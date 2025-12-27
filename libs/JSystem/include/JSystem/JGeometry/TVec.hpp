@@ -132,6 +132,9 @@ namespace JGeometry {
         inline TVec3(const Vec& vec) NO_INLINE { setTVec3f(&vec.x, &x); }
 
         // Used inlined and non-inlined?
+        #ifdef TVEC3F_EXTERN_CALLS
+        TVec3(const TVec3< f32 >& vec);
+        #else
         TVec3(const TVec3< f32 >& vec) {
             const register Vec* v_a = &vec;
             register Vec* v_b = this;
@@ -147,6 +150,7 @@ namespace JGeometry {
             }
             ;
         }
+        #endif
 
         // Can't be NO_INLINE (gets inlined in DiskGravity::DiskGravity())
         template < typename T >
@@ -259,21 +263,28 @@ namespace JGeometry {
             z = rVec.z;
         }
 
+        #ifdef TVEC3F_EXTERN_CALLS
+        template < typename T >
+        void set(T _x, T _y, T _z) NO_INLINE;
+        #else
         template < typename T >
         void set(T _x, T _y, T _z) NO_INLINE {
             x = _x;
             y = _y;
             z = _z;
         }
+        #endif
 
         template < typename T >
         void set(int x, int y, int z);
 
+        #ifndef TVEC3F_EXTERN_CALLS
         void set(f32 x_, f32 y_, f32 z_) {
             x = x_;
             y = y_;
             z = z_;
         }
+        #endif
 
         inline void set(f32 val) {
             x = val;
