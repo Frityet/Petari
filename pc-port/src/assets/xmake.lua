@@ -1,0 +1,5 @@
+target("pc-port-assets")
+    set_kind("static")
+    add_files("AssetLocator.cpp", "MenuAssetPipeline.cpp")
+    add_includedirs("$(projectdir)/src", {public = true})
+    add_deps("pc-port-core")

@@ -1,0 +1,5 @@
+target("pc-port-platform")
+    set_kind("static")
+    add_files("WiiStubs.cpp")
+    add_includedirs("$(projectdir)/src", {public = true})
+    add_deps("pc-port-core")

@@ -1,0 +1,5 @@
+target("pc-port-game")
+    set_kind("static")
+    add_files("TriggerChecker.cpp", "TitleSequenceProduct.cpp")
+    add_includedirs("$(projectdir)/src", {public = true})
+    add_deps("pc-port-core", "pc-port-layout")
