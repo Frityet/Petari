@@ -1,0 +1,9 @@
+{
+    "id": "xmake",
+    "version": "1.1.0",
+    "name": "xmake",
+    "installsAfter": [
+        "./llvm-latest",
+        "./llvm"
+    ]
+}

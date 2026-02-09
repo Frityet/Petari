@@ -1,0 +1,331 @@
+make: Entering directory '/home/vscode/.xmake/cache/packages/2602/b/bgfx/8752/source/bgfx/.build/projects/gmake-linux'
+==== Building bx (release64) ====
+==== Building fcpp (release64) ====
+==== Building glsl-optimizer (release64) ====
+==== Building glslang (release64) ====
+==== Building spirv-opt (release64) ====
+==== Building spirv-cross (release64) ====
+Creating ../../linux64_gcc/obj/x64/Release/fcpp
+Creating ../../linux64_gcc/obj/x64/Release/bx
+Creating ../../linux64_gcc/obj/x64/Release/fcpp/3rdparty/fcpp
+Creating ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src
+Creating ../../linux64_gcc/bin
+Creating ../../linux64_gcc/bin
+Creating ../../linux64_gcc/obj/x64/Release/spirv-cross
+Creating ../../linux64_gcc/obj/x64/Release/glslang
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV
+Creating ../../linux64_gcc/obj/x64/Release/glsl-optimizer
+Creating ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross
+Creating ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/glsl
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/CInterface
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/glslang/CInterface
+Creating ../../linux64_gcc/bin
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/glslang/GenericCodeGen
+Creating ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/glsl/glcpp
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/glslang/HLSL
+cpp1.c
+Creating ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/mesa/main
+Creating ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/mesa/program
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/glslang/MachineIndependent
+allocator.cpp
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/glslang/MachineIndependent/preprocessor
+cpp2.c
+Creating ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/util
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/glslang/OSDependent/Unix
+cpp3.c
+bx.cpp
+bounds.cpp
+commandline.cpp
+cpp4.c
+spirv_cfg.cpp
+cpp5.c
+spirv_cpp.cpp
+crtnone.cpp
+Creating ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/glslang/ResourceLimits
+spirv_cross.cpp
+cpp6.c
+spirv_cross_parsed_ir.cpp
+debug.cpp
+spirv_cross_util.cpp
+spirv_c_interface.cpp
+dtoa.cpp
+spirv_glsl.cpp
+easing.cpp
+spirv_hlsl.cpp
+Creating ../../linux64_gcc/obj/x64/Release/spirv-opt
+GlslangToSpv.cpp
+file.cpp
+InReadableOrder.cpp
+spirv_msl.cpp
+ast_array_index.cpp
+Logger.cpp
+SPVRemapper.cpp
+SpvBuilder.cpp
+SpvPostProcess.cpp
+ast_expr.cpp
+ast_function.cpp
+Creating ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source
+gcc: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+gcc: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [fcpp.make:349: ../../linux64_gcc/obj/x64/Release/fcpp/3rdparty/fcpp/cpp2.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** Waiting for unfinished jobs....
+make[1]: *** [fcpp.make:345: ../../linux64_gcc/obj/x64/Release/fcpp/3rdparty/fcpp/cpp1.o] Error 1
+gcc: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+Creating ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt
+make[1]: *** [fcpp.make:361: ../../linux64_gcc/obj/x64/Release/fcpp/3rdparty/fcpp/cpp5.o] Error 1
+filepath.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+gcc: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+SpvTools.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+gcc: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [fcpp.make:365: ../../linux64_gcc/obj/x64/Release/fcpp/3rdparty/fcpp/cpp6.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+gcc: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+Creating ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/reduce
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+spirv_parser.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+spirv_reflect.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [fcpp.make:353: ../../linux64_gcc/obj/x64/Release/fcpp/3rdparty/fcpp/cpp3.o] Error 1
+make[1]: *** [fcpp.make:357: ../../linux64_gcc/obj/x64/Release/fcpp/3rdparty/fcpp/cpp4.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+Creating ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/util
+Creating ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/val
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make: *** [Makefile:61: fcpp] Error 2
+make: *** Waiting for unfinished jobs....
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+disassemble.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+hash.cpp
+assembly_grammar.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:369: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_cfg.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+doc.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:393: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_hlsl.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [glslang.make:631: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/InReadableOrder.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+ast_to_hir.cpp
+make[1]: *** [spirv-cross.make:397: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_msl.o] Error 1
+make[1]: *** [glsl-optimizer.make:937: ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/glsl/ast_array_index.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: *** Waiting for unfinished jobs....
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:389: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_glsl.o] Error 1
+make[1]: *** [glslang.make:639: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/SPVRemapper.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+binary.cpp
+make[1]: *** [bx.make:449: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/bx.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: *** [bx.make:473: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/file.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [bx.make:441: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/allocator.o] Error 1
+diagnostic.cpp
+mutex.cpp
+math.cpp
+disassemble.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+enum_string_mapping.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+ext_inst.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:373: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_cpp.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [glsl-optimizer.make:941: ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/glsl/ast_expr.o] Error 1
+make[1]: *** [spirv-cross.make:385: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_cross_util.o] Error 1
+make[1]: *** [bx.make:445: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/bounds.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+extensions.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:377: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_cross.o] Error 1
+libspirv.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:381: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_cross_parsed_ir.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [bx.make:457: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/crtnone.o] Error 1
+make[1]: *** [bx.make:453: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/commandline.o] Error 1
+make[1]: *** [bx.make:461: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/debug.o] Error 1
+make[1]: *** [glslang.make:627: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/GlslangToSpv.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+name_mapper.cpp
+make[1]: *** [bx.make:465: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/dtoa.o] Error 1
+opcode.cpp
+operand.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [bx.make:469: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/easing.o] Error 1
+aggressive_dead_code_elim_pass.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+amd_ext_to_khr.cpp
+make[1]: *** [glslang.make:647: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/SpvPostProcess.o] Error 1
+analyze_live_input_pass.cpp
+basic_block.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+block_merge_pass.cpp
+block_merge_util.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+build_module.cpp
+ccp_pass.cpp
+make[1]: *** [glslang.make:623: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/CInterface/spirv_c_interface.o] Error 1
+make[1]: *** [glsl-optimizer.make:945: ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/glsl/ast_function.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [bx.make:477: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/filepath.o] Error 1
+cfg.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [glslang.make:651: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/SpvTools.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+cfg_cleanup_pass.cpp
+make[1]: *** [glslang.make:643: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/SpvBuilder.o] Error 1
+code_sink.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+combine_access_chains.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+compact_ids_pass.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+composite.cpp
+make[1]: *** [glslang.make:635: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/Logger.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [glslang.make:655: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/disassemble.o] Error 1
+const_folding_rules.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+constants.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:405: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_reflect.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+control_dependence.cpp
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1609: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/assembly_grammar.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-cross.make:401: ../../linux64_gcc/obj/x64/Release/spirv-cross/3rdparty/spirv-cross/spirv_parser.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make: *** [Makefile:49: spirv-cross] Error 2
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [bx.make:481: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/hash.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [bx.make:489: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/mutex.o] Error 1
+make[1]: *** [spirv-opt.make:1621: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/disassemble.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1637: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/libspirv.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [glslang.make:659: ../../linux64_gcc/obj/x64/Release/glslang/3rdparty/glslang/SPIRV/doc.o] Error 1
+make: *** [Makefile:53: glslang] Error 2
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1613: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/binary.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1645: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opcode.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [glsl-optimizer.make:949: ../../linux64_gcc/obj/x64/Release/glsl-optimizer/3rdparty/glsl-optimizer/src/glsl/ast_to_hir.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make: *** [Makefile:57: glsl-optimizer] Error 2
+make[1]: *** [spirv-opt.make:1617: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/diagnostic.o] Error 1
+make[1]: *** [spirv-opt.make:1625: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/enum_string_mapping.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1629: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/ext_inst.o] Error 1
+make[1]: *** [spirv-opt.make:1669: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/block_merge_pass.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1633: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/extensions.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1673: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/block_merge_util.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1681: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/ccp_pass.o] Error 1
+make[1]: *** [spirv-opt.make:1677: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/build_module.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1641: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/name_mapper.o] Error 1
+make[1]: *** [spirv-opt.make:1653: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/aggressive_dead_code_elim_pass.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1657: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/amd_ext_to_khr.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1661: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/analyze_live_input_pass.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [bx.make:485: ../../linux64_gcc/obj/x64/Release/bx/resources/bx/bx.git/src/math.o] Error 1
+make[1]: *** [spirv-opt.make:1649: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/operand.o] Error 1
+make: *** [Makefile:17: bx] Error 2
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1665: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/basic_block.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1697: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/combine_access_chains.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1693: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/code_sink.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1701: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/compact_ids_pass.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1713: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/constants.o] Error 1
+make[1]: *** [spirv-opt.make:1709: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/const_folding_rules.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1689: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/cfg_cleanup_pass.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1685: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/cfg.o] Error 1
+make[1]: *** [spirv-opt.make:1705: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/composite.o] Error 1
+g++: error: unrecognized command-line option ‘--target=x86_64-linux-gnu’
+make[1]: *** [spirv-opt.make:1717: ../../linux64_gcc/obj/x64/Release/spirv-opt/3rdparty/spirv-tools/source/opt/control_dependence.o] Error 1
+make: *** [Makefile:45: spirv-opt] Error 2
+make: Leaving directory '/home/vscode/.xmake/cache/packages/2602/b/bgfx/8752/source/bgfx/.build/projects/gmake-linux'
+

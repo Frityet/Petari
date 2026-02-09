@@ -1,0 +1,5 @@
+target("pc-port")
+    set_kind("binary")
+    add_files("Main.cpp")
+    add_deps("pc-port-assets", "pc-port-menu", "pc-port-platform", "pc-port-render")
+    add_packages("libsdl2")

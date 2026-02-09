@@ -1,0 +1,5 @@
+target("pc-port-menu")
+    set_kind("static")
+    add_files("MenuDirector.cpp")
+    add_includedirs("$(projectdir)/src", {public = true})
+    add_deps("pc-port-core", "pc-port-assets", "pc-port-game", "pc-port-layout", "pc-port-render")
