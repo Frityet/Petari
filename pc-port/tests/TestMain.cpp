@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     }
 
     if (listTests) {
-        for (const auto& test : pcport::test::Registry()) {
+        for (const auto& test : smgpc::test::Registry()) {
             std::cout << test.name << '\n';
         }
         return 0;
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     int failures = 0;
     bool matchedCase = false;
 
-    for (const auto& test : pcport::test::Registry()) {
+    for (const auto& test : smgpc::test::Registry()) {
         if (caseFilter.has_value() && test.name != *caseFilter) {
             continue;
         }
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
     if (caseFilter.has_value()) {
         std::cout << "Case passed: " << *caseFilter << '\n';
     } else {
-        std::cout << "All tests passed: " << pcport::test::Registry().size() << '\n';
+        std::cout << "All tests passed: " << smgpc::test::Registry().size() << '\n';
     }
     return 0;
 }

@@ -5,13 +5,13 @@
 #include <filesystem>
 #include <stdexcept>
 
-namespace pcport::test {
+namespace smgpc::test {
 
 inline std::filesystem::path FindRepoRoot() {
     std::filesystem::path cursor = std::filesystem::current_path();
 
     for (int i = 0; i < 10; ++i) {
-        if (std::filesystem::exists(cursor / "pc-port" / "tools" / "prepare_menu_assets.py") &&
+        if (std::filesystem::exists(cursor / "smgpc" / "tools" / "prepare_menu_assets.py") &&
             std::filesystem::exists(cursor / "build" / "tools" / "dtk")) {
             return cursor;
         }
@@ -30,12 +30,12 @@ inline const PreparedMenuAssets& GetPreparedAssets() {
     static PreparedMenuAssets assets = [] {
         const std::filesystem::path repoRoot = FindRepoRoot();
 
-        MenuAssetPipelineConfig pipeline;
+        MenuAssetPipelineConfigUration pipeline;
         pipeline.locator.gameRoot = repoRoot;
         pipeline.locator.version = "RMGK01";
         pipeline.locator.language = "KrKorean";
         pipeline.repoRoot = repoRoot;
-        pipeline.cacheRoot = repoRoot / "pc-port" / ".cache" / "assets";
+        pipeline.cacheRoot = repoRoot / "smgpc" / ".cache" / "assets";
         pipeline.forceRebuild = false;
 
         return PrepareMenuAssets(pipeline);
@@ -44,4 +44,4 @@ inline const PreparedMenuAssets& GetPreparedAssets() {
     return assets;
 }
 
-}  // namespace pcport::test
+}  // namespace smgpc::test
