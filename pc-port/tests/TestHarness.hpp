@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace pcport::test {
+namespace smgpc::test {
 
 using TestFn = std::function<void()>;
 
@@ -38,13 +38,13 @@ inline std::runtime_error MakeEqFailure(const A& lhs, const B& rhs, const char* 
     return std::runtime_error(message.str());
 }
 
-}  // namespace pcport::test
+}  // namespace smgpc::test
 
 #define $pc_port_test(name)                                                                                                                \
     static void name();                                                                                                                     \
     namespace {                                                                                                                             \
     struct name##_Registration final {                                                                                                      \
-        name##_Registration() { ::pcport::test::Register(#name, &name); }                                                                  \
+        name##_Registration() { ::smgpc::test::Register(#name, &name); }                                                                  \
     } name##_registration;                                                                                                                  \
     }                                                                                                                                       \
     static void name()
@@ -52,7 +52,7 @@ inline std::runtime_error MakeEqFailure(const A& lhs, const B& rhs, const char* 
 #define $pc_port_require(expr)                                                                                                              \
     do {                                                                                                                                    \
         if (!(expr)) {                                                                                                                      \
-            throw ::pcport::test::MakeFailure(#expr, __FILE__, __LINE__);                                                                  \
+            throw ::smgpc::test::MakeFailure(#expr, __FILE__, __LINE__);                                                                  \
         }                                                                                                                                   \
     } while (false)
 
@@ -61,6 +61,6 @@ inline std::runtime_error MakeEqFailure(const A& lhs, const B& rhs, const char* 
         const auto& lhsValue = (lhs);                                                                                                       \
         const auto& rhsValue = (rhs);                                                                                                       \
         if (!(lhsValue == rhsValue)) {                                                                                                      \
-            throw ::pcport::test::MakeEqFailure(lhsValue, rhsValue, #lhs, #rhs, __FILE__, __LINE__);                                      \
+            throw ::smgpc::test::MakeEqFailure(lhsValue, rhsValue, #lhs, #rhs, __FILE__, __LINE__);                                      \
         }                                                                                                                                   \
     } while (false)

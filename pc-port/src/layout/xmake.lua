@@ -1,5 +1,0 @@
-target("pc-port-layout")
-    set_kind("static")
-    add_files("BrlytRuntime.cpp", "BrlanRuntime.cpp")
-    add_includedirs("$(projectdir)/src", {public = true})
-    add_deps("pc-port-core", "pc-port-image")

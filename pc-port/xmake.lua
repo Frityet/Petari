@@ -1,19 +1,18 @@
-set_project("pc_port")
+set_project("smg-pc")
 set_xmakever("3.0.0")
 
 add_rules("mode.debug", "mode.release")
-set_languages("c++20")
+set_languages("c++23")
 add_cxxflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", {tools = {"gcc", "clang"}})
-add_includedirs("src")
+add_cxxflags("-Wno-dollar-in-identifier-extension", {tools = "clang"})
 
-option("pc_port_fetch_sdl2")
-    set_default(true)
-    set_showmenu(true)
-    set_description("Fetch SDL2 from source when not installed")
-option_end()
+add_repositories("local-repo $(projectdir)")
 
-add_requires("libsdl2", {configs = {shared = false, wayland = false, x11 = true}})
-add_requires("bgfx")
+add_requires("glfw", {configs = {shared = false, wayland = false, x11 = true}})
+add_requires("bgfx 8752")
 add_requires("stb")
 
-includes("src", "tests")
+includes {
+    "src",
+    "tests"
+}

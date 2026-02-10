@@ -1,1 +1,6 @@
-includes("core", "assets", "render", "layout", "game", "menu", "platform", "app")
+includes {
+    "common",
+    "render",
+    "app",
+    "assets"
+}
