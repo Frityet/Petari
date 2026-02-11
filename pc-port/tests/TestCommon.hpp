@@ -11,7 +11,7 @@ inline std::filesystem::path FindRepoRoot() {
     std::filesystem::path cursor = std::filesystem::current_path();
 
     for (int i = 0; i < 10; ++i) {
-        if (std::filesystem::exists(cursor / "smgpc" / "tools" / "prepare_menu_assets.py") &&
+        if (std::filesystem::exists(cursor / "smgpc" / "tools" / "prepare_menu_assets.py") and
             std::filesystem::exists(cursor / "build" / "tools" / "dtk")) {
             return cursor;
         }

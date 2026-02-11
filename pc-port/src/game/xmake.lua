@@ -1,7 +1,6 @@
-
-target("smg-pc-assets")
+target("smg-pc-game")
     set_kind("static")
     add_files("**.cpp")
     add_headerfiles("**.hpp")
     add_includedirs("./", {public = true})
-    add_deps("smg-pc-common")
+    add_deps("smg-pc-render", "smg-pc-common")

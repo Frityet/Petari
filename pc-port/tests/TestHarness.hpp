@@ -40,18 +40,18 @@ inline std::runtime_error MakeEqFailure(const A& lhs, const B& rhs, const char* 
 
 }  // namespace smgpc::test
 
-#define $pc_port_test(name)                                                                                                                \
-    static void name();                                                                                                                     \
-    namespace {                                                                                                                             \
-    struct name##_Registration final {                                                                                                      \
-        name##_Registration() { ::smgpc::test::Register(#name, &name); }                                                                  \
-    } name##_registration;                                                                                                                  \
-    }                                                                                                                                       \
-    static void name()
+#define $pc_port_concat_impl(a, b) a##b
+#define $pc_port_concat(a, b) $pc_port_concat_impl(a, b)
+#define $test(name) \
+    static void $pc_port_concat(_pc_port_test_fn_, __LINE__)(); \
+    namespace { \
+    const bool $pc_port_concat(_pc_port_test_reg_, __LINE__) = [] { ::smgpc::test::Register((name), &$pc_port_concat(_pc_port_test_fn_, __LINE__)); return true; }(); \
+    } \
+    static void $pc_port_concat(_pc_port_test_fn_, __LINE__)()
 
 #define $pc_port_require(expr)                                                                                                              \
     do {                                                                                                                                    \
-        if (!(expr)) {                                                                                                                      \
+        if (not (expr)) {                                                                                                                   \
             throw ::smgpc::test::MakeFailure(#expr, __FILE__, __LINE__);                                                                  \
         }                                                                                                                                   \
     } while (false)
@@ -60,7 +60,7 @@ inline std::runtime_error MakeEqFailure(const A& lhs, const B& rhs, const char* 
     do {                                                                                                                                    \
         const auto& lhsValue = (lhs);                                                                                                       \
         const auto& rhsValue = (rhs);                                                                                                       \
-        if (!(lhsValue == rhsValue)) {                                                                                                      \
+        if (not (lhsValue == rhsValue)) {                                                                                                   \
             throw ::smgpc::test::MakeEqFailure(lhsValue, rhsValue, #lhs, #rhs, __FILE__, __LINE__);                                      \
         }                                                                                                                                   \
     } while (false)
