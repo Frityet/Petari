@@ -84,7 +84,7 @@ class AssetResult<void> {
 public:
     AssetResult() = default;
 
-    explicit AssetResult(AssetError error)
+    AssetResult(AssetError error)
         : _success(false), _error(std::move(error)) {
     }
 

@@ -148,6 +148,19 @@ namespace smgpc::render
             bgfx::touch(0);
         }
 
+        [[nodiscard]] bool is_key_down(int key) const override
+        {
+            return glfwGetKey(_window, key) == GLFW_PRESS;
+        }
+
+        [[nodiscard]] std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const override
+        {
+            int width = 0;
+            int height = 0;
+            glfwGetFramebufferSize(_window, &width, &height);
+            return {clamp_view_dimension(width), clamp_view_dimension(height)};
+        }
+
         Renderer &renderer() override
         {
             return *_renderer;
@@ -215,6 +228,16 @@ namespace smgpc::render
         void render_frame() override
         {
             _window->render_frame();
+        }
+
+        [[nodiscard]] bool is_key_down(int key) const override
+        {
+            return _window->is_key_down(key);
+        }
+
+        [[nodiscard]] std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const override
+        {
+            return _window->framebuffer_size();
         }
 
     private:
