@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
     bool matchedCase = false;
 
     for (const auto& test : smgpc::test::Registry()) {
-        if (caseFilter.has_value() && test.name != *caseFilter) {
+        if (caseFilter.has_value() and test.name != *caseFilter) {
             continue;
         }
 
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    if (caseFilter.has_value() && !matchedCase) {
+    if (caseFilter.has_value() and not matchedCase) {
         std::cout << "Unknown test case: " << *caseFilter << '\n';
         return 2;
     }
