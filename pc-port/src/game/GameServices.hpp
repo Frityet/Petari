@@ -10,6 +10,10 @@ namespace smgpc::render {
     class IRendererService;
 }
 
+namespace smgpc::assets {
+    class IAssetManager;
+}
+
 namespace smgpc::game {
     class IGame {
     public:
@@ -17,5 +21,8 @@ namespace smgpc::game {
         [[nodiscard]] virtual int run() = 0;
     };
 
-    [[nodiscard]] std::shared_ptr<IGame> create_default_game_service(std::shared_ptr<render::IRendererService> renderer_service, std::shared_ptr<logging::ILogger> logger);
+    [[nodiscard]] std::shared_ptr<IGame> create_default_game_service(
+        std::shared_ptr<render::IRendererService> renderer_service,
+        std::shared_ptr<assets::IAssetManager> asset_manager,
+        std::shared_ptr<logging::ILogger> logger);
 }  // namespace smgpc::game

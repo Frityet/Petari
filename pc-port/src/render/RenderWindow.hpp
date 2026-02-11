@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <string>
+#include <utility>
 
 namespace smgpc::logging {
     class ILogger;
@@ -34,6 +36,8 @@ namespace smgpc::render
         virtual Renderer &renderer() = 0;
         virtual bool poll_events() = 0;
         virtual void render_frame() = 0;
+        [[nodiscard]] virtual bool is_key_down(int key) const = 0;
+        [[nodiscard]] virtual std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const = 0;
         virtual ~Window() = default;
     };
 
@@ -49,6 +53,8 @@ namespace smgpc::render
         virtual Renderer &renderer() = 0;
         virtual bool poll_events() = 0;
         virtual void render_frame() = 0;
+        [[nodiscard]] virtual bool is_key_down(int key) const = 0;
+        [[nodiscard]] virtual std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const = 0;
     };
 
     [[nodiscard]] std::shared_ptr<IWindowFactory> create_default_window_factory(std::shared_ptr<logging::ILogger> logger);

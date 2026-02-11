@@ -2,6 +2,7 @@
 #include "render/RenderWindow.hpp"
 #include "tests/TestHarness.hpp"
 
+#include <cstdint>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -55,6 +56,14 @@ public:
 
     void render_frame() override {
         ++render_frame_calls;
+    }
+
+    [[nodiscard]] bool is_key_down(int key) const override {
+        return key == 10;
+    }
+
+    [[nodiscard]] std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const override {
+        return {640U, 480U};
     }
 
     FakeRenderer renderer_instance {};
@@ -169,6 +178,12 @@ $test("Render renderer service delegates window behavior") {
     renderer.on_frame_enter();
     renderer.draw();
     renderer.on_frame_exit();
+
+    $pc_port_require(service->is_key_down(10));
+    $pc_port_require(not service->is_key_down(11));
+    const auto [width, height] = service->framebuffer_size();
+    $pc_port_require_eq(width, static_cast<std::uint16_t>(640));
+    $pc_port_require_eq(height, static_cast<std::uint16_t>(480));
 
     $pc_port_require_eq(window_ptr->renderer_instance.enter_calls, 1);
     $pc_port_require_eq(window_ptr->renderer_instance.draw_calls, 1);

@@ -149,7 +149,10 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
     if (not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
         graph.register_factory<game::IGame>([](ServiceGraph &services) {
-                return game::create_default_game_service(services.resolve_shared<render::IRendererService>(), services.resolve_shared<logging::ILogger>());
+                return game::create_default_game_service(
+                    services.resolve_shared<render::IRendererService>(),
+                    services.resolve_shared<assets::IAssetManager>(),
+                    services.resolve_shared<logging::ILogger>());
             });
     }
 
