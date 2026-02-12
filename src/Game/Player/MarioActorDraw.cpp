@@ -1,5 +1,7 @@
 #include "Game/MapObj/IceStep.hpp"
 #include "Game/Player/DLchanger.hpp"
+#include "Game/Player/DrawAdaptor.hpp"
+#include "Game/Player/JetTurtleShadow.hpp"
 #include "Game/Player/J3DModelX.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
@@ -40,16 +42,6 @@ struct DLholder {
     u8* mDL;
     u16 mSize;
     u16 _6;
-};
-
-class DrawAdaptor {
-public:
-    DrawAdaptor(const MR::FunctorBase&, int);
-};
-
-class JetTurtleShadow : public LiveActor {
-public:
-    void drawType0() const;
 };
 
 namespace {

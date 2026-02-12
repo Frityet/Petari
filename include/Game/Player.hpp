@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Game/Player/DLchanger.hpp"
+#include "Game/Player/DrawAdaptor.hpp"
 #include "Game/Player/FireMarioBall.hpp"
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Player/J3DModelX.hpp"
+#include "Game/Player/JetTurtleShadow.hpp"
 #include "Game/Player/MarineSnow.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioAbyssDamage.hpp"
@@ -57,6 +59,7 @@
 #include "Game/Player/MarioWait.hpp"
 #include "Game/Player/MarioWall.hpp"
 #include "Game/Player/MarioWarp.hpp"
+#include "Game/Player/MatrixControl.hpp"
 #include "Game/Player/ModelHolder.hpp"
 #include "Game/Player/RushEndInfo.hpp"
 #include "Game/Player/TornadoMario.hpp"

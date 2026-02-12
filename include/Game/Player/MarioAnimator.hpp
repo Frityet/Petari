@@ -8,6 +8,7 @@ class MarioActor;
 class XanimeResourceTable;
 class XanimePlayer;
 class HitSensor;
+class HashSortTable;
 
 class MarioAnimator : public MarioModule {
 public:
@@ -64,6 +65,10 @@ public:
     void spinClose();
     void stageInCheck();
     void throwCheck();
+    void throwEntry();
+    void throwClose();
+    void squatSpinCheck();
+    void walkinClose();
 
     inline void f1(const char* name) {
         getPlayer()->startBas(nullptr, false, 0.0f, 0.0f);
@@ -97,9 +102,10 @@ public:
     bool _10C;
     bool _10D;
     bool mUpperDefaultSet;  // 0x10E
+    u8 _10F;
     f32 _110;
     const char* mCurrBck;  // 0x114
     f32 _118;
-
-    u8 _11C[8];
+    s32 _11C;
+    HashSortTable* _120;
 };
