@@ -33,12 +33,18 @@ enum class PaneType {
     Pane, Picture, Text
 };
 
+enum class MaterialBlendMode : std::uint8_t {
+    Alpha,
+    Additive,
+};
+
 struct MaterialDefinition {
     std::string name {};
     std::int32_t texture_index {-1};
     std::vector<std::int32_t> texture_indices {};
     std::array<std::uint8_t, 4> mat_color {255U, 255U, 255U, 255U};
     std::int32_t tev_stage_count {};
+    MaterialBlendMode blend_mode {MaterialBlendMode::Alpha};
 };
 
 struct PaneDefinition {

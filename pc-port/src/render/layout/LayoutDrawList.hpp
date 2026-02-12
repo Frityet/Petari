@@ -14,6 +14,11 @@ struct TextureRef {
     std::uint16_t height {};
 };
 
+enum class BlendMode : std::uint8_t {
+    Alpha,
+    Additive,
+};
+
 struct QuadCommand {
     float x0 {};
     float y0 {};
@@ -30,6 +35,7 @@ struct QuadCommand {
     std::uint32_t color_bl {};
     std::uint32_t color_br {};
 
+    BlendMode blend_mode {BlendMode::Alpha};
     TextureRef texture {};
 };
 

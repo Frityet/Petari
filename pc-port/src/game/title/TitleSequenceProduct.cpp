@@ -12,230 +12,230 @@ namespace {
 
 class NrvTitleSequenceProductDisplayEncouragePal60Window final : public runtime::Nerve {
 public:
-    static NrvTitleSequenceProductDisplayEncouragePal60Window s_instance;
+    static NrvTitleSequenceProductDisplayEncouragePal60Window sInstance;
 
     void execute(runtime::Spine *spine) const override {
-        static_cast<TitleSequenceProduct *>(spine->executor())->exe_display_encourage_pal60_window();
+        static_cast<TitleSequenceProduct *>(spine->getExecutor())->exeDisplayEncouragePal60Window();
     }
 };
 
 class NrvTitleSequenceProductBgmPrepare final : public runtime::Nerve {
 public:
-    static NrvTitleSequenceProductBgmPrepare s_instance;
+    static NrvTitleSequenceProductBgmPrepare sInstance;
 
     void execute(runtime::Spine *spine) const override {
-        static_cast<TitleSequenceProduct *>(spine->executor())->exe_bgm_prepare();
+        static_cast<TitleSequenceProduct *>(spine->getExecutor())->exeBgmPrepare();
     }
 };
 
 class NrvTitleSequenceProductLogoFadein final : public runtime::Nerve {
 public:
-    static NrvTitleSequenceProductLogoFadein s_instance;
+    static NrvTitleSequenceProductLogoFadein sInstance;
 
     void execute(runtime::Spine *spine) const override {
-        static_cast<TitleSequenceProduct *>(spine->executor())->exe_logo_fadein();
+        static_cast<TitleSequenceProduct *>(spine->getExecutor())->exeLogoFadein();
     }
 };
 
 class NrvTitleSequenceProductLogoWait final : public runtime::Nerve {
 public:
-    static NrvTitleSequenceProductLogoWait s_instance;
+    static NrvTitleSequenceProductLogoWait sInstance;
 
     void execute(runtime::Spine *spine) const override {
-        static_cast<TitleSequenceProduct *>(spine->executor())->exe_logo_wait();
+        static_cast<TitleSequenceProduct *>(spine->getExecutor())->exeLogoWait();
     }
 };
 
 class NrvTitleSequenceProductLogoDisplay final : public runtime::Nerve {
 public:
-    static NrvTitleSequenceProductLogoDisplay s_instance;
+    static NrvTitleSequenceProductLogoDisplay sInstance;
 
     void execute(runtime::Spine *spine) const override {
-        static_cast<TitleSequenceProduct *>(spine->executor())->exe_logo_display();
+        static_cast<TitleSequenceProduct *>(spine->getExecutor())->exeLogoDisplay();
     }
 };
 
 class NrvTitleSequenceProductDecide final : public runtime::Nerve {
 public:
-    static NrvTitleSequenceProductDecide s_instance;
+    static NrvTitleSequenceProductDecide sInstance;
 
     void execute(runtime::Spine *spine) const override {
-        static_cast<TitleSequenceProduct *>(spine->executor())->exe_decide();
+        static_cast<TitleSequenceProduct *>(spine->getExecutor())->exeDecide();
     }
 };
 
 class NrvTitleSequenceProductDead final : public runtime::Nerve {
 public:
-    static NrvTitleSequenceProductDead s_instance;
+    static NrvTitleSequenceProductDead sInstance;
 
     void execute(runtime::Spine *spine) const override {
-        static_cast<TitleSequenceProduct *>(spine->executor())->exe_dead();
+        static_cast<TitleSequenceProduct *>(spine->getExecutor())->exeDead();
     }
 };
 
-NrvTitleSequenceProductDisplayEncouragePal60Window NrvTitleSequenceProductDisplayEncouragePal60Window::s_instance {};
-NrvTitleSequenceProductBgmPrepare NrvTitleSequenceProductBgmPrepare::s_instance {};
-NrvTitleSequenceProductLogoFadein NrvTitleSequenceProductLogoFadein::s_instance {};
-NrvTitleSequenceProductLogoWait NrvTitleSequenceProductLogoWait::s_instance {};
-NrvTitleSequenceProductLogoDisplay NrvTitleSequenceProductLogoDisplay::s_instance {};
-NrvTitleSequenceProductDecide NrvTitleSequenceProductDecide::s_instance {};
-NrvTitleSequenceProductDead NrvTitleSequenceProductDead::s_instance {};
+NrvTitleSequenceProductDisplayEncouragePal60Window NrvTitleSequenceProductDisplayEncouragePal60Window::sInstance {};
+NrvTitleSequenceProductBgmPrepare NrvTitleSequenceProductBgmPrepare::sInstance {};
+NrvTitleSequenceProductLogoFadein NrvTitleSequenceProductLogoFadein::sInstance {};
+NrvTitleSequenceProductLogoWait NrvTitleSequenceProductLogoWait::sInstance {};
+NrvTitleSequenceProductLogoDisplay NrvTitleSequenceProductLogoDisplay::sInstance {};
+NrvTitleSequenceProductDecide NrvTitleSequenceProductDecide::sInstance {};
+NrvTitleSequenceProductDead NrvTitleSequenceProductDead::sInstance {};
 
 }  // namespace
 
-TitleSequenceProduct::TitleSequenceProduct(TitleLayoutActor *logo_layout, TitleLayoutActor *press_start_layout)
-    : _logo_layout(logo_layout), _press_start_layout(press_start_layout) {
-    if (_logo_layout == nullptr || _press_start_layout == nullptr) {
+TitleSequenceProduct::TitleSequenceProduct(TitleLayoutActor *pLogoLayout, TitleLayoutActor *pPressStartLayout)
+    : mLogoLayout(pLogoLayout), mPressStartLayout(pPressStartLayout) {
+    if (mLogoLayout == nullptr || mPressStartLayout == nullptr) {
         throw std::invalid_argument("TitleSequenceProduct requires non-null logo and press-start layouts.");
     }
 
-    if (MR::is_display_encourage_pal60_window()) {
-        init_nerve(&NrvTitleSequenceProductDisplayEncouragePal60Window::s_instance);
+    if (MR::isDisplayEncouragePal60Window()) {
+        initNerve(&NrvTitleSequenceProductDisplayEncouragePal60Window::sInstance);
     } else {
-        init_nerve(&NrvTitleSequenceProductBgmPrepare::s_instance);
+        initNerve(&NrvTitleSequenceProductBgmPrepare::sInstance);
     }
 
-    _is_display_encourage_pal60_window = MR::is_display_encourage_pal60_window();
+    mIsDisplayEncouragePal60Window = MR::isDisplayEncouragePal60Window();
     kill();
 }
 
 void TitleSequenceProduct::appear() {
-    if (_is_display_encourage_pal60_window) {
-        set_nerve(&NrvTitleSequenceProductDisplayEncouragePal60Window::s_instance);
+    if (mIsDisplayEncouragePal60Window) {
+        setNerve(&NrvTitleSequenceProductDisplayEncouragePal60Window::sInstance);
     } else {
-        set_nerve(&NrvTitleSequenceProductBgmPrepare::s_instance);
+        setNerve(&NrvTitleSequenceProductBgmPrepare::sInstance);
     }
 }
 
 void TitleSequenceProduct::kill() {
-    set_nerve(&NrvTitleSequenceProductDead::s_instance);
+    setNerve(&NrvTitleSequenceProductDead::sInstance);
 }
 
-bool TitleSequenceProduct::is_active() const {
-    return not is_nerve(&NrvTitleSequenceProductDead::s_instance);
+bool TitleSequenceProduct::isActive() const {
+    return not isNerve(&NrvTitleSequenceProductDead::sInstance);
 }
 
 void TitleSequenceProduct::update() {
-    update_nerve();
-    _logo_layout->update(1.0F);
-    _press_start_layout->update(1.0F);
+    updateNerve();
+    mLogoLayout->update(1.0F);
+    mPressStartLayout->update(1.0F);
 }
 
-void TitleSequenceProduct::update_button_reaction(runtime::TriggerChecker *button_checker, const char *animation_name) {
-    if (button_checker == nullptr || animation_name == nullptr) {
+void TitleSequenceProduct::updateButtonReaction(runtime::TriggerChecker *pButtonChecker, const char *pAnimName) {
+    if (pButtonChecker == nullptr || pAnimName == nullptr) {
         return;
     }
 
-    if (button_checker->on_trigger()) {
-        MR::start_anim(_logo_layout, animation_name, 1U);
-        MR::set_anim_frame_and_stop(_logo_layout, 0.0F, 1U);
-    } else if (button_checker->off_trigger()) {
-        MR::start_anim(_logo_layout, animation_name, 1U);
+    if (pButtonChecker->getOnTrigger()) {
+        MR::startAnim(mLogoLayout, pAnimName, 1U);
+        MR::setAnimFrameAndStop(mLogoLayout, 0.0F, 1U);
+    } else if (pButtonChecker->getOffTrigger()) {
+        MR::startAnim(mLogoLayout, pAnimName, 1U);
     }
 }
 
-void TitleSequenceProduct::update_press_start_reaction() {
-    if (_a_button_checker.on_trigger()) {
-        MR::start_anim(_press_start_layout, "ButtonReaction", 0U);
-    } else if (_b_button_checker.on_trigger()) {
-        MR::start_anim(_press_start_layout, "ButtonReaction", 0U);
+void TitleSequenceProduct::updatePressStartReaction() {
+    if (mAButtonChecker.getOnTrigger()) {
+        MR::startAnim(mPressStartLayout, "ButtonReaction", 0U);
+    } else if (mBButtonChecker.getOnTrigger()) {
+        MR::startAnim(mPressStartLayout, "ButtonReaction", 0U);
     }
 }
 
-void TitleSequenceProduct::exe_display_encourage_pal60_window() {
-    set_nerve(&NrvTitleSequenceProductBgmPrepare::s_instance);
+void TitleSequenceProduct::exeDisplayEncouragePal60Window() {
+    setNerve(&NrvTitleSequenceProductBgmPrepare::sInstance);
 }
 
-void TitleSequenceProduct::exe_bgm_prepare() {
-    if (MR::is_first_step(this)) {
-        MR::start_stage_bgm("STM_TITLE", true);
+void TitleSequenceProduct::exeBgmPrepare() {
+    if (MR::isFirstStep(this)) {
+        MR::startStageBGM("STM_TITLE", true);
     }
 
-    if (MR::is_prepared_stage_bgm()) {
-        set_nerve(&NrvTitleSequenceProductLogoFadein::s_instance);
-    }
-}
-
-void TitleSequenceProduct::exe_logo_fadein() {
-    if (MR::is_first_step(this)) {
-        _logo_layout->appear();
-        MR::start_anim(_logo_layout, "Appear", 0U);
-        MR::unlock_stage_bgm();
-    }
-
-    if (MR::is_anim_stopped(_logo_layout, 0U)) {
-        set_nerve(&NrvTitleSequenceProductLogoWait::s_instance);
+    if (MR::isPreparedStageBgm()) {
+        setNerve(&NrvTitleSequenceProductLogoFadein::sInstance);
     }
 }
 
-void TitleSequenceProduct::exe_logo_wait() {
-    if (MR::is_first_step(this)) {
-        MR::start_anim(_logo_layout, "Wait", 0U);
-        MR::emit_effect(_logo_layout, "TitleLogoLight");
-        MR::emit_effect(_logo_layout, "TitleLogoLightB");
-        MR::emit_effect(_logo_layout, "TitleLogoLightC");
-        MR::emit_effect(_logo_layout, "TitleLogoLightD");
-        MR::emit_effect(_logo_layout, "TitleLogoLightE");
-        MR::emit_effect(_logo_layout, "TitleLogoLightF");
-        MR::emit_effect(_logo_layout, "TitleLogoLightG");
+void TitleSequenceProduct::exeLogoFadein() {
+    if (MR::isFirstStep(this)) {
+        mLogoLayout->appear();
+        MR::startAnim(mLogoLayout, "Appear", 0U);
+        MR::unlockStageBGM();
     }
 
-    if (MR::is_step(this, PRESS_AB_APPEAR_FRAME)) {
-        set_nerve(&NrvTitleSequenceProductLogoDisplay::s_instance);
+    if (MR::isAnimStopped(mLogoLayout, 0U)) {
+        setNerve(&NrvTitleSequenceProductLogoWait::sInstance);
     }
 }
 
-void TitleSequenceProduct::exe_logo_display() {
-    if (MR::is_first_step(this)) {
-        _press_start_layout->appear();
-        MR::start_anim(_press_start_layout, "Appear", 0U);
+void TitleSequenceProduct::exeLogoWait() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(mLogoLayout, "Wait", 0U);
+        MR::emitEffect(mLogoLayout, "TitleLogoLight");
+        MR::emitEffect(mLogoLayout, "TitleLogoLightB");
+        MR::emitEffect(mLogoLayout, "TitleLogoLightC");
+        MR::emitEffect(mLogoLayout, "TitleLogoLightD");
+        MR::emitEffect(mLogoLayout, "TitleLogoLightE");
+        MR::emitEffect(mLogoLayout, "TitleLogoLightF");
+        MR::emitEffect(mLogoLayout, "TitleLogoLightG");
     }
 
-    if (MR::is_anim_stopped(_press_start_layout, 0U)) {
-        MR::start_anim(_press_start_layout, "Wait", 0U);
+    if (MR::isStep(this, sPressABAppearFrame)) {
+        setNerve(&NrvTitleSequenceProductLogoDisplay::sInstance);
+    }
+}
+
+void TitleSequenceProduct::exeLogoDisplay() {
+    if (MR::isFirstStep(this)) {
+        mPressStartLayout->appear();
+        MR::startAnim(mPressStartLayout, "Appear", 0U);
     }
 
-    _a_button_checker.update(MR::test_core_pad_button_a(0));
-    _b_button_checker.update(MR::test_core_pad_button_b(0));
+    if (MR::isAnimStopped(mPressStartLayout, 0U)) {
+        MR::startAnim(mPressStartLayout, "Wait", 0U);
+    }
 
-    if (_a_button_checker.level() && _b_button_checker.level()) {
-        MR::stop_stage_bgm(75);
-        MR::start_system_se("SE_SY_GAME_START", -1, -1);
-        MR::start_cs_sound("CS_CLICK_CLOSE", 0, 0);
-        MR::try_rumble_pad_middle(this, 0);
-        set_nerve(&NrvTitleSequenceProductDecide::s_instance);
+    mAButtonChecker.update(MR::testCorePadButtonA(0));
+    mBButtonChecker.update(MR::testCorePadButtonB(0));
+
+    if (mAButtonChecker.getLevel() && mBButtonChecker.getLevel()) {
+        MR::stopStageBGM(75);
+        MR::startSystemSE("SE_SY_GAME_START", -1, -1);
+        MR::startCSSound("CS_CLICK_CLOSE", 0, 0);
+        MR::tryRumblePadMiddle(this, 0);
+        setNerve(&NrvTitleSequenceProductDecide::sInstance);
     } else {
-        update_button_reaction(&_a_button_checker, "ReactionA");
-        update_button_reaction(&_b_button_checker, "ReactionB");
-        update_press_start_reaction();
+        updateButtonReaction(&mAButtonChecker, "ReactionA");
+        updateButtonReaction(&mBButtonChecker, "ReactionB");
+        updatePressStartReaction();
     }
 }
 
-void TitleSequenceProduct::exe_decide() {
-    if (MR::is_first_step(this)) {
-        MR::start_anim(_logo_layout, "Decide", 0U);
-        MR::delete_effect_all(_logo_layout);
-        MR::start_anim(_press_start_layout, "End", 0U);
+void TitleSequenceProduct::exeDecide() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(mLogoLayout, "Decide", 0U);
+        MR::deleteEffectAll(mLogoLayout);
+        MR::startAnim(mPressStartLayout, "End", 0U);
     }
 
-    if (MR::is_anim_stopped(_logo_layout, 0U) && MR::is_anim_stopped(_press_start_layout, 0U)) {
-        set_nerve(&NrvTitleSequenceProductDead::s_instance);
-    }
-}
-
-void TitleSequenceProduct::exe_dead() {
-    if (MR::is_first_step(this)) {
-        _logo_layout->kill();
-        _press_start_layout->kill();
+    if (MR::isAnimStopped(mLogoLayout, 0U) && MR::isAnimStopped(mPressStartLayout, 0U)) {
+        setNerve(&NrvTitleSequenceProductDead::sInstance);
     }
 }
 
-const TitleLayoutActor *TitleSequenceProduct::logo_layout() const {
-    return _logo_layout;
+void TitleSequenceProduct::exeDead() {
+    if (MR::isFirstStep(this)) {
+        mLogoLayout->kill();
+        mPressStartLayout->kill();
+    }
 }
 
-const TitleLayoutActor *TitleSequenceProduct::press_start_layout() const {
-    return _press_start_layout;
+const TitleLayoutActor *TitleSequenceProduct::getLogoLayout() const {
+    return mLogoLayout;
+}
+
+const TitleLayoutActor *TitleSequenceProduct::getPressStartLayout() const {
+    return mPressStartLayout;
 }
 
 }  // namespace smgpc::game::title

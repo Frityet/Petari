@@ -18,26 +18,26 @@ public:
 
     void appear();
     void kill();
-    [[nodiscard]] bool is_dead() const;
+    [[nodiscard]] bool isDead() const;
 
-    void start_anim(const char *animation_name, std::uint32_t layer);
-    [[nodiscard]] bool is_anim_stopped(std::uint32_t layer) const;
-    void set_anim_frame_and_stop(float frame, std::uint32_t layer);
+    void startAnim(const char *pAnimName, std::uint32_t layer);
+    [[nodiscard]] bool isAnimStopped(std::uint32_t layer) const;
+    void setAnimFrameAndStop(float frame, std::uint32_t layer);
 
-    void update(float delta_frames);
+    void update(float deltaFrames);
 
-    void emit_effect(const char *);
-    void delete_effect_all();
+    void emitEffect(const char *);
+    void deleteEffectAll();
 
-    void append_draw_commands(
-        render::layout::LayoutDrawList *draw_list,
-        const std::unordered_map<std::string, assets::layout::BrfntFont> &fonts_by_name) const;
+    void appendDrawCommands(
+        render::layout::LayoutDrawList *pDrawList,
+        const std::unordered_map<std::string, assets::layout::BrfntFont> &rFontsByName) const;
 
 private:
     struct RuntimePaneState {
         bool visible {true};
         std::uint8_t alpha {255U};
-        std::array<std::uint8_t, 16> vertex_color {};
+        std::array<std::uint8_t, 16> vertexColor {};
 
         float tx {};
         float ty {};
@@ -47,10 +47,10 @@ private:
         float width {};
         float height {};
 
-        float tex_offset_u {};
-        float tex_offset_v {};
-        float tex_scale_u {1.0F};
-        float tex_scale_v {1.0F};
+        float texOffsetU {};
+        float texOffsetV {};
+        float texScaleU {1.0F};
+        float texScaleV {1.0F};
     };
 
     struct AnimationSlot {
@@ -60,53 +60,60 @@ private:
     };
 
     struct TransformContext {
-        float origin_x {};
-        float origin_y {};
-        float scale_x {1.0F};
-        float scale_y {1.0F};
+        float originX {};
+        float originY {};
+        float scaleX {1.0F};
+        float scaleY {1.0F};
         float alpha {1.0F};
         bool visible {true};
     };
 
-    [[nodiscard]] static std::string normalize_name(std::string name);
-    [[nodiscard]] static float anchor_offset_x(std::uint8_t base_position, float width);
-    [[nodiscard]] static float anchor_offset_y(std::uint8_t base_position, float height);
-    [[nodiscard]] static std::uint8_t clamp_u8(float value);
+    [[nodiscard]] static std::string normalizeName(std::string name);
+    [[nodiscard]] static float anchorOffsetX(std::uint8_t basePosition, float width);
+    [[nodiscard]] static float anchorOffsetY(std::uint8_t basePosition, float height);
+    [[nodiscard]] static std::uint8_t clampU8(float value);
 
-    [[nodiscard]] const assets::layout::PaneDefinition *pane_definition(std::size_t index) const;
-    [[nodiscard]] const RuntimePaneState *pane_state(std::size_t index) const;
+    [[nodiscard]] const assets::layout::PaneDefinition *paneDefinition(std::size_t index) const;
+    [[nodiscard]] const RuntimePaneState *paneState(std::size_t index) const;
 
-    void reset_pose();
-    void rebuild_pose();
-    void apply_animation(const assets::layout::BrlanAnimation &animation, float frame);
+    void resetPose();
+    void rebuildPose();
+    void applyAnimation(const assets::layout::BrlanAnimation &animation, float frame);
 
-    void apply_picture(
-        std::size_t pane_index,
+    void applyPicture(
+        std::size_t paneIndex,
         const TransformContext &parent,
-        render::layout::LayoutDrawList *draw_list) const;
+        render::layout::LayoutDrawList *pDrawList) const;
 
-    void apply_text(
-        std::size_t pane_index,
+    void applyText(
+        std::size_t paneIndex,
         const TransformContext &parent,
-        render::layout::LayoutDrawList *draw_list,
-        const std::unordered_map<std::string, assets::layout::BrfntFont> &fonts_by_name) const;
+        render::layout::LayoutDrawList *pDrawList,
+        const std::unordered_map<std::string, assets::layout::BrfntFont> &rFontsByName) const;
 
-    void append_pane_recursive(
-        std::size_t pane_index,
+    void appendPaneRecursive(
+        std::size_t paneIndex,
         const TransformContext &parent,
-        render::layout::LayoutDrawList *draw_list,
-        const std::unordered_map<std::string, assets::layout::BrfntFont> &fonts_by_name) const;
+        render::layout::LayoutDrawList *pDrawList,
+        const std::unordered_map<std::string, assets::layout::BrfntFont> &rFontsByName) const;
 
-    [[nodiscard]] const assets::layout::tpl::DecodedImage *resolve_texture_for_material(std::int32_t material_index) const;
+    [[nodiscard]] const assets::layout::tpl::DecodedImage *resolveTextureByLayoutIndex(std::int32_t textureIndex) const;
+    [[nodiscard]] const assets::layout::tpl::DecodedImage *resolveTextureForMaterial(std::int32_t materialIndex) const;
+    [[nodiscard]] static bool hasVariableAlpha(const assets::layout::tpl::DecodedImage &image);
+    void rebuildPicLogoGalaxyComposite(const assets::layout::tpl::DecodedImage &baseTexture, const assets::layout::tpl::DecodedImage &maskTexture) const;
 
-    const TitleLayoutResource *_resource {};
+    const TitleLayoutResource *mResource {};
 
-    bool _alive {};
-    std::array<AnimationSlot, 2> _animation_layers {};
+    bool mIsAlive {};
+    std::array<AnimationSlot, 2> mAnimationLayers {};
 
-    std::vector<RuntimePaneState> _base_states {};
-    std::vector<RuntimePaneState> _current_states {};
-    std::unordered_map<std::string, std::size_t> _pane_index_by_name {};
+    std::vector<RuntimePaneState> mBaseStates {};
+    std::vector<RuntimePaneState> mCurrentStates {};
+    std::unordered_map<std::string, std::size_t> mPaneIndexByName {};
+
+    mutable assets::layout::tpl::DecodedImage mPicLogoGalaxyComposite {};
+    mutable const assets::layout::tpl::DecodedImage *mPicLogoGalaxyBaseTexture {};
+    mutable const assets::layout::tpl::DecodedImage *mPicLogoGalaxyMaskTexture {};
 };
 
 }  // namespace smgpc::game::title

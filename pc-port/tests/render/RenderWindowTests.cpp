@@ -3,7 +3,9 @@
 #include "tests/TestHarness.hpp"
 
 #include <cstdint>
+#include <filesystem>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -58,6 +60,20 @@ public:
         ++render_frame_calls;
     }
 
+    void capture_next_frame(std::filesystem::path output_path) override {
+        capture_requests.push_back(std::move(output_path));
+    }
+
+    [[nodiscard]] std::optional<std::filesystem::path> poll_completed_capture() override {
+        if (completed_captures.empty()) {
+            return std::nullopt;
+        }
+
+        auto output_path = completed_captures.front();
+        completed_captures.erase(completed_captures.begin());
+        return output_path;
+    }
+
     [[nodiscard]] bool is_key_down(int key) const override {
         return key == 10;
     }
@@ -68,6 +84,8 @@ public:
 
     FakeRenderer renderer_instance {};
     int render_frame_calls {};
+    std::vector<std::filesystem::path> capture_requests {};
+    std::vector<std::filesystem::path> completed_captures {};
 
 private:
     std::vector<bool> _poll_results {};
@@ -173,6 +191,15 @@ $test("Render renderer service delegates window behavior") {
     service->render_frame();
     service->render_frame();
     $pc_port_require_eq(window_ptr->render_frame_calls, 2);
+    service->capture_next_frame("captures/frame_000001.ppm");
+    $pc_port_require_eq(window_ptr->capture_requests.size(), static_cast<std::size_t>(1));
+    $pc_port_require_eq(window_ptr->capture_requests.front(), std::filesystem::path("captures/frame_000001.ppm"));
+
+    window_ptr->completed_captures.push_back("captures/frame_000001.ppm");
+    const auto completed_capture = service->poll_completed_capture();
+    $pc_port_require(completed_capture.has_value());
+    $pc_port_require_eq(*completed_capture, std::filesystem::path("captures/frame_000001.ppm"));
+    $pc_port_require(not service->poll_completed_capture().has_value());
 
     auto &renderer = service->renderer();
     renderer.on_frame_enter();

@@ -2,7 +2,7 @@
 
 namespace smgpc::game::title::runtime {
 
-void Nerve::execute_on_end(Spine *) const {
+void Nerve::executeOnEnd(Spine *) const {
 }
 
 }  // namespace smgpc::game::title::runtime

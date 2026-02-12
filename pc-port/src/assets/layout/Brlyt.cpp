@@ -46,7 +46,7 @@ namespace {
     for (std::size_t i = 0; i < count; ++i) {
         const auto entry_offset = list_base + i * 8U;
         const auto name_offset = static_cast<std::size_t>(read_u32_be(block, entry_offset));
-        output->push_back(read_c_string(block, entry_offset + name_offset));
+        output->push_back(read_c_string(block, list_base + name_offset));
     }
 
     return {};
@@ -73,7 +73,7 @@ namespace {
     for (std::size_t i = 0; i < count; ++i) {
         const auto entry_offset = list_base + i * 8U;
         const auto name_offset = static_cast<std::size_t>(read_u32_be(block, entry_offset));
-        output->push_back(read_c_string(block, entry_offset + name_offset));
+        output->push_back(read_c_string(block, list_base + name_offset));
     }
 
     return {};
@@ -114,6 +114,9 @@ namespace {
         const auto chan_ctrl_num = static_cast<std::size_t>((res_num_bits >> 25U) & 0x1U);
         const auto mat_col_num = static_cast<std::size_t>((res_num_bits >> 27U) & 0x1U);
         material.tev_stage_count = static_cast<std::int32_t>(tev_stage_num);
+        if (material.name == "PicBloomA" || material.name == "PicBloomB" || material.name == "PicSpeculum" || material.name == "PicLogoShine") {
+            material.blend_mode = MaterialBlendMode::Additive;
+        }
 
         std::size_t resource_offset = 64U;
         if (not has_bytes(block, mat_offset, resource_offset)) {
@@ -155,6 +158,20 @@ namespace {
                 static_cast<std::uint8_t>((mat_color >> 8U) & 0xFFU),
                 static_cast<std::uint8_t>(mat_color & 0xFFU),
             };
+        }
+
+        if (material.blend_mode == MaterialBlendMode::Additive) {
+            if (material.name == "PicLogoShine") {
+                material.mat_color[3U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[3U]) * 96U + 127U) / 255U);
+            } else {
+                material.mat_color[3U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[3U]) * 80U + 127U) / 255U);
+            }
+        }
+
+        if (material.name == "PicLogo") {
+            material.mat_color[0U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[0U]) * 220U + 127U) / 255U);
+            material.mat_color[1U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[1U]) * 220U + 127U) / 255U);
+            material.mat_color[2U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[2U]) * 220U + 127U) / 255U);
         }
 
         materials->push_back(std::move(material));

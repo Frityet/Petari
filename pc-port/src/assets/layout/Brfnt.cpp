@@ -239,6 +239,10 @@ const std::vector<tpl::DecodedImage> &BrfntFont::sheets() const {
     return _sheets;
 }
 
+bool BrfntFont::has_codepoint(std::uint16_t codepoint) const {
+    return find_glyph_index(codepoint) != 0xFFFFU;
+}
+
 std::uint16_t BrfntFont::find_glyph_index(std::uint16_t codepoint) const {
     for (const auto &map : _code_maps) {
         if (codepoint < map.begin || codepoint > map.end) {

@@ -5,50 +5,50 @@
 namespace smgpc::game::title::runtime {
 
 Spine::Spine(void *executor, const Nerve *nerve)
-    : _executor(executor), _current_nerve(nerve), _next_nerve(nullptr), _step(0) {
+    : mExecutor(executor), mCurrNerve(nerve), mNextNerve(nullptr), mStep(0) {
 }
 
 void Spine::update() {
-    change_nerve();
-    if (_current_nerve != nullptr) {
-        _current_nerve->execute(this);
+    changeNerve();
+    if (mCurrNerve != nullptr) {
+        mCurrNerve->execute(this);
     }
-    ++_step;
-    change_nerve();
+    ++mStep;
+    changeNerve();
 }
 
-void Spine::set_nerve(const Nerve *nerve) {
-    if (_current_nerve != nullptr && _step >= 0) {
-        _current_nerve->execute_on_end(this);
+void Spine::setNerve(const Nerve *nerve) {
+    if (mCurrNerve != nullptr && mStep >= 0) {
+        mCurrNerve->executeOnEnd(this);
     }
 
-    _next_nerve = nerve;
-    _step = -1;
+    mNextNerve = nerve;
+    mStep = -1;
 }
 
-const Nerve *Spine::current_nerve() const {
-    if (_next_nerve != nullptr) {
-        return _next_nerve;
+const Nerve *Spine::getCurrentNerve() const {
+    if (mNextNerve != nullptr) {
+        return mNextNerve;
     }
-    return _current_nerve;
+    return mCurrNerve;
 }
 
-void *Spine::executor() const {
-    return _executor;
+void *Spine::getExecutor() const {
+    return mExecutor;
 }
 
-std::int32_t Spine::step() const {
-    return _step;
+std::int32_t Spine::getStep() const {
+    return mStep;
 }
 
-void Spine::change_nerve() {
-    if (_next_nerve == nullptr) {
+void Spine::changeNerve() {
+    if (mNextNerve == nullptr) {
         return;
     }
 
-    _current_nerve = _next_nerve;
-    _next_nerve = nullptr;
-    _step = 0;
+    mCurrNerve = mNextNerve;
+    mNextNerve = nullptr;
+    mStep = 0;
 }
 
 }  // namespace smgpc::game::title::runtime

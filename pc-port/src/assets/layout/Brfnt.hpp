@@ -49,6 +49,7 @@ public:
 
     [[nodiscard]] const std::vector<tpl::DecodedImage> &sheets() const;
 
+    [[nodiscard]] bool has_codepoint(std::uint16_t codepoint) const;
     [[nodiscard]] std::uint16_t map_codepoint_to_glyph(std::uint16_t codepoint) const;
     [[nodiscard]] bool get_glyph(std::uint16_t codepoint, BrfntGlyph *out) const;
 

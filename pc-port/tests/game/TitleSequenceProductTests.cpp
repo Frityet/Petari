@@ -6,6 +6,8 @@
 #include "tests/TestHarness.hpp"
 
 #include <cstdint>
+#include <filesystem>
+#include <optional>
 #include <string>
 #include <unordered_set>
 #include <utility>
@@ -35,6 +37,13 @@ public:
     }
 
     void render_frame() override {
+    }
+
+    void capture_next_frame(std::filesystem::path) override {
+    }
+
+    [[nodiscard]] std::optional<std::filesystem::path> poll_completed_capture() override {
+        return std::nullopt;
     }
 
     [[nodiscard]] bool is_key_down(int key) const override {
@@ -121,14 +130,14 @@ $test("TitleSequenceProduct reaches logo display flow without input") {
     smgpc::game::title::TitleSequenceProduct sequence(&logo_actor, &press_start_actor);
 
     FakeRendererService renderer {};
-    smgpc::game::title::MR::set_input_source(&renderer, nullptr);
+    smgpc::game::title::MR::setInputSource(&renderer, nullptr);
 
     sequence.appear();
     advance_frames(&sequence, 80);
 
-    $pc_port_require(sequence.is_active());
-    $pc_port_require(not logo_actor.is_dead());
-    $pc_port_require(not press_start_actor.is_dead());
+    $pc_port_require(sequence.isActive());
+    $pc_port_require(not logo_actor.isDead());
+    $pc_port_require(not press_start_actor.isDead());
 }
 
 $test("TitleSequenceProduct transitions to dead after enter press") {
@@ -139,7 +148,7 @@ $test("TitleSequenceProduct transitions to dead after enter press") {
     smgpc::game::title::TitleSequenceProduct sequence(&logo_actor, &press_start_actor);
 
     FakeRendererService renderer {};
-    smgpc::game::title::MR::set_input_source(&renderer, nullptr);
+    smgpc::game::title::MR::setInputSource(&renderer, nullptr);
 
     sequence.appear();
     advance_frames(&sequence, 80);
@@ -149,9 +158,9 @@ $test("TitleSequenceProduct transitions to dead after enter press") {
     renderer.set_key_down(257, false);
     advance_frames(&sequence, 10);
 
-    $pc_port_require(not sequence.is_active());
+    $pc_port_require(not sequence.isActive());
 
     sequence.update();
-    $pc_port_require(logo_actor.is_dead());
-    $pc_port_require(press_start_actor.is_dead());
+    $pc_port_require(logo_actor.isDead());
+    $pc_port_require(press_start_actor.isDead());
 }

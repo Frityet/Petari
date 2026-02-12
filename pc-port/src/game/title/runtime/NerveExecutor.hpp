@@ -13,17 +13,17 @@ public:
     NerveExecutor();
     virtual ~NerveExecutor();
 
-    void init_nerve(const Nerve *nerve);
-    void update_nerve();
-    void set_nerve(const Nerve *nerve);
-    [[nodiscard]] bool is_nerve(const Nerve *nerve) const;
-    [[nodiscard]] std::int32_t nerve_step() const;
+    void initNerve(const Nerve *nerve);
+    void updateNerve();
+    void setNerve(const Nerve *nerve);
+    [[nodiscard]] bool isNerve(const Nerve *nerve) const;
+    [[nodiscard]] std::int32_t getNerveStep() const;
 
 protected:
-    [[nodiscard]] Spine *spine() const;
+    [[nodiscard]] Spine *getSpine() const;
 
 private:
-    std::unique_ptr<Spine> _spine {};
+    std::unique_ptr<Spine> mSpine {};
 };
 
 }  // namespace smgpc::game::title::runtime

@@ -5,6 +5,7 @@
 #include "tests/TestHarness.hpp"
 
 #include <cstddef>
+#include <filesystem>
 #include <memory>
 #include <optional>
 #include <span>
@@ -73,6 +74,14 @@ public:
         ++render_frame_calls;
     }
 
+    void capture_next_frame(std::filesystem::path output_path) override {
+        capture_paths.push_back(std::move(output_path));
+    }
+
+    [[nodiscard]] std::optional<std::filesystem::path> poll_completed_capture() override {
+        return std::nullopt;
+    }
+
     [[nodiscard]] bool is_key_down(int) const override {
         return false;
     }
@@ -83,6 +92,7 @@ public:
 
     CountingRenderer renderer_instance {};
     int render_frame_calls {};
+    std::vector<std::filesystem::path> capture_paths {};
 
 private:
     std::vector<bool> _poll_results {};
