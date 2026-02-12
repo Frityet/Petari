@@ -26,13 +26,19 @@ public:
     LayoutBgfxRenderer(const LayoutBgfxRenderer &) = delete;
     LayoutBgfxRenderer &operator=(const LayoutBgfxRenderer &) = delete;
 
-    void draw(const LayoutDrawList &draw_list, std::uint16_t framebuffer_width, std::uint16_t framebuffer_height);
+    void draw(
+        const LayoutDrawList &draw_list,
+        std::uint16_t framebuffer_width,
+        std::uint16_t framebuffer_height,
+        float layout_width,
+        float layout_height);
 
 private:
     struct Vertex {
         float x {};
         float y {};
         float z {};
+        float w {1.0F};
         std::uint32_t abgr {};
         float u {};
         float v {};

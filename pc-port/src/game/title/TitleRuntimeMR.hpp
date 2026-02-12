@@ -8,29 +8,29 @@ class TitleLayoutActor;
 
 namespace MR {
 
-void begin_frame();
-void set_input_source(void *renderer_service, void *logger);
+void beginFrame();
+void setInputSource(void *pRendererService, void *pLogger);
 
-[[nodiscard]] bool is_display_encourage_pal60_window();
+[[nodiscard]] bool isDisplayEncouragePal60Window();
 
-void start_anim(TitleLayoutActor *actor, const char *animation_name, std::uint32_t layer);
-[[nodiscard]] bool is_anim_stopped(const TitleLayoutActor *actor, std::uint32_t layer);
-void set_anim_frame_and_stop(TitleLayoutActor *actor, float frame, std::uint32_t layer);
-void emit_effect(TitleLayoutActor *actor, const char *effect_name);
-void delete_effect_all(TitleLayoutActor *actor);
+void startAnim(TitleLayoutActor *pActor, const char *pAnimationName, std::uint32_t layer);
+[[nodiscard]] bool isAnimStopped(const TitleLayoutActor *pActor, std::uint32_t layer);
+void setAnimFrameAndStop(TitleLayoutActor *pActor, float frame, std::uint32_t layer);
+void emitEffect(TitleLayoutActor *pActor, const char *pEffectName);
+void deleteEffectAll(TitleLayoutActor *pActor);
 
-[[nodiscard]] bool is_dead(const TitleLayoutActor *actor);
+[[nodiscard]] bool isDead(const TitleLayoutActor *pActor);
 
-[[nodiscard]] bool test_core_pad_button_a(int channel);
-[[nodiscard]] bool test_core_pad_button_b(int channel);
+[[nodiscard]] bool testCorePadButtonA(int channel);
+[[nodiscard]] bool testCorePadButtonB(int channel);
 
-void start_stage_bgm(const char *name, bool prepare);
-[[nodiscard]] bool is_prepared_stage_bgm();
-void unlock_stage_bgm();
-void stop_stage_bgm(int fade_frames);
-void start_system_se(const char *name, int, int);
-void start_cs_sound(const char *name, int, int);
-void try_rumble_pad_middle(void *, int);
+void startStageBGM(const char *name, bool prepare);
+[[nodiscard]] bool isPreparedStageBgm();
+void unlockStageBGM();
+void stopStageBGM(int fadeFrames);
+void startSystemSE(const char *name, int, int);
+void startCSSound(const char *name, int, int);
+void tryRumblePadMiddle(void *, int);
 
 }  // namespace MR
 

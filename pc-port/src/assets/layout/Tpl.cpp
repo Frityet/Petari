@@ -66,8 +66,8 @@ void decode_i4(std::span<const std::byte> data, std::size_t data_offset, Decoded
                     const auto packed = binary::read_u8(data, cursor++);
                     const auto hi = expand4(static_cast<std::uint8_t>((packed >> 4U) & 0x0FU));
                     const auto lo = expand4(static_cast<std::uint8_t>(packed & 0x0FU));
-                    set_pixel(out, bx + x + 0, by + y, 255U, 255U, 255U, hi);
-                    set_pixel(out, bx + x + 1, by + y, 255U, 255U, 255U, lo);
+                    set_pixel(out, bx + x + 0, by + y, hi, hi, hi, hi);
+                    set_pixel(out, bx + x + 1, by + y, lo, lo, lo, lo);
                 }
             }
         }
@@ -81,7 +81,7 @@ void decode_i8(std::span<const std::byte> data, std::size_t data_offset, Decoded
             for (int y = 0; y < 4; ++y) {
                 for (int x = 0; x < 8; ++x) {
                     const auto intensity = binary::read_u8(data, cursor++);
-                    set_pixel(out, bx + x, by + y, 255U, 255U, 255U, intensity);
+                    set_pixel(out, bx + x, by + y, intensity, intensity, intensity, intensity);
                 }
             }
         }

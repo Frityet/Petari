@@ -9,39 +9,39 @@ namespace smgpc::game::title::runtime {
 NerveExecutor::NerveExecutor() = default;
 NerveExecutor::~NerveExecutor() = default;
 
-void NerveExecutor::init_nerve(const Nerve *nerve) {
-    _spine = std::make_unique<Spine>(this, nerve);
+void NerveExecutor::initNerve(const Nerve *nerve) {
+    mSpine = std::make_unique<Spine>(this, nerve);
 }
 
-void NerveExecutor::update_nerve() {
-    if (_spine != nullptr) {
-        _spine->update();
+void NerveExecutor::updateNerve() {
+    if (mSpine != nullptr) {
+        mSpine->update();
     }
 }
 
-void NerveExecutor::set_nerve(const Nerve *nerve) {
-    if (_spine == nullptr) {
-        throw std::runtime_error("NerveExecutor::set_nerve called before init_nerve.");
+void NerveExecutor::setNerve(const Nerve *nerve) {
+    if (mSpine == nullptr) {
+        throw std::runtime_error("NerveExecutor::setNerve called before initNerve.");
     }
-    _spine->set_nerve(nerve);
+    mSpine->setNerve(nerve);
 }
 
-bool NerveExecutor::is_nerve(const Nerve *nerve) const {
-    if (_spine == nullptr) {
+bool NerveExecutor::isNerve(const Nerve *nerve) const {
+    if (mSpine == nullptr) {
         return false;
     }
-    return _spine->current_nerve() == nerve;
+    return mSpine->getCurrentNerve() == nerve;
 }
 
-std::int32_t NerveExecutor::nerve_step() const {
-    if (_spine == nullptr) {
+std::int32_t NerveExecutor::getNerveStep() const {
+    if (mSpine == nullptr) {
         return 0;
     }
-    return _spine->step();
+    return mSpine->getStep();
 }
 
-Spine *NerveExecutor::spine() const {
-    return _spine.get();
+Spine *NerveExecutor::getSpine() const {
+    return mSpine.get();
 }
 
 }  // namespace smgpc::game::title::runtime

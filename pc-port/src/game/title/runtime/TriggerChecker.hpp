@@ -7,15 +7,15 @@ public:
     TriggerChecker();
 
     void update(bool input);
-    void set_input(bool input);
+    void setInput(bool input);
 
-    [[nodiscard]] bool level() const;
-    [[nodiscard]] bool on_trigger() const;
-    [[nodiscard]] bool off_trigger() const;
+    [[nodiscard]] bool getLevel() const;
+    [[nodiscard]] bool getOnTrigger() const;
+    [[nodiscard]] bool getOffTrigger() const;
 
 private:
-    bool _previous_level {};
-    bool _current_level {};
+    bool mPrevLevel {};
+    bool mCurrLevel {};
 };
 
 }  // namespace smgpc::game::title::runtime

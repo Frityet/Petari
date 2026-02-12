@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include <filesystem>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -36,6 +38,8 @@ namespace smgpc::render
         virtual Renderer &renderer() = 0;
         virtual bool poll_events() = 0;
         virtual void render_frame() = 0;
+        virtual void capture_next_frame(std::filesystem::path output_path) = 0;
+        [[nodiscard]] virtual std::optional<std::filesystem::path> poll_completed_capture() = 0;
         [[nodiscard]] virtual bool is_key_down(int key) const = 0;
         [[nodiscard]] virtual std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const = 0;
         virtual ~Window() = default;
@@ -53,6 +57,8 @@ namespace smgpc::render
         virtual Renderer &renderer() = 0;
         virtual bool poll_events() = 0;
         virtual void render_frame() = 0;
+        virtual void capture_next_frame(std::filesystem::path output_path) = 0;
+        [[nodiscard]] virtual std::optional<std::filesystem::path> poll_completed_capture() = 0;
         [[nodiscard]] virtual bool is_key_down(int key) const = 0;
         [[nodiscard]] virtual std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const = 0;
     };

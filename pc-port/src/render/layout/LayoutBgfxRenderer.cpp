@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstdlib>
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -9,6 +10,7 @@
 #include <iterator>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include <bgfx/bgfx.h>
 #include <bx/math.h>
@@ -16,12 +18,27 @@
 #include "Logger.hpp"
 
 namespace smgpc::render::layout {
+namespace {
+
+[[nodiscard]] const char *shader_backend_dir(bgfx::RendererType::Enum renderer_type) {
+    switch (renderer_type) {
+    case bgfx::RendererType::Vulkan:
+        return "spirv";
+    case bgfx::RendererType::OpenGL:
+    case bgfx::RendererType::OpenGLES:
+        return "glsl";
+    default:
+        return "glsl";
+    }
+}
+
+}  // namespace
 
 bgfx::VertexLayout LayoutBgfxRenderer::Vertex::layout {};
 
 void LayoutBgfxRenderer::Vertex::init_layout() {
     layout.begin()
-        .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+        .add(bgfx::Attrib::Position, 4, bgfx::AttribType::Float)
         .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
         .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
         .end();
@@ -82,24 +99,28 @@ std::vector<std::byte> LayoutBgfxRenderer::read_file_bytes(const std::filesystem
 }
 
 std::filesystem::path LayoutBgfxRenderer::resolve_shader_directory() {
-    const std::array<std::filesystem::path, 8> candidates {
-        std::filesystem::current_path() / "build" / "linux" / "x86_64" / "debug" / "shaders" / "glsl",
-        std::filesystem::current_path() / "build" / "linux" / "x86_64" / "release" / "shaders" / "glsl",
-        std::filesystem::current_path() / "pc-port" / "build" / "linux" / "x86_64" / "debug" / "shaders" / "glsl",
-        std::filesystem::current_path() / "pc-port" / "build" / "linux" / "x86_64" / "release" / "shaders" / "glsl",
-        std::filesystem::current_path() / "shaders" / "glsl",
-        std::filesystem::current_path().parent_path() / "build" / "linux" / "x86_64" / "debug" / "shaders" / "glsl",
-        std::filesystem::current_path().parent_path() / "build" / "linux" / "x86_64" / "release" / "shaders" / "glsl",
-        std::filesystem::current_path().parent_path() / "shaders" / "glsl",
+    const auto renderer_type = bgfx::getRendererType();
+    const auto backend_dir = std::string(shader_backend_dir(renderer_type));
+
+    const std::array<std::filesystem::path, 8> base_candidates {
+        std::filesystem::current_path() / "build" / "linux" / "x86_64" / "debug" / "shaders",
+        std::filesystem::current_path() / "build" / "linux" / "x86_64" / "release" / "shaders",
+        std::filesystem::current_path() / "pc-port" / "build" / "linux" / "x86_64" / "debug" / "shaders",
+        std::filesystem::current_path() / "pc-port" / "build" / "linux" / "x86_64" / "release" / "shaders",
+        std::filesystem::current_path() / "shaders",
+        std::filesystem::current_path().parent_path() / "build" / "linux" / "x86_64" / "debug" / "shaders",
+        std::filesystem::current_path().parent_path() / "build" / "linux" / "x86_64" / "release" / "shaders",
+        std::filesystem::current_path().parent_path() / "shaders",
     };
 
-    for (const auto &candidate : candidates) {
+    for (const auto &base_candidate : base_candidates) {
+        const auto candidate = base_candidate / backend_dir;
         if (std::filesystem::exists(candidate / "vs_layout.bin") and std::filesystem::exists(candidate / "fs_layout.bin")) {
             return candidate;
         }
     }
 
-    throw std::runtime_error("Failed to locate bgfx layout shader binaries (vs_layout.bin/fs_layout.bin).");
+    throw std::runtime_error("Failed to locate bgfx layout shader binaries for backend " + backend_dir + " (vs_layout.bin/fs_layout.bin).");
 }
 
 void LayoutBgfxRenderer::ensure_initialized() {
@@ -110,6 +131,7 @@ void LayoutBgfxRenderer::ensure_initialized() {
     Vertex::init_layout();
 
     const auto shader_dir = resolve_shader_directory();
+    _logger->info(__FILE__, __LINE__, logging::Category::RENDERER, "Layout renderer loading shaders from {}", shader_dir.string());
     const auto vertex_shader_bytes = read_file_bytes(shader_dir / "vs_layout.bin");
     const auto fragment_shader_bytes = read_file_bytes(shader_dir / "fs_layout.bin");
 
@@ -166,12 +188,21 @@ bgfx::TextureHandle LayoutBgfxRenderer::resolve_texture(const TextureRef &textur
     return _white_texture;
 }
 
-void LayoutBgfxRenderer::draw(const LayoutDrawList &draw_list, std::uint16_t framebuffer_width, std::uint16_t framebuffer_height) {
+void LayoutBgfxRenderer::draw(
+    const LayoutDrawList &draw_list,
+    std::uint16_t framebuffer_width,
+    std::uint16_t framebuffer_height,
+    float layout_width,
+    float layout_height) {
     ensure_initialized();
 
     if (framebuffer_width == 0U or framebuffer_height == 0U) {
         return;
     }
+
+    bgfx::setViewRect(0U, 0U, 0U, framebuffer_width, framebuffer_height);
+
+    bgfx::setViewMode(0U, bgfx::ViewMode::Sequential);
 
     float ortho[16] {};
     bx::mtxOrtho(
@@ -180,38 +211,85 @@ void LayoutBgfxRenderer::draw(const LayoutDrawList &draw_list, std::uint16_t fra
         static_cast<float>(framebuffer_width),
         static_cast<float>(framebuffer_height),
         0.0F,
-        0.0F,
-        1000.0F,
+        -1.0F,
+        1.0F,
         0.0F,
         bgfx::getCaps()->homogeneousDepth);
-
     bgfx::setViewTransform(0U, nullptr, ortho);
 
-    constexpr std::uint64_t DRAW_STATE =
+    if (layout_width <= 0.0F) {
+        layout_width = static_cast<float>(framebuffer_width);
+    }
+    if (layout_height <= 0.0F) {
+        layout_height = static_cast<float>(framebuffer_height);
+    }
+    const float scale_x = static_cast<float>(framebuffer_width) / layout_width;
+    const float scale_y = static_cast<float>(framebuffer_height) / layout_height;
+
+    constexpr std::uint64_t DRAW_STATE_ALPHA =
         BGFX_STATE_WRITE_RGB |
         BGFX_STATE_WRITE_A |
-        BGFX_STATE_BLEND_ALPHA |
-        BGFX_STATE_MSAA;
+        BGFX_STATE_DEPTH_TEST_ALWAYS |
+        BGFX_STATE_BLEND_ALPHA;
+    constexpr std::uint64_t DRAW_STATE_ADDITIVE =
+        BGFX_STATE_WRITE_RGB |
+        BGFX_STATE_WRITE_A |
+        BGFX_STATE_DEPTH_TEST_ALWAYS |
+        BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE);
 
-    for (const auto &quad : draw_list.quads()) {
-        bgfx::TransientVertexBuffer vertex_buffer {};
-        bgfx::TransientIndexBuffer index_buffer {};
+    const bool debug_solid_quad = [] {
+        const char *value = std::getenv("SMGPC_DEBUG_SOLID_QUAD");
+        return value != nullptr && value[0] != '\0' && value[0] != '0';
+    }();
+    const bool debug_force_touch = [] {
+        const char *value = std::getenv("SMGPC_DEBUG_FORCE_TOUCH");
+        return value != nullptr && value[0] != '\0' && value[0] != '0';
+    }();
+    const bool debug_trace = [] {
+        const char *value = std::getenv("SMGPC_DEBUG_LAYOUT_TRACE");
+        return value != nullptr && value[0] != '\0' && value[0] != '0';
+    }();
+    if (debug_trace) {
+        _logger->debug(
+            __FILE__,
+            __LINE__,
+            logging::Category::RENDERER,
+            "layout draw begin: quads={}, fb={}x{}, debug_solid_quad={}",
+            draw_list.quads().size(),
+            framebuffer_width,
+            framebuffer_height,
+            debug_solid_quad);
+    }
 
+    const auto draw_quad = [&](const QuadCommand &quad) {
         constexpr std::uint32_t VERTEX_COUNT = 4U;
         constexpr std::uint32_t INDEX_COUNT = 6U;
-        if (bgfx::getAvailTransientVertexBuffer(VERTEX_COUNT, Vertex::layout) < VERTEX_COUNT ||
-            bgfx::getAvailTransientIndexBuffer(INDEX_COUNT) < INDEX_COUNT) {
-            continue;
+
+        const auto available_vertices = bgfx::getAvailTransientVertexBuffer(VERTEX_COUNT, Vertex::layout);
+        const auto available_indices = bgfx::getAvailTransientIndexBuffer(INDEX_COUNT);
+        if (available_vertices < VERTEX_COUNT || available_indices < INDEX_COUNT) {
+            if (debug_trace) {
+                _logger->warning(
+                    __FILE__,
+                    __LINE__,
+                    logging::Category::RENDERER,
+                    "layout draw skipped quad: avail_vtx={}, avail_idx={}",
+                    available_vertices,
+                    available_indices);
+            }
+            return;
         }
 
+        bgfx::TransientVertexBuffer vertex_buffer {};
+        bgfx::TransientIndexBuffer index_buffer {};
         bgfx::allocTransientVertexBuffer(&vertex_buffer, VERTEX_COUNT, Vertex::layout);
         bgfx::allocTransientIndexBuffer(&index_buffer, INDEX_COUNT);
 
         auto *vertices = reinterpret_cast<Vertex *>(vertex_buffer.data);
-        vertices[0] = Vertex {.x = quad.x0, .y = quad.y0, .z = 0.0F, .abgr = quad.color_tl, .u = quad.u0, .v = quad.v0};
-        vertices[1] = Vertex {.x = quad.x1, .y = quad.y0, .z = 0.0F, .abgr = quad.color_tr, .u = quad.u1, .v = quad.v0};
-        vertices[2] = Vertex {.x = quad.x0, .y = quad.y1, .z = 0.0F, .abgr = quad.color_bl, .u = quad.u0, .v = quad.v1};
-        vertices[3] = Vertex {.x = quad.x1, .y = quad.y1, .z = 0.0F, .abgr = quad.color_br, .u = quad.u1, .v = quad.v1};
+        vertices[0] = Vertex {.x = quad.x0 * scale_x, .y = quad.y0 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_tl, .u = quad.u0, .v = quad.v0};
+        vertices[1] = Vertex {.x = quad.x1 * scale_x, .y = quad.y0 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_tr, .u = quad.u1, .v = quad.v0};
+        vertices[2] = Vertex {.x = quad.x0 * scale_x, .y = quad.y1 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_bl, .u = quad.u0, .v = quad.v1};
+        vertices[3] = Vertex {.x = quad.x1 * scale_x, .y = quad.y1 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_br, .u = quad.u1, .v = quad.v1};
 
         auto *indices = reinterpret_cast<std::uint16_t *>(index_buffer.data);
         indices[0] = 0U;
@@ -224,10 +302,91 @@ void LayoutBgfxRenderer::draw(const LayoutDrawList &draw_list, std::uint16_t fra
         const auto texture_handle = resolve_texture(quad.texture);
 
         bgfx::setTexture(0U, _sampler, texture_handle);
-        bgfx::setState(DRAW_STATE);
+        bgfx::setScissor(0U, 0U, framebuffer_width, framebuffer_height);
+        bgfx::setState(quad.blend_mode == BlendMode::Additive ? DRAW_STATE_ADDITIVE : DRAW_STATE_ALPHA);
         bgfx::setVertexBuffer(0U, &vertex_buffer);
         bgfx::setIndexBuffer(&index_buffer);
+        float model[16] {};
+        bx::mtxIdentity(model);
+        bgfx::setTransform(model);
         bgfx::submit(0U, _program);
+        if (debug_trace) {
+            std::uint32_t texel_rgba = 0U;
+            if (quad.texture.rgba8 != nullptr and quad.texture.width > 0U and quad.texture.height > 0U) {
+                texel_rgba =
+                    (static_cast<std::uint32_t>(quad.texture.rgba8[0]) << 24U) |
+                    (static_cast<std::uint32_t>(quad.texture.rgba8[1]) << 16U) |
+                    (static_cast<std::uint32_t>(quad.texture.rgba8[2]) << 8U) |
+                    static_cast<std::uint32_t>(quad.texture.rgba8[3]);
+            }
+            _logger->debug(
+                __FILE__,
+                __LINE__,
+                logging::Category::RENDERER,
+                "layout submit quad x=[{:.2f},{:.2f}] y=[{:.2f},{:.2f}] uv=[{:.3f},{:.3f}]..[{:.3f},{:.3f}] tex={} {}x{} c={:08x}/{:08x}/{:08x}/{:08x} texel_rgba={:08x}",
+                quad.x0,
+                quad.x1,
+                quad.y0,
+                quad.y1,
+                quad.u0,
+                quad.v0,
+                quad.u1,
+                quad.v1,
+                quad.texture.id,
+                quad.texture.width,
+                quad.texture.height,
+                quad.color_tl,
+                quad.color_tr,
+                quad.color_bl,
+                quad.color_br,
+                texel_rgba);
+        }
+    };
+
+    if (debug_force_touch) {
+        bgfx::touch(0U);
+    }
+
+    if (debug_solid_quad) {
+        draw_quad(QuadCommand {
+            .x0 = 0.0F,
+            .y0 = 0.0F,
+            .x1 = static_cast<float>(framebuffer_width),
+            .y1 = static_cast<float>(framebuffer_height),
+            .u0 = 0.0F,
+            .v0 = 0.0F,
+            .u1 = 1.0F,
+            .v1 = 1.0F,
+            .color_tl = 0xFF0000FFU,
+            .color_tr = 0xFF0000FFU,
+            .color_bl = 0xFF0000FFU,
+            .color_br = 0xFF0000FFU,
+            .texture = TextureRef {
+                .id = 0U,
+                .rgba8 = nullptr,
+                .width = 0U,
+                .height = 0U,
+            },
+        });
+        return;
+    }
+
+    const bool debug_touch_only = [] {
+        const char *value = std::getenv("SMGPC_DEBUG_TOUCH_ONLY");
+        return value != nullptr && value[0] != '\0' && value[0] != '0';
+    }();
+    if (debug_touch_only) {
+        bgfx::touch(0U);
+        return;
+    }
+
+    if (draw_list.quads().empty()) {
+        bgfx::touch(0U);
+        return;
+    }
+
+    for (const auto &quad : draw_list.quads()) {
+        draw_quad(quad);
     }
 }
 

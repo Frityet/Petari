@@ -8,7 +8,7 @@ class Nerve {
 public:
     virtual ~Nerve() = default;
     virtual void execute(Spine *spine) const = 0;
-    virtual void execute_on_end(Spine *spine) const;
+    virtual void executeOnEnd(Spine *spine) const;
 };
 
 }  // namespace smgpc::game::title::runtime

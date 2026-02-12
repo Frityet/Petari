@@ -27,12 +27,6 @@ rule("smg-pc-bgfx-shaders")
         local shader_type = fileconfig.type
         assert(shader_type, "cannot determine shader type for " .. shaderfile)
 
-        local output_name = fileconfig.output_name
-        assert(output_name, "output_name is required for " .. shaderfile)
-
-        local output_dir = fileconfig.output_dir or "shaders"
-        local profile = fileconfig.profile or "120"
-
         local bgfx_platform_map = {
             windows = "windows",
             linux = "linux",
@@ -43,26 +37,50 @@ rule("smg-pc-bgfx-shaders")
 
         local varyingdef = fileconfig.vardef or path.join(path.directory(shaderfile), "varying.def.sc")
 
-        local outputdir = path.join(target:targetdir(), output_dir, "glsl")
-        batchcmds:mkdir(outputdir)
-        local binary = path.join(outputdir, output_name)
-
-        local args = {
-            "-f", shaderfile,
-            "--type", shader_type,
-            "--varyingdef", varyingdef,
-            "--platform", bgfx_platform,
-            "-i", path.directory(shaderfile),
-            "-o", binary,
-            "--profile", profile
-        }
-
-        if option.get("verbose") then
-            batchcmds:show(shaderc .. " " .. os.args(args))
+        local backend_variants = fileconfig.backends
+        if backend_variants == nil then
+            backend_variants = {{
+                output_name = fileconfig.output_name,
+                output_dir = fileconfig.output_dir,
+                backend_dir = fileconfig.backend_dir,
+                profile = fileconfig.profile
+            }}
         end
-        batchcmds:vrunv(shaderc, args)
+
+        local last_binary = nil
+        for _, backend in ipairs(backend_variants) do
+            local output_name = backend.output_name or fileconfig.output_name
+            assert(output_name, "output_name is required for " .. shaderfile)
+
+            local output_dir = backend.output_dir or fileconfig.output_dir or "shaders"
+            local backend_dir = backend.backend_dir or fileconfig.backend_dir or "glsl"
+            local profile = backend.profile or fileconfig.profile or "120"
+
+            local outputdir = path.join(target:targetdir(), output_dir, backend_dir)
+            batchcmds:mkdir(outputdir)
+            local binary = path.join(outputdir, output_name)
+
+            local args = {
+                "-f", shaderfile,
+                "--type", shader_type,
+                "--varyingdef", varyingdef,
+                "--platform", bgfx_platform,
+                "-i", path.directory(shaderfile),
+                "-o", binary,
+                "--profile", profile
+            }
+
+            if option.get("verbose") then
+                batchcmds:show(shaderc .. " " .. os.args(args))
+            end
+            batchcmds:vrunv(shaderc, args)
+            last_binary = binary
+        end
+
         batchcmds:add_depfiles(shaderfile, varyingdef)
-        batchcmds:set_depmtime(os.mtime(binary))
+        if last_binary ~= nil then
+            batchcmds:set_depmtime(os.mtime(last_binary))
+        end
     end)
 
 target("smg-pc-render")
@@ -75,13 +93,15 @@ target("smg-pc-render")
     add_rules("smg-pc-bgfx-shaders")
     add_files("layout/shaders/vs_layout.sc", {
         type = "vertex",
-        output_dir = "shaders",
-        output_name = "vs_layout.bin",
-        profile = "120"
+        backends = {
+            { output_dir = "shaders", backend_dir = "glsl", output_name = "vs_layout.bin", profile = "120" },
+            { output_dir = "shaders", backend_dir = "spirv", output_name = "vs_layout.bin", profile = "spirv" }
+        }
     })
     add_files("layout/shaders/fs_layout.sc", {
         type = "fragment",
-        output_dir = "shaders",
-        output_name = "fs_layout.bin",
-        profile = "120"
+        backends = {
+            { output_dir = "shaders", backend_dir = "glsl", output_name = "fs_layout.bin", profile = "120" },
+            { output_dir = "shaders", backend_dir = "spirv", output_name = "fs_layout.bin", profile = "spirv" }
+        }
     })
