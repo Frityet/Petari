@@ -1,6 +1,7 @@
 #include "RenderWindow.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <cstdio>
 #include <cstdint>
@@ -44,22 +45,25 @@ namespace smgpc::render
             return clamped == 0U ? 1U : clamped;
         }
 
-        [[nodiscard]] bgfx::RendererType::Enum resolve_renderer_type_from_environment()
+        [[nodiscard]] std::optional<bgfx::RendererType::Enum> resolve_renderer_type_from_environment()
         {
             const char *value = std::getenv("SMGPC_BGFX_RENDERER");
             if (value == nullptr || value[0] == '\0') {
-                return bgfx::RendererType::OpenGL;
+                return std::nullopt;
             }
 
             const auto renderer_name = std::string_view(value);
-            if (renderer_name == "vulkan") {
+            if (renderer_name == "vulkan" || renderer_name == "vk") {
                 return bgfx::RendererType::Vulkan;
             }
             if (renderer_name == "opengl" || renderer_name == "gl") {
                 return bgfx::RendererType::OpenGL;
             }
+            if (renderer_name == "auto" || renderer_name == "default") {
+                return bgfx::RendererType::Count;
+            }
 
-            return bgfx::RendererType::OpenGL;
+            return bgfx::RendererType::Count;
         }
 
     }
@@ -141,19 +145,48 @@ namespace smgpc::render
             std::uint16_t backbuffer_height,
             std::shared_ptr<logging::ILogger> logger)
         {
-            auto init = bgfx::Init();
-            init.platformData.nwh = x11_window;
-            init.platformData.ndt = x11_display;
-            init.type = resolve_renderer_type_from_environment();
-            init.resolution.width = backbuffer_width;
-            init.resolution.height = backbuffer_height;
-            init.resolution.reset = BGFX_RESET_VSYNC;
+            const auto requested_renderer = resolve_renderer_type_from_environment();
             _callbacks = std::make_unique<Callbacks>(std::move(logger));
-            init.callback = _callbacks.get();
 
-            if (not bgfx::init(init)) {
+            const auto try_initialize_renderer = [&](bgfx::RendererType::Enum renderer_type) {
+                auto init = bgfx::Init();
+                init.platformData.nwh = x11_window;
+                init.platformData.ndt = x11_display;
+                init.type = renderer_type;
+                init.resolution.width = backbuffer_width;
+                init.resolution.height = backbuffer_height;
+                init.resolution.reset = BGFX_RESET_VSYNC;
+                init.callback = _callbacks.get();
+                return bgfx::init(init);
+            };
+
+            if (requested_renderer.has_value()) {
+                if (try_initialize_renderer(*requested_renderer)) {
+                    return;
+                }
                 throw std::runtime_error("Cannot init bgfx!");
             }
+
+#if defined(__linux__)
+            constexpr std::array<bgfx::RendererType::Enum, 3> renderer_fallback_order {
+                bgfx::RendererType::Vulkan,
+                bgfx::RendererType::OpenGL,
+                bgfx::RendererType::Count,
+            };
+#else
+            constexpr std::array<bgfx::RendererType::Enum, 2> renderer_fallback_order {
+                bgfx::RendererType::OpenGL,
+                bgfx::RendererType::Count,
+            };
+#endif
+
+            for (const auto renderer_type : renderer_fallback_order) {
+                if (try_initialize_renderer(renderer_type)) {
+                    return;
+                }
+            }
+
+            throw std::runtime_error("Cannot init bgfx!");
         }
 
         void on_frame_enter() override
@@ -224,7 +257,7 @@ namespace smgpc::render
             _backbuffer_width = initial_width;
             _backbuffer_height = initial_height;
             _logger->debug(__FILE__, __LINE__, logging::Category::RENDERER, "Using renderertype {}", bgfx::getRendererName(bgfx::getRendererType()));
-            bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+            bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000ff, 1.0f, 0);
         }
 
         bool poll_events() override

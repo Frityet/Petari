@@ -1,9 +1,9 @@
 #include "Application.hpp"
 
-#include <array>
 #include <memory>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
 #include "Logger.hpp"
 
@@ -25,22 +25,28 @@ namespace {
 
 class DesktopApplication final : public IApplication {
 public:
-    DesktopApplication(std::shared_ptr<game::IGame> game, std::shared_ptr<assets::IAssetManager> asset_manager, std::shared_ptr<logging::ILogger> logger)
-        : _game(std::move(game)), _asset_manager(std::move(asset_manager)), _logger(std::move(logger)) {
+    DesktopApplication(
+        std::shared_ptr<game::IGame> game,
+        std::shared_ptr<assets::IAssetManager> asset_manager,
+        std::shared_ptr<logging::ILogger> logger,
+        std::vector<assets::AssetId> startup_assets)
+        : _game(std::move(game)),
+          _asset_manager(std::move(asset_manager)),
+          _logger(std::move(logger)),
+          _startup_assets(std::move(startup_assets)) {
         if (not _game or not _asset_manager or not _logger) {
             throw std::invalid_argument("DesktopApplication requires non-null injected services.");
         }
     }
 
     [[nodiscard]] int run() override {
-        const std::array<assets::AssetId, 3> BOOTSTRAP_ASSETS {
-            assets::AssetId {.logical_path = "LayoutData/PressStart.arc"}, assets::AssetId {.logical_path = "LayoutData/TitleLogo.arc"}, assets::AssetId {.logical_path = "LayoutData/Font.arc"}, };
-
-        const auto prepare_result = _asset_manager->prepare_assets(BOOTSTRAP_ASSETS);
-        if (not prepare_result) {
-            _logger->warning(__FILE__, __LINE__, logging::Category::APP, "Asset bootstrap prepare failed [{}]: {}", to_error_string(prepare_result.failure().code), prepare_result.failure().message);
-        } else {
-            _logger->info(__FILE__, __LINE__, logging::Category::APP, "Prepared {} startup assets in cache", BOOTSTRAP_ASSETS.size());
+        if (not _startup_assets.empty()) {
+            const auto prepare_result = _asset_manager->prepare_assets(_startup_assets);
+            if (not prepare_result) {
+                _logger->warning(__FILE__, __LINE__, logging::Category::APP, "Asset bootstrap prepare failed [{}]: {}", to_error_string(prepare_result.failure().code), prepare_result.failure().message);
+            } else {
+                _logger->info(__FILE__, __LINE__, logging::Category::APP, "Prepared {} startup assets in cache", _startup_assets.size());
+            }
         }
 
         return _game->run();
@@ -50,6 +56,7 @@ private:
     std::shared_ptr<game::IGame> _game {};
     std::shared_ptr<assets::IAssetManager> _asset_manager {};
     std::shared_ptr<logging::ILogger> _logger {};
+    std::vector<assets::AssetId> _startup_assets {};
 };
 
 }  // namespace
@@ -85,6 +92,10 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
 
     if (overrides.asset_manager) {
         graph.register_instance<assets::IAssetManager>(std::move(overrides.asset_manager));
+    }
+
+    if (overrides.game_asset_service) {
+        graph.register_instance<assets::IGameAssetService>(std::move(overrides.game_asset_service));
     }
 
     if (overrides.game) {
@@ -146,19 +157,39 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
             });
     }
 
+    if (not graph.has<assets::IGameAssetService>() and
+        not graph.has<game::IGame>() and
+        not graph.has<IApplication>()) {
+        graph.register_factory<assets::IGameAssetService>([configuration](ServiceGraph &services) {
+                return assets::create_default_game_asset_service(
+                    services.resolve_shared<assets::IAssetManager>(),
+                    assets::GameAssetPathResolverConfiguration {
+                        .game_root = configuration.game_root,
+                        .version = configuration.game_version,
+                        .language = configuration.language,
+                        .is_widescreen = static_cast<float>(configuration.window_width) / static_cast<float>(configuration.window_height == 0 ? 1 : configuration.window_height) > 1.34F,
+                    },
+                    services.resolve_shared<logging::ILogger>());
+            });
+    }
+
     if (not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
         graph.register_factory<game::IGame>([](ServiceGraph &services) {
                 return game::create_default_game_service(
                     services.resolve_shared<render::IRendererService>(),
-                    services.resolve_shared<assets::IAssetManager>(),
+                    services.resolve_shared<assets::IGameAssetService>(),
                     services.resolve_shared<logging::ILogger>());
             });
     }
 
     if (not graph.has<IApplication>()) {
-        graph.register_factory<IApplication>([](ServiceGraph &services) {
-                return std::make_shared<DesktopApplication>(services.resolve_shared<game::IGame>(), services.resolve_shared<assets::IAssetManager>(), services.resolve_shared<logging::ILogger>());
+        graph.register_factory<IApplication>([configuration](ServiceGraph &services) {
+                return std::make_shared<DesktopApplication>(
+                    services.resolve_shared<game::IGame>(),
+                    services.resolve_shared<assets::IAssetManager>(),
+                    services.resolve_shared<logging::ILogger>(),
+                    configuration.startup_assets);
             });
     }
 

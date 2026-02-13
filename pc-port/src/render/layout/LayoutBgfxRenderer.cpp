@@ -8,12 +8,16 @@
 #include <filesystem>
 #include <fstream>
 #include <iterator>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 #include <bgfx/bgfx.h>
 #include <bx/math.h>
+#if defined(__linux__)
+#include <unistd.h>
+#endif
 
 #include "Logger.hpp"
 
@@ -32,6 +36,21 @@ namespace {
     }
 }
 
+[[nodiscard]] std::optional<std::filesystem::path> resolve_executable_path() {
+#if defined(__linux__)
+    std::array<char, 4096> buffer {};
+    const auto bytes_written = ::readlink("/proc/self/exe", buffer.data(), buffer.size() - 1U);
+    if (bytes_written <= 0) {
+        return std::nullopt;
+    }
+
+    buffer[static_cast<std::size_t>(bytes_written)] = '\0';
+    return std::filesystem::path(buffer.data());
+#else
+    return std::nullopt;
+#endif
+}
+
 }  // namespace
 
 bgfx::VertexLayout LayoutBgfxRenderer::Vertex::layout {};
@@ -41,6 +60,7 @@ void LayoutBgfxRenderer::Vertex::init_layout() {
         .add(bgfx::Attrib::Position, 4, bgfx::AttribType::Float)
         .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
         .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+        .add(bgfx::Attrib::TexCoord1, 2, bgfx::AttribType::Float)
         .end();
 }
 
@@ -82,6 +102,16 @@ void LayoutBgfxRenderer::shutdown() {
         _sampler = BGFX_INVALID_HANDLE;
     }
 
+    if (bgfx::isValid(_mask_sampler)) {
+        bgfx::destroy(_mask_sampler);
+        _mask_sampler = BGFX_INVALID_HANDLE;
+    }
+
+    if (bgfx::isValid(_mask_params)) {
+        bgfx::destroy(_mask_params);
+        _mask_params = BGFX_INVALID_HANDLE;
+    }
+
     _initialized = false;
 }
 
@@ -101,8 +131,17 @@ std::vector<std::byte> LayoutBgfxRenderer::read_file_bytes(const std::filesystem
 std::filesystem::path LayoutBgfxRenderer::resolve_shader_directory() {
     const auto renderer_type = bgfx::getRendererType();
     const auto backend_dir = std::string(shader_backend_dir(renderer_type));
+    std::vector<std::filesystem::path> base_candidates {};
+    base_candidates.reserve(10U);
 
-    const std::array<std::filesystem::path, 8> base_candidates {
+    if (const auto executable_path = resolve_executable_path(); executable_path.has_value()) {
+        const auto executable_directory = executable_path->parent_path();
+        if (not executable_directory.empty()) {
+            base_candidates.push_back(executable_directory / "shaders");
+        }
+    }
+
+    const std::array<std::filesystem::path, 8> legacy_candidates {
         std::filesystem::current_path() / "build" / "linux" / "x86_64" / "debug" / "shaders",
         std::filesystem::current_path() / "build" / "linux" / "x86_64" / "release" / "shaders",
         std::filesystem::current_path() / "pc-port" / "build" / "linux" / "x86_64" / "debug" / "shaders",
@@ -112,6 +151,7 @@ std::filesystem::path LayoutBgfxRenderer::resolve_shader_directory() {
         std::filesystem::current_path().parent_path() / "build" / "linux" / "x86_64" / "release" / "shaders",
         std::filesystem::current_path().parent_path() / "shaders",
     };
+    base_candidates.insert(base_candidates.end(), legacy_candidates.begin(), legacy_candidates.end());
 
     for (const auto &base_candidate : base_candidates) {
         const auto candidate = base_candidate / backend_dir;
@@ -150,6 +190,8 @@ void LayoutBgfxRenderer::ensure_initialized() {
     }
 
     _sampler = bgfx::createUniform("s_tex", bgfx::UniformType::Sampler);
+    _mask_sampler = bgfx::createUniform("s_mask", bgfx::UniformType::Sampler);
+    _mask_params = bgfx::createUniform("u_mask_params", bgfx::UniformType::Vec4);
 
     const std::uint32_t white_pixel = 0xFFFFFFFFU;
     const auto *white_memory = bgfx::copy(&white_pixel, sizeof(white_pixel));
@@ -286,10 +328,50 @@ void LayoutBgfxRenderer::draw(
         bgfx::allocTransientIndexBuffer(&index_buffer, INDEX_COUNT);
 
         auto *vertices = reinterpret_cast<Vertex *>(vertex_buffer.data);
-        vertices[0] = Vertex {.x = quad.x0 * scale_x, .y = quad.y0 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_tl, .u = quad.u0, .v = quad.v0};
-        vertices[1] = Vertex {.x = quad.x1 * scale_x, .y = quad.y0 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_tr, .u = quad.u1, .v = quad.v0};
-        vertices[2] = Vertex {.x = quad.x0 * scale_x, .y = quad.y1 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_bl, .u = quad.u0, .v = quad.v1};
-        vertices[3] = Vertex {.x = quad.x1 * scale_x, .y = quad.y1 * scale_y, .z = 0.0F, .w = 1.0F, .abgr = quad.color_br, .u = quad.u1, .v = quad.v1};
+        vertices[0] = Vertex {
+            .x = quad.x0 * scale_x,
+            .y = quad.y0 * scale_y,
+            .z = 0.0F,
+            .w = 1.0F,
+            .abgr = quad.color_tl,
+            .u = quad.u0,
+            .v = quad.v0,
+            .u_mask = quad.u0_secondary,
+            .v_mask = quad.v0_secondary,
+        };
+        vertices[1] = Vertex {
+            .x = quad.x1 * scale_x,
+            .y = quad.y0 * scale_y,
+            .z = 0.0F,
+            .w = 1.0F,
+            .abgr = quad.color_tr,
+            .u = quad.u1,
+            .v = quad.v0,
+            .u_mask = quad.u1_secondary,
+            .v_mask = quad.v0_secondary,
+        };
+        vertices[2] = Vertex {
+            .x = quad.x0 * scale_x,
+            .y = quad.y1 * scale_y,
+            .z = 0.0F,
+            .w = 1.0F,
+            .abgr = quad.color_bl,
+            .u = quad.u0,
+            .v = quad.v1,
+            .u_mask = quad.u0_secondary,
+            .v_mask = quad.v1_secondary,
+        };
+        vertices[3] = Vertex {
+            .x = quad.x1 * scale_x,
+            .y = quad.y1 * scale_y,
+            .z = 0.0F,
+            .w = 1.0F,
+            .abgr = quad.color_br,
+            .u = quad.u1,
+            .v = quad.v1,
+            .u_mask = quad.u1_secondary,
+            .v_mask = quad.v1_secondary,
+        };
 
         auto *indices = reinterpret_cast<std::uint16_t *>(index_buffer.data);
         indices[0] = 0U;
@@ -300,8 +382,19 @@ void LayoutBgfxRenderer::draw(
         indices[5] = 2U;
 
         const auto texture_handle = resolve_texture(quad.texture);
+        const auto mask_texture_handle = quad.use_mask_texture
+            ? resolve_texture(quad.mask_texture)
+            : _white_texture;
 
         bgfx::setTexture(0U, _sampler, texture_handle);
+        bgfx::setTexture(1U, _mask_sampler, mask_texture_handle);
+        const float mask_params[4] = {
+            quad.use_mask_texture ? 1.0F : 0.0F,
+            quad.invert_mask ? 1.0F : 0.0F,
+            quad.mask_uses_alpha ? 1.0F : 0.0F,
+            0.0F,
+        };
+        bgfx::setUniform(_mask_params, mask_params);
         bgfx::setScissor(0U, 0U, framebuffer_width, framebuffer_height);
         bgfx::setState(quad.blend_mode == BlendMode::Additive ? DRAW_STATE_ADDITIVE : DRAW_STATE_ALPHA);
         bgfx::setVertexBuffer(0U, &vertex_buffer);

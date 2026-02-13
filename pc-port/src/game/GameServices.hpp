@@ -11,7 +11,7 @@ namespace smgpc::render {
 }
 
 namespace smgpc::assets {
-    class IAssetManager;
+    class IGameAssetService;
 }
 
 namespace smgpc::game {
@@ -23,6 +23,6 @@ namespace smgpc::game {
 
     [[nodiscard]] std::shared_ptr<IGame> create_default_game_service(
         std::shared_ptr<render::IRendererService> renderer_service,
-        std::shared_ptr<assets::IAssetManager> asset_manager,
+        std::shared_ptr<assets::IGameAssetService> asset_service,
         std::shared_ptr<logging::ILogger> logger);
 }  // namespace smgpc::game

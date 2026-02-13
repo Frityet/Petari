@@ -132,7 +132,14 @@ $test("Application::build_service_graph with overrides runs and prepares assets"
     overrides.game = game;
     overrides.asset_manager = assets;
 
-    auto services = smgpc::app::build_service_graph(make_configuration(), overrides);
+    auto configuration = make_configuration();
+    configuration.startup_assets = {
+        smgpc::assets::AssetId {.logical_path = "LayoutData/PressStart.arc"},
+        smgpc::assets::AssetId {.logical_path = "LayoutData/TitleLogo.arc"},
+        smgpc::assets::AssetId {.logical_path = "LayoutData/Font.arc"},
+    };
+
+    auto services = smgpc::app::build_service_graph(configuration, overrides);
 
     $pc_port_require(services.resolve_shared<smgpc::logging::ILogger>() == logger);
     $pc_port_require(services.resolve_shared<smgpc::game::IGame>() == game);
@@ -172,7 +179,14 @@ $test("Application logs warning when bootstrap asset preparation fails") {
     overrides.game = game;
     overrides.asset_manager = assets;
 
-    auto services = smgpc::app::build_service_graph(make_configuration(), overrides);
+    auto configuration = make_configuration();
+    configuration.startup_assets = {
+        smgpc::assets::AssetId {.logical_path = "LayoutData/PressStart.arc"},
+        smgpc::assets::AssetId {.logical_path = "LayoutData/TitleLogo.arc"},
+        smgpc::assets::AssetId {.logical_path = "LayoutData/Font.arc"},
+    };
+
+    auto services = smgpc::app::build_service_graph(configuration, overrides);
     const int run_result = services.resolve<smgpc::app::IApplication>().run();
 
     $pc_port_require_eq(run_result, 3);
@@ -206,4 +220,22 @@ $test("Application overrides can replace IApplication registration") {
     $pc_port_require(app == fake_app);
     $pc_port_require_eq(app->run(), 17);
     $pc_port_require_eq(fake_app->run_calls, 1);
+}
+
+$test("Application skips bootstrap preparation when startup list is empty") {
+    auto logger = std::make_shared<RecordingLogger>();
+    auto game = std::make_shared<FakeGame>(5);
+    auto assets = std::make_shared<FakeAssetManager>();
+
+    smgpc::app::ServiceGraphOverrides overrides {};
+    overrides.logger = logger;
+    overrides.game = game;
+    overrides.asset_manager = assets;
+
+    auto services = smgpc::app::build_service_graph(make_configuration(), overrides);
+    const int run_result = services.resolve<smgpc::app::IApplication>().run();
+
+    $pc_port_require_eq(run_result, 5);
+    $pc_port_require_eq(game->run_calls, 1);
+    $pc_port_require_eq(assets->prepare_assets_calls, 0);
 }
