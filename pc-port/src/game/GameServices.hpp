@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "ServiceProvider.hpp"
+
 namespace smgpc::logging {
     class ILogger;
 }
@@ -21,8 +23,8 @@ namespace smgpc::game {
         [[nodiscard]] virtual int run() = 0;
     };
 
-    [[nodiscard]] std::shared_ptr<IGame> create_default_game_service(
-        std::shared_ptr<render::IRendererService> renderer_service,
-        std::shared_ptr<assets::IGameAssetService> asset_service,
-        std::shared_ptr<logging::ILogger> logger);
+[[nodiscard]] std::unique_ptr<IGame> create_default_game_service(
+    di::DependencyReference<render::IRendererService> renderer_service,
+    di::DependencyReference<assets::IGameAssetService> asset_service,
+    di::DependencyReference<logging::ILogger> logger);
 }  // namespace smgpc::game

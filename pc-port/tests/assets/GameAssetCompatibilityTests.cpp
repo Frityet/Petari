@@ -114,14 +114,14 @@ $test("GameAssetService request and receive file semantics are idempotent") {
 
     auto logger = std::make_shared<SilentLogger>();
     smgpc::assets::GameAssetService service(
-        fake_manager,
+        smgpc::di::DependencyReference<smgpc::assets::IAssetManager>{*fake_manager},
         smgpc::assets::GameAssetPathResolverConfiguration {
             .game_root = "/tmp",
             .version = "RMGK01",
             .language = "KrKorean",
             .is_widescreen = true,
         },
-        logger);
+        smgpc::di::DependencyReference<smgpc::logging::ILogger>{*logger});
 
     service.request_load_file("/LayoutData/Test.bin");
     service.request_load_file("/LayoutData/Test.bin");
@@ -141,14 +141,14 @@ $test("GameAssetService propagates archive parse failure") {
 
     auto logger = std::make_shared<SilentLogger>();
     smgpc::assets::GameAssetService service(
-        fake_manager,
+        smgpc::di::DependencyReference<smgpc::assets::IAssetManager>{*fake_manager},
         smgpc::assets::GameAssetPathResolverConfiguration {
             .game_root = "/tmp",
             .version = "RMGK01",
             .language = "KrKorean",
             .is_widescreen = true,
         },
-        logger);
+        smgpc::di::DependencyReference<smgpc::logging::ILogger>{*logger});
 
     service.request_mount_archive("/LayoutData/Bad.arc");
     const auto archive = service.receive_archive("/LayoutData/Bad.arc");

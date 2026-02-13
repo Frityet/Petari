@@ -1,4 +1,5 @@
 #include "assets/AssetServices.hpp"
+#include "ServiceProvider.hpp"
 #include "tests/TestFilesystem.hpp"
 #include "tests/TestHarness.hpp"
 
@@ -183,17 +184,15 @@ $test("FilesystemAssetLocator::locate returns not found for missing asset") {
     $pc_port_require(result.failure().message.find("LayoutData/Missing.arc") != std::string::npos);
 }
 
-$test("FilesystemAssetLoader requires non-null locator") {
-    bool threw = false;
+$test("FilesystemAssetLoader stores locator reference") {
+    smgpc::test::TempDirectory temp {};
+    auto locator = smgpc::assets::FilesystemAssetLocator(make_locator_configuration(temp.path()));
 
-    try {
-        smgpc::assets::FilesystemAssetLoader loader(nullptr);
-        (void)loader;
-    } catch (const std::invalid_argument &) {
-        threw = true;
-    }
+    smgpc::assets::FilesystemAssetLoader loader(smgpc::di::DependencyReference<smgpc::assets::IAssetLocator>{locator});
+    const auto result = loader.load(smgpc::assets::AssetId {.logical_path = "LayoutData/Font.arc"});
 
-    $pc_port_require(threw);
+    $pc_port_require(not result);
+    $pc_port_require(result.failure().code == smgpc::assets::AssetErrorCode::NotFound);
 }
 
 $test("FilesystemAssetLoader::load loads bytes from located file") {
@@ -202,8 +201,8 @@ $test("FilesystemAssetLoader::load loads bytes from located file") {
     const auto expected_bytes = bytes_from_values({0x01, 0x02, 0x03, 0x04});
     smgpc::test::write_bytes(source_path, expected_bytes);
 
-    auto locator = std::make_shared<smgpc::assets::FilesystemAssetLocator>(make_locator_configuration(temp.path()));
-    smgpc::assets::FilesystemAssetLoader loader(locator);
+    smgpc::assets::FilesystemAssetLocator locator(make_locator_configuration(temp.path()));
+    smgpc::assets::FilesystemAssetLoader loader(smgpc::di::DependencyReference<smgpc::assets::IAssetLocator>{locator});
 
     const auto result = loader.load(smgpc::assets::AssetId {.logical_path = "LayoutData/Font.arc"});
 
@@ -216,8 +215,8 @@ $test("FilesystemAssetLoader::load loads bytes from located file") {
 
 $test("FilesystemAssetLoader::load propagates locator failure") {
     smgpc::test::TempDirectory temp {};
-    auto locator = std::make_shared<smgpc::assets::FilesystemAssetLocator>(make_locator_configuration(temp.path()));
-    smgpc::assets::FilesystemAssetLoader loader(locator);
+    smgpc::assets::FilesystemAssetLocator locator(make_locator_configuration(temp.path()));
+    smgpc::assets::FilesystemAssetLoader loader(smgpc::di::DependencyReference<smgpc::assets::IAssetLocator>{locator});
 
     const auto result = loader.load(smgpc::assets::AssetId {.logical_path = "LayoutData/Nope.arc"});
 
@@ -274,50 +273,44 @@ $test("PackedAssetConverter::convert writes expected header and payload layout")
     }
 }
 
-$test("CachingAssetManager requires non-null loader and converter") {
-    auto valid_loader = std::make_shared<FunctionalLoader>([](const smgpc::assets::AssetId &) {
-            return smgpc::assets::LoadedAsset {};
-        });
-    auto valid_converter = std::make_shared<FunctionalConverter>([](const smgpc::assets::LoadedAsset &) {
-            return smgpc::assets::ConvertedAsset {};
-        });
-    bool threw_for_loader = false;
-    bool threw_for_converter = false;
+$test("CachingAssetManager stores loader and converter references") {
+    smgpc::assets::AssetId id {.logical_path = "LayoutData/Some.arc"};
+    FunctionalLoader loader([id](const smgpc::assets::AssetId &) {
+        return smgpc::assets::LoadedAsset { .id = id, .source_path = "/tmp/source", .bytes = smgpc::test::bytes_from_string("source") };
+    });
+    FunctionalConverter converter([id](const smgpc::assets::LoadedAsset &) {
+        return smgpc::assets::ConvertedAsset { .id = id, .conversion_profile = "pack-v1", .source_hash = 123, .bytes = smgpc::test::bytes_from_string("converted") };
+    });
 
-    try {
-        smgpc::assets::CachingAssetManager manager(nullptr, valid_converter, make_cache_configuration("/tmp/cache"));
-        (void)manager;
-    } catch (const std::invalid_argument &) {
-        threw_for_loader = true;
-    }
+    smgpc::assets::CachingAssetManager manager(
+        smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
+        smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
+        make_cache_configuration("/tmp/cache"));
+    const auto result = manager.prepare_asset(id);
 
-    try {
-        smgpc::assets::CachingAssetManager manager(valid_loader, nullptr, make_cache_configuration("/tmp/cache"));
-        (void)manager;
-    } catch (const std::invalid_argument &) {
-        threw_for_converter = true;
-    }
-
-    $pc_port_require(threw_for_loader);
-    $pc_port_require(threw_for_converter);
+    $pc_port_require(result);
+    $pc_port_require_eq(result->id.logical_path, std::string("LayoutData/Some.arc"));
 }
 
 $test("CachingAssetManager::prepare_asset writes cache and reuses existing record") {
     smgpc::test::TempDirectory temp {};
 
-    auto loader = std::make_shared<FunctionalLoader>([](const smgpc::assets::AssetId &id) {
+    FunctionalLoader loader([](const smgpc::assets::AssetId &id) {
             return smgpc::assets::LoadedAsset {
                 .id = id, .source_path = "/fake/source", .bytes = smgpc::test::bytes_from_string("source")
             };
         });
 
-    auto converter = std::make_shared<FunctionalConverter>([](const smgpc::assets::LoadedAsset &source) {
+    FunctionalConverter converter([](const smgpc::assets::LoadedAsset &source) {
             return smgpc::assets::ConvertedAsset {
                 .id = source.id, .conversion_profile = "unit-converter", .source_hash = 0x1234ULL, .bytes = smgpc::test::bytes_from_string("packed-data")
             };
         });
 
-    smgpc::assets::CachingAssetManager manager(loader, converter, make_cache_configuration(temp.path()/"cache"));
+    smgpc::assets::CachingAssetManager manager(
+        smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
+        smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
+        make_cache_configuration(temp.path()/"cache"));
     const smgpc::assets::AssetId id {.logical_path = "LayoutData/Test.arc"};
 
     const auto first = manager.prepare_asset(id);
@@ -325,8 +318,8 @@ $test("CachingAssetManager::prepare_asset writes cache and reuses existing recor
 
     $pc_port_require(first);
     $pc_port_require(second);
-    $pc_port_require_eq(loader->load_calls, 1);
-    $pc_port_require_eq(converter->convert_calls, 1);
+    $pc_port_require_eq(loader.load_calls, 1);
+    $pc_port_require_eq(converter.convert_calls, 1);
     $pc_port_require(std::filesystem::exists(first->cached_path));
     $pc_port_require_eq(first->conversion_profile, std::string("unit-converter"));
     $pc_port_require_eq(first->source_hash, static_cast<std::uint64_t>(0x1234ULL));
@@ -340,18 +333,21 @@ $test("CachingAssetManager::prepare_asset writes cache and reuses existing recor
 $test("CachingAssetManager::prepare_asset recaches when cached file is deleted") {
     smgpc::test::TempDirectory temp {};
 
-    auto loader = std::make_shared<FunctionalLoader>([](const smgpc::assets::AssetId &id) {
+    FunctionalLoader loader([](const smgpc::assets::AssetId &id) {
             return smgpc::assets::LoadedAsset {
                 .id = id, .source_path = "/tmp/source", .bytes = smgpc::test::bytes_from_string("source")
             };
         });
-    auto converter = std::make_shared<FunctionalConverter>([](const smgpc::assets::LoadedAsset &source) {
+    FunctionalConverter converter([](const smgpc::assets::LoadedAsset &source) {
             return smgpc::assets::ConvertedAsset {
                 .id = source.id, .conversion_profile = "pack-v1", .source_hash = 0x777ULL, .bytes = smgpc::test::bytes_from_string("content")
             };
         });
 
-    smgpc::assets::CachingAssetManager manager(loader, converter, make_cache_configuration(temp.path()/"cache"));
+    smgpc::assets::CachingAssetManager manager(
+        smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
+        smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
+        make_cache_configuration(temp.path()/"cache"));
     const smgpc::assets::AssetId id {.logical_path = "LayoutData/Rebuild.arc"};
 
     const auto first = manager.prepare_asset(id);
@@ -361,14 +357,14 @@ $test("CachingAssetManager::prepare_asset recaches when cached file is deleted")
     const auto second = manager.prepare_asset(id);
     $pc_port_require(second);
 
-    $pc_port_require_eq(loader->load_calls, 2);
-    $pc_port_require_eq(converter->convert_calls, 2);
+    $pc_port_require_eq(loader.load_calls, 2);
+    $pc_port_require_eq(converter.convert_calls, 2);
 }
 
 $test("CachingAssetManager::prepare_assets stops at first failure") {
     smgpc::test::TempDirectory temp {};
 
-    auto loader = std::make_shared<FunctionalLoader>([](const smgpc::assets::AssetId &id) -> smgpc::assets::AssetResult<smgpc::assets::LoadedAsset> {
+    FunctionalLoader loader([](const smgpc::assets::AssetId &id) -> smgpc::assets::AssetResult<smgpc::assets::LoadedAsset> {
             if (id.logical_path == "Bad.arc") {
                 return smgpc::assets::AssetError {
                     .code = smgpc::assets::AssetErrorCode::NotFound, .message = "missing"
@@ -379,13 +375,16 @@ $test("CachingAssetManager::prepare_assets stops at first failure") {
                 .id = id, .source_path = "/tmp/source", .bytes = smgpc::test::bytes_from_string("src")
             };
         });
-    auto converter = std::make_shared<FunctionalConverter>([](const smgpc::assets::LoadedAsset &source) {
+    FunctionalConverter converter([](const smgpc::assets::LoadedAsset &source) {
             return smgpc::assets::ConvertedAsset {
                 .id = source.id, .conversion_profile = "pack-v1", .source_hash = 5, .bytes = smgpc::test::bytes_from_string("packed")
             };
         });
 
-    smgpc::assets::CachingAssetManager manager(loader, converter, make_cache_configuration(temp.path()/"cache"));
+    smgpc::assets::CachingAssetManager manager(
+        smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
+        smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
+        make_cache_configuration(temp.path()/"cache"));
     const std::array<smgpc::assets::AssetId, 3> ids {
         smgpc::assets::AssetId {.logical_path = "Good.arc"}, smgpc::assets::AssetId {.logical_path = "Bad.arc"}, smgpc::assets::AssetId {.logical_path = "NeverReached.arc"}
     };
@@ -394,25 +393,28 @@ $test("CachingAssetManager::prepare_assets stops at first failure") {
 
     $pc_port_require(not result);
     $pc_port_require(result.failure().code == smgpc::assets::AssetErrorCode::NotFound);
-    $pc_port_require_eq(loader->load_calls, 2);
-    $pc_port_require_eq(converter->convert_calls, 1);
+    $pc_port_require_eq(loader.load_calls, 2);
+    $pc_port_require_eq(converter.convert_calls, 1);
 }
 
 $test("CachingAssetManager::load_cached_asset returns cached bytes") {
     smgpc::test::TempDirectory temp {};
 
-    auto loader = std::make_shared<FunctionalLoader>([](const smgpc::assets::AssetId &id) {
+    FunctionalLoader loader([](const smgpc::assets::AssetId &id) {
             return smgpc::assets::LoadedAsset {
                 .id = id, .source_path = "/tmp/source", .bytes = smgpc::test::bytes_from_string("source")
             };
         });
-    auto converter = std::make_shared<FunctionalConverter>([](const smgpc::assets::LoadedAsset &source) {
+    FunctionalConverter converter([](const smgpc::assets::LoadedAsset &source) {
             return smgpc::assets::ConvertedAsset {
                 .id = source.id, .conversion_profile = "pack-v1", .source_hash = 123, .bytes = smgpc::test::bytes_from_string("cached-content")
             };
         });
 
-    smgpc::assets::CachingAssetManager manager(loader, converter, make_cache_configuration(temp.path()/"cache"));
+    smgpc::assets::CachingAssetManager manager(
+        smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
+        smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
+        make_cache_configuration(temp.path()/"cache"));
     const auto result = manager.load_cached_asset(smgpc::assets::AssetId {.logical_path = "LayoutData/Font.arc"});
 
     $pc_port_require(result);
@@ -422,18 +424,21 @@ $test("CachingAssetManager::load_cached_asset returns cached bytes") {
 $test("CachingAssetManager::find_cached_asset reflects cache presence") {
     smgpc::test::TempDirectory temp {};
 
-    auto loader = std::make_shared<FunctionalLoader>([](const smgpc::assets::AssetId &id) {
+    FunctionalLoader loader([](const smgpc::assets::AssetId &id) {
             return smgpc::assets::LoadedAsset {
                 .id = id, .source_path = "/tmp/source", .bytes = smgpc::test::bytes_from_string("data")
             };
         });
-    auto converter = std::make_shared<FunctionalConverter>([](const smgpc::assets::LoadedAsset &source) {
+    FunctionalConverter converter([](const smgpc::assets::LoadedAsset &source) {
             return smgpc::assets::ConvertedAsset {
                 .id = source.id, .conversion_profile = "pack-v1", .source_hash = 999, .bytes = smgpc::test::bytes_from_string("result")
             };
         });
 
-    smgpc::assets::CachingAssetManager manager(loader, converter, make_cache_configuration(temp.path()/"cache"));
+    smgpc::assets::CachingAssetManager manager(
+        smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
+        smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
+        make_cache_configuration(temp.path()/"cache"));
     const smgpc::assets::AssetId id {.logical_path = "LayoutData/Probe.arc"};
 
     const auto before = manager.find_cached_asset(id);
@@ -454,18 +459,21 @@ $test("CachingAssetManager::find_cached_asset reflects cache presence") {
 $test("CachingAssetManager::load_cached_asset propagates prepare error") {
     smgpc::test::TempDirectory temp {};
 
-    auto loader = std::make_shared<FunctionalLoader>([](const smgpc::assets::AssetId &) -> smgpc::assets::AssetResult<smgpc::assets::LoadedAsset> {
+    FunctionalLoader loader([](const smgpc::assets::AssetId &) -> smgpc::assets::AssetResult<smgpc::assets::LoadedAsset> {
             return smgpc::assets::AssetError {
                 .code = smgpc::assets::AssetErrorCode::IoFailure, .message = "cannot read source"
             };
         });
-    auto converter = std::make_shared<FunctionalConverter>([](const smgpc::assets::LoadedAsset &source) {
+    FunctionalConverter converter([](const smgpc::assets::LoadedAsset &source) {
             return smgpc::assets::ConvertedAsset {
                 .id = source.id, .conversion_profile = "pack-v1", .source_hash = 1, .bytes = {}
             };
         });
 
-    smgpc::assets::CachingAssetManager manager(loader, converter, make_cache_configuration(temp.path()/"cache"));
+    smgpc::assets::CachingAssetManager manager(
+        smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
+        smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
+        make_cache_configuration(temp.path()/"cache"));
     const auto result = manager.load_cached_asset(smgpc::assets::AssetId {.logical_path = "LayoutData/Fail.arc"});
 
     $pc_port_require(not result);

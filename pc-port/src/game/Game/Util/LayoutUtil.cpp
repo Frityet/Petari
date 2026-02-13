@@ -1,6 +1,15 @@
 #include "Game/Util/LayoutUtil.hpp"
 
 #include "Game/Screen/LayoutActor.hpp"
+#include "compat/DecompIntegration.hpp"
+
+namespace {
+
+// SMGPC_INTEGRATION_BEGIN
+SMGPC_STUB(src/Game/Effect/MultiEmitter.cpp);
+// SMGPC_INTEGRATION_END
+
+}  // namespace
 
 namespace MR {
 

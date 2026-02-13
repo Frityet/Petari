@@ -1,13 +1,14 @@
 #include "Game/Util/GamePadUtil.hpp"
 
-#include "RenderWindow.hpp"
-#include "compat/RuntimeContext.hpp"
+#include "compat/DecompIntegration.hpp"
+#include "compat/GamePadCompat.hpp"
 
 namespace {
 
-constexpr int ENTER_KEY = 257;
-constexpr int A_KEY = 90;
-constexpr int B_KEY = 88;
+// SMGPC_INTEGRATION_BEGIN
+SMGPC_STUB(src/Game/System/WPadAcceleration.cpp);
+SMGPC_STUB(src/Game/System/WPadHVSwing.cpp);
+// SMGPC_INTEGRATION_END
 
 }  // namespace
 
@@ -15,16 +16,12 @@ namespace MR {
 
 bool testCorePadButtonA(int channel) {
     (void)channel;
-
-    const auto *renderer = smgpc::game::compat::runtime_context().renderer_service;
-    return renderer != nullptr && (renderer->is_key_down(ENTER_KEY) || renderer->is_key_down(A_KEY));
+    return smgpc::game::compat::test_core_pad_button_a();
 }
 
 bool testCorePadButtonB(int channel) {
     (void)channel;
-
-    const auto *renderer = smgpc::game::compat::runtime_context().renderer_service;
-    return renderer != nullptr && (renderer->is_key_down(ENTER_KEY) || renderer->is_key_down(B_KEY));
+    return smgpc::game::compat::test_core_pad_button_b();
 }
 
 }  // namespace MR

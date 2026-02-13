@@ -7,6 +7,8 @@
 #include <string>
 #include <utility>
 
+#include "ServiceProvider.hpp"
+
 namespace smgpc::logging {
     class ILogger;
 }
@@ -63,7 +65,11 @@ namespace smgpc::render
         [[nodiscard]] virtual std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const = 0;
     };
 
-    [[nodiscard]] std::shared_ptr<IWindowFactory> create_default_window_factory(std::shared_ptr<logging::ILogger> logger);
+    [[nodiscard]] std::unique_ptr<IWindowFactory> create_default_window_factory(
+        di::DependencyReference<logging::ILogger> logger);
 
-    [[nodiscard]] std::shared_ptr<IRendererService> create_default_renderer_service(std::shared_ptr<IWindowFactory> window_factory, WindowConfiguration configuration, std::shared_ptr<logging::ILogger> logger);
+    [[nodiscard]] std::unique_ptr<IRendererService> create_default_renderer_service(
+        di::DependencyReference<IWindowFactory> window_factory,
+        WindowConfiguration configuration,
+        di::DependencyReference<logging::ILogger> logger);
 }

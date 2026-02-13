@@ -18,7 +18,6 @@ target("smg-pc-tests")
         "$(projectdir)/src/app",
         "$(projectdir)/src/assets",
         "$(projectdir)/src/common",
-        "$(projectdir)/src/di",
         "$(projectdir)/src/game",
         "$(projectdir)/src/render"
     )
@@ -26,7 +25,6 @@ target("smg-pc-tests")
         "smg-pc-app",
         "smg-pc-assets",
         "smg-pc-common",
-        "smg-pc-di",
         "smg-pc-game",
         "smg-pc-render"
     )

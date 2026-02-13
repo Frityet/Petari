@@ -2,7 +2,17 @@
 
 #include <utility>
 
+#include "compat/DecompIntegration.hpp"
 #include "layout/LayoutRuntimeActor.hpp"
+
+namespace {
+
+// SMGPC_INTEGRATION_BEGIN
+SMGPC_STUB(src/Game/Screen/LayoutManager.cpp);
+SMGPC_STUB(src/Game/Screen/PaneEffectKeeper.cpp);
+// SMGPC_INTEGRATION_END
+
+}  // namespace
 
 LayoutActor::LayoutActor(const char *pName, std::shared_ptr<smgpc::game::layout::LayoutRuntimeActor> runtime_actor)
     : mName(pName), mRuntimeActor(std::move(runtime_actor)) {

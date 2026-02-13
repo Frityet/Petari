@@ -64,11 +64,8 @@ void LayoutBgfxRenderer::Vertex::init_layout() {
         .end();
 }
 
-LayoutBgfxRenderer::LayoutBgfxRenderer(std::shared_ptr<logging::ILogger> logger)
+LayoutBgfxRenderer::LayoutBgfxRenderer(di::DependencyReference<logging::ILogger> logger)
     : _logger(std::move(logger)) {
-    if (not _logger) {
-        throw std::invalid_argument("LayoutBgfxRenderer requires a logger.");
-    }
 }
 
 LayoutBgfxRenderer::~LayoutBgfxRenderer() {

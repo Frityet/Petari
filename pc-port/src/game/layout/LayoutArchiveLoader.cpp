@@ -9,8 +9,10 @@
 
 namespace smgpc::game::layout {
 
-LayoutArchiveLoader::LayoutArchiveLoader(assets::IGameAssetService &asset_service, logging::ILogger *logger)
-    : _asset_service(asset_service), _logger(logger) {
+LayoutArchiveLoader::LayoutArchiveLoader(
+    di::DependencyReference<assets::IGameAssetService> asset_service,
+    logging::ILogger *logger)
+    : _asset_service(std::move(asset_service)), _logger(logger) {
 }
 
 assets::AssetResult<std::shared_ptr<LayoutArchiveData>> LayoutArchiveLoader::load(const LayoutArchiveLoadRequest &request) const {
@@ -18,7 +20,7 @@ assets::AssetResult<std::shared_ptr<LayoutArchiveData>> LayoutArchiveLoader::loa
         return make_error("LayoutArchiveLoader requires a non-empty archive path.");
     }
 
-    const auto mounted = _asset_service.receive_archive(request.archive_path);
+    const auto mounted = _asset_service->receive_archive(request.archive_path);
     if (mounted == nullptr) {
         return make_error("Failed to mount layout archive at path: " + request.archive_path);
     }
@@ -37,7 +39,7 @@ assets::AssetResult<std::shared_ptr<LayoutArchiveData>> LayoutArchiveLoader::loa
 
     if (request.include_shared_fonts) {
         for (const auto &font_archive_path : request.shared_font_archives) {
-            const auto font_archive = _asset_service.receive_archive(font_archive_path);
+            const auto font_archive = _asset_service->receive_archive(font_archive_path);
             if (font_archive == nullptr) {
                 if (_logger != nullptr) {
                     _logger->warning(

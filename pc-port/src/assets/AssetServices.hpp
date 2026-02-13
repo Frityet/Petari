@@ -13,6 +13,8 @@
 #include <variant>
 #include <vector>
 
+#include "ServiceProvider.hpp"
+
 namespace smgpc::assets {
 
 enum class AssetErrorCode {
@@ -186,11 +188,11 @@ private:
 
 class FilesystemAssetLoader final : public IAssetLoader {
 public:
-    explicit FilesystemAssetLoader(std::shared_ptr<IAssetLocator> locator);
+    explicit FilesystemAssetLoader(di::DependencyReference<IAssetLocator> locator);
     [[nodiscard]] AssetResult<LoadedAsset> load(const AssetId &id) const override;
 
 private:
-    std::shared_ptr<IAssetLocator> _locator {};
+    di::DependencyReference<IAssetLocator> _locator;
 };
 
 class PackedAssetConverter final : public IAssetConverter {
@@ -201,7 +203,10 @@ public:
 
 class CachingAssetManager final : public IAssetManager {
 public:
-    CachingAssetManager(std::shared_ptr<IAssetLoader> loader, std::shared_ptr<IAssetConverter> converter, AssetCacheConfiguration configuration);
+    CachingAssetManager(
+        di::DependencyReference<IAssetLoader> loader,
+        di::DependencyReference<IAssetConverter> converter,
+        AssetCacheConfiguration configuration);
 
     [[nodiscard]] AssetResult<CachedAssetRecord> prepare_asset(const AssetId &id) override;
     [[nodiscard]] AssetResult<void> prepare_assets(std::span<const AssetId> ids) override;
@@ -211,8 +216,8 @@ public:
 private:
     [[nodiscard]] std::filesystem::path build_cache_path(const AssetId &id, std::uint64_t source_hash) const;
 
-    std::shared_ptr<IAssetLoader> _loader {};
-    std::shared_ptr<IAssetConverter> _converter {};
+    di::DependencyReference<IAssetLoader> _loader;
+    di::DependencyReference<IAssetConverter> _converter;
     AssetCacheConfiguration _configuration {};
     mutable std::mutex _mutex {};
     std::unordered_map<std::string, CachedAssetRecord> _records {};

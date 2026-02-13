@@ -3,12 +3,12 @@
 #include "game/GameServices.hpp"
 #include "render/RenderWindow.hpp"
 #include "tests/TestHarness.hpp"
+#include "ServiceProvider.hpp"
 
 #include <cstddef>
 #include <filesystem>
 #include <memory>
 #include <optional>
-#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -144,42 +144,19 @@ public:
 
 }  // namespace
 
-$test("Game::create_default_game_service rejects null dependencies") {
-    auto logger = std::make_shared<RecordingLogger>();
-    auto renderer_service = std::make_shared<FakeRendererService>(std::vector<bool> {});
-    auto asset_service = std::make_shared<FakeGameAssetService>();
-    bool threw_for_renderer = false;
-    bool threw_for_assets = false;
-    bool threw_for_logger = false;
+$test("Game::create_default_game_service builds with valid dependencies") {
+    auto logger = std::make_unique<RecordingLogger>();
+    auto renderer_service = FakeRendererService(std::vector<bool> {false});
+    auto asset_service = FakeGameAssetService();
 
-    try {
-        (void)smgpc::game::create_default_game_service(nullptr, asset_service, logger);
-    } catch (const std::invalid_argument &) {
-        threw_for_renderer = true;
-    }
+    smgpc::di::DependencyReference<smgpc::render::IRendererService> renderer_service_ref(renderer_service);
+    smgpc::di::DependencyReference<smgpc::assets::IGameAssetService> asset_service_ref(asset_service);
+    smgpc::di::DependencyReference<smgpc::logging::ILogger> logger_ref(*logger);
 
-    try {
-        (void)smgpc::game::create_default_game_service(renderer_service, nullptr, logger);
-    } catch (const std::invalid_argument &) {
-        threw_for_assets = true;
-    }
-
-    try {
-        (void)smgpc::game::create_default_game_service(renderer_service, asset_service, nullptr);
-    } catch (const std::invalid_argument &) {
-        threw_for_logger = true;
-    }
-
-    $pc_port_require(threw_for_renderer);
-    $pc_port_require(threw_for_assets);
-    $pc_port_require(threw_for_logger);
-}
-
-$test("Game::create_default_game_service builds with generic asset service") {
-    auto logger = std::make_shared<RecordingLogger>();
-    auto renderer_service = std::make_shared<FakeRendererService>(std::vector<bool> {false});
-    auto asset_service = std::make_shared<FakeGameAssetService>();
-    auto game = smgpc::game::create_default_game_service(renderer_service, asset_service, logger);
+    auto game = smgpc::game::create_default_game_service(
+        std::move(renderer_service_ref),
+        std::move(asset_service_ref),
+        std::move(logger_ref));
 
     $pc_port_require(game != nullptr);
 }

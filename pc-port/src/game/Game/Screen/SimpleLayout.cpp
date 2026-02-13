@@ -5,6 +5,7 @@
 #include <string_view>
 
 #include "Logger.hpp"
+#include "ServiceProvider.hpp"
 #include "compat/RuntimeContext.hpp"
 #include "layout/LayoutArchiveLoader.hpp"
 #include "layout/LayoutRuntimeActor.hpp"
@@ -46,7 +47,9 @@ std::shared_ptr<smgpc::game::layout::LayoutRuntimeActor> SimpleLayout::loadRunti
         archive_path = path.value_or("/LayoutData/" + archive_name + ".arc");
     }
 
-    auto loader = smgpc::game::layout::LayoutArchiveLoader(*context.asset_service, context.logger);
+    auto loader = smgpc::game::layout::LayoutArchiveLoader(
+        smgpc::di::DependencyReference<smgpc::assets::IGameAssetService>(*context.asset_service),
+        context.logger);
     smgpc::game::layout::LayoutArchiveLoadRequest request {
         .archive_path = std::move(archive_path),
     };
