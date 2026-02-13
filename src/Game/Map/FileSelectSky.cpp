@@ -1,4 +1,4 @@
-#include "Game\Map\FileSelectSky.hpp"
+#include "Game/Map/FileSelectSky.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/MaterialCtrl.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -10,7 +10,7 @@
 
 namespace NrvFileSelectSky {
     NEW_NERVE(FileSelectSkyNrvWait, FileSelectSky, Wait);
-};  
+};
 
 FileSelectSky::FileSelectSky(const char* pName) : LiveActor(pName) {
     _8C = 0.0f;

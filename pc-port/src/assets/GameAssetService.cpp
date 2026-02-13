@@ -14,15 +14,12 @@
 namespace smgpc::assets {
 
 GameAssetService::GameAssetService(
-    std::shared_ptr<IAssetManager> asset_manager,
+    di::DependencyReference<IAssetManager> asset_manager,
     GameAssetPathResolverConfiguration resolver_configuration,
-    std::shared_ptr<logging::ILogger> logger)
+    di::DependencyReference<logging::ILogger> logger)
     : _asset_manager(std::move(asset_manager)),
       _logger(std::move(logger)),
       _path_resolver(std::move(resolver_configuration)) {
-    if (not _asset_manager || not _logger) {
-        throw std::invalid_argument("GameAssetService requires non-null asset manager and logger services.");
-    }
 }
 
 void GameAssetService::request_load_file(std::string_view file_path) {
@@ -165,11 +162,11 @@ AssetError GameAssetService::make_invalid_error(std::string message) {
     };
 }
 
-std::shared_ptr<IGameAssetService> create_default_game_asset_service(
-    std::shared_ptr<IAssetManager> asset_manager,
+std::unique_ptr<IGameAssetService> create_default_game_asset_service(
+    di::DependencyReference<IAssetManager> asset_manager,
     GameAssetPathResolverConfiguration resolver_configuration,
-    std::shared_ptr<logging::ILogger> logger) {
-    return std::make_shared<GameAssetService>(std::move(asset_manager), std::move(resolver_configuration), std::move(logger));
+    di::DependencyReference<logging::ILogger> logger) {
+    return std::make_unique<GameAssetService>(std::move(asset_manager), std::move(resolver_configuration), std::move(logger));
 }
 
 }  // namespace smgpc::assets

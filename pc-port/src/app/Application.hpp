@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -9,7 +10,7 @@
 #include "GameServices.hpp"
 #include "Logger.hpp"
 #include "RenderWindow.hpp"
-#include "ServiceContainer.hpp"
+#include "ServiceProvider.hpp"
 
 namespace smgpc::app {
 
@@ -31,22 +32,31 @@ public:
 };
 
 struct ServiceGraphOverrides {
-    std::shared_ptr<logging::ILogger> logger {};
-    std::shared_ptr<render::IWindowFactory> window_factory {};
-    std::shared_ptr<render::IRendererService> renderer_service {};
-    std::shared_ptr<assets::IAssetLocator> asset_locator {};
-    std::shared_ptr<assets::IAssetLoader> asset_loader {};
-    std::shared_ptr<assets::IAssetConverter> asset_converter {};
-    std::shared_ptr<assets::IAssetManager> asset_manager {};
-    std::shared_ptr<assets::IGameAssetService> game_asset_service {};
-    std::shared_ptr<game::IGame> game {};
-    std::shared_ptr<IApplication> application {};
+    std::unique_ptr<logging::ILogger> logger {};
+    std::unique_ptr<render::IWindowFactory> window_factory {};
+    std::unique_ptr<render::IRendererService> renderer_service {};
+    std::unique_ptr<assets::IAssetLocator> asset_locator {};
+    std::unique_ptr<assets::IAssetLoader> asset_loader {};
+    std::unique_ptr<assets::IAssetConverter> asset_converter {};
+    std::unique_ptr<assets::IAssetManager> asset_manager {};
+    std::unique_ptr<assets::IGameAssetService> game_asset_service {};
+    std::unique_ptr<game::IGame> game {};
+    std::unique_ptr<IApplication> application {};
 };
 
-using ServiceGraph = di::ServiceContainer<
-    logging::ILogger, render::IWindowFactory, render::IRendererService, assets::IAssetLocator, assets::IAssetLoader, assets::IAssetConverter, assets::IAssetManager, assets::IGameAssetService, game::IGame, IApplication>;
+using ServiceGraph = di::ServiceProvider<
+    di::SingletonService<logging::ILogger>,
+    di::SingletonService<render::IWindowFactory>,
+    di::SingletonService<render::IRendererService>,
+    di::SingletonService<assets::IAssetLocator>,
+    di::SingletonService<assets::IAssetLoader>,
+    di::SingletonService<assets::IAssetConverter>,
+    di::SingletonService<assets::IAssetManager>,
+    di::SingletonService<assets::IGameAssetService>,
+    di::SingletonService<game::IGame>,
+    di::SingletonService<IApplication>>;
 
 [[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration);
-[[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides overrides);
+[[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides &&overrides);
 
 }  // namespace smgpc::app

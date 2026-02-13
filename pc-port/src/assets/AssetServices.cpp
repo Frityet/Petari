@@ -155,11 +155,8 @@ AssetResult<std::filesystem::path> FilesystemAssetLocator::locate(const AssetId 
     return make_error(AssetErrorCode::NotFound, "Asset not found in disc root for " + id.logical_path);
 }
 
-FilesystemAssetLoader::FilesystemAssetLoader(std::shared_ptr<IAssetLocator> locator)
+FilesystemAssetLoader::FilesystemAssetLoader(di::DependencyReference<IAssetLocator> locator)
     : _locator(std::move(locator)) {
-    if (not _locator) {
-        throw std::invalid_argument("FilesystemAssetLoader requires a non-null locator.");
-    }
 }
 
 AssetResult<LoadedAsset> FilesystemAssetLoader::load(const AssetId &id) const {
@@ -208,11 +205,11 @@ AssetResult<ConvertedAsset> PackedAssetConverter::convert(const LoadedAsset &sou
     };
 }
 
-CachingAssetManager::CachingAssetManager(std::shared_ptr<IAssetLoader> loader, std::shared_ptr<IAssetConverter> converter, AssetCacheConfiguration configuration)
+CachingAssetManager::CachingAssetManager(
+    di::DependencyReference<IAssetLoader> loader,
+    di::DependencyReference<IAssetConverter> converter,
+    AssetCacheConfiguration configuration)
     : _loader(std::move(loader)), _converter(std::move(converter)), _configuration(std::move(configuration)) {
-    if (not _loader or not _converter) {
-        throw std::invalid_argument("CachingAssetManager requires loader and converter services.");
-    }
 }
 
 AssetResult<CachedAssetRecord> CachingAssetManager::prepare_asset(const AssetId &id) {

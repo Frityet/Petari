@@ -13,6 +13,7 @@
 #include "AssetServices.hpp"
 #include "GameAssetPathResolver.hpp"
 #include "layout/RarcArchive.hpp"
+#include "ServiceProvider.hpp"
 
 namespace smgpc::logging {
 class ILogger;
@@ -42,9 +43,9 @@ public:
 class GameAssetService final : public IGameAssetService {
 public:
     GameAssetService(
-        std::shared_ptr<IAssetManager> asset_manager,
+        di::DependencyReference<IAssetManager> asset_manager,
         GameAssetPathResolverConfiguration resolver_configuration,
-        std::shared_ptr<logging::ILogger> logger);
+        di::DependencyReference<logging::ILogger> logger);
 
     void request_load_file(std::string_view file_path) override;
     [[nodiscard]] std::shared_ptr<const std::vector<std::byte>> receive_file(std::string_view file_path) override;
@@ -70,8 +71,8 @@ private:
     [[nodiscard]] std::string canonical_path(std::string_view file_path) const;
     [[nodiscard]] static AssetError make_invalid_error(std::string message);
 
-    std::shared_ptr<IAssetManager> _asset_manager {};
-    std::shared_ptr<logging::ILogger> _logger {};
+    di::DependencyReference<IAssetManager> _asset_manager;
+    di::DependencyReference<logging::ILogger> _logger;
     GameAssetPathResolver _path_resolver;
 
     mutable std::mutex _mutex {};
@@ -79,9 +80,9 @@ private:
     std::unordered_map<std::string, ArchiveRecord> _archives {};
 };
 
-[[nodiscard]] std::shared_ptr<IGameAssetService> create_default_game_asset_service(
-    std::shared_ptr<IAssetManager> asset_manager,
+[[nodiscard]] std::unique_ptr<IGameAssetService> create_default_game_asset_service(
+    di::DependencyReference<IAssetManager> asset_manager,
     GameAssetPathResolverConfiguration resolver_configuration,
-    std::shared_ptr<logging::ILogger> logger);
+    di::DependencyReference<logging::ILogger> logger);
 
 }  // namespace smgpc::assets

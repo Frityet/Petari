@@ -70,10 +70,10 @@ int main() try {
     };
 
     auto services = smgpc::app::build_service_graph(configuration);
-    auto logger = services.resolve_shared<smgpc::logging::ILogger>();
-    logger->info(__FILE__, __LINE__, smgpc::logging::Category::APP, "Started app at {}", game_root.string());
+    auto &logger = services.get<smgpc::logging::ILogger>();
+    logger.info(__FILE__, __LINE__, smgpc::logging::Category::APP, "Started app at {}", game_root.string());
 
-    auto &application = services.resolve<smgpc::app::IApplication>();
+    auto &application = services.get<smgpc::app::IApplication>();
     return application.run();
 } catch (const std::exception &e) {
     auto fallback_logger = smgpc::logging::create_default_logger();

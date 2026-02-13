@@ -26,26 +26,34 @@ namespace {
 class DesktopApplication final : public IApplication {
 public:
     DesktopApplication(
-        std::shared_ptr<game::IGame> game,
-        std::shared_ptr<assets::IAssetManager> asset_manager,
-        std::shared_ptr<logging::ILogger> logger,
+        di::DependencyReference<game::IGame> game,
+        di::DependencyReference<assets::IAssetManager> asset_manager,
+        di::DependencyReference<logging::ILogger> logger,
         std::vector<assets::AssetId> startup_assets)
         : _game(std::move(game)),
           _asset_manager(std::move(asset_manager)),
           _logger(std::move(logger)),
           _startup_assets(std::move(startup_assets)) {
-        if (not _game or not _asset_manager or not _logger) {
-            throw std::invalid_argument("DesktopApplication requires non-null injected services.");
-        }
     }
 
     [[nodiscard]] int run() override {
         if (not _startup_assets.empty()) {
             const auto prepare_result = _asset_manager->prepare_assets(_startup_assets);
             if (not prepare_result) {
-                _logger->warning(__FILE__, __LINE__, logging::Category::APP, "Asset bootstrap prepare failed [{}]: {}", to_error_string(prepare_result.failure().code), prepare_result.failure().message);
+                _logger->warning(
+                    __FILE__,
+                    __LINE__,
+                    logging::Category::APP,
+                    "Asset bootstrap prepare failed [{}]: {}",
+                    to_error_string(prepare_result.failure().code),
+                    prepare_result.failure().message);
             } else {
-                _logger->info(__FILE__, __LINE__, logging::Category::APP, "Prepared {} startup assets in cache", _startup_assets.size());
+                _logger->info(
+                    __FILE__,
+                    __LINE__,
+                    logging::Category::APP,
+                    "Prepared {} startup assets in cache",
+                    _startup_assets.size());
             }
         }
 
@@ -53,9 +61,9 @@ public:
     }
 
 private:
-    std::shared_ptr<game::IGame> _game {};
-    std::shared_ptr<assets::IAssetManager> _asset_manager {};
-    std::shared_ptr<logging::ILogger> _logger {};
+    di::DependencyReference<game::IGame> _game;
+    di::DependencyReference<assets::IAssetManager> _asset_manager;
+    di::DependencyReference<logging::ILogger> _logger;
     std::vector<assets::AssetId> _startup_assets {};
 };
 
@@ -65,63 +73,73 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration) {
     return build_service_graph(configuration, ServiceGraphOverrides {});
 }
 
-ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides overrides) {
+ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides &&overrides) {
     ServiceGraph graph {};
 
-    graph.register_instance<logging::ILogger>(overrides.logger ? std::move(overrides.logger) : logging::create_default_logger());
+    if (overrides.logger) {
+        graph.register_service<di::SingletonService<logging::ILogger>>(std::move(overrides.logger));
+    } else {
+        graph.register_service<di::SingletonService<logging::ILogger>>(logging::create_default_logger());
+    }
 
     if (overrides.window_factory) {
-        graph.register_instance<render::IWindowFactory>(std::move(overrides.window_factory));
+        graph.register_service<di::SingletonService<render::IWindowFactory>>(std::move(overrides.window_factory));
     }
 
     if (overrides.renderer_service) {
-        graph.register_instance<render::IRendererService>(std::move(overrides.renderer_service));
+        graph.register_service<di::SingletonService<render::IRendererService>>(std::move(overrides.renderer_service));
     }
 
     if (overrides.asset_locator) {
-        graph.register_instance<assets::IAssetLocator>(std::move(overrides.asset_locator));
+        graph.register_service<di::SingletonService<assets::IAssetLocator>>(std::move(overrides.asset_locator));
     }
 
     if (overrides.asset_loader) {
-        graph.register_instance<assets::IAssetLoader>(std::move(overrides.asset_loader));
+        graph.register_service<di::SingletonService<assets::IAssetLoader>>(std::move(overrides.asset_loader));
     }
 
     if (overrides.asset_converter) {
-        graph.register_instance<assets::IAssetConverter>(std::move(overrides.asset_converter));
+        graph.register_service<di::SingletonService<assets::IAssetConverter>>(std::move(overrides.asset_converter));
     }
 
     if (overrides.asset_manager) {
-        graph.register_instance<assets::IAssetManager>(std::move(overrides.asset_manager));
+        graph.register_service<di::SingletonService<assets::IAssetManager>>(std::move(overrides.asset_manager));
     }
 
     if (overrides.game_asset_service) {
-        graph.register_instance<assets::IGameAssetService>(std::move(overrides.game_asset_service));
+        graph.register_service<di::SingletonService<assets::IGameAssetService>>(std::move(overrides.game_asset_service));
     }
 
     if (overrides.game) {
-        graph.register_instance<game::IGame>(std::move(overrides.game));
+        graph.register_service<di::SingletonService<game::IGame>>(std::move(overrides.game));
     }
 
     if (overrides.application) {
-        graph.register_instance<IApplication>(std::move(overrides.application));
+        graph.register_service<di::SingletonService<IApplication>>(std::move(overrides.application));
     }
 
     if (not graph.has<render::IWindowFactory>() and
         not graph.has<render::IRendererService>() and
         not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
-        graph.register_factory<render::IWindowFactory>([](ServiceGraph &services) {
-                return render::create_default_window_factory(services.resolve_shared<logging::ILogger>());
-            });
+        graph.register_service<di::SingletonService<render::IWindowFactory>, logging::ILogger>([](di::DependencyReference<logging::ILogger> logger) {
+            return render::create_default_window_factory(std::move(logger));
+        });
     }
 
     if (not graph.has<render::IRendererService>() and
         not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
-        graph.register_factory<render::IRendererService>([configuration](ServiceGraph &services) {
-                return render::create_default_renderer_service(services.resolve_shared<render::IWindowFactory>(), render::WindowConfiguration {
-                        .width = configuration.window_width, .height = configuration.window_height, .title = configuration.window_title
-                    }, services.resolve_shared<logging::ILogger>());
+        graph.register_service<di::SingletonService<render::IRendererService>, render::IWindowFactory, logging::ILogger>(
+            [configuration](di::DependencyReference<render::IWindowFactory> window_factory, di::DependencyReference<logging::ILogger> logger) {
+                return render::create_default_renderer_service(
+                    std::move(window_factory),
+                    render::WindowConfiguration {
+                        .width = configuration.window_width,
+                        .height = configuration.window_height,
+                        .title = configuration.window_title,
+                    },
+                    std::move(logger));
             });
     }
 
@@ -129,30 +147,42 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
         not graph.has<assets::IAssetLoader>() and
         not graph.has<assets::IAssetManager>() and
         not graph.has<IApplication>()) {
-        graph.register_type<assets::IAssetLocator, assets::FilesystemAssetLocator>(assets::AssetLocatorConfiguration {
-                .game_root = configuration.game_root, .version = configuration.game_version, .language = configuration.language
+        graph.register_service<di::SingletonService<assets::IAssetLocator>>([configuration]() {
+            return std::make_unique<assets::FilesystemAssetLocator>(assets::AssetLocatorConfiguration {
+                .game_root = configuration.game_root,
+                .version = configuration.game_version,
+                .language = configuration.language,
             });
+        });
     }
 
     if (not graph.has<assets::IAssetLoader>() and
         not graph.has<assets::IAssetManager>() and
         not graph.has<IApplication>()) {
-        graph.register_factory<assets::IAssetLoader>([](ServiceGraph &services) {
-                return std::make_shared<assets::FilesystemAssetLoader>(services.resolve_shared<assets::IAssetLocator>());
-            });
+        graph.register_service<di::SingletonService<assets::IAssetLoader>, assets::IAssetLocator>([](di::DependencyReference<assets::IAssetLocator> locator) {
+            return std::make_unique<assets::FilesystemAssetLoader>(std::move(locator));
+        });
     }
 
     if (not graph.has<assets::IAssetConverter>() and
         not graph.has<assets::IAssetManager>() and
         not graph.has<IApplication>()) {
-        graph.register_type<assets::IAssetConverter, assets::PackedAssetConverter>();
+        graph.register_service<di::SingletonService<assets::IAssetConverter>>([]() {
+            return std::make_unique<assets::PackedAssetConverter>();
+        });
     }
 
     if (not graph.has<assets::IAssetManager>() and
         not graph.has<IApplication>()) {
-        graph.register_factory<assets::IAssetManager>([configuration](ServiceGraph &services) {
-                return std::make_shared<assets::CachingAssetManager>(services.resolve_shared<assets::IAssetLoader>(), services.resolve_shared<assets::IAssetConverter>(), assets::AssetCacheConfiguration {
-                        .cache_root = configuration.asset_cache_root, .version = configuration.game_version, .language = configuration.language
+        graph.register_service<di::SingletonService<assets::IAssetManager>, assets::IAssetLoader, assets::IAssetConverter>(
+            [configuration](di::DependencyReference<assets::IAssetLoader> asset_loader, di::DependencyReference<assets::IAssetConverter> converter) {
+                return std::make_unique<assets::CachingAssetManager>(
+                    std::move(asset_loader),
+                    std::move(converter),
+                    assets::AssetCacheConfiguration {
+                        .cache_root = configuration.asset_cache_root,
+                        .version = configuration.game_version,
+                        .language = configuration.language,
                     });
             });
     }
@@ -160,36 +190,43 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
     if (not graph.has<assets::IGameAssetService>() and
         not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
-        graph.register_factory<assets::IGameAssetService>([configuration](ServiceGraph &services) {
+        graph.register_service<di::SingletonService<assets::IGameAssetService>, assets::IAssetManager, logging::ILogger>(
+            [configuration](di::DependencyReference<assets::IAssetManager> asset_manager, di::DependencyReference<logging::ILogger> logger) {
                 return assets::create_default_game_asset_service(
-                    services.resolve_shared<assets::IAssetManager>(),
+                    std::move(asset_manager),
                     assets::GameAssetPathResolverConfiguration {
                         .game_root = configuration.game_root,
                         .version = configuration.game_version,
                         .language = configuration.language,
                         .is_widescreen = static_cast<float>(configuration.window_width) / static_cast<float>(configuration.window_height == 0 ? 1 : configuration.window_height) > 1.34F,
                     },
-                    services.resolve_shared<logging::ILogger>());
+                    std::move(logger));
             });
     }
 
     if (not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
-        graph.register_factory<game::IGame>([](ServiceGraph &services) {
+        graph.register_service<di::SingletonService<game::IGame>, render::IRendererService, assets::IGameAssetService, logging::ILogger>(
+            [](di::DependencyReference<render::IRendererService> renderer_service,
+                di::DependencyReference<assets::IGameAssetService> asset_service,
+                di::DependencyReference<logging::ILogger> logger) {
                 return game::create_default_game_service(
-                    services.resolve_shared<render::IRendererService>(),
-                    services.resolve_shared<assets::IGameAssetService>(),
-                    services.resolve_shared<logging::ILogger>());
+                    std::move(renderer_service),
+                    std::move(asset_service),
+                    std::move(logger));
             });
     }
 
     if (not graph.has<IApplication>()) {
-        graph.register_factory<IApplication>([configuration](ServiceGraph &services) {
-                return std::make_shared<DesktopApplication>(
-                    services.resolve_shared<game::IGame>(),
-                    services.resolve_shared<assets::IAssetManager>(),
-                    services.resolve_shared<logging::ILogger>(),
-                    configuration.startup_assets);
+        graph.register_service<di::SingletonService<IApplication>, game::IGame, assets::IAssetManager, logging::ILogger>(
+            [startup_assets = configuration.startup_assets](di::DependencyReference<game::IGame> game,
+                di::DependencyReference<assets::IAssetManager> asset_manager,
+                di::DependencyReference<logging::ILogger> logger) {
+                return std::make_unique<DesktopApplication>(
+                    std::move(game),
+                    std::move(asset_manager),
+                    std::move(logger),
+                    std::move(startup_assets));
             });
     }
 

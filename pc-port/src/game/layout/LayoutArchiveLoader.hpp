@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "AssetServices.hpp"
+#include "ServiceProvider.hpp"
 #include "GameAssetService.hpp"
 #include "layout/Brfnt.hpp"
 #include "layout/Brlan.hpp"
@@ -37,7 +38,9 @@ struct LayoutArchiveLoadRequest {
 
 class LayoutArchiveLoader {
 public:
-    LayoutArchiveLoader(assets::IGameAssetService &asset_service, logging::ILogger *logger);
+    LayoutArchiveLoader(
+        di::DependencyReference<assets::IGameAssetService> asset_service,
+        logging::ILogger *logger);
 
     [[nodiscard]] assets::AssetResult<std::shared_ptr<LayoutArchiveData>> load(const LayoutArchiveLoadRequest &request) const;
 
@@ -56,7 +59,7 @@ private:
     [[nodiscard]] static std::string normalize_name(std::string name);
     [[nodiscard]] static bool has_extension(std::string_view path, std::string_view extension);
 
-    assets::IGameAssetService &_asset_service;
+    di::DependencyReference<assets::IGameAssetService> _asset_service;
     logging::ILogger *_logger {};
 };
 

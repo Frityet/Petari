@@ -1,7 +1,16 @@
 #include "Game/Util/ObjUtil.hpp"
 
 #include "Logger.hpp"
+#include "compat/DecompIntegration.hpp"
 #include "compat/RuntimeContext.hpp"
+
+namespace {
+
+// SMGPC_INTEGRATION_BEGIN
+SMGPC_STUB(src/Game/Effect/EffectSystemUtil.cpp);
+// SMGPC_INTEGRATION_END
+
+}  // namespace
 
 namespace MR {
 

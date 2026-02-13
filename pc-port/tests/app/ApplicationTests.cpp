@@ -9,6 +9,7 @@
 #include <span>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -123,14 +124,17 @@ private:
 }  // namespace
 
 $test("Application::build_service_graph with overrides runs and prepares assets") {
-    auto logger = std::make_shared<RecordingLogger>();
-    auto game = std::make_shared<FakeGame>(91);
-    auto assets = std::make_shared<FakeAssetManager>();
+    auto logger = std::make_unique<RecordingLogger>();
+    auto logger_ptr = logger.get();
+    auto game = std::make_unique<FakeGame>(91);
+    auto game_ptr = game.get();
+    auto assets = std::make_unique<FakeAssetManager>();
+    auto assets_ptr = assets.get();
 
     smgpc::app::ServiceGraphOverrides overrides {};
-    overrides.logger = logger;
-    overrides.game = game;
-    overrides.asset_manager = assets;
+    overrides.logger = std::move(logger);
+    overrides.game = std::move(game);
+    overrides.asset_manager = std::move(assets);
 
     auto configuration = make_configuration();
     configuration.startup_assets = {
@@ -139,24 +143,24 @@ $test("Application::build_service_graph with overrides runs and prepares assets"
         smgpc::assets::AssetId {.logical_path = "LayoutData/Font.arc"},
     };
 
-    auto services = smgpc::app::build_service_graph(configuration, overrides);
+    auto services = smgpc::app::build_service_graph(configuration, std::move(overrides));
 
-    $pc_port_require(services.resolve_shared<smgpc::logging::ILogger>() == logger);
-    $pc_port_require(services.resolve_shared<smgpc::game::IGame>() == game);
-    $pc_port_require(services.resolve_shared<smgpc::assets::IAssetManager>() == assets);
+    $pc_port_require(&services.get<smgpc::logging::ILogger>() == logger_ptr);
+    $pc_port_require(&services.get<smgpc::game::IGame>() == game_ptr);
+    $pc_port_require(&services.get<smgpc::assets::IAssetManager>() == assets_ptr);
 
-    const int run_result = services.resolve<smgpc::app::IApplication>().run();
+    const int run_result = services.get<smgpc::app::IApplication>().run();
 
     $pc_port_require_eq(run_result, 91);
-    $pc_port_require_eq(game->run_calls, 1);
-    $pc_port_require_eq(assets->prepare_assets_calls, 1);
-    $pc_port_require_eq(assets->prepared_batch_ids.size(), static_cast<std::size_t>(3));
-    $pc_port_require_eq(assets->prepared_batch_ids[0], std::string("LayoutData/PressStart.arc"));
-    $pc_port_require_eq(assets->prepared_batch_ids[1], std::string("LayoutData/TitleLogo.arc"));
-    $pc_port_require_eq(assets->prepared_batch_ids[2], std::string("LayoutData/Font.arc"));
+    $pc_port_require_eq(game_ptr->run_calls, 1);
+    $pc_port_require_eq(assets_ptr->prepare_assets_calls, 1);
+    $pc_port_require_eq(assets_ptr->prepared_batch_ids.size(), static_cast<std::size_t>(3));
+    $pc_port_require_eq(assets_ptr->prepared_batch_ids[0], std::string("LayoutData/PressStart.arc"));
+    $pc_port_require_eq(assets_ptr->prepared_batch_ids[1], std::string("LayoutData/TitleLogo.arc"));
+    $pc_port_require_eq(assets_ptr->prepared_batch_ids[2], std::string("LayoutData/Font.arc"));
 
     bool found_prepared_log = false;
-    for (const auto &entry : logger->entries) {
+    for (const auto &entry : logger_ptr->entries) {
         if (entry.level == smgpc::logging::Level::INFO and
             entry.category == smgpc::logging::Category::APP and
             entry.message.find("Prepared 3 startup assets in cache") != std::string::npos) {
@@ -168,16 +172,19 @@ $test("Application::build_service_graph with overrides runs and prepares assets"
 }
 
 $test("Application logs warning when bootstrap asset preparation fails") {
-    auto logger = std::make_shared<RecordingLogger>();
-    auto game = std::make_shared<FakeGame>(3);
-    auto assets = std::make_shared<FakeAssetManager>(smgpc::assets::AssetError {
+    auto logger = std::make_unique<RecordingLogger>();
+    auto logger_ptr = logger.get();
+    auto game = std::make_unique<FakeGame>(3);
+    auto game_ptr = game.get();
+    auto assets = std::make_unique<FakeAssetManager>(smgpc::assets::AssetError {
             .code = smgpc::assets::AssetErrorCode::IoFailure, .message = "cache write failed"
         });
+    auto assets_ptr = assets.get();
 
     smgpc::app::ServiceGraphOverrides overrides {};
-    overrides.logger = logger;
-    overrides.game = game;
-    overrides.asset_manager = assets;
+    overrides.logger = std::move(logger);
+    overrides.game = std::move(game);
+    overrides.asset_manager = std::move(assets);
 
     auto configuration = make_configuration();
     configuration.startup_assets = {
@@ -186,15 +193,15 @@ $test("Application logs warning when bootstrap asset preparation fails") {
         smgpc::assets::AssetId {.logical_path = "LayoutData/Font.arc"},
     };
 
-    auto services = smgpc::app::build_service_graph(configuration, overrides);
-    const int run_result = services.resolve<smgpc::app::IApplication>().run();
+    auto services = smgpc::app::build_service_graph(configuration, std::move(overrides));
+    const int run_result = services.get<smgpc::app::IApplication>().run();
 
     $pc_port_require_eq(run_result, 3);
-    $pc_port_require_eq(game->run_calls, 1);
-    $pc_port_require_eq(assets->prepare_assets_calls, 1);
+    $pc_port_require_eq(game_ptr->run_calls, 1);
+    $pc_port_require_eq(assets_ptr->prepare_assets_calls, 1);
 
     bool found_warning_log = false;
-    for (const auto &entry : logger->entries) {
+    for (const auto &entry : logger_ptr->entries) {
         if (entry.level == smgpc::logging::Level::WARNING and
             entry.category == smgpc::logging::Category::APP and
             entry.message.find("io-failure") != std::string::npos and
@@ -207,35 +214,40 @@ $test("Application logs warning when bootstrap asset preparation fails") {
 }
 
 $test("Application overrides can replace IApplication registration") {
-    auto logger = std::make_shared<RecordingLogger>();
-    auto fake_app = std::make_shared<FakeApplication>(17);
+    auto logger = std::make_unique<RecordingLogger>();
+    auto fake_app = std::make_unique<FakeApplication>(17);
+    auto fake_app_ptr = fake_app.get();
 
     smgpc::app::ServiceGraphOverrides overrides {};
-    overrides.logger = logger;
-    overrides.application = fake_app;
+    overrides.logger = std::move(logger);
+    overrides.application = std::move(fake_app);
 
-    auto services = smgpc::app::build_service_graph(make_configuration(), overrides);
-    auto app = services.resolve_shared<smgpc::app::IApplication>();
+    auto services = smgpc::app::build_service_graph(make_configuration(), std::move(overrides));
+    auto &app = services.get<smgpc::app::IApplication>();
 
-    $pc_port_require(app == fake_app);
-    $pc_port_require_eq(app->run(), 17);
-    $pc_port_require_eq(fake_app->run_calls, 1);
+    $pc_port_require(dynamic_cast<const FakeApplication *>(&app) == fake_app_ptr);
+    $pc_port_require_eq(app.run(), 17);
+    $pc_port_require_eq(fake_app_ptr->run_calls, 1);
 }
 
 $test("Application skips bootstrap preparation when startup list is empty") {
-    auto logger = std::make_shared<RecordingLogger>();
-    auto game = std::make_shared<FakeGame>(5);
-    auto assets = std::make_shared<FakeAssetManager>();
+    auto logger = std::make_unique<RecordingLogger>();
+    auto logger_ptr = logger.get();
+    auto game = std::make_unique<FakeGame>(5);
+    auto game_ptr = game.get();
+    auto assets = std::make_unique<FakeAssetManager>();
+    auto assets_ptr = assets.get();
 
     smgpc::app::ServiceGraphOverrides overrides {};
-    overrides.logger = logger;
-    overrides.game = game;
-    overrides.asset_manager = assets;
+    overrides.logger = std::move(logger);
+    overrides.game = std::move(game);
+    overrides.asset_manager = std::move(assets);
 
-    auto services = smgpc::app::build_service_graph(make_configuration(), overrides);
-    const int run_result = services.resolve<smgpc::app::IApplication>().run();
+    auto services = smgpc::app::build_service_graph(make_configuration(), std::move(overrides));
+    const int run_result = services.get<smgpc::app::IApplication>().run();
 
     $pc_port_require_eq(run_result, 5);
-    $pc_port_require_eq(game->run_calls, 1);
-    $pc_port_require_eq(assets->prepare_assets_calls, 0);
+    $pc_port_require_eq(game_ptr->run_calls, 1);
+    $pc_port_require_eq(assets_ptr->prepare_assets_calls, 0);
+    $pc_port_require(logger_ptr->entries.empty());
 }

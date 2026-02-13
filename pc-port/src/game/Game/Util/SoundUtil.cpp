@@ -1,10 +1,14 @@
 #include "Game/Util/SoundUtil.hpp"
 
 #include "Logger.hpp"
+#include "compat/DecompIntegration.hpp"
 #include "compat/RuntimeContext.hpp"
 
 namespace {
 
+// SMGPC_INTEGRATION_BEGIN
+SMGPC_STUB(src/Game/Util/SoundUtil.cpp);
+// SMGPC_INTEGRATION_END
 bool sPreparedStageBgm {};
 
 }  // namespace

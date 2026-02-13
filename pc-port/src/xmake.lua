@@ -1,5 +1,4 @@
 includes {
-    "di",
     "common",
     "render",
     "game",

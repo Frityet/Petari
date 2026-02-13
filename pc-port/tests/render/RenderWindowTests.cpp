@@ -1,6 +1,7 @@
 #include "common/Logger.hpp"
 #include "render/RenderWindow.hpp"
 #include "tests/TestHarness.hpp"
+#include "ServiceProvider.hpp"
 
 #include <cstdint>
 #include <filesystem>
@@ -117,54 +118,23 @@ private:
 
 }  // namespace
 
-$test("Render::create_default_window_factory requires logger") {
-    bool threw = false;
-
-    try {
-        (void)smgpc::render::create_default_window_factory(nullptr);
-    } catch (const std::invalid_argument &) {
-        threw = true;
-    }
-
-    $pc_port_require(threw);
-}
-
 $test("Render::create_default_window_factory returns factory") {
-    auto logger = std::make_shared<NullLogger>();
-    auto factory = smgpc::render::create_default_window_factory(logger);
+    NullLogger logger {};
+    auto factory = smgpc::render::create_default_window_factory(smgpc::di::DependencyReference<smgpc::logging::ILogger>{logger});
 
     $pc_port_require(factory != nullptr);
 }
 
-$test("Render::create_default_renderer_service requires non-null dependencies") {
-    auto logger = std::make_shared<NullLogger>();
-    bool threw_for_factory = false;
-    bool threw_for_logger = false;
-
-    try {
-        (void)smgpc::render::create_default_renderer_service(nullptr, smgpc::render::WindowConfiguration {.width = 1, .height = 1, .title = "x"}, logger);
-    } catch (const std::invalid_argument &) {
-        threw_for_factory = true;
-    }
-
-    auto fake_factory = std::make_shared<FakeWindowFactory>(std::make_unique<FakeWindow>(std::vector<bool> {false}));
-    try {
-        (void)smgpc::render::create_default_renderer_service(fake_factory, smgpc::render::WindowConfiguration {.width = 1, .height = 1, .title = "x"}, nullptr);
-    } catch (const std::invalid_argument &) {
-        threw_for_logger = true;
-    }
-
-    $pc_port_require(threw_for_factory);
-    $pc_port_require(threw_for_logger);
-}
-
-$test("Render::create_default_renderer_service throws when factory returns null window") {
-    auto logger = std::make_shared<NullLogger>();
-    auto null_window_factory = std::make_shared<FakeWindowFactory>(nullptr);
+$test("Render::create_default_renderer_service requires non-null window from factory") {
+    NullLogger logger {};
+    auto null_window_factory = FakeWindowFactory(std::unique_ptr<smgpc::render::Window> {});
     bool threw = false;
 
     try {
-        (void)smgpc::render::create_default_renderer_service(null_window_factory, smgpc::render::WindowConfiguration {.width = 800, .height = 600, .title = "null-window"}, logger);
+        (void)smgpc::render::create_default_renderer_service(
+            smgpc::di::DependencyReference<smgpc::render::IWindowFactory>{null_window_factory},
+            smgpc::render::WindowConfiguration {.width = 800, .height = 600, .title = "null-window"},
+            smgpc::di::DependencyReference<smgpc::logging::ILogger>{logger});
     } catch (const std::runtime_error &) {
         threw = true;
     }
@@ -172,19 +142,22 @@ $test("Render::create_default_renderer_service throws when factory returns null 
     $pc_port_require(threw);
 }
 
-$test("Render renderer service delegates window behavior") {
-    auto logger = std::make_shared<NullLogger>();
+$test("Render::create_default_renderer_service delegates window behavior") {
+    NullLogger logger {};
     auto *window_ptr = new FakeWindow(std::vector<bool> {true, false});
     auto fake_window = std::unique_ptr<smgpc::render::Window>(window_ptr);
-    auto fake_factory = std::make_shared<FakeWindowFactory>(std::move(fake_window));
+    FakeWindowFactory fake_factory(std::move(fake_window));
 
-    auto service = smgpc::render::create_default_renderer_service(fake_factory, smgpc::render::WindowConfiguration {.width = 320, .height = 240, .title = "UnitTest"}, logger);
+    auto service = smgpc::render::create_default_renderer_service(
+        smgpc::di::DependencyReference<smgpc::render::IWindowFactory>{fake_factory},
+        smgpc::render::WindowConfiguration {.width = 320, .height = 240, .title = "UnitTest"},
+        smgpc::di::DependencyReference<smgpc::logging::ILogger>{logger});
 
     $pc_port_require(service != nullptr);
-    $pc_port_require_eq(fake_factory->create_calls, 1);
-    $pc_port_require_eq(fake_factory->last_width, 320);
-    $pc_port_require_eq(fake_factory->last_height, 240);
-    $pc_port_require_eq(fake_factory->last_title, std::string("UnitTest"));
+    $pc_port_require_eq(fake_factory.create_calls, 1);
+    $pc_port_require_eq(fake_factory.last_width, 320);
+    $pc_port_require_eq(fake_factory.last_height, 240);
+    $pc_port_require_eq(fake_factory.last_title, std::string("UnitTest"));
 
     $pc_port_require(service->poll_events());
     $pc_port_require(not service->poll_events());

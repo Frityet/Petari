@@ -74,11 +74,8 @@ namespace smgpc::render
 
         class Callbacks : public bgfx::CallbackI {
         public:
-            explicit Callbacks(std::shared_ptr<logging::ILogger> logger)
+            explicit Callbacks(di::DependencyReference<logging::ILogger> logger)
                 : _logger(std::move(logger)) {
-                if (not _logger) {
-                    throw std::invalid_argument("BGFX callbacks requires a logger.");
-                }
             }
 
             ~Callbacks() override = default;
@@ -133,7 +130,7 @@ namespace smgpc::render
             }
 
         private:
-            std::shared_ptr<logging::ILogger> _logger {};
+            di::DependencyReference<logging::ILogger> _logger;
             std::mutex _capture_mutex {};
             std::deque<std::filesystem::path> _completed_captures {};
         };
@@ -143,7 +140,7 @@ namespace smgpc::render
             void *x11_display,
             std::uint16_t backbuffer_width,
             std::uint16_t backbuffer_height,
-            std::shared_ptr<logging::ILogger> logger)
+            di::DependencyReference<logging::ILogger> logger)
         {
             const auto requested_renderer = resolve_renderer_type_from_environment();
             _callbacks = std::make_unique<Callbacks>(std::move(logger));
@@ -220,13 +217,9 @@ namespace smgpc::render
 
     class GLFWWindow : public Window {
     public:
-        GLFWWindow(const WindowConfiguration &configuration, std::shared_ptr<logging::ILogger> logger)
+        GLFWWindow(const WindowConfiguration &configuration, di::DependencyReference<logging::ILogger> logger)
             : _logger(std::move(logger))
         {
-            if (not _logger) {
-                throw std::invalid_argument("GLFW window requires a logger.");
-            }
-
             if (not glfwInit()) {
                 throw std::runtime_error("Failed to initialize GLFW");
             }
@@ -241,12 +234,12 @@ namespace smgpc::render
             const auto initial_height = clamp_backbuffer_dimension(configuration.height);
 
             try {
-                _renderer = std::make_unique<BGFXRenderer>(
+                    _renderer = std::make_unique<BGFXRenderer>(
                     reinterpret_cast<void *>(static_cast<std::uintptr_t>(glfwGetX11Window(_window))),
                     glfwGetX11Display(),
                     initial_width,
                     initial_height,
-                    _logger);
+                    di::DependencyReference<logging::ILogger>{_logger.get()});
             } catch (...) {
                 glfwDestroyWindow(_window);
                 _window = nullptr;
@@ -325,38 +318,34 @@ namespace smgpc::render
     private:
         GLFWwindow *_window {nullptr};
         std::unique_ptr<BGFXRenderer> _renderer {};
-        std::shared_ptr<logging::ILogger> _logger {};
+        di::DependencyReference<logging::ILogger> _logger;
         std::uint16_t _backbuffer_width {};
         std::uint16_t _backbuffer_height {};
     };
 
-    class GLFWWindowFactory : public IWindowFactory {
-    public:
-        explicit GLFWWindowFactory(std::shared_ptr<logging::ILogger> logger)
-            : _logger(std::move(logger)) {
-            if (not _logger) {
-                throw std::invalid_argument("GLFWWindowFactory requires a logger.");
+        class GLFWWindowFactory : public IWindowFactory {
+        public:
+            explicit GLFWWindowFactory(di::DependencyReference<logging::ILogger> logger)
+                : _logger(std::move(logger)) {
             }
-        }
 
         [[nodiscard]] std::unique_ptr<Window> create(const WindowConfiguration &configuration) const override
         {
-            return std::make_unique<GLFWWindow>(configuration, _logger);
+            return std::make_unique<GLFWWindow>(configuration, di::DependencyReference<logging::ILogger>{_logger.get()});
         }
 
     private:
-        std::shared_ptr<logging::ILogger> _logger {};
+        di::DependencyReference<logging::ILogger> _logger;
     };
 
     class WindowRendererService final : public IRendererService {
     public:
-        WindowRendererService(std::shared_ptr<IWindowFactory> window_factory, WindowConfiguration configuration, std::shared_ptr<logging::ILogger> logger)
-            : _logger(std::move(logger)) {
-            if (not window_factory or not _logger) {
-                throw std::invalid_argument("RendererService requires non-null dependencies.");
-            }
-
-            _window = window_factory->create(configuration);
+        WindowRendererService(
+            di::DependencyReference<IWindowFactory> window_factory,
+            WindowConfiguration configuration,
+            di::DependencyReference<logging::ILogger> logger)
+            : _window_factory(std::move(window_factory)), _logger(std::move(logger)) {
+            _window = _window_factory->create(configuration);
             if (not _window) {
                 throw std::runtime_error("RendererService failed to create a window.");
             }
@@ -399,15 +388,19 @@ namespace smgpc::render
 
     private:
         std::unique_ptr<Window> _window {};
-        std::shared_ptr<logging::ILogger> _logger {};
+        di::DependencyReference<IWindowFactory> _window_factory;
+        di::DependencyReference<logging::ILogger> _logger;
     };
 
-    std::shared_ptr<IWindowFactory> create_default_window_factory(std::shared_ptr<logging::ILogger> logger)
+    std::unique_ptr<IWindowFactory> create_default_window_factory(di::DependencyReference<logging::ILogger> logger)
     {
-        return std::make_shared<GLFWWindowFactory>(std::move(logger));
+        return std::make_unique<GLFWWindowFactory>(std::move(logger));
     }
 
-    std::shared_ptr<IRendererService> create_default_renderer_service(std::shared_ptr<IWindowFactory> window_factory, WindowConfiguration configuration, std::shared_ptr<logging::ILogger> logger) {
-        return std::make_shared<WindowRendererService>(std::move(window_factory), std::move(configuration), std::move(logger));
+    std::unique_ptr<IRendererService> create_default_renderer_service(
+        di::DependencyReference<IWindowFactory> window_factory,
+        WindowConfiguration configuration,
+        di::DependencyReference<logging::ILogger> logger) {
+        return std::make_unique<WindowRendererService>(std::move(window_factory), std::move(configuration), std::move(logger));
     }
 }

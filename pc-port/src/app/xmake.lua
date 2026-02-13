@@ -4,7 +4,6 @@ target("smg-pc-app")
     add_headerfiles("Application.hpp")
     add_includedirs("./", {public = true})
     add_deps {
-        "smg-pc-di",
         "smg-pc-assets",
         "smg-pc-game",
         "smg-pc-render",

@@ -59,7 +59,7 @@ public:
     void write(std::FILE *to, std::string_view file, int line, Level level, Category category, std::string_view message) override;
 };
 
-[[nodiscard]] std::shared_ptr<ILogger> create_default_logger();
+[[nodiscard]] std::unique_ptr<ILogger> create_default_logger();
 
 }  // namespace smgpc::logging
 

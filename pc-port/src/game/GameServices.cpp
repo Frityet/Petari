@@ -157,13 +157,10 @@ struct FrameCaptureConfiguration {
 class DesktopGame final : public IGame {
 public:
     DesktopGame(
-        std::shared_ptr<render::IRendererService> renderer_service,
-        std::shared_ptr<assets::IGameAssetService> asset_service,
-        std::shared_ptr<logging::ILogger> logger)
+        di::DependencyReference<render::IRendererService> renderer_service,
+        di::DependencyReference<assets::IGameAssetService> asset_service,
+        di::DependencyReference<logging::ILogger> logger)
         : _renderer_service(std::move(renderer_service)), _asset_service(std::move(asset_service)), _logger(std::move(logger)) {
-        if (not _renderer_service or not _asset_service or not _logger) {
-            throw std::invalid_argument("DesktopGame requires non-null injected services.");
-        }
     }
 
     [[nodiscard]] int run() override {
@@ -175,9 +172,9 @@ public:
             : static_cast<float>(initial_framebuffer_width) / static_cast<float>(initial_framebuffer_height) > 1.34F;
 
         compat::set_runtime_context(compat::RuntimeContext {
-            .asset_service = _asset_service.get(),
-            .renderer_service = _renderer_service.get(),
-            .logger = _logger.get(),
+            .asset_service = &_asset_service.get(),
+            .renderer_service = &_renderer_service.get(),
+            .logger = &_logger.get(),
             .is_widescreen = is_widescreen,
         });
 
@@ -207,7 +204,7 @@ public:
         render::layout::LayoutDrawList draw_list {};
         draw_list.reserve(512U);
 
-        const FrameCaptureConfiguration capture_configuration = load_frame_capture_configuration(_logger.get());
+        const FrameCaptureConfiguration capture_configuration = load_frame_capture_configuration(&_logger.get());
         std::uint64_t rendered_frame_count = 0U;
         std::uint64_t requested_capture_count = 0U;
         bool capture_request_pending = false;
@@ -252,12 +249,12 @@ public:
             }
 
             if (layout_renderer == nullptr) {
-                layout_renderer = std::make_unique<render::layout::LayoutBgfxRenderer>(_logger);
+                layout_renderer = std::make_unique<render::layout::LayoutBgfxRenderer>(di::DependencyReference<logging::ILogger>{_logger.get()});
             }
 
             _renderer_service->render_frame();
             const auto [framebuffer_width, framebuffer_height] = _renderer_service->framebuffer_size();
-            const auto [layout_width, layout_height] = resolve_layout_size(title_sequence.getLogoLayout(), _renderer_service.get());
+            const auto [layout_width, layout_height] = resolve_layout_size(title_sequence.getLogoLayout(), &_renderer_service.get());
             layout_renderer->draw(
                 draw_list,
                 framebuffer_width,
@@ -301,18 +298,18 @@ public:
     }
 
 private:
-    std::shared_ptr<render::IRendererService> _renderer_service {};
-    std::shared_ptr<assets::IGameAssetService> _asset_service {};
-    std::shared_ptr<logging::ILogger> _logger {};
+    di::DependencyReference<render::IRendererService> _renderer_service;
+    di::DependencyReference<assets::IGameAssetService> _asset_service;
+    di::DependencyReference<logging::ILogger> _logger;
 };
 
 }  // namespace
 
-std::shared_ptr<IGame> create_default_game_service(
-    std::shared_ptr<render::IRendererService> renderer_service,
-    std::shared_ptr<assets::IGameAssetService> asset_service,
-    std::shared_ptr<logging::ILogger> logger) {
-    return std::make_shared<DesktopGame>(std::move(renderer_service), std::move(asset_service), std::move(logger));
+std::unique_ptr<IGame> create_default_game_service(
+    di::DependencyReference<render::IRendererService> renderer_service,
+    di::DependencyReference<assets::IGameAssetService> asset_service,
+    di::DependencyReference<logging::ILogger> logger) {
+    return std::make_unique<DesktopGame>(std::move(renderer_service), std::move(asset_service), std::move(logger));
 }
 
 }  // namespace smgpc::game

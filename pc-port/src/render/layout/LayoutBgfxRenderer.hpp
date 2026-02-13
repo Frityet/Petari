@@ -4,13 +4,13 @@
 #include <cstdint>
 #include <filesystem>
 #include <span>
-#include <memory>
 #include <unordered_map>
 #include <vector>
 
 #include <bgfx/bgfx.h>
 
 #include "LayoutDrawList.hpp"
+#include "ServiceProvider.hpp"
 
 namespace smgpc::logging {
 class ILogger;
@@ -20,7 +20,7 @@ namespace smgpc::render::layout {
 
 class LayoutBgfxRenderer {
 public:
-    explicit LayoutBgfxRenderer(std::shared_ptr<logging::ILogger> logger);
+    explicit LayoutBgfxRenderer(di::DependencyReference<logging::ILogger> logger);
     ~LayoutBgfxRenderer();
 
     LayoutBgfxRenderer(const LayoutBgfxRenderer &) = delete;
@@ -59,7 +59,7 @@ private:
     [[nodiscard]] static constexpr bgfx::ProgramHandle invalid_program_handle() { return bgfx::ProgramHandle {bgfx::kInvalidHandle}; }
     [[nodiscard]] static constexpr bgfx::TextureHandle invalid_texture_handle() { return bgfx::TextureHandle {bgfx::kInvalidHandle}; }
 
-    std::shared_ptr<logging::ILogger> _logger {};
+    di::DependencyReference<logging::ILogger> _logger;
 
     bool _initialized {};
     bgfx::UniformHandle _sampler {invalid_uniform_handle()};
