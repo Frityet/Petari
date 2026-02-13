@@ -33,8 +33,10 @@ public:
 
 struct ServiceGraphOverrides {
     std::unique_ptr<logging::ILogger> logger {};
+    std::unique_ptr<render::IWindowService> window_service {};
     std::unique_ptr<render::IWindowFactory> window_factory {};
-    std::unique_ptr<render::IRendererService> renderer_service {};
+    std::unique_ptr<render::IInputService> input_service {};
+    std::unique_ptr<render::IRendererEngine> renderer_engine {};
     std::unique_ptr<assets::IAssetLocator> asset_locator {};
     std::unique_ptr<assets::IAssetLoader> asset_loader {};
     std::unique_ptr<assets::IAssetConverter> asset_converter {};
@@ -47,7 +49,9 @@ struct ServiceGraphOverrides {
 using ServiceGraph = di::ServiceProvider<
     di::SingletonService<logging::ILogger>,
     di::SingletonService<render::IWindowFactory>,
-    di::SingletonService<render::IRendererService>,
+    di::SingletonService<render::IWindowService>,
+    di::SingletonService<render::IInputService>,
+    di::SingletonService<render::IRendererEngine>,
     di::SingletonService<assets::IAssetLocator>,
     di::SingletonService<assets::IAssetLoader>,
     di::SingletonService<assets::IAssetConverter>,

@@ -13,7 +13,7 @@ namespace {
 
 std::unordered_map<std::string, std::unique_ptr<JKRMemArchive>> sMountedArchives {};
 
-[[nodiscard]] smgpc::assets::IGameAssetService *asset_service() {
+[[nodiscard]] smgpc::di::OptionalDependencyReference<smgpc::assets::IGameAssetService> asset_service() {
     return smgpc::game::compat::runtime_context().asset_service;
 }
 
@@ -30,7 +30,7 @@ void copy_path(char *pDst, u32 size, const std::string &path) {
         return "/";
     }
 
-    if (asset_service() == nullptr) {
+    if (!asset_service()) {
         return std::string(pFilePath);
     }
 
@@ -42,7 +42,7 @@ void copy_path(char *pDst, u32 size, const std::string &path) {
 namespace MR {
 
 bool isFileExist(const char *pFilePath, bool considerLanguage) {
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         return false;
     }
 
@@ -59,7 +59,7 @@ void loadAsyncToMainRAM(const char *pFilePath, u8 *pDst, JKRHeap *pHeap, JKRDvdR
     (void)pHeap;
     (void)allocDir;
 
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         return;
     }
 
@@ -74,7 +74,7 @@ JKRMemArchive *mountArchive(const char *pFilePath, JKRHeap *pHeap) {
 void mountAsyncArchive(const char *pFilePath, JKRHeap *pHeap) {
     (void)pHeap;
 
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         return;
     }
 
@@ -84,7 +84,7 @@ void mountAsyncArchive(const char *pFilePath, JKRHeap *pHeap) {
 void mountAsyncArchiveByObjectOrLayoutName(const char *pFilePrefix, JKRHeap *pHeap) {
     (void)pHeap;
 
-    if (asset_service() == nullptr || pFilePrefix == nullptr) {
+    if (!asset_service() || pFilePrefix == nullptr) {
         return;
     }
 
@@ -101,7 +101,7 @@ void mountAsyncArchiveByObjectOrLayoutName(const char *pFilePrefix, JKRHeap *pHe
 }
 
 void *receiveFile(const char *pFilePath) {
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         return nullptr;
     }
 
@@ -114,7 +114,7 @@ void *receiveFile(const char *pFilePath) {
 }
 
 JKRMemArchive *receiveArchive(const char *pFilePath) {
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         return nullptr;
     }
 
@@ -136,7 +136,7 @@ JKRMemArchive *receiveArchive(const char *pFilePath) {
 }
 
 bool isLoadedFile(const char *pFilePath) {
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         return false;
     }
 
@@ -144,7 +144,7 @@ bool isLoadedFile(const char *pFilePath) {
 }
 
 bool isMountedArchive(const char *pFilePath) {
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         return false;
     }
 
@@ -152,7 +152,7 @@ bool isMountedArchive(const char *pFilePath) {
 }
 
 bool isLoadedObjectOrLayoutArchive(const char *pFilePrefix) {
-    if (asset_service() == nullptr || pFilePrefix == nullptr) {
+    if (!asset_service() || pFilePrefix == nullptr) {
         return false;
     }
 
@@ -174,7 +174,7 @@ bool isLoadedObjectOrLayoutArchive(const char *pFilePrefix) {
 }
 
 void makeFileNameConsideringLanguage(char *pDst, u32 size, const char *pFilePath) {
-    if (asset_service() == nullptr || pFilePath == nullptr) {
+    if (!asset_service() || pFilePath == nullptr) {
         copy_path(pDst, size, pFilePath == nullptr ? std::string {} : std::string(pFilePath));
         return;
     }
@@ -183,7 +183,7 @@ void makeFileNameConsideringLanguage(char *pDst, u32 size, const char *pFilePath
 }
 
 bool makeObjectArchiveFileName(char *pDst, u32 size, const char *pFileName) {
-    if (asset_service() == nullptr || pFileName == nullptr) {
+    if (!asset_service() || pFileName == nullptr) {
         return false;
     }
 
@@ -197,7 +197,7 @@ bool makeObjectArchiveFileName(char *pDst, u32 size, const char *pFileName) {
 }
 
 bool makeObjectArchiveFileNameFromPrefix(char *pDst, u32 size, const char *pFilePrefix, bool unused) {
-    if (asset_service() == nullptr || pFilePrefix == nullptr) {
+    if (!asset_service() || pFilePrefix == nullptr) {
         return false;
     }
 
@@ -211,7 +211,7 @@ bool makeObjectArchiveFileNameFromPrefix(char *pDst, u32 size, const char *pFile
 }
 
 bool makeLayoutArchiveFileName(char *pDst, u32 size, const char *pFileName) {
-    if (asset_service() == nullptr || pFileName == nullptr) {
+    if (!asset_service() || pFileName == nullptr) {
         return false;
     }
 
@@ -225,7 +225,7 @@ bool makeLayoutArchiveFileName(char *pDst, u32 size, const char *pFileName) {
 }
 
 bool makeLayoutArchiveFileNameFromPrefix(char *pDst, u32 size, const char *pFilePrefix, bool fallback) {
-    if (asset_service() == nullptr || pFilePrefix == nullptr) {
+    if (!asset_service() || pFilePrefix == nullptr) {
         return false;
     }
 

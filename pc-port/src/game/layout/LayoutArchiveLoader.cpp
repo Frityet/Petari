@@ -11,7 +11,7 @@ namespace smgpc::game::layout {
 
 LayoutArchiveLoader::LayoutArchiveLoader(
     di::DependencyReference<assets::IGameAssetService> asset_service,
-    logging::ILogger *logger)
+    di::OptionalDependencyReference<logging::ILogger> logger)
     : _asset_service(std::move(asset_service)), _logger(logger) {
 }
 
@@ -41,7 +41,7 @@ assets::AssetResult<std::shared_ptr<LayoutArchiveData>> LayoutArchiveLoader::loa
         for (const auto &font_archive_path : request.shared_font_archives) {
             const auto font_archive = _asset_service->receive_archive(font_archive_path);
             if (font_archive == nullptr) {
-                if (_logger != nullptr) {
+                if (_logger) {
                     _logger->warning(
                         __FILE__,
                         __LINE__,
@@ -53,7 +53,7 @@ assets::AssetResult<std::shared_ptr<LayoutArchiveData>> LayoutArchiveLoader::loa
             }
 
             const auto shared_font_result = populate_fonts_from_archive(font_archive->archive, resource.get());
-            if (not shared_font_result && _logger != nullptr) {
+            if (not shared_font_result && _logger) {
                 _logger->warning(
                     __FILE__,
                     __LINE__,
@@ -110,7 +110,7 @@ assets::AssetResult<void> LayoutArchiveLoader::populate_layout_from_archive(
         if (has_extension(entry.path, ".brlan")) {
             auto animation = assets::layout::parse_brlan(bytes, basename_without_extension(entry.path));
             if (not animation) {
-                if (_logger != nullptr) {
+                if (_logger) {
                     _logger->warning(
                         __FILE__,
                         __LINE__,
@@ -129,7 +129,7 @@ assets::AssetResult<void> LayoutArchiveLoader::populate_layout_from_archive(
         if (has_extension(entry.path, ".tpl")) {
             auto decoded = assets::layout::tpl::decode_tpl_first_image(bytes);
             if (not decoded) {
-                if (_logger != nullptr) {
+                if (_logger) {
                     _logger->warning(
                         __FILE__,
                         __LINE__,
@@ -168,7 +168,7 @@ assets::AssetResult<void> LayoutArchiveLoader::populate_fonts_from_archive(
 
         auto font = assets::layout::parse_brfnt(bytes, basename_without_extension(entry.path));
         if (not font) {
-            if (_logger != nullptr) {
+            if (_logger) {
                 _logger->warning(
                     __FILE__,
                     __LINE__,

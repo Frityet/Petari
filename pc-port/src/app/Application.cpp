@@ -1,7 +1,6 @@
 #include "Application.hpp"
 
 #include <memory>
-#include <stdexcept>
 #include <utility>
 #include <vector>
 
@@ -86,8 +85,16 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
         graph.register_service<di::SingletonService<render::IWindowFactory>>(std::move(overrides.window_factory));
     }
 
-    if (overrides.renderer_service) {
-        graph.register_service<di::SingletonService<render::IRendererService>>(std::move(overrides.renderer_service));
+    if (overrides.window_service) {
+        graph.register_service<di::SingletonService<render::IWindowService>>(std::move(overrides.window_service));
+    }
+
+    if (overrides.input_service) {
+        graph.register_service<di::SingletonService<render::IInputService>>(std::move(overrides.input_service));
+    }
+
+    if (overrides.renderer_engine) {
+        graph.register_service<di::SingletonService<render::IRendererEngine>>(std::move(overrides.renderer_engine));
     }
 
     if (overrides.asset_locator) {
@@ -118,27 +125,50 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
         graph.register_service<di::SingletonService<IApplication>>(std::move(overrides.application));
     }
 
-    if (not graph.has<render::IWindowFactory>() and
-        not graph.has<render::IRendererService>() and
-        not graph.has<game::IGame>() and
-        not graph.has<IApplication>()) {
+    if (not graph.has<render::IWindowFactory>() and not graph.has<render::IWindowService>() and not graph.has<game::IGame>() and not graph.has<IApplication>()) {
         graph.register_service<di::SingletonService<render::IWindowFactory>, logging::ILogger>([](di::DependencyReference<logging::ILogger> logger) {
             return render::create_default_window_factory(std::move(logger));
         });
     }
 
-    if (not graph.has<render::IRendererService>() and
+    if (not graph.has<render::IWindowService>() and
         not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
-        graph.register_service<di::SingletonService<render::IRendererService>, render::IWindowFactory, logging::ILogger>(
-            [configuration](di::DependencyReference<render::IWindowFactory> window_factory, di::DependencyReference<logging::ILogger> logger) {
-                return render::create_default_renderer_service(
-                    std::move(window_factory),
-                    render::WindowConfiguration {
-                        .width = configuration.window_width,
-                        .height = configuration.window_height,
-                        .title = configuration.window_title,
-                    },
+        graph.register_service<di::SingletonService<render::IWindowService>, render::IWindowFactory, logging::ILogger>(
+            [configuration](di::DependencyReference<render::IWindowFactory> window_factory,
+                di::DependencyReference<logging::ILogger> logger) {
+                (void)logger;
+                return window_factory->create(render::WindowConfiguration {
+                    .width = configuration.window_width,
+                    .height = configuration.window_height,
+                    .title = configuration.window_title,
+                });
+            });
+    }
+
+    if (not graph.has<render::IInputService>() and
+        not graph.has<game::IGame>() and
+        not graph.has<IApplication>()) {
+        graph.register_service<di::SingletonService<render::IInputService>, render::IWindowService, logging::ILogger>(
+            [](di::DependencyReference<render::IWindowService> window_service, di::DependencyReference<logging::ILogger> logger) {
+                return render::create_default_input_service(std::move(window_service), std::move(logger));
+            });
+    }
+
+    if (not graph.has<render::IRendererEngine>() and
+        not graph.has<game::IGame>() and
+        not graph.has<IApplication>()) {
+        graph.register_service<
+            di::SingletonService<render::IRendererEngine>,
+            render::IWindowService,
+            render::IInputService,
+            logging::ILogger>(
+            [](di::DependencyReference<render::IWindowService> window_service,
+                di::DependencyReference<render::IInputService> input_service,
+                di::DependencyReference<logging::ILogger> logger) {
+                return render::create_default_renderer_engine(
+                    std::move(window_service),
+                    std::move(input_service),
                     std::move(logger));
             });
     }
@@ -206,12 +236,22 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
 
     if (not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
-        graph.register_service<di::SingletonService<game::IGame>, render::IRendererService, assets::IGameAssetService, logging::ILogger>(
-            [](di::DependencyReference<render::IRendererService> renderer_service,
+        graph.register_service<
+            di::SingletonService<game::IGame>,
+            render::IWindowService,
+            render::IInputService,
+            render::IRendererEngine,
+            assets::IGameAssetService,
+            logging::ILogger>(
+            [](di::DependencyReference<render::IWindowService> window_service,
+                di::DependencyReference<render::IInputService> input_service,
+                di::DependencyReference<render::IRendererEngine> renderer_engine,
                 di::DependencyReference<assets::IGameAssetService> asset_service,
                 di::DependencyReference<logging::ILogger> logger) {
                 return game::create_default_game_service(
-                    std::move(renderer_service),
+                    std::move(window_service),
+                    std::move(input_service),
+                    std::move(renderer_engine),
                     std::move(asset_service),
                     std::move(logger));
             });

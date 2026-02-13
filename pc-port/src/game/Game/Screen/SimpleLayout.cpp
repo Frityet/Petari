@@ -33,7 +33,7 @@ std::shared_ptr<smgpc::game::layout::LayoutRuntimeActor> SimpleLayout::loadRunti
     }
 
     const auto &context = smgpc::game::compat::runtime_context();
-    if (context.asset_service == nullptr) {
+    if (not context.asset_service) {
         return nullptr;
     }
 
@@ -56,7 +56,7 @@ std::shared_ptr<smgpc::game::layout::LayoutRuntimeActor> SimpleLayout::loadRunti
 
     auto loaded = loader.load(request);
     if (not loaded) {
-        if (context.logger != nullptr) {
+        if (context.logger) {
             context.logger->error(
                 __FILE__,
                 __LINE__,

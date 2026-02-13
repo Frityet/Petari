@@ -1,72 +1,49 @@
 #include "game/Game/Screen/LayoutActor.hpp"
 #include "game/Game/Screen/TitleSequenceProduct.hpp"
 #include "game/compat/RuntimeContext.hpp"
-#include "game/layout/LayoutArchiveLoader.hpp"
 #include "game/layout/LayoutRuntimeActor.hpp"
-#include "render/RenderWindow.hpp"
 #include "tests/TestHarness.hpp"
 
+#include <array>
 #include <cstdint>
-#include <filesystem>
 #include <memory>
-#include <optional>
 #include <string>
-#include <unordered_set>
 #include <utility>
 
 namespace {
 
-class DummyRenderer final : public smgpc::render::Renderer {
+class FakeInputSnapshot final : public smgpc::render::IInputSnapshot {
 public:
-    void on_frame_enter() override {
-    }
-
-    void draw() override {
-    }
-
-    void on_frame_exit() override {
-    }
-};
-
-class FakeRendererService final : public smgpc::render::IRendererService {
-public:
-    smgpc::render::Renderer &renderer() override {
-        return _renderer;
-    }
-
-    bool poll_events() override {
-        return true;
-    }
-
-    void render_frame() override {
-    }
-
-    void capture_next_frame(std::filesystem::path) override {
-    }
-
-    [[nodiscard]] std::optional<std::filesystem::path> poll_completed_capture() override {
-        return std::nullopt;
+    void set_key_down(int key, bool down) {
+        if (key < 0 || key >= static_cast<int>(_keys.size())) {
+            return;
+        }
+        _keys[static_cast<std::size_t>(key)] = down;
     }
 
     [[nodiscard]] bool is_key_down(int key) const override {
-        return _down_keys.contains(key);
-    }
-
-    [[nodiscard]] std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const override {
-        return {640U, 480U};
-    }
-
-    void set_key_down(int key, bool down) {
-        if (down) {
-            _down_keys.insert(key);
-        } else {
-            _down_keys.erase(key);
+        if (key < 0 || key >= static_cast<int>(_keys.size())) {
+            return false;
         }
+        return _keys[static_cast<std::size_t>(key)];
     }
 
 private:
-    DummyRenderer _renderer {};
-    std::unordered_set<int> _down_keys {};
+    std::array<bool, 1024> _keys {};
+};
+
+class FakeInputService final : public smgpc::render::IInputService {
+public:
+    [[nodiscard]] const smgpc::render::IInputSnapshot &snapshot() const override {
+        return _snapshot;
+    }
+
+    void set_key_down(int key, bool down) {
+        _snapshot.set_key_down(key, down);
+    }
+
+private:
+    mutable FakeInputSnapshot _snapshot {};
 };
 
 class TestLayoutActor final : public LayoutActor {
@@ -132,14 +109,15 @@ void advance_frames(TitleSequenceProduct *sequence, int frame_count) {
 }  // namespace
 
 $test("TitleSequenceProduct reaches logo display flow without input") {
+    FakeInputService input_service {};
     TestLayoutActor logo_actor(make_logo_actor());
     TestLayoutActor press_start_actor(make_press_start_actor());
     TitleSequenceProduct sequence(&logo_actor, &press_start_actor);
 
-    FakeRendererService renderer {};
     smgpc::game::compat::set_runtime_context(smgpc::game::compat::RuntimeContext {
         .asset_service = nullptr,
-        .renderer_service = &renderer,
+        .renderer_engine = nullptr,
+        .input_service = &input_service,
         .logger = nullptr,
         .is_widescreen = true,
     });
@@ -153,14 +131,15 @@ $test("TitleSequenceProduct reaches logo display flow without input") {
 }
 
 $test("TitleSequenceProduct transitions to dead after enter press") {
+    FakeInputService input_service {};
     TestLayoutActor logo_actor(make_logo_actor());
     TestLayoutActor press_start_actor(make_press_start_actor());
     TitleSequenceProduct sequence(&logo_actor, &press_start_actor);
 
-    FakeRendererService renderer {};
     smgpc::game::compat::set_runtime_context(smgpc::game::compat::RuntimeContext {
         .asset_service = nullptr,
-        .renderer_service = &renderer,
+        .renderer_engine = nullptr,
+        .input_service = &input_service,
         .logger = nullptr,
         .is_widescreen = true,
     });
@@ -168,9 +147,9 @@ $test("TitleSequenceProduct transitions to dead after enter press") {
     sequence.appear();
     advance_frames(&sequence, 80);
 
-    renderer.set_key_down(257, true);
+    input_service.set_key_down(257, true);
     advance_frames(&sequence, 20);
-    renderer.set_key_down(257, false);
+    input_service.set_key_down(257, false);
     advance_frames(&sequence, 10);
 
     $pc_port_require(not sequence.isActive());

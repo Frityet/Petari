@@ -40,7 +40,7 @@ class LayoutArchiveLoader {
 public:
     LayoutArchiveLoader(
         di::DependencyReference<assets::IGameAssetService> asset_service,
-        logging::ILogger *logger);
+        di::OptionalDependencyReference<logging::ILogger> logger = nullptr);
 
     [[nodiscard]] assets::AssetResult<std::shared_ptr<LayoutArchiveData>> load(const LayoutArchiveLoadRequest &request) const;
 
@@ -60,7 +60,7 @@ private:
     [[nodiscard]] static bool has_extension(std::string_view path, std::string_view extension);
 
     di::DependencyReference<assets::IGameAssetService> _asset_service;
-    logging::ILogger *_logger {};
+    di::OptionalDependencyReference<logging::ILogger> _logger;
 };
 
 }  // namespace smgpc::game::layout

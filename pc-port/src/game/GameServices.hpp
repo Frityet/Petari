@@ -2,14 +2,11 @@
 
 #include <memory>
 
+#include "RendererService.hpp"
 #include "ServiceProvider.hpp"
 
 namespace smgpc::logging {
     class ILogger;
-}
-
-namespace smgpc::render {
-    class IRendererService;
 }
 
 namespace smgpc::assets {
@@ -24,7 +21,9 @@ namespace smgpc::game {
     };
 
 [[nodiscard]] std::unique_ptr<IGame> create_default_game_service(
-    di::DependencyReference<render::IRendererService> renderer_service,
+    di::DependencyReference<render::IWindowService> window_service,
+    di::DependencyReference<render::IInputService> input_service,
+    di::DependencyReference<render::IRendererEngine> renderer_engine,
     di::DependencyReference<assets::IGameAssetService> asset_service,
     di::DependencyReference<logging::ILogger> logger);
 }  // namespace smgpc::game

@@ -1,6 +1,7 @@
 #include "compat/GamePadCompat.hpp"
 
-#include "RenderWindow.hpp"
+#include "RendererService.hpp"
+
 #include "compat/RuntimeContext.hpp"
 
 namespace {
@@ -14,13 +15,13 @@ constexpr int B_KEY = 88;
 namespace smgpc::game::compat {
 
 bool test_core_pad_button_a() {
-    const auto *renderer = runtime_context().renderer_service;
-    return renderer != nullptr && (renderer->is_key_down(ENTER_KEY) || renderer->is_key_down(A_KEY));
+    const auto &input = runtime_context().input_service;
+    return input && (input->is_key_down(ENTER_KEY) || input->is_key_down(A_KEY));
 }
 
 bool test_core_pad_button_b() {
-    const auto *renderer = runtime_context().renderer_service;
-    return renderer != nullptr && (renderer->is_key_down(ENTER_KEY) || renderer->is_key_down(B_KEY));
+    const auto &input = runtime_context().input_service;
+    return input && (input->is_key_down(ENTER_KEY) || input->is_key_down(B_KEY));
 }
 
 }  // namespace smgpc::game::compat
