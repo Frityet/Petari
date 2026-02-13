@@ -1,101 +1,136 @@
-#include "common/Logger.hpp"
+#include "ServiceProvider.hpp"
 #include "assets/GameAssetService.hpp"
+#include "common/Logger.hpp"
 #include "game/GameServices.hpp"
 #include "render/RenderWindow.hpp"
 #include "tests/TestHarness.hpp"
-#include "ServiceProvider.hpp"
 
+#include <array>
 #include <cstddef>
 #include <filesystem>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
-#include <utility>
 #include <vector>
 
 namespace {
 
-struct LogEntry {
-    smgpc::logging::Level level {};
-    smgpc::logging::Category category {};
-    std::string message {};
-};
-
 class RecordingLogger final : public smgpc::logging::ILogger {
 public:
     void write(std::FILE *, std::string_view, int, smgpc::logging::Level level, smgpc::logging::Category category, std::string_view message) override {
-        entries.push_back(LogEntry {
-            .level = level, .category = category, .message = std::string(message)
-        });
+        entries.push_back({.level = level, .category = category, .message = std::string(message)});
     }
+
+    struct LogEntry {
+        smgpc::logging::Level level {};
+        smgpc::logging::Category category {};
+        std::string message {};
+    };
 
     std::vector<LogEntry> entries {};
 };
 
-class CountingRenderer final : public smgpc::render::Renderer {
+class FakeWindowService final : public smgpc::render::IWindowService {
 public:
-    void on_frame_enter() override {
-        ++enter_calls;
-    }
-
-    void draw() override {
-        ++draw_calls;
-    }
-
-    void on_frame_exit() override {
-        ++exit_calls;
-    }
-
-    int enter_calls {};
-    int draw_calls {};
-    int exit_calls {};
-};
-
-class FakeRendererService final : public smgpc::render::IRendererService {
-public:
-    explicit FakeRendererService(std::vector<bool> poll_results)
-        : _poll_results(std::move(poll_results)) {
-    }
-
-    smgpc::render::Renderer &renderer() override {
-        return renderer_instance;
-    }
-
     bool poll_events() override {
-        if (_poll_index >= _poll_results.size()) {
-            return false;
-        }
-        return _poll_results[_poll_index++];
-    }
-
-    void render_frame() override {
-        ++render_frame_calls;
-    }
-
-    void capture_next_frame(std::filesystem::path output_path) override {
-        capture_paths.push_back(std::move(output_path));
-    }
-
-    [[nodiscard]] std::optional<std::filesystem::path> poll_completed_capture() override {
-        return std::nullopt;
-    }
-
-    [[nodiscard]] bool is_key_down(int) const override {
         return false;
     }
 
-    [[nodiscard]] std::pair<std::uint16_t, std::uint16_t> framebuffer_size() const override {
+    [[nodiscard]] bool should_close() const override {
+        return false;
+    }
+
+    [[nodiscard]] bool is_focused() const override {
+        return true;
+    }
+
+    [[nodiscard]] bool is_minimized() const override {
+        return false;
+    }
+
+    [[nodiscard]] smgpc::render::FramebufferInfo framebuffer_size() const override {
         return {320U, 240U};
     }
 
-    CountingRenderer renderer_instance {};
-    int render_frame_calls {};
-    std::vector<std::filesystem::path> capture_paths {};
+    [[nodiscard]] smgpc::render::NativeWindowHandle native_handle() const override {
+        return {nullptr, nullptr};
+    }
+};
+
+class FakeInputSnapshot final : public smgpc::render::IInputSnapshot {
+public:
+    [[nodiscard]] bool is_key_down(int key) const override {
+        if (key < 0 || key >= static_cast<int>(_keys.size())) {
+            return false;
+        }
+        return _keys[static_cast<std::size_t>(key)];
+    }
 
 private:
-    std::vector<bool> _poll_results {};
-    std::size_t _poll_index {};
+    std::array<bool, 1024> _keys {};
+};
+
+class FakeInputService final : public smgpc::render::IInputService {
+public:
+    [[nodiscard]] const smgpc::render::IInputSnapshot &snapshot() const override {
+        return _snapshot;
+    }
+
+private:
+    FakeInputSnapshot _snapshot {};
+};
+
+class FakeRendererEngine final : public smgpc::render::IRendererEngine {
+public:
+    [[nodiscard]] smgpc::render::FrameContext begin_frame() override {
+        ++begin_frame_calls;
+        return {
+            .frame_index = frame_counter++,
+            .frame_time_seconds = static_cast<double>(frame_counter),
+            .frame_delta_seconds = 0.0166667,
+            .framebuffer = framebuffer_size(),
+            .has_focus = true,
+            .is_minimized = false,
+            .input_snapshot = nullptr,
+        };
+    }
+
+    void submit(const smgpc::render::RenderCommandBuffer &) override {
+    }
+
+    void submit(std::span<const smgpc::render::RenderCommandBuffer>) override {
+    }
+
+    void end_frame() override {
+        ++end_frame_calls;
+    }
+
+    void request_capture(smgpc::render::RenderCaptureRequest request) override {
+        capture_requests.push_back(std::move(request.path));
+    }
+
+    [[nodiscard]] std::optional<std::filesystem::path> poll_completed_capture() override {
+        if (capture_requests.empty()) {
+            return std::nullopt;
+        }
+
+        auto output_path = capture_requests.front();
+        capture_requests.erase(capture_requests.begin());
+        return output_path;
+    }
+
+    [[nodiscard]] smgpc::render::FramebufferInfo framebuffer_size() const override {
+        return {320U, 240U};
+    }
+
+    int begin_frame_calls {};
+    int end_frame_calls {};
+    std::vector<std::filesystem::path> capture_requests {};
+
+private:
+    std::uint64_t frame_counter {};
 };
 
 class FakeGameAssetService final : public smgpc::assets::IGameAssetService {
@@ -146,15 +181,21 @@ public:
 
 $test("Game::create_default_game_service builds with valid dependencies") {
     auto logger = std::make_unique<RecordingLogger>();
-    auto renderer_service = FakeRendererService(std::vector<bool> {false});
-    auto asset_service = FakeGameAssetService();
+    FakeWindowService window_service {};
+    FakeInputService input_service {};
+    FakeRendererEngine renderer_engine {};
+    FakeGameAssetService asset_service {};
 
-    smgpc::di::DependencyReference<smgpc::render::IRendererService> renderer_service_ref(renderer_service);
+    smgpc::di::DependencyReference<smgpc::render::IWindowService> window_service_ref(window_service);
+    smgpc::di::DependencyReference<smgpc::render::IInputService> input_service_ref(input_service);
+    smgpc::di::DependencyReference<smgpc::render::IRendererEngine> renderer_engine_ref(renderer_engine);
     smgpc::di::DependencyReference<smgpc::assets::IGameAssetService> asset_service_ref(asset_service);
     smgpc::di::DependencyReference<smgpc::logging::ILogger> logger_ref(*logger);
 
     auto game = smgpc::game::create_default_game_service(
-        std::move(renderer_service_ref),
+        std::move(window_service_ref),
+        std::move(input_service_ref),
+        std::move(renderer_engine_ref),
         std::move(asset_service_ref),
         std::move(logger_ref));
 

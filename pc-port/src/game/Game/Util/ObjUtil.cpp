@@ -17,8 +17,8 @@ namespace MR {
 void tryRumblePadMiddle(void *pActor, int intensity) {
     (void)pActor;
 
-    auto *logger = smgpc::game::compat::runtime_context().logger;
-    if (logger != nullptr) {
+    const auto &logger = smgpc::game::compat::runtime_context().logger;
+    if (logger) {
         logger->debug(__FILE__, __LINE__, smgpc::logging::Category::GAME, "tryRumblePadMiddle intensity={}", intensity);
     }
 }

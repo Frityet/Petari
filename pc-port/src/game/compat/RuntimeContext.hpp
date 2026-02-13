@@ -1,5 +1,8 @@
 #pragma once
 
+#include "RendererService.hpp"
+#include "ServiceProvider.hpp"
+
 namespace smgpc::assets {
 class IGameAssetService;
 }
@@ -8,16 +11,13 @@ namespace smgpc::logging {
 class ILogger;
 }
 
-namespace smgpc::render {
-class IRendererService;
-}
-
 namespace smgpc::game::compat {
 
 struct RuntimeContext {
-    assets::IGameAssetService *asset_service {};
-    render::IRendererService *renderer_service {};
-    logging::ILogger *logger {};
+    di::OptionalDependencyReference<assets::IGameAssetService> asset_service {};
+    di::OptionalDependencyReference<render::IRendererEngine> renderer_engine {};
+    di::OptionalDependencyReference<render::IInputService> input_service {};
+    di::OptionalDependencyReference<logging::ILogger> logger {};
     bool is_widescreen {true};
 };
 

@@ -1,30 +1,26 @@
 #include "GameServices.hpp"
 
 #include <cerrno>
-#include <chrono>
 #include <cstdlib>
-#include <cstdio>
-#include <cstdint>
 #include <filesystem>
+#include <cstdint>
 #include <limits>
 #include <memory>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <stdexcept>
-#include <utility>
 #include <vector>
 
-#include "GameAssetService.hpp"
-#include "Logger.hpp"
-#include "RenderWindow.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
 #include "Game/Screen/TitleSequenceProduct.hpp"
+#include "GameAssetService.hpp"
+#include "Logger.hpp"
 #include "compat/RuntimeContext.hpp"
 #include "layout/LayoutArchiveLoader.hpp"
-#include "layout/LayoutBgfxRenderer.hpp"
+#include "layout/LayoutRenderPass.hpp"
 #include "layout/LayoutDrawList.hpp"
+#include "core/RenderCommandBuffer.hpp"
 
 namespace smgpc::game {
 namespace {
@@ -90,19 +86,19 @@ struct FrameCaptureConfiguration {
     errno = 0;
     char *end_pointer = nullptr;
     const unsigned long parsed_value = std::strtoul(value, &end_pointer, 10);
-    if (errno != 0 or end_pointer == value or *end_pointer != '\0' or parsed_value == 0UL or parsed_value > std::numeric_limits<std::uint32_t>::max()) {
+    if (errno != 0 || end_pointer == value || *end_pointer != '\0' || parsed_value == 0UL || parsed_value > std::numeric_limits<std::uint32_t>::max()) {
         return std::nullopt;
     }
 
     return static_cast<std::uint32_t>(parsed_value);
 }
 
-[[nodiscard]] FrameCaptureConfiguration load_frame_capture_configuration(logging::ILogger *logger) {
+[[nodiscard]] FrameCaptureConfiguration load_frame_capture_configuration(di::OptionalDependencyReference<logging::ILogger> logger) {
     const auto capture_directory = get_path_from_environment("SMGPC_CAPTURE_DIR");
     const auto capture_every_frames = get_positive_number_from_environment("SMGPC_CAPTURE_EVERY");
     const auto capture_maximum_frames = get_positive_number_from_environment("SMGPC_CAPTURE_MAX");
     const auto capture_start_frame = get_positive_number_from_environment("SMGPC_CAPTURE_START");
-    const bool capture_enabled = capture_directory.has_value() or capture_every_frames.has_value() or capture_maximum_frames.has_value() or capture_start_frame.has_value();
+    const bool capture_enabled = capture_directory.has_value() || capture_every_frames.has_value() || capture_maximum_frames.has_value() || capture_start_frame.has_value();
 
     FrameCaptureConfiguration configuration {};
     if (not capture_enabled) {
@@ -119,14 +115,28 @@ struct FrameCaptureConfiguration {
     std::filesystem::create_directories(configuration.output_directory, filesystem_error);
     if (filesystem_error) {
         configuration.enabled = false;
-        if (logger != nullptr) {
-            logger->warning(__FILE__, __LINE__, logging::Category::GAME, "Frame capture disabled because directory creation failed: {} ({})", configuration.output_directory.string(), filesystem_error.message());
+        if (logger) {
+            logger->warning(
+                __FILE__,
+                __LINE__,
+                logging::Category::GAME,
+                "Frame capture disabled because directory creation failed: {} ({})",
+                configuration.output_directory.string(),
+                filesystem_error.message());
         }
         return configuration;
     }
 
-    if (logger != nullptr) {
-        logger->info(__FILE__, __LINE__, logging::Category::GAME, "Frame capture enabled: dir={}, every={}, max={}, start={}", configuration.output_directory.string(), configuration.capture_every_frames, configuration.maximum_captures, configuration.capture_start_frame);
+    if (logger) {
+        logger->info(
+            __FILE__,
+            __LINE__,
+            logging::Category::GAME,
+            "Frame capture enabled: dir={}, every={}, max={}, start={}",
+            configuration.output_directory.string(),
+            configuration.capture_every_frames,
+            configuration.maximum_captures,
+            configuration.capture_start_frame);
     }
 
     return configuration;
@@ -138,7 +148,7 @@ struct FrameCaptureConfiguration {
     return capture_directory / file_name;
 }
 
-[[nodiscard]] std::pair<float, float> resolve_layout_size(const LayoutActor *logo_layout, render::IRendererService *renderer_service) {
+[[nodiscard]] std::pair<float, float> resolve_layout_size(const LayoutActor *logo_layout, di::OptionalDependencyReference<render::IRendererEngine> renderer_engine) {
     if (logo_layout != nullptr) {
         const auto *resource = logo_layout->getResource();
         if (resource != nullptr && resource->layout.size.x > 0.0F && resource->layout.size.y > 0.0F) {
@@ -146,9 +156,9 @@ struct FrameCaptureConfiguration {
         }
     }
 
-    if (renderer_service != nullptr) {
-        const auto [framebuffer_width, framebuffer_height] = renderer_service->framebuffer_size();
-        return {static_cast<float>(framebuffer_width), static_cast<float>(framebuffer_height)};
+    if (renderer_engine) {
+        const auto framebuffer = renderer_engine->framebuffer_size();
+        return {static_cast<float>(framebuffer.width), static_cast<float>(framebuffer.height)};
     }
 
     return {1280.0F, 720.0F};
@@ -157,24 +167,31 @@ struct FrameCaptureConfiguration {
 class DesktopGame final : public IGame {
 public:
     DesktopGame(
-        di::DependencyReference<render::IRendererService> renderer_service,
+        di::DependencyReference<render::IWindowService> window_service,
+        di::DependencyReference<render::IInputService> input_service,
+        di::DependencyReference<render::IRendererEngine> renderer_engine,
         di::DependencyReference<assets::IGameAssetService> asset_service,
         di::DependencyReference<logging::ILogger> logger)
-        : _renderer_service(std::move(renderer_service)), _asset_service(std::move(asset_service)), _logger(std::move(logger)) {
+        : _window_service(std::move(window_service)),
+          _input_service(std::move(input_service)),
+          _renderer_engine(std::move(renderer_engine)),
+          _asset_service(std::move(asset_service)),
+          _logger(std::move(logger)) {
     }
 
     [[nodiscard]] int run() override {
         _logger->info(__FILE__, __LINE__, logging::Category::GAME, "Starting game loop");
 
-        const auto [initial_framebuffer_width, initial_framebuffer_height] = _renderer_service->framebuffer_size();
+        const auto [initial_framebuffer_width, initial_framebuffer_height] = _renderer_engine->framebuffer_size();
         const bool is_widescreen = initial_framebuffer_height == 0U
             ? true
             : static_cast<float>(initial_framebuffer_width) / static_cast<float>(initial_framebuffer_height) > 1.34F;
 
         compat::set_runtime_context(compat::RuntimeContext {
-            .asset_service = &_asset_service.get(),
-            .renderer_service = &_renderer_service.get(),
-            .logger = &_logger.get(),
+            .asset_service = _asset_service,
+            .renderer_engine = _renderer_engine,
+            .input_service = _input_service,
+            .logger = _logger,
             .is_widescreen = is_widescreen,
         });
 
@@ -187,48 +204,37 @@ public:
             if (not layout->isDead()) {
                 layout->startAnim("Wait", 0U);
                 background_layouts.push_back(std::move(layout));
-            } else {
-                _logger->warning(
-                    __FILE__,
-                    __LINE__,
-                    logging::Category::GAME,
-                    "Background layout {} could not be loaded; skipping",
-                    layout_name);
             }
         }
 
         TitleSequenceProduct title_sequence {};
         title_sequence.appear();
 
-        std::unique_ptr<render::layout::LayoutBgfxRenderer> layout_renderer {};
+        std::unique_ptr<render::layout::LayoutRenderPass> layout_renderer {};
         render::layout::LayoutDrawList draw_list {};
         draw_list.reserve(512U);
+        render::core::RenderCommandBuffer layout_pass_commands {};
 
-        const FrameCaptureConfiguration capture_configuration = load_frame_capture_configuration(&_logger.get());
+        const FrameCaptureConfiguration capture_configuration = load_frame_capture_configuration(_logger);
         std::uint64_t rendered_frame_count = 0U;
         std::uint64_t requested_capture_count = 0U;
         bool capture_request_pending = false;
-
-        using Clock = std::chrono::steady_clock;
         constexpr double FIXED_STEP_SECONDS = 1.0 / 60.0;
         constexpr double MAX_DELTA_SECONDS = 0.25;
-
-        auto previous_time = Clock::now();
         double accumulator = FIXED_STEP_SECONDS * 2.0;
 
-        while (_renderer_service->poll_events()) {
-            const auto now = Clock::now();
-            auto delta_seconds = std::chrono::duration<double>(now - previous_time).count();
-            previous_time = now;
+        while (_window_service->poll_events()) {
+            const auto frame_context = _renderer_engine->begin_frame();
 
+            auto delta_seconds = frame_context.frame_delta_seconds;
             if (delta_seconds < 0.0) {
                 delta_seconds = 0.0;
             }
             if (delta_seconds > MAX_DELTA_SECONDS) {
                 delta_seconds = MAX_DELTA_SECONDS;
             }
-
             accumulator += delta_seconds;
+
             while (accumulator >= FIXED_STEP_SECONDS) {
                 for (auto &layout : background_layouts) {
                     layout->movement();
@@ -249,44 +255,41 @@ public:
             }
 
             if (layout_renderer == nullptr) {
-                layout_renderer = std::make_unique<render::layout::LayoutBgfxRenderer>(di::DependencyReference<logging::ILogger>{_logger.get()});
+                layout_renderer = std::make_unique<render::layout::LayoutRenderPass>();
             }
 
-            _renderer_service->render_frame();
-            const auto [framebuffer_width, framebuffer_height] = _renderer_service->framebuffer_size();
-            const auto [layout_width, layout_height] = resolve_layout_size(title_sequence.getLogoLayout(), &_renderer_service.get());
-            layout_renderer->draw(
+            layout_pass_commands.clear();
+            const auto framebuffer = _renderer_engine->framebuffer_size();
+            const auto [layout_width, layout_height] = resolve_layout_size(title_sequence.getLogoLayout(), _renderer_engine);
+            layout_renderer->record(
+                layout_pass_commands,
                 draw_list,
-                framebuffer_width,
-                framebuffer_height,
+                framebuffer.width,
+                framebuffer.height,
                 layout_width,
                 layout_height);
+            _renderer_engine->submit(layout_pass_commands);
+
             if (capture_configuration.enabled) {
                 const bool under_capture_limit = capture_configuration.maximum_captures == 0U || requested_capture_count < capture_configuration.maximum_captures;
                 const bool after_capture_start = rendered_frame_count >= capture_configuration.capture_start_frame;
                 const std::uint64_t capture_frame_index = after_capture_start ? (rendered_frame_count - capture_configuration.capture_start_frame) : 0U;
-                const bool capture_due = after_capture_start and (capture_frame_index % capture_configuration.capture_every_frames == 0U);
-                if (under_capture_limit and capture_due and not capture_request_pending) {
-                    _renderer_service->capture_next_frame(make_capture_path(capture_configuration.output_directory, requested_capture_count));
+                const bool capture_due = after_capture_start && (capture_frame_index % capture_configuration.capture_every_frames == 0U);
+                if (under_capture_limit && capture_due && not capture_request_pending) {
+                    _renderer_engine->request_capture(render::RenderCaptureRequest {make_capture_path(capture_configuration.output_directory, requested_capture_count)});
                     ++requested_capture_count;
                     capture_request_pending = true;
                 }
             }
 
-            auto &renderer = _renderer_service->renderer();
-            renderer.on_frame_enter();
-            renderer.draw();
-            renderer.on_frame_exit();
-            while (true) {
-                auto completed_capture = _renderer_service->poll_completed_capture();
-                if (not completed_capture.has_value()) {
-                    break;
-                }
+            _renderer_engine->end_frame();
+
+            while (auto completed_capture = _renderer_engine->poll_completed_capture()) {
                 capture_request_pending = false;
                 _logger->debug(__FILE__, __LINE__, logging::Category::GAME, "Frame capture available at {}", completed_capture->string());
             }
-            ++rendered_frame_count;
 
+            ++rendered_frame_count;
             if (not title_sequence.isActive()) {
                 _logger->info(__FILE__, __LINE__, logging::Category::GAME, "Title sequence reached Dead state");
                 break;
@@ -298,7 +301,9 @@ public:
     }
 
 private:
-    di::DependencyReference<render::IRendererService> _renderer_service;
+    di::DependencyReference<render::IWindowService> _window_service;
+    di::DependencyReference<render::IInputService> _input_service;
+    di::DependencyReference<render::IRendererEngine> _renderer_engine;
     di::DependencyReference<assets::IGameAssetService> _asset_service;
     di::DependencyReference<logging::ILogger> _logger;
 };
@@ -306,10 +311,17 @@ private:
 }  // namespace
 
 std::unique_ptr<IGame> create_default_game_service(
-    di::DependencyReference<render::IRendererService> renderer_service,
+    di::DependencyReference<render::IWindowService> window_service,
+    di::DependencyReference<render::IInputService> input_service,
+    di::DependencyReference<render::IRendererEngine> renderer_engine,
     di::DependencyReference<assets::IGameAssetService> asset_service,
     di::DependencyReference<logging::ILogger> logger) {
-    return std::make_unique<DesktopGame>(std::move(renderer_service), std::move(asset_service), std::move(logger));
+    return std::make_unique<DesktopGame>(
+        std::move(window_service),
+        std::move(input_service),
+        std::move(renderer_engine),
+        std::move(asset_service),
+        std::move(logger));
 }
 
 }  // namespace smgpc::game

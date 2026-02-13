@@ -1,7 +1,9 @@
 #pragma once
 
 #include <concepts>
+#include <cstddef>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <tuple>
 #include <type_traits>
@@ -36,6 +38,68 @@ public:
 
     [[nodiscard]] constexpr T *operator->() const {
         return _service;
+    }
+
+private:
+    T *_service {};
+};
+
+class NullDependencyReference : public std::bad_optional_access {
+public:
+    const std::type_info &type_id;
+
+    constexpr inline NullDependencyReference(const std::type_info &tid): type_id(tid) {}
+
+    const char *what() const noexcept override
+    {
+        static char buf[1024];
+        snprintf(buf, sizeof(buf), "dependency '%s' not found", type_id.name());
+        return buf;
+    }
+};
+
+template <typename T>
+class OptionalDependencyReference final {
+public:
+    constexpr OptionalDependencyReference() = default;
+    constexpr OptionalDependencyReference(std::nullptr_t) : _service(nullptr) {
+    }
+
+    constexpr OptionalDependencyReference(T *service) : _service(service) {
+    }
+
+    explicit constexpr OptionalDependencyReference(T &service)
+        : _service(std::addressof(service)) {
+    }
+
+    constexpr OptionalDependencyReference(DependencyReference<T> &service)
+        : _service(service.operator->()) {
+    }
+
+    constexpr OptionalDependencyReference(const DependencyReference<T> &service)
+        : _service(service.operator->()) {
+    }
+
+    [[nodiscard]] constexpr bool has_value() const noexcept {
+        return _service != nullptr;
+    }
+
+    [[nodiscard]] constexpr explicit operator bool() const noexcept {
+        return has_value();
+    }
+
+    [[nodiscard]] constexpr T *get() const {
+        if (not has_value())
+            throw NullDependencyReference(typeid(T));
+        return _service;
+    }
+
+    [[nodiscard]] constexpr T &operator*() const {
+        return *get();
+    }
+
+    [[nodiscard]] constexpr T *operator->() const {
+        return get();
     }
 
 private:
