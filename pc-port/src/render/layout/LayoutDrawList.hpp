@@ -30,13 +30,23 @@ struct QuadCommand {
     float u1 {};
     float v1 {};
 
+    float u0_secondary {};
+    float v0_secondary {};
+    float u1_secondary {};
+    float v1_secondary {};
+
     std::uint32_t color_tl {};
     std::uint32_t color_tr {};
     std::uint32_t color_bl {};
     std::uint32_t color_br {};
 
     BlendMode blend_mode {BlendMode::Alpha};
+
+    bool use_mask_texture {};
+    bool invert_mask {};
+    bool mask_uses_alpha {};
     TextureRef texture {};
+    TextureRef mask_texture {};
 };
 
 class LayoutDrawList {

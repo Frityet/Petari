@@ -13,32 +13,21 @@
 #include <string_view>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
-#include "AssetServices.hpp"
+#include "GameAssetService.hpp"
 #include "Logger.hpp"
 #include "RenderWindow.hpp"
+#include "Game/Screen/LayoutActor.hpp"
+#include "Game/Screen/SimpleLayout.hpp"
+#include "Game/Screen/TitleSequenceProduct.hpp"
+#include "compat/RuntimeContext.hpp"
+#include "layout/LayoutArchiveLoader.hpp"
 #include "layout/LayoutBgfxRenderer.hpp"
 #include "layout/LayoutDrawList.hpp"
-#include "title/TitleAssets.hpp"
-#include "title/TitleLayoutActor.hpp"
-#include "title/TitleRuntimeMR.hpp"
-#include "title/TitleSequenceProduct.hpp"
 
 namespace smgpc::game {
 namespace {
-
-[[nodiscard]] const char *asset_error_to_string(assets::AssetErrorCode code) {
-    switch (code) {
-    case assets::AssetErrorCode::NotFound:
-        return "not-found";
-    case assets::AssetErrorCode::IoFailure:
-        return "io-failure";
-    case assets::AssetErrorCode::InvalidFormat:
-        return "invalid-format";
-    }
-
-    return "unknown";
-}
 
 struct FrameCaptureConfiguration {
     bool enabled {};
@@ -47,6 +36,42 @@ struct FrameCaptureConfiguration {
     std::uint32_t maximum_captures {};
     std::uint32_t capture_start_frame {};
 };
+
+[[nodiscard]] std::string trim_ascii_space(std::string text) {
+    const auto first = text.find_first_not_of(" \t\r\n");
+    if (first == std::string::npos) {
+        return {};
+    }
+
+    const auto last = text.find_last_not_of(" \t\r\n");
+    return text.substr(first, last - first + 1U);
+}
+
+[[nodiscard]] std::vector<std::string> load_boot_background_layouts() {
+    const char *value = std::getenv("SMGPC_BOOT_BACKGROUND_LAYOUTS");
+    if (value == nullptr || value[0] == '\0') {
+        return {};
+    }
+
+    std::vector<std::string> layouts {};
+    std::string input(value);
+    std::size_t begin = 0U;
+
+    while (begin <= input.size()) {
+        const auto comma = input.find(',', begin);
+        const auto end = (comma == std::string::npos) ? input.size() : comma;
+        auto token = trim_ascii_space(input.substr(begin, end - begin));
+        if (not token.empty()) {
+            layouts.push_back(std::move(token));
+        }
+        if (comma == std::string::npos) {
+            break;
+        }
+        begin = comma + 1U;
+    }
+
+    return layouts;
+}
 
 [[nodiscard]] std::optional<std::filesystem::path> get_path_from_environment(const char *name) {
     const char *value = std::getenv(name);
@@ -113,162 +138,30 @@ struct FrameCaptureConfiguration {
     return capture_directory / file_name;
 }
 
-[[nodiscard]] const assets::layout::tpl::DecodedImage *find_title_space_texture(const title::TitleAssets &title_assets) {
-    for (const auto key : {std::string_view("mytitlespacekor"), std::string_view("mytitlespace")}) {
-        const auto found = title_assets.title_logo.textures_by_name.find(std::string(key));
-        if (found != title_assets.title_logo.textures_by_name.end()) {
-            return &found->second;
+[[nodiscard]] std::pair<float, float> resolve_layout_size(const LayoutActor *logo_layout, render::IRendererService *renderer_service) {
+    if (logo_layout != nullptr) {
+        const auto *resource = logo_layout->getResource();
+        if (resource != nullptr && resource->layout.size.x > 0.0F && resource->layout.size.y > 0.0F) {
+            return {resource->layout.size.x, resource->layout.size.y};
         }
     }
 
-    for (const auto &[name, texture] : title_assets.title_logo.textures_by_name) {
-        if (name.find("mytitlespace") != std::string::npos) {
-            return &texture;
-        }
+    if (renderer_service != nullptr) {
+        const auto [framebuffer_width, framebuffer_height] = renderer_service->framebuffer_size();
+        return {static_cast<float>(framebuffer_width), static_cast<float>(framebuffer_height)};
     }
 
-    return nullptr;
-}
-
-[[nodiscard]] render::layout::TextureRef make_texture_ref(const assets::layout::tpl::DecodedImage *texture) {
-    if (texture == nullptr || texture->rgba8.empty() || texture->width == 0U || texture->height == 0U) {
-        return render::layout::TextureRef {
-            .id = 0U,
-            .rgba8 = nullptr,
-            .width = 0U,
-            .height = 0U,
-        };
-    }
-
-    return render::layout::TextureRef {
-        .id = static_cast<std::uint64_t>(reinterpret_cast<std::uintptr_t>(texture)),
-        .rgba8 = texture->rgba8.data(),
-        .width = texture->width,
-        .height = texture->height,
-    };
-}
-
-void append_title_backdrop(render::layout::LayoutDrawList *draw_list, float layout_width, float layout_height, const assets::layout::tpl::DecodedImage *space_texture) {
-    if (draw_list == nullptr || layout_width <= 0.0F || layout_height <= 0.0F) {
-        return;
-    }
-
-    const auto no_texture = make_texture_ref(nullptr);
-    const auto space_texture_ref = make_texture_ref(space_texture);
-
-    const float horizon_y = layout_height * 0.56F;
-
-    draw_list->push_quad(render::layout::QuadCommand {
-        .x0 = 0.0F,
-        .y0 = 0.0F,
-        .x1 = layout_width,
-        .y1 = horizon_y,
-        .u0 = 0.0F,
-        .v0 = 0.0F,
-        .u1 = 1.0F,
-        .v1 = 1.0F,
-        .color_tl = render::layout::pack_abgr(6U, 26U, 59U, 255U),
-        .color_tr = render::layout::pack_abgr(16U, 45U, 108U, 255U),
-        .color_bl = render::layout::pack_abgr(14U, 86U, 144U, 255U),
-        .color_br = render::layout::pack_abgr(42U, 98U, 162U, 255U),
-        .texture = no_texture,
-    });
-
-    draw_list->push_quad(render::layout::QuadCommand {
-        .x0 = layout_width * 0.35F,
-        .y0 = 0.0F,
-        .x1 = layout_width,
-        .y1 = layout_height * 0.50F,
-        .u0 = 0.0F,
-        .v0 = 0.0F,
-        .u1 = 1.0F,
-        .v1 = 1.0F,
-        .color_tl = render::layout::pack_abgr(74U, 46U, 135U, 0U),
-        .color_tr = render::layout::pack_abgr(92U, 62U, 178U, 120U),
-        .color_bl = render::layout::pack_abgr(54U, 84U, 145U, 0U),
-        .color_br = render::layout::pack_abgr(80U, 120U, 185U, 96U),
-        .blend_mode = render::layout::BlendMode::Additive,
-        .texture = no_texture,
-    });
-
-    if (space_texture_ref.id != 0U) {
-        draw_list->push_quad(render::layout::QuadCommand {
-            .x0 = 0.0F,
-            .y0 = 0.0F,
-            .x1 = layout_width,
-            .y1 = layout_height * 0.52F,
-            .u0 = 0.0F,
-            .v0 = 0.0F,
-            .u1 = 2.1F,
-            .v1 = 2.0F,
-            .color_tl = render::layout::pack_abgr(255U, 255U, 255U, 124U),
-            .color_tr = render::layout::pack_abgr(255U, 255U, 255U, 124U),
-            .color_bl = render::layout::pack_abgr(255U, 255U, 255U, 80U),
-            .color_br = render::layout::pack_abgr(255U, 255U, 255U, 80U),
-            .texture = space_texture_ref,
-        });
-    }
-
-    draw_list->push_quad(render::layout::QuadCommand {
-        .x0 = 0.0F,
-        .y0 = horizon_y - 9.0F,
-        .x1 = layout_width,
-        .y1 = horizon_y + 4.0F,
-        .u0 = 0.0F,
-        .v0 = 0.0F,
-        .u1 = 1.0F,
-        .v1 = 1.0F,
-        .color_tl = render::layout::pack_abgr(222U, 255U, 255U, 90U),
-        .color_tr = render::layout::pack_abgr(222U, 255U, 255U, 90U),
-        .color_bl = render::layout::pack_abgr(170U, 255U, 255U, 12U),
-        .color_br = render::layout::pack_abgr(170U, 255U, 255U, 12U),
-        .blend_mode = render::layout::BlendMode::Additive,
-        .texture = no_texture,
-    });
-
-    draw_list->push_quad(render::layout::QuadCommand {
-        .x0 = 0.0F,
-        .y0 = horizon_y - 2.0F,
-        .x1 = layout_width,
-        .y1 = layout_height,
-        .u0 = 0.0F,
-        .v0 = 0.0F,
-        .u1 = 1.0F,
-        .v1 = 1.0F,
-        .color_tl = render::layout::pack_abgr(84U, 237U, 243U, 255U),
-        .color_tr = render::layout::pack_abgr(84U, 237U, 243U, 255U),
-        .color_bl = render::layout::pack_abgr(10U, 33U, 78U, 255U),
-        .color_br = render::layout::pack_abgr(10U, 33U, 78U, 255U),
-        .texture = no_texture,
-    });
-
-    if (space_texture_ref.id != 0U) {
-        draw_list->push_quad(render::layout::QuadCommand {
-            .x0 = 0.0F,
-            .y0 = horizon_y + 4.0F,
-            .x1 = layout_width,
-            .y1 = layout_height,
-            .u0 = 0.0F,
-            .v0 = 0.2F,
-            .u1 = 2.1F,
-            .v1 = 2.2F,
-            .color_tl = render::layout::pack_abgr(255U, 255U, 255U, 52U),
-            .color_tr = render::layout::pack_abgr(255U, 255U, 255U, 52U),
-            .color_bl = render::layout::pack_abgr(255U, 255U, 255U, 22U),
-            .color_br = render::layout::pack_abgr(255U, 255U, 255U, 22U),
-            .texture = space_texture_ref,
-        });
-    }
+    return {1280.0F, 720.0F};
 }
 
 class DesktopGame final : public IGame {
 public:
     DesktopGame(
         std::shared_ptr<render::IRendererService> renderer_service,
-        std::shared_ptr<assets::IAssetManager> asset_manager,
+        std::shared_ptr<assets::IGameAssetService> asset_service,
         std::shared_ptr<logging::ILogger> logger)
-        : _renderer_service(std::move(renderer_service)), _asset_manager(std::move(asset_manager)), _logger(std::move(logger)) {
-        if (not _renderer_service or not _asset_manager or not _logger) {
+        : _renderer_service(std::move(renderer_service)), _asset_service(std::move(asset_service)), _logger(std::move(logger)) {
+        if (not _renderer_service or not _asset_service or not _logger) {
             throw std::invalid_argument("DesktopGame requires non-null injected services.");
         }
     }
@@ -276,30 +169,44 @@ public:
     [[nodiscard]] int run() override {
         _logger->info(__FILE__, __LINE__, logging::Category::GAME, "Starting game loop");
 
-        auto loaded_title_assets = title::load_title_assets(*_asset_manager, *_logger);
-        if (not loaded_title_assets) {
-            _logger->error(
-                __FILE__,
-                __LINE__,
-                logging::Category::GAME,
-                "Failed to load title assets [{}]: {}",
-                asset_error_to_string(loaded_title_assets.failure().code),
-                loaded_title_assets.failure().message);
-            return 1;
+        const auto [initial_framebuffer_width, initial_framebuffer_height] = _renderer_service->framebuffer_size();
+        const bool is_widescreen = initial_framebuffer_height == 0U
+            ? true
+            : static_cast<float>(initial_framebuffer_width) / static_cast<float>(initial_framebuffer_height) > 1.34F;
+
+        compat::set_runtime_context(compat::RuntimeContext {
+            .asset_service = _asset_service.get(),
+            .renderer_service = _renderer_service.get(),
+            .logger = _logger.get(),
+            .is_widescreen = is_widescreen,
+        });
+
+        std::vector<std::unique_ptr<SimpleLayout>> background_layouts {};
+        const auto background_layout_names = load_boot_background_layouts();
+        background_layouts.reserve(background_layout_names.size());
+        for (const auto &layout_name : background_layout_names) {
+            auto layout = std::make_unique<SimpleLayout>("BootBackground", layout_name.c_str(), 1, -1);
+            layout->appear();
+            if (not layout->isDead()) {
+                layout->startAnim("Wait", 0U);
+                background_layouts.push_back(std::move(layout));
+            } else {
+                _logger->warning(
+                    __FILE__,
+                    __LINE__,
+                    logging::Category::GAME,
+                    "Background layout {} could not be loaded; skipping",
+                    layout_name);
+            }
         }
 
-        title::TitleLayoutActor logo_layout(&loaded_title_assets->title_logo);
-        title::TitleLayoutActor press_start_layout(&loaded_title_assets->press_start);
-        title::TitleSequenceProduct title_sequence(&logo_layout, &press_start_layout);
-        render::layout::LayoutBgfxRenderer layout_renderer(_logger);
+        TitleSequenceProduct title_sequence {};
+        title_sequence.appear();
+
+        std::unique_ptr<render::layout::LayoutBgfxRenderer> layout_renderer {};
         render::layout::LayoutDrawList draw_list {};
         draw_list.reserve(512U);
-        const auto *title_space_texture = find_title_space_texture(*loaded_title_assets);
-        const float layout_width = loaded_title_assets->title_logo.layout.size.x;
-        const float layout_height = loaded_title_assets->title_logo.layout.size.y;
 
-        title_sequence.appear();
-        title::MR::setInputSource(_renderer_service.get(), _logger.get());
         const FrameCaptureConfiguration capture_configuration = load_frame_capture_configuration(_logger.get());
         std::uint64_t rendered_frame_count = 0U;
         std::uint64_t requested_capture_count = 0U;
@@ -326,19 +233,32 @@ public:
 
             accumulator += delta_seconds;
             while (accumulator >= FIXED_STEP_SECONDS) {
-                title::MR::beginFrame();
+                for (auto &layout : background_layouts) {
+                    layout->movement();
+                }
                 title_sequence.update();
                 accumulator -= FIXED_STEP_SECONDS;
             }
 
             draw_list.clear();
-            append_title_backdrop(&draw_list, layout_width, layout_height, title_space_texture);
-            logo_layout.appendDrawCommands(&draw_list, loaded_title_assets->fonts_by_name);
-            press_start_layout.appendDrawCommands(&draw_list, loaded_title_assets->fonts_by_name);
+            for (const auto &layout : background_layouts) {
+                layout->appendDrawCommands(&draw_list);
+            }
+            if (const auto *logo_layout = title_sequence.getLogoLayout(); logo_layout != nullptr) {
+                logo_layout->appendDrawCommands(&draw_list);
+            }
+            if (const auto *press_start_layout = title_sequence.getPressStartLayout(); press_start_layout != nullptr) {
+                press_start_layout->appendDrawCommands(&draw_list);
+            }
+
+            if (layout_renderer == nullptr) {
+                layout_renderer = std::make_unique<render::layout::LayoutBgfxRenderer>(_logger);
+            }
 
             _renderer_service->render_frame();
             const auto [framebuffer_width, framebuffer_height] = _renderer_service->framebuffer_size();
-            layout_renderer.draw(
+            const auto [layout_width, layout_height] = resolve_layout_size(title_sequence.getLogoLayout(), _renderer_service.get());
+            layout_renderer->draw(
                 draw_list,
                 framebuffer_width,
                 framebuffer_height,
@@ -382,7 +302,7 @@ public:
 
 private:
     std::shared_ptr<render::IRendererService> _renderer_service {};
-    std::shared_ptr<assets::IAssetManager> _asset_manager {};
+    std::shared_ptr<assets::IGameAssetService> _asset_service {};
     std::shared_ptr<logging::ILogger> _logger {};
 };
 
@@ -390,9 +310,9 @@ private:
 
 std::shared_ptr<IGame> create_default_game_service(
     std::shared_ptr<render::IRendererService> renderer_service,
-    std::shared_ptr<assets::IAssetManager> asset_manager,
+    std::shared_ptr<assets::IGameAssetService> asset_service,
     std::shared_ptr<logging::ILogger> logger) {
-    return std::make_shared<DesktopGame>(std::move(renderer_service), std::move(asset_manager), std::move(logger));
+    return std::make_shared<DesktopGame>(std::move(renderer_service), std::move(asset_service), std::move(logger));
 }
 
 }  // namespace smgpc::game

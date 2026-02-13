@@ -110,13 +110,15 @@ namespace {
         const auto tex_map_num = static_cast<std::size_t>(res_num_bits & 0xFU);
         const auto tex_srt_num = static_cast<std::size_t>((res_num_bits >> 4U) & 0xFU);
         const auto tex_coord_num = static_cast<std::size_t>((res_num_bits >> 8U) & 0xFU);
+        const auto has_tev_swap = ((res_num_bits >> 12U) & 0x1U) != 0U;
+        const auto ind_tex_srt_num = static_cast<std::size_t>((res_num_bits >> 13U) & 0x3U);
+        const auto ind_stage_num = static_cast<std::size_t>((res_num_bits >> 15U) & 0x7U);
         const auto tev_stage_num = static_cast<std::size_t>((res_num_bits >> 18U) & 0x1FU);
+        const auto has_alpha_compare = ((res_num_bits >> 23U) & 0x1U) != 0U;
+        const auto has_blend_mode = ((res_num_bits >> 24U) & 0x1U) != 0U;
         const auto chan_ctrl_num = static_cast<std::size_t>((res_num_bits >> 25U) & 0x1U);
         const auto mat_col_num = static_cast<std::size_t>((res_num_bits >> 27U) & 0x1U);
         material.tev_stage_count = static_cast<std::int32_t>(tev_stage_num);
-        if (material.name == "PicBloomA" || material.name == "PicBloomB" || material.name == "PicSpeculum" || material.name == "PicLogoShine") {
-            material.blend_mode = MaterialBlendMode::Additive;
-        }
 
         std::size_t resource_offset = 64U;
         if (not has_bytes(block, mat_offset, resource_offset)) {
@@ -160,18 +162,31 @@ namespace {
             };
         }
 
-        if (material.blend_mode == MaterialBlendMode::Additive) {
-            if (material.name == "PicLogoShine") {
-                material.mat_color[3U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[3U]) * 96U + 127U) / 255U);
-            } else {
-                material.mat_color[3U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[3U]) * 80U + 127U) / 255U);
-            }
+        resource_offset += mat_col_num * 4U;
+        if (has_tev_swap) {
+            resource_offset += 4U;
+        }
+        resource_offset += ind_tex_srt_num * 20U;
+        resource_offset += ind_stage_num * 4U;
+        resource_offset += tev_stage_num * 16U;
+        if (has_alpha_compare) {
+            resource_offset += 4U;
         }
 
-        if (material.name == "PicLogo") {
-            material.mat_color[0U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[0U]) * 220U + 127U) / 255U);
-            material.mat_color[1U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[1U]) * 220U + 127U) / 255U);
-            material.mat_color[2U] = static_cast<std::uint8_t>((static_cast<std::uint32_t>(material.mat_color[2U]) * 220U + 127U) / 255U);
+        if (has_blend_mode) {
+            if (not has_bytes(block, mat_offset + resource_offset, 4U)) {
+                return make_error("mat1 blend mode table exceeds block bounds.");
+            }
+
+            constexpr std::uint8_t GX_BM_BLEND = 1U;
+            constexpr std::uint8_t GX_BL_ONE = 1U;
+
+            const auto blend_type = read_u8(block, mat_offset + resource_offset + 0U);
+            const auto blend_src = read_u8(block, mat_offset + resource_offset + 1U);
+            const auto blend_dst = read_u8(block, mat_offset + resource_offset + 2U);
+            if (blend_type == GX_BM_BLEND && (blend_src == GX_BL_ONE || blend_dst == GX_BL_ONE)) {
+                material.blend_mode = MaterialBlendMode::Additive;
+            }
         }
 
         materials->push_back(std::move(material));

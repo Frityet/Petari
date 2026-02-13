@@ -24,16 +24,15 @@ class ServiceContainer {
     static_assert(are_unique<Services...>::value, "ServiceContainer requires unique service interface types.");
 
 public:
-    ServiceContainer(): _instances({}) {}
-    ServiceContainer(const ServiceContainer &) = delete;
-    ServiceContainer &operator=(const ServiceContainer &) = delete;
-    ServiceContainer(ServiceContainer &&) = default;
-    ServiceContainer &operator=(ServiceContainer &&) = default;
-    ~ServiceContainer() = default;
+    constexpr ServiceContainer(): _instances({}) {}
+    constexpr ServiceContainer(const ServiceContainer &) = delete;
+    constexpr ServiceContainer &operator=(const ServiceContainer &) = delete;
+    constexpr ServiceContainer(ServiceContainer &&) = default;
+    constexpr ServiceContainer &operator=(ServiceContainer &&) = default;
+    constexpr ~ServiceContainer() = default;
 
-    template <typename Service>
-    requires(contains_type_v<Service, Services...>)
-    void register_instance(std::shared_ptr<Service> service) {
+    template <typename Service> requires contains_type_v<Service, Services...>
+    constexpr void register_instance(std::shared_ptr<Service> service) {
         if (not service) {
             throw std::invalid_argument("Cannot register a null service instance.");
         }
@@ -41,14 +40,15 @@ public:
         std::get<std::shared_ptr<Service>>(_instances) = std::move(service);
     }
 
-    template <typename Service, typename Implementation = Service, typename... Args>
-    requires(contains_type_v<Service, Services...> and std::derived_from<Implementation, Service>)
-    void register_type(Args &&...args) {
+    template <typename Service, typename Implementation = Service, typename... Args> requires (contains_type_v<Service, Services...> and std::derived_from<Implementation, Service>)
+    constexpr void register_type(Args &&...args)
+    {
         register_instance<Service>(std::make_shared<Implementation>(std::forward<Args>(args)...));
     }
 
-    template <typename Service, typename Factory> requires(contains_type_v<Service, Services...> and std::invocable<Factory, ServiceContainer &> and std::convertible_to<std::invoke_result_t<Factory, ServiceContainer &>, std::shared_ptr<Service>>)
-    void register_factory(Factory &&factory) {
+    template <typename Service, typename Factory> requires (contains_type_v<Service, Services...> and std::invocable<Factory, ServiceContainer &> and std::convertible_to<std::invoke_result_t<Factory, ServiceContainer &>, std::shared_ptr<Service>>)
+    constexpr void register_factory(Factory &&factory)
+    {
         auto produced = std::invoke(std::forward<Factory>(factory), *this);
         register_instance<Service>(std::shared_ptr<Service>(std::move(produced)));
     }
@@ -58,7 +58,7 @@ public:
     { return std::get<std::shared_ptr<Service>>(_instances) != nullptr; }
 
     template <typename Service> requires contains_type_v<Service, Services...>
-    [[nodiscard]] const std::shared_ptr<Service> resolve_shared() const
+    [[nodiscard]] constexpr const std::shared_ptr<Service> resolve_shared() const
     {
         const auto &instance = std::get<std::shared_ptr<Service>>(_instances);
         if (not instance) {
@@ -68,7 +68,8 @@ public:
     }
 
     template <typename Service> requires contains_type_v<Service, Services...>
-    [[nodiscard]] Service &resolve() const {
+    [[nodiscard]] constexpr Service &resolve() const
+    {
         return *resolve_shared<Service>();
     }
 
