@@ -44,18 +44,19 @@ private:
     T *_service {};
 };
 
+using namespace std::string_literals;
+
 class NullDependencyReference : public std::bad_optional_access {
 public:
     const std::type_info &type_id;
 
-    constexpr inline NullDependencyReference(const std::type_info &tid): type_id(tid) {}
+    inline NullDependencyReference(const std::type_info &tid): type_id(tid), _msg("dependency '"s + type_id.name() + "' not found") {}
 
     const char *what() const noexcept override
-    {
-        static char buf[1024];
-        snprintf(buf, sizeof(buf), "dependency '%s' not found", type_id.name());
-        return buf;
-    }
+    { return _msg.c_str(); }
+
+private:
+    std::string _msg;
 };
 
 template <typename T>
@@ -124,7 +125,7 @@ template <typename...>
 struct always_false : std::false_type {};
 
 template <typename Interface, typename... Scopes>
-inline constexpr bool contains_interface_v = (std::same_as<Interface, typename Scopes::Type> || ...);
+inline constexpr bool contains_interface_v = (std::same_as<Interface, typename Scopes::Type> or ...);
 
 template <typename T>
 struct scope_traits {
@@ -148,16 +149,16 @@ template <typename T>
 inline constexpr bool is_scope_v = scope_traits<std::remove_cv_t<T>>::valid;
 
 template <typename T>
-inline constexpr bool is_singleton_scope_v = scope_traits<std::remove_cv_t<T>>::valid && scope_traits<std::remove_cv_t<T>>::singleton;
+inline constexpr bool is_singleton_scope_v = scope_traits<std::remove_cv_t<T>>::valid and scope_traits<std::remove_cv_t<T>>::singleton;
 
 template <typename T>
-inline constexpr bool is_transient_scope_v = scope_traits<std::remove_cv_t<T>>::valid && not is_singleton_scope_v<T>;
+inline constexpr bool is_transient_scope_v = scope_traits<std::remove_cv_t<T>>::valid and not is_singleton_scope_v<T>;
 
 template <typename... Scopes>
 struct unique_service_scopes : std::true_type {};
 
 template <typename Scope, typename... Rest>
-struct unique_service_scopes<Scope, Rest...> : std::bool_constant<!contains_interface_v<typename Scope::Type, Rest...> && unique_service_scopes<Rest...>::value> {};
+struct unique_service_scopes<Scope, Rest...> : std::bool_constant<not contains_interface_v<typename Scope::Type, Rest...> and unique_service_scopes<Rest...>::value> {};
 
 template <typename Service, typename... Scopes>
 struct service_scope_for;
@@ -206,7 +207,7 @@ template <typename Dependency, typename... Scopes>
 struct normalized_dependency {
     using raw_dependency = std::remove_cv_t<Dependency>;
     static_assert(
-        is_scope_v<raw_dependency> || contains_interface_v<raw_dependency, Scopes...>,
+        is_scope_v<raw_dependency> or contains_interface_v<raw_dependency, Scopes...>,
         "Dependency is unknown to this ServiceProvider.");
 
     using declared_scope = std::conditional_t<
@@ -220,7 +221,7 @@ struct normalized_dependency {
         raw_dependency,
         service_scope_for_t<raw_dependency, Scopes...>>;
     static_assert(
-        not is_scope_v<raw_dependency> || std::same_as<raw_dependency, service_scope_for_t<service_type, Scopes...>>,
+        not is_scope_v<raw_dependency> or std::same_as<raw_dependency, service_scope_for_t<service_type, Scopes...>>,
         "Dependency scope marker does not match the declaration in this ServiceProvider.");
 };
 
@@ -265,7 +266,7 @@ public:
         if (_state == State::Unregistered) {
             throw std::logic_error("Service has not been registered.");
         }
-        if (_state == State::Factory && not _instance) {
+        if (_state == State::Factory and not _instance) {
             _instance = _factory->create(provider);
             if (not _instance) {
                 throw std::logic_error("Factory produced a null singleton service.");
