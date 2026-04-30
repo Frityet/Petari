@@ -93,7 +93,7 @@ void ReturnDemoRailMove::start() {
     }
     MR::startBckPlayer(bckName, (char *) nullptr);
 
-    MR::startBck(this->powerStar, bckName, (char *) nullptr);
+    MR::startBck(this->powerStar, bckName, nullptr);
     this->pathDrawer->_B0 = 0.0f;
     this->pathDrawer->appear();
 };
