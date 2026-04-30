@@ -99,8 +99,8 @@ void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
             pBckName = "ResultFlyGrandStar";
         }
 
-        MR::startBckPlayer(pBckName, reinterpret_cast<char *>(nullptr));
-        MR::startBck(mPowerStar, pBckName, nullptr);
+        MR::startBckPlayer(bckName, (char *) nullptr);
+        MR::startBck(this->powerStar, bckName, nullptr);
 
         if (mIsGrandStar == false) {
             MR::startSoundPlayer("SE_PM_S_SPIN_DRV_COOL_DOWN", -1);
