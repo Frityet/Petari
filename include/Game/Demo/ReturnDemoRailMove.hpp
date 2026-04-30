@@ -2,10 +2,6 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/MapObj/SpinDriverPathDrawer.hpp"
-#include "Game/MapObj/SpinDriverShootPath.hpp"
-#include "Game/Util/JMapInfo.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 
 class ReturnDemoRailMove {
 public:
@@ -21,11 +17,11 @@ public:
     void start();
     void update(long, long);
 
-    /* 0x0 */ LiveActor* demoStarter;
-    /* 0x4 */ LiveActor* powerStar;
-    /* 0x8 */ bool isGrandStar;
-    /* 0xC */ TPos3f* transform;
-    /* 0x10 */ SpinDriverShootPath* shootPath;
-    /* 0x14 */ SpinDriverPathDrawer* pathDrawer;
-    /* 0x18 */ TVec3f forward;
+    /* 0x0 */ LiveActor* mDemoStarter; // Can be either StarReturnDemoStarter or GrandStarReturnDemoStarter
+    /* 0x4 */ LiveActor* mPowerStar;
+    /* 0x8 */ bool mIsGrandStar;
+    /* 0xC */ TPos3f* mTransform;
+    /* 0x10 */ SpinDriverShootPath* mShootPath;
+    /* 0x14 */ SpinDriverPathDrawer* mPathDrawer;
+    /* 0x18 */ TVec3f mForward;
 };
