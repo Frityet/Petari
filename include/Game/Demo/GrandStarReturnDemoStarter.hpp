@@ -1,14 +1,8 @@
 #pragma once
 
 #include "Game/Demo/ReturnDemoRailMove.hpp"
-#include "Game/LiveActor/ActorCameraInfo.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/Screen/StageResultInformer.hpp"
-#include "Game/Util/JMapInfo.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include <revolution.h>
 
 class GrandStarReturnDemoStarter : public LiveActor {
 public:
@@ -32,13 +26,12 @@ public:
     void exeFadeOut();
     void exeWaitDemoEnd();
 
-private:
-    /*0x8C*/ ReturnDemoRailMove* returnDemoRailMove; //ReturnDemoRailMove
-    /*0x90*/ StageResultInformer* stageResultInformer;
-    /*0x94*/ TPos3f prevTransform;
-    /*0xC4*/ TPos3f transform;
-    /*0xF4*/ PowerStar* powerstar;
-    /*0xF8*/ TVec3f distanceToCore;
-    /*0x104*/ TVec3f position;
-    /*0x110*/ ActorCameraInfo* actorCameraInfo;
+    /*0x8C*/ ReturnDemoRailMove* mReturnDemoRailMove;
+    /*0x90*/ StageResultInformer* mStageResultInformer;
+    /*0x94*/ TPos3f mPrevTransform;
+    /*0xC4*/ TPos3f mTransform;
+    /*0xF4*/ PowerStar* mPowerstar;
+    /*0xF8*/ TVec3f mDistanceToCore;
+    /*0x104*/ TVec3f mPosition;
+    /*0x110*/ ActorCameraInfo* mActorCameraInfo;
 };
