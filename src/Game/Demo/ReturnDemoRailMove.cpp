@@ -76,9 +76,9 @@ void ReturnDemoRailMove::start() {
     }
     MR::startBckPlayer(pBckName, reinterpret_cast<char *>(nullptr));
 
-    MR::startBck(mPowerStar, pBckName, nullptr);
-    mPathDrawer->_B0 = 0.0f;
-    mPathDrawer->appear();
+    MR::startBck(this->powerStar, bckName, nullptr);
+    this->pathDrawer->_B0 = 0.0f;
+    this->pathDrawer->appear();
 };
 
 void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
