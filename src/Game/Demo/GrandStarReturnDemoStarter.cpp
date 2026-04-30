@@ -10,7 +10,7 @@ namespace {
 
 GrandStarReturnDemoStarter::GrandStarReturnDemoStarter(const char* pName)
     : LiveActor(pName), mReturnDemoRailMove(), mStageResultInformer(), mPowerstar(),
-    mDistanceToCore(0.0f, 0.0f, 1.0f), mPosition(gZeroVec), mActorCameraInfo() {
+    mDistanceToCore(0.0f, 0.0f, 1.0f), mPowerstarPosition(gZeroVec), mActorCameraInfo() {
     mPrevTransform.identity();
     mTransform.identity();
 }
@@ -127,12 +127,9 @@ void GrandStarReturnDemoStarter::updateRushStarPos(const TVec3f& rPosition, long
     TVec3f offset;
     TVec3f newPosition;
 
-    mDistanceToCore.scale(100.0f * frame, offset);
-    offset.add(*newPosition, *position);
-
-    mTransform[0][3] = newPosition->x;
-    mTransform[1][3] = newPosition->y;
-    mTransform[2][3] = newPosition->z;
+    offset.scale(100.0f * frame, mDistanceToCore);
+    newPosition.add(mPowerstarPosition, offset);
+    mTransform.setTrans(newPosition);
 }
 
 void GrandStarReturnDemoStarter::tryStartStageResult(const char* pDemoName) {
@@ -166,8 +163,9 @@ void GrandStarReturnDemoStarter::exeMove() {
         }
     }
 
-    s32 total = MR::getDemoPartTotalStep(cDemoMovePartName);
-    s32 step = MR::getDemoPartStep(cDemoMovePartName);
+    const char* demoName = cDemoMovePartName;
+    s32 total = MR::getDemoPartTotalStep(demoName);
+    s32 step = MR::getDemoPartStep(demoName);
     mReturnDemoRailMove->update(step + 1, total);
 
     MR::startLevelSoundPlayer("SE_PM_LV_SPIN_DRV_FLY", -1);
@@ -201,7 +199,7 @@ void GrandStarReturnDemoStarter::exeFlyWait() {
 void GrandStarReturnDemoStarter::exeRushToCore() {
     TVec3f position;
     position.set(mPrevTransform[0][3], mPrevTransform[1][3], mPrevTransform[2][3]);
-
+    
     if (MR::isFirstStep(this)) {
         MR::startBckPlayer("ResultFlyGrandStarRush", (char *) nullptr);
         MR::startBck(mPowerstar, "ResultFlyGrandStarRush", (char *) nullptr);
@@ -209,7 +207,7 @@ void GrandStarReturnDemoStarter::exeRushToCore() {
         
         MR::hideJointAndChildren(mPowerstar, "PowerStar");
         calcOffsetStarToCore(&mDistanceToCore);
-        mDistanceToCore.add(mPosition, position);
+        mPowerstarPosition.add(position, mDistanceToCore);
         MR::normalize(&mDistanceToCore);
     }
 
@@ -239,7 +237,7 @@ void GrandStarReturnDemoStarter::exeRevival() {
 
     if (MR::isLessStep(this, 40)) {
         s32 step = getNerveStep();
-        updateRushStarPos(&mPosition, -(40-step));
+        updateRushStarPos(&mPowerstarPosition, -(40-step));
         MR::startLevelSound(mPowerstar, "SE_OJ_LV_GND_STAR_RUSH", -1, -1, -1);
     }
 
