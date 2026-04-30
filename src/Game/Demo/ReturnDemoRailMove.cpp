@@ -64,7 +64,7 @@ void ReturnDemoRailMove::calcPathPosDir(TVec3f* position, TVec3f* direction, flo
     }
 
     if (direction != nullptr) {
-        mShootPath->calcDirection(direction, t, 0.01);
+        mShootPath->calcDirection(direction, t, 0.01f);
     }
 };
 
