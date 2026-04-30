@@ -1,6 +1,8 @@
 #include "Game/Demo/ReturnDemoRailMove.hpp"
+#include "Game/Player/MarioActor.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
-void setResultFlyStartFrame(LiveActor* liveActor, long frame) NO_INLINE {
+void setResultFlyStartFrame(LiveActor* liveActor, long frame) {
     int maxFrames = MR::getBckFrameMax(liveActor);
     MR::setBckFrame(liveActor, maxFrames - frame%maxFrames);
 }
@@ -8,18 +10,20 @@ void setResultFlyStartFrame(LiveActor* liveActor, long frame) NO_INLINE {
 ReturnDemoRailMove::ReturnDemoRailMove(
     LiveActor* pDemoStarter, LiveActor* pPowerStar,
     const JMapInfoIter &rIter, bool isGrandstar,
-    TPos3f* pTransform)
-    : mDemoStarter(pDemoStarter), mPowerStar(pPowerStar),
-    mIsGrandStar(isGrandstar), mTransform(pTransform),
+    TPos3f* transform)
+    : mDemoStarter(demoStarter), mPowerStar(powerStar),
+    mIsGrandStar(isGrandstar), mTransform(transform),
     mShootPath(nullptr), mPathDrawer(nullptr), mForward(0.0f, 0.0f, 1.0f) {
-    mShootPath = new SpinDriverShootPath();
+    SpinDriverShootPath* shootPath = new SpinDriverShootPath;
+    mShootPath = shootPath;
     mShootPath->init(rIter);
 
-    mPathDrawer = new SpinDriverPathDrawer(mShootPath);
+    SpinDriverPathDrawer* pathDrawer = new SpinDriverPathDrawer(mShootPath);
+    mPathDrawer = pathDrawer;
     mPathDrawer->initWithoutIter();
     mPathDrawer->setColorNormal();
 
-    calcPathPosDir(nullptr, &mForward, 1.0f);
+    calcPathPosDir((TVec3f *) 0x0, &mForward, 1.0f);
 }
 
 void ReturnDemoRailMove::posToStart() {
@@ -27,18 +31,18 @@ void ReturnDemoRailMove::posToStart() {
     TVec3f forward;
     calcPathPosDir(&position, &forward, 0.0f);
 
-    TPos3f* transform = mTransform; // Necessary to match
-    MR::makeMtxUpFront(transform, forward, TVec3f(0.0f, -1.0f, 0.0f));
+    TVec3f down = TVec3f(0.0f, -1.0f, 0.0f);
+    MR::makeMtxUpFront(mTransform, forward, down);
     mTransform->setTrans(position);
     MR::setPlayerBaseMtx(*mTransform);
 };
 
 void ReturnDemoRailMove::posToEnd() {
     TVec3f position;
-    calcPathPosDir(&position, nullptr, 1.0f);
+    calcPathPosDir(&position, (TVec3f *) nullptr, 1.0f);
 
-    TPos3f* transform = mTransform; // Necessary to match
-    MR::makeMtxUpFront(transform, TVec3f(0.0f, 1.0f, 0.0f), mForward);
+    TVec3f up = TVec3f(0.0f, 1.0f, 0.0f);
+    MR::makeMtxUpFront(mTransform, up, mForward);
     mTransform->setTrans(position);
     MR::setPlayerBaseMtx(*mTransform);
 };
@@ -47,7 +51,7 @@ void ReturnDemoRailMove::offPathDraw() {
     mPathDrawer->kill();
 };
 
-inline s32 ReturnDemoRailMove::getDemoFlyBrakeFrame() const {
+s32 ReturnDemoRailMove::getDemoFlyBrakeFrame() const {
     if (mIsGrandStar != false) {
         return 296;
     }
@@ -60,7 +64,7 @@ void ReturnDemoRailMove::calcPathPosDir(TVec3f* position, TVec3f* direction, f32
     }
 
     if (direction != nullptr) {
-        mShootPath->calcDirection(direction, t, 0.01f);
+        mShootPath->calcDirection(direction, t, 0.01);
     }
 };
 
@@ -70,37 +74,41 @@ void ReturnDemoRailMove::setupPathDrawForGraneStarReturnDemo() {
 };
 
 void ReturnDemoRailMove::start() {
-    const char* pBckName = "ResultFly";
+    const char* bckName = "ResultFly";
     if (mIsGrandStar != false) {
-        pBckName = "ResultFlyGrandStar";
+        bckName = "ResultFlyGrandStar";
     }
     MR::startBckPlayer(pBckName, reinterpret_cast<char *>(nullptr));
 
-    MR::startBck(this->powerStar, bckName, nullptr);
-    this->pathDrawer->_B0 = 0.0f;
-    this->pathDrawer->appear();
+    MR::startBck(mPowerStar, bckName, nullptr);
+    mPathDrawer->_B0 = 0.0f;
+    mPathDrawer->appear();
 };
 
 void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
-    int firstDemoSteps = maxSteps - getDemoFlyBrakeFrame();
+    int firstDemoSteps = 45;
+    if (mIsGrandStar != false) {
+        firstDemoSteps = 296;
+    }
+    firstDemoSteps = maxSteps - firstDemoSteps;
     
     int secondDemoSteps = 34;
     if (mIsGrandStar != false) {
         secondDemoSteps = 98;
     }
 
-    f32 progress = ((f32)currentStep/maxSteps) - 1.0f;
-    f32 t = 1.0f - progress * progress;
+    float progress = ((float)currentStep/maxSteps) - 1.0f;
+    float t = 1.0f - progress * progress;
 
     if ((t < 0 && MR::isFirstStep(mDemoStarter))
          || MR::isStep(mDemoStarter, firstDemoSteps)) {
-        const char* pBckName = "ResultFly";
+        const char* bckName = "ResultFly";
         if (mIsGrandStar != false) {
-            pBckName = "ResultFlyGrandStar";
+            bckName = "ResultFlyGrandStar";
         }
 
         MR::startBckPlayer(bckName, (char *) nullptr);
-        MR::startBck(this->powerStar, bckName, nullptr);
+        MR::startBck(mPowerStar, bckName, nullptr);
 
         if (mIsGrandStar == false) {
             MR::startSoundPlayer("SE_PM_S_SPIN_DRV_COOL_DOWN", -1);
@@ -110,10 +118,12 @@ void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
     if (MR::isFirstStep(mDemoStarter)) {
         if (firstDemoSteps < 0) {
             firstDemoSteps = -firstDemoSteps;
-            MR::setBckFrame(MR::getPlayerDemoActor(), firstDemoSteps);
+            MarioActor* marioActor = (MarioActor *) MR::getPlayerDemoActor();
+            MR::setBckFrame(marioActor, firstDemoSteps);
             MR::setBckFrame(mPowerStar, firstDemoSteps);
         } else {
-            setResultFlyStartFrame(MR::getPlayerDemoActor(), firstDemoSteps);
+            MarioActor* marioActor = (MarioActor *) MR::getPlayerDemoActor();
+            setResultFlyStartFrame(marioActor, firstDemoSteps);
             setResultFlyStartFrame(mPowerStar, firstDemoSteps);
         }
     }
@@ -124,17 +134,19 @@ void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
     TVec3f direction;
     calcPathPosDir(&position, &direction, t);
 
-    MR::makeMtxUpFront(mTransform, direction, TVec3f(0.0f, -1.0f, 0.0f));
+    TVec3f down = TVec3f(0.0f, -1.0f, 0.0f);
+    MR::makeMtxUpFront(mTransform, direction, down);
 
     if (MR::isGreaterStep(mDemoStarter, maxSteps - secondDemoSteps)) {
-        f32 rate = MR::calcNerveEaseOutRate(mDemoStarter, maxSteps - secondDemoSteps, maxSteps);
+        float rate = MR::calcNerveEaseOutRate(mDemoStarter, maxSteps - secondDemoSteps, maxSteps);
         
         TPos3f transform;
-        MR::makeMtxUpFront(&transform, TVec3f(0.0f, 1.0f, 0.0f), mForward);
+        MR::makeMtxUpFront(&transform, up, mForward);
         MR::blendMtxRotateSlerp(*mTransform, transform, rate, *mTransform);
     }
 
-    mTransform->setTrans(position);
+    TVec3f translation;
+    MR::setMtxTrans(*mTransform, *translation);
     mPathDrawer->setCoord(t);
     MR::setPlayerBaseMtx(*mTransform);
 };

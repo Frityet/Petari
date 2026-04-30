@@ -2,10 +2,6 @@
 
 #include "Game/MapObj/SpinDriverPathDrawer.hpp"
 
-class LiveActor;
-class SpinDriverShootPath;
-class SpinDriverPathDrawer;
-
 class ReturnDemoRailMove {
 public:
     ReturnDemoRailMove(LiveActor*, LiveActor*,
