@@ -32,6 +32,6 @@ public:
     /*0xC4*/ TPos3f mTransform;
     /*0xF4*/ PowerStar* mPowerstar;
     /*0xF8*/ TVec3f mDistanceToCore;
-    /*0x104*/ TVec3f mPosition;
+    /*0x104*/ TVec3f mPowerstarPosition;
     /*0x110*/ ActorCameraInfo* mActorCameraInfo;
 };
