@@ -11,7 +11,7 @@ public:
     void posToStart();
     void posToEnd();
     void offPathDraw();
-    s32 getDemoFlyBrakeFrame() const;
+    inline s32 getDemoFlyBrakeFrame() const;
     void calcPathPosDir(TVec3f*, TVec3f*, float) const;
     void setupPathDrawForGraneStarReturnDemo();
     void start();
