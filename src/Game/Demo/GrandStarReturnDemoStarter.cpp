@@ -31,7 +31,7 @@ void GrandStarReturnDemoStarter::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
     
-    mStageResultInformer = new StageResultInformer;
+    mStageResultInformer = new StageResultInformer();
     mStageResultInformer->initWithoutIter();
 
     mPowerStar = (PowerStar *) MR::createModelObjNoSilhouettedMapObjStrongLight("スターデモモデル", "GrandStar", mTransform);

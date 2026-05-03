@@ -12,7 +12,7 @@ ReturnDemoRailMove::ReturnDemoRailMove(
     : mDemoStarter(demoStarter), mPowerStar(powerStar),
     mIsGrandStar(isGrandstar), mTransform(transform),
     mShootPath(nullptr), mPathDrawer(nullptr), mForward(0.0f, 0.0f, 1.0f) {
-    mShootPath = new SpinDriverShootPath;
+    mShootPath = new SpinDriverShootPath();
     mShootPath->init(rIter);
 
     mPathDrawer = new SpinDriverPathDrawer(mShootPath);
