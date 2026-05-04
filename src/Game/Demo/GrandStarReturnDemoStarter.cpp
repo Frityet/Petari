@@ -45,9 +45,9 @@ void GrandStarReturnDemoStarter::init(const JMapInfoIter& rIter) {
         MR::tryRegisterDemoCast(mPowerStar, rIter);
     } else {
         for (int i = 1; i <= 6; i++) {
-            const char* demoName = AstroDemoFunction::getGrandStarReturnDemoName(i);
-            if (MR::isDemoExist(demoName) && MR::tryRegisterDemoCast(this, demoName, rIter)) {
-                MR::tryRegisterDemoCast(mPowerStar, demoName, rIter);
+            const char* pDemoName = AstroDemoFunction::getGrandStarReturnDemoName(i);
+            if (MR::isDemoExist(pDemoName) && MR::tryRegisterDemoCast(this, pDemoName, rIter)) {
+                MR::tryRegisterDemoCast(mPowerStar, pDemoName, rIter);
             }
         };
     }
@@ -154,6 +154,7 @@ void GrandStarReturnDemoStarter::exeMove() {
         if (MR::isFirstStep(this)) {
             MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, cDemoMovePartName, -1);
         }
+
         if (MR::isDemoPartStep(cDemoMovePartName, 300)) {
             MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, "ウェイト", -1);
         }
