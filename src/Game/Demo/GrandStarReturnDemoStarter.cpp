@@ -160,9 +160,7 @@ void GrandStarReturnDemoStarter::exeMove() {
     }
 
     const char* pDemoName = cDemoMovePartName;
-    s32 total = MR::getDemoPartTotalStep(pDemoName);
-    s32 step = MR::getDemoPartStep(pDemoName);
-    mReturnDemoRailMove->update(step + 1, total);
+    mReturnDemoRailMove->update(MR::getDemoPartStep(pDemoName) + 1, MR::getDemoPartTotalStep(pDemoName));
 
     MR::startLevelSoundPlayer("SE_PM_LV_SPIN_DRV_FLY", -1);
     
