@@ -6,11 +6,11 @@ void setResultFlyStartFrame(LiveActor* liveActor, long frame) NO_INLINE {
 }
 
 ReturnDemoRailMove::ReturnDemoRailMove(
-    LiveActor* demoStarter, LiveActor* powerStar,
+    LiveActor* pDemoStarter, LiveActor* pPowerStar,
     const JMapInfoIter &rIter, bool isGrandstar,
-    TPos3f* transform)
-    : mDemoStarter(demoStarter), mPowerStar(powerStar),
-    mIsGrandStar(isGrandstar), mTransform(transform),
+    TPos3f* pTransform)
+    : mDemoStarter(pDemoStarter), mPowerStar(pPowerStar),
+    mIsGrandStar(isGrandstar), mTransform(pTransform),
     mShootPath(nullptr), mPathDrawer(nullptr), mForward(0.0f, 0.0f, 1.0f) {
     mShootPath = new SpinDriverShootPath();
     mShootPath->init(rIter);
