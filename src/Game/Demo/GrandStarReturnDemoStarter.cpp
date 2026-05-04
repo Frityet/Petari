@@ -231,8 +231,7 @@ void GrandStarReturnDemoStarter::exeRevival() {
     }
 
     if (MR::isLessStep(this, 40)) {
-        s32 step = getNerveStep();
-        updateRushStarPos(mPowerStarPosition, -(40-step));
+        updateRushStarPos(mPowerStarPosition, -(40-getNerveStep()));
         MR::startLevelSound(mPowerStar, "SE_OJ_LV_GND_STAR_RUSH", -1, -1, -1);
     }
 
