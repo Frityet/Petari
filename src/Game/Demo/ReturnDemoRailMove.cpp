@@ -124,8 +124,7 @@ void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
     TVec3f direction;
     calcPathPosDir(&position, &direction, t);
 
-    TVec3f down = TVec3f(0.0f, -1.0f, 0.0f);
-    MR::makeMtxUpFront(mTransform, direction, down);
+    MR::makeMtxUpFront(mTransform, direction, TVec3f(0.0f, -1.0f, 0.0f));
 
     if (MR::isGreaterStep(mDemoStarter, maxSteps - secondDemoSteps)) {
         f32 rate = MR::calcNerveEaseOutRate(mDemoStarter, maxSteps - secondDemoSteps, maxSteps);
@@ -135,8 +134,7 @@ void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
         MR::blendMtxRotateSlerp(*mTransform, transform, rate, *mTransform);
     }
 
-    TVec3f translation;
-    mTransform->setTrans(translation);
+    mTransform->setTrans(position);
     mPathDrawer->setCoord(t);
     MR::setPlayerBaseMtx(*mTransform);
 };
