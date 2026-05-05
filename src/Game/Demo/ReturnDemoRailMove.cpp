@@ -70,13 +70,13 @@ void ReturnDemoRailMove::setupPathDrawForGraneStarReturnDemo() {
 };
 
 void ReturnDemoRailMove::start() {
-    const char* bckName = "ResultFly";
+    const char* pBckName = "ResultFly";
     if (mIsGrandStar != false) {
-        bckName = "ResultFlyGrandStar";
+        pBckName = "ResultFlyGrandStar";
     }
-    MR::startBckPlayer(bckName, (char *) nullptr);
+    MR::startBckPlayer(pBckName, reinterpret_cast<char *>(nullptr));
 
-    MR::startBck(mPowerStar, bckName, nullptr);
+    MR::startBck(mPowerStar, pBckName, nullptr);
     mPathDrawer->_B0 = 0.0f;
     mPathDrawer->appear();
 };
@@ -94,13 +94,13 @@ void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
 
     if ((t < 0 && MR::isFirstStep(mDemoStarter))
          || MR::isStep(mDemoStarter, firstDemoSteps)) {
-        const char* bckName = "ResultFly";
+        const char* pBckName = "ResultFly";
         if (mIsGrandStar != false) {
-            bckName = "ResultFlyGrandStar";
+            pBckName = "ResultFlyGrandStar";
         }
 
-        MR::startBckPlayer(bckName, (char *) nullptr);
-        MR::startBck(mPowerStar, bckName, nullptr);
+        MR::startBckPlayer(pBckName, reinterpret_cast<char *>(nullptr));
+        MR::startBck(mPowerStar, pBckName, nullptr);
 
         if (mIsGrandStar == false) {
             MR::startSoundPlayer("SE_PM_S_SPIN_DRV_COOL_DOWN", -1);
