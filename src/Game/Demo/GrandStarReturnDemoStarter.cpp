@@ -34,6 +34,7 @@ void GrandStarReturnDemoStarter::init(const JMapInfoIter& rIter) {
     mStageResultInformer->initWithoutIter();
 
     mPowerStar = (PowerStar *) MR::createModelObjNoSilhouettedMapObjStrongLight("スターデモモデル", "GrandStar", mTransform);
+    mPowerStar = reinterpret_cast<PowerStar *>(MR::createModelObjNoSilhouettedMapObjStrongLight("スターデモモデル", "GrandStar", mTransform));
     MR::invalidateClipping(mPowerStar);
     mPowerStar->kill();
 
@@ -195,8 +196,8 @@ void GrandStarReturnDemoStarter::exeRushToCore() {
     position.set(mPrevTransform[0][3], mPrevTransform[1][3], mPrevTransform[2][3]);
     
     if (MR::isFirstStep(this)) {
-        MR::startBckPlayer("ResultFlyGrandStarRush", (char *) nullptr);
-        MR::startBck(mPowerStar, "ResultFlyGrandStarRush", (char *) nullptr);
+        MR::startBckPlayer("ResultFlyGrandStarRush", reinterpret_cast<char *>(nullptr));
+        MR::startBck(mPowerStar, "ResultFlyGrandStarRush", nullptr);
         MR::startSound(mPowerStar, "SE_OJ_GND_STAR_RUSH", -1, -1);
         
         MR::hideJointAndChildren(mPowerStar, "PowerStar");
