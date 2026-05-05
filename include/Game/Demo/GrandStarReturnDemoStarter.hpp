@@ -4,6 +4,12 @@
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/Screen/StageResultInformer.hpp"
 
+class LiveActor;
+class ReturnDemoRailMove;
+class StageResultInformer;
+class PowerStar;
+class ActorCameraInfo;
+
 class GrandStarReturnDemoStarter : public LiveActor {
 public:
     GrandStarReturnDemoStarter(const char*);
