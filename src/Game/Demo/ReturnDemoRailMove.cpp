@@ -37,8 +37,8 @@ void ReturnDemoRailMove::posToEnd() {
     TVec3f position;
     calcPathPosDir(&position, nullptr, 1.0f);
 
-    TVec3f up = TVec3f(0.0f, 1.0f, 0.0f);
-    MR::makeMtxUpFront(mTransform, up, mForward);
+    TPos3f* transform = mTransform; // Necessary to match
+    MR::makeMtxUpFront(transform, TVec3f(0.0f, 1.0f, 0.0f), mForward);
     mTransform->setTrans(position);
     MR::setPlayerBaseMtx(*mTransform);
 };
