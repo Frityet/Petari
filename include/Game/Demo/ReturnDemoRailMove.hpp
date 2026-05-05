@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/MapObj/SpinDriverPathDrawer.hpp"
 
 class ReturnDemoRailMove {
