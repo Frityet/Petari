@@ -27,8 +27,7 @@ void ReturnDemoRailMove::posToStart() {
     TVec3f forward;
     calcPathPosDir(&position, &forward, 0.0f);
 
-    TVec3f down = TVec3f(0.0f, -1.0f, 0.0f);
-    MR::makeMtxUpFront(mTransform, forward, down);
+    MR::makeMtxUpFront(mTransform, forward, TVec3f(0.0f, -1.0f, 0.0f));
     mTransform->setTrans(position);
     MR::setPlayerBaseMtx(*mTransform);
 };
