@@ -1,6 +1,5 @@
 #include "Game/Demo/GrandStarReturnDemoStarter.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
-#include "Game/Screen/StageResultInformer.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
 #include <cstdio>
 
