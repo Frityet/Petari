@@ -273,16 +273,16 @@ void GrandStarReturnDemoStarter::exeFadeOut() {
 
 void GrandStarReturnDemoStarter::exeWaitDemoEnd() {
     if (MR::isFirstStep(this)) {
-        if (AstroDemoFunction::getActiveGrandStarReturnDemoIndex() != 0) {
+        if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) >> 5) {
             MR::startStageBGM("MBGM_GALAXY_24", false);
-        } else if (AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 1) {
+        } else if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex() - 1) >> 5) {
             MR::startStageBGM("STM_ASTRO_OUT", false);
-        } else if (AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 2) {
-            MR::startStageBGM("STM_ASTRO_OUT2", false);
-        } else if (AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 3) {
-            MR::startStageBGM("STM_ASTRO_OUT2", false);
+        } else if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex() - 2) >> 5) {
+            MR::startStageBGM("STM_ASTRO_OUT_2", false);
+        } else if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex() - 3) >> 5) {
+            MR::startStageBGM("STM_ASTRO_OUT_2", false);
         } else {
-            MR::startStageBGM("STM_ASTRO_OUT3", false);
+            MR::startStageBGM("STM_ASTRO_OUT_3", false);
         }
 
         MR::resumeTimeKeepDemo(this);
