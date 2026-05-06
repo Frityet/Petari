@@ -184,8 +184,8 @@ void GrandStarReturnDemoStarter::exeFlyWait() {
         emitEffectRush();
     }
 
-    if (!MR::isLessStep(this, 60)) {
-        MR::startLevelSound(this, "SE_OJ_LV_RET_POW_STAR_FLY", -1, -1, -1);
+    if (MR::isLessStep(this, 60)) {
+        MR::startLevelSound(mPowerStar, "SE_OJ_LV_RET_POW_STAR_FLY", -1, -1, -1);
     }
 
     if (MR::isBckOneTimeAndStoppedPlayer()) {
