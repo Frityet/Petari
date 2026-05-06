@@ -68,24 +68,6 @@ void GrandStarReturnDemoStarter::init(const JMapInfoIter& rIter) {
     makeActorDead();
 }
 
-void GrandStarReturnDemoStarter::calcOffsetStarToCore(TVec3f* pOffset) const {
-    TVec3f namePos;
-    TVec3f jointPos;
-
-    MR::findNamePos("コア中心", &namePos, nullptr);
-    MR::copyJointPos(mPowerStar, "PowerStar", &jointPos);
-
-    pOffset->subInline(namePos, jointPos);
-}
-
-void GrandStarReturnDemoStarter::updateRailMoveEndDir() {
-    TVec3f offset;
-    calcOffsetStarToCore(&offset);
-    MR::normalize(&offset);
-
-    mReturnDemoRailMove->mForward.set(offset);
-}
-
 void GrandStarReturnDemoStarter::appear() {
     LiveActor::appear();
 
@@ -111,6 +93,24 @@ void GrandStarReturnDemoStarter::control() {
     if (!MR::isDead(mPowerStar)) {
         PowerStar::requestPointLightAtResultSequence(mPowerStar);
     }
+}
+
+void GrandStarReturnDemoStarter::calcOffsetStarToCore(TVec3f* pOffset) const {
+    TVec3f namePos;
+    TVec3f jointPos;
+
+    MR::findNamePos("コア中心", &namePos, nullptr);
+    MR::copyJointPos(mPowerStar, "PowerStar", &jointPos);
+
+    pOffset->subInline(namePos, jointPos);
+}
+
+void GrandStarReturnDemoStarter::updateRailMoveEndDir() {
+    TVec3f offset;
+    calcOffsetStarToCore(&offset);
+    MR::normalize(&offset);
+
+    mReturnDemoRailMove->mForward.set(offset);
 }
 
 void GrandStarReturnDemoStarter::emitEffectRush() {
