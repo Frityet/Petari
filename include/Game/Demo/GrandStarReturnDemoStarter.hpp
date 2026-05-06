@@ -20,7 +20,7 @@ public:
     void emitEffectRush();
     void updateRushStarPos(const TVec3f&, s32);
     void tryStartStageResult(const char*);
-    
+
     void exeMove();
     void exeFlyWait();
     void exeRushToCore();

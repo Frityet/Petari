@@ -1,19 +1,19 @@
 #include "Game/Demo/GrandStarReturnDemoStarter.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
-#include "Game/System/GameSequenceFunction.hpp"
 #include "Game/Demo/ReturnDemoRailMove.hpp"
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/Screen/StageResultInformer.hpp"
+#include "Game/System/GameSequenceFunction.hpp"
 #include <cstdio>
 
 namespace {
     const char* cDemoMovePartName = "移動";
     const char* cDemoWaitPartName = "ウェイト→コア突入";
-}
+}  // namespace
 
 GrandStarReturnDemoStarter::GrandStarReturnDemoStarter(const char* pName)
-    : LiveActor(pName), mReturnDemoRailMove(), mStageResultInformer(), mPowerStar(),
-    mDistanceToCore(0.0f, 0.0f, 1.0f), mPowerStarPosition(gZeroVec), mActorCameraInfo() {
+    : LiveActor(pName), mReturnDemoRailMove(), mStageResultInformer(), mPowerStar(), mDistanceToCore(0.0f, 0.0f, 1.0f), mPowerStarPosition(gZeroVec),
+      mActorCameraInfo() {
     mPrevTransform.identity();
     mTransform.identity();
 }
@@ -26,17 +26,17 @@ namespace NrvGrandStarReturnDemoStarter {
     NEW_NERVE(GrandStarReturnDemoStarterNrvStageResult, GrandStarReturnDemoStarter, StageResult);
     NEW_NERVE(GrandStarReturnDemoStarterNrvFadeOut, GrandStarReturnDemoStarter, FadeOut);
     NEW_NERVE(GrandStarReturnDemoStarterNrvWaitDemoEnd, GrandStarReturnDemoStarter, WaitDemoEnd);
-}
+}  // namespace NrvGrandStarReturnDemoStarter
 
 void GrandStarReturnDemoStarter::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
-    
+
     mStageResultInformer = new StageResultInformer();
     mStageResultInformer->initWithoutIter();
 
-    mPowerStar = reinterpret_cast<PowerStar *>(MR::createModelObjNoSilhouettedMapObjStrongLight("スターデモモデル", "GrandStar", mTransform));
+    mPowerStar = reinterpret_cast< PowerStar* >(MR::createModelObjNoSilhouettedMapObjStrongLight("スターデモモデル", "GrandStar", mTransform));
     MR::invalidateClipping(mPowerStar);
     mPowerStar->kill();
 
@@ -101,16 +101,16 @@ void GrandStarReturnDemoStarter::appear() {
 }
 
 void GrandStarReturnDemoStarter::control() {
-    if (isNerve(&NrvGrandStarReturnDemoStarter::GrandStarReturnDemoStarterNrvMove::sInstance)
-        || isNerve(&NrvGrandStarReturnDemoStarter::GrandStarReturnDemoStarterNrvFlyWait::sInstance)) {
+    if (isNerve(&NrvGrandStarReturnDemoStarter::GrandStarReturnDemoStarterNrvMove::sInstance) ||
+        isNerve(&NrvGrandStarReturnDemoStarter::GrandStarReturnDemoStarterNrvFlyWait::sInstance)) {
         MR::setPlayerBaseMtx(mPrevTransform);
 
         mTransform.setInline(mPrevTransform);
     }
-    
+
     if (!MR::isDead(mPowerStar)) {
         PowerStar::requestPointLightAtResultSequence(mPowerStar);
-    } 
+    }
 }
 
 void GrandStarReturnDemoStarter::emitEffectRush() {
@@ -166,7 +166,7 @@ void GrandStarReturnDemoStarter::exeMove() {
     mReturnDemoRailMove->update(MR::getDemoPartStep(pDemoName) + 1, MR::getDemoPartTotalStep(pDemoName));
 
     MR::startLevelSoundPlayer("SE_PM_LV_SPIN_DRV_FLY", -1);
-    
+
     updateRailMoveEndDir();
 
     if (MR::isDemoPartLastStep(cDemoMovePartName)) {
@@ -196,12 +196,12 @@ void GrandStarReturnDemoStarter::exeFlyWait() {
 void GrandStarReturnDemoStarter::exeRushToCore() {
     TVec3f position;
     mPrevTransform.getTransInline(position);
-    
+
     if (MR::isFirstStep(this)) {
-        MR::startBckPlayer("ResultFlyGrandStarRush", reinterpret_cast<char *>(nullptr));
+        MR::startBckPlayer("ResultFlyGrandStarRush", reinterpret_cast< char* >(nullptr));
         MR::startBck(mPowerStar, "ResultFlyGrandStarRush", nullptr);
         MR::startSound(mPowerStar, "SE_OJ_GND_STAR_RUSH", -1, -1);
-        
+
         MR::hideJointAndChildren(mPowerStar, "PowerStar");
         calcOffsetStarToCore(&mDistanceToCore);
         mPowerStarPosition.add(position, mDistanceToCore);
@@ -224,15 +224,15 @@ void GrandStarReturnDemoStarter::exeRevival() {
         mReturnDemoRailMove->offPathDraw();
         MR::forceDeleteEffectAll(mPowerStar);
         emitEffectRush();
-        
+
         mPosition.zero();
         mRotation.zero();
-        
+
         MR::startAnimCameraTargetSelf(this, mActorCameraInfo, buffer, 0, 1.0f);
     }
 
     if (MR::isLessStep(this, 40)) {
-        updateRushStarPos(mPowerStarPosition, -(40-getNerveStep()));
+        updateRushStarPos(mPowerStarPosition, -(40 - getNerveStep()));
         MR::startLevelSound(mPowerStar, "SE_OJ_LV_GND_STAR_RUSH", -1, -1, -1);
     }
 
@@ -282,7 +282,7 @@ void GrandStarReturnDemoStarter::exeWaitDemoEnd() {
         } else if (AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 3) {
             MR::startStageBGM("STM_ASTRO_OUT2", false);
         } else {
-        MR::startStageBGM("STM_ASTRO_OUT3", false);
+            MR::startStageBGM("STM_ASTRO_OUT3", false);
         }
 
         MR::resumeTimeKeepDemo(this);
@@ -293,4 +293,5 @@ void GrandStarReturnDemoStarter::exeWaitDemoEnd() {
     }
 }
 
-GrandStarReturnDemoStarter::~GrandStarReturnDemoStarter() {}
+GrandStarReturnDemoStarter::~GrandStarReturnDemoStarter() {
+}
