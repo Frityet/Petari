@@ -1,5 +1,6 @@
 #include "Game/Demo/ReturnDemoRailMove.hpp"
 #include "Game/MapObj/SpinDriverPathDrawer.hpp"
+#include "JSystem/JGeometry/TVec.hpp"
 
 void setResultFlyStartFrame(LiveActor* liveActor, s32 frame) NO_INLINE {
     int maxFrames = MR::getBckFrameMax(liveActor);
@@ -83,21 +84,25 @@ void ReturnDemoRailMove::start() {
 };
 
 void ReturnDemoRailMove::update(s32 currentStep, s32 maxSteps) {
-    int firstDemoSteps = maxSteps - getDemoFlyBrakeFrame();
+    int startStepFirstDemo = maxSteps - getDemoFlyBrakeFrame();
     
-    int secondDemoSteps = 34;
+    int secondDemoTotalSteps = 34;
     if (mIsGrandStar != false) {
-        secondDemoSteps = 98;
+        secondDemoTotalSteps = 98;
     }
+
+    int startStepSecondDemo = maxSteps - secondDemoTotalSteps;
 
     f32 progress = (static_cast<f32>(currentStep)/maxSteps) - 1.0f;
     f32 t = 1.0f - progress * progress;
 
-    if ((t < 0 && MR::isFirstStep(mDemoStarter))
-         || MR::isStep(mDemoStarter, firstDemoSteps)) {
-        const char* pBckName = "ResultFly";
+    if ((startStepFirstDemo < 0 && MR::isFirstStep(mDemoStarter))
+         || MR::isStep(mDemoStarter, startStepFirstDemo)) {
+        const char* pBckName;
         if (mIsGrandStar != false) {
-            pBckName = "ResultFlyGrandStar";
+            pBckName = "ResultFlyGrandStarEnd";
+        } else {
+            pBckName = "ResultFlyEnd";
         }
 
         MR::startBckPlayer(pBckName, reinterpret_cast<char *>(nullptr));
@@ -109,13 +114,13 @@ void ReturnDemoRailMove::update(s32 currentStep, s32 maxSteps) {
     }
 
     if (MR::isFirstStep(mDemoStarter)) {
-        if (firstDemoSteps < 0) {
-            firstDemoSteps = -firstDemoSteps;
-            MR::setBckFrame(MR::getPlayerDemoActor(), firstDemoSteps);
-            MR::setBckFrame(mPowerStar, firstDemoSteps);
+        if (startStepFirstDemo < 0) {
+            startStepFirstDemo = -startStepFirstDemo;
+            MR::setBckFrame(MR::getPlayerDemoActor(), startStepFirstDemo);
+            MR::setBckFrame(mPowerStar, startStepFirstDemo);
         } else {
-            setResultFlyStartFrame(MR::getPlayerDemoActor(), firstDemoSteps);
-            setResultFlyStartFrame(mPowerStar, firstDemoSteps);
+            setResultFlyStartFrame(MR::getPlayerDemoActor(), startStepFirstDemo);
+            setResultFlyStartFrame(mPowerStar, startStepFirstDemo);
         }
     }
 
@@ -127,8 +132,8 @@ void ReturnDemoRailMove::update(s32 currentStep, s32 maxSteps) {
 
     MR::makeMtxUpFront(mTransform, direction, TVec3f(0.0f, -1.0f, 0.0f));
 
-    if (MR::isGreaterStep(mDemoStarter, maxSteps - secondDemoSteps)) {
-        f32 rate = MR::calcNerveEaseOutRate(mDemoStarter, maxSteps - secondDemoSteps, maxSteps);
+    if (MR::isGreaterStep(mDemoStarter, startStepSecondDemo)) {
+        f32 rate = MR::calcNerveEaseOutRate(mDemoStarter, startStepSecondDemo, maxSteps);
         
         TPos3f transform;
         MR::makeMtxUpFront(&transform, TVec3f(0.0f, 1.0f, 0.0f), mForward);
