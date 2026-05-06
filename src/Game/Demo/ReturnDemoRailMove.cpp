@@ -1,6 +1,7 @@
 #include "Game/Demo/ReturnDemoRailMove.hpp"
+#include "Game/MapObj/SpinDriverPathDrawer.hpp"
 
-void setResultFlyStartFrame(LiveActor* liveActor, long frame) NO_INLINE {
+void setResultFlyStartFrame(LiveActor* liveActor, s32 frame) NO_INLINE {
     int maxFrames = MR::getBckFrameMax(liveActor);
     MR::setBckFrame(liveActor, maxFrames - frame%maxFrames);
 }
@@ -81,7 +82,7 @@ void ReturnDemoRailMove::start() {
     mPathDrawer->appear();
 };
 
-void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
+void ReturnDemoRailMove::update(s32 currentStep, s32 maxSteps) {
     int firstDemoSteps = maxSteps - getDemoFlyBrakeFrame();
     
     int secondDemoSteps = 34;
@@ -89,7 +90,7 @@ void ReturnDemoRailMove::update(long currentStep, long maxSteps) {
         secondDemoSteps = 98;
     }
 
-    f32 progress = ((f32)currentStep/maxSteps) - 1.0f;
+    f32 progress = (static_cast<f32>(currentStep)/maxSteps) - 1.0f;
     f32 t = 1.0f - progress * progress;
 
     if ((t < 0 && MR::isFirstStep(mDemoStarter))

@@ -1,6 +1,9 @@
 #include "Game/Demo/GrandStarReturnDemoStarter.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
+#include "Game/Demo/ReturnDemoRailMove.hpp"
+#include "Game/MapObj/PowerStar.hpp"
+#include "Game/Screen/StageResultInformer.hpp"
 #include <cstdio>
 
 namespace {
@@ -119,7 +122,7 @@ void GrandStarReturnDemoStarter::emitEffectRush() {
     MR::emitEffect(mPowerStar, "Blur5");
 }
 
-void GrandStarReturnDemoStarter::updateRushStarPos(const TVec3f& rPosition, long frame) {
+void GrandStarReturnDemoStarter::updateRushStarPos(const TVec3f& rPosition, s32 frame) {
     TVec3f offset;
     TVec3f newPosition;
 
@@ -192,7 +195,7 @@ void GrandStarReturnDemoStarter::exeFlyWait() {
 
 void GrandStarReturnDemoStarter::exeRushToCore() {
     TVec3f position;
-    position.set(mPrevTransform[0][3], mPrevTransform[1][3], mPrevTransform[2][3]);
+    mPrevTransform.getTransInline(position);
     
     if (MR::isFirstStep(this)) {
         MR::startBckPlayer("ResultFlyGrandStarRush", reinterpret_cast<char *>(nullptr));

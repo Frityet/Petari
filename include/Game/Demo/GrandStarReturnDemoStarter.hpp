@@ -1,10 +1,7 @@
 #pragma once
 
-#include "Game/Demo/ReturnDemoRailMove.hpp"
-#include "Game/MapObj/PowerStar.hpp"
-#include "Game/Screen/StageResultInformer.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 
-class LiveActor;
 class ReturnDemoRailMove;
 class StageResultInformer;
 class PowerStar;
@@ -21,7 +18,7 @@ public:
     void updateRailMoveEndDir();
     void calcOffsetStarToCore(TVec3f*) const;
     void emitEffectRush();
-    void updateRushStarPos(const TVec3f&, long);
+    void updateRushStarPos(const TVec3f&, s32);
     void tryStartStageResult(const char*);
     
     void exeMove();

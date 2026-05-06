@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Game/MapObj/SpinDriverPathDrawer.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 
-class LiveActor;
 class SpinDriverShootPath;
 class SpinDriverPathDrawer;
 
@@ -15,10 +14,10 @@ public:
     void posToEnd();
     void offPathDraw();
     inline s32 getDemoFlyBrakeFrame() const;
-    void calcPathPosDir(TVec3f*, TVec3f*, float) const;
+    void calcPathPosDir(TVec3f*, TVec3f*, f32) const;
     void setupPathDrawForGraneStarReturnDemo();
     void start();
-    void update(long, long);
+    void update(s32, s32);
 
     /* 0x0 */ LiveActor* mDemoStarter; // Can be either StarReturnDemoStarter or GrandStarReturnDemoStarter
     /* 0x4 */ LiveActor* mPowerStar;
