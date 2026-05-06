@@ -47,10 +47,7 @@ void ReturnDemoRailMove::offPathDraw() {
 };
 
 inline s32 ReturnDemoRailMove::getDemoFlyBrakeFrame() const {
-    if (mIsGrandStar != false) {
-        return 296;
-    }
-    return 45;
+    return (mIsGrandStar) ? 296 : 45;
 };
 
 void ReturnDemoRailMove::calcPathPosDir(TVec3f* position, TVec3f* direction, f32 t) const {
@@ -69,10 +66,7 @@ void ReturnDemoRailMove::setupPathDrawForGraneStarReturnDemo() {
 };
 
 void ReturnDemoRailMove::start() {
-    const char* pBckName = "ResultFly";
-    if (mIsGrandStar != false) {
-        pBckName = "ResultFlyGrandStar";
-    }
+    const char* pBckName = (mIsGrandStar) ? "ResultFlyGrandStar" : "ResultFly";
     MR::startBckPlayer(pBckName, reinterpret_cast< char* >(nullptr));
 
     MR::startBck(mPowerStar, pBckName, nullptr);
@@ -82,29 +76,18 @@ void ReturnDemoRailMove::start() {
 
 void ReturnDemoRailMove::update(s32 currentStep, s32 maxSteps) {
     int startStepFirstDemo = maxSteps - getDemoFlyBrakeFrame();
-
-    int secondDemoTotalSteps = 34;
-    if (mIsGrandStar != false) {
-        secondDemoTotalSteps = 98;
-    }
-
-    int startStepSecondDemo = maxSteps - secondDemoTotalSteps;
+    int startStepSecondDemo = maxSteps - ((mIsGrandStar) ? 98 : 34);
 
     f32 progress = (static_cast< f32 >(currentStep) / maxSteps) - 1.0f;
     f32 t = 1.0f - progress * progress;
 
     if ((startStepFirstDemo < 0 && MR::isFirstStep(mDemoStarter)) || MR::isStep(mDemoStarter, startStepFirstDemo)) {
-        const char* pBckName;
-        if (mIsGrandStar != false) {
-            pBckName = "ResultFlyGrandStarEnd";
-        } else {
-            pBckName = "ResultFlyEnd";
-        }
+        const char* pBckName = (mIsGrandStar) ? "ResultFlyGrandStarEnd" : "ResultFlyEnd";
 
         MR::startBckPlayer(pBckName, reinterpret_cast< char* >(nullptr));
         MR::startBck(mPowerStar, pBckName, nullptr);
 
-        if (mIsGrandStar == false) {
+        if (!mIsGrandStar) {
             MR::startSoundPlayer("SE_PM_S_SPIN_DRV_COOL_DOWN", -1);
         }
     }
