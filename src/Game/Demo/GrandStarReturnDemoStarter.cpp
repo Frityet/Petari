@@ -145,16 +145,16 @@ void GrandStarReturnDemoStarter::tryStartStageResult(const char* pDemoName) {
 
 void GrandStarReturnDemoStarter::exeMove() {
     if (MR::isFirstStep(this)) {
-        if (!AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) {
-            MR::startStageBGM("STM_SECOND_ASTRO", false);
-        } else {
+        if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) >> 5) {
             MR::startStageBGM("STM_FIRST_ASTRO", false);
+        } else {
+            MR::startStageBGM("STM_SECOND_ASTRO", false);
         }
     }
 
-    if (!AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) {
+    if (!(__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) >> 5)) {
         if (MR::isFirstStep(this)) {
-            MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, cDemoMovePartName, -1);
+            MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, "移動", -1);
         }
 
         if (MR::isDemoPartStep(cDemoMovePartName, 300)) {
@@ -169,7 +169,7 @@ void GrandStarReturnDemoStarter::exeMove() {
 
     updateRailMoveEndDir();
 
-    if (MR::isDemoPartLastStep(cDemoMovePartName)) {
+    if (MR::isDemoPartLastStep(pDemoName)) {
         setNerve(&NrvGrandStarReturnDemoStarter::GrandStarReturnDemoStarterNrvFlyWait::sInstance);
     }
 }
