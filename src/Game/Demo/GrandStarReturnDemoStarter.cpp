@@ -145,14 +145,15 @@ void GrandStarReturnDemoStarter::tryStartStageResult(const char* pDemoName) {
 
 void GrandStarReturnDemoStarter::exeMove() {
     if (MR::isFirstStep(this)) {
-        if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) >> 5) {
+        if (bool res = !AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) {
             MR::startStageBGM("STM_FIRST_ASTRO", false);
         } else {
             MR::startStageBGM("STM_SECOND_ASTRO", false);
         }
     }
 
-    if (!(__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) >> 5)) {
+    bool isActiveReturnDemo = !AstroDemoFunction::getActiveGrandStarReturnDemoIndex();
+    if (!isActiveReturnDemo) {
         if (MR::isFirstStep(this)) {
             MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, "移動", -1);
         }
@@ -215,6 +216,7 @@ void GrandStarReturnDemoStarter::exeRushToCore() {
         setNerve(&NrvGrandStarReturnDemoStarter::GrandStarReturnDemoStarterNrvRevival::sInstance);
     }
 }
+
 void GrandStarReturnDemoStarter::exeRevival() {
     char buffer[32];
     int index = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() + 1;
@@ -273,13 +275,13 @@ void GrandStarReturnDemoStarter::exeFadeOut() {
 
 void GrandStarReturnDemoStarter::exeWaitDemoEnd() {
     if (MR::isFirstStep(this)) {
-        if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) >> 5) {
+        if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 0) {
             MR::startStageBGM("MBGM_GALAXY_24", false);
-        } else if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex() - 1) >> 5) {
+        } else if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 1) {
             MR::startStageBGM("STM_ASTRO_OUT", false);
-        } else if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex() - 2) >> 5) {
+        } else if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 2) {
             MR::startStageBGM("STM_ASTRO_OUT_2", false);
-        } else if (__cntlzw(AstroDemoFunction::getActiveGrandStarReturnDemoIndex() - 3) >> 5) {
+        } else if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 3) {
             MR::startStageBGM("STM_ASTRO_OUT_2", false);
         } else {
             MR::startStageBGM("STM_ASTRO_OUT_3", false);
