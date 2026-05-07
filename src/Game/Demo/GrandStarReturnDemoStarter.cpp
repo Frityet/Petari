@@ -143,17 +143,20 @@ void GrandStarReturnDemoStarter::tryStartStageResult(const char* pDemoName) {
     }
 }
 
+inline bool isActiveGrandStarReturnDemoIndex(s32 index) {
+    return AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == index;
+}
+
 void GrandStarReturnDemoStarter::exeMove() {
     if (MR::isFirstStep(this)) {
-        if (bool res = !AstroDemoFunction::getActiveGrandStarReturnDemoIndex()) {
+        if (isActiveGrandStarReturnDemoIndex(0)) {
             MR::startStageBGM("STM_FIRST_ASTRO", false);
         } else {
             MR::startStageBGM("STM_SECOND_ASTRO", false);
         }
     }
 
-    bool isActiveReturnDemo = !AstroDemoFunction::getActiveGrandStarReturnDemoIndex();
-    if (!isActiveReturnDemo) {
+    if (!isActiveGrandStarReturnDemoIndex(0)) {
         if (MR::isFirstStep(this)) {
             MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, "移動", -1);
         }
@@ -275,13 +278,13 @@ void GrandStarReturnDemoStarter::exeFadeOut() {
 
 void GrandStarReturnDemoStarter::exeWaitDemoEnd() {
     if (MR::isFirstStep(this)) {
-        if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 0) {
+        if (isActiveGrandStarReturnDemoIndex(0)) {
             MR::startStageBGM("MBGM_GALAXY_24", false);
-        } else if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 1) {
+        } else if (isActiveGrandStarReturnDemoIndex(1)) {
             MR::startStageBGM("STM_ASTRO_OUT", false);
-        } else if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 2) {
+        } else if (isActiveGrandStarReturnDemoIndex(2)) {
             MR::startStageBGM("STM_ASTRO_OUT_2", false);
-        } else if (bool res = AstroDemoFunction::getActiveGrandStarReturnDemoIndex() == 3) {
+        } else if (isActiveGrandStarReturnDemoIndex(3)) {
             MR::startStageBGM("STM_ASTRO_OUT_2", false);
         } else {
             MR::startStageBGM("STM_ASTRO_OUT_3", false);
