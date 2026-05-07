@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Game/LiveActor/LiveActor.hpp"
+#include "JSystem/JGeometry/TMatrix.hpp"
 
+class LiveActor;
+class JMapInfoIter;
 class SpinDriverShootPath;
 class SpinDriverPathDrawer;
 
