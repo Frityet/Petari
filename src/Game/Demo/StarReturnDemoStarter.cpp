@@ -84,7 +84,7 @@ void StarReturnDemoStarter::kill() {
     }
 }
 
-void StarReturnDemoStarter::makeArchiveList(NameObjArchiveListCollector* pArchiveList, const JMapInfoIter&) {
+void StarReturnDemoStarter::makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&) {
     if (GameSequenceFunction::isGrandStarAtResultSequence()) {
         reinterpret_cast< NameObjArchiveListCollector* >(this)->addArchive("GrandStar");
     }
