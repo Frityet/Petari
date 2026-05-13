@@ -191,11 +191,9 @@ void StarReturnDemoStarter::exeMove() {
     MR::startLevelSoundPlayer("SE_PM_LV_SPIN_DRV_FLY", -1);
 
     if (MR::isDemoPartLastStep(pDemoName)) {
-        if (GameSequenceFunction::isGrandStarAtResultSequence()) {
-            setNerve(&NrvStarReturnDemoStarter::StarReturnDemoStarterNrvFlyWaitGrandStar::sInstance);
-        } else {
+        GameSequenceFunction::isGrandStarAtResultSequence() ?
+            setNerve(&NrvStarReturnDemoStarter::StarReturnDemoStarterNrvFlyWaitGrandStar::sInstance) :
             setNerve(&NrvStarReturnDemoStarter::StarReturnDemoStarterNrvFlyWaitPowerStar::sInstance);
-        }
     }
 }
 
@@ -311,14 +309,10 @@ void StarReturnDemoStarter::exeWait() {
 void StarReturnDemoStarter::exeStageResult() {
     tryStartResultWait();
 
-    if (MR::isDead(mStageResultInformer)) {
-        if (MR::isEqualStringCase(MR::getPlayerCurrentBckName(), "ResultWait")) {
-            if (GameSequenceFunction::hasNextDemoForStorySequenceEvent()) {
-                setNerve(&NrvStarReturnDemoStarter::StarReturnDemoStarterNrvFadeOut::sInstance);
-            } else {
-                setNerve(&NrvStarReturnDemoStarter::StarReturnDemoStarterNrvStageResultAfter::sInstance);
-            }
-        }
+    if (MR::isDead(mStageResultInformer) && MR::isEqualStringCase(MR::getPlayerCurrentBckName(), "ResultWait")) {
+        GameSequenceFunction::hasNextDemoForStorySequenceEvent() ?
+            setNerve(&NrvStarReturnDemoStarter::StarReturnDemoStarterNrvFadeOut::sInstance) :
+            setNerve(&NrvStarReturnDemoStarter::StarReturnDemoStarterNrvStageResultAfter::sInstance);
     }
 }
 
