@@ -13,7 +13,8 @@ bool isUseLightChanNo(J3DMaterial* pMaterial, int channel, int index) {
         return false;
     }
 
-    return (channelID >> 2 & 0xF) | (channelID >> 7 & 0xF0) & (1 << index);
+    u8 useLightChan = (channelID >> 2 & 0xF | channelID >> 7 & 0xF0);
+    return useLightChan & (1 << index);
 }
 
 namespace MR {
