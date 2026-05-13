@@ -7,15 +7,17 @@
 #include "JSystem/J3DGraphBase/J3DPacket.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
 
-bool isUseLightChanNo(J3DMaterial* pMaterial, int channel, int index) {
-    u16 channelID = pMaterial->mColorBlock->getColorChan(channel)->mColorChanID;
-    if (((channelID >> 1) & 0x1) == 0) {
-        return false;
-    }
+namespace {
+    bool isUseLightChanNo(J3DMaterial* pMaterial, int channel, int index) {
+        u16 channelID = pMaterial->mColorBlock->getColorChan(channel)->mColorChanID;
+        if (((channelID >> 1) & 0x1) == 0) {
+            return false;
+        }
 
-    u8 useLightChan = (channelID >> 2 & 0xF | channelID >> 7 & 0xF0);
-    return useLightChan & (1 << index);
-}
+        u8 useLightChan = (channelID >> 2 & 0xF | channelID >> 7 & 0xF0);
+        return useLightChan & (1 << index);
+    }
+}  // namespace
 
 namespace MR {
     u32 getMaterialNo(J3DModelData* pModelData, const char* pMaterialName) {
