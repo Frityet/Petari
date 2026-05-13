@@ -101,21 +101,17 @@ void StarReturnDemoStarter::control() {
 }
 
 ModelObj* StarReturnDemoStarter::createSubModel(const char* pName, const char* pModelName, bool isPlayerDecoration) {
-    ModelObj* pModel;
-    if (!isPlayerDecoration) {
-        pModel = MR::createModelObjNpc(pName, pModelName, mTransform);
-    } else {
-        pModel = MR::createModelObjPlayerDecoration(pName, pModelName, mTransform);
+    ModelObj* pSubModel =
+        isPlayerDecoration ? MR::createModelObjPlayerDecoration(pName, pModelName, mTransform) : MR::createModelObjNpc(pName, pModelName, mTransform);
+
+    if (MR::getLightNumMax(pSubModel) > 0) {
+        MR::initLightCtrl(pSubModel);
     }
 
-    if (MR::getLightNumMax(pModel) > 0) {
-        MR::initLightCtrl(pModel);
-    }
+    MR::invalidateClipping(pSubModel);
+    pSubModel->kill();
 
-    MR::invalidateClipping(pModel);
-    pModel->kill();
-
-    return pModel;
+    return pSubModel;
 }
 
 void StarReturnDemoStarter::tryRegisterDemo(const char* pDemoName, const JMapInfoIter& rIter) {
