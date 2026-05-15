@@ -56,7 +56,18 @@ struct J3DTexCoord : public J3DTexCoordInfo {
     /* 0x4 */ u16 mTexMtxReg;
 };  // Size: 0x6
 
-extern J3DTexMtxInfo const j3dDefaultTexMtxInfo;
+extern J3DTexMtxInfo const j3dDefaultTexMtxInfo = {
+    1,
+    0,
+    -1,
+    -1,
+    gZeroVec,
+    J3DTextureSRTInfo(),
+    1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+};
 
 class J3DTexMtx {
 public:
@@ -75,7 +86,8 @@ public:
     Mtx& getMtx() { return mMtx; }
     void setEffectMtx(Mtx effectMtx) { mTexMtxInfo.setEffectMtx(effectMtx); }
 
-private:
     /* 0x00 */ J3DTexMtxInfo mTexMtxInfo;
+    
+private:
     /* 0x64 */ Mtx mMtx;
 };  // Size: 0x94
