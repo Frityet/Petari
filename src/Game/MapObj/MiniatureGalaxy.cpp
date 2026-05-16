@@ -26,8 +26,8 @@ MiniatureGalaxy::MiniatureGalaxy(const char* pName)
     : LiveActor(pName), mGalaxyType(-1), mState(3), mUnknownModel(), mShadowModel(), mSelectModel(), mStarPlateModel(), mProjmapEffectMtxSetter(),
       _108(), mMiniatureName(), mName(), mCanZoomIn(1), mZoomLevel(20), _124(j3dDefaultTexMtxInfo), _1B8(j3dDefaultTexMtxInfo), mOrbit(),
       mNamePlate() {
-    _A4.identity();
     _D4.identity();
+    _A4.identity();
 }
 
 MiniatureGalaxy::~MiniatureGalaxy() {
