@@ -7,6 +7,7 @@
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/Screen/GalaxyNamePlate.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
+#include "math_types.hpp"
 
 namespace {
     const char* cDemoNameDomeLecture = "ドームレクチャー２";
@@ -24,7 +25,7 @@ namespace NrvMiniatureGalaxy {
 
 MiniatureGalaxy::MiniatureGalaxy(const char* pName)
     : LiveActor(pName), mGalaxyType(-1), mState(3), mUnknownModel(), mShadowModel(), mSelectModel(), mStarPlateModel(), mProjmapEffectMtxSetter(),
-      _108(), mMiniatureName(), mName(), mCanZoomIn(1), mZoomLevel(20), _124(j3dDefaultTexMtxInfo), _1B8(j3dDefaultTexMtxInfo), mOrbit(),
+      _108(), mMiniatureName(), mName(), mCanZoomIn(1), mZoomLevel(20), _124(), _1B8(), mOrbit(),
       mNamePlate() {
     _D4.identity();
     _A4.identity();
