@@ -93,7 +93,7 @@ void MiniatureGalaxyHolder::updateCometStatus() {
             break;
         }
     }
-    if (mCometGalaxy) {
+    if (mCometGalaxy != nullptr) {
         mCometID = MR::getEncounterGalaxyCometNameId(mCometGalaxy->mName);
     }
 }
