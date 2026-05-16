@@ -35,6 +35,7 @@ namespace smgpc::render::core {
         virtual void destroy_texture(TextureHandle texture) = 0;
         virtual void submit_textured_quad(TextureHandle texture, const TexturedQuad2D& quad) = 0;
         virtual void submit_textured_triangles(TextureHandle texture, const TexturedTriangleBatch2D& batch) = 0;
+        virtual void submit_gx_material_triangles(const GxMaterialTriangleBatch2D& batch) = 0;
         [[nodiscard]] virtual FramebufferInfo framebuffer_size() const = 0;
         [[nodiscard]] virtual FramebufferInfo logical_framebuffer_size() const = 0;
     };

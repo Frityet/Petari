@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <filesystem>
 #include <memory>
@@ -33,6 +34,7 @@ namespace smgpc::render::backends {
         void destroy_texture(core::TextureHandle texture);
         void submit_textured_quad(core::TextureHandle texture, const core::TexturedQuad2D& quad);
         void submit_textured_triangles(core::TextureHandle texture, const core::TexturedTriangleBatch2D& batch);
+        void submit_gx_material_triangles(const core::GxMaterialTriangleBatch2D& batch);
 
         [[nodiscard]] core::FramebufferInfo framebuffer_size() const;
         [[nodiscard]] core::FramebufferInfo logical_framebuffer_size() const;
@@ -49,8 +51,21 @@ namespace smgpc::render::backends {
         std::unique_ptr< BgfxCallback > _callback{};
         std::vector< bgfx::TextureHandle > _textures{};
         bgfx::VertexLayout _textured_quad_layout{};
+        bgfx::VertexLayout _gx_material_layout{};
         bgfx::ProgramHandle _textured_quad_program = BGFX_INVALID_HANDLE;
+        bgfx::ProgramHandle _gx_material_program = BGFX_INVALID_HANDLE;
         bgfx::UniformHandle _texture_sampler = BGFX_INVALID_HANDLE;
+        std::array< bgfx::UniformHandle, core::kMaxGxMaterialTextureStages2D > _gx_material_samplers{};
+        bgfx::UniformHandle _gx_material_params = BGFX_INVALID_HANDLE;
+        std::array< bgfx::UniformHandle, core::kMaxGxMaterialTevStages2D > _gx_tev_color_inputs{};
+        std::array< bgfx::UniformHandle, core::kMaxGxMaterialTevStages2D > _gx_tev_alpha_inputs{};
+        std::array< bgfx::UniformHandle, core::kMaxGxMaterialTevStages2D > _gx_tev_color_operations{};
+        std::array< bgfx::UniformHandle, core::kMaxGxMaterialTevStages2D > _gx_tev_alpha_operations{};
+        std::array< bgfx::UniformHandle, core::kMaxGxMaterialTevStages2D > _gx_tev_outputs{};
+        std::array< bgfx::UniformHandle, core::kMaxGxMaterialTevStages2D > _gx_tev_konst_colors{};
+        std::array< bgfx::UniformHandle, 4U > _gx_tev_initial_registers{};
+        bgfx::UniformHandle _gx_alpha_compare_0 = BGFX_INVALID_HANDLE;
+        bgfx::UniformHandle _gx_alpha_compare_1 = BGFX_INVALID_HANDLE;
     };
 
 }  // namespace smgpc::render::backends

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <cstddef>
 #include <limits>
 #include <stdexcept>
 
@@ -17,40 +18,40 @@ namespace smgpc::game {
         constexpr auto GX_INDEX8 = std::uint32_t{2U};
         constexpr auto GX_INDEX16 = std::uint32_t{3U};
 
-        [[nodiscard]] std::uint16_t read_be16(std::span< const std::uint8_t > data, std::size_t offset) {
+        [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
                 throw std::runtime_error("J3D read past end of buffer");
             }
 
-            return static_cast< std::uint16_t >((static_cast< std::uint16_t >(data[offset]) << 8U) | static_cast< std::uint16_t >(data[offset + 1U]));
+            return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
         }
 
-        [[nodiscard]] std::int16_t read_be_s16(std::span< const std::uint8_t > data, std::size_t offset) {
-            return std::bit_cast< std::int16_t >(read_be16(data, offset));
+        [[nodiscard]] std::int16_t read_be_s16(std::span<const std::uint8_t> data, std::size_t offset) {
+            return std::bit_cast<std::int16_t>(read_be16(data, offset));
         }
 
-        [[nodiscard]] std::uint32_t read_be32(std::span< const std::uint8_t > data, std::size_t offset) {
+        [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
                 throw std::runtime_error("J3D read past end of buffer");
             }
 
-            return (static_cast< std::uint32_t >(data[offset]) << 24U) | (static_cast< std::uint32_t >(data[offset + 1U]) << 16U) |
-                   (static_cast< std::uint32_t >(data[offset + 2U]) << 8U) | static_cast< std::uint32_t >(data[offset + 3U]);
+            return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
+                   (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | static_cast<std::uint32_t>(data[offset + 3U]);
         }
 
-        [[nodiscard]] float read_be_float(std::span< const std::uint8_t > data, std::size_t offset) {
-            return std::bit_cast< float >(read_be32(data, offset));
+        [[nodiscard]] float read_be_float(std::span<const std::uint8_t> data, std::size_t offset) {
+            return std::bit_cast<float>(read_be32(data, offset));
         }
 
-        [[nodiscard]] std::string read_tag(std::span< const std::uint8_t > data, std::size_t offset) {
+        [[nodiscard]] std::string read_tag(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
                 throw std::runtime_error("J3D tag read past end of buffer");
             }
 
-            return std::string(reinterpret_cast< const char* >(data.data() + offset), 4U);
+            return std::string(reinterpret_cast<const char *>(data.data() + offset), 4U);
         }
 
-        [[nodiscard]] std::string read_string(std::span< const std::uint8_t > data, std::size_t offset) {
+        [[nodiscard]] std::string read_string(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset >= data.size()) {
                 throw std::runtime_error("J3D string offset outside buffer");
             }
@@ -63,11 +64,11 @@ namespace smgpc::game {
                 throw std::runtime_error("J3D string is not null terminated");
             }
 
-            return std::string(reinterpret_cast< const char* >(data.data() + offset), end - offset);
+            return std::string(reinterpret_cast<const char *>(data.data() + offset), end - offset);
         }
 
-        [[nodiscard]] std::vector< std::string > read_name_table(std::span< const std::uint8_t > data, std::size_t section_offset,
-                                                                 std::uint32_t table_relative_offset) {
+        [[nodiscard]] std::vector<std::string> read_name_table(std::span<const std::uint8_t> data, std::size_t section_offset,
+                                                               std::uint32_t table_relative_offset) {
             if (table_relative_offset == 0U) {
                 return {};
             }
@@ -78,7 +79,7 @@ namespace smgpc::game {
             }
 
             const auto count = read_be16(data, table_offset);
-            auto names = std::vector< std::string >{};
+            auto names = std::vector<std::string>{};
             names.reserve(count);
             for (auto i = 0U; i < count; ++i) {
                 const auto entry_offset = table_offset + 4U + i * 4U;
@@ -92,8 +93,8 @@ namespace smgpc::game {
             return names;
         }
 
-        [[nodiscard]] std::optional< std::size_t > section_offset_for(const std::vector< J3dSectionInfo >& sections, std::string_view tag) {
-            const auto it = std::ranges::find_if(sections, [tag](const auto& section) { return section.tag == tag; });
+        [[nodiscard]] std::optional<std::size_t> section_offset_for(const std::vector<J3dSectionInfo> &sections, std::string_view tag) {
+            const auto it = std::ranges::find_if(sections, [tag](const auto &section) { return section.tag == tag; });
 
             if (it == sections.end()) {
                 return std::nullopt;
@@ -102,8 +103,8 @@ namespace smgpc::game {
             return it->offset;
         }
 
-        [[nodiscard]] std::optional< J3dSectionInfo > section_for(const std::vector< J3dSectionInfo >& sections, std::string_view tag) {
-            const auto it = std::ranges::find_if(sections, [tag](const auto& section) { return section.tag == tag; });
+        [[nodiscard]] std::optional<J3dSectionInfo> section_for(const std::vector<J3dSectionInfo> &sections, std::string_view tag) {
+            const auto it = std::ranges::find_if(sections, [tag](const auto &section) { return section.tag == tag; });
 
             if (it == sections.end()) {
                 return std::nullopt;
@@ -135,7 +136,7 @@ namespace smgpc::game {
             }
         }
 
-        [[nodiscard]] std::uint32_t direct_attribute_size(const std::vector< J3dVertexAttributeFormat >& formats, std::uint32_t attr) {
+        [[nodiscard]] std::uint32_t direct_attribute_size(const std::vector<J3dVertexAttributeFormat> &formats, std::uint32_t attr) {
             if (attr <= 8U) {
                 return 1U;
             }
@@ -143,7 +144,7 @@ namespace smgpc::game {
                 return 4U;
             }
 
-            const auto it = std::ranges::find_if(formats, [attr](const auto& format) { return format.attr == attr; });
+            const auto it = std::ranges::find_if(formats, [attr](const auto &format) { return format.attr == attr; });
             if (it == formats.end()) {
                 return 0U;
             }
@@ -160,16 +161,16 @@ namespace smgpc::game {
             return component_count * scalar_component_size(it->component_type);
         }
 
-        [[nodiscard]] const J3dVertexAttributeFormat* format_for(const std::vector< J3dVertexAttributeFormat >& formats, std::uint32_t attr) {
-            const auto it = std::ranges::find_if(formats, [attr](const auto& format) { return format.attr == attr; });
+        [[nodiscard]] const J3dVertexAttributeFormat *format_for(const std::vector<J3dVertexAttributeFormat> &formats, std::uint32_t attr) {
+            const auto it = std::ranges::find_if(formats, [attr](const auto &format) { return format.attr == attr; });
 
             return it == formats.end() ? nullptr : &*it;
         }
 
-        [[nodiscard]] std::uint32_t display_list_vertex_size(const std::vector< J3dVertexDesc >& desc,
-                                                             const std::vector< J3dVertexAttributeFormat >& formats) {
+        [[nodiscard]] std::uint32_t display_list_vertex_size(const std::vector<J3dVertexDesc> &desc,
+                                                             const std::vector<J3dVertexAttributeFormat> &formats) {
             auto size = std::uint32_t{};
-            for (const auto& entry : desc) {
+            for (const auto &entry : desc) {
                 switch (entry.type) {
                 case GX_NONE:
                     break;
@@ -193,7 +194,7 @@ namespace smgpc::game {
         [[nodiscard]] std::uint32_t primitive_triangle_count(std::uint8_t primitive, std::uint16_t vertex_count) {
             switch (primitive) {
             case 0x80U:
-                return static_cast< std::uint32_t >(vertex_count / 4U) * 2U;
+                return static_cast<std::uint32_t>(vertex_count / 4U) * 2U;
             case 0x90U:
                 return vertex_count / 3U;
             case 0x98U:
@@ -204,15 +205,53 @@ namespace smgpc::game {
             }
         }
 
-        [[nodiscard]] std::vector< J3dPrimitiveSummary > parse_display_list(std::span< const std::uint8_t > data, std::size_t offset,
-                                                                            std::uint32_t size, const std::vector< J3dVertexDesc >& desc,
-                                                                            const std::vector< J3dVertexAttributeFormat >& formats,
-                                                                            std::uint32_t& parsed_bytes) {
+        [[nodiscard]] bool skip_gx_display_list_command(std::span<const std::uint8_t> data, std::size_t &cursor, std::size_t end,
+                                                        std::uint8_t command) {
+            const auto require = [&](std::size_t bytes) {
+                if (cursor + bytes > end || cursor + bytes > data.size()) {
+                    return false;
+                }
+                cursor += bytes;
+                return true;
+            };
+
+            switch (command) {
+            case 0x08U:
+                return require(5U);
+            case 0x10U: {
+                if (cursor + 4U > end || cursor + 4U > data.size()) {
+                    return false;
+                }
+
+                const auto transfer_count = read_be16(data, cursor);
+                cursor += 4U;
+                return require((static_cast<std::size_t>(transfer_count) + 1U) * 4U);
+            }
+            case 0x20U:
+            case 0x28U:
+            case 0x30U:
+            case 0x38U:
+                return require(4U);
+            case 0x40U:
+                return require(8U);
+            case 0x48U:
+                return true;
+            case 0x61U:
+                return require(4U);
+            default:
+                return false;
+            }
+        }
+
+        [[nodiscard]] std::vector<J3dPrimitiveSummary> parse_display_list(std::span<const std::uint8_t> data, std::size_t offset,
+                                                                          std::uint32_t size, const std::vector<J3dVertexDesc> &desc,
+                                                                          const std::vector<J3dVertexAttributeFormat> &formats,
+                                                                          std::uint32_t &parsed_bytes) {
             if (offset + size > data.size()) {
                 throw std::runtime_error("J3D shape display list outside buffer");
             }
 
-            auto primitives = std::vector< J3dPrimitiveSummary >{};
+            auto primitives = std::vector<J3dPrimitiveSummary>{};
             const auto vertex_size = display_list_vertex_size(desc, formats);
             if (vertex_size == 0U) {
                 parsed_bytes = 0U;
@@ -227,16 +266,20 @@ namespace smgpc::game {
                     continue;
                 }
 
-                const auto primitive = static_cast< std::uint8_t >(command & 0xf8U);
-                const auto vertex_format = static_cast< std::uint8_t >(command & 0x07U);
+                const auto primitive = static_cast<std::uint8_t>(command & 0xf8U);
+                const auto vertex_format = static_cast<std::uint8_t>(command & 0x07U);
                 if (primitive < 0x80U || primitive > 0xb8U || cursor + 2U > end) {
+                    if (skip_gx_display_list_command(data, cursor, end, command)) {
+                        continue;
+                    }
+
                     break;
                 }
 
                 const auto vertex_count = read_be16(data, cursor);
                 cursor += 2U;
 
-                const auto payload_size = static_cast< std::size_t >(vertex_count) * vertex_size;
+                const auto payload_size = static_cast<std::size_t>(vertex_count) * vertex_size;
                 if (cursor + payload_size > end) {
                     break;
                 }
@@ -251,12 +294,12 @@ namespace smgpc::game {
                 cursor += payload_size;
             }
 
-            parsed_bytes = static_cast< std::uint32_t >(cursor - offset);
+            parsed_bytes = static_cast<std::uint32_t>(cursor - offset);
             return primitives;
         }
 
-        [[nodiscard]] std::uint32_t array_stride_for_attr(const std::vector< J3dVertexAttributeFormat >& formats, std::uint32_t attr) {
-            const auto it = std::ranges::find_if(formats, [attr](const auto& format) { return format.attr == attr; });
+        [[nodiscard]] std::uint32_t array_stride_for_attr(const std::vector<J3dVertexAttributeFormat> &formats, std::uint32_t attr) {
+            const auto it = std::ranges::find_if(formats, [attr](const auto &format) { return format.attr == attr; });
             if (it == formats.end()) {
                 return 0U;
             }
@@ -264,7 +307,7 @@ namespace smgpc::game {
             return direct_attribute_size(formats, attr);
         }
 
-        [[nodiscard]] std::uint32_t infer_array_count(const std::vector< std::uint32_t >& array_offsets, std::uint32_t current_offset,
+        [[nodiscard]] std::uint32_t infer_array_count(const std::vector<std::uint32_t> &array_offsets, std::uint32_t current_offset,
                                                       std::uint32_t section_size, std::uint32_t stride) {
             if (current_offset == 0U || stride == 0U) {
                 return 0U;
@@ -280,8 +323,8 @@ namespace smgpc::game {
             return next_offset > current_offset ? (next_offset - current_offset) / stride : 0U;
         }
 
-        [[nodiscard]] J3dInfoSummary parse_inf1(std::span< const std::uint8_t > data, const J3dSectionInfo& section) {
-            const auto section_offset = static_cast< std::size_t >(section.offset);
+        [[nodiscard]] J3dInfoSummary parse_inf1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x18U) {
                 throw std::runtime_error("J3D INF1 section is too small");
             }
@@ -310,8 +353,8 @@ namespace smgpc::game {
             return info;
         }
 
-        [[nodiscard]] J3dJointBlockSummary parse_jnt1(std::span< const std::uint8_t > data, const J3dSectionInfo& section) {
-            const auto section_offset = static_cast< std::size_t >(section.offset);
+        [[nodiscard]] J3dJointBlockSummary parse_jnt1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x18U) {
                 throw std::runtime_error("J3D JNT1 section is too small");
             }
@@ -333,15 +376,15 @@ namespace smgpc::game {
 
             summary.joints.reserve(summary.joint_count);
             for (auto i = 0U; i < summary.joint_count; ++i) {
-                const auto remapped_index = i < summary.remap_table.size() ? summary.remap_table[i] : static_cast< std::uint16_t >(i);
-                const auto joint_offset = relative_offset(section_offset, joint_init_relative) + static_cast< std::size_t >(remapped_index) * 0x40U;
+                const auto remapped_index = i < summary.remap_table.size() ? summary.remap_table[i] : static_cast<std::uint16_t>(i);
+                const auto joint_offset = relative_offset(section_offset, joint_init_relative) + static_cast<std::size_t>(remapped_index) * 0x40U;
                 if (joint_offset + 0x40U > data.size()) {
                     throw std::runtime_error("J3D JNT1 joint init data outside buffer");
                 }
 
                 summary.joints.push_back(J3dJointSummary{
                     .name = i < names.size() ? names[i] : std::string{},
-                    .index = static_cast< std::uint16_t >(i),
+                    .index = static_cast<std::uint16_t>(i),
                     .kind = read_be16(data, joint_offset),
                     .scale_compensate = data[joint_offset + 0x02U],
                     .scale = {read_be_float(data, joint_offset + 0x04U), read_be_float(data, joint_offset + 0x08U),
@@ -361,8 +404,104 @@ namespace smgpc::game {
             return summary;
         }
 
-        [[nodiscard]] std::vector< J3dVertexAttributeFormat > parse_vertex_formats(std::span< const std::uint8_t > data, std::size_t offset) {
-            auto formats = std::vector< J3dVertexAttributeFormat >{};
+        [[nodiscard]] J3dEnvelopeBlockSummary parse_evp1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
+            if (section.size < 0x1cU) {
+                throw std::runtime_error("J3D EVP1 section is too small");
+            }
+
+            auto summary = J3dEnvelopeBlockSummary{};
+            summary.matrix_count = read_be16(data, section_offset + 0x08U);
+            if (summary.matrix_count == 0U) {
+                return summary;
+            }
+
+            const auto mix_count_relative = read_be32(data, section_offset + 0x0cU);
+            const auto mix_index_relative = read_be32(data, section_offset + 0x10U);
+            const auto mix_weight_relative = read_be32(data, section_offset + 0x14U);
+            const auto inv_joint_relative = read_be32(data, section_offset + 0x18U);
+            if (!has_relative_offset(mix_count_relative) || !has_relative_offset(mix_index_relative) || !has_relative_offset(mix_weight_relative)) {
+                throw std::runtime_error("J3D EVP1 missing required envelope tables");
+            }
+
+            const auto mix_count_offset = relative_offset(section_offset, mix_count_relative);
+            const auto mix_index_offset = relative_offset(section_offset, mix_index_relative);
+            const auto mix_weight_offset = relative_offset(section_offset, mix_weight_relative);
+
+            auto influence_cursor = std::size_t{};
+            auto max_joint_index = std::uint16_t{};
+            summary.matrices.reserve(summary.matrix_count);
+            for (auto matrix_index = 0U; matrix_index < summary.matrix_count; ++matrix_index) {
+                if (mix_count_offset + matrix_index >= data.size()) {
+                    throw std::runtime_error("J3D EVP1 mix-count table outside buffer");
+                }
+
+                const auto influence_count = data[mix_count_offset + matrix_index];
+                auto matrix = J3dEnvelopeMatrixSummary{};
+                matrix.joint_indices.reserve(influence_count);
+                matrix.weights.reserve(influence_count);
+                for (auto influence = 0U; influence < influence_count; ++influence) {
+                    const auto index = read_be16(data, mix_index_offset + (influence_cursor + influence) * 2U);
+                    const auto weight = read_be_float(data, mix_weight_offset + (influence_cursor + influence) * 4U);
+                    max_joint_index = std::max(max_joint_index, index);
+                    matrix.joint_indices.push_back(index);
+                    matrix.weights.push_back(weight);
+                }
+                influence_cursor += influence_count;
+                summary.matrices.push_back(std::move(matrix));
+            }
+
+            if (has_relative_offset(inv_joint_relative) && inv_joint_relative < section.size) {
+                const auto inv_joint_offset = relative_offset(section_offset, inv_joint_relative);
+                const auto available_bytes = static_cast<std::size_t>(section.size - inv_joint_relative);
+                const auto matrix_count = std::min<std::size_t>(static_cast<std::size_t>(max_joint_index) + 1U, available_bytes / 48U);
+                summary.inverse_bind_matrices.reserve(matrix_count);
+                for (auto matrix_index = 0U; matrix_index < matrix_count; ++matrix_index) {
+                    auto matrix = std::array<float, 12U>{};
+                    for (auto value = 0U; value < matrix.size(); ++value) {
+                        matrix[value] = read_be_float(data, inv_joint_offset + matrix_index * 48U + value * 4U);
+                    }
+                    summary.inverse_bind_matrices.push_back(matrix);
+                }
+            }
+
+            return summary;
+        }
+
+        [[nodiscard]] J3dDrawBlockSummary parse_drw1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
+            if (section.size < 0x14U) {
+                throw std::runtime_error("J3D DRW1 section is too small");
+            }
+
+            auto summary = J3dDrawBlockSummary{};
+            summary.matrix_count = read_be16(data, section_offset + 0x08U);
+            const auto flag_relative = read_be32(data, section_offset + 0x0cU);
+            const auto index_relative = read_be32(data, section_offset + 0x10U);
+            if (!has_relative_offset(flag_relative) || !has_relative_offset(index_relative)) {
+                return summary;
+            }
+
+            const auto flag_offset = relative_offset(section_offset, flag_relative);
+            const auto index_offset = relative_offset(section_offset, index_relative);
+            if (flag_offset + summary.matrix_count > data.size() ||
+                index_offset + static_cast<std::size_t>(summary.matrix_count) * 2U > data.size()) {
+                throw std::runtime_error("J3D DRW1 matrix tables outside buffer");
+            }
+
+            summary.matrices.reserve(summary.matrix_count);
+            for (auto i = 0U; i < summary.matrix_count; ++i) {
+                summary.matrices.push_back(J3dDrawMatrixSummary{
+                    .weighted = data[flag_offset + i] != 0U,
+                    .index = read_be16(data, index_offset + i * 2U),
+                });
+            }
+
+            return summary;
+        }
+
+        [[nodiscard]] std::vector<J3dVertexAttributeFormat> parse_vertex_formats(std::span<const std::uint8_t> data, std::size_t offset) {
+            auto formats = std::vector<J3dVertexAttributeFormat>{};
             if (offset == 0U) {
                 return formats;
             }
@@ -384,8 +523,8 @@ namespace smgpc::game {
             return formats;
         }
 
-        [[nodiscard]] J3dVertexSummary parse_vtx1(std::span< const std::uint8_t > data, const J3dSectionInfo& section) {
-            const auto section_offset = static_cast< std::size_t >(section.offset);
+        [[nodiscard]] J3dVertexSummary parse_vtx1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x40U) {
                 throw std::runtime_error("J3D VTX1 section is too small");
             }
@@ -396,16 +535,27 @@ namespace smgpc::game {
                 summary.formats = parse_vertex_formats(data, relative_offset(section_offset, format_relative));
             }
 
-            constexpr std::array< std::uint32_t, 12U > attrs{
-                9U, 10U, 25U, 11U, 12U, 13U, 14U, 15U, 16U, 17U, 18U, 19U,
+            constexpr std::array<std::uint32_t, 12U> attrs{
+                9U,
+                10U,
+                25U,
+                11U,
+                12U,
+                13U,
+                14U,
+                15U,
+                16U,
+                17U,
+                18U,
+                19U,
             };
 
-            std::array< std::uint32_t, attrs.size() > relatives{};
+            std::array<std::uint32_t, attrs.size()> relatives{};
             for (auto i = std::size_t{}; i < relatives.size(); ++i) {
                 relatives[i] = read_be32(data, section_offset + 0x0cU + i * 4U);
             }
 
-            auto nonzero_offsets = std::vector< std::uint32_t >{};
+            auto nonzero_offsets = std::vector<std::uint32_t>{};
             for (const auto offset : relatives) {
                 if (offset != 0U && offset < section.size) {
                     nonzero_offsets.push_back(offset);
@@ -431,8 +581,8 @@ namespace smgpc::game {
             return summary;
         }
 
-        [[nodiscard]] std::vector< J3dVertexDesc > parse_vertex_desc(std::span< const std::uint8_t > data, std::size_t offset) {
-            auto desc = std::vector< J3dVertexDesc >{};
+        [[nodiscard]] std::vector<J3dVertexDesc> parse_vertex_desc(std::span<const std::uint8_t> data, std::size_t offset) {
+            auto desc = std::vector<J3dVertexDesc>{};
             for (auto cursor = offset; cursor + 8U <= data.size(); cursor += 8U) {
                 const auto attr = read_be32(data, cursor);
                 if (attr == GX_VA_NULL) {
@@ -448,15 +598,15 @@ namespace smgpc::game {
             return desc;
         }
 
-        [[nodiscard]] std::vector< std::uint16_t > shape_materials_from_hierarchy(const std::optional< J3dInfoSummary >& info,
-                                                                                  std::uint16_t shape_count) {
-            auto materials = std::vector< std::uint16_t >(shape_count, 0xffffU);
+        [[nodiscard]] std::vector<std::uint16_t> shape_materials_from_hierarchy(const std::optional<J3dInfoSummary> &info,
+                                                                                std::uint16_t shape_count) {
+            auto materials = std::vector<std::uint16_t>(shape_count, 0xffffU);
             if (!info.has_value()) {
                 return materials;
             }
 
             auto current_material = std::uint16_t{0xffffU};
-            for (const auto& entry : info->hierarchy) {
+            for (const auto &entry : info->hierarchy) {
                 if (entry.type == 0x11U) {
                     current_material = entry.value;
                 } else if (entry.type == 0x12U && entry.value < materials.size()) {
@@ -467,15 +617,15 @@ namespace smgpc::game {
             return materials;
         }
 
-        [[nodiscard]] std::vector< std::uint16_t > shape_joints_from_hierarchy(const std::optional< J3dInfoSummary >& info,
-                                                                               std::uint16_t shape_count) {
-            auto joints = std::vector< std::uint16_t >(shape_count, 0xffffU);
+        [[nodiscard]] std::vector<std::uint16_t> shape_joints_from_hierarchy(const std::optional<J3dInfoSummary> &info,
+                                                                             std::uint16_t shape_count) {
+            auto joints = std::vector<std::uint16_t>(shape_count, 0xffffU);
             if (!info.has_value()) {
                 return joints;
             }
 
             auto current_joint = std::uint16_t{0xffffU};
-            for (const auto& entry : info->hierarchy) {
+            for (const auto &entry : info->hierarchy) {
                 if (entry.type == 0x10U) {
                     current_joint = entry.value;
                 } else if (entry.type == 0x12U && entry.value < joints.size()) {
@@ -486,9 +636,9 @@ namespace smgpc::game {
             return joints;
         }
 
-        [[nodiscard]] std::vector< std::uint16_t > shape_draw_orders_from_hierarchy(const std::optional< J3dInfoSummary >& info,
-                                                                                    std::uint16_t shape_count) {
-            auto draw_orders = std::vector< std::uint16_t >(shape_count, 0xffffU);
+        [[nodiscard]] std::vector<std::uint16_t> shape_draw_orders_from_hierarchy(const std::optional<J3dInfoSummary> &info,
+                                                                                  std::uint16_t shape_count) {
+            auto draw_orders = std::vector<std::uint16_t>(shape_count, 0xffffU);
             if (!info.has_value()) {
                 for (auto i = std::uint16_t{}; i < shape_count; ++i) {
                     draw_orders[i] = i;
@@ -497,7 +647,7 @@ namespace smgpc::game {
             }
 
             auto draw_order = std::uint16_t{};
-            for (const auto& entry : info->hierarchy) {
+            for (const auto &entry : info->hierarchy) {
                 if (entry.type == 0x12U && entry.value < draw_orders.size()) {
                     draw_orders[entry.value] = draw_order++;
                 }
@@ -506,10 +656,55 @@ namespace smgpc::game {
             return draw_orders;
         }
 
-        [[nodiscard]] J3dShapeBlockSummary parse_shp1(std::span< const std::uint8_t > data, const J3dSectionInfo& section,
-                                                      const std::optional< J3dInfoSummary >& info,
-                                                      const std::optional< J3dVertexSummary >& vertices) {
-            const auto section_offset = static_cast< std::size_t >(section.offset);
+        [[nodiscard]] std::vector<std::uint16_t> joint_parent_indices_from_hierarchy(const std::optional<J3dInfoSummary> &info,
+                                                                                     std::uint16_t joint_count) {
+            auto parents = std::vector<std::uint16_t>(joint_count, 0xffffU);
+            if (!info.has_value()) {
+                return parents;
+            }
+
+            auto stack = std::vector<std::uint16_t>{};
+            auto child_scope_is_joint = std::vector<bool>{};
+            auto last_joint = std::uint16_t{0xffffU};
+            auto last_entry_was_joint = false;
+            for (const auto &entry : info->hierarchy) {
+                switch (entry.type) {
+                case 0x10U:
+                    if (entry.value < parents.size()) {
+                        parents[entry.value] = stack.empty() ? static_cast<std::uint16_t>(0xffffU) : stack.back();
+                    }
+                    last_joint = entry.value;
+                    last_entry_was_joint = true;
+                    break;
+                case 0x01U:
+                    child_scope_is_joint.push_back(last_entry_was_joint && last_joint != 0xffffU);
+                    if (child_scope_is_joint.back()) {
+                        stack.push_back(last_joint);
+                    }
+                    last_entry_was_joint = false;
+                    break;
+                case 0x02U:
+                    if (!child_scope_is_joint.empty() && child_scope_is_joint.back() && !stack.empty()) {
+                        stack.pop_back();
+                    }
+                    if (!child_scope_is_joint.empty()) {
+                        child_scope_is_joint.pop_back();
+                    }
+                    last_entry_was_joint = false;
+                    break;
+                default:
+                    last_entry_was_joint = false;
+                    break;
+                }
+            }
+
+            return parents;
+        }
+
+        [[nodiscard]] J3dShapeBlockSummary parse_shp1(std::span<const std::uint8_t> data, const J3dSectionInfo &section,
+                                                      const std::optional<J3dInfoSummary> &info,
+                                                      const std::optional<J3dVertexSummary> &vertices) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x2cU) {
                 throw std::runtime_error("J3D SHP1 section is too small");
             }
@@ -519,10 +714,13 @@ namespace smgpc::game {
             const auto index_table_relative = read_be32(data, section_offset + 0x10U);
             const auto name_table_relative = read_be32(data, section_offset + 0x14U);
             const auto vtx_desc_relative = read_be32(data, section_offset + 0x18U);
+            const auto matrix_table_relative = read_be32(data, section_offset + 0x1cU);
             const auto display_list_relative = read_be32(data, section_offset + 0x20U);
+            const auto matrix_init_relative = read_be32(data, section_offset + 0x24U);
             const auto draw_init_relative = read_be32(data, section_offset + 0x28U);
             if (!has_relative_offset(shape_init_relative) || !has_relative_offset(index_table_relative) || !has_relative_offset(vtx_desc_relative) ||
-                !has_relative_offset(display_list_relative) || !has_relative_offset(draw_init_relative)) {
+                !has_relative_offset(display_list_relative) || !has_relative_offset(matrix_init_relative) ||
+                !has_relative_offset(draw_init_relative)) {
                 throw std::runtime_error("J3D SHP1 missing required tables");
             }
 
@@ -534,7 +732,7 @@ namespace smgpc::game {
             summary.shape_count = shape_count;
             summary.shapes.reserve(shape_count);
 
-            const auto formats = vertices.has_value() ? vertices->formats : std::vector< J3dVertexAttributeFormat >{};
+            const auto formats = vertices.has_value() ? vertices->formats : std::vector<J3dVertexAttributeFormat>{};
             for (auto i = std::uint16_t{}; i < shape_count; ++i) {
                 const auto shape_init_index = read_be16(data, relative_offset(section_offset, index_table_relative) + i * 2U);
                 const auto shape_init_offset = relative_offset(section_offset, shape_init_relative) + shape_init_index * 0x28U;
@@ -546,9 +744,9 @@ namespace smgpc::game {
                 auto shape = J3dShapeSummary{};
                 shape.name = i < names.size() ? names[i] : std::string{};
                 shape.index = i;
-                shape.draw_order = i < draw_orders.size() ? draw_orders[i] : static_cast< std::uint16_t >(0xffffU);
-                shape.material_index = i < material_indices.size() ? material_indices[i] : static_cast< std::uint16_t >(0xffffU);
-                shape.joint_index = i < joint_indices.size() ? joint_indices[i] : static_cast< std::uint16_t >(0xffffU);
+                shape.draw_order = i < draw_orders.size() ? draw_orders[i] : static_cast<std::uint16_t>(0xffffU);
+                shape.material_index = i < material_indices.size() ? material_indices[i] : static_cast<std::uint16_t>(0xffffU);
+                shape.joint_index = i < joint_indices.size() ? joint_indices[i] : static_cast<std::uint16_t>(0xffffU);
                 shape.matrix_type = data[shape_init_offset];
                 shape.matrix_group_count = matrix_group_count;
                 shape.vertex_desc_list_index = vertex_desc_list_index;
@@ -563,19 +761,54 @@ namespace smgpc::game {
                 shape.vertex_desc = parse_vertex_desc(data, relative_offset(section_offset, vtx_desc_relative) + vertex_desc_list_index);
 
                 for (auto group = 0U; group < matrix_group_count; ++group) {
+                    const auto matrix_init_offset =
+                        relative_offset(section_offset, matrix_init_relative) + static_cast<std::size_t>(matrix_init_data_index + group) * 8U;
                     const auto draw_init_offset = relative_offset(section_offset, draw_init_relative) + (draw_init_data_index + group) * 8U;
+                    const auto use_matrix_index = read_be16(data, matrix_init_offset);
+                    const auto use_matrix_count = read_be16(data, matrix_init_offset + 2U);
+                    const auto first_matrix_table_index = read_be32(data, matrix_init_offset + 4U);
                     const auto display_list_size = read_be32(data, draw_init_offset);
                     const auto display_list_index = read_be32(data, draw_init_offset + 4U);
+
+                    auto matrix_group = J3dShapeMatrixGroupSummary{
+                        .group_index = static_cast<std::uint16_t>(group),
+                        .use_matrix_index = use_matrix_index,
+                        .use_matrix_count = use_matrix_count,
+                        .first_matrix_table_index = first_matrix_table_index,
+                        .display_list_offset = display_list_index,
+                        .display_list_size = display_list_size,
+                        .matrix_table = {},
+                        .primitives = {},
+                        .parsed_display_list_bytes = 0U,
+                        .triangle_count = 0U,
+                    };
+                    if (shape.matrix_type == 3U && has_relative_offset(matrix_table_relative) && use_matrix_count > 0U) {
+                        const auto matrix_table_offset =
+                            relative_offset(section_offset, matrix_table_relative) + static_cast<std::size_t>(first_matrix_table_index) * 2U;
+                        matrix_group.matrix_table.reserve(use_matrix_count);
+                        for (auto matrix = 0U; matrix < use_matrix_count; ++matrix) {
+                            matrix_group.matrix_table.push_back(read_be16(data, matrix_table_offset + matrix * 2U));
+                        }
+                    } else if (use_matrix_index != 0xffffU) {
+                        matrix_group.matrix_table.push_back(use_matrix_index);
+                    }
+
                     shape.display_list_bytes += display_list_size;
 
                     auto parsed_bytes = std::uint32_t{};
                     auto primitives = parse_display_list(data, relative_offset(section_offset, display_list_relative) + display_list_index,
                                                          display_list_size, shape.vertex_desc, formats, parsed_bytes);
                     shape.parsed_display_list_bytes += parsed_bytes;
-                    for (const auto& primitive : primitives) {
+                    for (const auto &primitive : primitives) {
                         shape.triangle_count += primitive.triangle_count;
                     }
+                    matrix_group.parsed_display_list_bytes = parsed_bytes;
+                    for (const auto &primitive : primitives) {
+                        matrix_group.triangle_count += primitive.triangle_count;
+                    }
+                    matrix_group.primitives = primitives;
                     shape.primitives.insert(shape.primitives.end(), primitives.begin(), primitives.end());
+                    shape.matrix_groups.push_back(std::move(matrix_group));
                 }
 
                 summary.shapes.push_back(std::move(shape));
@@ -584,8 +817,8 @@ namespace smgpc::game {
             return summary;
         }
 
-        [[nodiscard]] J3dMaterialBlockSummary parse_mat3(std::span< const std::uint8_t > data, const J3dSectionInfo& section) {
-            const auto section_offset = static_cast< std::size_t >(section.offset);
+        [[nodiscard]] J3dMaterialBlockSummary parse_mat3(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x84U) {
                 throw std::runtime_error("J3D MAT3 section is too small");
             }
@@ -601,6 +834,7 @@ namespace smgpc::game {
             const auto texmtx_relative = read_be32(data, section_offset + 0x40U);
             const auto tex_no_relative = read_be32(data, section_offset + 0x48U);
             const auto tev_order_relative = read_be32(data, section_offset + 0x4cU);
+            const auto tev_color_relative = read_be32(data, section_offset + 0x50U);
             const auto tev_k_color_relative = read_be32(data, section_offset + 0x54U);
             const auto tev_stage_count_relative = read_be32(data, section_offset + 0x58U);
             const auto tev_stage_relative = read_be32(data, section_offset + 0x5cU);
@@ -669,6 +903,22 @@ namespace smgpc::game {
                                                              data[color_offset + 3U]};
                     }
                 }
+                if (has_relative_offset(tev_color_relative)) {
+                    for (auto color_slot = 0U; color_slot < material.tev_colors.size(); ++color_slot) {
+                        const auto color_index = read_be16(data, init_offset + 0x8cU + color_slot * 2U);
+                        if (color_index == 0xffffU) {
+                            continue;
+                        }
+
+                        const auto color_offset = relative_offset(section_offset, tev_color_relative) + color_index * 8U;
+                        material.tev_colors[color_slot] = {
+                            read_be_s16(data, color_offset),
+                            read_be_s16(data, color_offset + 2U),
+                            read_be_s16(data, color_offset + 4U),
+                            read_be_s16(data, color_offset + 6U),
+                        };
+                    }
+                }
 
                 const auto texgen_count_index = data[init_offset + 0x03U];
                 if (texgen_count_index != 0xffU && has_relative_offset(texgen_count_relative)) {
@@ -688,7 +938,7 @@ namespace smgpc::game {
                         }
 
                         material.textures.push_back(J3dMaterialTextureBinding{
-                            .slot = static_cast< std::uint8_t >(slot),
+                            .slot = static_cast<std::uint8_t>(slot),
                             .texture_index = read_be16(data, relative_offset(section_offset, tex_no_relative) + tex_no_index * 2U),
                         });
                     }
@@ -703,7 +953,7 @@ namespace smgpc::game {
 
                         const auto texcoord_offset = relative_offset(section_offset, texcoord_relative) + texcoord_index * 4U;
                         material.tex_coord_gens.push_back(J3dTexCoordGenSummary{
-                            .slot = static_cast< std::uint8_t >(slot),
+                            .slot = static_cast<std::uint8_t>(slot),
                             .type = data[texcoord_offset],
                             .source = data[texcoord_offset + 1U],
                             .matrix = data[texcoord_offset + 2U],
@@ -720,7 +970,7 @@ namespace smgpc::game {
 
                         const auto texmtx_offset = relative_offset(section_offset, texmtx_relative) + texmtx_index * 0x64U;
                         auto tex_matrix = J3dTexMatrixSummary{
-                            .slot = static_cast< std::uint8_t >(slot),
+                            .slot = static_cast<std::uint8_t>(slot),
                             .projection = data[texmtx_offset],
                             .info = data[texmtx_offset + 1U],
                             .center =
@@ -751,7 +1001,7 @@ namespace smgpc::game {
 
                         const auto tev_order_offset = relative_offset(section_offset, tev_order_relative) + tev_order_index * 4U;
                         material.tev_orders.push_back(J3dTevOrderSummary{
-                            .stage = static_cast< std::uint8_t >(stage),
+                            .stage = static_cast<std::uint8_t>(stage),
                             .tex_coord = data[tev_order_offset],
                             .tex_map = data[tev_order_offset + 1U],
                             .color_channel = data[tev_order_offset + 2U],
@@ -768,7 +1018,7 @@ namespace smgpc::game {
 
                         const auto tev_stage_offset = relative_offset(section_offset, tev_stage_relative) + tev_stage_index * 20U;
                         auto tev_stage = J3dTevStageSummary{
-                            .stage = static_cast< std::uint8_t >(stage),
+                            .stage = static_cast<std::uint8_t>(stage),
                         };
                         std::ranges::copy(data.subspan(tev_stage_offset, tev_stage.raw.size()), tev_stage.raw.begin());
                         tev_stage.color_in = {tev_stage.raw[1U], tev_stage.raw[2U], tev_stage.raw[3U], tev_stage.raw[4U]};
@@ -812,26 +1062,68 @@ namespace smgpc::game {
                     };
                 }
 
+                material.gx_state = gx_state_from_j3d_material(material);
                 summary.materials.push_back(std::move(material));
             }
 
             return summary;
         }
 
+        [[nodiscard]] J3dMdl3BlockSummary parse_mdl3(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
+            if (section.size < 0x20U) {
+                throw std::runtime_error("J3D MDL3 section is too small");
+            }
+
+            auto summary = J3dMdl3BlockSummary{};
+            summary.material_count = read_be16(data, section_offset + 0x08U);
+            const auto display_init_relative = read_be32(data, section_offset + 0x0cU);
+            if (!has_relative_offset(display_init_relative)) {
+                return summary;
+            }
+
+            const auto display_init_offset = relative_offset(section_offset, display_init_relative);
+            if (display_init_offset + static_cast<std::size_t>(summary.material_count) * 8U > data.size()) {
+                throw std::runtime_error("J3D MDL3 display-list init table outside buffer");
+            }
+
+            summary.packets.reserve(summary.material_count);
+            for (auto i = 0U; i < summary.material_count; ++i) {
+                const auto entry_offset = display_init_offset + i * 8U;
+                const auto packet_offset = entry_offset + read_be32(data, entry_offset);
+                const auto packet_size = read_be32(data, entry_offset + 4U);
+                if (packet_offset + packet_size > data.size()) {
+                    throw std::runtime_error("J3D MDL3 display list outside buffer");
+                }
+
+                auto packet = J3dMdl3PacketSummary{
+                    .offset = static_cast<std::uint32_t>(packet_offset - section_offset),
+                    .size = packet_size,
+                    .bytes = {},
+                };
+                packet.bytes.assign(data.begin() + static_cast<std::ptrdiff_t>(packet_offset),
+                                    data.begin() + static_cast<std::ptrdiff_t>(packet_offset + packet_size));
+                summary.packets.push_back(std::move(packet));
+            }
+
+            return summary;
+        }
+
         struct RawVertexSource {
-            std::vector< J3dVertexAttributeFormat > formats;
-            std::array< std::uint32_t, 26U > array_offsets{};
+            std::vector<J3dVertexAttributeFormat> formats;
+            std::array<std::uint32_t, 26U> array_offsets{};
             std::size_t section_offset = 0U;
         };
 
         struct RawDisplayVertex {
+            std::uint8_t position_matrix_slot = 0xffU;
             std::uint32_t pos_index = 0U;
-            std::uint32_t color0_index = std::numeric_limits< std::uint32_t >::max();
-            std::uint32_t tex0_index = std::numeric_limits< std::uint32_t >::max();
+            std::uint32_t color0_index = std::numeric_limits<std::uint32_t>::max();
+            std::uint32_t tex0_index = std::numeric_limits<std::uint32_t>::max();
         };
 
-        [[nodiscard]] RawVertexSource parse_raw_vertex_source(std::span< const std::uint8_t > data, const J3dSectionInfo& section) {
-            const auto section_offset = static_cast< std::size_t >(section.offset);
+        [[nodiscard]] RawVertexSource parse_raw_vertex_source(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
+            const auto section_offset = static_cast<std::size_t>(section.offset);
             auto source = RawVertexSource{};
             source.section_offset = section_offset;
             const auto format_relative = read_be32(data, section_offset + 0x08U);
@@ -839,8 +1131,19 @@ namespace smgpc::game {
                 source.formats = parse_vertex_formats(data, relative_offset(section_offset, format_relative));
             }
 
-            constexpr std::array< std::uint32_t, 12U > attrs{
-                9U, 10U, 25U, 11U, 12U, 13U, 14U, 15U, 16U, 17U, 18U, 19U,
+            constexpr std::array<std::uint32_t, 12U> attrs{
+                9U,
+                10U,
+                25U,
+                11U,
+                12U,
+                13U,
+                14U,
+                15U,
+                16U,
+                17U,
+                18U,
+                19U,
             };
             for (auto i = std::size_t{}; i < attrs.size(); ++i) {
                 source.array_offsets[attrs[i]] = read_be32(data, section_offset + 0x0cU + i * 4U);
@@ -850,20 +1153,20 @@ namespace smgpc::game {
         }
 
         [[nodiscard]] float fixed_scale(std::uint8_t fraction) {
-            return static_cast< float >(1U << fraction);
+            return static_cast<float>(1U << fraction);
         }
 
-        [[nodiscard]] float read_component(std::span< const std::uint8_t > data, std::size_t offset, std::uint32_t component_type,
+        [[nodiscard]] float read_component(std::span<const std::uint8_t> data, std::size_t offset, std::uint32_t component_type,
                                            std::uint8_t fraction) {
             switch (component_type) {
             case 0U:
-                return static_cast< float >(data[offset]) / fixed_scale(fraction);
+                return static_cast<float>(data[offset]) / fixed_scale(fraction);
             case 1U:
-                return static_cast< float >(static_cast< std::int8_t >(data[offset])) / fixed_scale(fraction);
+                return static_cast<float>(static_cast<std::int8_t>(data[offset])) / fixed_scale(fraction);
             case 2U:
-                return static_cast< float >(read_be16(data, offset)) / fixed_scale(fraction);
+                return static_cast<float>(read_be16(data, offset)) / fixed_scale(fraction);
             case 3U:
-                return static_cast< float >(static_cast< std::int16_t >(read_be16(data, offset))) / fixed_scale(fraction);
+                return static_cast<float>(static_cast<std::int16_t>(read_be16(data, offset))) / fixed_scale(fraction);
             case 4U:
                 return read_be_float(data, offset);
             default:
@@ -871,15 +1174,15 @@ namespace smgpc::game {
             }
         }
 
-        [[nodiscard]] std::array< float, 3U > read_position(std::span< const std::uint8_t > data, const RawVertexSource& source,
-                                                            std::uint32_t index) {
-            const auto* format = format_for(source.formats, 9U);
+        [[nodiscard]] std::array<float, 3U> read_position(std::span<const std::uint8_t> data, const RawVertexSource &source,
+                                                          std::uint32_t index) {
+            const auto *format = format_for(source.formats, 9U);
             if (format == nullptr || source.array_offsets[9U] == 0U) {
                 return {};
             }
 
             const auto stride = direct_attribute_size(source.formats, 9U);
-            const auto offset = source.section_offset + source.array_offsets[9U] + static_cast< std::size_t >(index) * stride;
+            const auto offset = source.section_offset + source.array_offsets[9U] + static_cast<std::size_t>(index) * stride;
             return {
                 read_component(data, offset, format->component_type, format->fraction),
                 read_component(data, offset + scalar_component_size(format->component_type), format->component_type, format->fraction),
@@ -887,31 +1190,31 @@ namespace smgpc::game {
             };
         }
 
-        [[nodiscard]] std::array< float, 2U > read_texcoord0(std::span< const std::uint8_t > data, const RawVertexSource& source,
-                                                             std::uint32_t index) {
-            const auto* format = format_for(source.formats, 13U);
+        [[nodiscard]] std::array<float, 2U> read_texcoord0(std::span<const std::uint8_t> data, const RawVertexSource &source,
+                                                           std::uint32_t index) {
+            const auto *format = format_for(source.formats, 13U);
             if (format == nullptr || source.array_offsets[13U] == 0U) {
                 return {};
             }
 
             const auto stride = direct_attribute_size(source.formats, 13U);
             const auto component_size = scalar_component_size(format->component_type);
-            const auto offset = source.section_offset + source.array_offsets[13U] + static_cast< std::size_t >(index) * stride;
+            const auto offset = source.section_offset + source.array_offsets[13U] + static_cast<std::size_t>(index) * stride;
             return {
                 read_component(data, offset, format->component_type, format->fraction),
                 read_component(data, offset + component_size, format->component_type, format->fraction),
             };
         }
 
-        [[nodiscard]] std::array< std::uint8_t, 4U > read_color0(std::span< const std::uint8_t > data, const RawVertexSource& source,
-                                                                 std::uint32_t index) {
-            const auto* format = format_for(source.formats, 11U);
+        [[nodiscard]] std::array<std::uint8_t, 4U> read_color0(std::span<const std::uint8_t> data, const RawVertexSource &source,
+                                                               std::uint32_t index) {
+            const auto *format = format_for(source.formats, 11U);
             if (format == nullptr || source.array_offsets[11U] == 0U) {
                 return {255U, 255U, 255U, 255U};
             }
 
             const auto offset =
-                source.section_offset + source.array_offsets[11U] + static_cast< std::size_t >(index) * direct_attribute_size(source.formats, 11U);
+                source.section_offset + source.array_offsets[11U] + static_cast<std::size_t>(index) * direct_attribute_size(source.formats, 11U);
             switch (format->component_type) {
             case 1U:
                 return {data[offset], data[offset + 1U], data[offset + 2U], 255U};
@@ -921,14 +1224,14 @@ namespace smgpc::game {
             }
         }
 
-        [[nodiscard]] J3dMeshVertex make_mesh_vertex(std::span< const std::uint8_t > data, const RawVertexSource& source,
-                                                     const RawDisplayVertex& display_vertex) {
+        [[nodiscard]] J3dMeshVertex make_mesh_vertex(std::span<const std::uint8_t> data, const RawVertexSource &source,
+                                                     const RawDisplayVertex &display_vertex, std::uint16_t draw_matrix_index) {
             const auto position = read_position(data, source, display_vertex.pos_index);
-            const auto texcoord = display_vertex.tex0_index == std::numeric_limits< std::uint32_t >::max() ?
-                                      std::array< float, 2U >{} :
+            const auto texcoord = display_vertex.tex0_index == std::numeric_limits<std::uint32_t>::max() ?
+                                      std::array<float, 2U>{} :
                                       read_texcoord0(data, source, display_vertex.tex0_index);
-            const auto color = display_vertex.color0_index == std::numeric_limits< std::uint32_t >::max() ?
-                                   std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U} :
+            const auto color = display_vertex.color0_index == std::numeric_limits<std::uint32_t>::max() ?
+                                   std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
                                    read_color0(data, source, display_vertex.color0_index);
 
             return J3dMeshVertex{
@@ -938,15 +1241,17 @@ namespace smgpc::game {
                 .u = texcoord[0U],
                 .v = texcoord[1U],
                 .color = color,
+                .position_matrix_slot = display_vertex.position_matrix_slot,
+                .draw_matrix_index = draw_matrix_index,
             };
         }
 
-        [[nodiscard]] std::uint32_t read_attribute_value(std::span< const std::uint8_t > data, std::size_t& cursor, std::uint32_t type,
+        [[nodiscard]] std::uint32_t read_attribute_value(std::span<const std::uint8_t> data, std::size_t &cursor, std::uint32_t type,
                                                          std::uint32_t direct_size) {
             switch (type) {
             case GX_DIRECT:
                 cursor += direct_size;
-                return std::numeric_limits< std::uint32_t >::max();
+                return std::numeric_limits<std::uint32_t>::max();
             case GX_INDEX8:
                 return data[cursor++];
             case GX_INDEX16: {
@@ -955,25 +1260,32 @@ namespace smgpc::game {
                 return value;
             }
             default:
-                return std::numeric_limits< std::uint32_t >::max();
+                return std::numeric_limits<std::uint32_t>::max();
             }
         }
 
-        [[nodiscard]] RawDisplayVertex read_display_vertex(std::span< const std::uint8_t > data, std::size_t& cursor,
-                                                           const std::vector< J3dVertexDesc >& desc,
-                                                           const std::vector< J3dVertexAttributeFormat >& formats) {
+        [[nodiscard]] RawDisplayVertex read_display_vertex(std::span<const std::uint8_t> data, std::size_t &cursor,
+                                                           const std::vector<J3dVertexDesc> &desc,
+                                                           const std::vector<J3dVertexAttributeFormat> &formats) {
             auto vertex = RawDisplayVertex{};
-            for (const auto& entry : desc) {
+            for (const auto &entry : desc) {
                 if (entry.type == GX_NONE) {
                     continue;
                 }
 
-                const auto value = read_attribute_value(data, cursor, entry.type, direct_attribute_size(formats, entry.attr));
-                if (value == std::numeric_limits< std::uint32_t >::max()) {
+                auto value = std::uint32_t{};
+                if (entry.type == GX_DIRECT && entry.attr <= 8U) {
+                    value = data[cursor++] & 0x3fU;
+                } else {
+                    value = read_attribute_value(data, cursor, entry.type, direct_attribute_size(formats, entry.attr));
+                }
+                if (value == std::numeric_limits<std::uint32_t>::max()) {
                     continue;
                 }
 
-                if (entry.attr == 9U) {
+                if (entry.attr == 0U) {
+                    vertex.position_matrix_slot = static_cast<std::uint8_t>(value & 0x3fU);
+                } else if (entry.attr == 9U) {
                     vertex.pos_index = value;
                 } else if (entry.attr == 11U) {
                     vertex.color0_index = value;
@@ -985,13 +1297,13 @@ namespace smgpc::game {
             return vertex;
         }
 
-        void push_triangle(std::vector< std::uint16_t >& indices, std::uint16_t a, std::uint16_t b, std::uint16_t c) {
+        void push_triangle(std::vector<std::uint16_t> &indices, std::uint16_t a, std::uint16_t b, std::uint16_t c) {
             indices.push_back(a);
             indices.push_back(b);
             indices.push_back(c);
         }
 
-        void append_primitive_indices(std::vector< std::uint16_t >& indices, std::uint8_t primitive, std::span< const std::uint16_t > vertices) {
+        void append_primitive_indices(std::vector<std::uint16_t> &indices, std::uint8_t primitive, std::span<const std::uint16_t> vertices) {
             switch (primitive) {
             case 0x80U:
                 for (auto i = std::size_t{}; i + 3U < vertices.size(); i += 4U) {
@@ -1023,8 +1335,24 @@ namespace smgpc::game {
             }
         }
 
-        void append_display_list_mesh(std::span< const std::uint8_t > data, J3dShapeMesh& mesh, const RawVertexSource& source, std::size_t offset,
-                                      std::uint32_t size, const std::vector< J3dVertexDesc >& desc) {
+        [[nodiscard]] std::uint16_t draw_matrix_index_for_vertex(const J3dShapeMatrixGroupSummary &group, std::uint8_t matrix_type,
+                                                                 const RawDisplayVertex &vertex) {
+            if (matrix_type == 3U && !group.matrix_table.empty()) {
+                const auto slot = vertex.position_matrix_slot == 0xffU ? 0U : static_cast<std::uint32_t>(vertex.position_matrix_slot / 3U);
+                if (slot < group.matrix_table.size()) {
+                    return group.matrix_table[slot];
+                }
+            }
+
+            if (!group.matrix_table.empty()) {
+                return group.matrix_table.front();
+            }
+
+            return group.use_matrix_index;
+        }
+
+        void append_display_list_mesh(std::span<const std::uint8_t> data, J3dShapeMesh &mesh, const RawVertexSource &source, std::size_t offset,
+                                      std::uint32_t size, const std::vector<J3dVertexDesc> &desc, const J3dShapeMatrixGroupSummary &matrix_group) {
             if (offset + size > data.size()) {
                 throw std::runtime_error("J3D geometry display list outside buffer");
             }
@@ -1042,66 +1370,105 @@ namespace smgpc::game {
                     continue;
                 }
 
-                const auto primitive = static_cast< std::uint8_t >(command & 0xf8U);
+                const auto primitive = static_cast<std::uint8_t>(command & 0xf8U);
                 if (primitive < 0x80U || primitive > 0xb8U || cursor + 2U > end) {
+                    if (skip_gx_display_list_command(data, cursor, end, command)) {
+                        continue;
+                    }
+
                     break;
                 }
 
                 const auto vertex_count = read_be16(data, cursor);
                 cursor += 2U;
 
-                const auto payload_size = static_cast< std::size_t >(vertex_count) * vertex_size;
-                if (cursor + payload_size > end || mesh.vertices.size() + vertex_count > std::numeric_limits< std::uint16_t >::max()) {
+                const auto payload_size = static_cast<std::size_t>(vertex_count) * vertex_size;
+                if (cursor + payload_size > end || mesh.vertices.size() + vertex_count > std::numeric_limits<std::uint16_t>::max()) {
                     break;
                 }
 
-                auto primitive_vertices = std::vector< std::uint16_t >{};
+                auto primitive_vertices = std::vector<std::uint16_t>{};
                 primitive_vertices.reserve(vertex_count);
                 for (auto i = 0U; i < vertex_count; ++i) {
                     const auto display_vertex = read_display_vertex(data, cursor, desc, source.formats);
-                    mesh.vertices.push_back(make_mesh_vertex(data, source, display_vertex));
-                    primitive_vertices.push_back(static_cast< std::uint16_t >(mesh.vertices.size() - 1U));
+                    mesh.vertices.push_back(
+                        make_mesh_vertex(data, source, display_vertex, draw_matrix_index_for_vertex(matrix_group, mesh.matrix_type, display_vertex)));
+                    primitive_vertices.push_back(static_cast<std::uint16_t>(mesh.vertices.size() - 1U));
                 }
 
                 append_primitive_indices(mesh.indices, primitive, primitive_vertices);
             }
         }
 
-        [[nodiscard]] std::vector< J3dShapeMesh > extract_shape_meshes(std::span< const std::uint8_t > data, const J3dSectionInfo& shape_section,
-                                                                       const RawVertexSource& vertex_source,
-                                                                       const std::optional< J3dInfoSummary >& info) {
-            const auto section_offset = static_cast< std::size_t >(shape_section.offset);
+        [[nodiscard]] std::vector<J3dShapeMesh> extract_shape_meshes(std::span<const std::uint8_t> data, const J3dSectionInfo &shape_section,
+                                                                     const RawVertexSource &vertex_source,
+                                                                     const std::optional<J3dInfoSummary> &info) {
+            const auto section_offset = static_cast<std::size_t>(shape_section.offset);
             const auto shape_count = read_be16(data, section_offset + 0x08U);
             const auto shape_init_relative = read_be32(data, section_offset + 0x0cU);
             const auto index_table_relative = read_be32(data, section_offset + 0x10U);
             const auto vtx_desc_relative = read_be32(data, section_offset + 0x18U);
+            const auto matrix_table_relative = read_be32(data, section_offset + 0x1cU);
             const auto display_list_relative = read_be32(data, section_offset + 0x20U);
+            const auto matrix_init_relative = read_be32(data, section_offset + 0x24U);
             const auto draw_init_relative = read_be32(data, section_offset + 0x28U);
             const auto material_indices = shape_materials_from_hierarchy(info, shape_count);
             const auto joint_indices = shape_joints_from_hierarchy(info, shape_count);
             const auto draw_orders = shape_draw_orders_from_hierarchy(info, shape_count);
 
-            auto meshes = std::vector< J3dShapeMesh >{};
+            auto meshes = std::vector<J3dShapeMesh>{};
             meshes.reserve(shape_count);
             for (auto i = std::uint16_t{}; i < shape_count; ++i) {
                 const auto shape_init_index = read_be16(data, relative_offset(section_offset, index_table_relative) + i * 2U);
                 const auto shape_init_offset = relative_offset(section_offset, shape_init_relative) + shape_init_index * 0x28U;
                 const auto matrix_group_count = read_be16(data, shape_init_offset + 0x02U);
                 const auto vertex_desc_list_index = read_be16(data, shape_init_offset + 0x04U);
+                const auto matrix_init_data_index = read_be16(data, shape_init_offset + 0x06U);
                 const auto draw_init_data_index = read_be16(data, shape_init_offset + 0x08U);
                 const auto desc = parse_vertex_desc(data, relative_offset(section_offset, vtx_desc_relative) + vertex_desc_list_index);
 
                 auto mesh = J3dShapeMesh{};
                 mesh.shape_index = i;
-                mesh.draw_order = i < draw_orders.size() ? draw_orders[i] : static_cast< std::uint16_t >(0xffffU);
-                mesh.material_index = i < material_indices.size() ? material_indices[i] : static_cast< std::uint16_t >(0xffffU);
-                mesh.joint_index = i < joint_indices.size() ? joint_indices[i] : static_cast< std::uint16_t >(0xffffU);
+                mesh.draw_order = i < draw_orders.size() ? draw_orders[i] : static_cast<std::uint16_t>(0xffffU);
+                mesh.material_index = i < material_indices.size() ? material_indices[i] : static_cast<std::uint16_t>(0xffffU);
+                mesh.joint_index = i < joint_indices.size() ? joint_indices[i] : static_cast<std::uint16_t>(0xffffU);
+                mesh.matrix_type = data[shape_init_offset];
                 for (auto group = 0U; group < matrix_group_count; ++group) {
+                    const auto matrix_init_offset =
+                        relative_offset(section_offset, matrix_init_relative) + static_cast<std::size_t>(matrix_init_data_index + group) * 8U;
                     const auto draw_init_offset = relative_offset(section_offset, draw_init_relative) + (draw_init_data_index + group) * 8U;
+                    const auto use_matrix_index = read_be16(data, matrix_init_offset);
+                    const auto use_matrix_count = read_be16(data, matrix_init_offset + 2U);
+                    const auto first_matrix_table_index = read_be32(data, matrix_init_offset + 4U);
                     const auto display_list_size = read_be32(data, draw_init_offset);
                     const auto display_list_index = read_be32(data, draw_init_offset + 4U);
+
+                    auto matrix_group = J3dShapeMatrixGroupSummary{
+                        .group_index = static_cast<std::uint16_t>(group),
+                        .use_matrix_index = use_matrix_index,
+                        .use_matrix_count = use_matrix_count,
+                        .first_matrix_table_index = first_matrix_table_index,
+                        .display_list_offset = display_list_index,
+                        .display_list_size = display_list_size,
+                        .matrix_table = {},
+                        .primitives = {},
+                        .parsed_display_list_bytes = 0U,
+                        .triangle_count = 0U,
+                    };
+                    if (mesh.matrix_type == 3U && has_relative_offset(matrix_table_relative) && use_matrix_count > 0U) {
+                        const auto matrix_table_offset =
+                            relative_offset(section_offset, matrix_table_relative) + static_cast<std::size_t>(first_matrix_table_index) * 2U;
+                        matrix_group.matrix_table.reserve(use_matrix_count);
+                        for (auto matrix = 0U; matrix < use_matrix_count; ++matrix) {
+                            matrix_group.matrix_table.push_back(read_be16(data, matrix_table_offset + matrix * 2U));
+                        }
+                    } else if (use_matrix_index != 0xffffU) {
+                        matrix_group.matrix_table.push_back(use_matrix_index);
+                    }
+
                     append_display_list_mesh(data, mesh, vertex_source, relative_offset(section_offset, display_list_relative) + display_list_index,
-                                             display_list_size, desc);
+                                             display_list_size, desc, matrix_group);
+                    mesh.matrix_groups.push_back(std::move(matrix_group));
                 }
 
                 meshes.push_back(std::move(mesh));
@@ -1112,7 +1479,7 @@ namespace smgpc::game {
 
     }  // namespace
 
-    J3dModelSummary inspect_j3d_model(std::span< const std::uint8_t > model_data) {
+    J3dModelSummary inspect_j3d_model(std::span<const std::uint8_t> model_data) {
         if (model_data.size() < 0x20U) {
             throw std::runtime_error("J3D model is too small");
         }
@@ -1132,13 +1499,13 @@ namespace smgpc::game {
             }
 
             const auto section_size = read_be32(model_data, offset + 4U);
-            if (section_size < 8U || offset + section_size > model_data.size() || section_size > std::numeric_limits< std::uint32_t >::max()) {
+            if (section_size < 8U || offset + section_size > model_data.size() || section_size > std::numeric_limits<std::uint32_t>::max()) {
                 throw std::runtime_error("J3D section size outside buffer");
             }
 
             summary.sections.push_back(J3dSectionInfo{
                 .tag = read_tag(model_data, offset),
-                .offset = static_cast< std::uint32_t >(offset),
+                .offset = static_cast<std::uint32_t>(offset),
                 .size = section_size,
             });
             offset += section_size;
@@ -1150,11 +1517,27 @@ namespace smgpc::game {
         if (const auto section = section_for(summary.sections, "VTX1"); section.has_value()) {
             summary.vertices = parse_vtx1(model_data, *section);
         }
+        if (const auto section = section_for(summary.sections, "EVP1"); section.has_value()) {
+            summary.envelopes = parse_evp1(model_data, *section);
+        }
+        if (const auto section = section_for(summary.sections, "DRW1"); section.has_value()) {
+            summary.draw_matrices = parse_drw1(model_data, *section);
+        }
         if (const auto section = section_for(summary.sections, "JNT1"); section.has_value()) {
             summary.joints = parse_jnt1(model_data, *section);
+            summary.joints->parent_indices = joint_parent_indices_from_hierarchy(summary.info, summary.joints->joint_count);
         }
         if (const auto section = section_for(summary.sections, "MAT3"); section.has_value()) {
             summary.materials = parse_mat3(model_data, *section);
+        }
+        if (const auto section = section_for(summary.sections, "MDL3"); section.has_value()) {
+            summary.mdl3 = parse_mdl3(model_data, *section);
+        }
+        if (summary.materials.has_value() && summary.mdl3.has_value()) {
+            const auto packet_count = std::min(summary.materials->materials.size(), summary.mdl3->packets.size());
+            for (auto i = std::size_t{}; i < packet_count; ++i) {
+                gx_apply_mdl3_display_list(summary.materials->materials[i].gx_state, summary.mdl3->packets[i].bytes);
+            }
         }
         if (const auto section = section_for(summary.sections, "SHP1"); section.has_value()) {
             summary.shapes = parse_shp1(model_data, *section, summary.info, summary.vertices);
@@ -1166,10 +1549,12 @@ namespace smgpc::game {
         return summary;
     }
 
-    J3dModelGeometry extract_j3d_model_geometry(std::span< const std::uint8_t > model_data) {
+    J3dModelGeometry extract_j3d_model_geometry(std::span<const std::uint8_t> model_data) {
         const auto summary = inspect_j3d_model(model_data);
         auto geometry = J3dModelGeometry{};
         geometry.materials = summary.materials;
+        geometry.envelopes = summary.envelopes;
+        geometry.draw_matrices = summary.draw_matrices;
         geometry.joints = summary.joints;
         geometry.textures = summary.textures;
 

@@ -56,6 +56,21 @@ namespace smgpc::game {
         };
     }
 
+    CameraPoseCompat file_select_far_camera_pose() {
+        constexpr auto c_far_target_y = 800.0F;
+        constexpr auto c_far_point_z = 15000.0F;
+
+        return CameraPoseCompat{
+            .eye = {0.0F, 0.0F, c_far_point_z},
+            .watch = {0.0F, c_far_target_y, 0.0F},
+            .up = {0.0F, 1.0F, 0.0F},
+            .fovy_degrees = 40.0F,
+            .aspect_ratio = 608.0F / 456.0F,
+            .near_clip = 100.0F,
+            .far_clip = 800000.0F,
+        };
+    }
+
     CameraViewPointCompat transform_world_to_camera(const CameraPoseCompat& pose, const CameraParamVec3& world) {
         const auto forward = normalized_or(subtract(pose.watch, pose.eye), {0.0F, 0.0F, -1.0F});
         const auto right = normalized_or(cross(forward, pose.up), {1.0F, 0.0F, 0.0F});

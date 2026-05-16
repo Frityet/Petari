@@ -42,4 +42,3 @@ namespace TitleSequenceProductSub {
         LogoLayout();
     };
 };  // namespace TitleSequenceProductSub
-

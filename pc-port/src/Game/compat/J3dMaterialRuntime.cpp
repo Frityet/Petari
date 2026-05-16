@@ -9,6 +9,7 @@ namespace smgpc::game {
 
         constexpr auto GX_TG_MTX3X4 = 0U;
         constexpr auto GX_TG_POS = 0U;
+        constexpr auto GX_TG_TEX0 = 4U;
 
         struct TexGenInput {
             float x = 0.0F;
@@ -181,32 +182,21 @@ namespace smgpc::game {
             return matrix;
         }
 
-        [[nodiscard]] J3dTextureCoordinate transform_with_matrix(const TexGenInput& coord, const J3dTexCoordGenSummary* tex_coord_gen,
-                                                                 const J3dMatrix3x4& matrix) {
+        [[nodiscard]] J3dTextureProjectionCoordinate project_with_matrix(const TexGenInput& coord, const J3dTexCoordGenSummary* tex_coord_gen,
+                                                                         const J3dMatrix3x4& matrix) {
             const auto u = matrix.m[0U] * coord.x + matrix.m[1U] * coord.y + matrix.m[2U] * coord.z + matrix.m[3U];
             const auto v = matrix.m[4U] * coord.x + matrix.m[5U] * coord.y + matrix.m[6U] * coord.z + matrix.m[7U];
             const auto q = matrix.m[8U] * coord.x + matrix.m[9U] * coord.y + matrix.m[10U] * coord.z + matrix.m[11U];
-            if (tex_coord_gen != nullptr && tex_coord_gen->type == GX_TG_MTX3X4 && q != 0.0F) {
-                return J3dTextureCoordinate{
-                    .u = u / q,
-                    .v = v / q,
-                };
-            }
-
-            return J3dTextureCoordinate{
+            return J3dTextureProjectionCoordinate{
                 .u = u,
                 .v = v,
+                .q = tex_coord_gen != nullptr && tex_coord_gen->type == GX_TG_MTX3X4 ? q : 1.0F,
             };
         }
 
         [[nodiscard]] bool uses_projected_texture_matrix(const J3dTexMatrixSummary& tex_matrix) {
             const auto mode = static_cast< std::uint8_t >(tex_matrix.info & 0x3fU);
             return mode == 8U || mode == 9U || mode == 11U;
-        }
-
-        [[nodiscard]] J3dTextureCoordinate transform_projected_tex_coord(const TexGenInput& coord, const J3dTexCoordGenSummary* tex_coord_gen,
-                                                                         const J3dTexMatrixSummary& tex_matrix, const J3dMatrix3x4* model_matrix) {
-            return transform_with_matrix(coord, tex_coord_gen, texture_projection_matrix(tex_matrix, model_matrix));
         }
 
         [[nodiscard]] const J3dTevOrderSummary* find_tev_order(const J3dMaterialSummary& material, std::uint8_t stage_index) {
@@ -367,16 +357,290 @@ namespace smgpc::game {
             }
         }
 
-        [[nodiscard]] TevColor evaluate_tev_stages(const J3dMaterialSummary& material, const TevColor& texture, const TevColor& raster) {
+        [[nodiscard]] TevColor sample_texture_rgba8(const DecodedTexture& texture, bool wrap_s, bool wrap_t, float u, float v) {
+            if (texture.width == 0U || texture.height == 0U ||
+                texture.rgba.size() < static_cast< std::size_t >(texture.width) * texture.height * 4U) {
+                return {0, 0, 0, 0};
+            }
+
+            const auto wrap_coord = [](float value) {
+                value = value - std::floor(value);
+                return value < 0.0F ? value + 1.0F : value;
+            };
+            const auto clamp_coord = [](float value) { return std::clamp(value, 0.0F, 1.0F); };
+
+            const auto sample_u = wrap_s ? wrap_coord(u) : clamp_coord(u);
+            const auto sample_v = wrap_t ? wrap_coord(v) : clamp_coord(v);
+            const auto x = sample_u * static_cast< float >(texture.width) - 0.5F;
+            const auto y = sample_v * static_cast< float >(texture.height) - 0.5F;
+            const auto x0 = static_cast< int >(std::floor(x));
+            const auto y0 = static_cast< int >(std::floor(y));
+            const auto fx = x - static_cast< float >(x0);
+            const auto fy = y - static_cast< float >(y0);
+
+            const auto resolve = [](int coordinate, std::uint16_t size, bool wrap) {
+                if (wrap) {
+                    auto value = coordinate % static_cast< int >(size);
+                    return value < 0 ? value + static_cast< int >(size) : value;
+                }
+                return std::clamp(coordinate, 0, static_cast< int >(size) - 1);
+            };
+
+            const auto pixel = [&](int px, int py, std::size_t component) {
+                const auto sx = resolve(px, texture.width, wrap_s);
+                const auto sy = resolve(py, texture.height, wrap_t);
+                const auto offset = (static_cast< std::size_t >(sy) * texture.width + static_cast< std::size_t >(sx)) * 4U + component;
+                return static_cast< float >(texture.rgba[offset]);
+            };
+
+            auto color = TevColor{};
+            for (auto component = 0U; component < 4U; ++component) {
+                const auto top = pixel(x0, y0, component) * (1.0F - fx) + pixel(x0 + 1, y0, component) * fx;
+                const auto bottom = pixel(x0, y0 + 1, component) * (1.0F - fx) + pixel(x0 + 1, y0 + 1, component) * fx;
+                color[component] = static_cast< int >(std::clamp(std::round(top * (1.0F - fy) + bottom * fy), 0.0F, 255.0F));
+            }
+
+            return color;
+        }
+
+        [[nodiscard]] const GXIndirectTevStageState* find_active_indirect_tev_stage(const J3dMaterialSummary& material, std::uint8_t tev_stage) {
+            const auto& indirect = material.gx_state.indirect;
+            const auto it = std::ranges::find_if(indirect.tev_stages, [tev_stage, &indirect](const auto& stage) {
+                return stage.active && stage.tev_stage == tev_stage && stage.ind_stage < indirect.stage_count;
+            });
+            return it == indirect.tev_stages.end() ? nullptr : &*it;
+        }
+
+        [[nodiscard]] const GXIndirectTextureOrderState* find_indirect_texture_order(const GXIndirectState& indirect, std::uint8_t stage) {
+            const auto it = std::ranges::find_if(indirect.texture_orders, [stage](const auto& order) { return order.stage == stage; });
+            return it == indirect.texture_orders.end() ? nullptr : &*it;
+        }
+
+        [[nodiscard]] const GXIndirectTextureMatrixState* find_indirect_texture_matrix(const GXIndirectState& indirect, std::uint8_t matrix_index) {
+            if (matrix_index == 0U) {
+                return nullptr;
+            }
+
+            const auto decoded_index = static_cast< std::uint8_t >(matrix_index - 1U);
+            const auto it =
+                std::ranges::find_if(indirect.texture_matrices, [decoded_index](const auto& matrix) { return matrix.matrix == decoded_index; });
+            return it == indirect.texture_matrices.end() ? nullptr : &*it;
+        }
+
+        [[nodiscard]] const GXIndirectTextureCoordScaleState* find_indirect_texture_scale(const GXIndirectState& indirect, std::uint8_t stage) {
+            const auto it = std::ranges::find_if(indirect.texture_coord_scales, [stage](const auto& scale) { return scale.stage == stage; });
+            return it == indirect.texture_coord_scales.end() ? nullptr : &*it;
+        }
+
+        [[nodiscard]] std::array< std::int32_t, 3U > indirect_coordinate_from_sample(const GXIndirectTevStageState& stage,
+                                                                                     const TevColor& sample) {
+            constexpr std::array< std::uint8_t, 4U > format_shifts{0U, 3U, 4U, 5U};
+            const auto shift = format_shifts[std::min< std::size_t >(stage.format, format_shifts.size() - 1U)];
+            const auto bias = stage.format == 0U ? -128 : 1;
+            auto coord = std::array< std::int32_t, 3U >{
+                sample[3U] >> shift,
+                sample[2U] >> shift,
+                sample[1U] >> shift,
+            };
+
+            if ((stage.bias & 0x1U) != 0U) {
+                coord[0U] += bias;
+            }
+            if ((stage.bias & 0x2U) != 0U) {
+                coord[1U] += bias;
+            }
+            if ((stage.bias & 0x4U) != 0U) {
+                coord[2U] += bias;
+            }
+            return coord;
+        }
+
+        [[nodiscard]] std::int64_t shift_indirect_value(std::int64_t value, int shift) {
+            if (shift >= 0) {
+                return value / (std::int64_t{1} << std::min(shift, 30));
+            }
+
+            return value * (std::int64_t{1} << std::min(-shift, 30));
+        }
+
+        [[nodiscard]] std::int64_t wrap_indirect_coordinate(std::int64_t coord, std::uint8_t wrap) {
+            switch (wrap) {
+            case 0U:
+                return coord;
+            case 1U:
+                return coord & ((std::int64_t{256} << 7U) - 1);
+            case 2U:
+                return coord & ((std::int64_t{128} << 7U) - 1);
+            case 3U:
+                return coord & ((std::int64_t{64} << 7U) - 1);
+            case 4U:
+                return coord & ((std::int64_t{32} << 7U) - 1);
+            case 5U:
+                return coord & ((std::int64_t{16} << 7U) - 1);
+            default:
+                return 0;
+            }
+        }
+
+        [[nodiscard]] std::array< std::int64_t, 2U > indirect_translation(const GXIndirectTevStageState& stage,
+                                                                          const GXIndirectTextureMatrixState* matrix, std::int64_t base_s,
+                                                                          std::int64_t base_t,
+                                                                          std::array< std::int32_t, 3U > indcoord) {
+            if (matrix == nullptr) {
+                return {0, 0};
+            }
+
+            auto translation = std::array< std::int64_t, 2U >{0, 0};
+            switch (stage.matrix_id) {
+            case 0U:
+                translation[0U] =
+                    (static_cast< std::int64_t >(matrix->ma) * indcoord[0U] + static_cast< std::int64_t >(matrix->mc) * indcoord[1U] +
+                     static_cast< std::int64_t >(matrix->me) * indcoord[2U]) /
+                    8;
+                translation[1U] =
+                    (static_cast< std::int64_t >(matrix->mb) * indcoord[0U] + static_cast< std::int64_t >(matrix->md) * indcoord[1U] +
+                     static_cast< std::int64_t >(matrix->mf) * indcoord[2U]) /
+                    8;
+                break;
+            case 1U:
+                translation[0U] = (base_s * indcoord[0U]) / 256;
+                translation[1U] = (base_t * indcoord[0U]) / 256;
+                break;
+            case 2U:
+                translation[0U] = (base_s * indcoord[1U]) / 256;
+                translation[1U] = (base_t * indcoord[1U]) / 256;
+                break;
+            default:
+                return translation;
+            }
+
+            const auto shift = 17 - static_cast< int >(matrix->scale);
+            translation[0U] = shift_indirect_value(translation[0U], shift);
+            translation[1U] = shift_indirect_value(translation[1U], shift);
+            return translation;
+        }
+
+        [[nodiscard]] std::optional< J3dIndirectTextureTrace >
+        trace_indirect_texture_transform(const J3dMaterialSummary& material, std::span< const J3dTexture > textures,
+                                         const J3dMeshVertex& source, const J3dMaterialTexturePass& pass,
+                                         const J3dTextureCoordinate& coord, const DecodedTexture& base_texture,
+                                         const J3dMatrix3x4* model_matrix) {
+            const auto* stage = find_active_indirect_tev_stage(material, pass.stage);
+            if (stage == nullptr || base_texture.width == 0U || base_texture.height == 0U) {
+                return std::nullopt;
+            }
+
+            const auto* order = find_indirect_texture_order(material.gx_state.indirect, stage->ind_stage);
+            if (order == nullptr) {
+                return std::nullopt;
+            }
+
+            const auto* binding = find_texture_binding(material, order->tex_map);
+            if (binding == nullptr || binding->texture_index >= textures.size()) {
+                return std::nullopt;
+            }
+
+            const auto& indirect_texture = textures[binding->texture_index].image;
+            if (indirect_texture.width == 0U || indirect_texture.height == 0U) {
+                return std::nullopt;
+            }
+
+            auto trace = J3dIndirectTextureTrace{
+                .tev_stage = pass.stage,
+                .indirect_stage = stage->ind_stage,
+                .indirect_tex_map = order->tex_map,
+                .indirect_tex_coord = order->tex_coord,
+                .format = stage->format,
+                .bias = stage->bias,
+                .matrix_index = stage->matrix_index,
+                .matrix_id = stage->matrix_id,
+                .wrap_s = stage->wrap_s,
+                .wrap_t = stage->wrap_t,
+                .add_previous = stage->add_previous,
+                .base_coord = coord,
+            };
+            auto indirect_coord = coord;
+            if (const auto* gen = find_tex_coord_gen(material, order->tex_coord); gen != nullptr) {
+                const auto* matrix = find_tex_matrix(material, gen);
+                indirect_coord = j3d_transform_tex_coord(source, gen, matrix, model_matrix);
+            }
+            trace.indirect_coord = indirect_coord;
+
+            const auto* scale = find_indirect_texture_scale(material.gx_state.indirect, stage->ind_stage);
+            trace.base_indirect_s =
+                static_cast< std::int64_t >(std::llround(indirect_coord.u * static_cast< float >(indirect_texture.width) * 128.0F));
+            trace.base_indirect_t =
+                static_cast< std::int64_t >(std::llround(indirect_coord.v * static_cast< float >(indirect_texture.height) * 128.0F));
+            trace.scaled_indirect_s = shift_indirect_value(trace.base_indirect_s, scale == nullptr ? 0 : scale->scale_s);
+            trace.scaled_indirect_t = shift_indirect_value(trace.base_indirect_t, scale == nullptr ? 0 : scale->scale_t);
+            const auto sampled = sample_texture_rgba8(indirect_texture, textures[binding->texture_index].wrap_s != 0U,
+                                                      textures[binding->texture_index].wrap_t != 0U,
+                                                      static_cast< float >(trace.scaled_indirect_s) /
+                                                          (static_cast< float >(indirect_texture.width) * 128.0F),
+                                                      static_cast< float >(trace.scaled_indirect_t) /
+                                                          (static_cast< float >(indirect_texture.height) * 128.0F));
+            trace.sampled_indirect_color = sampled;
+
+            trace.base_s = static_cast< std::int64_t >(std::llround(coord.u * static_cast< float >(base_texture.width) * 128.0F));
+            trace.base_t = static_cast< std::int64_t >(std::llround(coord.v * static_cast< float >(base_texture.height) * 128.0F));
+            const auto* matrix = find_indirect_texture_matrix(material.gx_state.indirect, stage->matrix_index);
+            trace.biased_indirect_coord = indirect_coordinate_from_sample(*stage, sampled);
+            trace.translation = indirect_translation(*stage, matrix, trace.base_s, trace.base_t, trace.biased_indirect_coord);
+            trace.transformed_s = wrap_indirect_coordinate(trace.base_s, stage->wrap_s) + trace.translation[0U];
+            trace.transformed_t = wrap_indirect_coordinate(trace.base_t, stage->wrap_t) + trace.translation[1U];
+            if (stage->add_previous) {
+                trace.transformed_s += trace.base_s;
+                trace.transformed_t += trace.base_t;
+            }
+
+            trace.transformed_coord = J3dTextureCoordinate{
+                .u = static_cast< float >(trace.transformed_s) / (static_cast< float >(base_texture.width) * 128.0F),
+                .v = static_cast< float >(trace.transformed_t) / (static_cast< float >(base_texture.height) * 128.0F),
+            };
+            return trace;
+        }
+
+        [[nodiscard]] J3dTextureCoordinate apply_indirect_texture_transform(const J3dMaterialSummary& material,
+                                                                            std::span< const J3dTexture > textures,
+                                                                            const J3dMeshVertex& source,
+                                                                            const J3dMaterialTexturePass& pass,
+                                                                            const J3dTextureCoordinate& coord,
+                                                                            const DecodedTexture& base_texture,
+                                                                            const J3dMatrix3x4* model_matrix) {
+            const auto trace = trace_indirect_texture_transform(material, textures, source, pass, coord, base_texture, model_matrix);
+            return trace.has_value() ? trace->transformed_coord : coord;
+        }
+
+        [[nodiscard]] TevColor texture_for_stage(std::span< const TevColor > textures_by_stage, std::uint8_t stage, const TevColor& fallback) {
+            if (stage < textures_by_stage.size()) {
+                return textures_by_stage[stage];
+            }
+
+            return fallback;
+        }
+
+        [[nodiscard]] TevRegisters initial_tev_registers_for_material(const J3dMaterialSummary& material) {
             auto registers = TevRegisters{};
+            for (auto register_index = 0U; register_index < registers.size(); ++register_index) {
+                for (auto component = 0U; component < registers[register_index].size(); ++component) {
+                    registers[register_index][component] = material.gx_state.tev_registers[register_index][component];
+                }
+            }
+            return registers;
+        }
+
+        [[nodiscard]] TevColor evaluate_tev_stages(const J3dMaterialSummary& material, std::span< const TevColor > textures_by_stage,
+                                                   const TevColor& fallback_texture, const TevColor& raster) {
+            auto registers = initial_tev_registers_for_material(material);
             auto output = TevColor{0, 0, 0, 0};
             if (material.tev_stages.empty()) {
-                return texture;
+                return fallback_texture;
             }
 
             std::uint8_t last_color_register = 0U;
             std::uint8_t last_alpha_register = 0U;
             for (const auto& stage : material.tev_stages) {
+                const auto texture = texture_for_stage(textures_by_stage, stage.stage, fallback_texture);
                 const auto color_konst = konst_color(material, stage.k_color_sel);
                 const auto alpha_konst = konst_color(material, stage.k_alpha_sel);
                 const auto stage_konst = TevColor{color_konst[0U], color_konst[1U], color_konst[2U], alpha_konst[3U]};
@@ -419,6 +683,11 @@ namespace smgpc::game {
             return output;
         }
 
+        [[nodiscard]] TevColor evaluate_tev_stages(const J3dMaterialSummary& material, const TevColor& texture, const TevColor& raster) {
+            const std::array< TevColor, 1U > textures_by_stage{texture};
+            return evaluate_tev_stages(material, textures_by_stage, texture, raster);
+        }
+
         [[nodiscard]] bool material_tev_uses_only_texture_slot(const J3dMaterialSummary& material, std::uint8_t texture_map_slot) {
             if (material.tev_stages.empty()) {
                 return true;
@@ -435,6 +704,10 @@ namespace smgpc::game {
             }
 
             return true;
+        }
+
+        [[nodiscard]] bool pass_uses_source_uv(const J3dMaterialTexturePass& pass) {
+            return !pass.tex_coord_gen.has_value() || pass.tex_coord_gen->source >= GX_TG_TEX0;
         }
 
     }  // namespace
@@ -521,18 +794,193 @@ namespace smgpc::game {
         return composed;
     }
 
+    std::optional< J3dComposedMaterialTexture > j3d_try_compose_material_constant(const J3dMaterialSummary& material,
+                                                                                  std::array< std::uint8_t, 4U > raster_color) {
+        for (const auto& order : material.tev_orders) {
+            if (order.tex_map != 0xffU) {
+                return std::nullopt;
+            }
+        }
+
+        const auto raster = color_to_tev(raster_color);
+        const auto fallback_texture = TevColor{255, 255, 255, 255};
+        const auto output =
+            material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span< const TevColor >{}, fallback_texture, raster);
+
+        auto composed = J3dComposedMaterialTexture{
+            .image =
+                DecodedTexture{
+                    .width = 1U,
+                    .height = 1U,
+                    .format = TplTextureFormat::RGBA8,
+                    .rgba = std::vector< std::uint8_t >(4U),
+                },
+            .raster_color_baked = true,
+        };
+        composed.image.rgba[0U] = static_cast< std::uint8_t >(std::clamp(output[0U], 0, 255));
+        composed.image.rgba[1U] = static_cast< std::uint8_t >(std::clamp(output[1U], 0, 255));
+        composed.image.rgba[2U] = static_cast< std::uint8_t >(std::clamp(output[2U], 0, 255));
+        composed.image.rgba[3U] = static_cast< std::uint8_t >(std::clamp(output[3U], 0, 255));
+        return composed;
+    }
+
+    std::optional< J3dComposedMaterialTexture > j3d_try_compose_material_texture(const J3dMaterialSummary& material,
+                                                                                 std::span< const J3dTexture > textures,
+                                                                                 std::span< const J3dMaterialTexturePass > passes,
+                                                                                 std::array< std::uint8_t, 4U > raster_color) {
+        if (passes.empty() || material.tev_stages.empty()) {
+            return std::nullopt;
+        }
+
+        auto width = std::uint16_t{1U};
+        auto height = std::uint16_t{1U};
+        for (const auto& pass : passes) {
+            if (!pass_uses_source_uv(pass) || pass.texture_index >= textures.size()) {
+                return std::nullopt;
+            }
+            const auto& texture = textures[pass.texture_index].image;
+            if (texture.width == 0U || texture.height == 0U ||
+                texture.rgba.size() < static_cast< std::size_t >(texture.width) * texture.height * 4U) {
+                return std::nullopt;
+            }
+            width = std::max(width, texture.width);
+            height = std::max(height, texture.height);
+        }
+
+        auto composed = J3dComposedMaterialTexture{
+            .image =
+                DecodedTexture{
+                    .width = width,
+                    .height = height,
+                    .format = TplTextureFormat::RGBA8,
+                    .rgba = std::vector< std::uint8_t >(static_cast< std::size_t >(width) * height * 4U),
+                },
+            .raster_color_baked = true,
+        };
+
+        const auto raster = color_to_tev(raster_color);
+        for (auto y = 0U; y < height; ++y) {
+            for (auto x = 0U; x < width; ++x) {
+                const auto source = J3dMeshVertex{
+                    .u = (static_cast< float >(x) + 0.5F) / static_cast< float >(width),
+                    .v = (static_cast< float >(y) + 0.5F) / static_cast< float >(height),
+                    .color = raster_color,
+                };
+                auto textures_by_stage = std::array< TevColor, 16U >{};
+                textures_by_stage.fill({255, 255, 255, 255});
+                for (const auto& pass : passes) {
+                    const auto& texture = textures[pass.texture_index];
+                    const auto* tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
+                    const auto* tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
+                    const auto coord = apply_indirect_texture_transform(material, textures, source, pass,
+                                                                        j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, nullptr),
+                                                                        texture.image, nullptr);
+                    textures_by_stage[std::min< std::size_t >(pass.stage, textures_by_stage.size() - 1U)] =
+                        sample_texture_rgba8(texture.image, texture.wrap_s != 0U, texture.wrap_t != 0U, coord.u, coord.v);
+                }
+
+                const auto output = evaluate_tev_stages(material, textures_by_stage, textures_by_stage.front(), raster);
+                const auto offset = (static_cast< std::size_t >(y) * width + x) * 4U;
+                composed.image.rgba[offset] = static_cast< std::uint8_t >(std::clamp(output[0U], 0, 255));
+                composed.image.rgba[offset + 1U] = static_cast< std::uint8_t >(std::clamp(output[1U], 0, 255));
+                composed.image.rgba[offset + 2U] = static_cast< std::uint8_t >(std::clamp(output[2U], 0, 255));
+                composed.image.rgba[offset + 3U] = static_cast< std::uint8_t >(std::clamp(output[3U], 0, 255));
+            }
+        }
+
+        return composed;
+    }
+
+    std::optional< std::array< std::uint8_t, 4U > >
+    j3d_evaluate_material_color(const J3dMaterialSummary& material, std::span< const J3dTexture > textures,
+                                std::span< const J3dMaterialTexturePass > passes, const J3dMeshVertex& source,
+                                std::array< std::uint8_t, 4U > raster_color, const J3dMatrix3x4* model_matrix) {
+        if (passes.empty()) {
+            const auto constant = j3d_try_compose_material_constant(material, raster_color);
+            if (!constant.has_value() || constant->image.rgba.size() < 4U) {
+                return std::nullopt;
+            }
+
+            return std::array< std::uint8_t, 4U >{
+                constant->image.rgba[0U],
+                constant->image.rgba[1U],
+                constant->image.rgba[2U],
+                constant->image.rgba[3U],
+            };
+        }
+
+        auto textures_by_stage = std::array< TevColor, 16U >{};
+        textures_by_stage.fill({255, 255, 255, 255});
+        for (const auto& pass : passes) {
+            if (pass.texture_index >= textures.size()) {
+                return std::nullopt;
+            }
+
+            const auto& texture = textures[pass.texture_index];
+            const auto* tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
+            const auto* tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
+            const auto coord = apply_indirect_texture_transform(material, textures, source, pass,
+                                                                j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix),
+                                                                texture.image, model_matrix);
+            textures_by_stage[std::min< std::size_t >(pass.stage, textures_by_stage.size() - 1U)] =
+                sample_texture_rgba8(texture.image, texture.wrap_s != 0U, texture.wrap_t != 0U, coord.u, coord.v);
+        }
+
+        const auto raster = color_to_tev(raster_color);
+        const auto output = evaluate_tev_stages(material, textures_by_stage, textures_by_stage.front(), raster);
+        return std::array< std::uint8_t, 4U >{
+            static_cast< std::uint8_t >(std::clamp(output[0U], 0, 255)),
+            static_cast< std::uint8_t >(std::clamp(output[1U], 0, 255)),
+            static_cast< std::uint8_t >(std::clamp(output[2U], 0, 255)),
+            static_cast< std::uint8_t >(std::clamp(output[3U], 0, 255)),
+        };
+    }
+
+    std::optional< J3dIndirectTextureTrace >
+    j3d_trace_indirect_texture_transform(const J3dMaterialSummary& material, std::span< const J3dTexture > textures,
+                                         const J3dMeshVertex& source, const J3dMaterialTexturePass& pass,
+                                         const J3dMatrix3x4* model_matrix) {
+        if (pass.texture_index >= textures.size()) {
+            return std::nullopt;
+        }
+
+        const auto& texture = textures[pass.texture_index];
+        const auto* tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
+        const auto* tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
+        return trace_indirect_texture_transform(material, textures, source, pass,
+                                                j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix), texture.image,
+                                                model_matrix);
+    }
+
     J3dTextureCoordinate j3d_transform_tex_coord(const J3dMeshVertex& source, const J3dTexCoordGenSummary* tex_coord_gen,
                                                  const J3dTexMatrixSummary* tex_matrix, const J3dMatrix3x4* model_matrix) {
+        const auto projected = j3d_project_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix);
+        if (projected.q != 0.0F) {
+            return J3dTextureCoordinate{
+                .u = projected.u / projected.q,
+                .v = projected.v / projected.q,
+            };
+        }
+
+        return J3dTextureCoordinate{
+            .u = projected.u,
+            .v = projected.v,
+        };
+    }
+
+    J3dTextureProjectionCoordinate j3d_project_tex_coord(const J3dMeshVertex& source, const J3dTexCoordGenSummary* tex_coord_gen,
+                                                         const J3dTexMatrixSummary* tex_matrix, const J3dMatrix3x4* model_matrix) {
         const auto coord = tex_gen_input_for_source(source, tex_coord_gen);
         if (tex_matrix == nullptr) {
-            return J3dTextureCoordinate{
+            return J3dTextureProjectionCoordinate{
                 .u = coord.x,
                 .v = coord.y,
+                .q = 1.0F,
             };
         }
 
         if (uses_projected_texture_matrix(*tex_matrix)) {
-            return transform_projected_tex_coord(coord, tex_coord_gen, *tex_matrix, model_matrix);
+            return project_with_matrix(coord, tex_coord_gen, texture_projection_matrix(*tex_matrix, model_matrix));
         }
 
         constexpr auto pi = 3.14159265358979323846F;
@@ -544,17 +992,10 @@ namespace smgpc::game {
         const auto centered_v = coord.y - tex_matrix->center[1U];
         const auto u = tex_matrix->scale_s * (centered_u * cos_angle - centered_v * sin_angle) + tex_matrix->center[0U] + tex_matrix->translate_s;
         const auto v = tex_matrix->scale_t * (centered_u * sin_angle + centered_v * cos_angle) + tex_matrix->center[1U] + tex_matrix->translate_t;
-
-        if (tex_coord_gen != nullptr && tex_coord_gen->type == GX_TG_MTX3X4 && coord.z != 0.0F) {
-            return J3dTextureCoordinate{
-                .u = u / coord.z,
-                .v = v / coord.z,
-            };
-        }
-
-        return J3dTextureCoordinate{
+        return J3dTextureProjectionCoordinate{
             .u = u,
             .v = v,
+            .q = tex_coord_gen != nullptr && tex_coord_gen->type == GX_TG_MTX3X4 ? coord.z : 1.0F,
         };
     }
 

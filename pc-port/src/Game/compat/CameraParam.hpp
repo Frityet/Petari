@@ -19,18 +19,18 @@ namespace smgpc::game {
 
     struct CameraGeneralParamCompat {
         float dist = 1200.0F;
-        CameraParamVec3 axis{0.0F, 1.0F, 0.0F};
-        CameraParamVec3 w_point{};
-        CameraParamVec3 up{};
+        CameraParamVec3 axis = {0.0F, 1.0F, 0.0F};
+        CameraParamVec3 w_point = {};
+        CameraParamVec3 up = {};
         float angle_a = 0.0F;
         float angle_b = 0.3F;
         std::int32_t num1 = 0;
         std::int32_t num2 = 0;
-        std::string string_param{};
+        std::string string_param = {};
     };
 
     struct CameraExtraParamCompat {
-        CameraParamVec3 w_offset{0.0F, 100.0F, 0.0F};
+        CameraParamVec3 w_offset = {0.0F, 100.0F, 0.0F};
         float l_offset = 0.0F;
         float l_offset_v = 0.0F;
         float roll = 0.0F;
@@ -46,15 +46,15 @@ namespace smgpc::game {
         std::int32_t push_delay_low = 120;
         std::int32_t u_down = 120;
         std::int32_t v_pan_use = 1;
-        CameraParamVec3 v_pan_axis{0.0F, 1.0F, 0.0F};
+        CameraParamVec3 v_pan_axis = {0.0F, 1.0F, 0.0F};
     };
 
     struct CameraParamChunkCompat {
         std::uint32_t version = 0U;
-        std::string id{};
-        std::string camera_type{};
-        CameraExtraParamCompat extra{};
-        CameraGeneralParamCompat general{};
+        std::string id = "";
+        std::string camera_type = "";
+        CameraExtraParamCompat extra = {};
+        CameraGeneralParamCompat general = {};
         std::int32_t game_thru = 0;
         std::int32_t game_enable_end_erp_frame = 0;
         std::uint32_t game_cam_end_int = 120U;

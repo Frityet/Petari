@@ -17,7 +17,16 @@ namespace smgpc::render {
     using InputButton = core::InputButton;
     using BlendMode = core::BlendMode;
     using DepthCompare = core::DepthCompare;
+    using CullMode = core::CullMode;
+    using GxAlphaCompare2D = core::GxAlphaCompare2D;
+    using GxBlendMode2D = core::GxBlendMode2D;
+    using GxFog2D = core::GxFog2D;
     using TextureHandle = core::TextureHandle;
+    using GxMaterialTriangleBatch2D = core::GxMaterialTriangleBatch2D;
+    using GxMaterialVertex2D = core::GxMaterialVertex2D;
+    using GxTevRegisterColor2D = core::GxTevRegisterColor2D;
+    using GxTevStage2D = core::GxTevStage2D;
+    using GxTextureStage2D = core::GxTextureStage2D;
     using TexturedTriangleBatch2D = core::TexturedTriangleBatch2D;
     using TexturedQuad2D = core::TexturedQuad2D;
     using TexturedVertex2D = core::TexturedVertex2D;

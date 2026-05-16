@@ -1,0 +1,170 @@
+#pragma once
+
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <optional>
+#include <span>
+#include <string>
+#include <string_view>
+#include <vector>
+
+#include "Game/compat/CameraPose.hpp"
+#include "Game/compat/J3dAnimation.hpp"
+#include "Game/compat/J3dMaterialRuntime.hpp"
+#include "RendererService.hpp"
+
+namespace smgpc::game {
+
+    struct J3dModelRendererLoadOptions {
+        std::uint16_t min_material_index = 0U;
+        std::uint16_t max_material_index = 0xffffU;
+        std::optional<std::uint16_t> constant_backdrop_material_index = {};
+        bool use_cpu_tev = true;
+        bool use_gx_blend_mode = false;
+    };
+
+    struct J3dModelRendererDrawOptions {
+        std::string_view material_filter = {};
+        std::optional<bool> translucent_filter = {};
+    };
+
+    enum class J3dRendererPacketMode {
+        ConstantBackdrop,
+        ConstantMaterial,
+        ComposedMaterial,
+        CpuTevPerVertex,
+        ShaderGxTev,
+        TexturePass,
+    };
+
+    struct J3dRendererPacketState {
+        std::string material_name;
+        std::uint16_t shape_index = 0xffffU;
+        std::uint16_t shape_draw_order = 0xffffU;
+        std::uint16_t material_index = 0xffffU;
+        std::uint16_t joint_index = 0xffffU;
+        std::uint8_t pass_order = 0U;
+        J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
+        std::size_t material_pass_count = 0U;
+        std::size_t shader_texture_stage_count = 0U;
+        std::uint8_t color_channel_count = 0U;
+        std::uint8_t declared_tev_stage_count = 0U;
+        std::size_t active_tev_stage_count = 0U;
+        std::size_t tev_order_count = 0U;
+        std::size_t tev_stage_count = 0U;
+        std::size_t texgen_count = 0U;
+        std::uint8_t indirect_stage_count = 0U;
+        std::size_t active_indirect_tev_stage_count = 0U;
+        std::size_t indirect_matrix_count = 0U;
+        std::size_t indirect_texture_order_count = 0U;
+        std::size_t indirect_texture_scale_count = 0U;
+        std::size_t mdl3_packet_bytes = 0U;
+        std::uint32_t mdl3_command_count = 0U;
+        std::uint32_t mdl3_bp_load_count = 0U;
+        std::uint32_t mdl3_xf_load_count = 0U;
+        std::size_t source_vertex_count = 0U;
+        std::size_t source_triangle_count = 0U;
+        bool project_source_vertices = false;
+        bool evaluate_material_per_vertex = false;
+        bool blend = false;
+        render::BlendMode blend_mode = render::BlendMode::Alpha;
+        render::GxBlendMode2D gx_blend{};
+        render::GxAlphaCompare2D gx_alpha_compare{};
+        std::array<render::GxTevRegisterColor2D, 4U> gx_initial_tev_registers{};
+        bool depth_test = false;
+        bool depth_write = false;
+        render::DepthCompare depth_compare = render::DepthCompare::LessEqual;
+        render::CullMode cull_mode = render::CullMode::None;
+        bool fog_enabled = false;
+        std::uint8_t fog_type = 0U;
+        std::uint8_t fog_projection = 0U;
+        bool fog_range_adjust_enabled = false;
+        std::array<std::uint8_t, 4U> fog_color{};
+        bool bck_active = false;
+        float bck_frame = 0.0F;
+        float bck_normalized_frame = 0.0F;
+        std::int16_t bck_frame_max = 0;
+        std::uint16_t bck_joint_count = 0U;
+        bool btk_active = false;
+        float btk_frame = 0.0F;
+        float btk_normalized_frame = 0.0F;
+        std::int16_t btk_frame_max = 0;
+        std::uint16_t btk_material_count = 0U;
+    };
+
+    class J3dModelRenderer final {
+    public:
+        void load(render::IRendererEngine &renderer, std::span<const std::uint8_t> model_data, const J3dModelRendererLoadOptions &options = {});
+        void set_bck_animation(const J3dBckAnimationSummary &animation);
+        void set_btk_animation(const J3dBtkAnimationSummary &animation);
+        void clear_animations();
+
+        void draw(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+                  const J3dModelRendererDrawOptions &options = {}) const;
+
+        [[nodiscard]] bool is_loaded() const;
+        [[nodiscard]] std::size_t mesh_count() const;
+        [[nodiscard]] std::span<const J3dRendererPacketState> render_packets() const;
+        [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame) const;
+
+    private:
+        struct Mesh {
+            std::string material_name;
+            std::uint16_t shape_index = 0xffffU;
+            std::uint16_t shape_draw_order = 0xffffU;
+            std::uint16_t material_index = 0xffffU;
+            std::uint16_t joint_index = 0xffffU;
+            render::TextureHandle texture{};
+            std::vector<render::TexturedVertex2D> vertices{};
+            std::vector<std::uint16_t> indices{};
+            std::vector<J3dMeshVertex> source_vertices{};
+            std::vector<std::uint16_t> source_indices{};
+            std::optional<J3dJointTransformValue> joint_transform{};
+            std::optional<J3dTexCoordGenSummary> tex_coord_gen{};
+            std::optional<J3dTexMatrixSummary> tex_matrix{};
+            std::optional<J3dMaterialSummary> material{};
+            std::vector<J3dMaterialTexturePass> material_passes{};
+            std::array<render::GxTextureStage2D, render::core::kMaxGxMaterialTextureStages2D> gx_texture_stages{};
+            std::array<render::GxTevStage2D, render::core::kMaxGxMaterialTevStages2D> gx_tev_stages{};
+            std::size_t gx_texture_stage_count = 0U;
+            std::size_t gx_tev_stage_count = 0U;
+            J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
+            std::array<std::uint8_t, 4U> material_color{255U, 255U, 255U, 255U};
+            std::uint8_t pass_order = 0U;
+            bool wrap_u = false;
+            bool wrap_v = false;
+            bool blend = true;
+            render::BlendMode blend_mode = render::BlendMode::Alpha;
+            render::GxBlendMode2D gx_blend{};
+            render::GxAlphaCompare2D gx_alpha_compare{};
+            std::array<render::GxTevRegisterColor2D, 4U> gx_initial_tev_registers{};
+            bool depth_test = false;
+            bool depth_write = false;
+            render::DepthCompare depth_compare = render::DepthCompare::LessEqual;
+            render::CullMode cull_mode = render::CullMode::None;
+            bool project_source_vertices = false;
+            bool evaluate_material_per_vertex = false;
+        };
+
+        [[nodiscard]] Mesh make_constant_backdrop(render::IRendererEngine &renderer, std::array<std::uint8_t, 4U> color) const;
+        [[nodiscard]] static J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh);
+        [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame) const;
+        void submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const CameraPoseCompat &camera_pose, const J3dMatrix3x4 &actor_matrix,
+                         std::uint64_t frame) const;
+
+        bool _loaded = false;
+        std::vector<J3dTexture> _textures{};
+        std::vector<J3dJointTransformValue> _joint_transforms{};
+        std::vector<std::uint16_t> _joint_parent_indices{};
+        std::vector<J3dDrawMatrixSummary> _draw_matrices{};
+        std::optional<J3dEnvelopeBlockSummary> _envelopes{};
+        std::vector<Mesh> _meshes{};
+        std::vector<J3dRendererPacketState> _render_packets{};
+        std::optional<J3dBckAnimationSummary> _bck_animation{};
+        std::optional<J3dBtkAnimationSummary> _btk_animation{};
+    };
+
+    [[nodiscard]] J3dMatrix3x4 j3d_matrix_from_translation_scale(const CameraParamVec3 &translation, float scale);
+
+}  // namespace smgpc::game

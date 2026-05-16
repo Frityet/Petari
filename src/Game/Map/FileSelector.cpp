@@ -1,5 +1,6 @@
 #include "Game/Map/FileSelector.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Map/FileSelectCameraController.hpp"
 #include "Game/Map/FileSelectSky.hpp"
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -19,6 +20,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 
@@ -34,6 +36,7 @@ namespace NrvFileSelector {
     NEW_NERVE(FileSelectorNrvTitleEnd, FileSelector, TitleEnd);
     NEW_NERVE(FileSelectorNrvRFLError, FileSelector, RFLError);
     NEW_NERVE(FileSelectorNrvRFLWait, FileSelector, RFLWait);
+    NEW_NERVE(FileSelectorNrvFileSelect, FileSelector, FileSelect);
 };  // namespace NrvFileSelector
 
 void NrvFileSelector::FileSelectorNrvWaitBind::execute(Spine* pSpine) const {
@@ -143,5 +146,23 @@ void FileSelector::exeTitle() {
         } else {
             setNerve(&NrvFileSelector::FileSelectorNrvRFLWait::sInstance);
         }
+    }
+}
+
+void FileSelector::exeTitleEnd() {
+    if (MR::isFirstStep(this)) {
+        mCameraController->goToFarPoint();
+        calcBasePos(0.0f);
+        appearAllItems();
+        initAllItems();
+        mMiiSelect->collectValidMiiIndex();
+        invalidateSelectAll();
+        MR::startStarPointerModeFileSelect(this);
+        MR::startStageBGM("MBGM_FILE_SELECT", false);
+    }
+
+    if (mCameraController->isAtFarPoint()) {
+        validateRotateAllItems();
+        setNerve(&NrvFileSelector::FileSelectorNrvFileSelect::sInstance);
     }
 }

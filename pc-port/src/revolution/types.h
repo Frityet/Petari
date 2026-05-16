@@ -12,6 +12,7 @@ using s32 = std::int32_t;
 using s64 = std::int64_t;
 using f32 = float;
 using f64 = double;
+using BOOL = int;
 using OSTime = s64;
 
 // TODO: fuck these, make into better C++ types

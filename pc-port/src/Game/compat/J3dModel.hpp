@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GXState.hpp"
 #include "J3dTexture.hpp"
 
 #include <array>
@@ -61,6 +62,19 @@ namespace smgpc::game {
         std::uint32_t triangle_count = 0U;
     };
 
+    struct J3dShapeMatrixGroupSummary {
+        std::uint16_t group_index = 0U;
+        std::uint16_t use_matrix_index = 0xffffU;
+        std::uint16_t use_matrix_count = 0U;
+        std::uint32_t first_matrix_table_index = 0U;
+        std::uint32_t display_list_offset = 0U;
+        std::uint32_t display_list_size = 0U;
+        std::vector< std::uint16_t > matrix_table;
+        std::vector< J3dPrimitiveSummary > primitives;
+        std::uint32_t parsed_display_list_bytes = 0U;
+        std::uint32_t triangle_count = 0U;
+    };
+
     struct J3dShapeSummary {
         std::string name;
         std::uint16_t index = 0U;
@@ -80,6 +94,7 @@ namespace smgpc::game {
         std::uint32_t display_list_bytes = 0U;
         std::uint32_t parsed_display_list_bytes = 0U;
         std::uint32_t triangle_count = 0U;
+        std::vector< J3dShapeMatrixGroupSummary > matrix_groups;
     };
 
     struct J3dShapeBlockSummary {
@@ -103,7 +118,29 @@ namespace smgpc::game {
     struct J3dJointBlockSummary {
         std::uint16_t joint_count = 0U;
         std::vector< std::uint16_t > remap_table;
+        std::vector< std::uint16_t > parent_indices;
         std::vector< J3dJointSummary > joints;
+    };
+
+    struct J3dEnvelopeMatrixSummary {
+        std::vector< std::uint16_t > joint_indices;
+        std::vector< float > weights;
+    };
+
+    struct J3dEnvelopeBlockSummary {
+        std::uint16_t matrix_count = 0U;
+        std::vector< J3dEnvelopeMatrixSummary > matrices;
+        std::vector< std::array< float, 12U > > inverse_bind_matrices;
+    };
+
+    struct J3dDrawMatrixSummary {
+        bool weighted = false;
+        std::uint16_t index = 0xffffU;
+    };
+
+    struct J3dDrawBlockSummary {
+        std::uint16_t matrix_count = 0U;
+        std::vector< J3dDrawMatrixSummary > matrices;
     };
 
     struct J3dMaterialTextureBinding {
@@ -196,6 +233,7 @@ namespace smgpc::game {
             std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
             std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
         };
+        std::array< GXTevRegisterColor, 4U > tev_colors{};
         std::uint8_t texgen_count = 0U;
         std::uint8_t tev_stage_count = 0U;
         std::uint16_t alpha_comp_index = 0xffffU;
@@ -213,6 +251,18 @@ namespace smgpc::game {
         J3dAlphaCompareSummary alpha_compare{};
         J3dBlendSummary blend{};
         J3dZModeSummary z_mode{};
+        GXMaterialState gx_state{};
+    };
+
+    struct J3dMdl3PacketSummary {
+        std::uint32_t offset = 0U;
+        std::uint32_t size = 0U;
+        std::vector< std::uint8_t > bytes;
+    };
+
+    struct J3dMdl3BlockSummary {
+        std::uint16_t material_count = 0U;
+        std::vector< J3dMdl3PacketSummary > packets;
     };
 
     struct J3dMaterialBlockSummary {
@@ -227,9 +277,12 @@ namespace smgpc::game {
         std::vector< J3dSectionInfo > sections;
         std::optional< J3dInfoSummary > info;
         std::optional< J3dVertexSummary > vertices;
+        std::optional< J3dEnvelopeBlockSummary > envelopes;
+        std::optional< J3dDrawBlockSummary > draw_matrices;
         std::optional< J3dJointBlockSummary > joints;
         std::optional< J3dShapeBlockSummary > shapes;
         std::optional< J3dMaterialBlockSummary > materials;
+        std::optional< J3dMdl3BlockSummary > mdl3;
         std::vector< J3dTexture > textures;
     };
 
@@ -240,6 +293,8 @@ namespace smgpc::game {
         float u = 0.0F;
         float v = 0.0F;
         std::array< std::uint8_t, 4U > color{255U, 255U, 255U, 255U};
+        std::uint8_t position_matrix_slot = 0xffU;
+        std::uint16_t draw_matrix_index = 0xffffU;
     };
 
     struct J3dShapeMesh {
@@ -247,12 +302,16 @@ namespace smgpc::game {
         std::uint16_t draw_order = 0xffffU;
         std::uint16_t material_index = 0xffffU;
         std::uint16_t joint_index = 0xffffU;
+        std::uint8_t matrix_type = 0U;
+        std::vector< J3dShapeMatrixGroupSummary > matrix_groups;
         std::vector< J3dMeshVertex > vertices;
         std::vector< std::uint16_t > indices;
     };
 
     struct J3dModelGeometry {
         std::optional< J3dMaterialBlockSummary > materials;
+        std::optional< J3dEnvelopeBlockSummary > envelopes;
+        std::optional< J3dDrawBlockSummary > draw_matrices;
         std::optional< J3dJointBlockSummary > joints;
         std::vector< J3dTexture > textures;
         std::vector< J3dShapeMesh > shapes;
