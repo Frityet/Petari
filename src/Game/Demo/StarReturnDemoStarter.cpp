@@ -75,7 +75,7 @@ void StarReturnDemoStarter::kill() {
     LiveActor::kill();
     mLuma->kill();
 
-    if (mHair) {
+    if (mHair != nullptr) {
         mHair->kill();
     }
 
@@ -119,7 +119,7 @@ void StarReturnDemoStarter::tryRegisterDemo(const char* pDemoName, const JMapInf
         MR::tryRegisterDemoCast(mPowerStar, pDemoName, rIter);
         MR::tryRegisterDemoCast(mLuma, pDemoName, rIter);
 
-        if (mHair) {
+        if (mHair != nullptr) {
             MR::tryRegisterDemoCast(mHair, pDemoName, rIter);
         }
     }
@@ -140,7 +140,7 @@ void StarReturnDemoStarter::tryStartStageResult() {
 void StarReturnDemoStarter::tryStartResultWait() {
     if (MR::isBckOneTimeAndStoppedPlayer()) {
         MR::startBckPlayer("ResultWait", reinterpret_cast< char* >(nullptr));
-    } else if (mHair) {
+    } else if (mHair != nullptr) {
         if (mFrame == 21) {
             MR::hidePlayerJoint("Cap0");
         }
