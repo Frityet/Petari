@@ -16,6 +16,7 @@ public:
     virtual void kill();
     static void makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&);
     virtual void control();
+    
     ModelObj* createSubModel(const char*, const char*, bool);
     void tryRegisterDemo(const char*, const JMapInfoIter&);
     void tryStartStageResult();
