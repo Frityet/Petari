@@ -1,73 +1,39 @@
 #pragma once
 
 #include <cstdint>
-#include <filesystem>
 #include <string>
 
 namespace smgpc::render::core {
 
-class IInputSnapshot;
-
 struct WindowConfiguration {
-    int width {800};
-    int height {600};
-    std::string title {"SMG PC Port"};
+    int width = 800;
+    int height = 600;
+    std::string title = "SMG PC Port";
 };
 
 struct RenderInitDesc : WindowConfiguration {
-    bool enable_vsync {true};
-    void *native_window_handle {nullptr};
-    void *native_display_handle {nullptr};
-};
-
-enum class RenderBlendMode : std::uint8_t {
-    Alpha,
-    Additive,
-    Opaque,
-};
-
-enum class RenderCullMode : std::uint8_t {
-    None,
-    Front,
-    Back,
-};
-
-enum class RenderDepthMode : std::uint8_t {
-    Always,
-    Less,
-    LessEqual,
-};
-
-enum class RenderTriangleTextureCombineMode : std::uint8_t {
-    None,
-    Multiply,
-    Add,
-    Screen,
-    J3dTevColorStages,
+    bool enable_vsync = true;
+    void *native_window_handle = nullptr;
+    void *native_display_handle = nullptr;
 };
 
 struct FramebufferInfo {
-    std::uint16_t width {1U};
-    std::uint16_t height {1U};
+    std::uint16_t width = 1U;
+    std::uint16_t height = 1U;
 };
 
 struct FrameContext {
-    std::uint64_t frame_index {};
-    double frame_time_seconds {};
-    double frame_delta_seconds {};
-    FramebufferInfo framebuffer {};
-    bool has_focus {true};
-    bool is_minimized {false};
-    const IInputSnapshot *input_snapshot {nullptr};
+    std::uint64_t frame_index = 0;
+    double frame_time_seconds = 0;
+    double frame_delta_seconds = 0;
+    FramebufferInfo framebuffer = {};
+    bool has_focus = true;
+    bool is_minimized = false;
 };
 
 struct NativeWindowHandle {
-    void *window_handle {};
-    void *display_handle {};
-};
-
-struct RenderCaptureRequest {
-    std::filesystem::path path {};
+    void *window_handle = nullptr;
+    void *display_handle = nullptr;
 };
 
 }  // namespace smgpc::render::core

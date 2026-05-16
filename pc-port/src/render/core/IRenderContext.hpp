@@ -1,41 +1,8 @@
 #pragma once
 
-#include <cstdint>
-#include <filesystem>
-#include <optional>
-#include <span>
-
 #include "RenderTypes.hpp"
 
 namespace smgpc::render::core {
-
-class RenderCommandBuffer;
-
-struct CursorPosition {
-    double x {};
-    double y {};
-};
-
-class IInputSnapshot {
-public:
-    virtual ~IInputSnapshot() = default;
-
-    [[nodiscard]] virtual bool is_key_down(int key) const = 0;
-    [[nodiscard]] virtual std::optional<CursorPosition> cursor_position() const {
-        return std::nullopt;
-    }
-};
-
-class IInputService {
-public:
-    virtual ~IInputService() = default;
-
-    [[nodiscard]] virtual const IInputSnapshot &snapshot() const = 0;
-
-    [[nodiscard]] virtual bool is_key_down(int key) const {
-        return snapshot().is_key_down(key);
-    }
-};
 
 class IWindowService {
 public:
@@ -56,11 +23,7 @@ public:
     virtual ~IRendererEngine() = default;
 
     [[nodiscard]] virtual FrameContext begin_frame() = 0;
-    virtual void submit(const RenderCommandBuffer &commands) = 0;
-    virtual void submit(std::span<const RenderCommandBuffer> passes) = 0;
     virtual void end_frame() = 0;
-    virtual void request_capture(RenderCaptureRequest request) = 0;
-    [[nodiscard]] virtual std::optional<std::filesystem::path> poll_completed_capture() = 0;
     [[nodiscard]] virtual FramebufferInfo framebuffer_size() const = 0;
 };
 
