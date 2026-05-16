@@ -42,7 +42,7 @@ bool write_screenshot_png(const std::filesystem::path &output_path, std::uint32_
             destination_row[destination_offset + 0U] = source_row[source_offset + 2U];
             destination_row[destination_offset + 1U] = source_row[source_offset + 1U];
             destination_row[destination_offset + 2U] = source_row[source_offset + 0U];
-            destination_row[destination_offset + 3U] = source_row[source_offset + 3U];
+            destination_row[destination_offset + 3U] = 255U;
         }
     }
 

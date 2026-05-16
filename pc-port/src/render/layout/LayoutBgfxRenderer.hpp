@@ -42,8 +42,10 @@ private:
         std::uint32_t abgr {};
         float u {};
         float v {};
+        float q {1.0F};
         float u_mask {};
         float v_mask {};
+        float q_mask {1.0F};
 
         static bgfx::VertexLayout layout;
         static void init_layout();
@@ -65,6 +67,9 @@ private:
     bgfx::UniformHandle _sampler {invalid_uniform_handle()};
     bgfx::UniformHandle _mask_sampler {invalid_uniform_handle()};
     bgfx::UniformHandle _mask_params {invalid_uniform_handle()};
+    bgfx::UniformHandle _wrap_params {invalid_uniform_handle()};
+    bgfx::UniformHandle _tev_color0 {invalid_uniform_handle()};
+    bgfx::UniformHandle _tev_color1 {invalid_uniform_handle()};
     bgfx::ProgramHandle _program {invalid_program_handle()};
     bgfx::TextureHandle _white_texture {invalid_texture_handle()};
     std::unordered_map<std::uint64_t, bgfx::TextureHandle> _texture_cache {};

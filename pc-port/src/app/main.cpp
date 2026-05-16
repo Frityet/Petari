@@ -2,6 +2,7 @@
 #include "Logger.hpp"
 
 #include <array>
+#include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <optional>
@@ -60,13 +61,26 @@ namespace {
     return std::filesystem::current_path();
 }
 
+[[nodiscard]] int read_positive_int_env(const char *name, int fallback) {
+    const char *value = std::getenv(name);
+    if (value == nullptr || value[0] == '\0') {
+        return fallback;
+    }
+
+    const int parsed = std::atoi(value);
+    if (parsed <= 0) {
+        return fallback;
+    }
+    return parsed;
+}
+
 }  // namespace
 
 int main() try {
     const auto game_root = resolve_game_root();
 
     smgpc::app::BootstrapConfiguration configuration {
-        .window_width = 800, .window_height = 600, .window_title = "SMG PC Port", .game_root = game_root, .asset_cache_root = game_root/"pc-port"/".cache"/"assets", .game_version = "RMGK01", .language = "KrKorean"
+        .window_width = read_positive_int_env("SMGPC_WINDOW_WIDTH", 800), .window_height = read_positive_int_env("SMGPC_WINDOW_HEIGHT", 600), .window_title = "SMG PC Port", .game_root = game_root, .asset_cache_root = game_root/"pc-port"/".cache"/"assets", .game_version = "RMGK01", .language = "KrKorean"
     };
 
     auto services = smgpc::app::build_service_graph(configuration);

@@ -29,8 +29,46 @@ struct Color {
     std::uint8_t a {};
 };
 
+struct Insets {
+    float left {};
+    float right {};
+    float top {};
+    float bottom {};
+};
+
+struct WindowFrameDefinition {
+    std::int32_t material_index {-1};
+    std::uint8_t texture_flip {};
+};
+
+struct TexSrtDefinition {
+    Vec2 translate {};
+    float rotate {};
+    Vec2 scale {1.0F, 1.0F};
+};
+
+struct TextureMapDefinition {
+    std::int32_t texture_index {-1};
+    std::uint8_t wrap_s {};
+    std::uint8_t wrap_t {};
+    std::uint8_t min_filter {};
+    std::uint8_t mag_filter {};
+};
+
+struct MaterialBlendDefinition {
+    bool enabled {};
+    std::uint8_t type {};
+    std::uint8_t source_factor {};
+    std::uint8_t destination_factor {};
+    std::uint8_t operation {};
+};
+
+struct MaterialTevStageDefinition {
+    std::array<std::uint8_t, 16> raw {};
+};
+
 enum class PaneType {
-    Pane, Picture, Text
+    Pane, Picture, Text, Window
 };
 
 enum class MaterialBlendMode : std::uint8_t {
@@ -42,8 +80,23 @@ struct MaterialDefinition {
     std::string name {};
     std::int32_t texture_index {-1};
     std::vector<std::int32_t> texture_indices {};
+    std::vector<TextureMapDefinition> texture_maps {};
+    std::vector<TexSrtDefinition> texture_srts {};
     std::array<std::uint8_t, 4> mat_color {255U, 255U, 255U, 255U};
+    std::array<std::uint8_t, 4> texture_color {255U, 255U, 255U, 255U};
+    std::array<std::uint8_t, 4> font_color {255U, 255U, 255U, 255U};
     std::int32_t tev_stage_count {};
+    std::vector<std::array<std::uint8_t, 4>> texture_coordinate_generators {};
+    bool has_channel_control {};
+    std::array<std::uint8_t, 4> channel_control {};
+    bool has_tev_swap_mode {};
+    std::array<std::uint8_t, 4> tev_swap_mode {};
+    std::vector<std::array<std::uint8_t, 20>> indirect_texture_srts {};
+    std::vector<std::array<std::uint8_t, 4>> indirect_stages {};
+    std::vector<MaterialTevStageDefinition> tev_stages {};
+    bool has_alpha_compare {};
+    std::array<std::uint8_t, 4> alpha_compare {};
+    MaterialBlendDefinition blend {};
     MaterialBlendMode blend_mode {MaterialBlendMode::Alpha};
 };
 
@@ -68,6 +121,9 @@ struct PaneDefinition {
     std::array<Color, 4> vertex_colors {};
     std::int32_t material_index {-1};
     std::array<float, 8> tex_coords {0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F};
+    Insets window_content_inflation {};
+    std::vector<WindowFrameDefinition> window_frames {};
+    std::int32_t window_frame_material_index {-1};
 
     std::u16string text {};
     std::int32_t font_index {-1};

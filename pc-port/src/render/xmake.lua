@@ -94,14 +94,28 @@ target("smg-pc-render")
     add_files("layout/shaders/vs_layout.sc", {
         type = "vertex",
         backends = {
-            { output_dir = "shaders", backend_dir = "glsl", output_name = "vs_layout.bin", profile = "120" },
+            { output_dir = "shaders", backend_dir = "glsl", output_name = "vs_layout.bin", profile = "430" },
             { output_dir = "shaders", backend_dir = "spirv", output_name = "vs_layout.bin", profile = "spirv" }
         }
     })
     add_files("layout/shaders/fs_layout.sc", {
         type = "fragment",
         backends = {
-            { output_dir = "shaders", backend_dir = "glsl", output_name = "fs_layout.bin", profile = "120" },
+            { output_dir = "shaders", backend_dir = "glsl", output_name = "fs_layout.bin", profile = "430" },
             { output_dir = "shaders", backend_dir = "spirv", output_name = "fs_layout.bin", profile = "spirv" }
+        }
+    })
+    add_files("j3d/shaders/vs_j3d.sc", {
+        type = "vertex",
+        backends = {
+            { output_dir = "shaders", backend_dir = "glsl", output_name = "vs_j3d.bin", profile = "430" },
+            { output_dir = "shaders", backend_dir = "spirv", output_name = "vs_j3d.bin", profile = "spirv" }
+        }
+    })
+    add_files("j3d/shaders/fs_j3d.sc", {
+        type = "fragment",
+        backends = {
+            { output_dir = "shaders", backend_dir = "glsl", output_name = "fs_j3d.bin", profile = "430" },
+            { output_dir = "shaders", backend_dir = "spirv", output_name = "fs_j3d.bin", profile = "spirv" }
         }
     })

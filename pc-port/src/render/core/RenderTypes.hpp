@@ -23,6 +23,27 @@ struct RenderInitDesc : WindowConfiguration {
 enum class RenderBlendMode : std::uint8_t {
     Alpha,
     Additive,
+    Opaque,
+};
+
+enum class RenderCullMode : std::uint8_t {
+    None,
+    Front,
+    Back,
+};
+
+enum class RenderDepthMode : std::uint8_t {
+    Always,
+    Less,
+    LessEqual,
+};
+
+enum class RenderTriangleTextureCombineMode : std::uint8_t {
+    None,
+    Multiply,
+    Add,
+    Screen,
+    J3dTevColorStages,
 };
 
 struct FramebufferInfo {

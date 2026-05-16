@@ -6,6 +6,7 @@
 
 #include "Logger.hpp"
 #include "ServiceProvider.hpp"
+#include "compat/RuntimeAssetLoader.hpp"
 #include "compat/RuntimeContext.hpp"
 #include "layout/LayoutArchiveLoader.hpp"
 #include "layout/LayoutRuntimeActor.hpp"
@@ -33,22 +34,23 @@ std::shared_ptr<smgpc::game::layout::LayoutRuntimeActor> SimpleLayout::loadRunti
     }
 
     const auto &context = smgpc::game::compat::runtime_context();
-    if (not context.asset_service) {
+    const smgpc::game::compat::RuntimeAssetLoaderScope asset_loader {};
+    if (not asset_loader) {
         return nullptr;
     }
 
     std::string archive_path;
     const std::string archive_name(pArchiveName);
     if (ends_with_arc(archive_name)) {
-        auto path = context.asset_service->path_resolver().make_layout_archive_file_name(archive_name);
+        auto path = asset_loader->layout_archive_file_name(archive_name);
         archive_path = path.value_or("/LayoutData/" + archive_name);
     } else {
-        auto path = context.asset_service->path_resolver().make_layout_archive_file_name_from_prefix(archive_name, true);
+        auto path = asset_loader->layout_archive_file_name_from_prefix(archive_name, true);
         archive_path = path.value_or("/LayoutData/" + archive_name + ".arc");
     }
 
     auto loader = smgpc::game::layout::LayoutArchiveLoader(
-        smgpc::di::DependencyReference<smgpc::assets::IGameAssetService>(*context.asset_service),
+        smgpc::di::DependencyReference<const smgpc::assets::AssetLoader>(*asset_loader),
         context.logger);
     smgpc::game::layout::LayoutArchiveLoadRequest request {
         .archive_path = std::move(archive_path),

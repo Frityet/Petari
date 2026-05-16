@@ -14,6 +14,5 @@ public:
 
     void initWithoutIter();
 
-private:
     [[nodiscard]] static std::shared_ptr<smgpc::game::layout::LayoutRuntimeActor> loadRuntimeActor(const char *pArchiveName);
 };

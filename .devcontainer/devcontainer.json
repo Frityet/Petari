@@ -48,11 +48,15 @@
         "vscode": {
             "extensions": [
                 "llvm-vs-code-extensions.vscode-clangd",
+                "openai.chatgpt"
             ],
 
             "settings": {
                 "clangd.path": "/usr/bin/clangd"
             }
         }
-    }
+    },
+    "forwardPorts": [
+        8765
+    ]
 }

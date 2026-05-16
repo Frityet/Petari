@@ -11,11 +11,19 @@ namespace smgpc::render::core {
 
 class RenderCommandBuffer;
 
+struct CursorPosition {
+    double x {};
+    double y {};
+};
+
 class IInputSnapshot {
 public:
     virtual ~IInputSnapshot() = default;
 
     [[nodiscard]] virtual bool is_key_down(int key) const = 0;
+    [[nodiscard]] virtual std::optional<CursorPosition> cursor_position() const {
+        return std::nullopt;
+    }
 };
 
 class IInputService {

@@ -1,6 +1,7 @@
 #include "Tpl.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cstddef>
 #include <string>
 
@@ -16,6 +17,7 @@ enum : std::uint32_t {
     FORMAT_IA8 = 3,
     FORMAT_RGB565 = 4,
     FORMAT_RGB5A3 = 5,
+    FORMAT_CMPR = 14,
 };
 
 [[nodiscard]] AssetError make_error(std::string message) {
@@ -110,8 +112,8 @@ void decode_ia8(std::span<const std::byte> data, std::size_t data_offset, Decode
         for (int bx = 0; bx < static_cast<int>(out->width); bx += 4) {
             for (int y = 0; y < 4; ++y) {
                 for (int x = 0; x < 4; ++x) {
-                    const auto alpha = binary::read_u8(data, cursor++);
                     const auto intensity = binary::read_u8(data, cursor++);
+                    const auto alpha = binary::read_u8(data, cursor++);
                     set_pixel(out, bx + x, by + y, intensity, intensity, intensity, alpha);
                 }
             }
@@ -169,6 +171,73 @@ void decode_rgb5a3(std::span<const std::byte> data, std::size_t data_offset, Dec
     }
 }
 
+struct RgbaColor {
+    std::uint8_t r {};
+    std::uint8_t g {};
+    std::uint8_t b {};
+    std::uint8_t a {255U};
+};
+
+[[nodiscard]] RgbaColor decode_rgb565_color(std::uint16_t packed) {
+    return RgbaColor {
+        .r = expand5(static_cast<std::uint8_t>((packed >> 11U) & 0x1FU)),
+        .g = expand6(static_cast<std::uint8_t>((packed >> 5U) & 0x3FU)),
+        .b = expand5(static_cast<std::uint8_t>(packed & 0x1FU)),
+        .a = 255U,
+    };
+}
+
+[[nodiscard]] RgbaColor lerp_color(RgbaColor a, RgbaColor b, int weight_a, int weight_b, int denominator) {
+    return RgbaColor {
+        .r = static_cast<std::uint8_t>((static_cast<int>(a.r) * weight_a + static_cast<int>(b.r) * weight_b) / denominator),
+        .g = static_cast<std::uint8_t>((static_cast<int>(a.g) * weight_a + static_cast<int>(b.g) * weight_b) / denominator),
+        .b = static_cast<std::uint8_t>((static_cast<int>(a.b) * weight_a + static_cast<int>(b.b) * weight_b) / denominator),
+        .a = static_cast<std::uint8_t>((static_cast<int>(a.a) * weight_a + static_cast<int>(b.a) * weight_b) / denominator),
+    };
+}
+
+void decode_cmpr_subblock(std::span<const std::byte> data, std::size_t cursor, int base_x, int base_y, DecodedImage *out) {
+    const auto color0_raw = static_cast<std::uint16_t>((binary::read_u8(data, cursor) << 8U) | binary::read_u8(data, cursor + 1U));
+    const auto color1_raw = static_cast<std::uint16_t>((binary::read_u8(data, cursor + 2U) << 8U) | binary::read_u8(data, cursor + 3U));
+    const auto selectors = binary::read_u32_be(data, cursor + 4U);
+
+    std::array<RgbaColor, 4> palette {};
+    palette[0] = decode_rgb565_color(color0_raw);
+    palette[1] = decode_rgb565_color(color1_raw);
+    if (color0_raw > color1_raw) {
+        palette[2] = lerp_color(palette[0], palette[1], 2, 1, 3);
+        palette[3] = lerp_color(palette[0], palette[1], 1, 2, 3);
+    } else {
+        palette[2] = lerp_color(palette[0], palette[1], 1, 1, 2);
+        palette[3] = RgbaColor {0U, 0U, 0U, 0U};
+    }
+
+    for (int y = 0; y < 4; ++y) {
+        for (int x = 0; x < 4; ++x) {
+            const auto selector_shift = static_cast<std::uint32_t>(30 - 2 * (y * 4 + x));
+            const auto selector = static_cast<std::size_t>((selectors >> selector_shift) & 0x3U);
+            const auto color = palette[selector];
+            set_pixel(out, base_x + x, base_y + y, color.r, color.g, color.b, color.a);
+        }
+    }
+}
+
+void decode_cmpr(std::span<const std::byte> data, std::size_t data_offset, DecodedImage *out) {
+    std::size_t cursor = data_offset;
+    for (int by = 0; by < static_cast<int>(out->height); by += 8) {
+        for (int bx = 0; bx < static_cast<int>(out->width); bx += 8) {
+            decode_cmpr_subblock(data, cursor, bx + 0, by + 0, out);
+            cursor += 8U;
+            decode_cmpr_subblock(data, cursor, bx + 4, by + 0, out);
+            cursor += 8U;
+            decode_cmpr_subblock(data, cursor, bx + 0, by + 4, out);
+            cursor += 8U;
+            decode_cmpr_subblock(data, cursor, bx + 4, by + 4, out);
+            cursor += 8U;
+        }
+    }
+}
+
 }  // namespace
 
 AssetResult<DecodedImage> decode_gx_tiled_texture(
@@ -201,6 +270,9 @@ AssetResult<DecodedImage> decode_gx_tiled_texture(
         break;
     case FORMAT_RGB5A3:
         decode_rgb5a3(bytes, data_offset, &image);
+        break;
+    case FORMAT_CMPR:
+        decode_cmpr(bytes, data_offset, &image);
         break;
     default:
         return make_error("Unsupported GX texture format.");

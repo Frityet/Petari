@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "AssetLoader.hpp"
 #include "AssetServices.hpp"
 #include "GameAssetService.hpp"
 #include "GameServices.hpp"
@@ -42,6 +43,7 @@ struct ServiceGraphOverrides {
     std::unique_ptr<assets::IAssetConverter> asset_converter {};
     std::unique_ptr<assets::IAssetManager> asset_manager {};
     std::unique_ptr<assets::IGameAssetService> game_asset_service {};
+    std::unique_ptr<assets::AssetLoader> game_asset_loader {};
     std::unique_ptr<game::IGame> game {};
     std::unique_ptr<IApplication> application {};
 };
@@ -57,6 +59,7 @@ using ServiceGraph = di::ServiceProvider<
     di::SingletonService<assets::IAssetConverter>,
     di::SingletonService<assets::IAssetManager>,
     di::SingletonService<assets::IGameAssetService>,
+    di::SingletonService<assets::AssetLoader>,
     di::SingletonService<game::IGame>,
     di::SingletonService<IApplication>>;
 

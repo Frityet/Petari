@@ -36,6 +36,38 @@ namespace {
     }
 }
 
+[[nodiscard]] std::uint32_t sampler_flags_for_wrap(std::uint8_t wrap_s, std::uint8_t wrap_t) {
+    constexpr std::uint8_t GX_CLAMP = 0U;
+    constexpr std::uint8_t GX_MIRROR = 2U;
+
+    std::uint32_t flags = 0U;
+    if (wrap_s == GX_CLAMP) {
+        flags |= BGFX_SAMPLER_U_CLAMP;
+    } else if (wrap_s == GX_MIRROR) {
+        flags |= BGFX_SAMPLER_U_MIRROR;
+    }
+
+    if (wrap_t == GX_CLAMP) {
+        flags |= BGFX_SAMPLER_V_CLAMP;
+    } else if (wrap_t == GX_MIRROR) {
+        flags |= BGFX_SAMPLER_V_MIRROR;
+    }
+
+    return flags;
+}
+
+[[nodiscard]] std::uint64_t texture_cache_key(const TextureRef &texture) {
+    const auto sampler_flags = sampler_flags_for_wrap(texture.wrap_s, texture.wrap_t);
+    return texture.id ^ (static_cast<std::uint64_t>(sampler_flags) << 32U);
+}
+
+void packed_color_to_uniform(std::uint32_t color, float *pOut) {
+    pOut[0U] = static_cast<float>(color & 0xFFU) / 255.0F;
+    pOut[1U] = static_cast<float>((color >> 8U) & 0xFFU) / 255.0F;
+    pOut[2U] = static_cast<float>((color >> 16U) & 0xFFU) / 255.0F;
+    pOut[3U] = static_cast<float>((color >> 24U) & 0xFFU) / 255.0F;
+}
+
 [[nodiscard]] std::optional<std::filesystem::path> resolve_executable_path() {
 #if defined(__linux__)
     std::array<char, 4096> buffer {};
@@ -59,8 +91,8 @@ void LayoutBgfxRenderer::Vertex::init_layout() {
     layout.begin()
         .add(bgfx::Attrib::Position, 4, bgfx::AttribType::Float)
         .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
-        .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-        .add(bgfx::Attrib::TexCoord1, 2, bgfx::AttribType::Float)
+        .add(bgfx::Attrib::TexCoord0, 3, bgfx::AttribType::Float)
+        .add(bgfx::Attrib::TexCoord1, 3, bgfx::AttribType::Float)
         .end();
 }
 
@@ -107,6 +139,18 @@ void LayoutBgfxRenderer::shutdown() {
     if (bgfx::isValid(_mask_params)) {
         bgfx::destroy(_mask_params);
         _mask_params = BGFX_INVALID_HANDLE;
+    }
+    if (bgfx::isValid(_wrap_params)) {
+        bgfx::destroy(_wrap_params);
+        _wrap_params = BGFX_INVALID_HANDLE;
+    }
+    if (bgfx::isValid(_tev_color0)) {
+        bgfx::destroy(_tev_color0);
+        _tev_color0 = BGFX_INVALID_HANDLE;
+    }
+    if (bgfx::isValid(_tev_color1)) {
+        bgfx::destroy(_tev_color1);
+        _tev_color1 = BGFX_INVALID_HANDLE;
     }
 
     _initialized = false;
@@ -189,6 +233,9 @@ void LayoutBgfxRenderer::ensure_initialized() {
     _sampler = bgfx::createUniform("s_tex", bgfx::UniformType::Sampler);
     _mask_sampler = bgfx::createUniform("s_mask", bgfx::UniformType::Sampler);
     _mask_params = bgfx::createUniform("u_mask_params", bgfx::UniformType::Vec4);
+    _wrap_params = bgfx::createUniform("u_wrap_params", bgfx::UniformType::Vec4);
+    _tev_color0 = bgfx::createUniform("u_tev_color0", bgfx::UniformType::Vec4);
+    _tev_color1 = bgfx::createUniform("u_tev_color1", bgfx::UniformType::Vec4);
 
     const std::uint32_t white_pixel = 0xFFFFFFFFU;
     const auto *white_memory = bgfx::copy(&white_pixel, sizeof(white_pixel));
@@ -202,24 +249,26 @@ bgfx::TextureHandle LayoutBgfxRenderer::resolve_texture(const TextureRef &textur
         return _white_texture;
     }
 
-    const auto found = _texture_cache.find(texture.id);
+    const auto cache_key = texture_cache_key(texture);
+    const auto found = _texture_cache.find(cache_key);
     if (found != _texture_cache.end()) {
         return found->second;
     }
 
     const auto byte_count = static_cast<std::size_t>(texture.width) * texture.height * 4U;
     const auto *memory = bgfx::copy(texture.rgba8, static_cast<std::uint32_t>(byte_count));
+    const auto sampler_flags = sampler_flags_for_wrap(texture.wrap_s, texture.wrap_t);
     const auto handle = bgfx::createTexture2D(
         texture.width,
         texture.height,
         false,
         1U,
         bgfx::TextureFormat::RGBA8,
-        BGFX_TEXTURE_NONE,
+        sampler_flags,
         memory);
 
     if (bgfx::isValid(handle)) {
-        _texture_cache.emplace(texture.id, handle);
+        _texture_cache.emplace(cache_key, handle);
         return handle;
     }
 
@@ -301,6 +350,8 @@ void LayoutBgfxRenderer::draw(
     }
 
     const auto draw_quad = [&](const QuadCommand &quad) {
+        const float quad_scale_x = quad.coordinate_width > 0.0F ? static_cast<float>(framebuffer_width) / quad.coordinate_width : scale_x;
+        const float quad_scale_y = quad.coordinate_height > 0.0F ? static_cast<float>(framebuffer_height) / quad.coordinate_height : scale_y;
         constexpr std::uint32_t VERTEX_COUNT = 4U;
         constexpr std::uint32_t INDEX_COUNT = 6U;
 
@@ -325,49 +376,89 @@ void LayoutBgfxRenderer::draw(
         bgfx::allocTransientIndexBuffer(&index_buffer, INDEX_COUNT);
 
         auto *vertices = reinterpret_cast<Vertex *>(vertex_buffer.data);
+        const float x_tl = quad.use_custom_vertices ? quad.x_tl : quad.x0;
+        const float y_tl = quad.use_custom_vertices ? quad.y_tl : quad.y0;
+        const float x_tr = quad.use_custom_vertices ? quad.x_tr : quad.x1;
+        const float y_tr = quad.use_custom_vertices ? quad.y_tr : quad.y0;
+        const float x_bl = quad.use_custom_vertices ? quad.x_bl : quad.x0;
+        const float y_bl = quad.use_custom_vertices ? quad.y_bl : quad.y1;
+        const float x_br = quad.use_custom_vertices ? quad.x_br : quad.x1;
+        const float y_br = quad.use_custom_vertices ? quad.y_br : quad.y1;
+        const float u_tl = quad.use_custom_tex_coords ? quad.u_tl : quad.u0;
+        const float v_tl = quad.use_custom_tex_coords ? quad.v_tl : quad.v0;
+        const float q_tl = quad.use_custom_tex_coords ? quad.q_tl : quad.q0;
+        const float u_tr = quad.use_custom_tex_coords ? quad.u_tr : quad.u1;
+        const float v_tr = quad.use_custom_tex_coords ? quad.v_tr : quad.v0;
+        const float q_tr = quad.use_custom_tex_coords ? quad.q_tr : quad.q1;
+        const float u_bl = quad.use_custom_tex_coords ? quad.u_bl : quad.u0;
+        const float v_bl = quad.use_custom_tex_coords ? quad.v_bl : quad.v1;
+        const float q_bl = quad.use_custom_tex_coords ? quad.q_bl : quad.q0;
+        const float u_br = quad.use_custom_tex_coords ? quad.u_br : quad.u1;
+        const float v_br = quad.use_custom_tex_coords ? quad.v_br : quad.v1;
+        const float q_br = quad.use_custom_tex_coords ? quad.q_br : quad.q1;
+        const float u_tl_secondary = quad.use_custom_tex_coords ? quad.u_tl_secondary : quad.u0_secondary;
+        const float v_tl_secondary = quad.use_custom_tex_coords ? quad.v_tl_secondary : quad.v0_secondary;
+        const float q_tl_secondary = quad.use_custom_tex_coords ? quad.q_tl_secondary : quad.q0_secondary;
+        const float u_tr_secondary = quad.use_custom_tex_coords ? quad.u_tr_secondary : quad.u1_secondary;
+        const float v_tr_secondary = quad.use_custom_tex_coords ? quad.v_tr_secondary : quad.v0_secondary;
+        const float q_tr_secondary = quad.use_custom_tex_coords ? quad.q_tr_secondary : quad.q1_secondary;
+        const float u_bl_secondary = quad.use_custom_tex_coords ? quad.u_bl_secondary : quad.u0_secondary;
+        const float v_bl_secondary = quad.use_custom_tex_coords ? quad.v_bl_secondary : quad.v1_secondary;
+        const float q_bl_secondary = quad.use_custom_tex_coords ? quad.q_bl_secondary : quad.q0_secondary;
+        const float u_br_secondary = quad.use_custom_tex_coords ? quad.u_br_secondary : quad.u1_secondary;
+        const float v_br_secondary = quad.use_custom_tex_coords ? quad.v_br_secondary : quad.v1_secondary;
+        const float q_br_secondary = quad.use_custom_tex_coords ? quad.q_br_secondary : quad.q1_secondary;
         vertices[0] = Vertex {
-            .x = quad.x0 * scale_x,
-            .y = quad.y0 * scale_y,
+            .x = x_tl * quad_scale_x,
+            .y = y_tl * quad_scale_y,
             .z = 0.0F,
             .w = 1.0F,
             .abgr = quad.color_tl,
-            .u = quad.u0,
-            .v = quad.v0,
-            .u_mask = quad.u0_secondary,
-            .v_mask = quad.v0_secondary,
+            .u = u_tl,
+            .v = v_tl,
+            .q = q_tl,
+            .u_mask = u_tl_secondary,
+            .v_mask = v_tl_secondary,
+            .q_mask = q_tl_secondary,
         };
         vertices[1] = Vertex {
-            .x = quad.x1 * scale_x,
-            .y = quad.y0 * scale_y,
+            .x = x_tr * quad_scale_x,
+            .y = y_tr * quad_scale_y,
             .z = 0.0F,
             .w = 1.0F,
             .abgr = quad.color_tr,
-            .u = quad.u1,
-            .v = quad.v0,
-            .u_mask = quad.u1_secondary,
-            .v_mask = quad.v0_secondary,
+            .u = u_tr,
+            .v = v_tr,
+            .q = q_tr,
+            .u_mask = u_tr_secondary,
+            .v_mask = v_tr_secondary,
+            .q_mask = q_tr_secondary,
         };
         vertices[2] = Vertex {
-            .x = quad.x0 * scale_x,
-            .y = quad.y1 * scale_y,
+            .x = x_bl * quad_scale_x,
+            .y = y_bl * quad_scale_y,
             .z = 0.0F,
             .w = 1.0F,
             .abgr = quad.color_bl,
-            .u = quad.u0,
-            .v = quad.v1,
-            .u_mask = quad.u0_secondary,
-            .v_mask = quad.v1_secondary,
+            .u = u_bl,
+            .v = v_bl,
+            .q = q_bl,
+            .u_mask = u_bl_secondary,
+            .v_mask = v_bl_secondary,
+            .q_mask = q_bl_secondary,
         };
         vertices[3] = Vertex {
-            .x = quad.x1 * scale_x,
-            .y = quad.y1 * scale_y,
+            .x = x_br * quad_scale_x,
+            .y = y_br * quad_scale_y,
             .z = 0.0F,
             .w = 1.0F,
             .abgr = quad.color_br,
-            .u = quad.u1,
-            .v = quad.v1,
-            .u_mask = quad.u1_secondary,
-            .v_mask = quad.v1_secondary,
+            .u = u_br,
+            .v = v_br,
+            .q = q_br,
+            .u_mask = u_br_secondary,
+            .v_mask = v_br_secondary,
+            .q_mask = q_br_secondary,
         };
 
         auto *indices = reinterpret_cast<std::uint16_t *>(index_buffer.data);
@@ -383,15 +474,32 @@ void LayoutBgfxRenderer::draw(
             ? resolve_texture(quad.mask_texture)
             : _white_texture;
 
-        bgfx::setTexture(0U, _sampler, texture_handle);
-        bgfx::setTexture(1U, _mask_sampler, mask_texture_handle);
+        bgfx::setTexture(0U, _sampler, texture_handle, sampler_flags_for_wrap(quad.texture.wrap_s, quad.texture.wrap_t));
+        bgfx::setTexture(
+            1U,
+            _mask_sampler,
+            mask_texture_handle,
+            quad.use_mask_texture ? sampler_flags_for_wrap(quad.mask_texture.wrap_s, quad.mask_texture.wrap_t) : BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP);
         const float mask_params[4] = {
             quad.use_mask_texture ? 1.0F : 0.0F,
             quad.invert_mask ? 1.0F : 0.0F,
             quad.mask_uses_alpha ? 1.0F : 0.0F,
-            0.0F,
+            quad.texture_color_lerp ? 2.0F : (quad.texture_alpha_only ? (quad.tev_color_scale > 1.5F ? 1.25F : 1.0F) : 0.0F),
         };
         bgfx::setUniform(_mask_params, mask_params);
+        const float wrap_params[4] = {
+            static_cast<float>(quad.texture.wrap_s),
+            static_cast<float>(quad.texture.wrap_t),
+            quad.use_mask_texture ? static_cast<float>(quad.mask_texture.wrap_s) : 0.0F,
+            quad.use_mask_texture ? static_cast<float>(quad.mask_texture.wrap_t) : 0.0F,
+        };
+        bgfx::setUniform(_wrap_params, wrap_params);
+        float tev_color0[4] {};
+        float tev_color1[4] {};
+        packed_color_to_uniform(quad.tev_color0, tev_color0);
+        packed_color_to_uniform(quad.tev_color1, tev_color1);
+        bgfx::setUniform(_tev_color0, tev_color0);
+        bgfx::setUniform(_tev_color1, tev_color1);
         bgfx::setScissor(0U, 0U, framebuffer_width, framebuffer_height);
         bgfx::setState(quad.blend_mode == BlendMode::Additive ? DRAW_STATE_ADDITIVE : DRAW_STATE_ALPHA);
         bgfx::setVertexBuffer(0U, &vertex_buffer);

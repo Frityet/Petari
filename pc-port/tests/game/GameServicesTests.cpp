@@ -1,4 +1,5 @@
 #include "ServiceProvider.hpp"
+#include "assets/AssetLoader.hpp"
 #include "assets/GameAssetService.hpp"
 #include "common/Logger.hpp"
 #include "game/GameServices.hpp"
@@ -189,14 +190,15 @@ $test("Game::create_default_game_service builds with valid dependencies") {
     smgpc::di::DependencyReference<smgpc::render::IWindowService> window_service_ref(window_service);
     smgpc::di::DependencyReference<smgpc::render::IInputService> input_service_ref(input_service);
     smgpc::di::DependencyReference<smgpc::render::IRendererEngine> renderer_engine_ref(renderer_engine);
-    smgpc::di::DependencyReference<smgpc::assets::IGameAssetService> asset_service_ref(asset_service);
+    smgpc::assets::AssetLoader asset_loader{smgpc::di::DependencyReference<smgpc::assets::IGameAssetService>(asset_service)};
+    smgpc::di::DependencyReference<smgpc::assets::AssetLoader> asset_loader_ref(asset_loader);
     smgpc::di::DependencyReference<smgpc::logging::ILogger> logger_ref(*logger);
 
     auto game = smgpc::game::create_default_game_service(
         std::move(window_service_ref),
         std::move(input_service_ref),
         std::move(renderer_engine_ref),
-        std::move(asset_service_ref),
+        std::move(asset_loader_ref),
         std::move(logger_ref));
 
     $pc_port_require(game != nullptr);
