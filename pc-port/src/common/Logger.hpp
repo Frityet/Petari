@@ -2,8 +2,10 @@
 
 #include <cstdio>
 #include <memory>
+#include <source_location>
 #include <string_view>
 #include <utility>
+#include <source_location>
 
 #include <fmt/format.h>
 
@@ -14,49 +16,64 @@ enum class Level {
 };
 
 enum class Category {
-    APP, RENDERER, GAME, ASSET
+    APP, RENDERER
+};
+
+struct Message {
+    std::string_view format;
+    std::source_location location;
+
+    constexpr inline Message(std::string_view message, std::source_location source = std::source_location::current()):
+        format(message),
+        location(source) {}
 };
 
 class ILogger {
 public:
     virtual ~ILogger() = default;
 
-    virtual void write(std::FILE *to, std::string_view file, int line, Level level, Category category, std::string_view message) = 0;
+    virtual void write(std::FILE *to, std::source_location location, Level level, Category category, std::string_view message) = 0;
 
     template <typename... Args>
-    void log(std::FILE *to, std::string_view file, int line, Level level, Category category, std::string_view format, Args &&...args) {
-        write(to, file, line, level, category, fmt::format(fmt::runtime(format), std::forward<Args>(args)...));
+    inline void log(std::FILE *to, Level level, Category category, Message message, Args &&...args)
+    {
+        write(to, message.location, level, category, fmt::format(fmt::runtime(message.format), std::forward<Args>(args)...));
     }
 
     template <typename... Args>
-    void debug(std::string_view file, int line, Category category, std::string_view format, Args &&...args) {
-        log(stdout, file, line, Level::DEBUG, category, format, std::forward<Args>(args)...);
+    inline void debug(Category category, Message message, Args &&...args)
+    {
+        log(stdout, Level::DEBUG, category, message, std::forward<Args>(args)...);
     }
 
     template <typename... Args>
-    void info(std::string_view file, int line, Category category, std::string_view format, Args &&...args) {
-        log(stdout, file, line, Level::INFO, category, format, std::forward<Args>(args)...);
+    inline void info(Category category, Message message, Args &&...args)
+    {
+        log(stdout, Level::INFO, category, message, std::forward<Args>(args)...);
     }
 
     template <typename... Args>
-    void warning(std::string_view file, int line, Category category, std::string_view format, Args &&...args) {
-        log(stderr, file, line, Level::WARNING, category, format, std::forward<Args>(args)...);
+    inline void warning(Category category, Message message, Args &&...args)
+    {
+        log(stderr, Level::WARNING, category, message, std::forward<Args>(args)...);
     }
 
     template <typename... Args>
-    void error(std::string_view file, int line, Category category, std::string_view format, Args &&...args) {
-        log(stderr, file, line, Level::ERROR, category, format, std::forward<Args>(args)...);
+    inline void error(Category category, Message message, Args &&...args)
+    {
+        log(stderr, Level::ERROR, category, message, std::forward<Args>(args)...);
     }
 
     template <typename... Args>
-    void fatal(std::string_view file, int line, Category category, std::string_view format, Args &&...args) {
-        log(stderr, file, line, Level::FATAL, category, format, std::forward<Args>(args)...);
+    inline void fatal(Category category, Message message, Args &&...args)
+    {
+        log(stderr, Level::FATAL, category, message, std::forward<Args>(args)...);
     }
 };
 
 class ConsoleLogger final : public ILogger {
 public:
-    void write(std::FILE *to, std::string_view file, int line, Level level, Category category, std::string_view message) override;
+    void write(std::FILE *to, std::source_location location, Level level, Category category, std::string_view message) override;
 };
 
 [[nodiscard]] std::unique_ptr<ILogger> create_default_logger();
@@ -99,10 +116,6 @@ struct formatter<smgpc::logging::Category> {
             return fmt::format_to(ctx.out(), "APP");
         case smgpc::logging::Category::RENDERER:
             return fmt::format_to(ctx.out(), "RENDERER");
-        case smgpc::logging::Category::GAME:
-            return fmt::format_to(ctx.out(), "GAME");
-        case smgpc::logging::Category::ASSET:
-            return fmt::format_to(ctx.out(), "ASSET");
         }
 
         return fmt::format_to(ctx.out(), "UNKNOWN");

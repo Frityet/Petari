@@ -10,10 +10,8 @@ add_cxxflags("-Wno-dollar-in-identifier-extension", {tools = "clang"})
 add_repositories("local-repo $(projectdir)")
 
 add_requires("glfw", {configs = {shared = false, wayland = false, x11 = true}})
-add_requires("bgfx 8752")
-add_requires("stb")
+add_requires("bgfx master")
 
 includes {
-    "src",
-    "tests"
+    "src"
 }

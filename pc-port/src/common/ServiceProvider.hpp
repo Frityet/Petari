@@ -2,13 +2,12 @@
 
 #include <concepts>
 #include <cstddef>
+#include <functional>
 #include <memory>
-#include <optional>
 #include <stdexcept>
 #include <tuple>
 #include <type_traits>
 #include <utility>
-#include <functional>
 
 namespace smgpc::di {
 
@@ -38,69 +37,6 @@ public:
 
     [[nodiscard]] constexpr T *operator->() const {
         return _service;
-    }
-
-private:
-    T *_service {};
-};
-
-using namespace std::string_literals;
-
-class NullDependencyReference : public std::bad_optional_access {
-public:
-    const std::type_info &type_id;
-
-    inline NullDependencyReference(const std::type_info &tid): type_id(tid), _msg("dependency '"s + type_id.name() + "' not found") {}
-
-    const char *what() const noexcept override
-    { return _msg.c_str(); }
-
-private:
-    std::string _msg;
-};
-
-template <typename T>
-class OptionalDependencyReference final {
-public:
-    constexpr OptionalDependencyReference() = default;
-    constexpr OptionalDependencyReference(std::nullptr_t) : _service(nullptr) {
-    }
-
-    constexpr OptionalDependencyReference(T *service) : _service(service) {
-    }
-
-    explicit constexpr OptionalDependencyReference(T &service)
-        : _service(std::addressof(service)) {
-    }
-
-    constexpr OptionalDependencyReference(DependencyReference<T> &service)
-        : _service(service.operator->()) {
-    }
-
-    constexpr OptionalDependencyReference(const DependencyReference<T> &service)
-        : _service(service.operator->()) {
-    }
-
-    [[nodiscard]] constexpr bool has_value() const noexcept {
-        return _service != nullptr;
-    }
-
-    [[nodiscard]] constexpr explicit operator bool() const noexcept {
-        return has_value();
-    }
-
-    [[nodiscard]] constexpr T *get() const {
-        if (not has_value())
-            throw NullDependencyReference(typeid(T));
-        return _service;
-    }
-
-    [[nodiscard]] constexpr T &operator*() const {
-        return *get();
-    }
-
-    [[nodiscard]] constexpr T *operator->() const {
-        return get();
     }
 
 private:
