@@ -14,7 +14,7 @@ enum class Level {
 };
 
 enum class Category {
-    APP, RENDERER, GAME
+    APP, RENDERER, GAME, ASSET
 };
 
 class ILogger {
@@ -101,6 +101,8 @@ struct formatter<smgpc::logging::Category> {
             return fmt::format_to(ctx.out(), "RENDERER");
         case smgpc::logging::Category::GAME:
             return fmt::format_to(ctx.out(), "GAME");
+        case smgpc::logging::Category::ASSET:
+            return fmt::format_to(ctx.out(), "ASSET");
         }
 
         return fmt::format_to(ctx.out(), "UNKNOWN");

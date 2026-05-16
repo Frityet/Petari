@@ -10,7 +10,7 @@ namespace smgpc::logging {
 }
 
 namespace smgpc::assets {
-    class IGameAssetService;
+    class AssetLoader;
 }
 
 namespace smgpc::game {
@@ -24,6 +24,6 @@ namespace smgpc::game {
     di::DependencyReference<render::IWindowService> window_service,
     di::DependencyReference<render::IInputService> input_service,
     di::DependencyReference<render::IRendererEngine> renderer_engine,
-    di::DependencyReference<assets::IGameAssetService> asset_service,
+    di::DependencyReference<assets::AssetLoader> asset_loader,
     di::DependencyReference<logging::ILogger> logger);
 }  // namespace smgpc::game

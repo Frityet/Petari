@@ -35,6 +35,54 @@ namespace {
     return out;
 }
 
+[[nodiscard]] bool is_texture_name_character(char value) {
+    return (value >= 'A' && value <= 'Z') || (value >= 'a' && value <= 'z') || (value >= '0' && value <= '9') || value == '_' || value == '.' ||
+           value == '/' || value == '\\';
+}
+
+[[nodiscard]] std::vector< std::string > collect_texture_names(std::span<const std::byte> bytes, std::size_t begin, std::size_t end) {
+    std::vector< std::string > names{};
+    begin = std::min(begin, bytes.size());
+    end = std::min(end, bytes.size());
+    if (begin >= end) {
+        return names;
+    }
+
+    for (std::size_t offset = begin; offset < end;) {
+        const auto value = static_cast< char >(binary::read_u8(bytes, offset));
+        if (!is_texture_name_character(value)) {
+            ++offset;
+            continue;
+        }
+
+        std::string candidate{};
+        std::size_t cursor = offset;
+        while (cursor < end) {
+            const auto character = static_cast< char >(binary::read_u8(bytes, cursor));
+            if (character == '\0') {
+                break;
+            }
+            if (!is_texture_name_character(character)) {
+                candidate.clear();
+                break;
+            }
+            candidate.push_back(character);
+            ++cursor;
+        }
+
+        if (!candidate.empty() && candidate.find(".tpl") != std::string::npos) {
+            if (const auto embedded_name = candidate.find("My"); embedded_name != std::string::npos) {
+                candidate = candidate.substr(embedded_name);
+            }
+            names.push_back(std::move(candidate));
+        }
+
+        offset = std::max(cursor + 1U, offset + 1U);
+    }
+
+    return names;
+}
+
 [[nodiscard]] AssetResult<void> validate_block(std::span<const std::byte> bytes, std::size_t block_offset, std::size_t block_size) {
     if (block_size < 8U) {
         return AssetResult<void>(make_error("BRLAN block size is smaller than block header."));
@@ -52,6 +100,17 @@ float BrlanTrack::sample(float frame) const {
         return 0.0F;
     }
 
+    if (curve_type == BrlanCurveType::Step) {
+        float value = keys.front().value;
+        for (const auto &key : keys) {
+            if (frame < key.frame) {
+                break;
+            }
+            value = key.value;
+        }
+        return value;
+    }
+
     if (keys.size() == 1U || frame <= keys.front().frame) {
         return keys.front().value;
     }
@@ -65,10 +124,6 @@ float BrlanTrack::sample(float frame) const {
         const auto &key1 = keys[i + 1U];
         if (frame < key0.frame || frame > key1.frame) {
             continue;
-        }
-
-        if (curve_type == BrlanCurveType::Step) {
-            return key0.value;
         }
 
         const float span = key1.frame - key0.frame;
@@ -166,6 +221,11 @@ AssetResult<BrlanAnimation> parse_brlan(std::span<const std::byte> bytes, std::s
             const auto anim_content_offsets_offset = static_cast<std::size_t>(read_u32_be(block, 16U));
             if (not has_bytes(block, anim_content_offsets_offset, anim_content_count * 4U)) {
                 return make_error("pai1 content offset table exceeds block bounds.");
+            }
+
+            const auto texture_names = collect_texture_names(block, 0x18U, anim_content_offsets_offset);
+            if (!texture_names.empty()) {
+                animation.texture_names = texture_names;
             }
 
             for (std::size_t content_index = 0; content_index < anim_content_count; ++content_index) {

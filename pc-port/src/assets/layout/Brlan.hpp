@@ -36,6 +36,7 @@ struct BrlanAnimation {
     std::string name {};
     std::uint16_t frame_size {};
     bool loop {};
+    std::vector<std::string> texture_names {};
     std::vector<BrlanTrack> tracks {};
 
     [[nodiscard]] float normalize_frame(float frame) const;

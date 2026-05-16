@@ -117,6 +117,10 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
         graph.register_service<di::SingletonService<assets::IGameAssetService>>(std::move(overrides.game_asset_service));
     }
 
+    if (overrides.game_asset_loader) {
+        graph.register_service<di::SingletonService<assets::AssetLoader>>(std::move(overrides.game_asset_loader));
+    }
+
     if (overrides.game) {
         graph.register_service<di::SingletonService<game::IGame>>(std::move(overrides.game));
     }
@@ -234,6 +238,15 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
             });
     }
 
+    if (not graph.has<assets::AssetLoader>() and
+        not graph.has<game::IGame>() and
+        not graph.has<IApplication>()) {
+        graph.register_service<di::SingletonService<assets::AssetLoader>, assets::IGameAssetService, logging::ILogger>(
+            [](di::DependencyReference<assets::IGameAssetService> asset_service, di::DependencyReference<logging::ILogger> logger) {
+                return std::make_unique<assets::AssetLoader>(std::move(asset_service), std::move(logger));
+            });
+    }
+
     if (not graph.has<game::IGame>() and
         not graph.has<IApplication>()) {
         graph.register_service<
@@ -241,18 +254,18 @@ ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, Se
             render::IWindowService,
             render::IInputService,
             render::IRendererEngine,
-            assets::IGameAssetService,
+            assets::AssetLoader,
             logging::ILogger>(
             [](di::DependencyReference<render::IWindowService> window_service,
                 di::DependencyReference<render::IInputService> input_service,
                 di::DependencyReference<render::IRendererEngine> renderer_engine,
-                di::DependencyReference<assets::IGameAssetService> asset_service,
+                di::DependencyReference<assets::AssetLoader> asset_loader,
                 di::DependencyReference<logging::ILogger> logger) {
                 return game::create_default_game_service(
                     std::move(window_service),
                     std::move(input_service),
                     std::move(renderer_engine),
-                    std::move(asset_service),
+                    std::move(asset_loader),
                     std::move(logger));
             });
     }

@@ -14,6 +14,7 @@ namespace smgpc::render {
 
 using FrameContext = core::FrameContext;
 using FramebufferInfo = core::FramebufferInfo;
+using CursorPosition = core::CursorPosition;
 using NativeWindowHandle = core::NativeWindowHandle;
 using RenderCaptureRequest = core::RenderCaptureRequest;
 using RenderCommandBuffer = core::RenderCommandBuffer;
@@ -43,4 +44,3 @@ public:
     di::DependencyReference<logging::ILogger> logger);
 
 }  // namespace smgpc::render
-

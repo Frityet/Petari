@@ -285,7 +285,8 @@ $test("CachingAssetManager stores loader and converter references") {
     smgpc::assets::CachingAssetManager manager(
         smgpc::di::DependencyReference<smgpc::assets::IAssetLoader>{loader},
         smgpc::di::DependencyReference<smgpc::assets::IAssetConverter>{converter},
-        make_cache_configuration("/tmp/cache"));
+        make_cache_configuration("/tmp/cache")
+    );
     const auto result = manager.prepare_asset(id);
 
     $pc_port_require(result);

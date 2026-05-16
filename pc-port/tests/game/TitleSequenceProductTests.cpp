@@ -115,7 +115,6 @@ $test("TitleSequenceProduct reaches logo display flow without input") {
     TitleSequenceProduct sequence(&logo_actor, &press_start_actor);
 
     smgpc::game::compat::set_runtime_context(smgpc::game::compat::RuntimeContext {
-        .asset_service = nullptr,
         .renderer_engine = nullptr,
         .input_service = &input_service,
         .logger = nullptr,
@@ -137,7 +136,6 @@ $test("TitleSequenceProduct transitions to dead after enter press") {
     TitleSequenceProduct sequence(&logo_actor, &press_start_actor);
 
     smgpc::game::compat::set_runtime_context(smgpc::game::compat::RuntimeContext {
-        .asset_service = nullptr,
         .renderer_engine = nullptr,
         .input_service = &input_service,
         .logger = nullptr,

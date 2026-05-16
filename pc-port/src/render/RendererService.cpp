@@ -131,12 +131,21 @@ public:
     void refresh(GLFWwindow *window) {
         if (window == nullptr) {
             _keys.fill(false);
+            _cursor_position = std::nullopt;
             return;
         }
 
         for (std::size_t key = 0U; key < _keys.size(); ++key) {
             _keys[key] = glfwGetKey(window, static_cast<int>(key)) == GLFW_PRESS;
         }
+
+        double cursor_x {};
+        double cursor_y {};
+        glfwGetCursorPos(window, &cursor_x, &cursor_y);
+        _cursor_position = CursorPosition {
+            .x = cursor_x,
+            .y = cursor_y,
+        };
     }
 
     [[nodiscard]] bool is_key_down(int key) const override {
@@ -146,8 +155,13 @@ public:
         return _keys[static_cast<std::size_t>(key)];
     }
 
+    [[nodiscard]] std::optional<CursorPosition> cursor_position() const override {
+        return _cursor_position;
+    }
+
 private:
     std::array<bool, 1024> _keys {};
+    std::optional<CursorPosition> _cursor_position {};
 };
 
 class GLFWInputService final : public IInputService {

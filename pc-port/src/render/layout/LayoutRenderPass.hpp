@@ -28,11 +28,16 @@ public:
         std::uint16_t framebuffer_width,
         std::uint16_t framebuffer_height,
         float layout_width,
-        float layout_height);
+        float layout_height,
+        bool clear_framebuffer = true,
+        std::uint8_t view_id = 0U);
 
 private:
     [[nodiscard]] static bool env_is_enabled(const char *name);
     [[nodiscard]] static smgpc::render::core::RenderBlendMode map_blend_mode(BlendMode blend_mode);
+    [[nodiscard]] static smgpc::render::core::RenderTriangleTextureCombineMode map_triangle_texture_combine_mode(
+        TriangleTextureCombineMode mode);
+    [[nodiscard]] static smgpc::render::core::RenderLayoutDrawItemKind map_draw_command_kind(DrawCommandKind kind);
 
     smgpc::di::OptionalDependencyReference<smgpc::logging::ILogger> _logger;
 };
