@@ -1,8 +1,10 @@
 add_requires("fmt")
+add_requires("nlohmann_json")
 
 target("smg-pc-common")
     set_kind("static")
-    add_files("Logger.cpp")
+    add_files("Logger.cpp", "DumpJson.cpp", "MarkdownWriter.cpp")
     add_headerfiles("**.hpp")
     add_includedirs("./", {public = true})
     add_packages("fmt", { public = true })
+    add_packages("nlohmann_json", { public = true })

@@ -68,6 +68,37 @@ namespace smgpc::game {
 
     using GXTevRegisterColor = std::array<std::int16_t, 4U>;
 
+    using GXColorValue = std::array<std::uint8_t, 4U>;
+
+    struct GXColorChannelControlState {
+        std::uint32_t raw = 0x400U;
+        std::uint8_t material_source = 0U;
+        bool lighting_enabled = false;
+        std::uint8_t light_mask = 0U;
+        std::uint8_t ambient_source = 0U;
+        std::uint8_t diffuse_function = 0U;
+        std::uint8_t attenuation_function = 2U;
+        std::uint8_t attenuation_mode = 2U;
+    };
+
+    struct GXColorChannelState {
+        GXColorValue material_color = {255U, 255U, 255U, 255U};
+        GXColorValue ambient_color = {0x32U, 0x32U, 0x32U, 0x32U};
+        GXColorChannelControlState color_control = {};
+        GXColorChannelControlState alpha_control = {};
+    };
+
+    struct GXLightState {
+        bool loaded = false;
+        GXColorValue color = {};
+        std::array<float, 3U> cosine_attenuation = {1.0F, 0.0F, 0.0F};
+        std::array<float, 3U> distance_attenuation = {1.0F, 0.0F, 0.0F};
+        std::array<float, 3U> position = {};
+        std::array<float, 3U> direction = {0.0F, 0.0F, -1.0F};
+        std::array<std::uint32_t, 16U> raw_words = {};
+        std::array<bool, 16U> word_loaded = {};
+    };
+
     struct GXAlphaCompareState {
         std::uint8_t comp0 = 7U;
         std::uint8_t ref0 = 0U;
@@ -194,10 +225,8 @@ namespace smgpc::game {
         std::uint8_t texgen_count = 0U;
         std::uint8_t tev_stage_count = 0U;
         std::uint8_t z_comp_loc = 0xffU;
-        std::array<std::array<std::uint8_t, 4U>, 2U> material_colors = {
-            std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
-            std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
-        };
+        std::array<GXColorChannelState, 2U> color_channels = {};
+        std::array<GXLightState, 8U> lights = {};
         std::array<std::array<std::uint8_t, 4U>, 4U> tev_k_colors = {
             std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
             std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
@@ -220,6 +249,13 @@ namespace smgpc::game {
         std::vector<GXRegisterLoadState> mdl3_register_loads;
     };
 
+    [[nodiscard]] GXColorValue gx_color_from_xf_value(std::uint32_t value);
+    [[nodiscard]] GXColorChannelControlState gx_color_channel_control_from_xf(std::uint32_t value);
+    [[nodiscard]] GXColorChannelControlState gx_color_channel_control_from_j3d(std::uint8_t enable, std::uint8_t material_source,
+                                                                               std::uint8_t light_mask, std::uint8_t diffuse_function,
+                                                                               std::uint8_t attenuation_function, std::uint8_t ambient_source);
+    [[nodiscard]] GXColorValue gx_evaluate_lit_raster_color(const GXMaterialState &state, std::uint8_t color_channel, GXColorValue vertex_color,
+                                                            std::array<float, 3U> position, std::array<float, 3U> normal);
     [[nodiscard]] GXMaterialState gx_state_from_j3d_material(const J3dMaterialSummary &material);
     [[nodiscard]] GXMaterialState gx_state_from_brlyt_material(const BrlytMaterial &material);
     void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list);
