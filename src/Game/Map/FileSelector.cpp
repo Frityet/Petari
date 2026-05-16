@@ -293,6 +293,12 @@ void FileSelector::createTitle() {
     mTitle->kill();
 }
 
+void FileSelector::createSky() {
+    mSky = new FileSelectSky("ファイル選択空");
+    mSky->initWithoutIter();
+    mSky->appear();
+}
+
 void FileSelector::createMiiSelect() {
     mMiiSelect = new MiiSelect("MiiSelect");
     mMiiSelect->initWithoutIter();
@@ -1513,5 +1519,28 @@ void FileSelector::exeManual() {
 
     if (mManual->isClosed()) {
         setNerve(&NrvFileSelector::FileSelectorNrvFileConfirm::sInstance);
+    }
+}
+
+void FileSelector::exeTitle() {
+    if (MR::isFirstStep(this)) {
+        mTitleSeq->appear();
+        MR::deactivateDefaultGameLayout();
+        MR::startStarPointerModeTitle(this);
+        MR::resetCameraMan();
+    }
+
+    mTitleSeq->updateNerve();
+
+    if (!mTitleSeq->isActive()) {
+        if (MR::getSceneObj< MiiFacePartsHolder >(SceneObj_MiiFacePartsHolder)->isInitEnd()) {
+            if (MR::getSceneObj< MiiFacePartsHolder >(SceneObj_MiiFacePartsHolder)->isError()) {
+                setNerve(&NrvFileSelector::FileSelectorNrvRFLError::sInstance);
+            } else {
+                setNerve(&NrvFileSelector::FileSelectorNrvTitleEnd::sInstance);
+            }
+        } else {
+            setNerve(&NrvFileSelector::FileSelectorNrvRFLWait::sInstance);
+        }
     }
 }
