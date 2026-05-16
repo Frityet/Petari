@@ -190,4 +190,3 @@ void TitleSequenceProduct::updatePressStartReaction() {
         MR::startAnim(mPressStartLayout, "ButtonReaction", 0);
     }
 }
-

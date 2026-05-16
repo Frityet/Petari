@@ -16,6 +16,7 @@
     },
 
     "runArgs": [
+        "--shm-size=4g",
         "--device=nvidia.com/gpu=all",
         "--device=/dev/nvidiactl",
         "--device=/dev/nvidia0",
@@ -43,7 +44,7 @@
         },
 		"./xmake": {}
     },
-    "onCreateCommand": "sudo apt update && sudo apt install -y ninja-build",
+    "onCreateCommand": "mkdir -p /tmp/xdg-runtime && chmod 700 /tmp/xdg-runtime && sudo apt update && sudo apt install -y ninja-build",
     "customizations": {
         "vscode": {
             "extensions": [

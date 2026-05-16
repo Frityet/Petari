@@ -65,3 +65,11 @@ target("smg-pc-bcsv-probe")
     add_deps {
         "smg-pc-game"
     }
+
+target("smg-pc-visual-diff")
+    set_kind("binary")
+    add_files("VisualDiff.cpp")
+    add_files("$(projectdir)/dolphin/Externals/libspng/libspng/spng/spng.c")
+    add_includedirs("$(projectdir)/dolphin/Externals/libspng/libspng/spng")
+    add_includedirs("$(projectdir)/dolphin/Externals/zlib-ng")
+    add_ldflags("-l:libz.so.1")

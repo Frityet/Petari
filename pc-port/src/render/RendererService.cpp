@@ -225,6 +225,14 @@ namespace smgpc::render {
                 _backend.submit_textured_triangles(texture, batch);
             }
 
+            void submit_gx_material_triangles(const GxMaterialTriangleBatch2D& batch) override {
+                if (not _backend.is_initialized()) {
+                    initialize_backend();
+                }
+
+                _backend.submit_gx_material_triangles(batch);
+            }
+
             [[nodiscard]] FramebufferInfo framebuffer_size() const override {
                 if (_backend.is_initialized()) {
                     return _backend.framebuffer_size();

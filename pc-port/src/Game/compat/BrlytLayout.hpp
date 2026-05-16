@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GXState.hpp"
+
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -115,6 +117,7 @@ struct BrlytMaterial {
     std::uint8_t chan_alpha_src = 1U;
     bool has_chan_ctrl = false;
     bool has_mat_color = false;
+    GXMaterialState gx_state {};
 };
 
 struct BrlytPicturePane {

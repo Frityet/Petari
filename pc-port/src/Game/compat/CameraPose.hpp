@@ -5,9 +5,9 @@
 namespace smgpc::game {
 
     struct CameraPoseCompat {
-        CameraParamVec3 eye{};
-        CameraParamVec3 watch{};
-        CameraParamVec3 up{0.0F, 1.0F, 0.0F};
+        CameraParamVec3 eye = {};
+        CameraParamVec3 watch = {};
+        CameraParamVec3 up = {0.0F, 1.0F, 0.0F};
         float fovy_degrees = 45.0F;
         float aspect_ratio = 608.0F / 456.0F;
         float near_clip = 100.0F;
@@ -21,6 +21,7 @@ namespace smgpc::game {
     };
 
     [[nodiscard]] CameraPoseCompat file_select_title_camera_pose();
+    [[nodiscard]] CameraPoseCompat file_select_far_camera_pose();
     [[nodiscard]] CameraViewPointCompat transform_world_to_camera(const CameraPoseCompat& pose, const CameraParamVec3& world);
 
 }  // namespace smgpc::game

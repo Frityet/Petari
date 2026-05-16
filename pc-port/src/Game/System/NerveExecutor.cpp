@@ -2,7 +2,8 @@
 
 #include "Game/LiveActor/Spine.hpp"
 
-NerveExecutor::NerveExecutor(const char*) : mSpine(nullptr) {}
+NerveExecutor::NerveExecutor(const char*) : mSpine(nullptr) {
+}
 
 NerveExecutor::~NerveExecutor() {
     delete mSpine;
@@ -19,14 +20,19 @@ void NerveExecutor::updateNerve() {
 }
 
 void NerveExecutor::setNerve(const Nerve* pNerve) {
-    mSpine->setNerve(pNerve);
+    if (mSpine != nullptr) {
+        mSpine->setNerve(pNerve);
+    }
 }
 
 bool NerveExecutor::isNerve(const Nerve* pNerve) const {
-    return mSpine->getCurrentNerve() == pNerve;
+    return mSpine != nullptr && mSpine->getCurrentNerve() == pNerve;
 }
 
 s32 NerveExecutor::getNerveStep() const {
+    if (mSpine == nullptr) {
+        return 0;
+    }
+
     return mSpine->mStep;
 }
-

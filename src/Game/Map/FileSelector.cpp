@@ -1544,3 +1544,21 @@ void FileSelector::exeTitle() {
         }
     }
 }
+
+void FileSelector::exeTitleEnd() {
+    if (MR::isFirstStep(this)) {
+        mCameraController->goToFarPoint();
+        calcBasePos(0.0f);
+        appearAllItems();
+        initAllItems();
+        mMiiSelect->collectValidMiiIndex();
+        invalidateSelectAll();
+        MR::startStarPointerModeFileSelect(this);
+        MR::startStageBGM("MBGM_FILE_SELECT", false);
+    }
+
+    if (mCameraController->isAtFarPoint()) {
+        validateRotateAllItems();
+        setNerve(&NrvFileSelector::FileSelectorNrvFileSelect::sInstance);
+    }
+}

@@ -96,13 +96,6 @@ namespace {
         return it == textures.end() ? nullptr : &(*it);
     }
 
-    [[nodiscard]] const SimpleLayout::RenderTexture* find_texture(const std::vector< SimpleLayout::RenderTexture >& textures,
-                                                                  std::string_view texture_name) {
-        const auto it = std::ranges::find_if(textures, [texture_name](const auto& texture) { return texture.name == texture_name; });
-
-        return it == textures.end() ? nullptr : &(*it);
-    }
-
     [[nodiscard]] bool contains_font(const std::vector< SimpleLayout::RenderFont >& fonts, std::string_view font_name) {
         return std::ranges::any_of(fonts, [font_name](const auto& font) { return font_name_matches(font.name, font_name); });
     }
@@ -116,13 +109,6 @@ namespace {
     [[nodiscard]] SimpleLayout::RenderTextTexture* find_text_texture(std::vector< SimpleLayout::RenderTextTexture >& textures,
                                                                      std::size_t text_box_index) {
         const auto it = std::ranges::find_if(textures, [text_box_index](const auto& texture) { return texture.text_box_index == text_box_index; });
-
-        return it == textures.end() ? nullptr : &(*it);
-    }
-
-    [[nodiscard]] SimpleLayout::RenderMaterialTexture* find_material_texture(std::vector< SimpleLayout::RenderMaterialTexture >& textures,
-                                                                             std::size_t picture_index) {
-        const auto it = std::ranges::find_if(textures, [picture_index](const auto& texture) { return texture.picture_index == picture_index; });
 
         return it == textures.end() ? nullptr : &(*it);
     }
@@ -297,27 +283,6 @@ namespace {
         };
     }
 
-    [[nodiscard]] bool same_optional_float(const std::optional< float >& lhs, const std::optional< float >& rhs) {
-        if (lhs.has_value() != rhs.has_value()) {
-            return false;
-        }
-        if (!lhs.has_value()) {
-            return true;
-        }
-
-        return std::abs(*lhs - *rhs) < 0.0001F;
-    }
-
-    [[nodiscard]] bool same_texture_frame(const smgpc::game::BrlanTextureFrame& lhs, const smgpc::game::BrlanTextureFrame& rhs) {
-        return same_optional_float(lhs.translate_s, rhs.translate_s) && same_optional_float(lhs.translate_t, rhs.translate_t) &&
-               same_optional_float(lhs.rotate, rhs.rotate) && same_optional_float(lhs.scale_s, rhs.scale_s) &&
-               same_optional_float(lhs.scale_t, rhs.scale_t);
-    }
-
-    [[nodiscard]] bool material_requires_cpu_composition(const smgpc::game::BrlytMaterial& material) {
-        return material.textures.size() != 1U || !material.tev_stages.empty();
-    }
-
     [[nodiscard]] std::uint16_t tex_srt_index_for_coord_gen(const smgpc::game::BrlytTexCoordGen& coord_gen) {
         constexpr auto gx_texmtx0 = std::uint8_t{30U};
         constexpr auto gx_identity = std::uint8_t{60U};
@@ -346,181 +311,115 @@ namespace {
         return transform_tex_coord(tex_coord, frame);
     }
 
-    [[nodiscard]] float wrap_or_clamp(float value, bool wrap) {
-        if (wrap) {
-            value -= std::floor(value);
-            if (value < 0.0F) {
-                value += 1.0F;
-            }
-            return value;
-        }
-
-        return std::clamp(value, 0.0F, 1.0F);
-    }
-
-    [[nodiscard]] std::array< int, 4U > sample_texture(const smgpc::game::DecodedTexture& texture, smgpc::game::BrlytTexCoord tex_coord, bool wrap_s,
-                                                       bool wrap_t) {
-        if (texture.width == 0U || texture.height == 0U || texture.rgba.empty()) {
-            return {0, 0, 0, 0};
-        }
-
-        const auto u = wrap_or_clamp(tex_coord.u, wrap_s);
-        const auto v = wrap_or_clamp(tex_coord.v, wrap_t);
-        const auto x = static_cast< std::uint32_t >(
-            std::clamp(std::round(u * static_cast< float >(texture.width - 1U)), 0.0F, static_cast< float >(texture.width - 1U)));
-        const auto y = static_cast< std::uint32_t >(
-            std::clamp(std::round(v * static_cast< float >(texture.height - 1U)), 0.0F, static_cast< float >(texture.height - 1U)));
-        const auto offset = (static_cast< std::size_t >(y) * texture.width + x) * 4U;
-        return {
-            texture.rgba[offset],
-            texture.rgba[offset + 1U],
-            texture.rgba[offset + 2U],
-            texture.rgba[offset + 3U],
-        };
-    }
-
-    [[nodiscard]] std::array< int, 4U > konst_color(const smgpc::game::BrlytMaterial& material, std::uint8_t selector) {
-        constexpr std::array< int, 8U > constants{255, 223, 191, 159, 128, 96, 64, 32};
+    [[nodiscard]] std::array< std::uint8_t, 4U > brlyt_konst_color(const smgpc::game::BrlytMaterial& material, std::uint8_t selector) {
+        constexpr std::array< std::uint8_t, 8U > constants{255U, 223U, 191U, 159U, 128U, 96U, 64U, 32U};
         if (selector < constants.size()) {
             return {constants[selector], constants[selector], constants[selector], constants[selector]};
         }
         if (selector >= 12U && selector <= 15U) {
-            const auto& color = material.tev_k_colors[selector - 12U];
-            return {color[0U], color[1U], color[2U], color[3U]};
+            return material.tev_k_colors[selector - 12U];
         }
         if (selector >= 16U && selector <= 31U) {
-            const auto color_index = (selector - 16U) % 4U;
-            const auto component = (selector - 16U) / 4U;
+            const auto color_index = static_cast< std::size_t >((selector - 16U) % 4U);
+            const auto component = static_cast< std::size_t >((selector - 16U) / 4U);
             const auto value = material.tev_k_colors[color_index][component];
             return {value, value, value, value};
         }
 
-        return {0, 0, 0, 0};
+        return {0U, 0U, 0U, 0U};
     }
 
-    [[nodiscard]] int color_arg_value(std::uint8_t arg, std::size_t component, const std::array< std::array< int, 4U >, 4U >& registers,
-                                      const std::array< int, 4U >& texture, const std::array< int, 4U >& ras, const std::array< int, 4U >& konst) {
-        switch (arg) {
-        case 0U:
-            return registers[0U][component];
-        case 1U:
-            return registers[0U][3U];
-        case 2U:
-            return registers[1U][component];
-        case 3U:
-            return registers[1U][3U];
-        case 4U:
-            return registers[2U][component];
-        case 5U:
-            return registers[2U][3U];
-        case 6U:
-            return registers[3U][component];
-        case 7U:
-            return registers[3U][3U];
-        case 8U:
-            return texture[component];
-        case 9U:
-            return texture[3U];
-        case 10U:
-            return ras[component];
-        case 11U:
-            return ras[3U];
-        case 12U:
-            return 255;
-        case 13U:
-            return 128;
-        case 14U:
-            return konst[component];
-        default:
-            return 0;
-        }
+    [[nodiscard]] std::array< std::uint8_t, 4U > brlyt_stage_konst_color(const smgpc::game::BrlytMaterial& material,
+                                                                         const smgpc::game::BrlytTevStage& stage) {
+        const auto color = brlyt_konst_color(material, stage.color.k_sel);
+        const auto alpha = brlyt_konst_color(material, stage.alpha.k_sel);
+        return {color[0U], color[1U], color[2U], alpha[3U]};
     }
 
-    [[nodiscard]] int alpha_arg_value(std::uint8_t arg, const std::array< std::array< int, 4U >, 4U >& registers,
-                                      const std::array< int, 4U >& texture, const std::array< int, 4U >& ras, const std::array< int, 4U >& konst) {
-        switch (arg) {
-        case 0U:
-            return registers[0U][3U];
-        case 1U:
-            return registers[1U][3U];
-        case 2U:
-            return registers[2U][3U];
-        case 3U:
-            return registers[3U][3U];
-        case 4U:
-            return texture[3U];
-        case 5U:
-            return ras[3U];
-        case 6U:
-            return konst[3U];
-        default:
-            return 0;
-        }
+    [[nodiscard]] bool brlyt_tev_op_can_use_gx_shader(const smgpc::game::BrlytTevStageInOp& op, std::uint8_t max_arg) {
+        return op.a <= max_arg && op.b <= max_arg && op.c <= max_arg && op.d <= max_arg && op.op <= 1U && op.bias <= 3U && op.scale <= 3U &&
+               op.out_reg <= 3U;
     }
 
-    [[nodiscard]] int tev_regular(const smgpc::game::BrlytTevStageInOp& op, int a, int b, int c, int d) {
-        constexpr std::array< int, 4U > bias{0, 128, -128, 0};
-        constexpr std::array< int, 4U > scale_lshift{0, 1, 2, 0};
-        constexpr std::array< int, 4U > scale_rshift{0, 0, 0, 1};
-        const auto scale = std::min< std::uint8_t >(op.scale, 3U);
-        const auto c256 = c + (c >> 7);
-        auto temp = a * (256 - c256) + b * c256;
-        temp <<= scale_lshift[scale];
-        if (scale != 3U) {
-            temp += op.op == 1U ? 127 : 128;
-        }
-        temp >>= 8;
-        if (op.op == 1U) {
-            temp = -temp;
-        }
-
-        auto result = ((d + bias[std::min< std::uint8_t >(op.bias, 3U)]) << scale_lshift[scale]) + temp;
-        result >>= scale_rshift[scale];
-        if (op.clamp) {
-            return std::clamp(result, 0, 255);
-        }
-
-        return std::clamp(result, -1024, 1023);
-    }
-
-    [[nodiscard]] bool compare_alpha(int alpha, std::uint8_t compare, std::uint8_t reference) {
-        switch (compare) {
-        case 0U:
+    [[nodiscard]] bool brlyt_material_can_use_gx_shader(const smgpc::game::BrlytMaterial& material) {
+        if (material.textures.empty()) {
             return false;
-        case 1U:
-            return alpha < reference;
-        case 2U:
-            return alpha == reference;
-        case 3U:
-            return alpha <= reference;
-        case 4U:
-            return alpha > reference;
-        case 5U:
-            return alpha != reference;
-        case 6U:
-            return alpha >= reference;
-        default:
-            return true;
         }
+        if (material.tev_stages.empty()) {
+            return material.textures.size() <= smgpc::render::core::kMaxGxMaterialTextureStages2D;
+        }
+        if (material.tev_stages.size() > smgpc::render::core::kMaxGxMaterialTevStages2D) {
+            return false;
+        }
+
+        return std::ranges::all_of(material.tev_stages, [&material](const auto& stage) {
+            return stage.tex_map < material.textures.size() && brlyt_tev_op_can_use_gx_shader(stage.color, 15U) &&
+                   brlyt_tev_op_can_use_gx_shader(stage.alpha, 7U);
+        });
     }
 
-    [[nodiscard]] bool passes_alpha_compare(const smgpc::game::BrlytAlphaCompare& alpha_compare, int alpha) {
-        if (!alpha_compare.enabled) {
-            return true;
-        }
+    [[nodiscard]] smgpc::render::GxTevStage2D brlyt_gx_tev_stage(const smgpc::game::BrlytMaterial& material, const smgpc::game::BrlytTevStage& stage,
+                                                                 std::uint8_t texture_stage) {
+        return smgpc::render::GxTevStage2D{
+            .texture_stage = texture_stage,
+            .color_in = {stage.color.a, stage.color.b, stage.color.c, stage.color.d},
+            .color_op = stage.color.op,
+            .color_bias = stage.color.bias,
+            .color_scale = stage.color.scale,
+            .color_clamp = stage.color.clamp,
+            .color_out = stage.color.out_reg,
+            .alpha_in = {stage.alpha.a, stage.alpha.b, stage.alpha.c, stage.alpha.d},
+            .alpha_op = stage.alpha.op,
+            .alpha_bias = stage.alpha.bias,
+            .alpha_scale = stage.alpha.scale,
+            .alpha_clamp = stage.alpha.clamp,
+            .alpha_out = stage.alpha.out_reg,
+            .konst_color = brlyt_stage_konst_color(material, stage),
+        };
+    }
 
-        const auto lhs = compare_alpha(alpha, alpha_compare.comp0, alpha_compare.ref0);
-        const auto rhs = compare_alpha(alpha, alpha_compare.comp1, alpha_compare.ref1);
-        switch (alpha_compare.op) {
-        case 1U:
-            return lhs || rhs;
-        case 2U:
-            return lhs != rhs;
-        case 3U:
-            return lhs == rhs;
-        default:
-            return lhs && rhs;
-        }
+    [[nodiscard]] smgpc::render::GxTevStage2D brlyt_default_texture_tev_stage() {
+        return smgpc::render::GxTevStage2D{
+            .texture_stage = 0U,
+            .color_in = {15U, 8U, 10U, 15U},
+            .color_op = 0U,
+            .color_bias = 0U,
+            .color_scale = 0U,
+            .color_clamp = true,
+            .color_out = 0U,
+            .alpha_in = {7U, 4U, 5U, 7U},
+            .alpha_op = 0U,
+            .alpha_bias = 0U,
+            .alpha_scale = 0U,
+            .alpha_clamp = true,
+            .alpha_out = 0U,
+            .konst_color = {0U, 0U, 0U, 0U},
+        };
+    }
+
+    [[nodiscard]] std::array< smgpc::render::GxTevRegisterColor2D, 4U > brlyt_initial_tev_registers(const smgpc::game::GXMaterialState& state) {
+        return state.tev_registers;
+    }
+
+    [[nodiscard]] smgpc::render::GxAlphaCompare2D brlyt_alpha_compare(const smgpc::game::BrlytAlphaCompare& alpha_compare) {
+        return smgpc::render::GxAlphaCompare2D{
+            .comp0 = alpha_compare.comp0,
+            .ref0 = alpha_compare.ref0,
+            .op = alpha_compare.op,
+            .comp1 = alpha_compare.comp1,
+            .ref1 = alpha_compare.ref1,
+            .enabled = alpha_compare.enabled,
+        };
+    }
+
+    [[nodiscard]] smgpc::render::GxBlendMode2D brlyt_gx_blend_mode(const smgpc::game::GXBlendState& blend) {
+        return smgpc::render::GxBlendMode2D{
+            .type = blend.type,
+            .src_factor = blend.src_factor,
+            .dst_factor = blend.dst_factor,
+            .op = blend.op,
+            .enabled = blend.enabled,
+        };
     }
 
 }  // namespace
@@ -642,61 +541,100 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
             };
         };
 
-        if (material_requires_cpu_composition(material)) {
-            auto* material_texture = ensureMaterialTextureUpload(renderer, picture_index, texture_frame);
-            if (material_texture == nullptr || !material_texture->handle.is_valid()) {
-                continue;
+        if (!brlyt_material_can_use_gx_shader(material)) {
+            continue;
+        }
+
+        auto texture_stages = std::array< smgpc::render::GxTextureStage2D, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+        auto tev_stages = std::array< smgpc::render::GxTevStage2D, smgpc::render::core::kMaxGxMaterialTevStages2D >{};
+        auto tex_coord_gen_indices = std::array< std::uint8_t, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+        auto texture_stage_count = std::size_t{};
+        auto tev_stage_count = std::size_t{};
+
+        const auto append_texture_stage = [&](const smgpc::game::BrlytMaterialTexture& material_texture, std::uint8_t tex_coord_gen_index) {
+            if (texture_stage_count >= texture_stages.size()) {
+                return false;
             }
 
-            const auto color = std::array< std::uint8_t, 4U >{
-                255U,
-                255U,
-                255U,
-                static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha, 0.0F, 255.0F)),
+            auto* texture = find_texture(mRenderTextures, material_texture.texture_name);
+            if (texture == nullptr || !texture->handle.is_valid()) {
+                return false;
+            }
+
+            texture_stages[texture_stage_count] = smgpc::render::GxTextureStage2D{
+                .texture = texture->handle,
+                .wrap_u = material_texture.wrap_s != 0U,
+                .wrap_v = material_texture.wrap_t != 0U,
             };
-            const auto top_v = gx_texture_v_to_host(0.0F);
-            const auto bottom_v = gx_texture_v_to_host(1.0F);
-            renderer.submit_textured_quad(
-                material_texture->handle,
-                smgpc::render::TexturedQuad2D{
-                    .vertices =
-                        {
-                            smgpc::render::TexturedVertex2D{.x = x, .y = y, .z = 0.0F, .u = 0.0F, .v = top_v, .color = color},
-                            smgpc::render::TexturedVertex2D{.x = x + width, .y = y, .z = 0.0F, .u = 1.0F, .v = top_v, .color = color},
-                            smgpc::render::TexturedVertex2D{.x = x + width, .y = y + height, .z = 0.0F, .u = 1.0F, .v = bottom_v, .color = color},
-                            smgpc::render::TexturedVertex2D{.x = x, .y = y + height, .z = 0.0F, .u = 0.0F, .v = bottom_v, .color = color},
-                        },
-                });
+            tex_coord_gen_indices[texture_stage_count] = tex_coord_gen_index;
+            ++texture_stage_count;
+            return true;
+        };
+
+        auto can_submit = true;
+        if (material.tev_stages.empty()) {
+            can_submit = append_texture_stage(material.textures.front(), 0U);
+            tev_stages[0U] = brlyt_default_texture_tev_stage();
+            tev_stage_count = 1U;
+        } else {
+            for (const auto& stage : material.tev_stages) {
+                const auto texture_stage = static_cast< std::uint8_t >(texture_stage_count);
+                can_submit = can_submit && append_texture_stage(material.textures[stage.tex_map], stage.tex_coord_gen);
+                if (tev_stage_count < tev_stages.size()) {
+                    tev_stages[tev_stage_count] = brlyt_gx_tev_stage(material, stage, texture_stage);
+                    ++tev_stage_count;
+                }
+            }
+        }
+        if (!can_submit || texture_stage_count == 0U || tev_stage_count == 0U) {
             continue;
         }
 
-        auto* texture = find_texture(mRenderTextures, picture.texture_name);
-        if (texture == nullptr || !texture->handle.is_valid()) {
-            continue;
-        }
+        const auto tex_coord = [&](std::size_t vertex_index, std::size_t texture_stage_index) {
+            auto coord = picture.tex_coords[vertex_index];
+            const auto tex_coord_gen_index = tex_coord_gen_indices[texture_stage_index];
+            if (tex_coord_gen_index < material.tex_coord_gens.size()) {
+                const auto tex_srt_index = tex_srt_index_for_coord_gen(material.tex_coord_gens[tex_coord_gen_index]);
+                if (tex_srt_index != UINT16_MAX && tex_srt_index < material.tex_srts.size()) {
+                    coord = transform_tex_coord(coord, material.tex_srts[tex_srt_index], texture_frame, tex_srt_index == 0U);
+                }
+            } else {
+                coord = transform_tex_coord(coord, texture_frame);
+            }
+            return std::array< float, 3U >{coord.u, gx_texture_v_to_host(coord.v), 1.0F};
+        };
 
         const auto vertex = [&](std::size_t index, float vx, float vy) {
-            const auto tex_coord = transform_tex_coord(picture.tex_coords[index], texture_frame);
-            return smgpc::render::TexturedVertex2D{
+            auto tex_coords = std::array< std::array< float, 3U >, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+            for (auto stage = std::size_t{}; stage < texture_stage_count && stage < tex_coords.size(); ++stage) {
+                tex_coords[stage] = tex_coord(index, stage);
+            }
+            return smgpc::render::GxMaterialVertex2D{
                 .x = vx,
                 .y = vy,
-                .u = tex_coord.u,
-                .v = gx_texture_v_to_host(tex_coord.v),
+                .z = 0.0F,
+                .clip_w = 1.0F,
+                .tex_coords = tex_coords,
                 .color = vertex_color(index),
             };
         };
 
-        renderer.submit_textured_quad(texture->handle, smgpc::render::TexturedQuad2D{
-                                                           .vertices =
-                                                               {
-                                                                   vertex(0U, x, y),
-                                                                   vertex(1U, x + width, y),
-                                                                   vertex(2U, x + width, y + height),
-                                                                   vertex(3U, x, y + height),
-                                                               },
-                                                           .wrap_u = picture.wrap_s != 0U,
-                                                           .wrap_v = picture.wrap_t != 0U,
-                                                       });
+        const auto vertices = std::array< smgpc::render::GxMaterialVertex2D, 4U >{
+            vertex(0U, x, y),
+            vertex(1U, x + width, y),
+            vertex(2U, x + width, y + height),
+            vertex(3U, x, y + height),
+        };
+        constexpr auto indices = std::array< std::uint16_t, 6U >{0U, 1U, 2U, 0U, 2U, 3U};
+        renderer.submit_gx_material_triangles(smgpc::render::GxMaterialTriangleBatch2D{
+            .vertices = std::span< const smgpc::render::GxMaterialVertex2D >(vertices.data(), vertices.size()),
+            .indices = std::span< const std::uint16_t >(indices.data(), indices.size()),
+            .texture_stages = std::span< const smgpc::render::GxTextureStage2D >(texture_stages.data(), texture_stage_count),
+            .tev_stages = std::span< const smgpc::render::GxTevStage2D >(tev_stages.data(), tev_stage_count),
+            .initial_tev_registers = brlyt_initial_tev_registers(material.gx_state),
+            .alpha_compare = brlyt_alpha_compare(material.alpha_compare),
+            .blend = brlyt_gx_blend_mode(material.gx_state.blend),
+        });
     }
 
     drawTextBoxes(renderer, alpha);
@@ -738,6 +676,30 @@ f32 SimpleLayout::getAnimFrame(u32 animLayer) const {
 bool SimpleLayout::isAnimStopped(u32 animLayer) {
     auto& anim = animation(animLayer);
     return anim.stopped;
+}
+
+std::size_t SimpleLayout::debugAnimLayerCount() const {
+    return mAnimLayerNum;
+}
+
+std::string_view SimpleLayout::debugAnimName(u32 animLayer) const {
+    return animation(animLayer).name;
+}
+
+f32 SimpleLayout::debugAnimEndFrame(u32 animLayer) const {
+    return animation(animLayer).end;
+}
+
+f32 SimpleLayout::debugAnimRate(u32 animLayer) const {
+    return animation(animLayer).rate;
+}
+
+bool SimpleLayout::debugAnimLooping(u32 animLayer) const {
+    return animation(animLayer).looping;
+}
+
+bool SimpleLayout::debugAnimStopped(u32 animLayer) const {
+    return animation(animLayer).stopped;
 }
 
 SimpleLayout::AnimationState& SimpleLayout::animation(u32 animLayer) {
@@ -878,7 +840,6 @@ void SimpleLayout::loadRenderData() {
         mRenderTextures.clear();
         mRenderFonts.clear();
         mRenderTextTextures.clear();
-        mRenderMaterialTextures.clear();
         mRenderAnimations.clear();
         mCommittedPaneFrames.clear();
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
@@ -931,159 +892,6 @@ void SimpleLayout::ensureTextTextureUploads(smgpc::render::IRendererEngine& rend
             mRenderTextTextures.push_back(std::move(text_texture));
         }
     }
-}
-
-SimpleLayout::RenderMaterialTexture SimpleLayout::composeMaterialTexture(std::size_t picture_index,
-                                                                         const smgpc::game::BrlanTextureFrame& texture_frame) const {
-    const auto& picture = mBrlytLayout.pictures.at(picture_index);
-    const auto& material = mBrlytLayout.materials.at(picture.material_index);
-    const auto width = texture_extent(std::max(1.0F, mBrlytLayout.panes.at(picture.pane_index).width));
-    const auto height = texture_extent(std::max(1.0F, mBrlytLayout.panes.at(picture.pane_index).height));
-
-    auto texture = RenderMaterialTexture{
-        .picture_index = picture_index,
-        .texture_frame = texture_frame,
-        .width = width,
-        .height = height,
-        .rgba = {},
-        .handle = {},
-    };
-    texture.rgba.assign(static_cast< std::size_t >(texture.width) * texture.height * 4U, 0U);
-
-    const auto interpolate_tex_coord = [&](float x, float y) {
-        const auto top = smgpc::game::BrlytTexCoord{
-            .u = picture.tex_coords[0U].u + (picture.tex_coords[1U].u - picture.tex_coords[0U].u) * x,
-            .v = picture.tex_coords[0U].v + (picture.tex_coords[1U].v - picture.tex_coords[0U].v) * x,
-        };
-        const auto bottom = smgpc::game::BrlytTexCoord{
-            .u = picture.tex_coords[3U].u + (picture.tex_coords[2U].u - picture.tex_coords[3U].u) * x,
-            .v = picture.tex_coords[3U].v + (picture.tex_coords[2U].v - picture.tex_coords[3U].v) * x,
-        };
-        return smgpc::game::BrlytTexCoord{
-            .u = top.u + (bottom.u - top.u) * y,
-            .v = top.v + (bottom.v - top.v) * y,
-        };
-    };
-
-    const auto interpolate_vertex_color = [&](float x, float y) {
-        auto color = std::array< int, 4U >{};
-        for (auto component = 0U; component < color.size(); ++component) {
-            const auto top =
-                static_cast< float >(picture.vertex_colors[0U][component]) +
-                (static_cast< float >(picture.vertex_colors[1U][component]) - static_cast< float >(picture.vertex_colors[0U][component])) * x;
-            const auto bottom =
-                static_cast< float >(picture.vertex_colors[3U][component]) +
-                (static_cast< float >(picture.vertex_colors[2U][component]) - static_cast< float >(picture.vertex_colors[3U][component])) * x;
-            color[component] = static_cast< int >(std::round(top + (bottom - top) * y));
-        }
-        return color;
-    };
-
-    const auto sample_material_texture = [&](const smgpc::game::BrlytMaterialTexture& material_texture, smgpc::game::BrlytTexCoord base_coord,
-                                             std::size_t tex_coord_gen_index) {
-        auto tex_coord = base_coord;
-        if (tex_coord_gen_index < material.tex_coord_gens.size()) {
-            const auto tex_srt_index = tex_srt_index_for_coord_gen(material.tex_coord_gens[tex_coord_gen_index]);
-            if (tex_srt_index != UINT16_MAX && tex_srt_index < material.tex_srts.size()) {
-                tex_coord = transform_tex_coord(base_coord, material.tex_srts[tex_srt_index], texture_frame, tex_srt_index == 0U);
-            }
-        }
-
-        const auto* render_texture = find_texture(mRenderTextures, material_texture.texture_name);
-        if (render_texture == nullptr) {
-            return std::array< int, 4U >{0, 0, 0, 0};
-        }
-
-        return sample_texture(render_texture->decoded, tex_coord, material_texture.wrap_s != 0U, material_texture.wrap_t != 0U);
-    };
-
-    for (auto y = 0U; y < texture.height; ++y) {
-        const auto normalized_y = (static_cast< float >(y) + 0.5F) / static_cast< float >(texture.height);
-        for (auto x = 0U; x < texture.width; ++x) {
-            const auto normalized_x = (static_cast< float >(x) + 0.5F) / static_cast< float >(texture.width);
-            const auto base_coord = interpolate_tex_coord(normalized_x, normalized_y);
-            const auto ras = interpolate_vertex_color(normalized_x, normalized_y);
-
-            auto registers = std::array< std::array< int, 4U >, 4U >{};
-            for (auto component = 0U; component < 4U; ++component) {
-                registers[1U][component] = material.tev_colors[0U][component];
-                registers[2U][component] = material.tev_colors[1U][component];
-                registers[3U][component] = material.tev_colors[2U][component];
-            }
-
-            auto output = std::array< int, 4U >{0, 0, 0, 0};
-            if (material.tev_stages.empty() && !material.textures.empty()) {
-                output = sample_material_texture(material.textures.front(), base_coord, 0U);
-            } else {
-                std::uint8_t last_color_register = 0U;
-                std::uint8_t last_alpha_register = 0U;
-                for (const auto& stage : material.tev_stages) {
-                    auto sampled = std::array< int, 4U >{0, 0, 0, 0};
-                    if (stage.tex_map < material.textures.size()) {
-                        sampled = sample_material_texture(material.textures[stage.tex_map], base_coord, stage.tex_coord_gen);
-                    }
-
-                    const auto color_konst = konst_color(material, stage.color.k_sel);
-                    const auto alpha_konst = konst_color(material, stage.alpha.k_sel);
-                    const auto stage_konst = std::array< int, 4U >{color_konst[0U], color_konst[1U], color_konst[2U], alpha_konst[3U]};
-                    for (auto component = 0U; component < 3U; ++component) {
-                        const auto a = color_arg_value(stage.color.a, component, registers, sampled, ras, stage_konst);
-                        const auto b = color_arg_value(stage.color.b, component, registers, sampled, ras, stage_konst);
-                        const auto c = color_arg_value(stage.color.c, component, registers, sampled, ras, stage_konst);
-                        const auto d = color_arg_value(stage.color.d, component, registers, sampled, ras, stage_konst);
-                        registers[stage.color.out_reg][component] = tev_regular(stage.color, a, b, c, d);
-                    }
-
-                    const auto alpha_a = alpha_arg_value(stage.alpha.a, registers, sampled, ras, stage_konst);
-                    const auto alpha_b = alpha_arg_value(stage.alpha.b, registers, sampled, ras, stage_konst);
-                    const auto alpha_c = alpha_arg_value(stage.alpha.c, registers, sampled, ras, stage_konst);
-                    const auto alpha_d = alpha_arg_value(stage.alpha.d, registers, sampled, ras, stage_konst);
-                    registers[stage.alpha.out_reg][3U] = tev_regular(stage.alpha, alpha_a, alpha_b, alpha_c, alpha_d);
-                    last_color_register = stage.color.out_reg;
-                    last_alpha_register = stage.alpha.out_reg;
-                }
-
-                output = registers[last_color_register];
-                output[3U] = registers[last_alpha_register][3U];
-            }
-
-            if (!passes_alpha_compare(material.alpha_compare, output[3U])) {
-                output = {0, 0, 0, 0};
-            }
-
-            const auto offset = (static_cast< std::size_t >(y) * texture.width + x) * 4U;
-            texture.rgba[offset] = static_cast< std::uint8_t >(std::clamp(output[0U], 0, 255));
-            texture.rgba[offset + 1U] = static_cast< std::uint8_t >(std::clamp(output[1U], 0, 255));
-            texture.rgba[offset + 2U] = static_cast< std::uint8_t >(std::clamp(output[2U], 0, 255));
-            texture.rgba[offset + 3U] = static_cast< std::uint8_t >(std::clamp(output[3U], 0, 255));
-        }
-    }
-
-    return texture;
-}
-
-SimpleLayout::RenderMaterialTexture* SimpleLayout::ensureMaterialTextureUpload(smgpc::render::IRendererEngine& renderer, std::size_t picture_index,
-                                                                               const smgpc::game::BrlanTextureFrame& texture_frame) {
-    auto* existing = find_material_texture(mRenderMaterialTextures, picture_index);
-    if (existing != nullptr && existing->handle.is_valid() && same_texture_frame(existing->texture_frame, texture_frame)) {
-        return existing;
-    }
-
-    if (existing != nullptr && existing->handle.is_valid()) {
-        renderer.destroy_texture(existing->handle);
-        existing->handle = {};
-    }
-
-    auto composed = composeMaterialTexture(picture_index, texture_frame);
-    composed.handle =
-        renderer.create_rgba8_texture(composed.width, composed.height, std::span< const std::uint8_t >(composed.rgba.data(), composed.rgba.size()));
-    if (existing != nullptr) {
-        *existing = std::move(composed);
-        return existing;
-    }
-
-    mRenderMaterialTextures.push_back(std::move(composed));
-    return &mRenderMaterialTextures.back();
 }
 
 SimpleLayout::RenderTextTexture SimpleLayout::composeTextTexture(std::size_t text_box_index, const RenderFont& render_font) const {

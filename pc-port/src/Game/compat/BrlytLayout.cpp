@@ -355,6 +355,7 @@ std::vector<BrlytMaterial> parse_material_list(std::span<const std::uint8_t> blo
             };
             cursor += 4U;
         }
+        material.gx_state = gx_state_from_brlyt_material(material);
         materials.push_back(material);
     }
 

@@ -8,4 +8,10 @@ namespace MR {
             runtime->note_debug_event("FileSelector started title star-pointer mode");
         }
     }
+
+    void startStarPointerModeFileSelect(void*) {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->note_debug_event("FileSelector started file-select star-pointer mode");
+        }
+    }
 }  // namespace MR
