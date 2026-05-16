@@ -258,7 +258,7 @@ void StarReturnDemoStarter::exeFall() {
     }
 
     TVec3f offset;
-    offset.scale(1.8f * static_cast< f32 >(getNerveStep()), down);
+    offset.scale(1.8f * getNerveStep(), down);
 
     offset.y = MR::max(offset.y, -35.0f);
     position.addInline(offset);
