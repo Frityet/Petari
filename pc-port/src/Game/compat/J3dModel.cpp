@@ -535,7 +535,7 @@ namespace smgpc::game {
                 summary.formats = parse_vertex_formats(data, relative_offset(section_offset, format_relative));
             }
 
-            constexpr std::array<std::uint32_t, 12U> attrs{
+            constexpr std::array<std::uint32_t, 13U> attrs{
                 9U,
                 10U,
                 25U,
@@ -548,6 +548,7 @@ namespace smgpc::game {
                 17U,
                 18U,
                 19U,
+                20U,
             };
 
             std::array<std::uint32_t, attrs.size()> relatives{};
@@ -827,8 +828,11 @@ namespace smgpc::game {
             const auto init_relative = read_be32(data, section_offset + 0x0cU);
             const auto material_id_relative = read_be32(data, section_offset + 0x10U);
             const auto name_table_relative = read_be32(data, section_offset + 0x14U);
-            const auto cull_mode_relative = read_be32(data, section_offset + 0x18U);
+            const auto cull_mode_relative = read_be32(data, section_offset + 0x1cU);
             const auto mat_color_relative = read_be32(data, section_offset + 0x20U);
+            const auto color_chan_num_relative = read_be32(data, section_offset + 0x24U);
+            const auto color_chan_relative = read_be32(data, section_offset + 0x28U);
+            const auto amb_color_relative = read_be32(data, section_offset + 0x2cU);
             const auto texgen_count_relative = read_be32(data, section_offset + 0x34U);
             const auto texcoord_relative = read_be32(data, section_offset + 0x38U);
             const auto texmtx_relative = read_be32(data, section_offset + 0x40U);
@@ -860,6 +864,7 @@ namespace smgpc::game {
                 material.material_id = material_id;
                 material.material_mode = data[init_offset];
                 material.cull_mode_index = data[init_offset + 0x01U];
+                material.color_channel_count_index = data[init_offset + 0x02U];
                 material.z_comp_loc_index = data[init_offset + 0x05U];
                 material.z_mode_index = data[init_offset + 0x06U];
                 material.alpha_comp_index = read_be16(data, init_offset + 0x146U);
@@ -889,6 +894,43 @@ namespace smgpc::game {
                         const auto color_offset = relative_offset(section_offset, mat_color_relative) + color_index * 4U;
                         material.material_colors[color_slot] = {data[color_offset], data[color_offset + 1U], data[color_offset + 2U],
                                                                 data[color_offset + 3U]};
+                    }
+                }
+                if (material.color_channel_count_index != 0xffU && has_relative_offset(color_chan_num_relative)) {
+                    material.color_channel_count = data[relative_offset(section_offset, color_chan_num_relative) + material.color_channel_count_index];
+                }
+                if (has_relative_offset(amb_color_relative)) {
+                    for (auto color_slot = 0U; color_slot < 2U; ++color_slot) {
+                        const auto color_index = read_be16(data, init_offset + 0x14U + color_slot * 2U);
+                        if (color_index == 0xffffU) {
+                            continue;
+                        }
+
+                        const auto color_offset = relative_offset(section_offset, amb_color_relative) + color_index * 4U;
+                        material.ambient_colors[color_slot] = {data[color_offset], data[color_offset + 1U], data[color_offset + 2U],
+                                                               data[color_offset + 3U]};
+                    }
+                }
+                if (has_relative_offset(color_chan_relative)) {
+                    for (auto control_slot = 0U; control_slot < 4U; ++control_slot) {
+                        const auto control_index = read_be16(data, init_offset + 0x0cU + control_slot * 2U);
+                        if (control_index == 0xffffU) {
+                            continue;
+                        }
+
+                        const auto control_offset = relative_offset(section_offset, color_chan_relative) + control_index * 8U;
+                        auto control = gx_color_channel_control_from_j3d(data[control_offset], data[control_offset + 1U],
+                                                                         data[control_offset + 2U], data[control_offset + 3U],
+                                                                         data[control_offset + 4U], data[control_offset + 5U]);
+                        if (control_slot == 0U) {
+                            material.color_channel_controls[0U] = control;
+                        } else if (control_slot == 1U) {
+                            material.alpha_channel_controls[0U] = control;
+                        } else if (control_slot == 2U) {
+                            material.color_channel_controls[1U] = control;
+                        } else {
+                            material.alpha_channel_controls[1U] = control;
+                        }
                     }
                 }
                 if (has_relative_offset(tev_k_color_relative)) {
@@ -1118,8 +1160,18 @@ namespace smgpc::game {
         struct RawDisplayVertex {
             std::uint8_t position_matrix_slot = 0xffU;
             std::uint32_t pos_index = 0U;
+            std::uint32_t normal_index = std::numeric_limits<std::uint32_t>::max();
             std::uint32_t color0_index = std::numeric_limits<std::uint32_t>::max();
-            std::uint32_t tex0_index = std::numeric_limits<std::uint32_t>::max();
+            std::array<std::uint32_t, 8U> tex_coord_indices{
+                std::numeric_limits<std::uint32_t>::max(),
+                std::numeric_limits<std::uint32_t>::max(),
+                std::numeric_limits<std::uint32_t>::max(),
+                std::numeric_limits<std::uint32_t>::max(),
+                std::numeric_limits<std::uint32_t>::max(),
+                std::numeric_limits<std::uint32_t>::max(),
+                std::numeric_limits<std::uint32_t>::max(),
+                std::numeric_limits<std::uint32_t>::max(),
+            };
         };
 
         [[nodiscard]] RawVertexSource parse_raw_vertex_source(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
@@ -1190,16 +1242,33 @@ namespace smgpc::game {
             };
         }
 
-        [[nodiscard]] std::array<float, 2U> read_texcoord0(std::span<const std::uint8_t> data, const RawVertexSource &source,
-                                                           std::uint32_t index) {
-            const auto *format = format_for(source.formats, 13U);
-            if (format == nullptr || source.array_offsets[13U] == 0U) {
+        [[nodiscard]] std::array<float, 3U> read_normal(std::span<const std::uint8_t> data, const RawVertexSource &source, std::uint32_t index) {
+            const auto *format = format_for(source.formats, 10U);
+            if (format == nullptr || source.array_offsets[10U] == 0U) {
+                return {0.0F, 0.0F, 1.0F};
+            }
+
+            const auto stride = direct_attribute_size(source.formats, 10U);
+            const auto component_size = scalar_component_size(format->component_type);
+            const auto offset = source.section_offset + source.array_offsets[10U] + static_cast<std::size_t>(index) * stride;
+            return {
+                read_component(data, offset, format->component_type, format->fraction),
+                read_component(data, offset + component_size, format->component_type, format->fraction),
+                read_component(data, offset + component_size * 2U, format->component_type, format->fraction),
+            };
+        }
+
+        [[nodiscard]] std::array<float, 2U> read_texcoord(std::span<const std::uint8_t> data, const RawVertexSource &source, std::uint8_t slot,
+                                                         std::uint32_t index) {
+            const auto attr = static_cast<std::uint32_t>(13U + slot);
+            const auto *format = format_for(source.formats, attr);
+            if (format == nullptr || source.array_offsets[attr] == 0U) {
                 return {};
             }
 
-            const auto stride = direct_attribute_size(source.formats, 13U);
+            const auto stride = direct_attribute_size(source.formats, attr);
             const auto component_size = scalar_component_size(format->component_type);
-            const auto offset = source.section_offset + source.array_offsets[13U] + static_cast<std::size_t>(index) * stride;
+            const auto offset = source.section_offset + source.array_offsets[attr] + static_cast<std::size_t>(index) * stride;
             return {
                 read_component(data, offset, format->component_type, format->fraction),
                 read_component(data, offset + component_size, format->component_type, format->fraction),
@@ -1227,9 +1296,19 @@ namespace smgpc::game {
         [[nodiscard]] J3dMeshVertex make_mesh_vertex(std::span<const std::uint8_t> data, const RawVertexSource &source,
                                                      const RawDisplayVertex &display_vertex, std::uint16_t draw_matrix_index) {
             const auto position = read_position(data, source, display_vertex.pos_index);
-            const auto texcoord = display_vertex.tex0_index == std::numeric_limits<std::uint32_t>::max() ?
-                                      std::array<float, 2U>{} :
-                                      read_texcoord0(data, source, display_vertex.tex0_index);
+            const auto normal = display_vertex.normal_index == std::numeric_limits<std::uint32_t>::max() ?
+                                    std::array<float, 3U>{0.0F, 0.0F, 1.0F} :
+                                    read_normal(data, source, display_vertex.normal_index);
+            auto tex_coords = std::array<std::array<float, 2U>, 8U>{};
+            auto tex_coord_count = std::uint8_t{};
+            for (auto slot = std::uint8_t{}; slot < tex_coords.size(); ++slot) {
+                if (display_vertex.tex_coord_indices[slot] == std::numeric_limits<std::uint32_t>::max()) {
+                    continue;
+                }
+
+                tex_coords[slot] = read_texcoord(data, source, slot, display_vertex.tex_coord_indices[slot]);
+                tex_coord_count = static_cast<std::uint8_t>(slot + 1U);
+            }
             const auto color = display_vertex.color0_index == std::numeric_limits<std::uint32_t>::max() ?
                                    std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
                                    read_color0(data, source, display_vertex.color0_index);
@@ -1238,8 +1317,11 @@ namespace smgpc::game {
                 .x = position[0U],
                 .y = position[1U],
                 .z = position[2U],
-                .u = texcoord[0U],
-                .v = texcoord[1U],
+                .normal = normal,
+                .u = tex_coords[0U][0U],
+                .v = tex_coords[0U][1U],
+                .tex_coords = tex_coords,
+                .tex_coord_count = tex_coord_count,
                 .color = color,
                 .position_matrix_slot = display_vertex.position_matrix_slot,
                 .draw_matrix_index = draw_matrix_index,
@@ -1287,10 +1369,12 @@ namespace smgpc::game {
                     vertex.position_matrix_slot = static_cast<std::uint8_t>(value & 0x3fU);
                 } else if (entry.attr == 9U) {
                     vertex.pos_index = value;
+                } else if (entry.attr == 10U) {
+                    vertex.normal_index = value;
                 } else if (entry.attr == 11U) {
                     vertex.color0_index = value;
-                } else if (entry.attr == 13U) {
-                    vertex.tex0_index = value;
+                } else if (entry.attr >= 13U && entry.attr <= 20U) {
+                    vertex.tex_coord_indices[entry.attr - 13U] = value;
                 }
             }
 
@@ -1351,8 +1435,9 @@ namespace smgpc::game {
             return group.use_matrix_index;
         }
 
-        void append_display_list_mesh(std::span<const std::uint8_t> data, J3dShapeMesh &mesh, const RawVertexSource &source, std::size_t offset,
-                                      std::uint32_t size, const std::vector<J3dVertexDesc> &desc, const J3dShapeMatrixGroupSummary &matrix_group) {
+        void append_display_list_packet_mesh(std::span<const std::uint8_t> data, J3dShapeDrawPacketMesh &packet, const RawVertexSource &source,
+                                             std::size_t offset, std::uint32_t size, const std::vector<J3dVertexDesc> &desc,
+                                             std::uint8_t matrix_type) {
             if (offset + size > data.size()) {
                 throw std::runtime_error("J3D geometry display list outside buffer");
             }
@@ -1383,7 +1468,7 @@ namespace smgpc::game {
                 cursor += 2U;
 
                 const auto payload_size = static_cast<std::size_t>(vertex_count) * vertex_size;
-                if (cursor + payload_size > end || mesh.vertices.size() + vertex_count > std::numeric_limits<std::uint16_t>::max()) {
+                if (cursor + payload_size > end || packet.vertices.size() + vertex_count > std::numeric_limits<std::uint16_t>::max()) {
                     break;
                 }
 
@@ -1391,12 +1476,12 @@ namespace smgpc::game {
                 primitive_vertices.reserve(vertex_count);
                 for (auto i = 0U; i < vertex_count; ++i) {
                     const auto display_vertex = read_display_vertex(data, cursor, desc, source.formats);
-                    mesh.vertices.push_back(
-                        make_mesh_vertex(data, source, display_vertex, draw_matrix_index_for_vertex(matrix_group, mesh.matrix_type, display_vertex)));
-                    primitive_vertices.push_back(static_cast<std::uint16_t>(mesh.vertices.size() - 1U));
+                    packet.vertices.push_back(make_mesh_vertex(data, source, display_vertex,
+                                                               draw_matrix_index_for_vertex(packet.matrix_group, matrix_type, display_vertex)));
+                    primitive_vertices.push_back(static_cast<std::uint16_t>(packet.vertices.size() - 1U));
                 }
 
-                append_primitive_indices(mesh.indices, primitive, primitive_vertices);
+                append_primitive_indices(packet.indices, primitive, primitive_vertices);
             }
         }
 
@@ -1466,9 +1551,24 @@ namespace smgpc::game {
                         matrix_group.matrix_table.push_back(use_matrix_index);
                     }
 
-                    append_display_list_mesh(data, mesh, vertex_source, relative_offset(section_offset, display_list_relative) + display_list_index,
-                                             display_list_size, desc, matrix_group);
-                    mesh.matrix_groups.push_back(std::move(matrix_group));
+                    auto parsed_bytes = std::uint32_t{};
+                    auto primitives = parse_display_list(data, relative_offset(section_offset, display_list_relative) + display_list_index,
+                                                         display_list_size, desc, vertex_source.formats, parsed_bytes);
+                    matrix_group.parsed_display_list_bytes = parsed_bytes;
+                    for (const auto &primitive : primitives) {
+                        matrix_group.triangle_count += primitive.triangle_count;
+                    }
+                    matrix_group.primitives = std::move(primitives);
+
+                    auto packet = J3dShapeDrawPacketMesh{
+                        .matrix_group = std::move(matrix_group),
+                        .vertices = {},
+                        .indices = {},
+                    };
+                    append_display_list_packet_mesh(data, packet, vertex_source,
+                                                    relative_offset(section_offset, display_list_relative) + display_list_index, display_list_size,
+                                                    desc, mesh.matrix_type);
+                    mesh.draw_packets.push_back(std::move(packet));
                 }
 
                 meshes.push_back(std::move(mesh));

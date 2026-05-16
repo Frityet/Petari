@@ -277,6 +277,9 @@ void run_tev_stage(vec4 texture_color, vec4 color_in, vec4 alpha_in, vec4 color_
 
 vec4 texture_for_stage(float texture_stage, vec4 texture0, vec4 texture1, vec4 texture2)
 {
+    if (texture_stage > 250.0) {
+        return vec4(1.0);
+    }
     if (texture_stage < 0.5) {
         return texture0;
     }

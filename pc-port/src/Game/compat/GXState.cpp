@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <bit>
+#include <cmath>
 
 namespace smgpc::game {
     namespace {
@@ -27,6 +28,17 @@ namespace smgpc::game {
             return static_cast<std::uint8_t>((value >> shift) & ((1U << count) - 1U));
         }
 
+        [[nodiscard]] std::uint8_t gx_attenuation_function_from_xf(std::uint32_t value) {
+            constexpr auto lookup = std::array<std::uint8_t, 4U>{2U, 0U, 2U, 1U};
+            return lookup[value & 0x3U];
+        }
+
+        [[nodiscard]] std::uint32_t gx_xf_attenuation_bits_from_function(std::uint8_t attenuation_function) {
+            constexpr auto gx_af_spec = std::uint8_t{0U};
+            constexpr auto gx_af_none = std::uint8_t{2U};
+            return (attenuation_function != gx_af_none ? 1U : 0U) | ((attenuation_function != gx_af_spec ? 1U : 0U) << 1U);
+        }
+
         [[nodiscard]] std::int16_t signed_bits_11(std::uint32_t value, std::uint8_t shift) {
             auto raw = static_cast<std::int16_t>((value >> shift) & 0x7ffU);
             if ((raw & 0x400) != 0) {
@@ -37,6 +49,142 @@ namespace smgpc::game {
 
         [[nodiscard]] float gx_fog_float_value(std::uint32_t mantissa, std::uint32_t exponent, std::uint32_t sign) {
             return std::bit_cast<float>((sign << 31U) | (exponent << 23U) | (mantissa << 12U));
+        }
+
+        [[nodiscard]] std::array<float, 3U> subtract3(std::array<float, 3U> left, std::array<float, 3U> right) {
+            return {left[0U] - right[0U], left[1U] - right[1U], left[2U] - right[2U]};
+        }
+
+        [[nodiscard]] float dot3(std::array<float, 3U> left, std::array<float, 3U> right) {
+            return left[0U] * right[0U] + left[1U] * right[1U] + left[2U] * right[2U];
+        }
+
+        [[nodiscard]] std::array<float, 3U> normalized_or(std::array<float, 3U> value, std::array<float, 3U> fallback) {
+            const auto length = std::sqrt(dot3(value, value));
+            if (length <= 0.000001F) {
+                return fallback;
+            }
+
+            return {value[0U] / length, value[1U] / length, value[2U] / length};
+        }
+
+        [[nodiscard]] float safe_ratio(float numerator, float denominator) {
+            if (std::abs(denominator) <= 0.000001F) {
+                return 0.0F;
+            }
+
+            return numerator / denominator;
+        }
+
+        [[nodiscard]] std::uint8_t gx_color_channel_index(std::uint8_t color_channel) {
+            if (color_channel == 1U || color_channel == 3U || color_channel == 5U) {
+                return 1U;
+            }
+
+            return 0U;
+        }
+
+        [[nodiscard]] bool gx_color_channel_is_null(std::uint8_t color_channel) {
+            return color_channel == 0xffU || color_channel == 6U || color_channel == 7U;
+        }
+
+        [[nodiscard]] float light_attenuation(const GXLightState &light, const GXColorChannelControlState &control,
+                                              std::array<float, 3U> position, std::array<float, 3U> normal,
+                                              std::array<float, 3U> &light_direction) {
+            auto delta = subtract3(light.position, position);
+            auto distance_squared = dot3(delta, delta);
+            auto distance = std::sqrt(distance_squared);
+            light_direction = normalized_or(delta, normal);
+
+            constexpr auto attenuation_none = std::uint8_t{0U};
+            constexpr auto attenuation_spec = std::uint8_t{1U};
+            constexpr auto attenuation_dir = std::uint8_t{2U};
+            constexpr auto attenuation_spot = std::uint8_t{3U};
+            switch (control.attenuation_mode) {
+            case attenuation_spec: {
+                const auto light_normal = normalized_or(light.direction, {0.0F, 0.0F, -1.0F});
+                const auto specular = dot3(normal, light_direction) >= 0.0F ? std::max(0.0F, dot3(normal, light_normal)) : 0.0F;
+                const auto cos_terms = std::array<float, 3U>{1.0F, specular, specular * specular};
+                auto dist_terms = light.distance_attenuation;
+                if (control.diffuse_function != 0U) {
+                    dist_terms = normalized_or(dist_terms, {1.0F, 0.0F, 0.0F});
+                }
+                const auto numerator = std::max(0.0F, dot3(light.cosine_attenuation, cos_terms));
+                return safe_ratio(numerator, dot3(dist_terms, cos_terms));
+            }
+            case attenuation_spot: {
+                if (distance <= 0.000001F) {
+                    distance = 0.0F;
+                    distance_squared = 0.0F;
+                    light_direction = normal;
+                }
+                const auto light_normal = normalized_or(light.direction, {0.0F, 0.0F, -1.0F});
+                const auto spot = std::max(0.0F, dot3(light_direction, light_normal));
+                const auto cos_terms = std::array<float, 3U>{1.0F, spot, spot * spot};
+                const auto dist_terms = std::array<float, 3U>{1.0F, distance, distance_squared};
+                const auto numerator = std::max(0.0F, dot3(light.cosine_attenuation, cos_terms));
+                return safe_ratio(numerator, dot3(light.distance_attenuation, dist_terms));
+            }
+            case attenuation_none:
+            case attenuation_dir:
+            default:
+                return 1.0F;
+            }
+        }
+
+        [[nodiscard]] std::array<int, 4U> lighting_accumulator(const GXMaterialState &state, const GXColorChannelState &channel,
+                                                               const GXColorChannelControlState &control, GXColorValue vertex_color,
+                                                               std::array<float, 3U> position, std::array<float, 3U> normal) {
+            if (!control.lighting_enabled) {
+                return {255, 255, 255, 255};
+            }
+
+            const auto ambient = control.ambient_source != 0U ? vertex_color : channel.ambient_color;
+            auto accumulator = std::array<int, 4U>{
+                static_cast<int>(ambient[0U]),
+                static_cast<int>(ambient[1U]),
+                static_cast<int>(ambient[2U]),
+                static_cast<int>(ambient[3U]),
+            };
+            normal = normalized_or(normal, {0.0F, 0.0F, 1.0F});
+
+            for (auto light_index = 0U; light_index < state.lights.size(); ++light_index) {
+                if ((control.light_mask & (1U << light_index)) == 0U) {
+                    continue;
+                }
+
+                const auto &light = state.lights[light_index];
+                if (!light.loaded) {
+                    continue;
+                }
+
+                auto light_direction = std::array<float, 3U>{};
+                const auto attenuation = light_attenuation(light, control, position, normal, light_direction);
+                auto contribution = attenuation;
+                switch (control.diffuse_function) {
+                case 1U:
+                    contribution *= dot3(light_direction, normal);
+                    break;
+                case 2U:
+                    contribution *= std::max(0.0F, dot3(light_direction, normal));
+                    break;
+                default:
+                    break;
+                }
+
+                for (auto component = 0U; component < accumulator.size(); ++component) {
+                    accumulator[component] += static_cast<int>(std::lround(contribution * static_cast<float>(light.color[component])));
+                }
+            }
+
+            for (auto &component : accumulator) {
+                component = std::clamp(component, 0, 255);
+            }
+            return accumulator;
+        }
+
+        [[nodiscard]] std::uint8_t apply_lighting_accumulator(std::uint8_t material, int accumulator) {
+            return static_cast<std::uint8_t>((static_cast<int>(material) * (accumulator + (accumulator >> 7))) >> 8);
         }
 
         GXTevOrderState &tev_order_for_stage(GXMaterialState &state, std::uint8_t stage) {
@@ -276,6 +424,74 @@ namespace smgpc::game {
             }
         }
 
+        void apply_xf_light_register(GXMaterialState &state, std::uint16_t address, std::uint32_t value) {
+            const auto light_index = static_cast<std::size_t>((address - 0x0600U) / 16U);
+            const auto word_index = static_cast<std::size_t>((address - 0x0600U) % 16U);
+            if (light_index >= state.lights.size()) {
+                return;
+            }
+
+            auto &light = state.lights[light_index];
+            light.loaded = true;
+            light.raw_words[word_index] = value;
+            light.word_loaded[word_index] = true;
+
+            if (word_index == 3U) {
+                light.color = gx_color_from_xf_value(value);
+                return;
+            }
+
+            if (word_index >= 4U && word_index <= 6U) {
+                light.cosine_attenuation[word_index - 4U] = std::bit_cast<float>(value);
+                return;
+            }
+
+            if (word_index >= 7U && word_index <= 9U) {
+                light.distance_attenuation[word_index - 7U] = std::bit_cast<float>(value);
+                return;
+            }
+
+            if (word_index >= 10U && word_index <= 12U) {
+                light.position[word_index - 10U] = std::bit_cast<float>(value);
+                return;
+            }
+
+            if (word_index >= 13U && word_index <= 15U) {
+                light.direction[word_index - 13U] = std::bit_cast<float>(value);
+            }
+        }
+
+        void apply_xf_register(GXMaterialState &state, std::uint16_t address, std::uint32_t value) {
+            if (address >= 0x0600U && address < 0x0680U) {
+                apply_xf_light_register(state, address, value);
+                return;
+            }
+
+            if (address == 0x1009U) {
+                state.color_channel_count = static_cast<std::uint8_t>(value & 0x3U);
+                return;
+            }
+
+            if (address >= 0x100aU && address <= 0x100bU) {
+                state.color_channels[address - 0x100aU].ambient_color = gx_color_from_xf_value(value);
+                return;
+            }
+
+            if (address >= 0x100cU && address <= 0x100dU) {
+                state.color_channels[address - 0x100cU].material_color = gx_color_from_xf_value(value);
+                return;
+            }
+
+            if (address >= 0x100eU && address <= 0x100fU) {
+                state.color_channels[address - 0x100eU].color_control = gx_color_channel_control_from_xf(value);
+                return;
+            }
+
+            if (address >= 0x1010U && address <= 0x1011U) {
+                state.color_channels[address - 0x1010U].alpha_control = gx_color_channel_control_from_xf(value);
+            }
+        }
+
         void apply_bp_register(GXMaterialState &state, std::uint8_t address, std::uint32_t value) {
             if (address == 0x00U) {
                 state.texgen_count = bits(value, 0U, 4U);
@@ -465,16 +681,86 @@ namespace smgpc::game {
 
     }  // namespace
 
+    GXColorValue gx_color_from_xf_value(std::uint32_t value) {
+        return {
+            static_cast<std::uint8_t>((value >> 24U) & 0xffU),
+            static_cast<std::uint8_t>((value >> 16U) & 0xffU),
+            static_cast<std::uint8_t>((value >> 8U) & 0xffU),
+            static_cast<std::uint8_t>(value & 0xffU),
+        };
+    }
+
+    GXColorChannelControlState gx_color_channel_control_from_xf(std::uint32_t value) {
+        const auto attenuation_mode = bits(value, 9U, 2U);
+        return GXColorChannelControlState{
+            .raw = value & 0x7fffU,
+            .material_source = bits(value, 0U, 1U),
+            .lighting_enabled = bits(value, 1U, 1U) != 0U,
+            .light_mask = static_cast<std::uint8_t>(bits(value, 2U, 4U) | (bits(value, 11U, 4U) << 4U)),
+            .ambient_source = bits(value, 6U, 1U),
+            .diffuse_function = bits(value, 7U, 2U),
+            .attenuation_function = gx_attenuation_function_from_xf(attenuation_mode),
+            .attenuation_mode = attenuation_mode,
+        };
+    }
+
+    GXColorChannelControlState gx_color_channel_control_from_j3d(std::uint8_t enable, std::uint8_t material_source, std::uint8_t light_mask,
+                                                                 std::uint8_t diffuse_function, std::uint8_t attenuation_function,
+                                                                 std::uint8_t ambient_source) {
+        auto raw = std::uint32_t{};
+        raw |= static_cast<std::uint32_t>(material_source & 1U);
+        raw |= static_cast<std::uint32_t>(enable & 1U) << 1U;
+        raw |= static_cast<std::uint32_t>(light_mask & 0x0fU) << 2U;
+        raw |= static_cast<std::uint32_t>(ambient_source & 1U) << 6U;
+        raw |= static_cast<std::uint32_t>((attenuation_function == 0U ? 0U : diffuse_function) & 0x3U) << 7U;
+        raw |= gx_xf_attenuation_bits_from_function(attenuation_function) << 9U;
+        raw |= static_cast<std::uint32_t>((light_mask >> 4U) & 0x0fU) << 11U;
+        auto state = gx_color_channel_control_from_xf(raw);
+        state.attenuation_function = attenuation_function;
+        return state;
+    }
+
+    GXColorValue gx_evaluate_lit_raster_color(const GXMaterialState &state, std::uint8_t color_channel, GXColorValue vertex_color,
+                                              std::array<float, 3U> position, std::array<float, 3U> normal) {
+        if (gx_color_channel_is_null(color_channel)) {
+            return {0U, 0U, 0U, 0U};
+        }
+
+        const auto channel_index = gx_color_channel_index(color_channel);
+        if (channel_index >= state.color_channel_count || channel_index >= state.color_channels.size()) {
+            return {0U, 0U, 0U, 0U};
+        }
+
+        const auto &channel = state.color_channels[channel_index];
+        const auto color_source = channel.color_control.material_source != 0U ? vertex_color : channel.material_color;
+        const auto alpha_source = channel.alpha_control.material_source != 0U ? vertex_color : channel.material_color;
+        const auto color_accumulator = lighting_accumulator(state, channel, channel.color_control, vertex_color, position, normal);
+        const auto alpha_accumulator = lighting_accumulator(state, channel, channel.alpha_control, vertex_color, position, normal);
+
+        return {
+            apply_lighting_accumulator(color_source[0U], color_accumulator[0U]),
+            apply_lighting_accumulator(color_source[1U], color_accumulator[1U]),
+            apply_lighting_accumulator(color_source[2U], color_accumulator[2U]),
+            apply_lighting_accumulator(alpha_source[3U], alpha_accumulator[3U]),
+        };
+    }
+
     GXMaterialState gx_state_from_j3d_material(const J3dMaterialSummary &material) {
         auto state = GXMaterialState{};
         state.source = "J3D";
         state.name = material.name;
         state.material_mode = material.material_mode;
         state.cull_mode = material.cull_mode;
+        state.color_channel_count = material.color_channel_count;
         state.texgen_count = material.texgen_count;
         state.tev_stage_count = material.tev_stage_count;
         state.z_comp_loc = material.z_comp_loc;
-        state.material_colors = material.material_colors;
+        for (auto channel = 0U; channel < state.color_channels.size(); ++channel) {
+            state.color_channels[channel].material_color = material.material_colors[channel];
+            state.color_channels[channel].ambient_color = material.ambient_colors[channel];
+            state.color_channels[channel].color_control = material.color_channel_controls[channel];
+            state.color_channels[channel].alpha_control = material.alpha_channel_controls[channel];
+        }
         state.tev_k_colors = material.tev_k_colors;
         for (auto register_index = 0U; register_index < 3U; ++register_index) {
             state.tev_registers[register_index + 1U] = material.tev_colors[register_index];
@@ -553,7 +839,9 @@ namespace smgpc::game {
         state.texgen_count = static_cast<std::uint8_t>(material.tex_coord_gens.size());
         state.tev_stage_count = static_cast<std::uint8_t>(material.tev_stages.size());
         state.color_channel_count = material.has_chan_ctrl ? 1U : 0U;
-        state.material_colors[0U] = material.mat_color;
+        state.color_channels[0U].material_color = material.mat_color;
+        state.color_channels[0U].color_control = gx_color_channel_control_from_j3d(0U, material.chan_color_src, 0U, 0U, 2U, 0U);
+        state.color_channels[0U].alpha_control = gx_color_channel_control_from_j3d(0U, material.chan_alpha_src, 0U, 0U, 2U, 0U);
         state.tev_k_colors = material.tev_k_colors;
 
         state.textures.reserve(material.textures.size());
@@ -680,8 +968,10 @@ namespace smgpc::game {
                 }
 
                 for (auto i = 0U; i < count; ++i) {
+                    const auto value = read_be32(display_list, cursor + i * 4U);
                     append_register_load(state, GXRegisterSpace::XF, static_cast<std::uint32_t>(command_offset),
-                                         static_cast<std::uint16_t>(address + i), count, read_be32(display_list, cursor + i * 4U));
+                                         static_cast<std::uint16_t>(address + i), count, value);
+                    apply_xf_register(state, static_cast<std::uint16_t>(address + i), value);
                 }
                 ++state.mdl3_stats.command_count;
                 ++state.mdl3_stats.xf_load_count;

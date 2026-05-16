@@ -34,6 +34,70 @@ namespace smgpc::game {
             };
         }
 
+        [[nodiscard]] float dot3(std::array<float, 3U> left, std::array<float, 3U> right) {
+            return left[0U] * right[0U] + left[1U] * right[1U] + left[2U] * right[2U];
+        }
+
+        [[nodiscard]] std::array<float, 3U> cross3(std::array<float, 3U> left, std::array<float, 3U> right) {
+            return {
+                left[1U] * right[2U] - left[2U] * right[1U],
+                left[2U] * right[0U] - left[0U] * right[2U],
+                left[0U] * right[1U] - left[1U] * right[0U],
+            };
+        }
+
+        [[nodiscard]] std::array<float, 3U> normalized_or(std::array<float, 3U> value, std::array<float, 3U> fallback) {
+            const auto length = std::sqrt(dot3(value, value));
+            if (length <= 0.000001F) {
+                return fallback;
+            }
+
+            return {value[0U] / length, value[1U] / length, value[2U] / length};
+        }
+
+        [[nodiscard]] std::array<float, 3U> camera_space_vector(const CameraPoseCompat &pose, std::array<float, 3U> world_vector) {
+            const auto forward = normalized_or({pose.watch.x - pose.eye.x, pose.watch.y - pose.eye.y, pose.watch.z - pose.eye.z},
+                                               {0.0F, 0.0F, -1.0F});
+            const auto right = normalized_or(cross3(forward, {pose.up.x, pose.up.y, pose.up.z}), {1.0F, 0.0F, 0.0F});
+            const auto up = normalized_or(cross3(right, forward), {0.0F, 1.0F, 0.0F});
+            return {dot3(world_vector, right), dot3(world_vector, up), dot3(world_vector, forward)};
+        }
+
+        [[nodiscard]] std::array<float, 3U> transform_normal_to_camera(const J3dMatrix3x4 &matrix, const CameraPoseCompat &pose,
+                                                                       std::array<float, 3U> normal) {
+            const auto world_normal = normalized_or(
+                {
+                    matrix.m[0U] * normal[0U] + matrix.m[1U] * normal[1U] + matrix.m[2U] * normal[2U],
+                    matrix.m[4U] * normal[0U] + matrix.m[5U] * normal[1U] + matrix.m[6U] * normal[2U],
+                    matrix.m[8U] * normal[0U] + matrix.m[9U] * normal[1U] + matrix.m[10U] * normal[2U],
+                },
+                {0.0F, 0.0F, 1.0F});
+            return normalized_or(camera_space_vector(pose, world_normal), {0.0F, 0.0F, 1.0F});
+        }
+
+        [[nodiscard]] std::uint8_t first_raster_channel_selector(const GXMaterialState &state, std::span<const J3dMaterialTexturePass> passes) {
+            for (const auto &pass : passes) {
+                if (auto it = std::ranges::find_if(state.tev_orders, [&pass](const auto &order) { return order.stage == pass.stage; });
+                    it != state.tev_orders.end()) {
+                    return it->color_channel;
+                }
+            }
+
+            return 4U;
+        }
+
+        [[nodiscard]] std::array<std::uint8_t, 4U> gx_raster_color(const J3dMeshVertex &source, const GXMaterialState &state,
+                                                                   std::uint8_t color_channel, std::array<float, 3U> position,
+                                                                   std::array<float, 3U> normal) {
+            return gx_evaluate_lit_raster_color(state, color_channel, source.color, position, normal);
+        }
+
+        [[nodiscard]] std::array<std::uint8_t, 4U> gx_raster_color(const J3dMeshVertex &source, const GXMaterialState &state,
+                                                                   std::span<const J3dMaterialTexturePass> passes,
+                                                                   std::array<float, 3U> position, std::array<float, 3U> normal) {
+            return gx_raster_color(source, state, first_raster_channel_selector(state, passes), position, normal);
+        }
+
         [[nodiscard]] bool texture_needs_blending(const DecodedTexture &texture) {
             for (auto offset = std::size_t{3U}; offset < texture.rgba.size(); offset += 4U) {
                 if (texture.rgba[offset] != 255U) {
@@ -317,6 +381,12 @@ namespace smgpc::game {
             });
         }
 
+        [[nodiscard]] bool material_uses_gx_lighting(const GXMaterialState &state) {
+            return std::ranges::any_of(state.color_channels, [](const auto &channel) {
+                return channel.color_control.lighting_enabled || channel.alpha_control.lighting_enabled;
+            });
+        }
+
         [[nodiscard]] std::array<std::uint8_t, 4U> konst_color_for_selector(const GXMaterialState &state, std::uint8_t selector) {
             constexpr auto constants = std::array<std::uint8_t, 8U>{255U, 223U, 191U, 159U, 128U, 96U, 64U, 32U};
             if (selector < constants.size()) {
@@ -357,6 +427,14 @@ namespace smgpc::game {
             return true;
         }
 
+        [[nodiscard]] bool tev_stage_uses_texture(const GXTevStageState &stage) {
+            constexpr auto gx_cc_texc = std::uint8_t{8U};
+            constexpr auto gx_cc_texa = std::uint8_t{9U};
+            constexpr auto gx_ca_texa = std::uint8_t{4U};
+            return std::ranges::any_of(stage.color_in, [=](auto arg) { return arg == gx_cc_texc || arg == gx_cc_texa; }) ||
+                   std::ranges::any_of(stage.alpha_in, [=](auto arg) { return arg == gx_ca_texa; });
+        }
+
         [[nodiscard]] std::uint8_t texture_stage_index_for_tev_stage(std::span<const J3dMaterialTexturePass> passes, std::uint8_t stage) {
             for (auto i = std::size_t{}; i < passes.size(); ++i) {
                 if (passes[i].stage == stage) {
@@ -364,7 +442,7 @@ namespace smgpc::game {
                 }
             }
 
-            return stage;
+            return 0xffU;
         }
 
         [[nodiscard]] render::GxTevStage2D gx_tev_stage_from_state(const GXMaterialState &state, const GXTevStageState &stage,
@@ -448,7 +526,7 @@ namespace smgpc::game {
                 }
 
                 const auto pass = std::ranges::find_if(passes, [&stage](const auto &candidate) { return candidate.stage == stage.stage; });
-                if (pass == passes.end()) {
+                if (pass == passes.end() && tev_stage_uses_texture(stage)) {
                     return false;
                 }
             }
@@ -763,13 +841,29 @@ namespace smgpc::game {
                                    static_cast<float>(c.color[i]) * weight_c;
                 color[i] = static_cast<std::uint8_t>(std::clamp(std::round(value), 0.0F, 255.0F));
             }
+            auto tex_coords = std::array<std::array<float, 2U>, 8U>{};
+            for (auto slot = std::size_t{}; slot < tex_coords.size(); ++slot) {
+                tex_coords[slot] = {
+                    mix(a.tex_coords[slot][0U], b.tex_coords[slot][0U], c.tex_coords[slot][0U]),
+                    mix(a.tex_coords[slot][1U], b.tex_coords[slot][1U], c.tex_coords[slot][1U]),
+                };
+            }
+            const auto tex_coord_count = std::max({a.tex_coord_count, b.tex_coord_count, c.tex_coord_count});
 
             return J3dMeshVertex{
                 .x = mix(a.x, b.x, c.x),
                 .y = mix(a.y, b.y, c.y),
                 .z = mix(a.z, b.z, c.z),
-                .u = mix(a.u, b.u, c.u),
-                .v = mix(a.v, b.v, c.v),
+                .normal =
+                    {
+                        mix(a.normal[0U], b.normal[0U], c.normal[0U]),
+                        mix(a.normal[1U], b.normal[1U], c.normal[1U]),
+                        mix(a.normal[2U], b.normal[2U], c.normal[2U]),
+                    },
+                .u = tex_coords[0U][0U],
+                .v = tex_coords[0U][1U],
+                .tex_coords = tex_coords,
+                .tex_coord_count = tex_coord_count,
                 .color = color,
                 .position_matrix_slot = a.position_matrix_slot == b.position_matrix_slot && a.position_matrix_slot == c.position_matrix_slot ?
                                             a.position_matrix_slot :
@@ -782,12 +876,12 @@ namespace smgpc::game {
 
         [[nodiscard]] ProjectedVertex material_view_vertex(const J3dMeshVertex &source, const J3dMaterialSummary &material,
                                                            std::span<const J3dTexture> textures, std::span<const J3dMaterialTexturePass> passes,
-                                                           std::array<std::uint8_t, 4U> material_color, const MatrixPaletteContext &matrix_context,
-                                                           const CameraPoseCompat &camera_pose) {
+                                                           const MatrixPaletteContext &matrix_context, const CameraPoseCompat &camera_pose) {
             const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
             const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
             const auto camera = transform_world_to_camera(camera_pose, {world[0U], world[1U], world[2U]});
-            const auto raster_color = modulate_color(source.color, material_color);
+            const auto raster_color = gx_raster_color(source, material.gx_state, passes, {camera.x, camera.y, camera.z},
+                                                      transform_normal_to_camera(model_matrix, camera_pose, source.normal));
             const auto evaluated = j3d_evaluate_material_color(material, textures, passes, source, raster_color, &model_matrix)
                                        .value_or(std::array<std::uint8_t, 4U>{0U, 0U, 0U, 0U});
 
@@ -803,8 +897,8 @@ namespace smgpc::game {
             };
         }
 
-        [[nodiscard]] ProjectedVertex gx_material_view_vertex(const J3dMeshVertex &source, std::span<const J3dMaterialTexturePass> passes,
-                                                              std::array<std::uint8_t, 4U> material_color, const MatrixPaletteContext &matrix_context,
+        [[nodiscard]] ProjectedVertex gx_material_view_vertex(const J3dMeshVertex &source, const J3dMaterialSummary &material,
+                                                              std::span<const J3dMaterialTexturePass> passes, const MatrixPaletteContext &matrix_context,
                                                               const CameraPoseCompat &camera_pose) {
             const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
             const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
@@ -826,7 +920,8 @@ namespace smgpc::game {
                 .v = tex_coords[0U][2U] != 0.0F ? tex_coords[0U][1U] / tex_coords[0U][2U] : tex_coords[0U][1U],
                 .clip_w = camera.z,
                 .tex_coords = tex_coords,
-                .color = color_to_float(modulate_color(source.color, material_color)),
+                .color = color_to_float(gx_raster_color(source, material.gx_state, passes, {camera.x, camera.y, camera.z},
+                                                        transform_normal_to_camera(model_matrix, camera_pose, source.normal))),
             };
         }
 
@@ -946,7 +1041,7 @@ namespace smgpc::game {
         }
 
         void project_gx_material_source_mesh(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
-                                             std::span<const J3dMaterialTexturePass> passes, std::array<std::uint8_t, 4U> material_color,
+                                             const J3dMaterialSummary &material, std::span<const J3dMaterialTexturePass> passes,
                                              const render::core::FramebufferInfo &framebuffer, const MatrixPaletteContext &matrix_context,
                                              const CameraPoseCompat &camera_pose, std::vector<render::GxMaterialVertex2D> &vertices,
                                              std::vector<std::uint16_t> &indices) {
@@ -966,9 +1061,9 @@ namespace smgpc::game {
                 }
 
                 const std::array<ProjectedVertex, 3U> triangle{
-                    gx_material_view_vertex(source_vertices[index_a], passes, material_color, matrix_context, camera_pose),
-                    gx_material_view_vertex(source_vertices[index_b], passes, material_color, matrix_context, camera_pose),
-                    gx_material_view_vertex(source_vertices[index_c], passes, material_color, matrix_context, camera_pose),
+                    gx_material_view_vertex(source_vertices[index_a], material, passes, matrix_context, camera_pose),
+                    gx_material_view_vertex(source_vertices[index_b], material, passes, matrix_context, camera_pose),
+                    gx_material_view_vertex(source_vertices[index_c], material, passes, matrix_context, camera_pose),
                 };
                 const auto clipped = clip_to_near_plane(triangle, near_plane);
                 if (clipped.size() < 3U) {
@@ -985,13 +1080,13 @@ namespace smgpc::game {
         void append_material_micro_triangle(std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices,
                                             const J3dMeshVertex &a, const J3dMeshVertex &b, const J3dMeshVertex &c,
                                             const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
-                                            std::span<const J3dMaterialTexturePass> passes, std::array<std::uint8_t, 4U> material_color,
-                                            const render::core::FramebufferInfo &framebuffer, const MatrixPaletteContext &matrix_context,
+                                            std::span<const J3dMaterialTexturePass> passes, const render::core::FramebufferInfo &framebuffer,
+                                            const MatrixPaletteContext &matrix_context,
                                             const CameraPoseCompat &camera_pose) {
             const std::array<ProjectedVertex, 3U> triangle{
-                material_view_vertex(a, material, textures, passes, material_color, matrix_context, camera_pose),
-                material_view_vertex(b, material, textures, passes, material_color, matrix_context, camera_pose),
-                material_view_vertex(c, material, textures, passes, material_color, matrix_context, camera_pose),
+                material_view_vertex(a, material, textures, passes, matrix_context, camera_pose),
+                material_view_vertex(b, material, textures, passes, matrix_context, camera_pose),
+                material_view_vertex(c, material, textures, passes, matrix_context, camera_pose),
             };
             const auto clipped = clip_to_near_plane(triangle, camera_pose.near_clip);
             if (clipped.size() < 3U) {
@@ -1006,8 +1101,8 @@ namespace smgpc::game {
 
         void project_material_source_mesh(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
                                           const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
-                                          std::span<const J3dMaterialTexturePass> passes, std::array<std::uint8_t, 4U> material_color,
-                                          const render::core::FramebufferInfo &framebuffer, const MatrixPaletteContext &matrix_context,
+                                          std::span<const J3dMaterialTexturePass> passes, const render::core::FramebufferInfo &framebuffer,
+                                          const MatrixPaletteContext &matrix_context,
                                           const CameraPoseCompat &camera_pose, std::vector<render::TexturedVertex2D> &vertices,
                                           std::vector<std::uint16_t> &indices) {
             constexpr auto subdivisions = 8U;
@@ -1044,13 +1139,13 @@ namespace smgpc::game {
                         const auto p0 = point(bi, ci);
                         const auto p1 = point(bi + 1U, ci);
                         const auto p2 = point(bi, ci + 1U);
-                        append_material_micro_triangle(vertices, indices, p0, p1, p2, material, textures, passes, material_color, framebuffer,
-                                                       matrix_context, camera_pose);
+                        append_material_micro_triangle(vertices, indices, p0, p1, p2, material, textures, passes, framebuffer, matrix_context,
+                                                       camera_pose);
 
                         if (bi + ci + 1U < subdivisions) {
                             const auto p3 = point(bi + 1U, ci + 1U);
-                            append_material_micro_triangle(vertices, indices, p1, p3, p2, material, textures, passes, material_color, framebuffer,
-                                                           matrix_context, camera_pose);
+                            append_material_micro_triangle(vertices, indices, p1, p3, p2, material, textures, passes, framebuffer, matrix_context,
+                                                           camera_pose);
                         }
                     }
                 }
@@ -1106,57 +1201,94 @@ namespace smgpc::game {
 
                 const auto &material = geometry.materials->materials[shape.material_index];
                 const auto passes = gx_material_texture_passes(material.gx_state);
-                if (passes.empty()) {
-                    if (!options.use_cpu_tev) {
+                for (const auto &shape_packet : shape.draw_packets) {
+                    const auto assign_shape_packet = [&](Mesh &mesh) {
+                        mesh.material_name = material.name;
+                        mesh.shape_index = shape.shape_index;
+                        mesh.shape_draw_order = shape.draw_order;
+                        mesh.material_index = shape.material_index;
+                        mesh.joint_index = shape.joint_index;
+                        mesh.matrix_group_count = static_cast<std::uint16_t>(shape.draw_packets.size());
+                        mesh.matrix_group = shape_packet.matrix_group;
+                        if (geometry.joints.has_value() && shape.joint_index < geometry.joints->joints.size()) {
+                            mesh.joint_transform = joint_transform_from_summary(geometry.joints->joints[shape.joint_index]);
+                        }
+                        mesh.project_source_vertices = true;
+                        mesh.source_vertices = shape_packet.vertices;
+                        mesh.source_indices = shape_packet.indices;
+                    };
+
+                    if (passes.empty()) {
+                        if (!options.use_cpu_tev) {
+                            continue;
+                        }
+
+                        if (material_uses_gx_lighting(material.gx_state)) {
+                            const std::array<std::uint8_t, 4U> white_pixel{255U, 255U, 255U, 255U};
+                            const auto white_texture =
+                                renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
+                            if (white_texture.is_valid()) {
+                                auto mesh = Mesh{};
+                                assign_shape_packet(mesh);
+                                mesh.texture = white_texture;
+                                mesh.material = material;
+                                mesh.material_passes = passes;
+                                mesh.packet_mode = J3dRendererPacketMode::CpuTevPerVertex;
+                                mesh.material_color = material.material_colors[0U];
+                                mesh.pass_order = 0U;
+                                mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                                mesh.blend_mode = material.blend.enabled ? blend_mode_for_composed_material(material, true) :
+                                                                           render::BlendMode::Opaque;
+                                mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
+                                if (material.gx_state.z_mode.enabled) {
+                                    mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
+                                    mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
+                                    mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
+                                }
+                                mesh.evaluate_material_per_vertex = true;
+                                if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
+                                    _meshes.push_back(std::move(mesh));
+                                    continue;
+                                }
+                            }
+                        }
+
+                        const auto composed_texture = j3d_try_compose_material_constant(material, material.material_colors[0U]);
+                        if (!composed_texture.has_value()) {
+                            continue;
+                        }
+
+                        const auto composed_handle = renderer.create_rgba8_texture(composed_texture->image.width, composed_texture->image.height,
+                                                                                   composed_texture->image.rgba);
+                        if (!composed_handle.is_valid()) {
+                            continue;
+                        }
+
+                        const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
+                        auto mesh = Mesh{};
+                        assign_shape_packet(mesh);
+                        mesh.texture = composed_handle;
+                        mesh.material_color = composed_texture->raster_color_baked ?
+                                                  std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
+                                                  material.material_colors[0U];
+                        mesh.material = material;
+                        mesh.material_passes = passes;
+                        mesh.packet_mode = J3dRendererPacketMode::ConstantMaterial;
+                        mesh.pass_order = 0U;
+                        mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                        mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
+                        mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
+                        if (material.gx_state.z_mode.enabled) {
+                            mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
+                            mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
+                            mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
+                        }
+                        if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
+                            _meshes.push_back(std::move(mesh));
+                        }
                         continue;
                     }
 
-                    const auto composed_texture = j3d_try_compose_material_constant(material, material.material_colors[0U]);
-                    if (!composed_texture.has_value()) {
-                        continue;
-                    }
-
-                    const auto composed_handle =
-                        renderer.create_rgba8_texture(composed_texture->image.width, composed_texture->image.height, composed_texture->image.rgba);
-                    if (!composed_handle.is_valid()) {
-                        continue;
-                    }
-
-                    const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
-                    auto mesh = Mesh{};
-                    mesh.material_name = material.name;
-                    mesh.shape_index = shape.shape_index;
-                    mesh.shape_draw_order = shape.draw_order;
-                    mesh.material_index = shape.material_index;
-                    mesh.joint_index = shape.joint_index;
-                    mesh.texture = composed_handle;
-                    if (geometry.joints.has_value() && shape.joint_index < geometry.joints->joints.size()) {
-                        mesh.joint_transform = joint_transform_from_summary(geometry.joints->joints[shape.joint_index]);
-                    }
-                    mesh.material_color =
-                        composed_texture->raster_color_baked ? std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} : material.material_colors[0U];
-                    mesh.material = material;
-                    mesh.material_passes = passes;
-                    mesh.packet_mode = J3dRendererPacketMode::ConstantMaterial;
-                    mesh.pass_order = 0U;
-                    mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                    mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
-                    mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
-                    if (material.gx_state.z_mode.enabled) {
-                        mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                        mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                        mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                    }
-                    mesh.project_source_vertices = true;
-                    mesh.source_vertices = shape.vertices;
-                    mesh.source_indices = shape.indices;
-                    if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                        _meshes.push_back(std::move(mesh));
-                    }
-                    continue;
-                }
-
-                if (!passes.empty()) {
                     const auto shader_textures_available = material_pass_textures_available(passes, geometry.textures) &&
                                                            std::ranges::all_of(passes, [&texture_handles](const auto &pass) {
                                                                return pass.texture_index < texture_handles.size() &&
@@ -1164,15 +1296,8 @@ namespace smgpc::game {
                                                            });
                     if (shader_textures_available && material_can_use_shader_gx_tev(material.gx_state, passes)) {
                         auto mesh = Mesh{};
-                        mesh.material_name = material.name;
-                        mesh.shape_index = shape.shape_index;
-                        mesh.shape_draw_order = shape.draw_order;
-                        mesh.material_index = shape.material_index;
-                        mesh.joint_index = shape.joint_index;
+                        assign_shape_packet(mesh);
                         mesh.texture = texture_handles[passes.front().texture_index];
-                        if (geometry.joints.has_value() && shape.joint_index < geometry.joints->joints.size()) {
-                            mesh.joint_transform = joint_transform_from_summary(geometry.joints->joints[shape.joint_index]);
-                        }
                         mesh.material = material;
                         mesh.material_passes = passes;
                         mesh.gx_texture_stage_count = passes.size();
@@ -1209,162 +1334,133 @@ namespace smgpc::game {
                             mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
                             mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
                         }
-                        mesh.project_source_vertices = true;
-                        mesh.source_vertices = shape.vertices;
-                        mesh.source_indices = shape.indices;
                         if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
                             _meshes.push_back(std::move(mesh));
                             continue;
                         }
                     }
-                }
 
-                if (options.use_cpu_tev && (passes.size() > 1U || has_active_indirect_tev_stage(material.gx_state))) {
-                    const auto composed_texture = j3d_try_compose_material_texture(material, geometry.textures, passes, material.material_colors[0U]);
-                    if (composed_texture.has_value()) {
-                        const auto composed_handle = renderer.create_rgba8_texture(composed_texture->image.width, composed_texture->image.height,
-                                                                                   composed_texture->image.rgba);
-                        if (composed_handle.is_valid()) {
-                            const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
-                            auto mesh = Mesh{};
-                            mesh.material_name = material.name;
-                            mesh.shape_index = shape.shape_index;
-                            mesh.shape_draw_order = shape.draw_order;
-                            mesh.material_index = shape.material_index;
-                            mesh.joint_index = shape.joint_index;
-                            mesh.texture = composed_handle;
-                            if (geometry.joints.has_value() && shape.joint_index < geometry.joints->joints.size()) {
-                                mesh.joint_transform = joint_transform_from_summary(geometry.joints->joints[shape.joint_index]);
-                            }
-                            mesh.material_color = composed_texture->raster_color_baked ? std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
-                                                                                         material.material_colors[0U];
-                            mesh.material = material;
-                            mesh.material_passes = passes;
-                            mesh.packet_mode = J3dRendererPacketMode::ComposedMaterial;
-                            mesh.pass_order = passes.front().stage;
-                            mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                            mesh.wrap_u = true;
-                            mesh.wrap_v = true;
-                            mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
-                            mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
-                            if (material.gx_state.z_mode.enabled) {
-                                mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                                mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                                mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                            }
-                            mesh.project_source_vertices = true;
-                            mesh.source_vertices = shape.vertices;
-                            mesh.source_indices = shape.indices;
-                            if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                                _meshes.push_back(std::move(mesh));
-                                continue;
-                            }
-                        }
-                    }
-
-                    if (material_pass_textures_available(passes, geometry.textures)) {
-                        const std::array<std::uint8_t, 4U> white_pixel{255U, 255U, 255U, 255U};
-                        const auto white_texture =
-                            renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
-                        if (white_texture.is_valid()) {
-                            auto mesh = Mesh{};
-                            mesh.material_name = material.name;
-                            mesh.shape_index = shape.shape_index;
-                            mesh.shape_draw_order = shape.draw_order;
-                            mesh.material_index = shape.material_index;
-                            mesh.joint_index = shape.joint_index;
-                            mesh.texture = white_texture;
-                            if (geometry.joints.has_value() && shape.joint_index < geometry.joints->joints.size()) {
-                                mesh.joint_transform = joint_transform_from_summary(geometry.joints->joints[shape.joint_index]);
-                            }
-                            mesh.material = material;
-                            mesh.material_passes = passes;
-                            mesh.packet_mode = J3dRendererPacketMode::CpuTevPerVertex;
-                            mesh.material_color = material.material_colors[0U];
-                            mesh.pass_order = passes.front().stage;
-                            mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                            mesh.blend = true;
-                            mesh.blend_mode = render::BlendMode::Alpha;
-                            if (material.gx_state.z_mode.enabled) {
-                                mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                                mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                                mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                            }
-                            mesh.project_source_vertices = true;
-                            mesh.evaluate_material_per_vertex = true;
-                            mesh.source_vertices = shape.vertices;
-                            mesh.source_indices = shape.indices;
-                            if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                                _meshes.push_back(std::move(mesh));
-                                continue;
-                            }
-                        }
-                    }
-                }
-
-                for (auto pass_index = std::size_t{}; pass_index < passes.size(); ++pass_index) {
-                    const auto &pass = passes[pass_index];
-                    const auto texture_index = pass.texture_index;
-                    if (texture_index >= texture_handles.size() || !texture_handles[texture_index].is_valid()) {
-                        continue;
-                    }
-
-                    auto texture_handle = texture_handles[texture_index];
-                    auto material_color = material.material_colors[0U];
-                    auto texture_has_alpha = texture_needs_blending(geometry.textures[texture_index].image);
-                    auto tev_baked = false;
-                    if (passes.size() == 1U && options.use_cpu_tev) {
+                    if (options.use_cpu_tev && (passes.size() > 1U || has_active_indirect_tev_stage(material.gx_state))) {
                         const auto composed_texture =
-                            j3d_try_compose_material_texture(material, geometry.textures[texture_index].image, material_color, pass.tex_map_slot);
+                            j3d_try_compose_material_texture(material, geometry.textures, passes, material.material_colors[0U]);
                         if (composed_texture.has_value()) {
                             const auto composed_handle = renderer.create_rgba8_texture(composed_texture->image.width, composed_texture->image.height,
                                                                                        composed_texture->image.rgba);
                             if (composed_handle.is_valid()) {
-                                texture_handle = composed_handle;
-                                texture_has_alpha = texture_needs_blending(composed_texture->image);
-                                if (composed_texture->raster_color_baked) {
-                                    material_color = {255U, 255U, 255U, 255U};
-                                    tev_baked = true;
+                                const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
+                                auto mesh = Mesh{};
+                                assign_shape_packet(mesh);
+                                mesh.texture = composed_handle;
+                                mesh.material_color = composed_texture->raster_color_baked ?
+                                                          std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
+                                                          material.material_colors[0U];
+                                mesh.material = material;
+                                mesh.material_passes = passes;
+                                mesh.packet_mode = J3dRendererPacketMode::ComposedMaterial;
+                                mesh.pass_order = passes.front().stage;
+                                mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                                mesh.wrap_u = true;
+                                mesh.wrap_v = true;
+                                mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
+                                mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
+                                if (material.gx_state.z_mode.enabled) {
+                                    mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
+                                    mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
+                                    mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
+                                }
+                                if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
+                                    _meshes.push_back(std::move(mesh));
+                                    continue;
+                                }
+                            }
+                        }
+
+                        if (material_pass_textures_available(passes, geometry.textures)) {
+                            const std::array<std::uint8_t, 4U> white_pixel{255U, 255U, 255U, 255U};
+                            const auto white_texture =
+                                renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
+                            if (white_texture.is_valid()) {
+                                auto mesh = Mesh{};
+                                assign_shape_packet(mesh);
+                                mesh.texture = white_texture;
+                                mesh.material = material;
+                                mesh.material_passes = passes;
+                                mesh.packet_mode = J3dRendererPacketMode::CpuTevPerVertex;
+                                mesh.material_color = material.material_colors[0U];
+                                mesh.pass_order = passes.front().stage;
+                                mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                                mesh.blend = true;
+                                mesh.blend_mode = render::BlendMode::Alpha;
+                                if (material.gx_state.z_mode.enabled) {
+                                    mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
+                                    mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
+                                    mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
+                                }
+                                mesh.evaluate_material_per_vertex = true;
+                                if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
+                                    _meshes.push_back(std::move(mesh));
+                                    continue;
                                 }
                             }
                         }
                     }
 
-                    const auto *tev_stage = find_tev_stage(material, pass.stage);
-                    auto mesh = Mesh{};
-                    mesh.material_name = material.name;
-                    mesh.shape_index = shape.shape_index;
-                    mesh.shape_draw_order = shape.draw_order;
-                    mesh.material_index = shape.material_index;
-                    mesh.joint_index = shape.joint_index;
-                    mesh.texture = texture_handle;
-                    if (geometry.joints.has_value() && shape.joint_index < geometry.joints->joints.size()) {
-                        mesh.joint_transform = joint_transform_from_summary(geometry.joints->joints[shape.joint_index]);
-                    }
-                    mesh.tex_coord_gen = pass.tex_coord_gen;
-                    mesh.tex_matrix = pass.tex_matrix;
-                    mesh.material = material;
-                    mesh.material_passes = passes;
-                    mesh.packet_mode = J3dRendererPacketMode::TexturePass;
-                    mesh.material_color = material_color;
-                    mesh.pass_order = pass.stage;
-                    mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                    mesh.wrap_u = geometry.textures[texture_index].wrap_s != 0U;
-                    mesh.wrap_v = geometry.textures[texture_index].wrap_t != 0U;
-                    mesh.blend_mode =
-                        tev_baked ? blend_mode_for_composed_material(material, texture_has_alpha) :
-                                    blend_mode_for_material_pass(material, texture_has_alpha, tev_stage, pass_index != 0U, options.use_gx_blend_mode);
-                    mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
-                    if (material.gx_state.z_mode.enabled) {
-                        mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                        mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                        mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                    }
-                    mesh.project_source_vertices = true;
-                    mesh.source_vertices = shape.vertices;
-                    mesh.source_indices = shape.indices;
-                    if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                        _meshes.push_back(std::move(mesh));
+                    for (auto pass_index = std::size_t{}; pass_index < passes.size(); ++pass_index) {
+                        const auto &pass = passes[pass_index];
+                        const auto texture_index = pass.texture_index;
+                        if (texture_index >= texture_handles.size() || !texture_handles[texture_index].is_valid()) {
+                            continue;
+                        }
+
+                        auto texture_handle = texture_handles[texture_index];
+                        auto material_color = material.material_colors[0U];
+                        auto texture_has_alpha = texture_needs_blending(geometry.textures[texture_index].image);
+                        auto tev_baked = false;
+                        if (passes.size() == 1U && options.use_cpu_tev) {
+                            const auto composed_texture =
+                                j3d_try_compose_material_texture(material, geometry.textures[texture_index].image, material_color, pass.tex_map_slot);
+                            if (composed_texture.has_value()) {
+                                const auto composed_handle =
+                                    renderer.create_rgba8_texture(composed_texture->image.width, composed_texture->image.height,
+                                                                  composed_texture->image.rgba);
+                                if (composed_handle.is_valid()) {
+                                    texture_handle = composed_handle;
+                                    texture_has_alpha = texture_needs_blending(composed_texture->image);
+                                    if (composed_texture->raster_color_baked) {
+                                        material_color = {255U, 255U, 255U, 255U};
+                                        tev_baked = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        const auto *tev_stage = find_tev_stage(material, pass.stage);
+                        auto mesh = Mesh{};
+                        assign_shape_packet(mesh);
+                        mesh.texture = texture_handle;
+                        mesh.tex_coord_gen = pass.tex_coord_gen;
+                        mesh.tex_matrix = pass.tex_matrix;
+                        mesh.material = material;
+                        mesh.material_passes = passes;
+                        mesh.packet_mode = J3dRendererPacketMode::TexturePass;
+                        mesh.material_color = material_color;
+                        mesh.pass_order = pass.stage;
+                        mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                        mesh.wrap_u = geometry.textures[texture_index].wrap_s != 0U;
+                        mesh.wrap_v = geometry.textures[texture_index].wrap_t != 0U;
+                        mesh.blend_mode = tev_baked ?
+                                              blend_mode_for_composed_material(material, texture_has_alpha) :
+                                              blend_mode_for_material_pass(material, texture_has_alpha, tev_stage, pass_index != 0U,
+                                                                           options.use_gx_blend_mode);
+                        mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
+                        if (material.gx_state.z_mode.enabled) {
+                            mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
+                            mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
+                            mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
+                        }
+                        if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
+                            _meshes.push_back(std::move(mesh));
+                        }
                     }
                 }
             }
@@ -1376,6 +1472,9 @@ namespace smgpc::game {
             }
             if (a.shape_draw_order != b.shape_draw_order) {
                 return a.shape_draw_order < b.shape_draw_order;
+            }
+            if (a.matrix_group.group_index != b.matrix_group.group_index) {
+                return a.matrix_group.group_index < b.matrix_group.group_index;
             }
 
             return a.pass_order < b.pass_order;
@@ -1472,6 +1571,16 @@ namespace smgpc::game {
             .shape_draw_order = mesh.shape_draw_order,
             .material_index = mesh.material_index,
             .joint_index = mesh.joint_index,
+            .matrix_group_index = mesh.matrix_group.group_index,
+            .matrix_group_count = mesh.matrix_group_count,
+            .use_matrix_index = mesh.matrix_group.use_matrix_index,
+            .use_matrix_count = mesh.matrix_group.use_matrix_count,
+            .first_matrix_table_index = mesh.matrix_group.first_matrix_table_index,
+            .matrix_table_count = mesh.matrix_group.matrix_table.size(),
+            .display_list_offset = mesh.matrix_group.display_list_offset,
+            .display_list_size = mesh.matrix_group.display_list_size,
+            .parsed_display_list_bytes = mesh.matrix_group.parsed_display_list_bytes,
+            .draw_packet_triangle_count = mesh.matrix_group.triangle_count,
             .pass_order = mesh.pass_order,
             .packet_mode = mesh.packet_mode,
             .material_pass_count = mesh.material_passes.size(),
@@ -1493,6 +1602,18 @@ namespace smgpc::game {
 
         if (mesh.material.has_value()) {
             state.color_channel_count = mesh.material->gx_state.color_channel_count;
+            for (auto channel = 0U; channel < state.color_channel_material_colors.size(); ++channel) {
+                state.color_channel_material_colors[channel] = mesh.material->gx_state.color_channels[channel].material_color;
+                state.color_channel_ambient_colors[channel] = mesh.material->gx_state.color_channels[channel].ambient_color;
+                state.color_channel_controls[channel] = mesh.material->gx_state.color_channels[channel].color_control;
+                state.alpha_channel_controls[channel] = mesh.material->gx_state.color_channels[channel].alpha_control;
+            }
+            state.lights = mesh.material->gx_state.lights;
+            for (auto light = 0U; light < state.lights.size(); ++light) {
+                if (state.lights[light].loaded) {
+                    state.loaded_light_mask |= static_cast<std::uint8_t>(1U << light);
+                }
+            }
             state.declared_tev_stage_count = mesh.material->gx_state.tev_stage_count;
             state.active_tev_stage_count = active_tev_stage_count(mesh.material->gx_state);
             state.tev_order_count = mesh.material->gx_state.tev_orders.size();
@@ -1595,7 +1716,7 @@ namespace smgpc::game {
                 }
 
                 auto gx_vertices = std::vector<render::GxMaterialVertex2D>{};
-                project_gx_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_passes, mesh.material_color,
+                project_gx_material_source_mesh(mesh.source_vertices, mesh.source_indices, *mesh.material, effective_passes,
                                                 renderer.logical_framebuffer_size(), matrix_context, camera_pose, gx_vertices, indices);
                 if (gx_vertices.empty() || indices.empty()) {
                     return;
@@ -1639,8 +1760,7 @@ namespace smgpc::game {
                 }
 
                 project_material_source_mesh(mesh.source_vertices, mesh.source_indices, *mesh.material, _textures, effective_passes,
-                                             mesh.material_color, renderer.logical_framebuffer_size(), matrix_context, camera_pose, vertices,
-                                             indices);
+                                             renderer.logical_framebuffer_size(), matrix_context, camera_pose, vertices, indices);
                 if (vertices.empty() || indices.empty()) {
                     return;
                 }

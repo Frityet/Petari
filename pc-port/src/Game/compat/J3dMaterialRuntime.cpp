@@ -9,6 +9,7 @@ namespace smgpc::game {
 
         constexpr auto GX_TG_MTX3X4 = 0U;
         constexpr auto GX_TG_POS = 0U;
+        constexpr auto GX_TG_NRM = 1U;
         constexpr auto GX_TG_TEX0 = 4U;
 
         struct TexGenInput {
@@ -82,6 +83,30 @@ namespace smgpc::game {
                     .y = source.y,
                     .z = source.z,
                 };
+            }
+            if (tex_coord_gen != nullptr && tex_coord_gen->source == GX_TG_NRM) {
+                return TexGenInput{
+                    .x = source.normal[0U],
+                    .y = source.normal[1U],
+                    .z = source.normal[2U],
+                };
+            }
+            if (tex_coord_gen != nullptr && tex_coord_gen->source >= GX_TG_TEX0) {
+                const auto slot = static_cast<std::size_t>(tex_coord_gen->source - GX_TG_TEX0);
+                if (slot < source.tex_coords.size() && slot < source.tex_coord_count) {
+                    return TexGenInput{
+                        .x = source.tex_coords[slot][0U],
+                        .y = source.tex_coords[slot][1U],
+                        .z = 1.0F,
+                    };
+                }
+                if (slot == 0U) {
+                    return TexGenInput{
+                        .x = source.u,
+                        .y = source.v,
+                        .z = 1.0F,
+                    };
+                }
             }
 
             return TexGenInput{

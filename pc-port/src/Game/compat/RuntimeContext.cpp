@@ -18,6 +18,54 @@ namespace smgpc::game {
 
         RuntimeContext *s_runtime_context = nullptr;
 
+        [[nodiscard]] std::filesystem::path weakly_canonical_or_normal(const std::filesystem::path &path) {
+            std::error_code error{};
+            const auto canonical = std::filesystem::weakly_canonical(path, error);
+            if (!error) {
+                return canonical;
+            }
+
+            return path.lexically_normal();
+        }
+
+        [[nodiscard]] std::optional<std::filesystem::path> read_path_environment(std::string_view name) {
+            const auto key = std::string(name);
+            const auto *value = std::getenv(key.c_str());
+            if (value == nullptr || value[0] == '\0') {
+                return std::nullopt;
+            }
+
+            return weakly_canonical_or_normal(std::filesystem::path(value));
+        }
+
+        void append_disc_root_candidates_from_anchor(std::vector<std::filesystem::path> &candidates, std::filesystem::path anchor) {
+            if (anchor.empty()) {
+                return;
+            }
+
+            auto directory = weakly_canonical_or_normal(anchor);
+            while (!directory.empty()) {
+                candidates.push_back(directory / "orig" / "RMGK01" / "files");
+                if (directory == directory.root_path()) {
+                    break;
+                }
+
+                directory = directory.parent_path();
+            }
+        }
+
+        [[nodiscard]] std::optional<std::filesystem::path> executable_directory() {
+#if defined(__linux__)
+            std::error_code error{};
+            const auto executable_path = std::filesystem::read_symlink("/proc/self/exe", error);
+            if (!error && executable_path.has_parent_path()) {
+                return executable_path.parent_path();
+            }
+#endif
+
+            return std::nullopt;
+        }
+
         [[nodiscard]] std::optional<std::uint64_t> read_frame_index_environment(std::string_view name) {
             const auto key = std::string(name);
             const auto *value = std::getenv(key.c_str());
@@ -295,12 +343,16 @@ namespace smgpc::game {
     }
 
     std::filesystem::path RuntimeContext::resolve_disc_files_root() const {
+        if (const auto explicit_root = read_path_environment("SMGPC_DISC_FILES_ROOT")) {
+            return *explicit_root;
+        }
+
         const auto cwd = std::filesystem::current_path();
-        const std::vector<std::filesystem::path> candidates{
-            cwd / "orig" / "RMGK01" / "files",
-            cwd.parent_path() / "orig" / "RMGK01" / "files",
-            cwd / ".." / "orig" / "RMGK01" / "files",
-        };
+        auto candidates = std::vector<std::filesystem::path>{};
+        append_disc_root_candidates_from_anchor(candidates, cwd);
+        if (const auto exe_directory = executable_directory()) {
+            append_disc_root_candidates_from_anchor(candidates, *exe_directory);
+        }
 
         for (const auto &candidate : candidates) {
             std::error_code error{};
@@ -310,7 +362,7 @@ namespace smgpc::game {
             }
         }
 
-        return candidates.front();
+        return cwd / "orig" / "RMGK01" / "files";
     }
 
 }  // namespace smgpc::game

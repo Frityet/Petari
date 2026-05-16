@@ -63,7 +63,7 @@ namespace smgpc::game {
     };
 
     struct J3dShapeMatrixGroupSummary {
-        std::uint16_t group_index = 0U;
+        std::uint16_t group_index = 0xffffU;
         std::uint16_t use_matrix_index = 0xffffU;
         std::uint16_t use_matrix_count = 0U;
         std::uint32_t first_matrix_table_index = 0U;
@@ -227,6 +227,12 @@ namespace smgpc::game {
             std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
             std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
         };
+        std::array< std::array< std::uint8_t, 4U >, 2U > ambient_colors{
+            std::array< std::uint8_t, 4U >{0x32U, 0x32U, 0x32U, 0x32U},
+            std::array< std::uint8_t, 4U >{0x32U, 0x32U, 0x32U, 0x32U},
+        };
+        std::array< GXColorChannelControlState, 2U > color_channel_controls{};
+        std::array< GXColorChannelControlState, 2U > alpha_channel_controls{};
         std::array< std::array< std::uint8_t, 4U >, 4U > tev_k_colors{
             std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
             std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
@@ -234,6 +240,8 @@ namespace smgpc::game {
             std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
         };
         std::array< GXTevRegisterColor, 4U > tev_colors{};
+        std::uint8_t color_channel_count_index = 0xffU;
+        std::uint8_t color_channel_count = 0U;
         std::uint8_t texgen_count = 0U;
         std::uint8_t tev_stage_count = 0U;
         std::uint16_t alpha_comp_index = 0xffffU;
@@ -290,11 +298,20 @@ namespace smgpc::game {
         float x = 0.0F;
         float y = 0.0F;
         float z = 0.0F;
+        std::array< float, 3U > normal{0.0F, 0.0F, 1.0F};
         float u = 0.0F;
         float v = 0.0F;
+        std::array< std::array< float, 2U >, 8U > tex_coords{};
+        std::uint8_t tex_coord_count = 0U;
         std::array< std::uint8_t, 4U > color{255U, 255U, 255U, 255U};
         std::uint8_t position_matrix_slot = 0xffU;
         std::uint16_t draw_matrix_index = 0xffffU;
+    };
+
+    struct J3dShapeDrawPacketMesh {
+        J3dShapeMatrixGroupSummary matrix_group;
+        std::vector< J3dMeshVertex > vertices;
+        std::vector< std::uint16_t > indices;
     };
 
     struct J3dShapeMesh {
@@ -303,9 +320,7 @@ namespace smgpc::game {
         std::uint16_t material_index = 0xffffU;
         std::uint16_t joint_index = 0xffffU;
         std::uint8_t matrix_type = 0U;
-        std::vector< J3dShapeMatrixGroupSummary > matrix_groups;
-        std::vector< J3dMeshVertex > vertices;
-        std::vector< std::uint16_t > indices;
+        std::vector< J3dShapeDrawPacketMesh > draw_packets;
     };
 
     struct J3dModelGeometry {

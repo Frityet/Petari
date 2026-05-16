@@ -1,3 +1,6 @@
 [submodule "pc-port/dolphin"]
 	path = pc-port/dolphin
 	url = https://github.com/Frityet/dolphin
+[submodule "pc-port/aurora"]
+	path = pc-port/aurora
+	url = https://github.com/encounter/aurora

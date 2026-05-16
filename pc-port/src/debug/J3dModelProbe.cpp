@@ -1,5 +1,6 @@
 #include "Game/compat/J3dModel.hpp"
 #include "Game/compat/RarcArchive.hpp"
+#include "MarkdownWriter.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -324,25 +325,69 @@ namespace {
         }
         out << '\n';
 
-        out << "### GX Material State\n\n";
-        out << "| index | source | cull | texgens | color chans | tev stages declared | textures | tex coord gens | tex matrices | tev orders | tev stages | "
-               "alpha | blend | z | z comp loc | indirect stages | mdl3 bytes | parsed | bp | xf | cp | indexed | unknown |\n";
-        out << "| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | "
-               "---: | ---: | ---: |\n";
+        auto markdown = smgpc::dump::MarkdownWriter(out);
+        markdown.heading(3U, "GX Material State");
+        const auto gx_headers = std::vector<std::string_view>{
+            "index", "source", "cull", "texgens", "color chans", "chan0 mat", "chan0 amb", "chan0 color ctrl", "chan0 alpha ctrl",
+            "loaded lights", "tev stages declared", "textures", "tex coord gens", "tex matrices", "tev orders", "tev stages", "alpha", "blend",
+            "z", "z comp loc", "indirect stages", "mdl3 bytes", "parsed", "bp", "xf", "cp", "indexed", "unknown"};
+        auto gx_rows = std::vector<std::vector<std::string>>{};
         for (const auto &material : model.materials->materials) {
             const auto &state = material.gx_state;
-            out << "| " << material.index << " | " << state.source << " | " << static_cast<int>(state.cull_mode) << " | "
-                << static_cast<int>(state.texgen_count) << " | " << static_cast<int>(state.color_channel_count) << " | "
-                << static_cast<int>(state.tev_stage_count) << " | " << state.textures.size() << " | " << state.tex_coord_gens.size() << " | "
-                << state.tex_matrices.size() << " | " << state.tev_orders.size() << " | " << state.tev_stages.size() << " | "
-                << (state.alpha_compare.enabled ? "on" : "off") << " | " << (state.blend.enabled ? "on" : "off") << " | "
-                << (state.z_mode.enabled ? "on" : "off") << " | " << static_cast<int>(state.z_comp_loc) << " | "
-                << static_cast<int>(state.indirect.stage_count) << " | " << state.mdl3_display_list.size() << " | "
-                << state.mdl3_stats.parsed_bytes << " | " << state.mdl3_stats.bp_load_count << " | " << state.mdl3_stats.xf_load_count << " | "
-                << state.mdl3_stats.cp_load_count << " | "
-                << state.mdl3_stats.indexed_load_count << " | " << state.mdl3_stats.unknown_opcode_count << " |\n";
+            const auto &channel = state.color_channels[0U];
+            auto loaded_light_mask = std::uint32_t{};
+            for (auto light = 0U; light < state.lights.size(); ++light) {
+                if (state.lights[light].loaded) {
+                    loaded_light_mask |= 1U << light;
+                }
+            }
+            const auto color_text = [](const auto &color) {
+                auto text = std::ostringstream{};
+                text << static_cast<int>(color[0U]) << ',' << static_cast<int>(color[1U]) << ',' << static_cast<int>(color[2U]) << ','
+                     << static_cast<int>(color[3U]);
+                return text.str();
+            };
+            const auto control_text = [](const auto &control) {
+                auto text = std::ostringstream{};
+                text << "raw " << control.raw << " src " << static_cast<int>(control.material_source) << " light "
+                     << (control.lighting_enabled ? "on" : "off") << " mask " << static_cast<int>(control.light_mask) << " attn mode "
+                     << static_cast<int>(control.attenuation_mode);
+                return text.str();
+            };
+            auto light_mask = std::ostringstream{};
+            light_mask << "0x" << std::hex << loaded_light_mask;
+            gx_rows.push_back({
+                std::to_string(material.index),
+                state.source,
+                std::to_string(static_cast<int>(state.cull_mode)),
+                std::to_string(static_cast<int>(state.texgen_count)),
+                std::to_string(static_cast<int>(state.color_channel_count)),
+                color_text(channel.material_color),
+                color_text(channel.ambient_color),
+                control_text(channel.color_control),
+                control_text(channel.alpha_control),
+                light_mask.str(),
+                std::to_string(static_cast<int>(state.tev_stage_count)),
+                std::to_string(state.textures.size()),
+                std::to_string(state.tex_coord_gens.size()),
+                std::to_string(state.tex_matrices.size()),
+                std::to_string(state.tev_orders.size()),
+                std::to_string(state.tev_stages.size()),
+                state.alpha_compare.enabled ? "on" : "off",
+                state.blend.enabled ? "on" : "off",
+                state.z_mode.enabled ? "on" : "off",
+                std::to_string(static_cast<int>(state.z_comp_loc)),
+                std::to_string(static_cast<int>(state.indirect.stage_count)),
+                std::to_string(state.mdl3_display_list.size()),
+                std::to_string(state.mdl3_stats.parsed_bytes),
+                std::to_string(state.mdl3_stats.bp_load_count),
+                std::to_string(state.mdl3_stats.xf_load_count),
+                std::to_string(state.mdl3_stats.cp_load_count),
+                std::to_string(state.mdl3_stats.indexed_load_count),
+                std::to_string(state.mdl3_stats.unknown_opcode_count),
+            });
         }
-        out << '\n';
+        markdown.table(gx_headers, gx_rows);
     }
 
     void write_shapes(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
