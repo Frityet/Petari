@@ -7,7 +7,6 @@
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/Screen/GalaxyNamePlate.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
-#include "math_types.hpp"
 
 namespace {
     const char* cDemoNameDomeLecture = "ドームレクチャー２";
