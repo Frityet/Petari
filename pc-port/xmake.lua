@@ -13,5 +13,6 @@ add_requires("glfw", {configs = {shared = false, wayland = false, x11 = true}})
 add_requires("bgfx master")
 
 includes {
-    "src"
+    "src",
+    "tests"
 }

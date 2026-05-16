@@ -5,7 +5,8 @@ target("smg-pc-app")
     add_includedirs("./", {public = true})
     add_deps {
         "smg-pc-render",
-        "smg-pc-common"
+        "smg-pc-common",
+        "smg-pc-game"
     }
 
 target("smg-pc")
