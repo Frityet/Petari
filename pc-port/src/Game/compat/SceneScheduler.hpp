@@ -272,6 +272,7 @@ namespace smgpc::game {
         [[nodiscard]] static std::string entry_name(const Entry &entry);
         void execute_draw_buffer(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type,
                                  SceneDrawBufferPass pass);
+        void execute_draw_type(render::IRendererEngine &renderer, s32 draw_type);
 #ifndef NDEBUG
         void push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass = SceneDrawBufferPass::None);
         void push_message_trace(SceneSchedulerMessageTraceEntry trace);

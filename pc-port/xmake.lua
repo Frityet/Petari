@@ -20,10 +20,10 @@ add_repositories("local-repo $(projectdir)")
 add_requires("glfw", {configs = {shared = false, wayland = false, x11 = true}})
 add_requires("bgfx master")
 
-local included_scripts = {"src"}
+local include_dirs = {"src"}
 
 if is_mode("debug") then
-    table.insert(included_scripts, "tests")
+    table.insert(include_dirs, "tests")
 end
 
-includes(included_scripts)
+includes(include_dirs)

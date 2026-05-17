@@ -286,5 +286,4 @@ void LayoutActor::syncAnimCtrlFromLayout(u32 animLayer) {
     ctrl.mFrame = mSimpleLayout->getAnimFrame(animLayer);
     ctrl.mEnd = static_cast< s16 >(mSimpleLayout->getAnimFrameMax(animLayer));
     ctrl.mRate = mSimpleLayout->getAnimRate(animLayer);
-    mLastSyncedAnimCtrls.at(std::min< std::size_t >(animLayer, mLastSyncedAnimCtrls.size() - 1U)) = ctrl;
 }

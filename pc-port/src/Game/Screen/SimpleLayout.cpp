@@ -16,6 +16,7 @@
 #include "Game/compat/LytTexMap.hpp"
 #include "Game/compat/RarcArchive.hpp"
 #include "Game/compat/RuntimeContext.hpp"
+#include "Game/compat/LytTexMap.hpp"
 #include "core/RenderTypes.hpp"
 
 namespace {
@@ -947,94 +948,6 @@ void SimpleLayout::setTextBoxStringRecursive(const char* pPaneName, std::u16stri
     mRenderTextTextures.clear();
 }
 
-void SimpleLayout::setTextBoxTaggedStringRecursive(const char* pPaneName, std::u16string_view rawText, std::u16string_view displayText) {
-    loadRenderData();
-
-    const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
-    const auto formatted = smgpc::game::format_bmg_text(rawText, {});
-    const auto text = !formatted.empty() || rawText.empty() ? std::u16string_view(formatted) : displayText;
-
-    auto encoded = std::vector< std::uint16_t >{};
-    encoded.reserve(text.size());
-    for (const auto code : text) {
-        encoded.push_back(static_cast< std::uint16_t >(code));
-    }
-
-    for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (requested_name.empty() || text_box.name == requested_name) {
-            text_box.text = encoded;
-            mTextBoxTemplates[text_box.name] = TextBoxTemplateState{
-                .raw_text = std::u16string(rawText),
-                .args = {},
-            };
-        }
-    }
-
-    mRenderTextTextures.clear();
-}
-
-void SimpleLayout::setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex) {
-    loadRenderData();
-    if (argIndex < 0) {
-        return;
-    }
-
-    const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
-    for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
-            continue;
-        }
-
-        const auto found = mTextBoxTemplates.find(text_box.name);
-        if (found == mTextBoxTemplates.end()) {
-            continue;
-        }
-
-        auto& state = found->second;
-        const auto index = static_cast< std::size_t >(argIndex);
-        if (state.args.size() <= index) {
-            state.args.resize(index + 1U);
-        }
-        state.args[index] = smgpc::game::BmgFormatArg::number(number);
-
-        const auto formatted = smgpc::game::format_bmg_text(state.raw_text, state.args);
-        text_box.text.assign(formatted.begin(), formatted.end());
-    }
-
-    mRenderTextTextures.clear();
-}
-
-void SimpleLayout::setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex) {
-    loadRenderData();
-    if (argIndex < 0) {
-        return;
-    }
-
-    const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
-    for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
-            continue;
-        }
-
-        const auto found = mTextBoxTemplates.find(text_box.name);
-        if (found == mTextBoxTemplates.end()) {
-            continue;
-        }
-
-        auto& state = found->second;
-        const auto index = static_cast< std::size_t >(argIndex);
-        if (state.args.size() <= index) {
-            state.args.resize(index + 1U);
-        }
-        state.args[index] = smgpc::game::BmgFormatArg::string(text);
-
-        const auto formatted = smgpc::game::format_bmg_text(state.raw_text, state.args);
-        text_box.text.assign(formatted.begin(), formatted.end());
-    }
-
-    mRenderTextTextures.clear();
-}
-
 void SimpleLayout::replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex) {
     loadRenderData();
     if (paneName.empty()) {
@@ -1120,8 +1033,31 @@ void SimpleLayout::setPaneVisible(std::string_view paneName, bool visible) {
     mPaneVisibilityOverrides[std::string(paneName)] = visible;
 }
 
-void SimpleLayout::setPaneVisibleRecursive(std::string_view paneName, bool visible) {
+void SimpleLayout::setTextBoxHorizontalPosition(std::string_view paneName, u8 position) {
     loadRenderData();
+    const auto requested_name = paneName;
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (!requested_name.empty() && text_box.name != requested_name) {
+            continue;
+        }
+
+        text_box.text_position = static_cast< std::uint8_t >((text_box.text_position / 3U) * 3U + std::min< u8 >(position, static_cast< u8 >(2U)));
+    }
+}
+
+void SimpleLayout::setTextBoxVerticalPosition(std::string_view paneName, u8 position) {
+    loadRenderData();
+    const auto requested_name = paneName;
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (!requested_name.empty() && text_box.name != requested_name) {
+            continue;
+        }
+
+        text_box.text_position = static_cast< std::uint8_t >(std::min< u8 >(position, static_cast< u8 >(2U)) * 3U + text_box.text_position % 3U);
+    }
+}
+
+bool SimpleLayout::isPaneVisible(std::string_view paneName) const {
     if (paneName.empty()) {
         return;
     }
@@ -1525,9 +1461,7 @@ std::vector< SimpleLayout::DebugPaneState > SimpleLayout::debugPanes() const {
                 .kind = "picture",
                 .name = picture.name,
                 .material_index = static_cast< s32 >(picture.material_index),
-                .material_name = {},
                 .texture_name = picture.texture_name,
-                .font_name = {},
                 .visible = picture.visible,
             };
             if (picture.material_index < mBrlytLayout.materials.size()) {
@@ -1549,8 +1483,6 @@ std::vector< SimpleLayout::DebugPaneState > SimpleLayout::debugPanes() const {
                 .kind = "text_box",
                 .name = text_box.name,
                 .material_index = static_cast< s32 >(text_box.material_index),
-                .material_name = {},
-                .texture_name = {},
                 .font_name = text_box.font_name,
                 .visible = text_box.visible,
             };
@@ -2081,15 +2013,6 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     if (const auto override = mPaneAlphaOverrides.find(pane.name); override != mPaneAlphaOverrides.end()) {
         local_alpha = override->second;
     }
-
-    constexpr auto kDegToRad = 3.14159265358979323846F / 180.0F;
-    const auto rotation = local_rotate_z * kDegToRad;
-    const auto cos_r = std::cos(rotation);
-    const auto sin_r = std::sin(rotation);
-    const auto local_m00 = cos_r * local_scale_x;
-    const auto local_m01 = -sin_r * local_scale_y;
-    const auto local_m10 = sin_r * local_scale_x;
-    const auto local_m11 = cos_r * local_scale_y;
 
     if (pane.parent_index < 0) {
         return PaneRenderState{

@@ -251,7 +251,7 @@ public:
     [[nodiscard]] bool didItemTurnToFront(s32 fileNo) const;
     [[nodiscard]] s32 getItemTurnToFrontFrameCount(s32 fileNo) const;
     [[nodiscard]] const smgpc::game::CameraParamVec3& getItemBasePosition(s32 index) const;
-    [[nodiscard]] const TVec3f& getItemPosition(s32 index) const;
+    [[nodiscard]] const smgpc::game::CameraParamVec3& getItemPosition(s32 index) const;
 #endif
 
 private:
@@ -284,7 +284,6 @@ private:
     s32 mSelectedFileNo = 1;
     s32 mCopySourceFileNo = 1;
     s32 mStageBgmState = 0;
-    bool mIsFirstMiiSelection = false;
 #ifndef NDEBUG
     // SMGPC temporary debug observer state; not part of release game code.
     bool mTitleStarted = false;

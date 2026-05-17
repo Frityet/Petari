@@ -37,6 +37,7 @@ namespace smgpc::game {
             std::string draw_pass;
             J3dRendererPacketState state = {};
         };
+#endif
 
         struct RenderTextureBindingTrace {
             std::uint8_t slot = 0U;
@@ -80,30 +81,6 @@ namespace smgpc::game {
             std::string detail;
             std::string stage_name;
         };
-
-        struct DebugWpadButtonScriptSpan {
-            std::uint64_t first_frame = 0U;
-            std::uint64_t last_frame = 0U;
-            std::uint32_t button_mask = 0U;
-        };
-
-        struct DebugWpadPointerScriptSpan {
-            std::uint64_t first_frame = 0U;
-            std::uint64_t last_frame = 0U;
-            float x = 0.0F;
-            float y = 0.0F;
-            bool valid = false;
-        };
-
-        struct HostInputTraceState {
-            std::uint64_t frame_index = 0U;
-            std::uint32_t raw_hold_mask = 0U;
-            std::uint32_t effective_hold_mask = 0U;
-            render::InputPointerState raw_pointer = {};
-            render::InputPointerState effective_pointer = {};
-            bool debug_button_script_applied = false;
-            bool debug_pointer_script_applied = false;
-        };
 #endif
 
         RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service);
@@ -134,14 +111,10 @@ namespace smgpc::game {
         [[nodiscard]] std::uint64_t frame_index() const;
         [[nodiscard]] const std::optional<CameraPoseCompat> &scene_camera_pose() const;
         [[nodiscard]] const std::optional<CameraPoseCompat> &last_camera_pose() const;
-        [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
-        [[nodiscard]] std::span<const LayoutRuntimePacketTrace> layout_packet_trace() const;
         [[nodiscard]] std::span<const SemanticTraceEvent> semantic_trace_events() const;
-        [[nodiscard]] const HostInputTraceState &host_input_trace() const;
         [[nodiscard]] bool should_record_j3d_packet_trace() const;
-        [[nodiscard]] bool should_record_render_packet_trace() const;
 #endif
         [[nodiscard]] const std::optional<GxPixelUpdateState> &j3d_pixel_update_state() const;
         [[nodiscard]] std::string_view current_stage_name() const;
@@ -163,11 +136,8 @@ namespace smgpc::game {
         [[nodiscard]] const WipeService &scene_wipe() const;
         [[nodiscard]] WipeService &system_wipe();
         [[nodiscard]] const WipeService &system_wipe() const;
-        [[nodiscard]] ImageEffectService &image_effects();
-        [[nodiscard]] const ImageEffectService &image_effects() const;
         [[nodiscard]] StarPointerService &star_pointer();
         [[nodiscard]] const StarPointerService &star_pointer() const;
-        [[nodiscard]] bool sample_star_pointer_target(const LiveActor &actor, bool check_z);
         [[nodiscard]] CameraSystemService &camera_system();
         [[nodiscard]] const CameraSystemService &camera_system() const;
         [[nodiscard]] PlayerSystemService &player_system();
@@ -223,7 +193,6 @@ namespace smgpc::game {
         void emit_sequence_state_trace_event(std::string_view name, std::string_view detail = {}, std::string_view draw_phase = {});
         void record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
                                      const J3dRendererPacketState &packet);
-        void record_layout_packet_trace(LayoutRuntimePacketTrace packet);
 #endif
         void register_layout(SimpleLayout &layout);
         void unregister_layout(SimpleLayout &layout);
@@ -251,7 +220,6 @@ namespace smgpc::game {
         EffectService _effects;
         WipeService _scene_wipe;
         WipeService _system_wipe;
-        ImageEffectService _image_effects;
         StarPointerService _star_pointer;
         CameraSystemService _camera_system;
         PlayerSystemService _player_system;
@@ -271,24 +239,19 @@ namespace smgpc::game {
         std::map<std::string, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;
         std::map<std::string, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
         std::uint64_t _frame_index = 0;
-        std::optional<CameraPoseCompat> _scene_camera_pose = {};
-        std::optional<CameraPoseCompat> _last_camera_pose = {};
-        std::optional<GxPixelUpdateState> _j3d_pixel_update_state = {};
-        std::vector<render::CopyEvent> _copy_events = {};
+        std::optional<CameraPoseCompat> _scene_camera_pose{};
+        std::optional<CameraPoseCompat> _last_camera_pose{};
+        std::optional<GxPixelUpdateState> _j3d_pixel_update_state{};
         std::string _current_stage_name;
         std::string _current_sequence_scene_name = "Game";
         std::string _next_sequence_scene_name;
 #ifndef NDEBUG
-        std::vector<J3dRuntimePacketTrace> _j3d_packet_trace = {};
-        std::vector<LayoutRuntimePacketTrace> _layout_packet_trace = {};
-        std::vector<SemanticTraceEvent> _semantic_trace_events = {};
-        HostInputTraceState _host_input_trace = {};
-        std::optional<std::uint64_t> _j3d_packet_trace_frame = {};
-        std::vector<DebugWpadButtonScriptSpan> _debug_wpad_button_script = {};
-        std::vector<DebugWpadPointerScriptSpan> _debug_wpad_pointer_script = {};
+        std::vector<J3dRuntimePacketTrace> _j3d_packet_trace{};
+        std::vector<SemanticTraceEvent> _semantic_trace_events{};
+        std::optional<std::uint64_t> _j3d_packet_trace_frame{};
+        std::optional<std::uint64_t> _hold_title_combo_frame{};
         std::uint64_t _next_semantic_trace_event_index = 0U;
-        std::size_t _next_star_pointer_target_trace_event_index = 0U;
-        bool _emitted_wpad_buttons_held_event = false;
+        bool _emitted_title_combo_held_event = false;
 #endif
     };
 

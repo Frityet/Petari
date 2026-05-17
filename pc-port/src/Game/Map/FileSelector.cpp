@@ -727,16 +727,10 @@ void FileSelector::initAllItems() {
     for (s32 i = 0; i < cItemCount; ++i) {
         auto* item = mItems[static_cast< std::size_t >(i)].get();
         const auto file_no = item != nullptr ? item->getFileNo() : i + 1;
-        const auto file_index = static_cast< std::size_t >(std::clamp(file_no, 1, cItemCount) - 1);
-        const auto* file = mFiles[file_index].get();
         auto icon_id = FileSelectIconID();
         getIconId(&icon_id, file_no);
         if (item != nullptr) {
-            if (file == nullptr || !file->isCreated() || isUserFileCorrupted(file_no)) {
-                item->forceChange(true);
-            } else {
-                item->forceChange(icon_id, mAllComplete[file_index]);
-            }
+            item->forceChange(item->isNew(), icon_id);
         }
     }
 }
@@ -1331,20 +1325,12 @@ void FileSelector::exeMiiSelectStart() {
 #ifndef NDEBUG
         mMiiSelectStartStarted = true;
 #endif
-        if (mMiiSelect != nullptr) {
-            if (isNerve(&NrvFileSelector::FileSelectorNrvMiiSelectStartFirst::sInstance)) {
-                mIsFirstMiiSelection = true;
-                mMiiSelect->admitIcon();
-            } else {
-                mIsFirstMiiSelection = false;
-                if (mSelectedItem != nullptr) {
-                    auto icon_id = FileSelectIconID();
-                    mSelectedItem->copyIconID(&icon_id);
-                    mMiiSelect->prohibitIcon(icon_id);
-                } else {
-                    mMiiSelect->admitIcon();
-                }
-            }
+        if (mSelectedItem != nullptr && mMiiSelect != nullptr) {
+            auto icon_id = FileSelectIconID();
+            mSelectedItem->copyIconID(&icon_id);
+            mMiiSelect->prohibitIcon(icon_id);
+        } else if (mMiiSelect != nullptr) {
+            mMiiSelect->admitIcon();
         }
 
         if (mMiiSelect != nullptr) {
@@ -1367,7 +1353,7 @@ void FileSelector::exeMiiSelect() {
 #ifndef NDEBUG
         mMiiSelectStarted = true;
 #endif
-        if (!mIsFirstMiiSelection && mBackButton != nullptr && mBackButton->isHidden()) {
+        if (mBackButton != nullptr && mBackButton->isHidden()) {
             mBackButton->appear();
         }
     }

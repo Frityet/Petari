@@ -735,10 +735,6 @@ namespace smgpc::game {
             push_trace(*entry, SceneSchedulerPhase::DrawType);
 #endif
         }
-
-        if (auto *runtime = RuntimeContext::try_instance()) {
-            runtime->effects().draw(renderer, draw_type);
-        }
     }
 
 #ifndef NDEBUG

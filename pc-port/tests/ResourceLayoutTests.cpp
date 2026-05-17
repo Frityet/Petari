@@ -357,6 +357,37 @@ namespace smgpc::tests {
                     "generic BMG display text should expand bound numeric control tags before rendering");
         }
 
+        $test("loads original BMG messages through MessageId JMap table") {
+            const auto root = disc_files_root();
+            const auto message_archive = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "MessageData" / "Message.arc");
+            const auto messages = smgpc::game::BmgMessageArchive::from_message_archive(message_archive);
+
+            require(messages.message_count() == 1994U, "Message.arc BMG message count changed");
+
+            const auto *guidance = messages.find("2PGuidance001");
+            require(guidance != nullptr, "MessageId.tbl should resolve 2PGuidance001");
+            require(guidance->info.text_offset == 2U, "2PGuidance001 should retain its original DAT1 text offset");
+            require(guidance->display_text.size() >= 3U, "2PGuidance001 should decode UTF-16BE text");
+            require(guidance->display_text[0U] == u'W' && guidance->display_text[1U] == u'i' && guidance->display_text[2U] == u'i',
+                    "2PGuidance001 should begin with Wii text after UTF-16BE decode");
+
+            const auto *layout = messages.find("Layout_SystemTalk");
+            require(layout != nullptr, "MessageId.tbl should resolve layout system prompts");
+            require(!layout->display_text.empty(), "Layout_SystemTalk should decode to displayable text");
+
+            const auto *save = messages.find("System_Save01");
+            require(save != nullptr, "MessageId.tbl should resolve save-system text");
+            require(!save->display_text.empty(), "System_Save01 should decode to displayable text");
+
+            auto service = smgpc::game::MessageService{};
+            require(service.load_message_archive(message_archive) == messages.message_count(), "MessageService should import every BMG message");
+            const auto *service_text = service.message_utf16("2PGuidance001");
+            require(service_text != nullptr, "MessageService should expose imported UTF-16 message text");
+            require(service_text->size() >= 3U && (*service_text)[0U] == u'W' && (*service_text)[1U] == u'i' && (*service_text)[2U] == u'i',
+                    "MessageService should preserve imported UTF-16 code units");
+            require(service.message("System_Save01") != nullptr, "MessageService should expose UTF-8 views for imported messages");
+        }
+
         $test("decodes Korean title logo TPL texture") {
             const auto root = disc_files_root();
             const auto title_logo = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");

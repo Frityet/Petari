@@ -432,47 +432,12 @@ namespace smgpc::game {
         std::vector<WipeEvent> _events;
     };
 
-    enum class ImageEffectControlKind {
-        ForceOff,
-        ControlAuto,
-    };
-
-    struct ImageEffectControlEvent {
-        ImageEffectControlKind kind = ImageEffectControlKind::ForceOff;
-        std::uint64_t frame_index = 0U;
-    };
-
-    class ImageEffectService final {
-    public:
-        void begin_frame(std::uint64_t frame_index);
-        void force_off();
-        void set_control_auto();
-
-        [[nodiscard]] bool is_forced_off() const;
-        [[nodiscard]] bool is_control_auto() const;
-        [[nodiscard]] std::span<const ImageEffectControlEvent> events() const;
-
-    private:
-        void push_event(ImageEffectControlKind kind);
-
-        std::uint64_t _frame_index = 0U;
-        bool _forced_off = false;
-        bool _control_auto = true;
-        std::vector<ImageEffectControlEvent> _events;
-    };
-
     enum class StarPointerMode {
         None,
-        ScreenMenu,
-        TargetSelection,
-        SystemModal,
-        DocumentViewer,
-    };
-
-    enum class StarPointerGuidanceRequest {
-        None,
-        Primary,
-        Secondary,
+        Title,
+        FileSelect,
+        SaveLoad,
+        PictureBook,
     };
 
     struct StarPointerModeEvent {
@@ -480,138 +445,45 @@ namespace smgpc::game {
         std::uint64_t frame_index = 0U;
     };
 
-#ifndef NDEBUG
-    enum class StarPointerTargetEventKind {
-        Enter,
-        Leave,
-        Select,
-    };
-
-    struct StarPointerTargetEvent {
-        StarPointerTargetEventKind kind = StarPointerTargetEventKind::Enter;
-        std::string actor_name;
-        std::uint64_t frame_index = 0U;
-        s32 channel = WPAD_CHAN0;
-        float pointer_x = 0.0F;
-        float pointer_y = 0.0F;
-        float target_x = 0.0F;
-        float target_y = 0.0F;
-        float projected_radius = 0.0F;
-        bool check_z = false;
-    };
-#endif
-
-    struct StarPointerTargetState {
-        const LiveActor *actor = nullptr;
-        float radius = 0.0F;
-        CameraParamVec3 offset{};
-#ifndef NDEBUG
-        bool was_pointing = false;
-        std::optional<std::uint64_t> last_select_frame_index{};
-#endif
-    };
-
     class StarPointerService final {
     public:
         void begin_frame(std::uint64_t frame_index);
-        void register_target(const LiveActor &actor, float radius, const CameraParamVec3 &offset);
-        void unregister_target(const LiveActor &actor);
-        void set_target_radius(const LiveActor &actor, float radius);
         void start_mode(StarPointerMode mode);
         void set_guidance_active(bool active);
-        void request_guidance(StarPointerGuidanceRequest request);
+        void request_file_select_guidance();
+        void request_file_select_copy_guidance();
 
         [[nodiscard]] StarPointerMode mode() const;
-        [[nodiscard]] bool has_target(const LiveActor &actor) const;
-        [[nodiscard]] bool is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<CameraPoseCompat> &camera_pose, bool check_z);
         [[nodiscard]] bool is_guidance_active() const;
-        [[nodiscard]] bool is_guidance_requested(StarPointerGuidanceRequest request) const;
-        [[nodiscard]] std::span<const StarPointerGuidanceRequest> guidance_requests() const;
+        [[nodiscard]] bool is_file_select_guidance_requested() const;
+        [[nodiscard]] bool is_file_select_copy_guidance_requested() const;
         [[nodiscard]] std::span<const StarPointerModeEvent> mode_events() const;
-#ifndef NDEBUG
-        [[nodiscard]] std::span<const StarPointerTargetEvent> target_events() const;
-#endif
 
     private:
-#ifndef NDEBUG
-        void record_target_pointing_sample(StarPointerTargetState &target, bool pointing, const WpadPointerState &pointer,
-                                           bool has_projection, float target_x, float target_y, float projected_radius, bool check_z,
-                                           bool select_triggered);
-#endif
-
         std::uint64_t _frame_index = 0U;
         StarPointerMode _mode = StarPointerMode::None;
         bool _guidance_active = false;
-        std::vector<StarPointerGuidanceRequest> _guidance_requests;
-        std::map<const LiveActor *, StarPointerTargetState> _targets;
+        bool _file_select_guidance_requested = false;
+        bool _file_select_copy_guidance_requested = false;
         std::vector<StarPointerModeEvent> _mode_events;
-#ifndef NDEBUG
-        std::vector<StarPointerTargetEvent> _target_events;
-#endif
     };
 
     class CameraSystemService final {
     public:
-        enum class ShakeRequestKind {
-            Normal,
-        };
-
-        struct ShakeRequestEvent {
-            ShakeRequestKind kind = ShakeRequestKind::Normal;
-            std::uint64_t frame_index = 0U;
-        };
-
-        void begin_frame(std::uint64_t frame_index);
         void reset_camera_man();
         void request_normal_shake();
         void pause_on_camera_director();
         void pause_off_camera_director();
-        void declare_event_camera_programmable(std::string_view name);
-        void start_global_event_camera_no_target(std::string_view name);
-        void end_global_event_camera(std::string_view name);
-        [[nodiscard]] std::optional<CameraPoseCompat> set_programmable_camera_param(std::string_view name, const CameraParamVec3 &watch,
-                                                                                    const CameraParamVec3 &eye, const CameraParamVec3 &up,
-                                                                                    bool do_zero_w_offset);
-        [[nodiscard]] std::optional<CameraPoseCompat> set_programmable_camera_fovy(std::string_view name, float fovy_degrees);
 
         [[nodiscard]] std::uint32_t reset_camera_man_count() const;
         [[nodiscard]] std::uint32_t normal_shake_request_count() const;
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
-        [[nodiscard]] std::optional<CameraPoseCompat> active_programmable_camera_pose() const;
-        [[nodiscard]] std::optional<std::string_view> active_programmable_camera_name() const;
-        [[nodiscard]] std::uint32_t programmable_camera_declare_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_start_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_end_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_param_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_fovy_count() const;
-        [[nodiscard]] std::span<const ShakeRequestEvent> shake_request_events() const;
 
     private:
-        struct ProgrammableCameraEventState {
-            CameraPoseCompat pose{};
-            bool declared = false;
-            bool active = false;
-            bool has_pose = false;
-        };
-
-        [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
-        [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
-        [[nodiscard]] std::optional<CameraPoseCompat> active_programmable_camera_pose_for(std::string_view name) const;
-        void push_shake_event(ShakeRequestKind kind);
-
-        std::uint64_t _frame_index = 0U;
         std::uint32_t _reset_camera_man_count = 0U;
         std::uint32_t _normal_shake_request_count = 0U;
         std::uint32_t _camera_director_pause_count = 0U;
-        std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
-        std::string _active_programmable_camera_name;
-        std::uint32_t _programmable_camera_declare_count = 0U;
-        std::uint32_t _programmable_camera_start_count = 0U;
-        std::uint32_t _programmable_camera_end_count = 0U;
-        std::uint32_t _programmable_camera_param_count = 0U;
-        std::uint32_t _programmable_camera_fovy_count = 0U;
-        std::vector<ShakeRequestEvent> _shake_request_events;
     };
 
     class PlayerSystemService final {
@@ -645,7 +517,6 @@ namespace smgpc::game {
 
     enum class RumbleRequestKind {
         Strong,
-        Middle,
         Weak,
     };
 
@@ -659,7 +530,6 @@ namespace smgpc::game {
     public:
         void begin_frame(std::uint64_t frame_index);
         void request_strong(s32 channel);
-        void request_middle(s32 channel);
         void request_weak(s32 channel);
 
         [[nodiscard]] std::span<const RumbleRequestEvent> events() const;
@@ -775,21 +645,13 @@ namespace smgpc::game {
         [[nodiscard]] std::size_t message_count() const;
         [[nodiscard]] const std::string *message(std::string_view tag) const;
         [[nodiscard]] const std::u16string *message_utf16(std::string_view tag) const;
-        [[nodiscard]] const std::u16string *message_raw_utf16(std::string_view tag) const;
-        [[nodiscard]] const std::vector<BmgControlTag> *message_control_tags(std::string_view tag) const;
         [[nodiscard]] std::string message_or(std::string_view tag, std::string_view fallback) const;
         [[nodiscard]] std::u16string message_utf16_or(std::string_view tag, std::u16string_view fallback) const;
-        [[nodiscard]] std::u16string message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const;
-        [[nodiscard]] std::u16string format_message_utf16(std::string_view tag, std::span<const BmgFormatArg> args) const;
-        [[nodiscard]] std::u16string format_message_utf16_or(std::string_view tag, std::span<const BmgFormatArg> args,
-                                                             std::u16string_view fallback) const;
 
     private:
         struct MessageText {
-            std::u16string raw_utf16;
             std::u16string utf16;
             std::string utf8;
-            std::vector<BmgControlTag> control_tags;
         };
 
         std::map<std::string, MessageText> _messages;
