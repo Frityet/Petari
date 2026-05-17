@@ -10,6 +10,7 @@
 #include "DumpJson.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/compat/RuntimeContext.hpp"
+#include "TraceStore.hpp"
 
 namespace smgpc::game {
     namespace {
@@ -1319,11 +1320,11 @@ namespace smgpc::game {
     }
 
     void write_runtime_parity_trace(const std::filesystem::path &path, const render::FrameContext &frame_context, const RuntimeContext &runtime) {
-        dump::write_json_file(path, runtime_parity_trace_json(frame_context, runtime));
+        trace::write_trace_ndjson_file(path, runtime_parity_trace_json(frame_context, runtime), "pc-port");
     }
 
     dump::Json load_runtime_parity_trace(const std::filesystem::path &path) {
-        return dump::load_json_file(path);
+        return trace::load_trace_ndjson_file(path);
     }
 
 }  // namespace smgpc::game

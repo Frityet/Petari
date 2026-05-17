@@ -1,10 +1,12 @@
 add_requires("fmt")
 add_requires("nlohmann_json")
+add_requires("sqlite3", {system = true})
 
 target("smg-pc-common")
     set_kind("static")
-    add_files("Logger.cpp", "DumpJson.cpp", "MarkdownWriter.cpp")
+    add_files("Logger.cpp", "DumpJson.cpp", "MarkdownWriter.cpp", "Ndjson.cpp", "Sqlite.cpp", "TraceStore.cpp", "TraceAnalysis.cpp")
     add_headerfiles("**.hpp")
     add_includedirs("./", {public = true})
     add_packages("fmt", { public = true })
     add_packages("nlohmann_json", { public = true })
+    add_packages("sqlite3", { public = true })

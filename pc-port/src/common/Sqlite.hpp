@@ -43,7 +43,10 @@ namespace smgpc::sql {
         void bind(int index, std::string_view value);
         void bind_optional_int(int index, std::optional<std::int64_t> value);
         void bind_optional_text(int index, const std::optional<std::string> &value);
+        [[nodiscard]] bool step();
         void step_done();
+        [[nodiscard]] std::optional<std::int64_t> column_int(int index) const;
+        [[nodiscard]] std::optional<std::string> column_text(int index) const;
 
     private:
         void check(int result);

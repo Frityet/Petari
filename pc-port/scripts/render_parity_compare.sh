@@ -9,7 +9,7 @@ frame="${SMGPC_PARITY_FRAME:-1900}"
 build_mode="${SMGPC_PARITY_XMAKE_MODE:-release}"
 work_dir="${SMGPC_PARITY_WORK_DIR:-${pc_port_root}/.cache/render-parity}"
 default_cached_dolphin_png="${pc_port_root}/.cache/dolphin-reference-dump/Frames/framedump_${frame}.png"
-dolphin_trace="${SMGPC_PARITY_DOLPHIN_TRACE:-${work_dir}/dolphin-frame-${frame}.trace.json}"
+dolphin_trace="${SMGPC_PARITY_DOLPHIN_TRACE:-${work_dir}/dolphin-frame-${frame}.trace.ndjson}"
 dolphin_png_is_user_supplied=0
 dolphin_png_is_cached_reference=0
 if [[ -n "${SMGPC_PARITY_DOLPHIN_PNG:-}" ]]; then
@@ -22,10 +22,13 @@ else
   dolphin_png="${work_dir}/dolphin-frame-${frame}.png"
 fi
 pc_png="${SMGPC_PARITY_PC_PNG:-${work_dir}/pcport-frame-${frame}.png}"
-pc_trace="${SMGPC_PARITY_PC_TRACE:-${work_dir}/pcport-frame-${frame}.trace.json}"
+pc_trace="${SMGPC_PARITY_PC_TRACE:-${work_dir}/pcport-frame-${frame}.trace.ndjson}"
 dolphin_log="${work_dir}/dolphin-frame-${frame}.log"
 pc_log="${work_dir}/pcport-frame-${frame}.log"
 diff_log="${work_dir}/visual-diff-frame-${frame}.log"
+trace_sqlite="${SMGPC_PARITY_TRACE_SQLITE:-${work_dir}/traces.sqlite}"
+trace_import_log="${work_dir}/trace-sqlite-frame-${frame}.log"
+trace_compare_log="${work_dir}/trace-compare-frame-${frame}.log"
 dolphin_user="${SMGPC_PARITY_DOLPHIN_USER:-${work_dir}/dolphin-user}"
 dolphin_shm="${SMGPC_DOLPHIN_SHM_DIR:-${work_dir}/dolphin-shm}"
 
@@ -33,6 +36,8 @@ dolphin_bin="${SMGPC_DOLPHIN_BIN:-${pc_port_root}/dolphin/build-nogui-libcxx/Bin
 game_image="${SMGPC_DOLPHIN_GAME:-${repo_root}/Super Mario Wii - Galaxy Adventure (Korea).rvz}"
 pc_bin="${SMGPC_PC_BIN:-${pc_port_root}/build/linux/x86_64/${build_mode}/smg-pc}"
 visual_diff_bin="${SMGPC_VISUAL_DIFF_BIN:-${pc_port_root}/build/linux/x86_64/${build_mode}/smg-pc-visual-diff}"
+trace_import_bin="${SMGPC_TRACE_IMPORT_BIN:-${pc_port_root}/build/linux/x86_64/${build_mode}/smg-pc-trace-import-sqlite}"
+trace_compare_bin="${SMGPC_TRACE_COMPARE_BIN:-${pc_port_root}/build/linux/x86_64/${build_mode}/smg-pc-trace-compare-sqlite}"
 dolphin_platform="${SMGPC_DOLPHIN_PLATFORM:-x11}"
 dolphin_video_backend="${SMGPC_DOLPHIN_VIDEO_BACKEND:-Software}"
 timeout_seconds="${SMGPC_PARITY_TIMEOUT_SECONDS:-240}"
@@ -46,6 +51,8 @@ if [[ "${SMGPC_PARITY_BUILD:-1}" == "1" ]]; then
   (cd "${pc_port_root}" && env CC="${CC:-clang-22}" CXX="${CXX:-clang++-22}" xmake f -m "${build_mode}")
   (cd "${pc_port_root}" && env CC="${CC:-clang-22}" CXX="${CXX:-clang++-22}" xmake build smg-pc)
   (cd "${pc_port_root}" && env CC="${CC:-clang-22}" CXX="${CXX:-clang++-22}" xmake build smg-pc-visual-diff)
+  (cd "${pc_port_root}" && env CC="${CC:-clang-22}" CXX="${CXX:-clang++-22}" xmake build smg-pc-trace-import-sqlite)
+  (cd "${pc_port_root}" && env CC="${CC:-clang-22}" CXX="${CXX:-clang++-22}" xmake build smg-pc-trace-compare-sqlite)
 fi
 
 run_dolphin_capture() {
@@ -144,6 +151,10 @@ run_pc_capture() {
 
 run_dolphin_capture
 run_pc_capture
+
+rm -f "${trace_sqlite}"
+"${trace_import_bin}" --output "${trace_sqlite}" "${dolphin_trace}" "${pc_trace}" >"${trace_import_log}" 2>&1
+"${trace_compare_bin}" --database "${trace_sqlite}" >"${trace_compare_log}" 2>&1
 
 diff_args=()
 if [[ -n "${crop}" ]]; then
