@@ -79,7 +79,7 @@ public:
         : JKRArchive(&archive) {
     }
 
-    explicit JKRMemArchive(smgpc::game::RarcArchive archive)
+    explicit JKRMemArchive(smgpc::game::RarcArchive &&archive)
         : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::game::RarcArchive>(std::move(archive))) {
         mArchive = mOwnedArchive.get();
     }

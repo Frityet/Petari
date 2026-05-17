@@ -1,0 +1,271 @@
+#include "Game/Screen/Manual2P.hpp"
+
+#include <cstdio>
+
+#include <revolution.h>
+
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Screen/BackButton.hpp"
+#include "Game/Screen/ButtonPaneController.hpp"
+#include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+
+namespace {
+    NEW_NERVE(Manual2PNrvAppear, Manual2P, Appear);
+    NEW_NERVE(Manual2PNrvWait, Manual2P, Wait);
+    NEW_NERVE(Manual2PNrvScrollRight, Manual2P, ScrollRight);
+    NEW_NERVE(Manual2PNrvScrollRightAfter, Manual2P, ScrollRightAfter);
+    NEW_NERVE(Manual2PNrvScrollLeft, Manual2P, ScrollLeft);
+    NEW_NERVE(Manual2PNrvScrollLeftAfter, Manual2P, ScrollLeftAfter);
+    NEW_NERVE(Manual2PNrvDisappear, Manual2P, Disappear);
+}  // namespace
+
+Manual2P::Manual2P(const char* pName)
+    : LayoutActor(pName, true), mPageIndex(0), _24(0), mLeftPaneCtrl(nullptr), mRightPaneCtrl(nullptr), _30(false), _31(false),
+      mBackButton(nullptr) {
+}
+
+Manual2P::~Manual2P() {
+    delete mLeftPaneCtrl;
+    delete mRightPaneCtrl;
+    delete mBackButton;
+}
+
+void Manual2P::init(const JMapInfoIter&) {
+    char messageId[128];
+
+    initLayoutManager("P2Manual", 2);
+    MR::invalidateParentAnim(this);
+    MR::createAndAddPaneCtrl(this, "LeftButton", 2);
+
+    mLeftPaneCtrl = new ButtonPaneController(this, "LeftButton", "PicLButton", 0, true);
+    mLeftPaneCtrl->_22 = false;
+
+    MR::createAndAddPaneCtrl(this, "RightButton", 2);
+
+    mRightPaneCtrl = new ButtonPaneController(this, "RightButton", "PicRButton", 0, true);
+    mRightPaneCtrl->_22 = false;
+
+    mBackButton = new BackButton("マニュアルの戻るボタン", true);
+    mBackButton->initWithoutIter();
+
+    initNerve(&Manual2PNrvAppear::sInstance);
+    MR::connectToSceneLayout(this);
+
+    auto i = s32{0};
+    do {
+        std::snprintf(messageId, sizeof(messageId), "%s%03d", "2PGuidance", i + 1);
+        i++;
+    } while (MR::isExistGameMessage(messageId));
+
+    _24 = i;
+}
+
+void Manual2P::appear() {
+    LayoutActor::appear();
+    setNerve(&Manual2PNrvAppear::sInstance);
+
+    mPageIndex = 0;
+
+    MR::startAnim(this, "Picture", 1);
+
+    if (_24 > MR::getAnimCtrl(this, 1)->mEnd) {
+        _24 = MR::getAnimCtrl(this, 1)->mEnd;
+    }
+    if (_24 <= 0) {
+        _24 = 1;
+    }
+}
+
+bool Manual2P::isClosed() const {
+    return MR::isDead(this);
+}
+
+void Manual2P::exeAppear() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(this, "Appear", 0);
+        mLeftPaneCtrl->appear();
+        mRightPaneCtrl->appear();
+        mBackButton->appear();
+        reflectPageIndex();
+    }
+
+    if (MR::isAnimStopped(this, 0) && mLeftPaneCtrl->isWait() && mRightPaneCtrl->isWait()) {
+        setNerve(&Manual2PNrvWait::sInstance);
+    }
+}
+
+void Manual2P::exeWait() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(this, "Wait", 0);
+    }
+
+    if (_30) {
+        mLeftPaneCtrl->trySelect();
+
+        if (mLeftPaneCtrl->mIsSelected) {
+            MR::startSystemSE("SE_SY_FILE_SEL_TIPS_PAGE", -1, -1);
+            setNerve(&Manual2PNrvScrollLeft::sInstance);
+            return;
+        }
+
+        if (MR::testSubPadStickTriggerLeft(WPAD_CHAN0) || MR::testCorePadTriggerLeft(WPAD_CHAN0)) {
+            mLeftPaneCtrl->_24 = false;
+
+            MR::startSystemSE("SE_SY_FILE_SEL_TIPS_PAGE", -1, -1);
+            setNerve(&Manual2PNrvScrollLeft::sInstance);
+            return;
+        }
+    }
+
+    if (_31) {
+        mRightPaneCtrl->trySelect();
+
+        if (mRightPaneCtrl->mIsSelected) {
+            MR::startSystemSE("SE_SY_FILE_SEL_TIPS_PAGE", -1, -1);
+            setNerve(&Manual2PNrvScrollRight::sInstance);
+            return;
+        }
+
+        if (MR::testSubPadStickTriggerRight(WPAD_CHAN0) || MR::testCorePadTriggerRight(WPAD_CHAN0)) {
+            mRightPaneCtrl->_24 = false;
+
+            MR::startSystemSE("SE_SY_FILE_SEL_TIPS_PAGE", -1, -1);
+            setNerve(&Manual2PNrvScrollRight::sInstance);
+            return;
+        }
+    }
+
+    if (checkSelectedBackButton()) {
+        setNerve(&Manual2PNrvDisappear::sInstance);
+    }
+}
+
+void Manual2P::exeScrollRight() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(this, "PageOut", 0);
+    }
+
+    if (MR::isAnimStopped(this, 0)) {
+        setNerve(&Manual2PNrvScrollRightAfter::sInstance);
+    }
+}
+
+void Manual2P::exeScrollRightAfter() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(this, "PageOut", 0);
+
+        mPageIndex++;
+
+        reflectPageIndex();
+    }
+
+    if (MR::isAnimStopped(this, 0)) {
+        mRightPaneCtrl->_24 = true;
+        mRightPaneCtrl->forceToWait();
+        setNerve(&Manual2PNrvWait::sInstance);
+    }
+}
+
+void Manual2P::exeScrollLeft() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(this, "PageIn", 0);
+        MR::setAnimFrame(this, MR::getAnimCtrl(this, 0)->mFrame - 1.0f, 0);
+        MR::getAnimCtrl(this, 0)->mRate = -1.0f;
+    }
+
+    if (MR::getAnimCtrl(this, 0)->mFrame + MR::getAnimCtrl(this, 0)->mRate <= 0.0f) {
+        setNerve(&Manual2PNrvScrollLeftAfter::sInstance);
+    }
+}
+
+void Manual2P::exeScrollLeftAfter() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(this, "PageIn", 0);
+        MR::setAnimFrame(this, MR::getAnimCtrl(this, 0)->mFrame - 1.0f, 0);
+        MR::getAnimCtrl(this, 0)->mRate = -1.0f;
+
+        mPageIndex--;
+
+        reflectPageIndex();
+    }
+
+    if (MR::getAnimCtrl(this, 0)->mFrame - MR::getAnimCtrl(this, 0)->mRate <= 0.0f) {
+        mLeftPaneCtrl->_24 = true;
+        mLeftPaneCtrl->forceToWait();
+        setNerve(&Manual2PNrvWait::sInstance);
+    }
+}
+
+void Manual2P::exeDisappear() {
+    if (MR::isFirstStep(this)) {
+        MR::startAnim(this, "End", 0);
+        mBackButton->disappear();
+        reflectPageIndex();
+    }
+
+    if (MR::isAnimStopped(this, 0) && mBackButton->isHidden()) {
+        kill();
+    }
+}
+
+void Manual2P::control() {
+    mLeftPaneCtrl->update();
+    mRightPaneCtrl->update();
+
+    if (mLeftPaneCtrl->isPointingTrigger()) {
+        MR::startSystemSE("SE_SY_BUTTON_CURSOR_ON", -1, -1);
+    }
+
+    if (mRightPaneCtrl->isPointingTrigger()) {
+        MR::startSystemSE("SE_SY_BUTTON_CURSOR_ON", -1, -1);
+    }
+}
+
+void Manual2P::reflectPageIndex() {
+    if (mPageIndex < 0) {
+        mPageIndex = 0;
+    }
+    if (mPageIndex >= _24) {
+        mPageIndex = _24 - 1;
+    }
+
+    _30 = mPageIndex > 0;
+    _31 = mPageIndex + 1 < _24;
+
+    if (_30) {
+        MR::showPane(this, "LeftButton");
+    } else {
+        MR::hidePane(this, "LeftButton");
+    }
+    if (_31) {
+        MR::showPane(this, "RightButton");
+    } else {
+        MR::hidePane(this, "RightButton");
+    }
+
+    MR::setAnimFrameAndStop(this, static_cast< f32 >(mPageIndex), 1);
+
+    char messageId[128];
+    std::snprintf(messageId, sizeof(messageId), "%s%03d", "2PGuidance", mPageIndex + 1);
+    MR::setTextBoxGameMessageRecursive(this, nullptr, messageId);
+}
+
+bool Manual2P::checkSelectedBackButton() {
+    if (mBackButton->_24) {
+        return true;
+    }
+
+    if (MR::testSystemTriggerB()) {
+        MR::startSystemSE("SE_SY_GALAXY_DECIDE_CANCEL", -1, -1);
+        mBackButton->disappear();
+
+        return true;
+    }
+
+    return false;
+}

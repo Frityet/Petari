@@ -28,6 +28,53 @@ namespace smgpc::game {
             return static_cast<std::uint8_t>((value >> shift) & ((1U << count) - 1U));
         }
 
+        [[nodiscard]] std::uint32_t encode_gen_mode_register(const GXMaterialState &state) {
+            auto value = std::uint32_t{};
+            value |= static_cast<std::uint32_t>(state.texgen_count & 0x0fU);
+            value |= static_cast<std::uint32_t>(state.color_channel_count & 0x07U) << 4U;
+            if (state.tev_stage_count != 0U) {
+                value |= static_cast<std::uint32_t>((state.tev_stage_count - 1U) & 0x0fU) << 10U;
+            }
+            if (state.cull_mode != 0xffU) {
+                value |= static_cast<std::uint32_t>(state.cull_mode & 0x03U) << 14U;
+            }
+            value |= static_cast<std::uint32_t>(state.indirect.stage_count & 0x07U) << 16U;
+            return value;
+        }
+
+        [[nodiscard]] std::uint32_t encode_z_mode_register(const GXZModeState &state) {
+            return static_cast<std::uint32_t>(state.compare_enable & 0x01U) |
+                   (static_cast<std::uint32_t>(state.function & 0x07U) << 1U) |
+                   (static_cast<std::uint32_t>(state.update_enable & 0x01U) << 4U);
+        }
+
+        [[nodiscard]] std::uint32_t encode_blend_register(const GXBlendState &state) {
+            const auto blend_enabled = state.type == 1U || state.type == 3U;
+            const auto logic_enabled = state.type == 2U;
+            const auto subtract_enabled = state.type == 3U;
+            return (blend_enabled ? 1U : 0U) | (logic_enabled ? 2U : 0U) |
+                   (state.color_update ? 0x08U : 0U) | (state.alpha_update ? 0x10U : 0U) |
+                   (static_cast<std::uint32_t>(state.dst_factor & 0x07U) << 5U) |
+                   (static_cast<std::uint32_t>(state.src_factor & 0x07U) << 8U) |
+                   (subtract_enabled ? 0x800U : 0U) | (static_cast<std::uint32_t>(state.op & 0x0fU) << 12U);
+        }
+
+        [[nodiscard]] std::uint32_t encode_alpha_compare_register(const GXAlphaCompareState &state) {
+            return static_cast<std::uint32_t>(state.ref0) | (static_cast<std::uint32_t>(state.ref1) << 8U) |
+                   (static_cast<std::uint32_t>(state.comp0 & 0x07U) << 16U) |
+                   (static_cast<std::uint32_t>(state.comp1 & 0x07U) << 19U) |
+                   (static_cast<std::uint32_t>(state.op & 0x03U) << 22U);
+        }
+
+        [[nodiscard]] std::array<std::uint32_t, 256U> initial_bp_registers_from_state(const GXMaterialState &state) {
+            auto registers = std::array<std::uint32_t, 256U>{};
+            registers[0x00U] = encode_gen_mode_register(state);
+            registers[0x40U] = encode_z_mode_register(state.z_mode);
+            registers[0x41U] = encode_blend_register(state.blend);
+            registers[0xf3U] = encode_alpha_compare_register(state.alpha_compare);
+            return registers;
+        }
+
         [[nodiscard]] std::uint8_t gx_attenuation_function_from_xf(std::uint32_t value) {
             constexpr auto lookup = std::array<std::uint8_t, 4U>{2U, 0U, 2U, 1U};
             return lookup[value & 0x3U];
@@ -554,6 +601,8 @@ namespace smgpc::game {
                     .src_factor = bits(value, 8U, 3U),
                     .dst_factor = bits(value, 5U, 3U),
                     .op = bits(value, 12U, 4U),
+                    .color_update = bits(value, 3U, 1U) != 0U,
+                    .alpha_update = bits(value, 4U, 1U) != 0U,
                     .enabled = true,
                 };
                 return;
@@ -629,6 +678,8 @@ namespace smgpc::game {
                 .src_factor = value.src_factor,
                 .dst_factor = value.dst_factor,
                 .op = value.op,
+                .color_update = true,
+                .alpha_update = true,
                 .enabled = value.enabled,
             };
         }
@@ -917,7 +968,9 @@ namespace smgpc::game {
             .src_factor = material.blend_mode.src_factor,
             .dst_factor = material.blend_mode.dst_factor,
             .op = material.blend_mode.op,
-            .enabled = material.blend_mode.enabled,
+            .color_update = true,
+            .alpha_update = true,
+            .enabled = true,
         };
         return state;
     }
@@ -926,6 +979,9 @@ namespace smgpc::game {
         state.mdl3_display_list.assign(display_list.begin(), display_list.end());
         state.mdl3_stats = GXDisplayListStats{};
         state.mdl3_register_loads.clear();
+
+        auto bp_registers = initial_bp_registers_from_state(state);
+        auto bp_mask = std::uint32_t{0xffffffU};
 
         auto cursor = std::size_t{};
         while (cursor < display_list.size()) {
@@ -1021,7 +1077,14 @@ namespace smgpc::game {
                 const auto address = display_list[cursor];
                 const auto value = read_be24(display_list, cursor + 1U);
                 append_register_load(state, GXRegisterSpace::BP, static_cast<std::uint32_t>(command_offset), address, 1U, value);
-                apply_bp_register(state, address, value);
+                if (address == 0xfeU) {
+                    bp_mask = value & 0xffffffU;
+                } else {
+                    const auto effective_value = (bp_registers[address] & ~bp_mask) | (value & bp_mask);
+                    bp_registers[address] = effective_value;
+                    apply_bp_register(state, address, effective_value);
+                    bp_mask = 0xffffffU;
+                }
                 ++state.mdl3_stats.command_count;
                 ++state.mdl3_stats.bp_load_count;
                 cursor += 4U;

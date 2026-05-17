@@ -3,6 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
@@ -27,6 +28,7 @@ namespace smgpc::game {
     struct J3dModelRendererDrawOptions {
         std::string_view material_filter = {};
         std::optional<bool> translucent_filter = {};
+        std::span<const GXLightState> scene_lights = {};
     };
 
     enum class J3dRendererPacketMode {
@@ -38,6 +40,22 @@ namespace smgpc::game {
         TexturePass,
     };
 
+    struct J3dRendererTextureState {
+        std::uint8_t slot = 0U;
+        std::uint16_t texture_index = 0xffffU;
+        std::uint8_t wrap_s = 0xffU;
+        std::uint8_t wrap_t = 0xffU;
+        std::uint8_t min_filter = 0xffU;
+        std::uint8_t mag_filter = 0xffU;
+        std::string name;
+        std::uint16_t width = 0U;
+        std::uint16_t height = 0U;
+        TplTextureFormat format = TplTextureFormat::I4;
+        bool has_source_texture = false;
+        render::TextureHandle host_handle = {};
+    };
+
+    //TODO: Split up
     struct J3dRendererPacketState {
         std::string material_name;
         std::uint16_t shape_index = 0xffffU;
@@ -64,7 +82,18 @@ namespace smgpc::game {
         std::array<GXColorChannelControlState, 2U> color_channel_controls = {};
         std::array<GXColorChannelControlState, 2U> alpha_channel_controls = {};
         std::uint8_t loaded_light_mask = 0U;
+        std::uint8_t material_loaded_light_mask = 0U;
+        std::uint8_t scene_loaded_light_mask = 0U;
+        std::uint8_t requested_light_mask = 0U;
+        std::uint8_t unsatisfied_light_mask = 0U;
         std::array<GXLightState, 8U> lights = {};
+        std::vector<J3dRendererTextureState> texture_bindings = {};
+        std::vector<GXTexCoordGenState> tex_coord_gens = {};
+        std::vector<GXTexMatrixState> tex_matrices = {};
+        std::vector<GXTevOrderState> tev_orders = {};
+        std::vector<GXTevStageState> tev_stages = {};
+        std::array<GXColorValue, 4U> tev_k_colors = {};
+        GXIndirectState indirect = {};
         std::uint8_t declared_tev_stage_count = 0U;
         std::size_t active_tev_stage_count = 0U;
         std::size_t tev_order_count = 0U;
@@ -87,7 +116,10 @@ namespace smgpc::game {
         render::BlendMode blend_mode = render::BlendMode::Alpha;
         render::GxBlendMode2D gx_blend = {};
         render::GxAlphaCompare2D gx_alpha_compare = {};
+        GXZModeState gx_z_mode = {};
+        GXFogState gx_fog = {};
         std::array<render::GxTevRegisterColor2D, 4U> gx_initial_tev_registers = {};
+        std::vector<GXRegisterLoadState> mdl3_register_loads = {};
         bool depth_test = false;
         bool depth_write = false;
         render::DepthCompare depth_compare = render::DepthCompare::LessEqual;
@@ -111,6 +143,9 @@ namespace smgpc::game {
 
     class J3dModelRenderer final {
     public:
+        J3dModelRenderer();
+        ~J3dModelRenderer();
+
         void load(render::IRendererEngine &renderer, std::span<const std::uint8_t> model_data, const J3dModelRendererLoadOptions &options = {});
         void set_bck_animation(const J3dBckAnimationSummary &animation);
         void set_btk_animation(const J3dBtkAnimationSummary &animation);
@@ -122,7 +157,7 @@ namespace smgpc::game {
         [[nodiscard]] bool is_loaded() const;
         [[nodiscard]] std::size_t mesh_count() const;
         [[nodiscard]] std::span<const J3dRendererPacketState> render_packets() const;
-        [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame) const;
+        [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame, std::span<const GXLightState> scene_lights = {}) const;
 
     private:
         struct Mesh {
@@ -165,14 +200,21 @@ namespace smgpc::game {
             bool evaluate_material_per_vertex = false;
         };
 
+        struct DrawScratch;
+        struct DrawScratchDeleter {
+            void operator()(DrawScratch *scratch) const;
+        };
+
         [[nodiscard]] Mesh make_constant_backdrop(render::IRendererEngine &renderer, std::array<std::uint8_t, 4U> color) const;
-        [[nodiscard]] static J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh);
-        [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame) const;
-        void submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const CameraPoseCompat &camera_pose, const J3dMatrix3x4 &actor_matrix,
-                         std::uint64_t frame) const;
+        [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights = {}) const;
+        [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
+                                                                   std::span<const GXLightState> scene_lights = {}) const;
+        void submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+                         DrawScratch &scratch, std::span<const GXLightState> scene_lights) const;
 
         bool _loaded = false;
         std::vector<J3dTexture> _textures = {};
+        std::vector<render::TextureHandle> _texture_handles = {};
         std::vector<J3dJointTransformValue> _joint_transforms = {};
         std::vector<std::uint16_t> _joint_parent_indices = {};
         std::vector<J3dDrawMatrixSummary> _draw_matrices = {};
@@ -181,6 +223,7 @@ namespace smgpc::game {
         std::vector<J3dRendererPacketState> _render_packets = {};
         std::optional<J3dBckAnimationSummary> _bck_animation = {};
         std::optional<J3dBtkAnimationSummary> _btk_animation = {};
+        mutable std::unique_ptr<DrawScratch, DrawScratchDeleter> _draw_scratch = {};
     };
 
     [[nodiscard]] J3dMatrix3x4 j3d_matrix_from_translation_scale(const CameraParamVec3 &translation, float scale);

@@ -19,6 +19,13 @@
 
 class SimpleLayout {
 public:
+    struct PaneBounds {
+        f32 left = 0.0F;
+        f32 top = 0.0F;
+        f32 right = 0.0F;
+        f32 bottom = 0.0F;
+    };
+
     SimpleLayout(const char* pName, const char* pLayoutName, u32 animLayerNum, int drawType);
     virtual ~SimpleLayout();
 
@@ -27,6 +34,7 @@ public:
     void appear();
     void kill();
     void update();
+    void setTrans(f32 x, f32 y);
 
     [[nodiscard]] bool isDead() const;
     [[nodiscard]] const std::string& getName() const;
@@ -41,14 +49,37 @@ public:
     void setAnimRate(f32 rate, u32 animLayer);
     [[nodiscard]] f32 getAnimFrame(u32 animLayer) const;
     [[nodiscard]] bool isAnimStopped(u32 animLayer);
+    void setTextBoxNumberRecursive(const char* pPaneName, s32 number);
+    void setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text);
+    void setPaneVisible(std::string_view paneName, bool visible);
+    [[nodiscard]] bool isPaneVisible(std::string_view paneName) const;
+    [[nodiscard]] bool hasPane(std::string_view paneName) const;
+    [[nodiscard]] std::optional< PaneBounds > paneBounds(std::string_view paneName) const;
+    [[nodiscard]] bool isPointingPane(std::string_view paneName, f32 screenX, f32 screenY) const;
+    void startPaneAnim(std::string_view paneName, const char* pAnimName, u32 animLayer);
+    void stopPaneAnim(std::string_view paneName, u32 animLayer);
+    void setPaneAnimFrame(std::string_view paneName, f32 frame, u32 animLayer);
+    void setPaneAnimRate(std::string_view paneName, f32 rate, u32 animLayer);
+    [[nodiscard]] f32 getPaneAnimFrame(std::string_view paneName, u32 animLayer) const;
+    [[nodiscard]] bool isPaneAnimStopped(std::string_view paneName, u32 animLayer) const;
+    [[nodiscard]] f32 debugPaneAnimEndFrame(std::string_view paneName, u32 animLayer) const;
 
     // SMGPC debug
     [[nodiscard]] std::size_t debugAnimLayerCount() const;
     [[nodiscard]] std::string_view debugAnimName(u32 animLayer) const;
+    [[nodiscard]] f32 debugAnimDuration(const char* pAnimName) const;
+    [[nodiscard]] bool debugAnimLooping(const char* pAnimName) const;
     [[nodiscard]] f32 debugAnimEndFrame(u32 animLayer) const;
     [[nodiscard]] f32 debugAnimRate(u32 animLayer) const;
     [[nodiscard]] bool debugAnimLooping(u32 animLayer) const;
     [[nodiscard]] bool debugAnimStopped(u32 animLayer) const;
+    [[nodiscard]] std::size_t debugPaneCount() const;
+    [[nodiscard]] std::size_t debugPictureCount() const;
+    [[nodiscard]] std::size_t debugTextBoxCount() const;
+    [[nodiscard]] std::size_t debugMaterialCount() const;
+    [[nodiscard]] std::size_t debugTextureCount() const;
+    [[nodiscard]] std::size_t debugFontCount() const;
+    [[nodiscard]] std::size_t debugCommittedPaneFrameCount() const;
 
     struct RenderTexture {
         std::string name;
@@ -91,8 +122,15 @@ private:
         bool visible = true;
     };
 
+    struct PaneAnimationState {
+        std::string pane_name;
+        std::array< AnimationState, 4 > animations = {};
+    };
+
     [[nodiscard]] AnimationState& animation(u32 animLayer);
     [[nodiscard]] const AnimationState& animation(u32 animLayer) const;
+    [[nodiscard]] PaneAnimationState& paneAnimation(std::string_view paneName);
+    [[nodiscard]] const PaneAnimationState* findPaneAnimation(std::string_view paneName) const;
     void commitAnimationState(const AnimationState& anim);
     void loadRenderData();
     void ensureTextureUploads(smgpc::render::IRendererEngine& renderer);
@@ -112,6 +150,8 @@ private:
     std::string mLayoutName;
     u32 mAnimLayerNum;
     bool mIsDead = true;
+    f32 mTransX = 0.0F;
+    f32 mTransY = 0.0F;
     std::optional< std::filesystem::path > mArchivePath;
     std::array< AnimationState, 4 > mAnimations = {};
     bool mRenderDataLoaded = false;
@@ -121,6 +161,8 @@ private:
     std::vector< RenderTextTexture > mRenderTextTextures = {};
     std::unordered_map< std::string, smgpc::game::BrlanAnimation > mRenderAnimations = {};
     std::unordered_map< std::string, smgpc::game::BrlanPaneFrame > mCommittedPaneFrames = {};
+    std::unordered_map< std::string, bool > mPaneVisibilityOverrides = {};
+    std::vector< PaneAnimationState > mPaneAnimations = {};
 };
 
 class SimpleEffectLayout : public SimpleLayout {

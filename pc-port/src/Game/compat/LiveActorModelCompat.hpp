@@ -30,6 +30,7 @@ public:
     LiveActorModelCompat(std::string model_arc_name, std::string animation_arc_name);
 
     void startBck(std::string_view name, std::string_view file_name);
+    std::optional<std::int16_t> startBrk(std::string_view name);
     void startBtk(std::string_view name);
     void draw(smgpc::render::IRendererEngine &renderer, const smgpc::game::CameraPoseCompat &camera_pose,
               const smgpc::game::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass = DrawPass::All);
@@ -42,13 +43,18 @@ private:
     [[nodiscard]] const smgpc::game::RarcEntry *findModelEntry(const smgpc::game::RarcArchive &archive) const;
     [[nodiscard]] std::optional<smgpc::game::J3dBckAnimationSummary> findBckAnimation(const smgpc::game::RarcArchive &archive) const;
     [[nodiscard]] std::optional<smgpc::game::J3dBtkAnimationSummary> findBtkAnimation(const smgpc::game::RarcArchive &archive) const;
+    [[nodiscard]] std::optional<smgpc::game::J3dBrkAnimationSummary> findBrkAnimation(const smgpc::game::RarcArchive &archive) const;
 
     std::string mModelArcName{};
     std::string mAnimationArcName{};
     bool mLoadAttempted = false;
     bool mBckStarted = false;
+    bool mBrkStarted = false;
     bool mBtkStarted = false;
+    std::string mBrkName{};
+    std::string mBrkAnimationName{};
     std::unique_ptr<smgpc::game::J3dModelRenderer> mRenderer{};
     std::optional<smgpc::game::J3dBckAnimationSummary> mBckAnimation{};
     std::optional<smgpc::game::J3dBtkAnimationSummary> mBtkAnimation{};
+    std::optional<smgpc::game::J3dBrkAnimationSummary> mBrkAnimation{};
 };

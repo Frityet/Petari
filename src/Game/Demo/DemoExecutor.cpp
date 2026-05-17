@@ -9,7 +9,7 @@
 #include "Game/Util.hpp"
 #include <algorithm>
 
-class DemoSheetKeeperBase {
+class __declspec(novtable) DemoSheetKeeperBase {
 public:
     virtual ~DemoSheetKeeperBase() {}
     virtual void initCast(LiveActor*, const JMapInfoIter&);

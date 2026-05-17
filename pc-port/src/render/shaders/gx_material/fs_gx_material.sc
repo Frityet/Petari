@@ -275,18 +275,18 @@ void run_tev_stage(vec4 texture_color, vec4 color_in, vec4 alpha_in, vec4 color_
     write_alpha_register(reg0, reg1, reg2, reg3, outputs.y, alpha);
 }
 
-vec4 texture_for_stage(float texture_stage, vec4 texture0, vec4 texture1, vec4 texture2)
+vec4 texture_for_stage(float texture_stage, vec3 texcoord0, vec3 texcoord1, vec3 texcoord2)
 {
     if (texture_stage > 250.0) {
         return vec4(1.0);
     }
     if (texture_stage < 0.5) {
-        return texture0;
+        return texture2D(s_gx_texture0, project_tex_coord(texcoord0));
     }
     if (texture_stage < 1.5) {
-        return texture1;
+        return texture2D(s_gx_texture1, project_tex_coord(texcoord1));
     }
-    return texture2;
+    return texture2D(s_gx_texture2, project_tex_coord(texcoord2));
 }
 
 bool compare_alpha(float alpha, float compare, float reference)
@@ -337,9 +337,6 @@ bool passes_alpha_compare(float alpha)
 void main()
 {
     vec4 raster = v_color0;
-    vec4 texture0 = texture2D(s_gx_texture0, project_tex_coord(v_texcoord0));
-    vec4 texture1 = texture2D(s_gx_texture1, project_tex_coord(v_texcoord1));
-    vec4 texture2 = texture2D(s_gx_texture2, project_tex_coord(v_texcoord2));
 
     vec4 reg0 = u_gx_tev_reg0;
     vec4 reg1 = u_gx_tev_reg1;
@@ -347,16 +344,16 @@ void main()
     vec4 reg3 = u_gx_tev_reg3;
     vec4 final_outputs = u_gx_tev_out0;
 
-    run_tev_stage(texture_for_stage(u_gx_tev_out0.z, texture0, texture1, texture2), u_gx_tev_color_in0, u_gx_tev_alpha_in0, u_gx_tev_color_op0, u_gx_tev_alpha_op0, u_gx_tev_out0, u_gx_tev_konst0,
+    run_tev_stage(texture_for_stage(u_gx_tev_out0.z, v_texcoord0, v_texcoord1, v_texcoord2), u_gx_tev_color_in0, u_gx_tev_alpha_in0, u_gx_tev_color_op0, u_gx_tev_alpha_op0, u_gx_tev_out0, u_gx_tev_konst0,
                   reg0, reg1, reg2, reg3, raster);
     if (u_gx_material_params.x > 1.5) {
         final_outputs = u_gx_tev_out1;
-        run_tev_stage(texture_for_stage(u_gx_tev_out1.z, texture0, texture1, texture2), u_gx_tev_color_in1, u_gx_tev_alpha_in1, u_gx_tev_color_op1, u_gx_tev_alpha_op1, u_gx_tev_out1, u_gx_tev_konst1,
+        run_tev_stage(texture_for_stage(u_gx_tev_out1.z, v_texcoord0, v_texcoord1, v_texcoord2), u_gx_tev_color_in1, u_gx_tev_alpha_in1, u_gx_tev_color_op1, u_gx_tev_alpha_op1, u_gx_tev_out1, u_gx_tev_konst1,
                       reg0, reg1, reg2, reg3, raster);
     }
     if (u_gx_material_params.x > 2.5) {
         final_outputs = u_gx_tev_out2;
-        run_tev_stage(texture_for_stage(u_gx_tev_out2.z, texture0, texture1, texture2), u_gx_tev_color_in2, u_gx_tev_alpha_in2, u_gx_tev_color_op2, u_gx_tev_alpha_op2, u_gx_tev_out2, u_gx_tev_konst2,
+        run_tev_stage(texture_for_stage(u_gx_tev_out2.z, v_texcoord0, v_texcoord1, v_texcoord2), u_gx_tev_color_in2, u_gx_tev_alpha_in2, u_gx_tev_color_op2, u_gx_tev_alpha_op2, u_gx_tev_out2, u_gx_tev_konst2,
                       reg0, reg1, reg2, reg3, raster);
     }
 

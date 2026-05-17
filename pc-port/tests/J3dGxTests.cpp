@@ -300,6 +300,12 @@ namespace smgpc::tests {
             require(space->alpha_compare.enabled, "Space_Mat_v should preserve alpha compare state");
             require(space->blend.enabled && space->blend.type == 0U && space->blend.src_factor == 1U && space->blend.dst_factor == 0U,
                     "Space_Mat_v should preserve original no-blend state");
+            require(std::ranges::any_of(space->gx_state.mdl3_register_loads, [](const auto &load) {
+                        return load.space == smgpc::game::GXRegisterSpace::BP && load.address == 0xfeU;
+                    }),
+                    "Space_Mat_v GX state should retain J3D BP mask-register loads");
+            require(space->gx_state.blend.color_update && space->gx_state.blend.alpha_update,
+                    "Space_Mat_v masked J3D blend writes should not clear inherited PE color/alpha update state");
             require(space->cull_mode == 0U, "Space_Mat_v should preserve original GX_CULL_NONE state");
             require(space->gx_state.cull_mode == 1U, "Space_Mat_v GX state should preserve MDL3 hardware back-face cull state");
             require(space->z_mode.enabled && space->z_mode.compare_enable == 1U && space->z_mode.function == 3U && space->z_mode.update_enable == 0U,
@@ -588,6 +594,8 @@ namespace smgpc::tests {
             require_tev_stage(sun->tev_stages[0U], {15U, 8U, 10U, 15U}, 12U, {7U, 4U, 5U, 7U}, 1U, 28U, "Sun_Mat_v TEV stage 0 semantic decode changed");
             require(sun->blend.enabled && sun->blend.type == 1U && sun->blend.src_factor == 4U && sun->blend.dst_factor == 1U,
                     "Sun_Mat_v should preserve original additive blend state");
+            require(sun->gx_state.blend.color_update && sun->gx_state.blend.alpha_update,
+                    "Sun_Mat_v masked J3D blend writes should not clear inherited PE color/alpha update state");
 
             const auto &space_shape = model.shapes->shapes.at(7U);
             require(space_shape.material_index == 7U, "CometNearOrbitSky shape 7 should use Space_Mat_v");
@@ -762,9 +770,37 @@ namespace smgpc::tests {
             });
             require(core_rock_packet != packets.end() && core_rock_packet->packet_mode == smgpc::game::J3dRendererPacketMode::CpuTevPerVertex &&
                         core_rock_packet->evaluate_material_per_vertex && core_rock_packet->loaded_light_mask == 0U &&
+                        core_rock_packet->material_loaded_light_mask == 0U && core_rock_packet->scene_loaded_light_mask == 0U &&
+                        core_rock_packet->requested_light_mask == 4U && core_rock_packet->unsatisfied_light_mask == 4U &&
                         core_rock_packet->alpha_channel_controls[0U].lighting_enabled &&
                         core_rock_packet->alpha_channel_controls[0U].light_mask == 4U,
-                    "J3dModelRenderer packet evidence should route untextured lit materials through per-vertex GX raster evaluation");
+                    "J3dModelRenderer packet evidence should route untextured lit materials through per-vertex GX raster evaluation and expose missing scene lights");
+            auto scene_lights = std::array<smgpc::game::GXLightState, 8U>{};
+            scene_lights[2U].loaded = true;
+            scene_lights[2U].color = {255U, 255U, 255U, 255U};
+            scene_lights[2U].position = {0.0F, 0.0F, 4000.0F};
+            scene_lights[2U].direction = {0.0F, 0.0F, -1.0F};
+            const auto scene_light_span = std::span<const smgpc::game::GXLightState>(scene_lights.data(), scene_lights.size());
+            const auto scene_lit_packets = model_renderer.render_packets(0U, scene_light_span);
+            const auto scene_lit_core_rock_packet = std::ranges::find_if(scene_lit_packets, [](const auto &packet) {
+                return packet.material_name == "CoreRock";
+            });
+            require(scene_lit_core_rock_packet != scene_lit_packets.end() &&
+                        scene_lit_core_rock_packet->material_loaded_light_mask == 0U &&
+                        scene_lit_core_rock_packet->scene_loaded_light_mask == 4U &&
+                        scene_lit_core_rock_packet->loaded_light_mask == 4U &&
+                        scene_lit_core_rock_packet->requested_light_mask == 4U &&
+                        scene_lit_core_rock_packet->unsatisfied_light_mask == 0U &&
+                        scene_lit_core_rock_packet->lights[2U].loaded,
+                    "J3dModelRenderer should fill material-local GX light slots from generic scene light state");
+            const auto core_rock_batches_before_draw = renderer.triangle_batch_count;
+            const auto core_rock_vertices_before_draw = renderer.submitted_vertices;
+            model_renderer.draw(renderer, smgpc::game::file_select_title_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+                                {.material_filter = "CoreRock", .scene_lights = scene_light_span});
+            require(renderer.triangle_batch_count > core_rock_batches_before_draw,
+                    "J3dModelRenderer should draw untextured lit materials while receiving generic scene light state");
+            require(renderer.submitted_vertices - core_rock_vertices_before_draw <= core_rock_packet->source_triangle_count * 6U,
+                    "J3dModelRenderer should draw untextured lit materials from original source triangles without CPU micro-subdivision");
             const auto space_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "Space_Mat_v";
             });
@@ -782,6 +818,24 @@ namespace smgpc::tests {
                         space_packet->color_channel_controls[0U].raw == space_summary->gx_state.color_channels[0U].color_control.raw &&
                         space_packet->alpha_channel_controls[0U].raw == space_summary->gx_state.color_channels[0U].alpha_control.raw,
                     "J3dModelRenderer packet evidence should preserve effective GX color-channel state for Space_Mat_v");
+            require(space_packet->texture_bindings.size() == 3U && space_packet->texture_bindings[0U].name == "OrbitUniverseL" &&
+                        space_packet->texture_bindings[1U].name == "Galaxy" &&
+                        space_packet->texture_bindings[2U].name == "GalaxyRiverK" && space_packet->texture_bindings[0U].width > 0U &&
+                        space_packet->texture_bindings[1U].format == smgpc::game::TplTextureFormat::CMPR,
+                    "J3dModelRenderer packet evidence should preserve source texture bindings and decoded dimensions for Space_Mat_v");
+            require(space_packet->tex_coord_gens.size() == space_summary->gx_state.tex_coord_gens.size() &&
+                        space_packet->tex_matrices.size() == space_summary->gx_state.tex_matrices.size() &&
+                        space_packet->tev_orders.size() == space_summary->gx_state.tev_orders.size() &&
+                        space_packet->tev_stages.size() == space_summary->gx_state.tev_stages.size() &&
+                        space_packet->tev_orders[0U].tex_map == space_summary->gx_state.tev_orders[0U].tex_map &&
+                        space_packet->tev_stages[0U].color_in == space_summary->gx_state.tev_stages[0U].color_in &&
+                        space_packet->tev_k_colors[0U] == space_summary->gx_state.tev_k_colors[0U],
+                    "J3dModelRenderer packet evidence should preserve low-level GX TEV order, TEV stage, texgen, tex-matrix, and konst arrays");
+            require(space_packet->gx_z_mode.function == space_summary->gx_state.z_mode.function &&
+                        space_packet->gx_fog.raw == space_summary->gx_state.fog.raw &&
+                        space_packet->mdl3_register_loads.size() == space_summary->gx_state.mdl3_register_loads.size() &&
+                        !space_packet->mdl3_register_loads.empty(),
+                    "J3dModelRenderer packet evidence should preserve effective z/fog state and raw MDL3 register load records");
             require(space_packet->matrix_group_index == 0U && space_packet->matrix_group_count == 1U && space_packet->use_matrix_index == 4U &&
                         space_packet->use_matrix_count == 1U && space_packet->first_matrix_table_index == 7U &&
                         space_packet->matrix_table_count == 1U && space_packet->display_list_offset == 0x3720U &&
@@ -801,6 +855,12 @@ namespace smgpc::tests {
                         animated_space_packet->bck_frame_max == 3000 && animated_space_packet->bck_joint_count == 8U &&
                         animated_space_packet->btk_frame_max == 10000 && animated_space_packet->btk_material_count == 5U,
                     "J3dModelRenderer packet evidence should include active BCK and BTK metadata for runtime comparisons");
+            const auto animated_earth_far_packet = std::ranges::find_if(animated_packets, [](const auto &packet) {
+                return packet.material_name == "EarthFar_v";
+            });
+            require(animated_earth_far_packet != animated_packets.end() && animated_earth_far_packet->tex_matrices.size() == earth_far_packet->tex_matrices.size() &&
+                        animated_earth_far_packet->tex_matrices[2U].translate_s != earth_far_packet->tex_matrices[2U].translate_s,
+                    "J3dModelRenderer packet evidence should expose BTK-mutated effective texture matrices");
             require_near(animated_space_packet->bck_frame, 3001.0F, 0.001F,
                          "J3dModelRenderer packet evidence should preserve the submitted BCK frame");
             require_near(animated_space_packet->bck_normalized_frame, 1.0F, 0.001F,
@@ -867,6 +927,8 @@ namespace smgpc::tests {
             require(renderer.last_gx_material_blend.enabled && renderer.last_gx_material_blend.type == 1U &&
                         renderer.last_gx_material_blend.src_factor == 4U && renderer.last_gx_material_blend.dst_factor == 1U,
                     "J3dModelRenderer should submit Sun_Mat_v raw GX additive blend state to the GX material renderer batch");
+            require(renderer.last_gx_material_blend.color_update && renderer.last_gx_material_blend.alpha_update,
+                    "J3dModelRenderer should submit the masked Sun_Mat_v PE color/alpha update state to the GX material renderer batch");
             require(renderer.texture_count > 0U, "J3dModelRenderer should upload CometNearOrbitSky textures");
 
             auto shader_only_renderer = RecordingRenderer();
@@ -917,6 +979,32 @@ namespace smgpc::tests {
             require(base_packet != packets.end() && base_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev &&
                         base_packet->shader_texture_stage_count == 1U && base_packet->active_tev_stage_count == 3U,
                     "J3dModelRenderer should keep BaseMat_v texture-disabled TEV stages in the GX shader path");
+            const auto has_base_texture_trace = std::ranges::any_of(base_packet->texture_bindings, [](const auto &texture) {
+                return texture.name == "grnd03L2" && texture.has_source_texture && texture.width == 256U && texture.height == 256U;
+            });
+            require(has_base_texture_trace && !base_packet->tex_coord_gens.empty() && !base_packet->tex_matrices.empty() &&
+                        !base_packet->tev_orders.empty() && base_packet->tev_stages.size() >= 3U,
+                    "J3dModelRenderer packet evidence should preserve BaseMat_v effective TEV order and real source texture metadata");
+            require(base_packet->scene_loaded_light_mask == 0U &&
+                        base_packet->unsatisfied_light_mask ==
+                            static_cast<std::uint8_t>(base_packet->requested_light_mask & ~base_packet->loaded_light_mask),
+                    "J3dModelRenderer packet evidence should explicitly expose BaseMat_v scene-light satisfaction state");
+            auto scene_lights = std::array<smgpc::game::GXLightState, 8U>{};
+            for (auto light_index = std::size_t{}; light_index < scene_lights.size(); ++light_index) {
+                scene_lights[light_index].loaded = true;
+                scene_lights[light_index].color = {255U, 255U, 255U, 255U};
+                scene_lights[light_index].position = {0.0F, 0.0F, 4000.0F};
+                scene_lights[light_index].direction = {0.0F, 0.0F, -1.0F};
+            }
+            const auto scene_light_span = std::span<const smgpc::game::GXLightState>(scene_lights.data(), scene_lights.size());
+            const auto scene_lit_packets = model_renderer.render_packets(0U, scene_light_span);
+            const auto scene_lit_base_packet = std::ranges::find_if(scene_lit_packets, [](const auto &packet) {
+                return packet.material_name == "BaseMat_v";
+            });
+            require(scene_lit_base_packet != scene_lit_packets.end() && scene_lit_base_packet->scene_loaded_light_mask == 0xffU &&
+                        scene_lit_base_packet->requested_light_mask == base_packet->requested_light_mask &&
+                        scene_lit_base_packet->unsatisfied_light_mask == 0U,
+                    "J3dModelRenderer should satisfy any BaseMat_v light mask through generic scene GX light slots");
 
             const auto base_gx_batches_before = renderer.gx_material_batch_count;
             model_renderer.draw(renderer, smgpc::game::file_select_far_camera_pose(),

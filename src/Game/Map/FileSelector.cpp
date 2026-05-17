@@ -36,7 +36,48 @@ namespace NrvFileSelector {
     NEW_NERVE(FileSelectorNrvTitleEnd, FileSelector, TitleEnd);
     NEW_NERVE(FileSelectorNrvRFLError, FileSelector, RFLError);
     NEW_NERVE(FileSelectorNrvRFLWait, FileSelector, RFLWait);
+    NEW_NERVE(FileSelectorNrvRFLWaitEnd, FileSelector, RFLWaitEnd);
+    NEW_NERVE(FileSelectorNrvFileSelectStart, FileSelector, FileSelectStart);
     NEW_NERVE(FileSelectorNrvFileSelect, FileSelector, FileSelect);
+    NEW_NERVE(FileSelectorNrvFileConfirmStart, FileSelector, FileConfirmStart);
+    NEW_NERVE(FileSelectorNrvFileConfirmMiiDeleteWarningStart, FileSelector, FileConfirmMiiDeleteWarningStart);
+    NEW_NERVE(FileSelectorNrvFileConfirmMiiDeleteWarning, FileSelector, FileConfirmMiiDeleteWarning);
+    NEW_NERVE(FileSelectorNrvFileConfirmMiiDeleteSave, FileSelector, FileConfirmMiiDeleteSave);
+    NEW_NERVE(FileSelectorNrvFileConfirm, FileSelector, FileConfirm);
+    NEW_NERVE(FileSelectorNrvDemoStartWait, FileSelector, DemoStartWait);
+    NEW_NERVE(FileSelectorNrvDemo, FileSelector, Demo);
+    NEW_NERVE(FileSelectorNrvCreateConfirmStart, FileSelector, CreateConfirmStart);
+    NEW_NERVE(FileSelectorNrvCreateConfirm, FileSelector, CreateConfirm);
+    NEW_NERVE(FileSelectorNrvCreate, FileSelector, Create);
+    NEW_NERVE(FileSelectorNrvCopyWait, FileSelector, CopyWait);
+    NEW_NERVE(FileSelectorNrvCopySelect, FileSelector, CopySelect);
+    NEW_NERVE(FileSelectorNrvCopyConfirmStart, FileSelector, CopyConfirmStart);
+    NEW_NERVE(FileSelectorNrvCopyConfirm, FileSelector, CopyConfirm);
+    NEW_NERVE(FileSelectorNrvCopySave, FileSelector, CopySave);
+    NEW_NERVE(FileSelectorNrvCopySaveMii, FileSelector, CopySaveMii);
+    NEW_NERVE(FileSelectorNrvCopyDemo, FileSelector, CopyDemo);
+    NEW_NERVE(FileSelectorNrvCopyRejectStart, FileSelector, CopyRejectStart);
+    NEW_NERVE(FileSelectorNrvCopyReject, FileSelector, CopyReject);
+    NEW_NERVE(FileSelectorNrvMiiWait, FileSelector, MiiWait);
+    NEW_NERVE(FileSelectorNrvMiiTip, FileSelector, MiiTip);
+    NEW_NERVE(FileSelectorNrvMiiSelectStartFirst, FileSelector, MiiSelectStart);
+    NEW_NERVE(FileSelectorNrvMiiSelectStart, FileSelector, MiiSelectStart);
+    NEW_NERVE(FileSelectorNrvMiiSelect, FileSelector, MiiSelect);
+    NEW_NERVE(FileSelectorNrvMiiCancel, FileSelector, MiiCancel);
+    NEW_NERVE(FileSelectorNrvMiiConfirmWait, FileSelector, MiiConfirmWait);
+    NEW_NERVE(FileSelectorNrvMiiConfirm, FileSelector, MiiConfirm);
+    NEW_NERVE(FileSelectorNrvMiiCreateWait, FileSelector, MiiCreateWait);
+    NEW_NERVE(FileSelectorNrvMiiCreateDemo, FileSelector, MiiCreateDemo);
+    NEW_NERVE(FileSelectorNrvMiiCaution, FileSelector, MiiCaution);
+    NEW_NERVE(FileSelectorNrvMiiInfoStart, FileSelector, MiiInfoStart);
+    NEW_NERVE(FileSelectorNrvMiiInfo, FileSelector, MiiInfo);
+    NEW_NERVE(FileSelectorNrvDeleteConfirmStart, FileSelector, DeleteConfirmStart);
+    NEW_NERVE(FileSelectorNrvDeleteConfirm, FileSelector, DeleteConfirm);
+    NEW_NERVE(FileSelectorNrvDelete, FileSelector, Delete);
+    NEW_NERVE(FileSelectorNrvDeleteDemo, FileSelector, DeleteDemo);
+    NEW_NERVE(FileSelectorNrvFileBroken, FileSelector, FileBroken);
+    NEW_NERVE(FileSelectorNrvManualStart, FileSelector, ManualStart);
+    NEW_NERVE(FileSelectorNrvManual, FileSelector, Manual);
 };  // namespace NrvFileSelector
 
 void NrvFileSelector::FileSelectorNrvWaitBind::execute(Spine* pSpine) const {
@@ -59,6 +100,29 @@ bool FileSelector::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRece
     }
 
     return false;
+}
+
+void FileSelector::callbackStart() {
+    setNerve(&NrvFileSelector::FileSelectorNrvDemoStartWait::sInstance);
+}
+
+void FileSelector::callbackCopy() {
+    setNerve(&NrvFileSelector::FileSelectorNrvCopyWait::sInstance);
+}
+
+void FileSelector::callbackMii() {
+    disappaerAllLayout();
+    invalidateSelectAll();
+    setNerve(&NrvFileSelector::FileSelectorNrvMiiWait::sInstance);
+}
+
+void FileSelector::callbackDelete() {
+    setNerve(&NrvFileSelector::FileSelectorNrvDeleteConfirmStart::sInstance);
+}
+
+void FileSelector::callbackManual() {
+    MR::startSystemSE("SE_SY_FILE_SEL_TIPS_OPEN", -1, -1);
+    setNerve(&NrvFileSelector::FileSelectorNrvManualStart::sInstance);
 }
 
 void FileSelector::createBackButton() {

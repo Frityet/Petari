@@ -11,7 +11,10 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
+#include "Game/System/SaveDataHandleSequence.hpp"
+#include "Game/compat/CameraParam.hpp"
 
 namespace smgpc::game {
     namespace {
@@ -85,10 +88,21 @@ namespace smgpc::game {
             return frame;
         }
 
+        [[nodiscard]] std::optional<std::string> read_string_environment(std::string_view name) {
+            const auto key = std::string(name);
+            const auto *value = std::getenv(key.c_str());
+            if (value == nullptr || value[0] == '\0') {
+                return std::nullopt;
+            }
+
+            return std::string(value);
+        }
+
     }  // namespace
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
+          _current_stage_name(read_string_environment("SMGPC_STAGE_NAME").value_or("FileSelect")),
           _hold_title_combo_frame(read_frame_index_environment("SMGPC_HOLD_TITLE_COMBO_FRAME")) {
         if (s_runtime_context != nullptr) {
             throw std::logic_error("Only one SMG runtime context may be active.");
@@ -96,6 +110,10 @@ namespace smgpc::game {
 
         s_runtime_context = this;
         _logger.info(logging::Category::APP, logging::Message{"Using SMG disc files from {}"}, _disc_files_root.string());
+        if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
+            _save_data.set_host_directory(*save_directory);
+            _logger.info(logging::Category::APP, logging::Message{"Using SMG save files from {}"}, save_directory->string());
+        }
         if (_hold_title_combo_frame.has_value()) {
             _logger.info(logging::Category::APP, logging::Message{"Debug title A+B hold starts at frame {}"}, *_hold_title_combo_frame);
         }
@@ -122,8 +140,12 @@ namespace smgpc::game {
     void RuntimeContext::begin_frame(const render::FrameContext &frame_context) {
         _frame_index = frame_context.frame_index;
         _j3d_packet_trace.clear();
+        _scene_camera_pose.reset();
         _audio.begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
+        _scene_wipe.begin_frame(_frame_index);
+        _system_wipe.begin_frame(_frame_index);
+        _sequence_requests.begin_frame(_frame_index);
         _wpad.begin_frame();
 
         auto hold_mask = std::uint32_t{};
@@ -138,9 +160,14 @@ namespace smgpc::game {
         _wpad.set_connected(WPAD_CHAN0, true);
         _wpad.set_button_mask(WPAD_CHAN0, hold_mask);
 
+        smgpc::game::save_data_handle_sequence().update();
         _scheduler.execute_movement();
         _scheduler.execute_calc_anim();
         _scheduler.execute_calc_view_and_entry();
+    }
+
+    void RuntimeContext::set_scene_camera_pose(const CameraPoseCompat &camera_pose) {
+        _scene_camera_pose = camera_pose;
     }
 
     void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose) {
@@ -148,8 +175,20 @@ namespace smgpc::game {
         _scheduler.execute_draw_buffer_list_normal(renderer, camera_pose);
     }
 
+    void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer) {
+        draw_3d_normal(renderer, _scene_camera_pose.value_or(file_select_title_camera_pose()));
+    }
+
     void RuntimeContext::draw_2d_normal(render::IRendererEngine &renderer) {
         _scheduler.execute_draw_list_2d_normal(renderer);
+    }
+
+    void RuntimeContext::set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index) {
+        _j3d_packet_trace_frame = frame_index;
+    }
+
+    void RuntimeContext::set_current_stage_name(std::string_view stage_name) {
+        _current_stage_name = stage_name;
     }
 
     bool RuntimeContext::is_core_pad_button_a(s32 channel) const {
@@ -170,6 +209,14 @@ namespace smgpc::game {
 
     std::span<const RuntimeContext::J3dRuntimePacketTrace> RuntimeContext::j3d_packet_trace() const {
         return _j3d_packet_trace;
+    }
+
+    bool RuntimeContext::should_record_j3d_packet_trace() const {
+        return _j3d_packet_trace_frame.has_value() && _frame_index == *_j3d_packet_trace_frame;
+    }
+
+    std::string_view RuntimeContext::current_stage_name() const {
+        return _current_stage_name;
     }
 
     bool RuntimeContext::is_stage_bgm_prepared() const {
@@ -220,6 +267,30 @@ namespace smgpc::game {
         return _effects;
     }
 
+    WipeService &RuntimeContext::scene_wipe() {
+        return _scene_wipe;
+    }
+
+    const WipeService &RuntimeContext::scene_wipe() const {
+        return _scene_wipe;
+    }
+
+    WipeService &RuntimeContext::system_wipe() {
+        return _system_wipe;
+    }
+
+    const WipeService &RuntimeContext::system_wipe() const {
+        return _system_wipe;
+    }
+
+    SequenceRequestService &RuntimeContext::sequence_requests() {
+        return _sequence_requests;
+    }
+
+    const SequenceRequestService &RuntimeContext::sequence_requests() const {
+        return _sequence_requests;
+    }
+
     SaveDataService &RuntimeContext::save_data() {
         return _save_data;
     }
@@ -234,6 +305,14 @@ namespace smgpc::game {
 
     const MessageService &RuntimeContext::messages() const {
         return _messages;
+    }
+
+    SceneLightService &RuntimeContext::scene_lights() {
+        return _scene_lights;
+    }
+
+    const SceneLightService &RuntimeContext::scene_lights() const {
+        return _scene_lights;
     }
 
     RflService &RuntimeContext::rfl() {
@@ -267,6 +346,11 @@ namespace smgpc::game {
         _logger.info(logging::Category::APP, logging::Message{"SMG stopped stage BGM over {} frames"}, fade_frames);
     }
 
+    void RuntimeContext::set_stage_bgm_state(s32 state, u32 change_frames) {
+        _audio.set_stage_bgm_state(state, change_frames);
+        _logger.info(logging::Category::APP, logging::Message{"SMG set stage BGM state {} over {} frames"}, state, change_frames);
+    }
+
     void RuntimeContext::start_system_sound(std::string_view name) {
         _audio.start_system_sound(name);
         _logger.info(logging::Category::APP, logging::Message{"TitleSequenceProduct requested system sound {}"}, name);
@@ -280,6 +364,11 @@ namespace smgpc::game {
     void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name) {
         _effects.emit(actor_name, effect_name);
         _logger.info(logging::Category::APP, logging::Message{"{} emitted effect {}"}, actor_name, effect_name);
+    }
+
+    void RuntimeContext::delete_effect(std::string_view actor_name, std::string_view effect_name) {
+        _effects.delete_effect(actor_name, effect_name);
+        _logger.info(logging::Category::APP, logging::Message{"{} deleted effect {}"}, actor_name, effect_name);
     }
 
     void RuntimeContext::delete_effect_all(std::string_view actor_name) {
@@ -334,12 +423,28 @@ namespace smgpc::game {
         _scheduler.unregister_layout(layout);
     }
 
+    void RuntimeContext::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
+        _scheduler.register_layout_actor(layout, movement_type, calc_anim_type, draw_type);
+    }
+
+    void RuntimeContext::unregister_layout_actor(LayoutActor &layout) {
+        _scheduler.unregister_layout_actor(layout);
+    }
+
+    void RuntimeContext::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
+        _scheduler.register_live_actor_model(actor, movement_type, calc_anim_type, draw_buffer_type, draw_type);
+    }
+
+    void RuntimeContext::unregister_live_actor_model(LiveActor &actor) {
+        _scheduler.unregister_live_actor_model(actor);
+    }
+
     void RuntimeContext::register_sky_actor(LiveActor &actor) {
-        _scheduler.register_live_actor_model(actor, MR::MovementType_Sky, MR::CalcAnimType_MapObj, MR::DrawBufferType_Sky, -1);
+        register_live_actor_model(actor, MR::MovementType_Sky, MR::CalcAnimType_MapObj, MR::DrawBufferType_Sky, -1);
     }
 
     void RuntimeContext::unregister_sky_actor(LiveActor &actor) {
-        _scheduler.unregister_live_actor_model(actor);
+        unregister_live_actor_model(actor);
     }
 
     std::filesystem::path RuntimeContext::resolve_disc_files_root() const {

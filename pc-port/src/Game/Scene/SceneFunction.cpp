@@ -2,12 +2,22 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "Game/compat/RuntimeContext.hpp"
 
 namespace MR {
 
     void connectToScene(NameObj* pObj, s32 movementType, s32 calcAnimType, s32 drawBufferType, s32 drawType) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && pObj != nullptr) {
+            if (auto* actor = dynamic_cast< LiveActor* >(pObj); actor != nullptr && drawBufferType >= 0) {
+                runtime->register_live_actor_model(*actor, movementType, calcAnimType, drawBufferType, drawType);
+                return;
+            }
+            if (auto* layout = dynamic_cast< LayoutActor* >(pObj); layout != nullptr && drawType >= 0) {
+                runtime->register_layout_actor(*layout, movementType, calcAnimType, drawType);
+                return;
+            }
+
             runtime->scheduler().connect_name_obj(*pObj, movementType, calcAnimType, drawBufferType, drawType);
         }
     }

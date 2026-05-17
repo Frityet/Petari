@@ -18,6 +18,7 @@
 
 class SimpleLayout;
 class LiveActor;
+class LayoutActor;
 
 namespace smgpc::game {
 
@@ -40,14 +41,20 @@ namespace smgpc::game {
         static RuntimeContext *try_instance();
 
         void begin_frame(const render::FrameContext &frame_context);
+        void set_scene_camera_pose(const CameraPoseCompat &camera_pose);
         void draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
+        void draw_3d_normal(render::IRendererEngine &renderer);
         void draw_2d_normal(render::IRendererEngine &renderer);
+        void set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index);
+        void set_current_stage_name(std::string_view stage_name);
 
         [[nodiscard]] bool is_core_pad_button_a(s32 channel) const;
         [[nodiscard]] bool is_core_pad_button_b(s32 channel) const;
         [[nodiscard]] std::uint64_t frame_index() const;
         [[nodiscard]] const std::optional<CameraPoseCompat> &last_camera_pose() const;
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
+        [[nodiscard]] bool should_record_j3d_packet_trace() const;
+        [[nodiscard]] std::string_view current_stage_name() const;
         [[nodiscard]] bool is_stage_bgm_prepared() const;
         [[nodiscard]] std::string_view current_stage_bgm_name() const;
         [[nodiscard]] std::optional<std::filesystem::path> find_layout_archive(std::string_view layout_name) const;
@@ -60,10 +67,18 @@ namespace smgpc::game {
         [[nodiscard]] const AudioEventService &audio() const;
         [[nodiscard]] EffectService &effects();
         [[nodiscard]] const EffectService &effects() const;
+        [[nodiscard]] WipeService &scene_wipe();
+        [[nodiscard]] const WipeService &scene_wipe() const;
+        [[nodiscard]] WipeService &system_wipe();
+        [[nodiscard]] const WipeService &system_wipe() const;
+        [[nodiscard]] SequenceRequestService &sequence_requests();
+        [[nodiscard]] const SequenceRequestService &sequence_requests() const;
         [[nodiscard]] SaveDataService &save_data();
         [[nodiscard]] const SaveDataService &save_data() const;
         [[nodiscard]] MessageService &messages();
         [[nodiscard]] const MessageService &messages() const;
+        [[nodiscard]] SceneLightService &scene_lights();
+        [[nodiscard]] const SceneLightService &scene_lights() const;
         [[nodiscard]] RflService &rfl();
         [[nodiscard]] const RflService &rfl() const;
         [[nodiscard]] SceneScheduler &scheduler();
@@ -72,9 +87,11 @@ namespace smgpc::game {
         void start_stage_bgm(std::string_view name);
         void unlock_stage_bgm();
         void stop_stage_bgm(s32 fade_frames);
+        void set_stage_bgm_state(s32 state, u32 change_frames);
         void start_system_sound(std::string_view name);
         void start_cs_sound(std::string_view name);
         void emit_effect(std::string_view actor_name, std::string_view effect_name);
+        void delete_effect(std::string_view actor_name, std::string_view effect_name);
         void delete_effect_all(std::string_view actor_name);
         void note_layout_archive(std::string_view layout_name, const std::filesystem::path &path);
         void note_missing_layout_archive(std::string_view layout_name);
@@ -87,6 +104,10 @@ namespace smgpc::game {
                                      const J3dRendererPacketState &packet);
         void register_layout(SimpleLayout &layout);
         void unregister_layout(SimpleLayout &layout);
+        void register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
+        void unregister_layout_actor(LayoutActor &layout);
+        void register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
+        void unregister_live_actor_model(LiveActor &actor);
         void register_sky_actor(LiveActor &actor);
         void unregister_sky_actor(LiveActor &actor);
 
@@ -100,13 +121,20 @@ namespace smgpc::game {
         WpadService _wpad;
         AudioEventService _audio;
         EffectService _effects;
+        WipeService _scene_wipe;
+        WipeService _system_wipe;
+        SequenceRequestService _sequence_requests;
         SaveDataService _save_data;
         MessageService _messages;
+        SceneLightService _scene_lights;
         RflService _rfl;
         SceneScheduler _scheduler;
         std::uint64_t _frame_index = 0;
+        std::optional<CameraPoseCompat> _scene_camera_pose{};
         std::optional<CameraPoseCompat> _last_camera_pose{};
         std::vector<J3dRuntimePacketTrace> _j3d_packet_trace{};
+        std::optional<std::uint64_t> _j3d_packet_trace_frame{};
+        std::string _current_stage_name;
         std::optional<std::uint64_t> _hold_title_combo_frame{};
     };
 

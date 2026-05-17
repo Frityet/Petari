@@ -5,10 +5,15 @@
 #include <limits>
 #include <utility>
 
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Screen/LayoutActor.hpp"
+#include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/LightUtil.hpp"
 
 namespace smgpc::game {
     namespace {
@@ -266,7 +271,8 @@ namespace smgpc::game {
         }
 
         [[nodiscard]] std::size_t calc_view_entry_rank(const SceneScheduler::Entry *entry) {
-            if (entry->kind == SceneEntryKind::Layout || (entry->draw_buffer_type < 0 && entry->draw_type >= 0)) {
+            if (entry->kind == SceneEntryKind::Layout || entry->kind == SceneEntryKind::LayoutActor ||
+                (entry->draw_buffer_type < 0 && entry->draw_type >= 0)) {
                 return category_rank(entry->draw_type, ORIGINAL_2D_DRAW_ORDER);
             }
             if (entry->draw_buffer_type >= 0) {
@@ -287,7 +293,67 @@ namespace smgpc::game {
         }
 
         [[nodiscard]] bool participates_in_calc_view_and_entry(const SceneScheduler::Entry &entry) {
-            return entry.kind == SceneEntryKind::Layout || entry.draw_buffer_type >= 0 || entry.draw_type >= 0;
+            return entry.kind == SceneEntryKind::Layout || entry.kind == SceneEntryKind::LayoutActor || entry.draw_buffer_type >= 0 ||
+                   entry.draw_type >= 0;
+        }
+
+        [[nodiscard]] s32 light_type_for_draw_buffer(s32 draw_buffer_type) {
+            if (draw_buffer_type < 0) {
+                return MR::LightType_None;
+            }
+
+            switch (draw_buffer_type) {
+            case MR::DrawBufferType_Player:
+            case MR::DrawBufferType_PlayerDecoration:
+            case MR::DrawBufferType_CrystalBox:
+                return MR::LightType_Player;
+            case MR::DrawBufferType_UNK_0x17:
+            case MR::DrawBufferType_NoSilhouettedMapObjWeakLight:
+            case MR::DrawBufferType_MapObjWeakLight:
+                return MR::LightType_Weak;
+            case MR::DrawBufferType_NPC:
+            case MR::DrawBufferType_Enemy:
+            case MR::DrawBufferType_EnemyDecoration:
+            case MR::DrawBufferType_TripodBoss:
+            case MR::DrawBufferType_IndirectNpc:
+            case MR::DrawBufferType_IndirectEnemy:
+            case MR::DrawBufferType_Ride:
+            case MR::DrawBufferType_NoShadowedMapObjStrongLight:
+            case MR::DrawBufferType_NoSilhouettedMapObjStrongLight:
+            case MR::DrawBufferType_MapObjStrongLight:
+            case MR::DrawBufferType_CrystalItem:
+                return MR::LightType_Strong;
+            case MR::DrawBufferType_0x26:
+            case MR::DrawBufferType_Model3DFor2D:
+            case MR::DrawBufferType_0x25:
+                return MR::LightType_None;
+            default:
+                return MR::LightType_Planet;
+            }
+        }
+
+        [[nodiscard]] const LiveActor *entry_live_actor(const SceneScheduler::Entry &entry) {
+            if (entry.kind == SceneEntryKind::LiveActorModel) {
+                return entry.live_actor;
+            }
+            if (entry.name_obj != nullptr) {
+                return dynamic_cast<const LiveActor *>(entry.name_obj);
+            }
+
+            return nullptr;
+        }
+
+        [[nodiscard]] LiveActor *entry_live_actor(SceneScheduler::Entry &entry) {
+            return const_cast<LiveActor *>(entry_live_actor(static_cast<const SceneScheduler::Entry &>(entry)));
+        }
+
+        [[nodiscard]] std::string sensor_host_name(const HitSensor *sensor) {
+            const auto *host = MR::getSensorHost(sensor);
+            return host != nullptr ? host->getName() : "";
+        }
+
+        [[nodiscard]] std::array<float, 3U> vec3_state(const TVec3f &value) {
+            return {value.x, value.y, value.z};
         }
 
     }  // namespace
@@ -342,12 +408,38 @@ namespace smgpc::game {
         });
     }
 
+    void SceneScheduler::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
+        if (auto *entry = find_entry(SceneEntryKind::LayoutActor, &layout)) {
+            entry->movement_type = movement_type;
+            entry->calc_anim_type = calc_anim_type;
+            entry->draw_type = draw_type;
+            return;
+        }
+
+        _entries.push_back(Entry{
+            .kind = SceneEntryKind::LayoutActor,
+            .name_obj = &layout,
+            .layout_actor = &layout,
+            .movement_type = movement_type,
+            .calc_anim_type = calc_anim_type,
+            .draw_type = draw_type,
+            .order = _next_order++,
+        });
+    }
+
+    void SceneScheduler::unregister_layout_actor(LayoutActor &layout) {
+        std::erase_if(_entries, [&layout](const auto &entry) {
+            return entry.kind == SceneEntryKind::LayoutActor && entry.layout_actor == &layout;
+        });
+    }
+
     void SceneScheduler::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
         if (auto *entry = find_entry(SceneEntryKind::LiveActorModel, &actor)) {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
             entry->draw_buffer_type = draw_buffer_type;
             entry->draw_type = draw_type;
+            MR::initActorLightInfoLightType(&actor, light_type_for_draw_buffer(draw_buffer_type));
             return;
         }
 
@@ -361,6 +453,7 @@ namespace smgpc::game {
             .draw_type = draw_type,
             .order = _next_order++,
         });
+        MR::initActorLightInfoLightType(&actor, light_type_for_draw_buffer(draw_buffer_type));
     }
 
     void SceneScheduler::unregister_live_actor_model(LiveActor &actor) {
@@ -383,6 +476,9 @@ namespace smgpc::game {
             case SceneEntryKind::Layout:
                 entry->layout->update();
                 break;
+            case SceneEntryKind::LayoutActor:
+                entry->layout_actor->executeMovement();
+                break;
             case SceneEntryKind::LiveActorModel:
                 entry->live_actor->movement();
                 break;
@@ -403,6 +499,9 @@ namespace smgpc::game {
                 break;
             case SceneEntryKind::Layout:
                 break;
+            case SceneEntryKind::LayoutActor:
+                entry->layout_actor->calcAnim();
+                break;
             case SceneEntryKind::LiveActorModel:
                 entry->live_actor->calcAnim();
                 break;
@@ -422,6 +521,9 @@ namespace smgpc::game {
                 entry->name_obj->calcViewAndEntry();
                 break;
             case SceneEntryKind::Layout:
+                break;
+            case SceneEntryKind::LayoutActor:
+                entry->layout_actor->calcViewAndEntry();
                 break;
             case SceneEntryKind::LiveActorModel:
                 entry->live_actor->calcViewAndEntry();
@@ -494,6 +596,57 @@ namespace smgpc::game {
         }
     }
 
+    std::size_t SceneScheduler::send_message_to_live_actors(u32 msg, LiveActor *exclude_actor) {
+        auto seen_actors = std::vector<LiveActor *>{};
+        auto accepted_count = std::size_t{};
+        auto *message_sensor = MR::getMessageSensor();
+
+        for (auto &entry : _entries) {
+            auto *actor = entry_live_actor(entry);
+            if (actor == nullptr || std::ranges::find(seen_actors, actor) != seen_actors.end()) {
+                continue;
+            }
+            seen_actors.push_back(actor);
+
+            const auto dead = entry_is_dead(entry);
+            const auto suspended = entry_is_suspended(entry);
+            const auto excluded = actor == exclude_actor;
+            const auto delivered = !dead && !suspended && !excluded;
+            auto accepted = false;
+            if (delivered) {
+                accepted = actor->receiveMessage(msg, message_sensor, message_sensor);
+                if (accepted) {
+                    ++accepted_count;
+                }
+            }
+
+            push_message_trace(SceneSchedulerMessageTraceEntry{
+                .sequence = _next_message_sequence++,
+                .message = msg,
+                .target_name = entry_name(entry),
+                .target_kind = entry.kind,
+                .target_movement_type = entry.movement_type,
+                .target_calc_anim_type = entry.calc_anim_type,
+                .target_draw_buffer_type = entry.draw_buffer_type,
+                .target_draw_type = entry.draw_type,
+                .target_order = entry.order,
+                .target_dead = dead,
+                .target_suspended = suspended,
+                .excluded = excluded,
+                .delivered = delivered,
+                .accepted = accepted,
+                .sender_sensor_present = message_sensor != nullptr,
+                .receiver_sensor_present = message_sensor != nullptr,
+                .sender_sensor_type = message_sensor != nullptr ? message_sensor->mType : 0U,
+                .receiver_sensor_type = message_sensor != nullptr ? message_sensor->mType : 0U,
+                .sender_sensor_host_name = sensor_host_name(message_sensor),
+                .receiver_sensor_host_name = sensor_host_name(message_sensor),
+            });
+        }
+
+        return accepted_count;
+    }
+
     void SceneScheduler::execute_draw_buffer(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type,
                                              SceneDrawBufferPass pass) {
         auto actor_entries = std::vector<Entry *>{};
@@ -503,12 +656,17 @@ namespace smgpc::game {
                 actor_entries.push_back(&entry);
             }
         }
+        if (actor_entries.empty()) {
+            return;
+        }
         std::ranges::stable_sort(actor_entries, draw_category_less);
+        MR::loadLight(light_type_for_draw_buffer(draw_buffer_type));
 
         const auto model_pass = pass == SceneDrawBufferPass::Translucent ? LiveActorModelCompat::DrawPass::Translucent :
                                                                            LiveActorModelCompat::DrawPass::Opaque;
         const auto phase = pass == SceneDrawBufferPass::Translucent ? SceneSchedulerPhase::DrawBufferXlu : SceneSchedulerPhase::DrawBufferOpa;
         for (auto *entry : actor_entries) {
+            entry->live_actor->loadActorLight();
             entry->live_actor->drawModel(renderer, camera_pose, static_cast<std::uint64_t>(entry->live_actor->getNerveStep()), model_pass);
             push_trace(*entry, phase, pass);
         }
@@ -531,6 +689,9 @@ namespace smgpc::game {
             case SceneEntryKind::Layout:
                 entry->layout->draw(renderer);
                 break;
+            case SceneEntryKind::LayoutActor:
+                entry->layout_actor->drawLayout(renderer);
+                break;
             case SceneEntryKind::LiveActorModel:
                 entry->live_actor->draw();
                 break;
@@ -543,7 +704,7 @@ namespace smgpc::game {
         auto states = std::vector<SceneSchedulerEntryState>{};
         states.reserve(_entries.size());
         for (const auto &entry : _entries) {
-            states.push_back(SceneSchedulerEntryState{
+            auto state = SceneSchedulerEntryState{
                 .kind = entry.kind,
                 .phase = SceneSchedulerPhase::None,
                 .name = entry_name(entry),
@@ -555,7 +716,19 @@ namespace smgpc::game {
                 .order = entry.order,
                 .suspended = entry_is_suspended(entry),
                 .dead = entry_is_dead(entry),
-            });
+            };
+            if (const auto *actor = entry_live_actor(entry)) {
+                state.has_live_actor_state = true;
+                state.live_actor_nerve_step = actor->getNerveStep();
+                state.live_actor_position = vec3_state(actor->mPosition);
+                state.live_actor_rotation = vec3_state(actor->mRotation);
+                state.live_actor_scale = vec3_state(actor->mScale);
+                state.live_actor_base_matrix = actor->getBaseMatrix().m;
+                state.live_actor_bck_name = std::string(actor->currentBckName());
+                state.live_actor_brk_name = std::string(actor->currentBrkName());
+                state.live_actor_btk_name = std::string(actor->currentBtkName());
+            }
+            states.push_back(std::move(state));
         }
 
         return states;
@@ -565,16 +738,22 @@ namespace smgpc::game {
         return _last_execution_trace;
     }
 
+    std::span<const SceneSchedulerMessageTraceEntry> SceneScheduler::message_trace() const {
+        return _message_trace;
+    }
+
     std::vector<SceneLayoutRuntimeDebugState> SceneScheduler::debug_layout_runtime_snapshot() const {
         auto states = std::vector<SceneLayoutRuntimeDebugState>{};
         for (const auto &entry : _entries) {
-            if (entry.kind != SceneEntryKind::Layout || entry.layout == nullptr) {
+            if ((entry.kind != SceneEntryKind::Layout || entry.layout == nullptr) &&
+                (entry.kind != SceneEntryKind::LayoutActor || entry.layout_actor == nullptr || entry.layout_actor->getSimpleLayout() == nullptr)) {
                 continue;
             }
+            const auto *layout = entry.kind == SceneEntryKind::Layout ? entry.layout : entry.layout_actor->getSimpleLayout();
 
             auto state = SceneLayoutRuntimeDebugState{
-                .name = entry.layout->getName(),
-                .layout_name = entry.layout->getLayoutName(),
+                .name = entry_name(entry),
+                .layout_name = layout->getLayoutName(),
                 .has_archive_path = false,
                 .archive_path = {},
                 .movement_type = entry.movement_type,
@@ -583,26 +762,75 @@ namespace smgpc::game {
                 .order = entry.order,
                 .suspended = entry_is_suspended(entry),
                 .dead = entry_is_dead(entry),
+                .pane_count = layout->debugPaneCount(),
+                .picture_count = layout->debugPictureCount(),
+                .text_box_count = layout->debugTextBoxCount(),
+                .material_count = layout->debugMaterialCount(),
+                .texture_count = layout->debugTextureCount(),
+                .font_count = layout->debugFontCount(),
+                .committed_pane_frame_count = layout->debugCommittedPaneFrameCount(),
                 .animations = {},
             };
-            if (entry.layout->getArchivePath().has_value()) {
+            if (layout->getArchivePath().has_value()) {
                 state.has_archive_path = true;
-                state.archive_path = entry.layout->getArchivePath()->string();
+                state.archive_path = layout->getArchivePath()->string();
             }
 
-            const auto layer_count = entry.layout->debugAnimLayerCount();
+            const auto layer_count = layout->debugAnimLayerCount();
             state.animations.reserve(layer_count);
             for (auto layer_index = std::size_t{}; layer_index < layer_count; ++layer_index) {
                 const auto layer = static_cast<u32>(layer_index);
                 state.animations.push_back(SceneLayoutAnimationDebugState{
                     .layer_index = layer_index,
-                    .name = std::string(entry.layout->debugAnimName(layer)),
-                    .frame = entry.layout->getAnimFrame(layer),
-                    .end_frame = entry.layout->debugAnimEndFrame(layer),
-                    .rate = entry.layout->debugAnimRate(layer),
-                    .stopped = entry.layout->debugAnimStopped(layer),
-                    .looping = entry.layout->debugAnimLooping(layer),
+                    .name = std::string(layout->debugAnimName(layer)),
+                    .frame = layout->getAnimFrame(layer),
+                    .end_frame = layout->debugAnimEndFrame(layer),
+                    .rate = layout->debugAnimRate(layer),
+                    .stopped = layout->debugAnimStopped(layer),
+                    .looping = layout->debugAnimLooping(layer),
                 });
+            }
+            if (entry.kind == SceneEntryKind::LayoutActor && entry.layout_actor->getLayoutManager() != nullptr) {
+                const auto pane_controls = entry.layout_actor->getLayoutManager()->debugPaneControls();
+                state.pane_controls.reserve(pane_controls.size());
+                for (const auto &pane_control : pane_controls) {
+                    auto pane_state = SceneLayoutPaneControlDebugState{
+                        .pane_name = pane_control.pane_name,
+                        .exists_in_layout = pane_control.exists_in_layout,
+                        .visible = pane_control.visible,
+                        .animations = {},
+                    };
+                    pane_state.animations.reserve(pane_control.animations.size());
+                    for (const auto &animation : pane_control.animations) {
+                        pane_state.animations.push_back(SceneLayoutPaneControlAnimationDebugState{
+                            .layer_index = animation.layer_index,
+                            .name = animation.name,
+                            .frame = animation.frame,
+                            .end_frame = animation.end_frame,
+                            .rate = animation.rate,
+                            .stopped = animation.stopped,
+                            .looping = animation.looping,
+                        });
+                    }
+                    state.pane_controls.push_back(std::move(pane_state));
+                }
+
+                const auto button_controllers = entry.layout_actor->getLayoutManager()->debugButtonControllers();
+                state.button_controllers.reserve(button_controllers.size());
+                for (const auto &button : button_controllers) {
+                    state.button_controllers.push_back(SceneLayoutButtonControllerDebugState{
+                        .pane_name = button.pane_name,
+                        .bounding_pane_name = button.bounding_pane_name,
+                        .nerve = button.nerve,
+                        .anim_layer = button.anim_layer,
+                        .active = button.active,
+                        .selected = button.selected,
+                        .pointing = button.pointing,
+                        .appearance_enabled = button.appearance_enabled,
+                        .decide_enabled = button.decide_enabled,
+                        .pointing_anim_start_frame = button.pointing_anim_start_frame,
+                    });
+                }
             }
 
             states.push_back(std::move(state));
@@ -614,7 +842,9 @@ namespace smgpc::game {
     void SceneScheduler::clear() {
         _entries.clear();
         _last_execution_trace.clear();
+        _message_trace.clear();
         _next_order = 0U;
+        _next_message_sequence = 0U;
     }
 
     SceneScheduler::Entry *SceneScheduler::find_entry(SceneEntryKind kind, const void *ptr) {
@@ -627,6 +857,8 @@ namespace smgpc::game {
                 return entry.name_obj == ptr;
             case SceneEntryKind::Layout:
                 return entry.layout == ptr;
+            case SceneEntryKind::LayoutActor:
+                return entry.layout_actor == ptr;
             case SceneEntryKind::LiveActorModel:
                 return entry.live_actor == ptr;
             }
@@ -674,6 +906,8 @@ namespace smgpc::game {
             return false;
         case SceneEntryKind::Layout:
             return entry.layout == nullptr || entry.layout->isDead();
+        case SceneEntryKind::LayoutActor:
+            return entry.layout_actor == nullptr || entry.layout_actor->isDead();
         case SceneEntryKind::LiveActorModel:
             return entry.live_actor == nullptr || entry.live_actor->isDead();
         }
@@ -691,6 +925,8 @@ namespace smgpc::game {
             return entry.name_obj == nullptr ? std::string{} : std::string(entry.name_obj->getName());
         case SceneEntryKind::Layout:
             return entry.layout == nullptr ? std::string{} : entry.layout->getName();
+        case SceneEntryKind::LayoutActor:
+            return entry.layout_actor == nullptr ? std::string{} : std::string(entry.layout_actor->getName());
         case SceneEntryKind::LiveActorModel:
             return entry.live_actor == nullptr ? std::string{} : std::string(entry.live_actor->getName());
         }
@@ -699,7 +935,7 @@ namespace smgpc::game {
     }
 
     void SceneScheduler::push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass) {
-        _last_execution_trace.push_back(SceneSchedulerEntryState{
+        auto state = SceneSchedulerEntryState{
             .kind = entry.kind,
             .phase = phase,
             .name = entry_name(entry),
@@ -711,7 +947,27 @@ namespace smgpc::game {
             .order = entry.order,
             .suspended = entry_is_suspended(entry),
             .dead = entry_is_dead(entry),
-        });
+        };
+        if (const auto *actor = entry_live_actor(entry)) {
+            state.has_live_actor_state = true;
+            state.live_actor_nerve_step = actor->getNerveStep();
+            state.live_actor_position = vec3_state(actor->mPosition);
+            state.live_actor_rotation = vec3_state(actor->mRotation);
+            state.live_actor_scale = vec3_state(actor->mScale);
+            state.live_actor_base_matrix = actor->getBaseMatrix().m;
+            state.live_actor_bck_name = std::string(actor->currentBckName());
+            state.live_actor_brk_name = std::string(actor->currentBrkName());
+            state.live_actor_btk_name = std::string(actor->currentBtkName());
+        }
+        _last_execution_trace.push_back(std::move(state));
+    }
+
+    void SceneScheduler::push_message_trace(SceneSchedulerMessageTraceEntry trace) {
+        constexpr auto max_message_trace_entries = std::size_t{512U};
+        if (_message_trace.size() >= max_message_trace_entries) {
+            _message_trace.erase(_message_trace.begin());
+        }
+        _message_trace.push_back(std::move(trace));
     }
 
 }  // namespace smgpc::game

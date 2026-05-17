@@ -87,6 +87,8 @@ namespace smgpc::render::core {
         std::uint8_t src_factor = 1U;
         std::uint8_t dst_factor = 0U;
         std::uint8_t op = 3U;
+        bool color_update = true;
+        bool alpha_update = true;
         bool enabled = false;
     };
 
@@ -164,6 +166,7 @@ namespace smgpc::render::core {
         bool wrap_v = false;
         bool blend = true;
         BlendMode blend_mode = BlendMode::Alpha;
+        GxBlendMode2D gx_blend{};
         bool depth_test = false;
         bool depth_write = false;
         DepthCompare depth_compare = DepthCompare::LessEqual;
@@ -178,6 +181,7 @@ namespace smgpc::render::core {
         bool wrap_v = false;
         bool blend = true;
         BlendMode blend_mode = BlendMode::Alpha;
+        GxBlendMode2D gx_blend{};
         bool depth_test = false;
         bool depth_write = false;
         DepthCompare depth_compare = DepthCompare::LessEqual;
