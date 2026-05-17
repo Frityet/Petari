@@ -69,6 +69,8 @@ namespace MR {
     bool isCubeBgmChangeInvalid();
     void clearBgmQueue();
 
+    void setMicMtx(Mtx, s32);
+
     void startEventBGM(s32);
     void startAfterBossBGM();
 
