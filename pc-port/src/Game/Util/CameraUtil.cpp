@@ -6,89 +6,22 @@
 #include "Game/compat/RuntimeContext.hpp"
 #include "core/RenderTypes.hpp"
 
-#include <cmath>
-
-namespace {
-    struct CameraBasis {
-        smgpc::game::CameraParamVec3 forward;
-        smgpc::game::CameraParamVec3 right;
-        smgpc::game::CameraParamVec3 up;
-    };
-
-    [[nodiscard]] std::string_view event_name(const char* pEventName) {
-        return pEventName != nullptr ? std::string_view(pEventName) : std::string_view{};
-    }
-
-    [[nodiscard]] smgpc::game::CameraParamVec3 camera_vec3(const TVec3f& value) {
-        return smgpc::game::CameraParamVec3{.x = value.x, .y = value.y, .z = value.z};
-    }
-
-    [[nodiscard]] TVec3f tv_vec3(const smgpc::game::CameraParamVec3& value) {
-        return TVec3f{value.x, value.y, value.z};
-    }
-
-    [[nodiscard]] smgpc::game::CameraParamVec3 subtract(const smgpc::game::CameraParamVec3& a,
-                                                        const smgpc::game::CameraParamVec3& b) {
-        return smgpc::game::CameraParamVec3{
-            .x = a.x - b.x,
-            .y = a.y - b.y,
-            .z = a.z - b.z,
-        };
-    }
-
-    [[nodiscard]] smgpc::game::CameraParamVec3 add(const smgpc::game::CameraParamVec3& a, const smgpc::game::CameraParamVec3& b) {
-        return smgpc::game::CameraParamVec3{
-            .x = a.x + b.x,
-            .y = a.y + b.y,
-            .z = a.z + b.z,
-        };
-    }
-
-    [[nodiscard]] smgpc::game::CameraParamVec3 scale(const smgpc::game::CameraParamVec3& value, f32 factor) {
-        return smgpc::game::CameraParamVec3{
-            .x = value.x * factor,
-            .y = value.y * factor,
-            .z = value.z * factor,
-        };
-    }
-
-    [[nodiscard]] smgpc::game::CameraParamVec3 cross(const smgpc::game::CameraParamVec3& a,
-                                                     const smgpc::game::CameraParamVec3& b) {
-        return smgpc::game::CameraParamVec3{
-            .x = a.y * b.z - a.z * b.y,
-            .y = a.z * b.x - a.x * b.z,
-            .z = a.x * b.y - a.y * b.x,
-        };
-    }
-
-    [[nodiscard]] f32 dot(const smgpc::game::CameraParamVec3& a, const smgpc::game::CameraParamVec3& b) {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
-    }
-
-    [[nodiscard]] smgpc::game::CameraParamVec3 normalized_or(const smgpc::game::CameraParamVec3& value,
-                                                             const smgpc::game::CameraParamVec3& fallback) {
-        const auto length = std::sqrt(dot(value, value));
-        if (length <= 0.000001F) {
-            return fallback;
+namespace MR {
+    void resetCameraMan() {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->camera_system().reset_camera_man();
         }
-
-        return scale(value, 1.0F / length);
     }
 
-    [[nodiscard]] CameraBasis camera_basis(const smgpc::game::CameraPoseCompat& pose) {
-        const auto forward = normalized_or(subtract(pose.watch, pose.eye), {0.0F, 0.0F, 1.0F});
-        const auto right = normalized_or(cross(forward, pose.up), {1.0F, 0.0F, 0.0F});
-        const auto corrected_up = normalized_or(cross(right, forward), {0.0F, 1.0F, 0.0F});
-        return CameraBasis{
-            .forward = forward,
-            .right = right,
-            .up = corrected_up,
-        };
+    void pauseOnCameraDirector() {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->camera_system().pause_on_camera_director();
+        }
     }
 
-    void sync_active_programmable_camera_pose(smgpc::game::RuntimeContext& runtime, const std::optional<smgpc::game::CameraPoseCompat>& pose) {
-        if (pose.has_value()) {
-            runtime.set_scene_camera_pose(*pose);
+    void pauseOffCameraDirector() {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->camera_system().pause_off_camera_director();
         }
     }
 

@@ -138,25 +138,25 @@ namespace MR {
 
     void startStarPointerModeTitle(void*) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModeTitle);
+            runtime->star_pointer().start_mode(smgpc::game::StarPointerMode::Title);
         }
     }
 
     void startStarPointerModeFileSelect(void*) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModeFileSelect);
+            runtime->star_pointer().start_mode(smgpc::game::StarPointerMode::FileSelect);
         }
     }
 
     void requestStarPointerModeSaveLoad(void*) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModeSaveLoad);
+            runtime->star_pointer().start_mode(smgpc::game::StarPointerMode::SaveLoad);
         }
     }
 
     void requestStarPointerModePictureBook(void*) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModePictureBook);
+            runtime->star_pointer().start_mode(smgpc::game::StarPointerMode::PictureBook);
         }
     }
 
@@ -174,14 +174,14 @@ namespace MR {
 
     bool requestFileSelectGuidance() {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->star_pointer().request_guidance(cFileSelectGuidanceRequest);
+            runtime->star_pointer().request_file_select_guidance();
         }
         return true;
     }
 
     bool requestFileSelectCopyGuidance() {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->star_pointer().request_guidance(cFileSelectCopyGuidanceRequest);
+            runtime->star_pointer().request_file_select_copy_guidance();
         }
         return true;
     }

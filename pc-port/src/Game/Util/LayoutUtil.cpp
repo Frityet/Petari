@@ -21,7 +21,6 @@
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "Game/compat/RuntimeContext.hpp"
-#include "core/RenderTypes.hpp"
 
 namespace {
     [[nodiscard]] std::u16string utf16_from_wide(const wchar_t* pText) {
@@ -42,14 +41,6 @@ namespace {
         const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
             return runtime->messages().message_utf16_or(tag, smgpc::game::utf16_from_utf8_lossy(tag));
-        }
-        return smgpc::game::utf16_from_utf8_lossy(tag);
-    }
-
-    [[nodiscard]] std::u16string runtime_raw_message_or_tag(const char* pMessageId) {
-        const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            return runtime->messages().message_raw_utf16_or(tag, smgpc::game::utf16_from_utf8_lossy(tag));
         }
         return smgpc::game::utf16_from_utf8_lossy(tag);
     }
@@ -78,6 +69,12 @@ namespace {
             name.append(".arc");
         }
         return name;
+    }
+
+    [[nodiscard]] const smgpc::game::RarcEntry* find_entry_by_basename(const smgpc::game::RarcArchive& archive, std::string_view name) {
+        const auto requested = lower_copy(base_name(name));
+        const auto it = std::ranges::find_if(archive.entries(), [&requested](const auto& entry) { return lower_copy(base_name(entry.path)) == requested; });
+        return it == archive.entries().end() ? nullptr : &*it;
     }
 
     [[nodiscard]] std::optional< std::filesystem::path > find_layout_texture_archive(smgpc::game::RuntimeContext& runtime,
@@ -172,7 +169,7 @@ namespace MR {
         }
 
         const auto& archive = runtime.dvd().archive_for_path(*archive_path);
-        const auto* entry = archive.find_by_basename(pTextureName);
+        const auto* entry = find_entry_by_basename(archive, pTextureName);
         if (entry == nullptr) {
             throw std::runtime_error("Layout texture does not exist: " + std::string(pTextureName));
         }
@@ -210,9 +207,8 @@ namespace MR {
     }
 
     void setTextBoxGameMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxTaggedStringRecursive(pPaneName, runtime_raw_message_or_tag(pMessageId),
-                                                                        runtime_message_or_tag(pMessageId));
+        if (pLayout != nullptr) {
+            pLayout->setTextBoxStringRecursive(pPaneName, runtime_message_or_tag(pMessageId));
         }
     }
 
@@ -318,6 +314,12 @@ namespace MR {
         }
     }
 
+    void setPaneAlphaFloat(LayoutActor* pLayout, const char* pPaneName, f32 alpha) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setPaneAlpha(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, alpha);
+        }
+    }
+
     void showLayout(LayoutActor* pLayout) {
         if (pLayout != nullptr) {
             pLayout->mFlag.mIsHidden = false;
@@ -403,7 +405,6 @@ namespace MR {
 
     void setLayoutScalePosAtPaneScaleTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
         setLayoutPosAtPaneTrans(pDst, pSrc, pPaneName);
-        setLayoutScaleAtPaneScale(pDst, pSrc, pPaneName);
     }
 
     void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {

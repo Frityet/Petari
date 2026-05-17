@@ -1,5 +1,8 @@
 #include "Application.hpp"
 
+#include "Game/compat/RuntimeContext.hpp"
+#include "Game/compat/SequenceBootService.hpp"
+
 #ifndef NDEBUG
 #include "Game/compat/ParityTrace.hpp"
 #endif
@@ -30,71 +33,6 @@ namespace smgpc::app {
         constexpr auto WII_FRAME_DURATION = std::chrono::duration_cast<FrameClock::duration>(
             std::chrono::duration<double>(WII_FRAME_DURATION_SECONDS));
 
-        [[nodiscard]] double logical_frame_time_seconds(std::uint64_t logical_frame_index) {
-            return logical_frame_index <= 1U ? 0.0 : static_cast<double>(logical_frame_index - 1U) * WII_FRAME_DURATION_SECONDS;
-        }
-
-        [[nodiscard]] double logical_frame_delta_seconds(std::uint64_t logical_frame_index) {
-            return logical_frame_index <= 1U ? 0.0 : WII_FRAME_DURATION_SECONDS;
-        }
-
-        void apply_logical_frame_timing(render::FrameContext &frame_context, std::uint64_t logical_frame_index) {
-            frame_context.frame_index = logical_frame_index;
-            frame_context.frame_time_seconds = logical_frame_time_seconds(logical_frame_index);
-            frame_context.frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index);
-        }
-
-        [[nodiscard]] std::filesystem::path default_save_directory() {
-            if (const auto *xdg_data_home = std::getenv("XDG_DATA_HOME"); xdg_data_home != nullptr && xdg_data_home[0] != '\0') {
-                return std::filesystem::path(xdg_data_home) / "smgpc" / "save";
-            }
-            if (const auto *home = std::getenv("HOME"); home != nullptr && home[0] != '\0') {
-                return std::filesystem::path(home) / ".local" / "share" / "smgpc" / "save";
-            }
-            return std::filesystem::path(".smgpc") / "save";
-        }
-
-        template <typename Service, Service &(game::RuntimeContext::*Getter)()>
-        void register_runtime_service_reference(ServiceGraph &graph) {
-            graph.register_service_reference<di::SingletonService<Service>, game::RuntimeContext>(
-                [](di::DependencyReference<game::RuntimeContext> runtime) -> Service & {
-                    return (runtime.get().*Getter)();
-                });
-        }
-
-        class FramePacer final {
-        public:
-            explicit FramePacer(bool enabled) : _enabled(enabled), _next_frame_deadline(FrameClock::now() + WII_FRAME_DURATION) {
-            }
-
-            [[nodiscard]] FrameClock::duration wait_for_frame_end() {
-                const auto now = FrameClock::now();
-                if (!_enabled) {
-                    _next_frame_deadline = now + WII_FRAME_DURATION;
-                    return FrameClock::duration::zero();
-                }
-
-                auto after_wait = now;
-                auto sleep_duration = FrameClock::duration::zero();
-                if (now < _next_frame_deadline) {
-                    const auto sleep_begin = now;
-                    std::this_thread::sleep_until(_next_frame_deadline);
-                    after_wait = FrameClock::now();
-                    sleep_duration = after_wait - sleep_begin;
-                }
-
-                while (_next_frame_deadline <= after_wait) {
-                    _next_frame_deadline += WII_FRAME_DURATION;
-                }
-
-                return sleep_duration;
-            }
-
-        private:
-            bool _enabled = true;
-            FrameClock::time_point _next_frame_deadline = {};
-        };
-
 #ifndef NDEBUG
         struct OneShotScreenshotRequest {
             std::filesystem::path path;
@@ -123,10 +61,6 @@ namespace smgpc::app {
 #endif
 
 #ifndef NDEBUG
-        [[nodiscard]] double elapsed_ms(FrameClock::duration duration) {
-            return std::chrono::duration<double, std::milli>(duration).count();
-        }
-
         [[nodiscard]] double elapsed_ms(FrameClock::time_point begin, FrameClock::time_point end) {
             return std::chrono::duration<double, std::milli>(end - begin).count();
         }
@@ -148,12 +82,8 @@ namespace smgpc::app {
             return fallback;
         }
 
-        [[nodiscard]] bool bool_environment_enabled(const char *name) {
-            return bool_environment_value(name, false);
-        }
-
-        [[nodiscard]] std::optional<std::string> string_environment(const char *name) {
-            const auto *value = std::getenv(name);
+        [[nodiscard]] std::optional<std::string> string_environment(const char* name) {
+            const auto* value = std::getenv(name);
             if (value == nullptr || value[0] == '\0') {
                 return std::nullopt;
             }
@@ -161,7 +91,7 @@ namespace smgpc::app {
             return std::string(value);
         }
 
-        void log_timing_summary(logging::ILogger &logger, const FrameTimingSummary &timing) {
+        void log_timing_summary(logging::ILogger& logger, const FrameTimingSummary& timing) {
             if (timing.frame_count == 0U) {
                 return;
             }
@@ -282,26 +212,7 @@ namespace smgpc::app {
             return *parsed;
         }
 
-        [[nodiscard]] std::optional<std::uint64_t> debug_change_stage_request_frame_from_environment() {
-            const auto *value = std::getenv("SMGPC_REQUEST_CHANGE_STAGE_AFTER_LOADING_FRAME");
-            if (value == nullptr || value[0] == '\0') {
-                return std::nullopt;
-            }
-
-            return parse_frame_index(value);
-        }
-
-        [[nodiscard]] bool has_active_layout(const game::RuntimeContext &runtime, std::string_view layout_name) {
-            for (const auto &layout : runtime.scheduler().debug_layout_runtime_snapshot()) {
-                if (layout.layout_name == layout_name && !layout.dead && !layout.suspended) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        void emit_configured_semantic_anchor(game::RuntimeContext &runtime) {
+        void emit_configured_semantic_anchor(game::RuntimeContext& runtime) {
             const auto name = string_environment("SMGPC_SEMANTIC_ANCHOR_NAME");
             if (!name.has_value()) {
                 return;
@@ -310,10 +221,6 @@ namespace smgpc::app {
             const auto category = string_environment("SMGPC_SEMANTIC_ANCHOR_CATEGORY").value_or("capture");
             const auto detail = string_environment("SMGPC_SEMANTIC_ANCHOR_DETAIL").value_or("runtime parity capture");
             runtime.emit_semantic_trace_event(category, *name, detail);
-        }
-
-        [[nodiscard]] bool frame_pacing_enabled_from_environment() {
-            return bool_environment_value("SMGPC_FRAME_PACING", true);
         }
 #endif
 
@@ -368,35 +275,17 @@ namespace smgpc::app {
                     _logger->info(logging::Category::APP, logging::Message{"Submitting one renderer frame every {} simulation frames"},
                                   render_frame_interval);
                 }
-                if (frame_pacing_enabled) {
-                    _logger->info(logging::Category::APP, logging::Message{"Pacing simulation frames at {:.3f} Hz"}, WII_FRAME_RATE_HZ);
-                } else {
-                    _logger->info(logging::Category::APP, logging::Message{"Debug frame pacing explicitly disabled by SMGPC_FRAME_PACING=0"});
-                }
-                if (exit_on_layout_name.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will exit when layout {} is active"}, *exit_on_layout_name);
-                }
-                if (debug_change_stage_request_frame.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will debug-request generic stage change after loading game data on frame {}"},
-                                  *debug_change_stage_request_frame);
-                }
-#else
-                constexpr auto frame_pacing_enabled = true;
 #endif
 
-                auto &runtime = _runtime.get();
-                auto &game_system = _game_system.get();
-                if (!runtime.save_data().host_directory().has_value()) {
-                    const auto save_directory = default_save_directory();
-                    runtime.save_data().set_host_directory(save_directory);
-                    _logger->info(logging::Category::APP, logging::Message{"Using default SMG save files from {}"}, save_directory.string());
-                }
+                auto runtime = game::RuntimeContext(_logger.get(), _window_service.get());
 #ifndef NDEBUG
                 emit_configured_semantic_anchor(runtime);
                 if (parity_trace_request.has_value()) {
                     runtime.set_j3d_packet_trace_frame(parity_trace_request->frame);
                 }
 #endif
+                auto sequence_boot = game::SequenceBootService(runtime);
+                sequence_boot.request_boot_to_file_select();
                 auto loop_frame_index = std::uint64_t{};
                 auto frame_pacer = FramePacer(frame_pacing_enabled);
 
@@ -444,20 +333,8 @@ namespace smgpc::app {
 #ifndef NDEBUG
                     const auto after_begin_frame = FrameClock::now();
 #endif
-                    game_system.begin_frame(frame_context);
-#ifndef NDEBUG
-                    if (debug_change_stage_request_frame.has_value() && !debug_change_stage_requested &&
-                        frame_context.frame_index >= *debug_change_stage_request_frame) {
-                        runtime.sequence_requests().request_change_stage_in_game_after_loading_game_data();
-                        debug_change_stage_requested = true;
-                    }
-#endif
-                    game_system.update();
-#ifndef NDEBUG
-                    if (exit_on_layout_name.has_value() && has_active_layout(runtime, *exit_on_layout_name)) {
-                        _window_service->close();
-                    }
-#endif
+                    runtime.begin_frame(frame_context);
+                    sequence_boot.update_after_runtime_frame();
 #ifndef NDEBUG
                     const auto after_runtime_update = FrameClock::now();
 #endif
@@ -510,8 +387,6 @@ namespace smgpc::app {
                         timing.frame_pacing_ms += elapsed_ms(frame_pacing_duration);
                         timing.total_ms += elapsed_ms(frame_start, after_frame_pacing);
                     }
-#else
-                    static_cast<void>(frame_pacer.wait_for_frame_end());
 #endif
                     ++loop_frame_index;
                 }

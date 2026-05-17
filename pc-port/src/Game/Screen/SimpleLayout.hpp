@@ -58,13 +58,9 @@ public:
     [[nodiscard]] bool isAnimStopped(u32 animLayer);
     void setTextBoxNumberRecursive(const char* pPaneName, s32 number);
     void setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text);
-    void setTextBoxTaggedStringRecursive(const char* pPaneName, std::u16string_view rawText, std::u16string_view displayText);
-    void setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex);
-    void setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex);
     void replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex);
     void setPaneAlpha(std::string_view paneName, f32 alpha);
     void setPaneVisible(std::string_view paneName, bool visible);
-    void setPaneVisibleRecursive(std::string_view paneName, bool visible);
     void setTextBoxHorizontalPosition(std::string_view paneName, u8 position);
     void setTextBoxVerticalPosition(std::string_view paneName, u8 position);
     [[nodiscard]] bool isPaneVisible(std::string_view paneName) const;
@@ -261,7 +257,6 @@ private:
     std::unordered_map< std::string, smgpc::game::BrlanPaneFrame > mCommittedPaneFrames = {};
     std::unordered_map< std::string, bool > mPaneVisibilityOverrides = {};
     std::unordered_map< std::string, f32 > mPaneAlphaOverrides = {};
-    std::unordered_map< std::string, TextBoxTemplateState > mTextBoxTemplates = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};
 };
 

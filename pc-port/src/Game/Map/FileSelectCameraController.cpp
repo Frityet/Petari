@@ -16,6 +16,47 @@ namespace {
     NEW_NERVE(FileSelectCameraControllerNrvFarPoint, FileSelectCameraController, FarPoint);
     NEW_NERVE(FileSelectCameraControllerNrvMoveToNearPoint, FileSelectCameraController, MoveToNearPoint);
     NEW_NERVE(FileSelectCameraControllerNrvNearPoint, FileSelectCameraController, NearPoint);
+
+    [[nodiscard]] smgpc::game::CameraParamVec3 lerp_vec(const smgpc::game::CameraParamVec3& from, const smgpc::game::CameraParamVec3& to, float t) {
+        return smgpc::game::CameraParamVec3{
+            .x = from.x + ((to.x - from.x) * t),
+            .y = from.y + ((to.y - from.y) * t),
+            .z = from.z + ((to.z - from.z) * t),
+        };
+    }
+
+    [[nodiscard]] smgpc::game::CameraPoseCompat lerp_pose(const smgpc::game::CameraPoseCompat& from, const smgpc::game::CameraPoseCompat& to,
+                                                          float t) {
+        return smgpc::game::CameraPoseCompat{
+            .eye = lerp_vec(from.eye, to.eye, t),
+            .watch = lerp_vec(from.watch, to.watch, t),
+            .up = to.up,
+            .fovy_degrees = from.fovy_degrees + ((to.fovy_degrees - from.fovy_degrees) * t),
+            .aspect_ratio = to.aspect_ratio,
+            .near_clip = to.near_clip,
+            .far_clip = to.far_clip,
+        };
+    }
+
+    [[nodiscard]] smgpc::game::CameraPoseCompat file_select_near_camera_pose(const smgpc::game::CameraParamVec3& basePosition) {
+        constexpr auto cNearTargetYOffset = 1100.0F;
+        constexpr auto cNearPointZOffset = 4800.0F;
+        const auto watch = smgpc::game::CameraParamVec3{
+            .x = basePosition.x,
+            .y = basePosition.y + cNearTargetYOffset,
+            .z = basePosition.z,
+        };
+
+        return smgpc::game::CameraPoseCompat{
+            .eye = {watch.x, watch.y, watch.z + cNearPointZOffset},
+            .watch = watch,
+            .up = {0.0F, 1.0F, 0.0F},
+            .fovy_degrees = 50.0F,
+            .aspect_ratio = 608.0F / 456.0F,
+            .near_clip = 100.0F,
+            .far_clip = 800000.0F,
+        };
+    }
 }  // namespace
 
 FileSelectCameraController::FileSelectCameraController(const char* pName) : LiveActor(pName) {
@@ -84,7 +125,7 @@ void FileSelectCameraController::exeTitle() {
 
 void FileSelectCameraController::exeMoveToFarPoint() {
     if (MR::isFirstStep(this)) {
-        _C4.set(0.0F, 1.0F, 0.0F);
+        mMoveStartPose = mCameraPose;
     }
 
     auto t = static_cast<f32>(getNerveStep()) / 60.0F;
@@ -108,8 +149,9 @@ void FileSelectCameraController::exeFarPoint() {
 }
 
 void FileSelectCameraController::exeMoveToNearPoint() {
-    auto point = _8C;
-    point.add(cNearPointOffset);
+    if (MR::isFirstStep(this)) {
+        mMoveStartPose = mCameraPose;
+    }
 
     auto t = static_cast<f32>(getNerveStep()) / 60.0F;
     t *= t;

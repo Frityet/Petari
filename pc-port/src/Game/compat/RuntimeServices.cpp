@@ -1882,61 +1882,8 @@ namespace smgpc::game {
         return frame_count < 0 ? 30 : frame_count;
     }
 
-    void ImageEffectService::begin_frame(std::uint64_t frame_index) {
-        _frame_index = frame_index;
-    }
-
-    void ImageEffectService::force_off() {
-        _forced_off = true;
-        _control_auto = false;
-        push_event(ImageEffectControlKind::ForceOff);
-    }
-
-    void ImageEffectService::set_control_auto() {
-        _forced_off = false;
-        _control_auto = true;
-        push_event(ImageEffectControlKind::ControlAuto);
-    }
-
-    bool ImageEffectService::is_forced_off() const {
-        return _forced_off;
-    }
-
-    bool ImageEffectService::is_control_auto() const {
-        return _control_auto;
-    }
-
-    std::span<const ImageEffectControlEvent> ImageEffectService::events() const {
-        return _events;
-    }
-
-    void ImageEffectService::push_event(ImageEffectControlKind kind) {
-        _events.push_back(ImageEffectControlEvent{
-            .kind = kind,
-            .frame_index = _frame_index,
-        });
-    }
-
     void StarPointerService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
-    }
-
-    void StarPointerService::register_target(const LiveActor &actor, float radius, const CameraParamVec3 &offset) {
-        _targets[&actor] = StarPointerTargetState{
-            .actor = &actor,
-            .radius = radius,
-            .offset = offset,
-        };
-    }
-
-    void StarPointerService::unregister_target(const LiveActor &actor) {
-        _targets.erase(&actor);
-    }
-
-    void StarPointerService::set_target_radius(const LiveActor &actor, float radius) {
-        if (auto iter = _targets.find(&actor); iter != _targets.end()) {
-            iter->second.radius = radius;
-        }
     }
 
     void StarPointerService::start_mode(StarPointerMode mode) {
@@ -1955,105 +1902,32 @@ namespace smgpc::game {
         _guidance_active = active;
     }
 
-    void StarPointerService::request_guidance(StarPointerGuidanceRequest request) {
-        if (request == StarPointerGuidanceRequest::None) {
-            return;
-        }
+    void StarPointerService::request_file_select_guidance() {
+        _file_select_guidance_requested = true;
+    }
 
-        if (std::find(_guidance_requests.begin(), _guidance_requests.end(), request) == _guidance_requests.end()) {
-            _guidance_requests.push_back(request);
-        }
+    void StarPointerService::request_file_select_copy_guidance() {
+        _file_select_copy_guidance_requested = true;
     }
 
     StarPointerMode StarPointerService::mode() const {
         return _mode;
     }
 
-    bool StarPointerService::has_target(const LiveActor &actor) const {
-        return _targets.contains(&actor);
-    }
-
-    bool StarPointerService::is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<CameraPoseCompat> &camera_pose, bool check_z) {
-        const auto iter = _targets.find(&actor);
-        if (iter == _targets.end()) {
-            return false;
-        }
-
-        auto &target = iter->second;
-        auto pointer = wpad.pointer(WPAD_CHAN0);
-        auto projection = std::optional<StarPointerProjection>{};
-        auto pointing = false;
-
-        if (!actor.isDead() && camera_pose.has_value() && pointer.valid) {
-            projection = project_star_pointer_target(target, *camera_pose, check_z);
-            if (projection.has_value()) {
-                const auto dx = pointer.x - projection->x;
-                const auto dy = pointer.y - projection->y;
-                pointing = (dx * dx) + (dy * dy) <= projection->radius * projection->radius;
-            }
-        }
-
-#ifndef NDEBUG
-        record_target_pointing_sample(target, pointing, pointer, projection.has_value(), projection.has_value() ? projection->x : 0.0F,
-                                      projection.has_value() ? projection->y : 0.0F, projection.has_value() ? projection->radius : 0.0F,
-                                      check_z, wpad.is_button_triggered(WPAD_CHAN0, WPAD_BUTTON_A));
-#endif
-        return pointing;
-    }
-
     bool StarPointerService::is_guidance_active() const {
         return _guidance_active;
     }
 
-    bool StarPointerService::is_guidance_requested(StarPointerGuidanceRequest request) const {
-        return std::find(_guidance_requests.begin(), _guidance_requests.end(), request) != _guidance_requests.end();
+    bool StarPointerService::is_file_select_guidance_requested() const {
+        return _file_select_guidance_requested;
     }
 
-    std::span<const StarPointerGuidanceRequest> StarPointerService::guidance_requests() const {
-        return _guidance_requests;
+    bool StarPointerService::is_file_select_copy_guidance_requested() const {
+        return _file_select_copy_guidance_requested;
     }
 
     std::span<const StarPointerModeEvent> StarPointerService::mode_events() const {
         return _mode_events;
-    }
-
-#ifndef NDEBUG
-    std::span<const StarPointerTargetEvent> StarPointerService::target_events() const {
-        return _target_events;
-    }
-
-    void StarPointerService::record_target_pointing_sample(StarPointerTargetState &target, bool pointing, const WpadPointerState &pointer,
-                                                           bool has_projection, float target_x, float target_y, float projected_radius,
-                                                           bool check_z, bool select_triggered) {
-        const auto push_event = [&](StarPointerTargetEventKind kind) {
-            _target_events.push_back(StarPointerTargetEvent{
-                .kind = kind,
-                .actor_name = target.actor != nullptr ? target.actor->getName() : "",
-                .frame_index = _frame_index,
-                .channel = WPAD_CHAN0,
-                .pointer_x = pointer.x,
-                .pointer_y = pointer.y,
-                .target_x = has_projection ? target_x : 0.0F,
-                .target_y = has_projection ? target_y : 0.0F,
-                .projected_radius = has_projection ? projected_radius : 0.0F,
-                .check_z = check_z,
-            });
-        };
-
-        if (pointing != target.was_pointing) {
-            push_event(pointing ? StarPointerTargetEventKind::Enter : StarPointerTargetEventKind::Leave);
-            target.was_pointing = pointing;
-        }
-
-        if (pointing && select_triggered && target.last_select_frame_index != _frame_index) {
-            push_event(StarPointerTargetEventKind::Select);
-            target.last_select_frame_index = _frame_index;
-        }
-    }
-#endif
-
-    void CameraSystemService::begin_frame(std::uint64_t frame_index) {
-        _frame_index = frame_index;
     }
 
     void CameraSystemService::reset_camera_man() {
@@ -2062,7 +1936,6 @@ namespace smgpc::game {
 
     void CameraSystemService::request_normal_shake() {
         ++_normal_shake_request_count;
-        push_shake_event(ShakeRequestKind::Normal);
     }
 
     void CameraSystemService::pause_on_camera_director() {
@@ -2073,78 +1946,6 @@ namespace smgpc::game {
         if (_camera_director_pause_count > 0U) {
             --_camera_director_pause_count;
         }
-    }
-
-    void CameraSystemService::declare_event_camera_programmable(std::string_view name) {
-        if (name.empty()) {
-            return;
-        }
-
-        auto &event = _programmable_camera_events[std::string(name)];
-        event.declared = true;
-        ++_programmable_camera_declare_count;
-    }
-
-    void CameraSystemService::start_global_event_camera_no_target(std::string_view name) {
-        if (name.empty()) {
-            return;
-        }
-
-        if (auto *event = find_programmable_event(_active_programmable_camera_name)) {
-            event->active = false;
-        }
-
-        auto &event = _programmable_camera_events[std::string(name)];
-        event.declared = true;
-        event.active = true;
-        _active_programmable_camera_name = std::string(name);
-        ++_programmable_camera_start_count;
-    }
-
-    void CameraSystemService::end_global_event_camera(std::string_view name) {
-        if (name.empty()) {
-            return;
-        }
-
-        if (auto *event = find_programmable_event(name)) {
-            event->active = false;
-        }
-        if (_active_programmable_camera_name == name) {
-            _active_programmable_camera_name.clear();
-        }
-        ++_programmable_camera_end_count;
-    }
-
-    std::optional<CameraPoseCompat> CameraSystemService::set_programmable_camera_param(std::string_view name, const CameraParamVec3 &watch,
-                                                                                       const CameraParamVec3 &eye, const CameraParamVec3 &up,
-                                                                                       bool do_zero_w_offset) {
-        (void)do_zero_w_offset;
-        if (name.empty()) {
-            return std::nullopt;
-        }
-
-        auto &event = _programmable_camera_events[std::string(name)];
-        event.declared = true;
-        event.pose.eye = eye;
-        event.pose.watch = watch;
-        event.pose.up = up;
-        event.has_pose = true;
-        ++_programmable_camera_param_count;
-
-        return active_programmable_camera_pose_for(name);
-    }
-
-    std::optional<CameraPoseCompat> CameraSystemService::set_programmable_camera_fovy(std::string_view name, float fovy_degrees) {
-        if (name.empty()) {
-            return std::nullopt;
-        }
-
-        auto &event = _programmable_camera_events[std::string(name)];
-        event.declared = true;
-        event.pose.fovy_degrees = fovy_degrees;
-        ++_programmable_camera_fovy_count;
-
-        return active_programmable_camera_pose_for(name);
     }
 
     std::uint32_t CameraSystemService::reset_camera_man_count() const {
@@ -2161,72 +1962,6 @@ namespace smgpc::game {
 
     bool CameraSystemService::is_camera_director_paused() const {
         return _camera_director_pause_count > 0U;
-    }
-
-    std::optional<CameraPoseCompat> CameraSystemService::active_programmable_camera_pose() const {
-        return active_programmable_camera_pose_for(_active_programmable_camera_name);
-    }
-
-    std::optional<std::string_view> CameraSystemService::active_programmable_camera_name() const {
-        if (_active_programmable_camera_name.empty()) {
-            return std::nullopt;
-        }
-
-        return std::string_view(_active_programmable_camera_name);
-    }
-
-    std::uint32_t CameraSystemService::programmable_camera_declare_count() const {
-        return _programmable_camera_declare_count;
-    }
-
-    std::uint32_t CameraSystemService::programmable_camera_start_count() const {
-        return _programmable_camera_start_count;
-    }
-
-    std::uint32_t CameraSystemService::programmable_camera_end_count() const {
-        return _programmable_camera_end_count;
-    }
-
-    std::uint32_t CameraSystemService::programmable_camera_param_count() const {
-        return _programmable_camera_param_count;
-    }
-
-    std::uint32_t CameraSystemService::programmable_camera_fovy_count() const {
-        return _programmable_camera_fovy_count;
-    }
-
-    std::span<const CameraSystemService::ShakeRequestEvent> CameraSystemService::shake_request_events() const {
-        return _shake_request_events;
-    }
-
-    void CameraSystemService::push_shake_event(ShakeRequestKind kind) {
-        _shake_request_events.push_back(ShakeRequestEvent{
-            .kind = kind,
-            .frame_index = _frame_index,
-        });
-    }
-
-    CameraSystemService::ProgrammableCameraEventState *CameraSystemService::find_programmable_event(std::string_view name) {
-        const auto it = _programmable_camera_events.find(std::string(name));
-        return it == _programmable_camera_events.end() ? nullptr : &it->second;
-    }
-
-    const CameraSystemService::ProgrammableCameraEventState *CameraSystemService::find_programmable_event(std::string_view name) const {
-        const auto it = _programmable_camera_events.find(std::string(name));
-        return it == _programmable_camera_events.end() ? nullptr : &it->second;
-    }
-
-    std::optional<CameraPoseCompat> CameraSystemService::active_programmable_camera_pose_for(std::string_view name) const {
-        if (name.empty() || _active_programmable_camera_name != name) {
-            return std::nullopt;
-        }
-
-        const auto *event = find_programmable_event(name);
-        if (event == nullptr || !event->active || !event->has_pose) {
-            return std::nullopt;
-        }
-
-        return event->pose;
     }
 
     void PlayerSystemService::hide_player() {
@@ -2286,10 +2021,6 @@ namespace smgpc::game {
 
     void RumbleService::request_strong(s32 channel) {
         push_event(RumbleRequestKind::Strong, channel);
-    }
-
-    void RumbleService::request_middle(s32 channel) {
-        push_event(RumbleRequestKind::Middle, channel);
     }
 
     void RumbleService::request_weak(s32 channel) {
@@ -2776,22 +2507,15 @@ namespace smgpc::game {
 
     void MessageService::set_message(std::string_view tag, std::u16string_view text) {
         _messages[std::string(tag)] = MessageText{
-            .raw_utf16 = std::u16string(text),
             .utf16 = std::u16string(text),
             .utf8 = utf8_from_utf16_lossy(text),
-            .control_tags = {},
         };
     }
 
     std::size_t MessageService::load_message_archive(const RarcArchive &archive) {
         const auto messages = BmgMessageArchive::from_message_archive(archive);
         for (const auto &message : messages.messages()) {
-            _messages[message.id] = MessageText{
-                .raw_utf16 = message.raw_text,
-                .utf16 = message.display_text,
-                .utf8 = utf8_from_utf16_lossy(message.display_text),
-                .control_tags = message.control_tags,
-            };
+            set_message(message.id, message.display_text);
         }
 
         return messages.message_count();
@@ -2817,22 +2541,6 @@ namespace smgpc::game {
         return nullptr;
     }
 
-    const std::u16string *MessageService::message_raw_utf16(std::string_view tag) const {
-        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
-            return &it->second.raw_utf16;
-        }
-
-        return nullptr;
-    }
-
-    const std::vector<BmgControlTag> *MessageService::message_control_tags(std::string_view tag) const {
-        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
-            return &it->second.control_tags;
-        }
-
-        return nullptr;
-    }
-
     std::string MessageService::message_or(std::string_view tag, std::string_view fallback) const {
         const auto *text = message(tag);
         return text == nullptr ? std::string(fallback) : *text;
@@ -2841,26 +2549,6 @@ namespace smgpc::game {
     std::u16string MessageService::message_utf16_or(std::string_view tag, std::u16string_view fallback) const {
         const auto *text = message_utf16(tag);
         return text == nullptr ? std::u16string(fallback) : *text;
-    }
-
-    std::u16string MessageService::message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const {
-        const auto *text = message_raw_utf16(tag);
-        return text == nullptr ? std::u16string(fallback) : *text;
-    }
-
-    std::u16string MessageService::format_message_utf16(std::string_view tag, std::span<const BmgFormatArg> args) const {
-        const auto *raw_text = message_raw_utf16(tag);
-        if (raw_text == nullptr) {
-            return {};
-        }
-
-        return format_bmg_text(*raw_text, args);
-    }
-
-    std::u16string MessageService::format_message_utf16_or(std::string_view tag, std::span<const BmgFormatArg> args,
-                                                           std::u16string_view fallback) const {
-        const auto *raw_text = message_raw_utf16(tag);
-        return raw_text == nullptr ? std::u16string(fallback) : format_bmg_text(*raw_text, args);
     }
 
     void SceneLightService::clear() {

@@ -14,7 +14,7 @@ namespace {
 
 PrologueLetter::PrologueLetter(const char* pName) : LayoutActor(pName, true), mAButtonIcon(nullptr) {}
 
-void PrologueLetter::init(const JMapInfoIter&) {
+void PrologueLetter::init(const JMapInfoIter& rIter) {
     initLayoutManager("PeachLetterMini", 1);
     MR::createAndAddPaneCtrl(this, "AButtonPosition", 1);
 

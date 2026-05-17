@@ -106,7 +106,12 @@ namespace MR {
         }
 
         const auto& rarc = runtime->dvd().archive_for_path(*archive_path);
-        return rarc.contains_resource(pResourceName);
+        if (rarc.contains(pResourceName)) {
+            return true;
+        }
+
+        const auto requested_name = lower_copy(base_name(pResourceName));
+        return std::ranges::any_of(rarc.entries(), [&requested_name](const auto& entry) { return lower_copy(base_name(entry.path)) == requested_name; });
     }
 
     bool tryRumblePadStrong(const void*, s32 channel) {

@@ -124,7 +124,6 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
         options.translucent_filter = true;
         break;
     }
-    options.projmap_effect_matrix = mProjmapEffectMatrix;
 #ifndef NDEBUG
     if (debug_model_filter_matches(mModelArcName)) {
         options.material_filter = debug_environment("SMGPC_J3D_MATERIAL_FILTER");
