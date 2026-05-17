@@ -5,7 +5,7 @@
 class FileSelectModel : public LiveActor {
 public:
     FileSelectModel(const char*, MtxPtr, const char*);
-    ~FileSelectModel() override = default;
+    ~FileSelectModel() override;
 
     void calcAnim() override;
     void calcAndSetBaseMtx() override;

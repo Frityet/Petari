@@ -355,36 +355,24 @@ namespace smgpc::tests {
             require_near(smgpc::game::jmath_cos_short(0x0000U), 1.0F, 0.000001F, "JMath cosShort(0) changed");
             require_near(smgpc::game::jmath_sin_short(0x4000U), 1.0F, 0.000001F, "JMath sinShort(0x4000) changed");
             require_near(smgpc::game::jmath_cos_short(0x8000U), -1.0F, 0.000001F, "JMath cosShort(0x8000) changed");
+            require_near(smgpc::game::jmath_cos_lap_rad(0.0F), 1.0F, 0.000001F, "JMath cosLapRad(0) changed");
+            require_near(smgpc::game::jmath_cos_lap_rad(3.1415927F), -1.0F, 0.000001F, "JMath cosLapRad(pi) changed");
         }
 
-        $test("matches FileSelectSky runtime matrix animation math") {
-            require_near(smgpc::game::file_select_sky_yaw(1900U), 1.9F, 0.000001F, "FileSelectSky yaw update rate changed");
-            require_near(smgpc::game::file_select_sky_pitch(0U), 0.0F, 0.000001F, "FileSelectSky pitch frame 0 changed");
-            require_near(smgpc::game::file_select_sky_pitch(100U), 0.000400535F, 0.000001F,
-                         "FileSelectSky pitch frame 100 should use JMath cosShort conversion");
-            require_near(smgpc::game::file_select_sky_pitch(500U), 0.010059165F, 0.000001F,
-                         "FileSelectSky pitch frame 500 should use JMath cosShort conversion");
-            require_near(smgpc::game::file_select_sky_pitch(1500U), 0.089677349F, 0.000001F,
-                         "FileSelectSky pitch frame 1500 should use JMath cosShort conversion");
-            require_near(smgpc::game::file_select_sky_pitch(1900U), 0.142750874F, 0.000001F,
-                         "FileSelectSky pitch frame 1900 should use JMath cosShort conversion");
-            require_near(smgpc::game::file_select_sky_pitch(3000U), 0.345056713F, 0.000001F,
-                         "FileSelectSky pitch frame 3000 should use JMath cosShort conversion");
+        $test("applies J3D matrix rotation, inversion, and scale helpers") {
+            const auto yaw = smgpc::game::j3d_rotation_matrix(0.0F, 1.0F, 0.0F, 1.9F);
+            const auto pitch = smgpc::game::j3d_rotation_matrix(1.0F, 0.0F, 0.0F, 0.142535359F);
+            const auto matrix = smgpc::game::j3d_apply_matrix_scale(
+                smgpc::game::j3d_invert_orthonormal_matrix(smgpc::game::j3d_concat_matrix(yaw, pitch)), 0.8F, 0.8F, 0.8F);
 
-            const auto identity_scaled = smgpc::game::file_select_sky_actor_matrix(0U);
-            require_near(identity_scaled.m[0U], 0.8F, 0.000001F, "FileSelectSky frame 0 matrix X scale changed");
-            require_near(identity_scaled.m[5U], 0.8F, 0.000001F, "FileSelectSky frame 0 matrix Y scale changed");
-            require_near(identity_scaled.m[10U], 0.8F, 0.000001F, "FileSelectSky frame 0 matrix Z scale changed");
-
-            const auto matrix = smgpc::game::file_select_sky_actor_matrix(1900U);
-            require_near(matrix.m[0U], -0.258631736F, 0.000001F, "FileSelectSky frame 1900 matrix[0] changed");
-            require_near(matrix.m[2U], -0.757040024F, 0.000001F, "FileSelectSky frame 1900 matrix[2] changed");
-            require_near(matrix.m[4U], 0.107539982F, 0.000001F, "FileSelectSky frame 1900 matrix[4] changed");
-            require_near(matrix.m[5U], 0.791887224F, 0.000001F, "FileSelectSky frame 1900 matrix[5] changed");
-            require_near(matrix.m[6U], -0.036739472F, 0.000001F, "FileSelectSky frame 1900 matrix[6] changed");
-            require_near(matrix.m[8U], 0.749362886F, 0.000001F, "FileSelectSky frame 1900 matrix[8] changed");
-            require_near(matrix.m[9U], -0.113642588F, 0.000001F, "FileSelectSky frame 1900 matrix[9] changed");
-            require_near(matrix.m[10U], -0.256008953F, 0.000001F, "FileSelectSky frame 1900 matrix[10] changed");
+            require_near(matrix.m[0U], -0.258631736F, 0.000001F, "J3D helper matrix[0] changed");
+            require_near(matrix.m[2U], -0.757040024F, 0.000001F, "J3D helper matrix[2] changed");
+            require_near(matrix.m[4U], 0.107539982F, 0.000001F, "J3D helper matrix[4] changed");
+            require_near(matrix.m[5U], 0.791887224F, 0.000001F, "J3D helper matrix[5] changed");
+            require_near(matrix.m[6U], -0.036739472F, 0.000001F, "J3D helper matrix[6] changed");
+            require_near(matrix.m[8U], 0.749362886F, 0.000001F, "J3D helper matrix[8] changed");
+            require_near(matrix.m[9U], -0.113642588F, 0.000001F, "J3D helper matrix[9] changed");
+            require_near(matrix.m[10U], -0.256008953F, 0.000001F, "J3D helper matrix[10] changed");
         }
 
         $test("parses TitleLogo BRLAN animations") {

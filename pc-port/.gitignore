@@ -1,3 +1,5 @@
 build/
 .cache/
 .xmake/
+container/orig/RMGK01/files/*
+!container/orig/RMGK01/files/.gitkeep

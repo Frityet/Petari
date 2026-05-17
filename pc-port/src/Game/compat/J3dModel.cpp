@@ -1635,8 +1635,10 @@ namespace smgpc::game {
         }
         if (summary.materials.has_value() && summary.mdl3.has_value()) {
             const auto packet_count = std::min(summary.materials->materials.size(), summary.mdl3->packets.size());
+            auto bp_registers = !summary.materials->materials.empty() ? gx_bp_registers_from_state(summary.materials->materials.front().gx_state)
+                                                                      : GXBPRegisterState{};
             for (auto i = std::size_t{}; i < packet_count; ++i) {
-                gx_apply_mdl3_display_list(summary.materials->materials[i].gx_state, summary.mdl3->packets[i].bytes);
+                gx_apply_mdl3_display_list(summary.materials->materials[i].gx_state, summary.mdl3->packets[i].bytes, &bp_registers);
             }
         }
         if (const auto section = section_for(summary.sections, "SHP1"); section.has_value()) {

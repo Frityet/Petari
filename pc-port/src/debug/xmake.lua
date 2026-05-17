@@ -1,3 +1,15 @@
+add_requires("sqlite3", {system = true})
+
+target("smg-pc-debug-common")
+    set_kind("static")
+    set_default(false)
+    add_files("DebugPaths.cpp", "DebugText.cpp")
+    add_headerfiles("DebugPaths.hpp", "DebugText.hpp")
+    add_includedirs("./", {public = true})
+    add_deps {
+        "smg-pc-common"
+    }
+
 target("smg-pc-title-probe")
     set_kind("binary")
     set_default(false)
@@ -30,9 +42,20 @@ target("smg-pc-j3d-model-probe")
     set_default(false)
     add_files("J3dModelProbe.cpp")
     add_deps {
+        "smg-pc-debug-common",
         "smg-pc-game",
         "smg-pc-render"
     }
+
+target("smg-pc-trace-import-sqlite")
+    set_kind("binary")
+    set_default(false)
+    add_files("TraceSqliteImport.cpp")
+    add_deps {
+        "smg-pc-debug-common",
+        "smg-pc-common"
+    }
+    add_packages("sqlite3")
 
 target("smg-pc-j3d-animation-probe")
     set_kind("binary")

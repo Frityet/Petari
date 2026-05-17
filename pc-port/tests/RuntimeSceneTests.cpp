@@ -1606,8 +1606,12 @@ namespace smgpc::tests {
                         }),
                         "runtime scene scheduler should run sky calcViewAndEntry during the frame phase");
                 require(sky.getNerveStep() == 1, "runtime scene scheduler should still move the sky actor nerve");
-                require(sky.getBaseMatrix().m == smgpc::game::file_select_sky_actor_matrix(0U).m,
-                        "runtime scene scheduler should update sky base matrix during calcViewAndEntry");
+                require_near(sky.getBaseMatrix().m[0U], 0.8F, 0.000001F,
+                             "runtime scene scheduler should update scaled sky base matrix during calcViewAndEntry");
+                require_near(sky.getBaseMatrix().m[5U], 0.8F, 0.000001F,
+                             "runtime scene scheduler should update scaled sky base matrix during calcViewAndEntry");
+                require_near(sky.getBaseMatrix().m[10U], 0.8F, 0.000001F,
+                             "runtime scene scheduler should update scaled sky base matrix during calcViewAndEntry");
                 const auto layout_runtime = runtime.scheduler().debug_layout_runtime_snapshot();
                 const auto title_logo_runtime = std::ranges::find_if(layout_runtime, [](const auto &entry) {
                     return entry.name == "TitleLogoProbe" && entry.layout_name == "TitleLogo";

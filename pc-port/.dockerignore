@@ -1,0 +1,8 @@
+*
+!Dockerfile
+!.dockerignore
+!container/
+!container/orig/
+!container/orig/RMGK01/
+!container/orig/RMGK01/files/
+!container/orig/RMGK01/files/**

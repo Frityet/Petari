@@ -5,27 +5,6 @@
 #include "Game/Util/ObjUtil.hpp"
 
 namespace {
-    [[nodiscard]] smgpc::game::J3dMatrix3x4 matrix_from_mtx(MtxPtr matrix, const TVec3f& scale) {
-        if (matrix == nullptr) {
-            return {};
-        }
-
-        return smgpc::game::J3dMatrix3x4{{
-            matrix[0][0] * scale.x,
-            matrix[0][1] * scale.y,
-            matrix[0][2] * scale.z,
-            matrix[0][3],
-            matrix[1][0] * scale.x,
-            matrix[1][1] * scale.y,
-            matrix[1][2] * scale.z,
-            matrix[1][3],
-            matrix[2][0] * scale.x,
-            matrix[2][1] * scale.y,
-            matrix[2][2] * scale.z,
-            matrix[2][3],
-        }};
-    }
-
     NEW_NERVE(FileSelectModelNrvOpen, FileSelectModel, Open);
     NEW_NERVE(FileSelectModelNrvBlinkOnce, FileSelectModel, BlinkOnce);
     NEW_NERVE(FileSelectModelNrvClose, FileSelectModel, Close);
@@ -36,6 +15,7 @@ FileSelectModel::FileSelectModel(const char* pModelName, MtxPtr pMtx, const char
     initModelManagerWithAnm(pModelName, nullptr, false);
     MR::connectToSceneNpc(this);
     initEffectKeeper(0, nullptr, false);
+    MR::initLightCtrl(this);
     mScale.x = 30.0F;
     mScale.y = 30.0F;
     mScale.z = 30.0F;
@@ -44,8 +24,15 @@ FileSelectModel::FileSelectModel(const char* pModelName, MtxPtr pMtx, const char
     makeActorDead();
 }
 
+FileSelectModel::~FileSelectModel() {}
+
 void FileSelectModel::calcAnim() {
     LiveActor::calcAnim();
+}
+
+void FileSelectModel::calcAndSetBaseMtx() {
+    mPosition.set< f32 >(_8C[0][3], _8C[1][3], _8C[2][3]);
+    MR::setBaseTRMtx(this, _8C);
 }
 
 void FileSelectModel::open() {
@@ -120,16 +107,4 @@ void FileSelectModel::exeBlink() {
     if (MR::isBtpStopped(this)) {
         setNerve(&FileSelectModelNrvOpen::sInstance);
     }
-}
-
-void FileSelectModel::calcAndSetBaseMtx() {
-    if (_8C == nullptr) {
-        LiveActor::calcAndSetBaseMtx();
-        return;
-    }
-
-    mPosition.x = _8C[0][3];
-    mPosition.y = _8C[1][3];
-    mPosition.z = _8C[2][3];
-    MR::setBaseTRMtx(this, matrix_from_mtx(_8C, mScale));
 }

@@ -66,8 +66,8 @@ namespace smgpc::game {
                    (static_cast<std::uint32_t>(state.op & 0x03U) << 22U);
         }
 
-        [[nodiscard]] std::array<std::uint32_t, 256U> initial_bp_registers_from_state(const GXMaterialState &state) {
-            auto registers = std::array<std::uint32_t, 256U>{};
+        [[nodiscard]] GXBPRegisterState initial_bp_registers_from_state(const GXMaterialState &state) {
+            auto registers = GXBPRegisterState{};
             registers[0x00U] = encode_gen_mode_register(state);
             registers[0x40U] = encode_z_mode_register(state.z_mode);
             registers[0x41U] = encode_blend_register(state.blend);
@@ -1022,12 +1022,20 @@ namespace smgpc::game {
         return state;
     }
 
+    GXBPRegisterState gx_bp_registers_from_state(const GXMaterialState &state) {
+        return initial_bp_registers_from_state(state);
+    }
+
     void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list) {
+        auto bp_registers = gx_bp_registers_from_state(state);
+        gx_apply_mdl3_display_list(state, display_list, &bp_registers);
+    }
+
+    void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list, GXBPRegisterState *bp_registers) {
         state.mdl3_display_list.assign(display_list.begin(), display_list.end());
         state.mdl3_stats = GXDisplayListStats{};
         state.mdl3_register_loads.clear();
 
-        auto bp_registers = initial_bp_registers_from_state(state);
         auto bp_mask = std::uint32_t{0xffffffU};
 
         auto cursor = std::size_t{};
@@ -1127,8 +1135,8 @@ namespace smgpc::game {
                 if (address == 0xfeU) {
                     bp_mask = value & 0xffffffU;
                 } else {
-                    const auto effective_value = (bp_registers[address] & ~bp_mask) | (value & bp_mask);
-                    bp_registers[address] = effective_value;
+                    const auto effective_value = ((*bp_registers)[address] & ~bp_mask) | (value & bp_mask);
+                    (*bp_registers)[address] = effective_value;
                     apply_bp_register(state, address, effective_value);
                     bp_mask = 0xffffffU;
                 }

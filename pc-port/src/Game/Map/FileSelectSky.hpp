@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "Game/LiveActor/LiveActor.hpp"
 
 class ProjmapEffectMtxSetter;
@@ -24,5 +22,5 @@ private:
     f32 _8C = 0.0F;
     f32 _90 = 0.0F;
     smgpc::game::J3dMatrix3x4 _94{};
-    std::unique_ptr< ProjmapEffectMtxSetter > mProjmapEffectMtxSetter{};
+    ProjmapEffectMtxSetter* mProjmapEffectMtxSetter = nullptr;
 };
