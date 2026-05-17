@@ -24,6 +24,9 @@ public:
 
 class ActorLightInfo {
 public:
+    ActorLightInfo() = default;
+    ActorLightInfo(const ActorLightInfo&) = default;
+
     void operator=(const ActorLightInfo& other) {
         mInfo0 = other.mInfo0;
         mInfo1 = other.mInfo1;

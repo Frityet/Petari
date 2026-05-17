@@ -3,7 +3,7 @@
 
 namespace smgpc::tests {
     namespace {
-        constexpr auto kTestSuite = std::string_view{"render/core"};
+        constexpr auto TEST_SUITE = std::string_view{"render/core"};
 
         template <int Line>
         struct TestCase;
@@ -206,7 +206,7 @@ namespace smgpc::tests {
     }  // namespace
 
     void run_render_core_tests() {
-        run_registered_tests(kTestSuite);
+        run_registered_tests(TEST_SUITE);
     }
 
 }  // namespace smgpc::tests

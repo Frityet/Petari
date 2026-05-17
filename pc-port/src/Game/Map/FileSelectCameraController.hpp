@@ -1,15 +1,18 @@
 #pragma once
 
-#include "Game/System/NerveExecutor.hpp"
-#include "Game/compat/CameraPose.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 
-class FileSelectCameraController : public NerveExecutor {
+class FileSelectCameraController : public LiveActor {
 public:
     FileSelectCameraController(const char* pName);
+    ~FileSelectCameraController() override;
 
-    void update();
+    void init(const JMapInfoIter& rIter) override;
+    void appear() override;
+    void kill() override;
+    void control() override;
     void goToFarPoint();
-    void goToNearPoint(const smgpc::game::CameraParamVec3& basePosition);
+    void goToNearPoint(const TVec3f& rPos);
     bool isAtFarPoint() const;
     bool isToOrAtFarPoint() const;
     bool isAtNearPoint() const;
@@ -21,12 +24,12 @@ public:
     void exeMoveToNearPoint();
     void exeNearPoint();
 
-    [[nodiscard]] const smgpc::game::CameraPoseCompat& getCameraPose() const;
-    [[nodiscard]] s32 getFarPointTransitionStep() const;
-    [[nodiscard]] s32 getNearPointTransitionStep() const;
-
 private:
-    smgpc::game::CameraPoseCompat mCameraPose;
-    smgpc::game::CameraPoseCompat mMoveStartPose;
-    smgpc::game::CameraParamVec3 mNearBasePosition{};
+    TVec3f _8C{};
+    TVec3f _98{};
+    TVec3f _A4{};
+    TVec3f _B0{};
+    f32 _BC = 60.0F;
+    f32 _C0 = 60.0F;
+    TVec3f _C4{0.0F, 1.0F, 0.0F};
 };

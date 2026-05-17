@@ -169,6 +169,10 @@ bool LiveActorModelCompat::isLoaded() const {
     return mRenderer != nullptr && mRenderer->is_loaded();
 }
 
+std::string_view LiveActorModelCompat::model_arc_name() const {
+    return mModelArcName;
+}
+
 void LiveActorModelCompat::ensureLoaded(smgpc::render::IRendererEngine &renderer) {
     if (mLoadAttempted) {
         return;

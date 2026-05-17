@@ -236,6 +236,7 @@ namespace smgpc::game {
         void execute_draw_buffer_list_normal_opa(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, bool prior_draw_air);
         void execute_draw_buffer_list_normal_xlu(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
         void execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, bool prior_draw_air = false);
+        void execute_draw_type(render::IRendererEngine &renderer, s32 draw_type);
         void execute_draw_list_2d_normal(render::IRendererEngine &renderer);
         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
 
@@ -271,7 +272,6 @@ namespace smgpc::game {
         [[nodiscard]] static std::string entry_name(const Entry &entry);
         void execute_draw_buffer(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type,
                                  SceneDrawBufferPass pass);
-        void execute_draw_type(render::IRendererEngine &renderer, s32 draw_type);
 #ifndef NDEBUG
         void push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass = SceneDrawBufferPass::None);
         void push_message_trace(SceneSchedulerMessageTraceEntry trace);

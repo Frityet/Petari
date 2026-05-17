@@ -995,12 +995,7 @@ namespace smgpc::game {
         }
 
         for (auto register_index = 0U; register_index < material.tev_colors.size(); ++register_index) {
-            state.tev_registers[register_index + 1U] = {
-                static_cast<std::int16_t>(material.tev_colors[register_index][0U]),
-                static_cast<std::int16_t>(material.tev_colors[register_index][1U]),
-                static_cast<std::int16_t>(material.tev_colors[register_index][2U]),
-                static_cast<std::int16_t>(material.tev_colors[register_index][3U]),
-            };
+            state.tev_registers[register_index + 1U] = material.tev_colors[register_index];
         }
         state.alpha_compare = GXAlphaCompareState{
             .comp0 = material.alpha_compare.comp0,

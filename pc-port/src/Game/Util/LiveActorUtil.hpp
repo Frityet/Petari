@@ -9,6 +9,7 @@ class LiveActor;
 class PartsModel;
 class ActorLightCtrl;
 class J3DFrameCtrl;
+class Nerve;
 
 class ProjmapEffectMtxSetter {
 public:
@@ -49,6 +50,7 @@ namespace MR {
     bool isDead(const LiveActor* pActor);
     bool isStep(const LiveActor* pActor, s32 step);
     bool isFirstStep(const LiveActor* pActor);
+    void setNerveAtStep(LiveActor* pActor, const Nerve* pNerve, s32 step);
     bool isBtpStopped(const LiveActor* pActor);
     bool isBrkOneTimeAndStopped(const LiveActor* pActor);
 }  // namespace MR

@@ -14,8 +14,11 @@
 
 #include <revolution.h>
 
+#include "Game/compat/CameraPose.hpp"
+#include "Game/compat/EffectResourceCompat.hpp"
 #include "Game/compat/GXState.hpp"
 #include "Game/compat/RarcArchive.hpp"
+#include "RendererService.hpp"
 
 class UserFile;
 
@@ -175,27 +178,134 @@ namespace smgpc::game {
         DeleteAll,
     };
 
+    enum class EffectKeeperHostKind {
+        LiveActor,
+        LayoutActor,
+        SimpleLayout,
+    };
+
+    struct EffectKeeperRegistration {
+        EffectKeeperHostKind host_kind = EffectKeeperHostKind::LiveActor;
+        std::string host_name;
+        std::string resource_group_name;
+        s32 requested_capacity = 0;
+        bool sort_enabled = false;
+        std::uint64_t frame_index = 0U;
+    };
+
     struct EffectEvent {
         EffectEventKind kind = EffectEventKind::Emit;
         std::string actor_name;
         std::string effect_name;
         std::uint64_t frame_index = 0U;
+        std::optional<EffectKeeperRegistration> keeper;
+        std::vector<ResolvedEffectResource> resolved_resources;
     };
+
+    struct JpcEffectParticleInstance {
+        std::uint32_t id = 0U;
+        std::uint16_t age = 0U;
+        std::uint16_t lifetime = 1U;
+        bool child = false;
+        float x = 0.0F;
+        float y = 0.0F;
+        float z = 0.0F;
+        float scale_x = 1.0F;
+        float scale_y = 1.0F;
+        float alpha = 1.0F;
+    };
+
+    struct JpcEffectEmitterInstance {
+        std::uint16_t user_index = 0U;
+        std::string particle_name;
+        std::uint64_t start_frame_index = 0U;
+        std::uint64_t next_update_frame_index = 0U;
+        std::uint32_t random_seed = 0U;
+        float fractional_emit_count = 0.0F;
+        std::uint16_t rate_step_timer = 0U;
+        bool first_emit = true;
+        bool rate_step_emit = true;
+        std::uint32_t next_particle_id = 0U;
+        std::vector<JpcEffectParticleInstance> particles;
+    };
+
+    struct ActiveEffectInstance {
+        std::string actor_name;
+        std::string effect_name;
+        std::uint64_t start_frame_index = 0U;
+        std::optional<EffectKeeperRegistration> keeper;
+        std::vector<ResolvedEffectResource> resolved_resources;
+        std::vector<JpcEffectEmitterInstance> emitters;
+    };
+
+#ifndef NDEBUG
+    struct EffectTextureBindingTrace {
+        std::uint8_t slot = 0U;
+        std::uint16_t texture_index = 0U;
+        std::string name;
+        std::uint16_t width = 0U;
+        std::uint16_t height = 0U;
+        std::uint32_t format_raw = 0U;
+        std::string format_name;
+    };
+
+    struct EffectDrawPacketTrace {
+        std::string actor_name;
+        std::string effect_name;
+        std::string particle_name;
+        std::uint16_t user_index = 0U;
+        std::string draw_order;
+        std::uint64_t frame_index = 0U;
+        s32 draw_type = 0;
+        std::uint32_t vertex_count = 0U;
+        std::uint32_t index_count = 0U;
+        std::uint32_t particle_id = 0U;
+        std::uint16_t particle_age = 0U;
+        std::uint16_t particle_lifetime = 0U;
+        std::uint32_t live_particle_count = 0U;
+        bool child_particle = false;
+        EffectTextureBindingTrace texture{};
+    };
+#endif
 
     class EffectService final {
     public:
+        void load_resources(const RarcArchive &archive);
         void begin_frame(std::uint64_t frame_index);
+        void register_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
+                             std::string_view resource_group_name, bool sort_enabled);
+        void unregister_keeper(std::string_view host_name);
         void emit(std::string_view actor_name, std::string_view effect_name);
         void delete_effect(std::string_view actor_name, std::string_view effect_name);
         void delete_all(std::string_view actor_name);
+        void draw(render::IRendererEngine &renderer, s32 draw_type);
 
         [[nodiscard]] std::span<const EffectEvent> events() const;
+        [[nodiscard]] std::span<const ActiveEffectInstance> active_effect_instances() const;
+        [[nodiscard]] std::vector<EffectKeeperRegistration> registered_keepers() const;
+        [[nodiscard]] std::optional<EffectKeeperRegistration> registered_keeper(std::string_view host_name) const;
         [[nodiscard]] std::vector<std::string> active_effects(std::string_view actor_name) const;
+        [[nodiscard]] const EffectResourceLibrary *resource_library() const;
+#ifndef NDEBUG
+        [[nodiscard]] std::span<const EffectDrawPacketTrace> draw_packets() const;
+#endif
 
     private:
+        [[nodiscard]] std::vector<ResolvedEffectResource> resolve(std::string_view actor_name, std::string_view effect_name) const;
+        [[nodiscard]] render::TextureHandle texture_handle_for(render::IRendererEngine &renderer, const JpcTextureMetadata &texture);
+        [[nodiscard]] std::vector<JpcEffectEmitterInstance> create_emitters(std::span<const ResolvedEffectResource> resources) const;
+        void advance_effects_to_frame(std::uint64_t frame_index);
+        void advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const ResolvedEffectResource &resource, std::uint64_t frame_index);
+
         std::uint64_t _frame_index = 0U;
         std::vector<EffectEvent> _events;
-        std::map<std::string, std::vector<std::string>> _active_effects;
+        std::vector<ActiveEffectInstance> _active_effects;
+        std::map<std::string, EffectKeeperRegistration, std::less<>> _registered_keepers;
+        std::optional<EffectResourceLibrary> _resource_library;
+        std::map<std::uint16_t, render::TextureHandle> _texture_handles;
+#ifndef NDEBUG
+        std::vector<EffectDrawPacketTrace> _draw_packets;
+#endif
     };
 
     enum class WipeEventKind {
@@ -291,16 +401,48 @@ namespace smgpc::game {
         void request_normal_shake();
         void pause_on_camera_director();
         void pause_off_camera_director();
+        void declare_event_camera_programmable(std::string_view name);
+        void start_global_event_camera_no_target(std::string_view name);
+        void end_global_event_camera(std::string_view name);
+        [[nodiscard]] std::optional<CameraPoseCompat> set_programmable_camera_param(std::string_view name, const CameraParamVec3 &watch,
+                                                                                    const CameraParamVec3 &eye, const CameraParamVec3 &up,
+                                                                                    bool do_zero_w_offset);
+        [[nodiscard]] std::optional<CameraPoseCompat> set_programmable_camera_fovy(std::string_view name, float fovy_degrees);
 
         [[nodiscard]] std::uint32_t reset_camera_man_count() const;
         [[nodiscard]] std::uint32_t normal_shake_request_count() const;
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
+        [[nodiscard]] std::optional<CameraPoseCompat> active_programmable_camera_pose() const;
+        [[nodiscard]] std::optional<std::string_view> active_programmable_camera_name() const;
+        [[nodiscard]] std::uint32_t programmable_camera_declare_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_start_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_end_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_param_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_fovy_count() const;
 
     private:
+        struct ProgrammableCameraEventState {
+            CameraPoseCompat pose{};
+            bool declared = false;
+            bool active = false;
+            bool has_pose = false;
+        };
+
+        [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
+        [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
+        [[nodiscard]] std::optional<CameraPoseCompat> active_programmable_camera_pose_for(std::string_view name) const;
+
         std::uint32_t _reset_camera_man_count = 0U;
         std::uint32_t _normal_shake_request_count = 0U;
         std::uint32_t _camera_director_pause_count = 0U;
+        std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
+        std::string _active_programmable_camera_name;
+        std::uint32_t _programmable_camera_declare_count = 0U;
+        std::uint32_t _programmable_camera_start_count = 0U;
+        std::uint32_t _programmable_camera_end_count = 0U;
+        std::uint32_t _programmable_camera_param_count = 0U;
+        std::uint32_t _programmable_camera_fovy_count = 0U;
     };
 
     class PlayerSystemService final {

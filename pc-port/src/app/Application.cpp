@@ -17,12 +17,64 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <thread>
 #include <utility>
 
 namespace smgpc::app {
     namespace {
 
         using FrameClock = std::chrono::steady_clock;
+        constexpr auto WII_FRAME_RATE_HZ = 60.0;
+        constexpr auto WII_FRAME_DURATION_SECONDS = 1.0 / WII_FRAME_RATE_HZ;
+        constexpr auto WII_FRAME_DURATION = std::chrono::duration_cast<FrameClock::duration>(
+            std::chrono::duration<double>(WII_FRAME_DURATION_SECONDS));
+
+        [[nodiscard]] double logical_frame_time_seconds(std::uint64_t logical_frame_index) {
+            return logical_frame_index <= 1U ? 0.0 : static_cast<double>(logical_frame_index - 1U) * WII_FRAME_DURATION_SECONDS;
+        }
+
+        [[nodiscard]] double logical_frame_delta_seconds(std::uint64_t logical_frame_index) {
+            return logical_frame_index <= 1U ? 0.0 : WII_FRAME_DURATION_SECONDS;
+        }
+
+        void apply_logical_frame_timing(render::FrameContext &frame_context, std::uint64_t logical_frame_index) {
+            frame_context.frame_index = logical_frame_index;
+            frame_context.frame_time_seconds = logical_frame_time_seconds(logical_frame_index);
+            frame_context.frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index);
+        }
+
+        class FramePacer final {
+        public:
+            explicit FramePacer(bool enabled) : _enabled(enabled), _next_frame_deadline(FrameClock::now() + WII_FRAME_DURATION) {
+            }
+
+            [[nodiscard]] FrameClock::duration wait_for_frame_end() {
+                const auto now = FrameClock::now();
+                if (!_enabled) {
+                    _next_frame_deadline = now + WII_FRAME_DURATION;
+                    return FrameClock::duration::zero();
+                }
+
+                auto after_wait = now;
+                auto sleep_duration = FrameClock::duration::zero();
+                if (now < _next_frame_deadline) {
+                    const auto sleep_begin = now;
+                    std::this_thread::sleep_until(_next_frame_deadline);
+                    after_wait = FrameClock::now();
+                    sleep_duration = after_wait - sleep_begin;
+                }
+
+                while (_next_frame_deadline <= after_wait) {
+                    _next_frame_deadline += WII_FRAME_DURATION;
+                }
+
+                return sleep_duration;
+            }
+
+        private:
+            bool _enabled = true;
+            FrameClock::time_point _next_frame_deadline = {};
+        };
 
 #ifndef NDEBUG
         struct OneShotScreenshotRequest {
@@ -46,22 +98,43 @@ namespace smgpc::app {
             double parity_trace_ms = 0.0;
             double screenshot_request_ms = 0.0;
             double end_frame_ms = 0.0;
+            double frame_pacing_ms = 0.0;
             double total_ms = 0.0;
         };
 #endif
 
 #ifndef NDEBUG
+        [[nodiscard]] double elapsed_ms(FrameClock::duration duration) {
+            return std::chrono::duration<double, std::milli>(duration).count();
+        }
+
         [[nodiscard]] double elapsed_ms(FrameClock::time_point begin, FrameClock::time_point end) {
-            return std::chrono::duration< double, std::milli >(end - begin).count();
+            return std::chrono::duration<double, std::milli>(end - begin).count();
         }
 
-        [[nodiscard]] bool bool_environment_enabled(const char* name) {
-            const auto* value = std::getenv(name);
-            return value != nullptr && std::string_view(value) == "1";
+        [[nodiscard]] bool bool_environment_value(const char *name, bool fallback) {
+            const auto *value = std::getenv(name);
+            if (value == nullptr || value[0] == '\0') {
+                return fallback;
+            }
+
+            const auto text = std::string_view(value);
+            if (text == "0" || text == "false" || text == "False" || text == "off" || text == "OFF" || text == "no" || text == "NO") {
+                return false;
+            }
+            if (text == "1" || text == "true" || text == "True" || text == "on" || text == "ON" || text == "yes" || text == "YES") {
+                return true;
+            }
+
+            return fallback;
         }
 
-        [[nodiscard]] std::optional<std::string> string_environment(const char* name) {
-            const auto* value = std::getenv(name);
+        [[nodiscard]] bool bool_environment_enabled(const char *name) {
+            return bool_environment_value(name, false);
+        }
+
+        [[nodiscard]] std::optional<std::string> string_environment(const char *name) {
+            const auto *value = std::getenv(name);
             if (value == nullptr || value[0] == '\0') {
                 return std::nullopt;
             }
@@ -69,20 +142,20 @@ namespace smgpc::app {
             return std::string(value);
         }
 
-        void log_timing_summary(logging::ILogger& logger, const FrameTimingSummary& timing) {
+        void log_timing_summary(logging::ILogger &logger, const FrameTimingSummary &timing) {
             if (timing.frame_count == 0U) {
                 return;
             }
 
-            const auto inv_frames = 1.0 / static_cast< double >(timing.frame_count);
+            const auto inv_frames = 1.0 / static_cast<double>(timing.frame_count);
             logger.info(logging::Category::APP,
                         logging::Message{
                             "Frame timing summary over {} frames: poll={:.3f}ms begin={:.3f}ms update={:.3f}ms draw3d={:.3f}ms draw2d={:.3f}ms "
-                            "trace={:.3f}ms screenshot={:.3f}ms end={:.3f}ms total={:.3f}ms"},
+                            "trace={:.3f}ms screenshot={:.3f}ms end={:.3f}ms pace={:.3f}ms total={:.3f}ms"},
                         timing.frame_count, timing.poll_events_ms * inv_frames, timing.begin_frame_ms * inv_frames,
                         timing.runtime_update_ms * inv_frames, timing.draw_3d_ms * inv_frames, timing.draw_2d_ms * inv_frames,
                         timing.parity_trace_ms * inv_frames, timing.screenshot_request_ms * inv_frames, timing.end_frame_ms * inv_frames,
-                        timing.total_ms * inv_frames);
+                        timing.frame_pacing_ms * inv_frames, timing.total_ms * inv_frames);
         }
 
         [[nodiscard]] std::optional<std::uint64_t> parse_frame_index(std::string_view text) {
@@ -190,7 +263,7 @@ namespace smgpc::app {
             return *parsed;
         }
 
-        void emit_configured_semantic_anchor(game::RuntimeContext& runtime) {
+        void emit_configured_semantic_anchor(game::RuntimeContext &runtime) {
             const auto name = string_environment("SMGPC_SEMANTIC_ANCHOR_NAME");
             if (!name.has_value()) {
                 return;
@@ -199,6 +272,10 @@ namespace smgpc::app {
             const auto category = string_environment("SMGPC_SEMANTIC_ANCHOR_CATEGORY").value_or("capture");
             const auto detail = string_environment("SMGPC_SEMANTIC_ANCHOR_DETAIL").value_or("runtime parity capture");
             runtime.emit_semantic_trace_event(category, *name, detail);
+        }
+
+        [[nodiscard]] bool frame_pacing_enabled_from_environment() {
+            return bool_environment_value("SMGPC_FRAME_PACING", true);
         }
 #endif
 
@@ -221,6 +298,7 @@ namespace smgpc::app {
                 const auto event_poll_interval = event_poll_interval_from_environment();
                 const auto skip_render_until_frame = skip_render_until_frame_from_environment();
                 const auto render_frame_interval = render_frame_interval_from_environment();
+                const auto frame_pacing_enabled = frame_pacing_enabled_from_environment();
                 auto timing = FrameTimingSummary{};
                 auto screenshot_queued = false;
                 auto parity_trace_written = false;
@@ -246,6 +324,13 @@ namespace smgpc::app {
                     _logger->info(logging::Category::APP, logging::Message{"Submitting one renderer frame every {} simulation frames"},
                                   render_frame_interval);
                 }
+                if (frame_pacing_enabled) {
+                    _logger->info(logging::Category::APP, logging::Message{"Pacing simulation frames at {:.3f} Hz"}, WII_FRAME_RATE_HZ);
+                } else {
+                    _logger->info(logging::Category::APP, logging::Message{"Debug frame pacing explicitly disabled by SMGPC_FRAME_PACING=0"});
+                }
+#else
+                constexpr auto frame_pacing_enabled = true;
 #endif
 
                 auto runtime = game::RuntimeContext(_logger.get(), _window_service.get());
@@ -258,6 +343,7 @@ namespace smgpc::app {
                 auto sequence_boot = game::SequenceBootService(runtime);
                 sequence_boot.request_boot_to_file_select();
                 auto loop_frame_index = std::uint64_t{};
+                auto frame_pacer = FramePacer(frame_pacing_enabled);
 
                 while (true) {
 #ifndef NDEBUG
@@ -290,15 +376,15 @@ namespace smgpc::app {
 #endif
                     auto frame_context = render::FrameContext{
                         .frame_index = logical_frame_index,
-                        .frame_time_seconds = logical_frame_index == 1U ? 0.0 : static_cast<double>(logical_frame_index - 1U) / 60.0,
-                        .frame_delta_seconds = logical_frame_index == 1U ? 0.0 : 1.0 / 60.0,
+                        .frame_time_seconds = logical_frame_time_seconds(logical_frame_index),
+                        .frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index),
                         .framebuffer = _renderer_engine->framebuffer_size(),
                         .has_focus = _window_service->is_focused(),
                         .is_minimized = _window_service->is_minimized(),
                     };
                     if (should_render_frame) {
                         frame_context = _renderer_engine->begin_frame();
-                        frame_context.frame_index = logical_frame_index;
+                        apply_logical_frame_timing(frame_context, logical_frame_index);
                     }
 #ifndef NDEBUG
                     const auto after_begin_frame = FrameClock::now();
@@ -342,6 +428,8 @@ namespace smgpc::app {
                     }
 #ifndef NDEBUG
                     const auto after_end_frame = FrameClock::now();
+                    const auto frame_pacing_duration = frame_pacer.wait_for_frame_end();
+                    const auto after_frame_pacing = FrameClock::now();
                     if (timing_enabled) {
                         ++timing.frame_count;
                         timing.poll_events_ms += elapsed_ms(frame_start, after_poll_events);
@@ -352,8 +440,11 @@ namespace smgpc::app {
                         timing.parity_trace_ms += elapsed_ms(after_draw_2d, after_parity_trace);
                         timing.screenshot_request_ms += elapsed_ms(after_parity_trace, after_screenshot_request);
                         timing.end_frame_ms += elapsed_ms(after_screenshot_request, after_end_frame);
-                        timing.total_ms += elapsed_ms(frame_start, after_end_frame);
+                        timing.frame_pacing_ms += elapsed_ms(frame_pacing_duration);
+                        timing.total_ms += elapsed_ms(frame_start, after_frame_pacing);
                     }
+#else
+                    static_cast<void>(frame_pacer.wait_for_frame_end());
 #endif
                     ++loop_frame_index;
                 }

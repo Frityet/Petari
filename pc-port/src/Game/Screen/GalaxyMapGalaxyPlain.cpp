@@ -25,6 +25,12 @@ void GalaxyMapGalaxyPlain::init(const JMapInfoIter&) {
     kill();
 }
 
+void GalaxyMapGalaxyPlain::control() {
+    if (mPaneName != nullptr) {
+        MR::setLayoutScalePosAtPaneScaleTrans(this, mHost, mPaneName);
+    }
+}
+
 void GalaxyMapGalaxyPlain::show(const char* pMessage, const char* pPaneName) {
     const auto wide = widen_ascii(pMessage);
     show(wide.c_str(), pPaneName);

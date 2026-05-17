@@ -2,6 +2,8 @@
 
 #include <revolution/types.h>
 
+struct ResTIMG;
+
 namespace MR {
     void closeWipeCircle(s32 frameCount);
     void forceOpenWipeCircle();
@@ -23,6 +25,11 @@ namespace MR {
     void closeSystemWipeWhiteFade(s32 frameCount);
     void forceCloseSystemWipeWhiteFade();
     bool isSystemWipeActive();
+    void startToCaptureScreen(const char* pName);
+    void endToCaptureScreen(const char* pName);
+    void captureScreenIfAllow(const char* pName);
+    const ResTIMG* getScreenResTIMG();
+    u8* getScreenTexImage();
     void closeSystemWipeCircleWithCaptureScreen(s32 frameCount);
     void closeSystemWipeFadeWithCaptureScreen(s32 frameCount);
     void deactivateDefaultGameLayout();

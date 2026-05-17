@@ -13,6 +13,10 @@ namespace smgpc::render {
 
     using FrameContext = core::FrameContext;
     using FramebufferInfo = core::FramebufferInfo;
+    using CopyEvent = core::CopyEvent;
+    using CopyEventKind = core::CopyEventKind;
+    using CopyRect = core::CopyRect;
+    using CopyViewport = core::CopyViewport;
     using NativeWindowHandle = core::NativeWindowHandle;
     using InputButton = core::InputButton;
     using BlendMode = core::BlendMode;
@@ -37,12 +41,12 @@ namespace smgpc::render {
     class IWindowFactory {
     public:
         virtual ~IWindowFactory() = default;
-        virtual std::unique_ptr< IWindowService > create(const WindowConfiguration& configuration) const = 0;
+        virtual std::unique_ptr<IWindowService> create(const WindowConfiguration &configuration) const = 0;
     };
 
-    [[nodiscard]] std::unique_ptr< IWindowFactory > create_default_window_factory(di::DependencyReference< logging::ILogger > logger);
+    [[nodiscard]] std::unique_ptr<IWindowFactory> create_default_window_factory(di::DependencyReference<logging::ILogger> logger);
 
-    [[nodiscard]] std::unique_ptr< IRendererEngine > create_default_renderer_engine(di::DependencyReference< IWindowService > window_service,
-                                                                                    di::DependencyReference< logging::ILogger > logger);
+    [[nodiscard]] std::unique_ptr<IRendererEngine> create_default_renderer_engine(di::DependencyReference<IWindowService> window_service,
+                                                                                  di::DependencyReference<logging::ILogger> logger);
 
 }  // namespace smgpc::render

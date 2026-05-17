@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
@@ -19,6 +20,8 @@
 class SimpleLayout;
 class LiveActor;
 class LayoutActor;
+class CaptureScreenActor;
+class CaptureScreenDirector;
 
 namespace smgpc::game {
 
@@ -30,6 +33,33 @@ namespace smgpc::game {
             std::uint64_t frame_index = 0U;
             std::string draw_pass;
             J3dRendererPacketState state{};
+        };
+
+        struct RenderTextureBindingTrace {
+            std::uint8_t slot = 0U;
+            std::uint16_t texture_index = 0U;
+            std::string name;
+            std::uint16_t width = 0U;
+            std::uint16_t height = 0U;
+            std::uint32_t format_raw = 0U;
+            std::string format_name;
+        };
+
+        struct LayoutRuntimePacketTrace {
+            std::string layout_name;
+            std::string pane_name;
+            std::string material_name;
+            std::uint64_t frame_index = 0U;
+            std::uint32_t picture_index = 0U;
+            std::uint32_t material_index = 0U;
+            std::uint32_t vertex_count = 0U;
+            std::uint32_t index_count = 0U;
+            std::uint32_t texgen_count = 0U;
+            std::uint32_t tev_stage_count = 0U;
+            bool alpha_compare_enabled = false;
+            bool blend_enabled = false;
+            render::CullMode cull_mode = render::CullMode::None;
+            std::vector<RenderTextureBindingTrace> texture_bindings{};
         };
 #endif
 
@@ -60,6 +90,7 @@ namespace smgpc::game {
 
         void begin_frame(const render::FrameContext &frame_context);
         void set_scene_camera_pose(const CameraPoseCompat &camera_pose);
+        void record_copy_event(render::CopyEvent event);
         void draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
         void draw_3d_normal(render::IRendererEngine &renderer);
         void draw_2d_normal(render::IRendererEngine &renderer);
@@ -75,10 +106,13 @@ namespace smgpc::game {
         [[nodiscard]] bool is_core_pad_button_b(s32 channel) const;
         [[nodiscard]] std::uint64_t frame_index() const;
         [[nodiscard]] const std::optional<CameraPoseCompat> &last_camera_pose() const;
+        [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
+        [[nodiscard]] std::span<const LayoutRuntimePacketTrace> layout_packet_trace() const;
         [[nodiscard]] std::span<const SemanticTraceEvent> semantic_trace_events() const;
         [[nodiscard]] bool should_record_j3d_packet_trace() const;
+        [[nodiscard]] bool should_record_render_packet_trace() const;
 #endif
         [[nodiscard]] const std::optional<GxPixelUpdateState> &j3d_pixel_update_state() const;
         [[nodiscard]] std::string_view current_stage_name() const;
@@ -120,6 +154,8 @@ namespace smgpc::game {
         [[nodiscard]] const SceneLightService &scene_lights() const;
         [[nodiscard]] RflService &rfl();
         [[nodiscard]] const RflService &rfl() const;
+        [[nodiscard]] CaptureScreenDirector &capture_screen_director();
+        [[nodiscard]] const CaptureScreenDirector &capture_screen_director() const;
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
 
@@ -129,6 +165,9 @@ namespace smgpc::game {
         void set_stage_bgm_state(s32 state, u32 change_frames);
         void start_system_sound(std::string_view name);
         void start_cs_sound(std::string_view name);
+        void register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
+                                    std::string_view resource_group_name, bool sort_enabled);
+        void unregister_effect_keeper(std::string_view host_name);
         void emit_effect(std::string_view actor_name, std::string_view effect_name);
         void delete_effect(std::string_view actor_name, std::string_view effect_name);
         void delete_effect_all(std::string_view actor_name);
@@ -144,6 +183,7 @@ namespace smgpc::game {
         void emit_sequence_state_trace_event(std::string_view name, std::string_view detail = {}, std::string_view draw_phase = {});
         void record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
                                      const J3dRendererPacketState &packet);
+        void record_layout_packet_trace(LayoutRuntimePacketTrace packet);
 #endif
         void register_layout(SimpleLayout &layout);
         void unregister_layout(SimpleLayout &layout);
@@ -176,16 +216,21 @@ namespace smgpc::game {
         MessageService _messages;
         SceneLightService _scene_lights;
         RflService _rfl;
+        std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
+        std::unique_ptr<CaptureScreenActor> _capture_screen_indirect_actor;
+        std::unique_ptr<CaptureScreenActor> _capture_screen_camera_actor;
         SceneScheduler _scheduler;
         std::uint64_t _frame_index = 0;
         std::optional<CameraPoseCompat> _scene_camera_pose{};
         std::optional<CameraPoseCompat> _last_camera_pose{};
         std::optional<GxPixelUpdateState> _j3d_pixel_update_state{};
+        std::vector<render::CopyEvent> _copy_events{};
         std::string _current_stage_name;
         std::string _current_sequence_scene_name = "Game";
         std::string _next_sequence_scene_name;
 #ifndef NDEBUG
         std::vector<J3dRuntimePacketTrace> _j3d_packet_trace{};
+        std::vector<LayoutRuntimePacketTrace> _layout_packet_trace{};
         std::vector<SemanticTraceEvent> _semantic_trace_events{};
         std::optional<std::uint64_t> _j3d_packet_trace_frame{};
         std::optional<std::uint64_t> _hold_title_combo_frame{};

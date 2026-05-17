@@ -6,7 +6,7 @@
 namespace smgpc::game {
     namespace {
 
-        constexpr auto kReplacementCharacter = char32_t{0xfffdU};
+        constexpr auto REPLACEMENT_CHARACTER = char32_t{0xfffdU};
 
         void append_utf8(std::string &out, char32_t code) {
             if (code <= 0x7fU) {
@@ -59,27 +59,23 @@ namespace smgpc::game {
             if (first < 0x80U) {
                 code = first;
                 length = 1U;
-            }
-            else if ((first & 0xe0U) == 0xc0U) {
+            } else if ((first & 0xe0U) == 0xc0U) {
                 code = first & 0x1fU;
                 length = 2U;
-            }
-            else if ((first & 0xf0U) == 0xe0U) {
+            } else if ((first & 0xf0U) == 0xe0U) {
                 code = first & 0x0fU;
                 length = 3U;
-            }
-            else if ((first & 0xf8U) == 0xf0U) {
+            } else if ((first & 0xf8U) == 0xf0U) {
                 code = first & 0x07U;
                 length = 4U;
-            }
-            else {
-                out.push_back(static_cast<char16_t>(kReplacementCharacter));
+            } else {
+                out.push_back(static_cast<char16_t>(REPLACEMENT_CHARACTER));
                 ++i;
                 continue;
             }
 
             if (i + length > text.size()) {
-                out.push_back(static_cast<char16_t>(kReplacementCharacter));
+                out.push_back(static_cast<char16_t>(REPLACEMENT_CHARACTER));
                 break;
             }
 
@@ -95,15 +91,14 @@ namespace smgpc::game {
 
             const auto overlong = (length == 2U && code < 0x80U) || (length == 3U && code < 0x800U) || (length == 4U && code < 0x10000U);
             if (!valid || overlong || code > 0x10ffffU || (code >= 0xd800U && code <= 0xdfffU)) {
-                out.push_back(static_cast<char16_t>(kReplacementCharacter));
+                out.push_back(static_cast<char16_t>(REPLACEMENT_CHARACTER));
                 ++i;
                 continue;
             }
 
             if (code <= 0xffffU) {
                 out.push_back(static_cast<char16_t>(code));
-            }
-            else {
+            } else {
                 const auto scalar = code - 0x10000U;
                 out.push_back(static_cast<char16_t>(0xd800U + (scalar >> 10U)));
                 out.push_back(static_cast<char16_t>(0xdc00U + (scalar & 0x3ffU)));
@@ -126,15 +121,14 @@ namespace smgpc::game {
                     const auto high = static_cast<char32_t>(code - 0xd800U);
                     const auto low = static_cast<char32_t>(text[++i] - 0xdc00U);
                     append_utf8(out, 0x10000U + ((high << 10U) | low));
-                }
-                else {
-                    append_utf8(out, kReplacementCharacter);
+                } else {
+                    append_utf8(out, REPLACEMENT_CHARACTER);
                 }
                 continue;
             }
 
             if (is_low_surrogate(code)) {
-                append_utf8(out, kReplacementCharacter);
+                append_utf8(out, REPLACEMENT_CHARACTER);
                 continue;
             }
 

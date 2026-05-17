@@ -36,6 +36,7 @@ public:
               const smgpc::game::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass = DrawPass::All);
 
     [[nodiscard]] bool isLoaded() const;
+    [[nodiscard]] std::string_view model_arc_name() const;
 
 private:
     void ensureLoaded(smgpc::render::IRendererEngine &renderer);

@@ -3,7 +3,7 @@
 
 namespace smgpc::tests {
     namespace {
-        constexpr auto kTestSuite = std::string_view{"resource/layout"};
+        constexpr auto TEST_SUITE = std::string_view{"resource/layout"};
 
         template <int Line>
         struct TestCase;
@@ -42,6 +42,89 @@ namespace smgpc::tests {
             require_magic(title_logo.file_data("anim/appear.brlan"), "RLAN");
             require_magic(press_start.file_data("blyt/pressstart.brlyt"), "RLYT");
             require_magic(press_start.file_data("anim/appear.brlan"), "RLAN");
+        }
+
+        $test("loads original Effect.arc particle names and JPC metadata") {
+            const auto root = disc_files_root();
+            const auto effect_archive = smgpc::game::RarcArchive::from_file(root / "ParticleData" / "Effect.arc");
+            const auto library = smgpc::game::EffectResourceLibrary::from_archive(effect_archive);
+
+            require(library.particle_name_count() == 3327U, "Effect.arc particlenames.bcsv should expose every JPC user index");
+            require(library.auto_effect_count() == 2591U, "Effect.arc autoeffectlist.bcsv should expose original auto-effect rows");
+            require(library.resource_count() == 3327U, "Effect.arc particles.jpc should expose every JPAC2-10 resource");
+            require(library.texture_count() == 225U, "Effect.arc particles.jpc should expose every JPAC2-10 texture");
+            require(library.find_particle_user_index("TitleLogoLightA00").value_or(0xffffU) == 3030U,
+                    "particlenames.bcsv should map title particles to original JPC user indices");
+
+            const auto title_light = library.resolve_auto_effect("TitleLogo", "TitleLogoLight");
+            require(title_light.size() == 1U, "auto-effect lookup should map TitleLogo/TitleLogoLight to one concrete particle resource");
+            require(title_light[0].particle_name == "TitleLogoLightA00" && title_light[0].user_index == 3030U,
+                    "auto-effect lookup should preserve the original EffectName -> particle id link");
+            require(title_light[0].auto_effect_joint_name == "EffPosition7" && title_light[0].auto_effect_draw_order == "2D",
+                    "auto-effect metadata should preserve transform binding and draw order fields");
+            require(title_light[0].resource != nullptr && title_light[0].resource->texture_reference_count > 0U,
+                    "resolved particle resources should include source JPC texture references");
+            require(title_light[0].resource->dynamics.has_value() &&
+                        title_light[0].resource->dynamics->flags == 0x400U &&
+                        title_light[0].resource->dynamics->volume_type == 4U &&
+                        title_light[0].resource->dynamics->start_frame == 250 &&
+                        title_light[0].resource->dynamics->lifetime == 30 &&
+                        title_light[0].resource->dynamics->rate > 0.0022F &&
+                        title_light[0].resource->dynamics->rate < 0.0023F,
+                    "BEM1 dynamics metadata should preserve JPADynamicsBlock timing/rate fields");
+            require(title_light[0].resource->base_shape.has_value() &&
+                        title_light[0].resource->base_shape->shape_type == 2U &&
+                        title_light[0].resource->base_shape->texture_coordinate_animation &&
+                        title_light[0].resource->base_shape->base_size_x > 1.14F &&
+                        title_light[0].resource->base_shape->base_size_y > 1.14F,
+                    "BSP1 base-shape metadata should preserve JPA billboard shape fields");
+            require(title_light[0].resource->base_shape_texture_slot.value_or(0xffU) == 2U,
+                    "BSP1 base shape metadata should preserve the original JPA texture slot");
+            require(title_light[0].primary_texture_index.value_or(0xffffU) == 102U,
+                    "resolved particle resources should use BSP1 mTexIdx through TDB1 as the primary texture");
+            const auto primary_title_light_texture = std::ranges::find_if(title_light[0].textures, [](const auto &texture) {
+                return texture.index == 102U;
+            });
+            require(primary_title_light_texture != title_light[0].textures.end() &&
+                        primary_title_light_texture->name == "mr_kirakira03_i" &&
+                        primary_title_light_texture->format == smgpc::game::TplTextureFormat::I8 &&
+                        primary_title_light_texture->width == 64U && primary_title_light_texture->height == 64U,
+                    "TitleLogoLightA00 primary JPA texture should be the BSP1-selected mr_kirakira03_i I8 texture");
+            require(std::ranges::any_of(title_light[0].textures,
+                                        [](const auto &texture) {
+                                            return texture.width == 64U && texture.height == 64U &&
+                                                   texture.format == smgpc::game::TplTextureFormat::I8 &&
+                                                   texture.image.rgba.size() == static_cast<std::size_t>(texture.width) * texture.height * 4U;
+                                        }),
+                    "TitleLogoLightA00 should reference and decode the original 64x64 I8 JPA texture");
+
+            const auto title_light_b = library.resolve_effect_request("TitleLogoLightB");
+            require(title_light_b.size() == 1U && title_light_b[0].particle_name == "TitleLogoLightB00" &&
+                        title_light_b[0].auto_effect_joint_name == "EffPosition2",
+                    "generic effect-name resolution should prefer autoeffectlist metadata before numbered particle fallback");
+            require(title_light_b[0].resource != nullptr && title_light_b[0].resource->base_shape_texture_slot.value_or(0xffU) == 0U &&
+                        title_light_b[0].primary_texture_index.value_or(0xffffU) == 46U,
+                    "BSP1 primary texture resolution should preserve per-resource texture slots instead of forcing one texture");
+
+            const auto shooting_star = library.resolve_auto_effect("CometNearOrbitSky", "CometNearOrbitSky");
+            require(shooting_star.size() == 1U && shooting_star[0].particle_name == "TitleShootingStar00" &&
+                        shooting_star[0].user_index == 3037U && shooting_star[0].auto_effect_draw_order == "3D",
+                    "generic auto-effect lookup should resolve CometNearOrbitSky startup effects");
+            require(shooting_star[0].resource != nullptr && shooting_star[0].resource->base_shape.has_value() &&
+                        shooting_star[0].resource->child_shape.has_value() &&
+                        shooting_star[0].resource->base_shape->texture_slot == 1U &&
+                        shooting_star[0].primary_texture_index.value_or(0xffffU) == 102U &&
+                        shooting_star[0].resource->child_shape->texture_slot == 0U &&
+                        shooting_star[0].resource->child_texture_index.value_or(0xffffU) == 0U,
+                    "SSP1 child-shape texture metadata should preserve parent and child JPA texture slots");
+            const auto shooting_star_child_texture = std::ranges::find_if(shooting_star[0].textures, [](const auto &texture) {
+                return texture.index == 0U;
+            });
+            require(shooting_star_child_texture != shooting_star[0].textures.end() &&
+                        shooting_star_child_texture->name == "mr_glow01_i" &&
+                        shooting_star_child_texture->format == smgpc::game::TplTextureFormat::I8 &&
+                        shooting_star_child_texture->width == 64U && shooting_star_child_texture->height == 64U,
+                    "TitleShootingStar00 child pass should bind the original mr_glow01_i I8 JPC texture");
         }
 
         $test("loads original BMG messages through MessageId JMap table") {
@@ -412,7 +495,7 @@ namespace smgpc::tests {
         }
 
         $test("matches FileSelect title camera pose math") {
-            const auto pose = smgpc::game::file_select_title_camera_pose();
+            const auto pose = title_test_camera_pose();
             require_near(pose.eye.x, 0.0F, 0.001F, "FileSelect title camera eye X changed");
             require_near(pose.eye.y, 15800.0F, 0.001F, "FileSelect title camera eye Y should include cFarTarget.Y + 15000 title offset");
             require_near(pose.eye.z, 15000.0F, 0.001F, "FileSelect title camera eye Z changed");
@@ -448,18 +531,18 @@ namespace smgpc::tests {
 
         $test("applies J3D matrix rotation, inversion, and scale helpers") {
             const auto yaw = smgpc::game::j3d_rotation_matrix(0.0F, 1.0F, 0.0F, 1.9F);
-            const auto pitch = smgpc::game::j3d_rotation_matrix(1.0F, 0.0F, 0.0F, 0.142535359F);
+            const auto pitch = smgpc::game::j3d_rotation_matrix(1.0F, 0.0F, 0.0F, 1.6571627F);
             const auto matrix = smgpc::game::j3d_apply_matrix_scale(
                 smgpc::game::j3d_invert_orthonormal_matrix(smgpc::game::j3d_concat_matrix(yaw, pitch)), 0.8F, 0.8F, 0.8F);
 
             require_near(matrix.m[0U], -0.258631736F, 0.000001F, "J3D helper matrix[0] changed");
             require_near(matrix.m[2U], -0.757040024F, 0.000001F, "J3D helper matrix[2] changed");
-            require_near(matrix.m[4U], 0.107539982F, 0.000001F, "J3D helper matrix[4] changed");
-            require_near(matrix.m[5U], 0.791887224F, 0.000001F, "J3D helper matrix[5] changed");
-            require_near(matrix.m[6U], -0.036739472F, 0.000001F, "J3D helper matrix[6] changed");
-            require_near(matrix.m[8U], 0.749362886F, 0.000001F, "J3D helper matrix[8] changed");
-            require_near(matrix.m[9U], -0.113642588F, 0.000001F, "J3D helper matrix[9] changed");
-            require_near(matrix.m[10U], -0.256008953F, 0.000001F, "J3D helper matrix[10] changed");
+            require_near(matrix.m[4U], 0.754218400F, 0.000001F, "J3D helper matrix[4] changed");
+            require_near(matrix.m[5U], -0.069007210F, 0.000001F, "J3D helper matrix[5] changed");
+            require_near(matrix.m[6U], -0.257667631F, 0.000001F, "J3D helper matrix[6] changed");
+            require_near(matrix.m[8U], -0.065301530F, 0.000001F, "J3D helper matrix[8] changed");
+            require_near(matrix.m[9U], -0.797018230F, 0.000001F, "J3D helper matrix[9] changed");
+            require_near(matrix.m[10U], 0.022309309F, 0.000001F, "J3D helper matrix[10] changed");
         }
 
         $test("parses TitleLogo BRLAN animations") {
@@ -558,7 +641,7 @@ namespace smgpc::tests {
     }  // namespace
 
     void run_resource_layout_tests() {
-        run_registered_tests(kTestSuite);
+        run_registered_tests(TEST_SUITE);
     }
 
 }  // namespace smgpc::tests

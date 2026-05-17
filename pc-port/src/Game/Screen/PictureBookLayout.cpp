@@ -92,7 +92,7 @@ PictureBookLayout::PictureBookLayout(s32 chapterMin, s32 chapterMax, bool isRose
     }
 }
 
-void PictureBookLayout::init(const JMapInfoIter& rIter) {
+void PictureBookLayout::init(const JMapInfoIter&) {
     initLayoutManagerWithTextBoxBufferLength("PictureBook", 512, 1);
     MR::createAndAddPaneCtrl(this, "AButtonPosition", 1);
     MR::createAndAddPaneCtrl(this, "Text", 1);

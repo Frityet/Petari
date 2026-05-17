@@ -64,7 +64,7 @@ void FileSelectSky::exeWait() {
     }
 
     const auto value = _90 + 0.001F;
-    const auto temp = 1.0F - smgpc::game::jmath_cos_lap_rad(steps * 0.25F);
+    const auto temp = 1.0F - smgpc::game::jmath_cos_lap_rad(steps);
     _90 = value;
     _8C = (3.0F * ((temp * 0.5F) * 3.1415927F)) * 0.25F;
 }

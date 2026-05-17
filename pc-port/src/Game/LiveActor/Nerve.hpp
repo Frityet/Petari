@@ -17,5 +17,4 @@ public:
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
     };                                                                                                                                               \
-    name name::sInstance;
-
+    [[maybe_unused]] name name::sInstance;

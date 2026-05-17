@@ -11,6 +11,7 @@ LiveActor::LiveActor(const char* pName) : NameObj(pName) {
 
 LiveActor::~LiveActor() {
     if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        runtime->unregister_effect_keeper(getName());
         runtime->unregister_live_actor_model(*this);
     }
     delete mActorLightCtrl;
@@ -134,7 +135,12 @@ void LiveActor::initModelManagerWithAnm(const char* pModelArcName, const char* p
     mModel = std::make_unique< LiveActorModelCompat >(pModelArcName != nullptr ? pModelArcName : "", pAnimArcName != nullptr ? pAnimArcName : "");
 }
 
-void LiveActor::initEffectKeeper(int, const char*, bool) {
+void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
+    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        const auto group_name =
+            pEffectName != nullptr ? std::string_view(pEffectName) : (mModel != nullptr ? mModel->model_arc_name() : std::string_view{});
+        runtime->register_effect_keeper(smgpc::game::EffectKeeperHostKind::LiveActor, getName(), effectNum, group_name, sort);
+    }
 }
 
 void LiveActor::initActorLightCtrl() {

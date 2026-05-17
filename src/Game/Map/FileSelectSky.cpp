@@ -67,7 +67,7 @@ void FileSelectSky::exeWait() {
         steps = -steps;
     }
     f32 value = _90 + 0.001f;
-    f32 temp = 1.0f - JMath::sSinCosTable.cosShort(8 * steps);
+    f32 temp = 1.0f - JMath::sSinCosTable.cosLapRad(steps);
     _90 = value;
     _8C = (3.0f * ((temp * 0.5f) * 3.1415927f)) * 0.25f;
 }

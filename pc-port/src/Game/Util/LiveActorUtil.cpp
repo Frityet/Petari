@@ -177,6 +177,12 @@ namespace MR {
         return isStep(pActor, 0);
     }
 
+    void setNerveAtStep(LiveActor* pActor, const Nerve* pNerve, s32 step) {
+        if (pActor != nullptr && pActor->getNerveStep() == step) {
+            pActor->setNerve(pNerve);
+        }
+    }
+
     bool isBtpStopped(const LiveActor*) {
         return true;
     }

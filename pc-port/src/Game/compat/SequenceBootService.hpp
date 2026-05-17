@@ -1,8 +1,6 @@
 #pragma once
 
-#include <memory>
-
-class FileSelector;
+#include "Game/compat/StageHostService.hpp"
 
 namespace smgpc::game {
 
@@ -24,14 +22,14 @@ namespace smgpc::game {
         [[nodiscard]] bool has_sent_autorush_begin() const;
 
     private:
-        void ensure_file_select_host();
+        void ensure_file_select_stage_host();
 #ifndef NDEBUG
         void emit_title_semantic_anchors();
         void emit_file_select_semantic_anchors();
 #endif
 
         RuntimeContext &_runtime;
-        std::unique_ptr<FileSelector> _file_selector;
+        StageHostService _stage_host;
         bool _boot_requested = false;
         bool _autorush_begin_sent = false;
 #ifndef NDEBUG
