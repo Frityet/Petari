@@ -11,6 +11,7 @@
 
 class LayoutManager;
 
+#ifndef NDEBUG
 struct LayoutPaneControlAnimationDebugState {
     u32 layer_index = 0U;
     std::string name;
@@ -20,6 +21,7 @@ struct LayoutPaneControlAnimationDebugState {
     bool stopped = true;
     bool looping = false;
 };
+#endif
 
 class LayoutPaneCtrl {
 public:
@@ -39,7 +41,9 @@ public:
     [[nodiscard]] f32 getFrame(u32 animLayer) const;
     [[nodiscard]] std::string_view paneName() const;
     [[nodiscard]] u32 animLayerCount() const;
+#ifndef NDEBUG
     [[nodiscard]] std::vector< LayoutPaneControlAnimationDebugState > debugAnimations() const;
+#endif
 
     /* 0x00 */ LayoutManager* mHost;
     /* 0x04 */ void* mPane;

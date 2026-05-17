@@ -37,12 +37,6 @@ namespace {
         };
     }
 
-    void note_camera_event(std::string_view message) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->note_debug_event(message);
-        }
-    }
-
     [[nodiscard]] smgpc::game::CameraPoseCompat file_select_near_camera_pose(const smgpc::game::CameraParamVec3& basePosition) {
         constexpr auto cNearTargetYOffset = 1100.0F;
         constexpr auto cNearPointZOffset = 4800.0F;
@@ -111,7 +105,6 @@ void FileSelectCameraController::exeTitle() {
 void FileSelectCameraController::exeMoveToFarPoint() {
     if (MR::isFirstStep(this)) {
         mMoveStartPose = mCameraPose;
-        note_camera_event("FileSelectCameraController started far-point transition");
     }
 
     const auto progress = std::clamp(static_cast< float >(getNerveStep()) / cMoveToFarPointFrames, 0.0F, 1.0F);
@@ -130,7 +123,6 @@ void FileSelectCameraController::exeFarPoint() {
 void FileSelectCameraController::exeMoveToNearPoint() {
     if (MR::isFirstStep(this)) {
         mMoveStartPose = mCameraPose;
-        note_camera_event("FileSelectCameraController started near-point transition");
     }
 
     const auto progress = std::clamp(static_cast< float >(getNerveStep()) / cMoveToNearPointFrames, 0.0F, 1.0F);

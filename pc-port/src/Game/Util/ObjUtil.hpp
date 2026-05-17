@@ -16,6 +16,7 @@ namespace MR {
     void connectToSceneLayoutDecoration(LayoutActor* pLayout);
     void connectToSceneTalkLayout(LayoutActor* pLayout);
     void connectToSceneLayoutOnPause(LayoutActor* pLayout);
+    bool isExistResourceInArc(const char* pArcName, const char* pResourceName);
     bool tryRumblePadStrong(const void* pSource, s32 channel);
     bool tryRumblePadWeak(const void* pSource, s32 channel);
     void shakeCameraNormal();

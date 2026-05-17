@@ -477,6 +477,40 @@ namespace smgpc::trace {
             return inserted;
         }
 
+        std::size_t insert_semantic_events(sql::Database &db, std::int64_t trace_id, const Json &trace) {
+            auto insert = sql::Statement(db, R"SQL(
+                INSERT INTO semantic_events(
+                    trace_id, row_index, event_index, frame_index, category, name, detail, stage, source, payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            )SQL");
+
+            const auto *events = member(trace, "semantic_events");
+            if (events == nullptr || !events->is_array()) {
+                return 0;
+            }
+
+            auto inserted = std::size_t{};
+            for (auto i = std::size_t{}; i < events->size(); ++i) {
+                const auto &event = (*events)[i];
+                if (!event.is_object()) {
+                    continue;
+                }
+                insert.bind(1, trace_id);
+                insert.bind(2, static_cast<std::int64_t>(i));
+                insert.bind_optional_int(3, json_int(event, "index"));
+                insert.bind_optional_int(4, json_int(event, "frame_index"));
+                insert.bind_optional_text(5, json_text(event, "category"));
+                insert.bind_optional_text(6, json_text(event, "name"));
+                insert.bind_optional_text(7, json_text(event, "detail"));
+                insert.bind_optional_text(8, json_text(event, "stage"));
+                insert.bind_optional_text(9, json_text(event, "source"));
+                insert.bind(10, json_raw(event));
+                insert.step_done();
+                ++inserted;
+            }
+            return inserted;
+        }
+
     }  // namespace
 
     std::vector<dump::Json> trace_ndjson_records_from_json(const dump::Json &trace, std::optional<std::string> emulator) {
@@ -491,7 +525,7 @@ namespace smgpc::trace {
         if (trace.is_object()) {
             for (const auto &[key, value] : trace.items()) {
                 if (key == "schema" || key == "emulator" || key == "requested_frame" || key == "frame" ||
-                    key == "render_packets" || key == "copy_events" || value.is_primitive()) {
+                    key == "render_packets" || key == "copy_events" || key == "semantic_events" || value.is_primitive()) {
                     continue;
                 }
                 auto record = base_record("top_level", trace, emulator);
@@ -513,6 +547,12 @@ namespace smgpc::trace {
             }
         }
 
+        if (const auto *events = member(trace, "semantic_events"); events != nullptr && events->is_array()) {
+            for (auto i = std::size_t{}; i < events->size(); ++i) {
+                append_indexed_payload_record(records, trace, emulator, "semantic_event", i, (*events)[i]);
+            }
+        }
+
         return records;
     }
 
@@ -520,6 +560,7 @@ namespace smgpc::trace {
         auto trace = Json::object();
         trace["render_packets"] = Json::array();
         trace["copy_events"] = Json::array();
+        trace["semantic_events"] = Json::array();
 
         for (const auto &record : records) {
             const auto schema = json_text(record, "schema");
@@ -556,6 +597,8 @@ namespace smgpc::trace {
                 trace["render_packets"].push_back(payload);
             } else if (*type == "copy_event") {
                 trace["copy_events"].push_back(payload);
+            } else if (*type == "semantic_event") {
+                trace["semantic_events"].push_back(payload);
             } else {
                 throw std::runtime_error("NDJSON trace record has unknown record_type " + *type);
             }
@@ -692,9 +735,23 @@ namespace smgpc::trace {
                 payload_json TEXT NOT NULL,
                 PRIMARY KEY(trace_id, row_index)
             );
+            CREATE TABLE IF NOT EXISTS semantic_events (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                row_index INTEGER NOT NULL,
+                event_index INTEGER,
+                frame_index INTEGER,
+                category TEXT,
+                name TEXT,
+                detail TEXT,
+                stage TEXT,
+                source TEXT,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, row_index)
+            );
             CREATE INDEX IF NOT EXISTS idx_render_packets_material ON render_packets(material_name);
             CREATE INDEX IF NOT EXISTS idx_render_packets_signature ON render_packets(texgen_count, color_channel_count, tev_stage_count, indirect_stage_count, cull_mode, vertex_count);
             CREATE INDEX IF NOT EXISTS idx_texture_bindings_signature ON packet_texture_bindings(slot, format, width, height);
+            CREATE INDEX IF NOT EXISTS idx_semantic_events_name ON semantic_events(category, name, frame_index);
             CREATE VIEW IF NOT EXISTS packet_signatures AS
                 SELECT
                     rp.trace_id,
@@ -744,11 +801,13 @@ namespace smgpc::trace {
         insert_frame(db, trace_id, trace);
         const auto packet_count = insert_render_packets(db, trace_id, trace);
         const auto copy_count = insert_copy_events(db, trace_id, trace);
+        const auto semantic_count = insert_semantic_events(db, trace_id, trace);
         return ImportResult{
             .trace_id = trace_id,
             .record_count = records.size(),
             .render_packet_count = packet_count,
             .copy_event_count = copy_count,
+            .semantic_event_count = semantic_count,
         };
     }
 

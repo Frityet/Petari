@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <string>
 
 #include "Game/System/UserFile.hpp"
 
@@ -15,6 +16,14 @@ namespace {
         bool view_complete_ending;
         bool final_challenge_star;
     };
+
+    [[nodiscard]] std::string event_name_or_empty(const char* pName) {
+        return pName != nullptr ? std::string(pName) : std::string{};
+    }
+
+    [[nodiscard]] std::string picture_book_flag_name(char suffix) {
+        return std::string("PictureBook") + suffix;
+    }
 }  // namespace
 
 GameDataHolder::GameDataHolder(const UserFile* pUserFile) : mUserFile(pUserFile) {
@@ -48,6 +57,10 @@ bool GameDataHolder::isOnGameEventFlag(const char* pName) const {
         return mFinalChallengeStar;
     }
 
+    if (auto it = mEventFlags.find(pName); it != mEventFlags.end()) {
+        return it->second;
+    }
+
     return false;
 }
 
@@ -62,7 +75,49 @@ void GameDataHolder::tryOnGameEventFlag(const char* pName) {
         mViewCompleteEnding = true;
     } else if (std::strcmp(pName, "SpecialStarFinalChallenge") == 0) {
         mFinalChallengeStar = true;
+    } else {
+        mEventFlags[event_name_or_empty(pName)] = true;
     }
+}
+
+u16 GameDataHolder::getGameEventValue(const char* pName) const {
+    if (pName == nullptr) {
+        return 0U;
+    }
+
+    if (auto it = mEventValues.find(pName); it != mEventValues.end()) {
+        return it->second;
+    }
+
+    return 0U;
+}
+
+void GameDataHolder::setGameEventValue(const char* pName, u16 value) {
+    if (pName != nullptr) {
+        mEventValues[event_name_or_empty(pName)] = value;
+    }
+}
+
+s32 GameDataHolder::getPictureBookChapterCanRead() const {
+    auto chapterCount = s32{};
+    for (char suffix = 'A'; suffix <= 'I'; ++suffix) {
+        const auto flag = picture_book_flag_name(suffix);
+        if (!isOnGameEventFlag(flag.c_str())) {
+            break;
+        }
+
+        ++chapterCount;
+    }
+
+    return chapterCount;
+}
+
+u16 GameDataHolder::getPictureBookChapterAlreadyRead() const {
+    return getGameEventValue("絵本話済");
+}
+
+void GameDataHolder::setPictureBookChapterAlreadyRead(int chapterAlreadyRead) {
+    setGameEventValue("絵本話済", static_cast<u16>(chapterAlreadyRead));
 }
 
 void GameDataHolder::resetAllData() {
@@ -72,6 +127,8 @@ void GameDataHolder::resetAllData() {
     mViewNormalEnding = false;
     mViewCompleteEnding = false;
     mFinalChallengeStar = false;
+    mEventFlags.clear();
+    mEventValues.clear();
 }
 
 s32 GameDataHolder::getStockedStarPieceNum() const {
@@ -145,4 +202,17 @@ void GameDataHolder::setCompatEndingFlags(bool viewNormalEnding, bool viewComple
     mViewNormalEnding = viewNormalEnding;
     mViewCompleteEnding = viewCompleteEnding;
     mFinalChallengeStar = finalChallengeStar;
+}
+
+void GameDataHolder::setCompatEventState(const std::map<std::string, bool>& rFlags, const std::map<std::string, u16>& rValues) {
+    mEventFlags = rFlags;
+    mEventValues = rValues;
+}
+
+const std::map<std::string, bool>& GameDataHolder::getCompatEventFlags() const {
+    return mEventFlags;
+}
+
+const std::map<std::string, u16>& GameDataHolder::getCompatEventValues() const {
+    return mEventValues;
 }

@@ -89,6 +89,7 @@ int main(int argc, char **argv) try {
         const auto result = smgpc::trace::import_trace_ndjson_file(db, trace_path);
         std::cout << "imported trace_id=" << result.trace_id << " records=" << result.record_count
                   << " render_packets=" << result.render_packet_count << " copy_events=" << result.copy_event_count
+                  << " semantic_events=" << result.semantic_event_count
                   << " path=" << trace_path << '\n';
     }
     db.exec("COMMIT");

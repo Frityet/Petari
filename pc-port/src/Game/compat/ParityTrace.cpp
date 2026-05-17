@@ -1,5 +1,7 @@
 #include "Game/compat/ParityTrace.hpp"
 
+#ifndef NDEBUG
+
 #include <array>
 #include <filesystem>
 #include <span>
@@ -135,6 +137,15 @@ namespace smgpc::game {
             }
 
             return "Unknown";
+        }
+
+        [[nodiscard]] const char *sequence_request_semantic_name(SequenceRequestKind kind) {
+            switch (kind) {
+            case SequenceRequestKind::ChangeStageInGameAfterLoadingGameData:
+                return "change_stage_in_game_after_loading_game_data";
+            }
+
+            return "unknown_sequence_request";
         }
 
         [[nodiscard]] const char *j3d_packet_mode_name(J3dRendererPacketMode mode) {
@@ -555,6 +566,114 @@ namespace smgpc::game {
             return out;
         }
 
+        [[nodiscard]] Json layout_pane_content_json(const SceneLayoutPaneContentDebugState &content) {
+            return Json{
+                {"kind", content.kind},
+                {"name", content.name},
+                {"material_index", content.material_index},
+                {"material_name", content.material_name},
+                {"texture_name", content.texture_name},
+                {"font_name", content.font_name},
+                {"visible", content.visible},
+            };
+        }
+
+        [[nodiscard]] Json layout_pane_contents_json(std::span<const SceneLayoutPaneContentDebugState> contents) {
+            auto out = Json::array();
+            for (const auto &content : contents) {
+                out.push_back(layout_pane_content_json(content));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json layout_pane_runtime_json(const SceneLayoutPaneRuntimeDebugState &pane) {
+            return Json{
+                {"index", pane.index},
+                {"name", pane.name},
+                {"parent_index", pane.parent_index},
+                {"base_visible", pane.base_visible},
+                {"effective_visible", pane.effective_visible},
+                {"translate_x", pane.translate_x},
+                {"translate_y", pane.translate_y},
+                {"scale_x", pane.scale_x},
+                {"scale_y", pane.scale_y},
+                {"alpha", pane.alpha},
+                {"width", pane.width},
+                {"height", pane.height},
+                {"contents", layout_pane_contents_json(pane.contents)},
+            };
+        }
+
+        [[nodiscard]] Json layout_panes_runtime_json(std::span<const SceneLayoutPaneRuntimeDebugState> panes) {
+            auto out = Json::array();
+            for (const auto &pane : panes) {
+                out.push_back(layout_pane_runtime_json(pane));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json layout_material_texture_json(const SceneLayoutMaterialTextureDebugState &texture) {
+            return Json{
+                {"slot", texture.slot},
+                {"texture_index", texture.texture_index},
+                {"texture_name", texture.texture_name},
+                {"wrap_s", texture.wrap_s},
+                {"wrap_t", texture.wrap_t},
+                {"min_filter", texture.min_filter},
+                {"mag_filter", texture.mag_filter},
+            };
+        }
+
+        [[nodiscard]] Json layout_material_textures_json(std::span<const SceneLayoutMaterialTextureDebugState> textures) {
+            auto out = Json::array();
+            for (const auto &texture : textures) {
+                out.push_back(layout_material_texture_json(texture));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json layout_material_json(const SceneLayoutMaterialDebugState &material) {
+            return Json{
+                {"index", material.index},
+                {"name", material.name},
+                {"texture_count", material.texture_count},
+                {"tex_coord_gen_count", material.tex_coord_gen_count},
+                {"tev_stage_count", material.tev_stage_count},
+                {"alpha_compare_enabled", material.alpha_compare_enabled},
+                {"blend_enabled", material.blend_enabled},
+                {"textures", layout_material_textures_json(material.textures)},
+            };
+        }
+
+        [[nodiscard]] Json layout_materials_json(std::span<const SceneLayoutMaterialDebugState> materials) {
+            auto out = Json::array();
+            for (const auto &material : materials) {
+                out.push_back(layout_material_json(material));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json layout_texture_json(const SceneLayoutTextureDebugState &texture) {
+            return Json{
+                {"index", texture.index},
+                {"name", texture.name},
+                {"width", texture.width},
+                {"height", texture.height},
+                {"format_raw", texture.format_raw},
+                {"format", texture.format_name},
+                {"uploaded", texture.uploaded},
+                {"rgba_byte_count", texture.rgba_byte_count},
+            };
+        }
+
+        [[nodiscard]] Json layout_textures_json(std::span<const SceneLayoutTextureDebugState> textures) {
+            auto out = Json::array();
+            for (const auto &texture : textures) {
+                out.push_back(layout_texture_json(texture));
+            }
+            return out;
+        }
+
         [[nodiscard]] Json layout_runtime_json(const SceneLayoutRuntimeDebugState &entry, std::size_t index) {
             return Json{
                 {"index", index},
@@ -577,6 +696,9 @@ namespace smgpc::game {
                 {"animations", layout_animations_json(entry.animations)},
                 {"pane_controls", layout_pane_controls_json(entry.pane_controls)},
                 {"button_controllers", layout_button_controllers_json(entry.button_controllers)},
+                {"panes", layout_panes_runtime_json(entry.panes)},
+                {"materials", layout_materials_json(entry.materials)},
+                {"textures", layout_textures_json(entry.textures)},
             };
         }
 
@@ -657,6 +779,42 @@ namespace smgpc::game {
                     {"kind", sequence_request_kind_name(event.kind)},
                     {"frame_index", event.frame_index},
                 });
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json semantic_trace_event_json(const RuntimeContext::SemanticTraceEvent &event) {
+            return Json{
+                {"index", event.index},
+                {"frame_index", event.frame_index},
+                {"category", event.category},
+                {"name", event.name},
+                {"detail", event.detail},
+                {"stage", event.stage_name},
+                {"source", "runtime"},
+            };
+        }
+
+        [[nodiscard]] Json sequence_request_semantic_event_json(const SequenceRequestEvent &event, std::size_t index,
+                                                                std::string_view stage_name) {
+            return Json{
+                {"index", index},
+                {"frame_index", event.frame_index},
+                {"category", "sequence"},
+                {"name", sequence_request_semantic_name(event.kind)},
+                {"detail", sequence_request_kind_name(event.kind)},
+                {"stage", std::string(stage_name)},
+                {"source", "sequence_requests"},
+            };
+        }
+
+        [[nodiscard]] Json semantic_trace_events_json(const RuntimeContext &runtime) {
+            auto out = Json::array();
+            for (const auto &event : runtime.semantic_trace_events()) {
+                out.push_back(semantic_trace_event_json(event));
+            }
+            for (const auto &event : runtime.sequence_requests().events()) {
+                out.push_back(sequence_request_semantic_event_json(event, out.size(), runtime.current_stage_name()));
             }
             return out;
         }
@@ -1312,6 +1470,7 @@ namespace smgpc::game {
             {"scene_snapshot", scene_entries_json(runtime.scheduler().snapshot())},
             {"scene_trace", scene_entries_json(runtime.scheduler().last_execution_trace())},
             {"scene_messages", scene_messages_json(runtime.scheduler().message_trace())},
+            {"semantic_events", semantic_trace_events_json(runtime)},
             {"layout_runtime", layout_runtime_entries_json(runtime.scheduler().debug_layout_runtime_snapshot())},
             {"render_packets", j3d_packet_traces_json(runtime.j3d_packet_trace())},
             {"copy_events", pc_copy_events_json(frame_context)},
@@ -1328,3 +1487,5 @@ namespace smgpc::game {
     }
 
 }  // namespace smgpc::game
+
+#endif

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <map>
+#include <string>
+
 #include <revolution.h>
 
 class UserFile;
@@ -13,6 +16,11 @@ public:
     void incPlayerMissNum();
     [[nodiscard]] bool isOnGameEventFlag(const char* pName) const;
     void tryOnGameEventFlag(const char* pName);
+    [[nodiscard]] u16 getGameEventValue(const char* pName) const;
+    void setGameEventValue(const char* pName, u16 value);
+    [[nodiscard]] s32 getPictureBookChapterCanRead() const;
+    [[nodiscard]] u16 getPictureBookChapterAlreadyRead() const;
+    void setPictureBookChapterAlreadyRead(int chapterAlreadyRead);
     void resetAllData();
     [[nodiscard]] s32 getStockedStarPieceNum() const;
     void addStockedStarPiece(int num);
@@ -25,6 +33,9 @@ private:
     void setName(const char* pName);
     void setCompatCounts(s32 powerStarNum, s32 starPieceNum, s32 playerMissNum);
     void setCompatEndingFlags(bool viewNormalEnding, bool viewCompleteEnding, bool finalChallengeStar);
+    void setCompatEventState(const std::map<std::string, bool>& rFlags, const std::map<std::string, u16>& rValues);
+    [[nodiscard]] const std::map<std::string, bool>& getCompatEventFlags() const;
+    [[nodiscard]] const std::map<std::string, u16>& getCompatEventValues() const;
 
     friend class UserFile;
 
@@ -39,4 +50,6 @@ private:
     bool mViewNormalEnding = false;
     bool mViewCompleteEnding = false;
     bool mFinalChallengeStar = false;
+    std::map<std::string, bool> mEventFlags;
+    std::map<std::string, u16> mEventValues;
 };

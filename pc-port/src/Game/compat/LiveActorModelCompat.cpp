@@ -66,6 +66,7 @@ namespace {
         return false;
     }
 
+#ifndef NDEBUG
     [[nodiscard]] std::string_view debug_environment(std::string_view name) {
         const auto key = std::string(name);
         const auto *value = std::getenv(key.c_str());
@@ -76,6 +77,7 @@ namespace {
         const auto filter = debug_environment("SMGPC_J3D_MODEL_FILTER");
         return filter.empty() || filter == model_name;
     }
+#endif
 }  // namespace
 
 LiveActorModelCompat::LiveActorModelCompat(std::string model_arc_name, std::string animation_arc_name)
@@ -134,10 +136,11 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
         options.translucent_filter = true;
         break;
     }
-    // SMGPC debug parity hook: isolate original J3D material packets in the real renderer/window.
+#ifndef NDEBUG
     if (debug_model_filter_matches(mModelArcName)) {
         options.material_filter = debug_environment("SMGPC_J3D_MATERIAL_FILTER");
     }
+#endif
     auto *runtime = smgpc::game::RuntimeContext::try_instance();
     if (runtime != nullptr) {
         options.scene_lights = runtime->scene_lights().lights();
@@ -148,6 +151,7 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
     }
     mRenderer->draw(renderer, camera_pose, actor_matrix, frame, options);
 
+#ifndef NDEBUG
     if (runtime == nullptr || !runtime->should_record_j3d_packet_trace()) {
         return;
     }
@@ -158,6 +162,7 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
             runtime->record_j3d_packet_trace(mModelArcName, frame, draw_pass_name(pass), packet);
         }
     }
+#endif
 }
 
 bool LiveActorModelCompat::isLoaded() const {

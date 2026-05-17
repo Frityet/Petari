@@ -17,11 +17,6 @@ constexpr auto TEX1_MAGIC = std::uint32_t {0x54455831U};
     return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
 }
 
-[[nodiscard]] std::int16_t read_sbe16(std::span<const std::uint8_t> data, std::size_t offset) {
-    const auto value = read_be16(data, offset);
-    return value < 0x8000U ? static_cast<std::int16_t>(value) : static_cast<std::int16_t>(static_cast<int>(value) - 0x10000);
-}
-
 [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
     if (offset + 4U > data.size()) {
         throw std::runtime_error("J3D read past end of buffer");
@@ -83,36 +78,28 @@ constexpr auto TEX1_MAGIC = std::uint32_t {0x54455831U};
     textures.reserve(texture_count);
     for (auto i = 0U; i < texture_count; ++i) {
         const auto header_offset = texture_header_offset + i * 0x20U;
-        const auto format = static_cast<TplTextureFormat>(data[header_offset]);
-        const auto width = read_be16(data, header_offset + 0x02U);
-        const auto height = read_be16(data, header_offset + 0x04U);
-        const auto palette_data_offset = read_be32(data, header_offset + 0x0CU);
-        const auto image_data_offset = read_be32(data, header_offset + 0x1CU);
-        const auto image_offset = header_offset + image_data_offset;
-        if (image_offset >= data.size()) {
-            throw std::runtime_error("J3D TEX1 image data outside buffer");
-        }
+        const auto bti = decode_bti_texture(data.subspan(header_offset));
 
         textures.push_back(J3dTexture {
             .name = i < names.size() ? names[i] : std::string {},
-            .transparency = data[header_offset + 0x01U],
-            .wrap_s = data[header_offset + 0x06U],
-            .wrap_t = data[header_offset + 0x07U],
-            .palette_format = data[header_offset + 0x08U],
-            .palette_entry_count = read_be16(data, header_offset + 0x0AU),
-            .palette_data_offset = palette_data_offset,
-            .mipmap = data[header_offset + 0x10U] != 0U,
-            .do_edge_lod = data[header_offset + 0x11U] != 0U,
-            .bias_clamp = data[header_offset + 0x12U] != 0U,
-            .max_anisotropy = data[header_offset + 0x13U],
-            .min_filter = data[header_offset + 0x14U],
-            .mag_filter = data[header_offset + 0x15U],
-            .min_lod = data[header_offset + 0x16U],
-            .max_lod = data[header_offset + 0x17U],
-            .image_count = data[header_offset + 0x18U],
-            .lod_bias = read_sbe16(data, header_offset + 0x1AU),
-            .image_data_offset = image_data_offset,
-            .image = decode_raw_gx_texture(data.subspan(image_offset), width, height, format),
+            .transparency = bti.transparency,
+            .wrap_s = bti.wrap_s,
+            .wrap_t = bti.wrap_t,
+            .palette_format = bti.palette_format,
+            .palette_entry_count = bti.palette_entry_count,
+            .palette_data_offset = bti.palette_data_offset,
+            .mipmap = bti.mipmap,
+            .do_edge_lod = bti.do_edge_lod,
+            .bias_clamp = bti.bias_clamp,
+            .max_anisotropy = bti.max_anisotropy,
+            .min_filter = bti.min_filter,
+            .mag_filter = bti.mag_filter,
+            .min_lod = bti.min_lod,
+            .max_lod = bti.max_lod,
+            .image_count = bti.image_count,
+            .lod_bias = bti.lod_bias,
+            .image_data_offset = bti.image_data_offset,
+            .image = bti.image,
         });
     }
 

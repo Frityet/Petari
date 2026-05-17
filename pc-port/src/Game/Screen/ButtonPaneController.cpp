@@ -338,6 +338,7 @@ void ButtonPaneController::exeDisappear() {
     setNerveAtAnimStopped(&NrvButtonPaneController::ButtonPaneControllerNrvHidden::sInstance);
 }
 
+#ifndef NDEBUG
 const char* ButtonPaneController::debugNerveName() const {
     if (isNerve(&NrvButtonPaneController::ButtonPaneControllerNrvHidden::sInstance)) {
         return "Hidden";
@@ -369,3 +370,4 @@ const char* ButtonPaneController::debugNerveName() const {
 
     return "Unknown";
 }
+#endif

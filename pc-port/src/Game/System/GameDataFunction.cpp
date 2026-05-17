@@ -2,6 +2,7 @@
 
 #include <cstring>
 
+#include "Game/System/GameDataHolder.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
@@ -28,6 +29,22 @@ u16 getUserFileIndex() {
 
     const auto ch = pGameDataName[length - 1U];
     return ch <= '0' || ch > '9' ? 1U : static_cast<u16>(ch - '0');
+}
+
+s32 getPictureBookChapterCanRead() {
+    auto* file = smgpc::game::save_data_handle_sequence().getCurrentUserFile();
+    return file != nullptr ? file->mGameDataHolder->getPictureBookChapterCanRead() : 0;
+}
+
+u16 getPictureBookChapterAlreadyRead() {
+    auto* file = smgpc::game::save_data_handle_sequence().getCurrentUserFile();
+    return file != nullptr ? file->mGameDataHolder->getPictureBookChapterAlreadyRead() : 0U;
+}
+
+void setPictureBookChapterAlreadyRead(int chapterAlreadyRead) {
+    if (auto* file = smgpc::game::save_data_handle_sequence().getCurrentUserFile()) {
+        file->mGameDataHolder->setPictureBookChapterAlreadyRead(chapterAlreadyRead);
+    }
 }
 
 OSTime getSysConfigFileTimeAnnounced() {

@@ -17,6 +17,10 @@
 #include "Game/compat/TplTexture.hpp"
 #include "RendererService.hpp"
 
+namespace nw4r::lyt {
+    class TexMap;
+}
+
 class SimpleLayout {
 public:
     struct PaneBounds {
@@ -51,7 +55,11 @@ public:
     [[nodiscard]] bool isAnimStopped(u32 animLayer);
     void setTextBoxNumberRecursive(const char* pPaneName, s32 number);
     void setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text);
+    void replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex);
+    void setPaneAlpha(std::string_view paneName, f32 alpha);
     void setPaneVisible(std::string_view paneName, bool visible);
+    void setTextBoxHorizontalPosition(std::string_view paneName, u8 position);
+    void setTextBoxVerticalPosition(std::string_view paneName, u8 position);
     [[nodiscard]] bool isPaneVisible(std::string_view paneName) const;
     [[nodiscard]] bool hasPane(std::string_view paneName) const;
     [[nodiscard]] std::optional< PaneBounds > paneBounds(std::string_view paneName) const;
@@ -62,9 +70,15 @@ public:
     void setPaneAnimRate(std::string_view paneName, f32 rate, u32 animLayer);
     [[nodiscard]] f32 getPaneAnimFrame(std::string_view paneName, u32 animLayer) const;
     [[nodiscard]] bool isPaneAnimStopped(std::string_view paneName, u32 animLayer) const;
-    [[nodiscard]] f32 debugPaneAnimEndFrame(std::string_view paneName, u32 animLayer) const;
+    [[nodiscard]] f32 getAnimFrameMax(u32 animLayer) const;
+    [[nodiscard]] f32 getAnimRate(u32 animLayer) const;
+    [[nodiscard]] f32 getAnimDuration(const char* pAnimName) const;
+    [[nodiscard]] bool isAnimLooping(const char* pAnimName) const;
+    [[nodiscard]] bool isAnimLooping(u32 animLayer) const;
 
+#ifndef NDEBUG
     // SMGPC debug
+    [[nodiscard]] f32 debugPaneAnimEndFrame(std::string_view paneName, u32 animLayer) const;
     [[nodiscard]] std::size_t debugAnimLayerCount() const;
     [[nodiscard]] std::string_view debugAnimName(u32 animLayer) const;
     [[nodiscard]] f32 debugAnimDuration(const char* pAnimName) const;
@@ -80,6 +94,69 @@ public:
     [[nodiscard]] std::size_t debugTextureCount() const;
     [[nodiscard]] std::size_t debugFontCount() const;
     [[nodiscard]] std::size_t debugCommittedPaneFrameCount() const;
+
+    struct DebugPaneContentState {
+        std::string kind;
+        std::string name;
+        s32 material_index = -1;
+        std::string material_name;
+        std::string texture_name;
+        std::string font_name;
+        bool visible = true;
+    };
+
+    struct DebugPaneState {
+        std::size_t index = 0U;
+        std::string name;
+        s32 parent_index = -1;
+        bool base_visible = true;
+        bool effective_visible = true;
+        f32 translate_x = 0.0F;
+        f32 translate_y = 0.0F;
+        f32 scale_x = 1.0F;
+        f32 scale_y = 1.0F;
+        f32 alpha = 255.0F;
+        f32 width = 0.0F;
+        f32 height = 0.0F;
+        std::vector< DebugPaneContentState > contents;
+    };
+
+    struct DebugMaterialTextureState {
+        std::size_t slot = 0U;
+        std::uint16_t texture_index = 0U;
+        std::string texture_name;
+        std::uint8_t wrap_s = 0U;
+        std::uint8_t wrap_t = 0U;
+        std::uint8_t min_filter = 0U;
+        std::uint8_t mag_filter = 0U;
+    };
+
+    struct DebugMaterialState {
+        std::size_t index = 0U;
+        std::string name;
+        std::size_t texture_count = 0U;
+        std::size_t tex_coord_gen_count = 0U;
+        std::size_t tev_stage_count = 0U;
+        bool alpha_compare_enabled = false;
+        bool blend_enabled = false;
+        std::vector< DebugMaterialTextureState > textures;
+    };
+
+    struct DebugTextureState {
+        std::size_t index = 0U;
+        std::string name;
+        std::uint16_t width = 0U;
+        std::uint16_t height = 0U;
+        std::uint32_t format_raw = 0U;
+        std::string format_name;
+        bool uploaded = false;
+        std::size_t rgba_byte_count = 0U;
+    };
+
+    [[nodiscard]] std::vector< DebugPaneState > debugPanes() const;
+    [[nodiscard]] std::vector< DebugMaterialState > debugMaterials() const;
+    [[nodiscard]] std::vector< DebugTextureState > debugTextures() const;
+#endif
 
     struct RenderTexture {
         std::string name;
@@ -162,6 +239,7 @@ private:
     std::unordered_map< std::string, smgpc::game::BrlanAnimation > mRenderAnimations = {};
     std::unordered_map< std::string, smgpc::game::BrlanPaneFrame > mCommittedPaneFrames = {};
     std::unordered_map< std::string, bool > mPaneVisibilityOverrides = {};
+    std::unordered_map< std::string, f32 > mPaneAlphaOverrides = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};
 };
 

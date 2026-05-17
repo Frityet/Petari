@@ -42,6 +42,7 @@ namespace smgpc::game {
         Translucent,
     };
 
+#ifndef NDEBUG
     struct SceneSchedulerEntryState {
         SceneEntryKind kind = SceneEntryKind::NameObj;
         SceneSchedulerPhase phase = SceneSchedulerPhase::None;
@@ -105,6 +106,64 @@ namespace smgpc::game {
         float pointing_anim_start_frame = 0.0F;
     };
 
+    struct SceneLayoutPaneContentDebugState {
+        std::string kind;
+        std::string name;
+        s32 material_index = -1;
+        std::string material_name;
+        std::string texture_name;
+        std::string font_name;
+        bool visible = true;
+    };
+
+    struct SceneLayoutPaneRuntimeDebugState {
+        std::size_t index = 0U;
+        std::string name;
+        s32 parent_index = -1;
+        bool base_visible = true;
+        bool effective_visible = true;
+        float translate_x = 0.0F;
+        float translate_y = 0.0F;
+        float scale_x = 1.0F;
+        float scale_y = 1.0F;
+        float alpha = 255.0F;
+        float width = 0.0F;
+        float height = 0.0F;
+        std::vector<SceneLayoutPaneContentDebugState> contents;
+    };
+
+    struct SceneLayoutMaterialTextureDebugState {
+        std::size_t slot = 0U;
+        u16 texture_index = 0U;
+        std::string texture_name;
+        u8 wrap_s = 0U;
+        u8 wrap_t = 0U;
+        u8 min_filter = 0U;
+        u8 mag_filter = 0U;
+    };
+
+    struct SceneLayoutMaterialDebugState {
+        std::size_t index = 0U;
+        std::string name;
+        std::size_t texture_count = 0U;
+        std::size_t tex_coord_gen_count = 0U;
+        std::size_t tev_stage_count = 0U;
+        bool alpha_compare_enabled = false;
+        bool blend_enabled = false;
+        std::vector<SceneLayoutMaterialTextureDebugState> textures;
+    };
+
+    struct SceneLayoutTextureDebugState {
+        std::size_t index = 0U;
+        std::string name;
+        u16 width = 0U;
+        u16 height = 0U;
+        u32 format_raw = 0U;
+        std::string format_name;
+        bool uploaded = false;
+        std::size_t rgba_byte_count = 0U;
+    };
+
     struct SceneLayoutRuntimeDebugState {
         std::string name;
         std::string layout_name;
@@ -126,6 +185,9 @@ namespace smgpc::game {
         std::vector<SceneLayoutAnimationDebugState> animations;
         std::vector<SceneLayoutPaneControlDebugState> pane_controls;
         std::vector<SceneLayoutButtonControllerDebugState> button_controllers;
+        std::vector<SceneLayoutPaneRuntimeDebugState> panes;
+        std::vector<SceneLayoutMaterialDebugState> materials;
+        std::vector<SceneLayoutTextureDebugState> textures;
     };
 
     struct SceneSchedulerMessageTraceEntry {
@@ -150,6 +212,7 @@ namespace smgpc::game {
         std::string sender_sensor_host_name;
         std::string receiver_sensor_host_name;
     };
+#endif
 
     class SceneScheduler final {
     public:
@@ -176,10 +239,12 @@ namespace smgpc::game {
         void execute_draw_list_2d_normal(render::IRendererEngine &renderer);
         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
 
+#ifndef NDEBUG
         [[nodiscard]] std::vector<SceneSchedulerEntryState> snapshot() const;
         [[nodiscard]] std::span<const SceneSchedulerEntryState> last_execution_trace() const;
         [[nodiscard]] std::span<const SceneSchedulerMessageTraceEntry> message_trace() const;
         [[nodiscard]] std::vector<SceneLayoutRuntimeDebugState> debug_layout_runtime_snapshot() const;
+#endif
         void clear();
 
         struct Entry {
@@ -207,14 +272,20 @@ namespace smgpc::game {
         void execute_draw_buffer(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type,
                                  SceneDrawBufferPass pass);
         void execute_draw_type(render::IRendererEngine &renderer, s32 draw_type);
+#ifndef NDEBUG
         void push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass = SceneDrawBufferPass::None);
         void push_message_trace(SceneSchedulerMessageTraceEntry trace);
+#endif
 
         std::vector<Entry> _entries;
+#ifndef NDEBUG
         std::vector<SceneSchedulerEntryState> _last_execution_trace;
         std::vector<SceneSchedulerMessageTraceEntry> _message_trace;
+#endif
         std::size_t _next_order = 0U;
+#ifndef NDEBUG
         std::uint64_t _next_message_sequence = 0U;
+#endif
     };
 
 }  // namespace smgpc::game

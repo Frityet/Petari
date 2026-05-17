@@ -12,6 +12,7 @@
 class ButtonPaneController;
 class LayoutActor;
 
+#ifndef NDEBUG
 struct LayoutPaneControlDebugState {
     std::string pane_name;
     bool exists_in_layout = false;
@@ -31,6 +32,7 @@ struct LayoutButtonControllerDebugState {
     bool decide_enabled = true;
     f32 pointing_anim_start_frame = 0.0F;
 };
+#endif
 
 class LayoutManager {
 public:
@@ -62,8 +64,10 @@ public:
     [[nodiscard]] bool isLoopingAnim(const char*) const;
     void registerButtonController(ButtonPaneController*);
     void unregisterButtonController(ButtonPaneController*);
+#ifndef NDEBUG
     [[nodiscard]] std::vector< LayoutPaneControlDebugState > debugPaneControls() const;
     [[nodiscard]] std::vector< LayoutButtonControllerDebugState > debugButtonControllers() const;
+#endif
 
     /* 0x00 */ LayoutActor* mHost;
     /* 0x04 */ bool mIsScreenHidden;

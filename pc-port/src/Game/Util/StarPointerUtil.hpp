@@ -10,6 +10,7 @@ namespace MR {
     void startStarPointerModeTitle(void* host);
     void startStarPointerModeFileSelect(void* host);
     void requestStarPointerModeSaveLoad(void* host);
+    void requestStarPointerModePictureBook(void* host);
     void activeStarPointerGuidance();
     void deactiveStarPointerGuidance();
     bool requestFileSelectGuidance();

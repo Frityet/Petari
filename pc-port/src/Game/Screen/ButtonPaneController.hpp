@@ -46,7 +46,9 @@ public:
     void exeDecidedWait();
     void exeDecidedToDisappear();
     void exeDisappear();
+#ifndef NDEBUG
     [[nodiscard]] const char* debugNerveName() const;
+#endif
 
     /* 0x08 */ LayoutActor* mHost;
     /* 0x0C */ const char* mPaneName;

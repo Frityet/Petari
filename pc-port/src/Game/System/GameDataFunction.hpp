@@ -5,6 +5,9 @@
 namespace GameDataFunction {
     const wchar_t* getUserName();
     u16 getUserFileIndex();
+    s32 getPictureBookChapterCanRead();
+    u16 getPictureBookChapterAlreadyRead();
+    void setPictureBookChapterAlreadyRead(int chapterAlreadyRead);
     OSTime getSysConfigFileTimeAnnounced();
     void updateSysConfigFileTimeAnnounced();
     OSTime getSysConfigFileTimeSent();

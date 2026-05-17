@@ -1,8 +1,12 @@
 #include "Game/Util/LayoutUtil.hpp"
 
 #include <algorithm>
+#include <cctype>
+#include <filesystem>
 #include <optional>
+#include <stdexcept>
 #include <string>
+#include <string_view>
 
 #include "Game/Screen/IconAButton.hpp"
 #include "Game/Screen/LayoutActor.hpp"
@@ -10,9 +14,13 @@
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
+#include "Game/compat/LytTexMap.hpp"
+#include "Game/compat/RarcArchive.hpp"
+#include "Game/compat/TextEncoding.hpp"
+#include "Game/compat/TplTexture.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/compat/RuntimeContext.hpp"
 #include "Game/Util/NerveUtil.hpp"
+#include "Game/compat/RuntimeContext.hpp"
 
 namespace {
     [[nodiscard]] std::u16string utf16_from_wide(const wchar_t* pText) {
@@ -29,21 +37,55 @@ namespace {
         return text;
     }
 
-    [[nodiscard]] std::u16string utf16_from_utf8_lossy(std::string_view text) {
-        auto out = std::u16string{};
-        out.reserve(text.size());
-        for (const auto ch : text) {
-            out.push_back(static_cast< char16_t >(static_cast< unsigned char >(ch)));
-        }
-        return out;
-    }
-
-    [[nodiscard]] std::string runtime_message_or_tag(const char* pMessageId) {
+    [[nodiscard]] std::u16string runtime_message_or_tag(const char* pMessageId) {
         const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            return runtime->messages().message_or(tag, tag);
+            return runtime->messages().message_utf16_or(tag, smgpc::game::utf16_from_utf8_lossy(tag));
         }
-        return std::string(tag);
+        return smgpc::game::utf16_from_utf8_lossy(tag);
+    }
+
+    [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
+        return text.size() >= suffix.size() && text.substr(text.size() - suffix.size()) == suffix;
+    }
+
+    [[nodiscard]] std::string lower_copy(std::string_view value) {
+        auto lower = std::string(value);
+        std::ranges::transform(lower, lower.begin(), [](unsigned char character) { return static_cast< char >(std::tolower(character)); });
+        return lower;
+    }
+
+    [[nodiscard]] std::string base_name(std::string_view path) {
+        const auto slash = path.find_last_of('/');
+        if (slash == std::string_view::npos) {
+            return std::string(path);
+        }
+        return std::string(path.substr(slash + 1U));
+    }
+
+    [[nodiscard]] std::string archive_file_name(std::string_view archiveName) {
+        auto name = base_name(archiveName);
+        if (!ends_with(lower_copy(name), ".arc")) {
+            name.append(".arc");
+        }
+        return name;
+    }
+
+    [[nodiscard]] const smgpc::game::RarcEntry* find_entry_by_basename(const smgpc::game::RarcArchive& archive, std::string_view name) {
+        const auto requested = lower_copy(base_name(name));
+        const auto it = std::ranges::find_if(archive.entries(), [&requested](const auto& entry) { return lower_copy(base_name(entry.path)) == requested; });
+        return it == archive.entries().end() ? nullptr : &*it;
+    }
+
+    [[nodiscard]] std::optional< std::filesystem::path > find_layout_texture_archive(smgpc::game::RuntimeContext& runtime,
+                                                                                     std::string_view archiveName) {
+        const auto archive = archive_file_name(archiveName);
+        return runtime.dvd().find_first({
+            std::filesystem::path(archiveName),
+            std::filesystem::path("KrKorean") / "LayoutData" / archive,
+            std::filesystem::path("LayoutData") / archive,
+            std::filesystem::path("ObjectData") / archive,
+        });
     }
 }  // namespace
 
@@ -115,7 +157,37 @@ namespace MR {
         }
     }
 
-    void replacePaneTexture(LayoutActor*, const char*, const nw4r::lyt::TexMap*, u8) {
+    nw4r::lyt::TexMap* createLytTexMap(const char* pArchiveName, const char* pTextureName) {
+        if (pArchiveName == nullptr || pTextureName == nullptr) {
+            throw std::runtime_error("MR::createLytTexMap requires archive and texture names");
+        }
+
+        auto& runtime = smgpc::game::RuntimeContext::instance();
+        const auto archive_path = find_layout_texture_archive(runtime, pArchiveName);
+        if (!archive_path.has_value()) {
+            throw std::runtime_error("Layout texture archive does not exist: " + std::string(pArchiveName));
+        }
+
+        const auto& archive = runtime.dvd().archive_for_path(*archive_path);
+        const auto* entry = find_entry_by_basename(archive, pTextureName);
+        if (entry == nullptr) {
+            throw std::runtime_error("Layout texture does not exist: " + std::string(pTextureName));
+        }
+
+        const auto entry_name = lower_copy(base_name(entry->path));
+        if (ends_with(entry_name, ".tpl")) {
+            return new nw4r::lyt::TexMap(entry_name, smgpc::game::decode_tpl_texture(archive.file_data(*entry)), 0U, 0U, 0U, 0U);
+        }
+
+        const auto bti = smgpc::game::decode_bti_texture(archive.file_data(*entry));
+        return new nw4r::lyt::TexMap(entry_name, bti.image, bti.wrap_s, bti.wrap_t, bti.min_filter, bti.mag_filter);
+    }
+
+    void replacePaneTexture(LayoutActor* pLayout, const char* pPaneName, const nw4r::lyt::TexMap* pTexMap, u8 texMapIndex) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr && pTexMap != nullptr) {
+            pLayout->getSimpleLayout()->replacePaneTexture(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, *pTexMap,
+                                                           texMapIndex);
+        }
     }
 
     void startAnimAtFirstStep(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
@@ -136,7 +208,7 @@ namespace MR {
 
     void setTextBoxGameMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
         if (pLayout != nullptr) {
-            pLayout->setTextBoxStringRecursive(pPaneName, utf16_from_utf8_lossy(runtime_message_or_tag(pMessageId)));
+            pLayout->setTextBoxStringRecursive(pPaneName, runtime_message_or_tag(pMessageId));
         }
     }
 
@@ -168,10 +240,34 @@ namespace MR {
         setTextBoxMessageRecursive(pLayout, pPaneName, pMessage);
     }
 
-    void setTextBoxVerticalPositionCenterRecursive(LayoutActor*, const char*) {
+    void setTextBoxHorizontalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setTextBoxHorizontalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 1U);
+        }
     }
 
-    void setTextBoxVerticalPositionBottomRecursive(LayoutActor*, const char*) {
+    void setTextBoxHorizontalPositionLeftRecursive(LayoutActor* pLayout, const char* pPaneName) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setTextBoxHorizontalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 0U);
+        }
+    }
+
+    void setTextBoxVerticalPositionTopRecursive(LayoutActor* pLayout, const char* pPaneName) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setTextBoxVerticalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 0U);
+        }
+    }
+
+    void setTextBoxVerticalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setTextBoxVerticalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 1U);
+        }
+    }
+
+    void setTextBoxVerticalPositionBottomRecursive(LayoutActor* pLayout, const char* pPaneName) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setTextBoxVerticalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 2U);
+        }
     }
 
     void createAndAddPaneCtrl(LayoutActor* pLayout, const char* pPaneName, u32 animLayerNum) {
@@ -202,6 +298,12 @@ namespace MR {
 
     void hidePaneRecursive(LayoutActor* pLayout, const char* pPaneName) {
         hidePane(pLayout, pPaneName);
+    }
+
+    void setPaneAlphaFloat(LayoutActor* pLayout, const char* pPaneName, f32 alpha) {
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setPaneAlpha(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, alpha);
+        }
     }
 
     void showLayout(LayoutActor* pLayout) {
@@ -238,6 +340,10 @@ namespace MR {
         auto pos = TVec2f{};
         copyPaneTrans(&pos, pSrc, pPaneName);
         setFollowPos(&pos, pDst, nullptr);
+    }
+
+    void setLayoutScalePosAtPaneScaleTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
+        setLayoutPosAtPaneTrans(pDst, pSrc, pPaneName);
     }
 
     void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
@@ -284,8 +390,46 @@ namespace MR {
         return pLayout->getLayoutManager()->getPaneAnimFrame(pPaneName, animLayer);
     }
 
+    s16 getPaneAnimFrameMax(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
+        if (pLayout == nullptr || pLayout->getLayoutManager() == nullptr) {
+            return 0;
+        }
+
+        return static_cast< s16 >(pLayout->getLayoutManager()->getPaneAnimFrameMax(pPaneName, animLayer));
+    }
+
     bool isPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
         return pLayout == nullptr || pLayout->getLayoutManager() == nullptr || pLayout->getLayoutManager()->isPaneAnimStopped(pPaneName, animLayer);
+    }
+
+    bool isLessStep(const LayoutActor* pActor, s32 step) {
+        return pActor != nullptr && pActor->getNerveStep() >= 0 && pActor->getNerveStep() < step;
+    }
+
+    bool isGreaterEqualStep(const LayoutActor* pActor, s32 step) {
+        return pActor != nullptr && pActor->getNerveStep() >= step;
+    }
+
+    f32 calcNerveRate(const LayoutActor* pActor, s32 stepMax) {
+        if (pActor == nullptr || stepMax <= 0) {
+            return 1.0F;
+        }
+
+        return std::clamp(static_cast< f32 >(pActor->getNerveStep()) / static_cast< f32 >(stepMax), 0.0F, 1.0F);
+    }
+
+    f32 calcNerveRate(const LayoutActor* pActor, s32 stepMin, s32 stepMax) {
+        if (pActor == nullptr || stepMax <= stepMin) {
+            return 1.0F;
+        }
+
+        return std::clamp(static_cast< f32 >(pActor->getNerveStep() - stepMin) / static_cast< f32 >(stepMax - stepMin), 0.0F, 1.0F);
+    }
+
+    void setNerveAtStep(LayoutActor* pLayout, const Nerve* pNerve, s32 step) {
+        if (pLayout != nullptr && pLayout->getNerveStep() == step) {
+            pLayout->setNerve(pNerve);
+        }
     }
 
     void setNerveAtPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, const Nerve* pNerve, u32 animLayer) {
@@ -312,6 +456,24 @@ namespace MR {
         }
 
         return static_cast< s16 >(pLayout->getLayoutManager()->getAnimFrameMax(pAnimName));
+    }
+
+    s16 getAnimFrameMax(LayoutActor* pLayout, u32 animLayer) {
+        if (pLayout == nullptr || pLayout->getSimpleLayout() == nullptr) {
+            return 0;
+        }
+
+        return static_cast< s16 >(pLayout->getSimpleLayout()->getAnimFrameMax(animLayer));
+    }
+
+    void startAnimReverseOneTime(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
+        if (pLayout == nullptr) {
+            return;
+        }
+
+        MR::startAnim(pLayout, pAnimName, animLayer);
+        MR::setAnimFrame(pLayout, static_cast< f32 >(MR::getAnimFrameMax(pLayout, animLayer)), animLayer);
+        MR::setAnimRate(pLayout, -1.0F, animLayer);
     }
 
     void invalidateParentAnim(LayoutActor*) {

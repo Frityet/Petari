@@ -103,6 +103,7 @@ u32 LayoutPaneCtrl::animLayerCount() const {
     return static_cast< u32 >(mFrameCtrls.size());
 }
 
+#ifndef NDEBUG
 std::vector< LayoutPaneControlAnimationDebugState > LayoutPaneCtrl::debugAnimations() const {
     auto out = std::vector< LayoutPaneControlAnimationDebugState >{};
     out.reserve(mFrameCtrls.size());
@@ -120,6 +121,7 @@ std::vector< LayoutPaneControlAnimationDebugState > LayoutPaneCtrl::debugAnimati
     }
     return out;
 }
+#endif
 
 u32 LayoutPaneCtrl::layerIndex(u32 animLayer) const {
     return std::min< u32 >(animLayer, static_cast< u32 >(mFrameCtrls.size() - 1U));

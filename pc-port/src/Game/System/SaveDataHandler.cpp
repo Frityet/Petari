@@ -17,12 +17,7 @@ namespace {
     NEW_NERVE(SaveDataHandlerNrvProcessing, SaveDataHandler, Processing);
 
     smgpc::game::SaveDataService& backing_save_data() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            return runtime->save_data();
-        }
-
-        static auto fallback = smgpc::game::SaveDataService();
-        return fallback;
+        return smgpc::game::RuntimeContext::instance().save_data();
     }
 
     [[nodiscard]] s32 slot_index_from_name(std::string_view name) {

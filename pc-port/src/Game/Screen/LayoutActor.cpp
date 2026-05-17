@@ -246,6 +246,6 @@ void LayoutActor::syncAnimCtrlFromLayout(u32 animLayer) {
 
     auto& ctrl = animCtrl(animLayer);
     ctrl.mFrame = mSimpleLayout->getAnimFrame(animLayer);
-    ctrl.mEnd = static_cast< s16 >(mSimpleLayout->debugAnimEndFrame(animLayer));
-    ctrl.mRate = mSimpleLayout->debugAnimRate(animLayer);
+    ctrl.mEnd = static_cast< s16 >(mSimpleLayout->getAnimFrameMax(animLayer));
+    ctrl.mRate = mSimpleLayout->getAnimRate(animLayer);
 }

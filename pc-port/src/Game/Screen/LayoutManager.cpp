@@ -147,7 +147,7 @@ f32 LayoutManager::getPaneAnimFrameMax(const char* pPaneName, u32 animLayer) con
 
 f32 LayoutManager::getAnimFrameMax(const char* pAnimName) const {
     const auto* layout = mHost != nullptr ? mHost->getSimpleLayout() : nullptr;
-    return layout == nullptr ? 1.0F : layout->debugAnimDuration(pAnimName);
+    return layout == nullptr ? 1.0F : layout->getAnimDuration(pAnimName);
 }
 
 bool LayoutManager::isLoopingAnim(const char* pAnimName) const {
@@ -156,7 +156,7 @@ bool LayoutManager::isLoopingAnim(const char* pAnimName) const {
         return false;
     }
 
-    return layout->debugAnimLooping(pAnimName);
+    return layout->isAnimLooping(pAnimName);
 }
 
 void LayoutManager::registerButtonController(ButtonPaneController* pController) {
@@ -174,6 +174,7 @@ void LayoutManager::unregisterButtonController(ButtonPaneController* pController
     }
 }
 
+#ifndef NDEBUG
 std::vector< LayoutPaneControlDebugState > LayoutManager::debugPaneControls() const {
     auto out = std::vector< LayoutPaneControlDebugState >{};
     out.reserve(mPaneCtrls.size());
@@ -213,6 +214,7 @@ std::vector< LayoutButtonControllerDebugState > LayoutManager::debugButtonContro
     }
     return out;
 }
+#endif
 
 std::string LayoutManager::normalizedPaneName(const char* pPaneName) const {
     return pPaneName != nullptr ? std::string(pPaneName) : std::string();
