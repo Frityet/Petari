@@ -113,6 +113,8 @@ namespace smgpc::game {
         std::uint8_t src_factor = 1U;
         std::uint8_t dst_factor = 0U;
         std::uint8_t op = 3U;
+        bool color_update = true;
+        bool alpha_update = true;
         bool enabled = false;
     };
 

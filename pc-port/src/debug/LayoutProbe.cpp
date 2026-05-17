@@ -276,6 +276,64 @@ namespace {
         }
         out << '\n';
 
+        out << "## Materials\n\n";
+        out << "| index | name | textures | tex SRTs | tex coord gens | TEV stages | alpha compare | blend |\n";
+        out << "| ---: | --- | --- | --- | --- | --- | --- | --- |\n";
+        for (auto i = std::size_t{}; i < layout.materials.size(); ++i) {
+            const auto& material = layout.materials[i];
+            out << "| " << i << " | `" << material.name << "` | ";
+            for (auto texture_index = std::size_t{}; texture_index < material.textures.size(); ++texture_index) {
+                const auto& texture = material.textures[texture_index];
+                if (texture_index != 0U) {
+                    out << "<br>";
+                }
+                out << texture_index << ":`" << texture.texture_name << "` wrap=" << static_cast< int >(texture.wrap_s) << ','
+                    << static_cast< int >(texture.wrap_t) << " filter=" << static_cast< int >(texture.min_filter) << ','
+                    << static_cast< int >(texture.mag_filter);
+            }
+            out << " | ";
+            for (auto srt_index = std::size_t{}; srt_index < material.tex_srts.size(); ++srt_index) {
+                const auto& srt = material.tex_srts[srt_index];
+                if (srt_index != 0U) {
+                    out << "<br>";
+                }
+                out << srt_index << ":t=" << srt.translate_s << ',' << srt.translate_t << " r=" << srt.rotate << " s=" << srt.scale_s << ','
+                    << srt.scale_t;
+            }
+            out << " | ";
+            for (auto gen_index = std::size_t{}; gen_index < material.tex_coord_gens.size(); ++gen_index) {
+                const auto& gen = material.tex_coord_gens[gen_index];
+                if (gen_index != 0U) {
+                    out << "<br>";
+                }
+                out << gen_index << ":type=" << static_cast< int >(gen.tex_gen_type) << " src=" << static_cast< int >(gen.tex_gen_src)
+                    << " mtx=" << static_cast< int >(gen.tex_mtx);
+            }
+            out << " | ";
+            for (auto stage_index = std::size_t{}; stage_index < material.tev_stages.size(); ++stage_index) {
+                const auto& stage = material.tev_stages[stage_index];
+                if (stage_index != 0U) {
+                    out << "<br>";
+                }
+                out << stage_index << ":tc=" << static_cast< int >(stage.tex_coord_gen) << " tm=" << stage.tex_map
+                    << " cc=" << static_cast< int >(stage.color_chan) << " c=[" << static_cast< int >(stage.color.a) << ','
+                    << static_cast< int >(stage.color.b) << ',' << static_cast< int >(stage.color.c) << ','
+                    << static_cast< int >(stage.color.d) << "]->" << static_cast< int >(stage.color.out_reg) << " a=["
+                    << static_cast< int >(stage.alpha.a) << ',' << static_cast< int >(stage.alpha.b) << ','
+                    << static_cast< int >(stage.alpha.c) << ',' << static_cast< int >(stage.alpha.d) << "]->"
+                    << static_cast< int >(stage.alpha.out_reg);
+            }
+            out << " | " << (material.alpha_compare.enabled ? "yes" : "no") << " c=" << static_cast< int >(material.alpha_compare.comp0) << ','
+                << static_cast< int >(material.alpha_compare.comp1) << " r=" << static_cast< int >(material.alpha_compare.ref0) << ','
+                << static_cast< int >(material.alpha_compare.ref1) << " op=" << static_cast< int >(material.alpha_compare.op) << " | "
+                << (material.blend_mode.enabled ? "yes" : "default") << " type=" << static_cast< int >(material.gx_state.blend.type)
+                << " src=" << static_cast< int >(material.gx_state.blend.src_factor) << " dst="
+                << static_cast< int >(material.gx_state.blend.dst_factor) << " op=" << static_cast< int >(material.gx_state.blend.op)
+                << " color_update=" << (material.gx_state.blend.color_update ? "yes" : "no")
+                << " alpha_update=" << (material.gx_state.blend.alpha_update ? "yes" : "no") << " |\n";
+        }
+        out << '\n';
+
         const auto appear = animations.find("appear");
         const auto wait = animations.find("wait");
         auto committed = std::unordered_map< std::string, smgpc::game::BrlanPaneFrame >{};

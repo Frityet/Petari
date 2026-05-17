@@ -921,16 +921,15 @@ namespace smgpc::game {
                                 std::span< const J3dMaterialTexturePass > passes, const J3dMeshVertex& source,
                                 std::array< std::uint8_t, 4U > raster_color, const J3dMatrix3x4* model_matrix) {
         if (passes.empty()) {
-            const auto constant = j3d_try_compose_material_constant(material, raster_color);
-            if (!constant.has_value() || constant->image.rgba.size() < 4U) {
-                return std::nullopt;
-            }
-
+            const auto raster = color_to_tev(raster_color);
+            const auto fallback_texture = TevColor{255, 255, 255, 255};
+            const auto output =
+                material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span< const TevColor >{}, fallback_texture, raster);
             return std::array< std::uint8_t, 4U >{
-                constant->image.rgba[0U],
-                constant->image.rgba[1U],
-                constant->image.rgba[2U],
-                constant->image.rgba[3U],
+                static_cast< std::uint8_t >(std::clamp(output[0U], 0, 255)),
+                static_cast< std::uint8_t >(std::clamp(output[1U], 0, 255)),
+                static_cast< std::uint8_t >(std::clamp(output[2U], 0, 255)),
+                static_cast< std::uint8_t >(std::clamp(output[3U], 0, 255)),
             };
         }
 

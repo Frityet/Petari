@@ -87,6 +87,30 @@ void LiveActorModelCompat::startBck(std::string_view, std::string_view) {
     applyStartedAnimations();
 }
 
+std::optional<std::int16_t> LiveActorModelCompat::startBrk(std::string_view name) {
+    mBrkStarted = true;
+    const auto requested_name = std::string(name);
+    if (mBrkName != requested_name) {
+        mBrkAnimation.reset();
+    }
+    mBrkName = requested_name;
+    if (!mBrkAnimation.has_value()) {
+        auto *runtime = smgpc::game::RuntimeContext::try_instance();
+        const auto archive_path = runtime != nullptr ? runtime->find_object_archive(mModelArcName) : std::nullopt;
+        if (archive_path.has_value()) {
+            try {
+                const auto &archive = runtime->dvd().archive_for_path(*archive_path);
+                mBrkAnimation = findBrkAnimation(archive);
+                mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string{};
+            } catch (const std::exception &) {
+                mBrkAnimation.reset();
+                mBrkAnimationName.clear();
+            }
+        }
+    }
+    return mBrkAnimation.has_value() ? std::optional<std::int16_t>{mBrkAnimation->frame_max} : std::nullopt;
+}
+
 void LiveActorModelCompat::startBtk(std::string_view) {
     mBtkStarted = true;
     applyStartedAnimations();
@@ -114,14 +138,17 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
     if (debug_model_filter_matches(mModelArcName)) {
         options.material_filter = debug_environment("SMGPC_J3D_MATERIAL_FILTER");
     }
+    auto *runtime = smgpc::game::RuntimeContext::try_instance();
+    if (runtime != nullptr) {
+        options.scene_lights = runtime->scene_lights().lights();
+    }
     mRenderer->draw(renderer, camera_pose, actor_matrix, frame, options);
 
-    auto *runtime = smgpc::game::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
+    if (runtime == nullptr || !runtime->should_record_j3d_packet_trace()) {
         return;
     }
 
-    const auto runtime_packets = mRenderer->render_packets(frame);
+    const auto runtime_packets = mRenderer->render_packets(frame, runtime->scene_lights().lights());
     for (const auto &packet : runtime_packets) {
         if (packet_matches_draw_pass(pass, packet)) {
             runtime->record_j3d_packet_trace(mModelArcName, frame, draw_pass_name(pass), packet);
@@ -151,7 +178,7 @@ void LiveActorModelCompat::ensureLoaded(smgpc::render::IRendererEngine &renderer
     }
 
     try {
-        const auto archive = smgpc::game::RarcArchive::from_file(*archive_path);
+        const auto &archive = runtime->dvd().archive_for_path(*archive_path);
         const auto *model_entry = findModelEntry(archive);
         if (model_entry == nullptr) {
             runtime->note_object_texture_decode_failed(mModelArcName, "archive contains no BDL/BMD model");
@@ -160,6 +187,10 @@ void LiveActorModelCompat::ensureLoaded(smgpc::render::IRendererEngine &renderer
 
         mBckAnimation = findBckAnimation(archive);
         mBtkAnimation = findBtkAnimation(archive);
+        if ((mBrkStarted || !mBrkName.empty()) && (!mBrkAnimation.has_value() || mBrkAnimationName != mBrkName)) {
+            mBrkAnimation = findBrkAnimation(archive);
+            mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string{};
+        }
         mRenderer = std::make_unique<smgpc::game::J3dModelRenderer>();
         mRenderer->load(renderer, archive.file_data(*model_entry));
         applyStartedAnimations();
@@ -224,4 +255,17 @@ std::optional<smgpc::game::J3dBtkAnimationSummary> LiveActorModelCompat::findBtk
     }
 
     return smgpc::game::inspect_j3d_animation(archive.file_data(*entry)).btk;
+}
+
+std::optional<smgpc::game::J3dBrkAnimationSummary> LiveActorModelCompat::findBrkAnimation(const smgpc::game::RarcArchive &archive) const {
+    const auto requested = lower_copy(mBrkName.empty() ? std::string_view{mModelArcName} : std::string_view{mBrkName}) + ".brk";
+    auto *entry = find_entry_by_basename(archive, requested);
+    if (entry == nullptr) {
+        entry = find_first_entry_with_suffix(archive, ".brk");
+    }
+    if (entry == nullptr) {
+        return std::nullopt;
+    }
+
+    return smgpc::game::inspect_j3d_animation(archive.file_data(*entry)).brk;
 }

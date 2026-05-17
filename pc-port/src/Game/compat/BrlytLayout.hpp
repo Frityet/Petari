@@ -89,7 +89,7 @@ struct BrlytBlendMode {
     std::uint8_t type = 1U;
     std::uint8_t src_factor = 4U;
     std::uint8_t dst_factor = 5U;
-    std::uint8_t op = 3U;
+    std::uint8_t op = 15U;
     bool enabled = false;
 };
 

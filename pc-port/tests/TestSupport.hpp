@@ -1,15 +1,43 @@
 #pragma once
 
+#include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Map/FileSelectEffect.hpp"
 #include "Game/Map/FileSelectItem.hpp"
 #include "Game/Map/FileSelectSky.hpp"
 #include "Game/Map/FileSelector.hpp"
+#include "Game/Map/LightFunction.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Screen/BackButton.hpp"
+#include "Game/Screen/BrosButton.hpp"
+#include "Game/Screen/ButtonPaneController.hpp"
+#include "Game/Screen/FileSelectButton.hpp"
+#include "Game/Screen/FileSelectInfo.hpp"
+#include "Game/Screen/FileSelectNumber.hpp"
+#include "Game/Screen/InformationMessage.hpp"
+#include "Game/Screen/Manual2P.hpp"
+#include "Game/Screen/MiiConfirmIcon.hpp"
+#include "Game/Screen/MiiSelect.hpp"
+#include "Game/Screen/SaveIcon.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
+#include "Game/Screen/SysInfoWindow.hpp"
+#include "Game/System/GameDataFunction.hpp"
+#include "Game/System/GameSequenceFunction.hpp"
+#include "Game/System/NANDManager.hpp"
+#include "Game/System/SaveDataHandleSequence.hpp"
+#include "Game/System/SaveDataHandler.hpp"
+#include "Game/System/SysConfigFile.hpp"
+#include "Game/System/UserFile.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/LightUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SequenceUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/compat/BcsvTable.hpp"
 #include "Game/compat/BrfntFont.hpp"
 #include "Game/compat/BrlanAnimation.hpp"
@@ -89,19 +117,26 @@ namespace smgpc::tests {
         [[nodiscard]] bool is_input_pressed(smgpc::render::InputButton button) const override {
             switch (button) {
             case smgpc::render::InputButton::CORE_PAD_A:
+                return _hold_core_pad_a;
             case smgpc::render::InputButton::CORE_PAD_B:
-                return _hold_title_combo;
+                return _hold_core_pad_b;
             }
 
             return false;
         }
 
         void set_title_combo(bool is_pressed) {
-            _hold_title_combo = is_pressed;
+            set_core_buttons(is_pressed, is_pressed);
+        }
+
+        void set_core_buttons(bool hold_a, bool hold_b) {
+            _hold_core_pad_a = hold_a;
+            _hold_core_pad_b = hold_b;
         }
 
     private:
-        bool _hold_title_combo = false;
+        bool _hold_core_pad_a = false;
+        bool _hold_core_pad_b = false;
     };
 
     class RecordingRenderer final : public smgpc::render::IRendererEngine {
@@ -281,9 +316,26 @@ namespace smgpc::tests {
             ++calc_view_count;
         }
 
+        bool receiveOtherMsg(u32 msg, HitSensor *pSender, HitSensor *pReceiver) override {
+            ++message_count;
+            last_message = msg;
+            last_sender = pSender;
+            last_receiver = pReceiver;
+            last_sender_host = MR::getSensorHost(pSender);
+            last_receiver_host = MR::getSensorHost(pReceiver);
+            return accept_messages;
+        }
+
         int calc_anim_count = 0;
         int control_count = 0;
         int calc_view_count = 0;
+        int message_count = 0;
+        u32 last_message = 0U;
+        HitSensor *last_sender = nullptr;
+        HitSensor *last_receiver = nullptr;
+        LiveActor *last_sender_host = nullptr;
+        LiveActor *last_receiver_host = nullptr;
+        bool accept_messages = false;
     };
 
     [[nodiscard]] inline std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {

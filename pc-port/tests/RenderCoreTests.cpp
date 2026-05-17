@@ -50,6 +50,46 @@ namespace smgpc::tests {
             require(png[25] == 6U, "PNG service color type mismatch");
         }
 
+        $test("flushes async PNG screenshot writes") {
+            const std::array<std::uint8_t, 16U> pixels{
+                255U,
+                255U,
+                255U,
+                255U,
+                255U,
+                0U,
+                0U,
+                255U,
+                0U,
+                255U,
+                0U,
+                255U,
+                0U,
+                0U,
+                255U,
+                255U,
+            };
+
+            const auto output = std::filesystem::temp_directory_path() / "smg-pc-async-png-screenshot-service-test.png";
+            std::filesystem::remove(output);
+            const auto screenshot_service = smgpc::render::capture::create_async_png_screenshot_service();
+            screenshot_service->write_png(output, smgpc::render::capture::ScreenshotImageView{
+                                                      .width = 2U,
+                                                      .height = 2U,
+                                                      .pitch = 8U,
+                                                      .pixels = std::span<const std::uint8_t>(pixels.data(), pixels.size()),
+                                                      .format = smgpc::render::capture::PixelFormat::RGBA8,
+                                                      .origin_bottom_left = true,
+                                                  });
+            screenshot_service->flush();
+
+            const auto png = read_file(output);
+            require(png.size() > 64U, "async PNG service output is too small");
+            require(png[0] == 0x89U && png[1] == 0x50U && png[2] == 0x4eU && png[3] == 0x47U, "async PNG service output missing signature");
+            require(read_be32(png, 16U) == 2U, "async PNG service width mismatch");
+            require(read_be32(png, 20U) == 2U, "async PNG service height mismatch");
+        }
+
         $test("composes a single-texture J3D TEV material") {
             auto material = smgpc::game::J3dMaterialSummary{};
             material.name = "synthetic-sky";

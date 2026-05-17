@@ -6,6 +6,9 @@
 #include <system_error>
 #include <utility>
 
+#include "Game/System/SysConfigFile.hpp"
+#include "Game/System/UserFile.hpp"
+
 namespace smgpc::game {
     namespace {
 
@@ -22,6 +25,54 @@ namespace smgpc::game {
             }
 
             return path.lexically_normal();
+        }
+
+        [[nodiscard]] std::vector<std::uint8_t> read_binary_file(const std::filesystem::path &path) {
+            auto file = std::ifstream(path, std::ios::binary);
+            if (!file) {
+                throw std::runtime_error("Cannot open save file " + path.string());
+            }
+
+            file.seekg(0, std::ios::end);
+            const auto size = file.tellg();
+            if (size < 0) {
+                throw std::runtime_error("Cannot determine save file size " + path.string());
+            }
+
+            auto bytes = std::vector<std::uint8_t>(static_cast<std::size_t>(size));
+            file.seekg(0, std::ios::beg);
+            file.read(reinterpret_cast<char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+            if (!file) {
+                throw std::runtime_error("Cannot read save file " + path.string());
+            }
+
+            return bytes;
+        }
+
+        void write_binary_file(const std::filesystem::path &path, std::span<const std::uint8_t> bytes) {
+            std::error_code error{};
+            std::filesystem::create_directories(path.parent_path(), error);
+            if (error) {
+                throw std::runtime_error("Cannot create save directory " + path.parent_path().string());
+            }
+
+            auto file = std::ofstream(path, std::ios::binary | std::ios::trunc);
+            if (!file) {
+                throw std::runtime_error("Cannot open save file for writing " + path.string());
+            }
+
+            file.write(reinterpret_cast<const char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+            if (!file) {
+                throw std::runtime_error("Cannot write save file " + path.string());
+            }
+        }
+
+        [[nodiscard]] std::string original_config_name(s32 slot_index) {
+            return "config" + std::to_string(slot_index);
+        }
+
+        [[nodiscard]] std::string original_game_name(s32 slot_index, bool is_player_mario) {
+            return std::string(is_player_mario ? "mario" : "luigi") + std::to_string(slot_index);
         }
 
     }  // namespace
@@ -96,7 +147,11 @@ namespace smgpc::game {
     }
 
     RarcArchive &DvdFileSystemService::archive(std::string_view disc_path) {
-        const auto key = archive_cache_key(disc_path);
+        return archive_for_path(resolve(disc_path));
+    }
+
+    RarcArchive &DvdFileSystemService::archive_for_path(const std::filesystem::path &path) {
+        const auto key = archive_cache_key_for_path(path);
         if (auto it = _archives.find(key); it != _archives.end()) {
             return *it->second;
         }
@@ -111,7 +166,11 @@ namespace smgpc::game {
     }
 
     std::size_t DvdFileSystemService::archive_load_count(std::string_view disc_path) const {
-        const auto key = archive_cache_key(disc_path);
+        return archive_load_count_for_path(resolve(disc_path));
+    }
+
+    std::size_t DvdFileSystemService::archive_load_count_for_path(const std::filesystem::path &path) const {
+        const auto key = archive_cache_key_for_path(path);
         if (auto it = _archive_load_counts.find(key); it != _archive_load_counts.end()) {
             return it->second;
         }
@@ -153,8 +212,12 @@ namespace smgpc::game {
         return normalized;
     }
 
+    std::string DvdFileSystemService::archive_cache_key_for_path(const std::filesystem::path &path) const {
+        return weakly_canonical_or_normal(path).generic_string();
+    }
+
     std::string DvdFileSystemService::archive_cache_key(std::string_view disc_path) const {
-        return resolve(disc_path).generic_string();
+        return archive_cache_key_for_path(resolve(disc_path));
     }
 
     void WpadService::begin_frame() {
@@ -415,6 +478,12 @@ namespace smgpc::game {
         push_event(AudioEventKind::StageBgmStop, stopped_name, fade_frames);
     }
 
+    void AudioEventService::set_stage_bgm_state(s32 state, u32 change_frames) {
+        _stage_bgm_state = state;
+        _stage_bgm_state_change_frames = change_frames;
+        push_event(AudioEventKind::StageBgmStateChange, _stage_bgm_name, 0, state, change_frames);
+    }
+
     void AudioEventService::start_system_sound(std::string_view name) {
         push_event(AudioEventKind::SystemSoundStart, name);
     }
@@ -435,15 +504,25 @@ namespace smgpc::game {
         return _stage_bgm_name;
     }
 
+    s32 AudioEventService::stage_bgm_state() const {
+        return _stage_bgm_state;
+    }
+
+    u32 AudioEventService::stage_bgm_state_change_frames() const {
+        return _stage_bgm_state_change_frames;
+    }
+
     std::span<const AudioEvent> AudioEventService::events() const {
         return _events;
     }
 
-    void AudioEventService::push_event(AudioEventKind kind, std::string_view name, s32 fade_frames) {
+    void AudioEventService::push_event(AudioEventKind kind, std::string_view name, s32 fade_frames, s32 state, u32 change_frames) {
         _events.push_back(AudioEvent{
             .kind = kind,
             .name = std::string(name),
             .fade_frames = fade_frames,
+            .state = state,
+            .change_frames = change_frames,
             .frame_index = _frame_index,
         });
     }
@@ -461,6 +540,22 @@ namespace smgpc::game {
 
         _events.push_back(EffectEvent{
             .kind = EffectEventKind::Emit,
+            .actor_name = std::string(actor_name),
+            .effect_name = std::string(effect_name),
+            .frame_index = _frame_index,
+        });
+    }
+
+    void EffectService::delete_effect(std::string_view actor_name, std::string_view effect_name) {
+        if (auto it = _active_effects.find(std::string(actor_name)); it != _active_effects.end()) {
+            std::erase(it->second, std::string(effect_name));
+            if (it->second.empty()) {
+                _active_effects.erase(it);
+            }
+        }
+
+        _events.push_back(EffectEvent{
+            .kind = EffectEventKind::Delete,
             .actor_name = std::string(actor_name),
             .effect_name = std::string(effect_name),
             .frame_index = _frame_index,
@@ -489,8 +584,128 @@ namespace smgpc::game {
         return {};
     }
 
+    void WipeService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+        if ((_state != WipeState::Opening && _state != WipeState::Closing) || _remaining_frames <= 0) {
+            return;
+        }
+
+        --_remaining_frames;
+        if (_remaining_frames <= 0) {
+            _state = _state == WipeState::Opening ? WipeState::Open : WipeState::Closed;
+        }
+    }
+
+    void WipeService::open(std::string_view name, s32 frame_count) {
+        start_transition(WipeEventKind::Open, WipeState::Opening, name, frame_count);
+    }
+
+    void WipeService::close(std::string_view name, s32 frame_count) {
+        start_transition(WipeEventKind::Close, WipeState::Closing, name, frame_count);
+    }
+
+    void WipeService::force_open(std::string_view name) {
+        _current_name = name;
+        _state = WipeState::Open;
+        _remaining_frames = 0;
+        _duration_frames = 0;
+        push_event(WipeEventKind::ForceOpen, name, 0);
+    }
+
+    void WipeService::force_close(std::string_view name) {
+        _current_name = name;
+        _state = WipeState::Closed;
+        _remaining_frames = 0;
+        _duration_frames = 0;
+        push_event(WipeEventKind::ForceClose, name, 0);
+    }
+
+    bool WipeService::is_active() const {
+        return _state == WipeState::Opening || _state == WipeState::Closing;
+    }
+
+    bool WipeService::is_blank() const {
+        return _state == WipeState::Closed;
+    }
+
+    bool WipeService::is_open() const {
+        return _state == WipeState::Open;
+    }
+
+    WipeState WipeService::state() const {
+        return _state;
+    }
+
+    std::string_view WipeService::current_name() const {
+        return _current_name;
+    }
+
+    s32 WipeService::remaining_frames() const {
+        return _remaining_frames;
+    }
+
+    s32 WipeService::duration_frames() const {
+        return _duration_frames;
+    }
+
+    std::span<const WipeEvent> WipeService::events() const {
+        return _events;
+    }
+
+    void WipeService::start_transition(WipeEventKind kind, WipeState state, std::string_view name, s32 frame_count) {
+        _current_name = name;
+        _duration_frames = normalized_frame_count(frame_count);
+        _remaining_frames = _duration_frames;
+        _state = _remaining_frames <= 0 ? (state == WipeState::Opening ? WipeState::Open : WipeState::Closed) : state;
+        push_event(kind, name, frame_count);
+    }
+
+    void WipeService::push_event(WipeEventKind kind, std::string_view name, s32 frame_count) {
+        _events.push_back(WipeEvent{
+            .kind = kind,
+            .name = std::string(name),
+            .frame_count = frame_count,
+            .frame_index = _frame_index,
+        });
+    }
+
+    s32 WipeService::normalized_frame_count(s32 frame_count) {
+        return frame_count < 0 ? 30 : frame_count;
+    }
+
+    void SequenceRequestService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+    }
+
+    void SequenceRequestService::request_change_stage_in_game_after_loading_game_data() {
+        if (_change_stage_in_game_after_loading_game_data_requested) {
+            return;
+        }
+
+        _change_stage_in_game_after_loading_game_data_requested = true;
+        _events.push_back(SequenceRequestEvent{
+            .kind = SequenceRequestKind::ChangeStageInGameAfterLoadingGameData,
+            .frame_index = _frame_index,
+        });
+    }
+
+    bool SequenceRequestService::is_change_stage_in_game_after_loading_game_data_requested() const {
+        return _change_stage_in_game_after_loading_game_data_requested;
+    }
+
+    std::span<const SequenceRequestEvent> SequenceRequestService::events() const {
+        return _events;
+    }
+
+    SaveDataService::SaveDataService() {
+        for (auto slot_index = s32{1}; slot_index <= 6; ++slot_index) {
+            _slot_states.push_back(SlotState{.slot_index = slot_index});
+        }
+    }
+
     void SaveDataService::write_file(std::string_view name, std::span<const std::uint8_t> bytes) {
         _files[std::string(name)] = std::vector<std::uint8_t>(bytes.begin(), bytes.end());
+        write_host_file(name, bytes);
     }
 
     std::optional<std::vector<std::uint8_t>> SaveDataService::read_file(std::string_view name) const {
@@ -506,11 +721,243 @@ namespace smgpc::game {
     }
 
     bool SaveDataService::erase(std::string_view name) {
-        return _files.erase(std::string(name)) != 0U;
+        const auto erased = _files.erase(std::string(name)) != 0U;
+        erase_host_file(name);
+        return erased;
     }
 
     std::size_t SaveDataService::file_count() const {
         return _files.size();
+    }
+
+    void SaveDataService::set_host_directory(std::filesystem::path directory) {
+        _host_directory = weakly_canonical_or_normal(std::move(directory));
+        load_host_files();
+    }
+
+    const std::optional<std::filesystem::path> &SaveDataService::host_directory() const {
+        return _host_directory;
+    }
+
+    void SaveDataService::load_host_files() {
+        if (!_host_directory.has_value()) {
+            return;
+        }
+
+        std::error_code error{};
+        std::filesystem::create_directories(*_host_directory, error);
+        if (error) {
+            throw std::runtime_error("Cannot create save directory " + _host_directory->string());
+        }
+
+        _files.clear();
+        for (const auto &entry : std::filesystem::recursive_directory_iterator(*_host_directory, error)) {
+            if (error) {
+                throw std::runtime_error("Cannot scan save directory " + _host_directory->string());
+            }
+            if (!entry.is_regular_file(error)) {
+                continue;
+            }
+
+            const auto relative = std::filesystem::relative(entry.path(), *_host_directory, error);
+            if (error || relative.empty()) {
+                continue;
+            }
+            _files[relative.generic_string()] = read_binary_file(entry.path());
+        }
+
+        load_slot_states_from_files();
+        load_sys_config_from_files();
+    }
+
+    void SaveDataService::flush_host_files() {
+        if (!_host_directory.has_value()) {
+            return;
+        }
+
+        write_sys_config_file();
+        for (const auto &[name, bytes] : _files) {
+            write_host_file(name, bytes);
+        }
+    }
+
+    const SaveDataService::SlotState *SaveDataService::slot_state(s32 slot_index) const {
+        const auto found = std::ranges::find_if(_slot_states, [slot_index](const auto &entry) { return entry.slot_index == slot_index; });
+        return found == _slot_states.end() ? nullptr : &*found;
+    }
+
+    SaveDataService::SlotState SaveDataService::slot_state_or_default(s32 slot_index) const {
+        if (const auto *state = slot_state(slot_index)) {
+            return *state;
+        }
+
+        return SlotState{.slot_index = slot_index};
+    }
+
+    void SaveDataService::set_slot_state(s32 slot_index, const SlotState &state) {
+        auto slot_state = state;
+        slot_state.slot_index = slot_index;
+
+        auto found = std::ranges::find_if(_slot_states, [slot_index](const auto &entry) { return entry.slot_index == slot_index; });
+        if (found != _slot_states.end()) {
+            *found = slot_state;
+        } else {
+            _slot_states.push_back(slot_state);
+        }
+
+        std::ranges::sort(_slot_states, {}, &SlotState::slot_index);
+    }
+
+    void SaveDataService::copy_slot_state(s32 dst_slot_index, s32 src_slot_index) {
+        set_slot_state(dst_slot_index, slot_state_or_default(src_slot_index));
+        const auto copy_file = [this, dst_slot_index, src_slot_index](std::string_view src_prefix, std::string_view dst_prefix) {
+            const auto src_name = std::string(src_prefix) + std::to_string(src_slot_index);
+            const auto dst_name = std::string(dst_prefix) + std::to_string(dst_slot_index);
+            if (const auto bytes = read_file(src_name)) {
+                write_file(dst_name, *bytes);
+            } else {
+                erase(dst_name);
+            }
+        };
+        copy_file("config", "config");
+        copy_file("mario", "mario");
+        copy_file("luigi", "luigi");
+    }
+
+    void SaveDataService::clear_slot_states() {
+        _slot_states.clear();
+    }
+
+    std::span<const SaveDataService::SlotState> SaveDataService::slot_states() const {
+        return _slot_states;
+    }
+
+    void SaveDataService::restore_user_file(UserFile &file, s32 slot_index, bool is_player_mario) const {
+        file.restoreFromSaveDataServiceSlot(slot_state_or_default(slot_index), slot_index, is_player_mario);
+    }
+
+    void SaveDataService::store_user_file(s32 slot_index, const UserFile &file) {
+        set_slot_state(slot_index, file.makeSaveDataServiceSlot(slot_index));
+
+        auto config_bytes = std::vector<std::uint8_t>(256U);
+        auto game_bytes = std::vector<std::uint8_t>(256U);
+        file.makeConfigDataBinary(config_bytes.data(), config_bytes.size());
+        file.makeGameDataBinary(game_bytes.data(), game_bytes.size());
+        write_file(file.getConfigDataName(), config_bytes);
+        write_file(file.getGameDataName(), game_bytes);
+    }
+
+    void SaveDataService::set_sys_config_time_announced(OSTime time) {
+        _sys_config_time_announced = time;
+        write_sys_config_file();
+    }
+
+    void SaveDataService::update_sys_config_time_announced() {
+        _sys_config_time_announced = OSGetTime();
+        write_sys_config_file();
+    }
+
+    OSTime SaveDataService::sys_config_time_announced() const {
+        return _sys_config_time_announced;
+    }
+
+    void SaveDataService::set_sys_config_time_sent(OSTime time) {
+        _sys_config_time_sent = time;
+        write_sys_config_file();
+    }
+
+    OSTime SaveDataService::sys_config_time_sent() const {
+        return _sys_config_time_sent;
+    }
+
+    void SaveDataService::set_sys_config_sent_bytes(u32 bytes) {
+        _sys_config_sent_bytes = bytes;
+        write_sys_config_file();
+    }
+
+    u32 SaveDataService::sys_config_sent_bytes() const {
+        return _sys_config_sent_bytes;
+    }
+
+    std::filesystem::path SaveDataService::host_file_path(std::string_view name) const {
+        if (!_host_directory.has_value()) {
+            return {};
+        }
+
+        auto relative = std::filesystem::path(std::string(name)).lexically_normal();
+        if (relative.empty() || relative.is_absolute()) {
+            throw std::runtime_error("Invalid save file name " + std::string(name));
+        }
+
+        for (const auto &part : relative) {
+            if (part == "..") {
+                throw std::runtime_error("Invalid save file name " + std::string(name));
+            }
+        }
+
+        return *_host_directory / relative;
+    }
+
+    void SaveDataService::write_host_file(std::string_view name, std::span<const std::uint8_t> bytes) const {
+        if (!_host_directory.has_value()) {
+            return;
+        }
+
+        write_binary_file(host_file_path(name), bytes);
+    }
+
+    void SaveDataService::erase_host_file(std::string_view name) const {
+        if (!_host_directory.has_value()) {
+            return;
+        }
+
+        std::error_code error{};
+        std::filesystem::remove(host_file_path(name), error);
+    }
+
+    void SaveDataService::load_slot_states_from_files() {
+        for (auto slot_index = s32{1}; slot_index <= 6; ++slot_index) {
+            auto file = UserFile();
+            const auto config_name = original_config_name(slot_index);
+            const auto config_bytes = read_file(config_name);
+            file.loadFromConfigDataBinary(config_name.c_str(), config_bytes.has_value() ? config_bytes->data() : nullptr,
+                                          config_bytes.has_value() ? static_cast<u32>(config_bytes->size()) : 0U);
+
+            const auto is_player_mario = file.isLastLoadedMario();
+            const auto game_name = original_game_name(slot_index, is_player_mario);
+            const auto game_bytes = read_file(game_name);
+            file.loadFromGameDataBinary(game_name.c_str(), game_bytes.has_value() ? game_bytes->data() : nullptr,
+                                        game_bytes.has_value() ? static_cast<u32>(game_bytes->size()) : 0U);
+            file.mIsPlayerMario = is_player_mario;
+            set_slot_state(slot_index, file.makeSaveDataServiceSlot(slot_index));
+        }
+    }
+
+    void SaveDataService::load_sys_config_from_files() {
+        const auto sys_config_bytes = read_file("sysconf");
+        if (!sys_config_bytes.has_value()) {
+            return;
+        }
+
+        auto sys_config = SysConfigFile();
+        sys_config.loadFromDataBinary(sys_config_bytes->data(), static_cast<u32>(sys_config_bytes->size()));
+        _sys_config_time_announced = sys_config.getTimeAnnounced();
+        _sys_config_time_sent = sys_config.getTimeSent();
+        _sys_config_sent_bytes = sys_config.getSentBytes();
+    }
+
+    void SaveDataService::write_sys_config_file() {
+        if (!_host_directory.has_value()) {
+            return;
+        }
+
+        auto sys_config = SysConfigFile();
+        sys_config.setTimeAnnounced(_sys_config_time_announced);
+        sys_config.setTimeSent(_sys_config_time_sent);
+        sys_config.setSentBytes(_sys_config_sent_bytes);
+        auto bytes = std::vector<std::uint8_t>(64U);
+        sys_config.makeDataBinary(bytes.data(), bytes.size());
+        write_file("sysconf", bytes);
     }
 
     void MessageService::set_message(std::string_view tag, std::string_view text) {
@@ -528,6 +975,49 @@ namespace smgpc::game {
     std::string MessageService::message_or(std::string_view tag, std::string_view fallback) const {
         const auto *text = message(tag);
         return text == nullptr ? std::string(fallback) : *text;
+    }
+
+    void SceneLightService::clear() {
+        _lights = {};
+    }
+
+    void SceneLightService::clear_light(std::size_t index) {
+        if (index >= _lights.size()) {
+            return;
+        }
+
+        _lights[index] = GXLightState{};
+    }
+
+    void SceneLightService::set_light(std::size_t index, const GXLightState &light) {
+        if (index >= _lights.size()) {
+            return;
+        }
+
+        _lights[index] = light;
+        _lights[index].loaded = true;
+    }
+
+    const GXLightState *SceneLightService::light(std::size_t index) const {
+        if (index >= _lights.size() || !_lights[index].loaded) {
+            return nullptr;
+        }
+
+        return &_lights[index];
+    }
+
+    std::span<const GXLightState> SceneLightService::lights() const {
+        return _lights;
+    }
+
+    std::uint8_t SceneLightService::loaded_mask() const {
+        auto mask = std::uint8_t{};
+        for (auto index = std::size_t{}; index < _lights.size(); ++index) {
+            if (_lights[index].loaded) {
+                mask |= static_cast<std::uint8_t>(1U << index);
+            }
+        }
+        return mask;
     }
 
     RflService::RflService()

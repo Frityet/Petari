@@ -17,6 +17,7 @@ namespace MR {
         std::map< std::string, std::vector< u8 > > sLoadedFiles;
         std::map< std::string, std::unique_ptr< JKRMemArchive > > sMountedArchives;
         std::map< std::string, std::vector< u8 > > sArchiveResources;
+        smgpc::game::RuntimeContext* sMountedArchiveRuntime = nullptr;
 
         [[nodiscard]] smgpc::game::RuntimeContext* runtime() {
             return smgpc::game::RuntimeContext::try_instance();
@@ -107,6 +108,16 @@ namespace MR {
             }
         }
 
+        void sync_mounted_archive_runtime(smgpc::game::RuntimeContext* context) {
+            if (sMountedArchiveRuntime == context) {
+                return;
+            }
+
+            sMountedArchives.clear();
+            sArchiveResources.clear();
+            sMountedArchiveRuntime = context;
+        }
+
         [[nodiscard]] bool copy_first_existing(char* dst, u32 size, std::initializer_list< std::string_view > candidates) {
             for (const auto candidate : candidates) {
                 if (dvd_exists(candidate)) {
@@ -179,6 +190,7 @@ namespace MR {
         if (context == nullptr || pFilePath == nullptr) {
             return nullptr;
         }
+        sync_mounted_archive_runtime(context);
 
         const auto key = mounted_archive_key(pFilePath);
         if (auto it = sMountedArchives.find(key); it != sMountedArchives.end()) {
@@ -186,7 +198,8 @@ namespace MR {
         }
 
         try {
-            auto mounted = std::make_unique< JKRMemArchive >(smgpc::game::RarcArchive::from_file(context->dvd().resolve(pFilePath)));
+            auto& archive = context->dvd().archive(pFilePath);
+            auto mounted = std::make_unique< JKRMemArchive >(archive);
             auto* result = mounted.get();
             sMountedArchives.emplace(key, std::move(mounted));
             return result;
@@ -217,6 +230,7 @@ namespace MR {
     }
 
     JKRMemArchive* receiveArchive(const char* pFilePath) {
+        sync_mounted_archive_runtime(runtime());
         if (auto it = sMountedArchives.find(mounted_archive_key(pFilePath)); it != sMountedArchives.end()) {
             return it->second.get();
         }

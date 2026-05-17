@@ -63,6 +63,19 @@ namespace smgpc::tests {
             require(visible_pixels > 1000U, "decoded title texture should contain visible pixels");
         }
 
+        $test("uses NW4R default alpha blend for BRLYT materials without blend blocks") {
+            auto material = smgpc::game::BrlytMaterial{};
+            material.name = "DefaultBlendMaterial";
+            require(!material.blend_mode.enabled, "test material should model an omitted BRLYT blend block");
+
+            const auto state = smgpc::game::gx_state_from_brlyt_material(material);
+            require(state.blend.enabled && state.blend.type == 1U && state.blend.src_factor == 4U && state.blend.dst_factor == 5U &&
+                        state.blend.op == 15U,
+                    "BRLYT GX state should match NW4R's default alpha blend when no blend block is present");
+            require(state.blend.color_update && state.blend.alpha_update,
+                    "BRLYT default GX blend state should keep color and alpha writes enabled");
+        }
+
         $test("parses TitleLogo BRLYT picture panes and GX material state") {
             const auto root = disc_files_root();
             const auto title_logo = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
@@ -345,7 +358,7 @@ namespace smgpc::tests {
         }
 
         $test("matches FileSelectSky runtime matrix animation math") {
-            require_near(smgpc::game::file_select_sky_yaw(2300U), 2.3F, 0.000001F, "FileSelectSky yaw update rate changed");
+            require_near(smgpc::game::file_select_sky_yaw(1900U), 1.9F, 0.000001F, "FileSelectSky yaw update rate changed");
             require_near(smgpc::game::file_select_sky_pitch(0U), 0.0F, 0.000001F, "FileSelectSky pitch frame 0 changed");
             require_near(smgpc::game::file_select_sky_pitch(100U), 0.000400535F, 0.000001F,
                          "FileSelectSky pitch frame 100 should use JMath cosShort conversion");
@@ -353,8 +366,8 @@ namespace smgpc::tests {
                          "FileSelectSky pitch frame 500 should use JMath cosShort conversion");
             require_near(smgpc::game::file_select_sky_pitch(1500U), 0.089677349F, 0.000001F,
                          "FileSelectSky pitch frame 1500 should use JMath cosShort conversion");
-            require_near(smgpc::game::file_select_sky_pitch(2300U), 0.207162336F, 0.000001F,
-                         "FileSelectSky pitch frame 2300 should use JMath cosShort conversion");
+            require_near(smgpc::game::file_select_sky_pitch(1900U), 0.142750874F, 0.000001F,
+                         "FileSelectSky pitch frame 1900 should use JMath cosShort conversion");
             require_near(smgpc::game::file_select_sky_pitch(3000U), 0.345056713F, 0.000001F,
                          "FileSelectSky pitch frame 3000 should use JMath cosShort conversion");
 
@@ -363,15 +376,15 @@ namespace smgpc::tests {
             require_near(identity_scaled.m[5U], 0.8F, 0.000001F, "FileSelectSky frame 0 matrix Y scale changed");
             require_near(identity_scaled.m[10U], 0.8F, 0.000001F, "FileSelectSky frame 0 matrix Z scale changed");
 
-            const auto matrix = smgpc::game::file_select_sky_actor_matrix(2300U);
-            require_near(matrix.m[0U], -0.533020794F, 0.000001F, "FileSelectSky frame 2300 matrix[0] changed");
-            require_near(matrix.m[2U], -0.596564233F, 0.000001F, "FileSelectSky frame 2300 matrix[2] changed");
-            require_near(matrix.m[4U], 0.122554213F, 0.000001F, "FileSelectSky frame 2300 matrix[4] changed");
-            require_near(matrix.m[5U], 0.782936871F, 0.000001F, "FileSelectSky frame 2300 matrix[5] changed");
-            require_near(matrix.m[6U], -0.109500274F, 0.000001F, "FileSelectSky frame 2300 matrix[6] changed");
-            require_near(matrix.m[8U], 0.583840132F, 0.000001F, "FileSelectSky frame 2300 matrix[8] changed");
-            require_near(matrix.m[9U], -0.164346725F, 0.000001F, "FileSelectSky frame 2300 matrix[9] changed");
-            require_near(matrix.m[10U], -0.521652043F, 0.000001F, "FileSelectSky frame 2300 matrix[10] changed");
+            const auto matrix = smgpc::game::file_select_sky_actor_matrix(1900U);
+            require_near(matrix.m[0U], -0.258631736F, 0.000001F, "FileSelectSky frame 1900 matrix[0] changed");
+            require_near(matrix.m[2U], -0.757040024F, 0.000001F, "FileSelectSky frame 1900 matrix[2] changed");
+            require_near(matrix.m[4U], 0.107539982F, 0.000001F, "FileSelectSky frame 1900 matrix[4] changed");
+            require_near(matrix.m[5U], 0.791887224F, 0.000001F, "FileSelectSky frame 1900 matrix[5] changed");
+            require_near(matrix.m[6U], -0.036739472F, 0.000001F, "FileSelectSky frame 1900 matrix[6] changed");
+            require_near(matrix.m[8U], 0.749362886F, 0.000001F, "FileSelectSky frame 1900 matrix[8] changed");
+            require_near(matrix.m[9U], -0.113642588F, 0.000001F, "FileSelectSky frame 1900 matrix[9] changed");
+            require_near(matrix.m[10U], -0.256008953F, 0.000001F, "FileSelectSky frame 1900 matrix[10] changed");
         }
 
         $test("parses TitleLogo BRLAN animations") {

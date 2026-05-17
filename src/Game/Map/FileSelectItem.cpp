@@ -1,4 +1,4 @@
-#include "Game/Map/FileSelectItem.hpp"
+#include "Game/Map/FIleSelectItem.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/FileSelectIconID.hpp"
 #include "Game/Map/FileSelectItemDelegator.hpp"
@@ -7,9 +7,13 @@
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/NPC/MiiFaceRecipe.hpp"
 #include "Game/Screen/FileSelectNumber.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "RFL_Types.h"
 
@@ -20,12 +24,26 @@ namespace {
     NEW_NERVE(FileSelectItemNrvChangeFellow, FileSelectItem, ChangeFellow);
     NEW_NERVE(FileSelectItemNrvChangeMii, FileSelectItem, ChangeMii);
 
-    bool checkCollisionOfPointAndCylinder(const TVec3f&, const TVec3f&, const TVec3f&, f32);
+    bool checkCollisionOfPointAndCylinder(const TVec3f& rPoint, const TVec3f& rBase, const TVec3f& rAxis, f32 radius) {
+        f32 axisLength = rAxis.length();
+        TVec3f axis(rAxis);
+        MR::normalize(&axis);
+
+        TVec3f offset = rPoint - rBase;
+        f32 projection = axis.dot(offset);
+
+        if (projection < 0.0f || projection > axisLength) {
+            return false;
+        }
+
+        axis.scale(projection);
+        return axis.distance(offset) <= radius;
+    }
 
     const char* sFellowModel[5] = {"FileSelectDataMario", "FileSelectDataLuigi", "FileSelectDataYoshi", "FileSelectDataKinopio",
                                    "FileSelectDataPeach"};
 
-    // static TVec3f sDataInfoOffset = TVec3f(0.0f, 2150.0f, 0.0f);
+    static const Vec sDataInfoOffset = {0.0f, 2150.0f, 0.0f};
 };  // namespace
 
 namespace FileSelectItemSub {
@@ -326,7 +344,51 @@ void FileSelectItem::exeChangeMii() {
     }
 }
 
-// ...
+void FileSelectItem::control() {
+    updatePointing();
+    updateRotate();
+
+    TMtx34f baseMtx;
+    if (mRotation.x == 0.0f && mRotation.z == 0.0f) {
+        MR::makeMtxTransRotateY(baseMtx.toMtxPtr(), this);
+    } else {
+        MR::makeMtxTR(baseMtx.toMtxPtr(), this);
+    }
+
+    TVec3f up(baseMtx(0, 1), baseMtx(1, 1), baseMtx(2, 1));
+    TVec3f trans(baseMtx(0, 3), baseMtx(1, 3), baseMtx(2, 3));
+    _A4.set(baseMtx);
+
+    TVec3f planetTrans(up);
+    planetTrans.scale(30.0f);
+    planetTrans.scale(30.0f);
+    planetTrans += trans;
+    _A4.mMtx[0][3] = planetTrans.x;
+    _A4.mMtx[1][3] = planetTrans.y;
+    _A4.mMtx[2][3] = planetTrans.z;
+
+    _D4.set(baseMtx);
+    _104.set(baseMtx);
+
+    mScaleCtrl->updateNerve();
+
+    f32 scale = 30.0f * mScaleCtrl->_8;
+    mPlanetMapObj->mScale.set(scale);
+
+    for (s32 i = 0; i < 5; i++) {
+        mModels[i]->mScale.set(scale);
+    }
+
+    mFaceParts->mScale.set(27.0f * mScaleCtrl->_8);
+    mBlinkCtrl->updateNerve();
+
+    TVec3f infoPos;
+    JMathInlineVEC::PSVECAdd(&mPosition, &sDataInfoOffset, &infoPos);
+
+    TVec2f screenPos;
+    MR::calcScreenPosition(&screenPos, infoPos);
+    _A0->setTrans(screenPos);
+}
 
 void FileSelectItem::createNew() {
     mPlanetMapObj = MR::createPartsModelMapObj(this, "ニューフェイス", "FileSelectDataPlanet", _A4);
@@ -403,9 +465,11 @@ void FileSelectItem::updateRotate() {
                 _168 = 0;
             }
 
-            mRotation.y = MR::repeat(mRotation.y, -180.0f, 360.0f);
+            f32 rotate = MR::repeat(mRotation.y, -180.0f, 360.0f);
+            mRotation.y = rotate - (rotate * v6);
             mBlinkCtrl->open();
             mBlinkCtrl->setNerve(&FileSelectItemSub::BlinkControllerNrvOpen::sInstance);
+            return;
         } else if (MR::isStarPointerInScreen(0)) {
             TVec3f v35(0.0f, 900.0f, 0.0f);
             TVec3f v43(mPosition);
@@ -514,8 +578,8 @@ void FileSelectItem::updateRotate() {
                 f32 v15 = -25.0f;
                 f32 v21 = screenPos.x - _158.x;
                 f32 v20 = screenPos.y - _158.y;
-                f32 v16 = (_160 + (0.029f * v21) / mScale.x);
-                _160 += (0.029f * v21) / mScale.x;
+                f32 v16 = (_160 + (0.03f * v21) / mScale.x);
+                _160 += (0.03f * v21) / mScale.x;
 
                 if (v16 >= -25.0f) {
                     v15 = 25.0f;
@@ -547,6 +611,131 @@ void FileSelectItem::updateRotate() {
         mRotation.y = MR::repeat(mRotation.y + _160, 0.0f, 360.0f);
         _155 = 0;
     }
+}
+
+void FileSelectItem::playPointedME() {
+    switch (MR::getRandom(0l, 5l)) {
+        case 0:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY1");
+            break;
+        case 1:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY2");
+            break;
+        case 2:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY3");
+            break;
+        case 3:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY4");
+            break;
+        case 4:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY5");
+            break;
+    }
+}
+
+void FileSelectItem::playPointedNotUsingME() {
+    switch (MR::getRandom(0l, 5l)) {
+        case 0:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY_N1");
+            break;
+        case 1:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY_N2");
+            break;
+        case 2:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY_N3");
+            break;
+        case 3:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY_N4");
+            break;
+        case 4:
+            MR::startSystemME("ME_ASTRO_DOME_HIT_GALAXY_N5");
+            break;
+    }
+}
+
+void FileSelectItem::appearFellowModel() {
+    killAllModels();
+    mModels[mIconID->getFellowID()]->makeActorAppeared();
+}
+
+void FileSelectItem::killAllModels() {
+    mPlanetMapObj->makeActorDead();
+
+    for (s32 i = 0; i < 5; i++) {
+        mModels[i]->makeActorDead();
+    }
+
+    mFaceParts->makeActorDead();
+}
+
+void FileSelectItem::emitOpen() {
+    if (!MR::isDead(mPlanetMapObj)) {
+        MR::emitEffect(mPlanetMapObj, "Open");
+    }
+
+    for (s32 i = 0; i < 5; i++) {
+        if (!MR::isDead(mModels[i])) {
+            mModels[i]->emitOpen();
+        }
+    }
+
+    if (!MR::isDead(mFaceParts)) {
+        MR::emitEffect(mFaceParts, "Open");
+    }
+}
+
+void FileSelectItem::emitVanish() {
+    if (!MR::isDead(mPlanetMapObj)) {
+        MR::emitEffect(mPlanetMapObj, "Vanish");
+    }
+
+    for (s32 i = 0; i < 5; i++) {
+        if (!MR::isDead(mModels[i])) {
+            mModels[i]->emitVanish();
+        }
+    }
+
+    if (!MR::isDead(mFaceParts)) {
+        MR::emitEffect(mFaceParts, "Vanish");
+    }
+}
+
+void FileSelectItem::emitCopy() {
+    if (!MR::isDead(mPlanetMapObj)) {
+        MR::emitEffect(mPlanetMapObj, "Copy");
+    }
+
+    for (s32 i = 0; i < 5; i++) {
+        if (!MR::isDead(mModels[i])) {
+            mModels[i]->emitCopy();
+        }
+    }
+
+    if (!MR::isDead(mFaceParts)) {
+        MR::emitEffect(mFaceParts, "Copy");
+    }
+}
+
+void FileSelectItem::emitCompleteEffect() {
+    if (_147) {
+        for (s32 i = 0; i < 5; i++) {
+            if (!MR::isDead(mModels[i])) {
+                mModels[i]->emitCompleteEffect();
+            }
+        }
+
+        if (!MR::isDead(mFaceParts)) {
+            MR::emitEffect(mFaceParts, "Complete");
+        }
+    }
+}
+
+void FileSelectItem::deleteCompleteEffect() {
+    for (s32 i = 0; i < 5; i++) {
+        mModels[i]->deleteCompleteEffect();
+    }
+
+    MR::deleteEffect(mFaceParts, "Complete");
 }
 
 namespace FileSelectItemSub {

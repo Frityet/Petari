@@ -2,11 +2,16 @@
 
 #include <algorithm>
 #include <array>
+#include <condition_variable>
 #include <cstddef>
+#include <cstdio>
+#include <deque>
 #include <fstream>
 #include <limits>
+#include <mutex>
 #include <stdexcept>
 #include <string>
+#include <thread>
 #include <vector>
 
 namespace smgpc::render::capture {
@@ -28,13 +33,25 @@ void append_le16(std::vector<std::uint8_t> &bytes, std::uint16_t value) {
     bytes.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xffU));
 }
 
-[[nodiscard]] std::uint32_t update_crc32(std::uint32_t crc, std::span<const std::uint8_t> bytes) {
-    auto value = crc;
-    for (const auto byte : bytes) {
-        value ^= byte;
+[[nodiscard]] constexpr std::array<std::uint32_t, 256U> make_crc32_table() {
+    auto table = std::array<std::uint32_t, 256U> {};
+    for (auto i = 0U; i < table.size(); ++i) {
+        auto value = static_cast<std::uint32_t>(i);
         for (auto bit = 0U; bit < 8U; ++bit) {
             value = (value >> 1U) ^ (0xedb88320U & (0U - (value & 1U)));
         }
+        table[i] = value;
+    }
+
+    return table;
+}
+
+[[nodiscard]] std::uint32_t update_crc32(std::uint32_t crc, std::span<const std::uint8_t> bytes) {
+    static constexpr auto table = make_crc32_table();
+
+    auto value = crc;
+    for (const auto byte : bytes) {
+        value = (value >> 8U) ^ table[(value ^ byte) & 0xffU];
     }
 
     return value;
@@ -49,12 +66,20 @@ void append_le16(std::vector<std::uint8_t> &bytes, std::uint16_t value) {
 
 [[nodiscard]] std::uint32_t adler32(std::span<const std::uint8_t> bytes) {
     constexpr auto kMod = 65521U;
+    constexpr auto kMaxChunk = 5552U;
     auto a = 1U;
     auto b = 0U;
 
-    for (const auto byte : bytes) {
-        a = (a + byte) % kMod;
-        b = (b + a) % kMod;
+    auto offset = std::size_t {};
+    while (offset < bytes.size()) {
+        const auto chunk_size = std::min<std::size_t>(bytes.size() - offset, kMaxChunk);
+        for (auto i = 0U; i < chunk_size; ++i) {
+            a += bytes[offset + i];
+            b += a;
+        }
+        a %= kMod;
+        b %= kMod;
+        offset += chunk_size;
     }
 
     return (b << 16U) | a;
@@ -87,28 +112,31 @@ void append_chunk(std::vector<std::uint8_t> &png, const std::array<std::uint8_t,
         throw std::runtime_error("Screenshot pixel buffer is shorter than the declared dimensions");
     }
 
-    auto filtered = std::vector<std::uint8_t> {};
-    filtered.reserve((static_cast<std::size_t>(row_bytes) + 1U) * image.height);
+    auto filtered = std::vector<std::uint8_t>((static_cast<std::size_t>(row_bytes) + 1U) * image.height);
 
     for (auto y = 0U; y < image.height; ++y) {
         const auto source_y = image.origin_bottom_left ? (image.height - 1U - y) : y;
         const auto row_offset = static_cast<std::size_t>(source_y) * pitch;
-        filtered.push_back(0U);
+        auto *destination = filtered.data() + (static_cast<std::size_t>(y) * (static_cast<std::size_t>(row_bytes) + 1U));
+        destination[0U] = 0U;
+
+        const auto *source = image.pixels.data() + row_offset;
+        if (image.format == PixelFormat::RGBA8) {
+            std::copy_n(source, row_bytes, destination + 1U);
+            continue;
+        }
 
         for (auto x = 0U; x < image.width; ++x) {
-            const auto pixel_offset = row_offset + static_cast<std::size_t>(x) * 4U;
+            const auto source_offset = static_cast<std::size_t>(x) * 4U;
+            const auto destination_offset = 1U + source_offset;
             switch (image.format) {
             case PixelFormat::RGBA8:
-                filtered.push_back(image.pixels[pixel_offset]);
-                filtered.push_back(image.pixels[pixel_offset + 1U]);
-                filtered.push_back(image.pixels[pixel_offset + 2U]);
-                filtered.push_back(image.pixels[pixel_offset + 3U]);
                 break;
             case PixelFormat::BGRA8:
-                filtered.push_back(image.pixels[pixel_offset + 2U]);
-                filtered.push_back(image.pixels[pixel_offset + 1U]);
-                filtered.push_back(image.pixels[pixel_offset]);
-                filtered.push_back(image.pixels[pixel_offset + 3U]);
+                destination[destination_offset] = source[source_offset + 2U];
+                destination[destination_offset + 1U] = source[source_offset + 1U];
+                destination[destination_offset + 2U] = source[source_offset];
+                destination[destination_offset + 3U] = source[source_offset + 3U];
                 break;
             }
         }
@@ -186,10 +214,129 @@ public:
     }
 };
 
+struct PngWriteJob {
+    std::filesystem::path path;
+    std::uint32_t width = 0U;
+    std::uint32_t height = 0U;
+    std::uint32_t pitch = 0U;
+    std::vector<std::uint8_t> pixels;
+    PixelFormat format = PixelFormat::RGBA8;
+    bool origin_bottom_left = false;
+};
+
+class AsyncPngScreenshotService final : public IScreenshotService {
+public:
+    AsyncPngScreenshotService() : _worker(&AsyncPngScreenshotService::worker_loop, this) {
+    }
+
+    ~AsyncPngScreenshotService() override {
+        try {
+            flush();
+        } catch (const std::exception &e) {
+            std::fprintf(stderr, "async PNG screenshot writer failed while flushing: %s\n", e.what());
+        }
+
+        {
+            auto lock = std::lock_guard(_mutex);
+            _stopping = true;
+        }
+        _has_work.notify_one();
+        if (_worker.joinable()) {
+            _worker.join();
+        }
+    }
+
+    void write_png(const std::filesystem::path &path, const ScreenshotImageView &image) const override {
+        auto job = PngWriteJob {
+            .path = path,
+            .width = image.width,
+            .height = image.height,
+            .pitch = image.pitch,
+            .pixels = std::vector<std::uint8_t>(image.pixels.begin(), image.pixels.end()),
+            .format = image.format,
+            .origin_bottom_left = image.origin_bottom_left,
+        };
+
+        {
+            auto lock = std::lock_guard(_mutex);
+            if (_stopping) {
+                throw std::runtime_error("Cannot queue PNG screenshot after async writer shutdown started");
+            }
+            _jobs.push_back(std::move(job));
+        }
+        _has_work.notify_one();
+    }
+
+    void flush() const override {
+        auto lock = std::unique_lock(_mutex);
+        _finished_work.wait(lock, [this] { return _jobs.empty() && _active_jobs == 0U; });
+        if (!_first_error.empty()) {
+            throw std::runtime_error(_first_error);
+        }
+    }
+
+private:
+    void worker_loop() {
+        while (true) {
+            auto job = PngWriteJob {};
+            {
+                auto lock = std::unique_lock(_mutex);
+                _has_work.wait(lock, [this] { return _stopping || !_jobs.empty(); });
+                if (_stopping && _jobs.empty()) {
+                    return;
+                }
+
+                job = std::move(_jobs.front());
+                _jobs.pop_front();
+                ++_active_jobs;
+            }
+
+            try {
+                _writer.write_png(job.path,
+                                  ScreenshotImageView {
+                                      .width = job.width,
+                                      .height = job.height,
+                                      .pitch = job.pitch,
+                                      .pixels = std::span<const std::uint8_t>(job.pixels.data(), job.pixels.size()),
+                                      .format = job.format,
+                                      .origin_bottom_left = job.origin_bottom_left,
+                                  });
+            } catch (const std::exception &e) {
+                auto lock = std::lock_guard(_mutex);
+                if (_first_error.empty()) {
+                    _first_error = e.what();
+                }
+            }
+
+            {
+                auto lock = std::lock_guard(_mutex);
+                --_active_jobs;
+                if (_jobs.empty() && _active_jobs == 0U) {
+                    _finished_work.notify_all();
+                }
+            }
+        }
+    }
+
+    PngScreenshotService _writer {};
+    mutable std::mutex _mutex {};
+    mutable std::condition_variable _has_work {};
+    mutable std::condition_variable _finished_work {};
+    mutable std::deque<PngWriteJob> _jobs {};
+    mutable std::string _first_error {};
+    mutable std::uint32_t _active_jobs = 0U;
+    mutable bool _stopping = false;
+    std::thread _worker;
+};
+
 }  // namespace
 
 std::unique_ptr<IScreenshotService> create_png_screenshot_service() {
     return std::make_unique<PngScreenshotService>();
+}
+
+std::unique_ptr<IScreenshotService> create_async_png_screenshot_service() {
+    return std::make_unique<AsyncPngScreenshotService>();
 }
 
 }  // namespace smgpc::render::capture

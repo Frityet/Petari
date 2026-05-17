@@ -26,8 +26,11 @@ public:
     virtual ~IScreenshotService() = default;
 
     virtual void write_png(const std::filesystem::path &path, const ScreenshotImageView &image) const = 0;
+    virtual void flush() const {
+    }
 };
 
 [[nodiscard]] std::unique_ptr<IScreenshotService> create_png_screenshot_service();
+[[nodiscard]] std::unique_ptr<IScreenshotService> create_async_png_screenshot_service();
 
 }  // namespace smgpc::render::capture

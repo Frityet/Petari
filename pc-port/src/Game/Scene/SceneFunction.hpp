@@ -211,6 +211,15 @@ namespace MR {
         DrawType_0x52 = 0x52,
     };
 
+    enum LightType {
+        LightType_None = -1,
+        LightType_Player = 0x00,
+        LightType_Strong = 0x01,
+        LightType_Weak = 0x02,
+        LightType_Planet = 0x03,
+        LightType_Coin = 0x04,
+    };
+
     void connectToScene(NameObj* pObj, s32 movementType, s32 calcAnimType, s32 drawBufferType, s32 drawType);
     void disconnectToScene(NameObj* pObj);
     void connectToSceneSky(LiveActor* pActor);

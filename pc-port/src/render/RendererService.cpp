@@ -3,11 +3,13 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <limits>
 #include <memory>
 #include <span>
 #include <stdexcept>
+#include <string_view>
 #include <utility>
 
 #if defined(__linux__)
@@ -27,6 +29,23 @@ namespace smgpc::render {
             return static_cast< std::uint16_t >(std::clamp(value, 1, std::numeric_limits< int >::max() / 16));
         }
 
+        [[nodiscard]] bool read_bool_env(const char* name, bool fallback) {
+            const auto* value = std::getenv(name);
+            if (value == nullptr || value[0] == '\0') {
+                return fallback;
+            }
+
+            const auto text = std::string_view(value);
+            if (text == "0" || text == "false" || text == "False" || text == "off" || text == "OFF" || text == "no" || text == "NO") {
+                return false;
+            }
+            if (text == "1" || text == "true" || text == "True" || text == "on" || text == "ON" || text == "yes" || text == "YES") {
+                return true;
+            }
+
+            return fallback;
+        }
+
         class GLFWWindowService final : public IWindowService {
         public:
             explicit GLFWWindowService(const WindowConfiguration& configuration) {
@@ -40,6 +59,7 @@ namespace smgpc::render {
                     glfwTerminate();
                     throw std::runtime_error("Failed to create GLFW window");
                 }
+                refresh_cached_window_state();
             }
 
             GLFWWindowService(const GLFWWindowService&) = delete;
@@ -59,33 +79,24 @@ namespace smgpc::render {
                 }
 
                 glfwPollEvents();
+                refresh_cached_window_state();
                 return not should_close();
             }
 
             [[nodiscard]] bool should_close() const override {
-                return _window == nullptr || glfwWindowShouldClose(_window);
+                return _window == nullptr || _should_close;
             }
 
             [[nodiscard]] bool is_focused() const override {
-                return _window != nullptr && glfwGetWindowAttrib(_window, GLFW_FOCUSED) == GLFW_TRUE;
+                return _focused;
             }
 
             [[nodiscard]] bool is_minimized() const override {
-                return _window != nullptr && glfwGetWindowAttrib(_window, GLFW_ICONIFIED) == GLFW_TRUE;
+                return _minimized;
             }
 
             [[nodiscard]] FramebufferInfo framebuffer_size() const override {
-                if (_window == nullptr) {
-                    return {1U, 1U};
-                }
-
-                int width = 1;
-                int height = 1;
-                glfwGetFramebufferSize(_window, &width, &height);
-                return {
-                    .width = clamp_window_dimension(width),
-                    .height = clamp_window_dimension(height),
-                };
+                return _framebuffer;
             }
 
             [[nodiscard]] NativeWindowHandle native_handle() const override {
@@ -117,11 +128,37 @@ namespace smgpc::render {
             void close() override {
                 if (_window != nullptr) {
                     glfwSetWindowShouldClose(_window, GLFW_TRUE);
+                    _should_close = true;
                 }
             }
 
         private:
+            void refresh_cached_window_state() {
+                if (_window == nullptr) {
+                    _framebuffer = {1U, 1U};
+                    _focused = false;
+                    _minimized = false;
+                    _should_close = true;
+                    return;
+                }
+
+                int width = 1;
+                int height = 1;
+                glfwGetFramebufferSize(_window, &width, &height);
+                _framebuffer = {
+                    .width = clamp_window_dimension(width),
+                    .height = clamp_window_dimension(height),
+                };
+                _focused = glfwGetWindowAttrib(_window, GLFW_FOCUSED) == GLFW_TRUE;
+                _minimized = glfwGetWindowAttrib(_window, GLFW_ICONIFIED) == GLFW_TRUE;
+                _should_close = glfwWindowShouldClose(_window) == GLFW_TRUE;
+            }
+
             GLFWwindow* _window{nullptr};
+            FramebufferInfo _framebuffer{1U, 1U};
+            bool _focused{false};
+            bool _minimized{false};
+            bool _should_close{false};
         };
 
         class GLFWWindowFactory final : public IWindowFactory {
@@ -261,7 +298,7 @@ namespace smgpc::render {
                 init_desc.width = framebuffer.width;
                 init_desc.height = framebuffer.height;
                 init_desc.title = "SMG PC Port";
-                init_desc.enable_vsync = true;
+                init_desc.enable_vsync = read_bool_env("SMGPC_ENABLE_VSYNC", true);
                 init_desc.native_window_handle = native_handle.window_handle;
                 init_desc.native_display_handle = native_handle.display_handle;
 

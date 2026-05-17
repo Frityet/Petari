@@ -5,6 +5,7 @@
 #include <cmath>
 #include <limits>
 #include <string>
+#include <utility>
 
 #include "Game/compat/J3dModel.hpp"
 
@@ -55,15 +56,61 @@ namespace smgpc::game {
             return {value[0U] / length, value[1U] / length, value[2U] / length};
         }
 
-        [[nodiscard]] std::array<float, 3U> camera_space_vector(const CameraPoseCompat &pose, std::array<float, 3U> world_vector) {
+        struct CameraProjectionContext {
+            std::array<float, 3U> eye = {};
+            std::array<float, 3U> right = {1.0F, 0.0F, 0.0F};
+            std::array<float, 3U> up = {0.0F, 1.0F, 0.0F};
+            std::array<float, 3U> forward = {0.0F, 0.0F, -1.0F};
+            float focal_y = 1.0F;
+            float focal_x = 1.0F;
+            float half_width = 1.0F;
+            float half_height = 1.0F;
+            float near_plane = 100.0F;
+            float depth_range = 1.0F;
+        };
+
+        [[nodiscard]] CameraProjectionContext camera_projection_context(const CameraPoseCompat &pose,
+                                                                        const render::core::FramebufferInfo &framebuffer) {
+            constexpr auto pi = 3.14159265358979323846F;
             const auto forward = normalized_or({pose.watch.x - pose.eye.x, pose.watch.y - pose.eye.y, pose.watch.z - pose.eye.z},
                                                {0.0F, 0.0F, -1.0F});
             const auto right = normalized_or(cross3(forward, {pose.up.x, pose.up.y, pose.up.z}), {1.0F, 0.0F, 0.0F});
             const auto up = normalized_or(cross3(right, forward), {0.0F, 1.0F, 0.0F});
-            return {dot3(world_vector, right), dot3(world_vector, up), dot3(world_vector, forward)};
+            const auto fovy = pose.fovy_degrees * pi / 180.0F;
+            const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
+
+            return CameraProjectionContext{
+                .eye = {pose.eye.x, pose.eye.y, pose.eye.z},
+                .right = right,
+                .up = up,
+                .forward = forward,
+                .focal_y = focal_y,
+                .focal_x = focal_y / pose.aspect_ratio,
+                .half_width = static_cast<float>(framebuffer.width) * 0.5F,
+                .half_height = static_cast<float>(framebuffer.height) * 0.5F,
+                .near_plane = pose.near_clip,
+                .depth_range = pose.far_clip - pose.near_clip,
+            };
         }
 
-        [[nodiscard]] std::array<float, 3U> transform_normal_to_camera(const J3dMatrix3x4 &matrix, const CameraPoseCompat &pose,
+        [[nodiscard]] CameraViewPointCompat camera_space_point(const CameraProjectionContext &context, std::array<float, 3U> world) {
+            const auto delta = std::array<float, 3U>{
+                world[0U] - context.eye[0U],
+                world[1U] - context.eye[1U],
+                world[2U] - context.eye[2U],
+            };
+            return CameraViewPointCompat{
+                .x = dot3(delta, context.right),
+                .y = dot3(delta, context.up),
+                .z = dot3(delta, context.forward),
+            };
+        }
+
+        [[nodiscard]] std::array<float, 3U> camera_space_vector(const CameraProjectionContext &context, std::array<float, 3U> world_vector) {
+            return {dot3(world_vector, context.right), dot3(world_vector, context.up), dot3(world_vector, context.forward)};
+        }
+
+        [[nodiscard]] std::array<float, 3U> transform_normal_to_camera(const J3dMatrix3x4 &matrix, const CameraProjectionContext &camera_context,
                                                                        std::array<float, 3U> normal) {
             const auto world_normal = normalized_or(
                 {
@@ -72,7 +119,7 @@ namespace smgpc::game {
                     matrix.m[8U] * normal[0U] + matrix.m[9U] * normal[1U] + matrix.m[10U] * normal[2U],
                 },
                 {0.0F, 0.0F, 1.0F});
-            return normalized_or(camera_space_vector(pose, world_normal), {0.0F, 0.0F, 1.0F});
+            return normalized_or(camera_space_vector(camera_context, world_normal), {0.0F, 0.0F, 1.0F});
         }
 
         [[nodiscard]] std::uint8_t first_raster_channel_selector(const GXMaterialState &state, std::span<const J3dMaterialTexturePass> passes) {
@@ -387,6 +434,39 @@ namespace smgpc::game {
             });
         }
 
+        [[nodiscard]] std::uint8_t loaded_light_mask(std::span<const GXLightState> lights) {
+            auto mask = std::uint8_t{};
+            for (auto light = std::size_t{}; light < lights.size() && light < 8U; ++light) {
+                if (lights[light].loaded) {
+                    mask |= static_cast<std::uint8_t>(1U << light);
+                }
+            }
+            return mask;
+        }
+
+        [[nodiscard]] std::uint8_t requested_light_mask(const GXMaterialState &state) {
+            auto mask = std::uint8_t{};
+            for (const auto &channel : state.color_channels) {
+                if (channel.color_control.lighting_enabled) {
+                    mask |= channel.color_control.light_mask;
+                }
+                if (channel.alpha_control.lighting_enabled) {
+                    mask |= channel.alpha_control.light_mask;
+                }
+            }
+            return mask;
+        }
+
+        [[nodiscard]] GXMaterialState material_with_scene_lights(const GXMaterialState &material, std::span<const GXLightState> scene_lights) {
+            auto state = material;
+            for (auto light = std::size_t{}; light < state.lights.size() && light < scene_lights.size(); ++light) {
+                if (!state.lights[light].loaded && scene_lights[light].loaded) {
+                    state.lights[light] = scene_lights[light];
+                }
+            }
+            return state;
+        }
+
         [[nodiscard]] std::array<std::uint8_t, 4U> konst_color_for_selector(const GXMaterialState &state, std::uint8_t selector) {
             constexpr auto constants = std::array<std::uint8_t, 8U>{255U, 223U, 191U, 159U, 128U, 96U, 64U, 32U};
             if (selector < constants.size()) {
@@ -482,6 +562,8 @@ namespace smgpc::game {
                 .src_factor = blend.src_factor,
                 .dst_factor = blend.dst_factor,
                 .op = blend.op,
+                .color_update = blend.color_update,
+                .alpha_update = blend.alpha_update,
                 .enabled = blend.enabled,
             };
         }
@@ -545,6 +627,17 @@ namespace smgpc::game {
             std::array<float, 4U> color{255.0F, 255.0F, 255.0F, 255.0F};
         };
 
+        struct ClippedProjectedPolygon {
+            std::array<ProjectedVertex, 4U> vertices;
+            std::size_t count = 0U;
+
+            void push(ProjectedVertex vertex) {
+                if (count < vertices.size()) {
+                    vertices[count++] = vertex;
+                }
+            }
+        };
+
         struct MatrixPaletteContext {
             const J3dMatrix3x4 &actor_matrix;
             std::span<const J3dJointTransformValue> transforms;
@@ -553,6 +646,12 @@ namespace smgpc::game {
             const J3dEnvelopeBlockSummary *envelopes = nullptr;
             const std::optional<J3dBckAnimationSummary> &animation;
             const J3dJointTransformValue *fallback_transform = nullptr;
+            std::span<J3dMatrix3x4> joint_model_cache;
+            std::span<std::uint8_t> joint_model_cache_valid;
+            std::span<J3dMatrix3x4> draw_matrix_cache;
+            std::span<std::uint8_t> draw_matrix_cache_valid;
+            std::span<J3dMatrix3x4> model_matrix_cache;
+            std::span<std::uint8_t> model_matrix_cache_valid;
             std::uint16_t default_joint_index = 0xffffU;
             std::uint64_t frame = 0U;
         };
@@ -632,34 +731,34 @@ namespace smgpc::game {
             return result;
         }
 
-        [[nodiscard]] J3dMatrix3x4 joint_model_matrix(std::span<const J3dJointTransformValue> transforms,
-                                                      std::span<const std::uint16_t> parent_indices,
-                                                      const std::optional<J3dBckAnimationSummary> &animation, std::uint16_t joint_index,
-                                                      std::uint64_t frame) {
-            if (joint_index >= transforms.size()) {
+        [[nodiscard]] J3dMatrix3x4 joint_model_matrix(const MatrixPaletteContext &context, std::uint16_t joint_index) {
+            if (joint_index >= context.transforms.size()) {
                 return J3dMatrix3x4{};
             }
 
-            auto chain = std::vector<std::uint16_t>{};
-            auto current = joint_index;
-            for (auto guard = 0U; current < transforms.size() && guard < transforms.size(); ++guard) {
-                chain.push_back(current);
-                if (current >= parent_indices.size() || parent_indices[current] == 0xffffU) {
-                    break;
-                }
-                current = parent_indices[current];
+            if (joint_index < context.joint_model_cache.size() && joint_index < context.joint_model_cache_valid.size() &&
+                context.joint_model_cache_valid[joint_index] != 0U) {
+                return context.joint_model_cache[joint_index];
             }
 
-            auto matrix = J3dMatrix3x4{};
-            for (auto it = chain.rbegin(); it != chain.rend(); ++it) {
-                auto transform = transforms[*it];
-                if (animation.has_value()) {
-                    if (const auto animated = j3d_evaluate_bck_joint_transform(*animation, *it, static_cast<float>(frame)); animated.has_value()) {
-                        transform = *animated;
-                    }
+            auto transform = context.transforms[joint_index];
+            if (context.animation.has_value()) {
+                if (const auto animated =
+                        j3d_evaluate_bck_joint_transform(*context.animation, joint_index, static_cast<float>(context.frame));
+                    animated.has_value()) {
+                    transform = *animated;
                 }
+            }
 
-                matrix = concat_matrix(matrix, matrix_from_joint_transform(&transform));
+            auto matrix = matrix_from_joint_transform(&transform);
+            if (joint_index < context.parent_indices.size() && context.parent_indices[joint_index] != 0xffffU &&
+                context.parent_indices[joint_index] < context.transforms.size()) {
+                matrix = concat_matrix(joint_model_matrix(context, context.parent_indices[joint_index]), matrix);
+            }
+
+            if (joint_index < context.joint_model_cache.size() && joint_index < context.joint_model_cache_valid.size()) {
+                context.joint_model_cache[joint_index] = matrix;
+                context.joint_model_cache_valid[joint_index] = 1U;
             }
 
             return matrix;
@@ -669,28 +768,24 @@ namespace smgpc::game {
             return J3dMatrix3x4{.m = values};
         }
 
-        [[nodiscard]] J3dMatrix3x4 weighted_envelope_matrix(std::span<const J3dJointTransformValue> transforms,
-                                                            std::span<const std::uint16_t> parent_indices,
-                                                            const std::optional<J3dBckAnimationSummary> &animation,
-                                                            const J3dEnvelopeBlockSummary *envelopes, std::uint16_t envelope_index,
-                                                            std::uint64_t frame) {
-            if (envelopes == nullptr || envelope_index >= envelopes->matrices.size()) {
+        [[nodiscard]] J3dMatrix3x4 weighted_envelope_matrix(const MatrixPaletteContext &context, std::uint16_t envelope_index) {
+            if (context.envelopes == nullptr || envelope_index >= context.envelopes->matrices.size()) {
                 return J3dMatrix3x4{};
             }
 
             auto result = J3dMatrix3x4{};
             result.m.fill(0.0F);
-            const auto &envelope = envelopes->matrices[envelope_index];
+            const auto &envelope = context.envelopes->matrices[envelope_index];
             auto total_weight = 0.0F;
             for (auto influence = std::size_t{}; influence < envelope.joint_indices.size() && influence < envelope.weights.size(); ++influence) {
                 const auto joint_index = envelope.joint_indices[influence];
-                if (joint_index >= transforms.size()) {
+                if (joint_index >= context.transforms.size()) {
                     continue;
                 }
 
-                auto matrix = joint_model_matrix(transforms, parent_indices, animation, joint_index, frame);
-                if (joint_index < envelopes->inverse_bind_matrices.size()) {
-                    matrix = concat_matrix(matrix, matrix_from_array(envelopes->inverse_bind_matrices[joint_index]));
+                auto matrix = joint_model_matrix(context, joint_index);
+                if (joint_index < context.envelopes->inverse_bind_matrices.size()) {
+                    matrix = concat_matrix(matrix, matrix_from_array(context.envelopes->inverse_bind_matrices[joint_index]));
                 }
 
                 const auto weight = envelope.weights[influence];
@@ -711,24 +806,48 @@ namespace smgpc::game {
 
         [[nodiscard]] J3dMatrix3x4 local_matrix_for_draw_matrix(const MatrixPaletteContext &context, std::uint16_t draw_matrix_index) {
             if (draw_matrix_index != 0xffffU && draw_matrix_index < context.draw_matrices.size()) {
-                const auto &draw_matrix = context.draw_matrices[draw_matrix_index];
-                if (draw_matrix.weighted) {
-                    return weighted_envelope_matrix(context.transforms, context.parent_indices, context.animation, context.envelopes,
-                                                    draw_matrix.index, context.frame);
+                if (draw_matrix_index < context.draw_matrix_cache.size() && draw_matrix_index < context.draw_matrix_cache_valid.size() &&
+                    context.draw_matrix_cache_valid[draw_matrix_index] != 0U) {
+                    return context.draw_matrix_cache[draw_matrix_index];
                 }
-                if (draw_matrix.index < context.transforms.size()) {
-                    return joint_model_matrix(context.transforms, context.parent_indices, context.animation, draw_matrix.index, context.frame);
+
+                const auto &draw_matrix = context.draw_matrices[draw_matrix_index];
+                auto matrix = std::optional<J3dMatrix3x4>{};
+                if (draw_matrix.weighted) {
+                    matrix = weighted_envelope_matrix(context, draw_matrix.index);
+                } else if (draw_matrix.index < context.transforms.size()) {
+                    matrix = joint_model_matrix(context, draw_matrix.index);
+                }
+
+                if (matrix.has_value()) {
+                    if (draw_matrix_index < context.draw_matrix_cache.size() && draw_matrix_index < context.draw_matrix_cache_valid.size()) {
+                        context.draw_matrix_cache[draw_matrix_index] = *matrix;
+                        context.draw_matrix_cache_valid[draw_matrix_index] = 1U;
+                    }
+                    return *matrix;
                 }
             }
 
             if (context.default_joint_index < context.transforms.size()) {
-                return joint_model_matrix(context.transforms, context.parent_indices, context.animation, context.default_joint_index, context.frame);
+                return joint_model_matrix(context, context.default_joint_index);
             }
 
             return matrix_from_joint_transform(context.fallback_transform);
         }
 
         [[nodiscard]] J3dMatrix3x4 model_matrix_for_source_vertex(const J3dMeshVertex &source, const MatrixPaletteContext &context) {
+            if (source.draw_matrix_index != 0xffffU && source.draw_matrix_index < context.model_matrix_cache.size() &&
+                source.draw_matrix_index < context.model_matrix_cache_valid.size()) {
+                if (context.model_matrix_cache_valid[source.draw_matrix_index] != 0U) {
+                    return context.model_matrix_cache[source.draw_matrix_index];
+                }
+
+                auto matrix = concat_matrix(context.actor_matrix, local_matrix_for_draw_matrix(context, source.draw_matrix_index));
+                context.model_matrix_cache[source.draw_matrix_index] = matrix;
+                context.model_matrix_cache_valid[source.draw_matrix_index] = 1U;
+                return matrix;
+            }
+
             return concat_matrix(context.actor_matrix, local_matrix_for_draw_matrix(context, source.draw_matrix_index));
         }
 
@@ -785,8 +904,8 @@ namespace smgpc::game {
             };
         }
 
-        [[nodiscard]] std::vector<ProjectedVertex> clip_to_near_plane(std::span<const ProjectedVertex> polygon, float near_plane) {
-            auto clipped = std::vector<ProjectedVertex>{};
+        [[nodiscard]] ClippedProjectedPolygon clip_to_near_plane(std::span<const ProjectedVertex> polygon, float near_plane) {
+            ClippedProjectedPolygon clipped;
             if (polygon.empty()) {
                 return clipped;
             }
@@ -797,10 +916,10 @@ namespace smgpc::game {
                 const auto current_inside = current.z >= near_plane;
                 if (current_inside != previous_inside) {
                     const auto t = (near_plane - previous.z) / (current.z - previous.z);
-                    clipped.push_back(interpolate_vertex(previous, current, t));
+                    clipped.push(interpolate_vertex(previous, current, t));
                 }
                 if (current_inside) {
-                    clipped.push_back(current);
+                    clipped.push(current);
                 }
                 previous = current;
                 previous_inside = current_inside;
@@ -810,11 +929,11 @@ namespace smgpc::game {
         }
 
         [[nodiscard]] ProjectedVertex view_vertex(const J3dMeshVertex &source, std::array<std::uint8_t, 4U> material_color,
-                                                  const MatrixPaletteContext &matrix_context, const CameraPoseCompat &camera_pose,
+                                                  const MatrixPaletteContext &matrix_context, const CameraProjectionContext &camera_context,
                                                   const J3dTexCoordGenSummary *tex_coord_gen, const J3dTexMatrixSummary *tex_matrix) {
             const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
             const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
-            const auto camera = transform_world_to_camera(camera_pose, {world[0U], world[1U], world[2U]});
+            const auto camera = camera_space_point(camera_context, world);
             const auto tex_coord = j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, &model_matrix);
             auto tex_coords = std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D>{};
             tex_coords[0U] = {tex_coord.u, tex_coord.v, 1.0F};
@@ -876,12 +995,13 @@ namespace smgpc::game {
 
         [[nodiscard]] ProjectedVertex material_view_vertex(const J3dMeshVertex &source, const J3dMaterialSummary &material,
                                                            std::span<const J3dTexture> textures, std::span<const J3dMaterialTexturePass> passes,
-                                                           const MatrixPaletteContext &matrix_context, const CameraPoseCompat &camera_pose) {
+                                                           const MatrixPaletteContext &matrix_context,
+                                                           const CameraProjectionContext &camera_context) {
             const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
             const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
-            const auto camera = transform_world_to_camera(camera_pose, {world[0U], world[1U], world[2U]});
+            const auto camera = camera_space_point(camera_context, world);
             const auto raster_color = gx_raster_color(source, material.gx_state, passes, {camera.x, camera.y, camera.z},
-                                                      transform_normal_to_camera(model_matrix, camera_pose, source.normal));
+                                                      transform_normal_to_camera(model_matrix, camera_context, source.normal));
             const auto evaluated = j3d_evaluate_material_color(material, textures, passes, source, raster_color, &model_matrix)
                                        .value_or(std::array<std::uint8_t, 4U>{0U, 0U, 0U, 0U});
 
@@ -899,10 +1019,10 @@ namespace smgpc::game {
 
         [[nodiscard]] ProjectedVertex gx_material_view_vertex(const J3dMeshVertex &source, const J3dMaterialSummary &material,
                                                               std::span<const J3dMaterialTexturePass> passes, const MatrixPaletteContext &matrix_context,
-                                                              const CameraPoseCompat &camera_pose) {
+                                                              const CameraProjectionContext &camera_context) {
             const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
             const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
-            const auto camera = transform_world_to_camera(camera_pose, {world[0U], world[1U], world[2U]});
+            const auto camera = camera_space_point(camera_context, world);
             auto tex_coords = std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D>{};
             for (auto i = std::size_t{}; i < passes.size() && i < tex_coords.size(); ++i) {
                 const auto &pass = passes[i];
@@ -921,29 +1041,21 @@ namespace smgpc::game {
                 .clip_w = camera.z,
                 .tex_coords = tex_coords,
                 .color = color_to_float(gx_raster_color(source, material.gx_state, passes, {camera.x, camera.y, camera.z},
-                                                        transform_normal_to_camera(model_matrix, camera_pose, source.normal))),
+                                                        transform_normal_to_camera(model_matrix, camera_context, source.normal))),
             };
         }
 
         void append_projected_triangle(std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices,
                                        const ProjectedVertex &a, const ProjectedVertex &b, const ProjectedVertex &c,
-                                       const render::core::FramebufferInfo &framebuffer, const CameraPoseCompat &camera_pose) {
-            constexpr auto pi = 3.14159265358979323846F;
-            const auto fovy = camera_pose.fovy_degrees * pi / 180.0F;
-            const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
-            const auto aspect = camera_pose.aspect_ratio;
-            const auto half_width = static_cast<float>(framebuffer.width) * 0.5F;
-            const auto half_height = static_cast<float>(framebuffer.height) * 0.5F;
-            const auto near_plane = camera_pose.near_clip;
-            const auto far_plane = camera_pose.far_clip;
-
+                                       const CameraProjectionContext &camera_context) {
             const auto append_vertex = [&](const ProjectedVertex &projected) {
-                const auto ndc_x = (projected.x / projected.z) * (focal_y / aspect);
-                const auto ndc_y = (projected.y / projected.z) * focal_y;
-                const auto ndc_z = std::clamp((projected.z - near_plane) / (far_plane - near_plane), 0.0F, 1.0F);
+                const auto ndc_x = (projected.x / projected.z) * camera_context.focal_x;
+                const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y;
+                const auto ndc_z =
+                    std::clamp((projected.z - camera_context.near_plane) / camera_context.depth_range, 0.0F, 1.0F);
                 vertices.push_back(render::TexturedVertex2D{
-                    .x = ndc_x * half_width,
-                    .y = ndc_y * half_height,
+                    .x = ndc_x * camera_context.half_width,
+                    .y = ndc_y * camera_context.half_height,
                     .z = ndc_z,
                     .u = projected.u,
                     .v = projected.v,
@@ -966,23 +1078,15 @@ namespace smgpc::game {
 
         void append_projected_gx_triangle(std::vector<render::GxMaterialVertex2D> &vertices, std::vector<std::uint16_t> &indices,
                                           const ProjectedVertex &a, const ProjectedVertex &b, const ProjectedVertex &c,
-                                          const render::core::FramebufferInfo &framebuffer, const CameraPoseCompat &camera_pose) {
-            constexpr auto pi = 3.14159265358979323846F;
-            const auto fovy = camera_pose.fovy_degrees * pi / 180.0F;
-            const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
-            const auto aspect = camera_pose.aspect_ratio;
-            const auto half_width = static_cast<float>(framebuffer.width) * 0.5F;
-            const auto half_height = static_cast<float>(framebuffer.height) * 0.5F;
-            const auto near_plane = camera_pose.near_clip;
-            const auto far_plane = camera_pose.far_clip;
-
+                                          const CameraProjectionContext &camera_context) {
             const auto append_vertex = [&](const ProjectedVertex &projected) {
-                const auto ndc_x = (projected.x / projected.z) * (focal_y / aspect);
-                const auto ndc_y = (projected.y / projected.z) * focal_y;
-                const auto ndc_z = std::clamp((projected.z - near_plane) / (far_plane - near_plane), 0.0F, 1.0F);
+                const auto ndc_x = (projected.x / projected.z) * camera_context.focal_x;
+                const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y;
+                const auto ndc_z =
+                    std::clamp((projected.z - camera_context.near_plane) / camera_context.depth_range, 0.0F, 1.0F);
                 vertices.push_back(render::GxMaterialVertex2D{
-                    .x = ndc_x * half_width,
-                    .y = ndc_y * half_height,
+                    .x = ndc_x * camera_context.half_width,
+                    .y = ndc_y * camera_context.half_height,
                     .z = ndc_z,
                     .clip_w = projected.clip_w,
                     .tex_coords = projected.tex_coords,
@@ -1004,16 +1108,22 @@ namespace smgpc::game {
         }
 
         void project_source_mesh(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
-                                 std::array<std::uint8_t, 4U> material_color, const render::core::FramebufferInfo &framebuffer,
-                                 const MatrixPaletteContext &matrix_context, const CameraPoseCompat &camera_pose,
+                                 std::array<std::uint8_t, 4U> material_color, const MatrixPaletteContext &matrix_context,
+                                 const CameraProjectionContext &camera_context,
                                  const J3dTexCoordGenSummary *tex_coord_gen, const J3dTexMatrixSummary *tex_matrix,
-                                 std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices) {
+                                 std::vector<ProjectedVertex> &projected_sources, std::vector<render::TexturedVertex2D> &vertices,
+                                 std::vector<std::uint16_t> &indices) {
             const auto triangle_count = source_indices.size() / 3U;
             vertices.clear();
             indices.clear();
             vertices.reserve(triangle_count * 3U);
             indices.reserve(triangle_count * 3U);
-            const auto near_plane = camera_pose.near_clip;
+            const auto near_plane = camera_context.near_plane;
+            projected_sources.clear();
+            projected_sources.reserve(source_vertices.size());
+            for (const auto &source : source_vertices) {
+                projected_sources.push_back(view_vertex(source, material_color, matrix_context, camera_context, tex_coord_gen, tex_matrix));
+            }
 
             for (auto i = 0U; i + 2U < source_indices.size(); i += 3U) {
                 const auto index_a = source_indices[i];
@@ -1024,33 +1134,38 @@ namespace smgpc::game {
                 }
 
                 const std::array<ProjectedVertex, 3U> triangle{
-                    view_vertex(source_vertices[index_a], material_color, matrix_context, camera_pose, tex_coord_gen, tex_matrix),
-                    view_vertex(source_vertices[index_b], material_color, matrix_context, camera_pose, tex_coord_gen, tex_matrix),
-                    view_vertex(source_vertices[index_c], material_color, matrix_context, camera_pose, tex_coord_gen, tex_matrix),
+                    projected_sources[index_a],
+                    projected_sources[index_b],
+                    projected_sources[index_c],
                 };
                 const auto clipped = clip_to_near_plane(triangle, near_plane);
-                if (clipped.size() < 3U) {
+                if (clipped.count < 3U) {
                     continue;
                 }
 
-                for (auto vertex_index = 1U; vertex_index + 1U < clipped.size(); ++vertex_index) {
-                    append_projected_triangle(vertices, indices, clipped[0U], clipped[vertex_index], clipped[vertex_index + 1U], framebuffer,
-                                              camera_pose);
+                for (auto vertex_index = 1U; vertex_index + 1U < clipped.count; ++vertex_index) {
+                    append_projected_triangle(vertices, indices, clipped.vertices[0U], clipped.vertices[vertex_index],
+                                              clipped.vertices[vertex_index + 1U], camera_context);
                 }
             }
         }
 
         void project_gx_material_source_mesh(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
                                              const J3dMaterialSummary &material, std::span<const J3dMaterialTexturePass> passes,
-                                             const render::core::FramebufferInfo &framebuffer, const MatrixPaletteContext &matrix_context,
-                                             const CameraPoseCompat &camera_pose, std::vector<render::GxMaterialVertex2D> &vertices,
-                                             std::vector<std::uint16_t> &indices) {
+                                             const MatrixPaletteContext &matrix_context, const CameraProjectionContext &camera_context,
+                                             std::vector<ProjectedVertex> &projected_sources,
+                                             std::vector<render::GxMaterialVertex2D> &vertices, std::vector<std::uint16_t> &indices) {
             const auto triangle_count = source_indices.size() / 3U;
             vertices.clear();
             indices.clear();
             vertices.reserve(triangle_count * 3U);
             indices.reserve(triangle_count * 3U);
-            const auto near_plane = camera_pose.near_clip;
+            const auto near_plane = camera_context.near_plane;
+            projected_sources.clear();
+            projected_sources.reserve(source_vertices.size());
+            for (const auto &source : source_vertices) {
+                projected_sources.push_back(gx_material_view_vertex(source, material, passes, matrix_context, camera_context));
+            }
 
             for (auto i = 0U; i + 2U < source_indices.size(); i += 3U) {
                 const auto index_a = source_indices[i];
@@ -1061,18 +1176,60 @@ namespace smgpc::game {
                 }
 
                 const std::array<ProjectedVertex, 3U> triangle{
-                    gx_material_view_vertex(source_vertices[index_a], material, passes, matrix_context, camera_pose),
-                    gx_material_view_vertex(source_vertices[index_b], material, passes, matrix_context, camera_pose),
-                    gx_material_view_vertex(source_vertices[index_c], material, passes, matrix_context, camera_pose),
+                    projected_sources[index_a],
+                    projected_sources[index_b],
+                    projected_sources[index_c],
                 };
                 const auto clipped = clip_to_near_plane(triangle, near_plane);
-                if (clipped.size() < 3U) {
+                if (clipped.count < 3U) {
                     continue;
                 }
 
-                for (auto vertex_index = 1U; vertex_index + 1U < clipped.size(); ++vertex_index) {
-                    append_projected_gx_triangle(vertices, indices, clipped[0U], clipped[vertex_index], clipped[vertex_index + 1U], framebuffer,
-                                                 camera_pose);
+                for (auto vertex_index = 1U; vertex_index + 1U < clipped.count; ++vertex_index) {
+                    append_projected_gx_triangle(vertices, indices, clipped.vertices[0U], clipped.vertices[vertex_index],
+                                                 clipped.vertices[vertex_index + 1U], camera_context);
+                }
+            }
+        }
+
+        void project_untextured_material_source_mesh(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
+                                                     const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
+                                                     const MatrixPaletteContext &matrix_context, const CameraProjectionContext &camera_context,
+                                                     std::vector<ProjectedVertex> &projected_sources,
+                                                     std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices) {
+            const auto triangle_count = source_indices.size() / 3U;
+            vertices.clear();
+            indices.clear();
+            vertices.reserve(triangle_count * 3U);
+            indices.reserve(triangle_count * 3U);
+            const auto near_plane = camera_context.near_plane;
+            projected_sources.clear();
+            projected_sources.reserve(source_vertices.size());
+            for (const auto &source : source_vertices) {
+                projected_sources.push_back(material_view_vertex(source, material, textures, {}, matrix_context, camera_context));
+            }
+
+            for (auto i = 0U; i + 2U < source_indices.size(); i += 3U) {
+                const auto index_a = source_indices[i];
+                const auto index_b = source_indices[i + 1U];
+                const auto index_c = source_indices[i + 2U];
+                if (index_a >= source_vertices.size() || index_b >= source_vertices.size() || index_c >= source_vertices.size()) {
+                    continue;
+                }
+
+                const std::array<ProjectedVertex, 3U> triangle{
+                    projected_sources[index_a],
+                    projected_sources[index_b],
+                    projected_sources[index_c],
+                };
+                const auto clipped = clip_to_near_plane(triangle, near_plane);
+                if (clipped.count < 3U) {
+                    continue;
+                }
+
+                for (auto vertex_index = 1U; vertex_index + 1U < clipped.count; ++vertex_index) {
+                    append_projected_triangle(vertices, indices, clipped.vertices[0U], clipped.vertices[vertex_index],
+                                              clipped.vertices[vertex_index + 1U], camera_context);
                 }
             }
         }
@@ -1080,30 +1237,28 @@ namespace smgpc::game {
         void append_material_micro_triangle(std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices,
                                             const J3dMeshVertex &a, const J3dMeshVertex &b, const J3dMeshVertex &c,
                                             const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
-                                            std::span<const J3dMaterialTexturePass> passes, const render::core::FramebufferInfo &framebuffer,
-                                            const MatrixPaletteContext &matrix_context,
-                                            const CameraPoseCompat &camera_pose) {
+                                            std::span<const J3dMaterialTexturePass> passes, const MatrixPaletteContext &matrix_context,
+                                            const CameraProjectionContext &camera_context) {
             const std::array<ProjectedVertex, 3U> triangle{
-                material_view_vertex(a, material, textures, passes, matrix_context, camera_pose),
-                material_view_vertex(b, material, textures, passes, matrix_context, camera_pose),
-                material_view_vertex(c, material, textures, passes, matrix_context, camera_pose),
+                material_view_vertex(a, material, textures, passes, matrix_context, camera_context),
+                material_view_vertex(b, material, textures, passes, matrix_context, camera_context),
+                material_view_vertex(c, material, textures, passes, matrix_context, camera_context),
             };
-            const auto clipped = clip_to_near_plane(triangle, camera_pose.near_clip);
-            if (clipped.size() < 3U) {
+            const auto clipped = clip_to_near_plane(triangle, camera_context.near_plane);
+            if (clipped.count < 3U) {
                 return;
             }
 
-            for (auto vertex_index = 1U; vertex_index + 1U < clipped.size(); ++vertex_index) {
-                append_projected_triangle(vertices, indices, clipped[0U], clipped[vertex_index], clipped[vertex_index + 1U], framebuffer,
-                                          camera_pose);
+            for (auto vertex_index = 1U; vertex_index + 1U < clipped.count; ++vertex_index) {
+                append_projected_triangle(vertices, indices, clipped.vertices[0U], clipped.vertices[vertex_index],
+                                          clipped.vertices[vertex_index + 1U], camera_context);
             }
         }
 
         void project_material_source_mesh(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
                                           const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
-                                          std::span<const J3dMaterialTexturePass> passes, const render::core::FramebufferInfo &framebuffer,
-                                          const MatrixPaletteContext &matrix_context,
-                                          const CameraPoseCompat &camera_pose, std::vector<render::TexturedVertex2D> &vertices,
+                                          std::span<const J3dMaterialTexturePass> passes, const MatrixPaletteContext &matrix_context,
+                                          const CameraProjectionContext &camera_context, std::vector<render::TexturedVertex2D> &vertices,
                                           std::vector<std::uint16_t> &indices) {
             constexpr auto subdivisions = 8U;
             const auto triangle_count = source_indices.size() / 3U;
@@ -1139,13 +1294,13 @@ namespace smgpc::game {
                         const auto p0 = point(bi, ci);
                         const auto p1 = point(bi + 1U, ci);
                         const auto p2 = point(bi, ci + 1U);
-                        append_material_micro_triangle(vertices, indices, p0, p1, p2, material, textures, passes, framebuffer, matrix_context,
-                                                       camera_pose);
+                        append_material_micro_triangle(vertices, indices, p0, p1, p2, material, textures, passes, matrix_context,
+                                                       camera_context);
 
                         if (bi + ci + 1U < subdivisions) {
                             const auto p3 = point(bi + 1U, ci + 1U);
-                            append_material_micro_triangle(vertices, indices, p1, p3, p2, material, textures, passes, framebuffer, matrix_context,
-                                                           camera_pose);
+                            append_material_micro_triangle(vertices, indices, p1, p3, p2, material, textures, passes, matrix_context,
+                                                           camera_context);
                         }
                     }
                 }
@@ -1154,12 +1309,48 @@ namespace smgpc::game {
 
     }  // namespace
 
+    struct J3dModelRenderer::DrawScratch {
+        CameraProjectionContext camera_context = {};
+        std::vector<ProjectedVertex> projected_sources = {};
+        std::vector<render::TexturedVertex2D> textured_vertices = {};
+        std::vector<render::GxMaterialVertex2D> gx_vertices = {};
+        std::vector<std::uint16_t> indices = {};
+        std::vector<J3dMatrix3x4> joint_model_cache = {};
+        std::vector<std::uint8_t> joint_model_cache_valid = {};
+        std::vector<J3dMatrix3x4> draw_matrix_cache = {};
+        std::vector<std::uint8_t> draw_matrix_cache_valid = {};
+        std::vector<J3dMatrix3x4> model_matrix_cache = {};
+        std::vector<std::uint8_t> model_matrix_cache_valid = {};
+
+        void prepare(std::size_t joint_count, std::size_t draw_matrix_count) {
+            projected_sources.clear();
+            textured_vertices.clear();
+            gx_vertices.clear();
+            indices.clear();
+            joint_model_cache.resize(joint_count);
+            joint_model_cache_valid.assign(joint_count, 0U);
+            draw_matrix_cache.resize(draw_matrix_count);
+            draw_matrix_cache_valid.assign(draw_matrix_count, 0U);
+            model_matrix_cache.resize(draw_matrix_count);
+            model_matrix_cache_valid.assign(draw_matrix_count, 0U);
+        }
+    };
+
+    void J3dModelRenderer::DrawScratchDeleter::operator()(DrawScratch *scratch) const {
+        delete scratch;
+    }
+
+    J3dModelRenderer::J3dModelRenderer() = default;
+
+    J3dModelRenderer::~J3dModelRenderer() = default;
+
     void J3dModelRenderer::load(render::IRendererEngine &renderer, std::span<const std::uint8_t> model_data,
                                 const J3dModelRendererLoadOptions &options) {
         _loaded = false;
         _meshes.clear();
         _render_packets.clear();
         _textures.clear();
+        _texture_handles.clear();
         _joint_transforms.clear();
         _joint_parent_indices.clear();
         _draw_matrices.clear();
@@ -1178,10 +1369,9 @@ namespace smgpc::game {
             }
             _joint_parent_indices = geometry.joints->parent_indices;
         }
-        auto texture_handles = std::vector<render::TextureHandle>{};
-        texture_handles.reserve(geometry.textures.size());
+        _texture_handles.reserve(geometry.textures.size());
         for (const auto &texture : geometry.textures) {
-            texture_handles.push_back(renderer.create_rgba8_texture(texture.image.width, texture.image.height, texture.image.rgba));
+            _texture_handles.push_back(renderer.create_rgba8_texture(texture.image.width, texture.image.height, texture.image.rgba));
         }
 
         if (geometry.materials.has_value()) {
@@ -1237,6 +1427,7 @@ namespace smgpc::game {
                                 mesh.material_color = material.material_colors[0U];
                                 mesh.pass_order = 0U;
                                 mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                                mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                                 mesh.blend_mode = material.blend.enabled ? blend_mode_for_composed_material(material, true) :
                                                                            render::BlendMode::Opaque;
                                 mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
@@ -1276,6 +1467,7 @@ namespace smgpc::game {
                         mesh.packet_mode = J3dRendererPacketMode::ConstantMaterial;
                         mesh.pass_order = 0U;
                         mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                        mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                         mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
                         mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
                         if (material.gx_state.z_mode.enabled) {
@@ -1290,21 +1482,21 @@ namespace smgpc::game {
                     }
 
                     const auto shader_textures_available = material_pass_textures_available(passes, geometry.textures) &&
-                                                           std::ranges::all_of(passes, [&texture_handles](const auto &pass) {
-                                                               return pass.texture_index < texture_handles.size() &&
-                                                                      texture_handles[pass.texture_index].is_valid();
+                                                           std::ranges::all_of(passes, [this](const auto &pass) {
+                                                               return pass.texture_index < _texture_handles.size() &&
+                                                                      _texture_handles[pass.texture_index].is_valid();
                                                            });
                     if (shader_textures_available && material_can_use_shader_gx_tev(material.gx_state, passes)) {
                         auto mesh = Mesh{};
                         assign_shape_packet(mesh);
-                        mesh.texture = texture_handles[passes.front().texture_index];
+                        mesh.texture = _texture_handles[passes.front().texture_index];
                         mesh.material = material;
                         mesh.material_passes = passes;
                         mesh.gx_texture_stage_count = passes.size();
                         for (auto i = std::size_t{}; i < passes.size() && i < mesh.gx_texture_stages.size(); ++i) {
                             const auto texture_index = passes[i].texture_index;
                             mesh.gx_texture_stages[i] = render::GxTextureStage2D{
-                                .texture = texture_handles[texture_index],
+                                .texture = _texture_handles[texture_index],
                                 .wrap_u = geometry.textures[texture_index].wrap_s != 0U,
                                 .wrap_v = geometry.textures[texture_index].wrap_t != 0U,
                             };
@@ -1361,6 +1553,7 @@ namespace smgpc::game {
                                 mesh.cull_mode = cull_mode_from_gx_material_state(material);
                                 mesh.wrap_u = true;
                                 mesh.wrap_v = true;
+                                mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                                 mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
                                 mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
                                 if (material.gx_state.z_mode.enabled) {
@@ -1389,6 +1582,7 @@ namespace smgpc::game {
                                 mesh.material_color = material.material_colors[0U];
                                 mesh.pass_order = passes.front().stage;
                                 mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                                mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                                 mesh.blend = true;
                                 mesh.blend_mode = render::BlendMode::Alpha;
                                 if (material.gx_state.z_mode.enabled) {
@@ -1408,11 +1602,11 @@ namespace smgpc::game {
                     for (auto pass_index = std::size_t{}; pass_index < passes.size(); ++pass_index) {
                         const auto &pass = passes[pass_index];
                         const auto texture_index = pass.texture_index;
-                        if (texture_index >= texture_handles.size() || !texture_handles[texture_index].is_valid()) {
+                        if (texture_index >= _texture_handles.size() || !_texture_handles[texture_index].is_valid()) {
                             continue;
                         }
 
-                        auto texture_handle = texture_handles[texture_index];
+                        auto texture_handle = _texture_handles[texture_index];
                         auto material_color = material.material_colors[0U];
                         auto texture_has_alpha = texture_needs_blending(geometry.textures[texture_index].image);
                         auto tev_baked = false;
@@ -1448,6 +1642,7 @@ namespace smgpc::game {
                         mesh.cull_mode = cull_mode_from_gx_material_state(material);
                         mesh.wrap_u = geometry.textures[texture_index].wrap_s != 0U;
                         mesh.wrap_v = geometry.textures[texture_index].wrap_t != 0U;
+                        mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                         mesh.blend_mode = tev_baked ?
                                               blend_mode_for_composed_material(material, texture_has_alpha) :
                                               blend_mode_for_material_pass(material, texture_has_alpha, tev_stage, pass_index != 0U,
@@ -1507,6 +1702,12 @@ namespace smgpc::game {
             return;
         }
 
+        if (_draw_scratch == nullptr) {
+            _draw_scratch.reset(new DrawScratch());
+        }
+        auto &scratch = *_draw_scratch;
+        scratch.prepare(_joint_transforms.size(), _draw_matrices.size());
+        scratch.camera_context = camera_projection_context(camera_pose, renderer.logical_framebuffer_size());
         for (const auto &mesh : _meshes) {
             if (!material_filter_allows_mesh(options.material_filter, mesh.material_name, mesh.material_index)) {
                 continue;
@@ -1515,7 +1716,7 @@ namespace smgpc::game {
                 continue;
             }
 
-            submit_mesh(renderer, mesh, camera_pose, actor_matrix, frame);
+            submit_mesh(renderer, mesh, actor_matrix, frame, scratch, options.scene_lights);
         }
     }
 
@@ -1531,11 +1732,11 @@ namespace smgpc::game {
         return _render_packets;
     }
 
-    std::vector<J3dRendererPacketState> J3dModelRenderer::render_packets(std::uint64_t frame) const {
+    std::vector<J3dRendererPacketState> J3dModelRenderer::render_packets(std::uint64_t frame, std::span<const GXLightState> scene_lights) const {
         auto packets = std::vector<J3dRendererPacketState>{};
         packets.reserve(_meshes.size());
         for (const auto &mesh : _meshes) {
-            packets.push_back(packet_state_for_mesh(mesh, frame));
+            packets.push_back(packet_state_for_mesh(mesh, frame, scene_lights));
         }
         return packets;
     }
@@ -1564,7 +1765,7 @@ namespace smgpc::game {
         return mesh;
     }
 
-    J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh) {
+    J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights) const {
         auto state = J3dRendererPacketState{
             .material_name = mesh.material_name,
             .shape_index = mesh.shape_index,
@@ -1601,45 +1802,78 @@ namespace smgpc::game {
         };
 
         if (mesh.material.has_value()) {
-            state.color_channel_count = mesh.material->gx_state.color_channel_count;
+            const auto effective_material = material_with_scene_lights(mesh.material->gx_state, scene_lights);
+            state.color_channel_count = effective_material.color_channel_count;
             for (auto channel = 0U; channel < state.color_channel_material_colors.size(); ++channel) {
-                state.color_channel_material_colors[channel] = mesh.material->gx_state.color_channels[channel].material_color;
-                state.color_channel_ambient_colors[channel] = mesh.material->gx_state.color_channels[channel].ambient_color;
-                state.color_channel_controls[channel] = mesh.material->gx_state.color_channels[channel].color_control;
-                state.alpha_channel_controls[channel] = mesh.material->gx_state.color_channels[channel].alpha_control;
+                state.color_channel_material_colors[channel] = effective_material.color_channels[channel].material_color;
+                state.color_channel_ambient_colors[channel] = effective_material.color_channels[channel].ambient_color;
+                state.color_channel_controls[channel] = effective_material.color_channels[channel].color_control;
+                state.alpha_channel_controls[channel] = effective_material.color_channels[channel].alpha_control;
             }
-            state.lights = mesh.material->gx_state.lights;
-            for (auto light = 0U; light < state.lights.size(); ++light) {
-                if (state.lights[light].loaded) {
-                    state.loaded_light_mask |= static_cast<std::uint8_t>(1U << light);
+            state.lights = effective_material.lights;
+            state.material_loaded_light_mask = loaded_light_mask(mesh.material->gx_state.lights);
+            state.scene_loaded_light_mask = loaded_light_mask(scene_lights);
+            state.loaded_light_mask = loaded_light_mask(effective_material.lights);
+            state.requested_light_mask = requested_light_mask(effective_material);
+            state.unsatisfied_light_mask = static_cast<std::uint8_t>(state.requested_light_mask & ~state.loaded_light_mask);
+            state.texture_bindings.reserve(effective_material.textures.size());
+            for (const auto &binding : effective_material.textures) {
+                auto texture_state = J3dRendererTextureState();
+                texture_state.slot = binding.slot;
+                texture_state.texture_index = binding.texture_index;
+                texture_state.wrap_s = binding.wrap_s;
+                texture_state.wrap_t = binding.wrap_t;
+                texture_state.min_filter = binding.min_filter;
+                texture_state.mag_filter = binding.mag_filter;
+                if (binding.texture_index < _textures.size()) {
+                    const auto &texture = _textures[binding.texture_index];
+                    texture_state.name = texture.name;
+                    texture_state.width = texture.image.width;
+                    texture_state.height = texture.image.height;
+                    texture_state.format = texture.image.format;
+                    texture_state.has_source_texture = true;
                 }
+                if (binding.texture_index < _texture_handles.size()) {
+                    texture_state.host_handle = _texture_handles[binding.texture_index];
+                }
+                state.texture_bindings.push_back(std::move(texture_state));
             }
-            state.declared_tev_stage_count = mesh.material->gx_state.tev_stage_count;
-            state.active_tev_stage_count = active_tev_stage_count(mesh.material->gx_state);
-            state.tev_order_count = mesh.material->gx_state.tev_orders.size();
-            state.tev_stage_count = mesh.material->gx_state.tev_stages.size();
-            state.texgen_count = mesh.material->gx_state.tex_coord_gens.size();
-            state.indirect_stage_count = mesh.material->gx_state.indirect.stage_count;
-            state.active_indirect_tev_stage_count = active_indirect_tev_stage_count(mesh.material->gx_state);
-            state.indirect_matrix_count = mesh.material->gx_state.indirect.texture_matrices.size();
-            state.indirect_texture_order_count = mesh.material->gx_state.indirect.texture_orders.size();
-            state.indirect_texture_scale_count = mesh.material->gx_state.indirect.texture_coord_scales.size();
-            state.mdl3_packet_bytes = mesh.material->gx_state.mdl3_display_list.size();
-            state.mdl3_command_count = mesh.material->gx_state.mdl3_stats.command_count;
-            state.mdl3_bp_load_count = mesh.material->gx_state.mdl3_stats.bp_load_count;
-            state.mdl3_xf_load_count = mesh.material->gx_state.mdl3_stats.xf_load_count;
-            state.fog_enabled = mesh.material->gx_state.fog.enabled;
-            state.fog_type = mesh.material->gx_state.fog.type;
-            state.fog_projection = mesh.material->gx_state.fog.projection;
-            state.fog_range_adjust_enabled = mesh.material->gx_state.fog.range_adjust_enabled;
-            state.fog_color = mesh.material->gx_state.fog.color;
+            state.tex_coord_gens = effective_material.tex_coord_gens;
+            state.tex_matrices = effective_material.tex_matrices;
+            state.tev_orders = effective_material.tev_orders;
+            state.tev_stages = effective_material.tev_stages;
+            state.tev_k_colors = effective_material.tev_k_colors;
+            state.indirect = effective_material.indirect;
+            state.declared_tev_stage_count = effective_material.tev_stage_count;
+            state.active_tev_stage_count = active_tev_stage_count(effective_material);
+            state.tev_order_count = effective_material.tev_orders.size();
+            state.tev_stage_count = effective_material.tev_stages.size();
+            state.texgen_count = effective_material.tex_coord_gens.size();
+            state.indirect_stage_count = effective_material.indirect.stage_count;
+            state.active_indirect_tev_stage_count = active_indirect_tev_stage_count(effective_material);
+            state.indirect_matrix_count = effective_material.indirect.texture_matrices.size();
+            state.indirect_texture_order_count = effective_material.indirect.texture_orders.size();
+            state.indirect_texture_scale_count = effective_material.indirect.texture_coord_scales.size();
+            state.mdl3_packet_bytes = effective_material.mdl3_display_list.size();
+            state.mdl3_command_count = effective_material.mdl3_stats.command_count;
+            state.mdl3_bp_load_count = effective_material.mdl3_stats.bp_load_count;
+            state.mdl3_xf_load_count = effective_material.mdl3_stats.xf_load_count;
+            state.gx_z_mode = effective_material.z_mode;
+            state.gx_fog = effective_material.fog;
+            state.mdl3_register_loads = effective_material.mdl3_register_loads;
+            state.fog_enabled = effective_material.fog.enabled;
+            state.fog_type = effective_material.fog.type;
+            state.fog_projection = effective_material.fog.projection;
+            state.fog_range_adjust_enabled = effective_material.fog.range_adjust_enabled;
+            state.fog_color = effective_material.fog.color;
         }
 
         return state;
     }
 
-    J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame) const {
-        auto state = packet_state_for_mesh(mesh);
+    J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
+                                                                   std::span<const GXLightState> scene_lights) const {
+        auto state = packet_state_for_mesh(mesh, scene_lights);
         const auto animation_frame = static_cast<float>(frame);
 
         if (_bck_animation.has_value()) {
@@ -1651,6 +1885,19 @@ namespace smgpc::game {
         }
 
         if (_btk_animation.has_value()) {
+            for (auto &matrix : state.tex_matrices) {
+                const auto srt = j3d_evaluate_btk_texture_srt(*_btk_animation, mesh.material_name, matrix.slot, animation_frame);
+                if (!srt.has_value()) {
+                    continue;
+                }
+
+                matrix.center = srt->center;
+                matrix.scale_s = srt->scale_s;
+                matrix.scale_t = srt->scale_t;
+                matrix.rotation = srt->rotation;
+                matrix.translate_s = srt->translate_s;
+                matrix.translate_t = srt->translate_t;
+            }
             state.btk_active = true;
             state.btk_frame = animation_frame;
             state.btk_normalized_frame = normalized_animation_frame(animation_frame, _btk_animation->frame_max);
@@ -1661,11 +1908,12 @@ namespace smgpc::game {
         return state;
     }
 
-    void J3dModelRenderer::submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const CameraPoseCompat &camera_pose,
-                                       const J3dMatrix3x4 &actor_matrix, std::uint64_t frame) const {
+    void J3dModelRenderer::submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix,
+                                       std::uint64_t frame, DrawScratch &scratch,
+                                       std::span<const GXLightState> scene_lights) const {
         if (mesh.project_source_vertices) {
-            auto vertices = std::vector<render::TexturedVertex2D>{};
-            auto indices = std::vector<std::uint16_t>{};
+            auto &vertices = scratch.textured_vertices;
+            auto &indices = scratch.indices;
             const auto *tex_coord_gen = mesh.tex_coord_gen.has_value() ? &*mesh.tex_coord_gen : nullptr;
             auto effective_tex_matrix = mesh.tex_matrix;
             if (_btk_animation.has_value() && effective_tex_matrix.has_value()) {
@@ -1691,11 +1939,22 @@ namespace smgpc::game {
                 .envelopes = envelopes,
                 .animation = _bck_animation,
                 .fallback_transform = fallback_transform,
+                .joint_model_cache = std::span<J3dMatrix3x4>(scratch.joint_model_cache.data(), scratch.joint_model_cache.size()),
+                .joint_model_cache_valid =
+                    std::span<std::uint8_t>(scratch.joint_model_cache_valid.data(), scratch.joint_model_cache_valid.size()),
+                .draw_matrix_cache = std::span<J3dMatrix3x4>(scratch.draw_matrix_cache.data(), scratch.draw_matrix_cache.size()),
+                .draw_matrix_cache_valid =
+                    std::span<std::uint8_t>(scratch.draw_matrix_cache_valid.data(), scratch.draw_matrix_cache_valid.size()),
+                .model_matrix_cache = std::span<J3dMatrix3x4>(scratch.model_matrix_cache.data(), scratch.model_matrix_cache.size()),
+                .model_matrix_cache_valid =
+                    std::span<std::uint8_t>(scratch.model_matrix_cache_valid.data(), scratch.model_matrix_cache_valid.size()),
                 .default_joint_index = mesh.joint_index,
                 .frame = frame,
             };
             if (mesh.packet_mode == J3dRendererPacketMode::ShaderGxTev && mesh.gx_texture_stage_count > 0U) {
                 auto effective_passes = mesh.material_passes;
+                auto effective_material = *mesh.material;
+                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights);
                 if (_btk_animation.has_value()) {
                     for (auto &pass : effective_passes) {
                         if (!pass.tex_matrix.has_value()) {
@@ -1715,9 +1974,9 @@ namespace smgpc::game {
                     }
                 }
 
-                auto gx_vertices = std::vector<render::GxMaterialVertex2D>{};
-                project_gx_material_source_mesh(mesh.source_vertices, mesh.source_indices, *mesh.material, effective_passes,
-                                                renderer.logical_framebuffer_size(), matrix_context, camera_pose, gx_vertices, indices);
+                auto &gx_vertices = scratch.gx_vertices;
+                project_gx_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, effective_passes, matrix_context,
+                                                scratch.camera_context, scratch.projected_sources, gx_vertices, indices);
                 if (gx_vertices.empty() || indices.empty()) {
                     return;
                 }
@@ -1740,6 +1999,8 @@ namespace smgpc::game {
             }
             if (mesh.evaluate_material_per_vertex && mesh.material.has_value()) {
                 auto effective_passes = mesh.material_passes;
+                auto effective_material = *mesh.material;
+                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights);
                 if (_btk_animation.has_value()) {
                     for (auto &pass : effective_passes) {
                         if (!pass.tex_matrix.has_value()) {
@@ -1759,8 +2020,13 @@ namespace smgpc::game {
                     }
                 }
 
-                project_material_source_mesh(mesh.source_vertices, mesh.source_indices, *mesh.material, _textures, effective_passes,
-                                             renderer.logical_framebuffer_size(), matrix_context, camera_pose, vertices, indices);
+                if (effective_passes.empty()) {
+                    project_untextured_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, matrix_context,
+                                                           scratch.camera_context, scratch.projected_sources, vertices, indices);
+                } else {
+                    project_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, effective_passes,
+                                                 matrix_context, scratch.camera_context, vertices, indices);
+                }
                 if (vertices.empty() || indices.empty()) {
                     return;
                 }
@@ -1773,6 +2039,7 @@ namespace smgpc::game {
                                                        .wrap_v = mesh.wrap_v,
                                                        .blend = mesh.blend,
                                                        .blend_mode = mesh.blend_mode,
+                                                       .gx_blend = mesh.gx_blend,
                                                        .depth_test = mesh.depth_test,
                                                        .depth_write = mesh.depth_write,
                                                        .depth_compare = mesh.depth_compare,
@@ -1782,8 +2049,8 @@ namespace smgpc::game {
                 return;
             }
 
-            project_source_mesh(mesh.source_vertices, mesh.source_indices, mesh.material_color, renderer.logical_framebuffer_size(), matrix_context,
-                                camera_pose, tex_coord_gen, tex_matrix, vertices, indices);
+            project_source_mesh(mesh.source_vertices, mesh.source_indices, mesh.material_color, matrix_context, scratch.camera_context, tex_coord_gen,
+                                tex_matrix, scratch.projected_sources, vertices, indices);
             if (vertices.empty() || indices.empty()) {
                 return;
             }
@@ -1796,6 +2063,7 @@ namespace smgpc::game {
                                                    .wrap_v = mesh.wrap_v,
                                                    .blend = mesh.blend,
                                                    .blend_mode = mesh.blend_mode,
+                                                   .gx_blend = mesh.gx_blend,
                                                    .depth_test = mesh.depth_test,
                                                    .depth_write = mesh.depth_write,
                                                    .depth_compare = mesh.depth_compare,
@@ -1813,6 +2081,7 @@ namespace smgpc::game {
                                                .wrap_v = mesh.wrap_v,
                                                .blend = mesh.blend,
                                                .blend_mode = mesh.blend_mode,
+                                               .gx_blend = mesh.gx_blend,
                                                .depth_test = mesh.depth_test,
                                                .depth_write = mesh.depth_write,
                                                .depth_compare = mesh.depth_compare,
