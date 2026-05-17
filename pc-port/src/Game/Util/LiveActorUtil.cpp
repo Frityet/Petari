@@ -5,6 +5,7 @@
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/compat/J3dMatrix.hpp"
 #include "Game/compat/RuntimeContext.hpp"
 
 ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(LiveActor* pActor) : mActor(pActor) {
@@ -73,9 +74,15 @@ namespace MR {
         return pActor != nullptr ? pActor->getBrkCtrl() : nullptr;
     }
 
+    void setBaseTRMtx(LiveActor* pActor, MtxPtr pMtx) {
+        if (pMtx != nullptr) {
+            setBaseTRMtx(pActor, smgpc::game::j3d_matrix_from_mtx(pMtx));
+        }
+    }
+
     void setBaseTRMtx(LiveActor* pActor, const smgpc::game::J3dMatrix3x4& matrix) {
         if (pActor != nullptr) {
-            pActor->setBaseMatrix(matrix);
+            pActor->setBaseMatrix(smgpc::game::j3d_apply_matrix_scale(matrix, pActor->mScale.x, pActor->mScale.y, pActor->mScale.z));
         }
     }
 

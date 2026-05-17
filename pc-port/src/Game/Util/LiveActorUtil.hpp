@@ -32,6 +32,7 @@ namespace MR {
     void setBrkFrameAndStop(LiveActor* pActor, f32 frame);
     void setBrkFrameEndAndStop(LiveActor* pActor);
     J3DFrameCtrl* getBrkCtrl(LiveActor* pActor);
+    void setBaseTRMtx(LiveActor* pActor, MtxPtr pMtx);
     void setBaseTRMtx(LiveActor* pActor, const smgpc::game::J3dMatrix3x4& matrix);
     PartsModel* createPartsModelMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx);
     void emitEffect(LiveActor* pActor, const char* pEffectName);

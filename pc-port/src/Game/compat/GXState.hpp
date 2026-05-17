@@ -279,6 +279,8 @@ namespace smgpc::game {
         std::vector<GXRegisterLoadState> mdl3_register_loads;
     };
 
+    using GXBPRegisterState = std::array< std::uint32_t, 256U >;
+
     [[nodiscard]] GXColorValue gx_color_from_xf_value(std::uint32_t value);
     [[nodiscard]] GXColorChannelControlState gx_color_channel_control_from_xf(std::uint32_t value);
     [[nodiscard]] GXColorChannelControlState gx_color_channel_control_from_j3d(std::uint8_t enable, std::uint8_t material_source,
@@ -288,6 +290,8 @@ namespace smgpc::game {
                                                             std::array<float, 3U> position, std::array<float, 3U> normal);
     [[nodiscard]] GXMaterialState gx_state_from_j3d_material(const J3dMaterialSummary &material);
     [[nodiscard]] GXMaterialState gx_state_from_brlyt_material(const BrlytMaterial &material);
+    [[nodiscard]] GXBPRegisterState gx_bp_registers_from_state(const GXMaterialState &state);
     void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list);
+    void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list, GXBPRegisterState *bp_registers);
 
 }  // namespace smgpc::game

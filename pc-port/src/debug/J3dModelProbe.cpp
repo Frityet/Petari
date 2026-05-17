@@ -1,9 +1,9 @@
+#include "DebugPaths.hpp"
+#include "DebugText.hpp"
 #include "Game/compat/J3dModel.hpp"
 #include "Game/compat/RarcArchive.hpp"
 #include "MarkdownWriter.hpp"
 
-#include <algorithm>
-#include <cctype>
 #include <exception>
 #include <filesystem>
 #include <fstream>
@@ -14,79 +14,8 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <system_error>
 
 namespace {
-
-    [[nodiscard]] std::filesystem::path disc_files_root() {
-        const auto cwd = std::filesystem::current_path();
-        const std::filesystem::path candidates[]{
-            cwd / "orig" / "RMGK01" / "files",
-            cwd.parent_path() / "orig" / "RMGK01" / "files",
-        };
-
-        for (const auto &candidate : candidates) {
-            std::error_code error{};
-            const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
-                return canonical;
-            }
-        }
-
-        throw std::runtime_error("could not locate orig/RMGK01/files from " + cwd.string());
-    }
-
-    [[nodiscard]] std::filesystem::path pc_port_root() {
-        const auto cwd = std::filesystem::current_path();
-        std::error_code error{};
-        if (std::filesystem::is_directory(cwd / "pc-port" / "src", error)) {
-            return cwd / "pc-port";
-        }
-        if (std::filesystem::is_directory(cwd / "src", error) && std::filesystem::is_regular_file(cwd / "xmake.lua", error)) {
-            return cwd;
-        }
-
-        return cwd / "pc-port";
-    }
-
-    [[nodiscard]] std::string lowercase(std::string_view text) {
-        auto lowered = std::string(text);
-        std::ranges::transform(lowered, lowered.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
-        return lowered;
-    }
-
-    [[nodiscard]] bool ends_with_ignore_case(std::string_view text, std::string_view suffix) {
-        if (text.size() < suffix.size()) {
-            return false;
-        }
-
-        return lowercase(text.substr(text.size() - suffix.size())) == lowercase(suffix);
-    }
-
-    [[nodiscard]] std::string sanitize_filename(std::string_view text) {
-        auto sanitized = std::string{};
-        sanitized.reserve(text.size());
-
-        for (const auto c : text) {
-            const auto value = static_cast<unsigned char>(c);
-            if (std::isalnum(value) != 0 || c == '-' || c == '_') {
-                sanitized.push_back(c);
-            } else {
-                sanitized.push_back('_');
-            }
-        }
-
-        return sanitized.empty() ? "model" : sanitized;
-    }
-
-    [[nodiscard]] std::string tag_string(std::uint32_t value) {
-        auto text = std::string{};
-        text.push_back(static_cast<char>((value >> 24U) & 0xffU));
-        text.push_back(static_cast<char>((value >> 16U) & 0xffU));
-        text.push_back(static_cast<char>((value >> 8U) & 0xffU));
-        text.push_back(static_cast<char>(value & 0xffU));
-        return text;
-    }
 
     void write_sections(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
         out << "## Sections\n\n";
@@ -492,8 +421,8 @@ namespace {
         }
 
         out << "# J3D Model Probe: " << object_name << " / " << entry.path << "\n\n";
-        out << "- magic: `" << tag_string(model.magic) << "`\n";
-        out << "- model type: `" << tag_string(model.model_type) << "`\n";
+        out << "- magic: `" << smgpc::debug::tag_string(model.magic) << "`\n";
+        out << "- model type: `" << smgpc::debug::tag_string(model.model_type) << "`\n";
         out << "- section count: " << model.section_count << "\n\n";
         write_sections(out, model);
         write_info(out, model);
@@ -509,18 +438,18 @@ namespace {
 
 int main(int argc, char **argv) try {
     const auto object_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
-    const auto archive_path = disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc");
+    const auto archive_path = smgpc::debug::disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc");
     const auto archive = smgpc::game::RarcArchive::from_file(archive_path);
-    const auto output_root = pc_port_root() / ".cache" / "j3d-model-probes" / sanitize_filename(object_name);
+    const auto output_root = smgpc::debug::cache_path("j3d-model-probes") / smgpc::debug::sanitize_filename(object_name, "model");
 
     auto model_count = 0U;
     for (const auto &entry : archive.entries()) {
-        if (!ends_with_ignore_case(entry.path, ".bdl") && !ends_with_ignore_case(entry.path, ".bmd")) {
+        if (!smgpc::debug::ends_with_ignore_case(entry.path, ".bdl") && !smgpc::debug::ends_with_ignore_case(entry.path, ".bmd")) {
             continue;
         }
 
         const auto model = smgpc::game::inspect_j3d_model(archive.file_data(entry));
-        const auto output = output_root / (sanitize_filename(std::filesystem::path(entry.path).stem().string()) + ".md");
+        const auto output = output_root / (smgpc::debug::sanitize_filename(std::filesystem::path(entry.path).stem().string(), "model") + ".md");
         write_model_probe(output, object_name, entry, model);
         std::cout << output << '\n';
         ++model_count;

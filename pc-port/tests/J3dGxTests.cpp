@@ -188,6 +188,42 @@ namespace smgpc::tests {
             require_near(state.fog.range_k[1U], 2.0F, 0.0001F, "MDL3 fog range K high sample should decode using Dolphin scale");
         }
 
+        $test("applies BP masks against rolling hardware register state") {
+            const auto append_bp = [](std::vector<std::uint8_t> &bytes, std::uint8_t address, std::uint32_t value) {
+                bytes.push_back(0x61U);
+                bytes.push_back(address);
+                bytes.push_back(static_cast<std::uint8_t>((value >> 16U) & 0xffU));
+                bytes.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xffU));
+                bytes.push_back(static_cast<std::uint8_t>(value & 0xffU));
+            };
+
+            auto first_state = smgpc::game::GXMaterialState{};
+            auto bp_registers = smgpc::game::gx_bp_registers_from_state(first_state);
+            auto first_list = std::vector<std::uint8_t>{};
+            append_bp(first_list, 0x40U, 1U | (3U << 1U));
+            smgpc::game::gx_apply_mdl3_display_list(first_state, first_list, &bp_registers);
+            require(first_state.z_mode.enabled && first_state.z_mode.compare_enable == 1U && first_state.z_mode.function == 3U &&
+                        first_state.z_mode.update_enable == 0U,
+                    "BP z-mode write should update the rolling hardware register state");
+
+            auto masked_state = smgpc::game::GXMaterialState{};
+            auto masked_list = std::vector<std::uint8_t>{};
+            append_bp(masked_list, 0xfeU, 0x00000fU);
+            append_bp(masked_list, 0x40U, 1U | (4U << 1U) | (1U << 4U));
+            smgpc::game::gx_apply_mdl3_display_list(masked_state, masked_list, &bp_registers);
+            require(masked_state.z_mode.enabled && masked_state.z_mode.compare_enable == 1U && masked_state.z_mode.function == 4U &&
+                        masked_state.z_mode.update_enable == 0U,
+                    "BP mask register should preserve unmasked bits from the prior hardware register value");
+
+            auto reset_state = smgpc::game::GXMaterialState{};
+            auto reset_list = std::vector<std::uint8_t>{};
+            append_bp(reset_list, 0x40U, 1U | (3U << 1U) | (1U << 4U));
+            smgpc::game::gx_apply_mdl3_display_list(reset_state, reset_list, &bp_registers);
+            require(reset_state.z_mode.enabled && reset_state.z_mode.compare_enable == 1U && reset_state.z_mode.function == 3U &&
+                        reset_state.z_mode.update_enable == 1U,
+                    "BP mask register should reset after the next non-mask BP write");
+        }
+
         $test("evaluates lit GX raster colors from typed channel and light state") {
             auto state = smgpc::game::GXMaterialState{};
             state.color_channel_count = 1U;
@@ -612,6 +648,8 @@ namespace smgpc::tests {
                     "Sun_Mat_v should preserve original additive blend state");
             require(sun->gx_state.blend.color_update && sun->gx_state.blend.alpha_update,
                     "Sun_Mat_v masked J3D blend writes should not clear inherited PE color/alpha update state");
+            require(sun->gx_state.z_mode.enabled && sun->gx_state.z_mode.compare_enable == 1U && sun->gx_state.z_mode.function == 3U,
+                    "Sun_Mat_v should preserve its effective GX_LEQUAL Z mode");
 
             const auto &space_shape = model.shapes->shapes.at(7U);
             require(space_shape.material_index == 7U, "CometNearOrbitSky shape 7 should use Space_Mat_v");
@@ -726,8 +764,9 @@ namespace smgpc::tests {
             };
             const auto *space_summary = find_material_summary("Space_Mat_v");
             const auto *earth_far_summary = find_material_summary("EarthFar_v");
+            const auto *sun_summary = find_material_summary("Sun_Mat_v");
             const auto *core_rock_summary = find_material_summary("CoreRock");
-            require(space_summary != nullptr && earth_far_summary != nullptr && core_rock_summary != nullptr,
+            require(space_summary != nullptr && earth_far_summary != nullptr && sun_summary != nullptr && core_rock_summary != nullptr,
                     "CometNearOrbitSky renderer test should resolve source material state");
 
             auto renderer = RecordingRenderer();
@@ -966,6 +1005,10 @@ namespace smgpc::tests {
                     "J3dModelRenderer should submit Sun_Mat_v raw GX additive blend state to the GX material renderer batch");
             require(renderer.last_gx_material_blend.color_update && renderer.last_gx_material_blend.alpha_update,
                     "J3dModelRenderer should submit the masked Sun_Mat_v PE color/alpha update state to the GX material renderer batch");
+            require(renderer.last_gx_material_depth_test &&
+                        renderer.last_gx_material_depth_write == (sun_summary->gx_state.z_mode.update_enable != 0U) &&
+                        renderer.last_gx_material_depth_compare == smgpc::render::DepthCompare::LessEqual,
+                    "J3dModelRenderer should submit Sun_Mat_v depth state from effective GX state");
             require(renderer.texture_count > 0U, "J3dModelRenderer should upload CometNearOrbitSky textures");
 
             auto shader_only_renderer = RecordingRenderer();

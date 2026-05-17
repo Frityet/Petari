@@ -23,6 +23,13 @@ struct TVec3f {
     f32 x = 0.0F;
     f32 y = 0.0F;
     f32 z = 0.0F;
+
+    template <typename T>
+    void set(T newX, T newY, T newZ) {
+        x = static_cast<f32>(newX);
+        y = static_cast<f32>(newY);
+        z = static_cast<f32>(newZ);
+    }
 };
 
 class LiveActor : public NameObj {
