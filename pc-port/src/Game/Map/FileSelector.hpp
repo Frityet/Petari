@@ -89,6 +89,7 @@ public:
     bool checkSelectedBackButton();
     void calcBasePos(float ratio);
     void goToNearPoint();
+    [[nodiscard]] FileSelectItem* getItemByFileNo(s32 fileNo) const;
     void exeWaitBind();
     void exeTitle();
     void exeTitleEnd();
@@ -130,6 +131,8 @@ public:
     void exeManualStart();
     void exeManual();
 
+#ifndef NDEBUG
+    // SMGPC temporary debug observer API for runtime-scene tests and semantic traces.
     [[nodiscard]] std::uint64_t getSkyStep() const;
     [[nodiscard]] bool isTitleActive() const;
     [[nodiscard]] bool isTitleStarted() const;
@@ -236,12 +239,12 @@ public:
     [[nodiscard]] s32 getPreviousPointingFileNo() const;
     [[nodiscard]] s32 getCurrentFileInfoFileNo() const;
     [[nodiscard]] bool isCameraAtNearPoint() const;
-    [[nodiscard]] FileSelectItem* getItemByFileNo(s32 fileNo) const;
     [[nodiscard]] bool wasItemPointed(s32 fileNo) const;
     [[nodiscard]] bool didItemTurnToFront(s32 fileNo) const;
     [[nodiscard]] s32 getItemTurnToFrontFrameCount(s32 fileNo) const;
     [[nodiscard]] const smgpc::game::CameraParamVec3& getItemBasePosition(s32 index) const;
     [[nodiscard]] const smgpc::game::CameraParamVec3& getItemPosition(s32 index) const;
+#endif
 
 private:
     static constexpr s32 cItemCount = 6;
@@ -271,6 +274,8 @@ private:
     s32 mSelectedFileNo = 1;
     s32 mCopySourceFileNo = 1;
     s32 mStageBgmState = 0;
+#ifndef NDEBUG
+    // SMGPC temporary debug observer state; not part of release game code.
     bool mTitleStarted = false;
     bool mTitleEnded = false;
     bool mAllItemsAppeared = false;
@@ -315,4 +320,5 @@ private:
     bool mDeleteConfirmStarted = false;
     bool mDeleteStarted = false;
     bool mDeleteDemoStarted = false;
+#endif
 };

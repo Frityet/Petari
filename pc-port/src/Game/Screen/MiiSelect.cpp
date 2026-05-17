@@ -51,9 +51,6 @@ void MiiSelect::init(const JMapInfoIter&) {
 
 void MiiSelect::initWithoutIter() {
     init(JMapInfoIter());
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("MiiSelect initialized for FileSelector");
-    }
 }
 
 void MiiSelect::appear() {
@@ -176,9 +173,6 @@ void MiiSelect::exeDummySelected() {
 void MiiSelect::collectValidMiiIndex() {
     ++mCollectValidMiiIndexCount;
     rebuildIconList();
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("MiiSelect collected valid Mii indices for FileSelector");
-    }
 }
 
 void MiiSelect::refresh() {

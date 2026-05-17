@@ -4,7 +4,9 @@
 #include <charconv>
 #include <chrono>
 #include <cstdlib>
+#include <exception>
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <system_error>
 #include <vector>
@@ -69,6 +71,7 @@ namespace smgpc::game {
             return std::nullopt;
         }
 
+#ifndef NDEBUG
         [[nodiscard]] std::optional<std::uint64_t> read_frame_index_environment(std::string_view name) {
             const auto key = std::string(name);
             const auto *value = std::getenv(key.c_str());
@@ -88,6 +91,11 @@ namespace smgpc::game {
             return frame;
         }
 
+        [[nodiscard]] std::optional<std::uint64_t> read_debug_hold_title_combo_frame_environment() {
+            return read_frame_index_environment("SMGPC_HOLD_TITLE_COMBO_FRAME");
+        }
+#endif
+
         [[nodiscard]] std::optional<std::string> read_string_environment(std::string_view name) {
             const auto key = std::string(name);
             const auto *value = std::getenv(key.c_str());
@@ -98,12 +106,33 @@ namespace smgpc::game {
             return std::string(value);
         }
 
+#ifndef NDEBUG
+        [[nodiscard]] std::string_view wipe_state_name(WipeState state) {
+            switch (state) {
+            case WipeState::Open:
+                return "Open";
+            case WipeState::Closed:
+                return "Closed";
+            case WipeState::Opening:
+                return "Opening";
+            case WipeState::Closing:
+                return "Closing";
+            }
+
+            return "Unknown";
+        }
+#endif
+
     }  // namespace
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
-          _current_stage_name(read_string_environment("SMGPC_STAGE_NAME").value_or("FileSelect")),
-          _hold_title_combo_frame(read_frame_index_environment("SMGPC_HOLD_TITLE_COMBO_FRAME")) {
+          _current_stage_name(read_string_environment("SMGPC_STAGE_NAME").value_or("FileSelect"))
+#ifndef NDEBUG
+          ,
+          _hold_title_combo_frame(read_debug_hold_title_combo_frame_environment())
+#endif
+    {
         if (s_runtime_context != nullptr) {
             throw std::logic_error("Only one SMG runtime context may be active.");
         }
@@ -114,9 +143,25 @@ namespace smgpc::game {
             _save_data.set_host_directory(*save_directory);
             _logger.info(logging::Category::APP, logging::Message{"Using SMG save files from {}"}, save_directory->string());
         }
+        if (const auto message_archive = _dvd.find_first({
+                std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
+                std::filesystem::path("MessageData") / "Message.arc",
+            })) {
+            try {
+                const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
+                _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());
+            }
+            catch (const std::exception &error) {
+                _logger.warning(logging::Category::APP, logging::Message{"Could not load original message archive {}: {}"}, message_archive->string(),
+                                error.what());
+            }
+        }
+#ifndef NDEBUG
         if (_hold_title_combo_frame.has_value()) {
             _logger.info(logging::Category::APP, logging::Message{"Debug title A+B hold starts at frame {}"}, *_hold_title_combo_frame);
         }
+        emit_semantic_trace_event("runtime", "runtime_context_created", "disc_files_root=" + _disc_files_root.generic_string());
+#endif
     }
 
     RuntimeContext::~RuntimeContext() {
@@ -139,27 +184,41 @@ namespace smgpc::game {
 
     void RuntimeContext::begin_frame(const render::FrameContext &frame_context) {
         _frame_index = frame_context.frame_index;
+#ifndef NDEBUG
         _j3d_packet_trace.clear();
+#endif
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
         _audio.begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
         _scene_wipe.begin_frame(_frame_index);
         _system_wipe.begin_frame(_frame_index);
+        _star_pointer.begin_frame(_frame_index);
+        _rumble.begin_frame(_frame_index);
         _sequence_requests.begin_frame(_frame_index);
         _wpad.begin_frame();
 
         auto hold_mask = std::uint32_t{};
-        if (_window_service.is_input_pressed(render::InputButton::CORE_PAD_A) ||
-            (_hold_title_combo_frame.has_value() && _frame_index >= *_hold_title_combo_frame)) {
+        const auto debug_title_combo_held =
+#ifndef NDEBUG
+            _hold_title_combo_frame.has_value() && _frame_index >= *_hold_title_combo_frame;
+#else
+            false;
+#endif
+        if (_window_service.is_input_pressed(render::InputButton::CORE_PAD_A) || debug_title_combo_held) {
             hold_mask |= WPAD_BUTTON_A;
         }
-        if (_window_service.is_input_pressed(render::InputButton::CORE_PAD_B) ||
-            (_hold_title_combo_frame.has_value() && _frame_index >= *_hold_title_combo_frame)) {
+        if (_window_service.is_input_pressed(render::InputButton::CORE_PAD_B) || debug_title_combo_held) {
             hold_mask |= WPAD_BUTTON_B;
         }
         _wpad.set_connected(WPAD_CHAN0, true);
         _wpad.set_button_mask(WPAD_CHAN0, hold_mask);
+#ifndef NDEBUG
+        if (!_emitted_title_combo_held_event && (hold_mask & (WPAD_BUTTON_A | WPAD_BUTTON_B)) == (WPAD_BUTTON_A | WPAD_BUTTON_B)) {
+            _emitted_title_combo_held_event = true;
+            emit_semantic_trace_event("input", "title_combo_held", "WPAD_CHAN0 A+B held");
+        }
+#endif
 
         smgpc::game::save_data_handle_sequence().update();
         _scheduler.execute_movement();
@@ -173,6 +232,14 @@ namespace smgpc::game {
 
     void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose) {
         _last_camera_pose = camera_pose;
+        if (!_game_layout.is_game_scene_draw_3d_active()) {
+            return;
+        }
+#ifndef NDEBUG
+        if (should_record_j3d_packet_trace()) {
+            emit_sequence_state_trace_event("draw_3d_normal", {}, "3d_normal");
+        }
+#endif
         _scheduler.execute_draw_buffer_list_normal(renderer, camera_pose);
     }
 
@@ -181,12 +248,19 @@ namespace smgpc::game {
     }
 
     void RuntimeContext::draw_2d_normal(render::IRendererEngine &renderer) {
+#ifndef NDEBUG
+        if (should_record_j3d_packet_trace()) {
+            emit_sequence_state_trace_event("draw_2d_normal", {}, "2d_normal");
+        }
+#endif
         _scheduler.execute_draw_list_2d_normal(renderer);
     }
 
+#ifndef NDEBUG
     void RuntimeContext::set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index) {
         _j3d_packet_trace_frame = frame_index;
     }
+#endif
 
     void RuntimeContext::set_j3d_pixel_update_state(std::optional<GxPixelUpdateState> state) {
         _j3d_pixel_update_state = state;
@@ -194,6 +268,14 @@ namespace smgpc::game {
 
     void RuntimeContext::set_current_stage_name(std::string_view stage_name) {
         _current_stage_name = stage_name;
+    }
+
+    void RuntimeContext::set_current_sequence_scene_name(std::string_view scene_name) {
+        _current_sequence_scene_name = scene_name;
+    }
+
+    void RuntimeContext::set_next_sequence_scene_name(std::string_view scene_name) {
+        _next_sequence_scene_name = scene_name;
     }
 
     bool RuntimeContext::is_core_pad_button_a(s32 channel) const {
@@ -212,13 +294,19 @@ namespace smgpc::game {
         return _last_camera_pose;
     }
 
+#ifndef NDEBUG
     std::span<const RuntimeContext::J3dRuntimePacketTrace> RuntimeContext::j3d_packet_trace() const {
         return _j3d_packet_trace;
+    }
+
+    std::span<const RuntimeContext::SemanticTraceEvent> RuntimeContext::semantic_trace_events() const {
+        return _semantic_trace_events;
     }
 
     bool RuntimeContext::should_record_j3d_packet_trace() const {
         return _j3d_packet_trace_frame.has_value() && _frame_index == *_j3d_packet_trace_frame;
     }
+#endif
 
     const std::optional<RuntimeContext::GxPixelUpdateState> &RuntimeContext::j3d_pixel_update_state() const {
         return _j3d_pixel_update_state;
@@ -226,6 +314,14 @@ namespace smgpc::game {
 
     std::string_view RuntimeContext::current_stage_name() const {
         return _current_stage_name;
+    }
+
+    std::string_view RuntimeContext::current_sequence_scene_name() const {
+        return _current_sequence_scene_name;
+    }
+
+    std::string_view RuntimeContext::next_sequence_scene_name() const {
+        return _next_sequence_scene_name;
     }
 
     bool RuntimeContext::is_stage_bgm_prepared() const {
@@ -292,6 +388,46 @@ namespace smgpc::game {
         return _system_wipe;
     }
 
+    StarPointerService &RuntimeContext::star_pointer() {
+        return _star_pointer;
+    }
+
+    const StarPointerService &RuntimeContext::star_pointer() const {
+        return _star_pointer;
+    }
+
+    CameraSystemService &RuntimeContext::camera_system() {
+        return _camera_system;
+    }
+
+    const CameraSystemService &RuntimeContext::camera_system() const {
+        return _camera_system;
+    }
+
+    PlayerSystemService &RuntimeContext::player_system() {
+        return _player_system;
+    }
+
+    const PlayerSystemService &RuntimeContext::player_system() const {
+        return _player_system;
+    }
+
+    GameLayoutService &RuntimeContext::game_layout() {
+        return _game_layout;
+    }
+
+    const GameLayoutService &RuntimeContext::game_layout() const {
+        return _game_layout;
+    }
+
+    RumbleService &RuntimeContext::rumble() {
+        return _rumble;
+    }
+
+    const RumbleService &RuntimeContext::rumble() const {
+        return _rumble;
+    }
+
     SequenceRequestService &RuntimeContext::sequence_requests() {
         return _sequence_requests;
     }
@@ -347,7 +483,7 @@ namespace smgpc::game {
 
     void RuntimeContext::unlock_stage_bgm() {
         _audio.unlock_stage_bgm();
-        _logger.info(logging::Category::APP, logging::Message{"TitleSequenceProduct unlocked stage BGM"});
+        _logger.info(logging::Category::APP, logging::Message{"SMG unlocked stage BGM"});
     }
 
     void RuntimeContext::stop_stage_bgm(s32 fade_frames) {
@@ -362,12 +498,12 @@ namespace smgpc::game {
 
     void RuntimeContext::start_system_sound(std::string_view name) {
         _audio.start_system_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"TitleSequenceProduct requested system sound {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested system sound {}"}, name);
     }
 
     void RuntimeContext::start_cs_sound(std::string_view name) {
         _audio.start_controller_speaker_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"TitleSequenceProduct requested controller speaker sound {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested controller speaker sound {}"}, name);
     }
 
     void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name) {
@@ -410,8 +546,38 @@ namespace smgpc::game {
         _logger.warning(logging::Category::APP, logging::Message{"Skipped object texture data from {}: {}"}, object_name, reason);
     }
 
+#ifndef NDEBUG
     void RuntimeContext::note_debug_event(std::string_view message) {
         _logger.info(logging::Category::APP, logging::Message{"SMG debug: {}"}, message);
+    }
+
+    void RuntimeContext::emit_semantic_trace_event(std::string_view category, std::string_view name, std::string_view detail) {
+        _semantic_trace_events.push_back(SemanticTraceEvent{
+            .index = _next_semantic_trace_event_index++,
+            .frame_index = _frame_index,
+            .category = std::string(category),
+            .name = std::string(name),
+            .detail = std::string(detail),
+            .stage_name = _current_stage_name,
+        });
+        if (detail.empty()) {
+            _logger.info(logging::Category::APP, logging::Message{"SMG semantic event {}:{}"}, category, name);
+        } else {
+            _logger.info(logging::Category::APP, logging::Message{"SMG semantic event {}:{} ({})"}, category, name, detail);
+        }
+    }
+
+    void RuntimeContext::emit_sequence_state_trace_event(std::string_view name, std::string_view detail, std::string_view draw_phase) {
+        auto full_detail = std::ostringstream();
+        full_detail << "current_scene=" << _current_sequence_scene_name << ";next_scene=" << _next_sequence_scene_name
+                    << ";current_stage=" << _current_stage_name << ";scene_wipe=" << wipe_state_name(_scene_wipe.state())
+                    << ";system_wipe=" << wipe_state_name(_system_wipe.state()) << ";draw_phase=" << draw_phase
+                    << ";frame=" << _frame_index;
+        if (!detail.empty()) {
+            full_detail << ';' << detail;
+        }
+
+        emit_semantic_trace_event("sequence_state", name, full_detail.str());
     }
 
     void RuntimeContext::record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
@@ -423,6 +589,7 @@ namespace smgpc::game {
             .state = packet,
         });
     }
+#endif
 
     void RuntimeContext::register_layout(SimpleLayout &layout) {
         _scheduler.register_layout(layout, MR::MovementType_Layout, -1, MR::DrawType_Layout);

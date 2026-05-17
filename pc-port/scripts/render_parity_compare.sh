@@ -6,7 +6,7 @@ pc_port_root="$(cd "${script_dir}/.." && pwd)"
 repo_root="$(cd "${pc_port_root}/.." && pwd)"
 
 frame="${SMGPC_PARITY_FRAME:-1900}"
-build_mode="${SMGPC_PARITY_XMAKE_MODE:-release}"
+build_mode="${SMGPC_PARITY_XMAKE_MODE:-debug}"
 work_dir="${SMGPC_PARITY_WORK_DIR:-${pc_port_root}/.cache/render-parity}"
 default_cached_dolphin_png="${pc_port_root}/.cache/dolphin-reference-dump/Frames/framedump_${frame}.png"
 dolphin_trace="${SMGPC_PARITY_DOLPHIN_TRACE:-${work_dir}/dolphin-frame-${frame}.trace.ndjson}"
@@ -44,8 +44,16 @@ timeout_seconds="${SMGPC_PARITY_TIMEOUT_SECONDS:-240}"
 max_full_rms="${SMGPC_PARITY_MAX_FULL_NORMALIZED_RMS:-0.35}"
 max_crop_rms="${SMGPC_PARITY_MAX_CROP_NORMALIZED_RMS:-}"
 crop="${SMGPC_PARITY_CROP:-}"
+semantic_category="${SMGPC_PARITY_SEMANTIC_CATEGORY:-capture}"
+semantic_name="${SMGPC_PARITY_SEMANTIC_NAME:-requested_frame_${frame}}"
+semantic_detail="${SMGPC_PARITY_SEMANTIC_DETAIL:-render_parity_compare frame ${frame}}"
 
 mkdir -p "${work_dir}" "${dolphin_user}" "${dolphin_shm}"
+
+if [[ "${build_mode}" != "debug" ]]; then
+  echo "render_parity_compare.sh requires SMGPC_PARITY_XMAKE_MODE=debug because it builds debug-only trace/visual tools and uses debug-only runtime capture hooks" >&2
+  exit 2
+fi
 
 if [[ "${SMGPC_PARITY_BUILD:-1}" == "1" ]]; then
   (cd "${pc_port_root}" && env CC="${CC:-clang-22}" CXX="${CXX:-clang++-22}" xmake f -m "${build_mode}")
@@ -83,6 +91,9 @@ run_dolphin_capture() {
       SMGPC_DOLPHIN_TRACE_FRAME="${frame}" \
       SMGPC_DOLPHIN_TRACE_PATH="${dolphin_trace}" \
       SMGPC_DOLPHIN_TRACE_WINDOW="${SMGPC_DOLPHIN_TRACE_WINDOW:-0}" \
+      SMGPC_DOLPHIN_SEMANTIC_ANCHOR_CATEGORY="${semantic_category}" \
+      SMGPC_DOLPHIN_SEMANTIC_ANCHOR_NAME="${semantic_name}" \
+      SMGPC_DOLPHIN_SEMANTIC_ANCHOR_DETAIL="${semantic_detail}" \
       xvfb-run -a "${dolphin_bin}" \
         -u "${dolphin_user}" \
         -p "${dolphin_platform}" \
@@ -134,6 +145,9 @@ run_pc_capture() {
     SMGPC_SCREENSHOT_FRAME="${frame}" \
     SMGPC_PARITY_TRACE_PATH="${pc_trace}" \
     SMGPC_PARITY_TRACE_FRAME="${frame}" \
+    SMGPC_SEMANTIC_ANCHOR_CATEGORY="${semantic_category}" \
+    SMGPC_SEMANTIC_ANCHOR_NAME="${semantic_name}" \
+    SMGPC_SEMANTIC_ANCHOR_DETAIL="${semantic_detail}" \
     SMGPC_EXIT_AFTER_SCREENSHOT=1 \
     timeout "${timeout_seconds}s" xvfb-run -a "${pc_bin}" >"${pc_log}" 2>&1
 

@@ -1,9 +1,11 @@
 #include "Application.hpp"
 
-#include "Game/Map/FileSelector.hpp"
-#include "Game/Util/ActorSensorUtil.hpp"
-#include "Game/compat/ParityTrace.hpp"
 #include "Game/compat/RuntimeContext.hpp"
+#include "Game/compat/SequenceBootService.hpp"
+
+#ifndef NDEBUG
+#include "Game/compat/ParityTrace.hpp"
+#endif
 
 #include <charconv>
 #include <chrono>
@@ -22,6 +24,7 @@ namespace smgpc::app {
 
         using FrameClock = std::chrono::steady_clock;
 
+#ifndef NDEBUG
         struct OneShotScreenshotRequest {
             std::filesystem::path path;
             std::uint64_t frame = 1U;
@@ -45,7 +48,9 @@ namespace smgpc::app {
             double end_frame_ms = 0.0;
             double total_ms = 0.0;
         };
+#endif
 
+#ifndef NDEBUG
         [[nodiscard]] double elapsed_ms(FrameClock::time_point begin, FrameClock::time_point end) {
             return std::chrono::duration< double, std::milli >(end - begin).count();
         }
@@ -53,6 +58,15 @@ namespace smgpc::app {
         [[nodiscard]] bool bool_environment_enabled(const char* name) {
             const auto* value = std::getenv(name);
             return value != nullptr && std::string_view(value) == "1";
+        }
+
+        [[nodiscard]] std::optional<std::string> string_environment(const char* name) {
+            const auto* value = std::getenv(name);
+            if (value == nullptr || value[0] == '\0') {
+                return std::nullopt;
+            }
+
+            return std::string(value);
         }
 
         void log_timing_summary(logging::ILogger& logger, const FrameTimingSummary& timing) {
@@ -176,6 +190,18 @@ namespace smgpc::app {
             return *parsed;
         }
 
+        void emit_configured_semantic_anchor(game::RuntimeContext& runtime) {
+            const auto name = string_environment("SMGPC_SEMANTIC_ANCHOR_NAME");
+            if (!name.has_value()) {
+                return;
+            }
+
+            const auto category = string_environment("SMGPC_SEMANTIC_ANCHOR_CATEGORY").value_or("capture");
+            const auto detail = string_environment("SMGPC_SEMANTIC_ANCHOR_DETAIL").value_or("runtime parity capture");
+            runtime.emit_semantic_trace_event(category, *name, detail);
+        }
+#endif
+
         class DesktopApplication final : public IApplication {
         public:
             DesktopApplication(di::DependencyReference<render::IWindowService> window_service,
@@ -184,9 +210,10 @@ namespace smgpc::app {
             }
 
             [[nodiscard]] int run() override {
-                _logger->info(logging::Category::APP, logging::Message{"Running original FileSelector title compatibility slice"});
+                _logger->info(logging::Category::APP, logging::Message{"Running SMG sequence boot compatibility slice"});
                 _logger->info(logging::Category::APP, logging::Message{"Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input"});
 
+#ifndef NDEBUG
                 const auto screenshot_request = screenshot_request_from_environment();
                 const auto parity_trace_request = parity_trace_request_from_environment();
                 const auto exit_after_frame = exit_frame_from_environment();
@@ -219,25 +246,33 @@ namespace smgpc::app {
                     _logger->info(logging::Category::APP, logging::Message{"Submitting one renderer frame every {} simulation frames"},
                                   render_frame_interval);
                 }
+#endif
 
                 auto runtime = game::RuntimeContext(_logger.get(), _window_service.get());
+#ifndef NDEBUG
+                emit_configured_semantic_anchor(runtime);
                 if (parity_trace_request.has_value()) {
                     runtime.set_j3d_packet_trace_frame(parity_trace_request->frame);
                 }
-                auto file_selector = FileSelector("ファイルセレクタ");
-                file_selector.initWithoutIter();
-                auto sent_auto_rush_begin = false;
+#endif
+                auto sequence_boot = game::SequenceBootService(runtime);
+                sequence_boot.request_boot_to_file_select();
                 auto loop_frame_index = std::uint64_t{};
 
                 while (true) {
+#ifndef NDEBUG
                     const auto frame_start = FrameClock::now();
                     const auto should_poll_events = loop_frame_index % event_poll_interval == 0U;
                     const auto window_open = should_poll_events ? _window_service->poll_events() : !_window_service->should_close();
                     const auto after_poll_events = FrameClock::now();
+#else
+                    const auto window_open = _window_service->poll_events();
+#endif
                     if (!window_open) {
                         break;
                     }
                     const auto logical_frame_index = loop_frame_index + 1U;
+#ifndef NDEBUG
                     const auto is_interval_render_frame = render_frame_interval == 1U || logical_frame_index % render_frame_interval == 0U;
                     const auto needs_parity_trace_render = parity_trace_request.has_value() && !parity_trace_written &&
                                                            logical_frame_index >= parity_trace_request->frame;
@@ -250,6 +285,9 @@ namespace smgpc::app {
                         ((!skip_render_until_frame.has_value() || logical_frame_index >= *skip_render_until_frame) &&
                          is_interval_render_frame) ||
                         needs_parity_trace_render || needs_screenshot_render || needs_screenshot_flush_render;
+#else
+                    constexpr auto should_render_frame = true;
+#endif
                     auto frame_context = render::FrameContext{
                         .frame_index = logical_frame_index,
                         .frame_time_seconds = logical_frame_index == 1U ? 0.0 : static_cast<double>(logical_frame_index - 1U) / 60.0,
@@ -262,20 +300,24 @@ namespace smgpc::app {
                         frame_context = _renderer_engine->begin_frame();
                         frame_context.frame_index = logical_frame_index;
                     }
+#ifndef NDEBUG
                     const auto after_begin_frame = FrameClock::now();
+#endif
                     runtime.begin_frame(frame_context);
+                    sequence_boot.update_after_runtime_frame();
+#ifndef NDEBUG
                     const auto after_runtime_update = FrameClock::now();
-                    if (!sent_auto_rush_begin) {
-                        MR::sendMsgToAllLiveActor(ACTMES_AUTORUSH_BEGIN, nullptr);
-                        sent_auto_rush_begin = true;
-                    }
+#endif
                     if (should_render_frame) {
                         runtime.draw_3d_normal(_renderer_engine.get());
                     }
+#ifndef NDEBUG
                     const auto after_draw_3d = FrameClock::now();
+#endif
                     if (should_render_frame) {
                         runtime.draw_2d_normal(_renderer_engine.get());
                     }
+#ifndef NDEBUG
                     const auto after_draw_2d = FrameClock::now();
                     if (parity_trace_request.has_value() && !parity_trace_written && frame_context.frame_index >= parity_trace_request->frame) {
                         game::write_runtime_parity_trace(parity_trace_request->path, frame_context, runtime);
@@ -294,9 +336,11 @@ namespace smgpc::app {
                     if (exit_after_frame.has_value() && frame_context.frame_index >= *exit_after_frame) {
                         _window_service->close();
                     }
+#endif
                     if (should_render_frame) {
                         _renderer_engine->end_frame();
                     }
+#ifndef NDEBUG
                     const auto after_end_frame = FrameClock::now();
                     if (timing_enabled) {
                         ++timing.frame_count;
@@ -310,12 +354,15 @@ namespace smgpc::app {
                         timing.end_frame_ms += elapsed_ms(after_screenshot_request, after_end_frame);
                         timing.total_ms += elapsed_ms(frame_start, after_end_frame);
                     }
+#endif
                     ++loop_frame_index;
                 }
 
+#ifndef NDEBUG
                 if (timing_enabled) {
                     log_timing_summary(_logger.get(), timing);
                 }
+#endif
                 _renderer_engine->shutdown();
                 return 0;
             }

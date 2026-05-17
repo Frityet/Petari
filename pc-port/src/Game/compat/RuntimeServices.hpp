@@ -249,6 +249,115 @@ namespace smgpc::game {
         std::vector<WipeEvent> _events;
     };
 
+    enum class StarPointerMode {
+        None,
+        Title,
+        FileSelect,
+        SaveLoad,
+        PictureBook,
+    };
+
+    struct StarPointerModeEvent {
+        StarPointerMode mode = StarPointerMode::None;
+        std::uint64_t frame_index = 0U;
+    };
+
+    class StarPointerService final {
+    public:
+        void begin_frame(std::uint64_t frame_index);
+        void start_mode(StarPointerMode mode);
+        void set_guidance_active(bool active);
+        void request_file_select_guidance();
+        void request_file_select_copy_guidance();
+
+        [[nodiscard]] StarPointerMode mode() const;
+        [[nodiscard]] bool is_guidance_active() const;
+        [[nodiscard]] bool is_file_select_guidance_requested() const;
+        [[nodiscard]] bool is_file_select_copy_guidance_requested() const;
+        [[nodiscard]] std::span<const StarPointerModeEvent> mode_events() const;
+
+    private:
+        std::uint64_t _frame_index = 0U;
+        StarPointerMode _mode = StarPointerMode::None;
+        bool _guidance_active = false;
+        bool _file_select_guidance_requested = false;
+        bool _file_select_copy_guidance_requested = false;
+        std::vector<StarPointerModeEvent> _mode_events;
+    };
+
+    class CameraSystemService final {
+    public:
+        void reset_camera_man();
+        void request_normal_shake();
+        void pause_on_camera_director();
+        void pause_off_camera_director();
+
+        [[nodiscard]] std::uint32_t reset_camera_man_count() const;
+        [[nodiscard]] std::uint32_t normal_shake_request_count() const;
+        [[nodiscard]] std::uint32_t camera_director_pause_count() const;
+        [[nodiscard]] bool is_camera_director_paused() const;
+
+    private:
+        std::uint32_t _reset_camera_man_count = 0U;
+        std::uint32_t _normal_shake_request_count = 0U;
+        std::uint32_t _camera_director_pause_count = 0U;
+    };
+
+    class PlayerSystemService final {
+    public:
+        void hide_player();
+        void set_base_matrix(MtxPtr matrix);
+
+        [[nodiscard]] bool is_player_hidden() const;
+        [[nodiscard]] bool has_base_matrix() const;
+        [[nodiscard]] std::span<const f32, 12U> base_matrix() const;
+
+    private:
+        bool _player_hidden = false;
+        bool _has_base_matrix = false;
+        std::array<f32, 12U> _base_matrix{};
+    };
+
+    class GameLayoutService final {
+    public:
+        void deactivate_default_game_layout();
+        void activate_game_scene_draw_3d();
+        void deactivate_game_scene_draw_3d();
+
+        [[nodiscard]] bool is_default_game_layout_active() const;
+        [[nodiscard]] bool is_game_scene_draw_3d_active() const;
+
+    private:
+        bool _default_game_layout_active = true;
+        bool _game_scene_draw_3d_active = true;
+    };
+
+    enum class RumbleRequestKind {
+        Strong,
+        Weak,
+    };
+
+    struct RumbleRequestEvent {
+        RumbleRequestKind kind = RumbleRequestKind::Strong;
+        s32 channel = 0;
+        std::uint64_t frame_index = 0U;
+    };
+
+    class RumbleService final {
+    public:
+        void begin_frame(std::uint64_t frame_index);
+        void request_strong(s32 channel);
+        void request_weak(s32 channel);
+
+        [[nodiscard]] std::span<const RumbleRequestEvent> events() const;
+
+    private:
+        void push_event(RumbleRequestKind kind, s32 channel);
+
+        std::uint64_t _frame_index = 0U;
+        std::vector<RumbleRequestEvent> _events;
+    };
+
     enum class SequenceRequestKind {
         ChangeStageInGameAfterLoadingGameData,
     };
@@ -289,6 +398,8 @@ namespace smgpc::game {
             bool view_normal_ending = false;
             bool view_complete_ending = false;
             bool complete_ending_mario_and_luigi = false;
+            std::map<std::string, bool> game_event_flags;
+            std::map<std::string, u16> game_event_values;
             OSTime last_modified = 0;
         };
 
@@ -338,11 +449,21 @@ namespace smgpc::game {
     class MessageService final {
     public:
         void set_message(std::string_view tag, std::string_view text);
+        void set_message(std::string_view tag, std::u16string_view text);
+        std::size_t load_message_archive(const RarcArchive &archive);
+        [[nodiscard]] std::size_t message_count() const;
         [[nodiscard]] const std::string *message(std::string_view tag) const;
+        [[nodiscard]] const std::u16string *message_utf16(std::string_view tag) const;
         [[nodiscard]] std::string message_or(std::string_view tag, std::string_view fallback) const;
+        [[nodiscard]] std::u16string message_utf16_or(std::string_view tag, std::u16string_view fallback) const;
 
     private:
-        std::map<std::string, std::string> _messages;
+        struct MessageText {
+            std::u16string utf16;
+            std::string utf8;
+        };
+
+        std::map<std::string, MessageText> _messages;
     };
 
     class SceneLightService final {

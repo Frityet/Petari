@@ -1,11 +1,43 @@
 #include "Game/Util/ObjUtil.hpp"
 
+#include <algorithm>
+#include <cctype>
+#include <filesystem>
+#include <string>
+#include <string_view>
+
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/compat/RuntimeContext.hpp"
 
-#include <string>
+namespace {
+    [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
+        return text.size() >= suffix.size() && text.substr(text.size() - suffix.size()) == suffix;
+    }
+
+    [[nodiscard]] std::string lower_copy(std::string_view value) {
+        auto lower = std::string(value);
+        std::ranges::transform(lower, lower.begin(), [](unsigned char character) { return static_cast< char >(std::tolower(character)); });
+        return lower;
+    }
+
+    [[nodiscard]] std::string base_name(std::string_view path) {
+        const auto slash = path.find_last_of('/');
+        if (slash == std::string_view::npos) {
+            return std::string(path);
+        }
+        return std::string(path.substr(slash + 1U));
+    }
+
+    [[nodiscard]] std::string archive_file_name(std::string_view archiveName) {
+        auto name = base_name(archiveName);
+        if (!ends_with(lower_copy(name), ".arc")) {
+            name.append(".arc");
+        }
+        return name;
+    }
+}  // namespace
 
 namespace MR {
     void requestMovementOn(NameObj* pObj) {
@@ -52,23 +84,53 @@ namespace MR {
         }
     }
 
+    bool isExistResourceInArc(const char* pArcName, const char* pResourceName) {
+        if (pArcName == nullptr || pResourceName == nullptr) {
+            return false;
+        }
+
+        auto* runtime = smgpc::game::RuntimeContext::try_instance();
+        if (runtime == nullptr) {
+            return false;
+        }
+
+        const auto archive = archive_file_name(pArcName);
+        const auto archive_path = runtime->dvd().find_first({
+            std::filesystem::path(pArcName),
+            std::filesystem::path("KrKorean") / "LayoutData" / archive,
+            std::filesystem::path("LayoutData") / archive,
+            std::filesystem::path("ObjectData") / archive,
+        });
+        if (!archive_path.has_value()) {
+            return false;
+        }
+
+        const auto& rarc = runtime->dvd().archive_for_path(*archive_path);
+        if (rarc.contains(pResourceName)) {
+            return true;
+        }
+
+        const auto requested_name = lower_copy(base_name(pResourceName));
+        return std::ranges::any_of(rarc.entries(), [&requested_name](const auto& entry) { return lower_copy(base_name(entry.path)) == requested_name; });
+    }
+
     bool tryRumblePadStrong(const void*, s32 channel) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->note_debug_event("SMG requested strong pad rumble on channel " + std::to_string(channel));
+            runtime->rumble().request_strong(channel);
         }
         return true;
     }
 
     bool tryRumblePadWeak(const void*, s32 channel) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->note_debug_event("SMG requested weak pad rumble on channel " + std::to_string(channel));
+            runtime->rumble().request_weak(channel);
         }
         return true;
     }
 
     void shakeCameraNormal() {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->note_debug_event("SMG requested normal camera shake");
+            runtime->camera_system().request_normal_shake();
         }
     }
 }  // namespace MR

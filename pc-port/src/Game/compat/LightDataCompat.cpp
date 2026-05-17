@@ -231,7 +231,11 @@ namespace smgpc::game {
             return true;
         } catch (const std::exception &error) {
             _load_failed = true;
+#ifndef NDEBUG
             runtime->note_debug_event(std::string("LightDataCompat failed to load original light data: ") + error.what());
+#else
+            (void)error;
+#endif
             return false;
         }
     }

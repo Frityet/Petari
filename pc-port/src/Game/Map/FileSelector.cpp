@@ -400,45 +400,40 @@ void FileSelector::restoreUserFile() {
 }
 
 void FileSelector::callbackStart() {
+#ifndef NDEBUG
     mStartCallbackCalled = true;
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector start button callback");
-    }
+#endif
     setNerve(&NrvFileSelector::FileSelectorNrvDemoStartWait::sInstance);
 }
 
 void FileSelector::callbackCopy() {
+#ifndef NDEBUG
     mCopyCallbackCalled = true;
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector copy button callback");
-    }
+#endif
     setNerve(&NrvFileSelector::FileSelectorNrvCopyWait::sInstance);
 }
 
 void FileSelector::callbackMii() {
+#ifndef NDEBUG
     mMiiCallbackCalled = true;
+#endif
     disappearAllLayout();
     invalidateSelectAll();
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector Mii button callback");
-    }
     setNerve(&NrvFileSelector::FileSelectorNrvMiiWait::sInstance);
 }
 
 void FileSelector::callbackDelete() {
+#ifndef NDEBUG
     mDeleteCallbackCalled = true;
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector delete button callback");
-    }
+#endif
     setNerve(&NrvFileSelector::FileSelectorNrvDeleteConfirmStart::sInstance);
 }
 
 void FileSelector::callbackManual() {
+#ifndef NDEBUG
     mManualCallbackCalled = true;
+#endif
     MR::startSystemSE("SE_SY_FILE_SEL_TIPS_OPEN", -1, -1);
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector manual button callback");
-    }
     setNerve(&NrvFileSelector::FileSelectorNrvManualStart::sInstance);
 }
 
@@ -692,67 +687,72 @@ void FileSelector::updateFileInfo() {
 }
 
 void FileSelector::appearAllItems() {
+#ifndef NDEBUG
     mAllItemsAppeared = true;
+#endif
     for (auto& item : mItems) {
         item->appear();
-    }
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector appeared all file-select items");
     }
 }
 
 void FileSelector::appearAllIndex() {
+#ifndef NDEBUG
     mAllIndexAppeared = true;
+#endif
     for (auto& item : mItems) {
         item->appearIndex();
     }
 }
 
 void FileSelector::disappearAllIndex() {
+#ifndef NDEBUG
     mAllIndexDisappeared = true;
+#endif
     for (auto& item : mItems) {
         item->disappearIndex();
     }
 }
 
 void FileSelector::initAllItems() {
+#ifndef NDEBUG
     mAllItemsInitialized = true;
+#endif
     for (s32 i = 0; i < cItemCount; ++i) {
-        const auto file_no = mItems[static_cast< std::size_t >(i)] != nullptr ? mItems[static_cast< std::size_t >(i)]->getFileNo() : i + 1;
+        auto* item = mItems[static_cast< std::size_t >(i)].get();
+        const auto file_no = item != nullptr ? item->getFileNo() : i + 1;
         auto icon_id = FileSelectIconID();
         getIconId(&icon_id, file_no);
-        mItems[static_cast< std::size_t >(i)]->forceChange(isItemNew(i), icon_id);
-    }
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector initialized all file-select items");
+        if (item != nullptr) {
+            item->forceChange(item->isNew(), icon_id);
+        }
     }
 }
 
 void FileSelector::invalidateSelectAll() {
+#ifndef NDEBUG
     mSelectAllInvalidated = true;
     mSelectAllInvalidatedOnce = true;
+#endif
     for (auto& item : mItems) {
         item->invalidateSelect();
-    }
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector invalidated all file-select item selection");
     }
 }
 
 void FileSelector::validateSelectAll() {
+#ifndef NDEBUG
     mSelectAllInvalidated = false;
+#endif
     for (auto& item : mItems) {
         item->validateSelect();
     }
 }
 
 void FileSelector::validateRotateAllItems() {
+#ifndef NDEBUG
     mRotateAllItemsValidated = true;
+#endif
     for (auto& item : mItems) {
         item->validateRotate();
-    }
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector validated file-select item rotation");
     }
 }
 
@@ -783,7 +783,9 @@ bool FileSelector::isHiddenAllLayout() const {
 }
 
 void FileSelector::clearPointing() {
+#ifndef NDEBUG
     mPointingCleared = true;
+#endif
     if (mPreviousPointingItem != nullptr) {
         mPreviousPointingItem->clearPointing();
     }
@@ -792,9 +794,6 @@ void FileSelector::clearPointing() {
     }
     mPointingItem = nullptr;
     mPreviousPointingItem = nullptr;
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-        runtime->note_debug_event("FileSelector cleared file-select pointing");
-    }
 }
 
 bool FileSelector::checkSelectedBackButton() {
@@ -841,7 +840,9 @@ void FileSelector::exeWaitBind() {
 
 void FileSelector::exeTitle() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mTitleStarted = true;
+#endif
         mTitleSeq->appear();
         MR::deactivateDefaultGameLayout();
         MR::startStarPointerModeTitle(this);
@@ -865,7 +866,9 @@ void FileSelector::exeTitle() {
 
 void FileSelector::exeTitleEnd() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mTitleEnded = true;
+#endif
         mCameraController->goToFarPoint();
         calcBasePos(0.0F);
         appearAllItems();
@@ -883,7 +886,9 @@ void FileSelector::exeTitleEnd() {
 }
 
 void FileSelector::exeRFLError() {
+#ifndef NDEBUG
     mTitleEnded = true;
+#endif
 }
 
 void FileSelector::exeRFLWait() {
@@ -905,7 +910,9 @@ void FileSelector::exeFileSelectStart() {
 
 void FileSelector::exeFileSelect() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mFileSelectStarted = true;
+#endif
         validateSelectAll();
         appearAllIndex();
         MR::activeStarPointerGuidance();
@@ -918,7 +925,9 @@ void FileSelector::exeFileSelect() {
 
 void FileSelector::exeFileConfirmStart() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mFileConfirmStartStarted = true;
+#endif
         goToNearPoint();
         invalidateSelectAll();
         disappearAllIndex();
@@ -934,7 +943,9 @@ void FileSelector::exeFileConfirmStart() {
 
 void FileSelector::exeFileConfirm() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mFileConfirmStarted = true;
+#endif
         if (mSelectButton != nullptr) {
             mSelectButton->appear();
         }
@@ -972,7 +983,9 @@ void FileSelector::exeFileConfirm() {
 
 void FileSelector::exeCreateConfirmStart() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCreateConfirmStartStarted = true;
+#endif
         goToNearPoint();
         invalidateSelectAll();
         disappearAllIndex();
@@ -988,7 +1001,9 @@ void FileSelector::exeCreateConfirmStart() {
 
 void FileSelector::exeCreateConfirm() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCreateConfirmStarted = true;
+#endif
         mSysInfoWindow->appear("System_FileSelect001", SysInfoWindow::Type_YesNo, SysInfoWindow::TextPos_Center, SysInfoWindow::MessageType_System);
         mSysInfoWindow->setYesNoSelectorSE("SE_SY_BUTTON_CURSOR_ON", "SE_SY_FILE_SEL_NEW_FILE", "SE_SY_TALK_SELECT_NO");
     }
@@ -1006,7 +1021,9 @@ void FileSelector::exeCreateConfirm() {
 
 void FileSelector::exeCreate() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCreateStarted = true;
+#endif
         const auto file_no = mSelectedItem != nullptr ? mSelectedItem->getFileNo() : mSelectedFileNo;
         GameSequenceFunction::startCreateUserFileSequence(file_no);
     }
@@ -1031,7 +1048,9 @@ void FileSelector::exeCreate() {
 
 void FileSelector::exeDemoStartWait() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mDemoStartWaitStarted = true;
+#endif
         MR::startSystemSE("SE_SY_FILE_SELECTED", -1, -1);
         MR::stopStageBGM(0x5a);
         disappearAllLayout();
@@ -1045,7 +1064,9 @@ void FileSelector::exeDemoStartWait() {
 
 void FileSelector::exeDemo() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mDemoStarted = true;
+#endif
         const auto file_no = mSelectedFileNo >= 1 && mSelectedFileNo <= cItemCount ? mSelectedFileNo : 1;
         const auto* file = mFiles[static_cast< std::size_t >(file_no - 1)].get();
         const auto is_luigi = file != nullptr && !file->mIsPlayerMario;
@@ -1069,7 +1090,9 @@ void FileSelector::exeDemo() {
 
 void FileSelector::exeCopyWait() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopyWaitStarted = true;
+#endif
         mCopySourceItem = mSelectedItem;
         mCopySourceFileNo = mSelectedItem != nullptr ? mSelectedItem->getFileNo() : mSelectedFileNo;
         MR::startSystemSE("SE_SY_FILE_SEL_UPPER_DECIDE", -1, -1);
@@ -1088,7 +1111,9 @@ void FileSelector::exeCopyWait() {
 
 void FileSelector::exeCopySelect() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopySelectStarted = true;
+#endif
         validateSelectAll();
         if (mCopySourceItem != nullptr) {
             mCopySourceItem->invalidateSelect();
@@ -1141,7 +1166,9 @@ void FileSelector::exeCopySelect() {
 
 void FileSelector::exeCopyConfirmStart() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopyConfirmStartStarted = true;
+#endif
         disappearAllLayout();
         invalidateSelectAll();
         if (mCopySourceItem != nullptr) {
@@ -1159,7 +1186,9 @@ void FileSelector::exeCopyConfirmStart() {
 
 void FileSelector::exeCopyConfirm() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopyConfirmStarted = true;
+#endif
         clearPointing();
         if (mSysInfoWindow != nullptr && mSelectedItem != nullptr) {
             mSysInfoWindow->appear(mSelectedItem->isNew() ? "System_FileSelect016" : "System_FileSelect014", SysInfoWindow::Type_YesNo,
@@ -1182,7 +1211,9 @@ void FileSelector::exeCopyConfirm() {
 
 void FileSelector::exeCopySave() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopySaveStarted = true;
+#endif
         const auto dst_file_no = mSelectedItem != nullptr ? mSelectedItem->getFileNo() : mSelectedFileNo;
         const auto src_file_no = mCopySourceItem != nullptr ? mCopySourceItem->getFileNo() : mCopySourceFileNo;
         const auto* src_file = src_file_no >= 1 && src_file_no <= cItemCount ? mFiles[static_cast< std::size_t >(src_file_no - 1)].get() : nullptr;
@@ -1204,7 +1235,9 @@ void FileSelector::exeCopySave() {
 
 void FileSelector::exeCopySaveMii() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopySaveMiiStarted = true;
+#endif
         GameSequenceFunction::startSaveAllUserFileSequence();
     }
 
@@ -1215,7 +1248,9 @@ void FileSelector::exeCopySaveMii() {
 
 void FileSelector::exeCopyDemo() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopyDemoStarted = true;
+#endif
         MR::startSystemSE("SE_SY_FILE_SEL_COPY", -1, -1);
         restoreUserFile();
         if (mSelectedItem != nullptr) {
@@ -1241,7 +1276,9 @@ void FileSelector::exeCopyDemo() {
 
 void FileSelector::exeCopyRejectStart() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopyRejectStartStarted = true;
+#endif
         disappearAllLayout();
     }
 
@@ -1252,7 +1289,9 @@ void FileSelector::exeCopyRejectStart() {
 
 void FileSelector::exeCopyReject() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mCopyRejectStarted = true;
+#endif
         if (mSysInfoWindowMini != nullptr) {
             mSysInfoWindowMini->appear("System_FileSelect003", SysInfoWindow::Type_Key, SysInfoWindow::TextPos_Center,
                                        SysInfoWindow::MessageType_System);
@@ -1270,7 +1309,9 @@ void FileSelector::exeCopyReject() {
 
 void FileSelector::exeMiiWait() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mMiiWaitStarted = true;
+#endif
         MR::startSystemSE("SE_SY_FILE_SEL_UPPER_DECIDE", -1, -1);
     }
 
@@ -1281,7 +1322,9 @@ void FileSelector::exeMiiWait() {
 
 void FileSelector::exeMiiSelectStart() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mMiiSelectStartStarted = true;
+#endif
         if (mSelectedItem != nullptr && mMiiSelect != nullptr) {
             auto icon_id = FileSelectIconID();
             mSelectedItem->copyIconID(&icon_id);
@@ -1307,7 +1350,9 @@ void FileSelector::exeMiiSelectStart() {
 
 void FileSelector::exeMiiSelect() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mMiiSelectStarted = true;
+#endif
         if (mBackButton != nullptr && mBackButton->isHidden()) {
             mBackButton->appear();
         }
@@ -1358,7 +1403,9 @@ void FileSelector::exeMiiConfirmWait() {
 
 void FileSelector::exeMiiConfirm() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mMiiConfirmStarted = true;
+#endif
         auto selected_id = FileSelectIconID();
         if (mMiiSelect != nullptr) {
             mMiiSelect->getSelectedID(&selected_id);
@@ -1390,7 +1437,9 @@ void FileSelector::exeMiiConfirm() {
 
 void FileSelector::exeMiiCreateWait() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mMiiCreateWaitStarted = true;
+#endif
         auto selected_id = FileSelectIconID();
         if (mMiiSelect != nullptr) {
             mMiiSelect->getSelectedID(&selected_id);
@@ -1405,7 +1454,9 @@ void FileSelector::exeMiiCreateWait() {
 
 void FileSelector::exeMiiCreateDemo() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mMiiCreateDemoStarted = true;
+#endif
         restoreUserFile();
         auto icon_id = FileSelectIconID();
         getIconId(&icon_id, mSelectedFileNo);
@@ -1454,7 +1505,9 @@ void FileSelector::exeMiiInfo() {
 
 void FileSelector::exeDeleteConfirmStart() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mDeleteConfirmStartStarted = true;
+#endif
         MR::startSystemSE("SE_SY_FILE_SEL_UPPER_DECIDE", -1, -1);
         disappearAllLayout();
     }
@@ -1466,7 +1519,9 @@ void FileSelector::exeDeleteConfirmStart() {
 
 void FileSelector::exeDeleteConfirm() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mDeleteConfirmStarted = true;
+#endif
         mSysInfoWindow->setYesNoSelectorSE("SE_SY_BUTTON_CURSOR_ON", "SE_SY_FILE_SEL_DELETE", "SE_SY_TALK_SELECT_NO");
         mSysInfoWindow->appear("System_FileSelect007", SysInfoWindow::Type_YesNo, SysInfoWindow::TextPos_Center, SysInfoWindow::MessageType_System);
     }
@@ -1486,7 +1541,9 @@ void FileSelector::exeDeleteConfirm() {
 
 void FileSelector::exeDelete() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mDeleteStarted = true;
+#endif
         const auto file_no = mSelectedItem != nullptr ? mSelectedItem->getFileNo() : mSelectedFileNo;
         setUserFileMario(file_no, true);
         GameSequenceFunction::startDeleteUserFileSequence(file_no);
@@ -1504,7 +1561,9 @@ void FileSelector::exeDelete() {
 
 void FileSelector::exeDeleteDemo() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mDeleteDemoStarted = true;
+#endif
         if (mSelectedItem != nullptr) {
             mSelectedItem->format();
         }
@@ -1519,7 +1578,9 @@ void FileSelector::exeDeleteDemo() {
 
 void FileSelector::exeManualStart() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mManualStartStarted = true;
+#endif
         disappearAllLayout();
     }
 
@@ -1530,7 +1591,9 @@ void FileSelector::exeManualStart() {
 
 void FileSelector::exeManual() {
     if (MR::isFirstStep(this)) {
+#ifndef NDEBUG
         mManualStarted = true;
+#endif
         if (mManual2P != nullptr) {
             mManual2P->appear();
         }
@@ -1541,6 +1604,7 @@ void FileSelector::exeManual() {
     }
 }
 
+#ifndef NDEBUG
 std::uint64_t FileSelector::getSkyStep() const {
     return mSky != nullptr ? static_cast< std::uint64_t >(mSky->getNerveStep()) : 0U;
 }
@@ -1989,6 +2053,7 @@ s32 FileSelector::getCurrentFileInfoFileNo() const {
 bool FileSelector::isCameraAtNearPoint() const {
     return mCameraController != nullptr && mCameraController->isAtNearPoint();
 }
+#endif
 
 FileSelectItem* FileSelector::getItemByFileNo(s32 fileNo) const {
     for (const auto& item : mItems) {
@@ -2000,6 +2065,7 @@ FileSelectItem* FileSelector::getItemByFileNo(s32 fileNo) const {
     return nullptr;
 }
 
+#ifndef NDEBUG
 bool FileSelector::wasItemPointed(s32 fileNo) const {
     const auto* item = getItemByFileNo(fileNo);
     return item != nullptr && item->wasPointed();
@@ -2022,3 +2088,4 @@ const smgpc::game::CameraParamVec3& FileSelector::getItemBasePosition(s32 index)
 const smgpc::game::CameraParamVec3& FileSelector::getItemPosition(s32 index) const {
     return mItems.at(static_cast< std::size_t >(index))->getPosition();
 }
+#endif

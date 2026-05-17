@@ -13,6 +13,7 @@
 
 #include "Game/compat/RarcArchive.hpp"
 #include "Game/compat/RuntimeContext.hpp"
+#include "Game/compat/LytTexMap.hpp"
 #include "core/RenderTypes.hpp"
 
 namespace {
@@ -95,6 +96,35 @@ namespace {
         const auto it = std::ranges::find_if(textures, [texture_name](const auto& texture) { return texture.name == texture_name; });
 
         return it == textures.end() ? nullptr : &(*it);
+    }
+
+    [[nodiscard]] std::string texture_format_name(smgpc::game::TplTextureFormat format) {
+        switch (format) {
+        case smgpc::game::TplTextureFormat::I4:
+            return "I4";
+        case smgpc::game::TplTextureFormat::I8:
+            return "I8";
+        case smgpc::game::TplTextureFormat::IA4:
+            return "IA4";
+        case smgpc::game::TplTextureFormat::IA8:
+            return "IA8";
+        case smgpc::game::TplTextureFormat::RGB565:
+            return "RGB565";
+        case smgpc::game::TplTextureFormat::RGB5A3:
+            return "RGB5A3";
+        case smgpc::game::TplTextureFormat::RGBA8:
+            return "RGBA8";
+        case smgpc::game::TplTextureFormat::C4:
+            return "C4";
+        case smgpc::game::TplTextureFormat::C8:
+            return "C8";
+        case smgpc::game::TplTextureFormat::C14X2:
+            return "C14X2";
+        case smgpc::game::TplTextureFormat::CMPR:
+            return "CMPR";
+        }
+
+        return "Unknown";
     }
 
     [[nodiscard]] bool contains_font(const std::vector< SimpleLayout::RenderFont >& fonts, std::string_view font_name) {
@@ -732,6 +762,82 @@ void SimpleLayout::setTextBoxStringRecursive(const char* pPaneName, std::u16stri
     mRenderTextTextures.clear();
 }
 
+void SimpleLayout::replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex) {
+    loadRenderData();
+    if (paneName.empty()) {
+        return;
+    }
+
+    auto* render_texture = find_texture(mRenderTextures, texMap.name());
+    if (render_texture == nullptr) {
+        mRenderTextures.push_back(RenderTexture{
+            .name = texMap.name(),
+            .decoded = texMap.image(),
+            .handle = {},
+        });
+    } else {
+        render_texture->decoded = texMap.image();
+        render_texture->handle = {};
+    }
+
+    const auto replace_material_texture = [&](std::uint16_t material_index) {
+        if (material_index >= mBrlytLayout.materials.size()) {
+            return false;
+        }
+
+        auto& material = mBrlytLayout.materials[material_index];
+        if (texMapIndex >= material.textures.size()) {
+            return false;
+        }
+
+        auto& material_texture = material.textures[texMapIndex];
+        material_texture.texture_name = texMap.name();
+        material_texture.wrap_s = texMap.wrap_s();
+        material_texture.wrap_t = texMap.wrap_t();
+        material_texture.min_filter = texMap.min_filter();
+        material_texture.mag_filter = texMap.mag_filter();
+        if (texMapIndex < material.gx_state.textures.size()) {
+            material.gx_state.textures[texMapIndex].wrap_s = texMap.wrap_s();
+            material.gx_state.textures[texMapIndex].wrap_t = texMap.wrap_t();
+            material.gx_state.textures[texMapIndex].min_filter = texMap.min_filter();
+            material.gx_state.textures[texMapIndex].mag_filter = texMap.mag_filter();
+        }
+
+        return true;
+    };
+
+    for (auto& picture : mBrlytLayout.pictures) {
+        const auto matches_picture = picture.name == paneName;
+        const auto matches_pane = picture.pane_index < mBrlytLayout.panes.size() && mBrlytLayout.panes[picture.pane_index].name == paneName;
+        if (!matches_picture && !matches_pane) {
+            continue;
+        }
+
+        if (replace_material_texture(picture.material_index) && texMapIndex == 0U) {
+            picture.texture_name = texMap.name();
+            picture.wrap_s = texMap.wrap_s();
+            picture.wrap_t = texMap.wrap_t();
+            picture.min_filter = texMap.min_filter();
+            picture.mag_filter = texMap.mag_filter();
+        }
+    }
+
+    for (auto material_index = std::uint16_t{}; material_index < mBrlytLayout.materials.size(); ++material_index) {
+        if (mBrlytLayout.materials[material_index].name == paneName) {
+            replace_material_texture(material_index);
+        }
+    }
+}
+
+void SimpleLayout::setPaneAlpha(std::string_view paneName, f32 alpha) {
+    loadRenderData();
+    if (paneName.empty()) {
+        return;
+    }
+
+    mPaneAlphaOverrides[std::string(paneName)] = std::clamp(alpha, 0.0F, 1.0F) * 255.0F;
+}
+
 void SimpleLayout::setPaneVisible(std::string_view paneName, bool visible) {
     loadRenderData();
     if (paneName.empty()) {
@@ -739,6 +845,30 @@ void SimpleLayout::setPaneVisible(std::string_view paneName, bool visible) {
     }
 
     mPaneVisibilityOverrides[std::string(paneName)] = visible;
+}
+
+void SimpleLayout::setTextBoxHorizontalPosition(std::string_view paneName, u8 position) {
+    loadRenderData();
+    const auto requested_name = paneName;
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (!requested_name.empty() && text_box.name != requested_name) {
+            continue;
+        }
+
+        text_box.text_position = static_cast< std::uint8_t >((text_box.text_position / 3U) * 3U + std::min< u8 >(position, static_cast< u8 >(2U)));
+    }
+}
+
+void SimpleLayout::setTextBoxVerticalPosition(std::string_view paneName, u8 position) {
+    loadRenderData();
+    const auto requested_name = paneName;
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (!requested_name.empty() && text_box.name != requested_name) {
+            continue;
+        }
+
+        text_box.text_position = static_cast< std::uint8_t >(std::min< u8 >(position, static_cast< u8 >(2U)) * 3U + text_box.text_position % 3U);
+    }
 }
 
 bool SimpleLayout::isPaneVisible(std::string_view paneName) const {
@@ -885,6 +1015,35 @@ bool SimpleLayout::isPaneAnimStopped(std::string_view paneName, u32 animLayer) c
     return pane->animations.at(std::min< std::size_t >(animLayer, pane->animations.size() - 1U)).stopped;
 }
 
+f32 SimpleLayout::getAnimFrameMax(u32 animLayer) const {
+    return animation(animLayer).end;
+}
+
+f32 SimpleLayout::getAnimRate(u32 animLayer) const {
+    return animation(animLayer).rate;
+}
+
+f32 SimpleLayout::getAnimDuration(const char* pAnimName) const {
+    if (pAnimName == nullptr || pAnimName[0] == '\0') {
+        return 1.0F;
+    }
+
+    return durationFor(pAnimName);
+}
+
+bool SimpleLayout::isAnimLooping(const char* pAnimName) const {
+    if (pAnimName == nullptr || pAnimName[0] == '\0') {
+        return false;
+    }
+
+    return isLoopingAnim(pAnimName);
+}
+
+bool SimpleLayout::isAnimLooping(u32 animLayer) const {
+    return animation(animLayer).looping;
+}
+
+#ifndef NDEBUG
 f32 SimpleLayout::debugPaneAnimEndFrame(std::string_view paneName, u32 animLayer) const {
     const auto* pane = findPaneAnimation(paneName);
     if (pane == nullptr) {
@@ -903,31 +1062,23 @@ std::string_view SimpleLayout::debugAnimName(u32 animLayer) const {
 }
 
 f32 SimpleLayout::debugAnimDuration(const char* pAnimName) const {
-    if (pAnimName == nullptr || pAnimName[0] == '\0') {
-        return 1.0F;
-    }
-
-    return durationFor(pAnimName);
+    return getAnimDuration(pAnimName);
 }
 
 bool SimpleLayout::debugAnimLooping(const char* pAnimName) const {
-    if (pAnimName == nullptr || pAnimName[0] == '\0') {
-        return false;
-    }
-
-    return isLoopingAnim(pAnimName);
+    return isAnimLooping(pAnimName);
 }
 
 f32 SimpleLayout::debugAnimEndFrame(u32 animLayer) const {
-    return animation(animLayer).end;
+    return getAnimFrameMax(animLayer);
 }
 
 f32 SimpleLayout::debugAnimRate(u32 animLayer) const {
-    return animation(animLayer).rate;
+    return getAnimRate(animLayer);
 }
 
 bool SimpleLayout::debugAnimLooping(u32 animLayer) const {
-    return animation(animLayer).looping;
+    return isAnimLooping(animLayer);
 }
 
 bool SimpleLayout::debugAnimStopped(u32 animLayer) const {
@@ -961,6 +1112,136 @@ std::size_t SimpleLayout::debugFontCount() const {
 std::size_t SimpleLayout::debugCommittedPaneFrameCount() const {
     return mCommittedPaneFrames.size();
 }
+
+std::vector< SimpleLayout::DebugPaneState > SimpleLayout::debugPanes() const {
+    auto states = std::vector< DebugPaneState >{};
+    states.reserve(mBrlytLayout.panes.size());
+
+    for (auto pane_index = std::size_t{}; pane_index < mBrlytLayout.panes.size(); ++pane_index) {
+        const auto& pane = mBrlytLayout.panes[pane_index];
+        const auto render_state = paneRenderState(pane_index);
+        auto state = DebugPaneState{
+            .index = pane_index,
+            .name = pane.name,
+            .parent_index = pane.parent_index,
+            .base_visible = pane.visible,
+            .effective_visible = render_state.visible,
+            .translate_x = render_state.translate_x,
+            .translate_y = render_state.translate_y,
+            .scale_x = render_state.scale_x,
+            .scale_y = render_state.scale_y,
+            .alpha = render_state.alpha,
+            .width = pane.width,
+            .height = pane.height,
+            .contents = {},
+        };
+
+        for (const auto& picture : mBrlytLayout.pictures) {
+            if (picture.pane_index != pane_index) {
+                continue;
+            }
+
+            auto content = DebugPaneContentState{
+                .kind = "picture",
+                .name = picture.name,
+                .material_index = static_cast< s32 >(picture.material_index),
+                .texture_name = picture.texture_name,
+                .visible = picture.visible,
+            };
+            if (picture.material_index < mBrlytLayout.materials.size()) {
+                const auto& material = mBrlytLayout.materials[picture.material_index];
+                content.material_name = material.name;
+                if (!material.textures.empty()) {
+                    content.texture_name = material.textures.front().texture_name;
+                }
+            }
+            state.contents.push_back(std::move(content));
+        }
+
+        for (const auto& text_box : mBrlytLayout.text_boxes) {
+            if (text_box.pane_index != pane_index) {
+                continue;
+            }
+
+            auto content = DebugPaneContentState{
+                .kind = "text_box",
+                .name = text_box.name,
+                .material_index = static_cast< s32 >(text_box.material_index),
+                .font_name = text_box.font_name,
+                .visible = text_box.visible,
+            };
+            if (text_box.material_index < mBrlytLayout.materials.size()) {
+                const auto& material = mBrlytLayout.materials[text_box.material_index];
+                content.material_name = material.name;
+                if (!material.textures.empty()) {
+                    content.texture_name = material.textures.front().texture_name;
+                }
+            }
+            state.contents.push_back(std::move(content));
+        }
+
+        states.push_back(std::move(state));
+    }
+
+    return states;
+}
+
+std::vector< SimpleLayout::DebugMaterialState > SimpleLayout::debugMaterials() const {
+    auto states = std::vector< DebugMaterialState >{};
+    states.reserve(mBrlytLayout.materials.size());
+
+    for (auto material_index = std::size_t{}; material_index < mBrlytLayout.materials.size(); ++material_index) {
+        const auto& material = mBrlytLayout.materials[material_index];
+        auto state = DebugMaterialState{
+            .index = material_index,
+            .name = material.name,
+            .texture_count = material.textures.size(),
+            .tex_coord_gen_count = material.tex_coord_gens.size(),
+            .tev_stage_count = material.tev_stages.size(),
+            .alpha_compare_enabled = material.alpha_compare.enabled,
+            .blend_enabled = material.blend_mode.enabled,
+            .textures = {},
+        };
+        state.textures.reserve(material.textures.size());
+        for (auto slot = std::size_t{}; slot < material.textures.size(); ++slot) {
+            const auto& texture = material.textures[slot];
+            state.textures.push_back(DebugMaterialTextureState{
+                .slot = slot,
+                .texture_index = texture.texture_index,
+                .texture_name = texture.texture_name,
+                .wrap_s = texture.wrap_s,
+                .wrap_t = texture.wrap_t,
+                .min_filter = texture.min_filter,
+                .mag_filter = texture.mag_filter,
+            });
+        }
+        states.push_back(std::move(state));
+    }
+
+    return states;
+}
+
+std::vector< SimpleLayout::DebugTextureState > SimpleLayout::debugTextures() const {
+    auto states = std::vector< DebugTextureState >{};
+    states.reserve(mRenderTextures.size());
+
+    for (auto texture_index = std::size_t{}; texture_index < mRenderTextures.size(); ++texture_index) {
+        const auto& texture = mRenderTextures[texture_index];
+        states.push_back(DebugTextureState{
+            .index = texture_index,
+            .name = texture.name,
+            .width = texture.decoded.width,
+            .height = texture.decoded.height,
+            .format_raw = static_cast< std::uint32_t >(texture.decoded.format),
+            .format_name = texture_format_name(texture.decoded.format),
+            .uploaded = texture.handle.is_valid(),
+            .rgba_byte_count = texture.decoded.rgba.size(),
+        });
+    }
+
+    return states;
+}
+#endif
 
 SimpleLayout::AnimationState& SimpleLayout::animation(u32 animLayer) {
     return mAnimations.at(std::min< std::size_t >(animLayer, mAnimations.size() - 1U));
@@ -1369,6 +1650,9 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     }
     if (const auto override = mPaneVisibilityOverrides.find(pane.name); override != mPaneVisibilityOverrides.end()) {
         local_visible = override->second;
+    }
+    if (const auto override = mPaneAlphaOverrides.find(pane.name); override != mPaneAlphaOverrides.end()) {
+        local_alpha = override->second;
     }
 
     if (pane.parent_index < 0) {

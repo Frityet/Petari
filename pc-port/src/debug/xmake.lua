@@ -17,6 +17,15 @@ target("smg-pc-title-probe")
         "smg-pc-common"
     }
 
+target("smg-pc-picturebook-resource-probe")
+    set_kind("binary")
+    set_default(false)
+    add_files("PicturebookResourceProbe.cpp")
+    add_deps {
+        "smg-pc-debug-common",
+        "smg-pc-game"
+    }
+
 target("smg-pc-tpl-dump")
     set_kind("binary")
     set_default(false)

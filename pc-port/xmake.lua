@@ -7,12 +7,23 @@ set_languages("c++23")
 add_cxxflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", {tools = {"gcc", "clang"}}) --TODO: msvc support?
 add_cxxflags("-Wno-dollar-in-identifier-extension", {tools = "clang"})
 
+if not is_mode("debug") then
+    add_defines("NDEBUG")
+end
+
+if is_mode("debug") then
+    add_defines("SMGPC_DEBUG_BUILD")
+end
+
 add_repositories("local-repo $(projectdir)")
 
 add_requires("glfw", {configs = {shared = false, wayland = false, x11 = true}})
 add_requires("bgfx master")
 
-includes {
-    "src",
-    "tests"
-}
+local include_dirs = {"src"}
+
+if is_mode("debug") then
+    table.insert(include_dirs, "tests")
+end
+
+includes(include_dirs)

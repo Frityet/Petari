@@ -46,6 +46,11 @@ struct Color {
     return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
 }
 
+[[nodiscard]] std::int16_t read_sbe16(std::span<const std::uint8_t> data, std::size_t offset) {
+    const auto value = read_be16(data, offset);
+    return value < 0x8000U ? static_cast<std::int16_t>(value) : static_cast<std::int16_t>(static_cast<int>(value) - 0x10000);
+}
+
 [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
     if (offset + 4U > data.size()) {
         throw std::runtime_error("TPL read past end of buffer");
@@ -208,6 +213,10 @@ struct Color {
     return tiled_block_offset(width, x, y, block_width, block_height, block_bytes) + tiled_texel_offset(x, y, block_width, block_height) * bytes_per_texel;
 }
 
+[[nodiscard]] bool is_palette_format(TplTextureFormat format) {
+    return format == TplTextureFormat::C4 || format == TplTextureFormat::C8 || format == TplTextureFormat::C14X2;
+}
+
 [[nodiscard]] Color read_texel(std::span<const std::uint8_t> data, const TplHeader &header, const TplClutHeader *clut, std::uint16_t x, std::uint16_t y) {
     const auto texture = data.subspan(header.data_offset);
 
@@ -307,6 +316,58 @@ DecodedTexture decode_tpl_texture(std::span<const std::uint8_t> data, std::uint3
     const auto header = read_texture_header(data, descriptor.texture_header_offset);
     const auto clut = descriptor.clut_header_offset == 0U ? std::optional<TplClutHeader>() : std::optional<TplClutHeader>(read_clut_header(data, descriptor.clut_header_offset));
     return decode_texture(data, header, clut.has_value() ? &*clut : nullptr);
+}
+
+BtiTexture decode_bti_texture(std::span<const std::uint8_t> data) {
+    if (data.size() < 0x20U) {
+        throw std::runtime_error("BTI texture header outside buffer");
+    }
+
+    auto texture = BtiTexture{
+        .format = static_cast<TplTextureFormat>(data[0x00U]),
+        .transparency = data[0x01U],
+        .width = read_be16(data, 0x02U),
+        .height = read_be16(data, 0x04U),
+        .wrap_s = data[0x06U],
+        .wrap_t = data[0x07U],
+        .palette_format = data[0x08U],
+        .palette_entry_count = read_be16(data, 0x0AU),
+        .palette_data_offset = read_be32(data, 0x0CU),
+        .mipmap = data[0x10U] != 0U,
+        .do_edge_lod = data[0x11U] != 0U,
+        .bias_clamp = data[0x12U] != 0U,
+        .max_anisotropy = data[0x13U],
+        .min_filter = data[0x14U],
+        .mag_filter = data[0x15U],
+        .min_lod = data[0x16U],
+        .max_lod = data[0x17U],
+        .image_count = data[0x18U],
+        .lod_bias = read_sbe16(data, 0x1AU),
+        .image_data_offset = read_be32(data, 0x1CU),
+    };
+
+    if (texture.image_data_offset >= data.size()) {
+        throw std::runtime_error("BTI image data outside buffer");
+    }
+    if (is_palette_format(texture.format) && texture.palette_entry_count == 0U) {
+        throw std::runtime_error("BTI palette texture missing palette entries");
+    }
+
+    const auto header = TplHeader{
+        .height = texture.height,
+        .width = texture.width,
+        .format = texture.format,
+        .data_offset = texture.image_data_offset,
+    };
+    const auto clut = texture.palette_entry_count == 0U ?
+                          std::optional<TplClutHeader>() :
+                          std::optional<TplClutHeader>(TplClutHeader{
+                              .entries = texture.palette_entry_count,
+                              .format = static_cast<TlutFormat>(texture.palette_format),
+                              .data_offset = texture.palette_data_offset,
+                          });
+    texture.image = decode_texture(data, header, clut.has_value() ? &*clut : nullptr);
+    return texture;
 }
 
 DecodedTexture decode_raw_gx_texture(std::span<const std::uint8_t> data, std::uint16_t width, std::uint16_t height, TplTextureFormat format) {

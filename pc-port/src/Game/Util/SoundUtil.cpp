@@ -4,10 +4,32 @@
 
 namespace MR {
 
+    void startCurrentStageBGM() {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->start_stage_bgm(runtime->current_stage_name());
+        }
+    }
+
     void startStageBGM(const char* pName, bool) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
             runtime->start_stage_bgm(pName);
         }
+    }
+
+    bool isPlayingStageBgmName(const char* pName) {
+        if (pName == nullptr) {
+            return false;
+        }
+
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            return runtime->current_stage_bgm_name() == pName;
+        }
+
+        return false;
+    }
+
+    bool isStopOrFadeoutBgmName(const char* pName) {
+        return !isPlayingStageBgmName(pName);
     }
 
     bool isPreparedStageBgm() {
@@ -58,6 +80,12 @@ namespace MR {
     }
 
     void startCSSound(const char* pName, s32, s32) {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->start_cs_sound(pName);
+        }
+    }
+
+    void startCSSound(const char* pName, const char*, s32) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
             runtime->start_cs_sound(pName);
         }

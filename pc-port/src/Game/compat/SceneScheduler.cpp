@@ -349,6 +349,7 @@ namespace smgpc::game {
             return const_cast<LiveActor *>(entry_live_actor(static_cast<const SceneScheduler::Entry &>(entry)));
         }
 
+#ifndef NDEBUG
         [[nodiscard]] std::string sensor_host_name(const HitSensor *sensor) {
             const auto *host = MR::getSensorHost(sensor);
             return host != nullptr ? host->getName() : "";
@@ -357,6 +358,7 @@ namespace smgpc::game {
         [[nodiscard]] std::array<float, 3U> vec3_state(const TVec3f &value) {
             return {value.x, value.y, value.z};
         }
+#endif
 
     }  // namespace
 
@@ -465,7 +467,9 @@ namespace smgpc::game {
     }
 
     void SceneScheduler::execute_movement() {
+#ifndef NDEBUG
         _last_execution_trace.clear();
+#endif
         for (auto *entry : sorted_entries_for_movement()) {
             if (entry->movement_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
                 continue;
@@ -485,7 +489,9 @@ namespace smgpc::game {
                 entry->live_actor->movement();
                 break;
             }
+#ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::Movement);
+#endif
         }
     }
 
@@ -508,7 +514,9 @@ namespace smgpc::game {
                 entry->live_actor->calcAnim();
                 break;
             }
+#ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::CalcAnim);
+#endif
         }
     }
 
@@ -531,7 +539,9 @@ namespace smgpc::game {
                 entry->live_actor->calcViewAndEntry();
                 break;
             }
+#ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::CalcViewAndEntry);
+#endif
         }
     }
 
@@ -637,6 +647,7 @@ namespace smgpc::game {
                 }
             }
 
+#ifndef NDEBUG
             push_message_trace(SceneSchedulerMessageTraceEntry{
                 .sequence = _next_message_sequence++,
                 .message = msg,
@@ -659,6 +670,7 @@ namespace smgpc::game {
                 .sender_sensor_host_name = sensor_host_name(message_sensor),
                 .receiver_sensor_host_name = sensor_host_name(message_sensor),
             });
+#endif
         }
 
         return accepted_count;
@@ -681,11 +693,15 @@ namespace smgpc::game {
 
         const auto model_pass = pass == SceneDrawBufferPass::Translucent ? LiveActorModelCompat::DrawPass::Translucent :
                                                                            LiveActorModelCompat::DrawPass::Opaque;
+#ifndef NDEBUG
         const auto phase = pass == SceneDrawBufferPass::Translucent ? SceneSchedulerPhase::DrawBufferXlu : SceneSchedulerPhase::DrawBufferOpa;
+#endif
         for (auto *entry : actor_entries) {
             entry->live_actor->loadActorLight();
             entry->live_actor->drawModel(renderer, camera_pose, static_cast<std::uint64_t>(entry->live_actor->getNerveStep()), model_pass);
+#ifndef NDEBUG
             push_trace(*entry, phase, pass);
+#endif
         }
     }
 
@@ -713,10 +729,13 @@ namespace smgpc::game {
                 entry->live_actor->draw();
                 break;
             }
+#ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::DrawType);
+#endif
         }
     }
 
+#ifndef NDEBUG
     std::vector<SceneSchedulerEntryState> SceneScheduler::snapshot() const {
         auto states = std::vector<SceneSchedulerEntryState>{};
         states.reserve(_entries.size());
@@ -807,6 +826,83 @@ namespace smgpc::game {
                     .looping = layout->debugAnimLooping(layer),
                 });
             }
+
+            const auto panes = layout->debugPanes();
+            state.panes.reserve(panes.size());
+            for (const auto &pane : panes) {
+                auto pane_state = SceneLayoutPaneRuntimeDebugState{
+                    .index = pane.index,
+                    .name = pane.name,
+                    .parent_index = pane.parent_index,
+                    .base_visible = pane.base_visible,
+                    .effective_visible = pane.effective_visible,
+                    .translate_x = pane.translate_x,
+                    .translate_y = pane.translate_y,
+                    .scale_x = pane.scale_x,
+                    .scale_y = pane.scale_y,
+                    .alpha = pane.alpha,
+                    .width = pane.width,
+                    .height = pane.height,
+                    .contents = {},
+                };
+                pane_state.contents.reserve(pane.contents.size());
+                for (const auto &content : pane.contents) {
+                    pane_state.contents.push_back(SceneLayoutPaneContentDebugState{
+                        .kind = content.kind,
+                        .name = content.name,
+                        .material_index = content.material_index,
+                        .material_name = content.material_name,
+                        .texture_name = content.texture_name,
+                        .font_name = content.font_name,
+                        .visible = content.visible,
+                    });
+                }
+                state.panes.push_back(std::move(pane_state));
+            }
+
+            const auto materials = layout->debugMaterials();
+            state.materials.reserve(materials.size());
+            for (const auto &material : materials) {
+                auto material_state = SceneLayoutMaterialDebugState{
+                    .index = material.index,
+                    .name = material.name,
+                    .texture_count = material.texture_count,
+                    .tex_coord_gen_count = material.tex_coord_gen_count,
+                    .tev_stage_count = material.tev_stage_count,
+                    .alpha_compare_enabled = material.alpha_compare_enabled,
+                    .blend_enabled = material.blend_enabled,
+                    .textures = {},
+                };
+                material_state.textures.reserve(material.textures.size());
+                for (const auto &texture : material.textures) {
+                    material_state.textures.push_back(SceneLayoutMaterialTextureDebugState{
+                        .slot = texture.slot,
+                        .texture_index = texture.texture_index,
+                        .texture_name = texture.texture_name,
+                        .wrap_s = texture.wrap_s,
+                        .wrap_t = texture.wrap_t,
+                        .min_filter = texture.min_filter,
+                        .mag_filter = texture.mag_filter,
+                    });
+                }
+                state.materials.push_back(std::move(material_state));
+            }
+
+            const auto textures = layout->debugTextures();
+            state.textures.reserve(textures.size());
+            for (const auto &texture : textures) {
+                state.textures.push_back(SceneLayoutTextureDebugState{
+                    .index = texture.index,
+                    .name = texture.name,
+                    .width = texture.width,
+                    .height = texture.height,
+                    .format_raw = texture.format_raw,
+                    .format_name = texture.format_name,
+                    .uploaded = texture.uploaded,
+                    .rgba_byte_count = texture.rgba_byte_count,
+                });
+            }
+
             if (entry.kind == SceneEntryKind::LayoutActor && entry.layout_actor->getLayoutManager() != nullptr) {
                 const auto pane_controls = entry.layout_actor->getLayoutManager()->debugPaneControls();
                 state.pane_controls.reserve(pane_controls.size());
@@ -855,13 +951,16 @@ namespace smgpc::game {
 
         return states;
     }
+#endif
 
     void SceneScheduler::clear() {
         _entries.clear();
+#ifndef NDEBUG
         _last_execution_trace.clear();
         _message_trace.clear();
-        _next_order = 0U;
         _next_message_sequence = 0U;
+#endif
+        _next_order = 0U;
     }
 
     SceneScheduler::Entry *SceneScheduler::find_entry(SceneEntryKind kind, const void *ptr) {
@@ -951,6 +1050,7 @@ namespace smgpc::game {
         return {};
     }
 
+#ifndef NDEBUG
     void SceneScheduler::push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass) {
         auto state = SceneSchedulerEntryState{
             .kind = entry.kind,
@@ -986,5 +1086,6 @@ namespace smgpc::game {
         }
         _message_trace.push_back(std::move(trace));
     }
+#endif
 
 }  // namespace smgpc::game

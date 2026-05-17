@@ -5,13 +5,13 @@
 namespace MR {
     void hidePlayer() {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->note_debug_event("FileSelector hid the player for title mode");
+            runtime->player_system().hide_player();
         }
     }
 
-    void setPlayerBaseMtx(MtxPtr) {
+    void setPlayerBaseMtx(MtxPtr matrix) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->note_debug_event("FileSelector reset the player base matrix");
+            runtime->player_system().set_base_matrix(matrix);
         }
     }
 }  // namespace MR

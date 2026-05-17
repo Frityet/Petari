@@ -186,6 +186,7 @@ void UserFile::restoreFromSaveDataServiceSlot(const smgpc::game::SaveDataService
     }
     mGameDataHolder->setCompatCounts(rSlot.power_star_num, rSlot.star_piece_num, rSlot.player_miss_num);
     mGameDataHolder->setCompatEndingFlags(rSlot.view_normal_ending, rSlot.view_complete_ending, rSlot.view_complete_ending);
+    mGameDataHolder->setCompatEventState(rSlot.game_event_flags, rSlot.game_event_values);
 }
 
 smgpc::game::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 slotIndex) const {
@@ -206,6 +207,8 @@ smgpc::game::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 sl
         .view_normal_ending = isViewNormalEnding(),
         .view_complete_ending = isViewCompleteEnding(),
         .complete_ending_mario_and_luigi = isOnCompleteEndingMarioAndLuigi(),
+        .game_event_flags = mGameDataHolder->getCompatEventFlags(),
+        .game_event_values = mGameDataHolder->getCompatEventValues(),
         .last_modified = getLastModified(),
     };
 }

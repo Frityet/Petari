@@ -44,6 +44,37 @@ namespace smgpc::tests {
             require_magic(press_start.file_data("anim/appear.brlan"), "RLAN");
         }
 
+        $test("loads original BMG messages through MessageId JMap table") {
+            const auto root = disc_files_root();
+            const auto message_archive = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "MessageData" / "Message.arc");
+            const auto messages = smgpc::game::BmgMessageArchive::from_message_archive(message_archive);
+
+            require(messages.message_count() == 1994U, "Message.arc BMG message count changed");
+
+            const auto *guidance = messages.find("2PGuidance001");
+            require(guidance != nullptr, "MessageId.tbl should resolve 2PGuidance001");
+            require(guidance->info.text_offset == 2U, "2PGuidance001 should retain its original DAT1 text offset");
+            require(guidance->display_text.size() >= 3U, "2PGuidance001 should decode UTF-16BE text");
+            require(guidance->display_text[0U] == u'W' && guidance->display_text[1U] == u'i' && guidance->display_text[2U] == u'i',
+                    "2PGuidance001 should begin with Wii text after UTF-16BE decode");
+
+            const auto *layout = messages.find("Layout_SystemTalk");
+            require(layout != nullptr, "MessageId.tbl should resolve layout system prompts");
+            require(!layout->display_text.empty(), "Layout_SystemTalk should decode to displayable text");
+
+            const auto *save = messages.find("System_Save01");
+            require(save != nullptr, "MessageId.tbl should resolve save-system text");
+            require(!save->display_text.empty(), "System_Save01 should decode to displayable text");
+
+            auto service = smgpc::game::MessageService{};
+            require(service.load_message_archive(message_archive) == messages.message_count(), "MessageService should import every BMG message");
+            const auto *service_text = service.message_utf16("2PGuidance001");
+            require(service_text != nullptr, "MessageService should expose imported UTF-16 message text");
+            require(service_text->size() >= 3U && (*service_text)[0U] == u'W' && (*service_text)[1U] == u'i' && (*service_text)[2U] == u'i',
+                    "MessageService should preserve imported UTF-16 code units");
+            require(service.message("System_Save01") != nullptr, "MessageService should expose UTF-8 views for imported messages");
+        }
+
         $test("decodes Korean title logo TPL texture") {
             const auto root = disc_files_root();
             const auto title_logo = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
@@ -61,6 +92,62 @@ namespace smgpc::tests {
                 }
             }
             require(visible_pixels > 1000U, "decoded title texture should contain visible pixels");
+        }
+
+        $test("decodes standalone picturebook BTI page textures") {
+            const auto root = disc_files_root();
+            const auto chapter = smgpc::game::RarcArchive::from_file(root / "ObjectData" / "PictureBookChapter1.arc");
+            const auto page = smgpc::game::decode_bti_texture(chapter.file_data("chapter1page1.bti"));
+            require(page.width == 416U && page.height == 240U, "picturebook page BTI dimensions changed");
+            require(page.format == smgpc::game::TplTextureFormat::CMPR, "picturebook page BTI should use GX CMPR");
+            require(page.image.width == page.width && page.image.height == page.height, "BTI decoded image should preserve header dimensions");
+            require(page.image.rgba.size() == static_cast<std::size_t>(page.width) * page.height * 4U,
+                    "BTI decoded image size mismatch");
+            require(page.image_data_offset == 0x20U, "picturebook page BTI should use header-relative image data offset");
+            require(page.min_filter == 1U && page.mag_filter == 1U && page.image_count == 1U, "BTI sampler metadata changed");
+
+            auto colored_pixels = 0U;
+            for (std::size_t offset = 0U; offset < page.image.rgba.size(); offset += 4U) {
+                if (page.image.rgba[offset] != 0U || page.image.rgba[offset + 1U] != 0U || page.image.rgba[offset + 2U] != 0U) {
+                    ++colored_pixels;
+                }
+            }
+            require(colored_pixels > 1000U, "decoded picturebook page should contain visible color data");
+
+            const auto cover_archive = smgpc::game::RarcArchive::from_file(root / "ObjectData" / "PictureBookTexture.arc");
+            const auto cover = smgpc::game::decode_bti_texture(cover_archive.file_data("picturebookcoverfront.bti"));
+            require(cover.width == 416U && cover.height == 240U, "picturebook cover BTI dimensions changed");
+            require(cover.transparency == 1U, "picturebook cover BTI transparency flag changed");
+        }
+
+        $test("replaces BRLYT pane textures through generic TexMap API") {
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::game::RuntimeContext(logger, window);
+
+            const auto *page_tex = MR::createLytTexMap("PictureBookChapter1.arc", "Chapter1Page1.bti");
+            require(page_tex != nullptr, "createLytTexMap should decode original picturebook BTI pages");
+            require(page_tex->name() == "chapter1page1.bti", "TexMap should keep a stable resource basename");
+            require(page_tex->image().width == 416U && page_tex->image().height == 240U, "TexMap should expose decoded page dimensions");
+            require(page_tex->wrap_s() == 0U && page_tex->wrap_t() == 0U, "TexMap should preserve BTI wrap modes");
+
+            auto layout_actor = LayoutActor("PictureBookTextureReplacementProbe", true);
+            layout_actor.initLayoutManager("PictureBook", 1U);
+            layout_actor.appear();
+            MR::replacePaneTexture(&layout_actor, "PicLeftPage", page_tex, 0U);
+
+#ifndef NDEBUG
+            const auto materials = layout_actor.getSimpleLayout()->debugMaterials();
+            const auto replaced_material = std::ranges::find_if(materials, [](const auto &material) {
+                return std::ranges::any_of(material.textures, [](const auto &texture) { return texture.texture_name == "chapter1page1.bti"; });
+            });
+            require(replaced_material != materials.end(), "replacePaneTexture should update the BRLYT material texture binding");
+#endif
+
+            auto renderer = RecordingRenderer();
+            layout_actor.drawLayout(renderer);
+            require(renderer.texture_count > 5U, "replaced external BTI texture should upload alongside PictureBook layout textures");
+            require(renderer.gx_material_batch_count > 0U, "PictureBook replacement draw should still use generic BRLYT GX material batches");
         }
 
         $test("uses NW4R default alpha blend for BRLYT materials without blend blocks") {

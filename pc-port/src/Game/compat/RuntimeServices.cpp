@@ -8,6 +8,8 @@
 
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
+#include "Game/compat/BmgMessageArchive.hpp"
+#include "Game/compat/TextEncoding.hpp"
 
 namespace smgpc::game {
     namespace {
@@ -673,6 +675,163 @@ namespace smgpc::game {
         return frame_count < 0 ? 30 : frame_count;
     }
 
+    void StarPointerService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+    }
+
+    void StarPointerService::start_mode(StarPointerMode mode) {
+        if (_mode == mode) {
+            return;
+        }
+
+        _mode = mode;
+        _mode_events.push_back(StarPointerModeEvent{
+            .mode = mode,
+            .frame_index = _frame_index,
+        });
+    }
+
+    void StarPointerService::set_guidance_active(bool active) {
+        _guidance_active = active;
+    }
+
+    void StarPointerService::request_file_select_guidance() {
+        _file_select_guidance_requested = true;
+    }
+
+    void StarPointerService::request_file_select_copy_guidance() {
+        _file_select_copy_guidance_requested = true;
+    }
+
+    StarPointerMode StarPointerService::mode() const {
+        return _mode;
+    }
+
+    bool StarPointerService::is_guidance_active() const {
+        return _guidance_active;
+    }
+
+    bool StarPointerService::is_file_select_guidance_requested() const {
+        return _file_select_guidance_requested;
+    }
+
+    bool StarPointerService::is_file_select_copy_guidance_requested() const {
+        return _file_select_copy_guidance_requested;
+    }
+
+    std::span<const StarPointerModeEvent> StarPointerService::mode_events() const {
+        return _mode_events;
+    }
+
+    void CameraSystemService::reset_camera_man() {
+        ++_reset_camera_man_count;
+    }
+
+    void CameraSystemService::request_normal_shake() {
+        ++_normal_shake_request_count;
+    }
+
+    void CameraSystemService::pause_on_camera_director() {
+        ++_camera_director_pause_count;
+    }
+
+    void CameraSystemService::pause_off_camera_director() {
+        if (_camera_director_pause_count > 0U) {
+            --_camera_director_pause_count;
+        }
+    }
+
+    std::uint32_t CameraSystemService::reset_camera_man_count() const {
+        return _reset_camera_man_count;
+    }
+
+    std::uint32_t CameraSystemService::normal_shake_request_count() const {
+        return _normal_shake_request_count;
+    }
+
+    std::uint32_t CameraSystemService::camera_director_pause_count() const {
+        return _camera_director_pause_count;
+    }
+
+    bool CameraSystemService::is_camera_director_paused() const {
+        return _camera_director_pause_count > 0U;
+    }
+
+    void PlayerSystemService::hide_player() {
+        _player_hidden = true;
+    }
+
+    void PlayerSystemService::set_base_matrix(MtxPtr matrix) {
+        _has_base_matrix = matrix != nullptr;
+        if (matrix == nullptr) {
+            _base_matrix = {};
+            return;
+        }
+
+        auto index = std::size_t{};
+        for (auto row = 0U; row < 3U; ++row) {
+            for (auto column = 0U; column < 4U; ++column) {
+                _base_matrix[index++] = matrix[row][column];
+            }
+        }
+    }
+
+    bool PlayerSystemService::is_player_hidden() const {
+        return _player_hidden;
+    }
+
+    bool PlayerSystemService::has_base_matrix() const {
+        return _has_base_matrix;
+    }
+
+    std::span<const f32, 12U> PlayerSystemService::base_matrix() const {
+        return _base_matrix;
+    }
+
+    void GameLayoutService::deactivate_default_game_layout() {
+        _default_game_layout_active = false;
+    }
+
+    void GameLayoutService::activate_game_scene_draw_3d() {
+        _game_scene_draw_3d_active = true;
+    }
+
+    void GameLayoutService::deactivate_game_scene_draw_3d() {
+        _game_scene_draw_3d_active = false;
+    }
+
+    bool GameLayoutService::is_default_game_layout_active() const {
+        return _default_game_layout_active;
+    }
+
+    bool GameLayoutService::is_game_scene_draw_3d_active() const {
+        return _game_scene_draw_3d_active;
+    }
+
+    void RumbleService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+    }
+
+    void RumbleService::request_strong(s32 channel) {
+        push_event(RumbleRequestKind::Strong, channel);
+    }
+
+    void RumbleService::request_weak(s32 channel) {
+        push_event(RumbleRequestKind::Weak, channel);
+    }
+
+    std::span<const RumbleRequestEvent> RumbleService::events() const {
+        return _events;
+    }
+
+    void RumbleService::push_event(RumbleRequestKind kind, s32 channel) {
+        _events.push_back(RumbleRequestEvent{
+            .kind = kind,
+            .channel = channel,
+            .frame_index = _frame_index,
+        });
+    }
+
     void SequenceRequestService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
     }
@@ -961,12 +1120,40 @@ namespace smgpc::game {
     }
 
     void MessageService::set_message(std::string_view tag, std::string_view text) {
-        _messages[std::string(tag)] = text;
+        set_message(tag, utf16_from_utf8_lossy(text));
+    }
+
+    void MessageService::set_message(std::string_view tag, std::u16string_view text) {
+        _messages[std::string(tag)] = MessageText{
+            .utf16 = std::u16string(text),
+            .utf8 = utf8_from_utf16_lossy(text),
+        };
+    }
+
+    std::size_t MessageService::load_message_archive(const RarcArchive &archive) {
+        const auto messages = BmgMessageArchive::from_message_archive(archive);
+        for (const auto &message : messages.messages()) {
+            set_message(message.id, message.display_text);
+        }
+
+        return messages.message_count();
+    }
+
+    std::size_t MessageService::message_count() const {
+        return _messages.size();
     }
 
     const std::string *MessageService::message(std::string_view tag) const {
         if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
-            return &it->second;
+            return &it->second.utf8;
+        }
+
+        return nullptr;
+    }
+
+    const std::u16string *MessageService::message_utf16(std::string_view tag) const {
+        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
+            return &it->second.utf16;
         }
 
         return nullptr;
@@ -975,6 +1162,11 @@ namespace smgpc::game {
     std::string MessageService::message_or(std::string_view tag, std::string_view fallback) const {
         const auto *text = message(tag);
         return text == nullptr ? std::string(fallback) : *text;
+    }
+
+    std::u16string MessageService::message_utf16_or(std::string_view tag, std::u16string_view fallback) const {
+        const auto *text = message_utf16(tag);
+        return text == nullptr ? std::u16string(fallback) : *text;
     }
 
     void SceneLightService::clear() {

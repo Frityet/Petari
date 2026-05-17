@@ -476,9 +476,14 @@ namespace smgpc::render::backends {
         _framebuffer_height = static_cast<std::uint16_t>(description.height);
         _logical_framebuffer_width = std::max<std::uint16_t>(1U, description.logical_width);
         _logical_framebuffer_height = std::max<std::uint16_t>(1U, description.logical_height);
-        _backend_stats_enabled = environment_flag_enabled("SMGPC_RENDER_BACKEND_STATS", false);
         _static_geometry_cache_enabled = environment_flag_enabled("SMGPC_RENDER_STATIC_GEOMETRY_CACHE", true);
+#ifndef NDEBUG
+        _backend_stats_enabled = environment_flag_enabled("SMGPC_RENDER_BACKEND_STATS", false);
         _static_geometry_cache_stats_enabled = environment_flag_enabled("SMGPC_RENDER_GEOMETRY_CACHE_STATS", false);
+#else
+        _backend_stats_enabled = false;
+        _static_geometry_cache_stats_enabled = false;
+#endif
 
         _textured_quad_layout.begin()
             .add(bgfx::Attrib::Position, 3U, bgfx::AttribType::Float)
@@ -933,6 +938,7 @@ namespace smgpc::render::backends {
     }
 
     void BgfxBackend::print_backend_stats() const {
+#ifndef NDEBUG
         if (!_backend_stats_enabled) {
             return;
         }
@@ -949,9 +955,11 @@ namespace smgpc::render::backends {
                      static_cast<unsigned long long>(_texture_binds),
                      static_cast<unsigned long long>(_uniform_updates),
                      static_cast<unsigned long long>(_dropped_transient_submits));
+#endif
     }
 
     void BgfxBackend::print_static_geometry_cache_stats() const {
+#ifndef NDEBUG
         if (!_static_geometry_cache_stats_enabled) {
             return;
         }
@@ -964,6 +972,7 @@ namespace smgpc::render::backends {
                      static_cast<unsigned long long>(_static_geometry_cache_promotions),
                      static_cast<unsigned long long>(_static_geometry_cache_evictions),
                      static_cast<unsigned long long>(_static_geometry_transient_submits));
+#endif
     }
 
     void BgfxBackend::submit_textured_quad(core::TextureHandle texture, const core::TexturedQuad2D &quad) {

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef NDEBUG
+
 #include <filesystem>
 
 #include "DumpJson.hpp"
@@ -14,3 +16,5 @@ namespace smgpc::game {
     [[nodiscard]] dump::Json load_runtime_parity_trace(const std::filesystem::path &path);
 
 }  // namespace smgpc::game
+
+#endif

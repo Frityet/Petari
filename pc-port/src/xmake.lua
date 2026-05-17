@@ -1,7 +1,12 @@
-includes {
+local subdirs = {
     "common",
     "render",
     "Game",
-    "debug",
     "app"
 }
+
+if is_mode("debug") then
+    table.insert(subdirs, "debug")
+end
+
+includes(subdirs)
