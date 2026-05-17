@@ -4,7 +4,7 @@
 
 class FileSelectEffect : public LiveActor {
 public:
-    FileSelectEffect(const char*);
+    FileSelectEffect(const char* = "選択時エフェクト");
 
     virtual ~FileSelectEffect();
     virtual void init(const JMapInfoIter&);

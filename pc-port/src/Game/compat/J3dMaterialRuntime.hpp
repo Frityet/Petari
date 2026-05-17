@@ -34,6 +34,7 @@ namespace smgpc::game {
         std::uint16_t texture_index = 0xffffU;
         std::optional< J3dTexCoordGenSummary > tex_coord_gen{};
         std::optional< J3dTexMatrixSummary > tex_matrix{};
+        std::optional< GXTexCoordScaleState > tex_coord_scale{};
     };
 
     struct J3dComposedMaterialTexture {
@@ -94,5 +95,11 @@ namespace smgpc::game {
                                                                const J3dTexMatrixSummary* tex_matrix, const J3dMatrix3x4* model_matrix = nullptr);
     [[nodiscard]] J3dTextureProjectionCoordinate j3d_project_tex_coord(const J3dMeshVertex& source, const J3dTexCoordGenSummary* tex_coord_gen,
                                                                        const J3dTexMatrixSummary* tex_matrix, const J3dMatrix3x4* model_matrix = nullptr);
+    [[nodiscard]] J3dTextureCoordinate j3d_apply_tex_coord_scale(const J3dTextureCoordinate& coord,
+                                                                 const J3dMaterialTexturePass& pass,
+                                                                 const J3dTexture& texture);
+    [[nodiscard]] J3dTextureProjectionCoordinate j3d_apply_tex_coord_scale(const J3dTextureProjectionCoordinate& coord,
+                                                                           const J3dMaterialTexturePass& pass,
+                                                                           const J3dTexture& texture);
 
 }  // namespace smgpc::game

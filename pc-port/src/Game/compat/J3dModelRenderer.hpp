@@ -28,6 +28,8 @@ namespace smgpc::game {
     struct J3dModelRendererDrawOptions {
         std::string_view material_filter = {};
         std::optional<bool> translucent_filter = {};
+        std::optional<bool> gx_color_update = {};
+        std::optional<bool> gx_alpha_update = {};
         std::span<const GXLightState> scene_lights = {};
     };
 
@@ -52,6 +54,20 @@ namespace smgpc::game {
         std::uint16_t height = 0U;
         TplTextureFormat format = TplTextureFormat::I4;
         bool has_source_texture = false;
+        bool has_sampler_metadata = false;
+        std::uint8_t transparency = 0U;
+        std::uint8_t palette_format = 0U;
+        std::uint16_t palette_entry_count = 0U;
+        std::uint32_t palette_data_offset = 0U;
+        bool mipmap = false;
+        bool do_edge_lod = false;
+        bool bias_clamp = false;
+        std::uint8_t max_anisotropy = 0U;
+        std::uint8_t min_lod = 0U;
+        std::uint8_t max_lod = 0U;
+        std::uint8_t image_count = 0U;
+        std::int16_t lod_bias = 0;
+        std::uint32_t image_data_offset = 0U;
         render::TextureHandle host_handle = {};
     };
 
@@ -61,6 +77,8 @@ namespace smgpc::game {
         std::uint16_t shape_index = 0xffffU;
         std::uint16_t shape_draw_order = 0xffffU;
         std::uint16_t material_index = 0xffffU;
+        std::uint8_t material_mode = 0U;
+        bool draw_buffer_opaque = true;
         std::uint16_t joint_index = 0xffffU;
         std::uint16_t matrix_group_index = 0xffffU;
         std::uint16_t matrix_group_count = 0U;
@@ -89,6 +107,8 @@ namespace smgpc::game {
         std::array<GXLightState, 8U> lights = {};
         std::vector<J3dRendererTextureState> texture_bindings = {};
         std::vector<GXTexCoordGenState> tex_coord_gens = {};
+        std::array<GXTexCoordScaleState, 8U> tex_coord_scales = {};
+        GXSULinePointState su_line_point = {};
         std::vector<GXTexMatrixState> tex_matrices = {};
         std::vector<GXTevOrderState> tev_orders = {};
         std::vector<GXTevStageState> tev_stages = {};
@@ -157,7 +177,9 @@ namespace smgpc::game {
         [[nodiscard]] bool is_loaded() const;
         [[nodiscard]] std::size_t mesh_count() const;
         [[nodiscard]] std::span<const J3dRendererPacketState> render_packets() const;
-        [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame, std::span<const GXLightState> scene_lights = {}) const;
+        [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame,
+                                                                          std::span<const GXLightState> scene_lights = {},
+                                                                          const J3dModelRendererDrawOptions &options = {}) const;
 
     private:
         struct Mesh {
@@ -165,6 +187,8 @@ namespace smgpc::game {
             std::uint16_t shape_index = 0xffffU;
             std::uint16_t shape_draw_order = 0xffffU;
             std::uint16_t material_index = 0xffffU;
+            std::uint8_t material_mode = 0U;
+            bool draw_buffer_opaque = true;
             std::uint16_t joint_index = 0xffffU;
             std::uint16_t matrix_group_count = 0U;
             J3dShapeMatrixGroupSummary matrix_group = {};
@@ -210,7 +234,8 @@ namespace smgpc::game {
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
                                                                    std::span<const GXLightState> scene_lights = {}) const;
         void submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
-                         DrawScratch &scratch, std::span<const GXLightState> scene_lights) const;
+                         DrawScratch &scratch, std::span<const GXLightState> scene_lights,
+                         const J3dModelRendererDrawOptions &options) const;
 
         bool _loaded = false;
         std::vector<J3dTexture> _textures = {};

@@ -20,4 +20,18 @@ public:
     bool isAtNearPoint() const;
     bool isToOrAtFarPoint() const;
     bool isToOrAtNearPoint() const;
+
+    void exeTitle();
+    void exeMoveToFarPoint();
+    void exeFarPoint();
+    void exeMoveToNearPoint();
+    void exeNearPoint();
+
+    /* 0x8C */ TVec3f _8C;
+    /* 0x98 */ TVec3f _98;
+    /* 0xA4 */ TVec3f _A4;
+    /* 0xB0 */ TVec3f _B0;
+    /* 0xBC */ f32 _BC;
+    /* 0xC0 */ f32 _C0;
+    /* 0xC4 */ TVec3f _C4;
 };

@@ -53,6 +53,19 @@ namespace smgpc::game {
             return it == material.tex_matrices.end() ? nullptr : &*it;
         }
 
+        [[nodiscard]] std::optional< GXTexCoordScaleState > tex_coord_scale_for_slot(const GXMaterialState& state, std::uint8_t slot) {
+            if (slot >= state.tex_coord_scales.size()) {
+                return {};
+            }
+
+            const auto& scale = state.tex_coord_scales[slot];
+            if (!scale.s_loaded && !scale.t_loaded && !scale.derived_from_texture) {
+                return {};
+            }
+
+            return scale;
+        }
+
         void append_pass_for_slots(std::vector< J3dMaterialTexturePass >& passes, const J3dMaterialSummary& material, std::uint8_t stage,
                                    std::uint8_t tex_coord_slot, std::uint8_t tex_map_slot) {
             if (tex_map_slot == 0xffU) {
@@ -73,6 +86,7 @@ namespace smgpc::game {
                 .texture_index = binding->texture_index,
                 .tex_coord_gen = gen == nullptr ? std::optional< J3dTexCoordGenSummary >{} : *gen,
                 .tex_matrix = matrix == nullptr ? std::optional< J3dTexMatrixSummary >{} : *matrix,
+                .tex_coord_scale = tex_coord_scale_for_slot(material.gx_state, tex_coord_slot),
             });
         }
 
@@ -897,9 +911,9 @@ namespace smgpc::game {
                     const auto& texture = textures[pass.texture_index];
                     const auto* tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
                     const auto* tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
-                    const auto coord = apply_indirect_texture_transform(material, textures, source, pass,
-                                                                        j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, nullptr),
-                                                                        texture.image, nullptr);
+                    const auto base_coord =
+                        j3d_apply_tex_coord_scale(j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, nullptr), pass, texture);
+                    const auto coord = apply_indirect_texture_transform(material, textures, source, pass, base_coord, texture.image, nullptr);
                     textures_by_stage[std::min< std::size_t >(pass.stage, textures_by_stage.size() - 1U)] =
                         sample_texture_rgba8(texture.image, texture.wrap_s != 0U, texture.wrap_t != 0U, coord.u, coord.v);
                 }
@@ -943,9 +957,9 @@ namespace smgpc::game {
             const auto& texture = textures[pass.texture_index];
             const auto* tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
             const auto* tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
-            const auto coord = apply_indirect_texture_transform(material, textures, source, pass,
-                                                                j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix),
-                                                                texture.image, model_matrix);
+            const auto base_coord =
+                j3d_apply_tex_coord_scale(j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix), pass, texture);
+            const auto coord = apply_indirect_texture_transform(material, textures, source, pass, base_coord, texture.image, model_matrix);
             textures_by_stage[std::min< std::size_t >(pass.stage, textures_by_stage.size() - 1U)] =
                 sample_texture_rgba8(texture.image, texture.wrap_s != 0U, texture.wrap_t != 0U, coord.u, coord.v);
         }
@@ -971,9 +985,9 @@ namespace smgpc::game {
         const auto& texture = textures[pass.texture_index];
         const auto* tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
         const auto* tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
-        return trace_indirect_texture_transform(material, textures, source, pass,
-                                                j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix), texture.image,
-                                                model_matrix);
+        const auto base_coord =
+            j3d_apply_tex_coord_scale(j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix), pass, texture);
+        return trace_indirect_texture_transform(material, textures, source, pass, base_coord, texture.image, model_matrix);
     }
 
     J3dTextureCoordinate j3d_transform_tex_coord(const J3dMeshVertex& source, const J3dTexCoordGenSummary* tex_coord_gen,
@@ -1020,6 +1034,47 @@ namespace smgpc::game {
             .u = u,
             .v = v,
             .q = tex_coord_gen != nullptr && tex_coord_gen->type == GX_TG_MTX3X4 ? coord.z : 1.0F,
+        };
+    }
+
+    J3dTextureCoordinate j3d_apply_tex_coord_scale(const J3dTextureCoordinate& coord, const J3dMaterialTexturePass& pass,
+                                                   const J3dTexture& texture) {
+        if (!pass.tex_coord_scale.has_value() || texture.image.width == 0U || texture.image.height == 0U) {
+            return coord;
+        }
+
+        const auto& scale = *pass.tex_coord_scale;
+        const auto s_scale = scale.s_loaded || scale.derived_from_texture ?
+                                 static_cast<float>(scale.s_scale_minus_1) + 1.0F :
+                                 static_cast<float>(texture.image.width);
+        const auto t_scale = scale.t_loaded || scale.derived_from_texture ?
+                                 static_cast<float>(scale.t_scale_minus_1) + 1.0F :
+                                 static_cast<float>(texture.image.height);
+
+        return J3dTextureCoordinate{
+            .u = coord.u * s_scale / static_cast<float>(texture.image.width),
+            .v = coord.v * t_scale / static_cast<float>(texture.image.height),
+        };
+    }
+
+    J3dTextureProjectionCoordinate j3d_apply_tex_coord_scale(const J3dTextureProjectionCoordinate& coord, const J3dMaterialTexturePass& pass,
+                                                             const J3dTexture& texture) {
+        if (!pass.tex_coord_scale.has_value() || texture.image.width == 0U || texture.image.height == 0U) {
+            return coord;
+        }
+
+        const auto& scale = *pass.tex_coord_scale;
+        const auto s_scale = scale.s_loaded || scale.derived_from_texture ?
+                                 static_cast<float>(scale.s_scale_minus_1) + 1.0F :
+                                 static_cast<float>(texture.image.width);
+        const auto t_scale = scale.t_loaded || scale.derived_from_texture ?
+                                 static_cast<float>(scale.t_scale_minus_1) + 1.0F :
+                                 static_cast<float>(texture.image.height);
+
+        return J3dTextureProjectionCoordinate{
+            .u = coord.u * s_scale / static_cast<float>(texture.image.width),
+            .v = coord.v * t_scale / static_cast<float>(texture.image.height),
+            .q = coord.q,
         };
     }
 

@@ -9,6 +9,7 @@ class FileSelectModel;
 class MiiFaceParts;
 class FileSelectNumber;
 class FileSelectItemDelegatorBase;
+class PartsModel;
 
 namespace FileSelectItemSub {
     class ScaleController : public NerveExecutor {

@@ -1712,6 +1712,9 @@ namespace smgpc::tests {
                 const auto space_packet = std::ranges::find_if(packets, [](const auto &packet) {
                     return packet.at("material_name") == "Space_Mat_v";
                 });
+                const auto comet_halo_packet = std::ranges::find_if(packets, [](const auto &packet) {
+                    return packet.at("material_name") == "CometHalo_v";
+                });
                 require(has_packet("Space_Mat_v", "ShaderGxTev") && has_packet("CometHalo_v", "ComposedMaterial") &&
                             space_packet != packets.end() && space_packet->at("model_name") == "CometNearOrbitSky" &&
                             space_packet->at("indirect_stage_count") == 0 && space_packet->at("matrix_group_index") == 0 &&
@@ -1721,11 +1724,22 @@ namespace smgpc::tests {
                             space_packet->at("bck_active") == true && space_packet->at("bck_frame_max") == 3000 &&
                             space_packet->at("btk_active") == true && space_packet->at("btk_frame_max") == 10000 &&
                             space_packet->at("draw_pass") == "Opaque" && space_packet->at("render_pass") == "Opaque" &&
-                            space_packet->at("view_id") == 0,
+                            space_packet->at("view_id") == 0 && space_packet->at("material_mode") == 1 &&
+                            space_packet->at("draw_buffer_opaque") == true && comet_halo_packet != packets.end() &&
+                            comet_halo_packet->at("material_mode") == 1 && comet_halo_packet->at("draw_pass") == "Opaque" &&
+                            comet_halo_packet->at("draw_buffer_opaque") == true && comet_halo_packet->at("blend") == true &&
+                            space_packet->at("gx_blend").at("alpha_update") == false &&
+                            comet_halo_packet->at("gx_blend").at("alpha_update") == false,
                         "runtime parity trace should include submitted J3D material packet sequence, animation frames, and draw state");
                 require(space_packet->at("texture_bindings").size() == 3U &&
                             space_packet->at("texture_bindings")[0U].at("name") == "OrbitUniverseL" &&
                             space_packet->at("texture_bindings")[1U].at("format") == "CMPR" &&
+                            space_packet->at("texture_bindings")[0U].at("has_sampler_metadata") == true &&
+                            space_packet->at("texture_bindings")[0U].at("wrap_s") == 1 &&
+                            space_packet->at("texture_bindings")[0U].at("min_filter") == 1 &&
+                            !space_packet->at("tex_coord_scales").empty() &&
+                            (space_packet->at("tex_coord_scales")[0U].at("derived_from_texture") == true ||
+                             space_packet->at("tex_coord_scales")[0U].at("s_loaded") == true) &&
                             space_packet->at("used_textures_mask") == 7U &&
                             space_packet->at("used_texture_slots").size() == 3U &&
                             space_packet->at("used_texture_slots")[0U] == 0U &&

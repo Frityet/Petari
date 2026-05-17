@@ -418,6 +418,43 @@ namespace smgpc::game {
             odd.scale_t = bits(value, 12U, 4U);
         }
 
+        void decode_su_line_point_state(GXMaterialState &state, std::uint32_t value) {
+            state.su_line_point = GXSULinePointState{
+                .line_size = bits(value, 0U, 8U),
+                .point_size = bits(value, 8U, 8U),
+                .line_tex_offset = bits(value, 16U, 3U),
+                .point_tex_offset = bits(value, 19U, 3U),
+                .field_mode = bits(value, 22U, 1U) != 0U,
+                .loaded = true,
+                .raw = value,
+            };
+        }
+
+        void decode_tex_coord_scale(GXMaterialState &state, std::uint8_t address, std::uint32_t value) {
+            const auto slot = static_cast<std::uint8_t>((address - 0x30U) / 2U);
+            if (slot >= state.tex_coord_scales.size()) {
+                return;
+            }
+
+            auto &scale = state.tex_coord_scales[slot];
+            if ((address & 1U) == 0U) {
+                scale.s_scale_minus_1 = static_cast<std::uint16_t>(value & 0xffffU);
+                scale.s_bias = bits(value, 16U, 1U) != 0U;
+                scale.s_wrap = bits(value, 17U, 1U) != 0U;
+                scale.line_offset = bits(value, 18U, 1U) != 0U;
+                scale.point_offset = bits(value, 19U, 1U) != 0U;
+                scale.s_loaded = true;
+                scale.raw_s = value;
+                return;
+            }
+
+            scale.t_scale_minus_1 = static_cast<std::uint16_t>(value & 0xffffU);
+            scale.t_bias = bits(value, 16U, 1U) != 0U;
+            scale.t_wrap = bits(value, 17U, 1U) != 0U;
+            scale.t_loaded = true;
+            scale.raw_t = value;
+        }
+
         void decode_fog_register(GXMaterialState &state, std::uint8_t address, std::uint32_t value) {
             const auto raw_index = static_cast<std::size_t>(address - 0xe8U) * 4U;
             if (raw_index + 3U < state.fog.raw.size()) {
@@ -559,6 +596,11 @@ namespace smgpc::game {
                 return;
             }
 
+            if (address == 0x22U) {
+                decode_su_line_point_state(state, value);
+                return;
+            }
+
             if (address >= 0x25U && address <= 0x26U) {
                 decode_indirect_tex_coord_scale(state, address, value);
                 return;
@@ -579,6 +621,11 @@ namespace smgpc::game {
 
             if (address >= 0x28U && address <= 0x2fU) {
                 decode_two_tev_orders(state, address, value);
+                return;
+            }
+
+            if (address >= 0x30U && address <= 0x3fU) {
+                decode_tex_coord_scale(state, address, value);
                 return;
             }
 

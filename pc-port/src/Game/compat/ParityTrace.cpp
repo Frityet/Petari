@@ -842,10 +842,27 @@ namespace smgpc::game {
                 {"height", texture.height},
                 {"format", texture_format_name(texture.format)},
                 {"format_raw", static_cast<std::uint32_t>(texture.format)},
+                {"has_sampler_metadata", texture.has_sampler_metadata},
+                {"transparency", texture.transparency},
                 {"wrap_s", texture.wrap_s},
                 {"wrap_t", texture.wrap_t},
+                {"palette_format", texture.palette_format},
+                {"palette_entry_count", texture.palette_entry_count},
+                {"palette_data_offset", texture.palette_data_offset},
+                {"mipmap", texture.mipmap},
+                {"do_edge_lod", texture.do_edge_lod},
+                {"bias_clamp", texture.bias_clamp},
+                {"max_anisotropy", texture.max_anisotropy},
                 {"min_filter", texture.min_filter},
                 {"mag_filter", texture.mag_filter},
+                {"min_lod_raw", texture.min_lod},
+                {"max_lod_raw", texture.max_lod},
+                {"min_lod", static_cast<float>(texture.min_lod) / 8.0F},
+                {"max_lod", static_cast<float>(texture.max_lod) / 8.0F},
+                {"image_count", texture.image_count},
+                {"lod_bias_raw", texture.lod_bias},
+                {"lod_bias", static_cast<float>(texture.lod_bias) / 100.0F},
+                {"image_data_offset", texture.image_data_offset},
                 {"host_texture_handle", texture.host_handle.is_valid() ? Json(texture.host_handle.value) : Json(nullptr)},
             };
         }
@@ -900,6 +917,52 @@ namespace smgpc::game {
                 out.push_back(gx_tex_coord_gen_json(gen));
             }
             return out;
+        }
+
+        [[nodiscard]] Json gx_tex_coord_scale_json(std::uint8_t slot, const GXTexCoordScaleState &scale) {
+            return Json{
+                {"slot", slot},
+                {"s_scale_minus_1", scale.s_scale_minus_1},
+                {"t_scale_minus_1", scale.t_scale_minus_1},
+                {"s_scale", static_cast<std::uint32_t>(scale.s_scale_minus_1) + 1U},
+                {"t_scale", static_cast<std::uint32_t>(scale.t_scale_minus_1) + 1U},
+                {"s_bias", scale.s_bias},
+                {"t_bias", scale.t_bias},
+                {"s_wrap", scale.s_wrap},
+                {"t_wrap", scale.t_wrap},
+                {"line_offset", scale.line_offset},
+                {"point_offset", scale.point_offset},
+                {"s_loaded", scale.s_loaded},
+                {"t_loaded", scale.t_loaded},
+                {"derived_from_texture", scale.derived_from_texture},
+                {"raw_s", scale.raw_s},
+                {"raw_t", scale.raw_t},
+            };
+        }
+
+        [[nodiscard]] Json gx_tex_coord_scales_json(const std::array<GXTexCoordScaleState, 8U> &scales) {
+            auto out = Json::array();
+            for (auto slot = 0U; slot < scales.size(); ++slot) {
+                const auto &scale = scales[slot];
+                if (!scale.s_loaded && !scale.t_loaded && !scale.derived_from_texture) {
+                    continue;
+                }
+
+                out.push_back(gx_tex_coord_scale_json(static_cast<std::uint8_t>(slot), scale));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json gx_su_line_point_json(const GXSULinePointState &state) {
+            return Json{
+                {"loaded", state.loaded},
+                {"line_size", state.line_size},
+                {"point_size", state.point_size},
+                {"line_tex_offset", state.line_tex_offset},
+                {"point_tex_offset", state.point_tex_offset},
+                {"field_mode", state.field_mode},
+                {"raw", state.raw},
+            };
         }
 
         [[nodiscard]] Json gx_tex_matrix_json(const GXTexMatrixState &matrix) {
@@ -1119,6 +1182,8 @@ namespace smgpc::game {
                 {"shape_index", state.shape_index},
                 {"shape_draw_order", state.shape_draw_order},
                 {"material_index", state.material_index},
+                {"material_mode", state.material_mode},
+                {"draw_buffer_opaque", state.draw_buffer_opaque},
                 {"joint_index", state.joint_index},
                 {"matrix_group_index", state.matrix_group_index},
                 {"matrix_group_count", state.matrix_group_count},
@@ -1147,6 +1212,8 @@ namespace smgpc::game {
                 {"used_texture_slots", used_texture_slots_json(state.texture_bindings)},
                 {"texture_bindings", gx_texture_bindings_json(state.texture_bindings)},
                 {"tex_coord_gens", gx_tex_coord_gens_json(state.tex_coord_gens)},
+                {"tex_coord_scales", gx_tex_coord_scales_json(state.tex_coord_scales)},
+                {"su_line_point", gx_su_line_point_json(state.su_line_point)},
                 {"tex_matrices", gx_tex_matrices_json(state.tex_matrices)},
                 {"tev_orders", gx_tev_orders_json(state.tev_orders)},
                 {"tev_stages", gx_tev_stages_json(state.tev_stages)},

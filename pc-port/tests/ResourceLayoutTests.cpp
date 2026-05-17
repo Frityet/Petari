@@ -448,6 +448,10 @@ namespace smgpc::tests {
             const auto *earth = find_texture("EarthKsMM");
             require(earth != nullptr, "CometNearOrbitSky should contain EarthKsMM");
             require(earth->image.width == 256U && earth->image.height == 256U, "EarthKsMM dimensions changed");
+            require(earth->mipmap && earth->image_count == 5U && earth->min_filter == 5U && earth->mag_filter == 1U,
+                    "EarthKsMM should preserve TEX1 mipmap sampler metadata");
+            require(earth->min_lod == 0U && earth->max_lod == 32U && earth->lod_bias == 100,
+                    "EarthKsMM should preserve TEX1 LOD metadata");
 
             const auto *galaxy = find_texture("Galaxy");
             require(galaxy != nullptr, "CometNearOrbitSky should contain Galaxy");
@@ -455,6 +459,25 @@ namespace smgpc::tests {
             require(galaxy->image.format == smgpc::game::TplTextureFormat::CMPR, "Galaxy should exercise GX CMPR decoding");
             require(std::ranges::any_of(galaxy->image.rgba, [](std::uint8_t value) { return value != 0U; }),
                     "CMPR decoded Galaxy texture should not be blank");
+
+            const auto *sky = find_texture("Skyk");
+            require(sky != nullptr, "CometNearOrbitSky should contain Skyk");
+            require(sky->image.width == 8U && sky->image.height == 32U && sky->image.format == smgpc::game::TplTextureFormat::I8,
+                    "Skyk should preserve TEX1 base image metadata");
+            require(sky->transparency == 2U && sky->wrap_s == 1U && sky->wrap_t == 0U && !sky->mipmap &&
+                        sky->min_filter == 1U && sky->mag_filter == 1U && sky->image_count == 1U,
+                    "Skyk should preserve TEX1 wrap/filter metadata");
+            const auto sky_pixel = [&sky](std::uint16_t x, std::uint16_t y) {
+                return sky->image.rgba[(static_cast<std::size_t>(y) * sky->image.width + x) * 4U];
+            };
+            require(sky_pixel(0U, 0U) == 4U && sky_pixel(4U, 0U) == 4U && sky_pixel(0U, 31U) == 255U,
+                    "Skyk should decode from the texture-header-relative BTI image offset");
+
+            const auto *cloud = find_texture("Cloud01k");
+            require(cloud != nullptr, "CometNearOrbitSky should contain Cloud01k");
+            require(cloud->image.format == smgpc::game::TplTextureFormat::CMPR && cloud->mipmap && cloud->image_count == 4U &&
+                        cloud->min_filter == 5U && cloud->max_lod == 24U && cloud->lod_bias == 200,
+                    "Cloud01k should preserve TEX1 compressed mipmap sampler metadata");
         }
 
     }  // namespace

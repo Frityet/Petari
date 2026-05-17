@@ -56,7 +56,7 @@ public:
     void createManual();
     void createSelectEffect();
     void appearAllItems();
-    void disappaerAllLayout();
+    void disappearAllLayout();
     bool isHiddenAllLayout() const;
     void updateFileInfo();
     void appearAllIndex();
@@ -76,14 +76,14 @@ public:
     void initAllItems();
     void validateRotateAllItems();
     FileSelectIconID::EFellowID getUserFileFellowID(s32) const;
-    bool isUserFileMiiidValid(s32) const;
+    bool isUserFileMiiIdValid(s32) const;
     s32 getUserFileMiiIndex(s32) const;
     bool isUserFileCorrupted(s32) const;
     bool isUserFileAppearLuigi(s32) const;
     bool isUserFileLuigi(s32) const;
     void setUserFileMario(s32, bool);
     void storeSetMiiIdUserFile(s32, const FileSelectIconID&);
-    void getMiiId(RFLCreateID*, const FileSelectIconID&);
+    void getMiiId(RFLCreateID*, const FileSelectIconID&) const;
     void getIconId(FileSelectIconID*, s32) const;
     s32 getMissCount(s32) const;
     void playSelectedME();
@@ -144,19 +144,19 @@ public:
     InformationMessage* mInfoMessage;   // 0xA8
     SysInfoWindow* mSysInfoWindow;      // 0xAC
     SysInfoWindow* mSysInfoWindowMini;  // 0xB0
-    u32 _B4;
-    u32 _B8;
-    u32 _BC;
-    u32 _C0;
+    FileSelectItem* _B4;
+    FileSelectItem* _B8;
+    FileSelectItem* _BC;
+    FileSelectItem* _C0;
     FileSelectInfo* mSelectInfo;  // 0xC4
     UserFile* mFiles;             // 0xC8
-    void* _CC;
+    u8* _CC;
     TitleSequenceProduct* mTitleSeq;  // 0xD0
     MiiSelect* mMiiSelect;            // 0xD4
     MiiConfirmIcon* mMiiConfirmIcon;  // 0xD8
-    void* _DC;
+    RFLCreateID* _DC;
     Manual2P* mManual2P;  // 0xE0
-    u32 _E4;
+    bool _E4;
     u32 _E8;
     FileSelectEffect* mSelectEffects;  // 0xEC
     nw4r::ut::ResFont* mFont;          // 0xF0
