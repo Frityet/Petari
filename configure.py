@@ -1042,7 +1042,7 @@ config.libs = [
             Object(Matching, "Game/Demo/DemoCastSubGroup.cpp"),
             Object(Matching, "Game/Demo/DemoCtrlBase.cpp"),
             Object(NonMatching, "Game/Demo/DemoDirector.cpp"),
-            Object(NonMatching, "Game/Demo/DemoExecutor.cpp"),
+            Object(Matching, "Game/Demo/DemoExecutor.cpp"),
             Object(Matching, "Game/Demo/DemoExecutorFunction.cpp"),
             Object(NonMatching, "Game/Demo/DemoFunction.cpp"),
             Object(NonMatching, "Game/Demo/DemoKoopaJrShip.cpp"),
