@@ -2,6 +2,7 @@
 !Dockerfile
 !.dockerignore
 !container/
+!container/entrypoint.sh
 !container/orig/
 !container/orig/RMGK01/
 !container/orig/RMGK01/files/

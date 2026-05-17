@@ -1,5 +1,3 @@
-add_requires("sqlite3", {system = true})
-
 target("smg-pc-debug-common")
     set_kind("static")
     set_default(false)
@@ -55,7 +53,15 @@ target("smg-pc-trace-import-sqlite")
         "smg-pc-debug-common",
         "smg-pc-common"
     }
-    add_packages("sqlite3")
+
+target("smg-pc-trace-compare-sqlite")
+    set_kind("binary")
+    set_default(false)
+    add_files("TraceSqliteCompare.cpp")
+    add_deps {
+        "smg-pc-debug-common",
+        "smg-pc-common"
+    }
 
 target("smg-pc-j3d-animation-probe")
     set_kind("binary")

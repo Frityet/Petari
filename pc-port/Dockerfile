@@ -83,6 +83,7 @@ RUN build_dir="$(mktemp -d)" \
     && XMAKE_ROOT=y xrepo --version
 
 COPY container/orig/ /workspaces/pcport/orig/
+COPY container/entrypoint.sh /usr/local/bin/pc-port-container-entrypoint
 
 RUN if getent group "${USER_GID}" >/dev/null; then \
         user_group="$(getent group "${USER_GID}" | cut -d: -f1)"; \
@@ -97,10 +98,13 @@ RUN if getent group "${USER_GID}" >/dev/null; then \
     else \
         useradd --uid "${USER_UID}" --gid "${user_group}" -m -s /bin/zsh "${USERNAME}"; \
     fi \
+    && chmod 0755 /usr/local/bin/pc-port-container-entrypoint \
+    && printf '%s\n' '# Created by the pc-port container image to keep zsh startup non-interactive.' > "/home/${USERNAME}/.zshrc" \
     && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" \
     && chmod 0440 "/etc/sudoers.d/${USERNAME}" \
     && install -d -m 0700 -o "${USERNAME}" -g "${user_group}" /tmp/xdg-runtime \
     && install -d -m 0755 -o "${USERNAME}" -g "${user_group}" /workspaces/pcport/pc-port \
+    && chown "${USERNAME}:${user_group}" "/home/${USERNAME}/.zshrc" \
     && chown -R "${USERNAME}:${user_group}" /workspaces/pcport
 
 ENV CC=clang \
@@ -112,4 +116,4 @@ ENV CC=clang \
 USER ${USERNAME}
 WORKDIR /workspaces/pcport/pc-port
 
-CMD ["/bin/zsh"]
+ENTRYPOINT ["/usr/local/bin/pc-port-container-entrypoint"]

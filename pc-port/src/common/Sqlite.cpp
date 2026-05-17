@@ -2,6 +2,7 @@
 
 #include <sqlite3.h>
 
+#include <cstddef>
 #include <stdexcept>
 
 namespace smgpc::sql {
@@ -85,12 +86,44 @@ namespace smgpc::sql {
         }
     }
 
+    bool Statement::step() {
+        const auto result = sqlite3_step(mStatement);
+        if (result == SQLITE_ROW) {
+            return true;
+        }
+        if (result == SQLITE_DONE) {
+            reset();
+            return false;
+        }
+        throw std::runtime_error("SQLite step failed: " + std::string(sqlite3_errmsg(mDb)));
+    }
+
     void Statement::step_done() {
         const auto result = sqlite3_step(mStatement);
         if (result != SQLITE_DONE) {
             throw std::runtime_error("SQLite step failed: " + std::string(sqlite3_errmsg(mDb)));
         }
         reset();
+    }
+
+    std::optional<std::int64_t> Statement::column_int(int index) const {
+        if (sqlite3_column_type(mStatement, index) == SQLITE_NULL) {
+            return std::nullopt;
+        }
+        return sqlite3_column_int64(mStatement, index);
+    }
+
+    std::optional<std::string> Statement::column_text(int index) const {
+        if (sqlite3_column_type(mStatement, index) == SQLITE_NULL) {
+            return std::nullopt;
+        }
+
+        const auto *text = sqlite3_column_text(mStatement, index);
+        const auto length = sqlite3_column_bytes(mStatement, index);
+        if (text == nullptr) {
+            return std::string{};
+        }
+        return std::string(reinterpret_cast<const char *>(text), static_cast<std::size_t>(length));
     }
 
     void Statement::check(int result) {

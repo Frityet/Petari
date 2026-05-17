@@ -402,7 +402,7 @@ namespace smgpc::tests {
                 .has_focus = true,
                 .is_minimized = false,
             };
-            const auto trace_path = std::filesystem::path(".cache/tests/runtime-layout-pane-controls-trace.json");
+            const auto trace_path = std::filesystem::path(".cache/tests/runtime-layout-pane-controls-trace.ndjson");
             smgpc::game::write_runtime_parity_trace(trace_path, frame_context, runtime);
             const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
             const auto &layout_entries = trace_json.at("layout_runtime");
@@ -1244,7 +1244,7 @@ namespace smgpc::tests {
                         runtime.sequence_requests().events().size() == 1U,
                     "MR sequence util should record stage-change requests through a generic runtime service");
 
-            const auto trace_path = std::filesystem::path(".cache/tests/runtime-wipe-service-trace.json");
+            const auto trace_path = std::filesystem::path(".cache/tests/runtime-wipe-service-trace.ndjson");
             smgpc::game::write_runtime_parity_trace(trace_path,
                                                     smgpc::render::FrameContext{
                                                         .frame_index = runtime.frame_index(),
@@ -1543,7 +1543,7 @@ namespace smgpc::tests {
             runtime.begin_frame(frame_context);
             require(selector.isTitleStarted(), "scheduler-broadcast AutoRushBegin should put FileSelector into the original title nerve flow");
 
-            const auto trace_path = std::filesystem::path(".cache/tests/runtime-message-trace.json");
+            const auto trace_path = std::filesystem::path(".cache/tests/runtime-message-trace.ndjson");
             smgpc::game::write_runtime_parity_trace(trace_path, frame_context, runtime);
             const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
             require(trace_json.contains("scene_messages"), "runtime parity trace should include generic actor-message routing evidence");
@@ -1662,7 +1662,7 @@ namespace smgpc::tests {
                 runtime.save_data().set_sys_config_time_announced(101);
                 runtime.save_data().set_sys_config_time_sent(202);
                 runtime.save_data().set_sys_config_sent_bytes(303U);
-                const auto trace_path = std::filesystem::path(".cache/tests/runtime-parity-trace.json");
+                const auto trace_path = std::filesystem::path(".cache/tests/runtime-parity-trace.ndjson");
                 smgpc::game::write_runtime_parity_trace(trace_path, frame_context, runtime);
                 const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
                 require(trace_json.at("schema") == "smgpc-runtime-parity-trace-v1",
@@ -1919,7 +1919,7 @@ namespace smgpc::tests {
                     "FileSelector FileSelect should wait for item pointing/confirmation before showing file-info and operation buttons");
             require(runtime.current_stage_bgm_name() == "MBGM_FILE_SELECT", "FileSelector TitleEnd should start the original file-select BGM");
 
-            const auto trace_path = std::filesystem::path(".cache/tests/runtime-file-select-generic-trace.json");
+            const auto trace_path = std::filesystem::path(".cache/tests/runtime-file-select-generic-trace.ndjson");
             smgpc::game::write_runtime_parity_trace(trace_path,
                                                     smgpc::render::FrameContext{
                                                         .frame_index = runtime.frame_index(),
