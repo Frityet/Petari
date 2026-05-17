@@ -18,6 +18,7 @@ namespace MR {
     void startAtmosphereLevelSE(const char*, s32, s32);
 
     void stopStageBGM(u32);
+    void limitedSound(const char*, s32);
     void unlockStageBGM();
 
     void startLastStageBGM();

@@ -67,7 +67,24 @@ void RailRider::moveToNearestPos(const TVec3f& rPos) {
     syncPosDir();
 }
 
-// RailRider::moveToNearestPoint()
+void RailRider::moveToNearestPoint(const TVec3f& rPos) {
+    f32 minDist = FLOAT_MAX;
+    s32 point = 0;
+
+    for (s32 i = 0; i < mBezierRail->mPointNum; i++) {
+        TVec3f pointPos;
+        copyPointPos(&pointPos, i);
+
+        f32 dist = rPos.squared(pointPos);
+        if (dist < minDist) {
+            minDist = dist;
+            point = i;
+        }
+    }
+
+    mCoord = mBezierRail->getRailPosCoord(point);
+    syncPosDir();
+}
 
 void RailRider::moveToNextPoint() {
     mCoord = mBezierRail->getRailPosCoord(getNextPointNo());
@@ -293,7 +310,28 @@ bool RailRider::getNextPointArgS32WithInit(const char* pStr, s32* pOut) const {
     return true;
 }
 
-// RailRider::getNextPointNo()
+s32 RailRider::getNextPointNo() const {
+    s32 dir = mIsNotReverse ? 1 : -1;
+
+    if (mBezierRail->mIsClosed) {
+        s32 pointNum = mBezierRail->mPointNum;
+        s32 next = pointNum + dir + pointNum + mCurPoint;
+        return next - (next / pointNum) * pointNum;
+    }
+
+    s32 next = mCurPoint + dir;
+    s32 lastPoint = mBezierRail->mPointNum - 1;
+
+    if (next < 0) {
+        return 0;
+    }
+
+    if (next > lastPoint) {
+        return lastPoint;
+    }
+
+    return next;
+}
 
 void RailRider::syncPosDir() {
     if (0.0f < mCoord && mCoord < mBezierRail->getTotalLength()) {

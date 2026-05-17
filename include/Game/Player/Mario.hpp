@@ -42,6 +42,7 @@ class MarioTeresa;
 class MarioTalk;
 class MarioMove;
 class AreaObj;
+class CubeCameraArea;
 class HitInfo;
 class HitSensor;
 class Triangle;
@@ -151,8 +152,8 @@ public:
     const TVec3f* calcShadowPos();
     void updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
-    void checkGround();
-    void getCameraCubeCode() const;
+    bool checkGround();
+    CubeCameraArea* getCameraCubeCode() const;
     void updateCubeCode();
 
     bool isDamaging() const;
@@ -248,13 +249,13 @@ public:
     void mainMove();
     bool isEnableTurn();
     void recordTurnSlipAngle();
-    void decideInertia(f32);
-    void decideInertiaOnIce(f32);
-    void decideInertiaOnSlip(f32);
+    f32 decideInertia(f32);
+    f32 decideInertiaOnIce(f32);
+    f32 decideInertiaOnSlip(f32);
     void calcShadowDir(const TVec3f&, TVec3f*);
     void retainMoveDir(f32, f32, TVec3f*);
     void calcMoveDir(f32, f32, TVec3f*, bool);
-    void checkLockOnHoming();
+    bool checkLockOnHoming();
     void doLockOnHoming();
     void fixPositionInTower();
 

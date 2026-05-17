@@ -7,7 +7,7 @@ class RabbitStateWaitStart;
 class RabbitStateCaught;
 class RailGraph;
 class RailGraphIter;
-class RailGraphNodeSelecter {};
+class RailGraphNodeSelecter;
 class SpotMarkLight;
 
 namespace TrickRabbitUtil {

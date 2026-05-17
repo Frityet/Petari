@@ -21,8 +21,11 @@
 #include "Game/Camera/GameCameraCreator.hpp"
 #include "Game/Camera/OnlyCamera.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
@@ -112,7 +115,7 @@ CameraDirector::CameraDirector(const char* pName) : NameObj(pName) {
     mCameraManPause = new CameraManPause("ポーズカメラマン");
     mCameraManSubjective = new CameraManSubjective("主観カメラマン");
     _58 = false;
-    _16C = 0;
+    mEndEventAtLandingCount = 0;
     _170 = true;
     _174 = 0;
     mStartCameraCreated = false;
@@ -240,12 +243,87 @@ void CameraDirector::calcPose() {
     mPoseParam1->copyFrom(*mOnlyCamera->mPoseParam);
 }
 
-/*void CameraDirector::calcSubjective() {
+void CameraDirector::calcSubjective() {
+    JMath::gekko_ps_copy12(&_1C0, MR::getCameraViewMtx());
+    _1F0 = true;
 
+    if (MR::isDemoActive()) {
+        MR::stopPlayerFpView();
+    }
 
+    if (mIsSubjectiveCamera) {
+        _1B4++;
 
+        if (_1B4 > 20) {
+            _1B4 = 20;
+        }
+    } else {
+        _1B4--;
 
-}*/
+        if (_1B4 <= 0) {
+            _1B4 = 0;
+
+            if (_1B3) {
+                if (_1BC >= 0.0f) {
+                    MR::setNearZ(_1BC);
+                }
+
+                _1BC = -100.0f;
+                MR::turnOnDOFInSubjective();
+                _1B3 = false;
+            }
+        }
+    }
+
+    if (!_1B3) {
+        return;
+    }
+
+    TPos3f curInvView;
+    JMath::gekko_ps_copy12(&curInvView, MR::getCameraInvViewMtx());
+
+    mCameraManSubjective->movement();
+
+    TPos3f subjectiveMtx;
+    calcViewMtxFromPoseParam(&subjectiveMtx, mCameraManSubjective->mPoseParam);
+
+    s32 blendFrame = _1B4;
+    if (blendFrame > 20) {
+        blendFrame = 20;
+    }
+
+    f32 posRate;
+    if (_1B4 >= 20) {
+        posRate = 1.0f;
+    } else {
+        posRate = 0.5f + 0.5f * MR::cos(3.1415927f + (3.1415927f * blendFrame) / 20.0f);
+    }
+
+    TVec3f curTrans;
+    curInvView.getTrans(curTrans);
+    TVec3f blendedTrans = curTrans * (1.0f - posRate) + mCameraManSubjective->mPoseParam->mPos * posRate;
+
+    s32 quatFrame = _1B4 - 10;
+    if (quatFrame < 0) {
+        quatFrame = 0;
+    }
+
+    f32 quatRate = 0.5f + 0.5f * MR::cos(3.1415927f + (3.1415927f * quatFrame) / 10.0f);
+
+    TQuat4f curQuat;
+    TQuat4f subjectiveQuat;
+    TQuat4f blendedQuat;
+    curInvView.getQuat(curQuat);
+    subjectiveMtx.getQuat(subjectiveQuat);
+    blendedQuat.slerp(curQuat, subjectiveQuat, quatRate);
+
+    subjectiveMtx.zeroTrans();
+    subjectiveMtx.setQuat(blendedQuat);
+    subjectiveMtx.setTrans(blendedTrans);
+    subjectiveMtx.invert(subjectiveMtx);
+
+    MR::setCameraViewMtx(subjectiveMtx, false, false, TVec3f(0.0f, 0.0f, 0.0f));
+}
 
 bool CameraDirector::isInterpolationOff() {
     bool off = false;
@@ -326,14 +404,14 @@ void CameraDirector::endEvent(s32 zoneID, const char* pName, bool a3, s32 a4) {
     }
 }
 
-/*void CameraDirector::endEventAtLanding(s32 a1, const char *pName, s32 a3) {
+void CameraDirector::endEventAtLanding(s32 zoneID, const char* pName, s32 interpolateFrame) {
     if (getCurrentCameraMan() == mCameraManEvent) {
-        _5C[_16C][0] = a1;
-        strcpy(reinterpret_cast<char *>(_5C[_16C][1]), pName);
-        _5C[_16C][0x21] = a3;
-        _16C++;
+        mEndEventsAtLanding[mEndEventAtLandingCount].mZoneID = zoneID;
+        strcpy(mEndEventsAtLanding[mEndEventAtLandingCount].mName, pName);
+        mEndEventsAtLanding[mEndEventAtLandingCount].mInterpolateFrame = interpolateFrame;
+        mEndEventAtLandingCount++;
     }
-}*/
+}
 
 CameraParamChunkEvent* CameraDirector::getEventParameter(s32 zoneID, const char* pName) {
     CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
@@ -607,27 +685,132 @@ void CameraDirector::zoomOutGameCamera() {
     mCameraManGame->zoomOut();
 }
 
-/*void CameraDirector::checkEndOfEventCamera() {
-    if (_16C != 0 && mTargetHolder->isOnGround()) {
-        for (u32 i = 0; i < _16C; i++) {
-            endEvent(_5C[i][0], reinterpret_cast<const char *>(_5C[i][4]), true, _5C[i][33]);
+void CameraDirector::checkEndOfEventCamera() {
+    if (mEndEventAtLandingCount != 0 && mTargetHolder->isOnGround()) {
+        for (u32 i = 0; i < mEndEventAtLandingCount; i++) {
+            endEvent(mEndEventsAtLanding[i].mZoneID, mEndEventsAtLanding[i].mName, true, mEndEventsAtLanding[i].mInterpolateFrame);
         }
 
-        _16C = 0;
+        mEndEventAtLandingCount = 0;
     }
-}*/
+}
 
-/*void CameraDirector::controlCameraSE() {
+void CameraDirector::controlCameraSE() {
+    _1F2 = false;
 
-}*/
+    if (MR::isPlayerDead()) {
+        return;
+    }
 
-/*void CameraDirector::removeEndEventAtLanding(s32, const char *) {
+    if (mIsSubjectiveCamera) {
+        if (MR::testCorePadTriggerLeft(WPAD_CHAN0) || MR::testCorePadTriggerRight(WPAD_CHAN0) || MR::testFpViewStartTrigger()) {
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+                _1F2 = true;
+            }
+        }
 
-}*/
+        return;
+    }
 
-/*void CameraDirector::calcViewMtxFromPoseParam(TPos3f *, const CameraPoseParam *) {
+    if (CameraLocalUtil::testCameraPadTriggerRoundLeft()) {
+        if (getCurrentCameraMan()->isEnableToRoundLeft()) {
+            getCurrentCameraMan()->roundLeft();
 
-}*/
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_MOVE", -1, -1);
+            }
+        } else if (isPlayableCameraSE(false)) {
+            MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+            _1F2 = true;
+        }
+    }
+
+    if (CameraLocalUtil::testCameraPadTriggerRoundRight()) {
+        if (getCurrentCameraMan()->isEnableToRoundRight()) {
+            getCurrentCameraMan()->roundRight();
+
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_MOVE", -1, -1);
+            }
+        } else if (isPlayableCameraSE(false)) {
+            MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+            _1F2 = true;
+        }
+    }
+
+    if (CameraLocalUtil::testCameraPadTriggerReset()) {
+        if (getCurrentCameraMan()->isEnableToReset()) {
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_RESET", -1, -1);
+                MR::startSystemSE("SE_SY_CAMERA_MOVE", -1, -1);
+            }
+        } else if (isPlayableCameraSE(false)) {
+            MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+            _1F2 = true;
+        }
+    }
+
+    if (MR::isPlayerInBind() && MR::testFpViewStartTrigger() && isPlayableCameraSE(false)) {
+        MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+        _1F2 = true;
+    }
+
+    if (MR::testCorePadTriggerDown(WPAD_CHAN0) && isPlayableCameraSE(false)) {
+        MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+        _1F2 = true;
+    }
+}
+
+void CameraDirector::removeEndEventAtLanding(s32 zoneID, const char* pName) {
+    for (u32 i = 0; i < mEndEventAtLandingCount; i++) {
+        if (mEndEventsAtLanding[i].mZoneID == zoneID && strcmp(mEndEventsAtLanding[i].mName, pName) == 0) {
+            u32 lastIdx = mEndEventAtLandingCount - 1;
+
+            if (lastIdx == i) {
+                mEndEventAtLandingCount = 0;
+                return;
+            }
+
+            mEndEventsAtLanding[i].mZoneID = mEndEventsAtLanding[lastIdx].mZoneID;
+            strcpy(mEndEventsAtLanding[i].mName, mEndEventsAtLanding[lastIdx].mName);
+            mEndEventsAtLanding[i].mInterpolateFrame = mEndEventsAtLanding[lastIdx].mInterpolateFrame;
+            mEndEventAtLandingCount--;
+            return;
+        }
+    }
+}
+
+void CameraDirector::calcViewMtxFromPoseParam(TPos3f* pMtx, const CameraPoseParam* pPoseParam) {
+    TVec3f zDir = pPoseParam->mWatchPos - pPoseParam->mPos;
+    MR::normalizeOrZero(&zDir);
+
+    TVec3f xDir;
+    PSVECCrossProduct(&pPoseParam->mUpVec, &zDir, &xDir);
+    MR::normalizeOrZero(&xDir);
+
+    TVec3f yDir;
+    PSVECCrossProduct(&zDir, &xDir, &yDir);
+    MR::normalizeOrZero(&yDir);
+
+    TVec3f negXDir = -xDir;
+    pMtx->mMtx[0][0] = negXDir.x;
+    pMtx->mMtx[1][0] = negXDir.y;
+    pMtx->mMtx[2][0] = negXDir.z;
+    pMtx->mMtx[0][1] = yDir.x;
+    pMtx->mMtx[1][1] = yDir.y;
+    pMtx->mMtx[2][1] = yDir.z;
+    TVec3f negZDir = -zDir;
+    pMtx->mMtx[0][2] = negZDir.x;
+    pMtx->mMtx[1][2] = negZDir.y;
+    pMtx->mMtx[2][2] = negZDir.z;
+    pMtx->setTrans(pPoseParam->mPos);
+
+    TPos3f rollMtx;
+    rollMtx.zeroTrans();
+    rollMtx.setRotateInline(TVec3f(0.0f, 0.0f, 1.0f), pPoseParam->mRoll);
+    pMtx->concat(*pMtx, rollMtx);
+}
 
 bool CameraDirector::isPlayableCameraSE(bool a1) {
     if (MR::isDemoActive()) {
@@ -739,3 +922,9 @@ void CameraDirector::createSubjectiveCamera() {
         chunk2->_64 = true;
     }
 }
+
+namespace MR {
+    CameraDirector* getCameraDirector() {
+        return getSceneObj< CameraDirector >(SceneObj_CameraDirector);
+    }
+};  // namespace MR

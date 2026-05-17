@@ -8,16 +8,9 @@
 #include "Game/Camera/CameraParamChunk.hpp"
 #include "Game/Camera/CameraParamChunkHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 
-// Constructor for mTargetArg is called. The constructor exists in the symbol so
-// it's not fully inlined. It also exists in the code (not inlined), but the code below
-// matches the constructor exactly.
-CameraManEvent::ChunkFIFOItem::ChunkFIFOItem() {
-    mTargetArg.mTargetObj = nullptr;
-    mTargetArg.mTargetMtx = nullptr;
-    mTargetArg.mLiveActor = nullptr;
-    mTargetArg.mMarioActor = nullptr;
-}
+CameraManEvent::ChunkFIFOItem::ChunkFIFOItem() : mTargetArg((void*****)0) {}
 
 CameraManEvent::CameraManEvent(CameraHolder* pHolder, CameraParamChunkHolder* pChunkHolder, const char* pName)
     : CameraMan(pName), mHolder(pHolder), mChunkHolder(pChunkHolder), mCamera(nullptr) {
@@ -190,8 +183,6 @@ void CameraManEvent::pauseOffAnimCamera(s32 zoneID, const char* pName) {
     }
 }
 
-#ifdef NON_MATCH
-// LWZ wrong instruction order, register mismatch
 void CameraManEvent::updateChunkFIFO() {
     for (u32 i = 0; i < NR_FIFO_ITEMS; i++) {
         CameraParamChunkEvent* chunk = mItems[i].mSecond.mChunk;
@@ -217,7 +208,6 @@ void CameraManEvent::updateChunkFIFO() {
         }
     }
 }
-#endif
 
 void CameraManEvent::applyChunk() {
     ChunkFIFOItem* item = nullptr;
@@ -283,7 +273,7 @@ void CameraManEvent::setExtraParam() {
 }
 
 void CameraManEvent::setVPanParam() {
-    if (mCamera->doesVPanExist()) {
+    if (mCamera->mVPan != nullptr) {
         CameraHeightArrange* vPan = mCamera->mVPan;
         vPan->resetParameter();
 
@@ -314,21 +304,74 @@ void CameraManEvent::resetCameraIfRequested() {
     }
 }
 
-/*void CameraManEvent::setSafePose() {
-    TVec3f pos = TVec3f(*CameraLocalUtil::getPos(mCamera));
-    TVec3f watchPos = TVec3f(*CameraLocalUtil::getWatchPos(mCamera));
-    TVec3f up = TVec3f(*CameraLocalUtil::getUpVec(mCamera));
+void CameraManEvent::setSafePose() {
+    TVec3f pos = TVec3f(CameraLocalUtil::getPos(mCamera));
+    TVec3f watchPos = TVec3f(CameraLocalUtil::getWatchPos(mCamera));
+    TVec3f up = TVec3f(CameraLocalUtil::getUpVec(mCamera));
 
     TVec3f dir = watchPos - pos;
-
-    f32 length = PSVECMag(reinterpret_cast<Vec *>(&dir));
+    f32 length = dir.length();
 
     if (length < 300.0f) {
         if (length < 1.0f) {
+            const TVec3f& prevPos = CameraLocalUtil::getPos(this);
+            const TVec3f& prevWatchPos = CameraLocalUtil::getWatchPos(this);
 
+            watchPos.set(pos + prevWatchPos - prevPos);
+        } else {
+            dir.length();
+            MR::normalize(&dir);
+            TVec3f scaledDir = TVec3f(dir);
+
+            scaledDir.x *= 300.0f;
+            scaledDir.y *= 300.0f;
+            scaledDir.z *= 300.0f;
+
+            watchPos.set(pos + scaledDir);
         }
     }
-}*/
+
+    TVec3f safeDir = watchPos - pos;
+    MR::normalize(&safeDir);
+    MR::normalizeOrZero(&up);
+
+    if (MR::isNearZero(up, 0.01f) || __fabsf(safeDir.dot(up)) > 0.95f) {
+        const TVec3f& prevPos = CameraLocalUtil::getPos(this);
+        TVec3f prevDir = CameraLocalUtil::getWatchPos(this) - prevPos;
+
+        MR::normalize(&prevDir);
+
+        if (__fabsf(safeDir.dot(prevDir)) > 0.95f) {
+            up.set(CameraLocalUtil::getUpVec(this));
+        } else {
+            TQuat4f rot;
+
+            rot.setRotate(prevDir, safeDir);
+            rot.transform(CameraLocalUtil::getUpVec(this), up);
+        }
+
+        CameraLocalUtil::recalcUpVec(&up, safeDir);
+    }
+
+    CameraLocalUtil::setPos(this, pos);
+    CameraLocalUtil::setUpVec(this, up);
+    CameraLocalUtil::setWatchPos(this, watchPos);
+
+    const TVec3f& watchUp = CameraLocalUtil::getWatchUpVec(mCamera);
+    CameraLocalUtil::setWatchUpVec(this, watchUp);
+
+    const TVec3f& globalOffset = CameraLocalUtil::getGlobalOffset(mCamera);
+    CameraLocalUtil::setGlobalOffset(this, globalOffset);
+
+    const TVec3f& localOffset = CameraLocalUtil::getLocalOffset(mCamera);
+    CameraLocalUtil::setLocalOffset(this, localOffset);
+
+    f32 fovy = CameraLocalUtil::getFovy(mCamera);
+    CameraLocalUtil::setFovy(this, fovy);
+
+    f32 roll = CameraLocalUtil::getRoll(mCamera);
+    CameraLocalUtil::setRoll(this, roll);
+}
 
 CameraParamChunkEvent* CameraManEvent::findChunk(s32 zoneID, const char* pName) const {
     CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();

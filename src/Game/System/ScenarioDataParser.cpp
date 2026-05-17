@@ -16,10 +16,6 @@ namespace {
             return GalaxyNameSortTable::getGalaxySortIndex(ppLhs->mGalaxyName) < GalaxyNameSortTable::getGalaxySortIndex(ppRhs->mGalaxyName);
         }
     };
-
-    const ScenarioData* getCurrentScenarioData() {
-        return ScenarioDataFunction::getScenarioDataParser()->getScenarioData(MR::getCurrentStageName());
-    }
 };  // namespace
 
 ScenarioData::ScenarioData(const char* pFilePath) : mScenarioData(nullptr), mGalaxyName(nullptr), mZoneList(nullptr) {
@@ -46,12 +42,39 @@ ScenarioData::ScenarioData(const char* pFilePath) : mScenarioData(nullptr), mGal
     mZoneList->attach(pArchive->getResource("/ZoneList.bcsv"));
 }
 
-// ScenarioData::getScenarioNum
-// ScenarioData::getPowerStarNum
+s32 ScenarioData::getScenarioNum() const {
+    s32 scenarioNum = 0;
+
+    for (s32 i = 1; i <= mScenarioData->getNumEntries(); i++) {
+        bool isHidden = false;
+        getValueBool("IsHidden", i, &isHidden);
+
+        if (!isHidden) {
+            scenarioNum++;
+        }
+    }
+
+    return scenarioNum;
+}
+
+s32 ScenarioData::getPowerStarNum() const {
+    s32 starNum = 0;
+
+    for (s32 i = 1; i <= mScenarioData->getNumEntries(); i++) {
+        u32 starId = 0;
+        getValueU32("PowerStarId", i, &starId);
+
+        if (starId != 0) {
+            starNum++;
+        }
+    }
+
+    return starNum;
+}
 
 bool ScenarioData::getValueString(const char* pKey, s32 a2, const char** ppOut) const {
-    ScenarioDataIter iter = getScenarioDataIter(a2);
-    bool isExist = reinterpret_cast< const JMapInfo* >(iter.mParser)->getValue< const char* >(iter.mCur, pKey, ppOut);
+    JMapInfoIter iter = getScenarioDataIter(a2);
+    bool isExist = iter.getValue< const char* >(pKey, ppOut);
 
     if (isExist) {
         if (MR::isEqualString(*ppOut, "")) {
@@ -69,20 +92,42 @@ const char* ScenarioData::getZoneName(s32 zoneId) const {
     return pZoneName;
 }
 
-// ScenarioData::getScenarioDataIter
+JMapInfoIter ScenarioData::getScenarioDataIter(s32 scenarioNo) const {
+    for (s32 i = 0; i < mScenarioData->getNumEntries(); i++) {
+        s32 curScenarioNo;
+        mScenarioData->getValue< s32 >(i, "ScenarioNo", &curScenarioNo);
 
-bool ScenarioData::getValueU32(const char* pKey, s32 a2, u32* pOut) const {
-    ScenarioDataIter iter = getScenarioDataIter(a2);
-    s32 index = reinterpret_cast< const JMapInfo* >(iter.mParser)->searchItemInfo(pKey);
-
-    if (index < 0) {
-        return nullptr;
+        if (curScenarioNo == scenarioNo) {
+            JMapInfoIter iter(mScenarioData, i);
+            return iter;
+        }
     }
 
-    return reinterpret_cast< const JMapInfo* >(iter.mParser)->getValueFast(a2, index, pOut);
+    JMapInfoIter iter = mScenarioData->end();
+    return iter;
 }
 
-// ScenarioData::getValueBool
+bool ScenarioData::getValueU32(const char* pKey, s32 a2, u32* pOut) const {
+    JMapInfoIter iter = getScenarioDataIter(a2);
+    s32 index = iter.mInfo->searchItemInfo(pKey);
+
+    if (index < 0) {
+        return false;
+    }
+
+    return iter.mInfo->getValueFast(iter.mIndex, index, pOut);
+}
+
+bool ScenarioData::getValueBool(const char* pKey, s32 a2, bool* pOut) const {
+    JMapInfoIter iter = getScenarioDataIter(a2);
+    s32 index = iter.mInfo->searchItemInfo(pKey);
+
+    if (index < 0) {
+        return false;
+    }
+
+    return iter.mInfo->getValueFast(iter.mIndex, index, pOut);
+}
 
 s32 ScenarioData::getZoneNum() const {
     if (mZoneList->mData != nullptr) {
@@ -175,7 +220,7 @@ namespace ScenarioDataFunction {
     }
 
     u32 getCurrentCommonLayers(const char* pParam1) {
-        getCurrentScenarioData();
+        getScenarioDataParser()->getScenarioData(MR::getCurrentStageName());
 
         return 1;
     }
@@ -183,7 +228,7 @@ namespace ScenarioDataFunction {
     u32 getCurrentScenarioLayers(const char* pParam1, s32 param2) {
         u32 layerNum;
 
-        if (getCurrentScenarioData()->getValueU32(pParam1, param2, &layerNum)) {
+        if (getScenarioDataParser()->getScenarioData(MR::getCurrentStageName())->getValueU32(pParam1, param2, &layerNum)) {
             return layerNum * 2;
         }
 

@@ -33,6 +33,7 @@ class MultiEmitter;
 class IceStep;
 class HashSortTable;
 class DrawAdaptor;
+class CollectCounter;
 struct SmokeEffectEntry;
 
 extern bool gIsLuigi;  // (cc68 - 10000)(r13)
@@ -103,7 +104,7 @@ public:
     void updateBaseScaleMtx();
     void getRealMtx(MtxPtr, const char*) const NO_INLINE;
     void getRealPos(const char*, TVec3f*) const;
-    void getGlobalJointMtx(const char*);
+    MtxPtr getGlobalJointMtx(const char*);
     void calcAnimInMovement();
     void forceSetBaseMtx(MtxPtr);
     void calcAnim();
@@ -151,6 +152,13 @@ public:
     void initParts();
     void initMorphStringTable();
     void setupSensors();
+    void updateHitSensor(HitSensor*) override;
+    void attackSensor(HitSensor*, HitSensor*) override;
+    void doTrampleJump(HitSensor*);
+    void trampleJump(f32, f32);
+    void initScouter();
+    void updateScouter();
+    void recordScoutingObject(HitSensor*);
     void updateTransForCamera();
 
     void initMember();
@@ -319,6 +327,12 @@ public:
 
     void sendMsgUpperPunch(HitSensor*);
     bool sendMsgToSensor(HitSensor*, u32);
+    void attackOrPushPolygons();
+    bool addRushSensor(HitSensor*, bool);
+    void attackOrPushSensor(HitSensor*, f32);
+    void attackOrPushSensorInRush(HitSensor*, f32);
+    void attackOrPushSensorInDamage(HitSensor*, f32);
+    void tryTornadoPull(HitSensor*);
 
     void entryWallWalkMode(const TVec3f&, const TVec3f&);
 
@@ -375,7 +389,7 @@ public:
     Color8 _1B0;
     u8 _1B4;
     bool _1B5;
-    u32 _1B8;
+    CollectCounter* _1B8;
     MarioMessenger* _1BC;
     bool _1C0;
     bool _1C1;
@@ -579,7 +593,7 @@ public:
     ModelHolder* _9C8;
     f32 _9CC;
     f32 _9D0;
-    u32 _9D4;
+    HitSensor* _9D4;
     TVec3f _9D8;
     ModelHolder* _9E4;
     MarioParts* _9E8;
@@ -736,7 +750,7 @@ public:
     u8 _F20;
     u8 _F21;
     // padding
-    u32 _F24;
+    HitSensor* _F24;
     u16 _F28;
     // padding
     union {
@@ -753,7 +767,7 @@ public:
     u16 _F42;
     bool _F44;
     // padding
-    u32 _F48;
+    HitSensor* _F48;
     BlackHole* mBlackHole;
     TVec3f mBlackHolePosition;
     TVec3f mBlackHoleRotateAxis;
