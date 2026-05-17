@@ -24,13 +24,42 @@ struct TVec3f {
     f32 y = 0.0F;
     f32 z = 0.0F;
 
+    constexpr TVec3f() = default;
+
+    constexpr TVec3f(f32 newX, f32 newY, f32 newZ) : x(newX), y(newY), z(newZ) {
+    }
+
     template <typename T>
     void set(T newX, T newY, T newZ) {
         x = static_cast<f32>(newX);
         y = static_cast<f32>(newY);
         z = static_cast<f32>(newZ);
     }
+
+    void set(const TVec3f& value) {
+        x = value.x;
+        y = value.y;
+        z = value.z;
+    }
+
+    void add(const TVec3f& value) {
+        x += value.x;
+        y += value.y;
+        z += value.z;
+    }
 };
+
+[[nodiscard]] constexpr TVec3f operator-(const TVec3f& lhs, const TVec3f& rhs) {
+    return TVec3f{lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z};
+}
+
+[[nodiscard]] constexpr TVec3f operator*(const TVec3f& value, f32 scale) {
+    return TVec3f{value.x * scale, value.y * scale, value.z * scale};
+}
+
+[[nodiscard]] constexpr TVec3f operator*(f32 scale, const TVec3f& value) {
+    return value * scale;
+}
 
 class LiveActor : public NameObj {
 public:

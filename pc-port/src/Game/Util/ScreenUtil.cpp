@@ -1,5 +1,6 @@
 #include "Game/Util/ScreenUtil.hpp"
 
+#include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/compat/RuntimeContext.hpp"
 
 namespace MR {
@@ -19,6 +20,14 @@ namespace MR {
         smgpc::game::WipeService* system_wipe() {
             if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
                 return &runtime->system_wipe();
+            }
+
+            return nullptr;
+        }
+
+        CaptureScreenDirector* capture_screen_director() {
+            if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+                return &runtime->capture_screen_director();
             }
 
             return nullptr;
@@ -153,11 +162,47 @@ namespace MR {
         return false;
     }
 
+    void startToCaptureScreen(const char* pName) {
+        if (auto* director = capture_screen_director()) {
+            director->requestCaptureTiming(pName);
+        }
+    }
+
+    void endToCaptureScreen(const char* pName) {
+        if (auto* director = capture_screen_director()) {
+            director->invalidateCaptureTiming(pName);
+        }
+    }
+
+    void captureScreenIfAllow(const char* pName) {
+        if (auto* director = capture_screen_director()) {
+            director->captureIfAllow(pName);
+        }
+    }
+
+    const ResTIMG* getScreenResTIMG() {
+        if (auto* director = capture_screen_director()) {
+            return director->getResTIMG();
+        }
+
+        return nullptr;
+    }
+
+    u8* getScreenTexImage() {
+        if (auto* director = capture_screen_director()) {
+            return director->getTexImage();
+        }
+
+        return nullptr;
+    }
+
     void closeSystemWipeCircleWithCaptureScreen(s32 frameCount) {
+        startToCaptureScreen("GameScreen");
         closeSystemWipeCircle(frameCount);
     }
 
     void closeSystemWipeFadeWithCaptureScreen(s32 frameCount) {
+        startToCaptureScreen("GameScreen");
         closeSystemWipeFade(frameCount);
     }
 

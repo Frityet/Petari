@@ -11,9 +11,9 @@
 #include <stdexcept>
 #include <string_view>
 
+#include "Game/compat/LytTexMap.hpp"
 #include "Game/compat/RarcArchive.hpp"
 #include "Game/compat/RuntimeContext.hpp"
-#include "Game/compat/LytTexMap.hpp"
 #include "core/RenderTypes.hpp"
 
 namespace {
@@ -470,6 +470,7 @@ SimpleLayout::SimpleLayout(const char* pName, const char* pLayoutName, u32 animL
 
 SimpleLayout::~SimpleLayout() {
     if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        runtime->unregister_effect_keeper(getName());
         runtime->unregister_layout(*this);
     }
 }
@@ -477,7 +478,11 @@ SimpleLayout::~SimpleLayout() {
 void SimpleLayout::initWithoutIter() {
 }
 
-void SimpleLayout::initEffectKeeper(int, const char*, const void*) {
+void SimpleLayout::initEffectKeeper(int effectNum, const char* pEffectName, const void*) {
+    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        const auto group_name = pEffectName != nullptr ? std::string_view(pEffectName) : std::string_view(mLayoutName);
+        runtime->register_effect_keeper(smgpc::game::EffectKeeperHostKind::SimpleLayout, mName, effectNum, group_name, false);
+    }
 }
 
 void SimpleLayout::appear() {
@@ -571,10 +576,14 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
         }
 
         const auto& pane = mBrlytLayout.panes[picture.pane_index];
-        const auto width = pane.width * pane_state.scale_x;
-        const auto height = pane.height * pane_state.scale_y;
-        const auto x = mTransX + pane_state.translate_x + base_position_x(pane.base_position, width);
-        const auto y = mTransY + pane_state.translate_y + base_position_y(pane.base_position, height);
+        const auto local_left = base_position_x(pane.base_position, pane.width);
+        const auto local_top = base_position_y(pane.base_position, pane.height);
+        const auto transform_point = [&](float local_x, float local_y) {
+            return std::array< float, 2U >{
+                mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
+                mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
+            };
+        };
         const auto texture_frame = textureFrameForContent(content_name);
         const auto vertex_color = [&](std::size_t index) {
             const auto& source = picture.vertex_colors[index];
@@ -595,6 +604,9 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
         auto tex_coord_gen_indices = std::array< std::uint8_t, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
         auto texture_stage_count = std::size_t{};
         auto tev_stage_count = std::size_t{};
+#ifndef NDEBUG
+        auto debug_texture_bindings = std::vector< smgpc::game::RuntimeContext::RenderTextureBindingTrace >{};
+#endif
 
         const auto append_texture_stage = [&](const smgpc::game::BrlytMaterialTexture& material_texture, std::uint8_t tex_coord_gen_index) {
             if (texture_stage_count >= texture_stages.size()) {
@@ -608,10 +620,23 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
 
             texture_stages[texture_stage_count] = smgpc::render::GxTextureStage2D{
                 .texture = texture->handle,
-                .wrap_u = material_texture.wrap_s != 0U,
-                .wrap_v = material_texture.wrap_t != 0U,
+                .wrap_u = material_texture.wrap_s,
+                .wrap_v = material_texture.wrap_t,
+                .min_filter = material_texture.min_filter,
+                .mag_filter = material_texture.mag_filter,
             };
             tex_coord_gen_indices[texture_stage_count] = tex_coord_gen_index;
+#ifndef NDEBUG
+            debug_texture_bindings.push_back(smgpc::game::RuntimeContext::RenderTextureBindingTrace{
+                .slot = static_cast< std::uint8_t >(texture_stage_count),
+                .texture_index = material_texture.texture_index,
+                .name = texture->name,
+                .width = texture->decoded.width,
+                .height = texture->decoded.height,
+                .format_raw = static_cast< std::uint32_t >(texture->decoded.format),
+                .format_name = texture_format_name(texture->decoded.format),
+            });
+#endif
             ++texture_stage_count;
             return true;
         };
@@ -650,13 +675,14 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
         };
 
         const auto vertex = [&](std::size_t index, float vx, float vy) {
+            const auto position = transform_point(vx, vy);
             auto tex_coords = std::array< std::array< float, 3U >, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
             for (auto stage = std::size_t{}; stage < texture_stage_count && stage < tex_coords.size(); ++stage) {
                 tex_coords[stage] = tex_coord(index, stage);
             }
             return smgpc::render::GxMaterialVertex2D{
-                .x = vx,
-                .y = vy,
+                .x = position[0U],
+                .y = position[1U],
                 .z = 0.0F,
                 .clip_w = 1.0F,
                 .tex_coords = tex_coords,
@@ -665,12 +691,32 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
         };
 
         const auto vertices = std::array< smgpc::render::GxMaterialVertex2D, 4U >{
-            vertex(0U, x, y),
-            vertex(1U, x + width, y),
-            vertex(2U, x + width, y + height),
-            vertex(3U, x, y + height),
+            vertex(0U, local_left, local_top),
+            vertex(1U, local_left + pane.width, local_top),
+            vertex(2U, local_left + pane.width, local_top + pane.height),
+            vertex(3U, local_left, local_top + pane.height),
         };
         constexpr auto indices = std::array< std::uint16_t, 6U >{0U, 1U, 2U, 0U, 2U, 3U};
+#ifndef NDEBUG
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->should_record_render_packet_trace()) {
+            runtime->record_layout_packet_trace(smgpc::game::RuntimeContext::LayoutRuntimePacketTrace{
+                .layout_name = mLayoutName,
+                .pane_name = pane.name,
+                .material_name = material.name.empty() ? picture.name : material.name,
+                .frame_index = runtime->frame_index(),
+                .picture_index = static_cast< std::uint32_t >(picture_index),
+                .material_index = picture.material_index,
+                .vertex_count = static_cast< std::uint32_t >(vertices.size()),
+                .index_count = static_cast< std::uint32_t >(indices.size()),
+                .texgen_count = static_cast< std::uint32_t >(texture_stage_count),
+                .tev_stage_count = static_cast< std::uint32_t >(tev_stage_count),
+                .alpha_compare_enabled = material.alpha_compare.enabled,
+                .blend_enabled = material.gx_state.blend.enabled,
+                .cull_mode = smgpc::render::CullMode::None,
+                .texture_bindings = debug_texture_bindings,
+            });
+        }
+#endif
         renderer.submit_gx_material_triangles(smgpc::render::GxMaterialTriangleBatch2D{
             .vertices = std::span< const smgpc::render::GxMaterialVertex2D >(vertices.data(), vertices.size()),
             .indices = std::span< const std::uint16_t >(indices.data(), indices.size()),
@@ -925,19 +971,39 @@ std::optional< SimpleLayout::PaneBounds > SimpleLayout::paneBounds(std::string_v
         return std::nullopt;
     }
 
-    const auto width = it->width * pane_state.scale_x;
-    const auto height = it->height * pane_state.scale_y;
-    if (width == 0.0F || height == 0.0F) {
+    if (it->width == 0.0F || it->height == 0.0F) {
         return std::nullopt;
     }
 
-    const auto x = mTransX + pane_state.translate_x + base_position_x(it->base_position, width);
-    const auto y = mTransY + pane_state.translate_y + base_position_y(it->base_position, height);
+    const auto local_left = base_position_x(it->base_position, it->width);
+    const auto local_top = base_position_y(it->base_position, it->height);
+    const auto transform_point = [&](float local_x, float local_y) {
+        return std::array< float, 2U >{
+            mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
+            mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
+        };
+    };
+    const auto corners = std::array< std::array< float, 2U >, 4U >{
+        transform_point(local_left, local_top),
+        transform_point(local_left + it->width, local_top),
+        transform_point(local_left + it->width, local_top + it->height),
+        transform_point(local_left, local_top + it->height),
+    };
+    auto left = corners.front()[0U];
+    auto right = corners.front()[0U];
+    auto top = corners.front()[1U];
+    auto bottom = corners.front()[1U];
+    for (const auto& corner : corners) {
+        left = std::min(left, corner[0U]);
+        right = std::max(right, corner[0U]);
+        top = std::min(top, corner[1U]);
+        bottom = std::max(bottom, corner[1U]);
+    }
     return PaneBounds{
-        .left = std::min(x, x + width),
-        .top = std::min(y, y + height),
-        .right = std::max(x, x + width),
-        .bottom = std::max(y, y + height),
+        .left = left,
+        .top = top,
+        .right = right,
+        .bottom = bottom,
     };
 }
 
@@ -1145,7 +1211,9 @@ std::vector< SimpleLayout::DebugPaneState > SimpleLayout::debugPanes() const {
                 .kind = "picture",
                 .name = picture.name,
                 .material_index = static_cast< s32 >(picture.material_index),
+                .material_name = {},
                 .texture_name = picture.texture_name,
+                .font_name = {},
                 .visible = picture.visible,
             };
             if (picture.material_index < mBrlytLayout.materials.size()) {
@@ -1167,6 +1235,8 @@ std::vector< SimpleLayout::DebugPaneState > SimpleLayout::debugPanes() const {
                 .kind = "text_box",
                 .name = text_box.name,
                 .material_index = static_cast< s32 >(text_box.material_index),
+                .material_name = {},
+                .texture_name = {},
                 .font_name = text_box.font_name,
                 .visible = text_box.visible,
             };
@@ -1295,6 +1365,9 @@ void SimpleLayout::commitAnimationState(const AnimationState& anim) {
         }
         if (pane_frame.scale_y.has_value()) {
             committed.scale_y = pane_frame.scale_y;
+        }
+        if (pane_frame.rotate_z.has_value()) {
+            committed.rotate_z = pane_frame.rotate_z;
         }
         if (pane_frame.alpha.has_value()) {
             committed.alpha = pane_frame.alpha;
@@ -1580,12 +1653,12 @@ void SimpleLayout::drawTextBoxes(smgpc::render::IRendererEngine& renderer, float
         }
 
         const auto& pane = mBrlytLayout.panes[text_box.pane_index];
-        const auto box_width = pane.width * pane_state.scale_x;
-        const auto box_height = pane.height * pane_state.scale_y;
-        const auto box_x = mTransX + pane_state.translate_x + base_position_x(pane.base_position, box_width);
-        const auto box_y = mTransY + pane_state.translate_y + base_position_y(pane.base_position, box_height);
-        const auto font_width = text_box.font_width * pane_state.scale_x;
-        const auto font_height = text_box.font_height * pane_state.scale_y;
+        const auto box_width = pane.width;
+        const auto box_height = pane.height;
+        const auto box_x = base_position_x(pane.base_position, box_width);
+        const auto box_y = base_position_y(pane.base_position, box_height);
+        const auto font_width = text_box.font_width;
+        const auto font_height = text_box.font_height;
         const auto scale_x = font_width / static_cast< float >(text_texture->font_width);
         const auto scale_y = font_height / static_cast< float >(text_texture->font_height);
         const auto line_width = static_cast< float >(text_texture->width) * scale_x;
@@ -1604,17 +1677,28 @@ void SimpleLayout::drawTextBoxes(smgpc::render::IRendererEngine& renderer, float
         const auto height = static_cast< float >(text_texture->height) * scale_y;
         const auto top_v = gx_texture_v_to_host(0.0F);
         const auto bottom_v = gx_texture_v_to_host(1.0F);
+        const auto transform_point = [&](float local_x, float local_y) {
+            return std::array< float, 2U >{
+                mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
+                mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
+            };
+        };
+        const auto top_left = transform_point(cursor_x, cursor_y);
+        const auto top_right = transform_point(cursor_x + width, cursor_y);
+        const auto bottom_right = transform_point(cursor_x + width, cursor_y + height);
+        const auto bottom_left = transform_point(cursor_x, cursor_y + height);
 
         renderer.submit_textured_quad(
             text_texture->handle,
             smgpc::render::TexturedQuad2D{
                 .vertices =
                     {
-                        smgpc::render::TexturedVertex2D{.x = cursor_x, .y = cursor_y, .z = 0.0F, .u = 0.0F, .v = top_v, .color = color},
-                        smgpc::render::TexturedVertex2D{.x = cursor_x + width, .y = cursor_y, .z = 0.0F, .u = 1.0F, .v = top_v, .color = color},
+                        smgpc::render::TexturedVertex2D{.x = top_left[0U], .y = top_left[1U], .z = 0.0F, .u = 0.0F, .v = top_v, .color = color},
+                        smgpc::render::TexturedVertex2D{.x = top_right[0U], .y = top_right[1U], .z = 0.0F, .u = 1.0F, .v = top_v, .color = color},
                         smgpc::render::TexturedVertex2D{
-                            .x = cursor_x + width, .y = cursor_y + height, .z = 0.0F, .u = 1.0F, .v = bottom_v, .color = color},
-                        smgpc::render::TexturedVertex2D{.x = cursor_x, .y = cursor_y + height, .z = 0.0F, .u = 0.0F, .v = bottom_v, .color = color},
+                            .x = bottom_right[0U], .y = bottom_right[1U], .z = 0.0F, .u = 1.0F, .v = bottom_v, .color = color},
+                        smgpc::render::TexturedVertex2D{
+                            .x = bottom_left[0U], .y = bottom_left[1U], .z = 0.0F, .u = 0.0F, .v = bottom_v, .color = color},
                     },
             });
     }
@@ -1626,6 +1710,7 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     auto local_translate_y = pane.translate_y;
     auto local_scale_x = pane.scale_x;
     auto local_scale_y = pane.scale_y;
+    auto local_rotate_z = pane.rotate_z;
     auto local_alpha = static_cast< float >(pane.alpha);
     auto local_visible = pane.visible;
 
@@ -1642,6 +1727,9 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     if (anim.scale_y.has_value()) {
         local_scale_y = *anim.scale_y;
     }
+    if (anim.rotate_z.has_value()) {
+        local_rotate_z = *anim.rotate_z;
+    }
     if (anim.alpha.has_value()) {
         local_alpha = *anim.alpha;
     }
@@ -1655,12 +1743,26 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
         local_alpha = override->second;
     }
 
+    constexpr auto kDegToRad = 3.14159265358979323846F / 180.0F;
+    const auto rotation = local_rotate_z * kDegToRad;
+    const auto cos_r = std::cos(rotation);
+    const auto sin_r = std::sin(rotation);
+    const auto local_m00 = cos_r * local_scale_x;
+    const auto local_m01 = -sin_r * local_scale_y;
+    const auto local_m10 = sin_r * local_scale_x;
+    const auto local_m11 = cos_r * local_scale_y;
+
     if (pane.parent_index < 0) {
         return PaneRenderState{
             .translate_x = local_translate_x,
             .translate_y = local_translate_y,
             .scale_x = local_scale_x,
             .scale_y = local_scale_y,
+            .rotate_z = local_rotate_z,
+            .m00 = local_m00,
+            .m01 = local_m01,
+            .m10 = local_m10,
+            .m11 = local_m11,
             .alpha = local_alpha,
             .visible = local_visible,
         };
@@ -1668,10 +1770,15 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
 
     const auto parent = paneRenderState(static_cast< std::size_t >(pane.parent_index));
     return PaneRenderState{
-        .translate_x = parent.translate_x + local_translate_x * parent.scale_x,
-        .translate_y = parent.translate_y + local_translate_y * parent.scale_y,
+        .translate_x = parent.translate_x + parent.m00 * local_translate_x + parent.m01 * local_translate_y,
+        .translate_y = parent.translate_y + parent.m10 * local_translate_x + parent.m11 * local_translate_y,
         .scale_x = parent.scale_x * local_scale_x,
         .scale_y = parent.scale_y * local_scale_y,
+        .rotate_z = parent.rotate_z + local_rotate_z,
+        .m00 = parent.m00 * local_m00 + parent.m01 * local_m10,
+        .m01 = parent.m00 * local_m01 + parent.m01 * local_m11,
+        .m10 = parent.m10 * local_m00 + parent.m11 * local_m10,
+        .m11 = parent.m10 * local_m01 + parent.m11 * local_m11,
         .alpha = parent.alpha * (local_alpha / 255.0F),
         .visible = parent.visible && local_visible,
     };
@@ -1711,6 +1818,9 @@ smgpc::game::BrlanPaneFrame SimpleLayout::animationFrameForPane(std::string_view
         if (layer_frame.scale_y.has_value()) {
             result.scale_y = layer_frame.scale_y;
         }
+        if (layer_frame.rotate_z.has_value()) {
+            result.rotate_z = layer_frame.rotate_z;
+        }
         if (layer_frame.alpha.has_value()) {
             result.alpha = layer_frame.alpha;
         }
@@ -1746,6 +1856,9 @@ smgpc::game::BrlanPaneFrame SimpleLayout::animationFrameForPane(std::string_view
             }
             if (layer_frame.scale_y.has_value()) {
                 result.scale_y = layer_frame.scale_y;
+            }
+            if (layer_frame.rotate_z.has_value()) {
+                result.rotate_z = layer_frame.rotate_z;
             }
             if (layer_frame.alpha.has_value()) {
                 result.alpha = layer_frame.alpha;

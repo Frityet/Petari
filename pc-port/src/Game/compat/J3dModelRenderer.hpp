@@ -71,7 +71,7 @@ namespace smgpc::game {
         render::TextureHandle host_handle = {};
     };
 
-    //TODO: Split up
+    // TODO: Split up
     struct J3dRendererPacketState {
         std::string material_name;
         std::uint16_t shape_index = 0xffffU;
@@ -178,8 +178,8 @@ namespace smgpc::game {
         [[nodiscard]] std::size_t mesh_count() const;
         [[nodiscard]] std::span<const J3dRendererPacketState> render_packets() const;
         [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame,
-                                                                          std::span<const GXLightState> scene_lights = {},
-                                                                          const J3dModelRendererDrawOptions &options = {}) const;
+                                                                         std::span<const GXLightState> scene_lights = {},
+                                                                         const J3dModelRendererDrawOptions &options = {}) const;
 
     private:
         struct Mesh {
@@ -209,8 +209,10 @@ namespace smgpc::game {
             J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
             std::array<std::uint8_t, 4U> material_color{255U, 255U, 255U, 255U};
             std::uint8_t pass_order = 0U;
-            bool wrap_u = false;
-            bool wrap_v = false;
+            std::uint8_t wrap_u = 0U;
+            std::uint8_t wrap_v = 0U;
+            std::uint8_t min_filter = 1U;
+            std::uint8_t mag_filter = 1U;
             bool blend = true;
             render::BlendMode blend_mode = render::BlendMode::Alpha;
             render::GxBlendMode2D gx_blend = {};

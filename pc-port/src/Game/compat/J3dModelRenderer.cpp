@@ -1609,8 +1609,10 @@ namespace smgpc::game {
                             const auto texture_index = passes[i].texture_index;
                             mesh.gx_texture_stages[i] = render::GxTextureStage2D{
                                 .texture = _texture_handles[texture_index],
-                                .wrap_u = geometry.textures[texture_index].wrap_s != 0U,
-                                .wrap_v = geometry.textures[texture_index].wrap_t != 0U,
+                                .wrap_u = geometry.textures[texture_index].wrap_s,
+                                .wrap_v = geometry.textures[texture_index].wrap_t,
+                                .min_filter = geometry.textures[texture_index].min_filter,
+                                .mag_filter = geometry.textures[texture_index].mag_filter,
                             };
                         }
                         mesh.gx_tev_stage_count = 0U;
@@ -1663,8 +1665,13 @@ namespace smgpc::game {
                                 mesh.packet_mode = J3dRendererPacketMode::ComposedMaterial;
                                 mesh.pass_order = passes.front().stage;
                                 mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                                mesh.wrap_u = true;
-                                mesh.wrap_v = true;
+                                if (passes.front().texture_index < geometry.textures.size()) {
+                                    const auto &source_texture = geometry.textures[passes.front().texture_index];
+                                    mesh.wrap_u = source_texture.wrap_s;
+                                    mesh.wrap_v = source_texture.wrap_t;
+                                    mesh.min_filter = source_texture.min_filter;
+                                    mesh.mag_filter = source_texture.mag_filter;
+                                }
                                 mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                                 mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
                                 mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
@@ -1752,8 +1759,10 @@ namespace smgpc::game {
                         mesh.material_color = material_color;
                         mesh.pass_order = pass.stage;
                         mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                        mesh.wrap_u = geometry.textures[texture_index].wrap_s != 0U;
-                        mesh.wrap_v = geometry.textures[texture_index].wrap_t != 0U;
+                        mesh.wrap_u = geometry.textures[texture_index].wrap_s;
+                        mesh.wrap_v = geometry.textures[texture_index].wrap_t;
+                        mesh.min_filter = geometry.textures[texture_index].min_filter;
+                        mesh.mag_filter = geometry.textures[texture_index].mag_filter;
                         mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                         mesh.blend_mode = tev_baked ?
                                               blend_mode_for_composed_material(material, texture_has_alpha) :
@@ -2186,7 +2195,7 @@ namespace smgpc::game {
                 apply_effective_tex_coord_scales(effective_passes, effective_material.gx_state, _textures);
                 if (effective_passes.empty()) {
                     project_untextured_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, matrix_context,
-                                                           scratch.camera_context, scratch.projected_sources, vertices, indices);
+                                                            scratch.camera_context, scratch.projected_sources, vertices, indices);
                 } else {
                     project_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, effective_passes,
                                                  matrix_context, scratch.camera_context, vertices, indices);
@@ -2201,6 +2210,8 @@ namespace smgpc::game {
                                                        .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                                                        .wrap_u = mesh.wrap_u,
                                                        .wrap_v = mesh.wrap_v,
+                                                       .min_filter = mesh.min_filter,
+                                                       .mag_filter = mesh.mag_filter,
                                                        .blend = mesh.blend,
                                                        .blend_mode = mesh.blend_mode,
                                                        .gx_blend = effective_gx_blend,
@@ -2225,6 +2236,8 @@ namespace smgpc::game {
                                                    .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                                                    .wrap_u = mesh.wrap_u,
                                                    .wrap_v = mesh.wrap_v,
+                                                   .min_filter = mesh.min_filter,
+                                                   .mag_filter = mesh.mag_filter,
                                                    .blend = mesh.blend,
                                                    .blend_mode = mesh.blend_mode,
                                                    .gx_blend = effective_gx_blend,
@@ -2243,6 +2256,8 @@ namespace smgpc::game {
                                                .indices = std::span<const std::uint16_t>(mesh.indices.data(), mesh.indices.size()),
                                                .wrap_u = mesh.wrap_u,
                                                .wrap_v = mesh.wrap_v,
+                                               .min_filter = mesh.min_filter,
+                                               .mag_filter = mesh.mag_filter,
                                                .blend = mesh.blend,
                                                .blend_mode = mesh.blend_mode,
                                                .gx_blend = effective_gx_blend,

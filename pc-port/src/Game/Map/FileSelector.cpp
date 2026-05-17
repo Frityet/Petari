@@ -253,6 +253,9 @@ void FileSelector::init(const JMapInfoIter&) {
 
 void FileSelector::appear() {
     LiveActor::appear();
+    if (mCameraController != nullptr) {
+        mCameraController->appear();
+    }
     setNerve(&NrvFileSelector::FileSelectorNrvWaitBind::sInstance);
 }
 
@@ -261,9 +264,6 @@ void FileSelector::kill() {
 }
 
 void FileSelector::control() {
-    if (mCameraController != nullptr) {
-        mCameraController->update();
-    }
     updateBgm();
 }
 
@@ -286,6 +286,7 @@ bool FileSelector::receiveOtherMsg(u32 msg, HitSensor*, HitSensor*) {
 
 void FileSelector::createCameraController() {
     mCameraController = std::make_unique< FileSelectCameraController >("ファイル選択カメラ");
+    mCameraController->initWithoutIter();
 }
 
 void FileSelector::createTitle() {
@@ -832,7 +833,7 @@ void FileSelector::goToNearPoint() {
     calcBasePos(1.0F);
     const auto* item = mSelectedItem != nullptr ? mSelectedItem : getItemByFileNo(mSelectedFileNo);
     const auto base_position = item != nullptr ? item->getBasePosition() : mItemBasePositions.front();
-    mCameraController->goToNearPoint(base_position);
+    mCameraController->goToNearPoint(TVec3f{base_position.x, base_position.y, base_position.z});
 }
 
 void FileSelector::exeWaitBind() {

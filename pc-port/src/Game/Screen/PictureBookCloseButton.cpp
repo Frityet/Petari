@@ -14,7 +14,7 @@ namespace NrvPictureBookCloseButton {
 PictureBookCloseButton::PictureBookCloseButton(bool canCloseWithPad)
     : LayoutActor("絵本閉じるボタン", true), mPaneCtrl(nullptr), mCanCloseWithPad(canCloseWithPad) {}
 
-void PictureBookCloseButton::init(const JMapInfoIter& rIter) {
+void PictureBookCloseButton::init(const JMapInfoIter&) {
     initLayoutManager("BackButton", 1);
     MR::connectToSceneLayoutDecoration(this);
 

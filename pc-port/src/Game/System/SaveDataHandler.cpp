@@ -152,7 +152,9 @@ void SaveDataHandler::requestSaveSaveData() {
 
 void SaveDataHandler::requestRemoveSaveData() {
     for (auto slot_index = s32{1}; slot_index <= 6; ++slot_index) {
-        backing_save_data().set_slot_state(slot_index, smgpc::game::SaveDataService::SlotState{.slot_index = slot_index});
+        auto slot_state = smgpc::game::SaveDataService::SlotState{};
+        slot_state.slot_index = slot_index;
+        backing_save_data().set_slot_state(slot_index, slot_state);
         backing_save_data().erase("config" + std::to_string(slot_index));
         backing_save_data().erase("mario" + std::to_string(slot_index));
         backing_save_data().erase("luigi" + std::to_string(slot_index));

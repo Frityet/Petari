@@ -20,8 +20,6 @@ namespace smgpc::game {
         float z = 0.0F;
     };
 
-    [[nodiscard]] CameraPoseCompat file_select_title_camera_pose();
-    [[nodiscard]] CameraPoseCompat file_select_far_camera_pose();
-    [[nodiscard]] CameraViewPointCompat transform_world_to_camera(const CameraPoseCompat& pose, const CameraParamVec3& world);
+    [[nodiscard]] CameraViewPointCompat transform_world_to_camera(const CameraPoseCompat &pose, const CameraParamVec3 &world);
 
 }  // namespace smgpc::game

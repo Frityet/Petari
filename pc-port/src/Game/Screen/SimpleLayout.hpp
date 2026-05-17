@@ -195,6 +195,11 @@ private:
         float translate_y = 0.0F;
         float scale_x = 1.0F;
         float scale_y = 1.0F;
+        float rotate_z = 0.0F;
+        float m00 = 1.0F;
+        float m01 = 0.0F;
+        float m10 = 0.0F;
+        float m11 = 1.0F;
         float alpha = 255.0F;
         bool visible = true;
     };

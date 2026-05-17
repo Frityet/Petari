@@ -319,6 +319,54 @@ namespace smgpc::render::backends {
             return state;
         }
 
+        [[nodiscard]] std::uint32_t gx_sampler_wrap_u(std::uint8_t wrap) {
+            constexpr auto gx_repeat = std::uint8_t{1U};
+            constexpr auto gx_mirror = std::uint8_t{2U};
+            if (wrap == gx_repeat) {
+                return 0U;
+            }
+            if (wrap == gx_mirror) {
+                return BGFX_SAMPLER_U_MIRROR;
+            }
+            return BGFX_SAMPLER_U_CLAMP;
+        }
+
+        [[nodiscard]] std::uint32_t gx_sampler_wrap_v(std::uint8_t wrap) {
+            constexpr auto gx_repeat = std::uint8_t{1U};
+            constexpr auto gx_mirror = std::uint8_t{2U};
+            if (wrap == gx_repeat) {
+                return 0U;
+            }
+            if (wrap == gx_mirror) {
+                return BGFX_SAMPLER_V_MIRROR;
+            }
+            return BGFX_SAMPLER_V_CLAMP;
+        }
+
+        [[nodiscard]] std::uint32_t gx_sampler_filter(std::uint8_t min_filter, std::uint8_t mag_filter) {
+            constexpr auto gx_near = std::uint8_t{0U};
+            constexpr auto gx_near_mip_near = std::uint8_t{2U};
+            constexpr auto gx_lin_mip_near = std::uint8_t{3U};
+            constexpr auto gx_near_mip_lin = std::uint8_t{4U};
+
+            auto flags = std::uint32_t{};
+            if (min_filter == gx_near || min_filter == gx_near_mip_near || min_filter == gx_near_mip_lin) {
+                flags |= BGFX_SAMPLER_MIN_POINT;
+            }
+            if (mag_filter == gx_near) {
+                flags |= BGFX_SAMPLER_MAG_POINT;
+            }
+            if (min_filter == gx_near_mip_near || min_filter == gx_lin_mip_near) {
+                flags |= BGFX_SAMPLER_MIP_POINT;
+            }
+            return flags;
+        }
+
+        [[nodiscard]] std::uint32_t gx_sampler_state(std::uint8_t wrap_u, std::uint8_t wrap_v, std::uint8_t min_filter,
+                                                     std::uint8_t mag_filter) {
+            return gx_sampler_wrap_u(wrap_u) | gx_sampler_wrap_v(wrap_v) | gx_sampler_filter(min_filter, mag_filter);
+        }
+
     }  // namespace
 
     class BgfxCallback final : public bgfx::CallbackI {
@@ -344,8 +392,15 @@ namespace smgpc::render::backends {
         }
 
         void traceVargs(const char *_filePath, std::uint16_t _line, const char *_format, va_list _argList) override {
+#ifndef NDEBUG
             std::fprintf(stderr, "bgfx trace at %s:%u: ", _filePath != nullptr ? _filePath : "<unknown>", _line);
             std::vfprintf(stderr, _format, _argList);
+#else
+            (void)_filePath;
+            (void)_line;
+            (void)_format;
+            (void)_argList;
+#endif
         }
 
         void profilerBegin(const char *, std::uint32_t, const char *, std::uint16_t) override {
@@ -982,6 +1037,8 @@ namespace smgpc::render::backends {
                                                .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                                                .wrap_u = quad.wrap_u,
                                                .wrap_v = quad.wrap_v,
+                                               .min_filter = quad.min_filter,
+                                               .mag_filter = quad.mag_filter,
                                                .blend = quad.blend,
                                                .blend_mode = quad.blend_mode,
                                                .gx_blend = quad.gx_blend,
@@ -1055,13 +1112,7 @@ namespace smgpc::render::backends {
             bgfx::setVertexBuffer(0U, &transient_vertex_buffer);
             bgfx::setIndexBuffer(&transient_index_buffer);
         }
-        auto sampler_flags = std::uint32_t{};
-        if (!batch.wrap_u) {
-            sampler_flags |= BGFX_SAMPLER_U_CLAMP;
-        }
-        if (!batch.wrap_v) {
-            sampler_flags |= BGFX_SAMPLER_V_CLAMP;
-        }
+        const auto sampler_flags = gx_sampler_state(batch.wrap_u, batch.wrap_v, batch.min_filter, batch.mag_filter);
         bgfx::setTexture(0U, _texture_sampler, _textures[texture.value], sampler_flags);
         ++_texture_binds;
         auto state = gx_write_state(batch.gx_blend);
@@ -1185,13 +1236,7 @@ namespace smgpc::render::backends {
                 continue;
             }
             const auto &stage = batch.texture_stages[stage_index];
-            auto sampler_flags = std::uint32_t{};
-            if (!stage.wrap_u) {
-                sampler_flags |= BGFX_SAMPLER_U_CLAMP;
-            }
-            if (!stage.wrap_v) {
-                sampler_flags |= BGFX_SAMPLER_V_CLAMP;
-            }
+            const auto sampler_flags = gx_sampler_state(stage.wrap_u, stage.wrap_v, stage.min_filter, stage.mag_filter);
             bgfx::setTexture(static_cast<std::uint8_t>(stage_index), _gx_material_samplers[stage_index], _textures[stage.texture.value], sampler_flags);
             ++_texture_binds;
         }

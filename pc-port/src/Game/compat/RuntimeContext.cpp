@@ -9,11 +9,14 @@
 #include <sstream>
 #include <stdexcept>
 #include <system_error>
+#include <utility>
 #include <vector>
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
+#include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/compat/CameraParam.hpp"
@@ -106,6 +109,18 @@ namespace smgpc::game {
             return std::string(value);
         }
 
+        [[nodiscard]] CameraPoseCompat default_scene_camera_pose() {
+            return CameraPoseCompat{
+                .eye = {0.0F, 0.0F, 0.0F},
+                .watch = {0.0F, 0.0F, -1.0F},
+                .up = {0.0F, 1.0F, 0.0F},
+                .fovy_degrees = 45.0F,
+                .aspect_ratio = 608.0F / 456.0F,
+                .near_clip = 100.0F,
+                .far_clip = 800000.0F,
+            };
+        }
+
 #ifndef NDEBUG
         [[nodiscard]] std::string_view wipe_state_name(WipeState state) {
             switch (state) {
@@ -138,6 +153,10 @@ namespace smgpc::game {
         }
 
         s_runtime_context = this;
+        _capture_screen_director = std::make_unique<CaptureScreenDirector>();
+        MR::createScreenAlphaSceneObj(0, 1.0F);
+        _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
+        _capture_screen_camera_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenCamera, "Camera");
         _logger.info(logging::Category::APP, logging::Message{"Using SMG disc files from {}"}, _disc_files_root.string());
         if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
             _save_data.set_host_directory(*save_directory);
@@ -150,9 +169,22 @@ namespace smgpc::game {
             try {
                 const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
                 _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());
-            }
-            catch (const std::exception &error) {
+            } catch (const std::exception &error) {
                 _logger.warning(logging::Category::APP, logging::Message{"Could not load original message archive {}: {}"}, message_archive->string(),
+                                error.what());
+            }
+        }
+        if (const auto effect_archive = _dvd.find_first({
+                std::filesystem::path("ParticleData") / "Effect.arc",
+            })) {
+            try {
+                _effects.load_resources(_dvd.archive_for_path(*effect_archive));
+                if (const auto *resources = _effects.resource_library(); resources != nullptr) {
+                    _logger.info(logging::Category::APP, logging::Message{"Loaded {} particle names, {} particle resources, and {} particle textures from {}"},
+                                 resources->particle_name_count(), resources->resource_count(), resources->texture_count(), effect_archive->string());
+                }
+            } catch (const std::exception &error) {
+                _logger.warning(logging::Category::APP, logging::Message{"Could not load original effect archive {}: {}"}, effect_archive->string(),
                                 error.what());
             }
         }
@@ -165,6 +197,9 @@ namespace smgpc::game {
     }
 
     RuntimeContext::~RuntimeContext() {
+        _capture_screen_camera_actor.reset();
+        _capture_screen_indirect_actor.reset();
+        _capture_screen_director.reset();
         if (s_runtime_context == this) {
             s_runtime_context = nullptr;
         }
@@ -184,11 +219,16 @@ namespace smgpc::game {
 
     void RuntimeContext::begin_frame(const render::FrameContext &frame_context) {
         _frame_index = frame_context.frame_index;
+        _copy_events.clear();
 #ifndef NDEBUG
         _j3d_packet_trace.clear();
+        _layout_packet_trace.clear();
 #endif
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
+        if (const auto camera_pose = _camera_system.active_programmable_camera_pose()) {
+            _scene_camera_pose = *camera_pose;
+        }
         _audio.begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
         _scene_wipe.begin_frame(_frame_index);
@@ -230,6 +270,17 @@ namespace smgpc::game {
         _scene_camera_pose = camera_pose;
     }
 
+    void RuntimeContext::record_copy_event(render::CopyEvent event) {
+        event.index = _copy_events.size();
+        if (event.event_index == 0U) {
+            event.event_index = _frame_index;
+        }
+        if (event.presenter_frame_count == 0U) {
+            event.presenter_frame_count = _frame_index;
+        }
+        _copy_events.push_back(std::move(event));
+    }
+
     void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose) {
         _last_camera_pose = camera_pose;
         if (!_game_layout.is_game_scene_draw_3d_active()) {
@@ -241,10 +292,21 @@ namespace smgpc::game {
         }
 #endif
         _scheduler.execute_draw_buffer_list_normal(renderer, camera_pose);
+        _scheduler.execute_draw_type(renderer, MR::DrawType_EffectDraw3D);
+        _scheduler.execute_draw_type(renderer, MR::DrawType_EffectDrawForBloomEffect);
+        _scheduler.execute_draw_type(renderer, MR::DrawType_CaptureScreenIndirect);
     }
 
     void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer) {
-        draw_3d_normal(renderer, _scene_camera_pose.value_or(file_select_title_camera_pose()));
+        if (!_scene_camera_pose.has_value()) {
+#ifndef NDEBUG
+            emit_semantic_trace_event("camera", "missing_scene_camera_pose", "using default_scene_camera_pose");
+#endif
+            draw_3d_normal(renderer, default_scene_camera_pose());
+            return;
+        }
+
+        draw_3d_normal(renderer, *_scene_camera_pose);
     }
 
     void RuntimeContext::draw_2d_normal(render::IRendererEngine &renderer) {
@@ -294,9 +356,17 @@ namespace smgpc::game {
         return _last_camera_pose;
     }
 
+    std::span<const render::CopyEvent> RuntimeContext::copy_events() const {
+        return _copy_events;
+    }
+
 #ifndef NDEBUG
     std::span<const RuntimeContext::J3dRuntimePacketTrace> RuntimeContext::j3d_packet_trace() const {
         return _j3d_packet_trace;
+    }
+
+    std::span<const RuntimeContext::LayoutRuntimePacketTrace> RuntimeContext::layout_packet_trace() const {
+        return _layout_packet_trace;
     }
 
     std::span<const RuntimeContext::SemanticTraceEvent> RuntimeContext::semantic_trace_events() const {
@@ -305,6 +375,10 @@ namespace smgpc::game {
 
     bool RuntimeContext::should_record_j3d_packet_trace() const {
         return _j3d_packet_trace_frame.has_value() && _frame_index == *_j3d_packet_trace_frame;
+    }
+
+    bool RuntimeContext::should_record_render_packet_trace() const {
+        return should_record_j3d_packet_trace();
     }
 #endif
 
@@ -468,6 +542,14 @@ namespace smgpc::game {
         return _rfl;
     }
 
+    CaptureScreenDirector &RuntimeContext::capture_screen_director() {
+        return *_capture_screen_director;
+    }
+
+    const CaptureScreenDirector &RuntimeContext::capture_screen_director() const {
+        return *_capture_screen_director;
+    }
+
     SceneScheduler &RuntimeContext::scheduler() {
         return _scheduler;
     }
@@ -504,6 +586,17 @@ namespace smgpc::game {
     void RuntimeContext::start_cs_sound(std::string_view name) {
         _audio.start_controller_speaker_sound(name);
         _logger.info(logging::Category::APP, logging::Message{"SMG requested controller speaker sound {}"}, name);
+    }
+
+    void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
+                                                std::string_view resource_group_name, bool sort_enabled) {
+        _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled);
+        _logger.info(logging::Category::APP, logging::Message{"Registered effect keeper {} group {} capacity {}"}, host_name,
+                     resource_group_name, requested_capacity);
+    }
+
+    void RuntimeContext::unregister_effect_keeper(std::string_view host_name) {
+        _effects.unregister_keeper(host_name);
     }
 
     void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name) {
@@ -588,6 +681,13 @@ namespace smgpc::game {
             .draw_pass = std::string(draw_pass),
             .state = packet,
         });
+    }
+
+    void RuntimeContext::record_layout_packet_trace(LayoutRuntimePacketTrace packet) {
+        if (packet.frame_index == 0U) {
+            packet.frame_index = _frame_index;
+        }
+        _layout_packet_trace.push_back(std::move(packet));
     }
 #endif
 

@@ -14,6 +14,7 @@
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
 #include "Game/compat/RuntimeContext.hpp"
 
@@ -607,6 +608,7 @@ namespace smgpc::game {
             runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = true});
         }
         execute_draw_buffer_list_normal_opa_before_silhouette(renderer, camera_pose);
+        MR::fillSilhouetteColor();
         if (runtime != nullptr) {
             runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = false});
         }
@@ -733,6 +735,10 @@ namespace smgpc::game {
             push_trace(*entry, SceneSchedulerPhase::DrawType);
 #endif
         }
+
+        if (auto *runtime = RuntimeContext::try_instance()) {
+            runtime->effects().draw(renderer, draw_type);
+        }
     }
 
 #ifndef NDEBUG
@@ -752,6 +758,15 @@ namespace smgpc::game {
                 .order = entry.order,
                 .suspended = entry_is_suspended(entry),
                 .dead = entry_is_dead(entry),
+                .has_live_actor_state = false,
+                .live_actor_nerve_step = 0,
+                .live_actor_position = {},
+                .live_actor_rotation = {},
+                .live_actor_scale = {},
+                .live_actor_base_matrix = {},
+                .live_actor_bck_name = {},
+                .live_actor_brk_name = {},
+                .live_actor_btk_name = {},
             };
             if (const auto *actor = entry_live_actor(entry)) {
                 state.has_live_actor_state = true;
@@ -806,6 +821,11 @@ namespace smgpc::game {
                 .font_count = layout->debugFontCount(),
                 .committed_pane_frame_count = layout->debugCommittedPaneFrameCount(),
                 .animations = {},
+                .pane_controls = {},
+                .button_controllers = {},
+                .panes = {},
+                .materials = {},
+                .textures = {},
             };
             if (layout->getArchivePath().has_value()) {
                 state.has_archive_path = true;
@@ -1064,6 +1084,15 @@ namespace smgpc::game {
             .order = entry.order,
             .suspended = entry_is_suspended(entry),
             .dead = entry_is_dead(entry),
+            .has_live_actor_state = false,
+            .live_actor_nerve_step = 0,
+            .live_actor_position = {},
+            .live_actor_rotation = {},
+            .live_actor_scale = {},
+            .live_actor_base_matrix = {},
+            .live_actor_bck_name = {},
+            .live_actor_brk_name = {},
+            .live_actor_btk_name = {},
         };
         if (const auto *actor = entry_live_actor(entry)) {
             state.has_live_actor_state = true;

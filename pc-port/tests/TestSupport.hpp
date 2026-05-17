@@ -46,8 +46,8 @@
 #include "Game/compat/CameraParam.hpp"
 #include "Game/compat/CameraPose.hpp"
 #include "Game/compat/J3dAnimation.hpp"
-#include "Game/compat/J3dMatrix.hpp"
 #include "Game/compat/J3dMaterialRuntime.hpp"
+#include "Game/compat/J3dMatrix.hpp"
 #include "Game/compat/J3dModel.hpp"
 #include "Game/compat/J3dModelRenderer.hpp"
 #include "Game/compat/J3dTexture.hpp"
@@ -83,6 +83,29 @@
 #include <vector>
 
 namespace smgpc::tests {
+    [[nodiscard]] inline smgpc::game::CameraPoseCompat title_test_camera_pose() {
+        return smgpc::game::CameraPoseCompat{
+            .eye = {0.0F, 15800.0F, 15000.0F},
+            .watch = {0.0F, 15800.0F, 0.0F},
+            .up = {0.0F, 1.0F, 0.0F},
+            .fovy_degrees = 60.0F,
+            .aspect_ratio = 608.0F / 456.0F,
+            .near_clip = 100.0F,
+            .far_clip = 800000.0F,
+        };
+    }
+
+    [[nodiscard]] inline smgpc::game::CameraPoseCompat far_test_camera_pose() {
+        return smgpc::game::CameraPoseCompat{
+            .eye = {0.0F, 0.0F, 15000.0F},
+            .watch = {0.0F, 800.0F, 0.0F},
+            .up = {0.0F, 1.0F, 0.0F},
+            .fovy_degrees = 40.0F,
+            .aspect_ratio = 608.0F / 456.0F,
+            .near_clip = 100.0F,
+            .far_clip = 800000.0F,
+        };
+    }
 
     class NullLogger final : public smgpc::logging::ILogger {
     public:
@@ -553,5 +576,5 @@ namespace smgpc::tests {
         [[maybe_unused]] static const ::smgpc::tests::TestRegistrar registrar;          \
     };                                                                                  \
     [[maybe_unused]] const ::smgpc::tests::TestRegistrar TestCase<__LINE__>::registrar{ \
-        kTestSuite, description, __FILE__, __LINE__, &TestCase<__LINE__>::run};         \
+        TEST_SUITE, description, __FILE__, __LINE__, &TestCase<__LINE__>::run};         \
     void TestCase<__LINE__>::run()

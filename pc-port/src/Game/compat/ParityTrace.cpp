@@ -100,6 +100,19 @@ namespace smgpc::game {
             return "Unknown";
         }
 
+        [[nodiscard]] const char *effect_keeper_host_kind_name(EffectKeeperHostKind kind) {
+            switch (kind) {
+            case EffectKeeperHostKind::LiveActor:
+                return "LiveActor";
+            case EffectKeeperHostKind::LayoutActor:
+                return "LayoutActor";
+            case EffectKeeperHostKind::SimpleLayout:
+                return "SimpleLayout";
+            }
+
+            return "Unknown";
+        }
+
         [[nodiscard]] const char *wipe_event_kind_name(WipeEventKind kind) {
             switch (kind) {
             case WipeEventKind::Open:
@@ -334,78 +347,166 @@ namespace smgpc::game {
             return out;
         }
 
-        [[nodiscard]] Json frame_rect_json(std::uint16_t width, std::uint16_t height) {
+        [[nodiscard]] const char *copy_event_kind_name(render::CopyEventKind kind) {
+            switch (kind) {
+            case render::CopyEventKind::Texture:
+                return "texture";
+            case render::CopyEventKind::Xfb:
+                return "xfb";
+            case render::CopyEventKind::Present:
+                return "present";
+            }
+
+            return "unknown";
+        }
+
+        [[nodiscard]] render::CopyRect frame_rect(std::uint16_t width, std::uint16_t height) {
+            return render::CopyRect{
+                .left = 0,
+                .top = 0,
+                .right = width,
+                .bottom = height,
+                .width = width,
+                .height = height,
+            };
+        }
+
+        [[nodiscard]] render::CopyViewport copy_viewport_from_frame(const render::FrameContext &frame_context) {
+            return render::CopyViewport{
+                .left = 0.0F,
+                .right = static_cast<float>(frame_context.framebuffer.width),
+                .top = 0.0F,
+                .bottom = static_cast<float>(frame_context.framebuffer.height),
+                .near_depth = 0.0F,
+                .far_depth = 1.0F,
+            };
+        }
+
+        [[nodiscard]] Json copy_rect_json(const render::CopyRect &rect) {
             return Json{
-                {"left", 0},
-                {"top", 0},
-                {"right", width},
-                {"bottom", height},
-                {"width", width},
-                {"height", height},
+                {"left", rect.left},
+                {"top", rect.top},
+                {"right", rect.right},
+                {"bottom", rect.bottom},
+                {"width", rect.width},
+                {"height", rect.height},
+            };
+        }
+
+        [[nodiscard]] Json copy_viewport_json(const render::CopyViewport &viewport) {
+            return Json{
+                {"left", viewport.left},
+                {"right", viewport.right},
+                {"top", viewport.top},
+                {"bottom", viewport.bottom},
+                {"near_depth", viewport.near_depth},
+                {"far_depth", viewport.far_depth},
+            };
+        }
+
+        [[nodiscard]] Json framebuffer_json(const render::FramebufferInfo &framebuffer) {
+            return Json{
+                {"width", framebuffer.width},
+                {"height", framebuffer.height},
             };
         }
 
         [[nodiscard]] Json frame_viewport_json(const render::FrameContext &frame_context) {
-            return Json{
-                {"left", 0.0F},
-                {"right", static_cast<float>(frame_context.framebuffer.width)},
-                {"top", 0.0F},
-                {"bottom", static_cast<float>(frame_context.framebuffer.height)},
-                {"near_depth", 0.0F},
-                {"far_depth", 1.0F},
-            };
+            return copy_viewport_json(copy_viewport_from_frame(frame_context));
         }
 
         [[nodiscard]] Json frame_scissor_json(const render::FrameContext &frame_context) {
             const auto width = frame_context.framebuffer.width;
             const auto height = frame_context.framebuffer.height;
-            return Json{
-                {"left", 0},
-                {"top", 0},
-                {"right", width},
-                {"bottom", height},
-                {"width", width},
-                {"height", height},
+            return copy_rect_json(frame_rect(width, height));
+        }
+
+        [[nodiscard]] render::CopyEvent default_xfb_copy_event(const render::FrameContext &frame_context) {
+            const auto width = frame_context.framebuffer.width;
+            const auto height = frame_context.framebuffer.height;
+            const auto rect = frame_rect(width, height);
+            return render::CopyEvent{
+                .index = 0U,
+                .event_index = frame_context.frame_index,
+                .presenter_frame_count = frame_context.frame_index,
+                .kind = render::CopyEventKind::Xfb,
+                .copy_to_xfb = true,
+                .depth_copy = false,
+                .clear = false,
+                .half_scale = false,
+                .scale_invert = false,
+                .clamp_top = true,
+                .clamp_bottom = true,
+                .intensity_format = false,
+                .auto_conversion = false,
+                .dest_addr = 0U,
+                .dest_stride = static_cast<std::uint32_t>(width) * 2U,
+                .source_rect = rect,
+                .output_size = frame_context.framebuffer,
+                .target_pixel_format = 0U,
+                .real_format = 0U,
+                .frame_to_field = 0U,
+                .gamma_index = 0U,
+                .gamma_value = 1.0F,
+                .y_scale = 1.0F,
+                .dispcopyyscale = 256U,
+                .scissor = rect,
+                .viewport = copy_viewport_from_frame(frame_context),
+                .backbuffer = frame_context.framebuffer,
+                .target_rect = rect,
+                .render_pass = "EfbToXfb",
+                .view_id = 0U,
             };
         }
 
-        [[nodiscard]] Json pc_copy_events_json(const render::FrameContext &frame_context) {
-            const auto width = frame_context.framebuffer.width;
-            const auto height = frame_context.framebuffer.height;
-            return Json::array({
-                Json{
-                    {"index", 0},
-                    {"event_index", frame_context.frame_index},
-                    {"presenter_frame_count", frame_context.frame_index},
-                    {"kind", "present"},
-                    {"copy_to_xfb", false},
-                    {"depth_copy", false},
-                    {"clear", false},
-                    {"half_scale", false},
-                    {"scale_invert", false},
-                    {"clamp_top", true},
-                    {"clamp_bottom", true},
-                    {"intensity_format", false},
-                    {"auto_conversion", false},
-                    {"dest_addr", 0},
-                    {"dest_stride", static_cast<std::uint32_t>(width) * 4U},
-                    {"source_rect", frame_rect_json(width, height)},
-                    {"output_size", Json{{"width", width}, {"height", height}}},
-                    {"target_pixel_format", 0},
-                    {"real_format", 0},
-                    {"frame_to_field", 0},
-                    {"gamma_index", 0},
-                    {"gamma_value", 1.0F},
-                    {"y_scale", 1.0F},
-                    {"dispcopyyscale", 256},
-                    {"scissor", frame_scissor_json(frame_context)},
-                    {"viewport", frame_viewport_json(frame_context)},
-                    {"backbuffer", Json{{"width", width}, {"height", height}}},
-                    {"target_rect", frame_rect_json(width, height)},
-                    {"render_pass", "FinalPresent"},
-                    {"view_id", 0},
-                },
-            });
+        [[nodiscard]] Json copy_event_json(const render::CopyEvent &event, std::uint64_t index) {
+            return Json{
+                {"index", index},
+                {"event_index", event.event_index},
+                {"presenter_frame_count", event.presenter_frame_count},
+                {"kind", copy_event_kind_name(event.kind)},
+                {"copy_to_xfb", event.copy_to_xfb},
+                {"depth_copy", event.depth_copy},
+                {"clear", event.clear},
+                {"half_scale", event.half_scale},
+                {"scale_invert", event.scale_invert},
+                {"clamp_top", event.clamp_top},
+                {"clamp_bottom", event.clamp_bottom},
+                {"intensity_format", event.intensity_format},
+                {"auto_conversion", event.auto_conversion},
+                {"dest_addr", event.dest_addr},
+                {"dest_stride", event.dest_stride},
+                {"source_rect", copy_rect_json(event.source_rect)},
+                {"output_size", framebuffer_json(event.output_size)},
+                {"target_pixel_format", event.target_pixel_format},
+                {"real_format", event.real_format},
+                {"frame_to_field", event.frame_to_field},
+                {"gamma_index", event.gamma_index},
+                {"gamma_value", event.gamma_value},
+                {"y_scale", event.y_scale},
+                {"dispcopyyscale", event.dispcopyyscale},
+                {"scissor", copy_rect_json(event.scissor)},
+                {"viewport", copy_viewport_json(event.viewport)},
+                {"backbuffer", framebuffer_json(event.backbuffer)},
+                {"target_rect", copy_rect_json(event.target_rect)},
+                {"render_pass", event.render_pass},
+                {"view_id", event.view_id},
+            };
+        }
+
+        [[nodiscard]] Json pc_copy_events_json(const render::FrameContext &frame_context, const RuntimeContext &runtime) {
+            auto out = Json::array();
+            auto has_xfb_copy = false;
+            for (const auto &event : runtime.copy_events()) {
+                has_xfb_copy = has_xfb_copy || event.kind == render::CopyEventKind::Xfb;
+            }
+            if (!has_xfb_copy) {
+                out.push_back(copy_event_json(default_xfb_copy_event(frame_context), out.size()));
+            }
+            for (const auto &event : runtime.copy_events()) {
+                out.push_back(copy_event_json(event, out.size()));
+            }
+            return out;
         }
 
         [[nodiscard]] Json live_actor_state_json(const SceneSchedulerEntryState &entry) {
@@ -727,6 +828,172 @@ namespace smgpc::game {
             return out;
         }
 
+        [[nodiscard]] Json effect_texture_metadata_json(const JpcTextureMetadata &texture) {
+            return Json{
+                {"index", texture.index},
+                {"name", texture.name},
+                {"width", texture.width},
+                {"height", texture.height},
+                {"format", texture_format_name(texture.format)},
+                {"format_raw", static_cast<std::uint32_t>(texture.format)},
+                {"wrap_s", texture.wrap_s},
+                {"wrap_t", texture.wrap_t},
+                {"min_filter", texture.min_filter},
+                {"mag_filter", texture.mag_filter},
+            };
+        }
+
+        [[nodiscard]] Json effect_texture_metadata_json(std::span<const JpcTextureMetadata> textures) {
+            auto out = Json::array();
+            for (const auto &texture : textures) {
+                out.push_back(effect_texture_metadata_json(texture));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json effect_resource_block_tags_json(const JpcResourceMetadata *resource) {
+            auto out = Json::array();
+            if (resource == nullptr) {
+                return out;
+            }
+            for (const auto &tag : resource->block_tags) {
+                out.push_back(tag);
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json effect_dynamics_json(const JpcResourceMetadata *resource) {
+            if (resource == nullptr || !resource->dynamics.has_value()) {
+                return nullptr;
+            }
+
+            const auto &dynamics = *resource->dynamics;
+            return Json{
+                {"flags", dynamics.flags},
+                {"volume_type", dynamics.volume_type},
+                {"fixed_density", dynamics.fixed_density},
+                {"fixed_interval", dynamics.fixed_interval},
+                {"inherit_scale", dynamics.inherit_scale},
+                {"follow_emitter", dynamics.follow_emitter},
+                {"follow_emitter_child", dynamics.follow_emitter_child},
+                {"rate", dynamics.rate},
+                {"rate_random", dynamics.rate_random},
+                {"lifetime_random", dynamics.lifetime_random},
+                {"start_frame", dynamics.start_frame},
+                {"max_frame", dynamics.max_frame},
+                {"lifetime", dynamics.lifetime},
+                {"volume_size", dynamics.volume_size},
+                {"div_number", dynamics.div_number},
+                {"rate_step", dynamics.rate_step},
+            };
+        }
+
+        [[nodiscard]] Json effect_base_shape_json(const JpcResourceMetadata *resource) {
+            if (resource == nullptr || !resource->base_shape.has_value()) {
+                return nullptr;
+            }
+
+            const auto &base_shape = *resource->base_shape;
+            return Json{
+                {"flags", base_shape.flags},
+                {"shape_type", base_shape.shape_type},
+                {"direction_type", base_shape.direction_type},
+                {"rotation_type", base_shape.rotation_type},
+                {"base_plane_type", base_shape.base_plane_type},
+                {"base_size_x", base_shape.base_size_x},
+                {"base_size_y", base_shape.base_size_y},
+                {"texture_flags", base_shape.texture_flags},
+                {"texture_count", base_shape.texture_count},
+                {"texture_slot", base_shape.texture_slot},
+                {"texture_coordinate_animation", base_shape.texture_coordinate_animation},
+                {"blend_mode_config", base_shape.blend_mode_config},
+                {"alpha_compare_config", base_shape.alpha_compare_config},
+                {"z_mode_config", base_shape.z_mode_config},
+            };
+        }
+
+        [[nodiscard]] Json effect_child_shape_json(const JpcResourceMetadata *resource) {
+            if (resource == nullptr || !resource->child_shape.has_value()) {
+                return nullptr;
+            }
+
+            const auto &child_shape = *resource->child_shape;
+            return Json{
+                {"flags", child_shape.flags},
+                {"shape_type", child_shape.shape_type},
+                {"direction_type", child_shape.direction_type},
+                {"rotation_type", child_shape.rotation_type},
+                {"base_plane_type", child_shape.base_plane_type},
+                {"position_random", child_shape.position_random},
+                {"base_velocity", child_shape.base_velocity},
+                {"base_velocity_random", child_shape.base_velocity_random},
+                {"velocity_inherit_rate", child_shape.velocity_inherit_rate},
+                {"gravity", child_shape.gravity},
+                {"scale_x", child_shape.scale_x},
+                {"scale_y", child_shape.scale_y},
+                {"inherit_scale", child_shape.inherit_scale},
+                {"inherit_alpha", child_shape.inherit_alpha},
+                {"inherit_rgb", child_shape.inherit_rgb},
+                {"timing", child_shape.timing},
+                {"lifetime", child_shape.lifetime},
+                {"rate", child_shape.rate},
+                {"step", child_shape.step},
+                {"texture_slot", child_shape.texture_slot},
+                {"rotation_speed", child_shape.rotation_speed},
+            };
+        }
+
+        [[nodiscard]] Json resolved_effect_resources_json(std::span<const ResolvedEffectResource> resources) {
+            auto out = Json::array();
+            for (const auto &resource : resources) {
+                out.push_back(Json{
+                    {"requested_name", resource.requested_name},
+                    {"particle_name", resource.particle_name},
+                    {"user_index", resource.user_index},
+                    {"auto_effect_group_name", resource.auto_effect_group_name},
+                    {"auto_effect_unique_name", resource.auto_effect_unique_name},
+                    {"auto_effect_parent_name", resource.auto_effect_parent_name},
+                    {"auto_effect_joint_name", resource.auto_effect_joint_name},
+                    {"auto_effect_draw_order", resource.auto_effect_draw_order},
+                    {"field_block_count", resource.resource != nullptr ? resource.resource->field_block_count : 0U},
+                    {"key_block_count", resource.resource != nullptr ? resource.resource->key_block_count : 0U},
+                    {"texture_reference_count", resource.resource != nullptr ? resource.resource->texture_reference_count : 0U},
+                    {"block_tags", effect_resource_block_tags_json(resource.resource)},
+                    {"dynamics", effect_dynamics_json(resource.resource)},
+                    {"base_shape", effect_base_shape_json(resource.resource)},
+                    {"child_shape", effect_child_shape_json(resource.resource)},
+                    {"textures", effect_texture_metadata_json(resource.textures)},
+                });
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json effect_keeper_registration_json(const EffectKeeperRegistration &keeper) {
+            return Json{
+                {"host_kind", effect_keeper_host_kind_name(keeper.host_kind)},
+                {"host_name", keeper.host_name},
+                {"resource_group_name", keeper.resource_group_name},
+                {"requested_capacity", keeper.requested_capacity},
+                {"sort_enabled", keeper.sort_enabled},
+                {"frame_index", keeper.frame_index},
+            };
+        }
+
+        [[nodiscard]] Json effect_keeper_registration_json(const std::optional<EffectKeeperRegistration> &keeper) {
+            return keeper.has_value() ? effect_keeper_registration_json(*keeper) : Json(nullptr);
+        }
+
+        [[nodiscard]] Json registered_effect_keepers_json(const EffectService &effects) {
+            auto out = Json::array();
+            const auto keepers = effects.registered_keepers();
+            for (auto i = std::size_t{}; i < keepers.size(); ++i) {
+                auto keeper = effect_keeper_registration_json(keepers[i]);
+                keeper["index"] = i;
+                out.push_back(std::move(keeper));
+            }
+            return out;
+        }
+
         [[nodiscard]] Json effect_events_json(std::span<const EffectEvent> events) {
             auto out = Json::array();
             for (auto i = std::size_t{}; i < events.size(); ++i) {
@@ -737,6 +1004,8 @@ namespace smgpc::game {
                     {"actor_name", event.actor_name},
                     {"effect_name", event.effect_name},
                     {"frame_index", event.frame_index},
+                    {"keeper", effect_keeper_registration_json(event.keeper)},
+                    {"resolved_resources", resolved_effect_resources_json(event.resolved_resources)},
                 });
             }
             return out;
@@ -913,6 +1182,19 @@ namespace smgpc::game {
                      {"scene", wipe_service_json(runtime.scene_wipe())},
                      {"system", wipe_service_json(runtime.system_wipe())},
                  }},
+                {"camera",
+                 Json{
+                     {"active_programmable_camera",
+                      runtime.camera_system().active_programmable_camera_name().has_value() ? Json(std::string(*runtime.camera_system().active_programmable_camera_name())) : Json(nullptr)},
+                     {"reset_camera_man_count", runtime.camera_system().reset_camera_man_count()},
+                     {"normal_shake_request_count", runtime.camera_system().normal_shake_request_count()},
+                     {"camera_director_pause_count", runtime.camera_system().camera_director_pause_count()},
+                     {"programmable_camera_declare_count", runtime.camera_system().programmable_camera_declare_count()},
+                     {"programmable_camera_start_count", runtime.camera_system().programmable_camera_start_count()},
+                     {"programmable_camera_end_count", runtime.camera_system().programmable_camera_end_count()},
+                     {"programmable_camera_param_count", runtime.camera_system().programmable_camera_param_count()},
+                     {"programmable_camera_fovy_count", runtime.camera_system().programmable_camera_fovy_count()},
+                 }},
                 {"sequence_requests",
                  Json{
                      {"change_stage_in_game_after_loading_game_data",
@@ -1034,6 +1316,46 @@ namespace smgpc::game {
             return out;
         }
 
+        [[nodiscard]] Json render_texture_binding_json(const RuntimeContext::RenderTextureBindingTrace &texture) {
+            return Json{
+                {"slot", texture.slot},
+                {"texture_index", texture.texture_index},
+                {"name", texture.name},
+                {"identity_name", texture.name},
+                {"width", texture.width},
+                {"height", texture.height},
+                {"format", texture.format_name},
+                {"format_raw", texture.format_raw},
+            };
+        }
+
+        [[nodiscard]] Json effect_texture_binding_json(const EffectTextureBindingTrace &texture) {
+            return Json{
+                {"slot", texture.slot},
+                {"texture_index", texture.texture_index},
+                {"name", texture.name},
+                {"identity_name", texture.name},
+                {"width", texture.width},
+                {"height", texture.height},
+                {"format", texture.format_name},
+                {"format_raw", texture.format_raw},
+            };
+        }
+
+        [[nodiscard]] Json render_texture_bindings_json(std::span<const RuntimeContext::RenderTextureBindingTrace> textures) {
+            auto out = Json::array();
+            for (const auto &texture : textures) {
+                out.push_back(render_texture_binding_json(texture));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json effect_texture_bindings_json(const EffectTextureBindingTrace &texture) {
+            auto out = Json::array();
+            out.push_back(effect_texture_binding_json(texture));
+            return out;
+        }
+
         [[nodiscard]] std::uint32_t used_textures_mask(std::span<const J3dRendererTextureState> textures) {
             auto mask = std::uint32_t{};
             for (const auto &texture : textures) {
@@ -1042,6 +1364,20 @@ namespace smgpc::game {
                 }
             }
             return mask;
+        }
+
+        [[nodiscard]] std::uint32_t used_textures_mask(std::span<const RuntimeContext::RenderTextureBindingTrace> textures) {
+            auto mask = std::uint32_t{};
+            for (const auto &texture : textures) {
+                if (texture.slot < 8U) {
+                    mask |= 1U << texture.slot;
+                }
+            }
+            return mask;
+        }
+
+        [[nodiscard]] std::uint32_t used_textures_mask(const EffectTextureBindingTrace &texture) {
+            return texture.slot < 8U ? (1U << texture.slot) : 0U;
         }
 
         [[nodiscard]] Json used_texture_slots_json(std::span<const J3dRendererTextureState> textures) {
@@ -1057,6 +1393,31 @@ namespace smgpc::game {
                 if (slots[slot]) {
                     out.push_back(slot);
                 }
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json used_texture_slots_json(std::span<const RuntimeContext::RenderTextureBindingTrace> textures) {
+            auto slots = std::array<bool, 8U>{};
+            for (const auto &texture : textures) {
+                if (texture.slot < slots.size()) {
+                    slots[texture.slot] = true;
+                }
+            }
+
+            auto out = Json::array();
+            for (auto slot = std::size_t{}; slot < slots.size(); ++slot) {
+                if (slots[slot]) {
+                    out.push_back(slot);
+                }
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json used_texture_slots_json(const EffectTextureBindingTrace &texture) {
+            auto out = Json::array();
+            if (texture.slot < 8U) {
+                out.push_back(texture.slot);
             }
             return out;
         }
@@ -1425,10 +1786,91 @@ namespace smgpc::game {
             };
         }
 
-        [[nodiscard]] Json j3d_packet_traces_json(std::span<const RuntimeContext::J3dRuntimePacketTrace> packets) {
+        [[nodiscard]] Json layout_packet_trace_json(const RuntimeContext::LayoutRuntimePacketTrace &packet, std::size_t index) {
+            return Json{
+                {"index", index},
+                {"model_name", packet.layout_name},
+                {"layout_name", packet.layout_name},
+                {"pane_name", packet.pane_name},
+                {"frame_index", packet.frame_index},
+                {"draw_pass", "2d_layout"},
+                {"render_pass", "2d_layout"},
+                {"view_id", 0},
+                {"material_name", packet.material_name},
+                {"picture_index", packet.picture_index},
+                {"material_index", packet.material_index},
+                {"packet_mode", "BrlytGxMaterial2D"},
+                {"primitive_type", "triangles"},
+                {"source_vertex_count", packet.vertex_count},
+                {"source_triangle_count", packet.index_count / 3U},
+                {"num_indices", packet.index_count},
+                {"texgen_count", packet.texgen_count},
+                {"color_channel_count", 1U},
+                {"active_tev_stage_count", packet.tev_stage_count},
+                {"tev_stage_count", packet.tev_stage_count},
+                {"indirect_stage_count", 0U},
+                {"cull_mode", cull_mode_name(packet.cull_mode)},
+                {"used_textures_mask", used_textures_mask(packet.texture_bindings)},
+                {"used_texture_slots", used_texture_slots_json(packet.texture_bindings)},
+                {"texture_bindings", render_texture_bindings_json(packet.texture_bindings)},
+                {"alpha_compare_enabled", packet.alpha_compare_enabled},
+                {"blend_enabled", packet.blend_enabled},
+            };
+        }
+
+        [[nodiscard]] Json effect_packet_trace_json(const EffectDrawPacketTrace &packet, std::size_t index) {
+            return Json{
+                {"index", index},
+                {"model_name", packet.actor_name},
+                {"actor_name", packet.actor_name},
+                {"effect_name", packet.effect_name},
+                {"particle_name", packet.particle_name},
+                {"user_index", packet.user_index},
+                {"frame_index", packet.frame_index},
+                {"draw_pass", "effect"},
+                {"render_pass", "effect"},
+                {"view_id", 0},
+                {"material_name", packet.particle_name},
+                {"draw_type", packet.draw_type},
+                {"draw_order", packet.draw_order},
+                {"packet_mode", "JpcBillboard2D"},
+                {"primitive_type", "triangles"},
+                {"source_vertex_count", packet.vertex_count},
+                {"source_triangle_count", packet.index_count / 3U},
+                {"num_indices", packet.index_count},
+                {"particle_id", packet.particle_id},
+                {"particle_age", packet.particle_age},
+                {"particle_lifetime", packet.particle_lifetime},
+                {"live_particle_count", packet.live_particle_count},
+                {"child_particle", packet.child_particle},
+                {"texgen_count", 1U},
+                {"color_channel_count", 1U},
+                {"active_tev_stage_count", 1U},
+                {"tev_stage_count", 1U},
+                {"indirect_stage_count", 0U},
+                {"cull_mode", "None"},
+                {"used_textures_mask", used_textures_mask(packet.texture)},
+                {"used_texture_slots", used_texture_slots_json(packet.texture)},
+                {"texture_bindings", effect_texture_bindings_json(packet.texture)},
+                {"alpha_compare_enabled", false},
+                {"blend_enabled", true},
+            };
+        }
+
+        [[nodiscard]] Json runtime_render_packets_json(const RuntimeContext &runtime) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < packets.size(); ++i) {
-                out.push_back(j3d_packet_trace_json(packets[i], i));
+            auto index = std::size_t{};
+            for (const auto &packet : runtime.j3d_packet_trace()) {
+                out.push_back(j3d_packet_trace_json(packet, index));
+                ++index;
+            }
+            for (const auto &packet : runtime.layout_packet_trace()) {
+                out.push_back(layout_packet_trace_json(packet, index));
+                ++index;
+            }
+            for (const auto &packet : runtime.effects().draw_packets()) {
+                out.push_back(effect_packet_trace_json(packet, index));
+                ++index;
             }
             return out;
         }
@@ -1465,15 +1907,19 @@ namespace smgpc::game {
                  {"stage_bgm_prepared", runtime.is_stage_bgm_prepared()},
                  {"events", audio_events_json(runtime.audio().events())},
              }},
-            {"effects", Json{{"events", effect_events_json(runtime.effects().events())}}},
+            {"effects",
+             Json{
+                 {"registered_keepers", registered_effect_keepers_json(runtime.effects())},
+                 {"events", effect_events_json(runtime.effects().events())},
+             }},
             {"runtime_services", runtime_services_json(runtime)},
             {"scene_snapshot", scene_entries_json(runtime.scheduler().snapshot())},
             {"scene_trace", scene_entries_json(runtime.scheduler().last_execution_trace())},
             {"scene_messages", scene_messages_json(runtime.scheduler().message_trace())},
             {"semantic_events", semantic_trace_events_json(runtime)},
             {"layout_runtime", layout_runtime_entries_json(runtime.scheduler().debug_layout_runtime_snapshot())},
-            {"render_packets", j3d_packet_traces_json(runtime.j3d_packet_trace())},
-            {"copy_events", pc_copy_events_json(frame_context)},
+            {"render_packets", runtime_render_packets_json(runtime)},
+            {"copy_events", pc_copy_events_json(frame_context, runtime)},
         };
         return trace;
     }

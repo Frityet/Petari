@@ -1,6 +1,5 @@
 #include "Game/compat/SequenceBootService.hpp"
 
-#include "Game/Map/FileSelector.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/compat/RuntimeContext.hpp"
 
@@ -44,7 +43,7 @@ namespace smgpc::game {
     }  // namespace
 #endif
 
-    SequenceBootService::SequenceBootService(RuntimeContext &runtime) : _runtime(runtime) {
+    SequenceBootService::SequenceBootService(RuntimeContext &runtime) : _runtime(runtime), _stage_host(runtime) {
     }
 
     SequenceBootService::~SequenceBootService() = default;
@@ -62,7 +61,7 @@ namespace smgpc::game {
         _runtime.emit_sequence_state_trace_event("stage_requested", "requested_stage=FileSelect;scenario=1");
         _runtime.emit_semantic_trace_event("sequence", "boot_file_select_requested", "scene=Game;stage=FileSelect;scenario=1");
 #endif
-        ensure_file_select_host();
+        ensure_file_select_stage_host();
     }
 
     void SequenceBootService::update_after_runtime_frame() {
@@ -90,47 +89,37 @@ namespace smgpc::game {
     }
 
     bool SequenceBootService::is_file_select_host_active() const {
-        return _file_selector != nullptr;
+        return _stage_host.has_active_stage("FileSelect");
     }
 
     bool SequenceBootService::has_sent_autorush_begin() const {
         return _autorush_begin_sent;
     }
 
-    void SequenceBootService::ensure_file_select_host() {
-        if (_file_selector != nullptr) {
-            return;
-        }
-
+    void SequenceBootService::ensure_file_select_stage_host() {
+        _stage_host.request_stage(StageHostRequest{
+            .scene_name = "Game",
+            .stage_name = "FileSelect",
+            .scenario_no = 1,
+        });
 #ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("sequence", "temporary_file_select_stage_host_started",
-                                           "direct FileSelector host until GameScene placement is available");
-        _runtime.emit_sequence_state_trace_event("temporary_stage_host_started", "host=FileSelector");
-#endif
-        _file_selector = std::make_unique<FileSelector>("ファイルセレクタ");
-#ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("file_select", "file_selector_constructed", "sequence boot host");
-#endif
-        _file_selector->initWithoutIter();
-#ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("file_select", "file_selector_initialized", "sequence boot host initWithoutIter");
         _title_product_created_emitted = true;
-        _runtime.emit_semantic_trace_event("title", "title_product_created", "source=FileSelector;layouts=TitleLogo,PressStart");
 #endif
     }
 
 #ifndef NDEBUG
     void SequenceBootService::emit_title_semantic_anchors() {
-        if (_file_selector == nullptr) {
+        const auto state = _stage_host.file_select_state();
+        if (!state.has_value()) {
             return;
         }
 
-        if (!_title_product_visible_emitted && _file_selector->isTitleStarted() && has_active_layout(_runtime, "TitleLogo")) {
+        if (!_title_product_visible_emitted && state->title_started && has_active_layout(_runtime, "TitleLogo")) {
             _title_product_visible_emitted = true;
             _runtime.emit_semantic_trace_event("title", "title_product_visible", "layout=TitleLogo");
         }
 
-        if (!_title_ab_gate_active_emitted && _file_selector->isTitleActive() && has_active_layout(_runtime, "PressStart")) {
+        if (!_title_ab_gate_active_emitted && state->title_active && has_active_layout(_runtime, "PressStart")) {
             _title_ab_gate_active_emitted = true;
             _runtime.emit_semantic_trace_event("title", "ab_gate_active", "layout=PressStart;buttons=A+B");
         }
@@ -140,7 +129,7 @@ namespace smgpc::game {
             _runtime.emit_semantic_trace_event("title", "title_input_accepted", "sound=SE_SY_GAME_START;buttons=A+B");
         }
 
-        if (!_file_select_scene_requested_emitted && _file_selector->isTitleEnded()) {
+        if (!_file_select_scene_requested_emitted && state->title_ended) {
             _file_select_scene_requested_emitted = true;
             _runtime.emit_semantic_trace_event("title", "file_select_scene_requested", "source=FileSelectorTitleEnd;stage=FileSelect");
             _runtime.emit_sequence_state_trace_event("file_select_scene_requested", "source=title;stage=FileSelect");
@@ -148,27 +137,28 @@ namespace smgpc::game {
     }
 
     void SequenceBootService::emit_file_select_semantic_anchors() {
-        if (_file_selector == nullptr) {
+        const auto state = _stage_host.file_select_state();
+        if (!state.has_value()) {
             return;
         }
 
-        if (!_file_select_title_nerve_entered_emitted && _file_selector->isTitleStarted()) {
+        if (!_file_select_title_nerve_entered_emitted && state->title_started) {
             _file_select_title_nerve_entered_emitted = true;
             _runtime.emit_semantic_trace_event("file_select", "title_nerve_entered", "source=FileSelector");
         }
 
         if (!_file_select_start_entered_emitted &&
-            (_file_selector->isFileSelectStart() || (_file_selector->isTitleEnded() && !_file_selector->isFileSelectStarted()))) {
+            (state->file_select_start || (state->title_ended && !state->file_select_started))) {
             _file_select_start_entered_emitted = true;
             _runtime.emit_semantic_trace_event("file_select", "file_select_start_entered", "source=FileSelector");
         }
 
-        if (!_file_select_selectable_emitted && _file_selector->isFileSelectStarted()) {
+        if (!_file_select_selectable_emitted && state->file_select_started) {
             _file_select_selectable_emitted = true;
             _runtime.emit_semantic_trace_event("file_select", "file_select_selectable", "source=FileSelector");
         }
 
-        if (!_file_select_demo_start_wait_emitted && _file_selector->didStartDemoStartWait()) {
+        if (!_file_select_demo_start_wait_emitted && state->demo_start_wait) {
             _file_select_demo_start_wait_emitted = true;
             _runtime.emit_semantic_trace_event("file_select", "demo_start_wait", "source=FileSelector");
         }

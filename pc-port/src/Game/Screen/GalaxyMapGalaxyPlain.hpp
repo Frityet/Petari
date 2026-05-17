@@ -7,6 +7,7 @@ public:
     explicit GalaxyMapGalaxyPlain(const LayoutActor* pHost);
 
     void init(const JMapInfoIter& rIter) override;
+    void control() override;
     void show(const char* pMessage, const char* pPaneName);
     void show(const wchar_t* pMessage, const char* pPaneName);
     [[nodiscard]] const char* getFollowPaneName() const;

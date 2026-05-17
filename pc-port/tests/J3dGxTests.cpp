@@ -6,7 +6,7 @@
 
 namespace smgpc::tests {
     namespace {
-        constexpr auto kTestSuite = std::string_view{"j3d/gx"};
+        constexpr auto TEST_SUITE = std::string_view{"j3d/gx"};
 
         template <int Line>
         struct TestCase;
@@ -778,8 +778,15 @@ namespace smgpc::tests {
             const auto packets = model_renderer.render_packets();
             require(packets.size() == 9U, "J3dModelRenderer should expose one state packet per CometNearOrbitSky SHP1 matrix group");
             constexpr auto expected_packet_order = std::array<std::string_view, 9U>{
-                "CometHalo_v", "CoreRock", "EarthFar_v", "EarthNightMat_v", "Sky_Mat_v",
-                "Space_Mat_v", "ACometHalo_v", "CometCoreMat_v_x", "Sun_Mat_v",
+                "CometHalo_v",
+                "CoreRock",
+                "EarthFar_v",
+                "EarthNightMat_v",
+                "Sky_Mat_v",
+                "Space_Mat_v",
+                "ACometHalo_v",
+                "CometCoreMat_v_x",
+                "Sun_Mat_v",
             };
             for (auto packet_index = std::size_t{}; packet_index < packets.size(); ++packet_index) {
                 require(packets[packet_index].material_name == expected_packet_order[packet_index],
@@ -810,7 +817,7 @@ namespace smgpc::tests {
                     "J3dModelRenderer packet evidence should route CometHalo_v active-indirect TEV through compat material evaluation while keeping DrawBuffer grouping separate from GX blend");
             const auto comet_halo_batch_count_before_draw = renderer.triangle_batch_count;
             const auto comet_halo_vertices_before_draw = renderer.submitted_vertices;
-            model_renderer.draw(renderer, smgpc::game::file_select_title_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "CometHalo_v"});
             require(renderer.triangle_batch_count > comet_halo_batch_count_before_draw &&
                         renderer.submitted_vertices > comet_halo_vertices_before_draw,
@@ -861,7 +868,7 @@ namespace smgpc::tests {
                     "J3dModelRenderer should fill material-local GX light slots from generic scene light state");
             const auto core_rock_batches_before_draw = renderer.triangle_batch_count;
             const auto core_rock_vertices_before_draw = renderer.submitted_vertices;
-            model_renderer.draw(renderer, smgpc::game::file_select_title_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "CoreRock", .scene_lights = scene_light_span});
             require(renderer.triangle_batch_count > core_rock_batches_before_draw,
                     "J3dModelRenderer should draw untextured lit materials while receiving generic scene light state");
@@ -944,7 +951,7 @@ namespace smgpc::tests {
             require_near(animated_space_packet->btk_normalized_frame, 3001.0F, 0.001F,
                          "J3dModelRenderer packet evidence should expose looped BTK frame state");
             const auto batch_count_before_draw = renderer.gx_material_batch_count;
-            model_renderer.draw(renderer, smgpc::game::file_select_title_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "Space_Mat_v"});
             require(renderer.gx_material_batch_count > batch_count_before_draw,
                     "J3dModelRenderer should submit filtered Space_Mat_v geometry through the GX material shader path");
@@ -972,7 +979,7 @@ namespace smgpc::tests {
             require(renderer.last_triangle_cull_mode == smgpc::render::CullMode::Back,
                     "J3dModelRenderer should submit the decoded MDL3 GX cull mode to the GX material renderer batch");
             const auto earth_batch_count_before_draw = renderer.gx_material_batch_count;
-            model_renderer.draw(renderer, smgpc::game::file_select_title_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "EarthFar_v"});
             require(renderer.gx_material_batch_count > earth_batch_count_before_draw,
                     "J3dModelRenderer should submit projected EarthFar_v geometry through the GX material shader path");
@@ -996,7 +1003,7 @@ namespace smgpc::tests {
                         renderer.last_gx_material_fog.color == earth_far_summary->gx_state.fog.color,
                     "J3dModelRenderer should submit EarthFar_v typed GX fog state to the renderer batch");
             const auto sun_batch_count_before_draw = renderer.gx_material_batch_count;
-            model_renderer.draw(renderer, smgpc::game::file_select_title_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "Sun_Mat_v"});
             require(renderer.gx_material_batch_count > sun_batch_count_before_draw,
                     "J3dModelRenderer should submit filtered Sun_Mat_v geometry through the GX material shader path");
@@ -1087,7 +1094,7 @@ namespace smgpc::tests {
                     "J3dModelRenderer should satisfy any BaseMat_v light mask through generic scene GX light slots");
 
             const auto base_gx_batches_before = renderer.gx_material_batch_count;
-            model_renderer.draw(renderer, smgpc::game::file_select_far_camera_pose(),
+            model_renderer.draw(renderer, far_test_camera_pose(),
                                 smgpc::game::j3d_matrix_from_translation_scale({0.0F, 800.0F, 0.0F}, 30.0F), 0U,
                                 {.material_filter = "BaseMat_v"});
             require(renderer.gx_material_batch_count > base_gx_batches_before && renderer.last_gx_material_stage_count == 1U &&
@@ -1095,7 +1102,7 @@ namespace smgpc::tests {
                     "J3dModelRenderer should submit BaseMat_v as one texture with all three TEV stages");
 
             const auto submitted_before = renderer.submitted_vertices;
-            model_renderer.draw(renderer, smgpc::game::file_select_far_camera_pose(),
+            model_renderer.draw(renderer, far_test_camera_pose(),
                                 smgpc::game::j3d_matrix_from_translation_scale({0.0F, 800.0F, 0.0F}, 30.0F), 0U);
             require(renderer.gx_material_batch_count > 0U || renderer.triangle_batch_count > 0U,
                     "J3dModelRenderer should submit projected FileSelectDataPlanet triangles");
@@ -1106,7 +1113,7 @@ namespace smgpc::tests {
     }  // namespace
 
     void run_j3d_gx_tests() {
-        run_registered_tests(kTestSuite);
+        run_registered_tests(TEST_SUITE);
     }
 
 }  // namespace smgpc::tests
