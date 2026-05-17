@@ -38,7 +38,8 @@ HitSensor* HitSensorKeeper::addMtx(const char* pName, u32 sensorType, u16 sensor
 }
 
 HitSensor* HitSensorKeeper::addCallback(const char* pName, u32 sensorType, u16 sensorGroupSize, f32 radius, LiveActor* pActor) {
-    HitSensorInfo* pInfo = new HitSensorInfo(pName, new HitSensor(sensorType, sensorGroupSize, radius, pActor), nullptr, nullptr, TVec3f(0.0f), true);
+    TVec3f offset(0.0f, 0.0f, 0.0f);
+    HitSensorInfo* pInfo = new HitSensorInfo(pName, new HitSensor(sensorType, sensorGroupSize, radius, pActor), nullptr, nullptr, offset, true);
     registHitSensorInfo(pInfo);
     return pInfo->mSensor;
 }

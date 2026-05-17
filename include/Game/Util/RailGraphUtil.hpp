@@ -4,7 +4,11 @@
 #include "Game/Map/RailGraphNode.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JGeometry/TVec.hpp"
-class RailGraphNodeSelecter;
+class RailGraphNodeSelecter {
+public:
+    virtual bool isSatisfy(RailGraphIter&);
+};
+
 namespace MR {
     RailGraph* createRailGraphFromJMap(const JMapInfoIter& rIter);
     RailGraphIter* createRailGraphIter(const RailGraph* pRailGraph);

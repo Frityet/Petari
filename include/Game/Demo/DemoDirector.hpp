@@ -23,11 +23,19 @@ public:
     void registerDemoSimpleCast(LayoutActor*);
     void registerDemoSimpleCast(NameObj*);
 
+    void startDemoProgrammable(NameObj*, const char*, bool, s32);
+    void startDemoTimeKeep(NameObj*, const char*, s32, bool, const char*);
+    void startDemoExecutor(NameObj*, const char*, s32, const char*);
     void endDemo(NameObj*, const char*, bool);
 
     bool isExistTimeKeepDemo(const char*) const;
 
     char* getCurrentDemoName() const;
+
+    bool tryStartDemoRequested();
+    void startDemo(NameObj*, const char*, bool, s32);
+    void startDemoRequested();
+    void doDemoEndRequest();
 
     bool mIsActive;           // 0xC
     DemoExecutor* mExecutor;  // 0x10

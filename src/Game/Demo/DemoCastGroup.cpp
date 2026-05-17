@@ -35,3 +35,13 @@ void DemoCastGroup::init(const JMapInfoIter& rIter) {
     mGroup->initWithoutIter();
     mInfo = new JMapIdInfo(MR::getDemoGroupLinkID(rIter), rIter);
 }
+
+bool JMapIdInfo::operator==(const JMapIdInfo& rOther) const {
+    bool ret = false;
+
+    if (_0 == rOther._0 && mZoneID == rOther.mZoneID) {
+        ret = true;
+    }
+
+    return ret;
+}

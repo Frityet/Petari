@@ -1,8 +1,64 @@
 #include "Game/Util/RailGraphUtil.hpp"
 #include "Game/Map/RailGraph.hpp"
+#include "Game/Map/RailGraphEdge.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+
+bool RailGraphNodeSelecter::isSatisfy(RailGraphIter&) {
+    return true;
+}
 
 namespace MR {
+    RailGraph* createRailGraphFromJMap(const JMapInfoIter& rIter) {
+        RailGraph* graph = new RailGraph();
+
+        const JMapInfo* railPointInfo = nullptr;
+        JMapInfoIter railIter(nullptr, -1);
+        MR::getRailInfo(&railIter, &railPointInfo, rIter);
+
+        bool hasNext = true;
+        while (hasNext) {
+            JMapInfoIter pathIter(railIter);
+            const JMapInfo* curRailPointInfo = railPointInfo;
+            s32 pointNum = MR::getCsvDataElementNum(curRailPointInfo);
+            RailGraphEdge edge;
+            s32 firstNode = -1;
+            s32 prevNode = -1;
+
+            for (s32 i = 0; i < pointNum; i++) {
+                JMapInfoIter pointIter(curRailPointInfo, i);
+                TVec3f pointPos;
+                MR::getRailPointPos0(pointIter, &pointPos);
+
+                s32 node = MR::getNearNodeIndex(graph, pointPos, 100.0f, nullptr);
+                if (node == -1) {
+                    node = graph->addNode(pointPos);
+                }
+
+                if (prevNode != -1 && node != prevNode) {
+                    graph->connectNodeTwoWay(prevNode, node, &edge);
+                }
+
+                if (i == 0) {
+                    firstNode = node;
+                }
+
+                prevNode = node;
+                edge.setArgs(curRailPointInfo, i);
+            }
+
+            if (MR::isLoopRailPathIter(pathIter) && prevNode != -1 && firstNode != prevNode) {
+                graph->connectNodeTwoWay(prevNode, firstNode, &edge);
+            }
+
+            hasNext = MR::getNextLinkRailInfo(&railIter, &railPointInfo, railIter);
+        }
+
+        return graph;
+    }
+
     RailGraphIter* createRailGraphIter(const RailGraph* pGraph) {
         return new RailGraphIter(pGraph->getIterator());
     }
@@ -38,7 +94,8 @@ namespace MR {
     }
 
     void calcWatchEdgeVector(const RailGraphIter* pIter, TVec3f* pEdge) {
-        pEdge->set< f32 >(pIter->getWatchNode()->_0 - pIter->getCurrentNode()->_0);
+        TVec3f edge(pIter->getWatchNode()->_0 - pIter->getCurrentNode()->_0);
+        pEdge->set(edge);
     }
 
     void calcWatchEdgeDirection(const RailGraphIter* pRailGraphIter, TVec3f* pVec) {
@@ -46,7 +103,32 @@ namespace MR {
         MR::normalize(pVec);
     }
 
-    // MR::getNearNodeIndex
+    s32 getNearNodeIndex(const RailGraph* pGraph, const TVec3f& rPos, f32 maxDist, RailGraphNodeSelecter* pSelector) {
+        if (maxDist < 0.0f) {
+            maxDist = FLOAT_MAX;
+        }
+
+        s32 nodeCount = pGraph->_8;
+        RailGraphIter iter = pGraph->getIterator();
+        s32 nearest = -1;
+
+        for (s32 i = 0; i < nodeCount; i++) {
+            if (pSelector != nullptr) {
+                iter.setNode(i);
+                if (!pSelector->isSatisfy(iter)) {
+                    continue;
+                }
+            }
+
+            f32 dist = PSVECDistance((const Vec*)&rPos, (const Vec*)&pGraph->getNode(i)->_0);
+            if (dist < maxDist) {
+                maxDist = dist;
+                nearest = i;
+            }
+        }
+
+        return nearest;
+    }
 
     s32 getSelectEdgeArg0(const RailGraphIter* pIter) {
         return pIter->getCurrentEdge()->mPointArg0;

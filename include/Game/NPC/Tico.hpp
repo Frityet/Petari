@@ -9,6 +9,8 @@ class TicoDemoGetPower;
 
 class Tico : public NPCActor {
 public:
+    static const f32 sFloatSeMinVolume;
+
     Tico(const char*);
 
     virtual ~Tico();

@@ -40,6 +40,7 @@
 #include "Game/Player/MarioWall.hpp"
 #include "Game/Player/MarioWarp.hpp"
 #include "Game/Util/DirectDraw.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
 #include "revolution/mtx.h"
 
 Mario::Mario(MarioActor* actor) : MarioModule(actor) {
@@ -970,6 +971,74 @@ bool Mario::isInvincible() const {
     }
 }
 
+void Mario::inputStick() {
+    mActor->getStickValue(&mStickPos.x, &mStickPos.y);
+
+    if (_10._28) {
+        _10._28 = 0;
+        mStickPos.x = 0.0f;
+        mStickPos.y = 0.0f;
+    }
+
+    mStickPos.x = MR::clamp(mStickPos.x * 1.5f, -1.0f, 1.0f);
+    mStickPos.y = MR::clamp(mStickPos.y * 1.5f, -1.0f, 1.0f);
+
+    _38 = mStickPos.z;
+    mStickPos.z = MR::clamp(MR::sqrt((mStickPos.x * mStickPos.x) + (mStickPos.y * mStickPos.y)), 0.0f, 1.0f);
+    if (MR::isNearZero(mStickPos.z, 0.01f)) {
+        mStickPos.z = 0.0f;
+    }
+
+    f32 stickAngle = MR::normalizeAngleAbs(JMath::sAtanTable.atan2_(mStickPos.y, mStickPos.x));
+    const f32 quarterTurn = HALF_PI;
+    f32 angleInQuadrant = stickAngle;
+    s32 quadrant = 0;
+    const f32 margin = mActor->mConst->getTable()->mStickAngleMargin;
+
+    while (angleInQuadrant > quarterTurn) {
+        angleInQuadrant -= quarterTurn;
+        quadrant++;
+    }
+
+    if (angleInQuadrant >= quarterTurn - margin) {
+        stickAngle = quarterTurn;
+    } else if (angleInQuadrant <= margin) {
+        stickAngle = 0.0f;
+    } else {
+        const f32 usableAngle = quarterTurn - (2.0f * margin);
+        stickAngle = (quarterTurn / usableAngle) * (angleInQuadrant - margin);
+    }
+    stickAngle += quarterTurn * quadrant;
+
+    if (!getPlayer()->_10._11) {
+        mStickPos.x = mStickPos.z * JMACosRadian(stickAngle);
+        mStickPos.y = mStickPos.z * JMASinRadian(stickAngle);
+    }
+
+    _524 = _528;
+    _528 = stickAngle;
+
+    if (mMovementStates._17) {
+        stick2DadjustGround(mStickPos.x, mStickPos.y);
+    }
+    if (_10._15) {
+        stick2Dadjust(mStickPos.x, mStickPos.y);
+    }
+    if (mMovementStates._1A) {
+        update25Dmode();
+        updateAxisFromMode(_6AC);
+    }
+    if (_10._13) {
+        mStickPos.y = 0.0f;
+    }
+    if (mStickPos.z <= 0.01f) {
+        mMovementStates._2 = 0;
+    }
+
+    calcWorldPadDir(&mWorldPadDir, mStickPos.x, mStickPos.y, false);
+    MR::normalizeOrZero(&mWorldPadDir);
+}
+
 bool Mario::isCeiling() const {
     if (_4C8->isValid() == false) {
         return false;
@@ -1245,14 +1314,15 @@ void Mario::initAfterConst() {
         }
     }
 }
+*/
 
 void Mario::actionMain() {
-    if (!mMovementStates._16) {
+    if (!mMovementStates.debugMode) {
         if (checkDamage() == false) {
             if (_97C) {
                 sendStateMsg(2);
             }
-            else if (mMovementStates._0) {
+            else if (mMovementStates.jumping) {
                 procJump(false);
                 checkTornado();
                 checkHang();
@@ -1269,7 +1339,7 @@ void Mario::actionMain() {
             }
         }
         if (!mMovementStates._23) {
-            _1A8 = _160;
+            _1A8 = mVelocity;
             _3C2 = 0;
             _280 = 0.0f;
             _284.zero();
@@ -1280,8 +1350,8 @@ void Mario::actionMain() {
         if (_3C4 != 0) {
             _3C4--;
         }
-        _A8C[2] = _160;
-        if (mMovementStates._1 && !mMovementStates._0) {
+        _A8C[2] = mVelocity;
+        if (mMovementStates._1 && !mMovementStates.jumping) {
             if (isEnableSlopeMove()) {
                 slopeMove();
             }
@@ -1299,20 +1369,19 @@ void Mario::actionMain() {
         beeMarioOnGround();
         checkSpecialWaitAnimation();
         if (!mDrawStates._16) {
-            retainMoveDir(_1C0.x, _1C0.y, nullptr);
+            retainMoveDir(mStickPos.x, mStickPos.y, nullptr);
         }
     }
 }
 
-/* void Mario::updateGroundInfo() {
+void Mario::updateGroundInfo() {
     checkMap();
     if (isEnableCheckGround()) {
         bool b1 = false;
-        if (!mMovementStates._0 && !mMovementStates._1) {
+        if (!mMovementStates.jumping && !mMovementStates._1) {
             b1 = true;
         }
-        checkGround();
-        mMovementStates._1 = 0;
+        mMovementStates._1 = checkGround();
         if (mDrawStates._18) {
             _3C6++;
         }
@@ -1323,8 +1392,8 @@ void Mario::actionMain() {
             changeAnimation(nullptr, "基本");
         }
         if (!isStatusActive(0x13)) {
-            if (!isStatusActive(0x13) && !mMovementStates._1 && mMovementStates._3E == 1 && _2D4.dot(Mario::getGravityVec()) > 0.0f
-                && _2D4.dot(*_45C->getNormal(0)) < 0.0f && _1FC.dot(Mario::getGravityVec()) > 0.0f && _488 < 170.0f) {
+            if (!isStatusActive(0x13) && !mMovementStates._1 && mMovementStates._3E == 1 && mJumpVec.dot(*Mario::getGravityVec()) > 0.0f
+                && mJumpVec.dot(*_45C->getNormal(0)) < 0.0f && _1FC.dot(*Mario::getGravityVec()) > 0.0f && mVerticalSpeed < 170.0f) {
                 mMovementStates._1 = 1;
                 setGroundNorm(*_45C->getNormal(0));
                 setTrans(mShadowPos, nullptr);
@@ -1334,7 +1403,7 @@ void Mario::actionMain() {
     updateCameraPolygon();
     if (mMovementStates._1) {
         mMovementStates._29 = 0;
-        if (_43A == 0 && isSlipPolygon(_464)) {
+        if (_43A == 0 && isSlipPolygon(mGroundPolygon)) {
             mDrawStates._C = 1;
         }
     }
@@ -1346,7 +1415,7 @@ void Mario::actionMain() {
     updateOnSand();
     updateOnWater();
     updateOnPoison();
-} */
+}
 
 // conditionals won't behave
 const TVec3f* Mario::getGravityVec() const {

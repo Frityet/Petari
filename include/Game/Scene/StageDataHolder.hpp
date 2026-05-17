@@ -23,6 +23,9 @@ public:
     s32 getCurrentStartCameraId() const;
     void getStartCameraIdInfoFromStartDataIndex(JMapIdInfo*, int) const;
     s32 getGeneralPosNum() const;
+    JMapInfoIter getGeneralPosInfoFromDataIndex(int) const;
+    s32 getChildObjNum(const JMapInfoIter&) const;
+    JMapInfoIter getChildObjInfoFromDataIndex(const JMapInfoIter&, int) const;
 
     const StageDataHolder* findPlacedStageDataHolder(const JMapInfoIter&) const;
     const StageDataHolder* getStageDataHolderFromZoneId(int) const;
@@ -33,6 +36,7 @@ public:
     s32 getStageArchiveResourceSize(void*);
 
     JMapInfoIter makeCurrentMarioJMapInfoIter() const;
+    JMapInfoIter makeMarioJMapInfoIter(const JMapIdInfo&) const;
 
     void initPlacementMario();
 
@@ -47,6 +51,7 @@ public:
     void createLocalStageDataHolder(const MR::AssignableArray< JMapInfo >&, bool);
 
     void initJmpInfo(MR::AssignableArray< JMapInfo >*, const char*);
+    JMapInfo* attachJmpInfoToArray(JMapInfo*, const char*);
 
     void initLayerJmpInfo(MR::AssignableArray< JMapInfo >*, const char*, const char*, u32);
     void initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >*, const char*, const char*);

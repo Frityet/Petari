@@ -4,19 +4,29 @@
 #include "Game/Util/TriangleFilter.hpp"
 
 class CollisionPartsFilterBase;
+class CollisionParts;
 
 class BinderParent {
 public:
     inline BinderParent(MtxPtr mtx) {
         _C = mtx;
-        _0 = 0;
-        _4 = 0;
+        mTriangleFilter = nullptr;
+        mCollisionPartsFilter = nullptr;
         _8 = 0;
     }
 
-    int _0;
-    int _4;
-    int _8;
+    union {
+        TriangleFilterBase* mTriangleFilter;
+        int _0;
+    };
+    union {
+        CollisionPartsFilterBase* mCollisionPartsFilter;
+        int _4;
+    };
+    union {
+        CollisionParts* mCollisionParts;
+        u32 _8;
+    };
     MtxPtr _C;
 };
 
@@ -29,6 +39,13 @@ public:
     const Triangle* getPlane(int) const;
     u32 copyPlaneArrayAndSortingSensor(HitInfo**, u32);
     const TVec3f bind(const TVec3f&);
+    static bool compSensor(const HitInfo*, const HitInfo*);
+    void moveAlongHittedPlanes(TVec3f*, TVec3f*, TVec3f*, const TVec3f&, const TVec3f&, HitInfo*, u32, bool*);
+    u32 findBindedPos(TVec3f*, TVec3f*, bool*, HitInfo*, u32, bool, bool);
+    bool moveWithCollisionParts(TVec3f*, TVec3f*);
+    u32 storeCurrentHitInfo(HitInfo*, u32, bool);
+    void obtainMomentFixReaction(HitInfo*, u32, TVec3f*, u32);
+    void storeContactPlane(HitInfo*, u32);
 
     const TVec3f* _10;
     const TVec3f* _14;

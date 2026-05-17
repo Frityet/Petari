@@ -34,16 +34,16 @@ public:
     void updateBoundingSphereRangePrivate(f32);
     const char* getHostName() const;
     s32 getPlacementZoneID() const;
-    void checkStrikePoint(HitInfo*, const TVec3f&);
-    bool checkStrikeBall(HitInfo*, u32, const TVec3f&, f32, bool, const TriangleFilterBase*);
-    void checkStrikeBallCore(HitInfo*, u32, const TVec3f&, const TVec3f&, f32, f32, f32, KC_PrismData**, f32*, u8*, const TriangleFilterBase*,
-                             const TVec3f*);
-    void checkStrikeBallWithThickness(HitInfo*, u32, const TVec3f&, f32, f32, const TriangleFilterBase*);
+    bool checkStrikePoint(HitInfo*, const TVec3f&);
+    u32 checkStrikeBall(HitInfo*, u32, const TVec3f&, f32, bool, const TriangleFilterBase*);
+    u32 checkStrikeBallCore(HitInfo*, u32, const TVec3f&, const TVec3f&, f32, f32, f32, KC_PrismData**, f32*, u8*, const TriangleFilterBase*,
+                            const TVec3f*);
+    u32 checkStrikeBallWithThickness(HitInfo*, u32, const TVec3f&, f32, f32, const TriangleFilterBase*);
     void calcCollidePosition(TVec3f*, const KC_PrismData&, u8);
     void projectToPlane(TVec3f*, const TVec3f&, const TVec3f&, const TVec3f&);
-    void checkStrikeLine(HitInfo*, u32, const TVec3f&, const TVec3f&, const TriangleFilterBase*);
-    void createAreaPolygonList(Triangle*, u32, const TVec3f&, const TVec3f&);
-    void createAreaPolygonListArray(Triangle*, u32, TVec3f*, u32);
+    u32 checkStrikeLine(HitInfo*, u32, const TVec3f&, const TVec3f&, const TriangleFilterBase*);
+    u32 createAreaPolygonList(Triangle*, u32, const TVec3f&, const TVec3f&);
+    u32 createAreaPolygonListArray(Triangle*, u32, TVec3f*, u32);
     void calcForceMovePower(TVec3f*, const TVec3f&) const;
 
     TPos3f* _0;

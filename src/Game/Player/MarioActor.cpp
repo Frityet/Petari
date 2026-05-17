@@ -465,6 +465,11 @@ void MarioActor::changeNullAnimation(const char* pName, s8 num) {
     _B92 = num;
 }
 
+void MarioActor::clearNullAnimation(s8 num) {
+    _B92 = num;
+    mNullAnimation->kill();
+}
+
 bool MarioActor::isStopNullAnimation() const {
     if (!MR::isBckStopped(mNullAnimation)) {
         return MR::isDead(mNullAnimation);
@@ -630,6 +635,34 @@ bool MarioActor::isJumpRising() const {
     return ret;
 }
 
+bool MarioActor::isPunching() const {
+    if (mMario->isStatusActive(0x11)) {
+        return true;
+    }
+    if (mMario->mSwim->mSpinTimer || mMario->mSwim->mSpinDashTimer) {
+        return true;
+    }
+    if (_3E5) {
+        return true;
+    }
+    if (mMario->isAnimationTerminate(nullptr)) {
+        return false;
+    }
+    if (mMario->isAnimationRun("地上スピンアタック")) {
+        return true;
+    }
+    if (mMario->isAnimationRun("空中スピンアタック")) {
+        return true;
+    }
+    if (mMario->isAnimationRun("水中スピンアタック")) {
+        return true;
+    }
+    if (mMario->isAnimationRun("ハチスピン空中")) {
+        return true;
+    }
+    return mMario->isAnimationRun("ハチスピン");
+}
+
 bool MarioActor::isItemSwinging() const {
     if (mMario->isAnimationRun("テニスショット左") || mMario->isAnimationRun("テニスショット右") || mMario->isAnimationRun("テニスショット中")) {
         return true;
@@ -668,6 +701,54 @@ bool MarioActor::isSleeping() const {
         }
     }
     return ret;
+}
+
+bool MarioActor::isRefuseTalk() const {
+    if (!isEnableNerveChange()) {
+        return true;
+    }
+    if (mMario->isStatusActive(0x1C)) {
+        return true;
+    }
+    if (mMario->isStatusActive(5)) {
+        return true;
+    }
+    if (mMario->isStatusActive(0x13)) {
+        return true;
+    }
+    if (mMario->isDamaging()) {
+        return true;
+    }
+    if (mMario->_420) {
+        return true;
+    }
+    if (!mMario->isPlayerModeTeresa()) {
+        if (_B94) {
+            return true;
+        }
+        if (mMario->mMovementStates.jumping) {
+            return true;
+        }
+        if (!mMario->mMovementStates._1) {
+            return true;
+        }
+        if (mMario->_3CE < 5) {
+            return true;
+        }
+        if (mMario->_10._23) {
+            return true;
+        }
+        if (mMario->mDrawStates._A) {
+            return true;
+        }
+        if (mMario->_3D2) {
+            return true;
+        }
+    }
+    if (_424) {
+        return true;
+    }
+    return _480;
 }
 
 bool MarioActor::isDebugMode() const {
@@ -1617,6 +1698,19 @@ void MarioActor::getRealMtx(MtxPtr mtx, const char* pName) const {
     MR::addTransMtx(mtx, stack_8);
 }
 
+void MarioActor::getRealPos(const char* pName, TVec3f* dst) const {
+    TMtx34f mtx;
+    getRealMtx(mtx.toMtxPtr(), pName);
+    MR::extractMtxTrans(mtx.toMtxPtr(), dst);
+}
+
+MtxPtr MarioActor::getGlobalJointMtx(const char* pName) {
+    u16 jointIndex = MR::getJointIndex(this, pName);
+    MtxPtr mtx = reinterpret_cast< MtxPtr >(_C28) + jointIndex;
+    getRealMtx(mtx, pName);
+    return mtx;
+}
+
 void MarioActor::forceSetBaseMtx(MtxPtr mtx) {
     _EA5 = true;
     _1C0 = true;
@@ -1653,6 +1747,77 @@ TVec3f* MarioActor::getShadowPos() const {
 
 XanimeResourceTable* MarioActor::getResourceTable() const {
     return mMarioAnim->mResourceTable;
+}
+
+bool MarioActor::isEnableMoveMario() const {
+    if (isNerve(&NrvMarioActor::MarioActorNrvWait::sInstance)) {
+        return true;
+    }
+    if (isNerve(&NrvMarioActor::MarioActorNrvNoRush::sInstance)) {
+        return true;
+    }
+    return isNerve(&NrvMarioActor::MarioActorNrvGameOverNonStop::sInstance);
+}
+
+bool MarioActor::isEnableNerveChange() const {
+    if (isNerve(&NrvMarioActor::MarioActorNrvWait::sInstance)) {
+        return true;
+    }
+    return isNerve(&NrvMarioActor::MarioActorNrvNoRush::sInstance);
+}
+
+void MarioActor::forceGameOver() {
+    if (isEnableNerveChange()) {
+        setNerve(&NrvMarioActor::MarioActorNrvGameOver::sInstance);
+    }
+}
+
+void MarioActor::forceGameOverAbyss() {
+    if (isEnableNerveChange()) {
+        setNerve(&NrvMarioActor::MarioActorNrvGameOverAbyss::sInstance);
+    }
+}
+
+void MarioActor::forceGameOverBlackHole() {
+    if (isEnableNerveChange()) {
+        setNerve(&NrvMarioActor::MarioActorNrvGameOverBlackHole::sInstance);
+    }
+}
+
+void MarioActor::forceGameOverNonStop() {
+    if (isEnableNerveChange()) {
+        setNerve(&NrvMarioActor::MarioActorNrvGameOverNonStop::sInstance);
+    }
+}
+
+void MarioActor::forceGameOverSink() {
+    if (isEnableNerveChange()) {
+        setNerve(&NrvMarioActor::MarioActorNrvGameOverSink::sInstance);
+    }
+}
+
+void MarioActor::updateCameraInfo() {
+    _F74 = false;
+    if (MR::diffAngleAbs(mCamDirZ, MR::getCamZdir()) >= 1.5707964f) {
+        _F74 = true;
+    }
+    if ((mCamPos - MR::getCamPos()).length() > 500.0f) {
+        _F74 = true;
+    }
+    if (_F74) {
+        mMario->changeAnimationInterpoleFrame(0);
+        stopSpinTicoEffect(true);
+        mBlendMtxTimer = 0;
+    }
+    mCamPos = MR::getCamPos();
+    mCamDirX = MR::getCamXdir();
+    mCamDirY = MR::getCamYdir();
+    _FA8 = mCamDirZ;
+    mCamDirZ = MR::getCamZdir();
+}
+
+bool MarioActor::binderFilter(const Triangle* pTriangle) {
+    return _F48 != nullptr && pTriangle->mSensor == _F48;
 }
 
 void MarioActor::setPunchHitTimer(u8 punchHitTime) {

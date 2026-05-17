@@ -15,6 +15,13 @@
 #include "Game/Util/ModelUtil.hpp"
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 
+class StarPointerTarget {
+public:
+    StarPointerTarget(f32, const TVec3f*, MtxPtr, TVec3f);
+
+    u8 _0[0x1C];
+};
+
 LiveActor::LiveActor(const char* pName)
     : NameObj(pName), mPosition(0.0f, 0.0f, 0.0f), mRotation(0.0f, 0.0f, 0.0f), mScale(1.0f, 1.0f, 1.0f), mVelocity(0.0f, 0.0f, 0.0f),
       mGravity(0.0f, -1.0f, 0.0f), mModelManager(nullptr), mAnimKeeper(nullptr), mSpine(nullptr), mSensorKeeper(nullptr), mBinder(nullptr),
@@ -378,13 +385,44 @@ void LiveActor::initShadowControllerList(u32 numShadows) {
     mShadowControllerList = new ShadowControllerList(this, numShadows);
 }
 
-// LiveActor::initActorCollisionParts
+void LiveActor::initActorCollisionParts(const char* pName, HitSensor* pSensor, ResourceHolder* pResourceHolder, MtxPtr pMtx, bool autoEqualScale,
+                                        bool notUsingScale) {
+    MR::CollisionScaleType scaleType;
+
+    if (notUsingScale) {
+        scaleType = MR::NoScale;
+    } else if (autoEqualScale) {
+        scaleType = MR::AutoEqualScale;
+    } else {
+        scaleType = MR::UNKNOWN_2;
+    }
+
+    if (pResourceHolder != nullptr) {
+        TPos3f mtx;
+
+        if (pMtx != nullptr) {
+            mtx.set(pMtx);
+        } else {
+            MR::makeMtxTRS(mtx, this);
+        }
+
+        mCollisionParts = MR::createCollisionPartsFromResourceHolder(pResourceHolder, pName, pSensor, mtx, scaleType);
+    } else if (pMtx == nullptr) {
+        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pName, pSensor, scaleType);
+    } else {
+        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pName, pSensor, pMtx, scaleType);
+    }
+
+    MR::invalidateCollisionParts(this);
+}
 
 void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
     mStageSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
 }
 
-// LiveActor::initActorStarPointerTarget
+void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* pPos, MtxPtr pMtx, TVec3f offset) {
+    mStarPointerTarget = new StarPointerTarget(radius, pPos, pMtx, offset);
+}
 
 void LiveActor::initActorLightCtrl() {
     mActorLightCtrl = new ActorLightCtrl(this);
@@ -428,4 +466,16 @@ bool LiveActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceive
 
 void LiveActor::addToSoundObjHolder() {
     mSoundObject->addToSoundObjHolder();
+}
+
+void LiveActor::updateBinder() {
+    if (mBinder == nullptr) {
+        mPosition.add(mVelocity);
+    } else if (mFlag.mIsNoBind) {
+        mPosition.add(mVelocity);
+        mBinder->clear();
+    } else {
+        TVec3f bindMove = mBinder->bind(mVelocity);
+        mPosition.add(bindMove);
+    }
 }

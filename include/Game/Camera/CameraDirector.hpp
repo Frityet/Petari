@@ -46,6 +46,12 @@ public:
 
 class CameraDirector : public NameObj {
 public:
+    struct EventAtLanding {
+        /* 0x00 */ s32 mZoneID;
+        /* 0x04 */ char mName[0x80];
+        /* 0x84 */ s32 mInterpolateFrame;
+    };
+
     class CameraManStack {
     public:
         inline CameraManStack() {
@@ -129,11 +135,6 @@ public:
     void createTalkCamera();
     void createSubjectiveCamera();
 
-    // 0x15C[0] and _15C[1] seems to be a struct of size 0x88 with the following layout:
-    // 0x00: mZoneID
-    // 0x04: mName
-    // 0x84: unknown
-
     /* 0x0C */ CameraTargetObj* mUsedTarget;
     /* 0x10 */ CameraManStack* mStack;
     /* 0x14 */ OnlyCamera* mOnlyCamera;
@@ -155,8 +156,8 @@ public:
     /* 0x54 */ CameraManSubjective* mCameraManSubjective;
     bool _58;
     u8 _59[3];
-    s32 _5C[2][34];
-    u32 _16C;
+    EventAtLanding mEndEventsAtLanding[2];  // 0x5C
+    u32 mEndEventAtLandingCount;            // 0x16C
     bool _170;
     u8 _171[3];
     s32 _174;

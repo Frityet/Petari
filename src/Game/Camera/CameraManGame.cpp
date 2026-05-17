@@ -11,7 +11,10 @@
 #include "Game/Camera/CameraParamChunk.hpp"
 #include "Game/Camera/CameraParamChunkHolder.hpp"
 #include "Game/Camera/CameraTargetObj.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/MapObj/GCapture.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include <cstring>
 
 namespace {
@@ -434,7 +437,6 @@ void CameraManGame::setSafePose() {
     CameraLocalUtil::setRoll(this, roll);
 }
 
-// Stack issues
 void CameraManGame::keepAwayWatchPos(TVec3f* watchPos, const TVec3f& pos) {
     TVec3f dir = *watchPos - pos;
     f32 length = dir.length();
@@ -460,6 +462,32 @@ void CameraManGame::keepAwayWatchPos(TVec3f* watchPos, const TVec3f& pos) {
             watchPos->set(pos + dirCopy);
         }
     }
+}
+
+void CameraManGame::calcSafeUpVec(TVec3f* up, const TVec3f& pos, const TVec3f& watchPos) {
+    TVec3f watchDir = watchPos - pos;
+    MR::normalize(&watchDir);
+
+    MR::normalizeOrZero(up);
+
+    if (!MR::isNearZero(*up) && __fabsf(watchDir.dot(*up)) <= 0.98f) {
+        return;
+    }
+
+    const TVec3f& currentPos = CameraLocalUtil::getPos(this);
+    const TVec3f& currentWatchPos = CameraLocalUtil::getWatchPos(this);
+    TVec3f currentWatchDir = currentWatchPos - currentPos;
+    MR::normalize(&currentWatchDir);
+
+    if (__fabsf(watchDir.dot(currentWatchDir)) > 0.98f) {
+        up->set(CameraLocalUtil::getUpVec(this));
+    } else {
+        TQuat4f rotate;
+        rotate.setRotate(currentWatchDir, watchDir);
+        rotate.transform(CameraLocalUtil::getUpVec(this), *up);
+    }
+
+    CameraLocalUtil::recalcUpVec(up, watchDir);
 }
 
 void CameraManGame::createDefaultCamera() {
@@ -608,13 +636,31 @@ bool CameraManGame::tryShiftToFooFighter() {
     return false;
 }
 
-/*void CameraManGame::updateNormal() {
+void CameraManGame::updateNormal() {
     if (!setCubeChunk(CubeCameraArea::CATEGORY_UNKNOWN_0)) {
-        CameraTargetObj *target = CameraLocalUtil::getTarget(this);
+        CameraTargetObj* target = CameraLocalUtil::getTarget(this);
+        Triangle* triangle = target->getGroundTriangle();
 
+        if (triangle != nullptr && triangle->isValid()) {
+            u32 cameraID = MR::getCameraID(triangle);
 
+            if (cameraID < 0xFF) {
+                CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
+                chunkID.createGroupID(triangle->getHostPlacementZoneID(), triangle->getHostName(), cameraID, 0);
+
+                setChunk(chunkID);
+                return;
+            }
+        }
+
+        if (mChunk != nullptr) {
+            setChunk(*mChunk->mParamChunkID);
+        } else {
+            CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
+            setChunk(chunkID);
+        }
     }
-}*/
+}
 
 void CameraManGame::updateSwim() {
     if (!setCubeChunk(CubeCameraArea::CATEGORY_UNKNOWN_1)) {
