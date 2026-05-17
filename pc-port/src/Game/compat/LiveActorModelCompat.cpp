@@ -58,9 +58,9 @@ namespace {
         case LiveActorModelCompat::DrawPass::All:
             return true;
         case LiveActorModelCompat::DrawPass::Opaque:
-            return !packet.blend;
+            return packet.draw_buffer_opaque;
         case LiveActorModelCompat::DrawPass::Translucent:
-            return packet.blend;
+            return !packet.draw_buffer_opaque;
         }
 
         return false;
@@ -141,6 +141,10 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
     auto *runtime = smgpc::game::RuntimeContext::try_instance();
     if (runtime != nullptr) {
         options.scene_lights = runtime->scene_lights().lights();
+        if (runtime->j3d_pixel_update_state().has_value()) {
+            options.gx_color_update = runtime->j3d_pixel_update_state()->color_update;
+            options.gx_alpha_update = runtime->j3d_pixel_update_state()->alpha_update;
+        }
     }
     mRenderer->draw(renderer, camera_pose, actor_matrix, frame, options);
 
@@ -148,7 +152,7 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
         return;
     }
 
-    const auto runtime_packets = mRenderer->render_packets(frame, runtime->scene_lights().lights());
+    const auto runtime_packets = mRenderer->render_packets(frame, runtime->scene_lights().lights(), options);
     for (const auto &packet : runtime_packets) {
         if (packet_matches_draw_pass(pass, packet)) {
             runtime->record_j3d_packet_trace(mModelArcName, frame, draw_pass_name(pass), packet);

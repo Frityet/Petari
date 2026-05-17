@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <limits>
+#include <optional>
 #include <utility>
 
 #include "Game/LiveActor/HitSensor.hpp"
@@ -14,6 +15,7 @@
 #include "Game/Screen/SimpleLayout.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
+#include "Game/compat/RuntimeContext.hpp"
 
 namespace smgpc::game {
     namespace {
@@ -584,10 +586,25 @@ namespace smgpc::game {
 
     void SceneScheduler::execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose,
                                                          bool prior_draw_air) {
+        auto *runtime = RuntimeContext::try_instance();
+        const auto previous_pixel_update_state = runtime != nullptr ? runtime->j3d_pixel_update_state() :
+                                                                      std::optional<RuntimeContext::GxPixelUpdateState>{};
+        if (runtime != nullptr) {
+            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = true});
+        }
         execute_draw_buffer_list_normal_opa_before_volume_shadow(renderer, camera_pose, prior_draw_air);
+        if (runtime != nullptr) {
+            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = true});
+        }
         execute_draw_buffer_list_normal_opa_before_silhouette(renderer, camera_pose);
+        if (runtime != nullptr) {
+            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = false});
+        }
         execute_draw_buffer_list_normal_opa(renderer, camera_pose, prior_draw_air);
         execute_draw_buffer_list_normal_xlu(renderer, camera_pose);
+        if (runtime != nullptr) {
+            runtime->set_j3d_pixel_update_state(previous_pixel_update_state);
+        }
     }
 
     void SceneScheduler::execute_draw_list_2d_normal(render::IRendererEngine &renderer) {

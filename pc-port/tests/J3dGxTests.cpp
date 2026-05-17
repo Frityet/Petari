@@ -1,6 +1,7 @@
 #include "TestSuites.hpp"
 #include "TestSupport.hpp"
 
+#include <array>
 #include <bit>
 
 namespace smgpc::tests {
@@ -73,6 +74,11 @@ namespace smgpc::tests {
             append_bp(display_list, 0x25U, 1U | (2U << 4U) | (3U << 8U) | (4U << 12U));
             append_bp(display_list, 0x27U, 2U | (3U << 3U) | (4U << 6U) | (5U << 9U));
             append_bp(display_list, 0x28U, 2U | (3U << 3U) | (1U << 6U) | (4U << 7U));
+            append_bp(display_list, 0x22U, 3U | (4U << 8U) | (5U << 16U) | (6U << 19U) | (1U << 22U));
+            append_bp(display_list, 0x30U, 9U | (1U << 18U) | (1U << 19U));
+            append_bp(display_list, 0xfeU, 0x03ffffU);
+            append_bp(display_list, 0x30U, 63U | (1U << 16U) | (1U << 17U));
+            append_bp(display_list, 0x31U, 31U | (1U << 16U) | (1U << 17U));
             append_bp(display_list, 0x40U, 1U | (4U << 1U));
             append_bp(display_list, 0xc0U, (4U << 12U) | (14U << 8U) | (8U << 4U) | (1U << 19U) | (2U << 22U));
             append_bp(display_list, 0xc1U, (5U << 13U) | (6U << 10U) | (7U << 7U) | (1U << 19U) | (2U << 22U));
@@ -150,6 +156,16 @@ namespace smgpc::tests {
             require(state.tev_orders.size() >= 2U && state.tev_orders[0U].tex_map == 2U && state.tev_orders[0U].tex_coord == 3U &&
                         state.tev_orders[0U].color_channel == 4U,
                     "MDL3 TEV order BP load should update effective texture order state");
+            require(state.su_line_point.loaded && state.su_line_point.line_size == 3U && state.su_line_point.point_size == 4U &&
+                        state.su_line_point.line_tex_offset == 5U && state.su_line_point.point_tex_offset == 6U &&
+                        state.su_line_point.field_mode,
+                    "MDL3 SU line/point BP load should preserve rasterizer texture offset state");
+            require(state.tex_coord_scales[0U].s_loaded && state.tex_coord_scales[0U].t_loaded &&
+                        state.tex_coord_scales[0U].s_scale_minus_1 == 63U && state.tex_coord_scales[0U].t_scale_minus_1 == 31U &&
+                        state.tex_coord_scales[0U].s_bias && state.tex_coord_scales[0U].t_bias &&
+                        state.tex_coord_scales[0U].s_wrap && state.tex_coord_scales[0U].t_wrap &&
+                        state.tex_coord_scales[0U].line_offset && state.tex_coord_scales[0U].point_offset,
+                    "MDL3 SU texture coordinate scale BP loads should preserve masked S/T scale and offset bits");
             require(state.z_mode.enabled && state.z_mode.compare_enable == 1U && state.z_mode.function == 4U && state.z_mode.update_enable == 0U,
                     "MDL3 z-mode BP load should update effective depth state");
             require(state.tev_stages.size() >= 1U && state.tev_stages[0U].color_in == std::array<std::uint8_t, 4U>{4U, 14U, 8U, 0U} &&
@@ -722,13 +738,13 @@ namespace smgpc::tests {
                     "J3dModelRenderer should execute one CometNearOrbitSky render packet per original SHP1 matrix group");
             const auto packets = model_renderer.render_packets();
             require(packets.size() == 9U, "J3dModelRenderer should expose one state packet per CometNearOrbitSky SHP1 matrix group");
-            for (auto packet_index = std::size_t{1U}; packet_index < packets.size(); ++packet_index) {
-                const auto previous = std::tuple<std::uint16_t, std::uint16_t, std::uint8_t>{packets[packet_index - 1U].shape_draw_order,
-                                                                                             packets[packet_index - 1U].matrix_group_index,
-                                                                                             packets[packet_index - 1U].pass_order};
-                const auto current = std::tuple<std::uint16_t, std::uint16_t, std::uint8_t>{
-                    packets[packet_index].shape_draw_order, packets[packet_index].matrix_group_index, packets[packet_index].pass_order};
-                require(previous <= current, "J3dModelRenderer packet evidence should preserve draw-order, matrix-group, then material-pass ordering");
+            constexpr auto expected_packet_order = std::array<std::string_view, 9U>{
+                "CometHalo_v", "CoreRock", "EarthFar_v", "EarthNightMat_v", "Sky_Mat_v",
+                "Space_Mat_v", "ACometHalo_v", "CometCoreMat_v_x", "Sun_Mat_v",
+            };
+            for (auto packet_index = std::size_t{}; packet_index < packets.size(); ++packet_index) {
+                require(packets[packet_index].material_name == expected_packet_order[packet_index],
+                        "J3dModelRenderer packet evidence should follow original DrawBuffer material-mode groups sorted by material name");
             }
             const auto earth_far_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "EarthFar_v";
@@ -750,8 +766,9 @@ namespace smgpc::tests {
             require(comet_halo_packet != packets.end() && comet_halo_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ComposedMaterial &&
                         !comet_halo_packet->evaluate_material_per_vertex && comet_halo_packet->indirect_stage_count == 1U &&
                         comet_halo_packet->indirect_texture_order_count > 0U && comet_halo_packet->declared_tev_stage_count == 1U &&
-                        comet_halo_packet->active_tev_stage_count == 1U,
-                    "J3dModelRenderer packet evidence should route CometHalo_v active-indirect TEV through compat material evaluation");
+                        comet_halo_packet->active_tev_stage_count == 1U && comet_halo_packet->material_mode == 1U &&
+                        comet_halo_packet->draw_buffer_opaque && comet_halo_packet->blend,
+                    "J3dModelRenderer packet evidence should route CometHalo_v active-indirect TEV through compat material evaluation while keeping DrawBuffer grouping separate from GX blend");
             const auto comet_halo_batch_count_before_draw = renderer.triangle_batch_count;
             const auto comet_halo_vertices_before_draw = renderer.submitted_vertices;
             model_renderer.draw(renderer, smgpc::game::file_select_title_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
@@ -765,6 +782,16 @@ namespace smgpc::tests {
             require(sky_packet != packets.end() && sky_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev &&
                         sky_packet->shader_texture_stage_count == 1U,
                     "J3dModelRenderer packet evidence should route single-texture TEV packets through the GX shader path");
+            require(sky_packet->texture_bindings.size() == 1U && sky_packet->texture_bindings[0U].name == "Skyk" &&
+                        sky_packet->texture_bindings[0U].has_sampler_metadata && sky_packet->texture_bindings[0U].wrap_s == 1U &&
+                        sky_packet->texture_bindings[0U].wrap_t == 0U && sky_packet->texture_bindings[0U].min_filter == 1U &&
+                        sky_packet->texture_bindings[0U].mag_filter == 1U && sky_packet->texture_bindings[0U].image_count == 1U,
+                    "J3dModelRenderer packet evidence should resolve J3D TEX1 sampler metadata when MDL3 texture bindings omit sampler registers");
+            require((sky_packet->tex_coord_scales[0U].derived_from_texture || sky_packet->tex_coord_scales[0U].s_loaded) &&
+                        (sky_packet->tex_coord_scales[0U].derived_from_texture || sky_packet->tex_coord_scales[0U].t_loaded) &&
+                        sky_packet->tex_coord_scales[0U].s_scale_minus_1 == 7U &&
+                        sky_packet->tex_coord_scales[0U].t_scale_minus_1 == 31U,
+                    "J3dModelRenderer packet evidence should preserve effective GX SU texcoord scale from display-list or texture-derived state");
             const auto core_rock_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "CoreRock";
             });
@@ -810,8 +837,15 @@ namespace smgpc::tests {
                         space_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev && space_packet->shader_texture_stage_count == 3U &&
                         space_packet->gx_blend.enabled && space_packet->gx_blend.type == 0U && space_packet->gx_blend.src_factor == 1U &&
                         space_packet->gx_blend.dst_factor == 0U && space_packet->fog_type == space_summary->gx_state.fog.type &&
-                        space_packet->fog_color == space_summary->gx_state.fog.color,
+                        space_packet->fog_color == space_summary->gx_state.fog.color && space_packet->material_mode == 1U &&
+                        space_packet->draw_buffer_opaque,
                     "J3dModelRenderer packet evidence should preserve GX state and shader-backed material context for Space_Mat_v");
+            const auto sun_packet = std::ranges::find_if(packets, [](const auto &packet) {
+                return packet.material_name == "Sun_Mat_v";
+            });
+            require(sun_packet != packets.end() && sun_packet->material_mode == 4U && !sun_packet->draw_buffer_opaque &&
+                        sun_packet->gx_blend.enabled,
+                    "J3dModelRenderer packet evidence should classify J3D material mode 4 in the original translucent DrawBuffer group independently of GX blend state");
             require(space_packet->color_channel_count == space_summary->gx_state.color_channel_count &&
                         space_packet->color_channel_material_colors[0U] == space_summary->gx_state.color_channels[0U].material_color &&
                         space_packet->color_channel_ambient_colors[0U] == space_summary->gx_state.color_channels[0U].ambient_color &&
@@ -821,7 +855,10 @@ namespace smgpc::tests {
             require(space_packet->texture_bindings.size() == 3U && space_packet->texture_bindings[0U].name == "OrbitUniverseL" &&
                         space_packet->texture_bindings[1U].name == "Galaxy" &&
                         space_packet->texture_bindings[2U].name == "GalaxyRiverK" && space_packet->texture_bindings[0U].width > 0U &&
-                        space_packet->texture_bindings[1U].format == smgpc::game::TplTextureFormat::CMPR,
+                        space_packet->texture_bindings[1U].format == smgpc::game::TplTextureFormat::CMPR &&
+                        space_packet->texture_bindings[0U].has_sampler_metadata && space_packet->texture_bindings[0U].wrap_s == 1U &&
+                        space_packet->texture_bindings[0U].wrap_t == 1U && space_packet->texture_bindings[0U].min_filter == 1U &&
+                        space_packet->texture_bindings[0U].mag_filter == 1U,
                     "J3dModelRenderer packet evidence should preserve source texture bindings and decoded dimensions for Space_Mat_v");
             require(space_packet->tex_coord_gens.size() == space_summary->gx_state.tex_coord_gens.size() &&
                         space_packet->tex_matrices.size() == space_summary->gx_state.tex_matrices.size() &&

@@ -140,6 +140,7 @@ namespace smgpc::game {
     void RuntimeContext::begin_frame(const render::FrameContext &frame_context) {
         _frame_index = frame_context.frame_index;
         _j3d_packet_trace.clear();
+        _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
         _audio.begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
@@ -187,6 +188,10 @@ namespace smgpc::game {
         _j3d_packet_trace_frame = frame_index;
     }
 
+    void RuntimeContext::set_j3d_pixel_update_state(std::optional<GxPixelUpdateState> state) {
+        _j3d_pixel_update_state = state;
+    }
+
     void RuntimeContext::set_current_stage_name(std::string_view stage_name) {
         _current_stage_name = stage_name;
     }
@@ -213,6 +218,10 @@ namespace smgpc::game {
 
     bool RuntimeContext::should_record_j3d_packet_trace() const {
         return _j3d_packet_trace_frame.has_value() && _frame_index == *_j3d_packet_trace_frame;
+    }
+
+    const std::optional<RuntimeContext::GxPixelUpdateState> &RuntimeContext::j3d_pixel_update_state() const {
+        return _j3d_pixel_update_state;
     }
 
     std::string_view RuntimeContext::current_stage_name() const {

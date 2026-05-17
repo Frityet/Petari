@@ -188,6 +188,32 @@ namespace smgpc::game {
         std::vector<GXIndirectTevStageState> tev_stages;
     };
 
+    struct GXSULinePointState {
+        std::uint8_t line_size = 0U;
+        std::uint8_t point_size = 0U;
+        std::uint8_t line_tex_offset = 0U;
+        std::uint8_t point_tex_offset = 0U;
+        bool field_mode = false;
+        bool loaded = false;
+        std::uint32_t raw = 0U;
+    };
+
+    struct GXTexCoordScaleState {
+        std::uint16_t s_scale_minus_1 = 0U;
+        std::uint16_t t_scale_minus_1 = 0U;
+        bool s_bias = false;
+        bool t_bias = false;
+        bool s_wrap = false;
+        bool t_wrap = false;
+        bool line_offset = false;
+        bool point_offset = false;
+        bool s_loaded = false;
+        bool t_loaded = false;
+        bool derived_from_texture = false;
+        std::uint32_t raw_s = 0U;
+        std::uint32_t raw_t = 0U;
+    };
+
     enum class GXRegisterSpace {
         BP,
         CP,
@@ -246,6 +272,8 @@ namespace smgpc::game {
         GXZModeState z_mode = {};
         GXFogState fog = {};
         GXIndirectState indirect = {};
+        GXSULinePointState su_line_point = {};
+        std::array<GXTexCoordScaleState, 8U> tex_coord_scales = {};
         std::vector<std::uint8_t> mdl3_display_list;
         GXDisplayListStats mdl3_stats = {};
         std::vector<GXRegisterLoadState> mdl3_register_loads;

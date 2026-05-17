@@ -31,6 +31,11 @@ namespace smgpc::game {
             J3dRendererPacketState state{};
         };
 
+        struct GxPixelUpdateState {
+            bool color_update = true;
+            bool alpha_update = true;
+        };
+
         RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service);
         ~RuntimeContext();
 
@@ -46,6 +51,7 @@ namespace smgpc::game {
         void draw_3d_normal(render::IRendererEngine &renderer);
         void draw_2d_normal(render::IRendererEngine &renderer);
         void set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index);
+        void set_j3d_pixel_update_state(std::optional<GxPixelUpdateState> state);
         void set_current_stage_name(std::string_view stage_name);
 
         [[nodiscard]] bool is_core_pad_button_a(s32 channel) const;
@@ -54,6 +60,7 @@ namespace smgpc::game {
         [[nodiscard]] const std::optional<CameraPoseCompat> &last_camera_pose() const;
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
         [[nodiscard]] bool should_record_j3d_packet_trace() const;
+        [[nodiscard]] const std::optional<GxPixelUpdateState> &j3d_pixel_update_state() const;
         [[nodiscard]] std::string_view current_stage_name() const;
         [[nodiscard]] bool is_stage_bgm_prepared() const;
         [[nodiscard]] std::string_view current_stage_bgm_name() const;
@@ -134,6 +141,7 @@ namespace smgpc::game {
         std::optional<CameraPoseCompat> _last_camera_pose{};
         std::vector<J3dRuntimePacketTrace> _j3d_packet_trace{};
         std::optional<std::uint64_t> _j3d_packet_trace_frame{};
+        std::optional<GxPixelUpdateState> _j3d_pixel_update_state{};
         std::string _current_stage_name;
         std::optional<std::uint64_t> _hold_title_combo_frame{};
     };

@@ -20,6 +20,10 @@ public:
     void emitCopy();
     void emitCompleteEffect();
     void deleteCompleteEffect();
+    void exeOpen();
+    void exeBlinkOnce();
+    void exeClose();
+    void exeBlink();
 
     MtxPtr _8C;
 };

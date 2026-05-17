@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cctype>
 #include <cmath>
 #include <limits>
 #include <string>
@@ -308,6 +309,25 @@ namespace smgpc::game {
             return false;
         }
 
+        [[nodiscard]] bool j3d_material_draws_in_opaque_buffer(std::uint8_t material_mode) {
+            return (material_mode & 0x03U) != 0U;
+        }
+
+        [[nodiscard]] int compare_material_names_case_insensitive(std::string_view left, std::string_view right) {
+            const auto count = std::min(left.size(), right.size());
+            for (auto i = std::size_t{}; i < count; ++i) {
+                const auto left_char = std::tolower(static_cast<unsigned char>(left[i]));
+                const auto right_char = std::tolower(static_cast<unsigned char>(right[i]));
+                if (left_char != right_char) {
+                    return left_char < right_char ? -1 : 1;
+                }
+            }
+            if (left.size() == right.size()) {
+                return 0;
+            }
+            return left.size() < right.size() ? -1 : 1;
+        }
+
         [[nodiscard]] float normalized_animation_frame(float frame, std::int16_t frame_max) {
             if (frame_max <= 0) {
                 return frame;
@@ -351,6 +371,75 @@ namespace smgpc::game {
 
             const auto it = std::ranges::find_if(state.tex_matrices, [slot = *matrix_slot](const auto &matrix) { return matrix.slot == slot; });
             return it == state.tex_matrices.end() ? nullptr : &*it;
+        }
+
+        [[nodiscard]] bool tex_coord_scale_has_values(const GXTexCoordScaleState &scale) {
+            return scale.s_loaded || scale.t_loaded || scale.derived_from_texture;
+        }
+
+        [[nodiscard]] std::optional<GXTexCoordScaleState> tex_coord_scale_for_slot(const GXMaterialState &state, std::uint8_t slot) {
+            if (slot >= state.tex_coord_scales.size()) {
+                return {};
+            }
+
+            const auto &scale = state.tex_coord_scales[slot];
+            return tex_coord_scale_has_values(scale) ? std::optional<GXTexCoordScaleState>(scale) : std::optional<GXTexCoordScaleState>{};
+        }
+
+        void derive_tex_coord_scale_from_texture(GXTexCoordScaleState &scale, const J3dTexture &texture) {
+            if (texture.image.width != 0U && !scale.s_loaded) {
+                scale.s_scale_minus_1 = static_cast<std::uint16_t>(texture.image.width - 1U);
+                scale.s_bias = texture.wrap_s == 1U;
+                scale.derived_from_texture = true;
+            }
+            if (texture.image.height != 0U && !scale.t_loaded) {
+                scale.t_scale_minus_1 = static_cast<std::uint16_t>(texture.image.height - 1U);
+                scale.t_bias = texture.wrap_t == 1U;
+                scale.derived_from_texture = true;
+            }
+        }
+
+        [[nodiscard]] std::array<GXTexCoordScaleState, 8U> effective_tex_coord_scales_for_material(const GXMaterialState &state,
+                                                                                                   std::span<const J3dTexture> textures) {
+            auto scales = state.tex_coord_scales;
+            const auto derive_for_order = [&](std::uint8_t tex_coord, std::uint8_t tex_map) {
+                if (tex_coord >= scales.size()) {
+                    return;
+                }
+
+                const auto *binding = find_texture_binding(state, tex_map);
+                if (binding == nullptr || binding->texture_index >= textures.size()) {
+                    return;
+                }
+
+                derive_tex_coord_scale_from_texture(scales[tex_coord], textures[binding->texture_index]);
+            };
+
+            for (const auto &order : state.tev_orders) {
+                if (order.tex_map != 0xffU && order.tex_coord != 0xffU) {
+                    derive_for_order(order.tex_coord, order.tex_map);
+                }
+            }
+            for (const auto &order : state.indirect.texture_orders) {
+                derive_for_order(order.tex_coord, order.tex_map);
+            }
+
+            return scales;
+        }
+
+        void apply_effective_tex_coord_scales(std::vector<J3dMaterialTexturePass> &passes, const GXMaterialState &state,
+                                              std::span<const J3dTexture> textures) {
+            const auto scales = effective_tex_coord_scales_for_material(state, textures);
+            for (auto &pass : passes) {
+                if (pass.tex_coord_slot >= scales.size()) {
+                    pass.tex_coord_scale = {};
+                    continue;
+                }
+
+                pass.tex_coord_scale = tex_coord_scale_has_values(scales[pass.tex_coord_slot]) ?
+                                           std::optional<GXTexCoordScaleState>(scales[pass.tex_coord_slot]) :
+                                           std::optional<GXTexCoordScaleState>{};
+            }
         }
 
         [[nodiscard]] J3dTexCoordGenSummary j3d_tex_coord_gen_from_gx(const GXTexCoordGenState &gen) {
@@ -402,6 +491,7 @@ namespace smgpc::game {
                     .texture_index = binding->texture_index,
                     .tex_coord_gen = gen == nullptr ? std::optional<J3dTexCoordGenSummary>{} : j3d_tex_coord_gen_from_gx(*gen),
                     .tex_matrix = matrix == nullptr ? std::optional<J3dTexMatrixSummary>{} : j3d_tex_matrix_from_gx(*matrix),
+                    .tex_coord_scale = tex_coord_scale_for_slot(state, order.tex_coord),
                 });
             }
 
@@ -566,6 +656,17 @@ namespace smgpc::game {
                 .alpha_update = blend.alpha_update,
                 .enabled = blend.enabled,
             };
+        }
+
+        [[nodiscard]] render::GxBlendMode2D gx_blend_with_draw_options(render::GxBlendMode2D blend,
+                                                                       const J3dModelRendererDrawOptions &options) {
+            if (options.gx_color_update.has_value()) {
+                blend.color_update = *options.gx_color_update;
+            }
+            if (options.gx_alpha_update.has_value()) {
+                blend.alpha_update = *options.gx_alpha_update;
+            }
+            return blend;
         }
 
         [[nodiscard]] render::GxFog2D gx_fog_from_material_state(const GXFogState &fog) {
@@ -1018,6 +1119,7 @@ namespace smgpc::game {
         }
 
         [[nodiscard]] ProjectedVertex gx_material_view_vertex(const J3dMeshVertex &source, const J3dMaterialSummary &material,
+                                                              std::span<const J3dTexture> textures,
                                                               std::span<const J3dMaterialTexturePass> passes, const MatrixPaletteContext &matrix_context,
                                                               const CameraProjectionContext &camera_context) {
             const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
@@ -1026,9 +1128,15 @@ namespace smgpc::game {
             auto tex_coords = std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D>{};
             for (auto i = std::size_t{}; i < passes.size() && i < tex_coords.size(); ++i) {
                 const auto &pass = passes[i];
+                if (pass.texture_index >= textures.size()) {
+                    continue;
+                }
+
                 const auto *tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
                 const auto *tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
-                const auto tex_coord = j3d_project_tex_coord(source, tex_coord_gen, tex_matrix, &model_matrix);
+                const auto tex_coord =
+                    j3d_apply_tex_coord_scale(j3d_project_tex_coord(source, tex_coord_gen, tex_matrix, &model_matrix), pass,
+                                              textures[pass.texture_index]);
                 tex_coords[i] = {tex_coord.u, tex_coord.v, tex_coord.q};
             }
 
@@ -1151,7 +1259,8 @@ namespace smgpc::game {
         }
 
         void project_gx_material_source_mesh(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
-                                             const J3dMaterialSummary &material, std::span<const J3dMaterialTexturePass> passes,
+                                             const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
+                                             std::span<const J3dMaterialTexturePass> passes,
                                              const MatrixPaletteContext &matrix_context, const CameraProjectionContext &camera_context,
                                              std::vector<ProjectedVertex> &projected_sources,
                                              std::vector<render::GxMaterialVertex2D> &vertices, std::vector<std::uint16_t> &indices) {
@@ -1164,7 +1273,7 @@ namespace smgpc::game {
             projected_sources.clear();
             projected_sources.reserve(source_vertices.size());
             for (const auto &source : source_vertices) {
-                projected_sources.push_back(gx_material_view_vertex(source, material, passes, matrix_context, camera_context));
+                projected_sources.push_back(gx_material_view_vertex(source, material, textures, passes, matrix_context, camera_context));
             }
 
             for (auto i = 0U; i + 2U < source_indices.size(); i += 3U) {
@@ -1390,13 +1499,16 @@ namespace smgpc::game {
                 }
 
                 const auto &material = geometry.materials->materials[shape.material_index];
-                const auto passes = gx_material_texture_passes(material.gx_state);
+                auto passes = gx_material_texture_passes(material.gx_state);
+                apply_effective_tex_coord_scales(passes, material.gx_state, geometry.textures);
                 for (const auto &shape_packet : shape.draw_packets) {
                     const auto assign_shape_packet = [&](Mesh &mesh) {
                         mesh.material_name = material.name;
                         mesh.shape_index = shape.shape_index;
                         mesh.shape_draw_order = shape.draw_order;
                         mesh.material_index = shape.material_index;
+                        mesh.material_mode = material.material_mode;
+                        mesh.draw_buffer_opaque = j3d_material_draws_in_opaque_buffer(material.material_mode);
                         mesh.joint_index = shape.joint_index;
                         mesh.matrix_group_count = static_cast<std::uint16_t>(shape.draw_packets.size());
                         mesh.matrix_group = shape_packet.matrix_group;
@@ -1665,6 +1777,17 @@ namespace smgpc::game {
             if (a.material_index == 0xfffeU || b.material_index == 0xfffeU) {
                 return a.material_index == 0xfffeU && b.material_index != 0xfffeU;
             }
+            if (a.draw_buffer_opaque != b.draw_buffer_opaque) {
+                return a.draw_buffer_opaque && !b.draw_buffer_opaque;
+            }
+
+            const auto material_name_compare = compare_material_names_case_insensitive(a.material_name, b.material_name);
+            if (material_name_compare != 0) {
+                return material_name_compare < 0;
+            }
+            if (a.material_index != b.material_index) {
+                return a.material_index < b.material_index;
+            }
             if (a.shape_draw_order != b.shape_draw_order) {
                 return a.shape_draw_order < b.shape_draw_order;
             }
@@ -1712,11 +1835,14 @@ namespace smgpc::game {
             if (!material_filter_allows_mesh(options.material_filter, mesh.material_name, mesh.material_index)) {
                 continue;
             }
-            if (options.translucent_filter.has_value() && mesh.blend != *options.translucent_filter) {
-                continue;
+            if (options.translucent_filter.has_value()) {
+                const auto draw_buffer_translucent = !mesh.draw_buffer_opaque;
+                if (draw_buffer_translucent != *options.translucent_filter) {
+                    continue;
+                }
             }
 
-            submit_mesh(renderer, mesh, actor_matrix, frame, scratch, options.scene_lights);
+            submit_mesh(renderer, mesh, actor_matrix, frame, scratch, options.scene_lights, options);
         }
     }
 
@@ -1732,11 +1858,14 @@ namespace smgpc::game {
         return _render_packets;
     }
 
-    std::vector<J3dRendererPacketState> J3dModelRenderer::render_packets(std::uint64_t frame, std::span<const GXLightState> scene_lights) const {
+    std::vector<J3dRendererPacketState> J3dModelRenderer::render_packets(std::uint64_t frame, std::span<const GXLightState> scene_lights,
+                                                                         const J3dModelRendererDrawOptions &options) const {
         auto packets = std::vector<J3dRendererPacketState>{};
         packets.reserve(_meshes.size());
         for (const auto &mesh : _meshes) {
-            packets.push_back(packet_state_for_mesh(mesh, frame, scene_lights));
+            auto state = packet_state_for_mesh(mesh, frame, scene_lights);
+            state.gx_blend = gx_blend_with_draw_options(state.gx_blend, options);
+            packets.push_back(std::move(state));
         }
         return packets;
     }
@@ -1751,6 +1880,8 @@ namespace smgpc::game {
         auto mesh = Mesh{};
         mesh.material_name = "constant-backdrop";
         mesh.material_index = 0xfffeU;
+        mesh.material_mode = 1U;
+        mesh.draw_buffer_opaque = true;
         mesh.packet_mode = J3dRendererPacketMode::ConstantBackdrop;
         mesh.texture = texture;
         mesh.vertices = {
@@ -1771,6 +1902,8 @@ namespace smgpc::game {
             .shape_index = mesh.shape_index,
             .shape_draw_order = mesh.shape_draw_order,
             .material_index = mesh.material_index,
+            .material_mode = mesh.material_mode,
+            .draw_buffer_opaque = mesh.draw_buffer_opaque,
             .joint_index = mesh.joint_index,
             .matrix_group_index = mesh.matrix_group.group_index,
             .matrix_group_count = mesh.matrix_group_count,
@@ -1832,6 +1965,32 @@ namespace smgpc::game {
                     texture_state.height = texture.image.height;
                     texture_state.format = texture.image.format;
                     texture_state.has_source_texture = true;
+                    texture_state.has_sampler_metadata = true;
+                    texture_state.transparency = texture.transparency;
+                    texture_state.palette_format = texture.palette_format;
+                    texture_state.palette_entry_count = texture.palette_entry_count;
+                    texture_state.palette_data_offset = texture.palette_data_offset;
+                    texture_state.mipmap = texture.mipmap;
+                    texture_state.do_edge_lod = texture.do_edge_lod;
+                    texture_state.bias_clamp = texture.bias_clamp;
+                    texture_state.max_anisotropy = texture.max_anisotropy;
+                    texture_state.min_lod = texture.min_lod;
+                    texture_state.max_lod = texture.max_lod;
+                    texture_state.image_count = texture.image_count;
+                    texture_state.lod_bias = texture.lod_bias;
+                    texture_state.image_data_offset = texture.image_data_offset;
+                    if (texture_state.wrap_s == 0xffU) {
+                        texture_state.wrap_s = texture.wrap_s;
+                    }
+                    if (texture_state.wrap_t == 0xffU) {
+                        texture_state.wrap_t = texture.wrap_t;
+                    }
+                    if (texture_state.min_filter == 0xffU) {
+                        texture_state.min_filter = texture.min_filter;
+                    }
+                    if (texture_state.mag_filter == 0xffU) {
+                        texture_state.mag_filter = texture.mag_filter;
+                    }
                 }
                 if (binding.texture_index < _texture_handles.size()) {
                     texture_state.host_handle = _texture_handles[binding.texture_index];
@@ -1839,6 +1998,8 @@ namespace smgpc::game {
                 state.texture_bindings.push_back(std::move(texture_state));
             }
             state.tex_coord_gens = effective_material.tex_coord_gens;
+            state.tex_coord_scales = effective_tex_coord_scales_for_material(effective_material, _textures);
+            state.su_line_point = effective_material.su_line_point;
             state.tex_matrices = effective_material.tex_matrices;
             state.tev_orders = effective_material.tev_orders;
             state.tev_stages = effective_material.tev_stages;
@@ -1909,8 +2070,9 @@ namespace smgpc::game {
     }
 
     void J3dModelRenderer::submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix,
-                                       std::uint64_t frame, DrawScratch &scratch,
-                                       std::span<const GXLightState> scene_lights) const {
+                                       std::uint64_t frame, DrawScratch &scratch, std::span<const GXLightState> scene_lights,
+                                       const J3dModelRendererDrawOptions &options) const {
+        const auto effective_gx_blend = gx_blend_with_draw_options(mesh.gx_blend, options);
         if (mesh.project_source_vertices) {
             auto &vertices = scratch.textured_vertices;
             auto &indices = scratch.indices;
@@ -1975,7 +2137,8 @@ namespace smgpc::game {
                 }
 
                 auto &gx_vertices = scratch.gx_vertices;
-                project_gx_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, effective_passes, matrix_context,
+                apply_effective_tex_coord_scales(effective_passes, effective_material.gx_state, _textures);
+                project_gx_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, effective_passes, matrix_context,
                                                 scratch.camera_context, scratch.projected_sources, gx_vertices, indices);
                 if (gx_vertices.empty() || indices.empty()) {
                     return;
@@ -1988,7 +2151,7 @@ namespace smgpc::game {
                     .tev_stages = std::span<const render::GxTevStage2D>(mesh.gx_tev_stages.data(), mesh.gx_tev_stage_count),
                     .initial_tev_registers = mesh.gx_initial_tev_registers,
                     .alpha_compare = mesh.gx_alpha_compare,
-                    .blend = mesh.gx_blend,
+                    .blend = effective_gx_blend,
                     .depth_test = mesh.depth_test,
                     .depth_write = mesh.depth_write,
                     .depth_compare = mesh.depth_compare,
@@ -2020,6 +2183,7 @@ namespace smgpc::game {
                     }
                 }
 
+                apply_effective_tex_coord_scales(effective_passes, effective_material.gx_state, _textures);
                 if (effective_passes.empty()) {
                     project_untextured_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, matrix_context,
                                                            scratch.camera_context, scratch.projected_sources, vertices, indices);
@@ -2039,7 +2203,7 @@ namespace smgpc::game {
                                                        .wrap_v = mesh.wrap_v,
                                                        .blend = mesh.blend,
                                                        .blend_mode = mesh.blend_mode,
-                                                       .gx_blend = mesh.gx_blend,
+                                                       .gx_blend = effective_gx_blend,
                                                        .depth_test = mesh.depth_test,
                                                        .depth_write = mesh.depth_write,
                                                        .depth_compare = mesh.depth_compare,
@@ -2063,7 +2227,7 @@ namespace smgpc::game {
                                                    .wrap_v = mesh.wrap_v,
                                                    .blend = mesh.blend,
                                                    .blend_mode = mesh.blend_mode,
-                                                   .gx_blend = mesh.gx_blend,
+                                                   .gx_blend = effective_gx_blend,
                                                    .depth_test = mesh.depth_test,
                                                    .depth_write = mesh.depth_write,
                                                    .depth_compare = mesh.depth_compare,
@@ -2081,7 +2245,7 @@ namespace smgpc::game {
                                                .wrap_v = mesh.wrap_v,
                                                .blend = mesh.blend,
                                                .blend_mode = mesh.blend_mode,
-                                               .gx_blend = mesh.gx_blend,
+                                               .gx_blend = effective_gx_blend,
                                                .depth_test = mesh.depth_test,
                                                .depth_write = mesh.depth_write,
                                                .depth_compare = mesh.depth_compare,
