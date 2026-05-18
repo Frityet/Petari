@@ -15,6 +15,7 @@ class FileSelectButton;
 class FileSelectEffect;
 class FileSelectInfo;
 class FileSelectItem;
+class FileSelectItemDelegatorBase;
 class FileSelectSky;
 class HitSensor;
 class BackButton;
@@ -55,6 +56,7 @@ public:
     void initUserFileArray();
     void initUserFile();
     void restoreUserFile();
+    void checkAllComplete();
     void callbackStart();
     void callbackCopy();
     void callbackMii();
@@ -67,6 +69,7 @@ public:
     [[nodiscard]] bool isUserFileCorrupted(s32 fileNo) const;
     [[nodiscard]] bool isUserFileAppearLuigi(s32 fileNo) const;
     [[nodiscard]] bool isUserFileLuigi(s32 fileNo) const;
+    [[nodiscard]] s32 getMissCount(s32 fileNo) const;
     void notifyItem(FileSelectItem* pItem, s32 action);
     [[nodiscard]] FileSelectIconID::EFellowID getUserFileFellowID(s32 fileNo) const;
     [[nodiscard]] bool isUserFileMiiIdValid(s32 fileNo) const;
@@ -238,12 +241,16 @@ public:
     [[nodiscard]] s32 getPointedFileNo() const;
     [[nodiscard]] s32 getPreviousPointingFileNo() const;
     [[nodiscard]] s32 getCurrentFileInfoFileNo() const;
+    [[nodiscard]] s32 getCurrentFileInfoMissCount() const;
+    [[nodiscard]] bool isCurrentFileInfoSelectedMario() const;
+    [[nodiscard]] const wchar_t* getCurrentFileInfoDateMessage() const;
+    [[nodiscard]] const wchar_t* getCurrentFileInfoTimeMessage() const;
     [[nodiscard]] bool isCameraAtNearPoint() const;
     [[nodiscard]] bool wasItemPointed(s32 fileNo) const;
     [[nodiscard]] bool didItemTurnToFront(s32 fileNo) const;
     [[nodiscard]] s32 getItemTurnToFrontFrameCount(s32 fileNo) const;
     [[nodiscard]] const smgpc::game::CameraParamVec3& getItemBasePosition(s32 index) const;
-    [[nodiscard]] const smgpc::game::CameraParamVec3& getItemPosition(s32 index) const;
+    [[nodiscard]] const TVec3f& getItemPosition(s32 index) const;
 #endif
 
 private:
@@ -265,6 +272,8 @@ private:
     std::array< std::unique_ptr< FileSelectEffect >, cItemCount > mSelectEffects{};
     std::array< std::unique_ptr< UserFile >, cItemCount > mFiles{};
     std::array< std::unique_ptr< FileSelectItem >, cItemCount > mItems{};
+    std::array< bool, cItemCount > mAllComplete{};
+    std::unique_ptr< FileSelectItemDelegatorBase > mItemDelegator;
     std::array< smgpc::game::CameraParamVec3, cItemCount > mItemBasePositions{};
     FileSelectItem* mSelectedItem = nullptr;
     FileSelectItem* mCopySourceItem = nullptr;

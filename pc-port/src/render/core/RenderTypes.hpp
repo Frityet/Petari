@@ -101,9 +101,25 @@ namespace smgpc::render::core {
         void *display_handle = nullptr;
     };
 
+    struct InputPointerState {
+        float x = 0.0F;
+        float y = 0.0F;
+        bool valid = false;
+    };
+
     enum class InputButton {
         CORE_PAD_A,
         CORE_PAD_B,
+        CORE_PAD_UP,
+        CORE_PAD_DOWN,
+        CORE_PAD_LEFT,
+        CORE_PAD_RIGHT,
+        CORE_PAD_PLUS,
+        CORE_PAD_MINUS,
+        CORE_PAD_HOME,
+        CORE_PAD_C,
+        CORE_PAD_Z,
+        COUNT,
     };
 
     enum class BlendMode {
@@ -128,6 +144,11 @@ namespace smgpc::render::core {
         Front,
         Back,
         FrontAndBack,
+    };
+
+    enum class PrimitiveTopology {
+        Triangles,
+        TriangleStrip,
     };
 
     struct GxAlphaCompare2D {
@@ -238,6 +259,7 @@ namespace smgpc::render::core {
     struct TexturedTriangleBatch2D {
         std::span<const TexturedVertex2D> vertices = {};
         std::span<const std::uint16_t> indices = {};
+        PrimitiveTopology primitive_topology = PrimitiveTopology::Triangles;
         std::uint8_t wrap_u = 0U;
         std::uint8_t wrap_v = 0U;
         std::uint8_t min_filter = 1U;
@@ -255,6 +277,7 @@ namespace smgpc::render::core {
     struct GxMaterialTriangleBatch2D {
         std::span<const GxMaterialVertex2D> vertices = {};
         std::span<const std::uint16_t> indices = {};
+        PrimitiveTopology primitive_topology = PrimitiveTopology::Triangles;
         std::span<const GxTextureStage2D> texture_stages = {};
         std::span<const GxTevStage2D> tev_stages = {};
         std::array<GxTevRegisterColor2D, 4U> initial_tev_registers = {};

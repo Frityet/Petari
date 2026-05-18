@@ -177,6 +177,10 @@ namespace MR {
         return isStep(pActor, 0);
     }
 
+    bool isGreaterEqualStep(const LiveActor* pActor, s32 step) {
+        return pActor != nullptr && pActor->getNerveStep() >= step;
+    }
+
     void setNerveAtStep(LiveActor* pActor, const Nerve* pNerve, s32 step) {
         if (pActor != nullptr && pActor->getNerveStep() == step) {
             pActor->setNerve(pNerve);
@@ -185,6 +189,31 @@ namespace MR {
 
     bool isBtpStopped(const LiveActor*) {
         return true;
+    }
+
+    bool isBckStopped(const LiveActor*) {
+        return true;
+    }
+
+    f32 getBckFrameMax(const LiveActor*) {
+        return 180.0F;
+    }
+
+    MtxPtr getJointMtx(const LiveActor* pActor, const char*) {
+        static Mtx matrix{};
+        matrix[0][0] = 1.0F;
+        matrix[0][1] = 0.0F;
+        matrix[0][2] = 0.0F;
+        matrix[0][3] = pActor != nullptr ? pActor->mPosition.x : 0.0F;
+        matrix[1][0] = 0.0F;
+        matrix[1][1] = 1.0F;
+        matrix[1][2] = 0.0F;
+        matrix[1][3] = pActor != nullptr ? pActor->mPosition.y : 0.0F;
+        matrix[2][0] = 0.0F;
+        matrix[2][1] = 0.0F;
+        matrix[2][2] = 1.0F;
+        matrix[2][3] = pActor != nullptr ? pActor->mPosition.z : 0.0F;
+        return matrix;
     }
 
     bool isBrkOneTimeAndStopped(const LiveActor* pActor) {

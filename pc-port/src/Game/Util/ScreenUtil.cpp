@@ -212,6 +212,12 @@ namespace MR {
         }
     }
 
+    void forceOffImageEffect() {
+    }
+
+    void setImageEffectControlAuto() {
+    }
+
     void openWipeCircle(s32 frameCount) {
         if (auto* wipe = scene_wipe()) {
             wipe->open(cCircleWipeName, frameCount);

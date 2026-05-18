@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <string_view>
+#include <cmath>
 
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 #include <revolution.h>
@@ -47,7 +48,42 @@ struct TVec3f {
         y += value.y;
         z += value.z;
     }
+
+    void sub(const TVec3f& value) {
+        x -= value.x;
+        y -= value.y;
+        z -= value.z;
+    }
+
+    void scale(f32 value) {
+        x *= value;
+        y *= value;
+        z *= value;
+    }
+
+    [[nodiscard]] f32 dot(const TVec3f& value) const {
+        return (x * value.x) + (y * value.y) + (z * value.z);
+    }
+
+    [[nodiscard]] f32 length() const {
+        return std::sqrt(dot(*this));
+    }
+
+    [[nodiscard]] f32 squareDistance(const TVec3f& value) const {
+        const auto dx = x - value.x;
+        const auto dy = y - value.y;
+        const auto dz = z - value.z;
+        return (dx * dx) + (dy * dy) + (dz * dz);
+    }
+
+    [[nodiscard]] f32 distance(const TVec3f& value) const {
+        return std::sqrt(squareDistance(value));
+    }
 };
+
+[[nodiscard]] constexpr TVec3f operator+(const TVec3f& lhs, const TVec3f& rhs) {
+    return TVec3f{lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z};
+}
 
 [[nodiscard]] constexpr TVec3f operator-(const TVec3f& lhs, const TVec3f& rhs) {
     return TVec3f{lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z};
@@ -67,6 +103,7 @@ public:
     virtual ~LiveActor();
 
     void init(const JMapInfoIter& rIter) override;
+    virtual void initAfterPlacement() override;
     void movement() override;
     void calcAnim() override;
     void calcViewAndEntry() override;
@@ -84,6 +121,7 @@ public:
     void setNerve(const Nerve* pNerve);
     bool isNerve(const Nerve* pNerve) const;
     s32 getNerveStep() const;
+    void initSound(s32 soundCount, bool usesCallback);
     void initModelManagerWithAnm(const char* pModelArcName, const char* pAnimArcName, bool);
     void initEffectKeeper(int effectNum, const char* pEffectName, bool);
     void initActorLightCtrl();

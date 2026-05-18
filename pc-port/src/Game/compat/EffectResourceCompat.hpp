@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <map>
 #include <optional>
@@ -79,12 +80,16 @@ namespace smgpc::game {
         float base_size_y = 1.0F;
         std::uint16_t blend_mode_config = 0U;
         std::uint8_t alpha_compare_config = 0U;
+        std::uint8_t alpha_ref0 = 0U;
+        std::uint8_t alpha_ref1 = 0U;
         std::uint8_t z_mode_config = 0U;
         std::uint8_t texture_flags = 0U;
         std::uint8_t texture_count = 0U;
         std::uint8_t texture_slot = 0U;
         std::uint8_t color_flags = 0U;
-        std::uint8_t color_animation_frame_max = 0U;
+        std::int16_t color_animation_frame_max = 0;
+        std::array<std::uint8_t, 4U> prm_color = {255U, 255U, 255U, 255U};
+        std::array<std::uint8_t, 4U> env_color = {0U, 0U, 0U, 255U};
         std::uint8_t shape_type = 0U;
         std::uint8_t direction_type = 0U;
         std::uint8_t rotation_type = 0U;
@@ -104,6 +109,8 @@ namespace smgpc::game {
         float inherit_scale = 0.0F;
         float inherit_alpha = 0.0F;
         float inherit_rgb = 0.0F;
+        std::array<std::uint8_t, 4U> prm_color = {255U, 255U, 255U, 255U};
+        std::array<std::uint8_t, 4U> env_color = {0U, 0U, 0U, 255U};
         float timing = 0.0F;
         std::int16_t lifetime = 0;
         std::int16_t rate = 0;
@@ -124,6 +131,19 @@ namespace smgpc::game {
         bool rotate_enabled = false;
     };
 
+    struct JpcKeyFrameMetadata {
+        float time = 0.0F;
+        float value = 0.0F;
+        float tangent_in = 0.0F;
+        float tangent_out = 0.0F;
+    };
+
+    struct JpcKeyBlockMetadata {
+        std::uint8_t id = 0U;
+        bool loop = false;
+        std::vector<JpcKeyFrameMetadata> keys;
+    };
+
     struct JpcResourceMetadata {
         std::uint16_t user_index = 0U;
         std::uint16_t block_count = 0U;
@@ -137,6 +157,7 @@ namespace smgpc::game {
         std::optional<std::uint16_t> primary_texture_index;
         std::optional<std::uint16_t> child_texture_index;
         std::vector<std::string> block_tags;
+        std::vector<JpcKeyBlockMetadata> key_blocks;
         std::vector<std::uint16_t> texture_indices;
     };
 

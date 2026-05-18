@@ -1,14 +1,18 @@
 #include "Game/Map/FileSelectItem.hpp"
 
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Map/FileSelectItemDelegator.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/FileSelectModel.hpp"
 #include "Game/Screen/FileSelectNumber.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -28,6 +32,7 @@ namespace {
         "ME_ASTRO_DOME_HIT_GALAXY_N1", "ME_ASTRO_DOME_HIT_GALAXY_N2", "ME_ASTRO_DOME_HIT_GALAXY_N3",
         "ME_ASTRO_DOME_HIT_GALAXY_N4", "ME_ASTRO_DOME_HIT_GALAXY_N5",
     };
+    const TVec3f sDataInfoOffset = {0.0F, 2150.0F, 0.0F};
 
     NEW_NERVE(FileSelectItemNrvNewWait, FileSelectItem, NewWait);
     NEW_NERVE(FileSelectItemNrvExistWait, FileSelectItem, ExistWait);
@@ -54,8 +59,65 @@ namespace {
         return (current * 0.95F) + (target * 0.05F);
     }
 
-    [[nodiscard]] f32 repeat(f32 value, f32 min, f32 max) {
-        return min + std::fmod(max + (value - min), max);
+    [[nodiscard]] TVec3f cross_product(const TVec3f& a, const TVec3f& b) {
+        return TVec3f{
+            (a.y * b.z) - (a.z * b.y),
+            (a.z * b.x) - (a.x * b.z),
+            (a.x * b.y) - (a.y * b.x),
+        };
+    }
+
+    [[nodiscard]] bool check_collision_of_point_and_cylinder(const TVec3f& point, const TVec3f& base, const TVec3f& axis, f32 radius) {
+        const auto axis_length = axis.length();
+        if (axis_length <= 0.000001F) {
+            return point.distance(base) <= radius;
+        }
+
+        auto normalized_axis = axis;
+        MR::normalize(&normalized_axis);
+        const auto offset = point - base;
+        const auto projection = normalized_axis.dot(offset);
+        if (projection < 0.0F || projection > axis_length) {
+            return false;
+        }
+
+        normalized_axis.scale(projection);
+        return normalized_axis.distance(offset) <= radius;
+    }
+
+    [[nodiscard]] bool is_point_inside_pointer_stroke_triangle(const TVec3f& point, const TVec3f& camera_pos, const TVec3f& current_world,
+                                                               const TVec3f& previous_world, f32 radius) {
+        const auto edge_camera_to_current = current_world - camera_pos;
+        const auto edge_current_to_previous = previous_world - current_world;
+        const auto edge_previous_to_camera = camera_pos - previous_world;
+        auto normal = cross_product(edge_current_to_previous, edge_camera_to_current);
+        MR::normalize(&normal);
+
+        const auto signed_distance = normal.dot(point - camera_pos);
+        if (std::fabs(signed_distance) >= radius) {
+            return false;
+        }
+
+        auto projected = point - (normal * signed_distance);
+        auto cross = cross_product(projected - camera_pos, edge_camera_to_current);
+        if (cross.dot(normal) < 0.0F) {
+            return false;
+        }
+
+        cross = cross_product(projected - current_world, edge_current_to_previous);
+        if (cross.dot(normal) < 0.0F) {
+            return false;
+        }
+
+        cross = cross_product(projected - previous_world, edge_previous_to_camera);
+        if (cross.dot(normal) >= 0.0F) {
+            return true;
+        }
+
+        return camera_pos.distance(point) <= radius || current_world.distance(point) <= radius || previous_world.distance(point) <= radius ||
+               check_collision_of_point_and_cylinder(point, camera_pos, edge_camera_to_current, radius) ||
+               check_collision_of_point_and_cylinder(point, current_world, edge_current_to_previous, radius) ||
+               check_collision_of_point_and_cylinder(point, previous_world, edge_previous_to_camera, radius);
     }
 
     void make_identity(Mtx matrix) {
@@ -111,6 +173,7 @@ void FileSelectItem::init(const JMapInfoIter&) {
     createNew();
     createFellows();
     createNumber();
+    MR::initStarPointerTarget(this, 1000.0F, TVec3f(0.0F, 900.0F, 0.0F));
     MR::invalidateClipping(this);
     initNerve(mIsNew ? new_wait_nerve() : exist_wait_nerve());
     makeActorAppeared();
@@ -126,19 +189,24 @@ void FileSelectItem::movement() {
         return;
     }
 
-    mPosition = smgpc::game::CameraParamVec3{
-        .x = smooth(mPosition.x, mBasePosition.x),
-        .y = smooth(mPosition.y, mBasePosition.y),
-        .z = smooth(mPosition.z, mBasePosition.z),
-    };
+    mPosition.set(smooth(mPosition.x, mBasePosition.x), smooth(mPosition.y, mBasePosition.y), smooth(mPosition.z, mBasePosition.z));
     if (mScaleCtrl != nullptr) {
         mScaleCtrl->updateNerve();
     }
+    updatePointing();
     updateRotate();
     if (mBlinkCtrl != nullptr) {
         mBlinkCtrl->updateNerve();
     }
     updateModelMatrix();
+
+    if (mNumber != nullptr) {
+        auto info_pos = TVec3f(mPosition.x + sDataInfoOffset.x, mPosition.y + sDataInfoOffset.y, mPosition.z + sDataInfoOffset.z);
+
+        auto screen_pos = TVec2f{};
+        MR::calcScreenPosition(&screen_pos, info_pos);
+        mNumber->setTrans(screen_pos);
+    }
 }
 
 void FileSelectItem::appear() {
@@ -167,7 +235,7 @@ void FileSelectItem::makeActorDead() {
 void FileSelectItem::forceChange(bool is_new) {
     deleteCompleteEffect();
     mIsNew = is_new;
-    mShouldEmitCompleteEffect = !mIsNew;
+    mShouldEmitCompleteEffect = false;
     mShouldEmitCopyEffect = false;
     if (!mIsAppeared) {
         killAllModels();
@@ -192,10 +260,27 @@ void FileSelectItem::forceChange(bool is_new, const FileSelectIconID& rIconId) {
     forceChange(is_new);
 }
 
+void FileSelectItem::forceChange(const FileSelectIconID& rIconId, bool isComplete) {
+    mIconID.set(rIconId);
+    deleteCompleteEffect();
+    mIsNew = false;
+    mShouldEmitCompleteEffect = isComplete;
+    mShouldEmitCopyEffect = false;
+    if (!mIsAppeared) {
+        killAllModels();
+        setNerve(exist_wait_nerve());
+        return;
+    }
+
+    appearFellowModel();
+    emitCompleteEffect();
+    setNerve(exist_wait_nerve());
+}
+
 void FileSelectItem::change(bool is_new) {
     mIsNew = is_new;
     deleteCompleteEffect();
-    mShouldEmitCompleteEffect = !mIsNew;
+    mShouldEmitCompleteEffect = false;
     mShouldEmitCopyEffect = false;
     setNerve(mIsNew ? format_nerve() : change_fellow_nerve());
 }
@@ -203,6 +288,12 @@ void FileSelectItem::change(bool is_new) {
 void FileSelectItem::change(bool is_new, const FileSelectIconID& rIconId) {
     mIconID.set(rIconId);
     change(is_new);
+}
+
+void FileSelectItem::change(const FileSelectIconID& rIconId, bool isComplete) {
+    mIconID.set(rIconId);
+    change(false);
+    mShouldEmitCompleteEffect = isComplete;
 }
 
 void FileSelectItem::copyIconID(FileSelectIconID* pIconID) const {
@@ -359,6 +450,10 @@ void FileSelectItem::setBasePosition(const smgpc::game::CameraParamVec3& base_po
     mBasePosition = base_position;
 }
 
+void FileSelectItem::setSelectDelegator(FileSelectItemDelegatorBase* pDelegator) {
+    mDelegator = pDelegator;
+}
+
 s32 FileSelectItem::getFileNo() const {
     return mFileNo;
 }
@@ -403,7 +498,7 @@ s32 FileSelectItem::getTurnToFrontFrameCount() const {
     return mTurnToFrontFrameCount;
 }
 
-const smgpc::game::CameraParamVec3& FileSelectItem::getPosition() const {
+const TVec3f& FileSelectItem::getPosition() const {
     return mPosition;
 }
 
@@ -526,6 +621,23 @@ s32 FileSelectItem::getFellowModelIndex() const {
     return std::clamp(index, 0, cFellowModelCount - 1);
 }
 
+void FileSelectItem::updatePointing() {
+    if (mIsSelectInvalid) {
+        if (MR::isStarPointerPointing1PWithoutCheckZ(this, nullptr, false, false) && mDelegator != nullptr) {
+            mDelegator->notify(this, 2);
+        }
+    } else if (MR::isStarPointerPointingFileSelect(this) && mDelegator != nullptr) {
+        mDelegator->notify(this, 0);
+    }
+
+    if (!mIsSelectInvalid && mIsPointing && MR::testDPDMenuPadDecideTrigger() && mDelegator != nullptr) {
+        mDelegator->notify(this, 1);
+        if (mScaleCtrl != nullptr) {
+            mScaleCtrl->setNerve(&FileSelectItemSub::ScaleControllerNrvToSmall::sInstance);
+        }
+    }
+}
+
 void FileSelectItem::updateRotate() {
     if (mIsRotateInvalid) {
         return;
@@ -544,9 +656,54 @@ void FileSelectItem::updateRotate() {
             mTurnToFrontDuration = 0;
         }
 
-        const auto wrapped = repeat(mRotation.y, -180.0F, 360.0F);
+        const auto wrapped = MR::repeat(mRotation.y, -180.0F, 360.0F);
         mRotation.y = wrapped - (wrapped * progress);
+        if (mBlinkCtrl != nullptr) {
+            mBlinkCtrl->open();
+            mBlinkCtrl->setNerve(&FileSelectItemSub::BlinkControllerNrvOpen::sInstance);
+        }
         return;
+    } else if (MR::isStarPointerInScreen(WPAD_CHAN0)) {
+        const auto target = mPosition + TVec3f(0.0F, 900.0F, 0.0F);
+        const auto* screen_position = MR::getStarPointerScreenPosition(WPAD_CHAN0);
+        const auto current_screen = screen_position != nullptr ? *screen_position : TVec2f{};
+
+        if (mNeedsPointerScreenReset) {
+            mPreviousPointerScreen = current_screen;
+            mNeedsPointerScreenReset = false;
+        }
+
+        const auto camera_pos = MR::getCamPos();
+        const auto camera_to_target = target - camera_pos;
+        const auto unprojection_distance = 900.0F + camera_to_target.length();
+
+        if (std::sqrt(current_screen.squareDist(mPreviousPointerScreen)) < 2.0F) {
+            auto current_world = TVec3f{};
+            MR::calcWorldPositionFromScreen(&current_world, current_screen, unprojection_distance);
+            auto camera_to_pointer = current_world - camera_pos;
+            MR::normalize(&camera_to_pointer);
+            if (cross_product(camera_to_target, camera_to_pointer).length() < 900.0F) {
+                mPointerStrokeHit = true;
+            }
+        } else {
+            auto current_world = TVec3f{};
+            auto previous_world = TVec3f{};
+            MR::calcWorldPositionFromScreen(&current_world, current_screen, unprojection_distance);
+            MR::calcWorldPositionFromScreen(&previous_world, mPreviousPointerScreen, unprojection_distance);
+            if (is_point_inside_pointer_stroke_triangle(target, camera_pos, current_world, previous_world, 900.0F)) {
+                mPointerStrokeHit = true;
+            }
+        }
+
+        if (mPointerStrokeHit) {
+            auto velocity = mRotationVelocityY + ((0.03F * (current_screen.x - mPreviousPointerScreen.x)) / mScale.x);
+            velocity = std::clamp(velocity, -25.0F, 25.0F);
+            mRotationVelocityY = velocity;
+        }
+
+        mPreviousPointerScreen = current_screen;
+    } else {
+        mNeedsPointerScreenReset = true;
     }
 
     mRotationVelocityY *= 0.98F;
@@ -555,7 +712,8 @@ void FileSelectItem::updateRotate() {
     } else if (mRotationVelocityY < 0.0F && mRotationVelocityY > -0.5F) {
         mRotationVelocityY = -0.5F;
     }
-    mRotation.y = repeat(mRotation.y + mRotationVelocityY, 0.0F, 360.0F);
+    mRotation.y = MR::repeat(mRotation.y + mRotationVelocityY, 0.0F, 360.0F);
+    mPointerStrokeHit = false;
 }
 
 void FileSelectItem::updateModelMatrix() {

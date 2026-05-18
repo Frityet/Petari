@@ -8,7 +8,6 @@ class FileSelectSky : public LiveActor {
 public:
     FileSelectSky(const char* pName);
     ~FileSelectSky() override;
-    using LiveActor::draw;
 
     void init(const JMapInfoIter& rIter) override;
     void calcAnim() override;
@@ -16,7 +15,6 @@ public:
     bool receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) override;
 
     void exeWait();
-    void draw(smgpc::render::IRendererEngine& renderer, const smgpc::game::CameraPoseCompat& camera_pose);
 
 private:
     f32 _8C = 0.0F;

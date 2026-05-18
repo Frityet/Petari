@@ -41,9 +41,20 @@ public:
         case smgpc::render::InputButton::CORE_PAD_A:
         case smgpc::render::InputButton::CORE_PAD_B:
             return _hold_title_combo;
+        case smgpc::render::InputButton::CORE_PAD_UP:
+        case smgpc::render::InputButton::CORE_PAD_DOWN:
+        case smgpc::render::InputButton::CORE_PAD_LEFT:
+        case smgpc::render::InputButton::CORE_PAD_RIGHT:
+        case smgpc::render::InputButton::CORE_PAD_PLUS:
+        case smgpc::render::InputButton::CORE_PAD_MINUS:
+        case smgpc::render::InputButton::CORE_PAD_HOME:
+        case smgpc::render::InputButton::CORE_PAD_C:
+        case smgpc::render::InputButton::CORE_PAD_Z:
+        case smgpc::render::InputButton::COUNT:
+            return false;
+        default:
+            return false;
         }
-
-        return false;
     }
 
     void set_title_combo(bool is_pressed) {

@@ -14,6 +14,7 @@ namespace smgpc::game {
         constexpr auto JPAC_VERSION_210 = std::uint32_t{0x322d3130U};
         constexpr auto BEM1_MAGIC = std::uint32_t{0x42454d31U};
         constexpr auto BSP1_MAGIC = std::uint32_t{0x42535031U};
+        constexpr auto KFA1_MAGIC = std::uint32_t{0x4b464131U};
         constexpr auto SSP1_MAGIC = std::uint32_t{0x53535031U};
         constexpr auto TDB1_MAGIC = std::uint32_t{0x54444231U};
 
@@ -189,12 +190,16 @@ namespace smgpc::game {
                 .base_size_y = read_be_float(data, offset + 0x14U),
                 .blend_mode_config = read_be16(data, offset + 0x18U),
                 .alpha_compare_config = data[offset + 0x1aU],
+                .alpha_ref0 = data[offset + 0x1bU],
+                .alpha_ref1 = data[offset + 0x1cU],
                 .z_mode_config = data[offset + 0x1dU],
                 .texture_flags = data[offset + 0x1eU],
                 .texture_count = data[offset + 0x1fU],
                 .texture_slot = texture_slot,
                 .color_flags = data[offset + 0x21U],
-                .color_animation_frame_max = data[offset + 0x26U],
+                .color_animation_frame_max = read_be_s16(data, offset + 0x24U),
+                .prm_color = {data[offset + 0x26U], data[offset + 0x27U], data[offset + 0x28U], data[offset + 0x29U]},
+                .env_color = {data[offset + 0x2aU], data[offset + 0x2bU], data[offset + 0x2cU], data[offset + 0x2dU]},
                 .shape_type = static_cast<std::uint8_t>(flags & 0x0fU),
                 .direction_type = static_cast<std::uint8_t>((flags >> 4U) & 0x07U),
                 .rotation_type = static_cast<std::uint8_t>((flags >> 7U) & 0x07U),
@@ -225,6 +230,8 @@ namespace smgpc::game {
                 .inherit_scale = read_be_float(data, offset + 0x28U),
                 .inherit_alpha = read_be_float(data, offset + 0x2cU),
                 .inherit_rgb = read_be_float(data, offset + 0x30U),
+                .prm_color = {data[offset + 0x34U], data[offset + 0x35U], data[offset + 0x36U], data[offset + 0x37U]},
+                .env_color = {data[offset + 0x38U], data[offset + 0x39U], data[offset + 0x3aU], data[offset + 0x3bU]},
                 .timing = read_be_float(data, offset + 0x3cU),
                 .lifetime = read_be_s16(data, offset + 0x40U),
                 .rate = read_be_s16(data, offset + 0x42U),
@@ -244,6 +251,40 @@ namespace smgpc::game {
                 .alpha_out_enabled = (flags & 0x00800000U) != 0U,
                 .rotate_enabled = (flags & 0x01000000U) != 0U,
             };
+        }
+
+        [[nodiscard]] JpcKeyBlockMetadata read_kfa1_key_metadata(std::span<const std::uint8_t> data, std::size_t offset,
+                                                                 std::uint32_t block_size) {
+            constexpr auto KEY_BLOCK_HEADER_SIZE = std::uint32_t{0x0cU};
+            constexpr auto FLOATS_PER_KEY = std::size_t{4U};
+            constexpr auto KEY_FRAME_SIZE = FLOATS_PER_KEY * sizeof(float);
+
+            if (block_size < KEY_BLOCK_HEADER_SIZE || offset + KEY_BLOCK_HEADER_SIZE > data.size()) {
+                throw std::runtime_error("JPC KFA1 block too small for JPAKeyBlock");
+            }
+
+            const auto key_count = data[offset + 0x09U];
+            const auto key_data_size = static_cast<std::size_t>(key_count) * KEY_FRAME_SIZE;
+            if (offset + KEY_BLOCK_HEADER_SIZE + key_data_size > data.size() || KEY_BLOCK_HEADER_SIZE + key_data_size > block_size) {
+                throw std::runtime_error("JPC KFA1 key data outside buffer");
+            }
+
+            auto key_block = JpcKeyBlockMetadata{
+                .id = data[offset + 0x08U],
+                .loop = data[offset + 0x0bU] != 0U,
+                .keys = {},
+            };
+            key_block.keys.reserve(key_count);
+            for (auto key_index = std::size_t{}; key_index < key_count; ++key_index) {
+                const auto key_offset = offset + KEY_BLOCK_HEADER_SIZE + key_index * KEY_FRAME_SIZE;
+                key_block.keys.push_back(JpcKeyFrameMetadata{
+                    .time = read_be_float(data, key_offset + 0x00U),
+                    .value = read_be_float(data, key_offset + 0x04U),
+                    .tangent_in = read_be_float(data, key_offset + 0x08U),
+                    .tangent_out = read_be_float(data, key_offset + 0x0cU),
+                });
+            }
+            return key_block;
         }
 
     }  // namespace
@@ -423,16 +464,16 @@ namespace smgpc::game {
                 throw std::runtime_error("JPC resource header outside buffer");
             }
 
-            auto resource = JpcResourceMetadata{
-                .user_index = read_be16(data, offset),
-                .block_count = read_be16(data, offset + 0x02U),
-                .field_block_count = data[offset + 0x04U],
-                .key_block_count = data[offset + 0x05U],
-                .texture_reference_count = data[offset + 0x06U],
-            };
+            auto resource = JpcResourceMetadata{};
+            resource.user_index = read_be16(data, offset);
+            resource.block_count = read_be16(data, offset + 0x02U);
+            resource.field_block_count = data[offset + 0x04U];
+            resource.key_block_count = data[offset + 0x05U];
+            resource.texture_reference_count = data[offset + 0x06U];
             offset += 8U;
 
             resource.block_tags.reserve(resource.block_count);
+            resource.key_blocks.reserve(resource.key_block_count);
             resource.texture_indices.reserve(resource.texture_reference_count);
             for (auto block_index = std::uint16_t{}; block_index < resource.block_count; ++block_index) {
                 if (offset + 8U > data.size()) {
@@ -450,6 +491,9 @@ namespace smgpc::game {
                 }
                 if (block_tag == BSP1_MAGIC) {
                     read_bsp1_shape_metadata(data, offset, block_size, resource);
+                }
+                if (block_tag == KFA1_MAGIC) {
+                    resource.key_blocks.push_back(read_kfa1_key_metadata(data, offset, block_size));
                 }
                 if (block_tag == SSP1_MAGIC) {
                     resource.child_shape = read_ssp1_child_shape_metadata(data, offset, block_size);

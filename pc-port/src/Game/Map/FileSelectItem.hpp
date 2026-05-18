@@ -8,12 +8,14 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/FileSelectIconID.hpp"
 #include "Game/System/NerveExecutor.hpp"
+#include "Game/Util/GamePadUtil.hpp"
 #include "Game/compat/CameraParam.hpp"
 
 class PartsModel;
 class FileSelectModel;
 class FileSelectNumber;
 class FileSelectItem;
+class FileSelectItemDelegatorBase;
 
 namespace FileSelectItemSub {
     class ScaleController : public NerveExecutor {
@@ -58,8 +60,10 @@ public:
     void makeActorDead() override;
     void forceChange(bool is_new);
     void forceChange(bool is_new, const FileSelectIconID& rIconId);
+    void forceChange(const FileSelectIconID& rIconId, bool isComplete);
     void change(bool is_new);
     void change(bool is_new, const FileSelectIconID& rIconId);
+    void change(const FileSelectIconID& rIconId, bool isComplete);
     void copyIconID(FileSelectIconID* pIconID) const;
     void format();
     void exeNewWait();
@@ -76,6 +80,7 @@ public:
     void clearPointing();
     void turnToFront(s32 frameCount);
     void setBasePosition(const smgpc::game::CameraParamVec3& base_position);
+    void setSelectDelegator(FileSelectItemDelegatorBase* pDelegator);
 
     [[nodiscard]] s32 getFileNo() const;
     [[nodiscard]] bool isExist() const;
@@ -88,7 +93,7 @@ public:
     [[nodiscard]] bool wasPointingCleared() const;
     [[nodiscard]] bool didTurnToFront() const;
     [[nodiscard]] s32 getTurnToFrontFrameCount() const;
-    [[nodiscard]] const smgpc::game::CameraParamVec3& getPosition() const;
+    [[nodiscard]] const TVec3f& getPosition() const;
     [[nodiscard]] const smgpc::game::CameraParamVec3& getBasePosition() const;
 
 private:
@@ -109,6 +114,7 @@ private:
     void playPointedME();
     void playPointedNotUsingME();
     [[nodiscard]] s32 getFellowModelIndex() const;
+    void updatePointing();
     void updateRotate();
     void updateModelMatrix();
 
@@ -126,11 +132,14 @@ private:
     s32 mTurnToFrontDuration = 0;
     s32 mTurnToFrontStep = 0;
     f32 mRotationVelocityY = 0.0F;
+    bool mNeedsPointerScreenReset = true;
+    bool mPointerStrokeHit = false;
+    TVec2f mPreviousPointerScreen{};
     bool mShouldEmitCompleteEffect = false;
     bool mShouldEmitCopyEffect = false;
+    FileSelectItemDelegatorBase* mDelegator = nullptr;
     FileSelectItemSub::ScaleController* mScaleCtrl = nullptr;
     FileSelectItemSub::BlinkController* mBlinkCtrl = nullptr;
-    smgpc::game::CameraParamVec3 mPosition{};
     smgpc::game::CameraParamVec3 mBasePosition{};
     Mtx mPlanetMatrix{};
     Mtx mFellowMatrix{};

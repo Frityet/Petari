@@ -2,17 +2,11 @@
 
 #include <memory>
 #include <optional>
-#include <span>
 #include <string_view>
 
 class NameObj;
 
 namespace smgpc::game {
-
-    struct NameObjFactoryEntry {
-        std::string_view object_name;
-        std::string_view archive_name;
-    };
 
 #ifndef NDEBUG
     struct FileSelectStageState {
@@ -25,7 +19,6 @@ namespace smgpc::game {
     };
 #endif
 
-    [[nodiscard]] std::span<const NameObjFactoryEntry> name_obj_factory_entries();
     [[nodiscard]] bool can_create_name_obj(std::string_view object_name);
     [[nodiscard]] std::unique_ptr<NameObj> create_name_obj(std::string_view object_name, std::string_view actor_name);
 #ifndef NDEBUG

@@ -2,7 +2,7 @@ add_requires("fmt")
 add_requires("nlohmann_json")
 
 if is_mode("debug") then
-    add_requires("sqlite3", {system = true})
+    add_requires("sqlite3")
 end
 
 target("smg-pc-common")
@@ -16,5 +16,5 @@ target("smg-pc-common")
     add_packages("fmt", { public = true })
     add_packages("nlohmann_json", { public = true })
     if is_mode("debug") then
-        add_packages("sqlite3", { public = true })
+        add_packages("sqlite3")
     end

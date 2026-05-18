@@ -7,6 +7,12 @@
 struct TVec2f {
     f32 x = 0.0F;
     f32 y = 0.0F;
+
+    [[nodiscard]] f32 squareDist(const TVec2f& value) const {
+        const auto dx = x - value.x;
+        const auto dy = y - value.y;
+        return (dx * dx) + (dy * dy);
+    }
 };
 
 namespace MR {

@@ -53,6 +53,10 @@ public:
     void hidePane(const char*);
     [[nodiscard]] bool isPaneVisible(const char*) const;
     [[nodiscard]] bool isPointingPane(const char*, f32, f32) const;
+    void createPaneMtxRef(const char*);
+    [[nodiscard]] MtxPtr getPaneMtxRef(const char*) const;
+    [[nodiscard]] bool isExistPaneMtxRef(const char*) const;
+    void refreshPaneMtxRefs();
     void startPaneAnim(const char*, const char*, u32);
     void stopPaneAnim(const char*, u32);
     void setPaneAnimFrame(const char*, f32, u32);
@@ -74,9 +78,18 @@ public:
     /* 0x05 */ bool _61;
 
 private:
+    struct PaneMtxRef {
+        std::string pane_name;
+        Mtx matrix = {};
+    };
+
     [[nodiscard]] std::string normalizedPaneName(const char*) const;
     [[nodiscard]] LayoutPaneCtrl* findPaneCtrl(std::string_view) const;
+    [[nodiscard]] PaneMtxRef* findPaneMtxRef(std::string_view);
+    [[nodiscard]] const PaneMtxRef* findPaneMtxRef(std::string_view) const;
+    void refreshPaneMtxRef(PaneMtxRef&);
 
     std::vector< std::unique_ptr< LayoutPaneCtrl > > mPaneCtrls;
     std::vector< ButtonPaneController* > mButtonControllers;
+    std::vector< PaneMtxRef > mPaneMtxRefs;
 };

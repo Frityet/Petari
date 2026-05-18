@@ -21,6 +21,7 @@
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "Game/compat/RuntimeContext.hpp"
+#include "core/RenderTypes.hpp"
 
 namespace {
     [[nodiscard]] std::u16string utf16_from_wide(const wchar_t* pText) {
@@ -318,9 +319,33 @@ namespace MR {
         }
     }
 
+    void convertScreenPosToLayoutPos(TVec2f* pLayoutPos, const TVec2f& rScreenPos) {
+        if (pLayoutPos == nullptr) {
+            return;
+        }
+
+        const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
+        const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
+        pLayoutPos->x = rScreenPos.x - half_width;
+        pLayoutPos->y = rScreenPos.y - half_height;
+    }
+
+    void convertLayoutPosToScreenPos(TVec2f* pScreenPos, const TVec2f& rLayoutPos) {
+        if (pScreenPos == nullptr) {
+            return;
+        }
+
+        const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
+        const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
+        pScreenPos->x = rLayoutPos.x + half_width;
+        pScreenPos->y = rLayoutPos.y + half_height;
+    }
+
     void setFollowPos(const TVec2f* pPos, LayoutActor* pLayout, const char*) {
         if (pLayout != nullptr && pPos != nullptr) {
-            pLayout->setTrans(*pPos);
+            auto screen_pos = TVec2f{};
+            convertLayoutPosToScreenPos(&screen_pos, *pPos);
+            pLayout->setTrans(screen_pos);
         }
     }
 

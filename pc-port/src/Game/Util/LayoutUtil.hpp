@@ -56,6 +56,8 @@ namespace MR {
     void setPaneAlphaFloat(LayoutActor* pLayout, const char* pPaneName, f32 alpha);
     void showLayout(LayoutActor* pLayout);
     void hideLayout(LayoutActor* pLayout);
+    void convertScreenPosToLayoutPos(TVec2f* pLayoutPos, const TVec2f& rScreenPos);
+    void convertLayoutPosToScreenPos(TVec2f* pScreenPos, const TVec2f& rLayoutPos);
     void setFollowPos(const TVec2f* pPos, LayoutActor* pLayout, const char* pPaneName);
     void copyPaneTrans(TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName);
     void setLayoutPosAtPaneTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);

@@ -117,12 +117,58 @@ namespace smgpc::render {
 
                 switch (button) {
                 case InputButton::CORE_PAD_A:
-                    return glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_ENTER) == GLFW_PRESS;
+                    return glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_ENTER) == GLFW_PRESS ||
+                           glfwGetKey(_window, GLFW_KEY_SPACE) == GLFW_PRESS || glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
                 case InputButton::CORE_PAD_B:
-                    return glfwGetKey(_window, GLFW_KEY_B) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_BACKSPACE) == GLFW_PRESS;
+                    return glfwGetKey(_window, GLFW_KEY_B) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_BACKSPACE) == GLFW_PRESS ||
+                           glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+                case InputButton::CORE_PAD_UP:
+                    return glfwGetKey(_window, GLFW_KEY_UP) == GLFW_PRESS;
+                case InputButton::CORE_PAD_DOWN:
+                    return glfwGetKey(_window, GLFW_KEY_DOWN) == GLFW_PRESS;
+                case InputButton::CORE_PAD_LEFT:
+                    return glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS;
+                case InputButton::CORE_PAD_RIGHT:
+                    return glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS;
+                case InputButton::CORE_PAD_PLUS:
+                    return glfwGetKey(_window, GLFW_KEY_EQUAL) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_KP_ADD) == GLFW_PRESS;
+                case InputButton::CORE_PAD_MINUS:
+                    return glfwGetKey(_window, GLFW_KEY_MINUS) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS;
+                case InputButton::CORE_PAD_HOME:
+                    return glfwGetKey(_window, GLFW_KEY_HOME) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_H) == GLFW_PRESS;
+                case InputButton::CORE_PAD_C:
+                    return glfwGetKey(_window, GLFW_KEY_C) == GLFW_PRESS;
+                case InputButton::CORE_PAD_Z:
+                    return glfwGetKey(_window, GLFW_KEY_Z) == GLFW_PRESS;
+                case InputButton::COUNT:
+                    break;
                 }
 
                 return false;
+            }
+
+            [[nodiscard]] InputPointerState input_pointer_state() const override {
+                if (_window == nullptr) {
+                    return {};
+                }
+
+                int width = 1;
+                int height = 1;
+                glfwGetWindowSize(_window, &width, &height);
+                if (width <= 0 || height <= 0) {
+                    return {};
+                }
+
+                double cursor_x = 0.0;
+                double cursor_y = 0.0;
+                glfwGetCursorPos(_window, &cursor_x, &cursor_y);
+                const auto valid = cursor_x >= 0.0 && cursor_y >= 0.0 && cursor_x < static_cast< double >(width) &&
+                                   cursor_y < static_cast< double >(height);
+                return InputPointerState{
+                    .x = static_cast< float >(cursor_x * static_cast< double >(core::kWiiLogicalFramebufferWidth) / static_cast< double >(width)),
+                    .y = static_cast< float >(cursor_y * static_cast< double >(core::kWiiLogicalFramebufferHeight) / static_cast< double >(height)),
+                    .valid = valid,
+                };
             }
 
             void close() override {

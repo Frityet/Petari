@@ -11,6 +11,7 @@ LiveActor::LiveActor(const char* pName) : NameObj(pName) {
 
 LiveActor::~LiveActor() {
     if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        runtime->star_pointer().unregister_target(*this);
         runtime->unregister_effect_keeper(getName());
         runtime->unregister_live_actor_model(*this);
     }
@@ -19,6 +20,9 @@ LiveActor::~LiveActor() {
 }
 
 void LiveActor::init(const JMapInfoIter&) {
+}
+
+void LiveActor::initAfterPlacement() {
 }
 
 void LiveActor::movement() {
@@ -129,6 +133,9 @@ s32 LiveActor::getNerveStep() const {
     }
 
     return mSpine->mStep;
+}
+
+void LiveActor::initSound(s32, bool) {
 }
 
 void LiveActor::initModelManagerWithAnm(const char* pModelArcName, const char* pAnimArcName, bool) {

@@ -63,6 +63,7 @@ public:
     [[nodiscard]] bool isPaneVisible(std::string_view paneName) const;
     [[nodiscard]] bool hasPane(std::string_view paneName) const;
     [[nodiscard]] std::optional< PaneBounds > paneBounds(std::string_view paneName) const;
+    [[nodiscard]] bool copyPaneMatrix(std::string_view paneName, Mtx matrix) const;
     [[nodiscard]] bool isPointingPane(std::string_view paneName, f32 screenX, f32 screenY) const;
     void startPaneAnim(std::string_view paneName, const char* pAnimName, u32 animLayer);
     void stopPaneAnim(std::string_view paneName, u32 animLayer);

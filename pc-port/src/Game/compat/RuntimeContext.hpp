@@ -25,6 +25,8 @@ class CaptureScreenDirector;
 
 namespace smgpc::game {
 
+    class SceneLifecycleService;
+
     class RuntimeContext final {
     public:
 #ifndef NDEBUG
@@ -77,6 +79,20 @@ namespace smgpc::game {
             std::string detail;
             std::string stage_name;
         };
+
+        struct DebugWpadButtonScriptSpan {
+            std::uint64_t first_frame = 0U;
+            std::uint64_t last_frame = 0U;
+            std::uint32_t button_mask = 0U;
+        };
+
+        struct DebugWpadPointerScriptSpan {
+            std::uint64_t first_frame = 0U;
+            std::uint64_t last_frame = 0U;
+            float x = 0.0F;
+            float y = 0.0F;
+            bool valid = false;
+        };
 #endif
 
         RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service);
@@ -105,6 +121,7 @@ namespace smgpc::game {
         [[nodiscard]] bool is_core_pad_button_a(s32 channel) const;
         [[nodiscard]] bool is_core_pad_button_b(s32 channel) const;
         [[nodiscard]] std::uint64_t frame_index() const;
+        [[nodiscard]] const std::optional<CameraPoseCompat> &scene_camera_pose() const;
         [[nodiscard]] const std::optional<CameraPoseCompat> &last_camera_pose() const;
         [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
@@ -136,6 +153,7 @@ namespace smgpc::game {
         [[nodiscard]] const WipeService &system_wipe() const;
         [[nodiscard]] StarPointerService &star_pointer();
         [[nodiscard]] const StarPointerService &star_pointer() const;
+        [[nodiscard]] bool sample_star_pointer_target(const LiveActor &actor, bool check_z);
         [[nodiscard]] CameraSystemService &camera_system();
         [[nodiscard]] const CameraSystemService &camera_system() const;
         [[nodiscard]] PlayerSystemService &player_system();
@@ -158,6 +176,8 @@ namespace smgpc::game {
         [[nodiscard]] const CaptureScreenDirector &capture_screen_director() const;
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
+        [[nodiscard]] SceneLifecycleService &scene_lifecycle();
+        [[nodiscard]] const SceneLifecycleService &scene_lifecycle() const;
 
         void start_stage_bgm(std::string_view name);
         void unlock_stage_bgm();
@@ -196,6 +216,9 @@ namespace smgpc::game {
 
     private:
         [[nodiscard]] std::filesystem::path resolve_disc_files_root() const;
+#ifndef NDEBUG
+        void emit_star_pointer_target_trace_events();
+#endif
 
         logging::ILogger &_logger;
         render::IWindowService &_window_service;
@@ -219,6 +242,7 @@ namespace smgpc::game {
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
         std::unique_ptr<CaptureScreenActor> _capture_screen_indirect_actor;
         std::unique_ptr<CaptureScreenActor> _capture_screen_camera_actor;
+        std::unique_ptr<SceneLifecycleService> _scene_lifecycle;
         SceneScheduler _scheduler;
         std::uint64_t _frame_index = 0;
         std::optional<CameraPoseCompat> _scene_camera_pose{};
@@ -234,7 +258,10 @@ namespace smgpc::game {
         std::vector<SemanticTraceEvent> _semantic_trace_events{};
         std::optional<std::uint64_t> _j3d_packet_trace_frame{};
         std::optional<std::uint64_t> _hold_title_combo_frame{};
+        std::vector<DebugWpadButtonScriptSpan> _debug_wpad_button_script{};
+        std::vector<DebugWpadPointerScriptSpan> _debug_wpad_pointer_script{};
         std::uint64_t _next_semantic_trace_event_index = 0U;
+        std::size_t _next_star_pointer_target_trace_event_index = 0U;
         bool _emitted_title_combo_held_event = false;
 #endif
     };

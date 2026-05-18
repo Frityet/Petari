@@ -26,6 +26,7 @@ namespace smgpc::render {
     using GxBlendMode2D = core::GxBlendMode2D;
     using GxFog2D = core::GxFog2D;
     using TextureHandle = core::TextureHandle;
+    using InputPointerState = core::InputPointerState;
     using GxMaterialTriangleBatch2D = core::GxMaterialTriangleBatch2D;
     using GxMaterialVertex2D = core::GxMaterialVertex2D;
     using GxTevRegisterColor2D = core::GxTevRegisterColor2D;
@@ -34,6 +35,7 @@ namespace smgpc::render {
     using TexturedTriangleBatch2D = core::TexturedTriangleBatch2D;
     using TexturedQuad2D = core::TexturedQuad2D;
     using TexturedVertex2D = core::TexturedVertex2D;
+    using PrimitiveTopology = core::PrimitiveTopology;
     using IWindowService = core::IWindowService;
     using IRendererEngine = core::IRendererEngine;
     using WindowConfiguration = core::WindowConfiguration;

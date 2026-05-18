@@ -73,6 +73,18 @@ namespace MR {
     void stopSystemSE(const char*, u32) {
     }
 
+    void startAtmosphereSE(const char* pName, s32, s32) {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->start_system_sound(pName);
+        }
+    }
+
+    void submitLevelSE() {
+    }
+
+    void permitLevelSE() {
+    }
+
     void startSystemME(const char* pName) {
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
             runtime->start_system_sound(pName);

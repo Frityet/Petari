@@ -68,12 +68,3 @@ void FileSelectSky::exeWait() {
     _90 = value;
     _8C = (3.0F * ((temp * 0.5F) * 3.1415927F)) * 0.25F;
 }
-
-void FileSelectSky::draw(smgpc::render::IRendererEngine& renderer, const smgpc::game::CameraPoseCompat& camera_pose) {
-    if (MR::isDead(this)) {
-        return;
-    }
-
-    calcAndSetBaseMtx();
-    drawModel(renderer, camera_pose, static_cast< std::uint64_t >(getNerveStep()));
-}
