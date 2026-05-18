@@ -1,9 +1,9 @@
 #include "Game/compat/NameObjFactoryCompat.hpp"
 
+#include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Map/FileSelector.hpp"
 
 #include <array>
-#include <cstddef>
 #include <stdexcept>
 #include <string>
 
@@ -15,7 +15,6 @@ namespace smgpc::game {
         struct FactoryEntry {
             std::string_view object_name;
             Creator creator = nullptr;
-            std::string_view archive_name;
         };
 
         template <typename T>
@@ -27,7 +26,10 @@ namespace smgpc::game {
             FactoryEntry{
                 .object_name = "FileSelector",
                 .creator = create_typed_name_obj<FileSelector>,
-                .archive_name = {},
+            },
+            FactoryEntry{
+                .object_name = "PrologueDirector",
+                .creator = create_typed_name_obj<PrologueDirector>,
             },
         };
 
@@ -42,22 +44,6 @@ namespace smgpc::game {
         }
 
     }  // namespace
-
-    std::span<const NameObjFactoryEntry> name_obj_factory_entries() {
-        static const auto entries = [] {
-            auto result = std::array<NameObjFactoryEntry, FACTORY_ENTRIES.size()>{};
-            for (auto i = std::size_t{}; i < FACTORY_ENTRIES.size(); ++i) {
-                result[i] = NameObjFactoryEntry{
-                    .object_name = FACTORY_ENTRIES[i].object_name,
-                    .archive_name = FACTORY_ENTRIES[i].archive_name,
-                };
-            }
-
-            return result;
-        }();
-
-        return entries;
-    }
 
     bool can_create_name_obj(std::string_view object_name) {
         return find_entry(object_name) != nullptr;

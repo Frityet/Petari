@@ -214,6 +214,20 @@ bool FileSelectInfo::isSelectedMario() const {
     return mIsSelectedMario;
 }
 
+#ifndef NDEBUG
+s32 FileSelectInfo::getMissNum() const {
+    return mMissNum;
+}
+
+const wchar_t* FileSelectInfo::getDateMessage() const {
+    return mDateMessage;
+}
+
+const wchar_t* FileSelectInfo::getTimeMessage() const {
+    return mTimeMessage;
+}
+#endif
+
 namespace FileSelectInfoSub {
     SlideState::SlideState(FileSelectInfo* pHost) : NerveExecutor("スライド状態"), mHost(pHost) {
         initNerve(&SlideStateNrvNormalPos::sInstance);

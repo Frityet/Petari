@@ -43,7 +43,7 @@ namespace smgpc::game {
     }  // namespace
 #endif
 
-    SequenceBootService::SequenceBootService(RuntimeContext &runtime) : _runtime(runtime), _stage_host(runtime) {
+    SequenceBootService::SequenceBootService(RuntimeContext &runtime) : _runtime(runtime), _story_sequence(runtime), _stage_host(runtime) {
     }
 
     SequenceBootService::~SequenceBootService() = default;
@@ -81,7 +81,9 @@ namespace smgpc::game {
 #ifndef NDEBUG
         emit_title_semantic_anchors();
         emit_file_select_semantic_anchors();
+        update_picturebook_reachability();
 #endif
+        update_stage_transition_requests();
     }
 
     bool SequenceBootService::is_boot_requested() const {
@@ -92,14 +94,24 @@ namespace smgpc::game {
         return _stage_host.has_active_stage("FileSelect");
     }
 
+    bool SequenceBootService::is_picturebook_host_active() const {
+        return _story_sequence.is_story_demo_active("Prologue") && _stage_host.has_active_stage("PeachCastleGardenGalaxy");
+    }
+
     bool SequenceBootService::has_sent_autorush_begin() const {
         return _autorush_begin_sent;
+    }
+
+    bool SequenceBootService::has_picturebook_reached() const {
+        return _picturebook_reached;
     }
 
     void SequenceBootService::ensure_file_select_stage_host() {
         _stage_host.request_stage(StageHostRequest{
             .scene_name = "Game",
             .stage_name = "FileSelect",
+            .object_name = {},
+            .actor_name = {},
             .scenario_no = 1,
         });
 #ifndef NDEBUG
@@ -107,7 +119,27 @@ namespace smgpc::game {
 #endif
     }
 
+    void SequenceBootService::update_stage_transition_requests() {
+        _story_sequence.update_after_loading_request();
+        if (auto request = _story_sequence.take_pending_stage_request()) {
+            _stage_host.request_stage(*request);
+        }
+    }
+
 #ifndef NDEBUG
+    void SequenceBootService::update_picturebook_reachability() {
+        if (!_story_sequence.is_story_demo_active("Prologue") || _picturebook_reached || !has_active_layout(_runtime, "PrologueDemo")) {
+            return;
+        }
+
+        _picturebook_reached = true;
+        _runtime.emit_sequence_state_trace_event(
+            "picturebook_reached", "event=cDemoPrologue;demo=Prologue;stage=PeachCastleGardenGalaxy;host=PrologueDirector;layout=PrologueDemo");
+        _runtime.emit_semantic_trace_event(
+            "picturebook", "picturebook_reached",
+            "event=cDemoPrologue;demo=Prologue;stage=PeachCastleGardenGalaxy;host=PrologueDirector;layout=PrologueDemo");
+    }
+
     void SequenceBootService::emit_title_semantic_anchors() {
         const auto state = _stage_host.file_select_state();
         if (!state.has_value()) {

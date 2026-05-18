@@ -46,10 +46,5 @@ public:
     /* 0x14 */ u8* _14;
     /* 0x18 */ u8* _18;
     /* 0x1C */ SaveDataBannerCreator* mBannerCreator;
-
-private:
-    void setResult(s32 result);
-
-    s32 mLastResult = NAND_RESULT_OK;
-    bool mDone = true;
+    bool mSaveDataDirty = false;
 };

@@ -97,6 +97,32 @@ bool LayoutManager::isPointingPane(const char* pPaneName, f32 screenX, f32 scree
     return layout != nullptr && layout->isPointingPane(normalizedPaneName(pPaneName), screenX, screenY);
 }
 
+void LayoutManager::createPaneMtxRef(const char* pPaneName) {
+    const auto pane_name = normalizedPaneName(pPaneName);
+    if (findPaneMtxRef(pane_name) != nullptr) {
+        return;
+    }
+
+    auto& pane_ref = mPaneMtxRefs.emplace_back();
+    pane_ref.pane_name = pane_name;
+    refreshPaneMtxRef(pane_ref);
+}
+
+MtxPtr LayoutManager::getPaneMtxRef(const char* pPaneName) const {
+    const auto* pane_ref = findPaneMtxRef(normalizedPaneName(pPaneName));
+    return pane_ref != nullptr ? const_cast< f32 (*)[4] >(pane_ref->matrix) : nullptr;
+}
+
+bool LayoutManager::isExistPaneMtxRef(const char* pPaneName) const {
+    return findPaneMtxRef(normalizedPaneName(pPaneName)) != nullptr;
+}
+
+void LayoutManager::refreshPaneMtxRefs() {
+    for (auto& pane_ref : mPaneMtxRefs) {
+        refreshPaneMtxRef(pane_ref);
+    }
+}
+
 void LayoutManager::startPaneAnim(const char* pPaneName, const char* pAnimName, u32 animLayer) {
     if (auto* layout = mHost != nullptr ? mHost->getSimpleLayout() : nullptr) {
         layout->startPaneAnim(normalizedPaneName(pPaneName), pAnimName, animLayer);
@@ -223,4 +249,36 @@ std::string LayoutManager::normalizedPaneName(const char* pPaneName) const {
 LayoutPaneCtrl* LayoutManager::findPaneCtrl(std::string_view paneName) const {
     const auto it = std::ranges::find_if(mPaneCtrls, [paneName](const auto& pane_ctrl) { return pane_ctrl->paneName() == paneName; });
     return it == mPaneCtrls.end() ? nullptr : it->get();
+}
+
+LayoutManager::PaneMtxRef* LayoutManager::findPaneMtxRef(std::string_view paneName) {
+    const auto it = std::ranges::find_if(mPaneMtxRefs, [paneName](const auto& pane_ref) { return pane_ref.pane_name == paneName; });
+    return it == mPaneMtxRefs.end() ? nullptr : &*it;
+}
+
+const LayoutManager::PaneMtxRef* LayoutManager::findPaneMtxRef(std::string_view paneName) const {
+    const auto it = std::ranges::find_if(mPaneMtxRefs, [paneName](const auto& pane_ref) { return pane_ref.pane_name == paneName; });
+    return it == mPaneMtxRefs.end() ? nullptr : &*it;
+}
+
+void LayoutManager::refreshPaneMtxRef(PaneMtxRef& paneRef) {
+    auto identity = [&]() {
+        paneRef.matrix[0][0] = 1.0F;
+        paneRef.matrix[0][1] = 0.0F;
+        paneRef.matrix[0][2] = 0.0F;
+        paneRef.matrix[0][3] = 0.0F;
+        paneRef.matrix[1][0] = 0.0F;
+        paneRef.matrix[1][1] = 1.0F;
+        paneRef.matrix[1][2] = 0.0F;
+        paneRef.matrix[1][3] = 0.0F;
+        paneRef.matrix[2][0] = 0.0F;
+        paneRef.matrix[2][1] = 0.0F;
+        paneRef.matrix[2][2] = 1.0F;
+        paneRef.matrix[2][3] = 0.0F;
+    };
+
+    const auto* layout = mHost != nullptr ? mHost->getSimpleLayout() : nullptr;
+    if (layout == nullptr || !layout->copyPaneMatrix(paneRef.pane_name, paneRef.matrix)) {
+        identity();
+    }
 }

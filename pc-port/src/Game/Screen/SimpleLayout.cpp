@@ -1007,6 +1007,42 @@ std::optional< SimpleLayout::PaneBounds > SimpleLayout::paneBounds(std::string_v
     };
 }
 
+bool SimpleLayout::copyPaneMatrix(std::string_view paneName, Mtx matrix) const {
+    if (matrix == nullptr) {
+        return false;
+    }
+
+    const_cast< SimpleLayout* >(this)->loadRenderData();
+
+    auto set_matrix = [&](const PaneRenderState& pane_state) {
+        matrix[0][0] = pane_state.m00;
+        matrix[0][1] = pane_state.m01;
+        matrix[0][2] = 0.0F;
+        matrix[0][3] = mTransX + pane_state.translate_x;
+        matrix[1][0] = pane_state.m10;
+        matrix[1][1] = pane_state.m11;
+        matrix[1][2] = 0.0F;
+        matrix[1][3] = mTransY + pane_state.translate_y;
+        matrix[2][0] = 0.0F;
+        matrix[2][1] = 0.0F;
+        matrix[2][2] = 1.0F;
+        matrix[2][3] = 0.0F;
+    };
+
+    if (paneName.empty()) {
+        set_matrix(PaneRenderState{});
+        return true;
+    }
+
+    const auto it = std::ranges::find_if(mBrlytLayout.panes, [paneName](const auto& pane) { return pane.name == paneName; });
+    if (it == mBrlytLayout.panes.end()) {
+        return false;
+    }
+
+    set_matrix(paneRenderState(static_cast< std::size_t >(std::distance(mBrlytLayout.panes.begin(), it))));
+    return true;
+}
+
 bool SimpleLayout::isPointingPane(std::string_view paneName, f32 screenX, f32 screenY) const {
     const auto bounds = paneBounds(paneName);
     if (!bounds.has_value()) {

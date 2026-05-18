@@ -15,6 +15,9 @@ using f64 = double;
 using BOOL = int;
 using OSTime = s64;
 
+constexpr BOOL FALSE = 0;
+constexpr BOOL TRUE = 1;
+
 // TODO: fuck these, make into better C++ types
 using Mtx = f32[3][4];
 using MtxPtr = f32 (*)[4];

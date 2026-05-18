@@ -3,8 +3,10 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/FileSelectCameraController.hpp"
 #include "Game/Map/FileSelectEffect.hpp"
+#include "Game/Map/FileSelectFunc.hpp"
 #include "Game/Map/FileSelectIconID.hpp"
 #include "Game/Map/FileSelectItem.hpp"
+#include "Game/Map/FileSelectItemDelegator.hpp"
 #include "Game/Map/FileSelectSky.hpp"
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -35,11 +37,11 @@
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "Game/Util/StringUtil.hpp"
 
+#include <RVLFaceLib.h>
 #include <algorithm>
 #include <cmath>
-#include <cwchar>
 #include <cstring>
 #include <ranges>
 #include <string_view>
@@ -103,14 +105,6 @@ namespace {
         "ME_ASTRO_DOME_SELECT3",
         "ME_ASTRO_DOME_SELECT4",
     };
-    constexpr std::array< const wchar_t*, 5 > cIconNames{
-        L"Mario",
-        L"Luigi",
-        L"Yoshi",
-        L"Kinopio",
-        L"Peach",
-    };
-
     void make_identity(Mtx matrix) {
         matrix[0][0] = 1.0F;
         matrix[0][1] = 0.0F;
@@ -124,23 +118,6 @@ namespace {
         matrix[2][1] = 0.0F;
         matrix[2][2] = 1.0F;
         matrix[2][3] = 0.0F;
-    }
-
-    [[nodiscard]] std::array< u16, 11U > user_name_utf16(const UserFile* pFile) {
-        auto name = std::array< u16, 11U >{};
-        const auto* user_name = pFile != nullptr ? pFile->mUserName : nullptr;
-        if (user_name == nullptr || user_name[0] == L'\0') {
-            constexpr auto fallback = std::wstring_view{L"Mario"};
-            for (auto i = std::size_t{}; i < fallback.size() && i + 1U < name.size(); ++i) {
-                name[i] = static_cast< u16 >(fallback[i]);
-            }
-            return name;
-        }
-
-        for (auto i = std::size_t{}; i + 1U < name.size() && user_name[i] != L'\0'; ++i) {
-            name[i] = static_cast< u16 >(user_name[i]);
-        }
-        return name;
     }
 
     [[nodiscard]] smgpc::game::CameraParamVec3 file_select_item_base_position(s32 index) {
@@ -190,35 +167,18 @@ namespace {
         return icon_id;
     }
 
-    [[nodiscard]] std::array< wchar_t, 11U > icon_name_utf16(const FileSelectIconID& rIconId) {
+    [[nodiscard]] std::array< u16, 11U > icon_name_utf16_u16(const FileSelectIconID& rIconId) {
+        auto name = std::array< u16, 11U >{};
+        FileSelectFunc::copyMiiName(name.data(), rIconId);
+        return name;
+    }
+
+    [[nodiscard]] std::array< wchar_t, 11U > icon_name_wide(const FileSelectIconID& rIconId) {
+        const auto utf16_name = icon_name_utf16_u16(rIconId);
         auto name = std::array< wchar_t, 11U >{};
-        auto copy_name = [&](std::wstring_view value) {
-            for (auto i = std::size_t{}; i < value.size() && i + 1U < name.size(); ++i) {
-                name[i] = value[i];
-            }
-        };
-
-        if (rIconId.isFellow()) {
-            const auto index = static_cast< std::size_t >(std::clamp(static_cast< s32 >(rIconId.getFellowID()), 0, 4));
-            copy_name(cIconNames[index]);
-            return name;
+        for (auto i = std::size_t{}; i + 1U < name.size() && utf16_name[i] != 0U; ++i) {
+            name[i] = static_cast< wchar_t >(utf16_name[i]);
         }
-
-        const auto* runtime = smgpc::game::RuntimeContext::try_instance();
-        if (runtime != nullptr) {
-            for (const auto& entry : runtime->rfl().valid_miis()) {
-                if (entry.index != rIconId.getMiiIndex()) {
-                    continue;
-                }
-
-                for (auto i = std::size_t{}; i < entry.name.size() && i + 1U < name.size(); ++i) {
-                    name[i] = static_cast< wchar_t >(static_cast< unsigned char >(entry.name[i]));
-                }
-                return name;
-            }
-        }
-
-        copy_name(L"Mii");
         return name;
     }
 }  // namespace
@@ -264,6 +224,7 @@ void FileSelector::kill() {
 }
 
 void FileSelector::control() {
+    mPointingItem = nullptr;
     updateBgm();
 }
 
@@ -368,6 +329,8 @@ void FileSelector::createSelectEffect() {
 }
 
 void FileSelector::createFileItems() {
+    mItemDelegator = std::make_unique< FileSelectItemDelegator< FileSelector > >(this, &FileSelector::notifyItem);
+
     for (s32 i = 0; i < cItemCount; ++i) {
         const auto file_no = cItemFileNoOrder[static_cast< std::size_t >(i)];
         const auto file_index = static_cast< std::size_t >(file_no - 1);
@@ -377,6 +340,7 @@ void FileSelector::createFileItems() {
         getIconId(&icon_id, file_no);
         mItems[static_cast< std::size_t >(i)] = std::make_unique< FileSelectItem >(file_no, is_new, icon_id);
         mItems[static_cast< std::size_t >(i)]->initWithoutIter();
+        mItems[static_cast< std::size_t >(i)]->setSelectDelegator(mItemDelegator.get());
     }
     calcBasePos(0.0F);
 }
@@ -391,12 +355,43 @@ void FileSelector::initUserFile() {
     for (s32 i = 0; i < cItemCount; ++i) {
         GameSequenceFunction::restoreUserFile(mFiles[static_cast< std::size_t >(i)].get(), i + 1);
     }
+
+    checkAllComplete();
 }
 
 void FileSelector::restoreUserFile() {
     for (s32 i = 0; i < cItemCount; ++i) {
         const auto file = mFiles[static_cast< std::size_t >(i)].get();
-        GameSequenceFunction::restoreUserFile(file, i + 1, file == nullptr || file->isLastLoadedMario());
+        GameSequenceFunction::restoreUserFile(file, i + 1, file == nullptr || file->mIsPlayerMario);
+    }
+
+    checkAllComplete();
+}
+
+void FileSelector::checkAllComplete() {
+    for (s32 i = 0; i < cItemCount; ++i) {
+        const auto file = mFiles[static_cast< std::size_t >(i)].get();
+        mAllComplete[static_cast< std::size_t >(i)] = false;
+        if (file == nullptr) {
+            continue;
+        }
+
+        const auto is_mario = file->mIsPlayerMario;
+
+        if (!is_mario) {
+            GameSequenceFunction::restoreUserFile(file, i + 1, true);
+        }
+
+        if (file->isPowerStarGetFinalChallengeGalaxy()) {
+            GameSequenceFunction::restoreUserFile(file, i + 1, false);
+            if (file->isPowerStarGetFinalChallengeGalaxy()) {
+                mAllComplete[static_cast< std::size_t >(i)] = true;
+            }
+        }
+
+        if (is_mario != file->mIsPlayerMario) {
+            GameSequenceFunction::restoreUserFile(file, i + 1, is_mario);
+        }
     }
 }
 
@@ -445,14 +440,21 @@ void FileSelector::setFileInfo(s32 fileNo) {
 
     mSelectedFileNo = fileNo;
     auto* file = mFiles[static_cast< std::size_t >(fileNo - 1)].get();
-    auto name = user_name_utf16(file);
+    auto icon_id = FileSelectIconID();
+    getIconId(&icon_id, fileNo);
+    auto name = icon_name_utf16_u16(icon_id);
+    auto calendar = OSCalendarTime{};
+    if (file != nullptr) {
+        OSTicksToCalendarTime(file->getLastModified(), &calendar);
+    }
+    auto date_message = std::array< wchar_t, 32U >{};
+    auto time_message = std::array< wchar_t, 32U >{};
+    MR::makeDateString(date_message.data(), static_cast< s32 >(date_message.size()), calendar.year, calendar.mon + 1, calendar.mday);
+    MR::makeTimeString(time_message.data(), static_cast< s32 >(time_message.size()), calendar.hour, calendar.min);
     const auto is_mario = file == nullptr || file->mIsPlayerMario;
-    const auto date_message = std::wstring_view{L"--/--/--"};
-    const auto time_message = std::wstring_view{L"--:--"};
     mSelectInfo->setInfo(name.data(), fileNo, file != nullptr ? file->getPowerStarNum() : 0, file != nullptr ? file->getStarPieceNum() : 0, is_mario,
                          file != nullptr && file->isViewNormalEnding(), file != nullptr && file->isViewCompleteEnding(), date_message.data(),
-                         time_message.data(), file != nullptr ? file->getPlayerMissNum() : -1);
-    mSelectInfo->forceChange();
+                         time_message.data(), getMissCount(fileNo));
 }
 
 bool FileSelector::isUserFileCorrupted(s32 fileNo) const {
@@ -480,6 +482,15 @@ bool FileSelector::isUserFileLuigi(s32 fileNo) const {
 
     const auto& file = mFiles[static_cast< std::size_t >(fileNo - 1)];
     return file != nullptr && !file->mIsPlayerMario;
+}
+
+s32 FileSelector::getMissCount(s32 fileNo) const {
+    if (fileNo < 1 || fileNo > cItemCount || !mAllComplete[static_cast< std::size_t >(fileNo - 1)]) {
+        return -1;
+    }
+
+    const auto& file = mFiles[static_cast< std::size_t >(fileNo - 1)];
+    return file != nullptr ? file->getPlayerMissNum() : -1;
 }
 
 void FileSelector::setUserFileMario(s32 fileNo, bool isMario) {
@@ -523,15 +534,9 @@ bool FileSelector::isUserFileMiiIdValid(s32 fileNo) const {
         return false;
     }
 
-    auto mii_index = s32{};
-    std::memcpy(&mii_index, mii_id.data(), std::min(sizeof(mii_index), mii_id.size()));
-    const auto* runtime = smgpc::game::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
-        return mii_index >= 0;
-    }
-
-    const auto valid_miis = runtime->rfl().valid_miis();
-    return std::ranges::any_of(valid_miis, [&](const auto& entry) { return entry.index == mii_index; });
+    const auto* create_id = reinterpret_cast< const RFLCreateID* >(mii_id.data());
+    auto index = u16{};
+    return RFLSearchOfficialData(create_id, &index) == TRUE && RFLIsAvailableOfficialData(index) == TRUE;
 }
 
 s32 FileSelector::getUserFileMiiIndex(s32 fileNo) const {
@@ -549,9 +554,9 @@ s32 FileSelector::getUserFileMiiIndex(s32 fileNo) const {
         return 0;
     }
 
-    auto mii_index = s32{};
-    std::memcpy(&mii_index, mii_id.data(), std::min(sizeof(mii_index), mii_id.size()));
-    return std::clamp(mii_index, 0, 0xffff);
+    const auto* create_id = reinterpret_cast< const RFLCreateID* >(mii_id.data());
+    auto index = u16{};
+    return RFLSearchOfficialData(create_id, &index) == TRUE ? index : 0;
 }
 
 void FileSelector::storeSetMiiIdUserFile(s32 fileNo, const FileSelectIconID& rIconId) {
@@ -721,10 +726,16 @@ void FileSelector::initAllItems() {
     for (s32 i = 0; i < cItemCount; ++i) {
         auto* item = mItems[static_cast< std::size_t >(i)].get();
         const auto file_no = item != nullptr ? item->getFileNo() : i + 1;
+        const auto file_index = static_cast< std::size_t >(std::clamp(file_no, 1, cItemCount) - 1);
+        const auto* file = mFiles[file_index].get();
         auto icon_id = FileSelectIconID();
         getIconId(&icon_id, file_no);
         if (item != nullptr) {
-            item->forceChange(item->isNew(), icon_id);
+            if (file == nullptr || !file->isCreated() || isUserFileCorrupted(file_no)) {
+                item->forceChange(true);
+            } else {
+                item->forceChange(icon_id, mAllComplete[file_index]);
+            }
         }
     }
 }
@@ -1036,7 +1047,7 @@ void FileSelector::exeCreate() {
                 const auto file_no = std::clamp(mSelectedItem->getFileNo(), 1, cItemCount);
                 auto icon_id = FileSelectIconID();
                 getIconId(&icon_id, file_no);
-                mSelectedItem->forceChange(false, icon_id);
+                mSelectedItem->forceChange(icon_id, mAllComplete[static_cast< std::size_t >(file_no - 1)]);
             }
             clearPointing();
             setNerve(&NrvFileSelector::FileSelectorNrvFileSelectStart::sInstance);
@@ -1411,7 +1422,7 @@ void FileSelector::exeMiiConfirm() {
         if (mMiiSelect != nullptr) {
             mMiiSelect->getSelectedID(&selected_id);
         }
-        const auto selected_name = icon_name_utf16(selected_id);
+        const auto selected_name = icon_name_wide(selected_id);
         if (mSysInfoWindow != nullptr) {
             mSysInfoWindow->appear(selected_id.isMii() ? "System_FileSelect013" : "System_FileSelect005", SysInfoWindow::Type_YesNo,
                                    SysInfoWindow::TextPos_Bottom, SysInfoWindow::MessageType_System);
@@ -2051,6 +2062,22 @@ s32 FileSelector::getCurrentFileInfoFileNo() const {
     return mSelectInfo != nullptr ? mSelectInfo->getFileNumber() : 0;
 }
 
+s32 FileSelector::getCurrentFileInfoMissCount() const {
+    return mSelectInfo != nullptr ? mSelectInfo->getMissNum() : -1;
+}
+
+bool FileSelector::isCurrentFileInfoSelectedMario() const {
+    return mSelectInfo != nullptr && mSelectInfo->isSelectedMario();
+}
+
+const wchar_t* FileSelector::getCurrentFileInfoDateMessage() const {
+    return mSelectInfo != nullptr ? mSelectInfo->getDateMessage() : L"";
+}
+
+const wchar_t* FileSelector::getCurrentFileInfoTimeMessage() const {
+    return mSelectInfo != nullptr ? mSelectInfo->getTimeMessage() : L"";
+}
+
 bool FileSelector::isCameraAtNearPoint() const {
     return mCameraController != nullptr && mCameraController->isAtNearPoint();
 }
@@ -2086,7 +2113,7 @@ const smgpc::game::CameraParamVec3& FileSelector::getItemBasePosition(s32 index)
     return mItemBasePositions.at(static_cast< std::size_t >(index));
 }
 
-const smgpc::game::CameraParamVec3& FileSelector::getItemPosition(s32 index) const {
+const TVec3f& FileSelector::getItemPosition(s32 index) const {
     return mItems.at(static_cast< std::size_t >(index))->getPosition();
 }
 #endif

@@ -9,16 +9,18 @@
 
 #include "Game/compat/NameObjFactoryCompat.hpp"
 
-class NameObj;
-
 namespace smgpc::game {
 
     class RuntimeContext;
+    class SceneLifecycleService;
 
     struct StageHostRequest {
         std::string scene_name;
         std::string stage_name;
+        std::string object_name;
+        std::string actor_name;
         s32 scenario_no = 1;
+        bool appear_after_init = false;
     };
 
     class StageHostService final {
@@ -40,13 +42,9 @@ namespace smgpc::game {
 #endif
 
     private:
-        void create_file_select_stage(const StageHostRequest &request);
+        void create_stage_from_factory(const StageHostRequest &request);
 
-        RuntimeContext &_runtime;
-        std::string _active_scene_name;
-        std::string _active_stage_name;
-        s32 _active_scenario_no = 0;
-        std::unique_ptr<NameObj> _stage_root;
+        SceneLifecycleService &_scene_lifecycle;
     };
 
 }  // namespace smgpc::game

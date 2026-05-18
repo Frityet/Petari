@@ -117,6 +117,15 @@ namespace smgpc::tests {
                         shooting_star[0].resource->child_shape->texture_slot == 0U &&
                         shooting_star[0].resource->child_texture_index.value_or(0xffffU) == 0U,
                     "SSP1 child-shape texture metadata should preserve parent and child JPA texture slots");
+            require(shooting_star[0].resource->key_block_count == 1U && shooting_star[0].resource->key_blocks.size() == 1U,
+                    "KFA1 metadata should preserve original JPA key block resources");
+            const auto &shooting_star_rate_key = shooting_star[0].resource->key_blocks.front();
+            require(shooting_star_rate_key.id == 0U && shooting_star_rate_key.loop && shooting_star_rate_key.keys.size() == 5U,
+                    "KFA1 key block metadata should preserve JPA rate animation id, loop flag, and key count");
+            require_near(shooting_star_rate_key.keys[0U].time, 0.0F, 0.001F, "KFA1 first key should preserve source time");
+            require_near(shooting_star_rate_key.keys[0U].value, 0.1F, 0.001F, "KFA1 first key should preserve source rate value");
+            require_near(shooting_star_rate_key.keys[1U].time, 150.0F, 0.001F, "KFA1 second key should preserve source time");
+            require_near(shooting_star_rate_key.keys[1U].value, 0.3F, 0.001F, "KFA1 second key should preserve source rate value");
             const auto shooting_star_child_texture = std::ranges::find_if(shooting_star[0].textures, [](const auto &texture) {
                 return texture.index == 0U;
             });
@@ -148,6 +157,10 @@ namespace smgpc::tests {
             const auto *save = messages.find("System_Save01");
             require(save != nullptr, "MessageId.tbl should resolve save-system text");
             require(!save->display_text.empty(), "System_Save01 should decode to displayable text");
+            const auto *date = messages.find("System_Date000");
+            require(date != nullptr, "MessageId.tbl should resolve date formatting text");
+            require(std::ranges::any_of(date->raw_text, [](char16_t code) { return code == 0x001aU; }) && date->display_text == u"//",
+                    "System_Date000 should preserve raw replacement tags while exposing stripped display text");
 
             auto service = smgpc::game::MessageService{};
             require(service.load_message_archive(message_archive) == messages.message_count(), "MessageService should import every BMG message");
@@ -156,6 +169,9 @@ namespace smgpc::tests {
             require(service_text->size() >= 3U && (*service_text)[0U] == u'W' && (*service_text)[1U] == u'i' && (*service_text)[2U] == u'i',
                     "MessageService should preserve imported UTF-16 code units");
             require(service.message("System_Save01") != nullptr, "MessageService should expose UTF-8 views for imported messages");
+            const auto *service_date_raw = service.message_raw_utf16("System_Date000");
+            require(service_date_raw != nullptr && std::ranges::any_of(*service_date_raw, [](char16_t code) { return code == 0x001aU; }),
+                    "MessageService should preserve raw tagged UTF-16 messages for replacement processing");
         }
 
         $test("decodes Korean title logo TPL texture") {

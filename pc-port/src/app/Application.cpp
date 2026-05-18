@@ -43,6 +43,16 @@ namespace smgpc::app {
             frame_context.frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index);
         }
 
+        [[nodiscard]] std::filesystem::path default_save_directory() {
+            if (const auto *xdg_data_home = std::getenv("XDG_DATA_HOME"); xdg_data_home != nullptr && xdg_data_home[0] != '\0') {
+                return std::filesystem::path(xdg_data_home) / "smgpc" / "save";
+            }
+            if (const auto *home = std::getenv("HOME"); home != nullptr && home[0] != '\0') {
+                return std::filesystem::path(home) / ".local" / "share" / "smgpc" / "save";
+            }
+            return std::filesystem::path(".smgpc") / "save";
+        }
+
         class FramePacer final {
         public:
             explicit FramePacer(bool enabled) : _enabled(enabled), _next_frame_deadline(FrameClock::now() + WII_FRAME_DURATION) {
@@ -263,6 +273,15 @@ namespace smgpc::app {
             return *parsed;
         }
 
+        [[nodiscard]] std::optional<std::uint64_t> debug_change_stage_request_frame_from_environment() {
+            const auto *value = std::getenv("SMGPC_REQUEST_CHANGE_STAGE_AFTER_LOADING_FRAME");
+            if (value == nullptr || value[0] == '\0') {
+                return std::nullopt;
+            }
+
+            return parse_frame_index(value);
+        }
+
         void emit_configured_semantic_anchor(game::RuntimeContext &runtime) {
             const auto name = string_environment("SMGPC_SEMANTIC_ANCHOR_NAME");
             if (!name.has_value()) {
@@ -299,9 +318,12 @@ namespace smgpc::app {
                 const auto skip_render_until_frame = skip_render_until_frame_from_environment();
                 const auto render_frame_interval = render_frame_interval_from_environment();
                 const auto frame_pacing_enabled = frame_pacing_enabled_from_environment();
+                const auto exit_on_picturebook_reached = bool_environment_enabled("SMGPC_EXIT_ON_PICTUREBOOK_REACHED");
+                const auto debug_change_stage_request_frame = debug_change_stage_request_frame_from_environment();
                 auto timing = FrameTimingSummary{};
                 auto screenshot_queued = false;
                 auto parity_trace_written = false;
+                auto debug_change_stage_requested = false;
                 if (screenshot_request.has_value()) {
                     _logger->info(logging::Category::APP, logging::Message{"Will write a renderer PNG screenshot to {} on frame {}"},
                                   screenshot_request->path.string(), screenshot_request->frame);
@@ -329,11 +351,23 @@ namespace smgpc::app {
                 } else {
                     _logger->info(logging::Category::APP, logging::Message{"Debug frame pacing explicitly disabled by SMGPC_FRAME_PACING=0"});
                 }
+                if (exit_on_picturebook_reached) {
+                    _logger->info(logging::Category::APP, logging::Message{"Will exit when picturebook_reached is emitted"});
+                }
+                if (debug_change_stage_request_frame.has_value()) {
+                    _logger->info(logging::Category::APP, logging::Message{"Will debug-request generic stage change after loading game data on frame {}"},
+                                  *debug_change_stage_request_frame);
+                }
 #else
                 constexpr auto frame_pacing_enabled = true;
 #endif
 
                 auto runtime = game::RuntimeContext(_logger.get(), _window_service.get());
+                if (!runtime.save_data().host_directory().has_value()) {
+                    const auto save_directory = default_save_directory();
+                    runtime.save_data().set_host_directory(save_directory);
+                    _logger->info(logging::Category::APP, logging::Message{"Using default SMG save files from {}"}, save_directory.string());
+                }
 #ifndef NDEBUG
                 emit_configured_semantic_anchor(runtime);
                 if (parity_trace_request.has_value()) {
@@ -390,7 +424,19 @@ namespace smgpc::app {
                     const auto after_begin_frame = FrameClock::now();
 #endif
                     runtime.begin_frame(frame_context);
+#ifndef NDEBUG
+                    if (debug_change_stage_request_frame.has_value() && !debug_change_stage_requested &&
+                        frame_context.frame_index >= *debug_change_stage_request_frame) {
+                        runtime.sequence_requests().request_change_stage_in_game_after_loading_game_data();
+                        debug_change_stage_requested = true;
+                    }
+#endif
                     sequence_boot.update_after_runtime_frame();
+#ifndef NDEBUG
+                    if (exit_on_picturebook_reached && sequence_boot.has_picturebook_reached()) {
+                        _window_service->close();
+                    }
+#endif
 #ifndef NDEBUG
                     const auto after_runtime_update = FrameClock::now();
 #endif

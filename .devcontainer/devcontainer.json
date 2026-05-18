@@ -26,7 +26,7 @@
         "--env", "DISPLAY=${localEnv:DISPLAY}",
         "--volume", "/tmp/.X11-unix:/tmp/.X11-unix:rw"
     ],
-    "initializeCommand": "xhost +local:",
+    "initializeCommand": "bash .devcontainer/prepare-x11.sh",
     "features": {
         "./llvm": {
             "version": "22"

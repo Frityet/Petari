@@ -18,6 +18,9 @@ namespace smgpc::render::core {
         [[nodiscard]] virtual FramebufferInfo framebuffer_size() const = 0;
         [[nodiscard]] virtual NativeWindowHandle native_handle() const = 0;
         [[nodiscard]] virtual bool is_input_pressed(InputButton button) const = 0;
+        [[nodiscard]] virtual InputPointerState input_pointer_state() const {
+            return {};
+        }
 
         virtual void close() {
         }

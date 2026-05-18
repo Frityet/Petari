@@ -908,7 +908,11 @@ namespace smgpc::game {
                 {"texture_coordinate_animation", base_shape.texture_coordinate_animation},
                 {"blend_mode_config", base_shape.blend_mode_config},
                 {"alpha_compare_config", base_shape.alpha_compare_config},
+                {"alpha_ref0", base_shape.alpha_ref0},
+                {"alpha_ref1", base_shape.alpha_ref1},
                 {"z_mode_config", base_shape.z_mode_config},
+                {"prm_color", Json::array({base_shape.prm_color[0U], base_shape.prm_color[1U], base_shape.prm_color[2U], base_shape.prm_color[3U]})},
+                {"env_color", Json::array({base_shape.env_color[0U], base_shape.env_color[1U], base_shape.env_color[2U], base_shape.env_color[3U]})},
             };
         }
 
@@ -934,6 +938,8 @@ namespace smgpc::game {
                 {"inherit_scale", child_shape.inherit_scale},
                 {"inherit_alpha", child_shape.inherit_alpha},
                 {"inherit_rgb", child_shape.inherit_rgb},
+                {"prm_color", Json::array({child_shape.prm_color[0U], child_shape.prm_color[1U], child_shape.prm_color[2U], child_shape.prm_color[3U]})},
+                {"env_color", Json::array({child_shape.env_color[0U], child_shape.env_color[1U], child_shape.env_color[2U], child_shape.env_color[3U]})},
                 {"timing", child_shape.timing},
                 {"lifetime", child_shape.lifetime},
                 {"rate", child_shape.rate},
@@ -941,6 +947,32 @@ namespace smgpc::game {
                 {"texture_slot", child_shape.texture_slot},
                 {"rotation_speed", child_shape.rotation_speed},
             };
+        }
+
+        [[nodiscard]] Json effect_key_blocks_json(const JpcResourceMetadata *resource) {
+            auto out = Json::array();
+            if (resource == nullptr) {
+                return out;
+            }
+
+            for (const auto &key_block : resource->key_blocks) {
+                auto keys = Json::array();
+                for (const auto &key : key_block.keys) {
+                    keys.push_back(Json{
+                        {"time", key.time},
+                        {"value", key.value},
+                        {"tangent_in", key.tangent_in},
+                        {"tangent_out", key.tangent_out},
+                    });
+                }
+                out.push_back(Json{
+                    {"id", key_block.id},
+                    {"loop", key_block.loop},
+                    {"key_count", key_block.keys.size()},
+                    {"keys", std::move(keys)},
+                });
+            }
+            return out;
         }
 
         [[nodiscard]] Json resolved_effect_resources_json(std::span<const ResolvedEffectResource> resources) {
@@ -962,6 +994,7 @@ namespace smgpc::game {
                     {"dynamics", effect_dynamics_json(resource.resource)},
                     {"base_shape", effect_base_shape_json(resource.resource)},
                     {"child_shape", effect_child_shape_json(resource.resource)},
+                    {"key_blocks", effect_key_blocks_json(resource.resource)},
                     {"textures", effect_texture_metadata_json(resource.textures)},
                 });
             }
@@ -1819,6 +1852,9 @@ namespace smgpc::game {
         }
 
         [[nodiscard]] Json effect_packet_trace_json(const EffectDrawPacketTrace &packet, std::size_t index) {
+            const auto source_triangle_count = packet.primitive_type == "triangle_strip" ?
+                                                   (packet.index_count >= 3U ? packet.index_count - 2U : 0U) :
+                                                   packet.index_count / 3U;
             return Json{
                 {"index", index},
                 {"model_name", packet.actor_name},
@@ -1834,9 +1870,9 @@ namespace smgpc::game {
                 {"draw_type", packet.draw_type},
                 {"draw_order", packet.draw_order},
                 {"packet_mode", "JpcBillboard2D"},
-                {"primitive_type", "triangles"},
+                {"primitive_type", packet.primitive_type},
                 {"source_vertex_count", packet.vertex_count},
-                {"source_triangle_count", packet.index_count / 3U},
+                {"source_triangle_count", source_triangle_count},
                 {"num_indices", packet.index_count},
                 {"particle_id", packet.particle_id},
                 {"particle_age", packet.particle_age},
@@ -1844,7 +1880,7 @@ namespace smgpc::game {
                 {"live_particle_count", packet.live_particle_count},
                 {"child_particle", packet.child_particle},
                 {"texgen_count", 1U},
-                {"color_channel_count", 1U},
+                {"color_channel_count", packet.color_channel_count},
                 {"active_tev_stage_count", 1U},
                 {"tev_stage_count", 1U},
                 {"indirect_stage_count", 0U},
@@ -1852,8 +1888,8 @@ namespace smgpc::game {
                 {"used_textures_mask", used_textures_mask(packet.texture)},
                 {"used_texture_slots", used_texture_slots_json(packet.texture)},
                 {"texture_bindings", effect_texture_bindings_json(packet.texture)},
-                {"alpha_compare_enabled", false},
-                {"blend_enabled", true},
+                {"alpha_compare_enabled", packet.alpha_compare_enabled},
+                {"blend_enabled", packet.blend_enabled},
             };
         }
 

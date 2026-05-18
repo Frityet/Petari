@@ -50,7 +50,11 @@ namespace MR {
     bool isDead(const LiveActor* pActor);
     bool isStep(const LiveActor* pActor, s32 step);
     bool isFirstStep(const LiveActor* pActor);
+    bool isGreaterEqualStep(const LiveActor* pActor, s32 step);
     void setNerveAtStep(LiveActor* pActor, const Nerve* pNerve, s32 step);
     bool isBtpStopped(const LiveActor* pActor);
+    bool isBckStopped(const LiveActor* pActor);
+    f32 getBckFrameMax(const LiveActor* pActor);
+    MtxPtr getJointMtx(const LiveActor* pActor, const char* pJointName);
     bool isBrkOneTimeAndStopped(const LiveActor* pActor);
 }  // namespace MR

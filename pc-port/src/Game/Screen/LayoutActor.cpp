@@ -47,6 +47,10 @@ void LayoutActor::movement() {
             syncAnimCtrlFromLayout(i);
         }
     }
+
+    if (mManager != nullptr) {
+        mManager->refreshPaneMtxRefs();
+    }
 }
 
 void LayoutActor::draw() const {
@@ -55,6 +59,7 @@ void LayoutActor::draw() const {
 void LayoutActor::calcAnim() {
     if (mManager != nullptr) {
         mManager->calcAnim();
+        mManager->refreshPaneMtxRefs();
     }
 }
 
@@ -93,11 +98,13 @@ s32 LayoutActor::getNerveStep() const {
 }
 
 TVec2f LayoutActor::getTrans() const {
-    return mTrans;
+    auto screen_pos = TVec2f{};
+    MR::convertLayoutPosToScreenPos(&screen_pos, mTrans);
+    return screen_pos;
 }
 
 void LayoutActor::setTrans(const TVec2f& rTrans) {
-    mTrans = rTrans;
+    MR::convertScreenPosToLayoutPos(&mTrans, rTrans);
     if (mSimpleLayout != nullptr) {
         mSimpleLayout->setTrans(mTrans.x, mTrans.y);
     }
@@ -107,11 +114,14 @@ LayoutManager* LayoutActor::getLayoutManager() const {
     return mManager;
 }
 
-void LayoutActor::createPaneMtxRef(const char*) {
+void LayoutActor::createPaneMtxRef(const char* pPaneName) {
+    if (mManager != nullptr) {
+        mManager->createPaneMtxRef(pPaneName);
+    }
 }
 
-MtxPtr LayoutActor::getPaneMtxRef(const char*) {
-    return nullptr;
+MtxPtr LayoutActor::getPaneMtxRef(const char* pPaneName) {
+    return mManager != nullptr ? mManager->getPaneMtxRef(pPaneName) : nullptr;
 }
 
 void LayoutActor::initLayoutManager(const char* pName, u32 animLayerNum) {

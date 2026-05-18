@@ -241,6 +241,7 @@ constexpr s32 NAND_RESULT_AUTHENTICATION = -15;
 constexpr s32 NAND_RESULT_MAXDEPTH = -16;
 constexpr s32 NAND_RESULT_UNKNOWN = -64;
 constexpr s32 NAND_RESULT_FATAL_ERROR = -128;
+constexpr u32 NAND_MAX_PATH = 64U;
 
 struct KPADVec2 {
     f32 x = 0.0F;
@@ -281,8 +282,22 @@ struct DVDFileInfo {
     void *internal = nullptr;
 };
 
+struct OSCalendarTime {
+    s32 sec = 0;
+    s32 min = 0;
+    s32 hour = 0;
+    s32 mday = 1;
+    s32 mon = 0;
+    s32 year = 1970;
+    s32 wday = 4;
+    s32 yday = 0;
+    s32 msec = 0;
+    s32 usec = 0;
+};
+
 [[nodiscard]] OSTime OSGetTime();
 [[nodiscard]] s64 OSTicksToSeconds(OSTime ticks);
+void OSTicksToCalendarTime(OSTime ticks, OSCalendarTime *pTime);
 [[nodiscard]] s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length);
 [[nodiscard]] s32 DVDConvertPathToEntrynum(const char *path);
 [[nodiscard]] BOOL DVDOpen(const char *path, DVDFileInfo *file_info);

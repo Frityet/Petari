@@ -202,6 +202,17 @@ namespace smgpc::render::backends {
             return 0U;
         }
 
+        [[nodiscard]] std::uint64_t primitive_topology_state(core::PrimitiveTopology topology) {
+            switch (topology) {
+            case core::PrimitiveTopology::Triangles:
+                return 0U;
+            case core::PrimitiveTopology::TriangleStrip:
+                return BGFX_STATE_PT_TRISTRIP;
+            }
+
+            return 0U;
+        }
+
         [[nodiscard]] std::uint64_t gx_src_blend_factor(std::uint8_t factor) {
             switch (factor) {
             case 0U:
@@ -743,6 +754,7 @@ namespace smgpc::render::backends {
     std::uint64_t BgfxBackend::hash_textured_geometry(const core::TexturedTriangleBatch2D &batch) const {
         auto hash = FNV_OFFSET_BASIS;
         hash_u8(hash, GEOMETRY_KIND_TEXTURED);
+        hash_u8(hash, static_cast<std::uint8_t>(batch.primitive_topology));
         hash_u32(hash, static_cast<std::uint32_t>(batch.vertices.size()));
         hash_u32(hash, static_cast<std::uint32_t>(batch.indices.size()));
         hash_u16(hash, _framebuffer_width);
@@ -768,6 +780,7 @@ namespace smgpc::render::backends {
     std::uint64_t BgfxBackend::hash_gx_material_geometry(const core::GxMaterialTriangleBatch2D &batch) const {
         auto hash = FNV_OFFSET_BASIS;
         hash_u8(hash, GEOMETRY_KIND_GX_MATERIAL);
+        hash_u8(hash, static_cast<std::uint8_t>(batch.primitive_topology));
         hash_u32(hash, static_cast<std::uint32_t>(batch.vertices.size()));
         hash_u32(hash, static_cast<std::uint32_t>(batch.indices.size()));
         hash_u16(hash, _framebuffer_width);
@@ -1123,6 +1136,7 @@ namespace smgpc::render::backends {
             state |= BGFX_STATE_WRITE_Z;
         }
         state |= cull_state(batch.cull_mode);
+        state |= primitive_topology_state(batch.primitive_topology);
         if (batch.gx_blend.enabled) {
             state |= gx_blend_state(batch.gx_blend);
         } else if (batch.blend && batch.blend_mode == core::BlendMode::Additive) {
@@ -1336,6 +1350,7 @@ namespace smgpc::render::backends {
             state |= BGFX_STATE_WRITE_Z;
         }
         state |= cull_state(batch.cull_mode);
+        state |= primitive_topology_state(batch.primitive_topology);
         state |= gx_blend_state(batch.blend);
         bgfx::setState(state);
         bgfx::submit(0U, _gx_material_program);

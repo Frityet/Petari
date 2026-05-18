@@ -90,6 +90,10 @@ int main(int argc, char **argv) try {
         std::cout << "imported trace_id=" << result.trace_id << " records=" << result.record_count
                   << " render_packets=" << result.render_packet_count << " copy_events=" << result.copy_event_count
                   << " semantic_events=" << result.semantic_event_count
+                  << " layout_runtime=" << result.layout_runtime_count
+                  << " layout_panes=" << result.layout_pane_count
+                  << " layout_materials=" << result.layout_material_count
+                  << " layout_textures=" << result.layout_texture_count
                   << " path=" << trace_path << '\n';
     }
     db.exec("COMMIT");

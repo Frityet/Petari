@@ -33,6 +33,8 @@ namespace MR {
     void closeSystemWipeCircleWithCaptureScreen(s32 frameCount);
     void closeSystemWipeFadeWithCaptureScreen(s32 frameCount);
     void deactivateDefaultGameLayout();
+    void forceOffImageEffect();
+    void setImageEffectControlAuto();
     void openWipeCircle(s32 frameCount);
     void openWipeFade(s32 frameCount);
     void openWipeWhiteFade(s32 frameCount);

@@ -14,6 +14,9 @@ namespace MR {
     void startSystemSE(const char* pName, s32, s32);
     void startSystemLevelSE(const char* pName, s32, s32);
     void stopSystemSE(const char* pName, u32 delay);
+    void startAtmosphereSE(const char* pName, s32, s32);
+    void submitLevelSE();
+    void permitLevelSE();
     void startSystemME(const char* pName);
     void startCSSound(const char* pName, s32, s32);
     void startCSSound(const char* pName, const char*, s32);

@@ -140,14 +140,14 @@ namespace smgpc::tests {
         }
 
         [[nodiscard]] bool is_input_pressed(smgpc::render::InputButton button) const override {
-            switch (button) {
-            case smgpc::render::InputButton::CORE_PAD_A:
-                return _hold_core_pad_a;
-            case smgpc::render::InputButton::CORE_PAD_B:
-                return _hold_core_pad_b;
+            if (button == smgpc::render::InputButton::COUNT) {
+                return false;
             }
+            return _input_buttons.at(static_cast<std::size_t>(button));
+        }
 
-            return false;
+        [[nodiscard]] smgpc::render::InputPointerState input_pointer_state() const override {
+            return _pointer;
         }
 
         void set_title_combo(bool is_pressed) {
@@ -155,13 +155,25 @@ namespace smgpc::tests {
         }
 
         void set_core_buttons(bool hold_a, bool hold_b) {
-            _hold_core_pad_a = hold_a;
-            _hold_core_pad_b = hold_b;
+            set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, hold_a);
+            set_input_pressed(smgpc::render::InputButton::CORE_PAD_B, hold_b);
+        }
+
+        void set_input_pressed(smgpc::render::InputButton button, bool pressed) {
+            _input_buttons.at(static_cast<std::size_t>(button)) = pressed;
+        }
+
+        void set_pointer(float x, float y, bool valid) {
+            _pointer = smgpc::render::InputPointerState{
+                .x = x,
+                .y = y,
+                .valid = valid,
+            };
         }
 
     private:
-        bool _hold_core_pad_a = false;
-        bool _hold_core_pad_b = false;
+        std::array<bool, static_cast<std::size_t>(smgpc::render::InputButton::COUNT)> _input_buttons{};
+        smgpc::render::InputPointerState _pointer{};
     };
 
     class RecordingRenderer final : public smgpc::render::IRendererEngine {
@@ -242,6 +254,7 @@ namespace smgpc::tests {
             last_gx_material_depth_test = batch.depth_test;
             last_gx_material_depth_write = batch.depth_write;
             last_gx_material_depth_compare = batch.depth_compare;
+            last_gx_material_primitive_topology = batch.primitive_topology;
             last_gx_material_color_inputs.fill({});
             last_gx_material_stage_konst_colors.fill({});
             for (auto i = std::size_t{}; i < batch.tev_stages.size() && i < last_gx_material_color_inputs.size(); ++i) {
@@ -290,6 +303,7 @@ namespace smgpc::tests {
         smgpc::render::GxBlendMode2D last_gx_material_blend{};
         smgpc::render::GxBlendMode2D last_two_stage_gx_material_blend{};
         smgpc::render::GxFog2D last_gx_material_fog{};
+        smgpc::render::PrimitiveTopology last_gx_material_primitive_topology = smgpc::render::PrimitiveTopology::Triangles;
         std::array<smgpc::render::GxTevRegisterColor2D, 4U> last_gx_material_initial_tev_registers{};
         bool last_gx_material_depth_test = false;
         bool last_gx_material_depth_write = false;

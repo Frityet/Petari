@@ -21,6 +21,7 @@
 #include "RendererService.hpp"
 
 class UserFile;
+class LiveActor;
 
 namespace smgpc::game {
 
@@ -257,13 +258,17 @@ namespace smgpc::game {
         std::string draw_order;
         std::uint64_t frame_index = 0U;
         s32 draw_type = 0;
+        std::string primitive_type = "triangles";
         std::uint32_t vertex_count = 0U;
         std::uint32_t index_count = 0U;
+        std::uint32_t color_channel_count = 1U;
         std::uint32_t particle_id = 0U;
         std::uint16_t particle_age = 0U;
         std::uint16_t particle_lifetime = 0U;
         std::uint32_t live_particle_count = 0U;
         bool child_particle = false;
+        bool alpha_compare_enabled = false;
+        bool blend_enabled = true;
         EffectTextureBindingTrace texture{};
     };
 #endif
@@ -293,7 +298,7 @@ namespace smgpc::game {
     private:
         [[nodiscard]] std::vector<ResolvedEffectResource> resolve(std::string_view actor_name, std::string_view effect_name) const;
         [[nodiscard]] render::TextureHandle texture_handle_for(render::IRendererEngine &renderer, const JpcTextureMetadata &texture);
-        [[nodiscard]] std::vector<JpcEffectEmitterInstance> create_emitters(std::span<const ResolvedEffectResource> resources) const;
+        [[nodiscard]] std::vector<JpcEffectEmitterInstance> create_emitters(std::span<const ResolvedEffectResource> resources);
         void advance_effects_to_frame(std::uint64_t frame_index);
         void advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const ResolvedEffectResource &resource, std::uint64_t frame_index);
 
@@ -303,6 +308,7 @@ namespace smgpc::game {
         std::map<std::string, EffectKeeperRegistration, std::less<>> _registered_keepers;
         std::optional<EffectResourceLibrary> _resource_library;
         std::map<std::uint16_t, render::TextureHandle> _texture_handles;
+        std::uint32_t _emitter_random_seed = 0U;
 #ifndef NDEBUG
         std::vector<EffectDrawPacketTrace> _draw_packets;
 #endif
@@ -372,27 +378,76 @@ namespace smgpc::game {
         std::uint64_t frame_index = 0U;
     };
 
+#ifndef NDEBUG
+    enum class StarPointerTargetEventKind {
+        Enter,
+        Leave,
+        Select,
+    };
+
+    struct StarPointerTargetEvent {
+        StarPointerTargetEventKind kind = StarPointerTargetEventKind::Enter;
+        std::string actor_name;
+        std::uint64_t frame_index = 0U;
+        s32 channel = WPAD_CHAN0;
+        float pointer_x = 0.0F;
+        float pointer_y = 0.0F;
+        float target_x = 0.0F;
+        float target_y = 0.0F;
+        float projected_radius = 0.0F;
+        bool check_z = false;
+    };
+#endif
+
+    struct StarPointerTargetState {
+        const LiveActor *actor = nullptr;
+        float radius = 0.0F;
+        CameraParamVec3 offset{};
+#ifndef NDEBUG
+        bool was_pointing = false;
+        std::optional<std::uint64_t> last_select_frame_index{};
+#endif
+    };
+
     class StarPointerService final {
     public:
         void begin_frame(std::uint64_t frame_index);
+        void register_target(const LiveActor &actor, float radius, const CameraParamVec3 &offset);
+        void unregister_target(const LiveActor &actor);
+        void set_target_radius(const LiveActor &actor, float radius);
         void start_mode(StarPointerMode mode);
         void set_guidance_active(bool active);
         void request_file_select_guidance();
         void request_file_select_copy_guidance();
 
         [[nodiscard]] StarPointerMode mode() const;
+        [[nodiscard]] bool has_target(const LiveActor &actor) const;
+        [[nodiscard]] bool is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<CameraPoseCompat> &camera_pose, bool check_z);
         [[nodiscard]] bool is_guidance_active() const;
         [[nodiscard]] bool is_file_select_guidance_requested() const;
         [[nodiscard]] bool is_file_select_copy_guidance_requested() const;
         [[nodiscard]] std::span<const StarPointerModeEvent> mode_events() const;
+#ifndef NDEBUG
+        [[nodiscard]] std::span<const StarPointerTargetEvent> target_events() const;
+#endif
 
     private:
+#ifndef NDEBUG
+        void record_target_pointing_sample(StarPointerTargetState &target, bool pointing, const WpadPointerState &pointer,
+                                           bool has_projection, float target_x, float target_y, float projected_radius, bool check_z,
+                                           bool select_triggered);
+#endif
+
         std::uint64_t _frame_index = 0U;
         StarPointerMode _mode = StarPointerMode::None;
         bool _guidance_active = false;
         bool _file_select_guidance_requested = false;
         bool _file_select_copy_guidance_requested = false;
+        std::map<const LiveActor *, StarPointerTargetState> _targets;
         std::vector<StarPointerModeEvent> _mode_events;
+#ifndef NDEBUG
+        std::vector<StarPointerTargetEvent> _target_events;
+#endif
     };
 
     class CameraSystemService final {
@@ -549,6 +604,8 @@ namespace smgpc::game {
 
         void write_file(std::string_view name, std::span<const std::uint8_t> bytes);
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view name) const;
+        void write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes);
+        [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_nand_file(std::string_view name) const;
         [[nodiscard]] bool exists(std::string_view name) const;
         bool erase(std::string_view name);
         [[nodiscard]] std::size_t file_count() const;
@@ -556,6 +613,7 @@ namespace smgpc::game {
         [[nodiscard]] const std::optional<std::filesystem::path> &host_directory() const;
         void load_host_files();
         void flush_host_files();
+        [[nodiscard]] bool has_valid_game_data_container() const;
         [[nodiscard]] const SlotState *slot_state(s32 slot_index) const;
         [[nodiscard]] SlotState slot_state_or_default(s32 slot_index) const;
         void set_slot_state(s32 slot_index, const SlotState &state);
@@ -576,6 +634,10 @@ namespace smgpc::game {
         [[nodiscard]] std::filesystem::path host_file_path(std::string_view name) const;
         void write_host_file(std::string_view name, std::span<const std::uint8_t> bytes) const;
         void erase_host_file(std::string_view name) const;
+        [[nodiscard]] std::optional<std::map<std::string, std::vector<std::uint8_t>>> decode_game_data_container(std::span<const std::uint8_t> bytes) const;
+        [[nodiscard]] std::vector<std::uint8_t> encode_game_data_container() const;
+        void set_slot_state_internal(s32 slot_index, const SlotState &state, bool materialize_files);
+        void materialize_slot_files(const SlotState &state);
         void load_slot_states_from_files();
         void load_sys_config_from_files();
         void write_sys_config_file();
@@ -586,6 +648,7 @@ namespace smgpc::game {
         OSTime _sys_config_time_announced = 0;
         OSTime _sys_config_time_sent = 0;
         u32 _sys_config_sent_bytes = 0U;
+        bool _has_valid_game_data_container = false;
     };
 
     class MessageService final {
@@ -596,11 +659,14 @@ namespace smgpc::game {
         [[nodiscard]] std::size_t message_count() const;
         [[nodiscard]] const std::string *message(std::string_view tag) const;
         [[nodiscard]] const std::u16string *message_utf16(std::string_view tag) const;
+        [[nodiscard]] const std::u16string *message_raw_utf16(std::string_view tag) const;
         [[nodiscard]] std::string message_or(std::string_view tag, std::string_view fallback) const;
         [[nodiscard]] std::u16string message_utf16_or(std::string_view tag, std::u16string_view fallback) const;
+        [[nodiscard]] std::u16string message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const;
 
     private:
         struct MessageText {
+            std::u16string raw_utf16;
             std::u16string utf16;
             std::string utf8;
         };

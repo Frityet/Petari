@@ -227,7 +227,8 @@ bool SaveDataHandleSequence::isInitializedGameDataHolder() const {
 
 void SaveDataHandleSequence::restoreUserFile(UserFile* pUserFile, int index) {
     if (pUserFile != nullptr) {
-        restoreUserFile(pUserFile, index, pUserFile->isLastLoadedMario());
+        restoreUserFileConfigData(pUserFile, index);
+        restoreUserFileGameData(pUserFile, index, pUserFile->isLastLoadedMario());
     }
 }
 

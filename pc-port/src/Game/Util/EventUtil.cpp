@@ -3,6 +3,16 @@
 #include "Game/System/GameDataFunction.hpp"
 
 namespace MR {
+    bool useStageSwitchWriteA(LiveActor*, const JMapInfoIter&) {
+        return false;
+    }
+
+    void onSwitchA(LiveActor*) {
+    }
+
+    void offSwitchA(LiveActor*) {
+    }
+
     s32 getPictureBookChapterCanRead() {
         return GameDataFunction::getPictureBookChapterCanRead();
     }

@@ -133,8 +133,16 @@ run_pc_capture() {
   if [[ -n "${SMGPC_BGFX_RENDERER:-}" ]]; then
     renderer_env+=(SMGPC_BGFX_RENDERER="${SMGPC_BGFX_RENDERER}")
   fi
+  local input_env=()
+  if [[ -n "${SMGPC_PARITY_PC_WPAD_BUTTON_SCRIPT:-}" ]]; then
+    input_env+=(SMGPC_DEBUG_WPAD_BUTTON_SCRIPT="${SMGPC_PARITY_PC_WPAD_BUTTON_SCRIPT}")
+  fi
+  if [[ -n "${SMGPC_PARITY_PC_WPAD_POINTER_SCRIPT:-}" ]]; then
+    input_env+=(SMGPC_DEBUG_WPAD_POINTER_SCRIPT="${SMGPC_PARITY_PC_WPAD_POINTER_SCRIPT}")
+  fi
   env \
     "${renderer_env[@]}" \
+    "${input_env[@]}" \
     SMGPC_ENABLE_VSYNC="${SMGPC_ENABLE_VSYNC:-0}" \
     SMGPC_EVENT_POLL_INTERVAL="${SMGPC_EVENT_POLL_INTERVAL:-8}" \
     SMGPC_ASYNC_SCREENSHOT_PNG="${SMGPC_ASYNC_SCREENSHOT_PNG:-1}" \
