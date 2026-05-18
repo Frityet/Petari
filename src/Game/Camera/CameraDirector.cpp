@@ -90,9 +90,11 @@ bool CameraMan::isEnableToRoundRight() const {
     return false;
 }
 
-void CameraMan::roundLeft() {}
+void CameraMan::roundLeft() {
+}
 
-void CameraMan::roundRight() {}
+void CameraMan::roundRight() {
+}
 
 CameraDirector::CameraDirector(const char* pName) : NameObj(pName) {
     mUsedTarget = nullptr;
@@ -133,14 +135,15 @@ CameraDirector::CameraDirector(const char* pName) : NameObj(pName) {
     MR::connectToSceneCamera(this);
     push(mCameraManGame);
     _180.identity();
-    JMath::gekko_ps_copy12(&mTargetMatrix->mMatrix, &_180);
+    mTargetMatrix->mMatrix.setInline(_180);
     setInterpolation(0);
     mCameraManSubjective->owned(this);
     _1C0.identity();
     MR::createCenterScreenBlur();
 }
 
-void CameraDirector::init(const JMapInfoIter& rIter) {}
+void CameraDirector::init(const JMapInfoIter& rIter) {
+}
 
 void CameraDirector::movement() {
     sUpdateCounter++;
@@ -150,7 +153,7 @@ void CameraDirector::movement() {
     updateCameraMan();
     calcPose();
     createViewMtx();
-    JMath::gekko_ps_copy12(&getCurrentCameraMan()->mMatrix, MR::getCameraInvViewMtx());
+    getCurrentCameraMan()->mMatrix.setInline(MR::getCameraInvViewMtx());
     mPoseParam2->copyFrom(*getCurrentCameraMan()->mPoseParam);
     calcSubjective();
     mShaker->movement();
@@ -375,8 +378,7 @@ void CameraDirector::startEvent(s32 zoneID, const char* pName, const CameraTarge
 
             if (getCurrentCameraMan() == gameMan) {
                 mCameraManEvent->mPoseParam->copyFrom(*gameMan->mPoseParam);
-                TPos3f* invView = MR::getCameraInvViewMtx();
-                JMath::gekko_ps_copy12(&mCameraManEvent->mMatrix, invView);
+                mCameraManEvent->mMatrix.setInline(MR::getCameraInvViewMtx());
             }
         }
 
@@ -395,8 +397,7 @@ void CameraDirector::endEvent(s32 zoneID, const char* pName, bool a3, s32 a4) {
 
             if (!mViewInterpolator->_9 && a3 && getCurrentCameraMan() == mCameraManGame) {
                 mCameraManGame->mPoseParam->copyFrom(*mPoseParam1);
-                TPos3f* invView = MR::getCameraInvViewMtx();
-                JMath::gekko_ps_copy12(&mCameraManGame->mMatrix, invView);
+                mCameraManGame->mMatrix.setInline(MR::getCameraInvViewMtx());
             }
 
             mViewInterpolator->_A = true;
