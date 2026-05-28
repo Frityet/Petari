@@ -59,6 +59,7 @@ private:
     std::vector< std::wstring > mIconNames;
     FileSelectIconID mProhibitedIcon;
     bool mHasProhibitedIcon = false;
+    s32 mCurrentPageStart = 0;
     s32 mSelectedIndex = 0;
     nw4r::lyt::TexMap* mSelectedTexMap = nullptr;
 };

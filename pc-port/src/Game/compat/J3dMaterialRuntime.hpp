@@ -71,6 +71,8 @@ namespace smgpc::game {
     };
 
     [[nodiscard]] std::optional< std::uint8_t > j3d_tex_matrix_slot_from_gx_matrix(std::uint8_t matrix);
+    [[nodiscard]] J3dTexMatrixSummary j3d_apply_projmap_effect_matrix(J3dTexMatrixSummary tex_matrix,
+                                                                       const J3dMatrix3x4& projmap_effect_matrix);
     [[nodiscard]] std::vector< J3dMaterialTexturePass > j3d_material_texture_passes(const J3dMaterialSummary& material);
     [[nodiscard]] std::optional< J3dMaterialTexturePass > j3d_representative_texture_pass(const J3dMaterialSummary& material);
     [[nodiscard]] std::optional< J3dComposedMaterialTexture > j3d_try_compose_material_texture(const J3dMaterialSummary& material,

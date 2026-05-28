@@ -8,6 +8,7 @@
 #include <iostream>
 #include <span>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 #include <system_error>
 
@@ -63,13 +64,35 @@ void write_texture_png(const smgpc::render::capture::IScreenshotService &screens
 
 }  // namespace
 
-int main() try {
+int main(int argc, char** argv) try {
+    const auto screenshot_service = smgpc::render::capture::create_png_screenshot_service();
+
+    if (argc == 3) {
+        const auto archive_path = std::filesystem::path(argv[1]);
+        const auto texture_output_root = std::filesystem::path(argv[2]);
+        const auto archive = smgpc::game::RarcArchive::from_file(archive_path);
+
+        for (const auto& entry : archive.entries()) {
+            if (!ends_with(entry.path, ".tpl")) {
+                continue;
+            }
+
+            auto file_name = std::filesystem::path(entry.path).filename();
+            file_name.replace_extension(".png");
+            const auto texture = smgpc::game::decode_tpl_texture(archive.file_data(entry));
+            const auto texture_output = texture_output_root / file_name;
+            write_texture_png(*screenshot_service, texture_output, texture);
+            std::cout << texture_output << '\n';
+        }
+
+        return 0;
+    }
+
     const auto root = disc_files_root();
     const auto title_logo_archive = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
     const auto title_logo_texture = smgpc::game::decode_tpl_texture(title_logo_archive.file_data("timg/mytitlelogokor.tpl"));
     const auto output = pc_port_root() / ".cache" / "decoded-title-logo.png";
 
-    const auto screenshot_service = smgpc::render::capture::create_png_screenshot_service();
     write_texture_png(*screenshot_service, output, title_logo_texture);
     std::cout << output << '\n';
 

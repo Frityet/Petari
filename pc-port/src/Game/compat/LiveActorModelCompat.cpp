@@ -15,24 +15,8 @@ namespace {
         return lower;
     }
 
-    [[nodiscard]] std::string base_name(std::string_view path) {
-        const auto slash = path.find_last_of('/');
-        if (slash == std::string_view::npos) {
-            return std::string(path);
-        }
-
-        return std::string(path.substr(slash + 1U));
-    }
-
     [[nodiscard]] bool ends_with_lower(std::string_view value, std::string_view suffix) {
         return lower_copy(value).ends_with(suffix);
-    }
-
-    [[nodiscard]] const smgpc::game::RarcEntry *find_entry_by_basename(const smgpc::game::RarcArchive &archive, std::string_view name) {
-        const auto requested = lower_copy(name);
-        const auto it =
-            std::ranges::find_if(archive.entries(), [&requested](const auto &entry) { return lower_copy(base_name(entry.path)) == requested; });
-        return it == archive.entries().end() ? nullptr : &*it;
     }
 
     [[nodiscard]] const smgpc::game::RarcEntry *find_first_entry_with_suffix(const smgpc::game::RarcArchive &archive, std::string_view suffix) {
@@ -118,6 +102,10 @@ void LiveActorModelCompat::startBtk(std::string_view) {
     applyStartedAnimations();
 }
 
+void LiveActorModelCompat::setProjmapEffectMatrix(const smgpc::game::J3dMatrix3x4 &matrix) {
+    mProjmapEffectMatrix = matrix;
+}
+
 void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const smgpc::game::CameraPoseCompat &camera_pose,
                                 const smgpc::game::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass) {
     ensureLoaded(renderer);
@@ -136,6 +124,7 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
         options.translucent_filter = true;
         break;
     }
+    options.projmap_effect_matrix = mProjmapEffectMatrix;
 #ifndef NDEBUG
     if (debug_model_filter_matches(mModelArcName)) {
         options.material_filter = debug_environment("SMGPC_J3D_MATERIAL_FILTER");
@@ -228,12 +217,12 @@ void LiveActorModelCompat::applyStartedAnimations() {
 
 const smgpc::game::RarcEntry *LiveActorModelCompat::findModelEntry(const smgpc::game::RarcArchive &archive) const {
     const auto requested_bdl = lower_copy(mModelArcName) + ".bdl";
-    if (const auto *entry = find_entry_by_basename(archive, requested_bdl); entry != nullptr) {
+    if (const auto *entry = archive.find_by_basename(requested_bdl); entry != nullptr) {
         return entry;
     }
 
     const auto requested_bmd = lower_copy(mModelArcName) + ".bmd";
-    if (const auto *entry = find_entry_by_basename(archive, requested_bmd); entry != nullptr) {
+    if (const auto *entry = archive.find_by_basename(requested_bmd); entry != nullptr) {
         return entry;
     }
 
@@ -246,7 +235,7 @@ const smgpc::game::RarcEntry *LiveActorModelCompat::findModelEntry(const smgpc::
 
 std::optional<smgpc::game::J3dBckAnimationSummary> LiveActorModelCompat::findBckAnimation(const smgpc::game::RarcArchive &archive) const {
     const auto requested = lower_copy(mModelArcName) + ".bck";
-    auto *entry = find_entry_by_basename(archive, requested);
+    auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         entry = find_first_entry_with_suffix(archive, ".bck");
     }
@@ -259,7 +248,7 @@ std::optional<smgpc::game::J3dBckAnimationSummary> LiveActorModelCompat::findBck
 
 std::optional<smgpc::game::J3dBtkAnimationSummary> LiveActorModelCompat::findBtkAnimation(const smgpc::game::RarcArchive &archive) const {
     const auto requested = lower_copy(mModelArcName) + ".btk";
-    auto *entry = find_entry_by_basename(archive, requested);
+    auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         entry = find_first_entry_with_suffix(archive, ".btk");
     }
@@ -272,7 +261,7 @@ std::optional<smgpc::game::J3dBtkAnimationSummary> LiveActorModelCompat::findBtk
 
 std::optional<smgpc::game::J3dBrkAnimationSummary> LiveActorModelCompat::findBrkAnimation(const smgpc::game::RarcArchive &archive) const {
     const auto requested = lower_copy(mBrkName.empty() ? std::string_view{mModelArcName} : std::string_view{mBrkName}) + ".brk";
-    auto *entry = find_entry_by_basename(archive, requested);
+    auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         entry = find_first_entry_with_suffix(archive, ".brk");
     }

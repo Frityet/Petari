@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <map>
 #include <memory>
 #include <optional>
 #include <span>
@@ -34,7 +35,7 @@ namespace smgpc::game {
             std::string model_name;
             std::uint64_t frame_index = 0U;
             std::string draw_pass;
-            J3dRendererPacketState state{};
+            J3dRendererPacketState state = {};
         };
 
         struct RenderTextureBindingTrace {
@@ -61,7 +62,7 @@ namespace smgpc::game {
             bool alpha_compare_enabled = false;
             bool blend_enabled = false;
             render::CullMode cull_mode = render::CullMode::None;
-            std::vector<RenderTextureBindingTrace> texture_bindings{};
+            std::vector<RenderTextureBindingTrace> texture_bindings = {};
         };
 #endif
 
@@ -92,6 +93,16 @@ namespace smgpc::game {
             float x = 0.0F;
             float y = 0.0F;
             bool valid = false;
+        };
+
+        struct HostInputTraceState {
+            std::uint64_t frame_index = 0U;
+            std::uint32_t raw_hold_mask = 0U;
+            std::uint32_t effective_hold_mask = 0U;
+            render::InputPointerState raw_pointer = {};
+            render::InputPointerState effective_pointer = {};
+            bool debug_button_script_applied = false;
+            bool debug_pointer_script_applied = false;
         };
 #endif
 
@@ -128,6 +139,7 @@ namespace smgpc::game {
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
         [[nodiscard]] std::span<const LayoutRuntimePacketTrace> layout_packet_trace() const;
         [[nodiscard]] std::span<const SemanticTraceEvent> semantic_trace_events() const;
+        [[nodiscard]] const HostInputTraceState &host_input_trace() const;
         [[nodiscard]] bool should_record_j3d_packet_trace() const;
         [[nodiscard]] bool should_record_render_packet_trace() const;
 #endif
@@ -151,6 +163,8 @@ namespace smgpc::game {
         [[nodiscard]] const WipeService &scene_wipe() const;
         [[nodiscard]] WipeService &system_wipe();
         [[nodiscard]] const WipeService &system_wipe() const;
+        [[nodiscard]] ImageEffectService &image_effects();
+        [[nodiscard]] const ImageEffectService &image_effects() const;
         [[nodiscard]] StarPointerService &star_pointer();
         [[nodiscard]] const StarPointerService &star_pointer() const;
         [[nodiscard]] bool sample_star_pointer_target(const LiveActor &actor, bool check_z);
@@ -184,6 +198,12 @@ namespace smgpc::game {
         void stop_stage_bgm(s32 fade_frames);
         void set_stage_bgm_state(s32 state, u32 change_frames);
         void start_system_sound(std::string_view name);
+        void stop_system_sound(std::string_view name, u32 delay_frames);
+        void start_system_level_sound(std::string_view name);
+        void submit_level_sound();
+        void permit_level_sound();
+        void start_atmosphere_sound(std::string_view name);
+        void start_system_me(std::string_view name);
         void start_cs_sound(std::string_view name);
         void register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                                     std::string_view resource_group_name, bool sort_enabled);
@@ -219,6 +239,8 @@ namespace smgpc::game {
 #ifndef NDEBUG
         void emit_star_pointer_target_trace_events();
 #endif
+        void refresh_effect_host_bindings();
+        void refresh_effect_host_binding(std::string_view host_name);
 
         logging::ILogger &_logger;
         render::IWindowService &_window_service;
@@ -229,6 +251,7 @@ namespace smgpc::game {
         EffectService _effects;
         WipeService _scene_wipe;
         WipeService _system_wipe;
+        ImageEffectService _image_effects;
         StarPointerService _star_pointer;
         CameraSystemService _camera_system;
         PlayerSystemService _player_system;
@@ -244,25 +267,28 @@ namespace smgpc::game {
         std::unique_ptr<CaptureScreenActor> _capture_screen_camera_actor;
         std::unique_ptr<SceneLifecycleService> _scene_lifecycle;
         SceneScheduler _scheduler;
+        std::map<std::string, LiveActor *, std::less<>> _effect_live_actor_hosts;
+        std::map<std::string, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;
+        std::map<std::string, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
         std::uint64_t _frame_index = 0;
-        std::optional<CameraPoseCompat> _scene_camera_pose{};
-        std::optional<CameraPoseCompat> _last_camera_pose{};
-        std::optional<GxPixelUpdateState> _j3d_pixel_update_state{};
-        std::vector<render::CopyEvent> _copy_events{};
+        std::optional<CameraPoseCompat> _scene_camera_pose = {};
+        std::optional<CameraPoseCompat> _last_camera_pose = {};
+        std::optional<GxPixelUpdateState> _j3d_pixel_update_state = {};
+        std::vector<render::CopyEvent> _copy_events = {};
         std::string _current_stage_name;
         std::string _current_sequence_scene_name = "Game";
         std::string _next_sequence_scene_name;
 #ifndef NDEBUG
-        std::vector<J3dRuntimePacketTrace> _j3d_packet_trace{};
-        std::vector<LayoutRuntimePacketTrace> _layout_packet_trace{};
-        std::vector<SemanticTraceEvent> _semantic_trace_events{};
-        std::optional<std::uint64_t> _j3d_packet_trace_frame{};
-        std::optional<std::uint64_t> _hold_title_combo_frame{};
-        std::vector<DebugWpadButtonScriptSpan> _debug_wpad_button_script{};
-        std::vector<DebugWpadPointerScriptSpan> _debug_wpad_pointer_script{};
+        std::vector<J3dRuntimePacketTrace> _j3d_packet_trace = {};
+        std::vector<LayoutRuntimePacketTrace> _layout_packet_trace = {};
+        std::vector<SemanticTraceEvent> _semantic_trace_events = {};
+        HostInputTraceState _host_input_trace = {};
+        std::optional<std::uint64_t> _j3d_packet_trace_frame = {};
+        std::vector<DebugWpadButtonScriptSpan> _debug_wpad_button_script = {};
+        std::vector<DebugWpadPointerScriptSpan> _debug_wpad_pointer_script = {};
         std::uint64_t _next_semantic_trace_event_index = 0U;
         std::size_t _next_star_pointer_target_trace_event_index = 0U;
-        bool _emitted_title_combo_held_event = false;
+        bool _emitted_wpad_buttons_held_event = false;
 #endif
     };
 

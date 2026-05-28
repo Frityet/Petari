@@ -6,6 +6,7 @@ local function add_smgpc_test_target(name, main_file, suite_file, test_name, tes
         add_files(main_file, suite_file)
         add_headerfiles("TestSupport.hpp", "TestSuites.hpp")
         add_deps {
+            "smg-pc-app",
             "smg-pc-game",
             "smg-pc-render"
         }
@@ -29,6 +30,7 @@ target("smg-pc-compat-tests")
     }
     add_headerfiles("TestSupport.hpp", "TestSuites.hpp")
     add_deps {
+        "smg-pc-app",
         "smg-pc-game",
         "smg-pc-render"
     }

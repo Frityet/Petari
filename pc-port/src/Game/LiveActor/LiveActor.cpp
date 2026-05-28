@@ -42,6 +42,10 @@ void LiveActor::movement() {
 }
 
 void LiveActor::calcAnim() {
+    if (mModel != nullptr) {
+        calcAndSetBaseMtx();
+    }
+
     if (!mBrkActive || mBrkCtrl.mRate == 0.0F) {
         return;
     }
@@ -163,6 +167,12 @@ void LiveActor::loadActorLight() const {
 
 void LiveActor::setBaseMatrix(const smgpc::game::J3dMatrix3x4& matrix) {
     mBaseMatrix = matrix;
+}
+
+void LiveActor::setProjmapEffectMatrix(const smgpc::game::J3dMatrix3x4& matrix) {
+    if (mModel != nullptr) {
+        mModel->setProjmapEffectMatrix(matrix);
+    }
 }
 
 void LiveActor::drawModel(smgpc::render::IRendererEngine& renderer, const smgpc::game::CameraPoseCompat& camera_pose, std::uint64_t frame,

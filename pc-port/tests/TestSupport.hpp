@@ -150,10 +150,6 @@ namespace smgpc::tests {
             return _pointer;
         }
 
-        void set_title_combo(bool is_pressed) {
-            set_core_buttons(is_pressed, is_pressed);
-        }
-
         void set_core_buttons(bool hold_a, bool hold_b) {
             set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, hold_a);
             set_input_pressed(smgpc::render::InputButton::CORE_PAD_B, hold_b);
@@ -207,17 +203,28 @@ namespace smgpc::tests {
                 throw std::runtime_error("recording renderer texture upload size mismatch");
             }
             ++texture_count;
-            return {.value = next_texture++};
+            auto handle = smgpc::render::TextureHandle{.value = next_texture++};
+            uploaded_textures.push_back(UploadedTexture{
+                .handle = handle,
+                .width = width,
+                .height = height,
+                .rgba = std::vector<std::uint8_t>(rgba.begin(), rgba.end()),
+            });
+            return handle;
         }
 
         void destroy_texture(smgpc::render::TextureHandle) override {
         }
 
-        void submit_textured_quad(smgpc::render::TextureHandle texture, const smgpc::render::TexturedQuad2D &) override {
+        void submit_textured_quad(smgpc::render::TextureHandle texture, const smgpc::render::TexturedQuad2D &quad) override {
             if (!texture.is_valid()) {
                 throw std::runtime_error("recording renderer should receive valid quad texture handles");
             }
             ++quad_count;
+            textured_quads.push_back(TexturedQuad{
+                .texture = texture,
+                .quad = quad,
+            });
         }
 
         void submit_textured_triangles(smgpc::render::TextureHandle texture, const smgpc::render::TexturedTriangleBatch2D &batch) override {
@@ -255,6 +262,7 @@ namespace smgpc::tests {
             last_gx_material_depth_write = batch.depth_write;
             last_gx_material_depth_compare = batch.depth_compare;
             last_gx_material_primitive_topology = batch.primitive_topology;
+            last_gx_material_vertices.assign(batch.vertices.begin(), batch.vertices.end());
             last_gx_material_color_inputs.fill({});
             last_gx_material_stage_konst_colors.fill({});
             for (auto i = std::size_t{}; i < batch.tev_stages.size() && i < last_gx_material_color_inputs.size(); ++i) {
@@ -287,6 +295,18 @@ namespace smgpc::tests {
             return {.width = 640U, .height = 456U};
         }
 
+        struct UploadedTexture {
+            smgpc::render::TextureHandle handle = {};
+            std::uint16_t width = 0U;
+            std::uint16_t height = 0U;
+            std::vector<std::uint8_t> rgba = {};
+        };
+
+        struct TexturedQuad {
+            smgpc::render::TextureHandle texture = {};
+            smgpc::render::TexturedQuad2D quad = {};
+        };
+
         std::uint32_t next_texture = 1U;
         std::size_t texture_count = 0U;
         std::size_t quad_count = 0U;
@@ -308,12 +328,15 @@ namespace smgpc::tests {
         bool last_gx_material_depth_test = false;
         bool last_gx_material_depth_write = false;
         smgpc::render::DepthCompare last_gx_material_depth_compare = smgpc::render::DepthCompare::LessEqual;
+        std::vector<smgpc::render::GxMaterialVertex2D> last_gx_material_vertices{};
         bool saw_gx_material_two_stage_batch = false;
         bool saw_gx_material_texture_stage_one = false;
         bool saw_gx_material_nonzero_initial_register = false;
         std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_color_inputs{};
         std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_stage_konst_colors{};
         smgpc::render::CullMode last_triangle_cull_mode = smgpc::render::CullMode::None;
+        std::vector<UploadedTexture> uploaded_textures = {};
+        std::vector<TexturedQuad> textured_quads = {};
     };
 
     class SchedulerProbeObj final : public NameObj {
@@ -494,29 +517,6 @@ namespace smgpc::tests {
         for (std::size_t i = 0; i < magic.size(); ++i) {
             require(data[i] == static_cast<std::uint8_t>(magic[i]), "unexpected magic");
         }
-    }
-
-    [[nodiscard]] inline std::string lower_copy(std::string_view value) {
-        auto lower = std::string(value);
-        std::ranges::transform(lower, lower.begin(), [](unsigned char character) { return static_cast<char>(std::tolower(character)); });
-        return lower;
-    }
-
-    [[nodiscard]] inline std::string base_name(std::string_view path) {
-        const auto slash = path.find_last_of('/');
-        if (slash == std::string_view::npos) {
-            return std::string(path);
-        }
-
-        return std::string(path.substr(slash + 1U));
-    }
-
-    [[nodiscard]] inline const smgpc::game::RarcEntry *find_entry_by_basename(const smgpc::game::RarcArchive &archive, std::string_view name) {
-        const auto requested = lower_copy(name);
-        const auto it =
-            std::ranges::find_if(archive.entries(), [&requested](const auto &entry) { return lower_copy(base_name(entry.path)) == requested; });
-
-        return it == archive.entries().end() ? nullptr : &(*it);
     }
 
     using RegisteredTestFunction = void (*)();

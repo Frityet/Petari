@@ -1,80 +1,26 @@
 #include "Game/compat/NameObjFactoryCompat.hpp"
 
-#include "Game/Demo/PrologueDirector.hpp"
-#include "Game/Map/FileSelector.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjFactory.hpp"
 
-#include <array>
 #include <stdexcept>
 #include <string>
 
 namespace smgpc::game {
-    namespace {
-
-        using Creator = std::unique_ptr<NameObj> (*)(const char *);
-
-        struct FactoryEntry {
-            std::string_view object_name;
-            Creator creator = nullptr;
-        };
-
-        template <typename T>
-        [[nodiscard]] std::unique_ptr<NameObj> create_typed_name_obj(const char *name) {
-            return std::make_unique<T>(name);
-        }
-
-        constexpr auto FACTORY_ENTRIES = std::array{
-            FactoryEntry{
-                .object_name = "FileSelector",
-                .creator = create_typed_name_obj<FileSelector>,
-            },
-            FactoryEntry{
-                .object_name = "PrologueDirector",
-                .creator = create_typed_name_obj<PrologueDirector>,
-            },
-        };
-
-        [[nodiscard]] const FactoryEntry *find_entry(std::string_view object_name) {
-            for (const auto &entry : FACTORY_ENTRIES) {
-                if (entry.object_name == object_name) {
-                    return &entry;
-                }
-            }
-
-            return nullptr;
-        }
-
-    }  // namespace
-
     bool can_create_name_obj(std::string_view object_name) {
-        return find_entry(object_name) != nullptr;
+        const auto name = std::string(object_name);
+        return NameObjFactory::canCreate(name.c_str());
     }
 
     std::unique_ptr<NameObj> create_name_obj(std::string_view object_name, std::string_view actor_name) {
-        const auto *entry = find_entry(object_name);
-        if (entry == nullptr || entry->creator == nullptr) {
+        const auto object = std::string(object_name);
+        const auto creator = NameObjFactory::getCreator(object.c_str());
+        if (creator == nullptr) {
             throw std::runtime_error("Unsupported NameObj factory request: " + std::string(object_name));
         }
 
         const auto name = std::string(actor_name);
-        return entry->creator(name.c_str());
+        return std::unique_ptr<NameObj>(creator(name.c_str()));
     }
-
-#ifndef NDEBUG
-    std::optional<FileSelectStageState> file_select_stage_state(const NameObj &object) {
-        const auto *file_selector = dynamic_cast<const FileSelector *>(&object);
-        if (file_selector == nullptr) {
-            return std::nullopt;
-        }
-
-        return FileSelectStageState{
-            .title_active = file_selector->isTitleActive(),
-            .title_started = file_selector->isTitleStarted(),
-            .title_ended = file_selector->isTitleEnded(),
-            .file_select_start = file_selector->isFileSelectStart(),
-            .file_select_started = file_selector->isFileSelectStarted(),
-            .demo_start_wait = file_selector->didStartDemoStartWait(),
-        };
-    }
-#endif
 
 }  // namespace smgpc::game

@@ -198,6 +198,7 @@ void FileSelectInfo::reflectInfo() {
     }
 }
 
+#ifndef NDEBUG
 s32 FileSelectInfo::getFileNumber() const {
     return mNumber;
 }
@@ -214,7 +215,6 @@ bool FileSelectInfo::isSelectedMario() const {
     return mIsSelectedMario;
 }
 
-#ifndef NDEBUG
 s32 FileSelectInfo::getMissNum() const {
     return mMissNum;
 }

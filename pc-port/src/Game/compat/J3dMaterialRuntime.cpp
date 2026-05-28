@@ -238,6 +238,48 @@ namespace smgpc::game {
             return mode == 8U || mode == 9U || mode == 11U;
         }
 
+        [[nodiscard]] bool uses_projmap_effect_matrix(const J3dTexMatrixSummary &tex_matrix) {
+            return static_cast<std::uint8_t>(tex_matrix.info & 0x3fU) == 8U;
+        }
+
+        [[nodiscard]] J3dMatrix3x4 effect_matrix_top3(const std::array<float, 16U> &matrix) {
+            return J3dMatrix3x4{{
+                matrix[0U],
+                matrix[1U],
+                matrix[2U],
+                matrix[3U],
+                matrix[4U],
+                matrix[5U],
+                matrix[6U],
+                matrix[7U],
+                matrix[8U],
+                matrix[9U],
+                matrix[10U],
+                matrix[11U],
+            }};
+        }
+
+        [[nodiscard]] std::array<float, 16U> effect_matrix_from_top3(const J3dMatrix3x4 &matrix) {
+            return {
+                matrix.m[0U],
+                matrix.m[1U],
+                matrix.m[2U],
+                matrix.m[3U],
+                matrix.m[4U],
+                matrix.m[5U],
+                matrix.m[6U],
+                matrix.m[7U],
+                matrix.m[8U],
+                matrix.m[9U],
+                matrix.m[10U],
+                matrix.m[11U],
+                0.0F,
+                0.0F,
+                0.0F,
+                1.0F,
+            };
+        }
+
         [[nodiscard]] const J3dTevOrderSummary *find_tev_order(const J3dMaterialSummary &material, std::uint8_t stage_index) {
             const auto it = std::ranges::find_if(material.tev_orders, [stage_index](const auto &order) { return order.stage == stage_index; });
             return it == material.tev_orders.end() ? nullptr : &*it;
@@ -791,6 +833,14 @@ namespace smgpc::game {
         }
 
         return static_cast<std::uint8_t>(offset / 3U);
+    }
+
+    J3dTexMatrixSummary j3d_apply_projmap_effect_matrix(J3dTexMatrixSummary tex_matrix, const J3dMatrix3x4 &projmap_effect_matrix) {
+        if (uses_projmap_effect_matrix(tex_matrix)) {
+            tex_matrix.effect_matrix =
+                effect_matrix_from_top3(concat_affine_3x4(effect_matrix_top3(tex_matrix.effect_matrix), projmap_effect_matrix));
+        }
+        return tex_matrix;
     }
 
     std::vector<J3dMaterialTexturePass> j3d_material_texture_passes(const J3dMaterialSummary &material) {

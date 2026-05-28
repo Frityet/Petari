@@ -466,6 +466,27 @@ namespace smgpc::game {
             };
         }
 
+        void apply_projmap_effect_matrix(std::optional<J3dTexMatrixSummary> &matrix, const J3dModelRendererDrawOptions &options) {
+            if (matrix.has_value() && options.projmap_effect_matrix.has_value()) {
+                matrix = j3d_apply_projmap_effect_matrix(*matrix, *options.projmap_effect_matrix);
+            }
+        }
+
+        void apply_projmap_effect_matrix(GXTexMatrixState &matrix, const J3dModelRendererDrawOptions &options) {
+            if (!options.projmap_effect_matrix.has_value()) {
+                return;
+            }
+
+            const auto effective_matrix = j3d_apply_projmap_effect_matrix(j3d_tex_matrix_from_gx(matrix), *options.projmap_effect_matrix);
+            matrix.effect_matrix = effective_matrix.effect_matrix;
+        }
+
+        void apply_projmap_effect_matrices(std::vector<J3dMaterialTexturePass> &passes, const J3dModelRendererDrawOptions &options) {
+            for (auto &pass : passes) {
+                apply_projmap_effect_matrix(pass.tex_matrix, options);
+            }
+        }
+
         [[nodiscard]] std::vector<J3dMaterialTexturePass> gx_material_texture_passes(const GXMaterialState &state) {
             auto passes = std::vector<J3dMaterialTexturePass>{};
             passes.reserve(state.tev_orders.size());
@@ -1536,6 +1557,8 @@ namespace smgpc::game {
                                 mesh.material = material;
                                 mesh.material_passes = passes;
                                 mesh.packet_mode = J3dRendererPacketMode::CpuTevPerVertex;
+                                mesh.packet_mode_reason = "cpu_tev_lit_no_texture_passes";
+                                mesh.packet_mode_fallback = true;
                                 mesh.material_color = material.material_colors[0U];
                                 mesh.pass_order = 0U;
                                 mesh.cull_mode = cull_mode_from_gx_material_state(material);
@@ -1577,6 +1600,7 @@ namespace smgpc::game {
                         mesh.material = material;
                         mesh.material_passes = passes;
                         mesh.packet_mode = J3dRendererPacketMode::ConstantMaterial;
+                        mesh.packet_mode_reason = "constant_material_no_texture_passes";
                         mesh.pass_order = 0U;
                         mesh.cull_mode = cull_mode_from_gx_material_state(material);
                         mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
@@ -1627,6 +1651,7 @@ namespace smgpc::game {
                             ++mesh.gx_tev_stage_count;
                         }
                         mesh.packet_mode = J3dRendererPacketMode::ShaderGxTev;
+                        mesh.packet_mode_reason = "shader_gx_tev_supported";
                         mesh.material_color = material.material_colors[0U];
                         mesh.pass_order = passes.front().stage;
                         mesh.cull_mode = cull_mode_from_gx_material_state(material);
@@ -1663,6 +1688,8 @@ namespace smgpc::game {
                                 mesh.material = material;
                                 mesh.material_passes = passes;
                                 mesh.packet_mode = J3dRendererPacketMode::ComposedMaterial;
+                                mesh.packet_mode_reason = "cpu_composed_multi_pass_or_indirect";
+                                mesh.packet_mode_fallback = true;
                                 mesh.pass_order = passes.front().stage;
                                 mesh.cull_mode = cull_mode_from_gx_material_state(material);
                                 if (passes.front().texture_index < geometry.textures.size()) {
@@ -1698,6 +1725,8 @@ namespace smgpc::game {
                                 mesh.material = material;
                                 mesh.material_passes = passes;
                                 mesh.packet_mode = J3dRendererPacketMode::CpuTevPerVertex;
+                                mesh.packet_mode_reason = "cpu_tev_multi_pass_or_indirect";
+                                mesh.packet_mode_fallback = true;
                                 mesh.material_color = material.material_colors[0U];
                                 mesh.pass_order = passes.front().stage;
                                 mesh.cull_mode = cull_mode_from_gx_material_state(material);
@@ -1756,6 +1785,8 @@ namespace smgpc::game {
                         mesh.material = material;
                         mesh.material_passes = passes;
                         mesh.packet_mode = J3dRendererPacketMode::TexturePass;
+                        mesh.packet_mode_reason = tev_baked ? "single_pass_cpu_tev_baked_texture" : "texture_pass_legacy_fallback";
+                        mesh.packet_mode_fallback = !tev_baked;
                         mesh.material_color = material_color;
                         mesh.pass_order = pass.stage;
                         mesh.cull_mode = cull_mode_from_gx_material_state(material);
@@ -1874,6 +1905,9 @@ namespace smgpc::game {
         for (const auto &mesh : _meshes) {
             auto state = packet_state_for_mesh(mesh, frame, scene_lights);
             state.gx_blend = gx_blend_with_draw_options(state.gx_blend, options);
+            for (auto &matrix : state.tex_matrices) {
+                apply_projmap_effect_matrix(matrix, options);
+            }
             packets.push_back(std::move(state));
         }
         return packets;
@@ -1892,6 +1926,7 @@ namespace smgpc::game {
         mesh.material_mode = 1U;
         mesh.draw_buffer_opaque = true;
         mesh.packet_mode = J3dRendererPacketMode::ConstantBackdrop;
+        mesh.packet_mode_reason = "constant_backdrop";
         mesh.texture = texture;
         mesh.vertices = {
             vertex(-half_width, -half_height, 0.0F, 0.0F, color),
@@ -1926,6 +1961,8 @@ namespace smgpc::game {
             .draw_packet_triangle_count = mesh.matrix_group.triangle_count,
             .pass_order = mesh.pass_order,
             .packet_mode = mesh.packet_mode,
+            .packet_mode_reason = mesh.packet_mode_reason,
+            .packet_mode_fallback = mesh.packet_mode_fallback,
             .material_pass_count = mesh.material_passes.size(),
             .shader_texture_stage_count = mesh.gx_texture_stage_count,
             .source_vertex_count = mesh.source_vertices.size(),
@@ -2099,6 +2136,7 @@ namespace smgpc::game {
                     effective_tex_matrix->translate_t = srt->translate_t;
                 }
             }
+            apply_projmap_effect_matrix(effective_tex_matrix, options);
             const auto *tex_matrix = effective_tex_matrix.has_value() ? &*effective_tex_matrix : nullptr;
             const auto *fallback_transform = mesh.joint_transform.has_value() ? &*mesh.joint_transform : nullptr;
             const auto *envelopes = _envelopes.has_value() ? &*_envelopes : nullptr;
@@ -2144,6 +2182,7 @@ namespace smgpc::game {
                         }
                     }
                 }
+                apply_projmap_effect_matrices(effective_passes, options);
 
                 auto &gx_vertices = scratch.gx_vertices;
                 apply_effective_tex_coord_scales(effective_passes, effective_material.gx_state, _textures);
@@ -2191,6 +2230,7 @@ namespace smgpc::game {
                         }
                     }
                 }
+                apply_projmap_effect_matrices(effective_passes, options);
 
                 apply_effective_tex_coord_scales(effective_passes, effective_material.gx_state, _textures);
                 if (effective_passes.empty()) {

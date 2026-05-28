@@ -221,6 +221,7 @@ public:
     [[nodiscard]] bool isCopyRejectStart() const;
     [[nodiscard]] bool isCopyReject() const;
     [[nodiscard]] bool isMiiWait() const;
+    [[nodiscard]] bool isMiiSelectStartFirst() const;
     [[nodiscard]] bool isMiiSelectStart() const;
     [[nodiscard]] bool isMiiSelect() const;
     [[nodiscard]] bool isMiiCancel() const;
@@ -283,6 +284,7 @@ private:
     s32 mSelectedFileNo = 1;
     s32 mCopySourceFileNo = 1;
     s32 mStageBgmState = 0;
+    bool mIsFirstMiiSelection = false;
 #ifndef NDEBUG
     // SMGPC temporary debug observer state; not part of release game code.
     bool mTitleStarted = false;

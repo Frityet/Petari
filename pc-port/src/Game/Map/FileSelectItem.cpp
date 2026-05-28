@@ -482,6 +482,7 @@ bool FileSelectItem::isPointing() const {
     return mIsPointing;
 }
 
+#ifndef NDEBUG
 bool FileSelectItem::wasPointed() const {
     return mWasPointed;
 }
@@ -501,6 +502,7 @@ s32 FileSelectItem::getTurnToFrontFrameCount() const {
 const TVec3f& FileSelectItem::getPosition() const {
     return mPosition;
 }
+#endif
 
 const smgpc::game::CameraParamVec3& FileSelectItem::getBasePosition() const {
     return mBasePosition;

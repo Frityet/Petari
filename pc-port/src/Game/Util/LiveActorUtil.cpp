@@ -11,10 +11,41 @@
 ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(LiveActor* pActor) : mActor(pActor) {
 }
 
+namespace {
+    smgpc::game::J3dMatrix3x4 projmap_base_transform(const LiveActor& actor) {
+        return smgpc::game::j3d_remove_matrix_scale(actor.getBaseMatrix(), actor.mScale.x, actor.mScale.y, actor.mScale.z);
+    }
+}  // namespace
+
 void ProjmapEffectMtxSetter::updateMtxUseBaseMtx() {
     if (mActor == nullptr) {
         return;
     }
+
+    mActor->setProjmapEffectMatrix(smgpc::game::j3d_invert_affine_matrix(projmap_base_transform(*mActor)));
+}
+
+void ProjmapEffectMtxSetter::updateMtxUseBaseMtxWithLocalOffset(const TVec3f& offset) {
+    if (mActor == nullptr) {
+        return;
+    }
+
+    const auto local_offset = smgpc::game::J3dMatrix3x4{{
+        1.0F,
+        0.0F,
+        0.0F,
+        offset.x,
+        0.0F,
+        1.0F,
+        0.0F,
+        offset.y,
+        0.0F,
+        0.0F,
+        1.0F,
+        offset.z,
+    }};
+    mActor->setProjmapEffectMatrix(
+        smgpc::game::j3d_invert_affine_matrix(smgpc::game::j3d_concat_matrix(projmap_base_transform(*mActor), local_offset)));
 }
 
 namespace MR {

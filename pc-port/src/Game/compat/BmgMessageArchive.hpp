@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <map>
 #include <optional>
@@ -11,6 +12,27 @@
 namespace smgpc::game {
 
     class RarcArchive;
+
+    struct BmgFormatArg {
+        enum class Type {
+            Number,
+            String,
+        };
+
+        [[nodiscard]] static BmgFormatArg number(std::int32_t value);
+        [[nodiscard]] static BmgFormatArg string(std::u16string_view value);
+
+        Type type = Type::Number;
+        std::int32_t number_value = 0;
+        std::u16string string_value;
+    };
+
+    struct BmgControlTag {
+        std::size_t raw_offset = 0U;
+        std::uint16_t size_bytes = 0U;
+        std::uint16_t type = 0U;
+        std::vector<std::uint16_t> payload_words = {};
+    };
 
     struct BmgMessageInfo {
         std::uint32_t text_offset = 0U;
@@ -28,7 +50,11 @@ namespace smgpc::game {
         BmgMessageInfo info{};
         std::u16string raw_text;
         std::u16string display_text;
+        std::vector<BmgControlTag> control_tags;
     };
+
+    [[nodiscard]] std::vector<BmgControlTag> bmg_control_tags(std::u16string_view raw_text);
+    [[nodiscard]] std::u16string format_bmg_text(std::u16string_view raw_text, std::span<const BmgFormatArg> args);
 
     class BmgMessageArchive final {
     public:

@@ -71,6 +71,7 @@ namespace NrvFileSelector {
     NEW_NERVE(FileSelectorNrvCopyRejectStart, FileSelector, CopyRejectStart);
     NEW_NERVE(FileSelectorNrvCopyReject, FileSelector, CopyReject);
     NEW_NERVE(FileSelectorNrvMiiWait, FileSelector, MiiWait);
+    NEW_NERVE(FileSelectorNrvMiiSelectStartFirst, FileSelector, MiiSelectStart);
     NEW_NERVE(FileSelectorNrvMiiSelectStart, FileSelector, MiiSelectStart);
     NEW_NERVE(FileSelectorNrvMiiSelect, FileSelector, MiiSelect);
     NEW_NERVE(FileSelectorNrvMiiCancel, FileSelector, MiiCancel);
@@ -1043,14 +1044,7 @@ void FileSelector::exeCreate() {
     if (!GameSequenceFunction::isActiveSaveDataHandleSequence()) {
         if (GameSequenceFunction::isSuccessSaveDataHandleSequence()) {
             restoreUserFile();
-            if (mSelectedItem != nullptr) {
-                const auto file_no = std::clamp(mSelectedItem->getFileNo(), 1, cItemCount);
-                auto icon_id = FileSelectIconID();
-                getIconId(&icon_id, file_no);
-                mSelectedItem->forceChange(icon_id, mAllComplete[static_cast< std::size_t >(file_no - 1)]);
-            }
-            clearPointing();
-            setNerve(&NrvFileSelector::FileSelectorNrvFileSelectStart::sInstance);
+            setNerve(&NrvFileSelector::FileSelectorNrvMiiSelectStartFirst::sInstance);
         } else {
             clearPointing();
             setNerve(&NrvFileSelector::FileSelectorNrvFileSelectStart::sInstance);
@@ -1337,12 +1331,20 @@ void FileSelector::exeMiiSelectStart() {
 #ifndef NDEBUG
         mMiiSelectStartStarted = true;
 #endif
-        if (mSelectedItem != nullptr && mMiiSelect != nullptr) {
-            auto icon_id = FileSelectIconID();
-            mSelectedItem->copyIconID(&icon_id);
-            mMiiSelect->prohibitIcon(icon_id);
-        } else if (mMiiSelect != nullptr) {
-            mMiiSelect->admitIcon();
+        if (mMiiSelect != nullptr) {
+            if (isNerve(&NrvFileSelector::FileSelectorNrvMiiSelectStartFirst::sInstance)) {
+                mIsFirstMiiSelection = true;
+                mMiiSelect->admitIcon();
+            } else {
+                mIsFirstMiiSelection = false;
+                if (mSelectedItem != nullptr) {
+                    auto icon_id = FileSelectIconID();
+                    mSelectedItem->copyIconID(&icon_id);
+                    mMiiSelect->prohibitIcon(icon_id);
+                } else {
+                    mMiiSelect->admitIcon();
+                }
+            }
         }
 
         if (mMiiSelect != nullptr) {
@@ -1365,7 +1367,7 @@ void FileSelector::exeMiiSelect() {
 #ifndef NDEBUG
         mMiiSelectStarted = true;
 #endif
-        if (mBackButton != nullptr && mBackButton->isHidden()) {
+        if (!mIsFirstMiiSelection && mBackButton != nullptr && mBackButton->isHidden()) {
             mBackButton->appear();
         }
     }
@@ -1424,7 +1426,7 @@ void FileSelector::exeMiiConfirm() {
         }
         const auto selected_name = icon_name_wide(selected_id);
         if (mSysInfoWindow != nullptr) {
-            mSysInfoWindow->appear(selected_id.isMii() ? "System_FileSelect013" : "System_FileSelect005", SysInfoWindow::Type_YesNo,
+            mSysInfoWindow->appear(mIsFirstMiiSelection ? "System_FileSelect013" : "System_FileSelect005", SysInfoWindow::Type_YesNo,
                                    SysInfoWindow::TextPos_Bottom, SysInfoWindow::MessageType_System);
             mSysInfoWindow->setYesNoSelectorSE("SE_SY_BUTTON_CURSOR_ON", "SE_SY_FILE_SEL_MII_CHANGE", "SE_SY_TALK_SELECT_NO");
         }
@@ -1441,6 +1443,8 @@ void FileSelector::exeMiiConfirm() {
         mSysInfoWindow->resetYesNoSelectorSE();
         if (mSysInfoWindow->isSelectedYes()) {
             setNerve(&NrvFileSelector::FileSelectorNrvMiiCreateWait::sInstance);
+        } else if (mIsFirstMiiSelection) {
+            setNerve(&NrvFileSelector::FileSelectorNrvMiiSelectStartFirst::sInstance);
         } else {
             setNerve(&NrvFileSelector::FileSelectorNrvMiiSelectStart::sInstance);
         }
@@ -1457,6 +1461,7 @@ void FileSelector::exeMiiCreateWait() {
             mMiiSelect->getSelectedID(&selected_id);
         }
         storeSetMiiIdUserFile(mSelectedFileNo, selected_id);
+        mIsFirstMiiSelection = false;
     }
 
     if (!GameSequenceFunction::isActiveSaveDataHandleSequence()) {
@@ -1511,7 +1516,8 @@ void FileSelector::exeMiiInfo() {
     }
 
     if (mSysInfoWindowMini != nullptr && MR::isDead(mSysInfoWindowMini.get())) {
-        setNerve(&NrvFileSelector::FileSelectorNrvMiiSelectStart::sInstance);
+        setNerve(mIsFirstMiiSelection ? static_cast< const Nerve* >(&NrvFileSelector::FileSelectorNrvMiiSelectStartFirst::sInstance) :
+                                        static_cast< const Nerve* >(&NrvFileSelector::FileSelectorNrvMiiSelectStart::sInstance));
     }
 }
 
@@ -1980,6 +1986,10 @@ bool FileSelector::isCopyReject() const {
 
 bool FileSelector::isMiiWait() const {
     return isNerve(&NrvFileSelector::FileSelectorNrvMiiWait::sInstance);
+}
+
+bool FileSelector::isMiiSelectStartFirst() const {
+    return isNerve(&NrvFileSelector::FileSelectorNrvMiiSelectStartFirst::sInstance);
 }
 
 bool FileSelector::isMiiSelectStart() const {

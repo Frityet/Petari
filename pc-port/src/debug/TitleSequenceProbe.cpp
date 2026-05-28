@@ -40,7 +40,7 @@ public:
         switch (button) {
         case smgpc::render::InputButton::CORE_PAD_A:
         case smgpc::render::InputButton::CORE_PAD_B:
-            return _hold_title_combo;
+            return _hold_core_ab;
         case smgpc::render::InputButton::CORE_PAD_UP:
         case smgpc::render::InputButton::CORE_PAD_DOWN:
         case smgpc::render::InputButton::CORE_PAD_LEFT:
@@ -57,12 +57,12 @@ public:
         }
     }
 
-    void set_title_combo(bool is_pressed) {
-        _hold_title_combo = is_pressed;
+    void set_core_ab_buttons(bool is_pressed) {
+        _hold_core_ab = is_pressed;
     }
 
 private:
-    bool _hold_title_combo = false;
+    bool _hold_core_ab = false;
 };
 
 [[nodiscard]] bool has_magic(std::span<const std::uint8_t> data, const char (&magic)[5]) {
@@ -117,7 +117,7 @@ private:
             .is_minimized = false,
         });
 
-        window.set_title_combo(frame >= kPressComboFrame);
+        window.set_core_ab_buttons(frame >= kPressComboFrame);
         title_sequence.updateNerve();
 
         if (!title_sequence.isActive()) {

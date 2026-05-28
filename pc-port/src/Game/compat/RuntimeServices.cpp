@@ -370,6 +370,23 @@ namespace smgpc::game {
             return primary_effect_texture(resource);
         }
 
+        [[nodiscard]] std::array<float, 3U> effect_host_translation(const std::array<float, 12U> &matrix) {
+            return {matrix[3U], matrix[7U], matrix[11U]};
+        }
+
+        [[nodiscard]] const char *effect_host_binding_source_name(EffectHostBindingSource source) {
+            switch (source) {
+            case EffectHostBindingSource::LiveActorBaseMatrix:
+                return "LiveActorBaseMatrix";
+            case EffectHostBindingSource::LayoutActorTransform:
+                return "LayoutActorTransform";
+            case EffectHostBindingSource::SimpleLayoutOrigin:
+                return "SimpleLayoutOrigin";
+            }
+
+            return "Unknown";
+        }
+
         [[nodiscard]] render::DepthCompare jpa_compare_from_config(std::uint8_t compare) {
             switch (compare & 0x07U) {
             case 0U:
@@ -755,16 +772,34 @@ namespace smgpc::game {
             throw std::runtime_error("Cannot read DVD file " + path.string());
         }
 
+        _file_read_trace.push_back(DvdFileReadTrace{
+            .requested_path = std::string(disc_path),
+            .resolved_path = path.generic_string(),
+            .byte_count = bytes.size(),
+        });
+
         return bytes;
     }
 
     RarcArchive &DvdFileSystemService::archive(std::string_view disc_path) {
-        return archive_for_path(resolve(disc_path));
+        return archive_for_path_with_request(resolve(disc_path), disc_path);
     }
 
     RarcArchive &DvdFileSystemService::archive_for_path(const std::filesystem::path &path) {
+        return archive_for_path_with_request(path, path.generic_string());
+    }
+
+    RarcArchive &DvdFileSystemService::archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path) {
         const auto key = archive_cache_key_for_path(path);
         if (auto it = _archives.find(key); it != _archives.end()) {
+            _archive_load_trace.push_back(DvdArchiveLoadTrace{
+                .requested_path = std::string(requested_path),
+                .resolved_path = key,
+                .cache_hit = true,
+                .load_count = archive_load_count_for_path(path),
+                .cached_archive_count = _archives.size(),
+                .resource_count = it->second->entries().size(),
+            });
             return *it->second;
         }
 
@@ -773,6 +808,14 @@ namespace smgpc::game {
         if (inserted) {
             ++_archive_load_counts[key];
         }
+        _archive_load_trace.push_back(DvdArchiveLoadTrace{
+            .requested_path = std::string(requested_path),
+            .resolved_path = key,
+            .cache_hit = false,
+            .load_count = archive_load_count_for_path(path),
+            .cached_archive_count = _archives.size(),
+            .resource_count = it->second->entries().size(),
+        });
 
         return *it->second;
     }
@@ -792,6 +835,19 @@ namespace smgpc::game {
 
     std::size_t DvdFileSystemService::cached_archive_count() const {
         return _archives.size();
+    }
+
+    std::span<const DvdFileReadTrace> DvdFileSystemService::file_read_trace() const {
+        return _file_read_trace;
+    }
+
+    std::span<const DvdArchiveLoadTrace> DvdFileSystemService::archive_load_trace() const {
+        return _archive_load_trace;
+    }
+
+    void DvdFileSystemService::clear_trace() {
+        _file_read_trace.clear();
+        _archive_load_trace.clear();
     }
 
     std::filesystem::path DvdFileSystemService::normalize_disc_path(std::string_view disc_path) const {
@@ -1100,6 +1156,30 @@ namespace smgpc::game {
         push_event(AudioEventKind::SystemSoundStart, name);
     }
 
+    void AudioEventService::stop_system_sound(std::string_view name, u32 delay_frames) {
+        push_event(AudioEventKind::SystemSoundStop, name, 0, 0, 0U, delay_frames);
+    }
+
+    void AudioEventService::start_system_level_sound(std::string_view name) {
+        push_event(AudioEventKind::SystemLevelSoundStart, name);
+    }
+
+    void AudioEventService::submit_level_sound() {
+        push_event(AudioEventKind::LevelSoundSubmit, {});
+    }
+
+    void AudioEventService::permit_level_sound() {
+        push_event(AudioEventKind::LevelSoundPermit, {});
+    }
+
+    void AudioEventService::start_atmosphere_sound(std::string_view name) {
+        push_event(AudioEventKind::AtmosphereSoundStart, name);
+    }
+
+    void AudioEventService::start_system_me(std::string_view name) {
+        push_event(AudioEventKind::SystemMEStart, name);
+    }
+
     void AudioEventService::start_controller_speaker_sound(std::string_view name) {
         push_event(AudioEventKind::ControllerSpeakerSoundStart, name);
     }
@@ -1128,13 +1208,15 @@ namespace smgpc::game {
         return _events;
     }
 
-    void AudioEventService::push_event(AudioEventKind kind, std::string_view name, s32 fade_frames, s32 state, u32 change_frames) {
+    void AudioEventService::push_event(AudioEventKind kind, std::string_view name, s32 fade_frames, s32 state, u32 change_frames,
+                                       u32 delay_frames) {
         _events.push_back(AudioEvent{
             .kind = kind,
             .name = std::string(name),
             .fade_frames = fade_frames,
             .state = state,
             .change_frames = change_frames,
+            .delay_frames = delay_frames,
             .frame_index = _frame_index,
         });
     }
@@ -1175,11 +1257,13 @@ namespace smgpc::game {
                 });
                 if (found == _active_effects.end()) {
                     auto emitters = create_emitters(resolved);
+                    auto binding = host_binding(host_name);
                     auto &active = _active_effects.emplace_back(ActiveEffectInstance{
                         .actor_name = std::string(host_name),
                         .effect_name = std::string(resource_group_name),
                         .start_frame_index = _frame_index,
                         .keeper = keeper,
+                        .host_binding = binding,
                         .resolved_resources = resolved,
                         .emitters = std::move(emitters),
                     });
@@ -1207,8 +1291,43 @@ namespace smgpc::game {
         }
     }
 
+    void EffectService::bind_host_transform(EffectKeeperHostKind host_kind, std::string_view host_name, EffectHostBindingSource source,
+                                            const std::array<float, 12U> &matrix, bool host_dead) {
+        if (host_name.empty()) {
+            return;
+        }
+
+        auto binding = EffectHostBinding{
+            .host_kind = host_kind,
+            .source = source,
+            .host_name = std::string(host_name),
+            .matrix = matrix,
+            .translation = effect_host_translation(matrix),
+            .host_dead = host_dead,
+            .frame_index = _frame_index,
+        };
+        _host_bindings[std::string(host_name)] = binding;
+        for (auto &active : _active_effects) {
+            if (active.actor_name == host_name) {
+                active.host_binding = binding;
+            }
+        }
+    }
+
+    void EffectService::unbind_host_transform(std::string_view host_name) {
+        if (const auto it = _host_bindings.find(host_name); it != _host_bindings.end()) {
+            _host_bindings.erase(it);
+        }
+        for (auto &active : _active_effects) {
+            if (active.actor_name == host_name) {
+                active.host_binding = std::nullopt;
+            }
+        }
+    }
+
     void EffectService::emit(std::string_view actor_name, std::string_view effect_name) {
         const auto keeper = registered_keeper(actor_name);
+        const auto binding = host_binding(actor_name);
         auto resolved = resolve(actor_name, effect_name);
         const auto found = std::ranges::find_if(_active_effects, [actor_name, effect_name](const auto &active) {
             return active.actor_name == actor_name && active.effect_name == effect_name;
@@ -1220,6 +1339,7 @@ namespace smgpc::game {
                 .effect_name = std::string(effect_name),
                 .start_frame_index = _frame_index,
                 .keeper = keeper,
+                .host_binding = binding,
                 .resolved_resources = resolved,
                 .emitters = std::move(emitters),
             });
@@ -1229,6 +1349,7 @@ namespace smgpc::game {
             }
         } else {
             found->keeper = keeper;
+            found->host_binding = binding;
             found->resolved_resources = resolved;
             found->emitters = create_emitters(found->resolved_resources);
             for (auto emitter_index = std::size_t{}; emitter_index < found->emitters.size() && emitter_index < found->resolved_resources.size();
@@ -1289,6 +1410,7 @@ namespace smgpc::game {
                     continue;
                 }
 
+                const auto host_translation = active.host_binding.has_value() ? active.host_binding->translation : std::array<float, 3U>{};
                 const auto *primary_texture = primary_effect_texture(resource);
                 const auto *child_texture = child_effect_texture(resource);
                 if (primary_texture == nullptr || child_texture == nullptr) {
@@ -1308,9 +1430,9 @@ namespace smgpc::game {
 
                     const auto half_size_x = base_size * particle.scale_x * 0.5F;
                     const auto half_size_y = base_size * particle.scale_y * 0.5F;
-                    const auto x = particle.x;
-                    const auto y = particle.y;
-                    const auto z = particle.z;
+                    const auto x = particle.x + host_translation[0U];
+                    const auto y = particle.y + host_translation[1U];
+                    const auto z = particle.z + host_translation[2U];
                     const auto alpha = static_cast<std::uint8_t>(std::clamp(particle.alpha, 0.0F, 1.0F) * 255.0F);
                     const auto color = std::array<std::uint8_t, 4U>{255U, 255U, 255U, alpha};
                     auto vertex_count = std::uint32_t{4U};
@@ -1412,6 +1534,15 @@ namespace smgpc::game {
                         .particle_id = particle.id,
                         .particle_age = particle.age,
                         .particle_lifetime = particle.lifetime,
+                        .host_binding_found = active.host_binding.has_value(),
+                        .host_binding_source = active.host_binding.has_value() ? effect_host_binding_source_name(active.host_binding->source) : "",
+                        .host_translation = host_translation,
+                        .particle_x = x,
+                        .particle_y = y,
+                        .particle_z = z,
+                        .particle_scale_x = particle.scale_x,
+                        .particle_scale_y = particle.scale_y,
+                        .particle_alpha = particle.alpha,
                         .live_particle_count = static_cast<std::uint32_t>(emitter.particles.size()),
                         .child_particle = particle.child,
                         .alpha_compare_enabled = alpha_compare.enabled,
@@ -1452,6 +1583,14 @@ namespace smgpc::game {
 
     std::optional<EffectKeeperRegistration> EffectService::registered_keeper(std::string_view host_name) const {
         if (auto it = _registered_keepers.find(host_name); it != _registered_keepers.end()) {
+            return it->second;
+        }
+
+        return std::nullopt;
+    }
+
+    std::optional<EffectHostBinding> EffectService::host_binding(std::string_view host_name) const {
+        if (auto it = _host_bindings.find(host_name); it != _host_bindings.end()) {
             return it->second;
         }
 
@@ -1743,6 +1882,41 @@ namespace smgpc::game {
         return frame_count < 0 ? 30 : frame_count;
     }
 
+    void ImageEffectService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+    }
+
+    void ImageEffectService::force_off() {
+        _forced_off = true;
+        _control_auto = false;
+        push_event(ImageEffectControlKind::ForceOff);
+    }
+
+    void ImageEffectService::set_control_auto() {
+        _forced_off = false;
+        _control_auto = true;
+        push_event(ImageEffectControlKind::ControlAuto);
+    }
+
+    bool ImageEffectService::is_forced_off() const {
+        return _forced_off;
+    }
+
+    bool ImageEffectService::is_control_auto() const {
+        return _control_auto;
+    }
+
+    std::span<const ImageEffectControlEvent> ImageEffectService::events() const {
+        return _events;
+    }
+
+    void ImageEffectService::push_event(ImageEffectControlKind kind) {
+        _events.push_back(ImageEffectControlEvent{
+            .kind = kind,
+            .frame_index = _frame_index,
+        });
+    }
+
     void StarPointerService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
     }
@@ -1781,12 +1955,14 @@ namespace smgpc::game {
         _guidance_active = active;
     }
 
-    void StarPointerService::request_file_select_guidance() {
-        _file_select_guidance_requested = true;
-    }
+    void StarPointerService::request_guidance(StarPointerGuidanceRequest request) {
+        if (request == StarPointerGuidanceRequest::None) {
+            return;
+        }
 
-    void StarPointerService::request_file_select_copy_guidance() {
-        _file_select_copy_guidance_requested = true;
+        if (std::find(_guidance_requests.begin(), _guidance_requests.end(), request) == _guidance_requests.end()) {
+            _guidance_requests.push_back(request);
+        }
     }
 
     StarPointerMode StarPointerService::mode() const {
@@ -1829,12 +2005,12 @@ namespace smgpc::game {
         return _guidance_active;
     }
 
-    bool StarPointerService::is_file_select_guidance_requested() const {
-        return _file_select_guidance_requested;
+    bool StarPointerService::is_guidance_requested(StarPointerGuidanceRequest request) const {
+        return std::find(_guidance_requests.begin(), _guidance_requests.end(), request) != _guidance_requests.end();
     }
 
-    bool StarPointerService::is_file_select_copy_guidance_requested() const {
-        return _file_select_copy_guidance_requested;
+    std::span<const StarPointerGuidanceRequest> StarPointerService::guidance_requests() const {
+        return _guidance_requests;
     }
 
     std::span<const StarPointerModeEvent> StarPointerService::mode_events() const {
@@ -1876,12 +2052,17 @@ namespace smgpc::game {
     }
 #endif
 
+    void CameraSystemService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+    }
+
     void CameraSystemService::reset_camera_man() {
         ++_reset_camera_man_count;
     }
 
     void CameraSystemService::request_normal_shake() {
         ++_normal_shake_request_count;
+        push_shake_event(ShakeRequestKind::Normal);
     }
 
     void CameraSystemService::pause_on_camera_director() {
@@ -2014,6 +2195,17 @@ namespace smgpc::game {
         return _programmable_camera_fovy_count;
     }
 
+    std::span<const CameraSystemService::ShakeRequestEvent> CameraSystemService::shake_request_events() const {
+        return _shake_request_events;
+    }
+
+    void CameraSystemService::push_shake_event(ShakeRequestKind kind) {
+        _shake_request_events.push_back(ShakeRequestEvent{
+            .kind = kind,
+            .frame_index = _frame_index,
+        });
+    }
+
     CameraSystemService::ProgrammableCameraEventState *CameraSystemService::find_programmable_event(std::string_view name) {
         const auto it = _programmable_camera_events.find(std::string(name));
         return it == _programmable_camera_events.end() ? nullptr : &it->second;
@@ -2094,6 +2286,10 @@ namespace smgpc::game {
 
     void RumbleService::request_strong(s32 channel) {
         push_event(RumbleRequestKind::Strong, channel);
+    }
+
+    void RumbleService::request_middle(s32 channel) {
+        push_event(RumbleRequestKind::Middle, channel);
     }
 
     void RumbleService::request_weak(s32 channel) {
@@ -2583,6 +2779,7 @@ namespace smgpc::game {
             .raw_utf16 = std::u16string(text),
             .utf16 = std::u16string(text),
             .utf8 = utf8_from_utf16_lossy(text),
+            .control_tags = {},
         };
     }
 
@@ -2593,6 +2790,7 @@ namespace smgpc::game {
                 .raw_utf16 = message.raw_text,
                 .utf16 = message.display_text,
                 .utf8 = utf8_from_utf16_lossy(message.display_text),
+                .control_tags = message.control_tags,
             };
         }
 
@@ -2627,6 +2825,14 @@ namespace smgpc::game {
         return nullptr;
     }
 
+    const std::vector<BmgControlTag> *MessageService::message_control_tags(std::string_view tag) const {
+        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
+            return &it->second.control_tags;
+        }
+
+        return nullptr;
+    }
+
     std::string MessageService::message_or(std::string_view tag, std::string_view fallback) const {
         const auto *text = message(tag);
         return text == nullptr ? std::string(fallback) : *text;
@@ -2640,6 +2846,21 @@ namespace smgpc::game {
     std::u16string MessageService::message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const {
         const auto *text = message_raw_utf16(tag);
         return text == nullptr ? std::u16string(fallback) : *text;
+    }
+
+    std::u16string MessageService::format_message_utf16(std::string_view tag, std::span<const BmgFormatArg> args) const {
+        const auto *raw_text = message_raw_utf16(tag);
+        if (raw_text == nullptr) {
+            return {};
+        }
+
+        return format_bmg_text(*raw_text, args);
+    }
+
+    std::u16string MessageService::format_message_utf16_or(std::string_view tag, std::span<const BmgFormatArg> args,
+                                                           std::u16string_view fallback) const {
+        const auto *raw_text = message_raw_utf16(tag);
+        return raw_text == nullptr ? std::u16string(fallback) : format_bmg_text(*raw_text, args);
     }
 
     void SceneLightService::clear() {
@@ -2677,7 +2898,7 @@ namespace smgpc::game {
 
     std::uint8_t SceneLightService::loaded_mask() const {
         auto mask = std::uint8_t{};
-        for (auto index = std::size_t{}; index < _lights.size(); ++index) {
+        for (auto index = 0zu; index < _lights.size(); ++index) {
             if (_lights[index].loaded) {
                 mask |= static_cast<std::uint8_t>(1U << index);
             }

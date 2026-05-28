@@ -66,6 +66,14 @@ namespace {
 
         return 1;
     }
+
+    s32 getPageTextureIndex(s32 textureNum, s32 pageNo) {
+        if (textureNum <= 0 || pageNo <= 0) {
+            return -1;
+        }
+
+        return (textureNum + pageNo - 1) % textureNum;
+    }
 };  // namespace
 
 namespace NrvPictureBookLayout {
@@ -205,7 +213,7 @@ void PictureBookLayout::initTexture() {
             char pageTexName[64];
             snprintf(pageTexName, sizeof(pageTexName), "Chapter%dPage%d.bti", c, p + 1);
 
-            _44[textureIndex + p] = MR::createLytTexMap(chapterArcName, pageTexName);
+            _44[textureIndex] = MR::createLytTexMap(chapterArcName, pageTexName);
             textureIndex++;
         }
     }
@@ -267,17 +275,17 @@ void PictureBookLayout::updateTexture() {
         MR::replacePaneTexture(this, "PicLeftPage", pTexMap, 0);
         MR::replacePaneTexture(this, "PicTurnRightPage", pTexMap, 0);
     } else {
-        s32 texMapIndex = textureNum + pageNo - 1;
-        nw4r::lyt::TexMap* pTexMap = _48[texMapIndex % textureNum - 1];
+        s32 texMapIndex = getPageTextureIndex(textureNum, pageNo);
+        nw4r::lyt::TexMap* pTexMap = texMapIndex >= 0 ? _48[texMapIndex] : nullptr;
 
         MR::replacePaneTexture(this, "PicLeftPage", pTexMap, 0);
         MR::replacePaneTexture(this, "PicTurnRightPage", pTexMap, 0);
     }
 
     if (mNextItemDir > 0) {
-        pageNo = mPageNo + 1;
-    } else {
         pageNo = mPageNo;
+    } else {
+        pageNo = mPageNo + 1;
     }
 
     if (pageNo == 0) {
@@ -286,8 +294,8 @@ void PictureBookLayout::updateTexture() {
         MR::replacePaneTexture(this, "PicRightPage", pTexMap, 0);
         MR::replacePaneTexture(this, "PicTurnLeftPage", pTexMap, 0);
     } else {
-        s32 texMapIndex = textureNum + pageNo - 1;
-        nw4r::lyt::TexMap* pTexMap = _48[texMapIndex % textureNum - 1];
+        s32 texMapIndex = getPageTextureIndex(textureNum, pageNo);
+        nw4r::lyt::TexMap* pTexMap = texMapIndex >= 0 ? _48[texMapIndex] : nullptr;
 
         MR::replacePaneTexture(this, "PicRightPage", pTexMap, 0);
         MR::replacePaneTexture(this, "PicTurnLeftPage", pTexMap, 0);

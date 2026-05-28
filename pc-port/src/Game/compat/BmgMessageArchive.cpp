@@ -1,6 +1,8 @@
 #include "BmgMessageArchive.hpp"
 
 #include <algorithm>
+#include <array>
+#include <charconv>
 #include <stdexcept>
 
 #include "Game/compat/BcsvTable.hpp"
@@ -17,6 +19,10 @@ namespace smgpc::game {
         constexpr std::size_t BMG_BLOCK_HEADER_SIZE = 0x08;
         constexpr std::size_t INF1_ENTRIES_OFFSET = 0x10;
         constexpr std::uint16_t BMG_CONTROL_MARKER = 0x001a;
+        constexpr std::uint16_t BMG_STRING_TAG_TYPE_A = 0x0005;
+        constexpr std::uint16_t BMG_NUMERIC_TAG_TYPE = 0x0006;
+        constexpr std::uint16_t BMG_STRING_TAG_TYPE_B = 0x0007;
+        constexpr std::uint16_t BMG_ZERO_PAD_TWO_DIGITS = 0x0005;
 
         struct BlockRange {
             std::size_t offset = 0U;
@@ -27,6 +33,71 @@ namespace smgpc::game {
             std::u16string raw_text;
             std::u16string display_text;
         };
+
+        [[nodiscard]] std::uint16_t tag_size(char16_t packed_size_type) {
+            return static_cast<std::uint16_t>((static_cast<std::uint32_t>(packed_size_type) >> 8U) & 0xffU);
+        }
+
+        [[nodiscard]] std::uint16_t tag_type(char16_t packed_size_type) {
+            return static_cast<std::uint16_t>(static_cast<std::uint32_t>(packed_size_type) & 0xffU);
+        }
+
+        [[nodiscard]] std::size_t tag_word_count(char16_t packed_size_type) {
+            const auto size = tag_size(packed_size_type);
+            return size >= 2U ? static_cast<std::size_t>((size - 2U) / 2U) : 0U;
+        }
+
+        [[nodiscard]] std::u16string number_text(std::int32_t value, bool zero_pad_two_digits) {
+            auto buffer = std::array<char, 32U>{};
+            const auto result = std::to_chars(buffer.data(), buffer.data() + buffer.size(), value);
+            auto text = std::string_view(buffer.data(), static_cast<std::size_t>(result.ptr - buffer.data()));
+            auto out = std::u16string{};
+            if (zero_pad_two_digits && value >= 0 && value < 10) {
+                out.push_back(u'0');
+            }
+            for (const auto character : text) {
+                out.push_back(static_cast<char16_t>(character));
+            }
+            return out;
+        }
+
+        [[nodiscard]] const BmgFormatArg *arg_at(std::span<const BmgFormatArg> args, std::size_t index) {
+            return index < args.size() ? &args[index] : nullptr;
+        }
+
+        [[nodiscard]] std::vector<BmgControlTag> scan_bmg_control_tags(std::u16string_view raw_text) {
+            auto tags = std::vector<BmgControlTag>{};
+
+            for (auto cursor = std::size_t{}; cursor < raw_text.size();) {
+                if (raw_text[cursor] != BMG_CONTROL_MARKER || cursor + 1U >= raw_text.size()) {
+                    ++cursor;
+                    continue;
+                }
+
+                const auto packed_size_type = raw_text[cursor + 1U];
+                const auto word_count = tag_word_count(packed_size_type);
+                if (word_count == 0U || cursor + word_count >= raw_text.size()) {
+                    ++cursor;
+                    continue;
+                }
+
+                auto tag = BmgControlTag{
+                    .raw_offset = cursor,
+                    .size_bytes = tag_size(packed_size_type),
+                    .type = tag_type(packed_size_type),
+                    .payload_words = {},
+                };
+                tag.payload_words.reserve(word_count - 1U);
+                for (auto word = std::size_t{2U}; word <= word_count; ++word) {
+                    tag.payload_words.push_back(static_cast<std::uint16_t>(raw_text[cursor + word]));
+                }
+                tags.push_back(std::move(tag));
+
+                cursor += 1U + word_count;
+            }
+
+            return tags;
+        }
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
@@ -175,11 +246,13 @@ namespace smgpc::game {
                 }
 
                 auto decoded = decode_utf16be_bmg_text(dat1_text, info.text_offset);
+                auto control_tags = scan_bmg_control_tags(decoded.raw_text);
                 messages.push_back(BmgMessage{
                     .id = {},
                     .info = info,
                     .raw_text = std::move(decoded.raw_text),
                     .display_text = std::move(decoded.display_text),
+                    .control_tags = std::move(control_tags),
                 });
             }
 
@@ -210,6 +283,72 @@ namespace smgpc::game {
         }
 
     }  // namespace
+
+    BmgFormatArg BmgFormatArg::number(std::int32_t value) {
+        return BmgFormatArg{
+            .type = Type::Number,
+            .number_value = value,
+            .string_value = {},
+        };
+    }
+
+    BmgFormatArg BmgFormatArg::string(std::u16string_view value) {
+        return BmgFormatArg{
+            .type = Type::String,
+            .number_value = 0,
+            .string_value = std::u16string(value),
+        };
+    }
+
+    std::vector<BmgControlTag> bmg_control_tags(std::u16string_view raw_text) {
+        return scan_bmg_control_tags(raw_text);
+    }
+
+    std::u16string format_bmg_text(std::u16string_view raw_text, std::span<const BmgFormatArg> args) {
+        auto formatted = std::u16string{};
+
+        for (auto cursor = std::size_t{}; cursor < raw_text.size();) {
+            const auto code = raw_text[cursor];
+            if (code != BMG_CONTROL_MARKER || cursor + 1U >= raw_text.size()) {
+                formatted.push_back(code);
+                ++cursor;
+                continue;
+            }
+
+            const auto packed_size_type = raw_text[cursor + 1U];
+            const auto word_count = tag_word_count(packed_size_type);
+            if (word_count == 0U || cursor + word_count >= raw_text.size()) {
+                ++cursor;
+                continue;
+            }
+
+            const auto type = tag_type(packed_size_type);
+            if (type == BMG_NUMERIC_TAG_TYPE && word_count >= 6U) {
+                const auto format = static_cast<std::uint16_t>(raw_text[cursor + 2U]);
+                const auto arg_index = static_cast<std::size_t>(raw_text[cursor + 6U]);
+                if (const auto *arg = arg_at(args, arg_index); arg != nullptr) {
+                    if (arg->type == BmgFormatArg::Type::Number) {
+                        formatted.append(number_text(arg->number_value, format == BMG_ZERO_PAD_TWO_DIGITS));
+                    } else {
+                        formatted.append(arg->string_value);
+                    }
+                }
+            } else if ((type == BMG_STRING_TAG_TYPE_A || type == BMG_STRING_TAG_TYPE_B) && word_count >= 2U) {
+                const auto arg_index = static_cast<std::size_t>(raw_text[cursor + word_count]);
+                if (const auto *arg = arg_at(args, arg_index); arg != nullptr) {
+                    if (arg->type == BmgFormatArg::Type::String) {
+                        formatted.append(arg->string_value);
+                    } else {
+                        formatted.append(number_text(arg->number_value, false));
+                    }
+                }
+            }
+
+            cursor += 1U + word_count;
+        }
+
+        return formatted;
+    }
 
     BmgMessageArchive BmgMessageArchive::from_message_archive(const RarcArchive &archive) {
         return from_bytes(archive_file_data_any(archive, {"message.bmg", "Message.bmg"}), archive_file_data_any(archive, {"messageid.tbl", "MessageId.tbl"}));

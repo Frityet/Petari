@@ -1,6 +1,5 @@
 #include "Game/compat/StagePlacementResolver.hpp"
 
-#include "Game/compat/BcsvTable.hpp"
 #include "Game/compat/NameObjFactoryCompat.hpp"
 #include "Game/compat/RarcArchive.hpp"
 #include "Game/compat/RuntimeServices.hpp"
@@ -23,48 +22,59 @@ namespace smgpc::game {
             });
         }
 
-        void read_object_args(StagePlacementObject &object, const BcsvTable &table, std::size_t entry_index) {
+        void read_object_args(StagePlacementObject &object, const JMapInfoIter &iter) {
             for (auto arg_index = std::size_t{}; arg_index < object.object_args.size(); ++arg_index) {
-                const auto value = table.get_s32(entry_index, "Obj_arg" + std::to_string(arg_index));
-                object.object_args[arg_index] = value.value_or(-1);
+                auto value = s32{-1};
+                const auto field = "Obj_arg" + std::to_string(arg_index);
+                (void)iter.getValue(field.c_str(), &value);
+                object.object_args[arg_index] = value;
             }
         }
 
-        void read_vec3(StagePlacementObject &object, const BcsvTable &table, std::size_t entry_index, std::string_view prefix,
+        void read_vec3(StagePlacementObject &object, const JMapInfoIter &iter, std::string_view prefix,
                        std::array<f32, 3U> StagePlacementObject::*field, bool StagePlacementObject::*has_field) {
             const auto base = std::string(prefix);
-            const auto x = table.get_float(entry_index, base + "_x");
-            const auto y = table.get_float(entry_index, base + "_y");
-            const auto z = table.get_float(entry_index, base + "_z");
-            if (!x.has_value() || !y.has_value() || !z.has_value()) {
+            auto x = f32{};
+            auto y = f32{};
+            auto z = f32{};
+            if (!iter.getValue((base + "_x").c_str(), &x) || !iter.getValue((base + "_y").c_str(), &y) ||
+                !iter.getValue((base + "_z").c_str(), &z)) {
                 object.*has_field = false;
                 return;
             }
 
-            object.*field = std::array<f32, 3U>{*x, *y, *z};
+            object.*field = std::array<f32, 3U>{x, y, z};
             object.*has_field = true;
         }
 
-        void read_standard_placement_fields(StagePlacementObject &object, const BcsvTable &table, std::size_t entry_index) {
-            object.type_name = table.get_string(entry_index, "type").value_or("");
-            read_vec3(object, table, entry_index, "pos", &StagePlacementObject::translation, &StagePlacementObject::has_translation);
-            read_vec3(object, table, entry_index, "dir", &StagePlacementObject::rotation, &StagePlacementObject::has_rotation);
-            read_vec3(object, table, entry_index, "scale", &StagePlacementObject::scale, &StagePlacementObject::has_scale);
+        void read_standard_placement_fields(StagePlacementObject &object, const JMapInfoIter &iter) {
+            const char *type_name = "";
+            if (iter.getValue("type", &type_name)) {
+                object.type_name = type_name;
+            }
+            read_vec3(object, iter, "pos", &StagePlacementObject::translation, &StagePlacementObject::has_translation);
+            read_vec3(object, iter, "dir", &StagePlacementObject::rotation, &StagePlacementObject::has_rotation);
+            read_vec3(object, iter, "scale", &StagePlacementObject::scale, &StagePlacementObject::has_scale);
         }
 
-        [[nodiscard]] std::optional<StagePlacementObject> read_supported_placement_object(const BcsvTable &table, std::size_t entry_index) {
-            const auto object_name = table.get_string(entry_index, "name");
-            if (!object_name.has_value() || object_name->empty() || !can_create_name_obj(*object_name)) {
+        [[nodiscard]] std::optional<StagePlacementObject> read_supported_placement_object(const JMapInfo &info, s32 entry_index) {
+            const auto iter = JMapInfoIter(&info, entry_index);
+            const char *object_name = nullptr;
+            if (!iter.getValue("name", &object_name) || object_name == nullptr || object_name[0] == '\0' || !can_create_name_obj(object_name)) {
                 return std::nullopt;
             }
 
+            auto l_id = s32{-1};
+            (void)iter.getValue("l_id", &l_id);
             auto object = StagePlacementObject{
-                .object_name = *object_name,
+                .object_name = object_name,
                 .type_name = "",
-                .l_id = table.get_s32(entry_index, "l_id").value_or(-1),
+                .l_id = l_id,
+                .jmap_info = info,
+                .jmap_entry_index = entry_index,
             };
-            read_object_args(object, table, entry_index);
-            read_standard_placement_fields(object, table, entry_index);
+            read_object_args(object, iter);
+            read_standard_placement_fields(object, iter);
             return object;
         }
 
@@ -84,9 +94,9 @@ namespace smgpc::game {
         }
 
         auto objects = std::vector<StagePlacementObject>{};
-        const auto table = BcsvTable::from_bytes(archive.file_data(cCommonObjInfoPath));
-        for (auto entry_index = std::size_t{}; entry_index < table.entry_count(); ++entry_index) {
-            if (auto object = read_supported_placement_object(table, entry_index)) {
+        const auto info = JMapInfo::from_bcsv(archive.file_data(cCommonObjInfoPath));
+        for (auto entry_index = s32{}; entry_index < info.getNumEntries(); ++entry_index) {
+            if (auto object = read_supported_placement_object(info, entry_index)) {
                 objects.push_back(std::move(*object));
             }
         }

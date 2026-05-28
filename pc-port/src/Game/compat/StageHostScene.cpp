@@ -48,25 +48,9 @@ namespace smgpc::game {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("sequence", "stage_host_constructed",
                                            "host=" + std::string(object_name) + ";stage=" + _request.stage_name);
-        if (object_name == "FileSelector") {
-            _runtime.emit_semantic_trace_event("sequence", "temporary_file_select_stage_host_started",
-                                               "stage host factory created FileSelector until GameScene placement is available");
-        }
 #endif
         if (placement != nullptr) {
-            const auto placement_iter_object = JMapInfoIter::PlacementObject{
-                .name = placement->object_name.c_str(),
-                .type = placement->type_name.c_str(),
-                .l_id = placement->l_id,
-                .object_args = placement->object_args,
-                .translation = placement->translation,
-                .rotation = placement->rotation,
-                .scale = placement->scale,
-                .has_translation = placement->has_translation,
-                .has_rotation = placement->has_rotation,
-                .has_scale = placement->has_scale,
-            };
-            const auto placement_iter = JMapInfoIter(&placement_iter_object);
+            const auto placement_iter = JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index);
             root->init(placement_iter);
         } else {
             root->initWithoutIter();
@@ -81,11 +65,6 @@ namespace smgpc::game {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("sequence", "stage_host_initialized",
                                            "host=" + std::string(object_name) + ";stage=" + _request.stage_name);
-        if (object_name == "FileSelector") {
-            _runtime.emit_semantic_trace_event("file_select", "file_selector_constructed", "stage host factory");
-            _runtime.emit_semantic_trace_event("file_select", "file_selector_initialized", "stage host factory initWithoutIter");
-            _runtime.emit_semantic_trace_event("title", "title_product_created", "source=StageHostScene;layouts=TitleLogo,PressStart");
-        }
 #endif
         _roots.push_back(std::move(root));
     }

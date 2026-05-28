@@ -5,9 +5,12 @@
 #include <functional>
 #include <memory>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <type_traits>
+#include <typeinfo>
 #include <utility>
+#include <cxxabi.h>
 
 namespace smgpc::di {
 
@@ -354,6 +357,43 @@ private:
         return std::get<service_index>(_slots);
     }
 
+    static std::string demangled_type_name(const std::type_info &type_info) {
+        int status = 0;
+        const auto *demangled = abi::__cxa_demangle(type_info.name(), nullptr, nullptr, &status);
+        std::string result = (status == 0 && demangled != nullptr) ? demangled : type_info.name();
+        std::free(const_cast<char *>(demangled));
+        return result;
+    }
+
+public:
+    [[nodiscard]] std::string dependencies_to_graphviz() const {
+        std::string graph;
+        std::apply(
+            [&graph, this](const auto &...slots) {
+                ((graph += this->slot_dependencies_to_graphviz(slots)), ...);
+            },
+            _slots);
+        return graph;
+    }
+
+    template <typename Service, typename Provider>
+    [[nodiscard]] std::string slot_dependencies_to_graphviz(const ServiceSlot<Service, Provider> &slot) const {
+        std::string graph;
+        if (slot.has()) {
+            graph += "    \"" + demangled_type_name(typeid(Service)) + "\" [shape=box];\n";
+            using Scope = detail::service_scope_for_t<Service, Scopes...>;
+            if constexpr (detail::is_singleton_scope_v<Scope>) {
+                graph += "    \"" + demangled_type_name(typeid(Scope)) + "\" -> \"" + demangled_type_name(typeid(Service)) +
+                         "\" [label=\"singleton\"];\n";
+            } else {
+                graph += "    \"" + demangled_type_name(typeid(Scope)) + "\" -> \"" + demangled_type_name(typeid(Service)) +
+                         "\" [label=\"transient\"];\n";
+            }
+        }
+        return graph;
+    }
+
+private:
     std::tuple<ServiceSlot<typename Scopes::Type, Self>...> _slots {};
 };
 

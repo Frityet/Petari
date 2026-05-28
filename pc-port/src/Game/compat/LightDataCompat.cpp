@@ -210,7 +210,7 @@ namespace smgpc::game {
 
         auto stage_name = std::string(runtime->current_stage_name());
         if (stage_name.empty()) {
-            stage_name = "FileSelect";
+            return false;
         }
 
         const auto root_key = runtime->dvd().root().generic_string();

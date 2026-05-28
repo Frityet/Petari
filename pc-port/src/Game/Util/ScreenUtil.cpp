@@ -213,9 +213,15 @@ namespace MR {
     }
 
     void forceOffImageEffect() {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->image_effects().force_off();
+        }
     }
 
     void setImageEffectControlAuto() {
+        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+            runtime->image_effects().set_control_auto();
+        }
     }
 
     void openWipeCircle(s32 frameCount) {

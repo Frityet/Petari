@@ -14,7 +14,9 @@
 #include "Game/compat/BrfntFont.hpp"
 #include "Game/compat/BrlanAnimation.hpp"
 #include "Game/compat/BrlytLayout.hpp"
+#include "Game/compat/BmgMessageArchive.hpp"
 #include "Game/compat/TplTexture.hpp"
+#include "Game/Util/GamePadUtil.hpp"
 #include "RendererService.hpp"
 
 namespace nw4r::lyt {
@@ -39,6 +41,7 @@ public:
     void kill();
     void update();
     void setTrans(f32 x, f32 y);
+    void setScale(f32 x, f32 y);
 
     [[nodiscard]] bool isDead() const;
     [[nodiscard]] const std::string& getName() const;
@@ -55,14 +58,19 @@ public:
     [[nodiscard]] bool isAnimStopped(u32 animLayer);
     void setTextBoxNumberRecursive(const char* pPaneName, s32 number);
     void setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text);
+    void setTextBoxTaggedStringRecursive(const char* pPaneName, std::u16string_view rawText, std::u16string_view displayText);
+    void setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex);
+    void setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex);
     void replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex);
     void setPaneAlpha(std::string_view paneName, f32 alpha);
     void setPaneVisible(std::string_view paneName, bool visible);
+    void setPaneVisibleRecursive(std::string_view paneName, bool visible);
     void setTextBoxHorizontalPosition(std::string_view paneName, u8 position);
     void setTextBoxVerticalPosition(std::string_view paneName, u8 position);
     [[nodiscard]] bool isPaneVisible(std::string_view paneName) const;
     [[nodiscard]] bool hasPane(std::string_view paneName) const;
     [[nodiscard]] std::optional< PaneBounds > paneBounds(std::string_view paneName) const;
+    [[nodiscard]] std::optional< TVec2f > paneScale(std::string_view paneName) const;
     [[nodiscard]] bool copyPaneMatrix(std::string_view paneName, Mtx matrix) const;
     [[nodiscard]] bool isPointingPane(std::string_view paneName, f32 screenX, f32 screenY) const;
     void startPaneAnim(std::string_view paneName, const char* pAnimName, u32 animLayer);
@@ -210,6 +218,11 @@ private:
         std::array< AnimationState, 4 > animations = {};
     };
 
+    struct TextBoxTemplateState {
+        std::u16string raw_text;
+        std::vector< smgpc::game::BmgFormatArg > args;
+    };
+
     [[nodiscard]] AnimationState& animation(u32 animLayer);
     [[nodiscard]] const AnimationState& animation(u32 animLayer) const;
     [[nodiscard]] PaneAnimationState& paneAnimation(std::string_view paneName);
@@ -235,6 +248,8 @@ private:
     bool mIsDead = true;
     f32 mTransX = 0.0F;
     f32 mTransY = 0.0F;
+    f32 mScaleX = 1.0F;
+    f32 mScaleY = 1.0F;
     std::optional< std::filesystem::path > mArchivePath;
     std::array< AnimationState, 4 > mAnimations = {};
     bool mRenderDataLoaded = false;
@@ -246,6 +261,7 @@ private:
     std::unordered_map< std::string, smgpc::game::BrlanPaneFrame > mCommittedPaneFrames = {};
     std::unordered_map< std::string, bool > mPaneVisibilityOverrides = {};
     std::unordered_map< std::string, f32 > mPaneAlphaOverrides = {};
+    std::unordered_map< std::string, TextBoxTemplateState > mTextBoxTemplates = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};
 };
 

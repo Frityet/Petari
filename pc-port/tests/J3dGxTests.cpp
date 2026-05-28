@@ -609,6 +609,32 @@ namespace smgpc::tests {
                          "J3D projected texture generation should include the actor/model matrix passed to J3DTexMtx::calc");
             require_near(projected_scaled_earth_coord.v, 0.50202F, 0.001F,
                          "J3D projected texture generation should include the actor/model matrix passed to J3DTexMtx::calc");
+            const auto yaw = 0.65F;
+            const auto cos_y = std::cos(yaw);
+            const auto sin_y = std::sin(yaw);
+            const auto rotated_actor_matrix = smgpc::game::J3dMatrix3x4{{
+                0.8F * cos_y,
+                0.0F,
+                0.8F * sin_y,
+                0.0F,
+                0.0F,
+                0.8F,
+                0.0F,
+                0.0F,
+                -0.8F * sin_y,
+                0.0F,
+                0.8F * cos_y,
+                0.0F,
+            }};
+            auto projmap_effect_tex_matrix = smgpc::game::j3d_apply_projmap_effect_matrix(
+                earth_far->tex_matrices[0U], smgpc::game::j3d_invert_affine_matrix(rotated_actor_matrix));
+            const auto projected_stable_earth_coord =
+                smgpc::game::j3d_transform_tex_coord(smgpc::game::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
+                                                     &earth_far->tex_coord_gens[0U], &projmap_effect_tex_matrix, &rotated_actor_matrix);
+            require_near(projected_stable_earth_coord.u, projected_earth_coord.u, 0.001F,
+                         "ProjmapEffectMtxSetter effect matrices should cancel actor rotation for projected S coordinates");
+            require_near(projected_stable_earth_coord.v, projected_earth_coord.v, 0.001F,
+                         "ProjmapEffectMtxSetter effect matrices should cancel actor rotation for projected T coordinates");
             require(earth_far->tev_orders.size() == 3U, "EarthFar_v should expose the original three TEV orders");
             require(earth_far->tev_stages.size() == 3U, "EarthFar_v should expose the original three raw TEV stages");
             require_tev_stage(earth_far->tev_stages[0U], {15U, 10U, 8U, 15U}, 12U, {7U, 4U, 5U, 7U}, 1U, 28U,
@@ -797,7 +823,8 @@ namespace smgpc::tests {
             });
             require(earth_far_packet != packets.end() && earth_far_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev &&
                         !earth_far_packet->evaluate_material_per_vertex && earth_far_packet->material_pass_count == 3U &&
-                        earth_far_packet->shader_texture_stage_count == 3U,
+                        earth_far_packet->shader_texture_stage_count == 3U && !earth_far_packet->packet_mode_fallback &&
+                        earth_far_packet->packet_mode_reason == "shader_gx_tev_supported",
                     "J3dModelRenderer packet evidence should identify projected multi-TEV shader packets");
             const auto earth_night_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "EarthNightMat_v";
@@ -813,7 +840,8 @@ namespace smgpc::tests {
                         !comet_halo_packet->evaluate_material_per_vertex && comet_halo_packet->indirect_stage_count == 1U &&
                         comet_halo_packet->indirect_texture_order_count > 0U && comet_halo_packet->declared_tev_stage_count == 1U &&
                         comet_halo_packet->active_tev_stage_count == 1U && comet_halo_packet->material_mode == 1U &&
-                        comet_halo_packet->draw_buffer_opaque && comet_halo_packet->blend,
+                        comet_halo_packet->draw_buffer_opaque && comet_halo_packet->blend && comet_halo_packet->packet_mode_fallback &&
+                        comet_halo_packet->packet_mode_reason == "cpu_composed_multi_pass_or_indirect",
                     "J3dModelRenderer packet evidence should route CometHalo_v active-indirect TEV through compat material evaluation while keeping DrawBuffer grouping separate from GX blend");
             const auto comet_halo_batch_count_before_draw = renderer.triangle_batch_count;
             const auto comet_halo_vertices_before_draw = renderer.submitted_vertices;
@@ -845,6 +873,7 @@ namespace smgpc::tests {
                         core_rock_packet->evaluate_material_per_vertex && core_rock_packet->loaded_light_mask == 0U &&
                         core_rock_packet->material_loaded_light_mask == 0U && core_rock_packet->scene_loaded_light_mask == 0U &&
                         core_rock_packet->requested_light_mask == 4U && core_rock_packet->unsatisfied_light_mask == 4U &&
+                        core_rock_packet->packet_mode_fallback && core_rock_packet->packet_mode_reason == "cpu_tev_lit_no_texture_passes" &&
                         core_rock_packet->alpha_channel_controls[0U].lighting_enabled &&
                         core_rock_packet->alpha_channel_controls[0U].light_mask == 4U,
                     "J3dModelRenderer packet evidence should route untextured lit materials through per-vertex GX raster evaluation and expose missing scene lights");

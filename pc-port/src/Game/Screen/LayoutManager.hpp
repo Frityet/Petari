@@ -51,6 +51,8 @@ public:
     bool isExistPaneCtrl(const char*) const;
     void showPane(const char*);
     void hidePane(const char*);
+    void showPaneRecursive(const char*);
+    void hidePaneRecursive(const char*);
     [[nodiscard]] bool isPaneVisible(const char*) const;
     [[nodiscard]] bool isPointingPane(const char*, f32, f32) const;
     void createPaneMtxRef(const char*);

@@ -32,6 +32,7 @@ public:
     void startBck(std::string_view name, std::string_view file_name);
     std::optional<std::int16_t> startBrk(std::string_view name);
     void startBtk(std::string_view name);
+    void setProjmapEffectMatrix(const smgpc::game::J3dMatrix3x4& matrix);
     void draw(smgpc::render::IRendererEngine &renderer, const smgpc::game::CameraPoseCompat &camera_pose,
               const smgpc::game::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass = DrawPass::All);
 
@@ -58,4 +59,5 @@ private:
     std::optional<smgpc::game::J3dBckAnimationSummary> mBckAnimation = {};
     std::optional<smgpc::game::J3dBtkAnimationSummary> mBtkAnimation = {};
     std::optional<smgpc::game::J3dBrkAnimationSummary> mBrkAnimation = {};
+    std::optional<smgpc::game::J3dMatrix3x4> mProjmapEffectMatrix = {};
 };

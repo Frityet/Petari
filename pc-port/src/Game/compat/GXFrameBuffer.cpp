@@ -1,6 +1,7 @@
 #include "revolution.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdint>
 #include <utility>
@@ -39,6 +40,12 @@ namespace {
         bool clamp_top = true;
         bool clamp_bottom = true;
         GXGamma gamma = GX_GM_1_0;
+        GXColor clear_color{};
+        u32 clear_depth = 0U;
+        bool copy_filter_aa = false;
+        bool copy_filter_vertical = false;
+        std::array<std::array<u8, 2U>, 12U> copy_filter_sample_pattern{};
+        std::array<u8, 7U> copy_filter_vfilter{};
         f32 y_scale = 1.0F;
         u32 display_copy_y_scale = 256U;
     };
@@ -186,6 +193,10 @@ namespace {
         return static_cast<u32>(256.0F / vertical_scale) & 0x1FFU;
     }
 
+    [[nodiscard]] std::array<std::uint8_t, 4U> clear_color_value(GXColor color) {
+        return {color.r, color.g, color.b, color.a};
+    }
+
     void record_copy_event(smgpc::render::CopyEvent event) {
         if (auto *runtime = smgpc::game::RuntimeContext::try_instance()) {
             runtime->record_copy_event(std::move(event));
@@ -257,10 +268,25 @@ u32 GXSetDispCopyYScale(f32 vertical_scale) {
     return GXGetNumXfbLines(s_copy_state.display.source.height, vertical_scale);
 }
 
-void GXSetCopyClear(GXColor, u32) {
+void GXSetCopyClear(GXColor clear_color, u32 clear_z) {
+    s_copy_state.clear_color = clear_color;
+    s_copy_state.clear_depth = clear_z;
 }
 
-void GXSetCopyFilter(GXBool, const u8[12][2], GXBool, const u8[7]) {
+void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vertical_filter, const u8 vfilter[7]) {
+    s_copy_state.copy_filter_aa = aa != GX_FALSE;
+    s_copy_state.copy_filter_vertical = vertical_filter != GX_FALSE;
+    if (sample_pattern != nullptr) {
+        for (auto i = std::size_t{}; i < s_copy_state.copy_filter_sample_pattern.size(); ++i) {
+            s_copy_state.copy_filter_sample_pattern[i][0U] = sample_pattern[i][0U];
+            s_copy_state.copy_filter_sample_pattern[i][1U] = sample_pattern[i][1U];
+        }
+    }
+    if (vfilter != nullptr) {
+        for (auto i = std::size_t{}; i < s_copy_state.copy_filter_vfilter.size(); ++i) {
+            s_copy_state.copy_filter_vfilter[i] = vfilter[i];
+        }
+    }
 }
 
 void GXSetDispCopyGamma(GXGamma gamma) {
@@ -323,6 +349,12 @@ void GXCopyDisp(void *dest, GXBool clear) {
         .clear = clear != GX_FALSE,
         .clamp_top = s_copy_state.clamp_top,
         .clamp_bottom = s_copy_state.clamp_bottom,
+        .clear_color = clear_color_value(s_copy_state.clear_color),
+        .clear_depth = s_copy_state.clear_depth,
+        .copy_filter_aa = s_copy_state.copy_filter_aa,
+        .copy_filter_vertical = s_copy_state.copy_filter_vertical,
+        .copy_filter_sample_pattern = s_copy_state.copy_filter_sample_pattern,
+        .copy_filter_vfilter = s_copy_state.copy_filter_vfilter,
         .dest_addr = static_cast<u32>(reinterpret_cast<std::uintptr_t>(dest)),
         .dest_stride = display.dest_stride,
         .source_rect = source_rect,
@@ -352,6 +384,12 @@ void GXCopyTex(void *dest, GXBool clear) {
         .clamp_top = s_copy_state.clamp_top,
         .clamp_bottom = s_copy_state.clamp_bottom,
         .auto_conversion = true,
+        .clear_color = clear_color_value(s_copy_state.clear_color),
+        .clear_depth = s_copy_state.clear_depth,
+        .copy_filter_aa = s_copy_state.copy_filter_aa,
+        .copy_filter_vertical = s_copy_state.copy_filter_vertical,
+        .copy_filter_sample_pattern = s_copy_state.copy_filter_sample_pattern,
+        .copy_filter_vfilter = s_copy_state.copy_filter_vfilter,
         .dest_addr = static_cast<u32>(reinterpret_cast<std::uintptr_t>(dest)),
         .dest_stride = texture.dest_stride,
         .source_rect = source_rect,

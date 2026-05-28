@@ -81,17 +81,6 @@ namespace smgpc::game {
         return _active_scenario_no;
     }
 
-#ifndef NDEBUG
-    std::optional<FileSelectStageState> SceneLifecycleService::file_select_state() const {
-        const auto *root = active_root();
-        if (root == nullptr) {
-            return std::nullopt;
-        }
-
-        return file_select_stage_state(*root);
-    }
-#endif
-
     void SceneLifecycleService::create_stage_scene(const StageHostRequest &request) {
         const auto object_name = !request.object_name.empty() ? request.object_name : request.stage_name;
 

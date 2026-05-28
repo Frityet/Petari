@@ -4,6 +4,8 @@
 #include <string>
 
 #include "Logger.hpp"
+#include "Game/compat/RuntimeContext.hpp"
+#include "Game/compat/SequenceBootService.hpp"
 #include "RendererService.hpp"
 #include "ServiceProvider.hpp"
 
@@ -26,6 +28,8 @@ namespace smgpc::app {
         std::unique_ptr<render::IWindowFactory> window_factory = {};
         std::unique_ptr<render::IWindowService> window_service = {};
         std::unique_ptr<render::IRendererEngine> renderer_engine = {};
+        std::unique_ptr<game::RuntimeContext> runtime_context = {};
+        std::unique_ptr<game::SequenceBootService> sequence_boot = {};
         std::unique_ptr<IApplication> application = {};
     };
 
@@ -33,6 +37,8 @@ namespace smgpc::app {
         di::SingletonService<logging::ILogger>,
         di::SingletonService<render::IWindowFactory>, di::SingletonService<render::IWindowService>,
         di::SingletonService<render::IRendererEngine>,
+        di::SingletonService<game::RuntimeContext>,
+        di::SingletonService<game::SequenceBootService>,
         di::SingletonService<IApplication>
     >;
 

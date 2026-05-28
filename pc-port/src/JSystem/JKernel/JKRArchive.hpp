@@ -46,11 +46,11 @@ public:
     }
 
     [[nodiscard]] virtual bool contains(const char *pPath) const {
-        return mArchive != nullptr && pPath != nullptr && mArchive->contains(pPath);
+        return mArchive != nullptr && pPath != nullptr && mArchive->contains_resource(pPath);
     }
 
 protected:
-    explicit JKRArchive(smgpc::game::RarcArchive *archive)
+    explicit JKRArchive(const smgpc::game::RarcArchive *archive)
         : mArchive(archive) {
     }
 
@@ -59,10 +59,7 @@ protected:
             return {};
         }
 
-        const auto *entry = mArchive->find(path);
-        if (entry == nullptr && path.starts_with('/')) {
-            entry = mArchive->find(path.substr(1U));
-        }
+        const auto *entry = mArchive->find_resource(path);
         if (entry == nullptr) {
             return {};
         }
@@ -70,12 +67,12 @@ protected:
         return mArchive->file_data(*entry);
     }
 
-    smgpc::game::RarcArchive *mArchive = nullptr;
+    const smgpc::game::RarcArchive *mArchive = nullptr;
 };
 
 class JKRMemArchive final : public JKRArchive {
 public:
-    explicit JKRMemArchive(smgpc::game::RarcArchive &archive)
+    explicit JKRMemArchive(const smgpc::game::RarcArchive &archive)
         : JKRArchive(&archive) {
     }
 

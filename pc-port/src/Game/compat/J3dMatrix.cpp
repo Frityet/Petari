@@ -93,6 +93,63 @@ namespace smgpc::game {
         return result;
     }
 
+    J3dMatrix3x4 j3d_invert_affine_matrix(const J3dMatrix3x4& matrix) {
+        const auto a00 = matrix.m[0U];
+        const auto a01 = matrix.m[1U];
+        const auto a02 = matrix.m[2U];
+        const auto a10 = matrix.m[4U];
+        const auto a11 = matrix.m[5U];
+        const auto a12 = matrix.m[6U];
+        const auto a20 = matrix.m[8U];
+        const auto a21 = matrix.m[9U];
+        const auto a22 = matrix.m[10U];
+
+        const auto c00 = (a11 * a22) - (a12 * a21);
+        const auto c01 = -((a10 * a22) - (a12 * a20));
+        const auto c02 = (a10 * a21) - (a11 * a20);
+        const auto c10 = -((a01 * a22) - (a02 * a21));
+        const auto c11 = (a00 * a22) - (a02 * a20);
+        const auto c12 = -((a00 * a21) - (a01 * a20));
+        const auto c20 = (a01 * a12) - (a02 * a11);
+        const auto c21 = -((a00 * a12) - (a02 * a10));
+        const auto c22 = (a00 * a11) - (a01 * a10);
+
+        const auto determinant = (a00 * c00) + (a01 * c01) + (a02 * c02);
+        if (std::abs(determinant) < 0.000001F) {
+            return {};
+        }
+
+        const auto inv_det = 1.0F / determinant;
+        const auto i00 = c00 * inv_det;
+        const auto i01 = c10 * inv_det;
+        const auto i02 = c20 * inv_det;
+        const auto i10 = c01 * inv_det;
+        const auto i11 = c11 * inv_det;
+        const auto i12 = c21 * inv_det;
+        const auto i20 = c02 * inv_det;
+        const auto i21 = c12 * inv_det;
+        const auto i22 = c22 * inv_det;
+
+        const auto tx = matrix.m[3U];
+        const auto ty = matrix.m[7U];
+        const auto tz = matrix.m[11U];
+
+        return J3dMatrix3x4{{
+            i00,
+            i01,
+            i02,
+            -((i00 * tx) + (i01 * ty) + (i02 * tz)),
+            i10,
+            i11,
+            i12,
+            -((i10 * tx) + (i11 * ty) + (i12 * tz)),
+            i20,
+            i21,
+            i22,
+            -((i20 * tx) + (i21 * ty) + (i22 * tz)),
+        }};
+    }
+
     J3dMatrix3x4 j3d_apply_matrix_scale(const J3dMatrix3x4& matrix, float scale_x, float scale_y, float scale_z) {
         return J3dMatrix3x4{{
             matrix.m[0U] * scale_x,
@@ -108,6 +165,14 @@ namespace smgpc::game {
             matrix.m[10U] * scale_z,
             matrix.m[11U],
         }};
+    }
+
+    J3dMatrix3x4 j3d_remove_matrix_scale(const J3dMatrix3x4& matrix, float scale_x, float scale_y, float scale_z) {
+        const auto safe_inverse = [](float scale) {
+            return std::abs(scale) < 0.000001F ? 1.0F : 1.0F / scale;
+        };
+
+        return j3d_apply_matrix_scale(matrix, safe_inverse(scale_x), safe_inverse(scale_y), safe_inverse(scale_z));
     }
 
 }  // namespace smgpc::game
