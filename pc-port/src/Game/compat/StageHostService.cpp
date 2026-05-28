@@ -30,12 +30,6 @@ namespace smgpc::game {
         return _scene_lifecycle.active_scenario_no();
     }
 
-#ifndef NDEBUG
-    std::optional<FileSelectStageState> StageHostService::file_select_state() const {
-        return _scene_lifecycle.file_select_state();
-    }
-#endif
-
     void StageHostService::create_stage_from_factory(const StageHostRequest &request) {
         _scene_lifecycle.request_stage(request);
     }

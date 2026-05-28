@@ -14,6 +14,7 @@
 
 #include <revolution.h>
 
+#include "Game/compat/BmgMessageArchive.hpp"
 #include "Game/compat/CameraPose.hpp"
 #include "Game/compat/EffectResourceCompat.hpp"
 #include "Game/compat/GXState.hpp"
@@ -24,6 +25,21 @@ class UserFile;
 class LiveActor;
 
 namespace smgpc::game {
+
+    struct DvdFileReadTrace {
+        std::string requested_path;
+        std::string resolved_path;
+        std::size_t byte_count = 0U;
+    };
+
+    struct DvdArchiveLoadTrace {
+        std::string requested_path;
+        std::string resolved_path;
+        bool cache_hit = false;
+        std::size_t load_count = 0U;
+        std::size_t cached_archive_count = 0U;
+        std::size_t resource_count = 0U;
+    };
 
     class DvdFileSystemService final {
     public:
@@ -41,15 +57,21 @@ namespace smgpc::game {
         [[nodiscard]] std::size_t archive_load_count(std::string_view disc_path) const;
         [[nodiscard]] std::size_t archive_load_count_for_path(const std::filesystem::path &path) const;
         [[nodiscard]] std::size_t cached_archive_count() const;
+        [[nodiscard]] std::span<const DvdFileReadTrace> file_read_trace() const;
+        [[nodiscard]] std::span<const DvdArchiveLoadTrace> archive_load_trace() const;
+        void clear_trace();
 
     private:
         [[nodiscard]] std::filesystem::path normalize_disc_path(std::string_view disc_path) const;
         [[nodiscard]] std::string archive_cache_key_for_path(const std::filesystem::path &path) const;
         [[nodiscard]] std::string archive_cache_key(std::string_view disc_path) const;
+        [[nodiscard]] RarcArchive &archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path);
 
         std::filesystem::path _root;
         std::map<std::string, std::unique_ptr<RarcArchive>> _archives;
         std::map<std::string, std::size_t> _archive_load_counts;
+        mutable std::vector<DvdFileReadTrace> _file_read_trace;
+        std::vector<DvdArchiveLoadTrace> _archive_load_trace;
     };
 
     struct WpadPointerState {
@@ -131,6 +153,12 @@ namespace smgpc::game {
         StageBgmStop,
         StageBgmStateChange,
         SystemSoundStart,
+        SystemSoundStop,
+        SystemLevelSoundStart,
+        LevelSoundSubmit,
+        LevelSoundPermit,
+        AtmosphereSoundStart,
+        SystemMEStart,
         ControllerSpeakerSoundStart,
     };
 
@@ -140,6 +168,7 @@ namespace smgpc::game {
         s32 fade_frames = 0;
         s32 state = 0;
         u32 change_frames = 0U;
+        u32 delay_frames = 0U;
         std::uint64_t frame_index = 0U;
     };
 
@@ -151,6 +180,12 @@ namespace smgpc::game {
         void stop_stage_bgm(s32 fade_frames);
         void set_stage_bgm_state(s32 state, u32 change_frames);
         void start_system_sound(std::string_view name);
+        void stop_system_sound(std::string_view name, u32 delay_frames);
+        void start_system_level_sound(std::string_view name);
+        void submit_level_sound();
+        void permit_level_sound();
+        void start_atmosphere_sound(std::string_view name);
+        void start_system_me(std::string_view name);
         void start_controller_speaker_sound(std::string_view name);
 
         [[nodiscard]] bool is_stage_bgm_prepared() const;
@@ -161,7 +196,8 @@ namespace smgpc::game {
         [[nodiscard]] std::span<const AudioEvent> events() const;
 
     private:
-        void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0, s32 state = 0, u32 change_frames = 0U);
+        void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0, s32 state = 0, u32 change_frames = 0U,
+                        u32 delay_frames = 0U);
 
         std::uint64_t _frame_index = 0U;
         std::uint64_t _stage_bgm_start_frame = 0U;
@@ -203,6 +239,22 @@ namespace smgpc::game {
         std::vector<ResolvedEffectResource> resolved_resources;
     };
 
+    enum class EffectHostBindingSource {
+        LiveActorBaseMatrix,
+        LayoutActorTransform,
+        SimpleLayoutOrigin,
+    };
+
+    struct EffectHostBinding {
+        EffectKeeperHostKind host_kind = EffectKeeperHostKind::LiveActor;
+        EffectHostBindingSource source = EffectHostBindingSource::LiveActorBaseMatrix;
+        std::string host_name;
+        std::array<float, 12U> matrix{};
+        std::array<float, 3U> translation{};
+        bool host_dead = false;
+        std::uint64_t frame_index = 0U;
+    };
+
     struct JpcEffectParticleInstance {
         std::uint32_t id = 0U;
         std::uint16_t age = 0U;
@@ -235,6 +287,7 @@ namespace smgpc::game {
         std::string effect_name;
         std::uint64_t start_frame_index = 0U;
         std::optional<EffectKeeperRegistration> keeper;
+        std::optional<EffectHostBinding> host_binding;
         std::vector<ResolvedEffectResource> resolved_resources;
         std::vector<JpcEffectEmitterInstance> emitters;
     };
@@ -265,11 +318,20 @@ namespace smgpc::game {
         std::uint32_t particle_id = 0U;
         std::uint16_t particle_age = 0U;
         std::uint16_t particle_lifetime = 0U;
+        bool host_binding_found = false;
+        std::string host_binding_source;
+        std::array<float, 3U> host_translation = {};
+        float particle_x = 0.0F;
+        float particle_y = 0.0F;
+        float particle_z = 0.0F;
+        float particle_scale_x = 1.0F;
+        float particle_scale_y = 1.0F;
+        float particle_alpha = 1.0F;
         std::uint32_t live_particle_count = 0U;
         bool child_particle = false;
         bool alpha_compare_enabled = false;
         bool blend_enabled = true;
-        EffectTextureBindingTrace texture{};
+        EffectTextureBindingTrace texture = {};
     };
 #endif
 
@@ -280,6 +342,9 @@ namespace smgpc::game {
         void register_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                              std::string_view resource_group_name, bool sort_enabled);
         void unregister_keeper(std::string_view host_name);
+        void bind_host_transform(EffectKeeperHostKind host_kind, std::string_view host_name, EffectHostBindingSource source,
+                                 const std::array<float, 12U> &matrix, bool host_dead);
+        void unbind_host_transform(std::string_view host_name);
         void emit(std::string_view actor_name, std::string_view effect_name);
         void delete_effect(std::string_view actor_name, std::string_view effect_name);
         void delete_all(std::string_view actor_name);
@@ -289,6 +354,7 @@ namespace smgpc::game {
         [[nodiscard]] std::span<const ActiveEffectInstance> active_effect_instances() const;
         [[nodiscard]] std::vector<EffectKeeperRegistration> registered_keepers() const;
         [[nodiscard]] std::optional<EffectKeeperRegistration> registered_keeper(std::string_view host_name) const;
+        [[nodiscard]] std::optional<EffectHostBinding> host_binding(std::string_view host_name) const;
         [[nodiscard]] std::vector<std::string> active_effects(std::string_view actor_name) const;
         [[nodiscard]] const EffectResourceLibrary *resource_library() const;
 #ifndef NDEBUG
@@ -306,6 +372,7 @@ namespace smgpc::game {
         std::vector<EffectEvent> _events;
         std::vector<ActiveEffectInstance> _active_effects;
         std::map<std::string, EffectKeeperRegistration, std::less<>> _registered_keepers;
+        std::map<std::string, EffectHostBinding, std::less<>> _host_bindings;
         std::optional<EffectResourceLibrary> _resource_library;
         std::map<std::uint16_t, render::TextureHandle> _texture_handles;
         std::uint32_t _emitter_random_seed = 0U;
@@ -365,12 +432,47 @@ namespace smgpc::game {
         std::vector<WipeEvent> _events;
     };
 
+    enum class ImageEffectControlKind {
+        ForceOff,
+        ControlAuto,
+    };
+
+    struct ImageEffectControlEvent {
+        ImageEffectControlKind kind = ImageEffectControlKind::ForceOff;
+        std::uint64_t frame_index = 0U;
+    };
+
+    class ImageEffectService final {
+    public:
+        void begin_frame(std::uint64_t frame_index);
+        void force_off();
+        void set_control_auto();
+
+        [[nodiscard]] bool is_forced_off() const;
+        [[nodiscard]] bool is_control_auto() const;
+        [[nodiscard]] std::span<const ImageEffectControlEvent> events() const;
+
+    private:
+        void push_event(ImageEffectControlKind kind);
+
+        std::uint64_t _frame_index = 0U;
+        bool _forced_off = false;
+        bool _control_auto = true;
+        std::vector<ImageEffectControlEvent> _events;
+    };
+
     enum class StarPointerMode {
         None,
-        Title,
-        FileSelect,
-        SaveLoad,
-        PictureBook,
+        ScreenMenu,
+        TargetSelection,
+        SystemModal,
+        DocumentViewer,
+    };
+
+    enum class StarPointerGuidanceRequest {
+        None,
+        Primary,
+        Secondary,
     };
 
     struct StarPointerModeEvent {
@@ -417,15 +519,14 @@ namespace smgpc::game {
         void set_target_radius(const LiveActor &actor, float radius);
         void start_mode(StarPointerMode mode);
         void set_guidance_active(bool active);
-        void request_file_select_guidance();
-        void request_file_select_copy_guidance();
+        void request_guidance(StarPointerGuidanceRequest request);
 
         [[nodiscard]] StarPointerMode mode() const;
         [[nodiscard]] bool has_target(const LiveActor &actor) const;
         [[nodiscard]] bool is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<CameraPoseCompat> &camera_pose, bool check_z);
         [[nodiscard]] bool is_guidance_active() const;
-        [[nodiscard]] bool is_file_select_guidance_requested() const;
-        [[nodiscard]] bool is_file_select_copy_guidance_requested() const;
+        [[nodiscard]] bool is_guidance_requested(StarPointerGuidanceRequest request) const;
+        [[nodiscard]] std::span<const StarPointerGuidanceRequest> guidance_requests() const;
         [[nodiscard]] std::span<const StarPointerModeEvent> mode_events() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const StarPointerTargetEvent> target_events() const;
@@ -441,8 +542,7 @@ namespace smgpc::game {
         std::uint64_t _frame_index = 0U;
         StarPointerMode _mode = StarPointerMode::None;
         bool _guidance_active = false;
-        bool _file_select_guidance_requested = false;
-        bool _file_select_copy_guidance_requested = false;
+        std::vector<StarPointerGuidanceRequest> _guidance_requests;
         std::map<const LiveActor *, StarPointerTargetState> _targets;
         std::vector<StarPointerModeEvent> _mode_events;
 #ifndef NDEBUG
@@ -452,6 +552,16 @@ namespace smgpc::game {
 
     class CameraSystemService final {
     public:
+        enum class ShakeRequestKind {
+            Normal,
+        };
+
+        struct ShakeRequestEvent {
+            ShakeRequestKind kind = ShakeRequestKind::Normal;
+            std::uint64_t frame_index = 0U;
+        };
+
+        void begin_frame(std::uint64_t frame_index);
         void reset_camera_man();
         void request_normal_shake();
         void pause_on_camera_director();
@@ -475,6 +585,7 @@ namespace smgpc::game {
         [[nodiscard]] std::uint32_t programmable_camera_end_count() const;
         [[nodiscard]] std::uint32_t programmable_camera_param_count() const;
         [[nodiscard]] std::uint32_t programmable_camera_fovy_count() const;
+        [[nodiscard]] std::span<const ShakeRequestEvent> shake_request_events() const;
 
     private:
         struct ProgrammableCameraEventState {
@@ -487,7 +598,9 @@ namespace smgpc::game {
         [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
         [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
         [[nodiscard]] std::optional<CameraPoseCompat> active_programmable_camera_pose_for(std::string_view name) const;
+        void push_shake_event(ShakeRequestKind kind);
 
+        std::uint64_t _frame_index = 0U;
         std::uint32_t _reset_camera_man_count = 0U;
         std::uint32_t _normal_shake_request_count = 0U;
         std::uint32_t _camera_director_pause_count = 0U;
@@ -498,6 +611,7 @@ namespace smgpc::game {
         std::uint32_t _programmable_camera_end_count = 0U;
         std::uint32_t _programmable_camera_param_count = 0U;
         std::uint32_t _programmable_camera_fovy_count = 0U;
+        std::vector<ShakeRequestEvent> _shake_request_events;
     };
 
     class PlayerSystemService final {
@@ -531,6 +645,7 @@ namespace smgpc::game {
 
     enum class RumbleRequestKind {
         Strong,
+        Middle,
         Weak,
     };
 
@@ -544,6 +659,7 @@ namespace smgpc::game {
     public:
         void begin_frame(std::uint64_t frame_index);
         void request_strong(s32 channel);
+        void request_middle(s32 channel);
         void request_weak(s32 channel);
 
         [[nodiscard]] std::span<const RumbleRequestEvent> events() const;
@@ -644,7 +760,7 @@ namespace smgpc::game {
 
         std::map<std::string, std::vector<std::uint8_t>> _files;
         std::vector<SlotState> _slot_states;
-        std::optional<std::filesystem::path> _host_directory{};
+        std::optional<std::filesystem::path> _host_directory = {};
         OSTime _sys_config_time_announced = 0;
         OSTime _sys_config_time_sent = 0;
         u32 _sys_config_sent_bytes = 0U;
@@ -660,15 +776,20 @@ namespace smgpc::game {
         [[nodiscard]] const std::string *message(std::string_view tag) const;
         [[nodiscard]] const std::u16string *message_utf16(std::string_view tag) const;
         [[nodiscard]] const std::u16string *message_raw_utf16(std::string_view tag) const;
+        [[nodiscard]] const std::vector<BmgControlTag> *message_control_tags(std::string_view tag) const;
         [[nodiscard]] std::string message_or(std::string_view tag, std::string_view fallback) const;
         [[nodiscard]] std::u16string message_utf16_or(std::string_view tag, std::u16string_view fallback) const;
         [[nodiscard]] std::u16string message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const;
+        [[nodiscard]] std::u16string format_message_utf16(std::string_view tag, std::span<const BmgFormatArg> args) const;
+        [[nodiscard]] std::u16string format_message_utf16_or(std::string_view tag, std::span<const BmgFormatArg> args,
+                                                             std::u16string_view fallback) const;
 
     private:
         struct MessageText {
             std::u16string raw_utf16;
             std::u16string utf16;
             std::string utf8;
+            std::vector<BmgControlTag> control_tags;
         };
 
         std::map<std::string, MessageText> _messages;
@@ -685,7 +806,7 @@ namespace smgpc::game {
         [[nodiscard]] std::uint8_t loaded_mask() const;
 
     private:
-        std::array<GXLightState, 8U> _lights{};
+        std::array<GXLightState, 8U> _lights = {};
     };
 
     struct RflMiiEntry {

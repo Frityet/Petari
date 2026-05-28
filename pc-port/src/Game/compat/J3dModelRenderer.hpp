@@ -31,6 +31,7 @@ namespace smgpc::game {
         std::optional<bool> gx_color_update = {};
         std::optional<bool> gx_alpha_update = {};
         std::span<const GXLightState> scene_lights = {};
+        std::optional<J3dMatrix3x4> projmap_effect_matrix = {};
     };
 
     enum class J3dRendererPacketMode {
@@ -92,6 +93,8 @@ namespace smgpc::game {
         std::uint32_t draw_packet_triangle_count = 0U;
         std::uint8_t pass_order = 0U;
         J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
+        std::string packet_mode_reason;
+        bool packet_mode_fallback = false;
         std::size_t material_pass_count = 0U;
         std::size_t shader_texture_stage_count = 0U;
         std::uint8_t color_channel_count = 0U;
@@ -207,6 +210,8 @@ namespace smgpc::game {
             std::size_t gx_texture_stage_count = 0U;
             std::size_t gx_tev_stage_count = 0U;
             J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
+            std::string packet_mode_reason;
+            bool packet_mode_fallback = false;
             std::array<std::uint8_t, 4U> material_color{255U, 255U, 255U, 255U};
             std::uint8_t pass_order = 0U;
             std::uint8_t wrap_u = 0U;

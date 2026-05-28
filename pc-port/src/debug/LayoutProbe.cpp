@@ -204,9 +204,9 @@ namespace {
         case 1U:
             return -height * 0.5F;
         case 2U:
-            return -height;
-        default:
             return 0.0F;
+        default:
+            return -height;
         }
     }
 

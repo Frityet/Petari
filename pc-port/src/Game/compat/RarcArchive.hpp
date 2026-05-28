@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <span>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace smgpc::game {
@@ -22,9 +23,18 @@ public:
 
     [[nodiscard]] const std::vector<RarcEntry> &entries() const;
     [[nodiscard]] bool contains(std::string_view path) const;
+    [[nodiscard]] bool contains_normalized(std::string_view path) const;
+    [[nodiscard]] bool contains_basename(std::string_view path) const;
+    [[nodiscard]] bool contains_resource(std::string_view path) const;
     [[nodiscard]] const RarcEntry *find(std::string_view path) const;
+    [[nodiscard]] const RarcEntry *find_normalized(std::string_view path) const;
+    [[nodiscard]] const RarcEntry *find_by_basename(std::string_view path) const;
+    [[nodiscard]] const RarcEntry *find_resource(std::string_view path) const;
     [[nodiscard]] std::span<const std::uint8_t> file_data(const RarcEntry &entry) const;
     [[nodiscard]] std::span<const std::uint8_t> file_data(std::string_view path) const;
+    [[nodiscard]] std::span<const std::uint8_t> file_data_normalized(std::string_view path) const;
+    [[nodiscard]] std::span<const std::uint8_t> file_data_by_basename(std::string_view path) const;
+    [[nodiscard]] std::span<const std::uint8_t> resource_data(std::string_view path) const;
 
 private:
     explicit RarcArchive(std::vector<std::uint8_t> bytes);

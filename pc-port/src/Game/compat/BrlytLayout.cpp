@@ -1,5 +1,7 @@
 #include "BrlytLayout.hpp"
 
+#include "BmgMessageArchive.hpp"
+
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -535,6 +537,24 @@ namespace smgpc::game {
             return text;
         }
 
+        [[nodiscard]] std::u16string u16string_from_words(std::span<const std::uint16_t> words) {
+            auto text = std::u16string{};
+            text.reserve(words.size());
+            for (const auto code : words) {
+                text.push_back(static_cast<char16_t>(code));
+            }
+            return text;
+        }
+
+        [[nodiscard]] std::vector<std::uint16_t> words_from_u16string(std::u16string_view text) {
+            auto words = std::vector<std::uint16_t>{};
+            words.reserve(text.size());
+            for (const auto code : text) {
+                words.push_back(static_cast<std::uint16_t>(code));
+            }
+            return words;
+        }
+
         [[nodiscard]] BrlytTextBox parse_text_box(std::span<const std::uint8_t> block, const PaneState &global_state, const std::vector<std::string> &font_names, const std::vector<BrlytMaterial> &materials) {
             if (block.size() < 116U) {
                 throw std::runtime_error("BRLYT text box pane is truncated");
@@ -555,11 +575,17 @@ namespace smgpc::game {
             color[3U] = static_cast<std::uint8_t>((static_cast<std::uint16_t>(color[3U]) * alpha) / 255U);
             const auto color_mapping_min = material_index < materials.size() ? material_color_to_rgba8(materials[material_index].tev_colors[0U]) : std::array<std::uint8_t, 4U>{0U, 0U, 0U, 0U};
             const auto color_mapping_max = material_index < materials.size() ? material_color_to_rgba8(materials[material_index].tev_colors[1U]) : std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U};
+            auto raw_text = parse_utf16be_string(block, text_offset, text_byte_count);
+            const auto raw_text_u16 = u16string_from_words(raw_text);
+            auto display_text = words_from_u16string(format_bmg_text(raw_text_u16, {}));
+            auto control_tags = bmg_control_tags(raw_text_u16);
 
             return BrlytTextBox{
                 .name = name,
                 .font_name = font_index < font_names.size() ? font_names[font_index] : std::string{},
-                .text = parse_utf16be_string(block, text_offset, text_byte_count),
+                .text = std::move(display_text),
+                .raw_text = std::move(raw_text),
+                .control_tags = std::move(control_tags),
                 .pane_index = 0U,
                 .material_index = material_index,
                 .x = global_state.translate_x + base_position_x(base_position, width),

@@ -42,6 +42,9 @@ void LayoutActor::movement() {
     }
 
     if (mSimpleLayout != nullptr && !mFlag.mIsStopAnimFrame) {
+        for (auto i = u32{0}; i < mAnimCtrls.size(); ++i) {
+            syncLayoutFromAnimCtrl(i);
+        }
         mSimpleLayout->update();
         for (auto i = u32{0}; i < mAnimCtrls.size(); ++i) {
             syncAnimCtrlFromLayout(i);
@@ -186,6 +189,7 @@ const SimpleLayout* LayoutActor::getSimpleLayout() const {
 }
 
 J3DFrameCtrl* LayoutActor::getAnimCtrl(u32 animLayer) {
+    syncLayoutFromAnimCtrl(animLayer);
     syncAnimCtrlFromLayout(animLayer);
     return &animCtrl(animLayer);
 }
@@ -256,6 +260,23 @@ const J3DFrameCtrl& LayoutActor::animCtrl(u32 animLayer) const {
     return mAnimCtrls.at(std::min< std::size_t >(animLayer, mAnimCtrls.size() - 1U));
 }
 
+void LayoutActor::syncLayoutFromAnimCtrl(u32 animLayer) {
+    if (mSimpleLayout == nullptr) {
+        return;
+    }
+
+    const auto layer = std::min< std::size_t >(animLayer, mAnimCtrls.size() - 1U);
+    const auto& ctrl = mAnimCtrls[layer];
+    auto& last_synced = mLastSyncedAnimCtrls[layer];
+    if (ctrl.mFrame == last_synced.mFrame && ctrl.mRate == last_synced.mRate) {
+        return;
+    }
+
+    mSimpleLayout->setAnimFrame(ctrl.mFrame, static_cast< u32 >(layer));
+    mSimpleLayout->setAnimRate(ctrl.mRate, static_cast< u32 >(layer));
+    last_synced = ctrl;
+}
+
 void LayoutActor::syncAnimCtrlFromLayout(u32 animLayer) {
     if (mSimpleLayout == nullptr) {
         return;
@@ -265,4 +286,5 @@ void LayoutActor::syncAnimCtrlFromLayout(u32 animLayer) {
     ctrl.mFrame = mSimpleLayout->getAnimFrame(animLayer);
     ctrl.mEnd = static_cast< s16 >(mSimpleLayout->getAnimFrameMax(animLayer));
     ctrl.mRate = mSimpleLayout->getAnimRate(animLayer);
+    mLastSyncedAnimCtrls.at(std::min< std::size_t >(animLayer, mLastSyncedAnimCtrls.size() - 1U)) = ctrl;
 }

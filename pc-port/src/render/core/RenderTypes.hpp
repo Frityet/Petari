@@ -77,6 +77,12 @@ namespace smgpc::render::core {
         bool clamp_bottom = true;
         bool intensity_format = false;
         bool auto_conversion = false;
+        std::array<std::uint8_t, 4U> clear_color = {0U, 0U, 0U, 0U};
+        std::uint32_t clear_depth = 0U;
+        bool copy_filter_aa = false;
+        bool copy_filter_vertical = false;
+        std::array<std::array<std::uint8_t, 2U>, 12U> copy_filter_sample_pattern = {};
+        std::array<std::uint8_t, 7U> copy_filter_vfilter = {};
         std::uint32_t dest_addr = 0U;
         std::uint32_t dest_stride = 0U;
         CopyRect source_rect = {};

@@ -29,11 +29,11 @@ public:
     void exeDisappear();
     void reflectInfo();
 
+#ifndef NDEBUG
     [[nodiscard]] s32 getFileNumber() const;
     [[nodiscard]] s32 getStarNum() const;
     [[nodiscard]] s32 getStarPieceNum() const;
     [[nodiscard]] bool isSelectedMario() const;
-#ifndef NDEBUG
     [[nodiscard]] s32 getMissNum() const;
     [[nodiscard]] const wchar_t* getDateMessage() const;
     [[nodiscard]] const wchar_t* getTimeMessage() const;

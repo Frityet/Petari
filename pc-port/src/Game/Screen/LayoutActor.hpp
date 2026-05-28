@@ -71,10 +71,12 @@ public:
 private:
     [[nodiscard]] J3DFrameCtrl& animCtrl(u32 animLayer);
     [[nodiscard]] const J3DFrameCtrl& animCtrl(u32 animLayer) const;
+    void syncLayoutFromAnimCtrl(u32 animLayer);
     void syncAnimCtrlFromLayout(u32 animLayer);
 
     std::unique_ptr< LayoutManager > mManagerOwner;
     std::unique_ptr< SimpleLayout > mSimpleLayout;
     TVec2f mTrans{};
     std::array< J3DFrameCtrl, 4 > mAnimCtrls{};
+    std::array< J3DFrameCtrl, 4 > mLastSyncedAnimCtrls{};
 };

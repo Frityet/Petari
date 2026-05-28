@@ -1,8 +1,5 @@
 #include "Application.hpp"
 
-#include "Game/compat/RuntimeContext.hpp"
-#include "Game/compat/SequenceBootService.hpp"
-
 #ifndef NDEBUG
 #include "Game/compat/ParityTrace.hpp"
 #endif
@@ -19,6 +16,10 @@
 #include <system_error>
 #include <thread>
 #include <utility>
+
+#ifndef NDEBUG
+#include <fstream>
+#endif
 
 namespace smgpc::app {
     namespace {
@@ -282,6 +283,16 @@ namespace smgpc::app {
             return parse_frame_index(value);
         }
 
+        [[nodiscard]] bool has_active_layout(const game::RuntimeContext &runtime, std::string_view layout_name) {
+            for (const auto &layout : runtime.scheduler().debug_layout_runtime_snapshot()) {
+                if (layout.layout_name == layout_name && !layout.dead && !layout.suspended) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         void emit_configured_semantic_anchor(game::RuntimeContext &runtime) {
             const auto name = string_environment("SMGPC_SEMANTIC_ANCHOR_NAME");
             if (!name.has_value()) {
@@ -301,8 +312,11 @@ namespace smgpc::app {
         class DesktopApplication final : public IApplication {
         public:
             DesktopApplication(di::DependencyReference<render::IWindowService> window_service,
-                               di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger)
-                : _window_service(std::move(window_service)), _renderer_engine(std::move(renderer_engine)), _logger(std::move(logger)) {
+                               di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger,
+                               di::DependencyReference<game::RuntimeContext> runtime,
+                               di::DependencyReference<game::SequenceBootService> sequence_boot)
+                : _window_service(std::move(window_service)), _renderer_engine(std::move(renderer_engine)), _logger(std::move(logger)),
+                  _runtime(std::move(runtime)), _sequence_boot(std::move(sequence_boot)) {
             }
 
             [[nodiscard]] int run() override {
@@ -318,7 +332,7 @@ namespace smgpc::app {
                 const auto skip_render_until_frame = skip_render_until_frame_from_environment();
                 const auto render_frame_interval = render_frame_interval_from_environment();
                 const auto frame_pacing_enabled = frame_pacing_enabled_from_environment();
-                const auto exit_on_picturebook_reached = bool_environment_enabled("SMGPC_EXIT_ON_PICTUREBOOK_REACHED");
+                const auto exit_on_layout_name = string_environment("SMGPC_EXIT_ON_LAYOUT_NAME");
                 const auto debug_change_stage_request_frame = debug_change_stage_request_frame_from_environment();
                 auto timing = FrameTimingSummary{};
                 auto screenshot_queued = false;
@@ -351,8 +365,8 @@ namespace smgpc::app {
                 } else {
                     _logger->info(logging::Category::APP, logging::Message{"Debug frame pacing explicitly disabled by SMGPC_FRAME_PACING=0"});
                 }
-                if (exit_on_picturebook_reached) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will exit when picturebook_reached is emitted"});
+                if (exit_on_layout_name.has_value()) {
+                    _logger->info(logging::Category::APP, logging::Message{"Will exit when layout {} is active"}, *exit_on_layout_name);
                 }
                 if (debug_change_stage_request_frame.has_value()) {
                     _logger->info(logging::Category::APP, logging::Message{"Will debug-request generic stage change after loading game data on frame {}"},
@@ -362,7 +376,8 @@ namespace smgpc::app {
                 constexpr auto frame_pacing_enabled = true;
 #endif
 
-                auto runtime = game::RuntimeContext(_logger.get(), _window_service.get());
+                auto &runtime = _runtime.get();
+                auto &sequence_boot = _sequence_boot.get();
                 if (!runtime.save_data().host_directory().has_value()) {
                     const auto save_directory = default_save_directory();
                     runtime.save_data().set_host_directory(save_directory);
@@ -374,8 +389,7 @@ namespace smgpc::app {
                     runtime.set_j3d_packet_trace_frame(parity_trace_request->frame);
                 }
 #endif
-                auto sequence_boot = game::SequenceBootService(runtime);
-                sequence_boot.request_boot_to_file_select();
+                sequence_boot.request_boot_to_initial_stage();
                 auto loop_frame_index = std::uint64_t{};
                 auto frame_pacer = FramePacer(frame_pacing_enabled);
 
@@ -433,7 +447,7 @@ namespace smgpc::app {
 #endif
                     sequence_boot.update_after_runtime_frame();
 #ifndef NDEBUG
-                    if (exit_on_picturebook_reached && sequence_boot.has_picturebook_reached()) {
+                    if (exit_on_layout_name.has_value() && has_active_layout(runtime, *exit_on_layout_name)) {
                         _window_service->close();
                     }
 #endif
@@ -508,6 +522,8 @@ namespace smgpc::app {
             di::DependencyReference<render::IWindowService> _window_service;
             di::DependencyReference<render::IRendererEngine> _renderer_engine;
             di::DependencyReference<logging::ILogger> _logger;
+            di::DependencyReference<game::RuntimeContext> _runtime;
+            di::DependencyReference<game::SequenceBootService> _sequence_boot;
         };
 
     }  // namespace
@@ -554,15 +570,43 @@ namespace smgpc::app {
                 });
         }
 
+        if (overrides.runtime_context) {
+            graph.register_service<di::SingletonService<game::RuntimeContext>>(std::move(overrides.runtime_context));
+        } else {
+            graph.register_service<di::SingletonService<game::RuntimeContext>, logging::ILogger, render::IWindowService>(
+                [](di::DependencyReference<logging::ILogger> logger, di::DependencyReference<render::IWindowService> window_service) {
+                    return std::make_unique<game::RuntimeContext>(logger.get(), window_service.get());
+                });
+        }
+
+        if (overrides.sequence_boot) {
+            graph.register_service<di::SingletonService<game::SequenceBootService>>(std::move(overrides.sequence_boot));
+        } else {
+            graph.register_service<di::SingletonService<game::SequenceBootService>, game::RuntimeContext>(
+                [](di::DependencyReference<game::RuntimeContext> runtime) {
+                    return std::make_unique<game::SequenceBootService>(runtime.get());
+                });
+        }
+
         if (overrides.application) {
             graph.register_service<di::SingletonService<IApplication>>(std::move(overrides.application));
         } else {
-            graph.register_service<di::SingletonService<IApplication>, render::IWindowService, render::IRendererEngine, logging::ILogger>(
+            graph.register_service<di::SingletonService<IApplication>, render::IWindowService, render::IRendererEngine, logging::ILogger,
+                                   game::RuntimeContext, game::SequenceBootService>(
                 [](di::DependencyReference<render::IWindowService> window_service,
-                   di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger) {
-                    return std::make_unique<DesktopApplication>(std::move(window_service), std::move(renderer_engine), std::move(logger));
+                   di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger,
+                   di::DependencyReference<game::RuntimeContext> runtime,
+                   di::DependencyReference<game::SequenceBootService> sequence_boot) {
+                    return std::make_unique<DesktopApplication>(std::move(window_service), std::move(renderer_engine), std::move(logger),
+                                                                std::move(runtime), std::move(sequence_boot));
                 });
         }
+
+#ifndef NDEBUG
+        if (const auto *graphviz_path = std::getenv("SMGPC_DI_GRAPHVIZ_PATH"); graphviz_path != nullptr && graphviz_path[0] != '\0') {
+            std::ofstream(graphviz_path) << graph.dependencies_to_graphviz();
+        }
+#endif
 
         return graph;
     }

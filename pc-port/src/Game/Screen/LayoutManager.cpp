@@ -87,6 +87,18 @@ void LayoutManager::hidePane(const char* pPaneName) {
     }
 }
 
+void LayoutManager::showPaneRecursive(const char* pPaneName) {
+    if (auto* layout = mHost != nullptr ? mHost->getSimpleLayout() : nullptr) {
+        layout->setPaneVisibleRecursive(normalizedPaneName(pPaneName), true);
+    }
+}
+
+void LayoutManager::hidePaneRecursive(const char* pPaneName) {
+    if (auto* layout = mHost != nullptr ? mHost->getSimpleLayout() : nullptr) {
+        layout->setPaneVisibleRecursive(normalizedPaneName(pPaneName), false);
+    }
+}
+
 bool LayoutManager::isPaneVisible(const char* pPaneName) const {
     const auto* layout = mHost != nullptr ? mHost->getSimpleLayout() : nullptr;
     return layout == nullptr || layout->isPaneVisible(normalizedPaneName(pPaneName));

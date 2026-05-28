@@ -1,9 +1,10 @@
 #include "RuntimeContext.hpp"
 
 #include <algorithm>
+#include <array>
+#include <cctype>
 #include <charconv>
 #include <chrono>
-#include <cctype>
 #include <cstdlib>
 #include <exception>
 #include <fstream>
@@ -28,6 +29,31 @@ namespace smgpc::game {
     namespace {
 
         RuntimeContext *s_runtime_context = nullptr;
+
+        [[nodiscard]] std::array<float, 12U> effect_identity_matrix() {
+            return {
+                1.0F,
+                0.0F,
+                0.0F,
+                0.0F,
+                0.0F,
+                1.0F,
+                0.0F,
+                0.0F,
+                0.0F,
+                0.0F,
+                1.0F,
+                0.0F,
+            };
+        }
+
+        [[nodiscard]] std::array<float, 12U> effect_translation_matrix(float x, float y, float z) {
+            auto matrix = effect_identity_matrix();
+            matrix[3U] = x;
+            matrix[7U] = y;
+            matrix[11U] = z;
+            return matrix;
+        }
 
         [[nodiscard]] std::filesystem::path weakly_canonical_or_normal(const std::filesystem::path &path) {
             std::error_code error{};
@@ -86,25 +112,6 @@ namespace smgpc::game {
                 text.remove_suffix(1U);
             }
             return text;
-        }
-
-        [[nodiscard]] std::optional<std::uint64_t> read_frame_index_environment(std::string_view name) {
-            const auto key = std::string(name);
-            const auto *value = std::getenv(key.c_str());
-            if (value == nullptr || value[0] == '\0') {
-                return std::nullopt;
-            }
-
-            auto frame = std::uint64_t{};
-            const auto text = std::string_view(value);
-            const auto *begin = text.data();
-            const auto *end = begin + text.size();
-            const auto result = std::from_chars(begin, end, frame);
-            if (result.ec != std::errc{} || result.ptr != end) {
-                return std::nullopt;
-            }
-
-            return frame;
         }
 
         [[nodiscard]] std::optional<std::uint64_t> parse_frame_index(std::string_view text) {
@@ -248,6 +255,41 @@ namespace smgpc::game {
             return mask;
         }
 
+        [[nodiscard]] std::string debug_wpad_button_mask_detail(std::uint32_t mask) {
+            constexpr auto buttons = std::array{
+                std::pair{WPAD_BUTTON_A, "A"},
+                std::pair{WPAD_BUTTON_B, "B"},
+                std::pair{WPAD_BUTTON_UP, "UP"},
+                std::pair{WPAD_BUTTON_DOWN, "DOWN"},
+                std::pair{WPAD_BUTTON_LEFT, "LEFT"},
+                std::pair{WPAD_BUTTON_RIGHT, "RIGHT"},
+                std::pair{WPAD_BUTTON_PLUS, "PLUS"},
+                std::pair{WPAD_BUTTON_MINUS, "MINUS"},
+                std::pair{WPAD_BUTTON_HOME, "HOME"},
+                std::pair{WPAD_BUTTON_C, "C"},
+                std::pair{WPAD_BUTTON_Z, "Z"},
+                std::pair{WPAD_BUTTON_1, "ONE"},
+                std::pair{WPAD_BUTTON_2, "TWO"},
+            };
+
+            auto detail = std::string{"channel=0;buttons="};
+            auto appended = false;
+            for (const auto &[button_mask, name] : buttons) {
+                if ((mask & button_mask) == 0U) {
+                    continue;
+                }
+                if (appended) {
+                    detail += '+';
+                }
+                detail += name;
+                appended = true;
+            }
+            if (!appended) {
+                detail += "none";
+            }
+            return detail;
+        }
+
         [[nodiscard]] std::optional<std::string> read_debug_string_environment(std::string_view name) {
             const auto key = std::string(name);
             const auto *value = std::getenv(key.c_str());
@@ -342,9 +384,6 @@ namespace smgpc::game {
             return frame_index >= first_frame && frame_index <= last_frame;
         }
 
-        [[nodiscard]] std::optional<std::uint64_t> read_debug_hold_title_combo_frame_environment() {
-            return read_frame_index_environment("SMGPC_HOLD_TITLE_COMBO_FRAME");
-        }
 #endif
 
         [[nodiscard]] std::optional<std::string> read_string_environment(std::string_view name) {
@@ -401,9 +440,9 @@ namespace smgpc::game {
 
         [[nodiscard]] std::string default_stage_name() {
 #ifndef NDEBUG
-            return read_string_environment("SMGPC_STAGE_NAME").value_or("FileSelect");
+            return read_string_environment("SMGPC_STAGE_NAME").value_or("");
 #else
-            return "FileSelect";
+            return "";
 #endif
         }
 
@@ -413,7 +452,6 @@ namespace smgpc::game {
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
-          _hold_title_combo_frame(read_debug_hold_title_combo_frame_environment()),
           _debug_wpad_button_script(read_debug_wpad_button_script_environment()),
           _debug_wpad_pointer_script(read_debug_wpad_pointer_script_environment())
 #endif
@@ -460,9 +498,6 @@ namespace smgpc::game {
             }
         }
 #ifndef NDEBUG
-        if (_hold_title_combo_frame.has_value()) {
-            _logger.info(logging::Category::APP, logging::Message{"Debug title A+B hold starts at frame {}"}, *_hold_title_combo_frame);
-        }
         if (!_debug_wpad_button_script.empty()) {
             _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD button script spans"},
                          _debug_wpad_button_script.size());
@@ -506,30 +541,27 @@ namespace smgpc::game {
 #endif
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
+        _camera_system.begin_frame(_frame_index);
         if (const auto camera_pose = _camera_system.active_programmable_camera_pose()) {
             _scene_camera_pose = *camera_pose;
         }
         _audio.begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
+        refresh_effect_host_bindings();
         _scene_wipe.begin_frame(_frame_index);
         _system_wipe.begin_frame(_frame_index);
+        _image_effects.begin_frame(_frame_index);
         _star_pointer.begin_frame(_frame_index);
         _rumble.begin_frame(_frame_index);
         _sequence_requests.begin_frame(_frame_index);
         _wpad.begin_frame();
 
-        auto hold_mask = std::uint32_t{};
-        const auto append_input_button = [this, &hold_mask](render::InputButton button, std::uint32_t mask) {
+        auto raw_hold_mask = std::uint32_t{};
+        const auto append_input_button = [this, &raw_hold_mask](render::InputButton button, std::uint32_t mask) {
             if (_window_service.is_input_pressed(button)) {
-                hold_mask |= mask;
+                raw_hold_mask |= mask;
             }
         };
-        const auto debug_title_combo_held =
-#ifndef NDEBUG
-            _hold_title_combo_frame.has_value() && _frame_index >= *_hold_title_combo_frame;
-#else
-            false;
-#endif
         append_input_button(render::InputButton::CORE_PAD_A, WPAD_BUTTON_A);
         append_input_button(render::InputButton::CORE_PAD_B, WPAD_BUTTON_B);
         append_input_button(render::InputButton::CORE_PAD_UP, WPAD_BUTTON_UP);
@@ -541,14 +573,16 @@ namespace smgpc::game {
         append_input_button(render::InputButton::CORE_PAD_HOME, WPAD_BUTTON_HOME);
         append_input_button(render::InputButton::CORE_PAD_C, WPAD_BUTTON_C);
         append_input_button(render::InputButton::CORE_PAD_Z, WPAD_BUTTON_Z);
-        if (debug_title_combo_held) {
-            hold_mask |= WPAD_BUTTON_A | WPAD_BUTTON_B;
-        }
+        auto hold_mask = raw_hold_mask;
         auto pointer = _window_service.input_pointer_state();
+        const auto raw_pointer = pointer;
 #ifndef NDEBUG
+        auto debug_button_script_applied = false;
+        auto debug_pointer_script_applied = false;
         for (const auto &span : _debug_wpad_button_script) {
             if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
                 hold_mask |= span.button_mask;
+                debug_button_script_applied = true;
             }
         }
         for (const auto &span : _debug_wpad_pointer_script) {
@@ -558,17 +592,27 @@ namespace smgpc::game {
                     .y = span.y,
                     .valid = span.valid,
                 };
+                debug_pointer_script_applied = true;
             }
         }
+        _host_input_trace = HostInputTraceState{
+            .frame_index = _frame_index,
+            .raw_hold_mask = raw_hold_mask,
+            .effective_hold_mask = hold_mask,
+            .raw_pointer = raw_pointer,
+            .effective_pointer = pointer,
+            .debug_button_script_applied = debug_button_script_applied,
+            .debug_pointer_script_applied = debug_pointer_script_applied,
+        };
 #endif
         _wpad.set_connected(WPAD_CHAN0, true);
         _wpad.set_button_mask(WPAD_CHAN0, hold_mask);
         _wpad.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid);
         _wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
 #ifndef NDEBUG
-        if (!_emitted_title_combo_held_event && (hold_mask & (WPAD_BUTTON_A | WPAD_BUTTON_B)) == (WPAD_BUTTON_A | WPAD_BUTTON_B)) {
-            _emitted_title_combo_held_event = true;
-            emit_semantic_trace_event("input", "title_combo_held", "WPAD_CHAN0 A+B held");
+        if (!_emitted_wpad_buttons_held_event && hold_mask != 0U) {
+            _emitted_wpad_buttons_held_event = true;
+            emit_semantic_trace_event("input", "wpad_buttons_held", debug_wpad_button_mask_detail(hold_mask));
         }
 #endif
 
@@ -704,6 +748,10 @@ namespace smgpc::game {
         return _semantic_trace_events;
     }
 
+    const RuntimeContext::HostInputTraceState &RuntimeContext::host_input_trace() const {
+        return _host_input_trace;
+    }
+
     bool RuntimeContext::should_record_j3d_packet_trace() const {
         return _j3d_packet_trace_frame.has_value() && _frame_index == *_j3d_packet_trace_frame;
     }
@@ -791,6 +839,14 @@ namespace smgpc::game {
 
     const WipeService &RuntimeContext::system_wipe() const {
         return _system_wipe;
+    }
+
+    ImageEffectService &RuntimeContext::image_effects() {
+        return _image_effects;
+    }
+
+    const ImageEffectService &RuntimeContext::image_effects() const {
+        return _image_effects;
     }
 
     StarPointerService &RuntimeContext::star_pointer() {
@@ -930,6 +986,36 @@ namespace smgpc::game {
         _logger.info(logging::Category::APP, logging::Message{"SMG requested system sound {}"}, name);
     }
 
+    void RuntimeContext::stop_system_sound(std::string_view name, u32 delay_frames) {
+        _audio.stop_system_sound(name, delay_frames);
+        _logger.info(logging::Category::APP, logging::Message{"SMG stopped system sound {} after {} frames"}, name, delay_frames);
+    }
+
+    void RuntimeContext::start_system_level_sound(std::string_view name) {
+        _audio.start_system_level_sound(name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested system level sound {}"}, name);
+    }
+
+    void RuntimeContext::submit_level_sound() {
+        _audio.submit_level_sound();
+        _logger.info(logging::Category::APP, logging::Message{"SMG submitted level sounds"});
+    }
+
+    void RuntimeContext::permit_level_sound() {
+        _audio.permit_level_sound();
+        _logger.info(logging::Category::APP, logging::Message{"SMG permitted level sounds"});
+    }
+
+    void RuntimeContext::start_atmosphere_sound(std::string_view name) {
+        _audio.start_atmosphere_sound(name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested atmosphere sound {}"}, name);
+    }
+
+    void RuntimeContext::start_system_me(std::string_view name) {
+        _audio.start_system_me(name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested system ME {}"}, name);
+    }
+
     void RuntimeContext::start_cs_sound(std::string_view name) {
         _audio.start_controller_speaker_sound(name);
         _logger.info(logging::Category::APP, logging::Message{"SMG requested controller speaker sound {}"}, name);
@@ -938,6 +1024,7 @@ namespace smgpc::game {
     void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                                                 std::string_view resource_group_name, bool sort_enabled) {
         _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled);
+        refresh_effect_host_binding(host_name);
         _logger.info(logging::Category::APP, logging::Message{"Registered effect keeper {} group {} capacity {}"}, host_name,
                      resource_group_name, requested_capacity);
     }
@@ -1050,27 +1137,83 @@ namespace smgpc::game {
     }
 #endif
 
+    void RuntimeContext::refresh_effect_host_bindings() {
+        for (const auto &[name, _] : _effect_simple_layout_hosts) {
+            refresh_effect_host_binding(name);
+        }
+        for (const auto &[name, _] : _effect_layout_actor_hosts) {
+            refresh_effect_host_binding(name);
+        }
+        for (const auto &[name, _] : _effect_live_actor_hosts) {
+            refresh_effect_host_binding(name);
+        }
+    }
+
+    void RuntimeContext::refresh_effect_host_binding(std::string_view host_name) {
+        if (auto it = _effect_live_actor_hosts.find(host_name); it != _effect_live_actor_hosts.end() && it->second != nullptr) {
+            const auto &actor = *it->second;
+            _effects.bind_host_transform(EffectKeeperHostKind::LiveActor, host_name, EffectHostBindingSource::LiveActorBaseMatrix,
+                                         actor.getBaseMatrix().m, actor.isDead());
+            return;
+        }
+
+        if (auto it = _effect_layout_actor_hosts.find(host_name); it != _effect_layout_actor_hosts.end() && it->second != nullptr) {
+            const auto &layout = *it->second;
+            const auto trans = layout.getTrans();
+            _effects.bind_host_transform(EffectKeeperHostKind::LayoutActor, host_name, EffectHostBindingSource::LayoutActorTransform,
+                                         effect_translation_matrix(trans.x, trans.y, 0.0F), layout.isDead());
+            return;
+        }
+
+        if (auto it = _effect_simple_layout_hosts.find(host_name); it != _effect_simple_layout_hosts.end() && it->second != nullptr) {
+            const auto &layout = *it->second;
+            _effects.bind_host_transform(EffectKeeperHostKind::SimpleLayout, host_name, EffectHostBindingSource::SimpleLayoutOrigin,
+                                         effect_identity_matrix(), layout.isDead());
+            return;
+        }
+
+        _effects.unbind_host_transform(host_name);
+    }
+
     void RuntimeContext::register_layout(SimpleLayout &layout) {
+        _effect_simple_layout_hosts[layout.getName()] = &layout;
+        refresh_effect_host_binding(layout.getName());
         _scheduler.register_layout(layout, MR::MovementType_Layout, -1, MR::DrawType_Layout);
     }
 
     void RuntimeContext::unregister_layout(SimpleLayout &layout) {
+        if (auto it = _effect_simple_layout_hosts.find(layout.getName()); it != _effect_simple_layout_hosts.end() && it->second == &layout) {
+            _effect_simple_layout_hosts.erase(it);
+        }
+        refresh_effect_host_binding(layout.getName());
         _scheduler.unregister_layout(layout);
     }
 
     void RuntimeContext::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
+        _effect_layout_actor_hosts[layout.getName()] = &layout;
+        refresh_effect_host_binding(layout.getName());
         _scheduler.register_layout_actor(layout, movement_type, calc_anim_type, draw_type);
     }
 
     void RuntimeContext::unregister_layout_actor(LayoutActor &layout) {
+        if (auto it = _effect_layout_actor_hosts.find(layout.getName()); it != _effect_layout_actor_hosts.end() && it->second == &layout) {
+            _effect_layout_actor_hosts.erase(it);
+        }
+        refresh_effect_host_binding(layout.getName());
         _scheduler.unregister_layout_actor(layout);
     }
 
     void RuntimeContext::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
+        _effect_live_actor_hosts[actor.getName()] = &actor;
+        refresh_effect_host_binding(actor.getName());
         _scheduler.register_live_actor_model(actor, movement_type, calc_anim_type, draw_buffer_type, draw_type);
     }
 
     void RuntimeContext::unregister_live_actor_model(LiveActor &actor) {
+        if (auto it = _effect_live_actor_hosts.find(actor.getName()); it != _effect_live_actor_hosts.end() && it->second == &actor) {
+            _effect_live_actor_hosts.erase(it);
+        }
+        refresh_effect_host_binding(actor.getName());
         _scheduler.unregister_live_actor_model(actor);
     }
 

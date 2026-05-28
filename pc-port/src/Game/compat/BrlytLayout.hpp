@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BmgMessageArchive.hpp"
 #include "GXState.hpp"
 
 #include <array>
@@ -154,6 +155,8 @@ namespace smgpc::game {
         std::string name;
         std::string font_name;
         std::vector<std::uint16_t> text;
+        std::vector<std::uint16_t> raw_text;
+        std::vector<BmgControlTag> control_tags;
         std::size_t pane_index = 0U;
         std::uint16_t material_index = 0U;
         float x = 0.0F;

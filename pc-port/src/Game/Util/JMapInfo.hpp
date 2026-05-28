@@ -1,55 +1,108 @@
 #pragma once
 
-#include <array>
 #include <cstddef>
 #include <cstring>
-#include <optional>
+#include <cstdint>
+#include <map>
+#include <memory>
+#include <span>
+#include <string>
 #include <string_view>
 #include <type_traits>
+#include <utility>
 
 #include <revolution.h>
 
+#define JMAP_VALUE_TYPE_LONG 0
+#define JMAP_VALUE_TYPE_STRING 1
+#define JMAP_VALUE_TYPE_FLOAT 2
+#define JMAP_VALUE_TYPE_LONG_2 3
+#define JMAP_VALUE_TYPE_SHORT 4
+#define JMAP_VALUE_TYPE_BYTE 5
+#define JMAP_VALUE_TYPE_STRING_PTR 6
+#define JMAP_VALUE_TYPE_NULL 7
+
+namespace smgpc::game {
+    class BcsvTable;
+}
+
+template < typename T >
+inline bool compareValues(const T a, const T b) {
+    return a == b;
+}
+
+template <>
+inline bool compareValues< const char* >(const char* a, const char* b) {
+    return std::strcmp(a, b) == 0;
+}
+
+class JMapInfoIter;
+
 class JMapInfo {
 public:
-    [[nodiscard]] bool dataExists() const {
-        return false;
+    JMapInfo() = default;
+    explicit JMapInfo(smgpc::game::BcsvTable table);
+
+    [[nodiscard]] bool operator==(const JMapInfo& rInfo) const {
+        return mTable == rInfo.mTable;
     }
 
-    [[nodiscard]] int getNumEntries() const {
-        return 0;
+    [[nodiscard]] static JMapInfo from_bcsv(std::span< const std::uint8_t > data);
+
+    [[nodiscard]] bool dataExists() const;
+    [[nodiscard]] int getNumEntries() const;
+    [[nodiscard]] int getNumFields() const;
+    bool attach(const void* pData);
+    void setName(const char* pName);
+    [[nodiscard]] const char* getName() const;
+    [[nodiscard]] s32 searchItemInfo(const char* pKey) const;
+    [[nodiscard]] s32 getValueType(const char* pKey) const;
+    [[nodiscard]] bool getValueFast(int entryIndex, int itemIndex, const char** pValueOut) const;
+    [[nodiscard]] bool getValueFast(int entryIndex, int itemIndex, u32* pValueOut) const;
+    [[nodiscard]] bool getValueFast(int entryIndex, int itemIndex, s32* pValueOut) const;
+    [[nodiscard]] bool getValueFast(int entryIndex, int itemIndex, f32* pValueOut) const;
+    [[nodiscard]] bool getValueFast(int entryIndex, int itemIndex, bool* pValueOut) const;
+    [[nodiscard]] JMapInfoIter findElementBinary(const char* pKey, const char* pValue) const;
+
+    template < typename T >
+    [[nodiscard]] bool getValue(int entryIndex, const char* pKey, T* pValueOut) const {
+        const auto item_index = searchItemInfo(pKey);
+        if (item_index < 0) {
+            return false;
+        }
+
+        return getValueFast(entryIndex, item_index, pValueOut);
     }
 
     template < typename T >
-    [[nodiscard]] bool getValue(int, const char*, T*) const {
-        return false;
-    }
+    [[nodiscard]] JMapInfoIter findElement(const char* pKey, T searchValue, int startIndex) const;
+
+    [[nodiscard]] JMapInfoIter end() const;
+
+private:
+    [[nodiscard]] bool getSignedValue(int entryIndex, const char* pKey, s32* pValueOut) const;
+    [[nodiscard]] bool getUnsignedValue(int entryIndex, const char* pKey, u32* pValueOut) const;
+    [[nodiscard]] bool getFloatValue(int entryIndex, const char* pKey, f32* pValueOut) const;
+    [[nodiscard]] bool getStringValue(int entryIndex, const char* pKey, const char** pValueOut) const;
+    [[nodiscard]] bool getSignedValueByHash(int entryIndex, std::uint32_t hash, s32* pValueOut) const;
+    [[nodiscard]] bool getUnsignedValueByHash(int entryIndex, std::uint32_t hash, u32* pValueOut) const;
+    [[nodiscard]] bool getFloatValueByHash(int entryIndex, std::uint32_t hash, f32* pValueOut) const;
+    [[nodiscard]] bool getStringValueByHash(int entryIndex, std::uint32_t hash, const char** pValueOut) const;
+
+    std::shared_ptr< smgpc::game::BcsvTable > mTable;
+    std::string mName;
+    mutable std::map< std::pair< int, std::uint32_t >, std::string > mStringCache;
 };
 
 class JMapInfoIter {
 public:
-    struct PlacementObject {
-        const char* name = "";
-        const char* type = "";
-        s32 l_id = -1;
-        std::array< s32, 8U > object_args{};
-        std::array< f32, 3U > translation{};
-        std::array< f32, 3U > rotation{};
-        std::array< f32, 3U > scale{1.0F, 1.0F, 1.0F};
-        bool has_translation = false;
-        bool has_rotation = false;
-        bool has_scale = false;
-    };
-
     JMapInfoIter() = default;
 
     JMapInfoIter(const JMapInfo* pInfo, s32 index) : mInfo(pInfo), mIndex(index) {
     }
 
-    explicit JMapInfoIter(const PlacementObject* pPlacement) : mPlacement(pPlacement) {
-    }
-
     [[nodiscard]] bool isValid() const {
-        return (mPlacement != nullptr) || (mInfo != nullptr && mIndex >= 0 && mIndex < mInfo->getNumEntries());
+        return mInfo != nullptr && mIndex >= 0 && mIndex < mInfo->getNumEntries();
     }
 
     template < typename T >
@@ -58,91 +111,26 @@ public:
             return false;
         }
 
-        if (mPlacement != nullptr && getPlacementValue(pKey, pValueOut)) {
-            return true;
-        }
-
         return mInfo != nullptr && mIndex >= 0 && mInfo->getValue(mIndex, pKey, pValueOut);
     }
 
     const JMapInfo* mInfo = nullptr;
     s32 mIndex = -1;
-
-private:
-    template < typename T >
-    [[nodiscard]] bool getPlacementValue(const char* pKey, T* pValueOut) const {
-        if constexpr (std::is_same_v< T, const char* >) {
-            if (std::strcmp(pKey, "name") == 0) {
-                *pValueOut = mPlacement->name != nullptr ? mPlacement->name : "";
-                return true;
-            }
-            if (std::strcmp(pKey, "type") == 0 && mPlacement->type != nullptr && mPlacement->type[0] != '\0') {
-                *pValueOut = mPlacement->type;
-                return true;
-            }
-        } else if constexpr (std::is_same_v< T, s32 >) {
-            if (std::strcmp(pKey, "l_id") == 0) {
-                *pValueOut = mPlacement->l_id;
-                return true;
-            }
-
-            constexpr auto prefix = std::string_view{"Obj_arg"};
-            const auto key = std::string_view{pKey};
-            if (key.starts_with(prefix) && key.size() == prefix.size() + 1U) {
-                const auto arg_index_char = key.back();
-                if (arg_index_char >= '0' && arg_index_char <= '7') {
-                    *pValueOut = mPlacement->object_args[static_cast< std::size_t >(arg_index_char - '0')];
-                    return true;
-                }
-            }
-        } else if constexpr (std::is_same_v< T, bool >) {
-            auto value = s32{};
-            if (getPlacementValue(pKey, &value)) {
-                *pValueOut = value != 0;
-                return true;
-            }
-        } else if constexpr (std::is_same_v< T, f32 >) {
-            auto value = s32{};
-            if (getPlacementValue(pKey, &value)) {
-                *pValueOut = static_cast< f32 >(value);
-                return true;
-            }
-            const auto key = std::string_view{pKey};
-            const auto component_index = [](char component) -> std::optional< std::size_t > {
-                switch (component) {
-                case 'x':
-                    return 0U;
-                case 'y':
-                    return 1U;
-                case 'z':
-                    return 2U;
-                default:
-                    return std::nullopt;
-                }
-            };
-            const auto read_vec_component = [&](std::string_view prefix, const std::array< f32, 3U>& values, bool has_values) {
-                if (!has_values || key.size() != prefix.size() + 2U || key.substr(0U, prefix.size()) != prefix || key[prefix.size()] != '_') {
-                    return false;
-                }
-
-                const auto index = component_index(key.back());
-                if (!index.has_value()) {
-                    return false;
-                }
-
-                *pValueOut = values[*index];
-                return true;
-            };
-
-            if (read_vec_component("pos", mPlacement->translation, mPlacement->has_translation) ||
-                read_vec_component("dir", mPlacement->rotation, mPlacement->has_rotation) ||
-                read_vec_component("scale", mPlacement->scale, mPlacement->has_scale)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    const PlacementObject* mPlacement = nullptr;
 };
+
+template < typename T >
+JMapInfoIter JMapInfo::findElement(const char* pKey, T searchValue, int startIndex) const {
+    auto entry_index = startIndex;
+    while (entry_index < getNumEntries()) {
+        auto value = T{};
+        if (getValue< T >(entry_index, pKey, &value) && compareValues< T >(value, searchValue)) {
+            return JMapInfoIter(this, entry_index);
+        }
+        ++entry_index;
+    }
+    return end();
+}
+
+namespace MR {
+    JMapInfoIter findJMapInfoElementNoCase(const JMapInfo* pInfo, const char* pKey, const char* pValue, int startIndex);
+}

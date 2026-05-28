@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <optional>
 #include <string>
 #include <string_view>
 
@@ -37,9 +36,6 @@ namespace smgpc::game {
         [[nodiscard]] std::string_view active_scene_name() const;
         [[nodiscard]] std::string_view active_stage_name() const;
         [[nodiscard]] s32 active_scenario_no() const;
-#ifndef NDEBUG
-        [[nodiscard]] std::optional<FileSelectStageState> file_select_state() const;
-#endif
 
     private:
         void create_stage_from_factory(const StageHostRequest &request);

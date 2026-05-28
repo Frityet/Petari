@@ -1,12 +1,115 @@
 #include "TestSuites.hpp"
 #include "TestSupport.hpp"
 
+#include "Game/Util/JMapUtil.hpp"
+#include "JSystem/JKernel/JKRArchive.hpp"
+
 namespace smgpc::tests {
     namespace {
         constexpr auto TEST_SUITE = std::string_view{"resource/layout"};
 
         template <int Line>
         struct TestCase;
+
+        struct AlphaBounds {
+            std::uint16_t min_x = 0U;
+            std::uint16_t max_x = 0U;
+            std::uint16_t min_y = 0U;
+            std::uint16_t max_y = 0U;
+            bool any = false;
+        };
+
+        struct TextDrawResult {
+            RecordingRenderer::UploadedTexture texture = {};
+            smgpc::render::TexturedQuad2D quad = {};
+            float quad_width = 0.0F;
+            float quad_height = 0.0F;
+            float top_y = 0.0F;
+        };
+
+        [[nodiscard]] const RecordingRenderer::UploadedTexture *
+        uploaded_texture_for_handle(const RecordingRenderer &renderer, smgpc::render::TextureHandle handle) {
+            const auto texture = std::ranges::find_if(renderer.uploaded_textures, [handle](const auto &uploaded) {
+                return uploaded.handle.value == handle.value;
+            });
+
+            return texture == renderer.uploaded_textures.end() ? nullptr : &(*texture);
+        }
+
+        [[nodiscard]] float quad_edge_length(const smgpc::render::TexturedVertex2D &a, const smgpc::render::TexturedVertex2D &b) {
+            const auto dx = b.x - a.x;
+            const auto dy = b.y - a.y;
+            return std::sqrt((dx * dx) + (dy * dy));
+        }
+
+        [[nodiscard]] AlphaBounds alpha_bounds(const RecordingRenderer::UploadedTexture &texture, std::uint16_t begin_y,
+                                               std::uint16_t end_y) {
+            auto bounds = AlphaBounds{};
+            bounds.min_x = texture.width;
+            bounds.min_y = texture.height;
+            end_y = std::min(end_y, texture.height);
+            for (auto y = begin_y; y < end_y; ++y) {
+                for (auto x = std::uint16_t{}; x < texture.width; ++x) {
+                    const auto offset = (static_cast<std::size_t>(y) * texture.width + x) * 4U;
+                    if (texture.rgba[offset + 3U] == 0U) {
+                        continue;
+                    }
+
+                    bounds.any = true;
+                    bounds.min_x = std::min(bounds.min_x, x);
+                    bounds.max_x = std::max(bounds.max_x, x);
+                    bounds.min_y = std::min(bounds.min_y, y);
+                    bounds.max_y = std::max(bounds.max_y, y);
+                }
+            }
+
+            return bounds;
+        }
+
+        [[nodiscard]] TextDrawResult draw_press_start_text(std::u16string_view text, std::uint8_t vertical_position = 1U) {
+            auto renderer = RecordingRenderer();
+            auto layout = SimpleLayout("PressStartTextProbe", "PressStart", 1U, MR::DrawType_Layout);
+
+            layout.setTextBoxStringRecursive("ShaStart", std::u16string_view{});
+            layout.setTextBoxStringRecursive("TxtStart", text);
+            layout.setTextBoxVerticalPosition("TxtStart", vertical_position);
+            layout.appear();
+            layout.draw(renderer);
+
+            require(!renderer.textured_quads.empty(), "PressStart text probe should submit text quads");
+
+            auto result = TextDrawResult{};
+            auto best_area = std::size_t{};
+            for (const auto &submitted : renderer.textured_quads) {
+                const auto *texture = uploaded_texture_for_handle(renderer, submitted.texture);
+                require(texture != nullptr, "text quad should reference an uploaded texture");
+                const auto area = static_cast<std::size_t>(texture->width) * texture->height;
+                if (area <= best_area) {
+                    continue;
+                }
+
+                best_area = area;
+                result.texture = *texture;
+                result.quad = submitted.quad;
+                result.quad_width = quad_edge_length(submitted.quad.vertices[0U], submitted.quad.vertices[1U]);
+                result.quad_height = quad_edge_length(submitted.quad.vertices[0U], submitted.quad.vertices[3U]);
+                result.top_y = std::min(submitted.quad.vertices[0U].y, submitted.quad.vertices[1U].y);
+            }
+
+            require(result.texture.width > 0U && result.texture.height > 0U, "PressStart text probe should draw an uploaded text texture");
+            return result;
+        }
+
+        [[nodiscard]] std::u16string repeated_ascii_words(std::size_t count) {
+            auto text = std::u16string{};
+            for (auto i = std::size_t{}; i < count; ++i) {
+                if (!text.empty()) {
+                    text.push_back(u' ');
+                }
+                text.append(u"ABCD");
+            }
+            return text;
+        }
 
         $test("decompresses Yaz0 title archive into RARC bytes") {
             const auto root = disc_files_root();
@@ -32,6 +135,14 @@ namespace smgpc::tests {
             require(title_logo.contains("anim/wait.brlan"), "TitleLogo.arc missing wait.brlan");
             require(title_logo.contains("anim/decide.brlan"), "TitleLogo.arc missing decide.brlan");
             require(title_logo.contains("timg/mytitlelogokor.tpl"), "TitleLogo.arc missing Korean title logo texture");
+            require(!title_logo.contains("/blyt/titlelogo.brlyt"), "RarcArchive::contains should remain an exact path lookup");
+            require(title_logo.contains_normalized("/blyt/titlelogo.brlyt"), "RarcArchive should resolve slash-prefixed resource paths generically");
+            require(title_logo.contains_normalized("\\anim\\appear.brlan"), "RarcArchive should normalize host-style path separators generically");
+            const auto *title_logo_texture = title_logo.find_by_basename("MYTITLELOGOKOR.TPL");
+            require(title_logo_texture != nullptr && title_logo_texture->path == "timg/mytitlelogokor.tpl",
+                    "RarcArchive should resolve resource basenames case-insensitively");
+            require(title_logo.find_resource("MYTITLELOGOKOR.TPL") == title_logo_texture,
+                    "RarcArchive resource lookup should fall back to basename lookup after path lookup");
 
             require(press_start.contains("blyt/pressstart.brlyt"), "PressStart.arc missing pressstart.brlyt");
             require(press_start.contains("anim/appear.brlan"), "PressStart.arc missing appear.brlan");
@@ -40,8 +151,20 @@ namespace smgpc::tests {
 
             require_magic(title_logo.file_data("blyt/titlelogo.brlyt"), "RLYT");
             require_magic(title_logo.file_data("anim/appear.brlan"), "RLAN");
+            require_magic(title_logo.file_data_normalized("/anim/appear.brlan"), "RLAN");
             require_magic(press_start.file_data("blyt/pressstart.brlyt"), "RLYT");
             require_magic(press_start.file_data("anim/appear.brlan"), "RLAN");
+
+            auto jkr_title_logo = JKRMemArchive(title_logo);
+            auto *slash_resource = jkr_title_logo.getResource("/blyt/titlelogo.brlyt");
+            auto *basename_resource = jkr_title_logo.getResource("MYTITLELOGOKOR.TPL");
+            require(slash_resource != nullptr, "JKRArchive should resolve slash-prefixed resource paths through RARC lookup");
+            require(basename_resource != nullptr, "JKRArchive should resolve case-insensitive resource basenames through RARC lookup");
+            require(jkr_title_logo.contains("MYTITLELOGOKOR.TPL"), "JKRArchive::contains should use the same generic resource lookup");
+            require(jkr_title_logo.getResSize(slash_resource) == title_logo.file_data("blyt/titlelogo.brlyt").size(),
+                    "JKRArchive should preserve slash-prefixed resource size reporting");
+            require(jkr_title_logo.getResSize(basename_resource) == title_logo.file_data("timg/mytitlelogokor.tpl").size(),
+                    "JKRArchive should preserve basename resource size reporting");
         }
 
         $test("loads original Effect.arc particle names and JPC metadata") {
@@ -161,6 +284,35 @@ namespace smgpc::tests {
             require(date != nullptr, "MessageId.tbl should resolve date formatting text");
             require(std::ranges::any_of(date->raw_text, [](char16_t code) { return code == 0x001aU; }) && date->display_text == u"//",
                     "System_Date000 should preserve raw replacement tags while exposing stripped display text");
+            require(!date->control_tags.empty(), "System_Date000 should expose stripped BMG control tag metadata");
+            require(date->control_tags.front().type == 0x0006U && date->control_tags.front().size_bytes > 2U &&
+                        date->control_tags.front().raw_offset < date->raw_text.size(),
+                    "BMG control tag metadata should preserve generic type, size, and raw-text offset");
+            const auto rescanned_date_tags = smgpc::game::bmg_control_tags(date->raw_text);
+            require(rescanned_date_tags.size() == date->control_tags.size(),
+                    "generic BMG control tag scanner should reproduce archive tag metadata from raw text");
+            const auto formatted_date = smgpc::game::format_bmg_text(date->raw_text, std::array{
+                                                                                         smgpc::game::BmgFormatArg::number(2026),
+                                                                                         smgpc::game::BmgFormatArg::number(5),
+                                                                                         smgpc::game::BmgFormatArg::number(7),
+                                                                                     });
+            require(formatted_date == u"2026/05/07", "generic BMG replacement should format date number tags");
+            const auto *time = messages.find("System_Time002");
+            require(time != nullptr, "MessageId.tbl should resolve time formatting text");
+            const auto formatted_time = smgpc::game::format_bmg_text(time->raw_text, std::array{
+                                                                                         smgpc::game::BmgFormatArg::number(9),
+                                                                                         smgpc::game::BmgFormatArg::number(8),
+                                                                                     });
+            require(formatted_time == u"09:08", "generic BMG replacement should format time number tags");
+            const auto *copy_confirm = messages.find("System_FileSelect014");
+            require(copy_confirm != nullptr, "MessageId.tbl should resolve FileSelect copy-confirm text fixture");
+            const auto formatted_copy_confirm = smgpc::game::format_bmg_text(copy_confirm->raw_text, std::array{
+                                                                                                   smgpc::game::BmgFormatArg::number(2),
+                                                                                                   smgpc::game::BmgFormatArg::number(5),
+                                                                                               });
+            require(formatted_copy_confirm.find(u'2') != std::u16string::npos && formatted_copy_confirm.find(u'5') != std::u16string::npos &&
+                        formatted_copy_confirm.size() > 2U,
+                    "generic BMG replacement should apply multiple numeric args without replacing the whole message");
 
             auto service = smgpc::game::MessageService{};
             require(service.load_message_archive(message_archive) == messages.message_count(), "MessageService should import every BMG message");
@@ -172,6 +324,37 @@ namespace smgpc::tests {
             const auto *service_date_raw = service.message_raw_utf16("System_Date000");
             require(service_date_raw != nullptr && std::ranges::any_of(*service_date_raw, [](char16_t code) { return code == 0x001aU; }),
                     "MessageService should preserve raw tagged UTF-16 messages for replacement processing");
+            const auto *service_date_tags = service.message_control_tags("System_Date000");
+            require(service_date_tags != nullptr && service_date_tags->size() == date->control_tags.size(),
+                    "MessageService should expose BMG control tags stripped from display text");
+            require(service.format_message_utf16("System_Date000", std::array{
+                                                                       smgpc::game::BmgFormatArg::number(2026),
+                                                                       smgpc::game::BmgFormatArg::number(5),
+                                                                       smgpc::game::BmgFormatArg::number(7),
+                                                                   }) == u"2026/05/07",
+                    "MessageService should expose generic formatted BMG messages");
+        }
+
+        $test("strips generic BMG control tags before display text rendering") {
+            const auto raw = std::u16string{
+                u'A',
+                0x001a,
+                0x0e06,
+                0x0005,
+                0x0000,
+                0x0000,
+                0x0000,
+                0x0000,
+                u'B',
+            };
+            const auto tags = smgpc::game::bmg_control_tags(raw);
+
+            require(tags.size() == 1U, "generic BMG scanner should find a synthetic numeric control tag");
+            require(tags[0].raw_offset == 1U && tags[0].size_bytes == 0x0eU && tags[0].type == 0x0006U,
+                    "generic BMG scanner should preserve raw offset, size, and type for display-stripped tags");
+            require(smgpc::game::format_bmg_text(raw, {}) == u"AB", "generic BMG display text should strip unbound control tags");
+            require(smgpc::game::format_bmg_text(raw, std::array{smgpc::game::BmgFormatArg::number(3)}) == u"A03B",
+                    "generic BMG display text should expand bound numeric control tags before rendering");
         }
 
         $test("decodes Korean title logo TPL texture") {
@@ -394,6 +577,10 @@ namespace smgpc::tests {
                     "TxtStart material should map glyph color to white");
             require(prompt->font_name == "MessageFont26kor.brfnt", "TxtStart should use the original Korean message font");
             require(prompt->font_width > 0.0F && prompt->font_height > 0.0F, "TxtStart font size should be positive");
+            require(prompt->text_position == 4U, "TxtStart should keep the original centered textbox position");
+            require(prompt->text_alignment <= 2U, "TxtStart should preserve a valid original line-alignment byte");
+            require(prompt->raw_text == prompt->text, "BRLYT parser should preserve raw txt1 text alongside display text");
+            require(prompt->control_tags.empty(), "BRLYT parser should expose generic BMG tag metadata for txt1 text");
 
             const std::array<std::uint16_t, 11U> expected_text{
                 0xff21U,
@@ -412,10 +599,38 @@ namespace smgpc::tests {
             require(std::ranges::equal(prompt->text, expected_text), "TxtStart UTF-16BE text changed");
         }
 
+        $test("renders BRFNT text with generic wrapping and multiline alignment") {
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::game::RuntimeContext(logger, window);
+
+            const auto single_line = draw_press_start_text(u"ABCD");
+            const auto explicit_multiline = draw_press_start_text(u"ABCD\nA");
+            const auto wrapped = draw_press_start_text(repeated_ascii_words(96U));
+
+            require(explicit_multiline.texture.height > single_line.texture.height,
+                    "explicit line breaks should expand BRFNT text texture height");
+            require(explicit_multiline.quad_height > single_line.quad_height, "explicit line breaks should expand rendered text quad height");
+            require(wrapped.texture.height > single_line.texture.height, "long text should wrap inside the BRLYT textbox width");
+            require(wrapped.quad_width <= 560.0F, "wrapped BRFNT text should remain inside the PressStart textbox width");
+
+            const auto upper_line = alpha_bounds(explicit_multiline.texture, 0U, explicit_multiline.texture.height / 2U);
+            const auto lower_line =
+                alpha_bounds(explicit_multiline.texture, explicit_multiline.texture.height / 2U, explicit_multiline.texture.height);
+            require(upper_line.any && lower_line.any, "multiline BRFNT texture should contain glyph pixels on both lines");
+            require(lower_line.min_x > upper_line.min_x + 20U,
+                    "BRLYT text_alignment should center shorter lines inside the multiline texture");
+
+            const auto top_aligned = draw_press_start_text(u"ABCD\nABCD", 0U);
+            const auto bottom_aligned = draw_press_start_text(u"ABCD\nABCD", 2U);
+            require(bottom_aligned.top_y < top_aligned.top_y - 1.0F,
+                    "vertical text_position should anchor the whole multiline text block using its total rendered height");
+        }
+
         $test("decodes message BRFNT sheets and glyphs") {
             const auto root = disc_files_root();
             const auto font_archive = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "Font.arc");
-            const auto *font_entry = find_entry_by_basename(font_archive, "MessageFont26.brfnt");
+            const auto *font_entry = font_archive.find_by_basename("MessageFont26.brfnt");
             require(font_entry != nullptr, "Font.arc should contain MessageFont26.brfnt");
 
             const auto font = smgpc::game::parse_brfnt_font(font_archive.file_data(*font_entry));
@@ -441,11 +656,13 @@ namespace smgpc::tests {
             const auto root = disc_files_root();
             const auto file_select = smgpc::game::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
             const auto camera = smgpc::game::BcsvTable::from_bytes(file_select.file_data("camera/cameraparam.bcam"));
+            const auto camera_info = JMapInfo::from_bcsv(file_select.file_data("camera/cameraparam.bcam"));
 
             require(camera.entry_count() == 8U, "FileSelect cameraparam entry count changed");
             require(camera.fields().size() == 32U, "FileSelect cameraparam field count changed");
             require(camera.entry_size() == 128U, "FileSelect cameraparam entry size changed");
             require(camera.field_index("camtype").has_value(), "FileSelect cameraparam should expose camtype field by JMap hash");
+            require(camera_info.dataExists() && camera_info.getNumEntries() == 8, "JMapInfo should expose BCSV camera rows");
 
             require(camera.get_s32(5U, "version").has_value() && *camera.get_s32(5U, "version") == 196621, "FileSelect start camera version changed");
             require(camera.get_string(5U, "camtype").has_value() && *camera.get_string(5U, "camtype") == "CAM_TYPE_XZ_PARA",
@@ -457,6 +674,15 @@ namespace smgpc::tests {
             const auto start_world_offset = camera.get_vec3(5U, "woffset");
             require(start_world_offset.has_value(), "FileSelect start camera should expose woffset vector");
             require_near((*start_world_offset)[1U], 100.0F, 0.001F, "FileSelect start camera Y world offset changed");
+            const auto start_camera_iter = JMapInfoIter(&camera_info, 5);
+            const char *start_camera_type = nullptr;
+            auto start_camera_version = s32{};
+            auto start_camera_angle = f32{};
+            require(start_camera_iter.getValue("camtype", &start_camera_type) && std::string_view(start_camera_type) == "CAM_TYPE_XZ_PARA" &&
+                        start_camera_iter.getValue("version", &start_camera_version) && start_camera_version == 196621 &&
+                        start_camera_iter.getValue("angleA", &start_camera_angle),
+                    "JMapInfoIter should expose string, integer, and float values from BCSV rows");
+            require_near(start_camera_angle, 1.57693F, 0.00001F, "JMapInfoIter should preserve FileSelect start camera angleA");
 
             require(camera.get_string(6U, "camtype").has_value() && *camera.get_string(6U, "camtype") == "CAM_TYPE_FOLLOW",
                     "FileSelect default camera type changed");
@@ -471,6 +697,70 @@ namespace smgpc::tests {
             require_near((*default_axis)[1U], 1000.0F, 0.001F, "FileSelect default camera Y axis changed");
 
             require(camera.get_string(7U, "id").has_value() && *camera.get_string(7U, "id") == "s:03e7", "FileSelect fallback camera id changed");
+        }
+
+        $test("exposes FileSelect placement BCSV rows through JMapInfo") {
+            const auto root = disc_files_root();
+            const auto file_select = smgpc::game::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
+            auto placement_info = JMapInfo::from_bcsv(file_select.file_data("jmp/placement/common/objinfo"));
+
+            require(placement_info.dataExists() && placement_info.getNumEntries() == 3, "FileSelect objinfo should expose original BCSV row count");
+            require(placement_info.getNumFields() == 34, "FileSelect objinfo should expose original BCSV field count");
+            require(placement_info.searchItemInfo("name") >= 0 && placement_info.getValueType("name") == JMAP_VALUE_TYPE_STRING_PTR,
+                    "JMapInfo should expose source-shaped field search and value type APIs");
+            require(placement_info.searchItemInfo("l_id") >= 0 && placement_info.getValueType("l_id") == JMAP_VALUE_TYPE_LONG,
+                    "JMapInfo should report integer field types from BCSV metadata");
+            placement_info.setName("FileSelectObjInfo");
+            require(std::string_view(placement_info.getName()) == "FileSelectObjInfo", "JMapInfo should retain a source-shaped table name");
+
+            const auto file_selector_iter = JMapInfoIter(&placement_info, 1);
+            const char *object_name = nullptr;
+            auto link_id = s32{};
+            auto arg0 = s32{};
+            auto pos_x = f32{};
+            auto scale_z = f32{};
+            require(file_selector_iter.getValue("name", &object_name) && std::string_view(object_name) == "FileSelector" &&
+                        file_selector_iter.getValue("l_id", &link_id) && link_id == 2 &&
+                        file_selector_iter.getValue("Obj_arg0", &arg0) && arg0 == -1 &&
+                        file_selector_iter.getValue("pos_x", &pos_x) && file_selector_iter.getValue("scale_z", &scale_z),
+                    "JMapInfoIter should expose original placement string, integer, and transform fields");
+            require_near(pos_x, 0.0F, 0.001F, "FileSelector placement pos_x changed");
+            require_near(scale_z, 1.0F, 0.001F, "FileSelector placement scale_z changed");
+
+            auto mr_object_name = static_cast<const char *>(nullptr);
+            auto mr_link_id = s32{};
+            auto mr_arg0 = s32{};
+            require(MR::getObjectName(&mr_object_name, file_selector_iter) && std::string_view(mr_object_name) == "FileSelector" &&
+                        MR::getJMapInfoLinkID(file_selector_iter, &mr_link_id) && mr_link_id == 2 &&
+                        !MR::getJMapInfoArg0NoInit(file_selector_iter, &mr_arg0),
+                    "MR JMapUtil should read original BCSV rows through generic JMapInfoIter sentinel behavior");
+
+            const auto astro = smgpc::game::RarcArchive::from_file(root / "StageData" / "AstroGalaxy.arc");
+            const auto astro_info = JMapInfo::from_bcsv(astro.file_data("jmp/placement/common/objinfo"));
+            require(astro_info.dataExists() && astro_info.getNumEntries() == 130 && astro_info.getNumFields() == 34,
+                    "JMapInfo should expose larger non-FileSelect placement tables through the same BCSV adapter");
+            const auto tico_iter = astro_info.findElement("name", "TicoGalaxy", 0);
+            const auto tico_iter_no_case = MR::findJMapInfoElementNoCase(&astro_info, "name", "ticogalaxy", 0);
+            const char *tico_name = nullptr;
+            auto tico_link_id = s32{};
+            auto tico_arg1 = s32{};
+            auto tico_camera_set = s32{};
+            auto tico_pos_x = f32{};
+            auto tico_common_path = s32{};
+            require(tico_iter.isValid() && tico_iter_no_case.isValid() && tico_iter_no_case.mIndex == tico_iter.mIndex &&
+                        tico_iter.getValue("name", &tico_name) && std::string_view(tico_name) == "TicoGalaxy" &&
+                        tico_iter.getValue("l_id", &tico_link_id) && tico_link_id == 65 &&
+                        tico_iter.getValue("Obj_arg1", &tico_arg1) && tico_arg1 == 50 &&
+                        tico_iter.getValue("CameraSetId", &tico_camera_set) && tico_camera_set == 110 &&
+                        tico_iter.getValue("pos_x", &tico_pos_x) && tico_iter.getValue("CommonPath_ID", &tico_common_path),
+                    "JMapInfo should expose generic string search, no-case search, s32, s16, and float fields from AstroGalaxy placement");
+            require_near(tico_pos_x, 3150.0F, 0.001F, "AstroGalaxy TicoGalaxy pos_x changed");
+            require(tico_common_path == 7, "AstroGalaxy TicoGalaxy CommonPath_ID s16 field changed");
+
+            const auto astro_scenario = smgpc::game::RarcArchive::from_file(root / "StageData" / "AstroGalaxy" / "AstroGalaxyScenario.arc");
+            const auto scenario_info = JMapInfo::from_bcsv(astro_scenario.resource_data("/ScenarioData.bcsv"));
+            require(scenario_info.dataExists() && scenario_info.getNumEntries() == 5,
+                    "JMapInfo should load scenario data through generic case-insensitive archive resource lookup");
         }
 
         $test("loads FileSelect camera parameter chunks") {
@@ -559,6 +849,11 @@ namespace smgpc::tests {
             require_near(matrix.m[8U], -0.065301530F, 0.000001F, "J3D helper matrix[8] changed");
             require_near(matrix.m[9U], -0.797018230F, 0.000001F, "J3D helper matrix[9] changed");
             require_near(matrix.m[10U], 0.022309309F, 0.000001F, "J3D helper matrix[10] changed");
+
+            const auto unscaled = smgpc::game::j3d_remove_matrix_scale(matrix, 0.8F, 0.8F, 0.8F);
+            require_near(unscaled.m[0U], -0.323289663F, 0.000001F, "J3D helper should remove base-scale X from column 0");
+            require_near(unscaled.m[5U], -0.086259015F, 0.000001F, "J3D helper should remove base-scale Y from column 1");
+            require_near(unscaled.m[10U], 0.027886637F, 0.000001F, "J3D helper should remove base-scale Z from column 2");
         }
 
         $test("parses TitleLogo BRLAN animations") {

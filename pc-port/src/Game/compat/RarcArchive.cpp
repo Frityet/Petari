@@ -3,6 +3,7 @@
 #include "Yaz0.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <fstream>
 #include <stdexcept>
 
@@ -59,6 +60,36 @@ constexpr auto FILE_FLAG_FOLDER = std::uint8_t {1U << 1U};
     return bytes;
 }
 
+[[nodiscard]] std::string lower_copy(std::string_view value) {
+    auto lower = std::string(value);
+    std::ranges::transform(lower, lower.begin(), [](unsigned char character) { return static_cast<char>(std::tolower(character)); });
+    return lower;
+}
+
+[[nodiscard]] std::string normalized_archive_path(std::string_view path) {
+    auto normalized = std::string(path);
+    std::ranges::replace(normalized, '\\', '/');
+
+    const auto first_name = normalized.find_first_not_of('/');
+    if (first_name == std::string::npos) {
+        return {};
+    }
+
+    normalized.erase(0U, first_name);
+    return normalized;
+}
+
+[[nodiscard]] std::string basename_lower(std::string_view path) {
+    auto normalized = normalized_archive_path(path);
+    while (!normalized.empty() && normalized.back() == '/') {
+        normalized.pop_back();
+    }
+
+    const auto slash = normalized.find_last_of('/');
+    const auto basename = slash == std::string::npos ? std::string_view(normalized) : std::string_view(normalized).substr(slash + 1U);
+    return lower_copy(basename);
+}
+
 }  // namespace
 
 RarcArchive RarcArchive::from_file(const std::filesystem::path &path) {
@@ -77,12 +108,58 @@ bool RarcArchive::contains(std::string_view path) const {
     return find(path) != nullptr;
 }
 
+bool RarcArchive::contains_normalized(std::string_view path) const {
+    return find_normalized(path) != nullptr;
+}
+
+bool RarcArchive::contains_basename(std::string_view path) const {
+    return find_by_basename(path) != nullptr;
+}
+
+bool RarcArchive::contains_resource(std::string_view path) const {
+    return find_resource(path) != nullptr;
+}
+
 const RarcEntry *RarcArchive::find(std::string_view path) const {
     const auto it = std::ranges::find_if(_entries, [path](const auto &entry) {
         return entry.path == path;
     });
 
     return it == _entries.end() ? nullptr : &*it;
+}
+
+const RarcEntry *RarcArchive::find_normalized(std::string_view path) const {
+    if (const auto *entry = find(path); entry != nullptr) {
+        return entry;
+    }
+
+    const auto normalized = normalized_archive_path(path);
+    if (normalized.empty() || std::string_view(normalized) == path) {
+        return nullptr;
+    }
+
+    return find(normalized);
+}
+
+const RarcEntry *RarcArchive::find_by_basename(std::string_view path) const {
+    const auto requested = basename_lower(path);
+    if (requested.empty()) {
+        return nullptr;
+    }
+
+    const auto it = std::ranges::find_if(_entries, [&requested](const auto &entry) {
+        return basename_lower(entry.path) == requested;
+    });
+
+    return it == _entries.end() ? nullptr : &*it;
+}
+
+const RarcEntry *RarcArchive::find_resource(std::string_view path) const {
+    if (const auto *entry = find_normalized(path); entry != nullptr) {
+        return entry;
+    }
+
+    return find_by_basename(path);
 }
 
 std::span<const std::uint8_t> RarcArchive::file_data(const RarcEntry &entry) const {
@@ -97,6 +174,33 @@ std::span<const std::uint8_t> RarcArchive::file_data(std::string_view path) cons
     const auto *entry = find(path);
     if (entry == nullptr) {
         throw std::runtime_error("RARC file does not exist: " + std::string(path));
+    }
+
+    return file_data(*entry);
+}
+
+std::span<const std::uint8_t> RarcArchive::file_data_normalized(std::string_view path) const {
+    const auto *entry = find_normalized(path);
+    if (entry == nullptr) {
+        throw std::runtime_error("RARC file does not exist: " + std::string(path));
+    }
+
+    return file_data(*entry);
+}
+
+std::span<const std::uint8_t> RarcArchive::file_data_by_basename(std::string_view path) const {
+    const auto *entry = find_by_basename(path);
+    if (entry == nullptr) {
+        throw std::runtime_error("RARC file does not exist: " + std::string(path));
+    }
+
+    return file_data(*entry);
+}
+
+std::span<const std::uint8_t> RarcArchive::resource_data(std::string_view path) const {
+    const auto *entry = find_resource(path);
+    if (entry == nullptr) {
+        throw std::runtime_error("RARC resource does not exist: " + std::string(path));
     }
 
     return file_data(*entry);

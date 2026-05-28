@@ -89,11 +89,13 @@ public:
     [[nodiscard]] bool isSelectInvalid() const;
     [[nodiscard]] bool isRotateInvalid() const;
     [[nodiscard]] bool isPointing() const;
+#ifndef NDEBUG
     [[nodiscard]] bool wasPointed() const;
     [[nodiscard]] bool wasPointingCleared() const;
     [[nodiscard]] bool didTurnToFront() const;
     [[nodiscard]] s32 getTurnToFrontFrameCount() const;
     [[nodiscard]] const TVec3f& getPosition() const;
+#endif
     [[nodiscard]] const smgpc::game::CameraParamVec3& getBasePosition() const;
 
 private:

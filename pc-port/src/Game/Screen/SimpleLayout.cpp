@@ -4,12 +4,14 @@
 #include <array>
 #include <cctype>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <optional>
 #include <span>
 #include <stdexcept>
 #include <string_view>
+#include <utility>
 
 #include "Game/compat/LytTexMap.hpp"
 #include "Game/compat/RarcArchive.hpp"
@@ -190,6 +192,132 @@ namespace {
         return static_cast< float >(char_width) * scale_x;
     }
 
+    struct TextLayoutGlyph {
+        std::uint16_t code = 0U;
+        smgpc::game::BrfntGlyph glyph{};
+        float advance = 0.0F;
+    };
+
+    struct TextLayoutLine {
+        std::vector< TextLayoutGlyph > glyphs = {};
+        float width = 0.0F;
+    };
+
+    [[nodiscard]] bool is_wrap_space(std::uint16_t code) {
+        return code == 0x0009U || code == 0x0020U || code == 0x3000U;
+    }
+
+    [[nodiscard]] bool is_line_break(std::uint16_t code) {
+        return code == 0x000aU || code == 0x000dU;
+    }
+
+    [[nodiscard]] std::uint16_t resolve_layout_glyph_code(std::uint16_t code, const smgpc::game::BrfntFont& font, bool use_button_icon_aliases);
+
+    [[nodiscard]] float text_line_width(const std::vector< TextLayoutGlyph >& glyphs, float native_char_space) {
+        if (glyphs.empty()) {
+            return 0.0F;
+        }
+
+        auto width = 0.0F;
+        for (const auto& glyph : glyphs) {
+            width += glyph.advance;
+        }
+        width += native_char_space * static_cast< float >(glyphs.size() - 1U);
+        return std::max(width, 0.0F);
+    }
+
+    void trim_trailing_wrap_spaces(std::vector< TextLayoutGlyph >& glyphs) {
+        while (!glyphs.empty() && is_wrap_space(glyphs.back().code)) {
+            glyphs.pop_back();
+        }
+    }
+
+    void trim_leading_wrap_spaces(std::vector< TextLayoutGlyph >& glyphs) {
+        while (!glyphs.empty() && is_wrap_space(glyphs.front().code)) {
+            glyphs.erase(glyphs.begin());
+        }
+    }
+
+    [[nodiscard]] std::optional< std::size_t > last_wrap_space_index(const std::vector< TextLayoutGlyph >& glyphs) {
+        for (auto index = glyphs.size(); index > 0U; --index) {
+            if (is_wrap_space(glyphs[index - 1U].code)) {
+                return index - 1U;
+            }
+        }
+
+        return std::nullopt;
+    }
+
+    [[nodiscard]] std::vector< TextLayoutLine > layout_text_lines(std::span< const std::uint16_t > text, const smgpc::game::BrfntFont& font,
+                                                                  float native_char_space, float native_wrap_width,
+                                                                  bool use_button_icon_aliases) {
+        auto lines = std::vector< TextLayoutLine >{};
+        auto current = std::vector< TextLayoutGlyph >{};
+
+        const auto measure_current = [&]() { return text_line_width(current, native_char_space); };
+        const auto push_current = [&]() {
+            trim_trailing_wrap_spaces(current);
+            lines.push_back(TextLayoutLine{
+                .glyphs = current,
+                .width = text_line_width(current, native_char_space),
+            });
+            current.clear();
+        };
+
+        const auto wrap_width = native_wrap_width > 0.0F ? native_wrap_width : 4096.0F;
+        for (auto index = std::size_t{}; index < text.size(); ++index) {
+            const auto code = text[index];
+            if (is_line_break(code)) {
+                push_current();
+                if (code == 0x000dU && index + 1U < text.size() && text[index + 1U] == 0x000aU) {
+                    ++index;
+                }
+                continue;
+            }
+
+            const auto glyph_code = resolve_layout_glyph_code(code, font, use_button_icon_aliases);
+            const auto glyph = font.glyph_for(glyph_code);
+            if (!glyph.has_value()) {
+                continue;
+            }
+
+            current.push_back(TextLayoutGlyph{
+                .code = code,
+                .glyph = *glyph,
+                .advance = glyph_advance(*glyph, 1.0F),
+            });
+
+            if (current.size() <= 1U || measure_current() <= wrap_width) {
+                continue;
+            }
+
+            if (const auto break_index = last_wrap_space_index(current); break_index.has_value() && *break_index > 0U) {
+                auto next = std::vector< TextLayoutGlyph >(current.begin() + static_cast< std::ptrdiff_t >(*break_index + 1U), current.end());
+                current.erase(current.begin() + static_cast< std::ptrdiff_t >(*break_index), current.end());
+                trim_trailing_wrap_spaces(current);
+                lines.push_back(TextLayoutLine{
+                    .glyphs = current,
+                    .width = text_line_width(current, native_char_space),
+                });
+                trim_leading_wrap_spaces(next);
+                current = std::move(next);
+                continue;
+            }
+
+            auto overflow = current.back();
+            current.pop_back();
+            push_current();
+            current.push_back(overflow);
+        }
+
+        push_current();
+        if (lines.empty()) {
+            lines.push_back(TextLayoutLine{});
+        }
+
+        return lines;
+    }
+
     struct ButtonIconAlias {
         std::uint16_t ascii_code = 0U;
         std::uint16_t icon_code = 0U;
@@ -282,14 +410,18 @@ namespace {
         case 1U:
             return -height * 0.5F;
         case 2U:
-            return -height;
-        default:
             return 0.0F;
+        default:
+            return -height;
         }
     }
 
     [[nodiscard]] float gx_texture_v_to_host(float v) {
         return 1.0F - v;
+    }
+
+    [[nodiscard]] float hypot2(float x, float y) {
+        return std::sqrt((x * x) + (y * y));
     }
 
     [[nodiscard]] std::uint16_t texture_extent(float value) {
@@ -531,6 +663,11 @@ void SimpleLayout::update() {
 void SimpleLayout::setTrans(f32 x, f32 y) {
     mTransX = x;
     mTransY = y;
+}
+
+void SimpleLayout::setScale(f32 x, f32 y) {
+    mScaleX = x;
+    mScaleY = y;
 }
 
 bool SimpleLayout::isDead() const {
@@ -783,6 +920,7 @@ void SimpleLayout::setTextBoxNumberRecursive(const char* pPaneName, s32 number) 
     for (auto& text_box : mBrlytLayout.text_boxes) {
         if (requested_name.empty() || text_box.name == requested_name) {
             text_box.text = text;
+            mTextBoxTemplates.erase(text_box.name);
         }
     }
 
@@ -802,7 +940,96 @@ void SimpleLayout::setTextBoxStringRecursive(const char* pPaneName, std::u16stri
     for (auto& text_box : mBrlytLayout.text_boxes) {
         if (requested_name.empty() || text_box.name == requested_name) {
             text_box.text = encoded;
+            mTextBoxTemplates.erase(text_box.name);
         }
+    }
+
+    mRenderTextTextures.clear();
+}
+
+void SimpleLayout::setTextBoxTaggedStringRecursive(const char* pPaneName, std::u16string_view rawText, std::u16string_view displayText) {
+    loadRenderData();
+
+    const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
+    const auto formatted = smgpc::game::format_bmg_text(rawText, {});
+    const auto text = !formatted.empty() || rawText.empty() ? std::u16string_view(formatted) : displayText;
+
+    auto encoded = std::vector< std::uint16_t >{};
+    encoded.reserve(text.size());
+    for (const auto code : text) {
+        encoded.push_back(static_cast< std::uint16_t >(code));
+    }
+
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (requested_name.empty() || text_box.name == requested_name) {
+            text_box.text = encoded;
+            mTextBoxTemplates[text_box.name] = TextBoxTemplateState{
+                .raw_text = std::u16string(rawText),
+                .args = {},
+            };
+        }
+    }
+
+    mRenderTextTextures.clear();
+}
+
+void SimpleLayout::setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex) {
+    loadRenderData();
+    if (argIndex < 0) {
+        return;
+    }
+
+    const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (!requested_name.empty() && text_box.name != requested_name) {
+            continue;
+        }
+
+        const auto found = mTextBoxTemplates.find(text_box.name);
+        if (found == mTextBoxTemplates.end()) {
+            continue;
+        }
+
+        auto& state = found->second;
+        const auto index = static_cast< std::size_t >(argIndex);
+        if (state.args.size() <= index) {
+            state.args.resize(index + 1U);
+        }
+        state.args[index] = smgpc::game::BmgFormatArg::number(number);
+
+        const auto formatted = smgpc::game::format_bmg_text(state.raw_text, state.args);
+        text_box.text.assign(formatted.begin(), formatted.end());
+    }
+
+    mRenderTextTextures.clear();
+}
+
+void SimpleLayout::setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex) {
+    loadRenderData();
+    if (argIndex < 0) {
+        return;
+    }
+
+    const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (!requested_name.empty() && text_box.name != requested_name) {
+            continue;
+        }
+
+        const auto found = mTextBoxTemplates.find(text_box.name);
+        if (found == mTextBoxTemplates.end()) {
+            continue;
+        }
+
+        auto& state = found->second;
+        const auto index = static_cast< std::size_t >(argIndex);
+        if (state.args.size() <= index) {
+            state.args.resize(index + 1U);
+        }
+        state.args[index] = smgpc::game::BmgFormatArg::string(text);
+
+        const auto formatted = smgpc::game::format_bmg_text(state.raw_text, state.args);
+        text_box.text.assign(formatted.begin(), formatted.end());
     }
 
     mRenderTextTextures.clear();
@@ -893,6 +1120,37 @@ void SimpleLayout::setPaneVisible(std::string_view paneName, bool visible) {
     mPaneVisibilityOverrides[std::string(paneName)] = visible;
 }
 
+void SimpleLayout::setPaneVisibleRecursive(std::string_view paneName, bool visible) {
+    loadRenderData();
+    if (paneName.empty()) {
+        return;
+    }
+
+    auto root_indices = std::vector< std::size_t >{};
+    for (auto i = std::size_t{}; i < mBrlytLayout.panes.size(); ++i) {
+        if (mBrlytLayout.panes[i].name == paneName) {
+            root_indices.push_back(i);
+        }
+    }
+
+    auto is_descendant_of = [&](std::size_t pane_index, std::size_t root_index) {
+        auto current = static_cast< int >(pane_index);
+        while (current >= 0) {
+            if (static_cast< std::size_t >(current) == root_index) {
+                return true;
+            }
+            current = mBrlytLayout.panes[static_cast< std::size_t >(current)].parent_index;
+        }
+        return false;
+    };
+
+    for (auto i = std::size_t{}; i < mBrlytLayout.panes.size(); ++i) {
+        if (std::ranges::any_of(root_indices, [&](std::size_t root_index) { return is_descendant_of(i, root_index); })) {
+            mPaneVisibilityOverrides[mBrlytLayout.panes[i].name] = visible;
+        }
+    }
+}
+
 void SimpleLayout::setTextBoxHorizontalPosition(std::string_view paneName, u8 position) {
     loadRenderData();
     const auto requested_name = paneName;
@@ -918,12 +1176,9 @@ void SimpleLayout::setTextBoxVerticalPosition(std::string_view paneName, u8 posi
 }
 
 bool SimpleLayout::isPaneVisible(std::string_view paneName) const {
+    const_cast< SimpleLayout* >(this)->loadRenderData();
     if (paneName.empty()) {
         return !mIsDead;
-    }
-
-    if (const auto override = mPaneVisibilityOverrides.find(std::string(paneName)); override != mPaneVisibilityOverrides.end()) {
-        return override->second;
     }
 
     for (auto i = std::size_t{}; i < mBrlytLayout.panes.size(); ++i) {
@@ -1007,6 +1262,24 @@ std::optional< SimpleLayout::PaneBounds > SimpleLayout::paneBounds(std::string_v
     };
 }
 
+std::optional< TVec2f > SimpleLayout::paneScale(std::string_view paneName) const {
+    const_cast< SimpleLayout* >(this)->loadRenderData();
+    if (paneName.empty()) {
+        return TVec2f{mScaleX, mScaleY};
+    }
+
+    const auto it = std::ranges::find_if(mBrlytLayout.panes, [paneName](const auto& pane) { return pane.name == paneName; });
+    if (it == mBrlytLayout.panes.end()) {
+        return std::nullopt;
+    }
+
+    const auto pane_state = paneRenderState(static_cast< std::size_t >(std::distance(mBrlytLayout.panes.begin(), it)));
+    return TVec2f{
+        .x = hypot2(pane_state.m00, pane_state.m10),
+        .y = hypot2(pane_state.m01, pane_state.m11),
+    };
+}
+
 bool SimpleLayout::copyPaneMatrix(std::string_view paneName, Mtx matrix) const {
     if (matrix == nullptr) {
         return false;
@@ -1030,7 +1303,12 @@ bool SimpleLayout::copyPaneMatrix(std::string_view paneName, Mtx matrix) const {
     };
 
     if (paneName.empty()) {
-        set_matrix(PaneRenderState{});
+        set_matrix(PaneRenderState{
+            .scale_x = mScaleX,
+            .scale_y = mScaleY,
+            .m00 = mScaleX,
+            .m11 = mScaleY,
+        });
         return true;
     }
 
@@ -1524,6 +1802,7 @@ void SimpleLayout::loadRenderData() {
         mRenderTextTextures.clear();
         mRenderAnimations.clear();
         mCommittedPaneFrames.clear();
+        mTextBoxTemplates.clear();
         if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
             runtime->note_layout_texture_decode_failed(mLayoutName, "<layout>", e.what());
         }
@@ -1580,23 +1859,39 @@ SimpleLayout::RenderTextTexture SimpleLayout::composeTextTexture(std::size_t tex
     const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
     const auto& font = render_font.font;
     const auto scale_x = text_box.font_width > 0.0F ? text_box.font_width / static_cast< float >(font.width) : 1.0F;
+    const auto scale_y = text_box.font_height > 0.0F ? text_box.font_height / static_cast< float >(font.height) : 1.0F;
     const auto native_char_space = scale_x > 0.0F ? text_box.char_space / scale_x : text_box.char_space;
+    const auto native_line_space = scale_y > 0.0F ? text_box.line_space / scale_y : text_box.line_space;
+    const auto native_line_height = static_cast< float >(std::max< std::uint16_t >(font.height, 1U));
+    const auto native_line_advance = std::max(1.0F, native_line_height + native_line_space);
     const auto use_button_icon_aliases = text_uses_button_icon_aliases(std::span< const std::uint16_t >(text_box.text.data(), text_box.text.size()));
 
-    auto native_line_width = 0.0F;
-    for (const auto code : text_box.text) {
-        if (const auto glyph = font.glyph_for(resolve_layout_glyph_code(code, font, use_button_icon_aliases))) {
-            native_line_width += glyph_advance(*glyph, 1.0F) + native_char_space;
-        }
+    auto box_width = text_box.width;
+    if (text_box.pane_index < mBrlytLayout.panes.size()) {
+        box_width = mBrlytLayout.panes[text_box.pane_index].width;
     }
-    if (!text_box.text.empty()) {
-        native_line_width -= native_char_space;
+    const auto native_wrap_width = scale_x > 0.0F ? box_width / scale_x : box_width;
+    const auto lines = layout_text_lines(std::span< const std::uint16_t >(text_box.text.data(), text_box.text.size()), font, native_char_space,
+                                         native_wrap_width, use_button_icon_aliases);
+
+    auto max_line_width = 0.0F;
+    auto has_multiline_text = lines.size() > 1U;
+    for (const auto& line : lines) {
+        max_line_width = std::max(max_line_width, line.width);
     }
+
+    const auto text_horizontal_position = static_cast< std::uint8_t >(text_box.text_position % 3U);
+    const auto line_alignment =
+        static_cast< std::uint8_t >(text_box.text_alignment == 0U || text_box.text_alignment > 2U ? text_horizontal_position :
+                                                                                                    text_box.text_alignment);
+    const auto native_texture_width =
+        native_wrap_width > 0.0F && (has_multiline_text || line_alignment != 0U) ? std::max(native_wrap_width, max_line_width) : max_line_width;
+    const auto native_texture_height = native_line_height + static_cast< float >(lines.size() - 1U) * native_line_advance;
 
     auto texture = RenderTextTexture{
         .text_box_index = text_box_index,
-        .width = texture_extent(native_line_width),
-        .height = std::max< std::uint16_t >(font.height, 1U),
+        .width = texture_extent(native_texture_width),
+        .height = texture_extent(native_texture_height),
         .font_width = std::max< std::uint16_t >(font.width, 1U),
         .font_height = std::max< std::uint16_t >(font.height, 1U),
         .rgba = {},
@@ -1611,61 +1906,68 @@ SimpleLayout::RenderTextTexture SimpleLayout::composeTextTexture(std::size_t tex
         static_cast< std::uint8_t >((static_cast< std::uint16_t >(text_box.color[3U]) * text_box.color_mapping_max[3U]) / 255U),
     };
 
-    auto cursor_x = 0.0F;
-    for (const auto code : text_box.text) {
-        const auto glyph_code = resolve_layout_glyph_code(code, font, use_button_icon_aliases);
-        const auto glyph = font.glyph_for(glyph_code);
-        if (!glyph.has_value() || glyph->sheet_index >= font.sheets.size()) {
-            continue;
-        }
+    for (auto line_index = std::size_t{}; line_index < lines.size(); ++line_index) {
+        const auto& line = lines[line_index];
+        auto cursor_x = (static_cast< float >(texture.width) - line.width) * text_factor(line_alignment);
+        const auto line_y = static_cast< float >(line_index) * native_line_advance;
 
-        const auto is_button_icon = is_button_icon_code(glyph_code);
-        const auto& sheet = font.sheets[glyph->sheet_index];
-        const auto glyph_x = static_cast< int >(std::round(cursor_x)) + static_cast< int >(glyph->widths.left);
-        for (auto y = 0U; y < glyph->height; ++y) {
-            for (auto x = 0U; x < glyph->width; ++x) {
-                const auto source_x = static_cast< std::uint16_t >(glyph->x + x);
-                const auto source_y = static_cast< std::uint16_t >(glyph->y + y);
-                if (source_x >= sheet.width || source_y >= sheet.height) {
-                    continue;
-                }
+        for (const auto& layout_glyph : line.glyphs) {
+            const auto& glyph = layout_glyph.glyph;
+            if (glyph.sheet_index >= font.sheets.size()) {
+                cursor_x += layout_glyph.advance + native_char_space;
+                continue;
+            }
 
-                const auto dest_x = glyph_x + static_cast< int >(x);
-                const auto dest_y = static_cast< int >(y);
-                if (dest_x < 0 || dest_y < 0 || dest_x >= texture.width || dest_y >= texture.height) {
-                    continue;
-                }
-
-                const auto source_offset = (static_cast< std::size_t >(source_y) * sheet.width + source_x) * 4U;
-                const auto source_alpha =
-                    static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 3U]) * mapped_color[3U]) / 255U);
-                if (source_alpha == 0U) {
-                    continue;
-                }
-
-                const auto dest_offset = (static_cast< std::size_t >(dest_y) * texture.width + static_cast< std::size_t >(dest_x)) * 4U;
-                const auto dest_alpha = is_button_icon ? mapped_color[3U] : source_alpha;
-                if (dest_alpha >= texture.rgba[dest_offset + 3U]) {
-                    if (is_button_icon) {
-                        texture.rgba[dest_offset] =
-                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset]) * mapped_color[0U]) / 255U);
-                        texture.rgba[dest_offset + 1U] =
-                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 1U]) * mapped_color[1U]) / 255U);
-                        texture.rgba[dest_offset + 2U] =
-                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 2U]) * mapped_color[2U]) / 255U);
-                        texture.rgba[dest_offset + 3U] = dest_alpha;
+            const auto glyph_code = resolve_layout_glyph_code(layout_glyph.code, font, use_button_icon_aliases);
+            const auto is_button_icon = is_button_icon_code(glyph_code);
+            const auto& sheet = font.sheets[glyph.sheet_index];
+            const auto glyph_x = static_cast< int >(std::round(cursor_x)) + static_cast< int >(glyph.widths.left);
+            const auto glyph_y = static_cast< int >(std::round(line_y));
+            for (auto y = 0U; y < glyph.height; ++y) {
+                for (auto x = 0U; x < glyph.width; ++x) {
+                    const auto source_x = static_cast< std::uint16_t >(glyph.x + x);
+                    const auto source_y = static_cast< std::uint16_t >(glyph.y + y);
+                    if (source_x >= sheet.width || source_y >= sheet.height) {
                         continue;
                     }
 
-                    texture.rgba[dest_offset] = mapped_color[0U];
-                    texture.rgba[dest_offset + 1U] = mapped_color[1U];
-                    texture.rgba[dest_offset + 2U] = mapped_color[2U];
-                    texture.rgba[dest_offset + 3U] = dest_alpha;
+                    const auto dest_x = glyph_x + static_cast< int >(x);
+                    const auto dest_y = glyph_y + static_cast< int >(y);
+                    if (dest_x < 0 || dest_y < 0 || dest_x >= texture.width || dest_y >= texture.height) {
+                        continue;
+                    }
+
+                    const auto source_offset = (static_cast< std::size_t >(source_y) * sheet.width + source_x) * 4U;
+                    const auto source_alpha =
+                        static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 3U]) * mapped_color[3U]) / 255U);
+                    if (source_alpha == 0U) {
+                        continue;
+                    }
+
+                    const auto dest_offset = (static_cast< std::size_t >(dest_y) * texture.width + static_cast< std::size_t >(dest_x)) * 4U;
+                    const auto dest_alpha = is_button_icon ? mapped_color[3U] : source_alpha;
+                    if (dest_alpha >= texture.rgba[dest_offset + 3U]) {
+                        if (is_button_icon) {
+                            texture.rgba[dest_offset] =
+                                static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset]) * mapped_color[0U]) / 255U);
+                            texture.rgba[dest_offset + 1U] = static_cast< std::uint8_t >(
+                                (static_cast< std::uint16_t >(sheet.rgba[source_offset + 1U]) * mapped_color[1U]) / 255U);
+                            texture.rgba[dest_offset + 2U] = static_cast< std::uint8_t >(
+                                (static_cast< std::uint16_t >(sheet.rgba[source_offset + 2U]) * mapped_color[2U]) / 255U);
+                            texture.rgba[dest_offset + 3U] = dest_alpha;
+                            continue;
+                        }
+
+                        texture.rgba[dest_offset] = mapped_color[0U];
+                        texture.rgba[dest_offset + 1U] = mapped_color[1U];
+                        texture.rgba[dest_offset + 2U] = mapped_color[2U];
+                        texture.rgba[dest_offset + 3U] = dest_alpha;
+                    }
                 }
             }
-        }
 
-        cursor_x += glyph_advance(*glyph, 1.0F) + native_char_space;
+            cursor_x += layout_glyph.advance + native_char_space;
+        }
     }
 
     return texture;
@@ -1698,11 +2000,12 @@ void SimpleLayout::drawTextBoxes(smgpc::render::IRendererEngine& renderer, float
         const auto scale_x = font_width / static_cast< float >(text_texture->font_width);
         const auto scale_y = font_height / static_cast< float >(text_texture->font_height);
         const auto line_width = static_cast< float >(text_texture->width) * scale_x;
+        const auto text_height = static_cast< float >(text_texture->height) * scale_y;
 
         const auto horizontal_factor = text_factor(text_box.text_position % 3U);
         const auto vertical_factor = text_factor(text_box.text_position / 3U);
         const auto cursor_x = box_x + (box_width - line_width) * horizontal_factor;
-        const auto cursor_y = box_y + (box_height - font_height) * vertical_factor;
+        const auto cursor_y = box_y + (box_height - text_height) * vertical_factor;
         const auto color = std::array< std::uint8_t, 4U >{
             255U,
             255U,
@@ -1710,7 +2013,7 @@ void SimpleLayout::drawTextBoxes(smgpc::render::IRendererEngine& renderer, float
             static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha, 0.0F, 255.0F)),
         };
         const auto width = line_width;
-        const auto height = static_cast< float >(text_texture->height) * scale_y;
+        const auto height = text_height;
         const auto top_v = gx_texture_v_to_host(0.0F);
         const auto bottom_v = gx_texture_v_to_host(1.0F);
         const auto transform_point = [&](float local_x, float local_y) {
@@ -1792,13 +2095,13 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
         return PaneRenderState{
             .translate_x = local_translate_x,
             .translate_y = local_translate_y,
-            .scale_x = local_scale_x,
-            .scale_y = local_scale_y,
+            .scale_x = mScaleX * local_scale_x,
+            .scale_y = mScaleY * local_scale_y,
             .rotate_z = local_rotate_z,
-            .m00 = local_m00,
-            .m01 = local_m01,
-            .m10 = local_m10,
-            .m11 = local_m11,
+            .m00 = mScaleX * local_m00,
+            .m01 = mScaleX * local_m01,
+            .m10 = mScaleY * local_m10,
+            .m11 = mScaleY * local_m11,
             .alpha = local_alpha,
             .visible = local_visible,
         };

@@ -10,12 +10,14 @@ class PartsModel;
 class ActorLightCtrl;
 class J3DFrameCtrl;
 class Nerve;
+struct TVec3f;
 
 class ProjmapEffectMtxSetter {
 public:
     explicit ProjmapEffectMtxSetter(LiveActor* pActor);
 
     void updateMtxUseBaseMtx();
+    void updateMtxUseBaseMtxWithLocalOffset(const TVec3f& offset);
 
 private:
     LiveActor* mActor = nullptr;

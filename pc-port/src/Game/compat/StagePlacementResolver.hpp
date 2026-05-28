@@ -8,6 +8,8 @@
 
 #include <revolution.h>
 
+#include "Game/Util/JMapInfo.hpp"
+
 namespace smgpc::game {
 
     class DvdFileSystemService;
@@ -20,6 +22,8 @@ namespace smgpc::game {
         std::array<f32, 3U> translation{};
         std::array<f32, 3U> rotation{};
         std::array<f32, 3U> scale{1.0F, 1.0F, 1.0F};
+        JMapInfo jmap_info;
+        s32 jmap_entry_index = -1;
         bool has_translation = false;
         bool has_rotation = false;
         bool has_scale = false;

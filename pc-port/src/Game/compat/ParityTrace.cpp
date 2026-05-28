@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <span>
 #include <string>
+#include <utility>
 
 #include <revolution.h>
 
@@ -80,8 +81,42 @@ namespace smgpc::game {
                 return "StageBgmStateChange";
             case AudioEventKind::SystemSoundStart:
                 return "SystemSoundStart";
+            case AudioEventKind::SystemSoundStop:
+                return "SystemSoundStop";
+            case AudioEventKind::SystemLevelSoundStart:
+                return "SystemLevelSoundStart";
+            case AudioEventKind::LevelSoundSubmit:
+                return "LevelSoundSubmit";
+            case AudioEventKind::LevelSoundPermit:
+                return "LevelSoundPermit";
+            case AudioEventKind::AtmosphereSoundStart:
+                return "AtmosphereSoundStart";
+            case AudioEventKind::SystemMEStart:
+                return "SystemMEStart";
             case AudioEventKind::ControllerSpeakerSoundStart:
                 return "ControllerSpeakerSoundStart";
+            }
+
+            return "Unknown";
+        }
+
+        [[nodiscard]] const char *camera_shake_request_kind_name(CameraSystemService::ShakeRequestKind kind) {
+            switch (kind) {
+            case CameraSystemService::ShakeRequestKind::Normal:
+                return "Normal";
+            }
+
+            return "Unknown";
+        }
+
+        [[nodiscard]] const char *rumble_request_kind_name(RumbleRequestKind kind) {
+            switch (kind) {
+            case RumbleRequestKind::Strong:
+                return "Strong";
+            case RumbleRequestKind::Middle:
+                return "Middle";
+            case RumbleRequestKind::Weak:
+                return "Weak";
             }
 
             return "Unknown";
@@ -113,6 +148,19 @@ namespace smgpc::game {
             return "Unknown";
         }
 
+        [[nodiscard]] const char *effect_host_binding_source_name(EffectHostBindingSource source) {
+            switch (source) {
+            case EffectHostBindingSource::LiveActorBaseMatrix:
+                return "LiveActorBaseMatrix";
+            case EffectHostBindingSource::LayoutActorTransform:
+                return "LayoutActorTransform";
+            case EffectHostBindingSource::SimpleLayoutOrigin:
+                return "SimpleLayoutOrigin";
+            }
+
+            return "Unknown";
+        }
+
         [[nodiscard]] const char *wipe_event_kind_name(WipeEventKind kind) {
             switch (kind) {
             case WipeEventKind::Open:
@@ -138,6 +186,17 @@ namespace smgpc::game {
                 return "Opening";
             case WipeState::Closing:
                 return "Closing";
+            }
+
+            return "Unknown";
+        }
+
+        [[nodiscard]] const char *image_effect_control_kind_name(ImageEffectControlKind kind) {
+            switch (kind) {
+            case ImageEffectControlKind::ForceOff:
+                return "ForceOff";
+            case ImageEffectControlKind::ControlAuto:
+                return "ControlAuto";
             }
 
             return "Unknown";
@@ -339,12 +398,111 @@ namespace smgpc::game {
             return out;
         }
 
+        [[nodiscard]] Json copy_sample_pattern_json(const std::array<std::array<std::uint8_t, 2U>, 12U> &pattern) {
+            auto out = Json::array();
+            for (const auto &sample : pattern) {
+                out.push_back(Json::array({sample[0U], sample[1U]}));
+            }
+            return out;
+        }
+
         [[nodiscard]] Json u32_array_json(std::span<const std::uint32_t> values) {
             auto out = Json::array();
             for (const auto value : values) {
                 out.push_back(value);
             }
             return out;
+        }
+
+        [[nodiscard]] Json wpad_button_names_json(std::uint32_t mask) {
+            constexpr auto buttons = std::array{
+                std::pair{WPAD_BUTTON_A, "A"},
+                std::pair{WPAD_BUTTON_B, "B"},
+                std::pair{WPAD_BUTTON_UP, "UP"},
+                std::pair{WPAD_BUTTON_DOWN, "DOWN"},
+                std::pair{WPAD_BUTTON_LEFT, "LEFT"},
+                std::pair{WPAD_BUTTON_RIGHT, "RIGHT"},
+                std::pair{WPAD_BUTTON_PLUS, "PLUS"},
+                std::pair{WPAD_BUTTON_MINUS, "MINUS"},
+                std::pair{WPAD_BUTTON_HOME, "HOME"},
+                std::pair{WPAD_BUTTON_C, "C"},
+                std::pair{WPAD_BUTTON_Z, "Z"},
+                std::pair{WPAD_BUTTON_1, "ONE"},
+                std::pair{WPAD_BUTTON_2, "TWO"},
+            };
+
+            auto out = Json::array();
+            for (const auto &[button_mask, name] : buttons) {
+                if ((mask & button_mask) != 0U) {
+                    out.push_back(name);
+                }
+            }
+            return out;
+        }
+
+        [[nodiscard]] bool pointer_on_screen(float x, float y, bool valid, const render::FrameContext &frame_context) {
+            return valid && x >= 0.0F && y >= 0.0F && x <= static_cast<float>(frame_context.framebuffer.width) &&
+                   y <= static_cast<float>(frame_context.framebuffer.height);
+        }
+
+        [[nodiscard]] Json input_pointer_json(const render::InputPointerState &pointer, const render::FrameContext &frame_context) {
+            return Json{
+                {"x", pointer.x},
+                {"y", pointer.y},
+                {"valid", pointer.valid},
+                {"on_screen", pointer_on_screen(pointer.x, pointer.y, pointer.valid, frame_context)},
+            };
+        }
+
+        [[nodiscard]] Json wpad_pointer_json(const WpadPointerState &pointer, const render::FrameContext &frame_context) {
+            return Json{
+                {"x", pointer.x},
+                {"y", pointer.y},
+                {"valid", pointer.valid},
+                {"on_screen", pointer_on_screen(pointer.x, pointer.y, pointer.valid, frame_context)},
+            };
+        }
+
+        [[nodiscard]] Json host_input_json(const RuntimeContext::HostInputTraceState &input, const render::FrameContext &frame_context) {
+            return Json{
+                {"frame_index", input.frame_index},
+                {"raw_hold_mask", input.raw_hold_mask},
+                {"effective_hold_mask", input.effective_hold_mask},
+                {"raw_buttons", wpad_button_names_json(input.raw_hold_mask)},
+                {"effective_buttons", wpad_button_names_json(input.effective_hold_mask)},
+                {"raw_pointer", input_pointer_json(input.raw_pointer, frame_context)},
+                {"effective_pointer", input_pointer_json(input.effective_pointer, frame_context)},
+                {"debug_button_script_applied", input.debug_button_script_applied},
+                {"debug_pointer_script_applied", input.debug_pointer_script_applied},
+            };
+        }
+
+        [[nodiscard]] Json wpad_channel_json(const WpadService &wpad, s32 channel, const render::FrameContext &frame_context) {
+            const auto *state = wpad.channel_state(channel);
+            if (state == nullptr) {
+                return Json{{"connected", false}};
+            }
+
+            return Json{
+                {"connected", state->connected},
+                {"hold_mask", state->hold},
+                {"trigger_mask", state->trigger},
+                {"release_mask", state->release},
+                {"repeat_mask", state->repeat},
+                {"hold_frame_count", state->hold_frame_count},
+                {"held_buttons", wpad_button_names_json(state->hold)},
+                {"triggered_buttons", wpad_button_names_json(state->trigger)},
+                {"released_buttons", wpad_button_names_json(state->release)},
+                {"repeated_buttons", wpad_button_names_json(state->repeat)},
+                {"pointer", wpad_pointer_json(state->pointer, frame_context)},
+                {"previous_pointer", wpad_pointer_json(wpad.past_pointer(channel, 1U), frame_context)},
+                {"pointer_history_count", state->pointer_history_count},
+                {"distance_to_display", state->distance_to_display},
+                {"button_a_held", wpad.is_button_held(channel, WPAD_BUTTON_A)},
+                {"button_b_held", wpad.is_button_held(channel, WPAD_BUTTON_B)},
+                {"button_a_triggered", wpad.is_button_triggered(channel, WPAD_BUTTON_A)},
+                {"button_b_triggered", wpad.is_button_triggered(channel, WPAD_BUTTON_B)},
+            };
         }
 
         [[nodiscard]] const char *copy_event_kind_name(render::CopyEventKind kind) {
@@ -439,6 +597,12 @@ namespace smgpc::game {
                 .clamp_bottom = true,
                 .intensity_format = false,
                 .auto_conversion = false,
+                .clear_color = {0U, 0U, 0U, 0U},
+                .clear_depth = 0U,
+                .copy_filter_aa = false,
+                .copy_filter_vertical = false,
+                .copy_filter_sample_pattern = {},
+                .copy_filter_vfilter = {},
                 .dest_addr = 0U,
                 .dest_stride = static_cast<std::uint32_t>(width) * 2U,
                 .source_rect = rect,
@@ -474,6 +638,12 @@ namespace smgpc::game {
                 {"clamp_bottom", event.clamp_bottom},
                 {"intensity_format", event.intensity_format},
                 {"auto_conversion", event.auto_conversion},
+                {"clear_color", u8_array_json(event.clear_color)},
+                {"clear_depth", event.clear_depth},
+                {"copy_filter_aa", event.copy_filter_aa},
+                {"copy_filter_vertical", event.copy_filter_vertical},
+                {"copy_filter_sample_pattern", copy_sample_pattern_json(event.copy_filter_sample_pattern)},
+                {"copy_filter_vfilter", u8_array_json(event.copy_filter_vfilter)},
                 {"dest_addr", event.dest_addr},
                 {"dest_stride", event.dest_stride},
                 {"source_rect", copy_rect_json(event.source_rect)},
@@ -822,6 +992,7 @@ namespace smgpc::game {
                     {"fade_frames", event.fade_frames},
                     {"state", event.state},
                     {"change_frames", event.change_frames},
+                    {"delay_frames", event.delay_frames},
                     {"frame_index", event.frame_index},
                 });
             }
@@ -1016,6 +1187,22 @@ namespace smgpc::game {
             return keeper.has_value() ? effect_keeper_registration_json(*keeper) : Json(nullptr);
         }
 
+        [[nodiscard]] Json effect_host_binding_json(const EffectHostBinding &binding) {
+            return Json{
+                {"host_kind", effect_keeper_host_kind_name(binding.host_kind)},
+                {"source", effect_host_binding_source_name(binding.source)},
+                {"host_name", binding.host_name},
+                {"matrix", float_array_json(binding.matrix)},
+                {"translation", Json::array({binding.translation[0U], binding.translation[1U], binding.translation[2U]})},
+                {"host_dead", binding.host_dead},
+                {"frame_index", binding.frame_index},
+            };
+        }
+
+        [[nodiscard]] Json effect_host_binding_json(const std::optional<EffectHostBinding> &binding) {
+            return binding.has_value() ? effect_host_binding_json(*binding) : Json(nullptr);
+        }
+
         [[nodiscard]] Json registered_effect_keepers_json(const EffectService &effects) {
             auto out = Json::array();
             const auto keepers = effects.registered_keepers();
@@ -1040,6 +1227,75 @@ namespace smgpc::game {
                     {"keeper", effect_keeper_registration_json(event.keeper)},
                     {"resolved_resources", resolved_effect_resources_json(event.resolved_resources)},
                 });
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json effect_particle_instance_json(const JpcEffectParticleInstance &particle, std::size_t index) {
+            return Json{
+                {"index", index},
+                {"id", particle.id},
+                {"age", particle.age},
+                {"lifetime", particle.lifetime},
+                {"child", particle.child},
+                {"position", Json::array({particle.x, particle.y, particle.z})},
+                {"scale", Json::array({particle.scale_x, particle.scale_y})},
+                {"alpha", particle.alpha},
+            };
+        }
+
+        [[nodiscard]] Json effect_particle_instances_json(std::span<const JpcEffectParticleInstance> particles) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < particles.size(); ++i) {
+                out.push_back(effect_particle_instance_json(particles[i], i));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json effect_emitter_instance_json(const JpcEffectEmitterInstance &emitter, std::size_t index) {
+            return Json{
+                {"index", index},
+                {"user_index", emitter.user_index},
+                {"particle_name", emitter.particle_name},
+                {"start_frame_index", emitter.start_frame_index},
+                {"next_update_frame_index", emitter.next_update_frame_index},
+                {"random_seed", emitter.random_seed},
+                {"fractional_emit_count", emitter.fractional_emit_count},
+                {"rate_step_timer", emitter.rate_step_timer},
+                {"first_emit", emitter.first_emit},
+                {"rate_step_emit", emitter.rate_step_emit},
+                {"next_particle_id", emitter.next_particle_id},
+                {"live_particle_count", emitter.particles.size()},
+                {"particles", effect_particle_instances_json(emitter.particles)},
+            };
+        }
+
+        [[nodiscard]] Json effect_emitter_instances_json(std::span<const JpcEffectEmitterInstance> emitters) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < emitters.size(); ++i) {
+                out.push_back(effect_emitter_instance_json(emitters[i], i));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json active_effect_instance_json(const ActiveEffectInstance &active, std::size_t index) {
+            return Json{
+                {"index", index},
+                {"actor_name", active.actor_name},
+                {"effect_name", active.effect_name},
+                {"start_frame_index", active.start_frame_index},
+                {"keeper", effect_keeper_registration_json(active.keeper)},
+                {"host_binding", effect_host_binding_json(active.host_binding)},
+                {"resolved_resources", resolved_effect_resources_json(active.resolved_resources)},
+                {"emitter_count", active.emitters.size()},
+                {"emitters", effect_emitter_instances_json(active.emitters)},
+            };
+        }
+
+        [[nodiscard]] Json active_effect_instances_json(std::span<const ActiveEffectInstance> active_effects) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < active_effects.size(); ++i) {
+                out.push_back(active_effect_instance_json(active_effects[i], i));
             }
             return out;
         }
@@ -1070,6 +1326,54 @@ namespace smgpc::game {
                 {"duration_frames", wipe.duration_frames()},
                 {"events", wipe_events_json(wipe.events())},
             };
+        }
+
+        [[nodiscard]] Json image_effect_events_json(std::span<const ImageEffectControlEvent> events) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < events.size(); ++i) {
+                const auto &event = events[i];
+                out.push_back(Json{
+                    {"index", i},
+                    {"kind", image_effect_control_kind_name(event.kind)},
+                    {"frame_index", event.frame_index},
+                });
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json image_effect_service_json(const ImageEffectService &image_effects) {
+            return Json{
+                {"forced_off", image_effects.is_forced_off()},
+                {"control_auto", image_effects.is_control_auto()},
+                {"events", image_effect_events_json(image_effects.events())},
+            };
+        }
+
+        [[nodiscard]] Json camera_shake_request_events_json(std::span<const CameraSystemService::ShakeRequestEvent> events) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < events.size(); ++i) {
+                const auto &event = events[i];
+                out.push_back(Json{
+                    {"index", i},
+                    {"kind", camera_shake_request_kind_name(event.kind)},
+                    {"frame_index", event.frame_index},
+                });
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json rumble_request_events_json(std::span<const RumbleRequestEvent> events) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < events.size(); ++i) {
+                const auto &event = events[i];
+                out.push_back(Json{
+                    {"index", i},
+                    {"kind", rumble_request_kind_name(event.kind)},
+                    {"channel", event.channel},
+                    {"frame_index", event.frame_index},
+                });
+            }
+            return out;
         }
 
         [[nodiscard]] Json sequence_request_events_json(std::span<const SequenceRequestEvent> events) {
@@ -1182,8 +1486,52 @@ namespace smgpc::game {
             return out;
         }
 
+        [[nodiscard]] Json dvd_file_read_trace_json(const DvdFileReadTrace &entry, std::size_t index) {
+            return Json{
+                {"index", index},
+                {"requested_path", entry.requested_path},
+                {"resolved_path", entry.resolved_path},
+                {"byte_count", entry.byte_count},
+            };
+        }
+
+        [[nodiscard]] Json dvd_file_read_traces_json(std::span<const DvdFileReadTrace> entries) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+                out.push_back(dvd_file_read_trace_json(entries[i], i));
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json dvd_archive_load_trace_json(const DvdArchiveLoadTrace &entry, std::size_t index) {
+            return Json{
+                {"index", index},
+                {"requested_path", entry.requested_path},
+                {"resolved_path", entry.resolved_path},
+                {"cache_hit", entry.cache_hit},
+                {"load_count", entry.load_count},
+                {"cached_archive_count", entry.cached_archive_count},
+                {"resource_count", entry.resource_count},
+            };
+        }
+
+        [[nodiscard]] Json dvd_archive_load_traces_json(std::span<const DvdArchiveLoadTrace> entries) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+                out.push_back(dvd_archive_load_trace_json(entries[i], i));
+            }
+            return out;
+        }
+
         [[nodiscard]] Json runtime_services_json(const RuntimeContext &runtime) {
             return Json{
+                {"dvd",
+                 Json{
+                     {"root", runtime.dvd().root().generic_string()},
+                     {"cached_archive_count", runtime.dvd().cached_archive_count()},
+                     {"file_reads", dvd_file_read_traces_json(runtime.dvd().file_read_trace())},
+                     {"archive_loads", dvd_archive_load_traces_json(runtime.dvd().archive_load_trace())},
+                 }},
                 {"rfl",
                  Json{
                      {"initialized", runtime.rfl().is_initialized()},
@@ -1215,6 +1563,7 @@ namespace smgpc::game {
                      {"scene", wipe_service_json(runtime.scene_wipe())},
                      {"system", wipe_service_json(runtime.system_wipe())},
                  }},
+                {"image_effects", image_effect_service_json(runtime.image_effects())},
                 {"camera",
                  Json{
                      {"active_programmable_camera",
@@ -1227,6 +1576,11 @@ namespace smgpc::game {
                      {"programmable_camera_end_count", runtime.camera_system().programmable_camera_end_count()},
                      {"programmable_camera_param_count", runtime.camera_system().programmable_camera_param_count()},
                      {"programmable_camera_fovy_count", runtime.camera_system().programmable_camera_fovy_count()},
+                     {"shake_events", camera_shake_request_events_json(runtime.camera_system().shake_request_events())},
+                 }},
+                {"rumble",
+                 Json{
+                     {"events", rumble_request_events_json(runtime.rumble().events())},
                  }},
                 {"sequence_requests",
                  Json{
@@ -1750,6 +2104,8 @@ namespace smgpc::game {
                 {"draw_packet_triangle_count", state.draw_packet_triangle_count},
                 {"pass_order", state.pass_order},
                 {"packet_mode", j3d_packet_mode_name(state.packet_mode)},
+                {"packet_mode_reason", state.packet_mode_reason},
+                {"packet_mode_fallback", state.packet_mode_fallback},
                 {"material_pass_count", state.material_pass_count},
                 {"shader_texture_stage_count", state.shader_texture_stage_count},
                 {"color_channel_count", state.color_channel_count},
@@ -1877,6 +2233,12 @@ namespace smgpc::game {
                 {"particle_id", packet.particle_id},
                 {"particle_age", packet.particle_age},
                 {"particle_lifetime", packet.particle_lifetime},
+                {"host_binding_found", packet.host_binding_found},
+                {"host_binding_source", packet.host_binding_source},
+                {"host_translation", Json::array({packet.host_translation[0U], packet.host_translation[1U], packet.host_translation[2U]})},
+                {"particle_position", Json::array({packet.particle_x, packet.particle_y, packet.particle_z})},
+                {"particle_scale", Json::array({packet.particle_scale_x, packet.particle_scale_y})},
+                {"particle_alpha", packet.particle_alpha},
                 {"live_particle_count", packet.live_particle_count},
                 {"child_particle", packet.child_particle},
                 {"texgen_count", 1U},
@@ -1929,23 +2291,22 @@ namespace smgpc::game {
                  {"is_minimized", frame_context.is_minimized},
              }},
             {"camera_pose", runtime.last_camera_pose().has_value() ? camera_pose_json(*runtime.last_camera_pose()) : Json(nullptr)},
-            {"wpad0",
-             Json{
-                 {"connected", runtime.wpad().is_connected(WPAD_CHAN0)},
-                 {"button_a_held", runtime.wpad().is_button_held(WPAD_CHAN0, WPAD_BUTTON_A)},
-                 {"button_b_held", runtime.wpad().is_button_held(WPAD_CHAN0, WPAD_BUTTON_B)},
-                 {"button_a_triggered", runtime.wpad().is_button_triggered(WPAD_CHAN0, WPAD_BUTTON_A)},
-                 {"button_b_triggered", runtime.wpad().is_button_triggered(WPAD_CHAN0, WPAD_BUTTON_B)},
-             }},
+            {"host_input", host_input_json(runtime.host_input_trace(), frame_context)},
+            {"wpad0", wpad_channel_json(runtime.wpad(), WPAD_CHAN0, frame_context)},
             {"audio",
              Json{
                  {"stage_bgm", runtime.current_stage_bgm_name()},
+                 {"stage_bgm_active", !runtime.current_stage_bgm_name().empty()},
                  {"stage_bgm_prepared", runtime.is_stage_bgm_prepared()},
+                 {"stage_bgm_unlocked", runtime.audio().is_stage_bgm_unlocked()},
+                 {"stage_bgm_state", runtime.audio().stage_bgm_state()},
+                 {"stage_bgm_state_change_frames", runtime.audio().stage_bgm_state_change_frames()},
                  {"events", audio_events_json(runtime.audio().events())},
              }},
             {"effects",
              Json{
                  {"registered_keepers", registered_effect_keepers_json(runtime.effects())},
+                 {"active_effects", active_effect_instances_json(runtime.effects().active_effect_instances())},
                  {"events", effect_events_json(runtime.effects().events())},
              }},
             {"runtime_services", runtime_services_json(runtime)},
