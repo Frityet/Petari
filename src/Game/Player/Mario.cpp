@@ -203,7 +203,7 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _480 = new Triangle();
     _484 = new Triangle();
 
-    for (unsigned int i = 0; i < 0x20; i++) {
+    for (unsigned int i = 0; i < ARRAY_SIZE(_57C); i++) {
         _57C[i] = new Triangle();
     }
 
@@ -227,7 +227,7 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _56C = 0;
     _570 = 0;
 
-    for (unsigned int i = 0; i < 9; i++) {
+    for (unsigned int i = 0; i < ARRAY_SIZE(_A8C); i++) {
         _A8C[i].zero();
     }
 
@@ -333,7 +333,7 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _95C = new FloorCode();
     _960 = 0;
     _962 = 0;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < ARRAY_SIZE(_964); i++) {
         _964[i] = _960;
     }
     _96A = 0;
