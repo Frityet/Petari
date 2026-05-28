@@ -28,8 +28,8 @@ namespace smgpc::scene {
         void start() override;
         void update() override;
         void calcAnim() override;
-        void draw3DNormal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void draw2DNormal(render::IRendererEngine &renderer);
+        void draw3DNormal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void draw2DNormal(render::AuroraRenderer &renderer);
 
         [[nodiscard]] NameObj *root() const;
         [[nodiscard]] std::string_view scene_name() const;

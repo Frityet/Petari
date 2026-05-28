@@ -169,12 +169,12 @@ namespace smgpc::render {
         J3dModelRenderer();
         ~J3dModelRenderer();
 
-        void load(render::IRendererEngine &renderer, std::span<const std::uint8_t> model_data, const J3dModelRendererLoadOptions &options = {});
+        void load(render::AuroraRenderer &renderer, std::span<const std::uint8_t> model_data, const J3dModelRendererLoadOptions &options = {});
         void set_bck_animation(const J3dBckAnimationSummary &animation);
         void set_btk_animation(const J3dBtkAnimationSummary &animation);
         void clear_animations();
 
-        void draw(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+        void draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
                   const J3dModelRendererDrawOptions &options = {}) const;
 
         [[nodiscard]] bool is_loaded() const;
@@ -236,11 +236,11 @@ namespace smgpc::render {
             void operator()(DrawScratch *scratch) const;
         };
 
-        [[nodiscard]] Mesh make_constant_backdrop(render::IRendererEngine &renderer, std::array<std::uint8_t, 4U> color) const;
+        [[nodiscard]] Mesh make_constant_backdrop(render::AuroraRenderer &renderer, std::array<std::uint8_t, 4U> color) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights = {}) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
                                                                    std::span<const GXLightState> scene_lights = {}) const;
-        void submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+        void submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
                          DrawScratch &scratch, std::span<const GXLightState> scene_lights,
                          const J3dModelRendererDrawOptions &options) const;
 

@@ -35,8 +35,8 @@ namespace smgpc::scene {
         void start_scene();
         void update_scene();
         void calc_anim_scene();
-        void draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void draw_2d_normal(render::IRendererEngine &renderer);
+        void draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void draw_2d_normal(render::AuroraRenderer &renderer);
 
         [[nodiscard]] Scene *active_scene() const;
         [[nodiscard]] NameObj *active_root() const;

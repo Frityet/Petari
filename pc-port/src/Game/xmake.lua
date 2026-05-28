@@ -8,7 +8,6 @@ target("smg-pc-game")
     add_files("../scene/**.cpp")
     add_files {
         "../render/effects/EffectResource.cpp",
-        "../render/GXFrameBuffer.cpp",
         "../render/GXState.cpp",
         "../render/J3dAnimation.cpp",
         "../render/J3dMaterialRuntime.cpp",
@@ -42,5 +41,14 @@ target("smg-pc-game")
     add_includedirs("../", { public = true })
     add_deps {
         "smg-pc-common",
-        "smg-pc-render"
+        "smg-pc-render",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-ms",
+        "aurora-mtx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-vi"
     }

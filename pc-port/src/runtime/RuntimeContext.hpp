@@ -120,7 +120,7 @@ namespace smgpc::runtime {
         };
 #endif
 
-        RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service,
+        RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                        RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
         ~RuntimeContext();
 
@@ -133,9 +133,9 @@ namespace smgpc::runtime {
         void begin_frame(const render::FrameContext &frame_context);
         void set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose);
         void record_copy_event(render::CopyEvent event);
-        void draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void draw_3d_normal(render::IRendererEngine &renderer);
-        void draw_2d_normal(render::IRendererEngine &renderer);
+        void draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void draw_3d_normal(render::AuroraRenderer &renderer);
+        void draw_2d_normal(render::AuroraRenderer &renderer);
 #ifndef NDEBUG
         void set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index);
 #endif
@@ -276,7 +276,7 @@ namespace smgpc::runtime {
         void refresh_effect_host_binding(std::string_view host_name);
 
         logging::ILogger &_logger;
-        render::IWindowService &_window_service;
+        render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
         WiiIosService _ios;

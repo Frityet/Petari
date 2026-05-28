@@ -1474,7 +1474,7 @@ namespace smgpc::render {
 
     J3dModelRenderer::~J3dModelRenderer() = default;
 
-    void J3dModelRenderer::load(render::IRendererEngine &renderer, std::span<const std::uint8_t> model_data,
+    void J3dModelRenderer::load(render::AuroraRenderer &renderer, std::span<const std::uint8_t> model_data,
                                 const J3dModelRendererLoadOptions &options) {
         _loaded = false;
         _meshes.clear();
@@ -1859,7 +1859,7 @@ namespace smgpc::render {
         _btk_animation.reset();
     }
 
-    void J3dModelRenderer::draw(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix,
+    void J3dModelRenderer::draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix,
                                 std::uint64_t frame, const J3dModelRendererDrawOptions &options) const {
         if (!_loaded) {
             return;
@@ -1913,7 +1913,7 @@ namespace smgpc::render {
         return packets;
     }
 
-    J3dModelRenderer::Mesh J3dModelRenderer::make_constant_backdrop(render::IRendererEngine &renderer, std::array<std::uint8_t, 4U> color) const {
+    J3dModelRenderer::Mesh J3dModelRenderer::make_constant_backdrop(render::AuroraRenderer &renderer, std::array<std::uint8_t, 4U> color) const {
         const std::array<std::uint8_t, 4U> white_pixel {255U, 255U, 255U, 255U};
         const auto texture = renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
         const auto framebuffer = renderer.logical_framebuffer_size();
@@ -2115,7 +2115,7 @@ namespace smgpc::render {
         return state;
     }
 
-    void J3dModelRenderer::submit_mesh(render::IRendererEngine &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix,
+    void J3dModelRenderer::submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix,
                                        std::uint64_t frame, DrawScratch &scratch, std::span<const GXLightState> scene_lights,
                                        const J3dModelRendererDrawOptions &options) const {
         const auto effective_gx_blend = gx_blend_with_draw_options(mesh.gx_blend, options);

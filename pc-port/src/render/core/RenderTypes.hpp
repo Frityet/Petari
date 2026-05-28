@@ -231,6 +231,9 @@ namespace smgpc::render::core {
 
     struct GxTevStage2D {
         std::uint8_t texture_stage = 0U;
+        std::uint8_t texture_coord_stage = 0xffU;
+        std::uint8_t texture_map_stage = 0xffU;
+        std::uint8_t color_channel = 4U;
         std::array<std::uint8_t, 4U> color_in = {};
         std::uint8_t color_op = 0U;
         std::uint8_t color_bias = 0U;
@@ -243,6 +246,8 @@ namespace smgpc::render::core {
         std::uint8_t alpha_scale = 0U;
         bool alpha_clamp = true;
         std::uint8_t alpha_out = 0U;
+        std::uint8_t k_color_sel = 0U;
+        std::uint8_t k_alpha_sel = 0U;
         std::array<std::uint8_t, 4U> konst_color = {0U, 0U, 0U, 0U};
     };
 
@@ -287,6 +292,8 @@ namespace smgpc::render::core {
         std::span<const GxTextureStage2D> texture_stages = {};
         std::span<const GxTevStage2D> tev_stages = {};
         std::array<GxTevRegisterColor2D, 4U> initial_tev_registers = {};
+        std::array<std::array<std::uint8_t, 4U>, 4U> initial_tev_k_colors = {};
+        bool has_initial_tev_k_colors = false;
         GxAlphaCompare2D alpha_compare = {};
         GxBlendMode2D blend = {};
         bool depth_test = false;

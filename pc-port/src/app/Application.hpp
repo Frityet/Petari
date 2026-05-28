@@ -1,7 +1,10 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
+#include <optional>
 #include <string>
+#include <vector>
 
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -24,6 +27,8 @@ namespace smgpc::app {
         int window_width = smgpc::render::core::kWiiLogicalFramebufferWidth;
         int window_height = smgpc::render::core::kWiiLogicalFramebufferHeight;
         std::string window_title = "SMG PC";
+        std::vector<std::string> arguments = {};
+        std::optional<std::filesystem::path> disc_image = {};
     };
 
     class IApplication {
@@ -34,9 +39,8 @@ namespace smgpc::app {
 
     struct ServiceGraphOverrides {
         std::unique_ptr<logging::ILogger> logger = {};
-        std::unique_ptr<render::IWindowFactory> window_factory = {};
-        std::unique_ptr<render::IWindowService> window_service = {};
-        std::unique_ptr<render::IRendererEngine> renderer_engine = {};
+        std::unique_ptr<render::AuroraWindow> window_service = {};
+        std::unique_ptr<render::AuroraRenderer> renderer_engine = {};
         std::unique_ptr<smgpc::runtime::RuntimeContext> runtime_context = {};
         std::unique_ptr<smgpc::scene::GameSystemSceneControllerService> scene_controller = {};
         std::unique_ptr<smgpc::scene::StorySequenceService> story_sequence = {};
@@ -48,8 +52,8 @@ namespace smgpc::app {
 
     using ServiceGraph = di::ServiceProvider<
         di::SingletonService<logging::ILogger>,
-        di::SingletonService<render::IWindowFactory>, di::SingletonService<render::IWindowService>,
-        di::SingletonService<render::IRendererEngine>,
+        di::SingletonService<render::AuroraWindow>,
+        di::SingletonService<render::AuroraRenderer>,
         di::SingletonService<smgpc::runtime::RuntimeContext>,
         di::SingletonService<smgpc::runtime::DvdFileSystemService>,
         di::SingletonService<smgpc::runtime::WiiIosService>,
@@ -84,5 +88,7 @@ namespace smgpc::app {
 
     [[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration);
     [[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides &&overrides);
+    [[nodiscard]] std::filesystem::path required_disc_image(const BootstrapConfiguration &configuration);
+    void ensure_disc_image_open(const BootstrapConfiguration &configuration, logging::ILogger &logger);
 
 }  // namespace smgpc::app

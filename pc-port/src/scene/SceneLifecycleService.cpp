@@ -65,13 +65,13 @@ namespace smgpc::scene {
         }
     }
 
-    void SceneLifecycleService::draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
+    void SceneLifecycleService::draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose) {
         if (_active_scene != nullptr) {
             _active_scene->draw3DNormal(renderer, camera_pose);
         }
     }
 
-    void SceneLifecycleService::draw_2d_normal(render::IRendererEngine &renderer) {
+    void SceneLifecycleService::draw_2d_normal(render::AuroraRenderer &renderer) {
         if (_active_scene != nullptr) {
             _active_scene->draw2DNormal(renderer);
         }

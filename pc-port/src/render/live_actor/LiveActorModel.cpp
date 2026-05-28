@@ -108,7 +108,7 @@ void LiveActorModel::setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4 &m
     mProjmapEffectMatrix = matrix;
 }
 
-void LiveActorModel::draw(smgpc::render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
+void LiveActorModel::draw(smgpc::render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose,
                                 const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass) {
     ensureLoaded(renderer);
     if (mRenderer == nullptr || !mRenderer->is_loaded()) {
@@ -164,7 +164,7 @@ std::string_view LiveActorModel::model_arc_name() const {
     return mModelArcName;
 }
 
-void LiveActorModel::ensureLoaded(smgpc::render::IRendererEngine &renderer) {
+void LiveActorModel::ensureLoaded(smgpc::render::AuroraRenderer &renderer) {
     if (mLoadAttempted) {
         return;
     }

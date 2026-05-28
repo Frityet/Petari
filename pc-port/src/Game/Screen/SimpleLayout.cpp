@@ -546,9 +546,6 @@ namespace {
     }
 
     [[nodiscard]] bool brlyt_material_can_use_gx_shader(const smgpc::layout::BrlytMaterial& material) {
-        if (material.textures.empty()) {
-            return false;
-        }
         if (material.tev_stages.empty()) {
             return material.textures.size() <= smgpc::render::core::kMaxGxMaterialTextureStages2D;
         }
@@ -563,9 +560,13 @@ namespace {
     }
 
     [[nodiscard]] smgpc::render::GxTevStage2D brlyt_gx_tev_stage(const smgpc::layout::BrlytMaterial& material,
-                                                                 const smgpc::layout::BrlytTevStage& stage, std::uint8_t texture_stage) {
+                                                                 const smgpc::layout::BrlytTevStage& stage, std::uint8_t texture_coord_stage,
+                                                                 std::uint8_t texture_map_stage) {
         return smgpc::render::GxTevStage2D{
-            .texture_stage = texture_stage,
+            .texture_stage = texture_map_stage,
+            .texture_coord_stage = texture_coord_stage,
+            .texture_map_stage = texture_map_stage,
+            .color_channel = stage.color_chan,
             .color_in = {stage.color.a, stage.color.b, stage.color.c, stage.color.d},
             .color_op = stage.color.op,
             .color_bias = stage.color.bias,
@@ -578,12 +579,19 @@ namespace {
             .alpha_scale = stage.alpha.scale,
             .alpha_clamp = stage.alpha.clamp,
             .alpha_out = stage.alpha.out_reg,
+            .k_color_sel = stage.color.k_sel,
+            .k_alpha_sel = stage.alpha.k_sel,
             .konst_color = brlyt_stage_konst_color(material, stage),
         };
     }
 
     [[nodiscard]] std::array< smgpc::render::GxTevRegisterColor2D, 4U > brlyt_initial_tev_registers(const smgpc::render::GXMaterialState& state) {
         return state.tev_registers;
+    }
+
+    [[nodiscard]] std::array< std::array< std::uint8_t, 4U >, 4U >
+    brlyt_initial_tev_k_colors(const smgpc::layout::BrlytMaterial& material) {
+        return material.tev_k_colors;
     }
 
     [[nodiscard]] smgpc::render::GxAlphaCompare2D brlyt_alpha_compare(const smgpc::layout::BrlytAlphaCompare& alpha_compare) {
@@ -597,13 +605,16 @@ namespace {
         };
     }
 
-    [[nodiscard]] smgpc::render::GxBlendMode2D brlyt_gx_blend_mode(const smgpc::render::GXBlendState& blend) {
+    [[nodiscard]] smgpc::render::GxBlendMode2D brlyt_gx_blend_mode(const smgpc::layout::BrlytMaterial& material) {
+        const auto& blend = material.gx_state.blend;
         return smgpc::render::GxBlendMode2D{
             .type = blend.type,
             .src_factor = blend.src_factor,
             .dst_factor = blend.dst_factor,
             .op = blend.op,
-            .enabled = blend.enabled,
+            .color_update = blend.color_update,
+            .alpha_update = blend.alpha_update,
+            .enabled = material.blend_mode.enabled,
         };
     }
 
@@ -766,7 +777,7 @@ const std::optional< std::filesystem::path >& SimpleLayout::getArchivePath() con
     return mArchivePath;
 }
 
-void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
+void SimpleLayout::draw(smgpc::render::AuroraRenderer& renderer) {
     if (mIsDead) {
         return;
     }
@@ -795,7 +806,7 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
     drawTextBoxes(renderer, alpha);
 }
 
-void SimpleLayout::drawPicture(smgpc::render::IRendererEngine& renderer, float alpha, std::size_t picture_index) {
+void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t picture_index) {
     if (picture_index >= mBrlytLayout.pictures.size()) {
         return;
     }
@@ -836,22 +847,20 @@ void SimpleLayout::drawPicture(smgpc::render::IRendererEngine& renderer, float a
         };
     };
 
-    if (!brlyt_material_can_use_gx_shader(material)) {
-        return;
-    }
-
     auto texture_stages = std::array< smgpc::render::GxTextureStage2D, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
     auto tev_stages = std::array< smgpc::render::GxTevStage2D, smgpc::render::core::kMaxGxMaterialTevStages2D >{};
     auto tex_coord_gen_indices = std::array< std::uint8_t, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
     auto texture_stage_wrap_t = std::array< std::uint8_t, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+    tex_coord_gen_indices.fill(0xffU);
     auto texture_stage_count = std::size_t{};
     auto tev_stage_count = std::size_t{};
 #ifndef NDEBUG
     auto debug_texture_bindings = std::vector< smgpc::runtime::RuntimeContext::RenderTextureBindingTrace >{};
 #endif
 
-    const auto append_texture_stage = [&](const smgpc::layout::BrlytMaterialTexture& material_texture, std::uint8_t tex_coord_gen_index) {
-        if (texture_stage_count >= texture_stages.size()) {
+    const auto assign_texture_stage = [&](std::size_t slot, const smgpc::layout::BrlytMaterialTexture& material_texture,
+                                          std::uint8_t tex_coord_gen_index) {
+        if (slot >= texture_stages.size()) {
             return false;
         }
 
@@ -860,61 +869,119 @@ void SimpleLayout::drawPicture(smgpc::render::IRendererEngine& renderer, float a
             return false;
         }
 
-        texture_stages[texture_stage_count] = smgpc::render::GxTextureStage2D{
+        texture_stages[slot] = smgpc::render::GxTextureStage2D{
             .texture = texture->handle,
             .wrap_u = material_texture.wrap_s,
             .wrap_v = material_texture.wrap_t,
             .min_filter = material_texture.min_filter,
             .mag_filter = material_texture.mag_filter,
         };
-        tex_coord_gen_indices[texture_stage_count] = tex_coord_gen_index;
-        texture_stage_wrap_t[texture_stage_count] = material_texture.wrap_t;
+        tex_coord_gen_indices[slot] = tex_coord_gen_index;
+        texture_stage_wrap_t[slot] = material_texture.wrap_t;
+        texture_stage_count = std::max(texture_stage_count, slot + 1U);
 #ifndef NDEBUG
-        debug_texture_bindings.push_back(smgpc::runtime::RuntimeContext::RenderTextureBindingTrace{
-            .slot = static_cast< std::uint8_t >(texture_stage_count),
-            .texture_index = material_texture.texture_index,
-            .name = texture->name,
-            .width = texture->decoded.width,
-            .height = texture->decoded.height,
-            .format_raw = static_cast< std::uint32_t >(texture->decoded.format),
-            .format_name = texture_format_name(texture->decoded.format),
-        });
+        const auto debug_slot = static_cast< std::uint8_t >(slot);
+        if (std::ranges::none_of(debug_texture_bindings, [debug_slot](const auto& binding) { return binding.slot == debug_slot; })) {
+            debug_texture_bindings.push_back(smgpc::runtime::RuntimeContext::RenderTextureBindingTrace{
+                .slot = debug_slot,
+                .texture_index = material_texture.texture_index,
+                .name = texture->name,
+                .width = texture->decoded.width,
+                .height = texture->decoded.height,
+                .format_raw = static_cast< std::uint32_t >(texture->decoded.format),
+                .format_name = texture_format_name(texture->decoded.format),
+            });
+        }
 #endif
-        ++texture_stage_count;
         return true;
     };
 
-    auto can_submit = true;
-    if (material.tev_stages.empty()) {
-        can_submit = append_texture_stage(material.textures.front(), 0U);
-        if (tev_stages.size() >= 2U) {
-            tev_stages[0U] = smgpc::render::gx_brlyt_default_texture_color_stage(0U);
-            tev_stages[1U] = smgpc::render::gx_brlyt_default_raster_modulate_stage();
-            tev_stage_count = 2U;
-        } else {
-            can_submit = false;
+    const auto bind_texture_map_slot = [&](std::uint8_t texture_map, std::uint8_t tex_coord_gen_index) {
+        if (texture_map >= material.textures.size()) {
+            return false;
         }
+
+        return assign_texture_stage(texture_map, material.textures[texture_map], tex_coord_gen_index);
+    };
+
+    const auto ensure_tex_coord_slot = [&](std::uint8_t tex_coord_gen_index) {
+        if (tex_coord_gen_index >= texture_stages.size()) {
+            return false;
+        }
+        if (tex_coord_gen_index < texture_stage_count && texture_stages[tex_coord_gen_index].texture.is_valid()) {
+            tex_coord_gen_indices[tex_coord_gen_index] = tex_coord_gen_index;
+            return true;
+        }
+        if (material.textures.empty()) {
+            return false;
+        }
+
+        return assign_texture_stage(tex_coord_gen_index, material.textures.front(), tex_coord_gen_index);
+    };
+
+    const auto use_simple_textured_material = [&]() {
+        if (material.textures.empty()) {
+            return false;
+        }
+
+        texture_stages = {};
+        tev_stages = {};
+        tex_coord_gen_indices.fill(0xffU);
+        texture_stage_wrap_t = {};
+        texture_stage_count = 0U;
+        tev_stage_count = 0U;
+#ifndef NDEBUG
+        debug_texture_bindings.clear();
+#endif
+        auto can_use = assign_texture_stage(0U, material.textures.front(), 0U);
+        if (!tev_stages.empty()) {
+            tev_stages[0U] = smgpc::render::gx_brlyt_default_texture_color_stage(0U);
+            tev_stages[0U].texture_coord_stage = 0U;
+            tev_stages[0U].texture_map_stage = 0U;
+            tev_stages[0U].color_channel = 4U;
+            tev_stage_count = 1U;
+        } else {
+            can_use = false;
+        }
+        return can_use;
+    };
+
+    auto can_submit = true;
+    if (!material.textures.empty()) {
+        can_submit = use_simple_textured_material();
+    } else if (!brlyt_material_can_use_gx_shader(material)) {
+        can_submit = false;
     } else {
         for (const auto& stage : material.tev_stages) {
-            auto texture_stage = std::uint8_t{0xffU};
+            auto texture_coord_stage = std::uint8_t{0xffU};
+            auto texture_map_stage = std::uint8_t{0xffU};
             if (brlyt_tev_stage_uses_texture(stage)) {
-                if (stage.tex_map >= material.textures.size()) {
+                if (stage.tex_map > UINT8_MAX) {
                     can_submit = false;
                 } else {
-                    texture_stage = static_cast< std::uint8_t >(texture_stage_count);
-                    can_submit = can_submit && append_texture_stage(material.textures[stage.tex_map], stage.tex_coord_gen);
+                    texture_coord_stage = stage.tex_coord_gen;
+                    texture_map_stage = static_cast< std::uint8_t >(stage.tex_map);
+                    can_submit = can_submit && bind_texture_map_slot(texture_map_stage, texture_coord_stage);
+                    can_submit = can_submit && ensure_tex_coord_slot(texture_coord_stage);
                 }
             }
             if (tev_stage_count < tev_stages.size()) {
-                tev_stages[tev_stage_count] = brlyt_gx_tev_stage(material, stage, texture_stage);
+                tev_stages[tev_stage_count] = brlyt_gx_tev_stage(material, stage, texture_coord_stage, texture_map_stage);
                 ++tev_stage_count;
             }
         }
     }
     const auto submitted_tev_uses_texture = std::ranges::any_of(std::span< const smgpc::render::GxTevStage2D >(tev_stages.data(), tev_stage_count),
-                                                                [](const auto& stage) { return stage.texture_stage != 0xffU; });
-    if (!can_submit || (submitted_tev_uses_texture && texture_stage_count == 0U) || tev_stage_count == 0U) {
+                                                                [](const auto& stage) { return stage.texture_map_stage != 0xffU; });
+    if ((!can_submit && !use_simple_textured_material()) || (submitted_tev_uses_texture && texture_stage_count == 0U) || tev_stage_count == 0U) {
         return;
+    }
+    if (!material.textures.empty()) {
+        for (auto slot = std::size_t{}; slot < texture_stage_count; ++slot) {
+            if (!texture_stages[slot].texture.is_valid() && !assign_texture_stage(slot, material.textures.front(), static_cast< std::uint8_t >(slot))) {
+                return;
+            }
+        }
     }
 
     const auto tex_coord = [&](std::size_t vertex_index, std::size_t texture_stage_index) {
@@ -968,7 +1035,7 @@ void SimpleLayout::drawPicture(smgpc::render::IRendererEngine& renderer, float a
             .texgen_count = static_cast< std::uint32_t >(texture_stage_count),
             .tev_stage_count = static_cast< std::uint32_t >(tev_stage_count),
             .alpha_compare_enabled = material.alpha_compare.enabled,
-            .blend_enabled = material.gx_state.blend.enabled,
+            .blend_enabled = material.blend_mode.enabled,
             .cull_mode = smgpc::render::CullMode::None,
             .texture_bindings = debug_texture_bindings,
         });
@@ -980,8 +1047,10 @@ void SimpleLayout::drawPicture(smgpc::render::IRendererEngine& renderer, float a
         .texture_stages = std::span< const smgpc::render::GxTextureStage2D >(texture_stages.data(), texture_stage_count),
         .tev_stages = std::span< const smgpc::render::GxTevStage2D >(tev_stages.data(), tev_stage_count),
         .initial_tev_registers = brlyt_initial_tev_registers(material.gx_state),
+        .initial_tev_k_colors = brlyt_initial_tev_k_colors(material),
+        .has_initial_tev_k_colors = true,
         .alpha_compare = brlyt_alpha_compare(material.alpha_compare),
-        .blend = brlyt_gx_blend_mode(material.gx_state.blend),
+        .blend = brlyt_gx_blend_mode(material),
     });
 }
 
@@ -1928,7 +1997,7 @@ void SimpleLayout::loadRenderData() {
     }
 }
 
-void SimpleLayout::ensureTextureUploads(smgpc::render::IRendererEngine& renderer) {
+void SimpleLayout::ensureTextureUploads(smgpc::render::AuroraRenderer& renderer) {
     for (auto& texture : mRenderTextures) {
         if (texture.handle.is_valid()) {
             continue;
@@ -1953,7 +2022,7 @@ void SimpleLayout::ensureTextureUploads(smgpc::render::IRendererEngine& renderer
     ensureTextTextureUploads(renderer);
 }
 
-void SimpleLayout::ensureTextTextureUploads(smgpc::render::IRendererEngine& renderer) {
+void SimpleLayout::ensureTextTextureUploads(smgpc::render::AuroraRenderer& renderer) {
     for (std::size_t text_box_index = 0U; text_box_index < mBrlytLayout.text_boxes.size(); ++text_box_index) {
         if (find_text_texture(mRenderTextTextures, text_box_index) != nullptr) {
             continue;
@@ -2083,13 +2152,13 @@ SimpleLayout::RenderTextTexture SimpleLayout::composeTextTexture(std::size_t tex
     return texture;
 }
 
-void SimpleLayout::drawTextBoxes(smgpc::render::IRendererEngine& renderer, float alpha) {
+void SimpleLayout::drawTextBoxes(smgpc::render::AuroraRenderer& renderer, float alpha) {
     for (std::size_t text_box_index = 0U; text_box_index < mBrlytLayout.text_boxes.size(); ++text_box_index) {
         drawTextBox(renderer, alpha, text_box_index);
     }
 }
 
-void SimpleLayout::drawTextBox(smgpc::render::IRendererEngine& renderer, float alpha, std::size_t text_box_index) {
+void SimpleLayout::drawTextBox(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t text_box_index) {
     if (text_box_index >= mBrlytLayout.text_boxes.size()) {
         return;
     }

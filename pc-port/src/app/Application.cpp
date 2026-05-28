@@ -9,16 +9,19 @@
 #include <cstdint>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
 #include <memory>
 #include <optional>
+#include <span>
+#include <stdexcept>
 #include <string>
 #include <string_view>
-#include <system_error>
 #include <thread>
 #include <utility>
 
-#ifndef NDEBUG
-#include <fstream>
+#if defined(__GNUC__) || defined(__clang__)
+extern "C" bool aurora_dvd_open(const char *disc_path) __attribute__((weak));
+extern "C" void aurora_dvd_close(void) __attribute__((weak));
 #endif
 
 namespace smgpc::app {
@@ -30,18 +33,10 @@ namespace smgpc::app {
         constexpr auto WII_FRAME_DURATION = std::chrono::duration_cast<FrameClock::duration>(
             std::chrono::duration<double>(WII_FRAME_DURATION_SECONDS));
 
+        bool g_disc_open = false;
+
         [[nodiscard]] double logical_frame_time_seconds(std::uint64_t logical_frame_index) {
             return logical_frame_index <= 1U ? 0.0 : static_cast<double>(logical_frame_index - 1U) * WII_FRAME_DURATION_SECONDS;
-        }
-
-        [[nodiscard]] double logical_frame_delta_seconds(std::uint64_t logical_frame_index) {
-            return logical_frame_index <= 1U ? 0.0 : WII_FRAME_DURATION_SECONDS;
-        }
-
-        void apply_logical_frame_timing(render::FrameContext &frame_context, std::uint64_t logical_frame_index) {
-            frame_context.frame_index = logical_frame_index;
-            frame_context.frame_time_seconds = logical_frame_time_seconds(logical_frame_index);
-            frame_context.frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index);
         }
 
         [[nodiscard]] std::filesystem::path default_save_directory() {
@@ -67,116 +62,27 @@ namespace smgpc::app {
             explicit FramePacer(bool enabled) : _enabled(enabled), _next_frame_deadline(FrameClock::now() + WII_FRAME_DURATION) {
             }
 
-            [[nodiscard]] FrameClock::duration wait_for_frame_end() {
+            void wait_for_frame_end() {
                 const auto now = FrameClock::now();
                 if (!_enabled) {
                     _next_frame_deadline = now + WII_FRAME_DURATION;
-                    return FrameClock::duration::zero();
+                    return;
                 }
 
-                auto after_wait = now;
-                auto sleep_duration = FrameClock::duration::zero();
                 if (now < _next_frame_deadline) {
-                    const auto sleep_begin = now;
                     std::this_thread::sleep_until(_next_frame_deadline);
-                    after_wait = FrameClock::now();
-                    sleep_duration = after_wait - sleep_begin;
                 }
 
+                const auto after_wait = FrameClock::now();
                 while (_next_frame_deadline <= after_wait) {
                     _next_frame_deadline += WII_FRAME_DURATION;
                 }
-
-                return sleep_duration;
             }
 
         private:
             bool _enabled = true;
             FrameClock::time_point _next_frame_deadline = {};
         };
-
-#ifndef NDEBUG
-        struct OneShotScreenshotRequest {
-            std::filesystem::path path;
-            std::uint64_t frame = 1U;
-            bool exit_after_capture = false;
-        };
-
-        struct OneShotParityTraceRequest {
-            std::filesystem::path path;
-            std::uint64_t frame = 1U;
-        };
-
-        struct FrameTimingSummary {
-            std::uint64_t frame_count = 0U;
-            double poll_events_ms = 0.0;
-            double begin_frame_ms = 0.0;
-            double runtime_update_ms = 0.0;
-            double draw_3d_ms = 0.0;
-            double draw_2d_ms = 0.0;
-            double parity_trace_ms = 0.0;
-            double screenshot_request_ms = 0.0;
-            double end_frame_ms = 0.0;
-            double frame_pacing_ms = 0.0;
-            double total_ms = 0.0;
-        };
-#endif
-
-#ifndef NDEBUG
-        [[nodiscard]] double elapsed_ms(FrameClock::duration duration) {
-            return std::chrono::duration<double, std::milli>(duration).count();
-        }
-
-        [[nodiscard]] double elapsed_ms(FrameClock::time_point begin, FrameClock::time_point end) {
-            return std::chrono::duration<double, std::milli>(end - begin).count();
-        }
-
-        [[nodiscard]] bool bool_environment_value(const char *name, bool fallback) {
-            const auto *value = std::getenv(name);
-            if (value == nullptr || value[0] == '\0') {
-                return fallback;
-            }
-
-            const auto text = std::string_view(value);
-            if (text == "0" || text == "false" || text == "False" || text == "off" || text == "OFF" || text == "no" || text == "NO") {
-                return false;
-            }
-            if (text == "1" || text == "true" || text == "True" || text == "on" || text == "ON" || text == "yes" || text == "YES") {
-                return true;
-            }
-
-            return fallback;
-        }
-
-        [[nodiscard]] bool bool_environment_enabled(const char *name) {
-            return bool_environment_value(name, false);
-        }
-
-        [[nodiscard]] std::optional<std::string> string_environment(const char *name) {
-            const auto *value = std::getenv(name);
-            if (value == nullptr || value[0] == '\0') {
-                return std::nullopt;
-            }
-
-            return std::string(value);
-        }
-
-        void log_timing_summary(logging::ILogger &logger, const FrameTimingSummary &timing) {
-            if (timing.frame_count == 0U) {
-                return;
-            }
-
-            const auto inv_frames = 1.0 / static_cast<double>(timing.frame_count);
-            logger.info(logging::Category::APP,
-                        logging::Message {
-                            "Frame timing summary over {} frames: poll={:.3f}ms begin={:.3f}ms update={:.3f}ms draw3d={:.3f}ms draw2d={:.3f}ms "
-                            "trace={:.3f}ms screenshot={:.3f}ms end={:.3f}ms pace={:.3f}ms total={:.3f}ms"
-                        },
-                        timing.frame_count, timing.poll_events_ms * inv_frames, timing.begin_frame_ms * inv_frames,
-                        timing.runtime_update_ms * inv_frames, timing.draw_3d_ms * inv_frames, timing.draw_2d_ms * inv_frames,
-                        timing.parity_trace_ms * inv_frames, timing.screenshot_request_ms * inv_frames, timing.end_frame_ms * inv_frames,
-                        timing.frame_pacing_ms * inv_frames, timing.total_ms * inv_frames);
-        }
 
         [[nodiscard]] std::optional<std::uint64_t> parse_frame_index(std::string_view text) {
             auto value = 0ULL;
@@ -186,53 +92,7 @@ namespace smgpc::app {
             if (result.ec != std::errc {} || result.ptr != end) {
                 return std::nullopt;
             }
-
             return value;
-        }
-
-        [[nodiscard]] std::optional<OneShotScreenshotRequest> screenshot_request_from_environment() {
-            const auto *path_value = std::getenv("SMGPC_SCREENSHOT_PATH");
-            if (path_value == nullptr || path_value[0] == '\0') {
-                return std::nullopt;
-            }
-
-            auto request = OneShotScreenshotRequest {
-                .path = std::filesystem::path(path_value),
-                .frame = 1U,
-            };
-
-            const auto *frame_value = std::getenv("SMGPC_SCREENSHOT_FRAME");
-            if (frame_value != nullptr && frame_value[0] != '\0') {
-                if (const auto parsed = parse_frame_index(frame_value); parsed.has_value()) {
-                    request.frame = *parsed;
-                }
-            }
-
-            const auto *exit_after_capture_value = std::getenv("SMGPC_EXIT_AFTER_SCREENSHOT");
-            request.exit_after_capture = exit_after_capture_value != nullptr && std::string_view(exit_after_capture_value) == "1";
-
-            return request;
-        }
-
-        [[nodiscard]] std::optional<OneShotParityTraceRequest> parity_trace_request_from_environment() {
-            const auto *path_value = std::getenv("SMGPC_PARITY_TRACE_PATH");
-            if (path_value == nullptr || path_value[0] == '\0') {
-                return std::nullopt;
-            }
-
-            auto request = OneShotParityTraceRequest {
-                .path = std::filesystem::path(path_value),
-                .frame = 1U,
-            };
-
-            const auto *frame_value = std::getenv("SMGPC_PARITY_TRACE_FRAME");
-            if (frame_value != nullptr && frame_value[0] != '\0') {
-                if (const auto parsed = parse_frame_index(frame_value); parsed.has_value()) {
-                    request.frame = *parsed;
-                }
-            }
-
-            return request;
         }
 
         [[nodiscard]] std::optional<std::uint64_t> exit_frame_from_environment() {
@@ -240,69 +100,37 @@ namespace smgpc::app {
             if (frame_value == nullptr || frame_value[0] == '\0') {
                 return std::nullopt;
             }
-
             return parse_frame_index(frame_value);
         }
 
-        [[nodiscard]] std::uint64_t event_poll_interval_from_environment() {
-            const auto *value = std::getenv("SMGPC_EVENT_POLL_INTERVAL");
-            if (value == nullptr || value[0] == '\0') {
-                return 1U;
-            }
-
-            const auto parsed = parse_frame_index(value);
-            if (!parsed.has_value() || *parsed == 0U) {
-                return 1U;
-            }
-            return *parsed;
+        [[nodiscard]] bool frame_pacing_enabled_from_environment() {
+            const auto *value = std::getenv("SMGPC_FRAME_PACING");
+            return value == nullptr || std::string_view(value) != "0";
         }
 
-        [[nodiscard]] std::optional<std::uint64_t> skip_render_until_frame_from_environment() {
-            const auto *value = std::getenv("SMGPC_SKIP_RENDER_UNTIL_FRAME");
+        [[nodiscard]] std::optional<std::string> string_environment(const char *name) {
+            const auto *value = std::getenv(name);
             if (value == nullptr || value[0] == '\0') {
                 return std::nullopt;
             }
-
-            const auto parsed = parse_frame_index(value);
-            if (!parsed.has_value() || *parsed <= 1U) {
-                return std::nullopt;
-            }
-            return parsed;
+            return std::string(value);
         }
 
-        [[nodiscard]] std::uint64_t render_frame_interval_from_environment() {
-            const auto *value = std::getenv("SMGPC_RENDER_FRAME_INTERVAL");
-            if (value == nullptr || value[0] == '\0') {
-                return 1U;
-            }
-
-            const auto parsed = parse_frame_index(value);
-            if (!parsed.has_value() || *parsed == 0U) {
-                return 1U;
-            }
-            return *parsed;
-        }
-
-        [[nodiscard]] std::optional<std::uint64_t> debug_change_stage_request_frame_from_environment() {
-            const auto *value = std::getenv("SMGPC_REQUEST_CHANGE_STAGE_AFTER_LOADING_FRAME");
-            if (value == nullptr || value[0] == '\0') {
-                return std::nullopt;
-            }
-
-            return parse_frame_index(value);
-        }
-
-        [[nodiscard]] bool has_active_layout(const smgpc::runtime::RuntimeContext &runtime, std::string_view layout_name) {
-            for (const auto &layout : runtime.scheduler().debug_layout_runtime_snapshot()) {
-                if (layout.layout_name == layout_name && !layout.dead && !layout.suspended) {
-                    return true;
+#ifndef NDEBUG
+        template <typename Runtime>
+        [[nodiscard]] bool has_active_layout(const Runtime &runtime, std::string_view layout_name) {
+            if constexpr (requires(const Runtime &value) { value.scheduler().debug_layout_runtime_snapshot(); }) {
+                for (const auto &layout : runtime.scheduler().debug_layout_runtime_snapshot()) {
+                    if (layout.layout_name == layout_name && !layout.dead && !layout.suspended) {
+                        return true;
+                    }
                 }
             }
-
             return false;
         }
 
-        void emit_configured_semantic_anchor(smgpc::runtime::RuntimeContext &runtime) {
+        template <typename Runtime>
+        void emit_configured_semantic_anchor(Runtime &runtime) {
             const auto name = string_environment("SMGPC_SEMANTIC_ANCHOR_NAME");
             if (!name.has_value()) {
                 return;
@@ -310,231 +138,175 @@ namespace smgpc::app {
 
             const auto category = string_environment("SMGPC_SEMANTIC_ANCHOR_CATEGORY").value_or("capture");
             const auto detail = string_environment("SMGPC_SEMANTIC_ANCHOR_DETAIL").value_or("runtime parity capture");
-            runtime.emit_semantic_trace_event(category, *name, detail);
-        }
-
-        [[nodiscard]] bool frame_pacing_enabled_from_environment() {
-            return bool_environment_value("SMGPC_FRAME_PACING", true);
+            if constexpr (requires(Runtime &value, const std::string &event_category, const std::string &event_name,
+                                   const std::string &event_detail) {
+                              value.emit_semantic_trace_event(event_category, event_name, event_detail);
+                          }) {
+                runtime.emit_semantic_trace_event(category, *name, detail);
+            }
         }
 #endif
+
+        [[nodiscard]] std::optional<std::filesystem::path> disc_image_from_arguments(std::span<const std::string> arguments) {
+            for (std::size_t i = 1U; i < arguments.size(); ++i) {
+                const auto &argument = arguments[i];
+                if (argument == "--disc") {
+                    if (i + 1U >= arguments.size() || arguments[i + 1U].empty()) {
+                        throw std::runtime_error("--disc requires a disc image path");
+                    }
+                    return std::filesystem::path(arguments[i + 1U]);
+                }
+                constexpr auto prefix = std::string_view("--disc=");
+                if (argument.starts_with(prefix)) {
+                    const auto value = argument.substr(prefix.size());
+                    if (value.empty()) {
+                        throw std::runtime_error("--disc requires a disc image path");
+                    }
+                    return std::filesystem::path(value);
+                }
+            }
+            return std::nullopt;
+        }
+
+        [[nodiscard]] std::filesystem::path required_disc_image_impl(const BootstrapConfiguration &configuration) {
+            if (const auto argument_disc = disc_image_from_arguments(configuration.arguments); argument_disc.has_value()) {
+                return *argument_disc;
+            }
+            if (configuration.disc_image.has_value()) {
+                return *configuration.disc_image;
+            }
+            if (const auto *env_disc = std::getenv("SMGPC_DISC_IMAGE"); env_disc != nullptr && env_disc[0] != '\0') {
+                return std::filesystem::path(env_disc);
+            }
+            throw std::runtime_error("Missing disc image. Launch with `smg-pc --disc <path>` or set SMGPC_DISC_IMAGE.");
+        }
+
+        void ensure_disc_image_open_impl(const BootstrapConfiguration &configuration, logging::ILogger &logger) {
+            if (g_disc_open) {
+                return;
+            }
+
+            const auto disc_image = required_disc_image_impl(configuration);
+            const auto disc_path = disc_image.string();
+#if defined(__GNUC__) || defined(__clang__)
+            if (aurora_dvd_open == nullptr) {
+                logger.warning(logging::Category::APP,
+                               logging::Message {"Aurora DVD image support is not linked; accepted disc image {}"}, disc_path);
+                return;
+            }
+            if (!aurora_dvd_open(disc_path.c_str())) {
+                throw std::runtime_error("Aurora could not open disc image " + disc_path);
+            }
+            g_disc_open = true;
+            logger.info(logging::Category::APP, logging::Message {"Opened Aurora disc image {}"}, disc_path);
+#else
+            logger.warning(logging::Category::APP,
+                           logging::Message {"Aurora DVD image support is not available on this toolchain; accepted disc image {}"}, disc_path);
+#endif
+        }
 
         class DesktopApplication final : public IApplication {
         public:
-            DesktopApplication(di::DependencyReference<render::IWindowService> window_service,
-                               di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger,
+            DesktopApplication(BootstrapConfiguration configuration, di::DependencyReference<render::AuroraWindow> window_service,
+                               di::DependencyReference<render::AuroraRenderer> renderer, di::DependencyReference<logging::ILogger> logger,
                                di::DependencyReference<smgpc::runtime::RuntimeContext> runtime,
                                di::DependencyReference<smgpc::scene::GameSystemService> game_system)
-                : _window_service(std::move(window_service)), _renderer_engine(std::move(renderer_engine)), _logger(std::move(logger)),
-                  _runtime(std::move(runtime)), _game_system(std::move(game_system)) {
+                : _configuration(std::move(configuration)), _window_service(std::move(window_service)), _renderer(std::move(renderer)),
+                  _logger(std::move(logger)), _runtime(std::move(runtime)), _game_system(std::move(game_system)) {
             }
 
             [[nodiscard]] int run() override {
-                _logger->info(logging::Category::APP, logging::Message {"Running SMG sequence boot slice"});
+                _logger->info(logging::Category::APP, logging::Message {"Running SMG on Aurora"});
                 _logger->info(logging::Category::APP, logging::Message {"Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input"});
-
-#ifndef NDEBUG
-                const auto screenshot_request = screenshot_request_from_environment();
-                const auto parity_trace_request = parity_trace_request_from_environment();
-                const auto exit_after_frame = exit_frame_from_environment();
-                const auto timing_enabled = bool_environment_enabled("SMGPC_FRAME_TIMING_SUMMARY");
-                const auto event_poll_interval = event_poll_interval_from_environment();
-                const auto skip_render_until_frame = skip_render_until_frame_from_environment();
-                const auto render_frame_interval = render_frame_interval_from_environment();
-                const auto frame_pacing_enabled = frame_pacing_enabled_from_environment();
-                const auto exit_on_layout_name = string_environment("SMGPC_EXIT_ON_LAYOUT_NAME");
-                const auto debug_change_stage_request_frame = debug_change_stage_request_frame_from_environment();
-                auto timing = FrameTimingSummary {};
-                auto screenshot_queued = false;
-                auto parity_trace_written = false;
-                auto debug_change_stage_requested = false;
-                if (screenshot_request.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message {"Will write a renderer PNG screenshot to {} on frame {}"},
-                                  screenshot_request->path.string(), screenshot_request->frame);
-                }
-                if (parity_trace_request.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message {"Will write runtime parity trace to {} on frame {}"},
-                                  parity_trace_request->path.string(), parity_trace_request->frame);
-                }
-                if (exit_after_frame.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message {"Will exit after frame {}"}, *exit_after_frame);
-                }
-                if (event_poll_interval > 1U) {
-                    _logger->info(logging::Category::APP, logging::Message {"Polling desktop events every {} frames"}, event_poll_interval);
-                }
-                if (skip_render_until_frame.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message {"Skipping renderer submission until frame {}"},
-                                  *skip_render_until_frame);
-                }
-                if (render_frame_interval > 1U) {
-                    _logger->info(logging::Category::APP, logging::Message {"Submitting one renderer frame every {} simulation frames"},
-                                  render_frame_interval);
-                }
-                if (frame_pacing_enabled) {
-                    _logger->info(logging::Category::APP, logging::Message {"Pacing simulation frames at {:.3f} Hz"}, WII_FRAME_RATE_HZ);
-                } else {
-                    _logger->info(logging::Category::APP, logging::Message {"Debug frame pacing explicitly disabled by SMGPC_FRAME_PACING=0"});
-                }
-                if (exit_on_layout_name.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message {"Will exit when layout {} is active"}, *exit_on_layout_name);
-                }
-                if (debug_change_stage_request_frame.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message {"Will debug-request generic stage change after loading game data on frame {}"},
-                                  *debug_change_stage_request_frame);
-                }
-#else
-                constexpr auto frame_pacing_enabled = true;
-#endif
 
                 auto &runtime = _runtime.get();
                 auto &game_system = _game_system.get();
                 if (!runtime.save_data().host_directory().has_value()) {
                     const auto save_directory = default_save_directory();
                     runtime.save_data().set_host_directory(save_directory);
-                    _logger->info(logging::Category::APP, logging::Message {"Using default SMG save files from {}"}, save_directory.string());
+                    _logger->info(logging::Category::APP, logging::Message {"Using SMG save files from {}"}, save_directory.string());
                 }
-#ifndef NDEBUG
-                emit_configured_semantic_anchor(runtime);
-                if (parity_trace_request.has_value()) {
-                    runtime.set_j3d_packet_trace_frame(parity_trace_request->frame);
-                }
-#endif
-                auto loop_frame_index = std::uint64_t {};
-                auto frame_pacer = FramePacer(frame_pacing_enabled);
 
-                while (true) {
 #ifndef NDEBUG
-                    const auto frame_start = FrameClock::now();
-                    const auto should_poll_events = loop_frame_index % event_poll_interval == 0U;
-                    const auto window_open = should_poll_events ? _window_service->poll_events() : !_window_service->should_close();
-                    const auto after_poll_events = FrameClock::now();
-#else
-                    const auto window_open = _window_service->poll_events();
+                const auto exit_after_frame = exit_frame_from_environment();
+                const auto exit_on_layout_name = string_environment("SMGPC_EXIT_ON_LAYOUT_NAME");
+                const auto parity_trace_path = string_environment("SMGPC_PARITY_TRACE_PATH");
+                const auto parity_trace_frame = parse_frame_index(string_environment("SMGPC_PARITY_TRACE_FRAME").value_or("1")).value_or(1U);
+                auto parity_trace_written = false;
+                emit_configured_semantic_anchor(runtime);
+                if (parity_trace_path.has_value()) {
+                    runtime.set_j3d_packet_trace_frame(parity_trace_frame);
+                }
+                if (exit_after_frame.has_value()) {
+                    _logger->info(logging::Category::APP, logging::Message {"Will exit after frame {}"}, *exit_after_frame);
+                }
 #endif
-                    if (!window_open) {
-                        break;
-                    }
+
+                auto frame_pacer = FramePacer(frame_pacing_enabled_from_environment());
+                auto loop_frame_index = std::uint64_t {};
+                while (_window_service->poll_events()) {
                     const auto logical_frame_index = loop_frame_index + 1U;
-#ifndef NDEBUG
-                    const auto is_interval_render_frame = render_frame_interval == 1U || logical_frame_index % render_frame_interval == 0U;
-                    const auto needs_parity_trace_render = parity_trace_request.has_value() && !parity_trace_written &&
-                                                           logical_frame_index >= parity_trace_request->frame;
-                    const auto needs_screenshot_render = screenshot_request.has_value() && !screenshot_queued &&
-                                                         logical_frame_index >= screenshot_request->frame;
-                    const auto needs_screenshot_flush_render =
-                        screenshot_request.has_value() && screenshot_queued && screenshot_request->exit_after_capture &&
-                        logical_frame_index <= screenshot_request->frame + 4U;
-                    const auto should_render_frame =
-                        ((!skip_render_until_frame.has_value() || logical_frame_index >= *skip_render_until_frame) &&
-                         is_interval_render_frame) ||
-                        needs_parity_trace_render || needs_screenshot_render || needs_screenshot_flush_render;
-#else
-                    constexpr auto should_render_frame = true;
-#endif
-                    auto frame_context = render::FrameContext {
-                        .frame_index = logical_frame_index,
-                        .frame_time_seconds = logical_frame_time_seconds(logical_frame_index),
-                        .frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index),
-                        .framebuffer = _renderer_engine->framebuffer_size(),
-                        .has_focus = _window_service->is_focused(),
-                        .is_minimized = _window_service->is_minimized(),
-                    };
-                    if (should_render_frame) {
-                        frame_context = _renderer_engine->begin_frame();
-                        apply_logical_frame_timing(frame_context, logical_frame_index);
-                    }
-#ifndef NDEBUG
-                    const auto after_begin_frame = FrameClock::now();
-#endif
+                    auto frame_context = _renderer->begin_frame();
+                    frame_context.frame_index = logical_frame_index;
+                    frame_context.frame_time_seconds = logical_frame_time_seconds(logical_frame_index);
+                    frame_context.frame_delta_seconds = WII_FRAME_DURATION_SECONDS;
+
                     game_system.begin_frame(frame_context);
-#ifndef NDEBUG
-                    if (debug_change_stage_request_frame.has_value() && !debug_change_stage_requested &&
-                        frame_context.frame_index >= *debug_change_stage_request_frame) {
-                        runtime.sequence_requests().request_change_stage_in_game_after_loading_game_data();
-                        debug_change_stage_requested = true;
-                    }
-#endif
                     game_system.update();
+
 #ifndef NDEBUG
                     if (exit_on_layout_name.has_value() && has_active_layout(runtime, *exit_on_layout_name)) {
                         _window_service->close();
                     }
 #endif
+
+                    game_system.draw_3d_normal(_renderer.get());
+                    game_system.draw_2d_normal(_renderer.get());
+
 #ifndef NDEBUG
-                    const auto after_runtime_update = FrameClock::now();
-#endif
-                    if (should_render_frame) {
-                        game_system.draw_3d_normal(_renderer_engine.get());
-                    }
-#ifndef NDEBUG
-                    const auto after_draw_3d = FrameClock::now();
-#endif
-                    if (should_render_frame) {
-                        game_system.draw_2d_normal(_renderer_engine.get());
-                    }
-#ifndef NDEBUG
-                    const auto after_draw_2d = FrameClock::now();
-                    if (parity_trace_request.has_value() && !parity_trace_written && frame_context.frame_index >= parity_trace_request->frame) {
-                        smgpc::runtime::write_runtime_parity_trace(parity_trace_request->path, frame_context, runtime);
+                    if (parity_trace_path.has_value() && !parity_trace_written && frame_context.frame_index >= parity_trace_frame) {
+                        smgpc::runtime::write_runtime_parity_trace(std::filesystem::path(*parity_trace_path), frame_context, runtime);
                         parity_trace_written = true;
-                    }
-                    const auto after_parity_trace = FrameClock::now();
-                    if (screenshot_request.has_value() && !screenshot_queued && frame_context.frame_index >= screenshot_request->frame) {
-                        _renderer_engine->request_screenshot_png(screenshot_request->path);
-                        screenshot_queued = true;
-                    }
-                    const auto after_screenshot_request = FrameClock::now();
-                    if (screenshot_request.has_value() && screenshot_request->exit_after_capture && screenshot_queued &&
-                        frame_context.frame_index >= screenshot_request->frame + 4U) {
-                        _window_service->close();
                     }
                     if (exit_after_frame.has_value() && frame_context.frame_index >= *exit_after_frame) {
                         _window_service->close();
                     }
 #endif
-                    if (should_render_frame) {
-                        _renderer_engine->end_frame();
-                    }
-#ifndef NDEBUG
-                    const auto after_end_frame = FrameClock::now();
-                    const auto frame_pacing_duration = frame_pacer.wait_for_frame_end();
-                    const auto after_frame_pacing = FrameClock::now();
-                    if (timing_enabled) {
-                        ++timing.frame_count;
-                        timing.poll_events_ms += elapsed_ms(frame_start, after_poll_events);
-                        timing.begin_frame_ms += elapsed_ms(after_poll_events, after_begin_frame);
-                        timing.runtime_update_ms += elapsed_ms(after_begin_frame, after_runtime_update);
-                        timing.draw_3d_ms += elapsed_ms(after_runtime_update, after_draw_3d);
-                        timing.draw_2d_ms += elapsed_ms(after_draw_3d, after_draw_2d);
-                        timing.parity_trace_ms += elapsed_ms(after_draw_2d, after_parity_trace);
-                        timing.screenshot_request_ms += elapsed_ms(after_parity_trace, after_screenshot_request);
-                        timing.end_frame_ms += elapsed_ms(after_screenshot_request, after_end_frame);
-                        timing.frame_pacing_ms += elapsed_ms(frame_pacing_duration);
-                        timing.total_ms += elapsed_ms(frame_start, after_frame_pacing);
-                    }
-#else
-                    static_cast<void>(frame_pacer.wait_for_frame_end());
-#endif
+
+                    _renderer->end_frame();
+                    frame_pacer.wait_for_frame_end();
                     ++loop_frame_index;
                 }
 
-#ifndef NDEBUG
-                if (timing_enabled) {
-                    log_timing_summary(_logger.get(), timing);
-                }
+                _renderer->shutdown();
+                if (g_disc_open) {
+#if defined(__GNUC__) || defined(__clang__)
+                    aurora_dvd_close();
 #endif
-                _renderer_engine->shutdown();
+                    g_disc_open = false;
+                }
+                static_cast<void>(_configuration);
                 return 0;
             }
 
         private:
-            di::DependencyReference<render::IWindowService> _window_service;
-            di::DependencyReference<render::IRendererEngine> _renderer_engine;
+            BootstrapConfiguration _configuration;
+            di::DependencyReference<render::AuroraWindow> _window_service;
+            di::DependencyReference<render::AuroraRenderer> _renderer;
             di::DependencyReference<logging::ILogger> _logger;
             di::DependencyReference<smgpc::runtime::RuntimeContext> _runtime;
             di::DependencyReference<smgpc::scene::GameSystemService> _game_system;
         };
 
     }  // namespace
+
+    std::filesystem::path required_disc_image(const BootstrapConfiguration &configuration) {
+        return required_disc_image_impl(configuration);
+    }
+
+    void ensure_disc_image_open(const BootstrapConfiguration &configuration, logging::ILogger &logger) {
+        ensure_disc_image_open_impl(configuration, logger);
+    }
 
     ServiceGraph build_service_graph(const BootstrapConfiguration &configuration) {
         return build_service_graph(configuration, ServiceGraphOverrides {});
@@ -549,42 +321,36 @@ namespace smgpc::app {
             graph.register_service<di::SingletonService<logging::ILogger>>(logging::create_default_logger());
         }
 
-        if (overrides.window_factory) {
-            graph.register_service<di::SingletonService<render::IWindowFactory>>(std::move(overrides.window_factory));
-        } else {
-            graph.register_service<di::SingletonService<render::IWindowFactory>, logging::ILogger>(
-                [](di::DependencyReference<logging::ILogger> logger) { return render::create_default_window_factory(std::move(logger)); });
-        }
-
         if (overrides.window_service) {
-            graph.register_service<di::SingletonService<render::IWindowService>>(std::move(overrides.window_service));
+            graph.register_service<di::SingletonService<render::AuroraWindow>>(std::move(overrides.window_service));
         } else {
-            graph.register_service<di::SingletonService<render::IWindowService>, render::IWindowFactory>(
-                [configuration](di::DependencyReference<render::IWindowFactory> window_factory) {
-                    return window_factory->create(render::WindowConfiguration {
-                        .width = configuration.window_width,
-                        .height = configuration.window_height,
-                        .title = configuration.window_title,
-                    });
+            graph.register_service<di::SingletonService<render::AuroraWindow>>([configuration]() {
+                return std::make_unique<render::AuroraWindow>(render::WindowConfiguration {
+                    .width = configuration.window_width,
+                    .height = configuration.window_height,
+                    .title = configuration.window_title,
                 });
+            });
         }
 
         if (overrides.renderer_engine) {
-            graph.register_service<di::SingletonService<render::IRendererEngine>>(std::move(overrides.renderer_engine));
+            graph.register_service<di::SingletonService<render::AuroraRenderer>>(std::move(overrides.renderer_engine));
         } else {
-            graph.register_service<di::SingletonService<render::IRendererEngine>, render::IWindowService, logging::ILogger>(
-                [](di::DependencyReference<render::IWindowService> window_service, di::DependencyReference<logging::ILogger> logger) {
-                    return render::create_default_renderer_engine(std::move(window_service), std::move(logger));
+            graph.register_service<di::SingletonService<render::AuroraRenderer>, render::AuroraWindow>(
+                [](di::DependencyReference<render::AuroraWindow> window_service) {
+                    return std::make_unique<render::AuroraRenderer>(window_service.get());
                 });
         }
 
         if (overrides.runtime_context) {
             graph.register_service<di::SingletonService<smgpc::runtime::RuntimeContext>>(std::move(overrides.runtime_context));
         } else {
-            graph.register_service<di::SingletonService<smgpc::runtime::RuntimeContext>, logging::ILogger, render::IWindowService>(
-                [](di::DependencyReference<logging::ILogger> logger, di::DependencyReference<render::IWindowService> window_service) {
+            graph.register_service<di::SingletonService<smgpc::runtime::RuntimeContext>, logging::ILogger, render::AuroraWindow>(
+                [configuration](di::DependencyReference<logging::ILogger> logger,
+                                di::DependencyReference<render::AuroraWindow> window_service) {
+                    ensure_disc_image_open(configuration, logger.get());
                     return std::make_unique<smgpc::runtime::RuntimeContext>(logger.get(), window_service.get(),
-                                                                    smgpc::runtime::RuntimeContextSceneServiceMode::External);
+                                                                            smgpc::runtime::RuntimeContextSceneServiceMode::External);
                 });
         }
 
@@ -615,6 +381,7 @@ namespace smgpc::app {
             });
         graph.add_service_dependency<smgpc::runtime::RflService, smgpc::runtime::NandFileSystemService>();
         register_runtime_service_reference<smgpc::runtime::SceneScheduler, &smgpc::runtime::RuntimeContext::scheduler>(graph);
+
         graph.register_service<di::SingletonService<smgpc::scene::NameObjLifecycleService>, smgpc::runtime::RuntimeContext>(
             [](di::DependencyReference<smgpc::runtime::RuntimeContext> runtime) {
                 auto service = std::make_unique<smgpc::scene::NameObjLifecycleService>(runtime.get());
@@ -700,14 +467,15 @@ namespace smgpc::app {
         if (overrides.application) {
             graph.register_service<di::SingletonService<IApplication>>(std::move(overrides.application));
         } else {
-            graph.register_service<di::SingletonService<IApplication>, render::IWindowService, render::IRendererEngine, logging::ILogger,
+            graph.register_service<di::SingletonService<IApplication>, render::AuroraWindow, render::AuroraRenderer, logging::ILogger,
                                    smgpc::runtime::RuntimeContext, smgpc::scene::GameSystemService>(
-                [](di::DependencyReference<render::IWindowService> window_service,
-                   di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger,
-                   di::DependencyReference<smgpc::runtime::RuntimeContext> runtime,
-                   di::DependencyReference<smgpc::scene::GameSystemService> game_system) {
-                    return std::make_unique<DesktopApplication>(std::move(window_service), std::move(renderer_engine), std::move(logger),
-                                                                std::move(runtime), std::move(game_system));
+                [configuration](di::DependencyReference<render::AuroraWindow> window_service,
+                                di::DependencyReference<render::AuroraRenderer> renderer_engine,
+                                di::DependencyReference<logging::ILogger> logger,
+                                di::DependencyReference<smgpc::runtime::RuntimeContext> runtime,
+                                di::DependencyReference<smgpc::scene::GameSystemService> game_system) {
+                    return std::make_unique<DesktopApplication>(configuration, std::move(window_service), std::move(renderer_engine),
+                                                                std::move(logger), std::move(runtime), std::move(game_system));
                 });
         }
 

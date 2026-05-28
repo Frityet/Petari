@@ -80,34 +80,6 @@ namespace smgpc::runtime {
             return weakly_canonical_or_normal(std::filesystem::path(value));
         }
 
-        void append_disc_root_candidates_from_anchor(std::vector<std::filesystem::path> &candidates, std::filesystem::path anchor) {
-            if (anchor.empty()) {
-                return;
-            }
-
-            auto directory = weakly_canonical_or_normal(anchor);
-            while (!directory.empty()) {
-                candidates.push_back(directory / "orig" / "RMGK01" / "files");
-                if (directory == directory.root_path()) {
-                    break;
-                }
-
-                directory = directory.parent_path();
-            }
-        }
-
-        [[nodiscard]] std::optional<std::filesystem::path> executable_directory() {
-#if defined(__linux__)
-            std::error_code error {};
-            const auto executable_path = std::filesystem::read_symlink("/proc/self/exe", error);
-            if (!error && executable_path.has_parent_path()) {
-                return executable_path.parent_path();
-            }
-#endif
-
-            return std::nullopt;
-        }
-
 #ifndef NDEBUG
         [[nodiscard]] std::string_view trim(std::string_view text) {
             while (!text.empty() && std::isspace(static_cast<unsigned char>(text.front())) != 0) {
@@ -453,7 +425,7 @@ namespace smgpc::runtime {
 
     }  // namespace
 
-    RuntimeContext::RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service,
+    RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                                    RuntimeContextSceneServiceMode scene_service_mode)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
@@ -481,7 +453,7 @@ namespace smgpc::runtime {
         MR::createScreenAlphaSceneObj(0, 1.0F);
         _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
         _capture_screen_camera_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenCamera, "Camera");
-        _logger.info(logging::Category::APP, logging::Message {"Using SMG disc files from {}"}, _disc_files_root.string());
+        _logger.info(logging::Category::APP, logging::Message {"Using SMG disc image through Aurora DVD"});
         if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
             _save_data.set_host_directory(*save_directory);
             _logger.info(logging::Category::APP, logging::Message {"Using SMG save files from {}"}, save_directory->string());
@@ -521,7 +493,7 @@ namespace smgpc::runtime {
             _logger.info(logging::Category::APP, logging::Message {"Loaded {} debug WPAD pointer script spans"},
                          _debug_wpad_pointer_script.size());
         }
-        emit_semantic_trace_event("runtime", "runtime_context_created", "disc_files_root=" + _disc_files_root.generic_string());
+        emit_semantic_trace_event("runtime", "runtime_context_created", "disc=aurora-dvd");
 #endif
     }
 
@@ -671,7 +643,7 @@ namespace smgpc::runtime {
         _copy_events.push_back(std::move(event));
     }
 
-    void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
+    void RuntimeContext::draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose) {
         _last_camera_pose = camera_pose;
         if (!_game_layout.is_game_scene_draw_3d_active()) {
             return;
@@ -690,7 +662,7 @@ namespace smgpc::runtime {
         scene_execution().draw_3d_normal(renderer, camera_pose);
     }
 
-    void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer) {
+    void RuntimeContext::draw_3d_normal(render::AuroraRenderer &renderer) {
         if (!_scene_camera_pose.has_value()) {
 #ifndef NDEBUG
             emit_semantic_trace_event("camera", "missing_scene_camera_pose", "using default_scene_camera_pose");
@@ -702,7 +674,7 @@ namespace smgpc::runtime {
         draw_3d_normal(renderer, *_scene_camera_pose);
     }
 
-    void RuntimeContext::draw_2d_normal(render::IRendererEngine &renderer) {
+    void RuntimeContext::draw_2d_normal(render::AuroraRenderer &renderer) {
 #ifndef NDEBUG
         if (should_record_j3d_packet_trace()) {
             emit_sequence_state_trace_event("draw_2d_normal", {}, "2d_normal");
@@ -1357,40 +1329,10 @@ namespace smgpc::runtime {
     }
 
     std::filesystem::path RuntimeContext::resolve_disc_files_root() const {
-        if (const auto explicit_root = read_path_environment("SMGPC_DISC_FILES_ROOT")) {
-            return *explicit_root;
-        }
-
-        const auto cwd = std::filesystem::current_path();
-        auto candidates = std::vector<std::filesystem::path>{};
-        append_disc_root_candidates_from_anchor(candidates, cwd);
-        if (const auto exe_directory = executable_directory()) {
-            append_disc_root_candidates_from_anchor(candidates, *exe_directory);
-        }
-
-        for (const auto &candidate : candidates) {
-            std::error_code error {};
-            auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
-                return canonical;
-            }
-        }
-
-        return cwd / "orig" / "RMGK01" / "files";
+        return std::filesystem::path("aurora-dvd");
     }
 
 }  // namespace smgpc::runtime
-
-namespace {
-    struct DvdRuntimeFileHandle {
-        std::string disc_path;
-    };
-
-    struct DvdRuntimeDirectoryHandle {
-        std::vector<smgpc::runtime::DvdDirectoryEntry> entries;
-        std::size_t cursor = 0U;
-    };
-}  // namespace
 
 s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length) {
     if (sampling_bufs == nullptr || length == 0U) {
@@ -1426,203 +1368,43 @@ s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length) {
     return 1;
 }
 
-s32 DVDConvertPathToEntrynum(const char *path) {
-    if (path == nullptr) {
-        return -1;
+BOOL WPADProbe(s32 channel, u32 *type) {
+    if (type != nullptr) {
+        *type = 0U;
     }
-
-    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
-        return -1;
-    }
-
-    try {
-        return runtime->dvd().entry_num(path);
-    } catch (const std::exception &) {
-        return -1;
-    }
-}
-
-BOOL DVDOpen(const char *path, DVDFileInfo *file_info) {
-    if (path == nullptr || file_info == nullptr) {
-        return 0;
-    }
-
-    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
-        return 0;
-    }
-
-    auto entry = std::optional<smgpc::runtime::DvdEntryMetadata>{};
-    try {
-        entry = runtime->dvd().entry_metadata(path);
-        if (!entry.has_value() || entry->is_directory || entry->length > static_cast<std::size_t>(UINT32_MAX)) {
-            return 0;
-        }
-    } catch (const std::exception &) {
-        return 0;
-    }
-
-    if (file_info->internal != nullptr) {
-        (void)DVDClose(file_info);
-    }
-
-    file_info->entry_num = entry->entry_num;
-    file_info->length = static_cast<u32>(entry->length);
-    file_info->position = 0U;
-    file_info->callback = nullptr;
-    file_info->cb = DVDCommandBlock {};
-    file_info->cb.state = DVD_STATE_END;
-    file_info->internal = new DvdRuntimeFileHandle {
-        .disc_path = entry->disc_path,
-    };
-    return 1;
-}
-
-BOOL DVDOpenDir(const char *path, DVDDir *dir) {
-    if (path == nullptr || dir == nullptr) {
-        return 0;
-    }
-
-    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
-        return 0;
-    }
-
-    try {
-        const auto entry = runtime->dvd().entry_metadata(path);
-        if (!entry.has_value() || !entry->is_directory) {
-            return 0;
-        }
-
-        if (dir->internal != nullptr) {
-            (void)DVDCloseDir(dir);
-        }
-
-        auto handle = std::make_unique<DvdRuntimeDirectoryHandle>();
-        handle->entries = runtime->dvd().directory_entries(path);
-        dir->entry_num = static_cast<u32>(entry->entry_num);
-        dir->location = 0U;
-        dir->next = static_cast<u32>(handle->entries.size());
-        dir->internal = handle.release();
-        return 1;
-    } catch (const std::exception &) {
-        return 0;
-    }
-}
-
-BOOL DVDReadDir(DVDDir *dir, DVDDirEntry *entry) {
-    if (dir == nullptr || entry == nullptr || dir->internal == nullptr) {
-        return 0;
-    }
-
-    auto &handle = *static_cast<DvdRuntimeDirectoryHandle *>(dir->internal);
-    if (handle.cursor >= handle.entries.size()) {
-        return 0;
-    }
-
-    const auto &current = handle.entries[handle.cursor++];
-    entry->entry_num = static_cast<u32>(current.entry_num);
-    entry->is_dir = current.is_directory ? TRUE : FALSE;
-    entry->name = const_cast<char *>(current.name.c_str());
-    dir->location = static_cast<u32>(handle.cursor);
-    return 1;
-}
-
-BOOL DVDCloseDir(DVDDir *dir) {
-    if (dir == nullptr) {
-        return 0;
-    }
-
-    delete static_cast<DvdRuntimeDirectoryHandle *>(dir->internal);
-    dir->entry_num = 0U;
-    dir->location = 0U;
-    dir->next = 0U;
-    dir->internal = nullptr;
-    return 1;
-}
-
-BOOL DVDClose(DVDFileInfo *file_info) {
-    if (file_info == nullptr) {
-        return 0;
-    }
-
-    delete static_cast<DvdRuntimeFileHandle *>(file_info->internal);
-    file_info->cb = DVDCommandBlock {};
-    file_info->entry_num = -1;
-    file_info->length = 0U;
-    file_info->position = 0U;
-    file_info->callback = nullptr;
-    file_info->internal = nullptr;
-    return 1;
-}
-
-u32 DVDGetLength(const DVDFileInfo *file_info) {
-    return file_info == nullptr ? 0U : file_info->length;
-}
-
-s32 DVDReadPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, s32 priority) {
-    if (file_info == nullptr || file_info->internal == nullptr || destination == nullptr || length < 0 || offset < 0) {
-        return -1;
-    }
-
-    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
-        return -1;
-    }
-
-    const auto &handle = *static_cast<const DvdRuntimeFileHandle *>(file_info->internal);
-    auto bytes = std::vector<std::uint8_t>{};
-    try {
-        bytes = runtime->dvd().read_file_range(handle.disc_path, static_cast<std::size_t>(offset), static_cast<std::size_t>(length), priority);
-    } catch (const std::exception &) {
-        return -1;
-    }
-
-    if (!bytes.empty()) {
-        std::memcpy(destination, bytes.data(), bytes.size());
-    }
-    file_info->position = static_cast<u32>(offset) + static_cast<u32>(bytes.size());
-    return static_cast<s32>(bytes.size());
-}
-
-BOOL DVDReadAsyncPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, DVDCallback callback, s32 priority) {
-    if (file_info == nullptr || file_info->internal == nullptr || destination == nullptr || length < 0 || offset < 0) {
-        return 0;
-    }
-
-    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
-        return 0;
-    }
-
-    const auto &handle = *static_cast<const DvdRuntimeFileHandle *>(file_info->internal);
-    try {
-        file_info->callback = callback;
-        file_info->cb.command = 1U;
-        file_info->cb.state = DVD_STATE_BUSY;
-        file_info->cb.offset = static_cast<u32>(offset);
-        file_info->cb.length = static_cast<u32>(length);
-        file_info->cb.addr = destination;
-        (void)runtime->dvd().submit_async_read(handle.disc_path, file_info, destination, static_cast<std::size_t>(length),
-                                               static_cast<std::size_t>(offset), priority, callback);
-    } catch (const std::exception &) {
-        file_info->cb.state = DVD_STATE_FATAL_ERROR;
-        return 0;
-    }
-
-    return 1;
-}
-
-s32 DVDGetCommandBlockStatus(const DVDCommandBlock *block) {
-    return block == nullptr ? DVD_STATE_FATAL_ERROR : block->state;
-}
-
-s32 DVDGetDriveStatus() {
     const auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-    return runtime == nullptr ? DVD_STATE_FATAL_ERROR : DVD_STATE_END;
+    return runtime != nullptr && runtime->wpad().is_connected(channel) ? TRUE : FALSE;
 }
 
-u32 __DVDGetCoverStatus() {
-    return DVDGetDriveStatus() == DVD_STATE_END ? 2U : 0U;
+void WPADDisconnect(s32 channel) {
+    if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+        runtime->wpad().set_connected(channel, false);
+    }
+}
+
+void WPADEnableURCC(BOOL) {
+}
+
+void WPADSetDataFormat(s32, s32) {
+}
+
+void WPADSetVRes(s32, u32, u32) {
+}
+
+void WPADSetAutoSamplingBuf(s32, void *, u32) {
+}
+
+void WPADControlSpeaker(s32, s32, void *) {
+}
+
+void WPADStartFastSimpleSync() {
+}
+
+void WPADStopSimpleSync() {
+}
+
+void WPADSetConnectCallback(s32, void *) {
+}
+
+void WPADSetExtensionCallback(s32, void *) {
 }

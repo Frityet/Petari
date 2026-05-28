@@ -48,7 +48,7 @@ public:
     void initPointingTarget(int);
     void updateSpine();
 
-    void drawLayout(smgpc::render::IRendererEngine& renderer);
+    void drawLayout(smgpc::render::AuroraRenderer& renderer);
     [[nodiscard]] bool isDead() const;
     [[nodiscard]] SimpleLayout* getSimpleLayout();
     [[nodiscard]] const SimpleLayout* getSimpleLayout() const;

@@ -1,9 +1,13 @@
 #pragma once
 
+#include <array>
+#include <filesystem>
 #include <memory>
+#include <span>
+#include <vector>
 
 #include "ServiceProvider.hpp"
-#include "core/IRenderContext.hpp"
+#include "core/RenderTypes.hpp"
 
 namespace smgpc::logging {
     class ILogger;
@@ -36,19 +40,60 @@ namespace smgpc::render {
     using TexturedQuad2D = core::TexturedQuad2D;
     using TexturedVertex2D = core::TexturedVertex2D;
     using PrimitiveTopology = core::PrimitiveTopology;
-    using IWindowService = core::IWindowService;
-    using IRendererEngine = core::IRendererEngine;
     using WindowConfiguration = core::WindowConfiguration;
 
-    class IWindowFactory {
+    class AuroraWindow {
     public:
-        virtual ~IWindowFactory() = default;
-        virtual std::unique_ptr<IWindowService> create(const WindowConfiguration &configuration) const = 0;
+        explicit AuroraWindow(const WindowConfiguration &configuration);
+        AuroraWindow(const AuroraWindow &) = delete;
+        AuroraWindow &operator=(const AuroraWindow &) = delete;
+        virtual ~AuroraWindow();
+
+        virtual bool poll_events();
+        [[nodiscard]] virtual bool should_close() const;
+        [[nodiscard]] virtual bool is_focused() const;
+        [[nodiscard]] virtual bool is_minimized() const;
+        [[nodiscard]] virtual FramebufferInfo framebuffer_size() const;
+        [[nodiscard]] virtual NativeWindowHandle native_handle() const;
+        [[nodiscard]] virtual bool is_input_pressed(InputButton button) const;
+        [[nodiscard]] virtual InputPointerState input_pointer_state() const;
+        virtual void close();
+        virtual void shutdown();
+
+    protected:
+        AuroraWindow();
+
+    private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
     };
 
-    [[nodiscard]] std::unique_ptr<IWindowFactory> create_default_window_factory(di::DependencyReference<logging::ILogger> logger);
+    class AuroraRenderer {
+    public:
+        explicit AuroraRenderer(AuroraWindow &window);
+        AuroraRenderer(const AuroraRenderer &) = delete;
+        AuroraRenderer &operator=(const AuroraRenderer &) = delete;
+        virtual ~AuroraRenderer();
 
-    [[nodiscard]] std::unique_ptr<IRendererEngine> create_default_renderer_engine(di::DependencyReference<IWindowService> window_service,
-                                                                                  di::DependencyReference<logging::ILogger> logger);
+        [[nodiscard]] virtual FrameContext begin_frame();
+        virtual void end_frame();
+        virtual void shutdown();
+        virtual void request_screenshot_png(const std::filesystem::path &path);
+        [[nodiscard]] virtual TextureHandle create_rgba8_texture(std::uint16_t width, std::uint16_t height,
+                                                                 std::span<const std::uint8_t> rgba);
+        virtual void destroy_texture(TextureHandle texture);
+        virtual void submit_textured_quad(TextureHandle texture, const TexturedQuad2D &quad);
+        virtual void submit_textured_triangles(TextureHandle texture, const TexturedTriangleBatch2D &batch);
+        virtual void submit_gx_material_triangles(const GxMaterialTriangleBatch2D &batch);
+        [[nodiscard]] virtual FramebufferInfo framebuffer_size() const;
+        [[nodiscard]] virtual FramebufferInfo logical_framebuffer_size() const;
+
+    protected:
+        AuroraRenderer();
+
+    private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
+    };
 
 }  // namespace smgpc::render

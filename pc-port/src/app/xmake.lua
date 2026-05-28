@@ -12,7 +12,9 @@ target("smg-pc-app")
 target("smg-pc")
     set_kind("binary")
     add_files("main.cpp")
+    add_files("AuroraDolphinCompat.cpp")
     add_headerfiles("**.hpp")
     add_deps {
-        "smg-pc-app"
+        "smg-pc-app",
+        "aurora-main"
     }

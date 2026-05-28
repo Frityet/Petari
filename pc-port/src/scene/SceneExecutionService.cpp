@@ -21,7 +21,7 @@ namespace smgpc::scene {
         scheduler.execute_calc_view_and_entry();
     }
 
-    void SceneExecutionService::draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
+    void SceneExecutionService::draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose) {
         auto &scheduler = _runtime.scheduler();
         scheduler.execute_draw_buffer_list_normal(renderer, camera_pose);
         scheduler.execute_draw_type(renderer, MR::DrawType_EffectDraw3D);
@@ -29,7 +29,7 @@ namespace smgpc::scene {
         scheduler.execute_draw_type(renderer, MR::DrawType_CaptureScreenIndirect);
     }
 
-    void SceneExecutionService::draw_2d_normal(render::IRendererEngine &renderer) {
+    void SceneExecutionService::draw_2d_normal(render::AuroraRenderer &renderer) {
         _runtime.scheduler().execute_draw_list_2d_normal(renderer);
     }
 

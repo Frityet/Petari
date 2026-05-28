@@ -596,15 +596,15 @@ namespace smgpc::runtime {
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
+    void SceneScheduler::execute_draw_buffer_opa(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
         execute_draw_buffer(renderer, camera_pose, draw_buffer_type, SceneDrawBufferPass::Opaque);
     }
 
-    void SceneScheduler::execute_draw_buffer_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
+    void SceneScheduler::execute_draw_buffer_xlu(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
         execute_draw_buffer(renderer, camera_pose, draw_buffer_type, SceneDrawBufferPass::Translucent);
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal_opa_before_volume_shadow(render::IRendererEngine &renderer,
+    void SceneScheduler::execute_draw_buffer_list_normal_opa_before_volume_shadow(render::AuroraRenderer &renderer,
                                                                                   const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air) {
         for (const auto &command : NORMAL_OPA_BEFORE_VOLUME_SHADOW_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
@@ -620,14 +620,14 @@ namespace smgpc::runtime {
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal_opa_before_silhouette(render::IRendererEngine &renderer,
+    void SceneScheduler::execute_draw_buffer_list_normal_opa_before_silhouette(render::AuroraRenderer &renderer,
                                                                                const smgpc::camera::CameraPose &camera_pose) {
         for (const auto &command : NORMAL_OPA_BEFORE_SILHOUETTE_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
+    void SceneScheduler::execute_draw_buffer_list_normal_opa(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose,
                                                              bool prior_draw_air) {
         for (const auto &command : NORMAL_OPA_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
@@ -639,13 +639,13 @@ namespace smgpc::runtime {
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
+    void SceneScheduler::execute_draw_buffer_list_normal_xlu(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose) {
         for (const auto &command : NORMAL_XLU_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
+    void SceneScheduler::execute_draw_buffer_list_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose,
                                                          bool prior_draw_air) {
         auto *runtime = RuntimeContext::try_instance();
         const auto previous_pixel_update_state = runtime != nullptr ? runtime->j3d_pixel_update_state() :
@@ -669,7 +669,7 @@ namespace smgpc::runtime {
         }
     }
 
-    void SceneScheduler::execute_draw_list_2d_normal(render::IRendererEngine &renderer) {
+    void SceneScheduler::execute_draw_list_2d_normal(render::AuroraRenderer &renderer) {
         for (const auto draw_type : NORMAL_2D_DRAW_TYPES) {
             execute_draw_type(renderer, draw_type);
         }
@@ -728,7 +728,7 @@ namespace smgpc::runtime {
         return accepted_count;
     }
 
-    void SceneScheduler::execute_draw_buffer(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type,
+    void SceneScheduler::execute_draw_buffer(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type,
                                              SceneDrawBufferPass pass) {
         auto actor_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
@@ -757,7 +757,7 @@ namespace smgpc::runtime {
         }
     }
 
-    void SceneScheduler::execute_draw_type(render::IRendererEngine &renderer, s32 draw_type) {
+    void SceneScheduler::execute_draw_type(render::AuroraRenderer &renderer, s32 draw_type) {
         auto draw_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
             if (entry.draw_type == draw_type && !entry_is_dead(entry) && !entry_is_suspended(entry)) {

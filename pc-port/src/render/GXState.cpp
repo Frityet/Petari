@@ -1020,13 +1020,13 @@ namespace smgpc::render {
     core::GxTevStage2D gx_brlyt_default_texture_color_stage(std::uint8_t texture_stage) {
         return core::GxTevStage2D{
             .texture_stage = texture_stage,
-            .color_in = {2U, 4U, 8U, 15U},
+            .color_in = {15U, 8U, 10U, 15U},
             .color_op = 0U,
             .color_bias = 0U,
             .color_scale = 0U,
             .color_clamp = true,
             .color_out = 0U,
-            .alpha_in = {1U, 2U, 4U, 7U},
+            .alpha_in = {7U, 4U, 5U, 7U},
             .alpha_op = 0U,
             .alpha_bias = 0U,
             .alpha_scale = 0U,

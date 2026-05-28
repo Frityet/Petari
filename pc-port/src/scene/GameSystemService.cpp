@@ -24,15 +24,15 @@ namespace smgpc::scene {
         _scene_controller.check_request_and_change_scene();
     }
 
-    void GameSystemService::draw_3d_normal(render::IRendererEngine &renderer) {
+    void GameSystemService::draw_3d_normal(render::AuroraRenderer &renderer) {
         _runtime.draw_3d_normal(renderer);
     }
 
-    void GameSystemService::draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
+    void GameSystemService::draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose) {
         _runtime.draw_3d_normal(renderer, camera_pose);
     }
 
-    void GameSystemService::draw_2d_normal(render::IRendererEngine &renderer) {
+    void GameSystemService::draw_2d_normal(render::AuroraRenderer &renderer) {
         _runtime.draw_2d_normal(renderer);
     }
 

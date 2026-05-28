@@ -1,41 +1,25 @@
-local function add_smgpc_test_target(name, main_file, suite_file, test_name, test_group)
-    target(name)
-        set_kind("binary")
-        set_default(false)
-        set_group("tests/" .. test_group)
-        add_files(main_file, suite_file)
-        add_headerfiles("TestSupport.hpp", "TestSuites.hpp")
-        add_deps {
-            "smg-pc-app",
-            "smg-pc-game",
-            "smg-pc-render"
-        }
-        add_tests(test_name, {
-            group = test_group,
-            rundir = os.projectdir(),
-            realtime_output = true
-        })
-end
-
-target("smg-pc-all-tests")
+target("smg-pc-aurora-native-tests")
     set_kind("binary")
     set_default(false)
-    set_group("tests/aggregate")
+    set_group("tests/aurora")
     add_files {
-        "AllTests.cpp",
-        "ResourceLayoutTests.cpp",
-        "J3dGxTests.cpp",
-        "RuntimeSceneTests.cpp",
-        "RenderCoreTests.cpp"
+        "AuroraNativeTests.cpp",
+        "../src/app/AuroraDolphinCompat.cpp"
     }
-    add_headerfiles("TestSupport.hpp", "TestSuites.hpp")
     add_deps {
-        "smg-pc-app",
+        "smg-pc-common",
         "smg-pc-game",
-        "smg-pc-render"
+        "smg-pc-render",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-vi"
     }
-
-add_smgpc_test_target("smg-pc-resource-layout-tests", "ResourceLayoutTestMain.cpp", "ResourceLayoutTests.cpp", "resource_layout", "assets")
-add_smgpc_test_target("smg-pc-j3d-gx-tests", "J3dGxTestMain.cpp", "J3dGxTests.cpp", "j3d_gx", "render")
-add_smgpc_test_target("smg-pc-runtime-scene-tests", "RuntimeSceneTestMain.cpp", "RuntimeSceneTests.cpp", "runtime_scene", "runtime")
-add_smgpc_test_target("smg-pc-render-core-tests", "RenderCoreTestMain.cpp", "RenderCoreTests.cpp", "render_core", "render")
+    add_tests("aurora_native", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

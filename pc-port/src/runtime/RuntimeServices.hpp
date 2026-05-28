@@ -405,7 +405,7 @@ namespace smgpc::runtime {
         void emit(std::string_view actor_name, std::string_view effect_name);
         void delete_effect(std::string_view actor_name, std::string_view effect_name);
         void delete_all(std::string_view actor_name);
-        void draw(render::IRendererEngine &renderer, s32 draw_type);
+        void draw(render::AuroraRenderer &renderer, s32 draw_type);
 
         [[nodiscard]] std::span<const EffectEvent> events() const;
         [[nodiscard]] std::span<const ActiveEffectInstance> active_effect_instances() const;
@@ -420,7 +420,7 @@ namespace smgpc::runtime {
 
     private:
         [[nodiscard]] std::vector<smgpc::render::effects::ResolvedEffectResource> resolve(std::string_view actor_name, std::string_view effect_name) const;
-        [[nodiscard]] render::TextureHandle texture_handle_for(render::IRendererEngine &renderer, const smgpc::render::effects::JpcTextureMetadata &texture);
+        [[nodiscard]] render::TextureHandle texture_handle_for(render::AuroraRenderer &renderer, const smgpc::render::effects::JpcTextureMetadata &texture);
         [[nodiscard]] std::vector<JpcEffectEmitterInstance> create_emitters(std::span<const smgpc::render::effects::ResolvedEffectResource> resources);
         void advance_effects_to_frame(std::uint64_t frame_index);
         void advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const smgpc::render::effects::ResolvedEffectResource &resource, std::uint64_t frame_index);

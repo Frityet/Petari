@@ -2,6 +2,14 @@
 
 #include "revolution/types.h"
 
+#include <dolphin/dvd.h>
+#include <dolphin/gd.h>
+#include <dolphin/gx.h>
+#include <dolphin/mtx.h>
+#include <dolphin/os.h>
+#include <dolphin/pad.h>
+#include <dolphin/vi.h>
+
 #ifndef NO_INLINE
 #if defined(__GNUC__) || defined(__clang__)
 #define NO_INLINE __attribute__((noinline))
@@ -9,6 +17,19 @@
 #define NO_INLINE
 #endif
 #endif
+
+using _GXColor = GXColor;
+using _GXTexFmt = GXTexFmt;
+using _GXTlut = GXTlut;
+using _GXTlutFmt = GXTlutFmt;
+using _GXTexMapID = GXTexMapID;
+using _GXTexWrapMode = GXTexWrapMode;
+using _GXTexFilter = GXTexFilter;
+using _GXAnisotropy = GXAnisotropy;
+using _GXRenderModeObj = GXRenderModeObj;
+using _GXFBClamp = GXFBClamp;
+using _GXGamma = GXGamma;
+using _GXLightID = GXLightID;
 
 constexpr s32 WPAD_CHAN0 = 0;
 constexpr s32 WPAD_CHAN1 = 1;
@@ -31,230 +52,6 @@ constexpr u32 WPAD_BUTTON_C = 0x4000;
 constexpr u32 WPAD_BUTTON_HOME = 0x8000;
 constexpr u32 KPAD_BUTTON_MASK = 0x0000ffff;
 constexpr u32 KPAD_BUTTON_RPT = 0x80000000;
-
-struct _GXColor {
-    u8 r = 0U;
-    u8 g = 0U;
-    u8 b = 0U;
-    u8 a = 0U;
-};
-
-using GXColor = _GXColor;
-using GXBool = BOOL;
-
-constexpr GXBool GX_FALSE = 0;
-constexpr GXBool GX_TRUE = 1;
-
-enum _GXTexFmt : u32 {
-    _GX_TF_CTF = 0x20,
-    _GX_TF_ZTF = 0x10,
-    GX_TF_I4 = 0x0,
-    GX_TF_I8 = 0x1,
-    GX_TF_IA4 = 0x2,
-    GX_TF_IA8 = 0x3,
-    GX_TF_RGB565 = 0x4,
-    GX_TF_RGB5A3 = 0x5,
-    GX_TF_RGBA8 = 0x6,
-    GX_TF_C4 = 0x8,
-    GX_TF_C8 = 0x9,
-    GX_TF_C14X2 = 0xA,
-    GX_TF_CMPR = 0xE,
-    GX_CTF_R4 = 0x0 | _GX_TF_CTF,
-    GX_CTF_RA4 = 0x2 | _GX_TF_CTF,
-    GX_CTF_RA8 = 0x3 | _GX_TF_CTF,
-    GX_CTF_YUVA8 = 0x6 | _GX_TF_CTF,
-    GX_CTF_A8 = 0x7 | _GX_TF_CTF,
-    GX_CTF_R8 = 0x8 | _GX_TF_CTF,
-    GX_CTF_G8 = 0x9 | _GX_TF_CTF,
-    GX_CTF_B8 = 0xA | _GX_TF_CTF,
-    GX_CTF_RG8 = 0xB | _GX_TF_CTF,
-    GX_CTF_GB8 = 0xC | _GX_TF_CTF,
-    GX_TF_Z8 = 0x1 | _GX_TF_ZTF,
-    GX_TF_Z16 = 0x3 | _GX_TF_ZTF,
-    GX_TF_Z24X8 = 0x6 | _GX_TF_ZTF,
-    GX_CTF_Z4 = 0x0 | _GX_TF_ZTF | _GX_TF_CTF,
-    GX_CTF_Z8M = 0x9 | _GX_TF_ZTF | _GX_TF_CTF,
-    GX_CTF_Z8L = 0xA | _GX_TF_ZTF | _GX_TF_CTF,
-    GX_CTF_Z16L = 0xC | _GX_TF_ZTF | _GX_TF_CTF,
-    GX_TF_A8 = GX_CTF_A8,
-};
-
-using GXTexFmt = _GXTexFmt;
-
-enum _GXTlut : u32 {
-    GX_TLUT0 = 0,
-    GX_TLUT1,
-    GX_TLUT2,
-    GX_TLUT3,
-    GX_TLUT4,
-    GX_TLUT5,
-    GX_TLUT6,
-    GX_TLUT7,
-    GX_TLUT8,
-    GX_TLUT9,
-    GX_TLUT10,
-    GX_TLUT11,
-    GX_TLUT12,
-    GX_TLUT13,
-    GX_TLUT14,
-    GX_TLUT15,
-    GX_BIGTLUT0,
-    GX_BIGTLUT1,
-    GX_BIGTLUT2,
-    GX_BIGTLUT3,
-};
-
-using GXTlut = _GXTlut;
-
-enum _GXTlutFmt : u32 {
-    GX_TL_IA8 = 0x0,
-    GX_TL_RGB565 = 0x1,
-    GX_TL_RGB5A3 = 0x2,
-};
-
-using GXTlutFmt = _GXTlutFmt;
-
-enum _GXTexMapID : u32 {
-    GX_TEXMAP0 = 0,
-    GX_TEXMAP1,
-    GX_TEXMAP2,
-    GX_TEXMAP3,
-    GX_TEXMAP4,
-    GX_TEXMAP5,
-    GX_TEXMAP6,
-    GX_TEXMAP7,
-    GX_MAX_TEXMAP,
-    GX_TEXMAP_NULL = 0xff,
-    GX_TEX_DISABLE = 0x100,
-};
-
-using GXTexMapID = _GXTexMapID;
-
-enum _GXTexWrapMode : u32 {
-    GX_CLAMP = 0,
-    GX_REPEAT,
-    GX_MIRROR,
-};
-
-using GXTexWrapMode = _GXTexWrapMode;
-
-enum _GXTexFilter : u32 {
-    GX_NEAR = 0,
-    GX_LINEAR,
-    GX_NEAR_MIP_NEAR,
-    GX_LIN_MIP_NEAR,
-    GX_NEAR_MIP_LIN,
-    GX_LIN_MIP_LIN,
-};
-
-using GXTexFilter = _GXTexFilter;
-
-enum _GXAnisotropy : u32 {
-    GX_ANISO_1 = 0,
-    GX_ANISO_2,
-    GX_ANISO_4,
-};
-
-using GXAnisotropy = _GXAnisotropy;
-
-struct _GXTexObj {
-    u32 dummy[8]{};
-};
-
-using GXTexObj = _GXTexObj;
-
-struct _GXRenderModeObj {
-    u32 viTVmode = 0U;
-    u16 fbWidth = 640U;
-    u16 efbHeight = 456U;
-    u16 xfbHeight = 456U;
-    u16 viXOrigin = 0U;
-    u16 viYOrigin = 0U;
-    u16 viWidth = 640U;
-    u16 viHeight = 456U;
-    u32 xFBmode = 0U;
-    u8 field_rendering = 0U;
-    u8 aa = 0U;
-    u8 sample_pattern[12][2]{};
-    u8 vfilter[7]{};
-};
-
-using GXRenderModeObj = _GXRenderModeObj;
-
-constexpr u32 VI_INTERLACE = 0U;
-constexpr u32 VI_NON_INTERLACE = 1U;
-constexpr u32 VI_PROGRESSIVE = 2U;
-
-constexpr u32 VI_NTSC = 0U;
-constexpr u32 VI_PAL = 1U;
-constexpr u32 VI_MPAL = 2U;
-constexpr u32 VI_DEBUG = 3U;
-constexpr u32 VI_DEBUG_PAL = 4U;
-constexpr u32 VI_EURGB60 = 5U;
-
-[[nodiscard]] constexpr u32 VI_TVMODE(u32 format, u32 scan_mode) {
-    return (format << 2U) + scan_mode;
-}
-
-using VITVMode = u32;
-using VIRetraceCallback = void (*)(u32 retrace_count);
-
-constexpr VITVMode VI_TVMODE_NTSC_INT = VI_TVMODE(VI_NTSC, VI_INTERLACE);
-constexpr VITVMode VI_TVMODE_NTSC_DS = VI_TVMODE(VI_NTSC, VI_NON_INTERLACE);
-constexpr VITVMode VI_TVMODE_NTSC_PROG = VI_TVMODE(VI_NTSC, VI_PROGRESSIVE);
-constexpr VITVMode VI_TVMODE_PAL_INT = VI_TVMODE(VI_PAL, VI_INTERLACE);
-constexpr VITVMode VI_TVMODE_PAL_DS = VI_TVMODE(VI_PAL, VI_NON_INTERLACE);
-constexpr VITVMode VI_TVMODE_EURGB60_INT = VI_TVMODE(VI_EURGB60, VI_INTERLACE);
-constexpr VITVMode VI_TVMODE_EURGB60_DS = VI_TVMODE(VI_EURGB60, VI_NON_INTERLACE);
-constexpr VITVMode VI_TVMODE_EURGB60_PROG = VI_TVMODE(VI_EURGB60, VI_PROGRESSIVE);
-constexpr VITVMode VI_TVMODE_MPAL_INT = VI_TVMODE(VI_MPAL, VI_INTERLACE);
-constexpr VITVMode VI_TVMODE_MPAL_DS = VI_TVMODE(VI_MPAL, VI_NON_INTERLACE);
-constexpr VITVMode VI_TVMODE_MPAL_PROG = VI_TVMODE(VI_MPAL, VI_PROGRESSIVE);
-
-constexpr u32 VI_XFBMODE_SF = 0U;
-constexpr u32 VI_XFBMODE_DF = 1U;
-
-constexpr u32 VI_FIELD_ABOVE = 0U;
-constexpr u32 VI_FIELD_BELOW = 1U;
-
-enum _GXFBClamp : u32 {
-    GX_CLAMP_NONE = 0,
-    GX_CLAMP_TOP = 1,
-    GX_CLAMP_BOTTOM = 2,
-};
-
-using GXFBClamp = _GXFBClamp;
-
-enum _GXGamma : u32 {
-    GX_GM_1_0 = 0,
-    GX_GM_1_7 = 1,
-    GX_GM_2_2 = 2,
-};
-
-using GXGamma = _GXGamma;
-
-enum _GXCopyMode : u32 {
-    GX_COPY_PROGRESSIVE = 0,
-    GX_COPY_INTLC_EVEN = 2,
-    GX_COPY_INTLC_ODD = 3,
-};
-
-using GXCopyMode = _GXCopyMode;
-
-enum _GXLightID : u32 {
-    GX_LIGHT_NULL = 0x000,
-    GX_LIGHT0 = 0x001,
-    GX_LIGHT1 = 0x002,
-    GX_LIGHT2 = 0x004,
-    GX_LIGHT3 = 0x008,
-    GX_LIGHT4 = 0x010,
-    GX_LIGHT5 = 0x020,
-    GX_LIGHT6 = 0x040,
-    GX_LIGHT7 = 0x080,
-    GX_MAX_LIGHT = 0x100,
-};
-
-using GXLightID = _GXLightID;
 
 constexpr s32 WPAD_ERR_NONE = 0;
 constexpr s32 WPAD_ERR_NO_CONTROLLER = -1;
@@ -295,8 +92,6 @@ struct KPADStatus {
     u32 trig = 0U;
     u32 release = 0U;
     KPADVec3 acc{};
-    f32 acc_value = 0.0F;
-    f32 acc_speed = 0.0F;
     KPADVec2 pos{};
     KPADVec2 vec{};
     f32 speed = 0.0F;
@@ -311,118 +106,17 @@ struct KPADStatus {
     s32 dpd_valid_fg = 0;
 };
 
-struct DVDCommandBlock;
-struct DVDFileInfo;
-using DVDCBCallback = void (*)(s32 result, DVDCommandBlock *block);
-using DVDCallback = void (*)(s32 result, DVDFileInfo *file_info);
-
-struct DVDCommandBlock {
-    u32 command = 0U;
-    s32 state = 0;
-    u32 offset = 0U;
-    u32 length = 0U;
-    void *addr = nullptr;
-    u32 curr_transfer_size = 0U;
-    u32 transferred_size = 0U;
-    DVDCBCallback callback = nullptr;
-    void *user_data = nullptr;
-};
-
-struct DVDFileInfo {
-    DVDCommandBlock cb{};
-    s32 entry_num = -1;
-    u32 length = 0U;
-    u32 position = 0U;
-    DVDCallback callback = nullptr;
-    void *internal = nullptr;
-};
-
-struct DVDDir {
-    u32 entry_num = 0U;
-    u32 location = 0U;
-    u32 next = 0U;
-    void *internal = nullptr;
-};
-
-struct DVDDirEntry {
-    u32 entry_num = 0U;
-    BOOL is_dir = FALSE;
-    char *name = nullptr;
-};
-
-constexpr s32 DVD_STATE_END = 0;
-constexpr s32 DVD_STATE_BUSY = 1;
-constexpr s32 DVD_STATE_FATAL_ERROR = -1;
-constexpr s32 DVD_RESULT_CANCELED = -3;
-
-struct OSCalendarTime {
-    s32 sec = 0;
-    s32 min = 0;
-    s32 hour = 0;
-    s32 mday = 1;
-    s32 mon = 0;
-    s32 year = 1970;
-    s32 wday = 4;
-    s32 yday = 0;
-    s32 msec = 0;
-    s32 usec = 0;
-};
-
-[[nodiscard]] OSTime OSGetTime();
-[[nodiscard]] u32 OSGetTick();
-[[nodiscard]] s64 OSTicksToSeconds(OSTime ticks);
-[[nodiscard]] s64 OSTicksToMilliseconds(OSTime ticks);
-[[nodiscard]] s64 OSTicksToMicroseconds(OSTime ticks);
-[[nodiscard]] OSTime OSSecondsToTicks(s64 seconds);
-void OSTicksToCalendarTime(OSTime ticks, OSCalendarTime *pTime);
-void VIInit();
-void VIConfigure(const GXRenderModeObj *render_mode);
-void VIConfigurePan(u16 x_origin, u16 y_origin, u16 width, u16 height);
-[[nodiscard]] u32 VIGetDTVStatus();
-[[nodiscard]] u32 VIGetTvFormat();
-[[nodiscard]] u32 VIGetCurrentLine();
-[[nodiscard]] u32 VIGetScanMode();
-void VISetBlack(BOOL black);
-void VIFlush();
-void VIWaitForRetrace();
-[[nodiscard]] u32 VIGetRetraceCount();
-void VISetNextFrameBuffer(void *frame_buffer);
-[[nodiscard]] void *VIGetNextFrameBuffer();
-[[nodiscard]] BOOL VIEnableDimming(BOOL enabled);
-[[nodiscard]] BOOL VIResetDimmingCount();
-[[nodiscard]] s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length);
-[[nodiscard]] s32 DVDConvertPathToEntrynum(const char *path);
-[[nodiscard]] BOOL DVDOpen(const char *path, DVDFileInfo *file_info);
-[[nodiscard]] BOOL DVDOpenDir(const char *path, DVDDir *dir);
-[[nodiscard]] BOOL DVDReadDir(DVDDir *dir, DVDDirEntry *entry);
-[[nodiscard]] BOOL DVDCloseDir(DVDDir *dir);
-[[nodiscard]] BOOL DVDClose(DVDFileInfo *file_info);
-[[nodiscard]] u32 DVDGetLength(const DVDFileInfo *file_info);
-[[nodiscard]] s32 DVDReadPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, s32 priority);
-[[nodiscard]] BOOL DVDReadAsyncPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, DVDCallback callback,
-                                    s32 priority);
-[[nodiscard]] s32 DVDGetCommandBlockStatus(const DVDCommandBlock *block);
-[[nodiscard]] s32 DVDGetDriveStatus();
-[[nodiscard]] u32 __DVDGetCoverStatus();
-void GXSetDispCopySrc(u16 left, u16 top, u16 width, u16 height);
-void GXSetTexCopySrc(u16 left, u16 top, u16 width, u16 height);
-void GXSetDispCopyDst(u16 width, u16 height);
-void GXSetTexCopyDst(u16 width, u16 height, GXTexFmt format, GXBool mipmap);
-void GXSetDispCopyFrame2Field(GXCopyMode mode);
-void GXSetCopyClamp(GXFBClamp clamp);
-[[nodiscard]] u16 GXGetNumXfbLines(u16 efb_height, f32 y_scale);
-[[nodiscard]] f32 GXGetYScaleFactor(u16 efb_height, u16 xfb_height);
-[[nodiscard]] u32 GXSetDispCopyYScale(f32 vertical_scale);
-void GXSetCopyClear(GXColor clear_color, u32 clear_z);
-void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vertical_filter, const u8 vfilter[7]);
-void GXSetDispCopyGamma(GXGamma gamma);
-[[nodiscard]] u32 GXGetTexBufferSize(u16 width, u16 height, u32 format, GXBool mipmap, u8 max_lod);
-void GXInitTexObj(GXTexObj *obj, void *image_ptr, u16 width, u16 height, GXTexFmt format, GXTexWrapMode wrap_s, GXTexWrapMode wrap_t,
-                  GXBool mipmap);
-void GXInitTexObjLOD(GXTexObj *obj, GXTexFilter min_filter, GXTexFilter mag_filter, f32 min_lod, f32 max_lod, f32 lod_bias,
-                     GXBool bias_clamp, GXBool do_edge_lod, GXAnisotropy max_aniso);
-void GXLoadTexObj(GXTexObj *obj, GXTexMapID id);
-void GXCopyDisp(void *dest, GXBool clear);
-void GXCopyTex(void *dest, GXBool clear);
-void GXPixModeSync();
-void DCFlushRange(void *ptr, u32 size);
+extern "C" {
+s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length);
+BOOL WPADProbe(s32 channel, u32 *type);
+void WPADDisconnect(s32 channel);
+void WPADEnableURCC(BOOL enable);
+void WPADSetDataFormat(s32 channel, s32 format);
+void WPADSetVRes(s32 channel, u32 xres, u32 yres);
+void WPADSetAutoSamplingBuf(s32 channel, void *buffer, u32 length);
+void WPADControlSpeaker(s32 channel, s32 command, void *callback);
+void WPADStartFastSimpleSync(void);
+void WPADStopSimpleSync(void);
+void WPADSetConnectCallback(s32 channel, void *callback);
+void WPADSetExtensionCallback(s32 channel, void *callback);
+}

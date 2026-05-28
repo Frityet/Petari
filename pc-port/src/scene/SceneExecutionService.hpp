@@ -20,8 +20,8 @@ namespace smgpc::scene {
 
         void execute_movement();
         void execute_calc_anim_and_view();
-        void draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void draw_2d_normal(render::IRendererEngine &renderer);
+        void draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void draw_2d_normal(render::AuroraRenderer &renderer);
 
     private:
         smgpc::runtime::RuntimeContext &_runtime;

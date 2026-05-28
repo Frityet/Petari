@@ -228,16 +228,16 @@ namespace smgpc::runtime {
         void execute_movement();
         void execute_calc_anim();
         void execute_calc_view_and_entry();
-        void execute_draw_buffer_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
-        void execute_draw_buffer_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
-        void execute_draw_buffer_list_normal_opa_before_volume_shadow(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
+        void execute_draw_buffer_opa(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
+        void execute_draw_buffer_xlu(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
+        void execute_draw_buffer_list_normal_opa_before_volume_shadow(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose,
                                                                       bool prior_draw_air);
-        void execute_draw_buffer_list_normal_opa_before_silhouette(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void execute_draw_buffer_list_normal_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air);
-        void execute_draw_buffer_list_normal_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air = false);
-        void execute_draw_type(render::IRendererEngine &renderer, s32 draw_type);
-        void execute_draw_list_2d_normal(render::IRendererEngine &renderer);
+        void execute_draw_buffer_list_normal_opa_before_silhouette(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void execute_draw_buffer_list_normal_opa(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air);
+        void execute_draw_buffer_list_normal_xlu(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void execute_draw_buffer_list_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air = false);
+        void execute_draw_type(render::AuroraRenderer &renderer, s32 draw_type);
+        void execute_draw_list_2d_normal(render::AuroraRenderer &renderer);
         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
 
 #ifndef NDEBUG
@@ -270,7 +270,7 @@ namespace smgpc::runtime {
         [[nodiscard]] static bool entry_is_dead(const Entry &entry);
         [[nodiscard]] static bool entry_is_suspended(const Entry &entry);
         [[nodiscard]] static std::string entry_name(const Entry &entry);
-        void execute_draw_buffer(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type,
+        void execute_draw_buffer(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type,
                                  SceneDrawBufferPass pass);
 #ifndef NDEBUG
         void push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass = SceneDrawBufferPass::None);

@@ -1,23 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
-using u8 = std::uint8_t;
-using u16 = std::uint16_t;
-using u32 = std::uint32_t;
-using u64 = std::uint64_t;
-using s8 = std::int8_t;
-using s16 = std::int16_t;
-using s32 = std::int32_t;
-using s64 = std::int64_t;
-using f32 = float;
-using f64 = double;
-using BOOL = int;
-using OSTime = s64;
-
-constexpr BOOL FALSE = 0;
-constexpr BOOL TRUE = 1;
-
-// TODO: fuck these, make into better C++ types
-using Mtx = f32[3][4];
-using MtxPtr = f32 (*)[4];
+#include <dolphin/types.h>
+#include <dolphin/mtx/GeoTypes.h>
+#include <dolphin/os/OSTime.h>

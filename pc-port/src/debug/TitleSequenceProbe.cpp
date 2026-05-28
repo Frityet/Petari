@@ -10,7 +10,7 @@
 
 namespace {
 
-    class ProbeWindowService final : public smgpc::render::IWindowService {
+    class ProbeWindowService final : public smgpc::render::AuroraWindow {
     public:
         bool poll_events() override {
             return true;

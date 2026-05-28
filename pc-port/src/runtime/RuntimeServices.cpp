@@ -949,7 +949,7 @@ namespace smgpc::runtime {
 
     }  // namespace
 
-    DvdFileSystemService::DvdFileSystemService(std::filesystem::path root) : _root(weakly_canonical_or_normal(std::move(root))) {
+    DvdFileSystemService::DvdFileSystemService(std::filesystem::path root) : _root(std::move(root)) {
     }
 
     void DvdFileSystemService::begin_frame(std::uint64_t frame_index) {
@@ -969,80 +969,113 @@ namespace smgpc::runtime {
 
     std::filesystem::path DvdFileSystemService::resolve(std::string_view disc_path) const {
         const auto normalized = normalize_disc_path(disc_path);
-        if (normalized.empty()) {
-            return _root;
-        }
-
-        return weakly_canonical_or_normal(_root / normalized);
+        return std::filesystem::path(normalize_disc_path_string(normalized.generic_string()));
     }
 
     bool DvdFileSystemService::exists(std::string_view disc_path) const {
-        return exists_regular_file(resolve(disc_path));
+        return entry_metadata(disc_path).has_value();
     }
 
     s32 DvdFileSystemService::entry_num(std::string_view disc_path) const {
-        if (const auto entry = entry_metadata(disc_path)) {
-            return entry->entry_num;
-        }
-        return -1;
+        const auto normalized = normalize_disc_path_string(disc_path);
+        return DVDConvertPathToEntrynum(normalized.c_str());
     }
 
     std::optional<DvdEntryMetadata> DvdFileSystemService::entry_metadata(std::string_view disc_path) const {
-        ensure_entry_table();
-        const auto key = entry_key(normalize_disc_path(disc_path));
-        const auto it = _entry_num_by_disc_path.find(key);
-        if (it == _entry_num_by_disc_path.end()) {
+        const auto normalized = normalize_disc_path_string(disc_path);
+        const auto entry = DVDConvertPathToEntrynum(normalized.c_str());
+        if (entry < 0) {
             return std::nullopt;
         }
-        return entry_metadata(it->second);
+
+        auto file_info = DVDFileInfo {};
+        if (DVDOpen(normalized.c_str(), &file_info)) {
+            const auto length = file_info.length;
+            (void)DVDClose(&file_info);
+            return DvdEntryMetadata {
+                .entry_num = entry,
+                .disc_path = normalized,
+                .resolved_path = normalized,
+                .is_directory = false,
+                .length = length,
+            };
+        }
+
+        auto dir = DVDDir {};
+        if (DVDOpenDir(normalized.c_str(), &dir)) {
+            (void)DVDCloseDir(&dir);
+            return DvdEntryMetadata {
+                .entry_num = entry,
+                .disc_path = normalized,
+                .resolved_path = normalized,
+                .is_directory = true,
+                .length = 0U,
+            };
+        }
+
+        return std::nullopt;
     }
 
     std::optional<DvdEntryMetadata> DvdFileSystemService::entry_metadata(s32 entry_num) const {
-        ensure_entry_table();
-        if (entry_num < 0 || static_cast<std::size_t>(entry_num) >= _entry_table.size()) {
+        if (entry_num < 0) {
             return std::nullopt;
         }
-        return _entry_table[static_cast<std::size_t>(entry_num)];
+
+        auto file_info = DVDFileInfo {};
+        if (DVDFastOpen(entry_num, &file_info)) {
+            const auto length = file_info.length;
+            (void)DVDClose(&file_info);
+            return DvdEntryMetadata {
+                .entry_num = entry_num,
+                .disc_path = std::to_string(entry_num),
+                .resolved_path = std::to_string(entry_num),
+                .is_directory = false,
+                .length = length,
+            };
+        }
+
+        auto dir = DVDDir {};
+        if (DVDFastOpenDir(entry_num, &dir)) {
+            (void)DVDCloseDir(&dir);
+            return DvdEntryMetadata {
+                .entry_num = entry_num,
+                .disc_path = std::to_string(entry_num),
+                .resolved_path = std::to_string(entry_num),
+                .is_directory = true,
+                .length = 0U,
+            };
+        }
+
+        return std::nullopt;
     }
 
     std::vector<DvdDirectoryEntry> DvdFileSystemService::directory_entries(std::string_view disc_path) const {
-        const auto directory = entry_metadata(disc_path);
-        if (!directory.has_value() || !directory->is_directory) {
+        const auto normalized = normalize_disc_path_string(disc_path);
+        auto dir = DVDDir {};
+        if (!DVDOpenDir(normalized.c_str(), &dir)) {
             return {};
         }
 
-        ensure_entry_table();
         auto entries = std::vector<DvdDirectoryEntry>{};
-        const auto parent_path = std::filesystem::path(directory->disc_path).lexically_normal();
-        const auto parent_key = parent_path.generic_string();
-        for (const auto &entry : _entry_table) {
-            if (entry.entry_num == directory->entry_num) {
-                continue;
-            }
-
-            const auto entry_path = std::filesystem::path(entry.disc_path).lexically_normal();
-            const auto entry_parent = entry_path.parent_path().generic_string();
-            const auto normalized_entry_parent = entry_parent.empty() ? std::string("/") : entry_parent;
-            if (normalized_entry_parent != parent_key) {
-                continue;
-            }
-
+        auto dir_entry = DVDDirEntry {};
+        while (DVDReadDir(&dir, &dir_entry)) {
             entries.push_back(DvdDirectoryEntry {
-                .entry_num = entry.entry_num,
-                .disc_path = entry.disc_path,
-                .name = entry_path.filename().generic_string(),
-                .is_directory = entry.is_directory,
+                .entry_num = static_cast<s32>(dir_entry.entryNum),
+                .disc_path = (std::filesystem::path(normalized) / (dir_entry.name != nullptr ? dir_entry.name : "")).generic_string(),
+                .name = dir_entry.name != nullptr ? dir_entry.name : "",
+                .is_directory = dir_entry.isDir != FALSE,
             });
         }
+        (void)DVDCloseDir(&dir);
 
         return entries;
     }
 
     std::optional<std::filesystem::path> DvdFileSystemService::find_first(std::initializer_list<std::filesystem::path> candidates) const {
         for (const auto &candidate : candidates) {
-            const auto path = candidate.is_absolute() ? weakly_canonical_or_normal(candidate) : resolve(candidate.generic_string());
-            if (exists_regular_file(path)) {
-                return path;
+            const auto path = normalize_disc_path_string(candidate.generic_string());
+            if (exists(path)) {
+                return std::filesystem::path(path);
             }
         }
 
@@ -1078,20 +1111,18 @@ namespace smgpc::runtime {
             throw std::runtime_error("DVD read offset is outside file " + std::string(disc_path));
         }
 
-        const auto path = std::filesystem::path(entry->resolved_path);
-        auto file = std::ifstream(path, std::ios::binary);
-        if (!file) {
-            throw std::runtime_error("Cannot open DVD file " + path.string());
-        }
-
         const auto read_size = std::min(length, entry->length - offset);
         auto bytes = std::vector<std::uint8_t>(read_size);
-        file.seekg(static_cast<std::streamoff>(offset), std::ios::beg);
-        file.read(reinterpret_cast<char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
-        if (!file && file.gcount() != static_cast<std::streamsize>(bytes.size())) {
-            throw std::runtime_error("Cannot read DVD file " + path.string());
+        auto file_info = DVDFileInfo {};
+        if (!DVDOpen(entry->disc_path.c_str(), &file_info)) {
+            throw std::runtime_error("Cannot open DVD file " + entry->disc_path);
         }
-        bytes.resize(static_cast<std::size_t>(file.gcount()));
+        const auto result = DVDReadPrio(&file_info, bytes.data(), static_cast<s32>(bytes.size()), static_cast<s32>(offset), priority);
+        (void)DVDClose(&file_info);
+        if (result < 0) {
+            throw std::runtime_error("Cannot read DVD file " + entry->disc_path);
+        }
+        bytes.resize(static_cast<std::size_t>(result));
 
         _file_read_trace.push_back(DvdFileReadTrace {
             .requested_path = std::string(disc_path),
@@ -1132,7 +1163,7 @@ namespace smgpc::runtime {
     }
 
     smgpc::resource::RarcArchive &DvdFileSystemService::archive(std::string_view disc_path) {
-        return archive_for_path_with_request(resolve(disc_path), disc_path);
+        return archive_for_path_with_request(std::filesystem::path(normalize_disc_path_string(disc_path)), disc_path);
     }
 
     smgpc::resource::RarcArchive &DvdFileSystemService::archive_for_path(const std::filesystem::path &path) {
@@ -1153,7 +1184,7 @@ namespace smgpc::runtime {
             return *it->second;
         }
 
-        auto archive = std::make_unique<smgpc::resource::RarcArchive>(smgpc::resource::RarcArchive::from_file(std::filesystem::path(key)));
+        auto archive = std::make_unique<smgpc::resource::RarcArchive>(smgpc::resource::RarcArchive::from_bytes(read_file(key)));
         auto [it, inserted] = _archives.emplace(key, std::move(archive));
         if (inserted) {
             ++_archive_load_counts[key];
@@ -1258,9 +1289,8 @@ namespace smgpc::runtime {
                 }
                 result = static_cast<s32>(bytes.size());
                 if (request.file_info != nullptr) {
-                    request.file_info->position = static_cast<u32>(request.offset) + static_cast<u32>(bytes.size());
                     request.file_info->cb.state = DVD_STATE_END;
-                    request.file_info->cb.transferred_size += static_cast<u32>(bytes.size());
+                    request.file_info->cb.transferredSize += static_cast<u32>(bytes.size());
                 }
             } catch (const std::exception &) {
                 result = -1;
@@ -1355,7 +1385,7 @@ namespace smgpc::runtime {
     }
 
     std::string DvdFileSystemService::archive_cache_key_for_path(const std::filesystem::path &path) const {
-        return weakly_canonical_or_normal(path).generic_string();
+        return normalize_disc_path_string(path.generic_string());
     }
 
     std::string DvdFileSystemService::archive_cache_key(std::string_view disc_path) const {
@@ -1869,7 +1899,7 @@ namespace smgpc::runtime {
         });
     }
 
-    void EffectService::draw(render::IRendererEngine &renderer, s32 draw_type) {
+    void EffectService::draw(render::AuroraRenderer &renderer, s32 draw_type) {
         for (const auto &active : _active_effects) {
             for (auto resource_index = std::size_t {}; resource_index < active.resolved_resources.size(); ++resource_index) {
                 const auto &resource = active.resolved_resources[resource_index];
@@ -2250,7 +2280,7 @@ namespace smgpc::runtime {
         }
     }
 
-    render::TextureHandle EffectService::texture_handle_for(render::IRendererEngine &renderer, const smgpc::render::effects::JpcTextureMetadata &texture) {
+    render::TextureHandle EffectService::texture_handle_for(render::AuroraRenderer &renderer, const smgpc::render::effects::JpcTextureMetadata &texture) {
         if (const auto it = _texture_handles.find(texture.index); it != _texture_handles.end() && it->second.is_valid()) {
             return it->second;
         }
