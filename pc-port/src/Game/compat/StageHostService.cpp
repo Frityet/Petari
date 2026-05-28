@@ -1,11 +1,10 @@
 #include "Game/compat/StageHostService.hpp"
 
-#include "Game/compat/RuntimeContext.hpp"
-#include "Game/compat/SceneLifecycleService.hpp"
+#include "Game/compat/GameSystemSceneControllerService.hpp"
 
 namespace smgpc::game {
 
-    StageHostService::StageHostService(RuntimeContext &runtime) : _scene_lifecycle(runtime.scene_lifecycle()) {
+    StageHostService::StageHostService(GameSystemSceneControllerService &scene_controller) : _scene_controller(scene_controller) {
     }
 
     StageHostService::~StageHostService() = default;
@@ -14,24 +13,28 @@ namespace smgpc::game {
         create_stage_from_factory(request);
     }
 
+    void StageHostService::update_scene_requests() {
+        _scene_controller.check_request_and_change_scene();
+    }
+
     bool StageHostService::has_active_stage(std::string_view stage_name) const {
-        return _scene_lifecycle.has_active_stage(stage_name);
+        return _scene_controller.has_active_stage(stage_name);
     }
 
     std::string_view StageHostService::active_scene_name() const {
-        return _scene_lifecycle.active_scene_name();
+        return _scene_controller.active_scene_name();
     }
 
     std::string_view StageHostService::active_stage_name() const {
-        return _scene_lifecycle.active_stage_name();
+        return _scene_controller.active_stage_name();
     }
 
     s32 StageHostService::active_scenario_no() const {
-        return _scene_lifecycle.active_scenario_no();
+        return _scene_controller.active_scenario_no();
     }
 
     void StageHostService::create_stage_from_factory(const StageHostRequest &request) {
-        _scene_lifecycle.request_stage(request);
+        _scene_controller.request_change_scene(request);
     }
 
 }  // namespace smgpc::game

@@ -11,7 +11,7 @@ namespace smgpc::game {
 
     class SequenceBootService final {
     public:
-        explicit SequenceBootService(RuntimeContext &runtime);
+        SequenceBootService(RuntimeContext &runtime, StorySequenceService &story_sequence, StageHostService &stage_host);
         ~SequenceBootService();
 
         SequenceBootService(const SequenceBootService &) = delete;
@@ -28,8 +28,8 @@ namespace smgpc::game {
         void update_stage_transition_requests();
 
         RuntimeContext &_runtime;
-        StorySequenceService _story_sequence;
-        StageHostService _stage_host;
+        StorySequenceService &_story_sequence;
+        StageHostService &_stage_host;
         std::string _boot_stage_name;
         bool _boot_requested = false;
         bool _autorush_begin_sent = false;

@@ -7,7 +7,8 @@
 #include <string>
 
 namespace smgpc::game {
-    SequenceBootService::SequenceBootService(RuntimeContext &runtime) : _runtime(runtime), _story_sequence(runtime), _stage_host(runtime) {
+    SequenceBootService::SequenceBootService(RuntimeContext &runtime, StorySequenceService &story_sequence, StageHostService &stage_host)
+        : _runtime(runtime), _story_sequence(story_sequence), _stage_host(stage_host) {
     }
 
     SequenceBootService::~SequenceBootService() = default;
@@ -45,6 +46,8 @@ namespace smgpc::game {
             return;
         }
 
+        _stage_host.update_scene_requests();
+
         if (!_autorush_begin_sent) {
             MR::sendMsgToAllLiveActor(ACTMES_AUTORUSH_BEGIN, nullptr);
             _autorush_begin_sent = true;
@@ -55,6 +58,7 @@ namespace smgpc::game {
         }
 
         update_stage_transition_requests();
+        _stage_host.update_scene_requests();
     }
 
     bool SequenceBootService::is_boot_requested() const {

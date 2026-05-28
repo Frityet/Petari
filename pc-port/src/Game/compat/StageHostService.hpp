@@ -10,8 +10,8 @@
 
 namespace smgpc::game {
 
+    class GameSystemSceneControllerService;
     class RuntimeContext;
-    class SceneLifecycleService;
 
     struct StageHostRequest {
         std::string scene_name;
@@ -24,13 +24,14 @@ namespace smgpc::game {
 
     class StageHostService final {
     public:
-        explicit StageHostService(RuntimeContext &runtime);
+        explicit StageHostService(GameSystemSceneControllerService &scene_controller);
         ~StageHostService();
 
         StageHostService(const StageHostService &) = delete;
         StageHostService &operator=(const StageHostService &) = delete;
 
         void request_stage(const StageHostRequest &request);
+        void update_scene_requests();
 
         [[nodiscard]] bool has_active_stage(std::string_view stage_name) const;
         [[nodiscard]] std::string_view active_scene_name() const;
@@ -40,7 +41,7 @@ namespace smgpc::game {
     private:
         void create_stage_from_factory(const StageHostRequest &request);
 
-        SceneLifecycleService &_scene_lifecycle;
+        GameSystemSceneControllerService &_scene_controller;
     };
 
 }  // namespace smgpc::game

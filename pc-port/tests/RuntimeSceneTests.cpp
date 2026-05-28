@@ -75,6 +75,18 @@ namespace smgpc::tests {
             std::optional<std::string> _previous{};
         };
 
+        struct SequenceServiceFixture {
+            smgpc::game::GameSystemSceneControllerService scene_controller;
+            smgpc::game::StorySequenceService story_sequence;
+            smgpc::game::StageHostService stage_host;
+            smgpc::game::SequenceBootService sequence_boot;
+
+            explicit SequenceServiceFixture(smgpc::game::RuntimeContext &runtime)
+                : scene_controller(runtime, runtime.scene_lifecycle()), story_sequence(runtime), stage_host(scene_controller),
+                  sequence_boot(runtime, story_sequence, stage_host) {
+            }
+        };
+
         [[nodiscard]] bool has_effect_event(const smgpc::game::RuntimeContext &runtime, smgpc::game::EffectEventKind kind,
                                             std::string_view actor_name, std::string_view effect_name) {
             return std::ranges::any_of(runtime.effects().events(), [&](const smgpc::game::EffectEvent &event) {
@@ -2682,7 +2694,8 @@ namespace smgpc::tests {
             auto logger = NullLogger();
             auto window = TestWindowService();
             auto runtime = smgpc::game::RuntimeContext(logger, window);
-            auto sequence_boot = smgpc::game::SequenceBootService(runtime);
+            auto sequence_services = SequenceServiceFixture(runtime);
+            auto &sequence_boot = sequence_services.sequence_boot;
 
             require(smgpc::game::can_create_name_obj("FileSelector") && smgpc::game::can_create_name_obj("PrologueDirector") &&
                         !smgpc::game::can_create_name_obj("ProloguePictureBook") &&
@@ -2724,8 +2737,11 @@ namespace smgpc::tests {
             require(file_select_placements.size() == 1U && file_select_placements.front().object_name == "FileSelector",
                     "stage placement resolver should return every currently supported FileSelect placement row");
             sequence_boot.request_boot_to_initial_stage();
+            require(sequence_boot.is_boot_requested() && sequence_services.scene_controller.has_pending_request(),
+                    "SequenceBootService should queue the FileSelect stage request through the scene controller");
+            sequence_boot.update_after_runtime_frame();
             require(sequence_boot.is_boot_requested() && sequence_boot.is_initial_stage_host_active(),
-                    "SequenceBootService should request the temporary FileSelect stage host after a boot request");
+                    "SequenceBootService should apply the queued FileSelect stage host through the scene controller update");
             const auto snapshot = runtime.scheduler().snapshot();
             require(std::ranges::any_of(snapshot,
                                         [](const auto &entry) {
@@ -2771,7 +2787,14 @@ namespace smgpc::tests {
 #endif
         }
 
-        $test("constructs runtime and sequence boot through application service graph") {
+        $test("constructs runtime and game system through application service graph") {
+#ifndef NDEBUG
+            const auto graph_path = std::filesystem::path(".cache/tests/app-service-graph.dot");
+            std::filesystem::create_directories(graph_path.parent_path());
+            std::filesystem::remove(graph_path);
+            const auto graph_path_text = graph_path.string();
+            auto graph_dump = ScopedEnvironmentVariable("SMGPC_DI_GRAPHVIZ_PATH", graph_path_text.c_str());
+#endif
             auto overrides = smgpc::app::ServiceGraphOverrides{
                 .logger = std::make_unique<NullLogger>(),
                 .window_service = std::make_unique<TestWindowService>(),
@@ -2779,15 +2802,61 @@ namespace smgpc::tests {
             auto services = smgpc::app::build_service_graph(smgpc::app::BootstrapConfiguration{}, std::move(overrides));
 
             require(services.has<smgpc::game::RuntimeContext>() && services.has<smgpc::game::SequenceBootService>() &&
+                        services.has<smgpc::game::GameSystemService>() &&
+                        services.has<smgpc::game::GameSystemSceneControllerService>() &&
+                        services.has<smgpc::game::StorySequenceService>() && services.has<smgpc::game::StageHostService>() &&
+                        services.has<smgpc::game::DvdFileSystemService>() && services.has<smgpc::game::SaveDataService>() &&
+                        services.has<smgpc::game::SceneScheduler>() && services.has<smgpc::game::SceneLifecycleService>() &&
                         services.has<smgpc::app::IApplication>(),
-                    "application service graph should register runtime, sequence boot, and app services");
+                    "application service graph should register runtime, runtime subservices, sequence subservices, sequence boot, game system, and app services");
+
+#ifndef NDEBUG
+            require(std::filesystem::exists(graph_path), "application service graph should emit a Graphviz dependency artifact when requested");
+            const auto graph_bytes = read_binary_file_for_test(graph_path);
+            const auto graph_text = std::string(graph_bytes.begin(), graph_bytes.end());
+            auto graph_contains = [&](std::string_view text) {
+                return graph_text.find(std::string(text)) != std::string::npos;
+            };
+            require(graph_contains("SMG PC Dependency Graph") && graph_contains("RuntimeContext") &&
+                        graph_contains("StorySequenceService") && graph_contains("StageHostService") &&
+                        graph_contains("SequenceBootService") && graph_contains("GameSystemSceneControllerService") &&
+                        graph_contains("GameSystemService"),
+                    "Graphviz dependency artifact should render the runtime sequence, scene controller, and game system services as named graph nodes");
+            require(graph_contains("\"smgpc::game::RuntimeContext\" -> \"smgpc::game::StorySequenceService\"") &&
+                        graph_contains("\"smgpc::game::RuntimeContext\" -> \"smgpc::game::GameSystemSceneControllerService\"") &&
+                        graph_contains("\"smgpc::game::RuntimeContext\" -> \"smgpc::game::SaveDataService\"") &&
+                        graph_contains("\"smgpc::game::RuntimeContext\" -> \"smgpc::game::SceneScheduler\"") &&
+                        graph_contains("\"smgpc::game::RuntimeContext\" -> \"smgpc::game::SceneLifecycleService\"") &&
+                        graph_contains("\"smgpc::game::SceneLifecycleService\" -> \"smgpc::game::GameSystemSceneControllerService\"") &&
+                        graph_contains("\"smgpc::game::GameSystemSceneControllerService\" -> \"smgpc::game::StageHostService\"") &&
+                        graph_contains("\"smgpc::game::StorySequenceService\" -> \"smgpc::game::SequenceBootService\"") &&
+                        graph_contains("\"smgpc::game::StageHostService\" -> \"smgpc::game::SequenceBootService\"") &&
+                        graph_contains("\"smgpc::game::GameSystemSceneControllerService\" -> \"smgpc::game::GameSystemService\"") &&
+                        graph_contains("\"smgpc::game::SequenceBootService\" -> \"smgpc::game::GameSystemService\"") &&
+                        graph_contains("\"smgpc::game::GameSystemService\" -> \"smgpc::app::IApplication\""),
+                    "Graphviz dependency artifact should contain real DI dependency edges from providers to consumers");
+#endif
 
             auto &runtime = services.get<smgpc::game::RuntimeContext>();
-            auto &sequence_boot = services.get<smgpc::game::SequenceBootService>();
-            sequence_boot.request_boot_to_initial_stage();
+            require(&services.get<smgpc::game::DvdFileSystemService>() == &runtime.dvd() &&
+                        &services.get<smgpc::game::SaveDataService>() == &runtime.save_data() &&
+                        &services.get<smgpc::game::SceneScheduler>() == &runtime.scheduler() &&
+                        &services.get<smgpc::game::SceneLifecycleService>() == &runtime.scene_lifecycle(),
+                    "DI runtime subservice registrations should borrow the active RuntimeContext services instead of constructing duplicate services");
+            auto &game_system = services.get<smgpc::game::GameSystemService>();
+            game_system.begin_frame(smgpc::render::FrameContext{
+                .frame_index = 1U,
+                .frame_time_seconds = 0.0,
+                .frame_delta_seconds = 0.0,
+                .framebuffer = {.width = 640U, .height = 456U},
+                .has_focus = true,
+                .is_minimized = false,
+            });
+            game_system.update();
 
-            require(sequence_boot.is_boot_requested() && sequence_boot.is_initial_stage_host_active(),
-                    "DI-owned SequenceBootService should request the initial FileSelect stage through its DI-owned RuntimeContext");
+            require(game_system.has_boot_requested_initial_stage() && game_system.is_initial_stage_host_active() &&
+                        game_system.has_sent_autorush_begin(),
+                    "DI-owned GameSystemService should request the initial FileSelect stage and update sequence messages through its DI-owned RuntimeContext");
             require(runtime.scene_lifecycle().active_stage_name() == "FileSelect" && runtime.scene_lifecycle().active_scenario_no() == 1,
                     "DI-owned RuntimeContext should own the active FileSelect scene lifecycle state");
 
@@ -2815,7 +2884,8 @@ namespace smgpc::tests {
             auto logger = NullLogger();
             auto window = TestWindowService();
             auto runtime = smgpc::game::RuntimeContext(logger, window);
-            auto sequence_boot = smgpc::game::SequenceBootService(runtime);
+            auto sequence_services = SequenceServiceFixture(runtime);
+            auto &sequence_boot = sequence_services.sequence_boot;
             auto advance_one = [&]() {
                 runtime.begin_frame(make_frame(runtime.frame_index() + 1U));
                 sequence_boot.update_after_runtime_frame();
@@ -2841,6 +2911,7 @@ namespace smgpc::tests {
                                                       .last_modified = 0,
                                                   });
             sequence_boot.request_boot_to_initial_stage();
+            sequence_boot.update_after_runtime_frame();
             auto selector = FileSelector("ファイルセレクタ");
             selector.initWithoutIter();
             require(selector.receiveOtherMsg(ACTMES_AUTORUSH_BEGIN), "FileSelector picturebook route test should begin from the title autorush gate");
@@ -2994,7 +3065,8 @@ namespace smgpc::tests {
             auto logger = NullLogger();
             auto window = TestWindowService();
             auto runtime = smgpc::game::RuntimeContext(logger, window);
-            auto sequence_boot = smgpc::game::SequenceBootService(runtime);
+            auto sequence_services = SequenceServiceFixture(runtime);
+            auto &sequence_boot = sequence_services.sequence_boot;
 
             sequence_boot.request_boot_to_initial_stage();
             for (std::uint64_t frame = 0; frame < 720U; ++frame) {
