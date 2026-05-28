@@ -8,9 +8,12 @@
 
 #include <revolution.h>
 
-namespace smgpc::compat {
-
+namespace smgpc::runtime {
     class RuntimeContext;
+}  // namespace smgpc::runtime
+
+namespace smgpc::scene {
+
     class SceneLifecycleService;
 
     enum class SceneControllerPhase {
@@ -23,7 +26,7 @@ namespace smgpc::compat {
         Normal,
     };
 
-    struct SceneControlInfoCompat {
+    struct SceneControlInfo {
         std::string scene_name;
         std::string stage_name;
         s32 scenario_no = 1;
@@ -35,7 +38,7 @@ namespace smgpc::compat {
 
     class GameSystemSceneControllerService final {
     public:
-        GameSystemSceneControllerService(RuntimeContext &runtime, SceneLifecycleService &scene_lifecycle);
+        GameSystemSceneControllerService(smgpc::runtime::RuntimeContext &runtime, SceneLifecycleService &scene_lifecycle);
         ~GameSystemSceneControllerService();
 
         GameSystemSceneControllerService(const GameSystemSceneControllerService &) = delete;
@@ -51,17 +54,17 @@ namespace smgpc::compat {
         [[nodiscard]] std::string_view active_stage_name() const;
         [[nodiscard]] s32 active_scenario_no() const;
         [[nodiscard]] SceneControllerPhase phase() const;
-        [[nodiscard]] const std::optional<SceneControlInfoCompat> &pending_scene() const;
+        [[nodiscard]] const std::optional<SceneControlInfo> &pending_scene() const;
 
     private:
         void apply_pending_scene();
         void set_phase(SceneControllerPhase phase);
         [[nodiscard]] StageHostRequest pending_request() const;
 
-        RuntimeContext &_runtime;
+        smgpc::runtime::RuntimeContext &_runtime;
         SceneLifecycleService &_scene_lifecycle;
         SceneControllerPhase _phase = SceneControllerPhase::NotInitialized;
-        std::optional<SceneControlInfoCompat> _pending_scene;
+        std::optional<SceneControlInfo> _pending_scene;
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

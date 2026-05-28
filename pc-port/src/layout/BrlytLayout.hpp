@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::layout {
 
     struct BrlytPane {
         std::string name;
@@ -100,10 +100,10 @@ namespace smgpc::compat {
         std::vector<BrlytMaterialTexture> textures;
         std::vector<BrlytTexSrt> tex_srts;
         std::vector<BrlytTexCoordGen> tex_coord_gens;
-        std::array<GXTevRegisterColor, 3U> tev_colors{
-            GXTevRegisterColor{0, 0, 0, 0},
-            GXTevRegisterColor{255, 255, 255, 255},
-            GXTevRegisterColor{255, 255, 255, 255},
+        std::array<smgpc::render::GXTevRegisterColor, 3U> tev_colors{
+            smgpc::render::GXTevRegisterColor{0, 0, 0, 0},
+            smgpc::render::GXTevRegisterColor{255, 255, 255, 255},
+            smgpc::render::GXTevRegisterColor{255, 255, 255, 255},
         };
         std::array<std::array<std::uint8_t, 4U>, 4U> tev_k_colors{
             std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
@@ -119,7 +119,7 @@ namespace smgpc::compat {
         std::uint8_t chan_alpha_src = 1U;
         bool has_chan_ctrl = false;
         bool has_mat_color = false;
-        GXMaterialState gx_state{};
+        smgpc::render::GXMaterialState gx_state{};
     };
 
     struct BrlytPicturePane {
@@ -156,7 +156,7 @@ namespace smgpc::compat {
         std::string font_name;
         std::vector<std::uint16_t> text;
         std::vector<std::uint16_t> raw_text;
-        std::vector<BmgControlTag> control_tags;
+        std::vector<smgpc::resource::BmgControlTag> control_tags;
         std::size_t pane_index = 0U;
         std::uint16_t material_index = 0U;
         float x = 0.0F;
@@ -175,6 +175,14 @@ namespace smgpc::compat {
         bool visible = true;
     };
 
+    struct BrlytGroup {
+        std::string name;
+        std::vector<std::string> pane_names;
+        std::vector<std::size_t> pane_indices;
+        std::uint16_t nest_level = 0U;
+        bool root_group = false;
+    };
+
     struct BrlytLayout {
         float width = 0.0F;
         float height = 0.0F;
@@ -184,8 +192,9 @@ namespace smgpc::compat {
         std::vector<BrlytPane> panes;
         std::vector<BrlytPicturePane> pictures;
         std::vector<BrlytTextBox> text_boxes;
+        std::vector<BrlytGroup> groups;
     };
 
     [[nodiscard]] BrlytLayout parse_brlyt_layout(std::span<const std::uint8_t> data);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::layout

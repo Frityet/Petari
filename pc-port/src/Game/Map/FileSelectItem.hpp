@@ -79,7 +79,7 @@ public:
     void offPointing();
     void clearPointing();
     void turnToFront(s32 frameCount);
-    void setBasePosition(const smgpc::compat::CameraParamVec3& base_position);
+    void setBasePosition(const smgpc::camera::CameraParamVec3& base_position);
     void setSelectDelegator(FileSelectItemDelegatorBase* pDelegator);
 
     [[nodiscard]] s32 getFileNo() const;
@@ -96,7 +96,7 @@ public:
     [[nodiscard]] s32 getTurnToFrontFrameCount() const;
     [[nodiscard]] const TVec3f& getPosition() const;
 #endif
-    [[nodiscard]] const smgpc::compat::CameraParamVec3& getBasePosition() const;
+    [[nodiscard]] const smgpc::camera::CameraParamVec3& getBasePosition() const;
 
 private:
     friend class FileSelectItemSub::BlinkController;
@@ -142,7 +142,7 @@ private:
     FileSelectItemDelegatorBase* mDelegator = nullptr;
     FileSelectItemSub::ScaleController* mScaleCtrl = nullptr;
     FileSelectItemSub::BlinkController* mBlinkCtrl = nullptr;
-    smgpc::compat::CameraParamVec3 mBasePosition{};
+    smgpc::camera::CameraParamVec3 mBasePosition{};
     Mtx mPlanetMatrix{};
     Mtx mFellowMatrix{};
     PartsModel* mPlanetMapObj = nullptr;

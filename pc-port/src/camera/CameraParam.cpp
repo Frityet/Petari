@@ -4,7 +4,7 @@
 #include <array>
 #include <utility>
 
-namespace smgpc::compat {
+namespace smgpc::camera {
     namespace {
 
         [[nodiscard]] CameraParamVec3 to_camera_vec3(std::array<float, 3U> value) {
@@ -15,25 +15,25 @@ namespace smgpc::compat {
             };
         }
 
-        void read_float(const BcsvTable &table, std::size_t row, std::string_view name, float &out) {
+        void read_float(const resource::BcsvTable &table, std::size_t row, std::string_view name, float &out) {
             if (const auto value = table.get_float(row, name); value.has_value()) {
                 out = *value;
             }
         }
 
-        void read_s32(const BcsvTable &table, std::size_t row, std::string_view name, std::int32_t &out) {
+        void read_s32(const resource::BcsvTable &table, std::size_t row, std::string_view name, std::int32_t &out) {
             if (const auto value = table.get_s32(row, name); value.has_value()) {
                 out = *value;
             }
         }
 
-        void read_u32(const BcsvTable &table, std::size_t row, std::string_view name, std::uint32_t &out) {
+        void read_u32(const resource::BcsvTable &table, std::size_t row, std::string_view name, std::uint32_t &out) {
             if (const auto value = table.get_u32(row, name); value.has_value()) {
                 out = *value;
             }
         }
 
-        void read_vec3(const BcsvTable &table, std::size_t row, std::string_view name, CameraParamVec3 &out) {
+        void read_vec3(const resource::BcsvTable &table, std::size_t row, std::string_view name, CameraParamVec3 &out) {
             if (const auto value = table.get_vec3(row, name); value.has_value()) {
                 out = to_camera_vec3(*value);
             }
@@ -61,7 +61,7 @@ namespace smgpc::compat {
             return camera_type;
         }
 
-        void load_extra_params(const BcsvTable &table, std::size_t row, CameraExtraParamCompat &extra) {
+        void load_extra_params(const resource::BcsvTable &table, std::size_t row, CameraExtraParam &extra) {
             read_vec3(table, row, "woffset", extra.w_offset);
             read_float(table, row, "loffset", extra.l_offset);
             read_float(table, row, "loffsetv", extra.l_offset_v);
@@ -95,7 +95,7 @@ namespace smgpc::compat {
             }
         }
 
-        void load_general_params(const BcsvTable &table, std::size_t row, std::string_view camera_type, CameraGeneralParamCompat &general) {
+        void load_general_params(const resource::BcsvTable &table, std::size_t row, std::string_view camera_type, CameraGeneralParam &general) {
             read_float(table, row, "dist", general.dist);
             read_vec3(table, row, "axis", general.axis);
             read_vec3(table, row, "wpoint", general.w_point);
@@ -115,36 +115,36 @@ namespace smgpc::compat {
 
     }  // namespace
 
-    bool CameraParamChunkCompat::is_on_no_reset() const {
+    bool CameraParamChunk::is_on_no_reset() const {
         return (extra.flags & (1U << 0U)) != 0U;
     }
 
-    bool CameraParamChunkCompat::is_on_use_fovy() const {
+    bool CameraParamChunk::is_on_use_fovy() const {
         return (extra.flags & (1U << 1U)) != 0U;
     }
 
-    bool CameraParamChunkCompat::is_l_offset_erp_off() const {
+    bool CameraParamChunk::is_l_offset_erp_off() const {
         return (extra.flags & (1U << 2U)) != 0U;
     }
 
-    bool CameraParamChunkCompat::is_anti_blur_off() const {
+    bool CameraParamChunk::is_anti_blur_off() const {
         return (extra.flags & (1U << 3U)) != 0U;
     }
 
-    bool CameraParamChunkCompat::is_collision_off() const {
+    bool CameraParamChunk::is_collision_off() const {
         return (extra.flags & (1U << 4U)) != 0U;
     }
 
-    bool CameraParamChunkCompat::is_subjective_camera_off() const {
+    bool CameraParamChunk::is_subjective_camera_off() const {
         return (extra.flags & (1U << 5U)) != 0U;
     }
 
-    std::vector<CameraParamChunkCompat> load_camera_param_chunks(const BcsvTable &table) {
-        auto chunks = std::vector<CameraParamChunkCompat>{};
+    std::vector<CameraParamChunk> load_camera_param_chunks(const resource::BcsvTable &table) {
+        auto chunks = std::vector<CameraParamChunk>{};
         chunks.reserve(table.entry_count());
 
         for (auto row = 0U; row < table.entry_count(); ++row) {
-            auto chunk = CameraParamChunkCompat{};
+            auto chunk = CameraParamChunk{};
             if (const auto version = table.get_u32(row, "version"); version.has_value()) {
                 chunk.version = *version;
             }
@@ -175,7 +175,7 @@ namespace smgpc::compat {
         return chunks;
     }
 
-    std::optional<CameraParamChunkCompat> find_camera_param_chunk(std::span<const CameraParamChunkCompat> chunks, std::string_view id) {
+    std::optional<CameraParamChunk> find_camera_param_chunk(std::span<const CameraParamChunk> chunks, std::string_view id) {
         const auto it = std::ranges::find_if(chunks, [id](const auto &chunk) { return chunk.id == id; });
         if (it == chunks.end()) {
             return std::nullopt;
@@ -184,4 +184,4 @@ namespace smgpc::compat {
         return *it;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::camera

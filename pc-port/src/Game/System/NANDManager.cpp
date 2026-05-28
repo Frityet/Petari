@@ -34,8 +34,8 @@ namespace {
         return path;
     }
 
-    [[nodiscard]] smgpc::compat::RuntimeContext* active_runtime() {
-        return smgpc::compat::RuntimeContext::try_instance();
+    [[nodiscard]] smgpc::runtime::RuntimeContext* active_runtime() {
+        return smgpc::runtime::RuntimeContext::try_instance();
     }
 
     void complete_request(NANDRequestInfo& request, s32 result) {

@@ -83,36 +83,36 @@ namespace {
         return sanitized.empty() ? "texture" : sanitized;
     }
 
-    [[nodiscard]] const char *texture_format_name(smgpc::compat::TplTextureFormat format) {
+    [[nodiscard]] const char *texture_format_name(smgpc::resource::TplTextureFormat format) {
         switch (format) {
-        case smgpc::compat::TplTextureFormat::I4:
+        case smgpc::resource::TplTextureFormat::I4:
             return "I4";
-        case smgpc::compat::TplTextureFormat::I8:
+        case smgpc::resource::TplTextureFormat::I8:
             return "I8";
-        case smgpc::compat::TplTextureFormat::IA4:
+        case smgpc::resource::TplTextureFormat::IA4:
             return "IA4";
-        case smgpc::compat::TplTextureFormat::IA8:
+        case smgpc::resource::TplTextureFormat::IA8:
             return "IA8";
-        case smgpc::compat::TplTextureFormat::RGB565:
+        case smgpc::resource::TplTextureFormat::RGB565:
             return "RGB565";
-        case smgpc::compat::TplTextureFormat::RGB5A3:
+        case smgpc::resource::TplTextureFormat::RGB5A3:
             return "RGB5A3";
-        case smgpc::compat::TplTextureFormat::RGBA8:
+        case smgpc::resource::TplTextureFormat::RGBA8:
             return "RGBA8";
-        case smgpc::compat::TplTextureFormat::C4:
+        case smgpc::resource::TplTextureFormat::C4:
             return "C4";
-        case smgpc::compat::TplTextureFormat::C8:
+        case smgpc::resource::TplTextureFormat::C8:
             return "C8";
-        case smgpc::compat::TplTextureFormat::C14X2:
+        case smgpc::resource::TplTextureFormat::C14X2:
             return "C14X2";
-        case smgpc::compat::TplTextureFormat::CMPR:
+        case smgpc::resource::TplTextureFormat::CMPR:
             return "CMPR";
         }
 
         return "unknown";
     }
 
-    void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output, const smgpc::compat::DecodedTexture &texture) {
+    void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output, const smgpc::resource::DecodedTexture &texture) {
         screenshot_service.write_png(
             output,
             smgpc::render::capture::ScreenshotImageView{
@@ -125,7 +125,7 @@ namespace {
             });
     }
 
-    [[nodiscard]] bool has_translucent_pixels(const smgpc::compat::DecodedTexture &texture) {
+    [[nodiscard]] bool has_translucent_pixels(const smgpc::resource::DecodedTexture &texture) {
         for (auto i = std::size_t{3U}; i < texture.rgba.size(); i += 4U) {
             if (texture.rgba[i] != 0xffU) {
                 return true;
@@ -135,7 +135,7 @@ namespace {
         return false;
     }
 
-    [[nodiscard]] smgpc::compat::DecodedTexture make_opaque_preview(smgpc::compat::DecodedTexture texture) {
+    [[nodiscard]] smgpc::resource::DecodedTexture make_opaque_preview(smgpc::resource::DecodedTexture texture) {
         for (auto i = std::size_t{3U}; i < texture.rgba.size(); i += 4U) {
             texture.rgba[i] = 0xffU;
         }
@@ -154,11 +154,11 @@ namespace {
         const std::filesystem::path &output_root,
         std::ofstream &manifest,
         std::string_view object_name,
-        const smgpc::compat::RarcArchive &archive,
-        const smgpc::compat::RarcEntry &entry) {
+        const smgpc::resource::RarcArchive &archive,
+        const smgpc::resource::RarcEntry &entry) {
         const auto model_path = std::filesystem::path(entry.path);
         const auto model_output_root = output_root / sanitize_filename(object_name) / sanitize_filename(model_path.stem().string());
-        const auto textures = smgpc::compat::extract_j3d_textures(archive.file_data(entry));
+        const auto textures = smgpc::render::extract_j3d_textures(archive.file_data(entry));
 
         std::cout << entry.path << ": " << textures.size() << " textures\n";
         for (auto i = std::size_t{}; i < textures.size(); ++i) {
@@ -187,7 +187,7 @@ namespace {
 int main(int argc, char **argv) try {
     const auto object_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
     const auto archive_path = disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc");
-    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
+    const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
     const auto output_root = pc_port_root() / ".cache" / "j3d-textures";
     const auto manifest_path = output_root / sanitize_filename(object_name) / "manifest.csv";
     std::filesystem::create_directories(manifest_path.parent_path());

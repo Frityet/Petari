@@ -6,12 +6,13 @@
 
 #include <revolution.h>
 
-#include "runtime/NameObjFactoryCompat.hpp"
+namespace smgpc::runtime {
+    class RuntimeContext;
+}  // namespace smgpc::runtime
 
-namespace smgpc::compat {
+namespace smgpc::scene {
 
     class GameSystemSceneControllerService;
-    class RuntimeContext;
 
     struct StageHostRequest {
         std::string scene_name;
@@ -44,4 +45,4 @@ namespace smgpc::compat {
         GameSystemSceneControllerService &_scene_controller;
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

@@ -1,7 +1,9 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <memory>
 #include <span>
 #include <string_view>
@@ -22,8 +24,14 @@ public:
         return getResource(pPath);
     }
 
-    [[nodiscard]] virtual void *getResource(std::uint16_t) const {
-        return nullptr;
+    [[nodiscard]] virtual void *getResource(std::uint16_t id) const {
+        const auto *entry = mArchive == nullptr ? nullptr : mArchive->find_by_file_id(id);
+        if (entry == nullptr) {
+            return nullptr;
+        }
+
+        const auto data = mArchive->file_data(*entry);
+        return data.empty() ? nullptr : const_cast<std::uint8_t *>(data.data());
     }
 
     [[nodiscard]] virtual std::uint32_t getResSize(const void *pResource) const {
@@ -45,12 +53,39 @@ public:
         return mArchive == nullptr ? 0U : static_cast<std::uint32_t>(mArchive->entries().size());
     }
 
+    [[nodiscard]] virtual std::uint32_t countFile(const char *pDirectory) const {
+        return mArchive == nullptr || pDirectory == nullptr ? 0U : mArchive->count_directory_files(pDirectory);
+    }
+
+    [[nodiscard]] virtual std::uint32_t readResource(void *pBuffer, std::uint32_t bufferSize, const char *pPath) const {
+        const auto data = resource_data(pPath == nullptr ? std::string_view{} : std::string_view(pPath));
+        if (data.empty() || pBuffer == nullptr || bufferSize == 0U) {
+            return 0U;
+        }
+
+        const auto copy_size = std::min<std::size_t>(bufferSize, data.size());
+        std::memcpy(pBuffer, data.data(), copy_size);
+        return static_cast<std::uint32_t>(copy_size);
+    }
+
+    [[nodiscard]] virtual std::uint32_t readResource(void *pBuffer, std::uint32_t bufferSize, std::uint16_t fileId) const {
+        const auto *entry = mArchive == nullptr ? nullptr : mArchive->find_by_file_id(fileId);
+        if (entry == nullptr || pBuffer == nullptr || bufferSize == 0U) {
+            return 0U;
+        }
+
+        const auto data = mArchive->file_data(*entry);
+        const auto copy_size = std::min<std::size_t>(bufferSize, data.size());
+        std::memcpy(pBuffer, data.data(), copy_size);
+        return static_cast<std::uint32_t>(copy_size);
+    }
+
     [[nodiscard]] virtual bool contains(const char *pPath) const {
         return mArchive != nullptr && pPath != nullptr && mArchive->contains_resource(pPath);
     }
 
 protected:
-    explicit JKRArchive(const smgpc::compat::RarcArchive *archive)
+    explicit JKRArchive(const smgpc::resource::RarcArchive *archive)
         : mArchive(archive) {
     }
 
@@ -67,20 +102,20 @@ protected:
         return mArchive->file_data(*entry);
     }
 
-    const smgpc::compat::RarcArchive *mArchive = nullptr;
+    const smgpc::resource::RarcArchive *mArchive = nullptr;
 };
 
 class JKRMemArchive final : public JKRArchive {
 public:
-    explicit JKRMemArchive(const smgpc::compat::RarcArchive &archive)
+    explicit JKRMemArchive(const smgpc::resource::RarcArchive &archive)
         : JKRArchive(&archive) {
     }
 
-    explicit JKRMemArchive(smgpc::compat::RarcArchive &&archive)
-        : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::compat::RarcArchive>(std::move(archive))) {
+    explicit JKRMemArchive(smgpc::resource::RarcArchive &&archive)
+        : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::resource::RarcArchive>(std::move(archive))) {
         mArchive = mOwnedArchive.get();
     }
 
 private:
-    std::unique_ptr<smgpc::compat::RarcArchive> mOwnedArchive;
+    std::unique_ptr<smgpc::resource::RarcArchive> mOwnedArchive;
 };

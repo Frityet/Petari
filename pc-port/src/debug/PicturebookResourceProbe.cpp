@@ -57,15 +57,15 @@ namespace {
         return smgpc::debug::disc_files_root() / std::filesystem::path(std::string(relative_path));
     }
 
-    [[nodiscard]] smgpc::compat::RarcArchive load_archive(std::string_view relative_path) {
-        return smgpc::compat::RarcArchive::from_file(disc_path(relative_path));
+    [[nodiscard]] smgpc::resource::RarcArchive load_archive(std::string_view relative_path) {
+        return smgpc::resource::RarcArchive::from_file(disc_path(relative_path));
     }
 
-    [[nodiscard]] bool entry_path_ends_with(const smgpc::compat::RarcEntry &entry, std::string_view suffix) {
+    [[nodiscard]] bool entry_path_ends_with(const smgpc::resource::RarcEntry &entry, std::string_view suffix) {
         return entry.path.size() >= suffix.size() && std::string_view(entry.path).ends_with(suffix);
     }
 
-    [[nodiscard]] std::uint64_t visible_pixel_count(const smgpc::compat::DecodedTexture &texture) {
+    [[nodiscard]] std::uint64_t visible_pixel_count(const smgpc::resource::DecodedTexture &texture) {
         auto count = std::uint64_t{};
         for (auto offset = std::size_t{}; offset < texture.rgba.size(); offset += 4U) {
             if (texture.rgba[offset] != 0U || texture.rgba[offset + 1U] != 0U || texture.rgba[offset + 2U] != 0U ||
@@ -80,18 +80,18 @@ namespace {
         std::size_t count = 0U;
         std::uint16_t first_width = 0U;
         std::uint16_t first_height = 0U;
-        smgpc::compat::TplTextureFormat first_format = smgpc::compat::TplTextureFormat::I4;
+        smgpc::resource::TplTextureFormat first_format = smgpc::resource::TplTextureFormat::I4;
         std::uint64_t visible_pixels = 0U;
     };
 
-    [[nodiscard]] BtiAggregate decode_bti_entries(const smgpc::compat::RarcArchive &archive) {
+    [[nodiscard]] BtiAggregate decode_bti_entries(const smgpc::resource::RarcArchive &archive) {
         auto aggregate = BtiAggregate{};
         for (const auto &entry : archive.entries()) {
             if (!entry_path_ends_with(entry, ".bti")) {
                 continue;
             }
 
-            const auto texture = smgpc::compat::decode_bti_texture(archive.file_data(entry));
+            const auto texture = smgpc::resource::decode_bti_texture(archive.file_data(entry));
             require(!texture.image.rgba.empty(), "BTI decode produced an empty image");
             if (aggregate.count == 0U) {
                 aggregate.first_width = texture.width;
@@ -104,7 +104,7 @@ namespace {
         return aggregate;
     }
 
-    [[nodiscard]] std::size_t brlan_target_count(const smgpc::compat::BrlanAnimation &animation) {
+    [[nodiscard]] std::size_t brlan_target_count(const smgpc::layout::BrlanAnimation &animation) {
         auto count = std::size_t{};
         for (const auto &content : animation.contents) {
             for (const auto &info : content.infos) {
@@ -114,7 +114,7 @@ namespace {
         return count;
     }
 
-    [[nodiscard]] std::size_t brlan_key_count(const smgpc::compat::BrlanAnimation &animation) {
+    [[nodiscard]] std::size_t brlan_key_count(const smgpc::layout::BrlanAnimation &animation) {
         auto count = std::size_t{};
         for (const auto &content : animation.contents) {
             for (const auto &info : content.infos) {
@@ -133,7 +133,7 @@ namespace {
         add_line(report, "archive\t", relative_path, "\tentries\t", archive.entries().size());
 
         require(archive.contains(brlyt_path), "layout archive is missing required BRLYT");
-        const auto layout = smgpc::compat::parse_brlyt_layout(archive.file_data(brlyt_path));
+        const auto layout = smgpc::layout::parse_brlyt_layout(archive.file_data(brlyt_path));
         require(!layout.panes.empty(), "BRLYT did not expose any panes");
         require(!layout.materials.empty(), "BRLYT did not expose any materials");
         add_line(report, "layout\t", relative_path, "\t", brlyt_path, "\tpanes\t", layout.panes.size(), "\tpictures\t", layout.pictures.size(),
@@ -142,7 +142,7 @@ namespace {
 
         for (const auto brlan_path : brlan_paths) {
             require(archive.contains(brlan_path), "layout archive is missing required BRLAN");
-            const auto animation = smgpc::compat::parse_brlan_animation(archive.file_data(brlan_path));
+            const auto animation = smgpc::layout::parse_brlan_animation(archive.file_data(brlan_path));
             require(!animation.contents.empty(), "BRLAN did not expose animation contents");
             add_line(report, "animation\t", relative_path, "\t", brlan_path, "\tframes\t", animation.frame_size, "\tloop\t",
                      animation.loop ? 1 : 0, "\tcontents\t", animation.contents.size(), "\ttargets\t", brlan_target_count(animation),
@@ -177,7 +177,7 @@ namespace {
     void probe_rosetta_picturebook_model(std::vector<std::string> &report) {
         const auto archive = load_archive("ObjectData/RosettaPictureBook.arc");
         require(archive.contains("rosettapicturebook.bdl"), "RosettaPictureBook.arc is missing rosettapicturebook.bdl");
-        const auto model = smgpc::compat::inspect_j3d_model(archive.file_data("rosettapicturebook.bdl"));
+        const auto model = smgpc::render::inspect_j3d_model(archive.file_data("rosettapicturebook.bdl"));
         require(model.section_count > 0U, "RosettaPictureBook model did not expose any J3D sections");
         add_line(report, "j3d_model\tObjectData/RosettaPictureBook.arc\trosettapicturebook.bdl\tsections\t", model.section_count, "\tjoints\t",
                  model.joints.has_value() ? model.joints->joint_count : 0U, "\tshapes\t",

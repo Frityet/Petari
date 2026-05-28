@@ -72,7 +72,7 @@ namespace {
     [[nodiscard]] int run_probe() {
         auto logger = smgpc::logging::create_default_logger();
         auto window = ProbeWindowService();
-        auto runtime = smgpc::compat::RuntimeContext(*logger, window);
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
 
         const auto title_logo = runtime.find_layout_archive("TitleLogo");
         const auto press_start = runtime.find_layout_archive("PressStart");
@@ -81,8 +81,8 @@ namespace {
             return 1;
         }
 
-        const auto title_logo_archive = smgpc::compat::RarcArchive::from_file(*title_logo);
-        const auto press_start_archive = smgpc::compat::RarcArchive::from_file(*press_start);
+        const auto title_logo_archive = smgpc::resource::RarcArchive::from_file(*title_logo);
+        const auto press_start_archive = smgpc::resource::RarcArchive::from_file(*press_start);
         if (!title_logo_archive.contains("blyt/titlelogo.brlyt") || !title_logo_archive.contains("anim/appear.brlan") || !title_logo_archive.contains("anim/wait.brlan") || !title_logo_archive.contains("anim/decide.brlan")) {
             logger->fatal(smgpc::logging::Category::APP, smgpc::logging::Message{"TitleLogo.arc does not contain the expected original title layout/animation files"});
             return 1;

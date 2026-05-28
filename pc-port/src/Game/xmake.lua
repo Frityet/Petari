@@ -7,7 +7,7 @@ target("smg-pc-game")
     add_files("../runtime/**.cpp")
     add_files("../scene/**.cpp")
     add_files {
-        "../render/EffectResourceCompat.cpp",
+        "../render/effects/EffectResource.cpp",
         "../render/GXFrameBuffer.cpp",
         "../render/GXState.cpp",
         "../render/J3dAnimation.cpp",
@@ -17,8 +17,8 @@ target("smg-pc-game")
         "../render/J3dModelRenderer.cpp",
         "../render/J3dTexture.cpp",
         "../render/JMathTrig.cpp",
-        "../render/LightDataCompat.cpp",
-        "../render/LiveActorModelCompat.cpp"
+        "../render/light/LightData.cpp",
+        "../render/live_actor/LiveActorModel.cpp"
     }
     add_headerfiles("**.hpp")
     add_headerfiles("../camera/**.hpp")
@@ -27,7 +27,7 @@ target("smg-pc-game")
     add_headerfiles("../runtime/**.hpp")
     add_headerfiles("../scene/**.hpp")
     add_headerfiles {
-        "../render/EffectResourceCompat.hpp",
+        "../render/effects/EffectResource.hpp",
         "../render/GXState.hpp",
         "../render/J3dAnimation.hpp",
         "../render/J3dMaterialRuntime.hpp",
@@ -36,8 +36,8 @@ target("smg-pc-game")
         "../render/J3dModelRenderer.hpp",
         "../render/J3dTexture.hpp",
         "../render/JMathTrig.hpp",
-        "../render/LightDataCompat.hpp",
-        "../render/LiveActorModelCompat.hpp"
+        "../render/light/LightData.hpp",
+        "../render/live_actor/LiveActorModel.hpp"
     }
     add_includedirs("../", { public = true })
     add_deps {

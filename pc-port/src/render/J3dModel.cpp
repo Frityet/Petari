@@ -7,7 +7,7 @@
 #include <limits>
 #include <stdexcept>
 
-namespace smgpc::compat {
+namespace smgpc::render {
     namespace {
 
         constexpr auto J3D1_MAGIC = std::uint32_t{0x4a334431U};
@@ -1778,4 +1778,4 @@ namespace smgpc::compat {
         }
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

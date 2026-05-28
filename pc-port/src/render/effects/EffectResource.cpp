@@ -1,4 +1,4 @@
-#include "render/EffectResourceCompat.hpp"
+#include "render/effects/EffectResource.hpp"
 
 #include <algorithm>
 #include <bit>
@@ -8,7 +8,7 @@
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::render::effects {
     namespace {
         constexpr auto JPAC_MAGIC = std::uint32_t{0x4a504143U};
         constexpr auto JPAC_VERSION_210 = std::uint32_t{0x322d3130U};
@@ -117,15 +117,15 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] std::string get_string_or_empty(const BcsvTable &table, std::size_t row, std::string_view name) {
+        [[nodiscard]] std::string get_string_or_empty(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view name) {
             return table.get_string(row, name).value_or(std::string{});
         }
 
-        [[nodiscard]] std::int32_t get_s32_or(const BcsvTable &table, std::size_t row, std::string_view name, std::int32_t fallback) {
+        [[nodiscard]] std::int32_t get_s32_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view name, std::int32_t fallback) {
             return table.get_s32(row, name).value_or(fallback);
         }
 
-        [[nodiscard]] float get_float_or(const BcsvTable &table, std::size_t row, std::string_view name, float fallback) {
+        [[nodiscard]] float get_float_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view name, float fallback) {
             return table.get_float(row, name).value_or(fallback);
         }
 
@@ -289,7 +289,7 @@ namespace smgpc::compat {
 
     }  // namespace
 
-    EffectResourceLibrary EffectResourceLibrary::from_archive(const RarcArchive &archive) {
+    EffectResourceLibrary EffectResourceLibrary::from_archive(const smgpc::resource::RarcArchive &archive) {
         auto library = EffectResourceLibrary{};
         library.parse_particle_names(archive.file_data("particlenames.bcsv"));
         library.parse_auto_effect_list(archive.file_data("autoeffectlist.bcsv"));
@@ -395,7 +395,7 @@ namespace smgpc::compat {
     }
 
     void EffectResourceLibrary::parse_particle_names(std::span<const std::uint8_t> data) {
-        const auto table = BcsvTable::from_bytes(data);
+        const auto table = smgpc::resource::BcsvTable::from_bytes(data);
         for (auto row = std::size_t{}; row < table.entry_count(); ++row) {
             const auto name = table.get_string(row, "name");
             const auto id = table.get_s32(row, "id");
@@ -410,10 +410,10 @@ namespace smgpc::compat {
     }
 
     void EffectResourceLibrary::parse_auto_effect_list(std::span<const std::uint8_t> data) {
-        const auto table = BcsvTable::from_bytes(data);
+        const auto table = smgpc::resource::BcsvTable::from_bytes(data);
         _auto_effects.reserve(table.entry_count());
         for (auto row = std::size_t{}; row < table.entry_count(); ++row) {
-            auto auto_effect = AutoEffectInfoCompat{
+            auto auto_effect = AutoEffectInfo{
                 .row_index = static_cast<std::uint32_t>(row),
                 .group_name = get_string_or_empty(table, row, "GroupName"),
                 .unique_name = get_string_or_empty(table, row, "UniqueName"),
@@ -537,12 +537,12 @@ namespace smgpc::compat {
                 throw std::runtime_error("JPC texture size outside buffer");
             }
 
-            const auto format = static_cast<TplTextureFormat>(data[offset + 0x20U]);
+            const auto format = static_cast<smgpc::resource::TplTextureFormat>(data[offset + 0x20U]);
             const auto width = read_be16(data, offset + 0x22U);
             const auto height = read_be16(data, offset + 0x24U);
-            auto image = DecodedTexture{};
+            auto image = smgpc::resource::DecodedTexture{};
             if (offset + 0x40U <= offset + texture_size) {
-                image = decode_raw_gx_texture(data.subspan(offset + 0x40U, texture_size - 0x40U), width, height, format);
+                image = smgpc::resource::decode_raw_gx_texture(data.subspan(offset + 0x40U, texture_size - 0x40U), width, height, format);
             }
 
             _textures.push_back(JpcTextureMetadata{
@@ -562,7 +562,7 @@ namespace smgpc::compat {
     }
 
     void EffectResourceLibrary::append_particle_resolution(std::vector<ResolvedEffectResource> &out, std::string_view requested_name,
-                                                           std::string_view particle_name, const AutoEffectInfoCompat *auto_effect) const {
+                                                           std::string_view particle_name, const AutoEffectInfo *auto_effect) const {
         const auto user_index = find_particle_user_index(particle_name);
         if (!user_index.has_value()) {
             return;
@@ -600,7 +600,7 @@ namespace smgpc::compat {
     }
 
     std::vector<ResolvedEffectResource> EffectResourceLibrary::resolve_particle_token(std::string_view requested_name,
-                                                                                      const AutoEffectInfoCompat *auto_effect) const {
+                                                                                      const AutoEffectInfo *auto_effect) const {
         auto out = std::vector<ResolvedEffectResource>{};
         append_particle_resolution(out, requested_name, requested_name, auto_effect);
         if (!out.empty() || has_trailing_two_digits(requested_name)) {
@@ -618,4 +618,4 @@ namespace smgpc::compat {
         return out;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render::effects

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::layout {
 
     struct BrlanPaneFrame {
         std::optional<float> translate_x;
@@ -27,6 +27,16 @@ namespace smgpc::compat {
     };
 
     struct BrlanAnimation {
+        struct GroupRef {
+            std::string name;
+            std::uint8_t flag = 0U;
+        };
+
+        struct ShareInfo {
+            std::string source_pane_name;
+            std::string target_group_name;
+        };
+
         struct StepKey {
             float frame = 0.0F;
             std::uint16_t value = 0U;
@@ -57,6 +67,13 @@ namespace smgpc::compat {
 
         std::uint16_t frame_size = 0U;
         bool loop = false;
+        std::string tag_name;
+        std::uint16_t tag_order = 0U;
+        std::int16_t tag_start_frame = 0;
+        std::int16_t tag_end_frame = 0;
+        std::uint8_t tag_flag = 0U;
+        std::vector<GroupRef> group_refs;
+        std::vector<ShareInfo> share_infos;
         std::vector<Content> contents;
 
         [[nodiscard]] BrlanPaneFrame pane_frame(std::string_view pane_name, float frame) const;
@@ -65,4 +82,4 @@ namespace smgpc::compat {
 
     [[nodiscard]] BrlanAnimation parse_brlan_animation(std::span<const std::uint8_t> data);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::layout

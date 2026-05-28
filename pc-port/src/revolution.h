@@ -181,6 +181,42 @@ struct _GXRenderModeObj {
 
 using GXRenderModeObj = _GXRenderModeObj;
 
+constexpr u32 VI_INTERLACE = 0U;
+constexpr u32 VI_NON_INTERLACE = 1U;
+constexpr u32 VI_PROGRESSIVE = 2U;
+
+constexpr u32 VI_NTSC = 0U;
+constexpr u32 VI_PAL = 1U;
+constexpr u32 VI_MPAL = 2U;
+constexpr u32 VI_DEBUG = 3U;
+constexpr u32 VI_DEBUG_PAL = 4U;
+constexpr u32 VI_EURGB60 = 5U;
+
+[[nodiscard]] constexpr u32 VI_TVMODE(u32 format, u32 scan_mode) {
+    return (format << 2U) + scan_mode;
+}
+
+using VITVMode = u32;
+using VIRetraceCallback = void (*)(u32 retrace_count);
+
+constexpr VITVMode VI_TVMODE_NTSC_INT = VI_TVMODE(VI_NTSC, VI_INTERLACE);
+constexpr VITVMode VI_TVMODE_NTSC_DS = VI_TVMODE(VI_NTSC, VI_NON_INTERLACE);
+constexpr VITVMode VI_TVMODE_NTSC_PROG = VI_TVMODE(VI_NTSC, VI_PROGRESSIVE);
+constexpr VITVMode VI_TVMODE_PAL_INT = VI_TVMODE(VI_PAL, VI_INTERLACE);
+constexpr VITVMode VI_TVMODE_PAL_DS = VI_TVMODE(VI_PAL, VI_NON_INTERLACE);
+constexpr VITVMode VI_TVMODE_EURGB60_INT = VI_TVMODE(VI_EURGB60, VI_INTERLACE);
+constexpr VITVMode VI_TVMODE_EURGB60_DS = VI_TVMODE(VI_EURGB60, VI_NON_INTERLACE);
+constexpr VITVMode VI_TVMODE_EURGB60_PROG = VI_TVMODE(VI_EURGB60, VI_PROGRESSIVE);
+constexpr VITVMode VI_TVMODE_MPAL_INT = VI_TVMODE(VI_MPAL, VI_INTERLACE);
+constexpr VITVMode VI_TVMODE_MPAL_DS = VI_TVMODE(VI_MPAL, VI_NON_INTERLACE);
+constexpr VITVMode VI_TVMODE_MPAL_PROG = VI_TVMODE(VI_MPAL, VI_PROGRESSIVE);
+
+constexpr u32 VI_XFBMODE_SF = 0U;
+constexpr u32 VI_XFBMODE_DF = 1U;
+
+constexpr u32 VI_FIELD_ABOVE = 0U;
+constexpr u32 VI_FIELD_BELOW = 1U;
+
 enum _GXFBClamp : u32 {
     GX_CLAMP_NONE = 0,
     GX_CLAMP_TOP = 1,
@@ -275,12 +311,49 @@ struct KPADStatus {
     s32 dpd_valid_fg = 0;
 };
 
+struct DVDCommandBlock;
+struct DVDFileInfo;
+using DVDCBCallback = void (*)(s32 result, DVDCommandBlock *block);
+using DVDCallback = void (*)(s32 result, DVDFileInfo *file_info);
+
+struct DVDCommandBlock {
+    u32 command = 0U;
+    s32 state = 0;
+    u32 offset = 0U;
+    u32 length = 0U;
+    void *addr = nullptr;
+    u32 curr_transfer_size = 0U;
+    u32 transferred_size = 0U;
+    DVDCBCallback callback = nullptr;
+    void *user_data = nullptr;
+};
+
 struct DVDFileInfo {
+    DVDCommandBlock cb{};
     s32 entry_num = -1;
     u32 length = 0U;
     u32 position = 0U;
+    DVDCallback callback = nullptr;
     void *internal = nullptr;
 };
+
+struct DVDDir {
+    u32 entry_num = 0U;
+    u32 location = 0U;
+    u32 next = 0U;
+    void *internal = nullptr;
+};
+
+struct DVDDirEntry {
+    u32 entry_num = 0U;
+    BOOL is_dir = FALSE;
+    char *name = nullptr;
+};
+
+constexpr s32 DVD_STATE_END = 0;
+constexpr s32 DVD_STATE_BUSY = 1;
+constexpr s32 DVD_STATE_FATAL_ERROR = -1;
+constexpr s32 DVD_RESULT_CANCELED = -3;
 
 struct OSCalendarTime {
     s32 sec = 0;
@@ -296,14 +369,41 @@ struct OSCalendarTime {
 };
 
 [[nodiscard]] OSTime OSGetTime();
+[[nodiscard]] u32 OSGetTick();
 [[nodiscard]] s64 OSTicksToSeconds(OSTime ticks);
+[[nodiscard]] s64 OSTicksToMilliseconds(OSTime ticks);
+[[nodiscard]] s64 OSTicksToMicroseconds(OSTime ticks);
+[[nodiscard]] OSTime OSSecondsToTicks(s64 seconds);
 void OSTicksToCalendarTime(OSTime ticks, OSCalendarTime *pTime);
+void VIInit();
+void VIConfigure(const GXRenderModeObj *render_mode);
+void VIConfigurePan(u16 x_origin, u16 y_origin, u16 width, u16 height);
+[[nodiscard]] u32 VIGetDTVStatus();
+[[nodiscard]] u32 VIGetTvFormat();
+[[nodiscard]] u32 VIGetCurrentLine();
+[[nodiscard]] u32 VIGetScanMode();
+void VISetBlack(BOOL black);
+void VIFlush();
+void VIWaitForRetrace();
+[[nodiscard]] u32 VIGetRetraceCount();
+void VISetNextFrameBuffer(void *frame_buffer);
+[[nodiscard]] void *VIGetNextFrameBuffer();
+[[nodiscard]] BOOL VIEnableDimming(BOOL enabled);
+[[nodiscard]] BOOL VIResetDimmingCount();
 [[nodiscard]] s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length);
 [[nodiscard]] s32 DVDConvertPathToEntrynum(const char *path);
 [[nodiscard]] BOOL DVDOpen(const char *path, DVDFileInfo *file_info);
+[[nodiscard]] BOOL DVDOpenDir(const char *path, DVDDir *dir);
+[[nodiscard]] BOOL DVDReadDir(DVDDir *dir, DVDDirEntry *entry);
+[[nodiscard]] BOOL DVDCloseDir(DVDDir *dir);
 [[nodiscard]] BOOL DVDClose(DVDFileInfo *file_info);
 [[nodiscard]] u32 DVDGetLength(const DVDFileInfo *file_info);
 [[nodiscard]] s32 DVDReadPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, s32 priority);
+[[nodiscard]] BOOL DVDReadAsyncPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, DVDCallback callback,
+                                    s32 priority);
+[[nodiscard]] s32 DVDGetCommandBlockStatus(const DVDCommandBlock *block);
+[[nodiscard]] s32 DVDGetDriveStatus();
+[[nodiscard]] u32 __DVDGetCoverStatus();
 void GXSetDispCopySrc(u16 left, u16 top, u16 width, u16 height);
 void GXSetTexCopySrc(u16 left, u16 top, u16 width, u16 height);
 void GXSetDispCopyDst(u16 width, u16 height);

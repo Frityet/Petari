@@ -8,7 +8,7 @@
 namespace MR {
 
     void connectToScene(NameObj* pObj, s32 movementType, s32 calcAnimType, s32 drawBufferType, s32 drawType) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pObj != nullptr) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pObj != nullptr) {
             if (auto* actor = dynamic_cast< LiveActor* >(pObj); actor != nullptr && drawBufferType >= 0) {
                 runtime->register_live_actor_model(*actor, movementType, calcAnimType, drawBufferType, drawType);
                 return;
@@ -23,13 +23,13 @@ namespace MR {
     }
 
     void disconnectToScene(NameObj* pObj) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pObj != nullptr) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pObj != nullptr) {
             runtime->scheduler().disconnect_name_obj(*pObj);
         }
     }
 
     void connectToSceneSky(LiveActor* pActor) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr) {
             runtime->register_sky_actor(*pActor);
         }
     }

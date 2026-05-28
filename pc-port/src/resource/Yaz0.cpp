@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace smgpc::compat {
+namespace smgpc::resource {
     namespace {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
@@ -82,4 +82,4 @@ namespace smgpc::compat {
         return output;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::resource

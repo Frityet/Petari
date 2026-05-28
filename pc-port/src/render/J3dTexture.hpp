@@ -7,7 +7,7 @@
 
 #include "resource/TplTexture.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::render {
 
     struct J3dTexture {
         std::string name;
@@ -28,9 +28,11 @@ namespace smgpc::compat {
         std::uint8_t image_count = 1U;
         std::int16_t lod_bias = 0;
         std::uint32_t image_data_offset = 0U;
-        DecodedTexture image;
+        std::uint32_t image_data_size = 0U;
+        std::vector<resource::GxTextureImageLevel> image_levels;
+        resource::DecodedTexture image;
     };
 
     [[nodiscard]] std::vector<J3dTexture> extract_j3d_textures(std::span<const std::uint8_t> model_data);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

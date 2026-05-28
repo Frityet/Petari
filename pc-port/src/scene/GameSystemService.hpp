@@ -3,15 +3,18 @@
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 
-namespace smgpc::compat {
-
+namespace smgpc::runtime {
     class RuntimeContext;
+}  // namespace smgpc::runtime
+
+namespace smgpc::scene {
+
     class GameSystemSceneControllerService;
     class SequenceBootService;
 
     class GameSystemService final {
     public:
-        GameSystemService(RuntimeContext &runtime, GameSystemSceneControllerService &scene_controller, SequenceBootService &sequence_boot);
+        GameSystemService(smgpc::runtime::RuntimeContext &runtime, GameSystemSceneControllerService &scene_controller, SequenceBootService &sequence_boot);
         ~GameSystemService();
 
         GameSystemService(const GameSystemService &) = delete;
@@ -20,7 +23,7 @@ namespace smgpc::compat {
         void begin_frame(const render::FrameContext &frame_context);
         void update();
         void draw_3d_normal(render::IRendererEngine &renderer);
-        void draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
+        void draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
         void draw_2d_normal(render::IRendererEngine &renderer);
 
         [[nodiscard]] bool has_boot_requested_initial_stage() const;
@@ -30,9 +33,9 @@ namespace smgpc::compat {
     private:
         void ensure_initial_sequence_requested();
 
-        RuntimeContext &_runtime;
+        smgpc::runtime::RuntimeContext &_runtime;
         GameSystemSceneControllerService &_scene_controller;
         SequenceBootService &_sequence_boot;
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

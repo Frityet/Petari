@@ -14,7 +14,7 @@
 namespace {
 
     [[nodiscard]] std::unordered_map<std::uint32_t, std::string_view> known_field_hashes() {
-        constexpr std::array<std::string_view, 58U> names{
+        constexpr std::array names{
             "version",
             "id",
             "camtype",
@@ -67,17 +67,51 @@ namespace {
             "camendint",
             "evfrm",
             "evpriority",
+            "name",
             "l_id",
             "Obj_arg0",
             "Obj_arg1",
             "Obj_arg2",
             "Obj_arg3",
+            "Obj_arg4",
+            "Obj_arg5",
+            "Obj_arg6",
+            "Obj_arg7",
             "CameraSetId",
+            "Camera_id",
+            "SW_APPEAR",
+            "SW_DEAD",
+            "SW_A",
+            "SW_B",
+            "SW_SLEEP",
+            "FollowId",
+            "GroupId",
+            "ClippingGroupId",
+            "DemoGroupId",
+            "ViewGroupId",
+            "MessageId",
+            "CastId",
+            "ShapeModelNo",
+            "MapParts_ID",
+            "CommonPath_ID",
+            "Path_ID",
+            "ParentID",
+            "DemoName",
+            "TimeSheetName",
+            "pos_x",
+            "pos_y",
+            "pos_z",
+            "dir_x",
+            "dir_y",
+            "dir_z",
+            "scale_x",
+            "scale_y",
+            "scale_z",
         };
 
         auto hashes = std::unordered_map<std::uint32_t, std::string_view>{};
         for (const auto name : names) {
-            hashes.emplace(smgpc::compat::jmap_hash(name), name);
+            hashes.emplace(smgpc::resource::jmap_hash(name), name);
         }
         return hashes;
     }
@@ -102,8 +136,8 @@ namespace {
         return std::filesystem::current_path() / archive_name;
     }
 
-    [[nodiscard]] bool is_string_field(smgpc::compat::BcsvFieldType type) {
-        return type == smgpc::compat::BcsvFieldType::InlineString || type == smgpc::compat::BcsvFieldType::StringOffset;
+    [[nodiscard]] bool is_string_field(smgpc::resource::BcsvFieldType type) {
+        return type == smgpc::resource::BcsvFieldType::InlineString || type == smgpc::resource::BcsvFieldType::StringOffset;
     }
 
 }  // namespace
@@ -114,8 +148,8 @@ int main(int argc, char **argv) try {
         return 1;
     }
 
-    const auto archive = smgpc::compat::RarcArchive::from_file(resolve_archive_path(argv[1]));
-    const auto table = smgpc::compat::BcsvTable::from_bytes(archive.file_data(argv[2]));
+    const auto archive = smgpc::resource::RarcArchive::from_file(resolve_archive_path(argv[1]));
+    const auto table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(argv[2]));
     const auto hashes = known_field_hashes();
 
     std::cout << "entries," << table.entry_count() << ",fields," << table.fields().size() << ",entry_size," << table.entry_size() << '\n';
@@ -130,7 +164,7 @@ int main(int argc, char **argv) try {
             } else {
                 std::cout << value;
             }
-            std::cout << " (type " << smgpc::compat::bcsv_field_type_name(field.type) << ", offs " << field.offset << ")\n";
+            std::cout << " (type " << smgpc::resource::bcsv_field_type_name(field.type) << ", offs " << field.offset << ")\n";
         }
     }
 

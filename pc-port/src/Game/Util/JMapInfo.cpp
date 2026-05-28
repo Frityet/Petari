@@ -9,25 +9,25 @@
 #include <string_view>
 
 namespace {
-    [[nodiscard]] bool valid_entry(const smgpc::compat::BcsvTable* table, int entryIndex) {
+    [[nodiscard]] bool valid_entry(const smgpc::resource::BcsvTable* table, int entryIndex) {
         return table != nullptr && entryIndex >= 0 && static_cast< std::uint32_t >(entryIndex) < table->entry_count();
     }
 
-    [[nodiscard]] s32 jmap_value_type(smgpc::compat::BcsvFieldType type) {
+    [[nodiscard]] s32 jmap_value_type(smgpc::resource::BcsvFieldType type) {
         switch (type) {
-        case smgpc::compat::BcsvFieldType::Int32:
+        case smgpc::resource::BcsvFieldType::Int32:
             return JMAP_VALUE_TYPE_LONG;
-        case smgpc::compat::BcsvFieldType::InlineString:
+        case smgpc::resource::BcsvFieldType::InlineString:
             return JMAP_VALUE_TYPE_STRING;
-        case smgpc::compat::BcsvFieldType::Float:
+        case smgpc::resource::BcsvFieldType::Float:
             return JMAP_VALUE_TYPE_FLOAT;
-        case smgpc::compat::BcsvFieldType::UInt32:
+        case smgpc::resource::BcsvFieldType::UInt32:
             return JMAP_VALUE_TYPE_LONG_2;
-        case smgpc::compat::BcsvFieldType::Int16:
+        case smgpc::resource::BcsvFieldType::Int16:
             return JMAP_VALUE_TYPE_SHORT;
-        case smgpc::compat::BcsvFieldType::Int8:
+        case smgpc::resource::BcsvFieldType::Int8:
             return JMAP_VALUE_TYPE_BYTE;
-        case smgpc::compat::BcsvFieldType::StringOffset:
+        case smgpc::resource::BcsvFieldType::StringOffset:
             return JMAP_VALUE_TYPE_STRING_PTR;
         }
 
@@ -52,11 +52,11 @@ namespace {
     }
 }  // namespace
 
-JMapInfo::JMapInfo(smgpc::compat::BcsvTable table) : mTable(std::make_shared< smgpc::compat::BcsvTable >(std::move(table))) {
+JMapInfo::JMapInfo(smgpc::resource::BcsvTable table) : mTable(std::make_shared< smgpc::resource::BcsvTable >(std::move(table))) {
 }
 
 JMapInfo JMapInfo::from_bcsv(std::span< const std::uint8_t > data) {
-    return JMapInfo(smgpc::compat::BcsvTable::from_bytes(data));
+    return JMapInfo(smgpc::resource::BcsvTable::from_bytes(data));
 }
 
 bool JMapInfo::dataExists() const {
@@ -185,7 +185,7 @@ bool JMapInfo::getSignedValue(int entryIndex, const char* pKey, s32* pValueOut) 
         return false;
     }
 
-    return getSignedValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
+    return getSignedValueByHash(entryIndex, smgpc::resource::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getUnsignedValue(int entryIndex, const char* pKey, u32* pValueOut) const {
@@ -193,7 +193,7 @@ bool JMapInfo::getUnsignedValue(int entryIndex, const char* pKey, u32* pValueOut
         return false;
     }
 
-    return getUnsignedValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
+    return getUnsignedValueByHash(entryIndex, smgpc::resource::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getFloatValue(int entryIndex, const char* pKey, f32* pValueOut) const {
@@ -201,7 +201,7 @@ bool JMapInfo::getFloatValue(int entryIndex, const char* pKey, f32* pValueOut) c
         return false;
     }
 
-    return getFloatValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
+    return getFloatValueByHash(entryIndex, smgpc::resource::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getStringValue(int entryIndex, const char* pKey, const char** pValueOut) const {
@@ -209,7 +209,7 @@ bool JMapInfo::getStringValue(int entryIndex, const char* pKey, const char** pVa
         return false;
     }
 
-    return getStringValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
+    return getStringValueByHash(entryIndex, smgpc::resource::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getSignedValueByHash(int entryIndex, std::uint32_t hash, s32* pValueOut) const {

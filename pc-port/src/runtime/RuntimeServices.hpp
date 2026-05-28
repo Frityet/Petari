@@ -16,20 +16,25 @@
 
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
-#include "render/EffectResourceCompat.hpp"
+#include "render/effects/EffectResource.hpp"
 #include "render/GXState.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/RarcArchive.hpp"
+#include "runtime/SysConfigService.hpp"
 
 class UserFile;
 class LiveActor;
 
-namespace smgpc::compat {
+namespace smgpc::runtime {
 
     struct DvdFileReadTrace {
         std::string requested_path;
+        std::string disc_path;
         std::string resolved_path;
+        s32 entry_num = -1;
         std::size_t byte_count = 0U;
+        std::size_t offset = 0U;
+        s32 priority = 0;
     };
 
     struct DvdArchiveLoadTrace {
@@ -41,35 +46,87 @@ namespace smgpc::compat {
         std::size_t resource_count = 0U;
     };
 
+    struct DvdEntryMetadata {
+        s32 entry_num = -1;
+        std::string disc_path;
+        std::string resolved_path;
+        bool is_directory = false;
+        std::size_t length = 0U;
+    };
+
+    struct DvdDirectoryEntry {
+        s32 entry_num = -1;
+        std::string disc_path;
+        std::string name;
+        bool is_directory = false;
+    };
+
+    struct DvdAsyncReadRequest {
+        std::uint64_t id = 0U;
+        std::string disc_path;
+        s32 entry_num = -1;
+        DVDFileInfo *file_info = nullptr;
+        void *destination = nullptr;
+        std::size_t length = 0U;
+        std::size_t offset = 0U;
+        s32 priority = 0;
+        std::uint64_t submitted_frame = 0U;
+        std::uint64_t completion_frame = 0U;
+        bool completed = false;
+        s32 result = DVD_STATE_BUSY;
+        DVDCallback callback = nullptr;
+    };
+
     class DvdFileSystemService final {
     public:
         explicit DvdFileSystemService(std::filesystem::path root);
 
+        void begin_frame(std::uint64_t frame_index);
         [[nodiscard]] const std::filesystem::path &root() const;
+        [[nodiscard]] std::string normalize_disc_path_string(std::string_view disc_path) const;
         [[nodiscard]] std::filesystem::path resolve(std::string_view disc_path) const;
         [[nodiscard]] bool exists(std::string_view disc_path) const;
+        [[nodiscard]] s32 entry_num(std::string_view disc_path) const;
+        [[nodiscard]] std::optional<DvdEntryMetadata> entry_metadata(std::string_view disc_path) const;
+        [[nodiscard]] std::optional<DvdEntryMetadata> entry_metadata(s32 entry_num) const;
+        [[nodiscard]] std::vector<DvdDirectoryEntry> directory_entries(std::string_view disc_path) const;
         [[nodiscard]] std::optional<std::filesystem::path> find_first(std::initializer_list<std::filesystem::path> candidates) const;
         [[nodiscard]] std::optional<std::filesystem::path> find_layout_archive(std::string_view layout_name) const;
         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
         [[nodiscard]] std::vector<std::uint8_t> read_file(std::string_view disc_path) const;
-        [[nodiscard]] RarcArchive &archive(std::string_view disc_path);
-        [[nodiscard]] RarcArchive &archive_for_path(const std::filesystem::path &path);
+        [[nodiscard]] std::vector<std::uint8_t> read_file_range(std::string_view disc_path, std::size_t offset, std::size_t length,
+                                                                s32 priority) const;
+        [[nodiscard]] std::uint64_t submit_async_read(std::string_view disc_path, DVDFileInfo *file_info, void *destination,
+                                                      std::size_t length, std::size_t offset, s32 priority, DVDCallback callback,
+                                                      std::uint64_t delay_frames = 1U);
+        [[nodiscard]] smgpc::resource::RarcArchive &archive(std::string_view disc_path);
+        [[nodiscard]] smgpc::resource::RarcArchive &archive_for_path(const std::filesystem::path &path);
         [[nodiscard]] std::size_t archive_load_count(std::string_view disc_path) const;
         [[nodiscard]] std::size_t archive_load_count_for_path(const std::filesystem::path &path) const;
         [[nodiscard]] std::size_t cached_archive_count() const;
         [[nodiscard]] std::span<const DvdFileReadTrace> file_read_trace() const;
+        [[nodiscard]] std::span<const DvdAsyncReadRequest> async_read_trace() const;
         [[nodiscard]] std::span<const DvdArchiveLoadTrace> archive_load_trace() const;
         void clear_trace();
 
     private:
         [[nodiscard]] std::filesystem::path normalize_disc_path(std::string_view disc_path) const;
+        void complete_ready_async_reads();
+        void ensure_entry_table() const;
+        [[nodiscard]] static std::string entry_key(const std::filesystem::path &disc_path);
         [[nodiscard]] std::string archive_cache_key_for_path(const std::filesystem::path &path) const;
         [[nodiscard]] std::string archive_cache_key(std::string_view disc_path) const;
-        [[nodiscard]] RarcArchive &archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path);
+        [[nodiscard]] smgpc::resource::RarcArchive &archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path);
 
         std::filesystem::path _root;
-        std::map<std::string, std::unique_ptr<RarcArchive>> _archives;
+        std::map<std::string, std::unique_ptr<smgpc::resource::RarcArchive>> _archives;
         std::map<std::string, std::size_t> _archive_load_counts;
+        std::uint64_t _frame_index = 0U;
+        std::uint64_t _next_async_read_id = 1U;
+        std::vector<DvdAsyncReadRequest> _async_read_trace;
+        mutable bool _entry_table_initialized = false;
+        mutable std::vector<DvdEntryMetadata> _entry_table;
+        mutable std::map<std::string, s32, std::less<>> _entry_num_by_disc_path;
         mutable std::vector<DvdFileReadTrace> _file_read_trace;
         std::vector<DvdArchiveLoadTrace> _archive_load_trace;
     };
@@ -236,7 +293,7 @@ namespace smgpc::compat {
         std::string effect_name;
         std::uint64_t frame_index = 0U;
         std::optional<EffectKeeperRegistration> keeper;
-        std::vector<ResolvedEffectResource> resolved_resources;
+        std::vector<smgpc::render::effects::ResolvedEffectResource> resolved_resources;
     };
 
     enum class EffectHostBindingSource {
@@ -288,7 +345,7 @@ namespace smgpc::compat {
         std::uint64_t start_frame_index = 0U;
         std::optional<EffectKeeperRegistration> keeper;
         std::optional<EffectHostBinding> host_binding;
-        std::vector<ResolvedEffectResource> resolved_resources;
+        std::vector<smgpc::render::effects::ResolvedEffectResource> resolved_resources;
         std::vector<JpcEffectEmitterInstance> emitters;
     };
 
@@ -337,7 +394,7 @@ namespace smgpc::compat {
 
     class EffectService final {
     public:
-        void load_resources(const RarcArchive &archive);
+        void load_resources(const smgpc::resource::RarcArchive &archive);
         void begin_frame(std::uint64_t frame_index);
         void register_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                              std::string_view resource_group_name, bool sort_enabled);
@@ -356,24 +413,24 @@ namespace smgpc::compat {
         [[nodiscard]] std::optional<EffectKeeperRegistration> registered_keeper(std::string_view host_name) const;
         [[nodiscard]] std::optional<EffectHostBinding> host_binding(std::string_view host_name) const;
         [[nodiscard]] std::vector<std::string> active_effects(std::string_view actor_name) const;
-        [[nodiscard]] const EffectResourceLibrary *resource_library() const;
+        [[nodiscard]] const smgpc::render::effects::EffectResourceLibrary *resource_library() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const EffectDrawPacketTrace> draw_packets() const;
 #endif
 
     private:
-        [[nodiscard]] std::vector<ResolvedEffectResource> resolve(std::string_view actor_name, std::string_view effect_name) const;
-        [[nodiscard]] render::TextureHandle texture_handle_for(render::IRendererEngine &renderer, const JpcTextureMetadata &texture);
-        [[nodiscard]] std::vector<JpcEffectEmitterInstance> create_emitters(std::span<const ResolvedEffectResource> resources);
+        [[nodiscard]] std::vector<smgpc::render::effects::ResolvedEffectResource> resolve(std::string_view actor_name, std::string_view effect_name) const;
+        [[nodiscard]] render::TextureHandle texture_handle_for(render::IRendererEngine &renderer, const smgpc::render::effects::JpcTextureMetadata &texture);
+        [[nodiscard]] std::vector<JpcEffectEmitterInstance> create_emitters(std::span<const smgpc::render::effects::ResolvedEffectResource> resources);
         void advance_effects_to_frame(std::uint64_t frame_index);
-        void advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const ResolvedEffectResource &resource, std::uint64_t frame_index);
+        void advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const smgpc::render::effects::ResolvedEffectResource &resource, std::uint64_t frame_index);
 
         std::uint64_t _frame_index = 0U;
         std::vector<EffectEvent> _events;
         std::vector<ActiveEffectInstance> _active_effects;
         std::map<std::string, EffectKeeperRegistration, std::less<>> _registered_keepers;
         std::map<std::string, EffectHostBinding, std::less<>> _host_bindings;
-        std::optional<EffectResourceLibrary> _resource_library;
+        std::optional<smgpc::render::effects::EffectResourceLibrary> _resource_library;
         std::map<std::uint16_t, render::TextureHandle> _texture_handles;
         std::uint32_t _emitter_random_seed = 0U;
 #ifndef NDEBUG
@@ -432,12 +489,47 @@ namespace smgpc::compat {
         std::vector<WipeEvent> _events;
     };
 
+    enum class ImageEffectControlKind {
+        ForceOff,
+        ControlAuto,
+    };
+
+    struct ImageEffectControlEvent {
+        ImageEffectControlKind kind = ImageEffectControlKind::ForceOff;
+        std::uint64_t frame_index = 0U;
+    };
+
+    class ImageEffectService final {
+    public:
+        void begin_frame(std::uint64_t frame_index);
+        void force_off();
+        void set_control_auto();
+
+        [[nodiscard]] bool is_forced_off() const;
+        [[nodiscard]] bool is_control_auto() const;
+        [[nodiscard]] std::span<const ImageEffectControlEvent> events() const;
+
+    private:
+        void push_event(ImageEffectControlKind kind);
+
+        std::uint64_t _frame_index = 0U;
+        bool _forced_off = false;
+        bool _control_auto = true;
+        std::vector<ImageEffectControlEvent> _events;
+    };
+
     enum class StarPointerMode {
         None,
-        Title,
-        FileSelect,
-        SaveLoad,
-        PictureBook,
+        ScreenMenu,
+        TargetSelection,
+        SystemModal,
+        DocumentViewer,
+    };
+
+    enum class StarPointerGuidanceRequest {
+        None,
+        Primary,
+        Secondary,
     };
 
     struct StarPointerModeEvent {
@@ -445,45 +537,138 @@ namespace smgpc::compat {
         std::uint64_t frame_index = 0U;
     };
 
+#ifndef NDEBUG
+    enum class StarPointerTargetEventKind {
+        Enter,
+        Leave,
+        Select,
+    };
+
+    struct StarPointerTargetEvent {
+        StarPointerTargetEventKind kind = StarPointerTargetEventKind::Enter;
+        std::string actor_name;
+        std::uint64_t frame_index = 0U;
+        s32 channel = WPAD_CHAN0;
+        float pointer_x = 0.0F;
+        float pointer_y = 0.0F;
+        float target_x = 0.0F;
+        float target_y = 0.0F;
+        float projected_radius = 0.0F;
+        bool check_z = false;
+    };
+#endif
+
+    struct StarPointerTargetState {
+        const LiveActor *actor = nullptr;
+        float radius = 0.0F;
+        smgpc::camera::CameraParamVec3 offset{};
+#ifndef NDEBUG
+        bool was_pointing = false;
+        std::optional<std::uint64_t> last_select_frame_index{};
+#endif
+    };
+
     class StarPointerService final {
     public:
         void begin_frame(std::uint64_t frame_index);
+        void register_target(const LiveActor &actor, float radius, const smgpc::camera::CameraParamVec3 &offset);
+        void unregister_target(const LiveActor &actor);
+        void set_target_radius(const LiveActor &actor, float radius);
         void start_mode(StarPointerMode mode);
         void set_guidance_active(bool active);
-        void request_file_select_guidance();
-        void request_file_select_copy_guidance();
+        void request_guidance(StarPointerGuidanceRequest request);
 
         [[nodiscard]] StarPointerMode mode() const;
+        [[nodiscard]] bool has_target(const LiveActor &actor) const;
+        [[nodiscard]] bool is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<smgpc::camera::CameraPose> &camera_pose, bool check_z);
         [[nodiscard]] bool is_guidance_active() const;
-        [[nodiscard]] bool is_file_select_guidance_requested() const;
-        [[nodiscard]] bool is_file_select_copy_guidance_requested() const;
+        [[nodiscard]] bool is_guidance_requested(StarPointerGuidanceRequest request) const;
+        [[nodiscard]] std::span<const StarPointerGuidanceRequest> guidance_requests() const;
         [[nodiscard]] std::span<const StarPointerModeEvent> mode_events() const;
+#ifndef NDEBUG
+        [[nodiscard]] std::span<const StarPointerTargetEvent> target_events() const;
+#endif
 
     private:
+#ifndef NDEBUG
+        void record_target_pointing_sample(StarPointerTargetState &target, bool pointing, const WpadPointerState &pointer,
+                                           bool has_projection, float target_x, float target_y, float projected_radius, bool check_z,
+                                           bool select_triggered);
+#endif
+
         std::uint64_t _frame_index = 0U;
         StarPointerMode _mode = StarPointerMode::None;
         bool _guidance_active = false;
-        bool _file_select_guidance_requested = false;
-        bool _file_select_copy_guidance_requested = false;
+        std::vector<StarPointerGuidanceRequest> _guidance_requests;
+        std::map<const LiveActor *, StarPointerTargetState> _targets;
         std::vector<StarPointerModeEvent> _mode_events;
+#ifndef NDEBUG
+        std::vector<StarPointerTargetEvent> _target_events;
+#endif
     };
 
     class CameraSystemService final {
     public:
+        enum class ShakeRequestKind {
+            Normal,
+        };
+
+        struct ShakeRequestEvent {
+            ShakeRequestKind kind = ShakeRequestKind::Normal;
+            std::uint64_t frame_index = 0U;
+        };
+
+        void begin_frame(std::uint64_t frame_index);
         void reset_camera_man();
         void request_normal_shake();
         void pause_on_camera_director();
         void pause_off_camera_director();
+        void declare_event_camera_programmable(std::string_view name);
+        void start_global_event_camera_no_target(std::string_view name);
+        void end_global_event_camera(std::string_view name);
+        [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
+                                                                                    const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
+                                                                                    bool do_zero_w_offset);
+        [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_fovy(std::string_view name, float fovy_degrees);
 
         [[nodiscard]] std::uint32_t reset_camera_man_count() const;
         [[nodiscard]] std::uint32_t normal_shake_request_count() const;
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
+        [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose() const;
+        [[nodiscard]] std::optional<std::string_view> active_programmable_camera_name() const;
+        [[nodiscard]] std::uint32_t programmable_camera_declare_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_start_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_end_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_param_count() const;
+        [[nodiscard]] std::uint32_t programmable_camera_fovy_count() const;
+        [[nodiscard]] std::span<const ShakeRequestEvent> shake_request_events() const;
 
     private:
+        struct ProgrammableCameraEventState {
+            smgpc::camera::CameraPose pose{};
+            bool declared = false;
+            bool active = false;
+            bool has_pose = false;
+        };
+
+        [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
+        [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
+        [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose_for(std::string_view name) const;
+        void push_shake_event(ShakeRequestKind kind);
+
+        std::uint64_t _frame_index = 0U;
         std::uint32_t _reset_camera_man_count = 0U;
         std::uint32_t _normal_shake_request_count = 0U;
         std::uint32_t _camera_director_pause_count = 0U;
+        std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
+        std::string _active_programmable_camera_name;
+        std::uint32_t _programmable_camera_declare_count = 0U;
+        std::uint32_t _programmable_camera_start_count = 0U;
+        std::uint32_t _programmable_camera_end_count = 0U;
+        std::uint32_t _programmable_camera_param_count = 0U;
+        std::uint32_t _programmable_camera_fovy_count = 0U;
+        std::vector<ShakeRequestEvent> _shake_request_events;
     };
 
     class PlayerSystemService final {
@@ -517,6 +702,7 @@ namespace smgpc::compat {
 
     enum class RumbleRequestKind {
         Strong,
+        Middle,
         Weak,
     };
 
@@ -530,6 +716,7 @@ namespace smgpc::compat {
     public:
         void begin_frame(std::uint64_t frame_index);
         void request_strong(s32 channel);
+        void request_middle(s32 channel);
         void request_weak(s32 channel);
 
         [[nodiscard]] std::span<const RumbleRequestEvent> events() const;
@@ -564,6 +751,76 @@ namespace smgpc::compat {
         std::vector<SequenceRequestEvent> _events;
     };
 
+    enum class NandOperationKind {
+        Write,
+        Read,
+        Delete,
+        Rename,
+        Check,
+    };
+
+    struct NandFileMetadata {
+        std::string path;
+        u8 permission = 0x3CU;
+        u8 attribute = 0U;
+        std::size_t size = 0U;
+    };
+
+    struct NandCheckResult {
+        s32 result = NAND_RESULT_OK;
+        u32 free_blocks = 0U;
+        u32 free_inodes = 0U;
+    };
+
+    struct NandOperationTrace {
+        NandOperationKind kind = NandOperationKind::Read;
+        std::string path;
+        std::string destination_path;
+        s32 result = NAND_RESULT_OK;
+        std::size_t byte_count = 0U;
+        u8 permission = 0U;
+        u8 attribute = 0U;
+        u32 requested_blocks = 0U;
+        u32 requested_inodes = 0U;
+        u32 free_blocks = 0U;
+        u32 free_inodes = 0U;
+    };
+
+    class NandFileSystemService final {
+    public:
+        [[nodiscard]] static std::string title_data_root();
+        [[nodiscard]] static std::string rfl_db_path();
+        [[nodiscard]] static std::string file_name(std::string_view path);
+
+        [[nodiscard]] std::string normalize_path(std::string_view path) const;
+        void write_file(std::string_view path, std::span<const std::uint8_t> bytes, u8 permission = 0x3CU, u8 attribute = 0U);
+        [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view path) const;
+        [[nodiscard]] bool exists(std::string_view path) const;
+        bool erase(std::string_view path);
+        [[nodiscard]] s32 rename(std::string_view source_path, std::string_view destination_path);
+        [[nodiscard]] NandCheckResult check(u32 requested_blocks, u32 requested_inodes);
+        [[nodiscard]] std::optional<NandFileMetadata> metadata(std::string_view path) const;
+        [[nodiscard]] std::span<const NandOperationTrace> trace() const;
+        void clear();
+        void clear_trace();
+
+    private:
+        struct StoredFile {
+            std::vector<std::uint8_t> bytes;
+            u8 permission = 0x3CU;
+            u8 attribute = 0U;
+        };
+
+        void push_trace(NandOperationTrace trace) const;
+        [[nodiscard]] u32 used_blocks() const;
+        [[nodiscard]] u32 used_inodes() const;
+
+        std::map<std::string, StoredFile, std::less<>> _files;
+        u32 _quota_blocks = 4096U;
+        u32 _quota_inodes = 256U;
+        mutable std::vector<NandOperationTrace> _trace;
+    };
+
     class SaveDataService final {
     public:
         struct SlotState {
@@ -587,11 +844,17 @@ namespace smgpc::compat {
         };
 
         SaveDataService();
+        explicit SaveDataService(SysConfigService &sys_config);
 
+        void set_sys_config_service(SysConfigService &sys_config);
+        [[nodiscard]] SysConfigService &sys_config();
+        [[nodiscard]] const SysConfigService &sys_config() const;
         void write_file(std::string_view name, std::span<const std::uint8_t> bytes);
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view name) const;
         void write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes);
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_nand_file(std::string_view name) const;
+        [[nodiscard]] NandFileSystemService &nand();
+        [[nodiscard]] const NandFileSystemService &nand() const;
         [[nodiscard]] bool exists(std::string_view name) const;
         bool erase(std::string_view name);
         [[nodiscard]] std::size_t file_count() const;
@@ -617,11 +880,16 @@ namespace smgpc::compat {
         [[nodiscard]] u32 sys_config_sent_bytes() const;
 
     private:
+        enum class ContainerPayloadShape {
+            SourceChunks,
+            GameBinaries,
+        };
+
         [[nodiscard]] std::filesystem::path host_file_path(std::string_view name) const;
         void write_host_file(std::string_view name, std::span<const std::uint8_t> bytes) const;
         void erase_host_file(std::string_view name) const;
         [[nodiscard]] std::optional<std::map<std::string, std::vector<std::uint8_t>>> decode_game_data_container(std::span<const std::uint8_t> bytes) const;
-        [[nodiscard]] std::vector<std::uint8_t> encode_game_data_container() const;
+        [[nodiscard]] std::vector<std::uint8_t> encode_game_data_container(ContainerPayloadShape payload_shape = ContainerPayloadShape::SourceChunks) const;
         void set_slot_state_internal(s32 slot_index, const SlotState &state, bool materialize_files);
         void materialize_slot_files(const SlotState &state);
         void load_slot_states_from_files();
@@ -631,9 +899,9 @@ namespace smgpc::compat {
         std::map<std::string, std::vector<std::uint8_t>> _files;
         std::vector<SlotState> _slot_states;
         std::optional<std::filesystem::path> _host_directory = {};
-        OSTime _sys_config_time_announced = 0;
-        OSTime _sys_config_time_sent = 0;
-        u32 _sys_config_sent_bytes = 0U;
+        SysConfigService _owned_sys_config;
+        SysConfigService *_sys_config = &_owned_sys_config;
+        NandFileSystemService _nand;
         bool _has_valid_game_data_container = false;
     };
 
@@ -641,17 +909,27 @@ namespace smgpc::compat {
     public:
         void set_message(std::string_view tag, std::string_view text);
         void set_message(std::string_view tag, std::u16string_view text);
-        std::size_t load_message_archive(const RarcArchive &archive);
+        std::size_t load_message_archive(const smgpc::resource::RarcArchive &archive);
         [[nodiscard]] std::size_t message_count() const;
         [[nodiscard]] const std::string *message(std::string_view tag) const;
         [[nodiscard]] const std::u16string *message_utf16(std::string_view tag) const;
+        [[nodiscard]] const std::u16string *message_raw_utf16(std::string_view tag) const;
+        [[nodiscard]] const smgpc::resource::BmgMessageInfo *message_info(std::string_view tag) const;
+        [[nodiscard]] const std::vector<smgpc::resource::BmgControlTag> *message_control_tags(std::string_view tag) const;
         [[nodiscard]] std::string message_or(std::string_view tag, std::string_view fallback) const;
         [[nodiscard]] std::u16string message_utf16_or(std::string_view tag, std::u16string_view fallback) const;
+        [[nodiscard]] std::u16string message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const;
+        [[nodiscard]] std::u16string format_message_utf16(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args) const;
+        [[nodiscard]] std::u16string format_message_utf16_or(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args,
+                                                             std::u16string_view fallback) const;
 
     private:
         struct MessageText {
+            std::u16string raw_utf16;
             std::u16string utf16;
             std::string utf8;
+            smgpc::resource::BmgMessageInfo info{};
+            std::vector<smgpc::resource::BmgControlTag> control_tags;
         };
 
         std::map<std::string, MessageText> _messages;
@@ -661,37 +939,14 @@ namespace smgpc::compat {
     public:
         void clear();
         void clear_light(std::size_t index);
-        void set_light(std::size_t index, const GXLightState &light);
+        void set_light(std::size_t index, const smgpc::render::GXLightState &light);
 
-        [[nodiscard]] const GXLightState *light(std::size_t index) const;
-        [[nodiscard]] std::span<const GXLightState> lights() const;
+        [[nodiscard]] const smgpc::render::GXLightState *light(std::size_t index) const;
+        [[nodiscard]] std::span<const smgpc::render::GXLightState> lights() const;
         [[nodiscard]] std::uint8_t loaded_mask() const;
 
     private:
-        std::array<GXLightState, 8U> _lights = {};
+        std::array<smgpc::render::GXLightState, 8U> _lights = {};
     };
 
-    struct RflMiiEntry {
-        s32 index = 0;
-        std::string name;
-    };
-
-    class RflService final {
-    public:
-        RflService();
-
-        void set_initialized(bool initialized);
-        void set_error(bool error);
-        void set_miis(std::vector<RflMiiEntry> miis);
-
-        [[nodiscard]] bool is_initialized() const;
-        [[nodiscard]] bool has_error() const;
-        [[nodiscard]] std::span<const RflMiiEntry> valid_miis() const;
-
-    private:
-        bool _initialized = true;
-        bool _error = false;
-        std::vector<RflMiiEntry> _miis;
-    };
-
-}  // namespace smgpc::compat
+}  // namespace smgpc::runtime

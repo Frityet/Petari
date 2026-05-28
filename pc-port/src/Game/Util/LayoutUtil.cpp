@@ -40,18 +40,18 @@ namespace {
 
     [[nodiscard]] std::u16string runtime_message_or_tag(const char* pMessageId) {
         const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
-            return runtime->messages().message_utf16_or(tag, smgpc::compat::utf16_from_utf8_lossy(tag));
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            return runtime->messages().message_utf16_or(tag, smgpc::resource::utf16_from_utf8_lossy(tag));
         }
-        return smgpc::compat::utf16_from_utf8_lossy(tag);
+        return smgpc::resource::utf16_from_utf8_lossy(tag);
     }
 
     [[nodiscard]] std::u16string runtime_raw_message_or_tag(const char* pMessageId) {
         const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
-            return runtime->messages().message_raw_utf16_or(tag, smgpc::compat::utf16_from_utf8_lossy(tag));
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            return runtime->messages().message_raw_utf16_or(tag, smgpc::resource::utf16_from_utf8_lossy(tag));
         }
-        return smgpc::compat::utf16_from_utf8_lossy(tag);
+        return smgpc::resource::utf16_from_utf8_lossy(tag);
     }
 
     [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
@@ -80,7 +80,7 @@ namespace {
         return name;
     }
 
-    [[nodiscard]] std::optional< std::filesystem::path > find_layout_texture_archive(smgpc::compat::RuntimeContext& runtime,
+    [[nodiscard]] std::optional< std::filesystem::path > find_layout_texture_archive(smgpc::runtime::RuntimeContext& runtime,
                                                                                      std::string_view archiveName) {
         const auto archive = archive_file_name(archiveName);
         return runtime.dvd().find_first({
@@ -165,7 +165,7 @@ namespace MR {
             throw std::runtime_error("MR::createLytTexMap requires archive and texture names");
         }
 
-        auto& runtime = smgpc::compat::RuntimeContext::instance();
+        auto& runtime = smgpc::runtime::RuntimeContext::instance();
         const auto archive_path = find_layout_texture_archive(runtime, pArchiveName);
         if (!archive_path.has_value()) {
             throw std::runtime_error("Layout texture archive does not exist: " + std::string(pArchiveName));
@@ -179,10 +179,10 @@ namespace MR {
 
         const auto entry_name = lower_copy(base_name(entry->path));
         if (ends_with(entry_name, ".tpl")) {
-            return new nw4r::lyt::TexMap(entry_name, smgpc::compat::decode_tpl_texture(archive.file_data(*entry)), 0U, 0U, 0U, 0U);
+            return new nw4r::lyt::TexMap(entry_name, smgpc::resource::decode_tpl_texture(archive.file_data(*entry)), 0U, 0U, 0U, 0U);
         }
 
-        const auto bti = smgpc::compat::decode_bti_texture(archive.file_data(*entry));
+        const auto bti = smgpc::resource::decode_bti_texture(archive.file_data(*entry));
         return new nw4r::lyt::TexMap(entry_name, bti.image, bti.wrap_s, bti.wrap_t, bti.min_filter, bti.mag_filter);
     }
 
@@ -553,25 +553,25 @@ namespace MR {
     }
 
     void emitEffect(SimpleLayout* pLayout, const char* pEffectName) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->emit_effect(pLayout->getName(), pEffectName);
         }
     }
 
     void emitEffect(LayoutActor* pLayout, const char* pEffectName) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->emit_effect(pLayout->getName(), pEffectName);
         }
     }
 
     void deleteEffectAll(SimpleLayout* pLayout) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->delete_effect_all(pLayout->getName());
         }
     }
 
     void deleteEffectAll(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->delete_effect_all(pLayout->getName());
         }
     }

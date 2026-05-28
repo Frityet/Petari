@@ -9,16 +9,16 @@ namespace MR {
         constexpr auto cFadeWipeName = "フェードワイプ";
         constexpr auto cWhiteFadeWipeName = "白フェードワイプ";
 
-        smgpc::compat::WipeService* scene_wipe() {
-            if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        smgpc::runtime::WipeService* scene_wipe() {
+            if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
                 return &runtime->scene_wipe();
             }
 
             return nullptr;
         }
 
-        smgpc::compat::WipeService* system_wipe() {
-            if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        smgpc::runtime::WipeService* system_wipe() {
+            if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
                 return &runtime->system_wipe();
             }
 
@@ -26,7 +26,7 @@ namespace MR {
         }
 
         CaptureScreenDirector* capture_screen_director() {
-            if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+            if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
                 return &runtime->capture_screen_director();
             }
 
@@ -207,19 +207,19 @@ namespace MR {
     }
 
     void deactivateDefaultGameLayout() {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->game_layout().deactivate_default_game_layout();
         }
     }
 
     void forceOffImageEffect() {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->image_effects().force_off();
         }
     }
 
     void setImageEffectControlAuto() {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->image_effects().set_control_auto();
         }
     }

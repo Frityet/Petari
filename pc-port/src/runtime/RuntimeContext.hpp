@@ -15,8 +15,12 @@
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "render/J3dModelRenderer.hpp"
+#include "runtime/RflService.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
+#include "runtime/WiiIosService.hpp"
+#include "runtime/WiiPlatformService.hpp"
+#include "runtime/WiiVideoService.hpp"
 
 class SimpleLayout;
 class LiveActor;
@@ -24,9 +28,19 @@ class LayoutActor;
 class CaptureScreenActor;
 class CaptureScreenDirector;
 
-namespace smgpc::compat {
-
+namespace smgpc::scene {
+    class NameObjLifecycleService;
+    class SceneExecutionService;
     class SceneLifecycleService;
+}  // namespace smgpc::scene
+
+namespace smgpc::runtime {
+
+
+    enum class RuntimeContextSceneServiceMode {
+        RuntimeOwned,
+        External,
+    };
 
     class RuntimeContext final {
     public:
@@ -35,9 +49,8 @@ namespace smgpc::compat {
             std::string model_name;
             std::uint64_t frame_index = 0U;
             std::string draw_pass;
-            J3dRendererPacketState state = {};
+            smgpc::render::J3dRendererPacketState state = {};
         };
-#endif
 
         struct RenderTextureBindingTrace {
             std::uint8_t slot = 0U;
@@ -81,9 +94,34 @@ namespace smgpc::compat {
             std::string detail;
             std::string stage_name;
         };
+
+        struct DebugWpadButtonScriptSpan {
+            std::uint64_t first_frame = 0U;
+            std::uint64_t last_frame = 0U;
+            std::uint32_t button_mask = 0U;
+        };
+
+        struct DebugWpadPointerScriptSpan {
+            std::uint64_t first_frame = 0U;
+            std::uint64_t last_frame = 0U;
+            float x = 0.0F;
+            float y = 0.0F;
+            bool valid = false;
+        };
+
+        struct HostInputTraceState {
+            std::uint64_t frame_index = 0U;
+            std::uint32_t raw_hold_mask = 0U;
+            std::uint32_t effective_hold_mask = 0U;
+            render::InputPointerState raw_pointer = {};
+            render::InputPointerState effective_pointer = {};
+            bool debug_button_script_applied = false;
+            bool debug_pointer_script_applied = false;
+        };
 #endif
 
-        RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service);
+        RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service,
+                       RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
         ~RuntimeContext();
 
         RuntimeContext(const RuntimeContext &) = delete;
@@ -93,9 +131,9 @@ namespace smgpc::compat {
         static RuntimeContext *try_instance();
 
         void begin_frame(const render::FrameContext &frame_context);
-        void set_scene_camera_pose(const CameraPoseCompat &camera_pose);
+        void set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose);
         void record_copy_event(render::CopyEvent event);
-        void draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
+        void draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
         void draw_3d_normal(render::IRendererEngine &renderer);
         void draw_2d_normal(render::IRendererEngine &renderer);
 #ifndef NDEBUG
@@ -109,12 +147,17 @@ namespace smgpc::compat {
         [[nodiscard]] bool is_core_pad_button_a(s32 channel) const;
         [[nodiscard]] bool is_core_pad_button_b(s32 channel) const;
         [[nodiscard]] std::uint64_t frame_index() const;
-        [[nodiscard]] const std::optional<CameraPoseCompat> &scene_camera_pose() const;
-        [[nodiscard]] const std::optional<CameraPoseCompat> &last_camera_pose() const;
+        [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &scene_camera_pose() const;
+        [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &last_camera_pose() const;
+        [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
+        [[nodiscard]] std::span<const LayoutRuntimePacketTrace> layout_packet_trace() const;
         [[nodiscard]] std::span<const SemanticTraceEvent> semantic_trace_events() const;
+        [[nodiscard]] const HostInputTraceState &host_input_trace() const;
         [[nodiscard]] bool should_record_j3d_packet_trace() const;
+        [[nodiscard]] bool should_record_render_packet_trace() const;
+        [[nodiscard]] bool is_destroying() const;
 #endif
         [[nodiscard]] const std::optional<GxPixelUpdateState> &j3d_pixel_update_state() const;
         [[nodiscard]] std::string_view current_stage_name() const;
@@ -126,6 +169,12 @@ namespace smgpc::compat {
         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
         [[nodiscard]] DvdFileSystemService &dvd();
         [[nodiscard]] const DvdFileSystemService &dvd() const;
+        [[nodiscard]] WiiIosService &ios();
+        [[nodiscard]] const WiiIosService &ios() const;
+        [[nodiscard]] WiiPlatformService &wii_platform();
+        [[nodiscard]] const WiiPlatformService &wii_platform() const;
+        [[nodiscard]] WiiVideoService &wii_video();
+        [[nodiscard]] const WiiVideoService &wii_video() const;
         [[nodiscard]] WpadService &wpad();
         [[nodiscard]] const WpadService &wpad() const;
         [[nodiscard]] AudioEventService &audio();
@@ -136,8 +185,11 @@ namespace smgpc::compat {
         [[nodiscard]] const WipeService &scene_wipe() const;
         [[nodiscard]] WipeService &system_wipe();
         [[nodiscard]] const WipeService &system_wipe() const;
+        [[nodiscard]] ImageEffectService &image_effects();
+        [[nodiscard]] const ImageEffectService &image_effects() const;
         [[nodiscard]] StarPointerService &star_pointer();
         [[nodiscard]] const StarPointerService &star_pointer() const;
+        [[nodiscard]] bool sample_star_pointer_target(const LiveActor &actor, bool check_z);
         [[nodiscard]] CameraSystemService &camera_system();
         [[nodiscard]] const CameraSystemService &camera_system() const;
         [[nodiscard]] PlayerSystemService &player_system();
@@ -148,8 +200,12 @@ namespace smgpc::compat {
         [[nodiscard]] const RumbleService &rumble() const;
         [[nodiscard]] SequenceRequestService &sequence_requests();
         [[nodiscard]] const SequenceRequestService &sequence_requests() const;
+        [[nodiscard]] SysConfigService &sys_config();
+        [[nodiscard]] const SysConfigService &sys_config() const;
         [[nodiscard]] SaveDataService &save_data();
         [[nodiscard]] const SaveDataService &save_data() const;
+        [[nodiscard]] NandFileSystemService &nand();
+        [[nodiscard]] const NandFileSystemService &nand() const;
         [[nodiscard]] MessageService &messages();
         [[nodiscard]] const MessageService &messages() const;
         [[nodiscard]] SceneLightService &scene_lights();
@@ -160,8 +216,15 @@ namespace smgpc::compat {
         [[nodiscard]] const CaptureScreenDirector &capture_screen_director() const;
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
-        [[nodiscard]] SceneLifecycleService &scene_lifecycle();
-        [[nodiscard]] const SceneLifecycleService &scene_lifecycle() const;
+        [[nodiscard]] smgpc::scene::NameObjLifecycleService &name_obj_lifecycle();
+        [[nodiscard]] const smgpc::scene::NameObjLifecycleService &name_obj_lifecycle() const;
+        [[nodiscard]] smgpc::scene::SceneExecutionService &scene_execution();
+        [[nodiscard]] const smgpc::scene::SceneExecutionService &scene_execution() const;
+        [[nodiscard]] smgpc::scene::SceneLifecycleService &scene_lifecycle();
+        [[nodiscard]] const smgpc::scene::SceneLifecycleService &scene_lifecycle() const;
+        void attach_name_obj_lifecycle(smgpc::scene::NameObjLifecycleService &service);
+        void attach_scene_execution(smgpc::scene::SceneExecutionService &service);
+        void attach_scene_lifecycle(smgpc::scene::SceneLifecycleService &service);
 
         void start_stage_bgm(std::string_view name);
         void unlock_stage_bgm();
@@ -192,7 +255,8 @@ namespace smgpc::compat {
         void emit_semantic_trace_event(std::string_view category, std::string_view name, std::string_view detail = {});
         void emit_sequence_state_trace_event(std::string_view name, std::string_view detail = {}, std::string_view draw_phase = {});
         void record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
-                                     const J3dRendererPacketState &packet);
+                                     const smgpc::render::J3dRendererPacketState &packet);
+        void record_layout_packet_trace(LayoutRuntimePacketTrace packet);
 #endif
         void register_layout(SimpleLayout &layout);
         void unregister_layout(SimpleLayout &layout);
@@ -215,17 +279,22 @@ namespace smgpc::compat {
         render::IWindowService &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
+        WiiIosService _ios;
+        WiiPlatformService _wii_platform;
+        WiiVideoService _wii_video;
         WpadService _wpad;
         AudioEventService _audio;
         EffectService _effects;
         WipeService _scene_wipe;
         WipeService _system_wipe;
+        ImageEffectService _image_effects;
         StarPointerService _star_pointer;
         CameraSystemService _camera_system;
         PlayerSystemService _player_system;
         GameLayoutService _game_layout;
         RumbleService _rumble;
         SequenceRequestService _sequence_requests;
+        SysConfigService _sys_config;
         SaveDataService _save_data;
         MessageService _messages;
         SceneLightService _scene_lights;
@@ -233,26 +302,37 @@ namespace smgpc::compat {
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
         std::unique_ptr<CaptureScreenActor> _capture_screen_indirect_actor;
         std::unique_ptr<CaptureScreenActor> _capture_screen_camera_actor;
-        std::unique_ptr<SceneLifecycleService> _scene_lifecycle;
+        std::unique_ptr<smgpc::scene::NameObjLifecycleService> _owned_name_obj_lifecycle;
+        std::unique_ptr<smgpc::scene::SceneExecutionService> _owned_scene_execution;
+        std::unique_ptr<smgpc::scene::SceneLifecycleService> _owned_scene_lifecycle;
+        smgpc::scene::NameObjLifecycleService *_name_obj_lifecycle = nullptr;
+        smgpc::scene::SceneExecutionService *_scene_execution = nullptr;
+        smgpc::scene::SceneLifecycleService *_scene_lifecycle = nullptr;
         SceneScheduler _scheduler;
         std::map<std::string, LiveActor *, std::less<>> _effect_live_actor_hosts;
         std::map<std::string, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;
         std::map<std::string, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
         std::uint64_t _frame_index = 0;
-        std::optional<CameraPoseCompat> _scene_camera_pose{};
-        std::optional<CameraPoseCompat> _last_camera_pose{};
-        std::optional<GxPixelUpdateState> _j3d_pixel_update_state{};
+        std::optional<smgpc::camera::CameraPose> _scene_camera_pose = {};
+        std::optional<smgpc::camera::CameraPose> _last_camera_pose = {};
+        std::optional<GxPixelUpdateState> _j3d_pixel_update_state = {};
+        std::vector<render::CopyEvent> _copy_events = {};
         std::string _current_stage_name;
         std::string _current_sequence_scene_name = "Game";
         std::string _next_sequence_scene_name;
 #ifndef NDEBUG
-        std::vector<J3dRuntimePacketTrace> _j3d_packet_trace{};
-        std::vector<SemanticTraceEvent> _semantic_trace_events{};
-        std::optional<std::uint64_t> _j3d_packet_trace_frame{};
-        std::optional<std::uint64_t> _hold_title_combo_frame{};
+        std::vector<J3dRuntimePacketTrace> _j3d_packet_trace = {};
+        std::vector<LayoutRuntimePacketTrace> _layout_packet_trace = {};
+        std::vector<SemanticTraceEvent> _semantic_trace_events = {};
+        HostInputTraceState _host_input_trace = {};
+        std::optional<std::uint64_t> _j3d_packet_trace_frame = {};
+        std::vector<DebugWpadButtonScriptSpan> _debug_wpad_button_script = {};
+        std::vector<DebugWpadPointerScriptSpan> _debug_wpad_pointer_script = {};
         std::uint64_t _next_semantic_trace_event_index = 0U;
-        bool _emitted_title_combo_held_event = false;
+        std::size_t _next_star_pointer_target_trace_event_index = 0U;
+        bool _emitted_wpad_buttons_held_event = false;
+        bool _is_destroying = false;
 #endif
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::runtime

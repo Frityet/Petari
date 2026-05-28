@@ -11,21 +11,24 @@
 
 #include "resource/TplTexture.hpp"
 
-namespace smgpc::compat {
-
+namespace smgpc::resource {
     class RarcArchive;
+}  // namespace smgpc::resource
+
+namespace smgpc::render::effects {
+
 
     struct JpcTextureMetadata {
         std::uint16_t index = 0U;
         std::string name;
-        TplTextureFormat format = TplTextureFormat::I4;
+        smgpc::resource::TplTextureFormat format = smgpc::resource::TplTextureFormat::I4;
         std::uint16_t width = 0U;
         std::uint16_t height = 0U;
         std::uint8_t wrap_s = 0U;
         std::uint8_t wrap_t = 0U;
         std::uint8_t min_filter = 0U;
         std::uint8_t mag_filter = 0U;
-        DecodedTexture image;
+        smgpc::resource::DecodedTexture image;
     };
 
     struct JpcVec3f {
@@ -161,7 +164,7 @@ namespace smgpc::compat {
         std::vector<std::uint16_t> texture_indices;
     };
 
-    struct AutoEffectInfoCompat {
+    struct AutoEffectInfo {
         std::uint32_t row_index = 0U;
         std::string group_name;
         std::string unique_name;
@@ -206,7 +209,7 @@ namespace smgpc::compat {
 
     class EffectResourceLibrary final {
     public:
-        [[nodiscard]] static EffectResourceLibrary from_archive(const RarcArchive &archive);
+        [[nodiscard]] static EffectResourceLibrary from_archive(const smgpc::resource::RarcArchive &archive);
 
         [[nodiscard]] std::size_t particle_name_count() const;
         [[nodiscard]] std::size_t auto_effect_count() const;
@@ -226,13 +229,13 @@ namespace smgpc::compat {
         void parse_auto_effect_list(std::span<const std::uint8_t> data);
         void parse_jpc(std::span<const std::uint8_t> data);
         void append_particle_resolution(std::vector<ResolvedEffectResource> &out, std::string_view requested_name,
-                                        std::string_view particle_name, const AutoEffectInfoCompat *auto_effect) const;
+                                        std::string_view particle_name, const AutoEffectInfo *auto_effect) const;
         [[nodiscard]] std::vector<ResolvedEffectResource> resolve_particle_token(std::string_view requested_name,
-                                                                                 const AutoEffectInfoCompat *auto_effect) const;
+                                                                                 const AutoEffectInfo *auto_effect) const;
 
         std::map<std::string, std::uint16_t, std::less<>> _particle_name_to_user_index;
         std::map<std::uint16_t, std::string> _particle_name_by_user_index;
-        std::vector<AutoEffectInfoCompat> _auto_effects;
+        std::vector<AutoEffectInfo> _auto_effects;
         std::map<std::string, std::vector<std::size_t>, std::less<>> _auto_effects_by_unique_name;
         std::map<std::string, std::vector<std::size_t>, std::less<>> _auto_effects_by_group_unique_name;
         std::vector<JpcResourceMetadata> _resources;
@@ -240,4 +243,4 @@ namespace smgpc::compat {
         std::vector<JpcTextureMetadata> _textures;
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render::effects

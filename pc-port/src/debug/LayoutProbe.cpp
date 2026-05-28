@@ -98,7 +98,7 @@ namespace {
         return archive_name;
     }
 
-    [[nodiscard]] std::optional<std::span<const std::uint8_t>> find_archive_file(const smgpc::compat::RarcArchive &archive,
+    [[nodiscard]] std::optional<std::span<const std::uint8_t>> find_archive_file(const smgpc::resource::RarcArchive &archive,
                                                                                  std::string_view suffix) {
         const auto lowered_suffix = lowercase(suffix);
         const auto it = std::ranges::find_if(archive.entries(), [&lowered_suffix](const auto &entry) {
@@ -112,8 +112,8 @@ namespace {
         return archive.file_data(*it);
     }
 
-    [[nodiscard]] std::unordered_map<std::string, smgpc::compat::BrlanAnimation> load_animations(const smgpc::compat::RarcArchive &archive) {
-        auto animations = std::unordered_map<std::string, smgpc::compat::BrlanAnimation>{};
+    [[nodiscard]] std::unordered_map<std::string, smgpc::layout::BrlanAnimation> load_animations(const smgpc::resource::RarcArchive &archive) {
+        auto animations = std::unordered_map<std::string, smgpc::layout::BrlanAnimation>{};
         for (const auto &entry : archive.entries()) {
             const auto lowered = lowercase(entry.path);
             if (!lowered.starts_with("anim/") || !lowered.ends_with(".brlan")) {
@@ -122,13 +122,13 @@ namespace {
 
             auto name = lowered.substr(std::string_view("anim/").size());
             name.resize(name.size() - std::string_view(".brlan").size());
-            animations.emplace(std::move(name), smgpc::compat::parse_brlan_animation(archive.file_data(entry)));
+            animations.emplace(std::move(name), smgpc::layout::parse_brlan_animation(archive.file_data(entry)));
         }
 
         return animations;
     }
 
-    void apply_pane_frame(PaneRenderState &state, const smgpc::compat::BrlanPaneFrame &frame) {
+    void apply_pane_frame(PaneRenderState &state, const smgpc::layout::BrlanPaneFrame &frame) {
         if (frame.translate_x.has_value()) {
             state.translate_x = *frame.translate_x;
         }
@@ -149,9 +149,9 @@ namespace {
         }
     }
 
-    [[nodiscard]] PaneRenderState pane_state_for(const smgpc::compat::BrlytLayout &layout, std::size_t pane_index,
-                                                 const std::unordered_map<std::string, smgpc::compat::BrlanPaneFrame> &committed,
-                                                 const std::vector<const smgpc::compat::BrlanAnimation *> &active_animations,
+    [[nodiscard]] PaneRenderState pane_state_for(const smgpc::layout::BrlytLayout &layout, std::size_t pane_index,
+                                                 const std::unordered_map<std::string, smgpc::layout::BrlanPaneFrame> &committed,
+                                                 const std::vector<const smgpc::layout::BrlanAnimation *> &active_animations,
                                                  std::span<const float> active_frames) {
         const auto &pane = layout.panes.at(pane_index);
         auto local = PaneRenderState{
@@ -210,7 +210,7 @@ namespace {
         }
     }
 
-    [[nodiscard]] Rect pane_rect(const smgpc::compat::BrlytPane &pane, const PaneRenderState &state) {
+    [[nodiscard]] Rect pane_rect(const smgpc::layout::BrlytPane &pane, const PaneRenderState &state) {
         const auto width = pane.width * state.scale_x;
         const auto height = pane.height * state.scale_y;
         const auto x = state.translate_x + base_position_x(pane.base_position, width);
@@ -239,8 +239,8 @@ namespace {
         out << '[' << rect.left << ", " << rect.top << "] -> [" << rect.right << ", " << rect.bottom << ']';
     }
 
-    void write_layout_probe(const std::filesystem::path &output, std::string_view layout_name, const smgpc::compat::BrlytLayout &layout,
-                            const std::unordered_map<std::string, smgpc::compat::BrlanAnimation> &animations) {
+    void write_layout_probe(const std::filesystem::path &output, std::string_view layout_name, const smgpc::layout::BrlytLayout &layout,
+                            const std::unordered_map<std::string, smgpc::layout::BrlanAnimation> &animations) {
         std::filesystem::create_directories(output.parent_path());
 
         auto out = std::ofstream(output);
@@ -336,7 +336,7 @@ namespace {
 
         const auto appear = animations.find("appear");
         const auto wait = animations.find("wait");
-        auto committed = std::unordered_map<std::string, smgpc::compat::BrlanPaneFrame>{};
+        auto committed = std::unordered_map<std::string, smgpc::layout::BrlanPaneFrame>{};
         if (appear != animations.end()) {
             const auto frame = static_cast<float>(std::max<int>(0, appear->second.frame_size - 1));
             for (const auto &pane : layout.panes) {
@@ -345,7 +345,7 @@ namespace {
         }
 
         const auto *wait_animation = wait == animations.end() ? nullptr : &wait->second;
-        const std::vector<const smgpc::compat::BrlanAnimation *> active{wait_animation};
+        const std::vector<const smgpc::layout::BrlanAnimation *> active{wait_animation};
         const std::vector<float> active_frames{80.0F};
         auto picture_bounds = std::optional<Rect>{};
         auto text_bounds = std::optional<Rect>{};
@@ -401,13 +401,13 @@ namespace {
 int main(int argc, char **argv) try {
     const auto layout_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("TitleLogo");
     const auto archive_path = disc_files_root() / "KrKorean" / "LayoutData" / archive_name_for(layout_name);
-    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
+    const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
     const auto brlyt = find_archive_file(archive, ".brlyt");
     if (!brlyt.has_value()) {
         throw std::runtime_error("layout archive has no BRLYT: " + archive_path.string());
     }
 
-    const auto layout = smgpc::compat::parse_brlyt_layout(*brlyt);
+    const auto layout = smgpc::layout::parse_brlyt_layout(*brlyt);
     const auto animations = load_animations(archive);
     const auto output = pc_port_root() / ".cache" / "layout-probes" / (sanitize_filename(layout_name) + ".md");
     write_layout_probe(output, layout_name, layout, animations);

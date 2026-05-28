@@ -48,7 +48,7 @@ namespace GameDataFunction {
     }
 
     OSTime getSysConfigFileTimeAnnounced() {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             return runtime->save_data().sys_config_time_announced();
         }
 
@@ -57,7 +57,7 @@ namespace GameDataFunction {
     }
 
     void updateSysConfigFileTimeAnnounced() {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->save_data().update_sys_config_time_announced();
         }
         if (auto* sysConfig = smgpc::game::save_data_handle_sequence().getSysConfigFile()) {
@@ -66,7 +66,7 @@ namespace GameDataFunction {
     }
 
     OSTime getSysConfigFileTimeSent() {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             return runtime->save_data().sys_config_time_sent();
         }
 
@@ -75,7 +75,7 @@ namespace GameDataFunction {
     }
 
     void setSysConfigFileTimeSent(OSTime time) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->save_data().set_sys_config_time_sent(time);
         }
         if (auto* sysConfig = smgpc::game::save_data_handle_sequence().getSysConfigFile()) {
@@ -84,7 +84,7 @@ namespace GameDataFunction {
     }
 
     u32 getSysConfigFileSentBytes() {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             return runtime->save_data().sys_config_sent_bytes();
         }
 
@@ -93,7 +93,7 @@ namespace GameDataFunction {
     }
 
     void setSysConfigFileSentBytes(u32 bytes) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->save_data().set_sys_config_sent_bytes(bytes);
         }
         if (auto* sysConfig = smgpc::game::save_data_handle_sequence().getSysConfigFile()) {

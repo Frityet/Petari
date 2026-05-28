@@ -31,11 +31,11 @@ public:
 
 private:
     void setName(const char* pName);
-    void setCompatCounts(s32 powerStarNum, s32 starPieceNum, s32 playerMissNum);
-    void setCompatEndingFlags(bool viewNormalEnding, bool viewCompleteEnding, bool finalChallengeStar);
-    void setCompatEventState(const std::map<std::string, bool>& rFlags, const std::map<std::string, u16>& rValues);
-    [[nodiscard]] const std::map<std::string, bool>& getCompatEventFlags() const;
-    [[nodiscard]] const std::map<std::string, u16>& getCompatEventValues() const;
+    void setSaveDataCounts(s32 powerStarNum, s32 starPieceNum, s32 playerMissNum);
+    void setEndingFlags(bool viewNormalEnding, bool viewCompleteEnding, bool finalChallengeStar);
+    void setEventState(const std::map<std::string, bool>& rFlags, const std::map<std::string, u16>& rValues);
+    [[nodiscard]] const std::map<std::string, bool>& getEventFlags() const;
+    [[nodiscard]] const std::map<std::string, u16>& getEventValues() const;
 
     friend class UserFile;
 

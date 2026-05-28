@@ -160,7 +160,7 @@ bool UserFile::isPowerStarGetFinalChallengeGalaxy() const {
     return mGameDataHolder->isOnGameEventFlag("SpecialStarFinalChallenge");
 }
 
-void UserFile::restoreFromSaveDataServiceSlot(const smgpc::compat::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario) {
+void UserFile::restoreFromSaveDataServiceSlot(const smgpc::runtime::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario) {
     resetAllData();
 
     auto configName = std::array< char, 16U >{};
@@ -179,20 +179,20 @@ void UserFile::restoreFromSaveDataServiceSlot(const smgpc::compat::SaveDataServi
     mConfigDataHolder->mCompleteEndingLuigi = rSlot.complete_ending_mario_and_luigi || (rSlot.view_complete_ending && !rSlot.last_loaded_mario);
     mConfigDataHolder->mLastModified = rSlot.last_modified;
     if (rSlot.has_mii_id) {
-        mConfigDataHolder->setCompatMiiIndex(rSlot.rfl_mii_index.value_or(0));
+        mConfigDataHolder->setMiiIndex(rSlot.rfl_mii_index.value_or(0));
     } else {
         const auto iconId = rSlot.icon_id.value_or(1U);
         mConfigDataHolder->setMiiOrIconId(nullptr, &iconId);
     }
-    mGameDataHolder->setCompatCounts(rSlot.power_star_num, rSlot.star_piece_num, rSlot.player_miss_num);
-    mGameDataHolder->setCompatEndingFlags(rSlot.view_normal_ending, rSlot.view_complete_ending, rSlot.view_complete_ending);
-    mGameDataHolder->setCompatEventState(rSlot.game_event_flags, rSlot.game_event_values);
+    mGameDataHolder->setSaveDataCounts(rSlot.power_star_num, rSlot.star_piece_num, rSlot.player_miss_num);
+    mGameDataHolder->setEndingFlags(rSlot.view_normal_ending, rSlot.view_complete_ending, rSlot.view_complete_ending);
+    mGameDataHolder->setEventState(rSlot.game_event_flags, rSlot.game_event_values);
 }
 
-smgpc::compat::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 slotIndex) const {
+smgpc::runtime::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 slotIndex) const {
     auto iconId = u32{};
     const auto hasIconId = getIconId(&iconId);
-    return smgpc::compat::SaveDataService::SlotState{
+    return smgpc::runtime::SaveDataService::SlotState{
         .slot_index = slotIndex,
         .created = isCreated(),
         .game_data_corrupted = mIsGameDataCorrupted,
@@ -202,13 +202,13 @@ smgpc::compat::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 
         .star_piece_num = getStarPieceNum(),
         .player_miss_num = getPlayerMissNum(),
         .has_mii_id = !hasIconId,
-        .rfl_mii_index = mConfigDataHolder->getCompatMiiIndex(),
+        .rfl_mii_index = mConfigDataHolder->getMiiIndex(),
         .icon_id = hasIconId ? std::optional< u32 >(iconId) : std::nullopt,
         .view_normal_ending = isViewNormalEnding(),
         .view_complete_ending = isViewCompleteEnding(),
         .complete_ending_mario_and_luigi = isOnCompleteEndingMarioAndLuigi(),
-        .game_event_flags = mGameDataHolder->getCompatEventFlags(),
-        .game_event_values = mGameDataHolder->getCompatEventValues(),
+        .game_event_flags = mGameDataHolder->getEventFlags(),
+        .game_event_values = mGameDataHolder->getEventValues(),
         .last_modified = getLastModified(),
     };
 }

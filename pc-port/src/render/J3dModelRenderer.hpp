@@ -15,7 +15,7 @@
 #include "render/J3dAnimation.hpp"
 #include "render/J3dMaterialRuntime.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::render {
 
     struct J3dModelRendererLoadOptions {
         std::uint16_t min_material_index = 0U;
@@ -53,7 +53,7 @@ namespace smgpc::compat {
         std::string name;
         std::uint16_t width = 0U;
         std::uint16_t height = 0U;
-        TplTextureFormat format = TplTextureFormat::I4;
+        smgpc::resource::TplTextureFormat format = smgpc::resource::TplTextureFormat::I4;
         bool has_source_texture = false;
         bool has_sampler_metadata = false;
         std::uint8_t transparency = 0U;
@@ -174,7 +174,7 @@ namespace smgpc::compat {
         void set_btk_animation(const J3dBtkAnimationSummary &animation);
         void clear_animations();
 
-        void draw(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+        void draw(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
                   const J3dModelRendererDrawOptions &options = {}) const;
 
         [[nodiscard]] bool is_loaded() const;
@@ -258,6 +258,6 @@ namespace smgpc::compat {
         mutable std::unique_ptr<DrawScratch, DrawScratchDeleter> _draw_scratch = {};
     };
 
-    [[nodiscard]] J3dMatrix3x4 j3d_matrix_from_translation_scale(const CameraParamVec3 &translation, float scale);
+    [[nodiscard]] J3dMatrix3x4 j3d_matrix_from_translation_scale(const smgpc::camera::CameraParamVec3 &translation, float scale);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

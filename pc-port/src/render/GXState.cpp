@@ -7,7 +7,7 @@
 #include <bit>
 #include <cmath>
 
-namespace smgpc::compat {
+namespace smgpc::render {
     namespace {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
@@ -740,7 +740,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] GXTevStageState gx_tev_stage_from_brlyt(const BrlytTevStage &stage, std::uint8_t stage_index) {
+        [[nodiscard]] GXTevStageState gx_tev_stage_from_brlyt(const smgpc::layout::BrlytTevStage &stage, std::uint8_t stage_index) {
             auto raw = std::array<std::uint8_t, 20U>{};
             raw[0U] = stage.tex_coord_gen;
             raw[1U] = stage.color_chan;
@@ -930,7 +930,7 @@ namespace smgpc::compat {
         return state;
     }
 
-    GXMaterialState gx_state_from_brlyt_material(const BrlytMaterial &material) {
+    GXMaterialState gx_state_from_brlyt_material(const smgpc::layout::BrlytMaterial &material) {
         auto state = GXMaterialState{};
         state.source = "BRLYT";
         state.name = material.name;
@@ -1166,4 +1166,4 @@ namespace smgpc::compat {
         }
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

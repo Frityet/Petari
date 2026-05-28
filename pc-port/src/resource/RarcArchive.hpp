@@ -7,10 +7,15 @@
 #include <string_view>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::resource {
 
     struct RarcEntry {
         std::string path;
+        std::string name;
+        std::string directory;
+        std::uint16_t file_id = 0U;
+        std::uint16_t name_hash = 0U;
+        std::uint32_t file_entry_index = 0U;
         std::uint32_t data_offset = 0U;
         std::uint32_t data_size = 0U;
         std::uint8_t flags = 0U;
@@ -22,14 +27,17 @@ namespace smgpc::compat {
         static RarcArchive from_bytes(std::vector<std::uint8_t> bytes);
 
         [[nodiscard]] const std::vector<RarcEntry> &entries() const;
+        [[nodiscard]] static std::uint16_t hash_name(std::string_view name);
         [[nodiscard]] bool contains(std::string_view path) const;
         [[nodiscard]] bool contains_normalized(std::string_view path) const;
         [[nodiscard]] bool contains_basename(std::string_view path) const;
         [[nodiscard]] bool contains_resource(std::string_view path) const;
+        [[nodiscard]] std::uint32_t count_directory_files(std::string_view directory) const;
         [[nodiscard]] const RarcEntry *find(std::string_view path) const;
         [[nodiscard]] const RarcEntry *find_normalized(std::string_view path) const;
         [[nodiscard]] const RarcEntry *find_by_basename(std::string_view path) const;
         [[nodiscard]] const RarcEntry *find_resource(std::string_view path) const;
+        [[nodiscard]] const RarcEntry *find_by_file_id(std::uint16_t file_id) const;
         [[nodiscard]] std::span<const std::uint8_t> file_data(const RarcEntry &entry) const;
         [[nodiscard]] std::span<const std::uint8_t> file_data(std::string_view path) const;
         [[nodiscard]] std::span<const std::uint8_t> file_data_normalized(std::string_view path) const;
@@ -57,4 +65,4 @@ namespace smgpc::compat {
         std::uint32_t _file_data_start = 0U;
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::resource

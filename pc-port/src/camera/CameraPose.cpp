@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace smgpc::compat {
+namespace smgpc::camera {
     namespace {
 
         [[nodiscard]] CameraParamVec3 subtract(const CameraParamVec3 &a, const CameraParamVec3 &b) {
@@ -40,17 +40,17 @@ namespace smgpc::compat {
 
     }  // namespace
 
-    CameraViewPointCompat transform_world_to_camera(const CameraPoseCompat &pose, const CameraParamVec3 &world) {
+    CameraViewPoint transform_world_to_camera(const CameraPose &pose, const CameraParamVec3 &world) {
         const auto forward = normalized_or(subtract(pose.watch, pose.eye), {0.0F, 0.0F, -1.0F});
         const auto right = normalized_or(cross(forward, pose.up), {1.0F, 0.0F, 0.0F});
         const auto corrected_up = normalized_or(cross(right, forward), {0.0F, 1.0F, 0.0F});
         const auto delta = subtract(world, pose.eye);
 
-        return CameraViewPointCompat{
+        return CameraViewPoint{
             .x = dot(delta, right),
             .y = dot(delta, corrected_up),
             .z = dot(delta, forward),
         };
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::camera

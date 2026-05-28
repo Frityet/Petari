@@ -115,17 +115,17 @@ namespace smgpc::tests {
             const auto root = disc_files_root();
             const auto title_logo_path = root / "KrKorean" / "LayoutData" / "TitleLogo.arc";
             const auto compressed = read_file(title_logo_path);
-            require(smgpc::compat::is_yaz0(compressed), "TitleLogo.arc should be Yaz0-compressed");
+            require(smgpc::resource::is_yaz0(compressed), "TitleLogo.arc should be Yaz0-compressed");
 
-            const auto decompressed = smgpc::compat::decompress_yaz0(compressed);
+            const auto decompressed = smgpc::resource::decompress_yaz0(compressed);
             require_magic(decompressed, "RARC");
             require(read_be32(decompressed, 0x04U) == decompressed.size(), "RARC header file size should match decompressed size");
         }
 
         $test("mounts original title RARC layout archives") {
             const auto root = disc_files_root();
-            const auto title_logo = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
-            const auto press_start = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "PressStart.arc");
+            const auto title_logo = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+            const auto press_start = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "PressStart.arc");
 
             require(title_logo.entries().size() == 18U, "TitleLogo.arc entry count changed");
             require(press_start.entries().size() == 5U, "PressStart.arc entry count changed");
@@ -135,14 +135,19 @@ namespace smgpc::tests {
             require(title_logo.contains("anim/wait.brlan"), "TitleLogo.arc missing wait.brlan");
             require(title_logo.contains("anim/decide.brlan"), "TitleLogo.arc missing decide.brlan");
             require(title_logo.contains("timg/mytitlelogokor.tpl"), "TitleLogo.arc missing Korean title logo texture");
-            require(!title_logo.contains("/blyt/titlelogo.brlyt"), "RarcArchive::contains should remain an exact path lookup");
-            require(title_logo.contains_normalized("/blyt/titlelogo.brlyt"), "RarcArchive should resolve slash-prefixed resource paths generically");
-            require(title_logo.contains_normalized("\\anim\\appear.brlan"), "RarcArchive should normalize host-style path separators generically");
+            require(!title_logo.contains("/blyt/titlelogo.brlyt"), "smgpc::resource::RarcArchive::contains should remain an exact path lookup");
+            require(title_logo.contains_normalized("/blyt/titlelogo.brlyt"), "smgpc::resource::RarcArchive should resolve slash-prefixed resource paths generically");
+            require(title_logo.contains_normalized("\\anim\\appear.brlan"), "smgpc::resource::RarcArchive should normalize host-style path separators generically");
             const auto *title_logo_texture = title_logo.find_by_basename("MYTITLELOGOKOR.TPL");
             require(title_logo_texture != nullptr && title_logo_texture->path == "timg/mytitlelogokor.tpl",
-                    "RarcArchive should resolve resource basenames case-insensitively");
+                    "smgpc::resource::RarcArchive should resolve resource basenames case-insensitively");
             require(title_logo.find_resource("MYTITLELOGOKOR.TPL") == title_logo_texture,
-                    "RarcArchive resource lookup should fall back to basename lookup after path lookup");
+                    "smgpc::resource::RarcArchive resource lookup should fall back to basename lookup after path lookup");
+            const auto *appear_entry = title_logo.find("anim/appear.brlan");
+            require(appear_entry != nullptr && appear_entry->name == "appear.brlan" && appear_entry->directory == "anim" &&
+                        appear_entry->name_hash == smgpc::resource::RarcArchive::hash_name(appear_entry->name) &&
+                        title_logo.find_by_file_id(appear_entry->file_id) == appear_entry,
+                    "smgpc::resource::RarcArchive should expose native file IDs, name hashes, names, and parent directories for generic resource lookup");
 
             require(press_start.contains("blyt/pressstart.brlyt"), "PressStart.arc missing pressstart.brlyt");
             require(press_start.contains("anim/appear.brlan"), "PressStart.arc missing appear.brlan");
@@ -165,12 +170,21 @@ namespace smgpc::tests {
                     "JKRArchive should preserve slash-prefixed resource size reporting");
             require(jkr_title_logo.getResSize(basename_resource) == title_logo.file_data("timg/mytitlelogokor.tpl").size(),
                     "JKRArchive should preserve basename resource size reporting");
+            require(jkr_title_logo.getResource(appear_entry->file_id) == title_logo.file_data("anim/appear.brlan").data(),
+                    "JKRArchive should resolve resources by native RARC file ID");
+            const auto title_logo_anim_count = title_logo.count_directory_files("anim");
+            require(jkr_title_logo.countFile("anim") == title_logo_anim_count && title_logo_anim_count >= 3U,
+                    "JKRArchive should count direct files in a native RARC directory");
+            auto read_buffer = std::vector<std::uint8_t>(title_logo.file_data("anim/appear.brlan").size());
+            const auto read_size = jkr_title_logo.readResource(read_buffer.data(), static_cast<std::uint32_t>(read_buffer.size()), "/anim/appear.brlan");
+            require(read_size == read_buffer.size(), "JKRArchive::readResource should copy the requested resource into caller memory");
+            require_magic(read_buffer, "RLAN");
         }
 
         $test("loads original Effect.arc particle names and JPC metadata") {
             const auto root = disc_files_root();
-            const auto effect_archive = smgpc::compat::RarcArchive::from_file(root / "ParticleData" / "Effect.arc");
-            const auto library = smgpc::compat::EffectResourceLibrary::from_archive(effect_archive);
+            const auto effect_archive = smgpc::resource::RarcArchive::from_file(root / "ParticleData" / "Effect.arc");
+            const auto library = smgpc::render::effects::EffectResourceLibrary::from_archive(effect_archive);
 
             require(library.particle_name_count() == 3327U, "Effect.arc particlenames.bcsv should expose every JPC user index");
             require(library.auto_effect_count() == 2591U, "Effect.arc autoeffectlist.bcsv should expose original auto-effect rows");
@@ -210,13 +224,13 @@ namespace smgpc::tests {
             });
             require(primary_title_light_texture != title_light[0].textures.end() &&
                         primary_title_light_texture->name == "mr_kirakira03_i" &&
-                        primary_title_light_texture->format == smgpc::compat::TplTextureFormat::I8 &&
+                        primary_title_light_texture->format == smgpc::resource::TplTextureFormat::I8 &&
                         primary_title_light_texture->width == 64U && primary_title_light_texture->height == 64U,
                     "TitleLogoLightA00 primary JPA texture should be the BSP1-selected mr_kirakira03_i I8 texture");
             require(std::ranges::any_of(title_light[0].textures,
                                         [](const auto &texture) {
                                             return texture.width == 64U && texture.height == 64U &&
-                                                   texture.format == smgpc::compat::TplTextureFormat::I8 &&
+                                                   texture.format == smgpc::resource::TplTextureFormat::I8 &&
                                                    texture.image.rgba.size() == static_cast<std::size_t>(texture.width) * texture.height * 4U;
                                         }),
                     "TitleLogoLightA00 should reference and decode the original 64x64 I8 JPA texture");
@@ -254,17 +268,38 @@ namespace smgpc::tests {
             });
             require(shooting_star_child_texture != shooting_star[0].textures.end() &&
                         shooting_star_child_texture->name == "mr_glow01_i" &&
-                        shooting_star_child_texture->format == smgpc::compat::TplTextureFormat::I8 &&
+                        shooting_star_child_texture->format == smgpc::resource::TplTextureFormat::I8 &&
                         shooting_star_child_texture->width == 64U && shooting_star_child_texture->height == 64U,
                     "TitleShootingStar00 child pass should bind the original mr_glow01_i I8 JPC texture");
         }
 
         $test("loads original BMG messages through MessageId JMap table") {
             const auto root = disc_files_root();
-            const auto message_archive = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "MessageData" / "Message.arc");
-            const auto messages = smgpc::compat::BmgMessageArchive::from_message_archive(message_archive);
+            const auto message_archive = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "MessageData" / "Message.arc");
+            const auto messages = smgpc::resource::BmgMessageArchive::from_message_archive(message_archive);
 
             require(messages.message_count() == 1994U, "Message.arc BMG message count changed");
+            require(messages.declared_file_size() == 0x23140U && messages.encoding() == 2U && messages.blocks().size() == 4U,
+                    "BMG archive should expose native header metadata and every declared block");
+            const auto *flw_block = messages.block("FLW1");
+            const auto *fli_block = messages.block("FLI1");
+            require(flw_block != nullptr && flw_block->offset == 0x23140U && flw_block->available_size == 0x3100U &&
+                        flw_block->extends_past_declared_file_size,
+                    "BMG block directory should preserve FLW1 after the declared text payload");
+            require(fli_block != nullptr && fli_block->offset == 0x26240U && fli_block->declared_size == 0x160U &&
+                        fli_block->available_size == 0x150U && fli_block->truncated,
+                    "BMG block directory should expose available FLI1 flow index bytes without reading past the archive entry");
+            require(messages.flow().has_value(), "BMG archive should expose FLW1/FLI1 flow metadata");
+            const auto &flow = *messages.flow();
+            require(flow.nodes.size() == 1324U && flow.branch_node_indices.size() == 640U && flow.index_entries.size() == 40U &&
+                        flow.event_data.size() == 0x290U,
+                    "BMG flow metadata should preserve node, branch, flow-index, and event payload counts");
+            require(flow.nodes[0U].node_type == 1U && flow.nodes[0U].group_id == 0U && flow.nodes[0U].index == 0x00d3U &&
+                        flow.nodes[0U].next_index == 4U && flow.nodes[0U].next_group == 0U &&
+                        flow.branch_node_indices[0U] == 5U,
+                    "BMG flow node parser should preserve TalkNode-compatible node fields and branch table indices");
+            require(flow.index_entries[0U].message_index == 0x0068U && flow.index_entries[0U].node_index == 0x0463U,
+                    "BMG FLI1 parser should preserve message-to-flow-node index entries");
 
             const auto *guidance = messages.find("2PGuidance001");
             require(guidance != nullptr, "MessageId.tbl should resolve 2PGuidance001");
@@ -288,51 +323,54 @@ namespace smgpc::tests {
             require(date->control_tags.front().type == 0x0006U && date->control_tags.front().size_bytes > 2U &&
                         date->control_tags.front().raw_offset < date->raw_text.size(),
                     "BMG control tag metadata should preserve generic type, size, and raw-text offset");
-            const auto rescanned_date_tags = smgpc::compat::bmg_control_tags(date->raw_text);
+            const auto rescanned_date_tags = smgpc::resource::bmg_control_tags(date->raw_text);
             require(rescanned_date_tags.size() == date->control_tags.size(),
                     "generic BMG control tag scanner should reproduce archive tag metadata from raw text");
-            const auto formatted_date = smgpc::compat::format_bmg_text(date->raw_text, std::array{
-                                                                                           smgpc::compat::BmgFormatArg::number(2026),
-                                                                                           smgpc::compat::BmgFormatArg::number(5),
-                                                                                           smgpc::compat::BmgFormatArg::number(7),
+            const auto formatted_date = smgpc::resource::format_bmg_text(date->raw_text, std::array{
+                                                                                           smgpc::resource::BmgFormatArg::number(2026),
+                                                                                           smgpc::resource::BmgFormatArg::number(5),
+                                                                                           smgpc::resource::BmgFormatArg::number(7),
                                                                                        });
             require(formatted_date == u"2026/05/07", "generic BMG replacement should format date number tags");
             const auto *time = messages.find("System_Time002");
             require(time != nullptr, "MessageId.tbl should resolve time formatting text");
-            const auto formatted_time = smgpc::compat::format_bmg_text(time->raw_text, std::array{
-                                                                                           smgpc::compat::BmgFormatArg::number(9),
-                                                                                           smgpc::compat::BmgFormatArg::number(8),
+            const auto formatted_time = smgpc::resource::format_bmg_text(time->raw_text, std::array{
+                                                                                           smgpc::resource::BmgFormatArg::number(9),
+                                                                                           smgpc::resource::BmgFormatArg::number(8),
                                                                                        });
             require(formatted_time == u"09:08", "generic BMG replacement should format time number tags");
             const auto *copy_confirm = messages.find("System_FileSelect014");
             require(copy_confirm != nullptr, "MessageId.tbl should resolve FileSelect copy-confirm text fixture");
-            const auto formatted_copy_confirm = smgpc::compat::format_bmg_text(copy_confirm->raw_text, std::array{
-                                                                                                           smgpc::compat::BmgFormatArg::number(2),
-                                                                                                           smgpc::compat::BmgFormatArg::number(5),
+            const auto formatted_copy_confirm = smgpc::resource::format_bmg_text(copy_confirm->raw_text, std::array{
+                                                                                                           smgpc::resource::BmgFormatArg::number(2),
+                                                                                                           smgpc::resource::BmgFormatArg::number(5),
                                                                                                        });
             require(formatted_copy_confirm.find(u'2') != std::u16string::npos && formatted_copy_confirm.find(u'5') != std::u16string::npos &&
                         formatted_copy_confirm.size() > 2U,
                     "generic BMG replacement should apply multiple numeric args without replacing the whole message");
 
-            auto service = smgpc::compat::MessageService{};
-            require(service.load_message_archive(message_archive) == messages.message_count(), "MessageService should import every BMG message");
+            auto service = smgpc::runtime::MessageService{};
+            require(service.load_message_archive(message_archive) == messages.message_count(), "smgpc::runtime::MessageService should import every BMG message");
             const auto *service_text = service.message_utf16("2PGuidance001");
-            require(service_text != nullptr, "MessageService should expose imported UTF-16 message text");
+            require(service_text != nullptr, "smgpc::runtime::MessageService should expose imported UTF-16 message text");
             require(service_text->size() >= 3U && (*service_text)[0U] == u'W' && (*service_text)[1U] == u'i' && (*service_text)[2U] == u'i',
-                    "MessageService should preserve imported UTF-16 code units");
-            require(service.message("System_Save01") != nullptr, "MessageService should expose UTF-8 views for imported messages");
+                    "smgpc::runtime::MessageService should preserve imported UTF-16 code units");
+            require(service.message("System_Save01") != nullptr, "smgpc::runtime::MessageService should expose UTF-8 views for imported messages");
             const auto *service_date_raw = service.message_raw_utf16("System_Date000");
             require(service_date_raw != nullptr && std::ranges::any_of(*service_date_raw, [](char16_t code) { return code == 0x001aU; }),
-                    "MessageService should preserve raw tagged UTF-16 messages for replacement processing");
+                    "smgpc::runtime::MessageService should preserve raw tagged UTF-16 messages for replacement processing");
             const auto *service_date_tags = service.message_control_tags("System_Date000");
             require(service_date_tags != nullptr && service_date_tags->size() == date->control_tags.size(),
-                    "MessageService should expose BMG control tags stripped from display text");
+                    "smgpc::runtime::MessageService should expose BMG control tags stripped from display text");
+            const auto *service_guidance_info = service.message_info("2PGuidance001");
+            require(service_guidance_info != nullptr && service_guidance_info->text_offset == guidance->info.text_offset,
+                    "smgpc::runtime::MessageService should expose native BMG INF1 message metadata");
             require(service.format_message_utf16("System_Date000", std::array{
-                                                                       smgpc::compat::BmgFormatArg::number(2026),
-                                                                       smgpc::compat::BmgFormatArg::number(5),
-                                                                       smgpc::compat::BmgFormatArg::number(7),
+                                                                       smgpc::resource::BmgFormatArg::number(2026),
+                                                                       smgpc::resource::BmgFormatArg::number(5),
+                                                                       smgpc::resource::BmgFormatArg::number(7),
                                                                    }) == u"2026/05/07",
-                    "MessageService should expose generic formatted BMG messages");
+                    "smgpc::runtime::MessageService should expose generic formatted BMG messages");
         }
 
         $test("strips generic BMG control tags before display text rendering") {
@@ -347,13 +385,13 @@ namespace smgpc::tests {
                 0x0000,
                 u'B',
             };
-            const auto tags = smgpc::compat::bmg_control_tags(raw);
+            const auto tags = smgpc::resource::bmg_control_tags(raw);
 
             require(tags.size() == 1U, "generic BMG scanner should find a synthetic numeric control tag");
             require(tags[0].raw_offset == 1U && tags[0].size_bytes == 0x0eU && tags[0].type == 0x0006U,
                     "generic BMG scanner should preserve raw offset, size, and type for display-stripped tags");
-            require(smgpc::compat::format_bmg_text(raw, {}) == u"AB", "generic BMG display text should strip unbound control tags");
-            require(smgpc::compat::format_bmg_text(raw, std::array{smgpc::compat::BmgFormatArg::number(3)}) == u"A03B",
+            require(smgpc::resource::format_bmg_text(raw, {}) == u"AB", "generic BMG display text should strip unbound control tags");
+            require(smgpc::resource::format_bmg_text(raw, std::array{smgpc::resource::BmgFormatArg::number(3)}) == u"A03B",
                     "generic BMG display text should expand bound numeric control tags before rendering");
         }
 
@@ -390,11 +428,38 @@ namespace smgpc::tests {
 
         $test("decodes Korean title logo TPL texture") {
             const auto root = disc_files_root();
-            const auto title_logo = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
-            const auto title_texture = smgpc::compat::decode_tpl_texture(title_logo.file_data("timg/mytitlelogokor.tpl"));
+            const auto title_logo = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+            const auto title_texture_data = title_logo.file_data("timg/mytitlelogokor.tpl");
+            const auto title_palette = smgpc::resource::read_tpl_palette(title_texture_data);
+            const auto title_descriptors = smgpc::resource::read_tpl_texture_descriptors(title_texture_data);
+            const auto title_texture = smgpc::resource::decode_tpl_texture(title_texture_data);
+            require(title_palette.version == 0x0020af30U && title_palette.descriptor_count == 1U &&
+                        title_palette.descriptor_array_offset == 0x0cU && title_palette.descriptors.size() == 1U,
+                    "TPL palette header should expose native TPLBind descriptor metadata");
+            require(title_descriptors.size() == 1U && title_descriptors[0U].texture_header_offset > 0U &&
+                        title_descriptors[0U].width == 272U && title_descriptors[0U].height == 32U &&
+                        title_descriptors[0U].format == smgpc::resource::TplTextureFormat::I4 &&
+                        title_descriptors[0U].image_data_offset > title_descriptors[0U].texture_header_offset &&
+                        !title_descriptors[0U].has_palette,
+                    "TPL descriptor reader should expose native image header metadata before decoding");
+            require(title_descriptors[0U].index == 0U && title_descriptors[0U].texture_header_offset == 0x14U &&
+                        title_descriptors[0U].image_data_offset == 0x40U &&
+                        title_descriptors[0U].image_data_size == smgpc::resource::gx_texture_data_size(272U, 32U, smgpc::resource::TplTextureFormat::I4) &&
+                        title_descriptors[0U].image_data_size == 4352U,
+                    "TPL descriptor reader should expose native image offset and encoded data size");
+            require(title_descriptors[0U].wrap_s == 0U && title_descriptors[0U].wrap_t == 0U &&
+                        title_descriptors[0U].min_filter == 1U && title_descriptors[0U].mag_filter == 1U &&
+                        !title_descriptors[0U].edge_lod_enable && title_descriptors[0U].min_lod == 0U &&
+                        title_descriptors[0U].max_lod == 0U && !title_descriptors[0U].texture_header_unpacked,
+                    "TPL descriptor reader should expose native wrap/filter/LOD header fields");
+            require_near(title_descriptors[0U].lod_bias, 0.0F, 0.0001F, "TPL descriptor reader should expose native LOD bias");
+            require(title_descriptors[0U].image_levels.size() == 1U &&
+                        title_descriptors[0U].image_levels[0U].data_offset == title_descriptors[0U].image_data_offset &&
+                        title_descriptors[0U].image_levels[0U].data_size == title_descriptors[0U].image_data_size,
+                    "TPL descriptor reader should expose native image level metadata");
             require(title_texture.width == 272U, "mytitlelogokor.tpl width changed");
             require(title_texture.height == 32U, "mytitlelogokor.tpl height changed");
-            require(title_texture.format == smgpc::compat::TplTextureFormat::I4, "mytitlelogokor.tpl format changed");
+            require(title_texture.format == smgpc::resource::TplTextureFormat::I4, "mytitlelogokor.tpl format changed");
             require(title_texture.rgba.size() == static_cast<std::size_t>(title_texture.width) * title_texture.height * 4U,
                     "decoded title texture size mismatch");
 
@@ -409,15 +474,19 @@ namespace smgpc::tests {
 
         $test("decodes standalone picturebook BTI page textures") {
             const auto root = disc_files_root();
-            const auto chapter = smgpc::compat::RarcArchive::from_file(root / "ObjectData" / "PictureBookChapter1.arc");
-            const auto page = smgpc::compat::decode_bti_texture(chapter.file_data("chapter1page1.bti"));
+            const auto chapter = smgpc::resource::RarcArchive::from_file(root / "ObjectData" / "PictureBookChapter1.arc");
+            const auto page = smgpc::resource::decode_bti_texture(chapter.file_data("chapter1page1.bti"));
             require(page.width == 416U && page.height == 240U, "picturebook page BTI dimensions changed");
-            require(page.format == smgpc::compat::TplTextureFormat::CMPR, "picturebook page BTI should use GX CMPR");
+            require(page.format == smgpc::resource::TplTextureFormat::CMPR, "picturebook page BTI should use GX CMPR");
             require(page.image.width == page.width && page.image.height == page.height, "BTI decoded image should preserve header dimensions");
             require(page.image.rgba.size() == static_cast<std::size_t>(page.width) * page.height * 4U,
                     "BTI decoded image size mismatch");
             require(page.image_data_offset == 0x20U, "picturebook page BTI should use header-relative image data offset");
             require(page.min_filter == 1U && page.mag_filter == 1U && page.image_count == 1U, "BTI sampler metadata changed");
+            require(page.image_levels.size() == 1U && page.image_data_size == 49920U &&
+                        page.image_levels[0U].data_offset == page.image_data_offset &&
+                        page.image_levels[0U].data_size == page.image_data_size,
+                    "BTI image level metadata should expose encoded CMPR data bounds");
 
             auto colored_pixels = 0U;
             for (std::size_t offset = 0U; offset < page.image.rgba.size(); offset += 4U) {
@@ -427,8 +496,8 @@ namespace smgpc::tests {
             }
             require(colored_pixels > 1000U, "decoded picturebook page should contain visible color data");
 
-            const auto cover_archive = smgpc::compat::RarcArchive::from_file(root / "ObjectData" / "PictureBookTexture.arc");
-            const auto cover = smgpc::compat::decode_bti_texture(cover_archive.file_data("picturebookcoverfront.bti"));
+            const auto cover_archive = smgpc::resource::RarcArchive::from_file(root / "ObjectData" / "PictureBookTexture.arc");
+            const auto cover = smgpc::resource::decode_bti_texture(cover_archive.file_data("picturebookcoverfront.bti"));
             require(cover.width == 416U && cover.height == 240U, "picturebook cover BTI dimensions changed");
             require(cover.transparency == 1U, "picturebook cover BTI transparency flag changed");
         }
@@ -436,7 +505,7 @@ namespace smgpc::tests {
         $test("replaces BRLYT pane textures through generic TexMap API") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto runtime = smgpc::runtime::RuntimeContext(logger, window);
 
             const auto *page_tex = MR::createLytTexMap("PictureBookChapter1.arc", "Chapter1Page1.bti");
             require(page_tex != nullptr, "createLytTexMap should decode original picturebook BTI pages");
@@ -464,11 +533,11 @@ namespace smgpc::tests {
         }
 
         $test("uses NW4R default alpha blend for BRLYT materials without blend blocks") {
-            auto material = smgpc::compat::BrlytMaterial{};
+            auto material = smgpc::layout::BrlytMaterial{};
             material.name = "DefaultBlendMaterial";
             require(!material.blend_mode.enabled, "test material should model an omitted BRLYT blend block");
 
-            const auto state = smgpc::compat::gx_state_from_brlyt_material(material);
+            const auto state = smgpc::render::gx_state_from_brlyt_material(material);
             require(state.blend.enabled && state.blend.type == 1U && state.blend.src_factor == 4U && state.blend.dst_factor == 5U &&
                         state.blend.op == 15U,
                     "BRLYT GX state should match NW4R's default alpha blend when no blend block is present");
@@ -476,10 +545,30 @@ namespace smgpc::tests {
                     "BRLYT default GX blend state should keep color and alpha writes enabled");
         }
 
+        $test("preserves BRLYT root groups for target layout resources") {
+            const auto root = disc_files_root();
+            const auto title_logo = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+            const auto file_select = smgpc::resource::RarcArchive::from_file(root / "LayoutData" / "FileSelect.arc");
+            const auto picture_book = smgpc::resource::RarcArchive::from_file(root / "LayoutData" / "PictureBook.arc");
+            const auto peach_letter = smgpc::resource::RarcArchive::from_file(root / "LayoutData" / "PeachLetter.arc");
+
+            const auto title_layout = smgpc::layout::parse_brlyt_layout(title_logo.file_data("blyt/titlelogo.brlyt"));
+            const auto file_select_layout = smgpc::layout::parse_brlyt_layout(file_select.file_data("blyt/fileselect.brlyt"));
+            const auto picture_book_layout = smgpc::layout::parse_brlyt_layout(picture_book.file_data("blyt/picturebook.brlyt"));
+            const auto peach_letter_layout = smgpc::layout::parse_brlyt_layout(peach_letter.file_data("blyt/peachletter.brlyt"));
+
+            for (const auto *layout : std::array{&title_layout, &file_select_layout, &picture_book_layout, &peach_letter_layout}) {
+                require(layout->groups.size() == 1U && layout->groups[0U].name == "RootGroup" && layout->groups[0U].root_group &&
+                            layout->groups[0U].nest_level == 0U && layout->groups[0U].pane_names.empty() &&
+                            layout->groups[0U].pane_indices.empty(),
+                        "BRLYT parser should preserve the native RootGroup block for target layout resources");
+            }
+        }
+
         $test("parses TitleLogo BRLYT picture panes and GX material state") {
             const auto root = disc_files_root();
-            const auto title_logo = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
-            const auto layout = smgpc::compat::parse_brlyt_layout(title_logo.file_data("blyt/titlelogo.brlyt"));
+            const auto title_logo = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+            const auto layout = smgpc::layout::parse_brlyt_layout(title_logo.file_data("blyt/titlelogo.brlyt"));
             require_near(layout.width, 608.0F, 0.001F, "titlelogo.brlyt layout width changed");
             require_near(layout.height, 456.0F, 0.001F, "titlelogo.brlyt layout height changed");
             require(!layout.panes.empty(), "titlelogo.brlyt should expose pane hierarchy");
@@ -538,7 +627,7 @@ namespace smgpc::tests {
         $test("draws TitleLogo SimpleLayout through GX TEV material batches") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto runtime = smgpc::runtime::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             auto layout = SimpleLayout("TitleLogoProbe", "TitleLogo", 2U, MR::DrawType_Layout);
 
@@ -565,7 +654,7 @@ namespace smgpc::tests {
             auto window = TestWindowService();
             std::filesystem::path expected_root;
             {
-                auto runtime = smgpc::compat::RuntimeContext(logger, window);
+                auto runtime = smgpc::runtime::RuntimeContext(logger, window);
                 expected_root = runtime.dvd().root();
             }
 
@@ -576,18 +665,18 @@ namespace smgpc::tests {
                 const auto scoped_path = ScopedCurrentPath(nested_target_dir);
                 auto nested_logger = NullLogger();
                 auto nested_window = TestWindowService();
-                auto runtime = smgpc::compat::RuntimeContext(nested_logger, nested_window);
-                require(runtime.dvd().root() == expected_root, "RuntimeContext should resolve original disc files from xmake run targetdir");
-                require(runtime.find_layout_archive("TitleLogo").has_value(), "RuntimeContext should find TitleLogo when xmake run starts in targetdir");
+                auto runtime = smgpc::runtime::RuntimeContext(nested_logger, nested_window);
+                require(runtime.dvd().root() == expected_root, "smgpc::runtime::RuntimeContext should resolve original disc files from xmake run targetdir");
+                require(runtime.find_layout_archive("TitleLogo").has_value(), "smgpc::runtime::RuntimeContext should find TitleLogo when xmake run starts in targetdir");
                 require(runtime.find_object_archive("CometNearOrbitSky").has_value(),
-                        "RuntimeContext should find CometNearOrbitSky when xmake run starts in targetdir");
+                        "smgpc::runtime::RuntimeContext should find CometNearOrbitSky when xmake run starts in targetdir");
             }
         }
 
         $test("parses PressStart BRLYT text boxes and glyph mapping") {
             const auto root = disc_files_root();
-            const auto press_start = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "PressStart.arc");
-            const auto layout = smgpc::compat::parse_brlyt_layout(press_start.file_data("blyt/pressstart.brlyt"));
+            const auto press_start = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "PressStart.arc");
+            const auto layout = smgpc::layout::parse_brlyt_layout(press_start.file_data("blyt/pressstart.brlyt"));
             require_near(layout.width, 608.0F, 0.001F, "pressstart.brlyt layout width changed");
             require_near(layout.height, 456.0F, 0.001F, "pressstart.brlyt layout height changed");
             require(!layout.font_names.empty(), "pressstart.brlyt should reference font resources");
@@ -633,7 +722,7 @@ namespace smgpc::tests {
         $test("renders BRFNT text with generic wrapping and multiline alignment") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto runtime = smgpc::runtime::RuntimeContext(logger, window);
 
             const auto single_line = draw_press_start_text(u"ABCD");
             const auto explicit_multiline = draw_press_start_text(u"ABCD\nA");
@@ -660,33 +749,68 @@ namespace smgpc::tests {
 
         $test("decodes message BRFNT sheets and glyphs") {
             const auto root = disc_files_root();
-            const auto font_archive = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "Font.arc");
+            const auto font_archive = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "Font.arc");
             const auto *font_entry = font_archive.find_by_basename("MessageFont26.brfnt");
             require(font_entry != nullptr, "Font.arc should contain MessageFont26.brfnt");
 
-            const auto font = smgpc::compat::parse_brfnt_font(font_archive.file_data(*font_entry));
+            const auto font = smgpc::layout::parse_brfnt_font(font_archive.file_data(*font_entry));
             require(!font.sheets.empty(), "MessageFont26.brfnt should contain decoded glyph sheets");
             require(font.sheet_width > 0U && font.sheet_height > 0U, "MessageFont26.brfnt sheet dimensions should be positive");
             require(font.width > 0U && font.height > 0U, "MessageFont26.brfnt font dimensions should be positive");
+            require(font.declared_file_size == 0xa22d4U, "MessageFont26.brfnt RFNT file size changed");
+            require(font.header_size == 0x10U && font.block_count == 8U, "MessageFont26.brfnt RFNT header metadata changed");
+            require(font.blocks.size() == 8U, "MessageFont26.brfnt should expose every RFNT block");
+            require(font.blocks[0U].magic == "FINF" && font.blocks[0U].offset == 0x10U && font.blocks[0U].size == 0x20U,
+                    "MessageFont26.brfnt FINF block metadata changed");
+            require(font.blocks[1U].magic == "TGLP" && font.blocks[1U].offset == 0x30U && font.blocks[1U].size == 0xa0030U,
+                    "MessageFont26.brfnt TGLP block metadata changed");
+            const auto cmap_block_count =
+                std::ranges::count_if(font.blocks, [](const auto &block) { return block.magic == "CMAP"; });
+            require(cmap_block_count == 5U, "MessageFont26.brfnt CMAP block count changed");
+            require(font.font_type == 1U && font.encoding == 1U, "MessageFont26.brfnt FINF type/encoding changed");
+            require(font.line_feed == 33 && font.default_width.left == 0 && font.default_width.glyph_width == 27U &&
+                        font.default_width.char_width == 27,
+                    "MessageFont26.brfnt FINF line feed/default widths changed");
+            require(font.sheet_size == 0x20000U && font.sheet_count == 5U && font.sheet_image_offset == 0x60U,
+                    "MessageFont26.brfnt TGLP sheet metadata changed");
+            require(font.height == 33U && font.width == 27U && font.ascent == 26U && font.cell_width == 26U && font.cell_height == 32U,
+                    "MessageFont26.brfnt glyph metrics changed");
 
             for (const auto code : std::array<std::uint16_t, 4U>{0xff21U, 0xc640U, 0x0042U, 0xb20cU}) {
                 require(font.glyph_for(code).has_value(), "MessageFont26.brfnt should map prompt glyphs");
             }
-            require(font.glyph_for(0xff21U)->x == font.glyph_for(0x0041U)->x, "fullwidth A should normalize to ASCII A in the BRFNT compatibility layer");
-            require(font.glyph_for(0xff21U)->y == font.glyph_for(0x0041U)->y, "fullwidth A should normalize to ASCII A glyph row");
+            const auto ascii_a = font.glyph_for_exact(0x0041U);
+            require(font.find_glyph_index_exact(0x0041U).value_or(UINT16_MAX) == 33U, "ASCII A native BRFNT glyph index changed");
+            require(font.resolved_glyph_index(0x0041U) == 33U && font.has_glyph(0x0041U), "ASCII A should resolve through native CMAP data");
+            require(ascii_a.has_value() && font.char_width(0x0041U) == 20, "ASCII A native BRFNT glyph widths changed");
+            require(font.glyph_for(0xff21U)->x == ascii_a->x, "fullwidth A should normalize to ASCII A in the BRFNT compatibility layer");
+            require(font.glyph_for(0xff21U)->y == ascii_a->y, "fullwidth A should normalize to ASCII A glyph row");
 
-            require(!font.glyph_for_exact(0xff21U).has_value(), "MessageFont26.brfnt should not directly map fullwidth A");
+            require(!font.has_glyph(0xff21U) && !font.glyph_for_exact(0xff21U).has_value(), "MessageFont26.brfnt should not directly map fullwidth A");
+            require(font.resolved_glyph_index(0xff21U) == font.alternate_char_index,
+                    "native BRFNT lookup should resolve missing fullwidth A to the alternate glyph");
+            const auto native_fullwidth_a = font.glyph_for_resfont(0xff21U);
+            require(native_fullwidth_a.has_value() && native_fullwidth_a->x != ascii_a->x,
+                    "native ResFont glyph lookup should not use compatibility fullwidth ASCII aliases");
             const auto icon_a = font.glyph_for_exact(0xe000U);
             const auto icon_b = font.glyph_for_exact(0xe00bU);
             require(icon_a.has_value() && icon_b.has_value(), "MessageFont26.brfnt should expose private-use A/B button icon glyphs");
+            require(font.find_glyph_index_exact(0xe000U).value_or(UINT16_MAX) == 1321U &&
+                        font.find_glyph_index_exact(0xe00bU).value_or(UINT16_MAX) == 1332U,
+                    "private-use button icon glyph indices changed");
+            require(font.char_width(0xe000U) == 22 && font.char_width(0xe00bU) == 22, "private-use button icon char widths changed");
             require(icon_a->sheet_index == 4U && icon_a->x == 190U && icon_a->y == 727U, "A button icon glyph location changed");
             require(icon_b->sheet_index == 4U && icon_b->x == 1U && icon_b->y == 793U, "B button icon glyph location changed");
+            const auto resfont_icon_a = font.glyph_for_resfont(0xe000U);
+            require(resfont_icon_a.has_value() && resfont_icon_a->sheet_index == icon_a->sheet_index && resfont_icon_a->x == icon_a->x &&
+                        resfont_icon_a->y == icon_a->y,
+                    "native ResFont glyph lookup should return private-use icon glyphs");
         }
 
         $test("parses FileSelect BCSV camera table") {
             const auto root = disc_files_root();
-            const auto file_select = smgpc::compat::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
-            const auto camera = smgpc::compat::BcsvTable::from_bytes(file_select.file_data("camera/cameraparam.bcam"));
+            const auto file_select = smgpc::resource::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
+            const auto camera = smgpc::resource::BcsvTable::from_bytes(file_select.file_data("camera/cameraparam.bcam"));
             const auto camera_info = JMapInfo::from_bcsv(file_select.file_data("camera/cameraparam.bcam"));
 
             require(camera.entry_count() == 8U, "FileSelect cameraparam entry count changed");
@@ -732,8 +856,10 @@ namespace smgpc::tests {
 
         $test("exposes FileSelect placement BCSV rows through JMapInfo") {
             const auto root = disc_files_root();
-            const auto file_select = smgpc::compat::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
-            auto placement_info = JMapInfo::from_bcsv(file_select.file_data("jmp/placement/common/objinfo"));
+            const auto file_select = smgpc::resource::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
+            const auto placement_data = file_select.file_data("jmp/placement/common/objinfo");
+            const auto placement_table = smgpc::resource::BcsvTable::from_bytes(placement_data);
+            auto placement_info = JMapInfo::from_bcsv(placement_data);
 
             require(placement_info.dataExists() && placement_info.getNumEntries() == 3, "FileSelect objinfo should expose original BCSV row count");
             require(placement_info.getNumFields() == 34, "FileSelect objinfo should expose original BCSV field count");
@@ -741,6 +867,13 @@ namespace smgpc::tests {
                     "JMapInfo should expose source-shaped field search and value type APIs");
             require(placement_info.searchItemInfo("l_id") >= 0 && placement_info.getValueType("l_id") == JMAP_VALUE_TYPE_LONG,
                     "JMapInfo should report integer field types from BCSV metadata");
+            const auto link_hash = smgpc::resource::jmap_hash("l_id");
+            const auto raw_link_id = placement_table.raw_value(1U, link_hash);
+            const auto raw_name = placement_table.raw_value(1U, "name");
+            require(placement_table.field_index(link_hash) == placement_table.field_index("l_id") &&
+                        raw_link_id.has_value() && raw_link_id->size() == sizeof(std::uint32_t) &&
+                        read_be32(*raw_link_id, 0U) == 2U && raw_name.has_value() && raw_name->size() == sizeof(std::uint32_t),
+                    "smgpc::resource::BcsvTable should find fields through the hash index and expose raw encoded field bytes");
             placement_info.setName("FileSelectObjInfo");
             require(std::string_view(placement_info.getName()) == "FileSelectObjInfo", "JMapInfo should retain a source-shaped table name");
 
@@ -766,7 +899,7 @@ namespace smgpc::tests {
                         !MR::getJMapInfoArg0NoInit(file_selector_iter, &mr_arg0),
                     "MR JMapUtil should read original BCSV rows through generic JMapInfoIter sentinel behavior");
 
-            const auto astro = smgpc::compat::RarcArchive::from_file(root / "StageData" / "AstroGalaxy.arc");
+            const auto astro = smgpc::resource::RarcArchive::from_file(root / "StageData" / "AstroGalaxy.arc");
             const auto astro_info = JMapInfo::from_bcsv(astro.file_data("jmp/placement/common/objinfo"));
             require(astro_info.dataExists() && astro_info.getNumEntries() == 130 && astro_info.getNumFields() == 34,
                     "JMapInfo should expose larger non-FileSelect placement tables through the same BCSV adapter");
@@ -788,7 +921,7 @@ namespace smgpc::tests {
             require_near(tico_pos_x, 3150.0F, 0.001F, "AstroGalaxy TicoGalaxy pos_x changed");
             require(tico_common_path == 7, "AstroGalaxy TicoGalaxy CommonPath_ID s16 field changed");
 
-            const auto astro_scenario = smgpc::compat::RarcArchive::from_file(root / "StageData" / "AstroGalaxy" / "AstroGalaxyScenario.arc");
+            const auto astro_scenario = smgpc::resource::RarcArchive::from_file(root / "StageData" / "AstroGalaxy" / "AstroGalaxyScenario.arc");
             const auto scenario_info = JMapInfo::from_bcsv(astro_scenario.resource_data("/ScenarioData.bcsv"));
             require(scenario_info.dataExists() && scenario_info.getNumEntries() == 5,
                     "JMapInfo should load scenario data through generic case-insensitive archive resource lookup");
@@ -796,9 +929,9 @@ namespace smgpc::tests {
 
         $test("loads FileSelect camera parameter chunks") {
             const auto root = disc_files_root();
-            const auto file_select = smgpc::compat::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
-            const auto table = smgpc::compat::BcsvTable::from_bytes(file_select.file_data("camera/cameraparam.bcam"));
-            const auto chunks = smgpc::compat::load_camera_param_chunks(table);
+            const auto file_select = smgpc::resource::RarcArchive::from_file(root / "StageData" / "FileSelect.arc");
+            const auto table = smgpc::resource::BcsvTable::from_bytes(file_select.file_data("camera/cameraparam.bcam"));
+            const auto chunks = smgpc::camera::load_camera_param_chunks(table);
 
             require(chunks.size() == 8U, "FileSelect camera chunk count changed");
 
@@ -824,7 +957,7 @@ namespace smgpc::tests {
             require_near(follow.extra.l_offset, 100.0F, 0.001F, "FileSelect default follow camera local offset changed");
             require_near(follow.extra.w_offset.y, 170.0F, 0.001F, "FileSelect default follow camera world offset changed");
 
-            const auto fallback = smgpc::compat::find_camera_param_chunk(chunks, "s:03e7");
+            const auto fallback = smgpc::camera::find_camera_param_chunk(chunks, "s:03e7");
             require(fallback.has_value(), "FileSelect fallback camera should be findable by id");
             require(fallback->camera_type == "CAM_TYPE_FOLLOW", "FileSelect fallback camera chunk type changed");
             require_near(fallback->general.axis.x, 900.0F, 0.001F, "FileSelect fallback camera axis X changed");
@@ -845,32 +978,32 @@ namespace smgpc::tests {
             require_near(pose.near_clip, 100.0F, 0.001F, "FileSelect title camera should use original CameraContext near clip");
             require_near(pose.far_clip, 800000.0F, 0.001F, "FileSelect title camera should use original CameraContext far clip");
 
-            const auto watch = smgpc::compat::transform_world_to_camera(pose, pose.watch);
+            const auto watch = smgpc::camera::transform_world_to_camera(pose, pose.watch);
             require_near(watch.x, 0.0F, 0.001F, "FileSelect title watch point should land on camera center X");
             require_near(watch.y, 0.0F, 0.001F, "FileSelect title watch point should land on camera center Y");
             require_near(watch.z, 15000.0F, 0.001F, "FileSelect title watch point depth changed");
 
-            const auto origin = smgpc::compat::transform_world_to_camera(pose, {0.0F, 0.0F, 0.0F});
+            const auto origin = smgpc::camera::transform_world_to_camera(pose, {0.0F, 0.0F, 0.0F});
             require_near(origin.y, -15800.0F, 0.001F, "FileSelect title origin Y should match original raised title view");
             require_near(origin.z, 15000.0F, 0.001F, "FileSelect title origin depth changed");
         }
 
         $test("matches JMath short trig conversion helpers") {
-            require(smgpc::compat::jmath_sincos_table_index_from_short(0xffffU) == 0x3fffU, "JMath short trig index should use high 14 bits");
-            require(smgpc::compat::jmath_fctiwz_to_u16(2607.9F) == 2607U, "JMath fctiwz helper should truncate positive values toward zero");
-            require(smgpc::compat::jmath_fctiwz_to_u16(-1.9F) == 0xffffU, "JMath fctiwz helper should preserve low 16 bits for negative values");
-            require_near(smgpc::compat::jmath_cos_short(0x0000U), 1.0F, 0.000001F, "JMath cosShort(0) changed");
-            require_near(smgpc::compat::jmath_sin_short(0x4000U), 1.0F, 0.000001F, "JMath sinShort(0x4000) changed");
-            require_near(smgpc::compat::jmath_cos_short(0x8000U), -1.0F, 0.000001F, "JMath cosShort(0x8000) changed");
-            require_near(smgpc::compat::jmath_cos_lap_rad(0.0F), 1.0F, 0.000001F, "JMath cosLapRad(0) changed");
-            require_near(smgpc::compat::jmath_cos_lap_rad(3.1415927F), -1.0F, 0.000001F, "JMath cosLapRad(pi) changed");
+            require(smgpc::render::jmath_sincos_table_index_from_short(0xffffU) == 0x3fffU, "JMath short trig index should use high 14 bits");
+            require(smgpc::render::jmath_fctiwz_to_u16(2607.9F) == 2607U, "JMath fctiwz helper should truncate positive values toward zero");
+            require(smgpc::render::jmath_fctiwz_to_u16(-1.9F) == 0xffffU, "JMath fctiwz helper should preserve low 16 bits for negative values");
+            require_near(smgpc::render::jmath_cos_short(0x0000U), 1.0F, 0.000001F, "JMath cosShort(0) changed");
+            require_near(smgpc::render::jmath_sin_short(0x4000U), 1.0F, 0.000001F, "JMath sinShort(0x4000) changed");
+            require_near(smgpc::render::jmath_cos_short(0x8000U), -1.0F, 0.000001F, "JMath cosShort(0x8000) changed");
+            require_near(smgpc::render::jmath_cos_lap_rad(0.0F), 1.0F, 0.000001F, "JMath cosLapRad(0) changed");
+            require_near(smgpc::render::jmath_cos_lap_rad(3.1415927F), -1.0F, 0.000001F, "JMath cosLapRad(pi) changed");
         }
 
         $test("applies J3D matrix rotation, inversion, and scale helpers") {
-            const auto yaw = smgpc::compat::j3d_rotation_matrix(0.0F, 1.0F, 0.0F, 1.9F);
-            const auto pitch = smgpc::compat::j3d_rotation_matrix(1.0F, 0.0F, 0.0F, 1.6571627F);
-            const auto matrix = smgpc::compat::j3d_apply_matrix_scale(
-                smgpc::compat::j3d_invert_orthonormal_matrix(smgpc::compat::j3d_concat_matrix(yaw, pitch)), 0.8F, 0.8F, 0.8F);
+            const auto yaw = smgpc::render::j3d_rotation_matrix(0.0F, 1.0F, 0.0F, 1.9F);
+            const auto pitch = smgpc::render::j3d_rotation_matrix(1.0F, 0.0F, 0.0F, 1.6571627F);
+            const auto matrix = smgpc::render::j3d_apply_matrix_scale(
+                smgpc::render::j3d_invert_orthonormal_matrix(smgpc::render::j3d_concat_matrix(yaw, pitch)), 0.8F, 0.8F, 0.8F);
 
             require_near(matrix.m[0U], -0.258631736F, 0.000001F, "J3D helper matrix[0] changed");
             require_near(matrix.m[2U], -0.757040024F, 0.000001F, "J3D helper matrix[2] changed");
@@ -881,7 +1014,7 @@ namespace smgpc::tests {
             require_near(matrix.m[9U], -0.797018230F, 0.000001F, "J3D helper matrix[9] changed");
             require_near(matrix.m[10U], 0.022309309F, 0.000001F, "J3D helper matrix[10] changed");
 
-            const auto unscaled = smgpc::compat::j3d_remove_matrix_scale(matrix, 0.8F, 0.8F, 0.8F);
+            const auto unscaled = smgpc::render::j3d_remove_matrix_scale(matrix, 0.8F, 0.8F, 0.8F);
             require_near(unscaled.m[0U], -0.323289663F, 0.000001F, "J3D helper should remove base-scale X from column 0");
             require_near(unscaled.m[5U], -0.086259015F, 0.000001F, "J3D helper should remove base-scale Y from column 1");
             require_near(unscaled.m[10U], 0.027886637F, 0.000001F, "J3D helper should remove base-scale Z from column 2");
@@ -889,10 +1022,13 @@ namespace smgpc::tests {
 
         $test("parses TitleLogo BRLAN animations") {
             const auto root = disc_files_root();
-            const auto title_logo = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
-            const auto appear = smgpc::compat::parse_brlan_animation(title_logo.file_data("anim/appear.brlan"));
+            const auto title_logo = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+            const auto appear = smgpc::layout::parse_brlan_animation(title_logo.file_data("anim/appear.brlan"));
             require(appear.frame_size == 201U, "TitleLogo appear frame size changed");
             require(!appear.loop, "TitleLogo appear should not loop");
+            require(appear.tag_name == "Appear" && appear.tag_order == 0U && appear.tag_start_frame == 0 &&
+                        appear.tag_end_frame == 200 && appear.tag_flag == 1U && appear.group_refs.empty(),
+                    "TitleLogo appear should preserve native PAT1 animation tag metadata");
             require(!appear.contents.empty(), "TitleLogo appear should contain animation content");
 
             const auto first_frame = appear.pane_frame("SMGTitleLogo", 0.0F);
@@ -904,9 +1040,11 @@ namespace smgpc::tests {
             require(visible_frame.scale_x.has_value() && *visible_frame.scale_x == 1.0F, "TitleLogo appear should animate root X scale to 1");
             require(visible_frame.scale_y.has_value() && *visible_frame.scale_y == 1.0F, "TitleLogo appear should animate root Y scale to 1");
 
-            const auto wait = smgpc::compat::parse_brlan_animation(title_logo.file_data("anim/wait.brlan"));
+            const auto wait = smgpc::layout::parse_brlan_animation(title_logo.file_data("anim/wait.brlan"));
             require(wait.frame_size == 10000U, "TitleLogo wait frame size changed");
             require(wait.loop, "TitleLogo wait should loop");
+            require(wait.tag_name == "Wait" && wait.tag_start_frame == 10000 && wait.tag_end_frame == 20000,
+                    "TitleLogo wait should preserve PAT1 tag frame bounds separately from PAI1 duration");
             const auto galaxy_texture_middle = wait.texture_frame("PicLogoGalaxy", 5000.0F);
             require(galaxy_texture_middle.translate_s.has_value(), "TitleLogo wait should animate PicLogoGalaxy texture S translation");
             require_near(*galaxy_texture_middle.translate_s, 0.5F, 0.001F, "TitleLogo wait should scroll PicLogoGalaxy texture S at half-frame");
@@ -914,28 +1052,37 @@ namespace smgpc::tests {
 
         $test("parses PressStart BRLAN animations") {
             const auto root = disc_files_root();
-            const auto press_start = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "PressStart.arc");
-            const auto appear = smgpc::compat::parse_brlan_animation(press_start.file_data("anim/appear.brlan"));
+            const auto press_start = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "PressStart.arc");
+            const auto appear = smgpc::layout::parse_brlan_animation(press_start.file_data("anim/appear.brlan"));
             require(appear.frame_size == 31U, "PressStart appear frame size changed");
             require(!appear.loop, "PressStart appear should not loop");
+            require(appear.tag_name == "Appear" && appear.tag_start_frame == 0 && appear.tag_end_frame == 30,
+                    "PressStart appear should expose PAT1 animation tag frame range");
             const auto faded_in = appear.pane_frame("PressAB", 30.0F);
             require(faded_in.alpha.has_value() && *faded_in.alpha == 255.0F, "PressStart appear should fade prompt alpha to 255");
 
-            const auto wait = smgpc::compat::parse_brlan_animation(press_start.file_data("anim/wait.brlan"));
+            const auto wait = smgpc::layout::parse_brlan_animation(press_start.file_data("anim/wait.brlan"));
             require(wait.frame_size == 120U, "PressStart wait frame size changed");
             require(wait.loop, "PressStart wait should loop");
             const auto middle = wait.pane_frame("PressAB", 60.0F);
             require(middle.translate_y.has_value(), "PressStart wait should animate prompt Y");
             require_near(*middle.translate_y, 3.0F, 0.001F, "PressStart wait should bob prompt Y at mid-frame");
+
+            const auto file_select = smgpc::resource::RarcArchive::from_file(root / "LayoutData" / "FileSelect.arc");
+            const auto button_select_in = smgpc::layout::parse_brlan_animation(file_select.file_data("anim/buttonselectin.brlan"));
+            require(button_select_in.tag_name == "ButtonSelectIn" && button_select_in.tag_order == 2U &&
+                        button_select_in.tag_start_frame == 100 && button_select_in.tag_end_frame == 107 &&
+                        button_select_in.tag_flag == 1U && button_select_in.group_refs.empty() && button_select_in.share_infos.empty(),
+                    "FileSelect button animation should expose generic PAT1 tag order/range metadata");
         }
 
         $test("extracts CometNearOrbitSky J3D textures") {
             const auto root = disc_files_root();
-            const auto sky_archive = smgpc::compat::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
-            const auto textures = smgpc::compat::extract_j3d_textures(sky_archive.file_data("cometnearorbitsky.bdl"));
+            const auto sky_archive = smgpc::resource::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
+            const auto textures = smgpc::render::extract_j3d_textures(sky_archive.file_data("cometnearorbitsky.bdl"));
             require(textures.size() == 12U, "CometNearOrbitSky.bdl TEX1 texture count changed");
 
-            const auto find_texture = [&textures](std::string_view name) -> const smgpc::compat::J3dTexture * {
+            const auto find_texture = [&textures](std::string_view name) -> const smgpc::render::J3dTexture * {
                 const auto it = std::ranges::find_if(textures, [name](const auto &texture) { return texture.name == name; });
                 return it == textures.end() ? nullptr : &*it;
             };
@@ -943,7 +1090,7 @@ namespace smgpc::tests {
             const auto *orbit_universe = find_texture("OrbitUniverseL");
             require(orbit_universe != nullptr, "CometNearOrbitSky should contain OrbitUniverseL");
             require(orbit_universe->image.width == 1024U && orbit_universe->image.height == 512U, "OrbitUniverseL dimensions changed");
-            require(orbit_universe->image.format == smgpc::compat::TplTextureFormat::I4, "OrbitUniverseL should use GX I4");
+            require(orbit_universe->image.format == smgpc::resource::TplTextureFormat::I4, "OrbitUniverseL should use GX I4");
 
             const auto *earth = find_texture("EarthKsMM");
             require(earth != nullptr, "CometNearOrbitSky should contain EarthKsMM");
@@ -952,17 +1099,25 @@ namespace smgpc::tests {
                     "EarthKsMM should preserve TEX1 mipmap sampler metadata");
             require(earth->min_lod == 0U && earth->max_lod == 32U && earth->lod_bias == 100,
                     "EarthKsMM should preserve TEX1 LOD metadata");
+            require(earth->image_levels.size() == earth->image_count &&
+                        earth->image_levels[0U].width == 256U && earth->image_levels[0U].height == 256U &&
+                        earth->image_levels[0U].data_offset == earth->image_data_offset &&
+                        earth->image_levels[0U].data_size == smgpc::resource::gx_texture_data_size(256U, 256U, earth->image.format) &&
+                        earth->image_levels[1U].width == 128U && earth->image_levels[1U].height == 128U &&
+                        earth->image_levels[1U].data_offset == earth->image_levels[0U].data_offset + earth->image_levels[0U].data_size &&
+                        earth->image_levels.back().width == 16U && earth->image_levels.back().height == 16U,
+                    "EarthKsMM should expose native TEX1 mip image offsets and dimensions");
 
             const auto *galaxy = find_texture("Galaxy");
             require(galaxy != nullptr, "CometNearOrbitSky should contain Galaxy");
             require(galaxy->image.width == 64U && galaxy->image.height == 64U, "Galaxy dimensions changed");
-            require(galaxy->image.format == smgpc::compat::TplTextureFormat::CMPR, "Galaxy should exercise GX CMPR decoding");
+            require(galaxy->image.format == smgpc::resource::TplTextureFormat::CMPR, "Galaxy should exercise GX CMPR decoding");
             require(std::ranges::any_of(galaxy->image.rgba, [](std::uint8_t value) { return value != 0U; }),
                     "CMPR decoded Galaxy texture should not be blank");
 
             const auto *sky = find_texture("Skyk");
             require(sky != nullptr, "CometNearOrbitSky should contain Skyk");
-            require(sky->image.width == 8U && sky->image.height == 32U && sky->image.format == smgpc::compat::TplTextureFormat::I8,
+            require(sky->image.width == 8U && sky->image.height == 32U && sky->image.format == smgpc::resource::TplTextureFormat::I8,
                     "Skyk should preserve TEX1 base image metadata");
             require(sky->transparency == 2U && sky->wrap_s == 1U && sky->wrap_t == 0U && !sky->mipmap &&
                         sky->min_filter == 1U && sky->mag_filter == 1U && sky->image_count == 1U,
@@ -975,7 +1130,7 @@ namespace smgpc::tests {
 
             const auto *cloud = find_texture("Cloud01k");
             require(cloud != nullptr, "CometNearOrbitSky should contain Cloud01k");
-            require(cloud->image.format == smgpc::compat::TplTextureFormat::CMPR && cloud->mipmap && cloud->image_count == 4U &&
+            require(cloud->image.format == smgpc::resource::TplTextureFormat::CMPR && cloud->mipmap && cloud->image_count == 4U &&
                         cloud->min_filter == 5U && cloud->max_lod == 24U && cloud->lod_bias == 200,
                     "Cloud01k should preserve TEX1 compressed mipmap sampler metadata");
         }

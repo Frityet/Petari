@@ -25,8 +25,8 @@ public:
     void resetAllData();
     s32 makeFileBinary(u8* pBuffer, u32 size);
     bool loadFromFileBinary(const char* pName, const u8* pBuffer, u32 size);
-    void setCompatMiiIndex(std::optional<s32> miiIndex);
-    [[nodiscard]] std::optional<s32> getCompatMiiIndex() const;
+    void setMiiIndex(std::optional<s32> miiIndex);
+    [[nodiscard]] std::optional<s32> getMiiIndex() const;
 
 private:
     void setName(const char* pName);

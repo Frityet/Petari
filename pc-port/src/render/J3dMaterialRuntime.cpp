@@ -4,7 +4,7 @@
 #include <array>
 #include <cmath>
 
-namespace smgpc::compat {
+namespace smgpc::render {
     namespace {
 
         constexpr auto GX_TG_MTX3X4 = 0U;
@@ -481,7 +481,7 @@ namespace smgpc::compat {
             return std::clamp(coordinate, 0, texture_size - 1);
         }
 
-        [[nodiscard]] TevColor sample_texture_rgba8(const DecodedTexture &texture, std::uint8_t wrap_s, std::uint8_t wrap_t, float u, float v) {
+        [[nodiscard]] TevColor sample_texture_rgba8(const smgpc::resource::DecodedTexture &texture, std::uint8_t wrap_s, std::uint8_t wrap_t, float u, float v) {
             if (texture.width == 0U || texture.height == 0U ||
                 texture.rgba.size() < static_cast<std::size_t>(texture.width) * texture.height * 4U) {
                 return {0, 0, 0, 0};
@@ -633,7 +633,7 @@ namespace smgpc::compat {
         [[nodiscard]] std::optional<J3dIndirectTextureTrace>
         trace_indirect_texture_transform(const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
                                          const J3dMeshVertex &source, const J3dMaterialTexturePass &pass,
-                                         const J3dTextureCoordinate &coord, const DecodedTexture &base_texture,
+                                         const J3dTextureCoordinate &coord, const smgpc::resource::DecodedTexture &base_texture,
                                          const J3dMatrix3x4 *model_matrix) {
             const auto *stage = find_active_indirect_tev_stage(material, pass.stage);
             if (stage == nullptr || base_texture.width == 0U || base_texture.height == 0U) {
@@ -715,7 +715,7 @@ namespace smgpc::compat {
                                                                             const J3dMeshVertex &source,
                                                                             const J3dMaterialTexturePass &pass,
                                                                             const J3dTextureCoordinate &coord,
-                                                                            const DecodedTexture &base_texture,
+                                                                            const smgpc::resource::DecodedTexture &base_texture,
                                                                             const J3dMatrix3x4 *model_matrix) {
             const auto trace = trace_indirect_texture_transform(material, textures, source, pass, coord, base_texture, model_matrix);
             return trace.has_value() ? trace->transformed_coord : coord;
@@ -874,7 +874,7 @@ namespace smgpc::compat {
         return passes.front();
     }
 
-    std::optional<J3dComposedMaterialTexture> j3d_try_compose_material_texture(const J3dMaterialSummary &material, const DecodedTexture &texture,
+    std::optional<J3dComposedMaterialTexture> j3d_try_compose_material_texture(const J3dMaterialSummary &material, const smgpc::resource::DecodedTexture &texture,
                                                                                std::array<std::uint8_t, 4U> raster_color,
                                                                                std::uint8_t texture_map_slot) {
         if (texture.width == 0U || texture.height == 0U || texture.rgba.empty()) {
@@ -927,10 +927,10 @@ namespace smgpc::compat {
 
         auto composed = J3dComposedMaterialTexture{
             .image =
-                DecodedTexture{
+                smgpc::resource::DecodedTexture{
                     .width = 1U,
                     .height = 1U,
-                    .format = TplTextureFormat::RGBA8,
+                    .format = smgpc::resource::TplTextureFormat::RGBA8,
                     .rgba = std::vector<std::uint8_t>(4U),
                 },
             .raster_color_baked = true,
@@ -967,10 +967,10 @@ namespace smgpc::compat {
 
         auto composed = J3dComposedMaterialTexture{
             .image =
-                DecodedTexture{
+                smgpc::resource::DecodedTexture{
                     .width = width,
                     .height = height,
-                    .format = TplTextureFormat::RGBA8,
+                    .format = smgpc::resource::TplTextureFormat::RGBA8,
                     .rgba = std::vector<std::uint8_t>(static_cast<std::size_t>(width) * height * 4U),
                 },
             .raster_color_baked = true,
@@ -1157,4 +1157,4 @@ namespace smgpc::compat {
         };
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

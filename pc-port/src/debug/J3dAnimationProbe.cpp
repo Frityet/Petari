@@ -35,9 +35,9 @@ namespace {
         return out;
     }
 
-    void write_btk_sample(std::ofstream &out, const smgpc::compat::J3dBtkAnimationSummary &btk,
-                          const smgpc::compat::J3dBtkMaterialAnimationSummary &material, float frame) {
-        const auto sample = smgpc::compat::j3d_evaluate_btk_texture_srt(btk, material.material_name, material.tex_matrix_id, frame);
+    void write_btk_sample(std::ofstream &out, const smgpc::render::J3dBtkAnimationSummary &btk,
+                          const smgpc::render::J3dBtkMaterialAnimationSummary &material, float frame) {
+        const auto sample = smgpc::render::j3d_evaluate_btk_texture_srt(btk, material.material_name, material.tex_matrix_id, frame);
         if (!sample.has_value()) {
             out << "-";
             return;
@@ -47,8 +47,8 @@ namespace {
             << sample->translate_t << ")";
     }
 
-    void write_bck_sample(std::ofstream &out, const smgpc::compat::J3dBckAnimationSummary &bck, std::uint16_t joint, float frame) {
-        const auto sample = smgpc::compat::j3d_evaluate_bck_joint_transform(bck, joint, frame);
+    void write_bck_sample(std::ofstream &out, const smgpc::render::J3dBckAnimationSummary &bck, std::uint16_t joint, float frame) {
+        const auto sample = smgpc::render::j3d_evaluate_bck_joint_transform(bck, joint, frame);
         if (!sample.has_value()) {
             out << "-";
             return;
@@ -59,7 +59,7 @@ namespace {
             << sample->translation[2U] << ")";
     }
 
-    void write_summary(std::ofstream &out, std::string_view file_name, const smgpc::compat::J3dAnimationSummary &animation) {
+    void write_summary(std::ofstream &out, std::string_view file_name, const smgpc::render::J3dAnimationSummary &animation) {
         out << "# J3D Animation Probe: " << file_name << "\n\n";
         out << "- type: `" << animation.type << "`\n";
         out << "- file size: " << animation.file_size << "\n";
@@ -127,7 +127,7 @@ namespace {
 
 int main(int argc, char **argv) try {
     const auto object_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
-    const auto archive = smgpc::compat::RarcArchive::from_file(disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc"));
+    const auto archive = smgpc::resource::RarcArchive::from_file(disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc"));
     const auto out_dir = output_directory(object_name);
 
     for (const auto &entry : archive.entries()) {
@@ -135,7 +135,7 @@ int main(int argc, char **argv) try {
             continue;
         }
 
-        const auto animation = smgpc::compat::inspect_j3d_animation(archive.file_data(entry));
+        const auto animation = smgpc::render::inspect_j3d_animation(archive.file_data(entry));
         const auto output = out_dir / (entry.path + ".md");
         auto file = std::ofstream(output);
         if (!file) {

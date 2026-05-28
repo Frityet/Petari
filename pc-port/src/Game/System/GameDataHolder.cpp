@@ -192,27 +192,27 @@ void GameDataHolder::setName(const char* pName) {
     std::snprintf(mName, sizeof(mName), "%s", pName != nullptr ? pName : "mario1");
 }
 
-void GameDataHolder::setCompatCounts(s32 powerStarNum, s32 starPieceNum, s32 playerMissNum) {
+void GameDataHolder::setSaveDataCounts(s32 powerStarNum, s32 starPieceNum, s32 playerMissNum) {
     mPowerStarNum = powerStarNum;
     mStarPieceNum = starPieceNum;
     mPlayerMissNum = playerMissNum;
 }
 
-void GameDataHolder::setCompatEndingFlags(bool viewNormalEnding, bool viewCompleteEnding, bool finalChallengeStar) {
+void GameDataHolder::setEndingFlags(bool viewNormalEnding, bool viewCompleteEnding, bool finalChallengeStar) {
     mViewNormalEnding = viewNormalEnding;
     mViewCompleteEnding = viewCompleteEnding;
     mFinalChallengeStar = finalChallengeStar;
 }
 
-void GameDataHolder::setCompatEventState(const std::map<std::string, bool>& rFlags, const std::map<std::string, u16>& rValues) {
+void GameDataHolder::setEventState(const std::map<std::string, bool>& rFlags, const std::map<std::string, u16>& rValues) {
     mEventFlags = rFlags;
     mEventValues = rValues;
 }
 
-const std::map<std::string, bool>& GameDataHolder::getCompatEventFlags() const {
+const std::map<std::string, bool>& GameDataHolder::getEventFlags() const {
     return mEventFlags;
 }
 
-const std::map<std::string, u16>& GameDataHolder::getCompatEventValues() const {
+const std::map<std::string, u16>& GameDataHolder::getEventValues() const {
     return mEventValues;
 }

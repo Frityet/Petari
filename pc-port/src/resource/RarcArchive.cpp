@@ -7,7 +7,7 @@
 #include <fstream>
 #include <stdexcept>
 
-namespace smgpc::compat {
+namespace smgpc::resource {
     namespace {
 
         constexpr auto RARC_MAGIC = std::uint32_t{0x52415243U};
@@ -104,6 +104,14 @@ namespace smgpc::compat {
         return _entries;
     }
 
+    std::uint16_t RarcArchive::hash_name(std::string_view name) {
+        auto hash = std::uint16_t{};
+        for (const auto character : name) {
+            hash = static_cast<std::uint16_t>((hash * 3U) + static_cast<std::uint8_t>(character));
+        }
+        return hash;
+    }
+
     bool RarcArchive::contains(std::string_view path) const {
         return find(path) != nullptr;
     }
@@ -118,6 +126,17 @@ namespace smgpc::compat {
 
     bool RarcArchive::contains_resource(std::string_view path) const {
         return find_resource(path) != nullptr;
+    }
+
+    std::uint32_t RarcArchive::count_directory_files(std::string_view directory) const {
+        auto normalized = normalized_archive_path(directory);
+        while (!normalized.empty() && normalized.back() == '/') {
+            normalized.pop_back();
+        }
+
+        return static_cast<std::uint32_t>(std::ranges::count_if(_entries, [&normalized](const auto &entry) {
+            return entry.directory == normalized;
+        }));
     }
 
     const RarcEntry *RarcArchive::find(std::string_view path) const {
@@ -160,6 +179,14 @@ namespace smgpc::compat {
         }
 
         return find_by_basename(path);
+    }
+
+    const RarcEntry *RarcArchive::find_by_file_id(std::uint16_t file_id) const {
+        const auto it = std::ranges::find_if(_entries, [file_id](const auto &entry) {
+            return entry.file_id == file_id;
+        });
+
+        return it == _entries.end() ? nullptr : &*it;
     }
 
     std::span<const std::uint8_t> RarcArchive::file_data(const RarcEntry &entry) const {
@@ -254,8 +281,19 @@ namespace smgpc::compat {
                 const auto child_dir_index = read_be32(entry, 0x08U);
                 walk_directory(child_dir_index, path + name + "/");
             } else if ((flags & FILE_FLAG_FILE) != 0U) {
+                const auto full_path = path + name;
+                auto directory = path;
+                while (!directory.empty() && directory.back() == '/') {
+                    directory.pop_back();
+                }
+
                 _entries.push_back(RarcEntry{
-                    .path = path + name,
+                    .path = full_path,
+                    .name = name,
+                    .directory = std::move(directory),
+                    .file_id = read_be16(entry, 0x00U),
+                    .name_hash = read_be16(entry, 0x02U),
+                    .file_entry_index = first_file_index + i,
                     .data_offset = _file_data_start + read_be32(entry, 0x08U),
                     .data_size = read_be32(entry, 0x0CU),
                     .flags = flags,
@@ -297,4 +335,4 @@ namespace smgpc::compat {
         return std::span<const std::uint8_t>(_bytes).subspan(_dir_offset + dir_index * 0x10U, 0x10U);
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::resource

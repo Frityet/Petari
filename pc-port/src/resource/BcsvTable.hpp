@@ -9,7 +9,7 @@
 #include <string_view>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::resource {
 
     enum class BcsvFieldType : std::uint8_t {
         Int32 = 0U,
@@ -39,6 +39,8 @@ namespace smgpc::compat {
 
         [[nodiscard]] std::optional<std::size_t> field_index(std::uint32_t hash) const;
         [[nodiscard]] std::optional<std::size_t> field_index(std::string_view name) const;
+        [[nodiscard]] std::optional<std::span<const std::uint8_t>> raw_value(std::size_t entry_index, std::uint32_t hash) const;
+        [[nodiscard]] std::optional<std::span<const std::uint8_t>> raw_value(std::size_t entry_index, std::string_view name) const;
 
         [[nodiscard]] std::optional<std::int32_t> get_s32(std::size_t entry_index, std::uint32_t hash) const;
         [[nodiscard]] std::optional<std::int32_t> get_s32(std::size_t entry_index, std::string_view name) const;
@@ -62,6 +64,7 @@ namespace smgpc::compat {
 
         std::vector<std::uint8_t> _data;
         std::vector<BcsvField> _fields;
+        std::vector<std::size_t> _field_indices_by_hash;
         std::uint32_t _entry_count = 0U;
         std::uint32_t _data_offset = 0U;
         std::uint32_t _entry_size = 0U;
@@ -71,4 +74,4 @@ namespace smgpc::compat {
     [[nodiscard]] std::uint32_t jmap_hash(std::string_view text);
     [[nodiscard]] std::string bcsv_field_type_name(BcsvFieldType type);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::resource
