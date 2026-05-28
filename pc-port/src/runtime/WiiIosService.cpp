@@ -75,7 +75,7 @@ namespace smgpc::runtime {
     }
 
     std::uint64_t WiiIosService::submit_open(std::string_view path, std::uint64_t delay_frames) {
-        return submit_request(WiiIosRequest{
+        return submit_request(WiiIosRequest {
                                   .kind = WiiIosRequestKind::Open,
                                   .device_path = std::string(path),
                                   .file_handle = -1,
@@ -88,7 +88,7 @@ namespace smgpc::runtime {
     }
 
     std::uint64_t WiiIosService::submit_close(s32 file_handle, std::uint64_t delay_frames) {
-        return submit_request(WiiIosRequest{
+        return submit_request(WiiIosRequest {
                                   .kind = WiiIosRequestKind::Close,
                                   .device_path = path_for_handle(file_handle),
                                   .file_handle = file_handle,
@@ -102,7 +102,7 @@ namespace smgpc::runtime {
 
     std::uint64_t WiiIosService::submit_ioctl(s32 file_handle, u32 command, std::span<const std::uint8_t> input,
                                               std::size_t output_size, std::uint64_t delay_frames) {
-        return submit_request(WiiIosRequest{
+        return submit_request(WiiIosRequest {
                                   .kind = WiiIosRequestKind::Ioctl,
                                   .device_path = path_for_handle(file_handle),
                                   .file_handle = file_handle,
@@ -116,7 +116,7 @@ namespace smgpc::runtime {
 
     std::uint64_t WiiIosService::submit_ioctlv(s32 file_handle, u32 command, std::span<const std::uint8_t> input,
                                                std::size_t output_size, std::uint64_t delay_frames) {
-        return submit_request(WiiIosRequest{
+        return submit_request(WiiIosRequest {
                                   .kind = WiiIosRequestKind::Ioctlv,
                                   .device_path = path_for_handle(file_handle),
                                   .file_handle = file_handle,

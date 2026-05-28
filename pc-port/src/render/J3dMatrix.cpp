@@ -9,7 +9,7 @@ namespace smgpc::render {
             return {};
         }
 
-        return J3dMatrix3x4{{
+        return J3dMatrix3x4 {{
             matrix[0][0],
             matrix[0][1],
             matrix[0][2],
@@ -38,7 +38,7 @@ namespace smgpc::render {
         const auto cos = std::cos(radians);
         const auto one_minus_cos = 1.0F - cos;
 
-        return J3dMatrix3x4{{
+        return J3dMatrix3x4 {{
             (one_minus_cos * x * x) + cos,
             (one_minus_cos * x * y) - (sin * z),
             (one_minus_cos * x * z) + (sin * y),
@@ -55,7 +55,7 @@ namespace smgpc::render {
     }
 
     J3dMatrix3x4 j3d_concat_matrix(const J3dMatrix3x4 &left, const J3dMatrix3x4 &right) {
-        auto result = J3dMatrix3x4{};
+        auto result = J3dMatrix3x4 {};
         for (auto row = 0U; row < 3U; ++row) {
             for (auto column = 0U; column < 3U; ++column) {
                 result.m[row * 4U + column] = (left.m[row * 4U + 0U] * right.m[column + 0U]) +
@@ -71,7 +71,7 @@ namespace smgpc::render {
     }
 
     J3dMatrix3x4 j3d_invert_orthonormal_matrix(const J3dMatrix3x4 &matrix) {
-        auto result = J3dMatrix3x4{{
+        auto result = J3dMatrix3x4 {{
             matrix.m[0U],
             matrix.m[4U],
             matrix.m[8U],
@@ -134,7 +134,7 @@ namespace smgpc::render {
         const auto ty = matrix.m[7U];
         const auto tz = matrix.m[11U];
 
-        return J3dMatrix3x4{{
+        return J3dMatrix3x4 {{
             i00,
             i01,
             i02,
@@ -151,7 +151,7 @@ namespace smgpc::render {
     }
 
     J3dMatrix3x4 j3d_apply_matrix_scale(const J3dMatrix3x4 &matrix, float scale_x, float scale_y, float scale_z) {
-        return J3dMatrix3x4{{
+        return J3dMatrix3x4 {{
             matrix.m[0U] * scale_x,
             matrix.m[1U] * scale_y,
             matrix.m[2U] * scale_z,

@@ -343,11 +343,11 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json vec3_json(const smgpc::camera::CameraParamVec3 &value) {
-            return Json{{"x", value.x}, {"y", value.y}, {"z", value.z}};
+            return Json {{"x", value.x}, {"y", value.y}, {"z", value.z}};
         }
 
         [[nodiscard]] Json camera_pose_json(const smgpc::camera::CameraPose &pose) {
-            return Json{
+            return Json {
                 {"eye", vec3_json(pose.eye)},
                 {"watch", vec3_json(pose.watch)},
                 {"up", vec3_json(pose.up)},
@@ -415,20 +415,20 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json wpad_button_names_json(std::uint32_t mask) {
-            constexpr auto buttons = std::array{
-                std::pair{WPAD_BUTTON_A, "A"},
-                std::pair{WPAD_BUTTON_B, "B"},
-                std::pair{WPAD_BUTTON_UP, "UP"},
-                std::pair{WPAD_BUTTON_DOWN, "DOWN"},
-                std::pair{WPAD_BUTTON_LEFT, "LEFT"},
-                std::pair{WPAD_BUTTON_RIGHT, "RIGHT"},
-                std::pair{WPAD_BUTTON_PLUS, "PLUS"},
-                std::pair{WPAD_BUTTON_MINUS, "MINUS"},
-                std::pair{WPAD_BUTTON_HOME, "HOME"},
-                std::pair{WPAD_BUTTON_C, "C"},
-                std::pair{WPAD_BUTTON_Z, "Z"},
-                std::pair{WPAD_BUTTON_1, "ONE"},
-                std::pair{WPAD_BUTTON_2, "TWO"},
+            constexpr auto buttons = std::array {
+                std::pair {WPAD_BUTTON_A, "A"},
+                std::pair {WPAD_BUTTON_B, "B"},
+                std::pair {WPAD_BUTTON_UP, "UP"},
+                std::pair {WPAD_BUTTON_DOWN, "DOWN"},
+                std::pair {WPAD_BUTTON_LEFT, "LEFT"},
+                std::pair {WPAD_BUTTON_RIGHT, "RIGHT"},
+                std::pair {WPAD_BUTTON_PLUS, "PLUS"},
+                std::pair {WPAD_BUTTON_MINUS, "MINUS"},
+                std::pair {WPAD_BUTTON_HOME, "HOME"},
+                std::pair {WPAD_BUTTON_C, "C"},
+                std::pair {WPAD_BUTTON_Z, "Z"},
+                std::pair {WPAD_BUTTON_1, "ONE"},
+                std::pair {WPAD_BUTTON_2, "TWO"},
             };
 
             auto out = Json::array();
@@ -446,7 +446,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json input_pointer_json(const render::InputPointerState &pointer, const render::FrameContext &frame_context) {
-            return Json{
+            return Json {
                 {"x", pointer.x},
                 {"y", pointer.y},
                 {"valid", pointer.valid},
@@ -455,7 +455,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json wpad_pointer_json(const WpadPointerState &pointer, const render::FrameContext &frame_context) {
-            return Json{
+            return Json {
                 {"x", pointer.x},
                 {"y", pointer.y},
                 {"valid", pointer.valid},
@@ -464,7 +464,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json host_input_json(const RuntimeContext::HostInputTraceState &input, const render::FrameContext &frame_context) {
-            return Json{
+            return Json {
                 {"frame_index", input.frame_index},
                 {"raw_hold_mask", input.raw_hold_mask},
                 {"effective_hold_mask", input.effective_hold_mask},
@@ -480,10 +480,10 @@ namespace smgpc::runtime {
         [[nodiscard]] Json wpad_channel_json(const WpadService &wpad, s32 channel, const render::FrameContext &frame_context) {
             const auto *state = wpad.channel_state(channel);
             if (state == nullptr) {
-                return Json{{"connected", false}};
+                return Json {{"connected", false}};
             }
 
-            return Json{
+            return Json {
                 {"connected", state->connected},
                 {"hold_mask", state->hold},
                 {"trigger_mask", state->trigger},
@@ -519,7 +519,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] render::CopyRect frame_rect(std::uint16_t width, std::uint16_t height) {
-            return render::CopyRect{
+            return render::CopyRect {
                 .left = 0,
                 .top = 0,
                 .right = width,
@@ -530,7 +530,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] render::CopyViewport copy_viewport_from_frame(const render::FrameContext &frame_context) {
-            return render::CopyViewport{
+            return render::CopyViewport {
                 .left = 0.0F,
                 .right = static_cast<float>(frame_context.framebuffer.width),
                 .top = 0.0F,
@@ -541,7 +541,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json copy_rect_json(const render::CopyRect &rect) {
-            return Json{
+            return Json {
                 {"left", rect.left},
                 {"top", rect.top},
                 {"right", rect.right},
@@ -552,7 +552,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json copy_viewport_json(const render::CopyViewport &viewport) {
-            return Json{
+            return Json {
                 {"left", viewport.left},
                 {"right", viewport.right},
                 {"top", viewport.top},
@@ -563,7 +563,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json framebuffer_json(const render::FramebufferInfo &framebuffer) {
-            return Json{
+            return Json {
                 {"width", framebuffer.width},
                 {"height", framebuffer.height},
             };
@@ -583,7 +583,7 @@ namespace smgpc::runtime {
             const auto width = frame_context.framebuffer.width;
             const auto height = frame_context.framebuffer.height;
             const auto rect = frame_rect(width, height);
-            return render::CopyEvent{
+            return render::CopyEvent {
                 .index = 0U,
                 .event_index = frame_context.frame_index,
                 .presenter_frame_count = frame_context.frame_index,
@@ -624,7 +624,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json copy_event_json(const render::CopyEvent &event, std::uint64_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"event_index", event.event_index},
                 {"presenter_frame_count", event.presenter_frame_count},
@@ -684,7 +684,7 @@ namespace smgpc::runtime {
                 return Json(nullptr);
             }
 
-            return Json{
+            return Json {
                 {"nerve_step", entry.live_actor_nerve_step},
                 {"position", Json::array({entry.live_actor_position[0U], entry.live_actor_position[1U], entry.live_actor_position[2U]})},
                 {"rotation", Json::array({entry.live_actor_rotation[0U], entry.live_actor_rotation[1U], entry.live_actor_rotation[2U]})},
@@ -697,7 +697,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json scene_entry_json(const SceneSchedulerEntryState &entry, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"kind", entry_kind_name(entry.kind)},
                 {"phase", phase_name(entry.phase)},
@@ -716,14 +716,14 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json scene_entries_json(std::span<const SceneSchedulerEntryState> entries) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+            for (auto i = std::size_t {}; i < entries.size(); ++i) {
                 out.push_back(scene_entry_json(entries[i], i));
             }
             return out;
         }
 
         [[nodiscard]] Json scene_message_json(const SceneSchedulerMessageTraceEntry &entry, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"sequence", entry.sequence},
                 {"message", entry.message},
@@ -751,14 +751,14 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json scene_messages_json(std::span<const SceneSchedulerMessageTraceEntry> entries) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+            for (auto i = std::size_t {}; i < entries.size(); ++i) {
                 out.push_back(scene_message_json(entries[i], i));
             }
             return out;
         }
 
         [[nodiscard]] Json layout_animation_json(const SceneLayoutAnimationDebugState &animation) {
-            return Json{
+            return Json {
                 {"layer_index", animation.layer_index},
                 {"name", animation.name},
                 {"frame", animation.frame},
@@ -778,7 +778,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_pane_control_animation_json(const SceneLayoutPaneControlAnimationDebugState &animation) {
-            return Json{
+            return Json {
                 {"layer_index", animation.layer_index},
                 {"name", animation.name},
                 {"frame", animation.frame},
@@ -798,7 +798,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_pane_control_json(const SceneLayoutPaneControlDebugState &pane) {
-            return Json{
+            return Json {
                 {"pane_name", pane.pane_name},
                 {"exists_in_layout", pane.exists_in_layout},
                 {"visible", pane.visible},
@@ -815,7 +815,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_button_controller_json(const SceneLayoutButtonControllerDebugState &button) {
-            return Json{
+            return Json {
                 {"pane_name", button.pane_name},
                 {"bounding_pane_name", button.bounding_pane_name},
                 {"nerve", button.nerve},
@@ -838,7 +838,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_pane_content_json(const SceneLayoutPaneContentDebugState &content) {
-            return Json{
+            return Json {
                 {"kind", content.kind},
                 {"name", content.name},
                 {"material_index", content.material_index},
@@ -858,7 +858,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_pane_runtime_json(const SceneLayoutPaneRuntimeDebugState &pane) {
-            return Json{
+            return Json {
                 {"index", pane.index},
                 {"name", pane.name},
                 {"parent_index", pane.parent_index},
@@ -884,7 +884,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_material_texture_json(const SceneLayoutMaterialTextureDebugState &texture) {
-            return Json{
+            return Json {
                 {"slot", texture.slot},
                 {"texture_index", texture.texture_index},
                 {"texture_name", texture.texture_name},
@@ -904,7 +904,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_material_json(const SceneLayoutMaterialDebugState &material) {
-            return Json{
+            return Json {
                 {"index", material.index},
                 {"name", material.name},
                 {"texture_count", material.texture_count},
@@ -925,7 +925,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_texture_json(const SceneLayoutTextureDebugState &texture) {
-            return Json{
+            return Json {
                 {"index", texture.index},
                 {"name", texture.name},
                 {"width", texture.width},
@@ -946,7 +946,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_runtime_json(const SceneLayoutRuntimeDebugState &entry, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"name", entry.name},
                 {"layout_name", entry.layout_name},
@@ -975,7 +975,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json layout_runtime_entries_json(std::span<const SceneLayoutRuntimeDebugState> entries) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+            for (auto i = std::size_t {}; i < entries.size(); ++i) {
                 out.push_back(layout_runtime_json(entries[i], i));
             }
             return out;
@@ -983,9 +983,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json audio_events_json(std::span<const AudioEvent> events) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
+            for (auto i = std::size_t {}; i < events.size(); ++i) {
                 const auto &event = events[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", audio_event_kind_name(event.kind)},
                     {"name", event.name},
@@ -1000,7 +1000,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json effect_texture_metadata_json(const smgpc::render::effects::JpcTextureMetadata &texture) {
-            return Json{
+            return Json {
                 {"index", texture.index},
                 {"name", texture.name},
                 {"width", texture.width},
@@ -1039,7 +1039,7 @@ namespace smgpc::runtime {
             }
 
             const auto &dynamics = *resource->dynamics;
-            return Json{
+            return Json {
                 {"flags", dynamics.flags},
                 {"volume_type", dynamics.volume_type},
                 {"fixed_density", dynamics.fixed_density},
@@ -1065,7 +1065,7 @@ namespace smgpc::runtime {
             }
 
             const auto &base_shape = *resource->base_shape;
-            return Json{
+            return Json {
                 {"flags", base_shape.flags},
                 {"shape_type", base_shape.shape_type},
                 {"direction_type", base_shape.direction_type},
@@ -1093,7 +1093,7 @@ namespace smgpc::runtime {
             }
 
             const auto &child_shape = *resource->child_shape;
-            return Json{
+            return Json {
                 {"flags", child_shape.flags},
                 {"shape_type", child_shape.shape_type},
                 {"direction_type", child_shape.direction_type},
@@ -1129,14 +1129,14 @@ namespace smgpc::runtime {
             for (const auto &key_block : resource->key_blocks) {
                 auto keys = Json::array();
                 for (const auto &key : key_block.keys) {
-                    keys.push_back(Json{
+                    keys.push_back(Json {
                         {"time", key.time},
                         {"value", key.value},
                         {"tangent_in", key.tangent_in},
                         {"tangent_out", key.tangent_out},
                     });
                 }
-                out.push_back(Json{
+                out.push_back(Json {
                     {"id", key_block.id},
                     {"loop", key_block.loop},
                     {"key_count", key_block.keys.size()},
@@ -1149,7 +1149,7 @@ namespace smgpc::runtime {
         [[nodiscard]] Json resolved_effect_resources_json(std::span<const smgpc::render::effects::ResolvedEffectResource> resources) {
             auto out = Json::array();
             for (const auto &resource : resources) {
-                out.push_back(Json{
+                out.push_back(Json {
                     {"requested_name", resource.requested_name},
                     {"particle_name", resource.particle_name},
                     {"user_index", resource.user_index},
@@ -1173,7 +1173,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json effect_keeper_registration_json(const EffectKeeperRegistration &keeper) {
-            return Json{
+            return Json {
                 {"host_kind", effect_keeper_host_kind_name(keeper.host_kind)},
                 {"host_name", keeper.host_name},
                 {"resource_group_name", keeper.resource_group_name},
@@ -1188,7 +1188,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json effect_host_binding_json(const EffectHostBinding &binding) {
-            return Json{
+            return Json {
                 {"host_kind", effect_keeper_host_kind_name(binding.host_kind)},
                 {"source", effect_host_binding_source_name(binding.source)},
                 {"host_name", binding.host_name},
@@ -1206,7 +1206,7 @@ namespace smgpc::runtime {
         [[nodiscard]] Json registered_effect_keepers_json(const EffectService &effects) {
             auto out = Json::array();
             const auto keepers = effects.registered_keepers();
-            for (auto i = std::size_t{}; i < keepers.size(); ++i) {
+            for (auto i = std::size_t {}; i < keepers.size(); ++i) {
                 auto keeper = effect_keeper_registration_json(keepers[i]);
                 keeper["index"] = i;
                 out.push_back(std::move(keeper));
@@ -1216,9 +1216,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json effect_events_json(std::span<const EffectEvent> events) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
+            for (auto i = std::size_t {}; i < events.size(); ++i) {
                 const auto &event = events[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", effect_event_kind_name(event.kind)},
                     {"actor_name", event.actor_name},
@@ -1232,7 +1232,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json effect_particle_instance_json(const JpcEffectParticleInstance &particle, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"id", particle.id},
                 {"age", particle.age},
@@ -1246,14 +1246,14 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json effect_particle_instances_json(std::span<const JpcEffectParticleInstance> particles) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < particles.size(); ++i) {
+            for (auto i = std::size_t {}; i < particles.size(); ++i) {
                 out.push_back(effect_particle_instance_json(particles[i], i));
             }
             return out;
         }
 
         [[nodiscard]] Json effect_emitter_instance_json(const JpcEffectEmitterInstance &emitter, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"user_index", emitter.user_index},
                 {"particle_name", emitter.particle_name},
@@ -1272,14 +1272,14 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json effect_emitter_instances_json(std::span<const JpcEffectEmitterInstance> emitters) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < emitters.size(); ++i) {
+            for (auto i = std::size_t {}; i < emitters.size(); ++i) {
                 out.push_back(effect_emitter_instance_json(emitters[i], i));
             }
             return out;
         }
 
         [[nodiscard]] Json active_effect_instance_json(const ActiveEffectInstance &active, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"actor_name", active.actor_name},
                 {"effect_name", active.effect_name},
@@ -1294,7 +1294,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json active_effect_instances_json(std::span<const ActiveEffectInstance> active_effects) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < active_effects.size(); ++i) {
+            for (auto i = std::size_t {}; i < active_effects.size(); ++i) {
                 out.push_back(active_effect_instance_json(active_effects[i], i));
             }
             return out;
@@ -1302,9 +1302,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json wipe_events_json(std::span<const WipeEvent> events) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
+            for (auto i = std::size_t {}; i < events.size(); ++i) {
                 const auto &event = events[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", wipe_event_kind_name(event.kind)},
                     {"name", event.name},
@@ -1316,7 +1316,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json wipe_service_json(const WipeService &wipe) {
-            return Json{
+            return Json {
                 {"state", wipe_state_name(wipe.state())},
                 {"name", wipe.current_name()},
                 {"active", wipe.is_active()},
@@ -1330,9 +1330,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json image_effect_events_json(std::span<const ImageEffectControlEvent> events) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
+            for (auto i = std::size_t {}; i < events.size(); ++i) {
                 const auto &event = events[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", image_effect_control_kind_name(event.kind)},
                     {"frame_index", event.frame_index},
@@ -1342,7 +1342,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json image_effect_service_json(const ImageEffectService &image_effects) {
-            return Json{
+            return Json {
                 {"forced_off", image_effects.is_forced_off()},
                 {"control_auto", image_effects.is_control_auto()},
                 {"events", image_effect_events_json(image_effects.events())},
@@ -1351,9 +1351,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json camera_shake_request_events_json(std::span<const CameraSystemService::ShakeRequestEvent> events) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
+            for (auto i = std::size_t {}; i < events.size(); ++i) {
                 const auto &event = events[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", camera_shake_request_kind_name(event.kind)},
                     {"frame_index", event.frame_index},
@@ -1364,9 +1364,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json rumble_request_events_json(std::span<const RumbleRequestEvent> events) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
+            for (auto i = std::size_t {}; i < events.size(); ++i) {
                 const auto &event = events[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", rumble_request_kind_name(event.kind)},
                     {"channel", event.channel},
@@ -1378,9 +1378,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json sequence_request_events_json(std::span<const SequenceRequestEvent> events) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
+            for (auto i = std::size_t {}; i < events.size(); ++i) {
                 const auto &event = events[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", sequence_request_kind_name(event.kind)},
                     {"frame_index", event.frame_index},
@@ -1390,7 +1390,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json semantic_trace_event_json(const RuntimeContext::SemanticTraceEvent &event) {
-            return Json{
+            return Json {
                 {"index", event.index},
                 {"frame_index", event.frame_index},
                 {"category", event.category},
@@ -1403,7 +1403,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json sequence_request_semantic_event_json(const SequenceRequestEvent &event, std::size_t index,
                                                                 std::string_view stage_name) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"frame_index", event.frame_index},
                 {"category", "sequence"},
@@ -1427,9 +1427,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json rfl_miis_json(std::span<const RflMiiEntry> entries) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+            for (auto i = std::size_t {}; i < entries.size(); ++i) {
                 const auto &entry = entries[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"rfl_index", entry.index},
                     {"source", static_cast<int>(entry.source)},
@@ -1475,9 +1475,9 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json rfl_trace_json(std::span<const RflOperationTrace> entries) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+            for (auto i = std::size_t {}; i < entries.size(); ++i) {
                 const auto &entry = entries[i];
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", i},
                     {"kind", std::string(rfl_operation_kind_name(entry.kind))},
                     {"frame_index", entry.frame_index},
@@ -1506,7 +1506,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json rfl_db_status_json(const RflDbStatus &status) {
-            return Json{
+            return Json {
                 {"nand_bound", status.nand_bound},
                 {"db_present", status.db_present},
                 {"fallback_used", status.fallback_used},
@@ -1522,7 +1522,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json save_slot_json(const SaveDataService::SlotState &slot) {
-            return Json{
+            return Json {
                 {"slot_index", slot.slot_index},
                 {"created", slot.created},
                 {"game_data_corrupted", slot.game_data_corrupted},
@@ -1552,12 +1552,12 @@ namespace smgpc::runtime {
         [[nodiscard]] Json scene_lights_json(const SceneLightService &lights) {
             auto out = Json::array();
             const auto entries = lights.lights();
-            for (auto light_index = std::size_t{}; light_index < entries.size(); ++light_index) {
+            for (auto light_index = std::size_t {}; light_index < entries.size(); ++light_index) {
                 const auto &light = entries[light_index];
                 if (!light.loaded) {
                     continue;
                 }
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", light_index},
                     {"color", color_json(light.color)},
                     {"cosine_attenuation", float3_json(light.cosine_attenuation)},
@@ -1570,7 +1570,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json dvd_file_read_trace_json(const DvdFileReadTrace &entry, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"requested_path", entry.requested_path},
                 {"resolved_path", entry.resolved_path},
@@ -1580,14 +1580,14 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json dvd_file_read_traces_json(std::span<const DvdFileReadTrace> entries) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+            for (auto i = std::size_t {}; i < entries.size(); ++i) {
                 out.push_back(dvd_file_read_trace_json(entries[i], i));
             }
             return out;
         }
 
         [[nodiscard]] Json dvd_archive_load_trace_json(const DvdArchiveLoadTrace &entry, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"requested_path", entry.requested_path},
                 {"resolved_path", entry.resolved_path},
@@ -1600,23 +1600,23 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json dvd_archive_load_traces_json(std::span<const DvdArchiveLoadTrace> entries) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+            for (auto i = std::size_t {}; i < entries.size(); ++i) {
                 out.push_back(dvd_archive_load_trace_json(entries[i], i));
             }
             return out;
         }
 
         [[nodiscard]] Json runtime_services_json(const RuntimeContext &runtime) {
-            return Json{
+            return Json {
                 {"dvd",
-                 Json{
+                 Json {
                      {"root", runtime.dvd().root().generic_string()},
                      {"cached_archive_count", runtime.dvd().cached_archive_count()},
                      {"file_reads", dvd_file_read_traces_json(runtime.dvd().file_read_trace())},
                      {"archive_loads", dvd_archive_load_traces_json(runtime.dvd().archive_load_trace())},
                  }},
                 {"rfl",
-                 Json{
+                 Json {
                      {"initialized", runtime.rfl().is_initialized()},
                      {"error", runtime.rfl().has_error()},
                      {"db_status", rfl_db_status_json(runtime.rfl().db_status())},
@@ -1625,12 +1625,12 @@ namespace smgpc::runtime {
                      {"trace", rfl_trace_json(runtime.rfl().trace())},
                  }},
                 {"save",
-                 Json{
+                 Json {
                      {"file_count", runtime.save_data().file_count()},
                      {"host_directory",
                       runtime.save_data().host_directory().has_value() ? Json(runtime.save_data().host_directory()->string()) : Json(nullptr)},
                      {"sys_config",
-                      Json{
+                      Json {
                           {"time_announced", runtime.save_data().sys_config_time_announced()},
                           {"time_sent", runtime.save_data().sys_config_time_sent()},
                           {"sent_bytes", runtime.save_data().sys_config_sent_bytes()},
@@ -1639,18 +1639,18 @@ namespace smgpc::runtime {
                      {"slots", save_slots_json(runtime.save_data().slot_states())},
                  }},
                 {"scene_lights",
-                 Json{
+                 Json {
                      {"loaded_mask", runtime.scene_lights().loaded_mask()},
                      {"lights", scene_lights_json(runtime.scene_lights())},
                  }},
                 {"wipe",
-                 Json{
+                 Json {
                      {"scene", wipe_service_json(runtime.scene_wipe())},
                      {"system", wipe_service_json(runtime.system_wipe())},
                  }},
                 {"image_effects", image_effect_service_json(runtime.image_effects())},
                 {"camera",
-                 Json{
+                 Json {
                      {"active_programmable_camera",
                       runtime.camera_system().active_programmable_camera_name().has_value() ? Json(std::string(*runtime.camera_system().active_programmable_camera_name())) : Json(nullptr)},
                      {"reset_camera_man_count", runtime.camera_system().reset_camera_man_count()},
@@ -1664,11 +1664,11 @@ namespace smgpc::runtime {
                      {"shake_events", camera_shake_request_events_json(runtime.camera_system().shake_request_events())},
                  }},
                 {"rumble",
-                 Json{
+                 Json {
                      {"events", rumble_request_events_json(runtime.rumble().events())},
                  }},
                 {"sequence_requests",
-                 Json{
+                 Json {
                      {"change_stage_in_game_after_loading_game_data",
                       runtime.sequence_requests().is_change_stage_in_game_after_loading_game_data_requested()},
                      {"events", sequence_request_events_json(runtime.sequence_requests().events())},
@@ -1677,7 +1677,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_blend_json(const render::GxBlendMode2D &blend) {
-            return Json{
+            return Json {
                 {"enabled", blend.enabled},
                 {"type", blend.type},
                 {"src_factor", blend.src_factor},
@@ -1689,7 +1689,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_alpha_compare_json(const render::GxAlphaCompare2D &alpha_compare) {
-            return Json{
+            return Json {
                 {"enabled", alpha_compare.enabled},
                 {"comp0", alpha_compare.comp0},
                 {"ref0", alpha_compare.ref0},
@@ -1700,7 +1700,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_color_channel_control_json(const smgpc::render::GXColorChannelControlState &control) {
-            return Json{
+            return Json {
                 {"raw", control.raw},
                 {"material_source", control.material_source},
                 {"lighting_enabled", control.lighting_enabled},
@@ -1714,8 +1714,8 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json gx_color_channels_json(const smgpc::render::J3dRendererPacketState &state) {
             auto out = Json::array();
-            for (auto channel = std::size_t{}; channel < state.color_channel_material_colors.size(); ++channel) {
-                out.push_back(Json{
+            for (auto channel = std::size_t {}; channel < state.color_channel_material_colors.size(); ++channel) {
+                out.push_back(Json {
                     {"index", channel},
                     {"material_color", color_json(state.color_channel_material_colors[channel])},
                     {"ambient_color", color_json(state.color_channel_ambient_colors[channel])},
@@ -1728,12 +1728,12 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json gx_lights_json(const smgpc::render::J3dRendererPacketState &state) {
             auto out = Json::array();
-            for (auto light_index = std::size_t{}; light_index < state.lights.size(); ++light_index) {
+            for (auto light_index = std::size_t {}; light_index < state.lights.size(); ++light_index) {
                 const auto &light = state.lights[light_index];
                 if (!light.loaded) {
                     continue;
                 }
-                out.push_back(Json{
+                out.push_back(Json {
                     {"index", light_index},
                     {"color", color_json(light.color)},
                     {"cosine_attenuation", float3_json(light.cosine_attenuation)},
@@ -1746,7 +1746,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_texture_binding_json(const smgpc::render::J3dRendererTextureState &texture) {
-            return Json{
+            return Json {
                 {"slot", texture.slot},
                 {"texture_index", texture.texture_index},
                 {"name", texture.name},
@@ -1789,7 +1789,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json render_texture_binding_json(const RuntimeContext::RenderTextureBindingTrace &texture) {
-            return Json{
+            return Json {
                 {"slot", texture.slot},
                 {"texture_index", texture.texture_index},
                 {"name", texture.name},
@@ -1802,7 +1802,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json effect_texture_binding_json(const EffectTextureBindingTrace &texture) {
-            return Json{
+            return Json {
                 {"slot", texture.slot},
                 {"texture_index", texture.texture_index},
                 {"name", texture.name},
@@ -1829,7 +1829,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::uint32_t used_textures_mask(std::span<const smgpc::render::J3dRendererTextureState> textures) {
-            auto mask = std::uint32_t{};
+            auto mask = std::uint32_t {};
             for (const auto &texture : textures) {
                 if (texture.slot < 8U) {
                     mask |= 1U << texture.slot;
@@ -1839,7 +1839,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::uint32_t used_textures_mask(std::span<const RuntimeContext::RenderTextureBindingTrace> textures) {
-            auto mask = std::uint32_t{};
+            auto mask = std::uint32_t {};
             for (const auto &texture : textures) {
                 if (texture.slot < 8U) {
                     mask |= 1U << texture.slot;
@@ -1861,7 +1861,7 @@ namespace smgpc::runtime {
             }
 
             auto out = Json::array();
-            for (auto slot = std::size_t{}; slot < slots.size(); ++slot) {
+            for (auto slot = std::size_t {}; slot < slots.size(); ++slot) {
                 if (slots[slot]) {
                     out.push_back(slot);
                 }
@@ -1878,7 +1878,7 @@ namespace smgpc::runtime {
             }
 
             auto out = Json::array();
-            for (auto slot = std::size_t{}; slot < slots.size(); ++slot) {
+            for (auto slot = std::size_t {}; slot < slots.size(); ++slot) {
                 if (slots[slot]) {
                     out.push_back(slot);
                 }
@@ -1895,7 +1895,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_tex_coord_gen_json(const smgpc::render::GXTexCoordGenState &gen) {
-            return Json{
+            return Json {
                 {"slot", gen.slot},
                 {"type", gen.type},
                 {"source", gen.source},
@@ -1912,7 +1912,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_tex_coord_scale_json(std::uint8_t slot, const smgpc::render::GXTexCoordScaleState &scale) {
-            return Json{
+            return Json {
                 {"slot", slot},
                 {"s_scale_minus_1", scale.s_scale_minus_1},
                 {"t_scale_minus_1", scale.t_scale_minus_1},
@@ -1946,7 +1946,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_su_line_point_json(const smgpc::render::GXSULinePointState &state) {
-            return Json{
+            return Json {
                 {"loaded", state.loaded},
                 {"line_size", state.line_size},
                 {"point_size", state.point_size},
@@ -1958,7 +1958,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_tex_matrix_json(const smgpc::render::GXTexMatrixState &matrix) {
-            return Json{
+            return Json {
                 {"slot", matrix.slot},
                 {"projection", matrix.projection},
                 {"info", matrix.info},
@@ -1981,7 +1981,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_tev_order_json(const smgpc::render::GXTevOrderState &order) {
-            return Json{
+            return Json {
                 {"stage", order.stage},
                 {"tex_coord", order.tex_coord},
                 {"tex_map", order.tex_map},
@@ -1998,7 +1998,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_tev_stage_json(const smgpc::render::GXTevStageState &stage) {
-            return Json{
+            return Json {
                 {"stage", stage.stage},
                 {"raw", u8_array_json(stage.raw)},
                 {"color_in", u8_array_json(stage.color_in)},
@@ -2043,7 +2043,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_z_mode_json(const smgpc::render::GXZModeState &z_mode) {
-            return Json{
+            return Json {
                 {"enabled", z_mode.enabled},
                 {"compare_enable", z_mode.compare_enable},
                 {"function", z_mode.function},
@@ -2052,7 +2052,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_fog_json(const smgpc::render::GXFogState &fog) {
-            return Json{
+            return Json {
                 {"enabled", fog.enabled},
                 {"type", fog.type},
                 {"projection", fog.projection},
@@ -2071,7 +2071,7 @@ namespace smgpc::runtime {
         [[nodiscard]] Json gx_indirect_texture_orders_json(std::span<const smgpc::render::GXIndirectTextureOrderState> orders) {
             auto out = Json::array();
             for (const auto &order : orders) {
-                out.push_back(Json{
+                out.push_back(Json {
                     {"stage", order.stage},
                     {"tex_map", order.tex_map},
                     {"tex_coord", order.tex_coord},
@@ -2083,7 +2083,7 @@ namespace smgpc::runtime {
         [[nodiscard]] Json gx_indirect_texture_matrices_json(std::span<const smgpc::render::GXIndirectTextureMatrixState> matrices) {
             auto out = Json::array();
             for (const auto &matrix : matrices) {
-                out.push_back(Json{
+                out.push_back(Json {
                     {"matrix", matrix.matrix},
                     {"ma", matrix.ma},
                     {"mb", matrix.mb},
@@ -2101,7 +2101,7 @@ namespace smgpc::runtime {
         [[nodiscard]] Json gx_indirect_texture_coord_scales_json(std::span<const smgpc::render::GXIndirectTextureCoordScaleState> scales) {
             auto out = Json::array();
             for (const auto &scale : scales) {
-                out.push_back(Json{
+                out.push_back(Json {
                     {"stage", scale.stage},
                     {"scale_s", scale.scale_s},
                     {"scale_t", scale.scale_t},
@@ -2113,7 +2113,7 @@ namespace smgpc::runtime {
         [[nodiscard]] Json gx_indirect_tev_stages_json(std::span<const smgpc::render::GXIndirectTevStageState> stages) {
             auto out = Json::array();
             for (const auto &stage : stages) {
-                out.push_back(Json{
+                out.push_back(Json {
                     {"tev_stage", stage.tev_stage},
                     {"ind_stage", stage.ind_stage},
                     {"format", stage.format},
@@ -2133,7 +2133,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_indirect_json(const smgpc::render::GXIndirectState &indirect) {
-            return Json{
+            return Json {
                 {"stage_count", indirect.stage_count},
                 {"texture_orders", gx_indirect_texture_orders_json(indirect.texture_orders)},
                 {"texture_matrices", gx_indirect_texture_matrices_json(indirect.texture_matrices)},
@@ -2143,7 +2143,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json gx_register_load_json(const smgpc::render::GXRegisterLoadState &load, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"space", register_space_name(load.space)},
                 {"byte_offset", load.byte_offset},
@@ -2155,7 +2155,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json gx_register_loads_json(std::span<const smgpc::render::GXRegisterLoadState> loads) {
             auto out = Json::array();
-            for (auto i = std::size_t{}; i < loads.size(); ++i) {
+            for (auto i = std::size_t {}; i < loads.size(); ++i) {
                 out.push_back(gx_register_load_json(loads[i], i));
             }
             return out;
@@ -2163,7 +2163,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json j3d_packet_trace_json(const RuntimeContext::J3dRuntimePacketTrace &packet, std::size_t index) {
             const auto &state = packet.state;
-            return Json{
+            return Json {
                 {"index", index},
                 {"model_name", packet.model_name},
                 {"frame_index", packet.frame_index},
@@ -2261,7 +2261,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_packet_trace_json(const RuntimeContext::LayoutRuntimePacketTrace &packet, std::size_t index) {
-            return Json{
+            return Json {
                 {"index", index},
                 {"model_name", packet.layout_name},
                 {"layout_name", packet.layout_name},
@@ -2296,7 +2296,7 @@ namespace smgpc::runtime {
             const auto source_triangle_count = packet.primitive_type == "triangle_strip" ?
                                                    (packet.index_count >= 3U ? packet.index_count - 2U : 0U) :
                                                    packet.index_count / 3U;
-            return Json{
+            return Json {
                 {"index", index},
                 {"model_name", packet.actor_name},
                 {"actor_name", packet.actor_name},
@@ -2342,7 +2342,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] Json runtime_render_packets_json(const RuntimeContext &runtime) {
             auto out = Json::array();
-            auto index = std::size_t{};
+            auto index = std::size_t {};
             for (const auto &packet : runtime.j3d_packet_trace()) {
                 out.push_back(j3d_packet_trace_json(packet, index));
                 ++index;
@@ -2361,15 +2361,15 @@ namespace smgpc::runtime {
     }  // namespace
 
     dump::Json runtime_parity_trace_json(const render::FrameContext &frame_context, const RuntimeContext &runtime) {
-        auto trace = Json{
+        auto trace = Json {
             {"schema", "smgpc-runtime-parity-trace-v1"},
             {"frame",
-             Json{
+             Json {
                  {"index", frame_context.frame_index},
                  {"runtime_index", runtime.frame_index()},
                  {"time_seconds", frame_context.frame_time_seconds},
                  {"delta_seconds", frame_context.frame_delta_seconds},
-                 {"framebuffer", Json{{"width", frame_context.framebuffer.width}, {"height", frame_context.framebuffer.height}}},
+                 {"framebuffer", Json {{"width", frame_context.framebuffer.width}, {"height", frame_context.framebuffer.height}}},
                  {"viewport", frame_viewport_json(frame_context)},
                  {"scissor", frame_scissor_json(frame_context)},
                  {"has_focus", frame_context.has_focus},
@@ -2379,7 +2379,7 @@ namespace smgpc::runtime {
             {"host_input", host_input_json(runtime.host_input_trace(), frame_context)},
             {"wpad0", wpad_channel_json(runtime.wpad(), WPAD_CHAN0, frame_context)},
             {"audio",
-             Json{
+             Json {
                  {"stage_bgm", runtime.current_stage_bgm_name()},
                  {"stage_bgm_active", !runtime.current_stage_bgm_name().empty()},
                  {"stage_bgm_prepared", runtime.is_stage_bgm_prepared()},
@@ -2389,7 +2389,7 @@ namespace smgpc::runtime {
                  {"events", audio_events_json(runtime.audio().events())},
              }},
             {"effects",
-             Json{
+             Json {
                  {"registered_keepers", registered_effect_keepers_json(runtime.effects())},
                  {"active_effects", active_effect_instances_json(runtime.effects().active_effect_instances())},
                  {"events", effect_events_json(runtime.effects().events())},

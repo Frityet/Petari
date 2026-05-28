@@ -6,7 +6,7 @@ namespace smgpc::camera {
     namespace {
 
         [[nodiscard]] CameraParamVec3 subtract(const CameraParamVec3 &a, const CameraParamVec3 &b) {
-            return CameraParamVec3{
+            return CameraParamVec3 {
                 .x = a.x - b.x,
                 .y = a.y - b.y,
                 .z = a.z - b.z,
@@ -14,7 +14,7 @@ namespace smgpc::camera {
         }
 
         [[nodiscard]] CameraParamVec3 cross(const CameraParamVec3 &a, const CameraParamVec3 &b) {
-            return CameraParamVec3{
+            return CameraParamVec3 {
                 .x = a.y * b.z - a.z * b.y,
                 .y = a.z * b.x - a.x * b.z,
                 .z = a.x * b.y - a.y * b.x,
@@ -31,7 +31,7 @@ namespace smgpc::camera {
                 return fallback;
             }
 
-            return CameraParamVec3{
+            return CameraParamVec3 {
                 .x = value.x / length,
                 .y = value.y / length,
                 .z = value.z / length,
@@ -46,7 +46,7 @@ namespace smgpc::camera {
         const auto corrected_up = normalized_or(cross(right, forward), {0.0F, 1.0F, 0.0F});
         const auto delta = subtract(world, pose.eye);
 
-        return CameraViewPoint{
+        return CameraViewPoint {
             .x = dot(delta, right),
             .y = dot(delta, corrected_up),
             .z = dot(delta, forward),

@@ -51,7 +51,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint8_t masked_bit_width(std::uint32_t mask, std::uint8_t shift, std::uint8_t storage_bits) {
             const auto shifted_mask = mask >> shift;
-            auto width = std::uint8_t{};
+            auto width = std::uint8_t {};
             for (auto bit = 0U; bit < storage_bits; ++bit) {
                 if ((shifted_mask & (1U << bit)) != 0U) {
                     width = static_cast<std::uint8_t>(bit + 1U);
@@ -64,7 +64,7 @@ namespace smgpc::resource {
     }  // namespace
 
     std::uint32_t jmap_hash(std::string_view text) {
-        auto hash = std::uint32_t{};
+        auto hash = std::uint32_t {};
         for (const auto character : text) {
             hash = static_cast<std::uint8_t>(character) + hash * 31U;
         }
@@ -131,7 +131,7 @@ namespace smgpc::resource {
 
         const auto &field = _fields[*index];
         const auto offset = value_offset(entry_index, field);
-        auto width = std::size_t{4U};
+        auto width = std::size_t {4U};
         switch (field.type) {
         case BcsvFieldType::Int8:
             width = 1U;
@@ -323,7 +323,7 @@ namespace smgpc::resource {
         _data_offset = read_be32(bytes, 0x08U);
         _entry_size = read_be32(bytes, 0x0cU);
 
-        constexpr auto fields_offset = std::size_t{0x10U};
+        constexpr auto fields_offset = std::size_t {0x10U};
         if (fields_offset + static_cast<std::size_t>(field_count) * 0x0cU > bytes.size()) {
             throw std::runtime_error("BCSV field table is truncated");
         }
@@ -336,7 +336,7 @@ namespace smgpc::resource {
         _field_indices_by_hash.clear();
         for (auto i = 0U; i < field_count; ++i) {
             const auto offset = fields_offset + static_cast<std::size_t>(i) * 0x0cU;
-            _fields.push_back(BcsvField{
+            _fields.push_back(BcsvField {
                 .hash = read_be32(bytes, offset),
                 .mask = read_be32(bytes, offset + 0x04U),
                 .offset = read_be16(bytes, offset + 0x08U),

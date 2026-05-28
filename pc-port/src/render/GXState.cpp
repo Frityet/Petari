@@ -1017,6 +1017,44 @@ namespace smgpc::render {
         return state;
     }
 
+    core::GxTevStage2D gx_brlyt_default_texture_color_stage(std::uint8_t texture_stage) {
+        return core::GxTevStage2D{
+            .texture_stage = texture_stage,
+            .color_in = {2U, 4U, 8U, 15U},
+            .color_op = 0U,
+            .color_bias = 0U,
+            .color_scale = 0U,
+            .color_clamp = true,
+            .color_out = 0U,
+            .alpha_in = {1U, 2U, 4U, 7U},
+            .alpha_op = 0U,
+            .alpha_bias = 0U,
+            .alpha_scale = 0U,
+            .alpha_clamp = true,
+            .alpha_out = 0U,
+            .konst_color = {0U, 0U, 0U, 0U},
+        };
+    }
+
+    core::GxTevStage2D gx_brlyt_default_raster_modulate_stage() {
+        return core::GxTevStage2D{
+            .texture_stage = 0xffU,
+            .color_in = {15U, 0U, 10U, 15U},
+            .color_op = 0U,
+            .color_bias = 0U,
+            .color_scale = 0U,
+            .color_clamp = true,
+            .color_out = 0U,
+            .alpha_in = {7U, 0U, 5U, 7U},
+            .alpha_op = 0U,
+            .alpha_bias = 0U,
+            .alpha_scale = 0U,
+            .alpha_clamp = true,
+            .alpha_out = 0U,
+            .konst_color = {0U, 0U, 0U, 0U},
+        };
+    }
+
     GXBPRegisterState gx_bp_registers_from_state(const GXMaterialState &state) {
         return initial_bp_registers_from_state(state);
     }

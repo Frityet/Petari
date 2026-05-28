@@ -26,9 +26,9 @@ namespace smgpc::trace {
 
         auto out = std::vector<TraceSummary>{};
         while (select.step()) {
-            out.push_back(TraceSummary{
+            out.push_back(TraceSummary {
                 .trace_id = select.column_int(0).value_or(0),
-                .path = std::filesystem::path(select.column_text(1).value_or(std::string{})),
+                .path = std::filesystem::path(select.column_text(1).value_or(std::string {})),
                 .emulator = select.column_text(2),
                 .requested_frame = select.column_int(3),
                 .frame_index = select.column_int(4),
@@ -102,8 +102,8 @@ namespace smgpc::trace {
 
         auto out = std::vector<PacketSignatureDiff>{};
         while (select.step()) {
-            out.push_back(PacketSignatureDiff{
-                .signature = select.column_text(0).value_or(std::string{}),
+            out.push_back(PacketSignatureDiff {
+                .signature = select.column_text(0).value_or(std::string {}),
                 .reference_count = select.column_int(1).value_or(0),
                 .candidate_count = select.column_int(2).value_or(0),
             });
@@ -148,8 +148,8 @@ namespace smgpc::trace {
 
         auto out = std::vector<CopyKindDiff>{};
         while (select.step()) {
-            out.push_back(CopyKindDiff{
-                .kind = select.column_text(0).value_or(std::string{}),
+            out.push_back(CopyKindDiff {
+                .kind = select.column_text(0).value_or(std::string {}),
                 .reference_count = select.column_int(1).value_or(0),
                 .candidate_count = select.column_int(2).value_or(0),
             });
@@ -246,9 +246,9 @@ namespace smgpc::trace {
 
         auto out = std::vector<SemanticAnchorAlignment>{};
         while (select.step()) {
-            out.push_back(SemanticAnchorAlignment{
-                .category = select.column_text(0).value_or(std::string{}),
-                .name = select.column_text(1).value_or(std::string{}),
+            out.push_back(SemanticAnchorAlignment {
+                .category = select.column_text(0).value_or(std::string {}),
+                .name = select.column_text(1).value_or(std::string {}),
                 .reference_frame_index = select.column_int(2),
                 .candidate_frame_index = select.column_int(3),
                 .frame_delta = select.column_int(4),
@@ -332,9 +332,9 @@ namespace smgpc::trace {
 
         auto out = std::vector<LayoutRuntimeDiff>{};
         while (select.step()) {
-            out.push_back(LayoutRuntimeDiff{
-                .name = select.column_text(0).value_or(std::string{}),
-                .layout_name = select.column_text(1).value_or(std::string{}),
+            out.push_back(LayoutRuntimeDiff {
+                .name = select.column_text(0).value_or(std::string {}),
+                .layout_name = select.column_text(1).value_or(std::string {}),
                 .reference_layout_count = select.column_int(2).value_or(0),
                 .candidate_layout_count = select.column_int(3).value_or(0),
                 .reference_dead_count = select.column_int(4).value_or(0),

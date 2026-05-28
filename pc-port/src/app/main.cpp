@@ -19,7 +19,7 @@ namespace {
 }  // namespace
 
 int main() try {
-    const smgpc::app::BootstrapConfiguration configuration{
+    const smgpc::app::BootstrapConfiguration configuration {
         .window_width = read_positive_int_env("SMGPC_WINDOW_WIDTH", smgpc::render::core::kWiiLogicalFramebufferWidth),
         .window_height = read_positive_int_env("SMGPC_WINDOW_HEIGHT", smgpc::render::core::kWiiLogicalFramebufferHeight),
         .window_title = "Super Mario Galaxy",
@@ -30,6 +30,6 @@ int main() try {
     return application.run();
 } catch (const std::exception& e) {
     auto fallback_logger = smgpc::logging::create_default_logger();
-    fallback_logger->fatal(smgpc::logging::Category::APP, smgpc::logging::Message{"Uncaught exception {}"}, e.what());
+    fallback_logger->fatal(smgpc::logging::Category::APP, smgpc::logging::Message {"Uncaught exception {}"}, e.what());
     return 1;
 }

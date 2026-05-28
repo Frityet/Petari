@@ -39,7 +39,7 @@ namespace {
         out << "- hierarchy entries: " << model.info->hierarchy.size() << "\n\n";
         out << "| index | type | value |\n";
         out << "| ---: | --- | ---: |\n";
-        for (auto i = std::size_t{}; i < model.info->hierarchy.size(); ++i) {
+        for (auto i = std::size_t {}; i < model.info->hierarchy.size(); ++i) {
             const auto &entry = model.info->hierarchy[i];
             out << "| " << i << " | " << smgpc::render::j3d_hierarchy_type_name(entry.type) << " | " << entry.value << " |\n";
         }
@@ -97,17 +97,17 @@ namespace {
             if (!model.envelopes->matrices.empty()) {
                 out << "| envelope | joints | weights |\n";
                 out << "| ---: | --- | --- |\n";
-                for (auto i = std::size_t{}; i < model.envelopes->matrices.size(); ++i) {
+                for (auto i = std::size_t {}; i < model.envelopes->matrices.size(); ++i) {
                     const auto &envelope = model.envelopes->matrices[i];
                     out << "| " << i << " | ";
-                    for (auto joint = std::size_t{}; joint < envelope.joint_indices.size(); ++joint) {
+                    for (auto joint = std::size_t {}; joint < envelope.joint_indices.size(); ++joint) {
                         if (joint != 0U) {
                             out << ',';
                         }
                         out << envelope.joint_indices[joint];
                     }
                     out << " | ";
-                    for (auto weight = std::size_t{}; weight < envelope.weights.size(); ++weight) {
+                    for (auto weight = std::size_t {}; weight < envelope.weights.size(); ++weight) {
                         if (weight != 0U) {
                             out << ',';
                         }
@@ -124,7 +124,7 @@ namespace {
             out << "- draw matrices: " << model.draw_matrices->matrix_count << "\n\n";
             out << "| index | kind | target |\n";
             out << "| ---: | --- | ---: |\n";
-            for (auto i = std::size_t{}; i < model.draw_matrices->matrices.size(); ++i) {
+            for (auto i = std::size_t {}; i < model.draw_matrices->matrices.size(); ++i) {
                 const auto &matrix = model.draw_matrices->matrices[i];
                 out << "| " << i << " | " << (matrix.weighted ? "envelope" : "joint") << " | " << matrix.index << " |\n";
             }
@@ -136,7 +136,7 @@ namespace {
             out << "- material packets: " << model.mdl3->material_count << "\n\n";
             out << "| material | packet offset | packet bytes |\n";
             out << "| ---: | ---: | ---: |\n";
-            for (auto i = std::size_t{}; i < model.mdl3->packets.size(); ++i) {
+            for (auto i = std::size_t {}; i < model.mdl3->packets.size(); ++i) {
                 const auto &packet = model.mdl3->packets[i];
                 out << "| " << i << " | 0x" << std::hex << packet.offset << std::dec << " | " << packet.size << " |\n";
             }
@@ -156,8 +156,8 @@ namespace {
                "orders | tev stage ops | alpha compare | blend | textures |\n";
         out << "| ---: | --- | ---: | ---: | ---: | --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | --- | --- | --- |\n";
         for (const auto &material : model.materials->materials) {
-            auto textures = std::ostringstream{};
-            for (auto i = std::size_t{}; i < material.textures.size(); ++i) {
+            auto textures = std::ostringstream {};
+            for (auto i = std::size_t {}; i < material.textures.size(); ++i) {
                 if (i != 0U) {
                     textures << ", ";
                 }
@@ -167,8 +167,8 @@ namespace {
                 }
             }
 
-            auto tex_coord_gens = std::ostringstream{};
-            for (auto i = std::size_t{}; i < material.tex_coord_gens.size(); ++i) {
+            auto tex_coord_gens = std::ostringstream {};
+            for (auto i = std::size_t {}; i < material.tex_coord_gens.size(); ++i) {
                 if (i != 0U) {
                     tex_coord_gens << ", ";
                 }
@@ -177,8 +177,8 @@ namespace {
                                << static_cast<int>(gen.source) << " mtx " << static_cast<int>(gen.matrix);
             }
 
-            auto tex_matrices = std::ostringstream{};
-            for (auto i = std::size_t{}; i < material.tex_matrices.size(); ++i) {
+            auto tex_matrices = std::ostringstream {};
+            for (auto i = std::size_t {}; i < material.tex_matrices.size(); ++i) {
                 if (i != 0U) {
                     tex_matrices << ", ";
                 }
@@ -193,8 +193,8 @@ namespace {
                              << matrix.effect_matrix[13U] << ',' << matrix.effect_matrix[14U] << ',' << matrix.effect_matrix[15U] << ')';
             }
 
-            auto tev_orders = std::ostringstream{};
-            for (auto i = std::size_t{}; i < material.tev_orders.size(); ++i) {
+            auto tev_orders = std::ostringstream {};
+            for (auto i = std::size_t {}; i < material.tev_orders.size(); ++i) {
                 if (i != 0U) {
                     tev_orders << ", ";
                 }
@@ -203,8 +203,8 @@ namespace {
                            << static_cast<int>(order.tex_map) << " chan " << static_cast<int>(order.color_channel);
             }
 
-            auto tev_stages = std::ostringstream{};
-            for (auto i = std::size_t{}; i < material.tev_stages.size(); ++i) {
+            auto tev_stages = std::ostringstream {};
+            for (auto i = std::size_t {}; i < material.tev_stages.size(); ++i) {
                 if (i != 0U) {
                     tev_stages << ", ";
                 }
@@ -222,20 +222,20 @@ namespace {
                            << static_cast<int>(stage.k_alpha_sel);
             }
 
-            auto alpha_compare = std::ostringstream{};
+            auto alpha_compare = std::ostringstream {};
             if (material.alpha_compare.enabled) {
                 alpha_compare << static_cast<int>(material.alpha_compare.comp0) << ',' << static_cast<int>(material.alpha_compare.ref0) << ','
                               << static_cast<int>(material.alpha_compare.op) << ',' << static_cast<int>(material.alpha_compare.comp1) << ','
                               << static_cast<int>(material.alpha_compare.ref1);
             }
 
-            auto blend = std::ostringstream{};
+            auto blend = std::ostringstream {};
             if (material.blend.enabled) {
                 blend << static_cast<int>(material.blend.type) << ',' << static_cast<int>(material.blend.src_factor) << ','
                       << static_cast<int>(material.blend.dst_factor) << ',' << static_cast<int>(material.blend.op);
             }
 
-            auto z_mode = std::ostringstream{};
+            auto z_mode = std::ostringstream {};
             if (material.z_mode.enabled) {
                 z_mode << static_cast<int>(material.z_mode.compare_enable) << ',' << static_cast<int>(material.z_mode.function) << ','
                        << static_cast<int>(material.z_mode.update_enable);
@@ -264,26 +264,26 @@ namespace {
         for (const auto &material : model.materials->materials) {
             const auto &state = material.gx_state;
             const auto &channel = state.color_channels[0U];
-            auto loaded_light_mask = std::uint32_t{};
+            auto loaded_light_mask = std::uint32_t {};
             for (auto light = 0U; light < state.lights.size(); ++light) {
                 if (state.lights[light].loaded) {
                     loaded_light_mask |= 1U << light;
                 }
             }
             const auto color_text = [](const auto &color) {
-                auto text = std::ostringstream{};
+                auto text = std::ostringstream {};
                 text << static_cast<int>(color[0U]) << ',' << static_cast<int>(color[1U]) << ',' << static_cast<int>(color[2U]) << ','
                      << static_cast<int>(color[3U]);
                 return text.str();
             };
             const auto control_text = [](const auto &control) {
-                auto text = std::ostringstream{};
+                auto text = std::ostringstream {};
                 text << "raw " << control.raw << " src " << static_cast<int>(control.material_source) << " light "
                      << (control.lighting_enabled ? "on" : "off") << " mask " << static_cast<int>(control.light_mask) << " attn mode "
                      << static_cast<int>(control.attenuation_mode);
                 return text.str();
             };
-            auto light_mask = std::ostringstream{};
+            auto light_mask = std::ostringstream {};
             light_mask << "0x" << std::hex << loaded_light_mask;
             gx_rows.push_back({
                 std::to_string(material.index),
@@ -329,7 +329,7 @@ namespace {
         out << "| index | draw order | name | material | joint | mtx type | groups | dl bytes | parsed bytes | primitives | triangles | bounds |\n";
         out << "| ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |\n";
         for (const auto &shape : model.shapes->shapes) {
-            auto material = std::ostringstream{};
+            auto material = std::ostringstream {};
             if (shape.material_index == 0xffffU) {
                 material << "none";
             } else {
@@ -339,7 +339,7 @@ namespace {
                 }
             }
 
-            auto joint = std::ostringstream{};
+            auto joint = std::ostringstream {};
             if (shape.joint_index == 0xffffU) {
                 joint << "none";
             } else {
@@ -360,7 +360,7 @@ namespace {
         for (const auto &shape : model.shapes->shapes) {
             out << "#### Shape " << shape.index << " `" << shape.name << "`\n\n";
             out << "Vertex descriptors: ";
-            for (auto i = std::size_t{}; i < shape.vertex_desc.size(); ++i) {
+            for (auto i = std::size_t {}; i < shape.vertex_desc.size(); ++i) {
                 if (i != 0U) {
                     out << ", ";
                 }
@@ -376,7 +376,7 @@ namespace {
                 for (const auto &group : shape.matrix_groups) {
                     out << "| " << group.group_index << " | " << group.use_matrix_index << " | " << group.use_matrix_count << " | "
                         << group.first_matrix_table_index << " | ";
-                    for (auto matrix = std::size_t{}; matrix < group.matrix_table.size(); ++matrix) {
+                    for (auto matrix = std::size_t {}; matrix < group.matrix_table.size(); ++matrix) {
                         if (matrix != 0U) {
                             out << ',';
                         }
@@ -402,7 +402,7 @@ namespace {
         out << "## TEX1\n\n";
         out << "| index | name | dimensions | format | wrap s | wrap t |\n";
         out << "| ---: | --- | --- | ---: | ---: | ---: |\n";
-        for (auto i = std::size_t{}; i < model.textures.size(); ++i) {
+        for (auto i = std::size_t {}; i < model.textures.size(); ++i) {
             const auto &texture = model.textures[i];
             out << "| " << i << " | `" << texture.name << "` | " << texture.image.width << 'x' << texture.image.height << " | "
                 << static_cast<std::uint32_t>(texture.image.format) << " | " << static_cast<int>(texture.wrap_s) << " | "

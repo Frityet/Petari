@@ -12,9 +12,9 @@
 namespace smgpc::runtime {
     namespace {
 
-        constexpr auto UNIX_SECONDS_TO_WII_EPOCH = s64{946684800};
-        constexpr auto SECONDS_PER_DAY = s64{86400};
-        constexpr auto WII_CALENDAR_DAY_OFFSET = s64{0xB2575};
+        constexpr auto UNIX_SECONDS_TO_WII_EPOCH = s64 {946684800};
+        constexpr auto SECONDS_PER_DAY = s64 {86400};
+        constexpr auto WII_CALENDAR_DAY_OFFSET = s64 {0xB2575};
 
         [[nodiscard]] bool is_leap_year(s32 year) {
             return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
@@ -35,12 +35,12 @@ namespace smgpc::runtime {
                 return std::nullopt;
             }
 
-            auto parsed = s64{};
+            auto parsed = s64 {};
             const auto text = std::string_view(value);
             const auto *begin = text.data();
             const auto *end = begin + text.size();
             const auto result = std::from_chars(begin, end, parsed);
-            if (result.ec != std::errc{} || result.ptr != end) {
+            if (result.ec != std::errc {} || result.ptr != end) {
                 return std::nullopt;
             }
             return parsed;
@@ -57,8 +57,8 @@ namespace smgpc::runtime {
         }
 
         void fill_calendar_date(s32 days, OSCalendarTime &time) {
-            static constexpr auto year_days = std::array{0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
-            static constexpr auto leap_year_days = std::array{0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};
+            static constexpr auto year_days = std::array {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
+            static constexpr auto leap_year_days = std::array {0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};
 
             time.wday = (days + 6) % 7;
 
@@ -147,8 +147,8 @@ namespace smgpc::runtime {
     OSTime WiiPlatformService::host_time_ticks() const {
         const auto now = std::chrono::system_clock::now().time_since_epoch();
         const auto unix_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(now).count();
-        const auto wii_microseconds = unix_microseconds - UNIX_SECONDS_TO_WII_EPOCH * s64{1000000};
-        return (wii_microseconds * kWiiOsTimerClock) / s64{1000000};
+        const auto wii_microseconds = unix_microseconds - UNIX_SECONDS_TO_WII_EPOCH * s64 {1000000};
+        return (wii_microseconds * kWiiOsTimerClock) / s64 {1000000};
     }
 
 }  // namespace smgpc::runtime

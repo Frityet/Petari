@@ -10,13 +10,13 @@
 
 namespace smgpc::render::effects {
     namespace {
-        constexpr auto JPAC_MAGIC = std::uint32_t{0x4a504143U};
-        constexpr auto JPAC_VERSION_210 = std::uint32_t{0x322d3130U};
-        constexpr auto BEM1_MAGIC = std::uint32_t{0x42454d31U};
-        constexpr auto BSP1_MAGIC = std::uint32_t{0x42535031U};
-        constexpr auto KFA1_MAGIC = std::uint32_t{0x4b464131U};
-        constexpr auto SSP1_MAGIC = std::uint32_t{0x53535031U};
-        constexpr auto TDB1_MAGIC = std::uint32_t{0x54444231U};
+        constexpr auto JPAC_MAGIC = std::uint32_t {0x4a504143U};
+        constexpr auto JPAC_VERSION_210 = std::uint32_t {0x322d3130U};
+        constexpr auto BEM1_MAGIC = std::uint32_t {0x42454d31U};
+        constexpr auto BSP1_MAGIC = std::uint32_t {0x42535031U};
+        constexpr auto KFA1_MAGIC = std::uint32_t {0x4b464131U};
+        constexpr auto SSP1_MAGIC = std::uint32_t {0x53535031U};
+        constexpr auto TDB1_MAGIC = std::uint32_t {0x54444231U};
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
@@ -44,7 +44,7 @@ namespace smgpc::render::effects {
         }
 
         [[nodiscard]] JpcVec3f read_be_vec3f(std::span<const std::uint8_t> data, std::size_t offset) {
-            return JpcVec3f{
+            return JpcVec3f {
                 .x = read_be_float(data, offset),
                 .y = read_be_float(data, offset + 0x04U),
                 .z = read_be_float(data, offset + 0x08U),
@@ -52,7 +52,7 @@ namespace smgpc::render::effects {
         }
 
         [[nodiscard]] JpcVec3s read_be_vec3s(std::span<const std::uint8_t> data, std::size_t offset) {
-            return JpcVec3s{
+            return JpcVec3s {
                 .x = read_be_s16(data, offset),
                 .y = read_be_s16(data, offset + 0x02U),
                 .z = read_be_s16(data, offset + 0x04U),
@@ -64,7 +64,7 @@ namespace smgpc::render::effects {
                 throw std::runtime_error("JPC fixed string outside buffer");
             }
 
-            auto size = std::size_t{};
+            auto size = std::size_t {};
             while (size < capacity && data[offset + size] != 0U) {
                 ++size;
             }
@@ -87,7 +87,7 @@ namespace smgpc::render::effects {
 
         [[nodiscard]] std::vector<std::string_view> split_space_tokens(std::string_view text) {
             auto tokens = std::vector<std::string_view>{};
-            auto offset = std::size_t{};
+            auto offset = std::size_t {};
             while (offset < text.size()) {
                 while (offset < text.size() && text[offset] == ' ') {
                     ++offset;
@@ -118,7 +118,7 @@ namespace smgpc::render::effects {
         }
 
         [[nodiscard]] std::string get_string_or_empty(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view name) {
-            return table.get_string(row, name).value_or(std::string{});
+            return table.get_string(row, name).value_or(std::string {});
         }
 
         [[nodiscard]] std::int32_t get_s32_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view name, std::int32_t fallback) {
@@ -131,14 +131,14 @@ namespace smgpc::render::effects {
 
         [[nodiscard]] JpcDynamicsBlockMetadata read_bem1_dynamics_metadata(std::span<const std::uint8_t> data, std::size_t offset,
                                                                            std::uint32_t block_size) {
-            constexpr auto DYNAMICS_BLOCK_DATA_SIZE = std::uint32_t{0x7cU};
+            constexpr auto DYNAMICS_BLOCK_DATA_SIZE = std::uint32_t {0x7cU};
 
             if (block_size < DYNAMICS_BLOCK_DATA_SIZE || offset + DYNAMICS_BLOCK_DATA_SIZE > data.size()) {
                 throw std::runtime_error("JPC BEM1 block too small for JPADynamicsBlockData");
             }
 
             const auto flags = read_be32(data, offset + 0x08U);
-            return JpcDynamicsBlockMetadata{
+            return JpcDynamicsBlockMetadata {
                 .flags = flags,
                 .resource_user_work = read_be32(data, offset + 0x0cU),
                 .emitter_scale = read_be_vec3f(data, offset + 0x10U),
@@ -175,8 +175,8 @@ namespace smgpc::render::effects {
 
         void read_bsp1_shape_metadata(std::span<const std::uint8_t> data, std::size_t offset, std::uint32_t block_size,
                                       JpcResourceMetadata &resource) {
-            constexpr auto BASE_SHAPE_DATA_SIZE = std::uint32_t{0x34U};
-            constexpr auto BASE_SHAPE_TEX_IDX_OFFSET = std::size_t{0x20U};
+            constexpr auto BASE_SHAPE_DATA_SIZE = std::uint32_t {0x34U};
+            constexpr auto BASE_SHAPE_TEX_IDX_OFFSET = std::size_t {0x20U};
 
             if (block_size < BASE_SHAPE_DATA_SIZE || offset + BASE_SHAPE_DATA_SIZE > data.size()) {
                 return;
@@ -184,7 +184,7 @@ namespace smgpc::render::effects {
 
             const auto flags = read_be32(data, offset + 0x08U);
             const auto texture_slot = data[offset + BASE_SHAPE_TEX_IDX_OFFSET];
-            resource.base_shape = JpcBaseShapeMetadata{
+            resource.base_shape = JpcBaseShapeMetadata {
                 .flags = flags,
                 .base_size_x = read_be_float(data, offset + 0x10U),
                 .base_size_y = read_be_float(data, offset + 0x14U),
@@ -211,14 +211,14 @@ namespace smgpc::render::effects {
 
         [[nodiscard]] JpcChildShapeMetadata read_ssp1_child_shape_metadata(std::span<const std::uint8_t> data, std::size_t offset,
                                                                            std::uint32_t block_size) {
-            constexpr auto CHILD_SHAPE_DATA_SIZE = std::uint32_t{0x48U};
+            constexpr auto CHILD_SHAPE_DATA_SIZE = std::uint32_t {0x48U};
 
             if (block_size < CHILD_SHAPE_DATA_SIZE || offset + CHILD_SHAPE_DATA_SIZE > data.size()) {
                 throw std::runtime_error("JPC SSP1 block too small for JPAChildShapeData");
             }
 
             const auto flags = read_be32(data, offset + 0x08U);
-            return JpcChildShapeMetadata{
+            return JpcChildShapeMetadata {
                 .flags = flags,
                 .position_random = read_be_float(data, offset + 0x0cU),
                 .base_velocity = read_be_float(data, offset + 0x10U),
@@ -255,8 +255,8 @@ namespace smgpc::render::effects {
 
         [[nodiscard]] JpcKeyBlockMetadata read_kfa1_key_metadata(std::span<const std::uint8_t> data, std::size_t offset,
                                                                  std::uint32_t block_size) {
-            constexpr auto KEY_BLOCK_HEADER_SIZE = std::uint32_t{0x0cU};
-            constexpr auto FLOATS_PER_KEY = std::size_t{4U};
+            constexpr auto KEY_BLOCK_HEADER_SIZE = std::uint32_t {0x0cU};
+            constexpr auto FLOATS_PER_KEY = std::size_t {4U};
             constexpr auto KEY_FRAME_SIZE = FLOATS_PER_KEY * sizeof(float);
 
             if (block_size < KEY_BLOCK_HEADER_SIZE || offset + KEY_BLOCK_HEADER_SIZE > data.size()) {
@@ -269,15 +269,15 @@ namespace smgpc::render::effects {
                 throw std::runtime_error("JPC KFA1 key data outside buffer");
             }
 
-            auto key_block = JpcKeyBlockMetadata{
+            auto key_block = JpcKeyBlockMetadata {
                 .id = data[offset + 0x08U],
                 .loop = data[offset + 0x0bU] != 0U,
                 .keys = {},
             };
             key_block.keys.reserve(key_count);
-            for (auto key_index = std::size_t{}; key_index < key_count; ++key_index) {
+            for (auto key_index = std::size_t {}; key_index < key_count; ++key_index) {
                 const auto key_offset = offset + KEY_BLOCK_HEADER_SIZE + key_index * KEY_FRAME_SIZE;
-                key_block.keys.push_back(JpcKeyFrameMetadata{
+                key_block.keys.push_back(JpcKeyFrameMetadata {
                     .time = read_be_float(data, key_offset + 0x00U),
                     .value = read_be_float(data, key_offset + 0x04U),
                     .tangent_in = read_be_float(data, key_offset + 0x08U),
@@ -290,7 +290,7 @@ namespace smgpc::render::effects {
     }  // namespace
 
     EffectResourceLibrary EffectResourceLibrary::from_archive(const smgpc::resource::RarcArchive &archive) {
-        auto library = EffectResourceLibrary{};
+        auto library = EffectResourceLibrary {};
         library.parse_particle_names(archive.file_data("particlenames.bcsv"));
         library.parse_auto_effect_list(archive.file_data("autoeffectlist.bcsv"));
         library.parse_jpc(archive.file_data("particles.jpc"));
@@ -396,7 +396,7 @@ namespace smgpc::render::effects {
 
     void EffectResourceLibrary::parse_particle_names(std::span<const std::uint8_t> data) {
         const auto table = smgpc::resource::BcsvTable::from_bytes(data);
-        for (auto row = std::size_t{}; row < table.entry_count(); ++row) {
+        for (auto row = std::size_t {}; row < table.entry_count(); ++row) {
             const auto name = table.get_string(row, "name");
             const auto id = table.get_s32(row, "id");
             if (!name.has_value() || name->empty() || !id.has_value() || *id < 0 || *id > 0xffff) {
@@ -412,8 +412,8 @@ namespace smgpc::render::effects {
     void EffectResourceLibrary::parse_auto_effect_list(std::span<const std::uint8_t> data) {
         const auto table = smgpc::resource::BcsvTable::from_bytes(data);
         _auto_effects.reserve(table.entry_count());
-        for (auto row = std::size_t{}; row < table.entry_count(); ++row) {
-            auto auto_effect = AutoEffectInfo{
+        for (auto row = std::size_t {}; row < table.entry_count(); ++row) {
+            auto auto_effect = AutoEffectInfo {
                 .row_index = static_cast<std::uint32_t>(row),
                 .group_name = get_string_or_empty(table, row, "GroupName"),
                 .unique_name = get_string_or_empty(table, row, "UniqueName"),
@@ -457,14 +457,14 @@ namespace smgpc::render::effects {
         const auto texture_count = read_be16(data, 0x0aU);
         const auto texture_offset = read_be32(data, 0x0cU);
 
-        auto offset = std::size_t{0x10U};
+        auto offset = std::size_t {0x10U};
         _resources.reserve(resource_count);
-        for (auto i = std::uint16_t{}; i < resource_count; ++i) {
+        for (auto i = std::uint16_t {}; i < resource_count; ++i) {
             if (offset + 8U > data.size()) {
                 throw std::runtime_error("JPC resource header outside buffer");
             }
 
-            auto resource = JpcResourceMetadata{};
+            auto resource = JpcResourceMetadata {};
             resource.user_index = read_be16(data, offset);
             resource.block_count = read_be16(data, offset + 0x02U);
             resource.field_block_count = data[offset + 0x04U];
@@ -475,7 +475,7 @@ namespace smgpc::render::effects {
             resource.block_tags.reserve(resource.block_count);
             resource.key_blocks.reserve(resource.key_block_count);
             resource.texture_indices.reserve(resource.texture_reference_count);
-            for (auto block_index = std::uint16_t{}; block_index < resource.block_count; ++block_index) {
+            for (auto block_index = std::uint16_t {}; block_index < resource.block_count; ++block_index) {
                 if (offset + 8U > data.size()) {
                     throw std::runtime_error("JPC block header outside buffer");
                 }
@@ -500,7 +500,7 @@ namespace smgpc::render::effects {
                 }
                 if (block_tag == TDB1_MAGIC) {
                     const auto texture_entry_count = std::min<std::uint32_t>(resource.texture_reference_count, (block_size - 8U) / 2U);
-                    for (auto texture_entry = std::uint32_t{}; texture_entry < texture_entry_count; ++texture_entry) {
+                    for (auto texture_entry = std::uint32_t {}; texture_entry < texture_entry_count; ++texture_entry) {
                         resource.texture_indices.push_back(read_be16(data, offset + 8U + texture_entry * 2U));
                     }
                 }
@@ -527,7 +527,7 @@ namespace smgpc::render::effects {
 
         offset = texture_offset;
         _textures.reserve(texture_count);
-        for (auto texture_index = std::uint16_t{}; texture_index < texture_count; ++texture_index) {
+        for (auto texture_index = std::uint16_t {}; texture_index < texture_count; ++texture_index) {
             if (offset + 0x40U > data.size()) {
                 throw std::runtime_error("JPC texture header outside buffer");
             }
@@ -540,12 +540,12 @@ namespace smgpc::render::effects {
             const auto format = static_cast<smgpc::resource::TplTextureFormat>(data[offset + 0x20U]);
             const auto width = read_be16(data, offset + 0x22U);
             const auto height = read_be16(data, offset + 0x24U);
-            auto image = smgpc::resource::DecodedTexture{};
+            auto image = smgpc::resource::DecodedTexture {};
             if (offset + 0x40U <= offset + texture_size) {
                 image = smgpc::resource::decode_raw_gx_texture(data.subspan(offset + 0x40U, texture_size - 0x40U), width, height, format);
             }
 
-            _textures.push_back(JpcTextureMetadata{
+            _textures.push_back(JpcTextureMetadata {
                 .index = texture_index,
                 .name = read_fixed_string(data, offset + 0x0cU, 0x14U),
                 .format = format,
@@ -579,15 +579,15 @@ namespace smgpc::render::effects {
             }
         }
 
-        out.push_back(ResolvedEffectResource{
+        out.push_back(ResolvedEffectResource {
             .requested_name = std::string(requested_name),
             .particle_name = std::string(particle_name),
             .user_index = *user_index,
-            .auto_effect_group_name = auto_effect != nullptr ? auto_effect->group_name : std::string{},
-            .auto_effect_unique_name = auto_effect != nullptr ? auto_effect->unique_name : std::string{},
-            .auto_effect_parent_name = auto_effect != nullptr ? auto_effect->parent_name : std::string{},
-            .auto_effect_joint_name = auto_effect != nullptr ? auto_effect->joint_name : std::string{},
-            .auto_effect_draw_order = auto_effect != nullptr ? auto_effect->draw_order : std::string{},
+            .auto_effect_group_name = auto_effect != nullptr ? auto_effect->group_name : std::string {},
+            .auto_effect_unique_name = auto_effect != nullptr ? auto_effect->unique_name : std::string {},
+            .auto_effect_parent_name = auto_effect != nullptr ? auto_effect->parent_name : std::string {},
+            .auto_effect_joint_name = auto_effect != nullptr ? auto_effect->joint_name : std::string {},
+            .auto_effect_draw_order = auto_effect != nullptr ? auto_effect->draw_order : std::string {},
             .auto_effect_offset_x = auto_effect != nullptr ? auto_effect->offset_x : 0.0F,
             .auto_effect_offset_y = auto_effect != nullptr ? auto_effect->offset_y : 0.0F,
             .auto_effect_offset_z = auto_effect != nullptr ? auto_effect->offset_z : 0.0F,
@@ -607,7 +607,7 @@ namespace smgpc::render::effects {
             return out;
         }
 
-        for (auto index = std::uint32_t{}; index < 100U; ++index) {
+        for (auto index = std::uint32_t {}; index < 100U; ++index) {
             const auto particle_name = numbered_name(requested_name, index);
             const auto before = out.size();
             append_particle_resolution(out, requested_name, particle_name, auto_effect);

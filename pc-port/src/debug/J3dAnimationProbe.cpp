@@ -19,7 +19,7 @@ namespace {
         };
 
         for (const auto &candidate : candidates) {
-            std::error_code error{};
+            std::error_code error {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;
@@ -83,10 +83,10 @@ namespace {
             out << "- rotation values: " << bck.rotation_count << "\n";
             out << "- translation values: " << bck.translation_count << "\n\n";
 
-            const std::array<float, 2U> sample_frames{0.0F, static_cast<float>(bck.frame_max) * 0.5F};
+            const std::array<float, 2U> sample_frames {0.0F, static_cast<float>(bck.frame_max) * 0.5F};
             out << "| joint | frame 0 transform | half-frame transform |\n";
             out << "| ---: | --- | --- |\n";
-            for (auto i = std::uint16_t{}; i < bck.joints.size(); ++i) {
+            for (auto i = std::uint16_t {}; i < bck.joints.size(); ++i) {
                 out << "| " << i << " | ";
                 write_bck_sample(out, bck, i, sample_frames[0U]);
                 out << " | ";
@@ -106,10 +106,10 @@ namespace {
             out << "- translation values: " << btk.translation_count << "\n";
             out << "- tex matrix calc type: " << btk.tex_matrix_calc_type << "\n\n";
 
-            const std::array<float, 2U> sample_frames{0.0F, static_cast<float>(btk.frame_max) * 0.5F};
+            const std::array<float, 2U> sample_frames {0.0F, static_cast<float>(btk.frame_max) * 0.5F};
             out << "| index | material | material id | tex matrix id | center | frame 0 SRT | half-frame SRT |\n";
             out << "| ---: | --- | ---: | ---: | --- | --- | --- |\n";
-            for (auto i = std::size_t{}; i < btk.materials.size(); ++i) {
+            for (auto i = std::size_t {}; i < btk.materials.size(); ++i) {
                 const auto &material = btk.materials[i];
                 out << "| " << i << " | `" << material.material_name << "` | " << material.material_id << " | "
                     << static_cast<int>(material.tex_matrix_id) << " | " << material.center[0U] << "," << material.center[1U] << ","

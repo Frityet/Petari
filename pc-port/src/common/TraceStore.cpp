@@ -192,7 +192,7 @@ namespace smgpc::trace {
         }
 
         [[nodiscard]] Json base_record(std::string_view record_type, const Json &trace, const std::optional<std::string> &emulator) {
-            auto record = Json{
+            auto record = Json {
                 {"schema", std::string(kTraceNdjsonSchema)},
                 {"record_type", std::string(record_type)},
             };
@@ -247,7 +247,7 @@ namespace smgpc::trace {
         }
 
         [[nodiscard]] std::string records_to_ndjson_text(std::span<const Json> records) {
-            auto out = std::ostringstream{};
+            auto out = std::ostringstream {};
             for (const auto &record : records) {
                 out << record.dump() << '\n';
             }
@@ -298,7 +298,7 @@ namespace smgpc::trace {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             )SQL");
             if (const auto *bindings = member(packet, "texture_bindings"); bindings != nullptr && bindings->is_array()) {
-                for (auto i = std::size_t{}; i < bindings->size(); ++i) {
+                for (auto i = std::size_t {}; i < bindings->size(); ++i) {
                     const auto &binding = (*bindings)[i];
                     if (!binding.is_object()) {
                         continue;
@@ -326,7 +326,7 @@ namespace smgpc::trace {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             )SQL");
             if (const auto *orders = member(packet, "tev_orders"); orders != nullptr && orders->is_array()) {
-                for (auto i = std::size_t{}; i < orders->size(); ++i) {
+                for (auto i = std::size_t {}; i < orders->size(); ++i) {
                     const auto &order = (*orders)[i];
                     if (!order.is_object()) {
                         continue;
@@ -350,7 +350,7 @@ namespace smgpc::trace {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             )SQL");
             if (const auto *stages = member(packet, "tev_stages"); stages != nullptr && stages->is_array()) {
-                for (auto i = std::size_t{}; i < stages->size(); ++i) {
+                for (auto i = std::size_t {}; i < stages->size(); ++i) {
                     const auto &stage = (*stages)[i];
                     if (!stage.is_object()) {
                         continue;
@@ -376,7 +376,7 @@ namespace smgpc::trace {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             )SQL");
             if (const auto *lights = member(packet, "lights"); lights != nullptr && lights->is_array()) {
-                for (auto i = std::size_t{}; i < lights->size(); ++i) {
+                for (auto i = std::size_t {}; i < lights->size(); ++i) {
                     const auto &light = (*lights)[i];
                     insert_light.bind(1, trace_id);
                     insert_light.bind(2, packet_index);
@@ -413,8 +413,8 @@ namespace smgpc::trace {
                 return 0;
             }
 
-            auto inserted = std::size_t{};
-            for (auto i = std::size_t{}; i < packets->size(); ++i) {
+            auto inserted = std::size_t {};
+            for (auto i = std::size_t {}; i < packets->size(); ++i) {
                 const auto &packet = (*packets)[i];
                 if (!packet.is_object()) {
                     continue;
@@ -468,8 +468,8 @@ namespace smgpc::trace {
                 return 0;
             }
 
-            auto inserted = std::size_t{};
-            for (auto i = std::size_t{}; i < events->size(); ++i) {
+            auto inserted = std::size_t {};
+            for (auto i = std::size_t {}; i < events->size(); ++i) {
                 const auto &event = (*events)[i];
                 if (!event.is_object()) {
                     continue;
@@ -504,8 +504,8 @@ namespace smgpc::trace {
                 return 0;
             }
 
-            auto inserted = std::size_t{};
-            for (auto i = std::size_t{}; i < events->size(); ++i) {
+            auto inserted = std::size_t {};
+            for (auto i = std::size_t {}; i < events->size(); ++i) {
                 const auto &event = (*events)[i];
                 if (!event.is_object()) {
                     continue;
@@ -524,6 +524,195 @@ namespace smgpc::trace {
                 ++inserted;
             }
             return inserted;
+        }
+
+        LayoutImportCounts insert_layout_runtime(sql::Database &db, std::int64_t trace_id, const Json &trace) {
+            auto counts = LayoutImportCounts {};
+            const auto *layouts = member(trace, "layout_runtime");
+            if (layouts == nullptr || !layouts->is_array()) {
+                return counts;
+            }
+
+            auto insert_layout = sql::Statement(db, R"SQL(
+                INSERT INTO layout_runtime(
+                    trace_id, row_index, layout_index, name, layout_name, archive_path, movement_type, calc_anim_type,
+                    draw_type, order_index, dead, suspended, pane_count, picture_count, text_box_count, material_count,
+                    texture_count, font_count, animation_count, committed_pane_frame_count, payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            )SQL");
+            auto insert_pane = sql::Statement(db, R"SQL(
+                INSERT INTO layout_runtime_panes(
+                    trace_id, layout_row, pane_index, name, parent_index, base_visible, effective_visible, alpha,
+                    width, height, content_count, payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            )SQL");
+            auto insert_content = sql::Statement(db, R"SQL(
+                INSERT INTO layout_runtime_pane_contents(
+                    trace_id, layout_row, pane_index, content_index, kind, material_index, material_name, texture_name, payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            )SQL");
+            auto insert_material = sql::Statement(db, R"SQL(
+                INSERT INTO layout_runtime_materials(
+                    trace_id, layout_row, material_index, name, texture_count, tex_coord_gen_count, tev_stage_count,
+                    alpha_compare_enabled, blend_enabled, payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            )SQL");
+            auto insert_material_texture = sql::Statement(db, R"SQL(
+                INSERT INTO layout_runtime_material_textures(
+                    trace_id, layout_row, material_index, texture_slot_index, slot, texture_index, texture_name,
+                    wrap_s, wrap_t, min_filter, mag_filter, payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            )SQL");
+            auto insert_texture = sql::Statement(db, R"SQL(
+                INSERT INTO layout_runtime_textures(
+                    trace_id, layout_row, texture_index, name, width, height, format, format_raw,
+                    uploaded, rgba_byte_count, payload_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            )SQL");
+
+            for (auto layout_row = std::size_t {}; layout_row < layouts->size(); ++layout_row) {
+                const auto &layout = (*layouts)[layout_row];
+                if (!layout.is_object()) {
+                    continue;
+                }
+
+                insert_layout.bind(1, trace_id);
+                insert_layout.bind(2, static_cast<std::int64_t>(layout_row));
+                insert_layout.bind_optional_int(3, json_int(layout, "index"));
+                insert_layout.bind_optional_text(4, json_text(layout, "name"));
+                insert_layout.bind_optional_text(5, json_text(layout, "layout_name"));
+                insert_layout.bind_optional_text(6, json_text(layout, "archive_path"));
+                insert_layout.bind_optional_int(7, json_int(layout, "movement_type"));
+                insert_layout.bind_optional_int(8, json_int(layout, "calc_anim_type"));
+                insert_layout.bind_optional_int(9, json_int(layout, "draw_type"));
+                insert_layout.bind_optional_int(10, json_int(layout, "order"));
+                insert_layout.bind_optional_int(11, json_int(layout, "dead"));
+                insert_layout.bind_optional_int(12, json_int(layout, "suspended"));
+                insert_layout.bind_optional_int(13, json_int(layout, "pane_count"));
+                insert_layout.bind_optional_int(14, json_int(layout, "picture_count"));
+                insert_layout.bind_optional_int(15, json_int(layout, "text_box_count"));
+                insert_layout.bind_optional_int(16, json_int(layout, "material_count"));
+                insert_layout.bind_optional_int(17, json_int(layout, "texture_count"));
+                insert_layout.bind_optional_int(18, json_int(layout, "font_count"));
+                insert_layout.bind_optional_int(19, json_array_size(layout, "animations"));
+                insert_layout.bind_optional_int(20, json_int(layout, "committed_pane_frame_count"));
+                insert_layout.bind(21, json_raw(layout));
+                insert_layout.step_done();
+                ++counts.layout_count;
+
+                if (const auto *panes = member(layout, "panes"); panes != nullptr && panes->is_array()) {
+                    for (auto pane_row = std::size_t {}; pane_row < panes->size(); ++pane_row) {
+                        const auto &pane = (*panes)[pane_row];
+                        if (!pane.is_object()) {
+                            continue;
+                        }
+
+                        const auto pane_index = json_int(pane, "index").value_or(static_cast<std::int64_t>(pane_row));
+                        insert_pane.bind(1, trace_id);
+                        insert_pane.bind(2, static_cast<std::int64_t>(layout_row));
+                        insert_pane.bind(3, pane_index);
+                        insert_pane.bind_optional_text(4, json_text(pane, "name"));
+                        insert_pane.bind_optional_int(5, json_int(pane, "parent_index"));
+                        insert_pane.bind_optional_int(6, json_int(pane, "base_visible"));
+                        insert_pane.bind_optional_int(7, json_int(pane, "effective_visible"));
+                        insert_pane.bind_optional_int(8, json_int(pane, "alpha"));
+                        insert_pane.bind_optional_int(9, json_int(pane, "width"));
+                        insert_pane.bind_optional_int(10, json_int(pane, "height"));
+                        insert_pane.bind_optional_int(11, json_array_size(pane, "contents"));
+                        insert_pane.bind(12, json_raw(pane));
+                        insert_pane.step_done();
+                        ++counts.pane_count;
+
+                        if (const auto *contents = member(pane, "contents"); contents != nullptr && contents->is_array()) {
+                            for (auto content_row = std::size_t {}; content_row < contents->size(); ++content_row) {
+                                const auto &content = (*contents)[content_row];
+                                if (!content.is_object()) {
+                                    continue;
+                                }
+                                insert_content.bind(1, trace_id);
+                                insert_content.bind(2, static_cast<std::int64_t>(layout_row));
+                                insert_content.bind(3, pane_index);
+                                insert_content.bind(4, static_cast<std::int64_t>(content_row));
+                                insert_content.bind_optional_text(5, json_text(content, "kind"));
+                                insert_content.bind_optional_int(6, json_int(content, "material_index"));
+                                insert_content.bind_optional_text(7, json_text(content, "material_name"));
+                                insert_content.bind_optional_text(8, json_text(content, "texture_name"));
+                                insert_content.bind(9, json_raw(content));
+                                insert_content.step_done();
+                            }
+                        }
+                    }
+                }
+
+                if (const auto *materials = member(layout, "materials"); materials != nullptr && materials->is_array()) {
+                    for (auto material_row = std::size_t {}; material_row < materials->size(); ++material_row) {
+                        const auto &material = (*materials)[material_row];
+                        if (!material.is_object()) {
+                            continue;
+                        }
+
+                        const auto material_index = json_int(material, "index").value_or(static_cast<std::int64_t>(material_row));
+                        insert_material.bind(1, trace_id);
+                        insert_material.bind(2, static_cast<std::int64_t>(layout_row));
+                        insert_material.bind(3, material_index);
+                        insert_material.bind_optional_text(4, json_text(material, "name"));
+                        insert_material.bind_optional_int(5, json_int(material, "texture_count"));
+                        insert_material.bind_optional_int(6, json_int(material, "tex_coord_gen_count"));
+                        insert_material.bind_optional_int(7, json_int(material, "tev_stage_count"));
+                        insert_material.bind_optional_int(8, json_int(material, "alpha_compare_enabled"));
+                        insert_material.bind_optional_int(9, json_int(material, "blend_enabled"));
+                        insert_material.bind(10, json_raw(material));
+                        insert_material.step_done();
+                        ++counts.material_count;
+
+                        if (const auto *textures = member(material, "textures"); textures != nullptr && textures->is_array()) {
+                            for (auto texture_row = std::size_t {}; texture_row < textures->size(); ++texture_row) {
+                                const auto &texture = (*textures)[texture_row];
+                                if (!texture.is_object()) {
+                                    continue;
+                                }
+                                insert_material_texture.bind(1, trace_id);
+                                insert_material_texture.bind(2, static_cast<std::int64_t>(layout_row));
+                                insert_material_texture.bind(3, material_index);
+                                insert_material_texture.bind(4, static_cast<std::int64_t>(texture_row));
+                                insert_material_texture.bind_optional_int(5, json_int(texture, "slot"));
+                                insert_material_texture.bind_optional_int(6, json_int(texture, "texture_index"));
+                                insert_material_texture.bind_optional_text(7, json_text(texture, "texture_name"));
+                                insert_material_texture.bind_optional_int(8, json_int(texture, "wrap_s"));
+                                insert_material_texture.bind_optional_int(9, json_int(texture, "wrap_t"));
+                                insert_material_texture.bind_optional_int(10, json_int(texture, "min_filter"));
+                                insert_material_texture.bind_optional_int(11, json_int(texture, "mag_filter"));
+                                insert_material_texture.bind(12, json_raw(texture));
+                                insert_material_texture.step_done();
+                            }
+                        }
+                    }
+                }
+
+                if (const auto *textures = member(layout, "textures"); textures != nullptr && textures->is_array()) {
+                    for (auto texture_row = std::size_t {}; texture_row < textures->size(); ++texture_row) {
+                        const auto &texture = (*textures)[texture_row];
+                        if (!texture.is_object()) {
+                            continue;
+                        }
+
+                        insert_texture.bind(1, trace_id);
+                        insert_texture.bind(2, static_cast<std::int64_t>(layout_row));
+                        insert_texture.bind_optional_int(3, json_int(texture, "index"));
+                        insert_texture.bind_optional_text(4, json_text(texture, "name"));
+                        insert_texture.bind_optional_int(5, json_int(texture, "width"));
+                        insert_texture.bind_optional_int(6, json_int(texture, "height"));
+                        insert_texture.bind_optional_text(7, json_text(texture, "format"));
+                        insert_texture.bind_optional_int(8, json_int(texture, "format_raw"));
+                        insert_texture.bind_optional_int(9, json_int(texture, "uploaded"));
+                        insert_texture.bind_optional_int(10, json_int(texture, "rgba_byte_count"));
+                        insert_texture.bind(11, json_raw(texture));
+                        insert_texture.step_done();
+                        ++counts.texture_count;
+                    }
+                }
+            }
+            return counts;
         }
 
     }  // namespace
@@ -551,19 +740,19 @@ namespace smgpc::trace {
         }
 
         if (const auto *packets = member(trace, "render_packets"); packets != nullptr && packets->is_array()) {
-            for (auto i = std::size_t{}; i < packets->size(); ++i) {
+            for (auto i = std::size_t {}; i < packets->size(); ++i) {
                 append_indexed_payload_record(records, trace, emulator, "render_packet", i, (*packets)[i]);
             }
         }
 
         if (const auto *events = member(trace, "copy_events"); events != nullptr && events->is_array()) {
-            for (auto i = std::size_t{}; i < events->size(); ++i) {
+            for (auto i = std::size_t {}; i < events->size(); ++i) {
                 append_indexed_payload_record(records, trace, emulator, "copy_event", i, (*events)[i]);
             }
         }
 
         if (const auto *events = member(trace, "semantic_events"); events != nullptr && events->is_array()) {
-            for (auto i = std::size_t{}; i < events->size(); ++i) {
+            for (auto i = std::size_t {}; i < events->size(); ++i) {
                 append_indexed_payload_record(records, trace, emulator, "semantic_event", i, (*events)[i]);
             }
         }
@@ -763,10 +952,107 @@ namespace smgpc::trace {
                 payload_json TEXT NOT NULL,
                 PRIMARY KEY(trace_id, row_index)
             );
+            CREATE TABLE IF NOT EXISTS layout_runtime (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                row_index INTEGER NOT NULL,
+                layout_index INTEGER,
+                name TEXT,
+                layout_name TEXT,
+                archive_path TEXT,
+                movement_type INTEGER,
+                calc_anim_type INTEGER,
+                draw_type INTEGER,
+                order_index INTEGER,
+                dead INTEGER,
+                suspended INTEGER,
+                pane_count INTEGER,
+                picture_count INTEGER,
+                text_box_count INTEGER,
+                material_count INTEGER,
+                texture_count INTEGER,
+                font_count INTEGER,
+                animation_count INTEGER,
+                committed_pane_frame_count INTEGER,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, row_index)
+            );
+            CREATE TABLE IF NOT EXISTS layout_runtime_panes (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                layout_row INTEGER NOT NULL,
+                pane_index INTEGER NOT NULL,
+                name TEXT,
+                parent_index INTEGER,
+                base_visible INTEGER,
+                effective_visible INTEGER,
+                alpha INTEGER,
+                width INTEGER,
+                height INTEGER,
+                content_count INTEGER,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, layout_row, pane_index)
+            );
+            CREATE TABLE IF NOT EXISTS layout_runtime_pane_contents (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                layout_row INTEGER NOT NULL,
+                pane_index INTEGER NOT NULL,
+                content_index INTEGER NOT NULL,
+                kind TEXT,
+                material_index INTEGER,
+                material_name TEXT,
+                texture_name TEXT,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, layout_row, pane_index, content_index)
+            );
+            CREATE TABLE IF NOT EXISTS layout_runtime_materials (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                layout_row INTEGER NOT NULL,
+                material_index INTEGER NOT NULL,
+                name TEXT,
+                texture_count INTEGER,
+                tex_coord_gen_count INTEGER,
+                tev_stage_count INTEGER,
+                alpha_compare_enabled INTEGER,
+                blend_enabled INTEGER,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, layout_row, material_index)
+            );
+            CREATE TABLE IF NOT EXISTS layout_runtime_material_textures (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                layout_row INTEGER NOT NULL,
+                material_index INTEGER NOT NULL,
+                texture_slot_index INTEGER NOT NULL,
+                slot INTEGER,
+                texture_index INTEGER,
+                texture_name TEXT,
+                wrap_s INTEGER,
+                wrap_t INTEGER,
+                min_filter INTEGER,
+                mag_filter INTEGER,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, layout_row, material_index, texture_slot_index)
+            );
+            CREATE TABLE IF NOT EXISTS layout_runtime_textures (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                layout_row INTEGER NOT NULL,
+                texture_index INTEGER NOT NULL,
+                name TEXT,
+                width INTEGER,
+                height INTEGER,
+                format TEXT,
+                format_raw INTEGER,
+                uploaded INTEGER,
+                rgba_byte_count INTEGER,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, layout_row, texture_index)
+            );
             CREATE INDEX IF NOT EXISTS idx_render_packets_material ON render_packets(material_name);
             CREATE INDEX IF NOT EXISTS idx_render_packets_signature ON render_packets(texgen_count, color_channel_count, tev_stage_count, indirect_stage_count, cull_mode, vertex_count);
             CREATE INDEX IF NOT EXISTS idx_texture_bindings_signature ON packet_texture_bindings(slot, format, width, height);
             CREATE INDEX IF NOT EXISTS idx_semantic_events_name ON semantic_events(category, name, frame_index);
+            CREATE INDEX IF NOT EXISTS idx_layout_runtime_name ON layout_runtime(name, layout_name, dead, suspended);
+            CREATE INDEX IF NOT EXISTS idx_layout_runtime_panes_name ON layout_runtime_panes(name, effective_visible);
+            CREATE INDEX IF NOT EXISTS idx_layout_runtime_materials_name ON layout_runtime_materials(name);
+            CREATE INDEX IF NOT EXISTS idx_layout_runtime_textures_name ON layout_runtime_textures(name, format, width, height);
             CREATE VIEW IF NOT EXISTS packet_signatures AS
                 SELECT
                     rp.trace_id,
@@ -817,12 +1103,17 @@ namespace smgpc::trace {
         const auto packet_count = insert_render_packets(db, trace_id, trace);
         const auto copy_count = insert_copy_events(db, trace_id, trace);
         const auto semantic_count = insert_semantic_events(db, trace_id, trace);
-        return ImportResult{
+        const auto layout_counts = insert_layout_runtime(db, trace_id, trace);
+        return ImportResult {
             .trace_id = trace_id,
             .record_count = records.size(),
             .render_packet_count = packet_count,
             .copy_event_count = copy_count,
             .semantic_event_count = semantic_count,
+            .layout_runtime_count = layout_counts.layout_count,
+            .layout_pane_count = layout_counts.pane_count,
+            .layout_material_count = layout_counts.material_count,
+            .layout_texture_count = layout_counts.texture_count,
         };
     }
 

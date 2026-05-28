@@ -150,65 +150,65 @@ namespace smgpc::runtime {
         };
 
         constexpr auto NORMAL_OPA_BEFORE_VOLUME_SHADOW_COMMANDS = std::array<DrawBufferPassCommand, 13U>{
-            DrawBufferPassCommand{MR::DrawBufferType_CrystalItem, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_CrystalItem, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_Crystal, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_Crystal, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_AstroDomeSky, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_AstroDomeSky, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_Planet, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_PlanetLow, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_Environment, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_MapObj, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_MapObjWeakLight, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_MapObjStrongLight, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_TripodBoss, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_CrystalItem, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_CrystalItem, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Crystal, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_Crystal, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_AstroDomeSky, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_AstroDomeSky, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Planet, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_PlanetLow, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_Environment, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_MapObj, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_MapObjWeakLight, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_MapObjStrongLight, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_TripodBoss, SceneDrawBufferPass::Opaque},
         };
 
         constexpr auto PRIOR_AIR_COMMANDS = std::array<DrawBufferPassCommand, 6U>{
-            DrawBufferPassCommand{MR::DrawBufferType_Sky, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_Air, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_Sun, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_Sky, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_Air, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_Sun, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Sky, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_Air, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_Sun, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_Sky, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Air, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Sun, SceneDrawBufferPass::Translucent},
         };
 
         constexpr auto NORMAL_OPA_BEFORE_SILHOUETTE_COMMANDS = std::array<DrawBufferPassCommand, 2U>{
-            DrawBufferPassCommand{MR::DrawBufferType_NoShadowedMapObj, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_NoShadowedMapObjStrongLight, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_NoShadowedMapObj, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_NoShadowedMapObjStrongLight, SceneDrawBufferPass::Opaque},
         };
 
         constexpr auto NORMAL_OPA_COMMANDS = std::array<DrawBufferPassCommand, 8U>{
-            DrawBufferPassCommand{MR::DrawBufferType_NoSilhouettedMapObj, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_NoSilhouettedMapObjWeakLight, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_NoSilhouettedMapObjStrongLight, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_NPC, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_Ride, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_Enemy, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_EnemyDecoration, SceneDrawBufferPass::Opaque},
-            DrawBufferPassCommand{MR::DrawBufferType_PlayerDecoration, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_NoSilhouettedMapObj, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_NoSilhouettedMapObjWeakLight, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_NoSilhouettedMapObjStrongLight, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_NPC, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_Ride, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_Enemy, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_EnemyDecoration, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_PlayerDecoration, SceneDrawBufferPass::Opaque},
         };
 
         constexpr auto NORMAL_XLU_COMMANDS = std::array<DrawBufferPassCommand, 18U>{
-            DrawBufferPassCommand{MR::DrawBufferType_Planet, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_PlanetLow, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_Environment, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_EnvironmentStrongLight, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_MapObj, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_MapObjWeakLight, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_MapObjStrongLight, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_TripodBoss, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_NoShadowedMapObj, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_NoShadowedMapObjStrongLight, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_NoSilhouettedMapObj, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_NoSilhouettedMapObjWeakLight, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_NoSilhouettedMapObjStrongLight, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_NPC, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_Ride, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_Enemy, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_EnemyDecoration, SceneDrawBufferPass::Translucent},
-            DrawBufferPassCommand{MR::DrawBufferType_PlayerDecoration, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Planet, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_PlanetLow, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Environment, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_EnvironmentStrongLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_MapObj, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_MapObjWeakLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_MapObjStrongLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_TripodBoss, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_NoShadowedMapObj, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_NoShadowedMapObjStrongLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_NoSilhouettedMapObj, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_NoSilhouettedMapObjWeakLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_NoSilhouettedMapObjStrongLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_NPC, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Ride, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_Enemy, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_EnemyDecoration, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_PlayerDecoration, SceneDrawBufferPass::Translucent},
         };
 
         constexpr auto NORMAL_2D_DRAW_TYPES = std::array<s32, 9U>{
@@ -228,7 +228,7 @@ namespace smgpc::runtime {
                 return std::numeric_limits<std::size_t>::max();
             }
 
-            for (auto i = std::size_t{}; i < order.size(); ++i) {
+            for (auto i = std::size_t {}; i < order.size(); ++i) {
                 if (order[i] == category) {
                     return i;
                 }
@@ -400,7 +400,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        _entries.push_back(Entry{
+        _entries.push_back(Entry {
             .kind = SceneEntryKind::NameObj,
             .name_obj = &obj,
             .movement_type = movement_type,
@@ -431,7 +431,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        _entries.push_back(Entry{
+        _entries.push_back(Entry {
             .kind = SceneEntryKind::Layout,
             .layout = &layout,
             .movement_type = movement_type,
@@ -461,7 +461,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        _entries.push_back(Entry{
+        _entries.push_back(Entry {
             .kind = SceneEntryKind::LayoutActor,
             .name_obj = &layout,
             .layout_actor = &layout,
@@ -495,7 +495,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        _entries.push_back(Entry{
+        _entries.push_back(Entry {
             .kind = SceneEntryKind::LiveActorModel,
             .name_obj = &actor,
             .live_actor = &actor,
@@ -651,16 +651,16 @@ namespace smgpc::runtime {
         const auto previous_pixel_update_state = runtime != nullptr ? runtime->j3d_pixel_update_state() :
                                                                       std::optional<RuntimeContext::GxPixelUpdateState>{};
         if (runtime != nullptr) {
-            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = true});
+            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = true});
         }
         execute_draw_buffer_list_normal_opa_before_volume_shadow(renderer, camera_pose, prior_draw_air);
         if (runtime != nullptr) {
-            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = true});
+            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = true});
         }
         execute_draw_buffer_list_normal_opa_before_silhouette(renderer, camera_pose);
         MR::fillSilhouetteColor();
         if (runtime != nullptr) {
-            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState{.color_update = true, .alpha_update = false});
+            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = false});
         }
         execute_draw_buffer_list_normal_opa(renderer, camera_pose, prior_draw_air);
         execute_draw_buffer_list_normal_xlu(renderer, camera_pose);
@@ -677,7 +677,7 @@ namespace smgpc::runtime {
 
     std::size_t SceneScheduler::send_message_to_live_actors(u32 msg, LiveActor *exclude_actor) {
         auto seen_actors = std::vector<LiveActor *>{};
-        auto accepted_count = std::size_t{};
+        auto accepted_count = std::size_t {};
         auto *message_sensor = MR::getMessageSensor();
 
         for (auto &entry : _entries) {
@@ -700,7 +700,7 @@ namespace smgpc::runtime {
             }
 
 #ifndef NDEBUG
-            push_message_trace(SceneSchedulerMessageTraceEntry{
+            push_message_trace(SceneSchedulerMessageTraceEntry {
                 .sequence = _next_message_sequence++,
                 .message = msg,
                 .target_name = entry_name(entry),
@@ -785,6 +785,10 @@ namespace smgpc::runtime {
             push_trace(*entry, SceneSchedulerPhase::DrawType);
 #endif
         }
+
+        if (auto *runtime = RuntimeContext::try_instance()) {
+            runtime->effects().draw(renderer, draw_type);
+        }
     }
 
 #ifndef NDEBUG
@@ -792,7 +796,7 @@ namespace smgpc::runtime {
         auto states = std::vector<SceneSchedulerEntryState>{};
         states.reserve(_entries.size());
         for (const auto &entry : _entries) {
-            auto state = SceneSchedulerEntryState{
+            auto state = SceneSchedulerEntryState {
                 .kind = entry.kind,
                 .phase = SceneSchedulerPhase::None,
                 .name = entry_name(entry),
@@ -848,7 +852,7 @@ namespace smgpc::runtime {
             }
             const auto *layout = entry.kind == SceneEntryKind::Layout ? entry.layout : entry.layout_actor->getSimpleLayout();
 
-            auto state = SceneLayoutRuntimeDebugState{
+            auto state = SceneLayoutRuntimeDebugState {
                 .name = entry_name(entry),
                 .layout_name = layout->getLayoutName(),
                 .has_archive_path = false,
@@ -880,9 +884,9 @@ namespace smgpc::runtime {
 
             const auto layer_count = layout->debugAnimLayerCount();
             state.animations.reserve(layer_count);
-            for (auto layer_index = std::size_t{}; layer_index < layer_count; ++layer_index) {
+            for (auto layer_index = std::size_t {}; layer_index < layer_count; ++layer_index) {
                 const auto layer = static_cast<u32>(layer_index);
-                state.animations.push_back(SceneLayoutAnimationDebugState{
+                state.animations.push_back(SceneLayoutAnimationDebugState {
                     .layer_index = layer_index,
                     .name = std::string(layout->debugAnimName(layer)),
                     .frame = layout->getAnimFrame(layer),
@@ -896,7 +900,7 @@ namespace smgpc::runtime {
             const auto panes = layout->debugPanes();
             state.panes.reserve(panes.size());
             for (const auto &pane : panes) {
-                auto pane_state = SceneLayoutPaneRuntimeDebugState{
+                auto pane_state = SceneLayoutPaneRuntimeDebugState {
                     .index = pane.index,
                     .name = pane.name,
                     .parent_index = pane.parent_index,
@@ -913,7 +917,7 @@ namespace smgpc::runtime {
                 };
                 pane_state.contents.reserve(pane.contents.size());
                 for (const auto &content : pane.contents) {
-                    pane_state.contents.push_back(SceneLayoutPaneContentDebugState{
+                    pane_state.contents.push_back(SceneLayoutPaneContentDebugState {
                         .kind = content.kind,
                         .name = content.name,
                         .material_index = content.material_index,
@@ -929,7 +933,7 @@ namespace smgpc::runtime {
             const auto materials = layout->debugMaterials();
             state.materials.reserve(materials.size());
             for (const auto &material : materials) {
-                auto material_state = SceneLayoutMaterialDebugState{
+                auto material_state = SceneLayoutMaterialDebugState {
                     .index = material.index,
                     .name = material.name,
                     .texture_count = material.texture_count,
@@ -941,7 +945,7 @@ namespace smgpc::runtime {
                 };
                 material_state.textures.reserve(material.textures.size());
                 for (const auto &texture : material.textures) {
-                    material_state.textures.push_back(SceneLayoutMaterialTextureDebugState{
+                    material_state.textures.push_back(SceneLayoutMaterialTextureDebugState {
                         .slot = texture.slot,
                         .texture_index = texture.texture_index,
                         .texture_name = texture.texture_name,
@@ -957,7 +961,7 @@ namespace smgpc::runtime {
             const auto textures = layout->debugTextures();
             state.textures.reserve(textures.size());
             for (const auto &texture : textures) {
-                state.textures.push_back(SceneLayoutTextureDebugState{
+                state.textures.push_back(SceneLayoutTextureDebugState {
                     .index = texture.index,
                     .name = texture.name,
                     .width = texture.width,
@@ -973,7 +977,7 @@ namespace smgpc::runtime {
                 const auto pane_controls = entry.layout_actor->getLayoutManager()->debugPaneControls();
                 state.pane_controls.reserve(pane_controls.size());
                 for (const auto &pane_control : pane_controls) {
-                    auto pane_state = SceneLayoutPaneControlDebugState{
+                    auto pane_state = SceneLayoutPaneControlDebugState {
                         .pane_name = pane_control.pane_name,
                         .exists_in_layout = pane_control.exists_in_layout,
                         .visible = pane_control.visible,
@@ -981,7 +985,7 @@ namespace smgpc::runtime {
                     };
                     pane_state.animations.reserve(pane_control.animations.size());
                     for (const auto &animation : pane_control.animations) {
-                        pane_state.animations.push_back(SceneLayoutPaneControlAnimationDebugState{
+                        pane_state.animations.push_back(SceneLayoutPaneControlAnimationDebugState {
                             .layer_index = animation.layer_index,
                             .name = animation.name,
                             .frame = animation.frame,
@@ -997,7 +1001,7 @@ namespace smgpc::runtime {
                 const auto button_controllers = entry.layout_actor->getLayoutManager()->debugButtonControllers();
                 state.button_controllers.reserve(button_controllers.size());
                 for (const auto &button : button_controllers) {
-                    state.button_controllers.push_back(SceneLayoutButtonControllerDebugState{
+                    state.button_controllers.push_back(SceneLayoutButtonControllerDebugState {
                         .pane_name = button.pane_name,
                         .bounding_pane_name = button.bounding_pane_name,
                         .nerve = button.nerve,
@@ -1104,13 +1108,13 @@ namespace smgpc::runtime {
     std::string SceneScheduler::entry_name(const Entry &entry) {
         switch (entry.kind) {
         case SceneEntryKind::NameObj:
-            return entry.name_obj == nullptr ? std::string{} : std::string(entry.name_obj->getName());
+            return entry.name_obj == nullptr ? std::string {} : std::string(entry.name_obj->getName());
         case SceneEntryKind::Layout:
-            return entry.layout == nullptr ? std::string{} : entry.layout->getName();
+            return entry.layout == nullptr ? std::string {} : entry.layout->getName();
         case SceneEntryKind::LayoutActor:
-            return entry.layout_actor == nullptr ? std::string{} : std::string(entry.layout_actor->getName());
+            return entry.layout_actor == nullptr ? std::string {} : std::string(entry.layout_actor->getName());
         case SceneEntryKind::LiveActorModel:
-            return entry.live_actor == nullptr ? std::string{} : std::string(entry.live_actor->getName());
+            return entry.live_actor == nullptr ? std::string {} : std::string(entry.live_actor->getName());
         }
 
         return {};
@@ -1118,7 +1122,7 @@ namespace smgpc::runtime {
 
 #ifndef NDEBUG
     void SceneScheduler::push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass) {
-        auto state = SceneSchedulerEntryState{
+        auto state = SceneSchedulerEntryState {
             .kind = entry.kind,
             .phase = phase,
             .name = entry_name(entry),
@@ -1155,7 +1159,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::push_message_trace(SceneSchedulerMessageTraceEntry trace) {
-        constexpr auto max_message_trace_entries = std::size_t{512U};
+        constexpr auto max_message_trace_entries = std::size_t {512U};
         if (_message_trace.size() >= max_message_trace_entries) {
             _message_trace.erase(_message_trace.begin());
         }

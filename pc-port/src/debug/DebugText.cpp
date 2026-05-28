@@ -22,7 +22,7 @@ namespace smgpc::debug {
     }
 
     std::string sanitize_filename(std::string_view text, std::string_view fallback) {
-        auto sanitized = std::string{};
+        auto sanitized = std::string {};
         sanitized.reserve(text.size());
 
         for (const auto c : text) {
@@ -38,7 +38,7 @@ namespace smgpc::debug {
     }
 
     std::string tag_string(std::uint32_t value) {
-        auto text = std::string{};
+        auto text = std::string {};
         text.push_back(static_cast<char>((value >> 24U) & 0xffU));
         text.push_back(static_cast<char>((value >> 16U) & 0xffU));
         text.push_back(static_cast<char>((value >> 8U) & 0xffU));

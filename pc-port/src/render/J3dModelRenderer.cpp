@@ -13,8 +13,8 @@
 namespace smgpc::render {
     namespace {
 
-        constexpr auto GX_TG_POS = std::uint8_t{0U};
-        constexpr auto GX_TG_TEX0 = std::uint8_t{4U};
+        constexpr auto GX_TG_POS = std::uint8_t {0U};
+        constexpr auto GX_TG_TEX0 = std::uint8_t {4U};
 
         [[nodiscard]] render::core::TexturedVertex2D vertex(float x, float y, float u, float v, std::array<std::uint8_t, 4U> color) {
             return {
@@ -80,7 +80,7 @@ namespace smgpc::render {
             const auto fovy = pose.fovy_degrees * pi / 180.0F;
             const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
 
-            return CameraProjectionContext{
+            return CameraProjectionContext {
                 .eye = {pose.eye.x, pose.eye.y, pose.eye.z},
                 .right = right,
                 .up = up,
@@ -100,7 +100,7 @@ namespace smgpc::render {
                 world[1U] - context.eye[1U],
                 world[2U] - context.eye[2U],
             };
-            return smgpc::camera::CameraViewPoint{
+            return smgpc::camera::CameraViewPoint {
                 .x = dot3(delta, context.right),
                 .y = dot3(delta, context.up),
                 .z = dot3(delta, context.forward),
@@ -147,7 +147,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] bool texture_needs_blending(const smgpc::resource::DecodedTexture &texture) {
-            for (auto offset = std::size_t{3U}; offset < texture.rgba.size(); offset += 4U) {
+            for (auto offset = std::size_t {3U}; offset < texture.rgba.size(); offset += 4U) {
                 if (texture.rgba[offset] != 255U) {
                     return true;
                 }
@@ -174,9 +174,9 @@ namespace smgpc::render {
         [[nodiscard]] render::BlendMode blend_mode_for_material_pass(const J3dMaterialSummary &material, bool texture_has_alpha,
                                                                      const J3dTevStageSummary *stage, bool is_overlay_pass, bool use_gx_blend_mode) {
             if (use_gx_blend_mode && material.blend.enabled) {
-                constexpr auto gx_bm_none = std::uint8_t{0U};
-                constexpr auto gx_bm_blend = std::uint8_t{1U};
-                constexpr auto gx_bl_one = std::uint8_t{1U};
+                constexpr auto gx_bm_none = std::uint8_t {0U};
+                constexpr auto gx_bm_blend = std::uint8_t {1U};
+                constexpr auto gx_bl_one = std::uint8_t {1U};
                 if (material.blend.type == gx_bm_none) {
                     return render::BlendMode::Opaque;
                 }
@@ -202,8 +202,8 @@ namespace smgpc::render {
 
         [[nodiscard]] render::BlendMode blend_mode_for_composed_material(const J3dMaterialSummary &material, bool texture_has_alpha) {
             if (material.blend.enabled) {
-                constexpr auto gx_bm_blend = std::uint8_t{1U};
-                constexpr auto gx_bl_one = std::uint8_t{1U};
+                constexpr auto gx_bm_blend = std::uint8_t {1U};
+                constexpr auto gx_bl_one = std::uint8_t {1U};
                 if (material.blend.type == gx_bm_blend) {
                     return material.blend.dst_factor == gx_bl_one ? render::BlendMode::Additive : render::BlendMode::Alpha;
                 }
@@ -315,7 +315,7 @@ namespace smgpc::render {
 
         [[nodiscard]] int compare_material_names_case_insensitive(std::string_view left, std::string_view right) {
             const auto count = std::min(left.size(), right.size());
-            for (auto i = std::size_t{}; i < count; ++i) {
+            for (auto i = std::size_t {}; i < count; ++i) {
                 const auto left_char = std::tolower(static_cast<unsigned char>(left[i]));
                 const auto right_char = std::tolower(static_cast<unsigned char>(right[i]));
                 if (left_char != right_char) {
@@ -443,7 +443,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dTexCoordGenSummary j3d_tex_coord_gen_from_gx(const GXTexCoordGenState &gen) {
-            return J3dTexCoordGenSummary{
+            return J3dTexCoordGenSummary {
                 .slot = gen.slot,
                 .type = gen.type,
                 .source = gen.source,
@@ -452,7 +452,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dTexMatrixSummary j3d_tex_matrix_from_gx(const GXTexMatrixState &matrix) {
-            return J3dTexMatrixSummary{
+            return J3dTexMatrixSummary {
                 .slot = matrix.slot,
                 .projection = matrix.projection,
                 .info = matrix.info,
@@ -505,7 +505,7 @@ namespace smgpc::render {
 
                 const auto *gen = order.tex_coord == 0xffU ? nullptr : find_tex_coord_gen(state, order.tex_coord);
                 const auto *matrix = find_tex_matrix(state, gen);
-                passes.push_back(J3dMaterialTexturePass{
+                passes.push_back(J3dMaterialTexturePass {
                     .stage = order.stage,
                     .tex_coord_slot = order.tex_coord,
                     .tex_map_slot = order.tex_map,
@@ -546,8 +546,8 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] std::uint8_t loaded_light_mask(std::span<const GXLightState> lights) {
-            auto mask = std::uint8_t{};
-            for (auto light = std::size_t{}; light < lights.size() && light < 8U; ++light) {
+            auto mask = std::uint8_t {};
+            for (auto light = std::size_t {}; light < lights.size() && light < 8U; ++light) {
                 if (lights[light].loaded) {
                     mask |= static_cast<std::uint8_t>(1U << light);
                 }
@@ -556,7 +556,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] std::uint8_t requested_light_mask(const GXMaterialState &state) {
-            auto mask = std::uint8_t{};
+            auto mask = std::uint8_t {};
             for (const auto &channel : state.color_channels) {
                 if (channel.color_control.lighting_enabled) {
                     mask |= channel.color_control.light_mask;
@@ -570,7 +570,7 @@ namespace smgpc::render {
 
         [[nodiscard]] GXMaterialState material_with_scene_lights(const GXMaterialState &material, std::span<const GXLightState> scene_lights) {
             auto state = material;
-            for (auto light = std::size_t{}; light < state.lights.size() && light < scene_lights.size(); ++light) {
+            for (auto light = std::size_t {}; light < state.lights.size() && light < scene_lights.size(); ++light) {
                 if (!state.lights[light].loaded && scene_lights[light].loaded) {
                     state.lights[light] = scene_lights[light];
                 }
@@ -619,15 +619,15 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] bool tev_stage_uses_texture(const GXTevStageState &stage) {
-            constexpr auto gx_cc_texc = std::uint8_t{8U};
-            constexpr auto gx_cc_texa = std::uint8_t{9U};
-            constexpr auto gx_ca_texa = std::uint8_t{4U};
+            constexpr auto gx_cc_texc = std::uint8_t {8U};
+            constexpr auto gx_cc_texa = std::uint8_t {9U};
+            constexpr auto gx_ca_texa = std::uint8_t {4U};
             return std::ranges::any_of(stage.color_in, [=](auto arg) { return arg == gx_cc_texc || arg == gx_cc_texa; }) ||
                    std::ranges::any_of(stage.alpha_in, [=](auto arg) { return arg == gx_ca_texa; });
         }
 
         [[nodiscard]] std::uint8_t texture_stage_index_for_tev_stage(std::span<const J3dMaterialTexturePass> passes, std::uint8_t stage) {
-            for (auto i = std::size_t{}; i < passes.size(); ++i) {
+            for (auto i = std::size_t {}; i < passes.size(); ++i) {
                 if (passes[i].stage == stage) {
                     return static_cast<std::uint8_t>(i);
                 }
@@ -638,7 +638,7 @@ namespace smgpc::render {
 
         [[nodiscard]] render::GxTevStage2D gx_tev_stage_from_state(const GXMaterialState &state, const GXTevStageState &stage,
                                                                    std::span<const J3dMaterialTexturePass> passes) {
-            return render::GxTevStage2D{
+            return render::GxTevStage2D {
                 .texture_stage = texture_stage_index_for_tev_stage(passes, stage.stage),
                 .color_in = stage.color_in,
                 .color_op = stage.color_op,
@@ -657,7 +657,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] render::GxAlphaCompare2D gx_alpha_compare_from_material_state(const GXAlphaCompareState &alpha_compare) {
-            return render::GxAlphaCompare2D{
+            return render::GxAlphaCompare2D {
                 .comp0 = alpha_compare.comp0,
                 .ref0 = alpha_compare.ref0,
                 .op = alpha_compare.op,
@@ -668,7 +668,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] render::GxBlendMode2D gx_blend_from_material_state(const GXBlendState &blend) {
-            return render::GxBlendMode2D{
+            return render::GxBlendMode2D {
                 .type = blend.type,
                 .src_factor = blend.src_factor,
                 .dst_factor = blend.dst_factor,
@@ -691,7 +691,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] render::GxFog2D gx_fog_from_material_state(const GXFogState &fog) {
-            return render::GxFog2D{
+            return render::GxFog2D {
                 .enabled = fog.enabled,
                 .type = fog.type,
                 .projection = fog.projection,
@@ -705,7 +705,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] render::GxFog2D gx_fog_for_mesh(const std::optional<J3dMaterialSummary> &material) {
-            return material.has_value() ? gx_fog_from_material_state(material->gx_state.fog) : render::GxFog2D{};
+            return material.has_value() ? gx_fog_from_material_state(material->gx_state.fog) : render::GxFog2D {};
         }
 
         [[nodiscard]] bool material_can_use_shader_gx_tev(const GXMaterialState &state, std::span<const J3dMaterialTexturePass> passes) {
@@ -745,8 +745,8 @@ namespace smgpc::render {
             float u = 0.0F;
             float v = 0.0F;
             float clip_w = 1.0F;
-            std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D> tex_coords{};
-            std::array<float, 4U> color{255.0F, 255.0F, 255.0F, 255.0F};
+            std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D> tex_coords {};
+            std::array<float, 4U> color {255.0F, 255.0F, 255.0F, 255.0F};
         };
 
         struct ClippedProjectedPolygon {
@@ -779,7 +779,7 @@ namespace smgpc::render {
         };
 
         [[nodiscard]] J3dJointTransformValue joint_transform_from_summary(const J3dJointSummary &joint) {
-            return J3dJointTransformValue{
+            return J3dJointTransformValue {
                 .scale = joint.scale,
                 .rotation = joint.rotation,
                 .translation = joint.translation,
@@ -788,7 +788,7 @@ namespace smgpc::render {
 
         [[nodiscard]] J3dMatrix3x4 matrix_from_joint_transform(const J3dJointTransformValue *transform) {
             if (transform == nullptr) {
-                return J3dMatrix3x4{};
+                return J3dMatrix3x4 {};
             }
 
             constexpr auto pi = 3.14159265358979323846F;
@@ -816,7 +816,7 @@ namespace smgpc::render {
             const auto m02 = cxcz * sy + sxsz;
             const auto m11 = sxsz * sy + cxcz;
 
-            return J3dMatrix3x4{
+            return J3dMatrix3x4 {
                 .m =
                     {
                         m00 * transform->scale[0U],
@@ -836,7 +836,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dMatrix3x4 concat_matrix(const J3dMatrix3x4 &left, const J3dMatrix3x4 &right) {
-            auto result = J3dMatrix3x4{};
+            auto result = J3dMatrix3x4 {};
             result.m.fill(0.0F);
             for (auto row = 0U; row < 3U; ++row) {
                 for (auto column = 0U; column < 3U; ++column) {
@@ -855,7 +855,7 @@ namespace smgpc::render {
 
         [[nodiscard]] J3dMatrix3x4 joint_model_matrix(const MatrixPaletteContext &context, std::uint16_t joint_index) {
             if (joint_index >= context.transforms.size()) {
-                return J3dMatrix3x4{};
+                return J3dMatrix3x4 {};
             }
 
             if (joint_index < context.joint_model_cache.size() && joint_index < context.joint_model_cache_valid.size() &&
@@ -887,19 +887,19 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dMatrix3x4 matrix_from_array(std::array<float, 12U> values) {
-            return J3dMatrix3x4{.m = values};
+            return J3dMatrix3x4 {.m = values};
         }
 
         [[nodiscard]] J3dMatrix3x4 weighted_envelope_matrix(const MatrixPaletteContext &context, std::uint16_t envelope_index) {
             if (context.envelopes == nullptr || envelope_index >= context.envelopes->matrices.size()) {
-                return J3dMatrix3x4{};
+                return J3dMatrix3x4 {};
             }
 
-            auto result = J3dMatrix3x4{};
+            auto result = J3dMatrix3x4 {};
             result.m.fill(0.0F);
             const auto &envelope = context.envelopes->matrices[envelope_index];
             auto total_weight = 0.0F;
-            for (auto influence = std::size_t{}; influence < envelope.joint_indices.size() && influence < envelope.weights.size(); ++influence) {
+            for (auto influence = std::size_t {}; influence < envelope.joint_indices.size() && influence < envelope.weights.size(); ++influence) {
                 const auto joint_index = envelope.joint_indices[influence];
                 if (joint_index >= context.transforms.size()) {
                     continue;
@@ -1014,7 +1014,7 @@ namespace smgpc::render {
                 tex_coords[i][2U] = mix(a.tex_coords[i][2U], b.tex_coords[i][2U]);
             }
 
-            return ProjectedVertex{
+            return ProjectedVertex {
                 .x = mix(a.x, b.x),
                 .y = mix(a.y, b.y),
                 .z = mix(a.z, b.z),
@@ -1060,7 +1060,7 @@ namespace smgpc::render {
             auto tex_coords = std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D>{};
             tex_coords[0U] = {tex_coord.u, tex_coord.v, 1.0F};
 
-            return ProjectedVertex{
+            return ProjectedVertex {
                 .x = camera.x,
                 .y = camera.y,
                 .z = camera.z,
@@ -1083,7 +1083,7 @@ namespace smgpc::render {
                 color[i] = static_cast<std::uint8_t>(std::clamp(std::round(value), 0.0F, 255.0F));
             }
             auto tex_coords = std::array<std::array<float, 2U>, 8U>{};
-            for (auto slot = std::size_t{}; slot < tex_coords.size(); ++slot) {
+            for (auto slot = std::size_t {}; slot < tex_coords.size(); ++slot) {
                 tex_coords[slot] = {
                     mix(a.tex_coords[slot][0U], b.tex_coords[slot][0U], c.tex_coords[slot][0U]),
                     mix(a.tex_coords[slot][1U], b.tex_coords[slot][1U], c.tex_coords[slot][1U]),
@@ -1091,7 +1091,7 @@ namespace smgpc::render {
             }
             const auto tex_coord_count = std::max({a.tex_coord_count, b.tex_coord_count, c.tex_coord_count});
 
-            return J3dMeshVertex{
+            return J3dMeshVertex {
                 .x = mix(a.x, b.x, c.x),
                 .y = mix(a.y, b.y, c.y),
                 .z = mix(a.z, b.z, c.z),
@@ -1127,7 +1127,7 @@ namespace smgpc::render {
             const auto evaluated = j3d_evaluate_material_color(material, textures, passes, source, raster_color, &model_matrix)
                                        .value_or(std::array<std::uint8_t, 4U>{0U, 0U, 0U, 0U});
 
-            return ProjectedVertex{
+            return ProjectedVertex {
                 .x = camera.x,
                 .y = camera.y,
                 .z = camera.z,
@@ -1147,7 +1147,7 @@ namespace smgpc::render {
             const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
             const auto camera = camera_space_point(camera_context, world);
             auto tex_coords = std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D>{};
-            for (auto i = std::size_t{}; i < passes.size() && i < tex_coords.size(); ++i) {
+            for (auto i = std::size_t {}; i < passes.size() && i < tex_coords.size(); ++i) {
                 const auto &pass = passes[i];
                 if (pass.texture_index >= textures.size()) {
                     continue;
@@ -1161,7 +1161,7 @@ namespace smgpc::render {
                 tex_coords[i] = {tex_coord.u, tex_coord.v, tex_coord.q};
             }
 
-            return ProjectedVertex{
+            return ProjectedVertex {
                 .x = camera.x,
                 .y = camera.y,
                 .z = camera.z,
@@ -1182,7 +1182,7 @@ namespace smgpc::render {
                 const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y;
                 const auto ndc_z =
                     std::clamp((projected.z - camera_context.near_plane) / camera_context.depth_range, 0.0F, 1.0F);
-                vertices.push_back(render::TexturedVertex2D{
+                vertices.push_back(render::TexturedVertex2D {
                     .x = ndc_x * camera_context.half_width,
                     .y = ndc_y * camera_context.half_height,
                     .z = ndc_z,
@@ -1213,7 +1213,7 @@ namespace smgpc::render {
                 const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y;
                 const auto ndc_z =
                     std::clamp((projected.z - camera_context.near_plane) / camera_context.depth_range, 0.0F, 1.0F);
-                vertices.push_back(render::GxMaterialVertex2D{
+                vertices.push_back(render::GxMaterialVertex2D {
                     .x = ndc_x * camera_context.half_width,
                     .y = ndc_y * camera_context.half_height,
                     .z = ndc_z,
@@ -1262,7 +1262,7 @@ namespace smgpc::render {
                     continue;
                 }
 
-                const std::array<ProjectedVertex, 3U> triangle{
+                const std::array<ProjectedVertex, 3U> triangle {
                     projected_sources[index_a],
                     projected_sources[index_b],
                     projected_sources[index_c],
@@ -1305,7 +1305,7 @@ namespace smgpc::render {
                     continue;
                 }
 
-                const std::array<ProjectedVertex, 3U> triangle{
+                const std::array<ProjectedVertex, 3U> triangle {
                     projected_sources[index_a],
                     projected_sources[index_b],
                     projected_sources[index_c],
@@ -1347,7 +1347,7 @@ namespace smgpc::render {
                     continue;
                 }
 
-                const std::array<ProjectedVertex, 3U> triangle{
+                const std::array<ProjectedVertex, 3U> triangle {
                     projected_sources[index_a],
                     projected_sources[index_b],
                     projected_sources[index_c],
@@ -1369,7 +1369,7 @@ namespace smgpc::render {
                                             const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
                                             std::span<const J3dMaterialTexturePass> passes, const MatrixPaletteContext &matrix_context,
                                             const CameraProjectionContext &camera_context) {
-            const std::array<ProjectedVertex, 3U> triangle{
+            const std::array<ProjectedVertex, 3U> triangle {
                 material_view_vertex(a, material, textures, passes, matrix_context, camera_context),
                 material_view_vertex(b, material, textures, passes, matrix_context, camera_context),
                 material_view_vertex(c, material, textures, passes, matrix_context, camera_context),
@@ -1547,11 +1547,11 @@ namespace smgpc::render {
                         }
 
                         if (material_uses_gx_lighting(material.gx_state)) {
-                            const std::array<std::uint8_t, 4U> white_pixel{255U, 255U, 255U, 255U};
+                            const std::array<std::uint8_t, 4U> white_pixel {255U, 255U, 255U, 255U};
                             const auto white_texture =
                                 renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
                             if (white_texture.is_valid()) {
-                                auto mesh = Mesh{};
+                                auto mesh = Mesh {};
                                 assign_shape_packet(mesh);
                                 mesh.texture = white_texture;
                                 mesh.material = material;
@@ -1591,7 +1591,7 @@ namespace smgpc::render {
                         }
 
                         const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
-                        auto mesh = Mesh{};
+                        auto mesh = Mesh {};
                         assign_shape_packet(mesh);
                         mesh.texture = composed_handle;
                         mesh.material_color = composed_texture->raster_color_baked ?
@@ -1623,15 +1623,15 @@ namespace smgpc::render {
                                                                       _texture_handles[pass.texture_index].is_valid();
                                                            });
                     if (shader_textures_available && material_can_use_shader_gx_tev(material.gx_state, passes)) {
-                        auto mesh = Mesh{};
+                        auto mesh = Mesh {};
                         assign_shape_packet(mesh);
                         mesh.texture = _texture_handles[passes.front().texture_index];
                         mesh.material = material;
                         mesh.material_passes = passes;
                         mesh.gx_texture_stage_count = passes.size();
-                        for (auto i = std::size_t{}; i < passes.size() && i < mesh.gx_texture_stages.size(); ++i) {
+                        for (auto i = std::size_t {}; i < passes.size() && i < mesh.gx_texture_stages.size(); ++i) {
                             const auto texture_index = passes[i].texture_index;
-                            mesh.gx_texture_stages[i] = render::GxTextureStage2D{
+                            mesh.gx_texture_stages[i] = render::GxTextureStage2D {
                                 .texture = _texture_handles[texture_index],
                                 .wrap_u = geometry.textures[texture_index].wrap_s,
                                 .wrap_v = geometry.textures[texture_index].wrap_t,
@@ -1679,7 +1679,7 @@ namespace smgpc::render {
                                                                                        composed_texture->image.rgba);
                             if (composed_handle.is_valid()) {
                                 const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
-                                auto mesh = Mesh{};
+                                auto mesh = Mesh {};
                                 assign_shape_packet(mesh);
                                 mesh.texture = composed_handle;
                                 mesh.material_color = composed_texture->raster_color_baked ?
@@ -1715,11 +1715,11 @@ namespace smgpc::render {
                         }
 
                         if (material_pass_textures_available(passes, geometry.textures)) {
-                            const std::array<std::uint8_t, 4U> white_pixel{255U, 255U, 255U, 255U};
+                            const std::array<std::uint8_t, 4U> white_pixel {255U, 255U, 255U, 255U};
                             const auto white_texture =
                                 renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
                             if (white_texture.is_valid()) {
-                                auto mesh = Mesh{};
+                                auto mesh = Mesh {};
                                 assign_shape_packet(mesh);
                                 mesh.texture = white_texture;
                                 mesh.material = material;
@@ -1747,7 +1747,7 @@ namespace smgpc::render {
                         }
                     }
 
-                    for (auto pass_index = std::size_t{}; pass_index < passes.size(); ++pass_index) {
+                    for (auto pass_index = std::size_t {}; pass_index < passes.size(); ++pass_index) {
                         const auto &pass = passes[pass_index];
                         const auto texture_index = pass.texture_index;
                         if (texture_index >= _texture_handles.size() || !_texture_handles[texture_index].is_valid()) {
@@ -1777,7 +1777,7 @@ namespace smgpc::render {
                         }
 
                         const auto *tev_stage = find_tev_stage(material, pass.stage);
-                        auto mesh = Mesh{};
+                        auto mesh = Mesh {};
                         assign_shape_packet(mesh);
                         mesh.texture = texture_handle;
                         mesh.tex_coord_gen = pass.tex_coord_gen;
@@ -1914,13 +1914,13 @@ namespace smgpc::render {
     }
 
     J3dModelRenderer::Mesh J3dModelRenderer::make_constant_backdrop(render::IRendererEngine &renderer, std::array<std::uint8_t, 4U> color) const {
-        const std::array<std::uint8_t, 4U> white_pixel{255U, 255U, 255U, 255U};
+        const std::array<std::uint8_t, 4U> white_pixel {255U, 255U, 255U, 255U};
         const auto texture = renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
         const auto framebuffer = renderer.logical_framebuffer_size();
         const auto half_width = static_cast<float>(framebuffer.width) * 0.5F;
         const auto half_height = static_cast<float>(framebuffer.height) * 0.5F;
 
-        auto mesh = Mesh{};
+        auto mesh = Mesh {};
         mesh.material_name = "constant-backdrop";
         mesh.material_index = 0xfffeU;
         mesh.material_mode = 1U;
@@ -1941,7 +1941,7 @@ namespace smgpc::render {
     }
 
     J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights) const {
-        auto state = J3dRendererPacketState{
+        auto state = J3dRendererPacketState {
             .material_name = mesh.material_name,
             .shape_index = mesh.shape_index,
             .shape_draw_order = mesh.shape_draw_order,
@@ -2140,7 +2140,7 @@ namespace smgpc::render {
             const auto *tex_matrix = effective_tex_matrix.has_value() ? &*effective_tex_matrix : nullptr;
             const auto *fallback_transform = mesh.joint_transform.has_value() ? &*mesh.joint_transform : nullptr;
             const auto *envelopes = _envelopes.has_value() ? &*_envelopes : nullptr;
-            const auto matrix_context = MatrixPaletteContext{
+            const auto matrix_context = MatrixPaletteContext {
                 .actor_matrix = actor_matrix,
                 .transforms = _joint_transforms,
                 .parent_indices = _joint_parent_indices,
@@ -2192,7 +2192,7 @@ namespace smgpc::render {
                     return;
                 }
 
-                renderer.submit_gx_material_triangles(render::core::GxMaterialTriangleBatch2D{
+                renderer.submit_gx_material_triangles(render::core::GxMaterialTriangleBatch2D {
                     .vertices = std::span<const render::GxMaterialVertex2D>(gx_vertices.data(), gx_vertices.size()),
                     .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                     .texture_stages = std::span<const render::GxTextureStage2D>(mesh.gx_texture_stages.data(), mesh.gx_texture_stage_count),
@@ -2245,7 +2245,7 @@ namespace smgpc::render {
                 }
 
                 renderer.submit_textured_triangles(mesh.texture,
-                                                   render::core::TexturedTriangleBatch2D{
+                                                   render::core::TexturedTriangleBatch2D {
                                                        .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
                                                        .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                                                        .wrap_u = mesh.wrap_u,
@@ -2271,7 +2271,7 @@ namespace smgpc::render {
             }
 
             renderer.submit_textured_triangles(mesh.texture,
-                                               render::core::TexturedTriangleBatch2D{
+                                               render::core::TexturedTriangleBatch2D {
                                                    .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
                                                    .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                                                    .wrap_u = mesh.wrap_u,
@@ -2291,7 +2291,7 @@ namespace smgpc::render {
         }
 
         renderer.submit_textured_triangles(mesh.texture,
-                                           render::core::TexturedTriangleBatch2D{
+                                           render::core::TexturedTriangleBatch2D {
                                                .vertices = std::span<const render::TexturedVertex2D>(mesh.vertices.data(), mesh.vertices.size()),
                                                .indices = std::span<const std::uint16_t>(mesh.indices.data(), mesh.indices.size()),
                                                .wrap_u = mesh.wrap_u,
@@ -2310,7 +2310,7 @@ namespace smgpc::render {
     }
 
     J3dMatrix3x4 j3d_matrix_from_translation_scale(const smgpc::camera::CameraParamVec3 &translation, float scale) {
-        return J3dMatrix3x4{
+        return J3dMatrix3x4 {
             .m =
                 {
                     scale,

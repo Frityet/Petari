@@ -13,7 +13,7 @@ namespace smgpc::common {
     }
 
     std::uint32_t hash_code_31(std::string_view text) {
-        auto hash = std::uint32_t{};
+        auto hash = std::uint32_t {};
         for (const auto ch : text) {
             hash = static_cast<std::uint32_t>(static_cast<std::uint8_t>(ch) + hash * 31U);
         }
@@ -42,8 +42,8 @@ namespace smgpc::common {
             return 0U;
         }
 
-        auto value = std::uint64_t{};
-        for (auto index = std::size_t{}; index < sizeof(std::uint64_t); ++index) {
+        auto value = std::uint64_t {};
+        for (auto index = std::size_t {}; index < sizeof(std::uint64_t); ++index) {
             value = (value << 8U) | bytes[offset + index];
         }
         return value;
@@ -92,7 +92,7 @@ namespace smgpc::common {
             return;
         }
 
-        for (auto index = std::size_t{}; index < sizeof(value); ++index) {
+        for (auto index = std::size_t {}; index < sizeof(value); ++index) {
             const auto shift = static_cast<unsigned>((sizeof(value) - 1U - index) * 8U);
             bytes[offset + index] = static_cast<std::uint8_t>(value >> shift);
         }
@@ -124,8 +124,8 @@ namespace smgpc::common {
 
         auto chunks = std::vector<BinaryChunk>{};
         chunks.reserve(bytes[1U]);
-        auto offset = std::size_t{4U};
-        for (auto index = std::uint8_t{}; index < bytes[1U]; ++index) {
+        auto offset = std::size_t {4U};
+        for (auto index = std::uint8_t {}; index < bytes[1U]; ++index) {
             if (offset + 12U > bytes.size()) {
                 return std::nullopt;
             }
@@ -137,7 +137,7 @@ namespace smgpc::common {
                 return std::nullopt;
             }
 
-            chunks.push_back(BinaryChunk{
+            chunks.push_back(BinaryChunk {
                 .signature = signature,
                 .hash = hash,
                 .data = std::vector<std::uint8_t>(bytes.begin() + static_cast<std::ptrdiff_t>(offset + 12U),

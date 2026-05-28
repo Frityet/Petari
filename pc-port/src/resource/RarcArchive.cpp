@@ -10,9 +10,9 @@
 namespace smgpc::resource {
     namespace {
 
-        constexpr auto RARC_MAGIC = std::uint32_t{0x52415243U};
-        constexpr auto FILE_FLAG_FILE = std::uint8_t{1U << 0U};
-        constexpr auto FILE_FLAG_FOLDER = std::uint8_t{1U << 1U};
+        constexpr auto RARC_MAGIC = std::uint32_t {0x52415243U};
+        constexpr auto FILE_FLAG_FILE = std::uint8_t {1U << 0U};
+        constexpr auto FILE_FLAG_FOLDER = std::uint8_t {1U << 1U};
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
@@ -105,7 +105,7 @@ namespace smgpc::resource {
     }
 
     std::uint16_t RarcArchive::hash_name(std::string_view name) {
-        auto hash = std::uint16_t{};
+        auto hash = std::uint16_t {};
         for (const auto character : name) {
             hash = static_cast<std::uint16_t>((hash * 3U) + static_cast<std::uint8_t>(character));
         }
@@ -287,7 +287,7 @@ namespace smgpc::resource {
                     directory.pop_back();
                 }
 
-                _entries.push_back(RarcEntry{
+                _entries.push_back(RarcEntry {
                     .path = full_path,
                     .name = name,
                     .directory = std::move(directory),

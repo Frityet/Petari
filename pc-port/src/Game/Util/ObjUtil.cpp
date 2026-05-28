@@ -9,6 +9,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/LayoutActor.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace {
@@ -133,5 +134,15 @@ namespace MR {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->camera_system().request_normal_shake();
         }
+    }
+
+    bool useStageSwitchWriteA(LiveActor*, const JMapInfoIter& rIter) {
+        return MR::isValidInfo(rIter) && MR::isExistStageSwitchA(rIter);
+    }
+
+    void onSwitchA(LiveActor*) {
+    }
+
+    void offSwitchA(LiveActor*) {
     }
 }  // namespace MR

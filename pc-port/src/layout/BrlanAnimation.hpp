@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <optional>
 #include <span>
@@ -24,6 +25,12 @@ namespace smgpc::layout {
         std::optional<float> rotate;
         std::optional<float> scale_s;
         std::optional<float> scale_t;
+    };
+
+    struct BrlanMaterialFrame {
+        std::array<std::optional<float>, 4U> material_color = {};
+        std::array<std::array<std::optional<float>, 4U>, 3U> tev_colors = {};
+        std::array<std::array<std::optional<float>, 4U>, 4U> tev_k_colors = {};
     };
 
     struct BrlanAnimation {
@@ -78,6 +85,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] BrlanPaneFrame pane_frame(std::string_view pane_name, float frame) const;
         [[nodiscard]] BrlanTextureFrame texture_frame(std::string_view material_name, float frame) const;
+        [[nodiscard]] BrlanMaterialFrame material_frame(std::string_view material_name, float frame) const;
     };
 
     [[nodiscard]] BrlanAnimation parse_brlan_animation(std::span<const std::uint8_t> data);

@@ -220,6 +220,7 @@ namespace smgpc::tests {
             if (!texture.is_valid()) {
                 throw std::runtime_error("recording renderer should receive valid quad texture handles");
             }
+            submission_log.push_back("textured_quad");
             ++quad_count;
             textured_quads.push_back(TexturedQuad{
                 .texture = texture,
@@ -231,6 +232,7 @@ namespace smgpc::tests {
             if (!texture.is_valid()) {
                 throw std::runtime_error("recording renderer should receive valid triangle texture handles");
             }
+            submission_log.push_back("textured_triangles");
             ++triangle_batch_count;
             submitted_vertices += batch.vertices.size();
             submitted_indices += batch.indices.size();
@@ -238,17 +240,19 @@ namespace smgpc::tests {
         }
 
         void submit_gx_material_triangles(const smgpc::render::GxMaterialTriangleBatch2D &batch) override {
-            if (batch.texture_stages.empty()) {
-                throw std::runtime_error("recording renderer should receive GX material texture stages");
-            }
             if (batch.tev_stages.empty()) {
                 throw std::runtime_error("recording renderer should receive GX TEV stages");
+            }
+            if (batch.texture_stages.empty() &&
+                std::ranges::any_of(batch.tev_stages, [](const auto &stage) { return stage.texture_stage != 0xffU; })) {
+                throw std::runtime_error("recording renderer should receive GX material texture stages for texture-enabled TEV");
             }
             for (const auto &stage : batch.texture_stages) {
                 if (!stage.texture.is_valid()) {
                     throw std::runtime_error("recording renderer should receive valid GX material texture handles");
                 }
             }
+            submission_log.push_back("gx_material");
             ++gx_material_batch_count;
             submitted_vertices += batch.vertices.size();
             submitted_indices += batch.indices.size();
@@ -264,10 +268,21 @@ namespace smgpc::tests {
             last_gx_material_primitive_topology = batch.primitive_topology;
             last_gx_material_vertices.assign(batch.vertices.begin(), batch.vertices.end());
             last_gx_material_color_inputs.fill({});
+            last_gx_material_alpha_inputs.fill({});
+            last_gx_material_tev_texture_stages.fill(0xffU);
             last_gx_material_stage_konst_colors.fill({});
             for (auto i = std::size_t{}; i < batch.tev_stages.size() && i < last_gx_material_color_inputs.size(); ++i) {
                 last_gx_material_color_inputs[i] = batch.tev_stages[i].color_in;
+                last_gx_material_alpha_inputs[i] = batch.tev_stages[i].alpha_in;
+                last_gx_material_tev_texture_stages[i] = batch.tev_stages[i].texture_stage;
                 last_gx_material_stage_konst_colors[i] = batch.tev_stages[i].konst_color;
+            }
+            if (batch.tev_stages.size() == 2U && batch.tev_stages[0U].color_in == std::array<std::uint8_t, 4U>{2U, 4U, 8U, 15U} &&
+                batch.tev_stages[0U].alpha_in == std::array<std::uint8_t, 4U>{1U, 2U, 4U, 7U} &&
+                batch.tev_stages[1U].texture_stage == 0xffU &&
+                batch.tev_stages[1U].color_in == std::array<std::uint8_t, 4U>{15U, 0U, 10U, 15U} &&
+                batch.tev_stages[1U].alpha_in == std::array<std::uint8_t, 4U>{7U, 0U, 5U, 7U}) {
+                saw_gx_material_brlyt_default_color_mapping_batch = true;
             }
             if (batch.tev_stages.size() == 2U) {
                 saw_gx_material_two_stage_batch = true;
@@ -285,6 +300,22 @@ namespace smgpc::tests {
             last_gx_material_saw_clip_w = std::ranges::any_of(batch.vertices, [](const auto &vertex) { return vertex.clip_w > 1.001F; });
             last_gx_material_alpha_compare_enabled = batch.alpha_compare.enabled;
             last_triangle_cull_mode = batch.cull_mode;
+            auto summary = GxMaterialBatchSummary{
+                .texture_stage_count = batch.texture_stages.size(),
+                .tev_stage_count = batch.tev_stages.size(),
+                .initial_tev_registers = batch.initial_tev_registers,
+                .blend = batch.blend,
+                .alpha_compare = batch.alpha_compare,
+            };
+            summary.color_inputs.fill({});
+            summary.alpha_inputs.fill({});
+            summary.tev_texture_stages.fill(0xffU);
+            for (auto i = std::size_t{}; i < batch.tev_stages.size() && i < summary.color_inputs.size(); ++i) {
+                summary.color_inputs[i] = batch.tev_stages[i].color_in;
+                summary.alpha_inputs[i] = batch.tev_stages[i].alpha_in;
+                summary.tev_texture_stages[i] = batch.tev_stages[i].texture_stage;
+            }
+            gx_material_batches.push_back(summary);
         }
 
         [[nodiscard]] smgpc::render::FramebufferInfo framebuffer_size() const override {
@@ -307,6 +338,17 @@ namespace smgpc::tests {
             smgpc::render::TexturedQuad2D quad = {};
         };
 
+        struct GxMaterialBatchSummary {
+            std::size_t texture_stage_count = 0U;
+            std::size_t tev_stage_count = 0U;
+            std::array<smgpc::render::GxTevRegisterColor2D, 4U> initial_tev_registers = {};
+            std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> color_inputs = {};
+            std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> alpha_inputs = {};
+            std::array<std::uint8_t, smgpc::render::core::kMaxGxMaterialTevStages2D> tev_texture_stages = {};
+            smgpc::render::GxBlendMode2D blend = {};
+            smgpc::render::GxAlphaCompare2D alpha_compare = {};
+        };
+
         std::uint32_t next_texture = 1U;
         std::size_t texture_count = 0U;
         std::size_t quad_count = 0U;
@@ -319,24 +361,29 @@ namespace smgpc::tests {
         bool last_gx_material_saw_projective_q = false;
         bool last_gx_material_saw_clip_w = false;
         bool last_gx_material_alpha_compare_enabled = false;
-        smgpc::render::GxAlphaCompare2D last_gx_material_alpha_compare{};
-        smgpc::render::GxBlendMode2D last_gx_material_blend{};
-        smgpc::render::GxBlendMode2D last_two_stage_gx_material_blend{};
-        smgpc::render::GxFog2D last_gx_material_fog{};
+        smgpc::render::GxAlphaCompare2D last_gx_material_alpha_compare = {};
+        smgpc::render::GxBlendMode2D last_gx_material_blend = {};
+        smgpc::render::GxBlendMode2D last_two_stage_gx_material_blend = {};
+        smgpc::render::GxFog2D last_gx_material_fog = {};
         smgpc::render::PrimitiveTopology last_gx_material_primitive_topology = smgpc::render::PrimitiveTopology::Triangles;
-        std::array<smgpc::render::GxTevRegisterColor2D, 4U> last_gx_material_initial_tev_registers{};
+        std::array<smgpc::render::GxTevRegisterColor2D, 4U> last_gx_material_initial_tev_registers = {};
         bool last_gx_material_depth_test = false;
         bool last_gx_material_depth_write = false;
         smgpc::render::DepthCompare last_gx_material_depth_compare = smgpc::render::DepthCompare::LessEqual;
-        std::vector<smgpc::render::GxMaterialVertex2D> last_gx_material_vertices{};
+        std::vector<smgpc::render::GxMaterialVertex2D> last_gx_material_vertices = {};
         bool saw_gx_material_two_stage_batch = false;
         bool saw_gx_material_texture_stage_one = false;
         bool saw_gx_material_nonzero_initial_register = false;
-        std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_color_inputs{};
-        std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_stage_konst_colors{};
+        bool saw_gx_material_brlyt_default_color_mapping_batch = false;
+        std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_color_inputs = {};
+        std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_alpha_inputs = {};
+        std::array<std::uint8_t, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_tev_texture_stages = {};
+        std::array<std::array<std::uint8_t, 4U>, smgpc::render::core::kMaxGxMaterialTevStages2D> last_gx_material_stage_konst_colors = {};
         smgpc::render::CullMode last_triangle_cull_mode = smgpc::render::CullMode::None;
         std::vector<UploadedTexture> uploaded_textures = {};
         std::vector<TexturedQuad> textured_quads = {};
+        std::vector<GxMaterialBatchSummary> gx_material_batches = {};
+        std::vector<std::string> submission_log = {};
     };
 
     class SchedulerProbeObj final : public NameObj {
@@ -438,7 +485,7 @@ namespace smgpc::tests {
         }
 
         ~ScopedCurrentPath() {
-            std::error_code error{};
+            std::error_code error = {};
             std::filesystem::current_path(_previous, error);
         }
 
@@ -450,7 +497,7 @@ namespace smgpc::tests {
     };
 
     [[nodiscard]] inline std::filesystem::path weakly_canonical_or_normal(const std::filesystem::path &path) {
-        std::error_code error{};
+        std::error_code error = {};
         const auto canonical = std::filesystem::weakly_canonical(path, error);
         if (!error) {
             return canonical;
@@ -477,7 +524,7 @@ namespace smgpc::tests {
         append_disc_root_candidates_from_anchor(candidates, cwd);
 
         for (const auto &candidate : candidates) {
-            std::error_code error{};
+            std::error_code error = {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;

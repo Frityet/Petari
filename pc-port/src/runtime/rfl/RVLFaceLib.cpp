@@ -149,18 +149,18 @@ extern "C" RFLExpression RFLGetExpression(const RFLCharModel *model) {
 
 GXColor RFLGetFavoriteColor(RFLFavoriteColor color) {
     constexpr auto colors = std::array<GXColor, RFLFavoriteColor_Max>{
-        GXColor{220U, 48U, 52U, 255U},
-        GXColor{238U, 126U, 42U, 255U},
-        GXColor{245U, 206U, 73U, 255U},
-        GXColor{159U, 204U, 62U, 255U},
-        GXColor{73U, 174U, 74U, 255U},
-        GXColor{47U, 102U, 201U, 255U},
-        GXColor{64U, 180U, 220U, 255U},
-        GXColor{235U, 111U, 168U, 255U},
-        GXColor{134U, 86U, 185U, 255U},
-        GXColor{122U, 82U, 54U, 255U},
-        GXColor{238U, 238U, 238U, 255U},
-        GXColor{48U, 48U, 52U, 255U},
+        GXColor {220U, 48U, 52U, 255U},
+        GXColor {238U, 126U, 42U, 255U},
+        GXColor {245U, 206U, 73U, 255U},
+        GXColor {159U, 204U, 62U, 255U},
+        GXColor {73U, 174U, 74U, 255U},
+        GXColor {47U, 102U, 201U, 255U},
+        GXColor {64U, 180U, 220U, 255U},
+        GXColor {235U, 111U, 168U, 255U},
+        GXColor {134U, 86U, 185U, 255U},
+        GXColor {122U, 82U, 54U, 255U},
+        GXColor {238U, 238U, 238U, 255U},
+        GXColor {48U, 48U, 52U, 255U},
     };
     const auto index = std::min<std::size_t>(static_cast<std::size_t>(color), colors.size() - 1U);
     return colors[index];

@@ -22,7 +22,7 @@ namespace {
         };
 
         for (const auto &candidate : candidates) {
-            std::error_code error{};
+            std::error_code error {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;
@@ -34,7 +34,7 @@ namespace {
 
     [[nodiscard]] std::filesystem::path pc_port_root() {
         const auto cwd = std::filesystem::current_path();
-        std::error_code error{};
+        std::error_code error {};
         if (std::filesystem::is_directory(cwd / "pc-port" / "src", error)) {
             return cwd / "pc-port";
         }
@@ -52,7 +52,7 @@ namespace {
     void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output, const smgpc::resource::DecodedTexture &texture) {
         screenshot_service.write_png(
             output,
-            smgpc::render::capture::ScreenshotImageView{
+            smgpc::render::capture::ScreenshotImageView {
                 .width = texture.width,
                 .height = texture.height,
                 .pitch = texture.width * 4U,

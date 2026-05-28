@@ -14,7 +14,7 @@
 namespace {
 
     [[nodiscard]] std::unordered_map<std::uint32_t, std::string_view> known_field_hashes() {
-        constexpr std::array names{
+        constexpr std::array names {
             "version",
             "id",
             "camtype",
@@ -122,7 +122,7 @@ namespace {
             return std::string(it->second);
         }
 
-        auto stream = std::ostringstream{};
+        auto stream = std::ostringstream {};
         stream << "hash_0x" << std::hex << hash;
         return stream.str();
     }

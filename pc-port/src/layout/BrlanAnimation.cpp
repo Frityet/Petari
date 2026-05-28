@@ -211,6 +211,27 @@ namespace smgpc::layout {
             }
         }
 
+        void apply_material_target(BrlanMaterialFrame &frame_values, std::string_view kind, const BrlanAnimation::Target &target, float frame) {
+            if (kind != "RLMC") {
+                return;
+            }
+
+            const auto value = evaluate_float_target(target, frame);
+            if (!value.has_value()) {
+                return;
+            }
+
+            if (target.target < 4U) {
+                frame_values.material_color[target.target] = *value;
+            } else if (target.target < 16U) {
+                const auto index = static_cast<std::size_t>(target.target - 4U);
+                frame_values.tev_colors[index / 4U][index % 4U] = *value;
+            } else if (target.target < 32U) {
+                const auto index = static_cast<std::size_t>(target.target - 16U);
+                frame_values.tev_k_colors[index / 4U][index % 4U] = *value;
+            }
+        }
+
         [[nodiscard]] BrlanAnimation::Target parse_target(std::span<const std::uint8_t> data, std::size_t base) {
             if (base + 12U > data.size()) {
                 throw std::runtime_error("BRLAN target is truncated");
@@ -398,6 +419,23 @@ namespace smgpc::layout {
             for (const auto &info : content.infos) {
                 for (const auto &target : info.targets) {
                     apply_texture_target(result, info.kind, target, frame);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    BrlanMaterialFrame BrlanAnimation::material_frame(std::string_view material_name, float frame) const {
+        auto result = BrlanMaterialFrame{};
+        for (const auto &content : contents) {
+            if (content.name != material_name) {
+                continue;
+            }
+
+            for (const auto &info : content.infos) {
+                for (const auto &target : info.targets) {
+                    apply_material_target(result, info.kind, target, frame);
                 }
             }
         }

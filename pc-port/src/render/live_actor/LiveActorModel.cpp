@@ -56,7 +56,7 @@ namespace {
     [[nodiscard]] std::string_view debug_environment(std::string_view name) {
         const auto key = std::string(name);
         const auto *value = std::getenv(key.c_str());
-        return value == nullptr ? std::string_view{} : std::string_view(value);
+        return value == nullptr ? std::string_view {} : std::string_view(value);
     }
 
     [[nodiscard]] bool debug_model_filter_matches(std::string_view model_name) {
@@ -89,7 +89,7 @@ std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
             try {
                 const auto &archive = runtime->dvd().archive_for_path(*archive_path);
                 mBrkAnimation = findBrkAnimation(archive);
-                mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string{};
+                mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string {};
             } catch (const std::exception &) {
                 mBrkAnimation.reset();
                 mBrkAnimationName.clear();
@@ -115,7 +115,7 @@ void LiveActorModel::draw(smgpc::render::IRendererEngine &renderer, const smgpc:
         return;
     }
 
-    auto options = smgpc::render::J3dModelRendererDrawOptions{};
+    auto options = smgpc::render::J3dModelRendererDrawOptions {};
     switch (pass) {
     case DrawPass::All:
         break;
@@ -193,7 +193,7 @@ void LiveActorModel::ensureLoaded(smgpc::render::IRendererEngine &renderer) {
         mBtkAnimation = findBtkAnimation(archive);
         if ((mBrkStarted || !mBrkName.empty()) && (!mBrkAnimation.has_value() || mBrkAnimationName != mBrkName)) {
             mBrkAnimation = findBrkAnimation(archive);
-            mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string{};
+            mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string {};
         }
         mRenderer = std::make_unique<smgpc::render::J3dModelRenderer>();
         mRenderer->load(renderer, archive.file_data(*model_entry));
@@ -262,7 +262,7 @@ std::optional<smgpc::render::J3dBtkAnimationSummary> LiveActorModel::findBtkAnim
 }
 
 std::optional<smgpc::render::J3dBrkAnimationSummary> LiveActorModel::findBrkAnimation(const smgpc::resource::RarcArchive &archive) const {
-    const auto requested = lower_copy(mBrkName.empty() ? std::string_view{mModelArcName} : std::string_view{mBrkName}) + ".brk";
+    const auto requested = lower_copy(mBrkName.empty() ? std::string_view {mModelArcName} : std::string_view {mBrkName}) + ".brk";
     auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         entry = find_first_entry_with_suffix(archive, ".brk");

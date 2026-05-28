@@ -5,9 +5,9 @@
 namespace smgpc::render {
     namespace {
 
-        constexpr auto J3D1_MAGIC = std::uint32_t{0x4a334431U};
-        constexpr auto J3D2_MAGIC = std::uint32_t{0x4a334432U};
-        constexpr auto TEX1_MAGIC = std::uint32_t{0x54455831U};
+        constexpr auto J3D1_MAGIC = std::uint32_t {0x4a334431U};
+        constexpr auto J3D2_MAGIC = std::uint32_t {0x4a334432U};
+        constexpr auto TEX1_MAGIC = std::uint32_t {0x54455831U};
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
@@ -80,8 +80,8 @@ namespace smgpc::render {
                 const auto header_offset = texture_header_offset + i * 0x20U;
                 const auto bti = smgpc::resource::decode_bti_texture(data.subspan(header_offset));
 
-                textures.push_back(J3dTexture{
-                    .name = i < names.size() ? names[i] : std::string{},
+                textures.push_back(J3dTexture {
+                    .name = i < names.size() ? names[i] : std::string {},
                     .transparency = bti.transparency,
                     .wrap_s = bti.wrap_s,
                     .wrap_t = bti.wrap_t,
@@ -121,7 +121,7 @@ namespace smgpc::render {
         }
 
         const auto section_count = read_be32(model_data, 0x0CU);
-        auto offset = std::size_t{0x20U};
+        auto offset = std::size_t {0x20U};
         for (auto i = 0U; i < section_count; ++i) {
             if (offset + 8U > model_data.size()) {
                 throw std::runtime_error("J3D section header outside buffer");

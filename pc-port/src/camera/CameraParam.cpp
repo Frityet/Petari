@@ -8,7 +8,7 @@ namespace smgpc::camera {
     namespace {
 
         [[nodiscard]] CameraParamVec3 to_camera_vec3(std::array<float, 3U> value) {
-            return CameraParamVec3{
+            return CameraParamVec3 {
                 .x = value[0U],
                 .y = value[1U],
                 .z = value[2U],
@@ -79,7 +79,7 @@ namespace smgpc::camera {
             read_s32(table, row, "vpanuse", extra.v_pan_use);
             read_vec3(table, row, "vpanaxis", extra.v_pan_axis);
 
-            constexpr std::array<std::string_view, 6U> flag_names{
+            constexpr std::array<std::string_view, 6U> flag_names {
                 "flag.noreset",
                 "flag.nofovy",
                 "flag.lofserpoff",
@@ -144,7 +144,7 @@ namespace smgpc::camera {
         chunks.reserve(table.entry_count());
 
         for (auto row = 0U; row < table.entry_count(); ++row) {
-            auto chunk = CameraParamChunk{};
+            auto chunk = CameraParamChunk {};
             if (const auto version = table.get_u32(row, "version"); version.has_value()) {
                 chunk.version = *version;
             }

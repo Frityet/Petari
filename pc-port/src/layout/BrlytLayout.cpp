@@ -705,7 +705,12 @@ namespace smgpc::layout {
                 auto text_box = parse_text_box(block, last_state, layout.font_names, layout.materials);
                 text_box.pane_index = static_cast<std::size_t>(last_pane_index);
                 if (!text_box.font_name.empty()) {
+                    const auto text_box_index = layout.text_boxes.size();
                     layout.text_boxes.push_back(std::move(text_box));
+                    layout.drawables.push_back(BrlytDrawable{
+                        .kind = BrlytDrawableKind::TextBox,
+                        .index = text_box_index,
+                    });
                 }
             } else if (has_magic(block, 0U, "pic1")) {
                 const auto local = parse_pane_state(block);
@@ -716,7 +721,12 @@ namespace smgpc::layout {
                 auto picture = parse_picture(block, last_state, layout.materials);
                 picture.pane_index = static_cast<std::size_t>(last_pane_index);
                 if (!picture.texture_name.empty()) {
+                    const auto picture_index = layout.pictures.size();
                     layout.pictures.push_back(std::move(picture));
+                    layout.drawables.push_back(BrlytDrawable{
+                        .kind = BrlytDrawableKind::Picture,
+                        .index = picture_index,
+                    });
                 }
             } else if (has_magic(block, 0U, "pas1")) {
                 parent_stack.push_back(last_state);

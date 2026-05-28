@@ -10,13 +10,13 @@
 namespace smgpc::render {
     namespace {
 
-        constexpr auto J3D1_MAGIC = std::uint32_t{0x4a334431U};
-        constexpr auto J3D2_MAGIC = std::uint32_t{0x4a334432U};
-        constexpr auto GX_VA_NULL = std::uint32_t{0xffU};
-        constexpr auto GX_NONE = std::uint32_t{0U};
-        constexpr auto GX_DIRECT = std::uint32_t{1U};
-        constexpr auto GX_INDEX8 = std::uint32_t{2U};
-        constexpr auto GX_INDEX16 = std::uint32_t{3U};
+        constexpr auto J3D1_MAGIC = std::uint32_t {0x4a334431U};
+        constexpr auto J3D2_MAGIC = std::uint32_t {0x4a334432U};
+        constexpr auto GX_VA_NULL = std::uint32_t {0xffU};
+        constexpr auto GX_NONE = std::uint32_t {0U};
+        constexpr auto GX_DIRECT = std::uint32_t {1U};
+        constexpr auto GX_INDEX8 = std::uint32_t {2U};
+        constexpr auto GX_INDEX16 = std::uint32_t {3U};
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
@@ -149,7 +149,7 @@ namespace smgpc::render {
                 return 0U;
             }
 
-            auto component_count = std::uint32_t{0U};
+            auto component_count = std::uint32_t {0U};
             if (attr == 9U) {
                 component_count = it->component_count == 0U ? 2U : 3U;
             } else if (attr == 10U) {
@@ -169,7 +169,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::uint32_t display_list_vertex_size(const std::vector<J3dVertexDesc> &desc,
                                                              const std::vector<J3dVertexAttributeFormat> &formats) {
-            auto size = std::uint32_t{};
+            auto size = std::uint32_t {};
             for (const auto &entry : desc) {
                 switch (entry.type) {
                 case GX_NONE:
@@ -284,7 +284,7 @@ namespace smgpc::render {
                     break;
                 }
 
-                primitives.push_back(J3dPrimitiveSummary{
+                primitives.push_back(J3dPrimitiveSummary {
                     .command = command,
                     .primitive = primitive,
                     .vertex_format = vertex_format,
@@ -329,7 +329,7 @@ namespace smgpc::render {
                 throw std::runtime_error("J3D INF1 section is too small");
             }
 
-            auto info = J3dInfoSummary{};
+            auto info = J3dInfoSummary {};
             info.flags = read_be16(data, section_offset + 0x08U);
             info.packet_count = read_be32(data, section_offset + 0x0cU);
             info.vertex_count = read_be32(data, section_offset + 0x10U);
@@ -338,7 +338,7 @@ namespace smgpc::render {
             if (hierarchy_relative != 0U) {
                 auto cursor = relative_offset(section_offset, hierarchy_relative);
                 while (cursor + 4U <= data.size()) {
-                    const auto entry = J3dHierarchyEntry{
+                    const auto entry = J3dHierarchyEntry {
                         .type = read_be16(data, cursor),
                         .value = read_be16(data, cursor + 2U),
                     };
@@ -359,7 +359,7 @@ namespace smgpc::render {
                 throw std::runtime_error("J3D JNT1 section is too small");
             }
 
-            auto summary = J3dJointBlockSummary{};
+            auto summary = J3dJointBlockSummary {};
             summary.joint_count = read_be16(data, section_offset + 0x08U);
             const auto joint_init_relative = read_be32(data, section_offset + 0x0cU);
             const auto remap_relative = read_be32(data, section_offset + 0x10U);
@@ -382,8 +382,8 @@ namespace smgpc::render {
                     throw std::runtime_error("J3D JNT1 joint init data outside buffer");
                 }
 
-                summary.joints.push_back(J3dJointSummary{
-                    .name = i < names.size() ? names[i] : std::string{},
+                summary.joints.push_back(J3dJointSummary {
+                    .name = i < names.size() ? names[i] : std::string {},
                     .index = static_cast<std::uint16_t>(i),
                     .kind = read_be16(data, joint_offset),
                     .scale_compensate = data[joint_offset + 0x02U],
@@ -410,7 +410,7 @@ namespace smgpc::render {
                 throw std::runtime_error("J3D EVP1 section is too small");
             }
 
-            auto summary = J3dEnvelopeBlockSummary{};
+            auto summary = J3dEnvelopeBlockSummary {};
             summary.matrix_count = read_be16(data, section_offset + 0x08U);
             if (summary.matrix_count == 0U) {
                 return summary;
@@ -428,8 +428,8 @@ namespace smgpc::render {
             const auto mix_index_offset = relative_offset(section_offset, mix_index_relative);
             const auto mix_weight_offset = relative_offset(section_offset, mix_weight_relative);
 
-            auto influence_cursor = std::size_t{};
-            auto max_joint_index = std::uint16_t{};
+            auto influence_cursor = std::size_t {};
+            auto max_joint_index = std::uint16_t {};
             summary.matrices.reserve(summary.matrix_count);
             for (auto matrix_index = 0U; matrix_index < summary.matrix_count; ++matrix_index) {
                 if (mix_count_offset + matrix_index >= data.size()) {
@@ -437,7 +437,7 @@ namespace smgpc::render {
                 }
 
                 const auto influence_count = data[mix_count_offset + matrix_index];
-                auto matrix = J3dEnvelopeMatrixSummary{};
+                auto matrix = J3dEnvelopeMatrixSummary {};
                 matrix.joint_indices.reserve(influence_count);
                 matrix.weights.reserve(influence_count);
                 for (auto influence = 0U; influence < influence_count; ++influence) {
@@ -474,7 +474,7 @@ namespace smgpc::render {
                 throw std::runtime_error("J3D DRW1 section is too small");
             }
 
-            auto summary = J3dDrawBlockSummary{};
+            auto summary = J3dDrawBlockSummary {};
             summary.matrix_count = read_be16(data, section_offset + 0x08U);
             const auto flag_relative = read_be32(data, section_offset + 0x0cU);
             const auto index_relative = read_be32(data, section_offset + 0x10U);
@@ -491,7 +491,7 @@ namespace smgpc::render {
 
             summary.matrices.reserve(summary.matrix_count);
             for (auto i = 0U; i < summary.matrix_count; ++i) {
-                summary.matrices.push_back(J3dDrawMatrixSummary{
+                summary.matrices.push_back(J3dDrawMatrixSummary {
                     .weighted = data[flag_offset + i] != 0U,
                     .index = read_be16(data, index_offset + i * 2U),
                 });
@@ -512,7 +512,7 @@ namespace smgpc::render {
                     break;
                 }
 
-                formats.push_back(J3dVertexAttributeFormat{
+                formats.push_back(J3dVertexAttributeFormat {
                     .attr = attr,
                     .component_count = read_be32(data, cursor + 4U),
                     .component_type = read_be32(data, cursor + 8U),
@@ -529,13 +529,13 @@ namespace smgpc::render {
                 throw std::runtime_error("J3D VTX1 section is too small");
             }
 
-            auto summary = J3dVertexSummary{};
+            auto summary = J3dVertexSummary {};
             const auto format_relative = read_be32(data, section_offset + 0x08U);
             if (has_relative_offset(format_relative)) {
                 summary.formats = parse_vertex_formats(data, relative_offset(section_offset, format_relative));
             }
 
-            constexpr std::array<std::uint32_t, 13U> attrs{
+            constexpr std::array<std::uint32_t, 13U> attrs {
                 9U,
                 10U,
                 25U,
@@ -551,8 +551,8 @@ namespace smgpc::render {
                 20U,
             };
 
-            std::array<std::uint32_t, attrs.size()> relatives{};
-            for (auto i = std::size_t{}; i < relatives.size(); ++i) {
+            std::array<std::uint32_t, attrs.size()> relatives {};
+            for (auto i = std::size_t {}; i < relatives.size(); ++i) {
                 relatives[i] = read_be32(data, section_offset + 0x0cU + i * 4U);
             }
 
@@ -564,14 +564,14 @@ namespace smgpc::render {
             }
             std::ranges::sort(nonzero_offsets);
 
-            for (auto i = std::size_t{}; i < attrs.size(); ++i) {
+            for (auto i = std::size_t {}; i < attrs.size(); ++i) {
                 const auto offset = relatives[i];
                 if (offset == 0U || offset >= section.size) {
                     continue;
                 }
 
                 const auto stride = array_stride_for_attr(summary.formats, attrs[i]);
-                summary.arrays.push_back(J3dVertexArraySummary{
+                summary.arrays.push_back(J3dVertexArraySummary {
                     .attr = attrs[i],
                     .offset = offset,
                     .stride = stride,
@@ -590,7 +590,7 @@ namespace smgpc::render {
                     break;
                 }
 
-                desc.push_back(J3dVertexDesc{
+                desc.push_back(J3dVertexDesc {
                     .attr = attr,
                     .type = read_be32(data, cursor + 4U),
                 });
@@ -606,7 +606,7 @@ namespace smgpc::render {
                 return materials;
             }
 
-            auto current_material = std::uint16_t{0xffffU};
+            auto current_material = std::uint16_t {0xffffU};
             for (const auto &entry : info->hierarchy) {
                 if (entry.type == 0x11U) {
                     current_material = entry.value;
@@ -625,7 +625,7 @@ namespace smgpc::render {
                 return joints;
             }
 
-            auto current_joint = std::uint16_t{0xffffU};
+            auto current_joint = std::uint16_t {0xffffU};
             for (const auto &entry : info->hierarchy) {
                 if (entry.type == 0x10U) {
                     current_joint = entry.value;
@@ -641,13 +641,13 @@ namespace smgpc::render {
                                                                                   std::uint16_t shape_count) {
             auto draw_orders = std::vector<std::uint16_t>(shape_count, 0xffffU);
             if (!info.has_value()) {
-                for (auto i = std::uint16_t{}; i < shape_count; ++i) {
+                for (auto i = std::uint16_t {}; i < shape_count; ++i) {
                     draw_orders[i] = i;
                 }
                 return draw_orders;
             }
 
-            auto draw_order = std::uint16_t{};
+            auto draw_order = std::uint16_t {};
             for (const auto &entry : info->hierarchy) {
                 if (entry.type == 0x12U && entry.value < draw_orders.size()) {
                     draw_orders[entry.value] = draw_order++;
@@ -666,7 +666,7 @@ namespace smgpc::render {
 
             auto stack = std::vector<std::uint16_t>{};
             auto child_scope_is_joint = std::vector<bool>{};
-            auto last_joint = std::uint16_t{0xffffU};
+            auto last_joint = std::uint16_t {0xffffU};
             auto last_entry_was_joint = false;
             for (const auto &entry : info->hierarchy) {
                 switch (entry.type) {
@@ -729,12 +729,12 @@ namespace smgpc::render {
             const auto material_indices = shape_materials_from_hierarchy(info, shape_count);
             const auto joint_indices = shape_joints_from_hierarchy(info, shape_count);
             const auto draw_orders = shape_draw_orders_from_hierarchy(info, shape_count);
-            auto summary = J3dShapeBlockSummary{};
+            auto summary = J3dShapeBlockSummary {};
             summary.shape_count = shape_count;
             summary.shapes.reserve(shape_count);
 
             const auto formats = vertices.has_value() ? vertices->formats : std::vector<J3dVertexAttributeFormat>{};
-            for (auto i = std::uint16_t{}; i < shape_count; ++i) {
+            for (auto i = std::uint16_t {}; i < shape_count; ++i) {
                 const auto shape_init_index = read_be16(data, relative_offset(section_offset, index_table_relative) + i * 2U);
                 const auto shape_init_offset = relative_offset(section_offset, shape_init_relative) + shape_init_index * 0x28U;
                 const auto matrix_group_count = read_be16(data, shape_init_offset + 0x02U);
@@ -742,8 +742,8 @@ namespace smgpc::render {
                 const auto matrix_init_data_index = read_be16(data, shape_init_offset + 0x06U);
                 const auto draw_init_data_index = read_be16(data, shape_init_offset + 0x08U);
 
-                auto shape = J3dShapeSummary{};
-                shape.name = i < names.size() ? names[i] : std::string{};
+                auto shape = J3dShapeSummary {};
+                shape.name = i < names.size() ? names[i] : std::string {};
                 shape.index = i;
                 shape.draw_order = i < draw_orders.size() ? draw_orders[i] : static_cast<std::uint16_t>(0xffffU);
                 shape.material_index = i < material_indices.size() ? material_indices[i] : static_cast<std::uint16_t>(0xffffU);
@@ -771,7 +771,7 @@ namespace smgpc::render {
                     const auto display_list_size = read_be32(data, draw_init_offset);
                     const auto display_list_index = read_be32(data, draw_init_offset + 4U);
 
-                    auto matrix_group = J3dShapeMatrixGroupSummary{
+                    auto matrix_group = J3dShapeMatrixGroupSummary {
                         .group_index = static_cast<std::uint16_t>(group),
                         .use_matrix_index = use_matrix_index,
                         .use_matrix_count = use_matrix_count,
@@ -796,7 +796,7 @@ namespace smgpc::render {
 
                     shape.display_list_bytes += display_list_size;
 
-                    auto parsed_bytes = std::uint32_t{};
+                    auto parsed_bytes = std::uint32_t {};
                     auto primitives = parse_display_list(data, relative_offset(section_offset, display_list_relative) + display_list_index,
                                                          display_list_size, shape.vertex_desc, formats, parsed_bytes);
                     shape.parsed_display_list_bytes += parsed_bytes;
@@ -851,15 +851,15 @@ namespace smgpc::render {
             }
 
             const auto names = read_name_table(data, section_offset, name_table_relative);
-            auto summary = J3dMaterialBlockSummary{};
+            auto summary = J3dMaterialBlockSummary {};
             summary.material_count = material_count;
             summary.materials.reserve(material_count);
 
-            for (auto i = std::uint16_t{}; i < material_count; ++i) {
+            for (auto i = std::uint16_t {}; i < material_count; ++i) {
                 const auto material_id = read_be16(data, relative_offset(section_offset, material_id_relative) + i * 2U);
                 const auto init_offset = relative_offset(section_offset, init_relative) + material_id * 0x14cU;
-                auto material = J3dMaterialSummary{};
-                material.name = i < names.size() ? names[i] : std::string{};
+                auto material = J3dMaterialSummary {};
+                material.name = i < names.size() ? names[i] : std::string {};
                 material.index = i;
                 material.material_id = material_id;
                 material.material_mode = data[init_offset];
@@ -877,7 +877,7 @@ namespace smgpc::render {
                 }
                 if (material.z_mode_index != 0xffU && has_relative_offset(z_mode_relative)) {
                     const auto z_mode_offset = relative_offset(section_offset, z_mode_relative) + material.z_mode_index * 4U;
-                    material.z_mode = J3dZModeSummary{
+                    material.z_mode = J3dZModeSummary {
                         .compare_enable = data[z_mode_offset],
                         .function = data[z_mode_offset + 1U],
                         .update_enable = data[z_mode_offset + 2U],
@@ -979,7 +979,7 @@ namespace smgpc::render {
                             continue;
                         }
 
-                        material.textures.push_back(J3dMaterialTextureBinding{
+                        material.textures.push_back(J3dMaterialTextureBinding {
                             .slot = static_cast<std::uint8_t>(slot),
                             .texture_index = read_be16(data, relative_offset(section_offset, tex_no_relative) + tex_no_index * 2U),
                         });
@@ -994,7 +994,7 @@ namespace smgpc::render {
                         }
 
                         const auto texcoord_offset = relative_offset(section_offset, texcoord_relative) + texcoord_index * 4U;
-                        material.tex_coord_gens.push_back(J3dTexCoordGenSummary{
+                        material.tex_coord_gens.push_back(J3dTexCoordGenSummary {
                             .slot = static_cast<std::uint8_t>(slot),
                             .type = data[texcoord_offset],
                             .source = data[texcoord_offset + 1U],
@@ -1011,7 +1011,7 @@ namespace smgpc::render {
                         }
 
                         const auto texmtx_offset = relative_offset(section_offset, texmtx_relative) + texmtx_index * 0x64U;
-                        auto tex_matrix = J3dTexMatrixSummary{
+                        auto tex_matrix = J3dTexMatrixSummary {
                             .slot = static_cast<std::uint8_t>(slot),
                             .projection = data[texmtx_offset],
                             .info = data[texmtx_offset + 1U],
@@ -1042,7 +1042,7 @@ namespace smgpc::render {
                         }
 
                         const auto tev_order_offset = relative_offset(section_offset, tev_order_relative) + tev_order_index * 4U;
-                        material.tev_orders.push_back(J3dTevOrderSummary{
+                        material.tev_orders.push_back(J3dTevOrderSummary {
                             .stage = static_cast<std::uint8_t>(stage),
                             .tex_coord = data[tev_order_offset],
                             .tex_map = data[tev_order_offset + 1U],
@@ -1059,7 +1059,7 @@ namespace smgpc::render {
                         }
 
                         const auto tev_stage_offset = relative_offset(section_offset, tev_stage_relative) + tev_stage_index * 20U;
-                        auto tev_stage = J3dTevStageSummary{
+                        auto tev_stage = J3dTevStageSummary {
                             .stage = static_cast<std::uint8_t>(stage),
                         };
                         std::ranges::copy(data.subspan(tev_stage_offset, tev_stage.raw.size()), tev_stage.raw.begin());
@@ -1083,7 +1083,7 @@ namespace smgpc::render {
 
                 if (material.alpha_comp_index != 0xffffU && has_relative_offset(alpha_comp_relative)) {
                     const auto alpha_offset = relative_offset(section_offset, alpha_comp_relative) + material.alpha_comp_index * 8U;
-                    material.alpha_compare = J3dAlphaCompareSummary{
+                    material.alpha_compare = J3dAlphaCompareSummary {
                         .comp0 = data[alpha_offset],
                         .ref0 = data[alpha_offset + 1U],
                         .op = data[alpha_offset + 2U],
@@ -1095,7 +1095,7 @@ namespace smgpc::render {
 
                 if (material.blend_index != 0xffffU && has_relative_offset(blend_relative)) {
                     const auto blend_offset = relative_offset(section_offset, blend_relative) + material.blend_index * 4U;
-                    material.blend = J3dBlendSummary{
+                    material.blend = J3dBlendSummary {
                         .type = data[blend_offset],
                         .src_factor = data[blend_offset + 1U],
                         .dst_factor = data[blend_offset + 2U],
@@ -1117,7 +1117,7 @@ namespace smgpc::render {
                 throw std::runtime_error("J3D MDL3 section is too small");
             }
 
-            auto summary = J3dMdl3BlockSummary{};
+            auto summary = J3dMdl3BlockSummary {};
             summary.material_count = read_be16(data, section_offset + 0x08U);
             const auto display_init_relative = read_be32(data, section_offset + 0x0cU);
             if (!has_relative_offset(display_init_relative)) {
@@ -1138,7 +1138,7 @@ namespace smgpc::render {
                     throw std::runtime_error("J3D MDL3 display list outside buffer");
                 }
 
-                auto packet = J3dMdl3PacketSummary{
+                auto packet = J3dMdl3PacketSummary {
                     .offset = static_cast<std::uint32_t>(packet_offset - section_offset),
                     .size = packet_size,
                     .bytes = {},
@@ -1153,7 +1153,7 @@ namespace smgpc::render {
 
         struct RawVertexSource {
             std::vector<J3dVertexAttributeFormat> formats;
-            std::array<std::uint32_t, 26U> array_offsets{};
+            std::array<std::uint32_t, 26U> array_offsets {};
             std::size_t section_offset = 0U;
         };
 
@@ -1162,7 +1162,7 @@ namespace smgpc::render {
             std::uint32_t pos_index = 0U;
             std::uint32_t normal_index = std::numeric_limits<std::uint32_t>::max();
             std::uint32_t color0_index = std::numeric_limits<std::uint32_t>::max();
-            std::array<std::uint32_t, 8U> tex_coord_indices{
+            std::array<std::uint32_t, 8U> tex_coord_indices {
                 std::numeric_limits<std::uint32_t>::max(),
                 std::numeric_limits<std::uint32_t>::max(),
                 std::numeric_limits<std::uint32_t>::max(),
@@ -1176,14 +1176,14 @@ namespace smgpc::render {
 
         [[nodiscard]] RawVertexSource parse_raw_vertex_source(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
-            auto source = RawVertexSource{};
+            auto source = RawVertexSource {};
             source.section_offset = section_offset;
             const auto format_relative = read_be32(data, section_offset + 0x08U);
             if (has_relative_offset(format_relative)) {
                 source.formats = parse_vertex_formats(data, relative_offset(section_offset, format_relative));
             }
 
-            constexpr std::array<std::uint32_t, 12U> attrs{
+            constexpr std::array<std::uint32_t, 12U> attrs {
                 9U,
                 10U,
                 25U,
@@ -1197,7 +1197,7 @@ namespace smgpc::render {
                 18U,
                 19U,
             };
-            for (auto i = std::size_t{}; i < attrs.size(); ++i) {
+            for (auto i = std::size_t {}; i < attrs.size(); ++i) {
                 source.array_offsets[attrs[i]] = read_be32(data, section_offset + 0x0cU + i * 4U);
             }
 
@@ -1300,8 +1300,8 @@ namespace smgpc::render {
                                     std::array<float, 3U>{0.0F, 0.0F, 1.0F} :
                                     read_normal(data, source, display_vertex.normal_index);
             auto tex_coords = std::array<std::array<float, 2U>, 8U>{};
-            auto tex_coord_count = std::uint8_t{};
-            for (auto slot = std::uint8_t{}; slot < tex_coords.size(); ++slot) {
+            auto tex_coord_count = std::uint8_t {};
+            for (auto slot = std::uint8_t {}; slot < tex_coords.size(); ++slot) {
                 if (display_vertex.tex_coord_indices[slot] == std::numeric_limits<std::uint32_t>::max()) {
                     continue;
                 }
@@ -1313,7 +1313,7 @@ namespace smgpc::render {
                                    std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
                                    read_color0(data, source, display_vertex.color0_index);
 
-            return J3dMeshVertex{
+            return J3dMeshVertex {
                 .x = position[0U],
                 .y = position[1U],
                 .z = position[2U],
@@ -1349,13 +1349,13 @@ namespace smgpc::render {
         [[nodiscard]] RawDisplayVertex read_display_vertex(std::span<const std::uint8_t> data, std::size_t &cursor,
                                                            const std::vector<J3dVertexDesc> &desc,
                                                            const std::vector<J3dVertexAttributeFormat> &formats) {
-            auto vertex = RawDisplayVertex{};
+            auto vertex = RawDisplayVertex {};
             for (const auto &entry : desc) {
                 if (entry.type == GX_NONE) {
                     continue;
                 }
 
-                auto value = std::uint32_t{};
+                auto value = std::uint32_t {};
                 if (entry.type == GX_DIRECT && entry.attr <= 8U) {
                     value = data[cursor++] & 0x3fU;
                 } else {
@@ -1390,18 +1390,18 @@ namespace smgpc::render {
         void append_primitive_indices(std::vector<std::uint16_t> &indices, std::uint8_t primitive, std::span<const std::uint16_t> vertices) {
             switch (primitive) {
             case 0x80U:
-                for (auto i = std::size_t{}; i + 3U < vertices.size(); i += 4U) {
+                for (auto i = std::size_t {}; i + 3U < vertices.size(); i += 4U) {
                     push_triangle(indices, vertices[i], vertices[i + 1U], vertices[i + 2U]);
                     push_triangle(indices, vertices[i], vertices[i + 2U], vertices[i + 3U]);
                 }
                 break;
             case 0x90U:
-                for (auto i = std::size_t{}; i + 2U < vertices.size(); i += 3U) {
+                for (auto i = std::size_t {}; i + 2U < vertices.size(); i += 3U) {
                     push_triangle(indices, vertices[i], vertices[i + 1U], vertices[i + 2U]);
                 }
                 break;
             case 0x98U:
-                for (auto i = std::size_t{}; i + 2U < vertices.size(); ++i) {
+                for (auto i = std::size_t {}; i + 2U < vertices.size(); ++i) {
                     if ((i & 1U) == 0U) {
                         push_triangle(indices, vertices[i], vertices[i + 1U], vertices[i + 2U]);
                     } else {
@@ -1410,7 +1410,7 @@ namespace smgpc::render {
                 }
                 break;
             case 0xa0U:
-                for (auto i = std::size_t{1U}; i + 1U < vertices.size(); ++i) {
+                for (auto i = std::size_t {1U}; i + 1U < vertices.size(); ++i) {
                     push_triangle(indices, vertices[0U], vertices[i], vertices[i + 1U]);
                 }
                 break;
@@ -1503,7 +1503,7 @@ namespace smgpc::render {
 
             auto meshes = std::vector<J3dShapeMesh>{};
             meshes.reserve(shape_count);
-            for (auto i = std::uint16_t{}; i < shape_count; ++i) {
+            for (auto i = std::uint16_t {}; i < shape_count; ++i) {
                 const auto shape_init_index = read_be16(data, relative_offset(section_offset, index_table_relative) + i * 2U);
                 const auto shape_init_offset = relative_offset(section_offset, shape_init_relative) + shape_init_index * 0x28U;
                 const auto matrix_group_count = read_be16(data, shape_init_offset + 0x02U);
@@ -1512,7 +1512,7 @@ namespace smgpc::render {
                 const auto draw_init_data_index = read_be16(data, shape_init_offset + 0x08U);
                 const auto desc = parse_vertex_desc(data, relative_offset(section_offset, vtx_desc_relative) + vertex_desc_list_index);
 
-                auto mesh = J3dShapeMesh{};
+                auto mesh = J3dShapeMesh {};
                 mesh.shape_index = i;
                 mesh.draw_order = i < draw_orders.size() ? draw_orders[i] : static_cast<std::uint16_t>(0xffffU);
                 mesh.material_index = i < material_indices.size() ? material_indices[i] : static_cast<std::uint16_t>(0xffffU);
@@ -1528,7 +1528,7 @@ namespace smgpc::render {
                     const auto display_list_size = read_be32(data, draw_init_offset);
                     const auto display_list_index = read_be32(data, draw_init_offset + 4U);
 
-                    auto matrix_group = J3dShapeMatrixGroupSummary{
+                    auto matrix_group = J3dShapeMatrixGroupSummary {
                         .group_index = static_cast<std::uint16_t>(group),
                         .use_matrix_index = use_matrix_index,
                         .use_matrix_count = use_matrix_count,
@@ -1551,7 +1551,7 @@ namespace smgpc::render {
                         matrix_group.matrix_table.push_back(use_matrix_index);
                     }
 
-                    auto parsed_bytes = std::uint32_t{};
+                    auto parsed_bytes = std::uint32_t {};
                     auto primitives = parse_display_list(data, relative_offset(section_offset, display_list_relative) + display_list_index,
                                                          display_list_size, desc, vertex_source.formats, parsed_bytes);
                     matrix_group.parsed_display_list_bytes = parsed_bytes;
@@ -1560,7 +1560,7 @@ namespace smgpc::render {
                     }
                     matrix_group.primitives = std::move(primitives);
 
-                    auto packet = J3dShapeDrawPacketMesh{
+                    auto packet = J3dShapeDrawPacketMesh {
                         .matrix_group = std::move(matrix_group),
                         .vertices = {},
                         .indices = {},
@@ -1584,7 +1584,7 @@ namespace smgpc::render {
             throw std::runtime_error("J3D model is too small");
         }
 
-        auto summary = J3dModelSummary{};
+        auto summary = J3dModelSummary {};
         summary.magic = read_be32(model_data, 0U);
         summary.model_type = read_be32(model_data, 4U);
         summary.section_count = read_be32(model_data, 0x0cU);
@@ -1592,7 +1592,7 @@ namespace smgpc::render {
             throw std::runtime_error("J3D model has unexpected magic");
         }
 
-        auto offset = std::size_t{0x20U};
+        auto offset = std::size_t {0x20U};
         for (auto i = 0U; i < summary.section_count; ++i) {
             if (offset + 8U > model_data.size()) {
                 throw std::runtime_error("J3D section header outside buffer");
@@ -1603,7 +1603,7 @@ namespace smgpc::render {
                 throw std::runtime_error("J3D section size outside buffer");
             }
 
-            summary.sections.push_back(J3dSectionInfo{
+            summary.sections.push_back(J3dSectionInfo {
                 .tag = read_tag(model_data, offset),
                 .offset = static_cast<std::uint32_t>(offset),
                 .size = section_size,
@@ -1635,8 +1635,8 @@ namespace smgpc::render {
         }
         if (summary.materials.has_value() && summary.mdl3.has_value()) {
             const auto packet_count = std::min(summary.materials->materials.size(), summary.mdl3->packets.size());
-            auto bp_registers = !summary.materials->materials.empty() ? gx_bp_registers_from_state(summary.materials->materials.front().gx_state) : GXBPRegisterState{};
-            for (auto i = std::size_t{}; i < packet_count; ++i) {
+            auto bp_registers = !summary.materials->materials.empty() ? gx_bp_registers_from_state(summary.materials->materials.front().gx_state) : GXBPRegisterState {};
+            for (auto i = std::size_t {}; i < packet_count; ++i) {
                 gx_apply_mdl3_display_list(summary.materials->materials[i].gx_state, summary.mdl3->packets[i].bytes, &bp_registers);
             }
         }
@@ -1652,7 +1652,7 @@ namespace smgpc::render {
 
     J3dModelGeometry extract_j3d_model_geometry(std::span<const std::uint8_t> model_data) {
         const auto summary = inspect_j3d_model(model_data);
-        auto geometry = J3dModelGeometry{};
+        auto geometry = J3dModelGeometry {};
         geometry.materials = summary.materials;
         geometry.envelopes = summary.envelopes;
         geometry.draw_matrices = summary.draw_matrices;

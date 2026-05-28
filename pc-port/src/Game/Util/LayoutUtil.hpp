@@ -62,6 +62,7 @@ namespace MR {
     void copyPaneTrans(TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName);
     void copyPaneScale(TVec2f* pScale, const LayoutActor* pLayout, const char* pPaneName);
     void setLayoutPosAtPaneTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
+    void setLayoutScaleAtPaneScale(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
     void setLayoutScalePosAtPaneScaleTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
     void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
     void startPaneAnim(LayoutActor* pLayout, const char* pPaneName, const char* pAnimName, u32 animLayer);

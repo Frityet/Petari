@@ -140,7 +140,7 @@ namespace smgpc::resource {
             const auto color0 = decode_rgb565(color0_value);
             const auto color1 = decode_rgb565(color1_value);
 
-            std::array<Color, 4U> colors{};
+            std::array<Color, 4U> colors {};
             colors[0] = color0;
             colors[1] = color1;
             if (color0_value > color1_value) {
@@ -262,7 +262,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] GxTextureImageLevel image_level(TplTextureFormat format, std::uint16_t width, std::uint16_t height,
                                                       std::uint32_t data_offset, std::uint8_t level) {
-            return GxTextureImageLevel{
+            return GxTextureImageLevel {
                 .level = level,
                 .width = width,
                 .height = height,
@@ -280,7 +280,7 @@ namespace smgpc::resource {
             auto level_width = width;
             auto level_height = height;
             auto offset = data_offset;
-            for (auto level = std::uint8_t{}; level < count; ++level) {
+            for (auto level = std::uint8_t {}; level < count; ++level) {
                 auto image = image_level(format, level_width, level_height, offset, level);
                 offset += image.data_size;
                 levels.push_back(image);
@@ -387,7 +387,7 @@ namespace smgpc::resource {
                 throw std::runtime_error("TPL image data outside buffer");
             }
 
-            auto texture = DecodedTexture{
+            auto texture = DecodedTexture {
                 .width = header.width,
                 .height = header.height,
                 .format = header.format,
@@ -411,7 +411,7 @@ namespace smgpc::resource {
         [[nodiscard]] TplTextureDescriptor make_tpl_texture_descriptor(std::span<const std::uint8_t> data, std::uint32_t index) {
             const auto descriptor = read_descriptor(data, index);
             const auto header = read_texture_header(data, descriptor.texture_header_offset);
-            auto result = TplTextureDescriptor{
+            auto result = TplTextureDescriptor {
                 .index = index,
                 .texture_header_offset = descriptor.texture_header_offset,
                 .clut_header_offset = descriptor.clut_header_offset,
@@ -469,14 +469,14 @@ namespace smgpc::resource {
             throw std::runtime_error("TPL descriptor array outside buffer");
         }
 
-        auto palette = TplPalette{
+        auto palette = TplPalette {
             .version = version,
             .descriptor_count = descriptor_count,
             .descriptor_array_offset = descriptor_array_offset,
             .descriptors = {},
         };
         palette.descriptors.reserve(descriptor_count);
-        for (auto index = std::uint32_t{}; index < descriptor_count; ++index) {
+        for (auto index = std::uint32_t {}; index < descriptor_count; ++index) {
             palette.descriptors.push_back(make_tpl_texture_descriptor(data, index));
         }
         return palette;
@@ -498,7 +498,7 @@ namespace smgpc::resource {
             throw std::runtime_error("BTI texture header outside buffer");
         }
 
-        auto texture = BtiTexture{
+        auto texture = BtiTexture {
             .format = static_cast<TplTextureFormat>(data[0x00U]),
             .transparency = data[0x01U],
             .width = read_be16(data, 0x02U),
@@ -538,7 +538,7 @@ namespace smgpc::resource {
             }
         }
 
-        const auto header = TplHeader{
+        const auto header = TplHeader {
             .height = texture.height,
             .width = texture.width,
             .format = texture.format,
@@ -546,7 +546,7 @@ namespace smgpc::resource {
         };
         const auto clut = texture.palette_entry_count == 0U ?
                               std::optional<TplClutHeader>() :
-                              std::optional<TplClutHeader>(TplClutHeader{
+                              std::optional<TplClutHeader>(TplClutHeader {
                                   .entries = texture.palette_entry_count,
                                   .format = static_cast<TlutFormat>(texture.palette_format),
                                   .data_offset = texture.palette_data_offset,
@@ -556,7 +556,7 @@ namespace smgpc::resource {
     }
 
     DecodedTexture decode_raw_gx_texture(std::span<const std::uint8_t> data, std::uint16_t width, std::uint16_t height, TplTextureFormat format) {
-        const auto header = TplHeader{
+        const auto header = TplHeader {
             .height = height,
             .width = width,
             .format = format,

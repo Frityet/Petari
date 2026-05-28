@@ -121,7 +121,7 @@ namespace smgpc::sql {
         const auto *text = sqlite3_column_text(mStatement, index);
         const auto length = sqlite3_column_bytes(mStatement, index);
         if (text == nullptr) {
-            return std::string{};
+            return std::string {};
         }
         return std::string(reinterpret_cast<const char *>(text), static_cast<std::size_t>(length));
     }

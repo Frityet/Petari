@@ -52,13 +52,29 @@ namespace {
     constexpr char cSaveDataSystemFileName[] = "sysconf";
 }
 
-    smgpc::game::SaveDataService& backing_save_data() {
-        return smgpc::game::RuntimeContext::instance().save_data();
+class SaveDataFileAccessor {
+public:
+    explicit SaveDataFileAccessor(u8* pSaveData) : mSaveData(pSaveData) {
     }
 
-    [[nodiscard]] s32 slot_index_from_name(std::string_view name) {
-        if (name.empty()) {
-            return 1;
+    SaveDataFileHeader* getHeader() const {
+        return reinterpret_cast<SaveDataFileHeader*>(mSaveData);
+    }
+
+    SaveDataFileInfo* getFileInfo(int index) const {
+        return reinterpret_cast<SaveDataFileInfo*>(mSaveData + sizeof(SaveDataFileHeader)) + index;
+    }
+
+    void makeUserFileInfo(SaveDataUserFileInfo* pInfo, const char* pName) const {
+        if (pInfo == nullptr) {
+            return;
+        }
+
+        pInfo->mData = nullptr;
+        pInfo->mSize = 0U;
+        pInfo->mType = SaveDataFileType_System;
+        if (mSaveData == nullptr || pName == nullptr) {
+            return;
         }
 
         const auto* header = getHeader();

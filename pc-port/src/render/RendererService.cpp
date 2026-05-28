@@ -164,7 +164,7 @@ namespace smgpc::render {
                 glfwGetCursorPos(_window, &cursor_x, &cursor_y);
                 const auto valid = cursor_x >= 0.0 && cursor_y >= 0.0 && cursor_x < static_cast< double >(width) &&
                                    cursor_y < static_cast< double >(height);
-                return InputPointerState{
+                return InputPointerState {
                     .x = static_cast< float >(cursor_x * static_cast< double >(core::kWiiLogicalFramebufferWidth) / static_cast< double >(width)),
                     .y = static_cast< float >(cursor_y * static_cast< double >(core::kWiiLogicalFramebufferHeight) / static_cast< double >(height)),
                     .valid = valid,
@@ -200,11 +200,11 @@ namespace smgpc::render {
                 _should_close = glfwWindowShouldClose(_window) == GLFW_TRUE;
             }
 
-            GLFWwindow* _window{nullptr};
-            FramebufferInfo _framebuffer{1U, 1U};
-            bool _focused{false};
-            bool _minimized{false};
-            bool _should_close{false};
+            GLFWwindow* _window {nullptr};
+            FramebufferInfo _framebuffer {1U, 1U};
+            bool _focused {false};
+            bool _minimized {false};
+            bool _should_close {false};
         };
 
         class GLFWWindowFactory final : public IWindowFactory {
@@ -228,7 +228,7 @@ namespace smgpc::render {
                 }
 
                 const auto now = std::chrono::steady_clock::now();
-                const auto raw_delta = (_frame_anchor == std::chrono::steady_clock::time_point{}) ?
+                const auto raw_delta = (_frame_anchor == std::chrono::steady_clock::time_point {}) ?
                                            std::chrono::duration< double >::zero() :
                                            std::chrono::duration< double >(now - _frame_anchor);
                 _frame_anchor = now;
@@ -248,7 +248,7 @@ namespace smgpc::render {
                     _framebuffer_ready = true;
                 }
 
-                const FrameContext context{
+                const FrameContext context {
                     .frame_index = _frame_index,
                     .frame_time_seconds = _frame_time,
                     .frame_delta_seconds = delta,
@@ -340,7 +340,7 @@ namespace smgpc::render {
                 const auto framebuffer = _window_service->framebuffer_size();
                 const auto native_handle = _window_service->native_handle();
 
-                core::RenderInitDesc init_desc{};
+                core::RenderInitDesc init_desc {};
                 init_desc.width = framebuffer.width;
                 init_desc.height = framebuffer.height;
                 init_desc.title = "SMG PC Port";
@@ -355,12 +355,12 @@ namespace smgpc::render {
             }
 
             di::DependencyReference< IWindowService > _window_service;
-            backends::BgfxBackend _backend{};
-            std::uint64_t _frame_index{};
-            double _frame_time{};
-            bool _framebuffer_ready{};
-            FramebufferInfo _framebuffer{1U, 1U};
-            std::chrono::steady_clock::time_point _frame_anchor{};
+            backends::BgfxBackend _backend {};
+            std::uint64_t _frame_index {};
+            double _frame_time {};
+            bool _framebuffer_ready {};
+            FramebufferInfo _framebuffer {1U, 1U};
+            std::chrono::steady_clock::time_point _frame_anchor {};
         };
 
     }  // namespace

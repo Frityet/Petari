@@ -36,7 +36,7 @@ namespace smgpc::scene {
     GameSystemSceneControllerService::~GameSystemSceneControllerService() = default;
 
     void GameSystemSceneControllerService::request_change_scene(const StageHostRequest &request) {
-        _pending_scene = SceneControlInfo{
+        _pending_scene = SceneControlInfo {
             .scene_name = request.scene_name,
             .stage_name = request.stage_name,
             .scenario_no = request.scenario_no,
@@ -145,7 +145,7 @@ namespace smgpc::scene {
 
     StageHostRequest GameSystemSceneControllerService::pending_request() const {
         const auto &pending = *_pending_scene;
-        return StageHostRequest{
+        return StageHostRequest {
             .scene_name = pending.scene_name,
             .stage_name = pending.stage_name,
             .object_name = pending.object_name,

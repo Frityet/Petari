@@ -8,7 +8,7 @@
 namespace smgpc::render {
     namespace {
 
-        constexpr auto J3D1_MAGIC = std::uint32_t{0x4a334431U};
+        constexpr auto J3D1_MAGIC = std::uint32_t {0x4a334431U};
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
@@ -82,7 +82,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dAnimationKeyTableSummary read_key_table(std::span<const std::uint8_t> data, std::size_t offset) {
-            return J3dAnimationKeyTableSummary{
+            return J3dAnimationKeyTableSummary {
                 .max_frame = read_be16(data, offset),
                 .offset = read_be16(data, offset + 2U),
                 .type = read_be16(data, offset + 4U),
@@ -90,7 +90,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dAnimationTransformTrackSummary read_transform_track(std::span<const std::uint8_t> data, std::size_t offset) {
-            return J3dAnimationTransformTrackSummary{
+            return J3dAnimationTransformTrackSummary {
                 .scale = read_key_table(data, offset),
                 .rotation = read_key_table(data, offset + 6U),
                 .translation = read_key_table(data, offset + 12U),
@@ -157,7 +157,7 @@ namespace smgpc::render {
                 return value_at(values, last + 1U);
             }
 
-            auto key = std::size_t{};
+            auto key = std::size_t {};
             while (key + 1U < table.max_frame && value_at(values, first + (key + 1U) * stride) <= frame) {
                 ++key;
             }
@@ -183,7 +183,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dBckAnimationSummary parse_ank1(std::span<const std::uint8_t> data, std::size_t section_offset) {
-            auto summary = J3dBckAnimationSummary{};
+            auto summary = J3dBckAnimationSummary {};
             summary.attribute = data[section_offset + 0x08U];
             summary.rotation_fraction = data[section_offset + 0x09U];
             summary.frame_max = read_be_s16(data, section_offset + 0x0aU);
@@ -222,7 +222,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dBtkAnimationSummary parse_ttk1(std::span<const std::uint8_t> data, std::size_t section_offset) {
-            auto summary = J3dBtkAnimationSummary{};
+            auto summary = J3dBtkAnimationSummary {};
             summary.attribute = data[section_offset + 0x08U];
             summary.rotation_fraction = data[section_offset + 0x09U];
             summary.frame_max = read_be_s16(data, section_offset + 0x0aU);
@@ -255,8 +255,8 @@ namespace smgpc::render {
             const auto material_count = summary.track_count / 3U;
             summary.materials.reserve(material_count);
             for (auto material = 0U; material < material_count; ++material) {
-                auto material_summary = J3dBtkMaterialAnimationSummary{};
-                material_summary.material_name = material < names.size() ? names[material] : std::string{};
+                auto material_summary = J3dBtkMaterialAnimationSummary {};
+                material_summary.material_name = material < names.size() ? names[material] : std::string {};
                 if (material_id_relative != 0U) {
                     material_summary.material_id = read_be16(data, section_offset + material_id_relative + material * 2U);
                 }
@@ -285,7 +285,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dBrkAnimationSummary parse_trk1(std::span<const std::uint8_t> data, std::size_t section_offset) {
-            return J3dBrkAnimationSummary{
+            return J3dBrkAnimationSummary {
                 .attribute = data[section_offset + 0x08U],
                 .frame_max = read_be_s16(data, section_offset + 0x0aU),
             };
@@ -298,16 +298,16 @@ namespace smgpc::render {
             throw std::runtime_error("Not a J3D1 animation file");
         }
 
-        auto summary = J3dAnimationSummary{};
+        auto summary = J3dAnimationSummary {};
         summary.type = read_tag(animation_data, 4U);
         summary.file_size = read_be32(animation_data, 0x08U);
         summary.block_count = read_be32(animation_data, 0x0cU);
 
-        auto section_offset = std::size_t{0x20U};
+        auto section_offset = std::size_t {0x20U};
         for (auto block = 0U; block < summary.block_count; ++block) {
             const auto tag = read_tag(animation_data, section_offset);
             const auto size = read_be32(animation_data, section_offset + 4U);
-            summary.sections.push_back(J3dAnimationSectionInfo{
+            summary.sections.push_back(J3dAnimationSectionInfo {
                 .tag = tag,
                 .offset = static_cast<std::uint32_t>(section_offset),
                 .size = size,
@@ -335,7 +335,7 @@ namespace smgpc::render {
 
         const auto normalized_frame = loop_frame(frame, bck.frame_max);
         const auto &tracks = bck.joints[joint_index];
-        auto transform = J3dJointTransformValue{};
+        auto transform = J3dJointTransformValue {};
         for (auto axis = 0U; axis < tracks.size(); ++axis) {
             transform.scale[axis] = evaluate_key_table(normalized_frame, tracks[axis].scale, bck.scale_values, 1.0F);
             transform.rotation[axis] = static_cast<std::int16_t>(
@@ -361,7 +361,7 @@ namespace smgpc::render {
         const auto &track_t = material.tracks[1U];
         const auto &track_rotation = material.tracks[2U];
 
-        return J3dTextureSrtAnimationValue{
+        return J3dTextureSrtAnimationValue {
             .center = material.center,
             .scale_s = evaluate_key_table(normalized_frame, track_s.scale, btk.scale_values, 1.0F),
             .scale_t = evaluate_key_table(normalized_frame, track_t.scale, btk.scale_values, 1.0F),

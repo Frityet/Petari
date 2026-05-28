@@ -17,7 +17,7 @@ namespace {
         };
 
         for (const auto &candidate : candidates) {
-            std::error_code error{};
+            std::error_code error {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;

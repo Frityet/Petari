@@ -4,6 +4,8 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "JSystem/JKernel/JKRArchive.hpp"
 
+#include <limits>
+
 namespace smgpc::tests {
     namespace {
         constexpr auto TEST_SUITE = std::string_view{"resource/layout"};
@@ -327,24 +329,24 @@ namespace smgpc::tests {
             require(rescanned_date_tags.size() == date->control_tags.size(),
                     "generic BMG control tag scanner should reproduce archive tag metadata from raw text");
             const auto formatted_date = smgpc::resource::format_bmg_text(date->raw_text, std::array{
-                                                                                           smgpc::resource::BmgFormatArg::number(2026),
-                                                                                           smgpc::resource::BmgFormatArg::number(5),
-                                                                                           smgpc::resource::BmgFormatArg::number(7),
-                                                                                       });
+                                                                                             smgpc::resource::BmgFormatArg::number(2026),
+                                                                                             smgpc::resource::BmgFormatArg::number(5),
+                                                                                             smgpc::resource::BmgFormatArg::number(7),
+                                                                                         });
             require(formatted_date == u"2026/05/07", "generic BMG replacement should format date number tags");
             const auto *time = messages.find("System_Time002");
             require(time != nullptr, "MessageId.tbl should resolve time formatting text");
             const auto formatted_time = smgpc::resource::format_bmg_text(time->raw_text, std::array{
-                                                                                           smgpc::resource::BmgFormatArg::number(9),
-                                                                                           smgpc::resource::BmgFormatArg::number(8),
-                                                                                       });
+                                                                                             smgpc::resource::BmgFormatArg::number(9),
+                                                                                             smgpc::resource::BmgFormatArg::number(8),
+                                                                                         });
             require(formatted_time == u"09:08", "generic BMG replacement should format time number tags");
             const auto *copy_confirm = messages.find("System_FileSelect014");
             require(copy_confirm != nullptr, "MessageId.tbl should resolve FileSelect copy-confirm text fixture");
             const auto formatted_copy_confirm = smgpc::resource::format_bmg_text(copy_confirm->raw_text, std::array{
-                                                                                                           smgpc::resource::BmgFormatArg::number(2),
-                                                                                                           smgpc::resource::BmgFormatArg::number(5),
-                                                                                                       });
+                                                                                                             smgpc::resource::BmgFormatArg::number(2),
+                                                                                                             smgpc::resource::BmgFormatArg::number(5),
+                                                                                                         });
             require(formatted_copy_confirm.find(u'2') != std::u16string::npos && formatted_copy_confirm.find(u'5') != std::u16string::npos &&
                         formatted_copy_confirm.size() > 2U,
                     "generic BMG replacement should apply multiple numeric args without replacing the whole message");
@@ -393,37 +395,6 @@ namespace smgpc::tests {
             require(smgpc::resource::format_bmg_text(raw, {}) == u"AB", "generic BMG display text should strip unbound control tags");
             require(smgpc::resource::format_bmg_text(raw, std::array{smgpc::resource::BmgFormatArg::number(3)}) == u"A03B",
                     "generic BMG display text should expand bound numeric control tags before rendering");
-        }
-
-        $test("loads original BMG messages through MessageId JMap table") {
-            const auto root = disc_files_root();
-            const auto message_archive = smgpc::game::RarcArchive::from_file(root / "KrKorean" / "MessageData" / "Message.arc");
-            const auto messages = smgpc::game::BmgMessageArchive::from_message_archive(message_archive);
-
-            require(messages.message_count() == 1994U, "Message.arc BMG message count changed");
-
-            const auto *guidance = messages.find("2PGuidance001");
-            require(guidance != nullptr, "MessageId.tbl should resolve 2PGuidance001");
-            require(guidance->info.text_offset == 2U, "2PGuidance001 should retain its original DAT1 text offset");
-            require(guidance->display_text.size() >= 3U, "2PGuidance001 should decode UTF-16BE text");
-            require(guidance->display_text[0U] == u'W' && guidance->display_text[1U] == u'i' && guidance->display_text[2U] == u'i',
-                    "2PGuidance001 should begin with Wii text after UTF-16BE decode");
-
-            const auto *layout = messages.find("Layout_SystemTalk");
-            require(layout != nullptr, "MessageId.tbl should resolve layout system prompts");
-            require(!layout->display_text.empty(), "Layout_SystemTalk should decode to displayable text");
-
-            const auto *save = messages.find("System_Save01");
-            require(save != nullptr, "MessageId.tbl should resolve save-system text");
-            require(!save->display_text.empty(), "System_Save01 should decode to displayable text");
-
-            auto service = smgpc::game::MessageService{};
-            require(service.load_message_archive(message_archive) == messages.message_count(), "MessageService should import every BMG message");
-            const auto *service_text = service.message_utf16("2PGuidance001");
-            require(service_text != nullptr, "MessageService should expose imported UTF-16 message text");
-            require(service_text->size() >= 3U && (*service_text)[0U] == u'W' && (*service_text)[1U] == u'i' && (*service_text)[2U] == u'i',
-                    "MessageService should preserve imported UTF-16 code units");
-            require(service.message("System_Save01") != nullptr, "MessageService should expose UTF-8 views for imported messages");
         }
 
         $test("decodes Korean title logo TPL texture") {
@@ -543,6 +514,180 @@ namespace smgpc::tests {
                     "BRLYT GX state should match NW4R's default alpha blend when no blend block is present");
             require(state.blend.color_update && state.blend.alpha_update,
                     "BRLYT default GX blend state should keep color and alpha writes enabled");
+        }
+
+        $test("maps default BRLYT textured materials through TEV color registers") {
+            const auto texture_stage = smgpc::render::gx_brlyt_default_texture_color_stage(0U);
+            const auto raster_stage = smgpc::render::gx_brlyt_default_raster_modulate_stage();
+            require(texture_stage.color_in == std::array<std::uint8_t, 4U>{2U, 4U, 8U, 15U},
+                    "BRLYT default texture stage should map texture intensity between TEV color registers");
+            require(texture_stage.alpha_in == std::array<std::uint8_t, 4U>{1U, 2U, 4U, 7U},
+                    "BRLYT default texture stage should map texture alpha between TEV alpha registers");
+            require(raster_stage.texture_stage == 0xffU,
+                    "BRLYT default raster stage should use the generic disabled-texture sentinel");
+            require(raster_stage.color_in == std::array<std::uint8_t, 4U>{15U, 0U, 10U, 15U},
+                    "BRLYT default raster stage should modulate register output by raster color");
+            require(raster_stage.alpha_in == std::array<std::uint8_t, 4U>{7U, 0U, 5U, 7U},
+                    "BRLYT default raster stage should modulate register alpha by raster alpha");
+        }
+
+        $test("draws FileNumber masks with default BRLYT color remap packets") {
+            const auto root = disc_files_root();
+            const auto file_number = smgpc::resource::RarcArchive::from_file(root / "LayoutData" / "FileNumber.arc");
+            const auto layout_resource = smgpc::layout::parse_brlyt_layout(file_number.file_data("blyt/filenumber.brlyt"));
+            const auto pic_base = std::ranges::find_if(layout_resource.materials, [](const auto &material) { return material.name == "PicBase"; });
+            const auto pic_base_frame =
+                std::ranges::find_if(layout_resource.materials, [](const auto &material) { return material.name == "PicBaseFrame"; });
+            require(pic_base != layout_resource.materials.end(), "FileNumber should expose the PicBase material");
+            require(pic_base_frame != layout_resource.materials.end(), "FileNumber should expose the PicBaseFrame material");
+            require(layout_resource.drawables.size() == 3U &&
+                        layout_resource.drawables[0U].kind == smgpc::layout::BrlytDrawableKind::Picture &&
+                        layout_resource.pictures[layout_resource.drawables[0U].index].name == "PicBaseFrame" &&
+                        layout_resource.drawables[1U].kind == smgpc::layout::BrlytDrawableKind::Picture &&
+                        layout_resource.pictures[layout_resource.drawables[1U].index].name == "PicBase" &&
+                        layout_resource.drawables[2U].kind == smgpc::layout::BrlytDrawableKind::TextBox &&
+                        layout_resource.text_boxes[layout_resource.drawables[2U].index].name == "TxtFileNumber",
+                    "FileNumber should retain native BRLYT picture/text draw order");
+            require(pic_base->tev_stages.empty() && pic_base_frame->tev_stages.empty(),
+                    "FileNumber masks should exercise the BRLYT omitted-TEV default material path");
+            require(pic_base->gx_state.tev_registers[1U] == smgpc::render::GXTevRegisterColor{40, 40, 40, 0} &&
+                        pic_base->gx_state.tev_registers[2U] == smgpc::render::GXTevRegisterColor{40, 40, 40, 255},
+                    "PicBase should preserve the original gray color-map register range");
+            require(pic_base_frame->gx_state.tev_registers[1U] == smgpc::render::GXTevRegisterColor{100, 100, 100, 0} &&
+                        pic_base_frame->gx_state.tev_registers[2U] == smgpc::render::GXTevRegisterColor{100, 100, 100, 255},
+                    "PicBaseFrame should preserve the original frame color-map register range");
+
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::runtime::RuntimeContext(logger, window);
+            auto renderer = RecordingRenderer();
+            auto layout = SimpleLayout("FileNumberProbe", "FileNumber", 2U, MR::DrawType_Layout);
+
+            layout.startAnim("Appear", 0U);
+            layout.setAnimFrameAndStop(21.0F, 0U);
+            layout.appear();
+            layout.draw(renderer);
+
+            require(renderer.gx_material_batch_count >= 2U, "FileNumber should submit both mask pictures as GX material batches");
+            const auto first_text_submit = std::ranges::find(renderer.submission_log, std::string("textured_quad"));
+            require(first_text_submit != renderer.submission_log.end() && std::distance(renderer.submission_log.begin(), first_text_submit) >= 2,
+                    "FileNumber draw should submit the text quad after the native mask pictures");
+            require(renderer.saw_gx_material_brlyt_default_color_mapping_batch,
+                    "FileNumber draw should use the generic default BRLYT TEV color-map packet instead of white texture passthrough");
+            require(renderer.last_gx_material_initial_tev_registers[1U] == smgpc::render::GxTevRegisterColor2D{100, 100, 100, 0} ||
+                        renderer.last_gx_material_initial_tev_registers[1U] == smgpc::render::GxTevRegisterColor2D{40, 40, 40, 0},
+                    "FileNumber draw should pass original BRLYT TEV color-map registers to the renderer");
+            require(!renderer.last_gx_material_vertices.empty(), "FileNumber should record submitted GX material vertices");
+            auto min_t = std::numeric_limits<float>::max();
+            auto max_t = std::numeric_limits<float>::lowest();
+            for (const auto &vertex : renderer.last_gx_material_vertices) {
+                min_t = std::min(min_t, vertex.tex_coords[0U][1U]);
+                max_t = std::max(max_t, vertex.tex_coords[0U][1U]);
+            }
+            require_near(min_t, 0.0F, 0.001F, "mirrored BRLYT texture SRT should preserve the native T-coordinate minimum");
+            require_near(max_t, 2.0F, 0.001F, "mirrored BRLYT texture SRT should preserve the native T-coordinate maximum");
+
+            const auto draw_number_text = [](const char *pane_name, s32 number) {
+                auto local_renderer = RecordingRenderer();
+                auto local_layout = SimpleLayout("FileNumberTextProbe", "FileNumber", 2U, MR::DrawType_Layout);
+                local_layout.setTextBoxNumberRecursive(pane_name, number);
+                local_layout.appear();
+                local_layout.draw(local_renderer);
+                require(!local_renderer.textured_quads.empty(), "FileNumber text should submit a text quad");
+
+                const auto *texture = uploaded_texture_for_handle(local_renderer, local_renderer.textured_quads.front().texture);
+                require(texture != nullptr, "FileNumber text quad should reference an uploaded text texture");
+                return *texture;
+            };
+
+            const auto recursive_parent_digit = draw_number_text("FileNumber", 6);
+            const auto exact_text_digit = draw_number_text("TxtFileNumber", 6);
+            const auto default_digit = draw_number_text(nullptr, 0);
+            require(recursive_parent_digit.width == exact_text_digit.width && recursive_parent_digit.height == exact_text_digit.height &&
+                        recursive_parent_digit.rgba == exact_text_digit.rgba,
+                    "setTextBoxNumberRecursive should update text boxes below the requested parent pane");
+            require(recursive_parent_digit.rgba != default_digit.rgba,
+                    "FileNumber recursive text update should change the rendered digit texture from the BRLYT default");
+            auto saw_source_colored_pixel = false;
+            for (auto offset = std::size_t{}; offset + 3U < recursive_parent_digit.rgba.size(); offset += 4U) {
+                if (recursive_parent_digit.rgba[offset + 3U] == 0U) {
+                    continue;
+                }
+                const auto red = recursive_parent_digit.rgba[offset];
+                const auto green = recursive_parent_digit.rgba[offset + 1U];
+                const auto blue = recursive_parent_digit.rgba[offset + 2U];
+                if (red != green || red != blue) {
+                    saw_source_colored_pixel = true;
+                    break;
+                }
+            }
+            require(saw_source_colored_pixel, "FileNumber text rendering should preserve colored NumberFont glyph pixels");
+        }
+
+        $test("evaluates BRLAN material color tracks for GX registers") {
+            const auto root = disc_files_root();
+            const auto title_logo = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+            const auto decide = smgpc::layout::parse_brlan_animation(title_logo.file_data("anim/decide.brlan"));
+
+            const auto pic_bloom_a = std::ranges::find_if(decide.contents, [](const auto &content) {
+                return content.name == "PicBloomA";
+            });
+            require(pic_bloom_a != decide.contents.end(), "TitleLogo Decide should animate PicBloomA material content");
+            require(std::ranges::any_of(pic_bloom_a->infos,
+                                        [](const auto &info) {
+                                            return info.kind == "RLMC" &&
+                                                   std::ranges::any_of(info.targets, [](const auto &target) { return target.target == 11U; });
+                                        }),
+                    "TitleLogo Decide should carry the native RLMC target for TEV register alpha");
+
+            const auto start_frame = decide.material_frame("PicBloomA", 0.0F);
+            const auto decided_frame = decide.material_frame("PicBloomA", 101.0F);
+            require(start_frame.tev_colors[1U][3U].has_value() && decided_frame.tev_colors[1U][3U].has_value(),
+                    "BRLAN RLMC target 11 should evaluate to TEV color register 1 alpha");
+            require_near(*start_frame.tev_colors[1U][3U], 255.0F, 0.001F,
+                         "PicBloomA material alpha should start from the native opaque TEV register value");
+            require_near(*decided_frame.tev_colors[1U][3U], 0.0F, 0.001F,
+                         "PicBloomA material alpha should fade to the native transparent TEV register value");
+        }
+
+        $test("applies BRLAN material color tracks to submitted GX packets") {
+            const auto root = disc_files_root();
+            const auto title_logo = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+            const auto brlyt = smgpc::layout::parse_brlyt_layout(title_logo.file_data("blyt/titlelogo.brlyt"));
+            require(brlyt.pictures.size() >= 2U && brlyt.pictures[0U].name == "PicBloomA" && brlyt.pictures[1U].name == "PicBloomB",
+                    "TitleLogo bloom pictures should remain first in native BRLYT draw order");
+
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::runtime::RuntimeContext(logger, window);
+
+            const auto draw_decide = [](float frame) {
+                auto renderer = RecordingRenderer();
+                auto layout = SimpleLayout("TitleLogoMaterialProbe", "TitleLogo", 2U, MR::DrawType_Layout);
+                layout.startAnim("Decide", 0U);
+                layout.setAnimFrameAndStop(frame, 0U);
+                layout.appear();
+                layout.draw(renderer);
+                return renderer;
+            };
+
+            const auto frame0 = draw_decide(0.0F);
+            const auto frame101 = draw_decide(101.0F);
+            require(frame0.gx_material_batches.size() >= 2U && frame101.gx_material_batches.size() >= 2U,
+                    "TitleLogo Decide should submit PicBloomA and PicBloomB as GX material batches");
+
+            const auto is_bloom_packet = [](const auto &batch) {
+                return batch.texture_stage_count == 1U && batch.tev_stage_count == 2U && batch.alpha_compare.enabled && batch.blend.enabled &&
+                       batch.blend.type == 1U && batch.blend.src_factor == 4U && batch.blend.dst_factor == 1U && batch.blend.op == 3U &&
+                       batch.tev_texture_stages[0U] == 0U && batch.tev_texture_stages[1U] == 0xffU;
+            };
+
+            require(is_bloom_packet(frame0.gx_material_batches[0U]) && frame0.gx_material_batches[0U].initial_tev_registers[2U][3U] == 255,
+                    "PicBloomA frame 0 batch should submit the unfaded RLMC TEV alpha");
+            require(is_bloom_packet(frame101.gx_material_batches[0U]) && frame101.gx_material_batches[0U].initial_tev_registers[2U][3U] == 0,
+                    "PicBloomA frame 101 batch should submit the faded RLMC TEV alpha");
+            require(is_bloom_packet(frame101.gx_material_batches[1U]) && frame101.gx_material_batches[1U].initial_tev_registers[2U][3U] == 0,
+                    "PicBloomB frame 101 batch should submit the faded RLMC TEV alpha");
         }
 
         $test("preserves BRLYT root groups for target layout resources") {

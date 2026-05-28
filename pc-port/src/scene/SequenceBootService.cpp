@@ -31,7 +31,7 @@ namespace smgpc::scene {
                                                                         ";scenario=" + std::to_string(request.mScenarioNo));
         _runtime.emit_semantic_trace_event("sequence", "boot_stage_requested", detail);
 #endif
-        _stage_host.request_stage(StageHostRequest{
+        _stage_host.request_stage(StageHostRequest {
             .scene_name = request.mSceneName,
             .stage_name = request.mStageName,
             .object_name = request.mObjectName,

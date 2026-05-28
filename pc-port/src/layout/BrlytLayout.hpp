@@ -183,6 +183,16 @@ namespace smgpc::layout {
         bool root_group = false;
     };
 
+    enum class BrlytDrawableKind {
+        Picture,
+        TextBox,
+    };
+
+    struct BrlytDrawable {
+        BrlytDrawableKind kind = BrlytDrawableKind::Picture;
+        std::size_t index = 0U;
+    };
+
     struct BrlytLayout {
         float width = 0.0F;
         float height = 0.0F;
@@ -192,6 +202,7 @@ namespace smgpc::layout {
         std::vector<BrlytPane> panes;
         std::vector<BrlytPicturePane> pictures;
         std::vector<BrlytTextBox> text_boxes;
+        std::vector<BrlytDrawable> drawables;
         std::vector<BrlytGroup> groups;
     };
 

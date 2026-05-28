@@ -25,7 +25,7 @@ namespace smgpc::dump {
     }
 
     std::string markdown_table_cell(std::string_view value) {
-        auto escaped = std::string{};
+        auto escaped = std::string {};
         escaped.reserve(value.size());
         for (const auto ch : value) {
             switch (ch) {
@@ -50,15 +50,15 @@ namespace smgpc::dump {
             _out << ' ' << markdown_table_cell(header) << " |";
         }
         _out << "\n|";
-        for (auto i = std::size_t{}; i < headers.size(); ++i) {
+        for (auto i = std::size_t {}; i < headers.size(); ++i) {
             _out << " --- |";
         }
         _out << '\n';
 
         for (const auto &row : rows) {
             _out << '|';
-            for (auto column = std::size_t{}; column < headers.size(); ++column) {
-                const auto cell = column < row.size() ? std::string_view(row[column]) : std::string_view{};
+            for (auto column = std::size_t {}; column < headers.size(); ++column) {
+                const auto cell = column < row.size() ? std::string_view(row[column]) : std::string_view {};
                 _out << ' ' << markdown_table_cell(cell) << " |";
             }
             _out << '\n';

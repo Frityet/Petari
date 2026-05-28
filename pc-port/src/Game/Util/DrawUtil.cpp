@@ -4,6 +4,11 @@
 #include "runtime/RuntimeContext.hpp"
 
 namespace MR {
+    void fillSilhouetteColor() {
+        captureScreenAlpha(0);
+        loadScreenAlphaTexture(0, GX_TEXMAP0);
+    }
+
     void activateGameSceneDraw3D() {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->game_layout().activate_game_scene_draw_3d();
