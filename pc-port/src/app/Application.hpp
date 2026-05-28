@@ -4,8 +4,15 @@
 #include <string>
 
 #include "Logger.hpp"
+#include "Game/compat/GameSystemSceneControllerService.hpp"
+#include "Game/compat/GameSystemService.hpp"
 #include "Game/compat/RuntimeContext.hpp"
+#include "Game/compat/RuntimeServices.hpp"
+#include "Game/compat/SceneLifecycleService.hpp"
+#include "Game/compat/SceneScheduler.hpp"
 #include "Game/compat/SequenceBootService.hpp"
+#include "Game/compat/StageHostService.hpp"
+#include "Game/compat/StorySequenceService.hpp"
 #include "RendererService.hpp"
 #include "ServiceProvider.hpp"
 
@@ -29,7 +36,11 @@ namespace smgpc::app {
         std::unique_ptr<render::IWindowService> window_service = {};
         std::unique_ptr<render::IRendererEngine> renderer_engine = {};
         std::unique_ptr<game::RuntimeContext> runtime_context = {};
+        std::unique_ptr<game::GameSystemSceneControllerService> scene_controller = {};
+        std::unique_ptr<game::StorySequenceService> story_sequence = {};
+        std::unique_ptr<game::StageHostService> stage_host = {};
         std::unique_ptr<game::SequenceBootService> sequence_boot = {};
+        std::unique_ptr<game::GameSystemService> game_system = {};
         std::unique_ptr<IApplication> application = {};
     };
 
@@ -38,7 +49,28 @@ namespace smgpc::app {
         di::SingletonService<render::IWindowFactory>, di::SingletonService<render::IWindowService>,
         di::SingletonService<render::IRendererEngine>,
         di::SingletonService<game::RuntimeContext>,
+        di::SingletonService<game::DvdFileSystemService>,
+        di::SingletonService<game::WpadService>,
+        di::SingletonService<game::AudioEventService>,
+        di::SingletonService<game::EffectService>,
+        di::SingletonService<game::ImageEffectService>,
+        di::SingletonService<game::StarPointerService>,
+        di::SingletonService<game::CameraSystemService>,
+        di::SingletonService<game::PlayerSystemService>,
+        di::SingletonService<game::GameLayoutService>,
+        di::SingletonService<game::RumbleService>,
+        di::SingletonService<game::SequenceRequestService>,
+        di::SingletonService<game::SaveDataService>,
+        di::SingletonService<game::MessageService>,
+        di::SingletonService<game::SceneLightService>,
+        di::SingletonService<game::RflService>,
+        di::SingletonService<game::SceneScheduler>,
+        di::SingletonService<game::SceneLifecycleService>,
+        di::SingletonService<game::GameSystemSceneControllerService>,
+        di::SingletonService<game::StorySequenceService>,
+        di::SingletonService<game::StageHostService>,
         di::SingletonService<game::SequenceBootService>,
+        di::SingletonService<game::GameSystemService>,
         di::SingletonService<IApplication>
     >;
 
