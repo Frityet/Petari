@@ -1,5 +1,5 @@
-#include "Game/compat/J3dAnimation.hpp"
-#include "Game/compat/RarcArchive.hpp"
+#include "render/J3dAnimation.hpp"
+#include "resource/RarcArchive.hpp"
 
 #include <array>
 #include <exception>
@@ -18,7 +18,7 @@ namespace {
             cwd.parent_path() / "orig" / "RMGK01" / "files",
         };
 
-        for (const auto& candidate : candidates) {
+        for (const auto &candidate : candidates) {
             std::error_code error{};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
@@ -35,9 +35,9 @@ namespace {
         return out;
     }
 
-    void write_btk_sample(std::ofstream& out, const smgpc::game::J3dBtkAnimationSummary& btk,
-                          const smgpc::game::J3dBtkMaterialAnimationSummary& material, float frame) {
-        const auto sample = smgpc::game::j3d_evaluate_btk_texture_srt(btk, material.material_name, material.tex_matrix_id, frame);
+    void write_btk_sample(std::ofstream &out, const smgpc::compat::J3dBtkAnimationSummary &btk,
+                          const smgpc::compat::J3dBtkMaterialAnimationSummary &material, float frame) {
+        const auto sample = smgpc::compat::j3d_evaluate_btk_texture_srt(btk, material.material_name, material.tex_matrix_id, frame);
         if (!sample.has_value()) {
             out << "-";
             return;
@@ -47,8 +47,8 @@ namespace {
             << sample->translate_t << ")";
     }
 
-    void write_bck_sample(std::ofstream& out, const smgpc::game::J3dBckAnimationSummary& bck, std::uint16_t joint, float frame) {
-        const auto sample = smgpc::game::j3d_evaluate_bck_joint_transform(bck, joint, frame);
+    void write_bck_sample(std::ofstream &out, const smgpc::compat::J3dBckAnimationSummary &bck, std::uint16_t joint, float frame) {
+        const auto sample = smgpc::compat::j3d_evaluate_bck_joint_transform(bck, joint, frame);
         if (!sample.has_value()) {
             out << "-";
             return;
@@ -59,7 +59,7 @@ namespace {
             << sample->translation[2U] << ")";
     }
 
-    void write_summary(std::ofstream& out, std::string_view file_name, const smgpc::game::J3dAnimationSummary& animation) {
+    void write_summary(std::ofstream &out, std::string_view file_name, const smgpc::compat::J3dAnimationSummary &animation) {
         out << "# J3D Animation Probe: " << file_name << "\n\n";
         out << "- type: `" << animation.type << "`\n";
         out << "- file size: " << animation.file_size << "\n";
@@ -68,22 +68,22 @@ namespace {
         out << "## Sections\n\n";
         out << "| tag | offset | size |\n";
         out << "| --- | ---: | ---: |\n";
-        for (const auto& section : animation.sections) {
+        for (const auto &section : animation.sections) {
             out << "| `" << section.tag << "` | 0x" << std::hex << section.offset << std::dec << " | " << section.size << " |\n";
         }
         out << '\n';
 
         if (animation.bck.has_value()) {
-            const auto& bck = *animation.bck;
+            const auto &bck = *animation.bck;
             out << "## ANK1\n\n";
             out << "- frame max: " << bck.frame_max << "\n";
             out << "- joint count: " << bck.joint_count << "\n";
-            out << "- rotation fraction: " << static_cast< int >(bck.rotation_fraction) << "\n";
+            out << "- rotation fraction: " << static_cast<int>(bck.rotation_fraction) << "\n";
             out << "- scale values: " << bck.scale_count << "\n";
             out << "- rotation values: " << bck.rotation_count << "\n";
             out << "- translation values: " << bck.translation_count << "\n\n";
 
-            const std::array< float, 2U > sample_frames{0.0F, static_cast< float >(bck.frame_max) * 0.5F};
+            const std::array<float, 2U> sample_frames{0.0F, static_cast<float>(bck.frame_max) * 0.5F};
             out << "| joint | frame 0 transform | half-frame transform |\n";
             out << "| ---: | --- | --- |\n";
             for (auto i = std::uint16_t{}; i < bck.joints.size(); ++i) {
@@ -97,7 +97,7 @@ namespace {
         }
 
         if (animation.btk.has_value()) {
-            const auto& btk = *animation.btk;
+            const auto &btk = *animation.btk;
             out << "## TTK1\n\n";
             out << "- frame max: " << btk.frame_max << "\n";
             out << "- track count: " << btk.track_count << "\n";
@@ -106,13 +106,13 @@ namespace {
             out << "- translation values: " << btk.translation_count << "\n";
             out << "- tex matrix calc type: " << btk.tex_matrix_calc_type << "\n\n";
 
-            const std::array< float, 2U > sample_frames{0.0F, static_cast< float >(btk.frame_max) * 0.5F};
+            const std::array<float, 2U> sample_frames{0.0F, static_cast<float>(btk.frame_max) * 0.5F};
             out << "| index | material | material id | tex matrix id | center | frame 0 SRT | half-frame SRT |\n";
             out << "| ---: | --- | ---: | ---: | --- | --- | --- |\n";
             for (auto i = std::size_t{}; i < btk.materials.size(); ++i) {
-                const auto& material = btk.materials[i];
+                const auto &material = btk.materials[i];
                 out << "| " << i << " | `" << material.material_name << "` | " << material.material_id << " | "
-                    << static_cast< int >(material.tex_matrix_id) << " | " << material.center[0U] << "," << material.center[1U] << ","
+                    << static_cast<int>(material.tex_matrix_id) << " | " << material.center[0U] << "," << material.center[1U] << ","
                     << material.center[2U] << " | ";
                 write_btk_sample(out, btk, material, sample_frames[0U]);
                 out << " | ";
@@ -125,17 +125,17 @@ namespace {
 
 }  // namespace
 
-int main(int argc, char** argv) try {
+int main(int argc, char **argv) try {
     const auto object_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
-    const auto archive = smgpc::game::RarcArchive::from_file(disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc"));
+    const auto archive = smgpc::compat::RarcArchive::from_file(disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc"));
     const auto out_dir = output_directory(object_name);
 
-    for (const auto& entry : archive.entries()) {
+    for (const auto &entry : archive.entries()) {
         if (!entry.path.ends_with(".bck") && !entry.path.ends_with(".btk")) {
             continue;
         }
 
-        const auto animation = smgpc::game::inspect_j3d_animation(archive.file_data(entry));
+        const auto animation = smgpc::compat::inspect_j3d_animation(archive.file_data(entry));
         const auto output = out_dir / (entry.path + ".md");
         auto file = std::ofstream(output);
         if (!file) {
@@ -147,7 +147,7 @@ int main(int argc, char** argv) try {
     }
 
     return 0;
-} catch (const std::exception& e) {
+} catch (const std::exception &e) {
     std::cerr << "J3D animation probe failed: " << e.what() << '\n';
     return 1;
 }

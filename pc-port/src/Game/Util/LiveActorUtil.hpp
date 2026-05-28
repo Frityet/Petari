@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Game/compat/J3dMaterialRuntime.hpp"
+#include "render/J3dMaterialRuntime.hpp"
 #include <revolution.h>
 
 class LiveActor;
@@ -36,7 +36,7 @@ namespace MR {
     void setBrkFrameEndAndStop(LiveActor* pActor);
     J3DFrameCtrl* getBrkCtrl(LiveActor* pActor);
     void setBaseTRMtx(LiveActor* pActor, MtxPtr pMtx);
-    void setBaseTRMtx(LiveActor* pActor, const smgpc::game::J3dMatrix3x4& matrix);
+    void setBaseTRMtx(LiveActor* pActor, const smgpc::compat::J3dMatrix3x4& matrix);
     PartsModel* createPartsModelMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx);
     void emitEffect(LiveActor* pActor, const char* pEffectName);
     void deleteEffect(LiveActor* pActor, const char* pEffectName);

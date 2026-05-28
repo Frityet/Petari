@@ -1,4 +1,4 @@
-#include "Game/compat/RarcArchive.hpp"
+#include "resource/RarcArchive.hpp"
 
 #include <exception>
 #include <filesystem>
@@ -16,7 +16,7 @@ namespace {
             cwd.parent_path() / "orig" / "RMGK01" / "files",
         };
 
-        for (const auto& candidate : candidates) {
+        for (const auto &candidate : candidates) {
             std::error_code error{};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
@@ -38,10 +38,10 @@ namespace {
 
 }  // namespace
 
-int main(int argc, char** argv) try {
+int main(int argc, char **argv) try {
     const auto archive_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
     const auto archive_path = resolve_archive_path(archive_name);
-    const auto archive = smgpc::game::RarcArchive::from_file(archive_path);
+    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
 
     if (argc == 4) {
         const auto entry_name = std::string_view(argv[2]);
@@ -51,18 +51,18 @@ int main(int argc, char** argv) try {
             std::filesystem::create_directories(output_path.parent_path());
         }
         auto output = std::ofstream(output_path, std::ios::binary);
-        output.write(reinterpret_cast< const char* >(data.data()), static_cast< std::streamsize >(data.size()));
+        output.write(reinterpret_cast<const char *>(data.data()), static_cast<std::streamsize>(data.size()));
         std::cout << output_path.string() << ',' << data.size() << '\n';
         return 0;
     }
 
     std::cout << archive_path.string() << '\n';
-    for (const auto& entry : archive.entries()) {
+    for (const auto &entry : archive.entries()) {
         std::cout << entry.path << ',' << entry.data_size << '\n';
     }
 
     return 0;
-} catch (const std::exception& e) {
+} catch (const std::exception &e) {
     std::cerr << "RARC probe failed: " << e.what() << '\n';
     return 1;
 }

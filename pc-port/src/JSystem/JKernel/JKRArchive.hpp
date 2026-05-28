@@ -7,7 +7,7 @@
 #include <string_view>
 #include <utility>
 
-#include "Game/compat/RarcArchive.hpp"
+#include "resource/RarcArchive.hpp"
 
 class JKRArchive {
 public:
@@ -50,7 +50,7 @@ public:
     }
 
 protected:
-    explicit JKRArchive(const smgpc::game::RarcArchive *archive)
+    explicit JKRArchive(const smgpc::compat::RarcArchive *archive)
         : mArchive(archive) {
     }
 
@@ -67,20 +67,20 @@ protected:
         return mArchive->file_data(*entry);
     }
 
-    const smgpc::game::RarcArchive *mArchive = nullptr;
+    const smgpc::compat::RarcArchive *mArchive = nullptr;
 };
 
 class JKRMemArchive final : public JKRArchive {
 public:
-    explicit JKRMemArchive(const smgpc::game::RarcArchive &archive)
+    explicit JKRMemArchive(const smgpc::compat::RarcArchive &archive)
         : JKRArchive(&archive) {
     }
 
-    explicit JKRMemArchive(smgpc::game::RarcArchive &&archive)
-        : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::game::RarcArchive>(std::move(archive))) {
+    explicit JKRMemArchive(smgpc::compat::RarcArchive &&archive)
+        : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::compat::RarcArchive>(std::move(archive))) {
         mArchive = mOwnedArchive.get();
     }
 
 private:
-    std::unique_ptr<smgpc::game::RarcArchive> mOwnedArchive;
+    std::unique_ptr<smgpc::compat::RarcArchive> mOwnedArchive;
 };

@@ -1,24 +1,32 @@
 #include "TestSuites.hpp"
 #include "TestSupport.hpp"
 
+#include "Application.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Screen/PictureBookLayout.hpp"
+#include "Game/Screen/ProloguePictureBook.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "Game/compat/SequenceBootService.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include "Sqlite.hpp"
 #include "TraceStore.hpp"
+#include "scene/SceneLifecycleService.hpp"
+#include "scene/SequenceBootService.hpp"
+#include "scene/StagePlacementResolver.hpp"
 
 namespace smgpc::tests {
     namespace {
         constexpr auto TEST_SUITE = std::string_view{"runtime/scene"};
-        constexpr auto cSourceTitleStarPointerMode = smgpc::game::StarPointerMode::ScreenMenu;
-        constexpr auto cSourceTargetSelectionStarPointerMode = smgpc::game::StarPointerMode::TargetSelection;
-        constexpr auto cSourceSystemModalStarPointerMode = smgpc::game::StarPointerMode::SystemModal;
-        constexpr auto cSourceDocumentViewerStarPointerMode = smgpc::game::StarPointerMode::DocumentViewer;
-        constexpr auto cSourceFileSelectGuidanceRequest = smgpc::game::StarPointerGuidanceRequest::Primary;
-        constexpr auto cSourceFileSelectCopyGuidanceRequest = smgpc::game::StarPointerGuidanceRequest::Secondary;
+        constexpr auto cSourceTitleStarPointerMode = smgpc::compat::StarPointerMode::ScreenMenu;
+        constexpr auto cSourceTargetSelectionStarPointerMode = smgpc::compat::StarPointerMode::TargetSelection;
+        constexpr auto cSourceSystemModalStarPointerMode = smgpc::compat::StarPointerMode::SystemModal;
+        constexpr auto cSourceDocumentViewerStarPointerMode = smgpc::compat::StarPointerMode::DocumentViewer;
+        constexpr auto cSourceFileSelectGuidanceRequest = smgpc::compat::StarPointerGuidanceRequest::Primary;
+        constexpr auto cSourceFileSelectCopyGuidanceRequest = smgpc::compat::StarPointerGuidanceRequest::Secondary;
 
         template <int Line>
         struct TestCase;
@@ -62,36 +70,36 @@ namespace smgpc::tests {
         };
 
         struct SequenceServiceFixture {
-            smgpc::game::GameSystemSceneControllerService scene_controller;
-            smgpc::game::StorySequenceService story_sequence;
-            smgpc::game::StageHostService stage_host;
-            smgpc::game::SequenceBootService sequence_boot;
+            smgpc::compat::GameSystemSceneControllerService scene_controller;
+            smgpc::compat::StorySequenceService story_sequence;
+            smgpc::compat::StageHostService stage_host;
+            smgpc::compat::SequenceBootService sequence_boot;
 
-            explicit SequenceServiceFixture(smgpc::game::RuntimeContext &runtime)
+            explicit SequenceServiceFixture(smgpc::compat::RuntimeContext &runtime)
                 : scene_controller(runtime, runtime.scene_lifecycle()), story_sequence(runtime), stage_host(scene_controller),
                   sequence_boot(runtime, story_sequence, stage_host) {
             }
         };
 
-        [[nodiscard]] bool has_effect_event(const smgpc::game::RuntimeContext &runtime, smgpc::game::EffectEventKind kind,
+        [[nodiscard]] bool has_effect_event(const smgpc::compat::RuntimeContext &runtime, smgpc::compat::EffectEventKind kind,
                                             std::string_view actor_name, std::string_view effect_name) {
-            return std::ranges::any_of(runtime.effects().events(), [&](const smgpc::game::EffectEvent &event) {
+            return std::ranges::any_of(runtime.effects().events(), [&](const smgpc::compat::EffectEvent &event) {
                 return event.kind == kind && event.actor_name == actor_name && event.effect_name == effect_name;
             });
         }
 
-        [[nodiscard]] bool has_active_effect(const smgpc::game::RuntimeContext &runtime, std::string_view actor_name,
+        [[nodiscard]] bool has_active_effect(const smgpc::compat::RuntimeContext &runtime, std::string_view actor_name,
                                              std::string_view effect_name) {
             const auto effects = runtime.effects().active_effects(actor_name);
             return std::ranges::any_of(effects, [&](const auto &active_effect) { return active_effect == effect_name; });
         }
 
-        [[nodiscard]] bool has_system_sound_event_prefix(const smgpc::game::RuntimeContext &runtime, std::string_view prefix) {
-            return std::ranges::any_of(runtime.audio().events(), [&](const smgpc::game::AudioEvent &event) {
-                return (event.kind == smgpc::game::AudioEventKind::SystemSoundStart ||
-                        event.kind == smgpc::game::AudioEventKind::SystemLevelSoundStart ||
-                        event.kind == smgpc::game::AudioEventKind::AtmosphereSoundStart ||
-                        event.kind == smgpc::game::AudioEventKind::SystemMEStart) &&
+        [[nodiscard]] bool has_system_sound_event_prefix(const smgpc::compat::RuntimeContext &runtime, std::string_view prefix) {
+            return std::ranges::any_of(runtime.audio().events(), [&](const smgpc::compat::AudioEvent &event) {
+                return (event.kind == smgpc::compat::AudioEventKind::SystemSoundStart ||
+                        event.kind == smgpc::compat::AudioEventKind::SystemLevelSoundStart ||
+                        event.kind == smgpc::compat::AudioEventKind::AtmosphereSoundStart ||
+                        event.kind == smgpc::compat::AudioEventKind::SystemMEStart) &&
                        event.name.starts_with(prefix);
             });
         }
@@ -117,6 +125,13 @@ namespace smgpc::tests {
             });
         }
 
+        [[nodiscard]] bool json_string_array_contains(const smgpc::dump::Json &values, std::string_view expected) {
+            const auto expected_text = std::string(expected);
+            return values.is_array() && std::ranges::any_of(values, [&](const auto &value) {
+                       return value.is_string() && value.template get<std::string>() == expected_text;
+                   });
+        }
+
         [[nodiscard]] std::int64_t sqlite_semantic_event_count(smgpc::sql::Database &db, std::string_view category, std::string_view name) {
             auto select = smgpc::sql::Statement(db, "SELECT count(*) FROM semantic_events WHERE category = ? AND name = ?");
             select.bind(1, category);
@@ -125,7 +140,27 @@ namespace smgpc::tests {
             return select.column_int(0).value_or(0);
         }
 
-        [[nodiscard]] bool has_file_number_animation(const smgpc::game::RuntimeContext &runtime, std::size_t layer_index,
+        [[nodiscard]] const smgpc::trace::SemanticAnchorAlignment *find_semantic_anchor_alignment(
+            const std::vector<smgpc::trace::SemanticAnchorAlignment> &anchors, std::string_view category, std::string_view name) {
+            for (const auto &anchor : anchors) {
+                if (anchor.category == category && anchor.name == name) {
+                    return &anchor;
+                }
+            }
+            return nullptr;
+        }
+
+        [[nodiscard]] const smgpc::trace::LayoutRuntimeDiff *find_layout_runtime_diff(
+            const std::vector<smgpc::trace::LayoutRuntimeDiff> &diffs, std::string_view name, std::string_view layout_name) {
+            for (const auto &diff : diffs) {
+                if (diff.name == name && diff.layout_name == layout_name) {
+                    return &diff;
+                }
+            }
+            return nullptr;
+        }
+
+        [[nodiscard]] bool has_file_number_animation(const smgpc::compat::RuntimeContext &runtime, std::size_t layer_index,
                                                      std::string_view animation_name) {
             const auto layouts = runtime.scheduler().debug_layout_runtime_snapshot();
             return std::ranges::any_of(layouts, [&](const auto &layout) {
@@ -136,7 +171,7 @@ namespace smgpc::tests {
             });
         }
 
-        [[nodiscard]] bool has_live_actor_btk_action(const smgpc::game::RuntimeContext &runtime, std::string_view actor_name,
+        [[nodiscard]] bool has_live_actor_btk_action(const smgpc::compat::RuntimeContext &runtime, std::string_view actor_name,
                                                      std::string_view action_name) {
             const auto snapshot = runtime.scheduler().snapshot();
             return std::ranges::any_of(snapshot, [&](const auto &entry) {
@@ -151,9 +186,9 @@ namespace smgpc::tests {
             };
         }
 
-        [[nodiscard]] TVec2f project_world_to_screen(const smgpc::game::CameraPoseCompat &pose, const smgpc::game::CameraParamVec3 &world) {
+        [[nodiscard]] TVec2f project_world_to_screen(const smgpc::compat::CameraPoseCompat &pose, const smgpc::compat::CameraParamVec3 &world) {
             constexpr auto PI = 3.14159265358979323846F;
-            const auto camera = smgpc::game::transform_world_to_camera(pose, world);
+            const auto camera = smgpc::compat::transform_world_to_camera(pose, world);
             const auto focal_y = 1.0F / std::tan((pose.fovy_degrees * PI / 180.0F) * 0.5F);
             const auto focal_x = focal_y / pose.aspect_ratio;
             const auto half_width = static_cast<f32>(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
@@ -203,7 +238,7 @@ namespace smgpc::tests {
         $test("draws FileSelectItem through scheduler-owned parts model") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             auto item = FileSelectItem(1, true);
 
@@ -211,7 +246,7 @@ namespace smgpc::tests {
             const auto init_snapshot = runtime.scheduler().snapshot();
             require(std::ranges::any_of(init_snapshot,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::LayoutActor &&
+                                            return entry.kind == smgpc::compat::SceneEntryKind::LayoutActor &&
                                                    entry.name == "ファイル番号" && entry.movement_type == MR::MovementType_Layout &&
                                                    entry.calc_anim_type == MR::CalcAnimType_Layout &&
                                                    entry.draw_type == MR::DrawType_Layout && entry.dead;
@@ -238,10 +273,10 @@ namespace smgpc::tests {
             const auto movement_trace = runtime.scheduler().last_execution_trace();
             require(std::ranges::any_of(movement_trace,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::NameObj &&
+                                            return entry.kind == smgpc::compat::SceneEntryKind::NameObj &&
                                                    entry.name == "ファイルセレクトアイテム" &&
                                                    entry.movement_type == MR::MovementType_MapObj &&
-                                                   entry.phase == smgpc::game::SceneSchedulerPhase::Movement;
+                                                   entry.phase == smgpc::compat::SceneSchedulerPhase::Movement;
                                         }),
                     "FileSelectItem parent should move as an original-style movement-only MapObj entry");
 
@@ -254,9 +289,9 @@ namespace smgpc::tests {
             require(renderer.submitted_indices > 0U, "FileSelectItem should submit original FileSelectDataPlanet geometry");
             require(std::ranges::any_of(draw_trace,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::LiveActorModel &&
+                                            return entry.kind == smgpc::compat::SceneEntryKind::LiveActorModel &&
                                                    entry.name == "ニューフェイス" && entry.draw_buffer_type == MR::DrawBufferType_MapObj &&
-                                                   entry.phase == smgpc::game::SceneSchedulerPhase::DrawBufferOpa;
+                                                   entry.phase == smgpc::compat::SceneSchedulerPhase::DrawBufferOpa;
                                         }),
                     "FileSelectItem child model should be drawn by the central MapObj draw buffer");
         }
@@ -264,7 +299,7 @@ namespace smgpc::tests {
         $test("turns FileSelectItem to front with original easing") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto item = FileSelectItem(1, false);
 
             item.initWithoutIter();
@@ -299,7 +334,7 @@ namespace smgpc::tests {
             };
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto item = FileSelectItem(1, false);
 
             item.initWithoutIter();
@@ -341,7 +376,7 @@ namespace smgpc::tests {
             {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
                 auto item = FileSelectItem(1, false);
 
                 item.initWithoutIter();
@@ -372,7 +407,7 @@ namespace smgpc::tests {
             {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
                 auto item = FileSelectItem(2, true);
 
                 item.initWithoutIter();
@@ -387,7 +422,7 @@ namespace smgpc::tests {
         $test("emits original FileSelectItem morph effects") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto item = FileSelectItem(1, false);
 
             item.initWithoutIter();
@@ -400,11 +435,11 @@ namespace smgpc::tests {
                 item.movement();
             }
 
-            require(has_effect_event(runtime, smgpc::game::EffectEventKind::Delete, "キャラフェイス", "Complete"),
+            require(has_effect_event(runtime, smgpc::compat::EffectEventKind::Delete, "キャラフェイス", "Complete"),
                     "FileSelectItem::change should delete stale Complete effects before morphing");
-            require(has_effect_event(runtime, smgpc::game::EffectEventKind::Emit, "キャラフェイス", "Complete"),
+            require(has_effect_event(runtime, smgpc::compat::EffectEventKind::Emit, "キャラフェイス", "Complete"),
                     "FileSelectItem::exeChangeFellow should emit the original Complete effect for all-complete file icons");
-            require(has_effect_event(runtime, smgpc::game::EffectEventKind::Emit, "キャラフェイス", "Open"),
+            require(has_effect_event(runtime, smgpc::compat::EffectEventKind::Emit, "キャラフェイス", "Open"),
                     "FileSelectItem::exeChangeFellow should emit the original Open effect on the appeared fellow model");
 
             item.format();
@@ -412,7 +447,7 @@ namespace smgpc::tests {
                 item.movement();
             }
 
-            require(has_effect_event(runtime, smgpc::game::EffectEventKind::Emit, "キャラフェイス", "Vanish"),
+            require(has_effect_event(runtime, smgpc::compat::EffectEventKind::Emit, "キャラフェイス", "Vanish"),
                     "FileSelectItem::exeFormat should emit the original Vanish effect before killing fellow models");
             require(!has_active_effect(runtime, "キャラフェイス", "Complete"),
                     "FileSelectItem::format should remove Complete effects before returning to the new-file planet");
@@ -421,7 +456,7 @@ namespace smgpc::tests {
         $test("drives FileSelectNumber through LayoutActor compatibility") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             auto number = FileSelectNumber("ファイル番号");
 
@@ -451,9 +486,9 @@ namespace smgpc::tests {
             const auto movement_trace = runtime.scheduler().last_execution_trace();
             require(std::ranges::any_of(movement_trace,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::LayoutActor &&
+                                            return entry.kind == smgpc::compat::SceneEntryKind::LayoutActor &&
                                                    entry.name == "ファイル番号" &&
-                                                   entry.phase == smgpc::game::SceneSchedulerPhase::Movement;
+                                                   entry.phase == smgpc::compat::SceneSchedulerPhase::Movement;
                                         }),
                     "FileSelectNumber should run movement/control through the scene scheduler");
 
@@ -464,9 +499,9 @@ namespace smgpc::tests {
                     "FileSelectNumber should draw through the central 2D draw list");
             require(std::ranges::any_of(draw_trace,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::LayoutActor &&
+                                            return entry.kind == smgpc::compat::SceneEntryKind::LayoutActor &&
                                                    entry.name == "ファイル番号" && entry.draw_type == MR::DrawType_Layout &&
-                                                   entry.phase == smgpc::game::SceneSchedulerPhase::DrawType;
+                                                   entry.phase == smgpc::compat::SceneSchedulerPhase::DrawType;
                                         }),
                     "FileSelectNumber should be drawn by the Layout draw type");
         }
@@ -474,14 +509,14 @@ namespace smgpc::tests {
         $test("supports root-style layout screen positions and pane matrix refs") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto number = FileSelectNumber("ファイル番号");
 
             number.initWithoutIter();
             number.setNumber(4);
             number.appear();
 
-            runtime.set_scene_camera_pose(smgpc::game::CameraPoseCompat{
+            runtime.set_scene_camera_pose(smgpc::compat::CameraPoseCompat{
                 .eye = {.x = 0.0F, .y = 0.0F, .z = 0.0F},
                 .watch = {.x = 0.0F, .y = 0.0F, .z = 1.0F},
                 .up = {.x = 0.0F, .y = 1.0F, .z = 0.0F},
@@ -552,7 +587,7 @@ namespace smgpc::tests {
         $test("exposes original-shaped layout pane controls and button controllers") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto number = FileSelectNumber("ファイル番号");
 
             number.initWithoutIter();
@@ -610,8 +645,8 @@ namespace smgpc::tests {
                 .is_minimized = false,
             };
             const auto trace_path = std::filesystem::path(".cache/tests/runtime-layout-pane-controls-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(trace_path, frame_context, runtime);
-            const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+            smgpc::compat::write_runtime_parity_trace(trace_path, frame_context, runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
             const auto &layout_entries = trace_json.at("layout_runtime");
             const auto trace_layout = std::ranges::find_if(layout_entries, [](const auto &entry) { return entry.at("name") == "ファイル番号"; });
             require(trace_layout != layout_entries.end() &&
@@ -633,17 +668,17 @@ namespace smgpc::tests {
         $test("routes recursive pane visibility and pane scale-position transfer through generic layout helpers") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
 
             auto pane_probe = LayoutActor("generic pane recursion probe", true);
             pane_probe.initLayoutManager("PictureBook", 1U);
             pane_probe.appear();
-            auto* pane_layout = pane_probe.getSimpleLayout();
+            auto *pane_layout = pane_probe.getSimpleLayout();
             require(pane_layout != nullptr, "PictureBook probe should own a SimpleLayout for generic pane recursion");
             require(pane_layout->paneBounds("").has_value(), "PictureBook probe should load generic layout resource data");
 
             const auto panes = pane_layout->debugPanes();
-            auto child_it = std::ranges::find_if(panes, [](const auto& pane) {
+            auto child_it = std::ranges::find_if(panes, [](const auto &pane) {
                 return pane.parent_index >= 0 && !pane.name.empty();
             });
             require(child_it != panes.end(), "PictureBook layout should expose at least one parented pane");
@@ -670,7 +705,7 @@ namespace smgpc::tests {
             source.appear();
             MR::startAnim(&source, "Appear", 0U);
             MR::setAnimFrame(&source, 0.0F, 0U);
-            auto* source_layout = source.getSimpleLayout();
+            auto *source_layout = source.getSimpleLayout();
             require(source_layout != nullptr, "TitleLogo source should own a SimpleLayout for pane scale transfer");
             const auto source_scale = source_layout->paneScale("SMGTitleLogo");
             const auto source_bounds = source_layout->paneBounds("SMGTitleLogo");
@@ -707,7 +742,7 @@ namespace smgpc::tests {
         $test("updates PictureBook page TexMaps with contiguous chapter indices") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
 
             auto picture_book = PictureBookLayout(1, 1, true);
             picture_book.init(JMapInfoIter{});
@@ -728,7 +763,7 @@ namespace smgpc::tests {
         $test("routes star-pointer pane checks through generic layout bounds") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto back = BackButton("戻るボタン", false);
 
             back.initWithoutIter();
@@ -759,10 +794,74 @@ namespace smgpc::tests {
                     "star-pointer pane checks should still require a valid WPAD pointer");
         }
 
+        $test("routes 3D star-pointer target checks through generic camera projection") {
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto actor = LiveActor("star pointer target");
+            const auto pose = smgpc::compat::CameraPoseCompat{
+                .eye = {0.0F, 0.0F, 1000.0F},
+                .watch = {0.0F, 0.0F, 0.0F},
+                .up = {0.0F, 1.0F, 0.0F},
+                .fovy_degrees = 45.0F,
+                .aspect_ratio = 608.0F / 456.0F,
+                .near_clip = 100.0F,
+                .far_clip = 800000.0F,
+            };
+
+            actor.makeActorAppeared();
+            actor.mPosition.set(0.0F, 0.0F, 0.0F);
+            MR::initStarPointerTarget(&actor, 120.0F, TVec3f(0.0F, 90.0F, 0.0F));
+            require(MR::isExistStarPointerTarget(&actor), "initStarPointerTarget should register a generic LiveActor star-pointer target");
+            runtime.set_scene_camera_pose(pose);
+
+            const auto center = project_world_to_screen(pose, {.x = 0.0F, .y = 90.0F, .z = 0.0F});
+            const auto actor_name = std::string_view{actor.getName()};
+            const auto has_target_event = [&](smgpc::compat::StarPointerTargetEventKind kind) {
+                return std::ranges::any_of(runtime.star_pointer().target_events(), [&](const auto &event) {
+                    return event.kind == kind && event.actor_name == actor_name;
+                });
+            };
+            const auto target_event_count = [&](smgpc::compat::StarPointerTargetEventKind kind) {
+                return std::ranges::count_if(runtime.star_pointer().target_events(), [&](const auto &event) {
+                    return event.kind == kind && event.actor_name == actor_name;
+                });
+            };
+            const auto has_star_pointer_semantic = [&](std::string_view name) {
+                return std::ranges::any_of(runtime.semantic_trace_events(), [&](const auto &event) {
+                    return event.category == "star_pointer" && event.name == name && event.detail.find("actor=star pointer target") != std::string::npos;
+                });
+            };
+
+            runtime.wpad().set_pointer(WPAD_CHAN0, center.x, center.y, true);
+            require(MR::isStarPointerPointingFileSelect(&actor), "3D star-pointer checks should accept pointers projected onto the actor target");
+            require(has_target_event(smgpc::compat::StarPointerTargetEventKind::Enter),
+                    "generic star-pointer target checks should record target enter events");
+            require(has_star_pointer_semantic("target_enter"), "runtime semantic trace should expose generic star-pointer target enter events");
+
+            runtime.wpad().set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A);
+            require(MR::isStarPointerPointingFileSelect(&actor), "3D star-pointer target checks should keep accepting the selected target");
+            require(target_event_count(smgpc::compat::StarPointerTargetEventKind::Select) == 1,
+                    "generic star-pointer target checks should record one select event per target and frame");
+            require(MR::isStarPointerPointingFileSelect(&actor), "duplicate checks in the same frame should remain accepted");
+            require(target_event_count(smgpc::compat::StarPointerTargetEventKind::Select) == 1,
+                    "generic star-pointer select tracing should avoid duplicate events for repeated checks in one frame");
+            require(has_star_pointer_semantic("target_select"), "runtime semantic trace should expose generic star-pointer target select events");
+
+            runtime.wpad().set_pointer(WPAD_CHAN0, center.x + 220.0F, center.y + 220.0F, true);
+            require(!MR::isStarPointerPointingFileSelect(&actor), "3D star-pointer checks should reject pointers outside the projected radius");
+            require(has_target_event(smgpc::compat::StarPointerTargetEventKind::Leave),
+                    "generic star-pointer target checks should record target leave events");
+            require(has_star_pointer_semantic("target_leave"), "runtime semantic trace should expose generic star-pointer target leave events");
+
+            runtime.wpad().set_pointer(WPAD_CHAN0, center.x, center.y, false);
+            require(!MR::isStarPointerPointingFileSelect(&actor), "3D star-pointer checks should require a valid WPAD pointer");
+        }
+
         $test("records generic Wii subsystem requests through compat services") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
 
             Mtx matrix = {
                 {1.0F, 0.0F, 0.0F, 10.0F},
@@ -788,23 +887,108 @@ namespace smgpc::tests {
                     "player base matrix compatibility state should preserve the incoming matrix translation");
             require(runtime.camera_system().reset_camera_man_count() == 1U && runtime.camera_system().normal_shake_request_count() == 1U,
                     "camera utility wrappers should update generic camera compatibility state");
+            require(runtime.camera_system().shake_request_events().size() == 1U &&
+                        runtime.camera_system().shake_request_events()[0U].kind == smgpc::compat::CameraSystemService::ShakeRequestKind::Normal &&
+                        runtime.camera_system().shake_request_events()[0U].frame_index == runtime.frame_index(),
+                    "camera utility wrappers should record generic frame-stamped camera shake requests");
             require(!runtime.game_layout().is_default_game_layout_active(), "screen utility wrappers should update default layout state");
             require(runtime.star_pointer().mode() == smgpc::game::StarPointerMode::Title &&
                         runtime.star_pointer().is_guidance_active() &&
                         runtime.star_pointer().is_file_select_guidance_requested() &&
                         runtime.star_pointer().is_file_select_copy_guidance_requested(),
                     "star-pointer wrappers should update generic star-pointer state without caller-specific workarounds");
-            require(runtime.rumble().events().size() == 2U && runtime.rumble().events()[0U].kind == smgpc::game::RumbleRequestKind::Strong &&
+            MR::startStarPointerModeFileSelect(nullptr);
+            require(runtime.star_pointer().mode() == cSourceTargetSelectionStarPointerMode,
+                    "source file-select star-pointer mode should map to generic target-selection compat state");
+            MR::requestStarPointerModeSaveLoad(nullptr);
+            require(runtime.star_pointer().mode() == cSourceSystemModalStarPointerMode,
+                    "source save/load star-pointer mode should map to generic system-modal compat state");
+            MR::requestStarPointerModePictureBook(nullptr);
+            require(runtime.star_pointer().mode() == cSourceDocumentViewerStarPointerMode,
+                    "source picturebook star-pointer mode should map to generic document-viewer compat state");
+            require(runtime.rumble().events().size() == 3U && runtime.rumble().events()[0U].kind == smgpc::compat::RumbleRequestKind::Strong &&
                         runtime.rumble().events()[0U].channel == WPAD_CHAN0 &&
-                        runtime.rumble().events()[1U].kind == smgpc::game::RumbleRequestKind::Weak &&
-                        runtime.rumble().events()[1U].channel == WPAD_CHAN1,
+                        runtime.rumble().events()[1U].kind == smgpc::compat::RumbleRequestKind::Middle &&
+                        runtime.rumble().events()[1U].channel == WPAD_CHAN1 &&
+                        runtime.rumble().events()[2U].kind == smgpc::compat::RumbleRequestKind::Weak &&
+                        runtime.rumble().events()[2U].channel == WPAD_CHAN2,
                     "rumble utility wrappers should record generic rumble requests");
+
+            u8 sample_pattern[12][2]{};
+            for (auto i = std::size_t{}; i < 12U; ++i) {
+                sample_pattern[i][0U] = static_cast<u8>(i);
+                sample_pattern[i][1U] = static_cast<u8>(23U - i);
+            }
+            const auto vfilter = std::array<u8, 7U>{0U, 0U, 21U, 22U, 21U, 0U, 0U};
+            GXSetCopyClear(GXColor{1U, 2U, 3U, 4U}, 0x00abcdefU);
+            GXSetCopyFilter(GX_TRUE, sample_pattern, GX_TRUE, vfilter.data());
+            GXSetCopyClamp(static_cast<GXFBClamp>(GX_CLAMP_TOP | GX_CLAMP_BOTTOM));
+            GXSetDispCopySrc(0U, 0U, 640U, 456U);
+            GXSetDispCopyDst(640U, 456U);
+            require(GXSetDispCopyYScale(1.0F) == 456U, "GX display copy y-scale should preserve 456 EFB lines at 1:1 scale");
+            GXSetDispCopyGamma(GX_GM_1_0);
+            GXCopyDisp(nullptr, GX_FALSE);
+            GXSetTexCopySrc(0U, 0U, 640U, 456U);
+            GXSetTexCopyDst(640U, 456U, GX_TF_RGB565, GX_FALSE);
+            GXCopyTex(nullptr, GX_TRUE);
+            GXSetTexCopySrc(0U, 0U, 640U, 456U);
+            GXSetTexCopyDst(640U, 456U, GX_CTF_A8, GX_FALSE);
+            GXCopyTex(nullptr, GX_TRUE);
+            require(runtime.copy_events().size() == 3U && runtime.copy_events()[0U].kind == smgpc::render::CopyEventKind::Xfb &&
+                        runtime.copy_events()[0U].copy_to_xfb && runtime.copy_events()[0U].dest_stride == 1280U &&
+                        runtime.copy_events()[0U].source_rect.height == 456 &&
+                        runtime.copy_events()[0U].clear_color == std::array<std::uint8_t, 4U>{1U, 2U, 3U, 4U} &&
+                        runtime.copy_events()[0U].clear_depth == 0x00abcdefU && runtime.copy_events()[0U].copy_filter_aa &&
+                        runtime.copy_events()[0U].copy_filter_vertical &&
+                        runtime.copy_events()[0U].copy_filter_sample_pattern[11U][1U] == 12U &&
+                        runtime.copy_events()[0U].copy_filter_vfilter[3U] == 22U &&
+                        runtime.copy_events()[1U].kind == smgpc::render::CopyEventKind::Texture &&
+                        runtime.copy_events()[1U].clear && runtime.copy_events()[1U].target_pixel_format == 8U &&
+                        runtime.copy_events()[1U].real_format == 4U && runtime.copy_events()[1U].dest_stride == 5120U &&
+                        runtime.copy_events()[1U].source_rect.left == 0 && runtime.copy_events()[1U].source_rect.top == 0 &&
+                        runtime.copy_events()[1U].output_size.height == 456U &&
+                        runtime.copy_events()[2U].kind == smgpc::render::CopyEventKind::Texture &&
+                        runtime.copy_events()[2U].target_pixel_format == 14U && runtime.copy_events()[2U].real_format == 7U &&
+                        runtime.copy_events()[2U].dest_stride == 2560U,
+                    "runtime should expose generic GX EFB copy events without caller-specific hooks");
+            runtime.begin_frame(smgpc::render::FrameContext{.frame_index = 42U, .framebuffer = smgpc::render::FramebufferInfo{.width = 640U, .height = 456U}});
+            require(runtime.copy_events().empty(), "runtime should clear per-frame copy events at the start of each frame");
+        }
+
+        $test("drives no-arg 3D drawing from programmable camera compatibility") {
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto renderer = RecordingRenderer();
+            auto camera_actor = LiveActor("ProgrammableCamera");
+
+            runtime.draw_3d_normal(renderer);
+            require(runtime.last_camera_pose().has_value(), "runtime should expose the neutral default camera used for missing scene cameras");
+            require_near(runtime.last_camera_pose()->watch.z, -1.0F, 0.001F, "missing scene camera fallback should not use a title-specific pose");
+
+            MR::initActorCameraProgrammable(&camera_actor);
+            MR::startActorCameraProgrammable(&camera_actor, -1);
+            MR::setProgrammableCameraParam(&camera_actor, TVec3f{1.0F, 2.0F, 3.0F}, TVec3f{4.0F, 5.0F, 6.0F}, TVec3f{0.0F, 0.0F, 1.0F});
+            MR::setProgrammableCameraParamFovy(&camera_actor, 37.5F);
+
+            runtime.draw_3d_normal(renderer);
+            require(runtime.camera_system().active_programmable_camera_name().has_value() &&
+                        *runtime.camera_system().active_programmable_camera_name() == "ProgrammableCamera",
+                    "programmable actor camera should become the active camera service event");
+            require(runtime.camera_system().programmable_camera_param_count() == 1U &&
+                        runtime.camera_system().programmable_camera_fovy_count() == 1U,
+                    "programmable camera service should record generic param and FOV updates");
+            require(runtime.last_camera_pose().has_value(), "active programmable camera should provide the draw camera pose");
+            require_near(runtime.last_camera_pose()->watch.x, 1.0F, 0.001F, "programmable camera watch X should flow through MR camera wrappers");
+            require_near(runtime.last_camera_pose()->eye.y, 5.0F, 0.001F, "programmable camera eye Y should flow through MR camera wrappers");
+            require_near(runtime.last_camera_pose()->up.z, 1.0F, 0.001F, "programmable camera up vector should preserve camera roll input");
+            require_near(runtime.last_camera_pose()->fovy_degrees, 37.5F, 0.001F, "programmable camera FOV should update the active draw pose");
         }
 
         $test("drives original-shaped sys-info save layouts through LayoutActor compatibility") {
             auto logger = NullLogger();
             auto window_service = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window_service);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window_service);
             auto renderer = RecordingRenderer();
             runtime.messages().set_message("System_Save01", "Saving");
 
@@ -860,7 +1044,7 @@ namespace smgpc::tests {
         $test("drives original-shaped file-select info and operation button layouts") {
             auto logger = NullLogger();
             auto window_service = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window_service);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window_service);
             auto renderer = RecordingRenderer();
 
             auto info = FileSelectInfo(11, "ファイル情報");
@@ -916,8 +1100,8 @@ namespace smgpc::tests {
         $test("fills FileSelector file info through source-shaped save restore state") {
             auto logger = NullLogger();
             auto window_service = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window_service);
-            runtime.save_data().set_slot_state(2, smgpc::game::SaveDataService::SlotState{
+            auto runtime = smgpc::compat::RuntimeContext(logger, window_service);
+            runtime.save_data().set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
                                                       .created = true,
                                                       .last_loaded_mario = false,
                                                       .power_star_num = 120,
@@ -931,7 +1115,7 @@ namespace smgpc::tests {
                                                       .game_event_values = {},
                                                       .last_modified = 1778992260,
                                                   });
-            runtime.save_data().set_slot_state(3, smgpc::game::SaveDataService::SlotState{
+            runtime.save_data().set_slot_state(3, smgpc::compat::SaveDataService::SlotState{
                                                       .created = true,
                                                       .last_loaded_mario = true,
                                                       .power_star_num = 6,
@@ -967,7 +1151,7 @@ namespace smgpc::tests {
         $test("drives remaining original-shaped file-select child layouts") {
             auto logger = NullLogger();
             auto window_service = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window_service);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window_service);
             auto renderer = RecordingRenderer();
             runtime.messages().set_message("2PGuidance001", "Two-player guidance");
 
@@ -1075,7 +1259,7 @@ namespace smgpc::tests {
         $test("drives MiiSelect icon selection through layout pane hit testing") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto mii_select = MiiSelect("MiiSelect");
             mii_select.initWithoutIter();
             mii_select.collectValidMiiIndex();
@@ -1107,7 +1291,7 @@ namespace smgpc::tests {
         $test("draws existing FileSelectItem through scheduler-owned fellow model") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             auto item = FileSelectItem(1, false);
             runtime.set_j3d_packet_trace_frame(0U);
@@ -1136,12 +1320,12 @@ namespace smgpc::tests {
                     "existing FileSelectItem should render through the original FileSelectDataMario archive");
             require(std::ranges::any_of(draw_trace,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::LiveActorModel &&
+                                            return entry.kind == smgpc::compat::SceneEntryKind::LiveActorModel &&
                                                    entry.name == "キャラフェイス" && entry.movement_type == MR::MovementType_NPC &&
                                                    entry.calc_anim_type == MR::CalcAnimType_NPC &&
                                                    entry.draw_buffer_type == MR::DrawBufferType_NPC &&
-                                                   (entry.phase == smgpc::game::SceneSchedulerPhase::DrawBufferOpa ||
-                                                    entry.phase == smgpc::game::SceneSchedulerPhase::DrawBufferXlu);
+                                                   (entry.phase == smgpc::compat::SceneSchedulerPhase::DrawBufferOpa ||
+                                                    entry.phase == smgpc::compat::SceneSchedulerPhase::DrawBufferXlu);
                                         }),
                     "FileSelectItem fellow model should be drawn by the central NPC draw buffer");
         }
@@ -1149,7 +1333,7 @@ namespace smgpc::tests {
         $test("draws FileSelectItem fellow model selected by FileSelectIconID") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             auto icon_id = FileSelectIconID();
             icon_id.setFellowID(FileSelectIconID::Peach);
@@ -1180,9 +1364,9 @@ namespace smgpc::tests {
         $test("threads FileSelector save icon IDs into fellow models") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
-            runtime.save_data().set_slot_state(3, smgpc::game::SaveDataService::SlotState{
+            runtime.save_data().set_slot_state(3, smgpc::compat::SaveDataService::SlotState{
                                                       .created = true,
                                                       .last_loaded_mario = true,
                                                       .power_star_num = 9,
@@ -1221,7 +1405,7 @@ namespace smgpc::tests {
         $test("draws FileSelectSky through LiveActor model compatibility") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             runtime.set_current_stage_name("FileSelect");
             runtime.set_j3d_packet_trace_frame(20U);
@@ -1230,7 +1414,7 @@ namespace smgpc::tests {
             sky.initWithoutIter();
             sky.appear();
             require(runtime.effects().host_binding("ファイル選択空").has_value() &&
-                        runtime.effects().host_binding("ファイル選択空")->source == smgpc::game::EffectHostBindingSource::LiveActorBaseMatrix,
+                        runtime.effects().host_binding("ファイル選択空")->source == smgpc::compat::EffectHostBindingSource::LiveActorBaseMatrix,
                     "FileSelectSky effect keeper should bind to generic LiveActor base-matrix host state");
             require(std::ranges::any_of(runtime.effects().events(),
                                         [](const auto &event) {
@@ -1311,7 +1495,7 @@ namespace smgpc::tests {
 
                 void calcAndSetBaseMtx() override {
                     ++base_matrix_updates;
-                    setBaseMatrix(smgpc::game::j3d_matrix_from_translation_scale({10.0F, 20.0F, 30.0F}, 2.0F));
+                    setBaseMatrix(smgpc::compat::j3d_matrix_from_translation_scale({10.0F, 20.0F, 30.0F}, 2.0F));
                 }
 
                 int base_matrix_updates = 0;
@@ -1333,7 +1517,7 @@ namespace smgpc::tests {
         $test("draws FileSelectEffect through generic LiveActor BRK/BTK compatibility") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             runtime.set_j3d_packet_trace_frame(0U);
             auto effect = FileSelectEffect("選択時エフェクト");
@@ -1366,7 +1550,7 @@ namespace smgpc::tests {
 
         $test("routes DVD archive loads through cached runtime service") {
             const auto root = disc_files_root();
-            auto dvd = smgpc::game::DvdFileSystemService(root);
+            auto dvd = smgpc::compat::DvdFileSystemService(root);
 
             const auto object_path = dvd.find_object_archive("CometNearOrbitSky");
             require(object_path.has_value(), "DVD service should resolve original object archives");
@@ -1411,7 +1595,7 @@ namespace smgpc::tests {
         }
 
         $test("exposes WPAD save message and RFL runtime services") {
-            auto wpad = smgpc::game::WpadService();
+            auto wpad = smgpc::compat::WpadService();
             wpad.begin_frame();
             wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A | WPAD_BUTTON_B);
             require(wpad.is_connected(WPAD_CHAN0), "WPAD service should mark a channel connected when data arrives");
@@ -1445,7 +1629,7 @@ namespace smgpc::tests {
             {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
                 window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, true);
                 window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_RIGHT, true);
                 window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_PLUS, true);
@@ -1471,17 +1655,17 @@ namespace smgpc::tests {
 
 #ifndef NDEBUG
                 const auto trace_path = std::filesystem::path(".cache/tests/runtime-input-trace-host.ndjson");
-                smgpc::game::write_runtime_parity_trace(trace_path,
-                                                        smgpc::render::FrameContext{
-                                                            .frame_index = 1U,
-                                                            .frame_time_seconds = 0.0,
-                                                            .frame_delta_seconds = 1.0 / 60.0,
-                                                            .framebuffer = {640U, 456U},
-                                                            .has_focus = true,
-                                                            .is_minimized = false,
-                                                        },
-                                                        runtime);
-                const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+                smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                          smgpc::render::FrameContext{
+                                                              .frame_index = 1U,
+                                                              .frame_time_seconds = 0.0,
+                                                              .frame_delta_seconds = 1.0 / 60.0,
+                                                              .framebuffer = {640U, 456U},
+                                                              .has_focus = true,
+                                                              .is_minimized = false,
+                                                          },
+                                                          runtime);
+                const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
                 const auto &host_input = trace_json.at("host_input");
                 const auto &wpad0 = trace_json.at("wpad0");
                 require(host_input.at("raw_hold_mask") == (WPAD_BUTTON_A | WPAD_BUTTON_RIGHT | WPAD_BUTTON_PLUS) &&
@@ -1508,7 +1692,7 @@ namespace smgpc::tests {
                 auto pointer_script = ScopedEnvironmentVariable("SMGPC_DEBUG_WPAD_POINTER_SCRIPT", "11-13:320,228,true;15:0,0,false");
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
 
                 runtime.begin_frame({
                     .frame_index = 9U,
@@ -1552,17 +1736,17 @@ namespace smgpc::tests {
 
 #ifndef NDEBUG
                 const auto trace_path = std::filesystem::path(".cache/tests/runtime-input-trace-script.ndjson");
-                smgpc::game::write_runtime_parity_trace(trace_path,
-                                                        smgpc::render::FrameContext{
-                                                            .frame_index = 11U,
-                                                            .frame_time_seconds = 11.0 / 60.0,
-                                                            .frame_delta_seconds = 1.0 / 60.0,
-                                                            .framebuffer = {640U, 456U},
-                                                            .has_focus = true,
-                                                            .is_minimized = false,
-                                                        },
-                                                        runtime);
-                const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+                smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                          smgpc::render::FrameContext{
+                                                              .frame_index = 11U,
+                                                              .frame_time_seconds = 11.0 / 60.0,
+                                                              .frame_delta_seconds = 1.0 / 60.0,
+                                                              .framebuffer = {640U, 456U},
+                                                              .has_focus = true,
+                                                              .is_minimized = false,
+                                                          },
+                                                          runtime);
+                const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
                 const auto &host_input = trace_json.at("host_input");
                 const auto &wpad0 = trace_json.at("wpad0");
                 require(host_input.at("raw_hold_mask") == 0U &&
@@ -1607,7 +1791,7 @@ namespace smgpc::tests {
                         "debug WPAD pointer script should support explicit invalid pointer spans");
             }
 
-            auto save = smgpc::game::SaveDataService();
+            auto save = smgpc::compat::SaveDataService();
             const std::array<std::uint8_t, 4U> save_bytes{1U, 2U, 3U, 4U};
             save.write_file("user/slot0.bin", save_bytes);
             require(save.exists("user/slot0.bin"), "save service should report deterministic fixture files");
@@ -1615,7 +1799,7 @@ namespace smgpc::tests {
             require(loaded_save.has_value() && *loaded_save == std::vector<std::uint8_t>(save_bytes.begin(), save_bytes.end()),
                     "save service should round-trip file bytes");
             require(save.erase("user/slot0.bin") && !save.exists("user/slot0.bin"), "save service should erase fixture files");
-            save.set_slot_state(2, smgpc::game::SaveDataService::SlotState{
+            save.set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
                                        .created = true,
                                        .game_data_corrupted = false,
                                        .config_data_corrupted = true,
@@ -1651,10 +1835,10 @@ namespace smgpc::tests {
                     "UserFile should round-trip back into generic save slot state");
             const auto persistent_save_dir = std::filesystem::path(".cache/tests/save-service-host");
             std::filesystem::remove_all(persistent_save_dir);
-            auto persistent_save = smgpc::game::SaveDataService();
+            auto persistent_save = smgpc::compat::SaveDataService();
             persistent_save.set_host_directory(persistent_save_dir);
             auto persistent_file = UserFile();
-            persistent_file.restoreFromSaveDataServiceSlot(smgpc::game::SaveDataService::SlotState{
+            persistent_file.restoreFromSaveDataServiceSlot(smgpc::compat::SaveDataService::SlotState{
                                                                .slot_index = 5,
                                                                .created = true,
                                                                .last_loaded_mario = true,
@@ -1688,13 +1872,13 @@ namespace smgpc::tests {
             require(nand_host_container.has_value() && read_le_u32(*nand_host_container, 4U) == 2U &&
                         read_le_u32(*nand_host_container, 8U) == 19U && read_le_u32(*nand_host_container, 12U) == 0xBE00U,
                     "save service NAND reads should expose GameData.bin in host byte order for source-shaped Game code");
-            auto nand_write_save = smgpc::game::SaveDataService();
+            auto nand_write_save = smgpc::compat::SaveDataService();
             nand_write_save.write_nand_file("GameData.bin", *nand_host_container);
             const auto stored_wii_container = nand_write_save.read_file("GameData.bin");
             require(stored_wii_container.has_value() && read_be_u32(*stored_wii_container, 4U) == 2U &&
                         read_be_u32(*stored_wii_container, 8U) == 19U && nand_write_save.has_valid_game_data_container(),
                     "save service NAND writes should persist Wii byte-order GameData.bin while decoding slot files generically");
-            auto reloaded_save = smgpc::game::SaveDataService();
+            auto reloaded_save = smgpc::compat::SaveDataService();
             reloaded_save.set_host_directory(persistent_save_dir);
             const auto *reloaded_slot = reloaded_save.slot_state(5);
             require(reloaded_save.has_valid_game_data_container() && reloaded_slot != nullptr && reloaded_slot->created && reloaded_slot->power_star_num == 61 &&
@@ -1705,7 +1889,7 @@ namespace smgpc::tests {
             std::filesystem::remove(persistent_save_dir / "config5");
             std::filesystem::remove(persistent_save_dir / "mario5");
             std::filesystem::remove(persistent_save_dir / "sysconf");
-            auto container_only_save = smgpc::game::SaveDataService();
+            auto container_only_save = smgpc::compat::SaveDataService();
             container_only_save.set_host_directory(persistent_save_dir);
             const auto *container_only_slot = container_only_save.slot_state(5);
             require(container_only_save.has_valid_game_data_container() && container_only_slot != nullptr && container_only_slot->created &&
@@ -1715,8 +1899,8 @@ namespace smgpc::tests {
 
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
-            runtime.save_data().set_slot_state(3, smgpc::game::SaveDataService::SlotState{
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            runtime.save_data().set_slot_state(3, smgpc::compat::SaveDataService::SlotState{
                                                       .created = true,
                                                       .last_loaded_mario = true,
                                                       .power_star_num = 7,
@@ -1762,7 +1946,7 @@ namespace smgpc::tests {
                         GameDataFunction::getSysConfigFileTimeAnnounced() != 0,
                     "GameDataFunction sys-config accessors should use the runtime save service backing store");
             auto handler_file = UserFile();
-            handler_file.restoreFromSaveDataServiceSlot(smgpc::game::SaveDataService::SlotState{
+            handler_file.restoreFromSaveDataServiceSlot(smgpc::compat::SaveDataService::SlotState{
                                                             .slot_index = 6,
                                                             .created = true,
                                                             .last_loaded_mario = true,
@@ -1811,25 +1995,25 @@ namespace smgpc::tests {
             require(save_handler.tryRemoveFile("mario1", &remove_done) && remove_done && !runtime.save_data().exists("mario1"),
                     "SaveDataHandler should expose original-shaped remove-file completion semantics");
 
-            auto messages = smgpc::game::MessageService();
+            auto messages = smgpc::compat::MessageService();
             messages.set_message("FileSelect_NewFile", "New File");
             require(messages.message_or("FileSelect_NewFile", "fallback") == "New File", "message service should resolve fixture messages");
             require(messages.message_or("Missing", "fallback") == "fallback", "message service should provide deterministic fallback text");
 
-            auto scene_lights = smgpc::game::SceneLightService();
-            auto light = smgpc::game::GXLightState{};
+            auto scene_lights = smgpc::compat::SceneLightService();
+            auto light = smgpc::compat::GXLightState{};
             light.color = {0x10U, 0x20U, 0x30U, 0x40U};
             light.position = {1.0F, 2.0F, 3.0F};
             light.direction = {0.0F, 0.0F, -1.0F};
             scene_lights.set_light(2U, light);
             require(scene_lights.loaded_mask() == 4U && scene_lights.light(2U) != nullptr && scene_lights.light(2U)->loaded &&
-                        scene_lights.light(2U)->color == smgpc::game::GXColorValue{0x10U, 0x20U, 0x30U, 0x40U},
+                        scene_lights.light(2U)->color == smgpc::compat::GXColorValue{0x10U, 0x20U, 0x30U, 0x40U},
                     "scene light service should expose typed GX light slots without material-specific compat hooks");
             scene_lights.clear_light(2U);
             require(scene_lights.loaded_mask() == 0U && scene_lights.light(2U) == nullptr,
                     "scene light service should clear individual GX light slots");
 
-            auto rfl = smgpc::game::RflService();
+            auto rfl = smgpc::compat::RflService();
             require(rfl.is_initialized() && !rfl.has_error(), "RFL service should default to a ready deterministic Mii fixture");
             require(!rfl.valid_miis().empty() && rfl.valid_miis()[0].name == "Mario", "RFL service should expose a fixture Mii entry");
             rfl.set_error(true);
@@ -1839,7 +2023,7 @@ namespace smgpc::tests {
         $test("routes MR DVD input audio and effects through RuntimeContext services") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto begin_frame = [&](std::uint64_t frame) {
                 runtime.begin_frame(smgpc::render::FrameContext{
                     .frame_index = frame,
@@ -1929,17 +2113,17 @@ namespace smgpc::tests {
             require(MR::isMountedArchive(object_archive_path), "MR FileUtil should retain mounted-archive state");
             require(mounted_archive->getResource("cometnearorbitsky.bdl") != nullptr, "JKR archive shim should expose resources by path");
             const auto dvd_trace_path = std::filesystem::path(".cache/tests/runtime-dvd-fileutil-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(dvd_trace_path,
-                                                    smgpc::render::FrameContext{
-                                                        .frame_index = 11U,
-                                                        .frame_time_seconds = 11.0 / 60.0,
-                                                        .frame_delta_seconds = 1.0 / 60.0,
-                                                        .framebuffer = {.width = 640U, .height = 456U},
-                                                        .has_focus = true,
-                                                        .is_minimized = false,
-                                                    },
-                                                    runtime);
-            const auto dvd_trace_json = smgpc::game::load_runtime_parity_trace(dvd_trace_path);
+            smgpc::compat::write_runtime_parity_trace(dvd_trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = 11U,
+                                                          .frame_time_seconds = 11.0 / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto dvd_trace_json = smgpc::compat::load_runtime_parity_trace(dvd_trace_path);
             const auto &dvd_trace = dvd_trace_json.at("runtime_services").at("dvd");
             require(dvd_trace.at("cached_archive_count") >= 1U, "runtime parity trace should serialize DVD archive cache size");
             require(std::ranges::any_of(dvd_trace.at("file_reads"),
@@ -1993,19 +2177,19 @@ namespace smgpc::tests {
             MR::permitLevelSE();
             runtime.stop_stage_bgm(30);
             require(runtime.audio().events().size() == 12U &&
-                        runtime.audio().events()[4U].kind == smgpc::game::AudioEventKind::SystemLevelSoundStart &&
+                        runtime.audio().events()[4U].kind == smgpc::compat::AudioEventKind::SystemLevelSoundStart &&
                         runtime.audio().events()[4U].name == "SE_SY_LEVEL_LOOP" &&
-                        runtime.audio().events()[5U].kind == smgpc::game::AudioEventKind::AtmosphereSoundStart &&
+                        runtime.audio().events()[5U].kind == smgpc::compat::AudioEventKind::AtmosphereSoundStart &&
                         runtime.audio().events()[5U].name == "SE_DM_ARRIVE_CASTLE_STAR" &&
-                        runtime.audio().events()[6U].kind == smgpc::game::AudioEventKind::SystemMEStart &&
+                        runtime.audio().events()[6U].kind == smgpc::compat::AudioEventKind::SystemMEStart &&
                         runtime.audio().events()[6U].name == "ME_ASTRO_DOME_SELECT1" &&
-                        runtime.audio().events()[7U].kind == smgpc::game::AudioEventKind::ControllerSpeakerSoundStart &&
+                        runtime.audio().events()[7U].kind == smgpc::compat::AudioEventKind::ControllerSpeakerSoundStart &&
                         runtime.audio().events()[7U].name == "CS_DECIDE" &&
-                        runtime.audio().events()[8U].kind == smgpc::game::AudioEventKind::SystemSoundStop &&
+                        runtime.audio().events()[8U].kind == smgpc::compat::AudioEventKind::SystemSoundStop &&
                         runtime.audio().events()[8U].name == "SE_SY_CURSOR" &&
                         runtime.audio().events()[8U].delay_frames == 7U &&
-                        runtime.audio().events()[9U].kind == smgpc::game::AudioEventKind::LevelSoundSubmit &&
-                        runtime.audio().events()[10U].kind == smgpc::game::AudioEventKind::LevelSoundPermit,
+                        runtime.audio().events()[9U].kind == smgpc::compat::AudioEventKind::LevelSoundSubmit &&
+                        runtime.audio().events()[10U].kind == smgpc::compat::AudioEventKind::LevelSoundPermit,
                     "audio service should keep separate deterministic event records for system, level, atmosphere, ME, controller speaker, stop, and level gate calls");
 
             auto logo_layout = SimpleLayout("ロゴ", "TitleLogo", 2U, MR::DrawType_Layout);
@@ -2013,13 +2197,13 @@ namespace smgpc::tests {
             MR::emitEffect(&logo_layout, "TitleLogoLight");
             require(runtime.effects().active_effects("ロゴ").size() == 1U, "runtime should route layout effect emission to the effect service");
             require(runtime.effects().host_binding("ロゴ").has_value() &&
-                        runtime.effects().host_binding("ロゴ")->source == smgpc::game::EffectHostBindingSource::SimpleLayoutOrigin,
+                        runtime.effects().host_binding("ロゴ")->source == smgpc::compat::EffectHostBindingSource::SimpleLayoutOrigin,
                     "layout effect keepers should bind to generic SimpleLayout host state");
             require(runtime.effects().resource_library() != nullptr, "runtime should load original Effect.arc through the effect service");
             require(!runtime.effects().events().empty() && !runtime.effects().events().back().resolved_resources.empty(),
                     "runtime effect events should resolve emitted names to original JPA resource metadata");
             require(runtime.effects().events().back().keeper.has_value() &&
-                        runtime.effects().events().back().keeper->host_kind == smgpc::game::EffectKeeperHostKind::SimpleLayout &&
+                        runtime.effects().events().back().keeper->host_kind == smgpc::compat::EffectKeeperHostKind::SimpleLayout &&
                         runtime.effects().events().back().keeper->resource_group_name == "TitleLogo",
                     "runtime effect events should retain generic keeper registration context");
             require(std::ranges::any_of(runtime.effects().events().back().resolved_resources,
@@ -2030,7 +2214,7 @@ namespace smgpc::tests {
                                                    resource.resource->dynamics->start_frame == 250 &&
                                                    std::ranges::any_of(resource.textures, [](const auto &texture) {
                                                        return texture.width == 64U && texture.height == 64U &&
-                                                              texture.format == smgpc::game::TplTextureFormat::I8 &&
+                                                              texture.format == smgpc::compat::TplTextureFormat::I8 &&
                                                               texture.image.rgba.size() == static_cast<std::size_t>(texture.width) *
                                                                                                texture.height * 4U;
                                                    });
@@ -2064,17 +2248,17 @@ namespace smgpc::tests {
                                             }),
                     "effect draw packets should retain generic JPA emitter particle, transform, and texture metadata");
             const auto effect_trace_path = std::filesystem::path(".cache/tests/runtime-effect-active-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(effect_trace_path,
-                                                    smgpc::render::FrameContext{
-                                                        .frame_index = runtime.frame_index(),
-                                                        .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
-                                                        .frame_delta_seconds = 1.0 / 60.0,
-                                                        .framebuffer = {.width = 640U, .height = 456U},
-                                                        .has_focus = true,
-                                                        .is_minimized = false,
-                                                    },
-                                                    runtime);
-            const auto effect_trace_json = smgpc::game::load_runtime_parity_trace(effect_trace_path);
+            smgpc::compat::write_runtime_parity_trace(effect_trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = runtime.frame_index(),
+                                                          .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto effect_trace_json = smgpc::compat::load_runtime_parity_trace(effect_trace_path);
             require(std::ranges::any_of(effect_trace_json.at("effects").at("active_effects"),
                                         [](const auto &active) {
                                             return active.at("actor_name").template get<std::string>() == "ロゴ" &&
@@ -2126,12 +2310,12 @@ namespace smgpc::tests {
             MR::forceOffImageEffect();
             require(runtime.image_effects().is_forced_off() && !runtime.image_effects().is_control_auto() &&
                         runtime.image_effects().events().size() == 1U &&
-                        runtime.image_effects().events().back().kind == smgpc::game::ImageEffectControlKind::ForceOff,
+                        runtime.image_effects().events().back().kind == smgpc::compat::ImageEffectControlKind::ForceOff,
                     "MR::forceOffImageEffect should record generic image-effect forced-off state");
             MR::setImageEffectControlAuto();
             require(!runtime.image_effects().is_forced_off() && runtime.image_effects().is_control_auto() &&
                         runtime.image_effects().events().size() == 2U &&
-                        runtime.image_effects().events().back().kind == smgpc::game::ImageEffectControlKind::ControlAuto,
+                        runtime.image_effects().events().back().kind == smgpc::compat::ImageEffectControlKind::ControlAuto,
                     "MR::setImageEffectControlAuto should restore generic image-effect auto control state");
             MR::requestChangeStageInGameAfterLoadingGameData();
             require(runtime.sequence_requests().is_change_stage_in_game_after_loading_game_data_requested() &&
@@ -2142,17 +2326,17 @@ namespace smgpc::tests {
             runtime.emit_semantic_trace_event("test", "manual_runtime_anchor", "runtime scene test");
 
             const auto trace_path = std::filesystem::path(".cache/tests/runtime-wipe-service-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(trace_path,
-                                                    smgpc::render::FrameContext{
-                                                        .frame_index = runtime.frame_index(),
-                                                        .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
-                                                        .frame_delta_seconds = 1.0 / 60.0,
-                                                        .framebuffer = {.width = 640U, .height = 456U},
-                                                        .has_focus = true,
-                                                        .is_minimized = false,
-                                                    },
-                                                    runtime);
-            const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+            smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = runtime.frame_index(),
+                                                          .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
             const auto &audio_trace = trace_json.at("audio");
             require(audio_trace.at("stage_bgm_active") == false && audio_trace.at("stage_bgm_prepared") == false &&
                         audio_trace.at("stage_bgm_unlocked") == true && audio_trace.at("stage_bgm_state") == 5 &&
@@ -2220,17 +2404,60 @@ namespace smgpc::tests {
         $test("boots current FileSelector host through sequence boot service") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
-            auto sequence_boot = smgpc::game::SequenceBootService(runtime);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto sequence_services = SequenceServiceFixture(runtime);
+            auto &sequence_boot = sequence_services.sequence_boot;
 
-            sequence_boot.request_boot_to_file_select();
-            require(sequence_boot.is_boot_requested() && sequence_boot.is_file_select_host_active(),
-                    "SequenceBootService should own the temporary FileSelector stage host after a boot request");
+            require(smgpc::compat::can_create_name_obj("FileSelector") && smgpc::compat::can_create_name_obj("PrologueDirector") &&
+                        !smgpc::compat::can_create_name_obj("ProloguePictureBook") &&
+                        !smgpc::compat::can_create_name_obj("MissingStageObject"),
+                    "compat NameObj factory should expose source stage roots while leaving ProloguePictureBook owned by PrologueDirector");
+            const auto file_select_placement = smgpc::compat::resolve_stage_root_placement(runtime.dvd(), "FileSelect", 1);
+            require(file_select_placement.has_value() && file_select_placement->object_name == "FileSelector" &&
+                        file_select_placement->l_id == 2,
+                    "stage placement resolver should discover FileSelector from original FileSelect objinfo");
+            require(file_select_placement->jmap_info.dataExists() && file_select_placement->jmap_info.getNumEntries() == 3 &&
+                        file_select_placement->jmap_entry_index == 1,
+                    "stage placement resolver should keep original BCSV JMapInfo row backing for source init paths");
+            const auto placement_iter = JMapInfoIter(&file_select_placement->jmap_info, file_select_placement->jmap_entry_index);
+            const char *placement_name = nullptr;
+            auto placement_l_id = s32{};
+            auto placement_arg0 = s32{};
+            require(placement_iter.getValue("name", &placement_name) && std::string_view(placement_name) == "FileSelector" &&
+                        placement_iter.getValue("l_id", &placement_l_id) && placement_l_id == 2 &&
+                        placement_iter.getValue("Obj_arg0", &placement_arg0) && placement_arg0 == file_select_placement->object_args[0U],
+                    "placement-backed JMapInfoIter should expose original objinfo fields to source init paths");
+            auto jmap_arg0 = s32{};
+            const auto has_arg0 = MR::getJMapInfoArg0WithInit(placement_iter, &jmap_arg0);
+            require(MR::isValidInfo(placement_iter) && MR::isObjectName(placement_iter, "FileSelector") &&
+                        MR::getJMapInfoLinkID(placement_iter, &placement_l_id) && placement_l_id == 2 &&
+                        has_arg0 == (file_select_placement->object_args[0U] != -1) && jmap_arg0 == file_select_placement->object_args[0U],
+                    "MR JMapUtil compatibility should expose object names, link IDs, and source Obj_arg sentinel behavior from placement iterators");
+            if (file_select_placement->has_translation && file_select_placement->has_rotation && file_select_placement->has_scale) {
+                auto trans = TVec3f{};
+                auto rotate = TVec3f{};
+                auto scale = TVec3f{};
+                require(MR::getJMapInfoTrans(placement_iter, &trans) && MR::getJMapInfoRotate(placement_iter, &rotate) &&
+                            MR::getJMapInfoScale(placement_iter, &scale),
+                        "MR JMapUtil compatibility should expose standard placement transforms when present");
+                require_near(trans.x, file_select_placement->translation[0U], 0.001F, "placement iterator should expose pos_x");
+                require_near(rotate.y, file_select_placement->rotation[1U], 0.001F, "placement iterator should expose dir_y");
+                require_near(scale.z, file_select_placement->scale[2U], 0.001F, "placement iterator should expose scale_z");
+            }
+            const auto file_select_placements = smgpc::compat::resolve_stage_root_placements(runtime.dvd(), "FileSelect", 1);
+            require(file_select_placements.size() == 1U && file_select_placements.front().object_name == "FileSelector",
+                    "stage placement resolver should return every currently supported FileSelect placement row");
+            sequence_boot.request_boot_to_initial_stage();
+            require(sequence_boot.is_boot_requested() && sequence_services.scene_controller.has_pending_request(),
+                    "SequenceBootService should queue the FileSelect stage request through the scene controller");
+            sequence_boot.update_after_runtime_frame();
+            require(sequence_boot.is_boot_requested() && sequence_boot.is_initial_stage_host_active(),
+                    "SequenceBootService should apply the queued FileSelect stage host through the scene controller update");
             const auto snapshot = runtime.scheduler().snapshot();
             require(std::ranges::any_of(snapshot,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::NameObj &&
-                                                   entry.name == "ファイルセレクタ";
+                                            return entry.kind == smgpc::compat::SceneEntryKind::NameObj &&
+                                                   entry.name == "FileSelector";
                                         }),
                     "sequence boot host should register FileSelector through the runtime scheduler");
 
@@ -2247,17 +2474,17 @@ namespace smgpc::tests {
 
 #ifndef NDEBUG
             const auto trace_path = std::filesystem::path(".cache/tests/sequence-boot-service-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(trace_path,
-                                                    smgpc::render::FrameContext{
-                                                        .frame_index = runtime.frame_index(),
-                                                        .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
-                                                        .frame_delta_seconds = 1.0 / 60.0,
-                                                        .framebuffer = {.width = 640U, .height = 456U},
-                                                        .has_focus = true,
-                                                        .is_minimized = false,
-                                                    },
-                                                    runtime);
-            const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+            smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = runtime.frame_index(),
+                                                          .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
             const auto &semantic_events = trace_json.at("semantic_events");
             require(has_semantic_trace_event(semantic_events, "sequence", "boot_file_select_requested") &&
                         has_semantic_trace_event(semantic_events, "sequence", "temporary_file_select_stage_host_started") &&
@@ -2272,7 +2499,269 @@ namespace smgpc::tests {
         }
 
 #ifndef NDEBUG
-        $test("emits title semantic anchors through sequence boot service") {
+            const auto graph_path = std::filesystem::path(".cache/tests/app-service-graph.dot");
+            std::filesystem::create_directories(graph_path.parent_path());
+            std::filesystem::remove(graph_path);
+            const auto graph_path_text = graph_path.string();
+            auto graph_dump = ScopedEnvironmentVariable("SMGPC_DI_GRAPHVIZ_PATH", graph_path_text.c_str());
+#endif
+            auto overrides = smgpc::app::ServiceGraphOverrides{
+                .logger = std::make_unique<NullLogger>(),
+                .window_service = std::make_unique<TestWindowService>(),
+            };
+            auto services = smgpc::app::build_service_graph(smgpc::app::BootstrapConfiguration{}, std::move(overrides));
+
+            require(services.has<smgpc::compat::RuntimeContext>() && services.has<smgpc::compat::SequenceBootService>() &&
+                        services.has<smgpc::compat::GameSystemService>() &&
+                        services.has<smgpc::compat::GameSystemSceneControllerService>() &&
+                        services.has<smgpc::compat::StorySequenceService>() && services.has<smgpc::compat::StageHostService>() &&
+                        services.has<smgpc::compat::DvdFileSystemService>() && services.has<smgpc::compat::SaveDataService>() &&
+                        services.has<smgpc::compat::SceneScheduler>() && services.has<smgpc::compat::SceneLifecycleService>() &&
+                        services.has<smgpc::app::IApplication>(),
+                    "application service graph should register runtime, runtime subservices, sequence subservices, sequence boot, game system, and app services");
+
+#ifndef NDEBUG
+            require(std::filesystem::exists(graph_path), "application service graph should emit a Graphviz dependency artifact when requested");
+            const auto graph_bytes = read_binary_file_for_test(graph_path);
+            const auto graph_text = std::string(graph_bytes.begin(), graph_bytes.end());
+            auto graph_contains = [&](std::string_view text) {
+                return graph_text.find(std::string(text)) != std::string::npos;
+            };
+            require(graph_contains("SMG PC Dependency Graph") && graph_contains("RuntimeContext") &&
+                        graph_contains("StorySequenceService") && graph_contains("StageHostService") &&
+                        graph_contains("SequenceBootService") && graph_contains("GameSystemSceneControllerService") &&
+                        graph_contains("GameSystemService"),
+                    "Graphviz dependency artifact should render the runtime sequence, scene controller, and game system services as named graph nodes");
+            require(graph_contains("\"smgpc::compat::RuntimeContext\" -> \"smgpc::compat::StorySequenceService\"") &&
+                        graph_contains("\"smgpc::compat::RuntimeContext\" -> \"smgpc::compat::GameSystemSceneControllerService\"") &&
+                        graph_contains("\"smgpc::compat::RuntimeContext\" -> \"smgpc::compat::SaveDataService\"") &&
+                        graph_contains("\"smgpc::compat::RuntimeContext\" -> \"smgpc::compat::SceneScheduler\"") &&
+                        graph_contains("\"smgpc::compat::RuntimeContext\" -> \"smgpc::compat::SceneLifecycleService\"") &&
+                        graph_contains("\"smgpc::compat::SceneLifecycleService\" -> \"smgpc::compat::GameSystemSceneControllerService\"") &&
+                        graph_contains("\"smgpc::compat::GameSystemSceneControllerService\" -> \"smgpc::compat::StageHostService\"") &&
+                        graph_contains("\"smgpc::compat::StorySequenceService\" -> \"smgpc::compat::SequenceBootService\"") &&
+                        graph_contains("\"smgpc::compat::StageHostService\" -> \"smgpc::compat::SequenceBootService\"") &&
+                        graph_contains("\"smgpc::compat::GameSystemSceneControllerService\" -> \"smgpc::compat::GameSystemService\"") &&
+                        graph_contains("\"smgpc::compat::SequenceBootService\" -> \"smgpc::compat::GameSystemService\"") &&
+                        graph_contains("\"smgpc::compat::GameSystemService\" -> \"smgpc::app::IApplication\""),
+                    "Graphviz dependency artifact should contain real DI dependency edges from providers to consumers");
+#endif
+
+            auto &runtime = services.get<smgpc::compat::RuntimeContext>();
+            require(&services.get<smgpc::compat::DvdFileSystemService>() == &runtime.dvd() &&
+                        &services.get<smgpc::compat::SaveDataService>() == &runtime.save_data() &&
+                        &services.get<smgpc::compat::SceneScheduler>() == &runtime.scheduler() &&
+                        &services.get<smgpc::compat::SceneLifecycleService>() == &runtime.scene_lifecycle(),
+                    "DI runtime subservice registrations should borrow the active RuntimeContext services instead of constructing duplicate services");
+            auto &game_system = services.get<smgpc::compat::GameSystemService>();
+            game_system.begin_frame(smgpc::render::FrameContext{
+                .frame_index = 1U,
+                .frame_time_seconds = 0.0,
+                .frame_delta_seconds = 0.0,
+                .framebuffer = {.width = 640U, .height = 456U},
+                .has_focus = true,
+                .is_minimized = false,
+            });
+            game_system.update();
+
+            require(game_system.has_boot_requested_initial_stage() && game_system.is_initial_stage_host_active() &&
+                        game_system.has_sent_autorush_begin(),
+                    "DI-owned GameSystemService should request the initial FileSelect stage and update sequence messages through its DI-owned RuntimeContext");
+            require(runtime.scene_lifecycle().active_stage_name() == "FileSelect" && runtime.scene_lifecycle().active_scenario_no() == 1,
+                    "DI-owned RuntimeContext should own the active FileSelect scene lifecycle state");
+
+            const auto snapshot = runtime.scheduler().snapshot();
+            require(std::ranges::any_of(snapshot,
+                                        [](const auto &entry) {
+                                            return entry.kind == smgpc::compat::SceneEntryKind::NameObj &&
+                                                   entry.name == "FileSelector";
+                                        }),
+                    "DI-owned boot path should instantiate FileSelector through placement/factory into the shared runtime scheduler");
+        }
+
+        $test("routes source FileSelector demo request to source-backed PrologueDirector host") {
+            auto make_frame = [](std::uint64_t frame) {
+                return smgpc::render::FrameContext{
+                    .frame_index = frame,
+                    .frame_time_seconds = static_cast<double>(frame) / 60.0,
+                    .frame_delta_seconds = 1.0 / 60.0,
+                    .framebuffer = {.width = 640U, .height = 456U},
+                    .has_focus = true,
+                    .is_minimized = false,
+                };
+            };
+
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto sequence_services = SequenceServiceFixture(runtime);
+            auto &sequence_boot = sequence_services.sequence_boot;
+            auto advance_one = [&]() {
+                runtime.begin_frame(make_frame(runtime.frame_index() + 1U));
+                sequence_boot.update_after_runtime_frame();
+            };
+            auto has_active_prologue_layout = [&]() {
+                const auto layouts = runtime.scheduler().debug_layout_runtime_snapshot();
+                return std::ranges::any_of(layouts, [](const auto &layout) {
+                    return layout.layout_name == "PrologueDemo" && !layout.dead && !layout.suspended;
+                });
+            };
+
+            runtime.save_data().set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
+                                                      .created = true,
+                                                      .last_loaded_mario = true,
+                                                      .power_star_num = 3,
+                                                      .star_piece_num = 40,
+                                                      .icon_id = 1U,
+                                                      .view_normal_ending = false,
+                                                      .view_complete_ending = false,
+                                                      .complete_ending_mario_and_luigi = false,
+                                                      .game_event_flags = {},
+                                                      .game_event_values = {},
+                                                      .last_modified = 0,
+                                                  });
+            sequence_boot.request_boot_to_initial_stage();
+            sequence_boot.update_after_runtime_frame();
+            auto selector = FileSelector("ファイルセレクタ");
+            selector.initWithoutIter();
+            require(selector.receiveOtherMsg(ACTMES_AUTORUSH_BEGIN), "FileSelector picturebook route test should begin from the title autorush gate");
+
+            for (std::uint64_t frame = 0; frame < 720U && !selector.isFileSelectStarted(); ++frame) {
+                window.set_core_buttons(frame >= 160U, frame >= 160U);
+                runtime.begin_frame(make_frame(frame));
+                sequence_boot.update_after_runtime_frame();
+            }
+            window.set_core_buttons(false, false);
+            require(selector.isFileSelect() && selector.didAppearAllIndex(), "FileSelector picturebook route test should reach original FileSelect");
+
+            auto *item = selector.getItemByFileNo(2);
+            require(item != nullptr && !item->isNew() && runtime.scene_camera_pose().has_value(),
+                    "FileSelector picturebook route test should use an existing save slot and active FileSelect camera");
+            const auto &item_position = item->getPosition();
+            const auto item_pointer = project_world_to_screen(*runtime.scene_camera_pose(),
+                                                              {.x = item_position.x, .y = item_position.y + 900.0F, .z = item_position.z});
+            window.set_pointer(item_pointer.x, item_pointer.y, true);
+            advance_one();
+            advance_one();
+            require(selector.getPreviousPointingFileNo() == 2 && selector.wasItemPointed(2),
+                    "FileSelector picturebook route test should point at the deterministic save slot through star-pointer projection");
+
+            window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, true);
+            advance_one();
+            window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, false);
+            for (auto i = 0; i < 80 && !selector.isFileConfirm(); ++i) {
+                advance_one();
+            }
+            require(selector.isFileConfirm() && selector.getSelectedFileNo() == 2,
+                    "FileSelector picturebook route test should confirm the deterministic save slot before starting");
+
+            selector.callbackStart();
+            for (auto i = 0; i < 180 && !has_active_prologue_layout(); ++i) {
+                advance_one();
+            }
+
+            require(selector.didStartDemoStartWait() && selector.didStartDemo() &&
+                        runtime.sequence_requests().is_change_stage_in_game_after_loading_game_data_requested(),
+                    "source FileSelector Demo should request the original stage change after loading save data");
+            require(runtime.current_stage_name() == "PeachCastleGardenGalaxy" &&
+                        runtime.next_sequence_scene_name() == "PeachCastleGardenGalaxy",
+                    "story sequence compatibility should resolve after-loading prologue to PeachCastleGardenGalaxy like the root flow");
+            require(has_active_prologue_layout(),
+                    "story prologue host should appear the source-backed PrologueDemo layout");
+
+#ifndef NDEBUG
+            const auto trace_path = std::filesystem::path(".cache/tests/picturebook-reached-trace.ndjson");
+            smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = runtime.frame_index(),
+                                                          .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
+            const auto &semantic_events = trace_json.at("semantic_events");
+            const auto &layout_entries = trace_json.at("layout_runtime");
+            require(has_semantic_trace_event_detail_containing(semantic_events, "story", "story_stage_prepared",
+                                                               "event=cDemoPrologue") &&
+                        std::ranges::any_of(layout_entries,
+                                            [](const auto &layout) {
+                                                return layout.at("layout_name") == "PrologueDemo" &&
+                                                       layout.at("dead") == false && layout.at("suspended") == false;
+                                            }),
+                    "runtime trace should expose story prologue preparation and active PrologueDemo layout through generic trace state");
+#endif
+        }
+
+        $test("pauses source ProloguePictureBook page waits through J3DFrameCtrl compatibility") {
+            auto make_frame = [](std::uint64_t frame) {
+                return smgpc::render::FrameContext{
+                    .frame_index = frame,
+                    .frame_time_seconds = static_cast<double>(frame) / 60.0,
+                    .frame_delta_seconds = 1.0 / 60.0,
+                    .framebuffer = {.width = 640U, .height = 456U},
+                    .has_focus = true,
+                    .is_minimized = false,
+                };
+            };
+
+            auto logger = NullLogger();
+            auto window = TestWindowService();
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto picturebook = ProloguePictureBook();
+            picturebook.initWithoutIter();
+            picturebook.appear();
+
+            auto frame = std::uint64_t{0};
+            auto advance_one = [&]() {
+                runtime.begin_frame(make_frame(frame));
+                ++frame;
+            };
+            auto prologue_anim = [&]() -> std::optional<smgpc::compat::SceneLayoutAnimationDebugState> {
+                const auto snapshot = runtime.scheduler().debug_layout_runtime_snapshot();
+                for (const auto &layout : snapshot) {
+                    if (layout.name != "プロローグの絵本" || layout.layout_name != "PrologueDemo" || layout.dead || layout.animations.empty()) {
+                        continue;
+                    }
+                    return layout.animations.front();
+                }
+                return std::nullopt;
+            };
+            auto is_page_wait = [&]() {
+                const auto anim = prologue_anim();
+                return anim.has_value() && anim->name == "Prologue" && anim->stopped && anim->rate == 0.0F && anim->frame >= 349.0F &&
+                       anim->frame <= 351.0F;
+            };
+            auto is_a_button_open = [&]() {
+                const auto layouts = runtime.scheduler().debug_layout_runtime_snapshot();
+                return std::ranges::any_of(layouts, [](const auto &layout) {
+                    return layout.name == "Aボタンアイコン" && layout.layout_name == "IconAButton" && !layout.dead;
+                });
+            };
+
+            for (auto i = 0; i < 420 && !is_page_wait(); ++i) {
+                advance_one();
+            }
+
+            require(is_page_wait(), "ProloguePictureBook should pause the Prologue BRLAN through direct J3DFrameCtrl rate writes");
+            require(is_a_button_open(), "ProloguePictureBook key wait should open the source A-button icon");
+
+            window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, true);
+            advance_one();
+            window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, false);
+            for (auto i = 0; i < 20 && is_page_wait(); ++i) {
+                advance_one();
+            }
+
+            require(!is_page_wait(), "A trigger should resume the Prologue BRLAN after the page wait");
+            require(has_system_sound_event_prefix(runtime, "SE_SY_TALK_FOCUS_ITEM"),
+                    "ProloguePictureBook page advance should play the original focus-item system sound");
+        }
+
+#ifndef NDEBUG
+        $test("emits generic sequence host anchors through sequence boot service") {
             auto make_frame = [](std::uint64_t frame) {
                 return smgpc::render::FrameContext{
                     .frame_index = frame,
@@ -2285,8 +2774,9 @@ namespace smgpc::tests {
             };
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
-            auto sequence_boot = smgpc::game::SequenceBootService(runtime);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            auto sequence_services = SequenceServiceFixture(runtime);
+            auto &sequence_boot = sequence_services.sequence_boot;
 
             sequence_boot.request_boot_to_file_select();
             for (std::uint64_t frame = 0; frame < 720U; ++frame) {
@@ -2296,17 +2786,17 @@ namespace smgpc::tests {
             }
 
             const auto trace_path = std::filesystem::path(".cache/tests/title-semantic-anchors-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(trace_path,
-                                                    smgpc::render::FrameContext{
-                                                        .frame_index = runtime.frame_index(),
-                                                        .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
-                                                        .frame_delta_seconds = 1.0 / 60.0,
-                                                        .framebuffer = {.width = 640U, .height = 456U},
-                                                        .has_focus = true,
-                                                        .is_minimized = false,
-                                                    },
-                                                    runtime);
-            const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+            smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = runtime.frame_index(),
+                                                          .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
             const auto &semantic_events = trace_json.at("semantic_events");
             require(has_semantic_trace_event(semantic_events, "title", "title_product_created") &&
                         has_semantic_trace_event(semantic_events, "title", "title_product_visible") &&
@@ -2324,7 +2814,7 @@ namespace smgpc::tests {
             auto logger = NullLogger();
             auto window = TestWindowService();
             auto renderer = RecordingRenderer();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             runtime.set_current_sequence_scene_name("Game");
             runtime.set_next_sequence_scene_name("FileSelect");
             runtime.set_current_stage_name("FileSelect");
@@ -2343,17 +2833,17 @@ namespace smgpc::tests {
             runtime.draw_2d_normal(renderer);
 
             const auto trace_path = std::filesystem::path(".cache/tests/sequence-state-anchors-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(trace_path,
-                                                    smgpc::render::FrameContext{
-                                                        .frame_index = runtime.frame_index(),
-                                                        .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
-                                                        .frame_delta_seconds = 1.0 / 60.0,
-                                                        .framebuffer = {.width = 640U, .height = 456U},
-                                                        .has_focus = true,
-                                                        .is_minimized = false,
-                                                    },
-                                                    runtime);
-            const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+            smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = runtime.frame_index(),
+                                                          .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
             const auto &semantic_events = trace_json.at("semantic_events");
             require(has_semantic_trace_event_detail_containing(semantic_events, "sequence_state", "manual_sequence_state_anchor",
                                                               "current_scene=Game;next_scene=FileSelect;current_stage=FileSelect") &&
@@ -2369,7 +2859,7 @@ namespace smgpc::tests {
         $test("bridges original LightFunction loads into generic scene light service") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
 
             auto actor_light = ActorLightInfo{};
             actor_light.mInfo0.mColor = {0x10U, 0x20U, 0x30U, 0x40U};
@@ -2383,22 +2873,22 @@ namespace smgpc::tests {
             require(runtime.scene_lights().loaded_mask() == ((1U << 0U) | (1U << 1U) | (1U << 2U)),
                     "LightFunction::loadActorLightInfo should populate the same GX light slots used by original draw-buffer light loading");
             require(runtime.scene_lights().light(0U) != nullptr &&
-                        runtime.scene_lights().light(0U)->color == smgpc::game::GXColorValue{0x10U, 0x20U, 0x30U, 0x40U} &&
+                        runtime.scene_lights().light(0U)->color == smgpc::compat::GXColorValue{0x10U, 0x20U, 0x30U, 0x40U} &&
                         runtime.scene_lights().light(0U)->position == std::array<float, 3U>{1.0F, 2.0F, 3.0F},
                     "LightFunction should convert ActorLightInfo::mInfo0 into GX light slot 0");
             require(runtime.scene_lights().light(1U) != nullptr &&
-                        runtime.scene_lights().light(1U)->color == smgpc::game::GXColorValue{0x50U, 0x60U, 0x70U, 0x80U} &&
+                        runtime.scene_lights().light(1U)->color == smgpc::compat::GXColorValue{0x50U, 0x60U, 0x70U, 0x80U} &&
                         runtime.scene_lights().light(1U)->position == std::array<float, 3U>{4.0F, 5.0F, 6.0F},
                     "LightFunction should convert ActorLightInfo::mInfo1 into GX light slot 1");
             require(runtime.scene_lights().light(2U) != nullptr &&
-                        runtime.scene_lights().light(2U)->color == smgpc::game::GXColorValue{0U, 0U, 0U, 0x90U},
+                        runtime.scene_lights().light(2U)->color == smgpc::compat::GXColorValue{0U, 0U, 0U, 0x90U},
                     "LightFunction should expose the original black alpha light in GX light slot 2");
 
             LightFunction::loadAllLightWhite();
             require(runtime.scene_lights().loaded_mask() == 0xffU, "LightFunction::loadAllLightWhite should populate every GX light slot");
             for (auto light_index = std::size_t{}; light_index < 8U; ++light_index) {
                 require(runtime.scene_lights().light(light_index) != nullptr &&
-                            runtime.scene_lights().light(light_index)->color == smgpc::game::GXColorValue{255U, 255U, 255U, 255U},
+                            runtime.scene_lights().light(light_index)->color == smgpc::compat::GXColorValue{255U, 255U, 255U, 255U},
                         "LightFunction::loadAllLightWhite should use white light payloads for every slot");
             }
         }
@@ -2406,7 +2896,7 @@ namespace smgpc::tests {
         $test("loads FileSelect stage area light data from original LightData archive") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             runtime.set_current_stage_name("FileSelect");
 
             auto zone_id = ZoneLightID{};
@@ -2438,7 +2928,7 @@ namespace smgpc::tests {
         $test("loads draw-buffer light type from stage LightData through MR LightUtil") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             runtime.set_current_stage_name("FileSelect");
 
             MR::loadLight(MR::LightType_Planet);
@@ -2446,22 +2936,22 @@ namespace smgpc::tests {
             require(runtime.scene_lights().loaded_mask() == ((1U << 0U) | (1U << 1U) | (1U << 2U)),
                     "MR::loadLight should populate original actor-light GX slots from the current stage area light");
             require(runtime.scene_lights().light(0U) != nullptr &&
-                        runtime.scene_lights().light(0U)->color == smgpc::game::GXColorValue{255U, 255U, 255U, 0U} &&
+                        runtime.scene_lights().light(0U)->color == smgpc::compat::GXColorValue{255U, 255U, 255U, 0U} &&
                         runtime.scene_lights().light(0U)->position == std::array<float, 3U>{700000.0F, 700000.0F, 700000.0F},
                     "MR::loadLight should load FileSelect planet light 0 into GX light slot 0");
             require(runtime.scene_lights().light(1U) != nullptr &&
-                        runtime.scene_lights().light(1U)->color == smgpc::game::GXColorValue{100U, 150U, 255U, 0U} &&
+                        runtime.scene_lights().light(1U)->color == smgpc::compat::GXColorValue{100U, 150U, 255U, 0U} &&
                         runtime.scene_lights().light(1U)->position == std::array<float, 3U>{-100000.0F, -1300.0F, 21500.0F},
                     "MR::loadLight should load FileSelect planet light 1 into GX light slot 1");
             require(runtime.scene_lights().light(2U) != nullptr &&
-                        runtime.scene_lights().light(2U)->color == smgpc::game::GXColorValue{0U, 0U, 0U, 128U},
+                        runtime.scene_lights().light(2U)->color == smgpc::compat::GXColorValue{0U, 0U, 0U, 128U},
                     "MR::loadLight should load the original black alpha light from the parsed area light");
         }
 
         $test("loads original draw-buffer light before scheduler model drawing") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             runtime.set_current_stage_name("FileSelect");
             auto renderer = RecordingRenderer();
             auto actor = SchedulerProbeActor("draw-buffer-light-probe");
@@ -2477,7 +2967,7 @@ namespace smgpc::tests {
         $test("loads ActorLightCtrl through central draw-buffer actor execution") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             auto actor = SchedulerProbeActor("light-loader-probe");
 
@@ -2496,24 +2986,24 @@ namespace smgpc::tests {
             require(runtime.scene_lights().loaded_mask() == ((1U << 0U) | (1U << 1U) | (1U << 2U)),
                     "central draw-buffer execution should load actor lights before drawing an actor model");
             require(runtime.scene_lights().light(0U) != nullptr &&
-                        runtime.scene_lights().light(0U)->color == smgpc::game::GXColorValue{0x11U, 0x22U, 0x33U, 0x44U} &&
+                        runtime.scene_lights().light(0U)->color == smgpc::compat::GXColorValue{0x11U, 0x22U, 0x33U, 0x44U} &&
                         runtime.scene_lights().light(0U)->position == std::array<float, 3U>{10.0F, 20.0F, 30.0F},
                     "draw-buffer actor light loading should bridge ActorLightCtrl::mInfo0 through LightFunction");
             require(runtime.scene_lights().light(1U) != nullptr &&
-                        runtime.scene_lights().light(1U)->color == smgpc::game::GXColorValue{0x55U, 0x66U, 0x77U, 0x88U} &&
+                        runtime.scene_lights().light(1U)->color == smgpc::compat::GXColorValue{0x55U, 0x66U, 0x77U, 0x88U} &&
                         runtime.scene_lights().light(1U)->position == std::array<float, 3U>{40.0F, 50.0F, 60.0F},
                     "draw-buffer actor light loading should bridge ActorLightCtrl::mInfo1 through LightFunction");
             require(runtime.scene_lights().light(2U) != nullptr &&
-                        runtime.scene_lights().light(2U)->color == smgpc::game::GXColorValue{0U, 0U, 0U, 0x99U},
+                        runtime.scene_lights().light(2U)->color == smgpc::compat::GXColorValue{0U, 0U, 0U, 0x99U},
                     "draw-buffer actor light loading should preserve the original alpha light slot");
             const auto trace = runtime.scheduler().last_execution_trace();
             require(!trace.empty() && trace.back().name == "light-loader-probe" &&
-                        trace.back().phase == smgpc::game::SceneSchedulerPhase::DrawBufferOpa,
+                        trace.back().phase == smgpc::compat::SceneSchedulerPhase::DrawBufferOpa,
                     "scene scheduler should still trace the draw-buffer actor after loading lights");
         }
 
         $test("orders scene scheduler movement calcAnim and calcView categories") {
-            auto scheduler = smgpc::game::SceneScheduler();
+            auto scheduler = smgpc::compat::SceneScheduler();
             auto sky = SchedulerProbeObj("sky-probe");
             auto layout = SchedulerProbeObj("layout-probe");
             auto map_obj = SchedulerProbeObj("map-probe");
@@ -2537,7 +3027,7 @@ namespace smgpc::tests {
             scheduler.execute_movement();
             const auto movement_trace = scheduler.last_execution_trace();
             require(movement_trace.size() == 6U, "scene scheduler should trace movement execution");
-            require(movement_trace[0].name == "map-probe" && movement_trace[0].phase == smgpc::game::SceneSchedulerPhase::Movement &&
+            require(movement_trace[0].name == "map-probe" && movement_trace[0].phase == smgpc::compat::SceneSchedulerPhase::Movement &&
                         movement_trace[1].name == "npc-probe" && movement_trace[2].name == "area-probe" &&
                         movement_trace[3].name == "layout-probe" && movement_trace[4].name == "movie-probe" && movement_trace[5].name == "sky-probe",
                     "scene scheduler movement should execute by original SceneExecutor movement category order");
@@ -2556,7 +3046,7 @@ namespace smgpc::tests {
             scheduler.execute_calc_anim();
             const auto calc_trace = scheduler.last_execution_trace();
             require(calc_trace.size() == 8U && calc_trace[5].name == "sky-probe" &&
-                        calc_trace[5].phase == smgpc::game::SceneSchedulerPhase::CalcAnim && calc_trace[6].name == "npc-probe" &&
+                        calc_trace[5].phase == smgpc::compat::SceneSchedulerPhase::CalcAnim && calc_trace[6].name == "npc-probe" &&
                         calc_trace[7].name == "layout-probe" && layout.calc_anim_count == 1 && sky.calc_anim_count == 1 &&
                         npc_actor.calc_anim_count == 1,
                     "scene scheduler should append phase-tagged calcAnim evidence in original SceneExecutor category order");
@@ -2564,7 +3054,7 @@ namespace smgpc::tests {
             scheduler.execute_calc_view_and_entry();
             const auto calc_view_trace = scheduler.last_execution_trace();
             require(calc_view_trace.size() == 12U && calc_view_trace[8].name == "layout-probe" &&
-                        calc_view_trace[8].phase == smgpc::game::SceneSchedulerPhase::CalcViewAndEntry &&
+                        calc_view_trace[8].phase == smgpc::compat::SceneSchedulerPhase::CalcViewAndEntry &&
                         calc_view_trace[9].name == "movie-probe" && calc_view_trace[10].name == "npc-probe" &&
                         calc_view_trace[11].name == "sky-probe" && sky.calc_view_count == 1 && layout.calc_view_count == 1 &&
                         area_obj.calc_view_count == 0 && movie.calc_view_count == 1 && npc_actor.calc_view_count == 1,
@@ -2572,7 +3062,7 @@ namespace smgpc::tests {
         }
 
         $test("executes original normal draw-buffer opaque and translucent passes") {
-            auto scheduler = smgpc::game::SceneScheduler();
+            auto scheduler = smgpc::compat::SceneScheduler();
             auto renderer = RecordingRenderer();
             auto map_actor = SchedulerProbeActor("map-draw-probe");
             auto npc_actor = SchedulerProbeActor("npc-draw-probe");
@@ -2588,27 +3078,27 @@ namespace smgpc::tests {
             scheduler.execute_draw_buffer_list_normal(renderer, title_test_camera_pose());
             const auto trace = scheduler.last_execution_trace();
             require(trace.size() == 6U, "normal draw-buffer list should trace opa and xlu buffer passes with active actors");
-            require(trace[0].name == "map-draw-probe" && trace[0].phase == smgpc::game::SceneSchedulerPhase::DrawBufferOpa &&
+            require(trace[0].name == "map-draw-probe" && trace[0].phase == smgpc::compat::SceneSchedulerPhase::DrawBufferOpa &&
                         trace[0].draw_buffer_type == MR::DrawBufferType_MapObj &&
-                        trace[0].draw_buffer_pass == smgpc::game::SceneDrawBufferPass::Opaque,
+                        trace[0].draw_buffer_pass == smgpc::compat::SceneDrawBufferPass::Opaque,
                     "normal draw-buffer opa-before-volume-shadow should draw MapObj opaque before later actor buffers");
-            require(trace[1].name == "npc-draw-probe" && trace[1].phase == smgpc::game::SceneSchedulerPhase::DrawBufferOpa &&
+            require(trace[1].name == "npc-draw-probe" && trace[1].phase == smgpc::compat::SceneSchedulerPhase::DrawBufferOpa &&
                         trace[1].draw_buffer_type == MR::DrawBufferType_NPC,
                     "normal draw-buffer opa list should draw NPC opaque before deferred sky when prior air is off");
-            require(trace[2].name == "sky-draw-probe" && trace[2].phase == smgpc::game::SceneSchedulerPhase::DrawBufferOpa &&
-                        trace[2].draw_buffer_pass == smgpc::game::SceneDrawBufferPass::Opaque && trace[3].name == "sky-draw-probe" &&
-                        trace[3].phase == smgpc::game::SceneSchedulerPhase::DrawBufferXlu &&
-                        trace[3].draw_buffer_pass == smgpc::game::SceneDrawBufferPass::Translucent,
+            require(trace[2].name == "sky-draw-probe" && trace[2].phase == smgpc::compat::SceneSchedulerPhase::DrawBufferOpa &&
+                        trace[2].draw_buffer_pass == smgpc::compat::SceneDrawBufferPass::Opaque && trace[3].name == "sky-draw-probe" &&
+                        trace[3].phase == smgpc::compat::SceneSchedulerPhase::DrawBufferXlu &&
+                        trace[3].draw_buffer_pass == smgpc::compat::SceneDrawBufferPass::Translucent,
                     "normal draw-buffer opa list should draw deferred Sky opaque and translucent passes together");
-            require(trace[4].name == "map-draw-probe" && trace[4].phase == smgpc::game::SceneSchedulerPhase::DrawBufferXlu &&
-                        trace[5].name == "npc-draw-probe" && trace[5].phase == smgpc::game::SceneSchedulerPhase::DrawBufferXlu,
+            require(trace[4].name == "map-draw-probe" && trace[4].phase == smgpc::compat::SceneSchedulerPhase::DrawBufferXlu &&
+                        trace[5].name == "npc-draw-probe" && trace[5].phase == smgpc::compat::SceneSchedulerPhase::DrawBufferXlu,
                     "normal xlu draw-buffer list should revisit map objects before NPC");
         }
 
         $test("routes all-live-actor messages through scheduler broadcast") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto selector = FileSelector("ファイルセレクタ");
             auto probe = SchedulerProbeActor("message-probe");
 
@@ -2650,8 +3140,8 @@ namespace smgpc::tests {
             require(selector.isTitleStarted(), "scheduler-broadcast AutoRushBegin should put FileSelector into the original title nerve flow");
 
             const auto trace_path = std::filesystem::path(".cache/tests/runtime-message-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(trace_path, frame_context, runtime);
-            const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+            smgpc::compat::write_runtime_parity_trace(trace_path, frame_context, runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
             require(trace_json.contains("scene_messages"), "runtime parity trace should include generic actor-message routing evidence");
             const auto &scene_messages = trace_json.at("scene_messages");
             require(std::ranges::any_of(scene_messages,
@@ -2670,7 +3160,7 @@ namespace smgpc::tests {
         $test("routes layout and sky actors through central scene scheduler") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto renderer = RecordingRenderer();
             runtime.set_current_stage_name("FileSelect");
             runtime.set_j3d_packet_trace_frame(20U);
@@ -2686,11 +3176,11 @@ namespace smgpc::tests {
 
                 const auto snapshot = runtime.scheduler().snapshot();
                 const auto has_layout = std::ranges::any_of(snapshot, [](const auto &entry) {
-                    return entry.kind == smgpc::game::SceneEntryKind::Layout && entry.name == "TitleLogoProbe" &&
+                    return entry.kind == smgpc::compat::SceneEntryKind::Layout && entry.name == "TitleLogoProbe" &&
                            entry.movement_type == MR::MovementType_Layout;
                 });
                 const auto has_sky = std::ranges::any_of(snapshot, [](const auto &entry) {
-                    return entry.kind == smgpc::game::SceneEntryKind::LiveActorModel && entry.name == "ファイル選択空" &&
+                    return entry.kind == smgpc::compat::SceneEntryKind::LiveActorModel && entry.name == "ファイル選択空" &&
                            entry.draw_buffer_type == MR::DrawBufferType_Sky;
                 });
                 require(has_layout && has_sky, "runtime should register layouts and sky actors in the central scene scheduler");
@@ -2705,11 +3195,11 @@ namespace smgpc::tests {
                 };
                 runtime.begin_frame(frame_context);
                 const auto trace = runtime.scheduler().last_execution_trace();
-                require(!trace.empty() && trace.front().kind == smgpc::game::SceneEntryKind::Layout &&
-                            trace.front().phase == smgpc::game::SceneSchedulerPhase::Movement,
+                require(!trace.empty() && trace.front().kind == smgpc::compat::SceneEntryKind::Layout &&
+                            trace.front().phase == smgpc::compat::SceneSchedulerPhase::Movement,
                         "runtime scene scheduler should execute layout category before sky movement");
                 require(std::ranges::any_of(trace, [](const auto &entry) {
-                            return entry.name == "ファイル選択空" && entry.phase == smgpc::game::SceneSchedulerPhase::CalcViewAndEntry;
+                            return entry.name == "ファイル選択空" && entry.phase == smgpc::compat::SceneSchedulerPhase::CalcViewAndEntry;
                         }),
                         "runtime scene scheduler should run sky calcViewAndEntry during the frame phase");
                 require(sky.getNerveStep() == 1, "runtime scene scheduler should still move the sky actor nerve");
@@ -2755,14 +3245,14 @@ namespace smgpc::tests {
                 require(std::ranges::any_of(draw_trace,
                                             [](const auto &entry) {
                                                 return entry.name == "ファイル選択空" &&
-                                                       entry.phase == smgpc::game::SceneSchedulerPhase::DrawBufferOpa &&
-                                                       entry.draw_buffer_pass == smgpc::game::SceneDrawBufferPass::Opaque;
+                                                       entry.phase == smgpc::compat::SceneSchedulerPhase::DrawBufferOpa &&
+                                                       entry.draw_buffer_pass == smgpc::compat::SceneDrawBufferPass::Opaque;
                                             }) &&
                             std::ranges::any_of(draw_trace,
                                                 [](const auto &entry) {
                                                     return entry.name == "ファイル選択空" &&
-                                                           entry.phase == smgpc::game::SceneSchedulerPhase::DrawBufferXlu &&
-                                                           entry.draw_buffer_pass == smgpc::game::SceneDrawBufferPass::Translucent;
+                                                           entry.phase == smgpc::compat::SceneSchedulerPhase::DrawBufferXlu &&
+                                                           entry.draw_buffer_pass == smgpc::compat::SceneDrawBufferPass::Translucent;
                                                 }),
                         "runtime scene scheduler should tag original sky draw-buffer opa/xlu passes in the execution trace");
                 require(renderer.triangle_batch_count > 0U || renderer.gx_material_batch_count > 0U,
@@ -2771,7 +3261,7 @@ namespace smgpc::tests {
                 runtime.draw_2d_normal(renderer);
                 require(runtime.scene_lights().loaded_mask() == ((1U << 0U) | (1U << 1U) | (1U << 2U)),
                         "runtime 2D draw should not replace scheduler-loaded 3D scene lights before parity trace capture");
-                runtime.save_data().set_slot_state(1, smgpc::game::SaveDataService::SlotState{
+                runtime.save_data().set_slot_state(1, smgpc::compat::SaveDataService::SlotState{
                                                           .created = true,
                                                           .last_loaded_mario = true,
                                                           .power_star_num = 12,
@@ -2790,8 +3280,8 @@ namespace smgpc::tests {
                 runtime.save_data().set_sys_config_time_sent(202);
                 runtime.save_data().set_sys_config_sent_bytes(303U);
                 const auto trace_path = std::filesystem::path(".cache/tests/runtime-parity-trace.ndjson");
-                smgpc::game::write_runtime_parity_trace(trace_path, frame_context, runtime);
-                const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+                smgpc::compat::write_runtime_parity_trace(trace_path, frame_context, runtime);
+                const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
                 require(trace_json.at("schema") == "smgpc-runtime-parity-trace-v1",
                         "runtime parity trace should write and load a stable schema identifier");
                 require(trace_json.contains("camera_pose") && trace_json.contains("scene_trace"),
@@ -2947,7 +3437,7 @@ namespace smgpc::tests {
             const auto remaining_entries = runtime.scheduler().snapshot();
             require(std::ranges::all_of(remaining_entries,
                                         [](const auto &entry) {
-                                            return entry.kind == smgpc::game::SceneEntryKind::NameObj &&
+                                            return entry.kind == smgpc::compat::SceneEntryKind::NameObj &&
                                                    entry.name == "画面キャプチャ" &&
                                                    (entry.draw_type == MR::DrawType_CaptureScreenIndirect ||
                                                     entry.draw_type == MR::DrawType_CaptureScreenCamera);
@@ -2958,8 +3448,8 @@ namespace smgpc::tests {
         $test("matches FileSelector title autorush gate behavior") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
-            runtime.save_data().set_slot_state(2, smgpc::game::SaveDataService::SlotState{
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            runtime.save_data().set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
                                                       .created = true,
                                                       .last_loaded_mario = false,
                                                       .power_star_num = 3,
@@ -3004,28 +3494,28 @@ namespace smgpc::tests {
 
             const auto snapshot = runtime.scheduler().snapshot();
             const auto has_selector_parent = std::ranges::any_of(snapshot, [](const auto &entry) {
-                return entry.kind == smgpc::game::SceneEntryKind::NameObj && entry.name == "ファイルセレクタ" &&
+                return entry.kind == smgpc::compat::SceneEntryKind::NameObj && entry.name == "ファイルセレクタ" &&
                        entry.movement_type == MR::MovementType_Environment && entry.calc_anim_type < 0 && entry.draw_buffer_type < 0;
             });
             const auto item_parent_count =
                 std::ranges::count_if(snapshot, [](const auto &entry) {
-                    return entry.kind == smgpc::game::SceneEntryKind::NameObj && entry.name == "ファイルセレクトアイテム" &&
+                    return entry.kind == smgpc::compat::SceneEntryKind::NameObj && entry.name == "ファイルセレクトアイテム" &&
                            entry.movement_type == MR::MovementType_MapObj && entry.calc_anim_type < 0 && entry.draw_buffer_type < 0;
                 });
             const auto item_new_model_count =
                 std::ranges::count_if(snapshot, [](const auto &entry) {
-                    return entry.kind == smgpc::game::SceneEntryKind::LiveActorModel && entry.name == "ニューフェイス" &&
+                    return entry.kind == smgpc::compat::SceneEntryKind::LiveActorModel && entry.name == "ニューフェイス" &&
                            entry.draw_buffer_type == MR::DrawBufferType_MapObj;
                 });
             const auto item_fellow_model_count =
                 std::ranges::count_if(snapshot, [](const auto &entry) {
-                    return entry.kind == smgpc::game::SceneEntryKind::LiveActorModel && entry.name == "キャラフェイス" &&
+                    return entry.kind == smgpc::compat::SceneEntryKind::LiveActorModel && entry.name == "キャラフェイス" &&
                            entry.movement_type == MR::MovementType_NPC && entry.calc_anim_type == MR::CalcAnimType_NPC &&
                            entry.draw_buffer_type == MR::DrawBufferType_NPC;
                 });
             const auto select_effect_model_count =
                 std::ranges::count_if(snapshot, [](const auto &entry) {
-                    return entry.kind == smgpc::game::SceneEntryKind::LiveActorModel && entry.name == "選択時エフェクト" &&
+                    return entry.kind == smgpc::compat::SceneEntryKind::LiveActorModel && entry.name == "選択時エフェクト" &&
                            entry.movement_type == MR::MovementType_MapObj && entry.calc_anim_type == MR::CalcAnimType_MapObj &&
                            entry.draw_buffer_type == MR::DrawBufferType_MapObj;
                 });
@@ -3086,7 +3576,7 @@ namespace smgpc::tests {
         $test("matches FileSelector title-end to file-select transition") {
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
             auto selector = FileSelector("ファイルセレクタ");
             selector.initWithoutIter();
 
@@ -3132,17 +3622,17 @@ namespace smgpc::tests {
             require(runtime.current_stage_bgm_name() == "MBGM_FILE_SELECT", "FileSelector TitleEnd should start the original file-select BGM");
 
             const auto trace_path = std::filesystem::path(".cache/tests/runtime-file-select-generic-trace.ndjson");
-            smgpc::game::write_runtime_parity_trace(trace_path,
-                                                    smgpc::render::FrameContext{
-                                                        .frame_index = runtime.frame_index(),
-                                                        .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
-                                                        .frame_delta_seconds = 1.0 / 60.0,
-                                                        .framebuffer = {.width = 640U, .height = 456U},
-                                                        .has_focus = true,
-                                                        .is_minimized = false,
-                                                    },
-                                                    runtime);
-            const auto trace_json = smgpc::game::load_runtime_parity_trace(trace_path);
+            smgpc::compat::write_runtime_parity_trace(trace_path,
+                                                      smgpc::render::FrameContext{
+                                                          .frame_index = runtime.frame_index(),
+                                                          .frame_time_seconds = static_cast<double>(runtime.frame_index()) / 60.0,
+                                                          .frame_delta_seconds = 1.0 / 60.0,
+                                                          .framebuffer = {.width = 640U, .height = 456U},
+                                                          .has_focus = true,
+                                                          .is_minimized = false,
+                                                      },
+                                                      runtime);
+            const auto trace_json = smgpc::compat::load_runtime_parity_trace(trace_path);
             const auto &snapshot = trace_json.at("scene_snapshot");
             const auto selector_entry = std::ranges::find_if(snapshot, [](const auto &entry) { return entry.at("name") == "ファイルセレクタ"; });
             const auto item_actor_count = std::ranges::count_if(snapshot, [](const auto &entry) {
@@ -3208,16 +3698,16 @@ namespace smgpc::tests {
                     .is_minimized = false,
                 };
             };
-            auto has_audio_event = [](const smgpc::game::RuntimeContext &runtime, smgpc::game::AudioEventKind kind, std::string_view name) {
-                return std::ranges::any_of(runtime.audio().events(), [&](const smgpc::game::AudioEvent &event) {
+            auto has_audio_event = [](const smgpc::compat::RuntimeContext &runtime, smgpc::compat::AudioEventKind kind, std::string_view name) {
+                return std::ranges::any_of(runtime.audio().events(), [&](const smgpc::compat::AudioEvent &event) {
                     return event.kind == kind && event.name == name;
                 });
             };
 
             auto logger = NullLogger();
             auto window = TestWindowService();
-            auto runtime = smgpc::game::RuntimeContext(logger, window);
-            runtime.save_data().set_slot_state(2, smgpc::game::SaveDataService::SlotState{
+            auto runtime = smgpc::compat::RuntimeContext(logger, window);
+            runtime.save_data().set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
                                                       .created = true,
                                                       .last_loaded_mario = true,
                                                       .power_star_num = 3,
@@ -3261,7 +3751,7 @@ namespace smgpc::tests {
             window.set_input_pressed(smgpc::render::InputButton::CORE_PAD_A, false);
             require(selector.isFileConfirmStart() && selector.getSelectedFileNo() == 2,
                     "FileSelector item star-pointer decide should enter FileConfirmStart and remember the selected file number");
-            require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_GALAXY_SELECTED"),
+            require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_GALAXY_SELECTED"),
                     "FileSelector item select should start the original galaxy-selected sound");
             require(has_system_sound_event_prefix(runtime, "ME_ASTRO_DOME_SELECT"),
                     "FileSelector item select should start one of the original selected ME cues");
@@ -3287,7 +3777,7 @@ namespace smgpc::tests {
             window.set_core_buttons(false, true);
             runtime.begin_frame(make_frame(runtime.frame_index() + 1U));
             window.set_core_buttons(false, false);
-            require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_GALAXY_DECIDE_CANCEL"),
+            require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_GALAXY_DECIDE_CANCEL"),
                     "FileSelector FileConfirm should route B-trigger back selection through checkSelectedBackButton");
             require(selector.isFileSelectStart() && selector.didClearPointing(),
                     "FileSelector FileConfirm B-trigger back selection should clear pointing and return toward FileSelectStart");
@@ -3304,10 +3794,10 @@ namespace smgpc::tests {
                     .is_minimized = false,
                 };
             };
-            auto advance_one = [&](smgpc::game::RuntimeContext &runtime) {
+            auto advance_one = [&](smgpc::compat::RuntimeContext &runtime) {
                 runtime.begin_frame(make_frame(runtime.frame_index() + 1U));
             };
-            auto advance_to_file_select = [&](smgpc::game::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
+            auto advance_to_file_select = [&](smgpc::compat::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
                 require(selector.receiveOtherMsg(ACTMES_AUTORUSH_BEGIN),
                         "FileSelector create/delete test should begin from the original title autorush gate");
 
@@ -3320,7 +3810,7 @@ namespace smgpc::tests {
                 require(selector.isFileSelectStarted() && selector.isFileSelect(),
                         "FileSelector create/delete test should reach FileSelect before selecting an item");
             };
-            auto pulse_yes_until = [&](smgpc::game::RuntimeContext &runtime, TestWindowService &window, auto &&condition, const char *message) {
+            auto pulse_yes_until = [&](smgpc::compat::RuntimeContext &runtime, TestWindowService &window, auto &&condition, const char *message) {
                 for (auto i = 0; i < 360 && !condition(); ++i) {
                     set_pointer_to_sys_info_yes(window);
                     window.set_core_buttons(i % 6 == 1, i % 6 == 1);
@@ -3334,7 +3824,7 @@ namespace smgpc::tests {
             {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
                 auto selector = FileSelector("ファイルセレクタ");
                 selector.initWithoutIter();
                 advance_to_file_select(runtime, window, selector);
@@ -3370,8 +3860,8 @@ namespace smgpc::tests {
             {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
-                runtime.save_data().set_slot_state(2, smgpc::game::SaveDataService::SlotState{
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
+                runtime.save_data().set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
                                                           .created = true,
                                                           .last_loaded_mario = true,
                                                           .power_star_num = 3,
@@ -3432,10 +3922,10 @@ namespace smgpc::tests {
                     .is_minimized = false,
                 };
             };
-            auto advance_one = [&](smgpc::game::RuntimeContext &runtime) {
+            auto advance_one = [&](smgpc::compat::RuntimeContext &runtime) {
                 runtime.begin_frame(make_frame(runtime.frame_index() + 1U));
             };
-            auto advance_to_file_select = [&](smgpc::game::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
+            auto advance_to_file_select = [&](smgpc::compat::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
                 require(selector.receiveOtherMsg(ACTMES_AUTORUSH_BEGIN),
                         "FileSelector copy test should begin from the original title autorush gate");
 
@@ -3448,7 +3938,7 @@ namespace smgpc::tests {
                 require(selector.isFileSelectStarted() && selector.isFileSelect(),
                         "FileSelector copy test should reach FileSelect before selecting the source item");
             };
-            auto advance_existing_item_to_confirm = [&](smgpc::game::RuntimeContext &runtime, FileSelector &selector, s32 file_no) {
+            auto advance_existing_item_to_confirm = [&](smgpc::compat::RuntimeContext &runtime, FileSelector &selector, s32 file_no) {
                 auto *item = selector.getItemByFileNo(file_no);
                 require(item != nullptr && !item->isNew(), "FileSelector copy test should select an existing source item");
                 selector.notifyItem(item, 1);
@@ -3458,7 +3948,7 @@ namespace smgpc::tests {
                 require(selector.isFileConfirm() && selector.getSelectedFileNo() == file_no,
                         "FileSelector copy test should enter FileConfirm on the source slot");
             };
-            auto advance_to_copy_select = [&](smgpc::game::RuntimeContext &runtime, FileSelector &selector) {
+            auto advance_to_copy_select = [&](smgpc::compat::RuntimeContext &runtime, FileSelector &selector) {
                 selector.callbackCopy();
                 require(selector.isCopyWait(), "FileSelector copy callback should enter CopyWait");
                 for (auto i = 0; i < 180 && !selector.didStartCopySelect(); ++i) {
@@ -3467,7 +3957,7 @@ namespace smgpc::tests {
                 require(selector.isCopySelect() && selector.didStartCopySelect() && selector.getSelectInvalidItemCount() == 1,
                         "FileSelector CopySelect should validate all slots except the copied source slot");
             };
-            auto pulse_yes_until = [&](smgpc::game::RuntimeContext &runtime, TestWindowService &window, auto &&condition, const char *message) {
+            auto pulse_yes_until = [&](smgpc::compat::RuntimeContext &runtime, TestWindowService &window, auto &&condition, const char *message) {
                 for (auto i = 0; i < 360 && !condition(); ++i) {
                     set_pointer_to_sys_info_yes(window);
                     window.set_core_buttons(i % 6 == 1, i % 6 == 1);
@@ -3481,8 +3971,8 @@ namespace smgpc::tests {
             {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
-                runtime.save_data().set_slot_state(2, smgpc::game::SaveDataService::SlotState{
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
+                runtime.save_data().set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
                                                           .created = true,
                                                           .last_loaded_mario = false,
                                                           .power_star_num = 17,
@@ -3532,8 +4022,8 @@ namespace smgpc::tests {
             {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
-                runtime.save_data().set_slot_state(2, smgpc::game::SaveDataService::SlotState{
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
+                runtime.save_data().set_slot_state(2, smgpc::compat::SaveDataService::SlotState{
                                                           .created = true,
                                                           .last_loaded_mario = true,
                                                           .power_star_num = 33,
@@ -3546,7 +4036,7 @@ namespace smgpc::tests {
                                                           .game_event_values = {},
                                                           .last_modified = 0,
                                                       });
-                runtime.save_data().set_slot_state(3, smgpc::game::SaveDataService::SlotState{
+                runtime.save_data().set_slot_state(3, smgpc::compat::SaveDataService::SlotState{
                                                           .created = true,
                                                           .last_loaded_mario = false,
                                                           .power_star_num = 1,
@@ -3607,10 +4097,10 @@ namespace smgpc::tests {
                     .is_minimized = false,
                 };
             };
-            auto advance_one = [&](smgpc::game::RuntimeContext &runtime) {
+            auto advance_one = [&](smgpc::compat::RuntimeContext &runtime) {
                 runtime.begin_frame(make_frame(runtime.frame_index() + 1U));
             };
-            auto advance_to_file_select = [&](smgpc::game::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
+            auto advance_to_file_select = [&](smgpc::compat::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
                 require(selector.receiveOtherMsg(ACTMES_AUTORUSH_BEGIN),
                         "FileSelector callback test should begin from the original title autorush gate");
 
@@ -3625,31 +4115,31 @@ namespace smgpc::tests {
             auto run_case = [&](auto &&body) {
                 auto logger = NullLogger();
                 auto window = TestWindowService();
-                auto runtime = smgpc::game::RuntimeContext(logger, window);
+                auto runtime = smgpc::compat::RuntimeContext(logger, window);
                 auto selector = FileSelector("ファイルセレクタ");
                 selector.initWithoutIter();
                 advance_to_file_select(runtime, window, selector);
                 body(runtime, window, selector);
             };
-            auto has_audio_event = [](const smgpc::game::RuntimeContext &runtime, smgpc::game::AudioEventKind kind,
+            auto has_audio_event = [](const smgpc::compat::RuntimeContext &runtime, smgpc::compat::AudioEventKind kind,
                                       std::string_view name, s32 fade_frames = 0) {
-                return std::ranges::any_of(runtime.audio().events(), [&](const smgpc::game::AudioEvent &event) {
+                return std::ranges::any_of(runtime.audio().events(), [&](const smgpc::compat::AudioEvent &event) {
                     return event.kind == kind && event.name == name && event.fade_frames == fade_frames;
                 });
             };
 
-            run_case([&](smgpc::game::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
+            run_case([&](smgpc::compat::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
                 selector.callbackStart();
                 require(selector.wasStartCallbackCalled() && selector.isDemoStartWait(),
                         "FileSelector start callback should enter DemoStartWait like the original");
                 advance_one(runtime);
                 require(selector.didStartDemoStartWait(), "FileSelector DemoStartWait should run first-step side effects");
-                require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SELECTED"),
+                require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SELECTED"),
                         "FileSelector DemoStartWait should start the original file-selected system sound");
-                require(has_audio_event(runtime, smgpc::game::AudioEventKind::StageBgmStop, "MBGM_FILE_SELECT", 0x5a),
+                require(has_audio_event(runtime, smgpc::compat::AudioEventKind::StageBgmStop, "MBGM_FILE_SELECT", 0x5a),
                         "FileSelector DemoStartWait should stop file-select BGM with the original fade");
                 require(runtime.scene_wipe().is_active() && runtime.scene_wipe().remaining_frames() == 0x3c &&
-                            runtime.scene_wipe().events().back().kind == smgpc::game::WipeEventKind::Close,
+                            runtime.scene_wipe().events().back().kind == smgpc::compat::WipeEventKind::Close,
                         "FileSelector DemoStartWait should close the scene fade wipe over the original 60 frames");
                 for (auto i = 0; i < 0x3c; ++i) {
                     advance_one(runtime);
@@ -3662,7 +4152,7 @@ namespace smgpc::tests {
                         "FileSelector Demo should request the original stage change after loading game data");
             });
 
-            run_case([&](smgpc::game::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
+            run_case([&](smgpc::compat::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
                 selector.callbackCopy();
                 require(selector.wasCopyCallbackCalled() && selector.isCopyWait(),
                         "FileSelector copy callback should enter CopyWait like the original");
@@ -3672,11 +4162,11 @@ namespace smgpc::tests {
                 require(selector.getBasePosRatio() == 0.0F, "FileSelector CopyWait should recalculate base positions with ratio 0");
                 require(selector.isCopyWait() || selector.isCopySelect(),
                         "FileSelector CopyWait should either wait for the far camera or advance to CopySelect");
-                require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_UPPER_DECIDE"),
+                require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_UPPER_DECIDE"),
                         "FileSelector CopyWait should start the original upper-menu decide sound");
             });
 
-            run_case([&](smgpc::game::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
+            run_case([&](smgpc::compat::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
                 selector.validateSelectAll();
                 require(selector.getSelectInvalidItemCount() == 0, "FileSelector Mii callback precondition should restore selectable items");
                 selector.callbackMii();
@@ -3686,17 +4176,17 @@ namespace smgpc::tests {
                 require(selector.didStartMiiWait(), "FileSelector MiiWait should run first-step side effects");
                 require(selector.isMiiWait() || selector.isMiiSelectStart(),
                         "FileSelector MiiWait should either wait for hidden layouts or advance to MiiSelectStart");
-                require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_UPPER_DECIDE"),
+                require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_UPPER_DECIDE"),
                         "FileSelector MiiWait should start the original upper-menu decide sound");
                 for (auto i = 0; i < 120 && !selector.didStartMiiSelectStart(); ++i) {
                     advance_one(runtime);
                 }
                 require(selector.didStartMiiSelectStart(), "FileSelector MiiWait should continue into original-shaped MiiSelectStart");
-                require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_MIISEL_OPEN"),
+                require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_MIISEL_OPEN"),
                         "FileSelector MiiSelectStart should appear MiiSelect and start the original Mii-select open sound");
             });
 
-            run_case([&](smgpc::game::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
+            run_case([&](smgpc::compat::RuntimeContext &runtime, TestWindowService &, FileSelector &selector) {
                 selector.callbackDelete();
                 require(selector.wasDeleteCallbackCalled() && selector.isDeleteConfirmStart(),
                         "FileSelector delete callback should enter DeleteConfirmStart like the original");
@@ -3704,15 +4194,15 @@ namespace smgpc::tests {
                 require(selector.didStartDeleteConfirmStart(), "FileSelector DeleteConfirmStart should run first-step side effects");
                 require(selector.isDeleteConfirmStart() || selector.isDeleteConfirm(),
                         "FileSelector DeleteConfirmStart should wait for hidden layouts before DeleteConfirm");
-                require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_UPPER_DECIDE"),
+                require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_UPPER_DECIDE"),
                         "FileSelector DeleteConfirmStart should start the original upper-menu decide sound");
             });
 
-            run_case([&](smgpc::game::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
+            run_case([&](smgpc::compat::RuntimeContext &runtime, TestWindowService &window, FileSelector &selector) {
                 selector.callbackManual();
                 require(selector.wasManualCallbackCalled() && selector.isManualStart(),
                         "FileSelector manual callback should start ManualStart like the original");
-                require(has_audio_event(runtime, smgpc::game::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_TIPS_OPEN"),
+                require(has_audio_event(runtime, smgpc::compat::AudioEventKind::SystemSoundStart, "SE_SY_FILE_SEL_TIPS_OPEN"),
                         "FileSelector manual callback should start the original tips-open system sound");
                 advance_one(runtime);
                 require(selector.didStartManualStart(), "FileSelector ManualStart should run first-step side effects");

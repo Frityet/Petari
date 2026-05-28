@@ -1,6 +1,6 @@
 #include "Game/Util/JMapInfo.hpp"
 
-#include "Game/compat/BcsvTable.hpp"
+#include "resource/BcsvTable.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -9,25 +9,25 @@
 #include <string_view>
 
 namespace {
-    [[nodiscard]] bool valid_entry(const smgpc::game::BcsvTable* table, int entryIndex) {
+    [[nodiscard]] bool valid_entry(const smgpc::compat::BcsvTable* table, int entryIndex) {
         return table != nullptr && entryIndex >= 0 && static_cast< std::uint32_t >(entryIndex) < table->entry_count();
     }
 
-    [[nodiscard]] s32 jmap_value_type(smgpc::game::BcsvFieldType type) {
+    [[nodiscard]] s32 jmap_value_type(smgpc::compat::BcsvFieldType type) {
         switch (type) {
-        case smgpc::game::BcsvFieldType::Int32:
+        case smgpc::compat::BcsvFieldType::Int32:
             return JMAP_VALUE_TYPE_LONG;
-        case smgpc::game::BcsvFieldType::InlineString:
+        case smgpc::compat::BcsvFieldType::InlineString:
             return JMAP_VALUE_TYPE_STRING;
-        case smgpc::game::BcsvFieldType::Float:
+        case smgpc::compat::BcsvFieldType::Float:
             return JMAP_VALUE_TYPE_FLOAT;
-        case smgpc::game::BcsvFieldType::UInt32:
+        case smgpc::compat::BcsvFieldType::UInt32:
             return JMAP_VALUE_TYPE_LONG_2;
-        case smgpc::game::BcsvFieldType::Int16:
+        case smgpc::compat::BcsvFieldType::Int16:
             return JMAP_VALUE_TYPE_SHORT;
-        case smgpc::game::BcsvFieldType::Int8:
+        case smgpc::compat::BcsvFieldType::Int8:
             return JMAP_VALUE_TYPE_BYTE;
-        case smgpc::game::BcsvFieldType::StringOffset:
+        case smgpc::compat::BcsvFieldType::StringOffset:
             return JMAP_VALUE_TYPE_STRING_PTR;
         }
 
@@ -37,8 +37,8 @@ namespace {
     [[nodiscard]] int compare_no_case(std::string_view lhs, std::string_view rhs) {
         const auto length = std::min(lhs.size(), rhs.size());
         for (std::size_t i = 0U; i < length; ++i) {
-            const auto lhs_char = static_cast<unsigned char>(lhs[i]);
-            const auto rhs_char = static_cast<unsigned char>(rhs[i]);
+            const auto lhs_char = static_cast< unsigned char >(lhs[i]);
+            const auto rhs_char = static_cast< unsigned char >(rhs[i]);
             const auto diff = std::tolower(lhs_char) - std::tolower(rhs_char);
             if (diff != 0) {
                 return diff;
@@ -50,14 +50,13 @@ namespace {
         }
         return lhs.size() < rhs.size() ? -1 : 1;
     }
-}
+}  // namespace
 
-JMapInfo::JMapInfo(smgpc::game::BcsvTable table)
-    : mTable(std::make_shared< smgpc::game::BcsvTable >(std::move(table))) {
+JMapInfo::JMapInfo(smgpc::compat::BcsvTable table) : mTable(std::make_shared< smgpc::compat::BcsvTable >(std::move(table))) {
 }
 
 JMapInfo JMapInfo::from_bcsv(std::span< const std::uint8_t > data) {
-    return JMapInfo(smgpc::game::BcsvTable::from_bytes(data));
+    return JMapInfo(smgpc::compat::BcsvTable::from_bytes(data));
 }
 
 bool JMapInfo::dataExists() const {
@@ -186,7 +185,7 @@ bool JMapInfo::getSignedValue(int entryIndex, const char* pKey, s32* pValueOut) 
         return false;
     }
 
-    return getSignedValueByHash(entryIndex, smgpc::game::jmap_hash(pKey), pValueOut);
+    return getSignedValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getUnsignedValue(int entryIndex, const char* pKey, u32* pValueOut) const {
@@ -194,7 +193,7 @@ bool JMapInfo::getUnsignedValue(int entryIndex, const char* pKey, u32* pValueOut
         return false;
     }
 
-    return getUnsignedValueByHash(entryIndex, smgpc::game::jmap_hash(pKey), pValueOut);
+    return getUnsignedValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getFloatValue(int entryIndex, const char* pKey, f32* pValueOut) const {
@@ -202,7 +201,7 @@ bool JMapInfo::getFloatValue(int entryIndex, const char* pKey, f32* pValueOut) c
         return false;
     }
 
-    return getFloatValueByHash(entryIndex, smgpc::game::jmap_hash(pKey), pValueOut);
+    return getFloatValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getStringValue(int entryIndex, const char* pKey, const char** pValueOut) const {
@@ -210,7 +209,7 @@ bool JMapInfo::getStringValue(int entryIndex, const char* pKey, const char** pVa
         return false;
     }
 
-    return getStringValueByHash(entryIndex, smgpc::game::jmap_hash(pKey), pValueOut);
+    return getStringValueByHash(entryIndex, smgpc::compat::jmap_hash(pKey), pValueOut);
 }
 
 bool JMapInfo::getSignedValueByHash(int entryIndex, std::uint32_t hash, s32* pValueOut) const {
@@ -286,4 +285,4 @@ namespace MR {
 
         return pInfo->end();
     }
-}
+}  // namespace MR

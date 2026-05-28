@@ -7,7 +7,7 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -24,22 +24,12 @@ namespace {
     NEW_NERVE(MiiSelectNrvDummySelected, MiiSelect, DummySelected);
 
     constexpr std::array< const wchar_t*, 5 > cFellowNames{
-        L"Mario",
-        L"Luigi",
-        L"Yoshi",
-        L"Kinopio",
-        L"Peach",
+        L"Mario", L"Luigi", L"Yoshi", L"Kinopio", L"Peach",
     };
     constexpr auto cIconsPerPage = 8;
     constexpr std::array< TVec2f, cIconsPerPage > cIconPaneCenters{
-        TVec2f{-168.0F, 57.0F},
-        TVec2f{-56.0F, 57.0F},
-        TVec2f{56.0F, 57.0F},
-        TVec2f{168.0F, 57.0F},
-        TVec2f{-168.0F, -57.0F},
-        TVec2f{-56.0F, -57.0F},
-        TVec2f{56.0F, -57.0F},
-        TVec2f{168.0F, -57.0F},
+        TVec2f{-168.0F, 57.0F},  TVec2f{-56.0F, 57.0F},  TVec2f{56.0F, 57.0F},  TVec2f{168.0F, 57.0F},
+        TVec2f{-168.0F, -57.0F}, TVec2f{-56.0F, -57.0F}, TVec2f{56.0F, -57.0F}, TVec2f{168.0F, -57.0F},
     };
 
     [[nodiscard]] std::wstring widen_ascii(std::string_view value) {
@@ -131,13 +121,11 @@ void MiiSelect::control() {
         MR::setTextBoxMessageRecursive(this, "TxtName", L"");
     }
 
-    if (icon_count > cIconsPerPage &&
-        (MR::testCorePadTriggerRight(WPAD_CHAN0) || MR::testSubPadStickTriggerRight(WPAD_CHAN0) ||
-         (MR::isStarPointerPointingPane(this, "Right", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
+    if (icon_count > cIconsPerPage && (MR::testCorePadTriggerRight(WPAD_CHAN0) || MR::testSubPadStickTriggerRight(WPAD_CHAN0) ||
+                                       (MR::isStarPointerPointingPane(this, "Right", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
         setNerve(&MiiSelectNrvScrollRight::sInstance);
-    } else if (icon_count > cIconsPerPage &&
-               (MR::testCorePadTriggerLeft(WPAD_CHAN0) || MR::testSubPadStickTriggerLeft(WPAD_CHAN0) ||
-                (MR::isStarPointerPointingPane(this, "Left", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
+    } else if (icon_count > cIconsPerPage && (MR::testCorePadTriggerLeft(WPAD_CHAN0) || MR::testSubPadStickTriggerLeft(WPAD_CHAN0) ||
+                                              (MR::isStarPointerPointingPane(this, "Left", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
         setNerve(&MiiSelectNrvScrollLeft::sInstance);
     }
 }
@@ -330,7 +318,7 @@ void MiiSelect::rebuildIconList() {
         mIconNames.emplace_back(cFellowNames[i]);
     }
 
-    const auto* runtime = smgpc::game::RuntimeContext::try_instance();
+    const auto* runtime = smgpc::compat::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return;
     }

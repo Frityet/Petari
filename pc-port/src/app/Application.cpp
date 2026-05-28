@@ -4,7 +4,7 @@
 #include "Game/compat/SequenceBootService.hpp"
 
 #ifndef NDEBUG
-#include "Game/compat/ParityTrace.hpp"
+#include "runtime/ParityTrace.hpp"
 #endif
 
 #include <charconv>
@@ -32,6 +32,71 @@ namespace smgpc::app {
         constexpr auto WII_FRAME_DURATION_SECONDS = 1.0 / WII_FRAME_RATE_HZ;
         constexpr auto WII_FRAME_DURATION = std::chrono::duration_cast<FrameClock::duration>(
             std::chrono::duration<double>(WII_FRAME_DURATION_SECONDS));
+
+        [[nodiscard]] double logical_frame_time_seconds(std::uint64_t logical_frame_index) {
+            return logical_frame_index <= 1U ? 0.0 : static_cast<double>(logical_frame_index - 1U) * WII_FRAME_DURATION_SECONDS;
+        }
+
+        [[nodiscard]] double logical_frame_delta_seconds(std::uint64_t logical_frame_index) {
+            return logical_frame_index <= 1U ? 0.0 : WII_FRAME_DURATION_SECONDS;
+        }
+
+        void apply_logical_frame_timing(render::FrameContext &frame_context, std::uint64_t logical_frame_index) {
+            frame_context.frame_index = logical_frame_index;
+            frame_context.frame_time_seconds = logical_frame_time_seconds(logical_frame_index);
+            frame_context.frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index);
+        }
+
+        [[nodiscard]] std::filesystem::path default_save_directory() {
+            if (const auto *xdg_data_home = std::getenv("XDG_DATA_HOME"); xdg_data_home != nullptr && xdg_data_home[0] != '\0') {
+                return std::filesystem::path(xdg_data_home) / "smgpc" / "save";
+            }
+            if (const auto *home = std::getenv("HOME"); home != nullptr && home[0] != '\0') {
+                return std::filesystem::path(home) / ".local" / "share" / "smgpc" / "save";
+            }
+            return std::filesystem::path(".smgpc") / "save";
+        }
+
+        template <typename Service, Service &(compat::RuntimeContext::*Getter)()>
+        void register_runtime_service_reference(ServiceGraph &graph) {
+            graph.register_service_reference<di::SingletonService<Service>, compat::RuntimeContext>(
+                [](di::DependencyReference<compat::RuntimeContext> runtime) -> Service & {
+                    return (runtime.get().*Getter)();
+                });
+        }
+
+        class FramePacer final {
+        public:
+            explicit FramePacer(bool enabled) : _enabled(enabled), _next_frame_deadline(FrameClock::now() + WII_FRAME_DURATION) {
+            }
+
+            [[nodiscard]] FrameClock::duration wait_for_frame_end() {
+                const auto now = FrameClock::now();
+                if (!_enabled) {
+                    _next_frame_deadline = now + WII_FRAME_DURATION;
+                    return FrameClock::duration::zero();
+                }
+
+                auto after_wait = now;
+                auto sleep_duration = FrameClock::duration::zero();
+                if (now < _next_frame_deadline) {
+                    const auto sleep_begin = now;
+                    std::this_thread::sleep_until(_next_frame_deadline);
+                    after_wait = FrameClock::now();
+                    sleep_duration = after_wait - sleep_begin;
+                }
+
+                while (_next_frame_deadline <= after_wait) {
+                    _next_frame_deadline += WII_FRAME_DURATION;
+                }
+
+                return sleep_duration;
+            }
+
+        private:
+            bool _enabled = true;
+            FrameClock::time_point _next_frame_deadline = {};
+        };
 
 #ifndef NDEBUG
         struct OneShotScreenshotRequest {
@@ -212,7 +277,26 @@ namespace smgpc::app {
             return *parsed;
         }
 
-        void emit_configured_semantic_anchor(game::RuntimeContext& runtime) {
+        [[nodiscard]] std::optional<std::uint64_t> debug_change_stage_request_frame_from_environment() {
+            const auto *value = std::getenv("SMGPC_REQUEST_CHANGE_STAGE_AFTER_LOADING_FRAME");
+            if (value == nullptr || value[0] == '\0') {
+                return std::nullopt;
+            }
+
+            return parse_frame_index(value);
+        }
+
+        [[nodiscard]] bool has_active_layout(const compat::RuntimeContext &runtime, std::string_view layout_name) {
+            for (const auto &layout : runtime.scheduler().debug_layout_runtime_snapshot()) {
+                if (layout.layout_name == layout_name && !layout.dead && !layout.suspended) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        void emit_configured_semantic_anchor(compat::RuntimeContext &runtime) {
             const auto name = string_environment("SMGPC_SEMANTIC_ANCHOR_NAME");
             if (!name.has_value()) {
                 return;
@@ -228,8 +312,8 @@ namespace smgpc::app {
         public:
             DesktopApplication(di::DependencyReference<render::IWindowService> window_service,
                                di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger,
-                               di::DependencyReference<game::RuntimeContext> runtime,
-                               di::DependencyReference<game::GameSystemService> game_system)
+                               di::DependencyReference<compat::RuntimeContext> runtime,
+                               di::DependencyReference<compat::GameSystemService> game_system)
                 : _window_service(std::move(window_service)), _renderer_engine(std::move(renderer_engine)), _logger(std::move(logger)),
                   _runtime(std::move(runtime)), _game_system(std::move(game_system)) {
             }
@@ -350,7 +434,7 @@ namespace smgpc::app {
 #ifndef NDEBUG
                     const auto after_draw_2d = FrameClock::now();
                     if (parity_trace_request.has_value() && !parity_trace_written && frame_context.frame_index >= parity_trace_request->frame) {
-                        game::write_runtime_parity_trace(parity_trace_request->path, frame_context, runtime);
+                        compat::write_runtime_parity_trace(parity_trace_request->path, frame_context, runtime);
                         parity_trace_written = true;
                     }
                     const auto after_parity_trace = FrameClock::now();
@@ -404,8 +488,8 @@ namespace smgpc::app {
             di::DependencyReference<render::IWindowService> _window_service;
             di::DependencyReference<render::IRendererEngine> _renderer_engine;
             di::DependencyReference<logging::ILogger> _logger;
-            di::DependencyReference<game::RuntimeContext> _runtime;
-            di::DependencyReference<game::GameSystemService> _game_system;
+            di::DependencyReference<compat::RuntimeContext> _runtime;
+            di::DependencyReference<compat::GameSystemService> _game_system;
         };
 
     }  // namespace
@@ -453,82 +537,82 @@ namespace smgpc::app {
         }
 
         if (overrides.runtime_context) {
-            graph.register_service<di::SingletonService<game::RuntimeContext>>(std::move(overrides.runtime_context));
+            graph.register_service<di::SingletonService<compat::RuntimeContext>>(std::move(overrides.runtime_context));
         } else {
-            graph.register_service<di::SingletonService<game::RuntimeContext>, logging::ILogger, render::IWindowService>(
+            graph.register_service<di::SingletonService<compat::RuntimeContext>, logging::ILogger, render::IWindowService>(
                 [](di::DependencyReference<logging::ILogger> logger, di::DependencyReference<render::IWindowService> window_service) {
-                    return std::make_unique<game::RuntimeContext>(logger.get(), window_service.get());
+                    return std::make_unique<compat::RuntimeContext>(logger.get(), window_service.get());
                 });
         }
 
-        register_runtime_service_reference<game::DvdFileSystemService, &game::RuntimeContext::dvd>(graph);
-        register_runtime_service_reference<game::WpadService, &game::RuntimeContext::wpad>(graph);
-        register_runtime_service_reference<game::AudioEventService, &game::RuntimeContext::audio>(graph);
-        register_runtime_service_reference<game::EffectService, &game::RuntimeContext::effects>(graph);
-        register_runtime_service_reference<game::ImageEffectService, &game::RuntimeContext::image_effects>(graph);
-        register_runtime_service_reference<game::StarPointerService, &game::RuntimeContext::star_pointer>(graph);
-        register_runtime_service_reference<game::CameraSystemService, &game::RuntimeContext::camera_system>(graph);
-        register_runtime_service_reference<game::PlayerSystemService, &game::RuntimeContext::player_system>(graph);
-        register_runtime_service_reference<game::GameLayoutService, &game::RuntimeContext::game_layout>(graph);
-        register_runtime_service_reference<game::RumbleService, &game::RuntimeContext::rumble>(graph);
-        register_runtime_service_reference<game::SequenceRequestService, &game::RuntimeContext::sequence_requests>(graph);
-        register_runtime_service_reference<game::SaveDataService, &game::RuntimeContext::save_data>(graph);
-        register_runtime_service_reference<game::MessageService, &game::RuntimeContext::messages>(graph);
-        register_runtime_service_reference<game::SceneLightService, &game::RuntimeContext::scene_lights>(graph);
-        register_runtime_service_reference<game::RflService, &game::RuntimeContext::rfl>(graph);
-        register_runtime_service_reference<game::SceneScheduler, &game::RuntimeContext::scheduler>(graph);
-        register_runtime_service_reference<game::SceneLifecycleService, &game::RuntimeContext::scene_lifecycle>(graph);
+        register_runtime_service_reference<compat::DvdFileSystemService, &compat::RuntimeContext::dvd>(graph);
+        register_runtime_service_reference<compat::WpadService, &compat::RuntimeContext::wpad>(graph);
+        register_runtime_service_reference<compat::AudioEventService, &compat::RuntimeContext::audio>(graph);
+        register_runtime_service_reference<compat::EffectService, &compat::RuntimeContext::effects>(graph);
+        register_runtime_service_reference<compat::ImageEffectService, &compat::RuntimeContext::image_effects>(graph);
+        register_runtime_service_reference<compat::StarPointerService, &compat::RuntimeContext::star_pointer>(graph);
+        register_runtime_service_reference<compat::CameraSystemService, &compat::RuntimeContext::camera_system>(graph);
+        register_runtime_service_reference<compat::PlayerSystemService, &compat::RuntimeContext::player_system>(graph);
+        register_runtime_service_reference<compat::GameLayoutService, &compat::RuntimeContext::game_layout>(graph);
+        register_runtime_service_reference<compat::RumbleService, &compat::RuntimeContext::rumble>(graph);
+        register_runtime_service_reference<compat::SequenceRequestService, &compat::RuntimeContext::sequence_requests>(graph);
+        register_runtime_service_reference<compat::SaveDataService, &compat::RuntimeContext::save_data>(graph);
+        register_runtime_service_reference<compat::MessageService, &compat::RuntimeContext::messages>(graph);
+        register_runtime_service_reference<compat::SceneLightService, &compat::RuntimeContext::scene_lights>(graph);
+        register_runtime_service_reference<compat::RflService, &compat::RuntimeContext::rfl>(graph);
+        register_runtime_service_reference<compat::SceneScheduler, &compat::RuntimeContext::scheduler>(graph);
+        register_runtime_service_reference<compat::SceneLifecycleService, &compat::RuntimeContext::scene_lifecycle>(graph);
 
         if (overrides.scene_controller) {
-            graph.register_service<di::SingletonService<game::GameSystemSceneControllerService>>(std::move(overrides.scene_controller));
+            graph.register_service<di::SingletonService<compat::GameSystemSceneControllerService>>(std::move(overrides.scene_controller));
         } else {
-            graph.register_service<di::SingletonService<game::GameSystemSceneControllerService>, game::RuntimeContext,
-                                   game::SceneLifecycleService>(
-                [](di::DependencyReference<game::RuntimeContext> runtime,
-                   di::DependencyReference<game::SceneLifecycleService> scene_lifecycle) {
-                    return std::make_unique<game::GameSystemSceneControllerService>(runtime.get(), scene_lifecycle.get());
+            graph.register_service<di::SingletonService<compat::GameSystemSceneControllerService>, compat::RuntimeContext,
+                                   compat::SceneLifecycleService>(
+                [](di::DependencyReference<compat::RuntimeContext> runtime,
+                   di::DependencyReference<compat::SceneLifecycleService> scene_lifecycle) {
+                    return std::make_unique<compat::GameSystemSceneControllerService>(runtime.get(), scene_lifecycle.get());
                 });
         }
 
         if (overrides.story_sequence) {
-            graph.register_service<di::SingletonService<game::StorySequenceService>>(std::move(overrides.story_sequence));
+            graph.register_service<di::SingletonService<compat::StorySequenceService>>(std::move(overrides.story_sequence));
         } else {
-            graph.register_service<di::SingletonService<game::StorySequenceService>, game::RuntimeContext>(
-                [](di::DependencyReference<game::RuntimeContext> runtime) {
-                    return std::make_unique<game::StorySequenceService>(runtime.get());
+            graph.register_service<di::SingletonService<compat::StorySequenceService>, compat::RuntimeContext>(
+                [](di::DependencyReference<compat::RuntimeContext> runtime) {
+                    return std::make_unique<compat::StorySequenceService>(runtime.get());
                 });
         }
 
         if (overrides.stage_host) {
-            graph.register_service<di::SingletonService<game::StageHostService>>(std::move(overrides.stage_host));
+            graph.register_service<di::SingletonService<compat::StageHostService>>(std::move(overrides.stage_host));
         } else {
-            graph.register_service<di::SingletonService<game::StageHostService>, game::GameSystemSceneControllerService>(
-                [](di::DependencyReference<game::GameSystemSceneControllerService> scene_controller) {
-                    return std::make_unique<game::StageHostService>(scene_controller.get());
+            graph.register_service<di::SingletonService<compat::StageHostService>, compat::GameSystemSceneControllerService>(
+                [](di::DependencyReference<compat::GameSystemSceneControllerService> scene_controller) {
+                    return std::make_unique<compat::StageHostService>(scene_controller.get());
                 });
         }
 
         if (overrides.sequence_boot) {
-            graph.register_service<di::SingletonService<game::SequenceBootService>>(std::move(overrides.sequence_boot));
+            graph.register_service<di::SingletonService<compat::SequenceBootService>>(std::move(overrides.sequence_boot));
         } else {
-            graph.register_service<di::SingletonService<game::SequenceBootService>, game::RuntimeContext, game::StorySequenceService,
-                                   game::StageHostService>(
-                [](di::DependencyReference<game::RuntimeContext> runtime,
-                   di::DependencyReference<game::StorySequenceService> story_sequence,
-                   di::DependencyReference<game::StageHostService> stage_host) {
-                    return std::make_unique<game::SequenceBootService>(runtime.get(), story_sequence.get(), stage_host.get());
+            graph.register_service<di::SingletonService<compat::SequenceBootService>, compat::RuntimeContext, compat::StorySequenceService,
+                                   compat::StageHostService>(
+                [](di::DependencyReference<compat::RuntimeContext> runtime,
+                   di::DependencyReference<compat::StorySequenceService> story_sequence,
+                   di::DependencyReference<compat::StageHostService> stage_host) {
+                    return std::make_unique<compat::SequenceBootService>(runtime.get(), story_sequence.get(), stage_host.get());
                 });
         }
 
         if (overrides.game_system) {
-            graph.register_service<di::SingletonService<game::GameSystemService>>(std::move(overrides.game_system));
+            graph.register_service<di::SingletonService<compat::GameSystemService>>(std::move(overrides.game_system));
         } else {
-            graph.register_service<di::SingletonService<game::GameSystemService>, game::RuntimeContext,
-                                   game::GameSystemSceneControllerService, game::SequenceBootService>(
-                [](di::DependencyReference<game::RuntimeContext> runtime,
-                   di::DependencyReference<game::GameSystemSceneControllerService> scene_controller,
-                   di::DependencyReference<game::SequenceBootService> sequence_boot) {
-                    return std::make_unique<game::GameSystemService>(runtime.get(), scene_controller.get(), sequence_boot.get());
+            graph.register_service<di::SingletonService<compat::GameSystemService>, compat::RuntimeContext,
+                                   compat::GameSystemSceneControllerService, compat::SequenceBootService>(
+                [](di::DependencyReference<compat::RuntimeContext> runtime,
+                   di::DependencyReference<compat::GameSystemSceneControllerService> scene_controller,
+                   di::DependencyReference<compat::SequenceBootService> sequence_boot) {
+                    return std::make_unique<compat::GameSystemService>(runtime.get(), scene_controller.get(), sequence_boot.get());
                 });
         }
 
@@ -536,11 +620,11 @@ namespace smgpc::app {
             graph.register_service<di::SingletonService<IApplication>>(std::move(overrides.application));
         } else {
             graph.register_service<di::SingletonService<IApplication>, render::IWindowService, render::IRendererEngine, logging::ILogger,
-                                   game::RuntimeContext, game::GameSystemService>(
+                                   compat::RuntimeContext, compat::GameSystemService>(
                 [](di::DependencyReference<render::IWindowService> window_service,
                    di::DependencyReference<render::IRendererEngine> renderer_engine, di::DependencyReference<logging::ILogger> logger,
-                   di::DependencyReference<game::RuntimeContext> runtime,
-                   di::DependencyReference<game::GameSystemService> game_system) {
+                   di::DependencyReference<compat::RuntimeContext> runtime,
+                   di::DependencyReference<compat::GameSystemService> game_system) {
                     return std::make_unique<DesktopApplication>(std::move(window_service), std::move(renderer_engine), std::move(logger),
                                                                 std::move(runtime), std::move(game_system));
                 });

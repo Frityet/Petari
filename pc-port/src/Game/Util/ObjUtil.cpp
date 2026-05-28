@@ -9,7 +9,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/LayoutActor.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace {
     [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
@@ -61,25 +61,26 @@ namespace MR {
     }
 
     void connectToSceneLayout(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
             runtime->register_layout_actor(*pLayout, MR::MovementType_Layout, MR::CalcAnimType_Layout, MR::DrawType_Layout);
         }
     }
 
     void connectToSceneLayoutDecoration(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
-            runtime->register_layout_actor(*pLayout, MR::MovementType_LayoutDecoration, MR::CalcAnimType_LayoutDecoration, MR::DrawType_LayoutDecoration);
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
+            runtime->register_layout_actor(*pLayout, MR::MovementType_LayoutDecoration, MR::CalcAnimType_LayoutDecoration,
+                                           MR::DrawType_LayoutDecoration);
         }
     }
 
     void connectToSceneTalkLayout(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
             runtime->register_layout_actor(*pLayout, MR::MovementType_Layout, MR::CalcAnimType_Layout, MR::DrawType_TalkLayout);
         }
     }
 
     void connectToSceneLayoutOnPause(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {
             runtime->register_layout_actor(*pLayout, MR::MovementType_LayoutOnPause, MR::CalcAnimType_Layout, MR::DrawType_LayoutOnPause);
         }
     }
@@ -89,7 +90,7 @@ namespace MR {
             return false;
         }
 
-        auto* runtime = smgpc::game::RuntimeContext::try_instance();
+        auto* runtime = smgpc::compat::RuntimeContext::try_instance();
         if (runtime == nullptr) {
             return false;
         }
@@ -115,21 +116,21 @@ namespace MR {
     }
 
     bool tryRumblePadStrong(const void*, s32 channel) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->rumble().request_strong(channel);
         }
         return true;
     }
 
     bool tryRumblePadWeak(const void*, s32 channel) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->rumble().request_weak(channel);
         }
         return true;
     }
 
     void shakeCameraNormal() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->camera_system().request_normal_shake();
         }
     }

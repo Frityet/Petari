@@ -1,8 +1,8 @@
 #include "Game/Map/FileSelectItem.hpp"
 
 #include "Game/LiveActor/Nerve.hpp"
-#include "Game/Map/FileSelectItemDelegator.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
+#include "Game/Map/FileSelectItemDelegator.hpp"
 #include "Game/Map/FileSelectModel.hpp"
 #include "Game/Screen/FileSelectNumber.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -446,7 +446,7 @@ void FileSelectItem::turnToFront(s32 frameCount) {
     mTurnToFrontStep = 0;
 }
 
-void FileSelectItem::setBasePosition(const smgpc::game::CameraParamVec3& base_position) {
+void FileSelectItem::setBasePosition(const smgpc::compat::CameraParamVec3& base_position) {
     mBasePosition = base_position;
 }
 
@@ -504,7 +504,7 @@ const TVec3f& FileSelectItem::getPosition() const {
 }
 #endif
 
-const smgpc::game::CameraParamVec3& FileSelectItem::getBasePosition() const {
+const smgpc::compat::CameraParamVec3& FileSelectItem::getBasePosition() const {
     return mBasePosition;
 }
 

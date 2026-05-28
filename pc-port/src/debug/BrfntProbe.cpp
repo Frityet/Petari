@@ -1,6 +1,6 @@
-#include "Game/compat/BrfntFont.hpp"
-#include "Game/compat/RarcArchive.hpp"
 #include "capture/ScreenshotService.hpp"
+#include "layout/BrfntFont.hpp"
+#include "resource/RarcArchive.hpp"
 
 #include <cstdint>
 #include <exception>
@@ -21,7 +21,7 @@ namespace {
             cwd.parent_path() / "orig" / "RMGK01" / "files",
         };
 
-        for (const auto& candidate : candidates) {
+        for (const auto &candidate : candidates) {
             std::error_code error{};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
@@ -53,17 +53,17 @@ namespace {
             throw std::runtime_error("glyph code is out of u16 range: " + value_text);
         }
 
-        return static_cast< std::uint16_t >(value);
+        return static_cast<std::uint16_t>(value);
     }
 
-    void write_texture_png(const smgpc::render::capture::IScreenshotService& screenshot_service, const std::filesystem::path& output,
-                           const smgpc::game::DecodedTexture& texture) {
+    void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output,
+                           const smgpc::compat::DecodedTexture &texture) {
         screenshot_service.write_png(output,
                                      smgpc::render::capture::ScreenshotImageView{
                                          .width = texture.width,
                                          .height = texture.height,
                                          .pitch = texture.width * 4U,
-                                         .pixels = std::span< const std::uint8_t >(texture.rgba.data(), texture.rgba.size()),
+                                         .pixels = std::span<const std::uint8_t>(texture.rgba.data(), texture.rgba.size()),
                                          .format = smgpc::render::capture::PixelFormat::RGBA8,
                                          .origin_bottom_left = false,
                                      });
@@ -71,9 +71,9 @@ namespace {
 
 }  // namespace
 
-int main(int argc, char** argv) try {
+int main(int argc, char **argv) try {
     const auto font_name = argc > 1 ? std::string(argv[1]) : std::string("messagefont26.brfnt");
-    auto codes = std::vector< std::uint16_t >{0xff21U, 0x0041U, 0x0042U};
+    auto codes = std::vector<std::uint16_t>{0xff21U, 0x0041U, 0x0042U};
     if (argc > 2) {
         codes.clear();
         for (auto i = 2; i < argc; ++i) {
@@ -82,16 +82,16 @@ int main(int argc, char** argv) try {
     }
 
     const auto archive_path = disc_files_root() / "KrKorean" / "LayoutData" / "Font.arc";
-    const auto archive = smgpc::game::RarcArchive::from_file(archive_path);
-    const auto font = smgpc::game::parse_brfnt_font(archive.file_data(font_name));
+    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
+    const auto font = smgpc::compat::parse_brfnt_font(archive.file_data(font_name));
 
     std::cout << "font," << font_name << '\n';
-    std::cout << "metrics,height=" << static_cast< unsigned >(font.height) << ",width=" << static_cast< unsigned >(font.width)
-              << ",cell=" << static_cast< unsigned >(font.cell_width) << "x" << static_cast< unsigned >(font.cell_height)
+    std::cout << "metrics,height=" << static_cast<unsigned>(font.height) << ",width=" << static_cast<unsigned>(font.width)
+              << ",cell=" << static_cast<unsigned>(font.cell_width) << "x" << static_cast<unsigned>(font.cell_height)
               << ",sheet=" << font.sheet_width << "x" << font.sheet_height << ",sheets=" << font.sheets.size() << '\n';
-    for (const auto& map : font.code_maps) {
+    for (const auto &map : font.code_maps) {
         std::cout << "map,begin=0x" << std::hex << map.begin << ",end=0x" << map.end << std::dec
-                  << ",method=" << static_cast< unsigned >(map.method) << '\n';
+                  << ",method=" << static_cast<unsigned>(map.method) << '\n';
     }
 
     for (const auto code : codes) {
@@ -103,9 +103,9 @@ int main(int argc, char** argv) try {
         }
 
         std::cout << ",sheet=" << glyph->sheet_index << ",xy=" << glyph->x << "," << glyph->y << ",size="
-                  << static_cast< unsigned >(glyph->width) << "x" << static_cast< unsigned >(glyph->height)
-                  << ",widths=" << static_cast< int >(glyph->widths.left) << "/" << static_cast< unsigned >(glyph->widths.glyph_width) << "/"
-                  << static_cast< int >(glyph->widths.char_width) << '\n';
+                  << static_cast<unsigned>(glyph->width) << "x" << static_cast<unsigned>(glyph->height)
+                  << ",widths=" << static_cast<int>(glyph->widths.left) << "/" << static_cast<unsigned>(glyph->widths.glyph_width) << "/"
+                  << static_cast<int>(glyph->widths.char_width) << '\n';
     }
 
     const auto output_root = pc_port_root() / ".cache" / "font-probes";
@@ -117,7 +117,7 @@ int main(int argc, char** argv) try {
     }
 
     return 0;
-} catch (const std::exception& e) {
+} catch (const std::exception &e) {
     std::cerr << "BRFNT probe failed: " << e.what() << '\n';
     return 1;
 }

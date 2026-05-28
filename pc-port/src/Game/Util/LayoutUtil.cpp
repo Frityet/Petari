@@ -14,13 +14,14 @@
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
-#include "Game/compat/LytTexMap.hpp"
-#include "Game/compat/RarcArchive.hpp"
-#include "Game/compat/TextEncoding.hpp"
-#include "Game/compat/TplTexture.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "core/RenderTypes.hpp"
+#include "layout/LytTexMap.hpp"
+#include "resource/RarcArchive.hpp"
+#include "resource/TextEncoding.hpp"
+#include "resource/TplTexture.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace {
     [[nodiscard]] std::u16string utf16_from_wide(const wchar_t* pText) {
@@ -39,10 +40,18 @@ namespace {
 
     [[nodiscard]] std::u16string runtime_message_or_tag(const char* pMessageId) {
         const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            return runtime->messages().message_utf16_or(tag, smgpc::game::utf16_from_utf8_lossy(tag));
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+            return runtime->messages().message_utf16_or(tag, smgpc::compat::utf16_from_utf8_lossy(tag));
         }
-        return smgpc::game::utf16_from_utf8_lossy(tag);
+        return smgpc::compat::utf16_from_utf8_lossy(tag);
+    }
+
+    [[nodiscard]] std::u16string runtime_raw_message_or_tag(const char* pMessageId) {
+        const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+            return runtime->messages().message_raw_utf16_or(tag, smgpc::compat::utf16_from_utf8_lossy(tag));
+        }
+        return smgpc::compat::utf16_from_utf8_lossy(tag);
     }
 
     [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
@@ -71,13 +80,7 @@ namespace {
         return name;
     }
 
-    [[nodiscard]] const smgpc::game::RarcEntry* find_entry_by_basename(const smgpc::game::RarcArchive& archive, std::string_view name) {
-        const auto requested = lower_copy(base_name(name));
-        const auto it = std::ranges::find_if(archive.entries(), [&requested](const auto& entry) { return lower_copy(base_name(entry.path)) == requested; });
-        return it == archive.entries().end() ? nullptr : &*it;
-    }
-
-    [[nodiscard]] std::optional< std::filesystem::path > find_layout_texture_archive(smgpc::game::RuntimeContext& runtime,
+    [[nodiscard]] std::optional< std::filesystem::path > find_layout_texture_archive(smgpc::compat::RuntimeContext& runtime,
                                                                                      std::string_view archiveName) {
         const auto archive = archive_file_name(archiveName);
         return runtime.dvd().find_first({
@@ -162,7 +165,7 @@ namespace MR {
             throw std::runtime_error("MR::createLytTexMap requires archive and texture names");
         }
 
-        auto& runtime = smgpc::game::RuntimeContext::instance();
+        auto& runtime = smgpc::compat::RuntimeContext::instance();
         const auto archive_path = find_layout_texture_archive(runtime, pArchiveName);
         if (!archive_path.has_value()) {
             throw std::runtime_error("Layout texture archive does not exist: " + std::string(pArchiveName));
@@ -176,10 +179,10 @@ namespace MR {
 
         const auto entry_name = lower_copy(base_name(entry->path));
         if (ends_with(entry_name, ".tpl")) {
-            return new nw4r::lyt::TexMap(entry_name, smgpc::game::decode_tpl_texture(archive.file_data(*entry)), 0U, 0U, 0U, 0U);
+            return new nw4r::lyt::TexMap(entry_name, smgpc::compat::decode_tpl_texture(archive.file_data(*entry)), 0U, 0U, 0U, 0U);
         }
 
-        const auto bti = smgpc::game::decode_bti_texture(archive.file_data(*entry));
+        const auto bti = smgpc::compat::decode_bti_texture(archive.file_data(*entry));
         return new nw4r::lyt::TexMap(entry_name, bti.image, bti.wrap_s, bti.wrap_t, bti.min_filter, bti.mag_filter);
     }
 
@@ -366,7 +369,8 @@ namespace MR {
         if (pPos != nullptr) {
             *pPos = {};
             const auto* layout = pLayout != nullptr ? pLayout->getSimpleLayout() : nullptr;
-            const auto bounds = layout != nullptr ? layout->paneBounds(pPaneName != nullptr ? pPaneName : "") : std::optional< SimpleLayout::PaneBounds >{};
+            const auto bounds =
+                layout != nullptr ? layout->paneBounds(pPaneName != nullptr ? pPaneName : "") : std::optional< SimpleLayout::PaneBounds >{};
             if (bounds.has_value()) {
                 pPos->x = (bounds->left + bounds->right) * 0.5F;
                 pPos->y = (bounds->top + bounds->bottom) * 0.5F;
@@ -549,25 +553,25 @@ namespace MR {
     }
 
     void emitEffect(SimpleLayout* pLayout, const char* pEffectName) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->emit_effect(pLayout->getName(), pEffectName);
         }
     }
 
     void emitEffect(LayoutActor* pLayout, const char* pEffectName) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->emit_effect(pLayout->getName(), pEffectName);
         }
     }
 
     void deleteEffectAll(SimpleLayout* pLayout) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->delete_effect_all(pLayout->getName());
         }
     }
 
     void deleteEffectAll(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->delete_effect_all(pLayout->getName());
         }
     }

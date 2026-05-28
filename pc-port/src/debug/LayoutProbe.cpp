@@ -1,6 +1,6 @@
-#include "Game/compat/BrlanAnimation.hpp"
-#include "Game/compat/BrlytLayout.hpp"
-#include "Game/compat/RarcArchive.hpp"
+#include "layout/BrlanAnimation.hpp"
+#include "layout/BrlytLayout.hpp"
+#include "resource/RarcArchive.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -44,7 +44,7 @@ namespace {
             cwd.parent_path() / "orig" / "RMGK01" / "files",
         };
 
-        for (const auto& candidate : candidates) {
+        for (const auto &candidate : candidates) {
             std::error_code error{};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
@@ -70,7 +70,7 @@ namespace {
 
     [[nodiscard]] std::string lowercase(std::string_view text) {
         auto lowered = std::string(text);
-        std::ranges::transform(lowered, lowered.begin(), [](unsigned char c) { return static_cast< char >(std::tolower(c)); });
+        std::ranges::transform(lowered, lowered.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
         return lowered;
     }
 
@@ -79,7 +79,7 @@ namespace {
         sanitized.reserve(text.size());
 
         for (const auto c : text) {
-            const auto value = static_cast< unsigned char >(c);
+            const auto value = static_cast<unsigned char>(c);
             if (std::isalnum(value) != 0 || c == '-' || c == '_') {
                 sanitized.push_back(c);
             } else {
@@ -98,10 +98,10 @@ namespace {
         return archive_name;
     }
 
-    [[nodiscard]] std::optional< std::span< const std::uint8_t > > find_archive_file(const smgpc::game::RarcArchive& archive,
-                                                                                     std::string_view suffix) {
+    [[nodiscard]] std::optional<std::span<const std::uint8_t>> find_archive_file(const smgpc::compat::RarcArchive &archive,
+                                                                                 std::string_view suffix) {
         const auto lowered_suffix = lowercase(suffix);
-        const auto it = std::ranges::find_if(archive.entries(), [&lowered_suffix](const auto& entry) {
+        const auto it = std::ranges::find_if(archive.entries(), [&lowered_suffix](const auto &entry) {
             const auto lowered = lowercase(entry.path);
             return lowered.size() >= lowered_suffix.size() && lowered.ends_with(lowered_suffix);
         });
@@ -112,9 +112,9 @@ namespace {
         return archive.file_data(*it);
     }
 
-    [[nodiscard]] std::unordered_map< std::string, smgpc::game::BrlanAnimation > load_animations(const smgpc::game::RarcArchive& archive) {
-        auto animations = std::unordered_map< std::string, smgpc::game::BrlanAnimation >{};
-        for (const auto& entry : archive.entries()) {
+    [[nodiscard]] std::unordered_map<std::string, smgpc::compat::BrlanAnimation> load_animations(const smgpc::compat::RarcArchive &archive) {
+        auto animations = std::unordered_map<std::string, smgpc::compat::BrlanAnimation>{};
+        for (const auto &entry : archive.entries()) {
             const auto lowered = lowercase(entry.path);
             if (!lowered.starts_with("anim/") || !lowered.ends_with(".brlan")) {
                 continue;
@@ -122,13 +122,13 @@ namespace {
 
             auto name = lowered.substr(std::string_view("anim/").size());
             name.resize(name.size() - std::string_view(".brlan").size());
-            animations.emplace(std::move(name), smgpc::game::parse_brlan_animation(archive.file_data(entry)));
+            animations.emplace(std::move(name), smgpc::compat::parse_brlan_animation(archive.file_data(entry)));
         }
 
         return animations;
     }
 
-    void apply_pane_frame(PaneRenderState& state, const smgpc::game::BrlanPaneFrame& frame) {
+    void apply_pane_frame(PaneRenderState &state, const smgpc::compat::BrlanPaneFrame &frame) {
         if (frame.translate_x.has_value()) {
             state.translate_x = *frame.translate_x;
         }
@@ -149,17 +149,17 @@ namespace {
         }
     }
 
-    [[nodiscard]] PaneRenderState pane_state_for(const smgpc::game::BrlytLayout& layout, std::size_t pane_index,
-                                                 const std::unordered_map< std::string, smgpc::game::BrlanPaneFrame >& committed,
-                                                 const std::vector< const smgpc::game::BrlanAnimation* >& active_animations,
-                                                 std::span< const float > active_frames) {
-        const auto& pane = layout.panes.at(pane_index);
+    [[nodiscard]] PaneRenderState pane_state_for(const smgpc::compat::BrlytLayout &layout, std::size_t pane_index,
+                                                 const std::unordered_map<std::string, smgpc::compat::BrlanPaneFrame> &committed,
+                                                 const std::vector<const smgpc::compat::BrlanAnimation *> &active_animations,
+                                                 std::span<const float> active_frames) {
+        const auto &pane = layout.panes.at(pane_index);
         auto local = PaneRenderState{
             .translate_x = pane.translate_x,
             .translate_y = pane.translate_y,
             .scale_x = pane.scale_x,
             .scale_y = pane.scale_y,
-            .alpha = static_cast< float >(pane.alpha),
+            .alpha = static_cast<float>(pane.alpha),
             .visible = pane.visible,
         };
 
@@ -177,7 +177,7 @@ namespace {
             return local;
         }
 
-        const auto parent = pane_state_for(layout, static_cast< std::size_t >(pane.parent_index), committed, active_animations, active_frames);
+        const auto parent = pane_state_for(layout, static_cast<std::size_t>(pane.parent_index), committed, active_animations, active_frames);
         return PaneRenderState{
             .translate_x = parent.translate_x + local.translate_x * parent.scale_x,
             .translate_y = parent.translate_y + local.translate_y * parent.scale_y,
@@ -210,7 +210,7 @@ namespace {
         }
     }
 
-    [[nodiscard]] Rect pane_rect(const smgpc::game::BrlytPane& pane, const PaneRenderState& state) {
+    [[nodiscard]] Rect pane_rect(const smgpc::compat::BrlytPane &pane, const PaneRenderState &state) {
         const auto width = pane.width * state.scale_x;
         const auto height = pane.height * state.scale_y;
         const auto x = state.translate_x + base_position_x(pane.base_position, width);
@@ -223,7 +223,7 @@ namespace {
         };
     }
 
-    [[nodiscard]] std::optional< Rect > merge_rect(std::optional< Rect > bounds, const Rect& rect) {
+    [[nodiscard]] std::optional<Rect> merge_rect(std::optional<Rect> bounds, const Rect &rect) {
         if (!bounds.has_value()) {
             return rect;
         }
@@ -235,12 +235,12 @@ namespace {
         return bounds;
     }
 
-    void write_rect(std::ofstream& out, const Rect& rect) {
+    void write_rect(std::ofstream &out, const Rect &rect) {
         out << '[' << rect.left << ", " << rect.top << "] -> [" << rect.right << ", " << rect.bottom << ']';
     }
 
-    void write_layout_probe(const std::filesystem::path& output, std::string_view layout_name, const smgpc::game::BrlytLayout& layout,
-                            const std::unordered_map< std::string, smgpc::game::BrlanAnimation >& animations) {
+    void write_layout_probe(const std::filesystem::path &output, std::string_view layout_name, const smgpc::compat::BrlytLayout &layout,
+                            const std::unordered_map<std::string, smgpc::compat::BrlanAnimation> &animations) {
         std::filesystem::create_directories(output.parent_path());
 
         auto out = std::ofstream(output);
@@ -259,7 +259,7 @@ namespace {
         out << "## Animations\n\n";
         out << "| name | frames | loop | contents |\n";
         out << "| --- | ---: | --- | ---: |\n";
-        for (const auto& [name, animation] : animations) {
+        for (const auto &[name, animation] : animations) {
             out << "| `" << name << "` | " << animation.frame_size << " | " << (animation.loop ? "yes" : "no") << " | " << animation.contents.size()
                 << " |\n";
         }
@@ -269,10 +269,10 @@ namespace {
         out << "| index | parent | name | base | translate | scale | size | alpha | visible |\n";
         out << "| ---: | ---: | --- | ---: | --- | --- | --- | ---: | --- |\n";
         for (auto i = std::size_t{}; i < layout.panes.size(); ++i) {
-            const auto& pane = layout.panes[i];
-            out << "| " << i << " | " << pane.parent_index << " | `" << pane.name << "` | " << static_cast< int >(pane.base_position) << " | "
+            const auto &pane = layout.panes[i];
+            out << "| " << i << " | " << pane.parent_index << " | `" << pane.name << "` | " << static_cast<int>(pane.base_position) << " | "
                 << pane.translate_x << ',' << pane.translate_y << " | " << pane.scale_x << ',' << pane.scale_y << " | " << pane.width << 'x'
-                << pane.height << " | " << static_cast< int >(pane.alpha) << " | " << (pane.visible ? "yes" : "no") << " |\n";
+                << pane.height << " | " << static_cast<int>(pane.alpha) << " | " << (pane.visible ? "yes" : "no") << " |\n";
         }
         out << '\n';
 
@@ -280,20 +280,20 @@ namespace {
         out << "| index | name | textures | tex SRTs | tex coord gens | TEV stages | alpha compare | blend |\n";
         out << "| ---: | --- | --- | --- | --- | --- | --- | --- |\n";
         for (auto i = std::size_t{}; i < layout.materials.size(); ++i) {
-            const auto& material = layout.materials[i];
+            const auto &material = layout.materials[i];
             out << "| " << i << " | `" << material.name << "` | ";
             for (auto texture_index = std::size_t{}; texture_index < material.textures.size(); ++texture_index) {
-                const auto& texture = material.textures[texture_index];
+                const auto &texture = material.textures[texture_index];
                 if (texture_index != 0U) {
                     out << "<br>";
                 }
-                out << texture_index << ":`" << texture.texture_name << "` wrap=" << static_cast< int >(texture.wrap_s) << ','
-                    << static_cast< int >(texture.wrap_t) << " filter=" << static_cast< int >(texture.min_filter) << ','
-                    << static_cast< int >(texture.mag_filter);
+                out << texture_index << ":`" << texture.texture_name << "` wrap=" << static_cast<int>(texture.wrap_s) << ','
+                    << static_cast<int>(texture.wrap_t) << " filter=" << static_cast<int>(texture.min_filter) << ','
+                    << static_cast<int>(texture.mag_filter);
             }
             out << " | ";
             for (auto srt_index = std::size_t{}; srt_index < material.tex_srts.size(); ++srt_index) {
-                const auto& srt = material.tex_srts[srt_index];
+                const auto &srt = material.tex_srts[srt_index];
                 if (srt_index != 0U) {
                     out << "<br>";
                 }
@@ -302,33 +302,33 @@ namespace {
             }
             out << " | ";
             for (auto gen_index = std::size_t{}; gen_index < material.tex_coord_gens.size(); ++gen_index) {
-                const auto& gen = material.tex_coord_gens[gen_index];
+                const auto &gen = material.tex_coord_gens[gen_index];
                 if (gen_index != 0U) {
                     out << "<br>";
                 }
-                out << gen_index << ":type=" << static_cast< int >(gen.tex_gen_type) << " src=" << static_cast< int >(gen.tex_gen_src)
-                    << " mtx=" << static_cast< int >(gen.tex_mtx);
+                out << gen_index << ":type=" << static_cast<int>(gen.tex_gen_type) << " src=" << static_cast<int>(gen.tex_gen_src)
+                    << " mtx=" << static_cast<int>(gen.tex_mtx);
             }
             out << " | ";
             for (auto stage_index = std::size_t{}; stage_index < material.tev_stages.size(); ++stage_index) {
-                const auto& stage = material.tev_stages[stage_index];
+                const auto &stage = material.tev_stages[stage_index];
                 if (stage_index != 0U) {
                     out << "<br>";
                 }
-                out << stage_index << ":tc=" << static_cast< int >(stage.tex_coord_gen) << " tm=" << stage.tex_map
-                    << " cc=" << static_cast< int >(stage.color_chan) << " c=[" << static_cast< int >(stage.color.a) << ','
-                    << static_cast< int >(stage.color.b) << ',' << static_cast< int >(stage.color.c) << ','
-                    << static_cast< int >(stage.color.d) << "]->" << static_cast< int >(stage.color.out_reg) << " a=["
-                    << static_cast< int >(stage.alpha.a) << ',' << static_cast< int >(stage.alpha.b) << ','
-                    << static_cast< int >(stage.alpha.c) << ',' << static_cast< int >(stage.alpha.d) << "]->"
-                    << static_cast< int >(stage.alpha.out_reg);
+                out << stage_index << ":tc=" << static_cast<int>(stage.tex_coord_gen) << " tm=" << stage.tex_map
+                    << " cc=" << static_cast<int>(stage.color_chan) << " c=[" << static_cast<int>(stage.color.a) << ','
+                    << static_cast<int>(stage.color.b) << ',' << static_cast<int>(stage.color.c) << ','
+                    << static_cast<int>(stage.color.d) << "]->" << static_cast<int>(stage.color.out_reg) << " a=["
+                    << static_cast<int>(stage.alpha.a) << ',' << static_cast<int>(stage.alpha.b) << ','
+                    << static_cast<int>(stage.alpha.c) << ',' << static_cast<int>(stage.alpha.d) << "]->"
+                    << static_cast<int>(stage.alpha.out_reg);
             }
-            out << " | " << (material.alpha_compare.enabled ? "yes" : "no") << " c=" << static_cast< int >(material.alpha_compare.comp0) << ','
-                << static_cast< int >(material.alpha_compare.comp1) << " r=" << static_cast< int >(material.alpha_compare.ref0) << ','
-                << static_cast< int >(material.alpha_compare.ref1) << " op=" << static_cast< int >(material.alpha_compare.op) << " | "
-                << (material.blend_mode.enabled ? "yes" : "default") << " type=" << static_cast< int >(material.gx_state.blend.type)
-                << " src=" << static_cast< int >(material.gx_state.blend.src_factor) << " dst="
-                << static_cast< int >(material.gx_state.blend.dst_factor) << " op=" << static_cast< int >(material.gx_state.blend.op)
+            out << " | " << (material.alpha_compare.enabled ? "yes" : "no") << " c=" << static_cast<int>(material.alpha_compare.comp0) << ','
+                << static_cast<int>(material.alpha_compare.comp1) << " r=" << static_cast<int>(material.alpha_compare.ref0) << ','
+                << static_cast<int>(material.alpha_compare.ref1) << " op=" << static_cast<int>(material.alpha_compare.op) << " | "
+                << (material.blend_mode.enabled ? "yes" : "default") << " type=" << static_cast<int>(material.gx_state.blend.type)
+                << " src=" << static_cast<int>(material.gx_state.blend.src_factor) << " dst="
+                << static_cast<int>(material.gx_state.blend.dst_factor) << " op=" << static_cast<int>(material.gx_state.blend.op)
                 << " color_update=" << (material.gx_state.blend.color_update ? "yes" : "no")
                 << " alpha_update=" << (material.gx_state.blend.alpha_update ? "yes" : "no") << " |\n";
         }
@@ -336,28 +336,28 @@ namespace {
 
         const auto appear = animations.find("appear");
         const auto wait = animations.find("wait");
-        auto committed = std::unordered_map< std::string, smgpc::game::BrlanPaneFrame >{};
+        auto committed = std::unordered_map<std::string, smgpc::compat::BrlanPaneFrame>{};
         if (appear != animations.end()) {
-            const auto frame = static_cast< float >(std::max< int >(0, appear->second.frame_size - 1));
-            for (const auto& pane : layout.panes) {
+            const auto frame = static_cast<float>(std::max<int>(0, appear->second.frame_size - 1));
+            for (const auto &pane : layout.panes) {
                 committed.emplace(pane.name, appear->second.pane_frame(pane.name, frame));
             }
         }
 
-        const auto* wait_animation = wait == animations.end() ? nullptr : &wait->second;
-        const std::vector< const smgpc::game::BrlanAnimation* > active{wait_animation};
-        const std::vector< float > active_frames{80.0F};
-        auto picture_bounds = std::optional< Rect >{};
-        auto text_bounds = std::optional< Rect >{};
+        const auto *wait_animation = wait == animations.end() ? nullptr : &wait->second;
+        const std::vector<const smgpc::compat::BrlanAnimation *> active{wait_animation};
+        const std::vector<float> active_frames{80.0F};
+        auto picture_bounds = std::optional<Rect>{};
+        auto text_bounds = std::optional<Rect>{};
 
         out << "## Runtime Bounds With Appear Committed And Wait Frame 80\n\n";
         out << "| kind | name | material | pane | rect | state scale | visible |\n";
         out << "| --- | --- | ---: | --- | --- | --- | --- |\n";
-        for (const auto& picture : layout.pictures) {
+        for (const auto &picture : layout.pictures) {
             if (picture.pane_index >= layout.panes.size()) {
                 continue;
             }
-            const auto& pane = layout.panes[picture.pane_index];
+            const auto &pane = layout.panes[picture.pane_index];
             const auto state = pane_state_for(layout, picture.pane_index, committed, active, active_frames);
             const auto rect = pane_rect(pane, state);
             if (state.visible && picture.visible) {
@@ -367,11 +367,11 @@ namespace {
             write_rect(out, rect);
             out << " | " << state.scale_x << ',' << state.scale_y << " | " << ((state.visible && picture.visible) ? "yes" : "no") << " |\n";
         }
-        for (const auto& text_box : layout.text_boxes) {
+        for (const auto &text_box : layout.text_boxes) {
             if (text_box.pane_index >= layout.panes.size()) {
                 continue;
             }
-            const auto& pane = layout.panes[text_box.pane_index];
+            const auto &pane = layout.panes[text_box.pane_index];
             const auto state = pane_state_for(layout, text_box.pane_index, committed, active, active_frames);
             const auto rect = pane_rect(pane, state);
             if (state.visible && text_box.visible) {
@@ -398,22 +398,22 @@ namespace {
 
 }  // namespace
 
-int main(int argc, char** argv) try {
+int main(int argc, char **argv) try {
     const auto layout_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("TitleLogo");
     const auto archive_path = disc_files_root() / "KrKorean" / "LayoutData" / archive_name_for(layout_name);
-    const auto archive = smgpc::game::RarcArchive::from_file(archive_path);
+    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
     const auto brlyt = find_archive_file(archive, ".brlyt");
     if (!brlyt.has_value()) {
         throw std::runtime_error("layout archive has no BRLYT: " + archive_path.string());
     }
 
-    const auto layout = smgpc::game::parse_brlyt_layout(*brlyt);
+    const auto layout = smgpc::compat::parse_brlyt_layout(*brlyt);
     const auto animations = load_animations(archive);
     const auto output = pc_port_root() / ".cache" / "layout-probes" / (sanitize_filename(layout_name) + ".md");
     write_layout_probe(output, layout_name, layout, animations);
     std::cout << "wrote " << output << '\n';
     return 0;
-} catch (const std::exception& e) {
+} catch (const std::exception &e) {
     std::cerr << "layout probe failed: " << e.what() << '\n';
     return 1;
 }

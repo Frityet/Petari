@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace {
     enum NANDRequestType {
@@ -34,8 +34,8 @@ namespace {
         return path;
     }
 
-    [[nodiscard]] smgpc::game::RuntimeContext* active_runtime() {
-        return smgpc::game::RuntimeContext::try_instance();
+    [[nodiscard]] smgpc::compat::RuntimeContext* active_runtime() {
+        return smgpc::compat::RuntimeContext::try_instance();
     }
 
     void complete_request(NANDRequestInfo& request, s32 result) {
@@ -67,10 +67,10 @@ namespace {
             return;
         }
 
-        const auto copy_size = std::min<std::size_t>(request.mFsBlock, bytes->size());
+        const auto copy_size = std::min< std::size_t >(request.mFsBlock, bytes->size());
         std::memcpy(request.mReadBuf, bytes->data(), copy_size);
         if (request.mReadLength != nullptr) {
-            *request.mReadLength = static_cast<u32>(copy_size);
+            *request.mReadLength = static_cast< u32 >(copy_size);
         }
         complete_request(request, NAND_RESULT_OK);
     }
@@ -83,7 +83,7 @@ namespace {
             return;
         }
 
-        auto bytes = std::vector<u8>(request.mFsBlock);
+        auto bytes = std::vector< u8 >(request.mFsBlock);
         std::memcpy(bytes.data(), request.mWriteBuf, bytes.size());
         runtime->save_data().write_nand_file(path, bytes);
         complete_request(request, NAND_RESULT_OK);

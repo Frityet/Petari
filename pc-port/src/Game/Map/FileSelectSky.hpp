@@ -19,6 +19,6 @@ public:
 private:
     f32 _8C = 0.0F;
     f32 _90 = 0.0F;
-    smgpc::game::J3dMatrix3x4 _94{};
+    smgpc::compat::J3dMatrix3x4 _94{};
     ProjmapEffectMtxSetter* mProjmapEffectMtxSetter = nullptr;
 };

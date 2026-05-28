@@ -1,6 +1,6 @@
 #include "Game/Util/GamePadUtil.hpp"
 
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace MR {
     namespace {
@@ -8,8 +8,8 @@ namespace MR {
         constexpr auto ANY_NON_HOME_BUTTON_MASK = static_cast< u32 >(KPAD_BUTTON_MASK & ~WPAD_BUTTON_HOME);
         constexpr auto STICK_TRIGGER_THRESHOLD = 0.5F;
 
-        [[nodiscard]] const smgpc::game::WpadService* wpad_service() {
-            if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        [[nodiscard]] const smgpc::compat::WpadService* wpad_service() {
+            if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
                 return &runtime->wpad();
             }
 
@@ -31,7 +31,7 @@ namespace MR {
             return wpad != nullptr && wpad->is_button_released(channel, mask);
         }
 
-        void set_vec2(TVec2f* pPos, const smgpc::game::WpadPointerState& pointer) {
+        void set_vec2(TVec2f* pPos, const smgpc::compat::WpadPointerState& pointer) {
             if (pPos == nullptr) {
                 return;
             }
@@ -40,7 +40,7 @@ namespace MR {
             pPos->y = pointer.y;
         }
 
-        void set_vec3(TVec3f* pVec, const smgpc::game::WpadVec3State& value) {
+        void set_vec3(TVec3f* pVec, const smgpc::compat::WpadVec3State& value) {
             if (pVec == nullptr) {
                 return;
             }
@@ -58,12 +58,12 @@ namespace MR {
 
     void getCorePadPointingPos(TVec2f* pPos, s32 channel) {
         const auto* wpad = wpad_service();
-        set_vec2(pPos, wpad == nullptr ? smgpc::game::WpadPointerState{} : wpad->pointer(channel));
+        set_vec2(pPos, wpad == nullptr ? smgpc::compat::WpadPointerState{} : wpad->pointer(channel));
     }
 
     void getCorePadPastPointingPos(TVec2f* pPos, s32 idx, s32 channel) {
         const auto* wpad = wpad_service();
-        set_vec2(pPos, wpad == nullptr || idx < 0 ? smgpc::game::WpadPointerState{} : wpad->past_pointer(channel, static_cast< u32 >(idx)));
+        set_vec2(pPos, wpad == nullptr || idx < 0 ? smgpc::compat::WpadPointerState{} : wpad->past_pointer(channel, static_cast< u32 >(idx)));
     }
 
     s32 getCorePadEnablePastCount(s32 channel) {
@@ -83,7 +83,7 @@ namespace MR {
 
     void getCorePadAcceleration(TVec3f* pAccel, s32 channel) {
         const auto* wpad = wpad_service();
-        set_vec3(pAccel, wpad == nullptr ? smgpc::game::WpadVec3State{} : wpad->core_acceleration(channel));
+        set_vec3(pAccel, wpad == nullptr ? smgpc::compat::WpadVec3State{} : wpad->core_acceleration(channel));
     }
 
     bool testCorePadButtonUp(s32 channel) {
@@ -220,7 +220,7 @@ namespace MR {
 
     void getSubPadAcceleration(TVec3f* pAccel, s32 channel) {
         const auto* wpad = wpad_service();
-        set_vec3(pAccel, wpad == nullptr ? smgpc::game::WpadVec3State{} : wpad->sub_acceleration(channel));
+        set_vec3(pAccel, wpad == nullptr ? smgpc::compat::WpadVec3State{} : wpad->sub_acceleration(channel));
     }
 
     bool isSubPadSwing(s32 channel) {

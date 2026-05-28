@@ -2,26 +2,89 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/compat/CameraPose.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "camera/CameraPose.hpp"
 #include "core/RenderTypes.hpp"
+#include "runtime/RuntimeContext.hpp"
 
-namespace MR {
-    void resetCameraMan() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->camera_system().reset_camera_man();
+#include <cmath>
+
+namespace {
+    struct CameraBasis {
+        smgpc::compat::CameraParamVec3 forward;
+        smgpc::compat::CameraParamVec3 right;
+        smgpc::compat::CameraParamVec3 up;
+    };
+
+    [[nodiscard]] std::string_view event_name(const char* pEventName) {
+        return pEventName != nullptr ? std::string_view(pEventName) : std::string_view{};
+    }
+
+    [[nodiscard]] smgpc::compat::CameraParamVec3 camera_vec3(const TVec3f& value) {
+        return smgpc::compat::CameraParamVec3{.x = value.x, .y = value.y, .z = value.z};
+    }
+
+    [[nodiscard]] TVec3f tv_vec3(const smgpc::compat::CameraParamVec3& value) {
+        return TVec3f{value.x, value.y, value.z};
+    }
+
+    [[nodiscard]] smgpc::compat::CameraParamVec3 subtract(const smgpc::compat::CameraParamVec3& a, const smgpc::compat::CameraParamVec3& b) {
+        return smgpc::compat::CameraParamVec3{
+            .x = a.x - b.x,
+            .y = a.y - b.y,
+            .z = a.z - b.z,
+        };
+    }
+
+    [[nodiscard]] smgpc::compat::CameraParamVec3 add(const smgpc::compat::CameraParamVec3& a, const smgpc::compat::CameraParamVec3& b) {
+        return smgpc::compat::CameraParamVec3{
+            .x = a.x + b.x,
+            .y = a.y + b.y,
+            .z = a.z + b.z,
+        };
+    }
+
+    [[nodiscard]] smgpc::compat::CameraParamVec3 scale(const smgpc::compat::CameraParamVec3& value, f32 factor) {
+        return smgpc::compat::CameraParamVec3{
+            .x = value.x * factor,
+            .y = value.y * factor,
+            .z = value.z * factor,
+        };
+    }
+
+    [[nodiscard]] smgpc::compat::CameraParamVec3 cross(const smgpc::compat::CameraParamVec3& a, const smgpc::compat::CameraParamVec3& b) {
+        return smgpc::compat::CameraParamVec3{
+            .x = a.y * b.z - a.z * b.y,
+            .y = a.z * b.x - a.x * b.z,
+            .z = a.x * b.y - a.y * b.x,
+        };
+    }
+
+    [[nodiscard]] f32 dot(const smgpc::compat::CameraParamVec3& a, const smgpc::compat::CameraParamVec3& b) {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    [[nodiscard]] smgpc::compat::CameraParamVec3 normalized_or(const smgpc::compat::CameraParamVec3& value,
+                                                               const smgpc::compat::CameraParamVec3& fallback) {
+        const auto length = std::sqrt(dot(value, value));
+        if (length <= 0.000001F) {
+            return fallback;
         }
     }
 
-    void pauseOnCameraDirector() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->camera_system().pause_on_camera_director();
-        }
+    [[nodiscard]] CameraBasis camera_basis(const smgpc::compat::CameraPoseCompat& pose) {
+        const auto forward = normalized_or(subtract(pose.watch, pose.eye), {0.0F, 0.0F, 1.0F});
+        const auto right = normalized_or(cross(forward, pose.up), {1.0F, 0.0F, 0.0F});
+        const auto corrected_up = normalized_or(cross(right, forward), {0.0F, 1.0F, 0.0F});
+        return CameraBasis{
+            .forward = forward,
+            .right = right,
+            .up = corrected_up,
+        };
     }
 
-    void pauseOffCameraDirector() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            runtime->camera_system().pause_off_camera_director();
+    void sync_active_programmable_camera_pose(smgpc::compat::RuntimeContext& runtime, const std::optional< smgpc::compat::CameraPoseCompat >& pose) {
+        if (pose.has_value()) {
+            runtime.set_scene_camera_pose(*pose);
         }
     }
 
@@ -30,7 +93,7 @@ namespace MR {
             return false;
         }
 
-        auto* runtime = smgpc::game::RuntimeContext::try_instance();
+        auto* runtime = smgpc::compat::RuntimeContext::try_instance();
         if (runtime == nullptr || !runtime->scene_camera_pose().has_value()) {
             pResult->x = 0.0F;
             pResult->y = 0.0F;
@@ -40,8 +103,8 @@ namespace MR {
 
         constexpr auto PI = 3.14159265358979323846F;
         const auto& pose = *runtime->scene_camera_pose();
-        const auto world = smgpc::game::CameraParamVec3{.x = rWorldPos.x, .y = rWorldPos.y, .z = rWorldPos.z};
-        const auto camera = smgpc::game::transform_world_to_camera(pose, world);
+        const auto world = smgpc::compat::CameraParamVec3{.x = rWorldPos.x, .y = rWorldPos.y, .z = rWorldPos.z};
+        const auto camera = smgpc::compat::transform_world_to_camera(pose, world);
         const auto depth = std::abs(camera.z);
         if (depth <= 0.0001F) {
             pResult->x = 0.0F;
@@ -66,7 +129,7 @@ namespace MR {
             return false;
         }
 
-        auto* runtime = smgpc::game::RuntimeContext::try_instance();
+        auto* runtime = smgpc::compat::RuntimeContext::try_instance();
         if (runtime == nullptr || !runtime->scene_camera_pose().has_value()) {
             pResult->set(0.0F, 0.0F, 0.0F);
             return false;
@@ -92,7 +155,7 @@ namespace MR {
 
 namespace MR {
     const TVec3f getCamPos() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return tv_vec3(runtime->scene_camera_pose()->eye);
         }
 
@@ -100,7 +163,7 @@ namespace MR {
     }
 
     TVec3f getCamXdir() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return tv_vec3(camera_basis(*runtime->scene_camera_pose()).right);
         }
 
@@ -108,7 +171,7 @@ namespace MR {
     }
 
     TVec3f getCamYdir() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return tv_vec3(camera_basis(*runtime->scene_camera_pose()).up);
         }
 
@@ -116,7 +179,7 @@ namespace MR {
     }
 
     TVec3f getCamZdir() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return tv_vec3(camera_basis(*runtime->scene_camera_pose()).forward);
         }
 
@@ -124,7 +187,7 @@ namespace MR {
     }
 
     f32 getAspect() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return runtime->scene_camera_pose()->aspect_ratio;
         }
 
@@ -133,7 +196,7 @@ namespace MR {
     }
 
     f32 getNearZ() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return runtime->scene_camera_pose()->near_clip;
         }
 
@@ -141,7 +204,7 @@ namespace MR {
     }
 
     f32 getFarZ() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return runtime->scene_camera_pose()->far_clip;
         }
 
@@ -149,7 +212,7 @@ namespace MR {
     }
 
     f32 getFovy() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
             return runtime->scene_camera_pose()->fovy_degrees;
         }
 
@@ -157,32 +220,32 @@ namespace MR {
     }
 
     void resetCameraMan() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->camera_system().reset_camera_man();
         }
     }
 
     void pauseOnCameraDirector() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->camera_system().pause_on_camera_director();
         }
     }
 
     void pauseOffCameraDirector() {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->camera_system().pause_off_camera_director();
         }
     }
 
     void declareEventCameraProgrammable(const char* pEventName) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->camera_system().declare_event_camera_programmable(event_name(pEventName));
         }
     }
 
     void startGlobalEventCameraNoTarget(const char* pEventName, s32 frames) {
         (void)frames;
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->camera_system().start_global_event_camera_no_target(event_name(pEventName));
             sync_active_programmable_camera_pose(*runtime, runtime->camera_system().active_programmable_camera_pose());
         }
@@ -191,14 +254,13 @@ namespace MR {
     void endGlobalEventCamera(const char* pEventName, s32 frames, bool endForce) {
         (void)frames;
         (void)endForce;
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->camera_system().end_global_event_camera(event_name(pEventName));
         }
     }
 
-    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rEye, const TVec3f& rUpVec,
-                                    bool doZeroWOffset) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rEye, const TVec3f& rUpVec, bool doZeroWOffset) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             sync_active_programmable_camera_pose(
                 *runtime, runtime->camera_system().set_programmable_camera_param(event_name(pEventName), camera_vec3(rWPoint), camera_vec3(rEye),
                                                                                  camera_vec3(rUpVec), doZeroWOffset));
@@ -206,9 +268,8 @@ namespace MR {
     }
 
     void setProgrammableCameraParamFovy(const char* pEventName, f32 fovy) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
-            sync_active_programmable_camera_pose(*runtime,
-                                                 runtime->camera_system().set_programmable_camera_fovy(event_name(pEventName), fovy));
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+            sync_active_programmable_camera_pose(*runtime, runtime->camera_system().set_programmable_camera_fovy(event_name(pEventName), fovy));
         }
     }
 

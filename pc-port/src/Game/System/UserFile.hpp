@@ -2,7 +2,7 @@
 
 #include <revolution.h>
 
-#include "Game/compat/RuntimeServices.hpp"
+#include "runtime/RuntimeServices.hpp"
 
 class ConfigDataHolder;
 class GameDataHolder;
@@ -39,8 +39,8 @@ public:
     [[nodiscard]] bool isViewNormalEnding() const;
     [[nodiscard]] bool isViewCompleteEnding() const;
     [[nodiscard]] bool isPowerStarGetFinalChallengeGalaxy() const;
-    void restoreFromSaveDataServiceSlot(const smgpc::game::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario);
-    [[nodiscard]] smgpc::game::SaveDataService::SlotState makeSaveDataServiceSlot(s32 slotIndex) const;
+    void restoreFromSaveDataServiceSlot(const smgpc::compat::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario);
+    [[nodiscard]] smgpc::compat::SaveDataService::SlotState makeSaveDataServiceSlot(s32 slotIndex) const;
 
     /* 0x00 */ GameDataHolder* mGameDataHolder;
     /* 0x04 */ ConfigDataHolder* mConfigDataHolder;

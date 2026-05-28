@@ -1,13 +1,13 @@
 #include "Game/Util/SequenceUtil.hpp"
 
 #include "Game/System/StorySequenceExecutor.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace MR {
     void requestChangeStageInGameAfterLoadingGameData() {
         smgpc::game::story_sequence_executor().requestChangeStageInGameAfterLoadingGameData();
 
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
             runtime->sequence_requests().request_change_stage_in_game_after_loading_game_data();
         }
     }

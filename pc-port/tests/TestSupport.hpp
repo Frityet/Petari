@@ -38,31 +38,31 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "Game/compat/BcsvTable.hpp"
-#include "Game/compat/BmgMessageArchive.hpp"
-#include "Game/compat/BrfntFont.hpp"
-#include "Game/compat/BrlanAnimation.hpp"
-#include "Game/compat/BrlytLayout.hpp"
-#include "Game/compat/CameraParam.hpp"
-#include "Game/compat/CameraPose.hpp"
-#include "Game/compat/J3dAnimation.hpp"
-#include "Game/compat/J3dMaterialRuntime.hpp"
-#include "Game/compat/J3dMatrix.hpp"
-#include "Game/compat/J3dModel.hpp"
-#include "Game/compat/J3dModelRenderer.hpp"
-#include "Game/compat/J3dTexture.hpp"
-#include "Game/compat/JMathTrig.hpp"
-#include "Game/compat/LytTexMap.hpp"
-#include "Game/compat/ParityTrace.hpp"
-#include "Game/compat/RarcArchive.hpp"
-#include "Game/compat/RuntimeContext.hpp"
-#include "Game/compat/RuntimeServices.hpp"
-#include "Game/compat/TplTexture.hpp"
-#include "Game/compat/Yaz0.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
+#include "camera/CameraParam.hpp"
+#include "camera/CameraPose.hpp"
 #include "capture/ScreenshotService.hpp"
 #include "core/RenderTypes.hpp"
+#include "layout/BrfntFont.hpp"
+#include "layout/BrlanAnimation.hpp"
+#include "layout/BrlytLayout.hpp"
+#include "layout/LytTexMap.hpp"
+#include "render/J3dAnimation.hpp"
+#include "render/J3dMaterialRuntime.hpp"
+#include "render/J3dMatrix.hpp"
+#include "render/J3dModel.hpp"
+#include "render/J3dModelRenderer.hpp"
+#include "render/J3dTexture.hpp"
+#include "render/JMathTrig.hpp"
+#include "resource/BcsvTable.hpp"
+#include "resource/BmgMessageArchive.hpp"
+#include "resource/RarcArchive.hpp"
+#include "resource/TplTexture.hpp"
+#include "resource/Yaz0.hpp"
+#include "runtime/ParityTrace.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include "runtime/RuntimeServices.hpp"
 
 #include <algorithm>
 #include <array>
@@ -83,8 +83,8 @@
 #include <vector>
 
 namespace smgpc::tests {
-    [[nodiscard]] inline smgpc::game::CameraPoseCompat title_test_camera_pose() {
-        return smgpc::game::CameraPoseCompat{
+    [[nodiscard]] inline smgpc::compat::CameraPoseCompat title_test_camera_pose() {
+        return smgpc::compat::CameraPoseCompat{
             .eye = {0.0F, 15800.0F, 15000.0F},
             .watch = {0.0F, 15800.0F, 0.0F},
             .up = {0.0F, 1.0F, 0.0F},
@@ -95,8 +95,8 @@ namespace smgpc::tests {
         };
     }
 
-    [[nodiscard]] inline smgpc::game::CameraPoseCompat far_test_camera_pose() {
-        return smgpc::game::CameraPoseCompat{
+    [[nodiscard]] inline smgpc::compat::CameraPoseCompat far_test_camera_pose() {
+        return smgpc::compat::CameraPoseCompat{
             .eye = {0.0F, 0.0F, 15000.0F},
             .watch = {0.0F, 800.0F, 0.0F},
             .up = {0.0F, 1.0F, 0.0F},
@@ -499,7 +499,7 @@ namespace smgpc::tests {
         }
     }
 
-    inline void require_tev_stage(const smgpc::game::J3dTevStageSummary &stage, std::array<std::uint8_t, 4U> color_in, std::uint8_t k_color_sel,
+    inline void require_tev_stage(const smgpc::compat::J3dTevStageSummary &stage, std::array<std::uint8_t, 4U> color_in, std::uint8_t k_color_sel,
                                   std::array<std::uint8_t, 4U> alpha_in, std::uint8_t alpha_clamp, std::uint8_t k_alpha_sel, std::string_view message) {
         require(stage.color_in == color_in, message);
         require(stage.color_op == 0U && stage.color_bias == 0U && stage.color_scale == 0U && stage.color_clamp == 1U && stage.color_out == 0U,

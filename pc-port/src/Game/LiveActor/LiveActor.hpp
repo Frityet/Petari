@@ -1,19 +1,19 @@
 #pragma once
 
+#include <cmath>
 #include <memory>
 #include <string>
 #include <string_view>
-#include <cmath>
 
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 #include <revolution.h>
 
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/JMapInfo.hpp"
-#include "Game/compat/CameraPose.hpp"
-#include "Game/compat/J3dMaterialRuntime.hpp"
-#include "Game/compat/LiveActorModelCompat.hpp"
 #include "RendererService.hpp"
+#include "camera/CameraPose.hpp"
+#include "render/J3dMaterialRuntime.hpp"
+#include "render/LiveActorModelCompat.hpp"
 
 class ActorLightCtrl;
 class HitSensor;
@@ -30,11 +30,11 @@ struct TVec3f {
     constexpr TVec3f(f32 newX, f32 newY, f32 newZ) : x(newX), y(newY), z(newZ) {
     }
 
-    template <typename T>
+    template < typename T >
     void set(T newX, T newY, T newZ) {
-        x = static_cast<f32>(newX);
-        y = static_cast<f32>(newY);
-        z = static_cast<f32>(newZ);
+        x = static_cast< f32 >(newX);
+        y = static_cast< f32 >(newY);
+        z = static_cast< f32 >(newZ);
     }
 
     void set(const TVec3f& value) {
@@ -126,9 +126,9 @@ public:
     void initEffectKeeper(int effectNum, const char* pEffectName, bool);
     void initActorLightCtrl();
     void loadActorLight() const;
-    void setBaseMatrix(const smgpc::game::J3dMatrix3x4& matrix);
-    void setProjmapEffectMatrix(const smgpc::game::J3dMatrix3x4& matrix);
-    void drawModel(smgpc::render::IRendererEngine& renderer, const smgpc::game::CameraPoseCompat& camera_pose, std::uint64_t frame,
+    void setBaseMatrix(const smgpc::compat::J3dMatrix3x4& matrix);
+    void setProjmapEffectMatrix(const smgpc::compat::J3dMatrix3x4& matrix);
+    void drawModel(smgpc::render::IRendererEngine& renderer, const smgpc::compat::CameraPoseCompat& camera_pose, std::uint64_t frame,
                    LiveActorModelCompat::DrawPass pass = LiveActorModelCompat::DrawPass::All);
     void startBck(const char* pName, const char* pFileName);
     void startBrk(const char* pName);
@@ -144,7 +144,7 @@ public:
     [[nodiscard]] std::string_view currentBtkName() const;
 
     [[nodiscard]] bool isDead() const;
-    [[nodiscard]] const smgpc::game::J3dMatrix3x4& getBaseMatrix() const;
+    [[nodiscard]] const smgpc::compat::J3dMatrix3x4& getBaseMatrix() const;
 
     TVec3f mPosition{};
     TVec3f mRotation{};
@@ -154,7 +154,7 @@ public:
 private:
     bool mIsDead = true;
     Spine* mSpine = nullptr;
-    smgpc::game::J3dMatrix3x4 mBaseMatrix{};
+    smgpc::compat::J3dMatrix3x4 mBaseMatrix{};
     J3DFrameCtrl mBrkCtrl{};
     bool mBrkActive = false;
     std::string mCurrentBckName{};

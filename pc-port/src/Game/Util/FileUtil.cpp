@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace MR {
     namespace {
@@ -17,10 +17,10 @@ namespace MR {
         std::map< std::string, std::vector< u8 > > sLoadedFiles;
         std::map< std::string, std::unique_ptr< JKRMemArchive > > sMountedArchives;
         std::map< std::string, std::vector< u8 > > sArchiveResources;
-        smgpc::game::RuntimeContext* sMountedArchiveRuntime = nullptr;
+        smgpc::compat::RuntimeContext* sMountedArchiveRuntime = nullptr;
 
-        [[nodiscard]] smgpc::game::RuntimeContext* runtime() {
-            return smgpc::game::RuntimeContext::try_instance();
+        [[nodiscard]] smgpc::compat::RuntimeContext* runtime() {
+            return smgpc::compat::RuntimeContext::try_instance();
         }
 
         [[nodiscard]] std::string normalize_disc_string(const char* path) {
@@ -108,7 +108,7 @@ namespace MR {
             }
         }
 
-        void sync_mounted_archive_runtime(smgpc::game::RuntimeContext* context) {
+        void sync_mounted_archive_runtime(smgpc::compat::RuntimeContext* context) {
             if (sMountedArchiveRuntime == context) {
                 return;
             }
