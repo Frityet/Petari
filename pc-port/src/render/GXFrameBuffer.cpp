@@ -18,7 +18,7 @@ namespace {
     };
 
     struct DisplayCopyState {
-        CopySourceState source{};
+        CopySourceState source {};
         u16 width = smgpc::render::core::kWiiLogicalFramebufferWidth;
         u16 height = smgpc::render::core::kWiiLogicalFramebufferHeight;
         u32 dest_stride = smgpc::render::core::kWiiLogicalFramebufferWidth * 2U;
@@ -26,7 +26,7 @@ namespace {
     };
 
     struct TextureCopyState {
-        CopySourceState source{};
+        CopySourceState source {};
         u16 width = smgpc::render::core::kWiiLogicalFramebufferWidth;
         u16 height = smgpc::render::core::kWiiLogicalFramebufferHeight;
         GXTexFmt format = GX_TF_RGB565;
@@ -35,25 +35,25 @@ namespace {
     };
 
     struct GxCopyState {
-        DisplayCopyState display{};
-        TextureCopyState texture{};
+        DisplayCopyState display {};
+        TextureCopyState texture {};
         bool clamp_top = true;
         bool clamp_bottom = true;
         GXGamma gamma = GX_GM_1_0;
-        GXColor clear_color{};
+        GXColor clear_color {};
         u32 clear_depth = 0U;
         bool copy_filter_aa = false;
         bool copy_filter_vertical = false;
-        std::array<std::array<u8, 2U>, 12U> copy_filter_sample_pattern{};
-        std::array<u8, 7U> copy_filter_vfilter{};
+        std::array<std::array<u8, 2U>, 12U> copy_filter_sample_pattern {};
+        std::array<u8, 7U> copy_filter_vfilter {};
         f32 y_scale = 1.0F;
         u32 display_copy_y_scale = 256U;
     };
 
-    GxCopyState s_copy_state{};
+    GxCopyState s_copy_state {};
 
     [[nodiscard]] smgpc::render::CopyRect copy_rect(const CopySourceState &source) {
-        return smgpc::render::CopyRect{
+        return smgpc::render::CopyRect {
             .left = source.left,
             .top = source.top,
             .right = static_cast<std::int32_t>(source.left + source.width),
@@ -64,7 +64,7 @@ namespace {
     }
 
     [[nodiscard]] smgpc::render::CopyRect output_rect(u16 width, u16 height) {
-        return smgpc::render::CopyRect{
+        return smgpc::render::CopyRect {
             .left = 0,
             .top = 0,
             .right = width,
@@ -75,7 +75,7 @@ namespace {
     }
 
     [[nodiscard]] smgpc::render::CopyViewport copy_viewport(const CopySourceState &source) {
-        return smgpc::render::CopyViewport{
+        return smgpc::render::CopyViewport {
             .left = static_cast<float>(source.left),
             .right = static_cast<float>(source.left + source.width),
             .top = static_cast<float>(source.top),
@@ -206,11 +206,11 @@ namespace {
 }  // namespace
 
 void GXSetDispCopySrc(u16 left, u16 top, u16 width, u16 height) {
-    s_copy_state.display.source = CopySourceState{.left = left, .top = top, .width = width, .height = height};
+    s_copy_state.display.source = CopySourceState {.left = left, .top = top, .width = width, .height = height};
 }
 
 void GXSetTexCopySrc(u16 left, u16 top, u16 width, u16 height) {
-    s_copy_state.texture.source = CopySourceState{.left = left, .top = top, .width = width, .height = height};
+    s_copy_state.texture.source = CopySourceState {.left = left, .top = top, .width = width, .height = height};
 }
 
 void GXSetDispCopyDst(u16 width, u16 height) {
@@ -277,13 +277,13 @@ void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vertical_
     s_copy_state.copy_filter_aa = aa != GX_FALSE;
     s_copy_state.copy_filter_vertical = vertical_filter != GX_FALSE;
     if (sample_pattern != nullptr) {
-        for (auto i = std::size_t{}; i < s_copy_state.copy_filter_sample_pattern.size(); ++i) {
+        for (auto i = std::size_t {}; i < s_copy_state.copy_filter_sample_pattern.size(); ++i) {
             s_copy_state.copy_filter_sample_pattern[i][0U] = sample_pattern[i][0U];
             s_copy_state.copy_filter_sample_pattern[i][1U] = sample_pattern[i][1U];
         }
     }
     if (vfilter != nullptr) {
-        for (auto i = std::size_t{}; i < s_copy_state.copy_filter_vfilter.size(); ++i) {
+        for (auto i = std::size_t {}; i < s_copy_state.copy_filter_vfilter.size(); ++i) {
             s_copy_state.copy_filter_vfilter[i] = vfilter[i];
         }
     }
@@ -299,7 +299,7 @@ u32 GXGetTexBufferSize(u16 width, u16 height, u32 format, GXBool mipmap, u8 max_
     auto level_height = std::max<u16>(height, 1U);
     const auto level_count = mipmap == GX_TRUE ? std::max<u8>(max_lod, 1U) : 1U;
 
-    for (auto level = u8{0U}; level < level_count; ++level) {
+    for (auto level = u8 {0U}; level < level_count; ++level) {
         total += texture_buffer_size_for_level(level_width, level_height, static_cast<GXTexFmt>(format));
         if (mipmap != GX_TRUE || (level_width == 1U && level_height == 1U)) {
             break;
@@ -342,8 +342,8 @@ void GXLoadTexObj(GXTexObj *, GXTexMapID) {
 void GXCopyDisp(void *dest, GXBool clear) {
     const auto &display = s_copy_state.display;
     const auto source_rect = copy_rect(display.source);
-    const auto output_size = smgpc::render::FramebufferInfo{.width = display.width, .height = display.height};
-    record_copy_event(smgpc::render::CopyEvent{
+    const auto output_size = smgpc::render::FramebufferInfo {.width = display.width, .height = display.height};
+    record_copy_event(smgpc::render::CopyEvent {
         .kind = smgpc::render::CopyEventKind::Xfb,
         .copy_to_xfb = true,
         .clear = clear != GX_FALSE,
@@ -375,8 +375,8 @@ void GXCopyDisp(void *dest, GXBool clear) {
 void GXCopyTex(void *dest, GXBool clear) {
     const auto &texture = s_copy_state.texture;
     const auto source_rect = copy_rect(texture.source);
-    const auto output_size = smgpc::render::FramebufferInfo{.width = texture.width, .height = texture.height};
-    record_copy_event(smgpc::render::CopyEvent{
+    const auto output_size = smgpc::render::FramebufferInfo {.width = texture.width, .height = texture.height};
+    record_copy_event(smgpc::render::CopyEvent {
         .kind = smgpc::render::CopyEventKind::Texture,
         .copy_to_xfb = false,
         .depth_copy = (static_cast<u32>(texture.format) & _GX_TF_ZTF) == _GX_TF_ZTF,

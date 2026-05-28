@@ -6,7 +6,7 @@
 namespace smgpc::resource {
     namespace {
 
-        constexpr auto kReplacementCharacter = char32_t{0xfffdU};
+        constexpr auto kReplacementCharacter = char32_t {0xfffdU};
 
         void append_utf8(std::string &out, char32_t code) {
             if (code <= 0x7fU) {
@@ -48,13 +48,13 @@ namespace smgpc::resource {
     }  // namespace
 
     std::u16string utf16_from_utf8_lossy(std::string_view text) {
-        auto out = std::u16string{};
+        auto out = std::u16string {};
         out.reserve(text.size());
 
         for (std::size_t i = 0U; i < text.size();) {
             const auto first = static_cast<unsigned char>(text[i]);
-            auto code = char32_t{};
-            auto length = std::size_t{0U};
+            auto code = char32_t {};
+            auto length = std::size_t {0U};
 
             if (first < 0x80U) {
                 code = first;
@@ -116,7 +116,7 @@ namespace smgpc::resource {
     }
 
     std::string utf8_from_utf16_lossy(std::u16string_view text) {
-        auto out = std::string{};
+        auto out = std::string {};
         out.reserve(text.size());
 
         for (std::size_t i = 0U; i < text.size(); ++i) {

@@ -542,6 +542,7 @@ namespace smgpc::render::backends {
         _framebuffer_height = static_cast<std::uint16_t>(description.height);
         _logical_framebuffer_width = std::max<std::uint16_t>(1U, description.logical_width);
         _logical_framebuffer_height = std::max<std::uint16_t>(1U, description.logical_height);
+        bgfx::setViewMode(0U, bgfx::ViewMode::Sequential);
         _static_geometry_cache_enabled = environment_flag_enabled("SMGPC_RENDER_STATIC_GEOMETRY_CACHE", true);
 #ifndef NDEBUG
         _backend_stats_enabled = environment_flag_enabled("SMGPC_RENDER_BACKEND_STATS", false);
@@ -1154,8 +1155,7 @@ namespace smgpc::render::backends {
             return;
         }
 
-        if (batch.vertices.empty() || batch.indices.empty() || batch.texture_stages.empty() ||
-            batch.texture_stages.size() > core::kMaxGxMaterialTextureStages2D ||
+        if (batch.vertices.empty() || batch.indices.empty() || batch.texture_stages.size() > core::kMaxGxMaterialTextureStages2D ||
             batch.tev_stages.size() > core::kMaxGxMaterialTevStages2D) {
             return;
         }

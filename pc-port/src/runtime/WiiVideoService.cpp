@@ -9,7 +9,7 @@
 namespace smgpc::runtime {
     namespace {
         [[nodiscard]] GXRenderModeObj default_render_mode() {
-            auto mode = GXRenderModeObj{};
+            auto mode = GXRenderModeObj {};
             mode.viTVmode = VI_TVMODE_NTSC_INT;
             mode.fbWidth = smgpc::render::core::kWiiLogicalFramebufferWidth;
             mode.efbHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;
@@ -176,7 +176,7 @@ namespace smgpc::runtime {
     }
 
     void WiiVideoService::push_event(WiiVideoEventKind kind) {
-        _events.push_back(WiiVideoEvent{
+        _events.push_back(WiiVideoEvent {
             .kind = kind,
             .frame_index = _frame_index,
             .retrace_count = _retrace_count,

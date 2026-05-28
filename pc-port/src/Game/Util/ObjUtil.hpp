@@ -5,6 +5,7 @@
 class LiveActor;
 class LayoutActor;
 class NameObj;
+class JMapInfoIter;
 
 namespace MR {
     void requestMovementOn(NameObj* pObj);
@@ -20,4 +21,7 @@ namespace MR {
     bool tryRumblePadStrong(const void* pSource, s32 channel);
     bool tryRumblePadWeak(const void* pSource, s32 channel);
     void shakeCameraNormal();
+    bool useStageSwitchWriteA(LiveActor* pActor, const JMapInfoIter& rIter);
+    void onSwitchA(LiveActor* pActor);
+    void offSwitchA(LiveActor* pActor);
 }  // namespace MR

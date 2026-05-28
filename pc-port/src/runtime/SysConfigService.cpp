@@ -57,7 +57,7 @@ namespace smgpc::runtime {
             }
 
             const auto expected_hash = static_cast<std::uint16_t>(common::hash_code_31(name));
-            for (auto index = std::uint16_t{}; index < attribute_count; ++index) {
+            for (auto index = std::uint16_t {}; index < attribute_count; ++index) {
                 const auto entry_offset = 4U + static_cast<std::size_t>(index) * 4U;
                 if (common::read_be16(data, entry_offset) == expected_hash) {
                     const auto value_offset = header_size + common::read_be16(data, entry_offset + 2U);
@@ -115,7 +115,7 @@ namespace smgpc::runtime {
 
     void SysConfigService::write_bytes(std::string_view key, SysConfigValueKind kind, std::span<const std::uint8_t> bytes) {
         auto copied = std::vector<std::uint8_t>(bytes.begin(), bytes.end());
-        _entries[std::string(key)] = SysConfigEntry{
+        _entries[std::string(key)] = SysConfigEntry {
             .kind = kind,
             .bytes = std::move(copied),
         };
@@ -188,8 +188,8 @@ namespace smgpc::runtime {
     }
 
     std::vector<std::uint8_t> SysConfigService::encode_save_data_binary(std::size_t size) const {
-        const auto chunks = std::array{
-            common::BinaryChunk{
+        const auto chunks = std::array {
+            common::BinaryChunk {
                 .signature = common::fourcc('S', 'Y', 'S', 'C'),
                 .hash = 0x1U,
                 .data = make_sys_config_chunk_data(_time_announced, _time_sent, _sent_bytes),
@@ -209,7 +209,7 @@ namespace smgpc::runtime {
     }
 
     void SysConfigService::trace(SysConfigAccessKind kind, std::string_view key, std::size_t byte_count, u32 value) const {
-        _access_trace.push_back(SysConfigAccessTrace{
+        _access_trace.push_back(SysConfigAccessTrace {
             .kind = kind,
             .key = std::string(key),
             .byte_count = byte_count,

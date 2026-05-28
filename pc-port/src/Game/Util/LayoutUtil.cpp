@@ -172,7 +172,7 @@ namespace MR {
         }
 
         const auto& archive = runtime.dvd().archive_for_path(*archive_path);
-        const auto* entry = find_entry_by_basename(archive, pTextureName);
+        const auto* entry = archive.find_by_basename(pTextureName);
         if (entry == nullptr) {
             throw std::runtime_error("Layout texture does not exist: " + std::string(pTextureName));
         }
@@ -210,8 +210,9 @@ namespace MR {
     }
 
     void setTextBoxGameMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
-        if (pLayout != nullptr) {
-            pLayout->setTextBoxStringRecursive(pPaneName, runtime_message_or_tag(pMessageId));
+        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
+            pLayout->getSimpleLayout()->setTextBoxTaggedStringRecursive(pPaneName, runtime_raw_message_or_tag(pMessageId),
+                                                                        runtime_message_or_tag(pMessageId));
         }
     }
 
@@ -317,12 +318,6 @@ namespace MR {
         }
     }
 
-    void setPaneAlphaFloat(LayoutActor* pLayout, const char* pPaneName, f32 alpha) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setPaneAlpha(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, alpha);
-        }
-    }
-
     void showLayout(LayoutActor* pLayout) {
         if (pLayout != nullptr) {
             pLayout->mFlag.mIsHidden = false;
@@ -409,6 +404,7 @@ namespace MR {
 
     void setLayoutScalePosAtPaneScaleTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
         setLayoutPosAtPaneTrans(pDst, pSrc, pPaneName);
+        setLayoutScaleAtPaneScale(pDst, pSrc, pPaneName);
     }
 
     void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {

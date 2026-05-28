@@ -59,7 +59,7 @@ namespace smgpc::resource {
             auto buffer = std::array<char, 32U>{};
             const auto result = std::to_chars(buffer.data(), buffer.data() + buffer.size(), value);
             auto text = std::string_view(buffer.data(), static_cast<std::size_t>(result.ptr - buffer.data()));
-            auto out = std::u16string{};
+            auto out = std::u16string {};
             if (zero_pad_two_digits && value >= 0 && value < 10) {
                 out.push_back(u'0');
             }
@@ -76,7 +76,7 @@ namespace smgpc::resource {
         [[nodiscard]] std::vector<BmgControlTag> scan_bmg_control_tags(std::u16string_view raw_text) {
             auto tags = std::vector<BmgControlTag>{};
 
-            for (auto cursor = std::size_t{}; cursor < raw_text.size();) {
+            for (auto cursor = std::size_t {}; cursor < raw_text.size();) {
                 if (raw_text[cursor] != BMG_CONTROL_MARKER || cursor + 1U >= raw_text.size()) {
                     ++cursor;
                     continue;
@@ -89,14 +89,14 @@ namespace smgpc::resource {
                     continue;
                 }
 
-                auto tag = BmgControlTag{
+                auto tag = BmgControlTag {
                     .raw_offset = cursor,
                     .size_bytes = tag_size(packed_size_type),
                     .type = tag_type(packed_size_type),
                     .payload_words = {},
                 };
                 tag.payload_words.reserve(word_count - 1U);
-                for (auto word = std::size_t{2U}; word <= word_count; ++word) {
+                for (auto word = std::size_t {2U}; word <= word_count; ++word) {
                     tag.payload_words.push_back(static_cast<std::uint16_t>(raw_text[cursor + word]));
                 }
                 tags.push_back(std::move(tag));
@@ -138,7 +138,7 @@ namespace smgpc::resource {
                 throw std::runtime_error("BMG declared file size is outside buffer");
             }
 
-            return BmgHeader{
+            return BmgHeader {
                 .declared_file_size = file_size,
                 .block_count = read_be32(data, 0x0cU),
                 .encoding = data[0x10U],
@@ -166,7 +166,7 @@ namespace smgpc::resource {
                     throw std::runtime_error("BMG block available size is outside file");
                 }
 
-                blocks.push_back(BmgBlockInfo{
+                blocks.push_back(BmgBlockInfo {
                     .magic = magic_string(data, cursor),
                     .offset = cursor,
                     .declared_size = block_size,
@@ -214,7 +214,7 @@ namespace smgpc::resource {
                 throw std::runtime_error("BMG FLW1 block is truncated");
             }
 
-            auto flow = BmgFlowData{
+            auto flow = BmgFlowData {
                 .node_count = read_be16(flw, 0x08U),
                 .branch_count = read_be16(flw, 0x0aU),
                 .unknown_0c = read_be32(flw, 0x0cU),
@@ -235,7 +235,7 @@ namespace smgpc::resource {
             flow.nodes.reserve(flow.node_count);
             for (auto i = 0U; i < flow.node_count; ++i) {
                 const auto offset = node_table_offset + static_cast<std::size_t>(i) * 8U;
-                flow.nodes.push_back(BmgFlowNode{
+                flow.nodes.push_back(BmgFlowNode {
                     .node_type = flw[offset],
                     .group_id = flw[offset + 1U],
                     .index = read_be16(flw, offset + 2U),
@@ -271,7 +271,7 @@ namespace smgpc::resource {
                 flow.index_entries.reserve(entry_count);
                 for (auto i = 0U; i < entry_count; ++i) {
                     const auto offset = 0x10U + static_cast<std::size_t>(i) * entry_size;
-                    auto entry = BmgFlowIndexEntry{
+                    auto entry = BmgFlowIndexEntry {
                         .message_index = read_be16(fli, offset),
                         .node_index = read_be16(fli, offset + 4U),
                         .raw = {},
@@ -297,7 +297,7 @@ namespace smgpc::resource {
         }
 
         [[nodiscard]] DecodedBmgText decode_utf16be_bmg_text(std::span<const std::uint8_t> data, std::size_t offset) {
-            auto decoded = DecodedBmgText{};
+            auto decoded = DecodedBmgText {};
             if (offset >= data.size()) {
                 throw std::runtime_error("BMG text offset is outside DAT1 data");
             }
@@ -363,7 +363,7 @@ namespace smgpc::resource {
             messages.reserve(message_count);
             for (auto i = 0U; i < message_count; ++i) {
                 const auto entry_offset = inf1->offset + INF1_ENTRIES_OFFSET + static_cast<std::size_t>(i) * item_size;
-                auto info = BmgMessageInfo{
+                auto info = BmgMessageInfo {
                     .text_offset = read_be32(bmg_data, entry_offset),
                 };
 
@@ -379,7 +379,7 @@ namespace smgpc::resource {
 
                 auto decoded = decode_utf16be_bmg_text(dat1_text, info.text_offset);
                 auto control_tags = scan_bmg_control_tags(decoded.raw_text);
-                messages.push_back(BmgMessage{
+                messages.push_back(BmgMessage {
                     .id = {},
                     .info = info,
                     .raw_text = std::move(decoded.raw_text),
@@ -417,7 +417,7 @@ namespace smgpc::resource {
     }  // namespace
 
     BmgFormatArg BmgFormatArg::number(std::int32_t value) {
-        return BmgFormatArg{
+        return BmgFormatArg {
             .type = Type::Number,
             .number_value = value,
             .string_value = {},
@@ -425,7 +425,7 @@ namespace smgpc::resource {
     }
 
     BmgFormatArg BmgFormatArg::string(std::u16string_view value) {
-        return BmgFormatArg{
+        return BmgFormatArg {
             .type = Type::String,
             .number_value = 0,
             .string_value = std::u16string(value),
@@ -437,9 +437,9 @@ namespace smgpc::resource {
     }
 
     std::u16string format_bmg_text(std::u16string_view raw_text, std::span<const BmgFormatArg> args) {
-        auto formatted = std::u16string{};
+        auto formatted = std::u16string {};
 
-        for (auto cursor = std::size_t{}; cursor < raw_text.size();) {
+        for (auto cursor = std::size_t {}; cursor < raw_text.size();) {
             const auto code = raw_text[cursor];
             if (code != BMG_CONTROL_MARKER || cursor + 1U >= raw_text.size()) {
                 formatted.push_back(code);
@@ -532,7 +532,7 @@ namespace smgpc::resource {
                                          std::uint32_t declared_file_size, std::uint8_t encoding, std::optional<BmgFlowData> flow)
         : _messages(std::move(messages)), _blocks(std::move(blocks)), _declared_file_size(declared_file_size), _encoding(encoding),
           _flow(std::move(flow)) {
-        for (auto i = std::size_t{}; i < _messages.size(); ++i) {
+        for (auto i = std::size_t {}; i < _messages.size(); ++i) {
             _index_by_id.emplace(_messages[i].id, i);
         }
     }

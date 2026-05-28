@@ -168,9 +168,10 @@ namespace smgpc::app {
 
             const auto inv_frames = 1.0 / static_cast<double>(timing.frame_count);
             logger.info(logging::Category::APP,
-                        logging::Message{
+                        logging::Message {
                             "Frame timing summary over {} frames: poll={:.3f}ms begin={:.3f}ms update={:.3f}ms draw3d={:.3f}ms draw2d={:.3f}ms "
-                            "trace={:.3f}ms screenshot={:.3f}ms end={:.3f}ms pace={:.3f}ms total={:.3f}ms"},
+                            "trace={:.3f}ms screenshot={:.3f}ms end={:.3f}ms pace={:.3f}ms total={:.3f}ms"
+                        },
                         timing.frame_count, timing.poll_events_ms * inv_frames, timing.begin_frame_ms * inv_frames,
                         timing.runtime_update_ms * inv_frames, timing.draw_3d_ms * inv_frames, timing.draw_2d_ms * inv_frames,
                         timing.parity_trace_ms * inv_frames, timing.screenshot_request_ms * inv_frames, timing.end_frame_ms * inv_frames,
@@ -182,7 +183,7 @@ namespace smgpc::app {
             const auto *begin = text.data();
             const auto *end = begin + text.size();
             const auto result = std::from_chars(begin, end, value);
-            if (result.ec != std::errc{} || result.ptr != end) {
+            if (result.ec != std::errc {} || result.ptr != end) {
                 return std::nullopt;
             }
 
@@ -195,7 +196,7 @@ namespace smgpc::app {
                 return std::nullopt;
             }
 
-            auto request = OneShotScreenshotRequest{
+            auto request = OneShotScreenshotRequest {
                 .path = std::filesystem::path(path_value),
                 .frame = 1U,
             };
@@ -219,7 +220,7 @@ namespace smgpc::app {
                 return std::nullopt;
             }
 
-            auto request = OneShotParityTraceRequest{
+            auto request = OneShotParityTraceRequest {
                 .path = std::filesystem::path(path_value),
                 .frame = 1U,
             };
@@ -328,8 +329,8 @@ namespace smgpc::app {
             }
 
             [[nodiscard]] int run() override {
-                _logger->info(logging::Category::APP, logging::Message{"Running SMG sequence boot slice"});
-                _logger->info(logging::Category::APP, logging::Message{"Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input"});
+                _logger->info(logging::Category::APP, logging::Message {"Running SMG sequence boot slice"});
+                _logger->info(logging::Category::APP, logging::Message {"Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input"});
 
 #ifndef NDEBUG
                 const auto screenshot_request = screenshot_request_from_environment();
@@ -342,42 +343,42 @@ namespace smgpc::app {
                 const auto frame_pacing_enabled = frame_pacing_enabled_from_environment();
                 const auto exit_on_layout_name = string_environment("SMGPC_EXIT_ON_LAYOUT_NAME");
                 const auto debug_change_stage_request_frame = debug_change_stage_request_frame_from_environment();
-                auto timing = FrameTimingSummary{};
+                auto timing = FrameTimingSummary {};
                 auto screenshot_queued = false;
                 auto parity_trace_written = false;
                 auto debug_change_stage_requested = false;
                 if (screenshot_request.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will write a renderer PNG screenshot to {} on frame {}"},
+                    _logger->info(logging::Category::APP, logging::Message {"Will write a renderer PNG screenshot to {} on frame {}"},
                                   screenshot_request->path.string(), screenshot_request->frame);
                 }
                 if (parity_trace_request.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will write runtime parity trace to {} on frame {}"},
+                    _logger->info(logging::Category::APP, logging::Message {"Will write runtime parity trace to {} on frame {}"},
                                   parity_trace_request->path.string(), parity_trace_request->frame);
                 }
                 if (exit_after_frame.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will exit after frame {}"}, *exit_after_frame);
+                    _logger->info(logging::Category::APP, logging::Message {"Will exit after frame {}"}, *exit_after_frame);
                 }
                 if (event_poll_interval > 1U) {
-                    _logger->info(logging::Category::APP, logging::Message{"Polling desktop events every {} frames"}, event_poll_interval);
+                    _logger->info(logging::Category::APP, logging::Message {"Polling desktop events every {} frames"}, event_poll_interval);
                 }
                 if (skip_render_until_frame.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Skipping renderer submission until frame {}"},
+                    _logger->info(logging::Category::APP, logging::Message {"Skipping renderer submission until frame {}"},
                                   *skip_render_until_frame);
                 }
                 if (render_frame_interval > 1U) {
-                    _logger->info(logging::Category::APP, logging::Message{"Submitting one renderer frame every {} simulation frames"},
+                    _logger->info(logging::Category::APP, logging::Message {"Submitting one renderer frame every {} simulation frames"},
                                   render_frame_interval);
                 }
                 if (frame_pacing_enabled) {
-                    _logger->info(logging::Category::APP, logging::Message{"Pacing simulation frames at {:.3f} Hz"}, WII_FRAME_RATE_HZ);
+                    _logger->info(logging::Category::APP, logging::Message {"Pacing simulation frames at {:.3f} Hz"}, WII_FRAME_RATE_HZ);
                 } else {
-                    _logger->info(logging::Category::APP, logging::Message{"Debug frame pacing explicitly disabled by SMGPC_FRAME_PACING=0"});
+                    _logger->info(logging::Category::APP, logging::Message {"Debug frame pacing explicitly disabled by SMGPC_FRAME_PACING=0"});
                 }
                 if (exit_on_layout_name.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will exit when layout {} is active"}, *exit_on_layout_name);
+                    _logger->info(logging::Category::APP, logging::Message {"Will exit when layout {} is active"}, *exit_on_layout_name);
                 }
                 if (debug_change_stage_request_frame.has_value()) {
-                    _logger->info(logging::Category::APP, logging::Message{"Will debug-request generic stage change after loading game data on frame {}"},
+                    _logger->info(logging::Category::APP, logging::Message {"Will debug-request generic stage change after loading game data on frame {}"},
                                   *debug_change_stage_request_frame);
                 }
 #else
@@ -389,7 +390,7 @@ namespace smgpc::app {
                 if (!runtime.save_data().host_directory().has_value()) {
                     const auto save_directory = default_save_directory();
                     runtime.save_data().set_host_directory(save_directory);
-                    _logger->info(logging::Category::APP, logging::Message{"Using default SMG save files from {}"}, save_directory.string());
+                    _logger->info(logging::Category::APP, logging::Message {"Using default SMG save files from {}"}, save_directory.string());
                 }
 #ifndef NDEBUG
                 emit_configured_semantic_anchor(runtime);
@@ -397,7 +398,7 @@ namespace smgpc::app {
                     runtime.set_j3d_packet_trace_frame(parity_trace_request->frame);
                 }
 #endif
-                auto loop_frame_index = std::uint64_t{};
+                auto loop_frame_index = std::uint64_t {};
                 auto frame_pacer = FramePacer(frame_pacing_enabled);
 
                 while (true) {
@@ -429,7 +430,7 @@ namespace smgpc::app {
 #else
                     constexpr auto should_render_frame = true;
 #endif
-                    auto frame_context = render::FrameContext{
+                    auto frame_context = render::FrameContext {
                         .frame_index = logical_frame_index,
                         .frame_time_seconds = logical_frame_time_seconds(logical_frame_index),
                         .frame_delta_seconds = logical_frame_delta_seconds(logical_frame_index),
@@ -536,7 +537,7 @@ namespace smgpc::app {
     }  // namespace
 
     ServiceGraph build_service_graph(const BootstrapConfiguration &configuration) {
-        return build_service_graph(configuration, ServiceGraphOverrides{});
+        return build_service_graph(configuration, ServiceGraphOverrides {});
     }
 
     ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides &&overrides) {
@@ -560,7 +561,7 @@ namespace smgpc::app {
         } else {
             graph.register_service<di::SingletonService<render::IWindowService>, render::IWindowFactory>(
                 [configuration](di::DependencyReference<render::IWindowFactory> window_factory) {
-                    return window_factory->create(render::WindowConfiguration{
+                    return window_factory->create(render::WindowConfiguration {
                         .width = configuration.window_width,
                         .height = configuration.window_height,
                         .title = configuration.window_title,

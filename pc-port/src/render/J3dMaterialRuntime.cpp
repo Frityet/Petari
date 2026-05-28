@@ -79,7 +79,7 @@ namespace smgpc::render {
 
             const auto *gen = tex_coord_slot == 0xffU ? nullptr : find_tex_coord_gen(material, tex_coord_slot);
             const auto *matrix = find_tex_matrix(material, gen);
-            passes.push_back(J3dMaterialTexturePass{
+            passes.push_back(J3dMaterialTexturePass {
                 .stage = stage,
                 .tex_coord_slot = tex_coord_slot,
                 .tex_map_slot = tex_map_slot,
@@ -92,14 +92,14 @@ namespace smgpc::render {
 
         [[nodiscard]] TexGenInput tex_gen_input_for_source(const J3dMeshVertex &source, const J3dTexCoordGenSummary *tex_coord_gen) {
             if (tex_coord_gen != nullptr && tex_coord_gen->source == GX_TG_POS) {
-                return TexGenInput{
+                return TexGenInput {
                     .x = source.x,
                     .y = source.y,
                     .z = source.z,
                 };
             }
             if (tex_coord_gen != nullptr && tex_coord_gen->source == GX_TG_NRM) {
-                return TexGenInput{
+                return TexGenInput {
                     .x = source.normal[0U],
                     .y = source.normal[1U],
                     .z = source.normal[2U],
@@ -108,14 +108,14 @@ namespace smgpc::render {
             if (tex_coord_gen != nullptr && tex_coord_gen->source >= GX_TG_TEX0) {
                 const auto slot = static_cast<std::size_t>(tex_coord_gen->source - GX_TG_TEX0);
                 if (slot < source.tex_coords.size() && slot < source.tex_coord_count) {
-                    return TexGenInput{
+                    return TexGenInput {
                         .x = source.tex_coords[slot][0U],
                         .y = source.tex_coords[slot][1U],
                         .z = 1.0F,
                     };
                 }
                 if (slot == 0U) {
-                    return TexGenInput{
+                    return TexGenInput {
                         .x = source.u,
                         .y = source.v,
                         .z = 1.0F,
@@ -123,7 +123,7 @@ namespace smgpc::render {
                 }
             }
 
-            return TexGenInput{
+            return TexGenInput {
                 .x = source.u,
                 .y = source.v,
                 .z = 1.0F,
@@ -140,7 +140,7 @@ namespace smgpc::render {
             const auto sy = tex_matrix.scale_t * sin_angle;
             const auto cy = tex_matrix.scale_t * cos_angle;
 
-            return J3dMatrix3x4{
+            return J3dMatrix3x4 {
                 .m =
                     {
                         cx,
@@ -160,7 +160,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dMatrix3x4 texture_projection_bias_matrix() {
-            return J3dMatrix3x4{
+            return J3dMatrix3x4 {
                 .m =
                     {
                         0.5F,
@@ -180,7 +180,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dMatrix3x4 concat_affine_3x4(const J3dMatrix3x4 &left, const J3dMatrix3x4 &right) {
-            auto result = J3dMatrix3x4{};
+            auto result = J3dMatrix3x4 {};
             result.m.fill(0.0F);
             for (auto row = 0U; row < 3U; ++row) {
                 for (auto column = 0U; column < 3U; ++column) {
@@ -198,7 +198,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dMatrix3x4 concat_projected_3x4_4x4(const J3dMatrix3x4 &left, const Matrix4 &right) {
-            auto result = J3dMatrix3x4{};
+            auto result = J3dMatrix3x4 {};
             result.m.fill(0.0F);
             for (auto row = 0U; row < 3U; ++row) {
                 for (auto column = 0U; column < 4U; ++column) {
@@ -226,7 +226,7 @@ namespace smgpc::render {
             const auto u = matrix.m[0U] * coord.x + matrix.m[1U] * coord.y + matrix.m[2U] * coord.z + matrix.m[3U];
             const auto v = matrix.m[4U] * coord.x + matrix.m[5U] * coord.y + matrix.m[6U] * coord.z + matrix.m[7U];
             const auto q = matrix.m[8U] * coord.x + matrix.m[9U] * coord.y + matrix.m[10U] * coord.z + matrix.m[11U];
-            return J3dTextureProjectionCoordinate{
+            return J3dTextureProjectionCoordinate {
                 .u = u,
                 .v = v,
                 .q = tex_coord_gen != nullptr && tex_coord_gen->type == GX_TG_MTX3X4 ? q : 1.0F,
@@ -243,7 +243,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dMatrix3x4 effect_matrix_top3(const std::array<float, 16U> &matrix) {
-            return J3dMatrix3x4{{
+            return J3dMatrix3x4 {{
                 matrix[0U],
                 matrix[1U],
                 matrix[2U],
@@ -295,7 +295,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] TevColor konst_color(const J3dMaterialSummary &material, std::uint8_t selector) {
-            constexpr std::array<int, 8U> constants{255, 223, 191, 159, 128, 96, 64, 32};
+            constexpr std::array<int, 8U> constants {255, 223, 191, 159, 128, 96, 64, 32};
             if (selector < constants.size()) {
                 return {constants[selector], constants[selector], constants[selector], constants[selector]};
             }
@@ -374,9 +374,9 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] int tev_regular(const TevOperation &operation, int a, int b, int c, int d) {
-            constexpr std::array<int, 4U> bias{0, 128, -128, 0};
-            constexpr std::array<int, 4U> scale_lshift{0, 1, 2, 0};
-            constexpr std::array<int, 4U> scale_rshift{0, 0, 0, 1};
+            constexpr std::array<int, 4U> bias {0, 128, -128, 0};
+            constexpr std::array<int, 4U> scale_lshift {0, 1, 2, 0};
+            constexpr std::array<int, 4U> scale_rshift {0, 0, 0, 1};
             const auto scale = std::min<std::uint8_t>(operation.scale, 3U);
             const auto c256 = c + (c >> 7);
             auto temp = a * (256 - c256) + b * c256;
@@ -439,8 +439,8 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] float apply_gx_wrap(float value, std::uint8_t wrap) {
-            constexpr auto gx_repeat = std::uint8_t{1U};
-            constexpr auto gx_mirror = std::uint8_t{2U};
+            constexpr auto gx_repeat = std::uint8_t {1U};
+            constexpr auto gx_mirror = std::uint8_t {2U};
 
             if (wrap == gx_repeat) {
                 value = value - std::floor(value);
@@ -460,8 +460,8 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] int resolve_gx_texel(int coordinate, std::uint16_t size, std::uint8_t wrap) {
-            constexpr auto gx_repeat = std::uint8_t{1U};
-            constexpr auto gx_mirror = std::uint8_t{2U};
+            constexpr auto gx_repeat = std::uint8_t {1U};
+            constexpr auto gx_mirror = std::uint8_t {2U};
             const auto texture_size = static_cast<int>(size);
 
             if (wrap == gx_repeat) {
@@ -503,7 +503,7 @@ namespace smgpc::render {
                 return static_cast<float>(texture.rgba[offset]);
             };
 
-            auto color = TevColor{};
+            auto color = TevColor {};
             for (auto component = 0U; component < 4U; ++component) {
                 const auto top = pixel(x0, y0, component) * (1.0F - fx) + pixel(x0 + 1, y0, component) * fx;
                 const auto bottom = pixel(x0, y0 + 1, component) * (1.0F - fx) + pixel(x0 + 1, y0 + 1, component) * fx;
@@ -544,7 +544,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::array<std::int32_t, 3U> indirect_coordinate_from_sample(const GXIndirectTevStageState &stage,
                                                                                    const TevColor &sample) {
-            constexpr std::array<std::uint8_t, 4U> format_shifts{0U, 3U, 4U, 5U};
+            constexpr std::array<std::uint8_t, 4U> format_shifts {0U, 3U, 4U, 5U};
             const auto shift = format_shifts[std::min<std::size_t>(stage.format, format_shifts.size() - 1U)];
             const auto bias = stage.format == 0U ? -128 : 1;
             auto coord = std::array<std::int32_t, 3U>{
@@ -567,10 +567,10 @@ namespace smgpc::render {
 
         [[nodiscard]] std::int64_t shift_indirect_value(std::int64_t value, int shift) {
             if (shift >= 0) {
-                return value / (std::int64_t{1} << std::min(shift, 30));
+                return value / (std::int64_t {1} << std::min(shift, 30));
             }
 
-            return value * (std::int64_t{1} << std::min(-shift, 30));
+            return value * (std::int64_t {1} << std::min(-shift, 30));
         }
 
         [[nodiscard]] std::int64_t wrap_indirect_coordinate(std::int64_t coord, std::uint8_t wrap) {
@@ -578,15 +578,15 @@ namespace smgpc::render {
             case 0U:
                 return coord;
             case 1U:
-                return coord & ((std::int64_t{256} << 7U) - 1);
+                return coord & ((std::int64_t {256} << 7U) - 1);
             case 2U:
-                return coord & ((std::int64_t{128} << 7U) - 1);
+                return coord & ((std::int64_t {128} << 7U) - 1);
             case 3U:
-                return coord & ((std::int64_t{64} << 7U) - 1);
+                return coord & ((std::int64_t {64} << 7U) - 1);
             case 4U:
-                return coord & ((std::int64_t{32} << 7U) - 1);
+                return coord & ((std::int64_t {32} << 7U) - 1);
             case 5U:
-                return coord & ((std::int64_t{16} << 7U) - 1);
+                return coord & ((std::int64_t {16} << 7U) - 1);
             default:
                 return 0;
             }
@@ -655,7 +655,7 @@ namespace smgpc::render {
                 return std::nullopt;
             }
 
-            auto trace = J3dIndirectTextureTrace{
+            auto trace = J3dIndirectTextureTrace {
                 .tev_stage = pass.stage,
                 .indirect_stage = stage->ind_stage,
                 .indirect_tex_map = order->tex_map,
@@ -703,7 +703,7 @@ namespace smgpc::render {
                 trace.transformed_t += trace.base_t;
             }
 
-            trace.transformed_coord = J3dTextureCoordinate{
+            trace.transformed_coord = J3dTextureCoordinate {
                 .u = static_cast<float>(trace.transformed_s) / (static_cast<float>(base_texture.width) * 128.0F),
                 .v = static_cast<float>(trace.transformed_t) / (static_cast<float>(base_texture.height) * 128.0F),
             };
@@ -730,7 +730,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] TevRegisters initial_tev_registers_for_material(const J3dMaterialSummary &material) {
-            auto registers = TevRegisters{};
+            auto registers = TevRegisters {};
             for (auto register_index = 0U; register_index < registers.size(); ++register_index) {
                 for (auto component = 0U; component < registers[register_index].size(); ++component) {
                     registers[register_index][component] = material.gx_state.tev_registers[register_index][component];
@@ -742,7 +742,7 @@ namespace smgpc::render {
         [[nodiscard]] TevColor evaluate_tev_stages(const J3dMaterialSummary &material, std::span<const TevColor> textures_by_stage,
                                                    const TevColor &fallback_texture, const TevColor &raster) {
             auto registers = initial_tev_registers_for_material(material);
-            auto output = TevColor{0, 0, 0, 0};
+            auto output = TevColor {0, 0, 0, 0};
             if (material.tev_stages.empty()) {
                 return fallback_texture;
             }
@@ -753,9 +753,9 @@ namespace smgpc::render {
                 const auto texture = texture_for_stage(textures_by_stage, stage.stage, fallback_texture);
                 const auto color_konst = konst_color(material, stage.k_color_sel);
                 const auto alpha_konst = konst_color(material, stage.k_alpha_sel);
-                const auto stage_konst = TevColor{color_konst[0U], color_konst[1U], color_konst[2U], alpha_konst[3U]};
+                const auto stage_konst = TevColor {color_konst[0U], color_konst[1U], color_konst[2U], alpha_konst[3U]};
 
-                const auto color_operation = TevOperation{
+                const auto color_operation = TevOperation {
                     .op = stage.color_op,
                     .bias = stage.color_bias,
                     .scale = stage.color_scale,
@@ -769,7 +769,7 @@ namespace smgpc::render {
                     registers[stage.color_out][component] = tev_regular(color_operation, a, b, c, d);
                 }
 
-                const auto alpha_operation = TevOperation{
+                const auto alpha_operation = TevOperation {
                     .op = stage.alpha_op,
                     .bias = stage.alpha_bias,
                     .scale = stage.alpha_scale,
@@ -794,7 +794,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] TevColor evaluate_tev_stages(const J3dMaterialSummary &material, const TevColor &texture, const TevColor &raster) {
-            const std::array<TevColor, 1U> textures_by_stage{texture};
+            const std::array<TevColor, 1U> textures_by_stage {texture};
             return evaluate_tev_stages(material, textures_by_stage, texture, raster);
         }
 
@@ -887,7 +887,7 @@ namespace smgpc::render {
             return std::nullopt;
         }
 
-        auto composed = J3dComposedMaterialTexture{
+        auto composed = J3dComposedMaterialTexture {
             .image = texture,
             .raster_color_baked = !material.tev_stages.empty(),
         };
@@ -895,7 +895,7 @@ namespace smgpc::render {
         for (auto y = 0U; y < texture.height; ++y) {
             for (auto x = 0U; x < texture.width; ++x) {
                 const auto offset = (static_cast<std::size_t>(y) * texture.width + x) * 4U;
-                const auto sampled = TevColor{
+                const auto sampled = TevColor {
                     texture.rgba[offset],
                     texture.rgba[offset + 1U],
                     texture.rgba[offset + 2U],
@@ -921,13 +921,13 @@ namespace smgpc::render {
         }
 
         const auto raster = color_to_tev(raster_color);
-        const auto fallback_texture = TevColor{255, 255, 255, 255};
+        const auto fallback_texture = TevColor {255, 255, 255, 255};
         const auto output =
             material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span<const TevColor>{}, fallback_texture, raster);
 
-        auto composed = J3dComposedMaterialTexture{
+        auto composed = J3dComposedMaterialTexture {
             .image =
-                smgpc::resource::DecodedTexture{
+                smgpc::resource::DecodedTexture {
                     .width = 1U,
                     .height = 1U,
                     .format = smgpc::resource::TplTextureFormat::RGBA8,
@@ -950,8 +950,8 @@ namespace smgpc::render {
             return std::nullopt;
         }
 
-        auto width = std::uint16_t{1U};
-        auto height = std::uint16_t{1U};
+        auto width = std::uint16_t {1U};
+        auto height = std::uint16_t {1U};
         for (const auto &pass : passes) {
             if (!pass_uses_source_uv(pass) || pass.texture_index >= textures.size()) {
                 return std::nullopt;
@@ -965,9 +965,9 @@ namespace smgpc::render {
             height = std::max(height, texture.height);
         }
 
-        auto composed = J3dComposedMaterialTexture{
+        auto composed = J3dComposedMaterialTexture {
             .image =
-                smgpc::resource::DecodedTexture{
+                smgpc::resource::DecodedTexture {
                     .width = width,
                     .height = height,
                     .format = smgpc::resource::TplTextureFormat::RGBA8,
@@ -979,7 +979,7 @@ namespace smgpc::render {
         const auto raster = color_to_tev(raster_color);
         for (auto y = 0U; y < height; ++y) {
             for (auto x = 0U; x < width; ++x) {
-                const auto source = J3dMeshVertex{
+                const auto source = J3dMeshVertex {
                     .u = (static_cast<float>(x) + 0.5F) / static_cast<float>(width),
                     .v = (static_cast<float>(y) + 0.5F) / static_cast<float>(height),
                     .color = raster_color,
@@ -1015,7 +1015,7 @@ namespace smgpc::render {
                                 std::array<std::uint8_t, 4U> raster_color, const J3dMatrix3x4 *model_matrix) {
         if (passes.empty()) {
             const auto raster = color_to_tev(raster_color);
-            const auto fallback_texture = TevColor{255, 255, 255, 255};
+            const auto fallback_texture = TevColor {255, 255, 255, 255};
             const auto output =
                 material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span<const TevColor>{}, fallback_texture, raster);
             return std::array<std::uint8_t, 4U>{
@@ -1073,13 +1073,13 @@ namespace smgpc::render {
                                                  const J3dTexMatrixSummary *tex_matrix, const J3dMatrix3x4 *model_matrix) {
         const auto projected = j3d_project_tex_coord(source, tex_coord_gen, tex_matrix, model_matrix);
         if (projected.q != 0.0F) {
-            return J3dTextureCoordinate{
+            return J3dTextureCoordinate {
                 .u = projected.u / projected.q,
                 .v = projected.v / projected.q,
             };
         }
 
-        return J3dTextureCoordinate{
+        return J3dTextureCoordinate {
             .u = projected.u,
             .v = projected.v,
         };
@@ -1089,7 +1089,7 @@ namespace smgpc::render {
                                                          const J3dTexMatrixSummary *tex_matrix, const J3dMatrix3x4 *model_matrix) {
         const auto coord = tex_gen_input_for_source(source, tex_coord_gen);
         if (tex_matrix == nullptr) {
-            return J3dTextureProjectionCoordinate{
+            return J3dTextureProjectionCoordinate {
                 .u = coord.x,
                 .v = coord.y,
                 .q = 1.0F,
@@ -1109,7 +1109,7 @@ namespace smgpc::render {
         const auto centered_v = coord.y - tex_matrix->center[1U];
         const auto u = tex_matrix->scale_s * (centered_u * cos_angle - centered_v * sin_angle) + tex_matrix->center[0U] + tex_matrix->translate_s;
         const auto v = tex_matrix->scale_t * (centered_u * sin_angle + centered_v * cos_angle) + tex_matrix->center[1U] + tex_matrix->translate_t;
-        return J3dTextureProjectionCoordinate{
+        return J3dTextureProjectionCoordinate {
             .u = u,
             .v = v,
             .q = tex_coord_gen != nullptr && tex_coord_gen->type == GX_TG_MTX3X4 ? coord.z : 1.0F,
@@ -1130,7 +1130,7 @@ namespace smgpc::render {
                                  static_cast<float>(scale.t_scale_minus_1) + 1.0F :
                                  static_cast<float>(texture.image.height);
 
-        return J3dTextureCoordinate{
+        return J3dTextureCoordinate {
             .u = coord.u * s_scale / static_cast<float>(texture.image.width),
             .v = coord.v * t_scale / static_cast<float>(texture.image.height),
         };
@@ -1150,7 +1150,7 @@ namespace smgpc::render {
                                  static_cast<float>(scale.t_scale_minus_1) + 1.0F :
                                  static_cast<float>(texture.image.height);
 
-        return J3dTextureProjectionCoordinate{
+        return J3dTextureProjectionCoordinate {
             .u = coord.u * s_scale / static_cast<float>(texture.image.width),
             .v = coord.v * t_scale / static_cast<float>(texture.image.height),
             .q = coord.q,

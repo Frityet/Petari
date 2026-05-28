@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "core/RenderTypes.hpp"
+
 namespace smgpc::layout {
     struct BrlytMaterial;
 }
@@ -293,6 +295,8 @@ namespace smgpc::render {
                                                             std::array<float, 3U> position, std::array<float, 3U> normal);
     [[nodiscard]] GXMaterialState gx_state_from_j3d_material(const J3dMaterialSummary &material);
     [[nodiscard]] GXMaterialState gx_state_from_brlyt_material(const smgpc::layout::BrlytMaterial &material);
+    [[nodiscard]] core::GxTevStage2D gx_brlyt_default_texture_color_stage(std::uint8_t texture_stage);
+    [[nodiscard]] core::GxTevStage2D gx_brlyt_default_raster_modulate_stage();
     [[nodiscard]] GXBPRegisterState gx_bp_registers_from_state(const GXMaterialState &state);
     void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list);
     void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list, GXBPRegisterState *bp_registers);

@@ -17,15 +17,15 @@ namespace smgpc::runtime {
     namespace {
 
         constexpr auto RFL_DB_MAGIC = std::array<std::uint8_t, 4U>{'S', 'R', 'F', 'L'};
-        constexpr auto RFL_DB_VERSION = std::uint16_t{1U};
-        constexpr auto RFL_DB_HEADER_SIZE = std::size_t{8U};
-        constexpr auto RFL_DB_ENTRY_SIZE = std::size_t{66U};
+        constexpr auto RFL_DB_VERSION = std::uint16_t {1U};
+        constexpr auto RFL_DB_HEADER_SIZE = std::size_t {8U};
+        constexpr auto RFL_DB_ENTRY_SIZE = std::size_t {66U};
 
-        constexpr auto RFL_ENTRY_FLAG_AVAILABLE = std::uint8_t{1U << 0U};
-        constexpr auto RFL_ENTRY_FLAG_FAVORITE = std::uint8_t{1U << 1U};
+        constexpr auto RFL_ENTRY_FLAG_AVAILABLE = std::uint8_t {1U << 0U};
+        constexpr auto RFL_ENTRY_FLAG_FAVORITE = std::uint8_t {1U << 1U};
 
-        constexpr auto RFL_BASE_WORK_SIZE = std::size_t{0x82000U};
-        constexpr auto RFL_DELUXE_WORK_SIZE = std::size_t{0x9A000U};
+        constexpr auto RFL_BASE_WORK_SIZE = std::size_t {0x82000U};
+        constexpr auto RFL_DELUXE_WORK_SIZE = std::size_t {0x9A000U};
 
         [[nodiscard]] bool is_supported_source(RFLDataSource source) {
             const auto value = static_cast<int>(source);
@@ -76,7 +76,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] RFLCreateID create_id_from_index(s32 index) {
-            auto id = RFLCreateID{};
+            auto id = RFLCreateID {};
             std::memcpy(id.data, &index, std::min(sizeof(index), sizeof(id.data)));
             return id;
         }
@@ -90,9 +90,9 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::string read_utf16_text(std::span<const std::uint8_t> bytes, std::size_t offset, std::size_t character_count) {
-            auto text = std::u16string{};
+            auto text = std::u16string {};
             text.reserve(character_count);
-            for (auto index = std::size_t{}; index < character_count; ++index) {
+            for (auto index = std::size_t {}; index < character_count; ++index) {
                 const auto value = read_be_u16(bytes, offset + index * sizeof(std::uint16_t));
                 if (value == 0U) {
                     break;
@@ -104,8 +104,8 @@ namespace smgpc::runtime {
 
         void append_utf16_text(std::vector<std::uint8_t> &bytes, std::string_view text, std::size_t character_count) {
             const auto utf16 = smgpc::resource::utf16_from_utf8_lossy(text);
-            for (auto index = std::size_t{}; index < character_count; ++index) {
-                const auto value = index < utf16.size() ? static_cast<std::uint16_t>(utf16[index]) : std::uint16_t{};
+            for (auto index = std::size_t {}; index < character_count; ++index) {
+                const auto value = index < utf16.size() ? static_cast<std::uint16_t>(utf16[index]) : std::uint16_t {};
                 append_be_u16(bytes, value);
             }
         }
@@ -140,14 +140,14 @@ namespace smgpc::runtime {
             }
 
             entries.reserve(count);
-            for (auto entry_index = std::uint16_t{}; entry_index < count; ++entry_index) {
+            for (auto entry_index = std::uint16_t {}; entry_index < count; ++entry_index) {
                 const auto offset = RFL_DB_HEADER_SIZE + static_cast<std::size_t>(entry_index) * RFL_DB_ENTRY_SIZE;
                 const auto source = static_cast<RFLDataSource>(bytes[offset + 2U]);
                 if (!is_supported_source(source)) {
                     return false;
                 }
 
-                auto entry = RflMiiEntry{};
+                auto entry = RflMiiEntry {};
                 entry.index = read_be_u16(bytes, offset);
                 entry.source = source;
                 entry.available = (bytes[offset + 3U] & RFL_ENTRY_FLAG_AVAILABLE) != 0U;
@@ -158,7 +158,7 @@ namespace smgpc::runtime {
                 entry.color = bytes[offset + 7U] & 0xfU;
                 entry.height = bytes[offset + 8U] & 0x7fU;
                 entry.build = bytes[offset + 9U] & 0x7fU;
-                entry.skin_color = GXColor{
+                entry.skin_color = GXColor {
                     .r = bytes[offset + 10U],
                     .g = bytes[offset + 11U],
                     .b = bytes[offset + 12U],
@@ -194,10 +194,10 @@ namespace smgpc::runtime {
         }
 
         void copy_utf16_text(u16 *destination, std::size_t character_count, std::string_view text) {
-            std::fill_n(destination, character_count, u16{});
+            std::fill_n(destination, character_count, u16 {});
             const auto utf16 = smgpc::resource::utf16_from_utf8_lossy(text);
             const auto count = std::min(utf16.size(), character_count == 0U ? 0U : character_count - 1U);
-            for (auto index = std::size_t{}; index < count; ++index) {
+            for (auto index = std::size_t {}; index < count; ++index) {
                 destination[index] = static_cast<u16>(utf16[index]);
             }
         }
@@ -214,18 +214,18 @@ namespace smgpc::runtime {
 
         [[nodiscard]] GXColor favorite_color(u32 color) {
             constexpr auto colors = std::array<GXColor, RFLFavoriteColor_Max>{
-                GXColor{220U, 48U, 52U, 255U},
-                GXColor{238U, 126U, 42U, 255U},
-                GXColor{245U, 206U, 73U, 255U},
-                GXColor{159U, 204U, 62U, 255U},
-                GXColor{73U, 174U, 74U, 255U},
-                GXColor{47U, 102U, 201U, 255U},
-                GXColor{64U, 180U, 220U, 255U},
-                GXColor{235U, 111U, 168U, 255U},
-                GXColor{134U, 86U, 185U, 255U},
-                GXColor{122U, 82U, 54U, 255U},
-                GXColor{238U, 238U, 238U, 255U},
-                GXColor{48U, 48U, 52U, 255U},
+                GXColor {220U, 48U, 52U, 255U},
+                GXColor {238U, 126U, 42U, 255U},
+                GXColor {245U, 206U, 73U, 255U},
+                GXColor {159U, 204U, 62U, 255U},
+                GXColor {73U, 174U, 74U, 255U},
+                GXColor {47U, 102U, 201U, 255U},
+                GXColor {64U, 180U, 220U, 255U},
+                GXColor {235U, 111U, 168U, 255U},
+                GXColor {134U, 86U, 185U, 255U},
+                GXColor {122U, 82U, 54U, 255U},
+                GXColor {238U, 238U, 238U, 255U},
+                GXColor {48U, 48U, 52U, 255U},
             };
             return colors[std::min<std::size_t>(color, colors.size() - 1U)];
         }
@@ -266,7 +266,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] GXColor mix_color(GXColor a, GXColor b, std::uint8_t b_weight) {
             const auto a_weight = static_cast<std::uint16_t>(255U - b_weight);
-            return GXColor{
+            return GXColor {
                 .r = static_cast<u8>((static_cast<std::uint16_t>(a.r) * a_weight + static_cast<std::uint16_t>(b.r) * b_weight) / 255U),
                 .g = static_cast<u8>((static_cast<std::uint16_t>(a.g) * a_weight + static_cast<std::uint16_t>(b.g) * b_weight) / 255U),
                 .b = static_cast<u8>((static_cast<std::uint16_t>(a.b) * a_weight + static_cast<std::uint16_t>(b.b) * b_weight) / 255U),
@@ -280,13 +280,13 @@ namespace smgpc::runtime {
             auto bytes = std::vector<std::uint8_t>(size);
             const auto accent = favorite_color(entry.color);
             const auto skin = entry.skin_color;
-            const auto hair = mix_color(GXColor{24U, 20U, 18U, 255U}, accent, static_cast<std::uint8_t>((entry.index * 17U) & 0x5fU));
-            const auto eye = GXColor{24U, 24U, 28U, 255U};
-            const auto mouth = expression == RFLExp_Smile ? GXColor{180U, 52U, 70U, 255U} : GXColor{112U, 36U, 48U, 255U};
+            const auto hair = mix_color(GXColor {24U, 20U, 18U, 255U}, accent, static_cast<std::uint8_t>((entry.index * 17U) & 0x5fU));
+            const auto eye = GXColor {24U, 24U, 28U, 255U};
+            const auto mouth = expression == RFLExp_Smile ? GXColor {180U, 52U, 70U, 255U} : GXColor {112U, 36U, 48U, 255U};
             const auto alpha = xlu_only ? 176U : 255U;
 
-            for (auto y = std::uint16_t{}; y < height; ++y) {
-                for (auto x = std::uint16_t{}; x < width; ++x) {
+            for (auto y = std::uint16_t {}; y < height; ++y) {
+                for (auto x = std::uint16_t {}; x < width; ++x) {
                     auto color = background;
                     const auto nx = (static_cast<int>(x) * 1000 / std::max<std::uint16_t>(width, 1U)) - 500;
                     const auto ny = (static_cast<int>(y) * 1000 / std::max<std::uint16_t>(height, 1U)) - 500;
@@ -405,7 +405,7 @@ namespace smgpc::runtime {
         _status.deluxe_textures = deluxe_textures;
         _status.last_error = result == RFLErrcode_Success ? _status.last_error : result;
         _status.last_reason = _last_reason;
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::InitResource,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -473,7 +473,7 @@ namespace smgpc::runtime {
         _miis.clear();
         _valid_miis.clear();
         _status.async_pending = true;
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::LoadBegin,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -492,14 +492,14 @@ namespace smgpc::runtime {
         _manual_override = false;
         _miis.clear();
         _valid_miis.clear();
-        _status = RflDbStatus{};
+        _status = RflDbStatus {};
         _status.resource_initialized = _resource_initialized;
         _status.deluxe_textures = _deluxe_textures;
         _status.last_reason = _last_reason;
     }
 
     void RflService::set_miis(std::vector<RflMiiEntry> miis) {
-        auto status = RflDbStatus{
+        auto status = RflDbStatus {
             .nand_bound = _nand != nullptr,
             .db_present = false,
             .fallback_used = false,
@@ -549,7 +549,7 @@ namespace smgpc::runtime {
         _status.loaded_frame = _frame_index;
         _status.last_error = RFLErrcode_Success;
         _status.last_reason = _last_reason;
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::Persist,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -580,7 +580,7 @@ namespace smgpc::runtime {
     bool RflService::load_from_bytes(std::span<const std::uint8_t> bytes) {
         auto entries = std::vector<RflMiiEntry>{};
         if (!parse_database(bytes, entries)) {
-            auto status = RflDbStatus{
+            auto status = RflDbStatus {
                 .nand_bound = _nand != nullptr,
                 .db_present = true,
                 .fallback_used = false,
@@ -594,7 +594,7 @@ namespace smgpc::runtime {
             return false;
         }
 
-        auto status = RflDbStatus{
+        auto status = RflDbStatus {
             .nand_bound = _nand != nullptr,
             .db_present = true,
             .fallback_used = false,
@@ -642,7 +642,7 @@ namespace smgpc::runtime {
     RFLErrcode RflService::additional_info(RFLAdditionalInfo &info, RFLDataSource source, const RFLMiddleDB *, u16 index) const {
         std::memset(&info, 0, sizeof(info));
         if (!is_supported_source(source)) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::AdditionalInfo,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -654,7 +654,7 @@ namespace smgpc::runtime {
             return RFLErrcode_WrongParam;
         }
         if (!is_initialized()) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::AdditionalInfo,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -667,7 +667,7 @@ namespace smgpc::runtime {
         }
         if (has_error()) {
             const auto result = _forced_error ? RFLErrcode_Broken : load_error_for_status(_status);
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::AdditionalInfo,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -685,7 +685,7 @@ namespace smgpc::runtime {
 
         const auto *entry = find_entry(source, index);
         if (entry == nullptr) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::AdditionalInfo,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -701,7 +701,7 @@ namespace smgpc::runtime {
             return RFLErrcode_DBNodata;
         }
         if (!entry->available) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::AdditionalInfo,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -728,7 +728,7 @@ namespace smgpc::runtime {
         info.height = entry->height;
         info.build = entry->build;
         info.skinColor = entry->skin_color;
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::AdditionalInfo,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -746,7 +746,7 @@ namespace smgpc::runtime {
 
     bool RflService::search_official_data(const RFLCreateID &id, u16 &index) const {
         if (!is_initialized()) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::SearchOfficial,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -757,7 +757,7 @@ namespace smgpc::runtime {
         }
         ensure_loaded();
         if (!_initialized || has_error()) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::SearchOfficial,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -775,7 +775,7 @@ namespace smgpc::runtime {
             return entry.source == RFLDataSource_Official && entry.available && create_ids_equal(entry.create_id, id);
         });
         if (found == _miis.end()) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::SearchOfficial,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -790,7 +790,7 @@ namespace smgpc::runtime {
         }
 
         index = static_cast<u16>(found->index);
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::SearchOfficial,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -808,7 +808,7 @@ namespace smgpc::runtime {
 
     bool RflService::is_available_official_data(u16 index) const {
         if (!is_initialized()) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::CheckAvailable,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -821,7 +821,7 @@ namespace smgpc::runtime {
         }
         const auto *entry = find_entry(RFLDataSource_Official, index);
         const auto available = entry != nullptr && entry->available && !has_error() && is_initialized();
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::CheckAvailable,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -847,7 +847,7 @@ namespace smgpc::runtime {
     RFLErrcode RflService::init_char_model(RFLCharModel &model, RFLDataSource source, const RFLMiddleDB *db, u16 index, void *work,
                                            RFLResolution resolution, u32 expression_flags) const {
         if (!is_supported_source(source) || expression_flags == 0U) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::InitCharModel,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -860,7 +860,7 @@ namespace smgpc::runtime {
         }
         if (!available()) {
             const auto result = _async_pending || !_initialized || !_resource_initialized ? RFLErrcode_NotAvailable : RFLErrcode_Broken;
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::InitCharModel,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -876,7 +876,7 @@ namespace smgpc::runtime {
         const auto *entry = find_entry(source, index);
         if (entry == nullptr || !entry->available) {
             const auto result = entry == nullptr ? RFLErrcode_DBNodata : RFLErrcode_NotAvailable;
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::InitCharModel,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -900,7 +900,7 @@ namespace smgpc::runtime {
         model.expression = first_expression_from_flags(expression_flags);
         model.work = work;
         model.initialized = TRUE;
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::InitCharModel,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -922,7 +922,7 @@ namespace smgpc::runtime {
             return;
         }
         model.expression = expression;
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::SetExpression,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -935,7 +935,7 @@ namespace smgpc::runtime {
     }
 
     void RflService::draw_model(const RFLCharModel *model) const {
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::DrawModel,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -949,7 +949,7 @@ namespace smgpc::runtime {
 
     RflIconTexture RflService::make_icon_texture(RFLDataSource source, const RFLMiddleDB *, u16 index, RFLExpression expression,
                                                  const RFLIconSetting &setting) const {
-        auto texture = RflIconTexture{
+        auto texture = RflIconTexture {
             .source = source,
             .index = index,
             .width = setting.width,
@@ -962,7 +962,7 @@ namespace smgpc::runtime {
 
         auto finish = [&](RFLErrcode result) {
             texture.result = result;
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::MakeIcon,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -1006,7 +1006,7 @@ namespace smgpc::runtime {
     RFLErrcode RflService::make_icon(void *buffer, RFLDataSource source, const RFLMiddleDB *db, u16 index, RFLExpression expression,
                                      const RFLIconSetting &setting) const {
         if (buffer == nullptr) {
-            push_trace(RflOperationTrace{
+            push_trace(RflOperationTrace {
                 .kind = RflOperationKind::MakeIcon,
                 .frame_index = _frame_index,
                 .path = NandFileSystemService::rfl_db_path(),
@@ -1030,9 +1030,9 @@ namespace smgpc::runtime {
     RflMiiSelectPageState RflService::mii_select_page_state(std::span<const RflMiiSelectSpecialIcon> special_icons,
                                                             std::optional<RflMiiSelectIconKey> prohibited, std::size_t page_index,
                                                             std::optional<RflMiiSelectIconKey> selected) const {
-        constexpr auto icons_per_page = std::size_t{8U};
+        constexpr auto icons_per_page = std::size_t {8U};
 
-        auto state = RflMiiSelectPageState{
+        auto state = RflMiiSelectPageState {
             .icons_per_page = icons_per_page,
             .page_index = page_index,
             .page_count = 0U,
@@ -1062,8 +1062,8 @@ namespace smgpc::runtime {
                 continue;
             }
 
-            append_icon(RflMiiSelectIcon{
-                .key = RflMiiSelectIconKey{
+            append_icon(RflMiiSelectIcon {
+                .key = RflMiiSelectIconKey {
                     .kind = RflMiiSelectIconKind::Special,
                     .id = special.id,
                     .source = RFLDataSource_Official,
@@ -1083,8 +1083,8 @@ namespace smgpc::runtime {
 
         const auto rfl_available = available();
         for (const auto &entry : valid_miis()) {
-            append_icon(RflMiiSelectIcon{
-                .key = RflMiiSelectIconKey{
+            append_icon(RflMiiSelectIcon {
+                .key = RflMiiSelectIconKey {
                     .kind = RflMiiSelectIconKind::Mii,
                     .id = entry.index,
                     .source = entry.source,
@@ -1110,12 +1110,12 @@ namespace smgpc::runtime {
             state.page_index = state.page_count - 1U;
         }
 
-        for (auto index = std::size_t{}; index < state.icons.size(); ++index) {
+        for (auto index = std::size_t {}; index < state.icons.size(); ++index) {
             state.icons[index].page_index = index / icons_per_page;
             state.icons[index].slot_index = index % icons_per_page;
         }
 
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = RflOperationKind::MiiSelectPage,
             .frame_index = _frame_index,
             .path = NandFileSystemService::rfl_db_path(),
@@ -1144,7 +1144,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        auto status = RflDbStatus{
+        auto status = RflDbStatus {
             .nand_bound = _nand != nullptr,
             .db_present = false,
             .fallback_used = false,
@@ -1220,7 +1220,7 @@ namespace smgpc::runtime {
         _cache_loaded = true;
         _manual_override = manual_override;
         rebuild_valid_miis();
-        push_trace(RflOperationTrace{
+        push_trace(RflOperationTrace {
             .kind = status.last_error == RFLErrcode_Success || status.last_error == RFLErrcode_DBNodata ? RflOperationKind::LoadComplete :
                                                                                                           RflOperationKind::LoadFailed,
             .frame_index = _frame_index,
@@ -1247,7 +1247,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<RflMiiEntry> RflService::fallback_miis() {
-        auto mario = RflMiiEntry{
+        auto mario = RflMiiEntry {
             .index = 0,
             .source = RFLDataSource_Official,
             .available = true,
@@ -1256,7 +1256,7 @@ namespace smgpc::runtime {
             .favorite = true,
             .height = 64U,
             .build = 64U,
-            .skin_color = GXColor{255U, 224U, 189U, 255U},
+            .skin_color = GXColor {255U, 224U, 189U, 255U},
         };
         mario.create_id = create_id_from_index(mario.index);
 

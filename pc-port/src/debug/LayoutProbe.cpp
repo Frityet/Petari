@@ -45,7 +45,7 @@ namespace {
         };
 
         for (const auto &candidate : candidates) {
-            std::error_code error{};
+            std::error_code error {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;
@@ -57,7 +57,7 @@ namespace {
 
     [[nodiscard]] std::filesystem::path pc_port_root() {
         const auto cwd = std::filesystem::current_path();
-        std::error_code error{};
+        std::error_code error {};
         if (std::filesystem::is_directory(cwd / "pc-port" / "src", error)) {
             return cwd / "pc-port";
         }
@@ -75,7 +75,7 @@ namespace {
     }
 
     [[nodiscard]] std::string sanitize_filename(std::string_view text) {
-        auto sanitized = std::string{};
+        auto sanitized = std::string {};
         sanitized.reserve(text.size());
 
         for (const auto c : text) {
@@ -154,7 +154,7 @@ namespace {
                                                  const std::vector<const smgpc::layout::BrlanAnimation *> &active_animations,
                                                  std::span<const float> active_frames) {
         const auto &pane = layout.panes.at(pane_index);
-        auto local = PaneRenderState{
+        auto local = PaneRenderState {
             .translate_x = pane.translate_x,
             .translate_y = pane.translate_y,
             .scale_x = pane.scale_x,
@@ -166,7 +166,7 @@ namespace {
         if (const auto committed_it = committed.find(pane.name); committed_it != committed.end()) {
             apply_pane_frame(local, committed_it->second);
         }
-        for (auto i = std::size_t{}; i < active_animations.size(); ++i) {
+        for (auto i = std::size_t {}; i < active_animations.size(); ++i) {
             if (active_animations[i] == nullptr) {
                 continue;
             }
@@ -178,7 +178,7 @@ namespace {
         }
 
         const auto parent = pane_state_for(layout, static_cast<std::size_t>(pane.parent_index), committed, active_animations, active_frames);
-        return PaneRenderState{
+        return PaneRenderState {
             .translate_x = parent.translate_x + local.translate_x * parent.scale_x,
             .translate_y = parent.translate_y + local.translate_y * parent.scale_y,
             .scale_x = parent.scale_x * local.scale_x,
@@ -268,7 +268,7 @@ namespace {
         out << "## Panes\n\n";
         out << "| index | parent | name | base | translate | scale | size | alpha | visible |\n";
         out << "| ---: | ---: | --- | ---: | --- | --- | --- | ---: | --- |\n";
-        for (auto i = std::size_t{}; i < layout.panes.size(); ++i) {
+        for (auto i = std::size_t {}; i < layout.panes.size(); ++i) {
             const auto &pane = layout.panes[i];
             out << "| " << i << " | " << pane.parent_index << " | `" << pane.name << "` | " << static_cast<int>(pane.base_position) << " | "
                 << pane.translate_x << ',' << pane.translate_y << " | " << pane.scale_x << ',' << pane.scale_y << " | " << pane.width << 'x'
@@ -279,10 +279,10 @@ namespace {
         out << "## Materials\n\n";
         out << "| index | name | textures | tex SRTs | tex coord gens | TEV stages | alpha compare | blend |\n";
         out << "| ---: | --- | --- | --- | --- | --- | --- | --- |\n";
-        for (auto i = std::size_t{}; i < layout.materials.size(); ++i) {
+        for (auto i = std::size_t {}; i < layout.materials.size(); ++i) {
             const auto &material = layout.materials[i];
             out << "| " << i << " | `" << material.name << "` | ";
-            for (auto texture_index = std::size_t{}; texture_index < material.textures.size(); ++texture_index) {
+            for (auto texture_index = std::size_t {}; texture_index < material.textures.size(); ++texture_index) {
                 const auto &texture = material.textures[texture_index];
                 if (texture_index != 0U) {
                     out << "<br>";
@@ -292,7 +292,7 @@ namespace {
                     << static_cast<int>(texture.mag_filter);
             }
             out << " | ";
-            for (auto srt_index = std::size_t{}; srt_index < material.tex_srts.size(); ++srt_index) {
+            for (auto srt_index = std::size_t {}; srt_index < material.tex_srts.size(); ++srt_index) {
                 const auto &srt = material.tex_srts[srt_index];
                 if (srt_index != 0U) {
                     out << "<br>";
@@ -301,7 +301,7 @@ namespace {
                     << srt.scale_t;
             }
             out << " | ";
-            for (auto gen_index = std::size_t{}; gen_index < material.tex_coord_gens.size(); ++gen_index) {
+            for (auto gen_index = std::size_t {}; gen_index < material.tex_coord_gens.size(); ++gen_index) {
                 const auto &gen = material.tex_coord_gens[gen_index];
                 if (gen_index != 0U) {
                     out << "<br>";
@@ -310,7 +310,7 @@ namespace {
                     << " mtx=" << static_cast<int>(gen.tex_mtx);
             }
             out << " | ";
-            for (auto stage_index = std::size_t{}; stage_index < material.tev_stages.size(); ++stage_index) {
+            for (auto stage_index = std::size_t {}; stage_index < material.tev_stages.size(); ++stage_index) {
                 const auto &stage = material.tev_stages[stage_index];
                 if (stage_index != 0U) {
                     out << "<br>";
@@ -345,8 +345,8 @@ namespace {
         }
 
         const auto *wait_animation = wait == animations.end() ? nullptr : &wait->second;
-        const std::vector<const smgpc::layout::BrlanAnimation *> active{wait_animation};
-        const std::vector<float> active_frames{80.0F};
+        const std::vector<const smgpc::layout::BrlanAnimation *> active {wait_animation};
+        const std::vector<float> active_frames {80.0F};
         auto picture_bounds = std::optional<Rect>{};
         auto text_bounds = std::optional<Rect>{};
 

@@ -31,7 +31,7 @@ namespace smgpc::dump {
         }
 
         auto records = std::vector<Json>{};
-        auto line = std::string{};
+        auto line = std::string {};
         auto line_number = 0U;
         while (std::getline(file, line)) {
             ++line_number;

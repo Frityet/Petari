@@ -58,9 +58,13 @@ public:
     [[nodiscard]] bool isAnimStopped(u32 animLayer);
     void setTextBoxNumberRecursive(const char* pPaneName, s32 number);
     void setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text);
+    void setTextBoxTaggedStringRecursive(const char* pPaneName, std::u16string_view rawText, std::u16string_view displayText);
+    void setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex);
+    void setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex);
     void replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex);
     void setPaneAlpha(std::string_view paneName, f32 alpha);
     void setPaneVisible(std::string_view paneName, bool visible);
+    void setPaneVisibleRecursive(std::string_view paneName, bool visible);
     void setTextBoxHorizontalPosition(std::string_view paneName, u8 position);
     void setTextBoxVerticalPosition(std::string_view paneName, u8 position);
     [[nodiscard]] bool isPaneVisible(std::string_view paneName) const;
@@ -228,10 +232,13 @@ private:
     void ensureTextureUploads(smgpc::render::IRendererEngine& renderer);
     void ensureTextTextureUploads(smgpc::render::IRendererEngine& renderer);
     [[nodiscard]] RenderTextTexture composeTextTexture(std::size_t text_box_index, const RenderFont& font) const;
+    void drawPicture(smgpc::render::IRendererEngine& renderer, float alpha, std::size_t picture_index);
     void drawTextBoxes(smgpc::render::IRendererEngine& renderer, float alpha);
+    void drawTextBox(smgpc::render::IRendererEngine& renderer, float alpha, std::size_t text_box_index);
     [[nodiscard]] PaneRenderState paneRenderState(std::size_t pane_index) const;
     [[nodiscard]] smgpc::layout::BrlanPaneFrame animationFrameForPane(std::string_view pane_name) const;
     [[nodiscard]] smgpc::layout::BrlanTextureFrame textureFrameForContent(std::string_view content_name) const;
+    [[nodiscard]] smgpc::layout::BrlanMaterialFrame materialFrameForContent(std::string_view content_name) const;
     [[nodiscard]] f32 durationFor(const char* pAnimName) const;
     [[nodiscard]] bool isLoopingAnim(const char* pAnimName) const;
     [[nodiscard]] float visualAlpha() const;
@@ -255,8 +262,10 @@ private:
     std::vector< RenderTextTexture > mRenderTextTextures = {};
     std::unordered_map< std::string, smgpc::layout::BrlanAnimation > mRenderAnimations = {};
     std::unordered_map< std::string, smgpc::layout::BrlanPaneFrame > mCommittedPaneFrames = {};
+    std::unordered_map< std::string, smgpc::layout::BrlanMaterialFrame > mCommittedMaterialFrames = {};
     std::unordered_map< std::string, bool > mPaneVisibilityOverrides = {};
     std::unordered_map< std::string, f32 > mPaneAlphaOverrides = {};
+    std::unordered_map< std::string, TextBoxTemplateState > mTextBoxTemplates = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};
 };
 

@@ -12,9 +12,9 @@
 namespace smgpc::scene {
     namespace {
 
-        constexpr auto cCommonLayerMask = u32{1U};
+        constexpr auto cCommonLayerMask = u32 {1U};
 
-        constexpr std::array<std::string_view, 17U> cLayerDirNames{
+        constexpr std::array<std::string_view, 17U> cLayerDirNames {
             "common",
             "layera",
             "layerb",
@@ -70,7 +70,7 @@ namespace smgpc::scene {
 
         [[nodiscard]] bool layer_is_active(std::string_view layer_name, u32 layer_mask) {
             const auto lower = lower_copy(layer_name);
-            for (auto index = std::size_t{}; index < cLayerDirNames.size(); ++index) {
+            for (auto index = std::size_t {}; index < cLayerDirNames.size(); ++index) {
                 if (lower == cLayerDirNames[index]) {
                     return (layer_mask & (1U << index)) != 0U;
                 }
@@ -81,7 +81,7 @@ namespace smgpc::scene {
 
         [[nodiscard]] s32 layer_id(std::string_view layer_name) {
             const auto lower = lower_copy(layer_name);
-            for (auto index = std::size_t{}; index < cLayerDirNames.size(); ++index) {
+            for (auto index = std::size_t {}; index < cLayerDirNames.size(); ++index) {
                 if (lower == cLayerDirNames[index]) {
                     return static_cast<s32>(index);
                 }
@@ -112,7 +112,7 @@ namespace smgpc::scene {
         }
 
         [[nodiscard]] std::optional<std::string> layered_jmp_category(std::string_view path, std::string &layer_name) {
-            constexpr std::array<std::string_view, 5U> categories{
+            constexpr std::array<std::string_view, 5U> categories {
                 "placement",
                 "mapparts",
                 "start",
@@ -161,7 +161,7 @@ namespace smgpc::scene {
                 return layer_mask;
             }
 
-            auto scenario_layers = u32{};
+            auto scenario_layers = u32 {};
             if (scenario_iter.getValue(std::string(layer_column_name).c_str(), &scenario_layers)) {
                 layer_mask |= scenario_layers * 2U;
             }
@@ -178,7 +178,7 @@ namespace smgpc::scene {
                 return;
             }
 
-            for (auto entry_index = s32{}; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
+            for (auto entry_index = s32 {}; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
                 const auto iter = JMapInfoIter(&table.jmap_info, entry_index);
                 const char *zone_name = nullptr;
                 if (!iter.getValue("name", &zone_name) || zone_name == nullptr || zone_name[0] == '\0') {
@@ -205,7 +205,7 @@ namespace smgpc::scene {
             const auto layer_mask = resolve_stage_layer_mask(dvd, scenario_stage_name, stage_name, scenario_no);
             const auto first_new_table = tables.size();
             for (const auto &entry : archive.entries()) {
-                auto layer_name = std::string{};
+                auto layer_name = std::string {};
                 auto category = layered_jmp_category(entry.path, layer_name);
                 if (category.has_value()) {
                     if (!layer_is_active(layer_name, layer_mask)) {
@@ -223,7 +223,7 @@ namespace smgpc::scene {
                 const auto table_name = basename(entry.path);
                 const auto table_layer_id = layer_id(layer_name);
                 info.setName(table_name.c_str());
-                tables.push_back(StagePlacementTable{
+                tables.push_back(StagePlacementTable {
                     .stage_name = std::string(stage_name),
                     .zone_name = std::string(stage_name),
                     .category = std::move(*category),
@@ -244,8 +244,8 @@ namespace smgpc::scene {
         }
 
         void read_object_args(StagePlacementObject &object, const JMapInfoIter &iter) {
-            for (auto arg_index = std::size_t{}; arg_index < object.object_args.size(); ++arg_index) {
-                auto value = s32{-1};
+            for (auto arg_index = std::size_t {}; arg_index < object.object_args.size(); ++arg_index) {
+                auto value = s32 {-1};
                 const auto field = "Obj_arg" + std::to_string(arg_index);
                 (void)iter.getValue(field.c_str(), &value);
                 object.object_args[arg_index] = value;
@@ -255,9 +255,9 @@ namespace smgpc::scene {
         void read_vec3(StagePlacementObject &object, const JMapInfoIter &iter, std::string_view prefix,
                        std::array<f32, 3U> StagePlacementObject::*field, bool StagePlacementObject::*has_field) {
             const auto base = std::string(prefix);
-            auto x = f32{};
-            auto y = f32{};
-            auto z = f32{};
+            auto x = f32 {};
+            auto y = f32 {};
+            auto z = f32 {};
             if (!iter.getValue((base + "_x").c_str(), &x) || !iter.getValue((base + "_y").c_str(), &y) ||
                 !iter.getValue((base + "_z").c_str(), &z)) {
                 object.*has_field = false;
@@ -317,10 +317,10 @@ namespace smgpc::scene {
                 return std::nullopt;
             }
 
-            auto l_id = s32{-1};
+            auto l_id = s32 {-1};
             (void)iter.getValue("l_id", &l_id);
             const auto object_archive = dvd.find_object_archive(object_name);
-            auto object = StagePlacementObject{
+            auto object = StagePlacementObject {
                 .object_name = object_name,
                 .type_name = "",
                 .stage_name = table.stage_name,
@@ -356,7 +356,7 @@ namespace smgpc::scene {
     std::vector<StagePlacementObject> resolve_stage_placement_objects(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {
         auto objects = std::vector<StagePlacementObject>{};
         for (const auto &table : resolve_stage_placement_tables(dvd, stage_name, scenario_no)) {
-            for (auto entry_index = s32{}; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
+            for (auto entry_index = s32 {}; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
                 if (auto object = read_placement_object(dvd, table, entry_index)) {
                     objects.push_back(std::move(*object));
                 }

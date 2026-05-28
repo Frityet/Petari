@@ -28,7 +28,7 @@ namespace {
 
     template <typename... Args>
     void add_line(std::vector<std::string> &report, Args &&...args) {
-        auto out = std::ostringstream{};
+        auto out = std::ostringstream {};
         (out << ... << std::forward<Args>(args));
         report.push_back(out.str());
     }
@@ -44,7 +44,7 @@ namespace {
             return false;
         }
 
-        for (auto i = std::size_t{}; i < prefix.size(); ++i) {
+        for (auto i = std::size_t {}; i < prefix.size(); ++i) {
             if (data[i] != static_cast<std::uint8_t>(prefix[i])) {
                 return false;
             }
@@ -66,8 +66,8 @@ namespace {
     }
 
     [[nodiscard]] std::uint64_t visible_pixel_count(const smgpc::resource::DecodedTexture &texture) {
-        auto count = std::uint64_t{};
-        for (auto offset = std::size_t{}; offset < texture.rgba.size(); offset += 4U) {
+        auto count = std::uint64_t {};
+        for (auto offset = std::size_t {}; offset < texture.rgba.size(); offset += 4U) {
             if (texture.rgba[offset] != 0U || texture.rgba[offset + 1U] != 0U || texture.rgba[offset + 2U] != 0U ||
                 texture.rgba[offset + 3U] != 0U) {
                 ++count;
@@ -85,7 +85,7 @@ namespace {
     };
 
     [[nodiscard]] BtiAggregate decode_bti_entries(const smgpc::resource::RarcArchive &archive) {
-        auto aggregate = BtiAggregate{};
+        auto aggregate = BtiAggregate {};
         for (const auto &entry : archive.entries()) {
             if (!entry_path_ends_with(entry, ".bti")) {
                 continue;
@@ -105,7 +105,7 @@ namespace {
     }
 
     [[nodiscard]] std::size_t brlan_target_count(const smgpc::layout::BrlanAnimation &animation) {
-        auto count = std::size_t{};
+        auto count = std::size_t {};
         for (const auto &content : animation.contents) {
             for (const auto &info : content.infos) {
                 count += info.targets.size();
@@ -115,7 +115,7 @@ namespace {
     }
 
     [[nodiscard]] std::size_t brlan_key_count(const smgpc::layout::BrlanAnimation &animation) {
-        auto count = std::size_t{};
+        auto count = std::size_t {};
         for (const auto &content : animation.contents) {
             for (const auto &info : content.infos) {
                 for (const auto &target : info.targets) {
@@ -217,7 +217,7 @@ namespace {
     }
 
     [[nodiscard]] Options parse_options(int argc, char **argv) {
-        auto options = Options{};
+        auto options = Options {};
         for (auto i = 1; i < argc; ++i) {
             const auto arg = std::string_view(argv[i]);
             if (arg == "--output") {

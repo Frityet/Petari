@@ -15,6 +15,7 @@
 
 #include "core/RenderTypes.hpp"
 #include "layout/LytTexMap.hpp"
+#include "render/GXState.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -144,6 +145,29 @@ namespace {
         const auto it = std::ranges::find_if(textures, [text_box_index](const auto& texture) { return texture.text_box_index == text_box_index; });
 
         return it == textures.end() ? nullptr : &(*it);
+    }
+
+    [[nodiscard]] bool pane_is_or_descends_from(const smgpc::layout::BrlytLayout& layout, std::size_t pane_index, std::string_view root_name) {
+        while (pane_index < layout.panes.size()) {
+            const auto& pane = layout.panes[pane_index];
+            if (pane.name == root_name) {
+                return true;
+            }
+            if (pane.parent_index < 0) {
+                break;
+            }
+            pane_index = static_cast< std::size_t >(pane.parent_index);
+        }
+
+        return false;
+    }
+
+    [[nodiscard]] bool text_box_matches_recursive(const smgpc::layout::BrlytLayout& layout, const smgpc::layout::BrlytTextBox& text_box,
+                                                  std::string_view requested_name) {
+        if (requested_name.empty() || text_box.name == requested_name) {
+            return true;
+        }
+        return text_box.pane_index < layout.panes.size() && pane_is_or_descends_from(layout, text_box.pane_index, requested_name);
     }
 
     [[nodiscard]] const smgpc::resource::RarcEntry* find_font_entry(const smgpc::resource::RarcArchive& archive, std::string_view font_name) {
@@ -419,6 +443,14 @@ namespace {
         return 1.0F - v;
     }
 
+    [[nodiscard]] float brlyt_texture_v_to_host(float v, std::uint8_t wrap_t) {
+        constexpr auto gx_clamp = std::uint8_t{0U};
+        if (wrap_t == gx_clamp) {
+            return gx_texture_v_to_host(v);
+        }
+        return v;
+    }
+
     [[nodiscard]] float hypot2(float x, float y) {
         return std::sqrt((x * x) + (y * y));
     }
@@ -504,6 +536,15 @@ namespace {
                op.out_reg <= 3U;
     }
 
+    [[nodiscard]] bool brlyt_tev_stage_uses_texture(const smgpc::layout::BrlytTevStage& stage) {
+        constexpr auto gx_cc_texc = std::uint8_t{8U};
+        constexpr auto gx_cc_texa = std::uint8_t{9U};
+        constexpr auto gx_ca_texa = std::uint8_t{4U};
+        return stage.color.a == gx_cc_texc || stage.color.b == gx_cc_texc || stage.color.c == gx_cc_texc || stage.color.d == gx_cc_texc ||
+               stage.color.a == gx_cc_texa || stage.color.b == gx_cc_texa || stage.color.c == gx_cc_texa || stage.color.d == gx_cc_texa ||
+               stage.alpha.a == gx_ca_texa || stage.alpha.b == gx_ca_texa || stage.alpha.c == gx_ca_texa || stage.alpha.d == gx_ca_texa;
+    }
+
     [[nodiscard]] bool brlyt_material_can_use_gx_shader(const smgpc::layout::BrlytMaterial& material) {
         if (material.textures.empty()) {
             return false;
@@ -516,8 +557,8 @@ namespace {
         }
 
         return std::ranges::all_of(material.tev_stages, [&material](const auto& stage) {
-            return stage.tex_map < material.textures.size() && brlyt_tev_op_can_use_gx_shader(stage.color, 15U) &&
-                   brlyt_tev_op_can_use_gx_shader(stage.alpha, 7U);
+            return (!brlyt_tev_stage_uses_texture(stage) || stage.tex_map < material.textures.size()) &&
+                   brlyt_tev_op_can_use_gx_shader(stage.color, 15U) && brlyt_tev_op_can_use_gx_shader(stage.alpha, 7U);
         });
     }
 
@@ -538,25 +579,6 @@ namespace {
             .alpha_clamp = stage.alpha.clamp,
             .alpha_out = stage.alpha.out_reg,
             .konst_color = brlyt_stage_konst_color(material, stage),
-        };
-    }
-
-    [[nodiscard]] smgpc::render::GxTevStage2D brlyt_default_texture_tev_stage() {
-        return smgpc::render::GxTevStage2D{
-            .texture_stage = 0U,
-            .color_in = {15U, 8U, 10U, 15U},
-            .color_op = 0U,
-            .color_bias = 0U,
-            .color_scale = 0U,
-            .color_clamp = true,
-            .color_out = 0U,
-            .alpha_in = {7U, 4U, 5U, 7U},
-            .alpha_op = 0U,
-            .alpha_bias = 0U,
-            .alpha_scale = 0U,
-            .alpha_clamp = true,
-            .alpha_out = 0U,
-            .konst_color = {0U, 0U, 0U, 0U},
         };
     }
 
@@ -583,6 +605,64 @@ namespace {
             .op = blend.op,
             .enabled = blend.enabled,
         };
+    }
+
+    [[nodiscard]] std::uint8_t brlan_color_u8(float value) {
+        return static_cast< std::uint8_t >(std::clamp(std::lround(value), 0L, 255L));
+    }
+
+    [[nodiscard]] std::int16_t brlan_tev_color_s10(float value) {
+        return static_cast< std::int16_t >(std::clamp(std::lround(value), -1024L, 1023L));
+    }
+
+    void merge_material_frame(smgpc::layout::BrlanMaterialFrame& target, const smgpc::layout::BrlanMaterialFrame& source) {
+        for (auto component = std::size_t{}; component < target.material_color.size(); ++component) {
+            if (source.material_color[component].has_value()) {
+                target.material_color[component] = source.material_color[component];
+            }
+        }
+        for (auto color = std::size_t{}; color < target.tev_colors.size(); ++color) {
+            for (auto component = std::size_t{}; component < target.tev_colors[color].size(); ++component) {
+                if (source.tev_colors[color][component].has_value()) {
+                    target.tev_colors[color][component] = source.tev_colors[color][component];
+                }
+            }
+        }
+        for (auto color = std::size_t{}; color < target.tev_k_colors.size(); ++color) {
+            for (auto component = std::size_t{}; component < target.tev_k_colors[color].size(); ++component) {
+                if (source.tev_k_colors[color][component].has_value()) {
+                    target.tev_k_colors[color][component] = source.tev_k_colors[color][component];
+                }
+            }
+        }
+    }
+
+    void apply_material_frame(smgpc::layout::BrlytMaterial& material, const smgpc::layout::BrlanMaterialFrame& frame) {
+        for (auto component = std::size_t{}; component < material.mat_color.size(); ++component) {
+            if (frame.material_color[component].has_value()) {
+                material.mat_color[component] = brlan_color_u8(*frame.material_color[component]);
+            }
+        }
+        for (auto color = std::size_t{}; color < material.tev_colors.size(); ++color) {
+            for (auto component = std::size_t{}; component < material.tev_colors[color].size(); ++component) {
+                if (frame.tev_colors[color][component].has_value()) {
+                    material.tev_colors[color][component] = brlan_tev_color_s10(*frame.tev_colors[color][component]);
+                }
+            }
+        }
+        for (auto color = std::size_t{}; color < material.tev_k_colors.size(); ++color) {
+            for (auto component = std::size_t{}; component < material.tev_k_colors[color].size(); ++component) {
+                if (frame.tev_k_colors[color][component].has_value()) {
+                    material.tev_k_colors[color][component] = brlan_color_u8(*frame.tev_k_colors[color][component]);
+                }
+            }
+        }
+
+        material.gx_state.color_channels[0U].material_color = material.mat_color;
+        for (auto color = std::size_t{}; color < material.tev_colors.size(); ++color) {
+            material.gx_state.tev_registers[color + 1U] = material.tev_colors[color];
+        }
+        material.gx_state.tev_k_colors = material.tev_k_colors;
     }
 
 }  // namespace
@@ -695,177 +775,214 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
     ensureTextureUploads(renderer);
 
     const auto alpha = visualAlpha();
-    for (std::size_t picture_index = 0U; picture_index < mBrlytLayout.pictures.size(); ++picture_index) {
-        const auto& picture = mBrlytLayout.pictures[picture_index];
-        if (!picture.visible || picture.pane_index >= mBrlytLayout.panes.size()) {
-            continue;
-        }
-
-        if (picture.material_index >= mBrlytLayout.materials.size()) {
-            continue;
-        }
-        const auto& material = mBrlytLayout.materials[picture.material_index];
-        const auto content_name = material.name.empty() ? std::string_view(picture.name) : std::string_view(material.name);
-
-        const auto pane_state = paneRenderState(picture.pane_index);
-        if (!pane_state.visible) {
-            continue;
-        }
-
-        const auto& pane = mBrlytLayout.panes[picture.pane_index];
-        const auto local_left = base_position_x(pane.base_position, pane.width);
-        const auto local_top = base_position_y(pane.base_position, pane.height);
-        const auto transform_point = [&](float local_x, float local_y) {
-            return std::array< float, 2U >{
-                mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
-                mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
-            };
-        };
-        const auto texture_frame = textureFrameForContent(content_name);
-        const auto vertex_color = [&](std::size_t index) {
-            const auto& source = picture.vertex_colors[index];
-            return std::array< std::uint8_t, 4U >{
-                source[0U],
-                source[1U],
-                source[2U],
-                static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha * (static_cast< float >(source[3U]) / 255.0F), 0.0F, 255.0F)),
-            };
-        };
-
-        if (!brlyt_material_can_use_gx_shader(material)) {
-            continue;
-        }
-
-        auto texture_stages = std::array< smgpc::render::GxTextureStage2D, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
-        auto tev_stages = std::array< smgpc::render::GxTevStage2D, smgpc::render::core::kMaxGxMaterialTevStages2D >{};
-        auto tex_coord_gen_indices = std::array< std::uint8_t, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
-        auto texture_stage_count = std::size_t{};
-        auto tev_stage_count = std::size_t{};
-#ifndef NDEBUG
-        auto debug_texture_bindings = std::vector< smgpc::runtime::RuntimeContext::RenderTextureBindingTrace >{};
-#endif
-
-        const auto append_texture_stage = [&](const smgpc::layout::BrlytMaterialTexture& material_texture, std::uint8_t tex_coord_gen_index) {
-            if (texture_stage_count >= texture_stages.size()) {
-                return false;
-            }
-
-            auto* texture = find_texture(mRenderTextures, material_texture.texture_name);
-            if (texture == nullptr || !texture->handle.is_valid()) {
-                return false;
-            }
-
-            texture_stages[texture_stage_count] = smgpc::render::GxTextureStage2D{
-                .texture = texture->handle,
-                .wrap_u = material_texture.wrap_s,
-                .wrap_v = material_texture.wrap_t,
-                .min_filter = material_texture.min_filter,
-                .mag_filter = material_texture.mag_filter,
-            };
-            tex_coord_gen_indices[texture_stage_count] = tex_coord_gen_index;
-#ifndef NDEBUG
-            debug_texture_bindings.push_back(smgpc::runtime::RuntimeContext::RenderTextureBindingTrace{
-                .slot = static_cast< std::uint8_t >(texture_stage_count),
-                .texture_index = material_texture.texture_index,
-                .name = texture->name,
-                .width = texture->decoded.width,
-                .height = texture->decoded.height,
-                .format_raw = static_cast< std::uint32_t >(texture->decoded.format),
-                .format_name = texture_format_name(texture->decoded.format),
-            });
-#endif
-            ++texture_stage_count;
-            return true;
-        };
-
-        auto can_submit = true;
-        if (material.tev_stages.empty()) {
-            can_submit = append_texture_stage(material.textures.front(), 0U);
-            tev_stages[0U] = brlyt_default_texture_tev_stage();
-            tev_stage_count = 1U;
-        } else {
-            for (const auto& stage : material.tev_stages) {
-                const auto texture_stage = static_cast< std::uint8_t >(texture_stage_count);
-                can_submit = can_submit && append_texture_stage(material.textures[stage.tex_map], stage.tex_coord_gen);
-                if (tev_stage_count < tev_stages.size()) {
-                    tev_stages[tev_stage_count] = brlyt_gx_tev_stage(material, stage, texture_stage);
-                    ++tev_stage_count;
-                }
+    if (!mBrlytLayout.drawables.empty()) {
+        for (const auto& drawable : mBrlytLayout.drawables) {
+            switch (drawable.kind) {
+            case smgpc::layout::BrlytDrawableKind::Picture:
+                drawPicture(renderer, alpha, drawable.index);
+                break;
+            case smgpc::layout::BrlytDrawableKind::TextBox:
+                drawTextBox(renderer, alpha, drawable.index);
+                break;
             }
         }
-        if (!can_submit || texture_stage_count == 0U || tev_stage_count == 0U) {
-            continue;
-        }
-
-        const auto tex_coord = [&](std::size_t vertex_index, std::size_t texture_stage_index) {
-            auto coord = picture.tex_coords[vertex_index];
-            const auto tex_coord_gen_index = tex_coord_gen_indices[texture_stage_index];
-            if (tex_coord_gen_index < material.tex_coord_gens.size()) {
-                const auto tex_srt_index = tex_srt_index_for_coord_gen(material.tex_coord_gens[tex_coord_gen_index]);
-                if (tex_srt_index != UINT16_MAX && tex_srt_index < material.tex_srts.size()) {
-                    coord = transform_tex_coord(coord, material.tex_srts[tex_srt_index], texture_frame, tex_srt_index == 0U);
-                }
-            } else {
-                coord = transform_tex_coord(coord, texture_frame);
-            }
-            return std::array< float, 3U >{coord.u, gx_texture_v_to_host(coord.v), 1.0F};
-        };
-
-        const auto vertex = [&](std::size_t index, float vx, float vy) {
-            const auto position = transform_point(vx, vy);
-            auto tex_coords = std::array< std::array< float, 3U >, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
-            for (auto stage = std::size_t{}; stage < texture_stage_count && stage < tex_coords.size(); ++stage) {
-                tex_coords[stage] = tex_coord(index, stage);
-            }
-            return smgpc::render::GxMaterialVertex2D{
-                .x = position[0U],
-                .y = position[1U],
-                .z = 0.0F,
-                .clip_w = 1.0F,
-                .tex_coords = tex_coords,
-                .color = vertex_color(index),
-            };
-        };
-
-        const auto vertices = std::array< smgpc::render::GxMaterialVertex2D, 4U >{
-            vertex(0U, local_left, local_top),
-            vertex(1U, local_left + pane.width, local_top),
-            vertex(2U, local_left + pane.width, local_top + pane.height),
-            vertex(3U, local_left, local_top + pane.height),
-        };
-        constexpr auto indices = std::array< std::uint16_t, 6U >{0U, 1U, 2U, 0U, 2U, 3U};
-#ifndef NDEBUG
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && runtime->should_record_render_packet_trace()) {
-            runtime->record_layout_packet_trace(smgpc::runtime::RuntimeContext::LayoutRuntimePacketTrace{
-                .layout_name = mLayoutName,
-                .pane_name = pane.name,
-                .material_name = material.name.empty() ? picture.name : material.name,
-                .frame_index = runtime->frame_index(),
-                .picture_index = static_cast< std::uint32_t >(picture_index),
-                .material_index = picture.material_index,
-                .vertex_count = static_cast< std::uint32_t >(vertices.size()),
-                .index_count = static_cast< std::uint32_t >(indices.size()),
-                .texgen_count = static_cast< std::uint32_t >(texture_stage_count),
-                .tev_stage_count = static_cast< std::uint32_t >(tev_stage_count),
-                .alpha_compare_enabled = material.alpha_compare.enabled,
-                .blend_enabled = material.gx_state.blend.enabled,
-                .cull_mode = smgpc::render::CullMode::None,
-                .texture_bindings = debug_texture_bindings,
-            });
-        }
-#endif
-        renderer.submit_gx_material_triangles(smgpc::render::GxMaterialTriangleBatch2D{
-            .vertices = std::span< const smgpc::render::GxMaterialVertex2D >(vertices.data(), vertices.size()),
-            .indices = std::span< const std::uint16_t >(indices.data(), indices.size()),
-            .texture_stages = std::span< const smgpc::render::GxTextureStage2D >(texture_stages.data(), texture_stage_count),
-            .tev_stages = std::span< const smgpc::render::GxTevStage2D >(tev_stages.data(), tev_stage_count),
-            .initial_tev_registers = brlyt_initial_tev_registers(material.gx_state),
-            .alpha_compare = brlyt_alpha_compare(material.alpha_compare),
-            .blend = brlyt_gx_blend_mode(material.gx_state.blend),
-        });
+        return;
     }
 
+    for (std::size_t picture_index = 0U; picture_index < mBrlytLayout.pictures.size(); ++picture_index) {
+        drawPicture(renderer, alpha, picture_index);
+    }
     drawTextBoxes(renderer, alpha);
+}
+
+void SimpleLayout::drawPicture(smgpc::render::IRendererEngine& renderer, float alpha, std::size_t picture_index) {
+    if (picture_index >= mBrlytLayout.pictures.size()) {
+        return;
+    }
+    const auto& picture = mBrlytLayout.pictures[picture_index];
+    if (!picture.visible || picture.pane_index >= mBrlytLayout.panes.size()) {
+        return;
+    }
+
+    if (picture.material_index >= mBrlytLayout.materials.size()) {
+        return;
+    }
+    auto material = mBrlytLayout.materials[picture.material_index];
+    const auto content_name = material.name.empty() ? std::string_view(picture.name) : std::string_view(material.name);
+    apply_material_frame(material, materialFrameForContent(content_name));
+
+    const auto pane_state = paneRenderState(picture.pane_index);
+    if (!pane_state.visible) {
+        return;
+    }
+
+    const auto& pane = mBrlytLayout.panes[picture.pane_index];
+    const auto local_left = base_position_x(pane.base_position, pane.width);
+    const auto local_top = base_position_y(pane.base_position, pane.height);
+    const auto transform_point = [&](float local_x, float local_y) {
+        return std::array< float, 2U >{
+            mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
+            mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
+        };
+    };
+    const auto texture_frame = textureFrameForContent(content_name);
+    const auto vertex_color = [&](std::size_t index) {
+        const auto& source = picture.vertex_colors[index];
+        return std::array< std::uint8_t, 4U >{
+            source[0U],
+            source[1U],
+            source[2U],
+            static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha * (static_cast< float >(source[3U]) / 255.0F), 0.0F, 255.0F)),
+        };
+    };
+
+    if (!brlyt_material_can_use_gx_shader(material)) {
+        return;
+    }
+
+    auto texture_stages = std::array< smgpc::render::GxTextureStage2D, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+    auto tev_stages = std::array< smgpc::render::GxTevStage2D, smgpc::render::core::kMaxGxMaterialTevStages2D >{};
+    auto tex_coord_gen_indices = std::array< std::uint8_t, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+    auto texture_stage_wrap_t = std::array< std::uint8_t, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+    auto texture_stage_count = std::size_t{};
+    auto tev_stage_count = std::size_t{};
+#ifndef NDEBUG
+    auto debug_texture_bindings = std::vector< smgpc::runtime::RuntimeContext::RenderTextureBindingTrace >{};
+#endif
+
+    const auto append_texture_stage = [&](const smgpc::layout::BrlytMaterialTexture& material_texture, std::uint8_t tex_coord_gen_index) {
+        if (texture_stage_count >= texture_stages.size()) {
+            return false;
+        }
+
+        auto* texture = find_texture(mRenderTextures, material_texture.texture_name);
+        if (texture == nullptr || !texture->handle.is_valid()) {
+            return false;
+        }
+
+        texture_stages[texture_stage_count] = smgpc::render::GxTextureStage2D{
+            .texture = texture->handle,
+            .wrap_u = material_texture.wrap_s,
+            .wrap_v = material_texture.wrap_t,
+            .min_filter = material_texture.min_filter,
+            .mag_filter = material_texture.mag_filter,
+        };
+        tex_coord_gen_indices[texture_stage_count] = tex_coord_gen_index;
+        texture_stage_wrap_t[texture_stage_count] = material_texture.wrap_t;
+#ifndef NDEBUG
+        debug_texture_bindings.push_back(smgpc::runtime::RuntimeContext::RenderTextureBindingTrace{
+            .slot = static_cast< std::uint8_t >(texture_stage_count),
+            .texture_index = material_texture.texture_index,
+            .name = texture->name,
+            .width = texture->decoded.width,
+            .height = texture->decoded.height,
+            .format_raw = static_cast< std::uint32_t >(texture->decoded.format),
+            .format_name = texture_format_name(texture->decoded.format),
+        });
+#endif
+        ++texture_stage_count;
+        return true;
+    };
+
+    auto can_submit = true;
+    if (material.tev_stages.empty()) {
+        can_submit = append_texture_stage(material.textures.front(), 0U);
+        if (tev_stages.size() >= 2U) {
+            tev_stages[0U] = smgpc::render::gx_brlyt_default_texture_color_stage(0U);
+            tev_stages[1U] = smgpc::render::gx_brlyt_default_raster_modulate_stage();
+            tev_stage_count = 2U;
+        } else {
+            can_submit = false;
+        }
+    } else {
+        for (const auto& stage : material.tev_stages) {
+            auto texture_stage = std::uint8_t{0xffU};
+            if (brlyt_tev_stage_uses_texture(stage)) {
+                if (stage.tex_map >= material.textures.size()) {
+                    can_submit = false;
+                } else {
+                    texture_stage = static_cast< std::uint8_t >(texture_stage_count);
+                    can_submit = can_submit && append_texture_stage(material.textures[stage.tex_map], stage.tex_coord_gen);
+                }
+            }
+            if (tev_stage_count < tev_stages.size()) {
+                tev_stages[tev_stage_count] = brlyt_gx_tev_stage(material, stage, texture_stage);
+                ++tev_stage_count;
+            }
+        }
+    }
+    const auto submitted_tev_uses_texture = std::ranges::any_of(std::span< const smgpc::render::GxTevStage2D >(tev_stages.data(), tev_stage_count),
+                                                                [](const auto& stage) { return stage.texture_stage != 0xffU; });
+    if (!can_submit || (submitted_tev_uses_texture && texture_stage_count == 0U) || tev_stage_count == 0U) {
+        return;
+    }
+
+    const auto tex_coord = [&](std::size_t vertex_index, std::size_t texture_stage_index) {
+        auto coord = picture.tex_coords[vertex_index];
+        const auto tex_coord_gen_index = tex_coord_gen_indices[texture_stage_index];
+        if (tex_coord_gen_index < material.tex_coord_gens.size()) {
+            const auto tex_srt_index = tex_srt_index_for_coord_gen(material.tex_coord_gens[tex_coord_gen_index]);
+            if (tex_srt_index != UINT16_MAX && tex_srt_index < material.tex_srts.size()) {
+                coord = transform_tex_coord(coord, material.tex_srts[tex_srt_index], texture_frame, tex_srt_index == 0U);
+            }
+        } else {
+            coord = transform_tex_coord(coord, texture_frame);
+        }
+        return std::array< float, 3U >{coord.u, brlyt_texture_v_to_host(coord.v, texture_stage_wrap_t[texture_stage_index]), 1.0F};
+    };
+
+    const auto vertex = [&](std::size_t index, float vx, float vy) {
+        const auto position = transform_point(vx, vy);
+        auto tex_coords = std::array< std::array< float, 3U >, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
+        for (auto stage = std::size_t{}; stage < texture_stage_count && stage < tex_coords.size(); ++stage) {
+            tex_coords[stage] = tex_coord(index, stage);
+        }
+        return smgpc::render::GxMaterialVertex2D{
+            .x = position[0U],
+            .y = position[1U],
+            .z = 0.0F,
+            .clip_w = 1.0F,
+            .tex_coords = tex_coords,
+            .color = vertex_color(index),
+        };
+    };
+
+    const auto vertices = std::array< smgpc::render::GxMaterialVertex2D, 4U >{
+        vertex(0U, local_left, local_top),
+        vertex(1U, local_left + pane.width, local_top),
+        vertex(2U, local_left + pane.width, local_top + pane.height),
+        vertex(3U, local_left, local_top + pane.height),
+    };
+    constexpr auto indices = std::array< std::uint16_t, 6U >{0U, 1U, 2U, 0U, 2U, 3U};
+#ifndef NDEBUG
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && runtime->should_record_render_packet_trace()) {
+        runtime->record_layout_packet_trace(smgpc::runtime::RuntimeContext::LayoutRuntimePacketTrace{
+            .layout_name = mLayoutName,
+            .pane_name = pane.name,
+            .material_name = material.name.empty() ? picture.name : material.name,
+            .frame_index = runtime->frame_index(),
+            .picture_index = static_cast< std::uint32_t >(picture_index),
+            .material_index = picture.material_index,
+            .vertex_count = static_cast< std::uint32_t >(vertices.size()),
+            .index_count = static_cast< std::uint32_t >(indices.size()),
+            .texgen_count = static_cast< std::uint32_t >(texture_stage_count),
+            .tev_stage_count = static_cast< std::uint32_t >(tev_stage_count),
+            .alpha_compare_enabled = material.alpha_compare.enabled,
+            .blend_enabled = material.gx_state.blend.enabled,
+            .cull_mode = smgpc::render::CullMode::None,
+            .texture_bindings = debug_texture_bindings,
+        });
+    }
+#endif
+    renderer.submit_gx_material_triangles(smgpc::render::GxMaterialTriangleBatch2D{
+        .vertices = std::span< const smgpc::render::GxMaterialVertex2D >(vertices.data(), vertices.size()),
+        .indices = std::span< const std::uint16_t >(indices.data(), indices.size()),
+        .texture_stages = std::span< const smgpc::render::GxTextureStage2D >(texture_stages.data(), texture_stage_count),
+        .tev_stages = std::span< const smgpc::render::GxTevStage2D >(tev_stages.data(), tev_stage_count),
+        .initial_tev_registers = brlyt_initial_tev_registers(material.gx_state),
+        .alpha_compare = brlyt_alpha_compare(material.alpha_compare),
+        .blend = brlyt_gx_blend_mode(material.gx_state.blend),
+    });
 }
 
 void SimpleLayout::startAnim(const char* pAnimName, u32 animLayer) {
@@ -918,7 +1035,7 @@ void SimpleLayout::setTextBoxNumberRecursive(const char* pPaneName, s32 number) 
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
     for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (requested_name.empty() || text_box.name == requested_name) {
+        if (text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             text_box.text = text;
             mTextBoxTemplates.erase(text_box.name);
         }
@@ -938,7 +1055,7 @@ void SimpleLayout::setTextBoxStringRecursive(const char* pPaneName, std::u16stri
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
     for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (requested_name.empty() || text_box.name == requested_name) {
+        if (text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             text_box.text = encoded;
             mTextBoxTemplates.erase(text_box.name);
         }
@@ -961,7 +1078,7 @@ void SimpleLayout::setTextBoxTaggedStringRecursive(const char* pPaneName, std::u
     }
 
     for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (requested_name.empty() || text_box.name == requested_name) {
+        if (text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             text_box.text = encoded;
             mTextBoxTemplates[text_box.name] = TextBoxTemplateState{
                 .raw_text = std::u16string(rawText),
@@ -981,7 +1098,7 @@ void SimpleLayout::setTextBoxArgNumberRecursive(const char* pPaneName, s32 numbe
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
     for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
+        if (!text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             continue;
         }
 
@@ -1012,7 +1129,7 @@ void SimpleLayout::setTextBoxArgStringRecursive(const char* pPaneName, std::u16s
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
     for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
+        if (!text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             continue;
         }
 
@@ -1120,31 +1237,8 @@ void SimpleLayout::setPaneVisible(std::string_view paneName, bool visible) {
     mPaneVisibilityOverrides[std::string(paneName)] = visible;
 }
 
-void SimpleLayout::setTextBoxHorizontalPosition(std::string_view paneName, u8 position) {
+void SimpleLayout::setPaneVisibleRecursive(std::string_view paneName, bool visible) {
     loadRenderData();
-    const auto requested_name = paneName;
-    for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
-            continue;
-        }
-
-        text_box.text_position = static_cast< std::uint8_t >((text_box.text_position / 3U) * 3U + std::min< u8 >(position, static_cast< u8 >(2U)));
-    }
-}
-
-void SimpleLayout::setTextBoxVerticalPosition(std::string_view paneName, u8 position) {
-    loadRenderData();
-    const auto requested_name = paneName;
-    for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
-            continue;
-        }
-
-        text_box.text_position = static_cast< std::uint8_t >(std::min< u8 >(position, static_cast< u8 >(2U)) * 3U + text_box.text_position % 3U);
-    }
-}
-
-bool SimpleLayout::isPaneVisible(std::string_view paneName) const {
     if (paneName.empty()) {
         return;
     }
@@ -1178,7 +1272,7 @@ void SimpleLayout::setTextBoxHorizontalPosition(std::string_view paneName, u8 po
     loadRenderData();
     const auto requested_name = paneName;
     for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
+        if (!text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             continue;
         }
 
@@ -1190,7 +1284,7 @@ void SimpleLayout::setTextBoxVerticalPosition(std::string_view paneName, u8 posi
     loadRenderData();
     const auto requested_name = paneName;
     for (auto& text_box : mBrlytLayout.text_boxes) {
-        if (!requested_name.empty() && text_box.name != requested_name) {
+        if (!text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             continue;
         }
 
@@ -1548,7 +1642,9 @@ std::vector< SimpleLayout::DebugPaneState > SimpleLayout::debugPanes() const {
                 .kind = "picture",
                 .name = picture.name,
                 .material_index = static_cast< s32 >(picture.material_index),
+                .material_name = {},
                 .texture_name = picture.texture_name,
+                .font_name = {},
                 .visible = picture.visible,
             };
             if (picture.material_index < mBrlytLayout.materials.size()) {
@@ -1570,6 +1666,8 @@ std::vector< SimpleLayout::DebugPaneState > SimpleLayout::debugPanes() const {
                 .kind = "text_box",
                 .name = text_box.name,
                 .material_index = static_cast< s32 >(text_box.material_index),
+                .material_name = {},
+                .texture_name = {},
                 .font_name = text_box.font_name,
                 .visible = text_box.visible,
             };
@@ -1708,6 +1806,7 @@ void SimpleLayout::commitAnimationState(const AnimationState& anim) {
         if (pane_frame.visible.has_value()) {
             committed.visible = pane_frame.visible;
         }
+        merge_material_frame(mCommittedMaterialFrames[content.name], it->second.material_frame(content.name, frame));
     }
 }
 
@@ -1821,6 +1920,7 @@ void SimpleLayout::loadRenderData() {
         mRenderTextTextures.clear();
         mRenderAnimations.clear();
         mCommittedPaneFrames.clear();
+        mCommittedMaterialFrames.clear();
         mTextBoxTemplates.clear();
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->note_layout_texture_decode_failed(mLayoutName, "<layout>", e.what());
@@ -1965,20 +2065,12 @@ SimpleLayout::RenderTextTexture SimpleLayout::composeTextTexture(std::size_t tex
                     const auto dest_offset = (static_cast< std::size_t >(dest_y) * texture.width + static_cast< std::size_t >(dest_x)) * 4U;
                     const auto dest_alpha = is_button_icon ? mapped_color[3U] : source_alpha;
                     if (dest_alpha >= texture.rgba[dest_offset + 3U]) {
-                        if (is_button_icon) {
-                            texture.rgba[dest_offset] =
-                                static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset]) * mapped_color[0U]) / 255U);
-                            texture.rgba[dest_offset + 1U] =
-                                static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 1U]) * mapped_color[1U]) / 255U);
-                            texture.rgba[dest_offset + 2U] =
-                                static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 2U]) * mapped_color[2U]) / 255U);
-                            texture.rgba[dest_offset + 3U] = dest_alpha;
-                            continue;
-                        }
-
-                        texture.rgba[dest_offset] = mapped_color[0U];
-                        texture.rgba[dest_offset + 1U] = mapped_color[1U];
-                        texture.rgba[dest_offset + 2U] = mapped_color[2U];
+                        texture.rgba[dest_offset] =
+                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset]) * mapped_color[0U]) / 255U);
+                        texture.rgba[dest_offset + 1U] =
+                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 1U]) * mapped_color[1U]) / 255U);
+                        texture.rgba[dest_offset + 2U] =
+                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 2U]) * mapped_color[2U]) / 255U);
                         texture.rgba[dest_offset + 3U] = dest_alpha;
                     }
                 }
@@ -1993,72 +2085,77 @@ SimpleLayout::RenderTextTexture SimpleLayout::composeTextTexture(std::size_t tex
 
 void SimpleLayout::drawTextBoxes(smgpc::render::IRendererEngine& renderer, float alpha) {
     for (std::size_t text_box_index = 0U; text_box_index < mBrlytLayout.text_boxes.size(); ++text_box_index) {
-        const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
-        if (!text_box.visible || text_box.pane_index >= mBrlytLayout.panes.size()) {
-            continue;
-        }
-
-        auto* text_texture = find_text_texture(mRenderTextTextures, text_box_index);
-        if (text_texture == nullptr || !text_texture->handle.is_valid()) {
-            continue;
-        }
-
-        const auto pane_state = paneRenderState(text_box.pane_index);
-        if (!pane_state.visible) {
-            continue;
-        }
-
-        const auto& pane = mBrlytLayout.panes[text_box.pane_index];
-        const auto box_width = pane.width;
-        const auto box_height = pane.height;
-        const auto box_x = base_position_x(pane.base_position, box_width);
-        const auto box_y = base_position_y(pane.base_position, box_height);
-        const auto font_width = text_box.font_width;
-        const auto font_height = text_box.font_height;
-        const auto scale_x = font_width / static_cast< float >(text_texture->font_width);
-        const auto scale_y = font_height / static_cast< float >(text_texture->font_height);
-        const auto line_width = static_cast< float >(text_texture->width) * scale_x;
-        const auto text_height = static_cast< float >(text_texture->height) * scale_y;
-
-        const auto horizontal_factor = text_factor(text_box.text_position % 3U);
-        const auto vertical_factor = text_factor(text_box.text_position / 3U);
-        const auto cursor_x = box_x + (box_width - line_width) * horizontal_factor;
-        const auto cursor_y = box_y + (box_height - text_height) * vertical_factor;
-        const auto color = std::array< std::uint8_t, 4U >{
-            255U,
-            255U,
-            255U,
-            static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha, 0.0F, 255.0F)),
-        };
-        const auto width = line_width;
-        const auto height = text_height;
-        const auto top_v = gx_texture_v_to_host(0.0F);
-        const auto bottom_v = gx_texture_v_to_host(1.0F);
-        const auto transform_point = [&](float local_x, float local_y) {
-            return std::array< float, 2U >{
-                mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
-                mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
-            };
-        };
-        const auto top_left = transform_point(cursor_x, cursor_y);
-        const auto top_right = transform_point(cursor_x + width, cursor_y);
-        const auto bottom_right = transform_point(cursor_x + width, cursor_y + height);
-        const auto bottom_left = transform_point(cursor_x, cursor_y + height);
-
-        renderer.submit_textured_quad(
-            text_texture->handle,
-            smgpc::render::TexturedQuad2D{
-                .vertices =
-                    {
-                        smgpc::render::TexturedVertex2D{.x = top_left[0U], .y = top_left[1U], .z = 0.0F, .u = 0.0F, .v = top_v, .color = color},
-                        smgpc::render::TexturedVertex2D{.x = top_right[0U], .y = top_right[1U], .z = 0.0F, .u = 1.0F, .v = top_v, .color = color},
-                        smgpc::render::TexturedVertex2D{
-                            .x = bottom_right[0U], .y = bottom_right[1U], .z = 0.0F, .u = 1.0F, .v = bottom_v, .color = color},
-                        smgpc::render::TexturedVertex2D{
-                            .x = bottom_left[0U], .y = bottom_left[1U], .z = 0.0F, .u = 0.0F, .v = bottom_v, .color = color},
-                    },
-            });
+        drawTextBox(renderer, alpha, text_box_index);
     }
+}
+
+void SimpleLayout::drawTextBox(smgpc::render::IRendererEngine& renderer, float alpha, std::size_t text_box_index) {
+    if (text_box_index >= mBrlytLayout.text_boxes.size()) {
+        return;
+    }
+    const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
+    if (!text_box.visible || text_box.pane_index >= mBrlytLayout.panes.size()) {
+        return;
+    }
+
+    auto* text_texture = find_text_texture(mRenderTextTextures, text_box_index);
+    if (text_texture == nullptr || !text_texture->handle.is_valid()) {
+        return;
+    }
+
+    const auto pane_state = paneRenderState(text_box.pane_index);
+    if (!pane_state.visible) {
+        return;
+    }
+    const auto& pane = mBrlytLayout.panes[text_box.pane_index];
+    const auto box_width = pane.width;
+    const auto box_height = pane.height;
+    const auto box_x = base_position_x(pane.base_position, box_width);
+    const auto box_y = base_position_y(pane.base_position, box_height);
+    const auto font_width = text_box.font_width;
+    const auto font_height = text_box.font_height;
+    const auto scale_x = font_width / static_cast< float >(text_texture->font_width);
+    const auto scale_y = font_height / static_cast< float >(text_texture->font_height);
+    const auto line_width = static_cast< float >(text_texture->width) * scale_x;
+    const auto text_height = static_cast< float >(text_texture->height) * scale_y;
+
+    const auto horizontal_factor = text_factor(text_box.text_position % 3U);
+    const auto vertical_factor = text_factor(text_box.text_position / 3U);
+    const auto cursor_x = box_x + (box_width - line_width) * horizontal_factor;
+    const auto cursor_y = box_y + (box_height - text_height) * vertical_factor;
+    const auto color = std::array< std::uint8_t, 4U >{
+        255U,
+        255U,
+        255U,
+        static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha, 0.0F, 255.0F)),
+    };
+    const auto width = line_width;
+    const auto height = text_height;
+    const auto top_v = gx_texture_v_to_host(0.0F);
+    const auto bottom_v = gx_texture_v_to_host(1.0F);
+    const auto transform_point = [&](float local_x, float local_y) {
+        return std::array< float, 2U >{
+            mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
+            mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
+        };
+    };
+    const auto top_left = transform_point(cursor_x, cursor_y);
+    const auto top_right = transform_point(cursor_x + width, cursor_y);
+    const auto bottom_right = transform_point(cursor_x + width, cursor_y + height);
+    const auto bottom_left = transform_point(cursor_x, cursor_y + height);
+
+    renderer.submit_textured_quad(
+        text_texture->handle,
+        smgpc::render::TexturedQuad2D{
+            .vertices =
+                {
+                    smgpc::render::TexturedVertex2D{.x = top_left[0U], .y = top_left[1U], .z = 0.0F, .u = 0.0F, .v = top_v, .color = color},
+                    smgpc::render::TexturedVertex2D{.x = top_right[0U], .y = top_right[1U], .z = 0.0F, .u = 1.0F, .v = top_v, .color = color},
+                    smgpc::render::TexturedVertex2D{
+                        .x = bottom_right[0U], .y = bottom_right[1U], .z = 0.0F, .u = 1.0F, .v = bottom_v, .color = color},
+                    smgpc::render::TexturedVertex2D{.x = bottom_left[0U], .y = bottom_left[1U], .z = 0.0F, .u = 0.0F, .v = bottom_v, .color = color},
+                },
+        });
 }
 
 SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_index) const {
@@ -2099,6 +2196,15 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     if (const auto override = mPaneAlphaOverrides.find(pane.name); override != mPaneAlphaOverrides.end()) {
         local_alpha = override->second;
     }
+
+    constexpr auto kDegToRad = 3.14159265358979323846F / 180.0F;
+    const auto rotation = local_rotate_z * kDegToRad;
+    const auto cos_r = std::cos(rotation);
+    const auto sin_r = std::sin(rotation);
+    const auto local_m00 = cos_r * local_scale_x;
+    const auto local_m01 = -sin_r * local_scale_y;
+    const auto local_m10 = sin_r * local_scale_x;
+    const auto local_m11 = cos_r * local_scale_y;
 
     if (pane.parent_index < 0) {
         return PaneRenderState{
@@ -2252,6 +2358,57 @@ smgpc::layout::BrlanTextureFrame SimpleLayout::textureFrameForContent(std::strin
         }
         if (layer_frame.scale_t.has_value()) {
             result.scale_t = layer_frame.scale_t;
+        }
+    }
+
+    return result;
+}
+
+smgpc::layout::BrlanMaterialFrame SimpleLayout::materialFrameForContent(std::string_view content_name) const {
+    auto result = smgpc::layout::BrlanMaterialFrame{};
+    if (const auto committed = mCommittedMaterialFrames.find(std::string(content_name)); committed != mCommittedMaterialFrames.end()) {
+        result = committed->second;
+    }
+
+    for (const auto& anim_state : mAnimations) {
+        if (anim_state.name.empty()) {
+            continue;
+        }
+
+        const auto it = mRenderAnimations.find(lower_copy(anim_state.name));
+        if (it == mRenderAnimations.end()) {
+            continue;
+        }
+
+        auto frame = anim_state.frame;
+        if (it->second.loop && it->second.frame_size > 0U) {
+            frame = std::fmod(frame, static_cast< float >(it->second.frame_size));
+        }
+
+        merge_material_frame(result, it->second.material_frame(content_name, frame));
+    }
+
+    for (const auto& pane_anim : mPaneAnimations) {
+        if (pane_anim.pane_name != content_name) {
+            continue;
+        }
+
+        for (const auto& anim_state : pane_anim.animations) {
+            if (anim_state.name.empty()) {
+                continue;
+            }
+
+            const auto it = mRenderAnimations.find(lower_copy(anim_state.name));
+            if (it == mRenderAnimations.end()) {
+                continue;
+            }
+
+            auto frame = anim_state.frame;
+            if (it->second.loop && it->second.frame_size > 0U) {
+                frame = std::fmod(frame, static_cast< float >(it->second.frame_size));
+            }
+
+            merge_material_frame(result, it->second.material_frame(content_name, frame));
         }
     }
 

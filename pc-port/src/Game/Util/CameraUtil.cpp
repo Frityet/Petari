@@ -69,6 +69,8 @@ namespace {
         if (length <= 0.000001F) {
             return fallback;
         }
+
+        return scale(value, 1.0F / length);
     }
 
     [[nodiscard]] CameraBasis camera_basis(const smgpc::camera::CameraPose& pose) {

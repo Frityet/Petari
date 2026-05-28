@@ -23,7 +23,7 @@ namespace smgpc::scene::nameobj {
         };
 
         [[nodiscard]] std::filesystem::path disc_relative(const std::filesystem::path &root, const std::filesystem::path &path) {
-            std::error_code error{};
+            std::error_code error {};
             auto relative = std::filesystem::relative(path, root, error);
             if (!error && !relative.empty()) {
                 return relative;
@@ -32,7 +32,7 @@ namespace smgpc::scene::nameobj {
         }
 
         [[nodiscard]] NameObjArchiveRequest describe_archive(smgpc::runtime::DvdFileSystemService &dvd, std::string_view archive_name) {
-            auto request = NameObjArchiveRequest{
+            auto request = NameObjArchiveRequest {
                 .archive_name = std::string(archive_name),
                 .disc_path = "",
                 .resolved_path = "",
@@ -87,7 +87,7 @@ namespace smgpc::scene::nameobj {
     }
 
     NameObjFactoryDescription describe_name_obj_factory(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name) {
-        return NameObjFactoryDescription{
+        return NameObjFactoryDescription {
             .object_name = std::string(object_name),
             .creator_supported = can_create_name_obj(object_name),
             .archives = collect_name_obj_archive_requests(dvd, object_name),

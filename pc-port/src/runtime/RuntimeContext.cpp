@@ -61,7 +61,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::filesystem::path weakly_canonical_or_normal(const std::filesystem::path &path) {
-            std::error_code error{};
+            std::error_code error {};
             const auto canonical = std::filesystem::weakly_canonical(path, error);
             if (!error) {
                 return canonical;
@@ -98,7 +98,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] std::optional<std::filesystem::path> executable_directory() {
 #if defined(__linux__)
-            std::error_code error{};
+            std::error_code error {};
             const auto executable_path = std::filesystem::read_symlink("/proc/self/exe", error);
             if (!error && executable_path.has_parent_path()) {
                 return executable_path.parent_path();
@@ -125,11 +125,11 @@ namespace smgpc::runtime {
                 return std::nullopt;
             }
 
-            auto frame = std::uint64_t{};
+            auto frame = std::uint64_t {};
             const auto *begin = text.data();
             const auto *end = begin + text.size();
             const auto result = std::from_chars(begin, end, frame);
-            if (result.ec != std::errc{} || result.ptr != end) {
+            if (result.ec != std::errc {} || result.ptr != end) {
                 return std::nullopt;
             }
             return frame;
@@ -145,7 +145,7 @@ namespace smgpc::runtime {
             const auto *begin = text.data();
             const auto *end = begin + text.size();
             const auto result = std::from_chars(begin, end, value);
-            if (result.ec != std::errc{} || result.ptr != end) {
+            if (result.ec != std::errc {} || result.ptr != end) {
                 return std::nullopt;
             }
             return value;
@@ -179,7 +179,7 @@ namespace smgpc::runtime {
                 if (!frame.has_value()) {
                     return std::nullopt;
                 }
-                return DebugFrameRange{.first_frame = *frame, .last_frame = *frame};
+                return DebugFrameRange {.first_frame = *frame, .last_frame = *frame};
             }
 
             const auto first = parse_frame_index(text.substr(0U, dash));
@@ -197,7 +197,7 @@ namespace smgpc::runtime {
                 last = *parsed_last;
             }
 
-            return DebugFrameRange{.first_frame = *first, .last_frame = last};
+            return DebugFrameRange {.first_frame = *first, .last_frame = last};
         }
 
         [[nodiscard]] std::optional<std::uint32_t> debug_wpad_button_mask(std::string_view text) {
@@ -245,7 +245,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::uint32_t parse_debug_wpad_button_mask(std::string_view text) {
-            auto mask = std::uint32_t{};
+            auto mask = std::uint32_t {};
             while (true) {
                 const auto plus = text.find('+');
                 const auto token = trim(text.substr(0U, plus));
@@ -261,23 +261,23 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::string debug_wpad_button_mask_detail(std::uint32_t mask) {
-            constexpr auto buttons = std::array{
-                std::pair{WPAD_BUTTON_A, "A"},
-                std::pair{WPAD_BUTTON_B, "B"},
-                std::pair{WPAD_BUTTON_UP, "UP"},
-                std::pair{WPAD_BUTTON_DOWN, "DOWN"},
-                std::pair{WPAD_BUTTON_LEFT, "LEFT"},
-                std::pair{WPAD_BUTTON_RIGHT, "RIGHT"},
-                std::pair{WPAD_BUTTON_PLUS, "PLUS"},
-                std::pair{WPAD_BUTTON_MINUS, "MINUS"},
-                std::pair{WPAD_BUTTON_HOME, "HOME"},
-                std::pair{WPAD_BUTTON_C, "C"},
-                std::pair{WPAD_BUTTON_Z, "Z"},
-                std::pair{WPAD_BUTTON_1, "ONE"},
-                std::pair{WPAD_BUTTON_2, "TWO"},
+            constexpr auto buttons = std::array {
+                std::pair {WPAD_BUTTON_A, "A"},
+                std::pair {WPAD_BUTTON_B, "B"},
+                std::pair {WPAD_BUTTON_UP, "UP"},
+                std::pair {WPAD_BUTTON_DOWN, "DOWN"},
+                std::pair {WPAD_BUTTON_LEFT, "LEFT"},
+                std::pair {WPAD_BUTTON_RIGHT, "RIGHT"},
+                std::pair {WPAD_BUTTON_PLUS, "PLUS"},
+                std::pair {WPAD_BUTTON_MINUS, "MINUS"},
+                std::pair {WPAD_BUTTON_HOME, "HOME"},
+                std::pair {WPAD_BUTTON_C, "C"},
+                std::pair {WPAD_BUTTON_Z, "Z"},
+                std::pair {WPAD_BUTTON_1, "ONE"},
+                std::pair {WPAD_BUTTON_2, "TWO"},
             };
 
-            auto detail = std::string{"channel=0;buttons="};
+            auto detail = std::string {"channel=0;buttons="};
             auto appended = false;
             for (const auto &[button_mask, name] : buttons) {
                 if ((mask & button_mask) == 0U) {
@@ -321,7 +321,7 @@ namespace smgpc::runtime {
                         const auto range = parse_debug_frame_range(entry.substr(0U, colon));
                         const auto mask = parse_debug_wpad_button_mask(entry.substr(colon + 1U));
                         if (range.has_value() && mask != 0U) {
-                            spans.push_back(RuntimeContext::DebugWpadButtonScriptSpan{
+                            spans.push_back(RuntimeContext::DebugWpadButtonScriptSpan {
                                 .first_frame = range->first_frame,
                                 .last_frame = range->last_frame,
                                 .button_mask = mask,
@@ -366,7 +366,7 @@ namespace smgpc::runtime {
                                 }
                             }
                             if (x.has_value() && y.has_value()) {
-                                spans.push_back(RuntimeContext::DebugWpadPointerScriptSpan{
+                                spans.push_back(RuntimeContext::DebugWpadPointerScriptSpan {
                                     .first_frame = range->first_frame,
                                     .last_frame = range->last_frame,
                                     .x = *x,
@@ -402,7 +402,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] smgpc::camera::CameraPose default_scene_camera_pose() {
-            return smgpc::camera::CameraPose{
+            return smgpc::camera::CameraPose {
                 .eye = {0.0F, 0.0F, 0.0F},
                 .watch = {0.0F, 0.0F, -1.0F},
                 .up = {0.0F, 1.0F, 0.0F},
@@ -481,10 +481,10 @@ namespace smgpc::runtime {
         MR::createScreenAlphaSceneObj(0, 1.0F);
         _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
         _capture_screen_camera_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenCamera, "Camera");
-        _logger.info(logging::Category::APP, logging::Message{"Using SMG disc files from {}"}, _disc_files_root.string());
+        _logger.info(logging::Category::APP, logging::Message {"Using SMG disc files from {}"}, _disc_files_root.string());
         if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
             _save_data.set_host_directory(*save_directory);
-            _logger.info(logging::Category::APP, logging::Message{"Using SMG save files from {}"}, save_directory->string());
+            _logger.info(logging::Category::APP, logging::Message {"Using SMG save files from {}"}, save_directory->string());
         }
         if (const auto message_archive = _dvd.find_first({
                 std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
@@ -492,9 +492,9 @@ namespace smgpc::runtime {
             })) {
             try {
                 const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
-                _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());
+                _logger.info(logging::Category::APP, logging::Message {"Loaded {} messages from {}"}, count, message_archive->string());
             } catch (const std::exception &error) {
-                _logger.warning(logging::Category::APP, logging::Message{"Could not load original message archive {}: {}"}, message_archive->string(),
+                _logger.warning(logging::Category::APP, logging::Message {"Could not load original message archive {}: {}"}, message_archive->string(),
                                 error.what());
             }
         }
@@ -504,21 +504,21 @@ namespace smgpc::runtime {
             try {
                 _effects.load_resources(_dvd.archive_for_path(*effect_archive));
                 if (const auto *resources = _effects.resource_library(); resources != nullptr) {
-                    _logger.info(logging::Category::APP, logging::Message{"Loaded {} particle names, {} particle resources, and {} particle textures from {}"},
+                    _logger.info(logging::Category::APP, logging::Message {"Loaded {} particle names, {} particle resources, and {} particle textures from {}"},
                                  resources->particle_name_count(), resources->resource_count(), resources->texture_count(), effect_archive->string());
                 }
             } catch (const std::exception &error) {
-                _logger.warning(logging::Category::APP, logging::Message{"Could not load original effect archive {}: {}"}, effect_archive->string(),
+                _logger.warning(logging::Category::APP, logging::Message {"Could not load original effect archive {}: {}"}, effect_archive->string(),
                                 error.what());
             }
         }
 #ifndef NDEBUG
         if (!_debug_wpad_button_script.empty()) {
-            _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD button script spans"},
+            _logger.info(logging::Category::APP, logging::Message {"Loaded {} debug WPAD button script spans"},
                          _debug_wpad_button_script.size());
         }
         if (!_debug_wpad_pointer_script.empty()) {
-            _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD pointer script spans"},
+            _logger.info(logging::Category::APP, logging::Message {"Loaded {} debug WPAD pointer script spans"},
                          _debug_wpad_pointer_script.size());
         }
         emit_semantic_trace_event("runtime", "runtime_context_created", "disc_files_root=" + _disc_files_root.generic_string());
@@ -584,7 +584,7 @@ namespace smgpc::runtime {
         _rfl.begin_frame(_frame_index);
         _wpad.begin_frame();
 
-        auto raw_hold_mask = std::uint32_t{};
+        auto raw_hold_mask = std::uint32_t {};
         const auto append_input_button = [this, &raw_hold_mask](render::InputButton button, std::uint32_t mask) {
             if (_window_service.is_input_pressed(button)) {
                 raw_hold_mask |= mask;
@@ -615,7 +615,7 @@ namespace smgpc::runtime {
         }
         for (const auto &span : _debug_wpad_pointer_script) {
             if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
-                pointer = render::InputPointerState{
+                pointer = render::InputPointerState {
                     .x = span.x,
                     .y = span.y,
                     .valid = span.valid,
@@ -623,7 +623,7 @@ namespace smgpc::runtime {
                 debug_pointer_script_applied = true;
             }
         }
-        _host_input_trace = HostInputTraceState{
+        _host_input_trace = HostInputTraceState {
             .frame_index = _frame_index,
             .raw_hold_mask = raw_hold_mask,
             .effective_hold_mask = hold_mask,
@@ -1090,69 +1090,69 @@ namespace smgpc::runtime {
 
     void RuntimeContext::start_stage_bgm(std::string_view name) {
         _audio.start_stage_bgm(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested stage BGM {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message {"SMG requested stage BGM {}"}, name);
     }
 
     void RuntimeContext::unlock_stage_bgm() {
         _audio.unlock_stage_bgm();
-        _logger.info(logging::Category::APP, logging::Message{"SMG unlocked stage BGM"});
+        _logger.info(logging::Category::APP, logging::Message {"SMG unlocked stage BGM"});
     }
 
     void RuntimeContext::stop_stage_bgm(s32 fade_frames) {
         _audio.stop_stage_bgm(fade_frames);
-        _logger.info(logging::Category::APP, logging::Message{"SMG stopped stage BGM over {} frames"}, fade_frames);
+        _logger.info(logging::Category::APP, logging::Message {"SMG stopped stage BGM over {} frames"}, fade_frames);
     }
 
     void RuntimeContext::set_stage_bgm_state(s32 state, u32 change_frames) {
         _audio.set_stage_bgm_state(state, change_frames);
-        _logger.info(logging::Category::APP, logging::Message{"SMG set stage BGM state {} over {} frames"}, state, change_frames);
+        _logger.info(logging::Category::APP, logging::Message {"SMG set stage BGM state {} over {} frames"}, state, change_frames);
     }
 
     void RuntimeContext::start_system_sound(std::string_view name) {
         _audio.start_system_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested system sound {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message {"SMG requested system sound {}"}, name);
     }
 
     void RuntimeContext::stop_system_sound(std::string_view name, u32 delay_frames) {
         _audio.stop_system_sound(name, delay_frames);
-        _logger.info(logging::Category::APP, logging::Message{"SMG stopped system sound {} after {} frames"}, name, delay_frames);
+        _logger.info(logging::Category::APP, logging::Message {"SMG stopped system sound {} after {} frames"}, name, delay_frames);
     }
 
     void RuntimeContext::start_system_level_sound(std::string_view name) {
         _audio.start_system_level_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested system level sound {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message {"SMG requested system level sound {}"}, name);
     }
 
     void RuntimeContext::submit_level_sound() {
         _audio.submit_level_sound();
-        _logger.info(logging::Category::APP, logging::Message{"SMG submitted level sounds"});
+        _logger.info(logging::Category::APP, logging::Message {"SMG submitted level sounds"});
     }
 
     void RuntimeContext::permit_level_sound() {
         _audio.permit_level_sound();
-        _logger.info(logging::Category::APP, logging::Message{"SMG permitted level sounds"});
+        _logger.info(logging::Category::APP, logging::Message {"SMG permitted level sounds"});
     }
 
     void RuntimeContext::start_atmosphere_sound(std::string_view name) {
         _audio.start_atmosphere_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested atmosphere sound {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message {"SMG requested atmosphere sound {}"}, name);
     }
 
     void RuntimeContext::start_system_me(std::string_view name) {
         _audio.start_system_me(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested system ME {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message {"SMG requested system ME {}"}, name);
     }
 
     void RuntimeContext::start_cs_sound(std::string_view name) {
         _audio.start_controller_speaker_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested controller speaker sound {}"}, name);
+        _logger.info(logging::Category::APP, logging::Message {"SMG requested controller speaker sound {}"}, name);
     }
 
     void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                                                 std::string_view resource_group_name, bool sort_enabled) {
         _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled);
         refresh_effect_host_binding(host_name);
-        _logger.info(logging::Category::APP, logging::Message{"Registered effect keeper {} group {} capacity {}"}, host_name,
+        _logger.info(logging::Category::APP, logging::Message {"Registered effect keeper {} group {} capacity {}"}, host_name,
                      resource_group_name, requested_capacity);
     }
 
@@ -1162,47 +1162,47 @@ namespace smgpc::runtime {
 
     void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name) {
         _effects.emit(actor_name, effect_name);
-        _logger.info(logging::Category::APP, logging::Message{"{} emitted effect {}"}, actor_name, effect_name);
+        _logger.info(logging::Category::APP, logging::Message {"{} emitted effect {}"}, actor_name, effect_name);
     }
 
     void RuntimeContext::delete_effect(std::string_view actor_name, std::string_view effect_name) {
         _effects.delete_effect(actor_name, effect_name);
-        _logger.info(logging::Category::APP, logging::Message{"{} deleted effect {}"}, actor_name, effect_name);
+        _logger.info(logging::Category::APP, logging::Message {"{} deleted effect {}"}, actor_name, effect_name);
     }
 
     void RuntimeContext::delete_effect_all(std::string_view actor_name) {
         _effects.delete_all(actor_name);
-        _logger.info(logging::Category::APP, logging::Message{"{} deleted all effects"}, actor_name);
+        _logger.info(logging::Category::APP, logging::Message {"{} deleted all effects"}, actor_name);
     }
 
     void RuntimeContext::note_layout_archive(std::string_view layout_name, const std::filesystem::path &path) {
-        _logger.info(logging::Category::APP, logging::Message{"Resolved original layout archive {} -> {}"}, layout_name, path.string());
+        _logger.info(logging::Category::APP, logging::Message {"Resolved original layout archive {} -> {}"}, layout_name, path.string());
     }
 
     void RuntimeContext::note_missing_layout_archive(std::string_view layout_name) {
-        _logger.warning(logging::Category::APP, logging::Message{"Missing original layout archive for {}"}, layout_name);
+        _logger.warning(logging::Category::APP, logging::Message {"Missing original layout archive for {}"}, layout_name);
     }
 
     void RuntimeContext::note_layout_texture_decode_failed(std::string_view layout_name, std::string_view texture_name, std::string_view reason) {
-        _logger.warning(logging::Category::APP, logging::Message{"Skipped unsupported layout texture {} from {}: {}"}, texture_name, layout_name,
+        _logger.warning(logging::Category::APP, logging::Message {"Skipped unsupported layout texture {} from {}: {}"}, texture_name, layout_name,
                         reason);
     }
 
     void RuntimeContext::note_object_archive(std::string_view object_name, const std::filesystem::path &path) {
-        _logger.info(logging::Category::APP, logging::Message{"Resolved original object archive {} -> {}"}, object_name, path.string());
+        _logger.info(logging::Category::APP, logging::Message {"Resolved original object archive {} -> {}"}, object_name, path.string());
     }
 
     void RuntimeContext::note_missing_object_archive(std::string_view object_name) {
-        _logger.warning(logging::Category::APP, logging::Message{"Missing original object archive for {}"}, object_name);
+        _logger.warning(logging::Category::APP, logging::Message {"Missing original object archive for {}"}, object_name);
     }
 
     void RuntimeContext::note_object_texture_decode_failed(std::string_view object_name, std::string_view reason) {
-        _logger.warning(logging::Category::APP, logging::Message{"Skipped object texture data from {}: {}"}, object_name, reason);
+        _logger.warning(logging::Category::APP, logging::Message {"Skipped object texture data from {}: {}"}, object_name, reason);
     }
 
 #ifndef NDEBUG
     void RuntimeContext::note_debug_event(std::string_view message) {
-        _logger.info(logging::Category::APP, logging::Message{"SMG debug: {}"}, message);
+        _logger.info(logging::Category::APP, logging::Message {"SMG debug: {}"}, message);
     }
 
     void RuntimeContext::emit_semantic_trace_event(std::string_view category, std::string_view name, std::string_view detail) {
@@ -1210,7 +1210,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        _semantic_trace_events.push_back(SemanticTraceEvent{
+        _semantic_trace_events.push_back(SemanticTraceEvent {
             .index = _next_semantic_trace_event_index++,
             .frame_index = _frame_index,
             .category = std::string(category),
@@ -1219,9 +1219,9 @@ namespace smgpc::runtime {
             .stage_name = _current_stage_name,
         });
         if (detail.empty()) {
-            _logger.info(logging::Category::APP, logging::Message{"SMG semantic event {}:{}"}, category, name);
+            _logger.info(logging::Category::APP, logging::Message {"SMG semantic event {}:{}"}, category, name);
         } else {
-            _logger.info(logging::Category::APP, logging::Message{"SMG semantic event {}:{} ({})"}, category, name, detail);
+            _logger.info(logging::Category::APP, logging::Message {"SMG semantic event {}:{} ({})"}, category, name, detail);
         }
     }
 
@@ -1252,7 +1252,7 @@ namespace smgpc::runtime {
 
     void RuntimeContext::record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
                                                  const smgpc::render::J3dRendererPacketState &packet) {
-        _j3d_packet_trace.push_back(J3dRuntimePacketTrace{
+        _j3d_packet_trace.push_back(J3dRuntimePacketTrace {
             .model_name = std::string(model_name),
             .frame_index = frame_index,
             .draw_pass = std::string(draw_pass),
@@ -1369,7 +1369,7 @@ namespace smgpc::runtime {
         }
 
         for (const auto &candidate : candidates) {
-            std::error_code error{};
+            std::error_code error {};
             auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;
@@ -1397,7 +1397,7 @@ s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length) {
         return 0;
     }
 
-    sampling_bufs[0] = KPADStatus{};
+    sampling_bufs[0] = KPADStatus {};
     auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return 0;
@@ -1411,12 +1411,12 @@ s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length) {
     sampling_bufs[0].hold = state->hold | (state->repeat != 0U ? KPAD_BUTTON_RPT : 0U);
     sampling_bufs[0].trig = state->trigger;
     sampling_bufs[0].release = state->release;
-    sampling_bufs[0].acc = KPADVec3{
+    sampling_bufs[0].acc = KPADVec3 {
         .x = state->core_acceleration.x,
         .y = state->core_acceleration.y,
         .z = state->core_acceleration.z,
     };
-    sampling_bufs[0].pos = KPADVec2{
+    sampling_bufs[0].pos = KPADVec2 {
         .x = state->pointer.x,
         .y = state->pointer.y,
     };
@@ -1471,9 +1471,9 @@ BOOL DVDOpen(const char *path, DVDFileInfo *file_info) {
     file_info->length = static_cast<u32>(entry->length);
     file_info->position = 0U;
     file_info->callback = nullptr;
-    file_info->cb = DVDCommandBlock{};
+    file_info->cb = DVDCommandBlock {};
     file_info->cb.state = DVD_STATE_END;
-    file_info->internal = new DvdRuntimeFileHandle{
+    file_info->internal = new DvdRuntimeFileHandle {
         .disc_path = entry->disc_path,
     };
     return 1;
@@ -1548,7 +1548,7 @@ BOOL DVDClose(DVDFileInfo *file_info) {
     }
 
     delete static_cast<DvdRuntimeFileHandle *>(file_info->internal);
-    file_info->cb = DVDCommandBlock{};
+    file_info->cb = DVDCommandBlock {};
     file_info->entry_num = -1;
     file_info->length = 0U;
     file_info->position = 0U;

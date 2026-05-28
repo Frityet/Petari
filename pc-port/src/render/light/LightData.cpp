@@ -17,8 +17,8 @@
 
 namespace smgpc::render::light {
     namespace {
-        constexpr auto cLightDataArchivePath = std::string_view{"ObjectData/LightData.arc"};
-        constexpr auto cMainLightDataPath = std::string_view{"lightdata.bcsv"};
+        constexpr auto cLightDataArchivePath = std::string_view {"ObjectData/LightData.arc"};
+        constexpr auto cMainLightDataPath = std::string_view {"lightdata.bcsv"};
 
         [[nodiscard]] std::string lower_ascii(std::string_view text) {
             auto out = std::string(text);
@@ -84,7 +84,7 @@ namespace smgpc::render::light {
 
         [[nodiscard]] _GXColor get_color_channels(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view prefix) {
             const auto base = std::string(prefix);
-            return _GXColor{
+            return _GXColor {
                 get_u8_or(table, row, base + "R", 0U),
                 get_u8_or(table, row, base + "G", 0U),
                 get_u8_or(table, row, base + "B", 0U),
@@ -94,7 +94,7 @@ namespace smgpc::render::light {
 
         [[nodiscard]] TVec3f get_position(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view prefix) {
             const auto base = std::string(prefix);
-            return TVec3f{
+            return TVec3f {
                 get_float_or(table, row, base + "PosX", 0.0F),
                 get_float_or(table, row, base + "PosY", 0.0F),
                 get_float_or(table, row, base + "PosZ", 0.0F),
@@ -133,7 +133,7 @@ namespace smgpc::render::light {
     }  // namespace
 
     StageLightData &StageLightData::instance() {
-        static auto s_instance = StageLightData{};
+        static auto s_instance = StageLightData {};
         return s_instance;
     }
 
@@ -153,7 +153,7 @@ namespace smgpc::render::light {
             return nullptr;
         }
 
-        auto area_name = std::string_view{};
+        auto area_name = std::string_view {};
         if (!_zone_area_lights.empty()) {
             const auto exact = std::ranges::find_if(_zone_area_lights, [&zone_id](const auto &entry) {
                 return entry.light_id == zone_id.mLightID;
@@ -252,9 +252,9 @@ namespace smgpc::render::light {
         const auto light_table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*main_entry));
         _area_light_names.reserve(light_table.entry_count());
         _area_lights.reserve(light_table.entry_count());
-        for (auto row = std::size_t{}; row < light_table.entry_count(); ++row) {
-            auto info = AreaLightInfo{};
-            _area_light_names.push_back(light_table.get_string(row, "AreaLightName").value_or(std::string{}));
+        for (auto row = std::size_t {}; row < light_table.entry_count(); ++row) {
+            auto info = AreaLightInfo {};
+            _area_light_names.push_back(light_table.get_string(row, "AreaLightName").value_or(std::string {}));
             info.mAreaLightName = _area_light_names.back().c_str();
             info.mInterpolate = get_s32_or(light_table, row, "Interpolate", -1);
             read_actor_light_info(light_table, row, info.mPlayerLight, "Player");
@@ -269,10 +269,10 @@ namespace smgpc::render::light {
         if (const auto *zone_entry = find_archive_file(archive, zone_file); zone_entry != nullptr) {
             const auto zone_table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*zone_entry));
             _zone_area_lights.reserve(zone_table.entry_count());
-            for (auto row = std::size_t{}; row < zone_table.entry_count(); ++row) {
-                _zone_area_lights.push_back(ZoneAreaLight{
+            for (auto row = std::size_t {}; row < zone_table.entry_count(); ++row) {
+                _zone_area_lights.push_back(ZoneAreaLight {
                     .light_id = get_s32_or(zone_table, row, "LightID", -1),
-                    .area_light_name = zone_table.get_string(row, "AreaLightName").value_or(std::string{}),
+                    .area_light_name = zone_table.get_string(row, "AreaLightName").value_or(std::string {}),
                 });
             }
         }

@@ -21,6 +21,10 @@ namespace smgpc::trace {
         std::size_t render_packet_count = 0;
         std::size_t copy_event_count = 0;
         std::size_t semantic_event_count = 0;
+        std::size_t layout_runtime_count = 0;
+        std::size_t layout_pane_count = 0;
+        std::size_t layout_material_count = 0;
+        std::size_t layout_texture_count = 0;
     };
 
     [[nodiscard]] std::vector<dump::Json> trace_ndjson_records_from_json(const dump::Json &trace, std::optional<std::string> emulator = {});

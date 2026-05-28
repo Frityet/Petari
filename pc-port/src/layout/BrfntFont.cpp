@@ -61,7 +61,7 @@ namespace smgpc::layout {
                 throw std::runtime_error("BRFNT char width out of range");
             }
 
-            return BrfntCharWidths{
+            return BrfntCharWidths {
                 .left = read_s8(data, offset),
                 .glyph_width = data[offset + 1U],
                 .char_width = read_s8(data, offset + 2U),
@@ -78,7 +78,7 @@ namespace smgpc::layout {
                     throw std::runtime_error("BRFNT width block has invalid range");
                 }
 
-                auto block = BrfntFont::WidthBlock{
+                auto block = BrfntFont::WidthBlock {
                     .begin = begin,
                     .end = end,
                     .widths = {},
@@ -113,7 +113,7 @@ namespace smgpc::layout {
                     throw std::runtime_error("BRFNT code map has invalid range");
                 }
 
-                auto map = BrfntFont::CodeMap{
+                auto map = BrfntFont::CodeMap {
                     .begin = begin,
                     .end = end,
                     .method = method,
@@ -249,7 +249,7 @@ namespace smgpc::layout {
             const auto glyph_cell = static_cast<std::uint32_t>(glyph_index % cells_per_sheet);
             const auto unit_x = static_cast<std::uint16_t>(glyph_cell % font.sheet_row);
             const auto unit_y = static_cast<std::uint16_t>(glyph_cell / font.sheet_row);
-            return BrfntGlyph{
+            return BrfntGlyph {
                 .sheet_index = sheet_index,
                 .x = static_cast<std::uint16_t>(unit_x * (font.cell_width + 1U) + 1U),
                 .y = static_cast<std::uint16_t>(unit_y * (font.cell_height + 1U) + 1U),
@@ -329,7 +329,7 @@ namespace smgpc::layout {
         const auto header_size = read_be16(data, 12U);
         const auto block_count = read_be16(data, 14U);
         auto cursor = static_cast<std::size_t>(header_size);
-        auto font = BrfntFont{};
+        auto font = BrfntFont {};
         font.declared_file_size = read_be32(data, 8U);
         font.header_size = header_size;
         font.block_count = block_count;
@@ -344,7 +344,7 @@ namespace smgpc::layout {
             if (block_size < 8U || cursor + block_size > data.size()) {
                 throw std::runtime_error("BRFNT block size is invalid");
             }
-            font.blocks.push_back(BrfntBlockInfo{
+            font.blocks.push_back(BrfntBlockInfo {
                 .magic = magic_string(data, cursor),
                 .offset = cursor,
                 .size = block_size,

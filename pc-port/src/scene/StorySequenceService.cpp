@@ -32,7 +32,7 @@ namespace smgpc::scene {
         _runtime.emit_sequence_state_trace_event("story_stage_prepared", detail);
         _runtime.emit_semantic_trace_event("story", "story_stage_prepared", detail);
 #endif
-        _pending_stage_request = StageHostRequest{
+        _pending_stage_request = StageHostRequest {
             .scene_name = route->mSceneName,
             .stage_name = route->mStageName,
             .object_name = route->mObjectName,

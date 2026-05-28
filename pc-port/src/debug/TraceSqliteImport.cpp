@@ -24,7 +24,7 @@ namespace {
     }
 
     [[nodiscard]] Options parse_args(int argc, char **argv) {
-        auto options = Options{};
+        auto options = Options {};
         options.output = smgpc::debug::pc_port_root() / ".cache" / "render-parity" / "traces.sqlite";
 
         for (auto i = 1; i < argc; ++i) {

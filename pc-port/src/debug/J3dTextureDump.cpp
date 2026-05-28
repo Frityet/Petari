@@ -28,7 +28,7 @@ namespace {
         };
 
         for (const auto &candidate : candidates) {
-            std::error_code error{};
+            std::error_code error {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;
@@ -40,7 +40,7 @@ namespace {
 
     [[nodiscard]] std::filesystem::path pc_port_root() {
         const auto cwd = std::filesystem::current_path();
-        std::error_code error{};
+        std::error_code error {};
         if (std::filesystem::is_directory(cwd / "pc-port" / "src", error)) {
             return cwd / "pc-port";
         }
@@ -68,7 +68,7 @@ namespace {
     }
 
     [[nodiscard]] std::string sanitize_filename(std::string_view text) {
-        auto sanitized = std::string{};
+        auto sanitized = std::string {};
         sanitized.reserve(text.size());
 
         for (const auto c : text) {
@@ -115,7 +115,7 @@ namespace {
     void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output, const smgpc::resource::DecodedTexture &texture) {
         screenshot_service.write_png(
             output,
-            smgpc::render::capture::ScreenshotImageView{
+            smgpc::render::capture::ScreenshotImageView {
                 .width = texture.width,
                 .height = texture.height,
                 .pitch = texture.width * 4U,
@@ -126,7 +126,7 @@ namespace {
     }
 
     [[nodiscard]] bool has_translucent_pixels(const smgpc::resource::DecodedTexture &texture) {
-        for (auto i = std::size_t{3U}; i < texture.rgba.size(); i += 4U) {
+        for (auto i = std::size_t {3U}; i < texture.rgba.size(); i += 4U) {
             if (texture.rgba[i] != 0xffU) {
                 return true;
             }
@@ -136,7 +136,7 @@ namespace {
     }
 
     [[nodiscard]] smgpc::resource::DecodedTexture make_opaque_preview(smgpc::resource::DecodedTexture texture) {
-        for (auto i = std::size_t{3U}; i < texture.rgba.size(); i += 4U) {
+        for (auto i = std::size_t {3U}; i < texture.rgba.size(); i += 4U) {
             texture.rgba[i] = 0xffU;
         }
 
@@ -144,7 +144,7 @@ namespace {
     }
 
     [[nodiscard]] std::filesystem::path texture_output_path(const std::filesystem::path &model_output_root, std::size_t index, std::string_view name, std::string_view suffix) {
-        auto stem = std::ostringstream{};
+        auto stem = std::ostringstream {};
         stem << std::setw(2) << std::setfill('0') << index << '-' << sanitize_filename(name) << suffix << ".png";
         return model_output_root / stem.str();
     }
@@ -161,7 +161,7 @@ namespace {
         const auto textures = smgpc::render::extract_j3d_textures(archive.file_data(entry));
 
         std::cout << entry.path << ": " << textures.size() << " textures\n";
-        for (auto i = std::size_t{}; i < textures.size(); ++i) {
+        for (auto i = std::size_t {}; i < textures.size(); ++i) {
             const auto &texture = textures[i];
             const auto output = texture_output_path(model_output_root, i, texture.name, "");
             write_texture_png(screenshot_service, output, texture.image);

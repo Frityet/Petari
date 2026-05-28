@@ -6,13 +6,13 @@
 namespace smgpc::debug {
     namespace {
         [[nodiscard]] bool is_pc_port_root(const std::filesystem::path &path) {
-            auto error = std::error_code{};
+            auto error = std::error_code {};
             return std::filesystem::is_regular_file(path / "xmake.lua", error) &&
                    std::filesystem::is_directory(path / "src" / "Game", error);
         }
 
         [[nodiscard]] std::filesystem::path find_upward(std::filesystem::path start) {
-            auto error = std::error_code{};
+            auto error = std::error_code {};
             start = std::filesystem::weakly_canonical(start, error);
             if (error) {
                 start = std::filesystem::current_path();
@@ -57,7 +57,7 @@ namespace smgpc::debug {
         };
 
         for (const auto &candidate : candidates) {
-            auto error = std::error_code{};
+            auto error = std::error_code {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
             if (!error && std::filesystem::is_directory(canonical, error)) {
                 return canonical;
