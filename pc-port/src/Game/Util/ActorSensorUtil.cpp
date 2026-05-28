@@ -2,7 +2,7 @@
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace {
     class MessageSensorHost final : public LiveActor {
@@ -56,7 +56,7 @@ namespace MR {
     }
 
     void sendMsgToAllLiveActor(u32 msg, LiveActor* pActor) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr) {
             runtime->scheduler().send_message_to_live_actors(msg, pActor);
         }
     }

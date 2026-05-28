@@ -121,7 +121,7 @@ namespace {
         matrix[2][3] = 0.0F;
     }
 
-    [[nodiscard]] smgpc::game::CameraParamVec3 file_select_item_base_position(s32 index) {
+    [[nodiscard]] smgpc::compat::CameraParamVec3 file_select_item_base_position(s32 index) {
         const auto theta_offset = cItemThetaOffsetDegrees[static_cast< std::size_t >(index)] * cPi / 180.0F;
         const auto theta = -static_cast< float >(index + 4) * cItemAngleStepRadians - theta_offset;
         const auto x = cItemRingRadius * std::cos(theta);
@@ -129,7 +129,7 @@ namespace {
         const auto pitch_sin = std::sin(cItemRingPitchRadians);
         const auto pitch_cos = std::cos(cItemRingPitchRadians);
 
-        return smgpc::game::CameraParamVec3{
+        return smgpc::compat::CameraParamVec3{
             .x = x,
             .y = -pitch_sin * z,
             .z = pitch_cos * z,
@@ -1480,8 +1480,7 @@ void FileSelector::exeMiiCreateDemo() {
 
 void FileSelector::exeMiiCaution() {
     if (MR::isFirstStep(this) && mSysInfoWindowMini != nullptr) {
-        mSysInfoWindowMini->appear("System_FileSelect006", SysInfoWindow::Type_Key, SysInfoWindow::TextPos_Center,
-                                   SysInfoWindow::MessageType_System);
+        mSysInfoWindowMini->appear("System_FileSelect006", SysInfoWindow::Type_Key, SysInfoWindow::TextPos_Center, SysInfoWindow::MessageType_System);
     }
 
     if (mSysInfoWindowMini != nullptr && MR::isDead(mSysInfoWindowMini.get())) {
@@ -1497,8 +1496,7 @@ void FileSelector::exeMiiInfoStart() {
 
 void FileSelector::exeMiiInfo() {
     if (MR::isFirstStep(this) && mSysInfoWindowMini != nullptr) {
-        mSysInfoWindowMini->appear("System_FileSelect015", SysInfoWindow::Type_Key, SysInfoWindow::TextPos_Center,
-                                   SysInfoWindow::MessageType_System);
+        mSysInfoWindowMini->appear("System_FileSelect015", SysInfoWindow::Type_Key, SysInfoWindow::TextPos_Center, SysInfoWindow::MessageType_System);
     }
 
     if (mSysInfoWindowMini != nullptr && MR::isDead(mSysInfoWindowMini.get())) {
@@ -2105,7 +2103,7 @@ s32 FileSelector::getItemTurnToFrontFrameCount(s32 fileNo) const {
     return item != nullptr ? item->getTurnToFrontFrameCount() : 0;
 }
 
-const smgpc::game::CameraParamVec3& FileSelector::getItemBasePosition(s32 index) const {
+const smgpc::compat::CameraParamVec3& FileSelector::getItemBasePosition(s32 index) const {
     return mItemBasePositions.at(static_cast< std::size_t >(index));
 }
 

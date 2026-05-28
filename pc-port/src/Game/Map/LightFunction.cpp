@@ -3,18 +3,19 @@
 #include <array>
 #include <cstddef>
 
-#include "Game/compat/GXState.hpp"
-#include "Game/compat/LightDataCompat.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "render/GXState.hpp"
+#include "render/LightDataCompat.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace {
-    constexpr auto cLightDataIDs = std::array<GXLightID, 8U>{GX_LIGHT0, GX_LIGHT1, GX_LIGHT2, GX_LIGHT3, GX_LIGHT4, GX_LIGHT5, GX_LIGHT6, GX_LIGHT7};
+    constexpr auto cLightDataIDs =
+        std::array< GXLightID, 8U >{GX_LIGHT0, GX_LIGHT1, GX_LIGHT2, GX_LIGHT3, GX_LIGHT4, GX_LIGHT5, GX_LIGHT6, GX_LIGHT7};
 
-    [[nodiscard]] std::array<std::uint8_t, 4U> color_value(_GXColor color) {
+    [[nodiscard]] std::array< std::uint8_t, 4U > color_value(_GXColor color) {
         return {color.r, color.g, color.b, color.a};
     }
 
-    [[nodiscard]] std::array<float, 3U> vec3_value(const TVec3f& value) {
+    [[nodiscard]] std::array< float, 3U > vec3_value(const TVec3f& value) {
         return {value.x, value.y, value.z};
     }
 
@@ -29,13 +30,13 @@ namespace {
     }
 
     void loadLightDiffuse(_GXColor color, const TVec3f& rPos, _GXLightID lightID) {
-        auto* runtime = smgpc::game::RuntimeContext::try_instance();
+        auto* runtime = smgpc::compat::RuntimeContext::try_instance();
         const auto slot = light_slot(lightID);
         if (runtime == nullptr || slot >= cLightDataIDs.size()) {
             return;
         }
 
-        auto light = smgpc::game::GXLightState{};
+        auto light = smgpc::compat::GXLightState{};
         light.loaded = true;
         light.color = color_value(color);
         light.position = vec3_value(rPos);
@@ -56,7 +57,7 @@ void LightFunction::initLightRegisterAll() {
 }
 
 void LightFunction::initLightData() {
-    (void)smgpc::game::LightDataCompat::instance().area_light_info(ZoneLightID{});
+    (void)smgpc::compat::LightDataCompat::instance().area_light_info(ZoneLightID{});
 }
 
 ResourceHolder* LightFunction::loadLightArchive() {
@@ -72,12 +73,12 @@ s32 LightFunction::createZoneDataParser(const char*, JMapInfo**) {
 }
 
 void LightFunction::loadAllLightWhite() {
-    auto* runtime = smgpc::game::RuntimeContext::try_instance();
+    auto* runtime = smgpc::compat::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return;
     }
 
-    auto light = smgpc::game::GXLightState{};
+    auto light = smgpc::compat::GXLightState{};
     light.loaded = true;
     light.color = {255U, 255U, 255U, 255U};
     light.position = {1.0F, 1.0F, 1.0F};
@@ -89,7 +90,7 @@ void LightFunction::loadAllLightWhite() {
 }
 
 AreaLightInfo* LightFunction::getAreaLightInfo(const ZoneLightID& rZoneID) {
-    return smgpc::game::LightDataCompat::instance().area_light_info(rZoneID);
+    return smgpc::compat::LightDataCompat::instance().area_light_info(rZoneID);
 }
 
 void LightFunction::loadActorLightInfo(const ActorLightInfo* pInfo) {
@@ -107,7 +108,7 @@ void LightFunction::getAreaLightLightData(JMapInfo*, int, AreaLightInfo*) {
 }
 
 const char* LightFunction::getDefaultAreaLightName() {
-    return smgpc::game::LightDataCompat::instance().default_area_light_name();
+    return smgpc::compat::LightDataCompat::instance().default_area_light_name();
 }
 
 void LightFunction::loadPointLightInfo(const PointLightInfo* pInfo) {
@@ -115,12 +116,12 @@ void LightFunction::loadPointLightInfo(const PointLightInfo* pInfo) {
         return;
     }
 
-    auto* runtime = smgpc::game::RuntimeContext::try_instance();
+    auto* runtime = smgpc::compat::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return;
     }
 
-    auto light = smgpc::game::GXLightState{};
+    auto light = smgpc::compat::GXLightState{};
     light.loaded = true;
     light.color = color_value(pInfo->mColor);
     light.position = vec3_value(pInfo->mPosition);

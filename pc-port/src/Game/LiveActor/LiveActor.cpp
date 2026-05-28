@@ -4,13 +4,13 @@
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/Spine.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 LiveActor::LiveActor(const char* pName) : NameObj(pName) {
 }
 
 LiveActor::~LiveActor() {
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
         runtime->star_pointer().unregister_target(*this);
         runtime->unregister_effect_keeper(getName());
         runtime->unregister_live_actor_model(*this);
@@ -94,7 +94,7 @@ void LiveActor::control() {
 }
 
 void LiveActor::calcAndSetBaseMtx() {
-    mBaseMatrix = smgpc::game::J3dMatrix3x4{{
+    mBaseMatrix = smgpc::compat::J3dMatrix3x4{{
         mScale.x,
         0.0F,
         0.0F,
@@ -147,10 +147,10 @@ void LiveActor::initModelManagerWithAnm(const char* pModelArcName, const char* p
 }
 
 void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
         const auto group_name =
             pEffectName != nullptr ? std::string_view(pEffectName) : (mModel != nullptr ? mModel->model_arc_name() : std::string_view{});
-        runtime->register_effect_keeper(smgpc::game::EffectKeeperHostKind::LiveActor, getName(), effectNum, group_name, sort);
+        runtime->register_effect_keeper(smgpc::compat::EffectKeeperHostKind::LiveActor, getName(), effectNum, group_name, sort);
     }
 }
 
@@ -165,17 +165,17 @@ void LiveActor::loadActorLight() const {
     }
 }
 
-void LiveActor::setBaseMatrix(const smgpc::game::J3dMatrix3x4& matrix) {
+void LiveActor::setBaseMatrix(const smgpc::compat::J3dMatrix3x4& matrix) {
     mBaseMatrix = matrix;
 }
 
-void LiveActor::setProjmapEffectMatrix(const smgpc::game::J3dMatrix3x4& matrix) {
+void LiveActor::setProjmapEffectMatrix(const smgpc::compat::J3dMatrix3x4& matrix) {
     if (mModel != nullptr) {
         mModel->setProjmapEffectMatrix(matrix);
     }
 }
 
-void LiveActor::drawModel(smgpc::render::IRendererEngine& renderer, const smgpc::game::CameraPoseCompat& camera_pose, std::uint64_t frame,
+void LiveActor::drawModel(smgpc::render::IRendererEngine& renderer, const smgpc::compat::CameraPoseCompat& camera_pose, std::uint64_t frame,
                           LiveActorModelCompat::DrawPass pass) {
     if (mIsDead || mModel == nullptr) {
         return;
@@ -258,6 +258,6 @@ bool LiveActor::isDead() const {
     return mIsDead;
 }
 
-const smgpc::game::J3dMatrix3x4& LiveActor::getBaseMatrix() const {
+const smgpc::compat::J3dMatrix3x4& LiveActor::getBaseMatrix() const {
     return mBaseMatrix;
 }

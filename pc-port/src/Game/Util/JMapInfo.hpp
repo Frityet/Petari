@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstddef>
-#include <cstring>
 #include <cstdint>
+#include <cstring>
 #include <map>
 #include <memory>
 #include <span>
@@ -22,7 +22,7 @@
 #define JMAP_VALUE_TYPE_STRING_PTR 6
 #define JMAP_VALUE_TYPE_NULL 7
 
-namespace smgpc::game {
+namespace smgpc::compat {
     class BcsvTable;
 }
 
@@ -41,7 +41,7 @@ class JMapInfoIter;
 class JMapInfo {
 public:
     JMapInfo() = default;
-    explicit JMapInfo(smgpc::game::BcsvTable table);
+    explicit JMapInfo(smgpc::compat::BcsvTable table);
 
     [[nodiscard]] bool operator==(const JMapInfo& rInfo) const {
         return mTable == rInfo.mTable;
@@ -89,7 +89,7 @@ private:
     [[nodiscard]] bool getFloatValueByHash(int entryIndex, std::uint32_t hash, f32* pValueOut) const;
     [[nodiscard]] bool getStringValueByHash(int entryIndex, std::uint32_t hash, const char** pValueOut) const;
 
-    std::shared_ptr< smgpc::game::BcsvTable > mTable;
+    std::shared_ptr< smgpc::compat::BcsvTable > mTable;
     std::string mName;
     mutable std::map< std::pair< int, std::uint32_t >, std::string > mStringCache;
 };

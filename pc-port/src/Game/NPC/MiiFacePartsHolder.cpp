@@ -1,9 +1,9 @@
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 bool MiiFacePartsHolder::isInitEnd() const {
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
         return runtime->rfl().is_initialized();
     }
 
@@ -11,7 +11,7 @@ bool MiiFacePartsHolder::isInitEnd() const {
 }
 
 bool MiiFacePartsHolder::isError() const {
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
         return runtime->rfl().has_error();
     }
 

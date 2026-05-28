@@ -1,8 +1,8 @@
 #include "DebugPaths.hpp"
 #include "DebugText.hpp"
-#include "Game/compat/J3dModel.hpp"
-#include "Game/compat/RarcArchive.hpp"
 #include "MarkdownWriter.hpp"
+#include "render/J3dModel.hpp"
+#include "resource/RarcArchive.hpp"
 
 #include <exception>
 #include <filesystem>
@@ -17,7 +17,7 @@
 
 namespace {
 
-    void write_sections(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_sections(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         out << "## Sections\n\n";
         out << "| tag | offset | size |\n";
         out << "| --- | ---: | ---: |\n";
@@ -27,7 +27,7 @@ namespace {
         out << '\n';
     }
 
-    void write_info(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_info(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         if (!model.info.has_value()) {
             return;
         }
@@ -41,12 +41,12 @@ namespace {
         out << "| ---: | --- | ---: |\n";
         for (auto i = std::size_t{}; i < model.info->hierarchy.size(); ++i) {
             const auto &entry = model.info->hierarchy[i];
-            out << "| " << i << " | " << smgpc::game::j3d_hierarchy_type_name(entry.type) << " | " << entry.value << " |\n";
+            out << "| " << i << " | " << smgpc::compat::j3d_hierarchy_type_name(entry.type) << " | " << entry.value << " |\n";
         }
         out << '\n';
     }
 
-    void write_vertices(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_vertices(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         if (!model.vertices.has_value()) {
             return;
         }
@@ -56,7 +56,7 @@ namespace {
         out << "| attr | component count | component type | fraction |\n";
         out << "| --- | ---: | ---: | ---: |\n";
         for (const auto &format : model.vertices->formats) {
-            out << "| " << smgpc::game::j3d_vertex_attr_name(format.attr) << " | " << format.component_count << " | " << format.component_type
+            out << "| " << smgpc::compat::j3d_vertex_attr_name(format.attr) << " | " << format.component_count << " | " << format.component_type
                 << " | " << static_cast<int>(format.fraction) << " |\n";
         }
 
@@ -64,13 +64,13 @@ namespace {
         out << "| attr | offset | stride | inferred count |\n";
         out << "| --- | ---: | ---: | ---: |\n";
         for (const auto &array : model.vertices->arrays) {
-            out << "| " << smgpc::game::j3d_vertex_attr_name(array.attr) << " | 0x" << std::hex << array.offset << std::dec << " | " << array.stride
+            out << "| " << smgpc::compat::j3d_vertex_attr_name(array.attr) << " | 0x" << std::hex << array.offset << std::dec << " | " << array.stride
                 << " | " << array.inferred_count << " |\n";
         }
         out << '\n';
     }
 
-    void write_joints(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_joints(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         if (!model.joints.has_value()) {
             return;
         }
@@ -89,7 +89,7 @@ namespace {
         out << '\n';
     }
 
-    void write_matrix_state(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_matrix_state(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         if (model.envelopes.has_value()) {
             out << "## EVP1\n\n";
             out << "- weighted envelopes: " << model.envelopes->matrix_count << '\n';
@@ -144,7 +144,7 @@ namespace {
         }
     }
 
-    void write_materials(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_materials(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         if (!model.materials.has_value()) {
             return;
         }
@@ -319,7 +319,7 @@ namespace {
         markdown.table(gx_headers, gx_rows);
     }
 
-    void write_shapes(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_shapes(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         if (!model.shapes.has_value()) {
             return;
         }
@@ -364,8 +364,8 @@ namespace {
                 if (i != 0U) {
                     out << ", ";
                 }
-                out << smgpc::game::j3d_vertex_attr_name(shape.vertex_desc[i].attr) << '='
-                    << smgpc::game::j3d_vertex_attr_type_name(shape.vertex_desc[i].type);
+                out << smgpc::compat::j3d_vertex_attr_name(shape.vertex_desc[i].attr) << '='
+                    << smgpc::compat::j3d_vertex_attr_type_name(shape.vertex_desc[i].type);
             }
             out << "\n\n";
 
@@ -391,14 +391,14 @@ namespace {
             out << "| primitive | vertex format | vertices | triangles |\n";
             out << "| --- | ---: | ---: | ---: |\n";
             for (const auto &primitive : shape.primitives) {
-                out << "| " << smgpc::game::j3d_primitive_name(primitive.primitive) << " | " << static_cast<int>(primitive.vertex_format) << " | "
+                out << "| " << smgpc::compat::j3d_primitive_name(primitive.primitive) << " | " << static_cast<int>(primitive.vertex_format) << " | "
                     << primitive.vertex_count << " | " << primitive.triangle_count << " |\n";
             }
             out << '\n';
         }
     }
 
-    void write_textures(std::ofstream &out, const smgpc::game::J3dModelSummary &model) {
+    void write_textures(std::ofstream &out, const smgpc::compat::J3dModelSummary &model) {
         out << "## TEX1\n\n";
         out << "| index | name | dimensions | format | wrap s | wrap t |\n";
         out << "| ---: | --- | --- | ---: | ---: | ---: |\n";
@@ -411,8 +411,8 @@ namespace {
         out << '\n';
     }
 
-    void write_model_probe(const std::filesystem::path &output, std::string_view object_name, const smgpc::game::RarcEntry &entry,
-                           const smgpc::game::J3dModelSummary &model) {
+    void write_model_probe(const std::filesystem::path &output, std::string_view object_name, const smgpc::compat::RarcEntry &entry,
+                           const smgpc::compat::J3dModelSummary &model) {
         std::filesystem::create_directories(output.parent_path());
 
         auto out = std::ofstream(output);
@@ -439,7 +439,7 @@ namespace {
 int main(int argc, char **argv) try {
     const auto object_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
     const auto archive_path = smgpc::debug::disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc");
-    const auto archive = smgpc::game::RarcArchive::from_file(archive_path);
+    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
     const auto output_root = smgpc::debug::cache_path("j3d-model-probes") / smgpc::debug::sanitize_filename(object_name, "model");
 
     auto model_count = 0U;
@@ -448,7 +448,7 @@ int main(int argc, char **argv) try {
             continue;
         }
 
-        const auto model = smgpc::game::inspect_j3d_model(archive.file_data(entry));
+        const auto model = smgpc::compat::inspect_j3d_model(archive.file_data(entry));
         const auto output = output_root / (smgpc::debug::sanitize_filename(std::filesystem::path(entry.path).stem().string(), "model") + ".md");
         write_model_probe(output, object_name, entry, model);
         std::cout << output << '\n';

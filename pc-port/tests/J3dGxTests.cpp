@@ -94,15 +94,15 @@ namespace smgpc::tests {
             append_bp(display_list, 0xf3U, (2U << 16U) | 10U | (1U << 22U) | (5U << 19U) | (20U << 8U));
             append_bp(display_list, 0xf6U, (14U << 4U) | (28U << 9U));
 
-            auto state = smgpc::game::GXMaterialState{};
-            smgpc::game::gx_apply_mdl3_display_list(state, display_list);
+            auto state = smgpc::compat::GXMaterialState{};
+            smgpc::compat::gx_apply_mdl3_display_list(state, display_list);
 
             require(state.color_channel_count == 2U, "MDL3 XF num-channel load should update effective color-channel count");
-            require(state.color_channels[0U].ambient_color == smgpc::game::GXColorValue{0x10U, 0x20U, 0x30U, 0x40U} &&
-                        state.color_channels[1U].ambient_color == smgpc::game::GXColorValue{0x50U, 0x60U, 0x70U, 0x80U},
+            require(state.color_channels[0U].ambient_color == smgpc::compat::GXColorValue{0x10U, 0x20U, 0x30U, 0x40U} &&
+                        state.color_channels[1U].ambient_color == smgpc::compat::GXColorValue{0x50U, 0x60U, 0x70U, 0x80U},
                     "MDL3 XF ambient color loads should preserve RGBA bytes");
-            require(state.color_channels[0U].material_color == smgpc::game::GXColorValue{0x90U, 0xa0U, 0xb0U, 0xc0U} &&
-                        state.color_channels[1U].material_color == smgpc::game::GXColorValue{0xd0U, 0xe0U, 0xf0U, 0x11U},
+            require(state.color_channels[0U].material_color == smgpc::compat::GXColorValue{0x90U, 0xa0U, 0xb0U, 0xc0U} &&
+                        state.color_channels[1U].material_color == smgpc::compat::GXColorValue{0xd0U, 0xe0U, 0xf0U, 0x11U},
                     "MDL3 XF material color loads should preserve RGBA bytes");
             require(state.color_channels[0U].color_control.material_source == 1U && state.color_channels[0U].color_control.lighting_enabled &&
                         state.color_channels[0U].color_control.light_mask == 0xa5U &&
@@ -115,7 +115,7 @@ namespace smgpc::tests {
                         state.color_channels[0U].alpha_control.attenuation_mode == 0U &&
                         state.color_channels[1U].alpha_control.material_source == 1U,
                     "MDL3 XF alpha channel controls should decode independently from color controls");
-            require(state.lights[2U].loaded && state.lights[2U].color == smgpc::game::GXColorValue{0x11U, 0x22U, 0x33U, 0x44U},
+            require(state.lights[2U].loaded && state.lights[2U].color == smgpc::compat::GXColorValue{0x11U, 0x22U, 0x33U, 0x44U},
                     "MDL3 XF light object loads should preserve light color bytes");
             require_near(state.lights[2U].cosine_attenuation[0U], 1.0F, 0.0001F,
                          "MDL3 XF light object loads should decode cosine attenuation floats");
@@ -173,7 +173,7 @@ namespace smgpc::tests {
                         state.tev_stages[0U].color_out == 2U && state.tev_stages[0U].alpha_out == 2U &&
                         state.tev_stages[0U].k_color_sel == 14U && state.tev_stages[0U].k_alpha_sel == 28U,
                     "MDL3 TEV BP loads should update effective stage and konst selector state");
-            require(state.tev_registers[1U] == smgpc::game::GXTevRegisterColor{100, 40, 30, -5},
+            require(state.tev_registers[1U] == smgpc::compat::GXTevRegisterColor{100, 40, 30, -5},
                     "MDL3 TEV color BP loads should update signed effective TEV registers");
             require(state.alpha_compare.enabled && state.alpha_compare.comp0 == 2U && state.alpha_compare.ref0 == 10U &&
                         state.alpha_compare.op == 1U && state.alpha_compare.comp1 == 5U && state.alpha_compare.ref1 == 20U,
@@ -197,63 +197,63 @@ namespace smgpc::tests {
                 bytes.push_back(static_cast<std::uint8_t>(value & 0xffU));
             };
 
-            auto first_state = smgpc::game::GXMaterialState{};
-            auto bp_registers = smgpc::game::gx_bp_registers_from_state(first_state);
+            auto first_state = smgpc::compat::GXMaterialState{};
+            auto bp_registers = smgpc::compat::gx_bp_registers_from_state(first_state);
             auto first_list = std::vector<std::uint8_t>{};
             append_bp(first_list, 0x40U, 1U | (3U << 1U));
-            smgpc::game::gx_apply_mdl3_display_list(first_state, first_list, &bp_registers);
+            smgpc::compat::gx_apply_mdl3_display_list(first_state, first_list, &bp_registers);
             require(first_state.z_mode.enabled && first_state.z_mode.compare_enable == 1U && first_state.z_mode.function == 3U &&
                         first_state.z_mode.update_enable == 0U,
                     "BP z-mode write should update the rolling hardware register state");
 
-            auto masked_state = smgpc::game::GXMaterialState{};
+            auto masked_state = smgpc::compat::GXMaterialState{};
             auto masked_list = std::vector<std::uint8_t>{};
             append_bp(masked_list, 0xfeU, 0x00000fU);
             append_bp(masked_list, 0x40U, 1U | (4U << 1U) | (1U << 4U));
-            smgpc::game::gx_apply_mdl3_display_list(masked_state, masked_list, &bp_registers);
+            smgpc::compat::gx_apply_mdl3_display_list(masked_state, masked_list, &bp_registers);
             require(masked_state.z_mode.enabled && masked_state.z_mode.compare_enable == 1U && masked_state.z_mode.function == 4U &&
                         masked_state.z_mode.update_enable == 0U,
                     "BP mask register should preserve unmasked bits from the prior hardware register value");
 
-            auto reset_state = smgpc::game::GXMaterialState{};
+            auto reset_state = smgpc::compat::GXMaterialState{};
             auto reset_list = std::vector<std::uint8_t>{};
             append_bp(reset_list, 0x40U, 1U | (3U << 1U) | (1U << 4U));
-            smgpc::game::gx_apply_mdl3_display_list(reset_state, reset_list, &bp_registers);
+            smgpc::compat::gx_apply_mdl3_display_list(reset_state, reset_list, &bp_registers);
             require(reset_state.z_mode.enabled && reset_state.z_mode.compare_enable == 1U && reset_state.z_mode.function == 3U &&
                         reset_state.z_mode.update_enable == 1U,
                     "BP mask register should reset after the next non-mask BP write");
         }
 
         $test("evaluates lit GX raster colors from typed channel and light state") {
-            auto state = smgpc::game::GXMaterialState{};
+            auto state = smgpc::compat::GXMaterialState{};
             state.color_channel_count = 1U;
             state.color_channels[0U].material_color = {100U, 100U, 100U, 100U};
             state.color_channels[0U].ambient_color = {10U, 10U, 10U, 10U};
             state.color_channels[0U].color_control =
-                smgpc::game::gx_color_channel_control_from_j3d(1U, 0U, 1U << 0U, 2U, 2U, 0U);
-            state.color_channels[0U].alpha_control = smgpc::game::gx_color_channel_control_from_j3d(0U, 0U, 0U, 0U, 2U, 0U);
+                smgpc::compat::gx_color_channel_control_from_j3d(1U, 0U, 1U << 0U, 2U, 2U, 0U);
+            state.color_channels[0U].alpha_control = smgpc::compat::gx_color_channel_control_from_j3d(0U, 0U, 0U, 0U, 2U, 0U);
             state.lights[0U].loaded = true;
             state.lights[0U].color = {255U, 0U, 0U, 255U};
             state.lights[0U].position = {0.0F, 0.0F, 10.0F};
             state.lights[0U].direction = {0.0F, 0.0F, -1.0F};
 
-            const auto lit = smgpc::game::gx_evaluate_lit_raster_color(state, 4U, {255U, 255U, 255U, 255U},
-                                                                       {0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 1.0F});
+            const auto lit = smgpc::compat::gx_evaluate_lit_raster_color(state, 4U, {255U, 255U, 255U, 255U},
+                                                                         {0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 1.0F});
             require(lit[0U] == 100U && lit[1U] == 3U && lit[2U] == 3U && lit[3U] == 100U,
                     "GX raster color lighting should apply Dolphin-style ambient/light accumulator before material modulation");
 
             state.lights[0U].loaded = false;
-            const auto ambient_only = smgpc::game::gx_evaluate_lit_raster_color(state, 4U, {255U, 255U, 255U, 255U},
-                                                                                {0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 1.0F});
+            const auto ambient_only = smgpc::compat::gx_evaluate_lit_raster_color(state, 4U, {255U, 255U, 255U, 255U},
+                                                                                  {0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 1.0F});
             require(ambient_only[0U] == 3U && ambient_only[1U] == 3U && ambient_only[2U] == 3U && ambient_only[3U] == 100U,
                     "GX raster color lighting should fall back to ambient when selected light objects have not been loaded");
         }
 
         $test("probes CometNearOrbitSky J3D model sections and materials") {
             const auto root = disc_files_root();
-            const auto sky_archive = smgpc::game::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
+            const auto sky_archive = smgpc::compat::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
             const auto model_data = sky_archive.file_data("cometnearorbitsky.bdl");
-            const auto model = smgpc::game::inspect_j3d_model(model_data);
+            const auto model = smgpc::compat::inspect_j3d_model(model_data);
 
             require(model.section_count == 9U, "CometNearOrbitSky.bdl section count changed");
             require(model.info.has_value(), "CometNearOrbitSky.bdl should expose INF1");
@@ -290,7 +290,7 @@ namespace smgpc::tests {
             require(std::ranges::all_of(model.mdl3->packets, [](const auto &packet) { return packet.size > 0U && !packet.bytes.empty(); }),
                     "CometNearOrbitSky MDL3 packets should preserve raw GX display-list bytes");
 
-            const auto find_material = [&model](std::string_view name) -> const smgpc::game::J3dMaterialSummary * {
+            const auto find_material = [&model](std::string_view name) -> const smgpc::compat::J3dMaterialSummary * {
                 const auto it = std::ranges::find_if(model.materials->materials, [name](const auto &material) { return material.name == name; });
                 return it == model.materials->materials.end() ? nullptr : &*it;
             };
@@ -310,11 +310,11 @@ namespace smgpc::tests {
                         space->gx_state.color_channels[0U].alpha_control.raw == space->alpha_channel_controls[0U].raw,
                     "Space_Mat_v GX state should preserve MAT3/XF color and alpha channel controls");
             require(std::ranges::any_of(space->gx_state.mdl3_register_loads, [](const auto &load) {
-                        return load.space == smgpc::game::GXRegisterSpace::XF && load.address >= 0x1009U && load.address <= 0x1011U;
+                        return load.space == smgpc::compat::GXRegisterSpace::XF && load.address >= 0x1009U && load.address <= 0x1011U;
                     }),
                     "Space_Mat_v GX state should retain XF color-channel register load evidence");
             require(std::ranges::any_of(space->gx_state.mdl3_register_loads, [](const auto &load) {
-                        return load.space == smgpc::game::GXRegisterSpace::BP && load.address >= 0xe0U && load.address <= 0xe7U;
+                        return load.space == smgpc::compat::GXRegisterSpace::BP && load.address >= 0xe0U && load.address <= 0xe7U;
                     }),
                     "Space_Mat_v GX state should retain and apply MDL3 TEV register BP loads");
             require(!space->gx_state.mdl3_display_list.empty(), "Space_Mat_v GX state should preserve its MDL3 material packet");
@@ -324,7 +324,7 @@ namespace smgpc::tests {
                     "Space_Mat_v GX state should parse the full MDL3 material packet");
             require(space->gx_state.mdl3_stats.unknown_opcode_count == 0U, "Space_Mat_v GX state should recognize all MDL3 material-packet opcodes");
             require(std::ranges::any_of(space->gx_state.mdl3_register_loads, [](const auto &load) {
-                        return load.space == smgpc::game::GXRegisterSpace::BP && load.address == 0x00U;
+                        return load.space == smgpc::compat::GXRegisterSpace::BP && load.address == 0x00U;
                     }),
                     "Space_Mat_v GX state should retain MDL3 gen-mode BP loads");
             require(space->textures.size() == 3U, "Space_Mat_v should bind the original three textures");
@@ -353,7 +353,7 @@ namespace smgpc::tests {
             require(space->blend.enabled && space->blend.type == 0U && space->blend.src_factor == 1U && space->blend.dst_factor == 0U,
                     "Space_Mat_v should preserve original no-blend state");
             require(std::ranges::any_of(space->gx_state.mdl3_register_loads, [](const auto &load) {
-                        return load.space == smgpc::game::GXRegisterSpace::BP && load.address == 0xfeU;
+                        return load.space == smgpc::compat::GXRegisterSpace::BP && load.address == 0xfeU;
                     }),
                     "Space_Mat_v GX state should retain J3D BP mask-register loads");
             require(space->gx_state.blend.color_update && space->gx_state.blend.alpha_update,
@@ -365,7 +365,7 @@ namespace smgpc::tests {
             require(!space->gx_state.fog.enabled && space->gx_state.fog.type == 0U &&
                         space->gx_state.fog.color == std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
                     "Space_Mat_v MDL3 fog registers should decode to original GX_FOG_NONE state instead of a raw-load marker");
-            const auto space_passes = smgpc::game::j3d_material_texture_passes(*space);
+            const auto space_passes = smgpc::compat::j3d_material_texture_passes(*space);
             require(space_passes.size() == 3U, "Space_Mat_v should build three runtime texture passes from TEV order");
             require(space_passes[0U].texture_index == 6U && space_passes[0U].tex_coord_slot == 1U,
                     "Space_Mat_v pass 0 should sample Galaxy through tex coord 1");
@@ -375,31 +375,31 @@ namespace smgpc::tests {
                     "Space_Mat_v pass 2 should sample GalaxyRiverK through tex coord 2");
             require(space_passes[0U].tex_matrix.has_value() && space_passes[0U].tex_matrix->slot == 1U,
                     "Space_Mat_v pass 0 should resolve GX_TEXMTX1-compatible slot 1");
-            const auto composed_space = smgpc::game::j3d_try_compose_material_texture(*space, model.textures, space_passes, space->material_colors[0U]);
+            const auto composed_space = smgpc::compat::j3d_try_compose_material_texture(*space, model.textures, space_passes, space->material_colors[0U]);
             require(composed_space.has_value(), "Space_Mat_v should compose from its original material texture passes");
             require(composed_space->raster_color_baked, "Space_Mat_v pass composition should bake raster color into the texture");
             require(composed_space->image.width == 1024U && composed_space->image.height == 512U,
                     "Space_Mat_v pass composition should use the largest source texture dimensions");
-            const auto representative_space_pass = smgpc::game::j3d_representative_texture_pass(*space);
+            const auto representative_space_pass = smgpc::compat::j3d_representative_texture_pass(*space);
             require(representative_space_pass.has_value(), "Space_Mat_v should expose a representative runtime texture pass");
             require(representative_space_pass->texture_index == 5U && representative_space_pass->tex_map_slot == 0U,
                     "Space_Mat_v representative pass should use the original base starfield texture map");
             require(representative_space_pass->tex_matrix.has_value() && representative_space_pass->tex_matrix->slot == 0U,
                     "Space_Mat_v representative pass should resolve its base texture matrix");
-            const auto transformed_space_coord = smgpc::game::j3d_transform_tex_coord(smgpc::game::J3dMeshVertex{.u = 0.75F, .v = 0.25F},
-                                                                                      &space->tex_coord_gens[0U], &space->tex_matrices[0U]);
+            const auto transformed_space_coord = smgpc::compat::j3d_transform_tex_coord(smgpc::compat::J3dMeshVertex{.u = 0.75F, .v = 0.25F},
+                                                                                        &space->tex_coord_gens[0U], &space->tex_matrices[0U]);
             require_near(transformed_space_coord.u, 0.625F, 0.001F, "J3D texture matrix transform should apply centered S scale");
             require_near(transformed_space_coord.v, 0.25F, 0.001F, "J3D texture matrix transform should preserve V without SRT changes");
 
             const auto *core_rock = find_material("CoreRock");
             require(core_rock != nullptr, "CometNearOrbitSky should expose CoreRock");
-            require(smgpc::game::j3d_material_texture_passes(*core_rock).empty(), "CoreRock should be an untextured material");
+            require(smgpc::compat::j3d_material_texture_passes(*core_rock).empty(), "CoreRock should be an untextured material");
             require(core_rock->gx_state.color_channels[0U].alpha_control.lighting_enabled &&
                         core_rock->gx_state.color_channels[0U].alpha_control.light_mask == 4U,
                     "CoreRock should preserve its original alpha-channel light mask for GX raster lighting");
             require(std::ranges::none_of(core_rock->gx_state.lights, [](const auto &light) { return light.loaded; }),
                     "CoreRock material packet should expose that its selected light comes from scene GX state rather than MDL3 local light loads");
-            const auto composed_core_rock = smgpc::game::j3d_try_compose_material_constant(*core_rock, core_rock->material_colors[0U]);
+            const auto composed_core_rock = smgpc::compat::j3d_try_compose_material_constant(*core_rock, core_rock->material_colors[0U]);
             require(composed_core_rock.has_value(), "CoreRock should compose to a constant material texture");
             require(composed_core_rock->raster_color_baked, "CoreRock constant material composition should bake raster color");
             require(composed_core_rock->image.width == 1U && composed_core_rock->image.height == 1U,
@@ -417,20 +417,20 @@ namespace smgpc::tests {
                         return order.stage == 0U && order.tex_map == 1U && order.tex_coord == 1U;
                     }),
                     "CometHalo_v indirect stage 0 should sample the original texture-map and texcoord slots");
-            const auto comet_halo_passes = smgpc::game::j3d_material_texture_passes(*comet_halo);
+            const auto comet_halo_passes = smgpc::compat::j3d_material_texture_passes(*comet_halo);
             require(comet_halo_passes.size() == 1U && comet_halo_passes[0U].texture_index == 2U && comet_halo_passes[0U].stage == 0U,
                     "CometHalo_v regular TEV order should still expose one base texture pass");
-            const auto indirect_source = smgpc::game::J3dMeshVertex{
+            const auto indirect_source = smgpc::compat::J3dMeshVertex{
                 .u = 3.0F / 8.0F,
                 .v = 5.0F / 8.0F,
             };
             const auto indirect_trace =
-                smgpc::game::j3d_trace_indirect_texture_transform(*comet_halo, model.textures, indirect_source, comet_halo_passes[0U]);
+                smgpc::compat::j3d_trace_indirect_texture_transform(*comet_halo, model.textures, indirect_source, comet_halo_passes[0U]);
             require(indirect_trace.has_value(), "CometHalo_v should expose a traceable active indirect texture transform");
             require(indirect_trace->tev_stage == 0U && indirect_trace->indirect_stage == 0U && indirect_trace->indirect_tex_map == 1U &&
                         indirect_trace->indirect_tex_coord == 1U,
                     "CometHalo_v indirect trace should preserve Dolphin/GX stage and indirect order selectors");
-            const auto base_coord = smgpc::game::j3d_transform_tex_coord(
+            const auto base_coord = smgpc::compat::j3d_transform_tex_coord(
                 indirect_source, comet_halo_passes[0U].tex_coord_gen.has_value() ? &*comet_halo_passes[0U].tex_coord_gen : nullptr,
                 comet_halo_passes[0U].tex_matrix.has_value() ? &*comet_halo_passes[0U].tex_matrix : nullptr);
             require_near(indirect_trace->base_coord.u, base_coord.u, 0.00001F,
@@ -549,15 +549,15 @@ namespace smgpc::tests {
             auto indirect_changes_sample = false;
             for (auto y = 1U; y < 8U && !indirect_changes_sample; ++y) {
                 for (auto x = 1U; x < 8U; ++x) {
-                    const auto source = smgpc::game::J3dMeshVertex{
+                    const auto source = smgpc::compat::J3dMeshVertex{
                         .u = static_cast<float>(x) / 8.0F,
                         .v = static_cast<float>(y) / 8.0F,
                     };
-                    const auto with_indirect = smgpc::game::j3d_evaluate_material_color(*comet_halo, model.textures, comet_halo_passes, source,
-                                                                                        comet_halo->material_colors[0U]);
+                    const auto with_indirect = smgpc::compat::j3d_evaluate_material_color(*comet_halo, model.textures, comet_halo_passes, source,
+                                                                                          comet_halo->material_colors[0U]);
                     const auto without_indirect =
-                        smgpc::game::j3d_evaluate_material_color(comet_halo_without_indirect, model.textures, comet_halo_passes, source,
-                                                                 comet_halo->material_colors[0U]);
+                        smgpc::compat::j3d_evaluate_material_color(comet_halo_without_indirect, model.textures, comet_halo_passes, source,
+                                                                   comet_halo->material_colors[0U]);
                     require(with_indirect.has_value() && without_indirect.has_value(),
                             "CometHalo_v material evaluator should sample both regular and indirect textures");
                     if (*with_indirect != *without_indirect) {
@@ -579,13 +579,13 @@ namespace smgpc::tests {
             require_near(earth_far->tex_matrices[2U].scale_s, 0.1F, 0.001F, "EarthFar_v cloud matrix S scale changed");
             require_near(earth_far->tex_matrices[2U].scale_t, 0.5F, 0.001F, "EarthFar_v cloud matrix T scale changed");
             const auto projected_earth_coord =
-                smgpc::game::j3d_transform_tex_coord(smgpc::game::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
-                                                     &earth_far->tex_coord_gens[0U], &earth_far->tex_matrices[0U]);
+                smgpc::compat::j3d_transform_tex_coord(smgpc::compat::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
+                                                       &earth_far->tex_coord_gens[0U], &earth_far->tex_matrices[0U]);
             require_near(projected_earth_coord.u, 0.49848F, 0.001F,
                          "J3D GX_TG_POS texture generation should apply projected texture matrix before Q divide");
             require_near(projected_earth_coord.v, 0.50253F, 0.001F,
                          "J3D GX_TG_POS texture generation should apply projected texture matrix before Q divide");
-            const auto scaled_actor_matrix = smgpc::game::J3dMatrix3x4{
+            const auto scaled_actor_matrix = smgpc::compat::J3dMatrix3x4{
                 .m =
                     {
                         0.8F,
@@ -603,8 +603,8 @@ namespace smgpc::tests {
                     },
             };
             const auto projected_scaled_earth_coord =
-                smgpc::game::j3d_transform_tex_coord(smgpc::game::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
-                                                     &earth_far->tex_coord_gens[0U], &earth_far->tex_matrices[0U], &scaled_actor_matrix);
+                smgpc::compat::j3d_transform_tex_coord(smgpc::compat::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
+                                                       &earth_far->tex_coord_gens[0U], &earth_far->tex_matrices[0U], &scaled_actor_matrix);
             require_near(projected_scaled_earth_coord.u, 0.49879F, 0.001F,
                          "J3D projected texture generation should include the actor/model matrix passed to J3DTexMtx::calc");
             require_near(projected_scaled_earth_coord.v, 0.50202F, 0.001F,
@@ -612,7 +612,7 @@ namespace smgpc::tests {
             const auto yaw = 0.65F;
             const auto cos_y = std::cos(yaw);
             const auto sin_y = std::sin(yaw);
-            const auto rotated_actor_matrix = smgpc::game::J3dMatrix3x4{{
+            const auto rotated_actor_matrix = smgpc::compat::J3dMatrix3x4{{
                 0.8F * cos_y,
                 0.0F,
                 0.8F * sin_y,
@@ -626,11 +626,11 @@ namespace smgpc::tests {
                 0.8F * cos_y,
                 0.0F,
             }};
-            auto projmap_effect_tex_matrix = smgpc::game::j3d_apply_projmap_effect_matrix(
-                earth_far->tex_matrices[0U], smgpc::game::j3d_invert_affine_matrix(rotated_actor_matrix));
+            auto projmap_effect_tex_matrix = smgpc::compat::j3d_apply_projmap_effect_matrix(
+                earth_far->tex_matrices[0U], smgpc::compat::j3d_invert_affine_matrix(rotated_actor_matrix));
             const auto projected_stable_earth_coord =
-                smgpc::game::j3d_transform_tex_coord(smgpc::game::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
-                                                     &earth_far->tex_coord_gens[0U], &projmap_effect_tex_matrix, &rotated_actor_matrix);
+                smgpc::compat::j3d_transform_tex_coord(smgpc::compat::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
+                                                       &earth_far->tex_coord_gens[0U], &projmap_effect_tex_matrix, &rotated_actor_matrix);
             require_near(projected_stable_earth_coord.u, projected_earth_coord.u, 0.001F,
                          "ProjmapEffectMtxSetter effect matrices should cancel actor rotation for projected S coordinates");
             require_near(projected_stable_earth_coord.v, projected_earth_coord.v, 0.001F,
@@ -649,17 +649,17 @@ namespace smgpc::tests {
             require(earth_far->z_mode.enabled && earth_far->z_mode.compare_enable == 1U && earth_far->z_mode.function == 3U &&
                         earth_far->z_mode.update_enable == 1U,
                     "EarthFar_v should preserve original GX_LEQUAL write-enabled Z mode");
-            const auto earth_passes = smgpc::game::j3d_material_texture_passes(*earth_far);
+            const auto earth_passes = smgpc::compat::j3d_material_texture_passes(*earth_far);
             require(earth_passes.size() == 3U, "EarthFar_v should build three runtime texture passes from TEV order");
             require(earth_passes[0U].texture_index == 9U && earth_passes[1U].texture_index == 11U && earth_passes[2U].texture_index == 10U,
                     "EarthFar_v runtime passes should preserve earth/far/cloud texture order");
-            require(!smgpc::game::j3d_try_compose_material_texture(*earth_far, model.textures, earth_passes, earth_far->material_colors[0U]).has_value(),
+            require(!smgpc::compat::j3d_try_compose_material_texture(*earth_far, model.textures, earth_passes, earth_far->material_colors[0U]).has_value(),
                     "EarthFar_v should not compose because it uses position/projected texture generation");
-            const auto representative_earth_pass = smgpc::game::j3d_representative_texture_pass(*earth_far);
+            const auto representative_earth_pass = smgpc::compat::j3d_representative_texture_pass(*earth_far);
             require(representative_earth_pass.has_value() && representative_earth_pass->texture_index == 9U,
                     "EarthFar_v representative pass should use the original base earth texture map");
-            const auto evaluated_earth_color = smgpc::game::j3d_evaluate_material_color(
-                *earth_far, model.textures, earth_passes, smgpc::game::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
+            const auto evaluated_earth_color = smgpc::compat::j3d_evaluate_material_color(
+                *earth_far, model.textures, earth_passes, smgpc::compat::J3dMeshVertex{.x = 10.0F, .y = 20.0F, .z = 40.0F, .u = 0.75F, .v = 0.25F},
                 earth_far->material_colors[0U]);
             require(evaluated_earth_color.has_value(), "EarthFar_v projected/POS material should evaluate through the shared J3D runtime");
             require(std::ranges::any_of(*evaluated_earth_color, [](std::uint8_t channel) { return channel != 0U; }),
@@ -688,7 +688,7 @@ namespace smgpc::tests {
             require(space_shape.display_list_bytes == 3232U, "Space_Mat_v shape display list size changed");
             require(space_shape.parsed_display_list_bytes == space_shape.display_list_bytes, "Space_Mat_v shape display list should parse fully");
             require(space_shape.triangle_count == 480U, "Space_Mat_v triangle count changed");
-            const auto geometry = smgpc::game::extract_j3d_model_geometry(model_data);
+            const auto geometry = smgpc::compat::extract_j3d_model_geometry(model_data);
             const auto &space_packet_mesh = geometry.shapes.at(7U).draw_packets.at(0U);
             require(space_packet_mesh.matrix_group.display_list_size == 3232U,
                     "Space_Mat_v runtime packet mesh should preserve the original SHP1 display-list size");
@@ -717,8 +717,8 @@ namespace smgpc::tests {
 
         $test("probes CometNearOrbitSky BCK and BTK animations") {
             const auto root = disc_files_root();
-            const auto sky_archive = smgpc::game::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
-            const auto bck = smgpc::game::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.bck"));
+            const auto sky_archive = smgpc::compat::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
+            const auto bck = smgpc::compat::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.bck"));
             require(bck.type == "bck1", "CometNearOrbitSky BCK file type changed");
             require(bck.sections.size() == 1U && bck.sections[0U].tag == "ANK1", "CometNearOrbitSky BCK should contain one ANK1 section");
             require(bck.bck.has_value(), "CometNearOrbitSky BCK should expose ANK1 summary");
@@ -732,21 +732,21 @@ namespace smgpc::tests {
             require(bck.bck->rotation_values.size() == 16U, "CometNearOrbitSky BCK rotation values should be decoded");
             require(bck.bck->translation_values.size() == 10U, "CometNearOrbitSky BCK translation values should be decoded");
 
-            const auto root_joint = smgpc::game::j3d_evaluate_bck_joint_transform(*bck.bck, 0U, 1500.0F);
+            const auto root_joint = smgpc::compat::j3d_evaluate_bck_joint_transform(*bck.bck, 0U, 1500.0F);
             require(root_joint.has_value(), "CometNearOrbitSky BCK should evaluate root joint transform");
             require_near(root_joint->scale[0U], 1.0F, 0.001F, "CometNearOrbitSky BCK root X scale changed");
             require(root_joint->rotation[0U] == 0 && root_joint->rotation[1U] == 0 && root_joint->rotation[2U] == 0,
                     "CometNearOrbitSky BCK root rotation should remain identity");
 
-            const auto orbit_joint = smgpc::game::j3d_evaluate_bck_joint_transform(*bck.bck, 3U, 1500.0F);
+            const auto orbit_joint = smgpc::compat::j3d_evaluate_bck_joint_transform(*bck.bck, 3U, 1500.0F);
             require(orbit_joint.has_value(), "CometNearOrbitSky BCK should evaluate animated orbit joint transform");
             require(orbit_joint->rotation[0U] == 32686 && orbit_joint->rotation[2U] == 32686,
                     "CometNearOrbitSky BCK orbit joint half-frame rotation changed");
             require_near(orbit_joint->translation[0U], 518043.0F, 0.5F, "CometNearOrbitSky BCK orbit joint X translation changed");
-            require(!smgpc::game::j3d_evaluate_bck_joint_transform(*bck.bck, 8U, 0.0F).has_value(),
+            require(!smgpc::compat::j3d_evaluate_bck_joint_transform(*bck.bck, 8U, 0.0F).has_value(),
                     "CometNearOrbitSky BCK should reject out-of-range joint indices");
 
-            const auto btk = smgpc::game::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.btk"));
+            const auto btk = smgpc::compat::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.btk"));
             require(btk.type == "btk1", "CometNearOrbitSky BTK file type changed");
             require(btk.sections.size() == 1U && btk.sections[0U].tag == "TTK1", "CometNearOrbitSky BTK should contain one TTK1 section");
             require(btk.btk.has_value(), "CometNearOrbitSky BTK should expose TTK1 summary");
@@ -763,28 +763,28 @@ namespace smgpc::tests {
             require(btk.btk->materials[3U].tex_matrix_id == 2U, "CometNearOrbitSky BTK EarthFar_v texture matrix id changed");
             require_near(btk.btk->materials[3U].center[0U], 0.5F, 0.001F, "CometNearOrbitSky BTK SRT center X changed");
 
-            const auto earth_start = smgpc::game::j3d_evaluate_btk_texture_srt(*btk.btk, "EarthFar_v", 2U, 0.0F);
+            const auto earth_start = smgpc::compat::j3d_evaluate_btk_texture_srt(*btk.btk, "EarthFar_v", 2U, 0.0F);
             require(earth_start.has_value(), "CometNearOrbitSky BTK should evaluate EarthFar_v matrix 2 at frame 0");
             require_near(earth_start->scale_s, 0.1F, 0.001F, "CometNearOrbitSky BTK EarthFar_v initial S scale changed");
             require_near(earth_start->scale_t, 0.5F, 0.001F, "CometNearOrbitSky BTK EarthFar_v initial T scale changed");
             require_near(earth_start->translate_s, 0.0F, 0.001F, "CometNearOrbitSky BTK EarthFar_v initial S translation changed");
             require_near(earth_start->translate_t, 0.0F, 0.001F, "CometNearOrbitSky BTK EarthFar_v initial T translation changed");
 
-            const auto earth_middle = smgpc::game::j3d_evaluate_btk_texture_srt(*btk.btk, "EarthFar_v", 2U, 5000.0F);
+            const auto earth_middle = smgpc::compat::j3d_evaluate_btk_texture_srt(*btk.btk, "EarthFar_v", 2U, 5000.0F);
             require(earth_middle.has_value(), "CometNearOrbitSky BTK should evaluate EarthFar_v matrix 2 at half-frame");
             require_near(earth_middle->translate_s, 0.5F, 0.001F, "CometNearOrbitSky BTK EarthFar_v half-frame S translation changed");
             require_near(earth_middle->translate_t, 0.5F, 0.001F, "CometNearOrbitSky BTK EarthFar_v half-frame T translation changed");
-            require(!smgpc::game::j3d_evaluate_btk_texture_srt(*btk.btk, "EarthFar_v", 0U, 5000.0F).has_value(),
+            require(!smgpc::compat::j3d_evaluate_btk_texture_srt(*btk.btk, "EarthFar_v", 0U, 5000.0F).has_value(),
                     "CometNearOrbitSky BTK should only match the material's animated texture matrix id");
         }
 
         $test("renders CometNearOrbitSky as original SHP1 draw packets") {
             const auto root = disc_files_root();
-            const auto sky_archive = smgpc::game::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
+            const auto sky_archive = smgpc::compat::RarcArchive::from_file(root / "ObjectData" / "CometNearOrbitSky.arc");
             require(sky_archive.contains("cometnearorbitsky.bdl"), "CometNearOrbitSky.arc should contain the original BDL");
-            const auto sky_model = smgpc::game::inspect_j3d_model(sky_archive.file_data("cometnearorbitsky.bdl"));
+            const auto sky_model = smgpc::compat::inspect_j3d_model(sky_archive.file_data("cometnearorbitsky.bdl"));
             require(sky_model.materials.has_value(), "CometNearOrbitSky renderer test should expose source materials");
-            const auto find_material_summary = [&sky_model](std::string_view name) -> const smgpc::game::J3dMaterialSummary * {
+            const auto find_material_summary = [&sky_model](std::string_view name) -> const smgpc::compat::J3dMaterialSummary * {
                 const auto it = std::ranges::find_if(sky_model.materials->materials, [name](const auto &material) { return material.name == name; });
                 return it == sky_model.materials->materials.end() ? nullptr : &*it;
             };
@@ -796,7 +796,7 @@ namespace smgpc::tests {
                     "CometNearOrbitSky renderer test should resolve source material state");
 
             auto renderer = RecordingRenderer();
-            auto model_renderer = smgpc::game::J3dModelRenderer();
+            auto model_renderer = smgpc::compat::J3dModelRenderer();
             model_renderer.load(renderer, sky_archive.file_data("cometnearorbitsky.bdl"));
             require(model_renderer.is_loaded(), "J3dModelRenderer should load CometNearOrbitSky original geometry");
             require(model_renderer.mesh_count() == 9U,
@@ -821,7 +821,7 @@ namespace smgpc::tests {
             const auto earth_far_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "EarthFar_v";
             });
-            require(earth_far_packet != packets.end() && earth_far_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev &&
+            require(earth_far_packet != packets.end() && earth_far_packet->packet_mode == smgpc::compat::J3dRendererPacketMode::ShaderGxTev &&
                         !earth_far_packet->evaluate_material_per_vertex && earth_far_packet->material_pass_count == 3U &&
                         earth_far_packet->shader_texture_stage_count == 3U && !earth_far_packet->packet_mode_fallback &&
                         earth_far_packet->packet_mode_reason == "shader_gx_tev_supported",
@@ -830,13 +830,13 @@ namespace smgpc::tests {
                 return packet.material_name == "EarthNightMat_v";
             });
             require(earth_night_packet != packets.end() &&
-                        earth_night_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev &&
+                        earth_night_packet->packet_mode == smgpc::compat::J3dRendererPacketMode::ShaderGxTev &&
                         earth_night_packet->shader_texture_stage_count == 2U,
                     "J3dModelRenderer packet evidence should identify projected two-stage TEV shader packets");
             const auto comet_halo_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "CometHalo_v";
             });
-            require(comet_halo_packet != packets.end() && comet_halo_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ComposedMaterial &&
+            require(comet_halo_packet != packets.end() && comet_halo_packet->packet_mode == smgpc::compat::J3dRendererPacketMode::ComposedMaterial &&
                         !comet_halo_packet->evaluate_material_per_vertex && comet_halo_packet->indirect_stage_count == 1U &&
                         comet_halo_packet->indirect_texture_order_count > 0U && comet_halo_packet->declared_tev_stage_count == 1U &&
                         comet_halo_packet->active_tev_stage_count == 1U && comet_halo_packet->material_mode == 1U &&
@@ -845,7 +845,7 @@ namespace smgpc::tests {
                     "J3dModelRenderer packet evidence should route CometHalo_v active-indirect TEV through compat material evaluation while keeping DrawBuffer grouping separate from GX blend");
             const auto comet_halo_batch_count_before_draw = renderer.triangle_batch_count;
             const auto comet_halo_vertices_before_draw = renderer.submitted_vertices;
-            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::compat::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "CometHalo_v"});
             require(renderer.triangle_batch_count > comet_halo_batch_count_before_draw &&
                         renderer.submitted_vertices > comet_halo_vertices_before_draw,
@@ -853,7 +853,7 @@ namespace smgpc::tests {
             const auto sky_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "Sky_Mat_v";
             });
-            require(sky_packet != packets.end() && sky_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev &&
+            require(sky_packet != packets.end() && sky_packet->packet_mode == smgpc::compat::J3dRendererPacketMode::ShaderGxTev &&
                         sky_packet->shader_texture_stage_count == 1U,
                     "J3dModelRenderer packet evidence should route single-texture TEV packets through the GX shader path");
             require(sky_packet->texture_bindings.size() == 1U && sky_packet->texture_bindings[0U].name == "Skyk" &&
@@ -869,7 +869,7 @@ namespace smgpc::tests {
             const auto core_rock_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "CoreRock";
             });
-            require(core_rock_packet != packets.end() && core_rock_packet->packet_mode == smgpc::game::J3dRendererPacketMode::CpuTevPerVertex &&
+            require(core_rock_packet != packets.end() && core_rock_packet->packet_mode == smgpc::compat::J3dRendererPacketMode::CpuTevPerVertex &&
                         core_rock_packet->evaluate_material_per_vertex && core_rock_packet->loaded_light_mask == 0U &&
                         core_rock_packet->material_loaded_light_mask == 0U && core_rock_packet->scene_loaded_light_mask == 0U &&
                         core_rock_packet->requested_light_mask == 4U && core_rock_packet->unsatisfied_light_mask == 4U &&
@@ -877,12 +877,12 @@ namespace smgpc::tests {
                         core_rock_packet->alpha_channel_controls[0U].lighting_enabled &&
                         core_rock_packet->alpha_channel_controls[0U].light_mask == 4U,
                     "J3dModelRenderer packet evidence should route untextured lit materials through per-vertex GX raster evaluation and expose missing scene lights");
-            auto scene_lights = std::array<smgpc::game::GXLightState, 8U>{};
+            auto scene_lights = std::array<smgpc::compat::GXLightState, 8U>{};
             scene_lights[2U].loaded = true;
             scene_lights[2U].color = {255U, 255U, 255U, 255U};
             scene_lights[2U].position = {0.0F, 0.0F, 4000.0F};
             scene_lights[2U].direction = {0.0F, 0.0F, -1.0F};
-            const auto scene_light_span = std::span<const smgpc::game::GXLightState>(scene_lights.data(), scene_lights.size());
+            const auto scene_light_span = std::span<const smgpc::compat::GXLightState>(scene_lights.data(), scene_lights.size());
             const auto scene_lit_packets = model_renderer.render_packets(0U, scene_light_span);
             const auto scene_lit_core_rock_packet = std::ranges::find_if(scene_lit_packets, [](const auto &packet) {
                 return packet.material_name == "CoreRock";
@@ -897,7 +897,7 @@ namespace smgpc::tests {
                     "J3dModelRenderer should fill material-local GX light slots from generic scene light state");
             const auto core_rock_batches_before_draw = renderer.triangle_batch_count;
             const auto core_rock_vertices_before_draw = renderer.submitted_vertices;
-            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::compat::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "CoreRock", .scene_lights = scene_light_span});
             require(renderer.triangle_batch_count > core_rock_batches_before_draw,
                     "J3dModelRenderer should draw untextured lit materials while receiving generic scene light state");
@@ -909,7 +909,7 @@ namespace smgpc::tests {
             require(space_packet != packets.end() && space_packet->shape_draw_order == 7U && space_packet->joint_index == 7U &&
                         space_packet->tev_stage_count > 0U && space_packet->mdl3_packet_bytes > 0U && space_packet->mdl3_bp_load_count > 0U &&
                         space_packet->mdl3_xf_load_count > 0U && space_packet->cull_mode == smgpc::render::CullMode::Back &&
-                        space_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev && space_packet->shader_texture_stage_count == 3U &&
+                        space_packet->packet_mode == smgpc::compat::J3dRendererPacketMode::ShaderGxTev && space_packet->shader_texture_stage_count == 3U &&
                         space_packet->gx_blend.enabled && space_packet->gx_blend.type == 0U && space_packet->gx_blend.src_factor == 1U &&
                         space_packet->gx_blend.dst_factor == 0U && space_packet->fog_type == space_summary->gx_state.fog.type &&
                         space_packet->fog_color == space_summary->gx_state.fog.color && space_packet->material_mode == 1U &&
@@ -930,7 +930,7 @@ namespace smgpc::tests {
             require(space_packet->texture_bindings.size() == 3U && space_packet->texture_bindings[0U].name == "OrbitUniverseL" &&
                         space_packet->texture_bindings[1U].name == "Galaxy" &&
                         space_packet->texture_bindings[2U].name == "GalaxyRiverK" && space_packet->texture_bindings[0U].width > 0U &&
-                        space_packet->texture_bindings[1U].format == smgpc::game::TplTextureFormat::CMPR &&
+                        space_packet->texture_bindings[1U].format == smgpc::compat::TplTextureFormat::CMPR &&
                         space_packet->texture_bindings[0U].has_sampler_metadata && space_packet->texture_bindings[0U].wrap_s == 1U &&
                         space_packet->texture_bindings[0U].wrap_t == 1U && space_packet->texture_bindings[0U].min_filter == 1U &&
                         space_packet->texture_bindings[0U].mag_filter == 1U,
@@ -954,8 +954,8 @@ namespace smgpc::tests {
                         space_packet->display_list_size == 3232U && space_packet->parsed_display_list_bytes == 3232U &&
                         space_packet->draw_packet_triangle_count == 480U && space_packet->source_triangle_count == 480U,
                     "J3dModelRenderer packet evidence should preserve Space_Mat_v SHP1 matrix-group draw packet metadata");
-            const auto sky_bck = smgpc::game::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.bck"));
-            const auto sky_btk = smgpc::game::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.btk"));
+            const auto sky_bck = smgpc::compat::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.bck"));
+            const auto sky_btk = smgpc::compat::inspect_j3d_animation(sky_archive.file_data("cometnearorbitsky.btk"));
             require(sky_bck.bck.has_value() && sky_btk.btk.has_value(), "CometNearOrbitSky renderer test should resolve BCK and BTK state");
             model_renderer.set_bck_animation(*sky_bck.bck);
             model_renderer.set_btk_animation(*sky_btk.btk);
@@ -980,7 +980,7 @@ namespace smgpc::tests {
             require_near(animated_space_packet->btk_normalized_frame, 3001.0F, 0.001F,
                          "J3dModelRenderer packet evidence should expose looped BTK frame state");
             const auto batch_count_before_draw = renderer.gx_material_batch_count;
-            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::compat::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "Space_Mat_v"});
             require(renderer.gx_material_batch_count > batch_count_before_draw,
                     "J3dModelRenderer should submit filtered Space_Mat_v geometry through the GX material shader path");
@@ -1008,7 +1008,7 @@ namespace smgpc::tests {
             require(renderer.last_triangle_cull_mode == smgpc::render::CullMode::Back,
                     "J3dModelRenderer should submit the decoded MDL3 GX cull mode to the GX material renderer batch");
             const auto earth_batch_count_before_draw = renderer.gx_material_batch_count;
-            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::compat::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "EarthFar_v"});
             require(renderer.gx_material_batch_count > earth_batch_count_before_draw,
                     "J3dModelRenderer should submit projected EarthFar_v geometry through the GX material shader path");
@@ -1032,7 +1032,7 @@ namespace smgpc::tests {
                         renderer.last_gx_material_fog.color == earth_far_summary->gx_state.fog.color,
                     "J3dModelRenderer should submit EarthFar_v typed GX fog state to the renderer batch");
             const auto sun_batch_count_before_draw = renderer.gx_material_batch_count;
-            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::game::J3dMatrix3x4{}, 0U,
+            model_renderer.draw(renderer, title_test_camera_pose(), smgpc::compat::J3dMatrix3x4{}, 0U,
                                 {.material_filter = "Sun_Mat_v"});
             require(renderer.gx_material_batch_count > sun_batch_count_before_draw,
                     "J3dModelRenderer should submit filtered Sun_Mat_v geometry through the GX material shader path");
@@ -1048,30 +1048,30 @@ namespace smgpc::tests {
             require(renderer.texture_count > 0U, "J3dModelRenderer should upload CometNearOrbitSky textures");
 
             auto shader_only_renderer = RecordingRenderer();
-            auto shader_only_options = smgpc::game::J3dModelRendererLoadOptions{};
+            auto shader_only_options = smgpc::compat::J3dModelRendererLoadOptions{};
             shader_only_options.use_cpu_tev = false;
-            auto shader_only_model = smgpc::game::J3dModelRenderer();
+            auto shader_only_model = smgpc::compat::J3dModelRenderer();
             shader_only_model.load(shader_only_renderer, sky_archive.file_data("cometnearorbitsky.bdl"), shader_only_options);
             const auto shader_only_packets = shader_only_model.render_packets();
             const auto shader_only_space = std::ranges::find_if(shader_only_packets, [](const auto &packet) {
                 return packet.material_name == "Space_Mat_v";
             });
             require(shader_only_space != shader_only_packets.end() &&
-                        shader_only_space->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev,
+                        shader_only_space->packet_mode == smgpc::compat::J3dRendererPacketMode::ShaderGxTev,
                     "J3dModelRenderer should keep shader-backed Space_Mat_v even when CPU TEV fallbacks are disabled");
             const auto shader_only_earth_far = std::ranges::find_if(shader_only_packets, [](const auto &packet) {
                 return packet.material_name == "EarthFar_v";
             });
             require(shader_only_earth_far != shader_only_packets.end() &&
-                        shader_only_earth_far->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev,
+                        shader_only_earth_far->packet_mode == smgpc::compat::J3dRendererPacketMode::ShaderGxTev,
                     "J3dModelRenderer should keep shader-backed EarthFar_v even when CPU TEV fallbacks are disabled");
         }
 
         $test("renders FileSelectDataPlanet original J3D model") {
             const auto root = disc_files_root();
-            const auto planet_archive = smgpc::game::RarcArchive::from_file(root / "ObjectData" / "FileSelectDataPlanet.arc");
+            const auto planet_archive = smgpc::compat::RarcArchive::from_file(root / "ObjectData" / "FileSelectDataPlanet.arc");
             require(planet_archive.contains("fileselectdataplanet.bdl"), "FileSelectDataPlanet.arc should contain the original BDL");
-            const auto planet_model = smgpc::game::inspect_j3d_model(planet_archive.file_data("fileselectdataplanet.bdl"));
+            const auto planet_model = smgpc::compat::inspect_j3d_model(planet_archive.file_data("fileselectdataplanet.bdl"));
             require(planet_model.materials.has_value(), "FileSelectDataPlanet renderer test should expose source materials");
             const auto base_material = std::ranges::find_if(planet_model.materials->materials, [](const auto &material) {
                 return material.name == "BaseMat_v";
@@ -1083,7 +1083,7 @@ namespace smgpc::tests {
                     "BaseMat_v should preserve texture-disabled TEV stages around its real texture stage");
 
             auto renderer = RecordingRenderer();
-            auto model_renderer = smgpc::game::J3dModelRenderer();
+            auto model_renderer = smgpc::compat::J3dModelRenderer();
             model_renderer.load(renderer, planet_archive.file_data("fileselectdataplanet.bdl"));
             require(model_renderer.is_loaded(), "J3dModelRenderer should load FileSelectDataPlanet original geometry");
             require(model_renderer.mesh_count() > 0U, "J3dModelRenderer should expose renderable FileSelectDataPlanet meshes");
@@ -1092,7 +1092,7 @@ namespace smgpc::tests {
             const auto base_packet = std::ranges::find_if(packets, [](const auto &packet) {
                 return packet.material_name == "BaseMat_v";
             });
-            require(base_packet != packets.end() && base_packet->packet_mode == smgpc::game::J3dRendererPacketMode::ShaderGxTev &&
+            require(base_packet != packets.end() && base_packet->packet_mode == smgpc::compat::J3dRendererPacketMode::ShaderGxTev &&
                         base_packet->shader_texture_stage_count == 1U && base_packet->active_tev_stage_count == 3U,
                     "J3dModelRenderer should keep BaseMat_v texture-disabled TEV stages in the GX shader path");
             const auto has_base_texture_trace = std::ranges::any_of(base_packet->texture_bindings, [](const auto &texture) {
@@ -1105,14 +1105,14 @@ namespace smgpc::tests {
                         base_packet->unsatisfied_light_mask ==
                             static_cast<std::uint8_t>(base_packet->requested_light_mask & ~base_packet->loaded_light_mask),
                     "J3dModelRenderer packet evidence should explicitly expose BaseMat_v scene-light satisfaction state");
-            auto scene_lights = std::array<smgpc::game::GXLightState, 8U>{};
+            auto scene_lights = std::array<smgpc::compat::GXLightState, 8U>{};
             for (auto light_index = std::size_t{}; light_index < scene_lights.size(); ++light_index) {
                 scene_lights[light_index].loaded = true;
                 scene_lights[light_index].color = {255U, 255U, 255U, 255U};
                 scene_lights[light_index].position = {0.0F, 0.0F, 4000.0F};
                 scene_lights[light_index].direction = {0.0F, 0.0F, -1.0F};
             }
-            const auto scene_light_span = std::span<const smgpc::game::GXLightState>(scene_lights.data(), scene_lights.size());
+            const auto scene_light_span = std::span<const smgpc::compat::GXLightState>(scene_lights.data(), scene_lights.size());
             const auto scene_lit_packets = model_renderer.render_packets(0U, scene_light_span);
             const auto scene_lit_base_packet = std::ranges::find_if(scene_lit_packets, [](const auto &packet) {
                 return packet.material_name == "BaseMat_v";
@@ -1124,7 +1124,7 @@ namespace smgpc::tests {
 
             const auto base_gx_batches_before = renderer.gx_material_batch_count;
             model_renderer.draw(renderer, far_test_camera_pose(),
-                                smgpc::game::j3d_matrix_from_translation_scale({0.0F, 800.0F, 0.0F}, 30.0F), 0U,
+                                smgpc::compat::j3d_matrix_from_translation_scale({0.0F, 800.0F, 0.0F}, 30.0F), 0U,
                                 {.material_filter = "BaseMat_v"});
             require(renderer.gx_material_batch_count > base_gx_batches_before && renderer.last_gx_material_stage_count == 1U &&
                         renderer.last_gx_material_tev_stage_count == 3U,
@@ -1132,7 +1132,7 @@ namespace smgpc::tests {
 
             const auto submitted_before = renderer.submitted_vertices;
             model_renderer.draw(renderer, far_test_camera_pose(),
-                                smgpc::game::j3d_matrix_from_translation_scale({0.0F, 800.0F, 0.0F}, 30.0F), 0U);
+                                smgpc::compat::j3d_matrix_from_translation_scale({0.0F, 800.0F, 0.0F}, 30.0F), 0U);
             require(renderer.gx_material_batch_count > 0U || renderer.triangle_batch_count > 0U,
                     "J3dModelRenderer should submit projected FileSelectDataPlanet triangles");
             require(renderer.submitted_vertices > submitted_before && renderer.submitted_indices > 0U,

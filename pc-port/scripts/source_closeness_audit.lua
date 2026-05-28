@@ -438,28 +438,38 @@ local function classify(pc_text, root_text)
 end
 
 local function compat_group(rel)
-    if rel:match("^Runtime") or rel:match("^Scene") or rel:match("^Stage") or rel:match("^Sequence") or rel:match("^Story") or rel:match("^NameObj") then
+    if rel:match("^scene/") or rel:match("^runtime/Runtime") or rel:match("^runtime/Scene") or rel:match("^runtime/NameObj") then
         return "scene-sequence"
     end
-    if rel:match("^GX") or rel:match("^J3d") or rel:match("^Jut") or rel:match("^Lyt") or rel:match("^Brlyt") or rel:match("^Brlan") or rel:match("^Camera") or rel:match("^Light") then
-        return "render-gx-j3d-brlyt"
-    end
-    if rel:match("^Rarc") or rel:match("^Yaz0") or rel:match("^Bcsv") or rel:match("^Bmg") or rel:match("^Brfnt") or rel:match("^Tpl") or rel:match("^Text") then
-        return "resource-message-font-texture"
-    end
-    if rel:match("^RVLFace") then
-        return "rfl-mii"
-    end
-    if rel:match("^Effect") then
+    if rel:match("^render/Effect") then
         return "effects"
     end
-    if rel:match("^ParityTrace") then
-        return "trace-proof"
-    end
-    if rel:match("^LiveActorModel") then
+    if rel:match("^render/LiveActorModel") then
         return "actor-model"
     end
+    if rel:match("^render/") or rel:match("^camera/") or rel:match("^layout/Lyt") or rel:match("^layout/Brlyt") or rel:match("^layout/Brlan") or
+        rel:match("^runtime/Jut") then
+        return "render-gx-j3d-brlyt"
+    end
+    if rel:match("^resource/") or rel:match("^layout/Brfnt") then
+        return "resource-message-font-texture"
+    end
+    if rel:match("^runtime/RVLFace") then
+        return "rfl-mii"
+    end
+    if rel:match("^runtime/ParityTrace") then
+        return "trace-proof"
+    end
     return "platform-compat"
+end
+
+local function is_promoted_render_compat_file(rel)
+    return rel:match("^render/EffectResourceCompat%.") or
+        rel:match("^render/GX") or
+        rel:match("^render/J3d") or
+        rel:match("^render/JMathTrig%.") or
+        rel:match("^render/LightDataCompat%.") or
+        rel:match("^render/LiveActorModelCompat%.")
 end
 
 local function compat_contract(group)
@@ -518,7 +528,14 @@ end
 mkdir_p(output_dir)
 
 local pc_game_root = join(pc_root, "src", "Game")
-local compat_root = join(pc_game_root, "compat")
+local compat_roots = {
+    { root = join(pc_root, "src", "camera"), prefix = "camera" },
+    { root = join(pc_root, "src", "layout"), prefix = "layout" },
+    { root = join(pc_root, "src", "render"), prefix = "render", include = is_promoted_render_compat_file },
+    { root = join(pc_root, "src", "resource"), prefix = "resource" },
+    { root = join(pc_root, "src", "runtime"), prefix = "runtime" },
+    { root = join(pc_root, "src", "scene"), prefix = "scene" },
+}
 local rows = {}
 local counts = {}
 local target_counts = {}
@@ -526,42 +543,40 @@ local release_rows = {}
 
 for _, pc_path in ipairs(list_files(pc_game_root)) do
     local rel = relative(pc_path, pc_game_root)
-    if rel:sub(1, #"compat/") ~= "compat/" then
-        local source_path, normalized_from = root_candidate(repo_root, rel)
-        local declaration_path = declaration_candidate(repo_root, rel)
-        local pc_text = read_binary(pc_path) or ""
-        local root_text = file_exists(source_path) and read_binary(source_path) or nil
-        local classification, note = classify(pc_text, root_text)
-        if normalized_from then
-            note = "root path case-normalized from " .. relative(normalized_from, repo_root) .. "; " .. note
-        end
-        if classification == "decomp-needed" and declaration_path then
-            note = "no root implementation counterpart; declaration counterpart " .. relative(declaration_path, repo_root)
-        end
-        local target = is_target_surface(rel)
-        local stripped = strip_debug_blocks(normalize_trailing_ws(pc_text))
-        local row = {
-            rel = rel,
-            pc_path = relative(pc_path, repo_root),
-            source_path = file_exists(source_path) and relative(source_path, repo_root) or "",
-            declaration_path = declaration_path and relative(declaration_path, repo_root) or "",
-            classification = classification,
-            target = target and "yes" or "no",
-            pc_sha256 = sha256(pc_path),
-            source_sha256 = file_exists(source_path) and sha256(source_path) or "",
-            debug_guard_count = tostring(count_pattern(pc_text, "#%s*ifndef%s+NDEBUG") + count_pattern(pc_text, "#%s*if%s+!%s*defined%s*%(%s*NDEBUG%s*%)")),
-            unguarded_smgpc_count = tostring(count_pattern(stripped, "SMGPC_")),
-            unguarded_observer_api_count = tostring(count_release_observer_candidates(rel, stripped)),
-            note = note,
-        }
-        table.insert(rows, row)
-        add_count(counts, classification)
-        if target then
-            add_count(target_counts, classification)
-        end
-        if row.unguarded_smgpc_count ~= "0" or row.unguarded_observer_api_count ~= "0" or row.debug_guard_count ~= "0" then
-            table.insert(release_rows, row)
-        end
+    local source_path, normalized_from = root_candidate(repo_root, rel)
+    local declaration_path = declaration_candidate(repo_root, rel)
+    local pc_text = read_binary(pc_path) or ""
+    local root_text = file_exists(source_path) and read_binary(source_path) or nil
+    local classification, note = classify(pc_text, root_text)
+    if normalized_from then
+        note = "root path case-normalized from " .. relative(normalized_from, repo_root) .. "; " .. note
+    end
+    if classification == "decomp-needed" and declaration_path then
+        note = "no root implementation counterpart; declaration counterpart " .. relative(declaration_path, repo_root)
+    end
+    local target = is_target_surface(rel)
+    local stripped = strip_debug_blocks(normalize_trailing_ws(pc_text))
+    local row = {
+        rel = rel,
+        pc_path = relative(pc_path, repo_root),
+        source_path = file_exists(source_path) and relative(source_path, repo_root) or "",
+        declaration_path = declaration_path and relative(declaration_path, repo_root) or "",
+        classification = classification,
+        target = target and "yes" or "no",
+        pc_sha256 = sha256(pc_path),
+        source_sha256 = file_exists(source_path) and sha256(source_path) or "",
+        debug_guard_count = tostring(count_pattern(pc_text, "#%s*ifndef%s+NDEBUG") + count_pattern(pc_text, "#%s*if%s+!%s*defined%s*%(%s*NDEBUG%s*%)")),
+        unguarded_smgpc_count = tostring(count_pattern(stripped, "SMGPC_")),
+        unguarded_observer_api_count = tostring(count_release_observer_candidates(rel, stripped)),
+        note = note,
+    }
+    table.insert(rows, row)
+    add_count(counts, classification)
+    if target then
+        add_count(target_counts, classification)
+    end
+    if row.unguarded_smgpc_count ~= "0" or row.unguarded_observer_api_count ~= "0" or row.debug_guard_count ~= "0" then
+        table.insert(release_rows, row)
     end
 end
 
@@ -571,17 +586,21 @@ end)
 
 local compat_rows = {}
 local compat_counts = {}
-for _, compat_path in ipairs(list_files(compat_root)) do
-    local rel = relative(compat_path, compat_root)
-    local group = compat_group(rel)
-    table.insert(compat_rows, {
-        rel = rel,
-        path = relative(compat_path, repo_root),
-        group = group,
-        contract = compat_contract(group),
-        sha256 = sha256(compat_path),
-    })
-    add_count(compat_counts, group)
+for _, spec in ipairs(compat_roots) do
+    for _, compat_path in ipairs(list_files(spec.root)) do
+        local rel = spec.prefix .. "/" .. relative(compat_path, spec.root)
+        if spec.include == nil or spec.include(rel) then
+            local group = compat_group(rel)
+            table.insert(compat_rows, {
+                rel = rel,
+                path = relative(compat_path, repo_root),
+                group = group,
+                contract = compat_contract(group),
+                sha256 = sha256(compat_path),
+            })
+            add_count(compat_counts, group)
+        end
+    end
 end
 table.sort(compat_rows, function(a, b)
     return a.rel < b.rel
@@ -771,7 +790,7 @@ local function write_summary(path)
     table.insert(lines, "")
     table.insert(lines, "## Compatibility-Layer Boundary")
     table.insert(lines, "")
-    table.insert(lines, "`pc-port/src/Game/compat` is inventoried as custom compatibility-layer code and is not counted as failed original-source parity. The audited original game-code surface is `pc-port/src/Game` excluding `compat`.")
+    table.insert(lines, "Promoted support directories (`pc-port/src/camera`, `pc-port/src/layout`, `pc-port/src/resource`, `pc-port/src/runtime`, `pc-port/src/scene`, and selected compatibility files in `pc-port/src/render`) are inventoried as custom compatibility-layer code and are not counted as failed original-source parity. The audited original game-code surface is `pc-port/src/Game`.")
     table.insert(lines, "")
     table.insert(lines, "## Classification Policy")
     table.insert(lines, "")

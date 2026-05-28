@@ -1,5 +1,5 @@
-#include "Game/compat/BcsvTable.hpp"
-#include "Game/compat/RarcArchive.hpp"
+#include "resource/BcsvTable.hpp"
+#include "resource/RarcArchive.hpp"
 
 #include <array>
 #include <cstdint>
@@ -13,8 +13,8 @@
 
 namespace {
 
-    [[nodiscard]] std::unordered_map< std::uint32_t, std::string_view > known_field_hashes() {
-        constexpr std::array< std::string_view, 58U > names{
+    [[nodiscard]] std::unordered_map<std::uint32_t, std::string_view> known_field_hashes() {
+        constexpr std::array<std::string_view, 58U> names{
             "version",
             "id",
             "camtype",
@@ -75,14 +75,14 @@ namespace {
             "CameraSetId",
         };
 
-        auto hashes = std::unordered_map< std::uint32_t, std::string_view >{};
+        auto hashes = std::unordered_map<std::uint32_t, std::string_view>{};
         for (const auto name : names) {
-            hashes.emplace(smgpc::game::jmap_hash(name), name);
+            hashes.emplace(smgpc::compat::jmap_hash(name), name);
         }
         return hashes;
     }
 
-    [[nodiscard]] std::string field_name(const std::unordered_map< std::uint32_t, std::string_view >& hashes, std::uint32_t hash) {
+    [[nodiscard]] std::string field_name(const std::unordered_map<std::uint32_t, std::string_view> &hashes, std::uint32_t hash) {
         const auto it = hashes.find(hash);
         if (it != hashes.end()) {
             return std::string(it->second);
@@ -102,27 +102,27 @@ namespace {
         return std::filesystem::current_path() / archive_name;
     }
 
-    [[nodiscard]] bool is_string_field(smgpc::game::BcsvFieldType type) {
-        return type == smgpc::game::BcsvFieldType::InlineString || type == smgpc::game::BcsvFieldType::StringOffset;
+    [[nodiscard]] bool is_string_field(smgpc::compat::BcsvFieldType type) {
+        return type == smgpc::compat::BcsvFieldType::InlineString || type == smgpc::compat::BcsvFieldType::StringOffset;
     }
 
 }  // namespace
 
-int main(int argc, char** argv) try {
+int main(int argc, char **argv) try {
     if (argc < 3) {
         std::cerr << "usage: smg-pc-bcsv-probe <archive.arc> <entry-path>\n";
         return 1;
     }
 
-    const auto archive = smgpc::game::RarcArchive::from_file(resolve_archive_path(argv[1]));
-    const auto table = smgpc::game::BcsvTable::from_bytes(archive.file_data(argv[2]));
+    const auto archive = smgpc::compat::RarcArchive::from_file(resolve_archive_path(argv[1]));
+    const auto table = smgpc::compat::BcsvTable::from_bytes(archive.file_data(argv[2]));
     const auto hashes = known_field_hashes();
 
     std::cout << "entries," << table.entry_count() << ",fields," << table.fields().size() << ",entry_size," << table.entry_size() << '\n';
     for (auto entry = 0U; entry < table.entry_count(); ++entry) {
         std::cout << "entry," << entry << '\n';
         for (std::size_t field_index = 0U; field_index < table.fields().size(); ++field_index) {
-            const auto& field = table.fields()[field_index];
+            const auto &field = table.fields()[field_index];
             const auto value = table.value_string(entry, field_index);
             std::cout << "  " << field_name(hashes, field.hash) << '=';
             if (is_string_field(field.type)) {
@@ -130,12 +130,12 @@ int main(int argc, char** argv) try {
             } else {
                 std::cout << value;
             }
-            std::cout << " (type " << smgpc::game::bcsv_field_type_name(field.type) << ", offs " << field.offset << ")\n";
+            std::cout << " (type " << smgpc::compat::bcsv_field_type_name(field.type) << ", offs " << field.offset << ")\n";
         }
     }
 
     return 0;
-} catch (const std::exception& e) {
+} catch (const std::exception &e) {
     std::cerr << "BCSV probe failed: " << e.what() << '\n';
     return 1;
 }

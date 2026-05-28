@@ -1,6 +1,6 @@
 #include "Game/NameObj/NameObj.hpp"
 
-#include "Game/compat/RuntimeContext.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace {
     constexpr auto FLAG_SUSPENDED = u16{1U << 0U};
@@ -11,7 +11,7 @@ NameObj::NameObj(const char* pName) {
 }
 
 NameObj::~NameObj() {
-    if (auto* runtime = smgpc::game::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
         runtime->scheduler().disconnect_name_obj(*this);
     }
 }

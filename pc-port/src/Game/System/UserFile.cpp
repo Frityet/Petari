@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <array>
-#include <cwchar>
 #include <cstdio>
+#include <cwchar>
 
 #include "Game/System/ConfigDataHolder.hpp"
 #include "Game/System/GameDataHolder.hpp"
@@ -160,11 +160,11 @@ bool UserFile::isPowerStarGetFinalChallengeGalaxy() const {
     return mGameDataHolder->isOnGameEventFlag("SpecialStarFinalChallenge");
 }
 
-void UserFile::restoreFromSaveDataServiceSlot(const smgpc::game::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario) {
+void UserFile::restoreFromSaveDataServiceSlot(const smgpc::compat::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario) {
     resetAllData();
 
-    auto configName = std::array<char, 16U>{};
-    auto gameName = std::array<char, 16U>{};
+    auto configName = std::array< char, 16U >{};
+    auto gameName = std::array< char, 16U >{};
     make_config_name(configName.data(), configName.size(), slotIndex);
     make_game_name(gameName.data(), gameName.size(), slotIndex, isPlayerMario);
     mConfigDataHolder->setName(configName.data());
@@ -189,10 +189,10 @@ void UserFile::restoreFromSaveDataServiceSlot(const smgpc::game::SaveDataService
     mGameDataHolder->setCompatEventState(rSlot.game_event_flags, rSlot.game_event_values);
 }
 
-smgpc::game::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 slotIndex) const {
+smgpc::compat::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 slotIndex) const {
     auto iconId = u32{};
     const auto hasIconId = getIconId(&iconId);
-    return smgpc::game::SaveDataService::SlotState{
+    return smgpc::compat::SaveDataService::SlotState{
         .slot_index = slotIndex,
         .created = isCreated(),
         .game_data_corrupted = mIsGameDataCorrupted,
@@ -203,7 +203,7 @@ smgpc::game::SaveDataService::SlotState UserFile::makeSaveDataServiceSlot(s32 sl
         .player_miss_num = getPlayerMissNum(),
         .has_mii_id = !hasIconId,
         .rfl_mii_index = mConfigDataHolder->getCompatMiiIndex(),
-        .icon_id = hasIconId ? std::optional<u32>(iconId) : std::nullopt,
+        .icon_id = hasIconId ? std::optional< u32 >(iconId) : std::nullopt,
         .view_normal_ending = isViewNormalEnding(),
         .view_complete_ending = isViewCompleteEnding(),
         .complete_ending_mario_and_luigi = isOnCompleteEndingMarioAndLuigi(),

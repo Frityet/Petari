@@ -11,13 +11,13 @@
 
 #include <revolution.h>
 
-#include "Game/compat/BrfntFont.hpp"
-#include "Game/compat/BrlanAnimation.hpp"
-#include "Game/compat/BrlytLayout.hpp"
-#include "Game/compat/BmgMessageArchive.hpp"
-#include "Game/compat/TplTexture.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "RendererService.hpp"
+#include "layout/BrfntFont.hpp"
+#include "layout/BrlanAnimation.hpp"
+#include "layout/BrlytLayout.hpp"
+#include "resource/BmgMessageArchive.hpp"
+#include "resource/TplTexture.hpp"
 
 namespace nw4r::lyt {
     class TexMap;
@@ -165,13 +165,13 @@ public:
 
     struct RenderTexture {
         std::string name;
-        smgpc::game::DecodedTexture decoded;
+        smgpc::compat::DecodedTexture decoded;
         smgpc::render::TextureHandle handle{};
     };
 
     struct RenderFont {
         std::string name;
-        smgpc::game::BrfntFont font;
+        smgpc::compat::BrfntFont font;
         std::vector< smgpc::render::TextureHandle > sheet_handles = {};
     };
 
@@ -216,7 +216,7 @@ private:
 
     struct TextBoxTemplateState {
         std::u16string raw_text;
-        std::vector< smgpc::game::BmgFormatArg > args;
+        std::vector< smgpc::compat::BmgFormatArg > args;
     };
 
     [[nodiscard]] AnimationState& animation(u32 animLayer);
@@ -230,8 +230,8 @@ private:
     [[nodiscard]] RenderTextTexture composeTextTexture(std::size_t text_box_index, const RenderFont& font) const;
     void drawTextBoxes(smgpc::render::IRendererEngine& renderer, float alpha);
     [[nodiscard]] PaneRenderState paneRenderState(std::size_t pane_index) const;
-    [[nodiscard]] smgpc::game::BrlanPaneFrame animationFrameForPane(std::string_view pane_name) const;
-    [[nodiscard]] smgpc::game::BrlanTextureFrame textureFrameForContent(std::string_view content_name) const;
+    [[nodiscard]] smgpc::compat::BrlanPaneFrame animationFrameForPane(std::string_view pane_name) const;
+    [[nodiscard]] smgpc::compat::BrlanTextureFrame textureFrameForContent(std::string_view content_name) const;
     [[nodiscard]] f32 durationFor(const char* pAnimName) const;
     [[nodiscard]] bool isLoopingAnim(const char* pAnimName) const;
     [[nodiscard]] float visualAlpha() const;
@@ -249,12 +249,12 @@ private:
     std::optional< std::filesystem::path > mArchivePath;
     std::array< AnimationState, 4 > mAnimations = {};
     bool mRenderDataLoaded = false;
-    smgpc::game::BrlytLayout mBrlytLayout = {};
+    smgpc::compat::BrlytLayout mBrlytLayout = {};
     std::vector< RenderTexture > mRenderTextures = {};
     std::vector< RenderFont > mRenderFonts = {};
     std::vector< RenderTextTexture > mRenderTextTextures = {};
-    std::unordered_map< std::string, smgpc::game::BrlanAnimation > mRenderAnimations = {};
-    std::unordered_map< std::string, smgpc::game::BrlanPaneFrame > mCommittedPaneFrames = {};
+    std::unordered_map< std::string, smgpc::compat::BrlanAnimation > mRenderAnimations = {};
+    std::unordered_map< std::string, smgpc::compat::BrlanPaneFrame > mCommittedPaneFrames = {};
     std::unordered_map< std::string, bool > mPaneVisibilityOverrides = {};
     std::unordered_map< std::string, f32 > mPaneAlphaOverrides = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};

@@ -8,7 +8,7 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/FileSelectIconID.hpp"
-#include "Game/compat/CameraParam.hpp"
+#include "camera/CameraParam.hpp"
 
 class FileSelectCameraController;
 class FileSelectButton;
@@ -250,8 +250,8 @@ public:
     [[nodiscard]] bool wasItemPointed(s32 fileNo) const;
     [[nodiscard]] bool didItemTurnToFront(s32 fileNo) const;
     [[nodiscard]] s32 getItemTurnToFrontFrameCount(s32 fileNo) const;
-    [[nodiscard]] const smgpc::game::CameraParamVec3& getItemBasePosition(s32 index) const;
-    [[nodiscard]] const smgpc::game::CameraParamVec3& getItemPosition(s32 index) const;
+    [[nodiscard]] const smgpc::compat::CameraParamVec3& getItemBasePosition(s32 index) const;
+    [[nodiscard]] const TVec3f& getItemPosition(s32 index) const;
 #endif
 
 private:
@@ -275,7 +275,7 @@ private:
     std::array< std::unique_ptr< FileSelectItem >, cItemCount > mItems{};
     std::array< bool, cItemCount > mAllComplete{};
     std::unique_ptr< FileSelectItemDelegatorBase > mItemDelegator;
-    std::array< smgpc::game::CameraParamVec3, cItemCount > mItemBasePositions{};
+    std::array< smgpc::compat::CameraParamVec3, cItemCount > mItemBasePositions{};
     FileSelectItem* mSelectedItem = nullptr;
     FileSelectItem* mCopySourceItem = nullptr;
     FileSelectItem* mPointingItem = nullptr;

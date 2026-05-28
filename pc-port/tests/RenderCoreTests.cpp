@@ -91,22 +91,22 @@ namespace smgpc::tests {
         }
 
         $test("composes a single-texture J3D TEV material") {
-            auto material = smgpc::game::J3dMaterialSummary{};
+            auto material = smgpc::compat::J3dMaterialSummary{};
             material.name = "synthetic-sky";
             material.material_colors[0U] = {149U, 195U, 165U, 255U};
             material.tev_k_colors[0U] = {0U, 28U, 43U, 255U};
             material.tev_stage_count = 1U;
-            material.textures.push_back(smgpc::game::J3dMaterialTextureBinding{
+            material.textures.push_back(smgpc::compat::J3dMaterialTextureBinding{
                 .slot = 0U,
                 .texture_index = 0U,
             });
-            material.tev_orders.push_back(smgpc::game::J3dTevOrderSummary{
+            material.tev_orders.push_back(smgpc::compat::J3dTevOrderSummary{
                 .stage = 0U,
                 .tex_coord = 0U,
                 .tex_map = 0U,
                 .color_channel = 4U,
             });
-            material.tev_stages.push_back(smgpc::game::J3dTevStageSummary{
+            material.tev_stages.push_back(smgpc::compat::J3dTevStageSummary{
                 .stage = 0U,
                 .color_in = {14U, 10U, 8U, 15U},
                 .color_op = 0U,
@@ -124,13 +124,13 @@ namespace smgpc::tests {
                 .k_alpha_sel = 28U,
             });
 
-            const auto source = smgpc::game::DecodedTexture{
+            const auto source = smgpc::compat::DecodedTexture{
                 .width = 2U,
                 .height = 1U,
-                .format = smgpc::game::TplTextureFormat::I8,
+                .format = smgpc::compat::TplTextureFormat::I8,
                 .rgba = {0U, 0U, 0U, 0U, 255U, 255U, 255U, 255U},
             };
-            const auto composed = smgpc::game::j3d_try_compose_material_texture(material, source, material.material_colors[0U], 0U);
+            const auto composed = smgpc::compat::j3d_try_compose_material_texture(material, source, material.material_colors[0U], 0U);
             require(composed.has_value(), "single-texture J3D TEV material should compose");
             require(composed->raster_color_baked, "single-texture J3D TEV material should mark raster color as baked");
             require(composed->image.width == 2U && composed->image.height == 1U, "single-texture J3D TEV composition dimensions changed");

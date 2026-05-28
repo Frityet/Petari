@@ -5,15 +5,15 @@
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Scene/SceneFunction.hpp"
-#include "Game/compat/J3dMatrix.hpp"
-#include "Game/compat/RuntimeContext.hpp"
+#include "render/J3dMatrix.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(LiveActor* pActor) : mActor(pActor) {
 }
 
 namespace {
-    smgpc::game::J3dMatrix3x4 projmap_base_transform(const LiveActor& actor) {
-        return smgpc::game::j3d_remove_matrix_scale(actor.getBaseMatrix(), actor.mScale.x, actor.mScale.y, actor.mScale.z);
+    smgpc::compat::J3dMatrix3x4 projmap_base_transform(const LiveActor& actor) {
+        return smgpc::compat::j3d_remove_matrix_scale(actor.getBaseMatrix(), actor.mScale.x, actor.mScale.y, actor.mScale.z);
     }
 }  // namespace
 
@@ -22,7 +22,7 @@ void ProjmapEffectMtxSetter::updateMtxUseBaseMtx() {
         return;
     }
 
-    mActor->setProjmapEffectMatrix(smgpc::game::j3d_invert_affine_matrix(projmap_base_transform(*mActor)));
+    mActor->setProjmapEffectMatrix(smgpc::compat::j3d_invert_affine_matrix(projmap_base_transform(*mActor)));
 }
 
 void ProjmapEffectMtxSetter::updateMtxUseBaseMtxWithLocalOffset(const TVec3f& offset) {
@@ -30,7 +30,7 @@ void ProjmapEffectMtxSetter::updateMtxUseBaseMtxWithLocalOffset(const TVec3f& of
         return;
     }
 
-    const auto local_offset = smgpc::game::J3dMatrix3x4{{
+    const auto local_offset = smgpc::compat::J3dMatrix3x4{{
         1.0F,
         0.0F,
         0.0F,
@@ -45,7 +45,7 @@ void ProjmapEffectMtxSetter::updateMtxUseBaseMtxWithLocalOffset(const TVec3f& of
         offset.z,
     }};
     mActor->setProjmapEffectMatrix(
-        smgpc::game::j3d_invert_affine_matrix(smgpc::game::j3d_concat_matrix(projmap_base_transform(*mActor), local_offset)));
+        smgpc::compat::j3d_invert_affine_matrix(smgpc::compat::j3d_concat_matrix(projmap_base_transform(*mActor), local_offset)));
 }
 
 namespace MR {
@@ -107,13 +107,13 @@ namespace MR {
 
     void setBaseTRMtx(LiveActor* pActor, MtxPtr pMtx) {
         if (pMtx != nullptr) {
-            setBaseTRMtx(pActor, smgpc::game::j3d_matrix_from_mtx(pMtx));
+            setBaseTRMtx(pActor, smgpc::compat::j3d_matrix_from_mtx(pMtx));
         }
     }
 
-    void setBaseTRMtx(LiveActor* pActor, const smgpc::game::J3dMatrix3x4& matrix) {
+    void setBaseTRMtx(LiveActor* pActor, const smgpc::compat::J3dMatrix3x4& matrix) {
         if (pActor != nullptr) {
-            pActor->setBaseMatrix(smgpc::game::j3d_apply_matrix_scale(matrix, pActor->mScale.x, pActor->mScale.y, pActor->mScale.z));
+            pActor->setBaseMatrix(smgpc::compat::j3d_apply_matrix_scale(matrix, pActor->mScale.x, pActor->mScale.y, pActor->mScale.z));
         }
     }
 
@@ -122,13 +122,13 @@ namespace MR {
     }
 
     void emitEffect(LiveActor* pActor, const char* pEffectName) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr && pEffectName != nullptr) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr && pEffectName != nullptr) {
             runtime->emit_effect(pActor->getName(), pEffectName);
         }
     }
 
     void deleteEffect(LiveActor* pActor, const char* pEffectName) {
-        if (auto* runtime = smgpc::game::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr && pEffectName != nullptr) {
+        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr && pEffectName != nullptr) {
             runtime->delete_effect(pActor->getName(), pEffectName);
         }
     }

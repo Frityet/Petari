@@ -3,8 +3,8 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
-#include "Game/compat/J3dMatrix.hpp"
-#include "Game/compat/JMathTrig.hpp"
+#include "render/J3dMatrix.hpp"
+#include "render/JMathTrig.hpp"
 
 namespace NrvFileSelectSky {
     NEW_NERVE(FileSelectSkyNrvWait, FileSelectSky, Wait);
@@ -54,9 +54,9 @@ void FileSelectSky::exeWait() {
         _90 = 0.0F;
     }
 
-    const auto yaw = smgpc::game::j3d_rotation_matrix(0.0F, 1.0F, 0.0F, _90);
-    const auto pitch = smgpc::game::j3d_rotation_matrix(1.0F, 0.0F, 0.0F, _8C);
-    _94 = smgpc::game::j3d_invert_orthonormal_matrix(smgpc::game::j3d_concat_matrix(yaw, pitch));
+    const auto yaw = smgpc::compat::j3d_rotation_matrix(0.0F, 1.0F, 0.0F, _90);
+    const auto pitch = smgpc::compat::j3d_rotation_matrix(1.0F, 0.0F, 0.0F, _8C);
+    _94 = smgpc::compat::j3d_invert_orthonormal_matrix(smgpc::compat::j3d_concat_matrix(yaw, pitch));
 
     auto steps = (3.1415927F * static_cast< f32 >(getNerveStep())) / 3000.0F;
     if (steps < 0.0F) {
@@ -64,7 +64,7 @@ void FileSelectSky::exeWait() {
     }
 
     const auto value = _90 + 0.001F;
-    const auto temp = 1.0F - smgpc::game::jmath_cos_lap_rad(steps);
+    const auto temp = 1.0F - smgpc::compat::jmath_cos_lap_rad(steps);
     _90 = value;
     _8C = (3.0F * ((temp * 0.5F) * 3.1415927F)) * 0.25F;
 }
