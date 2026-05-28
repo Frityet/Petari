@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace smgpc::compat {
+namespace smgpc::scene {
     namespace {
         [[nodiscard]] std::string phase_name(SceneControllerPhase phase) {
             switch (phase) {
@@ -28,7 +28,7 @@ namespace smgpc::compat {
         }
     }  // namespace
 
-    GameSystemSceneControllerService::GameSystemSceneControllerService(RuntimeContext &runtime, SceneLifecycleService &scene_lifecycle)
+    GameSystemSceneControllerService::GameSystemSceneControllerService(smgpc::runtime::RuntimeContext &runtime, SceneLifecycleService &scene_lifecycle)
         : _runtime(runtime), _scene_lifecycle(scene_lifecycle) {
         set_phase(SceneControllerPhase::WaitingForRequest);
     }
@@ -36,7 +36,7 @@ namespace smgpc::compat {
     GameSystemSceneControllerService::~GameSystemSceneControllerService() = default;
 
     void GameSystemSceneControllerService::request_change_scene(const StageHostRequest &request) {
-        _pending_scene = SceneControlInfoCompat{
+        _pending_scene = SceneControlInfo{
             .scene_name = request.scene_name,
             .stage_name = request.stage_name,
             .scenario_no = request.scenario_no,
@@ -109,7 +109,7 @@ namespace smgpc::compat {
         return _phase;
     }
 
-    const std::optional<SceneControlInfoCompat> &GameSystemSceneControllerService::pending_scene() const {
+    const std::optional<SceneControlInfo> &GameSystemSceneControllerService::pending_scene() const {
         return _pending_scene;
     }
 
@@ -155,4 +155,4 @@ namespace smgpc::compat {
         };
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

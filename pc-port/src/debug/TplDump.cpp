@@ -49,7 +49,7 @@ namespace {
         return text.size() >= suffix.size() && text.substr(text.size() - suffix.size()) == suffix;
     }
 
-    void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output, const smgpc::compat::DecodedTexture &texture) {
+    void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output, const smgpc::resource::DecodedTexture &texture) {
         screenshot_service.write_png(
             output,
             smgpc::render::capture::ScreenshotImageView{
@@ -70,7 +70,7 @@ int main(int argc, char **argv) try {
     if (argc == 3) {
         const auto archive_path = std::filesystem::path(argv[1]);
         const auto texture_output_root = std::filesystem::path(argv[2]);
-        const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
+        const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
 
         for (const auto &entry : archive.entries()) {
             if (!ends_with(entry.path, ".tpl")) {
@@ -79,7 +79,7 @@ int main(int argc, char **argv) try {
 
             auto file_name = std::filesystem::path(entry.path).filename();
             file_name.replace_extension(".png");
-            const auto texture = smgpc::compat::decode_tpl_texture(archive.file_data(entry));
+            const auto texture = smgpc::resource::decode_tpl_texture(archive.file_data(entry));
             const auto texture_output = texture_output_root / file_name;
             write_texture_png(*screenshot_service, texture_output, texture);
             std::cout << texture_output << '\n';
@@ -89,8 +89,8 @@ int main(int argc, char **argv) try {
     }
 
     const auto root = disc_files_root();
-    const auto title_logo_archive = smgpc::compat::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
-    const auto title_logo_texture = smgpc::compat::decode_tpl_texture(title_logo_archive.file_data("timg/mytitlelogokor.tpl"));
+    const auto title_logo_archive = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
+    const auto title_logo_texture = smgpc::resource::decode_tpl_texture(title_logo_archive.file_data("timg/mytitlelogokor.tpl"));
     const auto output = pc_port_root() / ".cache" / "decoded-title-logo.png";
 
     write_texture_png(*screenshot_service, output, title_logo_texture);
@@ -102,7 +102,7 @@ int main(int argc, char **argv) try {
             continue;
         }
 
-        const auto texture = smgpc::compat::decode_tpl_texture(title_logo_archive.file_data(entry));
+        const auto texture = smgpc::resource::decode_tpl_texture(title_logo_archive.file_data(entry));
         const auto texture_output = texture_output_root / (std::filesystem::path(entry.path).filename().replace_extension(".png"));
         write_texture_png(*screenshot_service, texture_output, texture);
         std::cout << texture_output << '\n';

@@ -17,7 +17,7 @@ class LayoutActor;
 class NameObj;
 class SimpleLayout;
 
-namespace smgpc::compat {
+namespace smgpc::runtime {
 
     enum class SceneEntryKind {
         NameObj,
@@ -228,14 +228,14 @@ namespace smgpc::compat {
         void execute_movement();
         void execute_calc_anim();
         void execute_calc_view_and_entry();
-        void execute_draw_buffer_opa(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type);
-        void execute_draw_buffer_xlu(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type);
-        void execute_draw_buffer_list_normal_opa_before_volume_shadow(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose,
+        void execute_draw_buffer_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
+        void execute_draw_buffer_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
+        void execute_draw_buffer_list_normal_opa_before_volume_shadow(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
                                                                       bool prior_draw_air);
-        void execute_draw_buffer_list_normal_opa_before_silhouette(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
-        void execute_draw_buffer_list_normal_opa(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, bool prior_draw_air);
-        void execute_draw_buffer_list_normal_xlu(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
-        void execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, bool prior_draw_air = false);
+        void execute_draw_buffer_list_normal_opa_before_silhouette(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void execute_draw_buffer_list_normal_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air);
+        void execute_draw_buffer_list_normal_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
+        void execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air = false);
         void execute_draw_type(render::IRendererEngine &renderer, s32 draw_type);
         void execute_draw_list_2d_normal(render::IRendererEngine &renderer);
         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
@@ -270,9 +270,8 @@ namespace smgpc::compat {
         [[nodiscard]] static bool entry_is_dead(const Entry &entry);
         [[nodiscard]] static bool entry_is_suspended(const Entry &entry);
         [[nodiscard]] static std::string entry_name(const Entry &entry);
-        void execute_draw_buffer(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type,
+        void execute_draw_buffer(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type,
                                  SceneDrawBufferPass pass);
-        void execute_draw_type(render::IRendererEngine &renderer, s32 draw_type);
 #ifndef NDEBUG
         void push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass = SceneDrawBufferPass::None);
         void push_message_trace(SceneSchedulerMessageTraceEntry trace);
@@ -289,4 +288,4 @@ namespace smgpc::compat {
 #endif
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::runtime

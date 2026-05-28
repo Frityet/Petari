@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace smgpc::compat {
+namespace smgpc::render {
     namespace {
 
         constexpr auto JMA_SINCOS_TABLE_BITS = 14U;
@@ -41,4 +41,4 @@ namespace smgpc::compat {
         return table_cos(index);
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

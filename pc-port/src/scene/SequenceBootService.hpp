@@ -3,50 +3,39 @@
 #include "scene/StageHostService.hpp"
 #include "scene/StorySequenceService.hpp"
 
-class FileSelector;
+#include <string>
 
-namespace smgpc::compat {
-
+namespace smgpc::runtime {
     class RuntimeContext;
+}  // namespace smgpc::runtime
+
+namespace smgpc::scene {
+
 
     class SequenceBootService final {
     public:
-        explicit SequenceBootService(RuntimeContext &runtime);
+        SequenceBootService(smgpc::runtime::RuntimeContext &runtime, StorySequenceService &story_sequence, StageHostService &stage_host);
         ~SequenceBootService();
 
         SequenceBootService(const SequenceBootService &) = delete;
         SequenceBootService &operator=(const SequenceBootService &) = delete;
 
-        void request_boot_to_file_select();
+        void request_boot_to_initial_stage();
         void update_after_runtime_frame();
 
         [[nodiscard]] bool is_boot_requested() const;
-        [[nodiscard]] bool is_file_select_host_active() const;
+        [[nodiscard]] bool is_initial_stage_host_active() const;
         [[nodiscard]] bool has_sent_autorush_begin() const;
 
     private:
-        void ensure_file_select_host();
-#ifndef NDEBUG
-        void emit_title_semantic_anchors();
-        void emit_file_select_semantic_anchors();
-#endif
+        void update_stage_transition_requests();
 
-        RuntimeContext &_runtime;
-        std::unique_ptr<FileSelector> _file_selector;
+        smgpc::runtime::RuntimeContext &_runtime;
+        StorySequenceService &_story_sequence;
+        StageHostService &_stage_host;
+        std::string _boot_stage_name;
         bool _boot_requested = false;
         bool _autorush_begin_sent = false;
-#ifndef NDEBUG
-        bool _title_product_created_emitted = false;
-        bool _title_product_visible_emitted = false;
-        bool _title_ab_gate_active_emitted = false;
-        bool _title_input_accepted_emitted = false;
-        bool _file_select_scene_requested_emitted = false;
-        bool _file_select_title_nerve_entered_emitted = false;
-        bool _file_select_start_entered_emitted = false;
-        bool _file_select_selectable_emitted = false;
-        bool _file_select_demo_start_wait_emitted = false;
-        bool _file_select_demo_transition_requested_emitted = false;
-#endif
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

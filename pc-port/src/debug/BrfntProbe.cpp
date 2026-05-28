@@ -57,7 +57,7 @@ namespace {
     }
 
     void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output,
-                           const smgpc::compat::DecodedTexture &texture) {
+                           const smgpc::resource::DecodedTexture &texture) {
         screenshot_service.write_png(output,
                                      smgpc::render::capture::ScreenshotImageView{
                                          .width = texture.width,
@@ -82,8 +82,8 @@ int main(int argc, char **argv) try {
     }
 
     const auto archive_path = disc_files_root() / "KrKorean" / "LayoutData" / "Font.arc";
-    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
-    const auto font = smgpc::compat::parse_brfnt_font(archive.file_data(font_name));
+    const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
+    const auto font = smgpc::layout::parse_brfnt_font(archive.file_data(font_name));
 
     std::cout << "font," << font_name << '\n';
     std::cout << "metrics,height=" << static_cast<unsigned>(font.height) << ",width=" << static_cast<unsigned>(font.width)

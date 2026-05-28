@@ -4,9 +4,9 @@
 #include "scene/GameSystemSceneControllerService.hpp"
 #include "scene/SequenceBootService.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::scene {
 
-    GameSystemService::GameSystemService(RuntimeContext &runtime, GameSystemSceneControllerService &scene_controller,
+    GameSystemService::GameSystemService(smgpc::runtime::RuntimeContext &runtime, GameSystemSceneControllerService &scene_controller,
                                          SequenceBootService &sequence_boot)
         : _runtime(runtime), _scene_controller(scene_controller), _sequence_boot(sequence_boot) {
     }
@@ -28,7 +28,7 @@ namespace smgpc::compat {
         _runtime.draw_3d_normal(renderer);
     }
 
-    void GameSystemService::draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose) {
+    void GameSystemService::draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
         _runtime.draw_3d_normal(renderer, camera_pose);
     }
 
@@ -54,4 +54,4 @@ namespace smgpc::compat {
         }
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

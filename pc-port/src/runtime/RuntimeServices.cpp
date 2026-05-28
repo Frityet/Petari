@@ -6,18 +6,19 @@
 #include <cmath>
 #include <cstring>
 #include <fstream>
+#include <limits>
 #include <stdexcept>
 #include <system_error>
 #include <utility>
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
-#include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
+#include "common/BinaryChunkFile.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TextEncoding.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::runtime {
     namespace {
 
         [[nodiscard]] bool exists_regular_file(const std::filesystem::path &path) {
@@ -34,11 +35,252 @@ namespace smgpc::compat {
         constexpr auto SAVE_DATA_GAME_FILE_SIZE = std::size_t{0xF80U};
         constexpr auto SAVE_DATA_CONFIG_FILE_SIZE = std::size_t{0x60U};
         constexpr auto SAVE_DATA_SYSTEM_FILE_SIZE = std::size_t{0x80U};
+        constexpr auto SAVE_DATA_ICON_ID_MII = u32{0U};
+        constexpr auto SAVE_DATA_ICON_ID_MARIO = u32{1U};
+        constexpr auto SAVE_DATA_MII_CREATE_ID_SIZE = std::size_t{8U};
+        constexpr auto SAVE_DATA_MII_FLAG_LEGACY_MII = std::uint8_t{0x1U};
+        constexpr auto SAVE_DATA_MII_FLAG_CREATE_ID = std::uint8_t{0x2U};
+        constexpr auto SAVE_DATA_MISC_FLAG_LAST_LOADED_MARIO = std::uint8_t{0x1U};
+        constexpr auto SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_MARIO = std::uint8_t{0x2U};
+        constexpr auto SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_LUIGI = std::uint8_t{0x4U};
+        constexpr auto SAVE_DATA_EVENT_FLAG_BIT = std::uint16_t{0x8000U};
+        constexpr auto SAVE_DATA_EVENT_FLAG_HASH_MASK = std::uint16_t{0x7fffU};
 
         enum class SaveDataByteOrder {
             BigEndian,
             LittleEndian,
         };
+
+        [[nodiscard]] bool save_data_chunks_have(std::span<const common::BinaryChunk> chunks, std::uint32_t signature) {
+            return std::ranges::any_of(chunks, [signature](const auto &chunk) { return chunk.signature == signature; });
+        }
+
+        [[nodiscard]] const common::BinaryChunk *save_data_chunk(std::span<const common::BinaryChunk> chunks, std::uint32_t signature) {
+            const auto found = std::ranges::find_if(chunks, [signature](const auto &chunk) { return chunk.signature == signature; });
+            return found == chunks.end() ? nullptr : &*found;
+        }
+
+        void append_save_event_flag(std::vector<std::uint8_t> &data, std::string_view name, bool enabled) {
+            const auto hash = static_cast<std::uint16_t>(common::hash_code_31(name) & SAVE_DATA_EVENT_FLAG_HASH_MASK);
+            common::append_be16(data, static_cast<std::uint16_t>(hash | (enabled ? SAVE_DATA_EVENT_FLAG_BIT : 0U)));
+        }
+
+        void append_save_event_value(std::vector<std::uint8_t> &data, std::string_view name, std::uint16_t value) {
+            common::append_be16(data, static_cast<std::uint16_t>(common::hash_code_31(name)));
+            common::append_be16(data, value);
+        }
+
+        [[nodiscard]] std::array<std::uint8_t, SAVE_DATA_MII_CREATE_ID_SIZE> save_create_id_from_slot(const SaveDataService::SlotState &state) {
+            auto create_id = std::array<std::uint8_t, SAVE_DATA_MII_CREATE_ID_SIZE>{};
+            if (state.has_mii_id) {
+                const auto index = state.rfl_mii_index.value_or(0);
+                std::memcpy(create_id.data(), &index, std::min(sizeof(index), create_id.size()));
+            }
+            return create_id;
+        }
+
+        [[nodiscard]] std::vector<std::uint8_t> encode_config_slot_chunks(const SaveDataService::SlotState &state) {
+            const auto create_id = save_create_id_from_slot(state);
+            auto mii_data = std::vector<std::uint8_t>{static_cast<std::uint8_t>(state.has_mii_id ? SAVE_DATA_MII_FLAG_CREATE_ID : 0U)};
+            mii_data.insert(mii_data.end(), create_id.begin(), create_id.end());
+            mii_data.push_back(static_cast<std::uint8_t>(state.has_mii_id ? SAVE_DATA_ICON_ID_MII : state.icon_id.value_or(SAVE_DATA_ICON_ID_MARIO)));
+
+            auto misc_data = std::vector<std::uint8_t>{static_cast<std::uint8_t>((state.last_loaded_mario ? SAVE_DATA_MISC_FLAG_LAST_LOADED_MARIO : 0U) |
+                                                                                 (state.complete_ending_mario_and_luigi ||
+                                                                                          (state.view_complete_ending && state.last_loaded_mario) ?
+                                                                                      SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_MARIO :
+                                                                                      0U) |
+                                                                                 (state.complete_ending_mario_and_luigi ||
+                                                                                          (state.view_complete_ending && !state.last_loaded_mario) ?
+                                                                                      SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_LUIGI :
+                                                                                      0U))};
+            common::append_be64(misc_data, static_cast<std::uint64_t>(state.last_modified));
+
+            const auto chunks = std::array{
+                common::BinaryChunk{
+                    .signature = common::fourcc('C', 'O', 'N', 'F'),
+                    .hash = 0x2432DAU,
+                    .data = {static_cast<std::uint8_t>(state.created ? 0xffU : 0U)},
+                },
+                common::BinaryChunk{
+                    .signature = common::fourcc('M', 'I', 'I', ' '),
+                    .hash = 0x2836E9U,
+                    .data = std::move(mii_data),
+                },
+                common::BinaryChunk{
+                    .signature = common::fourcc('M', 'I', 'S', 'C'),
+                    .hash = 0x1U,
+                    .data = std::move(misc_data),
+                },
+            };
+            return common::encode_binary_chunk_file(chunks, SAVE_DATA_CONFIG_FILE_SIZE);
+        }
+
+        [[nodiscard]] std::vector<std::uint8_t> encode_game_slot_chunks(const SaveDataService::SlotState &state) {
+            auto play_data = std::vector<std::uint8_t>{static_cast<std::uint8_t>(std::clamp(state.power_star_num, 0, 255))};
+            common::append_be32(play_data, static_cast<std::uint32_t>(std::max(state.star_piece_num, 0)));
+            common::append_be16(play_data, 4U);
+
+            auto flag_data = std::vector<std::uint8_t>{};
+            append_save_event_flag(flag_data, "ViewNormalEnding", state.view_normal_ending);
+            append_save_event_flag(flag_data, "ViewCompleteEnding", state.view_complete_ending);
+            append_save_event_flag(flag_data, "SpecialStarFinalChallenge", state.view_complete_ending);
+            for (const auto &[name, enabled] : state.game_event_flags) {
+                append_save_event_flag(flag_data, name, enabled);
+            }
+
+            auto value_data = std::vector<std::uint8_t>{};
+            append_save_event_value(value_data, "MissNum", static_cast<std::uint16_t>(std::clamp(state.player_miss_num, 0, 0xffff)));
+            for (const auto &[name, value] : state.game_event_values) {
+                append_save_event_value(value_data, name, value);
+            }
+
+            const auto chunks = std::array{
+                common::BinaryChunk{
+                    .signature = common::fourcc('P', 'L', 'A', 'Y'),
+                    .hash = 0x27C90FU,
+                    .data = std::move(play_data),
+                },
+                common::BinaryChunk{
+                    .signature = common::fourcc('F', 'L', 'G', '1'),
+                    .hash = common::hash_code_31("2bytes/flag"),
+                    .data = std::move(flag_data),
+                },
+                common::BinaryChunk{
+                    .signature = common::fourcc('P', 'C', 'E', '1'),
+                    .hash = common::hash_code_31("StarPieceAlmsStorage") << 5U,
+                    .data = {},
+                },
+                common::BinaryChunk{
+                    .signature = common::fourcc('S', 'P', 'N', '1'),
+                    .hash = 0x12345679U,
+                    .data = {},
+                },
+                common::BinaryChunk{
+                    .signature = common::fourcc('V', 'L', 'E', '1'),
+                    .hash = common::fourcc('V', 'L', 'E', '1'),
+                    .data = std::move(value_data),
+                },
+                common::BinaryChunk{
+                    .signature = common::fourcc('G', 'A', 'L', 'A'),
+                    .hash = 0xBF0640EEU,
+                    .data = {},
+                },
+            };
+            return common::encode_binary_chunk_file(chunks, SAVE_DATA_GAME_FILE_SIZE);
+        }
+
+        [[nodiscard]] bool decode_config_slot_chunks(std::span<const std::uint8_t> bytes, SaveDataService::SlotState &state) {
+            const auto chunks = common::decode_binary_chunk_file(bytes);
+            if (!chunks.has_value() || !save_data_chunks_have(*chunks, common::fourcc('C', 'O', 'N', 'F'))) {
+                return false;
+            }
+
+            if (const auto *chunk = save_data_chunk(*chunks, common::fourcc('C', 'O', 'N', 'F'))) {
+                if (chunk->hash != 0x2432DAU || chunk->data.empty()) {
+                    return false;
+                }
+                state.created = chunk->data[0U] != 0U;
+            }
+
+            if (const auto *chunk = save_data_chunk(*chunks, common::fourcc('M', 'I', 'I', ' '))) {
+                if (chunk->hash != 0x2836E9U || chunk->data.size() < 1U + SAVE_DATA_MII_CREATE_ID_SIZE) {
+                    return false;
+                }
+                const auto flag = chunk->data[0U];
+                const auto icon_id = chunk->data.size() > 1U + SAVE_DATA_MII_CREATE_ID_SIZE ? chunk->data[1U + SAVE_DATA_MII_CREATE_ID_SIZE] :
+                                                                                              ((flag & SAVE_DATA_MII_FLAG_LEGACY_MII) != 0U ? SAVE_DATA_ICON_ID_MII :
+                                                                                                                                              SAVE_DATA_ICON_ID_MARIO);
+                state.has_mii_id = icon_id == SAVE_DATA_ICON_ID_MII;
+                state.icon_id = state.has_mii_id ? std::nullopt : std::optional<u32>(icon_id);
+                if (state.has_mii_id) {
+                    auto index = s32{};
+                    std::memcpy(&index, chunk->data.data() + 1U, std::min(sizeof(index), SAVE_DATA_MII_CREATE_ID_SIZE));
+                    state.rfl_mii_index = index;
+                } else {
+                    state.rfl_mii_index.reset();
+                }
+            }
+
+            if (const auto *chunk = save_data_chunk(*chunks, common::fourcc('M', 'I', 'S', 'C'))) {
+                if (chunk->hash != 0x1U || chunk->data.empty()) {
+                    return false;
+                }
+                const auto flag = chunk->data[0U];
+                state.last_loaded_mario = (flag & SAVE_DATA_MISC_FLAG_LAST_LOADED_MARIO) != 0U;
+                state.complete_ending_mario_and_luigi = (flag & SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_MARIO) != 0U &&
+                                                        (flag & SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_LUIGI) != 0U;
+                state.view_complete_ending = state.complete_ending_mario_and_luigi ||
+                                             (flag & (SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_MARIO | SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_LUIGI)) != 0U;
+                if (chunk->data.size() >= 1U + sizeof(std::uint64_t)) {
+                    state.last_modified = static_cast<OSTime>(common::read_be64(chunk->data, 1U));
+                }
+            }
+
+            return true;
+        }
+
+        [[nodiscard]] bool decode_game_slot_chunks(std::span<const std::uint8_t> bytes, SaveDataService::SlotState &state) {
+            const auto chunks = common::decode_binary_chunk_file(bytes);
+            if (!chunks.has_value() || !save_data_chunks_have(*chunks, common::fourcc('P', 'L', 'A', 'Y'))) {
+                return false;
+            }
+
+            if (const auto *chunk = save_data_chunk(*chunks, common::fourcc('P', 'L', 'A', 'Y'))) {
+                if (chunk->hash != 0x27C90FU || chunk->data.size() < 5U) {
+                    return false;
+                }
+                state.power_star_num = chunk->data[0U];
+                state.star_piece_num = static_cast<s32>(common::read_be32(chunk->data, 1U));
+            }
+
+            if (const auto *chunk = save_data_chunk(*chunks, common::fourcc('F', 'L', 'G', '1'))) {
+                if (chunk->hash != common::hash_code_31("2bytes/flag")) {
+                    return false;
+                }
+                for (auto offset = std::size_t{}; offset + sizeof(std::uint16_t) <= chunk->data.size(); offset += sizeof(std::uint16_t)) {
+                    const auto word = common::read_be16(chunk->data, offset);
+                    const auto enabled = (word & SAVE_DATA_EVENT_FLAG_BIT) != 0U;
+                    const auto hash = static_cast<std::uint16_t>(word & SAVE_DATA_EVENT_FLAG_HASH_MASK);
+                    if (hash == static_cast<std::uint16_t>(common::hash_code_31("ViewNormalEnding") & SAVE_DATA_EVENT_FLAG_HASH_MASK)) {
+                        state.view_normal_ending = enabled;
+                    } else if (hash == static_cast<std::uint16_t>(common::hash_code_31("ViewCompleteEnding") & SAVE_DATA_EVENT_FLAG_HASH_MASK)) {
+                        state.view_complete_ending = enabled;
+                    }
+                }
+            }
+
+            if (const auto *chunk = save_data_chunk(*chunks, common::fourcc('V', 'L', 'E', '1'))) {
+                if (chunk->hash != common::fourcc('V', 'L', 'E', '1')) {
+                    return false;
+                }
+                for (auto offset = std::size_t{}; offset + 4U <= chunk->data.size(); offset += 4U) {
+                    const auto hash = common::read_be16(chunk->data, offset);
+                    const auto value = common::read_be16(chunk->data, offset + 2U);
+                    if (hash == static_cast<std::uint16_t>(common::hash_code_31("MissNum"))) {
+                        state.player_miss_num = value;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        [[nodiscard]] std::vector<std::uint8_t> encode_config_slot_binary(const SaveDataService::SlotState &state) {
+            auto file = UserFile();
+            file.restoreFromSaveDataServiceSlot(state, state.slot_index, state.last_loaded_mario);
+            auto bytes = std::vector<std::uint8_t>(SAVE_DATA_CONFIG_FILE_SIZE);
+            file.makeConfigDataBinary(bytes.data(), static_cast<u32>(bytes.size()));
+            return bytes;
+        }
+
+        [[nodiscard]] std::vector<std::uint8_t> encode_game_slot_binary(const SaveDataService::SlotState &state, bool is_player_mario) {
+            auto file = UserFile();
+            file.restoreFromSaveDataServiceSlot(state, state.slot_index, is_player_mario);
+            auto bytes = std::vector<std::uint8_t>(SAVE_DATA_GAME_FILE_SIZE);
+            file.makeGameDataBinary(bytes.data(), static_cast<u32>(bytes.size()));
+            return bytes;
+        }
 
         [[nodiscard]] std::uint16_t read_save_u16(std::span<const std::uint8_t> bytes, std::size_t offset, SaveDataByteOrder byte_order) {
             if (offset + sizeof(std::uint16_t) > bytes.size()) {
@@ -188,18 +430,18 @@ namespace smgpc::compat {
             float radius = 0.0F;
         };
 
-        [[nodiscard]] std::optional<StarPointerProjection> project_star_pointer_target(const StarPointerTargetState &target, const CameraPoseCompat &pose, bool check_z) {
+        [[nodiscard]] std::optional<StarPointerProjection> project_star_pointer_target(const StarPointerTargetState &target, const smgpc::camera::CameraPose &pose, bool check_z) {
             if (target.actor == nullptr) {
                 return std::nullopt;
             }
 
             constexpr auto PI = 3.14159265358979323846F;
-            const auto world = CameraParamVec3{
+            const auto world = smgpc::camera::CameraParamVec3{
                 .x = target.actor->mPosition.x + target.offset.x,
                 .y = target.actor->mPosition.y + target.offset.y,
                 .z = target.actor->mPosition.z + target.offset.z,
             };
-            const auto camera = transform_world_to_camera(pose, world);
+            const auto camera = smgpc::camera::transform_world_to_camera(pose, world);
             if (check_z && camera.z <= pose.near_clip) {
                 return std::nullopt;
             }
@@ -281,29 +523,29 @@ namespace smgpc::compat {
             return std::string(is_player_mario ? "mario" : "luigi") + std::to_string(slot_index);
         }
 
-        [[nodiscard]] std::string texture_format_name(TplTextureFormat format) {
+        [[nodiscard]] std::string texture_format_name(smgpc::resource::TplTextureFormat format) {
             switch (format) {
-            case TplTextureFormat::I4:
+            case smgpc::resource::TplTextureFormat::I4:
                 return "I4";
-            case TplTextureFormat::I8:
+            case smgpc::resource::TplTextureFormat::I8:
                 return "I8";
-            case TplTextureFormat::IA4:
+            case smgpc::resource::TplTextureFormat::IA4:
                 return "IA4";
-            case TplTextureFormat::IA8:
+            case smgpc::resource::TplTextureFormat::IA8:
                 return "IA8";
-            case TplTextureFormat::RGB565:
+            case smgpc::resource::TplTextureFormat::RGB565:
                 return "RGB565";
-            case TplTextureFormat::RGB5A3:
+            case smgpc::resource::TplTextureFormat::RGB5A3:
                 return "RGB5A3";
-            case TplTextureFormat::RGBA8:
+            case smgpc::resource::TplTextureFormat::RGBA8:
                 return "RGBA8";
-            case TplTextureFormat::C4:
+            case smgpc::resource::TplTextureFormat::C4:
                 return "C4";
-            case TplTextureFormat::C8:
+            case smgpc::resource::TplTextureFormat::C8:
                 return "C8";
-            case TplTextureFormat::C14X2:
+            case smgpc::resource::TplTextureFormat::C14X2:
                 return "C14X2";
-            case TplTextureFormat::CMPR:
+            case smgpc::resource::TplTextureFormat::CMPR:
                 return "CMPR";
             }
 
@@ -337,7 +579,7 @@ namespace smgpc::compat {
             return false;
         }
 
-        [[nodiscard]] float effect_billboard_size(const JpcTextureMetadata &texture, const ResolvedEffectResource &resource) {
+        [[nodiscard]] float effect_billboard_size(const smgpc::render::effects::JpcTextureMetadata &texture, const smgpc::render::effects::ResolvedEffectResource &resource) {
             const auto source_size = static_cast<float>(std::max(texture.width, texture.height));
             const auto base_shape_scale = resource.resource != nullptr && resource.resource->base_shape.has_value() ?
                                               std::max(resource.resource->base_shape->base_size_x, resource.resource->base_shape->base_size_y) :
@@ -346,7 +588,7 @@ namespace smgpc::compat {
             return std::clamp(source_size * scale, 8.0F, 192.0F);
         }
 
-        [[nodiscard]] const JpcTextureMetadata *primary_effect_texture(const ResolvedEffectResource &resource) {
+        [[nodiscard]] const smgpc::render::effects::JpcTextureMetadata *primary_effect_texture(const smgpc::render::effects::ResolvedEffectResource &resource) {
             if (resource.primary_texture_index.has_value()) {
                 for (const auto &texture : resource.textures) {
                     if (texture.index == *resource.primary_texture_index) {
@@ -358,7 +600,7 @@ namespace smgpc::compat {
             return resource.textures.empty() ? nullptr : &resource.textures.front();
         }
 
-        [[nodiscard]] const JpcTextureMetadata *child_effect_texture(const ResolvedEffectResource &resource) {
+        [[nodiscard]] const smgpc::render::effects::JpcTextureMetadata *child_effect_texture(const smgpc::render::effects::ResolvedEffectResource &resource) {
             if (resource.resource != nullptr && resource.resource->child_texture_index.has_value()) {
                 for (const auto &texture : resource.textures) {
                     if (texture.index == *resource.resource->child_texture_index) {
@@ -415,7 +657,7 @@ namespace smgpc::compat {
             return factor < BLEND_FACTORS.size() ? BLEND_FACTORS[factor] : 0U;
         }
 
-        [[nodiscard]] render::GxAlphaCompare2D jpa_alpha_compare(const JpcBaseShapeMetadata *base_shape) {
+        [[nodiscard]] render::GxAlphaCompare2D jpa_alpha_compare(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape) {
             if (base_shape == nullptr) {
                 return {};
             }
@@ -433,7 +675,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] render::GxBlendMode2D jpa_blend_mode(const JpcBaseShapeMetadata *base_shape) {
+        [[nodiscard]] render::GxBlendMode2D jpa_blend_mode(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape) {
             if (base_shape == nullptr) {
                 return render::GxBlendMode2D{.enabled = true};
             }
@@ -451,19 +693,19 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] bool jpa_depth_test(const JpcBaseShapeMetadata *base_shape) {
+        [[nodiscard]] bool jpa_depth_test(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape) {
             return base_shape != nullptr && (base_shape->z_mode_config & 0x01U) != 0U;
         }
 
-        [[nodiscard]] bool jpa_depth_write(const JpcBaseShapeMetadata *base_shape) {
+        [[nodiscard]] bool jpa_depth_write(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape) {
             return base_shape != nullptr && (base_shape->z_mode_config & 0x10U) != 0U;
         }
 
-        [[nodiscard]] render::DepthCompare jpa_depth_compare(const JpcBaseShapeMetadata *base_shape) {
+        [[nodiscard]] render::DepthCompare jpa_depth_compare(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape) {
             return jpa_compare_from_config(base_shape == nullptr ? 7U : static_cast<std::uint8_t>((base_shape->z_mode_config >> 1U) & 0x07U));
         }
 
-        [[nodiscard]] render::GxTevStage2D jpa_tev_stage(const JpcBaseShapeMetadata *base_shape) {
+        [[nodiscard]] render::GxTevStage2D jpa_tev_stage(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape) {
             constexpr auto COLOR_ARGS = std::array<std::array<std::uint8_t, 4U>, 6U>{
                 std::array<std::uint8_t, 4U>{15U, 8U, 12U, 15U},
                 std::array<std::uint8_t, 4U>{15U, 2U, 8U, 15U},
@@ -496,8 +738,8 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] std::array<render::GxTevRegisterColor2D, 4U> jpa_initial_tev_registers(const JpcBaseShapeMetadata *base_shape,
-                                                                                             const JpcChildShapeMetadata *child_shape,
+        [[nodiscard]] std::array<render::GxTevRegisterColor2D, 4U> jpa_initial_tev_registers(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape,
+                                                                                             const smgpc::render::effects::JpcChildShapeMetadata *child_shape,
                                                                                              float alpha_scale) {
             auto registers = std::array<render::GxTevRegisterColor2D, 4U>{};
             const auto prm = child_shape == nullptr ? (base_shape == nullptr ? std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
@@ -511,7 +753,7 @@ namespace smgpc::compat {
             return registers;
         }
 
-        [[nodiscard]] bool jpa_child_uses_display_list_shape(const JpcChildShapeMetadata *child_shape) {
+        [[nodiscard]] bool jpa_child_uses_display_list_shape(const smgpc::render::effects::JpcChildShapeMetadata *child_shape) {
             return child_shape != nullptr && (child_shape->shape_type == 4U || child_shape->shape_type == 8U);
         }
 
@@ -585,7 +827,8 @@ namespace smgpc::compat {
             float scale_out = 1.0F;
         };
 
-        [[nodiscard]] float jpa_hermite_interpolation(float frame, const JpcKeyFrameMetadata &current, const JpcKeyFrameMetadata &next) {
+        [[nodiscard]] float jpa_hermite_interpolation(float frame, const smgpc::render::effects::JpcKeyFrameMetadata &current,
+                                                      const smgpc::render::effects::JpcKeyFrameMetadata &next) {
             const auto frame_delta = next.time - current.time;
             if (std::abs(frame_delta) <= 0.000001F) {
                 return current.value;
@@ -601,7 +844,7 @@ namespace smgpc::compat {
             return h00 * current.value + h10 * frame_delta * current.tangent_out + h01 * next.value + h11 * frame_delta * next.tangent_in;
         }
 
-        [[nodiscard]] float jpa_key_animation_value(const JpcKeyBlockMetadata &key_block, float frame) {
+        [[nodiscard]] float jpa_key_animation_value(const smgpc::render::effects::JpcKeyBlockMetadata &key_block, float frame) {
             if (key_block.keys.empty()) {
                 return 0.0F;
             }
@@ -644,8 +887,8 @@ namespace smgpc::compat {
             return static_cast<std::int16_t>(std::clamp(value, 1.0F, 32767.0F));
         }
 
-        [[nodiscard]] JpcKeyedEmitterDynamics jpa_keyed_emitter_dynamics(const JpcDynamicsBlockMetadata &dynamics,
-                                                                         std::span<const JpcKeyBlockMetadata> key_blocks,
+        [[nodiscard]] JpcKeyedEmitterDynamics jpa_keyed_emitter_dynamics(const smgpc::render::effects::JpcDynamicsBlockMetadata &dynamics,
+                                                                         std::span<const smgpc::render::effects::JpcKeyBlockMetadata> key_blocks,
                                                                          float tick) {
             auto keyed = JpcKeyedEmitterDynamics{
                 .rate = dynamics.rate,
@@ -697,7 +940,7 @@ namespace smgpc::compat {
             return keyed;
         }
 
-        [[nodiscard]] std::uint16_t jpa_particle_lifetime(const JpcDynamicsBlockMetadata &dynamics, std::int16_t source_lifetime,
+        [[nodiscard]] std::uint16_t jpa_particle_lifetime(const smgpc::render::effects::JpcDynamicsBlockMetadata &dynamics, std::int16_t source_lifetime,
                                                           std::uint32_t &seed) {
             const auto clamped_lifetime = std::max<std::int16_t>(source_lifetime, 1);
             const auto lifetime = (1.0F - dynamics.lifetime_random * next_jpa_random_f(seed)) * static_cast<float>(clamped_lifetime);
@@ -709,8 +952,19 @@ namespace smgpc::compat {
     DvdFileSystemService::DvdFileSystemService(std::filesystem::path root) : _root(weakly_canonical_or_normal(std::move(root))) {
     }
 
+    void DvdFileSystemService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+        complete_ready_async_reads();
+    }
+
     const std::filesystem::path &DvdFileSystemService::root() const {
         return _root;
+    }
+
+    std::string DvdFileSystemService::normalize_disc_path_string(std::string_view disc_path) const {
+        const auto normalized = normalize_disc_path(disc_path);
+        const auto key = entry_key(normalized);
+        return key.empty() ? std::string("/") : "/" + key;
     }
 
     std::filesystem::path DvdFileSystemService::resolve(std::string_view disc_path) const {
@@ -724,6 +978,64 @@ namespace smgpc::compat {
 
     bool DvdFileSystemService::exists(std::string_view disc_path) const {
         return exists_regular_file(resolve(disc_path));
+    }
+
+    s32 DvdFileSystemService::entry_num(std::string_view disc_path) const {
+        if (const auto entry = entry_metadata(disc_path)) {
+            return entry->entry_num;
+        }
+        return -1;
+    }
+
+    std::optional<DvdEntryMetadata> DvdFileSystemService::entry_metadata(std::string_view disc_path) const {
+        ensure_entry_table();
+        const auto key = entry_key(normalize_disc_path(disc_path));
+        const auto it = _entry_num_by_disc_path.find(key);
+        if (it == _entry_num_by_disc_path.end()) {
+            return std::nullopt;
+        }
+        return entry_metadata(it->second);
+    }
+
+    std::optional<DvdEntryMetadata> DvdFileSystemService::entry_metadata(s32 entry_num) const {
+        ensure_entry_table();
+        if (entry_num < 0 || static_cast<std::size_t>(entry_num) >= _entry_table.size()) {
+            return std::nullopt;
+        }
+        return _entry_table[static_cast<std::size_t>(entry_num)];
+    }
+
+    std::vector<DvdDirectoryEntry> DvdFileSystemService::directory_entries(std::string_view disc_path) const {
+        const auto directory = entry_metadata(disc_path);
+        if (!directory.has_value() || !directory->is_directory) {
+            return {};
+        }
+
+        ensure_entry_table();
+        auto entries = std::vector<DvdDirectoryEntry>{};
+        const auto parent_path = std::filesystem::path(directory->disc_path).lexically_normal();
+        const auto parent_key = parent_path.generic_string();
+        for (const auto &entry : _entry_table) {
+            if (entry.entry_num == directory->entry_num) {
+                continue;
+            }
+
+            const auto entry_path = std::filesystem::path(entry.disc_path).lexically_normal();
+            const auto entry_parent = entry_path.parent_path().generic_string();
+            const auto normalized_entry_parent = entry_parent.empty() ? std::string("/") : entry_parent;
+            if (normalized_entry_parent != parent_key) {
+                continue;
+            }
+
+            entries.push_back(DvdDirectoryEntry{
+                .entry_num = entry.entry_num,
+                .disc_path = entry.disc_path,
+                .name = entry_path.filename().generic_string(),
+                .is_directory = entry.is_directory,
+            });
+        }
+
+        return entries;
     }
 
     std::optional<std::filesystem::path> DvdFileSystemService::find_first(std::initializer_list<std::filesystem::path> candidates) const {
@@ -753,43 +1065,81 @@ namespace smgpc::compat {
     }
 
     std::vector<std::uint8_t> DvdFileSystemService::read_file(std::string_view disc_path) const {
-        const auto path = resolve(disc_path);
+        return read_file_range(disc_path, 0U, std::numeric_limits<std::size_t>::max(), 0);
+    }
+
+    std::vector<std::uint8_t> DvdFileSystemService::read_file_range(std::string_view disc_path, std::size_t offset, std::size_t length,
+                                                                    s32 priority) const {
+        const auto entry = entry_metadata(disc_path);
+        if (!entry.has_value() || entry->is_directory) {
+            throw std::runtime_error("Cannot open DVD file " + std::string(disc_path));
+        }
+        if (offset > entry->length) {
+            throw std::runtime_error("DVD read offset is outside file " + std::string(disc_path));
+        }
+
+        const auto path = std::filesystem::path(entry->resolved_path);
         auto file = std::ifstream(path, std::ios::binary);
         if (!file) {
             throw std::runtime_error("Cannot open DVD file " + path.string());
         }
 
-        file.seekg(0, std::ios::end);
-        const auto size = file.tellg();
-        if (size < 0) {
-            throw std::runtime_error("Cannot determine DVD file size " + path.string());
-        }
-
-        auto bytes = std::vector<std::uint8_t>(static_cast<std::size_t>(size));
-        file.seekg(0, std::ios::beg);
+        const auto read_size = std::min(length, entry->length - offset);
+        auto bytes = std::vector<std::uint8_t>(read_size);
+        file.seekg(static_cast<std::streamoff>(offset), std::ios::beg);
         file.read(reinterpret_cast<char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
-        if (!file) {
+        if (!file && file.gcount() != static_cast<std::streamsize>(bytes.size())) {
             throw std::runtime_error("Cannot read DVD file " + path.string());
         }
+        bytes.resize(static_cast<std::size_t>(file.gcount()));
 
         _file_read_trace.push_back(DvdFileReadTrace{
             .requested_path = std::string(disc_path),
-            .resolved_path = path.generic_string(),
+            .disc_path = entry->disc_path,
+            .resolved_path = entry->resolved_path,
+            .entry_num = entry->entry_num,
             .byte_count = bytes.size(),
+            .offset = offset,
+            .priority = priority,
         });
 
         return bytes;
     }
 
-    RarcArchive &DvdFileSystemService::archive(std::string_view disc_path) {
+    std::uint64_t DvdFileSystemService::submit_async_read(std::string_view disc_path, DVDFileInfo *file_info, void *destination,
+                                                          std::size_t length, std::size_t offset, s32 priority, DVDCallback callback,
+                                                          std::uint64_t delay_frames) {
+        const auto entry = entry_metadata(disc_path);
+        if (!entry.has_value() || entry->is_directory) {
+            throw std::runtime_error("Cannot queue DVD read for " + std::string(disc_path));
+        }
+
+        auto request = DvdAsyncReadRequest{};
+        request.id = _next_async_read_id++;
+        request.disc_path = entry->disc_path;
+        request.entry_num = entry->entry_num;
+        request.file_info = file_info;
+        request.destination = destination;
+        request.length = length;
+        request.offset = offset;
+        request.priority = priority;
+        request.submitted_frame = _frame_index;
+        request.completion_frame = _frame_index + delay_frames;
+        request.callback = callback;
+        _async_read_trace.push_back(request);
+        complete_ready_async_reads();
+        return request.id;
+    }
+
+    smgpc::resource::RarcArchive &DvdFileSystemService::archive(std::string_view disc_path) {
         return archive_for_path_with_request(resolve(disc_path), disc_path);
     }
 
-    RarcArchive &DvdFileSystemService::archive_for_path(const std::filesystem::path &path) {
+    smgpc::resource::RarcArchive &DvdFileSystemService::archive_for_path(const std::filesystem::path &path) {
         return archive_for_path_with_request(path, path.generic_string());
     }
 
-    RarcArchive &DvdFileSystemService::archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path) {
+    smgpc::resource::RarcArchive &DvdFileSystemService::archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path) {
         const auto key = archive_cache_key_for_path(path);
         if (auto it = _archives.find(key); it != _archives.end()) {
             _archive_load_trace.push_back(DvdArchiveLoadTrace{
@@ -803,7 +1153,7 @@ namespace smgpc::compat {
             return *it->second;
         }
 
-        auto archive = std::make_unique<RarcArchive>(RarcArchive::from_file(std::filesystem::path(key)));
+        auto archive = std::make_unique<smgpc::resource::RarcArchive>(smgpc::resource::RarcArchive::from_file(std::filesystem::path(key)));
         auto [it, inserted] = _archives.emplace(key, std::move(archive));
         if (inserted) {
             ++_archive_load_counts[key];
@@ -841,12 +1191,17 @@ namespace smgpc::compat {
         return _file_read_trace;
     }
 
+    std::span<const DvdAsyncReadRequest> DvdFileSystemService::async_read_trace() const {
+        return _async_read_trace;
+    }
+
     std::span<const DvdArchiveLoadTrace> DvdFileSystemService::archive_load_trace() const {
         return _archive_load_trace;
     }
 
     void DvdFileSystemService::clear_trace() {
         _file_read_trace.clear();
+        _async_read_trace.clear();
         _archive_load_trace.clear();
     }
 
@@ -864,20 +1219,139 @@ namespace smgpc::compat {
             text.erase(0U, 6U);
         }
 
-        auto normalized = std::filesystem::path();
+        auto parts = std::vector<std::filesystem::path>{};
         for (const auto &component : std::filesystem::path(text)) {
             const auto part = component.generic_string();
             if (part.empty() || part == ".") {
                 continue;
             }
             if (part == "..") {
-                throw std::runtime_error("DVD path escapes disc root: " + std::string(disc_path));
+                if (parts.empty()) {
+                    throw std::runtime_error("DVD path escapes disc root: " + std::string(disc_path));
+                }
+                parts.pop_back();
+                continue;
             }
 
-            normalized /= component;
+            parts.push_back(component);
+        }
+
+        auto normalized = std::filesystem::path();
+        for (const auto &part : parts) {
+            normalized /= part;
         }
 
         return normalized;
+    }
+
+    void DvdFileSystemService::complete_ready_async_reads() {
+        for (auto &request : _async_read_trace) {
+            if (request.completed || request.completion_frame > _frame_index) {
+                continue;
+            }
+
+            auto result = s32{-1};
+            try {
+                const auto bytes = read_file_range(request.disc_path, request.offset, request.length, request.priority);
+                if (!bytes.empty() && request.destination != nullptr) {
+                    std::memcpy(request.destination, bytes.data(), bytes.size());
+                }
+                result = static_cast<s32>(bytes.size());
+                if (request.file_info != nullptr) {
+                    request.file_info->position = static_cast<u32>(request.offset) + static_cast<u32>(bytes.size());
+                    request.file_info->cb.state = DVD_STATE_END;
+                    request.file_info->cb.transferred_size += static_cast<u32>(bytes.size());
+                }
+            } catch (const std::exception &) {
+                result = -1;
+                if (request.file_info != nullptr) {
+                    request.file_info->cb.state = DVD_STATE_FATAL_ERROR;
+                }
+            }
+
+            request.result = result;
+            request.completed = true;
+            if (request.callback != nullptr) {
+                request.callback(result, request.file_info);
+            }
+        }
+    }
+
+    void DvdFileSystemService::ensure_entry_table() const {
+        if (_entry_table_initialized) {
+            return;
+        }
+
+        _entry_table.clear();
+        _entry_num_by_disc_path.clear();
+
+        const auto add_entry = [this](std::filesystem::path disc_path, const std::filesystem::path &resolved_path,
+                                      bool is_directory) -> s32 {
+            const auto entry_num = static_cast<s32>(_entry_table.size());
+            auto length = std::uintmax_t{};
+            if (!is_directory) {
+                std::error_code error{};
+                length = std::filesystem::file_size(resolved_path, error);
+                if (error) {
+                    length = 0U;
+                }
+            }
+
+            const auto key = entry_key(disc_path);
+            _entry_num_by_disc_path[key] = entry_num;
+            _entry_table.push_back(DvdEntryMetadata{
+                .entry_num = entry_num,
+                .disc_path = key.empty() ? std::string("/") : "/" + key,
+                .resolved_path = weakly_canonical_or_normal(resolved_path).generic_string(),
+                .is_directory = is_directory,
+                .length = static_cast<std::size_t>(std::min<std::uintmax_t>(length, std::numeric_limits<std::size_t>::max())),
+            });
+            return entry_num;
+        };
+
+        add_entry({}, _root, true);
+
+        const auto visit_directory = [&](const auto &self, const std::filesystem::path &relative_path) -> void {
+            const auto absolute_path = relative_path.empty() ? _root : _root / relative_path;
+            auto children = std::vector<std::filesystem::directory_entry>{};
+            std::error_code error{};
+            auto iter = std::filesystem::directory_iterator(absolute_path, std::filesystem::directory_options::skip_permission_denied, error);
+            if (error) {
+                return;
+            }
+            for (const auto &child : iter) {
+                std::error_code status_error{};
+                if (child.is_directory(status_error) || child.is_regular_file(status_error)) {
+                    children.push_back(child);
+                }
+            }
+            std::ranges::sort(children, [](const auto &lhs, const auto &rhs) {
+                return lhs.path().filename().generic_string() < rhs.path().filename().generic_string();
+            });
+
+            for (const auto &child : children) {
+                std::error_code status_error{};
+                const auto is_directory = child.is_directory(status_error);
+                const auto child_relative_path = relative_path / child.path().filename();
+                add_entry(child_relative_path, child.path(), is_directory);
+                if (is_directory) {
+                    self(self, child_relative_path);
+                }
+            }
+        };
+        visit_directory(visit_directory, {});
+        _entry_table_initialized = true;
+    }
+
+    std::string DvdFileSystemService::entry_key(const std::filesystem::path &disc_path) {
+        auto key = disc_path.lexically_normal().generic_string();
+        while (!key.empty() && key.front() == '/') {
+            key.erase(key.begin());
+        }
+        if (key == ".") {
+            key.clear();
+        }
+        return key;
     }
 
     std::string DvdFileSystemService::archive_cache_key_for_path(const std::filesystem::path &path) const {
@@ -1221,8 +1695,8 @@ namespace smgpc::compat {
         });
     }
 
-    void EffectService::load_resources(const RarcArchive &archive) {
-        _resource_library = EffectResourceLibrary::from_archive(archive);
+    void EffectService::load_resources(const smgpc::resource::RarcArchive &archive) {
+        _resource_library = smgpc::render::effects::EffectResourceLibrary::from_archive(archive);
     }
 
     void EffectService::begin_frame(std::uint64_t frame_index) {
@@ -1608,7 +2082,7 @@ namespace smgpc::compat {
         return out;
     }
 
-    const EffectResourceLibrary *EffectService::resource_library() const {
+    const smgpc::render::effects::EffectResourceLibrary *EffectService::resource_library() const {
         return _resource_library.has_value() ? &*_resource_library : nullptr;
     }
 
@@ -1618,7 +2092,7 @@ namespace smgpc::compat {
     }
 #endif
 
-    std::vector<ResolvedEffectResource> EffectService::resolve(std::string_view actor_name, std::string_view effect_name) const {
+    std::vector<smgpc::render::effects::ResolvedEffectResource> EffectService::resolve(std::string_view actor_name, std::string_view effect_name) const {
         if (!_resource_library.has_value() || effect_name.empty()) {
             return {};
         }
@@ -1633,7 +2107,7 @@ namespace smgpc::compat {
         return _resource_library->resolve_effect_request(effect_name);
     }
 
-    std::vector<JpcEffectEmitterInstance> EffectService::create_emitters(std::span<const ResolvedEffectResource> resources) {
+    std::vector<JpcEffectEmitterInstance> EffectService::create_emitters(std::span<const smgpc::render::effects::ResolvedEffectResource> resources) {
         auto emitters = std::vector<JpcEffectEmitterInstance>{};
         emitters.reserve(resources.size());
         for (const auto &resource : resources) {
@@ -1659,7 +2133,7 @@ namespace smgpc::compat {
         }
     }
 
-    void EffectService::advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const ResolvedEffectResource &resource,
+    void EffectService::advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const smgpc::render::effects::ResolvedEffectResource &resource,
                                                  std::uint64_t frame_index) {
         constexpr auto MAX_PARTICLES_PER_EMITTER = std::size_t{4096U};
         const auto *metadata = resource.resource;
@@ -1776,7 +2250,7 @@ namespace smgpc::compat {
         }
     }
 
-    render::TextureHandle EffectService::texture_handle_for(render::IRendererEngine &renderer, const JpcTextureMetadata &texture) {
+    render::TextureHandle EffectService::texture_handle_for(render::IRendererEngine &renderer, const smgpc::render::effects::JpcTextureMetadata &texture) {
         if (const auto it = _texture_handles.find(texture.index); it != _texture_handles.end() && it->second.is_valid()) {
             return it->second;
         }
@@ -1882,8 +2356,61 @@ namespace smgpc::compat {
         return frame_count < 0 ? 30 : frame_count;
     }
 
+    void ImageEffectService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
+    }
+
+    void ImageEffectService::force_off() {
+        _forced_off = true;
+        _control_auto = false;
+        push_event(ImageEffectControlKind::ForceOff);
+    }
+
+    void ImageEffectService::set_control_auto() {
+        _forced_off = false;
+        _control_auto = true;
+        push_event(ImageEffectControlKind::ControlAuto);
+    }
+
+    bool ImageEffectService::is_forced_off() const {
+        return _forced_off;
+    }
+
+    bool ImageEffectService::is_control_auto() const {
+        return _control_auto;
+    }
+
+    std::span<const ImageEffectControlEvent> ImageEffectService::events() const {
+        return _events;
+    }
+
+    void ImageEffectService::push_event(ImageEffectControlKind kind) {
+        _events.push_back(ImageEffectControlEvent{
+            .kind = kind,
+            .frame_index = _frame_index,
+        });
+    }
+
     void StarPointerService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
+    }
+
+    void StarPointerService::register_target(const LiveActor &actor, float radius, const smgpc::camera::CameraParamVec3 &offset) {
+        _targets[&actor] = StarPointerTargetState{
+            .actor = &actor,
+            .radius = radius,
+            .offset = offset,
+        };
+    }
+
+    void StarPointerService::unregister_target(const LiveActor &actor) {
+        _targets.erase(&actor);
+    }
+
+    void StarPointerService::set_target_radius(const LiveActor &actor, float radius) {
+        if (auto iter = _targets.find(&actor); iter != _targets.end()) {
+            iter->second.radius = radius;
+        }
     }
 
     void StarPointerService::start_mode(StarPointerMode mode) {
@@ -1902,32 +2429,105 @@ namespace smgpc::compat {
         _guidance_active = active;
     }
 
-    void StarPointerService::request_file_select_guidance() {
-        _file_select_guidance_requested = true;
-    }
+    void StarPointerService::request_guidance(StarPointerGuidanceRequest request) {
+        if (request == StarPointerGuidanceRequest::None) {
+            return;
+        }
 
-    void StarPointerService::request_file_select_copy_guidance() {
-        _file_select_copy_guidance_requested = true;
+        if (std::find(_guidance_requests.begin(), _guidance_requests.end(), request) == _guidance_requests.end()) {
+            _guidance_requests.push_back(request);
+        }
     }
 
     StarPointerMode StarPointerService::mode() const {
         return _mode;
     }
 
+    bool StarPointerService::has_target(const LiveActor &actor) const {
+        return _targets.contains(&actor);
+    }
+
+    bool StarPointerService::is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<smgpc::camera::CameraPose> &camera_pose, bool check_z) {
+        const auto iter = _targets.find(&actor);
+        if (iter == _targets.end()) {
+            return false;
+        }
+
+        auto &target = iter->second;
+        auto pointer = wpad.pointer(WPAD_CHAN0);
+        auto projection = std::optional<StarPointerProjection>{};
+        auto pointing = false;
+
+        if (!actor.isDead() && camera_pose.has_value() && pointer.valid) {
+            projection = project_star_pointer_target(target, *camera_pose, check_z);
+            if (projection.has_value()) {
+                const auto dx = pointer.x - projection->x;
+                const auto dy = pointer.y - projection->y;
+                pointing = (dx * dx) + (dy * dy) <= projection->radius * projection->radius;
+            }
+        }
+
+#ifndef NDEBUG
+        record_target_pointing_sample(target, pointing, pointer, projection.has_value(), projection.has_value() ? projection->x : 0.0F,
+                                      projection.has_value() ? projection->y : 0.0F, projection.has_value() ? projection->radius : 0.0F,
+                                      check_z, wpad.is_button_triggered(WPAD_CHAN0, WPAD_BUTTON_A));
+#endif
+        return pointing;
+    }
+
     bool StarPointerService::is_guidance_active() const {
         return _guidance_active;
     }
 
-    bool StarPointerService::is_file_select_guidance_requested() const {
-        return _file_select_guidance_requested;
+    bool StarPointerService::is_guidance_requested(StarPointerGuidanceRequest request) const {
+        return std::find(_guidance_requests.begin(), _guidance_requests.end(), request) != _guidance_requests.end();
     }
 
-    bool StarPointerService::is_file_select_copy_guidance_requested() const {
-        return _file_select_copy_guidance_requested;
+    std::span<const StarPointerGuidanceRequest> StarPointerService::guidance_requests() const {
+        return _guidance_requests;
     }
 
     std::span<const StarPointerModeEvent> StarPointerService::mode_events() const {
         return _mode_events;
+    }
+
+#ifndef NDEBUG
+    std::span<const StarPointerTargetEvent> StarPointerService::target_events() const {
+        return _target_events;
+    }
+
+    void StarPointerService::record_target_pointing_sample(StarPointerTargetState &target, bool pointing, const WpadPointerState &pointer,
+                                                           bool has_projection, float target_x, float target_y, float projected_radius,
+                                                           bool check_z, bool select_triggered) {
+        const auto push_event = [&](StarPointerTargetEventKind kind) {
+            _target_events.push_back(StarPointerTargetEvent{
+                .kind = kind,
+                .actor_name = target.actor != nullptr ? target.actor->getName() : "",
+                .frame_index = _frame_index,
+                .channel = WPAD_CHAN0,
+                .pointer_x = pointer.x,
+                .pointer_y = pointer.y,
+                .target_x = has_projection ? target_x : 0.0F,
+                .target_y = has_projection ? target_y : 0.0F,
+                .projected_radius = has_projection ? projected_radius : 0.0F,
+                .check_z = check_z,
+            });
+        };
+
+        if (pointing != target.was_pointing) {
+            push_event(pointing ? StarPointerTargetEventKind::Enter : StarPointerTargetEventKind::Leave);
+            target.was_pointing = pointing;
+        }
+
+        if (pointing && select_triggered && target.last_select_frame_index != _frame_index) {
+            push_event(StarPointerTargetEventKind::Select);
+            target.last_select_frame_index = _frame_index;
+        }
+    }
+#endif
+
+    void CameraSystemService::begin_frame(std::uint64_t frame_index) {
+        _frame_index = frame_index;
     }
 
     void CameraSystemService::reset_camera_man() {
@@ -1936,6 +2536,7 @@ namespace smgpc::compat {
 
     void CameraSystemService::request_normal_shake() {
         ++_normal_shake_request_count;
+        push_shake_event(ShakeRequestKind::Normal);
     }
 
     void CameraSystemService::pause_on_camera_director() {
@@ -1946,6 +2547,78 @@ namespace smgpc::compat {
         if (_camera_director_pause_count > 0U) {
             --_camera_director_pause_count;
         }
+    }
+
+    void CameraSystemService::declare_event_camera_programmable(std::string_view name) {
+        if (name.empty()) {
+            return;
+        }
+
+        auto &event = _programmable_camera_events[std::string(name)];
+        event.declared = true;
+        ++_programmable_camera_declare_count;
+    }
+
+    void CameraSystemService::start_global_event_camera_no_target(std::string_view name) {
+        if (name.empty()) {
+            return;
+        }
+
+        if (auto *event = find_programmable_event(_active_programmable_camera_name)) {
+            event->active = false;
+        }
+
+        auto &event = _programmable_camera_events[std::string(name)];
+        event.declared = true;
+        event.active = true;
+        _active_programmable_camera_name = std::string(name);
+        ++_programmable_camera_start_count;
+    }
+
+    void CameraSystemService::end_global_event_camera(std::string_view name) {
+        if (name.empty()) {
+            return;
+        }
+
+        if (auto *event = find_programmable_event(name)) {
+            event->active = false;
+        }
+        if (_active_programmable_camera_name == name) {
+            _active_programmable_camera_name.clear();
+        }
+        ++_programmable_camera_end_count;
+    }
+
+    std::optional<smgpc::camera::CameraPose> CameraSystemService::set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
+                                                                                       const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
+                                                                                       bool do_zero_w_offset) {
+        (void)do_zero_w_offset;
+        if (name.empty()) {
+            return std::nullopt;
+        }
+
+        auto &event = _programmable_camera_events[std::string(name)];
+        event.declared = true;
+        event.pose.eye = eye;
+        event.pose.watch = watch;
+        event.pose.up = up;
+        event.has_pose = true;
+        ++_programmable_camera_param_count;
+
+        return active_programmable_camera_pose_for(name);
+    }
+
+    std::optional<smgpc::camera::CameraPose> CameraSystemService::set_programmable_camera_fovy(std::string_view name, float fovy_degrees) {
+        if (name.empty()) {
+            return std::nullopt;
+        }
+
+        auto &event = _programmable_camera_events[std::string(name)];
+        event.declared = true;
+        event.pose.fovy_degrees = fovy_degrees;
+        ++_programmable_camera_fovy_count;
+
+        return active_programmable_camera_pose_for(name);
     }
 
     std::uint32_t CameraSystemService::reset_camera_man_count() const {
@@ -1962,6 +2635,72 @@ namespace smgpc::compat {
 
     bool CameraSystemService::is_camera_director_paused() const {
         return _camera_director_pause_count > 0U;
+    }
+
+    std::optional<smgpc::camera::CameraPose> CameraSystemService::active_programmable_camera_pose() const {
+        return active_programmable_camera_pose_for(_active_programmable_camera_name);
+    }
+
+    std::optional<std::string_view> CameraSystemService::active_programmable_camera_name() const {
+        if (_active_programmable_camera_name.empty()) {
+            return std::nullopt;
+        }
+
+        return std::string_view(_active_programmable_camera_name);
+    }
+
+    std::uint32_t CameraSystemService::programmable_camera_declare_count() const {
+        return _programmable_camera_declare_count;
+    }
+
+    std::uint32_t CameraSystemService::programmable_camera_start_count() const {
+        return _programmable_camera_start_count;
+    }
+
+    std::uint32_t CameraSystemService::programmable_camera_end_count() const {
+        return _programmable_camera_end_count;
+    }
+
+    std::uint32_t CameraSystemService::programmable_camera_param_count() const {
+        return _programmable_camera_param_count;
+    }
+
+    std::uint32_t CameraSystemService::programmable_camera_fovy_count() const {
+        return _programmable_camera_fovy_count;
+    }
+
+    std::span<const CameraSystemService::ShakeRequestEvent> CameraSystemService::shake_request_events() const {
+        return _shake_request_events;
+    }
+
+    void CameraSystemService::push_shake_event(ShakeRequestKind kind) {
+        _shake_request_events.push_back(ShakeRequestEvent{
+            .kind = kind,
+            .frame_index = _frame_index,
+        });
+    }
+
+    CameraSystemService::ProgrammableCameraEventState *CameraSystemService::find_programmable_event(std::string_view name) {
+        const auto it = _programmable_camera_events.find(std::string(name));
+        return it == _programmable_camera_events.end() ? nullptr : &it->second;
+    }
+
+    const CameraSystemService::ProgrammableCameraEventState *CameraSystemService::find_programmable_event(std::string_view name) const {
+        const auto it = _programmable_camera_events.find(std::string(name));
+        return it == _programmable_camera_events.end() ? nullptr : &it->second;
+    }
+
+    std::optional<smgpc::camera::CameraPose> CameraSystemService::active_programmable_camera_pose_for(std::string_view name) const {
+        if (name.empty() || _active_programmable_camera_name != name) {
+            return std::nullopt;
+        }
+
+        const auto *event = find_programmable_event(name);
+        if (event == nullptr || !event->active || !event->has_pose) {
+            return std::nullopt;
+        }
+
+        return event->pose;
     }
 
     void PlayerSystemService::hide_player() {
@@ -2023,6 +2762,10 @@ namespace smgpc::compat {
         push_event(RumbleRequestKind::Strong, channel);
     }
 
+    void RumbleService::request_middle(s32 channel) {
+        push_event(RumbleRequestKind::Middle, channel);
+    }
+
     void RumbleService::request_weak(s32 channel) {
         push_event(RumbleRequestKind::Weak, channel);
     }
@@ -2063,17 +2806,243 @@ namespace smgpc::compat {
         return _events;
     }
 
+    std::string NandFileSystemService::title_data_root() {
+        return "/title/00010000/524d474b/data";
+    }
+
+    std::string NandFileSystemService::rfl_db_path() {
+        return "/shared2/menu/FaceLib/RFL_DB.dat";
+    }
+
+    std::string NandFileSystemService::file_name(std::string_view path) {
+        auto text = std::string(path);
+        while (!text.empty() && text.back() == '/') {
+            text.pop_back();
+        }
+        const auto slash = text.find_last_of('/');
+        return slash == std::string::npos ? text : text.substr(slash + 1U);
+    }
+
+    std::string NandFileSystemService::normalize_path(std::string_view path) const {
+        auto text = std::string(path);
+        std::replace(text.begin(), text.end(), '\\', '/');
+        if (text.empty()) {
+            text = title_data_root();
+        } else if (text.front() != '/') {
+            text = title_data_root() + "/" + text;
+        }
+
+        auto parts = std::vector<std::string>{};
+        auto offset = std::size_t{};
+        while (offset <= text.size()) {
+            const auto slash = text.find('/', offset);
+            const auto token = text.substr(offset, slash == std::string::npos ? std::string::npos : slash - offset);
+            if (!token.empty() && token != ".") {
+                if (token == "..") {
+                    if (!parts.empty()) {
+                        parts.pop_back();
+                    }
+                } else {
+                    parts.push_back(token);
+                }
+            }
+            if (slash == std::string::npos) {
+                break;
+            }
+            offset = slash + 1U;
+        }
+
+        auto normalized = std::string{"/"};
+        for (auto index = std::size_t{}; index < parts.size(); ++index) {
+            if (index != 0U) {
+                normalized += '/';
+            }
+            normalized += parts[index];
+        }
+        return normalized;
+    }
+
+    void NandFileSystemService::write_file(std::string_view path, std::span<const std::uint8_t> bytes, u8 permission, u8 attribute) {
+        const auto normalized = normalize_path(path);
+        _files[normalized] = StoredFile{
+            .bytes = std::vector<std::uint8_t>(bytes.begin(), bytes.end()),
+            .permission = permission,
+            .attribute = attribute,
+        };
+        auto trace = NandOperationTrace{};
+        trace.kind = NandOperationKind::Write;
+        trace.path = normalized;
+        trace.result = NAND_RESULT_OK;
+        trace.byte_count = bytes.size();
+        trace.permission = permission;
+        trace.attribute = attribute;
+        push_trace(std::move(trace));
+    }
+
+    std::optional<std::vector<std::uint8_t>> NandFileSystemService::read_file(std::string_view path) const {
+        const auto normalized = normalize_path(path);
+        const auto it = _files.find(normalized);
+        if (it == _files.end()) {
+            auto trace = NandOperationTrace{};
+            trace.kind = NandOperationKind::Read;
+            trace.path = normalized;
+            trace.result = NAND_RESULT_NOEXISTS;
+            push_trace(std::move(trace));
+            return std::nullopt;
+        }
+
+        auto trace = NandOperationTrace{};
+        trace.kind = NandOperationKind::Read;
+        trace.path = normalized;
+        trace.result = NAND_RESULT_OK;
+        trace.byte_count = it->second.bytes.size();
+        trace.permission = it->second.permission;
+        trace.attribute = it->second.attribute;
+        push_trace(std::move(trace));
+        return it->second.bytes;
+    }
+
+    bool NandFileSystemService::exists(std::string_view path) const {
+        return _files.contains(normalize_path(path));
+    }
+
+    bool NandFileSystemService::erase(std::string_view path) {
+        const auto normalized = normalize_path(path);
+        const auto erased = _files.erase(normalized) != 0U;
+        auto trace = NandOperationTrace{};
+        trace.kind = NandOperationKind::Delete;
+        trace.path = normalized;
+        trace.result = erased ? NAND_RESULT_OK : NAND_RESULT_NOEXISTS;
+        push_trace(std::move(trace));
+        return erased;
+    }
+
+    s32 NandFileSystemService::rename(std::string_view source_path, std::string_view destination_path) {
+        const auto source = normalize_path(source_path);
+        const auto destination = normalize_path(destination_path);
+        auto node = _files.extract(source);
+        if (node.empty()) {
+            auto trace = NandOperationTrace{};
+            trace.kind = NandOperationKind::Rename;
+            trace.path = source;
+            trace.destination_path = destination;
+            trace.result = NAND_RESULT_NOEXISTS;
+            push_trace(std::move(trace));
+            return NAND_RESULT_NOEXISTS;
+        }
+
+        node.key() = destination;
+        const auto byte_count = node.mapped().bytes.size();
+        _files.insert(std::move(node));
+        auto trace = NandOperationTrace{};
+        trace.kind = NandOperationKind::Rename;
+        trace.path = source;
+        trace.destination_path = destination;
+        trace.result = NAND_RESULT_OK;
+        trace.byte_count = byte_count;
+        push_trace(std::move(trace));
+        return NAND_RESULT_OK;
+    }
+
+    NandCheckResult NandFileSystemService::check(u32 requested_blocks, u32 requested_inodes) {
+        const auto blocks = used_blocks();
+        const auto inodes = used_inodes();
+        const auto free_blocks = blocks >= _quota_blocks ? 0U : _quota_blocks - blocks;
+        const auto free_inodes = inodes >= _quota_inodes ? 0U : _quota_inodes - inodes;
+        const auto result = requested_blocks > free_blocks ? NAND_RESULT_MAXBLOCKS : requested_inodes > free_inodes ? NAND_RESULT_MAXFILES :
+                                                                                                                      NAND_RESULT_OK;
+        auto trace = NandOperationTrace{};
+        trace.kind = NandOperationKind::Check;
+        trace.result = result;
+        trace.requested_blocks = requested_blocks;
+        trace.requested_inodes = requested_inodes;
+        trace.free_blocks = free_blocks;
+        trace.free_inodes = free_inodes;
+        push_trace(std::move(trace));
+        return NandCheckResult{
+            .result = result,
+            .free_blocks = free_blocks,
+            .free_inodes = free_inodes,
+        };
+    }
+
+    std::optional<NandFileMetadata> NandFileSystemService::metadata(std::string_view path) const {
+        const auto normalized = normalize_path(path);
+        const auto it = _files.find(normalized);
+        if (it == _files.end()) {
+            return std::nullopt;
+        }
+
+        return NandFileMetadata{
+            .path = normalized,
+            .permission = it->second.permission,
+            .attribute = it->second.attribute,
+            .size = it->second.bytes.size(),
+        };
+    }
+
+    std::span<const NandOperationTrace> NandFileSystemService::trace() const {
+        return _trace;
+    }
+
+    void NandFileSystemService::clear() {
+        _files.clear();
+        clear_trace();
+    }
+
+    void NandFileSystemService::clear_trace() {
+        _trace.clear();
+    }
+
+    void NandFileSystemService::push_trace(NandOperationTrace trace) const {
+        _trace.push_back(std::move(trace));
+    }
+
+    u32 NandFileSystemService::used_blocks() const {
+        auto blocks = u32{};
+        for (const auto &[_, file] : _files) {
+            blocks += static_cast<u32>((file.bytes.size() + 0x3FFFU) / 0x4000U);
+        }
+        return blocks;
+    }
+
+    u32 NandFileSystemService::used_inodes() const {
+        return static_cast<u32>(_files.size());
+    }
+
     SaveDataService::SaveDataService() {
         for (auto slot_index = s32{1}; slot_index <= 6; ++slot_index) {
-            auto state = SlotState{};
+            auto state = SaveDataService::SlotState{};
             state.slot_index = slot_index;
             _slot_states.push_back(std::move(state));
         }
     }
 
+    SaveDataService::SaveDataService(SysConfigService &sys_config) : SaveDataService() {
+        set_sys_config_service(sys_config);
+    }
+
+    void SaveDataService::set_sys_config_service(SysConfigService &sys_config) {
+        sys_config.set_time_announced(_sys_config->time_announced());
+        sys_config.set_time_sent(_sys_config->time_sent());
+        sys_config.set_sent_bytes(_sys_config->sent_bytes());
+        _sys_config = &sys_config;
+    }
+
+    SysConfigService &SaveDataService::sys_config() {
+        return *_sys_config;
+    }
+
+    const SysConfigService &SaveDataService::sys_config() const {
+        return *_sys_config;
+    }
+
     void SaveDataService::write_file(std::string_view name, std::span<const std::uint8_t> bytes) {
         const auto key = std::string(name);
         _files[key] = std::vector<std::uint8_t>(bytes.begin(), bytes.end());
+        if (name == "sysconf") {
+            _sys_config->decode_save_data_binary(bytes);
+        }
         if (name == SAVE_DATA_CONTAINER_NAME) {
             if (const auto decoded = decode_game_data_container(bytes)) {
                 for (auto &[decoded_name, decoded_bytes] : *decoded) {
@@ -2102,35 +3071,52 @@ namespace smgpc::compat {
     }
 
     void SaveDataService::write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes) {
-        if (name == SAVE_DATA_CONTAINER_NAME) {
-            write_file(name, save_data_container_for_wii(bytes));
+        const auto file_name = NandFileSystemService::file_name(_nand.normalize_path(name));
+        const auto wii_bytes = file_name == SAVE_DATA_CONTAINER_NAME ? save_data_container_for_wii(bytes) : std::vector<std::uint8_t>{};
+        const auto payload = file_name == SAVE_DATA_CONTAINER_NAME ? std::span<const std::uint8_t>(wii_bytes.data(), wii_bytes.size()) : bytes;
+        _nand.write_file(name, payload);
+        if (file_name == SAVE_DATA_CONTAINER_NAME) {
+            write_file(file_name, payload);
             return;
         }
 
-        write_file(name, bytes);
+        write_file(file_name, bytes);
     }
 
     std::optional<std::vector<std::uint8_t>> SaveDataService::read_nand_file(std::string_view name) const {
-        auto bytes = read_file(name);
-        if (!bytes.has_value()) {
-            return std::nullopt;
+        const auto file_name = NandFileSystemService::file_name(_nand.normalize_path(name));
+        if (file_name == SAVE_DATA_CONTAINER_NAME) {
+            return save_data_container_for_host(encode_game_data_container(ContainerPayloadShape::GameBinaries));
         }
 
-        if (name == SAVE_DATA_CONTAINER_NAME) {
-            return save_data_container_for_host(*bytes);
+        auto bytes = _nand.read_file(name);
+        if (!bytes.has_value()) {
+            bytes = read_file(file_name);
+            if (!bytes.has_value()) {
+                return std::nullopt;
+            }
         }
 
         return bytes;
     }
 
+    NandFileSystemService &SaveDataService::nand() {
+        return _nand;
+    }
+
+    const NandFileSystemService &SaveDataService::nand() const {
+        return _nand;
+    }
+
     bool SaveDataService::exists(std::string_view name) const {
-        return _files.contains(std::string(name));
+        return _files.contains(std::string(name)) || _nand.exists(name);
     }
 
     bool SaveDataService::erase(std::string_view name) {
         const auto erased = _files.erase(std::string(name)) != 0U;
+        const auto nand_erased = _nand.erase(name);
         erase_host_file(name);
-        return erased;
+        return erased || nand_erased;
     }
 
     std::size_t SaveDataService::file_count() const {
@@ -2158,6 +3144,7 @@ namespace smgpc::compat {
         }
 
         _files.clear();
+        _nand.clear();
         _has_valid_game_data_container = false;
         for (const auto &entry : std::filesystem::recursive_directory_iterator(*_host_directory, error)) {
             if (error) {
@@ -2171,7 +3158,10 @@ namespace smgpc::compat {
             if (error || relative.empty()) {
                 continue;
             }
-            _files[relative.generic_string()] = read_binary_file(entry.path());
+            const auto relative_name = relative.generic_string();
+            auto bytes = read_binary_file(entry.path());
+            _nand.write_file(relative_name, bytes);
+            _files[relative_name] = std::move(bytes);
         }
 
         if (const auto container = read_file(SAVE_DATA_CONTAINER_NAME)) {
@@ -2216,16 +3206,16 @@ namespace smgpc::compat {
             return *state;
         }
 
-        auto state = SlotState{};
+        auto state = SaveDataService::SlotState{};
         state.slot_index = slot_index;
         return state;
     }
 
-    void SaveDataService::set_slot_state(s32 slot_index, const SlotState &state) {
+    void SaveDataService::set_slot_state(s32 slot_index, const SaveDataService::SlotState &state) {
         set_slot_state_internal(slot_index, state, true);
     }
 
-    void SaveDataService::set_slot_state_internal(s32 slot_index, const SlotState &state, bool materialize_files) {
+    void SaveDataService::set_slot_state_internal(s32 slot_index, const SaveDataService::SlotState &state, bool materialize_files) {
         auto slot_state = state;
         slot_state.slot_index = slot_index;
 
@@ -2236,13 +3226,13 @@ namespace smgpc::compat {
             _slot_states.push_back(slot_state);
         }
 
-        std::ranges::sort(_slot_states, {}, &SlotState::slot_index);
+        std::ranges::sort(_slot_states, {}, &SaveDataService::SlotState::slot_index);
         if (materialize_files) {
             materialize_slot_files(slot_state);
         }
     }
 
-    void SaveDataService::materialize_slot_files(const SlotState &state) {
+    void SaveDataService::materialize_slot_files(const SaveDataService::SlotState &state) {
         if (state.slot_index < 1 || state.slot_index > 6) {
             return;
         }
@@ -2304,35 +3294,35 @@ namespace smgpc::compat {
     }
 
     void SaveDataService::set_sys_config_time_announced(OSTime time) {
-        _sys_config_time_announced = time;
+        _sys_config->set_time_announced(time);
         write_sys_config_file();
     }
 
     void SaveDataService::update_sys_config_time_announced() {
-        _sys_config_time_announced = OSGetTime();
+        _sys_config->set_time_announced(OSGetTime());
         write_sys_config_file();
     }
 
     OSTime SaveDataService::sys_config_time_announced() const {
-        return _sys_config_time_announced;
+        return _sys_config->time_announced();
     }
 
     void SaveDataService::set_sys_config_time_sent(OSTime time) {
-        _sys_config_time_sent = time;
+        _sys_config->set_time_sent(time);
         write_sys_config_file();
     }
 
     OSTime SaveDataService::sys_config_time_sent() const {
-        return _sys_config_time_sent;
+        return _sys_config->time_sent();
     }
 
     void SaveDataService::set_sys_config_sent_bytes(u32 bytes) {
-        _sys_config_sent_bytes = bytes;
+        _sys_config->set_sent_bytes(bytes);
         write_sys_config_file();
     }
 
     u32 SaveDataService::sys_config_sent_bytes() const {
-        return _sys_config_sent_bytes;
+        return _sys_config->sent_bytes();
     }
 
     std::filesystem::path SaveDataService::host_file_path(std::string_view name) const {
@@ -2422,7 +3412,7 @@ namespace smgpc::compat {
         return decode_with_byte_order(SaveDataByteOrder::LittleEndian);
     }
 
-    std::vector<std::uint8_t> SaveDataService::encode_game_data_container() const {
+    std::vector<std::uint8_t> SaveDataService::encode_game_data_container(ContainerPayloadShape payload_shape) const {
         auto names = std::vector<std::string>{};
         append_save_data_file_names(names);
 
@@ -2445,8 +3435,22 @@ namespace smgpc::compat {
             std::memcpy(bytes.data() + info_offset, name.data(), copied_name_size);
             write_save_u32(bytes, info_offset + SAVE_DATA_FILE_NAME_SIZE, data_offset);
 
-            if (const auto file = read_file(name)) {
-                std::memcpy(bytes.data() + data_offset, file->data(), std::min(file_size, file->size()));
+            auto file_bytes = std::vector<std::uint8_t>{};
+            if (name.starts_with("config")) {
+                auto state = slot_state_or_default(static_cast<s32>(name.back() - '0'));
+                file_bytes = payload_shape == ContainerPayloadShape::SourceChunks ? encode_config_slot_chunks(state) : encode_config_slot_binary(state);
+            } else if (name.starts_with("mario") || name.starts_with("luigi")) {
+                auto state = slot_state_or_default(static_cast<s32>(name.back() - '0'));
+                file_bytes =
+                    payload_shape == ContainerPayloadShape::SourceChunks ? encode_game_slot_chunks(state) : encode_game_slot_binary(state, name.starts_with("mario"));
+            } else if (name == "sysconf") {
+                file_bytes = _sys_config->encode_save_data_binary(SAVE_DATA_SYSTEM_FILE_SIZE);
+            } else if (const auto file = read_file(name)) {
+                file_bytes = *file;
+            }
+
+            if (!file_bytes.empty()) {
+                std::memcpy(bytes.data() + data_offset, file_bytes.data(), std::min(file_size, file_bytes.size()));
             }
 
             data_offset += static_cast<std::uint32_t>(file_size);
@@ -2458,17 +3462,28 @@ namespace smgpc::compat {
 
     void SaveDataService::load_slot_states_from_files() {
         for (auto slot_index = s32{1}; slot_index <= 6; ++slot_index) {
-            auto file = UserFile();
+            auto state = slot_state_or_default(slot_index);
             const auto config_name = original_config_name(slot_index);
             const auto config_bytes = read_file(config_name);
+            const auto decoded_config = config_bytes.has_value() && decode_config_slot_chunks(*config_bytes, state);
+            const auto game_name = original_game_name(slot_index, state.last_loaded_mario);
+            const auto game_bytes = read_file(game_name);
+            const auto decoded_game = game_bytes.has_value() && decode_game_slot_chunks(*game_bytes, state);
+            if (decoded_config || decoded_game) {
+                set_slot_state_internal(slot_index, state, false);
+                materialize_slot_files(state);
+                continue;
+            }
+
+            auto file = UserFile();
             file.loadFromConfigDataBinary(config_name.c_str(), config_bytes.has_value() ? config_bytes->data() : nullptr,
                                           config_bytes.has_value() ? static_cast<u32>(config_bytes->size()) : 0U);
 
             const auto is_player_mario = file.isLastLoadedMario();
-            const auto game_name = original_game_name(slot_index, is_player_mario);
-            const auto game_bytes = read_file(game_name);
-            file.loadFromGameDataBinary(game_name.c_str(), game_bytes.has_value() ? game_bytes->data() : nullptr,
-                                        game_bytes.has_value() ? static_cast<u32>(game_bytes->size()) : 0U);
+            const auto fallback_game_name = original_game_name(slot_index, is_player_mario);
+            const auto fallback_game_bytes = read_file(fallback_game_name);
+            file.loadFromGameDataBinary(fallback_game_name.c_str(), fallback_game_bytes.has_value() ? fallback_game_bytes->data() : nullptr,
+                                        fallback_game_bytes.has_value() ? static_cast<u32>(fallback_game_bytes->size()) : 0U);
             file.mIsPlayerMario = is_player_mario;
             set_slot_state_internal(slot_index, file.makeSaveDataServiceSlot(slot_index), false);
         }
@@ -2480,11 +3495,7 @@ namespace smgpc::compat {
             return;
         }
 
-        auto sys_config = SysConfigFile();
-        sys_config.loadFromDataBinary(sys_config_bytes->data(), static_cast<u32>(sys_config_bytes->size()));
-        _sys_config_time_announced = sys_config.getTimeAnnounced();
-        _sys_config_time_sent = sys_config.getTimeSent();
-        _sys_config_sent_bytes = sys_config.getSentBytes();
+        _sys_config->decode_save_data_binary(*sys_config_bytes);
     }
 
     void SaveDataService::write_sys_config_file() {
@@ -2492,30 +3503,34 @@ namespace smgpc::compat {
             return;
         }
 
-        auto sys_config = SysConfigFile();
-        sys_config.setTimeAnnounced(_sys_config_time_announced);
-        sys_config.setTimeSent(_sys_config_time_sent);
-        sys_config.setSentBytes(_sys_config_sent_bytes);
-        auto bytes = std::vector<std::uint8_t>(SAVE_DATA_SYSTEM_FILE_SIZE);
-        sys_config.makeDataBinary(bytes.data(), bytes.size());
+        auto bytes = _sys_config->encode_save_data_binary(SAVE_DATA_SYSTEM_FILE_SIZE);
         write_file("sysconf", bytes);
     }
 
     void MessageService::set_message(std::string_view tag, std::string_view text) {
-        set_message(tag, utf16_from_utf8_lossy(text));
+        set_message(tag, smgpc::resource::utf16_from_utf8_lossy(text));
     }
 
     void MessageService::set_message(std::string_view tag, std::u16string_view text) {
         _messages[std::string(tag)] = MessageText{
+            .raw_utf16 = std::u16string(text),
             .utf16 = std::u16string(text),
-            .utf8 = utf8_from_utf16_lossy(text),
+            .utf8 = smgpc::resource::utf8_from_utf16_lossy(text),
+            .info = {},
+            .control_tags = {},
         };
     }
 
-    std::size_t MessageService::load_message_archive(const RarcArchive &archive) {
-        const auto messages = BmgMessageArchive::from_message_archive(archive);
+    std::size_t MessageService::load_message_archive(const smgpc::resource::RarcArchive &archive) {
+        const auto messages = smgpc::resource::BmgMessageArchive::from_message_archive(archive);
         for (const auto &message : messages.messages()) {
-            set_message(message.id, message.display_text);
+            _messages[message.id] = MessageText{
+                .raw_utf16 = message.raw_text,
+                .utf16 = message.display_text,
+                .utf8 = smgpc::resource::utf8_from_utf16_lossy(message.display_text),
+                .info = message.info,
+                .control_tags = message.control_tags,
+            };
         }
 
         return messages.message_count();
@@ -2541,6 +3556,30 @@ namespace smgpc::compat {
         return nullptr;
     }
 
+    const std::u16string *MessageService::message_raw_utf16(std::string_view tag) const {
+        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
+            return &it->second.raw_utf16;
+        }
+
+        return nullptr;
+    }
+
+    const smgpc::resource::BmgMessageInfo *MessageService::message_info(std::string_view tag) const {
+        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
+            return &it->second.info;
+        }
+
+        return nullptr;
+    }
+
+    const std::vector<smgpc::resource::BmgControlTag> *MessageService::message_control_tags(std::string_view tag) const {
+        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
+            return &it->second.control_tags;
+        }
+
+        return nullptr;
+    }
+
     std::string MessageService::message_or(std::string_view tag, std::string_view fallback) const {
         const auto *text = message(tag);
         return text == nullptr ? std::string(fallback) : *text;
@@ -2549,6 +3588,26 @@ namespace smgpc::compat {
     std::u16string MessageService::message_utf16_or(std::string_view tag, std::u16string_view fallback) const {
         const auto *text = message_utf16(tag);
         return text == nullptr ? std::u16string(fallback) : *text;
+    }
+
+    std::u16string MessageService::message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const {
+        const auto *text = message_raw_utf16(tag);
+        return text == nullptr ? std::u16string(fallback) : *text;
+    }
+
+    std::u16string MessageService::format_message_utf16(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args) const {
+        const auto *raw_text = message_raw_utf16(tag);
+        if (raw_text == nullptr) {
+            return {};
+        }
+
+        return smgpc::resource::format_bmg_text(*raw_text, args);
+    }
+
+    std::u16string MessageService::format_message_utf16_or(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args,
+                                                           std::u16string_view fallback) const {
+        const auto *raw_text = message_raw_utf16(tag);
+        return raw_text == nullptr ? std::u16string(fallback) : smgpc::resource::format_bmg_text(*raw_text, args);
     }
 
     void SceneLightService::clear() {
@@ -2560,10 +3619,10 @@ namespace smgpc::compat {
             return;
         }
 
-        _lights[index] = GXLightState{};
+        _lights[index] = smgpc::render::GXLightState{};
     }
 
-    void SceneLightService::set_light(std::size_t index, const GXLightState &light) {
+    void SceneLightService::set_light(std::size_t index, const smgpc::render::GXLightState &light) {
         if (index >= _lights.size()) {
             return;
         }
@@ -2572,7 +3631,7 @@ namespace smgpc::compat {
         _lights[index].loaded = true;
     }
 
-    const GXLightState *SceneLightService::light(std::size_t index) const {
+    const smgpc::render::GXLightState *SceneLightService::light(std::size_t index) const {
         if (index >= _lights.size() || !_lights[index].loaded) {
             return nullptr;
         }
@@ -2580,7 +3639,7 @@ namespace smgpc::compat {
         return &_lights[index];
     }
 
-    std::span<const GXLightState> SceneLightService::lights() const {
+    std::span<const smgpc::render::GXLightState> SceneLightService::lights() const {
         return _lights;
     }
 
@@ -2594,37 +3653,4 @@ namespace smgpc::compat {
         return mask;
     }
 
-    RflService::RflService()
-        : _miis{
-              RflMiiEntry{
-                  .index = 0,
-                  .name = "Mario",
-              },
-          } {
-    }
-
-    void RflService::set_initialized(bool initialized) {
-        _initialized = initialized;
-    }
-
-    void RflService::set_error(bool error) {
-        _error = error;
-    }
-
-    void RflService::set_miis(std::vector<RflMiiEntry> miis) {
-        _miis = std::move(miis);
-    }
-
-    bool RflService::is_initialized() const {
-        return _initialized;
-    }
-
-    bool RflService::has_error() const {
-        return _error;
-    }
-
-    std::span<const RflMiiEntry> RflService::valid_miis() const {
-        return _miis;
-    }
-
-}  // namespace smgpc::compat
+}  // namespace smgpc::runtime

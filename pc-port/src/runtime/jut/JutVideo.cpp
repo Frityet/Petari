@@ -2,27 +2,20 @@
 
 #include <memory>
 
-#include "RendererService.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include "runtime/WiiVideoService.hpp"
 
 namespace {
-    [[nodiscard]] GXRenderModeObj default_render_mode() {
-        auto mode = GXRenderModeObj{};
-        mode.fbWidth = smgpc::render::core::kWiiLogicalFramebufferWidth;
-        mode.efbHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;
-        mode.xfbHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;
-        mode.viWidth = smgpc::render::core::kWiiLogicalFramebufferWidth;
-        mode.viHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;
-        mode.vfilter[0U] = 0U;
-        mode.vfilter[1U] = 0U;
-        mode.vfilter[2U] = 21U;
-        mode.vfilter[3U] = 22U;
-        mode.vfilter[4U] = 21U;
-        mode.vfilter[5U] = 0U;
-        mode.vfilter[6U] = 0U;
-        return mode;
-    }
-
     std::unique_ptr<JUTVideo> s_manager;
+
+    smgpc::runtime::WiiVideoService &active_video_service() {
+        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
+            return runtime->wii_video();
+        }
+
+        static auto fallback = smgpc::runtime::WiiVideoService();
+        return fallback;
+    }
 }  // namespace
 
 JUTVideo::JUTVideo(const GXRenderModeObj *render_mode) {
@@ -41,26 +34,31 @@ void JUTVideo::destroyManager() {
 }
 
 void JUTVideo::drawDoneStart() {
+    active_video_service().draw_done_start();
 }
 
 void JUTVideo::dummyNoDrawWait() {
+    active_video_service().dummy_no_draw_wait();
 }
 
 void JUTVideo::setRenderMode(const GXRenderModeObj *render_mode) {
-    mRenderObjStorage = render_mode != nullptr ? *render_mode : default_render_mode();
-    mRenderObj = &mRenderObjStorage;
+    active_video_service().configure(render_mode);
 }
 
 void JUTVideo::waitRetraceIfNeed() {
+    active_video_service().wait_for_retrace();
 }
 
 void JUTVideo::preRetraceProc(u32) {
+    active_video_service().pre_retrace_proc(VIGetRetraceCount());
 }
 
 void JUTVideo::postRetraceProc(u32) {
+    active_video_service().post_retrace_proc(VIGetRetraceCount());
 }
 
 void JUTVideo::drawDoneCallback() {
+    active_video_service().draw_done_callback();
 }
 
 JUTVideo *JUTVideo::getManager() {
@@ -69,4 +67,8 @@ JUTVideo *JUTVideo::getManager() {
     }
 
     return s_manager.get();
+}
+
+GXRenderModeObj *JUTVideo::getRenderMode() const {
+    return &active_video_service().render_mode();
 }

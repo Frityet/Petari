@@ -15,7 +15,7 @@
 #include "TraceStore.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::runtime {
     namespace {
 
         using dump::Json;
@@ -220,71 +220,71 @@ namespace smgpc::compat {
             return "unknown_sequence_request";
         }
 
-        [[nodiscard]] const char *j3d_packet_mode_name(J3dRendererPacketMode mode) {
+        [[nodiscard]] const char *j3d_packet_mode_name(smgpc::render::J3dRendererPacketMode mode) {
             switch (mode) {
-            case J3dRendererPacketMode::ConstantBackdrop:
+            case smgpc::render::J3dRendererPacketMode::ConstantBackdrop:
                 return "ConstantBackdrop";
-            case J3dRendererPacketMode::ConstantMaterial:
+            case smgpc::render::J3dRendererPacketMode::ConstantMaterial:
                 return "ConstantMaterial";
-            case J3dRendererPacketMode::ComposedMaterial:
+            case smgpc::render::J3dRendererPacketMode::ComposedMaterial:
                 return "ComposedMaterial";
-            case J3dRendererPacketMode::CpuTevPerVertex:
+            case smgpc::render::J3dRendererPacketMode::CpuTevPerVertex:
                 return "CpuTevPerVertex";
-            case J3dRendererPacketMode::ShaderGxTev:
+            case smgpc::render::J3dRendererPacketMode::ShaderGxTev:
                 return "ShaderGxTev";
-            case J3dRendererPacketMode::TexturePass:
+            case smgpc::render::J3dRendererPacketMode::TexturePass:
                 return "TexturePass";
             }
 
             return "Unknown";
         }
 
-        [[nodiscard]] const char *texture_format_name(TplTextureFormat format) {
+        [[nodiscard]] const char *texture_format_name(smgpc::resource::TplTextureFormat format) {
             switch (format) {
-            case TplTextureFormat::I4:
+            case smgpc::resource::TplTextureFormat::I4:
                 return "I4";
-            case TplTextureFormat::I8:
+            case smgpc::resource::TplTextureFormat::I8:
                 return "I8";
-            case TplTextureFormat::IA4:
+            case smgpc::resource::TplTextureFormat::IA4:
                 return "IA4";
-            case TplTextureFormat::IA8:
+            case smgpc::resource::TplTextureFormat::IA8:
                 return "IA8";
-            case TplTextureFormat::RGB565:
+            case smgpc::resource::TplTextureFormat::RGB565:
                 return "RGB565";
-            case TplTextureFormat::RGB5A3:
+            case smgpc::resource::TplTextureFormat::RGB5A3:
                 return "RGB5A3";
-            case TplTextureFormat::RGBA8:
+            case smgpc::resource::TplTextureFormat::RGBA8:
                 return "RGBA8";
-            case TplTextureFormat::C4:
+            case smgpc::resource::TplTextureFormat::C4:
                 return "C4";
-            case TplTextureFormat::C8:
+            case smgpc::resource::TplTextureFormat::C8:
                 return "C8";
-            case TplTextureFormat::C14X2:
+            case smgpc::resource::TplTextureFormat::C14X2:
                 return "C14X2";
-            case TplTextureFormat::CMPR:
+            case smgpc::resource::TplTextureFormat::CMPR:
                 return "CMPR";
             }
 
             return "Unknown";
         }
 
-        [[nodiscard]] const char *register_space_name(GXRegisterSpace space) {
+        [[nodiscard]] const char *register_space_name(smgpc::render::GXRegisterSpace space) {
             switch (space) {
-            case GXRegisterSpace::BP:
+            case smgpc::render::GXRegisterSpace::BP:
                 return "BP";
-            case GXRegisterSpace::CP:
+            case smgpc::render::GXRegisterSpace::CP:
                 return "CP";
-            case GXRegisterSpace::XF:
+            case smgpc::render::GXRegisterSpace::XF:
                 return "XF";
-            case GXRegisterSpace::IndexedA:
+            case smgpc::render::GXRegisterSpace::IndexedA:
                 return "IndexedA";
-            case GXRegisterSpace::IndexedB:
+            case smgpc::render::GXRegisterSpace::IndexedB:
                 return "IndexedB";
-            case GXRegisterSpace::IndexedC:
+            case smgpc::render::GXRegisterSpace::IndexedC:
                 return "IndexedC";
-            case GXRegisterSpace::IndexedD:
+            case smgpc::render::GXRegisterSpace::IndexedD:
                 return "IndexedD";
-            case GXRegisterSpace::Unknown:
+            case smgpc::render::GXRegisterSpace::Unknown:
                 return "Unknown";
             }
 
@@ -342,11 +342,11 @@ namespace smgpc::compat {
             return "Unknown";
         }
 
-        [[nodiscard]] Json vec3_json(const CameraParamVec3 &value) {
+        [[nodiscard]] Json vec3_json(const smgpc::camera::CameraParamVec3 &value) {
             return Json{{"x", value.x}, {"y", value.y}, {"z", value.z}};
         }
 
-        [[nodiscard]] Json camera_pose_json(const CameraPoseCompat &pose) {
+        [[nodiscard]] Json camera_pose_json(const smgpc::camera::CameraPose &pose) {
             return Json{
                 {"eye", vec3_json(pose.eye)},
                 {"watch", vec3_json(pose.watch)},
@@ -358,7 +358,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json color_json(const GXColorValue &color) {
+        [[nodiscard]] Json color_json(const smgpc::render::GXColorValue &color) {
             return Json::array({color[0U], color[1U], color[2U], color[3U]});
         }
 
@@ -999,7 +999,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json effect_texture_metadata_json(const JpcTextureMetadata &texture) {
+        [[nodiscard]] Json effect_texture_metadata_json(const smgpc::render::effects::JpcTextureMetadata &texture) {
             return Json{
                 {"index", texture.index},
                 {"name", texture.name},
@@ -1014,7 +1014,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json effect_texture_metadata_json(std::span<const JpcTextureMetadata> textures) {
+        [[nodiscard]] Json effect_texture_metadata_json(std::span<const smgpc::render::effects::JpcTextureMetadata> textures) {
             auto out = Json::array();
             for (const auto &texture : textures) {
                 out.push_back(effect_texture_metadata_json(texture));
@@ -1022,7 +1022,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json effect_resource_block_tags_json(const JpcResourceMetadata *resource) {
+        [[nodiscard]] Json effect_resource_block_tags_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
             auto out = Json::array();
             if (resource == nullptr) {
                 return out;
@@ -1033,7 +1033,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json effect_dynamics_json(const JpcResourceMetadata *resource) {
+        [[nodiscard]] Json effect_dynamics_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
             if (resource == nullptr || !resource->dynamics.has_value()) {
                 return nullptr;
             }
@@ -1059,7 +1059,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json effect_base_shape_json(const JpcResourceMetadata *resource) {
+        [[nodiscard]] Json effect_base_shape_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
             if (resource == nullptr || !resource->base_shape.has_value()) {
                 return nullptr;
             }
@@ -1087,7 +1087,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json effect_child_shape_json(const JpcResourceMetadata *resource) {
+        [[nodiscard]] Json effect_child_shape_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
             if (resource == nullptr || !resource->child_shape.has_value()) {
                 return nullptr;
             }
@@ -1120,7 +1120,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json effect_key_blocks_json(const JpcResourceMetadata *resource) {
+        [[nodiscard]] Json effect_key_blocks_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
             auto out = Json::array();
             if (resource == nullptr) {
                 return out;
@@ -1146,7 +1146,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json resolved_effect_resources_json(std::span<const ResolvedEffectResource> resources) {
+        [[nodiscard]] Json resolved_effect_resources_json(std::span<const smgpc::render::effects::ResolvedEffectResource> resources) {
             auto out = Json::array();
             for (const auto &resource : resources) {
                 out.push_back(Json{
@@ -1432,10 +1432,93 @@ namespace smgpc::compat {
                 out.push_back(Json{
                     {"index", i},
                     {"rfl_index", entry.index},
+                    {"source", static_cast<int>(entry.source)},
                     {"name", entry.name},
+                    {"creator", entry.creator},
+                    {"favorite", entry.favorite},
                 });
             }
             return out;
+        }
+
+        [[nodiscard]] std::string_view rfl_operation_kind_name(RflOperationKind kind) {
+            switch (kind) {
+            case RflOperationKind::LoadBegin:
+                return "load_begin";
+            case RflOperationKind::LoadComplete:
+                return "load_complete";
+            case RflOperationKind::LoadFailed:
+                return "load_failed";
+            case RflOperationKind::Persist:
+                return "persist";
+            case RflOperationKind::AdditionalInfo:
+                return "additional_info";
+            case RflOperationKind::SearchOfficial:
+                return "search_official";
+            case RflOperationKind::CheckAvailable:
+                return "check_available";
+            case RflOperationKind::InitResource:
+                return "init_resource";
+            case RflOperationKind::InitCharModel:
+                return "init_char_model";
+            case RflOperationKind::SetExpression:
+                return "set_expression";
+            case RflOperationKind::MakeIcon:
+                return "make_icon";
+            case RflOperationKind::DrawModel:
+                return "draw_model";
+            case RflOperationKind::MiiSelectPage:
+                return "mii_select_page";
+            }
+            return "unknown";
+        }
+
+        [[nodiscard]] Json rfl_trace_json(std::span<const RflOperationTrace> entries) {
+            auto out = Json::array();
+            for (auto i = std::size_t{}; i < entries.size(); ++i) {
+                const auto &entry = entries[i];
+                out.push_back(Json{
+                    {"index", i},
+                    {"kind", std::string(rfl_operation_kind_name(entry.kind))},
+                    {"frame_index", entry.frame_index},
+                    {"path", entry.path},
+                    {"source", static_cast<int>(entry.source)},
+                    {"rfl_index", entry.index},
+                    {"result", static_cast<int>(entry.result)},
+                    {"byte_count", entry.byte_count},
+                    {"entry_count", entry.entry_count},
+                    {"db_present", entry.db_present},
+                    {"fallback_used", entry.fallback_used},
+                    {"async_pending", entry.async_pending},
+                    {"texture_available", entry.texture_available},
+                    {"width", entry.width},
+                    {"height", entry.height},
+                    {"expression", static_cast<int>(entry.expression)},
+                    {"expression_flags", entry.expression_flags},
+                    {"page_index", entry.page_index},
+                    {"page_count", entry.page_count},
+                    {"icon_count", entry.icon_count},
+                    {"selected", entry.selected},
+                    {"prohibited", entry.prohibited},
+                });
+            }
+            return out;
+        }
+
+        [[nodiscard]] Json rfl_db_status_json(const RflDbStatus &status) {
+            return Json{
+                {"nand_bound", status.nand_bound},
+                {"db_present", status.db_present},
+                {"fallback_used", status.fallback_used},
+                {"async_pending", status.async_pending},
+                {"resource_initialized", status.resource_initialized},
+                {"deluxe_textures", status.deluxe_textures},
+                {"byte_count", status.byte_count},
+                {"entry_count", status.entry_count},
+                {"loaded_frame", status.loaded_frame},
+                {"last_error", static_cast<int>(status.last_error)},
+                {"last_reason", status.last_reason},
+            };
         }
 
         [[nodiscard]] Json save_slot_json(const SaveDataService::SlotState &slot) {
@@ -1536,8 +1619,10 @@ namespace smgpc::compat {
                  Json{
                      {"initialized", runtime.rfl().is_initialized()},
                      {"error", runtime.rfl().has_error()},
+                     {"db_status", rfl_db_status_json(runtime.rfl().db_status())},
                      {"valid_mii_count", runtime.rfl().valid_miis().size()},
                      {"valid_miis", rfl_miis_json(runtime.rfl().valid_miis())},
+                     {"trace", rfl_trace_json(runtime.rfl().trace())},
                  }},
                 {"save",
                  Json{
@@ -1614,7 +1699,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_color_channel_control_json(const GXColorChannelControlState &control) {
+        [[nodiscard]] Json gx_color_channel_control_json(const smgpc::render::GXColorChannelControlState &control) {
             return Json{
                 {"raw", control.raw},
                 {"material_source", control.material_source},
@@ -1627,7 +1712,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_color_channels_json(const J3dRendererPacketState &state) {
+        [[nodiscard]] Json gx_color_channels_json(const smgpc::render::J3dRendererPacketState &state) {
             auto out = Json::array();
             for (auto channel = std::size_t{}; channel < state.color_channel_material_colors.size(); ++channel) {
                 out.push_back(Json{
@@ -1641,7 +1726,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_lights_json(const J3dRendererPacketState &state) {
+        [[nodiscard]] Json gx_lights_json(const smgpc::render::J3dRendererPacketState &state) {
             auto out = Json::array();
             for (auto light_index = std::size_t{}; light_index < state.lights.size(); ++light_index) {
                 const auto &light = state.lights[light_index];
@@ -1660,7 +1745,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_texture_binding_json(const J3dRendererTextureState &texture) {
+        [[nodiscard]] Json gx_texture_binding_json(const smgpc::render::J3dRendererTextureState &texture) {
             return Json{
                 {"slot", texture.slot},
                 {"texture_index", texture.texture_index},
@@ -1695,7 +1780,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_texture_bindings_json(std::span<const J3dRendererTextureState> textures) {
+        [[nodiscard]] Json gx_texture_bindings_json(std::span<const smgpc::render::J3dRendererTextureState> textures) {
             auto out = Json::array();
             for (const auto &texture : textures) {
                 out.push_back(gx_texture_binding_json(texture));
@@ -1743,7 +1828,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] std::uint32_t used_textures_mask(std::span<const J3dRendererTextureState> textures) {
+        [[nodiscard]] std::uint32_t used_textures_mask(std::span<const smgpc::render::J3dRendererTextureState> textures) {
             auto mask = std::uint32_t{};
             for (const auto &texture : textures) {
                 if (texture.slot < 8U) {
@@ -1767,7 +1852,7 @@ namespace smgpc::compat {
             return texture.slot < 8U ? (1U << texture.slot) : 0U;
         }
 
-        [[nodiscard]] Json used_texture_slots_json(std::span<const J3dRendererTextureState> textures) {
+        [[nodiscard]] Json used_texture_slots_json(std::span<const smgpc::render::J3dRendererTextureState> textures) {
             auto slots = std::array<bool, 8U>{};
             for (const auto &texture : textures) {
                 if (texture.slot < slots.size()) {
@@ -1809,7 +1894,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_tex_coord_gen_json(const GXTexCoordGenState &gen) {
+        [[nodiscard]] Json gx_tex_coord_gen_json(const smgpc::render::GXTexCoordGenState &gen) {
             return Json{
                 {"slot", gen.slot},
                 {"type", gen.type},
@@ -1818,7 +1903,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_tex_coord_gens_json(std::span<const GXTexCoordGenState> gens) {
+        [[nodiscard]] Json gx_tex_coord_gens_json(std::span<const smgpc::render::GXTexCoordGenState> gens) {
             auto out = Json::array();
             for (const auto &gen : gens) {
                 out.push_back(gx_tex_coord_gen_json(gen));
@@ -1826,7 +1911,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_tex_coord_scale_json(std::uint8_t slot, const GXTexCoordScaleState &scale) {
+        [[nodiscard]] Json gx_tex_coord_scale_json(std::uint8_t slot, const smgpc::render::GXTexCoordScaleState &scale) {
             return Json{
                 {"slot", slot},
                 {"s_scale_minus_1", scale.s_scale_minus_1},
@@ -1847,7 +1932,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_tex_coord_scales_json(const std::array<GXTexCoordScaleState, 8U> &scales) {
+        [[nodiscard]] Json gx_tex_coord_scales_json(const std::array<smgpc::render::GXTexCoordScaleState, 8U> &scales) {
             auto out = Json::array();
             for (auto slot = 0U; slot < scales.size(); ++slot) {
                 const auto &scale = scales[slot];
@@ -1860,7 +1945,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_su_line_point_json(const GXSULinePointState &state) {
+        [[nodiscard]] Json gx_su_line_point_json(const smgpc::render::GXSULinePointState &state) {
             return Json{
                 {"loaded", state.loaded},
                 {"line_size", state.line_size},
@@ -1872,7 +1957,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_tex_matrix_json(const GXTexMatrixState &matrix) {
+        [[nodiscard]] Json gx_tex_matrix_json(const smgpc::render::GXTexMatrixState &matrix) {
             return Json{
                 {"slot", matrix.slot},
                 {"projection", matrix.projection},
@@ -1887,7 +1972,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_tex_matrices_json(std::span<const GXTexMatrixState> matrices) {
+        [[nodiscard]] Json gx_tex_matrices_json(std::span<const smgpc::render::GXTexMatrixState> matrices) {
             auto out = Json::array();
             for (const auto &matrix : matrices) {
                 out.push_back(gx_tex_matrix_json(matrix));
@@ -1895,7 +1980,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_tev_order_json(const GXTevOrderState &order) {
+        [[nodiscard]] Json gx_tev_order_json(const smgpc::render::GXTevOrderState &order) {
             return Json{
                 {"stage", order.stage},
                 {"tex_coord", order.tex_coord},
@@ -1904,7 +1989,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_tev_orders_json(std::span<const GXTevOrderState> orders) {
+        [[nodiscard]] Json gx_tev_orders_json(std::span<const smgpc::render::GXTevOrderState> orders) {
             auto out = Json::array();
             for (const auto &order : orders) {
                 out.push_back(gx_tev_order_json(order));
@@ -1912,7 +1997,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_tev_stage_json(const GXTevStageState &stage) {
+        [[nodiscard]] Json gx_tev_stage_json(const smgpc::render::GXTevStageState &stage) {
             return Json{
                 {"stage", stage.stage},
                 {"raw", u8_array_json(stage.raw)},
@@ -1933,7 +2018,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_tev_stages_json(std::span<const GXTevStageState> stages) {
+        [[nodiscard]] Json gx_tev_stages_json(std::span<const smgpc::render::GXTevStageState> stages) {
             auto out = Json::array();
             for (const auto &stage : stages) {
                 out.push_back(gx_tev_stage_json(stage));
@@ -1949,7 +2034,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json tev_k_colors_json(const std::array<GXColorValue, 4U> &colors) {
+        [[nodiscard]] Json tev_k_colors_json(const std::array<smgpc::render::GXColorValue, 4U> &colors) {
             auto out = Json::array();
             for (const auto &color : colors) {
                 out.push_back(color_json(color));
@@ -1957,7 +2042,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_z_mode_json(const GXZModeState &z_mode) {
+        [[nodiscard]] Json gx_z_mode_json(const smgpc::render::GXZModeState &z_mode) {
             return Json{
                 {"enabled", z_mode.enabled},
                 {"compare_enable", z_mode.compare_enable},
@@ -1966,7 +2051,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_fog_json(const GXFogState &fog) {
+        [[nodiscard]] Json gx_fog_json(const smgpc::render::GXFogState &fog) {
             return Json{
                 {"enabled", fog.enabled},
                 {"type", fog.type},
@@ -1983,7 +2068,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_indirect_texture_orders_json(std::span<const GXIndirectTextureOrderState> orders) {
+        [[nodiscard]] Json gx_indirect_texture_orders_json(std::span<const smgpc::render::GXIndirectTextureOrderState> orders) {
             auto out = Json::array();
             for (const auto &order : orders) {
                 out.push_back(Json{
@@ -1995,7 +2080,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_indirect_texture_matrices_json(std::span<const GXIndirectTextureMatrixState> matrices) {
+        [[nodiscard]] Json gx_indirect_texture_matrices_json(std::span<const smgpc::render::GXIndirectTextureMatrixState> matrices) {
             auto out = Json::array();
             for (const auto &matrix : matrices) {
                 out.push_back(Json{
@@ -2013,7 +2098,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_indirect_texture_coord_scales_json(std::span<const GXIndirectTextureCoordScaleState> scales) {
+        [[nodiscard]] Json gx_indirect_texture_coord_scales_json(std::span<const smgpc::render::GXIndirectTextureCoordScaleState> scales) {
             auto out = Json::array();
             for (const auto &scale : scales) {
                 out.push_back(Json{
@@ -2025,7 +2110,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_indirect_tev_stages_json(std::span<const GXIndirectTevStageState> stages) {
+        [[nodiscard]] Json gx_indirect_tev_stages_json(std::span<const smgpc::render::GXIndirectTevStageState> stages) {
             auto out = Json::array();
             for (const auto &stage : stages) {
                 out.push_back(Json{
@@ -2047,7 +2132,7 @@ namespace smgpc::compat {
             return out;
         }
 
-        [[nodiscard]] Json gx_indirect_json(const GXIndirectState &indirect) {
+        [[nodiscard]] Json gx_indirect_json(const smgpc::render::GXIndirectState &indirect) {
             return Json{
                 {"stage_count", indirect.stage_count},
                 {"texture_orders", gx_indirect_texture_orders_json(indirect.texture_orders)},
@@ -2057,7 +2142,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_register_load_json(const GXRegisterLoadState &load, std::size_t index) {
+        [[nodiscard]] Json gx_register_load_json(const smgpc::render::GXRegisterLoadState &load, std::size_t index) {
             return Json{
                 {"index", index},
                 {"space", register_space_name(load.space)},
@@ -2068,7 +2153,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] Json gx_register_loads_json(std::span<const GXRegisterLoadState> loads) {
+        [[nodiscard]] Json gx_register_loads_json(std::span<const smgpc::render::GXRegisterLoadState> loads) {
             auto out = Json::array();
             for (auto i = std::size_t{}; i < loads.size(); ++i) {
                 out.push_back(gx_register_load_json(loads[i], i));
@@ -2329,6 +2414,6 @@ namespace smgpc::compat {
         return trace::load_trace_ndjson_file(path);
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::runtime
 
 #endif

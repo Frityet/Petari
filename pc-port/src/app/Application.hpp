@@ -11,6 +11,8 @@
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GameSystemSceneControllerService.hpp"
 #include "scene/GameSystemService.hpp"
+#include "scene/NameObjLifecycleService.hpp"
+#include "scene/SceneExecutionService.hpp"
 #include "scene/SceneLifecycleService.hpp"
 #include "scene/SequenceBootService.hpp"
 #include "scene/StageHostService.hpp"
@@ -35,12 +37,12 @@ namespace smgpc::app {
         std::unique_ptr<render::IWindowFactory> window_factory = {};
         std::unique_ptr<render::IWindowService> window_service = {};
         std::unique_ptr<render::IRendererEngine> renderer_engine = {};
-        std::unique_ptr<compat::RuntimeContext> runtime_context = {};
-        std::unique_ptr<compat::GameSystemSceneControllerService> scene_controller = {};
-        std::unique_ptr<compat::StorySequenceService> story_sequence = {};
-        std::unique_ptr<compat::StageHostService> stage_host = {};
-        std::unique_ptr<compat::SequenceBootService> sequence_boot = {};
-        std::unique_ptr<compat::GameSystemService> game_system = {};
+        std::unique_ptr<smgpc::runtime::RuntimeContext> runtime_context = {};
+        std::unique_ptr<smgpc::scene::GameSystemSceneControllerService> scene_controller = {};
+        std::unique_ptr<smgpc::scene::StorySequenceService> story_sequence = {};
+        std::unique_ptr<smgpc::scene::StageHostService> stage_host = {};
+        std::unique_ptr<smgpc::scene::SequenceBootService> sequence_boot = {};
+        std::unique_ptr<smgpc::scene::GameSystemService> game_system = {};
         std::unique_ptr<IApplication> application = {};
     };
 
@@ -48,29 +50,36 @@ namespace smgpc::app {
         di::SingletonService<logging::ILogger>,
         di::SingletonService<render::IWindowFactory>, di::SingletonService<render::IWindowService>,
         di::SingletonService<render::IRendererEngine>,
-        di::SingletonService<compat::RuntimeContext>,
-        di::SingletonService<compat::DvdFileSystemService>,
-        di::SingletonService<compat::WpadService>,
-        di::SingletonService<compat::AudioEventService>,
-        di::SingletonService<compat::EffectService>,
-        di::SingletonService<compat::ImageEffectService>,
-        di::SingletonService<compat::StarPointerService>,
-        di::SingletonService<compat::CameraSystemService>,
-        di::SingletonService<compat::PlayerSystemService>,
-        di::SingletonService<compat::GameLayoutService>,
-        di::SingletonService<compat::RumbleService>,
-        di::SingletonService<compat::SequenceRequestService>,
-        di::SingletonService<compat::SaveDataService>,
-        di::SingletonService<compat::MessageService>,
-        di::SingletonService<compat::SceneLightService>,
-        di::SingletonService<compat::RflService>,
-        di::SingletonService<compat::SceneScheduler>,
-        di::SingletonService<compat::SceneLifecycleService>,
-        di::SingletonService<compat::GameSystemSceneControllerService>,
-        di::SingletonService<compat::StorySequenceService>,
-        di::SingletonService<compat::StageHostService>,
-        di::SingletonService<compat::SequenceBootService>,
-        di::SingletonService<compat::GameSystemService>,
+        di::SingletonService<smgpc::runtime::RuntimeContext>,
+        di::SingletonService<smgpc::runtime::DvdFileSystemService>,
+        di::SingletonService<smgpc::runtime::WiiIosService>,
+        di::SingletonService<smgpc::runtime::WiiPlatformService>,
+        di::SingletonService<smgpc::runtime::WiiVideoService>,
+        di::SingletonService<smgpc::runtime::WpadService>,
+        di::SingletonService<smgpc::runtime::AudioEventService>,
+        di::SingletonService<smgpc::runtime::EffectService>,
+        di::SingletonService<smgpc::runtime::ImageEffectService>,
+        di::SingletonService<smgpc::runtime::StarPointerService>,
+        di::SingletonService<smgpc::runtime::CameraSystemService>,
+        di::SingletonService<smgpc::runtime::PlayerSystemService>,
+        di::SingletonService<smgpc::runtime::GameLayoutService>,
+        di::SingletonService<smgpc::runtime::RumbleService>,
+        di::SingletonService<smgpc::runtime::SequenceRequestService>,
+        di::SingletonService<smgpc::runtime::SysConfigService>,
+        di::SingletonService<smgpc::runtime::SaveDataService>,
+        di::SingletonService<smgpc::runtime::NandFileSystemService>,
+        di::SingletonService<smgpc::runtime::MessageService>,
+        di::SingletonService<smgpc::runtime::SceneLightService>,
+        di::SingletonService<smgpc::runtime::RflService>,
+        di::SingletonService<smgpc::runtime::SceneScheduler>,
+        di::SingletonService<smgpc::scene::NameObjLifecycleService>,
+        di::SingletonService<smgpc::scene::SceneExecutionService>,
+        di::SingletonService<smgpc::scene::SceneLifecycleService>,
+        di::SingletonService<smgpc::scene::GameSystemSceneControllerService>,
+        di::SingletonService<smgpc::scene::StorySequenceService>,
+        di::SingletonService<smgpc::scene::StageHostService>,
+        di::SingletonService<smgpc::scene::SequenceBootService>,
+        di::SingletonService<smgpc::scene::GameSystemService>,
         di::SingletonService<IApplication>>;
 
     [[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration);

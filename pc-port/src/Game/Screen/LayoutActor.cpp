@@ -17,7 +17,7 @@ LayoutActor::LayoutActor(const char* pName, bool)
 }
 
 LayoutActor::~LayoutActor() {
-    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->unregister_effect_keeper(getName());
         runtime->unregister_layout_actor(*this);
     }
@@ -129,7 +129,7 @@ MtxPtr LayoutActor::getPaneMtxRef(const char* pPaneName) {
 
 void LayoutActor::initLayoutManager(const char* pName, u32 animLayerNum) {
     mSimpleLayout = std::make_unique< SimpleLayout >(getName(), pName, animLayerNum, MR::DrawType_Layout);
-    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->unregister_layout(*mSimpleLayout);
     }
     mSimpleLayout->initWithoutIter();
@@ -153,11 +153,11 @@ void LayoutActor::initNerve(const Nerve* pNerve) {
 }
 
 void LayoutActor::initEffectKeeper(int effectNum, const char* pEffectName, const EffectSystem*) {
-    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         const auto group_name = pEffectName != nullptr ?
                                     std::string_view(pEffectName) :
                                     (mSimpleLayout != nullptr ? std::string_view(mSimpleLayout->getLayoutName()) : std::string_view{});
-        runtime->register_effect_keeper(smgpc::compat::EffectKeeperHostKind::LayoutActor, getName(), effectNum, group_name, false);
+        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LayoutActor, getName(), effectNum, group_name, false);
     }
 }
 

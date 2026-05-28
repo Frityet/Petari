@@ -4,7 +4,7 @@
 
 namespace nw4r::lyt {
 
-    TexMap::TexMap(std::string name, smgpc::compat::DecodedTexture image, std::uint8_t wrapS, std::uint8_t wrapT, std::uint8_t minFilter,
+    TexMap::TexMap(std::string name, smgpc::resource::DecodedTexture image, std::uint8_t wrapS, std::uint8_t wrapT, std::uint8_t minFilter,
                    std::uint8_t magFilter)
         : _name(std::move(name)), _image(std::move(image)), _wrap_s(wrapS), _wrap_t(wrapT), _min_filter(minFilter), _mag_filter(magFilter) {
     }
@@ -13,7 +13,7 @@ namespace nw4r::lyt {
         return _name;
     }
 
-    const smgpc::compat::DecodedTexture &TexMap::image() const {
+    const smgpc::resource::DecodedTexture &TexMap::image() const {
         return _image;
     }
 

@@ -1,32 +1,44 @@
 #include "scene/SequenceBootService.hpp"
 
-#include "Game/Map/FileSelector.hpp"
+#include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-#include <string_view>
+#include <string>
 
-namespace smgpc::compat {
-    SequenceBootService::SequenceBootService(RuntimeContext &runtime, StorySequenceService &story_sequence, StageHostService &stage_host)
+namespace smgpc::scene {
+    SequenceBootService::SequenceBootService(smgpc::runtime::RuntimeContext &runtime, StorySequenceService &story_sequence, StageHostService &stage_host)
         : _runtime(runtime), _story_sequence(story_sequence), _stage_host(stage_host) {
     }
 
     SequenceBootService::~SequenceBootService() = default;
 
-    void SequenceBootService::request_boot_to_file_select() {
+    void SequenceBootService::request_boot_to_initial_stage() {
         if (_boot_requested) {
             return;
         }
 
         _boot_requested = true;
-        _runtime.set_current_sequence_scene_name("Game");
-        _runtime.set_next_sequence_scene_name("FileSelect");
-        _runtime.set_current_stage_name("FileSelect");
+        const auto request = StorySequenceExecutor::makeInitialStageRequest();
+        _boot_stage_name = request.mStageName;
+        _runtime.set_current_sequence_scene_name(request.mSceneName);
+        _runtime.set_next_sequence_scene_name(request.mStageName);
+        _runtime.set_current_stage_name(request.mStageName);
 #ifndef NDEBUG
-        _runtime.emit_sequence_state_trace_event("stage_requested", "requested_stage=FileSelect;scenario=1");
-        _runtime.emit_semantic_trace_event("sequence", "boot_file_select_requested", "scene=Game;stage=FileSelect;scenario=1");
+        const auto detail = "scene=" + request.mSceneName + ";stage=" + request.mStageName +
+                            ";scenario=" + std::to_string(request.mScenarioNo);
+        _runtime.emit_sequence_state_trace_event("stage_requested", "requested_stage=" + request.mStageName +
+                                                                        ";scenario=" + std::to_string(request.mScenarioNo));
+        _runtime.emit_semantic_trace_event("sequence", "boot_stage_requested", detail);
 #endif
-        ensure_file_select_host();
+        _stage_host.request_stage(StageHostRequest{
+            .scene_name = request.mSceneName,
+            .stage_name = request.mStageName,
+            .object_name = request.mObjectName,
+            .actor_name = request.mActorName,
+            .scenario_no = request.mScenarioNo,
+            .appear_after_init = request.mAppearAfterInit,
+        });
     }
 
     void SequenceBootService::update_after_runtime_frame() {
@@ -34,81 +46,38 @@ namespace smgpc::compat {
             return;
         }
 
+        _stage_host.update_scene_requests();
+
         if (!_autorush_begin_sent) {
             MR::sendMsgToAllLiveActor(ACTMES_AUTORUSH_BEGIN, nullptr);
             _autorush_begin_sent = true;
 #ifndef NDEBUG
             _runtime.emit_sequence_state_trace_event("autorush_begin_sent", "message=ACTMES_AUTORUSH_BEGIN");
-            _runtime.emit_semantic_trace_event("sequence", "file_select_autorush_begin_sent", "ACTMES_AUTORUSH_BEGIN");
+            _runtime.emit_semantic_trace_event("sequence", "autorush_begin_sent", "ACTMES_AUTORUSH_BEGIN");
 #endif
         }
 
-#ifndef NDEBUG
-        emit_title_semantic_anchors();
-        emit_file_select_semantic_anchors();
-#endif
+        update_stage_transition_requests();
+        _stage_host.update_scene_requests();
     }
 
     bool SequenceBootService::is_boot_requested() const {
         return _boot_requested;
     }
 
-    bool SequenceBootService::is_file_select_host_active() const {
-        return _file_selector != nullptr;
+    bool SequenceBootService::is_initial_stage_host_active() const {
+        return !_boot_stage_name.empty() && _stage_host.has_active_stage(_boot_stage_name);
     }
 
     bool SequenceBootService::has_sent_autorush_begin() const {
         return _autorush_begin_sent;
     }
 
-    void SequenceBootService::ensure_file_select_host() {
-        if (_file_selector != nullptr) {
-            return;
-        }
-
-#ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("sequence", "temporary_file_select_stage_host_started",
-                                           "direct FileSelector host until GameScene placement is available");
-        _runtime.emit_sequence_state_trace_event("temporary_stage_host_started", "host=FileSelector");
-#endif
-        _file_selector = std::make_unique<FileSelector>("ファイルセレクタ");
-#ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("file_select", "file_selector_constructed", "sequence boot host");
-#endif
-        _file_selector->initWithoutIter();
-#ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("file_select", "file_selector_initialized", "sequence boot host initWithoutIter");
-        _title_product_created_emitted = true;
-        _runtime.emit_semantic_trace_event("title", "title_product_created", "source=FileSelector;layouts=TitleLogo,PressStart");
-#endif
-    }
-
-#ifndef NDEBUG
-    void SequenceBootService::emit_title_semantic_anchors() {
-        if (_file_selector == nullptr) {
-            return;
-        }
-
-        if (!_title_product_visible_emitted && _file_selector->isTitleStarted() && has_active_layout(_runtime, "TitleLogo")) {
-            _title_product_visible_emitted = true;
-            _runtime.emit_semantic_trace_event("title", "title_product_visible", "layout=TitleLogo");
-        }
-
-        if (!_title_ab_gate_active_emitted && _file_selector->isTitleActive() && has_active_layout(_runtime, "PressStart")) {
-            _title_ab_gate_active_emitted = true;
-            _runtime.emit_semantic_trace_event("title", "ab_gate_active", "layout=PressStart;buttons=A+B");
-        }
-
-        if (!_title_input_accepted_emitted && has_system_sound(_runtime, "SE_SY_GAME_START")) {
-            _title_input_accepted_emitted = true;
-            _runtime.emit_semantic_trace_event("title", "title_input_accepted", "sound=SE_SY_GAME_START;buttons=A+B");
-        }
-
-        if (!_file_select_scene_requested_emitted && _file_selector->isTitleEnded()) {
-            _file_select_scene_requested_emitted = true;
-            _runtime.emit_semantic_trace_event("title", "file_select_scene_requested", "source=FileSelectorTitleEnd;stage=FileSelect");
-            _runtime.emit_sequence_state_trace_event("file_select_scene_requested", "source=title;stage=FileSelect");
+    void SequenceBootService::update_stage_transition_requests() {
+        _story_sequence.update_after_loading_request();
+        if (auto request = _story_sequence.take_pending_stage_request()) {
+            _stage_host.request_stage(*request);
         }
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

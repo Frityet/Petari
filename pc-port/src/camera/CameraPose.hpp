@@ -2,9 +2,9 @@
 
 #include "camera/CameraParam.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::camera {
 
-    struct CameraPoseCompat {
+    struct CameraPose {
         CameraParamVec3 eye = {};
         CameraParamVec3 watch = {};
         CameraParamVec3 up = {0.0F, 1.0F, 0.0F};
@@ -14,12 +14,12 @@ namespace smgpc::compat {
         float far_clip = 800000.0F;
     };
 
-    struct CameraViewPointCompat {
+    struct CameraViewPoint {
         float x = 0.0F;
         float y = 0.0F;
         float z = 0.0F;
     };
 
-    [[nodiscard]] CameraViewPointCompat transform_world_to_camera(const CameraPoseCompat &pose, const CameraParamVec3 &world);
+    [[nodiscard]] CameraViewPoint transform_world_to_camera(const CameraPose &pose, const CameraParamVec3 &world);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::camera

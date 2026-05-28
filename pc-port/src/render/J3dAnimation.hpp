@@ -8,7 +8,7 @@
 #include <string_view>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::render {
 
     struct J3dAnimationSectionInfo {
         std::string tag;
@@ -101,4 +101,4 @@ namespace smgpc::compat {
     [[nodiscard]] std::optional<J3dTextureSrtAnimationValue>
     j3d_evaluate_btk_texture_srt(const J3dBtkAnimationSummary &btk, std::string_view material_name, std::uint8_t tex_matrix_id, float frame);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

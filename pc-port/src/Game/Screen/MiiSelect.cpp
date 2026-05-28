@@ -318,7 +318,7 @@ void MiiSelect::rebuildIconList() {
         mIconNames.emplace_back(cFellowNames[i]);
     }
 
-    const auto* runtime = smgpc::compat::RuntimeContext::try_instance();
+    const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return;
     }

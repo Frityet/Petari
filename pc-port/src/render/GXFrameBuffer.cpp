@@ -198,7 +198,7 @@ namespace {
     }
 
     void record_copy_event(smgpc::render::CopyEvent event) {
-        if (auto *runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->record_copy_event(std::move(event));
         }
     }

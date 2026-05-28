@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-namespace smgpc::compat {
+namespace smgpc::render {
 
     J3dMatrix3x4 j3d_matrix_from_mtx(MtxPtr matrix) {
         if (matrix == nullptr) {
@@ -175,4 +175,4 @@ namespace smgpc::compat {
         return j3d_apply_matrix_scale(matrix, safe_inverse(scale_x), safe_inverse(scale_y), safe_inverse(scale_z));
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

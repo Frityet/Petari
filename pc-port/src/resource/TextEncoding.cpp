@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 
-namespace smgpc::compat {
+namespace smgpc::resource {
     namespace {
 
         constexpr auto kReplacementCharacter = char32_t{0xfffdU};
@@ -144,4 +144,4 @@ namespace smgpc::compat {
         return out;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::resource

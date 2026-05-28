@@ -1,4 +1,4 @@
-#include "render/LiveActorModelCompat.hpp"
+#include "render/live_actor/LiveActorModel.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -7,6 +7,8 @@
 
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeContext.hpp"
+
+namespace smgpc::render::live_actor {
 
 namespace {
     [[nodiscard]] std::string lower_copy(std::string_view value) {
@@ -19,31 +21,31 @@ namespace {
         return lower_copy(value).ends_with(suffix);
     }
 
-    [[nodiscard]] const smgpc::compat::RarcEntry *find_first_entry_with_suffix(const smgpc::compat::RarcArchive &archive, std::string_view suffix) {
+    [[nodiscard]] const smgpc::resource::RarcEntry *find_first_entry_with_suffix(const smgpc::resource::RarcArchive &archive, std::string_view suffix) {
         const auto it = std::ranges::find_if(archive.entries(), [suffix](const auto &entry) { return ends_with_lower(entry.path, suffix); });
         return it == archive.entries().end() ? nullptr : &*it;
     }
 
-    [[nodiscard]] const char *draw_pass_name(LiveActorModelCompat::DrawPass pass) {
+    [[nodiscard]] const char *draw_pass_name(LiveActorModel::DrawPass pass) {
         switch (pass) {
-        case LiveActorModelCompat::DrawPass::All:
+        case LiveActorModel::DrawPass::All:
             return "All";
-        case LiveActorModelCompat::DrawPass::Opaque:
+        case LiveActorModel::DrawPass::Opaque:
             return "Opaque";
-        case LiveActorModelCompat::DrawPass::Translucent:
+        case LiveActorModel::DrawPass::Translucent:
             return "Translucent";
         }
 
         return "Unknown";
     }
 
-    [[nodiscard]] bool packet_matches_draw_pass(LiveActorModelCompat::DrawPass pass, const smgpc::compat::J3dRendererPacketState &packet) {
+    [[nodiscard]] bool packet_matches_draw_pass(LiveActorModel::DrawPass pass, const smgpc::render::J3dRendererPacketState &packet) {
         switch (pass) {
-        case LiveActorModelCompat::DrawPass::All:
+        case LiveActorModel::DrawPass::All:
             return true;
-        case LiveActorModelCompat::DrawPass::Opaque:
+        case LiveActorModel::DrawPass::Opaque:
             return packet.draw_buffer_opaque;
-        case LiveActorModelCompat::DrawPass::Translucent:
+        case LiveActorModel::DrawPass::Translucent:
             return !packet.draw_buffer_opaque;
         }
 
@@ -64,16 +66,16 @@ namespace {
 #endif
 }  // namespace
 
-LiveActorModelCompat::LiveActorModelCompat(std::string model_arc_name, std::string animation_arc_name)
+LiveActorModel::LiveActorModel(std::string model_arc_name, std::string animation_arc_name)
     : mModelArcName(std::move(model_arc_name)), mAnimationArcName(std::move(animation_arc_name)) {
 }
 
-void LiveActorModelCompat::startBck(std::string_view, std::string_view) {
+void LiveActorModel::startBck(std::string_view, std::string_view) {
     mBckStarted = true;
     applyStartedAnimations();
 }
 
-std::optional<std::int16_t> LiveActorModelCompat::startBrk(std::string_view name) {
+std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
     mBrkStarted = true;
     const auto requested_name = std::string(name);
     if (mBrkName != requested_name) {
@@ -81,7 +83,7 @@ std::optional<std::int16_t> LiveActorModelCompat::startBrk(std::string_view name
     }
     mBrkName = requested_name;
     if (!mBrkAnimation.has_value()) {
-        auto *runtime = smgpc::compat::RuntimeContext::try_instance();
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         const auto archive_path = runtime != nullptr ? runtime->find_object_archive(mModelArcName) : std::nullopt;
         if (archive_path.has_value()) {
             try {
@@ -97,23 +99,23 @@ std::optional<std::int16_t> LiveActorModelCompat::startBrk(std::string_view name
     return mBrkAnimation.has_value() ? std::optional<std::int16_t>{mBrkAnimation->frame_max} : std::nullopt;
 }
 
-void LiveActorModelCompat::startBtk(std::string_view) {
+void LiveActorModel::startBtk(std::string_view) {
     mBtkStarted = true;
     applyStartedAnimations();
 }
 
-void LiveActorModelCompat::setProjmapEffectMatrix(const smgpc::compat::J3dMatrix3x4 &matrix) {
+void LiveActorModel::setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4 &matrix) {
     mProjmapEffectMatrix = matrix;
 }
 
-void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const smgpc::compat::CameraPoseCompat &camera_pose,
-                                const smgpc::compat::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass) {
+void LiveActorModel::draw(smgpc::render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
+                                const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass) {
     ensureLoaded(renderer);
     if (mRenderer == nullptr || !mRenderer->is_loaded()) {
         return;
     }
 
-    auto options = smgpc::compat::J3dModelRendererDrawOptions{};
+    auto options = smgpc::render::J3dModelRendererDrawOptions{};
     switch (pass) {
     case DrawPass::All:
         break;
@@ -124,12 +126,13 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
         options.translucent_filter = true;
         break;
     }
+    options.projmap_effect_matrix = mProjmapEffectMatrix;
 #ifndef NDEBUG
     if (debug_model_filter_matches(mModelArcName)) {
         options.material_filter = debug_environment("SMGPC_J3D_MATERIAL_FILTER");
     }
 #endif
-    auto *runtime = smgpc::compat::RuntimeContext::try_instance();
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime != nullptr) {
         options.scene_lights = runtime->scene_lights().lights();
         if (runtime->j3d_pixel_update_state().has_value()) {
@@ -153,21 +156,21 @@ void LiveActorModelCompat::draw(smgpc::render::IRendererEngine &renderer, const 
 #endif
 }
 
-bool LiveActorModelCompat::isLoaded() const {
+bool LiveActorModel::isLoaded() const {
     return mRenderer != nullptr && mRenderer->is_loaded();
 }
 
-std::string_view LiveActorModelCompat::model_arc_name() const {
+std::string_view LiveActorModel::model_arc_name() const {
     return mModelArcName;
 }
 
-void LiveActorModelCompat::ensureLoaded(smgpc::render::IRendererEngine &renderer) {
+void LiveActorModel::ensureLoaded(smgpc::render::IRendererEngine &renderer) {
     if (mLoadAttempted) {
         return;
     }
     mLoadAttempted = true;
 
-    auto *runtime = smgpc::compat::RuntimeContext::try_instance();
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr || mModelArcName.empty()) {
         return;
     }
@@ -192,7 +195,7 @@ void LiveActorModelCompat::ensureLoaded(smgpc::render::IRendererEngine &renderer
             mBrkAnimation = findBrkAnimation(archive);
             mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string{};
         }
-        mRenderer = std::make_unique<smgpc::compat::J3dModelRenderer>();
+        mRenderer = std::make_unique<smgpc::render::J3dModelRenderer>();
         mRenderer->load(renderer, archive.file_data(*model_entry));
         applyStartedAnimations();
         runtime->note_object_archive(mModelArcName, *archive_path);
@@ -202,7 +205,7 @@ void LiveActorModelCompat::ensureLoaded(smgpc::render::IRendererEngine &renderer
     }
 }
 
-void LiveActorModelCompat::applyStartedAnimations() {
+void LiveActorModel::applyStartedAnimations() {
     if (mRenderer == nullptr) {
         return;
     }
@@ -214,7 +217,7 @@ void LiveActorModelCompat::applyStartedAnimations() {
     }
 }
 
-const smgpc::compat::RarcEntry *LiveActorModelCompat::findModelEntry(const smgpc::compat::RarcArchive &archive) const {
+const smgpc::resource::RarcEntry *LiveActorModel::findModelEntry(const smgpc::resource::RarcArchive &archive) const {
     const auto requested_bdl = lower_copy(mModelArcName) + ".bdl";
     if (const auto *entry = archive.find_by_basename(requested_bdl); entry != nullptr) {
         return entry;
@@ -232,7 +235,7 @@ const smgpc::compat::RarcEntry *LiveActorModelCompat::findModelEntry(const smgpc
     return find_first_entry_with_suffix(archive, ".bmd");
 }
 
-std::optional<smgpc::compat::J3dBckAnimationSummary> LiveActorModelCompat::findBckAnimation(const smgpc::compat::RarcArchive &archive) const {
+std::optional<smgpc::render::J3dBckAnimationSummary> LiveActorModel::findBckAnimation(const smgpc::resource::RarcArchive &archive) const {
     const auto requested = lower_copy(mModelArcName) + ".bck";
     auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
@@ -242,10 +245,10 @@ std::optional<smgpc::compat::J3dBckAnimationSummary> LiveActorModelCompat::findB
         return std::nullopt;
     }
 
-    return smgpc::compat::inspect_j3d_animation(archive.file_data(*entry)).bck;
+    return smgpc::render::inspect_j3d_animation(archive.file_data(*entry)).bck;
 }
 
-std::optional<smgpc::compat::J3dBtkAnimationSummary> LiveActorModelCompat::findBtkAnimation(const smgpc::compat::RarcArchive &archive) const {
+std::optional<smgpc::render::J3dBtkAnimationSummary> LiveActorModel::findBtkAnimation(const smgpc::resource::RarcArchive &archive) const {
     const auto requested = lower_copy(mModelArcName) + ".btk";
     auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
@@ -255,10 +258,10 @@ std::optional<smgpc::compat::J3dBtkAnimationSummary> LiveActorModelCompat::findB
         return std::nullopt;
     }
 
-    return smgpc::compat::inspect_j3d_animation(archive.file_data(*entry)).btk;
+    return smgpc::render::inspect_j3d_animation(archive.file_data(*entry)).btk;
 }
 
-std::optional<smgpc::compat::J3dBrkAnimationSummary> LiveActorModelCompat::findBrkAnimation(const smgpc::compat::RarcArchive &archive) const {
+std::optional<smgpc::render::J3dBrkAnimationSummary> LiveActorModel::findBrkAnimation(const smgpc::resource::RarcArchive &archive) const {
     const auto requested = lower_copy(mBrkName.empty() ? std::string_view{mModelArcName} : std::string_view{mBrkName}) + ".brk";
     auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
@@ -268,5 +271,7 @@ std::optional<smgpc::compat::J3dBrkAnimationSummary> LiveActorModelCompat::findB
         return std::nullopt;
     }
 
-    return smgpc::compat::inspect_j3d_animation(archive.file_data(*entry)).brk;
+    return smgpc::render::inspect_j3d_animation(archive.file_data(*entry)).brk;
 }
+
+}  // namespace smgpc::render::live_actor

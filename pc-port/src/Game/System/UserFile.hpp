@@ -39,8 +39,8 @@ public:
     [[nodiscard]] bool isViewNormalEnding() const;
     [[nodiscard]] bool isViewCompleteEnding() const;
     [[nodiscard]] bool isPowerStarGetFinalChallengeGalaxy() const;
-    void restoreFromSaveDataServiceSlot(const smgpc::compat::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario);
-    [[nodiscard]] smgpc::compat::SaveDataService::SlotState makeSaveDataServiceSlot(s32 slotIndex) const;
+    void restoreFromSaveDataServiceSlot(const smgpc::runtime::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario);
+    [[nodiscard]] smgpc::runtime::SaveDataService::SlotState makeSaveDataServiceSlot(s32 slotIndex) const;
 
     /* 0x00 */ GameDataHolder* mGameDataHolder;
     /* 0x04 */ ConfigDataHolder* mConfigDataHolder;

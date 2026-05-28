@@ -100,29 +100,29 @@ namespace {
         return it == textures.end() ? nullptr : &(*it);
     }
 
-    [[nodiscard]] std::string texture_format_name(smgpc::compat::TplTextureFormat format) {
+    [[nodiscard]] std::string texture_format_name(smgpc::resource::TplTextureFormat format) {
         switch (format) {
-        case smgpc::compat::TplTextureFormat::I4:
+        case smgpc::resource::TplTextureFormat::I4:
             return "I4";
-        case smgpc::compat::TplTextureFormat::I8:
+        case smgpc::resource::TplTextureFormat::I8:
             return "I8";
-        case smgpc::compat::TplTextureFormat::IA4:
+        case smgpc::resource::TplTextureFormat::IA4:
             return "IA4";
-        case smgpc::compat::TplTextureFormat::IA8:
+        case smgpc::resource::TplTextureFormat::IA8:
             return "IA8";
-        case smgpc::compat::TplTextureFormat::RGB565:
+        case smgpc::resource::TplTextureFormat::RGB565:
             return "RGB565";
-        case smgpc::compat::TplTextureFormat::RGB5A3:
+        case smgpc::resource::TplTextureFormat::RGB5A3:
             return "RGB5A3";
-        case smgpc::compat::TplTextureFormat::RGBA8:
+        case smgpc::resource::TplTextureFormat::RGBA8:
             return "RGBA8";
-        case smgpc::compat::TplTextureFormat::C4:
+        case smgpc::resource::TplTextureFormat::C4:
             return "C4";
-        case smgpc::compat::TplTextureFormat::C8:
+        case smgpc::resource::TplTextureFormat::C8:
             return "C8";
-        case smgpc::compat::TplTextureFormat::C14X2:
+        case smgpc::resource::TplTextureFormat::C14X2:
             return "C14X2";
-        case smgpc::compat::TplTextureFormat::CMPR:
+        case smgpc::resource::TplTextureFormat::CMPR:
             return "CMPR";
         }
 
@@ -146,7 +146,7 @@ namespace {
         return it == textures.end() ? nullptr : &(*it);
     }
 
-    [[nodiscard]] const smgpc::compat::RarcEntry* find_font_entry(const smgpc::compat::RarcArchive& archive, std::string_view font_name) {
+    [[nodiscard]] const smgpc::resource::RarcEntry* find_font_entry(const smgpc::resource::RarcArchive& archive, std::string_view font_name) {
         const auto candidates = font_resource_candidates(font_name);
         const auto it = std::ranges::find_if(archive.entries(), [&candidates](const auto& entry) {
             return std::ranges::find(candidates, font_resource_name(entry.path)) != candidates.end();
@@ -157,7 +157,7 @@ namespace {
 
     [[nodiscard]] std::optional< std::filesystem::path >
     find_companion_font_archive(const std::optional< std::filesystem::path >& layout_archive_path) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             if (auto path = runtime->find_layout_archive("Font")) {
                 return path;
             }
@@ -187,14 +187,14 @@ namespace {
         }
     }
 
-    [[nodiscard]] float glyph_advance(const smgpc::compat::BrfntGlyph& glyph, float scale_x) {
+    [[nodiscard]] float glyph_advance(const smgpc::layout::BrfntGlyph& glyph, float scale_x) {
         const auto char_width = glyph.widths.char_width == 0 ? static_cast< int >(glyph.width) : static_cast< int >(glyph.widths.char_width);
         return static_cast< float >(char_width) * scale_x;
     }
 
     struct TextLayoutGlyph {
         std::uint16_t code = 0U;
-        smgpc::compat::BrfntGlyph glyph{};
+        smgpc::layout::BrfntGlyph glyph{};
         float advance = 0.0F;
     };
 
@@ -211,7 +211,7 @@ namespace {
         return code == 0x000aU || code == 0x000dU;
     }
 
-    [[nodiscard]] std::uint16_t resolve_layout_glyph_code(std::uint16_t code, const smgpc::compat::BrfntFont& font, bool use_button_icon_aliases);
+    [[nodiscard]] std::uint16_t resolve_layout_glyph_code(std::uint16_t code, const smgpc::layout::BrfntFont& font, bool use_button_icon_aliases);
 
     [[nodiscard]] float text_line_width(const std::vector< TextLayoutGlyph >& glyphs, float native_char_space) {
         if (glyphs.empty()) {
@@ -248,7 +248,7 @@ namespace {
         return std::nullopt;
     }
 
-    [[nodiscard]] std::vector< TextLayoutLine > layout_text_lines(std::span< const std::uint16_t > text, const smgpc::compat::BrfntFont& font,
+    [[nodiscard]] std::vector< TextLayoutLine > layout_text_lines(std::span< const std::uint16_t > text, const smgpc::layout::BrfntFont& font,
                                                                   float native_char_space, float native_wrap_width, bool use_button_icon_aliases) {
         auto lines = std::vector< TextLayoutLine >{};
         auto current = std::vector< TextLayoutGlyph >{};
@@ -383,7 +383,7 @@ namespace {
         return has_button_marker && has_cjk_text;
     }
 
-    [[nodiscard]] std::uint16_t resolve_layout_glyph_code(std::uint16_t code, const smgpc::compat::BrfntFont& font, bool use_button_icon_aliases) {
+    [[nodiscard]] std::uint16_t resolve_layout_glyph_code(std::uint16_t code, const smgpc::layout::BrfntFont& font, bool use_button_icon_aliases) {
         if (use_button_icon_aliases) {
             if (const auto icon_code = button_icon_alias_for(code); icon_code.has_value() && font.glyph_for_exact(*icon_code).has_value()) {
                 return *icon_code;
@@ -427,8 +427,8 @@ namespace {
         return static_cast< std::uint16_t >(std::clamp(std::ceil(value), 1.0F, 4096.0F));
     }
 
-    [[nodiscard]] smgpc::compat::BrlytTexCoord transform_tex_coord(smgpc::compat::BrlytTexCoord tex_coord,
-                                                                   const smgpc::compat::BrlanTextureFrame& frame) {
+    [[nodiscard]] smgpc::layout::BrlytTexCoord transform_tex_coord(smgpc::layout::BrlytTexCoord tex_coord,
+                                                                   const smgpc::layout::BrlanTextureFrame& frame) {
         constexpr auto kDegToRad = 0.017453292519943295F;
         const auto scale_s = frame.scale_s.value_or(1.0F);
         const auto scale_t = frame.scale_t.value_or(1.0F);
@@ -440,13 +440,13 @@ namespace {
         const auto centered_s = tex_coord.u - 0.5F;
         const auto centered_t = tex_coord.v - 0.5F;
 
-        return smgpc::compat::BrlytTexCoord{
+        return smgpc::layout::BrlytTexCoord{
             .u = translate_s + 0.5F + cos_r * scale_s * centered_s - sin_r * scale_t * centered_t,
             .v = translate_t + 0.5F + sin_r * scale_s * centered_s + cos_r * scale_t * centered_t,
         };
     }
 
-    [[nodiscard]] std::uint16_t tex_srt_index_for_coord_gen(const smgpc::compat::BrlytTexCoordGen& coord_gen) {
+    [[nodiscard]] std::uint16_t tex_srt_index_for_coord_gen(const smgpc::layout::BrlytTexCoordGen& coord_gen) {
         constexpr auto gx_texmtx0 = std::uint8_t{30U};
         constexpr auto gx_identity = std::uint8_t{60U};
         if (coord_gen.tex_mtx == gx_identity || coord_gen.tex_mtx < gx_texmtx0) {
@@ -456,9 +456,9 @@ namespace {
         return static_cast< std::uint16_t >((coord_gen.tex_mtx - gx_texmtx0) / 3U);
     }
 
-    [[nodiscard]] smgpc::compat::BrlytTexCoord transform_tex_coord(smgpc::compat::BrlytTexCoord tex_coord, const smgpc::compat::BrlytTexSrt& srt,
-                                                                   const smgpc::compat::BrlanTextureFrame& texture_frame, bool apply_animation) {
-        auto frame = smgpc::compat::BrlanTextureFrame{
+    [[nodiscard]] smgpc::layout::BrlytTexCoord transform_tex_coord(smgpc::layout::BrlytTexCoord tex_coord, const smgpc::layout::BrlytTexSrt& srt,
+                                                                   const smgpc::layout::BrlanTextureFrame& texture_frame, bool apply_animation) {
+        auto frame = smgpc::layout::BrlanTextureFrame{
             .translate_s = apply_animation ? texture_frame.translate_s : std::optional< float >{},
             .translate_t = apply_animation ? texture_frame.translate_t : std::optional< float >{},
             .rotate = apply_animation ? texture_frame.rotate : std::optional< float >{},
@@ -474,7 +474,7 @@ namespace {
         return transform_tex_coord(tex_coord, frame);
     }
 
-    [[nodiscard]] std::array< std::uint8_t, 4U > brlyt_konst_color(const smgpc::compat::BrlytMaterial& material, std::uint8_t selector) {
+    [[nodiscard]] std::array< std::uint8_t, 4U > brlyt_konst_color(const smgpc::layout::BrlytMaterial& material, std::uint8_t selector) {
         constexpr std::array< std::uint8_t, 8U > constants{255U, 223U, 191U, 159U, 128U, 96U, 64U, 32U};
         if (selector < constants.size()) {
             return {constants[selector], constants[selector], constants[selector], constants[selector]};
@@ -492,19 +492,19 @@ namespace {
         return {0U, 0U, 0U, 0U};
     }
 
-    [[nodiscard]] std::array< std::uint8_t, 4U > brlyt_stage_konst_color(const smgpc::compat::BrlytMaterial& material,
-                                                                         const smgpc::compat::BrlytTevStage& stage) {
+    [[nodiscard]] std::array< std::uint8_t, 4U > brlyt_stage_konst_color(const smgpc::layout::BrlytMaterial& material,
+                                                                         const smgpc::layout::BrlytTevStage& stage) {
         const auto color = brlyt_konst_color(material, stage.color.k_sel);
         const auto alpha = brlyt_konst_color(material, stage.alpha.k_sel);
         return {color[0U], color[1U], color[2U], alpha[3U]};
     }
 
-    [[nodiscard]] bool brlyt_tev_op_can_use_gx_shader(const smgpc::compat::BrlytTevStageInOp& op, std::uint8_t max_arg) {
+    [[nodiscard]] bool brlyt_tev_op_can_use_gx_shader(const smgpc::layout::BrlytTevStageInOp& op, std::uint8_t max_arg) {
         return op.a <= max_arg && op.b <= max_arg && op.c <= max_arg && op.d <= max_arg && op.op <= 1U && op.bias <= 3U && op.scale <= 3U &&
                op.out_reg <= 3U;
     }
 
-    [[nodiscard]] bool brlyt_material_can_use_gx_shader(const smgpc::compat::BrlytMaterial& material) {
+    [[nodiscard]] bool brlyt_material_can_use_gx_shader(const smgpc::layout::BrlytMaterial& material) {
         if (material.textures.empty()) {
             return false;
         }
@@ -521,8 +521,8 @@ namespace {
         });
     }
 
-    [[nodiscard]] smgpc::render::GxTevStage2D brlyt_gx_tev_stage(const smgpc::compat::BrlytMaterial& material,
-                                                                 const smgpc::compat::BrlytTevStage& stage, std::uint8_t texture_stage) {
+    [[nodiscard]] smgpc::render::GxTevStage2D brlyt_gx_tev_stage(const smgpc::layout::BrlytMaterial& material,
+                                                                 const smgpc::layout::BrlytTevStage& stage, std::uint8_t texture_stage) {
         return smgpc::render::GxTevStage2D{
             .texture_stage = texture_stage,
             .color_in = {stage.color.a, stage.color.b, stage.color.c, stage.color.d},
@@ -560,11 +560,11 @@ namespace {
         };
     }
 
-    [[nodiscard]] std::array< smgpc::render::GxTevRegisterColor2D, 4U > brlyt_initial_tev_registers(const smgpc::compat::GXMaterialState& state) {
+    [[nodiscard]] std::array< smgpc::render::GxTevRegisterColor2D, 4U > brlyt_initial_tev_registers(const smgpc::render::GXMaterialState& state) {
         return state.tev_registers;
     }
 
-    [[nodiscard]] smgpc::render::GxAlphaCompare2D brlyt_alpha_compare(const smgpc::compat::BrlytAlphaCompare& alpha_compare) {
+    [[nodiscard]] smgpc::render::GxAlphaCompare2D brlyt_alpha_compare(const smgpc::layout::BrlytAlphaCompare& alpha_compare) {
         return smgpc::render::GxAlphaCompare2D{
             .comp0 = alpha_compare.comp0,
             .ref0 = alpha_compare.ref0,
@@ -575,7 +575,7 @@ namespace {
         };
     }
 
-    [[nodiscard]] smgpc::render::GxBlendMode2D brlyt_gx_blend_mode(const smgpc::compat::GXBlendState& blend) {
+    [[nodiscard]] smgpc::render::GxBlendMode2D brlyt_gx_blend_mode(const smgpc::render::GXBlendState& blend) {
         return smgpc::render::GxBlendMode2D{
             .type = blend.type,
             .src_factor = blend.src_factor,
@@ -589,7 +589,7 @@ namespace {
 
 SimpleLayout::SimpleLayout(const char* pName, const char* pLayoutName, u32 animLayerNum, int)
     : mName(pName), mLayoutName(pLayoutName), mAnimLayerNum(std::min< u32 >(animLayerNum, 4U)) {
-    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->register_layout(*this);
         mArchivePath = runtime->find_layout_archive(mLayoutName);
         if (mArchivePath.has_value()) {
@@ -601,7 +601,7 @@ SimpleLayout::SimpleLayout(const char* pName, const char* pLayoutName, u32 animL
 }
 
 SimpleLayout::~SimpleLayout() {
-    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->unregister_effect_keeper(getName());
         runtime->unregister_layout(*this);
     }
@@ -611,9 +611,9 @@ void SimpleLayout::initWithoutIter() {
 }
 
 void SimpleLayout::initEffectKeeper(int effectNum, const char* pEffectName, const void*) {
-    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         const auto group_name = pEffectName != nullptr ? std::string_view(pEffectName) : std::string_view(mLayoutName);
-        runtime->register_effect_keeper(smgpc::compat::EffectKeeperHostKind::SimpleLayout, mName, effectNum, group_name, false);
+        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::SimpleLayout, mName, effectNum, group_name, false);
     }
 }
 
@@ -742,10 +742,10 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
         auto texture_stage_count = std::size_t{};
         auto tev_stage_count = std::size_t{};
 #ifndef NDEBUG
-        auto debug_texture_bindings = std::vector< smgpc::compat::RuntimeContext::RenderTextureBindingTrace >{};
+        auto debug_texture_bindings = std::vector< smgpc::runtime::RuntimeContext::RenderTextureBindingTrace >{};
 #endif
 
-        const auto append_texture_stage = [&](const smgpc::compat::BrlytMaterialTexture& material_texture, std::uint8_t tex_coord_gen_index) {
+        const auto append_texture_stage = [&](const smgpc::layout::BrlytMaterialTexture& material_texture, std::uint8_t tex_coord_gen_index) {
             if (texture_stage_count >= texture_stages.size()) {
                 return false;
             }
@@ -764,7 +764,7 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
             };
             tex_coord_gen_indices[texture_stage_count] = tex_coord_gen_index;
 #ifndef NDEBUG
-            debug_texture_bindings.push_back(smgpc::compat::RuntimeContext::RenderTextureBindingTrace{
+            debug_texture_bindings.push_back(smgpc::runtime::RuntimeContext::RenderTextureBindingTrace{
                 .slot = static_cast< std::uint8_t >(texture_stage_count),
                 .texture_index = material_texture.texture_index,
                 .name = texture->name,
@@ -835,8 +835,8 @@ void SimpleLayout::draw(smgpc::render::IRendererEngine& renderer) {
         };
         constexpr auto indices = std::array< std::uint16_t, 6U >{0U, 1U, 2U, 0U, 2U, 3U};
 #ifndef NDEBUG
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr && runtime->should_record_render_packet_trace()) {
-            runtime->record_layout_packet_trace(smgpc::compat::RuntimeContext::LayoutRuntimePacketTrace{
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && runtime->should_record_render_packet_trace()) {
+            runtime->record_layout_packet_trace(smgpc::runtime::RuntimeContext::LayoutRuntimePacketTrace{
                 .layout_name = mLayoutName,
                 .pane_name = pane.name,
                 .material_name = material.name.empty() ? picture.name : material.name,
@@ -951,7 +951,7 @@ void SimpleLayout::setTextBoxTaggedStringRecursive(const char* pPaneName, std::u
     loadRenderData();
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
-    const auto formatted = smgpc::compat::format_bmg_text(rawText, {});
+    const auto formatted = smgpc::resource::format_bmg_text(rawText, {});
     const auto text = !formatted.empty() || rawText.empty() ? std::u16string_view(formatted) : displayText;
 
     auto encoded = std::vector< std::uint16_t >{};
@@ -995,9 +995,9 @@ void SimpleLayout::setTextBoxArgNumberRecursive(const char* pPaneName, s32 numbe
         if (state.args.size() <= index) {
             state.args.resize(index + 1U);
         }
-        state.args[index] = smgpc::compat::BmgFormatArg::number(number);
+        state.args[index] = smgpc::resource::BmgFormatArg::number(number);
 
-        const auto formatted = smgpc::compat::format_bmg_text(state.raw_text, state.args);
+        const auto formatted = smgpc::resource::format_bmg_text(state.raw_text, state.args);
         text_box.text.assign(formatted.begin(), formatted.end());
     }
 
@@ -1026,9 +1026,9 @@ void SimpleLayout::setTextBoxArgStringRecursive(const char* pPaneName, std::u16s
         if (state.args.size() <= index) {
             state.args.resize(index + 1U);
         }
-        state.args[index] = smgpc::compat::BmgFormatArg::string(text);
+        state.args[index] = smgpc::resource::BmgFormatArg::string(text);
 
-        const auto formatted = smgpc::compat::format_bmg_text(state.raw_text, state.args);
+        const auto formatted = smgpc::resource::format_bmg_text(state.raw_text, state.args);
         text_box.text.assign(formatted.begin(), formatted.end());
     }
 
@@ -1722,13 +1722,13 @@ void SimpleLayout::loadRenderData() {
     }
 
     try {
-        auto* runtime = smgpc::compat::RuntimeContext::try_instance();
-        auto local_archive = std::optional< smgpc::compat::RarcArchive >{};
-        const auto* archive = static_cast< const smgpc::compat::RarcArchive* >(nullptr);
+        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        auto local_archive = std::optional< smgpc::resource::RarcArchive >{};
+        const auto* archive = static_cast< const smgpc::resource::RarcArchive* >(nullptr);
         if (runtime != nullptr) {
             archive = &runtime->dvd().archive_for_path(*mArchivePath);
         } else {
-            local_archive = smgpc::compat::RarcArchive::from_file(*mArchivePath);
+            local_archive = smgpc::resource::RarcArchive::from_file(*mArchivePath);
             archive = &*local_archive;
         }
 
@@ -1737,16 +1737,16 @@ void SimpleLayout::loadRenderData() {
             return;
         }
 
-        mBrlytLayout = smgpc::compat::parse_brlyt_layout(archive->file_data(*brlyt_it));
+        mBrlytLayout = smgpc::layout::parse_brlyt_layout(archive->file_data(*brlyt_it));
         for (const auto& entry : archive->entries()) {
             if (!ends_with(entry.path, ".brlan")) {
                 continue;
             }
 
             try {
-                mRenderAnimations[animation_name_from_path(entry.path)] = smgpc::compat::parse_brlan_animation(archive->file_data(entry));
+                mRenderAnimations[animation_name_from_path(entry.path)] = smgpc::layout::parse_brlan_animation(archive->file_data(entry));
             } catch (const std::exception& e) {
-                if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+                if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
                     runtime->note_layout_texture_decode_failed(mLayoutName, entry.path, e.what());
                 }
             }
@@ -1766,11 +1766,11 @@ void SimpleLayout::loadRenderData() {
                 try {
                     mRenderTextures.push_back(RenderTexture{
                         .name = material_texture.texture_name,
-                        .decoded = smgpc::compat::decode_tpl_texture(archive->file_data(texture_path)),
+                        .decoded = smgpc::resource::decode_tpl_texture(archive->file_data(texture_path)),
                         .handle = {},
                     });
                 } catch (const std::exception& e) {
-                    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+                    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
                         runtime->note_layout_texture_decode_failed(mLayoutName, material_texture.texture_name, e.what());
                     }
                 }
@@ -1780,12 +1780,12 @@ void SimpleLayout::loadRenderData() {
         if (!mBrlytLayout.text_boxes.empty()) {
             if (const auto font_path = find_companion_font_archive(mArchivePath)) {
                 try {
-                    auto local_font_archive = std::optional< smgpc::compat::RarcArchive >{};
-                    const auto* font_archive = static_cast< const smgpc::compat::RarcArchive* >(nullptr);
+                    auto local_font_archive = std::optional< smgpc::resource::RarcArchive >{};
+                    const auto* font_archive = static_cast< const smgpc::resource::RarcArchive* >(nullptr);
                     if (runtime != nullptr) {
                         font_archive = &runtime->dvd().archive_for_path(*font_path);
                     } else {
-                        local_font_archive = smgpc::compat::RarcArchive::from_file(*font_path);
+                        local_font_archive = smgpc::resource::RarcArchive::from_file(*font_path);
                         font_archive = &*local_font_archive;
                     }
 
@@ -1799,7 +1799,7 @@ void SimpleLayout::loadRenderData() {
                             continue;
                         }
 
-                        auto font = smgpc::compat::parse_brfnt_font(font_archive->file_data(*font_entry));
+                        auto font = smgpc::layout::parse_brfnt_font(font_archive->file_data(*font_entry));
                         mRenderFonts.push_back(RenderFont{
                             .name = text_box.font_name,
                             .font = std::move(font),
@@ -1808,7 +1808,7 @@ void SimpleLayout::loadRenderData() {
                         mRenderFonts.back().sheet_handles.resize(mRenderFonts.back().font.sheets.size());
                     }
                 } catch (const std::exception& e) {
-                    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+                    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
                         runtime->note_layout_texture_decode_failed(mLayoutName, "<font>", e.what());
                     }
                 }
@@ -1822,7 +1822,7 @@ void SimpleLayout::loadRenderData() {
         mRenderAnimations.clear();
         mCommittedPaneFrames.clear();
         mTextBoxTemplates.clear();
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->note_layout_texture_decode_failed(mLayoutName, "<layout>", e.what());
         }
     }
@@ -2132,8 +2132,8 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     };
 }
 
-smgpc::compat::BrlanPaneFrame SimpleLayout::animationFrameForPane(std::string_view pane_name) const {
-    auto result = smgpc::compat::BrlanPaneFrame{};
+smgpc::layout::BrlanPaneFrame SimpleLayout::animationFrameForPane(std::string_view pane_name) const {
+    auto result = smgpc::layout::BrlanPaneFrame{};
     if (const auto committed = mCommittedPaneFrames.find(std::string(pane_name)); committed != mCommittedPaneFrames.end()) {
         result = committed->second;
     }
@@ -2220,8 +2220,8 @@ smgpc::compat::BrlanPaneFrame SimpleLayout::animationFrameForPane(std::string_vi
     return result;
 }
 
-smgpc::compat::BrlanTextureFrame SimpleLayout::textureFrameForContent(std::string_view content_name) const {
-    auto result = smgpc::compat::BrlanTextureFrame{};
+smgpc::layout::BrlanTextureFrame SimpleLayout::textureFrameForContent(std::string_view content_name) const {
+    auto result = smgpc::layout::BrlanTextureFrame{};
     for (const auto& anim_state : mAnimations) {
         if (anim_state.name.empty()) {
             continue;

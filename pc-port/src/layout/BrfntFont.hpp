@@ -3,12 +3,13 @@
 #include <cstdint>
 #include <optional>
 #include <span>
+#include <string>
 #include <utility>
 #include <vector>
 
 #include "resource/TplTexture.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::layout {
 
     struct BrfntCharWidths {
         std::int8_t left = 0;
@@ -25,7 +26,18 @@ namespace smgpc::compat {
         BrfntCharWidths widths{};
     };
 
+    struct BrfntBlockInfo {
+        std::string magic;
+        std::size_t offset = 0U;
+        std::size_t size = 0U;
+    };
+
     struct BrfntFont {
+        std::uint32_t declared_file_size = 0U;
+        std::uint16_t header_size = 0U;
+        std::uint16_t block_count = 0U;
+        std::uint8_t font_type = 0U;
+        std::uint8_t encoding = 0U;
         std::uint8_t height = 0U;
         std::uint8_t width = 0U;
         std::uint8_t ascent = 0U;
@@ -36,11 +48,21 @@ namespace smgpc::compat {
         std::uint8_t max_char_width = 0U;
         std::uint16_t sheet_width = 0U;
         std::uint16_t sheet_height = 0U;
-        TplTextureFormat sheet_format = TplTextureFormat::I4;
-        std::vector<DecodedTexture> sheets;
+        std::uint32_t sheet_size = 0U;
+        std::uint16_t sheet_count = 0U;
+        std::uint32_t sheet_image_offset = 0U;
+        smgpc::resource::TplTextureFormat sheet_format = smgpc::resource::TplTextureFormat::I4;
+        std::vector<BrfntBlockInfo> blocks;
+        std::vector<smgpc::resource::DecodedTexture> sheets;
 
+        [[nodiscard]] std::optional<std::uint16_t> find_glyph_index_exact(std::uint16_t code) const;
+        [[nodiscard]] std::uint16_t resolved_glyph_index(std::uint16_t code) const;
+        [[nodiscard]] bool has_glyph(std::uint16_t code) const;
         [[nodiscard]] std::optional<BrfntGlyph> glyph_for_exact(std::uint16_t code) const;
         [[nodiscard]] std::optional<BrfntGlyph> glyph_for(std::uint16_t code) const;
+        [[nodiscard]] std::optional<BrfntGlyph> glyph_for_resfont(std::uint16_t code) const;
+        [[nodiscard]] BrfntCharWidths char_widths(std::uint16_t code) const;
+        [[nodiscard]] int char_width(std::uint16_t code) const;
         [[nodiscard]] BrfntCharWidths widths_for_glyph(std::uint16_t glyph_index) const;
 
         struct WidthBlock {
@@ -74,4 +96,4 @@ namespace smgpc::compat {
 
     [[nodiscard]] BrfntFont parse_brfnt_font(std::span<const std::uint8_t> data);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::layout

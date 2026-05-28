@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string_view>
 
-namespace smgpc::compat {
+namespace smgpc::layout {
     namespace {
 
         constexpr auto CURVE_STEP = std::uint8_t{1U};
@@ -26,6 +26,10 @@ namespace smgpc::compat {
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) | (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | data[offset + 3U];
+        }
+
+        [[nodiscard]] std::int16_t read_be_s16(std::span<const std::uint8_t> data, std::size_t offset) {
+            return std::bit_cast<std::int16_t>(read_be16(data, offset));
         }
 
         [[nodiscard]] float read_be_float(std::span<const std::uint8_t> data, std::size_t offset) {
@@ -57,6 +61,22 @@ namespace smgpc::compat {
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), length);
+        }
+
+        [[nodiscard]] std::string read_c_string(std::span<const std::uint8_t> data, std::size_t offset) {
+            if (offset >= data.size()) {
+                throw std::runtime_error("BRLAN string out of range");
+            }
+
+            auto end = offset;
+            while (end < data.size() && data[end] != 0U) {
+                ++end;
+            }
+            if (end == data.size()) {
+                throw std::runtime_error("BRLAN string is not null terminated");
+            }
+
+            return std::string(reinterpret_cast<const char *>(data.data() + offset), end - offset);
         }
 
         [[nodiscard]] float evaluate_hermite(std::span<const BrlanAnimation::HermiteKey> keys, float frame) {
@@ -296,6 +316,59 @@ namespace smgpc::compat {
             }
         }
 
+        void parse_tag_block(BrlanAnimation &animation, std::span<const std::uint8_t> block) {
+            if (block.size() < 0x1cU) {
+                throw std::runtime_error("BRLAN animation tag block is truncated");
+            }
+
+            animation.tag_order = read_be16(block, 0x08U);
+            const auto group_count = read_be16(block, 0x0aU);
+            const auto name_offset = read_be32(block, 0x0cU);
+            const auto groups_offset = read_be32(block, 0x10U);
+            animation.tag_start_frame = read_be_s16(block, 0x14U);
+            animation.tag_end_frame = read_be_s16(block, 0x16U);
+            animation.tag_flag = block[0x18U];
+            animation.tag_name = read_c_string(block, name_offset);
+
+            constexpr auto GROUP_REF_SIZE = 20U;
+            if (groups_offset + static_cast<std::size_t>(group_count) * GROUP_REF_SIZE > block.size()) {
+                throw std::runtime_error("BRLAN animation group refs are truncated");
+            }
+
+            animation.group_refs.clear();
+            animation.group_refs.reserve(group_count);
+            for (auto i = 0U; i < group_count; ++i) {
+                const auto offset = groups_offset + static_cast<std::size_t>(i) * GROUP_REF_SIZE;
+                animation.group_refs.push_back(BrlanAnimation::GroupRef{
+                    .name = read_fixed_string(block, offset, 17U),
+                    .flag = block[offset + 17U],
+                });
+            }
+        }
+
+        void parse_share_block(BrlanAnimation &animation, std::span<const std::uint8_t> block) {
+            if (block.size() < 0x10U) {
+                throw std::runtime_error("BRLAN animation share block is truncated");
+            }
+
+            const auto share_info_offset = read_be32(block, 0x08U);
+            const auto share_count = read_be16(block, 0x0cU);
+            constexpr auto SHARE_INFO_SIZE = 36U;
+            if (share_info_offset + static_cast<std::size_t>(share_count) * SHARE_INFO_SIZE > block.size()) {
+                throw std::runtime_error("BRLAN animation share infos are truncated");
+            }
+
+            animation.share_infos.clear();
+            animation.share_infos.reserve(share_count);
+            for (auto i = 0U; i < share_count; ++i) {
+                const auto offset = share_info_offset + static_cast<std::size_t>(i) * SHARE_INFO_SIZE;
+                animation.share_infos.push_back(BrlanAnimation::ShareInfo{
+                    .source_pane_name = read_fixed_string(block, offset, 17U),
+                    .target_group_name = read_fixed_string(block, offset + 17U, 17U),
+                });
+            }
+        }
+
     }  // namespace
 
     BrlanPaneFrame BrlanAnimation::pane_frame(std::string_view pane_name, float frame) const {
@@ -356,7 +429,11 @@ namespace smgpc::compat {
             }
 
             const auto block = data.subspan(cursor, block_size);
-            if (has_magic(block, 0U, "pai1")) {
+            if (has_magic(block, 0U, "pat1")) {
+                parse_tag_block(animation, block);
+            } else if (has_magic(block, 0U, "pas1")) {
+                parse_share_block(animation, block);
+            } else if (has_magic(block, 0U, "pai1")) {
                 parse_animation_block(animation, block);
             }
 
@@ -366,4 +443,4 @@ namespace smgpc::compat {
         return animation;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::layout

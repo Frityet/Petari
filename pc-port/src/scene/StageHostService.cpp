@@ -2,7 +2,7 @@
 
 #include "scene/GameSystemSceneControllerService.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::scene {
 
     StageHostService::StageHostService(GameSystemSceneControllerService &scene_controller) : _scene_controller(scene_controller) {
     }
@@ -37,4 +37,4 @@ namespace smgpc::compat {
         _scene_controller.request_change_scene(request);
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

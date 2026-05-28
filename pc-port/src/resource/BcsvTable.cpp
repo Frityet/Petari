@@ -1,11 +1,13 @@
 #include "BcsvTable.hpp"
 
+#include <algorithm>
 #include <bit>
+#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <utility>
 
-namespace smgpc::compat {
+namespace smgpc::resource {
     namespace {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
@@ -107,17 +109,58 @@ namespace smgpc::compat {
     }
 
     std::optional<std::size_t> BcsvTable::field_index(std::uint32_t hash) const {
-        for (std::size_t i = 0U; i < _fields.size(); ++i) {
-            if (_fields[i].hash == hash) {
-                return i;
-            }
+        const auto found = std::ranges::lower_bound(_field_indices_by_hash, hash, {}, [this](std::size_t index) {
+            return _fields[index].hash;
+        });
+        if (found == _field_indices_by_hash.end() || _fields[*found].hash != hash) {
+            return std::nullopt;
         }
 
-        return std::nullopt;
+        return *found;
     }
 
     std::optional<std::size_t> BcsvTable::field_index(std::string_view name) const {
         return field_index(jmap_hash(name));
+    }
+
+    std::optional<std::span<const std::uint8_t>> BcsvTable::raw_value(std::size_t entry_index, std::uint32_t hash) const {
+        const auto index = field_index(hash);
+        if (!index.has_value()) {
+            return std::nullopt;
+        }
+
+        const auto &field = _fields[*index];
+        const auto offset = value_offset(entry_index, field);
+        auto width = std::size_t{4U};
+        switch (field.type) {
+        case BcsvFieldType::Int8:
+            width = 1U;
+            break;
+        case BcsvFieldType::Int16:
+            width = 2U;
+            break;
+        case BcsvFieldType::InlineString: {
+            const auto entry_end = entry_offset(entry_index) + _entry_size;
+            auto end = offset;
+            while (end < entry_end && _data[end] != 0U) {
+                ++end;
+            }
+            width = std::min(entry_end - offset, (end - offset) + (end < entry_end ? 1U : 0U));
+            break;
+        }
+        default:
+            width = 4U;
+            break;
+        }
+
+        if (offset + width > _data.size()) {
+            throw std::runtime_error("BCSV raw field value is outside table");
+        }
+        return std::span<const std::uint8_t>(_data).subspan(offset, width);
+    }
+
+    std::optional<std::span<const std::uint8_t>> BcsvTable::raw_value(std::size_t entry_index, std::string_view name) const {
+        return raw_value(entry_index, jmap_hash(name));
     }
 
     std::optional<std::int32_t> BcsvTable::get_s32(std::size_t entry_index, std::uint32_t hash) const {
@@ -290,6 +333,7 @@ namespace smgpc::compat {
 
         _fields.clear();
         _fields.reserve(field_count);
+        _field_indices_by_hash.clear();
         for (auto i = 0U; i < field_count; ++i) {
             const auto offset = fields_offset + static_cast<std::size_t>(i) * 0x0cU;
             _fields.push_back(BcsvField{
@@ -300,6 +344,14 @@ namespace smgpc::compat {
                 .type = static_cast<BcsvFieldType>(bytes[offset + 0x0bU]),
             });
         }
+        _field_indices_by_hash.resize(_fields.size());
+        std::iota(_field_indices_by_hash.begin(), _field_indices_by_hash.end(), 0U);
+        std::ranges::sort(_field_indices_by_hash, [this](std::size_t lhs, std::size_t rhs) {
+            if (_fields[lhs].hash == _fields[rhs].hash) {
+                return lhs < rhs;
+            }
+            return _fields[lhs].hash < _fields[rhs].hash;
+        });
 
         for (const auto &field : _fields) {
             const auto minimum_width = field.type == BcsvFieldType::InlineString || field.type == BcsvFieldType::Int8 ? 1U :
@@ -341,4 +393,4 @@ namespace smgpc::compat {
         return std::string(reinterpret_cast<const char *>(_data.data() + offset), end - offset);
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::resource

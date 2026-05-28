@@ -446,7 +446,7 @@ void FileSelectItem::turnToFront(s32 frameCount) {
     mTurnToFrontStep = 0;
 }
 
-void FileSelectItem::setBasePosition(const smgpc::compat::CameraParamVec3& base_position) {
+void FileSelectItem::setBasePosition(const smgpc::camera::CameraParamVec3& base_position) {
     mBasePosition = base_position;
 }
 
@@ -504,7 +504,7 @@ const TVec3f& FileSelectItem::getPosition() const {
 }
 #endif
 
-const smgpc::compat::CameraParamVec3& FileSelectItem::getBasePosition() const {
+const smgpc::camera::CameraParamVec3& FileSelectItem::getBasePosition() const {
     return mBasePosition;
 }
 

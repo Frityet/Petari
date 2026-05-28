@@ -6,11 +6,12 @@
 #include <array>
 #include <bit>
 #include <cstring>
+#include <optional>
 #include <stdexcept>
 #include <string_view>
 #include <utility>
 
-namespace smgpc::compat {
+namespace smgpc::layout {
     namespace {
 
         struct PaneState {
@@ -163,7 +164,7 @@ namespace smgpc::compat {
             return static_cast<std::uint8_t>(std::clamp<std::int16_t>(value, 0, 255));
         }
 
-        [[nodiscard]] std::array<std::uint8_t, 4U> material_color_to_rgba8(const GXTevRegisterColor &color) {
+        [[nodiscard]] std::array<std::uint8_t, 4U> material_color_to_rgba8(const smgpc::render::GXTevRegisterColor &color) {
             return std::array<std::uint8_t, 4U>{
                 clamp_material_color(color[0U]),
                 clamp_material_color(color[1U]),
@@ -215,7 +216,7 @@ namespace smgpc::compat {
                 material.name = read_fixed_string(block, material_offset, 20U);
                 for (auto color_index = 0U; color_index < material.tev_colors.size(); ++color_index) {
                     const auto color_offset = material_offset + 20U + static_cast<std::size_t>(color_index) * 8U;
-                    material.tev_colors[color_index] = GXTevRegisterColor{
+                    material.tev_colors[color_index] = smgpc::render::GXTevRegisterColor{
                         read_be_s16(block, color_offset),
                         read_be_s16(block, color_offset + 2U),
                         read_be_s16(block, color_offset + 4U),
@@ -367,7 +368,7 @@ namespace smgpc::compat {
                     };
                     cursor += 4U;
                 }
-                material.gx_state = gx_state_from_brlyt_material(material);
+                material.gx_state = smgpc::render::gx_state_from_brlyt_material(material);
                 materials.push_back(material);
             }
 
@@ -577,8 +578,8 @@ namespace smgpc::compat {
             const auto color_mapping_max = material_index < materials.size() ? material_color_to_rgba8(materials[material_index].tev_colors[1U]) : std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U};
             auto raw_text = parse_utf16be_string(block, text_offset, text_byte_count);
             const auto raw_text_u16 = u16string_from_words(raw_text);
-            auto display_text = words_from_u16string(format_bmg_text(raw_text_u16, {}));
-            auto control_tags = bmg_control_tags(raw_text_u16);
+            auto display_text = words_from_u16string(smgpc::resource::format_bmg_text(raw_text_u16, {}));
+            auto control_tags = smgpc::resource::bmg_control_tags(raw_text_u16);
 
             return BrlytTextBox{
                 .name = name,
@@ -605,6 +606,52 @@ namespace smgpc::compat {
             };
         }
 
+        [[nodiscard]] std::optional<std::size_t> pane_index_by_name(const std::vector<BrlytPane> &panes, std::string_view name) {
+            const auto found = std::ranges::find_if(panes, [name](const auto &pane) {
+                return pane.name == name;
+            });
+
+            if (found == panes.end()) {
+                return std::nullopt;
+            }
+
+            return static_cast<std::size_t>(std::distance(panes.begin(), found));
+        }
+
+        [[nodiscard]] BrlytGroup parse_group(std::span<const std::uint8_t> block, const std::vector<BrlytPane> &panes,
+                                             std::uint16_t nest_level, bool root_group) {
+            if (block.size() < 0x1cU) {
+                throw std::runtime_error("BRLYT group block is truncated");
+            }
+
+            auto group = BrlytGroup{
+                .name = read_fixed_string(block, 8U, 16U),
+                .pane_names = {},
+                .pane_indices = {},
+                .nest_level = nest_level,
+                .root_group = root_group,
+            };
+
+            const auto pane_count = read_be16(block, 24U);
+            const auto pane_names_offset = 0x1cU;
+            const auto pane_names_size = static_cast<std::size_t>(pane_count) * 16U;
+            if (pane_names_offset + pane_names_size > block.size()) {
+                throw std::runtime_error("BRLYT group pane-name table is truncated");
+            }
+
+            group.pane_names.reserve(pane_count);
+            group.pane_indices.reserve(pane_count);
+            for (auto i = 0U; i < pane_count; ++i) {
+                const auto pane_name = read_fixed_string(block, pane_names_offset + static_cast<std::size_t>(i) * 16U, 16U);
+                group.pane_names.push_back(pane_name);
+                if (const auto pane_index = pane_index_by_name(panes, pane_name)) {
+                    group.pane_indices.push_back(*pane_index);
+                }
+            }
+
+            return group;
+        }
+
     }  // namespace
 
     BrlytLayout parse_brlyt_layout(std::span<const std::uint8_t> data) {
@@ -620,6 +667,8 @@ namespace smgpc::compat {
         auto parent_index_stack = std::vector<std::int32_t>{};
         auto last_state = PaneState{};
         auto last_pane_index = std::int32_t{-1};
+        auto group_nest_level = std::uint16_t{};
+        auto read_root_group = false;
 
         for (auto i = 0U; i < block_count; ++i) {
             if (cursor + 8U > data.size()) {
@@ -679,6 +728,15 @@ namespace smgpc::compat {
                 if (!parent_index_stack.empty()) {
                     parent_index_stack.pop_back();
                 }
+            } else if (has_magic(block, 0U, "grp1")) {
+                layout.groups.push_back(parse_group(block, layout.panes, group_nest_level, !read_root_group));
+                read_root_group = true;
+            } else if (has_magic(block, 0U, "grs1")) {
+                ++group_nest_level;
+            } else if (has_magic(block, 0U, "gre1")) {
+                if (group_nest_level > 0U) {
+                    --group_nest_level;
+                }
             }
 
             cursor += block_size;
@@ -687,4 +745,4 @@ namespace smgpc::compat {
         return layout;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::layout

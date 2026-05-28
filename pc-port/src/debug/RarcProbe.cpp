@@ -41,7 +41,7 @@ namespace {
 int main(int argc, char **argv) try {
     const auto archive_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
     const auto archive_path = resolve_archive_path(archive_name);
-    const auto archive = smgpc::compat::RarcArchive::from_file(archive_path);
+    const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
 
     if (argc == 4) {
         const auto entry_name = std::string_view(argv[2]);

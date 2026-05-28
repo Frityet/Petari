@@ -13,7 +13,7 @@
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "render/J3dMaterialRuntime.hpp"
-#include "render/LiveActorModelCompat.hpp"
+#include "render/live_actor/LiveActorModel.hpp"
 
 class ActorLightCtrl;
 class HitSensor;
@@ -126,10 +126,10 @@ public:
     void initEffectKeeper(int effectNum, const char* pEffectName, bool);
     void initActorLightCtrl();
     void loadActorLight() const;
-    void setBaseMatrix(const smgpc::compat::J3dMatrix3x4& matrix);
-    void setProjmapEffectMatrix(const smgpc::compat::J3dMatrix3x4& matrix);
-    void drawModel(smgpc::render::IRendererEngine& renderer, const smgpc::compat::CameraPoseCompat& camera_pose, std::uint64_t frame,
-                   LiveActorModelCompat::DrawPass pass = LiveActorModelCompat::DrawPass::All);
+    void setBaseMatrix(const smgpc::render::J3dMatrix3x4& matrix);
+    void setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4& matrix);
+    void drawModel(smgpc::render::IRendererEngine& renderer, const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
+                   smgpc::render::live_actor::LiveActorModel::DrawPass pass = smgpc::render::live_actor::LiveActorModel::DrawPass::All);
     void startBck(const char* pName, const char* pFileName);
     void startBrk(const char* pName);
     void startBtk(const char* pName);
@@ -144,7 +144,7 @@ public:
     [[nodiscard]] std::string_view currentBtkName() const;
 
     [[nodiscard]] bool isDead() const;
-    [[nodiscard]] const smgpc::compat::J3dMatrix3x4& getBaseMatrix() const;
+    [[nodiscard]] const smgpc::render::J3dMatrix3x4& getBaseMatrix() const;
 
     TVec3f mPosition{};
     TVec3f mRotation{};
@@ -154,11 +154,11 @@ public:
 private:
     bool mIsDead = true;
     Spine* mSpine = nullptr;
-    smgpc::compat::J3dMatrix3x4 mBaseMatrix{};
+    smgpc::render::J3dMatrix3x4 mBaseMatrix{};
     J3DFrameCtrl mBrkCtrl{};
     bool mBrkActive = false;
     std::string mCurrentBckName{};
     std::string mCurrentBrkName{};
     std::string mCurrentBtkName{};
-    std::unique_ptr< LiveActorModelCompat > mModel{};
+    std::unique_ptr< smgpc::render::live_actor::LiveActorModel > mModel{};
 };

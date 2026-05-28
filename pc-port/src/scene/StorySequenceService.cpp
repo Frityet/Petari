@@ -5,9 +5,9 @@
 
 #include <string>
 
-namespace smgpc::compat {
+namespace smgpc::scene {
 
-    StorySequenceService::StorySequenceService(RuntimeContext &runtime) : _runtime(runtime) {
+    StorySequenceService::StorySequenceService(smgpc::runtime::RuntimeContext &runtime) : _runtime(runtime) {
     }
 
     StorySequenceService::~StorySequenceService() = default;
@@ -48,4 +48,4 @@ namespace smgpc::compat {
         return request;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene

@@ -11,7 +11,7 @@ NameObj::NameObj(const char* pName) {
 }
 
 NameObj::~NameObj() {
-    if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->scheduler().disconnect_name_obj(*this);
     }
 }

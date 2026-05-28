@@ -83,8 +83,8 @@
 #include <vector>
 
 namespace smgpc::tests {
-    [[nodiscard]] inline smgpc::compat::CameraPoseCompat title_test_camera_pose() {
-        return smgpc::compat::CameraPoseCompat{
+    [[nodiscard]] inline smgpc::camera::CameraPose title_test_camera_pose() {
+        return smgpc::camera::CameraPose{
             .eye = {0.0F, 15800.0F, 15000.0F},
             .watch = {0.0F, 15800.0F, 0.0F},
             .up = {0.0F, 1.0F, 0.0F},
@@ -95,8 +95,8 @@ namespace smgpc::tests {
         };
     }
 
-    [[nodiscard]] inline smgpc::compat::CameraPoseCompat far_test_camera_pose() {
-        return smgpc::compat::CameraPoseCompat{
+    [[nodiscard]] inline smgpc::camera::CameraPose far_test_camera_pose() {
+        return smgpc::camera::CameraPose{
             .eye = {0.0F, 0.0F, 15000.0F},
             .watch = {0.0F, 800.0F, 0.0F},
             .up = {0.0F, 1.0F, 0.0F},
@@ -499,7 +499,7 @@ namespace smgpc::tests {
         }
     }
 
-    inline void require_tev_stage(const smgpc::compat::J3dTevStageSummary &stage, std::array<std::uint8_t, 4U> color_in, std::uint8_t k_color_sel,
+    inline void require_tev_stage(const smgpc::render::J3dTevStageSummary &stage, std::array<std::uint8_t, 4U> color_in, std::uint8_t k_color_sel,
                                   std::array<std::uint8_t, 4U> alpha_in, std::uint8_t alpha_clamp, std::uint8_t k_alpha_sel, std::string_view message) {
         require(stage.color_in == color_in, message);
         require(stage.color_op == 0U && stage.color_bias == 0U && stage.color_scale == 0U && stage.color_clamp == 1U && stage.color_out == 0U,

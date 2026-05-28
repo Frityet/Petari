@@ -6,8 +6,12 @@
 #include <charconv>
 #include <chrono>
 #include <cstdlib>
+#include <cstring>
 #include <exception>
 #include <fstream>
+#include <limits>
+#include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <system_error>
@@ -22,9 +26,11 @@
 #include "Game/Screen/SimpleLayout.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "camera/CameraParam.hpp"
+#include "scene/NameObjLifecycleService.hpp"
+#include "scene/SceneExecutionService.hpp"
 #include "scene/SceneLifecycleService.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::runtime {
     namespace {
 
         RuntimeContext *s_runtime_context = nullptr;
@@ -103,10 +109,19 @@ namespace smgpc::compat {
         }
 
 #ifndef NDEBUG
-        [[nodiscard]] std::optional<std::uint64_t> read_frame_index_environment(std::string_view name) {
-            const auto key = std::string(name);
-            const auto *value = std::getenv(key.c_str());
-            if (value == nullptr || value[0] == '\0') {
+        [[nodiscard]] std::string_view trim(std::string_view text) {
+            while (!text.empty() && std::isspace(static_cast<unsigned char>(text.front())) != 0) {
+                text.remove_prefix(1U);
+            }
+            while (!text.empty() && std::isspace(static_cast<unsigned char>(text.back())) != 0) {
+                text.remove_suffix(1U);
+            }
+            return text;
+        }
+
+        [[nodiscard]] std::optional<std::uint64_t> parse_frame_index(std::string_view text) {
+            text = trim(text);
+            if (text.empty()) {
                 return std::nullopt;
             }
 
@@ -120,9 +135,260 @@ namespace smgpc::compat {
             return frame;
         }
 
-        [[nodiscard]] std::optional<std::uint64_t> read_debug_hold_title_combo_frame_environment() {
-            return read_frame_index_environment("SMGPC_HOLD_TITLE_COMBO_FRAME");
+        [[nodiscard]] std::optional<float> parse_float(std::string_view text) {
+            text = trim(text);
+            if (text.empty()) {
+                return std::nullopt;
+            }
+
+            auto value = 0.0F;
+            const auto *begin = text.data();
+            const auto *end = begin + text.size();
+            const auto result = std::from_chars(begin, end, value);
+            if (result.ec != std::errc{} || result.ptr != end) {
+                return std::nullopt;
+            }
+            return value;
         }
+
+        [[nodiscard]] std::optional<bool> parse_bool(std::string_view text) {
+            text = trim(text);
+            if (text == "1" || text == "true" || text == "TRUE" || text == "True" || text == "on" || text == "ON") {
+                return true;
+            }
+            if (text == "0" || text == "false" || text == "FALSE" || text == "False" || text == "off" || text == "OFF") {
+                return false;
+            }
+            return std::nullopt;
+        }
+
+        struct DebugFrameRange {
+            std::uint64_t first_frame = 0U;
+            std::uint64_t last_frame = std::numeric_limits<std::uint64_t>::max();
+        };
+
+        [[nodiscard]] std::optional<DebugFrameRange> parse_debug_frame_range(std::string_view text) {
+            text = trim(text);
+            if (text.empty()) {
+                return std::nullopt;
+            }
+
+            const auto dash = text.find('-');
+            if (dash == std::string_view::npos) {
+                const auto frame = parse_frame_index(text);
+                if (!frame.has_value()) {
+                    return std::nullopt;
+                }
+                return DebugFrameRange{.first_frame = *frame, .last_frame = *frame};
+            }
+
+            const auto first = parse_frame_index(text.substr(0U, dash));
+            if (!first.has_value()) {
+                return std::nullopt;
+            }
+
+            auto last = std::numeric_limits<std::uint64_t>::max();
+            const auto last_text = trim(text.substr(dash + 1U));
+            if (!last_text.empty()) {
+                const auto parsed_last = parse_frame_index(last_text);
+                if (!parsed_last.has_value() || *parsed_last < *first) {
+                    return std::nullopt;
+                }
+                last = *parsed_last;
+            }
+
+            return DebugFrameRange{.first_frame = *first, .last_frame = last};
+        }
+
+        [[nodiscard]] std::optional<std::uint32_t> debug_wpad_button_mask(std::string_view text) {
+            text = trim(text);
+            if (text == "A") {
+                return WPAD_BUTTON_A;
+            }
+            if (text == "B") {
+                return WPAD_BUTTON_B;
+            }
+            if (text == "UP") {
+                return WPAD_BUTTON_UP;
+            }
+            if (text == "DOWN") {
+                return WPAD_BUTTON_DOWN;
+            }
+            if (text == "LEFT") {
+                return WPAD_BUTTON_LEFT;
+            }
+            if (text == "RIGHT") {
+                return WPAD_BUTTON_RIGHT;
+            }
+            if (text == "PLUS" || text == "+") {
+                return WPAD_BUTTON_PLUS;
+            }
+            if (text == "MINUS") {
+                return WPAD_BUTTON_MINUS;
+            }
+            if (text == "HOME") {
+                return WPAD_BUTTON_HOME;
+            }
+            if (text == "C") {
+                return WPAD_BUTTON_C;
+            }
+            if (text == "Z") {
+                return WPAD_BUTTON_Z;
+            }
+            if (text == "ONE" || text == "1") {
+                return WPAD_BUTTON_1;
+            }
+            if (text == "TWO" || text == "2") {
+                return WPAD_BUTTON_2;
+            }
+            return std::nullopt;
+        }
+
+        [[nodiscard]] std::uint32_t parse_debug_wpad_button_mask(std::string_view text) {
+            auto mask = std::uint32_t{};
+            while (true) {
+                const auto plus = text.find('+');
+                const auto token = trim(text.substr(0U, plus));
+                if (const auto button = debug_wpad_button_mask(token)) {
+                    mask |= *button;
+                }
+                if (plus == std::string_view::npos) {
+                    break;
+                }
+                text.remove_prefix(plus + 1U);
+            }
+            return mask;
+        }
+
+        [[nodiscard]] std::string debug_wpad_button_mask_detail(std::uint32_t mask) {
+            constexpr auto buttons = std::array{
+                std::pair{WPAD_BUTTON_A, "A"},
+                std::pair{WPAD_BUTTON_B, "B"},
+                std::pair{WPAD_BUTTON_UP, "UP"},
+                std::pair{WPAD_BUTTON_DOWN, "DOWN"},
+                std::pair{WPAD_BUTTON_LEFT, "LEFT"},
+                std::pair{WPAD_BUTTON_RIGHT, "RIGHT"},
+                std::pair{WPAD_BUTTON_PLUS, "PLUS"},
+                std::pair{WPAD_BUTTON_MINUS, "MINUS"},
+                std::pair{WPAD_BUTTON_HOME, "HOME"},
+                std::pair{WPAD_BUTTON_C, "C"},
+                std::pair{WPAD_BUTTON_Z, "Z"},
+                std::pair{WPAD_BUTTON_1, "ONE"},
+                std::pair{WPAD_BUTTON_2, "TWO"},
+            };
+
+            auto detail = std::string{"channel=0;buttons="};
+            auto appended = false;
+            for (const auto &[button_mask, name] : buttons) {
+                if ((mask & button_mask) == 0U) {
+                    continue;
+                }
+                if (appended) {
+                    detail += '+';
+                }
+                detail += name;
+                appended = true;
+            }
+            if (!appended) {
+                detail += "none";
+            }
+            return detail;
+        }
+
+        [[nodiscard]] std::optional<std::string> read_debug_string_environment(std::string_view name) {
+            const auto key = std::string(name);
+            const auto *value = std::getenv(key.c_str());
+            if (value == nullptr || value[0] == '\0') {
+                return std::nullopt;
+            }
+            return std::string(value);
+        }
+
+        [[nodiscard]] std::vector<RuntimeContext::DebugWpadButtonScriptSpan> read_debug_wpad_button_script_environment() {
+            auto spans = std::vector<RuntimeContext::DebugWpadButtonScriptSpan>{};
+            const auto script = read_debug_string_environment("SMGPC_DEBUG_WPAD_BUTTON_SCRIPT");
+            if (!script.has_value()) {
+                return spans;
+            }
+
+            auto text = std::string_view(*script);
+            while (!text.empty()) {
+                const auto separator = text.find(';');
+                const auto entry = trim(text.substr(0U, separator));
+                if (!entry.empty()) {
+                    const auto colon = entry.find(':');
+                    if (colon != std::string_view::npos) {
+                        const auto range = parse_debug_frame_range(entry.substr(0U, colon));
+                        const auto mask = parse_debug_wpad_button_mask(entry.substr(colon + 1U));
+                        if (range.has_value() && mask != 0U) {
+                            spans.push_back(RuntimeContext::DebugWpadButtonScriptSpan{
+                                .first_frame = range->first_frame,
+                                .last_frame = range->last_frame,
+                                .button_mask = mask,
+                            });
+                        }
+                    }
+                }
+                if (separator == std::string_view::npos) {
+                    break;
+                }
+                text.remove_prefix(separator + 1U);
+            }
+            return spans;
+        }
+
+        [[nodiscard]] std::vector<RuntimeContext::DebugWpadPointerScriptSpan> read_debug_wpad_pointer_script_environment() {
+            auto spans = std::vector<RuntimeContext::DebugWpadPointerScriptSpan>{};
+            const auto script = read_debug_string_environment("SMGPC_DEBUG_WPAD_POINTER_SCRIPT");
+            if (!script.has_value()) {
+                return spans;
+            }
+
+            auto text = std::string_view(*script);
+            while (!text.empty()) {
+                const auto separator = text.find(';');
+                const auto entry = trim(text.substr(0U, separator));
+                if (!entry.empty()) {
+                    const auto colon = entry.find(':');
+                    if (colon != std::string_view::npos) {
+                        const auto range = parse_debug_frame_range(entry.substr(0U, colon));
+                        auto values = entry.substr(colon + 1U);
+                        const auto first_comma = values.find(',');
+                        if (range.has_value() && first_comma != std::string_view::npos) {
+                            const auto x = parse_float(values.substr(0U, first_comma));
+                            values.remove_prefix(first_comma + 1U);
+                            const auto second_comma = values.find(',');
+                            const auto y = parse_float(values.substr(0U, second_comma));
+                            auto valid = true;
+                            if (second_comma != std::string_view::npos) {
+                                if (const auto parsed_valid = parse_bool(values.substr(second_comma + 1U))) {
+                                    valid = *parsed_valid;
+                                }
+                            }
+                            if (x.has_value() && y.has_value()) {
+                                spans.push_back(RuntimeContext::DebugWpadPointerScriptSpan{
+                                    .first_frame = range->first_frame,
+                                    .last_frame = range->last_frame,
+                                    .x = *x,
+                                    .y = *y,
+                                    .valid = valid,
+                                });
+                            }
+                        }
+                    }
+                }
+                if (separator == std::string_view::npos) {
+                    break;
+                }
+                text.remove_prefix(separator + 1U);
+            }
+            return spans;
+        }
+
+        [[nodiscard]] bool debug_span_active(std::uint64_t frame_index, std::uint64_t first_frame, std::uint64_t last_frame) {
+            return frame_index >= first_frame && frame_index <= last_frame;
+        }
+
 #endif
 
         [[nodiscard]] std::optional<std::string> read_string_environment(std::string_view name) {
@@ -133,6 +399,18 @@ namespace smgpc::compat {
             }
 
             return std::string(value);
+        }
+
+        [[nodiscard]] smgpc::camera::CameraPose default_scene_camera_pose() {
+            return smgpc::camera::CameraPose{
+                .eye = {0.0F, 0.0F, 0.0F},
+                .watch = {0.0F, 0.0F, -1.0F},
+                .up = {0.0F, 1.0F, 0.0F},
+                .fovy_degrees = 45.0F,
+                .aspect_ratio = 608.0F / 456.0F,
+                .near_clip = 100.0F,
+                .far_clip = 800000.0F,
+            };
         }
 
 #ifndef NDEBUG
@@ -150,16 +428,39 @@ namespace smgpc::compat {
 
             return "Unknown";
         }
+
+        [[nodiscard]] std::string_view star_pointer_target_event_name(StarPointerTargetEventKind kind) {
+            switch (kind) {
+            case StarPointerTargetEventKind::Enter:
+                return "target_enter";
+            case StarPointerTargetEventKind::Leave:
+                return "target_leave";
+            case StarPointerTargetEventKind::Select:
+                return "target_select";
+            }
+
+            return "target_unknown";
+        }
 #endif
+
+        [[nodiscard]] std::string default_stage_name() {
+#ifndef NDEBUG
+            return read_string_environment("SMGPC_STAGE_NAME").value_or("");
+#else
+            return "";
+#endif
+        }
 
     }  // namespace
 
-    RuntimeContext::RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service)
-        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
-          _current_stage_name(read_string_environment("SMGPC_STAGE_NAME").value_or("FileSelect"))
+    RuntimeContext::RuntimeContext(logging::ILogger &logger, render::IWindowService &window_service,
+                                   RuntimeContextSceneServiceMode scene_service_mode)
+        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _rfl(_save_data.nand()),
+          _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
-          _hold_title_combo_frame(read_debug_hold_title_combo_frame_environment())
+          _debug_wpad_button_script(read_debug_wpad_button_script_environment()),
+          _debug_wpad_pointer_script(read_debug_wpad_pointer_script_environment())
 #endif
     {
         if (s_runtime_context != nullptr) {
@@ -167,7 +468,15 @@ namespace smgpc::compat {
         }
 
         s_runtime_context = this;
-        _scene_lifecycle = std::make_unique<SceneLifecycleService>(*this);
+        _save_data.set_sys_config_service(_sys_config);
+        if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
+            _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
+            _owned_scene_execution = std::make_unique<smgpc::scene::SceneExecutionService>(*this);
+            _owned_scene_lifecycle = std::make_unique<smgpc::scene::SceneLifecycleService>(*this);
+            attach_name_obj_lifecycle(*_owned_name_obj_lifecycle);
+            attach_scene_execution(*_owned_scene_execution);
+            attach_scene_lifecycle(*_owned_scene_lifecycle);
+        }
         _capture_screen_director = std::make_unique<CaptureScreenDirector>();
         MR::createScreenAlphaSceneObj(0, 1.0F);
         _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
@@ -184,22 +493,48 @@ namespace smgpc::compat {
             try {
                 const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
                 _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());
-            }
-            catch (const std::exception &error) {
+            } catch (const std::exception &error) {
                 _logger.warning(logging::Category::APP, logging::Message{"Could not load original message archive {}: {}"}, message_archive->string(),
                                 error.what());
             }
         }
+        if (const auto effect_archive = _dvd.find_first({
+                std::filesystem::path("ParticleData") / "Effect.arc",
+            })) {
+            try {
+                _effects.load_resources(_dvd.archive_for_path(*effect_archive));
+                if (const auto *resources = _effects.resource_library(); resources != nullptr) {
+                    _logger.info(logging::Category::APP, logging::Message{"Loaded {} particle names, {} particle resources, and {} particle textures from {}"},
+                                 resources->particle_name_count(), resources->resource_count(), resources->texture_count(), effect_archive->string());
+                }
+            } catch (const std::exception &error) {
+                _logger.warning(logging::Category::APP, logging::Message{"Could not load original effect archive {}: {}"}, effect_archive->string(),
+                                error.what());
+            }
+        }
 #ifndef NDEBUG
-        if (_hold_title_combo_frame.has_value()) {
-            _logger.info(logging::Category::APP, logging::Message{"Debug title A+B hold starts at frame {}"}, *_hold_title_combo_frame);
+        if (!_debug_wpad_button_script.empty()) {
+            _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD button script spans"},
+                         _debug_wpad_button_script.size());
+        }
+        if (!_debug_wpad_pointer_script.empty()) {
+            _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD pointer script spans"},
+                         _debug_wpad_pointer_script.size());
         }
         emit_semantic_trace_event("runtime", "runtime_context_created", "disc_files_root=" + _disc_files_root.generic_string());
 #endif
     }
 
     RuntimeContext::~RuntimeContext() {
-        _scene_lifecycle.reset();
+#ifndef NDEBUG
+        _is_destroying = true;
+#endif
+        _owned_scene_lifecycle.reset();
+        _owned_scene_execution.reset();
+        _owned_name_obj_lifecycle.reset();
+        _scene_lifecycle = nullptr;
+        _scene_execution = nullptr;
+        _name_obj_lifecycle = nullptr;
         _capture_screen_camera_actor.reset();
         _capture_screen_indirect_actor.reset();
         _capture_screen_director.reset();
@@ -222,8 +557,14 @@ namespace smgpc::compat {
 
     void RuntimeContext::begin_frame(const render::FrameContext &frame_context) {
         _frame_index = frame_context.frame_index;
+        _dvd.begin_frame(_frame_index);
+        _ios.begin_frame(_frame_index);
+        _wii_platform.begin_frame(_frame_index);
+        _wii_video.begin_frame(_frame_index);
+        _copy_events.clear();
 #ifndef NDEBUG
         _j3d_packet_trace.clear();
+        _layout_packet_trace.clear();
 #endif
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
@@ -236,23 +577,51 @@ namespace smgpc::compat {
         refresh_effect_host_bindings();
         _scene_wipe.begin_frame(_frame_index);
         _system_wipe.begin_frame(_frame_index);
+        _image_effects.begin_frame(_frame_index);
         _star_pointer.begin_frame(_frame_index);
         _rumble.begin_frame(_frame_index);
         _sequence_requests.begin_frame(_frame_index);
+        _rfl.begin_frame(_frame_index);
         _wpad.begin_frame();
 
-        auto hold_mask = std::uint32_t{};
-        const auto debug_title_combo_held =
+        auto raw_hold_mask = std::uint32_t{};
+        const auto append_input_button = [this, &raw_hold_mask](render::InputButton button, std::uint32_t mask) {
+            if (_window_service.is_input_pressed(button)) {
+                raw_hold_mask |= mask;
+            }
+        };
+        append_input_button(render::InputButton::CORE_PAD_A, WPAD_BUTTON_A);
+        append_input_button(render::InputButton::CORE_PAD_B, WPAD_BUTTON_B);
+        append_input_button(render::InputButton::CORE_PAD_UP, WPAD_BUTTON_UP);
+        append_input_button(render::InputButton::CORE_PAD_DOWN, WPAD_BUTTON_DOWN);
+        append_input_button(render::InputButton::CORE_PAD_LEFT, WPAD_BUTTON_LEFT);
+        append_input_button(render::InputButton::CORE_PAD_RIGHT, WPAD_BUTTON_RIGHT);
+        append_input_button(render::InputButton::CORE_PAD_PLUS, WPAD_BUTTON_PLUS);
+        append_input_button(render::InputButton::CORE_PAD_MINUS, WPAD_BUTTON_MINUS);
+        append_input_button(render::InputButton::CORE_PAD_HOME, WPAD_BUTTON_HOME);
+        append_input_button(render::InputButton::CORE_PAD_C, WPAD_BUTTON_C);
+        append_input_button(render::InputButton::CORE_PAD_Z, WPAD_BUTTON_Z);
+        auto hold_mask = raw_hold_mask;
+        auto pointer = _window_service.input_pointer_state();
+        const auto raw_pointer = pointer;
 #ifndef NDEBUG
-            _hold_title_combo_frame.has_value() && _frame_index >= *_hold_title_combo_frame;
-#else
-            false;
-#endif
-        if (_window_service.is_input_pressed(render::InputButton::CORE_PAD_A) || debug_title_combo_held) {
-            hold_mask |= WPAD_BUTTON_A;
+        auto debug_button_script_applied = false;
+        auto debug_pointer_script_applied = false;
+        for (const auto &span : _debug_wpad_button_script) {
+            if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
+                hold_mask |= span.button_mask;
+                debug_button_script_applied = true;
+            }
         }
-        if (_window_service.is_input_pressed(render::InputButton::CORE_PAD_B) || debug_title_combo_held) {
-            hold_mask |= WPAD_BUTTON_B;
+        for (const auto &span : _debug_wpad_pointer_script) {
+            if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
+                pointer = render::InputPointerState{
+                    .x = span.x,
+                    .y = span.y,
+                    .valid = span.valid,
+                };
+                debug_pointer_script_applied = true;
+            }
         }
         _host_input_trace = HostInputTraceState{
             .frame_index = _frame_index,
@@ -266,25 +635,28 @@ namespace smgpc::compat {
 #endif
         _wpad.set_connected(WPAD_CHAN0, true);
         _wpad.set_button_mask(WPAD_CHAN0, hold_mask);
+        _wpad.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid);
+        _wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
 #ifndef NDEBUG
-        if (!_emitted_title_combo_held_event && (hold_mask & (WPAD_BUTTON_A | WPAD_BUTTON_B)) == (WPAD_BUTTON_A | WPAD_BUTTON_B)) {
-            _emitted_title_combo_held_event = true;
-            emit_semantic_trace_event("input", "title_combo_held", "WPAD_CHAN0 A+B held");
+        if (!_emitted_wpad_buttons_held_event && hold_mask != 0U) {
+            _emitted_wpad_buttons_held_event = true;
+            emit_semantic_trace_event("input", "wpad_buttons_held", debug_wpad_button_mask_detail(hold_mask));
         }
 #endif
 
         smgpc::game::save_data_handle_sequence().update();
-        if (_scene_lifecycle->active_scene() != nullptr) {
-            _scene_lifecycle->update_scene();
-            _scene_lifecycle->calc_anim_scene();
+        auto &lifecycle = scene_lifecycle();
+        if (lifecycle.active_scene() != nullptr) {
+            lifecycle.update_scene();
+            lifecycle.calc_anim_scene();
         } else {
-            _scheduler.execute_movement();
-            _scheduler.execute_calc_anim();
-            _scheduler.execute_calc_view_and_entry();
+            auto &execution = scene_execution();
+            execution.execute_movement();
+            execution.execute_calc_anim_and_view();
         }
     }
 
-    void RuntimeContext::set_scene_camera_pose(const CameraPoseCompat &camera_pose) {
+    void RuntimeContext::set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose) {
         _scene_camera_pose = camera_pose;
     }
 
@@ -299,7 +671,7 @@ namespace smgpc::compat {
         _copy_events.push_back(std::move(event));
     }
 
-    void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose) {
+    void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
         _last_camera_pose = camera_pose;
         if (!_game_layout.is_game_scene_draw_3d_active()) {
             return;
@@ -309,10 +681,13 @@ namespace smgpc::compat {
             emit_sequence_state_trace_event("draw_3d_normal", {}, "3d_normal");
         }
 #endif
-        _scheduler.execute_draw_buffer_list_normal(renderer, camera_pose);
-        _scheduler.execute_draw_type(renderer, MR::DrawType_EffectDraw3D);
-        _scheduler.execute_draw_type(renderer, MR::DrawType_EffectDrawForBloomEffect);
-        _scheduler.execute_draw_type(renderer, MR::DrawType_CaptureScreenIndirect);
+        auto &lifecycle = scene_lifecycle();
+        if (lifecycle.active_scene() != nullptr) {
+            lifecycle.draw_3d_normal(renderer, camera_pose);
+            return;
+        }
+
+        scene_execution().draw_3d_normal(renderer, camera_pose);
     }
 
     void RuntimeContext::draw_3d_normal(render::IRendererEngine &renderer) {
@@ -333,7 +708,13 @@ namespace smgpc::compat {
             emit_sequence_state_trace_event("draw_2d_normal", {}, "2d_normal");
         }
 #endif
-        _scheduler.execute_draw_list_2d_normal(renderer);
+        auto &lifecycle = scene_lifecycle();
+        if (lifecycle.active_scene() != nullptr) {
+            lifecycle.draw_2d_normal(renderer);
+            return;
+        }
+
+        scene_execution().draw_2d_normal(renderer);
     }
 
 #ifndef NDEBUG
@@ -370,12 +751,16 @@ namespace smgpc::compat {
         return _frame_index;
     }
 
-    const std::optional<CameraPoseCompat> &RuntimeContext::scene_camera_pose() const {
+    const std::optional<smgpc::camera::CameraPose> &RuntimeContext::scene_camera_pose() const {
         return _scene_camera_pose;
     }
 
-    const std::optional<CameraPoseCompat> &RuntimeContext::last_camera_pose() const {
+    const std::optional<smgpc::camera::CameraPose> &RuntimeContext::last_camera_pose() const {
         return _last_camera_pose;
+    }
+
+    std::span<const render::CopyEvent> RuntimeContext::copy_events() const {
+        return _copy_events;
     }
 
 #ifndef NDEBUG
@@ -383,17 +768,28 @@ namespace smgpc::compat {
         return _j3d_packet_trace;
     }
 
+    std::span<const RuntimeContext::LayoutRuntimePacketTrace> RuntimeContext::layout_packet_trace() const {
+        return _layout_packet_trace;
+    }
+
     std::span<const RuntimeContext::SemanticTraceEvent> RuntimeContext::semantic_trace_events() const {
         return _semantic_trace_events;
+    }
+
+    const RuntimeContext::HostInputTraceState &RuntimeContext::host_input_trace() const {
+        return _host_input_trace;
     }
 
     bool RuntimeContext::should_record_j3d_packet_trace() const {
         return _j3d_packet_trace_frame.has_value() && _frame_index == *_j3d_packet_trace_frame;
     }
-#endif
 
     bool RuntimeContext::should_record_render_packet_trace() const {
         return should_record_j3d_packet_trace();
+    }
+
+    bool RuntimeContext::is_destroying() const {
+        return _is_destroying;
     }
 #endif
 
@@ -437,6 +833,30 @@ namespace smgpc::compat {
         return _dvd;
     }
 
+    WiiIosService &RuntimeContext::ios() {
+        return _ios;
+    }
+
+    const WiiIosService &RuntimeContext::ios() const {
+        return _ios;
+    }
+
+    WiiPlatformService &RuntimeContext::wii_platform() {
+        return _wii_platform;
+    }
+
+    const WiiPlatformService &RuntimeContext::wii_platform() const {
+        return _wii_platform;
+    }
+
+    WiiVideoService &RuntimeContext::wii_video() {
+        return _wii_video;
+    }
+
+    const WiiVideoService &RuntimeContext::wii_video() const {
+        return _wii_video;
+    }
+
     WpadService &RuntimeContext::wpad() {
         return _wpad;
     }
@@ -477,12 +897,28 @@ namespace smgpc::compat {
         return _system_wipe;
     }
 
+    ImageEffectService &RuntimeContext::image_effects() {
+        return _image_effects;
+    }
+
+    const ImageEffectService &RuntimeContext::image_effects() const {
+        return _image_effects;
+    }
+
     StarPointerService &RuntimeContext::star_pointer() {
         return _star_pointer;
     }
 
     const StarPointerService &RuntimeContext::star_pointer() const {
         return _star_pointer;
+    }
+
+    bool RuntimeContext::sample_star_pointer_target(const LiveActor &actor, bool check_z) {
+        const auto pointing = _star_pointer.is_pointing(actor, _wpad, _scene_camera_pose, check_z);
+#ifndef NDEBUG
+        emit_star_pointer_target_trace_events();
+#endif
+        return pointing;
     }
 
     CameraSystemService &RuntimeContext::camera_system() {
@@ -525,12 +961,28 @@ namespace smgpc::compat {
         return _sequence_requests;
     }
 
+    SysConfigService &RuntimeContext::sys_config() {
+        return _sys_config;
+    }
+
+    const SysConfigService &RuntimeContext::sys_config() const {
+        return _sys_config;
+    }
+
     SaveDataService &RuntimeContext::save_data() {
         return _save_data;
     }
 
     const SaveDataService &RuntimeContext::save_data() const {
         return _save_data;
+    }
+
+    NandFileSystemService &RuntimeContext::nand() {
+        return _save_data.nand();
+    }
+
+    const NandFileSystemService &RuntimeContext::nand() const {
+        return _save_data.nand();
     }
 
     MessageService &RuntimeContext::messages() {
@@ -573,12 +1025,67 @@ namespace smgpc::compat {
         return _scheduler;
     }
 
-    SceneLifecycleService &RuntimeContext::scene_lifecycle() {
+    smgpc::scene::NameObjLifecycleService &RuntimeContext::name_obj_lifecycle() {
+        if (_name_obj_lifecycle == nullptr) {
+            throw std::logic_error("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
+        }
+        return *_name_obj_lifecycle;
+    }
+
+    const smgpc::scene::NameObjLifecycleService &RuntimeContext::name_obj_lifecycle() const {
+        if (_name_obj_lifecycle == nullptr) {
+            throw std::logic_error("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
+        }
+        return *_name_obj_lifecycle;
+    }
+
+    smgpc::scene::SceneExecutionService &RuntimeContext::scene_execution() {
+        if (_scene_execution == nullptr) {
+            throw std::logic_error("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
+        }
+        return *_scene_execution;
+    }
+
+    const smgpc::scene::SceneExecutionService &RuntimeContext::scene_execution() const {
+        if (_scene_execution == nullptr) {
+            throw std::logic_error("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
+        }
+        return *_scene_execution;
+    }
+
+    smgpc::scene::SceneLifecycleService &RuntimeContext::scene_lifecycle() {
+        if (_scene_lifecycle == nullptr) {
+            throw std::logic_error("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
+        }
         return *_scene_lifecycle;
     }
 
-    const SceneLifecycleService &RuntimeContext::scene_lifecycle() const {
+    const smgpc::scene::SceneLifecycleService &RuntimeContext::scene_lifecycle() const {
+        if (_scene_lifecycle == nullptr) {
+            throw std::logic_error("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
+        }
         return *_scene_lifecycle;
+    }
+
+    void RuntimeContext::attach_name_obj_lifecycle(smgpc::scene::NameObjLifecycleService &service) {
+        if (_name_obj_lifecycle != nullptr && _name_obj_lifecycle != &service) {
+            throw std::logic_error("RuntimeContext smgpc::scene::NameObjLifecycleService has already been attached.");
+        }
+        _name_obj_lifecycle = &service;
+    }
+
+    void RuntimeContext::attach_scene_execution(smgpc::scene::SceneExecutionService &service) {
+        if (_scene_execution != nullptr && _scene_execution != &service) {
+            throw std::logic_error("RuntimeContext smgpc::scene::SceneExecutionService has already been attached.");
+        }
+        _scene_execution = &service;
+    }
+
+    void RuntimeContext::attach_scene_lifecycle(smgpc::scene::SceneLifecycleService &service) {
+        if (_scene_lifecycle != nullptr && _scene_lifecycle != &service) {
+            throw std::logic_error("RuntimeContext smgpc::scene::SceneLifecycleService has already been attached.");
+        }
+        _scene_lifecycle = &service;
     }
 
     void RuntimeContext::start_stage_bgm(std::string_view name) {
@@ -606,9 +1113,51 @@ namespace smgpc::compat {
         _logger.info(logging::Category::APP, logging::Message{"SMG requested system sound {}"}, name);
     }
 
+    void RuntimeContext::stop_system_sound(std::string_view name, u32 delay_frames) {
+        _audio.stop_system_sound(name, delay_frames);
+        _logger.info(logging::Category::APP, logging::Message{"SMG stopped system sound {} after {} frames"}, name, delay_frames);
+    }
+
+    void RuntimeContext::start_system_level_sound(std::string_view name) {
+        _audio.start_system_level_sound(name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested system level sound {}"}, name);
+    }
+
+    void RuntimeContext::submit_level_sound() {
+        _audio.submit_level_sound();
+        _logger.info(logging::Category::APP, logging::Message{"SMG submitted level sounds"});
+    }
+
+    void RuntimeContext::permit_level_sound() {
+        _audio.permit_level_sound();
+        _logger.info(logging::Category::APP, logging::Message{"SMG permitted level sounds"});
+    }
+
+    void RuntimeContext::start_atmosphere_sound(std::string_view name) {
+        _audio.start_atmosphere_sound(name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested atmosphere sound {}"}, name);
+    }
+
+    void RuntimeContext::start_system_me(std::string_view name) {
+        _audio.start_system_me(name);
+        _logger.info(logging::Category::APP, logging::Message{"SMG requested system ME {}"}, name);
+    }
+
     void RuntimeContext::start_cs_sound(std::string_view name) {
         _audio.start_controller_speaker_sound(name);
         _logger.info(logging::Category::APP, logging::Message{"SMG requested controller speaker sound {}"}, name);
+    }
+
+    void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
+                                                std::string_view resource_group_name, bool sort_enabled) {
+        _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled);
+        refresh_effect_host_binding(host_name);
+        _logger.info(logging::Category::APP, logging::Message{"Registered effect keeper {} group {} capacity {}"}, host_name,
+                     resource_group_name, requested_capacity);
+    }
+
+    void RuntimeContext::unregister_effect_keeper(std::string_view host_name) {
+        _effects.unregister_keeper(host_name);
     }
 
     void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name) {
@@ -657,6 +1206,10 @@ namespace smgpc::compat {
     }
 
     void RuntimeContext::emit_semantic_trace_event(std::string_view category, std::string_view name, std::string_view detail) {
+        if (_is_destroying) {
+            return;
+        }
+
         _semantic_trace_events.push_back(SemanticTraceEvent{
             .index = _next_semantic_trace_event_index++,
             .frame_index = _frame_index,
@@ -685,8 +1238,20 @@ namespace smgpc::compat {
         emit_semantic_trace_event("sequence_state", name, full_detail.str());
     }
 
+    void RuntimeContext::emit_star_pointer_target_trace_events() {
+        const auto events = _star_pointer.target_events();
+        while (_next_star_pointer_target_trace_event_index < events.size()) {
+            const auto &event = events[_next_star_pointer_target_trace_event_index++];
+            auto detail = std::ostringstream();
+            detail << "actor=" << event.actor_name << ";channel=" << event.channel << ";pointer_x=" << event.pointer_x
+                   << ";pointer_y=" << event.pointer_y << ";target_x=" << event.target_x << ";target_y=" << event.target_y
+                   << ";radius=" << event.projected_radius << ";check_z=" << (event.check_z ? "true" : "false");
+            emit_semantic_trace_event("star_pointer", star_pointer_target_event_name(event.kind), detail.str());
+        }
+    }
+
     void RuntimeContext::record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
-                                                 const J3dRendererPacketState &packet) {
+                                                 const smgpc::render::J3dRendererPacketState &packet) {
         _j3d_packet_trace.push_back(J3dRuntimePacketTrace{
             .model_name = std::string(model_name),
             .frame_index = frame_index,
@@ -694,7 +1259,6 @@ namespace smgpc::compat {
             .state = packet,
         });
     }
-#endif
 
     void RuntimeContext::record_layout_packet_trace(LayoutRuntimePacketTrace packet) {
         if (packet.frame_index == 0U) {
@@ -815,39 +1379,18 @@ namespace smgpc::compat {
         return cwd / "orig" / "RMGK01" / "files";
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::runtime
 
-OSTime OSGetTime() {
-    const auto now = std::chrono::system_clock::now().time_since_epoch();
-    return std::chrono::duration_cast<std::chrono::seconds>(now).count();
-}
+namespace {
+    struct DvdRuntimeFileHandle {
+        std::string disc_path;
+    };
 
-s64 OSTicksToSeconds(OSTime ticks) {
-    return ticks;
-}
-
-void OSTicksToCalendarTime(OSTime ticks, OSCalendarTime *pTime) {
-    if (pTime == nullptr) {
-        return;
-    }
-
-    const auto time = std::chrono::sys_seconds(std::chrono::seconds(ticks));
-    const auto days = std::chrono::floor<std::chrono::days>(time);
-    const auto date = std::chrono::year_month_day(days);
-    const auto year_start = std::chrono::sys_days(std::chrono::year(static_cast<int>(date.year())) / std::chrono::January / 1);
-    const auto day_time = std::chrono::hh_mm_ss(time - days);
-
-    pTime->sec = static_cast<s32>(day_time.seconds().count());
-    pTime->min = static_cast<s32>(day_time.minutes().count());
-    pTime->hour = static_cast<s32>(day_time.hours().count());
-    pTime->mday = static_cast<s32>(static_cast<unsigned>(date.day()));
-    pTime->mon = static_cast<s32>(static_cast<unsigned>(date.month())) - 1;
-    pTime->year = static_cast<s32>(static_cast<int>(date.year()));
-    pTime->wday = static_cast<s32>(std::chrono::weekday(days).c_encoding());
-    pTime->yday = static_cast<s32>((days - year_start).count());
-    pTime->msec = 0;
-    pTime->usec = 0;
-}
+    struct DvdRuntimeDirectoryHandle {
+        std::vector<smgpc::runtime::DvdDirectoryEntry> entries;
+        std::size_t cursor = 0U;
+    };
+}  // namespace
 
 s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length) {
     if (sampling_bufs == nullptr || length == 0U) {
@@ -855,7 +1398,7 @@ s32 KPADRead(s32 channel, KPADStatus sampling_bufs[], u32 length) {
     }
 
     sampling_bufs[0] = KPADStatus{};
-    auto *runtime = smgpc::compat::RuntimeContext::try_instance();
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return 0;
     }
@@ -888,22 +1431,13 @@ s32 DVDConvertPathToEntrynum(const char *path) {
         return -1;
     }
 
-    auto *runtime = smgpc::compat::RuntimeContext::try_instance();
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return -1;
     }
 
     try {
-        if (!runtime->dvd().exists(path)) {
-            return -1;
-        }
-
-        auto hash = std::uint32_t{2166136261U};
-        for (const auto byte : runtime->dvd().resolve(path).generic_string()) {
-            hash ^= static_cast<std::uint8_t>(byte);
-            hash *= 16777619U;
-        }
-        return static_cast<s32>(hash & 0x7fffffffU);
+        return runtime->dvd().entry_num(path);
     } catch (const std::exception &) {
         return -1;
     }
@@ -914,34 +1448,97 @@ BOOL DVDOpen(const char *path, DVDFileInfo *file_info) {
         return 0;
     }
 
-    auto *runtime = smgpc::compat::RuntimeContext::try_instance();
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr) {
         return 0;
     }
 
-    auto resolved = std::filesystem::path();
+    auto entry = std::optional<smgpc::runtime::DvdEntryMetadata>{};
     try {
-        if (!runtime->dvd().exists(path)) {
+        entry = runtime->dvd().entry_metadata(path);
+        if (!entry.has_value() || entry->is_directory || entry->length > static_cast<std::size_t>(UINT32_MAX)) {
             return 0;
         }
-        resolved = runtime->dvd().resolve(path);
     } catch (const std::exception &) {
         return 0;
     }
 
-    std::error_code error{};
-    const auto size = std::filesystem::file_size(resolved, error);
-    if (error || size > static_cast<std::uintmax_t>(UINT32_MAX)) {
-        return 0;
-    }
     if (file_info->internal != nullptr) {
         (void)DVDClose(file_info);
     }
 
-    file_info->entry_num = DVDConvertPathToEntrynum(path);
-    file_info->length = static_cast<u32>(size);
+    file_info->entry_num = entry->entry_num;
+    file_info->length = static_cast<u32>(entry->length);
     file_info->position = 0U;
-    file_info->internal = new std::filesystem::path(resolved);
+    file_info->callback = nullptr;
+    file_info->cb = DVDCommandBlock{};
+    file_info->cb.state = DVD_STATE_END;
+    file_info->internal = new DvdRuntimeFileHandle{
+        .disc_path = entry->disc_path,
+    };
+    return 1;
+}
+
+BOOL DVDOpenDir(const char *path, DVDDir *dir) {
+    if (path == nullptr || dir == nullptr) {
+        return 0;
+    }
+
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        return 0;
+    }
+
+    try {
+        const auto entry = runtime->dvd().entry_metadata(path);
+        if (!entry.has_value() || !entry->is_directory) {
+            return 0;
+        }
+
+        if (dir->internal != nullptr) {
+            (void)DVDCloseDir(dir);
+        }
+
+        auto handle = std::make_unique<DvdRuntimeDirectoryHandle>();
+        handle->entries = runtime->dvd().directory_entries(path);
+        dir->entry_num = static_cast<u32>(entry->entry_num);
+        dir->location = 0U;
+        dir->next = static_cast<u32>(handle->entries.size());
+        dir->internal = handle.release();
+        return 1;
+    } catch (const std::exception &) {
+        return 0;
+    }
+}
+
+BOOL DVDReadDir(DVDDir *dir, DVDDirEntry *entry) {
+    if (dir == nullptr || entry == nullptr || dir->internal == nullptr) {
+        return 0;
+    }
+
+    auto &handle = *static_cast<DvdRuntimeDirectoryHandle *>(dir->internal);
+    if (handle.cursor >= handle.entries.size()) {
+        return 0;
+    }
+
+    const auto &current = handle.entries[handle.cursor++];
+    entry->entry_num = static_cast<u32>(current.entry_num);
+    entry->is_dir = current.is_directory ? TRUE : FALSE;
+    entry->name = const_cast<char *>(current.name.c_str());
+    dir->location = static_cast<u32>(handle.cursor);
+    return 1;
+}
+
+BOOL DVDCloseDir(DVDDir *dir) {
+    if (dir == nullptr) {
+        return 0;
+    }
+
+    delete static_cast<DvdRuntimeDirectoryHandle *>(dir->internal);
+    dir->entry_num = 0U;
+    dir->location = 0U;
+    dir->next = 0U;
+    dir->internal = nullptr;
     return 1;
 }
 
@@ -950,10 +1547,12 @@ BOOL DVDClose(DVDFileInfo *file_info) {
         return 0;
     }
 
-    delete static_cast<std::filesystem::path *>(file_info->internal);
+    delete static_cast<DvdRuntimeFileHandle *>(file_info->internal);
+    file_info->cb = DVDCommandBlock{};
     file_info->entry_num = -1;
     file_info->length = 0U;
     file_info->position = 0U;
+    file_info->callback = nullptr;
     file_info->internal = nullptr;
     return 1;
 }
@@ -962,24 +1561,68 @@ u32 DVDGetLength(const DVDFileInfo *file_info) {
     return file_info == nullptr ? 0U : file_info->length;
 }
 
-s32 DVDReadPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, s32) {
+s32 DVDReadPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, s32 priority) {
     if (file_info == nullptr || file_info->internal == nullptr || destination == nullptr || length < 0 || offset < 0) {
         return -1;
     }
 
-    const auto &path = *static_cast<const std::filesystem::path *>(file_info->internal);
-    auto file = std::ifstream(path, std::ios::binary);
-    if (!file) {
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
         return -1;
     }
 
-    file.seekg(offset, std::ios::beg);
-    file.read(static_cast<char *>(destination), length);
-    const auto read = file.gcount();
-    if (read < 0) {
+    const auto &handle = *static_cast<const DvdRuntimeFileHandle *>(file_info->internal);
+    auto bytes = std::vector<std::uint8_t>{};
+    try {
+        bytes = runtime->dvd().read_file_range(handle.disc_path, static_cast<std::size_t>(offset), static_cast<std::size_t>(length), priority);
+    } catch (const std::exception &) {
         return -1;
     }
 
-    file_info->position = static_cast<u32>(offset + read);
-    return static_cast<s32>(read);
+    if (!bytes.empty()) {
+        std::memcpy(destination, bytes.data(), bytes.size());
+    }
+    file_info->position = static_cast<u32>(offset) + static_cast<u32>(bytes.size());
+    return static_cast<s32>(bytes.size());
+}
+
+BOOL DVDReadAsyncPrio(DVDFileInfo *file_info, void *destination, s32 length, s32 offset, DVDCallback callback, s32 priority) {
+    if (file_info == nullptr || file_info->internal == nullptr || destination == nullptr || length < 0 || offset < 0) {
+        return 0;
+    }
+
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        return 0;
+    }
+
+    const auto &handle = *static_cast<const DvdRuntimeFileHandle *>(file_info->internal);
+    try {
+        file_info->callback = callback;
+        file_info->cb.command = 1U;
+        file_info->cb.state = DVD_STATE_BUSY;
+        file_info->cb.offset = static_cast<u32>(offset);
+        file_info->cb.length = static_cast<u32>(length);
+        file_info->cb.addr = destination;
+        (void)runtime->dvd().submit_async_read(handle.disc_path, file_info, destination, static_cast<std::size_t>(length),
+                                               static_cast<std::size_t>(offset), priority, callback);
+    } catch (const std::exception &) {
+        file_info->cb.state = DVD_STATE_FATAL_ERROR;
+        return 0;
+    }
+
+    return 1;
+}
+
+s32 DVDGetCommandBlockStatus(const DVDCommandBlock *block) {
+    return block == nullptr ? DVD_STATE_FATAL_ERROR : block->state;
+}
+
+s32 DVDGetDriveStatus() {
+    const auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+    return runtime == nullptr ? DVD_STATE_FATAL_ERROR : DVD_STATE_END;
+}
+
+u32 __DVDGetCoverStatus() {
+    return DVDGetDriveStatus() == DVD_STATE_END ? 2U : 0U;
 }

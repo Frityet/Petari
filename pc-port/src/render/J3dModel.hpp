@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::render {
 
     struct J3dSectionInfo {
         std::string tag;
@@ -339,4 +339,4 @@ namespace smgpc::compat {
     [[nodiscard]] std::string j3d_vertex_attr_type_name(std::uint32_t type);
     [[nodiscard]] std::string j3d_primitive_name(std::uint8_t primitive);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

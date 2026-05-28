@@ -160,7 +160,7 @@ bool ConfigDataHolder::loadFromFileBinary(const char* pName, const u8* pBuffer, 
     return true;
 }
 
-void ConfigDataHolder::setCompatMiiIndex(std::optional<s32> miiIndex) {
+void ConfigDataHolder::setMiiIndex(std::optional<s32> miiIndex) {
     mMiiIndex = miiIndex;
     mUsesMii = miiIndex.has_value();
     if (mUsesMii) {
@@ -171,7 +171,7 @@ void ConfigDataHolder::setCompatMiiIndex(std::optional<s32> miiIndex) {
     }
 }
 
-std::optional<s32> ConfigDataHolder::getCompatMiiIndex() const {
+std::optional<s32> ConfigDataHolder::getMiiIndex() const {
     return mUsesMii ? mMiiIndex : std::nullopt;
 }
 

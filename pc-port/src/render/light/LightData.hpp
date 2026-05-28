@@ -7,11 +7,11 @@
 #include "Game/Map/LightDataHolder.hpp"
 #include "Game/Map/LightZoneDataHolder.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::render::light {
 
-    class LightDataCompat final {
+    class StageLightData final {
     public:
-        static LightDataCompat &instance();
+        static StageLightData &instance();
 
         void reset();
         [[nodiscard]] AreaLightInfo *area_light_info(const ZoneLightID &zone_id);
@@ -36,4 +36,4 @@ namespace smgpc::compat {
         std::vector<ZoneAreaLight> _zone_area_lights;
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render::light

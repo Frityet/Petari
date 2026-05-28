@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
-namespace smgpc::compat {
+namespace smgpc::layout {
     namespace {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
@@ -37,6 +38,14 @@ namespace smgpc::compat {
             return offset + 4U <= data.size() && data[offset] == static_cast<std::uint8_t>(magic[0]) &&
                    data[offset + 1U] == static_cast<std::uint8_t>(magic[1]) && data[offset + 2U] == static_cast<std::uint8_t>(magic[2]) &&
                    data[offset + 3U] == static_cast<std::uint8_t>(magic[3]);
+        }
+
+        [[nodiscard]] std::string magic_string(std::span<const std::uint8_t> data, std::size_t offset) {
+            if (offset + 4U > data.size()) {
+                throw std::runtime_error("BRFNT magic read out of range");
+            }
+
+            return std::string(reinterpret_cast<const char *>(data.data() + offset), 4U);
         }
 
         [[nodiscard]] std::size_t checked_offset(std::span<const std::uint8_t> data, std::uint32_t offset) {
@@ -159,12 +168,15 @@ namespace smgpc::compat {
 
             const auto sheet_size = read_be32(data, glyph_offset + 4U);
             const auto sheet_count = read_be16(data, glyph_offset + 8U);
-            font.sheet_format = static_cast<TplTextureFormat>(read_be16(data, glyph_offset + 10U));
+            font.sheet_format = static_cast<smgpc::resource::TplTextureFormat>(read_be16(data, glyph_offset + 10U));
             font.sheet_row = read_be16(data, glyph_offset + 12U);
             font.sheet_line = read_be16(data, glyph_offset + 14U);
             font.sheet_width = read_be16(data, glyph_offset + 16U);
             font.sheet_height = read_be16(data, glyph_offset + 18U);
-            const auto sheet_image_offset = checked_offset(data, read_be32(data, glyph_offset + 20U));
+            font.sheet_size = sheet_size;
+            font.sheet_count = sheet_count;
+            font.sheet_image_offset = read_be32(data, glyph_offset + 20U);
+            const auto sheet_image_offset = checked_offset(data, font.sheet_image_offset);
             if (sheet_size == 0U) {
                 throw std::runtime_error("BRFNT sheet size is zero");
             }
@@ -177,7 +189,7 @@ namespace smgpc::compat {
                 }
 
                 font.sheets.push_back(
-                    decode_raw_gx_texture(data.subspan(offset, sheet_size), font.sheet_width, font.sheet_height, font.sheet_format));
+                    smgpc::resource::decode_raw_gx_texture(data.subspan(offset, sheet_size), font.sheet_width, font.sheet_height, font.sheet_format));
             }
         }
 
@@ -197,8 +209,8 @@ namespace smgpc::compat {
                 return std::nullopt;
             }
             case BrfntFont::MapMethod::Scan: {
-                const auto it = std::ranges::find_if(map.scan_entries, [code](const auto &entry) { return entry.first == code; });
-                return it == map.scan_entries.end() ? std::nullopt : std::optional<std::uint16_t>(it->second);
+                const auto it = std::ranges::lower_bound(map.scan_entries, code, {}, [](const auto &entry) { return entry.first; });
+                return it != map.scan_entries.end() && it->first == code ? std::optional<std::uint16_t>(it->second) : std::nullopt;
             }
             }
 
@@ -249,8 +261,21 @@ namespace smgpc::compat {
 
     }  // namespace
 
+    std::optional<std::uint16_t> BrfntFont::find_glyph_index_exact(std::uint16_t code) const {
+        return find_glyph_index(code_maps, code);
+    }
+
+    std::uint16_t BrfntFont::resolved_glyph_index(std::uint16_t code) const {
+        const auto glyph_index = find_glyph_index_exact(code);
+        return glyph_index.value_or(alternate_char_index);
+    }
+
+    bool BrfntFont::has_glyph(std::uint16_t code) const {
+        return find_glyph_index_exact(code).has_value();
+    }
+
     std::optional<BrfntGlyph> BrfntFont::glyph_for_exact(std::uint16_t code) const {
-        const auto glyph_index = find_glyph_index(code_maps, code);
+        const auto glyph_index = find_glyph_index_exact(code);
         if (!glyph_index.has_value()) {
             return std::nullopt;
         }
@@ -269,6 +294,18 @@ namespace smgpc::compat {
         }
 
         return glyph_for_index(*this, alternate_char_index);
+    }
+
+    std::optional<BrfntGlyph> BrfntFont::glyph_for_resfont(std::uint16_t code) const {
+        return glyph_for_index(*this, resolved_glyph_index(code));
+    }
+
+    BrfntCharWidths BrfntFont::char_widths(std::uint16_t code) const {
+        return widths_for_glyph(resolved_glyph_index(code));
+    }
+
+    int BrfntFont::char_width(std::uint16_t code) const {
+        return char_widths(code).char_width;
     }
 
     BrfntCharWidths BrfntFont::widths_for_glyph(std::uint16_t glyph_index) const {
@@ -293,6 +330,9 @@ namespace smgpc::compat {
         const auto block_count = read_be16(data, 14U);
         auto cursor = static_cast<std::size_t>(header_size);
         auto font = BrfntFont{};
+        font.declared_file_size = read_be32(data, 8U);
+        font.header_size = header_size;
+        font.block_count = block_count;
 
         auto finf_offset = std::optional<std::size_t>{};
         for (auto i = 0U; i < block_count; ++i) {
@@ -304,10 +344,14 @@ namespace smgpc::compat {
             if (block_size < 8U || cursor + block_size > data.size()) {
                 throw std::runtime_error("BRFNT block size is invalid");
             }
+            font.blocks.push_back(BrfntBlockInfo{
+                .magic = magic_string(data, cursor),
+                .offset = cursor,
+                .size = block_size,
+            });
 
             if (has_magic(data, cursor, "FINF")) {
                 finf_offset = cursor + 8U;
-                break;
             }
 
             cursor += block_size;
@@ -318,9 +362,11 @@ namespace smgpc::compat {
         }
 
         const auto finf = *finf_offset;
+        font.font_type = data[finf];
         font.line_feed = read_s8(data, finf + 1U);
         font.alternate_char_index = read_be16(data, finf + 2U);
         font.default_width = read_width(data, finf + 4U);
+        font.encoding = data[finf + 7U];
         const auto glyph_offset = checked_offset(data, read_be32(data, finf + 8U));
         const auto width_offset = read_be32(data, finf + 12U);
         const auto map_offset = read_be32(data, finf + 16U);
@@ -339,4 +385,4 @@ namespace smgpc::compat {
         return font;
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::layout

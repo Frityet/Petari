@@ -18,10 +18,10 @@ namespace {
     [[nodiscard]] const wchar_t* raw_message_direct(const char* pMessageId) {
         thread_local auto message = std::wstring{};
         const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
-            message = wide_from_utf16(runtime->messages().message_raw_utf16_or(tag, smgpc::compat::utf16_from_utf8_lossy(tag)));
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            message = wide_from_utf16(runtime->messages().message_raw_utf16_or(tag, smgpc::resource::utf16_from_utf8_lossy(tag)));
         } else {
-            message = wide_from_utf16(smgpc::compat::utf16_from_utf8_lossy(tag));
+            message = wide_from_utf16(smgpc::resource::utf16_from_utf8_lossy(tag));
         }
         return message.c_str();
     }
@@ -44,7 +44,7 @@ namespace MR {
         if (pMessageId == nullptr) {
             return false;
         }
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance()) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             return runtime->messages().message(std::string_view(pMessageId)) != nullptr;
         }
         return false;

@@ -8,7 +8,7 @@
 #include <span>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::render {
 
     struct J3dMatrix3x4 {
         std::array<float, 12U> m{
@@ -49,7 +49,7 @@ namespace smgpc::compat {
     };
 
     struct J3dComposedMaterialTexture {
-        DecodedTexture image{};
+        smgpc::resource::DecodedTexture image{};
         bool raster_color_baked = false;
     };
 
@@ -87,7 +87,7 @@ namespace smgpc::compat {
     [[nodiscard]] std::vector<J3dMaterialTexturePass> j3d_material_texture_passes(const J3dMaterialSummary &material);
     [[nodiscard]] std::optional<J3dMaterialTexturePass> j3d_representative_texture_pass(const J3dMaterialSummary &material);
     [[nodiscard]] std::optional<J3dComposedMaterialTexture> j3d_try_compose_material_texture(const J3dMaterialSummary &material,
-                                                                                             const DecodedTexture &texture,
+                                                                                             const smgpc::resource::DecodedTexture &texture,
                                                                                              std::array<std::uint8_t, 4U> raster_color,
                                                                                              std::uint8_t texture_map_slot);
     [[nodiscard]] std::optional<J3dComposedMaterialTexture> j3d_try_compose_material_constant(const J3dMaterialSummary &material,
@@ -115,4 +115,4 @@ namespace smgpc::compat {
                                                                            const J3dMaterialTexturePass &pass,
                                                                            const J3dTexture &texture);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

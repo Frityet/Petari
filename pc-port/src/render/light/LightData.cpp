@@ -1,4 +1,4 @@
-#include "render/LightDataCompat.hpp"
+#include "render/light/LightData.hpp"
 
 #include <algorithm>
 #include <array>
@@ -15,7 +15,7 @@
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::render::light {
     namespace {
         constexpr auto cLightDataArchivePath = std::string_view{"ObjectData/LightData.arc"};
         constexpr auto cMainLightDataPath = std::string_view{"lightdata.bcsv"};
@@ -32,7 +32,7 @@ namespace smgpc::compat {
             return "light" + lower_ascii(stage_name) + ".bcsv";
         }
 
-        [[nodiscard]] const RarcEntry *find_archive_file(const RarcArchive &archive, std::string_view path) {
+        [[nodiscard]] const smgpc::resource::RarcEntry *find_archive_file(const smgpc::resource::RarcArchive &archive, std::string_view path) {
             if (const auto *entry = archive.find(path); entry != nullptr) {
                 return entry;
             }
@@ -47,42 +47,42 @@ namespace smgpc::compat {
             return nullptr;
         }
 
-        [[nodiscard]] std::int32_t get_s32_or(const BcsvTable &table, std::size_t row, std::string_view field_name, std::int32_t fallback) {
+        [[nodiscard]] std::int32_t get_s32_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view field_name, std::int32_t fallback) {
             if (const auto value = table.get_s32(row, field_name); value.has_value()) {
                 return *value;
             }
             return fallback;
         }
 
-        [[nodiscard]] std::optional<bool> get_bool(const BcsvTable &table, std::size_t row, std::string_view field_name) {
+        [[nodiscard]] std::optional<bool> get_bool(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view field_name) {
             if (const auto value = table.get_s32(row, field_name); value.has_value()) {
                 return *value != 0;
             }
             return std::nullopt;
         }
 
-        [[nodiscard]] bool get_bool_or(const BcsvTable &table, std::size_t row, std::string_view field_name, bool fallback) {
+        [[nodiscard]] bool get_bool_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view field_name, bool fallback) {
             if (const auto value = get_bool(table, row, field_name); value.has_value()) {
                 return *value;
             }
             return fallback;
         }
 
-        [[nodiscard]] std::uint8_t get_u8_or(const BcsvTable &table, std::size_t row, std::string_view field_name, std::uint8_t fallback) {
+        [[nodiscard]] std::uint8_t get_u8_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view field_name, std::uint8_t fallback) {
             if (const auto value = table.get_s32(row, field_name); value.has_value()) {
                 return static_cast<std::uint8_t>(*value);
             }
             return fallback;
         }
 
-        [[nodiscard]] float get_float_or(const BcsvTable &table, std::size_t row, std::string_view field_name, float fallback) {
+        [[nodiscard]] float get_float_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view field_name, float fallback) {
             if (const auto value = table.get_float(row, field_name); value.has_value()) {
                 return *value;
             }
             return fallback;
         }
 
-        [[nodiscard]] _GXColor get_color_channels(const BcsvTable &table, std::size_t row, std::string_view prefix) {
+        [[nodiscard]] _GXColor get_color_channels(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view prefix) {
             const auto base = std::string(prefix);
             return _GXColor{
                 get_u8_or(table, row, base + "R", 0U),
@@ -92,7 +92,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] TVec3f get_position(const BcsvTable &table, std::size_t row, std::string_view prefix) {
+        [[nodiscard]] TVec3f get_position(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view prefix) {
             const auto base = std::string(prefix);
             return TVec3f{
                 get_float_or(table, row, base + "PosX", 0.0F),
@@ -101,7 +101,7 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] bool get_follow_camera(const BcsvTable &table, std::size_t row, std::string_view prefix) {
+        [[nodiscard]] bool get_follow_camera(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view prefix) {
             const auto base = std::string(prefix);
             if (const auto value = get_bool(table, row, base + "FollowCamera"); value.has_value()) {
                 return *value;
@@ -112,13 +112,13 @@ namespace smgpc::compat {
             return false;
         }
 
-        void read_light_info(const BcsvTable &table, std::size_t row, LightInfo &info, std::string_view name) {
+        void read_light_info(const smgpc::resource::BcsvTable &table, std::size_t row, LightInfo &info, std::string_view name) {
             info.mColor = get_color_channels(table, row, std::string(name) + "Color");
             info.mPos = get_position(table, row, name);
             info.mIsFollowCamera = get_follow_camera(table, row, name);
         }
 
-        void read_actor_light_info(const BcsvTable &table, std::size_t row, ActorLightInfo &info, std::string_view name) {
+        void read_actor_light_info(const smgpc::resource::BcsvTable &table, std::size_t row, ActorLightInfo &info, std::string_view name) {
             const auto base = std::string(name);
             read_light_info(table, row, info.mInfo0, base + "Light0");
             read_light_info(table, row, info.mInfo1, base + "Light1");
@@ -132,12 +132,12 @@ namespace smgpc::compat {
 
     }  // namespace
 
-    LightDataCompat &LightDataCompat::instance() {
-        static auto s_instance = LightDataCompat{};
+    StageLightData &StageLightData::instance() {
+        static auto s_instance = StageLightData{};
         return s_instance;
     }
 
-    void LightDataCompat::reset() {
+    void StageLightData::reset() {
         _loaded = false;
         _load_failed = false;
         _root_key.clear();
@@ -148,7 +148,7 @@ namespace smgpc::compat {
         _zone_area_lights.clear();
     }
 
-    AreaLightInfo *LightDataCompat::area_light_info(const ZoneLightID &zone_id) {
+    AreaLightInfo *StageLightData::area_light_info(const ZoneLightID &zone_id) {
         if (!ensure_loaded() || _area_lights.empty()) {
             return nullptr;
         }
@@ -186,7 +186,7 @@ namespace smgpc::compat {
         return &_area_lights.front();
     }
 
-    const char *LightDataCompat::default_area_light_name() {
+    const char *StageLightData::default_area_light_name() {
         if (!ensure_loaded()) {
             return nullptr;
         }
@@ -202,8 +202,8 @@ namespace smgpc::compat {
         return nullptr;
     }
 
-    bool LightDataCompat::ensure_loaded() {
-        auto *runtime = RuntimeContext::try_instance();
+    bool StageLightData::ensure_loaded() {
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr) {
             return false;
         }
@@ -232,7 +232,7 @@ namespace smgpc::compat {
         } catch (const std::exception &error) {
             _load_failed = true;
 #ifndef NDEBUG
-            runtime->note_debug_event(std::string("LightDataCompat failed to load original light data: ") + error.what());
+            runtime->note_debug_event(std::string("StageLightData failed to load original light data: ") + error.what());
 #else
             (void)error;
 #endif
@@ -240,8 +240,8 @@ namespace smgpc::compat {
         }
     }
 
-    void LightDataCompat::load_current_stage(std::string_view stage_name) {
-        auto &runtime = RuntimeContext::instance();
+    void StageLightData::load_current_stage(std::string_view stage_name) {
+        auto &runtime = smgpc::runtime::RuntimeContext::instance();
         const auto &archive = runtime.dvd().archive(cLightDataArchivePath);
 
         const auto *main_entry = find_archive_file(archive, cMainLightDataPath);
@@ -249,7 +249,7 @@ namespace smgpc::compat {
             throw std::runtime_error("missing lightdata.bcsv in LightData.arc");
         }
 
-        const auto light_table = BcsvTable::from_bytes(archive.file_data(*main_entry));
+        const auto light_table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*main_entry));
         _area_light_names.reserve(light_table.entry_count());
         _area_lights.reserve(light_table.entry_count());
         for (auto row = std::size_t{}; row < light_table.entry_count(); ++row) {
@@ -267,7 +267,7 @@ namespace smgpc::compat {
 
         const auto zone_file = zone_light_file_name(stage_name);
         if (const auto *zone_entry = find_archive_file(archive, zone_file); zone_entry != nullptr) {
-            const auto zone_table = BcsvTable::from_bytes(archive.file_data(*zone_entry));
+            const auto zone_table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*zone_entry));
             _zone_area_lights.reserve(zone_table.entry_count());
             for (auto row = std::size_t{}; row < zone_table.entry_count(); ++row) {
                 _zone_area_lights.push_back(ZoneAreaLight{
@@ -287,4 +287,4 @@ namespace smgpc::compat {
         }
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render::light

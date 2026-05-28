@@ -18,7 +18,7 @@
 #include "Game/Util/LightUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::runtime {
     namespace {
 
         constexpr auto ORIGINAL_MOVEMENT_ORDER = std::array<s32, 43U>{
@@ -351,6 +351,31 @@ namespace smgpc::compat {
         }
 
 #ifndef NDEBUG
+        [[nodiscard]] std::string_view scene_entry_kind_name(SceneEntryKind kind) {
+            switch (kind) {
+            case SceneEntryKind::NameObj:
+                return "name_obj";
+            case SceneEntryKind::Layout:
+                return "layout";
+            case SceneEntryKind::LayoutActor:
+                return "layout_actor";
+            case SceneEntryKind::LiveActorModel:
+                return "live_actor_model";
+            }
+            return "unknown";
+        }
+
+        void emit_connect_to_scene_trace(SceneEntryKind kind, std::string_view name, s32 movement_type, s32 calc_anim_type,
+                                         s32 draw_buffer_type, s32 draw_type) {
+            if (auto *runtime = RuntimeContext::try_instance()) {
+                runtime->emit_semantic_trace_event(
+                    "name_obj_lifecycle", "connect_to_scene",
+                    "object=" + std::string(name) + ";kind=" + std::string(scene_entry_kind_name(kind)) +
+                        ";movement=" + std::to_string(movement_type) + ";calc_anim=" + std::to_string(calc_anim_type) +
+                        ";draw_buffer=" + std::to_string(draw_buffer_type) + ";draw_type=" + std::to_string(draw_type));
+            }
+        }
+
         [[nodiscard]] std::string sensor_host_name(const HitSensor *sensor) {
             const auto *host = MR::getSensorHost(sensor);
             return host != nullptr ? host->getName() : "";
@@ -369,6 +394,9 @@ namespace smgpc::compat {
             entry->calc_anim_type = calc_anim_type;
             entry->draw_buffer_type = draw_buffer_type;
             entry->draw_type = draw_type;
+#ifndef NDEBUG
+            emit_connect_to_scene_trace(SceneEntryKind::NameObj, obj.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
+#endif
             return;
         }
 
@@ -381,6 +409,9 @@ namespace smgpc::compat {
             .draw_type = draw_type,
             .order = _next_order++,
         });
+#ifndef NDEBUG
+        emit_connect_to_scene_trace(SceneEntryKind::NameObj, obj.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
+#endif
     }
 
     void SceneScheduler::disconnect_name_obj(NameObj &obj) {
@@ -394,6 +425,9 @@ namespace smgpc::compat {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
             entry->draw_type = draw_type;
+#ifndef NDEBUG
+            emit_connect_to_scene_trace(SceneEntryKind::Layout, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
+#endif
             return;
         }
 
@@ -405,6 +439,9 @@ namespace smgpc::compat {
             .draw_type = draw_type,
             .order = _next_order++,
         });
+#ifndef NDEBUG
+        emit_connect_to_scene_trace(SceneEntryKind::Layout, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
+#endif
     }
 
     void SceneScheduler::unregister_layout(SimpleLayout &layout) {
@@ -418,6 +455,9 @@ namespace smgpc::compat {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
             entry->draw_type = draw_type;
+#ifndef NDEBUG
+            emit_connect_to_scene_trace(SceneEntryKind::LayoutActor, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
+#endif
             return;
         }
 
@@ -430,6 +470,9 @@ namespace smgpc::compat {
             .draw_type = draw_type,
             .order = _next_order++,
         });
+#ifndef NDEBUG
+        emit_connect_to_scene_trace(SceneEntryKind::LayoutActor, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
+#endif
     }
 
     void SceneScheduler::unregister_layout_actor(LayoutActor &layout) {
@@ -445,6 +488,10 @@ namespace smgpc::compat {
             entry->draw_buffer_type = draw_buffer_type;
             entry->draw_type = draw_type;
             MR::initActorLightInfoLightType(&actor, light_type_for_draw_buffer(draw_buffer_type));
+#ifndef NDEBUG
+            emit_connect_to_scene_trace(SceneEntryKind::LiveActorModel, actor.getName(), movement_type, calc_anim_type, draw_buffer_type,
+                                        draw_type);
+#endif
             return;
         }
 
@@ -459,6 +506,9 @@ namespace smgpc::compat {
             .order = _next_order++,
         });
         MR::initActorLightInfoLightType(&actor, light_type_for_draw_buffer(draw_buffer_type));
+#ifndef NDEBUG
+        emit_connect_to_scene_trace(SceneEntryKind::LiveActorModel, actor.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
+#endif
     }
 
     void SceneScheduler::unregister_live_actor_model(LiveActor &actor) {
@@ -546,16 +596,16 @@ namespace smgpc::compat {
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_opa(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type) {
+    void SceneScheduler::execute_draw_buffer_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
         execute_draw_buffer(renderer, camera_pose, draw_buffer_type, SceneDrawBufferPass::Opaque);
     }
 
-    void SceneScheduler::execute_draw_buffer_xlu(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type) {
+    void SceneScheduler::execute_draw_buffer_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
         execute_draw_buffer(renderer, camera_pose, draw_buffer_type, SceneDrawBufferPass::Translucent);
     }
 
     void SceneScheduler::execute_draw_buffer_list_normal_opa_before_volume_shadow(render::IRendererEngine &renderer,
-                                                                                  const CameraPoseCompat &camera_pose, bool prior_draw_air) {
+                                                                                  const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air) {
         for (const auto &command : NORMAL_OPA_BEFORE_VOLUME_SHADOW_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
             if (command.draw_buffer_type == MR::DrawBufferType_AstroDomeSky && command.pass == SceneDrawBufferPass::Translucent &&
@@ -571,13 +621,13 @@ namespace smgpc::compat {
     }
 
     void SceneScheduler::execute_draw_buffer_list_normal_opa_before_silhouette(render::IRendererEngine &renderer,
-                                                                               const CameraPoseCompat &camera_pose) {
+                                                                               const smgpc::camera::CameraPose &camera_pose) {
         for (const auto &command : NORMAL_OPA_BEFORE_SILHOUETTE_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal_opa(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose,
+    void SceneScheduler::execute_draw_buffer_list_normal_opa(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
                                                              bool prior_draw_air) {
         for (const auto &command : NORMAL_OPA_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
@@ -589,13 +639,13 @@ namespace smgpc::compat {
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal_xlu(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose) {
+    void SceneScheduler::execute_draw_buffer_list_normal_xlu(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose) {
         for (const auto &command : NORMAL_XLU_COMMANDS) {
             execute_draw_buffer(renderer, camera_pose, command.draw_buffer_type, command.pass);
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose,
+    void SceneScheduler::execute_draw_buffer_list_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose,
                                                          bool prior_draw_air) {
         auto *runtime = RuntimeContext::try_instance();
         const auto previous_pixel_update_state = runtime != nullptr ? runtime->j3d_pixel_update_state() :
@@ -678,7 +728,7 @@ namespace smgpc::compat {
         return accepted_count;
     }
 
-    void SceneScheduler::execute_draw_buffer(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, s32 draw_buffer_type,
+    void SceneScheduler::execute_draw_buffer(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type,
                                              SceneDrawBufferPass pass) {
         auto actor_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
@@ -693,8 +743,8 @@ namespace smgpc::compat {
         std::ranges::stable_sort(actor_entries, draw_category_less);
         MR::loadLight(light_type_for_draw_buffer(draw_buffer_type));
 
-        const auto model_pass = pass == SceneDrawBufferPass::Translucent ? LiveActorModelCompat::DrawPass::Translucent :
-                                                                           LiveActorModelCompat::DrawPass::Opaque;
+        const auto model_pass = pass == SceneDrawBufferPass::Translucent ? smgpc::render::live_actor::LiveActorModel::DrawPass::Translucent :
+                                                                           smgpc::render::live_actor::LiveActorModel::DrawPass::Opaque;
 #ifndef NDEBUG
         const auto phase = pass == SceneDrawBufferPass::Translucent ? SceneSchedulerPhase::DrawBufferXlu : SceneSchedulerPhase::DrawBufferOpa;
 #endif
@@ -1113,4 +1163,4 @@ namespace smgpc::compat {
     }
 #endif
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::runtime

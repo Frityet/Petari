@@ -10,7 +10,7 @@
 
 #include "render/J3dModel.hpp"
 
-namespace smgpc::compat {
+namespace smgpc::render {
     namespace {
 
         constexpr auto GX_TG_POS = std::uint8_t{0U};
@@ -70,7 +70,7 @@ namespace smgpc::compat {
             float depth_range = 1.0F;
         };
 
-        [[nodiscard]] CameraProjectionContext camera_projection_context(const CameraPoseCompat &pose,
+        [[nodiscard]] CameraProjectionContext camera_projection_context(const smgpc::camera::CameraPose &pose,
                                                                         const render::core::FramebufferInfo &framebuffer) {
             constexpr auto pi = 3.14159265358979323846F;
             const auto forward = normalized_or({pose.watch.x - pose.eye.x, pose.watch.y - pose.eye.y, pose.watch.z - pose.eye.z},
@@ -94,13 +94,13 @@ namespace smgpc::compat {
             };
         }
 
-        [[nodiscard]] CameraViewPointCompat camera_space_point(const CameraProjectionContext &context, std::array<float, 3U> world) {
+        [[nodiscard]] smgpc::camera::CameraViewPoint camera_space_point(const CameraProjectionContext &context, std::array<float, 3U> world) {
             const auto delta = std::array<float, 3U>{
                 world[0U] - context.eye[0U],
                 world[1U] - context.eye[1U],
                 world[2U] - context.eye[2U],
             };
-            return CameraViewPointCompat{
+            return smgpc::camera::CameraViewPoint{
                 .x = dot3(delta, context.right),
                 .y = dot3(delta, context.up),
                 .z = dot3(delta, context.forward),
@@ -146,7 +146,7 @@ namespace smgpc::compat {
             return gx_raster_color(source, state, first_raster_channel_selector(state, passes), position, normal);
         }
 
-        [[nodiscard]] bool texture_needs_blending(const DecodedTexture &texture) {
+        [[nodiscard]] bool texture_needs_blending(const smgpc::resource::DecodedTexture &texture) {
             for (auto offset = std::size_t{3U}; offset < texture.rgba.size(); offset += 4U) {
                 if (texture.rgba[offset] != 255U) {
                     return true;
@@ -1859,7 +1859,7 @@ namespace smgpc::compat {
         _btk_animation.reset();
     }
 
-    void J3dModelRenderer::draw(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose, const J3dMatrix3x4 &actor_matrix,
+    void J3dModelRenderer::draw(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix,
                                 std::uint64_t frame, const J3dModelRendererDrawOptions &options) const {
         if (!_loaded) {
             return;
@@ -2309,7 +2309,7 @@ namespace smgpc::compat {
                                            });
     }
 
-    J3dMatrix3x4 j3d_matrix_from_translation_scale(const CameraParamVec3 &translation, float scale) {
+    J3dMatrix3x4 j3d_matrix_from_translation_scale(const smgpc::camera::CameraParamVec3 &translation, float scale) {
         return J3dMatrix3x4{
             .m =
                 {
@@ -2329,4 +2329,4 @@ namespace smgpc::compat {
         };
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

@@ -9,7 +9,7 @@
 #include <string_view>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::camera {
 
     struct CameraParamVec3 {
         float x = 0.0F;
@@ -17,7 +17,7 @@ namespace smgpc::compat {
         float z = 0.0F;
     };
 
-    struct CameraGeneralParamCompat {
+    struct CameraGeneralParam {
         float dist = 1200.0F;
         CameraParamVec3 axis = {0.0F, 1.0F, 0.0F};
         CameraParamVec3 w_point = {};
@@ -29,7 +29,7 @@ namespace smgpc::compat {
         std::string string_param = {};
     };
 
-    struct CameraExtraParamCompat {
+    struct CameraExtraParam {
         CameraParamVec3 w_offset = {0.0F, 100.0F, 0.0F};
         float l_offset = 0.0F;
         float l_offset_v = 0.0F;
@@ -49,12 +49,12 @@ namespace smgpc::compat {
         CameraParamVec3 v_pan_axis = {0.0F, 1.0F, 0.0F};
     };
 
-    struct CameraParamChunkCompat {
+    struct CameraParamChunk {
         std::uint32_t version = 0U;
         std::string id = "";
         std::string camera_type = "";
-        CameraExtraParamCompat extra = {};
-        CameraGeneralParamCompat general = {};
+        CameraExtraParam extra = {};
+        CameraGeneralParam general = {};
         std::int32_t game_thru = 0;
         std::int32_t game_enable_end_erp_frame = 0;
         std::uint32_t game_cam_end_int = 120U;
@@ -72,8 +72,8 @@ namespace smgpc::compat {
         [[nodiscard]] bool is_subjective_camera_off() const;
     };
 
-    [[nodiscard]] std::vector<CameraParamChunkCompat> load_camera_param_chunks(const BcsvTable &table);
-    [[nodiscard]] std::optional<CameraParamChunkCompat> find_camera_param_chunk(std::span<const CameraParamChunkCompat> chunks,
+    [[nodiscard]] std::vector<CameraParamChunk> load_camera_param_chunks(const resource::BcsvTable &table);
+    [[nodiscard]] std::optional<CameraParamChunk> find_camera_param_chunk(std::span<const CameraParamChunk> chunks,
                                                                                 std::string_view id);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::camera

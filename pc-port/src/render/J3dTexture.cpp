@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace smgpc::compat {
+namespace smgpc::render {
     namespace {
 
         constexpr auto J3D1_MAGIC = std::uint32_t{0x4a334431U};
@@ -78,7 +78,7 @@ namespace smgpc::compat {
             textures.reserve(texture_count);
             for (auto i = 0U; i < texture_count; ++i) {
                 const auto header_offset = texture_header_offset + i * 0x20U;
-                const auto bti = decode_bti_texture(data.subspan(header_offset));
+                const auto bti = smgpc::resource::decode_bti_texture(data.subspan(header_offset));
 
                 textures.push_back(J3dTexture{
                     .name = i < names.size() ? names[i] : std::string{},
@@ -99,6 +99,8 @@ namespace smgpc::compat {
                     .image_count = bti.image_count,
                     .lod_bias = bti.lod_bias,
                     .image_data_offset = bti.image_data_offset,
+                    .image_data_size = bti.image_data_size,
+                    .image_levels = bti.image_levels,
                     .image = bti.image,
                 });
             }
@@ -141,4 +143,4 @@ namespace smgpc::compat {
         return {};
     }
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

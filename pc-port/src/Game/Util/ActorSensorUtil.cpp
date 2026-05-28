@@ -56,7 +56,7 @@ namespace MR {
     }
 
     void sendMsgToAllLiveActor(u32 msg, LiveActor* pActor) {
-        if (auto* runtime = smgpc::compat::RuntimeContext::try_instance(); runtime != nullptr) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
             runtime->scheduler().send_message_to_live_actors(msg, pActor);
         }
     }

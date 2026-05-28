@@ -6,10 +6,13 @@
 #include <string>
 #include <vector>
 
-namespace smgpc::compat {
+namespace smgpc::layout {
+    struct BrlytMaterial;
+}
+
+namespace smgpc::render {
 
     struct J3dMaterialSummary;
-    struct BrlytMaterial;
 
     struct GXTextureBindingState {
         std::uint8_t slot = 0U;
@@ -289,9 +292,9 @@ namespace smgpc::compat {
     [[nodiscard]] GXColorValue gx_evaluate_lit_raster_color(const GXMaterialState &state, std::uint8_t color_channel, GXColorValue vertex_color,
                                                             std::array<float, 3U> position, std::array<float, 3U> normal);
     [[nodiscard]] GXMaterialState gx_state_from_j3d_material(const J3dMaterialSummary &material);
-    [[nodiscard]] GXMaterialState gx_state_from_brlyt_material(const BrlytMaterial &material);
+    [[nodiscard]] GXMaterialState gx_state_from_brlyt_material(const smgpc::layout::BrlytMaterial &material);
     [[nodiscard]] GXBPRegisterState gx_bp_registers_from_state(const GXMaterialState &state);
     void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list);
     void gx_apply_mdl3_display_list(GXMaterialState &state, std::span<const std::uint8_t> display_list, GXBPRegisterState *bp_registers);
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::render

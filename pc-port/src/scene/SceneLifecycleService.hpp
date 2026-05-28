@@ -13,14 +13,17 @@
 class NameObj;
 class Scene;
 
-namespace smgpc::compat {
-
+namespace smgpc::runtime {
     class RuntimeContext;
+}  // namespace smgpc::runtime
+
+namespace smgpc::scene {
+
     class StageHostScene;
 
     class SceneLifecycleService final {
     public:
-        explicit SceneLifecycleService(RuntimeContext &runtime);
+        explicit SceneLifecycleService(smgpc::runtime::RuntimeContext &runtime);
         ~SceneLifecycleService();
 
         SceneLifecycleService(const SceneLifecycleService &) = delete;
@@ -32,7 +35,7 @@ namespace smgpc::compat {
         void start_scene();
         void update_scene();
         void calc_anim_scene();
-        void draw_3d_normal(render::IRendererEngine &renderer, const CameraPoseCompat &camera_pose);
+        void draw_3d_normal(render::IRendererEngine &renderer, const smgpc::camera::CameraPose &camera_pose);
         void draw_2d_normal(render::IRendererEngine &renderer);
 
         [[nodiscard]] Scene *active_scene() const;
@@ -45,11 +48,11 @@ namespace smgpc::compat {
     private:
         void create_stage_scene(const StageHostRequest &request);
 
-        RuntimeContext &_runtime;
+        smgpc::runtime::RuntimeContext &_runtime;
         std::string _active_scene_name;
         std::string _active_stage_name;
         s32 _active_scenario_no = 0;
         std::unique_ptr<StageHostScene> _active_scene;
     };
 
-}  // namespace smgpc::compat
+}  // namespace smgpc::scene
