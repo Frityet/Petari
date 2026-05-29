@@ -22,29 +22,29 @@ namespace smgpc::runtime {
     namespace {
 
         [[nodiscard]] bool exists_regular_file(const std::filesystem::path &path) {
-            std::error_code error {};
+            std::error_code error{};
             return std::filesystem::is_regular_file(path, error);
         }
 
-        constexpr auto SAVE_DATA_CONTAINER_NAME = std::string_view {"GameData.bin"};
-        constexpr auto SAVE_DATA_VERSION = std::uint32_t {2U};
-        constexpr auto SAVE_DATA_FILE_COUNT = std::uint32_t {19U};
-        constexpr auto SAVE_DATA_FILE_INFO_SIZE = std::size_t {16U};
-        constexpr auto SAVE_DATA_FILE_NAME_SIZE = std::size_t {12U};
-        constexpr auto SAVE_DATA_HEADER_SIZE = std::size_t {16U};
-        constexpr auto SAVE_DATA_GAME_FILE_SIZE = std::size_t {0xF80U};
-        constexpr auto SAVE_DATA_CONFIG_FILE_SIZE = std::size_t {0x60U};
-        constexpr auto SAVE_DATA_SYSTEM_FILE_SIZE = std::size_t {0x80U};
-        constexpr auto SAVE_DATA_ICON_ID_MII = u32 {0U};
-        constexpr auto SAVE_DATA_ICON_ID_MARIO = u32 {1U};
-        constexpr auto SAVE_DATA_MII_CREATE_ID_SIZE = std::size_t {8U};
-        constexpr auto SAVE_DATA_MII_FLAG_LEGACY_MII = std::uint8_t {0x1U};
-        constexpr auto SAVE_DATA_MII_FLAG_CREATE_ID = std::uint8_t {0x2U};
-        constexpr auto SAVE_DATA_MISC_FLAG_LAST_LOADED_MARIO = std::uint8_t {0x1U};
-        constexpr auto SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_MARIO = std::uint8_t {0x2U};
-        constexpr auto SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_LUIGI = std::uint8_t {0x4U};
-        constexpr auto SAVE_DATA_EVENT_FLAG_BIT = std::uint16_t {0x8000U};
-        constexpr auto SAVE_DATA_EVENT_FLAG_HASH_MASK = std::uint16_t {0x7fffU};
+        constexpr auto SAVE_DATA_CONTAINER_NAME = std::string_view{"GameData.bin"};
+        constexpr auto SAVE_DATA_VERSION = std::uint32_t{2U};
+        constexpr auto SAVE_DATA_FILE_COUNT = std::uint32_t{19U};
+        constexpr auto SAVE_DATA_FILE_INFO_SIZE = std::size_t{16U};
+        constexpr auto SAVE_DATA_FILE_NAME_SIZE = std::size_t{12U};
+        constexpr auto SAVE_DATA_HEADER_SIZE = std::size_t{16U};
+        constexpr auto SAVE_DATA_GAME_FILE_SIZE = std::size_t{0xF80U};
+        constexpr auto SAVE_DATA_CONFIG_FILE_SIZE = std::size_t{0x60U};
+        constexpr auto SAVE_DATA_SYSTEM_FILE_SIZE = std::size_t{0x80U};
+        constexpr auto SAVE_DATA_ICON_ID_MII = u32{0U};
+        constexpr auto SAVE_DATA_ICON_ID_MARIO = u32{1U};
+        constexpr auto SAVE_DATA_MII_CREATE_ID_SIZE = std::size_t{8U};
+        constexpr auto SAVE_DATA_MII_FLAG_LEGACY_MII = std::uint8_t{0x1U};
+        constexpr auto SAVE_DATA_MII_FLAG_CREATE_ID = std::uint8_t{0x2U};
+        constexpr auto SAVE_DATA_MISC_FLAG_LAST_LOADED_MARIO = std::uint8_t{0x1U};
+        constexpr auto SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_MARIO = std::uint8_t{0x2U};
+        constexpr auto SAVE_DATA_MISC_FLAG_COMPLETE_ENDING_LUIGI = std::uint8_t{0x4U};
+        constexpr auto SAVE_DATA_EVENT_FLAG_BIT = std::uint16_t{0x8000U};
+        constexpr auto SAVE_DATA_EVENT_FLAG_HASH_MASK = std::uint16_t{0x7fffU};
 
         enum class SaveDataByteOrder {
             BigEndian,
@@ -96,18 +96,18 @@ namespace smgpc::runtime {
                                                                                       0U))};
             common::append_be64(misc_data, static_cast<std::uint64_t>(state.last_modified));
 
-            const auto chunks = std::array {
-                common::BinaryChunk {
+            const auto chunks = std::array{
+                common::BinaryChunk{
                     .signature = common::fourcc('C', 'O', 'N', 'F'),
                     .hash = 0x2432DAU,
                     .data = {static_cast<std::uint8_t>(state.created ? 0xffU : 0U)},
                 },
-                common::BinaryChunk {
+                common::BinaryChunk{
                     .signature = common::fourcc('M', 'I', 'I', ' '),
                     .hash = 0x2836E9U,
                     .data = std::move(mii_data),
                 },
-                common::BinaryChunk {
+                common::BinaryChunk{
                     .signature = common::fourcc('M', 'I', 'S', 'C'),
                     .hash = 0x1U,
                     .data = std::move(misc_data),
@@ -135,33 +135,33 @@ namespace smgpc::runtime {
                 append_save_event_value(value_data, name, value);
             }
 
-            const auto chunks = std::array {
-                common::BinaryChunk {
+            const auto chunks = std::array{
+                common::BinaryChunk{
                     .signature = common::fourcc('P', 'L', 'A', 'Y'),
                     .hash = 0x27C90FU,
                     .data = std::move(play_data),
                 },
-                common::BinaryChunk {
+                common::BinaryChunk{
                     .signature = common::fourcc('F', 'L', 'G', '1'),
                     .hash = common::hash_code_31("2bytes/flag"),
                     .data = std::move(flag_data),
                 },
-                common::BinaryChunk {
+                common::BinaryChunk{
                     .signature = common::fourcc('P', 'C', 'E', '1'),
                     .hash = common::hash_code_31("StarPieceAlmsStorage") << 5U,
                     .data = {},
                 },
-                common::BinaryChunk {
+                common::BinaryChunk{
                     .signature = common::fourcc('S', 'P', 'N', '1'),
                     .hash = 0x12345679U,
                     .data = {},
                 },
-                common::BinaryChunk {
+                common::BinaryChunk{
                     .signature = common::fourcc('V', 'L', 'E', '1'),
                     .hash = common::fourcc('V', 'L', 'E', '1'),
                     .data = std::move(value_data),
                 },
-                common::BinaryChunk {
+                common::BinaryChunk{
                     .signature = common::fourcc('G', 'A', 'L', 'A'),
                     .hash = 0xBF0640EEU,
                     .data = {},
@@ -194,7 +194,7 @@ namespace smgpc::runtime {
                 state.has_mii_id = icon_id == SAVE_DATA_ICON_ID_MII;
                 state.icon_id = state.has_mii_id ? std::nullopt : std::optional<u32>(icon_id);
                 if (state.has_mii_id) {
-                    auto index = s32 {};
+                    auto index = s32{};
                     std::memcpy(&index, chunk->data.data() + 1U, std::min(sizeof(index), SAVE_DATA_MII_CREATE_ID_SIZE));
                     state.rfl_mii_index = index;
                 } else {
@@ -238,7 +238,7 @@ namespace smgpc::runtime {
                 if (chunk->hash != common::hash_code_31("2bytes/flag")) {
                     return false;
                 }
-                for (auto offset = std::size_t {}; offset + sizeof(std::uint16_t) <= chunk->data.size(); offset += sizeof(std::uint16_t)) {
+                for (auto offset = std::size_t{}; offset + sizeof(std::uint16_t) <= chunk->data.size(); offset += sizeof(std::uint16_t)) {
                     const auto word = common::read_be16(chunk->data, offset);
                     const auto enabled = (word & SAVE_DATA_EVENT_FLAG_BIT) != 0U;
                     const auto hash = static_cast<std::uint16_t>(word & SAVE_DATA_EVENT_FLAG_HASH_MASK);
@@ -254,7 +254,7 @@ namespace smgpc::runtime {
                 if (chunk->hash != common::fourcc('V', 'L', 'E', '1')) {
                     return false;
                 }
-                for (auto offset = std::size_t {}; offset + 4U <= chunk->data.size(); offset += 4U) {
+                for (auto offset = std::size_t{}; offset + 4U <= chunk->data.size(); offset += 4U) {
                     const auto hash = common::read_be16(chunk->data, offset);
                     const auto value = common::read_be16(chunk->data, offset + 2U);
                     if (hash == static_cast<std::uint16_t>(common::hash_code_31("MissNum"))) {
@@ -326,10 +326,10 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::uint32_t save_check_sum(std::span<const std::uint8_t> bytes, SaveDataByteOrder byte_order) {
-            auto sum = std::uint16_t {};
-            auto inv_sum = std::uint16_t {};
+            auto sum = std::uint16_t{};
+            auto inv_sum = std::uint16_t{};
             const auto word_count = bytes.size() / sizeof(std::uint16_t);
-            for (auto index = std::size_t {}; index < word_count; ++index) {
+            for (auto index = std::size_t{}; index < word_count; ++index) {
                 const auto word = read_save_u16(bytes, index * sizeof(std::uint16_t), byte_order);
                 sum = static_cast<std::uint16_t>(sum + word);
                 inv_sum = static_cast<std::uint16_t>(inv_sum + static_cast<std::uint16_t>(~word));
@@ -365,7 +365,7 @@ namespace smgpc::runtime {
             write_save_u32(converted, 4U, version, destination_byte_order);
             write_save_u32(converted, 8U, file_count, destination_byte_order);
             write_save_u32(converted, 12U, data_size, destination_byte_order);
-            for (auto file_index = std::uint32_t {}; file_index < file_count; ++file_index) {
+            for (auto file_index = std::uint32_t{}; file_index < file_count; ++file_index) {
                 const auto info_offset = SAVE_DATA_HEADER_SIZE + static_cast<std::size_t>(file_index) * SAVE_DATA_FILE_INFO_SIZE;
                 write_save_u32(converted, info_offset + SAVE_DATA_FILE_NAME_SIZE,
                                read_save_u32(bytes, info_offset + SAVE_DATA_FILE_NAME_SIZE, source_byte_order), destination_byte_order);
@@ -436,7 +436,7 @@ namespace smgpc::runtime {
             }
 
             constexpr auto PI = 3.14159265358979323846F;
-            const auto world = smgpc::camera::CameraParamVec3 {
+            const auto world = smgpc::camera::CameraParamVec3{
                 .x = target.actor->mPosition.x + target.offset.x,
                 .y = target.actor->mPosition.y + target.offset.y,
                 .z = target.actor->mPosition.z + target.offset.z,
@@ -458,7 +458,7 @@ namespace smgpc::runtime {
             const auto half_height = static_cast<float>(render::core::kWiiLogicalFramebufferHeight) * 0.5F;
             const auto ndc_x = (camera.x / camera.z) * focal_x;
             const auto ndc_y = (camera.y / camera.z) * focal_y;
-            return StarPointerProjection {
+            return StarPointerProjection{
                 .x = (ndc_x * half_width) + half_width,
                 .y = (ndc_y * half_height) + half_height,
                 .radius = std::max((target.radius / depth) * focal_y * half_height, 1.0F),
@@ -466,7 +466,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::filesystem::path weakly_canonical_or_normal(const std::filesystem::path &path) {
-            std::error_code error {};
+            std::error_code error{};
             auto canonical = std::filesystem::weakly_canonical(path, error);
             if (!error) {
                 return canonical;
@@ -498,7 +498,7 @@ namespace smgpc::runtime {
         }
 
         void write_binary_file(const std::filesystem::path &path, std::span<const std::uint8_t> bytes) {
-            std::error_code error {};
+            std::error_code error{};
             std::filesystem::create_directories(path.parent_path(), error);
             if (error) {
                 throw std::runtime_error("Cannot create save directory " + path.parent_path().string());
@@ -665,7 +665,7 @@ namespace smgpc::runtime {
             const auto comp0 = static_cast<std::uint8_t>(base_shape->alpha_compare_config & 0x07U);
             const auto op = static_cast<std::uint8_t>((base_shape->alpha_compare_config >> 3U) & 0x03U);
             const auto comp1 = static_cast<std::uint8_t>((base_shape->alpha_compare_config >> 5U) & 0x07U);
-            return render::GxAlphaCompare2D {
+            return render::GxAlphaCompare2D{
                 .comp0 = comp0,
                 .ref0 = base_shape->alpha_ref0,
                 .op = op,
@@ -677,12 +677,12 @@ namespace smgpc::runtime {
 
         [[nodiscard]] render::GxBlendMode2D jpa_blend_mode(const smgpc::render::effects::JpcBaseShapeMetadata *base_shape) {
             if (base_shape == nullptr) {
-                return render::GxBlendMode2D {.enabled = true};
+                return render::GxBlendMode2D{.enabled = true};
             }
 
             const auto config = base_shape->blend_mode_config;
             const auto type = static_cast<std::uint8_t>(config & 0x03U);
-            return render::GxBlendMode2D {
+            return render::GxBlendMode2D{
                 .type = type,
                 .src_factor = jpa_blend_factor_from_config(static_cast<std::uint8_t>((config >> 2U) & 0x0fU)),
                 .dst_factor = jpa_blend_factor_from_config(static_cast<std::uint8_t>((config >> 6U) & 0x0fU)),
@@ -721,7 +721,7 @@ namespace smgpc::runtime {
             const auto flags = base_shape == nullptr ? 0U : base_shape->flags;
             const auto color_index = static_cast<std::size_t>((flags >> 15U) & 0x07U);
             const auto alpha_index = static_cast<std::size_t>((flags >> 18U) & 0x01U);
-            return render::GxTevStage2D {
+            return render::GxTevStage2D{
                 .texture_stage = 0U,
                 .color_in = color_index < COLOR_ARGS.size() ? COLOR_ARGS[color_index] : COLOR_ARGS.front(),
                 .alpha_in = ALPHA_ARGS[alpha_index],
@@ -730,7 +730,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] render::GxTevRegisterColor2D jpa_register_color(std::array<std::uint8_t, 4U> color, float alpha_scale) {
             color[3U] = static_cast<std::uint8_t>(std::clamp(static_cast<float>(color[3U]) * alpha_scale, 0.0F, 255.0F));
-            return render::GxTevRegisterColor2D {
+            return render::GxTevRegisterColor2D{
                 static_cast<std::int16_t>(color[0U]),
                 static_cast<std::int16_t>(color[1U]),
                 static_cast<std::int16_t>(color[2U]),
@@ -768,10 +768,10 @@ namespace smgpc::runtime {
                 const auto x0 = x - half_size_x + (half_size_x * 2.0F * u0);
                 const auto x1 = x - half_size_x + (half_size_x * 2.0F * u1);
                 const auto out = segment * 4U;
-                vertices[out + 0U] = render::GxMaterialVertex2D {.x = x0, .y = y - half_size_y, .z = z, .tex_coords = {{{u0, 1.0F, 1.0F}}}, .color = color};
-                vertices[out + 1U] = render::GxMaterialVertex2D {.x = x1, .y = y - half_size_y, .z = z, .tex_coords = {{{u1, 1.0F, 1.0F}}}, .color = color};
-                vertices[out + 2U] = render::GxMaterialVertex2D {.x = x1, .y = y + half_size_y, .z = z, .tex_coords = {{{u1, 0.0F, 1.0F}}}, .color = color};
-                vertices[out + 3U] = render::GxMaterialVertex2D {.x = x0, .y = y + half_size_y, .z = z, .tex_coords = {{{u0, 0.0F, 1.0F}}}, .color = color};
+                vertices[out + 0U] = render::GxMaterialVertex2D{.x = x0, .y = y - half_size_y, .z = z, .tex_coords = {{{u0, 1.0F, 1.0F}}}, .color = color};
+                vertices[out + 1U] = render::GxMaterialVertex2D{.x = x1, .y = y - half_size_y, .z = z, .tex_coords = {{{u1, 1.0F, 1.0F}}}, .color = color};
+                vertices[out + 2U] = render::GxMaterialVertex2D{.x = x1, .y = y + half_size_y, .z = z, .tex_coords = {{{u1, 0.0F, 1.0F}}}, .color = color};
+                vertices[out + 3U] = render::GxMaterialVertex2D{.x = x0, .y = y + half_size_y, .z = z, .tex_coords = {{{u0, 0.0F, 1.0F}}}, .color = color};
             }
             return vertices;
         }
@@ -928,7 +928,7 @@ namespace smgpc::runtime {
                 return key_block.keys.back().value;
             }
 
-            auto base_index = std::size_t {};
+            auto base_index = std::size_t{};
             auto remaining = key_block.keys.size();
             while (remaining > 1U) {
                 const auto step = remaining / 2U;
@@ -950,7 +950,7 @@ namespace smgpc::runtime {
         [[nodiscard]] JpcKeyedEmitterDynamics jpa_keyed_emitter_dynamics(const smgpc::render::effects::JpcDynamicsBlockMetadata &dynamics,
                                                                          std::span<const smgpc::render::effects::JpcKeyBlockMetadata> key_blocks,
                                                                          float tick) {
-            auto keyed = JpcKeyedEmitterDynamics {
+            auto keyed = JpcKeyedEmitterDynamics{
                 .rate = dynamics.rate,
                 .volume_size = static_cast<float>(dynamics.volume_size),
                 .volume_min_radius = dynamics.volume_min_radius,
@@ -1047,8 +1047,7 @@ namespace smgpc::runtime {
                 break;
             case kVolumeSphere: {
                 const auto phi = static_cast<float>(next_jpa_random_ss(seed)) * 0.5F;
-                const auto theta = keyed_dynamics.spread == 0.0F ? dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed))
-                                                                 : dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
+                const auto theta = keyed_dynamics.spread == 0.0F ? dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed)) : dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
                 auto radius_value = next_jpa_random_f(seed);
                 if (dynamics.fixed_density) {
                     radius_value = 1.0F - radius_value * radius_value * radius_value;
@@ -1102,9 +1101,7 @@ namespace smgpc::runtime {
                 sample.velocity_axis = {.x = sample.velocity_omni.x, .y = 0.0F, .z = sample.velocity_omni.z};
                 break;
             case kVolumeCircle: {
-                const auto theta = dynamics.fixed_interval && emit_count > 0
-                                       ? dynamics.volume_sweep * 65536.0F * static_cast<float>(emitted_index) / static_cast<float>(emit_count)
-                                       : dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
+                const auto theta = dynamics.fixed_interval && emit_count > 0 ? dynamics.volume_sweep * 65536.0F * static_cast<float>(emitted_index) / static_cast<float>(emit_count) : dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
                 const auto radius = radius_sample();
                 sample.position = {.x = radius * jpa_sin(theta), .y = 0.0F, .z = radius * jpa_cos(theta)};
                 sample.velocity_omni = sample.position;
@@ -1216,11 +1213,11 @@ namespace smgpc::runtime {
             return std::nullopt;
         }
 
-        auto file_info = DVDFileInfo {};
+        auto file_info = DVDFileInfo{};
         if (DVDOpen(normalized.c_str(), &file_info)) {
             const auto length = file_info.length;
             (void)DVDClose(&file_info);
-            return DvdEntryMetadata {
+            return DvdEntryMetadata{
                 .entry_num = entry,
                 .disc_path = normalized,
                 .resolved_path = normalized,
@@ -1229,10 +1226,10 @@ namespace smgpc::runtime {
             };
         }
 
-        auto dir = DVDDir {};
+        auto dir = DVDDir{};
         if (DVDOpenDir(normalized.c_str(), &dir)) {
             (void)DVDCloseDir(&dir);
-            return DvdEntryMetadata {
+            return DvdEntryMetadata{
                 .entry_num = entry,
                 .disc_path = normalized,
                 .resolved_path = normalized,
@@ -1249,11 +1246,11 @@ namespace smgpc::runtime {
             return std::nullopt;
         }
 
-        auto file_info = DVDFileInfo {};
+        auto file_info = DVDFileInfo{};
         if (DVDFastOpen(entry_num, &file_info)) {
             const auto length = file_info.length;
             (void)DVDClose(&file_info);
-            return DvdEntryMetadata {
+            return DvdEntryMetadata{
                 .entry_num = entry_num,
                 .disc_path = std::to_string(entry_num),
                 .resolved_path = std::to_string(entry_num),
@@ -1262,10 +1259,10 @@ namespace smgpc::runtime {
             };
         }
 
-        auto dir = DVDDir {};
+        auto dir = DVDDir{};
         if (DVDFastOpenDir(entry_num, &dir)) {
             (void)DVDCloseDir(&dir);
-            return DvdEntryMetadata {
+            return DvdEntryMetadata{
                 .entry_num = entry_num,
                 .disc_path = std::to_string(entry_num),
                 .resolved_path = std::to_string(entry_num),
@@ -1279,15 +1276,15 @@ namespace smgpc::runtime {
 
     std::vector<DvdDirectoryEntry> DvdFileSystemService::directory_entries(std::string_view disc_path) const {
         const auto normalized = normalize_disc_path_string(disc_path);
-        auto dir = DVDDir {};
+        auto dir = DVDDir{};
         if (!DVDOpenDir(normalized.c_str(), &dir)) {
             return {};
         }
 
         auto entries = std::vector<DvdDirectoryEntry>{};
-        auto dir_entry = DVDDirEntry {};
+        auto dir_entry = DVDDirEntry{};
         while (DVDReadDir(&dir, &dir_entry)) {
-            entries.push_back(DvdDirectoryEntry {
+            entries.push_back(DvdDirectoryEntry{
                 .entry_num = static_cast<s32>(dir_entry.entryNum),
                 .disc_path = (std::filesystem::path(normalized) / (dir_entry.name != nullptr ? dir_entry.name : "")).generic_string(),
                 .name = dir_entry.name != nullptr ? dir_entry.name : "",
@@ -1341,7 +1338,7 @@ namespace smgpc::runtime {
 
         const auto read_size = std::min(length, entry->length - offset);
         auto bytes = std::vector<std::uint8_t>(read_size);
-        auto file_info = DVDFileInfo {};
+        auto file_info = DVDFileInfo{};
         if (!DVDOpen(entry->disc_path.c_str(), &file_info)) {
             throw std::runtime_error("Cannot open DVD file " + entry->disc_path);
         }
@@ -1352,7 +1349,7 @@ namespace smgpc::runtime {
         }
         bytes.resize(static_cast<std::size_t>(result));
 
-        _file_read_trace.push_back(DvdFileReadTrace {
+        _file_read_trace.push_back(DvdFileReadTrace{
             .requested_path = std::string(disc_path),
             .disc_path = entry->disc_path,
             .resolved_path = entry->resolved_path,
@@ -1373,7 +1370,7 @@ namespace smgpc::runtime {
             throw std::runtime_error("Cannot queue DVD read for " + std::string(disc_path));
         }
 
-        auto request = DvdAsyncReadRequest {};
+        auto request = DvdAsyncReadRequest{};
         request.id = _next_async_read_id++;
         request.disc_path = entry->disc_path;
         request.entry_num = entry->entry_num;
@@ -1401,7 +1398,7 @@ namespace smgpc::runtime {
     smgpc::resource::RarcArchive &DvdFileSystemService::archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path) {
         const auto key = archive_cache_key_for_path(path);
         if (auto it = _archives.find(key); it != _archives.end()) {
-            _archive_load_trace.push_back(DvdArchiveLoadTrace {
+            _archive_load_trace.push_back(DvdArchiveLoadTrace{
                 .requested_path = std::string(requested_path),
                 .resolved_path = key,
                 .cache_hit = true,
@@ -1417,7 +1414,7 @@ namespace smgpc::runtime {
         if (inserted) {
             ++_archive_load_counts[key];
         }
-        _archive_load_trace.push_back(DvdArchiveLoadTrace {
+        _archive_load_trace.push_back(DvdArchiveLoadTrace{
             .requested_path = std::string(requested_path),
             .resolved_path = key,
             .cache_hit = false,
@@ -1509,7 +1506,7 @@ namespace smgpc::runtime {
                 continue;
             }
 
-            auto result = s32 {-1};
+            auto result = s32{-1};
             try {
                 const auto bytes = read_file_range(request.disc_path, request.offset, request.length, request.priority);
                 if (!bytes.empty() && request.destination != nullptr) {
@@ -1546,9 +1543,9 @@ namespace smgpc::runtime {
         const auto add_entry = [this](std::filesystem::path disc_path, const std::filesystem::path &resolved_path,
                                       bool is_directory) -> s32 {
             const auto entry_num = static_cast<s32>(_entry_table.size());
-            auto length = std::uintmax_t {};
+            auto length = std::uintmax_t{};
             if (!is_directory) {
-                std::error_code error {};
+                std::error_code error{};
                 length = std::filesystem::file_size(resolved_path, error);
                 if (error) {
                     length = 0U;
@@ -1557,7 +1554,7 @@ namespace smgpc::runtime {
 
             const auto key = entry_key(disc_path);
             _entry_num_by_disc_path[key] = entry_num;
-            _entry_table.push_back(DvdEntryMetadata {
+            _entry_table.push_back(DvdEntryMetadata{
                 .entry_num = entry_num,
                 .disc_path = key.empty() ? std::string("/") : "/" + key,
                 .resolved_path = weakly_canonical_or_normal(resolved_path).generic_string(),
@@ -1572,13 +1569,13 @@ namespace smgpc::runtime {
         const auto visit_directory = [&](const auto &self, const std::filesystem::path &relative_path) -> void {
             const auto absolute_path = relative_path.empty() ? _root : _root / relative_path;
             auto children = std::vector<std::filesystem::directory_entry>{};
-            std::error_code error {};
+            std::error_code error{};
             auto iter = std::filesystem::directory_iterator(absolute_path, std::filesystem::directory_options::skip_permission_denied, error);
             if (error) {
                 return;
             }
             for (const auto &child : iter) {
-                std::error_code status_error {};
+                std::error_code status_error{};
                 if (child.is_directory(status_error) || child.is_regular_file(status_error)) {
                     children.push_back(child);
                 }
@@ -1588,7 +1585,7 @@ namespace smgpc::runtime {
             });
 
             for (const auto &child : children) {
-                std::error_code status_error {};
+                std::error_code status_error{};
                 const auto is_directory = child.is_directory(status_error);
                 const auto child_relative_path = relative_path / child.path().filename();
                 add_entry(child_relative_path, child.path(), is_directory);
@@ -1618,241 +1615,6 @@ namespace smgpc::runtime {
 
     std::string DvdFileSystemService::archive_cache_key(std::string_view disc_path) const {
         return archive_cache_key_for_path(resolve(disc_path));
-    }
-
-    void WpadService::begin_frame() {
-        for (auto &channel : _channels) {
-            channel.previous_hold = channel.hold;
-            channel.previous_core_swing = channel.core_swing;
-            channel.previous_sub_swing = channel.sub_swing;
-            channel.trigger = 0U;
-            channel.release = 0U;
-            channel.repeat = 0U;
-            if (channel.hold != 0U) {
-                ++channel.hold_frame_count;
-                if (channel.hold_frame_count == 1U || (channel.hold_frame_count > 30U && (channel.hold_frame_count % 8U) == 0U)) {
-                    channel.repeat = channel.hold;
-                }
-            } else {
-                channel.hold_frame_count = 0U;
-            }
-            if (!channel.connected) {
-                channel.hold = 0U;
-                channel.pointer.valid = false;
-                channel.pointer_history_count = 0U;
-            }
-        }
-    }
-
-    void WpadService::set_connected(s32 channel, bool connected) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = connected;
-        if (!connected) {
-            state->hold = 0U;
-            state->trigger = 0U;
-            state->release = 0U;
-            state->repeat = 0U;
-            state->hold_frame_count = 0U;
-            state->pointer.valid = false;
-            state->pointer_history_count = 0U;
-        }
-    }
-
-    void WpadService::set_button_mask(s32 channel, std::uint32_t hold) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = true;
-        state->hold = hold;
-        state->trigger = hold & ~state->previous_hold;
-        state->release = state->previous_hold & ~hold;
-        if (hold != state->previous_hold) {
-            state->hold_frame_count = hold == 0U ? 0U : 1U;
-            state->repeat = state->trigger;
-        }
-    }
-
-    void WpadService::set_pointer(s32 channel, float x, float y, bool valid) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = true;
-        state->pointer = WpadPointerState {
-            .x = x,
-            .y = y,
-            .valid = valid,
-        };
-        for (auto i = state->pointer_history.size() - 1U; i > 0U; --i) {
-            state->pointer_history[i] = state->pointer_history[i - 1U];
-        }
-        state->pointer_history[0U] = state->pointer;
-        state->pointer_history_count = std::min<std::uint32_t>(static_cast<std::uint32_t>(state->pointer_history.size()),
-                                                               state->pointer_history_count + 1U);
-    }
-
-    void WpadService::set_sub_stick(s32 channel, float x, float y) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = true;
-        state->sub_stick = WpadStickState {
-            .x = x,
-            .y = y,
-        };
-    }
-
-    void WpadService::set_core_acceleration(s32 channel, float x, float y, float z) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = true;
-        state->core_acceleration = WpadVec3State {
-            .x = x,
-            .y = y,
-            .z = z,
-        };
-    }
-
-    void WpadService::set_sub_acceleration(s32 channel, float x, float y, float z) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = true;
-        state->sub_acceleration = WpadVec3State {
-            .x = x,
-            .y = y,
-            .z = z,
-        };
-    }
-
-    void WpadService::set_swing(s32 channel, bool core_swing, bool sub_swing) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = true;
-        state->core_swing = core_swing;
-        state->sub_swing = sub_swing;
-    }
-
-    void WpadService::set_distance_to_display(s32 channel, float distance) {
-        auto *state = mutable_channel_state(channel);
-        if (state == nullptr) {
-            return;
-        }
-
-        state->connected = true;
-        state->distance_to_display = distance;
-    }
-
-    bool WpadService::is_connected(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected;
-    }
-
-    bool WpadService::is_button_held(s32 channel, std::uint32_t button_mask) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected && (state->hold & button_mask) != 0U;
-    }
-
-    bool WpadService::is_button_triggered(s32 channel, std::uint32_t button_mask) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected && (state->trigger & button_mask) != 0U;
-    }
-
-    bool WpadService::is_button_released(s32 channel, std::uint32_t button_mask) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected && (state->release & button_mask) != 0U;
-    }
-
-    bool WpadService::is_button_repeated(s32 channel, std::uint32_t button_mask) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected && (state->repeat & button_mask) != 0U;
-    }
-
-    WpadPointerState WpadService::pointer(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state == nullptr ? WpadPointerState {} : state->pointer;
-    }
-
-    WpadPointerState WpadService::past_pointer(s32 channel, std::uint32_t index) const {
-        const auto *state = channel_state(channel);
-        if (state == nullptr || index >= state->pointer_history_count || index >= state->pointer_history.size()) {
-            return {};
-        }
-
-        return state->pointer_history[index];
-    }
-
-    std::uint32_t WpadService::pointer_history_count(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state == nullptr ? 0U : state->pointer_history_count;
-    }
-
-    WpadStickState WpadService::sub_stick(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state == nullptr ? WpadStickState {} : state->sub_stick;
-    }
-
-    WpadVec3State WpadService::core_acceleration(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state == nullptr ? WpadVec3State {} : state->core_acceleration;
-    }
-
-    WpadVec3State WpadService::sub_acceleration(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state == nullptr ? WpadVec3State {} : state->sub_acceleration;
-    }
-
-    bool WpadService::is_core_swing(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected && state->core_swing;
-    }
-
-    bool WpadService::is_core_swing_triggered(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected && state->core_swing && !state->previous_core_swing;
-    }
-
-    bool WpadService::is_sub_swing(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state != nullptr && state->connected && state->sub_swing;
-    }
-
-    float WpadService::distance_to_display(s32 channel) const {
-        const auto *state = channel_state(channel);
-        return state == nullptr ? 0.0F : state->distance_to_display;
-    }
-
-    const WpadChannelState *WpadService::channel_state(s32 channel) const {
-        if (channel < 0 || channel >= static_cast<s32>(_channels.size())) {
-            return nullptr;
-        }
-
-        return &_channels[static_cast<std::size_t>(channel)];
-    }
-
-    WpadChannelState *WpadService::mutable_channel_state(s32 channel) {
-        if (channel < 0 || channel >= static_cast<s32>(_channels.size())) {
-            return nullptr;
-        }
-
-        return &_channels[static_cast<std::size_t>(channel)];
     }
 
     void AudioEventService::begin_frame(std::uint64_t frame_index) {
@@ -1942,7 +1704,7 @@ namespace smgpc::runtime {
 
     void AudioEventService::push_event(AudioEventKind kind, std::string_view name, s32 fade_frames, s32 state, u32 change_frames,
                                        u32 delay_frames) {
-        _events.push_back(AudioEvent {
+        _events.push_back(AudioEvent{
             .kind = kind,
             .name = std::string(name),
             .fade_frames = fade_frames,
@@ -1971,7 +1733,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        auto keeper = EffectKeeperRegistration {
+        auto keeper = EffectKeeperRegistration{
             .host_kind = host_kind,
             .host_name = std::string(host_name),
             .resource_group_name = std::string(resource_group_name),
@@ -1994,7 +1756,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        auto binding = EffectHostBinding {
+        auto binding = EffectHostBinding{
             .host_kind = host_kind,
             .source = source,
             .host_name = std::string(host_name),
@@ -2031,7 +1793,7 @@ namespace smgpc::runtime {
         });
         if (found == _active_effects.end()) {
             auto emitters = create_emitters(resolved);
-            auto &active = _active_effects.emplace_back(ActiveEffectInstance {
+            auto &active = _active_effects.emplace_back(ActiveEffectInstance{
                 .actor_name = std::string(actor_name),
                 .effect_name = std::string(effect_name),
                 .start_frame_index = _frame_index,
@@ -2040,7 +1802,7 @@ namespace smgpc::runtime {
                 .resolved_resources = resolved,
                 .emitters = std::move(emitters),
             });
-            for (auto emitter_index = std::size_t {}; emitter_index < active.emitters.size() && emitter_index < active.resolved_resources.size();
+            for (auto emitter_index = std::size_t{}; emitter_index < active.emitters.size() && emitter_index < active.resolved_resources.size();
                  ++emitter_index) {
                 advance_emitter_to_frame(active.emitters[emitter_index], active.resolved_resources[emitter_index], _frame_index);
             }
@@ -2049,13 +1811,13 @@ namespace smgpc::runtime {
             found->host_binding = binding;
             found->resolved_resources = resolved;
             found->emitters = create_emitters(found->resolved_resources);
-            for (auto emitter_index = std::size_t {}; emitter_index < found->emitters.size() && emitter_index < found->resolved_resources.size();
+            for (auto emitter_index = std::size_t{}; emitter_index < found->emitters.size() && emitter_index < found->resolved_resources.size();
                  ++emitter_index) {
                 advance_emitter_to_frame(found->emitters[emitter_index], found->resolved_resources[emitter_index], _frame_index);
             }
         }
 
-        _events.push_back(EffectEvent {
+        _events.push_back(EffectEvent{
             .kind = EffectEventKind::Emit,
             .actor_name = std::string(actor_name),
             .effect_name = std::string(effect_name),
@@ -2070,7 +1832,7 @@ namespace smgpc::runtime {
             return active.actor_name == actor_name && active.effect_name == effect_name;
         });
 
-        _events.push_back(EffectEvent {
+        _events.push_back(EffectEvent{
             .kind = EffectEventKind::Delete,
             .actor_name = std::string(actor_name),
             .effect_name = std::string(effect_name),
@@ -2082,7 +1844,7 @@ namespace smgpc::runtime {
 
     void EffectService::delete_all(std::string_view actor_name) {
         std::erase_if(_active_effects, [actor_name](const auto &active) { return active.actor_name == actor_name; });
-        _events.push_back(EffectEvent {
+        _events.push_back(EffectEvent{
             .kind = EffectEventKind::DeleteAll,
             .actor_name = std::string(actor_name),
             .effect_name = {},
@@ -2095,7 +1857,7 @@ namespace smgpc::runtime {
     void EffectService::draw(s32 draw_type) {
         auto &renderer = render::current_aurora_renderer();
         for (const auto &active : _active_effects) {
-            for (auto resource_index = std::size_t {}; resource_index < active.resolved_resources.size(); ++resource_index) {
+            for (auto resource_index = std::size_t{}; resource_index < active.resolved_resources.size(); ++resource_index) {
                 const auto &resource = active.resolved_resources[resource_index];
                 if (!effect_draw_type_accepts_order(draw_type, resource.auto_effect_draw_order)) {
                     continue;
@@ -2133,17 +1895,17 @@ namespace smgpc::runtime {
                     const auto z = particle.z + host_translation[2U];
                     const auto alpha = static_cast<std::uint8_t>(std::clamp(particle.alpha, 0.0F, 1.0F) * 255.0F);
                     const auto color = std::array<std::uint8_t, 4U>{255U, 255U, 255U, alpha};
-                    auto vertex_count = std::uint32_t {4U};
-                    auto index_count = std::uint32_t {6U};
-                    auto color_channel_count = std::uint32_t {1U};
-                    auto primitive_type = std::string_view {"triangles"};
-                    auto alpha_compare = render::GxAlphaCompare2D {};
-                    auto blend = render::GxBlendMode2D {.enabled = true};
+                    auto vertex_count = std::uint32_t{4U};
+                    auto index_count = std::uint32_t{6U};
+                    auto color_channel_count = std::uint32_t{1U};
+                    auto primitive_type = std::string_view{"triangles"};
+                    auto alpha_compare = render::GxAlphaCompare2D{};
+                    auto blend = render::GxBlendMode2D{.enabled = true};
                     if (particle.child && jpa_child_uses_display_list_shape(child_shape)) {
                         auto vertices = jpa_child_display_list_vertices(x, y, z, half_size_x, half_size_y, color);
                         const auto indices = jpa_child_display_list_indices();
                         const auto texture_stages = std::array<render::GxTextureStage2D, 1U>{
-                            render::GxTextureStage2D {
+                            render::GxTextureStage2D{
                                 .texture = texture_handle,
                                 .wrap_u = texture.wrap_s,
                                 .wrap_v = texture.wrap_t,
@@ -2154,7 +1916,7 @@ namespace smgpc::runtime {
                         const auto tev_stages = std::array<render::GxTevStage2D, 1U>{jpa_tev_stage(base_shape)};
                         alpha_compare = jpa_alpha_compare(base_shape);
                         blend = jpa_blend_mode(base_shape);
-                        renderer.submit_gx_material_triangles(render::GxMaterialTriangleBatch2D {
+                        renderer.submit_gx_material_triangles(render::GxMaterialTriangleBatch2D{
                             .vertices = std::span<const render::GxMaterialVertex2D>(vertices.data(), vertices.size()),
                             .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                             .primitive_topology = render::PrimitiveTopology::TriangleStrip,
@@ -2173,10 +1935,10 @@ namespace smgpc::runtime {
                         primitive_type = "triangle_strip";
                     } else {
                         renderer.submit_textured_quad(texture_handle,
-                                                      render::TexturedQuad2D {
+                                                      render::TexturedQuad2D{
                                                           .vertices =
                                                               {
-                                                                  render::TexturedVertex2D {
+                                                                  render::TexturedVertex2D{
                                                                       .x = x - half_size_x,
                                                                       .y = y - half_size_y,
                                                                       .z = z,
@@ -2184,7 +1946,7 @@ namespace smgpc::runtime {
                                                                       .v = 1.0F,
                                                                       .color = color,
                                                                   },
-                                                                  render::TexturedVertex2D {
+                                                                  render::TexturedVertex2D{
                                                                       .x = x + half_size_x,
                                                                       .y = y - half_size_y,
                                                                       .z = z,
@@ -2192,7 +1954,7 @@ namespace smgpc::runtime {
                                                                       .v = 1.0F,
                                                                       .color = color,
                                                                   },
-                                                                  render::TexturedVertex2D {
+                                                                  render::TexturedVertex2D{
                                                                       .x = x + half_size_x,
                                                                       .y = y + half_size_y,
                                                                       .z = z,
@@ -2200,7 +1962,7 @@ namespace smgpc::runtime {
                                                                       .v = 0.0F,
                                                                       .color = color,
                                                                   },
-                                                                  render::TexturedVertex2D {
+                                                                  render::TexturedVertex2D{
                                                                       .x = x - half_size_x,
                                                                       .y = y + half_size_y,
                                                                       .z = z,
@@ -2217,7 +1979,7 @@ namespace smgpc::runtime {
                                                       });
                     }
 #ifndef NDEBUG
-                    _draw_packets.push_back(EffectDrawPacketTrace {
+                    _draw_packets.push_back(EffectDrawPacketTrace{
                         .actor_name = active.actor_name,
                         .effect_name = active.effect_name,
                         .particle_name = resource.particle_name,
@@ -2246,7 +2008,7 @@ namespace smgpc::runtime {
                         .alpha_compare_enabled = alpha_compare.enabled,
                         .blend_enabled = blend.enabled,
                         .texture =
-                            EffectTextureBindingTrace {
+                            EffectTextureBindingTrace{
                                 .slot = static_cast<std::uint8_t>(particle.child ? 1U : 0U),
                                 .texture_index = texture.index,
                                 .name = texture.name,
@@ -2336,7 +2098,7 @@ namespace smgpc::runtime {
         emitters.reserve(resources.size());
         for (const auto &resource : resources) {
             const auto seed = next_jpa_random_u(_emitter_random_seed);
-            emitters.push_back(JpcEffectEmitterInstance {
+            emitters.push_back(JpcEffectEmitterInstance{
                 .user_index = resource.user_index,
                 .particle_name = resource.particle_name,
                 .start_frame_index = _frame_index,
@@ -2350,7 +2112,7 @@ namespace smgpc::runtime {
 
     void EffectService::advance_effects_to_frame(std::uint64_t frame_index) {
         for (auto &active : _active_effects) {
-            for (auto emitter_index = std::size_t {}; emitter_index < active.emitters.size() && emitter_index < active.resolved_resources.size();
+            for (auto emitter_index = std::size_t{}; emitter_index < active.emitters.size() && emitter_index < active.resolved_resources.size();
                  ++emitter_index) {
                 advance_emitter_to_frame(active.emitters[emitter_index], active.resolved_resources[emitter_index], frame_index);
             }
@@ -2359,11 +2121,11 @@ namespace smgpc::runtime {
 
     void EffectService::advance_emitter_to_frame(JpcEffectEmitterInstance &emitter, const smgpc::render::effects::ResolvedEffectResource &resource,
                                                  std::uint64_t frame_index) {
-        constexpr auto MAX_PARTICLES_PER_EMITTER = std::size_t {4096U};
+        constexpr auto MAX_PARTICLES_PER_EMITTER = std::size_t{4096U};
         const auto *metadata = resource.resource;
         if (metadata == nullptr || !metadata->dynamics.has_value()) {
             if (emitter.particles.empty() && emitter.next_update_frame_index <= frame_index) {
-                emitter.particles.push_back(JpcEffectParticleInstance {
+                emitter.particles.push_back(JpcEffectParticleInstance{
                     .id = emitter.next_particle_id++,
                     .lifetime = 1U,
                     .x = resource.auto_effect_offset_x,
@@ -2376,26 +2138,26 @@ namespace smgpc::runtime {
             return;
         }
 
-            const auto &dynamics = *metadata->dynamics;
-            while (emitter.next_update_frame_index <= frame_index) {
-                const auto local_frame = emitter.next_update_frame_index - emitter.start_frame_index;
-                for (auto &particle : emitter.particles) {
-                    if (particle.age < particle.lifetime) {
-                        if (particle.child && metadata->child_shape.has_value() && particle.age != 0U) {
-                            particle.velocity_y -= metadata->child_shape->gravity;
-                        }
-                        const auto air_resistance = std::clamp(dynamics.air_resistance, 0.0F, 1.0F);
-                        particle.velocity_x *= air_resistance;
-                        particle.velocity_y *= air_resistance;
-                        particle.velocity_z *= air_resistance;
-                        particle.x += particle.velocity_x * particle.momentum;
-                        particle.y += particle.velocity_y * particle.momentum;
-                        particle.z += particle.velocity_z * particle.momentum;
-                        ++particle.age;
+        const auto &dynamics = *metadata->dynamics;
+        while (emitter.next_update_frame_index <= frame_index) {
+            const auto local_frame = emitter.next_update_frame_index - emitter.start_frame_index;
+            for (auto &particle : emitter.particles) {
+                if (particle.age < particle.lifetime) {
+                    if (particle.child && metadata->child_shape.has_value() && particle.age != 0U) {
+                        particle.velocity_y -= metadata->child_shape->gravity;
                     }
+                    const auto air_resistance = std::clamp(dynamics.air_resistance, 0.0F, 1.0F);
+                    particle.velocity_x *= air_resistance;
+                    particle.velocity_y *= air_resistance;
+                    particle.velocity_z *= air_resistance;
+                    particle.x += particle.velocity_x * particle.momentum;
+                    particle.y += particle.velocity_y * particle.momentum;
+                    particle.z += particle.velocity_z * particle.momentum;
+                    ++particle.age;
                 }
-                std::erase_if(emitter.particles, [](const auto &particle) {
-                    return particle.age >= particle.lifetime;
+            }
+            std::erase_if(emitter.particles, [](const auto &particle) {
+                return particle.age >= particle.lifetime;
             });
 
             if (local_frame >= static_cast<std::uint64_t>(std::max<std::int16_t>(dynamics.start_frame, 0))) {
@@ -2423,7 +2185,7 @@ namespace smgpc::runtime {
                     const auto volume_sample = jpa_particle_volume_sample(dynamics, keyed_dynamics, emitter.random_seed, emitted, emit_count);
                     const auto velocity = jpa_parent_velocity(dynamics, keyed_dynamics, volume_sample, emitter.random_seed);
                     const auto momentum = 1.0F - dynamics.moment * next_jpa_random_f(emitter.random_seed);
-                    emitter.particles.push_back(JpcEffectParticleInstance {
+                    emitter.particles.push_back(JpcEffectParticleInstance{
                         .id = emitter.next_particle_id++,
                         .age = 0U,
                         .lifetime = lifetime,
@@ -2444,7 +2206,7 @@ namespace smgpc::runtime {
                     const auto child_lifetime = static_cast<std::uint16_t>(std::max<std::int16_t>(child_shape.lifetime, 1));
                     const auto child_step = static_cast<std::uint16_t>(child_shape.step) + 1U;
                     const auto parent_count = emitter.particles.size();
-                    for (auto particle_index = std::size_t {}; particle_index < parent_count; ++particle_index) {
+                    for (auto particle_index = std::size_t{}; particle_index < parent_count; ++particle_index) {
                         const auto parent = emitter.particles[particle_index];
                         if (parent.child) {
                             continue;
@@ -2456,7 +2218,7 @@ namespace smgpc::runtime {
                             continue;
                         }
 
-                        for (auto child_index = std::int16_t {}; child_index < child_rate && emitter.particles.size() < MAX_PARTICLES_PER_EMITTER;
+                        for (auto child_index = std::int16_t{}; child_index < child_rate && emitter.particles.size() < MAX_PARTICLES_PER_EMITTER;
                              ++child_index) {
                             const auto scale_inherit = child_shape.scale_inherited ? child_shape.inherit_scale : 1.0F;
                             const auto alpha_inherit = child_shape.alpha_inherited ? child_shape.inherit_alpha : 1.0F;
@@ -2472,7 +2234,7 @@ namespace smgpc::runtime {
                                                              child_shape.position_random * next_jpa_random_f(emitter.random_seed)));
                             }
                             const auto child_velocity = jpa_child_velocity(parent, child_shape, emitter.random_seed);
-                            emitter.particles.push_back(JpcEffectParticleInstance {
+                            emitter.particles.push_back(JpcEffectParticleInstance{
                                 .id = emitter.next_particle_id++,
                                 .age = 0U,
                                 .lifetime = child_lifetime,
@@ -2602,7 +2364,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::push_event(WipeEventKind kind, std::string_view name, s32 frame_count) {
-        _events.push_back(WipeEvent {
+        _events.push_back(WipeEvent{
             .kind = kind,
             .name = std::string(name),
             .frame_count = frame_count,
@@ -2643,7 +2405,7 @@ namespace smgpc::runtime {
     }
 
     void ImageEffectService::push_event(ImageEffectControlKind kind) {
-        _events.push_back(ImageEffectControlEvent {
+        _events.push_back(ImageEffectControlEvent{
             .kind = kind,
             .frame_index = _frame_index,
         });
@@ -2654,7 +2416,7 @@ namespace smgpc::runtime {
     }
 
     void StarPointerService::register_target(const LiveActor &actor, float radius, const smgpc::camera::CameraParamVec3 &offset) {
-        _targets[&actor] = StarPointerTargetState {
+        _targets[&actor] = StarPointerTargetState{
             .actor = &actor,
             .radius = radius,
             .offset = offset,
@@ -2677,7 +2439,7 @@ namespace smgpc::runtime {
         }
 
         _mode = mode;
-        _mode_events.push_back(StarPointerModeEvent {
+        _mode_events.push_back(StarPointerModeEvent{
             .mode = mode,
             .frame_index = _frame_index,
         });
@@ -2758,7 +2520,7 @@ namespace smgpc::runtime {
                                                            bool has_projection, float target_x, float target_y, float projected_radius,
                                                            bool check_z, bool select_triggered) {
         const auto push_event = [&](StarPointerTargetEventKind kind) {
-            _target_events.push_back(StarPointerTargetEvent {
+            _target_events.push_back(StarPointerTargetEvent{
                 .kind = kind,
                 .actor_name = target.actor != nullptr ? target.actor->getName() : "",
                 .frame_index = _frame_index,
@@ -2848,8 +2610,8 @@ namespace smgpc::runtime {
     }
 
     std::optional<smgpc::camera::CameraPose> CameraSystemService::set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
-                                                                                       const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
-                                                                                       bool do_zero_w_offset) {
+                                                                                                const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
+                                                                                                bool do_zero_w_offset) {
         (void)do_zero_w_offset;
         if (name.empty()) {
             return std::nullopt;
@@ -2932,7 +2694,7 @@ namespace smgpc::runtime {
     }
 
     void CameraSystemService::push_shake_event(ShakeRequestKind kind) {
-        _shake_request_events.push_back(ShakeRequestEvent {
+        _shake_request_events.push_back(ShakeRequestEvent{
             .kind = kind,
             .frame_index = _frame_index,
         });
@@ -2972,7 +2734,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        auto index = std::size_t {};
+        auto index = std::size_t{};
         for (auto row = 0U; row < 3U; ++row) {
             for (auto column = 0U; column < 4U; ++column) {
                 _base_matrix[index++] = matrix[row][column];
@@ -3033,7 +2795,7 @@ namespace smgpc::runtime {
     }
 
     void RumbleService::push_event(RumbleRequestKind kind, s32 channel) {
-        _events.push_back(RumbleRequestEvent {
+        _events.push_back(RumbleRequestEvent{
             .kind = kind,
             .channel = channel,
             .frame_index = _frame_index,
@@ -3050,7 +2812,7 @@ namespace smgpc::runtime {
         }
 
         _change_stage_in_game_after_loading_game_data_requested = true;
-        _events.push_back(SequenceRequestEvent {
+        _events.push_back(SequenceRequestEvent{
             .kind = SequenceRequestKind::ChangeStageInGameAfterLoadingGameData,
             .frame_index = _frame_index,
         });
@@ -3064,213 +2826,9 @@ namespace smgpc::runtime {
         return _events;
     }
 
-    std::string NandFileSystemService::title_data_root() {
-        return "/title/00010000/524d474b/data";
-    }
-
-    std::string NandFileSystemService::rfl_db_path() {
-        return "/shared2/menu/FaceLib/RFL_DB.dat";
-    }
-
-    std::string NandFileSystemService::file_name(std::string_view path) {
-        auto text = std::string(path);
-        while (!text.empty() && text.back() == '/') {
-            text.pop_back();
-        }
-        const auto slash = text.find_last_of('/');
-        return slash == std::string::npos ? text : text.substr(slash + 1U);
-    }
-
-    std::string NandFileSystemService::normalize_path(std::string_view path) const {
-        auto text = std::string(path);
-        std::replace(text.begin(), text.end(), '\\', '/');
-        if (text.empty()) {
-            text = title_data_root();
-        } else if (text.front() != '/') {
-            text = title_data_root() + "/" + text;
-        }
-
-        auto parts = std::vector<std::string>{};
-        auto offset = std::size_t {};
-        while (offset <= text.size()) {
-            const auto slash = text.find('/', offset);
-            const auto token = text.substr(offset, slash == std::string::npos ? std::string::npos : slash - offset);
-            if (!token.empty() && token != ".") {
-                if (token == "..") {
-                    if (!parts.empty()) {
-                        parts.pop_back();
-                    }
-                } else {
-                    parts.push_back(token);
-                }
-            }
-            if (slash == std::string::npos) {
-                break;
-            }
-            offset = slash + 1U;
-        }
-
-        auto normalized = std::string {"/"};
-        for (auto index = std::size_t {}; index < parts.size(); ++index) {
-            if (index != 0U) {
-                normalized += '/';
-            }
-            normalized += parts[index];
-        }
-        return normalized;
-    }
-
-    void NandFileSystemService::write_file(std::string_view path, std::span<const std::uint8_t> bytes, u8 permission, u8 attribute) {
-        const auto normalized = normalize_path(path);
-        _files[normalized] = StoredFile {
-            .bytes = std::vector<std::uint8_t>(bytes.begin(), bytes.end()),
-            .permission = permission,
-            .attribute = attribute,
-        };
-        auto trace = NandOperationTrace {};
-        trace.kind = NandOperationKind::Write;
-        trace.path = normalized;
-        trace.result = NAND_RESULT_OK;
-        trace.byte_count = bytes.size();
-        trace.permission = permission;
-        trace.attribute = attribute;
-        push_trace(std::move(trace));
-    }
-
-    std::optional<std::vector<std::uint8_t>> NandFileSystemService::read_file(std::string_view path) const {
-        const auto normalized = normalize_path(path);
-        const auto it = _files.find(normalized);
-        if (it == _files.end()) {
-            auto trace = NandOperationTrace {};
-            trace.kind = NandOperationKind::Read;
-            trace.path = normalized;
-            trace.result = NAND_RESULT_NOEXISTS;
-            push_trace(std::move(trace));
-            return std::nullopt;
-        }
-
-        auto trace = NandOperationTrace {};
-        trace.kind = NandOperationKind::Read;
-        trace.path = normalized;
-        trace.result = NAND_RESULT_OK;
-        trace.byte_count = it->second.bytes.size();
-        trace.permission = it->second.permission;
-        trace.attribute = it->second.attribute;
-        push_trace(std::move(trace));
-        return it->second.bytes;
-    }
-
-    bool NandFileSystemService::exists(std::string_view path) const {
-        return _files.contains(normalize_path(path));
-    }
-
-    bool NandFileSystemService::erase(std::string_view path) {
-        const auto normalized = normalize_path(path);
-        const auto erased = _files.erase(normalized) != 0U;
-        auto trace = NandOperationTrace {};
-        trace.kind = NandOperationKind::Delete;
-        trace.path = normalized;
-        trace.result = erased ? NAND_RESULT_OK : NAND_RESULT_NOEXISTS;
-        push_trace(std::move(trace));
-        return erased;
-    }
-
-    s32 NandFileSystemService::rename(std::string_view source_path, std::string_view destination_path) {
-        const auto source = normalize_path(source_path);
-        const auto destination = normalize_path(destination_path);
-        auto node = _files.extract(source);
-        if (node.empty()) {
-            auto trace = NandOperationTrace {};
-            trace.kind = NandOperationKind::Rename;
-            trace.path = source;
-            trace.destination_path = destination;
-            trace.result = NAND_RESULT_NOEXISTS;
-            push_trace(std::move(trace));
-            return NAND_RESULT_NOEXISTS;
-        }
-
-        node.key() = destination;
-        const auto byte_count = node.mapped().bytes.size();
-        _files.insert(std::move(node));
-        auto trace = NandOperationTrace {};
-        trace.kind = NandOperationKind::Rename;
-        trace.path = source;
-        trace.destination_path = destination;
-        trace.result = NAND_RESULT_OK;
-        trace.byte_count = byte_count;
-        push_trace(std::move(trace));
-        return NAND_RESULT_OK;
-    }
-
-    NandCheckResult NandFileSystemService::check(u32 requested_blocks, u32 requested_inodes) {
-        const auto blocks = used_blocks();
-        const auto inodes = used_inodes();
-        const auto free_blocks = blocks >= _quota_blocks ? 0U : _quota_blocks - blocks;
-        const auto free_inodes = inodes >= _quota_inodes ? 0U : _quota_inodes - inodes;
-        const auto result = requested_blocks > free_blocks ? NAND_RESULT_MAXBLOCKS : requested_inodes > free_inodes ? NAND_RESULT_MAXFILES :
-                                                                                                                      NAND_RESULT_OK;
-        auto trace = NandOperationTrace {};
-        trace.kind = NandOperationKind::Check;
-        trace.result = result;
-        trace.requested_blocks = requested_blocks;
-        trace.requested_inodes = requested_inodes;
-        trace.free_blocks = free_blocks;
-        trace.free_inodes = free_inodes;
-        push_trace(std::move(trace));
-        return NandCheckResult {
-            .result = result,
-            .free_blocks = free_blocks,
-            .free_inodes = free_inodes,
-        };
-    }
-
-    std::optional<NandFileMetadata> NandFileSystemService::metadata(std::string_view path) const {
-        const auto normalized = normalize_path(path);
-        const auto it = _files.find(normalized);
-        if (it == _files.end()) {
-            return std::nullopt;
-        }
-
-        return NandFileMetadata {
-            .path = normalized,
-            .permission = it->second.permission,
-            .attribute = it->second.attribute,
-            .size = it->second.bytes.size(),
-        };
-    }
-
-    std::span<const NandOperationTrace> NandFileSystemService::trace() const {
-        return _trace;
-    }
-
-    void NandFileSystemService::clear() {
-        _files.clear();
-        clear_trace();
-    }
-
-    void NandFileSystemService::clear_trace() {
-        _trace.clear();
-    }
-
-    void NandFileSystemService::push_trace(NandOperationTrace trace) const {
-        _trace.push_back(std::move(trace));
-    }
-
-    u32 NandFileSystemService::used_blocks() const {
-        auto blocks = u32 {};
-        for (const auto &[_, file] : _files) {
-            blocks += static_cast<u32>((file.bytes.size() + 0x3FFFU) / 0x4000U);
-        }
-        return blocks;
-    }
-
-    u32 NandFileSystemService::used_inodes() const {
-        return static_cast<u32>(_files.size());
-    }
-
     SaveDataService::SaveDataService() {
-        for (auto slot_index = s32 {1}; slot_index <= 6; ++slot_index) {
-            auto state = SaveDataService::SlotState {};
+        for (auto slot_index = s32{1}; slot_index <= 6; ++slot_index) {
+            auto state = SaveDataService::SlotState{};
             state.slot_index = slot_index;
             _slot_states.push_back(std::move(state));
         }
@@ -3395,7 +2953,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        std::error_code error {};
+        std::error_code error{};
         std::filesystem::create_directories(*_host_directory, error);
         if (error) {
             throw std::runtime_error("Cannot create save directory " + _host_directory->string());
@@ -3464,7 +3022,7 @@ namespace smgpc::runtime {
             return *state;
         }
 
-        auto state = SaveDataService::SlotState {};
+        auto state = SaveDataService::SlotState{};
         state.slot_index = slot_index;
         return state;
     }
@@ -3615,7 +3173,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        std::error_code error {};
+        std::error_code error{};
         std::filesystem::remove(host_file_path(name), error);
     }
 
@@ -3644,9 +3202,9 @@ namespace smgpc::runtime {
             }
 
             auto decoded = std::map<std::string, std::vector<std::uint8_t>>{};
-            for (auto file_index = std::uint32_t {}; file_index < file_count; ++file_index) {
+            for (auto file_index = std::uint32_t{}; file_index < file_count; ++file_index) {
                 const auto info_offset = SAVE_DATA_HEADER_SIZE + static_cast<std::size_t>(file_index) * SAVE_DATA_FILE_INFO_SIZE;
-                auto name_size = std::size_t {};
+                auto name_size = std::size_t{};
                 while (name_size < SAVE_DATA_FILE_NAME_SIZE && bytes[info_offset + name_size] != 0U) {
                     ++name_size;
                 }
@@ -3685,7 +3243,7 @@ namespace smgpc::runtime {
         write_save_u32(bytes, 12U, data_size);
 
         auto data_offset = static_cast<std::uint32_t>(SAVE_DATA_HEADER_SIZE + names.size() * SAVE_DATA_FILE_INFO_SIZE);
-        for (auto file_index = std::size_t {}; file_index < names.size(); ++file_index) {
+        for (auto file_index = std::size_t{}; file_index < names.size(); ++file_index) {
             const auto &name = names[file_index];
             const auto file_size = *save_data_file_size(name);
             const auto info_offset = SAVE_DATA_HEADER_SIZE + file_index * SAVE_DATA_FILE_INFO_SIZE;
@@ -3719,7 +3277,7 @@ namespace smgpc::runtime {
     }
 
     void SaveDataService::load_slot_states_from_files() {
-        for (auto slot_index = s32 {1}; slot_index <= 6; ++slot_index) {
+        for (auto slot_index = s32{1}; slot_index <= 6; ++slot_index) {
             auto state = slot_state_or_default(slot_index);
             const auto config_name = original_config_name(slot_index);
             const auto config_bytes = read_file(config_name);
@@ -3770,7 +3328,7 @@ namespace smgpc::runtime {
     }
 
     void MessageService::set_message(std::string_view tag, std::u16string_view text) {
-        _messages[std::string(tag)] = MessageText {
+        _messages[std::string(tag)] = MessageText{
             .raw_utf16 = std::u16string(text),
             .utf16 = std::u16string(text),
             .utf8 = smgpc::resource::utf8_from_utf16_lossy(text),
@@ -3782,7 +3340,7 @@ namespace smgpc::runtime {
     std::size_t MessageService::load_message_archive(const smgpc::resource::RarcArchive &archive) {
         const auto messages = smgpc::resource::BmgMessageArchive::from_message_archive(archive);
         for (const auto &message : messages.messages()) {
-            _messages[message.id] = MessageText {
+            _messages[message.id] = MessageText{
                 .raw_utf16 = message.raw_text,
                 .utf16 = message.display_text,
                 .utf8 = smgpc::resource::utf8_from_utf16_lossy(message.display_text),
@@ -3877,7 +3435,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        _lights[index] = smgpc::render::GXLightState {};
+        _lights[index] = smgpc::render::GXLightState{};
     }
 
     void SceneLightService::set_light(std::size_t index, const smgpc::render::GXLightState &light) {
@@ -3902,7 +3460,7 @@ namespace smgpc::runtime {
     }
 
     std::uint8_t SceneLightService::loaded_mask() const {
-        auto mask = std::uint8_t {};
+        auto mask = std::uint8_t{};
         for (auto index = 0zu; index < _lights.size(); ++index) {
             if (_lights[index].loaded) {
                 mask |= static_cast<std::uint8_t>(1U << index);

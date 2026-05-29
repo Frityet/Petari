@@ -1,7 +1,10 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "runtime/RuntimeServices.hpp"
 
+#include <RVLFaceLib.h>
 #include <aurora/dvd.h>
+#include <aurora/nand.hpp>
+#include <aurora/wpad.hpp>
 #include <dolphin/dvd.h>
 #include <dolphin/gx.h>
 #include <dolphin/os.h>
@@ -42,13 +45,29 @@ namespace {
         static_assert(sizeof(u32) == 4U);
         static_assert(sizeof(s32) == 4U);
         static_assert(NAND_MAX_PATH == 64U);
+        static_assert(RFL_NAME_LEN == 10U);
 
-        auto type = u32 {0xFFFFFFFFU};
-        require(WPADProbe(0, &type) == FALSE, "WPADProbe should report disconnected without a runtime context");
+        aurora::wpad_service().clear();
+        auto type = u32{0xFFFFFFFFU};
+        require(WPADProbe(0, &type) == FALSE, "WPADProbe should report disconnected before Aurora receives controller state");
         require(type == 0U, "WPADProbe should zero the controller type when disconnected");
 
-        auto status = KPADStatus {};
-        require(KPADRead(0, &status, 1U) == 0, "KPADRead should not synthesize samples without a runtime context");
+        auto status = KPADStatus{};
+        require(KPADRead(0, &status, 1U) == 0, "KPADRead should not synthesize samples before Aurora receives controller state");
+
+        auto &wpad = aurora::wpad_service();
+        wpad.begin_frame();
+        wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A | WPAD_BUTTON_UP);
+        wpad.set_pointer(WPAD_CHAN0, 123.0F, 234.0F, true);
+        wpad.set_distance_to_display(WPAD_CHAN0, 1.0F);
+        require(WPADProbe(WPAD_CHAN0, &type) == TRUE, "WPADProbe should report Aurora-fed controller state");
+        require(KPADRead(WPAD_CHAN0, &status, 1U) == 1, "KPADRead should expose Aurora-fed controller samples");
+        require((status.hold & WPAD_BUTTON_A) != 0U && (status.hold & WPAD_BUTTON_UP) != 0U,
+                "KPADRead should preserve held WPAD buttons");
+        require(status.dpd_valid_fg == 1 && status.pos.x == 123.0F && status.pos.y == 234.0F,
+                "KPADRead should preserve pointer coordinates");
+        WPADDisconnect(WPAD_CHAN0);
+        require(WPADProbe(WPAD_CHAN0, nullptr) == FALSE, "WPADDisconnect should clear Aurora controller state");
     }
 
     void test_aurora_vi_retrace_and_framebuffer_state() {
@@ -58,7 +77,7 @@ namespace {
         require(VIGetScanMode() == VI_INTERLACE, "VI should expose interlaced scan mode");
         require(VIGetRetraceCount() == 0U, "VI retrace count should reset to zero");
 
-        auto framebuffer = std::array<std::uint8_t, 32U> {};
+        auto framebuffer = std::array<std::uint8_t, 32U>{};
         VISetNextFrameBuffer(framebuffer.data());
         require(VIGetNextFrameBuffer() == framebuffer.data(), "VI next framebuffer should be stored");
 
@@ -82,32 +101,32 @@ namespace {
         require(DVDGetDriveStatus() == DVD_STATE_NO_DISK, "DVD should report no disk until Aurora opens a disc image");
         require(DVDConvertPathToEntrynum("/ObjectData") < 0, "DVD path lookup should fail without an open disc image");
 
-        auto file = DVDFileInfo {};
+        auto file = DVDFileInfo{};
         require(DVDOpen("/ObjectData/Mario.arc", &file) == FALSE, "DVDOpen should fail without an open disc image");
     }
 
     void test_aurora_os_cache_and_gx_copy_smoke() {
-        auto cache_bytes = std::array<std::uint8_t, 64U> {};
+        auto cache_bytes = std::array<std::uint8_t, 64U>{};
         DCFlushRange(cache_bytes.data(), static_cast<u32>(cache_bytes.size()));
         DCInvalidateRange(cache_bytes.data(), static_cast<u32>(cache_bytes.size()));
         DCZeroRange(cache_bytes.data(), static_cast<u32>(cache_bytes.size()));
         require(cache_bytes[0] == 0U && cache_bytes.back() == 0U, "DCZeroRange should clear its byte range");
 
-        alignas(32) auto fifo = std::array<std::uint8_t, 32U * 1024U> {};
+        alignas(32) auto fifo = std::array<std::uint8_t, 32U * 1024U>{};
         require(GXInit(fifo.data(), static_cast<u32>(fifo.size())) != nullptr, "GXInit should return a FIFO object");
-        GXSetCopyClear(GXColor {.r = 0U, .g = 0U, .b = 0U, .a = 255U}, GX_MAX_Z24);
+        GXSetCopyClear(GXColor{.r = 0U, .g = 0U, .b = 0U, .a = 255U}, GX_MAX_Z24);
         GXSetDispCopySrc(0U, 0U, 640U, 456U);
         GXSetDispCopyDst(640U, 456U);
         GXCopyDisp(nullptr, GX_TRUE);
     }
 
-    void test_pc_port_nand_storage_smoke() {
-        auto nand = smgpc::runtime::NandFileSystemService {};
-        const auto payload = std::array<std::uint8_t, 4U> {1U, 2U, 3U, 4U};
+    void test_aurora_nand_storage_smoke() {
+        auto nand = aurora::NandFileSystem{};
+        const auto payload = std::array<std::uint8_t, 4U>{1U, 2U, 3U, 4U};
         nand.write_file("save/banner.bin", std::span<const std::uint8_t>(payload), 0x3CU, 0U);
 
         const auto normalized = nand.normalize_path("save/banner.bin");
-        require(normalized.starts_with(smgpc::runtime::NandFileSystemService::title_data_root()),
+        require(normalized.starts_with(aurora::NandFileSystem::title_data_root()),
                 "relative NAND paths should live under the title data root");
         require(nand.exists("save/banner.bin"), "NAND write should make the file visible");
 
@@ -147,9 +166,9 @@ namespace {
     };
 
     void test_spine_pending_nerve_runs_next_tick() {
-        const auto first = SpineProbeFirstNerve {};
-        const auto second = SpineProbeSecondNerve {};
-        auto state = SpineProbeState {
+        const auto first = SpineProbeFirstNerve{};
+        const auto second = SpineProbeSecondNerve{};
+        auto state = SpineProbeState{
             .second_nerve = &second,
         };
         auto spine = Spine(&state, &first);
@@ -172,13 +191,13 @@ namespace {
 }  // namespace
 
 int main() {
-    const auto tests = std::array {
-        TestCase {"revolution headers and input defaults", test_revolution_headers_and_input_defaults},
-        TestCase {"Aurora VI retrace/framebuffer state", test_aurora_vi_retrace_and_framebuffer_state},
-        TestCase {"Aurora DVD requires disc image", test_aurora_dvd_requires_disc_image},
-        TestCase {"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
-        TestCase {"pc-port NAND storage smoke", test_pc_port_nand_storage_smoke},
-        TestCase {"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
+    const auto tests = std::array{
+        TestCase{"revolution headers and input defaults", test_revolution_headers_and_input_defaults},
+        TestCase{"Aurora VI retrace/framebuffer state", test_aurora_vi_retrace_and_framebuffer_state},
+        TestCase{"Aurora DVD requires disc image", test_aurora_dvd_requires_disc_image},
+        TestCase{"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
+        TestCase{"Aurora NAND storage smoke", test_aurora_nand_storage_smoke},
+        TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };
 
     auto failures = 0;

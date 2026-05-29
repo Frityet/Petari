@@ -12,14 +12,16 @@
 #include <string_view>
 #include <vector>
 
+#include <aurora/wpad.hpp>
 #include <revolution.h>
 
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
-#include "render/effects/EffectResource.hpp"
 #include "render/GXState.hpp"
+#include "render/effects/EffectResource.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/RarcArchive.hpp"
+#include "runtime/NandFileSystemService.hpp"
 #include "runtime/SysConfigService.hpp"
 
 class UserFile;
@@ -131,78 +133,11 @@ namespace smgpc::runtime {
         std::vector<DvdArchiveLoadTrace> _archive_load_trace;
     };
 
-    struct WpadPointerState {
-        float x = 0.0F;
-        float y = 0.0F;
-        bool valid = false;
-    };
-
-    struct WpadVec3State {
-        float x = 0.0F;
-        float y = 0.0F;
-        float z = 0.0F;
-    };
-
-    struct WpadStickState {
-        float x = 0.0F;
-        float y = 0.0F;
-    };
-
-    struct WpadChannelState {
-        bool connected = false;
-        std::uint32_t previous_hold = 0U;
-        std::uint32_t hold = 0U;
-        std::uint32_t trigger = 0U;
-        std::uint32_t release = 0U;
-        std::uint32_t repeat = 0U;
-        std::uint32_t hold_frame_count = 0U;
-        WpadPointerState pointer{};
-        std::array<WpadPointerState, 16U> pointer_history{};
-        std::uint32_t pointer_history_count = 0U;
-        WpadVec3State core_acceleration{};
-        WpadVec3State sub_acceleration{};
-        WpadStickState sub_stick{};
-        bool core_swing = false;
-        bool previous_core_swing = false;
-        bool sub_swing = false;
-        bool previous_sub_swing = false;
-        float distance_to_display = 0.0F;
-    };
-
-    class WpadService final {
-    public:
-        void begin_frame();
-        void set_connected(s32 channel, bool connected);
-        void set_button_mask(s32 channel, std::uint32_t hold);
-        void set_pointer(s32 channel, float x, float y, bool valid);
-        void set_sub_stick(s32 channel, float x, float y);
-        void set_core_acceleration(s32 channel, float x, float y, float z);
-        void set_sub_acceleration(s32 channel, float x, float y, float z);
-        void set_swing(s32 channel, bool core_swing, bool sub_swing);
-        void set_distance_to_display(s32 channel, float distance);
-
-        [[nodiscard]] bool is_connected(s32 channel) const;
-        [[nodiscard]] bool is_button_held(s32 channel, std::uint32_t button_mask) const;
-        [[nodiscard]] bool is_button_triggered(s32 channel, std::uint32_t button_mask) const;
-        [[nodiscard]] bool is_button_released(s32 channel, std::uint32_t button_mask) const;
-        [[nodiscard]] bool is_button_repeated(s32 channel, std::uint32_t button_mask) const;
-        [[nodiscard]] WpadPointerState pointer(s32 channel) const;
-        [[nodiscard]] WpadPointerState past_pointer(s32 channel, std::uint32_t index) const;
-        [[nodiscard]] std::uint32_t pointer_history_count(s32 channel) const;
-        [[nodiscard]] WpadStickState sub_stick(s32 channel) const;
-        [[nodiscard]] WpadVec3State core_acceleration(s32 channel) const;
-        [[nodiscard]] WpadVec3State sub_acceleration(s32 channel) const;
-        [[nodiscard]] bool is_core_swing(s32 channel) const;
-        [[nodiscard]] bool is_core_swing_triggered(s32 channel) const;
-        [[nodiscard]] bool is_sub_swing(s32 channel) const;
-        [[nodiscard]] float distance_to_display(s32 channel) const;
-        [[nodiscard]] const WpadChannelState *channel_state(s32 channel) const;
-
-    private:
-        [[nodiscard]] WpadChannelState *mutable_channel_state(s32 channel);
-
-        std::array<WpadChannelState, WPAD_MAX_CONTROLLERS> _channels{};
-    };
+    using WpadPointerState = aurora::WpadPointerState;
+    using WpadVec3State = aurora::WpadVec3State;
+    using WpadStickState = aurora::WpadStickState;
+    using WpadChannelState = aurora::WpadChannelState;
+    using WpadService = aurora::WpadService;
 
     enum class AudioEventKind {
         StageBgmStart,
@@ -631,8 +566,8 @@ namespace smgpc::runtime {
         void start_global_event_camera_no_target(std::string_view name);
         void end_global_event_camera(std::string_view name);
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
-                                                                                    const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
-                                                                                    bool do_zero_w_offset);
+                                                                                             const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
+                                                                                             bool do_zero_w_offset);
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_fovy(std::string_view name, float fovy_degrees);
 
         [[nodiscard]] std::uint32_t reset_camera_man_count() const;
@@ -753,76 +688,6 @@ namespace smgpc::runtime {
         std::uint64_t _frame_index = 0U;
         bool _change_stage_in_game_after_loading_game_data_requested = false;
         std::vector<SequenceRequestEvent> _events;
-    };
-
-    enum class NandOperationKind {
-        Write,
-        Read,
-        Delete,
-        Rename,
-        Check,
-    };
-
-    struct NandFileMetadata {
-        std::string path;
-        u8 permission = 0x3CU;
-        u8 attribute = 0U;
-        std::size_t size = 0U;
-    };
-
-    struct NandCheckResult {
-        s32 result = NAND_RESULT_OK;
-        u32 free_blocks = 0U;
-        u32 free_inodes = 0U;
-    };
-
-    struct NandOperationTrace {
-        NandOperationKind kind = NandOperationKind::Read;
-        std::string path;
-        std::string destination_path;
-        s32 result = NAND_RESULT_OK;
-        std::size_t byte_count = 0U;
-        u8 permission = 0U;
-        u8 attribute = 0U;
-        u32 requested_blocks = 0U;
-        u32 requested_inodes = 0U;
-        u32 free_blocks = 0U;
-        u32 free_inodes = 0U;
-    };
-
-    class NandFileSystemService final {
-    public:
-        [[nodiscard]] static std::string title_data_root();
-        [[nodiscard]] static std::string rfl_db_path();
-        [[nodiscard]] static std::string file_name(std::string_view path);
-
-        [[nodiscard]] std::string normalize_path(std::string_view path) const;
-        void write_file(std::string_view path, std::span<const std::uint8_t> bytes, u8 permission = 0x3CU, u8 attribute = 0U);
-        [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view path) const;
-        [[nodiscard]] bool exists(std::string_view path) const;
-        bool erase(std::string_view path);
-        [[nodiscard]] s32 rename(std::string_view source_path, std::string_view destination_path);
-        [[nodiscard]] NandCheckResult check(u32 requested_blocks, u32 requested_inodes);
-        [[nodiscard]] std::optional<NandFileMetadata> metadata(std::string_view path) const;
-        [[nodiscard]] std::span<const NandOperationTrace> trace() const;
-        void clear();
-        void clear_trace();
-
-    private:
-        struct StoredFile {
-            std::vector<std::uint8_t> bytes;
-            u8 permission = 0x3CU;
-            u8 attribute = 0U;
-        };
-
-        void push_trace(NandOperationTrace trace) const;
-        [[nodiscard]] u32 used_blocks() const;
-        [[nodiscard]] u32 used_inodes() const;
-
-        std::map<std::string, StoredFile, std::less<>> _files;
-        u32 _quota_blocks = 4096U;
-        u32 _quota_inodes = 256U;
-        mutable std::vector<NandOperationTrace> _trace;
     };
 
     class SaveDataService final {

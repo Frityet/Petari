@@ -10,9 +10,9 @@
 
 #include <RVLFaceLib.h>
 
-namespace smgpc::runtime {
+#include "runtime/NandFileSystemService.hpp"
 
-    class NandFileSystemService;
+namespace smgpc::runtime {
 
     struct RflMiiEntry {
         s32 index = 0;

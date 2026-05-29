@@ -4,7 +4,7 @@ target("smg-pc-aurora-native-tests")
     set_group("tests/aurora")
     add_files {
         "AuroraNativeTests.cpp",
-        "../src/app/AuroraDolphinCompat.cpp"
+        "../aurora/lib/compat.cpp"
     }
     add_deps {
         "smg-pc-common",

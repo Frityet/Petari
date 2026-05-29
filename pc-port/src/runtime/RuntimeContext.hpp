@@ -36,7 +36,6 @@ namespace smgpc::scene {
 
 namespace smgpc::runtime {
 
-
     enum class RuntimeContextSceneServiceMode {
         RuntimeOwned,
         External,
@@ -282,7 +281,6 @@ namespace smgpc::runtime {
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
         WiiVideoService _wii_video;
-        WpadService _wpad;
         AudioEventService _audio;
         EffectService _effects;
         WipeService _scene_wipe;
