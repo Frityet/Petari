@@ -27,6 +27,7 @@ set_project("smg-pc")
 add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {lsp = "clangd"})
 set_languages("c++23")
+includes("scripts")
 
 if not is_mode("debug") then
     add_defines("NDEBUG")

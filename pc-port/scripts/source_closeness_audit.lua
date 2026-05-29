@@ -1,91 +1,31 @@
-#!/usr/bin/env luajit
-
 local function trim(value)
     local text = tostring(value or ""):gsub("^%s+", "")
     return (text:gsub("%s+$", ""))
 end
 
 local function join(...)
-    local out = ""
-    for _, part in ipairs({ ... }) do
-        if part ~= nil and tostring(part) ~= "" then
-            part = tostring(part)
-            if out == "" then
-                out = part
-            elseif out:sub(-1) == "/" then
-                out = out .. part:gsub("^/+", "")
-            else
-                out = out .. "/" .. part:gsub("^/+", "")
-            end
-        end
-    end
-    return out
-end
-
-local function shell_quote(value)
-    value = tostring(value)
-    return "'" .. value:gsub("'", [['"'"']]) .. "'"
-end
-
-local function capture(command)
-    local pipe = io.popen(command .. " 2>&1")
-    if not pipe then
-        return nil, false
-    end
-    local output = pipe:read("*a") or ""
-    local ok = pipe:close()
-    return trim(output), ok == true or ok == 0
-end
-
-local function run(command)
-    local output, ok = capture(command)
-    if not ok then
-        io.stderr:write("source_closeness_audit.lua: command failed: " .. command .. "\n" .. tostring(output) .. "\n")
-        os.exit(1)
-    end
-    return output
+    return path.join(...)
 end
 
 local function file_exists(path)
-    local file = io.open(path, "rb")
-    if file then
-        file:close()
-        return true
-    end
-    return false
+    return path ~= nil and os.isfile(path)
 end
 
 local function dir_exists(path)
-    local ok = os.execute("test -d " .. shell_quote(path))
-    return ok == true or ok == 0
+    return path ~= nil and os.isdir(path)
 end
 
 local function mkdir_p(path)
-    local ok = os.execute("mkdir -p " .. shell_quote(path))
-    if not (ok == true or ok == 0) then
-        io.stderr:write("source_closeness_audit.lua: could not create " .. path .. "\n")
-        os.exit(1)
-    end
+    os.mkdir(path)
 end
 
 local function read_binary(path)
-    local file = io.open(path, "rb")
-    if not file then
-        return nil
-    end
-    local text = file:read("*a")
-    file:close()
-    return text
+    return file_exists(path) and io.readfile(path, { encoding = "binary" }) or nil
 end
 
-local function write_file(path, text)
-    local file = io.open(path, "w")
-    if not file then
-        io.stderr:write("source_closeness_audit.lua: could not write " .. path .. "\n")
-        os.exit(1)
-    end
-    file:write(text)
-    file:close()
+local function write_file(pathname, text)
+    os.mkdir(path.directory(pathname))
+    io.writefile(pathname, text)
 end
 
 local function split_lines(text)
@@ -100,8 +40,19 @@ local function list_files(root)
     if not dir_exists(root) then
         return {}
     end
-    local output = run("find " .. shell_quote(root) .. " -type f \\( -name '*.cpp' -o -name '*.c' -o -name '*.hpp' -o -name '*.h' \\) | sort")
-    return split_lines(output)
+    local seen = {}
+    local files = {}
+    for _, pattern in ipairs({ "**.cpp", "**.c", "**.hpp", "**.h" }) do
+        for _, filepath in ipairs(os.files(join(root, pattern))) do
+            filepath = path.absolute(filepath)
+            if not seen[filepath] then
+                seen[filepath] = true
+                table.insert(files, filepath)
+            end
+        end
+    end
+    table.sort(files)
+    return files
 end
 
 local function relative(path, root)
@@ -130,29 +81,25 @@ local function basename(path)
     return path:match("([^/]+)$") or path
 end
 
-local function find_case_variant(path)
-    if file_exists(path) then
-        return path, nil
+local function find_case_variant(pathname)
+    if file_exists(pathname) then
+        return pathname, nil
     end
 
-    local dir = dirname(path)
+    local dir = dirname(pathname)
     if not dir_exists(dir) then
-        return path, nil
+        return pathname, nil
     end
 
-    local output, ok = capture("find " .. shell_quote(dir) .. " -maxdepth 1 -type f -iname " .. shell_quote(basename(path)) .. " | sort")
-    if not ok or output == "" then
-        return path, nil
-    end
-
-    local wanted = path:lower()
-    for _, line in ipairs(split_lines(output)) do
-        if line:lower() == wanted then
-            return line, path
+    local wanted = pathname:lower()
+    local wanted_base = basename(pathname):lower()
+    for _, candidate in ipairs(os.files(join(dir, "*"))) do
+        if basename(candidate):lower() == wanted_base and candidate:lower() == wanted then
+            return path.absolute(candidate), pathname
         end
     end
 
-    return path, nil
+    return pathname, nil
 end
 
 local function normalize_line_endings(text)
@@ -273,8 +220,7 @@ local function sha256(path)
     if not file_exists(path) then
         return ""
     end
-    local output = run("sha256sum " .. shell_quote(path))
-    return output:match("^(%x+)") or ""
+    return hash.sha256(path)
 end
 
 local function tsv(value)
@@ -305,16 +251,15 @@ local function parse_args(argv)
     return args
 end
 
-local function realpath(path)
-    local output, ok = capture("readlink -f -- " .. shell_quote(path))
-    if ok and output ~= "" then
-        return output
+local function realpath(pathname)
+    if not pathname then
+        return nil
     end
-    return path
+    return path.absolute(pathname)
 end
 
 local function detect_roots(args)
-    local cwd = run("pwd")
+    local cwd = os.projectdir() or os.workingdir()
     local repo_root = args["repo-root"]
     local pc_root = args["pc-root"]
 
@@ -325,8 +270,7 @@ local function detect_roots(args)
     elseif dir_exists(join(cwd, "src", "Game")) and dir_exists(join(cwd, "..", "src", "Game")) then
         repo_root = realpath(join(cwd, ".."))
     else
-        io.stderr:write("source_closeness_audit.lua: could not detect repo root; pass --repo-root\n")
-        os.exit(1)
+        raise("source-closeness-audit: could not detect repo root; pass --repo-root")
     end
 
     if pc_root then
@@ -505,7 +449,7 @@ local args = parse_args(argv or {})
 if args.help or args.h then
     emit([[
 usage:
-  luajit scripts/source_closeness_audit.lua --output DIR [--repo-root DIR] [--pc-root DIR]
+  xmake source-closeness-audit --output DIR [--repo-root DIR] [--pc-root DIR]
 
 Outputs:
   source-closeness.tsv
@@ -522,8 +466,7 @@ end
 local repo_root, pc_root = detect_roots(args)
 local output_dir = args.output or args.o
 if not output_dir then
-    io.stderr:write("source_closeness_audit.lua: missing --output DIR\n")
-    os.exit(1)
+    raise("source-closeness-audit: missing --output DIR")
 end
 mkdir_p(output_dir)
 
@@ -882,15 +825,6 @@ return {
 }
 end
 
-local M = {
-    run = run_audit,
-}
-
-local first_arg = select(1, ...)
-if first_arg == "scripts.source_closeness_audit" or first_arg == "source_closeness_audit" then
-    return M
+function run(argv, options)
+    return run_audit(argv, options)
 end
-
-run_audit({ ... })
-
-return M
