@@ -1,4 +1,4 @@
-#include "RendererService.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <aurora/dvd.h>
@@ -123,12 +123,46 @@ namespace {
                 "NAND quota check should report free space");
     }
 
-    void test_render_contract_survives_aurora_boundary() {
-        const auto invalid = smgpc::render::TextureHandle {};
-        require(!invalid.is_valid(), "default texture handles should be invalid");
-        require(smgpc::render::TextureHandle {.value = 0U}.is_valid(), "texture handle zero should be usable");
-        require(smgpc::render::core::kWiiLogicalFramebufferWidth == 640U, "Wii logical framebuffer width should be 640");
-        require(smgpc::render::core::kWiiLogicalFramebufferHeight == 456U, "Wii logical framebuffer height should be 456");
+    struct SpineProbeState {
+        int first_executions = 0;
+        int second_executions = 0;
+        const Nerve *second_nerve = nullptr;
+    };
+
+    class SpineProbeFirstNerve final : public Nerve {
+    public:
+        void execute(Spine *spine) const override {
+            auto *state = static_cast<SpineProbeState *>(spine->mExecutor);
+            ++state->first_executions;
+            spine->setNerve(state->second_nerve);
+        }
+    };
+
+    class SpineProbeSecondNerve final : public Nerve {
+    public:
+        void execute(Spine *spine) const override {
+            auto *state = static_cast<SpineProbeState *>(spine->mExecutor);
+            ++state->second_executions;
+        }
+    };
+
+    void test_spine_pending_nerve_runs_next_tick() {
+        const auto first = SpineProbeFirstNerve {};
+        const auto second = SpineProbeSecondNerve {};
+        auto state = SpineProbeState {
+            .second_nerve = &second,
+        };
+        auto spine = Spine(&state, &first);
+
+        require(spine.getCurrentNerve() == &first, "Spine should start on its initial nerve");
+        spine.update();
+        require(state.first_executions == 1, "first nerve should execute on the first update");
+        require(state.second_executions == 0, "queued nerve should not execute in the same update");
+        require(spine.getCurrentNerve() == &first, "queued nerve should not appear current before it executes");
+
+        spine.update();
+        require(state.second_executions == 1, "queued nerve should execute on the next update");
+        require(spine.getCurrentNerve() == &second, "executed nerve should become current after its first tick");
     }
 
     struct TestCase {
@@ -144,7 +178,7 @@ int main() {
         TestCase {"Aurora DVD requires disc image", test_aurora_dvd_requires_disc_image},
         TestCase {"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
         TestCase {"pc-port NAND storage smoke", test_pc_port_nand_storage_smoke},
-        TestCase {"render contract survives Aurora boundary", test_render_contract_survives_aurora_boundary},
+        TestCase {"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };
 
     auto failures = 0;

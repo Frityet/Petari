@@ -40,7 +40,7 @@ namespace smgpc::app {
     struct ServiceGraphOverrides {
         std::unique_ptr<logging::ILogger> logger = {};
         std::unique_ptr<render::AuroraWindow> window_service = {};
-        std::unique_ptr<render::AuroraRenderer> renderer_engine = {};
+        std::unique_ptr<render::AuroraRenderer> aurora_renderer = {};
         std::unique_ptr<smgpc::runtime::RuntimeContext> runtime_context = {};
         std::unique_ptr<smgpc::scene::GameSystemSceneControllerService> scene_controller = {};
         std::unique_ptr<smgpc::scene::StorySequenceService> story_sequence = {};

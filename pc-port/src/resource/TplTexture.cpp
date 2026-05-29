@@ -148,7 +148,8 @@ namespace smgpc::resource {
                 colors[3] = blend_rgb(color0, color1, 1U, 2U, 3U);
             } else {
                 colors[2] = blend_rgb(color0, color1, 1U, 1U, 2U);
-                colors[3] = rgba(0U, 0U, 0U, 0U);
+                colors[3] = colors[2];
+                colors[3].a = 0U;
             }
 
             const auto pixel_index = in_block_y * 4U + in_block_x;
@@ -521,6 +522,7 @@ namespace smgpc::resource {
             .image_data_offset = read_be32(data, 0x1CU),
             .image_data_size = 0U,
             .image_levels = {},
+            .image_data = {},
             .image = {},
         };
 
@@ -531,12 +533,16 @@ namespace smgpc::resource {
             throw std::runtime_error("BTI palette texture missing palette entries");
         }
         texture.image_levels = image_levels(texture.format, texture.width, texture.height, texture.image_data_offset, texture.image_count);
-        texture.image_data_size = texture.image_levels.front().data_size;
+        texture.image_data_size = texture.image_levels.empty() ?
+                                      0U :
+                                      texture.image_levels.back().data_offset + texture.image_levels.back().data_size - texture.image_data_offset;
         for (const auto &level : texture.image_levels) {
             if (static_cast<std::size_t>(level.data_offset) + level.data_size > data.size()) {
                 throw std::runtime_error("BTI mip image data outside buffer");
             }
         }
+        texture.image_data.assign(data.begin() + static_cast<std::ptrdiff_t>(texture.image_data_offset),
+                                  data.begin() + static_cast<std::ptrdiff_t>(texture.image_data_offset + texture.image_data_size));
 
         const auto header = TplHeader {
             .height = texture.height,

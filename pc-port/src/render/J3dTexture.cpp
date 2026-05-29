@@ -101,6 +101,7 @@ namespace smgpc::render {
                     .image_data_offset = bti.image_data_offset,
                     .image_data_size = bti.image_data_size,
                     .image_levels = bti.image_levels,
+                    .image_data = bti.image_data,
                     .image = bti.image,
                 });
             }

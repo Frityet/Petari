@@ -4,6 +4,7 @@
 #include "runtime/ParityTrace.hpp"
 #endif
 
+#include <algorithm>
 #include <charconv>
 #include <chrono>
 #include <cstdint>
@@ -102,6 +103,31 @@ namespace smgpc::app {
             }
             return parse_frame_index(frame_value);
         }
+
+        [[nodiscard]] bool exit_after_screenshot_from_environment() {
+            const auto *value = std::getenv("SMGPC_EXIT_AFTER_SCREENSHOT");
+            return value != nullptr && value[0] != '\0' && std::string_view(value) != "0";
+        }
+
+#ifndef NDEBUG
+        [[nodiscard]] std::chrono::milliseconds debug_hold_after_trace_duration() {
+            const auto *value = std::getenv("SMGPC_DEBUG_HOLD_AFTER_TRACE_MS");
+            if (value == nullptr || value[0] == '\0') {
+                return std::chrono::milliseconds {0};
+            }
+
+            auto milliseconds = 0ULL;
+            const auto *begin = value;
+            const auto *end = value + std::string_view(value).size();
+            const auto result = std::from_chars(begin, end, milliseconds);
+            if (result.ec != std::errc {} || result.ptr != end) {
+                return std::chrono::milliseconds {0};
+            }
+
+            constexpr auto kMaxDebugHoldMs = 30'000ULL;
+            return std::chrono::milliseconds {static_cast<std::chrono::milliseconds::rep>(std::min(milliseconds, kMaxDebugHoldMs))};
+        }
+#endif
 
         [[nodiscard]] bool frame_pacing_enabled_from_environment() {
             const auto *value = std::getenv("SMGPC_FRAME_PACING");
@@ -227,12 +253,18 @@ namespace smgpc::app {
                     _logger->info(logging::Category::APP, logging::Message {"Using SMG save files from {}"}, save_directory.string());
                 }
 
+                const auto skip_render_until_frame = parse_frame_index(string_environment("SMGPC_SKIP_RENDER_UNTIL_FRAME").value_or(""));
 #ifndef NDEBUG
                 const auto exit_after_frame = exit_frame_from_environment();
                 const auto exit_on_layout_name = string_environment("SMGPC_EXIT_ON_LAYOUT_NAME");
                 const auto parity_trace_path = string_environment("SMGPC_PARITY_TRACE_PATH");
                 const auto parity_trace_frame = parse_frame_index(string_environment("SMGPC_PARITY_TRACE_FRAME").value_or("1")).value_or(1U);
+                const auto screenshot_path = string_environment("SMGPC_SCREENSHOT_PATH");
+                const auto screenshot_frame = parse_frame_index(string_environment("SMGPC_SCREENSHOT_FRAME").value_or("1")).value_or(1U);
+                const auto exit_after_screenshot = exit_after_screenshot_from_environment();
+                const auto debug_hold_after_trace = debug_hold_after_trace_duration();
                 auto parity_trace_written = false;
+                auto screenshot_written = false;
                 emit_configured_semantic_anchor(runtime);
                 if (parity_trace_path.has_value()) {
                     runtime.set_j3d_packet_trace_frame(parity_trace_frame);
@@ -247,6 +279,7 @@ namespace smgpc::app {
                 while (_window_service->poll_events()) {
                     const auto logical_frame_index = loop_frame_index + 1U;
                     auto frame_context = _renderer->begin_frame();
+                    auto renderer_context = render::ScopedAuroraRendererContext(_renderer.get());
                     frame_context.frame_index = logical_frame_index;
                     frame_context.frame_time_seconds = logical_frame_time_seconds(logical_frame_index);
                     frame_context.frame_delta_seconds = WII_FRAME_DURATION_SECONDS;
@@ -260,13 +293,18 @@ namespace smgpc::app {
                     }
 #endif
 
-                    game_system.draw_3d_normal(_renderer.get());
-                    game_system.draw_2d_normal(_renderer.get());
+                    const auto should_draw_frame = !skip_render_until_frame.has_value() || frame_context.frame_index >= *skip_render_until_frame;
+                    if (should_draw_frame) {
+                        game_system.draw_3d_normal();
+                        game_system.draw_2d_normal();
+                    }
 
 #ifndef NDEBUG
+                    auto parity_trace_written_this_frame = false;
                     if (parity_trace_path.has_value() && !parity_trace_written && frame_context.frame_index >= parity_trace_frame) {
                         smgpc::runtime::write_runtime_parity_trace(std::filesystem::path(*parity_trace_path), frame_context, runtime);
                         parity_trace_written = true;
+                        parity_trace_written_this_frame = true;
                     }
                     if (exit_after_frame.has_value() && frame_context.frame_index >= *exit_after_frame) {
                         _window_service->close();
@@ -274,6 +312,21 @@ namespace smgpc::app {
 #endif
 
                     _renderer->end_frame();
+#ifndef NDEBUG
+                    if (screenshot_path.has_value() && !screenshot_written && frame_context.frame_index >= screenshot_frame) {
+                        _renderer->request_screenshot_png(std::filesystem::path(*screenshot_path));
+                        screenshot_written = true;
+                        if (exit_after_screenshot) {
+                            _window_service->close();
+                        }
+                    }
+                    if (parity_trace_written_this_frame && debug_hold_after_trace.count() > 0) {
+                        _logger->info(logging::Category::APP,
+                                      logging::Message {"Holding presented Aurora frame for {} ms after trace capture"},
+                                      debug_hold_after_trace.count());
+                        std::this_thread::sleep_for(debug_hold_after_trace);
+                    }
+#endif
                     frame_pacer.wait_for_frame_end();
                     ++loop_frame_index;
                 }
@@ -333,8 +386,8 @@ namespace smgpc::app {
             });
         }
 
-        if (overrides.renderer_engine) {
-            graph.register_service<di::SingletonService<render::AuroraRenderer>>(std::move(overrides.renderer_engine));
+        if (overrides.aurora_renderer) {
+            graph.register_service<di::SingletonService<render::AuroraRenderer>>(std::move(overrides.aurora_renderer));
         } else {
             graph.register_service<di::SingletonService<render::AuroraRenderer>, render::AuroraWindow>(
                 [](di::DependencyReference<render::AuroraWindow> window_service) {
@@ -470,11 +523,11 @@ namespace smgpc::app {
             graph.register_service<di::SingletonService<IApplication>, render::AuroraWindow, render::AuroraRenderer, logging::ILogger,
                                    smgpc::runtime::RuntimeContext, smgpc::scene::GameSystemService>(
                 [configuration](di::DependencyReference<render::AuroraWindow> window_service,
-                                di::DependencyReference<render::AuroraRenderer> renderer_engine,
+                                di::DependencyReference<render::AuroraRenderer> aurora_renderer,
                                 di::DependencyReference<logging::ILogger> logger,
                                 di::DependencyReference<smgpc::runtime::RuntimeContext> runtime,
                                 di::DependencyReference<smgpc::scene::GameSystemService> game_system) {
-                    return std::make_unique<DesktopApplication>(configuration, std::move(window_service), std::move(renderer_engine),
+                    return std::make_unique<DesktopApplication>(configuration, std::move(window_service), std::move(aurora_renderer),
                                                                 std::move(logger), std::move(runtime), std::move(game_system));
                 });
         }

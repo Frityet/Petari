@@ -1012,7 +1012,7 @@ namespace smgpc::render {
             .op = material.blend_mode.op,
             .color_update = true,
             .alpha_update = true,
-            .enabled = true,
+            .enabled = material.blend_mode.enabled,
         };
         return state;
     }

@@ -14,6 +14,7 @@ namespace smgpc::layout {
 
     struct BrlytPane {
         std::string name;
+        std::string user_data;
         std::int32_t parent_index = -1;
         float translate_x = 0.0F;
         float translate_y = 0.0F;
@@ -25,6 +26,8 @@ namespace smgpc::layout {
         std::uint8_t base_position = 0U;
         std::uint8_t alpha = 255U;
         bool visible = true;
+        bool influenced_alpha = false;
+        bool location_adjust = false;
     };
 
     struct BrlytTexCoord {
@@ -175,6 +178,42 @@ namespace smgpc::layout {
         bool visible = true;
     };
 
+    struct BrlytWindowInflation {
+        float left = 0.0F;
+        float right = 0.0F;
+        float top = 0.0F;
+        float bottom = 0.0F;
+    };
+
+    struct BrlytWindowContent {
+        std::uint16_t material_index = 0U;
+        std::array<std::array<std::uint8_t, 4U>, 4U> vertex_colors{
+            std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
+            std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
+            std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
+            std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
+        };
+        std::vector<std::array<BrlytTexCoord, 4U>> tex_coord_sets;
+    };
+
+    struct BrlytWindowFrame {
+        std::uint16_t material_index = 0U;
+        std::uint8_t texture_flip = 0U;
+    };
+
+    struct BrlytWindowPane {
+        std::string name;
+        std::size_t pane_index = 0U;
+        float x = 0.0F;
+        float y = 0.0F;
+        float width = 0.0F;
+        float height = 0.0F;
+        BrlytWindowInflation content_inflation{};
+        BrlytWindowContent content{};
+        std::vector<BrlytWindowFrame> frames;
+        bool visible = true;
+    };
+
     struct BrlytGroup {
         std::string name;
         std::vector<std::string> pane_names;
@@ -186,6 +225,7 @@ namespace smgpc::layout {
     enum class BrlytDrawableKind {
         Picture,
         TextBox,
+        Window,
     };
 
     struct BrlytDrawable {
@@ -194,6 +234,7 @@ namespace smgpc::layout {
     };
 
     struct BrlytLayout {
+        std::uint8_t origin_type = 0U;
         float width = 0.0F;
         float height = 0.0F;
         std::vector<std::string> texture_names;
@@ -202,6 +243,7 @@ namespace smgpc::layout {
         std::vector<BrlytPane> panes;
         std::vector<BrlytPicturePane> pictures;
         std::vector<BrlytTextBox> text_boxes;
+        std::vector<BrlytWindowPane> windows;
         std::vector<BrlytDrawable> drawables;
         std::vector<BrlytGroup> groups;
     };

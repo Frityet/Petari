@@ -1,6 +1,7 @@
 #include "layout/BrlanAnimation.hpp"
 #include "layout/BrlytLayout.hpp"
 #include "resource/RarcArchive.hpp"
+#include "resource/TextEncoding.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -41,7 +42,13 @@ namespace {
         const auto cwd = std::filesystem::current_path();
         const std::filesystem::path candidates[]{
             cwd / "orig" / "RMGK01" / "files",
+            cwd / "orig" / "RMGK02" / "files",
+            cwd / "container" / "orig" / "RMGK01" / "files",
+            cwd / "container" / "orig" / "RMGK02" / "files",
             cwd.parent_path() / "orig" / "RMGK01" / "files",
+            cwd.parent_path() / "orig" / "RMGK02" / "files",
+            cwd.parent_path() / "pc-port" / "container" / "orig" / "RMGK01" / "files",
+            cwd.parent_path() / "pc-port" / "container" / "orig" / "RMGK02" / "files",
         };
 
         for (const auto &candidate : candidates) {
@@ -88,6 +95,15 @@ namespace {
         }
 
         return sanitized.empty() ? "layout" : sanitized;
+    }
+
+    [[nodiscard]] std::string utf8_from_words(std::span<const std::uint16_t> words) {
+        auto text = std::u16string {};
+        text.reserve(words.size());
+        for (const auto word : words) {
+            text.push_back(static_cast<char16_t>(word));
+        }
+        return smgpc::resource::utf8_from_utf16_lossy(text);
     }
 
     [[nodiscard]] std::string archive_name_for(std::string_view layout_name) {
@@ -204,9 +220,9 @@ namespace {
         case 1U:
             return -height * 0.5F;
         case 2U:
-            return 0.0F;
-        default:
             return -height;
+        default:
+            return 0.0F;
         }
     }
 
@@ -249,6 +265,7 @@ namespace {
         }
 
         out << "# Layout Probe: " << layout_name << "\n\n";
+        out << "- origin type: " << static_cast<int>(layout.origin_type) << '\n';
         out << "- layout size: " << layout.width << " x " << layout.height << '\n';
         out << "- panes: " << layout.panes.size() << '\n';
         out << "- pictures: " << layout.pictures.size() << '\n';
@@ -266,22 +283,27 @@ namespace {
         out << '\n';
 
         out << "## Panes\n\n";
-        out << "| index | parent | name | base | translate | scale | size | alpha | visible |\n";
-        out << "| ---: | ---: | --- | ---: | --- | --- | --- | ---: | --- |\n";
+        out << "| index | parent | name | base | flags | translate | scale | size | alpha | visible |\n";
+        out << "| ---: | ---: | --- | ---: | --- | --- | --- | --- | ---: | --- |\n";
         for (auto i = std::size_t {}; i < layout.panes.size(); ++i) {
             const auto &pane = layout.panes[i];
             out << "| " << i << " | " << pane.parent_index << " | `" << pane.name << "` | " << static_cast<int>(pane.base_position) << " | "
-                << pane.translate_x << ',' << pane.translate_y << " | " << pane.scale_x << ',' << pane.scale_y << " | " << pane.width << 'x'
-                << pane.height << " | " << static_cast<int>(pane.alpha) << " | " << (pane.visible ? "yes" : "no") << " |\n";
+                << (pane.influenced_alpha ? "alpha" : "-") << ',' << (pane.location_adjust ? "loc" : "-") << " | " << pane.translate_x << ','
+                << pane.translate_y << " | " << pane.scale_x << ',' << pane.scale_y << " | " << pane.width << 'x' << pane.height << " | "
+                << static_cast<int>(pane.alpha) << " | " << (pane.visible ? "yes" : "no") << " |\n";
         }
         out << '\n';
 
         out << "## Materials\n\n";
-        out << "| index | name | textures | tex SRTs | tex coord gens | TEV stages | alpha compare | blend |\n";
-        out << "| ---: | --- | --- | --- | --- | --- | --- | --- |\n";
+        out << "| index | name | colors | textures | tex SRTs | tex coord gens | TEV stages | alpha compare | blend |\n";
+        out << "| ---: | --- | --- | --- | --- | --- | --- | --- | --- |\n";
         for (auto i = std::size_t {}; i < layout.materials.size(); ++i) {
             const auto &material = layout.materials[i];
-            out << "| " << i << " | `" << material.name << "` | ";
+            out << "| " << i << " | `" << material.name << "` | mat=(" << static_cast<int>(material.mat_color[0]) << ','
+                << static_cast<int>(material.mat_color[1]) << ',' << static_cast<int>(material.mat_color[2]) << ','
+                << static_cast<int>(material.mat_color[3]) << ") tev0=(" << material.tev_colors[0][0] << ',' << material.tev_colors[0][1] << ','
+                << material.tev_colors[0][2] << ',' << material.tev_colors[0][3] << ") tev1=(" << material.tev_colors[1][0] << ','
+                << material.tev_colors[1][1] << ',' << material.tev_colors[1][2] << ',' << material.tev_colors[1][3] << ") | ";
             for (auto texture_index = std::size_t {}; texture_index < material.textures.size(); ++texture_index) {
                 const auto &texture = material.textures[texture_index];
                 if (texture_index != 0U) {
@@ -331,6 +353,18 @@ namespace {
                 << static_cast<int>(material.gx_state.blend.dst_factor) << " op=" << static_cast<int>(material.gx_state.blend.op)
                 << " color_update=" << (material.gx_state.blend.color_update ? "yes" : "no")
                 << " alpha_update=" << (material.gx_state.blend.alpha_update ? "yes" : "no") << " |\n";
+        }
+        out << '\n';
+
+        out << "## Text Boxes\n\n";
+        out << "| index | name | pane | font | pos | align | raw | display |\n";
+        out << "| ---: | --- | --- | --- | ---: | ---: | --- | --- |\n";
+        for (auto i = std::size_t {}; i < layout.text_boxes.size(); ++i) {
+            const auto &text_box = layout.text_boxes[i];
+            const auto pane_name = text_box.pane_index < layout.panes.size() ? layout.panes[text_box.pane_index].name : std::string {};
+            out << "| " << i << " | `" << text_box.name << "` | `" << pane_name << "` | `" << text_box.font_name << "` | "
+                << static_cast<int>(text_box.text_position) << " | " << static_cast<int>(text_box.text_alignment) << " | "
+                << utf8_from_words(text_box.raw_text) << " | " << utf8_from_words(text_box.text) << " |\n";
         }
         out << '\n';
 
@@ -400,7 +434,10 @@ namespace {
 
 int main(int argc, char **argv) try {
     const auto layout_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("TitleLogo");
-    const auto archive_path = disc_files_root() / "KrKorean" / "LayoutData" / archive_name_for(layout_name);
+    auto archive_path = disc_files_root() / "KrKorean" / "LayoutData" / archive_name_for(layout_name);
+    if (!std::filesystem::is_regular_file(archive_path)) {
+        archive_path = disc_files_root() / "LayoutData" / archive_name_for(layout_name);
+    }
     const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
     const auto brlyt = find_archive_file(archive, ".brlyt");
     if (!brlyt.has_value()) {

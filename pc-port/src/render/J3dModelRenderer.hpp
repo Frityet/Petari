@@ -142,6 +142,7 @@ namespace smgpc::render {
         GXZModeState gx_z_mode = {};
         GXFogState gx_fog = {};
         std::array<render::GxTevRegisterColor2D, 4U> gx_initial_tev_registers = {};
+        std::array<std::array<std::uint8_t, 4U>, 4U> gx_initial_tev_k_colors = {};
         std::vector<GXRegisterLoadState> mdl3_register_loads = {};
         bool depth_test = false;
         bool depth_write = false;
@@ -207,8 +208,17 @@ namespace smgpc::render {
             std::vector<J3dMaterialTexturePass> material_passes = {};
             std::array<render::GxTextureStage2D, render::core::kMaxGxMaterialTextureStages2D> gx_texture_stages = {};
             std::array<render::GxTevStage2D, render::core::kMaxGxMaterialTevStages2D> gx_tev_stages = {};
+            std::array<render::core::GxIndirectTextureOrder2D, render::core::kMaxGxIndirectStages2D> gx_indirect_texture_orders = {};
+            std::array<render::core::GxIndirectTextureMatrix2D, render::core::kMaxGxIndirectMatrices2D> gx_indirect_texture_matrices = {};
+            std::array<render::core::GxIndirectTextureCoordScale2D, render::core::kMaxGxIndirectStages2D> gx_indirect_texture_scales = {};
+            std::array<render::core::GxIndirectTevStage2D, render::core::kMaxGxMaterialTevStages2D> gx_indirect_tev_stages = {};
             std::size_t gx_texture_stage_count = 0U;
             std::size_t gx_tev_stage_count = 0U;
+            std::size_t gx_indirect_texture_order_count = 0U;
+            std::size_t gx_indirect_texture_matrix_count = 0U;
+            std::size_t gx_indirect_texture_scale_count = 0U;
+            std::size_t gx_indirect_tev_stage_count = 0U;
+            std::uint8_t gx_indirect_stage_count = 0U;
             J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
             std::string packet_mode_reason;
             bool packet_mode_fallback = false;
@@ -223,6 +233,7 @@ namespace smgpc::render {
             render::GxBlendMode2D gx_blend = {};
             render::GxAlphaCompare2D gx_alpha_compare = {};
             std::array<render::GxTevRegisterColor2D, 4U> gx_initial_tev_registers = {};
+            std::array<std::array<std::uint8_t, 4U>, 4U> gx_initial_tev_k_colors = {};
             bool depth_test = false;
             bool depth_write = false;
             render::DepthCompare depth_compare = render::DepthCompare::LessEqual;
@@ -236,12 +247,13 @@ namespace smgpc::render {
             void operator()(DrawScratch *scratch) const;
         };
 
+        static void fill_indirect_state(Mesh &mesh, const GXIndirectState &indirect);
         [[nodiscard]] Mesh make_constant_backdrop(render::AuroraRenderer &renderer, std::array<std::uint8_t, 4U> color) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights = {}) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
                                                                    std::span<const GXLightState> scene_lights = {}) const;
-        void submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
-                         DrawScratch &scratch, std::span<const GXLightState> scene_lights,
+        void submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const smgpc::camera::CameraPose &camera_pose,
+                         const J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawScratch &scratch, std::span<const GXLightState> scene_lights,
                          const J3dModelRendererDrawOptions &options) const;
 
         bool _loaded = false;

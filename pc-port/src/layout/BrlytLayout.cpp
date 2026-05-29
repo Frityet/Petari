@@ -404,6 +404,7 @@ namespace smgpc::layout {
 
             return BrlytPane{
                 .name = read_fixed_string(block, 12U, 16U),
+                .user_data = read_fixed_string(block, 28U, 8U),
                 .parent_index = parent_index,
                 .translate_x = read_be_float(block, 36U),
                 .translate_y = read_be_float(block, 40U),
@@ -415,6 +416,8 @@ namespace smgpc::layout {
                 .base_position = block[9U],
                 .alpha = block[10U],
                 .visible = (block[8U] & 0x1U) != 0U,
+                .influenced_alpha = (block[8U] & 0x2U) != 0U,
+                .location_adjust = (block[8U] & 0x4U) != 0U,
             };
         }
 
@@ -516,6 +519,110 @@ namespace smgpc::layout {
                 .color = {255U, 255U, 255U, alpha},
                 .vertex_colors = vertex_colors,
                 .tex_coords = tex_coords,
+                .visible = (block[8U] & 0x1U) != 0U,
+            };
+        }
+
+        [[nodiscard]] std::array<std::array<std::uint8_t, 4U>, 4U> parse_vertex_colors(std::span<const std::uint8_t> block,
+                                                                                         std::size_t offset) {
+            if (offset + 16U > block.size()) {
+                throw std::runtime_error("BRLYT vertex color table is truncated");
+            }
+
+            auto vertex_colors = std::array<std::array<std::uint8_t, 4U>, 4U>{};
+            for (auto vertex = 0U; vertex < vertex_colors.size(); ++vertex) {
+                const auto color_offset = offset + static_cast<std::size_t>(vertex) * 4U;
+                vertex_colors[vertex] = std::array<std::uint8_t, 4U>{
+                    block[color_offset],
+                    block[color_offset + 1U],
+                    block[color_offset + 2U],
+                    block[color_offset + 3U],
+                };
+            }
+
+            return vertex_colors;
+        }
+
+        [[nodiscard]] std::vector<std::array<BrlytTexCoord, 4U>> parse_tex_coord_sets(std::span<const std::uint8_t> block,
+                                                                                       std::size_t offset,
+                                                                                       std::uint8_t tex_coord_count) {
+            constexpr auto kTexCoordsPerSet = std::size_t{4U};
+            constexpr auto kTexCoordBytes = std::size_t{8U};
+            const auto tex_coord_set_size = kTexCoordsPerSet * kTexCoordBytes;
+            if (offset + static_cast<std::size_t>(tex_coord_count) * tex_coord_set_size > block.size()) {
+                throw std::runtime_error("BRLYT texture coordinate table is truncated");
+            }
+
+            auto tex_coord_sets = std::vector<std::array<BrlytTexCoord, 4U>>{};
+            tex_coord_sets.reserve(tex_coord_count);
+            for (auto tex_coord_set = 0U; tex_coord_set < tex_coord_count; ++tex_coord_set) {
+                const auto set_offset = offset + static_cast<std::size_t>(tex_coord_set) * tex_coord_set_size;
+                tex_coord_sets.push_back(std::array<BrlytTexCoord, 4U>{
+                    BrlytTexCoord{read_be_float(block, set_offset), read_be_float(block, set_offset + 4U)},
+                    BrlytTexCoord{read_be_float(block, set_offset + 8U), read_be_float(block, set_offset + 12U)},
+                    BrlytTexCoord{read_be_float(block, set_offset + 16U), read_be_float(block, set_offset + 20U)},
+                    BrlytTexCoord{read_be_float(block, set_offset + 24U), read_be_float(block, set_offset + 28U)},
+                });
+            }
+
+            return tex_coord_sets;
+        }
+
+        [[nodiscard]] BrlytWindowPane parse_window(std::span<const std::uint8_t> block, const PaneState &global_state) {
+            if (block.size() < 104U) {
+                throw std::runtime_error("BRLYT window pane is truncated");
+            }
+
+            const auto base_position = block[9U];
+            const auto name = read_fixed_string(block, 12U, 16U);
+            const auto width = read_be_float(block, 68U) * global_state.scale_x;
+            const auto height = read_be_float(block, 72U) * global_state.scale_y;
+            const auto frame_count = block[92U];
+            const auto content_offset = read_be32(block, 96U);
+            const auto frame_offset_table_offset = read_be32(block, 100U);
+            if (content_offset + 20U > block.size()) {
+                throw std::runtime_error("BRLYT window content is truncated");
+            }
+
+            auto content = BrlytWindowContent{
+                .material_index = read_be16(block, content_offset + 16U),
+                .vertex_colors = parse_vertex_colors(block, content_offset),
+                .tex_coord_sets = parse_tex_coord_sets(block, content_offset + 20U, block[content_offset + 18U]),
+            };
+
+            if (frame_count > 0U && frame_offset_table_offset + static_cast<std::size_t>(frame_count) * 4U > block.size()) {
+                throw std::runtime_error("BRLYT window frame offset table is truncated");
+            }
+
+            auto frames = std::vector<BrlytWindowFrame>{};
+            frames.reserve(frame_count);
+            for (auto frame_index = 0U; frame_index < frame_count; ++frame_index) {
+                const auto frame_offset = read_be32(block, frame_offset_table_offset + static_cast<std::size_t>(frame_index) * 4U);
+                if (frame_offset + 4U > block.size()) {
+                    throw std::runtime_error("BRLYT window frame is truncated");
+                }
+
+                frames.push_back(BrlytWindowFrame{
+                    .material_index = read_be16(block, frame_offset),
+                    .texture_flip = block[frame_offset + 2U],
+                });
+            }
+
+            return BrlytWindowPane{
+                .name = name,
+                .pane_index = 0U,
+                .x = global_state.translate_x + base_position_x(base_position, width),
+                .y = global_state.translate_y + base_position_y(base_position, height),
+                .width = width,
+                .height = height,
+                .content_inflation = BrlytWindowInflation{
+                    .left = read_be_float(block, 76U),
+                    .right = read_be_float(block, 80U),
+                    .top = read_be_float(block, 84U),
+                    .bottom = read_be_float(block, 88U),
+                },
+                .content = std::move(content),
+                .frames = std::move(frames),
                 .visible = (block[8U] & 0x1U) != 0U,
             };
         }
@@ -682,6 +789,7 @@ namespace smgpc::layout {
 
             const auto block = data.subspan(cursor, block_size);
             if (has_magic(block, 0U, "lyt1")) {
+                layout.origin_type = block[8U];
                 layout.width = read_be_float(block, 12U);
                 layout.height = read_be_float(block, 16U);
             } else if (has_magic(block, 0U, "txl1")) {
@@ -690,12 +798,26 @@ namespace smgpc::layout {
                 parse_font_list(layout, block);
             } else if (has_magic(block, 0U, "mat1")) {
                 layout.materials = parse_material_list(block, layout.texture_names);
-            } else if (has_magic(block, 0U, "pan1") || has_magic(block, 0U, "bnd1") || has_magic(block, 0U, "wnd1")) {
+            } else if (has_magic(block, 0U, "pan1") || has_magic(block, 0U, "bnd1")) {
                 const auto local = parse_pane_state(block);
                 const auto parent = parent_stack.empty() ? PaneState{} : parent_stack.back();
                 last_state = combine_state(parent, local);
                 layout.panes.push_back(parse_pane(block, parent_index_stack.empty() ? -1 : parent_index_stack.back()));
                 last_pane_index = static_cast<std::int32_t>(layout.panes.size() - 1U);
+            } else if (has_magic(block, 0U, "wnd1")) {
+                const auto local = parse_pane_state(block);
+                const auto parent = parent_stack.empty() ? PaneState{} : parent_stack.back();
+                last_state = combine_state(parent, local);
+                layout.panes.push_back(parse_pane(block, parent_index_stack.empty() ? -1 : parent_index_stack.back()));
+                last_pane_index = static_cast<std::int32_t>(layout.panes.size() - 1U);
+                auto window = parse_window(block, last_state);
+                window.pane_index = static_cast<std::size_t>(last_pane_index);
+                const auto window_index = layout.windows.size();
+                layout.windows.push_back(std::move(window));
+                layout.drawables.push_back(BrlytDrawable{
+                    .kind = BrlytDrawableKind::Window,
+                    .index = window_index,
+                });
             } else if (has_magic(block, 0U, "txt1")) {
                 const auto local = parse_pane_state(block);
                 const auto parent = parent_stack.empty() ? PaneState{} : parent_stack.back();

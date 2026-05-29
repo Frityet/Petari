@@ -175,13 +175,13 @@ void LiveActor::setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4& matrix
     }
 }
 
-void LiveActor::drawModel(smgpc::render::AuroraRenderer& renderer, const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
+void LiveActor::drawModel(const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
                           smgpc::render::live_actor::LiveActorModel::DrawPass pass) {
     if (mIsDead || mModel == nullptr) {
         return;
     }
 
-    mModel->draw(renderer, camera_pose, mBaseMatrix, frame, pass);
+    mModel->draw(camera_pose, mBaseMatrix, frame, pass);
 }
 
 void LiveActor::startBck(const char* pName, const char* pFileName) {

@@ -1,10 +1,12 @@
-#include "capture/ScreenshotService.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TplTexture.hpp"
 
+#include <algorithm>
+#include <array>
 #include <cstdint>
 #include <exception>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <span>
 #include <stdexcept>
@@ -49,24 +51,60 @@ namespace {
         return text.size() >= suffix.size() && text.substr(text.size() - suffix.size()) == suffix;
     }
 
-    void write_texture_png(const smgpc::render::capture::IScreenshotService &screenshot_service, const std::filesystem::path &output, const smgpc::resource::DecodedTexture &texture) {
-        screenshot_service.write_png(
-            output,
-            smgpc::render::capture::ScreenshotImageView {
-                .width = texture.width,
-                .height = texture.height,
-                .pitch = texture.width * 4U,
-                .pixels = std::span<const std::uint8_t>(texture.rgba.data(), texture.rgba.size()),
-                .format = smgpc::render::capture::PixelFormat::RGBA8,
-                .origin_bottom_left = false,
-            });
+    void write_texture_ppm(const std::filesystem::path &output, const smgpc::resource::DecodedTexture &texture) {
+        std::filesystem::create_directories(output.parent_path());
+        auto file = std::ofstream(output, std::ios::binary);
+        if (!file) {
+            throw std::runtime_error("cannot write texture dump " + output.string());
+        }
+        file << "P6\n" << texture.width << ' ' << texture.height << "\n255\n";
+        for (auto offset = std::size_t{}; offset + 3U < texture.rgba.size(); offset += 4U) {
+            const auto alpha = static_cast<std::uint16_t>(texture.rgba[offset + 3U]);
+            const auto rgb = std::array< char, 3U >{
+                static_cast<char>((static_cast<std::uint16_t>(texture.rgba[offset]) * alpha) / 255U),
+                static_cast<char>((static_cast<std::uint16_t>(texture.rgba[offset + 1U]) * alpha) / 255U),
+                static_cast<char>((static_cast<std::uint16_t>(texture.rgba[offset + 2U]) * alpha) / 255U),
+            };
+            file.write(rgb.data(), static_cast<std::streamsize>(rgb.size()));
+        }
+    }
+
+    void print_texture_stats(std::string_view name, const smgpc::resource::DecodedTexture &texture) {
+        auto min_x = texture.width;
+        auto min_y = texture.height;
+        auto max_x = std::uint16_t{};
+        auto max_y = std::uint16_t{};
+        auto visible = std::uint64_t{};
+        auto red = std::uint64_t{};
+        auto green = std::uint64_t{};
+        auto blue = std::uint64_t{};
+        auto alpha = std::uint64_t{};
+        for (auto y = std::uint16_t{}; y < texture.height; ++y) {
+            for (auto x = std::uint16_t{}; x < texture.width; ++x) {
+                const auto offset = (static_cast<std::size_t>(y) * texture.width + x) * 4U;
+                red += texture.rgba[offset];
+                green += texture.rgba[offset + 1U];
+                blue += texture.rgba[offset + 2U];
+                alpha += texture.rgba[offset + 3U];
+                if (texture.rgba[offset + 3U] == 0U) {
+                    continue;
+                }
+                min_x = std::min(min_x, x);
+                min_y = std::min(min_y, y);
+                max_x = std::max(max_x, x);
+                max_y = std::max(max_y, y);
+                ++visible;
+            }
+        }
+        const auto pixels = std::max<std::uint64_t>(1U, static_cast<std::uint64_t>(texture.width) * texture.height);
+        std::cout << name << " size=" << texture.width << 'x' << texture.height << " format=" << static_cast<std::uint32_t>(texture.format)
+                  << " visible=" << visible << " bbox=" << min_x << ',' << min_y << '-' << max_x << ',' << max_y << " avg_rgba="
+                  << (red / pixels) << ',' << (green / pixels) << ',' << (blue / pixels) << ',' << (alpha / pixels) << '\n';
     }
 
 }  // namespace
 
 int main(int argc, char **argv) try {
-    const auto screenshot_service = smgpc::render::capture::create_png_screenshot_service();
-
     if (argc == 3) {
         const auto archive_path = std::filesystem::path(argv[1]);
         const auto texture_output_root = std::filesystem::path(argv[2]);
@@ -78,10 +116,11 @@ int main(int argc, char **argv) try {
             }
 
             auto file_name = std::filesystem::path(entry.path).filename();
-            file_name.replace_extension(".png");
+            file_name.replace_extension(".ppm");
             const auto texture = smgpc::resource::decode_tpl_texture(archive.file_data(entry));
             const auto texture_output = texture_output_root / file_name;
-            write_texture_png(*screenshot_service, texture_output, texture);
+            write_texture_ppm(texture_output, texture);
+            print_texture_stats(entry.path, texture);
             std::cout << texture_output << '\n';
         }
 
@@ -91,9 +130,10 @@ int main(int argc, char **argv) try {
     const auto root = disc_files_root();
     const auto title_logo_archive = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
     const auto title_logo_texture = smgpc::resource::decode_tpl_texture(title_logo_archive.file_data("timg/mytitlelogokor.tpl"));
-    const auto output = pc_port_root() / ".cache" / "decoded-title-logo.png";
+    const auto output = pc_port_root() / ".cache" / "decoded-title-logo.ppm";
 
-    write_texture_png(*screenshot_service, output, title_logo_texture);
+    write_texture_ppm(output, title_logo_texture);
+    print_texture_stats("timg/mytitlelogokor.tpl", title_logo_texture);
     std::cout << output << '\n';
 
     const auto texture_output_root = pc_port_root() / ".cache" / "title-logo-textures";
@@ -103,8 +143,9 @@ int main(int argc, char **argv) try {
         }
 
         const auto texture = smgpc::resource::decode_tpl_texture(title_logo_archive.file_data(entry));
-        const auto texture_output = texture_output_root / (std::filesystem::path(entry.path).filename().replace_extension(".png"));
-        write_texture_png(*screenshot_service, texture_output, texture);
+        const auto texture_output = texture_output_root / (std::filesystem::path(entry.path).filename().replace_extension(".ppm"));
+        write_texture_ppm(texture_output, texture);
+        print_texture_stats(entry.path, texture);
         std::cout << texture_output << '\n';
     }
 

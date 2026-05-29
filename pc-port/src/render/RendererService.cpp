@@ -2,11 +2,13 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
+#include <fstream>
 #include <limits>
 #include <memory>
 #include <optional>
@@ -22,7 +24,9 @@
 #include <aurora/aurora.h>
 #include <aurora/event.h>
 #include <aurora/gfx.h>
+#include <dolphin/gx/GXAurora.h>
 #include <dolphin/gx.h>
+#include <dolphin/mtx.h>
 
 namespace smgpc::render {
     namespace {
@@ -31,6 +35,8 @@ namespace smgpc::render {
             .width = core::kWiiLogicalFramebufferWidth,
             .height = core::kWiiLogicalFramebufferHeight,
         };
+
+        thread_local AuroraRenderer *s_current_renderer = nullptr;
 
         [[nodiscard]] bool environment_flag_enabled(const char *name, bool fallback) {
             const auto *value = std::getenv(name);
@@ -52,11 +58,247 @@ namespace smgpc::render {
             return static_cast<std::uint16_t>(std::clamp<std::uint32_t>(value, 1U, std::numeric_limits<std::uint16_t>::max()));
         }
 
+        void append_be32(std::vector<std::uint8_t> &bytes, std::uint32_t value) {
+            bytes.push_back(static_cast<std::uint8_t>((value >> 24U) & 0xffU));
+            bytes.push_back(static_cast<std::uint8_t>((value >> 16U) & 0xffU));
+            bytes.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xffU));
+            bytes.push_back(static_cast<std::uint8_t>(value & 0xffU));
+        }
+
+        void append_le16(std::vector<std::uint8_t> &bytes, std::uint16_t value) {
+            bytes.push_back(static_cast<std::uint8_t>(value & 0xffU));
+            bytes.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xffU));
+        }
+
+        [[nodiscard]] constexpr std::array<std::uint32_t, 256U> make_crc32_table() {
+            auto table = std::array<std::uint32_t, 256U> {};
+            for (auto i = 0U; i < table.size(); ++i) {
+                auto value = static_cast<std::uint32_t>(i);
+                for (auto bit = 0U; bit < 8U; ++bit) {
+                    value = (value >> 1U) ^ (0xedb88320U & (0U - (value & 1U)));
+                }
+                table[i] = value;
+            }
+            return table;
+        }
+
+        [[nodiscard]] std::uint32_t update_crc32(std::uint32_t crc, std::span<const std::uint8_t> bytes) {
+            static constexpr auto table = make_crc32_table();
+            auto value = crc;
+            for (const auto byte : bytes) {
+                value = (value >> 8U) ^ table[(value ^ byte) & 0xffU];
+            }
+            return value;
+        }
+
+        [[nodiscard]] std::uint32_t crc32(std::span<const std::uint8_t> type, std::span<const std::uint8_t> data) {
+            auto value = 0xffffffffU;
+            value = update_crc32(value, type);
+            value = update_crc32(value, data);
+            return value ^ 0xffffffffU;
+        }
+
+        [[nodiscard]] std::uint32_t adler32(std::span<const std::uint8_t> bytes) {
+            constexpr auto kMod = 65521U;
+            constexpr auto kMaxChunk = 5552U;
+            auto a = 1U;
+            auto b = 0U;
+
+            auto offset = std::size_t {};
+            while (offset < bytes.size()) {
+                const auto chunk_size = std::min<std::size_t>(bytes.size() - offset, kMaxChunk);
+                for (auto i = 0U; i < chunk_size; ++i) {
+                    a += bytes[offset + i];
+                    b += a;
+                }
+                a %= kMod;
+                b %= kMod;
+                offset += chunk_size;
+            }
+
+            return (b << 16U) | a;
+        }
+
+        void append_png_chunk(std::vector<std::uint8_t> &png, std::array<char, 4U> type, std::span<const std::uint8_t> data) {
+            append_be32(png, static_cast<std::uint32_t>(data.size()));
+            const auto type_offset = png.size();
+            for (const auto c : type) {
+                png.push_back(static_cast<std::uint8_t>(c));
+            }
+            png.insert(png.end(), data.begin(), data.end());
+            append_be32(png, crc32(std::span<const std::uint8_t>(png.data() + type_offset, type.size()), data));
+        }
+
+        [[nodiscard]] std::vector<std::uint8_t> make_zlib_stored_stream(std::span<const std::uint8_t> payload) {
+            auto stream = std::vector<std::uint8_t> {};
+            stream.reserve(payload.size() + (payload.size() / 65535U + 1U) * 5U + 6U);
+            stream.push_back(0x78U);
+            stream.push_back(0x01U);
+
+            auto offset = std::size_t {};
+            while (offset < payload.size()) {
+                const auto remaining = payload.size() - offset;
+                const auto block_size = static_cast<std::uint16_t>(std::min<std::size_t>(remaining, 65535U));
+                const auto final_block = (offset + block_size) == payload.size();
+                stream.push_back(final_block ? 0x01U : 0x00U);
+                append_le16(stream, block_size);
+                append_le16(stream, static_cast<std::uint16_t>(~block_size));
+                stream.insert(stream.end(), payload.begin() + static_cast<std::ptrdiff_t>(offset),
+                              payload.begin() + static_cast<std::ptrdiff_t>(offset + block_size));
+                offset += block_size;
+            }
+
+            append_be32(stream, adler32(payload));
+            return stream;
+        }
+
+        void write_rgba8_png(const std::filesystem::path &path, std::uint32_t width, std::uint32_t height, std::uint32_t pitch,
+                             std::span<const std::uint8_t> rgba) {
+            if (width == 0U || height == 0U || pitch < width * 4U || rgba.size() < static_cast<std::size_t>(pitch) * height) {
+                throw std::runtime_error("Cannot write Aurora screenshot: invalid readback dimensions");
+            }
+
+            auto rows = std::vector<std::uint8_t> {};
+            rows.resize((static_cast<std::size_t>(width) * 4U + 1U) * height);
+            for (auto y = 0U; y < height; ++y) {
+                const auto *source = rgba.data() + static_cast<std::size_t>(y) * pitch;
+                auto *destination = rows.data() + static_cast<std::size_t>(y) * (static_cast<std::size_t>(width) * 4U + 1U);
+                destination[0] = 0U;
+                std::memcpy(destination + 1U, source, static_cast<std::size_t>(width) * 4U);
+            }
+
+            auto ihdr = std::vector<std::uint8_t> {};
+            ihdr.reserve(13U);
+            append_be32(ihdr, width);
+            append_be32(ihdr, height);
+            ihdr.push_back(8U);
+            ihdr.push_back(6U);
+            ihdr.push_back(0U);
+            ihdr.push_back(0U);
+            ihdr.push_back(0U);
+
+            static constexpr auto kPngSignature = std::array<std::uint8_t, 8U> {
+                0x89U, 0x50U, 0x4eU, 0x47U, 0x0dU, 0x0aU, 0x1aU, 0x0aU,
+            };
+            auto png = std::vector<std::uint8_t> {};
+            const auto idat = make_zlib_stored_stream(rows);
+            png.reserve(kPngSignature.size() + ihdr.size() + idat.size() + 64U);
+            png.insert(png.end(), kPngSignature.begin(), kPngSignature.end());
+            append_png_chunk(png, {'I', 'H', 'D', 'R'}, ihdr);
+            append_png_chunk(png, {'I', 'D', 'A', 'T'}, idat);
+            append_png_chunk(png, {'I', 'E', 'N', 'D'}, {});
+
+            const auto parent = path.parent_path();
+            if (!parent.empty()) {
+                std::filesystem::create_directories(parent);
+            }
+            auto file = std::ofstream(path, std::ios::binary);
+            if (!file) {
+                throw std::runtime_error("Cannot write Aurora screenshot: " + path.string());
+            }
+            file.write(reinterpret_cast<const char *>(png.data()), static_cast<std::streamsize>(png.size()));
+            if (!file) {
+                throw std::runtime_error("Failed while writing Aurora screenshot: " + path.string());
+            }
+        }
+
         [[nodiscard]] FramebufferInfo framebuffer_from_window_size(const AuroraWindowSize &size) {
             return {
                 .width = clamp_framebuffer_dimension(size.fb_width == 0U ? size.native_fb_width : size.fb_width),
                 .height = clamp_framebuffer_dimension(size.fb_height == 0U ? size.native_fb_height : size.fb_height),
             };
+        }
+
+        [[nodiscard]] InputPointerState logical_pointer_from_window_point(float x, float y, const AuroraWindowSize &size) {
+            const auto window_width = std::max(1.0F, static_cast<float>(size.width));
+            const auto window_height = std::max(1.0F, static_cast<float>(size.height));
+            const auto logical_x = x * static_cast<float>(core::kWiiLogicalFramebufferWidth) / window_width;
+            const auto logical_y = y * static_cast<float>(core::kWiiLogicalFramebufferHeight) / window_height;
+            return {
+                .x = logical_x,
+                .y = logical_y,
+                .valid = logical_x >= 0.0F && logical_x <= static_cast<float>(core::kWiiLogicalFramebufferWidth) &&
+                         logical_y >= 0.0F && logical_y <= static_cast<float>(core::kWiiLogicalFramebufferHeight),
+            };
+        }
+
+        [[nodiscard]] std::uint32_t rgba8_mip_count(std::uint16_t width, std::uint16_t height, float max_lod) {
+            auto levels = std::uint32_t {1U};
+            auto mip_width = static_cast<std::uint32_t>(std::max<std::uint16_t>(width, 1U));
+            auto mip_height = static_cast<std::uint32_t>(std::max<std::uint16_t>(height, 1U));
+            while (mip_width > 1U || mip_height > 1U) {
+                mip_width = std::max(1U, mip_width >> 1U);
+                mip_height = std::max(1U, mip_height >> 1U);
+                ++levels;
+            }
+
+            const auto requested = std::max(1U, static_cast<std::uint32_t>(std::max(0.0F, max_lod)) + 1U);
+            return std::min(levels, requested);
+        }
+
+        void append_downsampled_rgba8_mip(std::vector<std::uint8_t> &mips, const std::vector<std::uint8_t> &previous,
+                                          std::uint32_t previous_width, std::uint32_t previous_height,
+                                          std::uint32_t next_width, std::uint32_t next_height) {
+            const auto first = mips.size();
+            mips.resize(first + static_cast<std::size_t>(next_width) * next_height * 4U);
+
+            const auto source_pixel = [&](std::uint32_t x, std::uint32_t y, std::size_t component) -> std::uint8_t {
+                x = std::min(x, previous_width - 1U);
+                y = std::min(y, previous_height - 1U);
+                return previous[(static_cast<std::size_t>(y) * previous_width + x) * 4U + component];
+            };
+
+            for (auto y = 0U; y < next_height; ++y) {
+                for (auto x = 0U; x < next_width; ++x) {
+                    auto alpha_sum = 0U;
+                    auto premul = std::array<std::uint32_t, 3U> {};
+                    for (auto oy = 0U; oy < 2U; ++oy) {
+                        for (auto ox = 0U; ox < 2U; ++ox) {
+                            const auto sx = std::min(previous_width - 1U, x * 2U + ox);
+                            const auto sy = std::min(previous_height - 1U, y * 2U + oy);
+                            const auto alpha = static_cast<std::uint32_t>(source_pixel(sx, sy, 3U));
+                            alpha_sum += alpha;
+                            for (auto component = 0U; component < 3U; ++component) {
+                                premul[component] += static_cast<std::uint32_t>(source_pixel(sx, sy, component)) * alpha;
+                            }
+                        }
+                    }
+
+                    const auto dst = first + (static_cast<std::size_t>(y) * next_width + x) * 4U;
+                    if (alpha_sum == 0U) {
+                        mips[dst + 0U] = 0U;
+                        mips[dst + 1U] = 0U;
+                        mips[dst + 2U] = 0U;
+                    } else {
+                        for (auto component = 0U; component < 3U; ++component) {
+                            mips[dst + component] =
+                                static_cast<std::uint8_t>(std::min<std::uint32_t>((premul[component] + alpha_sum / 2U) / alpha_sum, 255U));
+                        }
+                    }
+                    mips[dst + 3U] = static_cast<std::uint8_t>((alpha_sum + 2U) / 4U);
+                }
+            }
+        }
+
+        [[nodiscard]] std::vector<std::uint8_t> build_rgba8_mips(std::uint16_t width, std::uint16_t height,
+                                                                 std::span<const std::uint8_t> rgba, std::uint32_t mip_count) {
+            const auto base_width = static_cast<std::uint32_t>(std::max<std::uint16_t>(width, 1U));
+            const auto base_height = static_cast<std::uint32_t>(std::max<std::uint16_t>(height, 1U));
+            auto previous = std::vector<std::uint8_t>(rgba.begin(), rgba.begin() + static_cast<std::ptrdiff_t>(base_width * base_height * 4U));
+            auto mips = previous;
+            auto previous_width = base_width;
+            auto previous_height = base_height;
+
+            for (auto level = 1U; level < mip_count; ++level) {
+                const auto next_width = std::max(1U, previous_width >> 1U);
+                const auto next_height = std::max(1U, previous_height >> 1U);
+                append_downsampled_rgba8_mip(mips, previous, previous_width, previous_height, next_width, next_height);
+                previous.assign(mips.end() - static_cast<std::ptrdiff_t>(next_width * next_height * 4U), mips.end());
+                previous_width = next_width;
+                previous_height = next_height;
+            }
+
+            return mips;
         }
 
         void aurora_log_callback(AuroraLogLevel level, const char *module, const char *message, unsigned int length) {
@@ -206,6 +448,68 @@ namespace smgpc::render {
             return static_cast<GXTexMapID>(GX_TEXMAP0 + index);
         }
 
+        [[nodiscard]] GXIndTexStageID gx_ind_tex_stage_id(std::uint8_t index) {
+            return static_cast<GXIndTexStageID>(GX_INDTEXSTAGE0 + std::min<std::uint8_t>(index, GX_MAX_INDTEXSTAGE - 1U));
+        }
+
+        [[nodiscard]] GXIndTexMtxID gx_ind_tex_regular_matrix_id(std::uint8_t index) {
+            return static_cast<GXIndTexMtxID>(GX_ITM_0 + std::min<std::uint8_t>(index, core::kMaxGxIndirectMatrices2D - 1U));
+        }
+
+        [[nodiscard]] GXIndTexMtxID gx_ind_tex_stage_matrix_id(const core::GxIndirectTevStage2D &stage) {
+            if (stage.matrix_index == 0U || stage.matrix_index > core::kMaxGxIndirectMatrices2D || stage.matrix_id > 2U) {
+                return GX_ITM_OFF;
+            }
+            return static_cast<GXIndTexMtxID>(stage.matrix_index + stage.matrix_id * 4U);
+        }
+
+        [[nodiscard]] GXIndTexFormat gx_ind_tex_format(std::uint8_t value) {
+            return static_cast<GXIndTexFormat>(std::min<std::uint8_t>(value, GX_MAX_ITFORMAT - 1U));
+        }
+
+        [[nodiscard]] GXIndTexBiasSel gx_ind_tex_bias(std::uint8_t value) {
+            return static_cast<GXIndTexBiasSel>(std::min<std::uint8_t>(value, GX_MAX_ITBIAS - 1U));
+        }
+
+        [[nodiscard]] GXIndTexAlphaSel gx_ind_tex_alpha(std::uint8_t value) {
+            return static_cast<GXIndTexAlphaSel>(std::min<std::uint8_t>(value, GX_MAX_ITBALPHA - 1U));
+        }
+
+        [[nodiscard]] GXIndTexWrap gx_ind_tex_wrap(std::uint8_t value) {
+            return static_cast<GXIndTexWrap>(std::min<std::uint8_t>(value, GX_MAX_ITWRAP - 1U));
+        }
+
+        [[nodiscard]] GXIndTexScale gx_ind_tex_scale(std::uint8_t value) {
+            return static_cast<GXIndTexScale>(std::min<std::uint8_t>(value, GX_MAX_ITSCALE - 1U));
+        }
+
+        [[nodiscard]] GXChannelID gx_channel_id(std::uint8_t index) {
+            switch (index) {
+            case 0U:
+                return GX_COLOR0;
+            case 1U:
+                return GX_COLOR1;
+            case 2U:
+                return GX_ALPHA0;
+            case 3U:
+                return GX_ALPHA1;
+            case 4U:
+                return GX_COLOR0A0;
+            case 5U:
+                return GX_COLOR1A1;
+            case 6U:
+                return GX_COLOR_ZERO;
+            case 7U:
+                return GX_ALPHA_BUMP;
+            case 8U:
+                return GX_ALPHA_BUMPN;
+            case 0xffU:
+                return GX_COLOR_NULL;
+            default:
+                return GX_COLOR0A0;
+            }
+        }
+
         [[nodiscard]] GXTevKColorID gx_k_color_id(std::size_t index) {
             return static_cast<GXTevKColorID>(GX_KCOLOR0 + std::min<std::size_t>(index, GX_MAX_KCOLOR - 1U));
         }
@@ -230,22 +534,46 @@ namespace smgpc::render {
             return selectors[std::min<std::size_t>(index, selectors.size() - 1U)];
         }
 
+        [[nodiscard]] GXTevKColorSel gx_k_color_sel_for_stage(const GxTevStage2D &stage, std::size_t fallback_index) {
+            if (stage.k_color_sel <= 0x1fU) {
+                return static_cast<GXTevKColorSel>(stage.k_color_sel);
+            }
+            return gx_k_color_sel(fallback_index);
+        }
+
+        [[nodiscard]] GXTevKAlphaSel gx_k_alpha_sel_for_stage(const GxTevStage2D &stage, std::size_t fallback_index) {
+            if (stage.k_alpha_sel <= 0x1fU) {
+                return static_cast<GXTevKAlphaSel>(stage.k_alpha_sel);
+            }
+            return gx_k_alpha_sel(fallback_index);
+        }
+
+        [[nodiscard]] GXTevSwapSel gx_tev_swap_sel(std::uint8_t value) {
+            return static_cast<GXTevSwapSel>(std::min<std::uint8_t>(value, GX_TEV_SWAP3));
+        }
+
         void configure_copy_clear() {
             GXSetCopyClear(GXColor {.r = 0U, .g = 0U, .b = 0U, .a = 255U}, GX_MAX_Z24);
             GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+            GXSetDispCopySrc(0U, 0U, kLogicalFramebuffer.width, kLogicalFramebuffer.height);
+            GXSetDispCopyDst(kLogicalFramebuffer.width, kLogicalFramebuffer.height);
+            GXSetDispCopyYScale(1.0F);
         }
 
-        void configure_2d_projection() {
-            const auto width = static_cast<float>(kLogicalFramebuffer.width);
+        void configure_2d_projection(RenderSpace2D space) {
+            const auto width = static_cast<float>(space == RenderSpace2D::Layout ? core::kWiiLayoutWidth : kLogicalFramebuffer.width);
             const auto height = static_cast<float>(kLogicalFramebuffer.height);
             const auto half_width = width * 0.5F;
             const auto half_height = height * 0.5F;
+            const auto y_scale = space == RenderSpace2D::Layout ? 1.0F : -1.0F;
             const float projection[4][4] = {
                 {1.0F / half_width, 0.0F, 0.0F, 0.0F},
-                {0.0F, -1.0F / half_height, 0.0F, 0.0F},
+                {0.0F, y_scale / half_height, 0.0F, 0.0F},
                 {0.0F, 0.0F, 1.0F, 0.0F},
                 {0.0F, 0.0F, 0.0F, 1.0F},
             };
+            const auto viewport_width = static_cast<float>(kLogicalFramebuffer.width);
+            const auto viewport_height = static_cast<float>(kLogicalFramebuffer.height);
             const float position[3][4] = {
                 {1.0F, 0.0F, 0.0F, 0.0F},
                 {0.0F, 1.0F, 0.0F, 0.0F},
@@ -255,16 +583,47 @@ namespace smgpc::render {
             GXSetProjection(projection, GX_ORTHOGRAPHIC);
             GXLoadPosMtxImm(position, GX_PNMTX0);
             GXSetCurrentMtx(GX_PNMTX0);
-            GXSetViewport(0.0F, 0.0F, width, height, 0.0F, 1.0F);
+            GXSetViewport(0.0F, 0.0F, viewport_width, viewport_height, 0.0F, 1.0F);
             GXSetScissor(0U, 0U, kLogicalFramebuffer.width, kLogicalFramebuffer.height);
-            GXSetViewportRender(0.0F, 0.0F, width, height, 0.0F, 1.0F);
-            GXSetScissorRender(0U, 0U, kLogicalFramebuffer.width, kLogicalFramebuffer.height);
         }
 
-        void configure_channel_state() {
+        void configure_3d_projection(const smgpc::camera::CameraPose &camera_pose) {
+            const auto width = static_cast<float>(kLogicalFramebuffer.width);
+            const auto height = static_cast<float>(kLogicalFramebuffer.height);
+            Mtx44 projection {};
+            Mtx view {};
+            const auto eye = Point3d {
+                .x = camera_pose.eye.x,
+                .y = camera_pose.eye.y,
+                .z = camera_pose.eye.z,
+            };
+            const auto target = Point3d {
+                .x = camera_pose.watch.x,
+                .y = camera_pose.watch.y,
+                .z = camera_pose.watch.z,
+            };
+            const auto up = Vec {
+                .x = camera_pose.up.x,
+                .y = camera_pose.up.y,
+                .z = camera_pose.up.z,
+            };
+
+            C_MTXPerspective(projection, camera_pose.fovy_degrees, camera_pose.aspect_ratio, camera_pose.near_clip, camera_pose.far_clip);
+            C_MTXLookAt(view, &eye, &up, &target);
+
+            GXSetProjection(projection, GX_PERSPECTIVE);
+            GXLoadPosMtxImm(view, GX_PNMTX0);
+            GXSetCurrentMtx(GX_PNMTX0);
+            GXSetViewport(0.0F, 0.0F, width, height, 0.0F, 1.0F);
+            GXSetScissor(0U, 0U, kLogicalFramebuffer.width, kLogicalFramebuffer.height);
+        }
+
+        void configure_channel_state(std::uint8_t color_src = GX_SRC_VTX, std::uint8_t alpha_src = GX_SRC_VTX,
+                                     std::array<std::uint8_t, 4U> material_color = {255U, 255U, 255U, 255U}) {
             GXSetNumChans(1U);
-            GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-            GXSetChanMatColor(GX_COLOR0A0, GXColor {.r = 255U, .g = 255U, .b = 255U, .a = 255U});
+            GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, static_cast<GXColorSrc>(color_src), GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, static_cast<GXColorSrc>(alpha_src), GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanMatColor(GX_COLOR0A0, GXColor {.r = material_color[0], .g = material_color[1], .b = material_color[2], .a = material_color[3]});
             GXSetChanAmbColor(GX_COLOR0A0, GXColor {.r = 255U, .g = 255U, .b = 255U, .a = 255U});
         }
 
@@ -301,7 +660,12 @@ namespace smgpc::render {
             GXPosition3f32(vertex.x, vertex.y, vertex.z);
             GXColor4u8(vertex.color[0], vertex.color[1], vertex.color[2], vertex.color[3]);
             for (auto index = std::size_t {}; index < tex_coord_count; ++index) {
-                GXTexCoord2f32(vertex.tex_coords[index][0], vertex.tex_coords[index][1]);
+                const auto &coord = vertex.tex_coords[index];
+                if (std::abs(coord[2]) > 0.000001F) {
+                    GXTexCoord2f32(coord[0] / coord[2], coord[1] / coord[2]);
+                } else {
+                    GXTexCoord2f32(std::clamp(coord[0] * 0.5F, -1.0F, 1.0F), std::clamp(coord[1] * 0.5F, -1.0F, 1.0F));
+                }
             }
         }
 
@@ -363,7 +727,7 @@ namespace smgpc::render {
 
             info = aurora_initialize(0, nullptr, &config);
             size = info.windowSize;
-            AuroraSetViewportPolicy(AURORA_VIEWPORT_FIT);
+            AuroraSetViewportPolicy(AURORA_VIEWPORT_STRETCH);
             GXInit(nullptr, 0U);
             configure_copy_clear();
         }
@@ -395,14 +759,10 @@ namespace smgpc::render {
                 } else if (event.button.button == SDL_BUTTON_RIGHT) {
                     pressed[static_cast<std::size_t>(InputButton::CORE_PAD_B)] = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
                 }
-                pointer.valid = true;
-                pointer.x = event.button.x * static_cast<float>(core::kWiiLogicalFramebufferWidth) / std::max<float>(1.0F, static_cast<float>(size.width));
-                pointer.y = event.button.y * static_cast<float>(core::kWiiLogicalFramebufferHeight) / std::max<float>(1.0F, static_cast<float>(size.height));
+                pointer = logical_pointer_from_window_point(event.button.x, event.button.y, size);
                 break;
             case SDL_EVENT_MOUSE_MOTION:
-                pointer.valid = true;
-                pointer.x = event.motion.x * static_cast<float>(core::kWiiLogicalFramebufferWidth) / std::max<float>(1.0F, static_cast<float>(size.width));
-                pointer.y = event.motion.y * static_cast<float>(core::kWiiLogicalFramebufferHeight) / std::max<float>(1.0F, static_cast<float>(size.height));
+                pointer = logical_pointer_from_window_point(event.motion.x, event.motion.y, size);
                 break;
             case SDL_EVENT_WINDOW_FOCUS_GAINED:
                 focused = true;
@@ -457,8 +817,6 @@ namespace smgpc::render {
         bool initialized = true;
     };
 
-    AuroraWindow::AuroraWindow() = default;
-
     AuroraWindow::AuroraWindow(const WindowConfiguration &configuration) : _impl(std::make_unique<Impl>(configuration)) {
     }
 
@@ -508,29 +866,21 @@ namespace smgpc::render {
     }
 
     struct AuroraRenderer::Impl {
-        struct TextureRecord {
-            std::uint16_t width = 0U;
-            std::uint16_t height = 0U;
-            std::vector<std::uint8_t> rgba;
-            GXTexObj object {};
-            bool alive = false;
-        };
-
         explicit Impl(AuroraWindow &window_) : window(window_) {
         }
 
-        [[nodiscard]] TextureRecord *texture(TextureHandle handle) {
-            if (!handle.is_valid() || handle.value >= textures.size() || !textures[handle.value].alive) {
+        [[nodiscard]] core::AuroraTexture *texture(TextureHandle handle) {
+            if (!handle.is_valid()) {
                 return nullptr;
             }
-            return &textures[handle.value];
+            return handle.texture.get();
         }
 
-        [[nodiscard]] const TextureRecord *texture(TextureHandle handle) const {
-            if (!handle.is_valid() || handle.value >= textures.size() || !textures[handle.value].alive) {
+        [[nodiscard]] const core::AuroraTexture *texture(TextureHandle handle) const {
+            if (!handle.is_valid()) {
                 return nullptr;
             }
-            return &textures[handle.value];
+            return handle.texture.get();
         }
 
         void load_texture(TextureHandle handle, GXTexMapID map_id, std::uint8_t wrap_u, std::uint8_t wrap_v, std::uint8_t min_filter,
@@ -546,8 +896,13 @@ namespace smgpc::render {
             GXLoadTexObj(&record->object, map_id);
         }
 
-        void configure_textured_state(TextureHandle texture_handle, const TexturedTriangleBatch2D &batch) {
-            configure_2d_projection();
+        void configure_textured_state(TextureHandle texture_handle, const TexturedTriangleBatch2D &batch,
+                                      const smgpc::camera::CameraPose *camera_pose = nullptr) {
+            if (camera_pose != nullptr) {
+                configure_3d_projection(*camera_pose);
+            } else {
+                configure_2d_projection(batch.space);
+            }
             configure_channel_state();
             configure_blend_depth(batch.gx_blend, batch.blend_mode, batch.depth_test, batch.depth_write, batch.depth_compare, batch.cull_mode);
             configure_alpha_compare({});
@@ -567,9 +922,14 @@ namespace smgpc::render {
             GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
         }
 
-        void configure_material_state(const GxMaterialTriangleBatch2D &batch) {
-            configure_2d_projection();
-            configure_channel_state();
+        void configure_material_state(const GxMaterialTriangleBatch2D &batch,
+                                      const smgpc::camera::CameraPose *camera_pose = nullptr) {
+            if (camera_pose != nullptr) {
+                configure_3d_projection(*camera_pose);
+            } else {
+                configure_2d_projection(batch.space);
+            }
+            configure_channel_state(batch.channel_color_src, batch.channel_alpha_src, batch.channel_material_color);
             configure_blend_depth(batch.blend, BlendMode::Alpha, batch.depth_test, batch.depth_write, batch.depth_compare, batch.cull_mode);
             configure_alpha_compare(batch.alpha_compare);
 
@@ -587,18 +947,35 @@ namespace smgpc::render {
                 const auto &stage = batch.texture_stages[index];
                 GXSetVtxDesc(attr, GX_DIRECT);
                 GXSetVtxAttrFmt(GX_VTXFMT0, attr, GX_TEX_ST, GX_F32, 0U);
-                GXSetTexCoordGen(gx_tex_coord_id(index), GX_TG_MTX2x4, static_cast<GXTexGenSrc>(GX_TG_TEX0 + index), GX_IDENTITY);
+                const auto texgen_source = stage.has_texgen_matrix ?
+                                               stage.texgen_source :
+                                               static_cast<GXTexGenSrc>(GX_TG_TEX0 + index);
+                const auto texgen_matrix = stage.has_texgen_matrix ? stage.texgen_matrix : GX_IDENTITY;
+                if (stage.has_texgen_matrix) {
+                    GXLoadTexMtxImm(stage.texgen_matrix_values.data(), texgen_matrix, stage.texgen_matrix_type);
+                }
+                GXSetTexCoordGen(gx_tex_coord_id(index), stage.texgen_type, texgen_source, texgen_matrix);
                 load_texture(stage.texture, gx_tex_map_id(index), stage.wrap_u, stage.wrap_v, stage.min_filter, stage.mag_filter);
             }
             GXSetNumTexGens(static_cast<u8>(texture_count));
 
             for (auto index = std::size_t {}; index < batch.initial_tev_registers.size(); ++index) {
                 const auto &color = batch.initial_tev_registers[index];
-                GXSetTevColorS10(static_cast<GXTevRegID>(GX_TEVREG0 + index),
+                GXSetTevColorS10(static_cast<GXTevRegID>(GX_TEVPREV + index),
                                  GXColorS10 {.r = color[0], .g = color[1], .b = color[2], .a = color[3]});
+            }
+            if (batch.has_initial_tev_k_colors) {
+                for (auto index = std::size_t {}; index < batch.initial_tev_k_colors.size(); ++index) {
+                    const auto &color = batch.initial_tev_k_colors[index];
+                    GXSetTevKColor(gx_k_color_id(index), GXColor {.r = color[0], .g = color[1], .b = color[2], .a = color[3]});
+                }
             }
 
             GXSetNumTevStages(static_cast<u8>(tev_count));
+            GXSetNumIndStages(std::min<u8>(batch.indirect_stage_count, GX_MAX_INDTEXSTAGE));
+            for (auto index = std::size_t {}; index < tev_count; ++index) {
+                GXSetTevDirect(static_cast<GXTevStageID>(GX_TEVSTAGE0 + index));
+            }
             for (auto index = std::size_t {}; index < tev_count; ++index) {
                 const auto stage_id = static_cast<GXTevStageID>(GX_TEVSTAGE0 + index);
                 if (index >= batch.tev_stages.size()) {
@@ -609,15 +986,22 @@ namespace smgpc::render {
                 }
 
                 const auto &stage = batch.tev_stages[index];
-                const auto has_texture = stage.texture_stage < texture_count;
-                const auto texture_stage = has_texture ? stage.texture_stage : 0U;
-                const auto &konst = stage.konst_color;
-                GXSetTevKColor(gx_k_color_id(index), GXColor {.r = konst[0], .g = konst[1], .b = konst[2], .a = konst[3]});
-                GXSetTevKColorSel(stage_id, gx_k_color_sel(index));
-                GXSetTevKAlphaSel(stage_id, gx_k_alpha_sel(index));
-                GXSetTevSwapMode(stage_id, GX_TEV_SWAP0, GX_TEV_SWAP0);
-                GXSetTevOrder(stage_id, has_texture ? gx_tex_coord_id(texture_stage) : GX_TEXCOORD_NULL,
-                              has_texture ? gx_tex_map_id(texture_stage) : GX_TEXMAP_NULL, GX_COLOR0A0);
+                auto texture_coord_stage = stage.texture_coord_stage;
+                auto texture_map_stage = stage.texture_map_stage;
+                if ((texture_coord_stage >= texture_count || texture_map_stage >= texture_count) && stage.texture_stage < texture_count) {
+                    texture_coord_stage = stage.texture_stage;
+                    texture_map_stage = stage.texture_stage;
+                }
+                const auto has_texture = texture_coord_stage < texture_count && texture_map_stage < texture_count;
+                if (!batch.has_initial_tev_k_colors) {
+                    const auto &konst = stage.konst_color;
+                    GXSetTevKColor(gx_k_color_id(index), GXColor {.r = konst[0], .g = konst[1], .b = konst[2], .a = konst[3]});
+                }
+                GXSetTevKColorSel(stage_id, gx_k_color_sel_for_stage(stage, index));
+                GXSetTevKAlphaSel(stage_id, gx_k_alpha_sel_for_stage(stage, index));
+                GXSetTevSwapMode(stage_id, gx_tev_swap_sel(stage.ras_swap), gx_tev_swap_sel(stage.tex_swap));
+                GXSetTevOrder(stage_id, has_texture ? gx_tex_coord_id(texture_coord_stage) : GX_TEXCOORD_NULL,
+                              has_texture ? gx_tex_map_id(texture_map_stage) : GX_TEXMAP_NULL, gx_channel_id(stage.color_channel));
                 GXSetTevColorIn(stage_id, static_cast<GXTevColorArg>(stage.color_in[0]), static_cast<GXTevColorArg>(stage.color_in[1]),
                                 static_cast<GXTevColorArg>(stage.color_in[2]), static_cast<GXTevColorArg>(stage.color_in[3]));
                 GXSetTevAlphaIn(stage_id, static_cast<GXTevAlphaArg>(stage.alpha_in[0]), static_cast<GXTevAlphaArg>(stage.alpha_in[1]),
@@ -629,11 +1013,50 @@ namespace smgpc::render {
                                 static_cast<GXTevScale>(stage.alpha_scale), stage.alpha_clamp ? GX_TRUE : GX_FALSE,
                                 static_cast<GXTevRegID>(stage.alpha_out));
             }
+
+            for (const auto &order : batch.indirect_texture_orders) {
+                if (order.stage >= batch.indirect_stage_count || order.tex_coord >= texture_count || order.tex_map >= texture_count) {
+                    continue;
+                }
+                GXSetIndTexOrder(gx_ind_tex_stage_id(order.stage), gx_tex_coord_id(order.tex_coord), gx_tex_map_id(order.tex_map));
+            }
+            for (const auto &scale : batch.indirect_texture_scales) {
+                if (scale.stage >= batch.indirect_stage_count) {
+                    continue;
+                }
+                GXSetIndTexCoordScale(gx_ind_tex_stage_id(scale.stage), gx_ind_tex_scale(scale.scale_s), gx_ind_tex_scale(scale.scale_t));
+            }
+            for (const auto &matrix : batch.indirect_texture_matrices) {
+                if (matrix.matrix >= core::kMaxGxIndirectMatrices2D) {
+                    continue;
+                }
+                float gx_matrix[2][3] = {
+                    {
+                        static_cast<float>(matrix.ma) / 1024.0F,
+                        static_cast<float>(matrix.mc) / 1024.0F,
+                        static_cast<float>(matrix.me) / 1024.0F,
+                    },
+                    {
+                        static_cast<float>(matrix.mb) / 1024.0F,
+                        static_cast<float>(matrix.md) / 1024.0F,
+                        static_cast<float>(matrix.mf) / 1024.0F,
+                    },
+                };
+                GXSetIndTexMtx(gx_ind_tex_regular_matrix_id(matrix.matrix), gx_matrix, static_cast<s8>(matrix.scale) - 17);
+            }
+            for (const auto &stage : batch.indirect_tev_stages) {
+                if (!stage.active || stage.tev_stage >= tev_count || stage.ind_stage >= batch.indirect_stage_count) {
+                    continue;
+                }
+                GXSetTevIndirect(static_cast<GXTevStageID>(GX_TEVSTAGE0 + stage.tev_stage), gx_ind_tex_stage_id(stage.ind_stage),
+                                 gx_ind_tex_format(stage.format), gx_ind_tex_bias(stage.bias), gx_ind_tex_stage_matrix_id(stage),
+                                 gx_ind_tex_wrap(stage.wrap_s), gx_ind_tex_wrap(stage.wrap_t),
+                                 stage.add_previous ? GX_TRUE : GX_FALSE, stage.use_original_lod ? GX_TRUE : GX_FALSE,
+                                 gx_ind_tex_alpha(stage.bump_alpha));
+            }
         }
 
         AuroraWindow &window;
-        std::vector<TextureRecord> textures;
-        std::vector<std::uint32_t> free_texture_slots;
         std::uint64_t frame_index = 0U;
         double frame_time = 0.0;
         std::uint64_t frame_created_textures = 0U;
@@ -642,8 +1065,6 @@ namespace smgpc::render {
         std::uint64_t frame_submitted_vertices = 0U;
         bool frame_open = false;
     };
-
-    AuroraRenderer::AuroraRenderer() = default;
 
     AuroraRenderer::AuroraRenderer(AuroraWindow &window) : _impl(std::make_unique<Impl>(window)) {
     }
@@ -698,8 +1119,22 @@ namespace smgpc::render {
         _impl->window.shutdown();
     }
 
-    void AuroraRenderer::request_screenshot_png(const std::filesystem::path &) {
-        // Aurora readback support is intentionally not mirrored through the old screenshot queue.
+    void AuroraRenderer::request_screenshot_png(const std::filesystem::path &path) {
+        auto width = 0U;
+        auto height = 0U;
+        if (path.empty() || AuroraGetDisplayCopySize(&width, &height) == GX_FALSE || width == 0U || height == 0U) {
+            return;
+        }
+
+        const auto tight_pitch = width * 4U;
+        auto row_stride = 0U;
+        auto pixels = std::vector<std::uint8_t>(static_cast<std::size_t>(tight_pitch) * height);
+        if (AuroraReadDisplayCopyRGBA8(pixels.data(), static_cast<u32>(pixels.size()), &width, &height, &row_stride) == GX_FALSE ||
+            row_stride == 0U) {
+            return;
+        }
+
+        write_rgba8_png(path, width, height, row_stride, pixels);
     }
 
     TextureHandle AuroraRenderer::create_rgba8_texture(std::uint16_t width, std::uint16_t height, std::span<const std::uint8_t> rgba) {
@@ -707,34 +1142,95 @@ namespace smgpc::render {
             return invalid_texture();
         }
 
-        auto handle = TextureHandle {};
-        if (!_impl->free_texture_slots.empty()) {
-            handle.value = _impl->free_texture_slots.back();
-            _impl->free_texture_slots.pop_back();
-        } else {
-            handle.value = static_cast<std::uint32_t>(_impl->textures.size());
-            _impl->textures.emplace_back();
-        }
-
-        auto &record = _impl->textures[handle.value];
-        record.width = width;
-        record.height = height;
-        record.rgba.assign(rgba.begin(), rgba.begin() + static_cast<std::ptrdiff_t>(static_cast<std::size_t>(width) * height * 4U));
-        record.alive = true;
-        GXInitTexObj(&record.object, record.rgba.data(), width, height, GX_TF_RGBA8_PC, GX_CLAMP, GX_CLAMP, GX_FALSE);
-        GXInitTexObjLOD(&record.object, GX_LINEAR, GX_LINEAR, 0.0F, 0.0F, 0.0F, GX_FALSE, GX_FALSE, GX_ANISO_1);
+        auto handle = TextureHandle {
+            .texture = std::make_shared<core::AuroraTexture>(),
+        };
+        handle.texture->width = width;
+        handle.texture->height = height;
+        handle.texture->rgba.assign(rgba.begin(), rgba.begin() + static_cast<std::ptrdiff_t>(static_cast<std::size_t>(width) * height * 4U));
+        handle.texture->format = GX_TF_RGBA8_PC;
+        handle.texture->mipmap = false;
+        handle.texture->min_lod = 0.0F;
+        handle.texture->max_lod = 0.0F;
+        handle.texture->lod_bias = 0.0F;
+        handle.texture->bias_clamp = false;
+        handle.texture->edge_lod = false;
+        handle.texture->max_anisotropy = GX_ANISO_1;
+        handle.texture->alive = true;
+        GXInitTexObj(&handle.texture->object, handle.texture->rgba.data(), width, height, GX_TF_RGBA8_PC, GX_CLAMP, GX_CLAMP, GX_FALSE);
+        GXInitTexObjLOD(&handle.texture->object, GX_LINEAR, GX_LINEAR, 0.0F, 0.0F, 0.0F, GX_FALSE, GX_FALSE, GX_ANISO_1);
         ++_impl->frame_created_textures;
         return handle;
     }
 
-    void AuroraRenderer::destroy_texture(TextureHandle texture) {
-        auto *record = _impl->texture(texture);
-        if (record == nullptr) {
-            return;
+    TextureHandle AuroraRenderer::create_rgba8_mip_texture(std::uint16_t width, std::uint16_t height,
+                                                           std::span<const std::uint8_t> rgba, float min_lod,
+                                                           float max_lod, float lod_bias, bool bias_clamp,
+                                                           bool edge_lod, GXAnisotropy max_anisotropy,
+                                                           std::uint8_t min_filter, std::uint8_t mag_filter) {
+        if (width == 0U || height == 0U || rgba.size() < static_cast<std::size_t>(width) * height * 4U) {
+            return invalid_texture();
         }
-        record->alive = false;
-        record->rgba.clear();
-        _impl->free_texture_slots.push_back(texture.value);
+
+        const auto mip_count = rgba8_mip_count(width, height, max_lod);
+        if (mip_count <= 1U) {
+            return create_rgba8_texture(width, height, rgba);
+        }
+
+        auto handle = TextureHandle {
+            .texture = std::make_shared<core::AuroraTexture>(),
+        };
+        handle.texture->width = width;
+        handle.texture->height = height;
+        handle.texture->rgba = build_rgba8_mips(width, height, rgba, mip_count);
+        handle.texture->format = GX_TF_RGBA8_PC;
+        handle.texture->mipmap = true;
+        handle.texture->min_lod = min_lod;
+        handle.texture->max_lod = static_cast<float>(mip_count - 1U);
+        handle.texture->lod_bias = lod_bias;
+        handle.texture->bias_clamp = bias_clamp;
+        handle.texture->edge_lod = edge_lod;
+        handle.texture->max_anisotropy = max_anisotropy;
+        handle.texture->alive = true;
+        GXInitTexObj(&handle.texture->object, handle.texture->rgba.data(), width, height, GX_TF_RGBA8_PC, GX_CLAMP, GX_CLAMP, GX_TRUE);
+        GXInitTexObjLOD(&handle.texture->object, static_cast<GXTexFilter>(gx_texture_filter(min_filter)),
+                        static_cast<GXTexFilter>(gx_texture_filter(mag_filter)), min_lod, handle.texture->max_lod, lod_bias,
+                        bias_clamp ? GX_TRUE : GX_FALSE, edge_lod ? GX_TRUE : GX_FALSE, max_anisotropy);
+        ++_impl->frame_created_textures;
+        return handle;
+    }
+
+    TextureHandle AuroraRenderer::create_gx_texture(std::uint16_t width, std::uint16_t height, GXTexFmt format,
+                                                    std::span<const std::uint8_t> image_data, bool mipmap,
+                                                    float min_lod, float max_lod, float lod_bias, bool bias_clamp,
+                                                    bool edge_lod, GXAnisotropy max_anisotropy,
+                                                    std::uint8_t min_filter, std::uint8_t mag_filter) {
+        if (width == 0U || height == 0U || image_data.empty()) {
+            return invalid_texture();
+        }
+
+        auto handle = TextureHandle {
+            .texture = std::make_shared<core::AuroraTexture>(),
+        };
+        handle.texture->width = width;
+        handle.texture->height = height;
+        handle.texture->rgba.assign(image_data.begin(), image_data.end());
+        handle.texture->format = format;
+        handle.texture->mipmap = mipmap;
+        handle.texture->min_lod = min_lod;
+        handle.texture->max_lod = mipmap ? std::max(min_lod, max_lod) : 0.0F;
+        handle.texture->lod_bias = lod_bias;
+        handle.texture->bias_clamp = bias_clamp;
+        handle.texture->edge_lod = edge_lod;
+        handle.texture->max_anisotropy = max_anisotropy;
+        handle.texture->alive = true;
+        GXInitTexObj(&handle.texture->object, handle.texture->rgba.data(), width, height, format, GX_CLAMP, GX_CLAMP,
+                     mipmap ? GX_TRUE : GX_FALSE);
+        GXInitTexObjLOD(&handle.texture->object, static_cast<GXTexFilter>(gx_texture_filter(min_filter)),
+                        static_cast<GXTexFilter>(gx_texture_filter(mag_filter)), min_lod, handle.texture->max_lod, lod_bias,
+                        bias_clamp ? GX_TRUE : GX_FALSE, edge_lod ? GX_TRUE : GX_FALSE, max_anisotropy);
+        ++_impl->frame_created_textures;
+        return handle;
     }
 
     void AuroraRenderer::submit_textured_quad(TextureHandle texture, const TexturedQuad2D &quad) {
@@ -743,6 +1239,7 @@ namespace smgpc::render {
                                                .vertices = std::span<const TexturedVertex2D>(quad.vertices),
                                                .indices = std::span<const std::uint16_t>(indices),
                                                .primitive_topology = PrimitiveTopology::Triangles,
+                                               .space = quad.space,
                                                .wrap_u = quad.wrap_u,
                                                .wrap_v = quad.wrap_v,
                                                .min_filter = quad.min_filter,
@@ -777,6 +1274,26 @@ namespace smgpc::render {
         GXEnd();
     }
 
+    void AuroraRenderer::submit_textured_triangles_3d(TextureHandle texture, const TexturedTriangleBatch2D &batch,
+                                                      const smgpc::camera::CameraPose &camera_pose) {
+        if (!_impl->frame_open || _impl->texture(texture) == nullptr || batch.vertices.empty() || batch.indices.empty()) {
+            return;
+        }
+
+        ++_impl->frame_textured_submits;
+        _impl->frame_submitted_vertices += std::min<std::size_t>(batch.indices.size(), UINT16_MAX);
+        dump_batch_bounds("textured3d", _impl->frame_index, _impl->frame_textured_submits + _impl->frame_material_submits,
+                          batch.vertices, batch.indices);
+        _impl->configure_textured_state(texture, batch, &camera_pose);
+        GXBegin(gx_primitive(batch.primitive_topology), GX_VTXFMT0, static_cast<u16>(std::min<std::size_t>(batch.indices.size(), UINT16_MAX)));
+        for (const auto index : batch.indices) {
+            if (index < batch.vertices.size()) {
+                emit_textured_vertex(batch.vertices[index]);
+            }
+        }
+        GXEnd();
+    }
+
     void AuroraRenderer::submit_gx_material_triangles(const GxMaterialTriangleBatch2D &batch) {
         if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty()) {
             return;
@@ -797,12 +1314,48 @@ namespace smgpc::render {
         GXEnd();
     }
 
+    void AuroraRenderer::submit_gx_material_triangles_3d(const GxMaterialTriangleBatch2D &batch,
+                                                         const smgpc::camera::CameraPose &camera_pose) {
+        if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty()) {
+            return;
+        }
+
+        ++_impl->frame_material_submits;
+        _impl->frame_submitted_vertices += std::min<std::size_t>(batch.indices.size(), UINT16_MAX);
+        dump_batch_bounds("material3d", _impl->frame_index, _impl->frame_textured_submits + _impl->frame_material_submits,
+                          batch.vertices, batch.indices);
+        _impl->configure_material_state(batch, &camera_pose);
+        const auto texture_count = std::min<std::size_t>(batch.texture_stages.size(), core::kMaxGxMaterialTextureStages2D);
+        GXBegin(gx_primitive(batch.primitive_topology), GX_VTXFMT0, static_cast<u16>(std::min<std::size_t>(batch.indices.size(), UINT16_MAX)));
+        for (const auto index : batch.indices) {
+            if (index < batch.vertices.size()) {
+                emit_material_vertex(batch.vertices[index], texture_count);
+            }
+        }
+        GXEnd();
+    }
+
     FramebufferInfo AuroraRenderer::framebuffer_size() const {
         return _impl->window.framebuffer_size();
     }
 
     FramebufferInfo AuroraRenderer::logical_framebuffer_size() const {
         return kLogicalFramebuffer;
+    }
+
+    AuroraRenderer &current_aurora_renderer() {
+        if (s_current_renderer == nullptr) {
+            throw std::runtime_error("Aurora renderer context is not active");
+        }
+        return *s_current_renderer;
+    }
+
+    ScopedAuroraRendererContext::ScopedAuroraRendererContext(AuroraRenderer &renderer) : _previous(s_current_renderer) {
+        s_current_renderer = &renderer;
+    }
+
+    ScopedAuroraRendererContext::~ScopedAuroraRendererContext() {
+        s_current_renderer = _previous;
     }
 
 }  // namespace smgpc::render

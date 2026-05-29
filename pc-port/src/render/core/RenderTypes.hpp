@@ -3,13 +3,18 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <span>
 #include <string>
+#include <vector>
+
+#include <dolphin/gx.h>
 
 namespace smgpc::render::core {
 
     inline constexpr std::uint16_t kWiiLogicalFramebufferWidth = 640U;
     inline constexpr std::uint16_t kWiiLogicalFramebufferHeight = 456U;
+    inline constexpr std::uint16_t kWiiLayoutWidth = 608U;
 
     struct WindowConfiguration {
         int width = kWiiLogicalFramebufferWidth;
@@ -157,6 +162,11 @@ namespace smgpc::render::core {
         TriangleStrip,
     };
 
+    enum class RenderSpace2D {
+        Layout,
+        CenteredFramebuffer,
+    };
+
     struct GxAlphaCompare2D {
         std::uint8_t comp0 = 7U;
         std::uint8_t ref0 = 0U;
@@ -190,13 +200,31 @@ namespace smgpc::render::core {
 
     using GxTevRegisterColor2D = std::array<std::int16_t, 4U>;
 
-    struct TextureHandle {
-        static constexpr std::uint32_t INVALID_VALUE = UINT32_MAX;
+    struct AuroraTexture {
+        std::uint16_t width = 0U;
+        std::uint16_t height = 0U;
+        std::vector<std::uint8_t> rgba = {};
+        GXTexObj object {};
+        GXTexFmt format = GX_TF_RGBA8_PC;
+        bool mipmap = false;
+        float min_lod = 0.0F;
+        float max_lod = 0.0F;
+        float lod_bias = 0.0F;
+        bool bias_clamp = false;
+        bool edge_lod = false;
+        GXAnisotropy max_anisotropy = GX_ANISO_1;
+        bool alive = false;
+    };
 
-        std::uint32_t value = INVALID_VALUE;
+    struct TextureHandle {
+        std::shared_ptr<AuroraTexture> texture = {};
 
         [[nodiscard]] bool is_valid() const {
-            return value != INVALID_VALUE;
+            return texture != nullptr && texture->alive;
+        }
+
+        [[nodiscard]] std::uintptr_t debug_id() const {
+            return reinterpret_cast<std::uintptr_t>(texture.get());
         }
     };
 
@@ -209,8 +237,8 @@ namespace smgpc::render::core {
         std::array<std::uint8_t, 4U> color = {255U, 255U, 255U, 255U};
     };
 
-    inline constexpr std::size_t kMaxGxMaterialTextureStages2D = 3U;
-    inline constexpr std::size_t kMaxGxMaterialTevStages2D = 3U;
+    inline constexpr std::size_t kMaxGxMaterialTextureStages2D = 8U;
+    inline constexpr std::size_t kMaxGxMaterialTevStages2D = 16U;
 
     struct GxMaterialVertex2D {
         float x = 0.0F;
@@ -227,6 +255,12 @@ namespace smgpc::render::core {
         std::uint8_t wrap_v = 0U;
         std::uint8_t min_filter = 1U;
         std::uint8_t mag_filter = 1U;
+        GXTexGenType texgen_type = GX_TG_MTX2x4;
+        GXTexGenSrc texgen_source = GX_TG_TEX0;
+        GXTexMtx texgen_matrix = GX_IDENTITY;
+        GXTexMtxType texgen_matrix_type = GX_MTX2x4;
+        bool has_texgen_matrix = false;
+        std::array<float, 12U> texgen_matrix_values = {};
     };
 
     struct GxTevStage2D {
@@ -246,13 +280,57 @@ namespace smgpc::render::core {
         std::uint8_t alpha_scale = 0U;
         bool alpha_clamp = true;
         std::uint8_t alpha_out = 0U;
-        std::uint8_t k_color_sel = 0U;
-        std::uint8_t k_alpha_sel = 0U;
+        std::uint8_t k_color_sel = 0xffU;
+        std::uint8_t k_alpha_sel = 0xffU;
+        std::uint8_t ras_swap = 0U;
+        std::uint8_t tex_swap = 0U;
         std::array<std::uint8_t, 4U> konst_color = {0U, 0U, 0U, 0U};
+    };
+
+    inline constexpr std::size_t kMaxGxIndirectStages2D = 4U;
+    inline constexpr std::size_t kMaxGxIndirectMatrices2D = 3U;
+
+    struct GxIndirectTextureOrder2D {
+        std::uint8_t stage = 0U;
+        std::uint8_t tex_map = 0xffU;
+        std::uint8_t tex_coord = 0xffU;
+    };
+
+    struct GxIndirectTextureMatrix2D {
+        std::uint8_t matrix = 0U;
+        std::int16_t ma = 0;
+        std::int16_t mb = 0;
+        std::int16_t mc = 0;
+        std::int16_t md = 0;
+        std::int16_t me = 0;
+        std::int16_t mf = 0;
+        std::uint8_t scale = 0U;
+    };
+
+    struct GxIndirectTextureCoordScale2D {
+        std::uint8_t stage = 0U;
+        std::uint8_t scale_s = 0U;
+        std::uint8_t scale_t = 0U;
+    };
+
+    struct GxIndirectTevStage2D {
+        std::uint8_t tev_stage = 0U;
+        std::uint8_t ind_stage = 0U;
+        std::uint8_t format = 0U;
+        std::uint8_t bias = 0U;
+        std::uint8_t bump_alpha = 0U;
+        std::uint8_t matrix_index = 0U;
+        std::uint8_t matrix_id = 0U;
+        std::uint8_t wrap_s = 0U;
+        std::uint8_t wrap_t = 0U;
+        bool use_original_lod = false;
+        bool add_previous = false;
+        bool active = false;
     };
 
     struct TexturedQuad2D {
         std::array<TexturedVertex2D, 4U> vertices = {};
+        RenderSpace2D space = RenderSpace2D::Layout;
         std::uint8_t wrap_u = 0U;
         std::uint8_t wrap_v = 0U;
         std::uint8_t min_filter = 1U;
@@ -271,6 +349,7 @@ namespace smgpc::render::core {
         std::span<const TexturedVertex2D> vertices = {};
         std::span<const std::uint16_t> indices = {};
         PrimitiveTopology primitive_topology = PrimitiveTopology::Triangles;
+        RenderSpace2D space = RenderSpace2D::Layout;
         std::uint8_t wrap_u = 0U;
         std::uint8_t wrap_v = 0U;
         std::uint8_t min_filter = 1U;
@@ -289,11 +368,20 @@ namespace smgpc::render::core {
         std::span<const GxMaterialVertex2D> vertices = {};
         std::span<const std::uint16_t> indices = {};
         PrimitiveTopology primitive_topology = PrimitiveTopology::Triangles;
+        RenderSpace2D space = RenderSpace2D::Layout;
         std::span<const GxTextureStage2D> texture_stages = {};
         std::span<const GxTevStage2D> tev_stages = {};
+        std::uint8_t indirect_stage_count = 0U;
+        std::span<const GxIndirectTextureOrder2D> indirect_texture_orders = {};
+        std::span<const GxIndirectTextureMatrix2D> indirect_texture_matrices = {};
+        std::span<const GxIndirectTextureCoordScale2D> indirect_texture_scales = {};
+        std::span<const GxIndirectTevStage2D> indirect_tev_stages = {};
         std::array<GxTevRegisterColor2D, 4U> initial_tev_registers = {};
         std::array<std::array<std::uint8_t, 4U>, 4U> initial_tev_k_colors = {};
         bool has_initial_tev_k_colors = false;
+        std::array<std::uint8_t, 4U> channel_material_color = {255U, 255U, 255U, 255U};
+        std::uint8_t channel_color_src = 1U;
+        std::uint8_t channel_alpha_src = 1U;
         GxAlphaCompare2D alpha_compare = {};
         GxBlendMode2D blend = {};
         bool depth_test = false;

@@ -170,9 +170,9 @@ void LayoutActor::updateSpine() {
     }
 }
 
-void LayoutActor::drawLayout(smgpc::render::AuroraRenderer& renderer) {
+void LayoutActor::drawLayout() {
     if (mSimpleLayout != nullptr && !MR::isDead(this) && !mFlag.mIsHidden) {
-        mSimpleLayout->draw(renderer);
+        mSimpleLayout->draw();
     }
 }
 

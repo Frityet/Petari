@@ -335,10 +335,11 @@ namespace MR {
             return;
         }
 
-        const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
         const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
-        pLayoutPos->x = rScreenPos.x - half_width;
-        pLayoutPos->y = rScreenPos.y - half_height;
+        pLayoutPos->x = rScreenPos.x * static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) /
+                            static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) -
+                        static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) * 0.5F;
+        pLayoutPos->y = -(rScreenPos.y - half_height);
     }
 
     void convertLayoutPosToScreenPos(TVec2f* pScreenPos, const TVec2f& rLayoutPos) {
@@ -348,8 +349,10 @@ namespace MR {
 
         const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
         const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
-        pScreenPos->x = rLayoutPos.x + half_width;
-        pScreenPos->y = rLayoutPos.y + half_height;
+        pScreenPos->x = rLayoutPos.x * static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) /
+                            static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) +
+                        half_width;
+        pScreenPos->y = half_height - rLayoutPos.y;
     }
 
     void setFollowPos(const TVec2f* pPos, LayoutActor* pLayout, const char*) {

@@ -643,7 +643,7 @@ namespace smgpc::runtime {
         _copy_events.push_back(std::move(event));
     }
 
-    void RuntimeContext::draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose) {
+    void RuntimeContext::draw_3d_normal(const smgpc::camera::CameraPose &camera_pose) {
         _last_camera_pose = camera_pose;
         if (!_game_layout.is_game_scene_draw_3d_active()) {
             return;
@@ -655,26 +655,31 @@ namespace smgpc::runtime {
 #endif
         auto &lifecycle = scene_lifecycle();
         if (lifecycle.active_scene() != nullptr) {
-            lifecycle.draw_3d_normal(renderer, camera_pose);
+            lifecycle.draw_3d_normal(camera_pose);
             return;
         }
 
-        scene_execution().draw_3d_normal(renderer, camera_pose);
+        scene_execution().draw_3d_normal(camera_pose);
     }
 
-    void RuntimeContext::draw_3d_normal(render::AuroraRenderer &renderer) {
+    void RuntimeContext::draw_3d_normal() {
         if (!_scene_camera_pose.has_value()) {
+            if (const auto camera_pose = _camera_system.active_programmable_camera_pose()) {
+                _scene_camera_pose = *camera_pose;
+                draw_3d_normal(*_scene_camera_pose);
+                return;
+            }
 #ifndef NDEBUG
             emit_semantic_trace_event("camera", "missing_scene_camera_pose", "using default_scene_camera_pose");
 #endif
-            draw_3d_normal(renderer, default_scene_camera_pose());
+            draw_3d_normal(default_scene_camera_pose());
             return;
         }
 
-        draw_3d_normal(renderer, *_scene_camera_pose);
+        draw_3d_normal(*_scene_camera_pose);
     }
 
-    void RuntimeContext::draw_2d_normal(render::AuroraRenderer &renderer) {
+    void RuntimeContext::draw_2d_normal() {
 #ifndef NDEBUG
         if (should_record_j3d_packet_trace()) {
             emit_sequence_state_trace_event("draw_2d_normal", {}, "2d_normal");
@@ -682,11 +687,11 @@ namespace smgpc::runtime {
 #endif
         auto &lifecycle = scene_lifecycle();
         if (lifecycle.active_scene() != nullptr) {
-            lifecycle.draw_2d_normal(renderer);
+            lifecycle.draw_2d_normal();
             return;
         }
 
-        scene_execution().draw_2d_normal(renderer);
+        scene_execution().draw_2d_normal();
     }
 
 #ifndef NDEBUG

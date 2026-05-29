@@ -53,7 +53,13 @@ namespace smgpc::debug {
         const auto pc_root = pc_port_root();
         const std::filesystem::path candidates[]{
             root / "orig" / "RMGK01" / "files",
+            root / "orig" / "RMGK02" / "files",
+            pc_root / "container" / "orig" / "RMGK01" / "files",
+            pc_root / "container" / "orig" / "RMGK02" / "files",
             pc_root / ".." / "orig" / "RMGK01" / "files",
+            pc_root / ".." / "orig" / "RMGK02" / "files",
+            pc_root / ".." / "pc-port" / "container" / "orig" / "RMGK01" / "files",
+            pc_root / ".." / "pc-port" / "container" / "orig" / "RMGK02" / "files",
         };
 
         for (const auto &candidate : candidates) {

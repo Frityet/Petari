@@ -815,6 +815,60 @@ namespace smgpc::runtime {
             return value + value - 1.0F;
         }
 
+        [[nodiscard]] float next_jpa_random_zh(std::uint32_t &seed) {
+            return next_jpa_random_f(seed) - 0.5F;
+        }
+
+        [[nodiscard]] std::int16_t next_jpa_random_ss(std::uint32_t &seed) {
+            return static_cast<std::int16_t>(next_jpa_random_u(seed) >> 16U);
+        }
+
+        struct JpcVec3 {
+            float x = 0.0F;
+            float y = 0.0F;
+            float z = 0.0F;
+        };
+
+        [[nodiscard]] JpcVec3 jpa_add(JpcVec3 lhs, JpcVec3 rhs) {
+            return {.x = lhs.x + rhs.x, .y = lhs.y + rhs.y, .z = lhs.z + rhs.z};
+        }
+
+        [[nodiscard]] JpcVec3 jpa_scale(JpcVec3 value, float scale) {
+            return {.x = value.x * scale, .y = value.y * scale, .z = value.z * scale};
+        }
+
+        [[nodiscard]] float jpa_length(JpcVec3 value) {
+            return std::sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
+        }
+
+        [[nodiscard]] JpcVec3 jpa_set_length(JpcVec3 value, float length) {
+            const auto source_length = jpa_length(value);
+            if (source_length <= 0.000001F || std::abs(length) <= 0.000001F) {
+                return {};
+            }
+
+            return jpa_scale(value, length / source_length);
+        }
+
+        [[nodiscard]] JpcVec3 jpa_normalized_or(JpcVec3 value, JpcVec3 fallback) {
+            const auto source_length = jpa_length(value);
+            if (source_length <= 0.000001F) {
+                return fallback;
+            }
+
+            return jpa_scale(value, 1.0F / source_length);
+        }
+
+        [[nodiscard]] float jpa_sin(float angle) {
+            constexpr auto kTwoPiOverS16 = 6.28318530717958647692F / 65536.0F;
+            return std::sin(angle * kTwoPiOverS16);
+        }
+
+        [[nodiscard]] float jpa_cos(float angle) {
+            constexpr auto kTwoPiOverS16 = 6.28318530717958647692F / 65536.0F;
+            return std::cos(angle * kTwoPiOverS16);
+        }
+
         struct JpcKeyedEmitterDynamics {
             float rate = 0.0F;
             float volume_size = 0.0F;
@@ -825,6 +879,12 @@ namespace smgpc::runtime {
             float direction_speed = 0.0F;
             float spread = 0.0F;
             float scale_out = 1.0F;
+        };
+
+        struct JpcVolumeSample {
+            JpcVec3 position{};
+            JpcVec3 velocity_omni{};
+            JpcVec3 velocity_axis{};
         };
 
         [[nodiscard]] float jpa_hermite_interpolation(float frame, const smgpc::render::effects::JpcKeyFrameMetadata &current,
@@ -945,6 +1005,174 @@ namespace smgpc::runtime {
             const auto clamped_lifetime = std::max<std::int16_t>(source_lifetime, 1);
             const auto lifetime = (1.0F - dynamics.lifetime_random * next_jpa_random_f(seed)) * static_cast<float>(clamped_lifetime);
             return static_cast<std::uint16_t>(std::max(1.0F, std::floor(lifetime)));
+        }
+
+        [[nodiscard]] JpcVolumeSample jpa_particle_volume_sample(const smgpc::render::effects::JpcDynamicsBlockMetadata &dynamics,
+                                                                 const JpcKeyedEmitterDynamics &keyed_dynamics, std::uint32_t &seed,
+                                                                 int emitted_index, int emit_count) {
+            constexpr auto kVolumeCube = std::uint8_t{0U};
+            constexpr auto kVolumeSphere = std::uint8_t{1U};
+            constexpr auto kVolumeCylinder = std::uint8_t{2U};
+            constexpr auto kVolumeTorus = std::uint8_t{3U};
+            constexpr auto kVolumePoint = std::uint8_t{4U};
+            constexpr auto kVolumeCircle = std::uint8_t{5U};
+            constexpr auto kVolumeLine = std::uint8_t{6U};
+
+            const auto volume_size = keyed_dynamics.volume_size;
+            const auto volume_min_radius = std::clamp(keyed_dynamics.volume_min_radius, 0.0F, 1.0F);
+            auto sample = JpcVolumeSample{};
+            const auto fixed_step = [&] {
+                if (!dynamics.fixed_interval || emit_count <= 1) {
+                    return 0.0F;
+                }
+                return static_cast<float>(emitted_index) / static_cast<float>(emit_count - 1);
+            };
+            const auto radius_sample = [&] {
+                auto value = next_jpa_random_f(seed);
+                if (dynamics.fixed_density) {
+                    value = 1.0F - value * value;
+                }
+                return volume_size * (volume_min_radius + value * (1.0F - volume_min_radius));
+            };
+
+            switch (dynamics.volume_type) {
+            case kVolumeCube:
+                sample.position = {
+                    .x = next_jpa_random_zh(seed) * volume_size,
+                    .y = next_jpa_random_zh(seed) * volume_size,
+                    .z = next_jpa_random_zh(seed) * volume_size,
+                };
+                sample.velocity_omni = sample.position;
+                sample.velocity_axis = {.x = sample.position.x, .y = 0.0F, .z = sample.position.z};
+                break;
+            case kVolumeSphere: {
+                const auto phi = static_cast<float>(next_jpa_random_ss(seed)) * 0.5F;
+                const auto theta = keyed_dynamics.spread == 0.0F ? dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed))
+                                                                 : dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
+                auto radius_value = next_jpa_random_f(seed);
+                if (dynamics.fixed_density) {
+                    radius_value = 1.0F - radius_value * radius_value * radius_value;
+                }
+                const auto radius = volume_size * (volume_min_radius + radius_value * (1.0F - volume_min_radius));
+                sample.position = {
+                    .x = radius * jpa_cos(phi) * jpa_sin(theta),
+                    .y = -radius * jpa_sin(phi),
+                    .z = radius * jpa_cos(phi) * jpa_cos(theta),
+                };
+                sample.velocity_omni = sample.position;
+                sample.velocity_axis = {.x = sample.position.x, .y = 0.0F, .z = sample.position.z};
+                break;
+            }
+            case kVolumeCylinder: {
+                const auto theta = dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
+                const auto radius = radius_sample();
+                sample.position = {
+                    .x = radius * jpa_sin(theta),
+                    .y = volume_size * next_jpa_random_zp(seed),
+                    .z = radius * jpa_cos(theta),
+                };
+                sample.velocity_omni = sample.position;
+                sample.velocity_axis = {.x = sample.position.x, .y = 0.0F, .z = sample.position.z};
+                break;
+            }
+            case kVolumeTorus: {
+                const auto theta = dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
+                const auto phi = static_cast<float>(next_jpa_random_ss(seed));
+                const auto radius = volume_size * volume_min_radius;
+                sample.velocity_axis = {
+                    .x = radius * jpa_sin(theta) * jpa_cos(phi),
+                    .y = radius * jpa_sin(phi),
+                    .z = radius * jpa_cos(theta) * jpa_cos(phi),
+                };
+                sample.position = {
+                    .x = sample.velocity_axis.x + volume_size * jpa_sin(theta),
+                    .y = sample.velocity_axis.y,
+                    .z = sample.velocity_axis.z + volume_size * jpa_cos(theta),
+                };
+                sample.velocity_omni = sample.position;
+                break;
+            }
+            case kVolumePoint:
+                sample.position = {};
+                sample.velocity_omni = {
+                    .x = next_jpa_random_zh(seed),
+                    .y = next_jpa_random_zh(seed),
+                    .z = next_jpa_random_zh(seed),
+                };
+                sample.velocity_axis = {.x = sample.velocity_omni.x, .y = 0.0F, .z = sample.velocity_omni.z};
+                break;
+            case kVolumeCircle: {
+                const auto theta = dynamics.fixed_interval && emit_count > 0
+                                       ? dynamics.volume_sweep * 65536.0F * static_cast<float>(emitted_index) / static_cast<float>(emit_count)
+                                       : dynamics.volume_sweep * static_cast<float>(next_jpa_random_ss(seed));
+                const auto radius = radius_sample();
+                sample.position = {.x = radius * jpa_sin(theta), .y = 0.0F, .z = radius * jpa_cos(theta)};
+                sample.velocity_omni = sample.position;
+                sample.velocity_axis = {.x = sample.position.x, .y = 0.0F, .z = sample.position.z};
+                break;
+            }
+            case kVolumeLine:
+            default: {
+                const auto step = fixed_step();
+                const auto z = dynamics.fixed_interval && emit_count > 1 ? volume_size * (step - 0.5F) : volume_size * next_jpa_random_zh(seed);
+                sample.position = {.x = 0.0F, .y = 0.0F, .z = z};
+                sample.velocity_omni = {.x = 0.0F, .y = 0.0F, .z = z};
+                sample.velocity_axis = sample.velocity_omni;
+                break;
+            }
+            }
+
+            return sample;
+        }
+
+        [[nodiscard]] JpcVec3 jpa_direction_velocity(const smgpc::render::effects::JpcDynamicsBlockMetadata &dynamics,
+                                                     const JpcKeyedEmitterDynamics &keyed_dynamics, std::uint32_t &seed) {
+            if (std::abs(keyed_dynamics.direction_speed) <= 0.000001F) {
+                return {};
+            }
+
+            const auto base_direction = jpa_normalized_or(
+                {.x = dynamics.emitter_direction.x, .y = dynamics.emitter_direction.y, .z = dynamics.emitter_direction.z},
+                {.x = 0.0F, .y = 0.0F, .z = 1.0F});
+            const auto angle_y = next_jpa_random_zp(seed) * 32768.0F * keyed_dynamics.spread;
+            const auto angle_z = static_cast<float>(next_jpa_random_ss(seed));
+            const auto side = JpcVec3{.x = jpa_sin(angle_y) * jpa_cos(angle_z), .y = jpa_sin(angle_y) * jpa_sin(angle_z), .z = 0.0F};
+            const auto cone = jpa_normalized_or(jpa_add(base_direction, side), base_direction);
+            return jpa_scale(cone, keyed_dynamics.direction_speed);
+        }
+
+        [[nodiscard]] JpcVec3 jpa_parent_velocity(const smgpc::render::effects::JpcDynamicsBlockMetadata &dynamics,
+                                                  const JpcKeyedEmitterDynamics &keyed_dynamics, const JpcVolumeSample &volume_sample,
+                                                  std::uint32_t &seed) {
+            const auto vel_omni = jpa_set_length(volume_sample.velocity_omni, keyed_dynamics.away_from_center_speed);
+            const auto vel_axis = jpa_set_length(volume_sample.velocity_axis, keyed_dynamics.away_from_axis_speed);
+            const auto vel_dir = jpa_direction_velocity(dynamics, keyed_dynamics, seed);
+            const auto vel_random = JpcVec3{
+                .x = dynamics.initial_velocity_random * next_jpa_random_zh(seed),
+                .y = dynamics.initial_velocity_random * next_jpa_random_zh(seed),
+                .z = dynamics.initial_velocity_random * next_jpa_random_zh(seed),
+            };
+            const auto ratio = next_jpa_random_zp(seed) * dynamics.initial_velocity_ratio + 1.0F;
+            return jpa_scale(jpa_add(jpa_add(vel_omni, vel_axis), jpa_add(vel_dir, vel_random)), ratio);
+        }
+
+        [[nodiscard]] JpcVec3 jpa_child_velocity(const JpcEffectParticleInstance &parent,
+                                                 const smgpc::render::effects::JpcChildShapeMetadata &child_shape,
+                                                 std::uint32_t &seed) {
+            const auto base_speed = child_shape.base_velocity * (child_shape.base_velocity_random * next_jpa_random_zp(seed) + 1.0F);
+            const auto random_velocity = jpa_set_length(
+                {
+                    .x = next_jpa_random_zp(seed),
+                    .y = next_jpa_random_zp(seed),
+                    .z = next_jpa_random_zp(seed),
+                },
+                base_speed);
+            const auto inherited = JpcVec3{
+                .x = parent.velocity_x * child_shape.velocity_inherit_rate,
+                .y = parent.velocity_y * child_shape.velocity_inherit_rate,
+                .z = parent.velocity_z * child_shape.velocity_inherit_rate,
+            };
+            return jpa_add(random_velocity, inherited);
         }
 
     }  // namespace
@@ -1752,41 +1980,6 @@ namespace smgpc::runtime {
             .frame_index = _frame_index,
         };
         _registered_keepers[std::string(host_name)] = keeper;
-
-        if (_resource_library.has_value() && !resource_group_name.empty()) {
-            auto resolved = _resource_library->resolve_auto_effect(resource_group_name, resource_group_name);
-            if (!resolved.empty()) {
-                const auto found = std::ranges::find_if(_active_effects, [host_name, resource_group_name](const auto &active) {
-                    return active.actor_name == host_name && active.effect_name == resource_group_name;
-                });
-                if (found == _active_effects.end()) {
-                    auto emitters = create_emitters(resolved);
-                    auto binding = host_binding(host_name);
-                    auto &active = _active_effects.emplace_back(ActiveEffectInstance {
-                        .actor_name = std::string(host_name),
-                        .effect_name = std::string(resource_group_name),
-                        .start_frame_index = _frame_index,
-                        .keeper = keeper,
-                        .host_binding = binding,
-                        .resolved_resources = resolved,
-                        .emitters = std::move(emitters),
-                    });
-                    for (auto emitter_index = std::size_t {}; emitter_index < active.emitters.size() &&
-                                                             emitter_index < active.resolved_resources.size();
-                         ++emitter_index) {
-                        advance_emitter_to_frame(active.emitters[emitter_index], active.resolved_resources[emitter_index], _frame_index);
-                    }
-                    _events.push_back(EffectEvent {
-                        .kind = EffectEventKind::Emit,
-                        .actor_name = std::string(host_name),
-                        .effect_name = std::string(resource_group_name),
-                        .frame_index = _frame_index,
-                        .keeper = keeper,
-                        .resolved_resources = std::move(resolved),
-                    });
-                }
-            }
-        }
     }
 
     void EffectService::unregister_keeper(std::string_view host_name) {
@@ -1899,7 +2092,8 @@ namespace smgpc::runtime {
         });
     }
 
-    void EffectService::draw(render::AuroraRenderer &renderer, s32 draw_type) {
+    void EffectService::draw(s32 draw_type) {
+        auto &renderer = render::current_aurora_renderer();
         for (const auto &active : _active_effects) {
             for (auto resource_index = std::size_t {}; resource_index < active.resolved_resources.size(); ++resource_index) {
                 const auto &resource = active.resolved_resources[resource_index];
@@ -1927,7 +2121,7 @@ namespace smgpc::runtime {
                     resource.resource != nullptr && resource.resource->child_shape.has_value() ? &*resource.resource->child_shape : nullptr;
                 for (const auto &particle : emitter.particles) {
                     const auto &texture = particle.child ? *child_texture : *primary_texture;
-                    auto texture_handle = texture_handle_for(renderer, texture);
+                    auto texture_handle = texture_handle_for(texture);
                     if (!texture_handle.is_valid()) {
                         continue;
                     }
@@ -2182,16 +2376,26 @@ namespace smgpc::runtime {
             return;
         }
 
-        const auto &dynamics = *metadata->dynamics;
-        while (emitter.next_update_frame_index <= frame_index) {
-            const auto local_frame = emitter.next_update_frame_index - emitter.start_frame_index;
-            for (auto &particle : emitter.particles) {
-                if (particle.age < particle.lifetime) {
-                    ++particle.age;
+            const auto &dynamics = *metadata->dynamics;
+            while (emitter.next_update_frame_index <= frame_index) {
+                const auto local_frame = emitter.next_update_frame_index - emitter.start_frame_index;
+                for (auto &particle : emitter.particles) {
+                    if (particle.age < particle.lifetime) {
+                        if (particle.child && metadata->child_shape.has_value() && particle.age != 0U) {
+                            particle.velocity_y -= metadata->child_shape->gravity;
+                        }
+                        const auto air_resistance = std::clamp(dynamics.air_resistance, 0.0F, 1.0F);
+                        particle.velocity_x *= air_resistance;
+                        particle.velocity_y *= air_resistance;
+                        particle.velocity_z *= air_resistance;
+                        particle.x += particle.velocity_x * particle.momentum;
+                        particle.y += particle.velocity_y * particle.momentum;
+                        particle.z += particle.velocity_z * particle.momentum;
+                        ++particle.age;
+                    }
                 }
-            }
-            std::erase_if(emitter.particles, [](const auto &particle) {
-                return particle.age >= particle.lifetime;
+                std::erase_if(emitter.particles, [](const auto &particle) {
+                    return particle.age >= particle.lifetime;
             });
 
             if (local_frame >= static_cast<std::uint64_t>(std::max<std::int16_t>(dynamics.start_frame, 0))) {
@@ -2216,13 +2420,20 @@ namespace smgpc::runtime {
 
                 for (auto emitted = 0; emitted < emit_count && emitter.particles.size() < MAX_PARTICLES_PER_EMITTER; ++emitted) {
                     const auto lifetime = jpa_particle_lifetime(dynamics, keyed_dynamics.lifetime, emitter.random_seed);
+                    const auto volume_sample = jpa_particle_volume_sample(dynamics, keyed_dynamics, emitter.random_seed, emitted, emit_count);
+                    const auto velocity = jpa_parent_velocity(dynamics, keyed_dynamics, volume_sample, emitter.random_seed);
+                    const auto momentum = 1.0F - dynamics.moment * next_jpa_random_f(emitter.random_seed);
                     emitter.particles.push_back(JpcEffectParticleInstance {
                         .id = emitter.next_particle_id++,
                         .age = 0U,
                         .lifetime = lifetime,
-                        .x = resource.auto_effect_offset_x + dynamics.emitter_translation.x,
-                        .y = -(resource.auto_effect_offset_y + dynamics.emitter_translation.y),
-                        .z = (resource.auto_effect_offset_z + dynamics.emitter_translation.z) * 0.001F,
+                        .x = resource.auto_effect_offset_x + dynamics.emitter_translation.x + volume_sample.position.x,
+                        .y = -(resource.auto_effect_offset_y + dynamics.emitter_translation.y + volume_sample.position.y),
+                        .z = (resource.auto_effect_offset_z + dynamics.emitter_translation.z + volume_sample.position.z) * 0.001F,
+                        .velocity_x = velocity.x,
+                        .velocity_y = -velocity.y,
+                        .velocity_z = velocity.z * 0.001F,
+                        .momentum = momentum,
                         .alpha = std::clamp(resource.auto_effect_rate_value, 0.0F, 1.0F),
                     });
                 }
@@ -2234,7 +2445,7 @@ namespace smgpc::runtime {
                     const auto child_step = static_cast<std::uint16_t>(child_shape.step) + 1U;
                     const auto parent_count = emitter.particles.size();
                     for (auto particle_index = std::size_t {}; particle_index < parent_count; ++particle_index) {
-                        const auto &parent = emitter.particles[particle_index];
+                        const auto parent = emitter.particles[particle_index];
                         if (parent.child) {
                             continue;
                         }
@@ -2249,14 +2460,30 @@ namespace smgpc::runtime {
                              ++child_index) {
                             const auto scale_inherit = child_shape.scale_inherited ? child_shape.inherit_scale : 1.0F;
                             const auto alpha_inherit = child_shape.alpha_inherited ? child_shape.inherit_alpha : 1.0F;
+                            auto child_position = JpcVec3{.x = parent.x, .y = parent.y, .z = parent.z};
+                            if (child_shape.position_random != 0.0F) {
+                                child_position = jpa_add(child_position,
+                                                         jpa_set_length(
+                                                             {
+                                                                 .x = next_jpa_random_zh(emitter.random_seed),
+                                                                 .y = -next_jpa_random_zh(emitter.random_seed),
+                                                                 .z = next_jpa_random_zh(emitter.random_seed) * 0.001F,
+                                                             },
+                                                             child_shape.position_random * next_jpa_random_f(emitter.random_seed)));
+                            }
+                            const auto child_velocity = jpa_child_velocity(parent, child_shape, emitter.random_seed);
                             emitter.particles.push_back(JpcEffectParticleInstance {
                                 .id = emitter.next_particle_id++,
                                 .age = 0U,
                                 .lifetime = child_lifetime,
                                 .child = true,
-                                .x = parent.x,
-                                .y = parent.y,
-                                .z = parent.z,
+                                .x = child_position.x,
+                                .y = child_position.y,
+                                .z = child_position.z,
+                                .velocity_x = child_velocity.x,
+                                .velocity_y = -child_velocity.y,
+                                .velocity_z = child_velocity.z * 0.001F,
+                                .momentum = parent.momentum,
                                 .scale_x = std::max(0.01F, child_shape.scale_x * scale_inherit),
                                 .scale_y = std::max(0.01F, child_shape.scale_y * scale_inherit),
                                 .alpha = std::clamp(parent.alpha * alpha_inherit, 0.0F, 1.0F),
@@ -2280,7 +2507,7 @@ namespace smgpc::runtime {
         }
     }
 
-    render::TextureHandle EffectService::texture_handle_for(render::AuroraRenderer &renderer, const smgpc::render::effects::JpcTextureMetadata &texture) {
+    render::TextureHandle EffectService::texture_handle_for(const smgpc::render::effects::JpcTextureMetadata &texture) {
         if (const auto it = _texture_handles.find(texture.index); it != _texture_handles.end() && it->second.is_valid()) {
             return it->second;
         }
@@ -2289,6 +2516,7 @@ namespace smgpc::runtime {
             return {};
         }
 
+        auto &renderer = render::current_aurora_renderer();
         auto handle = renderer.create_rgba8_texture(texture.image.width, texture.image.height,
                                                     std::span<const std::uint8_t>(texture.image.rgba.data(), texture.image.rgba.size()));
         if (handle.is_valid()) {

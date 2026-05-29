@@ -92,6 +92,7 @@ namespace smgpc::resource {
         std::uint32_t image_data_offset = 0U;
         std::uint32_t image_data_size = 0U;
         std::vector<GxTextureImageLevel> image_levels;
+        std::vector<std::uint8_t> image_data;
         DecodedTexture image;
     };
 

@@ -22,9 +22,9 @@ namespace smgpc::scene {
 
         void begin_frame(const render::FrameContext &frame_context);
         void update();
-        void draw_3d_normal(render::AuroraRenderer &renderer);
-        void draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void draw_2d_normal(render::AuroraRenderer &renderer);
+        void draw_3d_normal();
+        void draw_3d_normal(const smgpc::camera::CameraPose &camera_pose);
+        void draw_2d_normal();
 
         [[nodiscard]] bool has_boot_requested_initial_stage() const;
         [[nodiscard]] bool is_initial_stage_host_active() const;

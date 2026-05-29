@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <cstdlib>
 #include <optional>
 #include <span>
 #include <stdexcept>
@@ -83,6 +84,99 @@ namespace {
         return candidates;
     }
 
+    [[nodiscard]] std::string_view layout_locale_suffix() {
+        static const auto locale_suffix = [] {
+            if (const auto* value = std::getenv("SMGPC_LAYOUT_LOCALE_SUFFIX"); value != nullptr && value[0] != '\0') {
+                return std::string(value);
+            }
+
+            return std::string("KrKo");
+        }();
+        return locale_suffix;
+    }
+
+    [[nodiscard]] bool pane_name_has_inactive_locale_suffix(std::string_view name) {
+        constexpr std::array< std::string_view, 10U > suffixes{"JpJa", "UsEn", "EuEn", "EuFr", "EuGe",
+                                                               "EuSp", "EuIt", "KrKo", "CnSi", "CnTr"};
+        const auto active = layout_locale_suffix();
+        for (const auto suffix : suffixes) {
+            if (suffix == active) {
+                continue;
+            }
+            if (ends_with(name, suffix) && name.size() > suffix.size()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    [[nodiscard]] bool pane_name_has_locale_suffix(std::string_view name) {
+        constexpr std::array< std::string_view, 10U > suffixes{"JpJa", "UsEn", "EuEn", "EuFr", "EuGe",
+                                                               "EuSp", "EuIt", "KrKo", "CnSi", "CnTr"};
+        return std::ranges::any_of(suffixes, [name](const auto suffix) { return ends_with(name, suffix) && name.size() > suffix.size(); });
+    }
+
+    [[nodiscard]] bool pane_name_has_active_locale_variant(const smgpc::layout::BrlytLayout& layout, std::string_view name) {
+        if (name.empty() || pane_name_has_locale_suffix(name)) {
+            return false;
+        }
+
+        auto active_name = std::string(name);
+        active_name.append(layout_locale_suffix());
+        return std::ranges::any_of(layout.panes, [&active_name](const auto& pane) { return pane.name == active_name; });
+    }
+
+    [[nodiscard]] std::string active_locale_variant_name(std::string_view name) {
+        auto active_name = std::string(name);
+        active_name.append(layout_locale_suffix());
+        return active_name;
+    }
+
+    [[nodiscard]] std::string layout_message_id(std::string_view layout_name, std::string_view user_data) {
+        auto message_id = std::string("Layout_");
+        message_id.append(layout_name);
+        message_id.append(user_data);
+        return message_id;
+    }
+
+    [[nodiscard]] std::vector< std::uint16_t > encode_utf16_words(std::u16string_view text) {
+        auto words = std::vector< std::uint16_t >{};
+        words.reserve(text.size());
+        for (const auto code : text) {
+            words.push_back(static_cast< std::uint16_t >(code));
+        }
+        return words;
+    }
+
+    [[nodiscard]] bool pane_name_matches_request(std::string_view pane_name, std::string_view requested_name) {
+        if (pane_name == requested_name) {
+            return true;
+        }
+        return !requested_name.empty() && !pane_name_has_locale_suffix(requested_name) && pane_name == active_locale_variant_name(requested_name);
+    }
+
+    [[nodiscard]] std::optional< std::size_t > find_preferred_pane_index(const smgpc::layout::BrlytLayout& layout, std::string_view pane_name) {
+        if (pane_name.empty()) {
+            return std::nullopt;
+        }
+
+        if (!pane_name_has_locale_suffix(pane_name)) {
+            const auto active_name = active_locale_variant_name(pane_name);
+            const auto active = std::ranges::find_if(layout.panes, [&active_name](const auto& pane) { return pane.name == active_name; });
+            if (active != layout.panes.end()) {
+                return static_cast< std::size_t >(std::distance(layout.panes.begin(), active));
+            }
+        }
+
+        const auto exact = std::ranges::find_if(layout.panes, [pane_name](const auto& pane) { return pane.name == pane_name; });
+        if (exact == layout.panes.end()) {
+            return std::nullopt;
+        }
+
+        return static_cast< std::size_t >(std::distance(layout.panes.begin(), exact));
+    }
+
     [[nodiscard]] bool font_name_matches(std::string_view loaded_name, std::string_view requested_name) {
         const auto loaded_candidates = font_resource_candidates(loaded_name);
         const auto requested_candidates = font_resource_candidates(requested_name);
@@ -150,7 +244,7 @@ namespace {
     [[nodiscard]] bool pane_is_or_descends_from(const smgpc::layout::BrlytLayout& layout, std::size_t pane_index, std::string_view root_name) {
         while (pane_index < layout.panes.size()) {
             const auto& pane = layout.panes[pane_index];
-            if (pane.name == root_name) {
+            if (pane_name_matches_request(pane.name, root_name)) {
                 return true;
             }
             if (pane.parent_index < 0) {
@@ -164,7 +258,7 @@ namespace {
 
     [[nodiscard]] bool text_box_matches_recursive(const smgpc::layout::BrlytLayout& layout, const smgpc::layout::BrlytTextBox& text_box,
                                                   std::string_view requested_name) {
-        if (requested_name.empty() || text_box.name == requested_name) {
+        if (requested_name.empty() || pane_name_matches_request(text_box.name, requested_name)) {
             return true;
         }
         return text_box.pane_index < layout.panes.size() && pane_is_or_descends_from(layout, text_box.pane_index, requested_name);
@@ -433,22 +527,23 @@ namespace {
         case 1U:
             return -height * 0.5F;
         case 2U:
-            return 0.0F;
-        default:
             return -height;
+        default:
+            return 0.0F;
         }
+    }
+
+    [[nodiscard]] std::array< float, 2U > layout_location_adjust_scale() {
+        return {0.75F, 1.0F};
     }
 
     [[nodiscard]] float gx_texture_v_to_host(float v) {
-        return 1.0F - v;
+        return v;
     }
 
     [[nodiscard]] float brlyt_texture_v_to_host(float v, std::uint8_t wrap_t) {
-        constexpr auto gx_clamp = std::uint8_t{0U};
-        if (wrap_t == gx_clamp) {
-            return gx_texture_v_to_host(v);
-        }
-        return v;
+        (void)wrap_t;
+        return gx_texture_v_to_host(v);
     }
 
     [[nodiscard]] float hypot2(float x, float y) {
@@ -457,6 +552,124 @@ namespace {
 
     [[nodiscard]] std::uint16_t texture_extent(float value) {
         return static_cast< std::uint16_t >(std::clamp(std::ceil(value), 1.0F, 4096.0F));
+    }
+
+    struct LayoutWindowFrameSize {
+        float left = 0.0F;
+        float right = 0.0F;
+        float top = 0.0F;
+        float bottom = 0.0F;
+    };
+
+    struct LayoutTextureSize {
+        float width = 1.0F;
+        float height = 1.0F;
+    };
+
+    struct LayoutTextureFlipInfo {
+        std::array< std::array< std::uint8_t, 2U >, 4U > coords{};
+        std::array< std::uint8_t, 2U > axis{};
+    };
+
+    [[nodiscard]] const LayoutTextureFlipInfo& layout_texture_flip_info(std::uint8_t texture_flip) {
+        static constexpr auto kFlipInfos = std::array< LayoutTextureFlipInfo, 6U >{
+            LayoutTextureFlipInfo{.coords = {{{0U, 0U}, {1U, 0U}, {0U, 1U}, {1U, 1U}}}, .axis = {0U, 1U}},
+            LayoutTextureFlipInfo{.coords = {{{1U, 0U}, {0U, 0U}, {1U, 1U}, {0U, 1U}}}, .axis = {0U, 1U}},
+            LayoutTextureFlipInfo{.coords = {{{0U, 1U}, {1U, 1U}, {0U, 0U}, {1U, 0U}}}, .axis = {0U, 1U}},
+            LayoutTextureFlipInfo{.coords = {{{0U, 1U}, {0U, 0U}, {1U, 1U}, {1U, 0U}}}, .axis = {1U, 0U}},
+            LayoutTextureFlipInfo{.coords = {{{1U, 1U}, {0U, 1U}, {1U, 0U}, {0U, 0U}}}, .axis = {0U, 1U}},
+            LayoutTextureFlipInfo{.coords = {{{1U, 0U}, {1U, 1U}, {0U, 0U}, {0U, 1U}}}, .axis = {1U, 0U}},
+        };
+
+        return kFlipInfos[std::min< std::size_t >(texture_flip, kFlipInfos.size() - 1U)];
+    }
+
+    [[nodiscard]] std::array< smgpc::layout::BrlytTexCoord, 4U >
+    layout_quad_tex_coords_from_raw(const std::array< smgpc::layout::BrlytTexCoord, 4U >& raw) {
+        return {
+            raw[0U],
+            raw[1U],
+            raw[3U],
+            raw[2U],
+        };
+    }
+
+    [[nodiscard]] std::array< smgpc::layout::BrlytTexCoord, 4U > default_quad_tex_coords() {
+        return {
+            smgpc::layout::BrlytTexCoord{0.0F, 0.0F},
+            smgpc::layout::BrlytTexCoord{1.0F, 0.0F},
+            smgpc::layout::BrlytTexCoord{1.0F, 1.0F},
+            smgpc::layout::BrlytTexCoord{0.0F, 1.0F},
+        };
+    }
+
+    [[nodiscard]] std::vector< std::array< smgpc::layout::BrlytTexCoord, 4U > >
+    layout_window_content_tex_coord_sets(std::span< const std::array< smgpc::layout::BrlytTexCoord, 4U > > raw_sets) {
+        auto sets = std::vector< std::array< smgpc::layout::BrlytTexCoord, 4U > >{};
+        sets.reserve(raw_sets.size());
+        for (const auto& raw : raw_sets) {
+            sets.push_back(layout_quad_tex_coords_from_raw(raw));
+        }
+        if (sets.empty()) {
+            sets.push_back(default_quad_tex_coords());
+        }
+        return sets;
+    }
+
+    [[nodiscard]] std::array< smgpc::layout::BrlytTexCoord, 4U >
+    layout_window_frame_tex_coords(std::uint8_t texture_flip, LayoutTextureSize texture_size, float width, float height,
+                                   std::uint8_t anchor0, std::uint8_t anchor1, std::uint8_t anchor2, std::uint8_t anchor3) {
+        const auto& info = layout_texture_flip_info(texture_flip);
+        const auto ix = info.axis[0U];
+        const auto iy = info.axis[1U];
+        const auto tex_extent = std::array< float, 2U >{std::max(texture_size.width, 1.0F), std::max(texture_size.height, 1.0F)};
+        auto raw = std::array< smgpc::layout::BrlytTexCoord, 4U >{};
+        auto set_component = [&](std::uint8_t point, std::uint8_t axis, float value) {
+            if (axis == 0U) {
+                raw[point].u = value;
+            } else {
+                raw[point].v = value;
+            }
+        };
+        auto get_component = [&](std::uint8_t coord, std::uint8_t axis) {
+            return static_cast< float >(info.coords[coord][axis]);
+        };
+
+        set_component(anchor0, ix, get_component(anchor0, ix));
+        set_component(anchor2, ix, get_component(anchor0, ix));
+        set_component(anchor0, iy, get_component(anchor0, iy));
+        set_component(anchor1, iy, get_component(anchor0, iy));
+
+        const auto sx = get_component(anchor1, ix) - get_component(anchor0, ix);
+        const auto sy = get_component(anchor2, iy) - get_component(anchor0, iy);
+        const auto u_delta = sx == 0.0F ? 0.0F : width / (sx * tex_extent[ix]);
+        const auto v_delta = sy == 0.0F ? 0.0F : height / (sy * tex_extent[iy]);
+        set_component(anchor3, ix, get_component(anchor0, ix) + u_delta);
+        set_component(anchor1, ix, get_component(anchor0, ix) + u_delta);
+        set_component(anchor3, iy, get_component(anchor0, iy) + v_delta);
+        set_component(anchor2, iy, get_component(anchor0, iy) + v_delta);
+
+        return layout_quad_tex_coords_from_raw(raw);
+    }
+
+    [[nodiscard]] std::array< smgpc::layout::BrlytTexCoord, 4U >
+    layout_window_frame_tex_coords_lt(std::uint8_t texture_flip, LayoutTextureSize texture_size, float width, float height) {
+        return layout_window_frame_tex_coords(texture_flip, texture_size, width, height, 0U, 1U, 2U, 3U);
+    }
+
+    [[nodiscard]] std::array< smgpc::layout::BrlytTexCoord, 4U >
+    layout_window_frame_tex_coords_rt(std::uint8_t texture_flip, LayoutTextureSize texture_size, float width, float height) {
+        return layout_window_frame_tex_coords(texture_flip, texture_size, width, height, 1U, 0U, 3U, 2U);
+    }
+
+    [[nodiscard]] std::array< smgpc::layout::BrlytTexCoord, 4U >
+    layout_window_frame_tex_coords_lb(std::uint8_t texture_flip, LayoutTextureSize texture_size, float width, float height) {
+        return layout_window_frame_tex_coords(texture_flip, texture_size, width, height, 2U, 3U, 0U, 1U);
+    }
+
+    [[nodiscard]] std::array< smgpc::layout::BrlytTexCoord, 4U >
+    layout_window_frame_tex_coords_rb(std::uint8_t texture_flip, LayoutTextureSize texture_size, float width, float height) {
+        return layout_window_frame_tex_coords(texture_flip, texture_size, width, height, 3U, 2U, 1U, 0U);
     }
 
     [[nodiscard]] smgpc::layout::BrlytTexCoord transform_tex_coord(smgpc::layout::BrlytTexCoord tex_coord,
@@ -581,6 +794,8 @@ namespace {
             .alpha_out = stage.alpha.out_reg,
             .k_color_sel = stage.color.k_sel,
             .k_alpha_sel = stage.alpha.k_sel,
+            .ras_swap = stage.ras_swap,
+            .tex_swap = stage.tex_swap,
             .konst_color = brlyt_stage_konst_color(material, stage),
         };
     }
@@ -614,7 +829,7 @@ namespace {
             .op = blend.op,
             .color_update = blend.color_update,
             .alpha_update = blend.alpha_update,
-            .enabled = material.blend_mode.enabled,
+            .enabled = true,
         };
     }
 
@@ -777,11 +992,12 @@ const std::optional< std::filesystem::path >& SimpleLayout::getArchivePath() con
     return mArchivePath;
 }
 
-void SimpleLayout::draw(smgpc::render::AuroraRenderer& renderer) {
+void SimpleLayout::draw() {
     if (mIsDead) {
         return;
     }
 
+    auto& renderer = smgpc::render::current_aurora_renderer();
     loadRenderData();
     ensureTextureUploads(renderer);
 
@@ -795,6 +1011,9 @@ void SimpleLayout::draw(smgpc::render::AuroraRenderer& renderer) {
             case smgpc::layout::BrlytDrawableKind::TextBox:
                 drawTextBox(renderer, alpha, drawable.index);
                 break;
+            case smgpc::layout::BrlytDrawableKind::Window:
+                drawWindow(renderer, alpha, drawable.index);
+                break;
             }
         }
         return;
@@ -803,6 +1022,9 @@ void SimpleLayout::draw(smgpc::render::AuroraRenderer& renderer) {
     for (std::size_t picture_index = 0U; picture_index < mBrlytLayout.pictures.size(); ++picture_index) {
         drawPicture(renderer, alpha, picture_index);
     }
+    for (std::size_t window_index = 0U; window_index < mBrlytLayout.windows.size(); ++window_index) {
+        drawWindow(renderer, alpha, window_index);
+    }
     drawTextBoxes(renderer, alpha);
 }
 
@@ -810,40 +1032,57 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
     if (picture_index >= mBrlytLayout.pictures.size()) {
         return;
     }
+
     const auto& picture = mBrlytLayout.pictures[picture_index];
     if (!picture.visible || picture.pane_index >= mBrlytLayout.panes.size()) {
         return;
     }
 
-    if (picture.material_index >= mBrlytLayout.materials.size()) {
+    const auto& pane = mBrlytLayout.panes[picture.pane_index];
+    const auto tex_coord_sets = std::array< std::array< smgpc::layout::BrlytTexCoord, 4U >, 1U >{picture.tex_coords};
+    submitLayoutQuad(renderer, alpha, picture.pane_index, picture.material_index, picture.name, picture.vertex_colors,
+                     std::span< const std::array< smgpc::layout::BrlytTexCoord, 4U > >(tex_coord_sets.data(), tex_coord_sets.size()),
+                     base_position_x(pane.base_position, pane.width), base_position_y(pane.base_position, pane.height), pane.width, pane.height,
+                     static_cast< std::uint32_t >(picture_index));
+}
+
+void SimpleLayout::submitLayoutQuad(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t pane_index,
+                                    std::uint16_t material_index, std::string_view content_name,
+                                    const std::array< std::array< std::uint8_t, 4U >, 4U >& vertex_colors,
+                                    std::span< const std::array< smgpc::layout::BrlytTexCoord, 4U > > tex_coord_sets,
+                                    float local_left, float local_top, float width, float height, std::uint32_t trace_index) {
+    if (pane_index >= mBrlytLayout.panes.size()) {
         return;
     }
-    auto material = mBrlytLayout.materials[picture.material_index];
-    const auto content_name = material.name.empty() ? std::string_view(picture.name) : std::string_view(material.name);
-    apply_material_frame(material, materialFrameForContent(content_name));
 
-    const auto pane_state = paneRenderState(picture.pane_index);
+    if (material_index >= mBrlytLayout.materials.size()) {
+        return;
+    }
+    auto material = mBrlytLayout.materials[material_index];
+    const auto material_frame_name = material.name.empty() ? content_name : std::string_view(material.name);
+    apply_material_frame(material, materialFrameForContent(material_frame_name));
+
+    const auto pane_state = paneRenderState(pane_index);
     if (!pane_state.visible) {
         return;
     }
 
-    const auto& pane = mBrlytLayout.panes[picture.pane_index];
-    const auto local_left = base_position_x(pane.base_position, pane.width);
-    const auto local_top = base_position_y(pane.base_position, pane.height);
-    const auto transform_point = [&](float local_x, float local_y) {
-        return std::array< float, 2U >{
-            mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
-            mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
-        };
-    };
-    const auto texture_frame = textureFrameForContent(content_name);
+    const auto& pane = mBrlytLayout.panes[pane_index];
+    const auto texture_frame = textureFrameForContent(material_frame_name);
+    auto raster_color_scale = std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U};
+    auto channel_material_color = std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U};
+    auto channel_color_src = std::uint8_t{1U};
+    auto channel_alpha_src = std::uint8_t{1U};
     const auto vertex_color = [&](std::size_t index) {
-        const auto& source = picture.vertex_colors[index];
+        constexpr auto kNw4rQuadColorOrder = std::array< std::size_t, 4U >{0U, 1U, 3U, 2U};
+        const auto& source = vertex_colors[kNw4rQuadColorOrder[index]];
         return std::array< std::uint8_t, 4U >{
-            source[0U],
-            source[1U],
-            source[2U],
-            static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha * (static_cast< float >(source[3U]) / 255.0F), 0.0F, 255.0F)),
+            static_cast< std::uint8_t >((static_cast< std::uint16_t >(source[0U]) * raster_color_scale[0U]) / 255U),
+            static_cast< std::uint8_t >((static_cast< std::uint16_t >(source[1U]) * raster_color_scale[1U]) / 255U),
+            static_cast< std::uint8_t >((static_cast< std::uint16_t >(source[2U]) * raster_color_scale[2U]) / 255U),
+            static_cast< std::uint8_t >(std::clamp(alpha * pane_state.alpha * (static_cast< float >(source[3U]) / 255.0F) *
+                                                       (static_cast< float >(raster_color_scale[3U]) / 255.0F),
+                                                   0.0F, 255.0F)),
         };
     };
 
@@ -919,11 +1158,7 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
         return assign_texture_stage(tex_coord_gen_index, material.textures.front(), tex_coord_gen_index);
     };
 
-    const auto use_simple_textured_material = [&]() {
-        if (material.textures.empty()) {
-            return false;
-        }
-
+    const auto reset_material_pipeline = [&]() {
         texture_stages = {};
         tev_stages = {};
         tex_coord_gen_indices.fill(0xffU);
@@ -933,12 +1168,45 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
 #ifndef NDEBUG
         debug_texture_bindings.clear();
 #endif
+    };
+
+    const auto add_tev_stage = [&](const smgpc::render::GxTevStage2D& stage) {
+        if (tev_stage_count >= tev_stages.size()) {
+            return false;
+        }
+
+        tev_stages[tev_stage_count] = stage;
+        ++tev_stage_count;
+        return true;
+    };
+
+    const auto use_simple_textured_material = [&]() {
+        if (material.textures.empty()) {
+            return false;
+        }
+
+        reset_material_pipeline();
+        raster_color_scale = {255U, 255U, 255U, 255U};
         auto can_use = assign_texture_stage(0U, material.textures.front(), 0U);
         if (!tev_stages.empty()) {
-            tev_stages[0U] = smgpc::render::gx_brlyt_default_texture_color_stage(0U);
-            tev_stages[0U].texture_coord_stage = 0U;
-            tev_stages[0U].texture_map_stage = 0U;
-            tev_stages[0U].color_channel = 4U;
+            tev_stages[0U] = smgpc::render::GxTevStage2D{
+                .texture_stage = 0U,
+                .texture_coord_stage = 0U,
+                .texture_map_stage = 0U,
+                .color_channel = 0xffU,
+                .color_in = {2U, 4U, 8U, 15U},
+                .color_op = 0U,
+                .color_bias = 0U,
+                .color_scale = 0U,
+                .color_clamp = true,
+                .color_out = 0U,
+                .alpha_in = {1U, 2U, 4U, 7U},
+                .alpha_op = 0U,
+                .alpha_bias = 0U,
+                .alpha_scale = 0U,
+                .alpha_clamp = true,
+                .alpha_out = 0U,
+            };
             tev_stage_count = 1U;
         } else {
             can_use = false;
@@ -946,9 +1214,227 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
         return can_use;
     };
 
+    const auto default_konst_selector = [](std::size_t texture_map_index) {
+        constexpr auto kSelectors = std::array< std::uint8_t, 8U >{0x1fU, 0x1bU, 0x17U, 0x13U, 0x1eU, 0x1aU, 0x16U, 0x12U};
+        return kSelectors[std::min(texture_map_index, kSelectors.size() - 1U)];
+    };
+
+    const auto default_konst_color = [&](std::size_t texture_map_index) {
+        const auto selector = default_konst_selector(texture_map_index);
+        const auto color = brlyt_konst_color(material, selector);
+        const auto alpha_color = brlyt_konst_color(material, selector);
+        return std::array< std::uint8_t, 4U >{color[0U], color[1U], color[2U], alpha_color[3U]};
+    };
+
+    const auto brlyt_default_stage_texture_replace = [](std::uint8_t texture_stage) {
+        return smgpc::render::GxTevStage2D{
+            .texture_stage = texture_stage,
+            .texture_coord_stage = texture_stage,
+            .texture_map_stage = texture_stage,
+            .color_channel = 0xffU,
+            .color_in = {15U, 15U, 15U, 8U},
+            .color_op = 0U,
+            .color_bias = 0U,
+            .color_scale = 0U,
+            .color_clamp = true,
+            .color_out = 0U,
+            .alpha_in = {7U, 7U, 7U, 4U},
+            .alpha_op = 0U,
+            .alpha_bias = 0U,
+            .alpha_scale = 0U,
+            .alpha_clamp = true,
+            .alpha_out = 0U,
+        };
+    };
+
+    const auto brlyt_default_stage_texture_lerp = [&](std::uint8_t texture_stage) {
+        return smgpc::render::GxTevStage2D{
+            .texture_stage = texture_stage,
+            .texture_coord_stage = texture_stage,
+            .texture_map_stage = texture_stage,
+            .color_channel = 0xffU,
+            .color_in = {8U, 0U, 14U, 15U},
+            .color_op = 0U,
+            .color_bias = 0U,
+            .color_scale = 0U,
+            .color_clamp = true,
+            .color_out = 0U,
+            .alpha_in = {4U, 0U, 6U, 7U},
+            .alpha_op = 0U,
+            .alpha_bias = 0U,
+            .alpha_scale = 0U,
+            .alpha_clamp = true,
+            .alpha_out = 0U,
+            .k_color_sel = default_konst_selector(texture_stage - 1U),
+            .k_alpha_sel = default_konst_selector(texture_stage - 1U),
+            .konst_color = default_konst_color(texture_stage - 1U),
+        };
+    };
+
+    const auto brlyt_default_stage_texture_modulate = [&](std::uint8_t texture_stage) {
+        return smgpc::render::GxTevStage2D{
+            .texture_stage = texture_stage,
+            .texture_coord_stage = texture_stage,
+            .texture_map_stage = texture_stage,
+            .color_channel = 0xffU,
+            .color_in = {15U, 8U, 14U, static_cast< std::uint8_t >(texture_stage == 0U ? 15U : 0U)},
+            .color_op = 0U,
+            .color_bias = 0U,
+            .color_scale = 0U,
+            .color_clamp = true,
+            .color_out = 0U,
+            .alpha_in = {7U, 4U, 6U, static_cast< std::uint8_t >(texture_stage == 0U ? 7U : 0U)},
+            .alpha_op = 0U,
+            .alpha_bias = 0U,
+            .alpha_scale = 0U,
+            .alpha_clamp = true,
+            .alpha_out = 0U,
+            .k_color_sel = default_konst_selector(texture_stage),
+            .k_alpha_sel = default_konst_selector(texture_stage),
+            .konst_color = default_konst_color(texture_stage),
+        };
+    };
+
+    const auto brlyt_default_stage_tev_color = [] {
+        return smgpc::render::GxTevStage2D{
+            .texture_stage = 0xffU,
+            .texture_coord_stage = 0xffU,
+            .texture_map_stage = 0xffU,
+            .color_channel = 0xffU,
+            .color_in = {2U, 4U, 0U, 15U},
+            .color_op = 0U,
+            .color_bias = 0U,
+            .color_scale = 0U,
+            .color_clamp = true,
+            .color_out = 0U,
+            .alpha_in = {1U, 2U, 0U, 7U},
+            .alpha_op = 0U,
+            .alpha_bias = 0U,
+            .alpha_scale = 0U,
+            .alpha_clamp = true,
+            .alpha_out = 0U,
+        };
+    };
+
+    const auto build_default_brlyt_material = [&]() {
+        if (material.textures.size() > texture_stages.size()) {
+            return false;
+        }
+
+        reset_material_pipeline();
+        for (auto slot = std::size_t{}; slot < material.textures.size(); ++slot) {
+            if (!assign_texture_stage(slot, material.textures[slot], static_cast< std::uint8_t >(slot))) {
+                return false;
+            }
+        }
+
+        const auto use_vertex_color =
+            !material.has_chan_ctrl || material.chan_color_src == 1U || material.chan_alpha_src == 1U;
+        const auto use_material_color =
+            material.has_chan_ctrl && (material.chan_color_src == 0U || material.chan_alpha_src == 0U);
+        channel_color_src = material.has_chan_ctrl ? material.chan_color_src : std::uint8_t{1U};
+        channel_alpha_src = material.has_chan_ctrl ? material.chan_alpha_src : std::uint8_t{1U};
+        channel_material_color = material.has_mat_color ? material.mat_color : std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U};
+        if (use_material_color) {
+            channel_material_color[3U] = static_cast< std::uint8_t >(std::clamp(
+                (static_cast< float >(channel_material_color[3U]) * alpha * pane_state.alpha) / 255.0F, 0.0F, 255.0F));
+        }
+        const auto vertex_color_modulates =
+            std::ranges::any_of(vertex_colors, [](const auto& color) {
+                return color[0U] != 255U || color[1U] != 255U || color[2U] != 255U || color[3U] != 255U;
+            }) ||
+            (alpha * pane_state.alpha) < 254.5F;
+        const auto material_color_modulates = material.mat_color != std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U};
+        const auto use_raster_stage = (use_vertex_color && vertex_color_modulates) || (use_material_color && material_color_modulates);
+        raster_color_scale = {255U, 255U, 255U, 255U};
+
+        if (material.textures.empty()) {
+            return add_tev_stage(smgpc::render::GxTevStage2D{
+                .texture_stage = 0xffU,
+                .texture_coord_stage = 0xffU,
+                .texture_map_stage = 0xffU,
+                .color_channel = 4U,
+                .color_in = {15U, 4U, 10U, 15U},
+                .color_op = 0U,
+                .color_bias = 0U,
+                .color_scale = 0U,
+                .color_clamp = true,
+                .color_out = 0U,
+                .alpha_in = {7U, 2U, 5U, 7U},
+                .alpha_op = 0U,
+                .alpha_bias = 0U,
+                .alpha_scale = 0U,
+                .alpha_clamp = true,
+                .alpha_out = 0U,
+            });
+        }
+        if (material.textures.size() == 1U) {
+            auto stage = smgpc::render::GxTevStage2D{
+                .texture_stage = 0U,
+                .texture_coord_stage = 0U,
+                .texture_map_stage = 0U,
+                .color_channel = 0xffU,
+                .color_in = {2U, 4U, 8U, 15U},
+                .color_op = 0U,
+                .color_bias = 0U,
+                .color_scale = 0U,
+                .color_clamp = true,
+                .color_out = 0U,
+                .alpha_in = {1U, 2U, 4U, 7U},
+                .alpha_op = 0U,
+                .alpha_bias = 0U,
+                .alpha_scale = 0U,
+                .alpha_clamp = true,
+                .alpha_out = 0U,
+            };
+            return add_tev_stage(stage) && (!use_raster_stage || add_tev_stage(smgpc::render::gx_brlyt_default_raster_modulate_stage()));
+        }
+
+        if (material.textures.size() == 2U) {
+            auto can_build = add_tev_stage(brlyt_default_stage_texture_replace(0U));
+            can_build = can_build && add_tev_stage(brlyt_default_stage_texture_lerp(1U));
+            const auto has_animated_tev_color = material.tev_colors[0U] != smgpc::render::GXTevRegisterColor{0, 0, 0, 0} ||
+                                                material.tev_colors[1U] != smgpc::render::GXTevRegisterColor{255, 255, 255, 255};
+            if (has_animated_tev_color) {
+                can_build = can_build && add_tev_stage(brlyt_default_stage_tev_color());
+            }
+            if (use_raster_stage) {
+                can_build = can_build && add_tev_stage(smgpc::render::gx_brlyt_default_raster_modulate_stage());
+            }
+            return can_build;
+        } else {
+            auto can_build = true;
+            for (auto slot = 0U; slot < material.textures.size(); ++slot) {
+                can_build = can_build && add_tev_stage(brlyt_default_stage_texture_modulate(static_cast< std::uint8_t >(slot)));
+            }
+
+            const auto has_animated_tev_color = material.tev_colors[0U] != smgpc::render::GXTevRegisterColor{0, 0, 0, 0} ||
+                                                material.tev_colors[1U] != smgpc::render::GXTevRegisterColor{255, 255, 255, 255};
+            if (has_animated_tev_color) {
+                can_build = can_build && add_tev_stage(brlyt_default_stage_tev_color());
+            }
+            if (use_raster_stage) {
+                can_build = can_build && add_tev_stage(smgpc::render::gx_brlyt_default_raster_modulate_stage());
+            }
+            return can_build;
+        }
+    };
+
+    {
+        const auto use_material_color =
+            material.has_chan_ctrl && (material.chan_color_src == 0U || material.chan_alpha_src == 0U);
+        channel_color_src = material.has_chan_ctrl ? material.chan_color_src : std::uint8_t{1U};
+        channel_alpha_src = material.has_chan_ctrl ? material.chan_alpha_src : std::uint8_t{1U};
+        channel_material_color = material.has_mat_color ? material.mat_color : std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U};
+        if (use_material_color) {
+            channel_material_color[3U] = static_cast< std::uint8_t >(std::clamp(
+                (static_cast< float >(channel_material_color[3U]) * alpha * pane_state.alpha) / 255.0F, 0.0F, 255.0F));
+        }
+    }
+
     auto can_submit = true;
-    if (!material.textures.empty()) {
-        can_submit = use_simple_textured_material();
+    if (material.tev_stages.empty()) {
+        can_submit = build_default_brlyt_material();
     } else if (!brlyt_material_can_use_gx_shader(material)) {
         can_submit = false;
     } else {
@@ -985,8 +1471,9 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
     }
 
     const auto tex_coord = [&](std::size_t vertex_index, std::size_t texture_stage_index) {
-        auto coord = picture.tex_coords[vertex_index];
         const auto tex_coord_gen_index = tex_coord_gen_indices[texture_stage_index];
+        const auto coord_set_index = tex_coord_gen_index < tex_coord_sets.size() ? tex_coord_gen_index : std::size_t{};
+        auto coord = tex_coord_sets.empty() ? default_quad_tex_coords()[vertex_index] : tex_coord_sets[coord_set_index][vertex_index];
         if (tex_coord_gen_index < material.tex_coord_gens.size()) {
             const auto tex_srt_index = tex_srt_index_for_coord_gen(material.tex_coord_gens[tex_coord_gen_index]);
             if (tex_srt_index != UINT16_MAX && tex_srt_index < material.tex_srts.size()) {
@@ -999,7 +1486,7 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
     };
 
     const auto vertex = [&](std::size_t index, float vx, float vy) {
-        const auto position = transform_point(vx, vy);
+        const auto position = panePointForAurora(pane_state, vx, vy);
         auto tex_coords = std::array< std::array< float, 3U >, smgpc::render::core::kMaxGxMaterialTextureStages2D >{};
         for (auto stage = std::size_t{}; stage < texture_stage_count && stage < tex_coords.size(); ++stage) {
             tex_coords[stage] = tex_coord(index, stage);
@@ -1016,9 +1503,9 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
 
     const auto vertices = std::array< smgpc::render::GxMaterialVertex2D, 4U >{
         vertex(0U, local_left, local_top),
-        vertex(1U, local_left + pane.width, local_top),
-        vertex(2U, local_left + pane.width, local_top + pane.height),
-        vertex(3U, local_left, local_top + pane.height),
+        vertex(1U, local_left + width, local_top),
+        vertex(2U, local_left + width, local_top + height),
+        vertex(3U, local_left, local_top + height),
     };
     constexpr auto indices = std::array< std::uint16_t, 6U >{0U, 1U, 2U, 0U, 2U, 3U};
 #ifndef NDEBUG
@@ -1026,10 +1513,10 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
         runtime->record_layout_packet_trace(smgpc::runtime::RuntimeContext::LayoutRuntimePacketTrace{
             .layout_name = mLayoutName,
             .pane_name = pane.name,
-            .material_name = material.name.empty() ? picture.name : material.name,
+            .material_name = material.name.empty() ? std::string(content_name) : material.name,
             .frame_index = runtime->frame_index(),
-            .picture_index = static_cast< std::uint32_t >(picture_index),
-            .material_index = picture.material_index,
+            .picture_index = trace_index,
+            .material_index = material_index,
             .vertex_count = static_cast< std::uint32_t >(vertices.size()),
             .index_count = static_cast< std::uint32_t >(indices.size()),
             .texgen_count = static_cast< std::uint32_t >(texture_stage_count),
@@ -1049,9 +1536,144 @@ void SimpleLayout::drawPicture(smgpc::render::AuroraRenderer& renderer, float al
         .initial_tev_registers = brlyt_initial_tev_registers(material.gx_state),
         .initial_tev_k_colors = brlyt_initial_tev_k_colors(material),
         .has_initial_tev_k_colors = true,
+        .channel_material_color = channel_material_color,
+        .channel_color_src = channel_color_src,
+        .channel_alpha_src = channel_alpha_src,
         .alpha_compare = brlyt_alpha_compare(material.alpha_compare),
         .blend = brlyt_gx_blend_mode(material),
     });
+}
+
+void SimpleLayout::drawWindow(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t window_index) {
+    if (window_index >= mBrlytLayout.windows.size()) {
+        return;
+    }
+
+    const auto& window = mBrlytLayout.windows[window_index];
+    if (!window.visible || window.pane_index >= mBrlytLayout.panes.size()) {
+        return;
+    }
+
+    const auto& pane = mBrlytLayout.panes[window.pane_index];
+    const auto base_left = base_position_x(pane.base_position, pane.width);
+    const auto base_top = base_position_y(pane.base_position, pane.height);
+    const auto white_vertex_colors = std::array< std::array< std::uint8_t, 4U >, 4U >{
+        std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
+        std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
+        std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
+        std::array< std::uint8_t, 4U >{255U, 255U, 255U, 255U},
+    };
+
+    const auto material_texture_size = [&](std::uint16_t material_index) {
+        auto size = LayoutTextureSize{};
+        if (material_index >= mBrlytLayout.materials.size() || mBrlytLayout.materials[material_index].textures.empty()) {
+            return size;
+        }
+        const auto& texture_name = mBrlytLayout.materials[material_index].textures.front().texture_name;
+        if (auto* texture = find_texture(mRenderTextures, texture_name); texture != nullptr) {
+            size.width = static_cast< float >(std::max<std::uint16_t>(texture->decoded.width, 1U));
+            size.height = static_cast< float >(std::max<std::uint16_t>(texture->decoded.height, 1U));
+        }
+        return size;
+    };
+
+    const auto frame_size_for = [&]() {
+        auto frame_size = LayoutWindowFrameSize{};
+        if (window.frames.empty()) {
+            return frame_size;
+        }
+        if (window.frames.size() == 1U) {
+            const auto size = material_texture_size(window.frames[0U].material_index);
+            frame_size.left = size.width;
+            frame_size.right = size.width;
+            frame_size.top = size.height;
+            frame_size.bottom = size.height;
+            return frame_size;
+        }
+        const auto top_left_size = material_texture_size(window.frames[0U].material_index);
+        const auto bottom_right_size = material_texture_size(window.frames[std::min<std::size_t>(3U, window.frames.size() - 1U)].material_index);
+        frame_size.left = top_left_size.width;
+        frame_size.top = top_left_size.height;
+        frame_size.right = bottom_right_size.width;
+        frame_size.bottom = bottom_right_size.height;
+        return frame_size;
+    };
+
+    const auto frame_size = frame_size_for();
+    auto content_tex_coords = layout_window_content_tex_coord_sets(window.content.tex_coord_sets);
+    submitLayoutQuad(renderer, alpha, window.pane_index, window.content.material_index, window.name, window.content.vertex_colors,
+                     std::span< const std::array< smgpc::layout::BrlytTexCoord, 4U > >(content_tex_coords.data(), content_tex_coords.size()),
+                     base_left + frame_size.left - window.content_inflation.left,
+                     base_top + frame_size.top - window.content_inflation.top,
+                     window.width - frame_size.left + window.content_inflation.left - frame_size.right + window.content_inflation.right,
+                     window.height - frame_size.top + window.content_inflation.top - frame_size.bottom + window.content_inflation.bottom,
+                     static_cast< std::uint32_t >(0x80000000U | window_index));
+
+    const auto draw_frame_quad = [&](std::size_t frame_index, float left, float top, float width, float height,
+                                     std::array< smgpc::layout::BrlytTexCoord, 4U > tex_coords) {
+        if (frame_index >= window.frames.size() || width <= 0.0F || height <= 0.0F) {
+            return;
+        }
+        const auto& frame = window.frames[frame_index];
+        if (frame.material_index >= mBrlytLayout.materials.size() || mBrlytLayout.materials[frame.material_index].textures.empty()) {
+            return;
+        }
+        const auto tex_coord_sets = std::array< std::array< smgpc::layout::BrlytTexCoord, 4U >, 1U >{tex_coords};
+        submitLayoutQuad(renderer, alpha, window.pane_index, frame.material_index, window.name, white_vertex_colors,
+                         std::span< const std::array< smgpc::layout::BrlytTexCoord, 4U > >(tex_coord_sets.data(), tex_coord_sets.size()),
+                         left, top, width, height, static_cast< std::uint32_t >(0x81000000U | (window_index << 8U) | frame_index));
+    };
+
+    if (window.frames.size() == 1U) {
+        const auto size = material_texture_size(window.frames[0U].material_index);
+        draw_frame_quad(0U, base_left, base_top, window.width - frame_size.right, frame_size.top,
+                        layout_window_frame_tex_coords_lt(window.frames[0U].texture_flip, size, window.width - frame_size.right, frame_size.top));
+        draw_frame_quad(0U, base_left + window.width - frame_size.right, base_top, frame_size.right, window.height - frame_size.bottom,
+                        layout_window_frame_tex_coords_rt(window.frames[0U].texture_flip, size, frame_size.right, window.height - frame_size.bottom));
+        draw_frame_quad(0U, base_left + frame_size.left, base_top + window.height - frame_size.bottom, window.width - frame_size.left,
+                        frame_size.bottom, layout_window_frame_tex_coords_rb(window.frames[0U].texture_flip, size, window.width - frame_size.left,
+                                                                            frame_size.bottom));
+        draw_frame_quad(0U, base_left, base_top + frame_size.top, frame_size.left, window.height - frame_size.top,
+                        layout_window_frame_tex_coords_lb(window.frames[0U].texture_flip, size, frame_size.left, window.height - frame_size.top));
+        return;
+    }
+
+    if (window.frames.size() >= 4U) {
+        auto size = material_texture_size(window.frames[0U].material_index);
+        draw_frame_quad(0U, base_left, base_top, window.width - frame_size.right, frame_size.top,
+                        layout_window_frame_tex_coords_lt(window.frames[0U].texture_flip, size, window.width - frame_size.right, frame_size.top));
+        size = material_texture_size(window.frames[1U].material_index);
+        draw_frame_quad(1U, base_left + window.width - frame_size.right, base_top, frame_size.right, window.height - frame_size.bottom,
+                        layout_window_frame_tex_coords_rt(window.frames[1U].texture_flip, size, frame_size.right, window.height - frame_size.bottom));
+        size = material_texture_size(window.frames[3U].material_index);
+        draw_frame_quad(3U, base_left + frame_size.left, base_top + window.height - frame_size.bottom, window.width - frame_size.left,
+                        frame_size.bottom, layout_window_frame_tex_coords_rb(window.frames[3U].texture_flip, size, window.width - frame_size.left,
+                                                                            frame_size.bottom));
+        size = material_texture_size(window.frames[2U].material_index);
+        draw_frame_quad(2U, base_left, base_top + frame_size.top, frame_size.left, window.height - frame_size.top,
+                        layout_window_frame_tex_coords_lb(window.frames[2U].texture_flip, size, frame_size.left, window.height - frame_size.top));
+    }
+
+    if (window.frames.size() >= 8U) {
+        auto size = material_texture_size(window.frames[6U].material_index);
+        draw_frame_quad(6U, base_left + frame_size.left, base_top, window.width - frame_size.left - frame_size.right, frame_size.top,
+                        layout_window_frame_tex_coords_lt(window.frames[6U].texture_flip, size, window.width - frame_size.left - frame_size.right,
+                                                          frame_size.top));
+        size = material_texture_size(window.frames[5U].material_index);
+        draw_frame_quad(5U, base_left + window.width - frame_size.right, base_top + frame_size.top, frame_size.right,
+                        window.height - frame_size.top - frame_size.bottom,
+                        layout_window_frame_tex_coords_rt(window.frames[5U].texture_flip, size, frame_size.right,
+                                                          window.height - frame_size.top - frame_size.bottom));
+        size = material_texture_size(window.frames[7U].material_index);
+        draw_frame_quad(7U, base_left + frame_size.left, base_top + window.height - frame_size.bottom,
+                        window.width - frame_size.left - frame_size.right, frame_size.bottom,
+                        layout_window_frame_tex_coords_rb(window.frames[7U].texture_flip, size, window.width - frame_size.left - frame_size.right,
+                                                          frame_size.bottom));
+        size = material_texture_size(window.frames[4U].material_index);
+        draw_frame_quad(4U, base_left, base_top + frame_size.top, frame_size.left, window.height - frame_size.top - frame_size.bottom,
+                        layout_window_frame_tex_coords_lb(window.frames[4U].texture_flip, size, frame_size.left,
+                                                          window.height - frame_size.top - frame_size.bottom));
+    }
 }
 
 void SimpleLayout::startAnim(const char* pAnimName, u32 animLayer) {
@@ -1266,8 +1888,9 @@ void SimpleLayout::replacePaneTexture(std::string_view paneName, const nw4r::lyt
     };
 
     for (auto& picture : mBrlytLayout.pictures) {
-        const auto matches_picture = picture.name == paneName;
-        const auto matches_pane = picture.pane_index < mBrlytLayout.panes.size() && mBrlytLayout.panes[picture.pane_index].name == paneName;
+        const auto matches_picture = pane_name_matches_request(picture.name, paneName);
+        const auto matches_pane = picture.pane_index < mBrlytLayout.panes.size() &&
+                                  pane_name_matches_request(mBrlytLayout.panes[picture.pane_index].name, paneName);
         if (!matches_picture && !matches_pane) {
             continue;
         }
@@ -1282,7 +1905,7 @@ void SimpleLayout::replacePaneTexture(std::string_view paneName, const nw4r::lyt
     }
 
     for (auto material_index = std::uint16_t{}; material_index < mBrlytLayout.materials.size(); ++material_index) {
-        if (mBrlytLayout.materials[material_index].name == paneName) {
+        if (pane_name_matches_request(mBrlytLayout.materials[material_index].name, paneName)) {
             replace_material_texture(material_index);
         }
     }
@@ -1294,7 +1917,17 @@ void SimpleLayout::setPaneAlpha(std::string_view paneName, f32 alpha) {
         return;
     }
 
-    mPaneAlphaOverrides[std::string(paneName)] = std::clamp(alpha, 0.0F, 1.0F) * 255.0F;
+    const auto alpha_u8 = std::clamp(alpha, 0.0F, 1.0F) * 255.0F;
+    auto matched = false;
+    for (const auto& pane : mBrlytLayout.panes) {
+        if (pane_name_matches_request(pane.name, paneName)) {
+            mPaneAlphaOverrides[pane.name] = alpha_u8;
+            matched = true;
+        }
+    }
+    if (!matched) {
+        mPaneAlphaOverrides[std::string(paneName)] = alpha_u8;
+    }
 }
 
 void SimpleLayout::setPaneVisible(std::string_view paneName, bool visible) {
@@ -1303,7 +1936,16 @@ void SimpleLayout::setPaneVisible(std::string_view paneName, bool visible) {
         return;
     }
 
-    mPaneVisibilityOverrides[std::string(paneName)] = visible;
+    auto matched = false;
+    for (const auto& pane : mBrlytLayout.panes) {
+        if (pane_name_matches_request(pane.name, paneName)) {
+            mPaneVisibilityOverrides[pane.name] = visible;
+            matched = true;
+        }
+    }
+    if (!matched) {
+        mPaneVisibilityOverrides[std::string(paneName)] = visible;
+    }
 }
 
 void SimpleLayout::setPaneVisibleRecursive(std::string_view paneName, bool visible) {
@@ -1314,7 +1956,7 @@ void SimpleLayout::setPaneVisibleRecursive(std::string_view paneName, bool visib
 
     auto root_indices = std::vector< std::size_t >{};
     for (auto i = std::size_t{}; i < mBrlytLayout.panes.size(); ++i) {
-        if (mBrlytLayout.panes[i].name == paneName) {
+        if (pane_name_matches_request(mBrlytLayout.panes[i].name, paneName)) {
             root_indices.push_back(i);
         }
     }
@@ -1367,10 +2009,8 @@ bool SimpleLayout::isPaneVisible(std::string_view paneName) const {
         return !mIsDead;
     }
 
-    for (auto i = std::size_t{}; i < mBrlytLayout.panes.size(); ++i) {
-        if (mBrlytLayout.panes[i].name == paneName) {
-            return paneRenderState(i).visible;
-        }
+    if (const auto pane_index = find_preferred_pane_index(mBrlytLayout, paneName)) {
+        return paneRenderState(*pane_index).visible;
     }
 
     return true;
@@ -1381,7 +2021,7 @@ bool SimpleLayout::hasPane(std::string_view paneName) const {
         return true;
     }
 
-    return std::ranges::any_of(mBrlytLayout.panes, [paneName](const auto& pane) { return pane.name == paneName; });
+    return find_preferred_pane_index(mBrlytLayout, paneName).has_value();
 }
 
 std::optional< SimpleLayout::PaneBounds > SimpleLayout::paneBounds(std::string_view paneName) const {
@@ -1391,7 +2031,7 @@ std::optional< SimpleLayout::PaneBounds > SimpleLayout::paneBounds(std::string_v
     }
 
     if (paneName.empty()) {
-        const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
+        const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) * 0.5F;
         const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
         return PaneBounds{
             .left = -half_width,
@@ -1401,34 +2041,28 @@ std::optional< SimpleLayout::PaneBounds > SimpleLayout::paneBounds(std::string_v
         };
     }
 
-    const auto it = std::ranges::find_if(mBrlytLayout.panes, [paneName](const auto& pane) { return pane.name == paneName; });
-    if (it == mBrlytLayout.panes.end()) {
+    const auto pane_index = find_preferred_pane_index(mBrlytLayout, paneName);
+    if (!pane_index.has_value()) {
         return std::nullopt;
     }
 
-    const auto pane_index = static_cast< std::size_t >(std::distance(mBrlytLayout.panes.begin(), it));
-    const auto pane_state = paneRenderState(pane_index);
+    const auto& pane = mBrlytLayout.panes[*pane_index];
+    const auto pane_state = paneRenderState(*pane_index);
     if (!pane_state.visible || pane_state.alpha <= 0.0F) {
         return std::nullopt;
     }
 
-    if (it->width == 0.0F || it->height == 0.0F) {
+    if (pane.width == 0.0F || pane.height == 0.0F) {
         return std::nullopt;
     }
 
-    const auto local_left = base_position_x(it->base_position, it->width);
-    const auto local_top = base_position_y(it->base_position, it->height);
-    const auto transform_point = [&](float local_x, float local_y) {
-        return std::array< float, 2U >{
-            mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
-            mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
-        };
-    };
+    const auto local_left = base_position_x(pane.base_position, pane.width);
+    const auto local_top = base_position_y(pane.base_position, pane.height);
     const auto corners = std::array< std::array< float, 2U >, 4U >{
-        transform_point(local_left, local_top),
-        transform_point(local_left + it->width, local_top),
-        transform_point(local_left + it->width, local_top + it->height),
-        transform_point(local_left, local_top + it->height),
+        panePointForAurora(pane_state, local_left, local_top),
+        panePointForAurora(pane_state, local_left + pane.width, local_top),
+        panePointForAurora(pane_state, local_left + pane.width, local_top + pane.height),
+        panePointForAurora(pane_state, local_left, local_top + pane.height),
     };
     auto left = corners.front()[0U];
     auto right = corners.front()[0U];
@@ -1454,12 +2088,12 @@ std::optional< TVec2f > SimpleLayout::paneScale(std::string_view paneName) const
         return TVec2f{mScaleX, mScaleY};
     }
 
-    const auto it = std::ranges::find_if(mBrlytLayout.panes, [paneName](const auto& pane) { return pane.name == paneName; });
-    if (it == mBrlytLayout.panes.end()) {
+    const auto pane_index = find_preferred_pane_index(mBrlytLayout, paneName);
+    if (!pane_index.has_value()) {
         return std::nullopt;
     }
 
-    const auto pane_state = paneRenderState(static_cast< std::size_t >(std::distance(mBrlytLayout.panes.begin(), it)));
+    const auto pane_state = paneRenderState(*pane_index);
     return TVec2f{
         .x = hypot2(pane_state.m00, pane_state.m10),
         .y = hypot2(pane_state.m01, pane_state.m11),
@@ -1498,12 +2132,12 @@ bool SimpleLayout::copyPaneMatrix(std::string_view paneName, Mtx matrix) const {
         return true;
     }
 
-    const auto it = std::ranges::find_if(mBrlytLayout.panes, [paneName](const auto& pane) { return pane.name == paneName; });
-    if (it == mBrlytLayout.panes.end()) {
+    const auto pane_index = find_preferred_pane_index(mBrlytLayout, paneName);
+    if (!pane_index.has_value()) {
         return false;
     }
 
-    set_matrix(paneRenderState(static_cast< std::size_t >(std::distance(mBrlytLayout.panes.begin(), it))));
+    set_matrix(paneRenderState(*pane_index));
     return true;
 }
 
@@ -1513,8 +2147,10 @@ bool SimpleLayout::isPointingPane(std::string_view paneName, f32 screenX, f32 sc
         return false;
     }
 
-    const auto layout_x = screenX - static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
-    const auto layout_y = screenY - static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
+    const auto layout_x = screenX * static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) /
+                              static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) -
+                          static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) * 0.5F;
+    const auto layout_y = -(screenY - static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F);
     return layout_x >= bounds->left && layout_x <= bounds->right && layout_y >= bounds->top && layout_y <= bounds->bottom;
 }
 
@@ -1833,7 +2469,18 @@ SimpleLayout::PaneAnimationState& SimpleLayout::paneAnimation(std::string_view p
 
 const SimpleLayout::PaneAnimationState* SimpleLayout::findPaneAnimation(std::string_view paneName) const {
     const auto it = std::ranges::find_if(mPaneAnimations, [paneName](const auto& pane) { return pane.pane_name == paneName; });
-    return it == mPaneAnimations.end() ? nullptr : &*it;
+    if (it != mPaneAnimations.end()) {
+        return &*it;
+    }
+
+    const auto active = layout_locale_suffix();
+    if (active.empty() || !ends_with(paneName, active) || paneName.size() <= active.size()) {
+        return nullptr;
+    }
+
+    const auto base_name = paneName.substr(0U, paneName.size() - active.size());
+    const auto base = std::ranges::find_if(mPaneAnimations, [base_name](const auto& pane) { return pane.pane_name == base_name; });
+    return base == mPaneAnimations.end() ? nullptr : &*base;
 }
 
 void SimpleLayout::commitAnimationState(const AnimationState& anim) {
@@ -1906,6 +2553,7 @@ void SimpleLayout::loadRenderData() {
         }
 
         mBrlytLayout = smgpc::layout::parse_brlyt_layout(archive->file_data(*brlyt_it));
+        applyLayoutMessagesFromPaneUserData();
         for (const auto& entry : archive->entries()) {
             if (!ends_with(entry.path, ".brlan")) {
                 continue;
@@ -1994,6 +2642,64 @@ void SimpleLayout::loadRenderData() {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->note_layout_texture_decode_failed(mLayoutName, "<layout>", e.what());
         }
+    }
+}
+
+void SimpleLayout::applyLayoutMessagesFromPaneUserData() {
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr || mBrlytLayout.text_boxes.empty()) {
+        return;
+    }
+
+    auto changed = false;
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (text_box.pane_index >= mBrlytLayout.panes.size()) {
+            continue;
+        }
+
+        auto user_data = std::string_view{};
+        auto pane_index = text_box.pane_index;
+        while (pane_index < mBrlytLayout.panes.size()) {
+            const auto& pane = mBrlytLayout.panes[pane_index];
+            if (!pane.user_data.empty()) {
+                user_data = pane.user_data;
+                break;
+            }
+            if (pane.parent_index < 0) {
+                break;
+            }
+            pane_index = static_cast< std::size_t >(pane.parent_index);
+        }
+
+        if (user_data.empty()) {
+            continue;
+        }
+
+        const auto message_id = layout_message_id(mLayoutName, user_data);
+        const auto* raw_text = runtime->messages().message_raw_utf16(message_id);
+        if (raw_text == nullptr) {
+            continue;
+        }
+
+        const auto* display_text = runtime->messages().message_utf16(message_id);
+        const auto formatted = display_text == nullptr ? smgpc::resource::format_bmg_text(*raw_text, {}) : std::u16string{};
+        const auto& visible_text = display_text == nullptr ? formatted : *display_text;
+        text_box.raw_text = encode_utf16_words(*raw_text);
+        text_box.text = encode_utf16_words(visible_text);
+        if (const auto* control_tags = runtime->messages().message_control_tags(message_id)) {
+            text_box.control_tags = *control_tags;
+        } else {
+            text_box.control_tags = smgpc::resource::bmg_control_tags(*raw_text);
+        }
+        mTextBoxTemplates[text_box.name] = TextBoxTemplateState{
+            .raw_text = *raw_text,
+            .args = {},
+        };
+        changed = true;
+    }
+
+    if (changed) {
+        mRenderTextTextures.clear();
     }
 }
 
@@ -2163,7 +2869,7 @@ void SimpleLayout::drawTextBox(smgpc::render::AuroraRenderer& renderer, float al
         return;
     }
     const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
-    if (!text_box.visible || text_box.pane_index >= mBrlytLayout.panes.size()) {
+    if (text_box.pane_index >= mBrlytLayout.panes.size()) {
         return;
     }
 
@@ -2202,16 +2908,10 @@ void SimpleLayout::drawTextBox(smgpc::render::AuroraRenderer& renderer, float al
     const auto height = text_height;
     const auto top_v = gx_texture_v_to_host(0.0F);
     const auto bottom_v = gx_texture_v_to_host(1.0F);
-    const auto transform_point = [&](float local_x, float local_y) {
-        return std::array< float, 2U >{
-            mTransX + pane_state.translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y,
-            mTransY + pane_state.translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y,
-        };
-    };
-    const auto top_left = transform_point(cursor_x, cursor_y);
-    const auto top_right = transform_point(cursor_x + width, cursor_y);
-    const auto bottom_right = transform_point(cursor_x + width, cursor_y + height);
-    const auto bottom_left = transform_point(cursor_x, cursor_y + height);
+    const auto top_left = panePointForAurora(pane_state, cursor_x, cursor_y);
+    const auto top_right = panePointForAurora(pane_state, cursor_x + width, cursor_y);
+    const auto bottom_right = panePointForAurora(pane_state, cursor_x + width, cursor_y + height);
+    const auto bottom_left = panePointForAurora(pane_state, cursor_x, cursor_y + height);
 
     renderer.submit_textured_quad(
         text_texture->handle,
@@ -2227,6 +2927,25 @@ void SimpleLayout::drawTextBox(smgpc::render::AuroraRenderer& renderer, float al
         });
 }
 
+std::array< float, 2U > SimpleLayout::panePointForAurora(const PaneRenderState& pane_state, float local_x, float local_y) const {
+    const auto translate_x = mTransX + pane_state.translate_x;
+    const auto translate_y = mTransY + pane_state.translate_y;
+
+    if (mBrlytLayout.origin_type == 1U) {
+        return std::array< float, 2U >{
+            translate_x + pane_state.m00 * local_x - pane_state.m01 * local_y,
+            translate_y + pane_state.m10 * local_x - pane_state.m11 * local_y,
+        };
+    }
+
+    const auto top_left_x = translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y;
+    const auto top_left_y = translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y;
+    return std::array< float, 2U >{
+        top_left_x - mBrlytLayout.width * 0.5F,
+        mBrlytLayout.height * 0.5F - top_left_y,
+    };
+}
+
 SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_index) const {
     const auto& pane = mBrlytLayout.panes.at(pane_index);
     auto local_translate_x = pane.translate_x;
@@ -2236,6 +2955,7 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     auto local_rotate_z = pane.rotate_z;
     auto local_alpha = static_cast< float >(pane.alpha);
     auto local_visible = pane.visible;
+    const auto local_location_adjust = pane.location_adjust;
 
     const auto anim = animationFrameForPane(pane.name);
     if (anim.translate_x.has_value()) {
@@ -2265,6 +2985,18 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     if (const auto override = mPaneAlphaOverrides.find(pane.name); override != mPaneAlphaOverrides.end()) {
         local_alpha = override->second;
     }
+    if (pane_name_has_inactive_locale_suffix(pane.name)) {
+        local_visible = false;
+    }
+    if (pane_name_has_active_locale_variant(mBrlytLayout, pane.name)) {
+        local_visible = false;
+    }
+
+    if (local_location_adjust) {
+        const auto adjust = layout_location_adjust_scale();
+        local_scale_x *= adjust[0U];
+        local_scale_y *= adjust[1U];
+    }
 
     constexpr auto kDegToRad = 3.14159265358979323846F / 180.0F;
     const auto rotation = local_rotate_z * kDegToRad;
@@ -2276,6 +3008,7 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
     const auto local_m11 = cos_r * local_scale_y;
 
     if (pane.parent_index < 0) {
+        const auto modifies_child_alpha = pane.influenced_alpha && local_alpha != 255.0F;
         return PaneRenderState{
             .translate_x = local_translate_x,
             .translate_y = local_translate_y,
@@ -2287,11 +3020,17 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
             .m10 = mScaleY * local_m10,
             .m11 = mScaleY * local_m11,
             .alpha = local_alpha,
+            .child_alpha_scale = modifies_child_alpha ? (local_alpha / 255.0F) : 1.0F,
             .visible = local_visible,
+            .location_adjust = local_location_adjust,
+            .child_alpha_influenced = modifies_child_alpha,
         };
     }
 
     const auto parent = paneRenderState(static_cast< std::size_t >(pane.parent_index));
+    const auto effective_alpha = parent.child_alpha_influenced ? local_alpha * parent.child_alpha_scale : local_alpha;
+    const auto modifies_child_alpha = pane.influenced_alpha && local_alpha != 255.0F;
+    const auto child_alpha_scale = modifies_child_alpha ? parent.child_alpha_scale * (local_alpha / 255.0F) : parent.child_alpha_scale;
     return PaneRenderState{
         .translate_x = parent.translate_x + parent.m00 * local_translate_x + parent.m01 * local_translate_y,
         .translate_y = parent.translate_y + parent.m10 * local_translate_x + parent.m11 * local_translate_y,
@@ -2302,8 +3041,11 @@ SimpleLayout::PaneRenderState SimpleLayout::paneRenderState(std::size_t pane_ind
         .m01 = parent.m00 * local_m01 + parent.m01 * local_m11,
         .m10 = parent.m10 * local_m00 + parent.m11 * local_m10,
         .m11 = parent.m10 * local_m01 + parent.m11 * local_m11,
-        .alpha = parent.alpha * (local_alpha / 255.0F),
+        .alpha = effective_alpha,
+        .child_alpha_scale = child_alpha_scale,
         .visible = parent.visible && local_visible,
+        .location_adjust = local_location_adjust,
+        .child_alpha_influenced = parent.child_alpha_influenced || modifies_child_alpha,
     };
 }
 

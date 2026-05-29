@@ -108,9 +108,10 @@ void LiveActorModel::setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4 &m
     mProjmapEffectMatrix = matrix;
 }
 
-void LiveActorModel::draw(smgpc::render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose,
-                                const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawPass pass) {
-    ensureLoaded(renderer);
+void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const smgpc::render::J3dMatrix3x4 &actor_matrix,
+                          std::uint64_t frame, DrawPass pass) {
+    auto &renderer = smgpc::render::current_aurora_renderer();
+    ensureLoaded();
     if (mRenderer == nullptr || !mRenderer->is_loaded()) {
         return;
     }
@@ -164,12 +165,13 @@ std::string_view LiveActorModel::model_arc_name() const {
     return mModelArcName;
 }
 
-void LiveActorModel::ensureLoaded(smgpc::render::AuroraRenderer &renderer) {
+void LiveActorModel::ensureLoaded() {
     if (mLoadAttempted) {
         return;
     }
     mLoadAttempted = true;
 
+    auto &renderer = smgpc::render::current_aurora_renderer();
     auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr || mModelArcName.empty()) {
         return;

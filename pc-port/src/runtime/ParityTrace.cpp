@@ -579,50 +579,6 @@ namespace smgpc::runtime {
             return copy_rect_json(frame_rect(width, height));
         }
 
-        [[nodiscard]] render::CopyEvent default_xfb_copy_event(const render::FrameContext &frame_context) {
-            const auto width = frame_context.framebuffer.width;
-            const auto height = frame_context.framebuffer.height;
-            const auto rect = frame_rect(width, height);
-            return render::CopyEvent {
-                .index = 0U,
-                .event_index = frame_context.frame_index,
-                .presenter_frame_count = frame_context.frame_index,
-                .kind = render::CopyEventKind::Xfb,
-                .copy_to_xfb = true,
-                .depth_copy = false,
-                .clear = false,
-                .half_scale = false,
-                .scale_invert = false,
-                .clamp_top = true,
-                .clamp_bottom = true,
-                .intensity_format = false,
-                .auto_conversion = false,
-                .clear_color = {0U, 0U, 0U, 0U},
-                .clear_depth = 0U,
-                .copy_filter_aa = false,
-                .copy_filter_vertical = false,
-                .copy_filter_sample_pattern = {},
-                .copy_filter_vfilter = {},
-                .dest_addr = 0U,
-                .dest_stride = static_cast<std::uint32_t>(width) * 2U,
-                .source_rect = rect,
-                .output_size = frame_context.framebuffer,
-                .target_pixel_format = 0U,
-                .real_format = 0U,
-                .frame_to_field = 0U,
-                .gamma_index = 0U,
-                .gamma_value = 1.0F,
-                .y_scale = 1.0F,
-                .dispcopyyscale = 256U,
-                .scissor = rect,
-                .viewport = copy_viewport_from_frame(frame_context),
-                .backbuffer = frame_context.framebuffer,
-                .target_rect = rect,
-                .render_pass = "EfbToXfb",
-                .view_id = 0U,
-            };
-        }
-
         [[nodiscard]] Json copy_event_json(const render::CopyEvent &event, std::uint64_t index) {
             return Json {
                 {"index", index},
@@ -664,15 +620,8 @@ namespace smgpc::runtime {
             };
         }
 
-        [[nodiscard]] Json pc_copy_events_json(const render::FrameContext &frame_context, const RuntimeContext &runtime) {
+        [[nodiscard]] Json pc_copy_events_json(const RuntimeContext &runtime) {
             auto out = Json::array();
-            auto has_xfb_copy = false;
-            for (const auto &event : runtime.copy_events()) {
-                has_xfb_copy = has_xfb_copy || event.kind == render::CopyEventKind::Xfb;
-            }
-            if (!has_xfb_copy) {
-                out.push_back(copy_event_json(default_xfb_copy_event(frame_context), out.size()));
-            }
             for (const auto &event : runtime.copy_events()) {
                 out.push_back(copy_event_json(event, out.size()));
             }
@@ -1239,6 +1188,8 @@ namespace smgpc::runtime {
                 {"lifetime", particle.lifetime},
                 {"child", particle.child},
                 {"position", Json::array({particle.x, particle.y, particle.z})},
+                {"velocity", Json::array({particle.velocity_x, particle.velocity_y, particle.velocity_z})},
+                {"momentum", particle.momentum},
                 {"scale", Json::array({particle.scale_x, particle.scale_y})},
                 {"alpha", particle.alpha},
             };
@@ -1776,7 +1727,7 @@ namespace smgpc::runtime {
                 {"lod_bias_raw", texture.lod_bias},
                 {"lod_bias", static_cast<float>(texture.lod_bias) / 100.0F},
                 {"image_data_offset", texture.image_data_offset},
-                {"host_texture_handle", texture.host_handle.is_valid() ? Json(texture.host_handle.value) : Json(nullptr)},
+                {"host_texture_handle", texture.host_handle.is_valid() ? Json(static_cast<std::uint64_t>(texture.host_handle.debug_id())) : Json(nullptr)},
             };
         }
 
@@ -2401,7 +2352,7 @@ namespace smgpc::runtime {
             {"semantic_events", semantic_trace_events_json(runtime)},
             {"layout_runtime", layout_runtime_entries_json(runtime.scheduler().debug_layout_runtime_snapshot())},
             {"render_packets", runtime_render_packets_json(runtime)},
-            {"copy_events", pc_copy_events_json(frame_context, runtime)},
+            {"copy_events", pc_copy_events_json(runtime)},
         };
         return trace;
     }

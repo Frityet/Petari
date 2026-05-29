@@ -9,7 +9,6 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/LayoutActorFlag.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "RendererService.hpp"
 
 class EffectSystem;
 class LayoutManager;
@@ -48,7 +47,7 @@ public:
     void initPointingTarget(int);
     void updateSpine();
 
-    void drawLayout(smgpc::render::AuroraRenderer& renderer);
+    void drawLayout();
     [[nodiscard]] bool isDead() const;
     [[nodiscard]] SimpleLayout* getSimpleLayout();
     [[nodiscard]] const SimpleLayout* getSimpleLayout() const;

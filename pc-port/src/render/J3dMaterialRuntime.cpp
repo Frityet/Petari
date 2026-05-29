@@ -822,6 +822,14 @@ namespace smgpc::render {
 
     }  // namespace
 
+    bool j3d_uses_projected_texture_matrix(const J3dTexMatrixSummary &tex_matrix) {
+        return uses_projected_texture_matrix(tex_matrix);
+    }
+
+    J3dMatrix3x4 j3d_texture_projection_matrix(const J3dTexMatrixSummary &tex_matrix, const J3dMatrix3x4 *model_matrix) {
+        return texture_projection_matrix(tex_matrix, model_matrix);
+    }
+
     std::optional<std::uint8_t> j3d_tex_matrix_slot_from_gx_matrix(std::uint8_t matrix) {
         if (matrix < 30U) {
             return std::nullopt;

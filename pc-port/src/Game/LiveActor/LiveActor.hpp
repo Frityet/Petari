@@ -128,7 +128,7 @@ public:
     void loadActorLight() const;
     void setBaseMatrix(const smgpc::render::J3dMatrix3x4& matrix);
     void setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4& matrix);
-    void drawModel(smgpc::render::AuroraRenderer& renderer, const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
+    void drawModel(const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
                    smgpc::render::live_actor::LiveActorModel::DrawPass pass = smgpc::render::live_actor::LiveActorModel::DrawPass::All);
     void startBck(const char* pName, const char* pFileName);
     void startBrk(const char* pName);

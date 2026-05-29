@@ -133,9 +133,9 @@ namespace smgpc::runtime {
         void begin_frame(const render::FrameContext &frame_context);
         void set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose);
         void record_copy_event(render::CopyEvent event);
-        void draw_3d_normal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose);
-        void draw_3d_normal(render::AuroraRenderer &renderer);
-        void draw_2d_normal(render::AuroraRenderer &renderer);
+        void draw_3d_normal(const smgpc::camera::CameraPose &camera_pose);
+        void draw_3d_normal();
+        void draw_2d_normal();
 #ifndef NDEBUG
         void set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index);
 #endif

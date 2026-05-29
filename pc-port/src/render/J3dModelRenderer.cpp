@@ -111,16 +111,35 @@ namespace smgpc::render {
             return {dot3(world_vector, context.right), dot3(world_vector, context.up), dot3(world_vector, context.forward)};
         }
 
-        [[nodiscard]] std::array<float, 3U> transform_normal_to_camera(const J3dMatrix3x4 &matrix, const CameraProjectionContext &camera_context,
+        [[nodiscard]] std::array<float, 3U> transform_normal_to_world(const J3dMatrix3x4 &matrix, std::array<float, 3U> normal) {
+            const auto a = matrix.m[0U];
+            const auto b = matrix.m[1U];
+            const auto c = matrix.m[2U];
+            const auto d = matrix.m[4U];
+            const auto e = matrix.m[5U];
+            const auto f = matrix.m[6U];
+            const auto g = matrix.m[8U];
+            const auto h = matrix.m[9U];
+            const auto i = matrix.m[10U];
+            auto world_normal = std::array<float, 3U>{
+                (e * i - f * h) * normal[0U] + (f * g - d * i) * normal[1U] + (d * h - e * g) * normal[2U],
+                (c * h - b * i) * normal[0U] + (a * i - c * g) * normal[1U] + (b * g - a * h) * normal[2U],
+                (b * f - c * e) * normal[0U] + (c * d - a * f) * normal[1U] + (a * e - b * d) * normal[2U],
+            };
+            if (dot3(world_normal, world_normal) <= 0.0000001F) {
+                world_normal = {
+                    a * normal[0U] + b * normal[1U] + c * normal[2U],
+                    d * normal[0U] + e * normal[1U] + f * normal[2U],
+                    g * normal[0U] + h * normal[1U] + i * normal[2U],
+                };
+            }
+            return normalized_or(world_normal, {0.0F, 0.0F, 1.0F});
+        }
+
+        [[nodiscard]] std::array<float, 3U> transform_normal_to_camera(const J3dMatrix3x4 &matrix,
+                                                                       const CameraProjectionContext &camera_context,
                                                                        std::array<float, 3U> normal) {
-            const auto world_normal = normalized_or(
-                {
-                    matrix.m[0U] * normal[0U] + matrix.m[1U] * normal[1U] + matrix.m[2U] * normal[2U],
-                    matrix.m[4U] * normal[0U] + matrix.m[5U] * normal[1U] + matrix.m[6U] * normal[2U],
-                    matrix.m[8U] * normal[0U] + matrix.m[9U] * normal[1U] + matrix.m[10U] * normal[2U],
-                },
-                {0.0F, 0.0F, 1.0F});
-            return normalized_or(camera_space_vector(camera_context, world_normal), {0.0F, 0.0F, 1.0F});
+            return normalized_or(camera_space_vector(camera_context, transform_normal_to_world(matrix, normal)), {0.0F, 0.0F, 1.0F});
         }
 
         [[nodiscard]] std::uint8_t first_raster_channel_selector(const GXMaterialState &state, std::span<const J3dMaterialTexturePass> passes) {
@@ -154,6 +173,64 @@ namespace smgpc::render {
             }
 
             return false;
+        }
+
+        [[nodiscard]] bool can_upload_raw_gx_texture(smgpc::resource::TplTextureFormat format) {
+            switch (format) {
+            case smgpc::resource::TplTextureFormat::C4:
+            case smgpc::resource::TplTextureFormat::C8:
+            case smgpc::resource::TplTextureFormat::C14X2:
+                return false;
+            default:
+                return true;
+            }
+        }
+
+        [[nodiscard]] GXAnisotropy gx_anisotropy_from_bti(std::uint8_t value) {
+            switch (value) {
+            case GX_ANISO_2:
+                return GX_ANISO_2;
+            case GX_ANISO_4:
+                return GX_ANISO_4;
+            default:
+                return GX_ANISO_1;
+            }
+        }
+
+        [[nodiscard]] TextureHandle create_composed_texture_handle(AuroraRenderer &renderer,
+                                                                   const J3dComposedMaterialTexture &composed,
+                                                                   std::span<const J3dTexture> textures,
+                                                                   std::span<const J3dMaterialTexturePass> passes) {
+            const auto base_handle = [&]() {
+                return renderer.create_rgba8_texture(composed.image.width, composed.image.height, composed.image.rgba);
+            };
+
+            const J3dTexture *mip_source = nullptr;
+            for (const auto &pass : passes) {
+                if (pass.texture_index >= textures.size()) {
+                    continue;
+                }
+
+                const auto &texture = textures[pass.texture_index];
+                if (mip_source == nullptr || (texture.mipmap && texture.image_count > 1U)) {
+                    mip_source = &texture;
+                }
+                if (texture.mipmap && texture.image_count > 1U) {
+                    break;
+                }
+            }
+
+            if (mip_source == nullptr || !mip_source->mipmap || mip_source->image_count <= 1U) {
+                return base_handle();
+            }
+
+            return renderer.create_rgba8_mip_texture(composed.image.width, composed.image.height, composed.image.rgba,
+                                                     static_cast<float>(mip_source->min_lod) / 8.0F,
+                                                     static_cast<float>(mip_source->max_lod) / 8.0F,
+                                                     static_cast<float>(mip_source->lod_bias) / 100.0F,
+                                                     mip_source->bias_clamp, mip_source->do_edge_lod,
+                                                     gx_anisotropy_from_bti(mip_source->max_anisotropy),
+                                                     mip_source->min_filter, mip_source->mag_filter);
         }
 
         [[nodiscard]] const J3dTevStageSummary *find_tev_stage(const J3dMaterialSummary &material, std::uint8_t stage_index) {
@@ -346,7 +423,11 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] bool pass_uses_supported_shader_texgen(const J3dMaterialTexturePass &pass) {
-            return !pass.tex_coord_gen.has_value() || pass.tex_coord_gen->source == GX_TG_POS || pass.tex_coord_gen->source >= GX_TG_TEX0;
+            if (!pass.tex_coord_gen.has_value()) {
+                return true;
+            }
+            return pass.tex_coord_gen->source == GX_TG_POS || pass.tex_coord_gen->source == GX_TG_NRM ||
+                   (pass.tex_coord_gen->source >= GX_TG_TEX0 && pass.tex_coord_gen->source <= GX_TG_TEX7);
         }
 
         [[nodiscard]] const GXTextureBindingState *find_texture_binding(const GXMaterialState &state, std::uint8_t slot) {
@@ -519,6 +600,39 @@ namespace smgpc::render {
             return passes;
         }
 
+        void append_indirect_texture_passes(std::vector<J3dMaterialTexturePass> &passes, const GXMaterialState &state) {
+            for (const auto &order : state.indirect.texture_orders) {
+                if (order.stage >= state.indirect.stage_count || order.tex_map == 0xffU) {
+                    continue;
+                }
+
+                const auto *binding = find_texture_binding(state, order.tex_map);
+                if (binding == nullptr || binding->texture_index == 0xffffU) {
+                    continue;
+                }
+
+                const auto duplicate = std::ranges::any_of(passes, [&order, binding](const auto &pass) {
+                    return pass.tex_coord_slot == order.tex_coord && pass.tex_map_slot == order.tex_map &&
+                           pass.texture_index == binding->texture_index;
+                });
+                if (duplicate) {
+                    continue;
+                }
+
+                const auto *gen = order.tex_coord == 0xffU ? nullptr : find_tex_coord_gen(state, order.tex_coord);
+                const auto *matrix = find_tex_matrix(state, gen);
+                passes.push_back(J3dMaterialTexturePass {
+                    .stage = order.stage,
+                    .tex_coord_slot = order.tex_coord,
+                    .tex_map_slot = order.tex_map,
+                    .texture_index = binding->texture_index,
+                    .tex_coord_gen = gen == nullptr ? std::optional<J3dTexCoordGenSummary>{} : j3d_tex_coord_gen_from_gx(*gen),
+                    .tex_matrix = matrix == nullptr ? std::optional<J3dTexMatrixSummary>{} : j3d_tex_matrix_from_gx(*matrix),
+                    .tex_coord_scale = tex_coord_scale_for_slot(state, order.tex_coord),
+                });
+            }
+        }
+
         [[nodiscard]] bool is_active_tev_stage(const GXMaterialState &state, const GXTevStageState &stage) {
             return state.tev_stage_count == 0U || stage.stage < state.tev_stage_count;
         }
@@ -568,7 +682,9 @@ namespace smgpc::render {
             return mask;
         }
 
-        [[nodiscard]] GXMaterialState material_with_scene_lights(const GXMaterialState &material, std::span<const GXLightState> scene_lights) {
+        [[nodiscard]] GXMaterialState material_with_scene_lights(const GXMaterialState &material, std::span<const GXLightState> scene_lights,
+                                                                 const CameraProjectionContext *camera_context = nullptr) {
+            (void)camera_context;
             auto state = material;
             for (auto light = std::size_t {}; light < state.lights.size() && light < scene_lights.size(); ++light) {
                 if (!state.lights[light].loaded && scene_lights[light].loaded) {
@@ -636,10 +752,20 @@ namespace smgpc::render {
             return 0xffU;
         }
 
+        [[nodiscard]] const GXTevOrderState *tev_order_for_stage(const GXMaterialState &state, std::uint8_t stage) {
+            const auto it = std::ranges::find_if(state.tev_orders, [stage](const auto &order) { return order.stage == stage; });
+            return it == state.tev_orders.end() ? nullptr : &*it;
+        }
+
         [[nodiscard]] render::GxTevStage2D gx_tev_stage_from_state(const GXMaterialState &state, const GXTevStageState &stage,
                                                                    std::span<const J3dMaterialTexturePass> passes) {
+            const auto texture_stage = texture_stage_index_for_tev_stage(passes, stage.stage);
+            const auto *order = tev_order_for_stage(state, stage.stage);
             return render::GxTevStage2D {
-                .texture_stage = texture_stage_index_for_tev_stage(passes, stage.stage),
+                .texture_stage = order != nullptr ? order->tex_map : texture_stage,
+                .texture_coord_stage = order != nullptr ? order->tex_coord : texture_stage,
+                .texture_map_stage = order != nullptr ? order->tex_map : texture_stage,
+                .color_channel = static_cast<std::uint8_t>(order != nullptr ? order->color_channel : 4U),
                 .color_in = stage.color_in,
                 .color_op = stage.color_op,
                 .color_bias = stage.color_bias,
@@ -652,6 +778,8 @@ namespace smgpc::render {
                 .alpha_scale = stage.alpha_scale,
                 .alpha_clamp = stage.alpha_clamp != 0U,
                 .alpha_out = stage.alpha_out,
+                .k_color_sel = stage.k_color_sel,
+                .k_alpha_sel = stage.k_alpha_sel,
                 .konst_color = stage_konst_color(state, stage),
             };
         }
@@ -714,11 +842,18 @@ namespace smgpc::render {
                 stage_count > render::core::kMaxGxMaterialTevStages2D) {
                 return false;
             }
-            if (has_active_indirect_tev_stage(state)) {
+            if (state.indirect.stage_count > render::core::kMaxGxIndirectStages2D ||
+                state.indirect.texture_matrices.size() > render::core::kMaxGxIndirectMatrices2D) {
                 return false;
             }
             if (!std::ranges::all_of(passes, pass_uses_supported_shader_texgen)) {
                 return false;
+            }
+            for (const auto &pass : passes) {
+                if (pass.tex_coord_slot >= render::core::kMaxGxMaterialTextureStages2D ||
+                    pass.tex_map_slot >= render::core::kMaxGxMaterialTextureStages2D) {
+                    return false;
+                }
             }
 
             for (const auto &stage : state.tev_stages) {
@@ -999,6 +1134,46 @@ namespace smgpc::render {
             };
         }
 
+        [[nodiscard]] std::array<float, 3U> tex_coord_stq_for_vertex(const J3dMeshVertex &source,
+                                                                     const J3dMaterialTexturePass &pass,
+                                                                     const J3dTexture &texture,
+                                                                     const J3dMatrix3x4 &model_matrix) {
+            const auto *tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
+            const auto *tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
+            const auto tex_coord =
+                j3d_apply_tex_coord_scale(j3d_project_tex_coord(source, tex_coord_gen, tex_matrix, &model_matrix), pass, texture);
+            return {tex_coord.u, tex_coord.v, tex_coord.q};
+        }
+
+        [[nodiscard]] std::array<float, 12U> matrix_values(const J3dMatrix3x4 &matrix) {
+            return matrix.m;
+        }
+
+        void apply_aurora_projected_texgens(
+            std::array<render::GxTextureStage2D, render::core::kMaxGxMaterialTextureStages2D> &texture_stages,
+            std::span<const J3dMaterialTexturePass> passes) {
+            for (const auto &pass : passes) {
+                if (!pass.tex_coord_gen.has_value() || !pass.tex_matrix.has_value() ||
+                    pass.tex_coord_slot >= texture_stages.size()) {
+                    continue;
+                }
+
+                const auto &gen = *pass.tex_coord_gen;
+                const auto &matrix = *pass.tex_matrix;
+                if (gen.source != GX_TG_POS || !j3d_uses_projected_texture_matrix(matrix)) {
+                    continue;
+                }
+
+                auto &stage = texture_stages[pass.tex_coord_slot];
+                stage.texgen_type = static_cast<GXTexGenType>(gen.type);
+                stage.texgen_source = static_cast<GXTexGenSrc>(gen.source);
+                stage.texgen_matrix = static_cast<GXTexMtx>(GX_TEXMTX0 + pass.tex_coord_slot * 3U);
+                stage.texgen_matrix_type = GX_MTX3x4;
+                stage.has_texgen_matrix = true;
+                stage.texgen_matrix_values = matrix_values(j3d_texture_projection_matrix(matrix, nullptr));
+            }
+        }
+
         [[nodiscard]] ProjectedVertex interpolate_vertex(const ProjectedVertex &a, const ProjectedVertex &b, float t) {
             const auto mix = [t](float left, float right) { return left + (right - left) * t; };
 
@@ -1147,18 +1322,12 @@ namespace smgpc::render {
             const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
             const auto camera = camera_space_point(camera_context, world);
             auto tex_coords = std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D>{};
-            for (auto i = std::size_t {}; i < passes.size() && i < tex_coords.size(); ++i) {
-                const auto &pass = passes[i];
-                if (pass.texture_index >= textures.size()) {
+            for (const auto &pass : passes) {
+                if (pass.texture_index >= textures.size() || pass.tex_coord_slot >= tex_coords.size()) {
                     continue;
                 }
 
-                const auto *tex_coord_gen = pass.tex_coord_gen.has_value() ? &*pass.tex_coord_gen : nullptr;
-                const auto *tex_matrix = pass.tex_matrix.has_value() ? &*pass.tex_matrix : nullptr;
-                const auto tex_coord =
-                    j3d_apply_tex_coord_scale(j3d_project_tex_coord(source, tex_coord_gen, tex_matrix, &model_matrix), pass,
-                                              textures[pass.texture_index]);
-                tex_coords[i] = {tex_coord.u, tex_coord.v, tex_coord.q};
+                tex_coords[pass.tex_coord_slot] = tex_coord_stq_for_vertex(source, pass, textures[pass.texture_index], model_matrix);
             }
 
             return ProjectedVertex {
@@ -1170,8 +1339,202 @@ namespace smgpc::render {
                 .clip_w = camera.z,
                 .tex_coords = tex_coords,
                 .color = color_to_float(gx_raster_color(source, material.gx_state, passes, {camera.x, camera.y, camera.z},
-                                                        transform_normal_to_camera(model_matrix, camera_context, source.normal))),
+                                                       transform_normal_to_camera(model_matrix, camera_context, source.normal))),
             };
+        }
+
+        [[nodiscard]] render::TexturedVertex2D world_vertex(const J3dMeshVertex &source, std::array<std::uint8_t, 4U> material_color,
+                                                            const MatrixPaletteContext &matrix_context,
+                                                            const J3dTexCoordGenSummary *tex_coord_gen,
+                                                            const J3dTexMatrixSummary *tex_matrix) {
+            const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
+            const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
+            const auto tex_coord = j3d_transform_tex_coord(source, tex_coord_gen, tex_matrix, &model_matrix);
+
+            return render::TexturedVertex2D {
+                .x = world[0U],
+                .y = world[1U],
+                .z = world[2U],
+                .u = tex_coord.u,
+                .v = tex_coord.v,
+                .color = modulate_color(source.color, material_color),
+            };
+        }
+
+        [[nodiscard]] render::TexturedVertex2D material_world_vertex(const J3dMeshVertex &source, const J3dMaterialSummary &material,
+                                                                     std::span<const J3dTexture> textures,
+                                                                     std::span<const J3dMaterialTexturePass> passes,
+                                                                     const MatrixPaletteContext &matrix_context,
+                                                                     const CameraProjectionContext &camera_context) {
+            const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
+            const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
+            const auto camera = camera_space_point(camera_context, world);
+            const auto raster_color = gx_raster_color(source, material.gx_state, passes, {camera.x, camera.y, camera.z},
+                                                      transform_normal_to_camera(model_matrix, camera_context, source.normal));
+            const auto evaluated = j3d_evaluate_material_color(material, textures, passes, source, raster_color, &model_matrix)
+                                       .value_or(std::array<std::uint8_t, 4U>{0U, 0U, 0U, 0U});
+
+            return render::TexturedVertex2D {
+                .x = world[0U],
+                .y = world[1U],
+                .z = world[2U],
+                .u = 0.5F,
+                .v = 0.5F,
+                .color = evaluated,
+            };
+        }
+
+        [[nodiscard]] render::GxMaterialVertex2D gx_material_world_vertex(const J3dMeshVertex &source, const J3dMaterialSummary &material,
+                                                                          std::span<const J3dTexture> textures,
+                                                                          std::span<const J3dMaterialTexturePass> passes,
+                                                                          const MatrixPaletteContext &matrix_context,
+                                                                          const CameraProjectionContext &camera_context) {
+            const auto model_matrix = model_matrix_for_source_vertex(source, matrix_context);
+            const auto world = transform_point(model_matrix, {source.x, source.y, source.z});
+            const auto camera = camera_space_point(camera_context, world);
+            auto tex_coords = std::array<std::array<float, 3U>, render::core::kMaxGxMaterialTextureStages2D>{};
+            for (const auto &pass : passes) {
+                if (pass.texture_index >= textures.size() || pass.tex_coord_slot >= tex_coords.size()) {
+                    continue;
+                }
+
+                tex_coords[pass.tex_coord_slot] = tex_coord_stq_for_vertex(source, pass, textures[pass.texture_index], model_matrix);
+            }
+
+            return render::GxMaterialVertex2D {
+                .x = world[0U],
+                .y = world[1U],
+                .z = world[2U],
+                .clip_w = 1.0F,
+                .tex_coords = tex_coords,
+                .color = color_to_u8(color_to_float(gx_raster_color(source, material.gx_state, passes, {camera.x, camera.y, camera.z},
+                                                                     transform_normal_to_camera(model_matrix, camera_context, source.normal)))),
+            };
+        }
+
+        void copy_source_triangle_indices(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
+                                          std::vector<std::uint16_t> &indices) {
+            indices.clear();
+            indices.reserve(source_indices.size());
+            for (auto i = 0U; i + 2U < source_indices.size(); i += 3U) {
+                const auto index_a = source_indices[i];
+                const auto index_b = source_indices[i + 1U];
+                const auto index_c = source_indices[i + 2U];
+                if (index_a >= source_vertices.size() || index_b >= source_vertices.size() || index_c >= source_vertices.size()) {
+                    continue;
+                }
+                indices.push_back(index_a);
+                indices.push_back(index_b);
+                indices.push_back(index_c);
+            }
+        }
+
+        void emit_source_mesh_world(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
+                                    std::array<std::uint8_t, 4U> material_color, const MatrixPaletteContext &matrix_context,
+                                    const J3dTexCoordGenSummary *tex_coord_gen, const J3dTexMatrixSummary *tex_matrix,
+                                    std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices) {
+            vertices.clear();
+            vertices.reserve(source_vertices.size());
+            for (const auto &source : source_vertices) {
+                vertices.push_back(world_vertex(source, material_color, matrix_context, tex_coord_gen, tex_matrix));
+            }
+            copy_source_triangle_indices(source_vertices, source_indices, indices);
+        }
+
+        void emit_gx_material_source_mesh_world(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
+                                                const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
+                                                std::span<const J3dMaterialTexturePass> passes,
+                                                const MatrixPaletteContext &matrix_context, const CameraProjectionContext &camera_context,
+                                                std::vector<render::GxMaterialVertex2D> &vertices,
+                                                std::vector<std::uint16_t> &indices) {
+            vertices.clear();
+            vertices.reserve(source_vertices.size());
+            for (const auto &source : source_vertices) {
+                vertices.push_back(gx_material_world_vertex(source, material, textures, passes, matrix_context, camera_context));
+            }
+            copy_source_triangle_indices(source_vertices, source_indices, indices);
+        }
+
+        void emit_untextured_material_source_mesh_world(std::span<const J3dMeshVertex> source_vertices,
+                                                        std::span<const std::uint16_t> source_indices,
+                                                        const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
+                                                        const MatrixPaletteContext &matrix_context,
+                                                        const CameraProjectionContext &camera_context,
+                                                        std::vector<render::TexturedVertex2D> &vertices,
+                                                        std::vector<std::uint16_t> &indices) {
+            vertices.clear();
+            vertices.reserve(source_vertices.size());
+            for (const auto &source : source_vertices) {
+                vertices.push_back(material_world_vertex(source, material, textures, {}, matrix_context, camera_context));
+            }
+            copy_source_triangle_indices(source_vertices, source_indices, indices);
+        }
+
+        void append_material_micro_triangle_world(std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices,
+                                                  const J3dMeshVertex &a, const J3dMeshVertex &b, const J3dMeshVertex &c,
+                                                  const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
+                                                  std::span<const J3dMaterialTexturePass> passes,
+                                                  const MatrixPaletteContext &matrix_context,
+                                                  const CameraProjectionContext &camera_context) {
+            if (vertices.size() + 3U > std::numeric_limits<std::uint16_t>::max()) {
+                return;
+            }
+
+            const auto first = static_cast<std::uint16_t>(vertices.size());
+            vertices.push_back(material_world_vertex(a, material, textures, passes, matrix_context, camera_context));
+            vertices.push_back(material_world_vertex(b, material, textures, passes, matrix_context, camera_context));
+            vertices.push_back(material_world_vertex(c, material, textures, passes, matrix_context, camera_context));
+            indices.push_back(first);
+            indices.push_back(static_cast<std::uint16_t>(first + 1U));
+            indices.push_back(static_cast<std::uint16_t>(first + 2U));
+        }
+
+        void emit_material_source_mesh_world(std::span<const J3dMeshVertex> source_vertices, std::span<const std::uint16_t> source_indices,
+                                             const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
+                                             std::span<const J3dMaterialTexturePass> passes,
+                                             const MatrixPaletteContext &matrix_context, const CameraProjectionContext &camera_context,
+                                             std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices) {
+            constexpr auto subdivisions = 8U;
+            const auto triangle_count = source_indices.size() / 3U;
+            vertices.clear();
+            indices.clear();
+            vertices.reserve(std::min<std::size_t>(triangle_count * subdivisions * subdivisions * 6U, 60000U));
+            indices.reserve(std::min<std::size_t>(triangle_count * subdivisions * subdivisions * 6U, 60000U));
+
+            for (auto i = 0U; i + 2U < source_indices.size(); i += 3U) {
+                const auto index_a = source_indices[i];
+                const auto index_b = source_indices[i + 1U];
+                const auto index_c = source_indices[i + 2U];
+                if (index_a >= source_vertices.size() || index_b >= source_vertices.size() || index_c >= source_vertices.size()) {
+                    continue;
+                }
+
+                const auto &a = source_vertices[index_a];
+                const auto &b = source_vertices[index_b];
+                const auto &c = source_vertices[index_c];
+                const auto point = [&](std::uint32_t bi, std::uint32_t ci) {
+                    const auto weight_b = static_cast<float>(bi) / static_cast<float>(subdivisions);
+                    const auto weight_c = static_cast<float>(ci) / static_cast<float>(subdivisions);
+                    const auto weight_a = 1.0F - weight_b - weight_c;
+                    return interpolate_source_vertex(a, b, c, weight_a, weight_b, weight_c);
+                };
+
+                for (auto bi = 0U; bi < subdivisions; ++bi) {
+                    for (auto ci = 0U; ci < subdivisions - bi; ++ci) {
+                        const auto p0 = point(bi, ci);
+                        const auto p1 = point(bi + 1U, ci);
+                        const auto p2 = point(bi, ci + 1U);
+                        append_material_micro_triangle_world(vertices, indices, p0, p1, p2, material, textures, passes, matrix_context,
+                                                             camera_context);
+
+                        if (bi + ci + 1U < subdivisions) {
+                            const auto p3 = point(bi + 1U, ci + 1U);
+                            append_material_micro_triangle_world(vertices, indices, p1, p3, p2, material, textures, passes, matrix_context,
+                                                                 camera_context);
+                        }
+                    }
+                }
+            }
         }
 
         void append_projected_triangle(std::vector<render::TexturedVertex2D> &vertices, std::vector<std::uint16_t> &indices,
@@ -1501,7 +1864,15 @@ namespace smgpc::render {
         }
         _texture_handles.reserve(geometry.textures.size());
         for (const auto &texture : geometry.textures) {
-            _texture_handles.push_back(renderer.create_rgba8_texture(texture.image.width, texture.image.height, texture.image.rgba));
+            if (can_upload_raw_gx_texture(texture.image.format) && !texture.image_data.empty()) {
+                _texture_handles.push_back(renderer.create_gx_texture(
+                    texture.image.width, texture.image.height, static_cast<GXTexFmt>(texture.image.format), texture.image_data,
+                    texture.mipmap && texture.image_count > 1U, static_cast<float>(texture.min_lod) / 8.0F,
+                    static_cast<float>(texture.max_lod) / 8.0F, static_cast<float>(texture.lod_bias) / 100.0F, texture.bias_clamp,
+                    texture.do_edge_lod, gx_anisotropy_from_bti(texture.max_anisotropy), texture.min_filter, texture.mag_filter));
+            } else {
+                _texture_handles.push_back(renderer.create_rgba8_texture(texture.image.width, texture.image.height, texture.image.rgba));
+            }
         }
 
         if (geometry.materials.has_value()) {
@@ -1522,6 +1893,9 @@ namespace smgpc::render {
                 const auto &material = geometry.materials->materials[shape.material_index];
                 auto passes = gx_material_texture_passes(material.gx_state);
                 apply_effective_tex_coord_scales(passes, material.gx_state, geometry.textures);
+                auto gx_passes = passes;
+                append_indirect_texture_passes(gx_passes, material.gx_state);
+                apply_effective_tex_coord_scales(gx_passes, material.gx_state, geometry.textures);
                 for (const auto &shape_packet : shape.draw_packets) {
                     const auto assign_shape_packet = [&](Mesh &mesh) {
                         mesh.material_name = material.name;
@@ -1617,26 +1991,32 @@ namespace smgpc::render {
                         continue;
                     }
 
-                    const auto shader_textures_available = material_pass_textures_available(passes, geometry.textures) &&
-                                                           std::ranges::all_of(passes, [this](const auto &pass) {
+                    const auto shader_textures_available = material_pass_textures_available(gx_passes, geometry.textures) &&
+                                                           std::ranges::all_of(gx_passes, [this](const auto &pass) {
                                                                return pass.texture_index < _texture_handles.size() &&
                                                                       _texture_handles[pass.texture_index].is_valid();
                                                            });
-                    if (shader_textures_available && material_can_use_shader_gx_tev(material.gx_state, passes)) {
+                    if (shader_textures_available && material_can_use_shader_gx_tev(material.gx_state, gx_passes)) {
                         auto mesh = Mesh {};
                         assign_shape_packet(mesh);
-                        mesh.texture = _texture_handles[passes.front().texture_index];
+                        mesh.texture = _texture_handles[gx_passes.front().texture_index];
                         mesh.material = material;
-                        mesh.material_passes = passes;
-                        mesh.gx_texture_stage_count = passes.size();
-                        for (auto i = std::size_t {}; i < passes.size() && i < mesh.gx_texture_stages.size(); ++i) {
-                            const auto texture_index = passes[i].texture_index;
-                            mesh.gx_texture_stages[i] = render::GxTextureStage2D {
+                        mesh.material_passes = gx_passes;
+                        mesh.gx_texture_stage_count = 0U;
+                        for (const auto &pass : gx_passes) {
+                            if (pass.tex_map_slot >= mesh.gx_texture_stages.size()) {
+                                continue;
+                            }
+                            const auto texture_index = pass.texture_index;
+                            const auto stage_extent = std::max<std::uint8_t>(pass.tex_map_slot, pass.tex_coord_slot);
+                            mesh.gx_texture_stage_count = std::max<std::size_t>(mesh.gx_texture_stage_count, stage_extent + 1U);
+                            mesh.gx_texture_stages[pass.tex_map_slot] = render::GxTextureStage2D {
                                 .texture = _texture_handles[texture_index],
                                 .wrap_u = geometry.textures[texture_index].wrap_s,
                                 .wrap_v = geometry.textures[texture_index].wrap_t,
                                 .min_filter = geometry.textures[texture_index].min_filter,
                                 .mag_filter = geometry.textures[texture_index].mag_filter,
+                                .texgen_source = static_cast<GXTexGenSrc>(::GX_TG_TEX0 + pass.tex_coord_slot),
                             };
                         }
                         mesh.gx_tev_stage_count = 0U;
@@ -1647,17 +2027,19 @@ namespace smgpc::render {
                             if (mesh.gx_tev_stage_count >= mesh.gx_tev_stages.size()) {
                                 break;
                             }
-                            mesh.gx_tev_stages[mesh.gx_tev_stage_count] = gx_tev_stage_from_state(material.gx_state, stage, passes);
+                            mesh.gx_tev_stages[mesh.gx_tev_stage_count] = gx_tev_stage_from_state(material.gx_state, stage, gx_passes);
                             ++mesh.gx_tev_stage_count;
                         }
+                        fill_indirect_state(mesh, material.gx_state.indirect);
                         mesh.packet_mode = J3dRendererPacketMode::ShaderGxTev;
                         mesh.packet_mode_reason = "shader_gx_tev_supported";
                         mesh.material_color = material.material_colors[0U];
-                        mesh.pass_order = passes.front().stage;
+                        mesh.pass_order = gx_passes.front().stage;
                         mesh.cull_mode = cull_mode_from_gx_material_state(material);
                         mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
                         mesh.gx_alpha_compare = gx_alpha_compare_from_material_state(material.gx_state.alpha_compare);
                         mesh.gx_initial_tev_registers = material.gx_state.tev_registers;
+                        mesh.gx_initial_tev_k_colors = material.gx_state.tev_k_colors;
                         mesh.blend = mesh.gx_blend.enabled && mesh.gx_blend.type != 0U;
                         mesh.blend_mode = render::BlendMode::Opaque;
                         if (material.gx_state.z_mode.enabled) {
@@ -1675,8 +2057,7 @@ namespace smgpc::render {
                         const auto composed_texture =
                             j3d_try_compose_material_texture(material, geometry.textures, passes, material.material_colors[0U]);
                         if (composed_texture.has_value()) {
-                            const auto composed_handle = renderer.create_rgba8_texture(composed_texture->image.width, composed_texture->image.height,
-                                                                                       composed_texture->image.rgba);
+                            const auto composed_handle = create_composed_texture_handle(renderer, *composed_texture, geometry.textures, passes);
                             if (composed_handle.is_valid()) {
                                 const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
                                 auto mesh = Mesh {};
@@ -1763,8 +2144,8 @@ namespace smgpc::render {
                                 j3d_try_compose_material_texture(material, geometry.textures[texture_index].image, material_color, pass.tex_map_slot);
                             if (composed_texture.has_value()) {
                                 const auto composed_handle =
-                                    renderer.create_rgba8_texture(composed_texture->image.width, composed_texture->image.height,
-                                                                  composed_texture->image.rgba);
+                                    create_composed_texture_handle(renderer, *composed_texture, geometry.textures,
+                                                                   std::span<const J3dMaterialTexturePass>(&pass, 1U));
                                 if (composed_handle.is_valid()) {
                                     texture_handle = composed_handle;
                                     texture_has_alpha = texture_needs_blending(composed_texture->image);
@@ -1882,7 +2263,7 @@ namespace smgpc::render {
                 }
             }
 
-            submit_mesh(renderer, mesh, actor_matrix, frame, scratch, options.scene_lights, options);
+            submit_mesh(renderer, mesh, camera_pose, actor_matrix, frame, scratch, options.scene_lights, options);
         }
     }
 
@@ -1911,6 +2292,75 @@ namespace smgpc::render {
             packets.push_back(std::move(state));
         }
         return packets;
+    }
+
+    void J3dModelRenderer::fill_indirect_state(Mesh &mesh, const GXIndirectState &indirect) {
+        mesh.gx_indirect_stage_count = std::min<std::uint8_t>(indirect.stage_count, render::core::kMaxGxIndirectStages2D);
+        mesh.gx_indirect_texture_order_count = 0U;
+        mesh.gx_indirect_texture_matrix_count = 0U;
+        mesh.gx_indirect_texture_scale_count = 0U;
+        mesh.gx_indirect_tev_stage_count = 0U;
+
+        for (const auto &order : indirect.texture_orders) {
+            if (order.stage >= mesh.gx_indirect_stage_count || mesh.gx_indirect_texture_order_count >= mesh.gx_indirect_texture_orders.size()) {
+                continue;
+            }
+            mesh.gx_indirect_texture_orders[mesh.gx_indirect_texture_order_count++] = render::core::GxIndirectTextureOrder2D {
+                .stage = order.stage,
+                .tex_map = order.tex_map,
+                .tex_coord = order.tex_coord,
+            };
+        }
+
+        for (const auto &matrix : indirect.texture_matrices) {
+            if (matrix.matrix >= render::core::kMaxGxIndirectMatrices2D ||
+                mesh.gx_indirect_texture_matrix_count >= mesh.gx_indirect_texture_matrices.size()) {
+                continue;
+            }
+            mesh.gx_indirect_texture_matrices[mesh.gx_indirect_texture_matrix_count++] = render::core::GxIndirectTextureMatrix2D {
+                .matrix = matrix.matrix,
+                .ma = matrix.ma,
+                .mb = matrix.mb,
+                .mc = matrix.mc,
+                .md = matrix.md,
+                .me = matrix.me,
+                .mf = matrix.mf,
+                .scale = matrix.scale,
+            };
+        }
+
+        for (const auto &scale : indirect.texture_coord_scales) {
+            if (scale.stage >= render::core::kMaxGxIndirectStages2D ||
+                mesh.gx_indirect_texture_scale_count >= mesh.gx_indirect_texture_scales.size()) {
+                continue;
+            }
+            mesh.gx_indirect_texture_scales[mesh.gx_indirect_texture_scale_count++] = render::core::GxIndirectTextureCoordScale2D {
+                .stage = scale.stage,
+                .scale_s = scale.scale_s,
+                .scale_t = scale.scale_t,
+            };
+        }
+
+        for (const auto &stage : indirect.tev_stages) {
+            if (!stage.active || stage.tev_stage >= render::core::kMaxGxMaterialTevStages2D ||
+                stage.ind_stage >= mesh.gx_indirect_stage_count || mesh.gx_indirect_tev_stage_count >= mesh.gx_indirect_tev_stages.size()) {
+                continue;
+            }
+            mesh.gx_indirect_tev_stages[mesh.gx_indirect_tev_stage_count++] = render::core::GxIndirectTevStage2D {
+                .tev_stage = stage.tev_stage,
+                .ind_stage = stage.ind_stage,
+                .format = stage.format,
+                .bias = stage.bias,
+                .bump_alpha = stage.bump_alpha,
+                .matrix_index = stage.matrix_index,
+                .matrix_id = stage.matrix_id,
+                .wrap_s = stage.wrap_s,
+                .wrap_t = stage.wrap_t,
+                .use_original_lod = stage.use_original_lod,
+                .add_previous = stage.add_previous,
+                .active = true,
+            };
+        }
     }
 
     J3dModelRenderer::Mesh J3dModelRenderer::make_constant_backdrop(render::AuroraRenderer &renderer, std::array<std::uint8_t, 4U> color) const {
@@ -1974,6 +2424,7 @@ namespace smgpc::render {
             .gx_blend = mesh.gx_blend,
             .gx_alpha_compare = mesh.gx_alpha_compare,
             .gx_initial_tev_registers = mesh.gx_initial_tev_registers,
+            .gx_initial_tev_k_colors = mesh.gx_initial_tev_k_colors,
             .depth_test = mesh.depth_test,
             .depth_write = mesh.depth_write,
             .depth_compare = mesh.depth_compare,
@@ -2115,8 +2566,9 @@ namespace smgpc::render {
         return state;
     }
 
-    void J3dModelRenderer::submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const J3dMatrix3x4 &actor_matrix,
-                                       std::uint64_t frame, DrawScratch &scratch, std::span<const GXLightState> scene_lights,
+    void J3dModelRenderer::submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const smgpc::camera::CameraPose &camera_pose,
+                                       const J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawScratch &scratch,
+                                       std::span<const GXLightState> scene_lights,
                                        const J3dModelRendererDrawOptions &options) const {
         const auto effective_gx_blend = gx_blend_with_draw_options(mesh.gx_blend, options);
         if (mesh.project_source_vertices) {
@@ -2163,7 +2615,7 @@ namespace smgpc::render {
             if (mesh.packet_mode == J3dRendererPacketMode::ShaderGxTev && mesh.gx_texture_stage_count > 0U) {
                 auto effective_passes = mesh.material_passes;
                 auto effective_material = *mesh.material;
-                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights);
+                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights, &scratch.camera_context);
                 if (_btk_animation.has_value()) {
                     for (auto &pass : effective_passes) {
                         if (!pass.tex_matrix.has_value()) {
@@ -2183,21 +2635,37 @@ namespace smgpc::render {
                     }
                 }
                 apply_projmap_effect_matrices(effective_passes, options);
+                auto gx_texture_stages = mesh.gx_texture_stages;
+                apply_aurora_projected_texgens(gx_texture_stages, effective_passes);
 
                 auto &gx_vertices = scratch.gx_vertices;
                 apply_effective_tex_coord_scales(effective_passes, effective_material.gx_state, _textures);
-                project_gx_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, effective_passes, matrix_context,
-                                                scratch.camera_context, scratch.projected_sources, gx_vertices, indices);
+                emit_gx_material_source_mesh_world(mesh.source_vertices, mesh.source_indices, effective_material, _textures, effective_passes,
+                                                   matrix_context, scratch.camera_context, gx_vertices, indices);
                 if (gx_vertices.empty() || indices.empty()) {
                     return;
                 }
 
-                renderer.submit_gx_material_triangles(render::core::GxMaterialTriangleBatch2D {
+                renderer.submit_gx_material_triangles_3d(render::core::GxMaterialTriangleBatch2D {
                     .vertices = std::span<const render::GxMaterialVertex2D>(gx_vertices.data(), gx_vertices.size()),
                     .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
-                    .texture_stages = std::span<const render::GxTextureStage2D>(mesh.gx_texture_stages.data(), mesh.gx_texture_stage_count),
+                    .texture_stages = std::span<const render::GxTextureStage2D>(gx_texture_stages.data(), mesh.gx_texture_stage_count),
                     .tev_stages = std::span<const render::GxTevStage2D>(mesh.gx_tev_stages.data(), mesh.gx_tev_stage_count),
+                    .indirect_stage_count = mesh.gx_indirect_stage_count,
+                    .indirect_texture_orders =
+                        std::span<const render::core::GxIndirectTextureOrder2D>(mesh.gx_indirect_texture_orders.data(),
+                                                                                mesh.gx_indirect_texture_order_count),
+                    .indirect_texture_matrices =
+                        std::span<const render::core::GxIndirectTextureMatrix2D>(mesh.gx_indirect_texture_matrices.data(),
+                                                                                 mesh.gx_indirect_texture_matrix_count),
+                    .indirect_texture_scales =
+                        std::span<const render::core::GxIndirectTextureCoordScale2D>(mesh.gx_indirect_texture_scales.data(),
+                                                                                    mesh.gx_indirect_texture_scale_count),
+                    .indirect_tev_stages =
+                        std::span<const render::core::GxIndirectTevStage2D>(mesh.gx_indirect_tev_stages.data(), mesh.gx_indirect_tev_stage_count),
                     .initial_tev_registers = mesh.gx_initial_tev_registers,
+                    .initial_tev_k_colors = mesh.gx_initial_tev_k_colors,
+                    .has_initial_tev_k_colors = true,
                     .alpha_compare = mesh.gx_alpha_compare,
                     .blend = effective_gx_blend,
                     .depth_test = mesh.depth_test,
@@ -2205,13 +2673,13 @@ namespace smgpc::render {
                     .depth_compare = mesh.depth_compare,
                     .cull_mode = mesh.cull_mode,
                     .fog = gx_fog_for_mesh(mesh.material),
-                });
+                }, camera_pose);
                 return;
             }
             if (mesh.evaluate_material_per_vertex && mesh.material.has_value()) {
                 auto effective_passes = mesh.material_passes;
                 auto effective_material = *mesh.material;
-                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights);
+                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights, &scratch.camera_context);
                 if (_btk_animation.has_value()) {
                     for (auto &pass : effective_passes) {
                         if (!pass.tex_matrix.has_value()) {
@@ -2234,59 +2702,61 @@ namespace smgpc::render {
 
                 apply_effective_tex_coord_scales(effective_passes, effective_material.gx_state, _textures);
                 if (effective_passes.empty()) {
-                    project_untextured_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, matrix_context,
-                                                            scratch.camera_context, scratch.projected_sources, vertices, indices);
+                    emit_untextured_material_source_mesh_world(mesh.source_vertices, mesh.source_indices, effective_material, _textures,
+                                                              matrix_context, scratch.camera_context, vertices, indices);
                 } else {
-                    project_material_source_mesh(mesh.source_vertices, mesh.source_indices, effective_material, _textures, effective_passes,
-                                                 matrix_context, scratch.camera_context, vertices, indices);
+                    emit_material_source_mesh_world(mesh.source_vertices, mesh.source_indices, effective_material, _textures, effective_passes,
+                                                    matrix_context, scratch.camera_context, vertices, indices);
                 }
                 if (vertices.empty() || indices.empty()) {
                     return;
                 }
 
-                renderer.submit_textured_triangles(mesh.texture,
-                                                   render::core::TexturedTriangleBatch2D {
-                                                       .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
-                                                       .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
-                                                       .wrap_u = mesh.wrap_u,
-                                                       .wrap_v = mesh.wrap_v,
-                                                       .min_filter = mesh.min_filter,
-                                                       .mag_filter = mesh.mag_filter,
-                                                       .blend = mesh.blend,
-                                                       .blend_mode = mesh.blend_mode,
-                                                       .gx_blend = effective_gx_blend,
-                                                       .depth_test = mesh.depth_test,
-                                                       .depth_write = mesh.depth_write,
-                                                       .depth_compare = mesh.depth_compare,
-                                                       .cull_mode = mesh.cull_mode,
-                                                       .fog = gx_fog_for_mesh(mesh.material),
-                                                   });
+                renderer.submit_textured_triangles_3d(mesh.texture,
+                                                      render::core::TexturedTriangleBatch2D {
+                                                          .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
+                                                          .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
+                                                          .wrap_u = mesh.wrap_u,
+                                                          .wrap_v = mesh.wrap_v,
+                                                          .min_filter = mesh.min_filter,
+                                                          .mag_filter = mesh.mag_filter,
+                                                          .blend = mesh.blend,
+                                                          .blend_mode = mesh.blend_mode,
+                                                          .gx_blend = effective_gx_blend,
+                                                          .depth_test = mesh.depth_test,
+                                                          .depth_write = mesh.depth_write,
+                                                          .depth_compare = mesh.depth_compare,
+                                                          .cull_mode = mesh.cull_mode,
+                                                          .fog = gx_fog_for_mesh(mesh.material),
+                                                      },
+                                                      camera_pose);
                 return;
             }
 
-            project_source_mesh(mesh.source_vertices, mesh.source_indices, mesh.material_color, matrix_context, scratch.camera_context, tex_coord_gen,
-                                tex_matrix, scratch.projected_sources, vertices, indices);
+            emit_source_mesh_world(mesh.source_vertices, mesh.source_indices, mesh.material_color, matrix_context, tex_coord_gen, tex_matrix,
+                                   vertices, indices);
             if (vertices.empty() || indices.empty()) {
                 return;
             }
 
-            renderer.submit_textured_triangles(mesh.texture,
-                                               render::core::TexturedTriangleBatch2D {
-                                                   .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
-                                                   .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
-                                                   .wrap_u = mesh.wrap_u,
-                                                   .wrap_v = mesh.wrap_v,
-                                                   .min_filter = mesh.min_filter,
-                                                   .mag_filter = mesh.mag_filter,
-                                                   .blend = mesh.blend,
-                                                   .blend_mode = mesh.blend_mode,
-                                                   .gx_blend = effective_gx_blend,
-                                                   .depth_test = mesh.depth_test,
-                                                   .depth_write = mesh.depth_write,
-                                                   .depth_compare = mesh.depth_compare,
-                                                   .cull_mode = mesh.cull_mode,
-                                                   .fog = gx_fog_for_mesh(mesh.material),
-                                               });
+            renderer.submit_textured_triangles_3d(mesh.texture,
+                                                  render::core::TexturedTriangleBatch2D {
+                                                      .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
+                                                      .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
+                                                      .wrap_u = mesh.wrap_u,
+                                                      .wrap_v = mesh.wrap_v,
+                                                      .min_filter = mesh.min_filter,
+                                                      .mag_filter = mesh.mag_filter,
+                                                      .blend = mesh.blend,
+                                                      .blend_mode = mesh.blend_mode,
+                                                      .gx_blend = effective_gx_blend,
+                                                      .depth_test = mesh.depth_test,
+                                                      .depth_write = mesh.depth_write,
+                                                      .depth_compare = mesh.depth_compare,
+                                                      .cull_mode = mesh.cull_mode,
+                                                      .fog = gx_fog_for_mesh(mesh.material),
+                                                  },
+                                                  camera_pose);
             return;
         }
 
@@ -2294,6 +2764,7 @@ namespace smgpc::render {
                                            render::core::TexturedTriangleBatch2D {
                                                .vertices = std::span<const render::TexturedVertex2D>(mesh.vertices.data(), mesh.vertices.size()),
                                                .indices = std::span<const std::uint16_t>(mesh.indices.data(), mesh.indices.size()),
+                                               .space = render::RenderSpace2D::CenteredFramebuffer,
                                                .wrap_u = mesh.wrap_u,
                                                .wrap_v = mesh.wrap_v,
                                                .min_filter = mesh.min_filter,

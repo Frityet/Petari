@@ -133,12 +133,12 @@ namespace smgpc::scene {
         _runtime.scene_execution().execute_calc_anim_and_view();
     }
 
-    void StageHostScene::draw3DNormal(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose) {
-        _runtime.scene_execution().draw_3d_normal(renderer, camera_pose);
+    void StageHostScene::draw3DNormal(const smgpc::camera::CameraPose &camera_pose) {
+        _runtime.scene_execution().draw_3d_normal(camera_pose);
     }
 
-    void StageHostScene::draw2DNormal(render::AuroraRenderer &renderer) {
-        _runtime.scene_execution().draw_2d_normal(renderer);
+    void StageHostScene::draw2DNormal() {
+        _runtime.scene_execution().draw_2d_normal();
     }
 
     NameObj *StageHostScene::root() const {

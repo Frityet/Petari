@@ -52,7 +52,7 @@ case "${scenario}" in
     scenario_crop="0,120,640,300"
     scenario_crops="selected_item=160,105,320,260;file_info_ui=0,300,640,156;operation_buttons=35,330,570,110"
     scenario_button_script="120-1700:A+B;1950-1960:A;2130-2140:A;2400-2410:A;2600-2610:A;2800-2810:A;3000-3010:A;3200-3210:A;3400-3410:A;3600-3610:A;3800-3810:A;4000-4010:A;4200-4210:A;4400-4410:A;4600-4610:A;4800-4810:A;5000-5010:A"
-    scenario_pointer_script="0-1899:0,0,false;1900-2020:212.935,152.482,true;2021-2079:0,0,false;2080-2200:436,92,true;2201-2299:0,0,false;2300-3699:187,251,true;3700-5200:436,92,true;5201-5799:0,0,false"
+    scenario_pointer_script="0-1899:0,0,false;1900-2020:212.935,152.482,true;2021-2079:0,0,false;2080-2200:436,364,true;2201-2299:0,0,false;2300-3699:187,205,true;3700-5200:436,364,true;5201-5799:0,0,false"
     scenario_dolphin_button_script="120-1700:A+B;2100-2120:A;2700-2720:A;3150-3170:A;4600-4620:A;5500-5520:A"
     scenario_dolphin_pointer_script="0-1799:0,0,false;1800-2200:271,264,true;2201-2299:0,0,false;2300-2800:386,385,true;2801-2999:0,0,false;3000-3250:187,251,true;3251-4449:0,0,false;4450-4700:386,385,true;4701-5299:0,0,false;5300-5600:271,264,true;5601-5799:0,0,false"
     scenario_description="selected-file near camera/file-confirm state after create/reselect"
@@ -62,7 +62,7 @@ case "${scenario}" in
     scenario_crop="70,35,500,360"
     scenario_crops="picturebook_page=70,35,500,360;prologue_text=75,330,490,90;a_button=500,330,90,90"
     scenario_button_script="120-1700:A+B;1950-1960:A;2130-2140:A;2400-2410:A;2600-2610:A;2800-2810:A;3000-3010:A;3200-3210:A;3400-3410:A;3600-3610:A;3800-3810:A;4000-4010:A;4200-4210:A;4400-4410:A;4600-4610:A;4800-4810:A;5000-5010:A;5400-5410:A"
-    scenario_pointer_script="0-1899:0,0,false;1900-2020:212.935,152.482,true;2021-2079:0,0,false;2080-2200:436,92,true;2201-2299:0,0,false;2300-3699:187,251,true;3700-5200:436,92,true;5201-7000:438,52,true;7001-7599:0,0,false"
+    scenario_pointer_script="0-1899:0,0,false;1900-2020:212.935,152.482,true;2021-2079:0,0,false;2080-2200:436,364,true;2201-2299:0,0,false;2300-3699:187,205,true;3700-5200:436,364,true;5201-7000:438,404,true;7001-7599:0,0,false"
     scenario_dolphin_button_script="120-1700:A+B;2100-2120:A;2700-2720:A;3150-3170:A;4600-4620:A;5500-5520:A;6800-6840:A"
     scenario_dolphin_pointer_script="0-1799:0,0,false;1800-2200:271,264,true;2201-2299:0,0,false;2300-2800:386,385,true;2801-2999:0,0,false;3000-3250:187,251,true;3251-4449:0,0,false;4450-4700:386,385,true;4701-5299:0,0,false;5300-5600:271,264,true;5601-5999:0,0,false;6000-7000:430,420,true;7001-7599:0,0,false"
     scenario_description="prologue picturebook first page after file create/reselect/start"
@@ -72,7 +72,7 @@ case "${scenario}" in
     scenario_crop="70,35,500,360"
     scenario_crops="picturebook_page=70,35,500,360;prologue_text=75,330,490,90;a_button=500,330,90,90"
     scenario_button_script="120-1700:A+B;1950-1960:A;2130-2140:A;2400-2410:A;2600-2610:A;2800-2810:A;3000-3010:A;3200-3210:A;3400-3410:A;3600-3610:A;3800-3810:A;4000-4010:A;4200-4210:A;4400-4410:A;4600-4610:A;4800-4810:A;5000-5010:A;5400-5410:A"
-    scenario_pointer_script="0-1899:0,0,false;1900-2020:212.935,152.482,true;2021-2079:0,0,false;2080-2200:436,92,true;2201-2299:0,0,false;2300-3699:187,251,true;3700-5200:436,92,true;5201-7000:438,52,true;7001-7899:0,0,false"
+    scenario_pointer_script="0-1899:0,0,false;1900-2020:212.935,152.482,true;2021-2079:0,0,false;2080-2200:436,364,true;2201-2299:0,0,false;2300-3699:187,205,true;3700-5200:436,364,true;5201-7000:438,404,true;7001-7899:0,0,false"
     scenario_dolphin_button_script="120-1700:A+B;2100-2120:A;2700-2720:A;3150-3170:A;4600-4620:A;5500-5520:A;6800-6840:A"
     scenario_dolphin_pointer_script="0-1799:0,0,false;1800-2200:271,264,true;2201-2299:0,0,false;2300-2800:386,385,true;2801-2999:0,0,false;3000-3250:187,251,true;3251-4449:0,0,false;4450-4700:386,385,true;4701-5299:0,0,false;5300-5600:271,264,true;5601-5999:0,0,false;6000-7000:430,420,true;7001-7899:0,0,false"
     scenario_description="prologue picturebook page wait with A icon after file create/reselect/start"
@@ -215,7 +215,7 @@ write_manifest() {
     printf '  "dolphin_frame": %s,\n' "${dolphin_frame}"
     printf '  "build_mode": '; json_string "${build_mode}"; printf ',\n'
     printf '  "command": '; json_string "SMGPC_PARITY_SCENARIO=${scenario} ${BASH_SOURCE[0]}"; printf ',\n'
-    printf '  "env": {"build": '; json_string "${SMGPC_PARITY_BUILD:-1}"; printf ', "refresh_dolphin": '; json_string "${SMGPC_PARITY_REFRESH_DOLPHIN:-0}"; printf ', "timeout_seconds": '; json_string "${timeout_seconds}"; printf ', "bgfx_renderer": '; json_string "${SMGPC_BGFX_RENDERER:-}"; printf ', "dolphin_platform": '; json_string "${dolphin_platform}"; printf ', "dolphin_video_backend": '; json_string "${dolphin_video_backend}"; printf ', "work_dir": '; json_string "${work_dir}"; printf ', "pc_save_dir": '; json_string "${pc_save_dir}"; printf ', "reset_pc_save": '; json_string "${reset_pc_save}"; printf '},\n'
+    printf '  "env": {"build": '; json_string "${SMGPC_PARITY_BUILD:-1}"; printf ', "refresh_dolphin": '; json_string "${SMGPC_PARITY_REFRESH_DOLPHIN:-0}"; printf ', "timeout_seconds": '; json_string "${timeout_seconds}"; printf ', "aurora_backend": "x11", "dolphin_platform": '; json_string "${dolphin_platform}"; printf ', "dolphin_video_backend": '; json_string "${dolphin_video_backend}"; printf ', "work_dir": '; json_string "${work_dir}"; printf ', "pc_save_dir": '; json_string "${pc_save_dir}"; printf ', "reset_pc_save": '; json_string "${reset_pc_save}"; printf '},\n'
     printf '  "tools": {"dolphin_bin": '; json_string "${dolphin_bin}"; printf ', "game_image": '; json_string "${game_image}"; printf ', "pc_bin": '; json_string "${pc_bin}"; printf ', "visual_diff_bin": '; json_string "${visual_diff_bin}"; printf ', "trace_import_bin": '; json_string "${trace_import_bin}"; printf ', "trace_compare_bin": '; json_string "${trace_compare_bin}"; printf '},\n'
     printf '  "dolphin_reference_status": '; json_string "${dolphin_reference_status}"; printf ',\n'
     printf '  "thresholds": {"max_full_normalized_rms": '; json_string "${max_full_rms}"; printf ', "max_crop_normalized_rms": '; json_string "${max_crop_rms}"; printf '},\n'
@@ -372,10 +372,6 @@ run_dolphin_capture() {
 
 run_pc_capture() {
   rm -f "${pc_png}" "${pc_trace}"
-  local renderer_env=()
-  if [[ -n "${SMGPC_BGFX_RENDERER:-}" ]]; then
-    renderer_env+=(SMGPC_BGFX_RENDERER="${SMGPC_BGFX_RENDERER}")
-  fi
   local input_env=()
   if [[ -n "${pc_button_script}" ]]; then
     input_env+=(SMGPC_DEBUG_WPAD_BUTTON_SCRIPT="${pc_button_script}")
@@ -384,7 +380,6 @@ run_pc_capture() {
     input_env+=(SMGPC_DEBUG_WPAD_POINTER_SCRIPT="${pc_pointer_script}")
   fi
   if ! env \
-      "${renderer_env[@]}" \
       "${input_env[@]}" \
       SMGPC_ENABLE_VSYNC="${SMGPC_ENABLE_VSYNC:-0}" \
       SMGPC_EVENT_POLL_INTERVAL="${SMGPC_EVENT_POLL_INTERVAL:-8}" \

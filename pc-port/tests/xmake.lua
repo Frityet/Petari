@@ -9,13 +9,13 @@ target("smg-pc-aurora-native-tests")
     add_deps {
         "smg-pc-common",
         "smg-pc-game",
-        "smg-pc-render",
         "aurora-card",
         "aurora-dvd",
         "aurora-gd",
         "aurora-gx",
         "aurora-os",
         "aurora-pad",
+        "aurora-si",
         "aurora-vi"
     }
     add_tests("aurora_native", {

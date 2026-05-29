@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -48,7 +49,7 @@ public:
     [[nodiscard]] const std::string& getLayoutName() const;
     [[nodiscard]] const std::optional< std::filesystem::path >& getArchivePath() const;
 
-    void draw(smgpc::render::AuroraRenderer& renderer);
+    void draw();
 
     void startAnim(const char* pAnimName, u32 animLayer);
     void setAnimFrameAndStop(f32 frame, u32 animLayer);
@@ -210,7 +211,10 @@ private:
         float m10 = 0.0F;
         float m11 = 1.0F;
         float alpha = 255.0F;
+        float child_alpha_scale = 1.0F;
         bool visible = true;
+        bool location_adjust = false;
+        bool child_alpha_influenced = false;
     };
 
     struct PaneAnimationState {
@@ -229,13 +233,20 @@ private:
     [[nodiscard]] const PaneAnimationState* findPaneAnimation(std::string_view paneName) const;
     void commitAnimationState(const AnimationState& anim);
     void loadRenderData();
+    void applyLayoutMessagesFromPaneUserData();
     void ensureTextureUploads(smgpc::render::AuroraRenderer& renderer);
     void ensureTextTextureUploads(smgpc::render::AuroraRenderer& renderer);
     [[nodiscard]] RenderTextTexture composeTextTexture(std::size_t text_box_index, const RenderFont& font) const;
     void drawPicture(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t picture_index);
+    void drawWindow(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t window_index);
+    void submitLayoutQuad(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t pane_index, std::uint16_t material_index,
+                          std::string_view content_name, const std::array< std::array< std::uint8_t, 4U >, 4U >& vertex_colors,
+                          std::span< const std::array< smgpc::layout::BrlytTexCoord, 4U > > tex_coord_sets, float local_left,
+                          float local_top, float width, float height, std::uint32_t trace_index);
     void drawTextBoxes(smgpc::render::AuroraRenderer& renderer, float alpha);
     void drawTextBox(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t text_box_index);
     [[nodiscard]] PaneRenderState paneRenderState(std::size_t pane_index) const;
+    [[nodiscard]] std::array< float, 2U > panePointForAurora(const PaneRenderState& pane_state, float local_x, float local_y) const;
     [[nodiscard]] smgpc::layout::BrlanPaneFrame animationFrameForPane(std::string_view pane_name) const;
     [[nodiscard]] smgpc::layout::BrlanTextureFrame textureFrameForContent(std::string_view content_name) const;
     [[nodiscard]] smgpc::layout::BrlanMaterialFrame materialFrameForContent(std::string_view content_name) const;

@@ -36,7 +36,9 @@ namespace smgpc::runtime {
     }
 
     void WiiVideoService::reset() {
+        VIInit();
         _render_mode = default_render_mode();
+        VIConfigure(&_render_mode);
         _frame_index = 0U;
         _retrace_count = 0U;
         _black = FALSE;
@@ -53,6 +55,7 @@ namespace smgpc::runtime {
 
     void WiiVideoService::configure(const GXRenderModeObj *render_mode) {
         _render_mode = render_mode != nullptr ? *render_mode : default_render_mode();
+        VIConfigure(&_render_mode);
         _flushed = FALSE;
         push_event(WiiVideoEventKind::Configure);
     }
@@ -62,28 +65,33 @@ namespace smgpc::runtime {
         _render_mode.viYOrigin = y_origin;
         _render_mode.viWidth = width;
         _render_mode.viHeight = height;
+        VIConfigurePan(x_origin, y_origin, width, height);
         _flushed = FALSE;
         push_event(WiiVideoEventKind::ConfigurePan);
     }
 
     void WiiVideoService::set_black(BOOL black) {
         _black = black != FALSE ? TRUE : FALSE;
+        VISetBlack(_black);
         _flushed = FALSE;
         push_event(WiiVideoEventKind::SetBlack);
     }
 
     void WiiVideoService::flush() {
+        VIFlush();
         _flushed = TRUE;
         push_event(WiiVideoEventKind::Flush);
     }
 
     void WiiVideoService::wait_for_retrace() {
+        VIWaitForRetrace();
         _retrace_count = saturating_u32_increment(_retrace_count);
         push_event(WiiVideoEventKind::WaitRetrace);
     }
 
     void WiiVideoService::set_next_frame_buffer(void *frame_buffer) {
         _next_frame_buffer = frame_buffer;
+        VISetNextFrameBuffer(frame_buffer);
         _flushed = FALSE;
         push_event(WiiVideoEventKind::SetNextFrameBuffer);
     }
