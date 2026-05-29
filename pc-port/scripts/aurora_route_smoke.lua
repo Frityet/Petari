@@ -1,7 +1,6 @@
 import("core.base.json")
 
 local common = import("common")
-local trace = import("trace_ndjson")
 
 local route_button_script = table.concat({
     "120-1700:A+B",
@@ -112,15 +111,6 @@ local function try_call(fn)
     return ok, result, caught
 end
 
-local function list_contains(values, wanted)
-    for _, value in ipairs(values) do
-        if value == wanted then
-            return true
-        end
-    end
-    return false
-end
-
 local function parse_image_stats(output)
     local ok, decoded, err = try_call(function()
         return json.decode(output)
@@ -136,15 +126,57 @@ local function image_stats(png_path, stats_bin)
     return parse_image_stats(output)
 end
 
-local function validate_trace_to_log(trace_path, scenario, log_path)
-    local summary = trace.validate_trace(trace_path, {
-        require_emulator = "pc-port",
-        require_frame = scenario.frame,
-        require_record_type = {"frame", "render_packet", "semantic_event"},
-        require_semantic_events = true,
-        min_render_packets = scenario.min_render_packets,
+local function parse_validator_summary(log_path)
+    local lines = {}
+    for line in tostring(common.read_file(log_path) or ""):gmatch("([^\r\n]*)\r?\n") do
+        if line ~= "" then
+            table.insert(lines, line)
+        end
+    end
+    if #lines < 2 then
+        return {record_counts = {}}
+    end
+    local fields = {}
+    for field in (lines[2] .. "\t"):gmatch("(.-)\t") do
+        table.insert(fields, field)
+        if #fields >= 9 then
+            break
+        end
+    end
+    return {
+        frame_index = tonumber(fields[4]),
+        emulator = fields[5],
+        record_counts = {
+            render_packet = tonumber(fields[7] or 0) or 0,
+            semantic_event = tonumber(fields[8] or 0) or 0,
+            layout_runtime = tonumber(fields[9] or 0) or 0,
+        },
+    }
+end
+
+local function validate_trace_to_log(trace_path, scenario, log_path, validate_bin)
+    local argv = {
+        "--require-emulator", "pc-port",
+        "--require-frame", tostring(scenario.frame),
+        "--require-record-type", "frame,render_packet,semantic_event",
+        "--require-semantic-events",
+        "--min-render-packets", tostring(scenario.min_render_packets),
+    }
+    if scenario.expected_layouts and #scenario.expected_layouts > 0 then
+        table.insert(argv, "--require-layout")
+        table.insert(argv, table.concat(scenario.expected_layouts, ","))
+    end
+    table.insert(argv, trace_path)
+    local ok = common.runv(validate_bin, argv, {
+        stdout = log_path,
+        stderr = log_path,
+        check = false,
     })
-    common.write_file(log_path, trace.format_summaries({summary}))
+    if not ok then
+        cprint("${yellow}%s", common.tail(log_path, 80))
+        raise("trace SQLite validation failed for %s", trace_path)
+    end
+    return parse_validator_summary(log_path)
 end
 
 local function terminate_process(proc)
@@ -176,7 +208,7 @@ local function wait_for_artifacts(proc, trace_path, png_path, app_log, timeout_s
     raise("timed out waiting for %s and %s; see %s", trace_path, png_path, app_log)
 end
 
-local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_bin)
+local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_bin, validate_bin)
     local scenario_dir = path.join(args.work_dir, scenario.name)
     os.mkdir(scenario_dir)
     local save_dir = path.join(scenario_dir, "save")
@@ -185,7 +217,7 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
     end
     os.mkdir(save_dir)
 
-    local trace_path = path.join(scenario_dir, string.format("%s-frame-%d.trace.ndjson", scenario.name, scenario.frame))
+    local trace_path = path.join(scenario_dir, string.format("%s-frame-%d.trace.sqlite", scenario.name, scenario.frame))
     local png_path = path.join(scenario_dir, string.format("%s-frame-%d.png", scenario.name, scenario.frame))
     local app_log = path.join(scenario_dir, scenario.name .. "-app.log")
     local trace_log = path.join(scenario_dir, scenario.name .. "-trace-validator.log")
@@ -266,17 +298,7 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
         raise("%s has no visible color range", png_path)
     end
 
-    validate_trace_to_log(trace_path, scenario, trace_log)
-    local trace_summary = trace.summarize_trace(trace_path)
-    local missing_layouts = {}
-    for _, layout in ipairs(scenario.expected_layouts) do
-        if not list_contains(trace_summary.layout_names or {}, layout) then
-            table.insert(missing_layouts, layout)
-        end
-    end
-    if #missing_layouts > 0 then
-        raise("%s is missing expected layout packet(s): %s", trace_path, table.concat(missing_layouts, ", "))
-    end
+    local trace_summary = validate_trace_to_log(trace_path, scenario, trace_log, validate_bin)
 
     local manifest = {
         scenario = scenario.name,
@@ -323,6 +345,7 @@ local function normalize_args(args)
     args.scenarios = args.scenarios or {}
     args.pc_bin = path.absolute(args.pc_bin or path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc"))
     args.stats_bin = path.absolute(args.stats_bin or path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-png-stats"))
+    args.validate_bin = path.absolute(args.validate_bin or path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-validate-sqlite"))
     args.work_dir = path.absolute(args.work_dir or path.join(common.project_root(), ".cache/aurora-route-smoke/latest"))
     args.width = tonumber(args.width or 640)
     args.height = tonumber(args.height or 480)
@@ -376,12 +399,16 @@ function run(args)
     if args.build then
         common.runv("xmake", {"build", "smg-pc"}, {curdir = common.project_root()})
         common.runv("xmake", {"build", "smg-pc-png-stats"}, {curdir = common.project_root()})
+        common.runv("xmake", {"build", "smg-pc-trace-validate-sqlite"}, {curdir = common.project_root()})
     end
     if not os.isfile(args.pc_bin) then
         raise("missing smg-pc binary: %s", args.pc_bin)
     end
     if not os.isfile(args.stats_bin) then
         raise("missing smg-pc-png-stats binary: %s", args.stats_bin)
+    end
+    if not os.isfile(args.validate_bin) then
+        raise("missing smg-pc-trace-validate-sqlite binary: %s", args.validate_bin)
     end
 
     os.mkdir(args.work_dir)
@@ -391,7 +418,7 @@ function run(args)
         local server
         local ok, result, err = try_call(function()
             server = common.start_xvfb(args.width, args.height, args.display, path.join(args.work_dir, name, "xvfb.log"))
-            return run_scenario(args, scenarios[name], ":" .. tostring(server.display), disc_image, args.pc_bin, args.stats_bin)
+            return run_scenario(args, scenarios[name], ":" .. tostring(server.display), disc_image, args.pc_bin, args.stats_bin, args.validate_bin)
         end)
         common.stop_xvfb(server)
         if ok then

@@ -230,17 +230,17 @@ local function resolve_compare(args)
         dolphin_frame = dolphin_frame,
         build_mode = build_mode,
         work_dir = work_dir,
-        dolphin_trace = common.env_value("SMGPC_PARITY_DOLPHIN_TRACE", path.join(work_dir, "dolphin-frame-" .. tostring(dolphin_frame) .. ".trace.ndjson"), env),
+        dolphin_trace = common.env_value("SMGPC_PARITY_DOLPHIN_TRACE", path.join(work_dir, "dolphin-frame-" .. tostring(dolphin_frame) .. ".trace.sqlite"), env),
         dolphin_png = dolphin_png,
         dolphin_png_is_user_supplied = dolphin_png_is_user_supplied,
         dolphin_png_is_cached_reference = dolphin_png_is_cached_reference,
         pc_png = common.env_value("SMGPC_PARITY_PC_PNG", path.join(work_dir, "pcport-frame-" .. tostring(pc_frame) .. ".png"), env),
-        pc_trace = common.env_value("SMGPC_PARITY_PC_TRACE", path.join(work_dir, "pcport-frame-" .. tostring(pc_frame) .. ".trace.ndjson"), env),
+        pc_trace = common.env_value("SMGPC_PARITY_PC_TRACE", path.join(work_dir, "pcport-frame-" .. tostring(pc_frame) .. ".trace.sqlite"), env),
         dolphin_log = path.join(work_dir, "dolphin-frame-" .. tostring(dolphin_frame) .. ".log"),
         pc_log = path.join(work_dir, "pcport-frame-" .. tostring(pc_frame) .. ".log"),
         diff_log = path.join(work_dir, "visual-diff-frame-" .. tostring(pc_frame) .. ".log"),
         trace_sqlite = common.env_value("SMGPC_PARITY_TRACE_SQLITE", path.join(work_dir, "traces.sqlite"), env),
-        trace_import_log = path.join(work_dir, "trace-sqlite-frame-" .. tostring(pc_frame) .. ".log"),
+        trace_pack_log = path.join(work_dir, "trace-pack-frame-" .. tostring(pc_frame) .. ".log"),
         trace_compare_log = path.join(work_dir, "trace-compare-frame-" .. tostring(pc_frame) .. ".log"),
         manifest_path = common.env_value("SMGPC_PARITY_MANIFEST", path.join(work_dir, "manifest.json"), env),
         dolphin_user = common.env_value("SMGPC_PARITY_DOLPHIN_USER", path.join(work_dir, "dolphin-user"), env),
@@ -251,7 +251,7 @@ local function resolve_compare(args)
         game_image = common.env_value("SMGPC_DOLPHIN_GAME", path.join(repo_root, "Super Mario Wii - Galaxy Adventure (Korea).rvz"), env),
         pc_bin = common.env_value("SMGPC_PC_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc"), env),
         visual_diff_bin = common.env_value("SMGPC_VISUAL_DIFF_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc-visual-diff"), env),
-        trace_import_bin = common.env_value("SMGPC_TRACE_IMPORT_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc-trace-import-sqlite"), env),
+        trace_pack_bin = common.env_value("SMGPC_TRACE_PACK_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc-trace-pack-sqlite"), env),
         trace_compare_bin = common.env_value("SMGPC_TRACE_COMPARE_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc-trace-compare-sqlite"), env),
         dolphin_platform = common.env_value("SMGPC_DOLPHIN_PLATFORM", "x11", env),
         dolphin_video_backend = common.env_value("SMGPC_DOLPHIN_VIDEO_BACKEND", "Software", env),
@@ -299,7 +299,7 @@ local function write_manifest(ctx, status, detail)
             game_image = ctx.game_image,
             pc_bin = ctx.pc_bin,
             visual_diff_bin = ctx.visual_diff_bin,
-            trace_import_bin = ctx.trace_import_bin,
+            trace_pack_bin = ctx.trace_pack_bin,
             trace_compare_bin = ctx.trace_compare_bin,
         },
         dolphin_reference_status = ctx.dolphin_reference_status,
@@ -332,7 +332,7 @@ local function write_manifest(ctx, status, detail)
                 dolphin = ctx.dolphin_log,
                 pc = ctx.pc_log,
                 visual_diff = ctx.diff_log,
-                trace_import = ctx.trace_import_log,
+                trace_pack = ctx.trace_pack_log,
                 trace_compare = ctx.trace_compare_log,
             },
         },
@@ -352,8 +352,9 @@ local function build_targets(ctx)
     for _, target in ipairs({
         "smg-pc",
         "smg-pc-visual-diff",
-        "smg-pc-trace-import-sqlite",
+        "smg-pc-trace-pack-sqlite",
         "smg-pc-trace-compare-sqlite",
+        "smg-pc-trace-inspect-sqlite",
     }) do
         common.runv("xmake", {"build", target}, {curdir = ctx.pc_root, env_extra = env_extra})
     end
@@ -395,7 +396,7 @@ local function run_dolphin_capture(ctx)
         raise("missing Dolphin NoGUI binary: %s\nbuild it with pc-port/dolphin/build-nogui-libcxx or set SMGPC_DOLPHIN_BIN", ctx.dolphin_bin)
     end
     if not common.read_binary_contains(ctx.dolphin_bin, "SMGPC_DOLPHIN_TRACE_PATH") then
-        raise("Dolphin binary does not appear to contain the SMGPC Dolphin trace hooks required for NDJSON parity traces: %s", ctx.dolphin_bin)
+        raise("Dolphin binary does not appear to contain the SMGPC Dolphin trace hooks required for SQLite parity traces: %s", ctx.dolphin_bin)
     end
     if not os.isfile(ctx.game_image) then
         raise("missing Dolphin game image: %s\nset SMGPC_DOLPHIN_GAME to the Korean SMG RVZ/ISO path", ctx.game_image)
@@ -529,14 +530,14 @@ function compare(args)
         run_pc_capture(ctx)
 
         os.tryrm(ctx.trace_sqlite)
-        local import_ok = common.runv(ctx.trace_import_bin, {"--output", ctx.trace_sqlite, ctx.dolphin_trace, ctx.pc_trace}, {
-            stdout = ctx.trace_import_log,
-            stderr = ctx.trace_import_log,
+        local pack_ok = common.runv(ctx.trace_pack_bin, {"--output", ctx.trace_sqlite, ctx.dolphin_trace, ctx.pc_trace}, {
+            stdout = ctx.trace_pack_log,
+            stderr = ctx.trace_pack_log,
             check = false,
         })
-        if not import_ok then
-            cprint("${yellow}%s", common.tail(ctx.trace_import_log, 80))
-            raise("trace import failed for scenario %s", ctx.scenario)
+        if not pack_ok then
+            cprint("${yellow}%s", common.tail(ctx.trace_pack_log, 80))
+            raise("trace pack failed for scenario %s", ctx.scenario)
         end
         local compare_ok = common.runv(ctx.trace_compare_bin, {"--database", ctx.trace_sqlite}, {
             stdout = ctx.trace_compare_log,
@@ -572,7 +573,7 @@ function compare(args)
         if not diff_ok then
             raise("visual diff failed for scenario %s", ctx.scenario)
         end
-        write_manifest(ctx, "passed", "captured Dolphin/PC artifacts, imported traces, compared trace SQLite, and ran visual diff")
+        write_manifest(ctx, "passed", "captured Dolphin/PC SQLite traces, packed the analysis database, compared traces, and ran visual diff")
     end)
     if not ok then
         write_manifest(ctx, "failed", tostring(err))

@@ -7,7 +7,7 @@ end
 
 target("smg-pc-common")
     set_kind("static")
-    add_files("Logger.cpp", "DumpJson.cpp", "MarkdownWriter.cpp", "Ndjson.cpp", "BinaryChunkFile.cpp")
+    add_files("Logger.cpp", "DumpJson.cpp", "MarkdownWriter.cpp", "BinaryChunkFile.cpp")
     if is_mode("debug") then
         add_files("Sqlite.cpp", "TraceStore.cpp", "TraceAnalysis.cpp")
     end

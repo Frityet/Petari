@@ -2358,11 +2358,11 @@ namespace smgpc::runtime {
     }
 
     void write_runtime_parity_trace(const std::filesystem::path &path, const render::FrameContext &frame_context, const RuntimeContext &runtime) {
-        trace::write_trace_ndjson_file(path, runtime_parity_trace_json(frame_context, runtime), "pc-port");
+        (void)trace::write_trace_sqlite_file(path, runtime_parity_trace_json(frame_context, runtime), "pc-port");
     }
 
     dump::Json load_runtime_parity_trace(const std::filesystem::path &path) {
-        return trace::load_trace_ndjson_file(path);
+        return trace::load_trace_sqlite_file(path);
     }
 
 }  // namespace smgpc::runtime

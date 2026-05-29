@@ -36,7 +36,7 @@ namespace {
 
     void print_usage(std::ostream &out) {
         out << "usage: smg-pc-trace-compare-sqlite [--database traces.sqlite] [--reference-trace-id id] [--candidate-trace-id id]\n";
-        out << "Reports semantic-anchor, frame, copy, and packet-signature deltas from the derived SQLite trace index.\n";
+        out << "Reports semantic-anchor, frame, copy, and packet-signature deltas from SQLite trace stores.\n";
     }
 
     [[nodiscard]] Options parse_args(int argc, char **argv) {

@@ -2,11 +2,8 @@
 
 #include <algorithm>
 #include <initializer_list>
-#include <sstream>
 #include <stdexcept>
 #include <utility>
-
-#include "Ndjson.hpp"
 
 namespace smgpc::trace {
     namespace {
@@ -191,22 +188,9 @@ namespace smgpc::trace {
             return json_int(trace, "frame", "index");
         }
 
-        [[nodiscard]] Json base_record(std::string_view record_type, const Json &trace, const std::optional<std::string> &emulator) {
-            auto record = Json {
-                {"schema", std::string(kTraceNdjsonSchema)},
-                {"record_type", std::string(record_type)},
-            };
-            if (const auto value = trace_emulator(trace, emulator); value.has_value()) {
-                record["emulator"] = *value;
-            }
-            if (const auto value = trace_frame_index(trace); value.has_value()) {
-                record["frame_index"] = *value;
-            }
-            return record;
-        }
-
         [[nodiscard]] Json trace_meta_payload(const Json &trace, const std::optional<std::string> &emulator) {
             auto payload = Json::object();
+            payload["store_schema"] = std::string(kTraceSqliteSchema);
             if (const auto *schema = member(trace, "schema"); schema != nullptr) {
                 payload["source_schema"] = *schema;
             }
@@ -220,7 +204,7 @@ namespace smgpc::trace {
             if (trace.is_object()) {
                 for (const auto &[key, value] : trace.items()) {
                     if (key == "schema" || key == "emulator" || key == "requested_frame" || key == "frame" ||
-                        key == "render_packets" || key == "copy_events") {
+                        key == "render_packets" || key == "copy_events" || key == "semantic_events" || key == "layout_runtime") {
                         continue;
                     }
                     if (value.is_primitive()) {
@@ -231,42 +215,37 @@ namespace smgpc::trace {
             return payload;
         }
 
-        void append_payload_record(std::vector<Json> &records, const Json &trace, const std::optional<std::string> &emulator,
-                                   std::string_view record_type, const Json &payload) {
-            auto record = base_record(record_type, trace, emulator);
-            record["payload"] = payload;
-            records.push_back(std::move(record));
+        [[nodiscard]] std::size_t array_record_count(const Json &trace, std::string_view key) {
+            const auto *records = member(trace, key);
+            return records != nullptr && records->is_array() ? records->size() : 0U;
         }
 
-        void append_indexed_payload_record(std::vector<Json> &records, const Json &trace, const std::optional<std::string> &emulator,
-                                           std::string_view record_type, std::size_t record_index, const Json &payload) {
-            auto record = base_record(record_type, trace, emulator);
-            record["record_index"] = record_index;
-            record["payload"] = payload;
-            records.push_back(std::move(record));
-        }
-
-        [[nodiscard]] std::string records_to_ndjson_text(std::span<const Json> records) {
-            auto out = std::ostringstream {};
-            for (const auto &record : records) {
-                out << record.dump() << '\n';
+        [[nodiscard]] std::size_t trace_record_count(const Json &trace) {
+            auto count = std::size_t {1U};  // trace metadata
+            if (member(trace, "frame") != nullptr) {
+                ++count;
             }
-            return out.str();
+            if (trace.is_object()) {
+                for (const auto &[key, value] : trace.items()) {
+                    if (key == "schema" || key == "emulator" || key == "requested_frame" || key == "frame" ||
+                        key == "render_packets" || key == "copy_events" || key == "semantic_events") {
+                        continue;
+                    }
+                    if (!value.is_primitive()) {
+                        ++count;
+                    }
+                }
+            }
+            return count + array_record_count(trace, "render_packets") + array_record_count(trace, "copy_events") +
+                   array_record_count(trace, "semantic_events");
         }
 
-        [[nodiscard]] std::optional<std::string> record_type(const Json &record) {
-            if (const auto *value = member(record, "record_type"); value != nullptr && value->is_string()) {
-                return value->get<std::string>();
+        [[nodiscard]] Json parse_stored_json(std::string_view text, std::string_view description) {
+            try {
+                return Json::parse(text.begin(), text.end());
+            } catch (const nlohmann::json::exception &e) {
+                throw std::runtime_error(std::string("could not parse stored trace JSON for ") + std::string(description) + ": " + e.what());
             }
-            return std::nullopt;
-        }
-
-        [[nodiscard]] const Json &record_payload(const Json &record) {
-            const auto *payload = member(record, "payload");
-            if (payload == nullptr) {
-                throw std::runtime_error("NDJSON trace record is missing payload");
-            }
-            return *payload;
         }
 
         void insert_frame(sql::Database &db, std::int64_t trace_id, const Json &trace) {
@@ -401,11 +380,11 @@ namespace smgpc::trace {
         std::size_t insert_render_packets(sql::Database &db, std::int64_t trace_id, const Json &trace) {
             auto insert = sql::Statement(db, R"SQL(
                 INSERT INTO render_packets(
-                    trace_id, packet_index, draw_index, frame_index, presenter_frame_count, model_name, material_name, render_pass, draw_pass, view_id,
+                    trace_id, packet_index, draw_index, frame_index, presenter_frame_count, model_name, material_name, layout_name, render_pass, draw_pass, view_id,
                     packet_mode, primitive_type, vertex_count, index_count, source_vertex_count, source_triangle_count, texgen_count,
                     color_channel_count, tev_stage_count, indirect_stage_count, cull_mode, used_textures_mask, used_texture_slots_json,
                     requested_light_mask, loaded_light_mask, payload_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             )SQL");
 
             const auto *packets = member(trace, "render_packets");
@@ -428,25 +407,26 @@ namespace smgpc::trace {
                 insert.bind_optional_int(5, json_int(packet, "presenter_frame_count"));
                 insert.bind_optional_text(6, json_text(packet, "model_name"));
                 insert.bind_optional_text(7, json_text(packet, "material_name"));
-                insert.bind_optional_text(8, json_text(packet, "render_pass"));
-                insert.bind_optional_text(9, json_text(packet, "draw_pass"));
-                insert.bind_optional_int(10, json_int(packet, "view_id"));
-                insert.bind_optional_text(11, json_text(packet, "packet_mode"));
-                insert.bind_optional_text(12, json_text(packet, "primitive_type"));
-                insert.bind_optional_int(13, packet_vertex_count(packet));
-                insert.bind_optional_int(14, json_int(packet, "num_indices"));
-                insert.bind_optional_int(15, json_int(packet, "source_vertex_count"));
-                insert.bind_optional_int(16, json_int(packet, "source_triangle_count"));
-                insert.bind_optional_int(17, packet_texgen_count(packet));
-                insert.bind_optional_int(18, packet_color_channel_count(packet));
-                insert.bind_optional_int(19, packet_tev_stage_count(packet));
-                insert.bind_optional_int(20, packet_indirect_stage_count(packet));
-                insert.bind_optional_text(21, packet_cull_mode(packet));
-                insert.bind_optional_int(22, json_int(packet, "used_textures_mask"));
-                insert.bind_optional_text(23, member_raw(packet, "used_texture_slots"));
-                insert.bind_optional_int(24, json_int(packet, "requested_light_mask"));
-                insert.bind_optional_int(25, json_int(packet, "loaded_light_mask"));
-                insert.bind(26, json_raw(packet));
+                insert.bind_optional_text(8, json_text(packet, "layout_name"));
+                insert.bind_optional_text(9, json_text(packet, "render_pass"));
+                insert.bind_optional_text(10, json_text(packet, "draw_pass"));
+                insert.bind_optional_int(11, json_int(packet, "view_id"));
+                insert.bind_optional_text(12, json_text(packet, "packet_mode"));
+                insert.bind_optional_text(13, json_text(packet, "primitive_type"));
+                insert.bind_optional_int(14, packet_vertex_count(packet));
+                insert.bind_optional_int(15, json_int(packet, "num_indices"));
+                insert.bind_optional_int(16, json_int(packet, "source_vertex_count"));
+                insert.bind_optional_int(17, json_int(packet, "source_triangle_count"));
+                insert.bind_optional_int(18, packet_texgen_count(packet));
+                insert.bind_optional_int(19, packet_color_channel_count(packet));
+                insert.bind_optional_int(20, packet_tev_stage_count(packet));
+                insert.bind_optional_int(21, packet_indirect_stage_count(packet));
+                insert.bind_optional_text(22, packet_cull_mode(packet));
+                insert.bind_optional_int(23, json_int(packet, "used_textures_mask"));
+                insert.bind_optional_text(24, member_raw(packet, "used_texture_slots"));
+                insert.bind_optional_int(25, json_int(packet, "requested_light_mask"));
+                insert.bind_optional_int(26, json_int(packet, "loaded_light_mask"));
+                insert.bind(27, json_raw(packet));
                 insert.step_done();
 
                 insert_packet_children(db, trace_id, packet_index, packet);
@@ -717,108 +697,30 @@ namespace smgpc::trace {
 
     }  // namespace
 
-    std::vector<dump::Json> trace_ndjson_records_from_json(const dump::Json &trace, std::optional<std::string> emulator) {
-        auto records = std::vector<Json>{};
+    namespace {
 
-        append_payload_record(records, trace, emulator, "trace_meta", trace_meta_payload(trace, emulator));
+        void insert_trace_sections(sql::Database &db, std::int64_t trace_id, const Json &trace) {
+            if (!trace.is_object()) {
+                return;
+            }
 
-        if (const auto *frame = member(trace, "frame"); frame != nullptr) {
-            append_payload_record(records, trace, emulator, "frame", *frame);
-        }
-
-        if (trace.is_object()) {
+            auto insert = sql::Statement(db, R"SQL(
+                INSERT INTO trace_sections(trace_id, section_key, payload_json)
+                VALUES(?, ?, ?)
+            )SQL");
             for (const auto &[key, value] : trace.items()) {
                 if (key == "schema" || key == "emulator" || key == "requested_frame" || key == "frame" ||
                     key == "render_packets" || key == "copy_events" || key == "semantic_events" || value.is_primitive()) {
                     continue;
                 }
-                auto record = base_record("top_level", trace, emulator);
-                record["key"] = key;
-                record["payload"] = value;
-                records.push_back(std::move(record));
+                insert.bind(1, trace_id);
+                insert.bind(2, key);
+                insert.bind(3, json_raw(value));
+                insert.step_done();
             }
         }
 
-        if (const auto *packets = member(trace, "render_packets"); packets != nullptr && packets->is_array()) {
-            for (auto i = std::size_t {}; i < packets->size(); ++i) {
-                append_indexed_payload_record(records, trace, emulator, "render_packet", i, (*packets)[i]);
-            }
-        }
-
-        if (const auto *events = member(trace, "copy_events"); events != nullptr && events->is_array()) {
-            for (auto i = std::size_t {}; i < events->size(); ++i) {
-                append_indexed_payload_record(records, trace, emulator, "copy_event", i, (*events)[i]);
-            }
-        }
-
-        if (const auto *events = member(trace, "semantic_events"); events != nullptr && events->is_array()) {
-            for (auto i = std::size_t {}; i < events->size(); ++i) {
-                append_indexed_payload_record(records, trace, emulator, "semantic_event", i, (*events)[i]);
-            }
-        }
-
-        return records;
-    }
-
-    dump::Json trace_json_from_ndjson_records(std::span<const dump::Json> records) {
-        auto trace = Json::object();
-        trace["render_packets"] = Json::array();
-        trace["copy_events"] = Json::array();
-        trace["semantic_events"] = Json::array();
-
-        for (const auto &record : records) {
-            const auto schema = json_text(record, "schema");
-            if (!schema.has_value() || *schema != kTraceNdjsonSchema) {
-                throw std::runtime_error("NDJSON trace record has an unsupported schema");
-            }
-
-            const auto type = record_type(record);
-            if (!type.has_value()) {
-                throw std::runtime_error("NDJSON trace record is missing record_type");
-            }
-
-            const auto &payload = record_payload(record);
-            if (*type == "trace_meta") {
-                if (!payload.is_object()) {
-                    throw std::runtime_error("trace_meta payload must be an object");
-                }
-                for (const auto &[key, value] : payload.items()) {
-                    if (key == "source_schema") {
-                        trace["schema"] = value;
-                    } else {
-                        trace[key] = value;
-                    }
-                }
-            } else if (*type == "frame") {
-                trace["frame"] = payload;
-            } else if (*type == "top_level") {
-                const auto key = json_text(record, "key");
-                if (!key.has_value()) {
-                    throw std::runtime_error("top_level NDJSON trace record is missing key");
-                }
-                trace[*key] = payload;
-            } else if (*type == "render_packet") {
-                trace["render_packets"].push_back(payload);
-            } else if (*type == "copy_event") {
-                trace["copy_events"].push_back(payload);
-            } else if (*type == "semantic_event") {
-                trace["semantic_events"].push_back(payload);
-            } else {
-                throw std::runtime_error("NDJSON trace record has unknown record_type " + *type);
-            }
-        }
-
-        return trace;
-    }
-
-    void write_trace_ndjson_file(const std::filesystem::path &path, const dump::Json &trace, std::optional<std::string> emulator) {
-        dump::write_ndjson_file(path, trace_ndjson_records_from_json(trace, std::move(emulator)));
-    }
-
-    dump::Json load_trace_ndjson_file(const std::filesystem::path &path) {
-        const auto records = dump::load_ndjson_file(path);
-        return trace_json_from_ndjson_records(records);
-    }
+    }  // namespace
 
     void create_trace_sqlite_schema(sql::Database &db) {
         db.exec(R"SQL(
@@ -826,11 +728,20 @@ namespace smgpc::trace {
                 id INTEGER PRIMARY KEY,
                 path TEXT NOT NULL UNIQUE,
                 trace_format TEXT NOT NULL,
+                store_schema TEXT NOT NULL,
                 schema_name TEXT,
                 emulator TEXT,
                 requested_frame INTEGER,
                 record_count INTEGER NOT NULL,
-                raw_ndjson TEXT NOT NULL
+                meta_json TEXT NOT NULL,
+                source_json TEXT NOT NULL,
+                created_utc TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+            );
+            CREATE TABLE IF NOT EXISTS trace_sections (
+                trace_id INTEGER NOT NULL REFERENCES traces(id) ON DELETE CASCADE,
+                section_key TEXT NOT NULL,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY(trace_id, section_key)
             );
             CREATE TABLE IF NOT EXISTS frames (
                 trace_id INTEGER PRIMARY KEY REFERENCES traces(id) ON DELETE CASCADE,
@@ -850,6 +761,7 @@ namespace smgpc::trace {
                 presenter_frame_count INTEGER,
                 model_name TEXT,
                 material_name TEXT,
+                layout_name TEXT,
                 render_pass TEXT,
                 draw_pass TEXT,
                 view_id INTEGER,
@@ -1045,7 +957,10 @@ namespace smgpc::trace {
                 payload_json TEXT NOT NULL,
                 PRIMARY KEY(trace_id, layout_row, texture_index)
             );
+            CREATE INDEX IF NOT EXISTS idx_traces_emulator_frame ON traces(emulator, requested_frame);
+            CREATE INDEX IF NOT EXISTS idx_trace_sections_key ON trace_sections(section_key);
             CREATE INDEX IF NOT EXISTS idx_render_packets_material ON render_packets(material_name);
+            CREATE INDEX IF NOT EXISTS idx_render_packets_layout ON render_packets(layout_name);
             CREATE INDEX IF NOT EXISTS idx_render_packets_signature ON render_packets(texgen_count, color_channel_count, tev_stage_count, indirect_stage_count, cull_mode, vertex_count);
             CREATE INDEX IF NOT EXISTS idx_texture_bindings_signature ON packet_texture_bindings(slot, format, width, height);
             CREATE INDEX IF NOT EXISTS idx_semantic_events_name ON semantic_events(category, name, frame_index);
@@ -1059,6 +974,7 @@ namespace smgpc::trace {
                     rp.packet_index,
                     rp.model_name,
                     rp.material_name,
+                    rp.layout_name,
                     rp.render_pass,
                     rp.packet_mode,
                     rp.texgen_count,
@@ -1072,41 +988,104 @@ namespace smgpc::trace {
                 FROM render_packets rp
                 LEFT JOIN packet_texture_bindings ptb ON ptb.trace_id = rp.trace_id AND ptb.packet_index = rp.packet_index
                 GROUP BY rp.trace_id, rp.packet_index;
+            CREATE VIEW IF NOT EXISTS trace_overview AS
+                SELECT
+                    t.id AS trace_id,
+                    t.path,
+                    t.store_schema,
+                    t.schema_name,
+                    t.emulator,
+                    t.requested_frame,
+                    f.frame_index,
+                    f.framebuffer_width,
+                    f.framebuffer_height,
+                    t.record_count,
+                    (SELECT count(*) FROM render_packets rp WHERE rp.trace_id = t.id) AS render_packet_count,
+                    (SELECT count(*) FROM copy_events ce WHERE ce.trace_id = t.id) AS copy_event_count,
+                    (SELECT count(*) FROM semantic_events se WHERE se.trace_id = t.id) AS semantic_event_count,
+                    (SELECT count(*) FROM layout_runtime lr WHERE lr.trace_id = t.id) AS layout_runtime_count
+                FROM traces t
+                LEFT JOIN frames f ON f.trace_id = t.id;
+            CREATE VIEW IF NOT EXISTS material_usage AS
+                SELECT trace_id, coalesce(material_name, '<null>') AS material_name, count(*) AS packet_count
+                FROM render_packets
+                GROUP BY trace_id, material_name;
+            CREATE VIEW IF NOT EXISTS layout_usage AS
+                SELECT trace_id, coalesce(layout_name, '<null>') AS layout_name, count(*) AS packet_count
+                FROM render_packets
+                GROUP BY trace_id, layout_name;
+            CREATE VIEW IF NOT EXISTS texture_usage AS
+                SELECT trace_id, coalesce(name, identity_name, '<null>') AS texture_name, coalesce(format, '<null>') AS format,
+                       width, height, count(*) AS binding_count
+                FROM packet_texture_bindings
+                GROUP BY trace_id, texture_name, format, width, height;
+            CREATE VIEW IF NOT EXISTS copy_kind_counts AS
+                SELECT trace_id, coalesce(kind, '<null>') AS kind, count(*) AS copy_count
+                FROM copy_events
+                GROUP BY trace_id, kind;
+            CREATE VIEW IF NOT EXISTS semantic_anchor_counts AS
+                SELECT trace_id, coalesce(category, '<null>') AS category, coalesce(name, '<null>') AS name,
+                       min(frame_index) AS first_frame_index, count(*) AS event_count
+                FROM semantic_events
+                GROUP BY trace_id, category, name;
         )SQL");
     }
 
-    ImportResult import_trace_ndjson_file(sql::Database &db, const std::filesystem::path &path) {
-        const auto records = dump::load_ndjson_file(path);
-        const auto trace = trace_json_from_ndjson_records(records);
-        const auto ndjson_text = records_to_ndjson_text(records);
+    std::vector<std::int64_t> trace_ids(sql::Database &db) {
+        auto select = sql::Statement(db, "SELECT id FROM traces ORDER BY id");
+        auto out = std::vector<std::int64_t>{};
+        while (select.step()) {
+            out.push_back(select.column_int(0).value_or(0));
+        }
+        return out;
+    }
 
-        auto insert = sql::Statement(db, R"SQL(
-            INSERT INTO traces(path, trace_format, schema_name, emulator, requested_frame, record_count, raw_ndjson)
-            VALUES(?, ?, ?, ?, ?, ?, ?)
-        )SQL");
+    dump::Json load_trace_json_from_database(sql::Database &db, std::int64_t trace_id) {
+        auto select = sql::Statement(db, "SELECT source_json FROM traces WHERE id = ?");
+        select.bind(1, trace_id);
+        if (!select.step()) {
+            throw std::runtime_error("trace id not found: " + std::to_string(trace_id));
+        }
+        const auto source = select.column_text(0).value_or(std::string {});
+        return parse_stored_json(source, "trace " + std::to_string(trace_id));
+    }
 
-        insert.bind(1, std::filesystem::absolute(path).string());
-        insert.bind(2, "ndjson");
-        insert.bind_optional_text(3, json_text(trace, "schema"));
-        auto emulator = json_text(trace, "emulator");
+    TraceWriteResult write_trace_json_to_database(sql::Database &db, const std::filesystem::path &path, const dump::Json &trace,
+                                                  std::optional<std::string> emulator) {
+        if (!emulator.has_value()) {
+            emulator = trace_emulator(trace, std::nullopt);
+        }
         if (!emulator.has_value()) {
             emulator = default_emulator_for_path(path);
         }
-        insert.bind_optional_text(4, emulator);
-        insert.bind_optional_int(5, json_int(trace, "requested_frame"));
-        insert.bind(6, static_cast<std::int64_t>(records.size()));
-        insert.bind(7, ndjson_text);
+        const auto meta = trace_meta_payload(trace, emulator);
+        const auto records = trace_record_count(trace);
+        auto insert = sql::Statement(db, R"SQL(
+            INSERT INTO traces(path, trace_format, store_schema, schema_name, emulator, requested_frame, record_count, meta_json, source_json)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+        )SQL");
+
+        insert.bind(1, std::filesystem::absolute(path).string());
+        insert.bind(2, "sqlite");
+        insert.bind(3, kTraceSqliteSchema);
+        insert.bind_optional_text(4, json_text(trace, "schema"));
+        insert.bind_optional_text(5, emulator);
+        insert.bind_optional_int(6, trace_frame_index(trace));
+        insert.bind(7, static_cast<std::int64_t>(records));
+        insert.bind(8, json_raw(meta));
+        insert.bind(9, json_raw(trace));
         insert.step_done();
 
         const auto trace_id = db.last_insert_rowid();
+        insert_trace_sections(db, trace_id, trace);
         insert_frame(db, trace_id, trace);
         const auto packet_count = insert_render_packets(db, trace_id, trace);
         const auto copy_count = insert_copy_events(db, trace_id, trace);
         const auto semantic_count = insert_semantic_events(db, trace_id, trace);
         const auto layout_counts = insert_layout_runtime(db, trace_id, trace);
-        return ImportResult {
+        return TraceWriteResult {
             .trace_id = trace_id,
-            .record_count = records.size(),
+            .record_count = records,
             .render_packet_count = packet_count,
             .copy_event_count = copy_count,
             .semantic_event_count = semantic_count,
@@ -1115,6 +1094,41 @@ namespace smgpc::trace {
             .layout_material_count = layout_counts.material_count,
             .layout_texture_count = layout_counts.texture_count,
         };
+    }
+
+    TraceWriteResult copy_trace_between_databases(sql::Database &destination, sql::Database &source, std::int64_t source_trace_id) {
+        auto select = sql::Statement(source, "SELECT path, source_json, emulator FROM traces WHERE id = ?");
+        select.bind(1, source_trace_id);
+        if (!select.step()) {
+            throw std::runtime_error("source trace id not found: " + std::to_string(source_trace_id));
+        }
+
+        const auto source_path = std::filesystem::path(select.column_text(0).value_or("trace.sqlite"));
+        const auto source_json = select.column_text(1).value_or(std::string {});
+        const auto emulator = select.column_text(2);
+        return write_trace_json_to_database(destination, source_path, parse_stored_json(source_json, source_path.string()), emulator);
+    }
+
+    TraceWriteResult write_trace_sqlite_file(const std::filesystem::path &path, const dump::Json &trace, std::optional<std::string> emulator) {
+        if (std::filesystem::exists(path)) {
+            std::filesystem::remove(path);
+        }
+        auto db = sql::Database(path);
+        db.exec("PRAGMA foreign_keys = ON");
+        create_trace_sqlite_schema(db);
+        db.exec("BEGIN IMMEDIATE TRANSACTION");
+        const auto result = write_trace_json_to_database(db, path, trace, std::move(emulator));
+        db.exec("COMMIT");
+        return result;
+    }
+
+    dump::Json load_trace_sqlite_file(const std::filesystem::path &path) {
+        auto db = sql::Database(path);
+        const auto ids = trace_ids(db);
+        if (ids.empty()) {
+            throw std::runtime_error("SQLite trace contains no traces: " + path.string());
+        }
+        return load_trace_json_from_database(db, ids.front());
     }
 
 }  // namespace smgpc::trace

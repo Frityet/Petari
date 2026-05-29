@@ -54,10 +54,28 @@ target("smg-pc-j3d-model-probe")
         "smg-pc-render"
     }
 
-target("smg-pc-trace-import-sqlite")
+target("smg-pc-trace-pack-sqlite")
     set_kind("binary")
     set_default(false)
-    add_files("TraceSqliteImport.cpp")
+    add_files("TraceSqlitePack.cpp")
+    add_deps {
+        "smg-pc-debug-common",
+        "smg-pc-common"
+    }
+
+target("smg-pc-trace-validate-sqlite")
+    set_kind("binary")
+    set_default(false)
+    add_files("TraceSqliteValidate.cpp")
+    add_deps {
+        "smg-pc-debug-common",
+        "smg-pc-common"
+    }
+
+target("smg-pc-trace-inspect-sqlite")
+    set_kind("binary")
+    set_default(false)
+    add_files("TraceSqliteInspect.cpp")
     add_deps {
         "smg-pc-debug-common",
         "smg-pc-common"

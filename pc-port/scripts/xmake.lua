@@ -1,32 +1,138 @@
 add_moduledirs("$(projectdir)/scripts")
 
-task("validate-trace-ndjson")
+task("validate-trace-sqlite")
     on_run(function()
-        import("trace_ndjson")
         import("common")
         import("core.base.option")
-        trace_ndjson.run({
-            traces = option.get("contents") or {},
-            require_emulator = option.get("require-emulator"),
-            require_frame = option.get("require-frame") and tonumber(option.get("require-frame")) or nil,
-            require_record_type = common.split_commas_or_table(option.get("require-record-type")),
-            require_top_level = common.split_commas_or_table(option.get("require-top-level")),
-            require_semantic_events = option.get("require-semantic-events") or false,
-            min_render_packets = tonumber(option.get("min-render-packets") or 0),
-        })
+        common.runv("xmake", {"build", "smg-pc-trace-validate-sqlite"}, {curdir = common.project_root()})
+        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-validate-sqlite")
+        local argv = {}
+        local function append_option(name, value)
+            if value ~= nil and value ~= false then
+                table.insert(argv, name)
+                table.insert(argv, tostring(value))
+            end
+        end
+        append_option("--require-emulator", option.get("require-emulator"))
+        append_option("--require-frame", option.get("require-frame"))
+        append_option("--require-record-type", option.get("require-record-type"))
+        append_option("--require-layout", option.get("require-layout"))
+        if option.get("require-semantic-events") then
+            table.insert(argv, "--require-semantic-events")
+        end
+        append_option("--min-render-packets", option.get("min-render-packets"))
+        for _, trace in ipairs(option.get("contents") or {}) do
+            table.insert(argv, trace)
+        end
+        common.runv(bin, argv, {curdir = common.project_root()})
     end)
     set_menu {
-        usage = "xmake validate-trace-ndjson [options] trace...",
-        description = "Validate SMG PC runtime parity NDJSON traces.",
+        usage = "xmake validate-trace-sqlite [options] trace...",
+        description = "Validate SMG PC runtime parity SQLite traces.",
         options = {
             {"-", "require-emulator", "kv", nil, "Require a trace emulator name."},
             {"-", "require-frame", "kv", nil, "Require a frame index."},
             {"-", "require-record-type", "kv", nil, "Require comma-separated record types."},
-            {"-", "require-top-level", "kv", nil, "Require comma-separated top-level keys."},
+            {"-", "require-layout", "kv", nil, "Require comma-separated layout names."},
             {"-", "require-semantic-events", "k", nil, "Require at least one semantic_event record."},
             {"-", "min-render-packets", "kv", "0", "Minimum render_packet count."},
             {},
-            {nil, "contents", "vs", nil, "Trace files."},
+            {nil, "contents", "vs", nil, "SQLite trace stores."},
+        },
+    }
+
+task("pack-trace-sqlite")
+    on_run(function()
+        import("common")
+        import("core.base.option")
+        common.runv("xmake", {"build", "smg-pc-trace-pack-sqlite"}, {curdir = common.project_root()})
+        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-pack-sqlite")
+        local argv = {}
+        if option.get("output") then
+            table.insert(argv, "--output")
+            table.insert(argv, option.get("output"))
+        end
+        if option.get("append") then
+            table.insert(argv, "--append")
+        end
+        for _, trace in ipairs(option.get("contents") or {}) do
+            table.insert(argv, trace)
+        end
+        common.runv(bin, argv, {curdir = common.project_root()})
+    end)
+    set_menu {
+        usage = "xmake pack-trace-sqlite [options] trace...",
+        description = "Pack one or more SQLite trace stores into an analysis database.",
+        options = {
+            {"o", "output", "kv", nil, "Output SQLite analysis database."},
+            {"-", "append", "k", nil, "Append instead of replacing the output database."},
+            {},
+            {nil, "contents", "vs", nil, "SQLite trace stores."},
+        },
+    }
+
+task("inspect-trace-sqlite")
+    on_run(function()
+        import("common")
+        import("core.base.option")
+        common.runv("xmake", {"build", "smg-pc-trace-inspect-sqlite"}, {curdir = common.project_root()})
+        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-inspect-sqlite")
+        local argv = {}
+        if option.get("database") then
+            table.insert(argv, "--database")
+            table.insert(argv, option.get("database"))
+        end
+        if option.get("query") then
+            table.insert(argv, "--query")
+            table.insert(argv, option.get("query"))
+        end
+        if option.get("limit") then
+            table.insert(argv, "--limit")
+            table.insert(argv, option.get("limit"))
+        end
+        common.runv(bin, argv, {curdir = common.project_root()})
+    end)
+    set_menu {
+        usage = "xmake inspect-trace-sqlite [options]",
+        description = "Inspect SQLite trace analysis tables and built-in views.",
+        options = {
+            {"-", "database", "kv", nil, "SQLite trace database."},
+            {"-", "query", "kv", "summary", "summary, semantic, layouts, materials, textures, packets, copies, or views."},
+            {"-", "limit", "kv", "40", "Maximum rows for table queries."},
+        },
+    }
+
+task("compare-trace-sqlite")
+    on_run(function()
+        import("common")
+        import("core.base.option")
+        common.runv("xmake", {"build", "smg-pc-trace-compare-sqlite"}, {curdir = common.project_root()})
+        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-compare-sqlite")
+        local argv = {}
+        local function append_option(name, value)
+            if value ~= nil and value ~= false then
+                table.insert(argv, name)
+                table.insert(argv, tostring(value))
+            end
+        end
+        append_option("--database", option.get("database"))
+        append_option("--reference-trace-id", option.get("reference-trace-id"))
+        append_option("--candidate-trace-id", option.get("candidate-trace-id"))
+        append_option("--max-signature-diffs", option.get("max-signature-diffs"))
+        append_option("--max-semantic-anchors", option.get("max-semantic-anchors"))
+        append_option("--max-layout-runtime-diffs", option.get("max-layout-runtime-diffs"))
+        common.runv(bin, argv, {curdir = common.project_root()})
+    end)
+    set_menu {
+        usage = "xmake compare-trace-sqlite [options]",
+        description = "Compare two traces inside a SQLite trace analysis database.",
+        options = {
+            {"-", "database", "kv", nil, "SQLite trace analysis database."},
+            {"-", "reference-trace-id", "kv", nil, "Reference trace id."},
+            {"-", "candidate-trace-id", "kv", nil, "Candidate trace id."},
+            {"-", "max-signature-diffs", "kv", "12", "Maximum packet signature diffs."},
+            {"-", "max-semantic-anchors", "kv", "40", "Maximum semantic anchors."},
+            {"-", "max-layout-runtime-diffs", "kv", "40", "Maximum layout runtime diffs."},
         },
     }
 
@@ -40,6 +146,7 @@ task("aurora-route-smoke")
             disc = option.get("disc"),
             pc_bin = option.get("pc-bin"),
             stats_bin = option.get("stats-bin"),
+            validate_bin = option.get("validate-bin"),
             work_dir = option.get("work-dir"),
             width = option.get("width") and tonumber(option.get("width")) or nil,
             height = option.get("height") and tonumber(option.get("height")) or nil,
@@ -62,6 +169,7 @@ task("aurora-route-smoke")
             {"-", "disc", "kv", nil, "SMG RVZ/WBFS/ISO path."},
             {"-", "pc-bin", "kv", nil, "Path to smg-pc binary."},
             {"-", "stats-bin", "kv", nil, "Path to smg-pc-png-stats binary."},
+            {"-", "validate-bin", "kv", nil, "Path to smg-pc-trace-validate-sqlite binary."},
             {"-", "work-dir", "kv", nil, "Artifact directory."},
             {"-", "width", "kv", "640", "Capture width."},
             {"-", "height", "kv", "480", "Capture height."},

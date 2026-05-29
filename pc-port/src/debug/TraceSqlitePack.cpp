@@ -19,8 +19,8 @@ namespace {
     };
 
     void print_usage(std::ostream &out) {
-        out << "usage: smg-pc-trace-import-sqlite [--output traces.sqlite] [--append] [trace.ndjson ...]\n";
-        out << "Raw trace inputs are NDJSON. SQLite databases are rebuildable derived analysis indexes.\n";
+        out << "usage: smg-pc-trace-pack-sqlite [--output traces.sqlite] [--append] [trace.sqlite ...]\n";
+        out << "Copies one or more SQLite trace stores into a single analysis database.\n";
     }
 
     [[nodiscard]] Options parse_args(int argc, char **argv) {
@@ -50,8 +50,8 @@ namespace {
         if (options.traces.empty()) {
             const auto cache = smgpc::debug::pc_port_root() / ".cache" / "render-parity";
             const std::filesystem::path defaults[]{
-                cache / "dolphin-frame-1900.trace.ndjson",
-                cache / "pcport-frame-1900.trace.ndjson",
+                cache / "dolphin-frame-1900.trace.sqlite",
+                cache / "pcport-frame-1900.trace.sqlite",
             };
             for (const auto &path : defaults) {
                 if (std::filesystem::is_regular_file(path)) {
@@ -61,12 +61,12 @@ namespace {
         }
 
         if (options.traces.empty()) {
-            throw std::runtime_error("no NDJSON trace files provided and no cached frame-1900 NDJSON traces found");
+            throw std::runtime_error("no SQLite trace stores provided and no cached frame-1900 SQLite traces found");
         }
 
         for (const auto &path : options.traces) {
-            if (path.extension() != ".ndjson") {
-                throw std::runtime_error("raw trace inputs must use .ndjson: " + path.string());
+            if (path.extension() != ".sqlite") {
+                throw std::runtime_error("trace stores must use .sqlite: " + path.string());
             }
         }
 
@@ -81,22 +81,30 @@ int main(int argc, char **argv) try {
         std::filesystem::remove(options.output);
     }
 
-    auto db = smgpc::sql::Database(options.output);
-    db.exec("PRAGMA foreign_keys = ON");
-    smgpc::trace::create_trace_sqlite_schema(db);
-    db.exec("BEGIN IMMEDIATE TRANSACTION");
-    for (const auto &trace_path : options.traces) {
-        const auto result = smgpc::trace::import_trace_ndjson_file(db, trace_path);
-        std::cout << "imported trace_id=" << result.trace_id << " records=" << result.record_count
-                  << " render_packets=" << result.render_packet_count << " copy_events=" << result.copy_event_count
-                  << " semantic_events=" << result.semantic_event_count
-                  << " path=" << trace_path << '\n';
-    }
-    db.exec("COMMIT");
+    auto output = smgpc::sql::Database(options.output);
+    output.exec("PRAGMA foreign_keys = ON");
+    smgpc::trace::create_trace_sqlite_schema(output);
+    output.exec("BEGIN IMMEDIATE TRANSACTION");
 
+    for (const auto &trace_path : options.traces) {
+        auto source = smgpc::sql::Database(trace_path);
+        source.exec("PRAGMA foreign_keys = ON");
+        const auto ids = smgpc::trace::trace_ids(source);
+        if (ids.empty()) {
+            throw std::runtime_error("trace store contains no traces: " + trace_path.string());
+        }
+        for (const auto trace_id : ids) {
+            const auto result = smgpc::trace::copy_trace_between_databases(output, source, trace_id);
+            std::cout << "packed trace_id=" << result.trace_id << " records=" << result.record_count
+                      << " render_packets=" << result.render_packet_count << " copy_events=" << result.copy_event_count
+                      << " semantic_events=" << result.semantic_event_count << " source=" << trace_path << '\n';
+        }
+    }
+
+    output.exec("COMMIT");
     std::cout << options.output << '\n';
     return 0;
 } catch (const std::exception &e) {
-    std::cerr << "trace SQLite import failed: " << e.what() << '\n';
+    std::cerr << "trace SQLite pack failed: " << e.what() << '\n';
     return 1;
 }
