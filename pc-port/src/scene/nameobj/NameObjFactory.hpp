@@ -15,6 +15,20 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene::nameobj {
 
+    enum class NameObjPlacementSupportKind {
+        Unsupported,
+        OriginalFactory,
+        GenericModel,
+        GenericAliasModel,
+        IntentionallyIgnored,
+    };
+
+    struct NameObjPlacementSupport {
+        NameObjPlacementSupportKind kind = NameObjPlacementSupportKind::Unsupported;
+        std::string reason;
+        std::string model_archive_name;
+    };
+
     enum class NameObjArchiveKind {
         Object,
         Layout,
@@ -36,10 +50,15 @@ namespace smgpc::scene::nameobj {
     };
 
     [[nodiscard]] bool can_create_name_obj(std::string_view object_name);
+    [[nodiscard]] bool can_create_name_obj(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name);
+    [[nodiscard]] NameObjPlacementSupport describe_name_obj_placement_support(smgpc::runtime::DvdFileSystemService &dvd,
+                                                                              std::string_view object_name,
+                                                                              std::string_view table_path);
     [[nodiscard]] NameObjFactoryDescription describe_name_obj_factory(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name);
     [[nodiscard]] std::vector<NameObjArchiveRequest> collect_name_obj_archive_requests(smgpc::runtime::DvdFileSystemService &dvd,
-                                                                                        std::string_view object_name);
+                                                                                       std::string_view object_name);
     std::vector<NameObjArchiveRequest> preload_name_obj_archives(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name);
-    [[nodiscard]] std::unique_ptr<NameObj> create_name_obj(std::string_view object_name, std::string_view actor_name);
+    [[nodiscard]] std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
+                                                           std::string_view actor_name);
 
 }  // namespace smgpc::scene::nameobj

@@ -1,4 +1,5 @@
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/System/StorySequenceExecutor.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <RVLFaceLib.h>
@@ -14,10 +15,13 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <optional>
 #include <span>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -142,6 +146,65 @@ namespace {
                 "NAND quota check should report free space");
     }
 
+    void test_player_visibility_can_be_restored() {
+        auto player = smgpc::runtime::PlayerSystemService{};
+        require(!player.is_player_hidden(), "player visibility should default to shown");
+        player.hide_player();
+        require(player.is_player_hidden(), "hide_player should mark the player hidden");
+        player.show_player();
+        require(!player.is_player_hidden(), "show_player should restore player visibility");
+    }
+
+    class EnvironmentVariableGuard {
+    public:
+        explicit EnvironmentVariableGuard(const char *name) : _name(name) {
+            if (const auto *value = std::getenv(_name.c_str())) {
+                _old_value = value;
+            }
+        }
+
+        ~EnvironmentVariableGuard() {
+            if (_old_value.has_value()) {
+                setenv(_name.c_str(), _old_value->c_str(), 1);
+            } else {
+                unsetenv(_name.c_str());
+            }
+        }
+
+        void set(const char *value) const {
+            setenv(_name.c_str(), value, 1);
+        }
+
+        void unset() const {
+            unsetenv(_name.c_str());
+        }
+
+    private:
+        std::string _name;
+        std::optional<std::string> _old_value;
+    };
+
+    void test_heavensdoor_route_is_picturebook_handoff_only() {
+        auto boot = EnvironmentVariableGuard("SMGPC_DEMO_BOOT");
+        auto route = EnvironmentVariableGuard("SMGPC_DEMO_ROUTE");
+        boot.set("heavensdoor_bunny");
+        route.unset();
+
+        const auto initial = StorySequenceExecutor::makeInitialStageRequest();
+        require(initial.mStageName == "FileSelect", "SMGPC_DEMO_BOOT should not bypass file select");
+
+        boot.unset();
+        route.set("heavensdoor_after_picturebook");
+        auto &executor = smgpc::game::story_sequence_executor();
+        require(executor.shouldRouteToHeavensDoorBunnyDemoAfterPictureBook(),
+                "heavensdoor_after_picturebook should arm the picturebook handoff");
+        executor.requestHeavensDoorBunnyDemoAfterPictureBook();
+        const auto pending = executor.takePendingStageRequest();
+        require(pending.has_value(), "picturebook handoff should create a pending stage request");
+        require(pending->mStageName == "HeavensDoorGalaxy", "picturebook handoff should request HeavensDoorGalaxy");
+        require(pending->mScenarioNo == 1, "picturebook handoff should request scenario 1");
+    }
+
     struct SpineProbeState {
         int first_executions = 0;
         int second_executions = 0;
@@ -197,6 +260,8 @@ int main() {
         TestCase{"Aurora DVD requires disc image", test_aurora_dvd_requires_disc_image},
         TestCase{"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
         TestCase{"Aurora NAND storage smoke", test_aurora_nand_storage_smoke},
+        TestCase{"player visibility can be restored", test_player_visibility_can_be_restored},
+        TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };
 

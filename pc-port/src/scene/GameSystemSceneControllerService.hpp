@@ -34,6 +34,7 @@ namespace smgpc::scene {
         std::string object_name;
         std::string actor_name;
         bool appear_after_init = false;
+        bool fail_unsupported_placement = false;
     };
 
     class GameSystemSceneControllerService final {

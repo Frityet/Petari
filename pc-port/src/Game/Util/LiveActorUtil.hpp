@@ -10,6 +10,7 @@ class PartsModel;
 class ActorLightCtrl;
 class J3DFrameCtrl;
 class Nerve;
+class JMapInfoIter;
 struct TVec3f;
 
 class ProjmapEffectMtxSetter {
@@ -48,6 +49,8 @@ namespace MR {
     void updateLightCtrlDirect(LiveActor* pActor);
     void loadActorLight(const LiveActor* pActor);
     ActorLightCtrl* getLightCtrl(const LiveActor* pActor);
+    void initDefaultPos(LiveActor* pActor, const JMapInfoIter& rIter);
+    void initDefaultPosNoRepeat(LiveActor* pActor, const JMapInfoIter& rIter);
     bool isHiddenModel(const LiveActor* pActor);
     bool isDead(const LiveActor* pActor);
     bool isStep(const LiveActor* pActor, s32 step);

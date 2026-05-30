@@ -93,6 +93,22 @@ const char* JMapInfo::getName() const {
     return mName.c_str();
 }
 
+void JMapInfo::setChildObjInfo(JMapInfo info) {
+    mChildObjInfo = std::make_shared< JMapInfo >(std::move(info));
+}
+
+const JMapInfo* JMapInfo::getChildObjInfo() const {
+    return mChildObjInfo.get();
+}
+
+void JMapInfo::setValue(int entryIndex, const char* pKey, f32 value) {
+    if (pKey == nullptr || entryIndex < 0 || entryIndex >= getNumEntries()) {
+        return;
+    }
+
+    mFloatOverrides[{entryIndex, smgpc::resource::jmap_hash(pKey)}] = value;
+}
+
 s32 JMapInfo::searchItemInfo(const char* pKey) const {
     if (mTable == nullptr || pKey == nullptr) {
         return -1;
@@ -243,6 +259,11 @@ bool JMapInfo::getUnsignedValueByHash(int entryIndex, std::uint32_t hash, u32* p
 bool JMapInfo::getFloatValueByHash(int entryIndex, std::uint32_t hash, f32* pValueOut) const {
     if (!valid_entry(mTable.get(), entryIndex) || pValueOut == nullptr) {
         return false;
+    }
+
+    if (const auto override = mFloatOverrides.find({entryIndex, hash}); override != mFloatOverrides.end()) {
+        *pValueOut = override->second;
+        return true;
     }
 
     const auto value = mTable->get_float(static_cast< std::size_t >(entryIndex), hash);

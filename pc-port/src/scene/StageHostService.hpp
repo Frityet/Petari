@@ -21,6 +21,7 @@ namespace smgpc::scene {
         std::string actor_name;
         s32 scenario_no = 1;
         bool appear_after_init = false;
+        bool fail_unsupported_placement = false;
     };
 
     class StageHostService final {

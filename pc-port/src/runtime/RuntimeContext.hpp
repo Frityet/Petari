@@ -142,9 +142,12 @@ namespace smgpc::runtime {
         void set_current_stage_name(std::string_view stage_name);
         void set_current_sequence_scene_name(std::string_view scene_name);
         void set_next_sequence_scene_name(std::string_view scene_name);
+        void request_application_exit(std::string_view reason);
 
         [[nodiscard]] bool is_core_pad_button_a(s32 channel) const;
         [[nodiscard]] bool is_core_pad_button_b(s32 channel) const;
+        [[nodiscard]] bool should_exit_application() const;
+        [[nodiscard]] std::string_view application_exit_reason() const;
         [[nodiscard]] std::uint64_t frame_index() const;
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &scene_camera_pose() const;
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &last_camera_pose() const;
@@ -308,6 +311,8 @@ namespace smgpc::runtime {
         smgpc::scene::SceneLifecycleService *_scene_lifecycle = nullptr;
         SceneScheduler _scheduler;
         std::map<std::string, LiveActor *, std::less<>> _effect_live_actor_hosts;
+        bool _application_exit_requested = false;
+        std::string _application_exit_reason;
         std::map<std::string, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;
         std::map<std::string, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
         std::uint64_t _frame_index = 0;
@@ -329,6 +334,7 @@ namespace smgpc::runtime {
         std::uint64_t _next_semantic_trace_event_index = 0U;
         std::size_t _next_star_pointer_target_trace_event_index = 0U;
         bool _emitted_wpad_buttons_held_event = false;
+        bool _emitted_wpad_sub_stick_event = false;
         bool _is_destroying = false;
 #endif
     };

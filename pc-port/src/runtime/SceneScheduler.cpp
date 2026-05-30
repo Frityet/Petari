@@ -544,6 +544,65 @@ namespace smgpc::runtime {
             push_trace(*entry, SceneSchedulerPhase::Movement);
 #endif
         }
+
+        execute_sensor_hit_check();
+    }
+
+    void SceneScheduler::execute_sensor_hit_check() {
+        auto actors = std::vector<LiveActor *>{};
+        auto sensors = std::vector<HitSensor *>{};
+
+        for (auto &entry : _entries) {
+            auto *actor = entry_live_actor(entry);
+            if (actor == nullptr || entry_is_dead(entry) || entry_is_suspended(entry) ||
+                std::ranges::find(actors, actor) != actors.end()) {
+                continue;
+            }
+
+            actor->updateHitSensors();
+            actor->collectHitSensors(sensors);
+            actors.push_back(actor);
+        }
+
+        for (auto *sensor : sensors) {
+            if (sensor != nullptr) {
+                sensor->mSensorCount = 0U;
+            }
+        }
+
+        for (auto lhs_index = std::size_t{}; lhs_index < sensors.size(); ++lhs_index) {
+            auto *lhs = sensors[lhs_index];
+            if (lhs == nullptr || lhs->mHost == nullptr || !lhs->mValidByHost || !lhs->mValidBySystem || lhs->mHost->isDead()) {
+                continue;
+            }
+
+            for (auto rhs_index = lhs_index + 1U; rhs_index < sensors.size(); ++rhs_index) {
+                auto *rhs = sensors[rhs_index];
+                if (rhs == nullptr || rhs->mHost == nullptr || rhs->mHost == lhs->mHost || !rhs->mValidByHost ||
+                    !rhs->mValidBySystem || rhs->mHost->isDead()) {
+                    continue;
+                }
+
+                const auto dx = lhs->mPosition.x - rhs->mPosition.x;
+                const auto dy = lhs->mPosition.y - rhs->mPosition.y;
+                const auto dz = lhs->mPosition.z - rhs->mPosition.z;
+                const auto radius = lhs->mRadius + rhs->mRadius;
+                const auto distance_squared = (dx * dx) + (dy * dy) + (dz * dz);
+                if (distance_squared > (radius * radius)) {
+                    continue;
+                }
+
+                lhs->addHitSensor(rhs);
+                rhs->addHitSensor(lhs);
+
+                if (!lhs->mHost->isDead()) {
+                    lhs->mHost->attackSensor(lhs, rhs);
+                }
+                if (!rhs->mHost->isDead()) {
+                    rhs->mHost->attackSensor(rhs, lhs);
+                }
+            }
+        }
     }
 
     void SceneScheduler::execute_calc_anim() {

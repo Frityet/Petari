@@ -5,6 +5,8 @@
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "render/J3dMatrix.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -190,6 +192,29 @@ namespace MR {
 
     ActorLightCtrl* getLightCtrl(const LiveActor* pActor) {
         return pActor == nullptr ? nullptr : pActor->mActorLightCtrl;
+    }
+
+    void initDefaultPos(LiveActor* pActor, const JMapInfoIter& rIter) {
+        if (pActor == nullptr || !rIter.isValid()) {
+            return;
+        }
+
+        (void)MR::getJMapInfoTrans(rIter, &pActor->mPosition);
+        (void)MR::getJMapInfoRotate(rIter, &pActor->mRotation);
+        (void)MR::getJMapInfoScale(rIter, &pActor->mScale);
+        pActor->mRotation.x = MR::repeat(pActor->mRotation.x, 0.0F, 360.0F);
+        pActor->mRotation.y = MR::repeat(pActor->mRotation.y, 0.0F, 360.0F);
+        pActor->mRotation.z = MR::repeat(pActor->mRotation.z, 0.0F, 360.0F);
+    }
+
+    void initDefaultPosNoRepeat(LiveActor* pActor, const JMapInfoIter& rIter) {
+        if (pActor == nullptr || !rIter.isValid()) {
+            return;
+        }
+
+        (void)MR::getJMapInfoTrans(rIter, &pActor->mPosition);
+        (void)MR::getJMapInfoRotate(rIter, &pActor->mRotation);
+        (void)MR::getJMapInfoScale(rIter, &pActor->mScale);
     }
 
     bool isHiddenModel(const LiveActor*) {

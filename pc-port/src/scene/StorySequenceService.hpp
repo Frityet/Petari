@@ -10,7 +10,6 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
-
     class StorySequenceService final {
     public:
         explicit StorySequenceService(smgpc::runtime::RuntimeContext &runtime);
@@ -26,7 +25,6 @@ namespace smgpc::scene {
     private:
         smgpc::runtime::RuntimeContext &_runtime;
         std::optional<StageHostRequest> _pending_stage_request;
-        bool _after_loading_request_consumed = false;
     };
 
 }  // namespace smgpc::scene

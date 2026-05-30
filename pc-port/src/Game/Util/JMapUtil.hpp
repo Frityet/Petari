@@ -3,6 +3,7 @@
 #include "Game/Util/JMapInfo.hpp"
 
 struct TVec3f;
+class NameObj;
 
 namespace MR {
     bool isValidInfo(const JMapInfoIter& rIter);
@@ -86,9 +87,12 @@ namespace MR {
     s32 getDemoCastID(const JMapInfoIter& rIter);
     const char* getDemoName(const JMapInfoIter& rIter);
     const char* getDemoSheetName(const JMapInfoIter& rIter);
+    s32 getChildObjNum(const JMapInfoIter& rIter);
+    const char* getChildObjName(const char** pDest, const JMapInfoIter& rIter, int index);
+    void initChildObj(NameObj* pObj, const JMapInfoIter& rIter, int index);
 
-    template <typename T>
+    template < typename T >
     inline bool getValue(const JMapInfoIter& rIter, const char* pName, T* pOut) {
-        return rIter.getValue<T>(pName, pOut);
+        return rIter.getValue< T >(pName, pOut);
     }
-}
+}  // namespace MR

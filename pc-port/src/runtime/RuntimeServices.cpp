@@ -2723,6 +2723,10 @@ namespace smgpc::runtime {
         return event->pose;
     }
 
+    void PlayerSystemService::show_player() {
+        _player_hidden = false;
+    }
+
     void PlayerSystemService::hide_player() {
         _player_hidden = true;
     }
@@ -2816,6 +2820,15 @@ namespace smgpc::runtime {
             .kind = SequenceRequestKind::ChangeStageInGameAfterLoadingGameData,
             .frame_index = _frame_index,
         });
+    }
+
+    bool SequenceRequestService::consume_change_stage_in_game_after_loading_game_data_request() {
+        if (!_change_stage_in_game_after_loading_game_data_requested) {
+            return false;
+        }
+
+        _change_stage_in_game_after_loading_game_data_requested = false;
+        return true;
     }
 
     bool SequenceRequestService::is_change_stage_in_game_after_loading_game_data_requested() const {

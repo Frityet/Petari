@@ -578,6 +578,8 @@ namespace smgpc::runtime {
         auto hold_mask = raw_hold_mask;
         auto pointer = _window_service.input_pointer_state();
         const auto raw_pointer = pointer;
+        auto sub_stick_x = 0.0F;
+        auto sub_stick_y = 0.0F;
 #ifndef NDEBUG
         auto debug_button_script_applied = false;
         auto debug_pointer_script_applied = false;
@@ -597,6 +599,25 @@ namespace smgpc::runtime {
                 debug_pointer_script_applied = true;
             }
         }
+#endif
+        if ((hold_mask & WPAD_BUTTON_LEFT) != 0U) {
+            sub_stick_x -= 1.0F;
+        }
+        if ((hold_mask & WPAD_BUTTON_RIGHT) != 0U) {
+            sub_stick_x += 1.0F;
+        }
+        if ((hold_mask & WPAD_BUTTON_UP) != 0U) {
+            sub_stick_y += 1.0F;
+        }
+        if ((hold_mask & WPAD_BUTTON_DOWN) != 0U) {
+            sub_stick_y -= 1.0F;
+        }
+        if (sub_stick_x != 0.0F && sub_stick_y != 0.0F) {
+            constexpr auto cDiagonalStickScale = 0.70710678118F;
+            sub_stick_x *= cDiagonalStickScale;
+            sub_stick_y *= cDiagonalStickScale;
+        }
+#ifndef NDEBUG
         _host_input_trace = HostInputTraceState{
             .frame_index = _frame_index,
             .raw_hold_mask = raw_hold_mask,
@@ -611,11 +632,17 @@ namespace smgpc::runtime {
         wpad.set_connected(WPAD_CHAN0, true);
         wpad.set_button_mask(WPAD_CHAN0, hold_mask);
         wpad.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid);
+        wpad.set_sub_stick(WPAD_CHAN0, sub_stick_x, sub_stick_y);
         wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
 #ifndef NDEBUG
         if (!_emitted_wpad_buttons_held_event && hold_mask != 0U) {
             _emitted_wpad_buttons_held_event = true;
             emit_semantic_trace_event("input", "wpad_buttons_held", debug_wpad_button_mask_detail(hold_mask));
+        }
+        if (!_emitted_wpad_sub_stick_event && (sub_stick_x != 0.0F || sub_stick_y != 0.0F)) {
+            _emitted_wpad_sub_stick_event = true;
+            emit_semantic_trace_event("input", "wpad_sub_stick",
+                                      "channel=0;x=" + std::to_string(sub_stick_x) + ";y=" + std::to_string(sub_stick_y));
         }
 #endif
 
@@ -719,12 +746,26 @@ namespace smgpc::runtime {
         _next_sequence_scene_name = scene_name;
     }
 
+    void RuntimeContext::request_application_exit(std::string_view reason) {
+        _application_exit_requested = true;
+        _application_exit_reason = std::string(reason);
+        _logger.info(logging::Category::APP, logging::Message{"Application exit requested: {}"}, _application_exit_reason);
+    }
+
     bool RuntimeContext::is_core_pad_button_a(s32 channel) const {
         return aurora::wpad_service().is_button_held(channel, WPAD_BUTTON_A);
     }
 
     bool RuntimeContext::is_core_pad_button_b(s32 channel) const {
         return aurora::wpad_service().is_button_held(channel, WPAD_BUTTON_B);
+    }
+
+    bool RuntimeContext::should_exit_application() const {
+        return _application_exit_requested;
+    }
+
+    std::string_view RuntimeContext::application_exit_reason() const {
+        return _application_exit_reason;
     }
 
     std::uint64_t RuntimeContext::frame_index() const {

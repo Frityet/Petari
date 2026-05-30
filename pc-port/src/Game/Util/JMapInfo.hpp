@@ -55,6 +55,9 @@ public:
     bool attach(const void* pData);
     void setName(const char* pName);
     [[nodiscard]] const char* getName() const;
+    void setChildObjInfo(JMapInfo info);
+    [[nodiscard]] const JMapInfo* getChildObjInfo() const;
+    void setValue(int entryIndex, const char* pKey, f32 value);
     [[nodiscard]] s32 searchItemInfo(const char* pKey) const;
     [[nodiscard]] s32 getValueType(const char* pKey) const;
     [[nodiscard]] bool getValueFast(int entryIndex, int itemIndex, const char** pValueOut) const;
@@ -90,7 +93,9 @@ private:
     [[nodiscard]] bool getStringValueByHash(int entryIndex, std::uint32_t hash, const char** pValueOut) const;
 
     std::shared_ptr< smgpc::resource::BcsvTable > mTable;
+    std::shared_ptr< JMapInfo > mChildObjInfo;
     std::string mName;
+    std::map< std::pair< int, std::uint32_t >, f32 > mFloatOverrides;
     mutable std::map< std::pair< int, std::uint32_t >, std::string > mStringCache;
 };
 

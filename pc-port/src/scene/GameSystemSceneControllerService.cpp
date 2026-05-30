@@ -36,7 +36,7 @@ namespace smgpc::scene {
     GameSystemSceneControllerService::~GameSystemSceneControllerService() = default;
 
     void GameSystemSceneControllerService::request_change_scene(const StageHostRequest &request) {
-        _pending_scene = SceneControlInfo {
+        _pending_scene = SceneControlInfo{
             .scene_name = request.scene_name,
             .stage_name = request.stage_name,
             .scenario_no = request.scenario_no,
@@ -44,6 +44,7 @@ namespace smgpc::scene {
             .object_name = request.object_name,
             .actor_name = request.actor_name,
             .appear_after_init = request.appear_after_init,
+            .fail_unsupported_placement = request.fail_unsupported_placement,
         };
         set_phase(SceneControllerPhase::RequestQueued);
 #ifndef NDEBUG
@@ -145,13 +146,14 @@ namespace smgpc::scene {
 
     StageHostRequest GameSystemSceneControllerService::pending_request() const {
         const auto &pending = *_pending_scene;
-        return StageHostRequest {
+        return StageHostRequest{
             .scene_name = pending.scene_name,
             .stage_name = pending.stage_name,
             .object_name = pending.object_name,
             .actor_name = pending.actor_name,
             .scenario_no = pending.scenario_no,
             .appear_after_init = pending.appear_after_init,
+            .fail_unsupported_placement = pending.fail_unsupported_placement,
         };
     }
 

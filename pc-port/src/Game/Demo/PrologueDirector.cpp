@@ -9,6 +9,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/PrologueLetter.hpp"
 #include "Game/Screen/ProloguePictureBook.hpp"
+#include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -18,11 +19,12 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
 namespace {
-    static const char *sPictureBookDemoName = "プロローグデモ";
-    static const char *sArriveDemoName = "主人公ピーチ城に到着";
+    static const char* sPictureBookDemoName = "プロローグデモ";
+    static const char* sArriveDemoName = "主人公ピーチ城に到着";
     static const s32 sPicBookStartWipeFrame = 60;
     static const s32 sPeachLetterWait = 20;
     static const s32 sPeachLetterStartWipeFrame = 60;
@@ -46,9 +48,8 @@ namespace {
     NEW_NERVE(PrologueDirectorNrvGameStart, PrologueDirector, GameStart);
 };  // namespace
 
-PrologueDirector::PrologueDirector(const char *pName)
-    : LiveActor(pName), mPictureBook(nullptr), mLetter(nullptr), mScenery(nullptr), mMarioPosDummyModel(nullptr), mCameraTarget(nullptr),
-      _D0(false) {
+PrologueDirector::PrologueDirector(const char* pName)
+    : LiveActor(pName), mPictureBook(nullptr), mLetter(nullptr), mScenery(nullptr), mMarioPosDummyModel(nullptr), mCameraTarget(nullptr), _D0(false) {
     _A0[0][0] = 1.0F;
     _A0[0][1] = 0.0F;
     _A0[0][2] = 0.0F;
@@ -63,7 +64,7 @@ PrologueDirector::PrologueDirector(const char *pName)
     _A0[2][3] = 0.0F;
 }
 
-void PrologueDirector::init(const JMapInfoIter &rIter) {
+void PrologueDirector::init(const JMapInfoIter& rIter) {
     if (MR::useStageSwitchWriteA(this, rIter)) {
         _D0 = true;
     }
@@ -112,7 +113,7 @@ void PrologueDirector::exeWait() {
         MR::submitLevelSE();
         setNerve(&PrologueDirectorNrvPictureBook::sInstance);
         pauseOff();
-        auto *player_base_mtx = MR::getPlayerBaseMtx();
+        auto* player_base_mtx = MR::getPlayerBaseMtx();
         for (auto row = 0U; row < 3U; ++row) {
             for (auto column = 0U; column < 4U; ++column) {
                 _A0[row][column] = player_base_mtx[row][column];
@@ -138,6 +139,14 @@ void PrologueDirector::exePictureBook() {
         MR::forceCloseWipeFade();
         mPictureBook->kill();
         MR::stopStageBGM(90);
+#ifndef NDEBUG
+        if (smgpc::game::story_sequence_executor().shouldRouteToHeavensDoorBunnyDemoAfterPictureBook()) {
+            smgpc::game::story_sequence_executor().requestHeavensDoorBunnyDemoAfterPictureBook();
+            MR::requestChangeStageInGameAfterLoadingGameData();
+            kill();
+            return;
+        }
+#endif
         setNerve(&PrologueDirectorNrvPeachLetterStart::sInstance);
     }
 }
@@ -301,10 +310,10 @@ void PrologueDirector::pauseOff() {
     MR::requestMovementOn(mMarioPosDummyModel);
 }
 
-PrologueHolder::PrologueHolder(const char *pName) : NameObj(pName), mDirector(nullptr) {
+PrologueHolder::PrologueHolder(const char* pName) : NameObj(pName), mDirector(nullptr) {
 }
 
-void PrologueHolder::registerPrologueObj(PrologueDirector *pDirector) {
+void PrologueHolder::registerPrologueObj(PrologueDirector* pDirector) {
     mDirector = pDirector;
 }
 
@@ -315,8 +324,8 @@ void PrologueHolder::start() {
 }
 
 namespace MR {
-    PrologueHolder *getPrologueHolder() {
-        return MR::getSceneObj<PrologueHolder>(SceneObj_PrologueHolder);
+    PrologueHolder* getPrologueHolder() {
+        return MR::getSceneObj< PrologueHolder >(SceneObj_PrologueHolder);
     }
 
     void startPrologue() {

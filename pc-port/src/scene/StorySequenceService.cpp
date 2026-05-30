@@ -13,11 +13,10 @@ namespace smgpc::scene {
     StorySequenceService::~StorySequenceService() = default;
 
     void StorySequenceService::update_after_loading_request() {
-        if (_after_loading_request_consumed || !_runtime.sequence_requests().is_change_stage_in_game_after_loading_game_data_requested()) {
+        if (!_runtime.sequence_requests().consume_change_stage_in_game_after_loading_game_data_request()) {
             return;
         }
 
-        _after_loading_request_consumed = true;
         const auto route = smgpc::game::story_sequence_executor().takePendingStageRequest();
         if (!route.has_value()) {
             return;
@@ -32,13 +31,14 @@ namespace smgpc::scene {
         _runtime.emit_sequence_state_trace_event("story_stage_prepared", detail);
         _runtime.emit_semantic_trace_event("story", "story_stage_prepared", detail);
 #endif
-        _pending_stage_request = StageHostRequest {
+        _pending_stage_request = StageHostRequest{
             .scene_name = route->mSceneName,
             .stage_name = route->mStageName,
             .object_name = route->mObjectName,
             .actor_name = route->mActorName,
             .scenario_no = route->mScenarioNo,
             .appear_after_init = route->mAppearAfterInit,
+            .fail_unsupported_placement = route->mFailUnsupportedPlacement,
         };
     }
 

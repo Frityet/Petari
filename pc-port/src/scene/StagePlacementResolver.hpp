@@ -9,6 +9,7 @@
 #include <revolution.h>
 
 #include "Game/Util/JMapInfo.hpp"
+#include "scene/nameobj/NameObjFactory.hpp"
 
 namespace smgpc::runtime {
     class DvdFileSystemService;
@@ -16,6 +17,11 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
+    struct StageZoneTransform {
+        std::array<f32, 3U> translation{0.0F, 0.0F, 0.0F};
+        std::array<f32, 3U> rotation{0.0F, 0.0F, 0.0F};
+        std::array<f32, 3U> scale{1.0F, 1.0F, 1.0F};
+    };
 
     struct StagePlacementTable {
         std::string stage_name;
@@ -29,6 +35,7 @@ namespace smgpc::scene {
         s32 zone_id = 0;
         s32 layer_id = -1;
         u32 layer_mask = 0U;
+        StageZoneTransform zone_transform{};
     };
 
     struct StagePlacementObject {
@@ -42,9 +49,11 @@ namespace smgpc::scene {
         std::string archive_path;
         std::string table_path;
         std::string object_archive_path;
+        std::string model_archive_name;
         s32 l_id = -1;
         s32 zone_id = 0;
         s32 layer_id = -1;
+        s32 child_object_count = 0;
         s32 camera_set_id = -1;
         s32 camera_id = -1;
         s32 common_path_id = -1;
@@ -74,6 +83,11 @@ namespace smgpc::scene {
         bool has_rotation = false;
         bool has_scale = false;
         bool factory_supported = false;
+        bool model_fallback_supported = false;
+        bool alias_model_fallback_supported = false;
+        bool intentionally_ignored = false;
+        std::string support_reason;
+        smgpc::scene::nameobj::NameObjPlacementSupportKind support_kind = smgpc::scene::nameobj::NameObjPlacementSupportKind::Unsupported;
     };
 
     [[nodiscard]] std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,

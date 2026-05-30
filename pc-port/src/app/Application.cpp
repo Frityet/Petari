@@ -287,6 +287,12 @@ namespace smgpc::app {
                     game_system.begin_frame(frame_context);
                     game_system.update();
 
+                    if (runtime.should_exit_application()) {
+                        _logger->info(logging::Category::APP, logging::Message {"Closing application after runtime request: {}"},
+                                      runtime.application_exit_reason());
+                        _window_service->close();
+                    }
+
 #ifndef NDEBUG
                     if (exit_on_layout_name.has_value() && has_active_layout(runtime, *exit_on_layout_name)) {
                         _window_service->close();

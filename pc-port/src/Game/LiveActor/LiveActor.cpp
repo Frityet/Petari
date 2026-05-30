@@ -1,10 +1,54 @@
 #include "Game/LiveActor/LiveActor.hpp"
 
+#include <cmath>
 #include <optional>
+#include <utility>
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "runtime/RuntimeContext.hpp"
+
+namespace {
+    constexpr f32 cDegToRad = 3.14159265358979323846F / 180.0F;
+
+    smgpc::render::J3dMatrix3x4 make_trs_matrix(const TVec3f& position, const TVec3f& rotation, const TVec3f& scale) {
+        const auto rx = rotation.x * cDegToRad;
+        const auto ry = rotation.y * cDegToRad;
+        const auto rz = rotation.z * cDegToRad;
+        const auto sx = std::sin(rx);
+        const auto cx = std::cos(rx);
+        const auto sy = std::sin(ry);
+        const auto cy = std::cos(ry);
+        const auto sz = std::sin(rz);
+        const auto cz = std::cos(rz);
+
+        const auto r00 = cz * cy;
+        const auto r01 = (cz * sy * sx) - (sz * cx);
+        const auto r02 = (cz * sy * cx) + (sz * sx);
+        const auto r10 = sz * cy;
+        const auto r11 = (sz * sy * sx) + (cz * cx);
+        const auto r12 = (sz * sy * cx) - (cz * sx);
+        const auto r20 = -sy;
+        const auto r21 = cy * sx;
+        const auto r22 = cy * cx;
+
+        return smgpc::render::J3dMatrix3x4{{
+            r00 * scale.x,
+            r01 * scale.y,
+            r02 * scale.z,
+            position.x,
+            r10 * scale.x,
+            r11 * scale.y,
+            r12 * scale.z,
+            position.y,
+            r20 * scale.x,
+            r21 * scale.y,
+            r22 * scale.z,
+            position.z,
+        }};
+    }
+}  // namespace
 
 LiveActor::LiveActor(const char* pName) : NameObj(pName) {
 }
@@ -30,6 +74,8 @@ void LiveActor::movement() {
         return;
     }
 
+    updateHitSensors();
+
     if (mSpine != nullptr) {
         updateNerve();
     }
@@ -39,6 +85,10 @@ void LiveActor::movement() {
     }
 
     control();
+
+    if (!mIsDead) {
+        updateHitSensors();
+    }
 }
 
 void LiveActor::calcAnim() {
@@ -76,10 +126,13 @@ void LiveActor::kill() {
 
 void LiveActor::makeActorAppeared() {
     mIsDead = false;
+    validateHitSensors();
+    updateHitSensors();
 }
 
 void LiveActor::makeActorDead() {
     mIsDead = true;
+    invalidateHitSensors();
 }
 
 bool LiveActor::receiveOtherMsg(u32, HitSensor*, HitSensor*) {
@@ -93,21 +146,17 @@ bool LiveActor::receiveMessage(u32 msg, HitSensor* pSender, HitSensor* pReceiver
 void LiveActor::control() {
 }
 
+void LiveActor::attackSensor(HitSensor*, HitSensor*) {
+}
+
+void LiveActor::startClipped() {
+}
+
+void LiveActor::endClipped() {
+}
+
 void LiveActor::calcAndSetBaseMtx() {
-    mBaseMatrix = smgpc::render::J3dMatrix3x4{{
-        mScale.x,
-        0.0F,
-        0.0F,
-        mPosition.x,
-        0.0F,
-        mScale.y,
-        0.0F,
-        mPosition.y,
-        0.0F,
-        0.0F,
-        mScale.z,
-        mPosition.z,
-    }};
+    mBaseMatrix = make_trs_matrix(mPosition, mRotation, mScale);
 }
 
 void LiveActor::initNerve(const Nerve* pNerve) {
@@ -182,6 +231,104 @@ void LiveActor::drawModel(const smgpc::camera::CameraPose& camera_pose, std::uin
     }
 
     mModel->draw(camera_pose, mBaseMatrix, frame, pass);
+}
+
+void LiveActor::initHitSensor(s32 sensorCount) {
+    mHitSensors.clear();
+    if (sensorCount > 0) {
+        mHitSensors.reserve(static_cast< std::size_t >(sensorCount));
+    }
+}
+
+HitSensor* LiveActor::addHitSensor(const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset) {
+    auto entry = ActorHitSensor{};
+    entry.name = pName != nullptr ? pName : "";
+    entry.offset = offset;
+    entry.sensor = std::make_unique< HitSensor >(type, groupSize, radius, this);
+    entry.sensor->mPosition = mPosition + offset;
+    entry.sensor->validateBySystem();
+    if (mIsDead) {
+        entry.sensor->invalidate();
+    } else {
+        entry.sensor->validate();
+    }
+
+    mHitSensors.push_back(std::move(entry));
+    return mHitSensors.back().sensor.get();
+}
+
+HitSensor* LiveActor::getSensor(const char* pName) {
+    if (pName == nullptr) {
+        return nullptr;
+    }
+
+    for (auto& entry : mHitSensors) {
+        if (entry.name == pName) {
+            return entry.sensor.get();
+        }
+    }
+
+    return nullptr;
+}
+
+const HitSensor* LiveActor::getSensor(const char* pName) const {
+    if (pName == nullptr) {
+        return nullptr;
+    }
+
+    for (const auto& entry : mHitSensors) {
+        if (entry.name == pName) {
+            return entry.sensor.get();
+        }
+    }
+
+    return nullptr;
+}
+
+const char* LiveActor::getSensorName(const HitSensor* pSensor) const {
+    if (pSensor == nullptr) {
+        return "";
+    }
+
+    for (const auto& entry : mHitSensors) {
+        if (entry.sensor.get() == pSensor) {
+            return entry.name.c_str();
+        }
+    }
+
+    return "";
+}
+
+void LiveActor::collectHitSensors(std::vector< HitSensor* >& sensors) {
+    for (auto& entry : mHitSensors) {
+        if (entry.sensor != nullptr) {
+            sensors.push_back(entry.sensor.get());
+        }
+    }
+}
+
+void LiveActor::validateHitSensors() {
+    for (auto& entry : mHitSensors) {
+        if (entry.sensor != nullptr) {
+            entry.sensor->validate();
+        }
+    }
+}
+
+void LiveActor::invalidateHitSensors() {
+    for (auto& entry : mHitSensors) {
+        if (entry.sensor != nullptr) {
+            entry.sensor->invalidate();
+        }
+    }
+}
+
+void LiveActor::updateHitSensors() {
+    for (auto& entry : mHitSensors) {
+        if (entry.sensor != nullptr) {
+            entry.sensor->mPosition = mPosition + entry.offset;
+        }
+    }
 }
 
 void LiveActor::startBck(const char* pName, const char* pFileName) {

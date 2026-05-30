@@ -612,6 +612,7 @@ namespace smgpc::runtime {
 
     class PlayerSystemService final {
     public:
+        void show_player();
         void hide_player();
         void set_base_matrix(MtxPtr matrix);
 
@@ -680,6 +681,7 @@ namespace smgpc::runtime {
     public:
         void begin_frame(std::uint64_t frame_index);
         void request_change_stage_in_game_after_loading_game_data();
+        bool consume_change_stage_in_game_after_loading_game_data_request();
 
         [[nodiscard]] bool is_change_stage_in_game_after_loading_game_data_requested() const;
         [[nodiscard]] std::span<const SequenceRequestEvent> events() const;
