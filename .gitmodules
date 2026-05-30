@@ -1,6 +1,7 @@
 [submodule "pc-port/dolphin"]
 	path = pc-port/dolphin
 	url = https://github.com/Frityet/dolphin
+	branch = master
 [submodule "pc-port/aurora"]
 	path = pc-port/aurora
 	url = https://github.com/frityet/aurora
