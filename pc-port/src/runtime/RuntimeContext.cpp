@@ -5,6 +5,7 @@
 #include <cctype>
 #include <charconv>
 #include <chrono>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <exception>
@@ -17,6 +18,8 @@
 #include <system_error>
 #include <utility>
 #include <vector>
+
+#include <SDL3/SDL_mouse.h>
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -423,6 +426,46 @@ namespace smgpc::runtime {
 #endif
         }
 
+        [[nodiscard]] smgpc::camera::CameraParamVec3 operator-(const smgpc::camera::CameraParamVec3 &lhs,
+                                                               const smgpc::camera::CameraParamVec3 &rhs) {
+            return {.x = lhs.x - rhs.x, .y = lhs.y - rhs.y, .z = lhs.z - rhs.z};
+        }
+
+        [[nodiscard]] smgpc::camera::CameraParamVec3 operator+(const smgpc::camera::CameraParamVec3 &lhs,
+                                                               const smgpc::camera::CameraParamVec3 &rhs) {
+            return {.x = lhs.x + rhs.x, .y = lhs.y + rhs.y, .z = lhs.z + rhs.z};
+        }
+
+        [[nodiscard]] smgpc::camera::CameraParamVec3 operator*(const smgpc::camera::CameraParamVec3 &lhs, float rhs) {
+            return {.x = lhs.x * rhs, .y = lhs.y * rhs, .z = lhs.z * rhs};
+        }
+
+        [[nodiscard]] smgpc::camera::CameraParamVec3 operator*(float lhs, const smgpc::camera::CameraParamVec3 &rhs) {
+            return rhs * lhs;
+        }
+
+        [[nodiscard]] smgpc::camera::CameraParamVec3 camera_vec_cross(const smgpc::camera::CameraParamVec3 &lhs,
+                                                                      const smgpc::camera::CameraParamVec3 &rhs) {
+            return {
+                .x = lhs.y * rhs.z - lhs.z * rhs.y,
+                .y = lhs.z * rhs.x - lhs.x * rhs.z,
+                .z = lhs.x * rhs.y - lhs.y * rhs.x,
+            };
+        }
+
+        [[nodiscard]] float camera_vec_length(const smgpc::camera::CameraParamVec3 &value) {
+            return std::sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
+        }
+
+        [[nodiscard]] smgpc::camera::CameraParamVec3 camera_vec_normalized(const smgpc::camera::CameraParamVec3 &value,
+                                                                           const smgpc::camera::CameraParamVec3 &fallback) {
+            const auto length = camera_vec_length(value);
+            if (length <= 0.000001F) {
+                return fallback;
+            }
+            return value * (1.0F / length);
+        }
+
     }  // namespace
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
@@ -502,6 +545,12 @@ namespace smgpc::runtime {
 #ifndef NDEBUG
         _is_destroying = true;
 #endif
+        if (_freecam_mouse_relative_mode) {
+            const auto native_handle = _window_service.native_handle();
+            if (native_handle.window_handle != nullptr) {
+                SDL_SetWindowRelativeMouseMode(static_cast<SDL_Window *>(native_handle.window_handle), false);
+            }
+        }
         _owned_scene_lifecycle.reset();
         _owned_scene_execution.reset();
         _owned_name_obj_lifecycle.reset();
@@ -545,6 +594,40 @@ namespace smgpc::runtime {
         _camera_system.begin_frame(_frame_index);
         if (const auto camera_pose = _camera_system.active_programmable_camera_pose()) {
             _scene_camera_pose = *camera_pose;
+        }
+        const auto debug_toggle_freecam = _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_TOGGLE_FREECAM);
+        if (debug_toggle_freecam && !_freecam_toggle_held_last_frame) {
+            _freecam_enabled = !_freecam_enabled;
+            if (_freecam_enabled && !_freecam_target_pose.has_value()) {
+                _freecam_target_pose = _scene_camera_pose.value_or(default_scene_camera_pose());
+            }
+            _freecam_look_initialized = false;
+        }
+        _freecam_toggle_held_last_frame = debug_toggle_freecam;
+        if (_freecam_mouse_relative_mode != _freecam_enabled) {
+            _freecam_mouse_relative_mode = _freecam_enabled;
+            const auto native_handle = _window_service.native_handle();
+            if (native_handle.window_handle != nullptr) {
+                if (!SDL_SetWindowRelativeMouseMode(static_cast<SDL_Window *>(native_handle.window_handle), _freecam_mouse_relative_mode)) {
+                    _logger.warning(logging::Category::APP,
+                                   logging::Message{"Failed to set relative mouse mode {} for freecam"},
+                                   _freecam_mouse_relative_mode ? "on" : "off");
+                }
+            }
+        }
+
+        const auto debug_request_heavens_door = _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_LOAD_HEAVENDOOR);
+        if (debug_request_heavens_door && !_debug_load_heavens_door_held_last_frame) {
+            _pending_heavens_door_request = true;
+        }
+        _debug_load_heavens_door_held_last_frame = debug_request_heavens_door;
+
+        if (_freecam_enabled && !_freecam_target_pose.has_value()) {
+            _freecam_target_pose = _scene_camera_pose.value_or(default_scene_camera_pose());
+        }
+        if (!_freecam_enabled) {
+            _freecam_target_pose.reset();
+            _freecam_look_initialized = false;
         }
         _audio.begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
@@ -617,6 +700,74 @@ namespace smgpc::runtime {
             sub_stick_x *= cDiagonalStickScale;
             sub_stick_y *= cDiagonalStickScale;
         }
+
+        if (_freecam_enabled && _freecam_target_pose.has_value()) {
+            auto freecam_pose = *_freecam_target_pose;
+            constexpr auto cFreecamMoveSpeed = 60.0F;
+            constexpr auto cFreecamMaxPitchRadians = 1.553343F;
+            constexpr auto cFreecamMinPitchRadians = -1.553343F;
+            constexpr auto cFreecamMouseYawSpeed = 0.0025F;
+            constexpr auto cFreecamMousePitchSpeed = 0.0025F;
+
+            const auto freecam_world_up = smgpc::camera::CameraParamVec3{.x = 0.0F, .y = 1.0F, .z = 0.0F};
+            const auto distance = camera_vec_length(freecam_pose.watch - freecam_pose.eye);
+            auto freecam_forward = camera_vec_normalized(freecam_pose.watch - freecam_pose.eye, {0.0F, 0.0F, -1.0F});
+
+            if (!_freecam_look_initialized) {
+                _freecam_yaw_radians = std::atan2(freecam_forward.x, -freecam_forward.z);
+                _freecam_pitch_radians = std::asin(std::clamp(freecam_forward.y, -1.0F, 1.0F));
+                _freecam_look_initialized = true;
+            }
+
+            const auto move_forward =
+                _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_FREECAM_MOVE_FORWARD) ? 1.0F : 0.0F;
+            const auto move_backward =
+                _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_FREECAM_MOVE_BACKWARD) ? 1.0F : 0.0F;
+            const auto move_left =
+                _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_FREECAM_MOVE_LEFT) ? 1.0F : 0.0F;
+            const auto move_right =
+                _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_FREECAM_MOVE_RIGHT) ? 1.0F : 0.0F;
+            const auto move_up =
+                _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_FREECAM_MOVE_UP) ? 1.0F : 0.0F;
+            const auto move_down =
+                _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_FREECAM_MOVE_DOWN) ? 1.0F : 0.0F;
+
+            auto freecam_mouse_delta_x = 0.0F;
+            auto freecam_mouse_delta_y = 0.0F;
+            SDL_GetRelativeMouseState(&freecam_mouse_delta_x, &freecam_mouse_delta_y);
+            _freecam_yaw_radians += freecam_mouse_delta_x * cFreecamMouseYawSpeed;
+            _freecam_pitch_radians += -freecam_mouse_delta_y * cFreecamMousePitchSpeed;
+            _freecam_pitch_radians = std::clamp(_freecam_pitch_radians, cFreecamMinPitchRadians, cFreecamMaxPitchRadians);
+
+            freecam_forward = {
+                .x = std::sin(_freecam_yaw_radians) * std::cos(_freecam_pitch_radians),
+                .y = std::sin(_freecam_pitch_radians),
+                .z = -std::cos(_freecam_pitch_radians) * std::cos(_freecam_yaw_radians),
+            };
+            const auto right = camera_vec_normalized(camera_vec_cross(freecam_forward, freecam_world_up), {1.0F, 0.0F, 0.0F});
+
+            const auto forward_delta = move_forward - move_backward;
+            if (forward_delta != 0.0F) {
+                freecam_pose.eye = freecam_pose.eye + freecam_forward * (forward_delta * cFreecamMoveSpeed);
+            }
+            const auto right_delta = move_right - move_left;
+            if (right_delta != 0.0F) {
+                freecam_pose.eye = freecam_pose.eye + right * (right_delta * cFreecamMoveSpeed);
+            }
+            const auto up_delta = move_up - move_down;
+            if (up_delta != 0.0F) {
+                freecam_pose.eye = freecam_pose.eye + freecam_world_up * (up_delta * cFreecamMoveSpeed);
+            }
+
+            freecam_pose.watch = freecam_pose.eye + freecam_forward * distance;
+            freecam_pose.up = freecam_world_up;
+            _freecam_target_pose = freecam_pose;
+            _scene_camera_pose = freecam_pose;
+            hold_mask = 0U;
+            pointer = render::InputPointerState{};
+            sub_stick_x = 0.0F;
+            sub_stick_y = 0.0F;
+        }
 #ifndef NDEBUG
         _host_input_trace = HostInputTraceState{
             .frame_index = _frame_index,
@@ -659,6 +810,9 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose) {
+        if (_freecam_enabled) {
+            return;
+        }
         _scene_camera_pose = camera_pose;
     }
 
@@ -770,6 +924,16 @@ namespace smgpc::runtime {
 
     std::uint64_t RuntimeContext::frame_index() const {
         return _frame_index;
+    }
+
+    bool RuntimeContext::is_freecam_enabled() const {
+        return _freecam_enabled;
+    }
+
+    bool RuntimeContext::consume_pending_heavens_door_request() {
+        const auto pending = _pending_heavens_door_request;
+        _pending_heavens_door_request = false;
+        return pending;
     }
 
     const std::optional<smgpc::camera::CameraPose> &RuntimeContext::scene_camera_pose() const {

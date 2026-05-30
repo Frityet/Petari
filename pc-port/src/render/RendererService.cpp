@@ -364,6 +364,29 @@ namespace smgpc::render {
             }
         }
 
+        [[nodiscard]] std::optional<DebugInput> debug_input_from_key(SDL_Keycode key) {
+            switch (key) {
+            case SDLK_F9:
+                return DebugInput::CORE_PAD_TOGGLE_FREECAM;
+            case SDLK_F10:
+                return DebugInput::CORE_PAD_LOAD_HEAVENDOOR;
+            case SDLK_W:
+                return DebugInput::CORE_PAD_FREECAM_MOVE_FORWARD;
+            case SDLK_S:
+                return DebugInput::CORE_PAD_FREECAM_MOVE_BACKWARD;
+            case SDLK_A:
+                return DebugInput::CORE_PAD_FREECAM_MOVE_LEFT;
+            case SDLK_D:
+                return DebugInput::CORE_PAD_FREECAM_MOVE_RIGHT;
+            case SDLK_LSHIFT:
+                return DebugInput::CORE_PAD_FREECAM_MOVE_DOWN;
+            case SDLK_SPACE:
+                return DebugInput::CORE_PAD_FREECAM_MOVE_UP;
+            default:
+                return std::nullopt;
+            }
+        }
+
         [[nodiscard]] std::uint8_t gx_wrap_mode(std::uint8_t value) {
             return static_cast<std::uint8_t>(std::min<std::uint8_t>(value, GX_MAX_TEXWRAPMODE - 1));
         }
@@ -751,6 +774,9 @@ namespace smgpc::render {
                 if (const auto button = input_button_from_key(event.key.key); button.has_value()) {
                     pressed[static_cast<std::size_t>(*button)] = event.type == SDL_EVENT_KEY_DOWN;
                 }
+                if (const auto debug_button = debug_input_from_key(event.key.key); debug_button.has_value()) {
+                    debug_pressed[static_cast<std::size_t>(*debug_button)] = event.type == SDL_EVENT_KEY_DOWN;
+                }
                 break;
             case SDL_EVENT_MOUSE_BUTTON_DOWN:
             case SDL_EVENT_MOUSE_BUTTON_UP:
@@ -811,6 +837,7 @@ namespace smgpc::render {
         AuroraWindowSize size {};
         std::array<bool, static_cast<std::size_t>(InputButton::COUNT)> pressed {};
         InputPointerState pointer {};
+        std::array<bool, static_cast<std::size_t>(DebugInput::COUNT)> debug_pressed {};
         bool should_close = false;
         bool focused = true;
         bool minimized = false;
@@ -843,7 +870,9 @@ namespace smgpc::render {
     }
 
     NativeWindowHandle AuroraWindow::native_handle() const {
-        return {};
+        return {
+            .window_handle = _impl->info.window,
+        };
     }
 
     bool AuroraWindow::is_input_pressed(InputButton button) const {
@@ -851,6 +880,13 @@ namespace smgpc::render {
             return false;
         }
         return _impl->pressed[static_cast<std::size_t>(button)];
+    }
+
+    bool AuroraWindow::is_debug_input_pressed(DebugInput input) const {
+        if (input == DebugInput::COUNT) {
+            return false;
+        }
+        return _impl->debug_pressed[static_cast<std::size_t>(input)];
     }
 
     InputPointerState AuroraWindow::input_pointer_state() const {

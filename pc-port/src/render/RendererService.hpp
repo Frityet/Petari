@@ -24,6 +24,7 @@ namespace smgpc::render {
     using CopyViewport = core::CopyViewport;
     using NativeWindowHandle = core::NativeWindowHandle;
     using InputButton = core::InputButton;
+    using DebugInput = core::DebugInput;
     using BlendMode = core::BlendMode;
     using DepthCompare = core::DepthCompare;
     using CullMode = core::CullMode;
@@ -58,6 +59,7 @@ namespace smgpc::render {
         [[nodiscard]] FramebufferInfo framebuffer_size() const;
         [[nodiscard]] NativeWindowHandle native_handle() const;
         [[nodiscard]] bool is_input_pressed(InputButton button) const;
+        [[nodiscard]] bool is_debug_input_pressed(DebugInput input) const;
         [[nodiscard]] InputPointerState input_pointer_state() const;
         void close();
         void shutdown();

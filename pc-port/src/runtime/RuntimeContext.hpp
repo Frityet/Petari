@@ -151,6 +151,8 @@ namespace smgpc::runtime {
         [[nodiscard]] std::uint64_t frame_index() const;
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &scene_camera_pose() const;
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &last_camera_pose() const;
+        [[nodiscard]] bool is_freecam_enabled() const;
+        [[nodiscard]] bool consume_pending_heavens_door_request();
         [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
@@ -319,6 +321,15 @@ namespace smgpc::runtime {
         std::optional<smgpc::camera::CameraPose> _scene_camera_pose = {};
         std::optional<smgpc::camera::CameraPose> _last_camera_pose = {};
         std::optional<GxPixelUpdateState> _j3d_pixel_update_state = {};
+        bool _freecam_enabled = false;
+        bool _freecam_toggle_held_last_frame = false;
+        bool _freecam_mouse_relative_mode = false;
+        bool _freecam_look_initialized = false;
+        float _freecam_yaw_radians = 0.0F;
+        float _freecam_pitch_radians = 0.0F;
+        bool _debug_load_heavens_door_held_last_frame = false;
+        bool _pending_heavens_door_request = false;
+        std::optional<smgpc::camera::CameraPose> _freecam_target_pose = {};
         std::vector<render::CopyEvent> _copy_events = {};
         std::string _current_stage_name;
         std::string _current_sequence_scene_name = "Game";

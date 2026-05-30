@@ -133,6 +133,18 @@ namespace smgpc::render::core {
         COUNT,
     };
 
+    enum class DebugInput {
+        CORE_PAD_TOGGLE_FREECAM,
+        CORE_PAD_LOAD_HEAVENDOOR,
+        CORE_PAD_FREECAM_MOVE_FORWARD,
+        CORE_PAD_FREECAM_MOVE_BACKWARD,
+        CORE_PAD_FREECAM_MOVE_LEFT,
+        CORE_PAD_FREECAM_MOVE_RIGHT,
+        CORE_PAD_FREECAM_MOVE_UP,
+        CORE_PAD_FREECAM_MOVE_DOWN,
+        COUNT,
+    };
+
     enum class BlendMode {
         Opaque,
         Alpha,

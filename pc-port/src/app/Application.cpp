@@ -244,6 +244,8 @@ namespace smgpc::app {
             [[nodiscard]] int run() override {
                 _logger->info(logging::Category::APP, logging::Message {"Running SMG on Aurora"});
                 _logger->info(logging::Category::APP, logging::Message {"Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input"});
+                _logger->info(logging::Category::APP, logging::Message {
+                    "Freecam debug keys: toggle F9, teleport to HeavensDoor F10, move with WASD, up/down Space/LeftShift, mouse look"});
 
                 auto &runtime = _runtime.get();
                 auto &game_system = _game_system.get();

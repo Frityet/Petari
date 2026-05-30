@@ -12,31 +12,39 @@ namespace {
 
     class ProbeWindowService final : public smgpc::render::AuroraWindow {
     public:
-        bool poll_events() override {
+        explicit ProbeWindowService(smgpc::render::WindowConfiguration configuration = {
+                                         .width = 800,
+                                         .height = 600,
+                                         .title = "SMG PC Port",
+                                     })
+            : smgpc::render::AuroraWindow(configuration) {
+        }
+
+        bool poll_events() {
             return true;
         }
 
-        [[nodiscard]] bool should_close() const override {
+        [[nodiscard]] bool should_close() const {
             return false;
         }
 
-        [[nodiscard]] bool is_focused() const override {
+        [[nodiscard]] bool is_focused() const {
             return true;
         }
 
-        [[nodiscard]] bool is_minimized() const override {
+        [[nodiscard]] bool is_minimized() const {
             return false;
         }
 
-        [[nodiscard]] smgpc::render::FramebufferInfo framebuffer_size() const override {
+        [[nodiscard]] smgpc::render::FramebufferInfo framebuffer_size() const {
             return {.width = 800U, .height = 600U};
         }
 
-        [[nodiscard]] smgpc::render::NativeWindowHandle native_handle() const override {
+        [[nodiscard]] smgpc::render::NativeWindowHandle native_handle() const {
             return {};
         }
 
-        [[nodiscard]] bool is_input_pressed(smgpc::render::InputButton button) const override {
+        [[nodiscard]] bool is_input_pressed(smgpc::render::InputButton button) const {
             switch (button) {
             case smgpc::render::InputButton::CORE_PAD_A:
             case smgpc::render::InputButton::CORE_PAD_B:
