@@ -6,35 +6,34 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 
-bool RailGraphNodeSelecter::isSatisfy(RailGraphIter&) {
-    return true;
-}
-
 namespace MR {
     RailGraph* createRailGraphFromJMap(const JMapInfoIter& rIter) {
         RailGraph* graph = new RailGraph();
 
         const JMapInfo* railPointInfo = nullptr;
         JMapInfoIter railIter(nullptr, -1);
+        bool hasNext = true;
         MR::getRailInfo(&railIter, &railPointInfo, rIter);
 
-        bool hasNext = true;
         while (hasNext) {
             JMapInfoIter pathIter(railIter);
             const JMapInfo* curRailPointInfo = railPointInfo;
-            s32 pointNum = MR::getCsvDataElementNum(curRailPointInfo);
-            RailGraphEdge edge;
-            s32 firstNode = -1;
+            s32 pointNum = curRailPointInfo->getNumEntries();
             s32 prevNode = -1;
+            RailGraphEdge edge;
+            s32 firstNode;
 
             for (s32 i = 0; i < pointNum; i++) {
                 JMapInfoIter pointIter(curRailPointInfo, i);
                 TVec3f pointPos;
                 MR::getRailPointPos0(pointIter, &pointPos);
 
-                s32 node = MR::getNearNodeIndex(graph, pointPos, 100.0f, nullptr);
-                if (node == -1) {
+                s32 nearNode = MR::getNearNodeIndex(graph, pointPos, 100.0f, nullptr);
+                s32 node;
+                if (nearNode == -1) {
                     node = graph->addNode(pointPos);
+                } else {
+                    node = nearNode;
                 }
 
                 if (prevNode != -1 && node != prevNode) {
@@ -93,10 +92,13 @@ namespace MR {
         return &pIter->getNextNode()->_0;
     }
 
+#pragma dont_inline on
     void calcWatchEdgeVector(const RailGraphIter* pIter, TVec3f* pEdge) {
-        TVec3f edge(pIter->getWatchNode()->_0 - pIter->getCurrentNode()->_0);
-        pEdge->set(edge);
+        const RailGraphNode* currentNode = pIter->getCurrentNode();
+        const RailGraphNode* watchNode = pIter->getWatchNode();
+        pEdge->set< f32 >(watchNode->_0 - currentNode->_0);
     }
+#pragma dont_inline reset
 
     void calcWatchEdgeDirection(const RailGraphIter* pRailGraphIter, TVec3f* pVec) {
         calcWatchEdgeVector(pRailGraphIter, pVec);
@@ -104,13 +106,16 @@ namespace MR {
     }
 
     s32 getNearNodeIndex(const RailGraph* pGraph, const TVec3f& rPos, f32 maxDist, RailGraphNodeSelecter* pSelector) {
+        f32 nearestDist;
         if (maxDist < 0.0f) {
-            maxDist = FLOAT_MAX;
+            nearestDist = FLOAT_MAX;
+        } else {
+            nearestDist = maxDist;
         }
 
         s32 nodeCount = pGraph->_8;
-        RailGraphIter iter = pGraph->getIterator();
         s32 nearest = -1;
+        RailGraphIter iter = pGraph->getIterator();
 
         for (s32 i = 0; i < nodeCount; i++) {
             if (pSelector != nullptr) {
@@ -121,8 +126,8 @@ namespace MR {
             }
 
             f32 dist = PSVECDistance((const Vec*)&rPos, (const Vec*)&pGraph->getNode(i)->_0);
-            if (dist < maxDist) {
-                maxDist = dist;
+            if (dist < nearestDist) {
+                nearestDist = dist;
                 nearest = i;
             }
         }

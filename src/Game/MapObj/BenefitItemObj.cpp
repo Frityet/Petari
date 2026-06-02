@@ -314,7 +314,6 @@ void BenefitItemObj::appearGround() {
     MR::invalidateClipping(this);
 }
 
-/*
 void BenefitItemObj::appearThrowUp() {
     MR::startSystemSE("SE_SY_ITEM_APPEAR");
     runBck("Appear");
@@ -324,22 +323,22 @@ void BenefitItemObj::appearThrowUp() {
     setNerve(&NrvBenefitItemObj::HostTypeNrvShoot::sInstance);
 
     if (!_DD) {
-        f32 speed = cAppearThrowUpSpd;
-        mVelocity = MR::createVecAndScale(rotated_axis, speed);
-    }
-    else {
-        f32 speed = cAppearThrowUpSpd2;
-        mVelocity = MR::createVecAndScale(rotated_axis, speed);
+        TVec3f throw_velocity(rotated_axis);
+        throw_velocity.scale(cAppearThrowUpSpd);
+        mVelocity = throw_velocity;
+    } else {
+        TVec3f throw_velocity(rotated_axis);
+        throw_velocity.scale(cAppearThrowUpSpd2);
+        mVelocity = throw_velocity;
     }
 
     MR::invalidateClipping(this);
 }
-*/
 
 void BenefitItemObj::shoot(const TVec3f& a2, const TVec3f& a3, bool a4) {
     mPosition = a2;
 
-    if (_D9) {
+    if (!_DD) {
         _D9 = 2;
     } else {
         _D9 = 3;
@@ -430,16 +429,13 @@ void BenefitItemObj::doRotateY() {
     }
 }
 
-/*
 void BenefitItemObj::exeShoot() {
-    f32 reflect, v2, gravity, v4;
-
     if (MR::isFirstStep(this)) {
         MR::onBind(this);
     }
 
-    TVec3f v9(mVelocity);
-    v2 = MR::vecKillElement(v9, mGravity, &v9);
+    TVec3f velocity(mVelocity);
+    f32 gravity = MR::vecKillElement(velocity, mGravity, &velocity);
     if (MR::isBindedGround(this)) {
         runBck("Land");
         MR::validateHitSensors(this);
@@ -448,28 +444,29 @@ void BenefitItemObj::exeShoot() {
             if (MR::isGreaterStep(this, 10)) {
                 setNerve(&NrvBenefitItemObj::HostTypeNrvWait::sInstance);
             }
-        }
-        else
+        } else {
             setNerve(&NrvBenefitItemObj::HostTypeNrvEscape::sInstance);
-    }
-    else {
-        gravity = v2;
+        }
+    } else {
         gravity += cGravity;
         if (getNerveStep() == 60) {
             MR::validateHitSensors(this);
         }
 
         if (MR::isBindedWall(this)) {
-            v4 = MR::vecKillElement(v9, *MR::getWallNormal(this), &v9);
-            reflect = cReflectWallX;
-            v9 -= MR::createVecAndScale(MR::createVecAndScale(*MR::getWallNormal(this), v4), reflect);
+            f32 wall_speed = MR::vecKillElement(velocity, *MR::getWallNormal(this), &velocity);
+            TVec3f reflect(*MR::getWallNormal(this));
+            reflect.scale(wall_speed);
+            reflect.scale(cReflectWallX);
+            velocity -= reflect;
         }
 
-        v9 += MR::createVecAndScale(mGravity, gravity);
-        mVelocity.set<f32>(v9);
+        TVec3f gravity_velocity(mGravity);
+        gravity_velocity.scale(gravity);
+        velocity += gravity_velocity;
+        mVelocity.set< f32 >(velocity);
     }
 }
-*/
 
 void BenefitItemObj::exeCatch() {
     if (MR::isFirstStep(this)) {
@@ -578,7 +575,6 @@ void BenefitItemObj::initEscape() {
     MR::startSound(this, "SE_OJ_KINOKO_1UP_RUN_START");
 }
 
-/*
 void BenefitItemObj::doEscape() {
     MR::startLevelSound(this, "SE_OJ_LV_KINOKO_1UP_RUN");
     bool cond = false;
@@ -598,16 +594,19 @@ void BenefitItemObj::doEscape() {
             MR::vecKillElement(v22, mGravity, &v22);
             MR::normalizeOrZero(&v22);
             if (_BC.dot(v22) < 0.0f) {
-                _BC += MR::createVecAndScale(v22, 0.2f);
+                TVec3f steer(v22);
+                steer.scale(0.02f);
+                _BC += steer;
                 _BC.x *= 1.1f;
                 _BC.y *= 1.1f;
                 _BC.z *= 1.1f;
-            }
-            else {
-                _BC += MR::createVecAndScale(v22, 0.01f);
-                _BC.x *= 0.01f;
-                _BC.y *= 0.01f;
-                _BC.z *= 0.01f;
+            } else {
+                TVec3f steer(v22);
+                steer.scale(0.01f);
+                _BC += steer;
+                _BC.x *= 1.1f;
+                _BC.y *= 1.1f;
+                _BC.z *= 1.1f;
             }
         }
 
@@ -620,15 +619,18 @@ void BenefitItemObj::doEscape() {
             runBck("Land");
         }
 
-        _C8 = MR::createVecAndScale(mGravity, 5.0f);
+        TVec3f fall_velocity(mGravity);
+        fall_velocity.scale(5.0f);
+        _C8 = fall_velocity;
         runEfx("Move");
-    }
-    else {
+    } else {
         _E5 = 1;
         _BC.x *= 0.95f;
         _BC.y *= 0.95f;
         _BC.z *= 0.95f;
-        _C8 += MR::createVecAndScale(mGravity, 1.0f);
+        TVec3f gravity_velocity(mGravity);
+        gravity_velocity.scale(1.0f);
+        _C8 += gravity_velocity;
 
         if (PSVECMag(&_C8) > 20.0f) {
             _C8.setLength(20.0f);
@@ -640,12 +642,16 @@ void BenefitItemObj::doEscape() {
     if (MR::isBindedWall(this) && !_E5) {
         if (MR::getWallNormal(this)->dot(mGravity) < 0.0f) {
             f32 scalar = MR::vecKillElement(_BC, *MR::getWallNormal(this), &_BC);
-            _BC += -*MR::getWallNormal(this) % scalar;
-            _C8 += -mGravity % 20.0f;
+            TVec3f reflect = -*MR::getWallNormal(this);
+            reflect.scale(scalar);
+            _BC += reflect;
+            TVec3f bound = -mGravity;
+            bound.scale(20.0f);
+            _C8 += bound;
             _E5 = 1;
         }
     }
-}*/
+}
 
 void BenefitItemObj::exeEscape() {
     if (MR::isFirstStep(this)) {

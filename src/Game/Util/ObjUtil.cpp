@@ -4,6 +4,7 @@
 #include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/LiveActor/ClippingJudge.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
@@ -34,9 +35,12 @@
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JGeometry/TUtil.hpp"
 #include "JSystem/JGeometry/TVec.hpp"
@@ -586,21 +590,55 @@ namespace MR {
         *pOut = val;
     }
 
-    /*
     void getCsvDataF32(f32* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-        int v7 = pMapInfo->searchItemInfo(pKey);
+        s32 itemIndex = pMapInfo->searchItemInfo(pKey);
 
-        if (v7 >= 0) {
-            *pOut = *((f32*)(pMapInfo->mData->mNumEntries + pMapInfo->mData->mDataOffset +
-                             idx * (pMapInfo->mData->mEntrySize + static_cast< const JMapItem* >(&pMapInfo->mData->mItems)[v7].mOffsData)));
+        if (itemIndex >= 0) {
+            const JMapData* data = pMapInfo->mData;
+            const JMapItem* item = &data->mItems[itemIndex];
+            const char* entry = getEntryAddress(data, data->mDataOffset, idx);
+            *pOut = *reinterpret_cast< const f32* >(entry + item->mOffsData);
         }
     }
-    */
 
-    // MR::getCsvDataBool
+    void getCsvDataBool(bool* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
+        s32 itemIndex = pMapInfo->searchItemInfo(pKey);
 
-    void getCsvDataVec(Vec*, const JMapInfo*, const char*, s32);
-    void getCsvDataColor(GXColor*, const JMapInfo*, const char*, s32);
+        if (itemIndex >= 0) {
+            const JMapData* data = pMapInfo->mData;
+            const JMapItem* item = &data->mItems[itemIndex];
+            const char* entry = getEntryAddress(data, data->mDataOffset, idx);
+            const u32 value = *reinterpret_cast< const u32* >(entry + item->mOffsData);
+            *pOut = (value & item->mMask) != 0;
+        }
+    }
+
+    void getCsvDataVec(Vec* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
+        char key[0x100];
+        snprintf(key, sizeof(key), "%sX", pKey);
+        getCsvDataF32(&pOut->x, pMapInfo, key, idx);
+
+        snprintf(key, sizeof(key), "%sY", pKey);
+        getCsvDataF32(&pOut->y, pMapInfo, key, idx);
+
+        snprintf(key, sizeof(key), "%sZ", pKey);
+        getCsvDataF32(&pOut->z, pMapInfo, key, idx);
+    }
+
+    void getCsvDataColor(GXColor* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
+        char key[0x100];
+        snprintf(key, sizeof(key), "%sR", pKey);
+        getCsvDataU8(&pOut->r, pMapInfo, key, idx);
+
+        snprintf(key, sizeof(key), "%sG", pKey);
+        getCsvDataU8(&pOut->g, pMapInfo, key, idx);
+
+        snprintf(key, sizeof(key), "%sB", pKey);
+        getCsvDataU8(&pOut->b, pMapInfo, key, idx);
+
+        snprintf(key, sizeof(key), "%sA", pKey);
+        getCsvDataU8(&pOut->a, pMapInfo, key, idx);
+    }
 
     bool isStageStateScenarioOpeningCamera() {
         return GameSceneFunction::isExecScenarioOpeningCamera();
@@ -889,7 +927,37 @@ namespace MR {
         getNamePosHolder()->find(nullptr, pName, a2, a3);
     }
 
-    // findNamePosOnGround
+    void findNamePosOnGround(const char* pName, MtxPtr pMtx) {
+        Triangle triangle;
+        TPos3f namePosMtx;
+        tryFindLinkNamePos(nullptr, pName, namePosMtx.toMtxPtr());
+
+        TVec3f position;
+        namePosMtx.getTrans(position);
+
+        TVec3f front;
+        namePosMtx.getZDirInline(front);
+
+        TVec3f gravity;
+        calcGravityVector(nullptr, position, &gravity, nullptr, 0);
+
+        TVec3f scaledGravity(gravity);
+        scaledGravity.scale(100.0f);
+
+        TVec3f startPosition(position);
+        startPosition.subInline(scaledGravity);
+
+        TVec3f lineOffset(gravity);
+        lineOffset.scale(1000.0f);
+
+        TVec3f groundPos;
+        if (getFirstPolyOnLineToMap(&groundPos, &triangle, startPosition, lineOffset)) {
+            TVec3f up(gravity.invertOperatorInternal());
+            makeMtxUpFrontPos(&namePosMtx, up, front, groundPos);
+        }
+
+        PSMTXCopy(namePosMtx.toMtxPtr(), pMtx);
+    }
 
     bool tryFindNamePos(const char* pName, MtxPtr pMtx) {
         return tryFindLinkNamePos(nullptr, pName, pMtx);
@@ -903,7 +971,17 @@ namespace MR {
         tryFindLinkNamePos(pObj, pName, pMtx);
     }
 
-    // tryFindLinkNamePos
+    bool tryFindLinkNamePos(const NameObj* pObj, const char* pName, MtxPtr pMtx) {
+        TVec3f position(0.0f, 0.0f, 0.0f);
+        TVec3f rotation(0.0f, 0.0f, 0.0f);
+
+        if (getNamePosHolder()->find(pObj, pName, &position, &rotation)) {
+            makeMtxTR(pMtx, position, rotation);
+            return true;
+        }
+
+        return false;
+    }
 
     bool tryFindLinkNamePos(const NameObj* pObj, const char* pName, TVec3f* pParam3, TVec3f* pParam4) {
         return getNamePosHolder()->find(pObj, pName, pParam3, pParam4);

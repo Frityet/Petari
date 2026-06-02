@@ -27,7 +27,7 @@ public:
     virtual bool receiveOtherMsg(u32, HitSensor*, HitSensor*);
 
     void initSensor();
-    void updatePose();
+    void updatePose() NO_INLINE;
     void updateBindActorMatrix();
     void activate();
     void startRunnaway();
@@ -44,8 +44,8 @@ public:
     void exeCaughtTalk();
     void exeCaughtEnd();
     void exeStop();
-    bool isCaught() const;
-    bool isCaughtable() const;
+    bool isCaught() const NO_INLINE;
+    bool isCaughtable() const NO_INLINE;
     bool isRunnaway() const;
     bool isChasing() const;
     bool isEnableBlow() const;

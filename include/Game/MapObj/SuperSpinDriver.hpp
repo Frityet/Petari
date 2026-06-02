@@ -34,7 +34,7 @@ public:
     void initOperateRing();
     void initAppearState(const JMapInfoIter&);
     bool canBind(HitSensor*, HitSensor*) const;
-    bool tryBind(HitSensor*, HitSensor*) const;
+    bool tryBind(HitSensor*, HitSensor*);
     bool tryEndCapture();
     bool tryForceCancel();
     bool tryShootStart();
@@ -105,20 +105,20 @@ public:
     f32 _144;
     f32 _148;
     f32 _14C;
-    u32 _150;
-    u32 _154;
-    u32 _158;
-    u32 _15C;
-    u32 _160;
+    s32 _150;
+    s32 _154;
+    s32 _158;
+    s32 _15C;
+    s32 _160;
     f32 _164;
     u32 _168;
-    u32 _16C;
+    s32 _16C;
     s32 mColor;  // 0x170
     u8 _174;
     u8 _175;
     u8 _176;
     u8 _177;
-    u32 _178;
+    s32 _178;
     u8 _17C;
     u8 _17D;
     u8 _17E;

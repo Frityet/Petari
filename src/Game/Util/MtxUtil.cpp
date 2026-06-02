@@ -780,29 +780,21 @@ namespace MR {
     }
 
     bool isSameMtx(MtxPtr a, MtxPtr b) {
-        f32* pA = (f32*)a;
-        f32* pB = (f32*)b;
         for (int i = 0; i < 12; i++) {
-            if (*pA != *pB) {
+            if (a[i / 4][i % 4] != b[i / 4][i % 4]) {
                 return false;
             }
-            pA++;
-            pB++;
         }
         return true;
     }
 
     bool isSameMtxRot(MtxPtr a, MtxPtr b) {
-        f32* pA = (f32*)a;
-        f32* pB = (f32*)b;
         for (u32 i = 0; i < 12; i++) {
             if ((i & 3) != 3) {
-                if (*pA != *pB) {
+                if (a[i / 4][i % 4] != b[i / 4][i % 4]) {
                     return false;
                 }
             }
-            pA++;
-            pB++;
         }
         return true;
     }

@@ -11,15 +11,18 @@
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/DirectDraw.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
+#include "JSystem/JUtility/JUTVideo.hpp"
 #include "revolution/types.h"
 #include <cstdio>
 
@@ -37,6 +40,35 @@ namespace NrvTalkDirector {
     NEW_NERVE(TalkDirectorNrvNext, TalkDirector, Next);
     NEW_NERVE(TalkDirectorNrvTerm, TalkDirector, Term);
 };  // namespace NrvTalkDirector
+
+TalkPeekZ::TalkPeekZ() {
+    mToken = DrawSyncManager::sInstance->setCallback(4, 1, this);
+}
+
+void TalkPeekZ::setDrawSyncToken() {
+    GXGetProjectionv(mProjection);
+    GXGetViewportv(mViewport);
+    mZ = 0;
+    DrawSyncManager::sInstance->pushBreakPoint();
+    GXSetDrawSync(mToken);
+}
+
+void TalkPeekZ::drawSyncCallback(u16) {
+    if (!MR::isInRange(mScreenPos.x, 0.0f, MR::getScreenWidth() - 1)) {
+        return;
+    }
+
+    if (!MR::isInRange(mScreenPos.y, 0.0f, JUTVideo::getManager()->getRenderMode()->efbHeight - 1)) {
+        return;
+    }
+
+    TVec2f frameBufferPos;
+    MR::convertScreenPosToFrameBufferPos(&frameBufferPos, mScreenPos);
+    GXPeekZ(frameBufferPos.x, frameBufferPos.y, &mZ);
+
+    TVec3f screenPos(mScreenPos.x, mScreenPos.y, static_cast< f32 >(mZ));
+    TDDraw::invProject(&mWorldPos, screenPos, MR::getCameraViewMtx(), mProjection, mViewport, false);
+}
 
 TalkDirector::TalkDirector(const char* pArg)
     : LayoutActor(pArg, true), mMsgCtrl(nullptr), _3C(nullptr), _40(nullptr), _44(nullptr), mTalkState(nullptr), _4C(false), _4D(false), _4E(false),
@@ -240,7 +272,8 @@ void TalkDirector::updateMessage() {
 
     if (_3C != nullptr) {
         _3C->updateBalloonPos();
-        // mPeekZ stuff to do
+        mPeekZ->mScreenPos.x = _3C->_1C.x;
+        mPeekZ->mScreenPos.y = _3C->_1C.y;
     }
 
     if (MR::isPowerStarGetDemoActive()) {

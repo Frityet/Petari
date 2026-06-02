@@ -9,7 +9,11 @@ namespace NrvBlackHole {
     NEW_NERVE(BlackHoleNrvDisappear, BlackHole, Disappear);
 };  // namespace NrvBlackHole
 
-// BlackHole::BlackHole
+BlackHole::BlackHole(const char* pName)
+    : LiveActor(pName), mBlackHoleModel(nullptr), _90(gZeroVec), _9C(1.0f), _A0(500.0f), _A4(nullptr), mCameraInfo(nullptr) {
+    _A8.identity();
+    _D8.identity();
+}
 
 void BlackHole::init(const JMapInfoIter& rIter) {
     initMapToolInfo(rIter);
@@ -18,7 +22,7 @@ void BlackHole::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addHitSensorEye(this, "body", 16, _A0, TVec3f(0.0f, 0.0f, 0.0f));
     initEffectKeeper(0, 0, false);
-    MR::setEffectHostMtx(this, "BlackHoleSuction", (MtxPtr)&_D8);
+    MR::setEffectHostMtx(this, "BlackHoleSuction", _D8.toMtxPtr());
     f32 radius = _A0;
     f32 val = 500.0f * _9C;
     if (radius >= val) {
@@ -27,7 +31,7 @@ void BlackHole::init(const JMapInfoIter& rIter) {
         radius = val;
     }
 
-    f32 clippingRadius = 500.0f * radius;
+    f32 clippingRadius = 500.0f + radius;
     MR::setClippingTypeSphere(this, clippingRadius);
     MR::setClippingTypeSphere(mBlackHoleModel, clippingRadius);
     MR::setClippingFarMax(this);
@@ -76,6 +80,34 @@ bool BlackHole::tryStartDemoCamera() {
     return false;
 }
 
+void BlackHole::calcAndSetBaseMtx() {
+    LiveActor::calcAndSetBaseMtx();
+
+    TVec3f front = MR::getCamPos() - mPosition;
+    TVec3f up = MR::getCamYdir();
+
+    if (MR::normalizeOrZero(&front)) {
+        return;
+    }
+
+    if (MR::isSameDirection(front, up, 0.01f)) {
+        return;
+    }
+
+    MR::makeMtxFrontUpPos(&_D8, front, up, mPosition);
+
+    f32 scale = mScale.x;
+    _D8.mMtx[0][0] *= scale;
+    _D8.mMtx[0][1] *= scale;
+    _D8.mMtx[0][2] *= scale;
+    _D8.mMtx[1][0] *= scale;
+    _D8.mMtx[1][1] *= scale;
+    _D8.mMtx[1][2] *= scale;
+    _D8.mMtx[2][0] *= scale;
+    _D8.mMtx[2][1] *= scale;
+    _D8.mMtx[2][2] *= scale;
+}
+
 void BlackHole::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (!isNerve(&NrvBlackHole::BlackHoleNrvWait::sInstance)) {
         return;
@@ -110,8 +142,7 @@ void BlackHole::initMapToolInfo(const JMapInfoIter& rIter) {
     if (_A4 == 0) {
         _A0 = 500.0f * mScale.z;
     } else {
-        TVec3f stack_C;
-        stack_C.setPS(mScale);
+        TVec3f stack_C(500.0f * mScale.x, 500.0f * mScale.y, 500.0f * mScale.z);
         _A0 = PSVECMag(&stack_C);
     }
 
@@ -135,13 +166,13 @@ void BlackHole::initModel() {
 }
 
 void BlackHole::initCubeBox() {
-    MR::makeMtxRotate((MtxPtr)&_A8, mRotation.x, mRotation.y, mRotation.z);
+    MR::makeMtxRotate(_A8.toMtxPtr(), mRotation.x, mRotation.y, mRotation.z);
     _A8.mMtx[0][3] = mPosition.x;
     _A8.mMtx[1][3] = mPosition.y;
     _A8.mMtx[2][3] = mPosition.z;
     _A4 = new TBox3f();
     TVec3f stack_8(0.5f * (1000.0f * -mScale.x), 0.5f * (1000.0f * -mScale.y), 0.5f * (1000.0f * -mScale.z));
-    TVec3f stack_14(0.5f * (1000.0f * mScale.x), 0.5f * (1000.0f * mScale.z), 0.5f * (1000.0f * mScale.y));
+    TVec3f stack_14(0.5f * (1000.0f * mScale.x), 0.5f * (1000.0f * mScale.y), 0.5f * (1000.0f * mScale.z));
     _A4->i.set(stack_8);
     _A4->f.set(stack_14);
 }

@@ -1024,7 +1024,7 @@ namespace MR {
         pPos->y *= value + pSensor1->mRadius + offset;
         pPos->z *= value + pSensor1->mRadius + offset;
 
-        JMathInlineVEC::PSVECAdd2(pPos, &pSensor1->mPosition, pPos);
+        pPos->addInline2(pSensor1->mPosition);
     }
 
     bool tryForceKillIfMsgStartPowerStarGet(LiveActor* pActor, u32 msg) {

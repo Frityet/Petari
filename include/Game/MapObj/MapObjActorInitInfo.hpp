@@ -29,7 +29,7 @@ public:
     void setupRailMover();
     void setupRotator();
     void setupRailRotator();
-    void setupSEesaw1AxisRotator(const char*, f32);
+    void setupSeesaw1AxisRotator(const char*, f32);
     void setupRailPosture();
     void setupBaseMtxFollowTarget();
     void setupAffectedScale();
@@ -83,12 +83,12 @@ public:
     s32 mColorChangeArg;     // 0x60
     s32 mTextureChangeArg;   // 0x64
     bool mNoAppearRiddleSE;  // 0x68
-    u32 _6C;
+    const char* _6C;
     f32 _70;
     bool _74;
     const char* mShadowName;  // 0x78
     f32 mShadowLength;        // 0x7C
-    u32 _80;
+    const char* _80;
     const char* mDummyChangeTexture;  // 0x84
     u32 _88;
     bool _8C;

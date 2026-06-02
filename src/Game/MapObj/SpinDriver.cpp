@@ -1,4 +1,5 @@
 #include "Game/MapObj/SpinDriver.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/MapObj/SpinDriverUtil.hpp"
 #include "math_types.hpp"
 #include <cstdio>
@@ -154,7 +155,6 @@ void SpinDriver::makeActorDead() {
     LiveActor::makeActorDead();
 }
 
-/*
 void SpinDriver::control() {
     if (!_141) {
         TVec3f* pos = MR::getPlayerPos();
@@ -175,7 +175,6 @@ void SpinDriver::control() {
     _104 = -PI + v6;
     _108 *= 0.95f;
 }
-*/
 
 void SpinDriver::calcAndSetBaseMtx() {
     TPos3f position;
@@ -419,7 +418,6 @@ void SpinDriver::exeCapture() {
     }
 }
 
-/*
 void SpinDriver::exeShootStart() {
     if (!tryForceCancel()) {
         if (MR::isFirstStep(this)) {
@@ -441,10 +439,16 @@ void SpinDriver::exeShootStart() {
         f32 dot = v3 * v3;
         TVec3f upVec;
         MR::calcUpVec(&upVec, this);
-        TVec3f stack_50;
-        stack_50.set(mPosition - MR::multVec(MR::multVec(upVec, 200.0f), 1.0f - dot));
+        TVec3f offset(upVec);
+        offset *= 200.0f;
+        offset *= 1.0f - dot;
+        TVec3f stack_50(mPosition - offset);
         f32 v5 = MR::clamp((2.0f * clamp), 0.0f, 1.0f);
-        _B8.set(MR::multAndAddVec(stack_50, _F4, v5, 1.0f - v5));
+        TVec3f end(stack_50);
+        end *= v5;
+        TVec3f start(_F4);
+        start *= 1.0f - v5;
+        _B8.set(end + start);
         updateBindActorMatrix((v5 + (_11C * (1.0f - v5))));
         _108 += 0.04f;
         MR::tryRumblePadMiddle(this, 0);
@@ -453,7 +457,6 @@ void SpinDriver::exeShootStart() {
         }
     }
 }
-*/
 
 void SpinDriver::exeShoot() {
     if (!tryForceCancel()) {
@@ -523,8 +526,7 @@ void SpinDriver::exeCoolDown() {
     }
 }
 
-/*
-bool SpinDriver::startBind(HitSensor *pSensor) {
+bool SpinDriver::startBind(HitSensor* pSensor) {
     if (!canStartBind()) {
         return false;
     }
@@ -558,7 +560,7 @@ bool SpinDriver::startBind(HitSensor *pSensor) {
     }
 
     _8C = pSensor->mHost;
-    _B8 = mPosition;
+    _B8 = _8C->mPosition;
     _C4 = *MR::getPlayerLastMove();
     f32 mag = PSVECMag(&_C4);
     if (mag > 40.0f) {
@@ -576,7 +578,6 @@ bool SpinDriver::startBind(HitSensor *pSensor) {
     MR::validateClipping(this);
     return true;
 }
-*/
 
 void SpinDriver::cancelBind() {
     if (_8C) {
@@ -595,19 +596,18 @@ void SpinDriver::updateBindPosition() {
     _C4 = position - stack_20;
 }
 
-/*
 void SpinDriver::moveBindPosToCenter() {
     _B8 += _C4;
     TVec3f stack_24(mPosition - _B8);
     f32 scalar;
     MR::separateScalarAndDirection(&scalar, &stack_24, stack_24);
     f32 v3 = scalar / 120.0f;
-    _C4 += MR::multVec(stack_24, 1.5f, v3);
-    _C4.x *= 0.8f;
-    _C4.y *= 0.8f;
-    _C4.z *= 0.8f;
+    TVec3f accel(stack_24);
+    accel *= 1.5f;
+    accel *= v3;
+    _C4 += accel;
+    _C4 *= 0.8f;
 }
-*/
 
 void SpinDriver::updateBindActorMatrix(f32 a1) {
     TPos3f rotation;
@@ -621,54 +621,61 @@ void SpinDriver::updateBindActorMatrix(f32 a1) {
     _A8.slerp(quat, a1);
 }
 
-/*
 void SpinDriver::calcBindActorMatrix() {
-    f32 v3 = (2.0f * _A8.y);
-    f32 v4 = _A8.z;
-    f32 v5 = (2.0f * _A8.x);
-    f32 v6 = (2.0f * _A8.y) * _A8.y;
-    f32 v7 = (2.0f * _A8.w);
-    f32 v8 = (1.0f - ((2.0f * _A8.x) * _A8.x));
-    f32 v9 = ((1.0f - ((2.0f * _A8.x) * _A8.x)) - ((2.0f * _A8.z) * _A8.z));
-    f32 v10 = (((2.0f * _A8.x) * _A8.y) - ((2.0f * _A8.w) * _A8.z));
-    f32 v11 = (((2.0f * _A8.x) * _A8.y) + ((2.0f * _A8.w) * _A8.z));
-    TPos3f pos;
-    pos.mMtx[0][0] = (1.0f - ((2.0f * _A8.y) * _A8.y)) - ((2.0f * _A8.z) * _A8.z);
-    pos.mMtx[0][1] = v10;
-    f32 v12 = (v7 * _A8.y);
-    pos.mMtx[1][1] = v9;
-    f32 v13 = (v7 * _A8.x);
-    pos.mMtx[1][0] = v11;
-    pos.mMtx[2][2] = v8 - v6;
-    pos.mMtx[0][2] = (v5 * v4) + v12;
-    pos.mMtx[1][2] = (v3 * v4) - v13;
-    pos.mMtx[2][0] = (v5 * v4) - v12;
-    pos.mMtx[2][1] = (v3 * v4) + v13;
-    pos.mMtx[0][3] = _B8.x;
-    pos.mMtx[1][3] = _B8.y;
-    pos.mMtx[2][3] = _B8.z;
-    MR::setBaseTRMtx(_8C, pos);
+    TPos3f pose;
+    pose.setQT(_A8, _B8);
+    MR::setBaseTRMtx(_8C, pose);
 }
-*/
 
-// SpinDriver::calcParabolicBindPose
-// SpinDriver::turnBindHead
+void SpinDriver::calcParabolicBindPose() {
+    if (MR::isNearZero(_C4, 0.001f)) {
+        return;
+    }
 
-/*
+    TVec3f headDir;
+    MR::normalize(_C4, &headDir);
+
+    if (_124 > 0) {
+        f32 rate = MR::calcNerveRate(this, _124);
+        f32 rotateRate = MR::normalize(rate, static_cast< f32 >(_12C) / static_cast< f32 >(_124),
+                                       static_cast< f32 >(_130) / static_cast< f32 >(_124));
+
+        if (rotateRate > 0.0f) {
+            TQuat4f rotate;
+            rotate.setRotate(_DC, 0.5f * PI * rotateRate);
+            rotate.transform(headDir);
+        }
+    }
+
+    turnBindHead(headDir, 0.4f);
+}
+
+void SpinDriver::turnBindHead(const TVec3f& rDir, f32 rate) {
+    TVec3f currentDir;
+    _A8.getYDir(currentDir);
+
+    TQuat4f rotate;
+    rotate.setRotate(currentDir, rDir, rate);
+    PSQUATMultiply(&rotate, &_A8, &_A8);
+    _A8.normalize();
+}
+
 void SpinDriver::calcShootMotionTime() {
-    s32 v1 = _124;
-    if (v1 < cSpaceFlyEndFrame) {
+    s32 frames = _124;
+    s32 endFrame = cSpaceFlyEndFrame + 20;
+
+    if (frames < endFrame) {
         _128 = -1;
         _12C = 0;
-        _130 = v1;
+        _130 = frames;
     }
     else {
-        _12C = v1 - 70;
-        _130 = v1 - 20;
-        _128 = (v1 - 70) / 5;
+        s32 flyFrame = frames - endFrame;
+        _12C = flyFrame;
+        _130 = frames - 20;
+        _128 = flyFrame / 5;
     }
 }
-*/
 
 void SpinDriver::startCamera() {
     if (mSpinDriverCamera) {
@@ -698,8 +705,7 @@ bool SpinDriver::canStartBind() const {
     return isNerve(&NrvSpinDriver::SpinDriverNrvWait::sInstance);
 }
 
-/*
-bool SpinDriver::canBind(HitSensor *pSensor) const {
+bool SpinDriver::canBind(HitSensor* pSensor) const {
     if (!canStartBind()) {
         return false;
     }
@@ -711,13 +717,12 @@ bool SpinDriver::canBind(HitSensor *pSensor) const {
         return true;
     }
 
-    if (_138 && _141 && mPosition.squared(pSensor->mPosition) < 457600.0f) {
+    if (_138 && _141 && mPosition.squared(pSensor->mPosition) < 57600.0f) {
         return true;
     }
 
     return false;
 }
-*/
 
 SpinDriver::~SpinDriver() {
 }

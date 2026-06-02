@@ -25,7 +25,8 @@ namespace MR {
     PartsModel* createNPCGoods(LiveActor*, const char*, const char*);
     PartsModel* createIndirectNPCGoods(LiveActor*, const char*, const char*);
 
-    void calcPlayerFaceStarePos(TVec3f*, MtxPtr, MtxPtr);
+    bool calcPlayerFaceStarePos(TVec3f*, MtxPtr, MtxPtr);
+    bool calcPlayerFaceStareVector(TVec3f*, MtxPtr, MtxPtr);
 
     void invalidateLodCtrl(const NPCActor*);
     void startMoveAction(NPCActor*);
@@ -46,6 +47,7 @@ namespace MR {
 
     bool tryStartTalkAction(NPCActor*);
     bool tryStartMoveTalkAction(NPCActor*);
+    bool isActionLoopedOrStopped(const LiveActor*);
 
     void turnPlayerToActor(const LiveActor*, f32);
     void decidePose(NPCActor*, const TVec3f&, const TVec3f&, const TVec3f&, f32, f32, f32);
@@ -57,7 +59,10 @@ namespace MR {
     void followRailPoseOnGround(NPCActor*, const LiveActor*, f32);
 
     void setDefaultPose(NPCActor*);
-    void convertPosOnGround(TVec3f*, const TVec3f&);
+    bool convertPosOnGround(TVec3f*, const TVec3f&);
+    void timeKeepDemoFadeIn();
+    void timeKeepDemoFadeOut();
+    void endNPCTalkCamera(bool, s32);
 
     bool isActionContinuous(const LiveActor*);
 };  // namespace MR

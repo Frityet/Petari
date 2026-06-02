@@ -6,7 +6,7 @@
 #include "JSystem/JGeometry/TVec.hpp"
 class RailGraphNodeSelecter {
 public:
-    virtual bool isSatisfy(RailGraphIter&);
+    virtual bool isSatisfy(RailGraphIter&) = 0;
 };
 
 namespace MR {

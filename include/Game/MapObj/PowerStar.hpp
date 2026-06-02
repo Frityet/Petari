@@ -62,7 +62,7 @@ public:
     TVec3f _A0;
     TVec3f _AC;
     TPos3f _B8;
-    TMtx34f _E8;
+    TPos3f _E8;
     ModelObj* mPowerStarModelObj;  // 0x118
     u8 _11C;
     u8 _11D;
@@ -83,6 +83,6 @@ public:
     ActorCameraInfo* mCameraInfo;        // 0x128
     PowerStarAppearPoint* mCameraActor;  // 0x12C
     ModelObj* mLuigiNPC;                 // 0x130
-    TMtx34f _134;
+    TPos3f _134;
     bool _164;
 };

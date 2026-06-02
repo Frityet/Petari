@@ -52,7 +52,7 @@ private:
 };
 
 namespace MR {
-    void calcPlayerFaceStarePos(TVec3f*, MtxPtr, MtxPtr);
+    bool calcPlayerFaceStarePos(TVec3f*, MtxPtr, MtxPtr);
     void setNextStageBGM(const char*);
 };  // namespace MR
 
@@ -94,7 +94,9 @@ void Rosetta::init(const JMapInfoIter& rIter) {
     caps.mSensor = false;
     caps.mMakeActor = false;
     caps.mBinder = false;
-    caps.mMessageOffset.set< f32 >(0.0f, 0.0f, 0.0f);
+    caps.mMessageOffset.x = 0.0f;
+    caps.mMessageOffset.y = 0.0f;
+    caps.mMessageOffset.z = 0.0f;
     caps.mTalkJointName = "Chin";
     caps.mReactionNerve = &NrvRosetta::RosettaNrvReaction::sInstance;
     initialize(rIter, caps);
@@ -104,9 +106,10 @@ void Rosetta::init(const JMapInfoIter& rIter) {
     MR::addHitSensorNpc(this, "Body", 8, 80.0f, TVec3f(0.0f, 50.0f, 0.0f));
 
     if (mMsgCtrl != nullptr) {
-        MR::registerBranchFunc(mMsgCtrl, TalkMessageFunc< Rosetta >(this, &Rosetta::branchFunc));
-        MR::registerEventFunc(mMsgCtrl, TalkMessageFunc< Rosetta >(this, &Rosetta::eventFunc));
-        MR::onStartOnlyFront(mMsgCtrl);
+        TalkMessageCtrl* msgCtrl = mMsgCtrl;
+        MR::registerBranchFunc(msgCtrl, TalkMessageFunc< Rosetta >(this, &Rosetta::branchFunc));
+        MR::registerEventFunc(msgCtrl, TalkMessageFunc< Rosetta >(this, &Rosetta::eventFunc));
+        MR::onStartOnlyFront(msgCtrl);
     }
 
     MR::startBrk(this, "Normal");
@@ -271,8 +274,7 @@ bool Rosetta::canUpdateStarePos() const {
         return false;
     }
 
-    TVec3f playerDir;
-    playerDir.sub(*MR::getPlayerPos(), mPosition);
+    TVec3f playerDir(*MR::getPlayerPos() - mPosition);
 
     TVec3f upDir;
     MR::extractMtxYDir(getBaseMtx(), &upDir);

@@ -6,7 +6,14 @@
 #include <cstring>
 
 namespace {
-    void getJMapInfoArgPlus(const JMapInfoIter& rIter, const char* pFieldName, f32* pDest) {}
+    void getJMapInfoArgPlus(const JMapInfoIter& rIter, const char* pFieldName, f32* pDest) {
+        f32 result;
+        bool read = rIter.getValue(pFieldName, &result);
+
+        if (read && result >= 0.0f) {
+            *pDest = result;
+        }
+    }
 
     void getJMapInfoArgPlus(const JMapInfoIter& rIter, const char* pFieldName, s32* pDest) {
         // Get row and column of data

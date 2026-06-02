@@ -84,10 +84,10 @@ namespace nw4r {
             }
 
             inline u8 GetVtxColorElement(const ut::Color* pColors, u32 idx) {
-                return reinterpret_cast< const u8* >(&pColors[idx / 4])[idx % 4];
+                return pColors[idx / 4][idx % 4];
             }
             inline void SetVtxColorElement(ut::Color* pColors, u32 idx, u8 value) {
-                reinterpret_cast< u8* >(&pColors[idx / 4])[idx % 4] = value;
+                pColors[idx / 4][idx % 4] = value;
             }
 
             const Size GetTextureSize(Material* pMaterial, u8 texMapIdx);

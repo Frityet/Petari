@@ -40,6 +40,57 @@ namespace std {
         return mem_fun_t< S, T >(f);
     }
 
+    template < class S, class T, class A >
+    class mem_fun1_t : public binary_function< T*, A, S > {
+    public:
+        explicit mem_fun1_t(S (T::*mf)(A));
+
+        S operator()(T* p, A a) const;
+
+    private:
+        S (T::*mf_)(A);
+    };
+
+    template < class S, class T, class A >
+    inline mem_fun1_t< S, T, A >::mem_fun1_t(S (T::*mf)(A)) : mf_(mf) {
+    }
+
+    template < class S, class T, class A >
+    inline S mem_fun1_t< S, T, A >::operator()(T* p, A a) const {
+        return (p->*mf_)(a);
+    }
+
+    template < class S, class T, class A >
+    inline mem_fun1_t< S, T, A > mem_fun(S (T::*f)(A)) {
+        return mem_fun1_t< S, T, A >(f);
+    }
+
+    template < class Operation, class T >
+    class binder2nd : public unary_function< typename Operation::first_argument_type, typename Operation::result_type > {
+    public:
+        binder2nd(const Operation& op, const T& value);
+
+        typename Operation::result_type operator()(typename Operation::first_argument_type x) const;
+
+    protected:
+        Operation op;
+        T value;
+    };
+
+    template < class Operation, class T >
+    inline binder2nd< Operation, T >::binder2nd(const Operation& op_, const T& value_) : op(op_), value(value_) {
+    }
+
+    template < class Operation, class T >
+    inline typename Operation::result_type binder2nd< Operation, T >::operator()(typename Operation::first_argument_type x) const {
+        return op(x, value);
+    }
+
+    template < class Operation, class T >
+    inline binder2nd< Operation, T > bind2nd(const Operation& op, const T& value) {
+        return binder2nd< Operation, T >(op, value);
+    }
+
     template < class S, class T >
     class const_mem_fun_t : public unary_function< T*, S > {
     public:

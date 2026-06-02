@@ -438,7 +438,7 @@ void RaceManager::resetRace() {
         }
     }
 
-    std::for_each(&mAudience[0], &mAudience[mAudienceNum], std::mem_func(&AbstractAudience::resetAudience));
+    std::for_each(mAudience, mAudience + mAudienceNum, std::mem_func(&AbstractAudience::resetAudience));
     mLayout->kill();
 }
 

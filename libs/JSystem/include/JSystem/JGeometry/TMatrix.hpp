@@ -66,6 +66,14 @@ namespace JGeometry {
             return mMtx[x][y];
         }
 
+        T& element(int idx) {
+            return mMtx[idx / 4][idx % 4];
+        }
+
+        const T& element(int idx) const {
+            return mMtx[idx / 4][idx % 4];
+        }
+
         f32 operator()(int x, int y) const {
             return get(x, y);
         }

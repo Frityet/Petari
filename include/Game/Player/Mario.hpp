@@ -150,7 +150,7 @@ public:
     bool checkBaseTransPoint();
     bool checkHeadPoint();
     const TVec3f* calcShadowPos();
-    void updateBinderInfo();
+    bool updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
     bool checkGround();
     CubeCameraArea* getCameraCubeCode() const;
@@ -253,7 +253,7 @@ public:
     f32 decideInertiaOnIce(f32);
     f32 decideInertiaOnSlip(f32);
     void calcShadowDir(const TVec3f&, TVec3f*);
-    void retainMoveDir(f32, f32, TVec3f*);
+    bool retainMoveDir(f32, f32, TVec3f*);
     void calcMoveDir(f32, f32, TVec3f*, bool);
     bool checkLockOnHoming();
     void doLockOnHoming();
@@ -790,7 +790,7 @@ public:
     // NOT FAKE
 
     /* 0x564 */ s32 _564;
-    /* 0x568 */ u32 _568;
+    /* 0x568 */ AreaObj* _568;
     /* 0x56C */ u32 _56C;
     /* 0x570 */ u8 _570;
     /* 0x574 */ u32 _574;
@@ -903,7 +903,7 @@ public:
     /* 0x88C */ MarioStep* mStep;
     /* 0x890 */ MarioBump* mBump;
     /* 0x894 */ MarioMagic* mMagic;
-    /* 0x898 */ u8 _898;
+    /* 0x898 */ bool _898;
     /* 0x89C */ MarioFpView* mFpView;
     /* 0x8A0 */ MarioMove* mMove;
     /* 0x8A4 */ TVec3f _8A4;

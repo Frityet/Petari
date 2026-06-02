@@ -4,6 +4,7 @@
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/Screen/LayoutActor.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 #include <revolution.h>
 
 class ActorCameraInfo;
@@ -97,11 +98,20 @@ public:
     bool mIsOnGameEventFlagViewNormalEnding;  // 0x8B
 };
 
-class TalkPeekZ {
+class TalkPeekZ : public DrawSyncCallback {
 public:
     TalkPeekZ();
+
+    virtual void drawSyncCallback(u16);
+
     void setDrawSyncToken();
-    void drawSyncCallback(u16);
+
+    /* 0x04 */ u16 mToken;
+    /* 0x08 */ u32 mZ;
+    /* 0x0C */ TVec2f mScreenPos;
+    /* 0x14 */ TVec3f mWorldPos;
+    /* 0x20 */ f32 mProjection[7];
+    /* 0x3C */ f32 mViewport[6];
 };
 
 namespace MR {

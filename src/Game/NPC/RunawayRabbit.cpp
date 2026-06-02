@@ -60,9 +60,8 @@ namespace NrvRunawayRabbit {
 
 RunawayRabbit::RunawayRabbit(const char* pName, RunawayRabbitCollect* pCollector)
     : LiveActor(pName), mRunawayState(nullptr), mBlowDamageState(nullptr), mCollector(pCollector), mFootPrint(nullptr), mSpotLight(nullptr),
-      mMsgCtrl(nullptr), mQuat(0.0f, 0.0f, 0.0f, 1.0f), mFrontVec(0, 0, 1), mBindQuat(0.0f, 0.0f, 0.0f, 1.0f), mBindFrontVec(0, 0, 1),
-      _DC(0), mGroupId(-1), mRunawayLevel(0), mMessageId(-1), _EC(0), _F0(0), mIsCaughtable(true), mHasAppearedTico(false),
-      mRunawayDistance(-1.0f) {}
+      mMsgCtrl(nullptr), mQuat(0, 0, 0, 1), mFrontVec(0, 0, 1), mBindQuat(0, 0, 0, 1), mBindFrontVec(0, 0, 1), mGroupId(-1), mRunawayLevel(0),
+      mMessageId(-1), _EC(0), _F0(0), mIsCaughtable(true), mHasAppearedTico(false), mRunawayDistance(-1.0f) {}
 
 void RunawayRabbit::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -143,7 +142,12 @@ void RunawayRabbit::control() {
         _F0--;
     }
 
-    MR::setSeVersion(this, MR::isBindedGroundWater(this) ? 1 : 0);
+    if (MR::isBindedGroundWater(this)) {
+        MR::setSeVersion(this, 1);
+    }
+    else {
+        MR::setSeVersion(this, 0);
+    }
 }
 
 void RunawayRabbit::calcAndSetBaseMtx() {
@@ -151,7 +155,7 @@ void RunawayRabbit::calcAndSetBaseMtx() {
 }
 
 void RunawayRabbit::updatePose() {
-    TVec3f up = -mGravity;
+    TVec3f up = mGravity.negateInline();
     MR::blendQuatUpFront(&mQuat, up, mFrontVec, 0.1f, 0.2f);
 }
 
@@ -339,16 +343,25 @@ void RunawayRabbit::exeRunaway() {
             _EC++;
         }
 
-        s32 rampTime = 240;
+        s32 runawayTime = _EC;
+        s32 rampTime;
 
-        if (mRunawayLevel == 1) {
+        switch (mRunawayLevel) {
+        case 0:
+            rampTime = 240;
+            break;
+        case 1:
             rampTime = 500;
-        }
-        else if (mRunawayLevel == 2) {
+            break;
+        case 2:
             rampTime = 800;
+            break;
+        default:
+            rampTime = 240;
+            break;
         }
 
-        f32 rate = MR::clamp(static_cast< f32 >(_EC - 200) / static_cast< f32 >(rampTime), 0.0f, 1.0f);
+        f32 rate = MR::clamp(static_cast< f32 >(runawayTime - 200) / static_cast< f32 >(rampTime), 0.0f, 1.0f);
         bckRate = MR::getLinerValue(rate, 1.8f, 0.5f, 1.0f);
 
         if (bckRate < 1.3f) {
@@ -455,7 +468,11 @@ bool RunawayRabbit::isCaught() const {
 }
 
 bool RunawayRabbit::isCaughtable() const {
-    return isRunnaway() && _F0 == 0;
+    if (isRunnaway() && _F0 == 0) {
+        return true;
+    }
+
+    return false;
 }
 
 bool RunawayRabbit::isRunnaway() const {

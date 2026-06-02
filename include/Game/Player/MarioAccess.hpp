@@ -82,7 +82,7 @@ public:
     static void onFollowDemo();
     static void setBaseMtx(MtxPtr);
     static MtxPtr getBaseMtx();
-    static void calcSpinPullVelocity(TVec3f*, const TVec3f&);
+    static bool calcSpinPullVelocity(TVec3f*, const TVec3f&);
     static void tryCoinPull();
     static void addVelocity(const TVec3f&);
     static void addVelocityFromArea(const TVec3f&);

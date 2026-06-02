@@ -49,8 +49,8 @@ public:
     TPos3f _BC;
     LiveActor* mHostActor;  // 0xEC
     TPos3f _F0;
-    TMtx34f _120;
-    TMtx34f _150;
+    TPos3f _120;
+    TPos3f _150;
     f32 _180;
     f32 mHorizExitForce;  // 0x184
     f32 mVertExitForce;   // 0x188

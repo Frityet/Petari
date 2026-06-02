@@ -35,8 +35,14 @@ namespace MR {
 
     void setShadowDropPosition(LiveActor*, const char*, const TVec3f&);
     void setShadowDropPositionPtr(LiveActor*, const char*, const TVec3f*);
-    void setShadowDropPositionMtxPtr(LiveActor*, const char*, MtxPtr, const TVec3f*);
-    void setShadowDropPositionAtJoint(LiveActor*, const char*, const char*, const TVec3f*);
+    void setShadowDropPositionMtxPtr(LiveActor*, const char*, MtxPtr, const TVec3f&);
+    void setShadowDropPositionAtJoint(LiveActor*, const char*, const char*, const TVec3f&);
+    inline void setShadowDropPositionMtxPtr(LiveActor* pActor, const char* pName, MtxPtr mtx, const TVec3f* pPos) {
+        setShadowDropPositionMtxPtr(pActor, pName, mtx, *pPos);
+    }
+    inline void setShadowDropPositionAtJoint(LiveActor* pActor, const char* pName1, const char* pName2, const TVec3f* pPos) {
+        setShadowDropPositionAtJoint(pActor, pName1, pName2, *pPos);
+    }
     void setShadowDropDirection(LiveActor*, const char*, const TVec3f&);
     void setShadowDropDirectionPtr(LiveActor*, const char*, const TVec3f*);
     void setShadowProjection(LiveActor*, const char*, const TVec3f&, const TVec3f&, bool);

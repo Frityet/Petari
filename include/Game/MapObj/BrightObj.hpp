@@ -1,7 +1,9 @@
 #pragma once
 
 #include <JSystem/JGeometry/TMatrix.hpp>
-#include "Game/NameObj/NameObj.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+
+class Sun;
 
 class BrightInfo {
 public:
@@ -35,28 +37,72 @@ public:
     /// @brief Creates a new `BrightCamInfo`.
     BrightCamInfo();
 
-    // void write(u16, const TPos3f&, const JGeometry::TProjection3<JGeometry::TMatrix44<JGeometry::SMatrix44C<f32>>>&, const TVec3f&, const TVec3f&)
+    void write(u16, const TPos3f&, const TProj3f&, const TVec3f&, const TVec3f&);
 
-    /* 0x00 */ TMtx34f mViewMtx[2];
-    /* 0x60 */ Mtx44 mProjectionMtx[2];
+    /* 0x00 */ TPos3f mViewMtx[2];
+    /* 0x60 */ TProj3f mProjectionMtx[2];
     /* 0xE0 */ TVec3f mCameraDir[2];
     /* 0xF8 */ TVec3f mCameraPos[2];
 };
 
-class BrightObj : public NameObj {
+class BrightObjBase {
+public:
+    struct CheckArg {
+        /* 0x00 */ u32 mCheckCount;
+        /* 0x04 */ u32 mVisibleCount;
+        /* 0x08 */ TVec2f mBrightCenterSum;
+        /* 0x10 */ TVec2f mCenter;
+    };
+
+    BrightObjBase();
+    virtual ~BrightObjBase();
+    virtual void calcBrightInfo(u16, const BrightCamInfo&) = 0;
+    virtual f32 getBright() const;
+    virtual const TVec2f* getBrightCenter() const;
+    virtual const TVec2f* getCenter() const;
+    virtual void endRead();
+    virtual void getNowCenter(TVec2f*) const;
+
+    void checkVisibilityOfSphere(u16, const BrightCamInfo&);
+    void checkVisible(CheckArg*, const TVec3f&, const TPos3f&, const TProj3f&);
+    void setResult(const CheckArg&);
+    void drawSphere(const TVec3f&, f32) const;
+
+    /* 0x04 */ BrightInfo mBrightInfo;
+    /* 0x48 */ TVec2f mBrightCenter;
+    /* 0x50 */ TVec2f mNowCenter;
+    /* 0x58 */ f32 mBright;
+    /* 0x5C */ bool mIsNotVisible;
+    /* 0x5D */ u8 _5D[3];
+    /* 0x60 */ BrightDrawInfo mDrawInfo;
+};
+
+class BrightObj : public LiveActor, public BrightObjBase {
 public:
     BrightObj(const char*);
     virtual ~BrightObj();
+    virtual void init(const JMapInfoIter&);
+    virtual void control();
+    virtual void draw() const;
+    virtual void calcBrightInfo(u16, const BrightCamInfo&);
+    virtual void getNowCenter(TVec2f*) const;
 
 private:
-    u8 mPad[(0x110) - sizeof(NameObj)];
+    /* 0x10C */ f32 mRadius;
 };
 
-class BrightSun : public NameObj {
+class BrightSun : public LiveActor, public BrightObjBase {
 public:
     BrightSun(const char*);
     virtual ~BrightSun();
+    virtual void init(const JMapInfoIter&);
+    virtual void control();
+    virtual void draw() const;
+    virtual void calcBrightInfo(u16, const BrightCamInfo&);
+    virtual void getNowCenter(TVec2f*) const;
+
+    void controlSunModel();
 
 private:
-    u8 mPad[(0x110) - sizeof(NameObj)];
+    /* 0x10C */ Sun* mSun;
 };

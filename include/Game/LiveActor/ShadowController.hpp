@@ -64,7 +64,7 @@ public:
     bool isDraw() const;
     bool isCalcCollision() const;
     bool isCalcGravity() const;
-    bool isCalcShadowGravity() const;
+    bool isCalcShadowGravity() const NO_INLINE;
     void setGroupName(const char*);
     void setDropPosPtr(const TVec3f*);
     void setDropPosMtxPtr(MtxPtr, const TVec3f&);
@@ -131,7 +131,7 @@ public:
 };
 
 namespace MR {
-    void addShadowController(ShadowController*);
+    void addShadowController(ShadowController*) NO_INLINE;
     void requestCalcActorShadowAppear(LiveActor*);
     void requestCalcActorShadow(LiveActor*);
 };  // namespace MR

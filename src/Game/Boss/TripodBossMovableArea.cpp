@@ -133,7 +133,7 @@ void TripodBossMovableArea::calcNearLandingPosition(TVec3f* pPos, const TVec3f& 
         if (MR::isNearZero(v15)) {
             v15.zero();
             int idx = MR::getMinAbsElementIndex(mBaseAxis);
-            (&v15.x)[idx] = 1.0f;
+            v15[idx] = 1.0f;
         }
 
         MR::normalizeOrZero(&v15);
@@ -167,7 +167,7 @@ void TripodBossMovableArea::calcLandingFront(TVec3f* pFront, const TVec3f& a2) c
     if (MR::isNearZero(v10)) {
         v10.zero();
         int idx = MR::getMinAbsElementIndex(mBaseAxis);
-        (&v10.x)[idx] = 1.0f;
+        v10[idx] = 1.0f;
         f32 v8 = mBaseAxis.dot(v10);
         JMAVECScaleAdd(&mBaseAxis, &v10, &v10, -v8);
         MR::normalizeOrZero(&v10);

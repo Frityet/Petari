@@ -9,6 +9,27 @@ class NerveExecutor;
 
 class DemoStartInfo {
 public:
+    enum DemoType {
+        DemoType_Programmable = 0,
+        DemoType_TimeKeep = 1
+    };
+
+    enum CinemaFrameType {
+        CinemaFrame_On = 0,
+        CinemaFrame_Off = 1
+    };
+
+    enum StarPointerType {
+        StarPointer_Default = 0,
+        StarPointer_StarPointer = 1,
+        StarPointer_HandPointerFinger = 2
+    };
+
+    enum DeleteEffectType {
+        DeleteEffect_Keep = 0,
+        DeleteEffect_Delete = 1
+    };
+
     DemoStartInfo();
     DemoStartInfo& operator=(const DemoStartInfo&);
 

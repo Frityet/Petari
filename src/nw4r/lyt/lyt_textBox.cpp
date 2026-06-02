@@ -111,11 +111,11 @@ namespace nw4r {
         }
 
         u8 TextBox::GetVtxColorElement(u32 idx) const {
-            return reinterpret_cast< const u8* >(&mTextColors[idx / (4 * 2)])[idx % 4];
+            return mTextColors[idx / (4 * 2)][idx % 4];
         }
 
         void TextBox::SetVtxColorElement(u32 idx, u8 value) {
-            reinterpret_cast< u8* >(&mTextColors[idx / (4 * 2)])[idx % 4] = value;
+            mTextColors[idx / (4 * 2)][idx % 4] = value;
         }
 
         const ut::Rect TextBox::GetTextDrawRect() const {

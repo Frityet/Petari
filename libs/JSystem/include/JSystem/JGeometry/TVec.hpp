@@ -126,7 +126,9 @@ namespace JGeometry {
         T squared(const TVec2< T >& rOther) const;  //{ return (x - rOther.x) * (x - rOther.x) + (y - rOther.y) * (y - rOther.y); };
         T dot(const TVec2< T >& rOther) const;
         T distance(const TVec2< T >& rOther) const;
-        void zero();
+        void zero() NO_INLINE {
+            y = x = 0;
+        }
 
         inline T squareDist(const TVec2< T >& rOther) const {
             return ((x - rOther.x) * (x - rOther.x)) + ((y - rOther.y) * (y - rOther.y));
@@ -342,6 +344,14 @@ namespace JGeometry {
             return *reinterpret_cast< const TVec2< f32 >* >(this);
         }
 
+        f32& operator[](int idx) {
+            return idx == 0 ? x : idx == 1 ? y : z;
+        }
+
+        const f32& operator[](int idx) const {
+            return idx == 0 ? x : idx == 1 ? y : z;
+        }
+
         TVec3& operator=(const TVec3& b) NO_INLINE {
             setTVec3f(&b.x, &x);
             return *this;
@@ -379,6 +389,10 @@ namespace JGeometry {
 
         void addInline(const TVec3& op) {
             JMathInlineVEC::PSVECAdd(this, &op, this);
+        }
+
+        void addInline2(const TVec3& op) {
+            JMathInlineVEC::PSVECAdd2(this, &op, this);
         }
 
         inline TVec3 addOtherInline(const TVec3& op) const {

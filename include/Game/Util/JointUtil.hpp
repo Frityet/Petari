@@ -39,7 +39,7 @@ namespace MR {
     f32 getJointTransX(const J3DJoint*);
     f32 getJointTransY(const J3DJoint*);
     f32 getJointTransZ(const J3DJoint*);
-    s32 searchChildJoint(J3DJoint*, J3DJoint*);
-    s32 getParentJoint(J3DModelData*, J3DJoint*);
-    s32 getParentJoint(const LiveActor*, J3DJoint*);
+    J3DJoint* searchChildJoint(J3DJoint*, J3DJoint*);
+    J3DJoint* getParentJoint(J3DModelData*, J3DJoint*);
+    J3DJoint* getParentJoint(const LiveActor*, J3DJoint*);
 };  // namespace MR

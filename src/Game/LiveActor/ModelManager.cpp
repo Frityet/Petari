@@ -10,7 +10,16 @@
 #include "Game/LiveActor/DisplayListMaker.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/MutexHolder.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
+#include <cstdio>
+
+namespace MR {
+    J3DModel* newJ3DModel(const ResourceHolder*, const char*, J3DMdlFlag);
+    XanimePlayer* newXanimePlayer(const ResourceHolder*, const char*, const ResourceHolder*, J3DMdlFlag, XanimeResourceTable*);
+    XanimeResourceTable* newXanimeResourceTable(ResourceHolder*);
+};
 
 ModelManager::ModelManager()
     : mBtkPlayer(nullptr), mBrkPlayer(nullptr), mBtpPlayer(nullptr), mBpkPlayer(nullptr), mBvaPlayer(nullptr), mXanimeResourceTable(nullptr),
@@ -189,7 +198,9 @@ void ModelManager::stopBva() {
     }
 }
 
-// ModelManager::getBckCtrl
+J3DFrameCtrl* ModelManager::getBckCtrl() const {
+    return mXanimePlayer->_20;
+}
 
 J3DFrameCtrl* ModelManager::getBtkCtrl() const {
     return &mBtkPlayer->mFrameCtrl;
@@ -211,7 +222,10 @@ J3DFrameCtrl* ModelManager::getBvaCtrl() const {
     return &mBvaPlayer->mFrameCtrl;
 }
 
-// ModelManager::isBckStopped
+bool ModelManager::isBckStopped() const {
+    XanimeFrameCtrl* pCtrl = &mXanimePlayer->_24[mXanimePlayer->_54];
+    return pCtrl->mState & 1;
+}
 
 bool ModelManager::isBtkStopped() const {
     if (mBtkPlayer != nullptr) {
@@ -277,17 +291,24 @@ void ModelManager::initJointTransform() {
     mXanimePlayer->mCore->enableJointTransform(getJ3DModelData());
 }
 
-// ModelManager::getJointTransform
+XjointTransform* ModelManager::getJointTransform(const char* pJointName) {
+    s32 idx = getJ3DModel()->mModelData->mJointTree.mJointName->getIndex(pJointName);
+    XjointTransform* pTransformList = mXanimePlayer->mCore->mTransformList;
 
-/*
+    if (pTransformList == nullptr) {
+        return nullptr;
+    }
+
+    return &pTransformList[idx];
+}
+
 ResourceHolder* ModelManager::getResourceHolder() const {
     if (mXanimeResourceTable == nullptr) {
         return mModelResourceHolder;
     }
 
-    return mXanimeResourceTable->_6C;
+    return mXanimeResourceTable->mResourceHolder;
 }
-*/
 
 ResourceHolder* ModelManager::getModelResourceHolder() const {
     return mModelResourceHolder;
@@ -313,7 +334,17 @@ const char* ModelManager::getPlayingBckName() const {
     return nullptr;
 }
 
-// ModelManager::initModelAndAnimation
+void ModelManager::initModelAndAnimation(ResourceHolder* pModelResource, const char* pModelName, ResourceHolder* pAnimResource, J3DMdlFlag flags) {
+    mModelResourceHolder = pModelResource;
+
+    if (pAnimResource->mMotionResTable->mCount == 0) {
+        mModel = MR::newJ3DModel(pModelResource, pModelName, flags);
+    }
+    else {
+        mXanimeResourceTable = MR::newXanimeResourceTable(pAnimResource);
+        mXanimePlayer = MR::newXanimePlayer(pModelResource, pModelName, pAnimResource, flags, mXanimeResourceTable);
+    }
+}
 
 void ModelManager::initMaterialAnm() {
     ResourceHolder* pResourceHolder = getResourceHolder();
@@ -382,4 +413,41 @@ void ModelManager::changeBckSetting(const char* pBckName, const char* pActorAnim
     }
 }
 
-// ModelManager::init
+void ModelManager::init(const char* pModelName, const char* pAnimName, bool createDL) {
+    char modelArchiveName[0x40];
+    snprintf(modelArchiveName, sizeof(modelArchiveName), "%s.arc", pModelName);
+    ResourceHolder* pModelResource = MR::createAndAddResourceHolder(modelArchiveName);
+
+    ResourceHolder* pAnimResource;
+    if (pAnimName == nullptr) {
+        pAnimResource = pModelResource;
+    }
+    else {
+        char animArchiveName[0x40];
+        snprintf(animArchiveName, sizeof(animArchiveName), "%s.arc", pAnimName);
+        pAnimResource = MR::createAndAddResourceHolder(animArchiveName);
+    }
+
+    bool hasMaterialAnm = pAnimResource->isExistMaterialAnm();
+    bool hasDiffMaterial = DisplayListMaker::isExistDiffMaterial(static_cast< J3DModelData* >(pModelResource->mModelResTable->getRes(pModelName)));
+
+    J3DMdlFlag flags = J3DMdlFlag_UseSharedDL;
+    if (createDL || hasMaterialAnm || hasDiffMaterial) {
+        flags = static_cast< J3DMdlFlag >(flags | J3DMdlFlag_DifferedDLBuffer);
+    }
+
+    initModelAndAnimation(pModelResource, pModelName, pAnimResource, flags);
+    initVisibilityAnm();
+
+    if (hasMaterialAnm) {
+        initMaterialAnm();
+    }
+
+    if (flags & J3DMdlFlag_DifferedDLBuffer) {
+        mDisplayListMaker = new DisplayListMaker(getJ3DModel(), getResourceHolder());
+
+        if (!createDL) {
+            mDisplayListMaker->newDifferedDisplayList();
+        }
+    }
+}

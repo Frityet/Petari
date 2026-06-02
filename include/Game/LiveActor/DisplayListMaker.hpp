@@ -48,7 +48,7 @@ public:
     ViewProjmapEffectMtxSetter* addViewProjmapEffectMtxSetter();
     MarioShadowProjmapMtxSetter* addMarioShadowProjmapMtxSetter();
     void checkTexture();
-    bool isExistDiffMaterial(const J3DModelData*);
+    static bool isExistDiffMaterial(const J3DModelData*);
 
     /* 0x00 */ MR::Vector< MR::AssignableArray< MaterialCtrl* > > mMaterialCtrl;
     /* 0x0C */ u32 mPrgFlag;

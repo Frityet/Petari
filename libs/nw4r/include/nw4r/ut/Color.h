@@ -29,6 +29,14 @@ namespace nw4r {
 
             u32& ToU32ref() { return *reinterpret_cast< u32* >(this); }
             const u32& ToU32ref() const { return *reinterpret_cast< const u32* >(this); }
+
+            u8& operator[](u32 idx) {
+                return idx == 0 ? r : idx == 1 ? g : idx == 2 ? b : a;
+            }
+
+            const u8& operator[](u32 idx) const {
+                return idx == 0 ? r : idx == 1 ? g : idx == 2 ? b : a;
+            }
         };
     };  // namespace ut
 };  // namespace nw4r

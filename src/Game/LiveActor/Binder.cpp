@@ -240,7 +240,12 @@ u32 Binder::findBindedPos(TVec3f* pCenter, TVec3f* pMove, bool* pCanMoveMore, Hi
         }
 
         if (hitNum != 0) {
-            *pCanMoveMore = i != stepNum;
+            if (i == stepNum) {
+                *pCanMoveMore = false;
+            } else {
+                *pCanMoveMore = true;
+            }
+
             return storeCurrentHitInfo(pInfos, maxInfos, noAddOffset);
         }
     }

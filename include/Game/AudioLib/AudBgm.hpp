@@ -3,6 +3,7 @@
 #include "Game/AudioLib/AudBgmRhythmStrategy.hpp"
 #include "Game/AudioLib/AudTrackController.hpp"
 
+class JAISoundHandle;
 class JAISoundID;
 
 class AudBgm {
@@ -19,8 +20,8 @@ public:
     virtual void moveVolume(f32, u32) = 0;
     virtual void moveVolumeForNoteFairy(f32, u32) = 0;
     virtual void changeTrackMuteState(s32, s32) = 0;
-    virtual u32* getHandle() = 0;
-    virtual u32* getRhythmHandle() = 0;
+    virtual JAISoundHandle* getHandle() = 0;
+    virtual JAISoundHandle* getRhythmHandle() = 0;
     virtual bool isSoundAttached() const = 0;
     virtual void pause(bool) = 0;
     virtual bool isStopping() const = 0;
@@ -50,8 +51,8 @@ public:
     virtual void moveVolume(f32, u32);
     virtual void moveVolumeForNoteFairy(f32, u32);
     virtual void changeTrackMuteState(s32, s32);
-    virtual u32* getHandle();
-    virtual u32* getRhythmHandle();
+    virtual JAISoundHandle* getHandle();
+    virtual JAISoundHandle* getRhythmHandle();
     virtual bool isSoundAttached() const;
     virtual void pause(bool);
     virtual bool isStopping() const;
@@ -84,8 +85,8 @@ public:
     virtual void moveVolume(f32, u32);
     virtual void moveVolumeForNoteFairy(f32, u32);
     virtual void changeTrackMuteState(s32, s32);
-    virtual u32* getHandle();
-    virtual u32* getRhythmHandle();
+    virtual JAISoundHandle* getHandle();
+    virtual JAISoundHandle* getRhythmHandle();
     virtual bool isSoundAttached() const;
     virtual void pause(bool);
     virtual bool isStopping() const;

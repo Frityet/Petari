@@ -30,6 +30,20 @@ from tools.project import (
 DEFAULT_VERSION = 0
 VERSIONS = ["RMGK01", "RMGK02"]  # 0  # 1
 
+
+def detect_default_version() -> str:
+    available_versions = [
+        version
+        for version in VERSIONS
+        if (Path("orig") / version / "sys" / "main.dol").is_file()
+    ]
+
+    if len(available_versions) == 1:
+        return available_versions[0]
+
+    return VERSIONS[DEFAULT_VERSION]
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "mode",
@@ -43,8 +57,7 @@ parser.add_argument(
     "--version",
     choices=VERSIONS,
     type=str.upper,
-    default=VERSIONS[DEFAULT_VERSION],
-    help="version to build",
+    help="version to build (default: auto-detect from orig, then RMGK01)",
 )
 parser.add_argument(
     "--build-dir",
@@ -120,7 +133,10 @@ parser.add_argument(
 args = parser.parse_args()
 
 config = ProjectConfig()
-config.version = str(args.version)
+version_was_auto_detected = args.version is None
+config.version = str(args.version or detect_default_version())
+if version_was_auto_detected:
+    sys.argv.insert(1, f"--version={config.version}")
 version_num = VERSIONS.index(config.version)
 
 # Apply arguments
@@ -1042,7 +1058,7 @@ config.libs = [
             Object(Matching, "Game/Demo/DemoCastSubGroup.cpp"),
             Object(Matching, "Game/Demo/DemoCtrlBase.cpp"),
             Object(NonMatching, "Game/Demo/DemoDirector.cpp"),
-            Object(Matching, "Game/Demo/DemoExecutor.cpp"),
+            Object(NonMatching, "Game/Demo/DemoExecutor.cpp"),
             Object(Matching, "Game/Demo/DemoExecutorFunction.cpp"),
             Object(NonMatching, "Game/Demo/DemoFunction.cpp"),
             Object(NonMatching, "Game/Demo/DemoKoopaJrShip.cpp"),

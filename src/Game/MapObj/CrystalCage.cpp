@@ -121,30 +121,33 @@ void CrystalCage::init(const JMapInfoIter& rIter) {
     }
 }
 
-/*
 void CrystalCage::initAfterPlacement() {
     if (!mIsBreakObjVisible || mHasBinding) {
-        f32 val = mCrystalCageType == 2 ? 1000.0f : 300.0f;
-        TVec3f up_vec;
-        TVec3f stack_2C;
-        TVec3f stack_20;
-        MR::calcUpVec(&up_vec, this);
-        // I realy do not like this, but it matches :c
-        JMathInlineVEC::PSVECAdd(&mPosition, (Vec *) &(up_vec * (val * mScale.x)), &stack_20);
-        stack_2C.scale((-(2.0f * val) * mScale.x), up_vec);
+        f32 range = mCrystalCageType == 2 ? 1000.0f : 300.0f;
+        TVec3f upVec;
+        MR::calcUpVec(&upVec, this);
 
-        if (!MR::getFirstPolyOnLineToMapExceptActor(&_F8, 0, stack_20, stack_2C, this)) {
+        TVec3f startPos;
+        TVec3f startOffset;
+        startOffset.scale(range * mScale.x, upVec);
+        JMathInlineVEC::PSVECAdd(&mPosition, &startOffset, &startPos);
+
+        TVec3f castOffset;
+        castOffset.scale((-2.0f * range) * mScale.x, upVec);
+
+        if (!MR::getFirstPolyOnLineToMapExceptActor(&_F8, nullptr, startPos, castOffset, this)) {
             _F8.set<f32>(mPosition);
         }
 
         if (mHasBinding) {
             _110.sub(_F8, mPosition);
-            JMathInlineVEC::PSVECAdd(&_110, &(up_vec * 50.0f), &_110);
-            mVelocity.scale(-2.0f, up_vec);
+            TVec3f bindOffset;
+            bindOffset.scale(50.0f, upVec);
+            JMathInlineVEC::PSVECAdd(&_110, &bindOffset, &_110);
+            mVelocity.scale(-2.0f, upVec);
         }
     }
 }
-*/
 
 void CrystalCage::kill() {
     LiveActor::kill();
@@ -256,26 +259,23 @@ void CrystalCage::initMapToolInfo(const JMapInfoIter& rIter) {
     }
 }
 
-/*
-void CrystalCage::initModel(const char *pName) {
+void CrystalCage::initModel(const char* pName) {
     initModelManagerWithAnm(pName, nullptr, false);
-    TVec3f stack_8;
-    stack_8.negateInline_2(mGravity);
-    MR::makeMtxUpNoSupportPos(&_94, stack_8, _DC);
+    TVec3f negGravity;
+    negGravity.negate(mGravity);
+    MR::makeMtxUpNoSupportPos(&_94, negGravity, _DC);
 
     if (mCrystalCageType == 2) {
-        mBreakObj = MR::createModelObjMapObjStrongLight("クリスタルケージ[大]壊れモデル", "CrystalCageLBreak", (MtxPtr)&_94);
-    }
-    else {
-        mBreakObj = MR::createModelObjMapObjStrongLight("クリスタルケージ[小]壊れモデル", "CrystalCageSBreak", (MtxPtr)&_94);
+        mBreakObj = MR::createModelObjMapObjStrongLight("クリスタルケージ[大]壊れモデル", "CrystalCageLBreak", _94.toMtxPtr());
+    } else {
+        mBreakObj = MR::createModelObjMapObjStrongLight("クリスタルケージ[小]壊れモデル", "CrystalCageSBreak", _94.toMtxPtr());
     }
 
-    MR::invalidateClipping(this);
+    MR::invalidateClipping(mBreakObj);
     mBreakObj->mScale.set(mScale);
     MR::registerDemoSimpleCastAll(mBreakObj);
     mBreakObj->makeActorDead();
 }
-*/
 
 void CrystalCage::tryOnSwitchDead() {
     if (mCrystalCageType == 2 || !MR::isValidSwitchDead(this)) {

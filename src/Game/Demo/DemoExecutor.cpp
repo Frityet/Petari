@@ -11,7 +11,8 @@
 
 class DemoSheetKeeperBase {
 public:
-    virtual ~DemoSheetKeeperBase() {}
+    virtual const char* getName() const = 0;
+    virtual const char* getTypeString() const = 0;
     virtual void initCast(LiveActor*, const JMapInfoIter&);
     virtual void start();
     virtual void end();
@@ -34,12 +35,21 @@ class DemoWipeKeeper : public DemoSheetKeeperBase {
 public:
     DemoWipeKeeper(DemoExecutor*);
 
+    virtual const char* getName() const;
+    virtual const char* getTypeString() const;
+    virtual void start();
+    virtual void update();
+
     u8 _4[0x14];
 };
 
 class DemoSoundKeeper : public DemoSheetKeeperBase {
 public:
     DemoSoundKeeper(DemoExecutor*);
+
+    virtual const char* getName() const;
+    virtual const char* getTypeString() const;
+    virtual void update();
 
     u8 _4[0x14];
 };
@@ -63,8 +73,6 @@ DemoExecutor::DemoExecutor(const char* pName) : DemoCastGroup(pName) {
     mNumTalkMessageInfos = 0;
 }
 
-DemoExecutor::~DemoExecutor() {}
-
 void DemoExecutor::init(const JMapInfoIter& rIter) {
     DemoCastGroup::init(rIter);
     mSheetName = MR::getDemoSheetName(rIter);
@@ -80,7 +88,8 @@ void DemoExecutor::init(const JMapInfoIter& rIter) {
 
     mStageSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
     if (mStageSwitchCtrl->isValidSwitchAppear()) {
-        MR::listenNameObjStageSwitchOnAppear(this, mStageSwitchCtrl, MR::Functor(this, &DemoExecutor::startProperDemoSystem));
+        MR::FunctorV0M< DemoExecutor*, void (DemoExecutor::*)() > startDemoSystemFunc(this, &DemoExecutor::startProperDemoSystem);
+        MR::listenNameObjStageSwitchOnAppear(this, mStageSwitchCtrl, startDemoSystemFunc);
     }
 
     DemoFunction::registerDemoExecutor(this);
@@ -108,10 +117,15 @@ void DemoExecutor::movement() {
         mPlayerKeeper->update();
         mCameraKeeper->update();
         mActionKeeper->update();
-        std::for_each(mSheetKeepers.begin(), mSheetKeepers.end(), std::mem_func(&DemoSheetKeeperBase::update));
+
+        std::mem_fun_t< void, DemoSheetKeeperBase > updateSheet = std::mem_func(&DemoSheetKeeperBase::update);
+        std::mem_fun_t< void, DemoSheetKeeperBase > updateSheetResult = std::for_each(mSheetKeepers.begin(), mSheetKeepers.end(), updateSheet);
     }
 
-    std::for_each(mTalkAnimCtrls, &mTalkAnimCtrls[mNumTalkAnimCtrls], std::mem_func(&DemoTalkAnimCtrl::updateDemo));
+    std::mem_fun_t< bool, DemoTalkAnimCtrl > updateDemo = std::mem_func(&DemoTalkAnimCtrl::updateDemo);
+    for (DemoTalkAnimCtrl** it = mTalkAnimCtrls; it != mTalkAnimCtrls + mNumTalkAnimCtrls; ++it) {
+        updateDemo(*it);
+    }
 }
 
 void DemoExecutor::start(NameObj* pStarter, const char* pDemoName, s32 startType) {
@@ -121,8 +135,14 @@ void DemoExecutor::start(NameObj* pStarter, const char* pDemoName, s32 startType
 
     mTimeKeeper->start();
     mCameraKeeper->start();
-    std::for_each(mSheetKeepers.begin(), mSheetKeepers.end(), std::mem_func(&DemoSheetKeeperBase::start));
-    std::for_each(mTalkAnimCtrls, &mTalkAnimCtrls[mNumTalkAnimCtrls], std::mem_func(&DemoTalkAnimCtrl::startDemo));
+
+    std::mem_fun_t< void, DemoSheetKeeperBase > startSheet = std::mem_func(&DemoSheetKeeperBase::start);
+    std::mem_fun_t< void, DemoSheetKeeperBase > startSheetResult = std::for_each(mSheetKeepers.begin(), mSheetKeepers.end(), startSheet);
+
+    std::mem_fun_t< void, DemoTalkAnimCtrl > startDemo = std::mem_func(&DemoTalkAnimCtrl::startDemo);
+    for (DemoTalkAnimCtrl** it = mTalkAnimCtrls; it != mTalkAnimCtrls + mNumTalkAnimCtrls; ++it) {
+        startDemo(*it);
+    }
 
     mNumInvalidateClippingActors = 0;
     for (s32 i = 0; i < mGroup->mObjectCount; i++) {
@@ -131,16 +151,19 @@ void DemoExecutor::start(NameObj* pStarter, const char* pDemoName, s32 startType
         DemoFunction::requestDemoCastMovementOn(actor);
         if (!MR::isInvalidClipping(actor)) {
             MR::invalidateClipping(actor);
-            mInvalidateClippingActors[mNumInvalidateClippingActors] = actor;
-            mNumInvalidateClippingActors++;
+            s32 idx = mNumInvalidateClippingActors;
+            mNumInvalidateClippingActors = idx + 1;
+            mInvalidateClippingActors[idx] = actor;
         }
     }
 }
 
 void DemoExecutor::startPart(NameObj* pStarter, const char* pDemoName, const char* pPartName, s32 startType) {
-    for (s32 i = 0; i < mNumTalkAnimCtrls; i++) {
-        mTalkAnimCtrls[i]->setupStartDemoPart(pPartName);
-    }
+    std::for_each(
+        mTalkAnimCtrls,
+        mTalkAnimCtrls + mNumTalkAnimCtrls,
+        std::bind2nd(std::mem_fun(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
+
     start(pStarter, pDemoName, startType);
     mTimeKeeper->setStartPart(pPartName);
 }
@@ -154,9 +177,10 @@ void DemoExecutor::startProperDemoSystem() {
 }
 
 void DemoExecutor::startDemoSystemPart(const char* pPartName, s32 startType) {
-    for (s32 i = 0; i < mNumTalkAnimCtrls; i++) {
-        mTalkAnimCtrls[i]->setupStartDemoPart(pPartName);
-    }
+    std::for_each(
+        mTalkAnimCtrls,
+        mTalkAnimCtrls + mNumTalkAnimCtrls,
+        std::bind2nd(std::mem_fun(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
 
     switch (startType) {
     case 1:
@@ -178,9 +202,10 @@ bool DemoExecutor::tryStartProperDemoSystem() {
 }
 
 bool DemoExecutor::tryStartDemoSystemPart(const char* pPartName, s32 startType) {
-    for (s32 i = 0; i < mNumTalkAnimCtrls; i++) {
-        mTalkAnimCtrls[i]->setupStartDemoPart(pPartName);
-    }
+    std::for_each(
+        mTalkAnimCtrls,
+        mTalkAnimCtrls + mNumTalkAnimCtrls,
+        std::bind2nd(std::mem_fun(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
 
     bool started = false;
     switch (startType) {
@@ -216,20 +241,22 @@ void DemoExecutor::resume() {
 }
 
 void DemoExecutor::addTalkAnimCtrl(DemoTalkAnimCtrl* pCtrl) {
-    mTalkAnimCtrls[mNumTalkAnimCtrls] = pCtrl;
-    mNumTalkAnimCtrls++;
+    s32 idx = mNumTalkAnimCtrls++;
+    mTalkAnimCtrls[idx] = pCtrl;
 }
 
 void DemoExecutor::addTalkMessageCtrl(LiveActor* pActor, TalkMessageCtrl* pCtrl) {
-    mTalkMessageInfos[mNumTalkMessageInfos].mActor = pActor;
-    mTalkMessageInfos[mNumTalkMessageInfos].mMessageCtrl = pCtrl;
-    mNumTalkMessageInfos++;
+    s32 idx = mNumTalkMessageInfos++;
+    mTalkMessageInfos[idx].mActor = pActor;
+    mTalkMessageInfos[idx].mMessageCtrl = pCtrl;
 }
 
 TalkMessageCtrl* DemoExecutor::findTalkMessageCtrl(const LiveActor* pActor) const {
-    for (s32 i = 0; i < mNumTalkMessageInfos; i++) {
-        if (mTalkMessageInfos[i].mActor == pActor) {
-            return mTalkMessageInfos[i].mMessageCtrl;
+    TalkMessageInfo* it = const_cast< TalkMessageInfo* >(mTalkMessageInfos);
+    TalkMessageInfo* end = const_cast< TalkMessageInfo* >(mTalkMessageInfos + mNumTalkMessageInfos);
+    for (; it != end; ++it) {
+        if (it->mActor == pActor) {
+            return it->mMessageCtrl;
         }
     }
 
@@ -237,9 +264,11 @@ TalkMessageCtrl* DemoExecutor::findTalkMessageCtrl(const LiveActor* pActor) cons
 }
 
 void DemoExecutor::setTalkMessageCtrl(const LiveActor* pActor, TalkMessageCtrl* pCtrl) {
-    for (s32 i = 0; i < mNumTalkMessageInfos; i++) {
-        if (mTalkMessageInfos[i].mActor == pActor) {
-            mTalkMessageInfos[i].mMessageCtrl = pCtrl;
+    TalkMessageInfo* it = mTalkMessageInfos;
+    TalkMessageInfo* end = mTalkMessageInfos + mNumTalkMessageInfos;
+    for (; it != end; ++it) {
+        if (it->mActor == pActor) {
+            it->mMessageCtrl = pCtrl;
             return;
         }
     }
@@ -249,10 +278,14 @@ void DemoExecutor::end() {
     mTimeKeeper->end();
     mSubPartKeeper->end();
     mCameraKeeper->end();
-    std::for_each(mSheetKeepers.begin(), mSheetKeepers.end(), std::mem_func(&DemoSheetKeeperBase::end));
+
+    std::mem_fun_t< void, DemoSheetKeeperBase > endSheet = std::mem_func(&DemoSheetKeeperBase::end);
+    std::mem_fun_t< void, DemoSheetKeeperBase > endSheetResult = std::for_each(mSheetKeepers.begin(), mSheetKeepers.end(), endSheet);
 
     switch (mStartType) {
     case 1:
+        MR::endDemo(mDemoStarter, mDemoName);
+        break;
     case 2:
         MR::endDemo(mDemoStarter, mDemoName);
         break;
@@ -262,12 +295,15 @@ void DemoExecutor::end() {
         mStageSwitchCtrl->onSwitchDead();
     }
 
+    LiveActor** it = mInvalidateClippingActors;
+    LiveActor** end = mInvalidateClippingActors + mNumInvalidateClippingActors;
+
     mDemoStarter = nullptr;
     mDemoName = nullptr;
     mStartType = -1;
-
-    for (s32 i = 0; i < mNumInvalidateClippingActors; i++) {
-        MR::validateClipping(mInvalidateClippingActors[i]);
+    void (*validate)(LiveActor*) = MR::validateClipping;
+    for (; it != end; ++it) {
+        validate(*it);
     }
 
     mNumInvalidateClippingActors = 0;
@@ -280,3 +316,5 @@ void DemoSheetKeeperBase::update() {}
 void DemoSheetKeeperBase::start() {}
 
 void DemoSheetKeeperBase::end() {}
+
+DemoExecutor::~DemoExecutor() {}

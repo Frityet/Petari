@@ -94,9 +94,9 @@ bool PunchingKinoko::ballMtxCallBack(TPos3f* a1, const JointControllerInfo& join
     a1->concat(stack_14, *a1);
 
     TVec3f* groundCheckerPos = &mGroundChecker->mPosition;
-    a1->mMtx[0][0] = groundCheckerPos->x;
-    a1->mMtx[1][1] = groundCheckerPos->y;
-    a1->mMtx[2][2] = groundCheckerPos->z;
+    a1->mMtx[0][3] = groundCheckerPos->x;
+    a1->mMtx[1][3] = groundCheckerPos->y;
+    a1->mMtx[2][3] = groundCheckerPos->z;
 
     return true;
 }
@@ -127,18 +127,15 @@ void PunchingKinoko::control() {
     }
 }
 
-/*
 void PunchingKinoko::calcAndSetBaseMtx() {
     TPos3f stack_14;
     TVec3f stack_8;
-    stack_8.setNegatedInline(mGravity);
+    stack_8.negate(mGravity);
     MR::makeMtxUpNoSupportPos(&stack_14, stack_8, mPosition);
     MR::setBaseTRMtx(this, stack_14);
     mDelegator->registerCallBack();
 }
-*/
 
-/*
 void PunchingKinoko::attackSensor(HitSensor *pSender, HitSensor *pReceiver) {
     if (!isCrushed()) {
         if (pSender == getSensor("Body")) {
@@ -196,7 +193,6 @@ stack_24);
         }
     }
 }
-*/
 
 bool PunchingKinoko::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (isCrushed()) {

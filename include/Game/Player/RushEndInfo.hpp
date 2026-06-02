@@ -5,5 +5,13 @@
 class RushEndInfo {
 public:
     RushEndInfo(LiveActor*, u32, const TVec3f&, bool, u32);
-    u8 _0[0x24];
+
+    u32 mMagic;
+    u32 mType;
+    TVec3f mVec;
+    bool mUseVec;
+    u8 _15[3];
+    u32 mTimer;
+    LiveActor* mActor;
+    u32 mFlags;
 };

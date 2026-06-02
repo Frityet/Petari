@@ -5,9 +5,14 @@
 
 class LightInfo {
 public:
-    _GXColor mColor;       // 0x0
-    TVec3f mPos;           // 0x4
-    bool mIsFollowCamera;  // 0x10
+    union {
+        struct {
+            _GXColor mColor;       // 0x0
+            TVec3f mPos;           // 0x4
+            bool mIsFollowCamera;  // 0x10
+        };
+        u32 mWords[5];
+    };
 };
 
 class LightInfoCoin : public LightInfo {

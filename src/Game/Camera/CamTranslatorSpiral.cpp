@@ -15,7 +15,7 @@ void CamTranslatorSpiral::setParam(const CameraParamChunk* pChunk) {
     f32 axisX;
     s16 sVar7;
 
-    sVar7 = reinterpret_cast< s16* >(&general->mNum1)[1];
+    sVar7 = general->getNum1High();
     axisX = general->mAxis.x;
     wPointX = general->mWPoint.x;
     axisZ = general->mAxis.z;
@@ -24,7 +24,7 @@ void CamTranslatorSpiral::setParam(const CameraParamChunk* pChunk) {
     wPointY = general->mWPoint.y;
     uVar8 = general->mNum2;
 
-    camera->_4C = reinterpret_cast< s16* >(&general->mNum1)[0];
+    camera->_4C = general->getNum1Low();
     camera->_54 = sVar7;
     camera->_58 = uVar8;
     camera->mWPointY = wPointY;

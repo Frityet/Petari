@@ -30,7 +30,7 @@ DemoTimePartInfo::DemoTimePartInfo() : mName(nullptr), mTotalSteps(1), _8(false)
 
 void DemoTimeKeeper::start() {
     _18 = 0;
-    mSubPartInfos = &mMainPartInfos[0];
+    mSubPartInfos = &mMainPartInfos[_18];
 }
 
 void DemoTimeKeeper::update() {
@@ -62,8 +62,9 @@ void DemoTimeKeeper::update() {
         return;
     }
 
+    DemoTimePartInfo* partInfo = &mMainPartInfos[_18];
     mCurrentStep = 0;
-    mSubPartInfos = &mMainPartInfos[_18];
+    mSubPartInfos = partInfo;
 }
 
 void DemoTimeKeeper::end() {
@@ -82,7 +83,13 @@ bool DemoTimeKeeper::isDemoEnd() const {
         return true;
     }
 
-    return mSubPartInfos->mTotalSteps < mCurrentStep && mNumPartInfos == _18;
+    if (mSubPartInfos->mTotalSteps >= mCurrentStep) {
+        if (mNumPartInfos == _18) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void DemoTimeKeeper::setStartPart(const char* pPartName) {
@@ -103,16 +110,17 @@ bool DemoTimeKeeper::isPartLast() const {
 
 void DemoTimeKeeper::setCurrentPart(const char* pPartName) {
     s32 partIndex = 0;
-    for (; partIndex < mNumPartInfos; partIndex++) {
-        if (MR::isEqualString(mMainPartInfos[partIndex].mName, pPartName)) {
-            break;
+    while (partIndex < mNumPartInfos) {
+        if (!MR::isEqualString(mMainPartInfos[partIndex].mName, pPartName)) {
+            partIndex++;
+        } else {
+            goto set_part;
         }
     }
 
-    if (partIndex >= mNumPartInfos) {
-        partIndex = -1;
-    }
+    partIndex = -1;
 
+set_part:
     _18 = partIndex;
     mSubPartInfos = &mMainPartInfos[partIndex];
 }

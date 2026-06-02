@@ -214,7 +214,7 @@ bool EarthenPipe::tryHideDown() {
 bool EarthenPipe::isNerveShowUp() const {
     bool ret;
 
-    if (isNerve(&NrvEarthenPipe::EarthenPipeNrvShowUp::sInstance) || isNerve(&NrvEarthenPipe::EarthenPipeNrvShowUp::sInstance)) {
+    if (isNerve(&NrvEarthenPipe::EarthenPipeNrvWaitToShowUp::sInstance) || isNerve(&NrvEarthenPipe::EarthenPipeNrvShowUp::sInstance)) {
         ret = true;
     } else {
         ret = false;
@@ -401,18 +401,64 @@ void EarthenPipe::control() {
     }
 }
 
-/* bool EarthenPipe::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+bool EarthenPipe::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgAutoRushBegin(msg)) {
         if (!isNerve(&NrvEarthenPipe::EarthenPipeNrvInvalid::sInstance) && !isNerve(&NrvEarthenPipe::EarthenPipeNrvHide::sInstance) &&
             !isNerve(&NrvEarthenPipe::EarthenPipeNrvWaitToShowUp::sInstance) && !isNerve(&NrvEarthenPipe::EarthenPipeNrvShowUp::sInstance) &&
             !isNerve(&NrvEarthenPipe::EarthenPipeNrvWaitToHideDown::sInstance) && !isNerve(&NrvEarthenPipe::EarthenPipeNrvHideDown::sInstance) &&
             !MR::isPlayerDead()) {
-            TVec3f vec = TVec3f(mTopJointMtx[0][3], mTopJointMtx[1][3], mTopJointMtx[2][3]);
+            TVec3f pipeTop(mTopJointMtx[0][3], mTopJointMtx[1][3], mTopJointMtx[2][3]);
+            TVec3f playerOffset(*MR::getPlayerPos());
+            playerOffset.sub(pipeTop);
+            TVec3f horizontalOffset(playerOffset);
+            MR::vecKillElement(horizontalOffset, mGravity, &horizontalOffset);
 
-        } else
+            if (!MR::isPlayerSwimming()) {
+                if (PSVECMag(&horizontalOffset) > 50.0f && playerOffset.dot(_98) < -5.0f) {
+                    return false;
+                }
+            }
+
+            mHostActor = MR::getSensorHost(pSender);
+            MR::invalidateClipping(this);
+            _120.setInline(MR::getPlayerBaseMtx());
+            _F0.setInline(_120);
+
+            TVec3f cameraOffset(MR::getCamPos());
+            cameraOffset.sub(mPosition);
+            MR::normalize(&cameraOffset);
+            MR::makeMtxUpFrontPos(&_150, _98, cameraOffset, mPosition);
+            MR::invalidateHitSensors(this);
+            setNerve(&NrvEarthenPipe::EarthenPipeNrvReady::sInstance);
+            return true;
+        } else {
             return false;
+        }
     }
-} */
+
+    if (MR::isMsgUpdateBaseMtx(msg)) {
+        MR::setBaseTRMtx(mHostActor, _F0);
+        return true;
+    }
+
+    if (msg == 0xF0) {
+        _194 = 1;
+    }
+
+    if (msg == 0xF1) {
+        _194 = 0;
+        return true;
+    }
+
+    if (MR::isMsgRushCancel(msg)) {
+        mHostActor = nullptr;
+        _B0->tryHideDown();
+        setNerve(&NrvEarthenPipe::EarthenPipeNrvWait::sInstance);
+        return true;
+    }
+
+    return false;
+}
 
 void EarthenPipe::calcTrans(f32 a1) {
     mPosition.set< f32 >(_98);

@@ -46,7 +46,7 @@ void MarioActor::exeGameOverBlackHole2() {
         playEffect(changeMorphString("DieBlackHole"));
         initBlackHoleOut();
 
-        mMario->mMovementStates._23 = true;
+        mMario->mMovementStates._3C = true;
 
         MR::startStarPointerModeDemoMarioDeath(this);
         MR::deactivateDefaultGameLayout();
@@ -86,8 +86,7 @@ void MarioActor::exeGameOverBlackHole2() {
     PSMTXRotAxisRad(rotationMatrix, &mBlackHoleRotateAxis, angle);
     PSMTXMultVec(rotationMatrix, &mPosRelativeToBlackHole, &mPosRelativeToBlackHole);
 
-    TVec3f camDirZNegate;
-    camDirZNegate = -mCamDirZ;
+    TVec3f camDirZNegate = mCamDirZ.invertOperatorInternal();
     MR::vecBlendSphere(mBlackHoleRotateAxis, camDirZNegate, &mBlackHoleRotateAxis, 0.01f);
 
     f32 distChangeFactor = 180 - getNerveStep();
@@ -98,7 +97,7 @@ void MarioActor::exeGameOverBlackHole2() {
 
     f32 newDistToBlackHole = mPosRelativeToBlackHole.length() * distChangeFactor / (1 + distChangeFactor);
 
-    mPosRelativeToBlackHole.setLength(newDistToBlackHole);
+    mPosRelativeToBlackHole.setLength2(newDistToBlackHole);
 
     f32 scale = getNerveStep() * mConst->getTable()->mBlackHoleScaleSpeed;
     scale = 1 - scale;
@@ -111,7 +110,9 @@ void MarioActor::exeGameOverBlackHole2() {
 
     mPosition = mBlackHolePosition + mPosRelativeToBlackHole;
 
-    mVelocity.zero();
+    mVelocity.z = 0.0f;
+    mVelocity.y = 0.0f;
+    mVelocity.x = 0.0f;
 }
 
 namespace NrvMarioActor {

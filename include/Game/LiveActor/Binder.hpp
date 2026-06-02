@@ -46,6 +46,7 @@ public:
     u32 storeCurrentHitInfo(HitInfo*, u32, bool);
     void obtainMomentFixReaction(HitInfo*, u32, TVec3f*, u32);
     void storeContactPlane(HitInfo*, u32);
+    void setExCollisionParts(CollisionParts*);
 
     const TVec3f* _10;
     const TVec3f* _14;

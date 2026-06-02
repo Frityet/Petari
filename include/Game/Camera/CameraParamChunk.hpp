@@ -22,6 +22,14 @@ public:
     s32 mNum1;                  // 0x30
     s32 mNum2;                  // 0x34
     CameraParamString mString;  // 0x38
+
+    s16 getNum1Low() const {
+        return mNum1;
+    }
+
+    s16 getNum1High() const {
+        return mNum1 >> 16;
+    }
 };
 
 class CameraParamChunk {

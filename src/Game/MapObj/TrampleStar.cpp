@@ -589,7 +589,7 @@ void TrampleStar::drawSelf() const {
     PSMTXConcat(mtx2, mtx, mtx3);
     TPos3f mtx4;
     for (u32 idx = 0; idx < 12; idx++) {
-        reinterpret_cast< f32* >(&mtx4)[idx] = 0;
+        mtx4.element(idx) = 0;
     }
     mtx4[0][0] = debug1;
     mtx4[1][2] = debug2;

@@ -37,10 +37,10 @@ void MarioAnimator::init() {
     _15 = 0;
     _16 = 1;
 
-    _18 = 0.0f;
-    _1C = 0.0f;
-    _20 = 0.0f;
-    _24 = 1.0f;
+    mWalkWeights[0] = 0.0f;
+    mWalkWeights[1] = 0.0f;
+    mWalkWeights[2] = 0.0f;
+    mWalkWeights[3] = 1.0f;
 
     PSMTXIdentity(_28.toMtxPtr());
     PSMTXIdentity(_7C.toMtxPtr());
@@ -154,10 +154,10 @@ void MarioAnimator::changeDefaultUpper(const char* name) {
 }
 
 void MarioAnimator::initWalkWeight() {
-    _18 = 0.0f;
-    _1C = 0.0f;
-    _20 = 0.0f;
-    _24 = 1.0f;
+    mWalkWeights[0] = 0.0f;
+    mWalkWeights[1] = 0.0f;
+    mWalkWeights[2] = 0.0f;
+    mWalkWeights[3] = 1.0f;
 }
 
 f32 MarioAnimator::getFrame() const {
@@ -184,7 +184,7 @@ void MarioAnimator::forceSetBlendWeight(const f32* pWeights) {
     f32 weight;
     for (u32 i = 0; i < 4; i++) {
         weight = pWeights[i];
-        (&_18)[i] = weight;
+        mWalkWeights[i] = weight;
         mXanimePlayer->changeTrackWeight(i, weight);
     }
 }
@@ -209,13 +209,13 @@ void MarioAnimator::setWalkWeight(const f32* pWeights) {
 }
 
 void MarioAnimator::setBlendWeight(const f32* pWeights, f32 rate) {
-    targetWeight(&_18, pWeights[0], rate);
-    targetWeight(&_1C, pWeights[1], rate);
-    targetWeight(&_20, pWeights[2], rate);
-    targetWeight(&_24, pWeights[3], rate);
+    targetWeight(&mWalkWeights[0], pWeights[0], rate);
+    targetWeight(&mWalkWeights[1], pWeights[1], rate);
+    targetWeight(&mWalkWeights[2], pWeights[2], rate);
+    targetWeight(&mWalkWeights[3], pWeights[3], rate);
 
     for (u32 i = 0; i < 4; i++) {
-        mXanimePlayer->changeTrackWeight(i, *(&_18 + i));
+        mXanimePlayer->changeTrackWeight(i, mWalkWeights[i]);
     }
 }
 

@@ -83,6 +83,7 @@ public:
     void updateBindRatio();
     bool isInPunchTimerRange() const;
     void updatePunching();
+    void setRasterScroll(s32, s32, s32);
     bool doRush();
     void updateSwingTimer();
     void updateSwingAction();
@@ -107,11 +108,13 @@ public:
     MtxPtr getGlobalJointMtx(const char*);
     void calcAnimInMovement();
     void forceSetBaseMtx(MtxPtr);
-    void calcAnim();
-    void calcAndSetBaseMtx();
+    void calcAnim() override;
+    void calcAndSetBaseMtx() override;
     void setBlendMtxTimer(u16);
     void getGroundPos(TVec3f* dst) const;
     TVec3f* getShadowPos() const;
+    void getUpVec(TVec3f*) const;
+    void getSideVec(TVec3f*) const;
 
     bool isTurning() const;
     bool isJumping() const;
@@ -189,6 +192,7 @@ public:
     void calcViewMainModel();
     void initFace();
     void updateFace();
+    void updateHand();
     void draw() const override;
     void drawIndirect() const;
     void drawIndirectModel() const;
@@ -258,6 +262,7 @@ public:
     void updateEffect();
     bool checkEffectWaterColumn();
     void updateThrowVector();
+    void getThrowVec(TVec3f*) const;
     void updateForCamera();
     void updateTornado();
 
@@ -282,6 +287,9 @@ public:
     bool selectRecoverFlyMeter(const HitSensor*) const;
     void endRush(const RushEndInfo*);
     void stopSpinTicoEffect(bool);
+    void resetCondition();
+    void flushCoinPull();
+    bool tryPullTrans(TVec3f*, const TVec3f&);
     void stopEffectForce(const char*);
     bool isRequestRush() const;
     bool isRequestJump2P() const;
@@ -405,7 +413,7 @@ public:
     FBO* _1D8;
     FBO* _1DC;
     bool _1E0;
-    u8 _1E1;
+    bool _1E1;
     u8 _1E2;
     // padding
     f32 _1E4;
@@ -634,7 +642,7 @@ public:
     u32 _A64;
     f32 _A68;
     u16 _A6C;
-    bool _A6E;
+    u8 _A6E;
     // padding
     Mtx* _A70[8];
     Mtx* _A90[8];
@@ -673,8 +681,7 @@ public:
     // padding
     J3DAnmTexPattern* mEyeRes;  // 0xB78
     JUTTexture* _B7C;
-    JUTTexture* _B80;
-    JUTTexture* _B84;
+    JUTTexture* _B80[2];
     u16 _B88;
     MarioNullBck* mNullAnimation;  // 0xB8C
     bool _B90;                     // animations

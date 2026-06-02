@@ -15,7 +15,7 @@ namespace MR {
 
     f32 calcCameraDistanceZ(const TVec3f&);
 
-    bool isCameraInterpolateNearlyEnd();
+    bool isCameraInterpolatingNearlyEnd();
 
     void setShakeOffset(f32, f32);
 
@@ -76,6 +76,7 @@ namespace MR {
     bool calcNormalizedScreenPosition(TVec3f*, const TVec3f&);
     bool calcNormalizedScreenPositionFromView(TVec3f*, const TVec3f&);
     bool calcWorldPositionFromScreen(TVec3f*, const TVec2f&, f32);
+    bool calcWorldPositionFromCenterScreen(TVec3f*, const TVec2f&, f32);
     bool calcWorldRayDirectionFromScreen(TVec3f*, const TVec2f&);
 
     void declareEventCameraAnim(const ActorCameraInfo*, const char*, void*);
@@ -96,7 +97,7 @@ namespace MR {
 
     void overlayWithPreviousScreen(u32);
 
-    void resetCamerLocalOffset();
+    void resetCameraLocalOffset();
 
     void drawInitFor2DModel();
 
@@ -135,6 +136,15 @@ namespace MR {
     void startBlackHoleCamera(const char*, const TVec3f&, const TVec3f&);
     void startSubjectiveCamera(s32);
     void endSubjectiveCamera(s32);
+    void declareLauncherCamera();
+    void endLauncherCamera();
+    void setLauncherCameraAngle(f32, f32, f32, f32);
+    void declareLauncherFlightCamera();
+    void endLauncherFlightCamera();
+    bool isActiveLauncherCamera();
+    bool isActiveLauncherFlightCamera();
+    void startLauncherCamera(const CameraTargetArg&);
+    void startLauncherFlightCamera(s32);
 
     bool isSubjectiveCameraOnForObjClipping();
 
