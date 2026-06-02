@@ -15,6 +15,8 @@
 
 namespace {
     static f32 sCanBindTime = 90.0f;
+    static const s32 cSpaceFlyStartFrame = 10;
+    static const s32 cSpaceFlyEndFrame = 50;
 };  // namespace
 
 namespace NrvSuperSpinDriver {

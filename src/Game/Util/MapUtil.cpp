@@ -25,10 +25,66 @@ static HitInfo mSortBuffer[32];
 static u32 mSortCount;
 
 namespace {
-    // getStrikeInfoNumCategory
-    // getFirstPolyOnLineCategory
-    // getFirstPolyOnLineCategoryExceptSensor
-    // getFirstPolyOnLineCategoryExceptActor
+    u32 getStrikeInfoNumCategory(s32 category) {
+        return MR::getCollisionDirector()->mKeepers[category]->_10;
+    }
+
+    bool getFirstPolyOnLineCategory(TVec3f* pDst, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                    const TriangleFilterBase* pTriangleFilter, const CollisionPartsFilterBase* pPartsFilter, s32 category) {
+        CollisionCategorizedKeeper* keeper = MR::getCollisionDirector()->mKeepers[category];
+        const u32 hitCount = keeper->checkStrikeLine(rStart, rOffset, 0, pPartsFilter, pTriangleFilter);
+
+        if (hitCount == 0) {
+            return false;
+        }
+
+        HitInfo* nearestInfo = keeper->getStrikeInfo(0);
+        TVec3f nearestDelta(nearestInfo->mHitPos);
+        nearestDelta.sub(rStart);
+        f32 nearestDistance = nearestDelta.squared();
+
+        for (u32 i = 1; i < hitCount; i++) {
+            HitInfo* hitInfo = keeper->getStrikeInfo(i);
+            TVec3f delta(hitInfo->mHitPos);
+            delta.sub(rStart);
+            f32 distance = delta.squared();
+
+            if (distance < nearestDistance) {
+                nearestInfo = hitInfo;
+                nearestDistance = distance;
+            }
+        }
+
+        if (pDst != nullptr) {
+            *pDst = nearestInfo->mHitPos;
+        }
+
+        if (pTriangle != nullptr) {
+            *pTriangle = nearestInfo->mParentTriangle;
+        }
+
+        return true;
+    }
+
+    bool getFirstPolyOnLineCategoryExceptSensor(TVec3f* pDst, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                                const HitSensor* pSensor, s32 category) {
+        if (pSensor == nullptr) {
+            return getFirstPolyOnLineCategory(pDst, pTriangle, rStart, rOffset, nullptr, nullptr, category);
+        }
+
+        CollisionPartsFilterSensor filter(pSensor);
+        return getFirstPolyOnLineCategory(pDst, pTriangle, rStart, rOffset, nullptr, &filter, category);
+    }
+
+    bool getFirstPolyOnLineCategoryExceptActor(TVec3f* pDst, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                               const LiveActor* pActor, s32 category) {
+        if (pActor == nullptr) {
+            return getFirstPolyOnLineCategory(pDst, pTriangle, rStart, rOffset, nullptr, nullptr, category);
+        }
+
+        CollisionPartsFilterActor filter(pActor);
+        return getFirstPolyOnLineCategory(pDst, pTriangle, rStart, rOffset, nullptr, &filter, category);
+    }
 };  // namespace
 
 namespace MR {

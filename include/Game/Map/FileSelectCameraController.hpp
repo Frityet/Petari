@@ -7,6 +7,7 @@ public:
     /// @brief Creates a new `FileSelectCameraController`.
     /// @param pName A pointer to the null-terminated name of the object.
     FileSelectCameraController(const char* pName);
+    virtual ~FileSelectCameraController();
 
     virtual void init(const JMapInfoIter& rIter);
     virtual void appear();
@@ -31,7 +32,7 @@ private:
     /* 0x98 */ u8 _98[0xC];
     /* 0xA4 */ TVec3f _A4;
     /* 0xB0 */ TVec3f _B0;
-    /* 0xBC */ f32 mPrevFovy;
-    /* 0xC0 */ f32 mFovy;
+    /* 0xBC */ f32 _BC;
+    /* 0xC0 */ f32 _C0;
     /* 0xC4 */ TVec3f _C4;
 };

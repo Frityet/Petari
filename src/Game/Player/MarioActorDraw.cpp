@@ -526,7 +526,7 @@ void MarioActor::initBlur() {
     _B14 = 0;
     for (u32 i = 0; i < 6; i++) {
         if (mModels[i] != nullptr) {
-            const u16 jointNum = reinterpret_cast< J3DModelDataForMarioActorDraw* >(mModels[i]->mModelData)->mJointNum;
+            const u16 jointNum = mModels[i]->mModelData->getJointNum();
             if (jointNum > _B14) {
                 _B14 = jointNum;
             }
@@ -1030,7 +1030,7 @@ void MarioActor::drawModelBlur() const {
         model->setDrawViewBuffer(reinterpret_cast< MtxPtr >(_A70[idx + (static_cast< u32 >(_B10) << 3)]));
 
         if (!_1C1) {
-            for (u16 joint = 0; joint < reinterpret_cast< J3DModelDataForMarioActorDraw* >(getModelData())->mJointNum; joint++) {
+            for (u16 joint = 0; joint < getModelData()->getJointNum(); joint++) {
                 const u32 prevBuffer = idx + (static_cast< u32 >(1 - _B10) << 3);
                 const u32 currBuffer = idx + (static_cast< u32 >(_B10) << 3);
                 Mtx* src = _A70[prevBuffer];
@@ -1039,7 +1039,7 @@ void MarioActor::drawModelBlur() const {
             }
         }
 
-        const u32 jointCount = reinterpret_cast< J3DModelDataForMarioActorDraw* >(getModelData())->mJointNum;
+        const u32 jointCount = getModelData()->getJointNum();
         DCStoreRange(_A70[idx + (static_cast< u32 >(_B10) << 3)], jointCount * sizeof(Mtx));
 
         _94[idx + ((i - 1) << 3)]->addDL(model);

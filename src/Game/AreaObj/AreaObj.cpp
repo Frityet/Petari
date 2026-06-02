@@ -2,31 +2,6 @@
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObjFollower.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
-#include <algorithm>
-
-namespace {
-    class AreaObjReverseIter {
-    public:
-        explicit AreaObjReverseIter(AreaObj* const* pIter) : mIter(pIter) {}
-
-        AreaObj* operator*() const { return *mIter; }
-        bool operator!=(const AreaObjReverseIter& rIter) const { return mIter != rIter.mIter; }
-        AreaObjReverseIter& operator++() {
-            --mIter;
-            return *this;
-        }
-
-        AreaObj* const* get() const { return mIter; }
-
-    private:
-        AreaObj* const* mIter;
-    };
-
-    template < class Operation, class T >
-    inline std::binder2nd< Operation, const T& > bind2ndRef(const Operation& rOp, const T& rValue) {
-        return std::binder2nd< Operation, const T& >(rOp, rValue);
-    }
-}
 
 AreaObj::AreaObj(int type, const char* pName)
     : NameObj(pName), mFormType(type), mIsValid(true), _15(true), mIsAwake(true), mObjArg0(-1), mObjArg1(-1), mObjArg2(-1), mObjArg3(-1),
@@ -132,17 +107,16 @@ void AreaObjMgr::entry(AreaObj* pAreaObj) {
 
 AreaObj* AreaObjMgr::find_in(const TVec3f& rPos) const {
     AreaObj* const* begin = mArray.begin();
-    AreaObj* const* end = mArray.end();
-    AreaObjReverseIter first(end - 1);
-    AreaObjReverseIter last(begin - 1);
-    AreaObj* const* iter = std::find_if(first, last, bind2ndRef(std::mem_fun(&AreaObj::isInVolume), rPos)).get();
+    AreaObj* const* iter = mArray.end();
 
-    AreaObj* const* found = end;
-    if (iter != begin - 1) {
-        found = iter;
+    while (iter != begin) {
+        --iter;
+        if ((*iter)->isInVolume(rPos)) {
+            return *iter;
+        }
     }
 
-    return found != end ? *found : nullptr;
+    return nullptr;
 }
 
 void AreaObj::validate() {
