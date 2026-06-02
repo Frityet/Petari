@@ -44,7 +44,10 @@ namespace MR {
         }
     }
 
-    void initActorLightInfoDrawBuffer(LiveActor*, DrawBuffer*) {
+    void initActorLightInfoDrawBuffer(LiveActor* pActor, DrawBuffer* pDrawBuffer) {
+        if (pActor != nullptr && pActor->mActorLightCtrl != nullptr) {
+            pActor->mActorLightCtrl->_8 = pDrawBuffer;
+        }
     }
 
     void loadLightPlayer() {

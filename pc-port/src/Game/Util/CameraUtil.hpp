@@ -20,11 +20,14 @@ namespace MR {
     void declareEventCameraProgrammable(const char* pEventName);
     void startGlobalEventCameraNoTarget(const char* pEventName, s32 frames);
     void endGlobalEventCamera(const char* pEventName, s32 frames, bool endForce);
-    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rEye, const TVec3f& rUpVec,
-                                    bool doZeroWOffset);
+    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rEye, const TVec3f& rUpVec, bool doZeroWOffset);
     void setProgrammableCameraParamFovy(const char* pEventName, f32 fovy);
     bool calcScreenPosition(TVec2f* pResult, const TVec3f& rWorldPos);
     bool calcScreenPosition(TVec3f* pResult, const TVec3f& rWorldPos);
+    bool calcNormalizedScreenPosition(TVec3f* pResult, const TVec3f& rWorldPos);
+    bool calcNormalizedScreenPositionFromView(TVec3f* pResult, const TVec3f& rViewPos);
     bool calcWorldPositionFromScreen(TVec3f* pResult, const TVec2f& rScreenPos, f32 distance);
+    bool calcWorldPositionFromCenterScreen(TVec3f* pResult, const TVec2f& rCenterScreenPos, f32 distance);
     bool calcWorldRayDirectionFromScreen(TVec3f* pResult, const TVec2f& rScreenPos);
+    f32 calcCameraDistanceZ(const TVec3f& rWorldPos);
 }  // namespace MR

@@ -22,8 +22,11 @@ public:
     static void loadAllLightWhite();
 
     static AreaLightInfo* getAreaLightInfo(const ZoneLightID&);
+    static s32 getDefaultStepInterpolate();
+    static bool tryFindNewAreaLightID(const TVec3f&, ZoneLightID*);
 
     static void loadActorLightInfo(const ActorLightInfo*);
+    static void blendActorLightInfo(ActorLightInfo*, const ActorLightInfo&, const ActorLightInfo&, f32);
 
     static void getAreaLightLightData(JMapInfo*, int, AreaLightInfo*);
     static const char* getDefaultAreaLightName();

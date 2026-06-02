@@ -4,6 +4,7 @@
 #include "Game/Map/LightZoneDataHolder.hpp"
 
 class LiveActor;
+class DrawBuffer;
 
 class ActorLightCtrl {
 public:
@@ -24,11 +25,11 @@ public:
 
     const LiveActor* mActor;       // 0x0
     s32 _4;                        // 0x4
-    u32 _8;                        // 0x8
+    DrawBuffer* _8;                // 0x8
     u8 _C;                         // 0xC
     AreaLightInfo* mAreaLightInf;  // 0x10
     ZoneLightID mLightID;          // 0x14
-    u32 _1C;                       // 0x1C
+    const ActorLightInfo* _1C;     // 0x1C
     ActorLightInfo mLightInfo;     // 0x20
     s32 mInterpolate;              // 0x50
     s32 _54;                       // 0x54

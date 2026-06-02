@@ -9,6 +9,8 @@
 #include <cmath>
 
 namespace {
+    constexpr auto PI = 3.14159265358979323846F;
+
     struct CameraBasis {
         smgpc::camera::CameraParamVec3 forward;
         smgpc::camera::CameraParamVec3 right;
@@ -103,7 +105,6 @@ namespace {
             return false;
         }
 
-        constexpr auto PI = 3.14159265358979323846F;
         const auto& pose = *runtime->scene_camera_pose();
         const auto world = smgpc::camera::CameraParamVec3{.x = rWorldPos.x, .y = rWorldPos.y, .z = rWorldPos.z};
         const auto camera = smgpc::camera::transform_world_to_camera(pose, world);
@@ -137,7 +138,6 @@ namespace {
             return false;
         }
 
-        constexpr auto PI = 3.14159265358979323846F;
         const auto& pose = *runtime->scene_camera_pose();
         const auto basis = camera_basis(pose);
         const auto world_distance = distance < 0.0F ? pose.near_clip : distance;
@@ -289,8 +289,46 @@ namespace MR {
         return project_world_to_screen(pResult, rWorldPos);
     }
 
+    bool calcNormalizedScreenPosition(TVec3f* pResult, const TVec3f& rWorldPos) {
+        auto screen_pos = TVec3f{};
+        const auto visible = calcScreenPosition(&screen_pos, rWorldPos);
+        if (pResult != nullptr) {
+            const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
+            const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
+            pResult->x = (screen_pos.x - half_width) / half_width;
+            pResult->y = (screen_pos.y - half_height) / half_height;
+            pResult->z = screen_pos.z;
+        }
+        return visible;
+    }
+
+    bool calcNormalizedScreenPositionFromView(TVec3f* pResult, const TVec3f& rViewPos) {
+        if (pResult == nullptr) {
+            return false;
+        }
+
+        if (std::abs(rViewPos.z) <= 0.0001F) {
+            pResult->set(0.0F, 0.0F, rViewPos.z);
+            return false;
+        }
+
+        const auto fovy = getFovy() * PI / 180.0F;
+        const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
+        const auto focal_x = focal_y / getAspect();
+        pResult->x = (rViewPos.x / rViewPos.z) * focal_x;
+        pResult->y = (rViewPos.y / rViewPos.z) * focal_y;
+        pResult->z = rViewPos.z;
+        return std::abs(pResult->x) <= 1.0F && std::abs(pResult->y) <= 1.0F && rViewPos.z >= getNearZ() && rViewPos.z <= getFarZ();
+    }
+
     bool calcWorldPositionFromScreen(TVec3f* pResult, const TVec2f& rScreenPos, f32 distance) {
         return unproject_screen_to_world(pResult, rScreenPos, distance);
+    }
+
+    bool calcWorldPositionFromCenterScreen(TVec3f* pResult, const TVec2f& rCenterScreenPos, f32 distance) {
+        const auto screen_pos = TVec2f{rCenterScreenPos.x + (static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F),
+                                       rCenterScreenPos.y + (static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F)};
+        return calcWorldPositionFromScreen(pResult, screen_pos, distance);
     }
 
     bool calcWorldRayDirectionFromScreen(TVec3f* pResult, const TVec2f& rScreenPos) {
@@ -302,5 +340,14 @@ namespace MR {
             pResult->z -= cam_pos.z;
         }
         return ret;
+    }
+
+    f32 calcCameraDistanceZ(const TVec3f& rWorldPos) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && runtime->scene_camera_pose().has_value()) {
+            const auto camera = smgpc::camera::transform_world_to_camera(*runtime->scene_camera_pose(), camera_vec3(rWorldPos));
+            return std::abs(camera.z);
+        }
+
+        return 0.0F;
     }
 }  // namespace MR

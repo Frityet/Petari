@@ -1,5 +1,6 @@
 #include "Game/Map/LightFunction.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 
@@ -50,6 +51,35 @@ namespace {
         LightFunction::calcLightWorldPos(&position, rInfo);
         loadLightDiffuse(rInfo.mColor, position, lightID);
     }
+
+    [[nodiscard]] u8 blend_channel(u8 from, u8 to, f32 rate) {
+        const auto clamped = std::clamp(rate, 0.0F, 1.0F);
+        return static_cast< u8 >(static_cast< f32 >(from) + ((static_cast< f32 >(to) - static_cast< f32 >(from)) * clamped));
+    }
+
+    [[nodiscard]] f32 blend_float(f32 from, f32 to, f32 rate) {
+        const auto clamped = std::clamp(rate, 0.0F, 1.0F);
+        return from + ((to - from) * clamped);
+    }
+
+    void blendColor(_GXColor* pOut, const _GXColor& rFrom, const _GXColor& rTo, f32 rate) {
+        pOut->r = blend_channel(rFrom.r, rTo.r, rate);
+        pOut->g = blend_channel(rFrom.g, rTo.g, rate);
+        pOut->b = blend_channel(rFrom.b, rTo.b, rate);
+        pOut->a = blend_channel(rFrom.a, rTo.a, rate);
+    }
+
+    void blendVec(TVec3f* pOut, const TVec3f& rFrom, const TVec3f& rTo, f32 rate) {
+        pOut->x = blend_float(rFrom.x, rTo.x, rate);
+        pOut->y = blend_float(rFrom.y, rTo.y, rate);
+        pOut->z = blend_float(rFrom.z, rTo.z, rate);
+    }
+
+    void blendLightInfo(LightInfo* pOut, const LightInfo& rFrom, const LightInfo& rTo, f32 rate) {
+        blendColor(&pOut->mColor, rFrom.mColor, rTo.mColor, rate);
+        blendVec(&pOut->mPos, rFrom.mPos, rTo.mPos, rate);
+        pOut->mIsFollowCamera = rTo.mIsFollowCamera;
+    }
 }  // namespace
 
 void LightFunction::initLightRegisterAll() {
@@ -93,6 +123,28 @@ AreaLightInfo* LightFunction::getAreaLightInfo(const ZoneLightID& rZoneID) {
     return smgpc::render::light::StageLightData::instance().area_light_info(rZoneID);
 }
 
+s32 LightFunction::getDefaultStepInterpolate() {
+    return 0x1E;
+}
+
+bool LightFunction::tryFindNewAreaLightID(const TVec3f&, ZoneLightID* pLightID) {
+    if (pLightID == nullptr) {
+        return false;
+    }
+
+    ZoneLightID candidate;
+    if (smgpc::render::light::StageLightData::instance().area_light_info(candidate) == nullptr) {
+        return false;
+    }
+
+    if (pLightID->_0 == candidate._0 && pLightID->mLightID == candidate.mLightID) {
+        return false;
+    }
+
+    *pLightID = candidate;
+    return true;
+}
+
 void LightFunction::loadActorLightInfo(const ActorLightInfo* pInfo) {
     if (pInfo == nullptr) {
         return;
@@ -102,6 +154,17 @@ void LightFunction::loadActorLightInfo(const ActorLightInfo* pInfo) {
     loadLightInfoDiffuse(pInfo->mInfo1, GX_LIGHT1);
     const auto alpha = pInfo->mAlpha2;
     loadLightDiffuse(_GXColor{0U, 0U, 0U, alpha}, TVec3f{}, GX_LIGHT2);
+}
+
+void LightFunction::blendActorLightInfo(ActorLightInfo* pOut, const ActorLightInfo& rFrom, const ActorLightInfo& rTo, f32 rate) {
+    if (pOut == nullptr) {
+        return;
+    }
+
+    blendLightInfo(&pOut->mInfo0, rFrom.mInfo0, rTo.mInfo0, rate);
+    blendLightInfo(&pOut->mInfo1, rFrom.mInfo1, rTo.mInfo1, rate);
+    pOut->mAlpha2 = blend_channel(rFrom.mAlpha2, rTo.mAlpha2, rate);
+    blendColor(&pOut->mColor, rFrom.mColor, rTo.mColor, rate);
 }
 
 void LightFunction::getAreaLightLightData(JMapInfo*, int, AreaLightInfo*) {

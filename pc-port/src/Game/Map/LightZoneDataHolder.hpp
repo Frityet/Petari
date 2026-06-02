@@ -6,14 +6,19 @@ class LightArea;
 
 class ZoneLightID {
 public:
-    ZoneLightID() = default;
+    ZoneLightID();
 
-    bool isTargetArea(const LightArea*) const {
-        return false;
-    }
+    void clear();
+    bool isTargetArea(const LightArea*) const;
+    bool isOutOfArea() const;
 
-    s32 mZoneID = -1;   // 0x0
+    s32 _0;             // 0x0
     s32 mLightID = -1;  // 0x4
+};
+
+struct AreaInfo {
+    s32 mID;                     // 0x0
+    const char* mAreaLightName;  // 0x4
 };
 
 class LightZoneInfo {
@@ -24,8 +29,8 @@ public:
         return nullptr;
     }
 
-    s32 mZoneID = -1;                 // 0x0
-    const char* mAreaLightName = {};  // 0x4
+    s32 mAreaCount = 0;        // 0x0
+    AreaInfo* mAreaInfo = {};  // 0x4
 };
 
 class LightZoneDataHolder {
