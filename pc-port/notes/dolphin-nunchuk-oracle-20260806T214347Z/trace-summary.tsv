@@ -1,0 +1,5 @@
+frame	state	status	record_count	render_packet	semantic_event	trace_bytes	trace_sha256	transient_path
+11200	forward road climb	passed	424	404	2	2809856	fdb8cf7799958125b307f01e40dc4bf14c6254d4437085bd79d9546879b34526	/tmp/dolphin-nunchuk-f11200move/dolphin-frame-11200.trace.sqlite
+11400	castle crest	passed	379	359	2	2494464	93530c278f57ee971c80a0f4f72319d4cec8d0140f163c6670e4307923093eb2	/tmp/dolphin-nunchuk-f11400/dolphin-frame-11400.trace.sqlite
+12000	hard-left boundary	passed	257	237	2	1658880	8109fb3562aba5a2aa1ae24dbc13d56a07c936a0308b793e128058409a945cc2	/tmp/dolphin-nunchuk-f12000-route1/dolphin-frame-12000.trace.sqlite
+13000	shallow correction dock	passed	919	899	2	5210112	c573d150d9dc77037861b79f184f71043fe42bb8e47a5a48fbda66a52cbb06c1	/tmp/dolphin-nunchuk-f13000-route2/dolphin-frame-13000.trace.sqlite
