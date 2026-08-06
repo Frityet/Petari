@@ -1,24 +1,44 @@
 #include "Game/Util/MapUtil.hpp"
 
-namespace MR {
-    bool getFirstPolyOnLineToMap(TVec3f*, Triangle*, const TVec3f&, const TVec3f&) {
-        // This is the generalized host map-collision boundary. The stage host
-        // does not expose collision triangles yet, so a query reports no hit
-        // and deliberately leaves caller-provided outputs unchanged.
-        return false;
-    }
+#include "scene/StageCollisionService.hpp"
 
-    bool getFirstPolyNormalOnLineToMap(TVec3f* pNormal, const TVec3f&, const TVec3f&, TVec3f* pPosition, const HitSensor*) {
-        if (pNormal != nullptr) {
-            pNormal->zero();
+namespace MR {
+    bool getFirstPolyOnLineToMap(TVec3f* pPosition, Triangle*, const TVec3f& rStart, const TVec3f& rOffset) {
+        auto* collision = smgpc::scene::StageCollisionService::active();
+        auto hit = smgpc::scene::StageCollisionHit{};
+        if (collision == nullptr || !collision->line_cast(rStart, rOffset, &hit)) {
+            return false;
         }
         if (pPosition != nullptr) {
-            pPosition->zero();
+            pPosition->set(hit.position);
         }
-        return false;
+        return true;
     }
 
-    bool isExistMapCollision(const TVec3f&, const TVec3f&) {
-        return false;
+    bool getFirstPolyNormalOnLineToMap(TVec3f* pNormal, const TVec3f& rStart, const TVec3f& rOffset,
+                                       TVec3f* pPosition, const HitSensor*) {
+        auto* collision = smgpc::scene::StageCollisionService::active();
+        auto hit = smgpc::scene::StageCollisionHit{};
+        if (collision == nullptr || !collision->line_cast(rStart, rOffset, &hit)) {
+            if (pNormal != nullptr) {
+                pNormal->zero();
+            }
+            if (pPosition != nullptr) {
+                pPosition->zero();
+            }
+            return false;
+        }
+        if (pNormal != nullptr) {
+            pNormal->set(hit.normal);
+        }
+        if (pPosition != nullptr) {
+            pPosition->set(hit.position);
+        }
+        return true;
+    }
+
+    bool isExistMapCollision(const TVec3f& rStart, const TVec3f& rOffset) {
+        auto* collision = smgpc::scene::StageCollisionService::active();
+        return collision != nullptr && collision->line_cast(rStart, rOffset);
     }
 }  // namespace MR

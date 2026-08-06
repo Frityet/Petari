@@ -113,6 +113,14 @@ namespace smgpc::camera {
             }
         }
 
+        void arrange_camera_param_chunk(CameraParamChunk &chunk) {
+            // CameraParamChunkHolder::arrangeChunk applies this migration for
+            // camera files written before XZ_PARA's round-control flag existed.
+            if (chunk.version < 0x30016U && chunk.camera_type == "CAM_TYPE_XZ_PARA") {
+                chunk.general.num1 = 0;
+            }
+        }
+
     }  // namespace
 
     bool CameraParamChunk::is_on_no_reset() const {
@@ -168,6 +176,8 @@ namespace smgpc::camera {
             read_u32(table, row, "camendint", chunk.event_cam_end_int);
             read_u32(table, row, "evfrm", chunk.event_frame);
             read_u32(table, row, "evpriority", chunk.event_priority);
+
+            arrange_camera_param_chunk(chunk);
 
             chunks.push_back(std::move(chunk));
         }

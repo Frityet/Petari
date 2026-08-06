@@ -23,3 +23,29 @@ target("smg-pc-aurora-native-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+target("smg-pc-stage-start-camera-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "StageStartCameraTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("stage_start_camera", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

@@ -1,10 +1,14 @@
 #pragma once
 
 #include "JSystem/JGeometry/TVec.hpp"
+#include <revolution/mtx.h>
 
 class LiveActor;
 
 namespace MR {
+    void makeMtxTRS(MtxPtr pMtx, const LiveActor* pActor);
+    void resetPosition(LiveActor* pActor);
+    void resetPosition(LiveActor* pActor, const TVec3f& rPosition);
     bool isInDeath(const LiveActor* pActor, const TVec3f& rOffset);
     void calcActorAxisY(TVec3f* pOut, const LiveActor* pActor);
     bool isNearPlayer(const LiveActor* pActor, f32 distance);

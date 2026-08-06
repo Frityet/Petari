@@ -41,6 +41,8 @@ namespace smgpc::scene {
             .stage_name = request.stage_name,
             .scenario_no = request.scenario_no,
             .selected_scenario_no = request.scenario_no,
+            .start_id = request.start_id,
+            .start_zone_id = request.start_zone_id,
             .object_name = request.object_name,
             .actor_name = request.actor_name,
             .appear_after_init = request.appear_after_init,
@@ -49,7 +51,9 @@ namespace smgpc::scene {
         set_phase(SceneControllerPhase::RequestQueued);
 #ifndef NDEBUG
         const auto detail = "next_scene=" + request.scene_name + ";next_stage=" + request.stage_name +
-                            ";scenario=" + std::to_string(request.scenario_no);
+                            ";scenario=" + std::to_string(request.scenario_no) +
+                            ";start_id=" + std::to_string(request.start_id) +
+                            ";start_zone_id=" + std::to_string(request.start_zone_id);
         _runtime.emit_sequence_state_trace_event("scene_change_requested", detail);
         _runtime.emit_semantic_trace_event("scene_controller", "scene_change_requested", detail);
 #endif
@@ -152,6 +156,8 @@ namespace smgpc::scene {
             .object_name = pending.object_name,
             .actor_name = pending.actor_name,
             .scenario_no = pending.scenario_no,
+            .start_id = pending.start_id,
+            .start_zone_id = pending.start_zone_id,
             .appear_after_init = pending.appear_after_init,
             .fail_unsupported_placement = pending.fail_unsupported_placement,
         };

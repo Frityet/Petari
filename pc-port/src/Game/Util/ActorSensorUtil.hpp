@@ -29,6 +29,7 @@ enum {
     ATYPE_ENEMY_BODY = 0x11,
     ATYPE_ENEMY_CATCH = 0x12,
     ATYPE_COIN = 0x4A,
+    ATYPE_STAR_PIECE = 0x4C,
 };
 
 class HitSensor;

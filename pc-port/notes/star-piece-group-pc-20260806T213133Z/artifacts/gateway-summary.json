@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "scenario": "gateway_handoff",
+  "description": "title through five-page picturebook advance into the HeavensDoor stage handoff",
+  "capture_frame": 10350,
+  "stage": "HeavensDoorGalaxy",
+  "stage_scenario": 1,
+  "placement": {
+    "total_objects": 242,
+    "created_objects": 168,
+    "blocked_objects": 2,
+    "intentionally_ignored_objects": 72,
+    "star_piece_group_matches": 1
+  },
+  "trace": {
+    "render_packets": 573,
+    "semantic_events": 1862,
+    "star_piece_packets_at_stage_frame": 10
+  },
+  "image": {
+    "width": 640,
+    "height": 480,
+    "nonblack_ratio": 0.98057
+  }
+}

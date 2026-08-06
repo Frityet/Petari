@@ -34,6 +34,22 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void resetPosition(LiveActor* pActor) {
+        if (pActor == nullptr) {
+            return;
+        }
+        pActor->updateHitSensors();
+        pActor->calcAndSetBaseMtx();
+    }
+
+    void resetPosition(LiveActor* pActor, const TVec3f& rPosition) {
+        if (pActor == nullptr) {
+            return;
+        }
+        pActor->mPosition.set(rPosition);
+        resetPosition(pActor);
+    }
+
     bool isInDeath(const LiveActor* pActor, const TVec3f& rOffset) {
         return pActor != nullptr && MR::isInAreaObj("DeathArea", pActor->mPosition + rOffset);
     }

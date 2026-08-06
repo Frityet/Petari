@@ -110,13 +110,9 @@ local scenarios = {
                     stage = "HeavensDoorGalaxy",
                     scenario = 1,
                     total_objects = 242,
+                    created_objects = 168,
+                    blocked_objects = 2,
                     intentionally_ignored_objects = 72,
-                },
-                summary_minimum = {
-                    created_objects = 164,
-                },
-                summary_maximum = {
-                    blocked_objects = 6,
                 },
                 objects = {
                     {
@@ -147,6 +143,14 @@ local scenarios = {
                             object = "DemoRabbit",
                             rail_info_attached = true,
                             rail_point_count = 5,
+                        },
+                        count = 1,
+                    },
+                    {
+                        match = {
+                            status = "created",
+                            object = "StarPieceGroup",
+                            zone = "HeavensDoorMiddleZone",
                         },
                         count = 1,
                     },

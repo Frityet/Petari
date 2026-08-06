@@ -1602,6 +1602,14 @@ namespace smgpc::runtime {
                 {"image_effects", image_effect_service_json(runtime.image_effects())},
                 {"camera",
                  Json {
+                     {"game_camera_pose",
+                      runtime.camera_system().game_camera_pose().has_value()
+                          ? camera_pose_json(*runtime.camera_system().game_camera_pose())
+                          : Json(nullptr)},
+                     {"effective_camera_pose",
+                      runtime.camera_system().effective_camera_pose().has_value()
+                          ? camera_pose_json(*runtime.camera_system().effective_camera_pose())
+                          : Json(nullptr)},
                      {"active_programmable_camera",
                       runtime.camera_system().active_programmable_camera_name().has_value() ? Json(std::string(*runtime.camera_system().active_programmable_camera_name())) : Json(nullptr)},
                      {"reset_camera_man_count", runtime.camera_system().reset_camera_man_count()},

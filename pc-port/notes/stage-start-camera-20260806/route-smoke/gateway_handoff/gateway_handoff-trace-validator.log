@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/workspaces/pcport/pc-port/notes/stage-start-camera-20260806/route-smoke/gateway_handoff/gateway_handoff-frame-10350.trace.sqlite"	passed	1	10350	pc-port	2449	573	1864	0

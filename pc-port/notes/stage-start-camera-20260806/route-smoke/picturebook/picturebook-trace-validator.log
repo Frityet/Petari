@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/workspaces/pcport/pc-port/notes/stage-start-camera-20260806/route-smoke/picturebook/picturebook-frame-7600.trace.sqlite"	passed	1	7600	pc-port	236	13	211	4

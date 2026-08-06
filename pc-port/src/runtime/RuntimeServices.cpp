@@ -2619,6 +2619,14 @@ namespace smgpc::runtime {
         ++_programmable_camera_end_count;
     }
 
+    void CameraSystemService::set_game_camera_pose(const smgpc::camera::CameraPose &pose) {
+        _game_camera_pose = pose;
+    }
+
+    void CameraSystemService::clear_game_camera_pose() {
+        _game_camera_pose.reset();
+    }
+
     std::optional<smgpc::camera::CameraPose> CameraSystemService::set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
                                                                                                 const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
                                                                                                 bool do_zero_w_offset) {
@@ -2675,8 +2683,19 @@ namespace smgpc::runtime {
         return _camera_director_pause_count > 0U;
     }
 
+    std::optional<smgpc::camera::CameraPose> CameraSystemService::game_camera_pose() const {
+        return _game_camera_pose;
+    }
+
     std::optional<smgpc::camera::CameraPose> CameraSystemService::active_programmable_camera_pose() const {
         return active_programmable_camera_pose_for(_active_programmable_camera_name);
+    }
+
+    std::optional<smgpc::camera::CameraPose> CameraSystemService::effective_camera_pose() const {
+        if (const auto programmable = active_programmable_camera_pose()) {
+            return programmable;
+        }
+        return _game_camera_pose;
     }
 
     std::optional<std::string_view> CameraSystemService::active_programmable_camera_name() const {

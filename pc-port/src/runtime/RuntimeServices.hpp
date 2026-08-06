@@ -569,6 +569,8 @@ namespace smgpc::runtime {
         void declare_event_camera_programmable(std::string_view name);
         void start_global_event_camera_no_target(std::string_view name);
         void end_global_event_camera(std::string_view name);
+        void set_game_camera_pose(const smgpc::camera::CameraPose &pose);
+        void clear_game_camera_pose();
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
                                                                                              const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
                                                                                              bool do_zero_w_offset);
@@ -580,7 +582,9 @@ namespace smgpc::runtime {
         [[nodiscard]] std::uint32_t strong_shake_request_count() const;
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
+        [[nodiscard]] std::optional<smgpc::camera::CameraPose> game_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose() const;
+        [[nodiscard]] std::optional<smgpc::camera::CameraPose> effective_camera_pose() const;
         [[nodiscard]] std::optional<std::string_view> active_programmable_camera_name() const;
         [[nodiscard]] std::uint32_t programmable_camera_declare_count() const;
         [[nodiscard]] std::uint32_t programmable_camera_start_count() const;
@@ -608,6 +612,7 @@ namespace smgpc::runtime {
         std::uint32_t _normal_shake_request_count = 0U;
         std::uint32_t _strong_shake_request_count = 0U;
         std::uint32_t _camera_director_pause_count = 0U;
+        std::optional<smgpc::camera::CameraPose> _game_camera_pose;
         std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
         std::string _active_programmable_camera_name;
         std::uint32_t _programmable_camera_declare_count = 0U;

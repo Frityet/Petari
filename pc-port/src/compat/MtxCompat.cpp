@@ -72,6 +72,30 @@ namespace MR {
         }
     }
 
+    void makeMtxTRS(MtxPtr pMatrix, f32 tx, f32 ty, f32 tz, f32 rx, f32 ry, f32 rz, f32 sx, f32 sy, f32 sz) {
+        makeMtxTR(pMatrix, tx, ty, tz, rx, ry, rz);
+        pMatrix[0][0] *= sx;
+        pMatrix[1][0] *= sx;
+        pMatrix[2][0] *= sx;
+        pMatrix[0][1] *= sy;
+        pMatrix[1][1] *= sy;
+        pMatrix[2][1] *= sy;
+        pMatrix[0][2] *= sz;
+        pMatrix[1][2] *= sz;
+        pMatrix[2][2] *= sz;
+    }
+
+    void makeMtxTRS(MtxPtr pMatrix, const TVec3f& rTranslation, const TVec3f& rRotation, const TVec3f& rScale) {
+        makeMtxTRS(pMatrix, rTranslation.x, rTranslation.y, rTranslation.z, rRotation.x, rRotation.y, rRotation.z, rScale.x,
+                   rScale.y, rScale.z);
+    }
+
+    void makeMtxTRS(MtxPtr pMatrix, const LiveActor* pActor) {
+        if (pActor != nullptr) {
+            makeMtxTRS(pMatrix, pActor->mPosition, pActor->mRotation, pActor->mScale);
+        }
+    }
+
     void makeMtxUpNoSupportPos(TPos3f* pMatrix, const TVec3f& rUp, const TVec3f& rPosition) {
         if (pMatrix == nullptr) {
             return;

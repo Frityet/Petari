@@ -1,0 +1,36 @@
+Focused camera tests (synthetic):
+  xmake run smg-pc-stage-start-camera-tests
+  [ok] rigid zone matrix and StartInfo selection
+  [ok] camera migration, key, and XZ_PARA pose
+  [ok] base and programmable camera priority
+  [skip] real-disc camera test (set SMGPC_REAL_DISC)
+  [ok] optional real-disc HeavensDoor camera
+  4 stage-start camera test(s) passed
+
+Focused camera tests (real Korean RVZ):
+  SMGPC_REAL_DISC='../Super Mario Wii - Galaxy Adventure (Korea).rvz' xmake run smg-pc-stage-start-camera-tests
+  [ok] rigid zone matrix and StartInfo selection
+  [ok] camera migration, key, and XZ_PARA pose
+  [ok] base and programmable camera priority
+  [ok] optional real-disc HeavensDoor camera
+  4 stage-start camera test(s) passed
+
+Aurora native suite:
+  xmake run smg-pc-aurora-native-tests
+  20 Aurora-native test(s) passed
+
+PC port build:
+  xmake build smg-pc
+  build ok
+
+RMGK02 decomp build:
+  ninja
+  ninja: no work to do.
+
+Full real-disc route:
+  xmake aurora-route-smoke --disc='../Super Mario Wii - Galaxy Adventure (Korea).rvz' --work-dir=notes/stage-start-camera-20260806/route-smoke --no-build title file_select picturebook gateway_handoff
+  aurora-route-smoke: title passed nonblack=1.0000 render_packets=22
+  aurora-route-smoke: file_select passed nonblack=0.9998 render_packets=27
+  aurora-route-smoke: picturebook passed nonblack=1.0000 render_packets=13
+  aurora-route-smoke: gateway_handoff passed nonblack=0.9806 render_packets=573
+  aurora-route-smoke: passed

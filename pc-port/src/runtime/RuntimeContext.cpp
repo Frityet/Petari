@@ -592,7 +592,7 @@ namespace smgpc::runtime {
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
         _camera_system.begin_frame(_frame_index);
-        if (const auto camera_pose = _camera_system.active_programmable_camera_pose()) {
+        if (const auto camera_pose = _camera_system.effective_camera_pose()) {
             _scene_camera_pose = *camera_pose;
         }
         const auto debug_toggle_freecam = _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_TOGGLE_FREECAM);
@@ -848,7 +848,7 @@ namespace smgpc::runtime {
 
     void RuntimeContext::draw_3d_normal() {
         if (!_scene_camera_pose.has_value()) {
-            if (const auto camera_pose = _camera_system.active_programmable_camera_pose()) {
+            if (const auto camera_pose = _camera_system.effective_camera_pose()) {
                 _scene_camera_pose = *camera_pose;
                 draw_3d_normal(*_scene_camera_pose);
                 return;

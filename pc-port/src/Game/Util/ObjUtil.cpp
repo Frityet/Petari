@@ -61,6 +61,10 @@ namespace MR {
         MR::connectToScene(pObj, MR::MovementType_MapObj, -1, -1, -1);
     }
 
+    void connectToSceneNoSilhouettedMapObj(LiveActor* pActor) {
+        MR::connectToScene(pActor, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_NoSilhouettedMapObj, -1);
+    }
+
     void connectToSceneItemStrongLight(LiveActor* pActor) {
         MR::connectToScene(pActor, MR::MovementType_Item, MR::CalcAnimType_Item, MR::DrawBufferType_NoSilhouettedMapObjStrongLight, -1);
     }

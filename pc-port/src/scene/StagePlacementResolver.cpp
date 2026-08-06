@@ -216,46 +216,29 @@ namespace smgpc::scene {
             return value;
         }
 
-        [[nodiscard]] std::array<f32, 3U> rotate_euler_xyz(const std::array<f32, 3U> &value, const std::array<f32, 3U> &rotation) {
-            const auto rx = rotation[0] * cDegToRad;
-            const auto ry = rotation[1] * cDegToRad;
-            const auto rz = rotation[2] * cDegToRad;
-            const auto sx = std::sin(rx);
-            const auto cx = std::cos(rx);
-            const auto sy = std::sin(ry);
-            const auto cy = std::cos(ry);
-            const auto sz = std::sin(rz);
-            const auto cz = std::cos(rz);
-
-            const auto r00 = cz * cy;
-            const auto r01 = (cz * sy * sx) - (sz * cx);
-            const auto r02 = (cz * sy * cx) + (sz * sx);
-            const auto r10 = sz * cy;
-            const auto r11 = (sz * sy * sx) + (cz * cx);
-            const auto r12 = (sz * sy * cx) - (cz * sx);
-            const auto r20 = -sy;
-            const auto r21 = cy * sx;
-            const auto r22 = cy * cx;
-
-            return std::array<f32, 3U>{
-                (r00 * value[0]) + (r01 * value[1]) + (r02 * value[2]),
-                (r10 * value[0]) + (r11 * value[1]) + (r12 * value[2]),
-                (r20 * value[0]) + (r21 * value[1]) + (r22 * value[2]),
-            };
+        [[nodiscard]] std::array<f32, 3U> transform_point(const StageZoneTransform &transform, const std::array<f32, 3U> &point) {
+            return transform.transform_point(point);
         }
 
-        [[nodiscard]] std::array<f32, 3U> transform_point(const StageZoneTransform &transform, const std::array<f32, 3U> &point) {
-            const auto scaled = std::array<f32, 3U>{
-                point[0] * transform.scale[0],
-                point[1] * transform.scale[1],
-                point[2] * transform.scale[2],
-            };
-            const auto rotated = rotate_euler_xyz(scaled, transform.rotation);
-            return std::array<f32, 3U>{
-                rotated[0] + transform.translation[0],
-                rotated[1] + transform.translation[1],
-                rotated[2] + transform.translation[2],
-            };
+        [[nodiscard]] std::array<f32, 3U> rotation_degrees(const StageZoneTransform &transform) {
+            constexpr auto cRadToDeg = f32{180.0F / 3.14159265358979323846F};
+            const auto &m = transform.matrix;
+            auto result = std::array<f32, 3U>{};
+            if (m[8] >= 0.999F) {
+                result[0] = std::atan2(-m[1], m[5]);
+                result[1] = -0.5F * 3.14159265358979323846F;
+            } else if (m[8] <= -0.999F) {
+                result[0] = std::atan2(m[1], m[5]);
+                result[1] = 0.5F * 3.14159265358979323846F;
+            } else {
+                result[0] = std::atan2(m[9], m[10]);
+                result[1] = std::asin(-m[8]);
+                result[2] = std::atan2(m[4], m[0]);
+            }
+            for (auto &angle : result) {
+                angle *= cRadToDeg;
+            }
+            return result;
         }
 
         void apply_point_transform(JMapInfo &info, int entry_index, const StageZoneTransform &transform, std::string_view prefix) {
@@ -276,22 +259,7 @@ namespace smgpc::scene {
         [[nodiscard]] StageZoneTransform compose_zone_transform(const StageZoneTransform &parent, const JMapInfoIter &zone_iter) {
             const auto local_translation = read_vec3_or(zone_iter, "pos", {0.0F, 0.0F, 0.0F});
             const auto local_rotation = read_vec3_or(zone_iter, "dir", {0.0F, 0.0F, 0.0F});
-            const auto local_scale = read_vec3_or(zone_iter, "scale", {1.0F, 1.0F, 1.0F});
-            return StageZoneTransform{
-                .translation = transform_point(parent, local_translation),
-                .rotation =
-                    {
-                        parent.rotation[0] + local_rotation[0],
-                        parent.rotation[1] + local_rotation[1],
-                        parent.rotation[2] + local_rotation[2],
-                    },
-                .scale =
-                    {
-                        parent.scale[0] * local_scale[0],
-                        parent.scale[1] * local_scale[1],
-                        parent.scale[2] * local_scale[2],
-                    },
-            };
+            return parent.concatenated(StageZoneTransform::from_translation_rotation(local_translation, local_rotation));
         }
 
         void apply_zone_transform(JMapInfo &info, const StageZoneTransform &transform) {
@@ -305,17 +273,12 @@ namespace smgpc::scene {
                 auto local_rotation = std::array<f32, 3U>{};
                 if (iter.getValue("dir_x", &local_rotation[0]) && iter.getValue("dir_y", &local_rotation[1]) &&
                     iter.getValue("dir_z", &local_rotation[2])) {
-                    info.setValue(entry_index, "dir_x", transform.rotation[0] + local_rotation[0]);
-                    info.setValue(entry_index, "dir_y", transform.rotation[1] + local_rotation[1]);
-                    info.setValue(entry_index, "dir_z", transform.rotation[2] + local_rotation[2]);
-                }
-
-                auto local_scale = std::array<f32, 3U>{};
-                if (iter.getValue("scale_x", &local_scale[0]) && iter.getValue("scale_y", &local_scale[1]) &&
-                    iter.getValue("scale_z", &local_scale[2])) {
-                    info.setValue(entry_index, "scale_x", transform.scale[0] * local_scale[0]);
-                    info.setValue(entry_index, "scale_y", transform.scale[1] * local_scale[1]);
-                    info.setValue(entry_index, "scale_z", transform.scale[2] * local_scale[2]);
+                    const auto world_rotation = transform.concatenated(
+                        StageZoneTransform::from_translation_rotation({0.0F, 0.0F, 0.0F}, local_rotation));
+                    const auto world_euler = rotation_degrees(world_rotation);
+                    info.setValue(entry_index, "dir_x", world_euler[0]);
+                    info.setValue(entry_index, "dir_y", world_euler[1]);
+                    info.setValue(entry_index, "dir_z", world_euler[2]);
                 }
             }
         }
@@ -481,6 +444,7 @@ namespace smgpc::scene {
                     .zone_id = zone_id,
                     .layer_id = table_layer_id,
                     .layer_mask = layer_mask,
+                    .archive_entry_order = entry.file_entry_index,
                     .zone_transform = zone_transform,
                 });
             }
@@ -641,6 +605,121 @@ namespace smgpc::scene {
 
     }  // namespace
 
+    StageZoneTransform StageZoneTransform::from_translation_rotation(const std::array<f32, 3U> &translation,
+                                                                      const std::array<f32, 3U> &rotation_degrees) {
+        const auto rx = rotation_degrees[0] * cDegToRad;
+        const auto ry = rotation_degrees[1] * cDegToRad;
+        const auto rz = rotation_degrees[2] * cDegToRad;
+        const auto sx = std::sin(rx);
+        const auto cx = std::cos(rx);
+        const auto sy = std::sin(ry);
+        const auto cy = std::cos(ry);
+        const auto sz = std::sin(rz);
+        const auto cz = std::cos(rz);
+
+        auto result = StageZoneTransform{};
+        result.matrix = {
+            cz * cy,
+            (cz * sy * sx) - (sz * cx),
+            (cz * sy * cx) + (sz * sx),
+            translation[0],
+            sz * cy,
+            (sz * sy * sx) + (cz * cx),
+            (sz * sy * cx) - (cz * sx),
+            translation[1],
+            -sy,
+            cy * sx,
+            cy * cx,
+            translation[2],
+        };
+        return result;
+    }
+
+    StageZoneTransform StageZoneTransform::concatenated(const StageZoneTransform &local) const {
+        auto result = StageZoneTransform{};
+        for (auto row = std::size_t{}; row < 3U; ++row) {
+            for (auto column = std::size_t{}; column < 3U; ++column) {
+                result.matrix[row * 4U + column] = matrix[row * 4U + 0U] * local.matrix[column + 0U] +
+                                                     matrix[row * 4U + 1U] * local.matrix[column + 4U] +
+                                                     matrix[row * 4U + 2U] * local.matrix[column + 8U];
+            }
+            result.matrix[row * 4U + 3U] = matrix[row * 4U + 0U] * local.matrix[3U] +
+                                           matrix[row * 4U + 1U] * local.matrix[7U] +
+                                           matrix[row * 4U + 2U] * local.matrix[11U] + matrix[row * 4U + 3U];
+        }
+        return result;
+    }
+
+    std::array<f32, 3U> StageZoneTransform::transform_point(const std::array<f32, 3U> &point) const {
+        const auto rotated = transform_vector(point);
+        return {
+            rotated[0] + matrix[3U],
+            rotated[1] + matrix[7U],
+            rotated[2] + matrix[11U],
+        };
+    }
+
+    std::array<f32, 3U> StageZoneTransform::transform_vector(const std::array<f32, 3U> &vector) const {
+        return {
+            matrix[0U] * vector[0] + matrix[1U] * vector[1] + matrix[2U] * vector[2],
+            matrix[4U] * vector[0] + matrix[5U] * vector[1] + matrix[6U] * vector[2],
+            matrix[8U] * vector[0] + matrix[9U] * vector[1] + matrix[10U] * vector[2],
+        };
+    }
+
+    std::optional<StageStartInfo> select_stage_start_info(std::span<const StagePlacementTable> tables, s32 start_id,
+                                                           s32 start_zone_id) {
+        auto start_tables = std::vector<const StagePlacementTable *>{};
+        for (const auto &table : tables) {
+            if (table.category == "start" && table.zone_id == start_zone_id && table.layer_id >= 0) {
+                start_tables.push_back(&table);
+            }
+        }
+        std::ranges::stable_sort(start_tables, [](const auto *lhs, const auto *rhs) {
+            if (lhs->layer_id != rhs->layer_id) {
+                return lhs->layer_id < rhs->layer_id;
+            }
+            return lhs->archive_entry_order < rhs->archive_entry_order;
+        });
+
+        for (const auto *table : start_tables) {
+            for (auto entry_index = s32{}; entry_index < table->jmap_info.getNumEntries(); ++entry_index) {
+                const auto iter = JMapInfoIter(&table->jmap_info, entry_index);
+                auto mario_no = s32{-1};
+                if (!iter.getValue("MarioNo", &mario_no) || mario_no != start_id) {
+                    continue;
+                }
+
+                const auto local_position = read_vec3_or(iter, "pos", {0.0F, 0.0F, 0.0F});
+                const auto local_rotation = read_vec3_or(iter, "dir", {0.0F, 0.0F, 0.0F});
+                const auto world_rotation = table->zone_transform.concatenated(
+                    StageZoneTransform::from_translation_rotation({0.0F, 0.0F, 0.0F}, local_rotation));
+                auto camera_id = s32{-1};
+                (void)iter.getValue("Camera_id", &camera_id);
+
+                return StageStartInfo{
+                    .stage_name = table->stage_name,
+                    .zone_name = table->zone_name,
+                    .layer_name = table->layer_name,
+                    .archive_path = table->archive_path,
+                    .table_path = table->table_path,
+                    .start_id = start_id,
+                    .zone_id = start_zone_id,
+                    .camera_id = camera_id,
+                    .jmap_entry_index = entry_index,
+                    .local_position = local_position,
+                    .local_rotation = local_rotation,
+                    .world_position = table->zone_transform.transform_point(local_position),
+                    .world_side = {world_rotation.matrix[0U], world_rotation.matrix[4U], world_rotation.matrix[8U]},
+                    .world_up = {world_rotation.matrix[1U], world_rotation.matrix[5U], world_rotation.matrix[9U]},
+                    .world_front = {world_rotation.matrix[2U], world_rotation.matrix[6U], world_rotation.matrix[10U]},
+                    .zone_transform = table->zone_transform,
+                };
+            }
+        }
+        return std::nullopt;
+    }
+
     std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {
         auto tables = std::vector<StagePlacementTable>{};
         auto visited = std::set<std::string>{};
@@ -682,6 +761,12 @@ namespace smgpc::scene {
         }
 
         return std::move(objects.front());
+    }
+
+    std::optional<StageStartInfo> resolve_stage_start_info(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
+                                                           s32 scenario_no, s32 start_id, s32 start_zone_id) {
+        const auto tables = resolve_stage_placement_tables(dvd, stage_name, scenario_no);
+        return select_stage_start_info(tables, start_id, start_zone_id);
     }
 
 }  // namespace smgpc::scene

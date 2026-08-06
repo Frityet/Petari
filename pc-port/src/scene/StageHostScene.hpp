@@ -3,11 +3,15 @@
 #include "Game/Scene/Scene.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
+#include "camera/StageStartCamera.hpp"
+#include "scene/StageCollisionService.hpp"
+#include "scene/StageGravityService.hpp"
 #include "scene/StageHostService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
 #include <cstddef>
 #include <memory>
+#include <optional>
 #include <string_view>
 #include <vector>
 
@@ -44,6 +48,7 @@ namespace smgpc::scene {
         void init_placement_roots();
         void trace_placement_object(const StagePlacementObject &placement) const;
         void init_roots_after_placement();
+        void init_stage_start_camera();
         void appear_roots();
         void destroy_roots();
         [[nodiscard]] std::string resolve_actor_name(std::string_view object_name) const;
@@ -51,9 +56,12 @@ namespace smgpc::scene {
         smgpc::runtime::RuntimeContext &_runtime;
         std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
+        StageCollisionService _collision;
+        StageGravityService _gravity;
         std::vector<StagePlacementObject> _placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
         std::vector<const StagePlacementObject *> _root_placements;
+        std::optional<smgpc::camera::ResolvedStageStartCamera> _stage_start_camera;
     };
 
 }  // namespace smgpc::scene

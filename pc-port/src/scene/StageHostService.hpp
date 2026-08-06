@@ -20,6 +20,8 @@ namespace smgpc::scene {
         std::string object_name;
         std::string actor_name;
         s32 scenario_no = 1;
+        s32 start_id = 0;
+        s32 start_zone_id = 0;
         bool appear_after_init = false;
         bool fail_unsupported_placement = false;
     };

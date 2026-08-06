@@ -15,6 +15,12 @@ namespace MR {
     void addRandomVector(TVec3f* pDst, const TVec3f& rSrc, f32 range);
     f32 repeat(f32 value, f32 min, f32 max);
     f32 mod(f32 x, f32 y);
+    inline f32 cos(f32 value) {
+        return std::cos(value);
+    }
+    inline f32 sin(f32 value) {
+        return std::sin(value);
+    }
     bool isNearZero(f32 x, f32 tolerance = 0.001f);
     bool isNearZero(const TVec3f& rVec, f32 tolerance = 0.001f);
     void makeAxisVerticalZX(TVec3f* pDst, const TVec3f& rAxis);

@@ -9,6 +9,7 @@
 #include "Game/MapObj/Coin.hpp"
 #include "Game/MapObj/PurpleCoinStarter.hpp"
 #include "Game/MapObj/RailCoin.hpp"
+#include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/NPC/DemoRabbit.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 
@@ -21,7 +22,7 @@ namespace {
         return new T(pName);
     }
 
-    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 12>{
+    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 14>{
         NameObjFactory::Name2CreateFunc{
             "PrologueDirector",
             createNameObj<PrologueDirector>,
@@ -80,6 +81,16 @@ namespace {
         NameObjFactory::Name2CreateFunc{
             "DemoRabbit",
             createNameObj<DemoRabbit>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "StarPieceFlow",
+            createNameObj<StarPieceGroup>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "StarPieceGroup",
+            createNameObj<StarPieceGroup>,
             nullptr,
         },
     };

@@ -16,6 +16,7 @@
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
+#include "compat/ActorMotionCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace smgpc::runtime {
@@ -526,6 +527,10 @@ namespace smgpc::runtime {
                 continue;
             }
 
+            if (auto *actor = entry_live_actor(*entry); actor != nullptr) {
+                smgpc::compat::update_live_actor_gravity(*actor);
+            }
+
             switch (entry->kind) {
             case SceneEntryKind::NameObj:
                 entry->name_obj->executeMovement();
@@ -539,6 +544,10 @@ namespace smgpc::runtime {
             case SceneEntryKind::LiveActorModel:
                 entry->live_actor->movement();
                 break;
+            }
+
+            if (auto *actor = entry_live_actor(*entry); actor != nullptr && !actor->isDead()) {
+                smgpc::compat::integrate_live_actor_velocity(*actor);
             }
 #ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::Movement);

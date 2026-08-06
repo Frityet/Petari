@@ -9,6 +9,8 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
+#include "Game/MapObj/StarPiece.hpp"
+#include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
@@ -32,6 +34,8 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
+#include "scene/StageCollisionService.hpp"
+#include "scene/StageGravityService.hpp"
 #include "scene/StageHostScene.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 
@@ -99,6 +103,41 @@ namespace {
         write_be32(bytes, 0x00U, entry_count);
         write_be32(bytes, 0x08U, 0x10U);
         return JMapInfo::from_bcsv(bytes);
+    }
+
+    std::vector<std::uint8_t> make_single_triangle_kcl() {
+        constexpr auto position_offset = 0x38U;
+        constexpr auto normal_offset = 0x44U;
+        constexpr auto prism_offset = 0x74U;
+        constexpr auto octree_offset = 0x84U;
+        auto bytes = std::vector<std::uint8_t>(0x88U, 0U);
+        write_be32(bytes, 0x00U, position_offset);
+        write_be32(bytes, 0x04U, normal_offset);
+        // KCL stores this address 0x10 bytes before the first prism.
+        write_be32(bytes, 0x08U, prism_offset - 0x10U);
+        write_be32(bytes, 0x0cU, octree_offset);
+        write_be_float(bytes, 0x10U, 0.0F);
+
+        const auto write_vec3 = [&](std::size_t offset, float x, float y, float z) {
+            write_be_float(bytes, offset, x);
+            write_be_float(bytes, offset + 4U, y);
+            write_be_float(bytes, offset + 8U, z);
+        };
+        write_vec3(position_offset, 0.0F, 0.0F, 0.0F);
+        write_vec3(normal_offset + 0x00U, 0.0F, 1.0F, 0.0F);
+        write_vec3(normal_offset + 0x0cU, 1.0F, 0.0F, 0.0F);
+        write_vec3(normal_offset + 0x18U, 0.0F, 0.0F, 1.0F);
+        constexpr auto diagonal = 0.70710678118F;
+        write_vec3(normal_offset + 0x24U, diagonal, 0.0F, diagonal);
+
+        write_be_float(bytes, prism_offset, diagonal);
+        write_be16(bytes, prism_offset + 4U, 0U);
+        write_be16(bytes, prism_offset + 6U, 0U);
+        write_be16(bytes, prism_offset + 8U, 1U);
+        write_be16(bytes, prism_offset + 10U, 2U);
+        write_be16(bytes, prism_offset + 12U, 3U);
+        write_be16(bytes, prism_offset + 14U, 7U);
+        return bytes;
     }
 
     JMapInfo make_open_rail_path_info() {
@@ -176,6 +215,38 @@ namespace {
         auto info = JMapInfo::from_bcsv(bytes);
         info.setRailInfo(0, make_open_rail_path_info(), make_linear_rail_point_info(5U), 0);
         return info;
+    }
+
+    JMapInfo make_star_piece_group_placement_info() {
+        constexpr auto field_count = 11U;
+        constexpr auto entry_size = field_count * 4U;
+        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
+        constexpr auto field_names = std::array<std::string_view, field_count>{
+            "Obj_arg0", "Obj_arg1", "pos_x", "pos_y", "pos_z", "dir_x", "dir_y", "dir_z", "scale_x", "scale_y", "scale_z",
+        };
+
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        for (auto field = 0U; field < field_count; ++field) {
+            const auto type = field <= 1U ? smgpc::resource::BcsvFieldType::Int32 : smgpc::resource::BcsvFieldType::Float;
+            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U), type);
+        }
+
+        write_be32(bytes, data_offset + 0U * 4U, 10U);
+        write_be32(bytes, data_offset + 1U * 4U, 100U);
+        write_be_float(bytes, data_offset + 2U * 4U, 0.0F);
+        write_be_float(bytes, data_offset + 3U * 4U, 2120.580322F);
+        write_be_float(bytes, data_offset + 4U * 4U, 0.0F);
+        write_be_float(bytes, data_offset + 5U * 4U, 0.0F);
+        write_be_float(bytes, data_offset + 6U * 4U, 90.0F);
+        write_be_float(bytes, data_offset + 7U * 4U, 0.0F);
+        write_be_float(bytes, data_offset + 8U * 4U, 2.0F);
+        write_be_float(bytes, data_offset + 9U * 4U, 3.0F);
+        write_be_float(bytes, data_offset + 10U * 4U, 4.0F);
+        return JMapInfo::from_bcsv(bytes);
     }
 
     int g_pre_retrace = -1;
@@ -616,6 +687,57 @@ namespace {
         smgpc::compat::release_actor_runtime_state(revisited_rabbit);
     }
 
+    void test_star_piece_group_factory_trs_and_reset() {
+        require(NameObjFactory::canCreate("StarPieceGroup") && NameObjFactory::canCreate("StarPieceFlow"),
+                "the original factory aliases should expose both StarPieceGroup placement names");
+        const auto creator = NameObjFactory::getCreator("StarPieceGroup");
+        require(creator != nullptr, "StarPieceGroup should have a concrete original factory creator");
+
+        auto placement = make_star_piece_group_placement_info();
+        auto archives = NameObjArchiveListCollector{};
+        NameObjFactory::getMountObjectArchiveList(&archives, "StarPieceGroup", JMapInfoIter(&placement, 0));
+        require(archives.mCount == 0,
+                "StarPieceGroup should preserve the original null factory archive entry; its children request StarPiece at initialization");
+
+        auto actor = std::unique_ptr<NameObj>(creator("StarPieceGroup"));
+        auto* group = dynamic_cast<StarPieceGroup*>(actor.get());
+        require(group != nullptr, "the StarPieceGroup factory entry should construct the exact actor type");
+        group->init(JMapInfoIter(&placement, 0));
+
+        require(group->mNumPieces == 10 && group->mPieces != nullptr && group->mRailCoords != nullptr,
+                "Obj_arg0=10 should create the native ten-piece group and its original coordinate storage");
+        require(smgpc::compat::declared_star_piece_count(group) == 10U,
+                "the generalized StarPiece declaration registry should retain the group's native child count");
+        require(group->mPosition.epsilonEquals(TVec3f{0.0F, 2120.580322F, 0.0F}, 0.001F) &&
+                    group->mRotation.epsilonEquals(TVec3f{0.0F, 90.0F, 0.0F}, 0.001F) &&
+                    group->mScale.epsilonEquals(TVec3f{2.0F, 3.0F, 4.0F}, 0.001F),
+                "the original group should consume placement translation, rotation, and scale without route-specific policy");
+
+        require(group->mPieces[0]->mPosition.epsilonEquals(TVec3f{400.0F, 2120.580322F, 0.0F}, 0.01F),
+                "piece zero should use the scaled and Y-rotated local Z axis from the actor TRS matrix");
+        require(group->mPieces[5]->mPosition.epsilonEquals(TVec3f{-400.0F, 2120.580322F, 0.0F}, 0.02F),
+                "the opposite point should retain the original even-circle placement");
+        require(group->mPieces[2]->mPosition.epsilonEquals(TVec3f{123.6068F, 2120.580322F, -190.2113F}, 0.02F),
+                "non-cardinal points should combine independently scaled TRS axes with the original circle angles");
+        for (auto index = s32{}; index < group->mNumPieces; ++index) {
+            require(group->mPieces[index] != nullptr && !group->mPieces[index]->isDead() && group->mPieces[index]->isFloat(),
+                    "every native child should appear in the floating group state");
+        }
+
+        const auto original_piece_two = group->mPieces[2]->mPosition;
+        group->forceKillStarPieceAll(false);
+        require(!group->isExistAnyStarPiece(), "the original group kill path should make all floating children dead");
+        group->mPieces[2]->mPosition.set(999.0F, 999.0F, 999.0F);
+        group->forceReplaceStarPieceAll();
+        require(group->isExistAnyStarPiece() && group->mPieces[2]->mPosition.epsilonEquals(original_piece_two, 0.001F),
+                "the original reset path should restore circle placement and revive collected children");
+
+        smgpc::compat::release_actor_runtime_state(group);
+        require(group->mPieces == nullptr && group->mRailCoords == nullptr && group->mNumPieces == 0 &&
+                    smgpc::compat::declared_star_piece_count(group) == 0U,
+                "group teardown should release child actors, arrays, and generalized declaration state");
+    }
+
     void test_stage_host_preserves_placement_appearance_state() {
         auto placement = smgpc::scene::StagePlacementObject{};
         require(smgpc::scene::should_apply_host_appear(nullptr),
@@ -633,6 +755,87 @@ namespace {
         }
         require(!explicit_root.isDead() && placement_root.isDead(),
                 "the generic host appear policy should not revive a placement actor that initialized dead");
+    }
+
+    void test_kcl_collision_service_queries_and_binder_resolution() {
+        auto collision = smgpc::scene::StageCollisionService{};
+        constexpr auto identity = std::array<float, 12U>{
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+        const auto kcl = make_single_triangle_kcl();
+        require(collision.add_kcl(kcl, identity, "native-test.kcl"),
+                "a valid big-endian KCL prism should reconstruct into a host collision triangle");
+        collision.build();
+        require(collision.stats().mesh_count == 1U && collision.stats().triangle_count == 1U &&
+                    collision.stats().rejected_triangle_count == 0U,
+                "the KCL service should report its accepted resource and triangle counts");
+
+        auto hit = smgpc::scene::StageCollisionHit{};
+        require(collision.line_cast(TVec3f{0.25F, 1.0F, 0.25F}, TVec3f{0.0F, -2.0F, 0.0F}, &hit) &&
+                    hit.position.epsilonEquals(TVec3f{0.25F, 0.0F, 0.25F}, 0.0001F) &&
+                    hit.normal.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) && hit.attribute == 7U,
+                "line queries should return the reconstructed KCL position, normal, and attribute");
+
+        const auto contacts = collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F);
+        require(!contacts.empty() && contacts.front().penetration > 0.24F && contacts.front().attribute == 7U,
+                "sphere queries should expose penetrating KCL contacts to the generalized binder");
+        const auto move = collision.move_sphere(TVec3f{0.25F, 0.75F, 0.25F}, TVec3f{0.0F, -0.5F, 0.0F}, 0.5F);
+        const auto resolved_center = TVec3f{0.25F, 0.75F, 0.25F} + move.displacement;
+        require(!move.contacts.empty() && resolved_center.y >= 0.5F && resolved_center.y < 2.0F,
+                "binder motion should stop a moving sphere at the KCL surface instead of passing through it");
+
+        collision.activate();
+        require(smgpc::scene::StageCollisionService::active() == &collision,
+                "the scene collision boundary should publish the current stage service");
+        collision.deactivate();
+        require(smgpc::scene::StageCollisionService::active() == nullptr,
+                "stage teardown should clear the active collision boundary");
+    }
+
+    void test_stage_gravity_service_data_driven_fields() {
+        auto point = smgpc::scene::StagePlacementObject{};
+        point.object_name = "GlobalPointGravity";
+        point.translation = {10.0F, 20.0F, 30.0F};
+        point.object_args.fill(-1);
+        point.jmap_info = make_fieldless_jmap(1U);
+        point.jmap_entry_index = 0;
+
+        auto gravity_service = smgpc::scene::StageGravityService{};
+        auto placements = std::array{point};
+        const auto point_stats = gravity_service.load(placements);
+        require(point_stats.placement_count == 1U && point_stats.gravity_count == 1U &&
+                    point_stats.unsupported_count == 0U,
+                "a GlobalPointGravity placement should become one supported host gravity field");
+
+        auto gravity = TVec3f{};
+        require(gravity_service.query(TVec3f{10.0F, 30.0F, 30.0F}, &gravity) &&
+                    gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
+                "point gravity should point from the queried position toward its placement origin");
+
+        gravity_service.activate();
+        auto caller = NameObj("gravity-query-caller");
+        gravity.zero();
+        require(MR::calcGravityVector(&caller, TVec3f{10.0F, 30.0F, 30.0F}, &gravity, nullptr, 0U) &&
+                    gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
+                "the original MR gravity query boundary should consume the active generalized field service");
+
+        auto plane = smgpc::scene::StagePlacementObject{};
+        plane.object_name = "GlobalPlaneGravity";
+        plane.rotation = {0.0F, 0.0F, 90.0F};
+        plane.object_args.fill(-1);
+        plane.jmap_info = make_fieldless_jmap(1U);
+        plane.jmap_entry_index = 0;
+        placements[0] = plane;
+        gravity_service.load(placements);
+        require(gravity_service.query(TVec3f{100.0F, 200.0F, 300.0F}, &gravity) &&
+                    gravity.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
+                "parallel gravity should derive its direction from the placement rotation without stage-name policy");
+
+        gravity_service.deactivate();
+        require(smgpc::scene::StageGravityService::active() == nullptr,
+                "stage teardown should clear the active gravity boundary");
     }
 
     void test_original_rail_part_geometry() {
@@ -919,7 +1122,10 @@ int main() {
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
         TestCase{"DemoRabbit factory archives and placement init", test_demo_rabbit_factory_archives_and_placement_init},
+        TestCase{"StarPieceGroup factory TRS and reset", test_star_piece_group_factory_trs_and_reset},
         TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
+        TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},
+        TestCase{"data-driven stage gravity fields", test_stage_gravity_service_data_driven_fields},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},

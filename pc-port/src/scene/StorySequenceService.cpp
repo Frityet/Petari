@@ -27,7 +27,9 @@ namespace smgpc::scene {
         _runtime.set_current_stage_name(route->mStageName);
 #ifndef NDEBUG
         const auto detail = "event=" + route->mEventName + ";demo=" + route->mDemoName + ";stage=" + route->mStageName +
-                            ";scenario=" + std::to_string(route->mScenarioNo);
+                            ";scenario=" + std::to_string(route->mScenarioNo) +
+                            ";start_id=" + std::to_string(route->mStartId) +
+                            ";start_zone_id=" + std::to_string(route->mStartZoneId);
         _runtime.emit_sequence_state_trace_event("story_stage_prepared", detail);
         _runtime.emit_semantic_trace_event("story", "story_stage_prepared", detail);
 #endif
@@ -37,6 +39,8 @@ namespace smgpc::scene {
             .object_name = route->mObjectName,
             .actor_name = route->mActorName,
             .scenario_no = route->mScenarioNo,
+            .start_id = route->mStartId,
+            .start_zone_id = route->mStartZoneId,
             .appear_after_init = route->mAppearAfterInit,
             .fail_unsupported_placement = route->mFailUnsupportedPlacement,
         };

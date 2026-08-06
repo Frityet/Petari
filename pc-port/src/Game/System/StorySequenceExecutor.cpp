@@ -42,6 +42,8 @@ namespace {
             .mDemoName = std::string(cHeavensDoorDemoName),
             .mEventName = std::string(cHeavensDoorEventName),
             .mScenarioNo = 1,
+            .mStartId = 0,
+            .mStartZoneId = 0,
             .mAppearAfterInit = true,
             .mFailUnsupportedPlacement = false,
         };
@@ -57,6 +59,8 @@ StorySequenceExecutor::StageRequest StorySequenceExecutor::makeInitialStageReque
         .mDemoName = {},
         .mEventName = {},
         .mScenarioNo = 1,
+        .mStartId = 0,
+        .mStartZoneId = 0,
         .mAppearAfterInit = false,
     };
 }
@@ -108,6 +112,8 @@ void StorySequenceExecutor::preparePrologueAfterLoading() {
         .mDemoName = std::string(cPrologueDemoName),
         .mEventName = std::string(cPrologueEventName),
         .mScenarioNo = 1,
+        .mStartId = 0,
+        .mStartZoneId = 0,
         .mAppearAfterInit = true,
         .mFailUnsupportedPlacement = false,
     };

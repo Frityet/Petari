@@ -3,8 +3,19 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "scene/StageGravityService.hpp"
 
 namespace {
+    bool copy_stage_gravity(const TVec3f& rPosition, TVec3f* pDest) {
+        if (pDest == nullptr) {
+            return false;
+        }
+        if (auto* service = smgpc::scene::StageGravityService::active()) {
+            return service->query(rPosition, pDest);
+        }
+        return false;
+    }
+
     bool copy_actor_gravity(const NameObj* pObj, TVec3f* pDest) {
         if (pDest == nullptr) {
             return false;
@@ -22,13 +33,16 @@ namespace {
 
 namespace MR {
     bool calcGravityVector(const LiveActor* pActor, TVec3f* pDest, GravityInfo*, u32) {
+        if (pActor != nullptr && copy_stage_gravity(pActor->mPosition, pDest)) {
+            return true;
+        }
         return copy_actor_gravity(pActor, pDest);
     }
 
-    bool calcGravityVector(const NameObj* pObj, const TVec3f&, TVec3f* pDest, GravityInfo*, u32) {
-        // A positional query cannot be answered faithfully until the host has
-        // a PlanetGravityManager-equivalent registry. Do not invent a global
-        // down vector: report no field and leave a deterministic zero result.
+    bool calcGravityVector(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo*, u32) {
+        if (copy_stage_gravity(rPosition, pDest)) {
+            return true;
+        }
         return copy_actor_gravity(pObj, pDest);
     }
 

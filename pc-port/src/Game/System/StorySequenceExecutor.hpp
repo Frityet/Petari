@@ -16,6 +16,8 @@ public:
         std::string mDemoName;
         std::string mEventName;
         s32 mScenarioNo = 1;
+        s32 mStartId = 0;
+        s32 mStartZoneId = 0;
         bool mAppearAfterInit = false;
         bool mFailUnsupportedPlacement = false;
     };

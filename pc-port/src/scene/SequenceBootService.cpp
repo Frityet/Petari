@@ -37,6 +37,8 @@ namespace smgpc::scene {
             .object_name = request.mObjectName,
             .actor_name = request.mActorName,
             .scenario_no = request.mScenarioNo,
+            .start_id = request.mStartId,
+            .start_zone_id = request.mStartZoneId,
             .appear_after_init = request.mAppearAfterInit,
             .fail_unsupported_placement = request.mFailUnsupportedPlacement,
         });
