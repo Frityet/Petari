@@ -284,7 +284,7 @@ bool GameDataHolder::isPassedStoryEvent(const char* pEventName) const {
 
     u32 progress = 0;
     iter.getValue("progress", &progress);
-    return progress >= mPlayerStatus->mStoryProgress;
+    return mPlayerStatus->mStoryProgress >= progress;
 }
 
 void GameDataHolder::followStoryEventByName(const char* pEventName) {
