@@ -7,5 +7,7 @@ namespace MR {
     s32 getPictureBookChapterAlreadyRead();
     void setPictureBookChapterAlreadyRead(int chapterAlreadyRead);
     bool isOnGameEventFlagEndTicoGuideDemo();
+    void onGameEventFlagEndTicoGuideDemo();
+    void onGameEventFlagEnableToSpinAndStarPointer();
     bool isGalaxyDarkCometAppearInCurrentStage();
 }  // namespace MR

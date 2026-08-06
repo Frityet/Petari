@@ -1,5 +1,14 @@
 #include "compat/PlayerUtilCompat.hpp"
+#include "Game/System/GameDataFunction.hpp"
 #include "runtime/RuntimeServices.hpp"
+
+namespace smgpc::compat {
+
+    void restore_stage_player_permissions(smgpc::runtime::PlayerSystemService &service) {
+        service.set_swing_permission(GameDataFunction::isPassedStoryEvent("スピン権利"));
+    }
+
+}  // namespace smgpc::compat
 
 // Original MR player-state entry points whose host implementation belongs to
 // the compatibility boundary while MarioActor is not part of the PC build.

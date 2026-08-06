@@ -1,4 +1,5 @@
 #include "compat/StagePlayerRuntime.hpp"
+#include "compat/PlayerUtilCompat.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -373,6 +374,7 @@ namespace smgpc::compat {
                                            const smgpc::scene::StageStartInfo &start_info)
         : _runtime(runtime), _start_info(start_info) {
         _runtime.player_system().reset_stage_state();
+        smgpc::compat::restore_stage_player_permissions(_runtime.player_system());
         _actor = std::make_unique<StagePlayerActor>(_runtime, _start_info);
         _runtime.player_system().attach_actor(*_actor);
     }

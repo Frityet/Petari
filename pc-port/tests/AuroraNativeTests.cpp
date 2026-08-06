@@ -17,9 +17,13 @@
 #include "Game/NPC/DemoRabbit.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/System/GameDataFunction.hpp"
+#include "Game/System/GameDataHolder.hpp"
+#include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EventUtil.hpp"
 #include "Game/Util/FixedPosition.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
@@ -32,6 +36,7 @@
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JGeometry/TUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/SaveEventNameDictionary.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
@@ -41,6 +46,7 @@
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameGravityCompat.hpp"
+#include "compat/PlayerUtilCompat.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>
@@ -60,6 +66,7 @@
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <map>
 #include <optional>
 #include <span>
 #include <stdexcept>
@@ -794,6 +801,94 @@ namespace {
                 "invalid demo-group metadata should not create registry state");
     }
 
+    void test_story_event_spin_entitlement_boundary() {
+        auto* holder = smgpc::game::save_data_handle_sequence().getHolder();
+        require(holder != nullptr, "story-event tests require the active user-file holder");
+        holder->resetAllData();
+
+        auto player = smgpc::runtime::PlayerSystemService{};
+        player.reset_stage_state();
+        smgpc::compat::restore_stage_player_permissions(player);
+        const auto player_context = smgpc::compat::ScopedPlayerSystemServiceOverride{player};
+
+        require(!GameDataFunction::isPassedStoryEvent("スピン権利") && !player.is_swing_permitted(),
+                "a fresh user file should begin before the spin entitlement boundary");
+        MR::onGameEventFlagEnableToSpinAndStarPointer();
+        require(GameDataFunction::isPassedStoryEvent("スピン権利") && player.is_swing_permitted(),
+                "acknowledging the original spin explanation should persist and enable spin together");
+
+        require(!MR::isOnGameEventFlagEndTicoGuideDemo(),
+                "the Tico guide story event should remain independent from spin entitlement");
+        MR::onGameEventFlagEndTicoGuideDemo();
+        require(MR::isOnGameEventFlagEndTicoGuideDemo(),
+                "the original Tico guide setter and query should share persistent story state");
+
+        holder->resetAllData();
+    }
+
+    void test_save_event_name_dictionary_codec() {
+        const auto flags = std::map<std::string, bool>{
+            {"arbitrary/disabled", false},
+            {"スピン権利", true},
+        };
+        const auto values = std::map<std::string, u16>{
+            {"generalized/value", 0xbeefU},
+            {"絵本話済", 4U},
+        };
+
+        const auto encoded = smgpc::runtime::save::encode_event_name_dictionary(flags, values);
+        require(encoded.has_value(), "valid UTF-8 event names should produce host dictionary metadata");
+        const auto decoded = smgpc::runtime::save::decode_event_name_dictionary(*encoded);
+        require(decoded.has_value(), "encoded event-name metadata should decode");
+        require(decoded->flag_names == std::vector<std::string>{"arbitrary/disabled", "スピン権利"},
+                "flag-name metadata should preserve deterministic map order and UTF-8 bytes");
+        require(decoded->value_names == std::vector<std::string>{"generalized/value", "絵本話済"},
+                "value-name metadata should preserve arbitrary event keys without embedding their values");
+
+        auto truncated = *encoded;
+        truncated.pop_back();
+        require(!smgpc::runtime::save::decode_event_name_dictionary(truncated).has_value(),
+                "truncated event-name metadata should fail closed");
+        require(!smgpc::runtime::save::encode_event_name_dictionary(flags, values, 8U).has_value(),
+                "the codec should reject a dictionary that cannot fit its caller-provided budget");
+    }
+
+    void test_save_event_state_container_round_trip() {
+        auto state = smgpc::runtime::SaveDataService::SlotState{
+            .slot_index = 1,
+            .created = true,
+            .last_loaded_mario = true,
+            .power_star_num = 3,
+            .star_piece_num = 41,
+            .player_miss_num = 2,
+            .game_event_flags = {
+                {"arbitrary/disabled", false},
+                {"チコガイドデモ終了", true},
+                {"スピン権利", true},
+            },
+            .game_event_values = {
+                {"generalized/value", 0xbeefU},
+                {"絵本話済", 4U},
+            },
+        };
+
+        auto writer = smgpc::runtime::SaveDataService{};
+        writer.set_slot_state(1, state);
+        const auto container = writer.read_file("GameData.bin");
+        require(container.has_value(), "the source-chunk save container should encode from slot state");
+
+        auto reader = smgpc::runtime::SaveDataService{};
+        reader.write_file("GameData.bin", *container);
+        const auto* restored = reader.slot_state(1);
+        require(restored != nullptr && restored->created && restored->power_star_num == 3 &&
+                    restored->star_piece_num == 41 && restored->player_miss_num == 2,
+                "loading a generated container should retain the ordinary slot fields");
+        require(restored->game_event_flags == state.game_event_flags,
+                "FLG1 plus generic name metadata should round-trip true and false arbitrary event flags");
+        require(restored->game_event_values == state.game_event_values,
+                "VLE1 plus generic name metadata should round-trip arbitrary event values");
+    }
+
     void test_star_piece_group_factory_trs_and_reset() {
         require(NameObjFactory::canCreate("StarPieceGroup") && NameObjFactory::canCreate("StarPieceFlow"),
                 "the original factory aliases should expose both StarPieceGroup placement names");
@@ -1468,6 +1563,9 @@ int main() {
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
         TestCase{"DemoRabbit factory archives and placement init", test_demo_rabbit_factory_archives_and_placement_init},
         TestCase{"demo cast optional CastId sentinel", test_demo_cast_optional_cast_id_sentinel},
+        TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
+        TestCase{"save event-name dictionary codec", test_save_event_name_dictionary_codec},
+        TestCase{"save event-state container round trip", test_save_event_state_container_round_trip},
         TestCase{"StarPieceGroup factory TRS and reset", test_star_piece_group_factory_trs_and_reset},
         TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
         TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},

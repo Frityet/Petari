@@ -17,6 +17,7 @@
 #include "common/BinaryChunkFile.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TextEncoding.hpp"
+#include "runtime/SaveEventNameDictionary.hpp"
 
 namespace smgpc::runtime {
     namespace {
@@ -135,7 +136,7 @@ namespace smgpc::runtime {
                 append_save_event_value(value_data, name, value);
             }
 
-            const auto chunks = std::array{
+            auto chunks = std::vector<common::BinaryChunk>{
                 common::BinaryChunk{
                     .signature = common::fourcc('P', 'L', 'A', 'Y'),
                     .hash = 0x27C90FU,
@@ -167,6 +168,23 @@ namespace smgpc::runtime {
                     .data = {},
                 },
             };
+
+            if (!state.game_event_flags.empty() || !state.game_event_values.empty()) {
+                const auto base_size = common::encode_binary_chunk_file(chunks).size();
+                constexpr auto chunk_header_size = std::size_t{12U};
+                if (base_size + chunk_header_size <= SAVE_DATA_GAME_FILE_SIZE) {
+                    const auto dictionary = save::encode_event_name_dictionary(
+                        state.game_event_flags, state.game_event_values,
+                        SAVE_DATA_GAME_FILE_SIZE - base_size - chunk_header_size);
+                    if (dictionary.has_value()) {
+                        chunks.push_back(common::BinaryChunk{
+                            .signature = save::EVENT_NAME_DICTIONARY_SIGNATURE,
+                            .hash = save::event_name_dictionary_hash(),
+                            .data = *dictionary,
+                        });
+                    }
+                }
+            }
             return common::encode_binary_chunk_file(chunks, SAVE_DATA_GAME_FILE_SIZE);
         }
 
@@ -234,6 +252,14 @@ namespace smgpc::runtime {
                 state.star_piece_num = static_cast<s32>(common::read_be32(chunk->data, 1U));
             }
 
+            state.game_event_flags.clear();
+            state.game_event_values.clear();
+            auto event_names = std::optional<save::EventNameDictionary>{};
+            if (const auto *chunk = save_data_chunk(*chunks, save::EVENT_NAME_DICTIONARY_SIGNATURE);
+                chunk != nullptr && chunk->hash == save::event_name_dictionary_hash()) {
+                event_names = save::decode_event_name_dictionary(chunk->data);
+            }
+
             if (const auto *chunk = save_data_chunk(*chunks, common::fourcc('F', 'L', 'G', '1'))) {
                 if (chunk->hash != common::hash_code_31("2bytes/flag")) {
                     return false;
@@ -247,6 +273,13 @@ namespace smgpc::runtime {
                     } else if (hash == static_cast<std::uint16_t>(common::hash_code_31("ViewCompleteEnding") & SAVE_DATA_EVENT_FLAG_HASH_MASK)) {
                         state.view_complete_ending = enabled;
                     }
+                    if (event_names.has_value()) {
+                        for (const auto &name : event_names->flag_names) {
+                            if (hash == static_cast<std::uint16_t>(common::hash_code_31(name) & SAVE_DATA_EVENT_FLAG_HASH_MASK)) {
+                                state.game_event_flags[name] = enabled;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -259,6 +292,13 @@ namespace smgpc::runtime {
                     const auto value = common::read_be16(chunk->data, offset + 2U);
                     if (hash == static_cast<std::uint16_t>(common::hash_code_31("MissNum"))) {
                         state.player_miss_num = value;
+                    }
+                    if (event_names.has_value()) {
+                        for (const auto &name : event_names->value_names) {
+                            if (hash == static_cast<std::uint16_t>(common::hash_code_31(name))) {
+                                state.game_event_values[name] = value;
+                            }
+                        }
                     }
                 }
             }

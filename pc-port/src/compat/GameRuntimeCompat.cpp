@@ -14,12 +14,6 @@
 #include <string_view>
 
 namespace MR {
-    bool isOnGameEventFlagEndTicoGuideDemo() {
-        // Story-event persistence is not exposed by the current host save-data
-        // service. The unset value is the correct first-visit state.
-        return false;
-    }
-
     bool isPlayingStageBgm() {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             return !runtime->current_stage_bgm_name().empty();

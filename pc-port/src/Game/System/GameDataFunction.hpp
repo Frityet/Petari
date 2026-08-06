@@ -5,6 +5,10 @@
 namespace GameDataFunction {
     const wchar_t* getUserName();
     u16 getUserFileIndex();
+    void onGameEventFlag(const char* pName);
+    bool isOnGameEventFlag(const char* pName);
+    bool isPassedStoryEvent(const char* pStoryEventName);
+    void followStoryEventByName(const char* pStoryEventName);
     s32 getPictureBookChapterCanRead();
     u16 getPictureBookChapterAlreadyRead();
     void setPictureBookChapterAlreadyRead(int chapterAlreadyRead);
