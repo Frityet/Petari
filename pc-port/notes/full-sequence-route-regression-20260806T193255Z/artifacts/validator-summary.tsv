@@ -1,0 +1,4 @@
+checkpoint	status	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+title	passed	90	pc-port	196	22	162	23
+file_select	passed	1900	pc-port	203	27	164	23
+picturebook	passed	7600	pc-port	234	13	209	4
