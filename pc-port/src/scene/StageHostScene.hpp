@@ -5,6 +5,7 @@
 #include "camera/CameraPose.hpp"
 #include "scene/StageHostService.hpp"
 
+#include <cstddef>
 #include <memory>
 #include <string_view>
 #include <vector>
@@ -47,6 +48,7 @@ namespace smgpc::scene {
         [[nodiscard]] std::string resolve_actor_name(std::string_view object_name) const;
 
         smgpc::runtime::RuntimeContext &_runtime;
+        std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
         std::vector<std::unique_ptr<NameObj>> _roots;
     };

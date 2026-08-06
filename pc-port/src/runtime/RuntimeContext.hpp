@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <set>
 #include <span>
 #include <string>
 #include <string_view>
@@ -220,6 +221,8 @@ namespace smgpc::runtime {
         [[nodiscard]] const CaptureScreenDirector &capture_screen_director() const;
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
+        [[nodiscard]] std::size_t begin_scene_registration_scope();
+        [[nodiscard]] std::size_t end_scene_registration_scope(std::size_t scope_id);
         [[nodiscard]] smgpc::scene::NameObjLifecycleService &name_obj_lifecycle();
         [[nodiscard]] const smgpc::scene::NameObjLifecycleService &name_obj_lifecycle() const;
         [[nodiscard]] smgpc::scene::SceneExecutionService &scene_execution();
@@ -313,6 +316,11 @@ namespace smgpc::runtime {
         smgpc::scene::SceneLifecycleService *_scene_lifecycle = nullptr;
         SceneScheduler _scheduler;
         std::map<std::string, LiveActor *, std::less<>> _effect_live_actor_hosts;
+        std::optional<std::size_t> _active_scene_registration_scope;
+        std::size_t _scene_scheduler_registration_marker = 0U;
+        std::size_t _next_scene_registration_scope_id = 1U;
+        std::set<std::string, std::less<>> _scene_effect_emission_hosts;
+        std::set<std::string, std::less<>> _scene_effect_keeper_hosts;
         bool _application_exit_requested = false;
         std::string _application_exit_reason;
         std::map<std::string, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;

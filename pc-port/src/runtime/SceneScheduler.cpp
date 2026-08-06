@@ -783,6 +783,32 @@ namespace smgpc::runtime {
         return accepted_count;
     }
 
+    std::size_t SceneScheduler::registration_marker() const {
+        return _next_order;
+    }
+
+    std::vector<SceneSchedulerRegistration> SceneScheduler::remove_registrations_since(std::size_t marker) {
+        auto registrations = std::vector<SceneSchedulerRegistration>{};
+        for (auto &entry : _entries) {
+            if (entry.order < marker) {
+                continue;
+            }
+
+            registrations.push_back(SceneSchedulerRegistration{
+                .kind = entry.kind,
+                .name_obj = entry.name_obj,
+                .layout = entry.layout,
+                .layout_actor = entry.layout_actor,
+                .live_actor = entry_live_actor(entry),
+                .name = entry_name(entry),
+                .order = entry.order,
+            });
+        }
+
+        std::erase_if(_entries, [marker](const auto &entry) { return entry.order >= marker; });
+        return registrations;
+    }
+
     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
         auto actor_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {

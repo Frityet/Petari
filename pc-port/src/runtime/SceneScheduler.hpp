@@ -42,6 +42,16 @@ namespace smgpc::runtime {
         Translucent,
     };
 
+    struct SceneSchedulerRegistration {
+        SceneEntryKind kind = SceneEntryKind::NameObj;
+        NameObj *name_obj = nullptr;
+        SimpleLayout *layout = nullptr;
+        LayoutActor *layout_actor = nullptr;
+        LiveActor *live_actor = nullptr;
+        std::string name;
+        std::size_t order = 0U;
+    };
+
 #ifndef NDEBUG
     struct SceneSchedulerEntryState {
         SceneEntryKind kind = SceneEntryKind::NameObj;
@@ -238,6 +248,9 @@ namespace smgpc::runtime {
         void execute_draw_type(s32 draw_type);
         void execute_draw_list_2d_normal();
         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
+
+        [[nodiscard]] std::size_t registration_marker() const;
+        [[nodiscard]] std::vector<SceneSchedulerRegistration> remove_registrations_since(std::size_t marker);
 
 #ifndef NDEBUG
         [[nodiscard]] std::vector<SceneSchedulerEntryState> snapshot() const;

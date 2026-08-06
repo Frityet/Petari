@@ -1210,6 +1210,76 @@ namespace smgpc::runtime {
         return _scheduler;
     }
 
+    std::size_t RuntimeContext::begin_scene_registration_scope() {
+        if (_active_scene_registration_scope.has_value()) {
+            throw std::logic_error("RuntimeContext scene registration scope is already active.");
+        }
+
+        const auto scope_id = _next_scene_registration_scope_id++;
+        _active_scene_registration_scope = scope_id;
+        _scene_scheduler_registration_marker = _scheduler.registration_marker();
+        _scene_effect_emission_hosts.clear();
+        _scene_effect_keeper_hosts.clear();
+        return scope_id;
+    }
+
+    std::size_t RuntimeContext::end_scene_registration_scope(std::size_t scope_id) {
+        if (!_active_scene_registration_scope.has_value() || *_active_scene_registration_scope != scope_id) {
+            throw std::logic_error("RuntimeContext scene registration scope does not match the active scope.");
+        }
+
+        const auto registrations = _scheduler.remove_registrations_since(_scene_scheduler_registration_marker);
+        auto registered_host_names = std::set<std::string, std::less<>>{};
+        for (const auto &registration : registrations) {
+            if (!registration.name.empty()) {
+                registered_host_names.insert(registration.name);
+            }
+            if (registration.live_actor != nullptr) {
+                _star_pointer.unregister_target(*registration.live_actor);
+            }
+
+            switch (registration.kind) {
+            case SceneEntryKind::NameObj:
+                break;
+            case SceneEntryKind::Layout:
+                std::erase_if(_effect_simple_layout_hosts,
+                              [&registration](const auto &host) { return host.second == registration.layout; });
+                break;
+            case SceneEntryKind::LayoutActor:
+                std::erase_if(_effect_layout_actor_hosts,
+                              [&registration](const auto &host) { return host.second == registration.layout_actor; });
+                break;
+            case SceneEntryKind::LiveActorModel:
+                std::erase_if(_effect_live_actor_hosts,
+                              [&registration](const auto &host) { return host.second == registration.live_actor; });
+                break;
+            }
+        }
+
+        auto effect_cleanup_hosts = registered_host_names;
+        effect_cleanup_hosts.insert(_scene_effect_emission_hosts.begin(), _scene_effect_emission_hosts.end());
+        effect_cleanup_hosts.insert(_scene_effect_keeper_hosts.begin(), _scene_effect_keeper_hosts.end());
+        for (const auto &host_name : effect_cleanup_hosts) {
+            _effects.delete_all(host_name);
+        }
+
+        for (const auto &host_name : _scene_effect_keeper_hosts) {
+            _effects.unregister_keeper(host_name);
+        }
+
+        auto binding_cleanup_hosts = registered_host_names;
+        binding_cleanup_hosts.insert(_scene_effect_keeper_hosts.begin(), _scene_effect_keeper_hosts.end());
+        for (const auto &host_name : binding_cleanup_hosts) {
+            refresh_effect_host_binding(host_name);
+        }
+
+        _scene_effect_emission_hosts.clear();
+        _scene_effect_keeper_hosts.clear();
+        _active_scene_registration_scope.reset();
+        _scene_scheduler_registration_marker = 0U;
+        return registrations.size();
+    }
+
     smgpc::scene::NameObjLifecycleService &RuntimeContext::name_obj_lifecycle() {
         if (_name_obj_lifecycle == nullptr) {
             throw std::logic_error("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
@@ -1335,6 +1405,9 @@ namespace smgpc::runtime {
 
     void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                                                 std::string_view resource_group_name, bool sort_enabled) {
+        if (_active_scene_registration_scope.has_value() && !host_name.empty()) {
+            _scene_effect_keeper_hosts.insert(std::string(host_name));
+        }
         _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled);
         refresh_effect_host_binding(host_name);
         _logger.info(logging::Category::APP, logging::Message{"Registered effect keeper {} group {} capacity {}"}, host_name,
@@ -1346,6 +1419,9 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name) {
+        if (_active_scene_registration_scope.has_value() && !actor_name.empty()) {
+            _scene_effect_emission_hosts.insert(std::string(actor_name));
+        }
         _effects.emit(actor_name, effect_name);
         _logger.info(logging::Category::APP, logging::Message{"{} emitted effect {}"}, actor_name, effect_name);
     }

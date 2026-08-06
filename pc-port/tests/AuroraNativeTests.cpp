@@ -1,6 +1,9 @@
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/SceneScheduler.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>
@@ -155,6 +158,27 @@ namespace {
         require(!player.is_player_hidden(), "show_player should restore player visibility");
     }
 
+    void test_scene_scheduler_registration_scope_cleanup() {
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto persistent = NameObj("persistent");
+        auto scene_local_actor = LiveActor("scene-local");
+
+        scheduler.connect_name_obj(persistent, 0, -1, -1, -1);
+        const auto marker = scheduler.registration_marker();
+        scheduler.connect_name_obj(persistent, 1, -1, -1, -1);
+        scheduler.connect_name_obj(scene_local_actor, 0, -1, -1, -1);
+
+        const auto removed_scene = scheduler.remove_registrations_since(marker);
+        require(removed_scene.size() == 1U && removed_scene.front().name == "scene-local",
+                "scene cleanup should remove registrations made after its marker");
+        require(removed_scene.front().live_actor == &scene_local_actor,
+                "scene cleanup should identify movement-only LiveActor registrations");
+
+        const auto removed_persistent = scheduler.remove_registrations_since(0U);
+        require(removed_persistent.size() == 1U && removed_persistent.front().name == "persistent",
+                "scene cleanup should preserve registrations made before its marker");
+    }
+
     class EnvironmentVariableGuard {
     public:
         explicit EnvironmentVariableGuard(const char *name) : _name(name) {
@@ -261,6 +285,7 @@ int main() {
         TestCase{"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
         TestCase{"Aurora NAND storage smoke", test_aurora_nand_storage_smoke},
         TestCase{"player visibility can be restored", test_player_visibility_can_be_restored},
+        TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
         TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };

@@ -104,10 +104,14 @@ namespace smgpc::scene {
     }  // namespace
 
     StageHostScene::StageHostScene(smgpc::runtime::RuntimeContext &runtime, StageHostRequest request)
-        : Scene(!request.stage_name.empty() ? request.stage_name.c_str() : "StageHostScene"), _runtime(runtime), _request(std::move(request)) {
+        : Scene(!request.stage_name.empty() ? request.stage_name.c_str() : "StageHostScene"), _runtime(runtime),
+          _registration_scope_id(runtime.begin_scene_registration_scope()), _request(std::move(request)) {
     }
 
     StageHostScene::~StageHostScene() {
+        // Scheduler registrations retain raw object pointers, so remove the scene
+        // scope while its roots and child objects are still alive.
+        (void)_runtime.end_scene_registration_scope(_registration_scope_id);
         destroy_roots();
         if (MR::getSceneObjHolder() == mSceneObjHolder) {
             MR::setCurrentSceneObjHolder(nullptr);
