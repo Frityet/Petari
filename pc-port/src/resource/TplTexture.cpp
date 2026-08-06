@@ -96,8 +96,8 @@ namespace smgpc::resource {
         }
 
         [[nodiscard]] Color decode_ia8(std::uint16_t value) {
-            const auto intensity = static_cast<std::uint8_t>(value >> 8U);
-            const auto alpha = static_cast<std::uint8_t>(value & 0xFFU);
+            const auto alpha = static_cast<std::uint8_t>(value >> 8U);
+            const auto intensity = static_cast<std::uint8_t>(value & 0xFFU);
             return rgba(intensity, intensity, intensity, alpha);
         }
 

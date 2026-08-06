@@ -34,6 +34,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
+#include "resource/TplTexture.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StageGravityService.hpp"
 #include "scene/StageHostScene.hpp"
@@ -476,6 +477,21 @@ namespace {
         GXSetDispCopySrc(0U, 0U, 640U, 456U);
         GXSetDispCopyDst(640U, 456U);
         GXCopyDisp(nullptr, GX_TRUE);
+    }
+
+    void test_gx_ia8_channel_order() {
+        auto block = std::array<std::uint8_t, 32U>{};
+        block[0U] = 0x12U;
+        block[1U] = 0x34U;
+
+        const auto texture = smgpc::resource::decode_raw_gx_texture(
+            std::span<const std::uint8_t>(block.data(), block.size()), 4U, 4U,
+            smgpc::resource::TplTextureFormat::IA8);
+        require(texture.rgba.size() == 4U * 4U * 4U,
+                "IA8 decoding should produce one RGBA texel per source texel");
+        require(texture.rgba[0U] == 0x34U && texture.rgba[1U] == 0x34U &&
+                    texture.rgba[2U] == 0x34U && texture.rgba[3U] == 0x12U,
+                "GX IA8 stores alpha before intensity in texture memory");
     }
 
     void test_aurora_nand_storage_smoke() {
@@ -1398,6 +1414,7 @@ int main() {
         TestCase{"Aurora VI retrace/framebuffer state", test_aurora_vi_retrace_and_framebuffer_state},
         TestCase{"Aurora DVD requires disc image", test_aurora_dvd_requires_disc_image},
         TestCase{"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
+        TestCase{"GX IA8 channel order", test_gx_ia8_channel_order},
         TestCase{"Aurora NAND storage smoke", test_aurora_nand_storage_smoke},
         TestCase{"player visibility can be restored", test_player_visibility_can_be_restored},
         TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
