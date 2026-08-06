@@ -65,7 +65,7 @@ namespace smgpc::debug {
         for (const auto &candidate : candidates) {
             auto error = std::error_code {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
+            if (!error && std::filesystem::is_directory(canonical / "ObjectData", error)) {
                 return canonical;
             }
         }
