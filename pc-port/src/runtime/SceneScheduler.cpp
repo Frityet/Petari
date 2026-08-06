@@ -887,7 +887,8 @@ namespace smgpc::runtime {
         }
 
         if (auto *runtime = RuntimeContext::try_instance()) {
-            runtime->effects().draw(draw_type);
+            const auto &camera_pose = runtime->last_camera_pose();
+            runtime->effects().draw(draw_type, camera_pose.has_value() ? &*camera_pose : nullptr);
         }
     }
 

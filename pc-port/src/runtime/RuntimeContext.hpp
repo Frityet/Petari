@@ -246,11 +246,14 @@ namespace smgpc::runtime {
         void start_system_me(std::string_view name);
         void start_cs_sound(std::string_view name);
         void register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
-                                    std::string_view resource_group_name, bool sort_enabled);
-        void unregister_effect_keeper(std::string_view host_name);
-        void emit_effect(std::string_view actor_name, std::string_view effect_name);
-        void delete_effect(std::string_view actor_name, std::string_view effect_name);
-        void delete_effect_all(std::string_view actor_name);
+                                    std::string_view resource_group_name, bool sort_enabled,
+                                    const void *host_identity = nullptr);
+        void unregister_effect_keeper(std::string_view host_name, const void *host_identity = nullptr);
+        void emit_effect(std::string_view actor_name, std::string_view effect_name,
+                         const void *host_identity = nullptr);
+        void delete_effect(std::string_view actor_name, std::string_view effect_name,
+                           const void *host_identity = nullptr);
+        void delete_effect_all(std::string_view actor_name, const void *host_identity = nullptr);
         void note_layout_archive(std::string_view layout_name, const std::filesystem::path &path);
         void note_missing_layout_archive(std::string_view layout_name);
         void note_layout_texture_decode_failed(std::string_view layout_name, std::string_view texture_name, std::string_view reason);
@@ -280,7 +283,7 @@ namespace smgpc::runtime {
         void emit_star_pointer_target_trace_events();
 #endif
         void refresh_effect_host_bindings();
-        void refresh_effect_host_binding(std::string_view host_name);
+        void refresh_effect_host_binding(std::string_view host_name, const void *host_identity = nullptr);
 
         logging::ILogger &_logger;
         render::AuroraWindow &_window_service;
@@ -315,16 +318,18 @@ namespace smgpc::runtime {
         smgpc::scene::SceneExecutionService *_scene_execution = nullptr;
         smgpc::scene::SceneLifecycleService *_scene_lifecycle = nullptr;
         SceneScheduler _scheduler;
-        std::map<std::string, LiveActor *, std::less<>> _effect_live_actor_hosts;
+        std::map<const void *, LiveActor *, std::less<>> _effect_live_actor_hosts;
         std::optional<std::size_t> _active_scene_registration_scope;
         std::size_t _scene_scheduler_registration_marker = 0U;
         std::size_t _next_scene_registration_scope_id = 1U;
         std::set<std::string, std::less<>> _scene_effect_emission_hosts;
         std::set<std::string, std::less<>> _scene_effect_keeper_hosts;
+        std::map<const void *, std::string, std::less<>> _scene_effect_emission_instances;
+        std::map<const void *, std::string, std::less<>> _scene_effect_keeper_instances;
         bool _application_exit_requested = false;
         std::string _application_exit_reason;
-        std::map<std::string, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;
-        std::map<std::string, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
+        std::map<const void *, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;
+        std::map<const void *, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
         std::uint64_t _frame_index = 0;
         std::optional<smgpc::camera::CameraPose> _scene_camera_pose = {};
         std::optional<smgpc::camera::CameraPose> _last_camera_pose = {};

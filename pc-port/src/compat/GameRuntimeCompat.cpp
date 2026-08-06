@@ -55,7 +55,7 @@ namespace MR {
 
     void deleteEffectAll(LiveActor* pActor) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr) {
-            runtime->delete_effect_all(pActor->getName());
+            runtime->delete_effect_all(pActor->getName(), pActor);
         }
     }
 

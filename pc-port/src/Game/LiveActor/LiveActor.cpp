@@ -61,7 +61,7 @@ LiveActor::~LiveActor() {
     smgpc::compat::release_actor_runtime_state(this);
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->star_pointer().unregister_target(*this);
-        runtime->unregister_effect_keeper(getName());
+        runtime->unregister_effect_keeper(getName(), this);
         runtime->unregister_live_actor_model(*this);
     }
     delete mActorLightCtrl;
@@ -218,7 +218,7 @@ void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool so
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         const auto group_name =
             pEffectName != nullptr ? std::string_view(pEffectName) : (mModel != nullptr ? mModel->model_arc_name() : std::string_view{});
-        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, getName(), effectNum, group_name, sort);
+        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, getName(), effectNum, group_name, sort, this);
     }
 }
 

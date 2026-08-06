@@ -908,7 +908,7 @@ SimpleLayout::SimpleLayout(const char* pName, const char* pLayoutName, u32 animL
 
 SimpleLayout::~SimpleLayout() {
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        runtime->unregister_effect_keeper(getName());
+        runtime->unregister_effect_keeper(getName(), this);
         runtime->unregister_layout(*this);
     }
 }
@@ -919,7 +919,7 @@ void SimpleLayout::initWithoutIter() {
 void SimpleLayout::initEffectKeeper(int effectNum, const char* pEffectName, const void*) {
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         const auto group_name = pEffectName != nullptr ? std::string_view(pEffectName) : std::string_view(mLayoutName);
-        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::SimpleLayout, mName, effectNum, group_name, false);
+        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::SimpleLayout, mName, effectNum, group_name, false, this);
     }
 }
 

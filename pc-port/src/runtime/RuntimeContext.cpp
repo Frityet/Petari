@@ -63,6 +63,14 @@ namespace smgpc::runtime {
             return matrix;
         }
 
+        [[nodiscard]] std::array<float, 12U> live_actor_effect_matrix(const LiveActor &actor) {
+            auto matrix = actor.getBaseMatrix().m;
+            matrix[3U] = actor.mPosition.x;
+            matrix[7U] = actor.mPosition.y;
+            matrix[11U] = actor.mPosition.z;
+            return matrix;
+        }
+
         [[nodiscard]] std::filesystem::path weakly_canonical_or_normal(const std::filesystem::path &path) {
             std::error_code error{};
             const auto canonical = std::filesystem::weakly_canonical(path, error);
@@ -1226,6 +1234,8 @@ namespace smgpc::runtime {
         _scene_scheduler_registration_marker = _scheduler.registration_marker();
         _scene_effect_emission_hosts.clear();
         _scene_effect_keeper_hosts.clear();
+        _scene_effect_emission_instances.clear();
+        _scene_effect_keeper_instances.clear();
         return scope_id;
     }
 
@@ -1242,22 +1252,19 @@ namespace smgpc::runtime {
             }
             if (registration.live_actor != nullptr) {
                 _star_pointer.unregister_target(*registration.live_actor);
+                _effect_live_actor_hosts.erase(registration.live_actor);
             }
 
             switch (registration.kind) {
             case SceneEntryKind::NameObj:
                 break;
             case SceneEntryKind::Layout:
-                std::erase_if(_effect_simple_layout_hosts,
-                              [&registration](const auto &host) { return host.second == registration.layout; });
+                _effect_simple_layout_hosts.erase(registration.layout);
                 break;
             case SceneEntryKind::LayoutActor:
-                std::erase_if(_effect_layout_actor_hosts,
-                              [&registration](const auto &host) { return host.second == registration.layout_actor; });
+                _effect_layout_actor_hosts.erase(registration.layout_actor);
                 break;
             case SceneEntryKind::LiveActorModel:
-                std::erase_if(_effect_live_actor_hosts,
-                              [&registration](const auto &host) { return host.second == registration.live_actor; });
                 break;
             }
         }
@@ -1268,9 +1275,18 @@ namespace smgpc::runtime {
         for (const auto &host_name : effect_cleanup_hosts) {
             _effects.delete_all(host_name);
         }
+        for (const auto &[host_identity, host_name] : _scene_effect_emission_instances) {
+            _effects.delete_all(host_name, host_identity);
+        }
+        for (const auto &[host_identity, host_name] : _scene_effect_keeper_instances) {
+            _effects.delete_all(host_name, host_identity);
+        }
 
         for (const auto &host_name : _scene_effect_keeper_hosts) {
             _effects.unregister_keeper(host_name);
+        }
+        for (const auto &[host_identity, host_name] : _scene_effect_keeper_instances) {
+            _effects.unregister_keeper(host_name, host_identity);
         }
 
         auto binding_cleanup_hosts = registered_host_names;
@@ -1278,9 +1294,14 @@ namespace smgpc::runtime {
         for (const auto &host_name : binding_cleanup_hosts) {
             refresh_effect_host_binding(host_name);
         }
+        for (const auto &[host_identity, host_name] : _scene_effect_keeper_instances) {
+            _effects.unbind_host_transform(host_name, host_identity);
+        }
 
         _scene_effect_emission_hosts.clear();
         _scene_effect_keeper_hosts.clear();
+        _scene_effect_emission_instances.clear();
+        _scene_effect_keeper_instances.clear();
         _active_scene_registration_scope.reset();
         _scene_scheduler_registration_marker = 0U;
         return registrations.size();
@@ -1410,35 +1431,55 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
-                                                std::string_view resource_group_name, bool sort_enabled) {
+                                                std::string_view resource_group_name, bool sort_enabled,
+                                                const void *host_identity) {
         if (_active_scene_registration_scope.has_value() && !host_name.empty()) {
-            _scene_effect_keeper_hosts.insert(std::string(host_name));
+            if (host_identity != nullptr) {
+                _scene_effect_keeper_instances[host_identity] = std::string(host_name);
+            } else {
+                _scene_effect_keeper_hosts.insert(std::string(host_name));
+            }
         }
-        _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled);
-        refresh_effect_host_binding(host_name);
+        if (host_identity != nullptr && host_kind == EffectKeeperHostKind::LiveActor) {
+            _effect_live_actor_hosts[host_identity] = const_cast<LiveActor *>(static_cast<const LiveActor *>(host_identity));
+        }
+        _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled, host_identity);
+        refresh_effect_host_binding(host_name, host_identity);
         _logger.info(logging::Category::APP, logging::Message{"Registered effect keeper {} group {} capacity {}"}, host_name,
                      resource_group_name, requested_capacity);
     }
 
-    void RuntimeContext::unregister_effect_keeper(std::string_view host_name) {
-        _effects.unregister_keeper(host_name);
+    void RuntimeContext::unregister_effect_keeper(std::string_view host_name, const void *host_identity) {
+        _effects.unregister_keeper(host_name, host_identity);
+        if (host_identity != nullptr) {
+            _scene_effect_keeper_instances.erase(host_identity);
+            _scene_effect_emission_instances.erase(host_identity);
+            _effect_live_actor_hosts.erase(host_identity);
+            _effect_layout_actor_hosts.erase(host_identity);
+            _effect_simple_layout_hosts.erase(host_identity);
+        }
     }
 
-    void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name) {
+    void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
         if (_active_scene_registration_scope.has_value() && !actor_name.empty()) {
-            _scene_effect_emission_hosts.insert(std::string(actor_name));
+            if (host_identity != nullptr) {
+                _scene_effect_emission_instances[host_identity] = std::string(actor_name);
+            } else {
+                _scene_effect_emission_hosts.insert(std::string(actor_name));
+            }
         }
-        _effects.emit(actor_name, effect_name);
+        refresh_effect_host_binding(actor_name, host_identity);
+        _effects.emit(actor_name, effect_name, host_identity);
         _logger.info(logging::Category::APP, logging::Message{"{} emitted effect {}"}, actor_name, effect_name);
     }
 
-    void RuntimeContext::delete_effect(std::string_view actor_name, std::string_view effect_name) {
-        _effects.delete_effect(actor_name, effect_name);
+    void RuntimeContext::delete_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
+        _effects.delete_effect(actor_name, effect_name, host_identity);
         _logger.info(logging::Category::APP, logging::Message{"{} deleted effect {}"}, actor_name, effect_name);
     }
 
-    void RuntimeContext::delete_effect_all(std::string_view actor_name) {
-        _effects.delete_all(actor_name);
+    void RuntimeContext::delete_effect_all(std::string_view actor_name, const void *host_identity) {
+        _effects.delete_all(actor_name, host_identity);
         _logger.info(logging::Category::APP, logging::Message{"{} deleted all effects"}, actor_name);
     }
 
@@ -1536,82 +1577,82 @@ namespace smgpc::runtime {
 #endif
 
     void RuntimeContext::refresh_effect_host_bindings() {
-        for (const auto &[name, _] : _effect_simple_layout_hosts) {
-            refresh_effect_host_binding(name);
+        for (const auto &[identity, layout] : _effect_simple_layout_hosts) {
+            if (layout != nullptr) {
+                refresh_effect_host_binding(layout->getName(), identity);
+            }
         }
-        for (const auto &[name, _] : _effect_layout_actor_hosts) {
-            refresh_effect_host_binding(name);
+        for (const auto &[identity, layout] : _effect_layout_actor_hosts) {
+            if (layout != nullptr) {
+                refresh_effect_host_binding(layout->getName(), identity);
+            }
         }
-        for (const auto &[name, _] : _effect_live_actor_hosts) {
-            refresh_effect_host_binding(name);
+        for (const auto &[identity, actor] : _effect_live_actor_hosts) {
+            if (actor != nullptr) {
+                refresh_effect_host_binding(actor->getName(), identity);
+            }
         }
     }
 
-    void RuntimeContext::refresh_effect_host_binding(std::string_view host_name) {
-        if (auto it = _effect_live_actor_hosts.find(host_name); it != _effect_live_actor_hosts.end() && it->second != nullptr) {
+    void RuntimeContext::refresh_effect_host_binding(std::string_view host_name, const void *host_identity) {
+        if (auto it = _effect_live_actor_hosts.find(host_identity); it != _effect_live_actor_hosts.end() && it->second != nullptr) {
             const auto &actor = *it->second;
             _effects.bind_host_transform(EffectKeeperHostKind::LiveActor, host_name, EffectHostBindingSource::LiveActorBaseMatrix,
-                                         actor.getBaseMatrix().m, actor.isDead());
+                                         live_actor_effect_matrix(actor), actor.isDead(), host_identity);
             return;
         }
 
-        if (auto it = _effect_layout_actor_hosts.find(host_name); it != _effect_layout_actor_hosts.end() && it->second != nullptr) {
+        if (auto it = _effect_layout_actor_hosts.find(host_identity); it != _effect_layout_actor_hosts.end() && it->second != nullptr) {
             const auto &layout = *it->second;
             const auto trans = layout.getTrans();
             _effects.bind_host_transform(EffectKeeperHostKind::LayoutActor, host_name, EffectHostBindingSource::LayoutActorTransform,
-                                         effect_translation_matrix(trans.x, trans.y, 0.0F), layout.isDead());
+                                         effect_translation_matrix(trans.x, trans.y, 0.0F), layout.isDead(), host_identity);
             return;
         }
 
-        if (auto it = _effect_simple_layout_hosts.find(host_name); it != _effect_simple_layout_hosts.end() && it->second != nullptr) {
+        if (auto it = _effect_simple_layout_hosts.find(host_identity); it != _effect_simple_layout_hosts.end() && it->second != nullptr) {
             const auto &layout = *it->second;
             _effects.bind_host_transform(EffectKeeperHostKind::SimpleLayout, host_name, EffectHostBindingSource::SimpleLayoutOrigin,
-                                         effect_identity_matrix(), layout.isDead());
+                                         effect_identity_matrix(), layout.isDead(), host_identity);
             return;
         }
 
-        _effects.unbind_host_transform(host_name);
+        _effects.unbind_host_transform(host_name, host_identity);
     }
 
     void RuntimeContext::register_layout(SimpleLayout &layout) {
-        _effect_simple_layout_hosts[layout.getName()] = &layout;
-        refresh_effect_host_binding(layout.getName());
+        _effect_simple_layout_hosts[&layout] = &layout;
+        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.register_layout(layout, MR::MovementType_Layout, -1, MR::DrawType_Layout);
     }
 
     void RuntimeContext::unregister_layout(SimpleLayout &layout) {
-        if (auto it = _effect_simple_layout_hosts.find(layout.getName()); it != _effect_simple_layout_hosts.end() && it->second == &layout) {
-            _effect_simple_layout_hosts.erase(it);
-        }
-        refresh_effect_host_binding(layout.getName());
+        _effect_simple_layout_hosts.erase(&layout);
+        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.unregister_layout(layout);
     }
 
     void RuntimeContext::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
-        _effect_layout_actor_hosts[layout.getName()] = &layout;
-        refresh_effect_host_binding(layout.getName());
+        _effect_layout_actor_hosts[&layout] = &layout;
+        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.register_layout_actor(layout, movement_type, calc_anim_type, draw_type);
     }
 
     void RuntimeContext::unregister_layout_actor(LayoutActor &layout) {
-        if (auto it = _effect_layout_actor_hosts.find(layout.getName()); it != _effect_layout_actor_hosts.end() && it->second == &layout) {
-            _effect_layout_actor_hosts.erase(it);
-        }
-        refresh_effect_host_binding(layout.getName());
+        _effect_layout_actor_hosts.erase(&layout);
+        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.unregister_layout_actor(layout);
     }
 
     void RuntimeContext::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
-        _effect_live_actor_hosts[actor.getName()] = &actor;
-        refresh_effect_host_binding(actor.getName());
+        _effect_live_actor_hosts[&actor] = &actor;
+        refresh_effect_host_binding(actor.getName(), &actor);
         _scheduler.register_live_actor_model(actor, movement_type, calc_anim_type, draw_buffer_type, draw_type);
     }
 
     void RuntimeContext::unregister_live_actor_model(LiveActor &actor) {
-        if (auto it = _effect_live_actor_hosts.find(actor.getName()); it != _effect_live_actor_hosts.end() && it->second == &actor) {
-            _effect_live_actor_hosts.erase(it);
-        }
-        refresh_effect_host_binding(actor.getName());
+        _effect_live_actor_hosts.erase(&actor);
+        refresh_effect_host_binding(actor.getName(), &actor);
         _scheduler.unregister_live_actor_model(actor);
     }
 

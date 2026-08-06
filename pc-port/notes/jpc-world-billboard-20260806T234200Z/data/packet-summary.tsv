@@ -1,0 +1,6 @@
+capture	packet_mode	shape_type	child_particle	world_space	host_binding_found	host_translation	packets
+before	JpcBillboard2D	n/a	false	n/a	false	[0.0,0.0,0.0]	42
+before	JpcBillboard2D	n/a	true	n/a	false	[0.0,0.0,0.0]	28
+after	JpcBillboard3D	2	false	true	true	per-host; see steam-host-translations.tsv	176
+after	JpcBillboard3D	2	true	true	true	per-host; see steam-host-translations.tsv	199
+after	JpcWorldShapeFallback3D	4	false	true	true	per-host; see steam-host-translations.tsv	173

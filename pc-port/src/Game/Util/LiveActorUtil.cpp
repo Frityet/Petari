@@ -158,13 +158,13 @@ namespace MR {
 
     void emitEffect(LiveActor* pActor, const char* pEffectName) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr && pEffectName != nullptr) {
-            runtime->emit_effect(pActor->getName(), pEffectName);
+            runtime->emit_effect(pActor->getName(), pEffectName, pActor);
         }
     }
 
     void deleteEffect(LiveActor* pActor, const char* pEffectName) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr && pEffectName != nullptr) {
-            runtime->delete_effect(pActor->getName(), pEffectName);
+            runtime->delete_effect(pActor->getName(), pEffectName, pActor);
         }
     }
 

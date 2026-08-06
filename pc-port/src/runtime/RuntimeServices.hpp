@@ -215,6 +215,7 @@ namespace smgpc::runtime {
 
     struct EffectKeeperRegistration {
         EffectKeeperHostKind host_kind = EffectKeeperHostKind::LiveActor;
+        const void *host_identity = nullptr;
         std::string host_name;
         std::string resource_group_name;
         s32 requested_capacity = 0;
@@ -224,6 +225,7 @@ namespace smgpc::runtime {
 
     struct EffectEvent {
         EffectEventKind kind = EffectEventKind::Emit;
+        const void *host_identity = nullptr;
         std::string actor_name;
         std::string effect_name;
         std::uint64_t frame_index = 0U;
@@ -240,6 +242,7 @@ namespace smgpc::runtime {
     struct EffectHostBinding {
         EffectKeeperHostKind host_kind = EffectKeeperHostKind::LiveActor;
         EffectHostBindingSource source = EffectHostBindingSource::LiveActorBaseMatrix;
+        const void *host_identity = nullptr;
         std::string host_name;
         std::array<float, 12U> matrix{};
         std::array<float, 3U> translation{};
@@ -279,6 +282,7 @@ namespace smgpc::runtime {
     };
 
     struct ActiveEffectInstance {
+        const void *host_identity = nullptr;
         std::string actor_name;
         std::string effect_name;
         std::uint64_t start_frame_index = 0U;
@@ -307,6 +311,9 @@ namespace smgpc::runtime {
         std::string draw_order;
         std::uint64_t frame_index = 0U;
         s32 draw_type = 0;
+        std::string packet_mode = "JpcBillboard2D";
+        std::uint8_t shape_type = 2U;
+        bool world_space = false;
         std::string primitive_type = "triangles";
         std::uint32_t vertex_count = 0U;
         std::uint32_t index_count = 0U;
@@ -336,29 +343,34 @@ namespace smgpc::runtime {
         void load_resources(const smgpc::resource::RarcArchive &archive);
         void begin_frame(std::uint64_t frame_index);
         void register_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
-                             std::string_view resource_group_name, bool sort_enabled);
-        void unregister_keeper(std::string_view host_name);
+                             std::string_view resource_group_name, bool sort_enabled, const void *host_identity = nullptr);
+        void unregister_keeper(std::string_view host_name, const void *host_identity = nullptr);
         void bind_host_transform(EffectKeeperHostKind host_kind, std::string_view host_name, EffectHostBindingSource source,
-                                 const std::array<float, 12U> &matrix, bool host_dead);
-        void unbind_host_transform(std::string_view host_name);
-        void emit(std::string_view actor_name, std::string_view effect_name);
-        void delete_effect(std::string_view actor_name, std::string_view effect_name);
-        void delete_all(std::string_view actor_name);
-        void draw(s32 draw_type);
+                                 const std::array<float, 12U> &matrix, bool host_dead, const void *host_identity = nullptr);
+        void unbind_host_transform(std::string_view host_name, const void *host_identity = nullptr);
+        void emit(std::string_view actor_name, std::string_view effect_name, const void *host_identity = nullptr);
+        void delete_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity = nullptr);
+        void delete_all(std::string_view actor_name, const void *host_identity = nullptr);
+        void draw(s32 draw_type, const smgpc::camera::CameraPose *camera_pose = nullptr);
 
         [[nodiscard]] std::span<const EffectEvent> events() const;
         [[nodiscard]] std::span<const ActiveEffectInstance> active_effect_instances() const;
         [[nodiscard]] std::vector<EffectKeeperRegistration> registered_keepers() const;
-        [[nodiscard]] std::optional<EffectKeeperRegistration> registered_keeper(std::string_view host_name) const;
-        [[nodiscard]] std::optional<EffectHostBinding> host_binding(std::string_view host_name) const;
-        [[nodiscard]] std::vector<std::string> active_effects(std::string_view actor_name) const;
+        [[nodiscard]] std::optional<EffectKeeperRegistration> registered_keeper(std::string_view host_name,
+                                                                                const void *host_identity = nullptr) const;
+        [[nodiscard]] std::optional<EffectHostBinding> host_binding(std::string_view host_name,
+                                                                    const void *host_identity = nullptr) const;
+        [[nodiscard]] std::vector<std::string> active_effects(std::string_view actor_name,
+                                                              const void *host_identity = nullptr) const;
         [[nodiscard]] const smgpc::render::effects::EffectResourceLibrary *resource_library() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const EffectDrawPacketTrace> draw_packets() const;
 #endif
 
     private:
-        [[nodiscard]] std::vector<smgpc::render::effects::ResolvedEffectResource> resolve(std::string_view actor_name, std::string_view effect_name) const;
+        [[nodiscard]] std::vector<smgpc::render::effects::ResolvedEffectResource> resolve(std::string_view actor_name,
+                                                                                          std::string_view effect_name,
+                                                                                          const void *host_identity = nullptr) const;
         [[nodiscard]] render::TextureHandle texture_handle_for(const smgpc::render::effects::JpcTextureMetadata &texture);
         [[nodiscard]] std::vector<JpcEffectEmitterInstance> create_emitters(std::span<const smgpc::render::effects::ResolvedEffectResource> resources);
         void advance_effects_to_frame(std::uint64_t frame_index);
@@ -368,7 +380,9 @@ namespace smgpc::runtime {
         std::vector<EffectEvent> _events;
         std::vector<ActiveEffectInstance> _active_effects;
         std::map<std::string, EffectKeeperRegistration, std::less<>> _registered_keepers;
+        std::map<const void *, EffectKeeperRegistration, std::less<>> _registered_keeper_instances;
         std::map<std::string, EffectHostBinding, std::less<>> _host_bindings;
+        std::map<const void *, EffectHostBinding, std::less<>> _host_binding_instances;
         std::optional<smgpc::render::effects::EffectResourceLibrary> _resource_library;
         std::map<std::uint16_t, render::TextureHandle> _texture_handles;
         std::uint32_t _emitter_random_seed = 0U;

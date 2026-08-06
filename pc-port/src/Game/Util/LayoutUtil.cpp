@@ -553,25 +553,25 @@ namespace MR {
 
     void emitEffect(SimpleLayout* pLayout, const char* pEffectName) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_effect(pLayout->getName(), pEffectName);
+            runtime->emit_effect(pLayout->getName(), pEffectName, pLayout);
         }
     }
 
     void emitEffect(LayoutActor* pLayout, const char* pEffectName) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_effect(pLayout->getName(), pEffectName);
+            runtime->emit_effect(pLayout->getName(), pEffectName, pLayout);
         }
     }
 
     void deleteEffectAll(SimpleLayout* pLayout) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->delete_effect_all(pLayout->getName());
+            runtime->delete_effect_all(pLayout->getName(), pLayout);
         }
     }
 
     void deleteEffectAll(LayoutActor* pLayout) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->delete_effect_all(pLayout->getName());
+            runtime->delete_effect_all(pLayout->getName(), pLayout);
         }
     }
 

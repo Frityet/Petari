@@ -15,6 +15,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/UserFile.hpp"
 #include "common/BinaryChunkFile.hpp"
+#include "render/effects/JpcBillboard.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/SaveEventNameDictionary.hpp"
@@ -619,6 +620,33 @@ namespace smgpc::runtime {
             return false;
         }
 
+        [[nodiscard]] bool effect_draw_type_uses_world_camera(s32 draw_type) {
+            return draw_type == MR::DrawType_EffectDraw3D || draw_type == MR::DrawType_EffectDrawIndirect ||
+                   draw_type == MR::DrawType_EffectDrawAfterIndirect || draw_type == MR::DrawType_EffectDrawForBloomEffect ||
+                   draw_type == MR::DrawType_EffectDrawAfterImageEffect;
+        }
+
+        [[nodiscard]] std::uint8_t jpa_particle_shape_type(
+            bool child, const smgpc::render::effects::JpcBaseShapeMetadata *base_shape,
+            const smgpc::render::effects::JpcChildShapeMetadata *child_shape) {
+            if (child && child_shape != nullptr) {
+                return child_shape->shape_type;
+            }
+            return base_shape == nullptr ? 2U : base_shape->shape_type;
+        }
+
+        [[nodiscard]] const char *jpa_packet_path_name(smgpc::render::effects::JpcParticlePacketPath path) {
+            switch (path) {
+            case smgpc::render::effects::JpcParticlePacketPath::ScreenSpace:
+                return "JpcBillboard2D";
+            case smgpc::render::effects::JpcParticlePacketPath::WorldBillboard:
+                return "JpcBillboard3D";
+            case smgpc::render::effects::JpcParticlePacketPath::WorldBillboardFallback:
+                return "JpcWorldShapeFallback3D";
+            }
+            return "JpcBillboard2D";
+        }
+
         [[nodiscard]] float effect_billboard_size(const smgpc::render::effects::JpcTextureMetadata &texture, const smgpc::render::effects::ResolvedEffectResource &resource) {
             const auto source_size = static_cast<float>(std::max(texture.width, texture.height));
             const auto base_shape_scale = resource.resource != nullptr && resource.resource->base_shape.has_value() ?
@@ -667,6 +695,14 @@ namespace smgpc::runtime {
             }
 
             return "Unknown";
+        }
+
+        [[nodiscard]] bool effect_host_matches(const ActiveEffectInstance &active, std::string_view host_name,
+                                               const void *host_identity) {
+            if (host_identity != nullptr) {
+                return active.host_identity == host_identity;
+            }
+            return active.host_identity == nullptr && active.actor_name == host_name;
         }
 
         [[nodiscard]] render::DepthCompare jpa_compare_from_config(std::uint8_t compare) {
@@ -838,6 +874,23 @@ namespace smgpc::runtime {
                 15U,
                 14U,
             };
+        }
+
+        template <std::size_t Size>
+        [[nodiscard]] std::array<render::GxMaterialVertex2D, Size>
+        jpa_material_vertices(const std::array<render::TexturedVertex2D, Size> &source) {
+            auto vertices = std::array<render::GxMaterialVertex2D, Size>{};
+            for (auto index = std::size_t{}; index < source.size(); ++index) {
+                const auto &vertex = source[index];
+                vertices[index] = render::GxMaterialVertex2D{
+                    .x = vertex.x,
+                    .y = vertex.y,
+                    .z = vertex.z,
+                    .tex_coords = {{{vertex.u, vertex.v, 1.0F}}},
+                    .color = vertex.color,
+                };
+            }
+            return vertices;
         }
 
         [[nodiscard]] std::uint32_t next_jpa_random_u(std::uint32_t &seed) {
@@ -1768,30 +1821,39 @@ namespace smgpc::runtime {
     }
 
     void EffectService::register_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
-                                        std::string_view resource_group_name, bool sort_enabled) {
+                                        std::string_view resource_group_name, bool sort_enabled, const void *host_identity) {
         if (host_name.empty()) {
             return;
         }
 
         auto keeper = EffectKeeperRegistration{
             .host_kind = host_kind,
+            .host_identity = host_identity,
             .host_name = std::string(host_name),
             .resource_group_name = std::string(resource_group_name),
             .requested_capacity = requested_capacity,
             .sort_enabled = sort_enabled,
             .frame_index = _frame_index,
         };
-        _registered_keepers[std::string(host_name)] = keeper;
-    }
-
-    void EffectService::unregister_keeper(std::string_view host_name) {
-        if (const auto it = _registered_keepers.find(host_name); it != _registered_keepers.end()) {
-            _registered_keepers.erase(it);
+        if (host_identity != nullptr) {
+            _registered_keeper_instances[host_identity] = keeper;
+        } else {
+            _registered_keepers[std::string(host_name)] = keeper;
         }
     }
 
+    void EffectService::unregister_keeper(std::string_view host_name, const void *host_identity) {
+        if (host_identity != nullptr) {
+            _registered_keeper_instances.erase(host_identity);
+        } else if (const auto it = _registered_keepers.find(host_name); it != _registered_keepers.end()) {
+            _registered_keepers.erase(it);
+        }
+        delete_all(host_name, host_identity);
+        unbind_host_transform(host_name, host_identity);
+    }
+
     void EffectService::bind_host_transform(EffectKeeperHostKind host_kind, std::string_view host_name, EffectHostBindingSource source,
-                                            const std::array<float, 12U> &matrix, bool host_dead) {
+                                            const std::array<float, 12U> &matrix, bool host_dead, const void *host_identity) {
         if (host_name.empty()) {
             return;
         }
@@ -1799,41 +1861,49 @@ namespace smgpc::runtime {
         auto binding = EffectHostBinding{
             .host_kind = host_kind,
             .source = source,
+            .host_identity = host_identity,
             .host_name = std::string(host_name),
             .matrix = matrix,
             .translation = effect_host_translation(matrix),
             .host_dead = host_dead,
             .frame_index = _frame_index,
         };
-        _host_bindings[std::string(host_name)] = binding;
+        if (host_identity != nullptr) {
+            _host_binding_instances[host_identity] = binding;
+        } else {
+            _host_bindings[std::string(host_name)] = binding;
+        }
         for (auto &active : _active_effects) {
-            if (active.actor_name == host_name) {
+            if (effect_host_matches(active, host_name, host_identity)) {
                 active.host_binding = binding;
             }
         }
     }
 
-    void EffectService::unbind_host_transform(std::string_view host_name) {
-        if (const auto it = _host_bindings.find(host_name); it != _host_bindings.end()) {
+    void EffectService::unbind_host_transform(std::string_view host_name, const void *host_identity) {
+        if (host_identity != nullptr) {
+            _host_binding_instances.erase(host_identity);
+        } else if (const auto it = _host_bindings.find(host_name); it != _host_bindings.end()) {
             _host_bindings.erase(it);
         }
         for (auto &active : _active_effects) {
-            if (active.actor_name == host_name) {
+            if (effect_host_matches(active, host_name, host_identity)) {
                 active.host_binding = std::nullopt;
             }
         }
     }
 
-    void EffectService::emit(std::string_view actor_name, std::string_view effect_name) {
-        const auto keeper = registered_keeper(actor_name);
-        const auto binding = host_binding(actor_name);
-        auto resolved = resolve(actor_name, effect_name);
-        const auto found = std::ranges::find_if(_active_effects, [actor_name, effect_name](const auto &active) {
-            return active.actor_name == actor_name && active.effect_name == effect_name;
+    void EffectService::emit(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
+        const auto keeper = registered_keeper(actor_name, host_identity);
+        const auto binding = host_binding(actor_name, host_identity);
+        auto resolved = resolve(actor_name, effect_name, host_identity);
+        const auto found = std::ranges::find_if(_active_effects, [actor_name, effect_name, host_identity](const auto &active) {
+            return effect_host_matches(active, actor_name, host_identity) && active.effect_name == effect_name;
         });
         if (found == _active_effects.end()) {
             auto emitters = create_emitters(resolved);
             auto &active = _active_effects.emplace_back(ActiveEffectInstance{
+                .host_identity = host_identity,
                 .actor_name = std::string(actor_name),
                 .effect_name = std::string(effect_name),
                 .start_frame_index = _frame_index,
@@ -1859,6 +1929,7 @@ namespace smgpc::runtime {
 
         _events.push_back(EffectEvent{
             .kind = EffectEventKind::Emit,
+            .host_identity = host_identity,
             .actor_name = std::string(actor_name),
             .effect_name = std::string(effect_name),
             .frame_index = _frame_index,
@@ -1867,35 +1938,40 @@ namespace smgpc::runtime {
         });
     }
 
-    void EffectService::delete_effect(std::string_view actor_name, std::string_view effect_name) {
-        std::erase_if(_active_effects, [actor_name, effect_name](const auto &active) {
-            return active.actor_name == actor_name && active.effect_name == effect_name;
+    void EffectService::delete_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
+        std::erase_if(_active_effects, [actor_name, effect_name, host_identity](const auto &active) {
+            return effect_host_matches(active, actor_name, host_identity) && active.effect_name == effect_name;
         });
 
         _events.push_back(EffectEvent{
             .kind = EffectEventKind::Delete,
+            .host_identity = host_identity,
             .actor_name = std::string(actor_name),
             .effect_name = std::string(effect_name),
             .frame_index = _frame_index,
-            .keeper = registered_keeper(actor_name),
-            .resolved_resources = resolve(actor_name, effect_name),
+            .keeper = registered_keeper(actor_name, host_identity),
+            .resolved_resources = resolve(actor_name, effect_name, host_identity),
         });
     }
 
-    void EffectService::delete_all(std::string_view actor_name) {
-        std::erase_if(_active_effects, [actor_name](const auto &active) { return active.actor_name == actor_name; });
+    void EffectService::delete_all(std::string_view actor_name, const void *host_identity) {
+        std::erase_if(_active_effects, [actor_name, host_identity](const auto &active) {
+            return effect_host_matches(active, actor_name, host_identity);
+        });
         _events.push_back(EffectEvent{
             .kind = EffectEventKind::DeleteAll,
+            .host_identity = host_identity,
             .actor_name = std::string(actor_name),
             .effect_name = {},
             .frame_index = _frame_index,
-            .keeper = registered_keeper(actor_name),
+            .keeper = registered_keeper(actor_name, host_identity),
             .resolved_resources = {},
         });
     }
 
-    void EffectService::draw(s32 draw_type) {
+    void EffectService::draw(s32 draw_type, const smgpc::camera::CameraPose *camera_pose) {
         auto &renderer = render::current_aurora_renderer();
+        const auto world_draw = effect_draw_type_uses_world_camera(draw_type) && camera_pose != nullptr;
         for (const auto &active : _active_effects) {
             for (auto resource_index = std::size_t{}; resource_index < active.resolved_resources.size(); ++resource_index) {
                 const auto &resource = active.resolved_resources[resource_index];
@@ -1930,18 +2006,68 @@ namespace smgpc::runtime {
 
                     const auto half_size_x = base_size * particle.scale_x * 0.5F;
                     const auto half_size_y = base_size * particle.scale_y * 0.5F;
-                    const auto x = particle.x + host_translation[0U];
-                    const auto y = particle.y + host_translation[1U];
-                    const auto z = particle.z + host_translation[2U];
+                    const auto local_center = smgpc::camera::CameraParamVec3{
+                        .x = particle.x,
+                        .y = particle.y,
+                        .z = particle.z,
+                    };
+                    auto center = local_center;
+                    if (active.host_binding.has_value()) {
+                        center = smgpc::render::effects::jpc_transform_particle_center(active.host_binding->matrix, local_center);
+                    }
+                    const auto x = center.x;
+                    const auto y = center.y;
+                    const auto z = center.z;
                     const auto alpha = static_cast<std::uint8_t>(std::clamp(particle.alpha, 0.0F, 1.0F) * 255.0F);
                     const auto color = std::array<std::uint8_t, 4U>{255U, 255U, 255U, alpha};
                     auto vertex_count = std::uint32_t{4U};
                     auto index_count = std::uint32_t{6U};
                     auto color_channel_count = std::uint32_t{1U};
                     auto primitive_type = std::string_view{"triangles"};
-                    auto alpha_compare = render::GxAlphaCompare2D{};
-                    auto blend = render::GxBlendMode2D{.enabled = true};
-                    if (particle.child && jpa_child_uses_display_list_shape(child_shape)) {
+                    const auto shape_type = jpa_particle_shape_type(particle.child, base_shape, child_shape);
+                    const auto packet_path = smgpc::render::effects::jpc_particle_packet_path(world_draw, shape_type);
+                    auto alpha_compare = jpa_alpha_compare(base_shape);
+                    auto blend = jpa_blend_mode(base_shape);
+                    if (packet_path != smgpc::render::effects::JpcParticlePacketPath::ScreenSpace) {
+                        const auto textured_vertices = smgpc::render::effects::jpc_billboard_world_vertices(
+                            *camera_pose,
+                            smgpc::render::effects::JpcBillboardGeometry{
+                                .center = {.x = x, .y = y, .z = z},
+                                .half_size_x = half_size_x,
+                                .half_size_y = half_size_y,
+                                .rotation_radians = 0.0F,
+                                .color = color,
+                            });
+                        const auto vertices = jpa_material_vertices(textured_vertices);
+                        const auto indices = std::array<std::uint16_t, 6U>{0U, 1U, 2U, 0U, 2U, 3U};
+                        const auto texture_stages = std::array<render::GxTextureStage2D, 1U>{
+                            render::GxTextureStage2D{
+                                .texture = texture_handle,
+                                .wrap_u = texture.wrap_s,
+                                .wrap_v = texture.wrap_t,
+                                .min_filter = texture.min_filter,
+                                .mag_filter = texture.mag_filter,
+                            },
+                        };
+                        const auto tev_stages = std::array<render::GxTevStage2D, 1U>{jpa_tev_stage(base_shape)};
+                        renderer.submit_gx_material_triangles_3d(
+                            render::GxMaterialTriangleBatch2D{
+                                .vertices = std::span<const render::GxMaterialVertex2D>(vertices.data(), vertices.size()),
+                                .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
+                                .primitive_topology = render::PrimitiveTopology::Triangles,
+                                .texture_stages = std::span<const render::GxTextureStage2D>(texture_stages.data(), texture_stages.size()),
+                                .tev_stages = std::span<const render::GxTevStage2D>(tev_stages.data(), tev_stages.size()),
+                                .initial_tev_registers =
+                                    jpa_initial_tev_registers(base_shape, particle.child ? child_shape : nullptr, particle.alpha),
+                                .alpha_compare = alpha_compare,
+                                .blend = blend,
+                                .depth_test = jpa_depth_test(base_shape),
+                                .depth_write = jpa_depth_write(base_shape),
+                                .depth_compare = jpa_depth_compare(base_shape),
+                            },
+                            *camera_pose);
+                        color_channel_count = 0U;
+                    } else if (particle.child && jpa_child_uses_display_list_shape(child_shape)) {
                         auto vertices = jpa_child_display_list_vertices(x, y, z, half_size_x, half_size_y, color);
                         const auto indices = jpa_child_display_list_indices();
                         const auto texture_stages = std::array<render::GxTextureStage2D, 1U>{
@@ -1954,8 +2080,6 @@ namespace smgpc::runtime {
                             },
                         };
                         const auto tev_stages = std::array<render::GxTevStage2D, 1U>{jpa_tev_stage(base_shape)};
-                        alpha_compare = jpa_alpha_compare(base_shape);
-                        blend = jpa_blend_mode(base_shape);
                         renderer.submit_gx_material_triangles(render::GxMaterialTriangleBatch2D{
                             .vertices = std::span<const render::GxMaterialVertex2D>(vertices.data(), vertices.size()),
                             .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
@@ -2027,6 +2151,9 @@ namespace smgpc::runtime {
                         .draw_order = resource.auto_effect_draw_order,
                         .frame_index = _frame_index,
                         .draw_type = draw_type,
+                        .packet_mode = jpa_packet_path_name(packet_path),
+                        .shape_type = shape_type,
+                        .world_space = packet_path != smgpc::render::effects::JpcParticlePacketPath::ScreenSpace,
                         .primitive_type = std::string(primitive_type),
                         .vertex_count = vertex_count,
                         .index_count = index_count,
@@ -2074,14 +2201,24 @@ namespace smgpc::runtime {
 
     std::vector<EffectKeeperRegistration> EffectService::registered_keepers() const {
         auto out = std::vector<EffectKeeperRegistration>{};
-        out.reserve(_registered_keepers.size());
+        out.reserve(_registered_keepers.size() + _registered_keeper_instances.size());
         for (const auto &[_, keeper] : _registered_keepers) {
+            out.push_back(keeper);
+        }
+        for (const auto &[_, keeper] : _registered_keeper_instances) {
             out.push_back(keeper);
         }
         return out;
     }
 
-    std::optional<EffectKeeperRegistration> EffectService::registered_keeper(std::string_view host_name) const {
+    std::optional<EffectKeeperRegistration> EffectService::registered_keeper(std::string_view host_name,
+                                                                             const void *host_identity) const {
+        if (host_identity != nullptr) {
+            if (const auto it = _registered_keeper_instances.find(host_identity); it != _registered_keeper_instances.end()) {
+                return it->second;
+            }
+            return std::nullopt;
+        }
         if (auto it = _registered_keepers.find(host_name); it != _registered_keepers.end()) {
             return it->second;
         }
@@ -2089,7 +2226,14 @@ namespace smgpc::runtime {
         return std::nullopt;
     }
 
-    std::optional<EffectHostBinding> EffectService::host_binding(std::string_view host_name) const {
+    std::optional<EffectHostBinding> EffectService::host_binding(std::string_view host_name,
+                                                                 const void *host_identity) const {
+        if (host_identity != nullptr) {
+            if (const auto it = _host_binding_instances.find(host_identity); it != _host_binding_instances.end()) {
+                return it->second;
+            }
+            return std::nullopt;
+        }
         if (auto it = _host_bindings.find(host_name); it != _host_bindings.end()) {
             return it->second;
         }
@@ -2097,10 +2241,10 @@ namespace smgpc::runtime {
         return std::nullopt;
     }
 
-    std::vector<std::string> EffectService::active_effects(std::string_view actor_name) const {
+    std::vector<std::string> EffectService::active_effects(std::string_view actor_name, const void *host_identity) const {
         auto out = std::vector<std::string>{};
         for (const auto &active : _active_effects) {
-            if (active.actor_name == actor_name) {
+            if (effect_host_matches(active, actor_name, host_identity)) {
                 out.push_back(active.effect_name);
             }
         }
@@ -2118,12 +2262,13 @@ namespace smgpc::runtime {
     }
 #endif
 
-    std::vector<smgpc::render::effects::ResolvedEffectResource> EffectService::resolve(std::string_view actor_name, std::string_view effect_name) const {
+    std::vector<smgpc::render::effects::ResolvedEffectResource>
+    EffectService::resolve(std::string_view actor_name, std::string_view effect_name, const void *host_identity) const {
         if (!_resource_library.has_value() || effect_name.empty()) {
             return {};
         }
 
-        if (const auto keeper = registered_keeper(actor_name); keeper.has_value() && !keeper->resource_group_name.empty()) {
+        if (const auto keeper = registered_keeper(actor_name, host_identity); keeper.has_value() && !keeper->resource_group_name.empty()) {
             auto resources = _resource_library->resolve_auto_effect(keeper->resource_group_name, effect_name);
             if (!resources.empty()) {
                 return resources;

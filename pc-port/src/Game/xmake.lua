@@ -12,6 +12,7 @@ target("smg-pc-game")
     add_files("../scene/**.cpp")
     add_files("../compat/**.cpp")
     add_files {
+        "../render/effects/JpcBillboard.cpp",
         "../render/effects/EffectResource.cpp",
         "../render/GXState.cpp",
         "../render/J3dAnimation.cpp",
@@ -32,6 +33,7 @@ target("smg-pc-game")
     add_headerfiles("../scene/**.hpp")
     add_headerfiles("../compat/**.hpp")
     add_headerfiles {
+        "../render/effects/JpcBillboard.hpp",
         "../render/effects/EffectResource.hpp",
         "../render/GXState.hpp",
         "../render/J3dAnimation.hpp",
