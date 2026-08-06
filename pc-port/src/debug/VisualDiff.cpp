@@ -1,5 +1,6 @@
 #include <spng.h>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <filesystem>
@@ -37,7 +38,7 @@ struct RmsResult {
 };
 
 void print_usage(std::ostream &out) {
-    out << "usage: smg-pc-visual-diff [--crop x,y,w,h] [--max-full-normalized-rms value] [--max-crop-normalized-rms value] <expected.png> <actual.png>\n";
+    out << "usage: smg-pc-visual-diff [--crop x,y,w,h] [--crop-first] [--max-full-normalized-rms value] [--max-crop-normalized-rms value] <expected.png> <actual.png>\n";
 }
 
 [[nodiscard]] std::vector< std::uint8_t > read_file(const std::filesystem::path &path) {
@@ -172,6 +173,23 @@ void validate_crop(const Crop &crop, const Image &image) {
     }
 }
 
+[[nodiscard]] Image crop_image(const Image &source, const Crop &crop) {
+    validate_crop(crop, source);
+
+    auto result = Image {
+        .width = crop.width,
+        .height = crop.height,
+        .rgba = std::vector< std::uint8_t >(static_cast< std::size_t >(crop.width) * crop.height * 4U),
+    };
+    const auto row_bytes = static_cast< std::size_t >(crop.width) * 4U;
+    for (auto y = 0U; y < crop.height; ++y) {
+        const auto source_pixel = static_cast< std::size_t >(crop.y + y) * source.width + crop.x;
+        const auto destination_pixel = static_cast< std::size_t >(y) * crop.width;
+        std::copy_n(source.rgba.data() + source_pixel * 4U, row_bytes, result.rgba.data() + destination_pixel * 4U);
+    }
+    return result;
+}
+
 [[nodiscard]] RmsResult calculate_rgb_rms(const Image &expected, const Image &actual, const Crop &crop) {
     auto sum_squares = 0.0L;
 
@@ -213,6 +231,7 @@ void print_rms(std::string_view label, const RmsResult &result) {
 int main(int argc, char **argv) {
     try {
         auto crop = std::optional< Crop > {};
+        auto crop_first = false;
         auto max_full_normalized_rms = std::optional< double > {};
         auto max_crop_normalized_rms = std::optional< double > {};
         auto paths = std::vector< std::filesystem::path > {};
@@ -228,6 +247,10 @@ int main(int argc, char **argv) {
                     throw std::runtime_error("--crop requires x,y,w,h");
                 }
                 crop = parse_crop(argv[++i]);
+                continue;
+            }
+            if (arg == "--crop-first") {
+                crop_first = true;
                 continue;
             }
             if (arg == "--max-full-normalized-rms") {
@@ -253,12 +276,25 @@ int main(int argc, char **argv) {
             return 2;
         }
 
-        const auto expected = load_png(paths[0]);
-        const auto actual = load_png(paths[1]);
+        auto expected = load_png(paths[0]);
+        auto actual = load_png(paths[1]);
 
         std::cout << std::fixed << std::setprecision(6);
         std::cout << "expected_size: " << expected.width << 'x' << expected.height << '\n';
         std::cout << "actual_size: " << actual.width << 'x' << actual.height << '\n';
+
+        auto applied_crop_first = false;
+        if (crop_first) {
+            if (!crop.has_value()) {
+                throw std::runtime_error("--crop-first requires --crop x,y,w,h");
+            }
+            expected = crop_image(expected, *crop);
+            actual = crop_image(actual, *crop);
+            std::cout << "comparison_crop: " << crop->x << ',' << crop->y << ',' << crop->width << ',' << crop->height << '\n';
+            std::cout << "comparison_size: " << expected.width << 'x' << expected.height << '\n';
+            crop.reset();
+            applied_crop_first = true;
+        }
 
         if (expected.width != actual.width || expected.height != actual.height) {
             throw std::runtime_error("image sizes differ; RMS requires matching dimensions");
@@ -274,6 +310,11 @@ int main(int argc, char **argv) {
         const auto full_result = calculate_rgb_rms(expected, actual, full_crop);
         print_rms("full", full_result);
         failed_threshold = exceeds_threshold("full", full_result, max_full_normalized_rms);
+
+        if (applied_crop_first) {
+            print_rms("crop", full_result);
+            failed_threshold = exceeds_threshold("crop", full_result, max_crop_normalized_rms) || failed_threshold;
+        }
 
         if (crop.has_value()) {
             validate_crop(*crop, expected);

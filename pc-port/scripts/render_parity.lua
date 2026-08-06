@@ -362,13 +362,36 @@ end
 
 local function wait_for_pair(proc, png_path, trace_path, timeout_seconds, log_path)
     local deadline = os.mclock() + timeout_seconds * 1000
+    local stable_trace_size = nil
+    local stable_poll_count = 0
     while os.mclock() < deadline do
-        if common.file_nonempty(png_path) and common.file_nonempty(trace_path) then
-            return true
+        local pair_exists = common.file_nonempty(png_path) and common.file_nonempty(trace_path)
+        local trace_journal_exists = os.isfile(trace_path .. "-journal")
+        if pair_exists and not trace_journal_exists then
+            local trace_size = os.filesize(trace_path)
+            if stable_trace_size == trace_size then
+                stable_poll_count = stable_poll_count + 1
+            else
+                stable_trace_size = trace_size
+                stable_poll_count = 0
+            end
+
+            -- The Dolphin trace hook commits SQLite after the PNG has already appeared. Killing
+            -- Dolphin as soon as both files exist can therefore leave a journal and an empty
+            -- database. A software-rendered frame can itself take multiple seconds, so require
+            -- the committed database size to remain stable for five seconds.
+            if stable_poll_count >= 10 then
+                return true
+            end
+        else
+            stable_trace_size = nil
+            stable_poll_count = 0
         end
-        local done = proc:wait(1000)
+        local done = proc:wait(500)
         if done == 1 then
-            return common.file_nonempty(png_path) and common.file_nonempty(trace_path)
+            return common.file_nonempty(png_path)
+                and common.file_nonempty(trace_path)
+                and not os.isfile(trace_path .. "-journal")
         end
     end
     if log_path then
@@ -504,7 +527,9 @@ end
 
 function compare(args)
     local ctx = resolve_compare(args or {})
-    os.mkdir(ctx.work_dir, ctx.dolphin_user, ctx.dolphin_shm)
+    os.mkdir(ctx.work_dir)
+    os.mkdir(ctx.dolphin_user)
+    os.mkdir(ctx.dolphin_shm)
     if ctx.reset_pc_save == "1" then
         os.tryrm(ctx.pc_save_dir)
     end
@@ -553,6 +578,7 @@ function compare(args)
         if ctx.crop ~= "" then
             table.insert(diff_args, "--crop")
             table.insert(diff_args, ctx.crop)
+            table.insert(diff_args, "--crop-first")
         end
         if ctx.max_full_rms ~= "" then
             table.insert(diff_args, "--max-full-normalized-rms")
