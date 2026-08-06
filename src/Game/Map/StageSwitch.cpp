@@ -24,6 +24,7 @@ ZoneSwitch::ZoneSwitch() : BitFlag128() {
 
     while (idx < 0x80) {
         set(idx, false);
+        idx++;
     }
 }
 
@@ -129,9 +130,10 @@ bool StageSwitchCtrl::isValidSwitchDead() const {
 bool StageSwitchCtrl::isOnAllSwitchAfterB(int idx) const {
     for (s32 i = 0; i < idx; i++) {
         s32 switchNo = i + mSW_B->getSwitchNo();
+        SwitchIdInfo* pSwitch = mSW_B;
         StageSwitchContainer* pContainer = MR::getSceneObj< StageSwitchContainer >(SceneObj_StageSwitchContainer);
 
-        if (!pContainer->getZoneSwitch(*mSW_B)->get(switchNo)) {
+        if (!pContainer->getZoneSwitch(*pSwitch)->get(switchNo)) {
             return false;
         }
     }
@@ -139,7 +141,19 @@ bool StageSwitchCtrl::isOnAllSwitchAfterB(int idx) const {
     return true;
 }
 
-// isOnAnyOneSwitchAfterB
+bool StageSwitchCtrl::isOnAnyOneSwitchAfterB(int idx) const {
+    for (s32 i = 0; i < idx; i++) {
+        s32 switchNo = i + mSW_B->getSwitchNo();
+        SwitchIdInfo* pSwitch = mSW_B;
+        StageSwitchContainer* pContainer = MR::getSceneObj< StageSwitchContainer >(SceneObj_StageSwitchContainer);
+
+        if (pContainer->getZoneSwitch(*pSwitch)->get(switchNo)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 SwitchIdInfo* StageSwitchFunction::createSwitchIdInfo(const char* pSwitchName, const JMapInfoIter& rIter, bool unused) {
     s32 switchNo;
