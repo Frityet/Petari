@@ -1,11 +1,11 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
 
 class LayoutActor;
 class LiveActor;
 struct TVec2f;
-struct TVec3f;
 
 namespace MR {
     bool isStarPointerPointingPane(const LayoutActor* pLayout, const char* pPaneName, s32, bool, const char*);

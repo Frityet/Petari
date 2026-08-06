@@ -2,7 +2,8 @@
 
 #include "Game/Util/JMapInfo.hpp"
 
-struct TVec3f;
+#include <JSystem/JGeometry/TVec.hpp>
+
 class NameObj;
 
 namespace MR {

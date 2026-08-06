@@ -1,11 +1,11 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution.h>
 
 class Color8;
 class DrawBuffer;
 class LiveActor;
-struct TVec3f;
 
 namespace MR {
     void loadLight(s32);

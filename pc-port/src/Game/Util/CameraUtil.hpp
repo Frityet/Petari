@@ -1,9 +1,9 @@
 #pragma once
 
-struct TVec3f;
-struct TVec2f;
-
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
+
+struct TVec2f;
 
 namespace MR {
     const TVec3f getCamPos();

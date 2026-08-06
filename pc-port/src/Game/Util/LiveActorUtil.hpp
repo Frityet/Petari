@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "render/J3dMaterialRuntime.hpp"
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution.h>
 
 class LiveActor;
@@ -12,7 +13,6 @@ class J3DFrameCtrl;
 class Nerve;
 class JMapInfoIter;
 class MsgSharedGroup;
-struct TVec3f;
 
 class ProjmapEffectMtxSetter {
 public:

@@ -1,8 +1,7 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution.h>
-
-struct TVec3f;
 
 namespace MR {
     void showPlayer();

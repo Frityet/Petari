@@ -1,5 +1,6 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution.h>
 
 enum {
@@ -21,7 +22,6 @@ enum {
 
 class HitSensor;
 class LiveActor;
-struct TVec3f;
 
 namespace MR {
     bool isMsgAutoRushBegin(u32 msg);

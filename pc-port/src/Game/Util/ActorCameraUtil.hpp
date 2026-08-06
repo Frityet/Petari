@@ -1,11 +1,11 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
 
 class ActorCameraInfo;
 class CameraTargetArg;
 class LiveActor;
-struct TVec3f;
 
 namespace MR {
     void initAnimCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName);

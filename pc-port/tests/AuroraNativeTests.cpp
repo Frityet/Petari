@@ -11,6 +11,9 @@
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "JSystem/JGeometry/TBox.hpp"
+#include "JSystem/JGeometry/TMatrix.hpp"
+#include "JSystem/JGeometry/TUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 
@@ -25,6 +28,7 @@
 #include <revolution.h>
 
 #include <array>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -35,6 +39,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <vector>
 
 namespace {
@@ -84,6 +89,82 @@ namespace {
                 "KPADRead should preserve pointer coordinates");
         WPADDisconnect(WPAD_CHAN0);
         require(WPADProbe(WPAD_CHAN0, nullptr) == FALSE, "WPADDisconnect should clear Aurora controller state");
+    }
+
+    void test_jgeometry_host_layout_and_math() {
+        static_assert(std::is_same_v<TVec3f, JGeometry::TVec3<f32>>);
+        static_assert(sizeof(TVec3f) == sizeof(Vec));
+        static_assert(sizeof(TVec3f) == 12U);
+        static_assert(alignof(TVec3f) == alignof(Vec));
+        static_assert(sizeof(TPos3f) == sizeof(Mtx));
+        static_assert(sizeof(TBox3f) == 24U);
+
+        auto vector = TVec3f{3.0F, 4.0F, 0.0F};
+        require(vector.squared() == 25.0F && vector.squared(TVec3f{3.0F, 0.0F, 0.0F}) == 16.0F,
+                "JGeometry vectors should expose source-compatible squared magnitudes and distances");
+        require(vector.normalize() == 5.0F && vector.epsilonEquals(TVec3f{0.6F, 0.8F, 0.0F}, 0.00001F),
+                "JGeometry vector normalization should return the original length");
+
+        auto zero = TVec3f{};
+        require(zero.normalize() == 0.0F && zero.squared() == 0.0F, "normalizing a zero vector should remain finite and zero");
+
+        auto scale_add = TVec3f{1.0F, 2.0F, 3.0F};
+        scale_add.scaleAdd(2.0F, TVec3f{4.0F, 5.0F, 6.0F}, scale_add);
+        require(scale_add.epsilonEquals(TVec3f{9.0F, 12.0F, 15.0F}, 0.0F),
+                "scaleAdd should remain correct when the destination aliases its base operand");
+        require(TVec3f{3.0F, 4.0F, 5.0F}.killElement(TVec3f{0.0F, 1.0F, 0.0F}).epsilonEquals(TVec3f{3.0F, 0.0F, 5.0F}, 0.0F),
+                "killElement should remove the component parallel to a normalized direction");
+        require(JGeometry::TUtil<f32>::clamp(-1.0F, 0.0F, 2.0F) == 0.0F &&
+                    JGeometry::TUtil<f32>::clamp(3.0F, 0.0F, 2.0F) == 2.0F,
+                "TUtil clamp should preserve the source boundary behavior");
+
+        auto lhs = TPos3f{};
+        lhs.identity();
+        lhs.mMtx[0][0] = 0.0F;
+        lhs.mMtx[0][1] = -1.0F;
+        lhs.mMtx[1][0] = 1.0F;
+        lhs.mMtx[1][1] = 0.0F;
+        lhs.setTrans(10.0F, 20.0F, 0.0F);
+
+        auto rhs = TPos3f{};
+        rhs.identity();
+        rhs.setTrans(2.0F, 3.0F, 4.0F);
+
+        auto expected = TPos3f{};
+        expected.concat(lhs, rhs);
+        require(expected.toMtxPtr() == expected.mMtx && expected.mMtx[0][3] == 7.0F && expected.mMtx[1][3] == 22.0F &&
+                    expected.mMtx[2][3] == 4.0F,
+                "TPos3f concat should compose affine translation and expose its writable Mtx view");
+
+        const auto matrix_equal = [](const TPos3f &left, const TPos3f &right) {
+            for (int row = 0; row < 3; ++row) {
+                for (int column = 0; column < 4; ++column) {
+                    if (left.mMtx[row][column] != right.mMtx[row][column]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+
+        auto alias_lhs = lhs;
+        alias_lhs.concat(alias_lhs, rhs);
+        auto alias_rhs = rhs;
+        alias_rhs.concat(lhs, alias_rhs);
+        require(matrix_equal(alias_lhs, expected) && matrix_equal(alias_rhs, expected),
+                "TPos3f concat should support destination aliasing either input operand");
+
+        auto local = TVec3f{2.0F, 3.0F, 4.0F};
+        auto world = TVec3f{};
+        lhs.mult(local, world);
+        require(world.epsilonEquals(TVec3f{7.0F, 22.0F, 4.0F}, 0.0F), "TPos3f mult should apply rotation and translation");
+        lhs.multTranspose(world, world);
+        require(world.epsilonEquals(local, 0.0F), "TPos3f multTranspose should be writable and safe for an aliased source/destination");
+
+        auto box = TBox3f{};
+        box.set(TVec3f{-1.0F, -2.0F, -3.0F}, TVec3f{1.0F, 2.0F, 3.0F});
+        require(box.intersectsPoint(TVec3f{0.0F, 0.0F, 0.0F}) && !box.intersectsPoint(TVec3f{1.0F, 0.0F, 0.0F}),
+                "TBox3f point tests should retain the original half-open maximum boundary");
     }
 
     void test_aurora_vi_retrace_and_framebuffer_state() {
@@ -402,6 +483,7 @@ namespace {
 int main() {
     const auto tests = std::array{
         TestCase{"revolution headers and input defaults", test_revolution_headers_and_input_defaults},
+        TestCase{"JGeometry host layout and math", test_jgeometry_host_layout_and_math},
         TestCase{"Aurora VI retrace/framebuffer state", test_aurora_vi_retrace_and_framebuffer_state},
         TestCase{"Aurora DVD requires disc image", test_aurora_dvd_requires_disc_image},
         TestCase{"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
