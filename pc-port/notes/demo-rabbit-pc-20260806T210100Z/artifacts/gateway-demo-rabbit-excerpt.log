@@ -1,0 +1,22 @@
+placement summary:
+stage=HeavensDoorGalaxy scenario=1 total=242 created=167 blocked=3 ignored=72
+
+placement row 8:
+status=created object=DemoRabbit zone=HeavensDoorMysteriousZone row=8 common_path_id=0 rail_info_attached=true rail_path_row=0 rail_point_count=5 rail_first_point=[15472.2,-12853.1,6202.44] support_reason=original_factory
+
+placement row 9:
+status=created object=DemoRabbit zone=HeavensDoorMysteriousZone row=9 common_path_id=-1 rail_info_attached=false rail_point_count=0 support_reason=original_factory
+
+placement row 10:
+status=created object=DemoRabbit zone=HeavensDoorMysteriousZone row=10 common_path_id=-1 rail_info_attached=false rail_point_count=0 support_reason=original_factory
+
+runtime semantic events, in placement order:
+name_obj_lifecycle:archive_request (object=DemoRabbit;archive=TrickRabbitBaby;kind=object;loaded=true;disc_path=TrickRabbitBaby.arc)
+demo:cast_registered (actor=DemoRabbit;group=0;cast=0)
+sequence:stage_host_initialized (host=DemoRabbit;stage=HeavensDoorGalaxy)
+name_obj_lifecycle:archive_request (object=DemoRabbit;archive=TrickRabbit;kind=object;loaded=true;disc_path=TrickRabbit.arc)
+demo:cast_registered (actor=DemoRabbit;group=0;cast=1)
+sequence:stage_host_initialized (host=DemoRabbit;stage=HeavensDoorGalaxy)
+name_obj_lifecycle:archive_request (object=DemoRabbit;archive=TrickRabbit;kind=object;loaded=true;disc_path=TrickRabbit.arc)
+demo:cast_registered (actor=DemoRabbit;group=0;cast=2)
+sequence:stage_host_initialized (host=DemoRabbit;stage=HeavensDoorGalaxy)

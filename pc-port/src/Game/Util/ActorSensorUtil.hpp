@@ -19,6 +19,9 @@ enum {
 };
 
 enum {
+    ATYPE_NPC_START = 0x04,
+    ATYPE_NPC = 0x05,
+    ATYPE_NPC_END = 0x06,
     ATYPE_EYE = 0x7F,
     ATYPE_MESSAGE_SENSOR = 0x83,
     ATYPE_PLAYER = 0x01,
@@ -40,6 +43,7 @@ namespace MR {
     void initHitSensor(LiveActor* pActor, s32 sensorCount);
     HitSensor* addHitSensorPlayer(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& offset);
     HitSensor* addHitSensorEnemy(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& offset);
+    HitSensor* addHitSensorNpc(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& offset);
     HitSensor* addHitSensorEye(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& offset);
     HitSensor* addHitSensor(LiveActor* pActor, const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset);
     HitSensor* addHitSensorAtJointEnemy(LiveActor* pActor, const char* pName, const char* pJointName, u16 groupSize, f32 radius,

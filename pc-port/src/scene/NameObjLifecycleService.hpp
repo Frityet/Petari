@@ -24,7 +24,8 @@ namespace smgpc::scene {
         NameObjLifecycleService(const NameObjLifecycleService &) = delete;
         NameObjLifecycleService &operator=(const NameObjLifecycleService &) = delete;
 
-        std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> preload_archives(std::string_view object_name);
+        std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> preload_archives(std::string_view object_name,
+                                                                                  const StagePlacementObject *placement = nullptr);
         [[nodiscard]] std::unique_ptr<NameObj> construct(std::string_view object_name, std::string_view actor_name);
         void init(NameObj &object, const StagePlacementObject *placement);
         void init_after_placement(NameObj &object);

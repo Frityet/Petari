@@ -9,6 +9,7 @@ namespace MR {
     void startLevelSound(const LiveActor* pActor, const char* pName, s32 param3 = -1, s32 param4 = -1, s32 param5 = -1);
     void startCurrentStageBGM();
     void startStageBGM(const char* pName, bool isPrepare);
+    bool isPlayingStageBgm();
     bool isPlayingStageBgmName(const char* pName);
     bool isStopOrFadeoutBgmName(const char* pName);
     bool isPreparedStageBgm();

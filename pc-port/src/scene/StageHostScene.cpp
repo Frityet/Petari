@@ -139,6 +139,10 @@ namespace smgpc::scene {
 
     }  // namespace
 
+    bool should_apply_host_appear(const StagePlacementObject *placement) {
+        return placement == nullptr;
+    }
+
     StageHostScene::StageHostScene(smgpc::runtime::RuntimeContext &runtime, StageHostRequest request)
         : Scene(!request.stage_name.empty() ? request.stage_name.c_str() : "StageHostScene"), _runtime(runtime),
           _registration_scope_id(runtime.begin_scene_registration_scope()), _request(std::move(request)) {
@@ -180,7 +184,7 @@ namespace smgpc::scene {
         }
 
         auto &lifecycle = _runtime.name_obj_lifecycle();
-        lifecycle.preload_archives(object_name);
+        lifecycle.preload_archives(object_name, placement);
         auto root = lifecycle.construct(object_name, actor_name);
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("sequence", "stage_host_constructed",
@@ -192,6 +196,7 @@ namespace smgpc::scene {
                                            "host=" + std::string(object_name) + ";stage=" + _request.stage_name);
 #endif
         _roots.push_back(std::move(root));
+        _root_placements.push_back(placement);
     }
 
     void StageHostScene::init_explicit_root() {
@@ -276,8 +281,10 @@ namespace smgpc::scene {
         }
 
         auto &lifecycle = _runtime.name_obj_lifecycle();
-        for (auto &root : _roots) {
-            lifecycle.appear(*root);
+        for (auto index = std::size_t{}; index < _roots.size(); ++index) {
+            if (should_apply_host_appear(_root_placements[index])) {
+                lifecycle.appear(*_roots[index]);
+            }
         }
     }
 
@@ -287,6 +294,7 @@ namespace smgpc::scene {
             lifecycle.destroy(*root);
         }
         _roots.clear();
+        _root_placements.clear();
     }
 
     void StageHostScene::start() {

@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "scenario": "gateway_handoff",
+  "description": "title through five-page picturebook advance into the HeavensDoor stage handoff",
+  "frame": 10350,
+  "image": {
+    "width": 640,
+    "height": 480,
+    "nonblack_ratio": 0.980612,
+    "render_packets": 563
+  },
+  "placement_summary": {
+    "stage": "HeavensDoorGalaxy",
+    "scenario": 1,
+    "total_objects": 242,
+    "created_objects": 167,
+    "blocked_objects": 3,
+    "intentionally_ignored_objects": 72
+  },
+  "validated_matches": [
+    {
+      "status": "created",
+      "object": "DemoRabbit",
+      "count": 3
+    },
+    {
+      "status": "created",
+      "object": "DemoRabbit",
+      "rail_info_attached": true,
+      "rail_point_count": 5,
+      "count": 1
+    }
+  ],
+  "archives_in_placement_order": [
+    "TrickRabbitBaby",
+    "TrickRabbit",
+    "TrickRabbit"
+  ],
+  "demo_cast_ids_in_placement_order": [0, 1, 2]
+}

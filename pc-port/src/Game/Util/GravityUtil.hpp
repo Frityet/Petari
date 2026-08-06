@@ -26,6 +26,10 @@ namespace MR {
         return calcGravityVector(pObj, rPosition, pDest, pInfo, 0U);
     }
 
+    inline bool calcGravityVector(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, int host) {
+        return calcGravityVector(pObj, rPosition, pDest, pInfo, static_cast<u32>(host));
+    }
+
     inline bool calcGravityVectorOrZero(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, std::nullptr_t) {
         return calcGravityVectorOrZero(pActor, pDest, pInfo, 0U);
     }

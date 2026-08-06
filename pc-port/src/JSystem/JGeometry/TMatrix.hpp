@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JSystem/JGeometry/TUtil.hpp"
+#include "JSystem/JGeometry/TQuat.hpp"
 #include "JSystem/JGeometry/TVec.hpp"
 
 #include <cmath>

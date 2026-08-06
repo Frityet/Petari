@@ -1,6 +1,7 @@
 #pragma once
 
 class LiveActor;
+class NameObj;
 class JMapInfoIter;
 class Nerve;
 
@@ -12,6 +13,7 @@ namespace MR {
     bool tryRegisterDemoCast(LiveActor* pActor, const JMapInfoIter& rIter);
     bool tryRegisterDemoActionFunctor(const LiveActor* pActor, const MR::FunctorBase& rFunctor, const char* pActionName);
     void registerDemoActionFunctor(const LiveActor* pActor, const MR::FunctorBase& rFunctor, const char* pActionName);
+    void registerDemoActionNerve(const LiveActor* pActor, const Nerve* pNerve, const char* pActionName);
     void registerDemoSimpleCastAll(LiveActor* pActor);
     bool tryStartDemoWithoutCinemaFrame(const LiveActor *pActor, const char *pDemoName);
     bool tryStartDemoMarioPuppetable(const LiveActor *pActor, const char *pDemoName);
@@ -19,4 +21,5 @@ namespace MR {
     void endDemo(const LiveActor *pActor, const char *pDemoName);
     bool isDemoActive();
     bool isDemoActive(const char* pDemoName);
+    void startTimeKeepDemoMarioPuppetable(NameObj* pObj, const char* pDemoName, const char* pPartName);
 }  // namespace MR

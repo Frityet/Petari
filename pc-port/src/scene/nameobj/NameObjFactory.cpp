@@ -2,8 +2,10 @@
 
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <algorithm>
@@ -151,8 +153,16 @@ namespace smgpc::scene::nameobj {
         };
     }
 
-    std::vector<NameObjArchiveRequest> collect_name_obj_archive_requests(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name) {
+    std::vector<NameObjArchiveRequest> collect_name_obj_archive_requests(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
+                                                                         const JMapInfoIter *placement_iter) {
         auto requests = std::vector<NameObjArchiveRequest>{};
+        auto collector = NameObjArchiveListCollector{};
+        const auto invalid_iter = JMapInfoIter{};
+        const auto object = std::string(object_name);
+        NameObjFactory::getMountObjectArchiveList(&collector, object.c_str(), placement_iter != nullptr ? *placement_iter : invalid_iter);
+        for (auto index = s32{}; index < collector.mCount; ++index) {
+            add_archive_request(requests, describe_archive(dvd, collector.getArchive(index)));
+        }
         for (const auto &record : cOriginalArchiveRecords) {
             if (record.object_name == object_name) {
                 add_archive_request(requests, describe_archive(dvd, record.archive_name));
@@ -195,12 +205,13 @@ namespace smgpc::scene::nameobj {
         return NameObjFactoryDescription{
             .object_name = std::string(object_name),
             .creator_supported = can_create_name_obj(object_name),
-            .archives = collect_name_obj_archive_requests(dvd, object_name),
+            .archives = collect_name_obj_archive_requests(dvd, object_name, nullptr),
         };
     }
 
-    std::vector<NameObjArchiveRequest> preload_name_obj_archives(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name) {
-        auto requests = collect_name_obj_archive_requests(dvd, object_name);
+    std::vector<NameObjArchiveRequest> preload_name_obj_archives(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
+                                                                 const JMapInfoIter *placement_iter) {
+        auto requests = collect_name_obj_archive_requests(dvd, object_name, placement_iter);
         for (auto &request : requests) {
             if (request.kind == NameObjArchiveKind::Missing || request.resolved_path.empty()) {
                 continue;

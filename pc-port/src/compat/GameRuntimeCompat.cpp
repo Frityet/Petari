@@ -14,6 +14,19 @@
 #include <string_view>
 
 namespace MR {
+    bool isOnGameEventFlagEndTicoGuideDemo() {
+        // Story-event persistence is not exposed by the current host save-data
+        // service. The unset value is the correct first-visit state.
+        return false;
+    }
+
+    bool isPlayingStageBgm() {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            return !runtime->current_stage_bgm_name().empty();
+        }
+        return false;
+    }
+
     HitSensor* addHitSensorEye(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& rOffset) {
         return pActor != nullptr ? pActor->addHitSensor(pName, ATYPE_EYE, groupSize, radius, rOffset) : nullptr;
     }
@@ -41,14 +54,6 @@ namespace MR {
 
     MsgSharedGroup* joinToGroupArray(LiveActor*, const JMapInfoIter&, const char*, s32) {
         return nullptr;
-    }
-
-    bool tryRegisterDemoCast(LiveActor*, const JMapInfoIter&) {
-        return false;
-    }
-
-    bool tryRegisterDemoActionFunctor(const LiveActor*, const MR::FunctorBase&, const char*) {
-        return false;
     }
 
     void registerDemoSimpleCastAll(LiveActor*) {

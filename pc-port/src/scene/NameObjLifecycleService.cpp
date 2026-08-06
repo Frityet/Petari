@@ -6,6 +6,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/StagePlacementResolver.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 
 #include <string>
 
@@ -41,8 +42,11 @@ namespace smgpc::scene {
 
     NameObjLifecycleService::~NameObjLifecycleService() = default;
 
-    std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> NameObjLifecycleService::preload_archives(std::string_view object_name) {
-        auto requests = smgpc::scene::nameobj::preload_name_obj_archives(_runtime.dvd(), object_name);
+    std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> NameObjLifecycleService::preload_archives(
+        std::string_view object_name, const StagePlacementObject *placement) {
+        const auto placement_iter = placement != nullptr ? JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index) : JMapInfoIter{};
+        auto requests = smgpc::scene::nameobj::preload_name_obj_archives(_runtime.dvd(), object_name,
+                                                                         placement != nullptr ? &placement_iter : nullptr);
 #ifndef NDEBUG
         for (const auto &request : requests) {
             _runtime.emit_semantic_trace_event("name_obj_lifecycle", "archive_request",
@@ -105,6 +109,9 @@ namespace smgpc::scene {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "destroy", "object=" + object_name(object));
 #endif
+        if (auto *live_actor = dynamic_cast<LiveActor *>(&object)) {
+            smgpc::compat::release_actor_runtime_state(live_actor);
+        }
     }
 
 }  // namespace smgpc::scene

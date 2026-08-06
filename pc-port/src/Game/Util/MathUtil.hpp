@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JSystem/JGeometry/TUtil.hpp>
+#include <JSystem/JGeometry/TQuat.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
 #include <cmath>
 #include <revolution/types.h>
@@ -25,6 +26,8 @@ namespace MR {
     void normalize(const TVec3f& rSrc, TVec3f* pDst);
     bool normalizeOrZero(TVec3f* pVec);
     bool normalizeOrZero(const TVec3f& rSrc, TVec3f* pDst);
+    f32 vecKillElement(const TVec3f& rVector, const TVec3f& rDirection, TVec3f* pOut);
+    void blendQuatUpFront(TQuat4f* pQuat, const TVec3f& rUp, const TVec3f& rFront, f32 upRate, f32 frontRate);
 
     inline f32 abs(f32 x) {
         return std::fabs(x);

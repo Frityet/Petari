@@ -51,6 +51,7 @@ namespace MR {
     void onBind(LiveActor* pActor);
     void offBind(LiveActor* pActor);
     void offCalcGravity(LiveActor* pActor);
+    void onCalcGravity(LiveActor* pActor);
     MsgSharedGroup* joinToGroupArray(LiveActor* pActor, const JMapInfoIter& rIter, const char* pGroupName, s32 capacity);
     void startBck(LiveActor* pActor, const char* pName, const char* pFileName);
     void startBrk(LiveActor* pActor, const char* pName);
@@ -93,6 +94,9 @@ namespace MR {
     void setNerveAtStep(LiveActor* pActor, const Nerve* pNerve, s32 step);
     bool isBtpStopped(const LiveActor* pActor);
     bool isBckStopped(const LiveActor* pActor);
+    bool checkPassBckFrame(const LiveActor* pActor, f32 frame);
+    f32 calcNerveValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd);
+    f32 calcHitPowerToWall(const LiveActor* pActor);
     f32 getBckFrameMax(const LiveActor* pActor);
     MtxPtr getJointMtx(const LiveActor* pActor, const char* pJointName);
     bool isBrkOneTimeAndStopped(const LiveActor* pActor);

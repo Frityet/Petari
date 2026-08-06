@@ -19,6 +19,8 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
+    [[nodiscard]] bool should_apply_host_appear(const StagePlacementObject *placement);
+
     class StageHostScene final : public Scene {
     public:
         StageHostScene(smgpc::runtime::RuntimeContext &runtime, StageHostRequest request);
@@ -51,6 +53,7 @@ namespace smgpc::scene {
         StageHostRequest _request;
         std::vector<StagePlacementObject> _placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
+        std::vector<const StagePlacementObject *> _root_placements;
     };
 
 }  // namespace smgpc::scene

@@ -10,9 +10,14 @@
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjArchiveListCollector.hpp"
+#include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/NPC/DemoRabbit.hpp"
+#include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/FixedPosition.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
@@ -27,6 +32,8 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
+#include "scene/StageHostScene.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>
@@ -110,9 +117,8 @@ namespace {
         return JMapInfo::from_bcsv(bytes);
     }
 
-    JMapInfo make_linear_rail_point_info() {
+    JMapInfo make_linear_rail_point_info(std::uint32_t entry_count = 3U) {
         constexpr auto field_count = 10U;
-        constexpr auto entry_count = 3U;
         constexpr auto entry_size = field_count * 4U;
         constexpr auto data_offset = 0x10U + field_count * 0x0cU;
         constexpr auto field_names = std::array<std::string_view, field_count>{
@@ -138,6 +144,38 @@ namespace {
             write_be32(bytes, entry_offset + 9U * 4U, entry);
         }
         return JMapInfo::from_bcsv(bytes);
+    }
+
+    JMapInfo make_demo_rabbit_placement_info() {
+        constexpr auto field_count = 4U;
+        constexpr auto entry_count = 3U;
+        constexpr auto entry_size = field_count * 4U;
+        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
+        constexpr auto field_names = std::array<std::string_view, field_count>{
+            "DemoGroupId", "CastId", "MessageId", "CommonPath_ID",
+        };
+
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_count * entry_size, 0U);
+        write_be32(bytes, 0x00U, entry_count);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        for (auto field = 0U; field < field_count; ++field) {
+            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U),
+                             smgpc::resource::BcsvFieldType::Int32);
+        }
+
+        for (auto entry = 0U; entry < entry_count; ++entry) {
+            const auto entry_offset = data_offset + entry * entry_size;
+            write_be32(bytes, entry_offset + 0U * 4U, 0U);
+            write_be32(bytes, entry_offset + 1U * 4U, entry);
+            write_be32(bytes, entry_offset + 2U * 4U, entry == 0U ? 0U : 0xffffffffU);
+            write_be32(bytes, entry_offset + 3U * 4U, entry == 0U ? 0U : 0xffffffffU);
+        }
+
+        auto info = JMapInfo::from_bcsv(bytes);
+        info.setRailInfo(0, make_open_rail_path_info(), make_linear_rail_point_info(5U), 0);
+        return info;
     }
 
     int g_pre_retrace = -1;
@@ -198,6 +236,20 @@ namespace {
 
         auto zero = TVec3f{};
         require(zero.normalize() == 0.0F && zero.squared() == 0.0F, "normalizing a zero vector should remain finite and zero");
+
+        const auto inline_source = TVec3f{2.0F, 4.0F, 6.0F};
+        require(inline_source.scaleInline(0.5F).epsilonEquals(TVec3f{1.0F, 2.0F, 3.0F}, 0.0F) &&
+                    inline_source.epsilonEquals(TVec3f{2.0F, 4.0F, 6.0F}, 0.0F),
+                "scaleInline should return a scaled copy without mutating its source");
+        auto inline_zero = inline_source;
+        inline_zero.zeroInline();
+        require(inline_zero.epsilonEquals(TVec3f{}, 0.0F), "zeroInline should preserve the original in-place zeroing surface");
+
+        auto identity_quat = TQuat4f{};
+        auto quat_front = TVec3f{};
+        identity_quat.getZDir(quat_front);
+        require(sizeof(identity_quat) == 16U && quat_front.epsilonEquals(TVec3f{0.0F, 0.0F, 1.0F}, 0.0F),
+                "TQuat4f should retain its four-float layout and identity forward vector");
 
         auto scale_add = TVec3f{1.0F, 2.0F, 3.0F};
         scale_add.scaleAdd(2.0F, TVec3f{4.0F, 5.0F, 6.0F}, scale_add);
@@ -499,6 +551,90 @@ namespace {
                 "each placement row should retain its own CommonPathPointInfo table");
     }
 
+    void test_demo_rabbit_factory_archives_and_placement_init() {
+        require(NameObjFactory::canCreate("DemoRabbit"), "the Game factory should expose DemoRabbit by its placement name");
+        const auto creator = NameObjFactory::getCreator("DemoRabbit");
+        require(creator != nullptr, "DemoRabbit should have a concrete Game factory creator");
+
+        auto placement = make_demo_rabbit_placement_info();
+        auto created_count = 0U;
+        for (auto row = 0; row < placement.getNumEntries(); ++row) {
+            const auto iter = JMapInfoIter(&placement, row);
+            auto archives = NameObjArchiveListCollector{};
+            NameObjFactory::getMountObjectArchiveList(&archives, "DemoRabbit", iter);
+            require(archives.mCount == 1, "each DemoRabbit placement should select exactly one model archive");
+            const auto expected_archive = row == 0 ? std::string_view("TrickRabbitBaby") : std::string_view("TrickRabbit");
+            require(std::string_view(archives.getArchive(0)) == expected_archive,
+                    "DemoRabbit archive selection should use the placement's CastId");
+
+            auto actor = std::unique_ptr<NameObj>(creator("DemoRabbit"));
+            auto* rabbit = dynamic_cast<DemoRabbit*>(actor.get());
+            require(rabbit != nullptr, "the DemoRabbit factory entry should construct the exact actor type");
+            rabbit->init(iter);
+            rabbit->initAfterPlacement();
+            ++created_count;
+
+            require(smgpc::compat::has_registered_demo_cast(rabbit),
+                    "each metadata-backed DemoRabbit should be owned by the generalized demo registry");
+            require(smgpc::compat::registered_demo_action_count(rabbit) == (row == 0 ? 6U : 1U),
+                    "each cast should register only its original named action set");
+            const auto* body_sensor = rabbit->getSensor("Body");
+            require(body_sensor != nullptr && body_sensor->mType == ATYPE_NPC && body_sensor->mGroupSize == 8U,
+                    "the NPC base should preserve the original Body sensor type and group size");
+
+            if (row == 0) {
+                require(rabbit->isDead(), "cast 0 should preserve its original hidden Appear state until the guide demo");
+                require(rabbit->mRailRider != nullptr && rabbit->mRailRider->getPointNum() == 5,
+                        "cast 0 should consume its attached five-point placement rail");
+                require(rabbit->mMsgCtrl != nullptr, "cast 0 should create the placement-backed talk controller");
+                require(smgpc::compat::has_owned_talk_ctrl(rabbit),
+                        "the generalized talk registry should own cast 0's controller");
+                require(MR::tryRegisterDemoCast(rabbit, JMapInfoIter(&placement, 1)) &&
+                            smgpc::compat::registered_demo_action_count(rabbit) == 0U,
+                        "re-registering a reused actor address should discard stale named demo actions");
+            } else {
+                require(!rabbit->isDead(), "casts 1 and 2 should appear in their registered Demo nerve");
+                require(rabbit->mRailRider == nullptr, "placements without CommonPath_ID should not synthesize a rail");
+                require(rabbit->mMsgCtrl == nullptr, "placements without MessageId should not synthesize talk state");
+                require(!smgpc::compat::has_owned_talk_ctrl(rabbit),
+                        "placements without talk state should not enter the ownership registry");
+            }
+
+            smgpc::compat::release_actor_runtime_state(rabbit);
+            require(!smgpc::compat::has_owned_talk_ctrl(rabbit) && !smgpc::compat::has_registered_demo_cast(rabbit),
+                    "actor teardown should release both generalized talk and demo registry state");
+            require(rabbit->mMsgCtrl == nullptr, "talk teardown should clear the exact NPC's non-owning controller pointer");
+        }
+        require(created_count == 3U, "all three HeavensDoor DemoRabbit placement shapes should construct");
+
+        auto revisit = std::unique_ptr<NameObj>(creator("DemoRabbit"));
+        auto* revisited_rabbit = dynamic_cast<DemoRabbit*>(revisit.get());
+        require(revisited_rabbit != nullptr, "a revisited placement should still construct the exact actor type");
+        revisited_rabbit->init(JMapInfoIter(&placement, 0));
+        require(smgpc::compat::has_owned_talk_ctrl(revisited_rabbit) && smgpc::compat::has_registered_demo_cast(revisited_rabbit),
+                "a revisited placement should receive fresh talk ownership and a fresh demo action map");
+        smgpc::compat::release_actor_runtime_state(revisited_rabbit);
+    }
+
+    void test_stage_host_preserves_placement_appearance_state() {
+        auto placement = smgpc::scene::StagePlacementObject{};
+        require(smgpc::scene::should_apply_host_appear(nullptr),
+                "an explicit non-placement stage root should retain the requested host-level appear pass");
+        require(!smgpc::scene::should_apply_host_appear(&placement),
+                "a placement root should retain the appeared/dead state chosen by its own initialization");
+
+        auto explicit_root = LiveActor("explicit-root");
+        auto placement_root = LiveActor("placement-root");
+        if (smgpc::scene::should_apply_host_appear(nullptr)) {
+            explicit_root.makeActorAppeared();
+        }
+        if (smgpc::scene::should_apply_host_appear(&placement)) {
+            placement_root.makeActorAppeared();
+        }
+        require(!explicit_root.isDead() && placement_root.isDead(),
+                "the generic host appear policy should not revive a placement actor that initialized dead");
+    }
+
     void test_original_rail_part_geometry() {
         auto linear = RailPart{};
         linear.init(TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{10.0F, 0.0F, 0.0F},
@@ -782,6 +918,8 @@ int main() {
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
+        TestCase{"DemoRabbit factory archives and placement init", test_demo_rabbit_factory_archives_and_placement_init},
+        TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},

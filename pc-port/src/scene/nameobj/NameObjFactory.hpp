@@ -6,6 +6,7 @@
 #include <vector>
 
 class NameObj;
+class JMapInfoIter;
 
 namespace smgpc::runtime {
 
@@ -56,8 +57,10 @@ namespace smgpc::scene::nameobj {
                                                                               std::string_view table_path);
     [[nodiscard]] NameObjFactoryDescription describe_name_obj_factory(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name);
     [[nodiscard]] std::vector<NameObjArchiveRequest> collect_name_obj_archive_requests(smgpc::runtime::DvdFileSystemService &dvd,
-                                                                                       std::string_view object_name);
-    std::vector<NameObjArchiveRequest> preload_name_obj_archives(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name);
+                                                                                       std::string_view object_name,
+                                                                                       const JMapInfoIter *placement_iter = nullptr);
+    std::vector<NameObjArchiveRequest> preload_name_obj_archives(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
+                                                                 const JMapInfoIter *placement_iter = nullptr);
     [[nodiscard]] std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
                                                            std::string_view actor_name);
 

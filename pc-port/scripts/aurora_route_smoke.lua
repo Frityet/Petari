@@ -134,6 +134,22 @@ local scenarios = {
                         },
                         count = 2,
                     },
+                    {
+                        match = {
+                            status = "created",
+                            object = "DemoRabbit",
+                        },
+                        count = 3,
+                    },
+                    {
+                        match = {
+                            status = "created",
+                            object = "DemoRabbit",
+                            rail_info_attached = true,
+                            rail_point_count = 5,
+                        },
+                        count = 1,
+                    },
                 },
             },
         },

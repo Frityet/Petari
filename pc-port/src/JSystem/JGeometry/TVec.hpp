@@ -124,6 +124,12 @@ namespace JGeometry {
             z *= value;
         }
 
+        [[nodiscard]] TVec3 scaleInline(f32 value) const {
+            auto result = *this;
+            result.scale(value);
+            return result;
+        }
+
         void scale(f32 value, const TVec3 &source) {
             const f32 newX = value * source.x;
             const f32 newY = value * source.y;
@@ -233,6 +239,10 @@ namespace JGeometry {
 
         void zero() {
             set(0.0F, 0.0F, 0.0F);
+        }
+
+        void zeroInline() {
+            zero();
         }
 
         [[nodiscard]] constexpr TVec3 operator+(const TVec3 &value) const {

@@ -9,6 +9,8 @@
 #include "Game/MapObj/Coin.hpp"
 #include "Game/MapObj/PurpleCoinStarter.hpp"
 #include "Game/MapObj/RailCoin.hpp"
+#include "Game/NPC/DemoRabbit.hpp"
+#include "Game/NameObj/NameObjArchiveListCollector.hpp"
 
 #include <array>
 #include <string_view>
@@ -19,7 +21,7 @@ namespace {
         return new T(pName);
     }
 
-    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 11>{
+    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 12>{
         NameObjFactory::Name2CreateFunc{
             "PrologueDirector",
             createNameObj<PrologueDirector>,
@@ -75,6 +77,18 @@ namespace {
             createNameObj<PurpleCoinStarter>,
             nullptr,
         },
+        NameObjFactory::Name2CreateFunc{
+            "DemoRabbit",
+            createNameObj<DemoRabbit>,
+            nullptr,
+        },
+    };
+
+    constexpr auto cName2MakeArchiveListFuncTable = std::array<NameObjFactory::Name2MakeArchiveListFunc, 1>{
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "DemoRabbit",
+            DemoRabbit::makeArchiveList,
+        },
     };
 
     [[nodiscard]] const NameObjFactory::Name2CreateFunc* findEntry(const char* pName) {
@@ -97,5 +111,20 @@ namespace NameObjFactory {
 
     bool canCreate(const char* pName) {
         return getCreator(pName) != nullptr;
+    }
+
+    void getMountObjectArchiveList(NameObjArchiveListCollector* pArchiveList, const char* pName, const JMapInfoIter& rIter) {
+        if (pArchiveList == nullptr) {
+            return;
+        }
+        if (const auto* entry = findEntry(pName); entry != nullptr && entry->mArchiveName != nullptr) {
+            pArchiveList->addArchive(entry->mArchiveName);
+        }
+        const auto name = pName != nullptr ? std::string_view(pName) : std::string_view{};
+        for (const auto& entry : cName2MakeArchiveListFuncTable) {
+            if (entry.mName == name && entry.mArchiveFunc != nullptr) {
+                entry.mArchiveFunc(pArchiveList, rIter);
+            }
+        }
     }
 }  // namespace NameObjFactory

@@ -5,12 +5,15 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "runtime/RuntimeContext.hpp"
 
+#include <cmath>
 #include <string>
 
 namespace {
@@ -50,10 +53,145 @@ namespace MR {
         }
     }
 
+    bool isNearPlayer(const LiveActor* pActor, f32 distance) {
+        return pActor != nullptr && pActor->mPosition.squareDistance(*MR::getPlayerPos()) < (distance * distance);
+    }
+
+    void calcVecToPlayerH(TVec3f* pOut, const LiveActor* pActor, const TVec3f* pUp) {
+        if (pOut == nullptr || pActor == nullptr) {
+            return;
+        }
+        pOut->set(*MR::getPlayerPos() - pActor->mPosition);
+        MR::vecKillElement(*pOut, pUp != nullptr ? *pUp : pActor->mGravity, pOut);
+        MR::normalizeOrZero(pOut);
+    }
+
     void attenuateVelocity(LiveActor* pActor, f32 scalar) {
         if (pActor != nullptr) {
             pActor->mVelocity.scale(scalar);
         }
+    }
+
+    void addVelocityMoveToDirection(LiveActor* pActor, const TVec3f& rDirection, f32 speed) {
+        if (pActor == nullptr) {
+            return;
+        }
+        auto direction = rDirection;
+        const auto& plane_normal = pActor->mBindedGround ? pActor->mGroundNormal : pActor->mGravity;
+        MR::vecKillElement(direction, plane_normal, &direction);
+        if (!MR::normalizeOrZero(&direction)) {
+            pActor->mVelocity.add(direction * speed);
+        }
+    }
+
+    void addVelocityJump(LiveActor* pActor, f32 speed) {
+        if (pActor != nullptr) {
+            pActor->mVelocity.add(pActor->mGravity * -speed);
+        }
+    }
+
+    void addVelocityToGravity(LiveActor* pActor, f32 acceleration) {
+        if (pActor != nullptr) {
+            pActor->mVelocity.add(pActor->mGravity * acceleration);
+        }
+    }
+
+    void addVelocityToGravityOrGround(LiveActor* pActor, f32 acceleration) {
+        if (pActor == nullptr) {
+            return;
+        }
+        if (pActor->mBindedGround) {
+            pActor->mVelocity.add(pActor->mGroundNormal * -acceleration);
+        } else {
+            addVelocityToGravity(pActor, acceleration);
+        }
+    }
+
+    bool reboundVelocityFromCollision(LiveActor* pActor, f32 restitution, f32 threshold, f32 tangentScale) {
+        if (pActor == nullptr) {
+            return false;
+        }
+        const TVec3f* normal = nullptr;
+        if (pActor->mBindedWall) {
+            normal = &pActor->mWallNormal;
+        } else if (pActor->mBindedGround) {
+            normal = &pActor->mGroundNormal;
+        } else if (pActor->mBindedRoof) {
+            normal = &pActor->mRoofNormal;
+        }
+        if (normal == nullptr) {
+            return false;
+        }
+
+        auto unit_normal = *normal;
+        if (MR::normalizeOrZero(&unit_normal)) {
+            return false;
+        }
+        const auto hit_speed = unit_normal.dot(pActor->mVelocity);
+        if (hit_speed >= 0.0F) {
+            return false;
+        }
+        pActor->mVelocity.sub(unit_normal * hit_speed);
+        if (hit_speed < -threshold) {
+            pActor->mVelocity.scale(tangentScale);
+            pActor->mVelocity.sub(unit_normal * hit_speed * restitution);
+            return true;
+        }
+        return false;
+    }
+
+    void turnDirectionDegree(const LiveActor* pActor, TVec3f* pDirection, const TVec3f& rTargetDirection, f32 degree) {
+        if (pActor == nullptr || pDirection == nullptr) {
+            return;
+        }
+        auto current = *pDirection;
+        auto target = rTargetDirection;
+        MR::vecKillElement(current, pActor->mGravity, &current);
+        MR::vecKillElement(target, pActor->mGravity, &target);
+        if (MR::normalizeOrZero(&current) || MR::normalizeOrZero(&target)) {
+            return;
+        }
+        const auto cosine = MR::clamp(current.dot(target), -1.0F, 1.0F);
+        const auto angle = std::acos(cosine) * (180.0F / 3.14159265358979323846F);
+        if (angle <= degree) {
+            pDirection->set(target);
+            return;
+        }
+        const auto cross = current.cross(target);
+        const auto signed_degree = cross.dot(pActor->mGravity) > 0.0F ? degree : -degree;
+        MR::rotateVecDegree(pDirection, current, pActor->mGravity, signed_degree);
+        MR::normalizeOrZero(pDirection);
+    }
+
+    void turnDirectionToPlayerDegree(const LiveActor* pActor, TVec3f* pDirection, f32 degree) {
+        if (pActor != nullptr) {
+            turnDirectionDegree(pActor, pDirection, *MR::getPlayerPos() - pActor->mPosition, degree);
+        }
+    }
+
+    bool checkPassBckFrame(const LiveActor* pActor, f32 frame) {
+        if (pActor == nullptr) {
+            return false;
+        }
+        const auto current = static_cast<f32>(pActor->getNerveStep() % 30);
+        const auto previous = static_cast<f32>((pActor->getNerveStep() + 29) % 30);
+        return previous < frame && current >= frame;
+    }
+
+    f32 calcNerveValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {
+        if (pActor == nullptr || stepMax <= 0) {
+            return valueEnd;
+        }
+        const auto rate = MR::clamp(static_cast<f32>(pActor->getNerveStep()) / static_cast<f32>(stepMax), 0.0F, 1.0F);
+        return valueStart + ((valueEnd - valueStart) * rate);
+    }
+
+    f32 calcHitPowerToWall(const LiveActor* pActor) {
+        if (pActor == nullptr || !pActor->mBindedWall) {
+            return 0.0F;
+        }
+        const auto speed = pActor->mVelocity.dot(pActor->mWallNormal);
+        return speed < 0.0F ? -speed : 0.0F;
     }
 
     void zeroVelocity(LiveActor* pActor) {
@@ -126,6 +264,15 @@ namespace MR {
     void offCalcGravity(LiveActor* pActor) {
         if (pActor != nullptr) {
             pActor->mFlag.mIsCalcGravity = false;
+        }
+    }
+
+    void onCalcGravity(LiveActor* pActor) {
+        if (pActor == nullptr) {
+            return;
+        }
+        if (!MR::normalizeOrZero(&pActor->mGravity)) {
+            pActor->mFlag.mIsCalcGravity = true;
         }
     }
 
