@@ -45,19 +45,17 @@ void ChipBase::init(const JMapInfoIter& rIter) {
     }
 }
 
-/*
-void ChipBase::initModel(const JMapInfoIter &rIter) {
-    mScale.scaleInline(1.0f);
-    initModelManagerWithAnm(mChipName, 0, false);
+void ChipBase::initModel(const JMapInfoIter& rIter) {
+    mScale.scale(1.0f);
+    initModelManagerWithAnm(mChipName, nullptr, false);
     MR::connectToSceneNoSilhouettedMapObjStrongLight(this);
 
     if (ChipBase::isNeedBubble(rIter)) {
-        mAirBubble = MR::createPartsModelNoSilhouettedMapObj(this, "アワ", "AirBubble", 0);
-        mAirBubble->initFixedPosition(TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f), 0);
-        MR::startBck(mAirBubble, "Move", 0);
+        mAirBubble = MR::createPartsModelNoSilhouettedMapObj(this, "アワ", "AirBubble", nullptr);
+        mAirBubble->initFixedPosition(TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f), nullptr);
+        MR::startBck(mAirBubble, "Move", nullptr);
     }
 }
-*/
 
 void ChipBase::initSensor() {
     f32 radius;
@@ -187,6 +185,30 @@ void ChipBase::appearFlashing(s32 a1) {
     MR::invalidateClipping(this);
     mFlashingCtrl->start(a1);
     setNerve(&NrvChipBase::ChipBaseNrvFlashing::sInstance);
+}
+
+bool ChipBase::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+    if (MR::isMsgItemGet(msg)) {
+        return requestGet(pReceiver, pSender);
+    }
+
+    if (MR::isMsgItemShow(msg)) {
+        return requestShow();
+    }
+
+    if (MR::isMsgItemHide(msg)) {
+        return requestHide();
+    }
+
+    if (MR::isMsgItemStartMove(msg)) {
+        return requestStartControl();
+    }
+
+    if (MR::isMsgItemEndMove(msg)) {
+        return requestEndControl();
+    }
+
+    return false;
 }
 
 bool ChipBase::requestGet(HitSensor* pSender, HitSensor* pReceiver) {

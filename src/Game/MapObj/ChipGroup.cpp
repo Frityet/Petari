@@ -18,11 +18,11 @@ ChipGroup::ChipGroup(const char* pName, s32 chipType) : NameObj(pName) {
     ChipEntry* pEntry = mChips;
     ChipEntry* pEnd = mChips + CHIP_GROUP_MAX_CHIPS;
 
-    while (pEntry < pEnd) {
+    do {
         pEntry->mChip = nullptr;
         pEntry->mIsGotten = false;
         pEntry++;
-    }
+    } while (pEntry < pEnd);
 
     mSwitchCtrl = nullptr;
     mGotCount = 0;
@@ -41,19 +41,19 @@ ChipGroup::ChipGroup(const char* pName, s32 chipType) : NameObj(pName) {
 
 void ChipGroup::updateUIRange() {
     if (_60 < 0.0f) {
-        TVec3f min;
         TVec3f max;
+        TVec3f min;
 
         for (s32 i = 0; i < mTotalCount; i++) {
+            TVec3f chipMax;
+            TVec3f chipMin;
             TVec3f pos(mChips[i].mChip->mPosition);
             TVec3f base(pos);
             TVec3f range(CHIP_GROUP_UI_MARGIN, CHIP_GROUP_UI_MARGIN, CHIP_GROUP_UI_MARGIN);
             TVec3f maxPos(base);
             TVec3f minPos(base);
-            TVec3f chipMin;
-            TVec3f chipMax;
 
-            maxPos.addInline(range);
+            maxPos.add(range);
             JMathInlineVEC::PSVECSubtract(&minPos, &range, &minPos);
             chipMin.set< f32 >(minPos);
             chipMax.set< f32 >(maxPos);

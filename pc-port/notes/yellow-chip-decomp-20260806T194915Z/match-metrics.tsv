@@ -1,0 +1,5 @@
+unit	text_bytes	fuzzy_percent	exact_functions	total_functions	notes
+ChipBase	3640	99.7033	34	39	initModel=99.6721%;receiveOtherMsg=100%
+ChipCounter	2764	99.7178	18	30	reconstructed_methods=99.4737-100%
+ChipGroup	2548	98.1586			constructor=99.2857%;updateUIRange=91.8906%
+ChipHolder	1308	100			showChipCounter=100%
