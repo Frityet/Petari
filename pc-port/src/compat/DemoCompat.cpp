@@ -87,7 +87,10 @@ namespace MR {
         }
         const auto group_id = MR::getDemoGroupID(rIter);
         const auto cast_id = MR::getDemoCastID(rIter);
-        if (group_id < 0 || cast_id < 0) {
+        // DemoDirector::registerDemoCast keys time-keep groups by DemoGroupId.
+        // CastId is optional metadata: original placements such as Gateway
+        // Rosetta legitimately use the -1 sentinel and still join the group.
+        if (group_id < 0) {
             return false;
         }
         auto cast = DemoCast{

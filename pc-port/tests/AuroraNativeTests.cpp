@@ -265,6 +265,34 @@ namespace {
         return info;
     }
 
+    JMapInfo make_demo_cast_sentinel_placement_info() {
+        constexpr auto field_count = 2U;
+        constexpr auto entry_count = 2U;
+        constexpr auto entry_size = field_count * 4U;
+        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
+        constexpr auto field_names = std::array<std::string_view, field_count>{
+            "DemoGroupId", "CastId",
+        };
+
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_count * entry_size, 0U);
+        write_be32(bytes, 0x00U, entry_count);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        for (auto field = 0U; field < field_count; ++field) {
+            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U),
+                             smgpc::resource::BcsvFieldType::Int32);
+        }
+
+        // Gateway Rosetta has a valid group and the optional CastId sentinel.
+        write_be32(bytes, data_offset + 0U * entry_size + 0U * 4U, 0U);
+        write_be32(bytes, data_offset + 0U * entry_size + 1U * 4U, 0xffffffffU);
+        // A missing group remains invalid even when CastId is present.
+        write_be32(bytes, data_offset + 1U * entry_size + 0U * 4U, 0xffffffffU);
+        write_be32(bytes, data_offset + 1U * entry_size + 1U * 4U, 0U);
+        return JMapInfo::from_bcsv(bytes);
+    }
+
     JMapInfo make_star_piece_group_placement_info() {
         constexpr auto field_count = 11U;
         constexpr auto entry_size = field_count * 4U;
@@ -748,6 +776,22 @@ namespace {
         require(smgpc::compat::has_owned_talk_ctrl(revisited_rabbit) && smgpc::compat::has_registered_demo_cast(revisited_rabbit),
                 "a revisited placement should receive fresh talk ownership and a fresh demo action map");
         smgpc::compat::release_actor_runtime_state(revisited_rabbit);
+    }
+
+    void test_demo_cast_optional_cast_id_sentinel() {
+        auto placement = make_demo_cast_sentinel_placement_info();
+        auto actor = LiveActor("optional-cast-id");
+
+        require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)),
+                "a valid DemoGroupId should register even when optional CastId is -1");
+        require(smgpc::compat::has_registered_demo_cast(&actor),
+                "the generalized demo registry should retain sentinel-CastId actors");
+        smgpc::compat::release_actor_runtime_state(&actor);
+
+        require(!MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 1)),
+                "a missing DemoGroupId should remain unregistered even when CastId is present");
+        require(!smgpc::compat::has_registered_demo_cast(&actor),
+                "invalid demo-group metadata should not create registry state");
     }
 
     void test_star_piece_group_factory_trs_and_reset() {
@@ -1423,6 +1467,7 @@ int main() {
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
         TestCase{"DemoRabbit factory archives and placement init", test_demo_rabbit_factory_archives_and_placement_init},
+        TestCase{"demo cast optional CastId sentinel", test_demo_cast_optional_cast_id_sentinel},
         TestCase{"StarPieceGroup factory TRS and reset", test_star_piece_group_factory_trs_and_reset},
         TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
         TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},
