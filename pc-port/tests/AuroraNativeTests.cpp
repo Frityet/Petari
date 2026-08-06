@@ -105,7 +105,51 @@ namespace {
         return JMapInfo::from_bcsv(bytes);
     }
 
-    std::vector<std::uint8_t> make_single_triangle_kcl() {
+    JMapInfo make_gravity_inverse_jmap(std::int32_t inverse) {
+        constexpr auto data_offset = 0x1cU;
+        auto bytes = std::vector<std::uint8_t>(data_offset + 4U, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, 1U);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, 4U);
+        write_bcsv_field(bytes, 0U, "Inverse", 0U, smgpc::resource::BcsvFieldType::Int32);
+        write_be32(bytes, data_offset, static_cast<std::uint32_t>(inverse));
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    JMapInfo make_gravity_priority_jmap(std::int32_t priority) {
+        constexpr auto data_offset = 0x1cU;
+        auto bytes = std::vector<std::uint8_t>(data_offset + 4U, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, 1U);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, 4U);
+        write_bcsv_field(bytes, 0U, "Priority", 0U, smgpc::resource::BcsvFieldType::Int32);
+        write_be32(bytes, data_offset, static_cast<std::uint32_t>(priority));
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    JMapInfo make_gravity_negative_sentinel_jmap() {
+        constexpr auto field_count = 4U;
+        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
+        constexpr auto entry_size = 16U;
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "Range", 0U, smgpc::resource::BcsvFieldType::Float);
+        write_bcsv_field(bytes, 1U, "Distant", 4U, smgpc::resource::BcsvFieldType::Float);
+        write_bcsv_field(bytes, 2U, "Priority", 8U, smgpc::resource::BcsvFieldType::Int32);
+        write_bcsv_field(bytes, 3U, "Inverse", 12U, smgpc::resource::BcsvFieldType::Int32);
+        write_be_float(bytes, data_offset + 0U, -1.0F);
+        write_be_float(bytes, data_offset + 4U, -1.0F);
+        write_be32(bytes, data_offset + 8U, 0xffffffffU);
+        write_be32(bytes, data_offset + 12U, 0xffffffffU);
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    std::vector<std::uint8_t> make_single_triangle_kcl(float thickness = 2.0F) {
         constexpr auto position_offset = 0x38U;
         constexpr auto normal_offset = 0x44U;
         constexpr auto prism_offset = 0x74U;
@@ -116,7 +160,7 @@ namespace {
         // KCL stores this address 0x10 bytes before the first prism.
         write_be32(bytes, 0x08U, prism_offset - 0x10U);
         write_be32(bytes, 0x0cU, octree_offset);
-        write_be_float(bytes, 0x10U, 0.0F);
+        write_be_float(bytes, 0x10U, thickness);
 
         const auto write_vec3 = [&](std::size_t offset, float x, float y, float z) {
             write_be_float(bytes, offset, x);
@@ -777,6 +821,14 @@ namespace {
                     hit.position.epsilonEquals(TVec3f{0.25F, 0.0F, 0.25F}, 0.0001F) &&
                     hit.normal.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) && hit.attribute == 7U,
                 "line queries should return the reconstructed KCL position, normal, and attribute");
+        require(!collision.line_cast(TVec3f{0.25F, -1.0F, 0.25F}, TVec3f{0.0F, 2.0F, 0.0F}, &hit),
+                "KCL line queries should reject travel from the prism's back side toward its front");
+        require(collision.line_cast(TVec3f{0.25F, 1.0F, 0.25F}, TVec3f{0.0F, -1.0F, 0.0F}, &hit) &&
+                    std::abs(hit.fraction - 1.0F) < 0.0001F,
+                "KCL line queries should accept an arrow ending exactly on the face");
+        require(collision.line_cast(TVec3f{-0.005F, 1.0F, 0.25F}, TVec3f{0.0F, -2.0F, 0.0F}, &hit) &&
+                    !collision.line_cast(TVec3f{-0.011F, 1.0F, 0.25F}, TVec3f{0.0F, -2.0F, 0.0F}, &hit),
+                "KCL arrows should preserve the original 0.01-unit physical edge tolerance");
 
         const auto contacts = collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F);
         require(!contacts.empty() && contacts.front().penetration > 0.24F && contacts.front().attribute == 7U,
@@ -785,6 +837,54 @@ namespace {
         const auto resolved_center = TVec3f{0.25F, 0.75F, 0.25F} + move.displacement;
         require(!move.contacts.empty() && resolved_center.y >= 0.5F && resolved_center.y < 2.0F,
                 "binder motion should stop a moving sphere at the KCL surface instead of passing through it");
+
+        const auto moving_away = collision.move_sphere(TVec3f{0.25F, 0.25F, 0.25F},
+                                                        TVec3f{0.0F, 0.25F, 0.0F}, 0.5F);
+        require(!moving_away.contacts.empty() && moving_away.displacement.y > 0.25F,
+                "binder motion should resolve an initial overlap before preserving movement away from the face");
+
+        auto duplicate_collision = smgpc::scene::StageCollisionService{};
+        require(duplicate_collision.add_kcl(kcl, identity, "duplicate-a.kcl") &&
+                    duplicate_collision.add_kcl(kcl, identity, "duplicate-b.kcl"),
+                "the native fixture should permit coincident KCL sources");
+        duplicate_collision.build();
+        const auto duplicate_move = duplicate_collision.move_sphere(TVec3f{0.25F, 0.75F, 0.25F},
+                                                                     TVec3f{0.0F, -0.5F, 0.0F}, 0.5F);
+        require(duplicate_move.displacement.epsilonEquals(move.displacement, 0.0001F),
+                "coincident triangles should use Binder's component extrema instead of summing duplicate reactions");
+        const auto capped_move = duplicate_collision.move_sphere(TVec3f{0.25F, 0.75F, 0.25F},
+                                                                  TVec3f{0.0F, -0.5F, 0.0F}, 0.5F, 1U);
+        require(capped_move.contacts.size() == 1U &&
+                    capped_move.displacement.epsilonEquals(move.displacement, 0.0001F),
+                "Binder's third init argument should cap stored planes without changing a coincident-face reaction");
+
+        auto thin_collision = smgpc::scene::StageCollisionService{};
+        const auto thin_kcl = make_single_triangle_kcl(0.2F);
+        require(thin_collision.add_kcl(thin_kcl, identity, "thin.kcl"),
+                "a thin KCL prism should remain a valid collision resource");
+        thin_collision.build();
+        require(thin_collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F).empty(),
+                "a sphere penetration deeper than the KCL thickness should be rejected");
+        const auto thickness_boundary = thin_collision.sphere_contacts(TVec3f{0.25F, 0.3F, 0.25F}, 0.5F);
+        require(!thickness_boundary.empty() &&
+                    std::abs(thickness_boundary.front().penetration - 0.2F) < 0.0001F,
+                "the inclusive KCL thickness boundary should retain radius minus signed face distance");
+
+        const auto edge_contact = collision.sphere_contacts(TVec3f{0.75F, 0.1F, 0.75F}, 0.5F);
+        constexpr auto expected_edge_penetration = 0.25355339F;
+        require(!edge_contact.empty() &&
+                    std::abs(edge_contact.front().penetration - expected_edge_penetration) < 0.0001F &&
+                    edge_contact.front().reaction_normal.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F),
+                "edge contacts should use KCHitSphere's face-axis square-root correction and face normal");
+
+        const auto point_contact = collision.sphere_contacts(TVec3f{0.25F, -1.0F, 0.25F}, 0.0F);
+        require(!point_contact.empty() && std::abs(point_contact.front().penetration - 1.0F) < 0.0001F,
+                "a zero-radius point behind the face but inside the extruded prism slab should collide");
+        require(collision.sphere_contacts(TVec3f{0.0F, -1.0F, 0.25F}, 0.0F).empty(),
+                "a zero-radius point exactly on a prism edge should retain KCHitSphere's strict rejection");
+        const auto zero_depth = collision.sphere_contacts(TVec3f{0.25F, 0.5F, 0.25F}, 0.5F);
+        require(!zero_depth.empty() && std::abs(zero_depth.front().penetration) < 0.0001F,
+                "a face-interior sphere exactly tangent to KCL should remain a zero-depth hit");
 
         collision.activate();
         require(smgpc::scene::StageCollisionService::active() == &collision,
@@ -821,6 +921,29 @@ namespace {
                     gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
                 "the original MR gravity query boundary should consume the active generalized field service");
 
+        for (const auto inverse : std::array<std::int32_t, 3U>{-1, 0, 1}) {
+            point.jmap_info = make_gravity_inverse_jmap(inverse);
+            placements[0] = point;
+            gravity_service.load(placements);
+            require(gravity_service.query(TVec3f{10.0F, 30.0F, 30.0F}, &gravity),
+                    "an explicit or sentinel Inverse value should leave the gravity field queryable");
+            const auto expected_y = inverse == 1 ? 1.0F : -1.0F;
+            require(gravity.epsilonEquals(TVec3f{0.0F, expected_y, 0.0F}, 0.0001F),
+                    "Inverse=-1 must preserve the default, zero must remain normal, and one must reverse the field");
+        }
+
+        auto sentinel_point = point;
+        sentinel_point.translation = {-100.0F, 0.0F, 0.0F};
+        sentinel_point.jmap_info = make_gravity_negative_sentinel_jmap();
+        auto default_point = point;
+        default_point.translation = {0.0F, -100.0F, 0.0F};
+        default_point.jmap_info = make_fieldless_jmap(1U);
+        auto combined_points = std::array{sentinel_point, default_point};
+        gravity_service.load(combined_points);
+        require(gravity_service.query(TVec3f{}, &gravity) &&
+                    gravity.epsilonEquals(TVec3f{-0.70710678F, -0.70710678F, 0.0F}, 0.0001F),
+                "negative Range, Distant, Priority, and Inverse sentinels should preserve constructor defaults and equal-priority combination");
+
         auto plane = smgpc::scene::StagePlacementObject{};
         plane.object_name = "GlobalPlaneGravity";
         plane.rotation = {0.0F, 0.0F, 90.0F};
@@ -832,6 +955,29 @@ namespace {
         require(gravity_service.query(TVec3f{100.0F, 200.0F, 300.0F}, &gravity) &&
                     gravity.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
                 "parallel gravity should derive its direction from the placement rotation without stage-name policy");
+
+        plane.scale = {1.0F, 0.0F, 1.0F};
+        placements[0] = plane;
+        gravity_service.load(placements);
+        require(gravity_service.query(TVec3f{100.0F, 200.0F, 300.0F}, &gravity) &&
+                    gravity.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
+                "a zero range scale axis must not collapse the rotation-only parallel-gravity direction");
+
+        auto center_point = point;
+        center_point.translation = {0.0F, 0.0F, 0.0F};
+        center_point.jmap_info = make_gravity_priority_jmap(10);
+        plane.rotation = {0.0F, 0.0F, 0.0F};
+        plane.scale = {1.0F, 1.0F, 1.0F};
+        plane.jmap_info = make_fieldless_jmap(1U);
+        auto priority_fields = std::array{plane, center_point};
+        gravity_service.load(priority_fields);
+        gravity.set(9.0F, 9.0F, 9.0F);
+        require(gravity_service.query(TVec3f{}, &gravity) && gravity.epsilonEquals(TVec3f{}, 0.0F),
+                "a valid zero vector at a high-priority point center should suppress lower-priority gravity");
+        gravity.set(9.0F, 9.0F, 9.0F);
+        require(gravity_service.query(TVec3f{0.0005F, 0.0F, 0.0F}, &gravity) &&
+                    gravity.epsilonEquals(TVec3f{}, 0.0F),
+                "PointGravity's 0.001 near-center region should remain a valid priority-winning zero vector");
 
         gravity_service.deactivate();
         require(smgpc::scene::StageGravityService::active() == nullptr,

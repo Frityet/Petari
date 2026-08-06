@@ -30,7 +30,13 @@ namespace {
 namespace smgpc::compat {
     void update_live_actor_gravity(LiveActor& actor) {
         if (!actor.isDead() && actor.mFlag.mIsCalcGravity) {
-            MR::calcGravityOrZero(&actor);
+            // LiveActor::movement calls calcGravity, whose no-field behavior
+            // keeps the actor's previous gravity. calcGravityOrZero is a
+            // separate opt-in helper used by actors such as Coin.
+            auto gravity = TVec3f{};
+            if (MR::calcGravityVector(&actor, &gravity, nullptr, 0U) && normalize(gravity)) {
+                actor.mGravity.set(gravity);
+            }
         }
     }
 
@@ -60,7 +66,13 @@ namespace smgpc::compat {
             gravity.set(0.0F, -1.0F, 0.0F);
         }
         const auto binder_center = actor.mPosition - gravity * actor.mBinderOffset;
-        const auto resolved = collision->move_sphere(binder_center, actor.mVelocity, actor.mBinderRadius);
+        // LiveActor's third initBinder argument is Binder's stored-plane
+        // capacity (_24), with zero selecting its temporary 32-plane array.
+        const auto maximum_contacts = actor.mBinderType == 0U
+                                          ? std::size_t{32U}
+                                          : static_cast<std::size_t>(actor.mBinderType);
+        const auto resolved = collision->move_sphere(binder_center, actor.mVelocity,
+                                                     actor.mBinderRadius, maximum_contacts);
         actor.mPosition.add(resolved.displacement);
 
         auto strongest_ground = -1.0F;
@@ -83,11 +95,5 @@ namespace smgpc::compat {
             }
         }
 
-        // This mirrors calcGravityOrZero's original no-field fallback: a
-        // grounded actor can derive a stable local gravity from its floor.
-        if (actor.mFlag.mIsCalcGravity && actor.mBindedGround) {
-            actor.mGravity.set(-actor.mGroundNormal);
-            (void)normalize(actor.mGravity);
-        }
     }
 }  // namespace smgpc::compat

@@ -83,13 +83,18 @@ namespace smgpc::scene {
             }
 
             const auto iter = JMapInfoIter(&placement.jmap_info, placement.jmap_entry_index);
-            const auto matrix = stage_collision_matrix(placement);
+            // Gravity creators use the placement rotation, never its scale,
+            // when constructing their direction basis. In particular, a
+            // zero-sized range axis must not collapse a plane's normal.
+            auto rotation_placement = placement;
+            rotation_placement.scale = {1.0F, 1.0F, 1.0F};
+            const auto rotation_matrix = stage_collision_matrix(rotation_placement);
             auto field = Field{
                 .kind = kind,
                 .position = TVec3f(placement.translation[0], placement.translation[1], placement.translation[2]),
-                .side = matrix_axis(matrix, 0U),
-                .up = matrix_axis(matrix, 1U),
-                .front = matrix_axis(matrix, 2U),
+                .side = matrix_axis(rotation_matrix, 0U),
+                .up = matrix_axis(rotation_matrix, 1U),
+                .front = matrix_axis(rotation_matrix, 2U),
                 .extent = TVec3f(std::abs(placement.scale[0]) * 500.0F,
                                  std::abs(placement.scale[1]) * 500.0F,
                                  std::abs(placement.scale[2]) * 500.0F),
@@ -102,11 +107,23 @@ namespace smgpc::scene {
                                      : -1,
                 .gravity_type = gravity_type(iter),
             };
-            (void)iter.getValue("Range", &field.range);
-            (void)iter.getValue("Distant", &field.distant);
-            (void)iter.getValue("Priority", &field.priority);
+            // GravityUtil's getJMapInfoArgPlus applies all of these only when
+            // the placement value is nonnegative. A value of -1 means "keep
+            // the gravity class constructor default" in the original data.
+            auto range = field.range;
+            if (iter.getValue("Range", &range) && range >= 0.0F) {
+                field.range = range;
+            }
+            auto distant = field.distant;
+            if (iter.getValue("Distant", &distant) && distant >= 0.0F) {
+                field.distant = distant;
+            }
+            auto priority = field.priority;
+            if (iter.getValue("Priority", &priority) && priority >= 0) {
+                field.priority = priority;
+            }
             auto inverse = std::int32_t{};
-            if (iter.getValue("Inverse", &inverse)) {
+            if (iter.getValue("Inverse", &inverse) && inverse >= 0) {
                 field.inverse = inverse != 0;
             }
 
@@ -115,7 +132,7 @@ namespace smgpc::scene {
             }
             _fields.push_back(field);
         }
-        std::ranges::sort(_fields, [](const auto& lhs, const auto& rhs) {
+        std::ranges::stable_sort(_fields, [](const auto& lhs, const auto& rhs) {
             return lhs.priority > rhs.priority;
         });
         _stats.gravity_count = _fields.size();
@@ -171,8 +188,13 @@ namespace smgpc::scene {
             if (field.range >= 0.0F && distance >= field.range + field.distant) {
                 return false;
             }
-            if (!normalize(direction)) {
-                return false;
+            // PointGravity reports a valid zero vector at its exact center.
+            // Its priority must therefore still suppress lower-priority
+            // fields, just as PlanetGravityManager does in the original.
+            if (distance < 0.001F) {
+                direction.zero();
+            } else {
+                (void)normalize(direction);
             }
             break;
         }

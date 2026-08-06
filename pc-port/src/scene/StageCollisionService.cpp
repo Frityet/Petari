@@ -19,6 +19,7 @@ namespace smgpc::scene {
         constexpr auto cPi = 3.14159265358979323846F;
         constexpr auto cLeafTriangleCount = std::uint32_t{8U};
         constexpr auto cCollisionSkin = 1.2F;
+        constexpr auto cArrowEdgeTolerance = 0.01F;
 
         StageCollisionService* sActiveService = nullptr;
 
@@ -217,12 +218,23 @@ namespace smgpc::scene {
             const auto inverse = 1.0F / determinant;
             const auto from_a = start - a;
             const auto u = dot(from_a, perpendicular) * inverse;
-            if (u < -1.0e-5F || u > 1.00001F) {
+            const auto twice_area = std::sqrt(length_squared(cross(edge1, edge2)));
+            const auto edge_ab_length = std::sqrt(length_squared(edge1));
+            const auto edge_ac_length = std::sqrt(length_squared(edge2));
+            const auto edge_bc_length = std::sqrt(length_squared(c - b));
+            if (!(twice_area > 1.0e-8F) || !(edge_ab_length > 1.0e-8F) ||
+                !(edge_ac_length > 1.0e-8F) || !(edge_bc_length > 1.0e-8F)) {
                 return std::nullopt;
             }
             const auto q = cross(from_a, edge1);
             const auto v = dot(offset, q) * inverse;
-            if (v < -1.0e-5F || u + v > 1.00001F) {
+            // KCHitArrow permits 0.01 units beyond each prism edge. Convert
+            // that physical tolerance to the corresponding barycentric
+            // coefficient using each triangle altitude.
+            const auto u_tolerance = cArrowEdgeTolerance * edge_ac_length / twice_area;
+            const auto v_tolerance = cArrowEdgeTolerance * edge_ab_length / twice_area;
+            const auto sum_tolerance = cArrowEdgeTolerance * edge_bc_length / twice_area;
+            if (u < -u_tolerance || v < -v_tolerance || u + v > 1.0F + sum_tolerance) {
                 return std::nullopt;
             }
             const auto fraction = dot(edge2, q) * inverse;
@@ -230,6 +242,27 @@ namespace smgpc::scene {
                 return std::nullopt;
             }
             return fraction;
+        }
+
+        [[nodiscard]] bool is_strictly_inside_triangle(const TVec3f& point, const TVec3f& a,
+                                                       const TVec3f& b, const TVec3f& c) {
+            const auto edge0 = b - a;
+            const auto edge1 = c - a;
+            const auto relative = point - a;
+            const auto d00 = dot(edge0, edge0);
+            const auto d01 = dot(edge0, edge1);
+            const auto d11 = dot(edge1, edge1);
+            const auto d20 = dot(relative, edge0);
+            const auto d21 = dot(relative, edge1);
+            const auto denominator = d00 * d11 - d01 * d01;
+            if (!(std::abs(denominator) > 1.0e-12F)) {
+                return false;
+            }
+            const auto inverse = 1.0F / denominator;
+            const auto second = (d11 * d20 - d01 * d21) * inverse;
+            const auto third = (d00 * d21 - d01 * d20) * inverse;
+            const auto first = 1.0F - second - third;
+            return first > 0.0F && second > 0.0F && third > 0.0F;
         }
 
         [[nodiscard]] TVec3f closest_point_on_triangle(const TVec3f& point, const TVec3f& a, const TVec3f& b,
@@ -395,12 +428,20 @@ namespace smgpc::scene {
             if (dot(triangle.normal, source_normal) < 0.0F) {
                 triangle.normal.negate();
             }
+            triangle.thickness = std::max(0.0F, thickness);
             triangle.bounds = empty_bounds<Bounds>();
             include(triangle.bounds, triangle.vertices[0]);
             include(triangle.bounds, triangle.vertices[1]);
             include(triangle.bounds, triangle.vertices[2]);
+            // KCL prisms are one-sided volumes extending behind the face by
+            // the file thickness. Include that volume in broad-phase bounds
+            // so an initially embedded binder is still reported.
+            include(triangle.bounds, triangle.vertices[0] - triangle.normal * triangle.thickness);
+            include(triangle.bounds, triangle.vertices[1] - triangle.normal * triangle.thickness);
+            include(triangle.bounds, triangle.vertices[2] - triangle.normal * triangle.thickness);
+            triangle.bounds.minimum -= TVec3f(cArrowEdgeTolerance, cArrowEdgeTolerance, cArrowEdgeTolerance);
+            triangle.bounds.maximum += TVec3f(cArrowEdgeTolerance, cArrowEdgeTolerance, cArrowEdgeTolerance);
             triangle.centroid = (triangle.vertices[0] + triangle.vertices[1] + triangle.vertices[2]) * (1.0F / 3.0F);
-            triangle.thickness = std::max(0.0F, thickness);
             triangle.attribute = attribute;
             triangle.source_index = source_index;
             _triangles.push_back(triangle);
@@ -471,7 +512,8 @@ namespace smgpc::scene {
         if (!_built || _nodes.empty() || length_squared(offset) <= 1.0e-12F) {
             return false;
         }
-        auto best_fraction = 1.0F;
+        // A line ending exactly on the face is a KCHitArrow hit (t == 1).
+        auto best_fraction = std::nextafter(1.0F, std::numeric_limits<float>::infinity());
         auto best_triangle = static_cast<const Triangle*>(nullptr);
         auto stack = std::vector<std::uint32_t>{0U};
         while (!stack.empty()) {
@@ -484,6 +526,12 @@ namespace smgpc::scene {
             if (node.count != 0U) {
                 for (auto leaf_index = std::uint32_t{}; leaf_index < node.count; ++leaf_index) {
                     const auto& triangle = _triangles[_triangle_indices[node.first + leaf_index]];
+                    // KCHitArrow only accepts a ray beginning on the front
+                    // side of a KCL prism. Map queries therefore remain
+                    // one-sided even though the host triangle routine is not.
+                    if (dot(start - triangle.vertices[0], triangle.normal) <= 0.0F) {
+                        continue;
+                    }
                     const auto fraction = segment_triangle_fraction(start, offset, triangle.vertices[0],
                                                                     triangle.vertices[1], triangle.vertices[2]);
                     if (fraction.has_value() && *fraction < best_fraction) {
@@ -512,7 +560,7 @@ namespace smgpc::scene {
     std::vector<StageCollisionContact> StageCollisionService::sphere_contacts(const TVec3f& center, float radius,
                                                                               std::size_t maximum) const {
         auto contacts = std::vector<StageCollisionContact>{};
-        if (!_built || _nodes.empty() || !(radius > 0.0F) || maximum == 0U) {
+        if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum == 0U) {
             return contacts;
         }
         contacts.reserve(std::min(maximum, std::size_t{32U}));
@@ -532,25 +580,40 @@ namespace smgpc::scene {
             for (auto leaf_index = std::uint32_t{}; leaf_index < node.count; ++leaf_index) {
                 const auto& triangle = _triangles[_triangle_indices[node.first + leaf_index]];
                 const auto plane_distance = dot(center - triangle.vertices[0], triangle.normal);
-                if (plane_distance < -triangle.thickness || plane_distance > radius) {
+                if (plane_distance > radius) {
                     continue;
                 }
                 const auto closest = closest_point_on_triangle(center, triangle.vertices[0], triangle.vertices[1],
                                                                triangle.vertices[2]);
-                auto from_surface = center - closest;
-                const auto square_distance = length_squared(from_surface);
-                if (!(square_distance < radius * radius)) {
+                const auto projected = center - triangle.normal * plane_distance;
+                const auto lateral = projected - closest;
+                const auto lateral_square = length_squared(lateral);
+                const auto is_face_interior = lateral_square <= 1.0e-10F;
+                if (radius == 0.0F &&
+                    (!is_face_interior ||
+                     !is_strictly_inside_triangle(projected, triangle.vertices[0], triangle.vertices[1],
+                                                  triangle.vertices[2]))) {
                     continue;
                 }
-                const auto distance = std::sqrt(std::max(0.0F, square_distance));
-                if (!normalize(from_surface) || dot(from_surface, triangle.normal) < 0.0F) {
-                    from_surface = triangle.normal;
+                if (!is_face_interior && !(lateral_square < radius * radius)) {
+                    continue;
+                }
+                // KCHitSphere resolves an edge/corner hit along the prism's
+                // face axis: sqrt(r^2 - lateral^2) - face distance. This is
+                // deliberately not the radial Euclidean overlap of a generic
+                // two-sided triangle.
+                const auto axial_reach = is_face_interior
+                                             ? radius
+                                             : std::sqrt(std::max(0.0F, radius * radius - lateral_square));
+                const auto penetration = axial_reach - plane_distance;
+                if (!(penetration >= 0.0F) || penetration > triangle.thickness) {
+                    continue;
                 }
                 contacts.push_back(StageCollisionContact{
                     .position = closest,
                     .normal = triangle.normal,
-                    .reaction_normal = from_surface,
-                    .penetration = radius - distance,
+                    .reaction_normal = triangle.normal,
+                    .penetration = penetration,
                     .attribute = triangle.attribute,
                 });
             }
@@ -565,35 +628,85 @@ namespace smgpc::scene {
     }
 
     StageCollisionMoveResult StageCollisionService::move_sphere(const TVec3f& center, const TVec3f& movement,
-                                                                float radius) const {
+                                                                float radius, std::size_t maximum_contacts) const {
         auto result = StageCollisionMoveResult{};
-        if (!_built || _nodes.empty() || !(radius > 0.0F)) {
+        if (!_built || _nodes.empty() || !(radius > 0.0F) || maximum_contacts == 0U) {
             result.displacement = movement;
             return result;
         }
 
-        auto resolved_center = center;
-        const auto movement_length = std::sqrt(length_squared(movement));
-        const auto step_count = std::max(1, static_cast<int>(movement_length * (1.0F / 35.0F)) + 1);
-        const auto step = movement * (1.0F / static_cast<float>(step_count));
-        for (auto step_index = 0; step_index < step_count; ++step_index) {
-            resolved_center.add(step);
-            for (auto pass = 0; pass < 4; ++pass) {
-                auto contacts = sphere_contacts(resolved_center, radius, 32U);
-                if (contacts.empty()) {
-                    break;
+        struct SweepResult {
+            TVec3f center{};
+            TVec3f movement{};
+            std::vector<StageCollisionContact> contacts{};
+            bool can_move_more = false;
+        };
+
+        const auto sweep = [&](const TVec3f& start, const TVec3f& requested, bool skip_first_check) {
+            auto sweep_result = SweepResult{.center = start};
+            const auto requested_length = std::sqrt(length_squared(requested));
+            const auto step_count = std::max(1, static_cast<int>(requested_length * (1.0F / 35.0F)) + 1);
+            const auto step = requested * (1.0F / static_cast<float>(step_count));
+            for (auto step_index = 0; step_index <= step_count; ++step_index) {
+                if (step_index != 0) {
+                    sweep_result.center.add(step);
+                    sweep_result.movement.add(step);
+                } else if (skip_first_check) {
+                    continue;
                 }
-                auto moved = false;
-                for (const auto& contact : contacts) {
-                    if (!(contact.penetration > 1.0e-4F)) {
-                        continue;
-                    }
-                    resolved_center.add(contact.reaction_normal * (contact.penetration + cCollisionSkin));
-                    result.contacts.push_back(contact);
-                    moved = true;
+
+                sweep_result.contacts = sphere_contacts(sweep_result.center, radius, maximum_contacts);
+                if (!sweep_result.contacts.empty()) {
+                    sweep_result.can_move_more = step_index != step_count;
+                    return sweep_result;
                 }
-                if (!moved) {
-                    break;
+            }
+            return sweep_result;
+        };
+
+        const auto aggregate_reaction = [](const std::vector<StageCollisionContact>& contacts) {
+            auto positive = TVec3f{};
+            auto negative = TVec3f{};
+            for (const auto& contact : contacts) {
+                const auto reaction = contact.normal * (contact.penetration + cCollisionSkin);
+                positive.x = std::max(positive.x, reaction.x);
+                positive.y = std::max(positive.y, reaction.y);
+                positive.z = std::max(positive.z, reaction.z);
+                negative.x = std::min(negative.x, reaction.x);
+                negative.y = std::min(negative.y, reaction.y);
+                negative.z = std::min(negative.z, reaction.z);
+            }
+            return positive + negative;
+        };
+
+        auto first = sweep(center, movement, false);
+        if (first.contacts.empty()) {
+            result.displacement = first.movement;
+            return result;
+        }
+
+        auto resolved_center = first.center;
+        auto first_reaction = aggregate_reaction(first.contacts);
+        resolved_center.add(first_reaction);
+        result.contacts.insert(result.contacts.end(), first.contacts.begin(), first.contacts.end());
+
+        // Binder performs one projected retry for the unconsumed movement.
+        // It removes only the component entering the aggregate reaction plane.
+        if (first.can_move_more) {
+            auto remaining = movement - first.movement;
+            auto reaction_normal = first_reaction;
+            if (normalize(reaction_normal)) {
+                const auto inward = dot(remaining, reaction_normal);
+                if (inward < 0.0F) {
+                    remaining -= reaction_normal * inward;
+                }
+            }
+            if (dot(movement, remaining) >= 0.0F) {
+                auto second = sweep(resolved_center, remaining, true);
+                resolved_center = second.center;
+                if (!second.contacts.empty()) {
+                    resolved_center.add(aggregate_reaction(second.contacts));
+                    result.contacts.insert(result.contacts.end(), second.contacts.begin(), second.contacts.end());
                 }
             }
         }

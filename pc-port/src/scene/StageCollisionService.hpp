@@ -72,7 +72,7 @@ namespace smgpc::scene {
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts(const TVec3f& center, float radius,
                                                                          std::size_t maximum = 32U) const;
         [[nodiscard]] StageCollisionMoveResult move_sphere(const TVec3f& center, const TVec3f& movement,
-                                                           float radius) const;
+                                                           float radius, std::size_t maximum_contacts = 32U) const;
 
         [[nodiscard]] const StageCollisionLoadStats& stats() const;
         [[nodiscard]] bool empty() const;
