@@ -18,7 +18,7 @@ public:
     void appearHoleComment(const TVec3f&);
     void appearPipeComment(const TVec3f&);
     void appearMamaComment(const TVec3f&);
-    void setPosAfterCaught(const TVec3f&);
+    void setPosAfterCaught(const TVec3f&) NO_INLINE;
     void setPosAllCaught();
     bool isStartRunaway() const;
     void startRunaway();

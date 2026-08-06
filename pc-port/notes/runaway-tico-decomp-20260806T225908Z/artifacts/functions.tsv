@@ -1,0 +1,58 @@
+RunawayTico::RunawayTico(const char*)	84	100
+Tico::~Tico()	120	0
+RunawayTico::makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&)	140	99.57143
+RunawayTico::init(const JMapInfoIter&)	524	93.458015
+RunawayTico::initAfterPlacement()	84	100
+RunawayTico::appearBushComment(const JGeometry::TVec3<float>&)	116	100
+RunawayTico::appearHoleComment(const JGeometry::TVec3<float>&)	124	100
+RunawayTico::appearPipeComment(const JGeometry::TVec3<float>&)	124	100
+RunawayTico::appearMamaComment(const JGeometry::TVec3<float>&)	124	100
+RunawayTico::setPosAfterCaught(const JGeometry::TVec3<float>&)	124	100
+RunawayTico::setPosAllCaught()	152	100
+RunawayTico::isStartRunaway() const	8	100
+RunawayTico::startRunaway()	68	100
+RunawayTico::setDemoTrans()	68	100
+RunawayTico::exeGuide0()	316	99.74683
+RunawayTico::exeGuide1()	296	99.72973
+RunawayTico::exeWhiteOut()	156	91.15385
+RunawayTico::exeWhiteIn()	160	99.725
+RunawayTico::exeAppear()	180	99.46667
+RunawayTico::exeTalk()	196	83.918365
+__sinit_\\RunawayTico_cpp	84	100
+NrvRunawayTico::RunawayTicoNrvGuide0::RunawayTicoNrvGuide0()	16	100
+NrvRunawayTico::RunawayTicoNrvGuide1::RunawayTicoNrvGuide1()	16	100
+NrvRunawayTico::RunawayTicoNrvWhiteIn::RunawayTicoNrvWhiteIn()	16	100
+NrvRunawayTico::RunawayTicoNrvWhiteOut::RunawayTicoNrvWhiteOut()	16	100
+NrvRunawayTico::RunawayTicoNrvWait::RunawayTicoNrvWait()	16	100
+NrvRunawayTico::RunawayTicoNrvAppear::RunawayTicoNrvAppear()	16	100
+NrvRunawayTico::RunawayTicoNrvTalk::RunawayTicoNrvTalk()	16	100
+NrvRunawayTico::RunawayTicoNrvTalk::execute(Spine*) const	8	100
+NrvRunawayTico::RunawayTicoNrvAppear::execute(Spine*) const	8	100
+NrvRunawayTico::RunawayTicoNrvWait::execute(Spine*) const	72	99.44444
+NrvRunawayTico::RunawayTicoNrvWhiteOut::execute(Spine*) const	8	100
+NrvRunawayTico::RunawayTicoNrvWhiteIn::execute(Spine*) const	8	100
+NrvRunawayTico::RunawayTicoNrvGuide1::execute(Spine*) const	8	100
+NrvRunawayTico::RunawayTicoNrvGuide0::execute(Spine*) const	8	100
+MR::FunctorV0M<RunawayTico*, void (RunawayTico::*)()> MR::Functor<RunawayTico>(RunawayTico*, void (RunawayTico::*)())	64	100
+MR::FunctorV0M<RunawayTico*, void (RunawayTico::*)()>::operator()() const	48	100
+MR::FunctorV0M<RunawayTico*, void (RunawayTico::*)()>::clone(JKRHeap*) const	104	100
+RunawayTico::~RunawayTico()	88	100
+MR::FunctorV0M<RunawayTico*, void (RunawayTico::*)()>::__vtable	16	100
+RunawayTico::__vtable	120	100
+NrvRunawayTico::RunawayTicoNrvTalk::__vtable	16	100
+NrvRunawayTico::RunawayTicoNrvAppear::__vtable	16	100
+NrvRunawayTico::RunawayTicoNrvWait::__vtable	16	100
+NrvRunawayTico::RunawayTicoNrvWhiteOut::__vtable	16	100
+NrvRunawayTico::RunawayTicoNrvWhiteIn::__vtable	16	100
+NrvRunawayTico::RunawayTicoNrvGuide1::__vtable	16	100
+NrvRunawayTico::RunawayTicoNrvGuide0::__vtable	16	100
+NrvRunawayTico::RunawayTicoNrvGuide0::sInstance	4	100
+NrvRunawayTico::RunawayTicoNrvGuide1::sInstance	4	100
+NrvRunawayTico::RunawayTicoNrvWhiteIn::sInstance	4	100
+NrvRunawayTico::RunawayTicoNrvWhiteOut::sInstance	4	100
+NrvRunawayTico::RunawayTicoNrvWait::sInstance	4	100
+NrvRunawayTico::RunawayTicoNrvAppear::sInstance	4	100
+NrvRunawayTico::RunawayTicoNrvTalk::sInstance	4	100
+[.ctors-0]	4	100
+[.data-0]	768	77.348724
+[.sdata2-0]	16	85.71429
