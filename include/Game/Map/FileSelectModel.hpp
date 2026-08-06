@@ -24,10 +24,5 @@ public:
     void exeClose();
     void exeBlink();
 
-    void exeOpen();
-    void exeBlinkOnce();
-    void exeClose();
-    void exeBlink();
-
     MtxPtr _8C;
 };

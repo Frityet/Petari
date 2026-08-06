@@ -27,6 +27,7 @@ This project is **not** meant to be an effort to create a PC Port. Please do not
 Supported versions:
 
 - `RMGK01`: Rev 0 (Korea)
+- `RMGK02`: Rev 1 (Korea)
 
 Dependencies
 ============

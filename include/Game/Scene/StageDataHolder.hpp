@@ -40,7 +40,6 @@ public:
     s32 getStageArchiveResourceSize(void*);
 
     JMapInfoIter makeCurrentMarioJMapInfoIter() const;
-    JMapInfoIter makeMarioJMapInfoIter(const JMapIdInfo&) const;
 
     void initPlacementMario();
 
@@ -55,7 +54,6 @@ public:
     void createLocalStageDataHolder(const MR::AssignableArray< JMapInfo >&, bool);
 
     void initJmpInfo(MR::AssignableArray< JMapInfo >*, const char*);
-    JMapInfo* attachJmpInfoToArray(JMapInfo*, const char*);
 
     void initLayerJmpInfo(MR::AssignableArray< JMapInfo >*, const char*, const char*, u32);
     void initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >*, const char*, const char*);

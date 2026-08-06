@@ -28,7 +28,7 @@ from tools.project import (
 
 # Game versions
 DEFAULT_VERSION = 0
-VERSIONS = ["RMGK01"]
+VERSIONS = ["RMGK01", "RMGK02"]  # Rev 0, Rev 1
 
 
 def detect_default_version() -> str:
