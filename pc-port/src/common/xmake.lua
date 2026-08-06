@@ -1,8 +1,8 @@
-add_requires("fmt")
+add_requires("fmt 11.1.4")
 add_requires("nlohmann_json")
 
 if is_mode("debug") then
-    add_requires("sqlite3", {system = true})
+    add_requires("sqlite3 3.53.0+0")
 end
 
 target("smg-pc-common")
