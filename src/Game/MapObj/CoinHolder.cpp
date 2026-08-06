@@ -43,11 +43,43 @@ bool CoinHolder::appearCoinPop(const NameObj* pObj, const TVec3f& a2, s32 a3) {
     return appearCoin(pObj, a2, stack_14, a3, -1, -1, a3 == 1 ? 0.0f : 4.0f);
 }
 
+bool CoinHolder::appearCoinPopToDirection(const NameObj* pObj, const TVec3f& a2, const TVec3f& a3, s32 a4) {
+    TVec3f stack_14;
+    MR::normalize(a3, &stack_14);
+    f32 randomRange = a4 == 1 ? 0.0f : 4.0f;
+    TVec3f stack_8 = stack_14 * 25.0f;
+    return appearCoin(pObj, a2, stack_8, a4, -1, -1, randomRange);
+}
+
 bool CoinHolder::appearCoinToVelocity(const NameObj* pObj, const TVec3f& a2, const TVec3f& a3, s32 a4) {
     return appearCoin(pObj, a2, a3, a4, -1, -1, a4 == 1 ? 0.0f : 4.0f);
 }
 
-// CoinHolder::appearCoinCircle
+bool CoinHolder::appearCoinCircle(const NameObj* pObj, const TVec3f& a2, s32 a3) {
+    if (a3 == 1) {
+        return appearCoinPop(pObj, a2, a3);
+    }
+
+    TVec3f gravity;
+    MR::calcGravityVector(this, a2, &gravity, nullptr, nullptr);
+
+    TVec3f axis;
+    MR::makeAxisVerticalZX(&axis, gravity);
+
+    bool appeared = false;
+
+    for (s32 i = 0; i < a3; i++) {
+        TVec3f direction;
+        MR::rotateVecDegree(&direction, axis, gravity, 360.0f / a3 * i);
+        direction.setLength(0.25f);
+
+        TVec3f velocity = direction - gravity;
+        velocity.setLength(30.0f);
+        appeared |= appearCoin(pObj, a2, velocity, 1, -1, -1, 0.0f);
+    }
+
+    return appeared;
+}
 
 CoinHostInfo* CoinHolder::declare(const NameObj* pObj, s32 a2) {
     if (a2 <= 0) {
@@ -91,6 +123,48 @@ void CoinHolder::init(const JMapInfoIter& rIter) {
         coin->initWithoutIter();
         registerActor(coin);
     }
+}
+
+bool CoinHolder::appearCoin(const NameObj* pObj, const TVec3f& a2, const TVec3f& a3, s32 a4, s32 a5, s32 a6, f32 a7) {
+    CoinHostInfo* hostInfo = findHostInfo(pObj);
+
+    if (!hostInfo) {
+        return false;
+    }
+
+    bool appeared = false;
+
+    for (s32 i = 0; i < a4; i++) {
+        if (hostInfo->_8 >= hostInfo->_4) {
+            break;
+        }
+
+        Coin* coin = getDeadMember();
+
+        if (!coin) {
+            break;
+        }
+
+        TVec3f velocity(a3);
+
+        if (!MR::isNearZero(a7, 0.001f)) {
+            MR::addRandomVector(&velocity, velocity, a7);
+        }
+
+        coin->setHostInfo(hostInfo);
+        coin->appearMove(a2, velocity, a5, a6);
+        appeared = true;
+    }
+
+    if (!MR::isGalaxyDarkCometAppearInCurrentStage() && appeared) {
+        if (MR::hasME()) {
+            MR::startSystemME("ME_COIN_APPEAR_S");
+        } else {
+            MR::startSystemSE("SE_SY_COIN_APPEAR_S");
+        }
+    }
+
+    return appeared;
 }
 
 namespace MR {

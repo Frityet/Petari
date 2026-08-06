@@ -724,11 +724,11 @@ namespace MR {
     }
 
     f32 getMaxElement(const TVec3f& rVec) {
-        return rVec[getMaxElementIndex(rVec)];
+        return (&rVec.x)[getMaxElementIndex(rVec)];
     }
 
     f32 getMaxAbsElement(const TVec3f& rVec) {
-        return rVec[getMaxAbsElementIndex(rVec)];
+        return (&rVec.x)[getMaxAbsElementIndex(rVec)];
     }
 
     u32 getMaxElementIndex(const TVec3f& rVec) {
