@@ -23,7 +23,9 @@ namespace smgpc::scene {
 
     void SceneExecutionService::draw_3d_normal(const smgpc::camera::CameraPose &camera_pose) {
         auto &scheduler = _runtime.scheduler();
-        scheduler.execute_draw_buffer_list_normal(camera_pose);
+        // SceneExecutor loads player light and runs DrawType_Player after the
+        // normal opaque lists but before the normal translucent lists.
+        scheduler.execute_draw_buffer_list_normal(camera_pose, false, MR::DrawType_Player, MR::LightType_Player);
         scheduler.execute_draw_type(MR::DrawType_EffectDraw3D);
         scheduler.execute_draw_type(MR::DrawType_EffectDrawForBloomEffect);
         scheduler.execute_draw_type(MR::DrawType_CaptureScreenIndirect);

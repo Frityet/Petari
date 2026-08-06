@@ -625,18 +625,50 @@ namespace smgpc::runtime {
 
     class PlayerSystemService final {
     public:
+        void reset_stage_state();
+        void clear_stage_state();
+        void attach_actor(LiveActor &actor);
+        void detach_actor(const LiveActor *actor = nullptr);
+        void synchronize_attached_actor();
+
         void show_player();
         void hide_player();
         void set_base_matrix(MtxPtr matrix);
+        void set_swing_permission(bool permitted);
+        void disable_control();
+        void enable_control(bool reset_condition);
+        void finish_opening_demo();
 
         [[nodiscard]] bool is_player_hidden() const;
         [[nodiscard]] bool has_base_matrix() const;
+        [[nodiscard]] bool has_forced_base_matrix() const;
         [[nodiscard]] std::span<const f32, 12U> base_matrix() const;
+        [[nodiscard]] std::span<const f32, 3U> position() const;
+        [[nodiscard]] std::span<const f32, 3U> velocity() const;
+        [[nodiscard]] std::span<const f32, 3U> gravity() const;
+        [[nodiscard]] bool is_on_ground() const;
+        [[nodiscard]] bool is_swing_permitted() const;
+        [[nodiscard]] bool is_control_enabled() const;
+        [[nodiscard]] std::uint64_t base_matrix_revision() const;
+        [[nodiscard]] LiveActor *attached_actor() const;
+        bool consume_reset_condition_request();
 
     private:
+        void copy_actor_state();
+
+        LiveActor *_attached_actor = nullptr;
         bool _player_hidden = false;
         bool _has_base_matrix = false;
+        bool _has_forced_base_matrix = false;
+        bool _on_ground = false;
+        bool _swing_permitted = false;
+        bool _control_enabled = true;
+        bool _reset_condition_requested = false;
+        std::uint64_t _base_matrix_revision = 0U;
         std::array<f32, 12U> _base_matrix{};
+        std::array<f32, 3U> _position{};
+        std::array<f32, 3U> _velocity{};
+        std::array<f32, 3U> _gravity{0.0F, -1.0F, 0.0F};
     };
 
     class GameLayoutService final {

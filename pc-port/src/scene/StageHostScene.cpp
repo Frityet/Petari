@@ -1,11 +1,13 @@
 #include "scene/StageHostScene.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Map/LightFunction.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "camera/StageStartCamera.hpp"
+#include "compat/StagePlayerRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionService.hpp"
@@ -138,6 +140,12 @@ namespace smgpc::scene {
             return out.str();
         }
 
+        [[nodiscard]] bool same_placement_identity(const StagePlacementObject &left,
+                                                   const StagePlacementObject &right) {
+            return left.archive_path == right.archive_path && left.table_path == right.table_path &&
+                   left.zone_id == right.zone_id && left.jmap_entry_index == right.jmap_entry_index;
+        }
+
     }  // namespace
 
     bool should_apply_host_appear(const StagePlacementObject *placement) {
@@ -156,6 +164,10 @@ namespace smgpc::scene {
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
+        if (_stage_player != nullptr) {
+            _stage_player.reset();
+            _runtime.player_system().clear_stage_state();
+        }
         destroy_roots();
         if (MR::getSceneObjHolder() == mSceneObjHolder) {
             MR::setCurrentSceneObjHolder(nullptr);
@@ -169,6 +181,7 @@ namespace smgpc::scene {
 
         initSceneObjHolder();
         MR::setCurrentSceneObjHolder(mSceneObjHolder);
+        LightFunction::initLightRegisterAll();
         _runtime.player_system().show_player();
 
         if (!_request.object_name.empty()) {
@@ -205,38 +218,36 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::init_explicit_root() {
-        _collision.deactivate();
-        _collision.clear();
-        _gravity.deactivate();
-        _gravity.clear();
+        init_stage_environment();
         construct_root_object(_request.object_name, resolve_actor_name(_request.object_name), nullptr);
+
+        const auto explicit_placement = std::ranges::find_if(_placements, [this](const auto &placement) {
+            return placement.object_name == _request.object_name &&
+                   (placement.factory_supported || placement.model_fallback_supported ||
+                    placement.alias_model_fallback_supported);
+        });
+        construct_placement_roots(explicit_placement != _placements.end() ? &*explicit_placement : nullptr);
     }
 
     void StageHostScene::init_placement_roots() {
-        _placements = resolve_stage_placement_objects(_runtime.dvd(), _request.stage_name, _request.scenario_no);
-        const auto collision_stats = _collision.load(_runtime.dvd(), _placements);
-        _collision.activate();
-        const auto gravity_stats = _gravity.load(_placements);
-        _gravity.activate();
-#ifndef NDEBUG
-        _runtime.emit_semantic_trace_event(
-            "collision", "stage_collision_loaded",
-            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                ";placements=" + std::to_string(collision_stats.placement_count) +
-                ";archives=" + std::to_string(collision_stats.archive_count) +
-                ";meshes=" + std::to_string(collision_stats.mesh_count) +
-                ";triangles=" + std::to_string(collision_stats.triangle_count) +
-                ";rejected_triangles=" + std::to_string(collision_stats.rejected_triangle_count));
-        _runtime.emit_semantic_trace_event(
-            "gravity", "stage_gravity_loaded",
-            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                ";placements=" + std::to_string(gravity_stats.placement_count) +
-                ";gravities=" + std::to_string(gravity_stats.gravity_count) +
-                ";unsupported=" + std::to_string(gravity_stats.unsupported_count));
-#endif
+        init_stage_environment();
+        construct_placement_roots();
+    }
+
+    void StageHostScene::construct_placement_roots(const StagePlacementObject *explicit_placement) {
         auto blocked_placements = std::vector<const StagePlacementObject *>{};
         for (const auto &placement : _placements) {
             trace_placement_object(placement);
+            if (explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) {
+#ifndef NDEBUG
+                _runtime.emit_semantic_trace_event(
+                    "placement", "stage_object_deduplicated",
+                    "stage=" + placement.stage_name + ";object=" + placement.object_name +
+                        ";table=" + placement.table_path + ";row=" + std::to_string(placement.jmap_entry_index) +
+                        ";reason=explicit_root_same_data_identity");
+#endif
+                continue;
+            }
             if (placement.intentionally_ignored) {
                 continue;
             }
@@ -245,7 +256,9 @@ namespace smgpc::scene {
                 blocked_placements.push_back(&placement);
                 continue;
             }
-            construct_root_object(placement.object_name, resolve_actor_name(placement.object_name), &placement);
+            // A request actor-name override identifies only its explicit root;
+            // data-driven placement actors retain their own identity.
+            construct_root_object(placement.object_name, placement.object_name, &placement);
         }
 
 #ifndef NDEBUG
@@ -267,6 +280,62 @@ namespace smgpc::scene {
 
         if (_roots.empty()) {
             construct_root_object(_request.stage_name, resolve_actor_name(_request.stage_name), nullptr);
+        }
+    }
+
+    void StageHostScene::init_stage_environment() {
+        _placements = resolve_stage_placement_objects(_runtime.dvd(), _request.stage_name, _request.scenario_no);
+        const auto collision_stats = _collision.load(_runtime.dvd(), _placements);
+        _collision.activate();
+        const auto gravity_stats = _gravity.load(_placements);
+        _gravity.activate();
+        _stage_start_info = resolve_stage_start_info(_runtime.dvd(), _request.stage_name, _request.scenario_no,
+                                                     _request.start_id, _request.start_zone_id);
+        init_stage_player();
+
+#ifndef NDEBUG
+        _runtime.emit_semantic_trace_event(
+            "collision", "stage_collision_loaded",
+            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
+                ";placements=" + std::to_string(collision_stats.placement_count) +
+                ";archives=" + std::to_string(collision_stats.archive_count) +
+                ";meshes=" + std::to_string(collision_stats.mesh_count) +
+                ";triangles=" + std::to_string(collision_stats.triangle_count) +
+                ";rejected_triangles=" + std::to_string(collision_stats.rejected_triangle_count));
+        _runtime.emit_semantic_trace_event(
+            "gravity", "stage_gravity_loaded",
+            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
+                ";placements=" + std::to_string(gravity_stats.placement_count) +
+                ";gravities=" + std::to_string(gravity_stats.gravity_count) +
+                ";unsupported=" + std::to_string(gravity_stats.unsupported_count));
+#endif
+    }
+
+    void StageHostScene::init_stage_player() {
+        _stage_player.reset();
+        if (_stage_start_info.has_value()) {
+            _stage_player = std::make_unique<smgpc::compat::StagePlayerRuntime>(_runtime, *_stage_start_info);
+#ifndef NDEBUG
+            const auto &start = *_stage_start_info;
+            _runtime.emit_semantic_trace_event(
+                "player", "stage_player_created",
+                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
+                    ";start_id=" + std::to_string(start.start_id) + ";start_zone_id=" + std::to_string(start.zone_id) +
+                    ";start_layer=" + start.layer_name + ";start_table=" + start.table_path +
+                    ";start_row=" + std::to_string(start.jmap_entry_index) +
+                    ";position=" + std::to_string(start.world_position[0U]) + "," +
+                    std::to_string(start.world_position[1U]) + "," + std::to_string(start.world_position[2U]) +
+                    ";model=Mario");
+#endif
+        } else {
+            _runtime.player_system().reset_stage_state();
+#ifndef NDEBUG
+            _runtime.emit_semantic_trace_event(
+                "player", "stage_player_unavailable",
+                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
+                    ";start_id=" + std::to_string(_request.start_id) +
+                    ";start_zone_id=" + std::to_string(_request.start_zone_id) + ";reason=start_info_not_found");
+#endif
         }
     }
 
@@ -308,22 +377,33 @@ namespace smgpc::scene {
         _runtime.camera_system().clear_game_camera_pose();
         _stage_start_camera.reset();
 
-        auto resolved = smgpc::camera::resolve_stage_start_camera(_runtime.dvd(), _request.stage_name, _request.scenario_no,
-                                                                  _request.start_id, _request.start_zone_id);
+        if (!_stage_start_info.has_value()) {
+            return;
+        }
+
+        auto resolved = smgpc::camera::resolve_stage_start_camera(_runtime.dvd(), *_stage_start_info);
         if (!resolved.camera.has_value()) {
+            if (_stage_player != nullptr) {
+                _stage_player->use_fallback_follow_camera();
+            }
 #ifndef NDEBUG
             _runtime.emit_semantic_trace_event(
                 "camera", "stage_start_camera_unavailable",
                 "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
                     ";start_id=" + std::to_string(_request.start_id) + ";start_zone_id=" + std::to_string(_request.start_zone_id) +
                     ";status=" + std::string(smgpc::camera::stage_start_camera_status_name(resolved.status)) +
-                    ";detail=" + resolved.detail);
+                    ";detail=" + resolved.detail +
+                    ";fallback=" + (_stage_player != nullptr ? "start_orientation_follow" : "none"));
 #endif
             return;
         }
 
         _stage_start_camera = std::move(*resolved.camera);
-        _runtime.camera_system().set_game_camera_pose(_stage_start_camera->calculation.pose);
+        if (_stage_player != nullptr) {
+            _stage_player->use_follow_camera_pose(_stage_start_camera->calculation.pose);
+        } else {
+            _runtime.camera_system().set_game_camera_pose(_stage_start_camera->calculation.pose);
+        }
 #ifndef NDEBUG
         const auto &camera = *_stage_start_camera;
         const auto &pose = camera.calculation.pose;
@@ -341,9 +421,10 @@ namespace smgpc::scene {
                 ";up=" + std::to_string(pose.up.x) + "," + std::to_string(pose.up.y) + "," + std::to_string(pose.up.z) +
                 ";fovy=" + std::to_string(pose.fovy_degrees));
         _runtime.emit_semantic_trace_event(
-            "camera", "gravity_unavailable",
+            "camera", "stage_player_follow_camera_initialized",
             "stage=" + _request.stage_name + ";start_id=" + std::to_string(camera.start_info.start_id) +
-                ";start_zone_id=" + std::to_string(camera.start_info.zone_id) + ";fallback=transformed_start_orientation_up");
+                ";start_zone_id=" + std::to_string(camera.start_info.zone_id) +
+                ";gravity_source=active_stage_gravity_or_start_orientation");
 #endif
     }
 
@@ -374,6 +455,9 @@ namespace smgpc::scene {
 
     void StageHostScene::update() {
         _runtime.scene_execution().execute_movement();
+        if (_stage_player != nullptr) {
+            _stage_player->synchronize_after_movement();
+        }
     }
 
     void StageHostScene::calcAnim() {

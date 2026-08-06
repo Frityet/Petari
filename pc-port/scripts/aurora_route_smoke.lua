@@ -32,6 +32,12 @@ local gateway_button_script = table.concat({
     "9600-9610:A",
 }, ";")
 
+local opening_button_script = table.concat({
+    gateway_button_script,
+    "9900-9910:A",
+    "10100-10110:A",
+}, ";")
+
 local route_pointer_script = table.concat({
     "0-1899:0,0,false",
     "1900-2020:212.935,152.482,true",
@@ -158,6 +164,51 @@ local scenarios = {
             },
         },
     },
+    opening_arrival_complete = {
+        name = "opening_arrival_complete",
+        frame = 10550,
+        description = "normal title/file-select/picturebook/letter/arrival sequence completed in Peach Castle Garden",
+        min_nonblack_ratio = 0.25,
+        min_render_packets = 300,
+        button_script = opening_button_script,
+        semantic_chain = {
+            {category = "demo", name = "demo_started", detail = "name=プロローグデモ", count = 1},
+            {category = "demo", name = "demo_ended", detail = "name=プロローグデモ", count = 1},
+            {category = "demo", name = "demo_started", detail = "name=主人公ピーチ城に到着", count = 1},
+            {category = "player", name = "player_bck_started", detail = "name=DemoPeachCastleGate;file=;frame_max=299", count = 1},
+            {category = "demo", name = "demo_ended", detail = "name=主人公ピーチ城に到着", count = 1},
+            {category = "player", name = "player_opening_demo_finished",
+             detail = "animation=Wait;control=enabled;forced_matrix=cleared", count = 1},
+        },
+        expected_semantic_events = {
+            {category = "name_obj_lifecycle", name = "construct",
+             detail = "object=PrologueDirector;actor=PrologueDirector", count = 1},
+            {category = "name_obj_lifecycle", name = "archive_request",
+             detail = "object=PrologueDirector;archive=PrologueDemo", count = 1},
+        },
+        expected_render_models = {
+            {name = "Mario", min_packets = 1, bck_frame_max = 180,
+             maximum_unsatisfied_light_mask = 0, require_loaded_requested_lights = true},
+            {name = "PeachCastleGardenPlanet", min_packets = 1},
+            {name = "PeachCastleTownBeforeAttack", min_packets = 1},
+            {name = "PeachCastleTownAfterAttack", min_packets = 1},
+            {name = "PeachCastleTownGate", min_packets = 1},
+            {name = "GalaxySky", min_packets = 1},
+        },
+        placement_report = {
+            filename = "opening_arrival_complete-placement-report.md",
+            expected = {
+                summary = {
+                    stage = "PeachCastleGardenGalaxy",
+                    scenario = 1,
+                    total_objects = 230,
+                    created_objects = 151,
+                    blocked_objects = 24,
+                    intentionally_ignored_objects = 55,
+                },
+            },
+        },
+    },
 }
 
 local default_scenarios = {"title", "file_select", "picturebook"}
@@ -202,6 +253,122 @@ end
 
 local function trim(value)
     return tostring(value or ""):gsub("^%s+", ""):gsub("%s+$", "")
+end
+
+local function sql_quote(value)
+    return "'" .. tostring(value or ""):gsub("'", "''") .. "'"
+end
+
+local function sqlite_scalar(sqlite_bin, trace_path, sql)
+    local output = common.capturev(sqlite_bin, {"-batch", "-noheader", trace_path, sql})
+    local text = trim(output)
+    local value = tonumber(text)
+    if value == nil then
+        raise("SQLite validation query returned non-numeric output for %s: %s", trace_path, text)
+    end
+    return value
+end
+
+local function semantic_where(event)
+    local clauses = {
+        "category = " .. sql_quote(event.category),
+        "name = " .. sql_quote(event.name),
+    }
+    if event.detail ~= nil and event.detail ~= "" then
+        table.insert(clauses, "instr(coalesce(detail, ''), " .. sql_quote(event.detail) .. ") > 0")
+    end
+    return table.concat(clauses, " AND ")
+end
+
+local function validate_trace_expectations(trace_path, scenario, validation_path)
+    if scenario.semantic_chain == nil and scenario.expected_semantic_events == nil and
+       scenario.expected_render_models == nil then
+        return nil
+    end
+
+    local sqlite_bin = common.require_tool("sqlite3")
+    local validation = {
+        semantic_chain = {},
+        semantic_events = {},
+        render_models = {},
+    }
+
+    local function validate_semantic(event, destination)
+        local where = semantic_where(event)
+        local count = sqlite_scalar(sqlite_bin, trace_path,
+            "SELECT count(*) FROM semantic_events WHERE " .. where .. ";")
+        if event.count ~= nil and count ~= event.count then
+            raise("%s semantic %s:%s count=%d, expected %d", trace_path, event.category, event.name, count, event.count)
+        end
+        if event.min_count ~= nil and count < event.min_count then
+            raise("%s semantic %s:%s count=%d, expected at least %d", trace_path, event.category, event.name, count, event.min_count)
+        end
+        if event.count == nil and event.min_count == nil and count == 0 then
+            raise("%s is missing semantic %s:%s", trace_path, event.category, event.name)
+        end
+        local row_index = sqlite_scalar(sqlite_bin, trace_path,
+            "SELECT coalesce(min(row_index), -1) FROM semantic_events WHERE " .. where .. ";")
+        table.insert(destination, {
+            category = event.category,
+            name = event.name,
+            detail = event.detail,
+            count = count,
+            first_row_index = row_index,
+        })
+        return row_index
+    end
+
+    local previous_row_index = -1
+    for _, event in ipairs(scenario.semantic_chain or {}) do
+        local row_index = validate_semantic(event, validation.semantic_chain)
+        if row_index <= previous_row_index then
+            raise("%s semantic chain is out of order at %s:%s", trace_path, event.category, event.name)
+        end
+        previous_row_index = row_index
+    end
+    for _, event in ipairs(scenario.expected_semantic_events or {}) do
+        validate_semantic(event, validation.semantic_events)
+    end
+
+    for _, expected in ipairs(scenario.expected_render_models or {}) do
+        local model = sql_quote(expected.name)
+        local packet_count = sqlite_scalar(sqlite_bin, trace_path,
+            "SELECT count(*) FROM render_packets WHERE model_name = " .. model .. ";")
+        if expected.min_packets ~= nil and packet_count < expected.min_packets then
+            raise("%s model %s packets=%d, expected at least %d", trace_path, expected.name, packet_count, expected.min_packets)
+        end
+        if expected.bck_frame_max ~= nil then
+            local mismatches = sqlite_scalar(sqlite_bin, trace_path,
+                "SELECT count(*) FROM render_packets WHERE model_name = " .. model ..
+                " AND coalesce(json_extract(payload_json, '$.bck_frame_max'), -1) <> " .. tostring(expected.bck_frame_max) .. ";")
+            if mismatches ~= 0 then
+                raise("%s model %s has %d packets with unexpected BCK frame max", trace_path, expected.name, mismatches)
+            end
+        end
+        if expected.maximum_unsatisfied_light_mask ~= nil then
+            local maximum = sqlite_scalar(sqlite_bin, trace_path,
+                "SELECT coalesce(max(json_extract(payload_json, '$.unsatisfied_light_mask')), 0) FROM render_packets WHERE model_name = " .. model .. ";")
+            if maximum > expected.maximum_unsatisfied_light_mask then
+                raise("%s model %s unsatisfied light mask=%d, expected at most %d", trace_path, expected.name, maximum,
+                      expected.maximum_unsatisfied_light_mask)
+            end
+        end
+        if expected.require_loaded_requested_lights then
+            local violations = sqlite_scalar(sqlite_bin, trace_path,
+                "SELECT count(*) FROM render_packets WHERE model_name = " .. model ..
+                " AND (coalesce(loaded_light_mask, 0) & coalesce(requested_light_mask, 0)) <> coalesce(requested_light_mask, 0);")
+            if violations ~= 0 then
+                raise("%s model %s has %d packets missing requested lights", trace_path, expected.name, violations)
+            end
+        end
+        table.insert(validation.render_models, {
+            name = expected.name,
+            packet_count = packet_count,
+        })
+    end
+
+    common.write_json(validation_path, validation)
+    return validation
 end
 
 local function parse_report_value(value)
@@ -424,6 +591,7 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
     local png_path = path.join(scenario_dir, string.format("%s-frame-%d.png", scenario.name, scenario.frame))
     local app_log = path.join(scenario_dir, scenario.name .. "-app.log")
     local trace_log = path.join(scenario_dir, scenario.name .. "-trace-validator.log")
+    local expectation_validation_path = path.join(scenario_dir, scenario.name .. "-expectations.json")
     local manifest_path = path.join(scenario_dir, "manifest.json")
     local placement_report_path
     if scenario.placement_report ~= nil then
@@ -433,6 +601,7 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
     os.tryrm(png_path)
     os.tryrm(app_log)
     os.tryrm(trace_log)
+    os.tryrm(expectation_validation_path)
     if placement_report_path ~= nil then
         os.tryrm(placement_report_path)
     end
@@ -515,6 +684,7 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
     end
 
     local trace_summary = validate_trace_to_log(trace_path, scenario, trace_log, validate_bin)
+    local trace_expectation_validation = validate_trace_expectations(trace_path, scenario, expectation_validation_path)
     local placement_report_validation
     if placement_report_path ~= nil then
         placement_report_validation = validate_placement_report(placement_report_path, scenario.placement_report.expected)
@@ -529,6 +699,9 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
     if placement_report_path ~= nil then
         artifacts.placement_report = placement_report_path
     end
+    if trace_expectation_validation ~= nil then
+        artifacts.expectation_validation = expectation_validation_path
+    end
 
     local manifest = {
         scenario = scenario.name,
@@ -539,6 +712,7 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
         artifacts = artifacts,
         image_stats = stats,
         trace_summary = trace_summary,
+        trace_expectation_validation = trace_expectation_validation,
         placement_report_validation = placement_report_validation,
         input = {
             button_script = scenario.button_script,

@@ -170,9 +170,12 @@ namespace smgpc::render {
                            value_at(values, next + 1U), tangent1);
         }
 
+        // BTK playback predates the actor-local BCK lifecycle. Keep texture SRT
+        // animation on its independent renderer timeline until it gains an
+        // explicit start origin of its own.
         [[nodiscard]] float loop_frame(float frame, std::int16_t frame_max) {
-            if (frame_max <= 0) {
-                return frame;
+            if (frame_max <= 0 || !std::isfinite(frame)) {
+                return 0.0F;
             }
 
             auto wrapped = std::fmod(frame, static_cast<float>(frame_max));
@@ -327,13 +330,65 @@ namespace smgpc::render {
         return summary;
     }
 
+    float j3d_animation_frame(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame) {
+        if (frame_max <= 0 || !std::isfinite(elapsed_frame)) {
+            return 0.0F;
+        }
+
+        const auto duration = static_cast<float>(frame_max);
+        const auto elapsed = std::max(elapsed_frame, 0.0F);
+        switch (attribute) {
+        case 0U:  // LOOP_ONCE
+            return std::min(elapsed, std::max(duration - 0.001F, 0.0F));
+        case 1U:  // LOOP_ONCE_RESET
+            return elapsed >= duration ? 0.0F : elapsed;
+        case 2U: {  // LOOP_REPEAT
+            return std::fmod(elapsed, duration);
+        }
+        case 3U:  // LOOP_MIRROR_ONCE
+            if (elapsed > duration * 2.0F) {
+                // With the original unit playback rate, the first update that
+                // underflows reflects to frame 1 and then stops there.
+                return std::min(1.0F, duration);
+            }
+            return elapsed <= duration ? elapsed : duration * 2.0F - elapsed;
+        case 4U: {  // LOOP_MIRROR_REPEAT
+            const auto turn_frame = std::max(duration - 1.0F, 0.0F);
+            if (turn_frame == 0.0F) {
+                return 0.0F;
+            }
+            const auto period = turn_frame * 2.0F;
+            const auto mirrored = std::fmod(elapsed, period);
+            return mirrored <= turn_frame ? mirrored : period - mirrored;
+        }
+        default:
+            return std::min(elapsed, std::max(duration - 0.001F, 0.0F));
+        }
+    }
+
+    bool j3d_animation_stopped(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame) {
+        if (frame_max <= 0) {
+            return true;
+        }
+        const auto elapsed = std::max(elapsed_frame, 0.0F);
+        switch (attribute) {
+        case 2U:
+        case 4U:
+            return false;
+        case 3U:
+            return elapsed > static_cast<float>(frame_max) * 2.0F;
+        default:
+            return elapsed >= static_cast<float>(frame_max);
+        }
+    }
+
     std::optional<J3dJointTransformValue> j3d_evaluate_bck_joint_transform(const J3dBckAnimationSummary &bck, std::uint16_t joint_index,
                                                                            float frame) {
         if (joint_index >= bck.joints.size()) {
             return std::nullopt;
         }
 
-        const auto normalized_frame = loop_frame(frame, bck.frame_max);
+        const auto normalized_frame = j3d_animation_frame(bck.attribute, bck.frame_max, frame);
         const auto &tracks = bck.joints[joint_index];
         auto transform = J3dJointTransformValue {};
         for (auto axis = 0U; axis < tracks.size(); ++axis) {

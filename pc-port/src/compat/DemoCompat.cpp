@@ -7,6 +7,7 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/DemoUtilCompat.hpp"
 
 #include <memory>
 #include <string>
@@ -65,6 +66,7 @@ namespace {
 
 namespace smgpc::compat {
     void release_demo_runtime_state(const LiveActor* actor) {
+        release_active_demo_for_owner(actor);
         sDemoCasts.erase(actor);
     }
 

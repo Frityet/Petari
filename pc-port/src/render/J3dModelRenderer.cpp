@@ -405,18 +405,6 @@ namespace smgpc::render {
             return left.size() < right.size() ? -1 : 1;
         }
 
-        [[nodiscard]] float normalized_animation_frame(float frame, std::int16_t frame_max) {
-            if (frame_max <= 0) {
-                return frame;
-            }
-
-            auto wrapped = std::fmod(frame, static_cast<float>(frame_max));
-            if (wrapped < 0.0F) {
-                wrapped += static_cast<float>(frame_max);
-            }
-            return wrapped;
-        }
-
         [[nodiscard]] bool material_pass_textures_available(std::span<const J3dMaterialTexturePass> passes,
                                                             std::span<const J3dTexture> textures) {
             return std::ranges::all_of(passes, [textures](const auto &pass) { return pass.texture_index < textures.size(); });
@@ -910,7 +898,7 @@ namespace smgpc::render {
             std::span<J3dMatrix3x4> model_matrix_cache;
             std::span<std::uint8_t> model_matrix_cache_valid;
             std::uint16_t default_joint_index = 0xffffU;
-            std::uint64_t frame = 0U;
+            float frame = 0.0F;
         };
 
         [[nodiscard]] J3dJointTransformValue joint_transform_from_summary(const J3dJointSummary &joint) {
@@ -1001,7 +989,7 @@ namespace smgpc::render {
             auto transform = context.transforms[joint_index];
             if (context.animation.has_value()) {
                 if (const auto animated =
-                        j3d_evaluate_bck_joint_transform(*context.animation, joint_index, static_cast<float>(context.frame));
+                        j3d_evaluate_bck_joint_transform(*context.animation, joint_index, context.frame);
                     animated.has_value()) {
                     transform = *animated;
                 }
@@ -2231,6 +2219,10 @@ namespace smgpc::render {
         _bck_animation = animation;
     }
 
+    void J3dModelRenderer::clear_bck_animation() {
+        _bck_animation.reset();
+    }
+
     void J3dModelRenderer::set_btk_animation(const J3dBtkAnimationSummary &animation) {
         _btk_animation = animation;
     }
@@ -2284,7 +2276,7 @@ namespace smgpc::render {
         auto packets = std::vector<J3dRendererPacketState>{};
         packets.reserve(_meshes.size());
         for (const auto &mesh : _meshes) {
-            auto state = packet_state_for_mesh(mesh, frame, scene_lights);
+            auto state = packet_state_for_mesh(mesh, frame, scene_lights, options.bck_animation_frame);
             state.gx_blend = gx_blend_with_draw_options(state.gx_blend, options);
             for (auto &matrix : state.tex_matrices) {
                 apply_projmap_effect_matrix(matrix, options);
@@ -2530,14 +2522,17 @@ namespace smgpc::render {
     }
 
     J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
-                                                                   std::span<const GXLightState> scene_lights) const {
+                                                                   std::span<const GXLightState> scene_lights,
+                                                                   std::optional<float> bck_animation_frame) const {
         auto state = packet_state_for_mesh(mesh, scene_lights);
         const auto animation_frame = static_cast<float>(frame);
 
         if (_bck_animation.has_value()) {
+            const auto local_frame = bck_animation_frame.value_or(animation_frame);
             state.bck_active = true;
-            state.bck_frame = animation_frame;
-            state.bck_normalized_frame = normalized_animation_frame(animation_frame, _bck_animation->frame_max);
+            state.bck_frame = local_frame;
+            state.bck_normalized_frame = j3d_animation_frame(_bck_animation->attribute,
+                                                              _bck_animation->frame_max, local_frame);
             state.bck_frame_max = _bck_animation->frame_max;
             state.bck_joint_count = _bck_animation->joint_count;
         }
@@ -2558,7 +2553,9 @@ namespace smgpc::render {
             }
             state.btk_active = true;
             state.btk_frame = animation_frame;
-            state.btk_normalized_frame = normalized_animation_frame(animation_frame, _btk_animation->frame_max);
+            state.btk_normalized_frame = _btk_animation->frame_max > 0
+                                             ? std::fmod(animation_frame, static_cast<float>(_btk_animation->frame_max))
+                                             : animation_frame;
             state.btk_frame_max = _btk_animation->frame_max;
             state.btk_material_count = static_cast<std::uint16_t>(_btk_animation->materials.size());
         }
@@ -2610,7 +2607,7 @@ namespace smgpc::render {
                 .model_matrix_cache_valid =
                     std::span<std::uint8_t>(scratch.model_matrix_cache_valid.data(), scratch.model_matrix_cache_valid.size()),
                 .default_joint_index = mesh.joint_index,
-                .frame = frame,
+                .frame = options.bck_animation_frame.value_or(static_cast<float>(frame)),
             };
             if (mesh.packet_mode == J3dRendererPacketMode::ShaderGxTev && mesh.gx_texture_stage_count > 0U) {
                 auto effective_passes = mesh.material_passes;

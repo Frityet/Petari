@@ -548,6 +548,10 @@ namespace smgpc::runtime {
 
             if (auto *actor = entry_live_actor(*entry); actor != nullptr && !actor->isDead()) {
                 smgpc::compat::integrate_live_actor_velocity(*actor);
+                if (auto *runtime = RuntimeContext::try_instance();
+                    runtime != nullptr && runtime->player_system().attached_actor() == actor) {
+                    runtime->player_system().synchronize_attached_actor();
+                }
             }
 #ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::Movement);
@@ -710,7 +714,8 @@ namespace smgpc::runtime {
         }
     }
 
-    void SceneScheduler::execute_draw_buffer_list_normal(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air) {
+    void SceneScheduler::execute_draw_buffer_list_normal(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air,
+                                                          s32 interleaved_draw_type, s32 interleaved_light_type) {
         auto *runtime = RuntimeContext::try_instance();
         const auto previous_pixel_update_state = runtime != nullptr ? runtime->j3d_pixel_update_state() :
                                                                       std::optional<RuntimeContext::GxPixelUpdateState>{};
@@ -727,6 +732,12 @@ namespace smgpc::runtime {
             runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = false});
         }
         execute_draw_buffer_list_normal_opa(camera_pose, prior_draw_air);
+        if (interleaved_draw_type >= 0) {
+            if (interleaved_light_type >= 0) {
+                MR::loadLight(interleaved_light_type);
+            }
+            execute_draw_type(interleaved_draw_type);
+        }
         execute_draw_buffer_list_normal_xlu(camera_pose);
         if (runtime != nullptr) {
             runtime->set_j3d_pixel_update_state(previous_pixel_update_state);

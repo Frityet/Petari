@@ -21,6 +21,10 @@ namespace smgpc::runtime {
     class RuntimeContext;
 }  // namespace smgpc::runtime
 
+namespace smgpc::compat {
+    class StagePlayerRuntime;
+}  // namespace smgpc::compat
+
 namespace smgpc::scene {
 
     [[nodiscard]] bool should_apply_host_appear(const StagePlacementObject *placement);
@@ -46,6 +50,9 @@ namespace smgpc::scene {
         void construct_root_object(std::string_view object_name, std::string_view actor_name, const StagePlacementObject *placement);
         void init_explicit_root();
         void init_placement_roots();
+        void construct_placement_roots(const StagePlacementObject *explicit_placement = nullptr);
+        void init_stage_environment();
+        void init_stage_player();
         void trace_placement_object(const StagePlacementObject &placement) const;
         void init_roots_after_placement();
         void init_stage_start_camera();
@@ -61,7 +68,9 @@ namespace smgpc::scene {
         std::vector<StagePlacementObject> _placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
         std::vector<const StagePlacementObject *> _root_placements;
+        std::optional<StageStartInfo> _stage_start_info;
         std::optional<smgpc::camera::ResolvedStageStartCamera> _stage_start_camera;
+        std::unique_ptr<smgpc::compat::StagePlayerRuntime> _stage_player;
     };
 
 }  // namespace smgpc::scene

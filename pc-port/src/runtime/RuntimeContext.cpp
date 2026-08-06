@@ -658,6 +658,7 @@ namespace smgpc::runtime {
         append_input_button(render::InputButton::CORE_PAD_HOME, WPAD_BUTTON_HOME);
         append_input_button(render::InputButton::CORE_PAD_C, WPAD_BUTTON_C);
         append_input_button(render::InputButton::CORE_PAD_Z, WPAD_BUTTON_Z);
+        auto core_swing = _window_service.is_input_pressed(render::InputButton::CORE_PAD_SWING);
         auto hold_mask = raw_hold_mask;
         auto pointer = _window_service.input_pointer_state();
         const auto raw_pointer = pointer;
@@ -672,6 +673,9 @@ namespace smgpc::runtime {
                 debug_button_script_applied = true;
             }
         }
+        // ONE is retained as a scriptable stand-in for a Wii Remote shake;
+        // keyboard users have the dedicated X binding above.
+        core_swing = core_swing || (hold_mask & WPAD_BUTTON_1) != 0U;
         for (const auto &span : _debug_wpad_pointer_script) {
             if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
                 pointer = render::InputPointerState{
@@ -767,6 +771,7 @@ namespace smgpc::runtime {
             pointer = render::InputPointerState{};
             sub_stick_x = 0.0F;
             sub_stick_y = 0.0F;
+            core_swing = false;
         }
 #ifndef NDEBUG
         _host_input_trace = HostInputTraceState{
@@ -784,6 +789,7 @@ namespace smgpc::runtime {
         wpad.set_button_mask(WPAD_CHAN0, hold_mask);
         wpad.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid);
         wpad.set_sub_stick(WPAD_CHAN0, sub_stick_x, sub_stick_y);
+        wpad.set_swing(WPAD_CHAN0, core_swing, false);
         wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
 #ifndef NDEBUG
         if (!_emitted_wpad_buttons_held_event && hold_mask != 0U) {

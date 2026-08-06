@@ -130,6 +130,7 @@ namespace smgpc::render::core {
         CORE_PAD_HOME,
         CORE_PAD_C,
         CORE_PAD_Z,
+        CORE_PAD_SWING,
         COUNT,
     };
 

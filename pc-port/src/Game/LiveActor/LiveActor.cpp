@@ -211,6 +211,7 @@ void LiveActor::initSound(s32, bool) {
 
 void LiveActor::initModelManagerWithAnm(const char* pModelArcName, const char* pAnimArcName, bool) {
     mModel = std::make_unique< smgpc::render::live_actor::LiveActorModel >(pModelArcName != nullptr ? pModelArcName : "", pAnimArcName != nullptr ? pAnimArcName : "");
+    smgpc::compat::register_actor_model(this, mModel.get());
 }
 
 void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {

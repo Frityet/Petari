@@ -32,6 +32,7 @@ namespace smgpc::render {
         std::optional<bool> gx_alpha_update = {};
         std::span<const GXLightState> scene_lights = {};
         std::optional<J3dMatrix3x4> projmap_effect_matrix = {};
+        std::optional<float> bck_animation_frame = {};
     };
 
     enum class J3dRendererPacketMode {
@@ -172,6 +173,7 @@ namespace smgpc::render {
 
         void load(render::AuroraRenderer &renderer, std::span<const std::uint8_t> model_data, const J3dModelRendererLoadOptions &options = {});
         void set_bck_animation(const J3dBckAnimationSummary &animation);
+        void clear_bck_animation();
         void set_btk_animation(const J3dBtkAnimationSummary &animation);
         void clear_animations();
 
@@ -251,7 +253,8 @@ namespace smgpc::render {
         [[nodiscard]] Mesh make_constant_backdrop(render::AuroraRenderer &renderer, std::array<std::uint8_t, 4U> color) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights = {}) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
-                                                                   std::span<const GXLightState> scene_lights = {}) const;
+                                                                   std::span<const GXLightState> scene_lights = {},
+                                                                   std::optional<float> bck_animation_frame = {}) const;
         void submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const smgpc::camera::CameraPose &camera_pose,
                          const J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawScratch &scratch, std::span<const GXLightState> scene_lights,
                          const J3dModelRendererDrawOptions &options) const;

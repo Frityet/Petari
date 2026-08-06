@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/workspaces/pcport/pc-port/.cache/aurora-route-smoke/opening-arrival-final/opening_arrival_complete/opening_arrival_complete-frame-10550.trace.sqlite"	passed	1	10550	pc-port	2034	377	1645	4

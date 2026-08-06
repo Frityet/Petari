@@ -359,6 +359,8 @@ namespace smgpc::render {
                 return InputButton::CORE_PAD_C;
             case SDLK_Z:
                 return InputButton::CORE_PAD_Z;
+            case SDLK_X:
+                return InputButton::CORE_PAD_SWING;
             default:
                 return std::nullopt;
             }

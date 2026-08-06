@@ -29,7 +29,7 @@ public:
 
     LiveActorModel(std::string model_arc_name, std::string animation_arc_name);
 
-    void startBck(std::string_view name, std::string_view file_name);
+    std::optional<std::int16_t> startBck(std::string_view name, std::string_view file_name);
     std::optional<std::int16_t> startBrk(std::string_view name);
     void startBtk(std::string_view name);
     void setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4 &matrix);
@@ -38,12 +38,19 @@ public:
 
     [[nodiscard]] bool isLoaded() const;
     [[nodiscard]] std::string_view model_arc_name() const;
+    [[nodiscard]] std::optional<std::int16_t> bck_frame_max(std::string_view name) const;
+    [[nodiscard]] float bck_frame(std::uint64_t runtime_frame) const;
+    [[nodiscard]] bool is_bck_stopped(std::uint64_t runtime_frame) const;
 
 private:
     void ensureLoaded();
+    void resolveBckAnimation();
+    [[nodiscard]] std::optional<smgpc::render::J3dBckAnimationSummary>
+    loadBckAnimation(std::string_view resource_name) const;
     void applyStartedAnimations();
     [[nodiscard]] const smgpc::resource::RarcEntry *findModelEntry(const smgpc::resource::RarcArchive &archive) const;
-    [[nodiscard]] std::optional<smgpc::render::J3dBckAnimationSummary> findBckAnimation(const smgpc::resource::RarcArchive &archive) const;
+    [[nodiscard]] std::optional<smgpc::render::J3dBckAnimationSummary>
+    findBckAnimation(const smgpc::resource::RarcArchive &archive, std::string_view resource_name) const;
     [[nodiscard]] std::optional<smgpc::render::J3dBtkAnimationSummary> findBtkAnimation(const smgpc::resource::RarcArchive &archive) const;
     [[nodiscard]] std::optional<smgpc::render::J3dBrkAnimationSummary> findBrkAnimation(const smgpc::resource::RarcArchive &archive) const;
 
@@ -53,6 +60,8 @@ private:
     bool mBckStarted = false;
     bool mBrkStarted = false;
     bool mBtkStarted = false;
+    std::uint64_t mBckStartFrame = 0U;
+    std::string mBckResourceName = {};
     std::string mBrkName = {};
     std::string mBrkAnimationName = {};
     std::unique_ptr<smgpc::render::J3dModelRenderer> mRenderer = {};

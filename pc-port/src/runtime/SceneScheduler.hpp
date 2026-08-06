@@ -244,7 +244,8 @@ namespace smgpc::runtime {
         void execute_draw_buffer_list_normal_opa_before_silhouette(const smgpc::camera::CameraPose &camera_pose);
         void execute_draw_buffer_list_normal_opa(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air);
         void execute_draw_buffer_list_normal_xlu(const smgpc::camera::CameraPose &camera_pose);
-        void execute_draw_buffer_list_normal(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air = false);
+        void execute_draw_buffer_list_normal(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air = false,
+                                             s32 interleaved_draw_type = -1, s32 interleaved_light_type = -1);
         void execute_draw_type(s32 draw_type);
         void execute_draw_list_2d_normal();
         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);

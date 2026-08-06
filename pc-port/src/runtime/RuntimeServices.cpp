@@ -2760,18 +2760,70 @@ namespace smgpc::runtime {
         return event->pose;
     }
 
+    void PlayerSystemService::reset_stage_state() {
+        _attached_actor = nullptr;
+        _player_hidden = false;
+        _has_base_matrix = false;
+        _has_forced_base_matrix = false;
+        _on_ground = false;
+        _swing_permitted = true;
+        // Control ownership can span scene boundaries (notably puppetable
+        // demos), so stage-local actor teardown must not release it.
+        _reset_condition_requested = false;
+        ++_base_matrix_revision;
+        _base_matrix = {};
+        _position = {};
+        _velocity = {};
+        _gravity = {0.0F, -1.0F, 0.0F};
+    }
+
+    void PlayerSystemService::clear_stage_state() {
+        reset_stage_state();
+    }
+
+    void PlayerSystemService::attach_actor(LiveActor &actor) {
+        _attached_actor = &actor;
+        copy_actor_state();
+        actor.mFlag.mIsHiddenModel = _player_hidden;
+    }
+
+    void PlayerSystemService::detach_actor(const LiveActor *actor) {
+        if (actor == nullptr || _attached_actor == actor) {
+            _attached_actor = nullptr;
+        }
+    }
+
+    void PlayerSystemService::synchronize_attached_actor() {
+        if (_attached_actor == nullptr) {
+            return;
+        }
+
+        _attached_actor->calcAndSetBaseMtx();
+        copy_actor_state();
+        _attached_actor->mFlag.mIsHiddenModel = _player_hidden;
+    }
+
     void PlayerSystemService::show_player() {
         _player_hidden = false;
+        if (_attached_actor != nullptr) {
+            _attached_actor->mFlag.mIsHiddenModel = false;
+        }
     }
 
     void PlayerSystemService::hide_player() {
         _player_hidden = true;
+        if (_attached_actor != nullptr) {
+            _attached_actor->mFlag.mIsHiddenModel = true;
+        }
     }
 
     void PlayerSystemService::set_base_matrix(MtxPtr matrix) {
+        ++_base_matrix_revision;
         _has_base_matrix = matrix != nullptr;
+        _has_forced_base_matrix = matrix != nullptr;
         if (matrix == nullptr) {
             _base_matrix = {};
+            _position = {};
             return;
         }
 
@@ -2781,6 +2833,43 @@ namespace smgpc::runtime {
                 _base_matrix[index++] = matrix[row][column];
             }
         }
+        _position = {_base_matrix[3U], _base_matrix[7U], _base_matrix[11U]};
+
+        if (_attached_actor != nullptr) {
+            _attached_actor->setBaseMatrix(smgpc::render::J3dMatrix3x4{_base_matrix});
+            _attached_actor->mPosition.set(_position[0U], _position[1U], _position[2U]);
+        }
+    }
+
+    void PlayerSystemService::set_swing_permission(bool permitted) {
+        _swing_permitted = permitted;
+    }
+
+    void PlayerSystemService::disable_control() {
+        _control_enabled = false;
+    }
+
+    void PlayerSystemService::enable_control(bool reset_condition) {
+        _control_enabled = true;
+        _reset_condition_requested = _reset_condition_requested || reset_condition;
+    }
+
+    void PlayerSystemService::finish_opening_demo() {
+        _control_enabled = true;
+        _reset_condition_requested = false;
+        _has_forced_base_matrix = false;
+        ++_base_matrix_revision;
+
+        if (_attached_actor == nullptr) {
+            return;
+        }
+
+        _attached_actor->mVelocity.zero();
+        _attached_actor->mBindedGround = false;
+        _attached_actor->mBindedWall = false;
+        _attached_actor->mBindedRoof = false;
+        _attached_actor->mFlag.mIsNoBind = false;
+        copy_actor_state();
     }
 
     bool PlayerSystemService::is_player_hidden() const {
@@ -2791,8 +2880,61 @@ namespace smgpc::runtime {
         return _has_base_matrix;
     }
 
+    bool PlayerSystemService::has_forced_base_matrix() const {
+        return _has_forced_base_matrix;
+    }
+
     std::span<const f32, 12U> PlayerSystemService::base_matrix() const {
         return _base_matrix;
+    }
+
+    std::span<const f32, 3U> PlayerSystemService::position() const {
+        return _position;
+    }
+
+    std::span<const f32, 3U> PlayerSystemService::velocity() const {
+        return _velocity;
+    }
+
+    std::span<const f32, 3U> PlayerSystemService::gravity() const {
+        return _gravity;
+    }
+
+    bool PlayerSystemService::is_on_ground() const {
+        return _on_ground;
+    }
+
+    bool PlayerSystemService::is_swing_permitted() const {
+        return _swing_permitted;
+    }
+
+    bool PlayerSystemService::is_control_enabled() const {
+        return _control_enabled;
+    }
+
+    std::uint64_t PlayerSystemService::base_matrix_revision() const {
+        return _base_matrix_revision;
+    }
+
+    LiveActor *PlayerSystemService::attached_actor() const {
+        return _attached_actor;
+    }
+
+    bool PlayerSystemService::consume_reset_condition_request() {
+        return std::exchange(_reset_condition_requested, false);
+    }
+
+    void PlayerSystemService::copy_actor_state() {
+        if (_attached_actor == nullptr) {
+            return;
+        }
+
+        _has_base_matrix = true;
+        _base_matrix = _attached_actor->getBaseMatrix().m;
+        _position = {_attached_actor->mPosition.x, _attached_actor->mPosition.y, _attached_actor->mPosition.z};
+        _velocity = {_attached_actor->mVelocity.x, _attached_actor->mVelocity.y, _attached_actor->mVelocity.z};
+        _gravity = {_attached_actor->mGravity.x, _attached_actor->mGravity.y, _attached_actor->mGravity.z};
+        _on_ground = _attached_actor->mBindedGround;
     }
 
     void GameLayoutService::deactivate_default_game_layout() {

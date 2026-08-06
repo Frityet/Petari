@@ -96,6 +96,8 @@ namespace smgpc::render {
     };
 
     [[nodiscard]] J3dAnimationSummary inspect_j3d_animation(std::span<const std::uint8_t> animation_data);
+    [[nodiscard]] float j3d_animation_frame(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame);
+    [[nodiscard]] bool j3d_animation_stopped(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame);
     [[nodiscard]] std::optional<J3dJointTransformValue> j3d_evaluate_bck_joint_transform(const J3dBckAnimationSummary &bck,
                                                                                          std::uint16_t joint_index, float frame);
     [[nodiscard]] std::optional<J3dTextureSrtAnimationValue>

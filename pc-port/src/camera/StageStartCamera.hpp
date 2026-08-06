@@ -66,5 +66,8 @@ namespace smgpc::camera {
     [[nodiscard]] StageStartCameraResolveResult resolve_stage_start_camera(
         smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, std::int32_t scenario_no,
         std::int32_t start_id = 0, std::int32_t start_zone_id = 0, float default_fovy_degrees = 45.0F);
+    [[nodiscard]] StageStartCameraResolveResult resolve_stage_start_camera(
+        smgpc::runtime::DvdFileSystemService &dvd, const smgpc::scene::StageStartInfo &start_info,
+        float default_fovy_degrees = 45.0F);
 
 }  // namespace smgpc::camera

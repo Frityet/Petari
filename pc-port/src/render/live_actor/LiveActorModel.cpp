@@ -70,9 +70,17 @@ LiveActorModel::LiveActorModel(std::string model_arc_name, std::string animation
     : mModelArcName(std::move(model_arc_name)), mAnimationArcName(std::move(animation_arc_name)) {
 }
 
-void LiveActorModel::startBck(std::string_view, std::string_view) {
+std::optional<std::int16_t> LiveActorModel::startBck(std::string_view name, std::string_view file_name) {
     mBckStarted = true;
+    mBckResourceName = std::string(file_name.empty() ? name : file_name);
+    if (const auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+        mBckStartFrame = runtime->frame_index();
+    } else {
+        mBckStartFrame = 0U;
+    }
+    mBckAnimation = loadBckAnimation(mBckResourceName);
     applyStartedAnimations();
+    return mBckAnimation.has_value() ? std::optional<std::int16_t>{mBckAnimation->frame_max} : std::nullopt;
 }
 
 std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
@@ -128,6 +136,9 @@ void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const sm
         break;
     }
     options.projmap_effect_matrix = mProjmapEffectMatrix;
+    if (mBckStarted && mBckAnimation.has_value()) {
+        options.bck_animation_frame = bck_frame(frame);
+    }
 #ifndef NDEBUG
     if (debug_model_filter_matches(mModelArcName)) {
         options.material_filter = debug_environment("SMGPC_J3D_MATERIAL_FILTER");
@@ -165,6 +176,30 @@ std::string_view LiveActorModel::model_arc_name() const {
     return mModelArcName;
 }
 
+std::optional<std::int16_t> LiveActorModel::bck_frame_max(std::string_view name) const {
+    if (mBckAnimation.has_value() && lower_copy(name) == lower_copy(mBckResourceName)) {
+        return mBckAnimation->frame_max;
+    }
+    const auto animation = loadBckAnimation(name);
+    return animation.has_value() ? std::optional<std::int16_t>{animation->frame_max} : std::nullopt;
+}
+
+float LiveActorModel::bck_frame(std::uint64_t runtime_frame) const {
+    if (!mBckStarted || !mBckAnimation.has_value()) {
+        return 0.0F;
+    }
+    const auto elapsed = runtime_frame >= mBckStartFrame ? static_cast<float>(runtime_frame - mBckStartFrame) : 0.0F;
+    return smgpc::render::j3d_animation_frame(mBckAnimation->attribute, mBckAnimation->frame_max, elapsed);
+}
+
+bool LiveActorModel::is_bck_stopped(std::uint64_t runtime_frame) const {
+    if (!mBckStarted || !mBckAnimation.has_value()) {
+        return true;
+    }
+    const auto elapsed = runtime_frame >= mBckStartFrame ? static_cast<float>(runtime_frame - mBckStartFrame) : 0.0F;
+    return smgpc::render::j3d_animation_stopped(mBckAnimation->attribute, mBckAnimation->frame_max, elapsed);
+}
+
 void LiveActorModel::ensureLoaded() {
     if (mLoadAttempted) {
         return;
@@ -191,7 +226,9 @@ void LiveActorModel::ensureLoaded() {
             return;
         }
 
-        mBckAnimation = findBckAnimation(archive);
+        if (mBckStarted && !mBckAnimation.has_value()) {
+            resolveBckAnimation();
+        }
         mBtkAnimation = findBtkAnimation(archive);
         if ((mBrkStarted || !mBrkName.empty()) && (!mBrkAnimation.has_value() || mBrkAnimationName != mBrkName)) {
             mBrkAnimation = findBrkAnimation(archive);
@@ -207,12 +244,58 @@ void LiveActorModel::ensureLoaded() {
     }
 }
 
+void LiveActorModel::resolveBckAnimation() {
+    mBckAnimation = loadBckAnimation(mBckResourceName);
+}
+
+std::optional<smgpc::render::J3dBckAnimationSummary>
+LiveActorModel::loadBckAnimation(std::string_view resource_name) const {
+    auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        return std::nullopt;
+    }
+
+    auto animation = std::optional<smgpc::render::J3dBckAnimationSummary>{};
+
+    const auto try_archive = [this, runtime, resource_name, &animation](std::string_view archive_name) {
+        if (archive_name.empty()) {
+            return false;
+        }
+        const auto archive_path = runtime->find_object_archive(archive_name);
+        if (!archive_path.has_value()) {
+            runtime->note_missing_object_archive(archive_name);
+            return false;
+        }
+        try {
+            const auto &archive = runtime->dvd().archive_for_path(*archive_path);
+            animation = findBckAnimation(archive, resource_name);
+            runtime->note_object_archive(archive_name, *archive_path);
+            return animation.has_value();
+        } catch (const std::exception &error) {
+            runtime->note_object_texture_decode_failed(archive_name, error.what());
+            return false;
+        }
+    };
+
+    if (!mAnimationArcName.empty() && try_archive(mAnimationArcName)) {
+        return animation;
+    }
+    if (mAnimationArcName != mModelArcName) {
+        (void)try_archive(mModelArcName);
+    }
+    return animation;
+}
+
 void LiveActorModel::applyStartedAnimations() {
     if (mRenderer == nullptr) {
         return;
     }
-    if (mBckStarted && mBckAnimation.has_value()) {
-        mRenderer->set_bck_animation(*mBckAnimation);
+    if (mBckStarted) {
+        if (mBckAnimation.has_value()) {
+            mRenderer->set_bck_animation(*mBckAnimation);
+        } else {
+            mRenderer->clear_bck_animation();
+        }
     }
     if (mBtkStarted && mBtkAnimation.has_value()) {
         mRenderer->set_btk_animation(*mBtkAnimation);
@@ -237,10 +320,14 @@ const smgpc::resource::RarcEntry *LiveActorModel::findModelEntry(const smgpc::re
     return find_first_entry_with_suffix(archive, ".bmd");
 }
 
-std::optional<smgpc::render::J3dBckAnimationSummary> LiveActorModel::findBckAnimation(const smgpc::resource::RarcArchive &archive) const {
-    const auto requested = lower_copy(mModelArcName) + ".bck";
+std::optional<smgpc::render::J3dBckAnimationSummary>
+LiveActorModel::findBckAnimation(const smgpc::resource::RarcArchive &archive, std::string_view resource_name) const {
+    auto requested = lower_copy(resource_name.empty() ? std::string_view {mModelArcName} : resource_name);
+    if (!requested.ends_with(".bck")) {
+        requested += ".bck";
+    }
     auto *entry = archive.find_by_basename(requested);
-    if (entry == nullptr) {
+    if (entry == nullptr && resource_name.empty()) {
         entry = find_first_entry_with_suffix(archive, ".bck");
     }
     if (entry == nullptr) {

@@ -152,8 +152,15 @@ namespace smgpc::camera {
             };
         }
 
-        const auto camera_key = make_start_camera_key(start_info->camera_id);
-        if (start_info->archive_path.empty()) {
+        return resolve_stage_start_camera(dvd, *start_info, default_fovy_degrees);
+    }
+
+    StageStartCameraResolveResult resolve_stage_start_camera(smgpc::runtime::DvdFileSystemService &dvd,
+                                                              const smgpc::scene::StageStartInfo &start_info,
+                                                              float default_fovy_degrees) {
+
+        const auto camera_key = make_start_camera_key(start_info.camera_id);
+        if (start_info.archive_path.empty()) {
             return {
                 .status = StageStartCameraResolveStatus::CameraArchiveUnavailable,
                 .detail = "selected StartInfo has no zone archive path",
@@ -161,7 +168,7 @@ namespace smgpc::camera {
         }
 
         try {
-            const auto &archive = dvd.archive_for_path(start_info->archive_path);
+            const auto &archive = dvd.archive_for_path(start_info.archive_path);
             if (!archive.contains_resource("CameraParam.bcam")) {
                 return {
                     .status = StageStartCameraResolveStatus::CameraParamUnavailable,
@@ -177,11 +184,11 @@ namespace smgpc::camera {
             }
 
             const auto target = StageCameraTargetState{
-                .position = camera_vec(start_info->world_position),
-                .up = normalized_or(camera_vec(start_info->world_up), {0.0F, 1.0F, 0.0F}),
-                .front = normalized_or(camera_vec(start_info->world_front), {0.0F, 0.0F, 1.0F}),
+                .position = camera_vec(start_info.world_position),
+                .up = normalized_or(camera_vec(start_info.world_up), {0.0F, 1.0F, 0.0F}),
+                .front = normalized_or(camera_vec(start_info.world_front), {0.0F, 0.0F, 1.0F}),
             };
-            const auto calculation = calculate_stage_camera_pose(start_info->zone_transform, *camera_param, target, {},
+            const auto calculation = calculate_stage_camera_pose(start_info.zone_transform, *camera_param, target, {},
                                                                   default_fovy_degrees);
             if (!calculation.has_value()) {
                 return {
@@ -193,7 +200,7 @@ namespace smgpc::camera {
             return {
                 .status = StageStartCameraResolveStatus::Resolved,
                 .camera = ResolvedStageStartCamera{
-                    .start_info = *start_info,
+                    .start_info = start_info,
                     .camera_param = *camera_param,
                     .camera_key = camera_key,
                     .target = target,
