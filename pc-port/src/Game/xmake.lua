@@ -7,6 +7,7 @@ target("smg-pc-game")
     add_files("../resource/**.cpp")
     add_files("../runtime/**.cpp")
     add_files("../scene/**.cpp")
+    add_files("../compat/**.cpp")
     add_files {
         "../render/effects/EffectResource.cpp",
         "../render/GXState.cpp",
@@ -26,6 +27,7 @@ target("smg-pc-game")
     add_headerfiles("../resource/**.hpp")
     add_headerfiles("../runtime/**.hpp")
     add_headerfiles("../scene/**.hpp")
+    add_headerfiles("../compat/**.hpp")
     add_headerfiles {
         "../render/effects/EffectResource.hpp",
         "../render/GXState.hpp",

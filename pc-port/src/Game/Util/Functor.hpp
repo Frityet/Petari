@@ -37,4 +37,9 @@ namespace MR {
     [[nodiscard]] FunctorV0M< T*, void (T::*)() const > Functor(T* pCaller, void (T::*pCallee)() const) {
         return FunctorV0M< T*, void (T::*)() const >(pCaller, pCallee);
     }
+
+    template < class T >
+    [[nodiscard]] FunctorV0M< T*, void (T::*)() > Functor_Inline(T* pCaller, void (T::*pCallee)()) {
+        return Functor(pCaller, pCallee);
+    }
 }  // namespace MR

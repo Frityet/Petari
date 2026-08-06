@@ -3,6 +3,7 @@
 #include <revolution.h>
 
 enum {
+    ACTMES_PUSH_FORCE = 0x2A,
     ACTMES_RUSH_BEGIN = 0x91,
     ACTMES_AUTORUSH_BEGIN = 0x92,
     ACTMES_RUSH_CANCEL = 0x93,
@@ -10,6 +11,7 @@ enum {
 };
 
 enum {
+    ATYPE_EYE = 0x7F,
     ATYPE_MESSAGE_SENSOR = 0x83,
     ATYPE_PLAYER = 0x01,
     ATYPE_ENEMY = 0x10,
@@ -30,6 +32,7 @@ namespace MR {
     void initHitSensor(LiveActor* pActor, s32 sensorCount);
     HitSensor* addHitSensorPlayer(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& offset);
     HitSensor* addHitSensorEnemy(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& offset);
+    HitSensor* addHitSensorEye(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& offset);
     HitSensor* addHitSensorAtJointEnemy(LiveActor* pActor, const char* pName, const char* pJointName, u16 groupSize, f32 radius,
                                         const TVec3f& offset);
     HitSensor* getSensor(LiveActor* pActor, const char* pName);
@@ -41,5 +44,6 @@ namespace MR {
     bool isSensorPlayer(const HitSensor* pSensor);
     bool isSensorEnemy(const HitSensor* pSensor);
     bool isPlayerInHitSensor(const HitSensor* pSensor);
+    bool sendArbitraryMsg(u32 msg, HitSensor* pReceiver, HitSensor* pSender);
     void sendMsgToAllLiveActor(u32 msg, LiveActor* pActor);
 }  // namespace MR

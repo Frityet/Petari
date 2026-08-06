@@ -28,6 +28,7 @@ namespace MR {
     ProjmapEffectMtxSetter* initDLMakerProjmapEffectMtxSetter(LiveActor* pActor);
     void connectToSceneSky(LiveActor* pActor);
     void invalidateClipping(LiveActor* pActor);
+    void setClippingFar50m(LiveActor* pActor);
     void startBck(LiveActor* pActor, const char* pName, const char* pFileName);
     void startBrk(LiveActor* pActor, const char* pName);
     void startBtk(LiveActor* pActor, const char* pName);

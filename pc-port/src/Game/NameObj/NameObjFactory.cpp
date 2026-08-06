@@ -4,6 +4,7 @@
 #include "Game/Map/FileSelector.hpp"
 #include "Game/Map/GroupSwitchWatcher.hpp"
 #include "Game/Map/SwitchSynchronizer.hpp"
+#include "Game/MapObj/CollisionBlocker.hpp"
 
 #include <array>
 #include <string_view>
@@ -14,7 +15,7 @@ namespace {
         return new T(pName);
     }
 
-    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 4>{
+    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 5>{
         NameObjFactory::Name2CreateFunc{
             "PrologueDirector",
             createNameObj<PrologueDirector>,
@@ -33,6 +34,11 @@ namespace {
         NameObjFactory::Name2CreateFunc{
             "SwitchSynchronizerReverse",
             createNameObj<SwitchSynchronizer>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "CollisionBlocker",
+            createNameObj<CollisionBlocker>,
             nullptr,
         },
     };

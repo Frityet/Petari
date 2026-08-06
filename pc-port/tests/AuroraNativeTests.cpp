@@ -1,11 +1,14 @@
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/ActorAppearSwitchListener.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcher.hpp"
+#include "Game/MapObj/CollisionBlocker.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 
@@ -256,6 +259,20 @@ namespace {
         require(listener.on_count == 1 && listener.off_count == 1, "watcher should emit one falling edge after the switch turns off");
     }
 
+    void test_collision_blocker_sensor_lifecycle() {
+        auto blocker = CollisionBlocker("CollisionBlocker");
+        blocker.init(JMapInfoIter{});
+
+        const auto* sensor = blocker.getSensor("eye");
+        require(sensor != nullptr, "CollisionBlocker should create its original eye sensor");
+        require(sensor->mType == ATYPE_EYE && sensor->mGroupSize == 4U && sensor->mRadius == 50.0F,
+                "CollisionBlocker eye sensor should preserve the original type, group size, and radius");
+        require(!blocker.isDead(), "CollisionBlocker should appear after initialization");
+
+        blocker.forceBreak();
+        require(blocker.isDead(), "CollisionBlocker forceBreak should kill the actor");
+    }
+
     class EnvironmentVariableGuard {
     public:
         explicit EnvironmentVariableGuard(const char *name) : _name(name) {
@@ -364,6 +381,7 @@ int main() {
         TestCase{"player visibility can be restored", test_player_visibility_can_be_restored},
         TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
         TestCase{"stage switch zone identity and edges", test_stage_switch_zone_identity_and_edges},
+        TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };
