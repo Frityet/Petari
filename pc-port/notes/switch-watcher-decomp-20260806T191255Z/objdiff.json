@@ -1,0 +1,27 @@
+{
+  "min_version": "2.0.0-beta.5",
+  "build_target": false,
+  "units": [
+    {
+      "name": "main/Game/Map/ActorAppearSwitchListener",
+      "target_path": "/workspaces/pcport/build/RMGK02/obj/Game/Map/ActorAppearSwitchListener.o",
+      "base_path": "/workspaces/pcport/build/RMGK02/src/Game/Map/ActorAppearSwitchListener.o"
+    },
+    {
+      "name": "main/Game/Map/SwitchWatcher",
+      "target_path": "/workspaces/pcport/build/RMGK02/obj/Game/Map/SwitchWatcher.o",
+      "base_path": "/workspaces/pcport/build/RMGK02/src/Game/Map/SwitchWatcher.o"
+    },
+    {
+      "name": "main/Game/Map/SwitchWatcherHolder",
+      "target_path": "/workspaces/pcport/build/RMGK02/obj/Game/Map/SwitchWatcherHolder.o",
+      "base_path": "/workspaces/pcport/build/RMGK02/src/Game/Map/SwitchWatcherHolder.o"
+    },
+    {
+      "name": "main/Game/Util/SwitchEventFunctorListener",
+      "target_path": "/workspaces/pcport/build/RMGK02/obj/Game/Util/SwitchEventFunctorListener.o",
+      "base_path": "/workspaces/pcport/build/RMGK02/src/Game/Util/SwitchEventFunctorListener.o"
+    }
+  ],
+  "progress_categories": []
+}

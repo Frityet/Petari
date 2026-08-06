@@ -5,6 +5,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include <algorithm>
 
 SwitchWatcherHolder::SwitchWatcherHolder() : NameObj("SwitchWatcherHolder") {
     mWatcherCount = 0;
@@ -12,9 +13,7 @@ SwitchWatcherHolder::SwitchWatcherHolder() : NameObj("SwitchWatcherHolder") {
 }
 
 void SwitchWatcherHolder::movement() {
-    // not quite sure what is going on here
-    // but it seems to just call movement on all watchers
-    mWatchers.callAllFunc(&SwitchWatcher::movement);
+    std::for_each(mWatchers.begin(), &mWatchers[mWatcherCount], std::mem_func(&SwitchWatcher::movement));
 }
 
 void SwitchWatcherHolder::joinSwitchEventListenerA(const StageSwitchCtrl* pCtrl, SwitchEventListener* pListener) {
@@ -30,7 +29,7 @@ void SwitchWatcherHolder::joinSwitchEventListenerAppear(const StageSwitchCtrl* p
 }
 
 SwitchWatcher* SwitchWatcherHolder::findSwitchWatcher(const StageSwitchCtrl* pCtrl) {
-    for (SwitchWatcher** it = mWatchers.begin(); it != mWatchers.end(); it++) {
+    for (SwitchWatcher** it = mWatchers.begin(); it != &mWatchers[mWatcherCount]; it++) {
         if ((*it)->isSameSwitch(pCtrl)) {
             return *it;
         }
@@ -49,7 +48,7 @@ void SwitchWatcherHolder::joinSwitchEventListener(const StageSwitchCtrl* pCtrl, 
 }
 
 void SwitchWatcherHolder::addSwitchWatcher(SwitchWatcher* pWatcher) {
-    mWatchers[++mWatcherCount] = pWatcher;
+    mWatchers[mWatcherCount++] = pWatcher;
 }
 
 namespace MR {

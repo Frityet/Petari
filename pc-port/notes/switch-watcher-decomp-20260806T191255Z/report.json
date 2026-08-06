@@ -1,0 +1,438 @@
+{
+  "measures": {
+    "fuzzy_match_percent": 100.0,
+    "total_code": "1788",
+    "matched_code": "1788",
+    "matched_code_percent": 100.0,
+    "total_data": "176",
+    "matched_data": "176",
+    "matched_data_percent": 100.0,
+    "total_functions": 26,
+    "matched_functions": 26,
+    "matched_functions_percent": 100.0,
+    "total_units": 4
+  },
+  "units": [
+    {
+      "name": "main/Game/Map/ActorAppearSwitchListener",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "total_code": "244",
+        "matched_code": "244",
+        "matched_code_percent": 100.0,
+        "total_data": "24",
+        "matched_data": "24",
+        "matched_data_percent": 100.0,
+        "total_functions": 4,
+        "matched_functions": 4,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".data",
+          "size": "24",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2153285712"
+          }
+        },
+        {
+          "name": ".text",
+          "size": "244",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2148993636"
+          }
+        }
+      ],
+      "functions": [
+        {
+          "name": "__ct__25ActorAppearSwitchListenerFP9LiveActorbb",
+          "size": "28",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "ActorAppearSwitchListener::ActorAppearSwitchListener(LiveActor*, bool, bool)",
+            "virtual_address": "2148993636"
+          },
+          "address": "0"
+        },
+        {
+          "name": "listenSwitchOnEvent__25ActorAppearSwitchListenerFv",
+          "size": "88",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "ActorAppearSwitchListener::listenSwitchOnEvent()",
+            "virtual_address": "2148993664"
+          },
+          "address": "28"
+        },
+        {
+          "name": "listenSwitchOffEvent__25ActorAppearSwitchListenerFv",
+          "size": "88",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "ActorAppearSwitchListener::listenSwitchOffEvent()",
+            "virtual_address": "2148993752"
+          },
+          "address": "116"
+        },
+        {
+          "name": "refresh__19SwitchEventListenerFb",
+          "size": "40",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchEventListener::refresh(bool)",
+            "virtual_address": "2148993840"
+          },
+          "address": "204"
+        }
+      ],
+      "metadata": {
+        "module_name": "main",
+        "module_id": 0
+      }
+    },
+    {
+      "name": "main/Game/Map/SwitchWatcher",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "total_code": "588",
+        "matched_code": "588",
+        "matched_code_percent": 100.0,
+        "total_data": "56",
+        "matched_data": "56",
+        "matched_data_percent": 100.0,
+        "total_functions": 6,
+        "matched_functions": 6,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".data",
+          "size": "56",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2153303024"
+          }
+        },
+        {
+          "name": ".text",
+          "size": "588",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2149184168"
+          }
+        }
+      ],
+      "functions": [
+        {
+          "name": "__ct__13SwitchWatcherFPC15StageSwitchCtrl",
+          "size": "104",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcher::SwitchWatcher(const StageSwitchCtrl*)",
+            "virtual_address": "2149184168"
+          },
+          "address": "0"
+        },
+        {
+          "name": "movement__13SwitchWatcherFv",
+          "size": "160",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcher::movement()",
+            "virtual_address": "2149184272"
+          },
+          "address": "104"
+        },
+        {
+          "name": "checkSwitch__13SwitchWatcherFP19SwitchEventListenerUlb",
+          "size": "152",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcher::checkSwitch(SwitchEventListener*, unsigned long, bool)",
+            "virtual_address": "2149184432"
+          },
+          "address": "264"
+        },
+        {
+          "name": "isSameSwitch__13SwitchWatcherCFPC15StageSwitchCtrl",
+          "size": "20",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcher::isSameSwitch(const StageSwitchCtrl*) const",
+            "virtual_address": "2149184584"
+          },
+          "address": "416"
+        },
+        {
+          "name": "addSwitchListener__13SwitchWatcherFP19SwitchEventListenerUl",
+          "size": "64",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcher::addSwitchListener(SwitchEventListener*, unsigned long)",
+            "virtual_address": "2149184604"
+          },
+          "address": "436"
+        },
+        {
+          "name": "__dt__13SwitchWatcherFv",
+          "size": "88",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcher::~SwitchWatcher()",
+            "virtual_address": "2149184668"
+          },
+          "address": "500"
+        }
+      ],
+      "metadata": {
+        "module_name": "main",
+        "module_id": 0
+      }
+    },
+    {
+      "name": "main/Game/Map/SwitchWatcherHolder",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "total_code": "728",
+        "matched_code": "728",
+        "matched_code_percent": 100.0,
+        "total_data": "72",
+        "matched_data": "72",
+        "matched_data_percent": 100.0,
+        "total_functions": 11,
+        "matched_functions": 11,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".data",
+          "size": "72",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2153303080"
+          }
+        },
+        {
+          "name": ".text",
+          "size": "728",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2149184756"
+          }
+        }
+      ],
+      "functions": [
+        {
+          "name": "__ct__19SwitchWatcherHolderFv",
+          "size": "100",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::SwitchWatcherHolder()",
+            "virtual_address": "2149184756"
+          },
+          "address": "0"
+        },
+        {
+          "name": "movement__19SwitchWatcherHolderFv",
+          "size": "136",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::movement()",
+            "virtual_address": "2149184856"
+          },
+          "address": "100"
+        },
+        {
+          "name": "joinSwitchEventListenerA__19SwitchWatcherHolderFPC15StageSwitchCtrlP19SwitchEventListener",
+          "size": "12",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::joinSwitchEventListenerA(const StageSwitchCtrl*, SwitchEventListener*)",
+            "virtual_address": "2149184992"
+          },
+          "address": "236"
+        },
+        {
+          "name": "joinSwitchEventListenerB__19SwitchWatcherHolderFPC15StageSwitchCtrlP19SwitchEventListener",
+          "size": "12",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::joinSwitchEventListenerB(const StageSwitchCtrl*, SwitchEventListener*)",
+            "virtual_address": "2149185004"
+          },
+          "address": "248"
+        },
+        {
+          "name": "joinSwitchEventListenerAppear__19SwitchWatcherHolderFPC15StageSwitchCtrlP19SwitchEventListener",
+          "size": "12",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::joinSwitchEventListenerAppear(const StageSwitchCtrl*, SwitchEventListener*)",
+            "virtual_address": "2149185016"
+          },
+          "address": "260"
+        },
+        {
+          "name": "findSwitchWatcher__19SwitchWatcherHolderFPC15StageSwitchCtrl",
+          "size": "120",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::findSwitchWatcher(const StageSwitchCtrl*)",
+            "virtual_address": "2149185028"
+          },
+          "address": "272"
+        },
+        {
+          "name": "joinSwitchEventListener__19SwitchWatcherHolderFPC15StageSwitchCtrlUlP19SwitchEventListener",
+          "size": "136",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::joinSwitchEventListener(const StageSwitchCtrl*, unsigned long, SwitchEventListener*)",
+            "virtual_address": "2149185148"
+          },
+          "address": "392"
+        },
+        {
+          "name": "addSwitchWatcher__19SwitchWatcherHolderFP13SwitchWatcher",
+          "size": "28",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::addSwitchWatcher(SwitchWatcher*)",
+            "virtual_address": "2149185284"
+          },
+          "address": "528"
+        },
+        {
+          "name": "getSwitchWatcherHolder__2MRFv",
+          "size": "40",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "MR::getSwitchWatcherHolder()",
+            "virtual_address": "2149185312"
+          },
+          "address": "556"
+        },
+        {
+          "name": "requestMovementOnSwitchWatcher__2MRFv",
+          "size": "44",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "MR::requestMovementOnSwitchWatcher()",
+            "virtual_address": "2149185352"
+          },
+          "address": "596"
+        },
+        {
+          "name": "__dt__19SwitchWatcherHolderFv",
+          "size": "88",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchWatcherHolder::~SwitchWatcherHolder()",
+            "virtual_address": "2149185396"
+          },
+          "address": "640"
+        }
+      ],
+      "metadata": {
+        "module_name": "main",
+        "module_id": 0
+      }
+    },
+    {
+      "name": "main/Game/Util/SwitchEventFunctorListener",
+      "measures": {
+        "fuzzy_match_percent": 100.0,
+        "total_code": "228",
+        "matched_code": "228",
+        "matched_code_percent": 100.0,
+        "total_data": "24",
+        "matched_data": "24",
+        "matched_data_percent": 100.0,
+        "total_functions": 5,
+        "matched_functions": 5,
+        "matched_functions_percent": 100.0,
+        "total_units": 1
+      },
+      "sections": [
+        {
+          "name": ".data",
+          "size": "24",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2153653256"
+          }
+        },
+        {
+          "name": ".text",
+          "size": "228",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "virtual_address": "2151674120"
+          }
+        }
+      ],
+      "functions": [
+        {
+          "name": "__ct__26SwitchEventFunctorListenerFv",
+          "size": "28",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchEventFunctorListener::SwitchEventFunctorListener()",
+            "virtual_address": "2151674120"
+          },
+          "address": "0"
+        },
+        {
+          "name": "setOnFunctor__26SwitchEventFunctorListenerFRCQ22MR11FunctorBase",
+          "size": "68",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchEventFunctorListener::setOnFunctor(const MR::FunctorBase&)",
+            "virtual_address": "2151674148"
+          },
+          "address": "28"
+        },
+        {
+          "name": "setOffFunctor__26SwitchEventFunctorListenerFRCQ22MR11FunctorBase",
+          "size": "68",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchEventFunctorListener::setOffFunctor(const MR::FunctorBase&)",
+            "virtual_address": "2151674216"
+          },
+          "address": "96"
+        },
+        {
+          "name": "listenSwitchOnEvent__26SwitchEventFunctorListenerFv",
+          "size": "32",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchEventFunctorListener::listenSwitchOnEvent()",
+            "virtual_address": "2151674284"
+          },
+          "address": "164"
+        },
+        {
+          "name": "listenSwitchOffEvent__26SwitchEventFunctorListenerFv",
+          "size": "32",
+          "fuzzy_match_percent": 100.0,
+          "metadata": {
+            "demangled_name": "SwitchEventFunctorListener::listenSwitchOffEvent()",
+            "virtual_address": "2151674316"
+          },
+          "address": "196"
+        }
+      ],
+      "metadata": {
+        "module_name": "main",
+        "module_id": 0
+      }
+    }
+  ],
+  "version": 2
+}
