@@ -1,0 +1,4 @@
+object	zone	zone_id	placement_row	common_path_id	path_header_row	point_count	world_first_point
+DemoRabbit	HeavensDoorMysteriousZone	5	8	0	0	5	15472.2,-12853.1,6202.44
+RailCoin	HeavensDoorMiddleZone	4	10	0	0	4	2866.89,6079.10,-8913.95
+RailCoin	HeavensDoorInsideZone	2	19	1	1	4	42824.4,-14782.9,-3654.88

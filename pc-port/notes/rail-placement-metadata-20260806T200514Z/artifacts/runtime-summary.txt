@@ -1,0 +1,12 @@
+run_directory=/tmp/smgpc-rail-metadata.gfd6ll
+application_result=0
+stage=HeavensDoorGalaxy
+scenario=1
+objects=242
+created=162
+ignored=72
+blocked=8
+rail_associations=3
+fatal_segmentation_abort_crash_matches=0
+placement_report_sha256=600944a155ccbaf284948386b479f7d9984a79372ae6c52279cbea7887b6da8c
+runtime_log_sha256=dbbe806241d1f709c80ea369a5d8df3fb673958744cafaa179f913e9257d82a2

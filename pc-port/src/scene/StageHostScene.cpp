@@ -12,6 +12,7 @@
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -51,6 +52,31 @@ namespace smgpc::scene {
             return "blocked";
         }
 
+        struct PlacementRailSummary {
+            bool attached = false;
+            s32 path_info_index = -1;
+            s32 point_count = 0;
+            bool has_first_point = false;
+            std::array<f32, 3U> first_point{};
+        };
+
+        [[nodiscard]] PlacementRailSummary placement_rail_summary(const StagePlacementObject &placement) {
+            const JMapInfo *point_info = nullptr;
+            auto path_info_index = s32{-1};
+            const auto attached = placement.jmap_info.getRailInfo(placement.jmap_entry_index, nullptr, &point_info, &path_info_index);
+            auto first_point = std::array<f32, 3U>{};
+            const auto has_first_point = point_info != nullptr && point_info->getValue(0, "pnt0_x", &first_point[0]) &&
+                                         point_info->getValue(0, "pnt0_y", &first_point[1]) &&
+                                         point_info->getValue(0, "pnt0_z", &first_point[2]);
+            return PlacementRailSummary{
+                .attached = attached,
+                .path_info_index = path_info_index,
+                .point_count = point_info != nullptr ? point_info->getNumEntries() : 0,
+                .has_first_point = has_first_point,
+                .first_point = first_point,
+            };
+        }
+
         void write_stage_placement_report(std::string_view stage_name, s32 scenario_no, const std::vector<StagePlacementObject> &placements,
                                           const std::vector<const StagePlacementObject *> &blocked_placements) {
             const auto report_path = debug_stage_placement_report_path();
@@ -79,6 +105,7 @@ namespace smgpc::scene {
             out << "intentionally_ignored_objects: " << ignored_count << "\n\n";
             out << "## Objects\n";
             for (const auto &placement : placements) {
+                const auto rail = placement_rail_summary(placement);
                 out << "- status: " << placement_status_name(placement) << "\n";
                 out << "  object: " << placement.object_name << "\n";
                 out << "  zone: " << placement.zone_name << "\n";
@@ -86,6 +113,13 @@ namespace smgpc::scene {
                 out << "  table: " << placement.table_path << "\n";
                 out << "  row: " << placement.jmap_entry_index << "\n";
                 out << "  child_count: " << placement.child_object_count << "\n";
+                out << "  common_path_id: " << placement.common_path_id << "\n";
+                out << "  rail_info_attached: " << (rail.attached ? "true" : "false") << "\n";
+                out << "  rail_path_row: " << rail.path_info_index << "\n";
+                out << "  rail_point_count: " << rail.point_count << "\n";
+                if (rail.has_first_point) {
+                    out << "  rail_first_point: [" << rail.first_point[0] << ", " << rail.first_point[1] << ", " << rail.first_point[2] << "]\n";
+                }
                 out << "  support_reason: " << placement.support_reason << "\n";
                 out << "  model_archive: " << placement.model_archive_name << "\n";
                 out << "  archive: " << placement.object_archive_path << "\n";
@@ -165,9 +199,9 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::init_placement_roots() {
-        const auto placements = resolve_stage_placement_objects(_runtime.dvd(), _request.stage_name, _request.scenario_no);
+        _placements = resolve_stage_placement_objects(_runtime.dvd(), _request.stage_name, _request.scenario_no);
         auto blocked_placements = std::vector<const StagePlacementObject *>{};
-        for (const auto &placement : placements) {
+        for (const auto &placement : _placements) {
             trace_placement_object(placement);
             if (placement.intentionally_ignored) {
                 continue;
@@ -183,14 +217,14 @@ namespace smgpc::scene {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("placement", "stage_placement_summary",
                                            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                                               ";objects=" + std::to_string(placements.size()) +
-                                               ";created=" + std::to_string(std::ranges::count_if(placements, placement_is_created)) +
+                                               ";objects=" + std::to_string(_placements.size()) +
+                                               ";created=" + std::to_string(std::ranges::count_if(_placements, placement_is_created)) +
                                                ";ignored=" +
-                                               std::to_string(std::ranges::count_if(placements, [](const auto &placement) {
+                                               std::to_string(std::ranges::count_if(_placements, [](const auto &placement) {
                                                    return placement.intentionally_ignored;
                                                })) +
                                                ";blocked=" + std::to_string(blocked_placements.size()));
-        write_stage_placement_report(_request.stage_name, _request.scenario_no, placements, blocked_placements);
+        write_stage_placement_report(_request.stage_name, _request.scenario_no, _placements, blocked_placements);
 #endif
 
         if (_request.fail_unsupported_placement && !blocked_placements.empty()) {
@@ -204,6 +238,7 @@ namespace smgpc::scene {
 
     void StageHostScene::trace_placement_object(const StagePlacementObject &placement) const {
 #ifndef NDEBUG
+        const auto rail = placement_rail_summary(placement);
         _runtime.emit_semantic_trace_event("placement", "stage_object",
                                            "stage=" + placement.stage_name + ";zone=" + placement.zone_name +
                                                ";zone_id=" + std::to_string(placement.zone_id) +
@@ -212,6 +247,15 @@ namespace smgpc::scene {
                                                ";object=" + placement.object_name +
                                                ";factory=" + std::string(placement_status_name(placement)) +
                                                ";support_reason=" + placement.support_reason +
+                                               ";common_path_id=" + std::to_string(placement.common_path_id) +
+                                               ";rail_info_attached=" + (rail.attached ? "true" : "false") +
+                                               ";rail_path_row=" + std::to_string(rail.path_info_index) +
+                                               ";rail_point_count=" + std::to_string(rail.point_count) +
+                                               ";rail_first_point=" +
+                                               (rail.has_first_point ? std::to_string(rail.first_point[0]) + "," +
+                                                                           std::to_string(rail.first_point[1]) + "," +
+                                                                           std::to_string(rail.first_point[2]) :
+                                                                       "none") +
                                                ";model_archive=" + placement.model_archive_name +
                                                ";object_archive=" + placement.object_archive_path);
 #else

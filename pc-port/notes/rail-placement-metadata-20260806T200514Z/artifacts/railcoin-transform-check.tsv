@@ -1,0 +1,3 @@
+zone	raw_x	raw_y	raw_z	zone_x	zone_y	zone_z	zone_rot_x_deg	expected_world_x	expected_world_y	expected_world_z	reported_world_x	reported_world_y	reported_world_z
+HeavensDoorMiddleZone	10	-4.924067	-1910	2856.892334	6490.821289	-7048.847168	-12.300564	2866.89	6079.10	-8913.95	2866.89	6079.10	-8913.95
+HeavensDoorInsideZone	-15.637055	0	-1151.307251	42840	-14537.606445	-2530	-12.300564	42824.36	-14782.88	-3654.88	42824.4	-14782.9	-3654.88

@@ -59,6 +59,8 @@ public:
     [[nodiscard]] s32 getPlacedZoneId() const;
     void setChildObjInfo(JMapInfo info);
     [[nodiscard]] const JMapInfo* getChildObjInfo() const;
+    void setRailInfo(int entryIndex, JMapInfo pathInfo, JMapInfo pointInfo, s32 pathInfoIndex);
+    [[nodiscard]] bool getRailInfo(int entryIndex, const JMapInfo** pPathInfo, const JMapInfo** pPointInfo, s32* pPathInfoIndex) const;
     void setValue(int entryIndex, const char* pKey, f32 value);
     [[nodiscard]] s32 searchItemInfo(const char* pKey) const;
     [[nodiscard]] s32 getValueType(const char* pKey) const;
@@ -85,6 +87,12 @@ public:
     [[nodiscard]] JMapInfoIter end() const;
 
 private:
+    struct RailInfo {
+        std::shared_ptr< JMapInfo > mPathInfo;
+        std::shared_ptr< JMapInfo > mPointInfo;
+        s32 mPathInfoIndex = -1;
+    };
+
     [[nodiscard]] bool getSignedValue(int entryIndex, const char* pKey, s32* pValueOut) const;
     [[nodiscard]] bool getUnsignedValue(int entryIndex, const char* pKey, u32* pValueOut) const;
     [[nodiscard]] bool getFloatValue(int entryIndex, const char* pKey, f32* pValueOut) const;
@@ -96,6 +104,7 @@ private:
 
     std::shared_ptr< smgpc::resource::BcsvTable > mTable;
     std::shared_ptr< JMapInfo > mChildObjInfo;
+    std::map< int, RailInfo > mRailInfo;
     std::string mName;
     s32 mPlacedZoneId = -1;
     std::map< std::pair< int, std::uint32_t >, f32 > mFloatOverrides;

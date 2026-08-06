@@ -4,6 +4,7 @@
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "scene/StageHostService.hpp"
+#include "scene/StagePlacementResolver.hpp"
 
 #include <cstddef>
 #include <memory>
@@ -17,8 +18,6 @@ namespace smgpc::runtime {
 }  // namespace smgpc::runtime
 
 namespace smgpc::scene {
-
-    struct StagePlacementObject;
 
     class StageHostScene final : public Scene {
     public:
@@ -50,6 +49,7 @@ namespace smgpc::scene {
         smgpc::runtime::RuntimeContext &_runtime;
         std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
+        std::vector<StagePlacementObject> _placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
     };
 

@@ -10,6 +10,8 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JGeometry/TBox.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
@@ -47,6 +49,20 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
+    }
+
+    void write_be32(std::vector<std::uint8_t> &bytes, std::size_t offset, std::uint32_t value) {
+        bytes[offset] = static_cast<std::uint8_t>(value >> 24U);
+        bytes[offset + 1U] = static_cast<std::uint8_t>(value >> 16U);
+        bytes[offset + 2U] = static_cast<std::uint8_t>(value >> 8U);
+        bytes[offset + 3U] = static_cast<std::uint8_t>(value);
+    }
+
+    JMapInfo make_fieldless_jmap(std::uint32_t entry_count) {
+        auto bytes = std::vector<std::uint8_t>(0x10U, 0U);
+        write_be32(bytes, 0x00U, entry_count);
+        write_be32(bytes, 0x08U, 0x10U);
+        return JMapInfo::from_bcsv(bytes);
     }
 
     int g_pre_retrace = -1;
@@ -382,6 +398,32 @@ namespace {
                 "camera shake events should retain their kind and frame");
     }
 
+    void test_rail_info_ownership_and_per_entry_lookup() {
+        auto placement_info = [] {
+            auto placement = make_fieldless_jmap(2U);
+            placement.setRailInfo(0, make_fieldless_jmap(2U), make_fieldless_jmap(3U), 1);
+            placement.setRailInfo(1, make_fieldless_jmap(1U), make_fieldless_jmap(4U), 0);
+            return placement;
+        }();
+
+        auto retained_copy = placement_info;
+        placement_info = JMapInfo{};
+
+        auto path_iter = JMapInfoIter{};
+        const JMapInfo *point_info = nullptr;
+        MR::getRailInfo(&path_iter, &point_info, JMapInfoIter(&retained_copy, 0));
+        require(path_iter.isValid() && path_iter.mIndex == 1,
+                "rail header iterator should retain the matched CommonPathInfo row");
+        require(point_info != nullptr && point_info->getNumEntries() == 3,
+                "rail point metadata should outlive the resolver's temporary tables");
+
+        MR::getRailInfo(&path_iter, &point_info, JMapInfoIter(&retained_copy, 1));
+        require(path_iter.isValid() && path_iter.mIndex == 0,
+                "each placement row should retain its own CommonPathInfo association");
+        require(point_info != nullptr && point_info->getNumEntries() == 4,
+                "each placement row should retain its own CommonPathPointInfo table");
+    }
+
     class EnvironmentVariableGuard {
     public:
         explicit EnvironmentVariableGuard(const char *name) : _name(name) {
@@ -493,6 +535,7 @@ int main() {
         TestCase{"stage switch zone identity and edges", test_stage_switch_zone_identity_and_edges},
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
+        TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
         TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };

@@ -109,6 +109,46 @@ const JMapInfo* JMapInfo::getChildObjInfo() const {
     return mChildObjInfo.get();
 }
 
+void JMapInfo::setRailInfo(int entryIndex, JMapInfo pathInfo, JMapInfo pointInfo, s32 pathInfoIndex) {
+    if (entryIndex < 0 || entryIndex >= getNumEntries() || pathInfoIndex < 0) {
+        return;
+    }
+
+    mRailInfo[entryIndex] = RailInfo{
+        .mPathInfo = std::make_shared< JMapInfo >(std::move(pathInfo)),
+        .mPointInfo = std::make_shared< JMapInfo >(std::move(pointInfo)),
+        .mPathInfoIndex = pathInfoIndex,
+    };
+}
+
+bool JMapInfo::getRailInfo(int entryIndex, const JMapInfo** pPathInfo, const JMapInfo** pPointInfo, s32* pPathInfoIndex) const {
+    if (pPathInfo != nullptr) {
+        *pPathInfo = nullptr;
+    }
+    if (pPointInfo != nullptr) {
+        *pPointInfo = nullptr;
+    }
+    if (pPathInfoIndex != nullptr) {
+        *pPathInfoIndex = -1;
+    }
+
+    const auto found = mRailInfo.find(entryIndex);
+    if (found == mRailInfo.end() || found->second.mPathInfo == nullptr || found->second.mPointInfo == nullptr) {
+        return false;
+    }
+
+    if (pPathInfo != nullptr) {
+        *pPathInfo = found->second.mPathInfo.get();
+    }
+    if (pPointInfo != nullptr) {
+        *pPointInfo = found->second.mPointInfo.get();
+    }
+    if (pPathInfoIndex != nullptr) {
+        *pPathInfoIndex = found->second.mPathInfoIndex;
+    }
+    return true;
+}
+
 void JMapInfo::setValue(int entryIndex, const char* pKey, f32 value) {
     if (pKey == nullptr || entryIndex < 0 || entryIndex >= getNumEntries()) {
         return;

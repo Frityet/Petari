@@ -258,6 +258,21 @@ namespace smgpc::scene {
             };
         }
 
+        void apply_point_transform(JMapInfo &info, int entry_index, const StageZoneTransform &transform, std::string_view prefix) {
+            const auto base = std::string(prefix);
+            const auto iter = JMapInfoIter(&info, entry_index);
+            auto local_point = std::array<f32, 3U>{};
+            if (!iter.getValue((base + "_x").c_str(), &local_point[0]) || !iter.getValue((base + "_y").c_str(), &local_point[1]) ||
+                !iter.getValue((base + "_z").c_str(), &local_point[2])) {
+                return;
+            }
+
+            const auto world_point = transform_point(transform, local_point);
+            info.setValue(entry_index, (base + "_x").c_str(), world_point[0]);
+            info.setValue(entry_index, (base + "_y").c_str(), world_point[1]);
+            info.setValue(entry_index, (base + "_z").c_str(), world_point[2]);
+        }
+
         [[nodiscard]] StageZoneTransform compose_zone_transform(const StageZoneTransform &parent, const JMapInfoIter &zone_iter) {
             const auto local_translation = read_vec3_or(zone_iter, "pos", {0.0F, 0.0F, 0.0F});
             const auto local_rotation = read_vec3_or(zone_iter, "dir", {0.0F, 0.0F, 0.0F});
@@ -281,16 +296,12 @@ namespace smgpc::scene {
 
         void apply_zone_transform(JMapInfo &info, const StageZoneTransform &transform) {
             for (auto entry_index = 0; entry_index < info.getNumEntries(); ++entry_index) {
-                const auto iter = JMapInfoIter(&info, entry_index);
-                auto local_translation = std::array<f32, 3U>{};
-                if (iter.getValue("pos_x", &local_translation[0]) && iter.getValue("pos_y", &local_translation[1]) &&
-                    iter.getValue("pos_z", &local_translation[2])) {
-                    const auto world_translation = transform_point(transform, local_translation);
-                    info.setValue(entry_index, "pos_x", world_translation[0]);
-                    info.setValue(entry_index, "pos_y", world_translation[1]);
-                    info.setValue(entry_index, "pos_z", world_translation[2]);
-                }
+                apply_point_transform(info, entry_index, transform, "pos");
+                apply_point_transform(info, entry_index, transform, "pnt0");
+                apply_point_transform(info, entry_index, transform, "pnt1");
+                apply_point_transform(info, entry_index, transform, "pnt2");
 
+                const auto iter = JMapInfoIter(&info, entry_index);
                 auto local_rotation = std::array<f32, 3U>{};
                 if (iter.getValue("dir_x", &local_rotation[0]) && iter.getValue("dir_y", &local_rotation[1]) &&
                     iter.getValue("dir_z", &local_rotation[2])) {
@@ -305,6 +316,55 @@ namespace smgpc::scene {
                     info.setValue(entry_index, "scale_x", transform.scale[0] * local_scale[0]);
                     info.setValue(entry_index, "scale_y", transform.scale[1] * local_scale[1]);
                     info.setValue(entry_index, "scale_z", transform.scale[2] * local_scale[2]);
+                }
+            }
+        }
+
+        [[nodiscard]] const StagePlacementTable *find_path_table(const std::vector<StagePlacementTable> &tables,
+                                                                 const StagePlacementTable &placement_table,
+                                                                 std::string_view table_name) {
+            const auto normalized_name = lower_copy(table_name);
+            const auto found = std::ranges::find_if(tables, [&](const auto &candidate) {
+                return candidate.stage_name == placement_table.stage_name && candidate.category == "path" &&
+                       lower_copy(candidate.table_name) == normalized_name;
+            });
+            return found != tables.end() ? &*found : nullptr;
+        }
+
+        void attach_rail_info(std::vector<StagePlacementTable> &tables) {
+            for (auto &table : tables) {
+                if (table.jmap_info.searchItemInfo("CommonPath_ID") < 0) {
+                    continue;
+                }
+
+                const auto *path_info_table = find_path_table(tables, table, "commonpathinfo");
+                if (path_info_table == nullptr) {
+                    continue;
+                }
+
+                for (auto entry_index = 0; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
+                    auto common_path_id = s32{-1};
+                    if (!table.jmap_info.getValue(entry_index, "CommonPath_ID", &common_path_id) || common_path_id < 0) {
+                        continue;
+                    }
+
+                    const auto path_iter = path_info_table->jmap_info.findElement<s32>("l_id", common_path_id, 0);
+                    if (!path_iter.isValid()) {
+                        continue;
+                    }
+
+                    const auto point_table_name = "commonpathpointinfo." + std::to_string(path_iter.mIndex);
+                    auto *point_info_table = find_path_table(tables, table, point_table_name);
+                    if (point_info_table == nullptr) {
+                        point_info_table = find_path_table(tables, table, "commonpathpointinfo");
+                    }
+                    if (point_info_table == nullptr || point_info_table->jmap_info.getNumEntries() == 0) {
+                        continue;
+                    }
+
+                    auto point_info = point_info_table->jmap_info;
+                    apply_zone_transform(point_info, point_info_table->zone_transform);
+                    table.jmap_info.setRailInfo(entry_index, path_info_table->jmap_info, std::move(point_info), path_iter.mIndex);
                 }
             }
         }
@@ -586,6 +646,7 @@ namespace smgpc::scene {
         auto visited = std::set<std::string>{};
         auto zone_ids = StageZoneIdResolver(load_zone_list(dvd, stage_name));
         collect_stage_tables(dvd, stage_name, stage_name, scenario_no, 0, StageZoneTransform{}, zone_ids, visited, tables);
+        attach_rail_info(tables);
         return tables;
     }
 
