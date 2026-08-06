@@ -1,0 +1,11 @@
+table,row,part_name,arg0,arg1,arg2,arg3,arg4,arg5
+Player,0,チコとの出会い[開始],MarioDemoPos,demomeettico,,,,
+Player,1,ウサギ追いかけ[フェードイン],MarioDemoPos3,watch,,,,
+Player,2,高楼出現[フェードイン],MarioDemoPos2,,,,,
+Player,3,スピンゲット[デモ1],MarioDemoPos4,,,,,
+Player,4,チコとの出会い[マリオアニメ],,demomeetticowatch,,,,
+Camera,0,ウサギ追いかけ[フェードイン],,-1,,-1,-1,0
+Camera,1,高楼出現[デモ],ロゼッタ,-1,,-1,-1,0
+Wipe,0,スピンゲット[デモ8],フェードワイプ,0,60,,,
+Wipe,1,スピンゲット[デモ7],フェードワイプ,1,120,,,
+Wipe,2,スピンゲット[デモ1],フェードワイプ,0,-1,,,

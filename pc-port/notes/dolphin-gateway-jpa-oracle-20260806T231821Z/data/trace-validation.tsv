@@ -1,0 +1,9 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/tmp/dolphin-gateway-safe-f11400/dolphin-frame-11450.trace.sqlite"	passed	1	11450	dolphin	374	354	2	0
+"/tmp/dolphin-gateway-resume-left35/frame-12050.trace.sqlite"	passed	1	12050	dolphin	1153	1134	1	0
+"/tmp/dolphin-gateway-plaza45/frame-12500.trace.sqlite"	passed	1	12500	dolphin	10	3	1	0
+"/tmp/dolphin-gateway-attack19000/frame-19000.trace.sqlite"	passed	1	19000	dolphin	470	451	1	0
+"/tmp/dolphin-gateway-tangent50-20450/frame-20450.trace.sqlite"	passed	1	20450	dolphin	988	969	1	0
+"/tmp/dolphin-gateway-jumpleft-21150/frame-21150.trace.sqlite"	passed	1	21150	dolphin	487	468	1	0
+"/tmp/dolphin-gateway-continue50-21250/frame-21250.trace.sqlite"	passed	1	21250	dolphin	765	746	1	0
+"/tmp/dolphin-gateway-mouth-rb66-22150/frame-22150.trace.sqlite"	passed	1	22150	dolphin	886	867	1	0

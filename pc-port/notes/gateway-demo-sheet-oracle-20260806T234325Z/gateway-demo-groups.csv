@@ -1,0 +1,5 @@
+zone,layer,demo_group_id,demo_name,time_sheet_name,sw_appear,pos_x,pos_y,pos_z
+HeavensDoorMysteriousZone,layera,0,チコガイドデモ,TicoGuideDemo,-1,500.000000,-2305.847168,-440.000000
+HeavensDoorMysteriousZone,layera,1,スピンゲットデモ,SpinGetDemo,-1,-760.000000,2768.303955,-2790.000000
+HeavensDoorMysteriousZone,layerb,2,赤いスター,ReadStar,-1,-2602.432861,2269.708252,9.294404
+HeavensDoorInsideZone,common,0,ミニ太陽消失,MiniSunDisappear,0,-835.188049,1578.428345,-2313.696533

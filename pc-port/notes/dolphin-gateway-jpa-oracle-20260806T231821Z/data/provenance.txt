@@ -1,0 +1,60 @@
+Generated: 2026-08-06T23:44:12Z
+
+ORIGINAL GAME IMAGE
+path=/workspaces/pcport/RMGK01.iso
+disc_id=RMGK01
+size_bytes=4699979776
+sha256=0c321eff29251c8c7a1eed87d03dcf9d10908b2c2fdb177256e7ed9b39851ea6
+
+ROOT DECOMPILED SOURCE ORACLE
+repository=/workspaces/pcport
+commit=6e4776b99acc25077673a6fbd6c4938602e9f7dd
+commit_subject=Fix RMGK02 story progress comparison
+JPABaseShape.cpp.sha256=77fc79feb347c1d9c8206a922b065a42b303c8ea5b6e88e0609ae75877741a7c
+JPAEmitterManager.cpp.sha256=517c367e59de67daa1d876a5e66c1474d3b10553d7a8c818a1a2d864ec347f60
+JPAResource.cpp.sha256=67cfe90c0762d8dcbe72c4a89f1c2173d36e8c886e791dd97a3fe57cf30fb790
+JPADrawInfo.hpp.sha256=ae2a270fdddf162d44e86abd88f3802292412233349a99295ea2454c808433fc
+
+LOCAL DOLPHIN ORACLE
+repository=/workspaces/pcport/pc-port/dolphin
+origin=https://github.com/Frityet/dolphin
+head=ed8e44d4be114fc70258fbfaeb239f3e83b041fe
+origin_master=ed8e44d4be114fc70258fbfaeb239f3e83b041fe
+head_subject=Core: add deterministic presented-frame savestates
+head_parent=5895bce8fddc05265d24df5f763a078a55c2d9ed
+scripted_nunchuk_commit=5895bce8fddc05265d24df5f763a078a55c2d9ed
+scripted_nunchuk_subject=Core: add deterministic scripted Nunchuk input
+worktree_status=clean
+
+DOLPHIN BUILD
+command=cmake --build build-nogui-libcxx --target dolphin-emu-nogui -j4
+result=passed
+cmake_version=3.22.1
+binary=/workspaces/pcport/pc-port/dolphin/build-nogui-libcxx/Binaries/dolphin-emu-nogui
+binary_version=Dolphin ed8e44d4be
+binary_size_bytes=24303472
+binary_sha256=54c88ed12cb89ce871061fc890ccc3c24fb11cec44a69a75eea5ae0de753b486
+build_log_sha256=2851942eb5cda5a90c5ac1f21dddefafa225e2f2c26b9ce499f017b9cdf6c35b
+
+ROUTE CHECKPOINTS (NOT INCLUDED; TRANSIENT /tmp ARTIFACTS)
+frame_11400_state=/tmp/dolphin-gateway-safe-f11400/frame-11400.sav
+frame_11400_state_size_bytes=41824363
+frame_11400_state_sha256=8cf23e2686d025037e40bddba4a6a4c4c0edd856002da31c2f92403a2f1e7879
+frame_22100_state=/tmp/dolphin-gateway-mouth-rb66-22150/frame-22100.sav
+frame_22100_state_size_bytes=43714006
+frame_22100_state_sha256=1dea84e5bf0e6b841820778756b6571a7c23776ce96b4085e1b1650dba1708c5
+
+COMPACT ORACLE DATA
+jpa-billboard-source-oracle.txt.sha256=48d3a9314cb6dbacff7c663208a752032a034aa4e428c62e6475fecc2fa4c049
+steam-resource-metadata.json.sha256=73bd9ad176e9e0bd6314c7b5784e63689c5fab1744b44d4bfc1d788701440e8f
+trace-validation.tsv.sha256=62cd18e678d95a1930dbd7bb2bf36f9eda9a12f8e7d5ea6b066f1e3a63c831c2
+castle-side-toad-f22150.png.sha256=7fb514001c4066a2f6be480b167ba0c6c0b994e8ba9a45f05105aa9c36287acb
+
+FRAME 22150 TRACE VALIDATION
+status=passed
+frame_index=22150
+emulator=dolphin
+record_count=886
+render_packet=867
+semantic_event=1
+layout_runtime=0

@@ -1,0 +1,212 @@
+{
+  "source_trace": "pc-port/.cache/aurora-route-smoke/stage-player-owner-final/gateway_handoff/gateway_handoff-frame-10350.trace.sqlite",
+  "source_disc": "RMGK01.iso",
+  "resources": [
+    {
+      "requested_name": "Steam",
+      "particle_name": "Steam00",
+      "user_index": 2279,
+      "auto_effect_group_name": "Steam",
+      "auto_effect_unique_name": "Steam",
+      "auto_effect_parent_name": "",
+      "auto_effect_joint_name": "",
+      "auto_effect_draw_order": "3D",
+      "field_block_count": 2,
+      "key_block_count": 0,
+      "texture_reference_count": 1,
+      "block_tags": [
+        "BEM1",
+        "FLD1",
+        "FLD1",
+        "BSP1",
+        "ESP1",
+        "TDB1"
+      ],
+      "dynamics": {
+        "flags": 1024,
+        "volume_type": 4,
+        "fixed_density": false,
+        "fixed_interval": false,
+        "inherit_scale": false,
+        "follow_emitter": false,
+        "follow_emitter_child": false,
+        "rate": 1,
+        "rate_random": 0,
+        "lifetime_random": 0.25,
+        "start_frame": 3,
+        "max_frame": 0,
+        "lifetime": 25,
+        "volume_size": 48,
+        "div_number": 5,
+        "rate_step": 0
+      },
+      "base_shape": {
+        "flags": 12681236,
+        "shape_type": 4,
+        "direction_type": 1,
+        "rotation_type": 0,
+        "base_plane_type": 0,
+        "base_size_x": 1,
+        "base_size_y": 1.5,
+        "texture_flags": 6,
+        "texture_count": 0,
+        "texture_slot": 0,
+        "texture_coordinate_animation": false,
+        "blend_mode_config": 1497,
+        "alpha_compare_config": 231,
+        "alpha_ref0": 0,
+        "alpha_ref1": 0,
+        "z_mode_config": 37,
+        "prm_color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "env_color": [
+          90,
+          120,
+          120,
+          255
+        ]
+      },
+      "child_shape": null,
+      "key_blocks": [],
+      "textures": [
+        {
+          "index": 6,
+          "name": "mr_steam00_ia",
+          "width": 64,
+          "height": 64,
+          "format": "IA8",
+          "format_raw": 3,
+          "wrap_s": 0,
+          "wrap_t": 0,
+          "min_filter": 1,
+          "mag_filter": 1
+        }
+      ]
+    },
+    {
+      "requested_name": "Steam",
+      "particle_name": "Steam01",
+      "user_index": 2280,
+      "auto_effect_group_name": "Steam",
+      "auto_effect_unique_name": "Steam",
+      "auto_effect_parent_name": "",
+      "auto_effect_joint_name": "",
+      "auto_effect_draw_order": "3D",
+      "field_block_count": 3,
+      "key_block_count": 0,
+      "texture_reference_count": 1,
+      "block_tags": [
+        "BEM1",
+        "FLD1",
+        "FLD1",
+        "FLD1",
+        "BSP1",
+        "ESP1",
+        "SSP1",
+        "TDB1"
+      ],
+      "dynamics": {
+        "flags": 256,
+        "volume_type": 1,
+        "fixed_density": false,
+        "fixed_interval": false,
+        "inherit_scale": false,
+        "follow_emitter": false,
+        "follow_emitter_child": false,
+        "rate": 1,
+        "rate_random": 0,
+        "lifetime_random": 0.44999998807907104,
+        "start_frame": 0,
+        "max_frame": 0,
+        "lifetime": 30,
+        "volume_size": 10,
+        "div_number": 5,
+        "rate_step": 0
+      },
+      "base_shape": {
+        "flags": 8486914,
+        "shape_type": 2,
+        "direction_type": 0,
+        "rotation_type": 0,
+        "base_plane_type": 0,
+        "base_size_x": 2,
+        "base_size_y": 2,
+        "texture_flags": 18,
+        "texture_count": 0,
+        "texture_slot": 0,
+        "texture_coordinate_animation": false,
+        "blend_mode_config": 1497,
+        "alpha_compare_config": 231,
+        "alpha_ref0": 0,
+        "alpha_ref1": 0,
+        "z_mode_config": 37,
+        "prm_color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "env_color": [
+          202,
+          229,
+          255,
+          255
+        ]
+      },
+      "child_shape": {
+        "flags": 10420226,
+        "shape_type": 2,
+        "direction_type": 0,
+        "rotation_type": 0,
+        "base_plane_type": 0,
+        "position_random": 30,
+        "base_velocity": 3.5,
+        "base_velocity_random": 0,
+        "velocity_inherit_rate": 0.09999999403953552,
+        "gravity": 0,
+        "scale_x": 1,
+        "scale_y": 1,
+        "inherit_scale": 0.875,
+        "inherit_alpha": 0.44999998807907104,
+        "inherit_rgb": 1,
+        "prm_color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "env_color": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "timing": 0.625,
+        "lifetime": 25,
+        "rate": 1,
+        "step": 255,
+        "texture_slot": 0,
+        "rotation_speed": 0
+      },
+      "key_blocks": [],
+      "textures": [
+        {
+          "index": 6,
+          "name": "mr_steam00_ia",
+          "width": 64,
+          "height": 64,
+          "format": "IA8",
+          "format_raw": 3,
+          "wrap_s": 0,
+          "wrap_t": 0,
+          "min_filter": 1,
+          "mag_filter": 1
+        }
+      ]
+    }
+  ]
+}

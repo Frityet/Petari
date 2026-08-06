@@ -1,0 +1,5 @@
+[0/2] Re-checking globbed directories...
+[1/4] cd /workspaces/pcport/pc-port/dolphin/build-nogui-libcxx && /usr/bin/cmake -DPROJECT_SOURCE_DIR=/workspaces/pcport/pc-port/dolphin -DPROJECT_BINARY_DIR=/workspaces/pcport/pc-port/dolphin/build-nogui-libcxx -DDISTRIBUTOR=None -DDOLPHIN_DEFAULT_UPDATE_TRACK= -DGIT_FOUND=TRUE -DGIT_EXECUTABLE=/usr/bin/git -DDOLPHIN_WC_REVISION= -DDOLPHIN_WC_DESCRIBE= -DDOLPHIN_WC_BRANCH= -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0.0 -P /workspaces/pcport/pc-port/dolphin/CMake/ScmRevGen.cmake
+[2/4] Building CXX object Source/Core/Common/CMakeFiles/common.dir/Version.cpp.o
+[3/4] Linking CXX static library Source/Core/Common/libcommon.a
+[4/4] Linking CXX executable Binaries/dolphin-emu-nogui
