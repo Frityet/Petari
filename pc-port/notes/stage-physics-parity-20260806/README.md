@@ -95,3 +95,38 @@ Expected checkpoint facts:
 - The stage host does not yet instantiate a playable actor from selected
   `StartInfo`. A compatibility-owned, data-driven stage player is the next
   hard route blocker before chase/demo actors can be exercised.
+
+## Follow-up exactness audit
+
+A second source/assembly pass after the initial checkpoint found and corrected
+several edge cases that the first route smoke did not exercise:
+
+- Binder plane capacity is cumulative across its initial sweep and projected
+  retry. A retry still detects and stops at a face after storage is full, but
+  that unstored face contributes neither a contact plane nor a reaction.
+- Host BVH traversal no longer makes limited contact arrays deepest-first.
+  Until KCL octree leaf lists are retained, capacity uses deterministic source
+  prism order; this is documented as an approximation of original octree-list
+  encounter order rather than claimed as exact.
+- `initBinder(0, 0, ...)` is now represented explicitly and zero-radius point
+  binders reach the strict-interior KCL path. `initBinder` also restores the
+  original `onBind` transition.
+- Binder centers use the actor's scale-free base-matrix Y basis. Host-only TRS
+  scale is removed, including negative scale, and a zero Y scale reconstructs
+  the basis from the X/Z columns or actor rotation when all axes collapse.
+- wall/floor/roof classification now preserves the exact strict wall threshold
+  (`abs(dot) < 0.34202015`), with threshold equality classified by sign.
+- transformed KCL now applies affine plane separation to prism thickness and
+  preserves the original 0.01 local-unit arrow allowance through
+  source-derived barycentric tolerances.
+- missing gravity fields return false and write zero rather than echoing
+  `LiveActor::mGravity`; a valid zero field still reaches the grounded-normal
+  branch of `calcGravityOrZero`.
+
+The host gravity implementation now lives in
+`src/compat/GameGravityCompat.cpp`. `pc-port/src/Game/Util/GravityUtil.cpp` and
+`.hpp` are byte-identical to the root decomp and excluded from the host target;
+the Metrowerks null-host overloads live in a forced compatibility header.
+
+Post-audit verification remained green: 22/22 Aurora native tests, 4/4 stage
+camera tests, and the `smg-pc` application link all passed in debug mode.

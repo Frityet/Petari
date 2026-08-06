@@ -6,6 +6,10 @@ class LiveActor;
 class NameObj;
 
 namespace smgpc::compat {
+    void register_actor_binder(const LiveActor* actor);
+    [[nodiscard]] bool has_actor_binder(const LiveActor* actor);
+    void release_actor_binder_state(const LiveActor* actor);
+
     void release_talk_runtime_state(const LiveActor* actor);
     void release_demo_runtime_state(const LiveActor* actor);
     void release_star_piece_runtime_state(const LiveActor* actor);

@@ -93,6 +93,7 @@ namespace smgpc::scene {
             Bounds bounds{};
             TVec3f centroid{};
             float thickness = 0.0F;
+            std::array<float, 3U> arrow_edge_tolerances{};
             std::uint16_t attribute = 0U;
             std::uint32_t source_index = 0U;
         };

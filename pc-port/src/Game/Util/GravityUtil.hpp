@@ -1,43 +1,29 @@
 #pragma once
 
 #include <JSystem/JGeometry/TVec.hpp>
-#include <revolution/types.h>
-
-#include <cstddef>
 
 class GravityInfo;
+class JMapInfoIter;
 class LiveActor;
 class NameObj;
+class PlanetGravity;
 
 namespace MR {
+    void registerGravity(PlanetGravity* pGravity);
     bool calcGravityVector(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, u32 host);
     bool calcGravityVector(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+    bool calcDropShadowVector(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+    bool calcDropShadowVector(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+    bool calcGravityAndDropShadowVector(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+    bool calcGravityAndMagnetVector(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, u32 host);
     bool calcGravityVectorOrZero(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, u32 host);
     bool calcGravityVectorOrZero(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, u32 host);
-
-    // The original sources use `nullptr` as the zero host value. Keep those
-    // call sites source-close under a modern C++ compiler while retaining the
-    // original u32 entry points above.
-    inline bool calcGravityVector(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, std::nullptr_t) {
-        return calcGravityVector(pActor, pDest, pInfo, 0U);
-    }
-
-    inline bool calcGravityVector(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, std::nullptr_t) {
-        return calcGravityVector(pObj, rPosition, pDest, pInfo, 0U);
-    }
-
-    inline bool calcGravityVector(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, int host) {
-        return calcGravityVector(pObj, rPosition, pDest, pInfo, static_cast<u32>(host));
-    }
-
-    inline bool calcGravityVectorOrZero(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, std::nullptr_t) {
-        return calcGravityVectorOrZero(pActor, pDest, pInfo, 0U);
-    }
-
-    inline bool calcGravityVectorOrZero(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, std::nullptr_t) {
-        return calcGravityVectorOrZero(pObj, rPosition, pDest, pInfo, 0U);
-    }
-
-    void calcGravityOrZero(LiveActor* pActor);
-    void calcGravityOrZero(LiveActor* pActor, const TVec3f& rPosition);
-}  // namespace MR
+    bool calcDropShadowVectorOrZero(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+    bool calcGravityAndDropShadowVectorOrZero(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+    bool calcAttractMarioLauncherOrZero(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+    bool isZeroGravity(const LiveActor* pActor);
+    bool isLightGravity(const GravityInfo& rInfo);
+    void settingGravityParamFromJMap(PlanetGravity* pGravity, const JMapInfoIter& rIter);
+    void getJMapInfoGravityType(const JMapInfoIter& rIter, PlanetGravity* pGravity);
+    void getJMapInfoGravityPower(const JMapInfoIter& rIter, PlanetGravity* pGravity);
+};  // namespace MR

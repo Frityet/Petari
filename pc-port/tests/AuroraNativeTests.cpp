@@ -37,7 +37,9 @@
 #include "scene/StageCollisionService.hpp"
 #include "scene/StageGravityService.hpp"
 #include "scene/StageHostScene.hpp"
+#include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/GameGravityCompat.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>
@@ -149,7 +151,8 @@ namespace {
         return JMapInfo::from_bcsv(bytes);
     }
 
-    std::vector<std::uint8_t> make_single_triangle_kcl(float thickness = 2.0F) {
+    std::vector<std::uint8_t> make_single_triangle_kcl(float thickness = 2.0F,
+                                                       std::uint16_t attribute = 7U) {
         constexpr auto position_offset = 0x38U;
         constexpr auto normal_offset = 0x44U;
         constexpr auto prism_offset = 0x74U;
@@ -180,7 +183,7 @@ namespace {
         write_be16(bytes, prism_offset + 8U, 1U);
         write_be16(bytes, prism_offset + 10U, 2U);
         write_be16(bytes, prism_offset + 12U, 3U);
-        write_be16(bytes, prism_offset + 14U, 7U);
+        write_be16(bytes, prism_offset + 14U, attribute);
         return bytes;
     }
 
@@ -858,6 +861,39 @@ namespace {
                     capped_move.displacement.epsilonEquals(move.displacement, 0.0001F),
                 "Binder's third init argument should cap stored planes without changing a coincident-face reaction");
 
+        auto ordered_collision = smgpc::scene::StageCollisionService{};
+        constexpr auto raised = std::array<float, 12U>{
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.2F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+        require(ordered_collision.add_kcl(make_single_triangle_kcl(2.0F, 7U), identity, "first.kcl") &&
+                    ordered_collision.add_kcl(make_single_triangle_kcl(2.0F, 9U), raised, "second.kcl"),
+                "the native fixture should permit overlapping KCL sources at different depths");
+        ordered_collision.build();
+        const auto first_ordered_contact =
+            ordered_collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F, 1U);
+        require(first_ordered_contact.size() == 1U && first_ordered_contact.front().attribute == 7U,
+                "a full collision-plane array should use deterministic source order rather than deepest-first order");
+
+        auto retry_collision = smgpc::scene::StageCollisionService{};
+        constexpr auto wall = std::array<float, 12U>{
+            0.0F, -4.0F, 0.0F, 10.0F,
+            4.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 4.0F, 0.0F,
+        };
+        require(retry_collision.add_kcl(kcl, identity, "retry-floor.kcl") &&
+                    retry_collision.add_kcl(make_single_triangle_kcl(100.0F), wall, "retry-wall.kcl"),
+                "the native fixture should permit orthogonal floor and wall KCL sources");
+        retry_collision.build();
+        const auto capped_retry = retry_collision.move_sphere(
+            TVec3f{0.25F, 0.25F, 0.25F}, TVec3f{70.0F, 0.0F, 0.0F}, 0.5F, 1U);
+        const auto retry_center = TVec3f{0.25F, 0.25F, 0.25F} + capped_retry.displacement;
+        require(capped_retry.contacts.size() == 1U && retry_center.x > 23.0F && retry_center.x < 24.0F,
+                "a full Binder plane array should still detect and stop at a projected-retry face without storing it");
+        require(retry_center.y > 1.0F && retry_center.y < 2.0F,
+                "an unstored projected-retry face must not contribute another collision reaction");
+
         auto thin_collision = smgpc::scene::StageCollisionService{};
         const auto thin_kcl = make_single_triangle_kcl(0.2F);
         require(thin_collision.add_kcl(thin_kcl, identity, "thin.kcl"),
@@ -886,10 +922,94 @@ namespace {
         require(!zero_depth.empty() && std::abs(zero_depth.front().penetration) < 0.0001F,
                 "a face-interior sphere exactly tangent to KCL should remain a zero-depth hit");
 
+        auto scaled_collision = smgpc::scene::StageCollisionService{};
+        constexpr auto scale_four = std::array<float, 12U>{
+            4.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 4.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 4.0F, 0.0F,
+        };
+        require(scaled_collision.add_kcl(kcl, scale_four, "scaled.kcl"),
+                "a uniformly scaled KCL prism should remain loadable");
+        scaled_collision.build();
+        const auto scaled_depth = scaled_collision.sphere_contacts(TVec3f{1.0F, -4.0F, 1.0F}, 0.0F);
+        require(!scaled_depth.empty() && std::abs(scaled_depth.front().penetration - 4.0F) < 0.0001F,
+                "KCL header thickness should scale into world space with its collision transform");
+        require(scaled_collision.line_cast(TVec3f{-0.03F, 4.0F, 1.0F}, TVec3f{0.0F, -8.0F, 0.0F}) &&
+                    !scaled_collision.line_cast(TVec3f{-0.041F, 4.0F, 1.0F}, TVec3f{0.0F, -8.0F, 0.0F}),
+                "KCHitArrow's 0.01 local-unit edge allowance should scale with transformed KCL");
+
+        auto affine_collision = smgpc::scene::StageCollisionService{};
+        constexpr auto shear_x_by_y = std::array<float, 12U>{
+            1.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+        require(affine_collision.add_kcl(kcl, shear_x_by_y, "affine.kcl"),
+                "an affine-transformed KCL prism should remain loadable");
+        affine_collision.build();
+        require(!affine_collision.sphere_contacts(TVec3f{0.5F, -1.9F, 0.25F}, 0.0F).empty() &&
+                    affine_collision.sphere_contacts(TVec3f{0.5F, -2.1F, 0.25F}, 0.0F).empty(),
+                "KCL slab thickness should use transformed-plane separation under non-uniform affine transforms");
+
         collision.activate();
         require(smgpc::scene::StageCollisionService::active() == &collision,
                 "the scene collision boundary should publish the current stage service");
+
+        auto zero_binder = LiveActor("zero-binder-test");
+        zero_binder.makeActorAppeared();
+        zero_binder.mPosition.set(0.25F, -1.0F, 0.25F);
+        zero_binder.initBinder(0.0F, 0.0F, 0U);
+        smgpc::compat::integrate_live_actor_velocity(zero_binder);
+        require(smgpc::compat::has_actor_binder(&zero_binder) && zero_binder.mBindedGround &&
+                    zero_binder.mPosition.y > 1.0F,
+                "a zero-radius Binder should remain explicit and resolve a strict-interior point-prism hit");
+
+        auto matrix_binder = LiveActor("matrix-binder-test");
+        matrix_binder.makeActorAppeared();
+        matrix_binder.mPosition.set(0.25F, 2.0F, 0.25F);
+        matrix_binder.setBaseMatrix(smgpc::render::J3dMatrix3x4{{
+            1.0F, 0.0F, 0.0F, 0.25F,
+            0.0F, -2.0F, 0.0F, 2.0F,
+            0.0F, 0.0F, -1.0F, 0.25F,
+        }});
+        matrix_binder.initBinder(0.5F, 2.0F, 1U);
+        smgpc::compat::integrate_live_actor_velocity(matrix_binder);
+        require(matrix_binder.mBindedGround && matrix_binder.mPosition.y > 3.0F,
+                "Binder offset should use the unscaled base-matrix Y direction instead of inferred anti-gravity");
+
+        auto negative_scale_binder = LiveActor("negative-scale-binder-test");
+        negative_scale_binder.makeActorAppeared();
+        negative_scale_binder.mPosition.set(0.25F, -2.0F, 0.25F);
+        negative_scale_binder.mScale.set(1.0F, -1.0F, 1.0F);
+        negative_scale_binder.calcAndSetBaseMtx();
+        negative_scale_binder.initBinder(0.5F, 2.0F, 1U);
+        smgpc::compat::integrate_live_actor_velocity(negative_scale_binder);
+        require(negative_scale_binder.mBindedGround && negative_scale_binder.mPosition.y > -1.0F,
+                "host model-scale sign should not invert the scale-free Binder offset basis");
+
         collision.deactivate();
+
+        auto collapsed_axis_collision = smgpc::scene::StageCollisionService{};
+        constexpr auto positive_x_wall = std::array<float, 12U>{
+            0.0F, 4.0F, 0.0F, 0.0F,
+            -4.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 4.0F, 0.0F,
+        };
+        require(collapsed_axis_collision.add_kcl(kcl, positive_x_wall, "collapsed-axis-wall.kcl"),
+                "the native fixture should permit a positive-X wall");
+        collapsed_axis_collision.build();
+        collapsed_axis_collision.activate();
+        auto collapsed_axis_binder = LiveActor("collapsed-axis-binder-test");
+        collapsed_axis_binder.makeActorAppeared();
+        collapsed_axis_binder.mPosition.set(2.0F, -1.0F, 1.0F);
+        collapsed_axis_binder.mRotation.set(0.0F, 0.0F, 90.0F);
+        collapsed_axis_binder.mScale.zero();
+        collapsed_axis_binder.calcAndSetBaseMtx();
+        collapsed_axis_binder.initBinder(0.5F, 2.0F, 1U);
+        smgpc::compat::integrate_live_actor_velocity(collapsed_axis_binder);
+        require(collapsed_axis_binder.mBindedWall && collapsed_axis_binder.mPosition.x > 3.0F,
+                "a collapsed host scale should reconstruct Binder's rotated scale-free Y basis");
+        collapsed_axis_collision.deactivate();
         require(smgpc::scene::StageCollisionService::active() == nullptr,
                 "stage teardown should clear the active collision boundary");
     }
@@ -920,6 +1040,8 @@ namespace {
         require(MR::calcGravityVector(&caller, TVec3f{10.0F, 30.0F, 30.0F}, &gravity, nullptr, 0U) &&
                     gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
                 "the original MR gravity query boundary should consume the active generalized field service");
+        require(MR::calcGravityVector(&caller, TVec3f{10.0F, 30.0F, 30.0F}, nullptr, nullptr, 0U),
+                "gravity queries should report an applicable field even when the caller only requests the boolean");
 
         for (const auto inverse : std::array<std::int32_t, 3U>{-1, 0, 1}) {
             point.jmap_info = make_gravity_inverse_jmap(inverse);
@@ -978,6 +1100,22 @@ namespace {
         require(gravity_service.query(TVec3f{0.0005F, 0.0F, 0.0F}, &gravity) &&
                     gravity.epsilonEquals(TVec3f{}, 0.0F),
                 "PointGravity's 0.001 near-center region should remain a valid priority-winning zero vector");
+
+        auto grounded_center_actor = LiveActor("grounded-center-gravity-test");
+        grounded_center_actor.mPosition.zero();
+        grounded_center_actor.mGravity.set(1.0F, 0.0F, 0.0F);
+        grounded_center_actor.mBindedGround = true;
+        grounded_center_actor.mGroundNormal.set(0.0F, 2.0F, 0.0F);
+        MR::calcGravityOrZero(&grounded_center_actor);
+        require(grounded_center_actor.mGravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
+                "a valid zero field should still select calcGravityOrZero's grounded-normal fallback");
+
+        auto airborne_center_actor = LiveActor("airborne-center-gravity-test");
+        airborne_center_actor.mPosition.zero();
+        airborne_center_actor.mGravity.set(1.0F, 0.0F, 0.0F);
+        MR::calcGravityOrZero(&airborne_center_actor);
+        require(airborne_center_actor.mGravity.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0F),
+                "a zero field without ground contact should preserve the actor's prior gravity");
 
         gravity_service.deactivate();
         require(smgpc::scene::StageGravityService::active() == nullptr,
@@ -1137,9 +1275,9 @@ namespace {
         auto actor = LiveActor("coin-gravity-test");
         actor.mGravity.set(0.0F, -4.0F, 0.0F);
         auto gravity = TVec3f{9.0F, 9.0F, 9.0F};
-        require(MR::calcGravityVector(&actor, &gravity, nullptr, nullptr) &&
-                    gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.00001F),
-                "host gravity queries should normalize a LiveActor's authoritative gravity");
+        require(!MR::calcGravityVector(&actor, &gravity, nullptr, nullptr) &&
+                    gravity.epsilonEquals(TVec3f{}, 0.0F),
+                "a missing gravity field should return false and zero instead of echoing actor-local state");
 
         auto plainObject = NameObj("positional-gravity-test");
         gravity.set(9.0F, 9.0F, 9.0F);

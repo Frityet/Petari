@@ -9,6 +9,8 @@
 #include "Game/LiveActor/RailRider.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/StageSwitch.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace {
@@ -56,6 +58,7 @@ LiveActor::LiveActor(const char* pName) : NameObj(pName) {
 }
 
 LiveActor::~LiveActor() {
+    smgpc::compat::release_actor_runtime_state(this);
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->star_pointer().unregister_target(*this);
         runtime->unregister_effect_keeper(getName());
@@ -259,6 +262,8 @@ void LiveActor::initBinder(f32 radius, f32 offset, u32 type) {
     mBinderRadius = radius;
     mBinderOffset = offset;
     mBinderType = type;
+    smgpc::compat::register_actor_binder(this);
+    MR::onBind(this);
 }
 
 void LiveActor::initRailRider(const JMapInfoIter& rIter) {

@@ -207,7 +207,8 @@ namespace smgpc::scene {
 
         [[nodiscard]] std::optional<float> segment_triangle_fraction(const TVec3f& start, const TVec3f& offset,
                                                                      const TVec3f& a, const TVec3f& b,
-                                                                     const TVec3f& c) {
+                                                                     const TVec3f& c,
+                                                                     const std::array<float, 3U>& edge_tolerances) {
             const auto edge1 = b - a;
             const auto edge2 = c - a;
             const auto perpendicular = cross(offset, edge2);
@@ -218,23 +219,13 @@ namespace smgpc::scene {
             const auto inverse = 1.0F / determinant;
             const auto from_a = start - a;
             const auto u = dot(from_a, perpendicular) * inverse;
-            const auto twice_area = std::sqrt(length_squared(cross(edge1, edge2)));
-            const auto edge_ab_length = std::sqrt(length_squared(edge1));
-            const auto edge_ac_length = std::sqrt(length_squared(edge2));
-            const auto edge_bc_length = std::sqrt(length_squared(c - b));
-            if (!(twice_area > 1.0e-8F) || !(edge_ab_length > 1.0e-8F) ||
-                !(edge_ac_length > 1.0e-8F) || !(edge_bc_length > 1.0e-8F)) {
-                return std::nullopt;
-            }
             const auto q = cross(from_a, edge1);
             const auto v = dot(offset, q) * inverse;
-            // KCHitArrow permits 0.01 units beyond each prism edge. Convert
-            // that physical tolerance to the corresponding barycentric
-            // coefficient using each triangle altitude.
-            const auto u_tolerance = cArrowEdgeTolerance * edge_ac_length / twice_area;
-            const auto v_tolerance = cArrowEdgeTolerance * edge_ab_length / twice_area;
-            const auto sum_tolerance = cArrowEdgeTolerance * edge_bc_length / twice_area;
-            if (u < -u_tolerance || v < -v_tolerance || u + v > 1.0F + sum_tolerance) {
+            // These coefficients were derived from the source KCL prism.
+            // Barycentric coordinates survive the placement transform, so
+            // the original 0.01 local-unit edge allowance scales with it.
+            if (u < -edge_tolerances[0] || v < -edge_tolerances[1] ||
+                u + v > 1.0F + edge_tolerances[2]) {
                 return std::nullopt;
             }
             const auto fraction = dot(edge2, q) * inverse;
@@ -414,13 +405,31 @@ namespace smgpc::scene {
                 continue;
             }
 
+            const auto local_vertices = std::array<TVec3f, 3U>{
+                position,
+                position + to_vertex_1 * (height / divisor_1),
+                position + to_vertex_2 * (height / divisor_2),
+            };
+            const auto local_ab = local_vertices[1] - local_vertices[0];
+            const auto local_ac = local_vertices[2] - local_vertices[0];
+            const auto local_twice_area = std::sqrt(length_squared(cross(local_ab, local_ac)));
+            const auto local_ab_length = std::sqrt(length_squared(local_ab));
+            const auto local_ac_length = std::sqrt(length_squared(local_ac));
+            const auto local_bc_length = std::sqrt(length_squared(local_vertices[2] - local_vertices[1]));
+            if (!(local_twice_area > 1.0e-8F) || !(local_ab_length > 1.0e-8F) ||
+                !(local_ac_length > 1.0e-8F) || !(local_bc_length > 1.0e-8F)) {
+                ++_stats.rejected_triangle_count;
+                continue;
+            }
+
             auto triangle = Triangle{};
-            triangle.vertices[0] = transform_point(matrix, position);
-            triangle.vertices[1] = transform_point(matrix, position + to_vertex_1 * (height / divisor_1));
-            triangle.vertices[2] = transform_point(matrix, position + to_vertex_2 * (height / divisor_2));
+            triangle.vertices[0] = transform_point(matrix, local_vertices[0]);
+            triangle.vertices[1] = transform_point(matrix, local_vertices[1]);
+            triangle.vertices[2] = transform_point(matrix, local_vertices[2]);
             triangle.normal = cross(triangle.vertices[1] - triangle.vertices[0],
                                     triangle.vertices[2] - triangle.vertices[0]);
-            auto source_normal = transform_vector(matrix, face_normal);
+            const auto transformed_face_normal = transform_vector(matrix, face_normal);
+            auto source_normal = transformed_face_normal;
             if (!normalize(triangle.normal) || !normalize(source_normal)) {
                 ++_stats.rejected_triangle_count;
                 continue;
@@ -428,7 +437,21 @@ namespace smgpc::scene {
             if (dot(triangle.normal, source_normal) < 0.0F) {
                 triangle.normal.negate();
             }
-            triangle.thickness = std::max(0.0F, thickness);
+            // Local KCL slab planes are separated by `thickness` along the
+            // unit face normal. After an affine transform their perpendicular
+            // separation is thickness / |M^-T n|, equivalently the projection
+            // of M*n onto the transformed unit plane normal.
+            const auto normal_scale = std::abs(dot(transformed_face_normal, triangle.normal));
+            if (!(normal_scale > 1.0e-8F)) {
+                ++_stats.rejected_triangle_count;
+                continue;
+            }
+            triangle.thickness = std::max(0.0F, thickness) * normal_scale;
+            triangle.arrow_edge_tolerances = {
+                cArrowEdgeTolerance * local_ac_length / local_twice_area,
+                cArrowEdgeTolerance * local_ab_length / local_twice_area,
+                cArrowEdgeTolerance * local_bc_length / local_twice_area,
+            };
             triangle.bounds = empty_bounds<Bounds>();
             include(triangle.bounds, triangle.vertices[0]);
             include(triangle.bounds, triangle.vertices[1]);
@@ -439,8 +462,13 @@ namespace smgpc::scene {
             include(triangle.bounds, triangle.vertices[0] - triangle.normal * triangle.thickness);
             include(triangle.bounds, triangle.vertices[1] - triangle.normal * triangle.thickness);
             include(triangle.bounds, triangle.vertices[2] - triangle.normal * triangle.thickness);
-            triangle.bounds.minimum -= TVec3f(cArrowEdgeTolerance, cArrowEdgeTolerance, cArrowEdgeTolerance);
-            triangle.bounds.maximum += TVec3f(cArrowEdgeTolerance, cArrowEdgeTolerance, cArrowEdgeTolerance);
+            auto linear_square_sum = 0.0F;
+            for (const auto index : std::array{0U, 1U, 2U, 4U, 5U, 6U, 8U, 9U, 10U}) {
+                linear_square_sum += matrix[index] * matrix[index];
+            }
+            const auto edge_padding = cArrowEdgeTolerance * std::sqrt(linear_square_sum);
+            triangle.bounds.minimum -= TVec3f(edge_padding, edge_padding, edge_padding);
+            triangle.bounds.maximum += TVec3f(edge_padding, edge_padding, edge_padding);
             triangle.centroid = (triangle.vertices[0] + triangle.vertices[1] + triangle.vertices[2]) * (1.0F / 3.0F);
             triangle.attribute = attribute;
             triangle.source_index = source_index;
@@ -533,7 +561,8 @@ namespace smgpc::scene {
                         continue;
                     }
                     const auto fraction = segment_triangle_fraction(start, offset, triangle.vertices[0],
-                                                                    triangle.vertices[1], triangle.vertices[2]);
+                                                                    triangle.vertices[1], triangle.vertices[2],
+                                                                    triangle.arrow_edge_tolerances);
                     if (fraction.has_value() && *fraction < best_fraction) {
                         best_fraction = *fraction;
                         best_triangle = &triangle;
@@ -563,7 +592,12 @@ namespace smgpc::scene {
         if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum == 0U) {
             return contacts;
         }
-        contacts.reserve(std::min(maximum, std::size_t{32U}));
+        struct IndexedContact {
+            std::uint32_t triangle_index = 0U;
+            StageCollisionContact contact{};
+        };
+        auto indexed_contacts = std::vector<IndexedContact>{};
+        indexed_contacts.reserve(std::min(maximum, std::size_t{32U}));
         auto stack = std::vector<std::uint32_t>{0U};
         while (!stack.empty()) {
             const auto node_index = stack.back();
@@ -578,7 +612,8 @@ namespace smgpc::scene {
                 continue;
             }
             for (auto leaf_index = std::uint32_t{}; leaf_index < node.count; ++leaf_index) {
-                const auto& triangle = _triangles[_triangle_indices[node.first + leaf_index]];
+                const auto triangle_index = _triangle_indices[node.first + leaf_index];
+                const auto& triangle = _triangles[triangle_index];
                 const auto plane_distance = dot(center - triangle.vertices[0], triangle.normal);
                 if (plane_distance > radius) {
                     continue;
@@ -609,20 +644,29 @@ namespace smgpc::scene {
                 if (!(penetration >= 0.0F) || penetration > triangle.thickness) {
                     continue;
                 }
-                contacts.push_back(StageCollisionContact{
-                    .position = closest,
-                    .normal = triangle.normal,
-                    .reaction_normal = triangle.normal,
-                    .penetration = penetration,
-                    .attribute = triangle.attribute,
+                indexed_contacts.push_back(IndexedContact{
+                    .triangle_index = triangle_index,
+                    .contact = StageCollisionContact{
+                        .position = closest,
+                        .normal = triangle.normal,
+                        .reaction_normal = triangle.normal,
+                        .penetration = penetration,
+                        .attribute = triangle.attribute,
+                    },
                 });
             }
         }
-        std::ranges::sort(contacts, [](const auto& lhs, const auto& rhs) {
-            return lhs.penetration > rhs.penetration;
+        // KCollision stores prisms in resource-octree encounter order until
+        // Binder's plane array is full. The host BVH does not retain those
+        // leaf lists, so use deterministic source-prism order rather than
+        // leaking BVH traversal or penetration-depth order into capacity.
+        std::ranges::stable_sort(indexed_contacts, [](const auto& lhs, const auto& rhs) {
+            return lhs.triangle_index < rhs.triangle_index;
         });
-        if (contacts.size() > maximum) {
-            contacts.resize(maximum);
+        const auto stored_count = std::min(maximum, indexed_contacts.size());
+        contacts.reserve(stored_count);
+        for (auto index = std::size_t{}; index < stored_count; ++index) {
+            contacts.push_back(indexed_contacts[index].contact);
         }
         return contacts;
     }
@@ -630,7 +674,7 @@ namespace smgpc::scene {
     StageCollisionMoveResult StageCollisionService::move_sphere(const TVec3f& center, const TVec3f& movement,
                                                                 float radius, std::size_t maximum_contacts) const {
         auto result = StageCollisionMoveResult{};
-        if (!_built || _nodes.empty() || !(radius > 0.0F) || maximum_contacts == 0U) {
+        if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum_contacts == 0U) {
             result.displacement = movement;
             return result;
         }
@@ -642,7 +686,8 @@ namespace smgpc::scene {
             bool can_move_more = false;
         };
 
-        const auto sweep = [&](const TVec3f& start, const TVec3f& requested, bool skip_first_check) {
+        const auto sweep = [&](const TVec3f& start, const TVec3f& requested, bool skip_first_check,
+                               std::size_t detection_limit) {
             auto sweep_result = SweepResult{.center = start};
             const auto requested_length = std::sqrt(length_squared(requested));
             const auto step_count = std::max(1, static_cast<int>(requested_length * (1.0F / 35.0F)) + 1);
@@ -655,7 +700,7 @@ namespace smgpc::scene {
                     continue;
                 }
 
-                sweep_result.contacts = sphere_contacts(sweep_result.center, radius, maximum_contacts);
+                sweep_result.contacts = sphere_contacts(sweep_result.center, radius, detection_limit);
                 if (!sweep_result.contacts.empty()) {
                     sweep_result.can_move_more = step_index != step_count;
                     return sweep_result;
@@ -679,7 +724,7 @@ namespace smgpc::scene {
             return positive + negative;
         };
 
-        auto first = sweep(center, movement, false);
+        auto first = sweep(center, movement, false, maximum_contacts);
         if (first.contacts.empty()) {
             result.displacement = first.movement;
             return result;
@@ -702,11 +747,19 @@ namespace smgpc::scene {
                 }
             }
             if (dot(movement, remaining) >= 0.0F) {
-                auto second = sweep(resolved_center, remaining, true);
+                const auto remaining_capacity = maximum_contacts - result.contacts.size();
+                // Binder still asks KCollision whether the projected retry
+                // hits after its plane array is full. That hit stops motion,
+                // but cannot add another plane or contribute a reaction.
+                auto second = sweep(resolved_center, remaining, true, std::max(remaining_capacity, std::size_t{1U}));
                 resolved_center = second.center;
                 if (!second.contacts.empty()) {
-                    resolved_center.add(aggregate_reaction(second.contacts));
-                    result.contacts.insert(result.contacts.end(), second.contacts.begin(), second.contacts.end());
+                    const auto stored_count = std::min(remaining_capacity, second.contacts.size());
+                    if (stored_count != 0U) {
+                        second.contacts.resize(stored_count);
+                        resolved_center.add(aggregate_reaction(second.contacts));
+                        result.contacts.insert(result.contacts.end(), second.contacts.begin(), second.contacts.end());
+                    }
                 }
             }
         }

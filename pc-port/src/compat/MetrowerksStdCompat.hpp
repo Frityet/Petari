@@ -6,6 +6,8 @@
 #include <cmath>
 #include <functional>
 
+#include "compat/GameGravityCompat.hpp"
+
 inline constexpr f32 FLOAT_MAX = FLT_MAX;
 
 #ifndef NO_INLINE

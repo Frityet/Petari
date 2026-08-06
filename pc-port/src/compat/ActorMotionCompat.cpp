@@ -2,12 +2,14 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/GravityUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <cmath>
 
 namespace {
     constexpr auto cWallDot = 0.34202015F;
+    constexpr auto cDegreesToRadians = 3.14159265358979323846F / 180.0F;
 
     bool normalize(TVec3f& value) {
         const auto length_squared = value.dot(value);
@@ -17,6 +19,27 @@ namespace {
         }
         value.scale(1.0F / std::sqrt(length_squared));
         return true;
+    }
+
+    TVec3f cross(const TVec3f& lhs, const TVec3f& rhs) {
+        return TVec3f{lhs.y * rhs.z - lhs.z * rhs.y,
+                      lhs.z * rhs.x - lhs.x * rhs.z,
+                      lhs.x * rhs.y - lhs.y * rhs.x};
+    }
+
+    TVec3f rotation_up(const TVec3f& rotation) {
+        const auto rx = rotation.x * cDegreesToRadians;
+        const auto ry = rotation.y * cDegreesToRadians;
+        const auto rz = rotation.z * cDegreesToRadians;
+        const auto sx = std::sin(rx);
+        const auto cx = std::cos(rx);
+        const auto sy = std::sin(ry);
+        const auto cy = std::cos(ry);
+        const auto sz = std::sin(rz);
+        const auto cz = std::cos(rz);
+        return TVec3f{cz * sy * sx - sz * cx,
+                      sz * sy * sx + cz * cx,
+                      cy * sx};
     }
 
     void clear_bind_state(LiveActor& actor) {
@@ -45,7 +68,7 @@ namespace smgpc::compat {
             return;
         }
 
-        const auto has_binder = actor.mBinderRadius > 0.0F || actor.mBinderOffset > 0.0F;
+        const auto has_binder = has_actor_binder(&actor);
         if (!has_binder || actor.mFlag.mIsNoBind) {
             actor.mPosition.add(actor.mVelocity);
             if (has_binder) {
@@ -65,7 +88,31 @@ namespace smgpc::compat {
         if (!normalize(gravity)) {
             gravity.set(0.0F, -1.0F, 0.0F);
         }
-        const auto binder_center = actor.mPosition - gravity * actor.mBinderOffset;
+        const auto& base_matrix = actor.getBaseMatrix().m;
+        auto binder_up = TVec3f{base_matrix[1], base_matrix[5], base_matrix[9]};
+        // The original model base matrix supplied to Binder contains the
+        // actor basis but not model scale. The host render matrix is TRS, so
+        // remove that host-only scale before applying Binder's offset.
+        if (std::abs(actor.mScale.y) > 1.0e-8F) {
+            binder_up.scale(1.0F / actor.mScale.y);
+        } else {
+            auto binder_side = TVec3f{base_matrix[0], base_matrix[4], base_matrix[8]};
+            auto binder_front = TVec3f{base_matrix[2], base_matrix[6], base_matrix[10]};
+            if (std::abs(actor.mScale.x) > 1.0e-8F) {
+                binder_side.scale(1.0F / actor.mScale.x);
+            }
+            if (std::abs(actor.mScale.z) > 1.0e-8F) {
+                binder_front.scale(1.0F / actor.mScale.z);
+            }
+            binder_up = cross(binder_front, binder_side);
+        }
+        if (!normalize(binder_up)) {
+            binder_up = rotation_up(actor.mRotation);
+            if (!normalize(binder_up)) {
+                binder_up.set(0.0F, 1.0F, 0.0F);
+            }
+        }
+        const auto binder_center = actor.mPosition + binder_up * actor.mBinderOffset;
         // LiveActor's third initBinder argument is Binder's stored-plane
         // capacity (_24), with zero selecting its temporary 32-plane array.
         const auto maximum_contacts = actor.mBinderType == 0U
@@ -80,18 +127,24 @@ namespace smgpc::compat {
         auto strongest_roof = -1.0F;
         for (const auto& contact : resolved.contacts) {
             const auto gravity_dot = contact.normal.dot(gravity);
-            if (gravity_dot < -cWallDot && contact.penetration > strongest_ground) {
-                actor.mBindedGround = true;
-                actor.mGroundNormal.set(contact.normal);
-                strongest_ground = contact.penetration;
-            } else if (gravity_dot > cWallDot && contact.penetration > strongest_roof) {
-                actor.mBindedRoof = true;
-                actor.mRoofNormal.set(contact.normal);
-                strongest_roof = contact.penetration;
-            } else if (contact.penetration > strongest_wall) {
+            if (std::abs(gravity_dot) < cWallDot) {
+                if (contact.penetration <= strongest_wall) {
+                    continue;
+                }
                 actor.mBindedWall = true;
                 actor.mWallNormal.set(contact.normal);
                 strongest_wall = contact.penetration;
+            } else if (gravity_dot < 0.0F) {
+                if (contact.penetration <= strongest_ground) {
+                    continue;
+                }
+                actor.mBindedGround = true;
+                actor.mGroundNormal.set(contact.normal);
+                strongest_ground = contact.penetration;
+            } else if (contact.penetration > strongest_roof) {
+                actor.mBindedRoof = true;
+                actor.mRoofNormal.set(contact.normal);
+                strongest_roof = contact.penetration;
             }
         }
 

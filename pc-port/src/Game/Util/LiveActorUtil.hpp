@@ -52,6 +52,8 @@ namespace MR {
     void offBind(LiveActor* pActor);
     void offCalcGravity(LiveActor* pActor);
     void onCalcGravity(LiveActor* pActor);
+    void calcGravityOrZero(LiveActor* pActor);
+    void calcGravityOrZero(LiveActor* pActor, const TVec3f& position);
     MsgSharedGroup* joinToGroupArray(LiveActor* pActor, const JMapInfoIter& rIter, const char* pGroupName, s32 capacity);
     void startBck(LiveActor* pActor, const char* pName, const char* pFileName);
     void startBrk(LiveActor* pActor, const char* pName);
