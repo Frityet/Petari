@@ -1,0 +1,4 @@
+zone	layer	row	object	cast_id	demo_group_id	message_id	common_path_id	role
+HeavensDoorMysteriousZone	layera	8	DemoRabbit	0	0	0	0	baby_talk_guide_owner
+HeavensDoorMysteriousZone	layera	9	DemoRabbit	1	0	-1	-1	adult_runaway_cast
+HeavensDoorMysteriousZone	layera	10	DemoRabbit	2	0	-1	-1	adult_runaway_cast

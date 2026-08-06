@@ -1,0 +1,5 @@
+section	bytes	match_percent	mapped_symbols	exact_symbols
+.text	4668	99.46015	48	32
+function	match_percent	status
+updateRun	98.23364	lowest_remaining
+exeGuide	98.29214	lowest_remaining
