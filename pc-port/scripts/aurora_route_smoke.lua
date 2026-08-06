@@ -23,6 +23,15 @@ local route_button_script = table.concat({
     "5400-5410:A",
 }, ";")
 
+local gateway_button_script = table.concat({
+    route_button_script,
+    "8000-8010:A",
+    "8400-8410:A",
+    "8800-8810:A",
+    "9200-9210:A",
+    "9600-9610:A",
+}, ";")
+
 local route_pointer_script = table.concat({
     "0-1899:0,0,false",
     "1900-2020:212.935,152.482,true",
@@ -84,6 +93,51 @@ local scenarios = {
         min_render_packets = 1,
         expected_layouts = {"PrologueDemo", "IconAButton"},
     },
+    gateway_handoff = {
+        name = "gateway_handoff",
+        frame = 10350,
+        description = "title through five-page picturebook advance into the HeavensDoor stage handoff",
+        min_nonblack_ratio = 0.01,
+        min_render_packets = 1,
+        button_script = gateway_button_script,
+        env = {
+            SMGPC_DEMO_ROUTE = "heavensdoor_after_picturebook",
+        },
+        placement_report = {
+            filename = "gateway_handoff-placement-report.md",
+            expected = {
+                summary = {
+                    stage = "HeavensDoorGalaxy",
+                    scenario = 1,
+                    total_objects = 242,
+                    intentionally_ignored_objects = 72,
+                },
+                summary_minimum = {
+                    created_objects = 164,
+                },
+                summary_maximum = {
+                    blocked_objects = 6,
+                },
+                objects = {
+                    {
+                        match = {
+                            status = "created",
+                            object = "RailCoin",
+                        },
+                        count = 2,
+                    },
+                    {
+                        match = {
+                            status = "created",
+                            object = "RailCoin",
+                            rail_info_attached = true,
+                        },
+                        count = 2,
+                    },
+                },
+            },
+        },
+    },
 }
 
 local default_scenarios = {"title", "file_select", "picturebook"}
@@ -124,6 +178,135 @@ end
 local function image_stats(png_path, stats_bin)
     local output = common.capturev(stats_bin, {png_path})
     return parse_image_stats(output)
+end
+
+local function trim(value)
+    return tostring(value or ""):gsub("^%s+", ""):gsub("%s+$", "")
+end
+
+local function parse_report_value(value)
+    value = trim(value)
+    if value == "true" then
+        return true
+    end
+    if value == "false" then
+        return false
+    end
+    local number = tonumber(value)
+    if number ~= nil then
+        return number
+    end
+    return value
+end
+
+local function parse_placement_report(report_path)
+    local text = common.read_file(report_path)
+    if text == nil or text == "" then
+        raise("missing or empty stage placement report: %s", report_path)
+    end
+
+    local report = {
+        summary = {},
+        objects = {},
+    }
+    local current_object
+    for line in (text .. "\n"):gmatch("([^\r\n]*)\r?\n") do
+        local key, value = line:match("^%- ([%w_]+):%s*(.*)$")
+        if key ~= nil then
+            current_object = {}
+            current_object[key] = parse_report_value(value)
+            table.insert(report.objects, current_object)
+        else
+            key, value = line:match("^  ([%w_]+):%s*(.*)$")
+            if key ~= nil and current_object ~= nil then
+                current_object[key] = parse_report_value(value)
+            else
+                key, value = line:match("^([%w_]+):%s*(.*)$")
+                if key ~= nil then
+                    report.summary[key] = parse_report_value(value)
+                end
+            end
+        end
+    end
+    return report
+end
+
+local function report_value_text(value)
+    if value == nil then
+        return "<missing>"
+    end
+    return tostring(value)
+end
+
+local function placement_object_matches(object, expected)
+    for key, value in pairs(expected or {}) do
+        if object[key] ~= value then
+            return false
+        end
+    end
+    return true
+end
+
+local function validate_placement_report(report_path, expected)
+    local report = parse_placement_report(report_path)
+    local validation = {
+        summary = report.summary,
+        object_count = #report.objects,
+        object_matches = {},
+        expected = expected,
+    }
+
+    for key, value in pairs((expected or {}).summary or {}) do
+        local actual = report.summary[key]
+        if actual ~= value then
+            raise("%s summary %s=%s, expected %s", report_path, key, report_value_text(actual), report_value_text(value))
+        end
+    end
+
+    for key, value in pairs((expected or {}).summary_minimum or {}) do
+        local actual = report.summary[key]
+        if type(actual) ~= "number" or actual < value then
+            raise("%s summary %s=%s, expected at least %s", report_path, key, report_value_text(actual), report_value_text(value))
+        end
+    end
+
+    for key, value in pairs((expected or {}).summary_maximum or {}) do
+        local actual = report.summary[key]
+        if type(actual) ~= "number" or actual > value then
+            raise("%s summary %s=%s, expected at most %s", report_path, key, report_value_text(actual), report_value_text(value))
+        end
+    end
+
+    for _, rule in ipairs((expected or {}).objects or {}) do
+        local count = 0
+        for _, object in ipairs(report.objects) do
+            if placement_object_matches(object, rule.match) then
+                count = count + 1
+            end
+        end
+
+        if rule.count ~= nil and count ~= rule.count then
+            raise("%s matched %d placement objects, expected exactly %d for %s", report_path, count, rule.count,
+                  json.encode(rule.match or {}))
+        end
+        if rule.min_count ~= nil and count < rule.min_count then
+            raise("%s matched %d placement objects, expected at least %d for %s", report_path, count, rule.min_count,
+                  json.encode(rule.match or {}))
+        end
+        if rule.max_count ~= nil and count > rule.max_count then
+            raise("%s matched %d placement objects, expected at most %d for %s", report_path, count, rule.max_count,
+                  json.encode(rule.match or {}))
+        end
+        if rule.count == nil and rule.min_count == nil and rule.max_count == nil and count == 0 then
+            raise("%s has no placement object matching %s", report_path, json.encode(rule.match or {}))
+        end
+        table.insert(validation.object_matches, {
+            match = rule.match,
+            count = count,
+        })
+    end
+
+    return validation
 end
 
 local function parse_validator_summary(log_path)
@@ -222,10 +405,17 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
     local app_log = path.join(scenario_dir, scenario.name .. "-app.log")
     local trace_log = path.join(scenario_dir, scenario.name .. "-trace-validator.log")
     local manifest_path = path.join(scenario_dir, "manifest.json")
+    local placement_report_path
+    if scenario.placement_report ~= nil then
+        placement_report_path = path.join(scenario_dir, scenario.placement_report.filename or (scenario.name .. "-placement-report.md"))
+    end
     os.tryrm(trace_path)
     os.tryrm(png_path)
     os.tryrm(app_log)
     os.tryrm(trace_log)
+    if placement_report_path ~= nil then
+        os.tryrm(placement_report_path)
+    end
 
     local env = common.make_env({
         DISPLAY = display,
@@ -248,6 +438,12 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
         SMGPC_SEMANTIC_ANCHOR_NAME = scenario.name,
         SMGPC_SEMANTIC_ANCHOR_DETAIL = scenario.description,
     })
+    for key, value in pairs(scenario.env or {}) do
+        env[key] = tostring(value)
+    end
+    if placement_report_path ~= nil then
+        env.SMGPC_STAGE_PLACEMENT_REPORT_PATH = placement_report_path
+    end
     if args.disc == nil then
         env.SMGPC_DISC_IMAGE = disc_image
     end
@@ -299,6 +495,20 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
     end
 
     local trace_summary = validate_trace_to_log(trace_path, scenario, trace_log, validate_bin)
+    local placement_report_validation
+    if placement_report_path ~= nil then
+        placement_report_validation = validate_placement_report(placement_report_path, scenario.placement_report.expected)
+    end
+
+    local artifacts = {
+        png = png_path,
+        trace = trace_path,
+        app_log = app_log,
+        trace_validator_log = trace_log,
+    }
+    if placement_report_path ~= nil then
+        artifacts.placement_report = placement_report_path
+    end
 
     local manifest = {
         scenario = scenario.name,
@@ -306,17 +516,14 @@ local function run_scenario(args, scenario, display, disc_image, pc_bin, stats_b
         status = "passed",
         frame = scenario.frame,
         expected_layouts = scenario.expected_layouts,
-        artifacts = {
-            png = png_path,
-            trace = trace_path,
-            app_log = app_log,
-            trace_validator_log = trace_log,
-        },
+        artifacts = artifacts,
         image_stats = stats,
         trace_summary = trace_summary,
+        placement_report_validation = placement_report_validation,
         input = {
             button_script = scenario.button_script,
             pointer_script = scenario.pointer_script,
+            env = scenario.env,
         },
     }
     common.write_json(manifest_path, manifest)
