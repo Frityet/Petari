@@ -1,4 +1,9 @@
 #include "Game/MapObj/SandCapsuleInsidePlanet.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
 namespace NrvSandCapsuleInsidePlanet {
     NEW_NERVE(SandCapsuleInsidePlanetNrvWait, SandCapsuleInsidePlanet, Wait);
@@ -21,9 +26,6 @@ void SandCapsuleInsidePlanet::initCaseUseSwitchA(const MapObjActorInitInfo& rInf
     MR::listenStageSwitchOnOffA(this, MR::Functor(this, &SandCapsuleInsidePlanet::startOn), MR::Functor(this, &SandCapsuleInsidePlanet::startOff));
 }
 
-void SandCapsuleInsidePlanet::exeWait() {
-}
-
 void SandCapsuleInsidePlanet::startOn() {
     MR::startBrk(this, "On");
 }
@@ -32,5 +34,5 @@ void SandCapsuleInsidePlanet::startOff() {
     MR::startBrk(this, "Off");
 }
 
-SandCapsuleInsidePlanet::~SandCapsuleInsidePlanet() {
+void SandCapsuleInsidePlanet::exeWait() {
 }

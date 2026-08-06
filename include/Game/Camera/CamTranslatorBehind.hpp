@@ -4,7 +4,8 @@
 
 class CamTranslatorBehind : public CamTranslatorBase {
 public:
-    inline CamTranslatorBehind(CameraBehind* pCamera) { mCamera = pCamera; }
+    CamTranslatorBehind(CameraBehind* pCamera) : mCamera(pCamera) {
+    }
 
     virtual void setParam(const CameraParamChunk*);
     virtual Camera* getCamera() const;

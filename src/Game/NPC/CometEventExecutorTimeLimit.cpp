@@ -1,12 +1,22 @@
 #include "Game/NPC/CometEventExecutorTimeLimit.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/TimeLimitLayout.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+
+namespace {
+    static const s32 sCometTimeLimitDefault = 1800;
+};  // namespace
 
 namespace NrvCometEventExecutorTimeLimit {
     NEW_NERVE(CometEventExecutorTimeLimitStartEvent, CometEventExecutorTimeLimit, StartEvent);
 };  // namespace NrvCometEventExecutorTimeLimit
 
 CometEventExecutorTimeLimit::CometEventExecutorTimeLimit(u32 timeLimit)
-    : LiveActor("制限時間コメット実行者"), mTimeLimitLayout(nullptr), mTimeLimit(timeLimit) {}
+    : LiveActor("制限時間コメット実行者"), mTimeLimitLayout(nullptr), mTimeLimit(timeLimit) {
+}
 
 void CometEventExecutorTimeLimit::init(const JMapInfoIter&) {
     MR::connectToSceneLayoutMovement(this);
@@ -48,5 +58,5 @@ u32 CometEventExecutorTimeLimit::getTimeLimit() const {
         return mTimeLimit * 60;
     }
 
-    return 108000;
+    return ::sCometTimeLimitDefault * 60;
 }

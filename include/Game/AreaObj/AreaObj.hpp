@@ -14,7 +14,10 @@ public:
     virtual void init(const JMapInfoIter&);
 
     virtual bool isInVolume(const TVec3f&) const;
-    virtual const char* getManagerName() const;
+
+    virtual const char* getManagerName() const {
+        return mName;
+    }
 
     void onSwitchA();
     void offSwitchA();
@@ -24,11 +27,26 @@ public:
     bool isValidSwitchB() const;
     void setFollowMtx(const TPos3f*);
     TPos3f* getFollowMtx() const;
-    void validate();
-    void invalidate();
-    bool isValid() const;
-    void awake();
-    void sleep();
+
+    void validate() {
+        mIsValid = true;
+    }
+
+    void invalidate() {
+        mIsValid = false;
+    }
+
+    bool isValid() const {
+        return mIsValid && _15 && mIsAwake;
+    }
+
+    void awake() {
+        mIsAwake = true;
+    }
+
+    void sleep() {
+        mIsAwake = false;
+    }
 
     /* 0x0C */ AreaForm* mForm;
     /* 0x10 */ int mFormType;
@@ -54,7 +72,9 @@ public:
     void entry(AreaObj*);
     AreaObj* find_in(const TVec3f&) const;
 
-    AreaObj* getAreaObj(int index) { return mArray[index]; }
+    AreaObj* getAreaObj(int index) {
+        return mArray[index];
+    }
 
     /* 0x0C */ MR::Vector< MR::AssignableArray< AreaObj* > > mArray;
     /* 0x18 */ s32 _18;

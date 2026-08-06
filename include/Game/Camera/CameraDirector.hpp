@@ -2,7 +2,7 @@
 
 #include "Game/Camera/CameraParamChunkID.hpp"
 #include "Game/NameObj/NameObj.hpp"
-#include "JSystem/JGeometry.hpp"
+#include "JSystem/JGeometry/TMatrix.hpp"
 
 class CameraCover;
 class CameraDirector;
@@ -35,9 +35,12 @@ namespace MR {
 
 class CameraParamChunkID_Tmp : public CameraParamChunkID {
 public:
-    inline CameraParamChunkID_Tmp() : CameraParamChunkID() {}
+    inline CameraParamChunkID_Tmp() : CameraParamChunkID() {
+    }
 
-    virtual char* getBuffer(u32);
+    virtual char* getBuffer(u32 size) {
+        return &mBuffer[0];
+    }
 
     char mBuffer[0x100];  // 0xC
 };

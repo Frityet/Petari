@@ -1,4 +1,5 @@
 #include "Game/MapObj/CollectCounter.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
 
 namespace NrvCollectCounter {
@@ -23,7 +24,8 @@ void CollectCounter::control() {
     setPosition();
 }
 
-void CollectCounter::exeHide() {}
+void CollectCounter::exeHide() {
+}
 
 void CollectCounter::exeShow() {
     if (MR::isFirstStep(this)) {
@@ -58,4 +60,5 @@ void CollectCounter::setPosition() {
     mFollowPosition.y = screen_pos.y;
 }
 
-CollectCounter::~CollectCounter() {}
+CollectCounter::~CollectCounter() {
+}

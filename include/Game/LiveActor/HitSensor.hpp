@@ -19,6 +19,14 @@ public:
     void invalidateBySystem();
     void addHitSensor(HitSensor* pSensor);
 
+    f32 getRadius() const {
+        return mRadius;
+    }
+
+    inline bool isValid() const {
+        return mValidByHost && mValidBySystem;
+    }
+
     /* 0x00 */ u32 mType;
     /* 0x04 */ TVec3f mPosition;
     /* 0x10 */ f32 mRadius;

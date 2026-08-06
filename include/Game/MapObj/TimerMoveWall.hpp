@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/MapObj/MapObjActor.hpp"
-
 
 class TimerMoveWall : public MapObjActor {
 public:

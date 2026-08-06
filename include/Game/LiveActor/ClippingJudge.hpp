@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Game/NameObj/NameObj.hpp"
-#include "JSystem/JGeometry/THex.hpp"
+#include <JSystem/JGeometry/THex.hpp>
 
 class ClippingJudge : public NameObj {
 public:
@@ -23,4 +23,4 @@ public:
 
 namespace MR {
     ClippingJudge* getClippingJudge();
-};  // namespace
+};  // namespace MR

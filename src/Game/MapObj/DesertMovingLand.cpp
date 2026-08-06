@@ -1,12 +1,13 @@
 #include "Game/MapObj/DesertMovingLand.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "revolution/mtx.h"
 
 namespace {
@@ -61,17 +62,17 @@ void DesertMovingLand::init(const JMapInfoIter& rIter) {
 
     if (MR::isValidSwitchA(this)) {
         _C4.set(mPosition);
-        _D0.set(_C4 - stack_3C.scaleInline(arg));
+        _D0.set(_C4 - stack_3C * arg);
     } else {
         _D0.set(mPosition);
-        _C4.set(_D0 + stack_3C.scaleInline(arg));
+        _C4.set(_D0 + stack_3C * arg);
     }
     MR::setBodySensorTypePress(this);
 }
 
 void DesertMovingLand::control() {
     MapObjActor::control();
-    if (MR::isDemoActive(cDemoName))
+    if (MR::isDemoActive(::cDemoName))
         updateDemoPlayerPos();
 
     MR::startLevelSound(this, "SE_AT_LV_WIND_MOVING_DESERT");
@@ -95,7 +96,7 @@ void DesertMovingLand::updateDemoPlayerPos() {
     TPos3f stack_8;
     stack_8.set(jointMtx);
     stack_8.concat(stack_8, _E4);
-    stack_8.getTransInline(MR::getPlayerDemoActor()->mPosition);
+    stack_8.getTrans(MR::getPlayerDemoActor()->mPosition);
     MR::setPlayerBaseMtx(stack_8);
 }
 
@@ -112,13 +113,13 @@ void DesertMovingLand::exeWait() {
 void DesertMovingLand::exeMoveDown() {
     if (MR::isFirstStep(this)) {
         TVec3f stack_8(_D0 - _C4);
-        stack_8.setLength(PSVECMag(&stack_8) / _DC);
+        stack_8.setLength(stack_8.length() / _DC);
         mVelocity.set(stack_8);
         MR::startAtmosphereSE("SE_OJ_DESERT_LAND_MOVE_ST");
     }
     MR::startAtmosphereLevelSE("SE_OJ_LV_DESERT_LAND_MOVE");
     if (MR::isLessStep(this, 90)) {
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
     }
 
     if (MR::isStep(this, 90)) {
@@ -137,14 +138,14 @@ void DesertMovingLand::exeMoveDown() {
 void DesertMovingLand::exeMoveUp() {
     if (MR::isFirstStep(this)) {
         TVec3f stack_8(_C4 - _D0);
-        stack_8.setLength(PSVECMag(&stack_8) / _E0);
+        stack_8.setLength(stack_8.length() / _E0);
         mVelocity.set(stack_8);
         MR::startAtmosphereSE("SE_OJ_DESERT_LAND_MOVE_ST");
     }
     MR::startAtmosphereLevelSE("SE_OJ_LV_DESERT_LAND_MOVE");
 
     if (MR::isLessStep(this, 90)) {
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
     }
 
     if (MR::isStep(this, 90)) {
@@ -173,7 +174,7 @@ void DesertMovingLand::exeMoveSign() {
     }
 
     MR::startLevelSound(this, "SE_OJ_LV_DESERT_LAND_SIGN");
-    MR::tryRumblePadMiddle(this, 0);
+    MR::tryRumblePadMiddle(this, WPAD_CHAN0);
     if (MR::isBckStopped(this)) {
         if (isNerve(&NrvDesertMovingLand::HostTypeMoveUpSign::sInstance))
             setNerve(&NrvDesertMovingLand::HostTypeMoveUp::sInstance);
@@ -200,10 +201,13 @@ void DesertMovingLand::connectToScene(const MapObjActorInitInfo& rInfo) {
     MR::connectToSceneCollisionMapObj(this);
 }
 
-void DesertMovingLand::initCaseNoUseSwitchB(const MapObjActorInitInfo& rInfo) {}
+void DesertMovingLand::initCaseNoUseSwitchB(const MapObjActorInitInfo& rInfo) {
+}
 
-void DesertMovingLand::initCaseUseSwitchB(const MapObjActorInitInfo& rInfo) {}
+void DesertMovingLand::initCaseUseSwitchB(const MapObjActorInitInfo& rInfo) {
+}
 
-void DesertMovingLand::initCaseUseSwitchA(const MapObjActorInitInfo& rInfo) {}
+void DesertMovingLand::initCaseUseSwitchA(const MapObjActorInitInfo& rInfo) {
+}
 
 DesertMovingLand::~DesertMovingLand(){};

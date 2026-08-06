@@ -2,11 +2,19 @@
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObjFollower.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
+#include "Game/Map/StageSwitch.hpp"
+#include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include <algorithm>
+#include <functional.hpp>
 
-AreaObj::AreaObj(int type, const char* pName)
-    : NameObj(pName), mFormType(type), mIsValid(true), _15(true), mIsAwake(true), mObjArg0(-1), mObjArg1(-1), mObjArg2(-1), mObjArg3(-1),
-      mObjArg4(-1), mObjArg5(-1), mObjArg6(-1), mObjArg7(-1), mSwitchCtrl(nullptr) {
-    switch (type) {
+
+AreaObj::AreaObj(int formType, const char* pName)
+    : NameObj(pName), mFormType(formType), mIsValid(true), _15(true), mIsAwake(true), mObjArg0(-1), mObjArg1(-1), mObjArg2(-1), mObjArg3(-1),
+      mObjArg4(-1), mObjArg5(-1), mObjArg6(-1), mObjArg7(-1), mSwitchCtrl() {
+    switch (formType) {
     case AreaForm::Type_Cube1:
         mForm = new AreaFormCube(0);
         break;
@@ -40,15 +48,14 @@ void AreaObj::init(const JMapInfoIter& rIter) {
     mSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
 
     if (mSwitchCtrl->isValidSwitchAppear()) {
-        MR::listenNameObjStageSwitchOnOffAppear(this, mSwitchCtrl, MR::Functor_Inline(this, &AreaObj::validate),
-                                                MR::Functor_Inline(this, &AreaObj::invalidate));
+        MR::listenNameObjStageSwitchOnOffAppear(this, mSwitchCtrl, MR::Functor(this, &AreaObj::validate), MR::Functor(this, &AreaObj::invalidate));
         mIsValid = false;
     }
 
-    const char* pName;
+    const char* name;
 
-    if (MR::getObjectName(&pName, rIter)) {
-        setName(pName);
+    if (MR::getObjectName(&name, rIter)) {
+        setName(name);
     }
 
     MR::getAreaObjManager(getManagerName())->entry(this);
@@ -57,7 +64,7 @@ void AreaObj::init(const JMapInfoIter& rIter) {
 }
 
 bool AreaObj::isInVolume(const TVec3f& rPos) const {
-    return mIsValid && _15 && mIsAwake && mForm->isInVolume(rPos);
+    return isValid() && mForm->isInVolume(rPos);
 }
 
 void AreaObj::onSwitchA() {
@@ -95,8 +102,6 @@ TPos3f* AreaObj::getFollowMtx() const {
 AreaObjMgr::AreaObjMgr(s32 count, const char* pName) : NameObj(pName), mArray(), _18(count) {
 }
 
-AreaObjMgr::~AreaObjMgr() {}
-
 void AreaObjMgr::entry(AreaObj* pAreaObj) {
     if (mArray.capacity() == 0) {
         mArray.init(_18);
@@ -105,28 +110,16 @@ void AreaObjMgr::entry(AreaObj* pAreaObj) {
     mArray.push_back(pAreaObj);
 }
 
-AreaObj* AreaObjMgr::find_in(const TVec3f& rPos) const {
-    AreaObj* const* begin = mArray.begin();
-    AreaObj* const* iter = mArray.end();
+AreaObj* AreaObjMgr::find_in(const TVec3f& rVec) const {
+    AreaObj* const* Begin = mArray.begin();
+    AreaObj* const* End = mArray.end();
+    AreaObj* const* p = std::rfind_if(End - 1, Begin - 1, std::bind2nd(std::mem_func(&AreaObj::isInVolume), rVec));
 
-    while (iter != begin) {
-        --iter;
-        if ((*iter)->isInVolume(rPos)) {
-            return *iter;
-        }
+    p = (p == Begin - 1 ? End : p);
+
+    if (p != mArray.end()) {
+        return *p;
     }
 
     return nullptr;
-}
-
-void AreaObj::validate() {
-    mIsValid = true;
-}
-
-void AreaObj::invalidate() {
-    mIsValid = false;
-}
-
-const char* AreaObj::getManagerName() const {
-    return mName;
 }

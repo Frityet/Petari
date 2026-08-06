@@ -1,19 +1,23 @@
 #pragma once
 
 #include "Game/MapObj/MapParts.hpp"
-#include "Game/MapObj/MapPartsAppearController.hpp"
-#include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
-#include "Game/MapObj/MapPartsRailMover.hpp"
-#include "Game/MapObj/MapPartsRailPosture.hpp"
-#include "Game/MapObj/MapPartsRailRotator.hpp"
-#include "Game/MapObj/MapPartsRotator.hpp"
 #include "Game/Util/Array.hpp"
+
+class ActorCameraInfo;
+class MapPartsAppearController;
+class MapPartsFunction;
+class MapPartsRailGuideDrawer;
+class MapPartsRailMover;
+class MapPartsRailPosture;
+class MapPartsRailRotator;
+class MapPartsRotator;
 
 class GeneralMapParts : public MapParts {
 public:
     GeneralMapParts(const char*);
 
-    virtual ~GeneralMapParts() {}
+    virtual ~GeneralMapParts() {
+    }
 
     virtual void init(const JMapInfoIter&);
     virtual void initAfterPlacement();

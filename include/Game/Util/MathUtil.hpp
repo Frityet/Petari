@@ -1,5 +1,6 @@
 #pragma once
 
+#include "JSystem/JGeometry/TUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>
 #include <JSystem/JGeometry/TQuat.hpp>
@@ -188,8 +189,7 @@ namespace MR {
     }
 
     inline f32 toRadian(f32 angle) {
-        f32 cnv = PI_180;
-        return angle * cnv;
+        return angle * PI_180;
     }
 
     /// @brief Computes the distance between two points.
@@ -385,6 +385,18 @@ namespace MR {
     /// @return The remainder of the division.
     f32 mod(f32 x, f32 y);
 
+    /// @brief Computes the angle in radians mapped from [0, TWO_PI).
+    /// @param angle The angle, in radians.
+    /// @return The mapped angle.
+    inline f32 modRadian(f32 angle) {
+        return fmod(angle, TWO_PI);
+    }
+
+    inline bool isOppositeDirectionRadian(f32 angle, f32 target) {
+        f32 modRad = MR::modRadian(angle - target + TWO_PI);
+        return target + modRad < -HALF_PI || target + modRad > HALF_PI;
+    }
+
     /// @brief Converts a three-dimensional floating-point vector into a fixed-point vector.
     /// @param[out] pDst A pointer to the three-dimensional fixed-point vector to initialize.
     /// @param[in] rSrc A reference to the three-dimensional floating-point vector to evaluate.
@@ -402,6 +414,23 @@ namespace MR {
 
     template < typename T >
     T converge(T, T, T);
+
+    /// @brief Returns the value of pi (3.14159274f)
+    inline f32 pi() {
+        return PI;  // TODO: test if actually JGeometry::TUtil<f32>::PI();
+    }
+
+    inline f32 epsilon() {
+        return JGeometry::TUtil< f32 >::epsilon();
+    }
+
+    inline f32 abs(f32 x) {
+        return __fabsf(x);
+    }
+
+    inline s32 abs(s32 x) {
+        return __abs(x);
+    }
 
     /// @brief Computes the cosine of a number, in radians.
     /// @param x The number of radians to evaluate.
@@ -421,7 +450,29 @@ namespace MR {
     /// @param x The number of radians to evaluate.
     /// @return The ratio of the length of the opposite to that of the adjacent.
     inline f32 tan(f32 x) {
-        return sin(x) / cos(x);
+        return JMASinRadian(x) / JMACosRadian(x);
+    }
+
+    /// @brief Computes the arccos of a number in radians.
+    /// @param x The ratio to evaluate.
+    /// @return The angle in radians such that cos(angle) = x.
+    inline f32 acos(f32 x) {
+        return JMAAcosRadian(x);
+    }
+
+    /// @brief Computes the arcsin of a number in radians.
+    /// @param x The ratio to evaluate.
+    /// @return The angle in radians such that sin(angle) = x.
+    inline f32 asin(f32 x) {
+        return JMAAsinRadian(x);
+    }
+
+    /// @brief Computes the angle of the vector given by (x,y), in radians.
+    /// @param x The x coordinate of input vector
+    /// @param y The y coordinate of input vector
+    /// @return The heading angle of the vector given by (x,y).
+    inline f32 atan2(f32 x, f32 y) {
+        return JMAATan2(x, y);
     }
 
     /// @brief Computes the cosine of a number, in degrees.
@@ -442,7 +493,7 @@ namespace MR {
     /// @param x The number of degrees to evaluate.
     /// @return The ratio of the length of the opposite to that of the adjacent.
     inline f32 tanDegree(f32 x) {
-        return sinDegree(x) / cosDegree(x);
+        return JMASinDegree(x) / JMACosDegree(x);
     }
 
     /// @brief Compares two numbers for the smallest value.
@@ -520,7 +571,29 @@ namespace MR {
         *pX = *pX < 0.0f ? 0.0f : *pX > 1.0f ? 1.0f : *pX;
     }
 
-    inline void clampBoth(f32* value, f32 min, f32 max);
+    inline f32 clamp01(f32 x) {
+        if (x < 0.0f) {
+            x = 0.0f;
+        }
+        if (x > 1.0f) {
+            x = 1.0f;
+        }
+        return x;
+    }
+
+    inline void clampBoth(f32* value, f32 min, f32 max) {
+        *value = clamp(*value, min, max);
+    }
+
+    inline void clampMax(f32* val, f32 max) {
+        f32 ret;
+        if (*val >= max) {
+            ret = max;
+        } else {
+            ret = *val;
+        }
+        *val = ret;
+    }
 
     inline f32 repeat(f32 value, f32 min, f32 max) {
         return min + (f32)fmod(max + (value - min), max);
@@ -576,6 +649,7 @@ namespace MR {
     T sqrt(T x) {
         return fastSqrtf(x);
     }
+
 };  // namespace MR
 
 f32 PSVECKillElement(const Vec*, const Vec*, const Vec*);

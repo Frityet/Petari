@@ -1,5 +1,7 @@
 #include "Game/MapObj/FountainBig.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvFountainBig {
     NEW_NERVE(FountainBigNrvWait, FountainBig, Wait);
@@ -16,7 +18,8 @@ FountainBig::FountainBig(const char* pName) : LiveActor(pName) {
     mSpoutTimer = -1;
 }
 
-FountainBig::~FountainBig() {}
+FountainBig::~FountainBig() {
+}
 
 void FountainBig::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -29,7 +32,7 @@ void FountainBig::init(const JMapInfoIter& rIter) {
     initSound(4, false);
     TVec3f vec;
     MR::calcUpVec(&vec, this);
-    JMAVECScaleAdd(&vec, &mPosition, &mClippingRadius, 300.0f);
+    mClippingRadius.scaleAdd(300.0f, vec, mPosition);
     MR::setClippingTypeSphere(this, 600.0f, &mClippingRadius);
     MR::hideModel(this);
     MR::startBtk(this, "FountainBig");
@@ -115,8 +118,8 @@ void FountainBig::updateHitSensor(HitSensor* pSensor) {
     f32 pSensorY = pSensor->mRadius;
     TVec3f vec1, vec2, vec3;
     MR::calcUpVec(&vec1, this);
-    JMAVECScaleAdd(&vec1, &mPosition, &vec2, pSensorY);
-    JMAVECScaleAdd(&vec1, &vec2, &vec3, (600.0f - pSensorY));
+    vec2.scaleAdd(pSensorY, vec1, mPosition);
+    vec3.scaleAdd(600.0f - pSensorY, vec1, vec2);
     MR::calcPerpendicFootToLineInside(&pSensor->mPosition, *MR::getPlayerPos(), vec2, vec3);
 }
 
@@ -134,7 +137,7 @@ void FountainBig::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
                 MR::invalidateHitSensors(this);
             }
         } else {
-            MR::tryRumblePadWeak(this, 0);
+            MR::tryRumblePadWeak(this, WPAD_CHAN0);
             MR::sendArbitraryMsg(ACTMES_FOUNTAINJUMP, pReceiver, pSender);
         }
     }

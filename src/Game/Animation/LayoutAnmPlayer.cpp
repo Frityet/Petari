@@ -2,7 +2,8 @@
 #include "Game/Screen/LayoutManager.hpp"
 #include <nw4r/lyt/animation.h>
 
-LayoutAnmPlayer::LayoutAnmPlayer(const LayoutManager* pManager) : mManager(pManager), mAnimName(nullptr), mAnimTransform(nullptr), mFrameCtrl(0) {}
+LayoutAnmPlayer::LayoutAnmPlayer(const LayoutManager* pManager) : mManager(pManager), mAnimName(nullptr), mAnimTransform(nullptr), mFrameCtrl(0) {
+}
 
 void LayoutAnmPlayer::movement() {
     if (mAnimTransform != nullptr) {
@@ -13,7 +14,7 @@ void LayoutAnmPlayer::movement() {
 void LayoutAnmPlayer::reflectFrame() {
     if (mAnimTransform != nullptr) {
         // TODO: Should be AnimTransform::SetFrame
-        mAnimTransform->mFrame = mFrameCtrl.mFrame;
+        mAnimTransform->mFrame = mFrameCtrl.getFrame();
     }
 }
 
@@ -26,21 +27,21 @@ void LayoutAnmPlayer::start(const char* pAnimName) {
 
     u32 frameSize = mAnimTransform->GetFrameSize();
 
-    mFrameCtrl.init((s16)frameSize);
+    mFrameCtrl.init(static_cast< s16 >(frameSize));
 
     if (mAnimTransform->IsLoopData()) {
-        mFrameCtrl.mAttribute = 2;
+        mFrameCtrl.setAttribute(2);
     } else {
-        mFrameCtrl.mAttribute = 0;
+        mFrameCtrl.setAttribute(0);
     }
 
-    mFrameCtrl.mFrame = 0.0f;
-    mFrameCtrl.mRate = 1.0f;
+    mFrameCtrl.setFrame(0.0f);
+    mFrameCtrl.setRate(1.0f);
     mAnimName = pAnimName;
 }
 
 void LayoutAnmPlayer::stop() {
-    mFrameCtrl.mRate = 0.0f;
+    mFrameCtrl.setRate(0.0f);
 }
 
 // LayoutAnmPlayer::isStop

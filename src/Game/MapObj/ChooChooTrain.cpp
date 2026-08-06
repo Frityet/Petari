@@ -1,4 +1,5 @@
 #include "Game/MapObj/ChooChooTrain.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util.hpp"
 #include "Game/Util/Array.hpp"
@@ -29,7 +30,8 @@ void ChooChooTrain::endClipped() {
 
 void ChooChooTrain::init(const JMapInfoIter& rIter) {
     if (MR::isValidInfo(rIter)) {
-        MR::isConnectedWithRail(rIter);
+        if (MR::isConnectedWithRail(rIter)) {
+        }
     }
 
     MR::initDefaultPos(this, rIter);

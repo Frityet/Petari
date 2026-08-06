@@ -1,4 +1,15 @@
 #include "Game/Enemy/WalkerStateRunaway.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+
+void WalkerStateRunaway_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)3.0f;
+}
 
 namespace {
     static WalkerStateRunawayParam sDefaultParam;
@@ -38,7 +49,7 @@ WalkerStateRunawayParam::WalkerStateRunawayParam() {
 WalkerStateRunaway::WalkerStateRunaway(LiveActor* pHost, TVec3f* pDirection, WalkerStateRunawayParam* pRunawayParam)
     : ActorStateBase< LiveActor >("歩行型アクター逃げ", pHost), mRunawayParam(pRunawayParam), mDirection(pDirection), _18(0), mRunawaySpeed(1.0f) {
     if (mRunawayParam == nullptr) {
-        mRunawayParam = &sDefaultParam;
+        mRunawayParam = &::sDefaultParam;
     }
 
     initNerve(&NrvWalkerStateRunaway::WalkerStateRunawayNrvWait::sInstance);
@@ -79,7 +90,9 @@ bool WalkerStateRunaway::tryWallJump() {
             MR::addVelocityClockwiseToDirection(getHost(), wallNorml,
                                                 MR::isHalfProbability() ? mRunawayParam->mWallJumpPowerH : -mRunawayParam->mWallJumpPowerH);
         } else {
-            MR::addVelocityMoveToDirection(getHost(), wallNorml.addOtherInline(horiz), mRunawayParam->mWallJumpPowerH);
+            TVec3f dir;
+            dir.add(wallNorml, horiz);
+            MR::addVelocityMoveToDirection(getHost(), dir, mRunawayParam->mWallJumpPowerH);
         }
 
         MR::addVelocityJump(getHost(), mRunawayParam->mWallJumpPowerV);
@@ -110,7 +123,7 @@ void WalkerStateRunaway::exeRunaway() {
     }
 
     TVec3f v13;
-    JMAVECScaleAdd(MR::getPlayerVelocity(), MR::getPlayerPos(), &v13, mRunawayParam->mPlayerFrontLineLength);
+    v13.scaleAdd(mRunawayParam->mPlayerFrontLineLength, *MR::getPlayerVelocity(), *MR::getPlayerPos());
     TVec3f* actorPos = &mHost->mPosition;
     MR::calcPerpendicFootToLineInside(&v13, *actorPos, *MR::getPlayerPos(), v13);
     MR::turnDirectionFromTargetDegree(mHost, mDirection, v13,

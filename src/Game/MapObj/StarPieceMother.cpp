@@ -1,5 +1,20 @@
 #include "Game/MapObj/StarPieceMother.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/StarPiece.hpp"
+#include "Game/Util.hpp"
+
+void StarPieceMother_FORCE_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)10.0f;
+}
+
+namespace {
+    // const f32 hMoveSpeed = _;
+    const f32 hAddRandomVectorValue = 0.5f;
+    const f32 hAddRotateY = 10.0f;
+};  // namespace
 
 namespace NrvStarPieceMother {
     NEW_NERVE(HostTypeNrvMoveOnRail, StarPieceMother, MoveOnRail);
@@ -9,13 +24,11 @@ namespace NrvStarPieceMother {
 StarPieceMother::StarPieceMother(const char* pName) : LiveActor(pName), mStarPieceArray(), _90(), _94(6), _98(), _9C(), _A0() {
 }
 
-StarPieceMother::~StarPieceMother() {
-}
-
 void StarPieceMother::init(const JMapInfoIter& rIter) {
-    s32 notRailConnected = false;
+    s32 isRailNotConnected = false;
+
     if (!MR::isValidInfo(rIter) || !MR::isConnectedWithRail(rIter)) {
-        notRailConnected = true;
+        isRailNotConnected = true;
 
         MR::initDefaultPos(this, rIter);
 
@@ -62,7 +75,7 @@ void StarPieceMother::init(const JMapInfoIter& rIter) {
         }
     }
 
-    if (notRailConnected) {
+    if (isRailNotConnected) {
         initNerve(&NrvStarPieceMother::HostTypeNrvWait::sInstance);
         initHitSensor(1);
         MR::addHitSensorMapObj(this, "body", 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));
@@ -80,7 +93,7 @@ void StarPieceMother::init(const JMapInfoIter& rIter) {
         if (arg != -1 && arg != 0) {
             _A0 = static_cast< f32 >(arg);
         }
-        
+
         makeActorDead();
     }
 
@@ -98,7 +111,7 @@ void StarPieceMother::kill() {
 }
 
 void StarPieceMother::control() {
-    mRotation.y += 10.0f;
+    mRotation.y += ::hAddRotateY;
 }
 
 void StarPieceMother::exeMoveOnRail() {
@@ -107,9 +120,9 @@ void StarPieceMother::exeMoveOnRail() {
     }
 
     MR::startLevelSound(this, "SE_OJ_LV_STAR_PIECE_MO_MV");
-    MR::moveCoordAndFollowTrans(this, _A0); 
+    MR::moveCoordAndFollowTrans(this, _A0);
 
-    f32 railCoord = MR::getRailCoord(this); // Necessary to match
+    f32 railCoord = MR::getRailCoord(this);  // Necessary to match
     if (_90[_98] <= railCoord) {
         mStarPieceArray[_98]->appear();
         MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
@@ -154,8 +167,8 @@ void StarPieceMother::offSwitchA() {
     }
 }
 
-void StarPieceMother::attackSensor(HitSensor* pSensor1, HitSensor* pSensor2) {
-    if (MR::isSensorPlayer(pSensor2) && (!MR::isValidSwitchA(this) || MR::isOnSwitchA(this))) {
+void StarPieceMother::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
+    if (MR::isSensorPlayer(pReceiver) && (!MR::isValidSwitchA(this) || MR::isOnSwitchA(this))) {
         emitStarPieces();
         kill();
     }
@@ -165,9 +178,9 @@ void StarPieceMother::emitStarPieces() {
     for (u32 idx = 0; idx < _94; idx++) {
         TVec3f position;
         position.set(*MR::getPlayerCenterPos());
-        position.subInline(mPosition);
+        position.sub(mPosition);
         MR::normalizeOrZero(&position);
-        MR::addRandomVector(&position, position, 0.5f);
+        MR::addRandomVector(&position, position, ::hAddRandomVectorValue);
         MR::normalizeOrZero(&position);
 
         if (MR::isNearZero(position)) {

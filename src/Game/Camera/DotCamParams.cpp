@@ -3,11 +3,10 @@
 #include <cstdio>
 #include <cstring>
 
-DotCamReader::~DotCamReader() {}
+DotCamReader::~DotCamReader() {
+}
 
 DotCamReaderInBin::DotCamReaderInBin(const void* pData) : mVersion(0), _8(nullptr), mMapInfo() {
-    mMapIter.mInfo = nullptr;
-    mMapIter.mIndex = -1;
     init(pData);
 }
 
@@ -96,5 +95,5 @@ void DotCamReaderInBin::init(const void* pData) {
     mMapInfo.attach(pData);
     mMapInfo.getValue(0, "version", &mVersion);
 
-    mMapIter = JMapInfoIter(&mMapInfo,0);
+    mMapIter = JMapInfoIter(&mMapInfo, 0);
 }

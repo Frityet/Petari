@@ -1,5 +1,12 @@
 #include "Game/MapObj/TreasureSpot.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util.hpp"
+
+namespace {
+    static const s32 sNumCoin = 1;
+    static const f32 sEnableSpoutLength = 2000.0f;
+};  // namespace
 
 namespace NrvTreasureSpot {
     NEW_NERVE(TreasureSpotNrvWait, TreasureSpot, Wait);
@@ -7,8 +14,7 @@ namespace NrvTreasureSpot {
     NEW_NERVE(TreasureSpotNrvSpout, TreasureSpot, Spout);
 };  // namespace NrvTreasureSpot
 
-TreasureSpot::TreasureSpot(const char* pName) : MapObjActor(pName) {
-    mIsCoinFlower = false;
+TreasureSpot::TreasureSpot(const char* pName) : MapObjActor(pName), mIsCoinFlower() {
 }
 
 void TreasureSpot::init(const JMapInfoIter& rIter) {
@@ -22,22 +28,24 @@ void TreasureSpot::init(const JMapInfoIter& rIter) {
     MapObjActor::initialize(rIter, info);
     mIsCoinFlower = isObjectName("CoinFlower");
     MR::initStarPointerTarget(this, 100.0f, TVec3f(0.0f, 50.0f, 0.0f));
-    MR::declareCoin(this, 1);
+    MR::declareCoin(this, ::sNumCoin);
 }
 
-void TreasureSpot::exeWait() {}
+void TreasureSpot::exeWait() {
+}
 
-void TreasureSpot::exeEnd() {}
+void TreasureSpot::exeEnd() {
+}
 
 void TreasureSpot::exeSpout() {
     if (MR::isFirstStep(this)) {
         MR::forceDeleteEffectAll(this);
         TVec3f upVec;
         MR::calcUpVec(&upVec, this);
-        MR::appearCoinPopToDirection(this, mPosition, upVec, 1);
+        MR::appearCoinPopToDirection(this, mPosition, upVec, ::sNumCoin);
 
         if (mIsCoinFlower) {
-            MR::startBck(this, "Bloom", 0);
+            MR::startBck(this, "Bloom", nullptr);
             MR::startSound(this, "SE_OJ_COIN_FLOWER_BLOOM");
         } else {
             setNerve(&NrvTreasureSpot::TreasureSpotNrvEnd::sInstance);
@@ -54,9 +62,15 @@ void TreasureSpot::exeSpout() {
 }
 
 void TreasureSpot::control() {
-    if (!isNerve(&NrvTreasureSpot::TreasureSpotNrvSpout::sInstance) && !isNerve(&NrvTreasureSpot::TreasureSpotNrvEnd::sInstance)) {
-        switchEmitGlow();
+    if (isNerve(&NrvTreasureSpot::TreasureSpotNrvSpout::sInstance)) {
+        return;
     }
+
+    if (isNerve(&NrvTreasureSpot::TreasureSpotNrvEnd::sInstance)) {
+        return;
+    }
+
+    switchEmitGlow();
 }
 
 bool TreasureSpot::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
@@ -68,7 +82,7 @@ bool TreasureSpot::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor
         return false;
     }
 
-    if (!MR::isNearPlayerAnyTime(this, 2000.0f)) {
+    if (!MR::isNearPlayerAnyTime(this, ::sEnableSpoutLength)) {
         return false;
     }
 
@@ -85,15 +99,11 @@ bool TreasureSpot::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor
 }
 
 void TreasureSpot::switchEmitGlow() {
-    if (!MR::isNearPlayerAnyTime(this, 2000.0f)) {
+    if (!MR::isNearPlayerAnyTime(this, ::sEnableSpoutLength)) {
         MR::deleteEffect(this, "Glow");
-    } else {
-        if (MR::isNearPlayerAnyTime(this, 2000.0f)) {
-            if (!MR::isEffectValid(this, "Glow")) {
-                MR::emitEffect(this, "Glow");
-            }
+    } else if (MR::isNearPlayerAnyTime(this, ::sEnableSpoutLength)) {
+        if (!MR::isEffectValid(this, "Glow")) {
+            MR::emitEffect(this, "Glow");
         }
     }
 }
-
-TreasureSpot::~TreasureSpot() {}

@@ -1,24 +1,39 @@
 #include "Game/NPC/TicoFat.hpp"
+#include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
-#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
+#include "Game/MapObj/BenefitItemLifeUp.hpp"
 #include "Game/MapObj/SpinDriverShootPath.hpp"
 #include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/NPC/NPCActorItem.hpp"
+#include "Game/NPC/TalkMessageFunc.hpp"
 #include "Game/Screen/FullnessMeter.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/Color.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LightUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/NPCUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include <cstdio>
 
@@ -153,7 +168,7 @@ void TicoFat::init(const JMapInfoIter& rIter) {
     _174 = 0;
     mStartEat = false;
     _1F4 = -1;
-    mScaleController = new AnimScaleController(&sParam);
+    mScaleController = new AnimScaleController(&::sParam);
     NPCActor::initialize(rIter, caps);
     s32 itemType = _1DC;
     MR::getJMapInfoArg0NoInit(rIter, &itemType);
@@ -247,7 +262,7 @@ void TicoFat::init(const JMapInfoIter& rIter) {
 
 void TicoFat::initAfterPlacement() {
     MR::extractMtxYDir(getBaseMtx(), &mGravity);
-    mGravity.invert();
+    mGravity.mult(-1.0f);
     if (!_1E0) {
         disappear(false);
         makeActorDead();
@@ -265,14 +280,11 @@ void TicoFat::setCameraParam() {
     TVec3f trans, yDir, zDir, xDir, v18;
     MR::extractMtxXYZDir(getBaseMtx(), &xDir, &yDir, &zDir);
     MR::extractMtxTrans(getBaseMtx(), &trans);
-    xDir.set< f32 >(((1.0f - (2.0f * (_B0.y * _B0.y))) - (2.0f * (_B0.z * _B0.z))), ((2.0f * (_B0.x * _B0.y)) + (2.0f * (_B0.w * _B0.z))),
-                    ((2.0f * (_B0.x * _B0.z)) - (2.0f * (_B0.w * _B0.y))));
-    yDir.set< f32 >(((2.0f * (_B0.x * _B0.y)) - (2.0f * (_B0.w * _B0.z))), ((1.0f - (2.0f * (_B0.x * _B0.x))) - (2.0f * (_B0.z * _B0.z))),
-                    ((2.0f * (_B0.y * _B0.z)) + (2.0f * (_B0.w * _B0.x))));
-    zDir.set< f32 >(((2.0f * (_B0.x * _B0.z)) + (2.0f * (_B0.w * _B0.y))), ((2.0f * (_B0.y * _B0.z)) - (2.0f * (_B0.w * _B0.x))),
-                    ((1.0f - (2.0f * (_B0.x * _B0.x))) - (2.0f * (_B0.y * _B0.y))));
+    _B0.getXDir(xDir);
+    _B0.getYDir(yDir);
+    _B0.getZDir(zDir);
 
-    v18.setPS2(_C0);
+    v18 = _C0;
     TVec3f* ptr = &v18;
     MR::setProgrammableCameraParam(
         "デブチコカメラ", (*ptr + (xDir * 0.0f) + (yDir * 0.0f)) + (zDir * 0.0f),
@@ -283,7 +295,7 @@ void TicoFat::control() {
     NPCActor::control();
     TVec3f trans;
     MR::extractMtxTrans(MR::getJointMtx(this, "Center"), &trans);
-    MR::requestPointLight(this, TVec3f(trans), hPointLight, 0.99864602f, -1);
+    MR::requestPointLight(this, TVec3f(trans), ::hPointLight, 0.99864602f, -1);
     if (isNerve(&NrvTicoFat::TicoFatNrvPrep::sInstance) || isNerve(&NrvTicoFat::TicoFatNrvWait::sInstance) ||
         isNerve(&NrvTicoFat::TicoFatNrvPoint::sInstance) || isNerve(&NrvTicoFat::TicoFatNrvEat::sInstance) ||
         isNerve(&NrvTicoFat::TicoFatNrvChem::sInstance) || isNerve(&NrvTicoFat::TicoFatNrvFullness::sInstance) ||
@@ -457,7 +469,7 @@ void TicoFat::setMessage(s32 msg) {
 void TicoFat::shootStarPiece() {
     if (MR::giftStarPieceToTarget(getSensor("Mouth"), 1)) {
         mCurrentFed++;
-        MR::tryRumblePadVeryWeak(this, 0);
+        MR::tryRumblePadVeryWeak(this, WPAD_CHAN0);
     }
 }
 
@@ -472,7 +484,7 @@ void TicoFat::receiveStarPiece(s32 num) {
     addStarPieceSaveData(val);
     setScale(calcScale());
     mMeter->setNumber(_1E4 - _1E0);
-    MR::tryRumblePadVeryWeak(this, 0);
+    MR::tryRumblePadVeryWeak(this, WPAD_CHAN0);
     startAbsorbSound();
     MR::setMessageArg(mMsgCtrl, _1E0);
     MR::setMessageArg(_16C, _1E0);
@@ -506,10 +518,11 @@ void TicoFat::initStarPieceSaveData(const JMapInfoIter& rIter) {
     }
 }
 
-void TicoFat::addStarPieceSaveData(s32) {}
+void TicoFat::addStarPieceSaveData(s32) {
+}
 
 void TicoFat::appearInformation() const {
-    MR::appearInformationMessage(MR::getGameMessageDirect(sInfoMessageID), true);
+    MR::appearInformationMessage(MR::getGameMessageDirect(::sInfoMessageID), true);
 }
 
 void TicoFat::disappear(bool a1) {
@@ -557,9 +570,7 @@ void TicoFat::emitScreenEffect() {
 }
 
 void TicoFat::updateScreenEffect() {
-    const TVec3f camPos = MR::getCamPos();
-    TVec3f v19(mPosition);
-    JMathInlineVEC::PSVECSubtract(&v19, &camPos, &v19);
+    TVec3f v19 = mPosition - MR::getCamPos();
     MR::normalizeOrZero(&v19);
     MR::makeMtxFrontUpPos(&_17C, -MR::getCamZdir(), MR::getCamYdir(), MR::getCamPos() + (v19 * 500.0f));
     MR::makeMtxFrontUpPos(&_1AC, -MR::getCamZdir(), MR::getCamYdir(), mPosition);
@@ -847,10 +858,10 @@ void TicoFat::exeFly() {
         MR::startMultiActorCameraTargetSelf(this, mCameraInfo, "飛行", -1);
         MR::startAction(this, getActionName("Fly"));
         MR::startSound(this, "SE_DM_TICOFAT_MORPH_FLY");
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
     }
 
-    MR::tryRumblePadVeryWeak(this, 0);
+    MR::tryRumblePadVeryWeak(this, WPAD_CHAN0);
     f32 v4 = _1F8 / mShootPath->getTotalLength();
     if (1.0f >= v4) {
         v4 = v4;
@@ -886,7 +897,7 @@ void TicoFat::exeWipeOut() {
         MR::startSystemSE("SE_DM_TICOFAT_MORPH_WIPE_OUT");
         emitScreenEffect();
         MR::closeWipeWhiteFade(60);
-        MR::tryRumblePadMiddle(this, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
     }
 
@@ -957,4 +968,5 @@ void TicoFat::exeAfter() {
     }
 }
 
-TicoFat::~TicoFat() {}
+TicoFat::~TicoFat() {
+}

@@ -1,27 +1,55 @@
 #pragma once
 
 #include "Game/Demo/DemoCastGroup.hpp"
-#include "Game/Demo/DemoSubPartKeeper.hpp"
+#include "Game/Util/Array.hpp"
 
 class DemoActionKeeper;
 class DemoCameraKeeper;
+class DemoExecutor;
 class DemoPlayerKeeper;
-class DemoSheetKeeperBase;
 class DemoSoundKeeper;
-class DemoTimeKeeper;
+class DemoSubPartInfo;
+class DemoSubPartKeeper;
 class DemoTalkAnimCtrl;
+class DemoTimeKeeper;
 class DemoWipeKeeper;
 class StageSwitchCtrl;
 class TalkMessageCtrl;
 
+class DemoSheetKeeperBase {
+public:
+    virtual const char* getName() = 0;
+    virtual const char* getTypeString() = 0;
+    virtual void initCast(LiveActor*, const JMapInfoIter&) {};
+    virtual void start() {};
+    virtual void end() {};
+    virtual void update() {};
+
+    /* 0x04 */ DemoExecutor* mExecutor;
+};
+
+template < class T >
+class DemoSheetKeeperInfoHolder {
+public:
+    virtual void executeType(T*);
+
+    /* 0x00 */ MR::Vector< MR::AssignableArray< T > > mInfo;
+};
+
+struct DemoTalkMessageCtrl {
+    /* 0x00 */ LiveActor* mActor;
+    /* 0x04 */ TalkMessageCtrl* mTalkMessageCtrl;
+};
+
 class DemoExecutor : public DemoCastGroup {
 public:
-    DemoExecutor(const char*);
+    /// @brief Creates a new `DemoExecutor`
+    DemoExecutor(const char* pName);
 
-    virtual ~DemoExecutor();
-    virtual void init(const JMapInfoIter&);
-    virtual void registerDemoActor(LiveActor*, const JMapInfoIter&);
+    virtual void init(const JMapInfoIter& rIter);
     virtual void movement();
+
+    virtual void registerDemoActor(LiveActor*, const JMapInfoIter&);
 
     void start(NameObj*, const char*, s32);
     void startPart(NameObj*, const char*, const char*, s32);
@@ -30,51 +58,29 @@ public:
     bool tryStartProperDemoSystem();
     bool tryStartDemoSystemPart(const char*, s32);
     bool tryStartProperDemoSystemPart(const char*);
-
     void pause();
     void resume();
-    void end();
-
     void addTalkAnimCtrl(DemoTalkAnimCtrl*);
     void addTalkMessageCtrl(LiveActor*, TalkMessageCtrl*);
     TalkMessageCtrl* findTalkMessageCtrl(const LiveActor*) const;
     void setTalkMessageCtrl(const LiveActor*, TalkMessageCtrl*);
+    void end();
 
-    inline s32 getSubPartStep(const char* pName) {
-        DemoSubPartInfo* subpart;
-        DemoSubPartKeeper* subpartkeeper = mSubPartKeeper;
-        for (int i = 0; i < subpartkeeper->mNumSubPartInfos; i++) {
-            subpart = &subpartkeeper->mSubPartInfos[i];
-            if (MR::isEqualString(pName, subpart->mMainPartName) && MR::isEqualSubString(subpart->mSubPartName, "会話アニメループ")) {
-                return subpart->mMainPartStep;
-            }
-        }
-        return 0;
-    }
-
-    const char* mSheetName;                                          // 0x14
-    DemoTimeKeeper* mTimeKeeper;                                     // 0x18
-    DemoSubPartKeeper* mSubPartKeeper;                               // 0x1C
-    DemoPlayerKeeper* mPlayerKeeper;                                 // 0x20
-    DemoCameraKeeper* mCameraKeeper;                                 // 0x24
-    DemoActionKeeper* mActionKeeper;                                 // 0x28
-    DemoWipeKeeper* mWipeKeeper;                                     // 0x2C
-    DemoSoundKeeper* mSoundKeeper;                                   // 0x30
-    MR::Vector< MR::FixedArray< DemoSheetKeeperBase*, 2 > > mSheetKeepers;  // 0x34
-    StageSwitchCtrl* mStageSwitchCtrl;                               // 0x40
-    NameObj* mDemoStarter;                                           // 0x44
-    const char* mDemoName;                                           // 0x48
-    s32 mStartType;                                                  // 0x4C
-    bool _50;                                                        // 0x50
-    u8 _51[3];                                                       // 0x51
-    LiveActor* mInvalidateClippingActors[192];                       // 0x54
-    s32 mNumInvalidateClippingActors;                                // 0x354
-    DemoTalkAnimCtrl* mTalkAnimCtrls[8];  // 0x358 (inline array)
-    s32 mNumTalkAnimCtrls;              // 0x378
-    struct TalkMessageInfo {
-        const LiveActor* mActor;       // 0x00
-        TalkMessageCtrl* mMessageCtrl;  // 0x04
-    };
-    TalkMessageInfo mTalkMessageInfos[8];  // 0x37C
-    s32 mNumTalkMessageInfos;              // 0x3BC
+    /* 0x014 */ const char* mSheetName;
+    /* 0x018 */ DemoTimeKeeper* mTimeKeeper;
+    /* 0x01C */ DemoSubPartKeeper* mSubPartKeeper;
+    /* 0x020 */ DemoPlayerKeeper* mPlayerKeeper;
+    /* 0x024 */ DemoCameraKeeper* mCameraKeeper;
+    /* 0x028 */ DemoActionKeeper* mActionKeeper;
+    /* 0x02C */ DemoWipeKeeper* mWipeKeeper;
+    /* 0x030 */ DemoSoundKeeper* mSoundKeeper;
+    /* 0x034 */ MR::Vector< MR::FixedArray< DemoSheetKeeperBase*, 2 > > mSheetKeeper;
+    /* 0x040 */ StageSwitchCtrl* _40;
+    /* 0x044 */ NameObj* _44;
+    /* 0x048 */ const char* _48;
+    /* 0x04C */ s32 _4C;
+    /* 0x050 */ bool _50;
+    /* 0x054 */ MR::Vector< MR::FixedArray< LiveActor*, 192 > > mActor;
+    /* 0x358 */ MR::Vector< MR::FixedArray< DemoTalkAnimCtrl*, 8 > > mTalkAnimCtrl;
+    /* 0x37C */ MR::Vector< MR::FixedArray< DemoTalkMessageCtrl, 8 > > mTalkMessageCtrl;
 };

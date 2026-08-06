@@ -13,20 +13,19 @@
 #include "Game/Boss/PoltaSensorCtrl.hpp"
 #include "Game/Enemy/BombTeresa.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/Functor.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMath.hpp"
 #include "revolution/types.h"
 
@@ -229,8 +228,7 @@ void Polta::updateAction() {
 }
 
 void Polta::updatePose(f32 param1, f32 param2) {
-    TVec3f* mGravTemp = &mGravity;
-    JMAVECScaleAdd(mGravTemp, &_C4, &_C4, -mGravTemp->dot(_C4));
+    _C4.orthogonalize(mGravity);
     if (MR::isNearZero(_C4)) {
         _B4.getZDir(_C4);
     } else {

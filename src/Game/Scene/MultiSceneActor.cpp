@@ -15,7 +15,8 @@ MultiSceneActor::MultiSceneActor(const char* pName, const char* pModelName, bool
     mModelManager->init(pModelName, nullptr, param3);
 }
 
-void MultiSceneActor::init(const JMapInfoIter& rIter) {}
+void MultiSceneActor::init(const JMapInfoIter& rIter) {
+}
 
 void MultiSceneActor::movement() {
     if (_30) {
@@ -130,23 +131,13 @@ namespace MultiScene {
     }
 
     void setBtpFrameAndStop(MultiSceneActor* pActor, f32 frame) {
-        J3DFrameCtrl* pBtpCtrl;
-
-        pBtpCtrl = pActor->getModelManager()->getBtpCtrl();
-        pBtpCtrl->mFrame = frame;
-
-        pBtpCtrl = pActor->getModelManager()->getBtpCtrl();
-        pBtpCtrl->mRate = 0.0f;
+        pActor->getModelManager()->getBtpCtrl()->setFrame(frame);
+        pActor->getModelManager()->getBtpCtrl()->setRate(0.0f);
     }
 
     void setBvaFrameAndStop(MultiSceneActor* pActor, f32 frame) {
-        J3DFrameCtrl* pBvaCtrl;
-
-        pBvaCtrl = pActor->getModelManager()->getBvaCtrl();
-        pBvaCtrl->mFrame = frame;
-
-        pBvaCtrl = pActor->getModelManager()->getBvaCtrl();
-        pBvaCtrl->mRate = 0.0f;
+        pActor->getModelManager()->getBvaCtrl()->setFrame(frame);
+        pActor->getModelManager()->getBvaCtrl()->setRate(0.0f);
     }
 
     bool isBckStopped(MultiSceneActor* pActor) {
@@ -218,4 +209,5 @@ namespace MultiScene {
     }
 };  // namespace MultiScene
 
-void MultiSceneActor::control() {}
+void MultiSceneActor::control() {
+}

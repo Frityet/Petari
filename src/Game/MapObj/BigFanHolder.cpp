@@ -1,8 +1,11 @@
 #include "Game/MapObj/BigFanHolder.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/BigFan.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util.hpp"
 
-BigFanHolder::BigFanHolder() : DeriveActorGroup("大型扇風機管理", 0x20) {}
+BigFanHolder::BigFanHolder() : DeriveActorGroup("大型扇風機管理", 0x20) {
+}
 
 /*
 void BigFanHolder::calcWindInfo(TVec3f *pWindInfo, const TVec3f &a2, f32 *a3) {
@@ -20,7 +23,7 @@ void BigFanHolder::calcWindInfo(TVec3f *pWindInfo, const TVec3f &a2, f32 *a3) {
         stack_2C.addInline3(stack_14);
     }
 
-    f32 mag = PSVECMag(&stack_2C);
+    f32 mag = stack_2C.length();
     if (MR::isNearZero(mag)) {
         pWindInfo->zero();
 
@@ -61,4 +64,5 @@ void BigFanFunction::registerBigFan(BigFan* pFan) {
     MR::getSceneObj< BigFanHolder >(SceneObj_BigFanHolder)->registerActor(pFan);
 }
 
-BigFanHolder::~BigFanHolder() {}
+BigFanHolder::~BigFanHolder() {
+}

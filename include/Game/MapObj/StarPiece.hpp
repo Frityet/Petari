@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/TriangleFilter.hpp"
 #include "JSystem/J3DGraphBase/J3DStruct.hpp"
@@ -15,7 +14,8 @@ namespace MR {
 
 struct StarPieceReceiverInfo {
 public:
-    inline StarPieceReceiverInfo(NameObj* pNameObj, s32 a2, s32 a3, s32 a4) : mObj(pNameObj), _4(a2), _8(a3), mGotCount(a4) {}
+    inline StarPieceReceiverInfo(NameObj* pNameObj, s32 a2, s32 a3, s32 a4) : mObj(pNameObj), _4(a2), _8(a3), mGotCount(a4) {
+    }
     NameObj* mObj;
     u32 _4;
     u32 _8;
@@ -24,8 +24,11 @@ public:
 
 struct StarPieceHostInfo {
 public:
-    inline StarPieceHostInfo(NameObj* pNameObj, s32 a2, s32 a3, s32 a4) : mObj(pNameObj), _4(a2), _8(a3), _C(a4) {}
-    bool isAppearable() NO_INLINE { return _C < _4 && _8 < _4 - _C; }
+    inline StarPieceHostInfo(NameObj* pNameObj, s32 a2, s32 a3, s32 a4) : mObj(pNameObj), _4(a2), _8(a3), _C(a4) {
+    }
+    bool isAppearable() NO_INLINE {
+        return _C < _4 && _8 < _4 - _C;
+    }
 
     NameObj* mObj;
     s32 _4;

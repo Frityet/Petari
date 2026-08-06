@@ -18,7 +18,8 @@ namespace NrvPlayerMissLeft {
     NEW_NERVE(HostTypeNrvEnd, PlayerMissLeft, End);
 };  // namespace NrvPlayerMissLeft
 
-PlayerMissLeft::PlayerMissLeft(const char* pName) : LayoutActor(pName, true), mLayoutAppearer(nullptr), mPaneRumbler(nullptr) {}
+PlayerMissLeft::PlayerMissLeft(const char* pName) : LayoutActor(pName, true), mLayoutAppearer(nullptr), mPaneRumbler(nullptr) {
+}
 
 void PlayerMissLeft::init(const JMapInfoIter& rIter) {
     initLayoutManager("PlayerLeft", 3);
@@ -73,13 +74,13 @@ void PlayerMissLeft::exeAppear() {
 }
 
 void PlayerMissLeft::exeWait() {
-    if (MR::isStep(this, hCountDownTime)) {
+    if (MR::isStep(this, ::hCountDownTime)) {
         MR::setTextBoxNumberRecursive(this, "CenterPlayerLeft", MR::getPlayerLeft());
         mPaneRumbler->start();
         MR::startSystemSE("SE_SY_PLAYER_LEFT_DEC");
     }
 
-    if (MR::isGreaterStep(this, hEndTime)) {
+    if (MR::isGreaterStep(this, ::hEndTime)) {
         setNerve(&NrvPlayerMissLeft::HostTypeNrvEnd::sInstance);
     }
 }

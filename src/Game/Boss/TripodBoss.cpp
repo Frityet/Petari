@@ -6,14 +6,24 @@
 #include "Game/Boss/TripodBossStepSequence.hpp"
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/MapObj/DummyDisplayModel.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/GravityUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
@@ -23,7 +33,7 @@
 namespace {
     static const char* sLegBoneNameTable[] = {"LeftLeg", "RightLeg", "BackLeg"};
 
-    static s32 sKillerGeneraterIncreaseSeTiming = 0x5A;
+    static s32 sKillerGeneraterIncreaseSeTiming = 90;
     static s32 sHeadExplodeSeTiming;
 
     static TVec3f sPowerStarOffset(0.0f, 3200.0f, 0.0f);
@@ -168,8 +178,7 @@ void TripodBoss::initLegIKPlacement() {
 
     TVec3f v29(mMovableArea->mBaseAxis);
     TVec3f v28(mMovableArea->mFront);
-    TVec3f v27;
-    PSVECCrossProduct(&v29, &v28, &v27);
+    TVec3f v27 = v29.cross(v28);
     v29 *= (temp618 * mMovableArea->mRadius);
     v28 *= (v5 * mMovableArea->mRadius);
     v27 *= (v5 * mMovableArea->mRadius);
@@ -179,8 +188,8 @@ void TripodBoss::initLegIKPlacement() {
         u32& rI = i;
         f32 cur = -(f32)i * ONEPOINTFIVEPI;
         f32 initAngle = ((0.5f * ONEPOINTFIVEPI) + cur);
-        f32 x = JMath::sSinCosTable.sinLapRad(initAngle);
-        f32 z = JMath::sSinCosTable.cosLapRad(initAngle);
+        f32 x = MR::sin(initAngle);
+        f32 z = MR::cos(initAngle);
 
         TVec3f legDirShadow;
         legDirShadow.x = x;
@@ -189,13 +198,13 @@ void TripodBoss::initLegIKPlacement() {
 
         TVec3f j(0.0f, 1.0f, 0.0f);
 
-        TVec3f legDir = legDirShadow.multiplyOperatorInline(_610).translate(j.multiplyOperatorInline(_614));
+        TVec3f legDir = legDirShadow * _610 + j * _614;
 
         getLeg(rI)->setIKParam(_608, _60C, legDir, legDirShadow, j);
 
         TVec3f* center = &mMovableArea->mCenter;
 
-        TVec3f v23 = v29.translate(v27.multiplyOperatorInline(x)).translate(v28.multiplyOperatorInline(z)).translate(*center);
+        TVec3f v23 = v29 + v27 * x + v28 * z + *center;
 
         TVec3f v22;
         mMovableArea->calcLandingNormal(&v22, v23);
@@ -360,8 +369,7 @@ bool TripodBoss::tryEndSequence() {
 
 bool TripodBoss::tryNextSequence() {
     if (isStopAllLeg()) {
-        bool v4 = isStateSomething();
-        if (!v4) {
+        if (!isStateSomething()) {
             setNerve(&NrvTripodBoss::TripodBossNrvStep::sInstance);
             return true;
         }
@@ -390,8 +398,7 @@ bool TripodBoss::tryWaitStep() {
 }
 
 bool TripodBoss::tryNextStep() {
-    bool v3 = isStateSomething();
-    if (v3) {
+    if (isStateSomething()) {
         return false;
     }
 
@@ -483,7 +490,7 @@ void TripodBoss::requestEndDamageDemo() {
     endDemo("ダメージ");
     setNerve(&NrvTripodBoss::TripodBossNrvWait::sInstance);
     TVec3f appearOffs;
-    mBodyMtx.mult(sAppearStarPieceOffset, appearOffs);
+    mBodyMtx.mult(::sAppearStarPieceOffset, appearOffs);
     TVec3f yDir;
     mBodyMtx.getYDir(yDir);
     MR::appearStarPieceToDirection(this, appearOffs, yDir, 24, 50.0f, 60.0f, false);
@@ -618,7 +625,7 @@ void TripodBoss::exeDamageDemo() {
 
     MR::startLevelSound(this, "SE_BM_LV_TRIPOD_SIREN");
     MR::startLevelSound(this, "SE_BM_LV_TRIPOD_MID_DEMO");
-    if (MR::isStep(this, sKillerGeneraterIncreaseSeTiming)) {
+    if (MR::isStep(this, ::sKillerGeneraterIncreaseSeTiming)) {
         MR::startSound(this, "SE_BM_TRIPOD_CANNON_APPEAR");
     }
 
@@ -643,7 +650,7 @@ void TripodBoss::exePainDemo() {
     if (MR::isStep(this, 90)) {
         TPos3f mtx(getBaseMtx());
         TVec3f v5;
-        mtx.mult(sEndMarioPosition, v5);
+        mtx.mult(::sEndMarioPosition, v5);
         mtx.mMtx[0][3] = v5.x;
         mtx.mMtx[1][3] = v5.y;
         mtx.mMtx[2][3] = v5.z;
@@ -677,7 +684,7 @@ void TripodBoss::exePainDemo() {
 
 void TripodBoss::exeBreakDownDemo() {
     if (MR::isFirstStep(this)) {
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraStrong();
         MR::startSound(this, "SE_BM_TRIPOD_ALL_BREAK");
     }
@@ -689,10 +696,10 @@ void TripodBoss::exeBreakDownDemo() {
 
 void TripodBoss::exeExplosionDemo() {
     if (MR::isFirstStep(this)) {
-        MR::tryRumblePadVeryStrongLong(this, 0);
+        MR::tryRumblePadVeryStrongLong(this, WPAD_CHAN0);
     }
 
-    if (MR::isStep(this, sHeadExplodeSeTiming)) {
+    if (MR::isStep(this, ::sHeadExplodeSeTiming)) {
         MR::startSound(this, "SE_BM_TRIPOD_KILL_HEAD");
     }
 
@@ -710,12 +717,9 @@ void TripodBoss::exeTryStartDemo() {
 }
 
 bool TripodBoss::isStopLeg(s32 idx) const {
-    bool ret = false;
-    if (idx >= 0 && idx <= 2) {
-        ret = true;
-    }
+    bool isValidIndex = idx >= 0 && idx <= ARRAY_SIZE(mLegs) - 1;
 
-    if (ret) {
+    if (isValidIndex) {
         return mLegs[idx]->isStop();
     }
 
@@ -847,15 +851,11 @@ TripodBossStepSequence* TripodBoss::getNextStepSequence() {
 }
 
 void TripodBoss::calcLegUpVector(TVec3f* pUp, const TVec3f& a2) {
-    TVec3f* center = &mMovableArea->mCenter;
-    TVec3f v8(a2);
-    v8 -= *center;
+    TVec3f v8 = a2 - mMovableArea->mCenter;
     MR::normalizeOrZero(&v8);
-    TVec3f* axis = &mMovableArea->mBaseAxis;
-    f32 v7 = axis->dot(v8);
-    JMAVECScaleAdd(axis, &v8, &v8, -v7);
+    v8.orthogonalize(mMovableArea->mBaseAxis);
     MR::normalizeOrZero(&v8);
-    pUp->set< f32 >(v8);
+    pUp->set(v8);
 }
 
 void TripodBoss::calcDemoMovement() {
@@ -864,7 +864,7 @@ void TripodBoss::calcDemoMovement() {
     mBodyMtx.getTrans(_5D4);
 
     for (u32 i = 0; i < 3; i++) {
-        MtxPtr jointMtx = MR::getJointMtx(this, sLegBoneNameTable[i]);
+        MtxPtr jointMtx = MR::getJointMtx(this, ::sLegBoneNameTable[i]);
         TPos3f v8(jointMtx);
         TVec3f v7;
         v8.getTrans(v7);
@@ -899,9 +899,6 @@ void TripodBoss::addAccelToWeightPosition() {
     TBox3f v21;
     TVec3f v20;
     TVec3f v19;
-    TVec3f v18;
-    TVec3f* center;
-    TVec3f* axis;
 
     v22.i.set< f32 >(_5C8);
     v22.f.set< f32 >(_5C8);
@@ -916,38 +913,27 @@ void TripodBoss::addAccelToWeightPosition() {
         v21.extend(getLeg(i)->mForceEndPoint);
     }
 
-    JMAVECLerp(&v22.f, &v22.i, &v20, 0.5f);
+    v20.lerp(v22.f, v22.i, 0.5f);
+    v19.lerp(v21.f, v21.i, 0.5f);
 
-    JMAVECLerp(&v21.f, &v21.i, &v19, 0.5f);
-
+    TVec3f v18;
     MR::vecBlend(v19, v20, &v18, 0.3f);
-    center = &mMovableArea->mCenter;
-    TVec3f v14(v18);
-    v14 -= *center;
-    axis = &mMovableArea->mBaseAxis;
-    f32 v7 = axis->dot(v14);
-    JMAVECScaleAdd(axis, &v14, &v18, -v7);
+
+    TVec3f v14 = v18 - mMovableArea->mCenter;
+    v18.killElement(v14, mMovableArea->mBaseAxis);
     f32 v9 = mMovableArea->mRadius;
     v9 = _604 + v9;
     v9 = _5FC + v9;
-    TVec3f v13(mMovableArea->mBaseAxis);
-    v13 *= v9;
-    TVec3f v17(v13);
-    v17 += v18;
+    TVec3f v17 = mMovableArea->mBaseAxis * v9 + v18;
     MR::normalizeOrZero(&v17);
-    TVec3f v12(v17);
-    v12 *= v9;
-    TVec3f v16(mMovableArea->mCenter);
-    v16 += v12;
-    TVec3f v15(v16);
-    v15 -= _5D4;
-    f32 v10 = PSVECMag(&v15);
+    TVec3f v15 = mMovableArea->mCenter + v17 * v9 - _5D4;
+    f32 v10 = v15.length();
     if (v10 < 500.0f) {
         v10 = 500.0f;
     }
 
     v15 *= (1.0f / v10);
-    _5E0 += v15.multiplyOperatorInline(0.8f);
+    _5E0 += v15 * 0.8f;
 }
 
 void TripodBoss::calcClippingSphere() {
@@ -959,7 +945,7 @@ void TripodBoss::calcClippingSphere() {
         v4.extend(mLegs[i]->mForceEndPoint);
     }
 
-    JMAVECLerp(&v4.f, &v4.i, &_5EC, 0.5f);
+    _5EC.lerp(v4.f, v4.i, 0.5f);
 }
 
 void TripodBoss::clippingModel() {
@@ -1016,7 +1002,7 @@ void TripodBoss::endDemo(const char* pName) {
 void TripodBoss::checkRideMario() {
     GravityInfo info;
     TVec3f v8;
-    MR::calcGravityAndMagnetVector(this, *MR::getPlayerPos(), v8, &info, 0);
+    MR::calcGravityAndMagnetVector(this, *MR::getPlayerPos(), &v8, &info, 0);
 
     if (info.mGravityInstance != nullptr && MR::isTripoddBossParts((const NameObj*)info.mGravityInstance->mHost)) {
         _630 = 120;
@@ -1027,19 +1013,13 @@ void TripodBoss::checkRideMario() {
     }
 
     if (_630 > 0) {
-        bool v5 = 1;
-        v5 = isStateSomething();
-
-        if (v5) {
+        if (isStateSomething()) {
             _634 = 0;
         } else {
             _634 = 1;
         }
     } else {
-        bool v7 = 1;
-        v7 = isStateSomething();
-
-        if (v7) {
+        if (isStateSomething()) {
             _634 = 3;
         } else {
             _634 = 2;
@@ -1048,12 +1028,9 @@ void TripodBoss::checkRideMario() {
 }
 
 const TPos3f* TripodBoss::getLegMatrixPtr(PART_ID partID, SUB_PART_ID subPartID) const {
-    bool v3 = false;
-    if (partID >= LeftLeg && partID <= RightLeg) {
-        v3 = true;
-    }
+    bool isValidLegPartID = partID >= LeftLeg && partID <= RightLeg;
 
-    if (!v3) {
+    if (!isValidLegPartID) {
         return nullptr;
     }
 
@@ -1086,8 +1063,7 @@ void TripodBoss::changeBgmState() {
         _640 = 0;
     }
 
-    bool v3 = isStateSomething();
-    if (v3) {
+    if (isStateSomething()) {
         if (_63C != 3) {
             MR::setStageBGMState(3, 60);
         }

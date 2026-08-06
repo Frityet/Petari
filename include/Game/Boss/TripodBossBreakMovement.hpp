@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/SpringValue.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
+
+class SpringValue;
 
 class TripodBossBreakMovement : public LiveActor {
 public:
@@ -14,7 +16,8 @@ public:
     void setBreakDownLevel(s32);
     void exeStartBreak();
     void exeBreak();
-    void exeWait() {}
+    void exeWait() {
+    }
 
     TPos3f _8C;
     SpringValue* mSpring;  // 0xBC

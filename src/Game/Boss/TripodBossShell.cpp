@@ -3,10 +3,16 @@
 #include "Game/Boss/TripodBossFixPartsBase.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
@@ -16,7 +22,8 @@ namespace NrvTripodBossShell {
     NEW_NERVE(TripodBossShellNrvBreak, TripodBossShell, Break);
 };  // namespace NrvTripodBossShell
 
-TripodBossShell::~TripodBossShell() {}
+TripodBossShell::~TripodBossShell() {
+}
 
 TripodBossShell::TripodBossShell(const char* pName) : TripodBossFixPartsBase(pName) {
     mBreakModel = nullptr;
@@ -110,4 +117,5 @@ void TripodBossShell::exeWait() {
     updateTripodMatrix();
 }
 
-void TripodBossShell::exeNonActive() {}
+void TripodBossShell::exeNonActive() {
+}

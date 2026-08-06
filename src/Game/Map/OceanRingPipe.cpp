@@ -1,19 +1,22 @@
-#include "Game/Map/OceanRing.hpp"
 #include "Game/Map/OceanRingPipe.hpp"
+#include "Game/Map/Flag.hpp"
+#include "Game/Map/OceanRing.hpp"
 #include "Game/Map/OceanRingPipeInside.hpp"
 #include "Game/Map/OceanRingPipeOutside.hpp"
-
 #include "Game/Map/WaterAreaHolder.hpp"
-#include "Game/Map/WaterInfo.hpp"
+#include "Game/Util/GravityUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
-#include "Game/Map/Flag.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 OceanRingPipe::~OceanRingPipe() {
 }
 
-OceanRingPipe::OceanRingPipe(const OceanRing* ring, f32 a, f32 b) : LiveActor("オーシャンリングの側面"),
-	mOceanRing(ring), _90(0), _94(0), _98(0), _9C(8), _A0(0), _A4(0), _A8(a), _AC(b), mPipeInside(0), mPipeOutside(0) {
-
+OceanRingPipe::OceanRingPipe(const OceanRing* ring, f32 a, f32 b)
+    : LiveActor("オーシャンリングの側面"), mOceanRing(ring), _90(0), _94(0), _98(0), _9C(8), _A0(0), _A4(0), _A8(a), _AC(b), mPipeInside(0),
+      mPipeOutside(0) {
 }
 
 void OceanRingPipe::init(const JMapInfoIter& rIter) {
@@ -83,7 +86,7 @@ void OceanRingPipe::initPoints() {
 
         TPos3f mtx;
         mtx.identity();
-        mtx.setRotateInline(MR::getRailDirection(this), angle);
+        mtx.setRotate(MR::getRailDirection(this), angle);
 
         f32 currDist = 0.0f;
         f32 nextDist = 0.0f;
@@ -108,7 +111,7 @@ void OceanRingPipe::initPoints() {
             f3 = diva / divb;
             f32 fff = flt - flt2;
 
-            if (__fabsf(fff) > 0.0001f) {
+            if (MR::abs(fff) > 0.0001f) {
                 TVec3f v2(side);
                 TVec3f v3(side);
                 v2.scale(flt);
@@ -121,7 +124,8 @@ void OceanRingPipe::initPoints() {
                 MR::calcRailPosAtCoord(&railPos, this, MR::repeat(MR::getRailCoord(this) + 300.0f, 0.0f, MR::getRailTotalLength(this)));
                 v3.add(railPos);
 
-                v1.cross(-grav, *v2.subInline(v3));
+                v2.sub(v3);
+                v1.cross(-grav, v2);
                 MR::normalize(&v1);
             }
         }
@@ -135,7 +139,7 @@ void OceanRingPipe::initPoints() {
             // w h a t
             // (TODO: look into how its actually supposed to convert these values into
             // their s16 components instead of writing the multiply directly)
-            //JGeometry::TVec3< s64 >(v1.x * 32768.0f, v1.y * 32768.0f, v1.z * 32768.0f);
+            // JGeometry::TVec3< s64 >(v1.x * 32768.0f, v1.y * 32768.0f, v1.z * 32768.0f);
             _A4[idx].set(v1.x * 32768.0f, v1.y * 32768.0f, v1.z * 32768.0f);
             idx++;
 

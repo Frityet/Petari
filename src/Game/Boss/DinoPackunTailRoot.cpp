@@ -1,12 +1,15 @@
 #include "Game/Boss/DinoPackunTailRoot.hpp"
 #include "Game/Boss/DinoPackunAction.hpp"
 #include "Game/Util/JointController.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
 typedef JointControlDelegator< DinoPackunTailRoot > Delegator;
 
 typedef bool (DinoPackunTailRoot::*func)(TPos3f*, const JointControllerInfo&);
 
-DinoPackunTailRoot::DinoPackunTailRoot(const char* name, DinoPackun* pPackun) : DinoPackunTailNode(name, pPackun) {}
+DinoPackunTailRoot::DinoPackunTailRoot(const char* name, DinoPackun* pPackun) : DinoPackunTailNode(name, pPackun) {
+}
 
 void DinoPackunTailRoot::init(const JMapInfoIter& rIter) {
     MR::invalidateClipping(this);
@@ -36,5 +39,3 @@ bool DinoPackunTailRoot::calcJointDirection(TPos3f* pOut, const JointControllerI
 void DinoPackunTailRoot::addNodeVelocity(const TVec3f& rVel) {
     return;
 }
-
-DinoPackunTailRoot::~DinoPackunTailRoot() {}

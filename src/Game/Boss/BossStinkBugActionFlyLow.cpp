@@ -65,7 +65,7 @@ bool BossStinkBugActionFlyLow::isValidFollowId(s32 id) const {
 
 bool BossStinkBugActionFlyLow::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgPlayerHipDropFloor(msg) && isEnableHipDrop()) {
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
         MR::emitEffectHit(getHost(), MR::getSensorPos(pSender), "Hit");
 
@@ -93,7 +93,7 @@ bool BossStinkBugActionFlyLow::receiveOtherMsg(u32 msg, HitSensor* pSender, HitS
 void BossStinkBugActionFlyLow::exeFly() {
     _64 += 0.05235988f;
     MR::repeatDegree(&_64);
-    _3C = 900.0f + JMath::sSinCosTable.sinLapRad(_64) * 100.0f;
+    _3C = 900.0f + MR::sin(_64) * 100.0f;
     throwBomb(60);
     updateFly();
     if (BossStinkBugFunction::isExistPlayerBack(getHost(), 2000.0f)) {

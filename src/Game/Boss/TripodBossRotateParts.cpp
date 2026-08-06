@@ -1,6 +1,8 @@
 #include "Game/Boss/TripodBossRotateParts.hpp"
 #include "Game/Boss/TripodBossFixParts.hpp"
 #include "Game/MapObj/MapPartsRotator.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 TripodBossRotateParts::TripodBossRotateParts(const char* pName) : TripodBossFixParts(pName) {
     mRotator = nullptr;
@@ -36,7 +38,8 @@ void TripodBossRotateParts::calcTripodLocalMatrix(TPos3f* pMtx) {
     }
 }
 
-TripodBossRotateParts::~TripodBossRotateParts() {}
+TripodBossRotateParts::~TripodBossRotateParts() {
+}
 
 void TripodBossRotateParts::exeWaitOwn() {
     mRotator->movement();

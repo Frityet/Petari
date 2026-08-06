@@ -2,13 +2,21 @@
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/NPC/NPCActorItem.hpp"
+#include "Game/NPC/TalkMessageFunc.hpp"
 #include "Game/Screen/GalaxyMapController.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
 namespace NrvTicoEat {
@@ -47,7 +55,7 @@ TicoEat::TicoEat(const char* pName) : Tico(pName) {
 }
 
 void TicoEat::init(const JMapInfoIter& rIter) {
-    mScaleController = new AnimScaleController(&sParam);
+    mScaleController = new AnimScaleController(&::sParam);
     mReactionNerve = &NrvTicoEat::TicoEatNrvReaction::sInstance;
     _178 = MR::getJointMtx(this, "Center");
     mParam._14 = "Wait";
@@ -156,11 +164,7 @@ void TicoEat::exeEatPre() {
         MR::startBva(this, "Big0");
     }
 
-    TVec3f neg;
-    TVec3f dir = MR::getCamZdir();
-
-    JMathInlineVEC::PSVECNegate(&dir, &neg);
-    if (MR::turnQuatZDirRad(&_A0, _A0, neg, 0.034906585f)) {
+    if (MR::turnQuatZDirRad(&_A0, _A0, -MR::getCamZdir(), MR::toRadian(2.0f))) {
         popAndPushNerve(&NrvTicoEat::TicoEatNrvEatNow::sInstance);
     }
 }
@@ -190,9 +194,11 @@ void TicoEat::exeEatPst() {
     }
 }
 
-void TicoEat::exeEatEnd() {}
+void TicoEat::exeEatEnd() {
+}
 
-TicoComet::TicoComet(const char* pName) : TicoEat(pName) {}
+TicoComet::TicoComet(const char* pName) : TicoEat(pName) {
+}
 
 void TicoComet::init(const JMapInfoIter& rIter) {
     NPCActorCaps caps("TicoComet");
@@ -321,6 +327,8 @@ void TicoComet::exeDemoFade() {
     }
 }
 
-void TicoComet::exeDemoEnd() {}
+void TicoComet::exeDemoEnd() {
+}
 
-void TicoEat::startReactionSound() {}
+void TicoEat::startReactionSound() {
+}

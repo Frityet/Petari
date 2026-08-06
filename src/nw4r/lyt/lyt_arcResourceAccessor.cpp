@@ -31,8 +31,8 @@ namespace {
 
     void* GetResourceSub(ARCHandle* pHandle, const char* pRoot, nw4r::lyt::ResType resType, const char* pName, u32* pSize) {
         s32 entryNum = -1;
-        if (-1 != ARCConvertPathToEntrynum(pHandle, const_cast< char* >(pRoot))) {
-            if (ARCChangeDir(pHandle, const_cast< char* >(pRoot))) {
+        if (-1 != ARCConvertPathToEntrynum(pHandle, pRoot)) {
+            if (ARCChangeDir(pHandle, pRoot)) {
                 if (resType == 0) {
                     entryNum = FindNameResource(pHandle, pName);
                 } else {
@@ -45,7 +45,7 @@ namespace {
 
                     if (-1 != ARCConvertPathToEntrynum(pHandle, resTypeStr)) {
                         if (ARCChangeDir(pHandle, resTypeStr)) {
-                            entryNum = ARCConvertPathToEntrynum(pHandle, const_cast< char* >(pName));
+                            entryNum = ARCConvertPathToEntrynum(pHandle, pName);
                             ARCChangeDir(pHandle, "..");
                         }
                     }
@@ -84,7 +84,8 @@ namespace nw4r {
             }
         };  // namespace detail
 
-        ArcResourceAccessor::ArcResourceAccessor() : mArcBuf(nullptr) {}
+        ArcResourceAccessor::ArcResourceAccessor() : mArcBuf(nullptr) {
+        }
 
         bool ArcResourceAccessor::Attach(void* pArchive, const char* pRoot) {
             BOOL succcess = ARCInitHandle(pArchive, &mArcHandle);
@@ -106,6 +107,7 @@ namespace nw4r {
             return detail::FindFont(&mFontList, pName);
         }
 
-        ArcResourceAccessor::~ArcResourceAccessor() {}
+        ArcResourceAccessor::~ArcResourceAccessor() {
+        }
     };  // namespace lyt
 };  // namespace nw4r

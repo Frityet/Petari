@@ -1,5 +1,8 @@
 #include "Game/LiveActor/ViewGroupCtrl.hpp"
+#include "Game/LiveActor/ClippingActorInfo.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/Util/Array.hpp"
+#include "Game/Util/JMapUtil.hpp"
 
 ViewGroupCtrl::ViewGroupCtrl() {
     mViewCubeMgr = nullptr;
@@ -34,7 +37,8 @@ void ViewGroupCtrl::initViewGroup(ClippingActorInfoList* pList) {
     }
 }
 
-void ViewGroupCtrl::endInitViewGroupTable() {}
+void ViewGroupCtrl::endInitViewGroupTable() {
+}
 
 void ViewGroupCtrl::entryLodCtrl(LodCtrl* pCtrl, const JMapInfoIter& rIter) {
     s32 groupID = -1;

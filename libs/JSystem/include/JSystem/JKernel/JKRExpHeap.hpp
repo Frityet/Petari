@@ -11,7 +11,13 @@ public:
         CMemBlock* allocBack(u32, u8, u8, u8, u8);
         static CMemBlock* getHeapBlock(void*);
 
-        void* getContent() const { return (void*)(this + 1); }
+        void* getContent() const {
+            return (void*)(this + 1);
+        }
+
+        void newGroupId(u8 groupId) {
+            mGroupId = groupId;
+        }
 
         u16 mMagic;        // 0x0
         u8 mFlags;         // 0x2
@@ -49,15 +55,17 @@ public:
     void* allocFromTail(u32);
     void* allocFromTail(u32, int);
     bool isEmpty();
-
     void appendUsedList(JKRExpHeap::CMemBlock*);
     void setFreeBlock(CMemBlock*, CMemBlock*, CMemBlock*);
     void removeFreeBlock(CMemBlock*);
-
-    static JKRExpHeap* create(void*, u32, JKRHeap*, bool);
-    static JKRExpHeap* create(u32, JKRHeap*, bool);
+    void removeUsedBlock(CMemBlock*);
+    void recycleFreeBlock(CMemBlock*);
+    void joinTwoBlocks(CMemBlock*);
+    void adjustSize();
 
     static JKRExpHeap* createRoot(int, bool);
+    static JKRExpHeap* create(u32, JKRHeap*, bool);
+    static JKRExpHeap* create(void*, u32, JKRHeap*, bool);
 
     u8 mAllocMode;       // 0x6C
     u8 mCurrentGroupId;  // 0x6D

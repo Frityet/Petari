@@ -2,10 +2,24 @@
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/WalkerStateBindStarPointer.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorStateUtil.hpp"
+#include "Game/Util/Color.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LightUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 
 namespace NrvJellyfish {
@@ -45,7 +59,7 @@ void Jellyfish::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     TVec3f sensorOffs;
     sensorOffs.set(0.0f, 30.0f, 0.0f);
-    MR::addHitSensor(this, "body", 0x1E, 8, 100.0f, sensorOffs);
+    MR::addHitSensor(this, "body", ATYPE_KILLER_TARGET_ENEMY, 8, 100.0f, sensorOffs);
     initBinder(130.0f, 0.0f, 0);
     MR::offBind(this);
     mController = new AnimScaleController(nullptr);
@@ -83,7 +97,7 @@ void Jellyfish::kill() {
 }
 
 void Jellyfish::control() {
-    Color8 clr = sPointLightColor;
+    Color8 clr = ::sPointLightColor;
     MR::requestPointLight(this, TVec3f(mPosition), clr, 0.0998f, -1);
     mController->updateNerve();
 
@@ -98,7 +112,7 @@ void Jellyfish::control() {
             }
         }
 
-        mVelocity.scale(JMath::sSinCosTable.sinLapRad(_94 + 0x2D), mGravity);
+        mVelocity.scale(MR::sin(_94 + 0x2D), mGravity);
         _94++;
     }
 
@@ -107,13 +121,10 @@ void Jellyfish::control() {
 }
 
 void Jellyfish::calcAndSetBaseMtx() {
-    TVec3f v7;
-    v7.negate(mGravity);
     TPos3f pos;
-    MR::makeMtxFrontUpPos(&pos, _98, v7, mPosition);
+    MR::makeMtxFrontUpPos(&pos, _98, -mGravity, mPosition);
     MR::setBaseTRMtx(this, pos);
-    TVec3f scale;
-    JMathInlineVEC::PSVECMultiply(&mController->_C, &mScale, &scale);
+    TVec3f scale = mController->_C * mScale;
     MR::setBaseScale(this, scale);
 }
 
@@ -269,17 +280,14 @@ void Jellyfish::threatTurn() {
 }
 
 bool Jellyfish::faceToMario() {
-    TVec3f* pos = &mPosition;
     TVec3f v13;
-    JMathInlineVEC::PSVECSubtract(MR::getPlayerPos(), pos, &v13);
+    v13.sub(*MR::getPlayerPos(), mPosition);
     MR::normalizeOrZero(&v13);
     TVec3f v12;
     MR::calcSideVec(&v12, this);
 
     if (!MR::isNearZero(v13)) {
-        f32 v4 = MR::negateIfLessZero(0.5f);
-        f32 cos = JMath::sSinCosTable.cosShort(v4);
-        MR::turnVecToVecCosOnPlane(&_98, v13, v12, cos);
+        MR::turnVecToVecCosOnPlane(&_98, v13, v12, MR::cos(0.5f));
         TVec3f v10;
         v10.negate(mGravity);
         TVec3f v11;
@@ -305,13 +313,11 @@ bool Jellyfish::faceToMario() {
     return true;
 }
 
-void Jellyfish::knockOut(HitSensor* a2, HitSensor* a3) {
-    TVec3f v6;
-    TVec3f v5(a3->mPosition);
-    JMathInlineVEC::PSVECSubtract(&v5, &a2->mPosition, v5);
-    MR::normalize(v5, &v6);
-    mVelocity.scale(50.0f, v6);
-    _98.negate(v6);
+void Jellyfish::knockOut(HitSensor* pSender, HitSensor* pReceiver) {
+    TVec3f toReceiverDir;
+    MR::normalize(pReceiver->mPosition - pSender->mPosition, &toReceiverDir);
+    mVelocity.scale(50.0f, toReceiverDir);
+    _98.negate(toReceiverDir);
     setNerve(&NrvJellyfish::JellyfishNrvDeath::sInstance);
 }
 

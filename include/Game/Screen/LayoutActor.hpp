@@ -15,7 +15,8 @@ class LayoutActor : public NameObj {
 public:
     LayoutActor(const char*, bool);
 
-    virtual ~LayoutActor() {}
+    virtual ~LayoutActor() {
+    }
 
     virtual void movement();
     virtual void draw() const;
@@ -23,7 +24,8 @@ public:
     virtual void appear();
     virtual void kill();
 
-    virtual void control() {}
+    virtual void control() {
+    }
 
     void setNerve(const Nerve*) const;
     bool isNerve(const Nerve*) const;
@@ -41,9 +43,9 @@ public:
     void initPointingTarget(int);
     void updateSpine();
 
-    /* 0x0C */ LayoutManager* mManager;
+    /* 0x0C */ LayoutManager* mLayoutManager;
     /* 0x10 */ Spine* mSpine;
-    /* 0x14 */ PaneEffectKeeper* mPaneEffectKeeper;
-    /* 0x18 */ StarPointerLayoutTargetKeeper* mStarPointerTargetKeeper;
+    /* 0x14 */ PaneEffectKeeper* mEffectKeeper;
+    /* 0x18 */ StarPointerLayoutTargetKeeper* mPointingTarget;
     /* 0x1C */ LayoutActorFlag mFlag;
 };

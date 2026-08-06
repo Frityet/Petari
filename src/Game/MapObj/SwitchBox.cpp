@@ -1,14 +1,15 @@
 #include "Game/MapObj/SwitchBox.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 
 namespace NrvSwitchBox {
     NEW_NERVE(SwitchBoxNrvWait, SwitchBox, Wait);
     NEW_NERVE(SwitchBoxNrvHit, SwitchBox, Hit);
 };  // namespace NrvSwitchBox
 
-SwitchBox::SwitchBox(const char* pName) : LiveActor(pName) {}
+SwitchBox::SwitchBox(const char* pName) : LiveActor(pName) {
+}
 
 void SwitchBox::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -57,7 +58,8 @@ void SwitchBox::init(const JMapInfoIter& rIter) {
     appear();
 }
 
-void SwitchBox::initAfterPlacement() {}
+void SwitchBox::initAfterPlacement() {
+}
 
 void SwitchBox::exeWait() {
     if (_8c != 0) {
@@ -130,7 +132,7 @@ void SwitchBox::doHit(HitSensor* pSender, HitSensor* pReceiver) {
 bool SwitchBox::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgPlayerUpperPunch(msg) && _90 != 0) {
         doHit(pSender, pReceiver);
-        pSender->receiveMessage(0x40, pReceiver);
+        pSender->receiveMessage(ACTMES_REFLECT_V, pReceiver);
         return true;
     }
 

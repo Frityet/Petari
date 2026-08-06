@@ -3,11 +3,16 @@
 #include "Game/Boss/TripodBossFixPartsBase.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/Color.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LightUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvTripodBossCore {
     NEW_NERVE(TripodBossCoreNrvNonActive, TripodBossCore, NonActive);
@@ -28,11 +33,7 @@ void TripodBossCore::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_MapObjDecoration, MR::CalcAnimType_MapObjDecoration, MR::DrawBufferType_TripodBoss, -1);
     initClippingSphere();
     initHitSensor(1);
-    TVec3f offs;
-    offs.x = 0.0f;
-    offs.y = 0.0f;
-    offs.z = 0.0f;
-    MR::addHitSensor(this, "body", ATYPE_BREAKABLE_CAGE, 8, 300.0f * mScale.x, offs);
+    MR::addHitSensor(this, "body", ATYPE_BREAKABLE_CAGE, 8, 300.0f * mScale.x, TVec3f(0.0f, 0.0f, 0.0f));
     MR::initCollisionParts(this, "TripodBossCore", getSensor("body"), nullptr);
     initSound(4, false);
     mBreakModel = MR::createModelObjMapObjStrongLight("壊れモデル", "TripodBossCoreBreak", getBaseMtx());
@@ -83,8 +84,7 @@ void TripodBossCore::exeWait() {
     }
 
     updateTripodMatrix();
-    GXColor g = {0x96, 0x96, 0x96, 0xFF};
-    MR::requestPointLight(this, mPosition, Color8(g), 1.0f, -1);
+    MR::requestPointLight(this, mPosition, (GXColor){0x96, 0x96, 0x96, 0xFF}, 1.0f, -1);
     if (MR::isDamageDemoTripodBoss()) {
         setNerve(&NrvTripodBossCore::TripodBossCoreNrvDamageDemo::sInstance);
     }
@@ -96,8 +96,7 @@ void TripodBossCore::exeDamageDemo() {
         MR::tryStartAllAnim(mBloomModel, "2ndDemo");
     }
 
-    GXColor g = {0xFF, 0x96, 0x96, 0xFF};
-    MR::requestPointLight(this, mPosition, Color8(g), 1.0f, -1);
+    MR::requestPointLight(this, mPosition, (GXColor){0xFF, 0x96, 0x96, 0xFF}, 1.0f, -1);
     if (MR::isDamageDemoTripodBoss()) {
         setNerve(&NrvTripodBossCore::TripodBossCoreNrvWarning::sInstance);
     }
@@ -105,8 +104,7 @@ void TripodBossCore::exeDamageDemo() {
 
 void TripodBossCore::exeWarning() {
     updateTripodMatrix();
-    GXColor g = {0xFF, 0x96, 0x96, 0xFF};
-    MR::requestPointLight(this, mPosition, Color8(g), 1.0f, -1);
+    MR::requestPointLight(this, mPosition, (GXColor){0xFF, 0x96, 0x96, 0xFF}, 1.0f, -1);
 }
 
 void TripodBossCore::exeBreak() {
@@ -138,6 +136,8 @@ void TripodBossCore::exeBreak() {
     }
 }
 
-void TripodBossCore::exeNonActive() {}
+void TripodBossCore::exeNonActive() {
+}
 
-TripodBossCore::~TripodBossCore() {}
+TripodBossCore::~TripodBossCore() {
+}

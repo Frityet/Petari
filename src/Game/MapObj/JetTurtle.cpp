@@ -2,6 +2,8 @@
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -10,10 +12,10 @@
 #include <JSystem/JMath/JMATrigonometric.hpp>
 
 namespace {
-    static f32 sThrowSpdStraight[3] = {30.0f, 20.0f, 30.0f};
-    static f32 sThrowSpdHoming[3] = {24.0f, 20.0f, 24.0f};
-    static f32 sGravityLevel[3] = {0.017000001f, 0.0099999998f, 0.0055f};
-    static u16 sResetStep[3] = {0x12C, 0x1E0, 0x12C};
+    static const f32 sThrowSpdStraight[3] = {30.0f, 20.0f, 30.0f};
+    static const f32 sThrowSpdHoming[3] = {24.0f, 20.0f, 24.0f};
+    static const f32 sGravityLevel[3] = {0.017000001f, 0.0099999998f, 0.0055f};
+    static const u16 sResetStep[3] = {0x12C, 0x1E0, 0x12C};
 };  // namespace
 
 namespace NrvJetTurtle {
@@ -44,14 +46,14 @@ void JetTurtle::initAfterPlacement() {
 }
 
 void JetTurtle::becomeSlowType() {
-    getSensor("body")->setType(0x10);
+    getSensor("body")->setType(ATYPE_JET_TURTLE_SLOW);
     MR::startBrk(this, "Koura");
     MR::setBrkFrameAndStop(this, 0.0f);
     mShellType = 0;
 }
 
 void JetTurtle::becomeFastType() {
-    getSensor("body")->setType(0xF);
+    getSensor("body")->setType(ATYPE_JET_TURTLE);
     MR::startBrk(this, "Koura");
     MR::setBrkFrameAndStop(this, 0.0f);
     mShellType = 1;
@@ -118,11 +120,7 @@ void JetTurtle::bound() {
         f32 v3 = MR::vecKillElement(_9C, *MR::getGroundNormal(this), &v22);
 
         if (v3 < 0.0f) {
-            TVec3f v17(*MR::getGroundNormal(this));
-            v17.scale(v3);
-            TVec3f v18(v17);
-            v18.scale(0.80f);
-            _9C = v22 - v18;
+            _9C = v22 - *MR::getGroundNormal(this) * v3 * 0.80f;
         }
     }
 
@@ -131,11 +129,7 @@ void JetTurtle::bound() {
         f32 v6 = MR::vecKillElement(_9C, *MR::getWallNormal(this), &v21);
 
         if (v6 < 0.0f) {
-            TVec3f v14(*MR::getWallNormal(this));
-            v14.scale(v6);
-            TVec3f v15(v14);
-            v15.scale(0.89f);
-            _9C = v21 - v15;
+            _9C = v21 - *MR::getWallNormal(this) * v6 * 0.89f;
         }
     }
 
@@ -144,12 +138,14 @@ void JetTurtle::bound() {
         f32 v6 = MR::vecKillElement(_9C, *MR::getRoofNormal(this), &v21);
 
         if (v6 < 0.0f) {
-            TVec3f v14(*MR::getRoofNormal(this));
-            v14.scale(v6);
-            TVec3f v15(v14);
-            v15.scale(0.89f);
-            _9C = v21 - v15;
+            _9C = v21 - *MR::getRoofNormal(this) * v6 * 0.89f;
         }
+    }
+}
+
+inline void JetTurtle::endWait() {
+    if (mShellType == JETTURTLETYPE_GOLD) {
+        MR::deleteEffect(this, "Glow");
     }
 }
 
@@ -171,7 +167,7 @@ void JetTurtle::exeThrowing() {
                 MR::startBck(this, "Bullet", nullptr);
 
                 switch (mShellType) {
-                case 0:
+                default:
                     MR::emitEffect(this, "Blur");
                     break;
                 case 1:
@@ -184,9 +180,8 @@ void JetTurtle::exeThrowing() {
             }
         }
 
-        if (MR::isStep(this, sResetStep[_92])) {
-            TVec3f v16 = _C0 - mPosition;
-            if (PSVECMag(&v16) > 5000.0f) {
+        if (MR::isStep(this, ::sResetStep[_92])) {
+            if ((_C0 - mPosition).length() > 5000.0f) {
                 reset(1);
             } else {
                 reset(0);
@@ -195,8 +190,11 @@ void JetTurtle::exeThrowing() {
             return;
         }
 
+        TVec3f v22;
         if (_98 != nullptr) {
-            if (_98->mValidByHost) {
+            if (!_98->mValidByHost) {
+                _98 = nullptr;
+            } else {
                 TVec3f v21 = _98->mPosition - mPosition;
                 MR::normalizeOrZero(&v21);
                 MR::vecBlendSphere(_9C, v21, &_9C, 0.2f);
@@ -206,24 +204,20 @@ void JetTurtle::exeThrowing() {
                     } else {
                         MR::startBck(this, "Bullet", nullptr);
                     }
-
-                    TVec3f v22 = _9C;
-                    v22.setLength(_8C + sThrowSpdHoming[_92]);
-                    mVelocity = v22;
                 }
-            } else {
-                _98 = nullptr;
+                v22 = _9C;
+                v22.setLength(_8C + ::sThrowSpdHoming[_92]);
+                mVelocity = v22;
             }
         }
 
         if (_98 == nullptr) {
-            TVec3f v22 = _9C;
-            v22.setLength(_8C + sThrowSpdStraight[_92]);
+            v22 = _9C;
+            v22.setLength(_8C + ::sThrowSpdStraight[_92]);
             mVelocity = v22;
         }
 
-        TVec3f v14 = _C0 - mPosition;
-        if (PSVECMag(&v14) > 10000.0f) {
+        if ((_C0 - mPosition).length() > 10000.0f) {
             reset(1);
         } else {
             if (MR::isBindedWall(this) || MR::isBindedRoof(this)) {
@@ -231,36 +225,32 @@ void JetTurtle::exeThrowing() {
                     MR::sendArbitraryMsg(ACTMES_JET_TURTLE_ATTACK, MR::getBindedPlaneSensor(this, i), getSensor("body"));
                 }
 
-                if (MR::isBindedWall(this)) {
-                    if (MR::isWallCodeRebound(&mBinder->mWallInfo.mParentTriangle)) {
-                        bound();
-                    }
-                } else if (MR::isBindedRoof(this)) {
-                    if (MR::isWallCodeRebound(&mBinder->mRoofInfo.mParentTriangle)) {
-                        bound();
-                    }
+                if (MR::isBindedWall(this) && MR::isWallCodeRebound(&mBinder->mWallInfo.mParentTriangle)) {
+                    bound();
+                } else if (MR::isBindedRoof(this) && MR::isWallCodeRebound(&mBinder->mRoofInfo.mParentTriangle)) {
+                    bound();
                 } else {
                     MR::shakeCameraWeak();
                     reset(0);
                     return;
                 }
+            }
 
-                if (MR::isBindedGround(this)) {
-                    if (MR::sendMsgToGroundSensor(6, getSensor("body"))) {
-                        MR::shakeCameraWeak();
-                        reset(0);
-                        return;
-                    }
+            if (MR::isBindedGround(this)) {
+                if (MR::sendMsgToGroundSensor(ACTMES_JET_TURTLE_ATTACK, getSensor("body"))) {
+                    MR::shakeCameraWeak();
+                    reset(0);
+                    return;
+                }
 
-                    if (MR::isWallCodeRebound(&mBinder->mGroundInfo.mParentTriangle)) {
-                        bound();
-                    }
+                if (MR::isWallCodeRebound(&mBinder->mGroundInfo.mParentTriangle)) {
+                    bound();
                 }
             }
         }
 
         MtxPtr jointMtx = MR::getJointMtx(this, 0);
-        TVec3f v20(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
+        TVec3f v20(jointMtx[0][1], jointMtx[1][1], jointMtx[2][1]);
         TVec3f grav;
         MR::calcGravityVector(this, &grav, nullptr, 0);
 
@@ -270,54 +260,26 @@ void JetTurtle::exeThrowing() {
             return;
         }
 
-        if (!MR::isSameDirection(grav, mVelocity, 0.0099999998f)) {
-            TVec3f v13 = -grav;
-            v20 = v13;
+        if (!MR::isSameDirection(grav, mVelocity, 0.01f)) {
+            v20 = -grav;
         }
 
         if (!_98) {
-            bool v10 = false;
-
-            if (JGeometry::TUtil< f32 >::epsilonEquals(grav.x, _CC.x, 0.0000038146973f) &&
-                JGeometry::TUtil< f32 >::epsilonEquals(grav.y, _CC.y, 0.0000038146973f) &&
-                JGeometry::TUtil< f32 >::epsilonEquals(grav.z, _CC.z, 0.0000038146973f)) {
-                v10 = true;
-            }
-
-            if (!v10) {
-                MR::vecBlendSphere(_9C, grav, &_9C, sGravityLevel[_92]);
+            if (!(grav == _CC)) {
+                MR::vecBlendSphere(_9C, grav, &_9C, ::sGravityLevel[_92]);
             }
 
             _CC = grav;
         }
 
-        TVec3f v18;
-        PSVECCrossProduct(&mVelocity, &v20, &v18);
-        PSVECCrossProduct(&v18, &mVelocity, &v20);
+        TVec3f v18 = mVelocity.cross(v20);
+        v20.cross(v18, mVelocity);
 
         if (!MR::isNearZero(mVelocity)) {
             TPos3f frontUp;
             MR::makeMtxFrontUp(&frontUp, mVelocity, v20);
-
-            if ((frontUp.mMtx[2][0] - 1.0f) >= -0.0000038146973f) {
-                mRotation.x = JMath::sAtanTable.atan2_(-frontUp.mMtx[0][1], frontUp.mMtx[1][1]);
-                mRotation.y = -1.5707964f;
-                mRotation.z = 0.0f;
-            } else {
-                if ((frontUp.mMtx[2][0] + 1.0f) <= 0.0000038146973f) {
-                    mRotation.x = JMath::sAtanTable.atan2_(frontUp.mMtx[0][1], frontUp.mMtx[1][1]);
-                    mRotation.y = 1.5707964f;
-                    mRotation.z = 0.0f;
-                } else {
-                    mRotation.x = JMath::sAtanTable.atan2_(frontUp.mMtx[2][1], frontUp.mMtx[2][2]);
-                    mRotation.z = JMath::sAtanTable.atan2_(frontUp.mMtx[1][0], frontUp.mMtx[0][0]);
-                    mRotation.y = JGeometry::TUtil< f32 >::asin(-frontUp.mMtx[2][0]);
-                }
-            }
-
-            mRotation.x *= 57.295776f;
-            mRotation.y *= 57.295776f;
-            mRotation.z *= 57.295776f;
+            frontUp.getEulerXYZ(mRotation);
+            mRotation.mult(_180_PI);
         }
     }
 }
@@ -346,23 +308,17 @@ void JetTurtle::exeTakenReserve() {
 
     TVec3f takePos;
     MR::getPlayerTakePos(&takePos);
-    TVec3f v3(takePos);
-    v3.scale(v2);
-    TVec3f v4(mPosition);
-    v4.scale(1.0f - v2);
-    TVec3f v5(v4);
-    v5 += v3;
-    mPosition = v5;
+    mPosition = mPosition * (1.0f - v2) + takePos * v2;
 
     if (isNerve(&NrvJetTurtle::JetTurtleNrvTakenReserveD::sInstance)) {
         if (MR::isStep(this, 2)) {
             setNerve(&NrvJetTurtle::JetTurtleNrvTakenStart::sInstance);
-            return;
         }
+        return;
+    }
 
-        if (MR::isStep(this, 8)) {
-            setNerve(&NrvJetTurtle::JetTurtleNrvTakenStart::sInstance);
-        }
+    if (MR::isStep(this, 8)) {
+        setNerve(&NrvJetTurtle::JetTurtleNrvTakenStart::sInstance);
     }
 }
 
@@ -391,7 +347,8 @@ void JetTurtle::exeTakenStart() {
 
 // missing branch
 void JetTurtle::exeRestart() {
-    MR::isFirstStep(this);
+    if (MR::isFirstStep(this)) {
+    }
 
     if (MR::isStep(this, 45)) {
         mPosition = _A8;
@@ -442,13 +399,8 @@ void JetTurtle::exeDrop() {
     if (MR::isFirstStep(this)) {
         TVec3f front;
         MR::calcFrontVec(&front, this);
-        TVec3f v3 = -mGravity;
-        TVec3f v4(v3);
-        v4.scale(10.0f);
-        mVelocity = v4;
-        TVec3f v2(front);
-        v2.scale(10.0f);
-        mVelocity += v2;
+        mVelocity = -mGravity * 10.0f;
+        mVelocity += front * 10.0f;
     }
 
     boundDrop();
@@ -462,7 +414,7 @@ void JetTurtle::exeDrop() {
 
 // JetTurtle::attackSensor
 
-bool JetTurtle::receiveOtherMsg(u32 msg, HitSensor* a2, HitSensor* a3) {
+bool JetTurtle::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgItemGet(msg)) {
         if (mFlag.mIsDead) {
             return false;
@@ -474,7 +426,7 @@ bool JetTurtle::receiveOtherMsg(u32 msg, HitSensor* a2, HitSensor* a3) {
             }
 
             if (v7 || isNerve(&NrvJetTurtle::JetTurtleNrvTakenReserve::sInstance)) {
-                _94 = a2;
+                _94 = pSender;
                 setNerve(&NrvJetTurtle::JetTurtleNrvTakenReserveD::sInstance);
                 return true;
             } else {
@@ -536,16 +488,16 @@ bool JetTurtle::receiveOtherMsg(u32 msg, HitSensor* a2, HitSensor* a3) {
     }
 }
 
-bool JetTurtle::receiveMsgThrow(HitSensor* a1, HitSensor* a2) {
+bool JetTurtle::receiveMsgThrow(HitSensor* pSender, HitSensor* pReceiver) {
     setNerve(&NrvJetTurtle::JetTurtleNrvThrowing::sInstance);
     MR::deleteEffect(this, "BrakeLamp");
 
-    if (MR::isSensorPlayer(a1)) {
+    if (MR::isSensorPlayer(pSender)) {
         MR::getPlayerThrowVec(&_9C);
         _98 = nullptr;
     } else {
-        if (MR::isExistInAttributeGroupSearchTurtle(a1->mHost)) {
-            _98 = a1;
+        if (MR::isExistInAttributeGroupSearchTurtle(pSender->mHost)) {
+            _98 = pSender;
         } else {
             _98 = nullptr;
         }
@@ -554,12 +506,12 @@ bool JetTurtle::receiveMsgThrow(HitSensor* a1, HitSensor* a2) {
             _98 = nullptr;
         }
 
-        _9C = a1->mPosition - mPosition;
+        _9C = pSender->mPosition - mPosition;
         MR::normalizeOrZero(&_9C);
     }
 
     if (!_92) {
-        _8C = PSVECMag(MR::getPlayerVelocity());
+        _8C = MR::getPlayerVelocity()->length();
     } else {
         _8C = 0.0f;
     }
@@ -570,7 +522,7 @@ bool JetTurtle::receiveMsgThrow(HitSensor* a1, HitSensor* a2) {
     return true;
 }
 
-bool JetTurtle::receiveMsgPlayerAttack(u32 msg, HitSensor*, HitSensor*) {
+bool JetTurtle::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgStarPieceReflect(msg)) {
         return true;
     }
@@ -592,16 +544,16 @@ bool JetTurtle::receiveMsgPlayerAttack(u32 msg, HitSensor*, HitSensor*) {
         }
     }
 
-    return 0;
+    return false;
 }
 
-bool JetTurtle::receiveMsgEnemyAttack(u32 msg, HitSensor* a2, HitSensor* a3) {
+bool JetTurtle::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (isNerve(&NrvJetTurtle::JetTurtleNrvTakenReserve::sInstance) || isNerve(&NrvJetTurtle::JetTurtleNrvTakenReserveD::sInstance) ||
         isNerve(&NrvJetTurtle::JetTurtleNrvTakenStart::sInstance)) {
         return false;
     }
 
-    MR::sendArbitraryMsg(ACTMES_JET_TURTLE_ATTACK, a2, getSensor("eye"));
+    MR::sendArbitraryMsg(ACTMES_JET_TURTLE_ATTACK, pSender, getSensor("eye"));
     MR::shakeCameraWeak();
     reset(0);
     return true;
@@ -624,17 +576,17 @@ bool JetTurtle::isRestart() const {
 void GoldenTurtle::init(const JMapInfoIter& rIter) {
     init2(rIter, 1);
     MR::startBtk(this, "KouraShine");
-    getSensor("body")->setType(0x10);
+    getSensor("body")->setType(ATYPE_JET_TURTLE_SLOW);
 }
 
 void GoldenTurtle::resetPosition() {
     JetTurtle::resetPosition();
-    getSensor("body")->setType(0x10);
+    getSensor("body")->setType(ATYPE_JET_TURTLE_SLOW);
 }
 
 void GoldenTurtle::exeThrowing() {
     if (MR::isFirstStep(this)) {
-        getSensor("body")->setType(0x11);
+        getSensor("body")->setType(ATYPE_SPECIAL_WEAPON);
 
         if (mShellType == 2) {
             MR::deleteEffect(this, "HandyGlow");
@@ -646,9 +598,11 @@ void GoldenTurtle::exeThrowing() {
 
 void GoldenTurtle::reset(u32 a1) {
     JetTurtle::reset(a1);
-    getSensor("body")->setType(0x10);
+    getSensor("body")->setType(ATYPE_JET_TURTLE_SLOW);
 }
 
-JetTurtle::~JetTurtle() {}
+JetTurtle::~JetTurtle() {
+}
 
-GoldenTurtle::~GoldenTurtle() {}
+GoldenTurtle::~GoldenTurtle() {
+}

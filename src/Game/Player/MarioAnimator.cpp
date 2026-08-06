@@ -1,18 +1,23 @@
 #include "Game/Player/MarioAnimator.hpp"
+#include "Game/Animation/XanimeCore.hpp"
+#include "Game/Animation/XanimePlayer.hpp"
 #include "Game/Animation/XanimeResource.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
 #include "Game/Player/J3DModelX.hpp"
 #include "Game/Player/MarioActor.hpp"
-#include "Game/Player/MarioConst.hpp"
-
-#include "Game/Animation/XanimePlayer.hpp"
-#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/MarioAnimatorData.hpp"
+#include "Game/Player/MarioConst.hpp"
+#include "Game/Player/MarioState.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include <cstring>
 
@@ -94,8 +99,8 @@ void MarioAnimator::change(const char* name) {
     const char* bck = mXanimePlayer->getCurrentBckName();
     if (bck) {
         const XanimeGroupInfo* info = mXanimePlayer->mCurrentAnimation;
-        if (info->_18 == 2) {
-            f32 arg1 = info->_14, arg2 = info->_10;
+        if (info->mAttribute == 2) {
+            f32 arg1 = info->mLoop, arg2 = info->mEnd;
             getPlayer()->startBas(bck, false, arg1, arg2);
         } else {
             getPlayer()->startBas(bck, false, 0.0f, 0.0f);
@@ -300,8 +305,8 @@ void MarioAnimator::setWalkMode() {
         f32 stick = player->_8F0;
         if (0.0f != stick) {
         } else if ((u8)(player = self->getPlayer())->checkStickFrontBack() != 2) {
-        } else if (self->isStatusActiveID(0x11)) {
-        } else if (self->isStatusActiveID(0x1f)) {
+        } else if (self->isStatusActiveID(MarioStatus_Magic)) {
+        } else if (self->isStatusActiveID(MarioStatus_Skate)) {
         } else {
             player = self->getPlayer();
             if (player->mMovementStates._35) {
@@ -371,12 +376,12 @@ void MarioAnimator::clearAllJointTransform() {
     core = mXanimePlayer->mCore;
     jointIdx = MR::getJointIndex(mActor, "ArmL1");
     jt = core->getJointTransform(jointIdx);
-    jt->_30 = 0.0f;
+    jt->_2C.y = 0.0f;
 
     core = mXanimePlayer->mCore;
     jointIdx = MR::getJointIndex(mActor, "ArmR2");
     jt = core->getJointTransform(jointIdx);
-    jt->_30 = 0.0f;
+    jt->_2C.y = 0.0f;
 
     core = mXanimePlayer->mCore;
     u8 chestIdx = MR::getJointIndex(mActor, jname_chest);
@@ -576,7 +581,7 @@ void MarioAnimator::updateTakingAnimation(const HitSensor* pSensor) {
     u32 type = pSensor->mType;
     switch (type) {
     case ACTMES_STAR_PIECE_GIFT_MAX:
-        stopAnimation(nullptr, static_cast< const char* >(nullptr));
+        stopAnimation(nullptr);
         changeAnimationUpper("カブウエイト", nullptr);
         mActor->clearNullAnimation(0);
         mActor->offTakingFlag();
@@ -614,35 +619,35 @@ HitSensor* MarioActor::getLookTargetSensor() const {
 }
 
 void MarioAnimator::switchMirrorMode() {
+    f32 scale = 1.0f;
     J3DModelX* model = static_cast< J3DModelX* >(MR::getJ3DModel(mActor));
-    f32 one = 1.0f;
     if (isMirrorAnimation()) {
         u32* modelFlags = (u32*)&model->mFlags;
         *modelFlags |= 1;
         XjointTransform* jt = mXanimePlayer->mCore->getJointTransform(0);
         TVec3f mirrorScale;
-        mirrorScale.x = one;
-        mirrorScale.y = one;
-        mirrorScale.z = -one;
+        mirrorScale.x = scale;
+        mirrorScale.y = scale;
+        mirrorScale.z = -scale;
         jt->_14 = mirrorScale;
 
         Mtx invBase;
         MtxPtr base = mActor->getBaseMtx();
         PSMTXInverse(base, invBase);
-        PSMTXConcat(MR::tmpMtxRotYRad(PI), invBase, _DC.toMtxPtr());
+        MR::multMtx(_DC, invBase, MR::tmpMtxRotYRad(PI));
 
         base = mActor->getBaseMtx();
-        PSMTXConcat(base, _DC.toMtxPtr(), _DC.toMtxPtr());
+        MR::multMtx(_DC, _DC, base);
 
-        jt->_6C = _DC.toMtxPtr();
+        jt->_6C = _DC;
     } else {
         u32* modelFlags = (u32*)&model->mFlags;
         *modelFlags &= ~1;
         XjointTransform* jt = mXanimePlayer->mCore->getJointTransform(0);
         TVec3f normalScale;
-        normalScale.x = one;
-        normalScale.y = one;
-        normalScale.z = one;
+        normalScale.x = scale;
+        normalScale.y = scale;
+        normalScale.z = scale;
         jt->_14 = normalScale;
         jt->_6C = 0;
     }
@@ -651,11 +656,11 @@ bool MarioAnimator::isMirrorAnimation() {
     if (mActor->_468) {
         return false;
     }
-    TVec3f camDir(getCamDirX());
+    TVec3f camDir = getCamDirX();
     Mario* player = getPlayer();
-    f32 dot = getCamDirY().dot(player->_1FC);
+    f32 dot = player->_1FC.dot(getCamDirY());
     if (dot < 0.0f) {
-        camDir = camDir.negateInline();
+        camDir = -camDir;
     }
     if (isAnimationRun("WallWalkL") || isAnimationRun("WallWalkR")) {
         if (!_10C) {
@@ -794,8 +799,7 @@ void MarioAnimator::setTilt() {
         tiltAngle = 1.0f - frontDot;
 
         if (tiltAngle > 0.001f) {
-            TVec3f cross;
-            PSVECCrossProduct((Vec*)&_60, (Vec*)getFrontVec(), (Vec*)&cross);
+            TVec3f cross = _60.cross(getFrontVec());
 
             f32 gravDot = cross.dot(*getPlayer()->getGravityVec());
             if (gravDot < 0.0f) {
@@ -815,13 +819,13 @@ void MarioAnimator::setTilt() {
     tiltAngle *= ratio;
 
     const f32 maxTilt = HALF_PI;
-    f32 absTilt = __fabsf(tiltAngle);
+    f32 absTilt = MR::abs(tiltAngle);
     if (absTilt >= maxTilt) {
         tiltAngle *= (maxTilt / absTilt);
     }
 
-    f32 absNew = __fabsf(tiltAngle);
-    f32 absOld = __fabsf(_58);
+    f32 absNew = MR::abs(tiltAngle);
+    f32 absOld = MR::abs(_58);
 
     if (absNew > absOld) {
         _58 = 0.9f * _58 + 0.1f * tiltAngle;
@@ -877,16 +881,16 @@ void MarioAnimator::setHoming() {
         Mario* player = getPlayer();
         angleH = MR::vecKillElement(toTarget, player->mHeadVec, &toTarget);
 
-        f32 dist = PSVECMag((Vec*)&toTarget);
+        f32 dist = toTarget.length();
         f32 vAngle;
 
         if (dist < 10.0f) {
             vAngle = 0.0f;
         } else {
-            f32 dist2 = PSVECMag((Vec*)&toTarget);
+            f32 dist2 = toTarget.length();
             vAngle = JMath::sAtanTable.atan2_(angleH, dist2);
 
-            if (isStatusActiveID(0x22)) {
+            if (isStatusActiveID(MarioStatus_Talk)) {
                 if (vAngle > 1.0f) {
                     vAngle = 1.0f;
                 }
@@ -911,8 +915,7 @@ void MarioAnimator::setHoming() {
             angleH = table->mLookMaxAngleH;
         }
 
-        TVec3f cross;
-        PSVECCrossProduct((Vec*)&toTarget, (Vec*)getFrontVec(), (Vec*)&cross);
+        TVec3f cross = toTarget.cross(getFrontVec());
         Mario* player2 = getPlayer();
         f32 gravDot = cross.dot(player2->mHeadVec);
         if (gravDot < 0.0f) {
@@ -956,12 +959,11 @@ void MarioAnimator::setHoming() {
 
     XanimeCore* core = mXanimePlayer->mCore;
     u8 leftIdx = MR::getJointIndex(mActor, "ShoulderL");
-    XjointTransform* leftJt = core->getJointTransform(leftIdx);
-    leftJt->_2C = leftShoulderRot;
+    core->getJointTransform(leftIdx)->_2C.x = leftShoulderRot;
 
+    core = mXanimePlayer->mCore;
     u8 rightIdx = MR::getJointIndex(mActor, "ShoulderR");
-    XjointTransform* rightJt = core->getJointTransform(rightIdx);
-    rightJt->_2C = rightShoulderRot;
+    core->getJointTransform(rightIdx)->_2C.x = rightShoulderRot;
 }
 
 void MarioAnimator::updateJointRumble() {
@@ -996,11 +998,11 @@ void MarioAnimator::updateJointRumble() {
     XanimeCore* core = mXanimePlayer->mCore;
     u16 larmIdx = MR::getJointIndex(mActor, "ArmL1");
     XjointTransform* larmJt = core->getJointTransform(larmIdx);
-    larmJt->_30 = sineVal * power;
+    larmJt->_2C.y = sineVal * power;
 
     u16 rarmIdx = MR::getJointIndex(mActor, "ArmR2");
     XjointTransform* rarmJt = core->getJointTransform(rarmIdx);
-    rarmJt->_30 = sineVal * power;
+    rarmJt->_2C.y = sineVal * power;
 
     f32 hipRot = 0.7f * ((f32)_74 / 60.0f);
 
@@ -1070,7 +1072,7 @@ void MarioAnimator::update() {
                 if (!mActor->_934) {
                     player = getPlayer();
                     if (player->mMovementStates._1) {
-                        stopAnimation(nullptr, static_cast< const char* >(nullptr));
+                        stopAnimation(nullptr);
                     }
                 }
             }
@@ -1107,9 +1109,9 @@ void MarioAnimator::update() {
     if (player->mDrawStates._A) {
         if (!isPlayerModeHopper()) {
             player = getPlayer();
-            if (!player->isStatusActive(0xD)) {
+            if (!player->isStatusActive(MarioStatus_Freeze)) {
                 if (isLandingAnimationRun()) {
-                    stopAnimation(nullptr, static_cast< const char* >(nullptr));
+                    stopAnimation(nullptr);
                 }
 
                 player = getPlayer();
@@ -1144,12 +1146,12 @@ void MarioAnimator::update() {
 
         player = getPlayer();
         if (player->_71C != 0) {
-            stopAnimation(nullptr, static_cast< const char* >(nullptr));
+            stopAnimation(nullptr);
         }
 
         player = getPlayer();
         if (player->mMovementStates._A) {
-            stopAnimation(nullptr, static_cast< const char* >(nullptr));
+            stopAnimation(nullptr);
         }
         goto afterBrake;
     }
@@ -1227,7 +1229,7 @@ notSquat:
     }
 
     if (isAnimationRun("壁押し")) {
-        stopAnimation(nullptr, static_cast< const char* >(nullptr));
+        stopAnimation(nullptr);
         goto doBrake;
     }
 
@@ -1250,7 +1252,7 @@ notSquat:
         if (isAnimationRun("ターン")) {
             player = getPlayer();
             if (player->_8F0 < 1.0f) {
-                stopAnimation(nullptr, static_cast< const char* >(nullptr));
+                stopAnimation(nullptr);
             }
         } else {
             _15 = 0;
@@ -1305,11 +1307,10 @@ afterBrake:
 
 f32 XanimePlayer::tellAnimationFrame() const {
     if (isTerminate()) {
-        s16 endFrame = _20->mEnd;
-        return (f32)endFrame;
+        return _20->getEnd();
     }
 
-    return _20->mFrame;
+    return _20->getFrame();
 }
 
 namespace NrvMarioActor {

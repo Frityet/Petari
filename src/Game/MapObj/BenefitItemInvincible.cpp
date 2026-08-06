@@ -1,4 +1,6 @@
 #include "Game/MapObj/BenefitItemInvincible.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 #include <cstring>
 
 namespace {
@@ -43,11 +45,7 @@ void BenefitItemInvincible::initModelAndEfx() {
     initEffectKeeper(5, "BenefitItemObj", false);
     initBinder(60.0f, 60.0f, 0);
     initHitSensor(1);
-    TVec3f offs;
-    offs.x = 0.0f;
-    offs.y = 60.0f;
-    offs.z = 0.0f;
-    MR::addHitSensorMapObj(this, "body", 4, 60.0f, offs);
+    MR::addHitSensorMapObj(this, "body", 4, 60.0f, TVec3f(0.0f, 60.0f, 0.0f));
     MR::startBrk(this, "PowerupInvincible");
 }
 
@@ -59,8 +57,8 @@ void BenefitItemInvincible::appearThrowUp() {
     else {
         MR::startSystemSE("SE_SY_ITEM_APPEAR");
         setNerve(&NrvBenefitItemObj::HostTypeNrvShoot::sInstance);
-        f32 appear = cAppearThrowFwdSpd;
-        mVelocity = MR::addTwoScalarVecs(_148, _13C, appear, cAppearThrowUpSpd);
+        f32 appear = ::cAppearThrowFwdSpd;
+        mVelocity = MR::addTwoScalarVecs(_148, _13C, appear, ::cAppearThrowUpSpd);
         MR::invalidateClipping(this);
     }
 }
@@ -87,6 +85,8 @@ void BenefitItemInvincible::stopEfx(const char* pEffect) {
     }
 }
 
-BenefitItemInvincible::~BenefitItemInvincible() {}
+BenefitItemInvincible::~BenefitItemInvincible() {
+}
 
-void BenefitItemInvincible::runBck(const char*) {}
+void BenefitItemInvincible::runBck(const char*) {
+}

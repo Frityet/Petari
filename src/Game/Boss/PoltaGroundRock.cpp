@@ -1,13 +1,15 @@
 #include "Game/Boss/PoltaGroundRock.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/types.h"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 namespace NrvPoltaGroundRock {
     NEW_NERVE(PoltaGroundRockNrvSign, PoltaGroundRock, Sign);
@@ -16,7 +18,8 @@ namespace NrvPoltaGroundRock {
     NEW_NERVE(PoltaGroundRockNrvBreak, PoltaGroundRock, Break);
 };  // namespace NrvPoltaGroundRock
 PoltaGroundRock::PoltaGroundRock(const char* pName)
-    : LiveActor(pName), mOwner(nullptr), mBreakModel(nullptr), _94(0.0f, 0.0f, 0.0f, 1.0f), _A4(0.0f, 0.0f, 0.0f) {}
+    : LiveActor(pName), mOwner(nullptr), mBreakModel(nullptr), _94(0.0f, 0.0f, 0.0f, 1.0f), _A4(0.0f, 0.0f, 0.0f) {
+}
 
 void PoltaGroundRock::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -44,7 +47,8 @@ void PoltaGroundRock::initBreakModel() {
     mBreakModel->makeActorDead();
 }
 
-void PoltaGroundRock::control() {}
+void PoltaGroundRock::control() {
+}
 
 void PoltaGroundRock::calcAndSetBaseMtx() {
     MR::setBaseTRMtx(this, _94);
@@ -56,10 +60,10 @@ void PoltaGroundRock::start(LiveActor* pOwner, const TVec3f& rVec1) {
     setNerve(&NrvPoltaGroundRock::PoltaGroundRockNrvSign::sInstance);
     _A4.set(rVec1);
     MR::calcGravity(this, rVec1);
-    JMAVECScaleAdd(&mGravity, &_A4, &mPosition, 500.0f);
+    mPosition.scaleAdd(500.0f, mGravity, _A4);
     TPos3f v9;
-    MR::makeMtxUpNoSupportPos(&v9, mGravity.negateInline(), mPosition);
-    MR::rotateMtxLocalY(v9, MR::getRandom(0.0f, 6.2831855f));
+    MR::makeMtxUpNoSupportPos(&v9, -mGravity, mPosition);
+    MR::rotateMtxLocalY(v9, MR::getRandom(0.0f, TWO_PI));
     v9.getQuat(_94);
     MR::validateCollisionParts(this);
     MR::showModel(this);
@@ -129,7 +133,7 @@ void PoltaGroundRock::exeJut() {
     if (MR::isFirstStep(this)) {
         MR::startSound(this, "SE_OJ_POLTA_G_ROCK_JUT");
     }
-    JMAVECScaleAdd(&mGravity, &_A4, &mPosition, MR::calcNerveEaseOutValue(this, 20, 500.0f, 0.0f));
+    mPosition.scaleAdd(MR::calcNerveEaseOutValue(this, 20, 500.0f, 0.0f), mGravity, _A4);
     if (MR::isGreaterStep(this, 20)) {
         MR::tryRumblePadAndCameraDistanceMiddle(this, 800.0f, 1200.0f, 2000.0f);
         setNerve(&NrvPoltaGroundRock::PoltaGroundRockNrvWait::sInstance);

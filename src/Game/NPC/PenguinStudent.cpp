@@ -1,7 +1,6 @@
 #include "Game/NPC/PenguinStudent.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LiveActorGroupArray.hpp"
-#include "Game/NPC/NPCActor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/Penguin.hpp"
 #include "Game/NPC/TalkMessageFunc.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
@@ -16,8 +15,6 @@
 #include "Game/Util/RailUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/types.h"
 
 namespace NrvPenguinStudent {
     NEW_NERVE(PenguinStudentNrvSwim, PenguinStudent, Swim);
@@ -118,7 +115,7 @@ void PenguinStudent::exeSwim() {
     MR::calcUpVec(&v20, this);
     MR::calcFrontVec(&v19, this);
     MR::rotAxisVecRad(v20, v19, &v21, 0.017453292f * (getNerveStep() % 360));
-    mPosition.set< f32 >(mPosition + v21.multInLine(speed));
+    mPosition.set< f32 >(mPosition + v21 * speed);
     if (mMsgCtrl) {
         MR::tryTalkNearPlayer(mMsgCtrl);
     }

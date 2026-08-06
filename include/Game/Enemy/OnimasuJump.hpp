@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/Enemy/Onimasu.hpp"
-
 
 class OnimasuJump : public Onimasu {
 public:

@@ -1,7 +1,9 @@
 #include "Game/MapObj/SpiderThreadPoint.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/SpiderThread.hpp"
 #include "Game/MapObj/SpiderThreadWindCtrl.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include <revolution/mtx.h>
 
@@ -18,29 +20,25 @@ namespace {
 
 SpiderThreadPoint::SpiderThreadPoint(const TVec3f& rPos, f32 friction)
     : mBasePos(rPos), mPosition(rPos), mVelocity(0.0f, 0.0f, 0.0f), mFriction(friction), mUp(0.0f, 1.0f, 0.0f), mFront(0.0f, 0.0f, 1.0f) {
-    mWindStartTime = getWindCtrl()->getTimeToStartWind();
-    mWindTime = getWindCtrl()->getWindTime();
+    mWindStartTime = ::getWindCtrl()->getTimeToStartWind();
+    mWindTime = ::getWindCtrl()->getWindTime();
     mPrevStretchDist = 0.0f;
 }
 
 bool SpiderThreadPoint::updateSpring() {
     mVelocity.scale(mFriction);
-    TVec3f v1(mBasePos);
-    v1.sub(mPosition);
-
-    TVec3f v2(v1);
-    v2.scale(sAccelRate);
+    TVec3f v1(mBasePos - mPosition);
+    TVec3f v2(v1 * ::sAccelRate);
     mVelocity.add(v2);
     mPosition.add(mVelocity);
 
-    TVec3f v3(mBasePos);
-    v3.sub(mPosition);
+    TVec3f v3(mBasePos - mPosition);
     v3.z = 0.0f;
 
     f32 mag1 = v3.length();
     f32 mag2 = mVelocity.length();
 
-    if (mag2 < sSpeedMinToStop && mag1 < sDistanceToStop) {
+    if (mag2 < ::sSpeedMinToStop && mag1 < ::sDistanceToStop) {
         mVelocity.zero();
         return true;
     }
@@ -65,10 +63,10 @@ void SpiderThreadPoint::updateWind(f32 dampener) {
         mWindStartTime--;
     } else {
         if (--mWindTime > 0) {
-            mVelocity.add(getWindCtrl()->mWind);
+            mVelocity.add(::getWindCtrl()->mWind);
         } else {
-            mWindStartTime = getWindCtrl()->getTimeToStartWind();
-            mWindTime = getWindCtrl()->getWindTime();
+            mWindStartTime = ::getWindCtrl()->getTimeToStartWind();
+            mWindTime = ::getWindCtrl()->getWindTime();
         }
     }
     mVelocity.scale(dampener);
@@ -88,7 +86,7 @@ void SpiderThreadPoint::restrict(const TVec3f* pAnchor, f32 length) {
         MR::normalize(&v2);
 
         if (nextPosDiff.squared() >= length * length) {
-            TVec3f restriction = v2.scaleInline(length);
+            TVec3f restriction = v2 * length;
             mVelocity.x -= nextPosDiff.x - restriction.x;
             mVelocity.y -= nextPosDiff.y - restriction.y;
             mVelocity.z -= nextPosDiff.z - restriction.z;
@@ -97,7 +95,7 @@ void SpiderThreadPoint::restrict(const TVec3f* pAnchor, f32 length) {
 }
 
 void SpiderThreadPoint::updateHang(const TVec3f& rPos) {
-    mPosition.setPS2(rPos);
+    mPosition = rPos;
     mVelocity.zero();
 }
 
@@ -124,7 +122,7 @@ bool SpiderThreadPoint::tryPush(const TVec3f& rPos, f32 radius) {
 void SpiderThreadPoint::startThreadLevelSound() {
     f32 stretchDist = mBasePos.distance(mPosition);
     if (mPrevStretchDist > 0.0f && stretchDist > 50.0f) {
-        f32 diff = __fabsf(mPrevStretchDist - stretchDist);
+        f32 diff = MR::abs(mPrevStretchDist - stretchDist);
         if (diff > 1.0f) {
             MR::startSystemLevelSE("SE_OJ_LV_SPIDER_THREAD_PULL", systemLevelParam(stretchDist, diff * 100.0f));
         }

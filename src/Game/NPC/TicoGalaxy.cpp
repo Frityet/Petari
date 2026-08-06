@@ -1,4 +1,5 @@
 #include "Game/NPC/TicoGalaxy.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/NPC/TicoStarRing.hpp"
 #include "Game/System/GameEventFlagTable.hpp"
@@ -40,7 +41,7 @@ void TicoGalaxy::shootStarPiece() {
 
     if (MR::giftStarPieceToTarget(getSensor("Mouth"), v5)) {
         mCurrentFed += v5;
-        MR::tryRumblePadVeryWeak(this, 0);
+        MR::tryRumblePadVeryWeak(this, WPAD_CHAN0);
     }
 }
 
@@ -75,8 +76,9 @@ void TicoGalaxy::disappear(bool a1) {
 }
 
 void TicoGalaxy::appearInformation() const {
-    MR::appearInformationMessage(MR::getGameMessageDirect(sInfoMessageID), true);
+    MR::appearInformationMessage(MR::getGameMessageDirect(::sInfoMessageID), true);
     MR::setInformationMessageReplaceString(MR::getGalaxyNameShortOnCurrentLanguage(mGalaxyName), 0);
 }
 
-TicoGalaxy::~TicoGalaxy() {}
+TicoGalaxy::~TicoGalaxy() {
+}

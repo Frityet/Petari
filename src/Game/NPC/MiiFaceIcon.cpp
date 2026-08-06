@@ -1,4 +1,5 @@
 #include "Game/NPC/MiiFaceIcon.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/MiiFaceIconHolder.hpp"
 #include "Game/NPC/MiiFaceRecipe.hpp"
 #include "Game/Util/MemoryUtil.hpp"
@@ -12,9 +13,11 @@ MiiFaceIcon::MiiFaceIcon(u16 width, u16 height, const MiiFaceRecipe& rRecipe, co
     MR::registerMiiFaceIcon(this);
 }
 
-void MiiFaceIcon::init(const JMapInfoIter& rIter) {}
+void MiiFaceIcon::init(const JMapInfoIter& rIter) {
+}
 
-void MiiFaceIcon::movement() {}
+void MiiFaceIcon::movement() {
+}
 
 // FIXME: Stack accesses are ordered incorrectly.
 void MiiFaceIcon::drawIcon() {

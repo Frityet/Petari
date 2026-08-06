@@ -3,9 +3,6 @@
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 
-class NameObjArchiveListCollector;
-class JMapInfoIter;
-
 class DemoRabbit : public NPCActor {
 public:
     DemoRabbit(const char*);

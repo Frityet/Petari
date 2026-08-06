@@ -1,7 +1,9 @@
 #include "Game/MapObj/ClipAreaDropHolder.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/ClipAreaDrop.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util.hpp"
 
 namespace {
     static const s32 sMaxClipAreaDrop = 32;
@@ -26,7 +28,7 @@ namespace MR {
         ClipAreaDropHolder* pHolder = MR::getSceneObj< ClipAreaDropHolder >(SceneObj_ClipAreaDropHolder);
 
         if (pHolder->getDeadActor() != nullptr) {
-            return static_cast<ClipAreaDrop*>(pHolder->getDeadActor());
+            return static_cast< ClipAreaDrop* >(pHolder->getDeadActor());
         }
 
         return nullptr;

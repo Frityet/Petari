@@ -1,4 +1,5 @@
 #include "Game/Player/MarioModule.hpp"
+#include "Game/Animation/XanimeCore.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -6,7 +7,8 @@
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioMapCode.hpp"
 #include "Game/Player/MarioState.hpp"
-#include "revolution/types.h"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 Mario* MarioModule::getPlayer() const {
     return mActor->mMario;
@@ -229,23 +231,22 @@ TVec3f& MarioModule::getWorldPadDir() const {
     return mActor->mMario->mWorldPadDir;
 }
 
-// regswap
 bool MarioModule::calcWorldPadDir(TVec3f* pDest, f32 a2, f32 a3, bool a4) {
     pDest->zero();
     if (MR::isNearZero(a2) && MR::isNearZero(a3)) {
         return false;
     }
     if (!mActor->mMario->_10._11) {
-        if (__fabsf(a3) > mActor->mConst->getTable()->mStickMarginYstart) {
-            if (__fabsf(a2) < mActor->mConst->getTable()->mStickMarginX) {
+        if (MR::abs(a3) > mActor->mConst->getTable()->mStickMarginYstart) {
+            if (MR::abs(a2) < mActor->mConst->getTable()->mStickMarginX) {
                 a2 = 0.0f;
             } else if (a2 > 0.0f) {
                 a2 = (a2 - mActor->mConst->getTable()->mStickMarginX) / (1.0f - mActor->mConst->getTable()->mStickMarginX);
             } else {
                 a2 = (a2 + mActor->mConst->getTable()->mStickMarginX) / (1.0f - mActor->mConst->getTable()->mStickMarginX);
             }
-        } else if (__fabsf(a2) > mActor->mConst->getTable()->mStickMarginXstart) {
-            if (__fabsf(a3) < mActor->mConst->getTable()->mStickMarginY) {
+        } else if (MR::abs(a2) > mActor->mConst->getTable()->mStickMarginXstart) {
+            if (MR::abs(a3) < mActor->mConst->getTable()->mStickMarginY) {
                 a3 = 0.0f;
             } else if (a3 > 0.0f) {
                 a3 = (a3 - mActor->mConst->getTable()->mStickMarginY) / (1.0f - mActor->mConst->getTable()->mStickMarginY);
@@ -302,7 +303,7 @@ TVec3f& MarioModule::getJumpVec() const {
 }
 
 void MarioModule::setJumpVec(const TVec3f& rVec) {
-    mActor->mMario->mJumpVec.setPS2(rVec);
+    mActor->mMario->mJumpVec = rVec;
 }
 
 void MarioModule::playEffect(const char* pEffectName) {
@@ -337,8 +338,8 @@ void MarioModule::stopEffectForce(const char* pEffectName) {
     mActor->stopEffectForce(pEffectName);
 }
 
-bool MarioModule::playSound(const char* pSoundName, s32 a2) {
-    return mActor->mMario->playSoundJ(pSoundName, a2);
+void MarioModule::playSound(const char* pSoundName, s32 a2) {
+    mActor->mMario->playSoundJ(pSoundName, a2);
 }
 
 void MarioModule::stopSound(const char* pSoundName, u32 a2) {
@@ -386,24 +387,24 @@ TVec3f& MarioModule::getCamDirZ() const {
 void MarioModule::startPadVib(u32 strength) {
     switch (strength) {
     case 1:
-        MR::tryRumblePadVeryWeak(mActor, 0);
+        MR::tryRumblePadVeryWeak(mActor, WPAD_CHAN0);
         return;
     case 0:
-        MR::tryRumblePadWeak(mActor, 0);
+        MR::tryRumblePadWeak(mActor, WPAD_CHAN0);
         return;
     case 2:
-        MR::tryRumblePadMiddle(mActor, 0);
+        MR::tryRumblePadMiddle(mActor, WPAD_CHAN0);
         return;
     case 3:
-        MR::tryRumblePadStrong(mActor, 0);
+        MR::tryRumblePadStrong(mActor, WPAD_CHAN0);
         return;
     default:
         return;
     }
 }
 
-void MarioModule::startPadVib(const char* a1) {
-    MR::tryRumblePad(mActor, a1, 0);
+void MarioModule::startPadVib(const char* pStrength) {
+    MR::tryRumblePad(mActor, pStrength, WPAD_CHAN0);
 }
 
 f32 MarioModule::getStickX() const {
@@ -574,7 +575,7 @@ bool MarioModule::isInputDisable() const {
     if (mActor->mMario->mMovementStates._22) {
         return true;
     }
-    if (mActor->mMario->isStatusActive(12)) {
+    if (mActor->mMario->isStatusActive(MarioStatus_AbyssDamage)) {
         return true;
     }
     if (isAnimationRun("ハード着地")) {  // "Hard landing"

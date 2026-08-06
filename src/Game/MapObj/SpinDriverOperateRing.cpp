@@ -1,8 +1,17 @@
 #include "Game/MapObj/SpinDriverOperateRing.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvSpinDriverOperateRing {
     NEW_NERVE(SpinDriverOperateRingNrvWait, SpinDriverOperateRing, Wait);
 };  // namespace NrvSpinDriverOperateRing
+
+void FORCE_OPERATOR() {
+    TVec3f vec;
+    TVec3f vec2;
+    vec.scale(1.0f);
+    vec -= vec2;
+}
 
 SpinDriverOperateRing::SpinDriverOperateRing(const char* pName)
     : LiveActor(pName), _8C(0, 0, 0), _98(0, 0, 0), _A4(0, 0, 0), mAccelerate(0, 0, 0), mDirection(0, 0, 0) {
@@ -20,9 +29,11 @@ void SpinDriverOperateRing::init(const JMapInfoIter& rIter) {
     MR::invalidateClipping(this);
 }
 
-void SpinDriverOperateRing::control() {}
+void SpinDriverOperateRing::control() {
+}
 
-void SpinDriverOperateRing::exeWait() {}
+void SpinDriverOperateRing::exeWait() {
+}
 
 void SpinDriverOperateRing::setRadiusRate(f32 rate) {
     mRadiusRate = MR::normalize(rate, 0.0f, 1.0f);
@@ -51,13 +62,7 @@ void SpinDriverOperateRing::update(const TVec3f& a1, const TVec3f& a2) {
 }
 
 void SpinDriverOperateRing::updateDirection(const TVec3f& rVec) {
-    TVec3f direction(mDirection);
-    direction.scale(0.9f);
-    TVec3f stack_14(rVec);
-    stack_14.scale(0.1f);
-    TVec3f stack_20(stack_14);
-    stack_20 += direction;
-    mDirection = stack_20;
+    mDirection = rVec * 0.1f + mDirection * 0.9f;
 }
 
 void SpinDriverOperateRing::resetVelocityAndTrans() {
@@ -70,9 +75,7 @@ void SpinDriverOperateRing::resetVelocityAndTrans() {
 
 void SpinDriverOperateRing::addAccelToOperatePlane(const TVec3f& rVec) {
     f32 dot = -rVec.dot(_A4);
-    TVec3f scalar(rVec);
-    scalar.scale(0.05f * dot);
-    mAccelerate += scalar;
+    mAccelerate += rVec * (0.05f * dot);
 }
 
 void SpinDriverOperateRing::addAccelToCenter() {
@@ -80,9 +83,7 @@ void SpinDriverOperateRing::addAccelToCenter() {
 
     if (norm > 0.0001f) {
         f32 scalar = ((0.5f * norm) / _D8);
-        TVec3f accel(_A4);
-        accel.scale(scalar);
-        mAccelerate += accel;
+        mAccelerate -= _A4 * scalar;
     }
 }
 
@@ -92,4 +93,5 @@ void SpinDriverOperateRing::attenuateVelocity() {
     mAccelerate.z *= 0.94f;
 }
 
-SpinDriverOperateRing::~SpinDriverOperateRing() {}
+SpinDriverOperateRing::~SpinDriverOperateRing() {
+}

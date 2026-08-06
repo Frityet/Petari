@@ -1,13 +1,13 @@
 #include "Game/Ride/BigBubble.hpp"
 #include "Game/AreaObj/BigBubbleGoalArea.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/BigBubbleMoveLimitter.hpp"
 #include "Game/MapObj/BigFanHolder.hpp"
 #include "Game/MapObj/ElectricRailHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/OctahedronBezierSurface.hpp"
-#include <JSystem/JGeometry/TMatrix.hpp>
-#include <JSystem/JGeometry/TVec.hpp>
 #include <JSystem/JMath/JMATrigonometric.hpp>
 #include <revolution/gx/GXTev.h>
 #include <revolution/mtx.h>
@@ -202,15 +202,15 @@ void BigBubble::calcAnim() {
         f32 radius = MR::calcPointRadius2D(mPosition, getSize());
 
         s32 divideLevel = 0;
-        if (radius >= sRadiusSubLevel6) {
+        if (radius >= ::sRadiusSubLevel6) {
             divideLevel = 6;
-        } else if (radius >= sRadiusSubLevel5) {
+        } else if (radius >= ::sRadiusSubLevel5) {
             divideLevel = 5;
-        } else if (radius >= sRadiusSubLevel4) {
+        } else if (radius >= ::sRadiusSubLevel4) {
             divideLevel = 4;
-        } else if (radius >= sRadiusSubLevel3) {
+        } else if (radius >= ::sRadiusSubLevel3) {
             divideLevel = 3;
-        } else if (radius >= sRadiusSubLevel2) {
+        } else if (radius >= ::sRadiusSubLevel2) {
             divideLevel = 2;
         } else if (radius >= 3.0f) {  // no static symbol here?
             divideLevel = 1;
@@ -256,10 +256,10 @@ void BigBubble::generate(const TVec3f& rPos, const TVec3f& rUp, f32 volume, bool
     makeActorAppeared();
 
     MR::getRandomVector(&mCoriolisAccel, 1.0f);
-    mCoriolisAccel.rejection(mGravity);
+    mCoriolisAccel.orthogonalize(mGravity);
     MR::onBind(this);
     MR::offCalcGravity(this);
-    mGravity.set(rUp.negateOperatorInternal());
+    mGravity.set(-rUp);
     mWarningColor.a = 0;
 }
 
@@ -296,13 +296,13 @@ void BigBubble::setShapeType(s32 shapeType) {
 f32 BigBubble::getBaseRadius() const {
     switch (mShapeType) {
     case ShapeType_Sphere:
-        return sBaseRadiusSphere;
+        return ::sBaseRadiusSphere;
     case ShapeType_Cube:
-        return sBaseRadiusCube;
+        return ::sBaseRadiusCube;
     case ShapeType_Octahedron:
-        return sBaseRadiusOctahedron;
+        return ::sBaseRadiusOctahedron;
     default:
-        return sBaseRadiusSphere;
+        return ::sBaseRadiusSphere;
     }
 }
 
@@ -342,7 +342,7 @@ bool BigBubble::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* p
     if (MR::isMsgStarPieceReflect(msg)) {
         TVec3f sensorDir;
         MR::calcSensorDirectionNormalize(&sensorDir, pSender, pReceiver);
-        addDeformVelocityOuter(sensorDir.multiplyOperatorInline(sStarPieceDeformPower), false);
+        addDeformVelocityOuter(sensorDir * ::sStarPieceDeformPower, false);
         return true;
     }
 
@@ -385,12 +385,12 @@ bool BigBubble::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
             }
 
             if (mergeDiff > 0.0f) {
-                mVelocity.add(dir.multiplyOperatorInline(mergeDiff / getSize()).multiplyOperatorInline(0.18f));
+                mVelocity.add(dir * (mergeDiff / getSize()) * 0.18f);
             }
 
             f32 mergeDiff2 = sumRadii * 0.9f - dist;
             if (mergeDiff2 > 0.0f) {
-                addDeformVelocityOuter(dir.multiplyOperatorInline(mergeDiff2 * (1.1f / getBaseRadius())), false);
+                addDeformVelocityOuter(dir * (mergeDiff2 * (1.1f / getBaseRadius())), false);
             }
         }
         return true;
@@ -475,7 +475,7 @@ bool BigBubble::requestAssimilate(HitSensor* pSender, HitSensor* pReceiver) {
     }
 
     TVec3f pos;
-    pos.set(mPosition.addOperatorInLine(dir.multiplyOperatorInline(getSize())));
+    pos.set(mPosition + dir * getSize());
     TPos3f mtx;
     MR::makeMtxUpNoSupportPos(&mtx, dir, pos);
     MR::emitEffectHit(this, mtx, "Merge");
@@ -487,7 +487,7 @@ bool BigBubble::requestAssimilate(HitSensor* pSender, HitSensor* pReceiver) {
     }
 
     setScale(getRadius(mVolume));
-    addDeformVelocityOuter(dir.multiplyOperatorInline(scale).multiplyOperatorInline(8.0f), true);
+    addDeformVelocityOuter(dir * scale * 8.0f, true);
 
     for (s32 idx = 0; idx < 6; idx++) {
         if (mMergeBubbles[idx] == pReceiver->mHost) {
@@ -558,7 +558,7 @@ bool BigBubble::tryBreak() {
 }
 
 bool BigBubble::tryAutoBreak() {
-    if (!mIsObstruct && MR::isGreaterStep(this, sAutoBreakTime) || mIsExitLimitter) {
+    if (!mIsObstruct && MR::isGreaterStep(this, ::sAutoBreakTime) || mIsExitLimitter) {
         if (mRider != nullptr) {
             MR::endBindAndPlayerWeakGravityLimitJump(this, mVelocity);
             mRider = nullptr;
@@ -589,7 +589,7 @@ bool BigBubble::tryEscapeEnd() {
     if (MR::isGreaterStep(this, 30)) {
         if (mRider != nullptr) {
             MR::calcGravity(this);
-            MR::endBindAndPlayerJump(this, mGravity.multiplyOperatorInline(30.0f), 30);
+            MR::endBindAndPlayerJump(this, mGravity * 30.0f, 30);
             mRider = nullptr;
         }
         MR::emitEffect(this, "Break");
@@ -643,7 +643,7 @@ void BigBubble::exeAppear() {
     f32 scale = MR::calcNerveValue(this, 30, 0.01f, mAppearRadius);
     setScale(scale);
 
-    mPosition.set(mSpawnPosition.addOperatorInLine(mGravity.multiplyOperatorInline(-scale * getBaseRadius())));
+    mPosition.set(mSpawnPosition + mGravity * (-scale * getBaseRadius()));
     if (tryAppearEnd()) {
         MR::onCalcGravity(this);
         MR::validateHitSensors(this);
@@ -736,8 +736,8 @@ void BigBubble::exeMerged() {
     }
 
     f32 f1 = size * MR::calcNerveRate(this, 25) * 0.0075f;
-    addDeformVelocityOuter(mergeDir.multiplyOperatorInline(f1), false);
-    mMergeBubble->addDeformVelocityOuter(mergeDir.multiplyOperatorInline(-f1).multiplyOperatorInline(0.75f), false);
+    addDeformVelocityOuter(mergeDir * f1, false);
+    mMergeBubble->addDeformVelocityOuter(mergeDir * -f1 * 0.75f, false);
     addDeformVelocityInternalOressure();
     addDeformVelocityRebound();
     updateDeformVelocity();
@@ -745,10 +745,10 @@ void BigBubble::exeMerged() {
     TVec3f localDir;
     calcLocalDirection(&localDir, mMergeIndex);
     TQuat4f q;
-    q.setRotate(localDir, mergeDir.negateOperatorInternal(), 0.2f);
+    q.setRotate(localDir, -mergeDir, 0.2f);
     PSQUATMultiply(&q, &mBubbleQuat, &mBubbleQuat);
     calcLocalDirection(&localDir, mMergeIndex);
-    mPosition.set(mergePos - localDir.multiplyOperatorInline(mDeformCoeff[mMergeIndex]).multiplyOperatorInline(0.95f));
+    mPosition.set(mergePos - localDir * mDeformCoeff[mMergeIndex] * 0.95f);
     MR::rotateQuatMoment(&mBubbleQuat, mMoment);
 
     mBaseMtx.setQT(mBubbleQuat, mPosition);
@@ -894,18 +894,18 @@ void BigBubble::addDeformVelocityRebound() {
 
 void BigBubble::addCoriolisAccel() {
     MR::rotateVecDegree(&mCoriolisAccel, mGravity, 3.0f);
-    mCoriolisAccel.rejection(mGravity);
+    mCoriolisAccel.orthogonalize(mGravity);
     if (MR::isNearZero(mCoriolisAccel)) {
         MR::getRandomVector(&mCoriolisAccel, 1.0f);
     }
     MR::normalizeOrZero(&mCoriolisAccel);
-    mVelocity.add(mCoriolisAccel.multiplyOperatorInline(mScale.x).multiplyOperatorInline(0.1f));
+    mVelocity.add(mCoriolisAccel * mScale.x * 0.1f);
 }
 
 void BigBubble::addAccelMoment(s32 padChannel) {
     TVec3f rotateMoment;
     if (MR::calcStarPointerStrokeRotateMoment(&rotateMoment, mPosition, getSize(), padChannel)) {
-        mMoment.add(rotateMoment.multiplyOperatorInline(0.03f));
+        mMoment.add(rotateMoment * 0.03f);
         f32 inertia = mMoment.length();
         if (inertia > 0.2f) {
             mMoment *= 0.2f / inertia;
@@ -943,8 +943,8 @@ bool BigBubble::addAccelPointing(s32 padChannel) {
 
     TVec3f accelDir;
     MR::normalizeOrZero(mPosition - mPointerPos, &accelDir);
-    MR::addVelocity(this, accelDir.multiplyOperatorInline(mBlowForce));
-    addDeformVelocityOuter(accelDir.multiplyOperatorInline(1.5f), false);
+    MR::addVelocity(this, accelDir * mBlowForce);
+    addDeformVelocityOuter(accelDir * 1.5f, false);
     return true;
 }
 
@@ -966,10 +966,10 @@ void BigBubble::updatePose() {
         addDeformVelocityOuter(_1A4, false);
     }
 
-    addDeformVelocityOuter(mGravity.negateOperatorInternal().multiplyOperatorInline(0.03f).multiplyOperatorInline(mScale.x), false);
+    addDeformVelocityOuter(-mGravity * 0.03f * mScale.x, false);
     TVec3f v1;
-    MR::clampLength(&v1, mVelocity.negateOperatorInternal(), 10.0f);
-    addDeformVelocityOuter(v1.multiplyOperatorInline(0.1f), false);
+    MR::clampLength(&v1, -mVelocity, 10.0f);
+    addDeformVelocityOuter(v1 * 0.1f, false);
     addDeformVelocityInternalOressure();
     addDeformVelocityRebound();
     updateDeformVelocity();
@@ -977,8 +977,7 @@ void BigBubble::updatePose() {
 
 void BigBubble::updateBindActorMatrix() {
     if (mInterpolateTime < 1.0f) {
-        mRiderPos.set(
-            mRiderBasePos.multiplyOperatorInline(1.0f - mInterpolateTime).addOperatorInLine(mPosition.multiplyOperatorInline(mInterpolateTime)));
+        mRiderPos.set(mRiderBasePos * (1.0f - mInterpolateTime) + mPosition * mInterpolateTime);
 
     } else {
         mRiderPos.set(mPosition);
@@ -995,7 +994,7 @@ void BigBubble::updateNormalVelocity() {
     f32 windSpeed;
     BigFanFunction::calcWindInfo(&windDir, mPosition, &windSpeed);
     windSpeed = MR::normalize(windSpeed, 0.0f, 0.5f);
-    mVelocity.add(windDir.multiplyOperatorInline(0.25f).multiplyOperatorInline(windSpeed));
+    mVelocity.add(windDir * 0.25f * windSpeed);
     mMoment.mult(0.99f);
     MR::reboundVelocityFromEachCollision(this, 0.1f, 0.1f, 0.1f, 0.0f);
 }
@@ -1024,18 +1023,18 @@ void BigBubble::updateMeshPoint() {
     mBaseMtx.getYDir(up);
     mBaseMtx.getZDir(front);
 
-    mSurface->getVertexPtr(Side_Top)->set(mPosition.addOperatorInLine(up.multiplyOperatorInline(mDeformCoeff[Side_Top])));
-    mSurface->getVertexPtr(Side_Right)->set(mPosition.addOperatorInLine(side.multiplyOperatorInline(mDeformCoeff[Side_Right])));
-    mSurface->getVertexPtr(Side_Back)->set(mPosition - front.multiplyOperatorInline(mDeformCoeff[Side_Back]));
-    mSurface->getVertexPtr(Side_Left)->set(mPosition - side.multiplyOperatorInline(mDeformCoeff[Side_Left]));
-    mSurface->getVertexPtr(Side_Front)->set(mPosition.addOperatorInLine(front.multiplyOperatorInline(mDeformCoeff[Side_Front])));
-    mSurface->getVertexPtr(Side_Bottom)->set(mPosition - up.multiplyOperatorInline(mDeformCoeff[Side_Bottom]));
+    mSurface->getVertexPtr(Side_Top)->set(mPosition + up * mDeformCoeff[Side_Top]);
+    mSurface->getVertexPtr(Side_Right)->set(mPosition + side * mDeformCoeff[Side_Right]);
+    mSurface->getVertexPtr(Side_Back)->set(mPosition - front * mDeformCoeff[Side_Back]);
+    mSurface->getVertexPtr(Side_Left)->set(mPosition - side * mDeformCoeff[Side_Left]);
+    mSurface->getVertexPtr(Side_Front)->set(mPosition + front * mDeformCoeff[Side_Front]);
+    mSurface->getVertexPtr(Side_Bottom)->set(mPosition - up * mDeformCoeff[Side_Bottom]);
     mSurface->calcControlPoint();
 }
 
 void BigBubble::updateCaptureReduceVolume() {
-    if (mReduceVolumeTimer >= sReduceSizeInterval) {
-        mVolume -= sReduceVolume;
+    if (mReduceVolumeTimer >= ::sReduceSizeInterval) {
+        mVolume -= ::sReduceVolume;
 
         if (0.25f <= mVolume && mVolume < 0.735f) {
             mVolume = 0.735f;
@@ -1071,7 +1070,7 @@ void BigBubble::updateCaptureWarningColor() {
         // disgusting mess
         f32 flashPhase = (static_cast< f32 >(mReduceVolumeTimer % flashTime) / static_cast< f32 >(flashTime - 1)) * TWO_PI;
 
-        mWarningColor.a = (JMath::sSinCosTable.cosLapRad(flashPhase) + 1.0f) * 0.5f * 128.0f;
+        mWarningColor.a = (MR::cos(flashPhase) + 1.0f) * 0.5f * 128.0f;
     } else {
         mWarningColor.a = 0;
     }
@@ -1105,18 +1104,18 @@ void BigBubble::calcLocalDirection(TVec3f* pDir, s32 mergeIndex) const {
         break;
     case Side_Back:
         mBubbleQuat.getZDir(dir);
-        dir.negateInternal();
+        dir.negate();
         break;
     case Side_Left:
         mBubbleQuat.getXDir(dir);
-        dir.negateInternal();
+        dir.negate();
         break;
     case Side_Front:
         mBubbleQuat.getZDir(dir);
         break;
     case Side_Bottom:
         mBubbleQuat.getYDir(dir);
-        dir.negateInternal();
+        dir.negate();
         break;
     }
     pDir->set(dir);

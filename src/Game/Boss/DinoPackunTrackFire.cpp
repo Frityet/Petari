@@ -1,5 +1,13 @@
 #include "Game/Boss/DinoPackunTrackFire.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 namespace NrvDinoPackunFire {
     NEW_NERVE(DinoPackunTrackFireNrvWait, DinoPackunTrackFire, Wait);
@@ -42,9 +50,7 @@ void DinoPackunTrackFire::init(const JMapInfoIter& rIter) {
 }
 
 void DinoPackunTrackFire::control() {
-    TVec3f v1;
-    JMathInlineVEC::PSVECNegate(&mGravity, &v1);
-    MR::makeMtxUpNoSupportPos(&_8C, v1, mPosition);
+    MR::makeMtxUpNoSupportPos(&_8C, -mGravity, mPosition);
 
     if (MR::isStarPointerPointing2POnPressButton(this, "弱", true, false)) {
         kill();
@@ -52,7 +58,9 @@ void DinoPackunTrackFire::control() {
 }
 
 void DinoPackunTrackFire::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
-    MR::isSensorPlayer(pReceiver);
+    if (MR::isSensorPlayer(pReceiver)) {
+    }
+
     MR::sendMsgEnemyAttackFire(pReceiver, pSender);
 }
 
@@ -74,7 +82,7 @@ void DinoPackunTrackFire::exeWait() {
     }
 
     MR::addVelocityToGravity(this, 2.0f);
-    MR::attenuateVelocity(this, 0.99199998f);
+    MR::attenuateVelocity(this, 0.992f);
     if (MR::isBindedGround(this)) {
         setNerve(&NrvDinoPackunFire::DinoPackunTrackFireNrvGround::sInstance);
         MR::zeroVelocity(this);
@@ -93,9 +101,11 @@ void DinoPackunTrackFire::exeGround() {
     }
 }
 
-DinoPackunTrackFire::~DinoPackunTrackFire() {}
+DinoPackunTrackFire::~DinoPackunTrackFire() {
+}
 
-DinoPackunTrackFireHolder::~DinoPackunTrackFireHolder() {}
+DinoPackunTrackFireHolder::~DinoPackunTrackFireHolder() {
+}
 
 MtxPtr DinoPackunTrackFire::getBaseMtx() const {
     return (MtxPtr)&_8C;

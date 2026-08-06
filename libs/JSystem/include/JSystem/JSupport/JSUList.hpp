@@ -25,6 +25,10 @@ public:
         return mNext;
     }
 
+    JSUPtrLink* getPrev() const {
+        return mPrev;
+    }
+
     void* mData;           // 0x0
     JSUPtrList* mPtrList;  // 0x4
     JSUPtrLink* mPrev;     // 0x8
@@ -37,7 +41,7 @@ public:
     JSULink(void* pData) : JSUPtrLink(pData) {
     }
 
-    ~JSULink() NO_INLINE {
+    ~JSULink() {
     }
 
     T* getObject() const {
@@ -99,9 +103,7 @@ public:
     JSUList(bool thing) : JSUPtrList(thing) {
     }
 
-    ~JSUList(){
-
-    };
+    ~JSUList(){};
 
     JSULink< T >* getFirst() const {
         return (JSULink< T >*)getFirstLink();
@@ -154,7 +156,7 @@ public:
         return this->mLink != other.mLink;
     }
 
-    JSUListIterator< T > operator++(int) {
+    JSUListIterator< T > operator++(int) NO_INLINE {
         JSUListIterator< T > prev = *this;
         this->mLink = this->mLink->getNext();
         return prev;
@@ -205,8 +207,12 @@ public:
         return this->remove(child);
     }
 
+    bool insertChild(JSUTree< T >* before, JSUTree< T >* child) {
+        return this->insert(before, child);
+    }
+
     JSUTree< T >* getEndChild() const {
-        return NULL;
+        return nullptr;
     }
 
     JSUTree< T >* getFirstChild() const {
@@ -219,6 +225,10 @@ public:
 
     JSUTree< T >* getNextChild() const {
         return (JSUTree< T >*)this->getNext();
+    }
+
+    JSUTree< T >* getPrevChild() const {
+        return (JSUTree< T >*)this->mPrev;
     }
 
     u32 getNumChildren() const {

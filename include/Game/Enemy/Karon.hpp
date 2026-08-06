@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 
 class AnimScaleController;
 class WalkerStateBindStarPointer;
@@ -48,7 +48,9 @@ public:
     void endBindStarPointer();
     bool isFallNextMove(bool);
 
-    inline void moveAndTurn(const KaronParam* pParam) { MR::moveAndTurnToPlayer(this, pParam->_0, pParam->_4, pParam->_8, pParam->_C); }
+    inline void moveAndTurn(const KaronParam* pParam) {
+        MR::moveAndTurnToPlayer(this, pParam->_0, pParam->_4, pParam->_8, pParam->_C);
+    }
 
     TerritoryMover* mTerritoryMover;  // 0x8C
     u32 _90;

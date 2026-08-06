@@ -1,17 +1,14 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/LiveActor/HitSensor.hpp"
-#include "Game/Util/JMapInfo.hpp"
-#include "JSystem/JGeometry/TQuat.hpp"
 
 class AnimScaleController;
 class ItemGenerator;
-class WalkerStateBindStarPointer;
-class WalkerStateChase;
-class WalkerStateFindPlayer;
-class WalkerStateStagger;
 class WalkerStateWander;
+class WalkerStateFindPlayer;
+class WalkerStateChase;
+class WalkerStateStagger;
+class WalkerStateBindStarPointer;
 
 class KuriboMini : public LiveActor {
 public:
@@ -30,6 +27,7 @@ public:
     virtual bool receiveMsgEnemyAttack(u32, HitSensor*, HitSensor*);
     virtual bool receiveOtherMsg(u32, HitSensor*, HitSensor*);
 
+    void initSensor();
     void initState();
     bool requestHipDropDown(HitSensor*, HitSensor*);
     bool requestFlatDown(HitSensor*, HitSensor*);
@@ -44,6 +42,8 @@ public:
     void exeFindPlayer();
     void exeChase();
     void exeStagger();
+    void exeBindStarPointer();
+    void endBindStarPointer();
     void exeAttackSuccess();
     void exeHipDropDown();
     void exeFlatDown();
@@ -51,16 +51,16 @@ public:
     void exeBlowDown();
     void calcPassiveMovement();
     bool isEnableAttack() const;
-    bool isEnableKick() const;
+    bool isEnableKick() const NO_INLINE;
     bool isDown() const;
 
-    AnimScaleController* mScaleController;         // 0x8C
-    ItemGenerator* mItemGenerator;                 // 0x90
-    WalkerStateWander* mStateWander;               // 0x94
-    WalkerStateFindPlayer* mStateFindPlayer;       // 0x98
-    WalkerStateChase* mStateChase;                 // 0x9C
-    WalkerStateStagger* mStateStagger;             // 0xA0
-    WalkerStateBindStarPointer* mBindStarPointer;  // 0xA4
-    TQuat4f _A8;
-    TVec3f _B8;
+    /* 0x8C */ AnimScaleController* mScaleController;
+    /* 0x90 */ ItemGenerator* mItemGenerator;
+    /* 0x94 */ WalkerStateWander* mStateWander;
+    /* 0x98 */ WalkerStateFindPlayer* mStateFindPlayer;
+    /* 0x9C */ WalkerStateChase* mStateChase;
+    /* 0xA0 */ WalkerStateStagger* mStateStagger;
+    /* 0xA4 */ WalkerStateBindStarPointer* mStateBindStarPointer;
+    /* 0xA8 */ TQuat4f _A8;
+    /* 0xB8 */ TVec3f _B8;
 };

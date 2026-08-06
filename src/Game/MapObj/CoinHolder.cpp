@@ -1,7 +1,13 @@
 #include "Game/MapObj/CoinHolder.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/Coin.hpp"
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util.hpp"
+
+void FORCE_SCALE() {
+    TVec3f vec;
+    vec.scale(1.0f);
+}
 
 CoinHolder::CoinHolder(const char* pName) : DeriveActorGroup< Coin >(pName, 0x200), mHostInfoArr(nullptr), mHostInfoCount(0) {
     mHostInfoArr = new CoinHostInfo[0x200];
@@ -33,7 +39,7 @@ bool CoinHolder::appearCoinFix(const NameObj* pObj, const TVec3f& a2, s32 a3) {
 bool CoinHolder::appearCoinPop(const NameObj* pObj, const TVec3f& a2, s32 a3) {
     TVec3f stack_20;
     MR::calcGravityVector(this, a2, &stack_20, nullptr, nullptr);
-    TVec3f stack_14 = (-stack_20).scaleInline(25.0f);
+    TVec3f stack_14 = (-stack_20) * 25.0f;
     return appearCoin(pObj, a2, stack_14, a3, -1, -1, a3 == 1 ? 0.0f : 4.0f);
 }
 

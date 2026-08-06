@@ -30,7 +30,8 @@ namespace {
 
 PlayerActionGuidance::PlayerActionGuidance()
     : LayoutActor("プレイヤーアクションガイダンス", true), mSpinLayout(nullptr), mTamakoroLayout(nullptr), mCurrentLayout(nullptr), mGuidanceState(3),
-      mGuidancePrevState(3), _34(false), _35(false), _36(false), _37(false) {}
+      mGuidancePrevState(3), _34(false), _35(false), _36(false), _37(false) {
+}
 
 void PlayerActionGuidance::control() {
     mGuidancePrevState = mGuidanceState;
@@ -155,7 +156,7 @@ void PlayerActionGuidance::exeDisplay() {
             MR::startSystemSE("SE_SY_CTRL_GUIDE_CHANGE", 500);
         }
 
-        if (MR::getAnimFrame(mCurrentLayout, 0) == sChangeSoundFrame) {
+        if (MR::getAnimFrame(mCurrentLayout, 0) == ::sChangeSoundFrame) {
             MR::startSystemSE("SE_SY_CTRL_GUIDE_CHANGE2", 1000);
         }
     }
@@ -170,7 +171,7 @@ void PlayerActionGuidance::exeDisplay() {
 }
 
 void PlayerActionGuidance::exeSuspend() {
-    if (MR::isStep(this, sSuspendFrame)) {
+    if (MR::isStep(this, ::sSuspendFrame)) {
         if (!_35) {
             hideAllLayout();
             setNerve(&PlayerActionGuidanceWaitFocusIn::sInstance);

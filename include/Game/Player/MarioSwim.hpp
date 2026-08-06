@@ -2,9 +2,10 @@
 
 #include "Game/Map/WaterInfo.hpp"
 #include "Game/Player/Mario.hpp"
-#include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioState.hpp"
 
+class AreaInfo;
+class HitInfo;
 class MarioActor;
 class MarineSnow;
 
@@ -40,7 +41,6 @@ public:
     virtual const TVec3f& getGravityVec() const;
     virtual void addVelocity(const TVec3f& rVelocity);
     virtual void addVelocity(const TVec3f& rVelocity, f32);
-
 
     bool checkWaterCube(bool);
     void onSurface() NO_INLINE;
@@ -82,7 +82,17 @@ public:
     f32 checkUnderWaterFull(const TVec3f&);
     void hitHead(const HitInfo*);
 
-    static inline f32 getWorthlessNumber() { return 0.523598790169f; }
+    f32 calcWaterEdgeDist() const {
+        if (isOnWaterSurface()) {
+            return -1.0f;
+        }
+
+        return mDistanceToWaterSurface;
+    };
+
+    static inline f32 getWorthlessNumber() {
+        return 0.523598790169f;
+    }
 
     /* The worthlesser variable, as its name suggests, has no purpose.
        It achieves nothing in life. Its existence is completely devoid of value.
@@ -119,15 +129,18 @@ public:
         worthlesser = true;
     }
 
-    inline TVec3f getPlayer380() const { return getPlayer()->_380; }
+    inline TVec3f getPlayer380() const {
+        return getPlayer()->_380;
+    }
 
-    inline bool check7Aand7C() const { return mSpinTimer || mSpinDashTimer; }
-    inline f32 getSwimFrontJetSpeed();
-    inline f32 getSwimFrontJetSpeedSlow();
-    inline f32 getSwimFrontMaxSpeed();
-    inline void updateSwimWeight(int animIndex, const MarioConstTable* table);
-    inline void setupSwimSpeeds(f32* speeds);
-    
+    inline bool check7Aand7C() const {
+        return mSpinTimer || mSpinDashTimer;
+    }
+
+    inline bool isOnWaterSurface() const {
+        return mIsOnSurface || mIsSwimmingAtSurface;
+    }
+
     /* 0x014 */ MarineSnow* mMarineSnow;
     /* 0x018 */ u8 _18;
     /* 0x019 */ bool mIsOnSurface;

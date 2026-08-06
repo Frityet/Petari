@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include <revolution/types.h>
 
 class Mario;
 class MarioActor;
@@ -11,7 +10,8 @@ class Triangle;
 
 class MarioModule {
 public:
-    inline MarioModule(MarioActor* actor) : mActor(actor) {}
+    inline MarioModule(MarioActor* pActor) : mActor(pActor) {
+    }
 
     virtual f32 getStickY() const;
     virtual void addVelocity(const TVec3f&);
@@ -35,7 +35,7 @@ public:
     void changeAnimation(const char*, const char*);
     void changeAnimationNonStop(const char*);
     void changeAnimationWithAttr(const char*, u32);
-    void stopAnimation(const char*, const char*);
+    void stopAnimation(const char*, const char* = nullptr);
     bool isDefaultAnimationRun(const char*) const;
     void changeAnimationInterpoleFrame(u32);
     bool isAnimationRun(const char*) const;
@@ -73,7 +73,7 @@ public:
     void playEffectSRT(const char*, f32, const TVec3f&, const TVec3f&);
     void stopEFfect(const char*);
     void stopEffectForce(const char*);
-    bool playSound(const char*, s32);
+    void playSound(const char*, s32);
     void stopSound(const char*, u32);
     void startCamVib(u32);
     TVec3f& getCamPos() const;

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Game/Util.hpp"
-#include <revolution.h>
+#include <revolution/types.h>
 
 class LiveActor;
 
@@ -9,7 +8,9 @@ class ActiveActorList {
 public:
     ActiveActorList(int);
 
-    bool hasTooMany() const { return (mCurCount >= mMaxCount); }
+    bool hasTooMany() const {
+        return (mCurCount >= mMaxCount);
+    }
 
     bool isFull() const;
     void addActor(LiveActor*);

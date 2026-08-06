@@ -1,7 +1,11 @@
 #include "Game/MapObj/ArrowSwitchMultiHolder.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/ArrowSwitchMulti.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
 
-ArrowSwitchMultiHolder::ArrowSwitchMultiHolder() : DeriveActorGroup("複数方向矢印スイッチ管理", 0x10) {}
+ArrowSwitchMultiHolder::ArrowSwitchMultiHolder() : DeriveActorGroup("複数方向矢印スイッチ管理", 0x10) {
+}
 
 ArrowSwitchMulti* ArrowSwitchMultiHolder::findSwitch(const JMapIdInfo* pInfo) {
     for (s32 i = 0; i < mObjectCount; i++) {

@@ -1,5 +1,6 @@
 #include "Game/MapObj/HipDropMoveObj.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/StageEffectDataTable.hpp"
 #include "Game/Util.hpp"
 
@@ -15,7 +16,8 @@ namespace NrvHipDropMoveObj {
     NEW_NERVE(HostTypeDone, HipDropMoveObj, Done);
 };  // namespace NrvHipDropMoveObj
 
-HipDropDemoMoveObj::~HipDropDemoMoveObj() {}
+HipDropDemoMoveObj::~HipDropDemoMoveObj() {
+}
 
 HipDropMoveObj::HipDropMoveObj(const char* pName) : LiveActor(pName) {
     mObjectName = 0;
@@ -33,8 +35,8 @@ void HipDropMoveObj::init(const JMapInfoIter& rIter) {
     sensor.x = 0.0f;
     sensor.y = 0.0f;
     sensor.z = 0.0f;
-    HitSensor* jointSensor = MR::addHitSensorAtJointMapObj(this, "body", cSwitchJointName, 0, 225.0f, sensor);
-    MtxPtr mtx = MR::getJointMtx(this, cMoveJointName);
+    HitSensor* jointSensor = MR::addHitSensorAtJointMapObj(this, "body", ::cSwitchJointName, 0, 225.0f, sensor);
+    MtxPtr mtx = MR::getJointMtx(this, ::cMoveJointName);
     MR::initCollisionParts(this, mObjectName, jointSensor, mtx);
     MR::setClippingTypeSphereContainsModelBoundingBox(this, 100.0f);
     MR::setGroupClipping(this, rIter, 8);
@@ -67,11 +69,12 @@ bool HipDropMoveObj::isEndMove() const {
     return MR::isBckStopped(this);
 }
 
-void HipDropMoveObj::exeWait() {}
+void HipDropMoveObj::exeWait() {
+}
 
 void HipDropMoveObj::exeMove() {
     if (MR::isFirstStep(this)) {
-        MR::startAllAnim(this, cMoveAnimName);
+        MR::startAllAnim(this, ::cMoveAnimName);
         const char* startSe = MR::StageEffect::getStartSe(mObjectName);
 
         if (startSe) {
@@ -134,20 +137,22 @@ void HipDropMoveObj::exeMove() {
     }
 }
 
-void HipDropMoveObj::exeDone() {}
+void HipDropMoveObj::exeDone() {
+}
 
 HipDropDemoMoveObj::HipDropDemoMoveObj(const char* pName) : HipDropMoveObj(pName) {
     mMtx.identity();
 }
 
-HipDropMoveObj::~HipDropMoveObj() {}
+HipDropMoveObj::~HipDropMoveObj() {
+}
 
 void HipDropDemoMoveObj::moveStart() {
     MR::startBckPlayer("Wait", (char*)nullptr);
     MtxPtr mtx = MR::getPlayerDemoActor()->getBaseMtx();
     TMtx34f stack_38;
     stack_38.set(mtx);
-    MtxPtr jointMtx = MR::getJointMtx(this, cMoveJointName);
+    MtxPtr jointMtx = MR::getJointMtx(this, ::cMoveJointName);
     TMtx34f stack_8;
     stack_8.set(jointMtx);
     stack_8.invert(stack_8);
@@ -156,7 +161,7 @@ void HipDropDemoMoveObj::moveStart() {
 
 void HipDropDemoMoveObj::moving() {
     if (MR::isDemoActive()) {
-        MtxPtr jointMtx = MR::getJointMtx(this, cMoveJointName);
+        MtxPtr jointMtx = MR::getJointMtx(this, ::cMoveJointName);
         TMtx34f stack_8;
         stack_8.set(jointMtx);
         stack_8.concat(stack_8, mMtx);
@@ -170,8 +175,11 @@ void HipDropDemoMoveObj::moving() {
     }
 }
 
-void HipDropMoveObj::moveStart() {}
+void HipDropMoveObj::moveStart() {
+}
 
-void HipDropMoveObj::moving() {}
+void HipDropMoveObj::moving() {
+}
 
-void HipDropMoveObj::moveEnd() {}
+void HipDropMoveObj::moveEnd() {
+}

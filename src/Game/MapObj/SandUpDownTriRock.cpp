@@ -1,8 +1,9 @@
 #include "Game/MapObj/SandUpDownTriRock.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/CollisionParts.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util.hpp"
 #include <cstdio>
-
 
 namespace NrvSandUpDownTriRock {
     NEW_NERVE(SandUpDownTriRockNrvWait, SandUpDownTriRock, Wait);
@@ -12,9 +13,9 @@ namespace NrvSandUpDownTriRock {
     NEW_NERVE(SandUpDownTriRockNrvStop, SandUpDownTriRock, Stop);
 };  // namespace NrvSandUpDownTriRock
 
-SandUpDownTriRock::SandUpDownTriRock(const char* pName) : MapObjActor(pName), mTimer(0) {
-    for (s32 idx = 0; idx < 3; idx++) {
-        mRockCollisionParts[idx] = nullptr;
+SandUpDownTriRock::SandUpDownTriRock(const char* pName) : MapObjActor(pName), mRestStep() {
+    for (s32 i = 0; i < ARRAY_SIZE(mRockCollisionParts); i++) {
+        mRockCollisionParts[i] = nullptr;
     }
 }
 
@@ -31,18 +32,21 @@ void SandUpDownTriRock::init(const JMapInfoIter& rIter) {
     info.setupNerve(&NrvSandUpDownTriRock::SandUpDownTriRockNrvWait::sInstance);
     initialize(rIter, info);
 
-    MR::getJMapInfoArg0NoInit(rIter, &mTimer);
+    MR::getJMapInfoArg0NoInit(rIter, &mRestStep);
 
-    char buffer[256];
-    for (s32 idx = 0; idx < 3; idx++) {
-        snprintf(buffer, 256, "Move0%d", idx);
-        mRockCollisionParts[idx] = MR::createCollisionPartsFromLiveActor(this, buffer, getSensor("body"), MR::getJointMtx(this, buffer),
-                                                                         static_cast< MR::CollisionScaleType >(2));
-        MR::validateCollisionParts(mRockCollisionParts[idx]);
+
+    for (s32 i = 0; i < ARRAY_SIZE(mRockCollisionParts); i++) {
+        char name[256];
+        snprintf(name, sizeof(name), "Move0%d", i);
+
+        mRockCollisionParts[i] =
+            MR::createCollisionPartsFromLiveActor(this, name, getSensor("body"), MR::getJointMtx(this, name), MR::CollisionScaleType_Unk2);
+        MR::validateCollisionParts(mRockCollisionParts[i]);
     }
 }
 
-void SandUpDownTriRock::exeWait() {}
+void SandUpDownTriRock::exeWait() {
+}
 
 void SandUpDownTriRock::exeDown() {
     if (MR::isFirstStep(this)) {
@@ -59,7 +63,7 @@ void SandUpDownTriRock::exeRest() {
         MR::invalidateClipping(this);
     }
 
-    if (MR::isStep(this, mTimer)) {
+    if (MR::isStep(this, mRestStep)) {
         MR::validateClipping(this);
         setNerve(&NrvSandUpDownTriRock::SandUpDownTriRockNrvUp::sInstance);
     }
@@ -75,11 +79,13 @@ void SandUpDownTriRock::exeUp() {
     }
 }
 
-void SandUpDownTriRock::exeStop() {}
+void SandUpDownTriRock::exeStop() {
+}
 
 bool SandUpDownTriRock::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgStartPowerStarGet(msg)) {
         setNerve(&NrvSandUpDownTriRock::SandUpDownTriRockNrvStop::sInstance);
+
         return true;
     }
 
@@ -91,8 +97,8 @@ void SandUpDownTriRock::initCaseUseSwitchB(const MapObjActorInitInfo& info) {
 }
 
 void SandUpDownTriRock::control() {
-    for (s32 idx = 0; idx < 3; idx++) {
-        mRockCollisionParts[idx]->setMtx();
+    for (s32 i = 0; i < ARRAY_SIZE(mRockCollisionParts); i++) {
+        mRockCollisionParts[i]->setMtx();
     }
 }
 

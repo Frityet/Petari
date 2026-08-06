@@ -1,6 +1,7 @@
 #include "Game/MapObj/BallRail.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include <JSystem/JMath/JMath.hpp>
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvBallRail {
     NEW_NERVE(BallRailNrvWait, BallRail, Wait);
@@ -44,7 +45,8 @@ void BallRail::init(const JMapInfoIter& rIter) {
     appear();
 }
 
-void BallRail::control() {}
+void BallRail::control() {
+}
 
 bool BallRail::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (msg == ACTMES_SPHERE_PLAYER_BINDED && isNerve(&NrvBallRail::BallRailNrvWait::sInstance)) {
@@ -96,19 +98,19 @@ void BallRail::initRailPoints() {
 
     if (mNumPoints >= 2) {
         BallRailPoint* pnt = mRailPoints;
-        PSVECCrossProduct(&pnt->_24, &v17, &pnt->_C);
+        pnt->_C.cross(pnt->_24, v17);
         MR::normalizeOrZero(&pnt->_C);
     }
 
     for (u32 i = 0; i < mNumPoints; i++) {
         BallRailPoint* pnt = &mRailPoints[i];
-        PSVECCrossProduct(&pnt->_24, &v17, &pnt->_C);
+        pnt->_C.cross(pnt->_24, v17);
         MR::normalizeOrZero(&pnt->_C);
     }
 
     if (mNumPoints >= 2) {
         BallRailPoint* lastPnt = &mRailPoints[mNumPoints - 1];
-        PSVECCrossProduct(&lastPnt->_24, &v17, &lastPnt->_C);
+        lastPnt->_C.cross(lastPnt->_24, v17);
         MR::normalizeOrZero(&lastPnt->_C);
     }
 }
@@ -122,11 +124,10 @@ void BallRail::exeWait() {
     }
 }
 
-/*
 void BallRail::exeSetUp() {
     if (MR::isFirstStep(this)) {
         _94 = _90->mPosition;
-        MR::zeroVelocity(_90->mActor);
+        MR::zeroVelocity(_90->mHost);
         MR::setRailCoordSpeed(this, 0.0f);
     }
 
@@ -137,36 +138,32 @@ void BallRail::exeSetUp() {
 
     if (MR::isLessStep(this, 15)) {
         TVec3f v6;
-        JMAVECScaleAdd(&mGravity, &mPosition, &v6, -_90->mRadius);
+        v6.scaleAdd(-_90->mRadius, mGravity, mPosition);
         f32 rate = MR::calcNerveEaseInRate(this, 15);
         MR::vecBlend(_94, v6, &v7, rate);
-    }
-    else {
-        JMAVECScaleAdd(&mGravity, &mPosition, &v7, -_90->mRadius);
+    } else {
+        v7.scaleAdd(-_90->mRadius, mGravity, mPosition);
     }
 
     if (MR::isStep(this, 15)) {
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
     }
 
-    MR::subtractAndSet(_90->mHost->mVelocity, v7, &_90->mPosition);
+    _90->mHost->mVelocity.set(v7 - _90->mPosition);
 
     if (MR::isGreaterStep(this, 45)) {
         setNerve(&NrvBallRail::BallRailNrvRun::sInstance);
     }
 }
-*/
 
-/*
 void BallRail::exeRun() {
     if (MR::isFirstStep(this)) {
         MR::setRailCoordSpeed(this, 0.0f);
     }
 
-    TVec3f v14(MR::getRailDirection(this));
-    TVec3f v13 = mGravity * mAcceleration;
-    TVec3f v12;
-    MR::accelerateRailCoordSpeed(this, v13.dot(v14));
+    TVec3f v14 = MR::getRailDirection(this);
+
+    MR::accelerateRailCoordSpeed(this, (mGravity * mAcceleration).dot(v14));
     MR::slowDownRailCoordSpeed(this, mDeceleration);
 
     if (!MR::isRailGoingToEnd(this) || MR::getRailCoordSpeed(this) < 6.0f) {
@@ -179,19 +176,19 @@ void BallRail::exeRun() {
 
     MR::moveRailRider(this);
     MR::moveTransToCurrentRailPos(this);
-    JMAVECScaleAdd(&mGravity, &mPosition, &v12, -_90->mRadius);
-    MR::subtractAndSet(_90->mHost->mVelocity, v12, &_90->mPosition);
+    TVec3f v12;
+    v12.scaleAdd(-_90->mRadius, mGravity, mPosition);
+    LiveActor* host = _90->mHost;
+    host->mVelocity.set(v12 - _90->mPosition);
 
     if (MR::isRailReachedGoal(this)) {
-        LiveActor* actor = _90->mHost;
-        TVec3f* vec = &actor->mVelocity;
-        MR::multAndSet(vec, MR::getRailDirection(this), MR::getRailCoordSpeed(this));
-        getSensor("bind")->receiveMessage(178, _90);
+        LiveActor* host = _90->mHost;
+        host->mVelocity.set(MR::getRailDirection(this) * MR::getRailCoordSpeed(this));
+        getSensor("bind")->receiveMessage(ACTMES_END_BALL_RAIL, _90);
         _90 = nullptr;
         setNerve(&NrvBallRail::BallRailNrvNoBind::sInstance);
     }
 }
-*/
 
 void BallRail::exeNoBind() {
     if (getNerveStep() > 60) {
@@ -199,6 +196,8 @@ void BallRail::exeNoBind() {
     }
 }
 
-BallRailPoint::BallRailPoint() : _0(0, 0, 0), _C(1, 0, 0), _18(0, 1, 0), _24(0, 0, 1) {}
+BallRailPoint::BallRailPoint() : _0(0, 0, 0), _C(1, 0, 0), _18(0, 1, 0), _24(0, 0, 1) {
+}
 
-BallRail::~BallRail() {}
+BallRail::~BallRail() {
+}

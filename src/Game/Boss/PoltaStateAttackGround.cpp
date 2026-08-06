@@ -3,6 +3,10 @@
 #include "Game/Boss/PoltaFunction.hpp"
 #include "Game/LiveActor/ActorStateBase.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvPoltaStateAttackGround {
     NEW_NERVE(PoltaStateAttackGroundNrvStart, PoltaStateAttackGround, Start);
@@ -10,8 +14,7 @@ namespace NrvPoltaStateAttackGround {
     NEW_NERVE(PoltaStateAttackGroundNrvToWait, PoltaStateAttackGround, ToWait);
 };  // namespace NrvPoltaStateAttackGround
 
-PoltaStateAttackGround::PoltaStateAttackGround(Polta* pPolta)
-    : ActorStateBase< Polta >("[state]地面叩き攻撃", pPolta), mIsAffectBody(true) {
+PoltaStateAttackGround::PoltaStateAttackGround(Polta* pPolta) : ActorStateBase< Polta >("[state]地面叩き攻撃", pPolta), mIsAffectBody(true) {
     initNerve(&NrvPoltaStateAttackGround::PoltaStateAttackGroundNrvStart::sInstance);
     mAttackStartLength = MR::getBckFrameMax(getHost(), "AttackFrontStart");
     mAttackLength = MR::getBckFrameMax(getHost(), "AttackFront");
@@ -57,7 +60,7 @@ void PoltaStateAttackGround::exeAttack() {
     } else {
         if (MR::isGreaterStep(this, mAttackLength)) {
             setNerve(&NrvPoltaStateAttackGround::PoltaStateAttackGroundNrvToWait::sInstance);
-            MR::tryRumblePadStrong(this, 0);
+            MR::tryRumblePadStrong(this, WPAD_CHAN0);
             MR::startSound(getHost(), "SE_BM_POLTA_HIT_GROUND");
             MR::shakeCameraNormalStrong();
         }
@@ -81,4 +84,5 @@ bool PoltaStateAttackGround::isEnableAttack(const HitSensor* pSensor) const {
     }
 }
 
-PoltaStateAttackGround::~PoltaStateAttackGround() {}
+PoltaStateAttackGround::~PoltaStateAttackGround() {
+}

@@ -1,4 +1,9 @@
 #include "Game/MapObj/Banekiti.hpp"
+#include "Game/Enemy/AnimScaleController.hpp"
+#include "Game/Enemy/WalkerStateBindStarPointer.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapPartsRailMover.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvBanekiti {
     NEW_NERVE(BanekitiNrvWait, Banekiti, Wait);
@@ -45,7 +50,7 @@ void Banekiti::exeWait() {
 
 void Banekiti::exeRepel() {
     if (MR::isFirstStep(this)) {
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
         MR::shakeCameraWeak();
         MR::startBck(this, "Repel", nullptr);
         MR::startSound(this, "SE_OJ_BANEKITI_REPEL");
@@ -57,21 +62,20 @@ void Banekiti::exeRepel() {
 
 void Banekiti::exeDPDSwoon() {
     if (MR::isFirstStep(this)) {
-        mRailMover->_14 = false;
+        mRailMover->mIsActive = false;
     }
     MR::updateActorStateAndNextNerve(this, mBindStarPointer, &NrvBanekiti::BanekitiNrvWait::sInstance);
 }
 
 void Banekiti::endDPDSwoon() {
-    mRailMover->_14 = true;
+    mRailMover->mIsActive = true;
     mBindStarPointer->kill();
 }
 
 void Banekiti::calcAndSetBaseMtx() {
-    TVec3f mtx;
     LiveActor::calcAndSetBaseMtx();
-    mtx.multPS(mScale, mAnimScaleCtrl->_C);
-    MR::setBaseScale(this, mtx);
+    TVec3f scale = mAnimScaleCtrl->_C * mScale;
+    MR::setBaseScale(this, scale);
 }
 
 void Banekiti::control() {

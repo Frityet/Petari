@@ -1,8 +1,10 @@
 #include "Game/MapObj/ItemBubble.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/StarPiece.hpp"
-#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
 namespace {
     const f32 cHitSensorRadius = 120.f;
@@ -13,6 +15,11 @@ namespace {
 namespace NrvItemBubble {
     NEW_NERVE(ItemBubbleNrvWait, ItemBubble, Wait);
     NEW_NERVE(ItemBubbleNrvBreak, ItemBubble, Break);
+};  // namespace NrvItemBubble
+
+void FORCE_OPERATOR() {
+    TVec3f vec;
+    vec *= 1.0f;
 }
 
 ItemBubble::ItemBubble(const char* pName) : LiveActor(pName), _90(nullptr), _94(nullptr) {
@@ -32,7 +39,7 @@ void ItemBubble::init(const JMapInfoIter& rIter) {
     PSMTXCopy(_9C, _CC);
     _108 = mPosition;
     initHitSensor(1);
-    MR::addHitSensorMapObj(this, "body", 8, mScale.x * cHitSensorRadius, TVec3f(0.0f, 0.0f, 0.0f));
+    MR::addHitSensorMapObj(this, "body", 8, mScale.x * ::cHitSensorRadius, TVec3f(0.0f, 0.0f, 0.0f));
     initEffectKeeper(0, nullptr, false);
     initSound(4, false);
     initNerve(&NrvItemBubble::ItemBubbleNrvWait::sInstance);
@@ -95,7 +102,6 @@ void ItemBubble::init(const JMapInfoIter& rIter) {
             MR::newDifferedDLBuffer(_90[i]);
             _90[i]->initWithoutIter();
 
-            
             switch (itemCount) {
             case 1:
                 _90[i]->initFixedPosition(_CC, TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
@@ -155,7 +161,7 @@ void ItemBubble::initAfterPlacement() {
     TPos3f mtx;
     MR::makeMtxRotate(mtx, mRotation);
     TVec3f vec;
-    mtx.getZDirInline(vec);
+    mtx.getZDir(vec);
 
     if (mUseRail)
         MR::moveCoordAndTransToNearestRailPos(this);
@@ -183,7 +189,7 @@ void ItemBubble::kill() {
                 break;
             case 1:
                 StarPiece* piece = getStarPiece(i);
-                piece->launch(getRotPartsPosition(i), grav.negateInline().multInLine(cShootStarSpeed), false, false);
+                piece->launch(getRotPartsPosition(i), (-grav).multInLine(::cShootStarSpeed), false, false);
                 MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
                 break;
             }
@@ -193,38 +199,24 @@ void ItemBubble::kill() {
     LiveActor::kill();
 }
 
-
 void ItemBubble::calcAndSetBaseMtx() {
     TVec3f camPos = MR::getCamPos();
-    TVec3f* pCamPos = &camPos;
+    camPos.sub(mPosition);
 
-    JMathInlineVEC::PSVECSubtract2(pCamPos, mPosition, pCamPos);
-
-    if (MR::isNearZero(*pCamPos))
+    if (MR::isNearZero(camPos))
         return;
 
-    MR::normalize(pCamPos);
+    MR::normalize(&camPos);
     TVec3f YDir(MR::getCamYdir());
-    TVec3f camcross(YDir.cross(*pCamPos));
+    TVec3f camcross(YDir.cross(camPos));
 
-    if (MR::isNearZero(camcross))
+    if (MR::isNearZero(camcross)) {
         return;
+    }
 
     MR::normalize(&camcross);
-    MtxPtr baseMtx = getBaseMtx();
-    baseMtx[0][0] = camcross.x;
-    baseMtx[1][0] = camcross.y;
-    baseMtx[2][0] = camcross.z;
-    baseMtx[0][1] = YDir.x;
-    baseMtx[1][1] = YDir.y;
-    baseMtx[2][1] = YDir.z;
-    baseMtx[0][2] = pCamPos->x;
-    baseMtx[1][2] = pCamPos->y;
-    baseMtx[2][2] = pCamPos->z;
-    MtxPtr baseMtx2 = getBaseMtx();
-    baseMtx2[0][3] = mPosition.x;
-    baseMtx2[1][3] = mPosition.y;
-    baseMtx2[2][3] = mPosition.z;
+    reinterpret_cast< TPos3f* >(getBaseMtx())->setXYZDir(camcross, YDir, camPos);
+    reinterpret_cast< TPos3f* >(getBaseMtx())->setTrans(mPosition);
 }
 
 void ItemBubble::exeWait() {
@@ -232,7 +224,7 @@ void ItemBubble::exeWait() {
         // Useless...
     }
 
-    _8C = MR::sin(2.0f * ((static_cast< f32 >(getNerveStep()) / cSwingRange) * PI));
+    _8C = MR::sin(2.0f * ((static_cast< f32 >(getNerveStep()) / ::cSwingRange) * PI));
 
     if (mUseRail) {
         if (MR::isRailReachedGoal(this))
@@ -246,7 +238,7 @@ void ItemBubble::exeWait() {
     }
 
     PSMTXScale(_9C, mScale.x, mScale.y, mScale.z);
-    PSMTXConcat(_9C, MR::tmpMtxRotZDeg(mRotation.z), _9C);
+    MR::multMtx(_9C, MR::tmpMtxRotZDeg(mRotation.z), _9C);
 
     mPosition = _108 + TVec3f(0.0f, 1.0f, 0.0f).multInLine2(_8C).multInLine2(30.0f);
 
@@ -290,5 +282,5 @@ bool ItemBubble::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* 
     return false;
 }
 
-ItemBubble::~ItemBubble() {}
-
+ItemBubble::~ItemBubble() {
+}

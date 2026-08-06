@@ -2,23 +2,27 @@
 #include "Game/Camera/CameraParamChunk.hpp"
 #include "Game/Util.hpp"
 
-// Register issues
-void CamTranslatorCharmedVecRegTower::setParam(const CameraParamChunk* pChunk) {
-    CameraGeneralParam* general = pChunk->mGeneralParam;
+void CamTranslatorCharmedVecRegTower_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+}
 
-    TVec3f axis;
+void CamTranslatorCharmedVecRegTower::setParam(const CameraParamChunk* pChunk) {
     const char* string;
     f32 angleA;
     f32 angleB;
     f32 dist;
     bool uVar3;
+    TVec3f axis;
 
-    axis.set(general->mAxis);
+    CameraGeneralParam* general = pChunk->mGeneralParam;
+
+    axis = general->mAxis;
 
     MR::normalizeOrZero(&axis);
 
     if (MR::isNearZero(axis)) {
-        axis.set(0.0f, 1.0f, 0.0f);
+        axis.set< f32 >(0.0f, 1.0f, 0.0f);
     }
 
     uVar3 = general->mNum1 != 0;
@@ -29,13 +33,13 @@ void CamTranslatorCharmedVecRegTower::setParam(const CameraParamChunk* pChunk) {
 
     CameraCharmedVecRegTower* camera = mCamera;
 
-    camera->mString = string;
+    mCamera->mString = string;
     camera->mWPoint.set(general->mWPoint);
     camera->mAxis.set(axis);
     camera->mAngleA = angleA;
     camera->mAngleB = angleB;
     camera->mDist = dist;
-    camera->_70 = uVar3;
+    camera->mArrange = uVar3;
 }
 
 Camera* CamTranslatorCharmedVecRegTower::getCamera() const {

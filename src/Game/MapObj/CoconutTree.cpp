@@ -1,9 +1,12 @@
 #include "Game/MapObj/CoconutTree.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
 
-CoconutTree::CoconutTree(const char* pName) : LiveActor(pName) {}
+CoconutTree::CoconutTree(const char* pName) : LiveActor(pName) {
+}
 
-CoconutTree::~CoconutTree() {}
+CoconutTree::~CoconutTree() {
+}
 
 void CoconutTree::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);

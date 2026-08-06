@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Inline.hpp"
-#include "JSystem/JKernel/JKRHeap.hpp"
-
-class JKRHeap;
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 namespace MR {
     class FunctorBase {
@@ -103,6 +101,11 @@ namespace MR {
     template < class T >
     inline static FunctorV0M< T*, void (T::*)() const > Functor_Inline(T* a1, void (T::*a2)() const) {
         return FunctorV0M< T*, void (T::*)() const >(a1, a2);
+    }
+
+    template < class T >
+    inline static FunctorV0M< const T*, void (T::*)() const > Functor_InlineC(T* a1, void (T::*a2)() const) {
+        return FunctorV0M< const T*, void (T::*)() const >(a1, a2);
     }
 
     template < class T, typename U >

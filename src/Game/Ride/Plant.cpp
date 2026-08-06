@@ -1,5 +1,7 @@
 #include "Game/Ride/Plant.hpp"
+#include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/MapObj/PlantPoint.hpp"
 #include "Game/Ride/PlantLeaf.hpp"
@@ -11,22 +13,33 @@
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include <JSystem/J3DGraphBase/J3DShapeDraw.hpp>
-#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/gx/GXTransform.h>
 #include <revolution/mtx.h>
 #include <revolution/types.h>
 #include <revolution/wpad.h>
+
+void Plant_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
+
+void DUMMY() {
+    f32 a;
+    MR::clampMax(&a, 0.0f);
+}
 
 namespace NrvPlant {
     NEW_NERVE(PlantNrvWaitFar, Plant, WaitFar);
@@ -161,7 +174,6 @@ void Plant::exeGrowUp() {
         MR::startSound(this, "SE_OJ_PLANT_GROW_START");
     }
 
-    // interesting...
     if (updateGrowUp()) {
         return;
     }
@@ -229,7 +241,8 @@ void Plant::exeHangUpGrowUp() {
     }
 }
 
-void Plant::exeGrowthStop() {}
+void Plant::exeGrowthStop() {
+}
 
 void Plant::exeGrowthWait() {
     if (MR::isFirstStep(this)) {
@@ -323,7 +336,7 @@ void Plant::exeHangDown() {
 }
 
 void Plant::initLeaf() {
-    f32 leafPos, leafSize, leafRatio;
+    f32 leafRatio, leafSize, leafPos;
 
     mNumLeaves = (s32)(((MR::getRailTotalLength(this) - 100.0f) - 200.0f) / 200.0f) + 2;
     mLeaves = new PlantLeaf*[mNumLeaves];
@@ -334,7 +347,7 @@ void Plant::initLeaf() {
     TVec3f baseRotate(0.0f, 0.0f, 1.0f);
     leafPos = MR::getRailTotalLength(this) - 100.0f;
 
-    MR::getRailTotalLength(this);  // ?????
+    MR::getRailTotalLength(this);
 
     for (s32 leaf = 0; leaf < mNumLeaves; leaf++) {
         leafRatio = static_cast< f32 >(leaf) / static_cast< f32 >(mNumLeaves);
@@ -343,13 +356,11 @@ void Plant::initLeaf() {
 
         TVec3f growDirection(baseRotate);
         f32 dot = growDirection.dot(railDirection);
-        if (__fabsf(dot) > 0.7f) {
+        if (MR::abs(dot) > 0.7f) {
             if (dot > 0.0f) {
-                TVec3f up(0.0f, 1.0f, 0.0f);
-                PSVECCrossProduct(&up, &railDirection, &growDirection);
+                growDirection.cross(TVec3f(0.0f, 1.0f, 0.0f), railDirection);
             } else {
-                TVec3f up(0.0f, 1.0f, 0.0f);
-                PSVECCrossProduct(&railDirection, &up, &growDirection);
+                growDirection.cross(railDirection, TVec3f(0.0f, 1.0f, 0.0f));
             }
 
             MR::normalize(&growDirection);
@@ -361,30 +372,19 @@ void Plant::initLeaf() {
         mLeaves[leaf]->initWithoutIter();
         leafPos -= MR::getInterpolateValue(leafRatio, 100.0f, 300.0f);
 
-        f32 rand = PI_180 * MR::getRandom(90.0f, 270.0f);
-        mtx.setRotateInline(TVec3f(0.0f, 1.0f, 0.0f), rand);
+        mtx.setRotate(TVec3f(0.0f, 1.0f, 0.0f), MR::toRadian(MR::getRandom(90.0f, 270.0f)));
         mtx.mult(baseRotate, baseRotate);
     }
 }
 
-inline void setMatrix(MtxPtr posMtx, MtxPtr camMtx, MtxPtr baseMtx) {
-    PSMTXConcat(camMtx, baseMtx, posMtx);
-}
-
 void Plant::calcAnim() {
-    // register alloc mismatch
-    // https://decomp.me/scratch/A8p2y
-
     if (!MR::isValidCalcViewAndEntry(this) || isNerve(&NrvPlant::PlantNrvWaitFar::sInstance) || isNerve(&NrvPlant::PlantNrvSeedWait::sInstance)) {
         return;
     }
-    // FIXME
-    MtxPtr posMtx, camViewMtx, leafBaseMtx;
+
     for (s32 leaf = 0; leaf < mNumLeaves; leaf++) {
-        posMtx = mLeaves[leaf]->mPosMtx;
-        camViewMtx = MR::getCameraViewMtx();
-        leafBaseMtx = mLeaves[leaf]->getBaseMtx();
-        PSMTXConcat(camViewMtx, leafBaseMtx, posMtx);
+        MtxPtr mtx = mLeaves[leaf]->getPosMtx();
+        MR::multMtx(mtx, mLeaves[leaf]->getBaseMtx(), MR::getCameraViewMtx());
     }
 }
 
@@ -434,9 +434,8 @@ bool Plant::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pRece
             mTopPartsModel->appear();
             startGrowUp();
             return true;
-        } else {
-            return false;  // necessary to match
         }
+        return false;
     }
 
     return false;
@@ -472,7 +471,7 @@ bool Plant::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
             mGrabbedTop = true;
             setNerve(&NrvPlant::PlantNrvHangStart::sInstance);
         } else {
-            if (mRideVelocity >= 2.0f) {
+            if (mRideVelocity >= -2.0f) {
                 mRideVelocity = MR::clamp(mRideVelocity, 15.0f, 35.0f);
                 MR::setRailDirectionToEnd(this);
                 setNerve(&NrvPlant::PlantNrvHangStart::sInstance);
@@ -586,8 +585,7 @@ void Plant::updateBindLeaf() {
         springPower *= -1.0f;
     }
 
-    TVec3f railDir(MR::getRailDirection(this));
-    railDir.scale(20.0f);
+    TVec3f railDir(MR::getRailDirection(this) * 20.0f);
     if (MR::isRailGoingToEnd(this)) {
         railDir.scale(-1.0f);
     }
@@ -647,10 +645,7 @@ bool Plant::tryReachGoal() {
     TVec3f endUp(mStalk->mPlantPoints[0]->mUp);
     endUp.scale(mLaunchSpeed);
 
-    f32 launchVel = -mLaunchNormal;
-    TVec3f up(mGravity);
-    up.scale(launchVel);
-    endUp.add(up);
+    endUp.add(mGravity * -mLaunchNormal);
 
     MR::startBckPlayer("GrowPlantJump", (const char*)0);
     MR::stopSound(mRider, "SE_OJ_PLANT_MARIO_UP_START");
@@ -698,21 +693,4 @@ void Plant::draw() const {
         GXLoadNrmMtxImm(mLeaves[leaf]->mPosMtx, 0);
         mShapeDraw->draw();
     }
-}
-
-namespace MR {
-    // should this be in MathUtil?
-    void clampMax(f32* val, f32 max) {
-        f32 ret;
-        if (*val >= max) {
-            ret = max;
-        } else {
-            ret = *val;
-        }
-        *val = ret;
-    }
-};  // namespace MR
-
-MtxPtr PlantLeaf::getBaseMtx() const {
-    return (MtxPtr)&mBaseMtx;
 }

@@ -1,6 +1,6 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
 
 bool BitFlag128::get(int idx) const {
     u32 flags = mFlags[idx / 32];
@@ -201,7 +201,8 @@ namespace MR {
     }
 };  // namespace MR
 
-StageSwitchContainer::~StageSwitchContainer() {}
+StageSwitchContainer::~StageSwitchContainer() {
+}
 
 StageSwitchContainer::StageSwitchContainer() : NameObj("ステージスイッチ"), mSwitches(), mGlobalSwitches() {
     mGlobalSwitches = new ZoneSwitch();

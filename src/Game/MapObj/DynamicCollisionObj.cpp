@@ -1,7 +1,9 @@
 #include "Game/MapObj/DynamicCollisionObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/KCollision.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util.hpp"
 
 DynamicCollisionObj::DynamicCollisionObj(const char* pName) : LiveActor(pName) {
     _A4 = 0;
@@ -45,8 +47,7 @@ void DynamicCollisionObj::updateTriangle() {
         MR::normalizeOrZero(&a);
         MR::normalizeOrZero(&b);
         MR::normalizeOrZero(&c);
-        TVec3f cross;
-        PSVECCrossProduct(&b, &a, &cross);
+        TVec3f cross = b.cross(a);
         MR::normalizeOrZero(&cross);
         _9C[i] = cross;
 
@@ -54,14 +55,9 @@ void DynamicCollisionObj::updateTriangle() {
             continue;
         }
 
-        TVec3f cross2;
-        TVec3f cross3;
-        TVec3f cross4;
-        TVec3f OuterVec;
-        JMathInlineVEC::PSVECNegate(&a, &OuterVec);
-        PSVECCrossProduct(&OuterVec, &cross, &cross2);
-        PSVECCrossProduct(&b, &cross, &cross3);
-        PSVECCrossProduct(&c, &cross, &cross4);
+        TVec3f cross2 = (-a).cross(cross);
+        TVec3f cross3 = b.cross(cross);
+        TVec3f cross4 = c.cross(cross);
 
         MR::normalizeOrZero(&cross2);
         MR::normalizeOrZero(&cross3);
@@ -80,7 +76,7 @@ void DynamicCollisionObj::updateTriangle() {
         KC_PrismData* prism = &mKCLFile->mPrisms[prismidx];
         MR::vecKillElement(SaveForLater, c, &SaveForLater);
 
-        prism->mHeight = PSVECMag(&SaveForLater);
+        prism->mHeight = SaveForLater.length();
         prism->mPositionIndex = i;
         u16 nrmidx = normalidx;
         prism->mNormalIndex = nrmidx;

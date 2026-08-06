@@ -11,6 +11,7 @@
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
@@ -28,7 +29,8 @@ namespace PoltaFunction {
         MR::requestMovementOn(pPolta->mRightArm->mFormationModel);
     }
 
-    void emitEffectShadow(Polta* pPolta) {}
+    void emitEffectShadow(Polta* pPolta) {
+    }
 
     PoltaArm* getLeftArmActor(Polta* pPolta) {
         return pPolta->mLeftArm;
@@ -150,18 +152,17 @@ namespace PoltaFunction {
         PoltaGroundRockHolder* groundRockHolder = pPolta->mGroundRockHolder;
         PoltaGroundRock* deadMember = groundRockHolder->getDeadActor() ? (PoltaGroundRock*)groundRockHolder->getDeadActor() : nullptr;
 
-        if (!deadMember) {
+        if (deadMember == nullptr) {
             return false;
         }
-        TVec3f v28(*MR::getPlayerPos());
-        TVec3f v14;
-        JMathInlineVEC::PSVECSubtract(pPolta->mPosition, v28, v28);
-        JMAVECScaleAdd(pPolta->mGravity, v28, v28, -pPolta->mGravity.dot(v28));
+
+        TVec3f v28 = *MR::getPlayerPos() - pPolta->mPosition;
+        v28.orthogonalize(pPolta->mGravity);
         if (MR::normalizeOrZero(&v28)) {
-            v28.setPS(pPolta->_C4);
+            v28 = pPolta->_C4;
         }
         MR::rotateVecDegree(&v28, pPolta->mGravity, param2);
-        JMAVECScaleAdd(v28, pPolta->mPosition, v28, param3);
+        v28.scaleAdd(param3, v28, pPolta->mPosition);
         deadMember->start(pPolta, v28);
         return true;
     }
@@ -183,7 +184,7 @@ namespace PoltaFunction {
     // All the params besides pPolta go unused.
     bool appearBombTeresaFromRoot(Polta* pPolta, f32 param2, f32 param3, s32 param4) {
         TVec3f v8;
-        JMAVECScaleAdd(pPolta->mGravity, pPolta->mPosition, &v8, -120.0f);
+        v8.scaleAdd(-120.0f, pPolta->mGravity, pPolta->mPosition);
         BombTeresa* deadMember = pPolta->mBombTeresaHolder->getDeadMember();
         if (!deadMember) {
             return false;

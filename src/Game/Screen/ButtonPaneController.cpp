@@ -306,11 +306,12 @@ void ButtonPaneController::exeDecided() {
     }
 }
 
-void ButtonPaneController::exeDecidedWait() {}
+void ButtonPaneController::exeDecidedWait() {
+}
 
 void ButtonPaneController::exeDecidedToDisappear() {
     if (startAnimAtFirstStep(mNotPointingAnimName)) {
-        MR::setPaneAnimRate(mHost, mPaneName, cDecidedToDisappearAnimRate, mAnimIndex);
+        MR::setPaneAnimRate(mHost, mPaneName, ::cDecidedToDisappearAnimRate, mAnimIndex);
     }
 
     if (_22) {

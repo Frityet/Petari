@@ -1,7 +1,11 @@
 #include "Game/Map/LavaShellTower.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvLavaShellTower {
     NEW_NERVE(HostTypeWait, LavaShellTower, Wait);
@@ -9,7 +13,8 @@ namespace NrvLavaShellTower {
     NEW_NERVE(HostTypeDone, LavaShellTower, Done);
 };  // namespace NrvLavaShellTower
 
-LavaShellTower::LavaShellTower(const char* pName) : MapObjActor(pName) {}
+LavaShellTower::LavaShellTower(const char* pName) : MapObjActor(pName) {
+}
 
 void LavaShellTower::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
@@ -25,7 +30,8 @@ void LavaShellTower::init(const JMapInfoIter& rIter) {
     makeActorAppeared();
 }
 
-void LavaShellTower::exeWait() {}
+void LavaShellTower::exeWait() {
+}
 
 void LavaShellTower::exeDemo() {
     if (MR::isFirstStep(this)) {
@@ -34,7 +40,7 @@ void LavaShellTower::exeDemo() {
     }
 
     MR::startSystemLevelSE("SE_DM_LV_SHELL_TOWER");
-    MR::tryRumblePadStrong(this, 0);
+    MR::tryRumblePadStrong(this, WPAD_CHAN0);
 
     if (MR::isGreaterStep(this, 1) && MR::isDemoLastStep()) {
         MR::stopShakingCamera(this);
@@ -42,6 +48,5 @@ void LavaShellTower::exeDemo() {
     }
 }
 
-void LavaShellTower::exeDone() {}
-
-void LavaShellTower::initCaseUseSwitchB(const MapObjActorInitInfo&) {}
+void LavaShellTower::exeDone() {
+}

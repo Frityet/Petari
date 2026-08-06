@@ -1,27 +1,26 @@
 #include "Game/Ride/Creeper.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/Color.hpp"
+#include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
-#include <JSystem/JGeometry/TMatrix.hpp>
-#include <JSystem/JGeometry/TVec.hpp>
+#include "Game/Util/SoundUtil.hpp"
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <revolution/gx/GXVert.h>
 #include <revolution/mtx.h>
 #include <revolution/wpad.h>
-
-namespace {
-    static Color8 sColorPlusZ(0xFF, 0xFF, 0xFF, 0xFF);
-    static Color8 sColorPlusX(0x96, 0x96, 0x96, 0xFF);
-    static Color8 sColorMinusX(0xC8, 0xC8, 0xC8, 0xFF);
-};  // namespace
 
 namespace NrvCreeper {
     NEW_NERVE(CreeperNrvFree, Creeper, Free);
@@ -31,12 +30,23 @@ namespace NrvCreeper {
     NEW_NERVE(CreeperNrvHangDown, Creeper, HangDown);
 };  // namespace NrvCreeper
 
+namespace {
+    static Color8 sColorPlusZ(0xFF, 0xFF, 0xFF, 0xFF);
+    static Color8 sColorPlusX(0x96, 0x96, 0x96, 0xFF);
+    static Color8 sColorMinusX(0xC8, 0xC8, 0xC8, 0xFF);
+};  // namespace
+
+void Creeoer_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
+
 CreeperPoint::CreeperPoint(const TVec3f& rPos, const TVec3f& rUp, const CreeperPoint* pPrevPoint)
     : mPosition(rPos), mNeutralPos(rPos), mVelocity(0.0f, 0.0f, 0.0f), mSide(1.0f, 0.0f, 0.0f), mUp(rUp), mFront(0.0f, 0.0f, 1.0f),
       mProjection(0.0f, 0.0f, 0.0f), mPrevPoint(pPrevPoint) {
-    TVec3f front;
-    PSVECCrossProduct(&mSide, &mUp, &front);
-    if (MR::isNearZero(front, 0.001f)) {
+    TVec3f front = mSide.cross(mUp);
+    if (MR::isNearZero(front)) {
         MR::makeAxisUpFront(&mSide, &mFront, mUp, mFront);
     } else {
         MR::makeAxisUpSide(&mFront, &mSide, mUp, mSide);
@@ -46,21 +56,16 @@ CreeperPoint::CreeperPoint(const TVec3f& rPos, const TVec3f& rUp, const CreeperP
         return;
     }
 
-    TVec3f posDiff(mPosition);
-    posDiff.sub(pPrevPoint->mPosition);
+    TVec3f posDiff = mPosition - pPrevPoint->mPosition;
     mProjection.x = pPrevPoint->mSide.dot(posDiff);
     mProjection.y = pPrevPoint->mUp.dot(posDiff);
     mProjection.z = pPrevPoint->mFront.dot(posDiff);
 }
 
 void CreeperPoint::updateFree() {
-    TVec3f restoreVec(mNeutralPos);
-    restoreVec.sub(mPosition);
+    TVec3f restoreVec(mNeutralPos - mPosition);
 
-    TVec3f v2(restoreVec);
-    v2.scale(0.05f);
-
-    mVelocity.add(v2);
+    mVelocity.add(restoreVec * 0.05f);
 
     mPosition.add(mVelocity);
 
@@ -78,13 +83,10 @@ void CreeperPoint::updateBend(bool bend, const TVec3f& bendDirection, f32 t, f32
     mVelocity.mult(0.7f);
 
     if (bend) {
-        mVelocity.add(bendDirection.scaleInline(t).scaleInline(bendFactor));
+        mVelocity.add(bendDirection * t * bendFactor);
     }
 
-    mPosition = mPrevPoint->mSide.scaleInline(mProjection.x)
-                    .addOperatorInLine(mPrevPoint->mUp.scaleInline(mProjection.y))
-                    .addOperatorInLine(mPrevPoint->mFront.scaleInline(mProjection.z))
-                    .addOperatorInLine(mPrevPoint->mPosition);
+    mPosition = mPrevPoint->mSide * mProjection.x + mPrevPoint->mUp * mProjection.y + mPrevPoint->mFront * mProjection.z + mPrevPoint->mPosition;
 
     mPosition.add(mVelocity);
 
@@ -101,9 +103,8 @@ void CreeperPoint::updateLocalAxis() {
     mUp.sub(mPrevPoint->mPosition);
     MR::normalize(&mUp);
 
-    TVec3f front;
-    PSVECCrossProduct(&mSide, &mUp, &front);
-    if (MR::isNearZero(front, 0.001f)) {
+    TVec3f front = mSide.cross(mUp);
+    if (MR::isNearZero(front)) {
         MR::makeAxisUpFront(&mSide, &mFront, mUp, mFront);
     } else {
         MR::makeAxisUpSide(&mFront, &mSide, mUp, mSide);
@@ -162,9 +163,10 @@ void Creeper::init(const JMapInfoIter& rIter) {
     makeActorAppeared();
 }
 
-inline void Creeper::exeFree() {}
+inline void Creeper::exeFree() {
+}
 
-inline void Creeper::exeFreeInvalid() {
+void Creeper::exeFreeInvalid() {
     if (MR::isNearPlayer(this, 200.0f) && MR::isGreaterStep(this, 20)) {
         setNerve(&NrvCreeper::CreeperNrvFree::sInstance);
     }
@@ -257,8 +259,8 @@ void Creeper::control() {
         mCoord = MR::getRailCoord(this) / MR::getRailTotalLength(this);
     }
 
-    mTopMtx.setVec(getHeadPoint()->mSide, getHeadPoint()->mUp, getHeadPoint()->mFront);
-    mTopMtx.setPos(getHeadPoint()->mPosition);
+    mTopMtx.setXYZDir(getHeadPoint()->mSide, getHeadPoint()->mUp, getHeadPoint()->mFront);
+    mTopMtx.setTrans(getHeadPoint()->mPosition);
 }
 
 bool Creeper::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
@@ -372,7 +374,7 @@ bool Creeper::tryJump() {
 
     calcAndGetCurrentInfo(&mPosition, &mUp);
 
-    TVec3f launchFront = mBendDirection.negateInline();
+    TVec3f launchFront = -mBendDirection;
 
     MR::vecKillElement(launchFront, mGravity, &launchFront);
     MR::normalizeOrZero(&launchFront);
@@ -381,7 +383,7 @@ bool Creeper::tryJump() {
     }
 
     TVec3f launch;
-    launch = (launchFront.scaleInline(mLaunchHorizontalSpeed)).subOperatorInLine(mGravity.scaleInline(mLaunchVerticalSpeed));
+    launch = launchFront * mLaunchHorizontalSpeed - mGravity * mLaunchVerticalSpeed;
 
     MR::startBckPlayer("GrowPlantJump", static_cast< const char* >(nullptr));
     MR::endMultiActorCamera(this, mCameraInfo, "掴まり", true, -1);
@@ -438,12 +440,12 @@ void Creeper::calcAndGetCurrentInfo(TVec3f* pPosition, TVec3f* pUp) const {
 
     if (idx < mNumPoints - 1) {
         s32 nextIdx = idx + 1;
-        *pPosition = (mPoints[idx]->mPosition.scaleInline(1.0f - t)).addOperatorInLine(mPoints[nextIdx]->mPosition.scaleInline(t));
-        *pUp = (mPoints[nextIdx]->mPosition).subOperatorInLine(mPoints[idx]->mPosition);
+        *pPosition = mPoints[idx]->mPosition * (1.0f - t) + mPoints[nextIdx]->mPosition * t;
+        *pUp = mPoints[nextIdx]->mPosition - mPoints[idx]->mPosition;
     } else {
         s32 prevIdx = idx - 1;
         pPosition->set(mPoints[idx]->mPosition);
-        *pUp = (mPoints[idx]->mPosition).subOperatorInLine(mPoints[prevIdx]->mPosition);
+        *pUp = mPoints[idx]->mPosition - mPoints[prevIdx]->mPosition;
     }
     MR::normalize(pUp);
 }
@@ -478,44 +480,47 @@ void Creeper::draw() const {
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mNumPoints * 2);
     for (s32 idx = 0; idx < mNumPoints; idx++) {
         texY = delta * ((mNumPoints - 1) - idx);
-        color1 = sColorPlusX;
-        color2 = sColorPlusZ;
+        color1 = ::sColorPlusX;
+        color2 = ::sColorPlusZ;
 
         front = &mPoints[idx]->mFront;
         side = &mPoints[idx]->mSide;
         pos = &mPoints[idx]->mPosition;
 
-        sendVertex(*pos, *side, *front, 10.0f, -10.0f, color1, 1.0f, texY);
-        sendVertex(*pos, *side, *front, 0.0f, 10.0f, color2, 0.0f, texY);
+        ::sendVertex(*pos, *side, *front, 10.0f, -10.0f, color1, 1.0f, texY);
+        ::sendVertex(*pos, *side, *front, 0.0f, 10.0f, color2, 0.0f, texY);
     }
+    GXEnd();
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mNumPoints * 2);
     for (s32 idx = 0; idx < mNumPoints; idx++) {
         texY = delta * ((mNumPoints - 1) - idx);
-        color1 = sColorPlusZ;
-        color2 = sColorMinusX;
+        color1 = ::sColorPlusZ;
+        color2 = ::sColorMinusX;
 
         front = &mPoints[idx]->mFront;
         side = &mPoints[idx]->mSide;
         pos = &mPoints[idx]->mPosition;
 
-        sendVertex(*pos, *side, *front, 0.0f, 10.0f, color1, 1.0f, texY);
-        sendVertex(*pos, *side, *front, -10.0f, -10.0f, color2, 0.0f, texY);
+        ::sendVertex(*pos, *side, *front, 0.0f, 10.0f, color1, 1.0f, texY);
+        ::sendVertex(*pos, *side, *front, -10.0f, -10.0f, color2, 0.0f, texY);
     }
+    GXEnd();
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mNumPoints * 2);
     for (s32 idx = 0; idx < mNumPoints; idx++) {
         texY = delta * ((mNumPoints - 1) - idx);
-        color1 = sColorMinusX;
-        color2 = sColorPlusX;
+        color1 = ::sColorMinusX;
+        color2 = ::sColorPlusX;
 
         front = &mPoints[idx]->mFront;
         side = &mPoints[idx]->mSide;
         pos = &mPoints[idx]->mPosition;
 
-        sendVertex(*pos, *side, *front, -10.0f, -10.0f, color1, 1.0f, texY);
-        sendVertex(*pos, *side, *front, 10.0f, -10.0f, color2, 0.0f, texY);
+        ::sendVertex(*pos, *side, *front, -10.0f, -10.0f, color1, 1.0f, texY);
+        ::sendVertex(*pos, *side, *front, 10.0f, -10.0f, color2, 0.0f, texY);
     }
+    GXEnd();
 }
 
 void Creeper::loadMaterial() const {

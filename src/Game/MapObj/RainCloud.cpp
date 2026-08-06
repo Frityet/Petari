@@ -1,15 +1,17 @@
 #include "Game/MapObj/RainCloud.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapPartsRailMover.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapPartsUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
-#include "revolution/types.h"
 
 namespace {
     static s32 sThunderStep = 140;
@@ -92,7 +94,7 @@ void RainCloud::init(const JMapInfoIter& rIter) {
     }
 
     TVec3f v13;
-    v13.setPS(mPosition);
+    v13 = mPosition;
     f32 boundRadius;
     MR::calcModelBoundingRadius(&boundRadius, this);
     boundRadius += 0.5f * _104;
@@ -102,13 +104,13 @@ void RainCloud::init(const JMapInfoIter& rIter) {
         boundRadius += v11;
     }
 
-    JMAVECScaleAdd(&mGravity, &mPosition, &_F8, (0.5f * _104));
+    _F8.scaleAdd(0.5f * _104, mGravity, mPosition);
     MR::setClippingTypeSphere(this, boundRadius, &_F8);
     MR::setGroupClipping(this, rIter, 16);
     MR::joinToGroupArray(this, rIter, "雲集団", 16);
     MR::startBck(this, "Wait", nullptr);
 
-    if (_10D) {
+    if (!_10D) {
         MR::startBpk(this, "Fine");
         MR::startBpk(_F4->_14, "Fine");
     } else {
@@ -141,7 +143,7 @@ void RainCloud::exeAppear() {
         MR::startSound(this, "SE_OJ_RAIN_CLOUD_APPEAR");
     }
 
-    if (MR::isStep(this, sThunderStep)) {
+    if (MR::isStep(this, ::sThunderStep)) {
         MR::startSound(this, "SE_OJ_RAIN_CLOUD_THUNDER");
     }
 
@@ -204,7 +206,7 @@ void RainCloud::exeSoftTouch() {
 void RainCloud::exeHardTouch() {
     if (MR::isFirstStep(this)) {
         MR::invalidateCollisionParts(this);
-        MR::tryRumblePadMiddle(this, nullptr);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
     }
 
@@ -238,7 +240,7 @@ void RainCloud::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
         if (MR::isPlayerElementModeBee()) {
             MR::curePlayerElementMode();
-            MR::tryRumblePadStrong(this, 0);
+            MR::tryRumblePadStrong(this, WPAD_CHAN0);
         }
 
         MR::sendArbitraryMsg(ACTMES_PUDDLE_TOUCH_GROUND, pReceiver, pSender);
@@ -248,9 +250,9 @@ void RainCloud::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
 void RainCloud::updateHitSensor(HitSensor* pSensor) {
     f32 radius = pSensor->mRadius;
     TVec3f v7;
-    JMAVECScaleAdd(&mGravity, &mPosition, &v7, radius);
+    v7.scaleAdd(radius, mGravity, mPosition);
     TVec3f v6;
-    JMAVECScaleAdd(&mGravity, &mPosition, &v6, (_104 - radius));
+    v6.scaleAdd(_104 - radius, mGravity, mPosition);
     MR::calcPerpendicFootToLineInside(&pSensor->mPosition, *MR::getPlayerPos(), v7, v6);
 }
 
@@ -320,4 +322,5 @@ void RainCloud::switchEffect() {
     }
 }
 
-RainCloud::~RainCloud() {}
+RainCloud::~RainCloud() {
+}

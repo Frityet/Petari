@@ -1,9 +1,31 @@
 #include "Game/Ride/Pole.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include <JSystem/JMath.hpp>
 #include <cstring>
+
+void Pole_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)-1.0f;
+}
 
 namespace NrvPole {
     NEW_NERVE(PoleNrvDemoAppear, Pole, DemoAppear);
@@ -22,10 +44,6 @@ namespace NrvPole {
     NEW_NERVE(PoleNrvBindHandstandEnd, Pole, BindHandstandEnd);
     NEW_NERVE(PoleNrvBindHandstandTurn, Pole, BindHandstandTurn);
 };  // namespace NrvPole
-
-inline f32 modRotateFromBase(f32 angle, f32 base) {
-    return static_cast< f32 >(fmod((angle - base) + 360.0f, 360.0f)) + base;
-}
 
 Pole::Pole(const char* pName)
     : LiveActor(pName), mBasePos(0.0f, 0.0f, 0.0f), mTopPos(0.0f, 0.0f, 0.0f), mPoleLength(0.0f), mDisableHandstand(false), mIsSquare(false),
@@ -64,9 +82,9 @@ void Pole::init(const JMapInfoIter& rIter) {
     mtx.identity();
     MR::makeMtxTR(mtx.toMtxPtr(), this);
 
-    mtx.getXDirInline(mSide);
-    mtx.getYDirInline(mUp);
-    mtx.getZDirInline(mFront);
+    mtx.getXDir(mSide);
+    mtx.getYDir(mUp);
+    mtx.getZDir(mFront);
 
     mPosMtx.set(mtx);
     mPosMtx.invert(mPosMtx);
@@ -208,7 +226,7 @@ void Pole::exeBindStart() {
             rotateSpeed = 9.0f;
         }
 
-        s16 frame = MR::getBckCtrl(mRider)->mEnd;
+        s16 frame = MR::getBckCtrl(mRider)->getEnd();
         mRotation.y += (rotateSpeed * MR::getEaseOutValue(1.0f - ((f32)getNerveStep() / frame), 0.0f, 1.0f, 1.0f));
     }
 
@@ -264,7 +282,7 @@ void Pole::exeBindTurn() {
 
     if (!mIsSquare) {
         mRotation.y += 2.5f * getPoleSubPadStickX();
-        mRotation.y = modRotateFromBase(mRotation.y, 0.0f);
+        mRotation.y = MR::repeat(mRotation.y, 0.0f, 360.0f);
     }
 
     f32 jump = 0.0f;
@@ -289,7 +307,7 @@ void Pole::exeBindTurn() {
                 mRotation.y -= 90.0f;
             }
 
-            mRotation.y = modRotateFromBase(mRotation.y, 0.0f);
+            mRotation.y = MR::repeat(mRotation.y, 0.0f, 360.0f);
 
             MR::startBckPlayer("SquarePoleWait", "SquarePoleTurnEnd");
             setNerve(&NrvPole::PoleNrvBindTurnEnd::sInstance);
@@ -374,8 +392,7 @@ void Pole::exeBindFallDown() {
         front.z = JMACosDegree(mRotation.y);
         mtx.mult(front, front);
 
-        TVec3f pos(front);
-        pos.scale(-30.0f);
+        TVec3f pos(front * -30.0f);
         pos.add(mBasePos);
 
         MR::setPlayerPos(pos);
@@ -457,7 +474,7 @@ void Pole::exeBindHandstandTurn() {
     }
 
     mRotation.y += 2.5f * getPoleSubPadStickX();
-    mRotation.y = modRotateFromBase(mRotation.y, 0.0f);
+    mRotation.y = MR::repeat(mRotation.y, 0.0f, 360.0f);
 
     if (!tryJump(true, (0.0f)) && !isEnableTurn()) {
         setNerve(&NrvPole::PoleNrvBindHandstandWait::sInstance);
@@ -509,7 +526,7 @@ bool Pole::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
         MR::vecKillElement(velHoriz, mUp, &velHoriz);
         f32 horizSpeed = velHoriz.length();
         f32 velUpProj = mUp.dot(*MR::getPlayerVelocity());
-        if (__fabsf(horizSpeed) < 5.0f && velUpProj > 1.0f) {
+        if (MR::abs(horizSpeed) < 5.0f && velUpProj > 1.0f) {
             return false;
         }
 
@@ -577,12 +594,12 @@ bool Pole::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
         TPos3f posMtx;
         TRot3f rotMtx;
         posMtx.identity();
-        posMtx.setVec(mSide, mUp, mFront);
+        posMtx.setXYZDir(mSide, mUp, mFront);
 
         rotMtx.identity();
-        MR::makeMtxTransRotateY(rotMtx.toMtxPtr(), this);
-        PSMTXConcat(posMtx.toMtxPtr(), rotMtx.toMtxPtr(), posMtx.toMtxPtr());
-        posMtx.setPos(mPosition);
+        MR::makeMtxTransRotateY(rotMtx, this);
+        MR::multMtx(posMtx, rotMtx, posMtx);
+        posMtx.setTrans(mPosition);
         MR::setBaseTRMtx(mRider, posMtx);
         return true;
     }
@@ -605,7 +622,7 @@ bool Pole::tryJump(bool handstand, f32 angleOffset) {
         TPos3f pos;
         calcGravityMtx(&pos);
 
-        f32 frontAngle = modRotateFromBase(angleOffset + mRotation.y + 180.0f, 0.0f);
+        f32 frontAngle = MR::repeat(angleOffset + mRotation.y + 180.0f, 0.0f, 360.0f);
         TVec3f jumpFront(0.0f, 0.0f, 0.0f);
         jumpFront.x = JMASinDegree(frontAngle);
         jumpFront.z = JMACosDegree(frontAngle);
@@ -633,8 +650,7 @@ bool Pole::tryJump(bool handstand, f32 angleOffset) {
         MR::endActorCamera(this, mCameraInfo, 1, -1);
 
         if (mIsSquare) {
-            TVec3f vec2(jumpFront);
-            vec2.scale(50.0f);
+            TVec3f vec2(jumpFront * 50.0f);
             vec2.add(*MR::getPlayerPos());
             MR::setPlayerPos(vec2);
         }
@@ -655,9 +671,9 @@ bool Pole::tryJump(bool handstand, f32 angleOffset) {
 bool Pole::tryTurn() {
     if (isEnableTurn()) {
         if (getPoleSubPadStickX() > 0.0f) {
-            setNerve(&NrvPole::PoleNrvBindTurnLeft::sInstance);
-        } else {
             setNerve(&NrvPole::PoleNrvBindTurnRight::sInstance);
+        } else {
+            setNerve(&NrvPole::PoleNrvBindTurnLeft::sInstance);
         }
         return true;
     }
@@ -689,7 +705,7 @@ bool Pole::tryHandstandTurn() {
 }
 
 bool Pole::isEnableTurn() const {
-    if (__fabsf(getPoleSubPadStickX()) > 0.8f) {
+    if (MR::abs(getPoleSubPadStickX()) > 0.8f) {
         return true;
     }
     return false;

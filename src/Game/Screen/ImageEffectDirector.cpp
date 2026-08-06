@@ -19,7 +19,7 @@ namespace {
 };  // namespace
 
 ImageEffectDirector::ImageEffectDirector(const char* pName)
-    : NameObj(pName), mIsAuto(true), mIsPlayerSync(false), _E(false), _F(false), mPlayerSyncIntensity(0), mDepthOfFieldIntensity(sDOFIntensity),
+    : NameObj(pName), mIsAuto(true), mIsPlayerSync(false), _E(false), _F(false), mPlayerSyncIntensity(0), mDepthOfFieldIntensity(::sDOFIntensity),
       mStateNull(new ImageEffectStateImpl::StateNull(this)), mStateBloomNormal(new ImageEffectStateImpl::StateBloomNormal(this)),
       mStateBloomSimple(new ImageEffectStateImpl::StateBloomSimple(this)), mStateScreenBlur(new ImageEffectStateImpl::StateScreenBlur(this)),
       mStateDepthOfField(new ImageEffectStateImpl::StateDepthOfField(this)), mState(mStateNull), mCurrentEffect(nullptr) {
@@ -32,7 +32,9 @@ void ImageEffectDirector::movement() {
     } else {
         updateManual();
     }
+
     bool isDOF = _F && mState == mStateDepthOfField;
+
     if (_E) {
         if (!isDOF) {
             mState->onChange();
@@ -41,11 +43,13 @@ void ImageEffectDirector::movement() {
         mState->forceOff();
         mStateNull->onChange();
     }
+
     if (isDOF) {
         mStateNull->update();
     } else {
         mState->update();
     }
+
     _E = isDOF;
 }
 
@@ -64,7 +68,7 @@ void ImageEffectDirector::turnOnDepthOfField(bool p1) {
     mIsAuto = false;
     setState(mStateDepthOfField);
     setPlayerSync(p1);
-    mDepthOfFieldIntensity = sDOFIntensity;
+    mDepthOfFieldIntensity = ::sDOFIntensity;
     mStateDepthOfField->setBlurMinDist(-1);
     mStateDepthOfField->setBlurMaxDist(-1);
 }
@@ -113,10 +117,10 @@ void ImageEffectDirector::setDepthOfFieldIntensity(f32 intensity) {
 }
 
 void ImageEffectDirector::updateManual() {
-    if (mIsPlayerSync != false) {
-        incPlayerSyncIntensity();
-    } else {
+    if (mIsPlayerSync) {
         updateSyncCounter();
+    } else {
+        incPlayerSyncIntensity();
     }
 
     f32 intensity = mDepthOfFieldIntensity * (mPlayerSyncIntensity / 60.0f);
@@ -131,21 +135,22 @@ void ImageEffectDirector::updateManual() {
 void ImageEffectDirector::setState(ImageEffectState* pState) {
     if (mState != pState) {
         mState = pState;
-        pState->onChange();
+        mState->onChange();
     }
 }
 
 void ImageEffectDirector::setBloomNormalParams(ImageEffectArea* pArea) {
     BloomArea* pBloomArea = static_cast< BloomArea* >(pArea);
-    mStateBloomNormal->setBloomIntensity(pBloomArea->_41);
-    mStateBloomNormal->setThreshold(pBloomArea->_40);
-    if (pBloomArea->_44 >= 0) {
-        mStateBloomNormal->setIntensity1(pBloomArea->_44);
+    mStateBloomNormal->setBloomIntensity(pBloomArea->mIntensity);
+    mStateBloomNormal->setThreshold(pBloomArea->mThreshold);
+
+    if (pBloomArea->mIntensity1 >= 0) {
+        mStateBloomNormal->setIntensity1(pBloomArea->mIntensity1);
     } else {
         mStateBloomNormal->setIntensity1Default();
     }
-    if (pBloomArea->_48 >= 0) {
-        mStateBloomNormal->setIntensity2(pBloomArea->_48);
+    if (pBloomArea->mIntensity2 >= 0) {
+        mStateBloomNormal->setIntensity2(pBloomArea->mIntensity2);
     } else {
         mStateBloomNormal->setIntensity2Default();
     }
@@ -153,6 +158,7 @@ void ImageEffectDirector::setBloomNormalParams(ImageEffectArea* pArea) {
 
 void ImageEffectDirector::setBloomSimpleParams(ImageEffectArea* pArea) {
     SimpleBloomArea* pSimpleBloomArea = static_cast< SimpleBloomArea* >(pArea);
+
     switch (pSimpleBloomArea->mMaskFilterColor) {
     case SimpleBloomArea::MASK_FILTER_ALL:
         mStateBloomSimple->setMaskFilterAll();
@@ -167,8 +173,9 @@ void ImageEffectDirector::setBloomSimpleParams(ImageEffectArea* pArea) {
         mStateBloomSimple->setMaskFilterBlue();
         break;
     }
-    mStateBloomSimple->setThreshold(pSimpleBloomArea->_44);
-    mStateBloomSimple->setIntensity(pSimpleBloomArea->_45 / 255.0f);
+
+    mStateBloomSimple->setThreshold(pSimpleBloomArea->mThreshold);
+    mStateBloomSimple->setIntensity(pSimpleBloomArea->mIntensity / 255.0f);
 }
 
 void ImageEffectDirector::setScreenBlurParams(ImageEffectArea* pArea) {
@@ -192,23 +199,23 @@ void ImageEffectDirector::initPlayerSyncIntensity(ImageEffectArea* pArea, ImageE
         if (pArea->isSyncWithPlayer()) {
             mPlayerSyncIntensity = 0;
         } else {
-            mPlayerSyncIntensity = sIntensityCountMax;
+            mPlayerSyncIntensity = ::sIntensityCountMax;
         }
     }
 }
 
 void ImageEffectDirector::updatePlayerSyncIntensity(ImageEffectArea* pArea, ImageEffectState* pState) {
     initPlayerSyncIntensity(pArea, pState);
+
     if (pArea->isSyncWithPlayer()) {
-        incPlayerSyncIntensity();
-    } else {
         updateSyncCounter();
+    } else {
+        incPlayerSyncIntensity();
     }
 }
 
 void ImageEffectDirector::updateSyncCounter() {
-    CameraDirector* pDirector = MR::getCameraDirector();
-    if (pDirector->isRotatingHard()) {
+    if (MR::getCameraDirector()->isRotatingHard()) {
         incPlayerSyncIntensity();
     } else {
         decPlayerSyncIntensity();
@@ -217,33 +224,38 @@ void ImageEffectDirector::updateSyncCounter() {
 
 void ImageEffectDirector::incPlayerSyncIntensity() {
     mPlayerSyncIntensity++;
-    if (mPlayerSyncIntensity > sIntensityCountMax) {
-        mPlayerSyncIntensity = sIntensityCountMax;
+
+    if (mPlayerSyncIntensity > ::sIntensityCountMax) {
+        mPlayerSyncIntensity = ::sIntensityCountMax;
     }
 }
 
 void ImageEffectDirector::decPlayerSyncIntensity() {
     mPlayerSyncIntensity--;
+
     if (mPlayerSyncIntensity < 0) {
         mPlayerSyncIntensity = 0;
     }
 }
 
-void ImageEffectDirector::setPlayerSync(bool playerSync) {
-    mIsPlayerSync = playerSync;
-    if (playerSync) {
+void ImageEffectDirector::setPlayerSync(bool isPlayerSync) {
+    mIsPlayerSync = isPlayerSync;
+
+    if (isPlayerSync) {
         mPlayerSyncIntensity = 0;
     } else {
-        mPlayerSyncIntensity = sIntensityCountMax;
+        mPlayerSyncIntensity = ::sIntensityCountMax;
     }
 }
 
 void ImageEffectDirector::updateAuto() {
     ImageEffectArea* pEffectArea = static_cast< ImageEffectArea* >(MR::getAreaObj("ImageEffectArea", *MR::getPlayerPos()));
-    if (!pEffectArea) {
+
+    if (pEffectArea == nullptr) {
         setState(mStateNull);
         return;
     }
+
     switch (pEffectArea->mEffectType) {
     case ImageEffectArea::IMAGE_EFFECT_TYPE_BLOOM:
         setBloomNormalParams(pEffectArea);

@@ -1,4 +1,6 @@
 #include "Game/MapObj/PunchingKinoko.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 #include <revolution.h>
 
 namespace NrvPunchingKinoko {
@@ -79,24 +81,20 @@ void PunchingKinoko::initJointControl() {
     mDelegator = MR::createJointDelegatorWithNullChildFunc(this, &PunchingKinoko::ballMtxCallBack, "Ball");
 }
 
-bool PunchingKinoko::ballMtxCallBack(TPos3f* a1, const JointControllerInfo& joint) {
+bool PunchingKinoko::ballMtxCallBack(TPos3f* pMtx, const JointControllerInfo& joint) {
     TVec3f stack_8;
-    PSVECSubtract(&mGroundChecker->mPosition, &mPosition, &stack_8);
-    MR::orthogonalize(a1);
+    stack_8.sub(mGroundChecker->mPosition, mPosition);
+    MR::orthogonalize(pMtx);
     if (!MR::normalizeOrZero(&stack_8)) {
-        MR::turnMtxToYDirRate(a1, stack_8, 1.0f);
+        MR::turnMtxToYDirRate(pMtx, stack_8, 1.0f);
     }
 
     TPos3f stack_14;
     stack_14.identity();
 
     MR::scaleMtxToDir(&stack_14, _A8, mScaleController->_C);
-    a1->concat(stack_14, *a1);
-
-    TVec3f* groundCheckerPos = &mGroundChecker->mPosition;
-    a1->mMtx[0][3] = groundCheckerPos->x;
-    a1->mMtx[1][3] = groundCheckerPos->y;
-    a1->mMtx[2][3] = groundCheckerPos->z;
+    pMtx->concat(stack_14, *pMtx);
+    pMtx->setTrans(mGroundChecker->mPosition);
 
     return true;
 }
@@ -136,42 +134,42 @@ void PunchingKinoko::calcAndSetBaseMtx() {
     mDelegator->registerCallBack();
 }
 
-void PunchingKinoko::attackSensor(HitSensor *pSender, HitSensor *pReceiver) {
+void PunchingKinoko::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (!isCrushed()) {
         if (pSender == getSensor("Body")) {
             if (isNerve(&NrvPunchingKinoko::PunchingKinokoNrvWait::sInstance)) {
                 MR::sendMsgPush(pReceiver, pSender);
             }
-        }
-        else if (!isNerve(&NrvPunchingKinoko::PunchingKinokoNrvCrushedEnd::sInstance) || !MR::isSensorPlayer(pReceiver) ||
-!MR::sendMsgEnemyAttackFlipWeakJump(pReceiver, pSender)) { TVec3f stack_3C; TVec3f stack_30; f32 stack_8; MR::separateScalarAndDirection(&stack_8,
-&stack_3C, mGroundChecker->mVelocity); bool hit = false; if (MR::isSensorPlayer(pReceiver)) { if (isEnableHitPlayer()) { if (stack_8 >= 30.0f) { if
-(stack_8 >= 45.0f) { TVec3f stack_24(stack_3C); stack_24.scaleInline(70.0f); hit = MR::sendMsgEnemyAttackFlipMaximumToDir(pReceiver, pSender,
-stack_24);
-                        }
-                        else {
-                            TVec3f stack_18(stack_3C);
-                            stack_18.scale(70.0f);
-                            hit = MR::sendMsgEnemyAttackFlipToDir(pReceiver, pSender, stack_18);
+        } else if (!isNerve(&NrvPunchingKinoko::PunchingKinokoNrvCrushedEnd::sInstance) || !MR::isSensorPlayer(pReceiver) ||
+                   !MR::sendMsgEnemyAttackFlipWeakJump(pReceiver, pSender)) {
+            TVec3f stack_3C;
+            TVec3f stack_30;
+            f32 stack_8;
+            MR::separateScalarAndDirection(&stack_8, &stack_3C, mGroundChecker->mVelocity);
+            bool hit = false;
+            if (MR::isSensorPlayer(pReceiver)) {
+                if (isEnableHitPlayer()) {
+                    if (stack_8 >= 30.0f) {
+                        if (stack_8 >= 45.0f) {
+                            hit = MR::sendMsgEnemyAttackFlipMaximumToDir(pReceiver, pSender, stack_3C * 70.0f);
+                        } else {
+                            hit = MR::sendMsgEnemyAttackFlipToDir(pReceiver, pSender, stack_3C * 70.0f);
                         }
                         if (hit) {
                             MR::startSoundPlayer("SE_PM_WALL_HIT_BODY", -1);
                             MR::scatterStarPiecePlayer(10);
                         }
-                    }
-                    else {
+                    } else {
                         if (stack_8 >= 15.0f) {
                             hit = MR::sendMsgEnemyAttackFlipWeak(pReceiver, pSender);
                         } else {
                             MR::sendMsgPush(pReceiver, pSender);
                         }
                     }
-                }
-                else {
+                } else {
                     MR::sendMsgPush(pReceiver, pSender);
                 }
-            }
-            else {
+            } else {
                 if (isEnableEnemyAttack()) {
                     hit = MR::sendMsgToEnemyAttackBlow(pReceiver, pSender);
                 }
@@ -183,11 +181,8 @@ stack_24);
                 MR::emitEffectHitBetweenSensors(this, pSender, pReceiver, 0.0f, "Hit");
                 MR::calcSensorDirectionNormalize(&stack_30, pReceiver, pSender);
                 f32 dot = mGroundChecker->mVelocity.dot(stack_30) * 1.6f;
-                TVec3f stack_C(stack_30);
-                stack_C.scale(dot);
-                TVec3f *groundvel = &mGroundChecker->mVelocity;
-                PSVECSubtract(groundvel, stack_C, groundvel);
-                mGroundChecker->mVelocity.scaleInline(0.3f);
+                mGroundChecker->mVelocity -= stack_30 * dot;
+                mGroundChecker->mVelocity *= 0.3f;
                 setNerve(&NrvPunchingKinoko::PunchingKinokoNrvWait::sInstance);
             }
         }
@@ -226,9 +221,7 @@ bool PunchingKinoko::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSens
         f32 dot = mGroundChecker->mVelocity.dot(stack_14);
 
         if (dot < 15.0f) {
-            TVec3f stack_8(stack_14);
-            stack_8.scale(15.0f);
-            mGroundChecker->mVelocity.add(stack_8);
+            mGroundChecker->mVelocity.add(stack_14 * 15.0f);
         }
 
         MR::startSound(this, "SE_OJ_PNC_KINOKO_BOUND");
@@ -285,9 +278,7 @@ bool PunchingKinoko::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
     }
 
     if (fVar1 > 0.0f) {
-        TVec3f stack_8(stack_14);
-        stack_8.scale(fVar1);
-        mGroundChecker->mVelocity.add(stack_8);
+        mGroundChecker->mVelocity.add(stack_14 * fVar1);
         return true;
     }
 
@@ -307,12 +298,10 @@ bool PunchingKinoko::requestPunch(HitSensor* pOtherSensor, HitSensor* pMySensor)
         MR::invalidateClipping(this);
         TVec3f stack_14;
         MR::calcSensorHorizonNormalize(&stack_14, mGravity, pOtherSensor, pMySensor);
-        TVec3f stack_8(stack_14);
-        stack_8.scale(50.0f);
-        mGroundChecker->mVelocity.add(stack_8);
+        mGroundChecker->mVelocity.add(stack_14 * 50.0f);
         MR::startSpinHitSound(this);
         MR::startBlowHitSound(this);
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::stopScene(5);
         setNerve(&NrvPunchingKinoko::PunchingKinokoNrvPunched::sInstance);
 
@@ -330,9 +319,7 @@ bool PunchingKinoko::requestEnemyBlow(HitSensor* pOtherSensor, HitSensor* pMySen
     MR::invalidateClipping(this);
     TVec3f stack_14;
     MR::calcSensorHorizonNormalize(&stack_14, mGravity, pOtherSensor, pMySensor);
-    TVec3f stack_8(stack_14);
-    stack_8.scale(25.0f);
-    mGroundChecker->mVelocity.add(stack_8);
+    mGroundChecker->mVelocity.add(stack_14 * 25.0f);
     MR::startSound(this, "SE_OJ_PNC_KINOKO_HIT_SELF");
     setNerve(&NrvPunchingKinoko::PunchingKinokoNrvWait::sInstance);
 
@@ -344,10 +331,7 @@ bool PunchingKinoko::requestTrample(HitSensor* pOtherSensor, HitSensor* pMySenso
         TVec3f stack_14;
         MR::calcSensorDirectionNormalize(&stack_14, pOtherSensor, pMySensor);
 
-        TVec3f stack_8(stack_14);
-        stack_8.scale(5.0f);
-
-        mGroundChecker->mVelocity.add(stack_8);
+        mGroundChecker->mVelocity.add(stack_14 * 5.0f);
         return true;
     }
     return false;
@@ -370,29 +354,18 @@ void PunchingKinoko::exeWait() {
     }
 
     TVec3f stack_38;
-    TVec3f stack_2C;
     MR::calcPositionUpOffset(&stack_38, this, 130.0f);
-
-    TVec3f* groundCheckerPos = &mGroundChecker->mPosition;
-    TVec3f stack_20;
-    TVec3f stack_14(stack_38);
-    PSVECSubtract(&stack_14, groundCheckerPos, &stack_14);
-
-    stack_20 = stack_14;
-    stack_20.scale(0.008f);
-    MR::addVelocity(mGroundChecker, stack_20);
+    MR::addVelocity(mGroundChecker, (stack_38 - mGroundChecker->mPosition) * 0.008f);
     MR::attenuateVelocity(mGroundChecker, 0.94f);
 
     if (MR::isStarPointerPointing2POnPressButton(this, nullptr, false, false)) {
         if (mStarPointerHitCoolDown == 0 && !_B8 && MR::getStarPointerScreenSpeed(1) > 5.0f) {
-            stack_2C.set(0.0f, 0.0f, 0.0f);
+            TVec3f stack_2C(0.0f, 0.0f, 0.0f);
             if (MR::calcStarPointerWorldVelocityDirectionOnPlane(&stack_2C, mGroundChecker->mPosition, mGravity, 1)) {
-                TVec3f stack_8(stack_2C);
-                stack_8.scale(35.0f);
-                mGroundChecker->mVelocity.add(stack_8);
+                mGroundChecker->mVelocity.add(stack_2C * 35.0f);
                 MR::startBlowHitSound(this);
                 MR::start2PAttackAssistSound();
-                MR::tryRumblePadWeak(this, 1);
+                MR::tryRumblePadWeak(this, WPAD_CHAN1);
                 mStarPointerHitCoolDown = 30;
                 setNerve(&NrvPunchingKinoko::PunchingKinokoNrvPointSnaped::sInstance);
                 return;
@@ -410,14 +383,8 @@ void PunchingKinoko::exeSwing() {
     TVec3f stack_20;
     MR::calcPositionUpOffset(&stack_20, this, 130.0f);
 
-    TVec3f* groundCheckerPos = &mGroundChecker->mPosition;
-    TVec3f stack_14(stack_20);
-    PSVECSubtract(&stack_14, groundCheckerPos, &stack_14);
-
-    TVec3f stack_8(stack_14);
-    stack_8.scale(0.008f);
-
-    MR::addVelocity(mGroundChecker, stack_8);
+    TVec3f stack_14 = stack_20 - mGroundChecker->mPosition;
+    MR::addVelocity(mGroundChecker, stack_14 * 0.008f);
     MR::attenuateVelocity(mGroundChecker, 0.97f);
     f32 var3 = MR::calcVelocityLength(mGroundChecker);
 
@@ -428,7 +395,7 @@ void PunchingKinoko::exeSwing() {
 
     MR::vecBlend(_9C, mPosition, &_9C, 0.05f);
 
-    if (var3 < 40.0f && PSVECMag(&stack_14) < 50.0f) {
+    if (var3 < 40.0f && stack_14.length() < 50.0f) {
         setNerve(&NrvPunchingKinoko::PunchingKinokoNrvWait::sInstance);
     }
 }
@@ -491,9 +458,7 @@ void PunchingKinoko::exeCrushed() {
         if (MR::isShadowProjected(this, "頭")) {
             MR::getShadowProjectionNormal(this, "頭", &_A8);
             MR::getShadowProjectionPos(this, "頭", &mGroundChecker->mPosition);
-            TVec3f stack_8(_A8);
-            stack_8.scale(20.0f);
-            mGroundChecker->mPosition.add(stack_8);
+            mGroundChecker->mPosition.add(_A8 * 20.0f);
         } else {
             _A8.set< f32 >(mGravity);
         }
@@ -522,13 +487,7 @@ void PunchingKinoko::exeCrushedEnd() {
 
     TVec3f stack_20;
     MR::calcPositionUpOffset(&stack_20, this, 130.0f);
-    TVec3f* groundCheckerPos = &mGroundChecker->mPosition;
-    TVec3f stack_14;
-    TVec3f stack_8(stack_20);
-    PSVECSubtract(&stack_8, groundCheckerPos, &stack_8);
-    stack_14 = stack_8;
-    stack_14.scale(0.008f);
-    MR::addVelocity(mGroundChecker, stack_14);
+    MR::addVelocity(mGroundChecker, (stack_20 - mGroundChecker->mPosition) * 0.008f);
     MR::attenuateVelocity(mGroundChecker, 0.94f);
 
     if (MR::isGreaterStep(this, 60)) {

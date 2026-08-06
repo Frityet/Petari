@@ -8,7 +8,15 @@
 #include "Game/Boss/DinoPackunTail.hpp"
 #include "Game/Boss/DinoPackunTrackFire.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorStateUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace {
     static TVec3f sShotMouthFireOffset = TVec3f(150.0f, 150.0f, 0.0f);
@@ -93,13 +101,9 @@ void DinoPackunBattleVs2Lv1::control() {
 
 void DinoPackunBattleVs2Lv1::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
-        bool v6 = false;
-
-        if (isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvChase::sInstance) ||
-            isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvWalk::sInstance) ||
-            isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvCrazy::sInstance)) {
-            v6 = true;
-        }
+        bool v6 = isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvChase::sInstance) ||
+                  isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvWalk::sInstance) ||
+                  isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvCrazy::sInstance);
 
         if (v6) {
             if (sendBlowAttackMessage(pSender, pReceiver, mStateFire->isFire())) {
@@ -112,11 +116,8 @@ void DinoPackunBattleVs2Lv1::attackSensor(HitSensor* pSender, HitSensor* pReceiv
             }
         }
 
-        bool v8 = false;
-        if (isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvTurn::sInstance) ||
-            isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvAwake::sInstance)) {
-            v8 = true;
-        }
+        bool v8 = isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvTurn::sInstance) ||
+                  isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvAwake::sInstance);
 
         if (v8 && sendHitAttackMessage(pSender, pReceiver, mStateFire->isFire())) {
             if (!_3D) {
@@ -126,12 +127,9 @@ void DinoPackunBattleVs2Lv1::attackSensor(HitSensor* pSender, HitSensor* pReceiv
             MR::sendMsgPush(pReceiver, pSender);
         }
     } else {
-        bool v10 = false;
-        if (isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvChase::sInstance) ||
-            isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvWalk::sInstance) ||
-            isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvCrazy::sInstance)) {
-            v10 = true;
-        }
+        bool v10 = isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvChase::sInstance) ||
+                   isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvWalk::sInstance) ||
+                   isNerve(&NrvDinoPackunBattleVs2Lv1::DinoPackunBattleVs2Lv1NrvCrazy::sInstance);
 
         if (v10) {
             MR::sendMsgEnemyAttack(pReceiver, pSender);
@@ -400,7 +398,7 @@ bool DinoPackunBattleVs2Lv1::emitFireMouth() {
     TPos3f v17;
     v17.setInline(mouthMtx);
     TVec3f v16;
-    v17.mult(sShotMouthFireOffset, v16);
+    v17.mult(::sShotMouthFireOffset, v16);
     TVec3f v15;
     v15.set< f32 >(v17(0, 0), v17(1, 0), v17(2, 0));
     MR::normalizeOrZero(&v15);
@@ -430,8 +428,8 @@ bool DinoPackunBattleVs2Lv1::emitFireTail() {
 
     if (fire != nullptr) {
         TVec3f v7(getHost()->mBall->mPosition);
-        if (PSVECDistance(&_28, &v7) >= 120.0f) {
-            _28.setPS2(v7);
+        if (_28.distance(v7) >= 120.0f) {
+            _28 = v7;
             fire->appearAndSetPos(v7);
             return true;
         }

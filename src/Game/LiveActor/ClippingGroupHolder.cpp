@@ -1,6 +1,8 @@
 #include "Game/LiveActor/ClippingGroupHolder.hpp"
 #include "Game/LiveActor/ClippingActorInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
 ClippingInfoGroup::ClippingInfoGroup(const char* pGroupName, int count) : NameObj(pGroupName) {
     _C = count;
@@ -113,9 +115,11 @@ ClippingInfoGroup* ClippingGroupHolder::findGroup(const JMapInfoIter& rIter) {
     return 0;
 }
 
-ClippingInfoGroup::~ClippingInfoGroup() {}
+ClippingInfoGroup::~ClippingInfoGroup() {
+}
 
-ClippingGroupHolder::~ClippingGroupHolder() {}
+ClippingGroupHolder::~ClippingGroupHolder() {
+}
 
 ClippingGroupHolder::ClippingGroupHolder() : NameObj("クリッピングアクター保持") {
     mNumGroups = 0;

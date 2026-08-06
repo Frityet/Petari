@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 
 class ActorCameraInfo;
@@ -8,17 +7,19 @@ class ActorCameraInfo;
 class ShockWaveGenerator : public LiveActor {
 public:
     ShockWaveGenerator(const char*);
-    virtual ~ShockWaveGenerator();
-    virtual void init(const JMapInfoIter&);
-    virtual bool receiveMsgPlayerAttack(u32, HitSensor*, HitSensor*);
+
+    virtual void init(const JMapInfoIter& rIter);
+    virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
 
     void exeWait();
     void exeDemoEcho();
     void exeGenerate();
+
     void startShockWave();
     void sendMsgShockWaveToNearEnemy();
-    bool isHitCylinder(HitSensor*, HitSensor*) const;
+    bool isHitCylinder(HitSensor* pSender, HitSensor* pReceiver) const;
 
-private:
-    ActorCameraInfo* mCameraInfo;
+    bool isPlayerInCameraStartRange() const;
+
+    /* 0x8C */ ActorCameraInfo* mCameraInfo;
 };

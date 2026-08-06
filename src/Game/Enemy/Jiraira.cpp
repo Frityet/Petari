@@ -1,6 +1,17 @@
 #include "Game/Enemy/Jiraira.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/CollisionParts.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvJiraira {
     NEW_NERVE(HostTypeNrvWait, Jiraira, Wait);
@@ -11,7 +22,8 @@ namespace NrvJiraira {
     NEW_NERVE(HostTypeNrvExplode, Jiraira, Explode);
 };  // namespace NrvJiraira
 
-Jiraira::Jiraira(const char* pName) : LiveActor(pName), _8C(nullptr), _90(500.0f) {}
+Jiraira::Jiraira(const char* pName) : LiveActor(pName), _8C(nullptr), _90(500.0f) {
+}
 
 void Jiraira::init(const JMapInfoIter& rIter) {
     if (MR::isValidInfo(rIter)) {
@@ -36,8 +48,8 @@ void Jiraira::init(const JMapInfoIter& rIter) {
     offset2.z = 0.0f;
     MR::addHitSensorEnemyAttack(this, "explode", 16, (_90 * scaleY), offset2);
     MR::initCollisionPartsAutoEqualScaleOne(this, "Jiraira", getSensor("body"), MR::getJointMtx(this, "Jiraira"));
-    CollisionParts* colPart =
-        MR::createCollisionPartsFromLiveActor(this, "Button", getSensor("body"), MR::getJointMtx(this, "Button"), (MR::CollisionScaleType)1);
+    CollisionParts* colPart = MR::createCollisionPartsFromLiveActor(this, "Button", getSensor("body"), MR::getJointMtx(this, "Button"),
+                                                                    MR::CollisionScaleType_NotUsingScale);
     _8C = colPart;
     MR::validateCollisionParts(colPart);
     initSound(6, false);
@@ -78,7 +90,7 @@ void Jiraira::exeStepped() {
     if (MR::isFirstStep(this)) {
         MR::startBck(this, "Stepped", nullptr);
         MR::startBrk(this, "Stepped");
-        MR::tryRumblePadMiddle(this, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         MR::startSound(this, "SE_OJ_JIRAIRA_STEPPED");
     }
 
@@ -189,4 +201,5 @@ bool Jiraira::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pRec
     return false;
 }
 
-Jiraira::~Jiraira() {}
+Jiraira::~Jiraira() {
+}

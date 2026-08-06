@@ -1,7 +1,14 @@
 #include "Game/MapObj/HeavensDoorDemoObj.hpp"
-#include "Game/MapObj/MapObjActor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/MapObj/StageEffectDataTable.hpp"
+#include "Game/Util.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/Functor.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvHeavensDoorDemoObj {
     NEW_NERVE(HeavensDoorDemoObjNrvAppear, HeavensDoorDemoObj, Appear);
@@ -13,7 +20,8 @@ HeavensDoorDemoObj::HeavensDoorDemoObj(const char* pName) : MapObjActor(pName) {
     _C4 = false;
 }
 
-HeavensDoorDemoObj::~HeavensDoorDemoObj() {}
+HeavensDoorDemoObj::~HeavensDoorDemoObj() {
+}
 
 void HeavensDoorDemoObj::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
@@ -93,7 +101,7 @@ void HeavensDoorDemoObj::kill() {
 
 void HeavensDoorDemoObj::control() {
     if (_C4) {
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
     }
 }
 

@@ -6,6 +6,11 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
+void KoopaBattleMapPlate_FORCE_MATCH_SDATA2() {
+    (void)0.0f;
+    (void)3.0f;
+}
+
 KoopaBattleMapPlate::KoopaBattleMapPlate(const char* pName) : LiveActor(pName) {
     _8C.identity();
 }
@@ -14,15 +19,13 @@ void KoopaBattleMapPlate::calcAndSetBaseMtx() {
     MR::setBaseTRMtx(this, _8C);
 }
 
-KoopaBattleMapPlate::~KoopaBattleMapPlate() {}
+KoopaBattleMapPlate::~KoopaBattleMapPlate() {
+}
 
 void KoopaBattleMapPlate::init(const JMapInfoIter& rIter) {
-    TVec3f v1;
-
     MR::initDefaultPos(this, rIter);
     MR::calcGravity(this);
-    JMathInlineVEC::PSVECNegate(&mGravity, &v1);
-    MR::makeMtxUpNoSupportPos(&_8C, v1, mPosition);
+    MR::makeMtxUpNoSupportPos(&_8C, -mGravity, mPosition);
     initModelManagerWithAnm("KoopaPlate", nullptr, false);
     MR::connectToSceneMapObj(this);
     initHitSensor(1);

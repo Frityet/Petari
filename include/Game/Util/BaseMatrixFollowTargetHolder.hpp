@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
-#include <revolution.h>
+#include "Game/Util/Array.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 class JMapLinkInfo;
+class LiveActor;
 
 class BaseMatrixFollowValidater {
 public:
@@ -30,7 +31,8 @@ class BaseMatrixFollower {
 public:
     BaseMatrixFollower(NameObj*, const JMapInfoIter&);
 
-    virtual void setGravityFollowHost(const NameObj*) {}
+    virtual void setGravityFollowHost(const NameObj*) {
+    }
 
     virtual void update();
 

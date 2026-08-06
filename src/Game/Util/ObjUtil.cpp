@@ -4,7 +4,6 @@
 #include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/LiveActor/ClippingJudge.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
-#include "Game/Map/HitInfo.hpp"
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
@@ -26,7 +25,6 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/StopSceneController.hpp"
 #include "Game/Screen/LayoutActor.hpp"
-#include "Game/SingletonHolder.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/System/ResourceHolder.hpp"
@@ -34,19 +32,15 @@
 #include "Game/System/WPadRumble.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/GravityUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "Game/Util/SwitchEventFunctorListener.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JGeometry/TUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
-#include "revolution/types.h"
-#include <cstddef>
 #include <cstdio>
 #include <va_list.h>
 
@@ -89,7 +83,7 @@ namespace MR {
     bool isJudgedToNearClip(const TVec3f& rParam1, f32 param2) {
         TVec3f camPos = MR::getCamPos();
 
-        return PSVECDistance(&rParam1, &camPos) < param2;
+        return rParam1.distance(camPos) < param2;
     }
 
     bool isInWater(const TVec3f& rParam1) {
@@ -590,55 +584,21 @@ namespace MR {
         *pOut = val;
     }
 
+    /*
     void getCsvDataF32(f32* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-        s32 itemIndex = pMapInfo->searchItemInfo(pKey);
+        int v7 = pMapInfo->searchItemInfo(pKey);
 
-        if (itemIndex >= 0) {
-            const JMapData* data = pMapInfo->mData;
-            const JMapItem* item = &data->mItems[itemIndex];
-            const char* entry = getEntryAddress(data, data->mDataOffset, idx);
-            *pOut = *reinterpret_cast< const f32* >(entry + item->mOffsData);
+        if (v7 >= 0) {
+            *pOut = *((f32*)(pMapInfo->mData->mNumEntries + pMapInfo->mData->mDataOffset +
+                             idx * (pMapInfo->mData->mEntrySize + static_cast< const JMapItem* >(&pMapInfo->mData->mItems)[v7].mOffsData)));
         }
     }
+    */
 
-    void getCsvDataBool(bool* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-        s32 itemIndex = pMapInfo->searchItemInfo(pKey);
+    // MR::getCsvDataBool
 
-        if (itemIndex >= 0) {
-            const JMapData* data = pMapInfo->mData;
-            const JMapItem* item = &data->mItems[itemIndex];
-            const char* entry = getEntryAddress(data, data->mDataOffset, idx);
-            const u32 value = *reinterpret_cast< const u32* >(entry + item->mOffsData);
-            *pOut = (value & item->mMask) != 0;
-        }
-    }
-
-    void getCsvDataVec(Vec* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-        char key[0x100];
-        snprintf(key, sizeof(key), "%sX", pKey);
-        getCsvDataF32(&pOut->x, pMapInfo, key, idx);
-
-        snprintf(key, sizeof(key), "%sY", pKey);
-        getCsvDataF32(&pOut->y, pMapInfo, key, idx);
-
-        snprintf(key, sizeof(key), "%sZ", pKey);
-        getCsvDataF32(&pOut->z, pMapInfo, key, idx);
-    }
-
-    void getCsvDataColor(GXColor* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-        char key[0x100];
-        snprintf(key, sizeof(key), "%sR", pKey);
-        getCsvDataU8(&pOut->r, pMapInfo, key, idx);
-
-        snprintf(key, sizeof(key), "%sG", pKey);
-        getCsvDataU8(&pOut->g, pMapInfo, key, idx);
-
-        snprintf(key, sizeof(key), "%sB", pKey);
-        getCsvDataU8(&pOut->b, pMapInfo, key, idx);
-
-        snprintf(key, sizeof(key), "%sA", pKey);
-        getCsvDataU8(&pOut->a, pMapInfo, key, idx);
-    }
+    void getCsvDataVec(Vec*, const JMapInfo*, const char*, s32);
+    void getCsvDataColor(GXColor*, const JMapInfo*, const char*, s32);
 
     bool isStageStateScenarioOpeningCamera() {
         return GameSceneFunction::isExecScenarioOpeningCamera();
@@ -775,6 +735,7 @@ namespace MR {
 
     void initStarPieceGetCSSound() {
         StarPieceDirector* director = getStarPieceDirector();
+
         if (director != nullptr) {
             director->initCSSound();
         }
@@ -792,29 +753,19 @@ namespace MR {
         TPos3f pos;
         TVec3f vec1;
         pos.setInline(pMtx);
-
-        if (pos(2, 0) - 1.0f >= -0.0000038146973f) {
-            vec1.set(JMath::sAtanTable.atan2_(-pos(0, 1), pos(1, 1)), -HALF_PI, 0.0f);
-        } else if (1.0f + pos(2, 0) <= 0.0000038146973f) {
-            vec1.set(JMath::sAtanTable.atan2_(pos(0, 1), pos(1, 1)), -HALF_PI, 0.0f);
-        } else {
-            vec1.x = JMath::sAtanTable.atan2_(pos(2, 1), pos(2, 2));
-            vec1.z = JMath::sAtanTable.atan2_(pos(1, 0), pos(0, 0));
-            vec1.y = JGeometry::TUtil< f32 >::asin(-pos(1, 4));
-        }
+        pos.getEulerXYZ(vec1);
 
         TVec3f transVec;
         TVec3f vec3;
-        TVec3f vec2(vec1);
-
-        vec2.scale(57.29578f);
+        TVec3f vec2 = vec1;
+        vec2.scale(_180_PI);
         pBenefitObj->mRotation.set(vec2);
 
         pos.getTrans(transVec);
-        pos.getYDirInline(vec3);
+        pos.getYDir(vec3);
         MR::normalize(&vec3);
 
-        TVec3f vec4(vec3);
+        TVec3f vec4 = vec3;
         vec4.scale(flt);
         pBenefitObj->shoot(transVec, vec4, true);
     }
@@ -831,12 +782,12 @@ namespace MR {
         appearKinokoOneUpPop(pKinokoSuper, pMtx, param3);
     }
 
-    void stopScene(s32 param1) {
-        MR::getSceneObj< StopSceneController >(SceneObj_StopSceneController)->requestStopScene(param1);
+    void stopScene(s32 frame) {
+        MR::getSceneObj< StopSceneController >(SceneObj_StopSceneController)->requestStopScene(frame);
     }
 
-    void stopSceneForDefaultHit(s32 param1) {
-        MR::getSceneObj< StopSceneController >(SceneObj_StopSceneController)->requestStopSceneDelay(param1, 2);
+    void stopSceneForDefaultHit(s32 frame) {
+        MR::getSceneObj< StopSceneController >(SceneObj_StopSceneController)->requestStopSceneDelay(frame, 2);
     }
 
     bool tryRumblePad(const void* pParam1, const char* pPatternName, s32 channel) {
@@ -899,8 +850,8 @@ namespace MR {
         getCameraDirector()->mShaker->shakeVertical(CameraShaker::SINGLY_VERTICAL_POWER_VERY_WEAK);
     }
 
-    void shakeCameraInfinity(NameObj* pObj, f32 param2, f32 param3) {
-        getCameraDirector()->mShaker->shakeInfinity(pObj, param2, 15.0f / param3);
+    void shakeCameraInfinity(NameObj* pObj, f32 intensity, f32 speed) {
+        getCameraDirector()->mShaker->shakeInfinity(pObj, intensity, 15.0f / speed);
     }
 
     void stopShakingCamera(NameObj* pObj) {
@@ -927,37 +878,7 @@ namespace MR {
         getNamePosHolder()->find(nullptr, pName, a2, a3);
     }
 
-    void findNamePosOnGround(const char* pName, MtxPtr pMtx) {
-        Triangle triangle;
-        TPos3f namePosMtx;
-        tryFindLinkNamePos(nullptr, pName, namePosMtx.toMtxPtr());
-
-        TVec3f position;
-        namePosMtx.getTrans(position);
-
-        TVec3f front;
-        namePosMtx.getZDirInline(front);
-
-        TVec3f gravity;
-        calcGravityVector(nullptr, position, &gravity, nullptr, 0);
-
-        TVec3f scaledGravity(gravity);
-        scaledGravity.scale(100.0f);
-
-        TVec3f startPosition(position);
-        startPosition.subInline(scaledGravity);
-
-        TVec3f lineOffset(gravity);
-        lineOffset.scale(1000.0f);
-
-        TVec3f groundPos;
-        if (getFirstPolyOnLineToMap(&groundPos, &triangle, startPosition, lineOffset)) {
-            TVec3f up(gravity.invertOperatorInternal());
-            makeMtxUpFrontPos(&namePosMtx, up, front, groundPos);
-        }
-
-        PSMTXCopy(namePosMtx.toMtxPtr(), pMtx);
-    }
+    // findNamePosOnGround
 
     bool tryFindNamePos(const char* pName, MtxPtr pMtx) {
         return tryFindLinkNamePos(nullptr, pName, pMtx);
@@ -971,17 +892,7 @@ namespace MR {
         tryFindLinkNamePos(pObj, pName, pMtx);
     }
 
-    bool tryFindLinkNamePos(const NameObj* pObj, const char* pName, MtxPtr pMtx) {
-        TVec3f position(0.0f, 0.0f, 0.0f);
-        TVec3f rotation(0.0f, 0.0f, 0.0f);
-
-        if (getNamePosHolder()->find(pObj, pName, &position, &rotation)) {
-            makeMtxTR(pMtx, position, rotation);
-            return true;
-        }
-
-        return false;
-    }
+    // tryFindLinkNamePos
 
     bool tryFindLinkNamePos(const NameObj* pObj, const char* pName, TVec3f* pParam3, TVec3f* pParam4) {
         return getNamePosHolder()->find(pObj, pName, pParam3, pParam4);

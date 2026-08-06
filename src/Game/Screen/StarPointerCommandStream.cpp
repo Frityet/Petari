@@ -32,12 +32,6 @@ namespace {
     static Color8 hOutColor = Color8((GXColor){0xFF, 0x00, 0x00, 0xFF});
 };  // namespace
 
-// TODO: probably an MR function
-inline f32 toRadian(f32 angle) {
-    f32 x = (180.0f / PI);
-    return angle * x;
-}
-
 StarPointerCommandStream::StarPointerCommandStream(const TVec2f* pScreenPos)
     : LayoutActor("スターポインタ指示線", true), _20(false), mOffScreenTime(0), _28(0.0f), mScreenPos(pScreenPos), mWorldPos(nullptr),
       mPadChannel(-1), mColor(nullptr) {
@@ -112,10 +106,10 @@ void StarPointerCommandStream::calcPose(const TVec2f& rPos, const TVec2f& rInsid
         f32 length;
         MR::separateScalarAndDirection(&length, &diff, diff);
         f32 lineWidth = calcLineWidth(length);
-        length /= hDefaultLength;
-        lineWidth /= hDefaultWidth;
+        length /= ::hDefaultLength;
+        lineWidth /= ::hDefaultWidth;
         MR::setPaneScale(this, lineWidth, length, "PicRibbon");
-        MR::setPaneRotate(this, 0.0f, 0.0f, toRadian(JMAATan2(diff.x, diff.y)), "Arrow");
+        MR::setPaneRotate(this, 0.0f, 0.0f, MR::toDegree(MR::atan2(diff.x, diff.y)), "Arrow");
         return;
     }
 
@@ -142,6 +136,6 @@ void StarPointerCommandStream::exeSignal() {
 }
 
 f32 StarPointerCommandStream::calcLineWidth(f32 length) const {
-    f32 norm = MR::normalize(length, sMinLineWidthDistance, sMaxLineWidthDistance);
-    return norm * sMinWidth + (1.0f - norm) * sMaxWidth;
+    f32 norm = MR::normalize(length, ::sMinLineWidthDistance, ::sMaxLineWidthDistance);
+    return norm * ::sMinWidth + (1.0f - norm) * ::sMaxWidth;
 }

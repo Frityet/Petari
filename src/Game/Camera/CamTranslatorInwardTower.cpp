@@ -2,27 +2,23 @@
 #include "Game/Camera/CameraParamChunk.hpp"
 #include "Game/Util/MathUtil.hpp"
 
+void CamTranslatorInwardTower_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+}
+
 void CamTranslatorInwardTower::setParam(const CameraParamChunk* pChunk) {
     CameraGeneralParam* general = pChunk->mGeneralParam;
 
     TVec3f axis = general->mAxis;
 
     if (MR::isNearZero(axis)) {
-        axis.set(0.0f, 1.0f, 0.0f);
+        axis.set< f32 >(0.0f, 1.0f, 0.0f);
     } else {
         MR::normalize(&axis);
     }
 
-    TVec2f angle = TVec2f(general->mAngleB, general->mAngleA);
-    f32 dist = general->mDist;
-
-    CameraInwardTower* camera = mCamera;
-
-    camera->mWPoint.set< f32 >(general->mWPoint);
-    camera->mAxis.set< f32 >(axis);
-    camera->mAngleB = angle.x;
-    camera->mAngleA = angle.y;
-    camera->mDist = dist;
+    mCamera->setParam(general->mWPoint, axis, TVec2f(general->mAngleB, general->mAngleA), general->mDist);
 }
 
 Camera* CamTranslatorInwardTower::getCamera() const {

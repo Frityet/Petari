@@ -1,6 +1,10 @@
 #include "Game/Boss/TripodBossCoin.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/Coin.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 namespace NrvTripodBossCoin {
     NEW_NERVE(TripodBossCoinNrvNonActive, TripodBossCoin, NonActive);
@@ -56,4 +60,5 @@ void TripodBossCoin::exeActive() {
     }
 }
 
-void TripodBossCoin::exeEnd() {}
+void TripodBossCoin::exeEnd() {
+}

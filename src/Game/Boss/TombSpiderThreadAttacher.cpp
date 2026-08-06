@@ -1,6 +1,6 @@
 #include "Game/Boss/TombSpiderThreadAttacher.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/SpiderThread.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -27,4 +27,5 @@ void TombSpiderThreadAttacher::exeFree() {
     MR::tryPushSpiderThread(pos, mRadius);
 }
 
-void TombSpiderThreadAttacher::exeAttach() {}
+void TombSpiderThreadAttacher::exeAttach() {
+}

@@ -1,10 +1,15 @@
 #pragma once
 
 #include "Game/System/OSThreadWrapper.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/Array.hpp"
+#include "Game/Util/StringUtil.hpp"
 
 class JKRExpHeap;
 class JKRUnitHeap;
+
+namespace MR {
+    class FunctorBase;
+};  // namespace MR
 
 class FunctionAsyncExecInfo {
 public:
@@ -14,7 +19,9 @@ public:
 
     void execute();
 
-    bool isSame(const char* pStr) { return MR::strcasecmp(mName, pStr) == 0; }
+    bool isSame(const char* pStr) {
+        return MR::strcasecmp(mName, pStr) == 0;
+    }
 
     /* 0x00 */ MR::FunctorBase* mFunc;
     /* 0x04 */ int mPriority;

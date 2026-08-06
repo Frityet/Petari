@@ -1,4 +1,5 @@
 #include "Game/NPC/TalkDirector.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/TalkBalloon.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
@@ -7,23 +8,18 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
-#include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/DirectDraw.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
-#include "JSystem/JUtility/JUTVideo.hpp"
-#include "revolution/types.h"
 #include <cstdio>
 
 namespace {
@@ -41,40 +37,13 @@ namespace NrvTalkDirector {
     NEW_NERVE(TalkDirectorNrvTerm, TalkDirector, Term);
 };  // namespace NrvTalkDirector
 
-TalkPeekZ::TalkPeekZ() {
-    mToken = DrawSyncManager::sInstance->setCallback(4, 1, this);
-}
-
-void TalkPeekZ::setDrawSyncToken() {
-    GXGetProjectionv(mProjection);
-    GXGetViewportv(mViewport);
-    mZ = 0;
-    DrawSyncManager::sInstance->pushBreakPoint();
-    GXSetDrawSync(mToken);
-}
-
-void TalkPeekZ::drawSyncCallback(u16) {
-    if (!MR::isInRange(mScreenPos.x, 0.0f, MR::getScreenWidth() - 1)) {
-        return;
-    }
-
-    if (!MR::isInRange(mScreenPos.y, 0.0f, JUTVideo::getManager()->getRenderMode()->efbHeight - 1)) {
-        return;
-    }
-
-    TVec2f frameBufferPos;
-    MR::convertScreenPosToFrameBufferPos(&frameBufferPos, mScreenPos);
-    GXPeekZ(frameBufferPos.x, frameBufferPos.y, &mZ);
-
-    TVec3f screenPos(mScreenPos.x, mScreenPos.y, static_cast< f32 >(mZ));
-    TDDraw::invProject(&mWorldPos, screenPos, MR::getCameraViewMtx(), mProjection, mViewport, false);
-}
-
 TalkDirector::TalkDirector(const char* pArg)
-    : LayoutActor(pArg, true), mMsgCtrl(nullptr), _3C(nullptr), _40(nullptr), _44(nullptr), mTalkState(nullptr), _4C(false), _4D(false), _4E(false),
-      mIsInvalidClipping(false), mDemoType(0), _58(false), _59(false) {}
+    : LayoutActor(pArg, true), mMsgCtrl(), _3C(), _40(), _44(), mTalkState(), _4C(), _4D(), _4E(),
+      mIsInvalidClipping(), mDemoType(), _58(), _59() {
+}
 
-TalkDirector::~TalkDirector() {}
+TalkDirector::~TalkDirector() {
+}
 
 void TalkDirector::init(const JMapInfoIter& pArg) {
     MR::connectToScene(this, MR::MovementType_TalkDirector, -1, -1, -1);
@@ -272,8 +241,7 @@ void TalkDirector::updateMessage() {
 
     if (_3C != nullptr) {
         _3C->updateBalloonPos();
-        mPeekZ->mScreenPos.x = _3C->_1C.x;
-        mPeekZ->mScreenPos.y = _3C->_1C.y;
+        // mPeekZ stuff to do
     }
 
     if (MR::isPowerStarGetDemoActive()) {
@@ -478,7 +446,8 @@ LiveActor* TalkDirector::getTalkingActor() const {
     return nullptr;
 }
 
-void TalkDirector::exeWait() {}
+void TalkDirector::exeWait() {
+}
 
 void TalkDirector::exeTalk() {
     TalkMessageCtrl* control = mTalkState->_04;
@@ -613,7 +582,9 @@ void TalkFunction::startTalkSystem(TalkMessageCtrl* pCtrl, bool force, bool demo
 
 void TalkFunction::endTalkSystem(TalkMessageCtrl* pCtrl) {
     ::getTalkDirector();
-    MR::isTalkEnableEnd(pCtrl);
+
+    if (MR::isTalkEnableEnd(pCtrl)) {
+    }
 }
 
 bool TalkFunction::isTalkSystemStart(const TalkMessageCtrl* pCtrl) {

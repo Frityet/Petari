@@ -5,15 +5,24 @@
 #include "Game/Enemy/KoopaJrShipCannonShell.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/KoopaJr.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "math_types.hpp"
-#include "revolution/wpad.h"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include <algorithm>
-#include <functional.hpp>
 
 namespace {
     static const char* cJointNamePropellerBack0 = "Screw00";
@@ -57,7 +66,7 @@ void KoopaJrShip_float_ordering0() {
 
 KoopaJrShip::KoopaJrShip(const char* pName)
     : LiveActor(pName), mShellHolder(nullptr), mMainShellHolder(nullptr), mJr(nullptr), mShipBreakModel(nullptr), mPodModel(nullptr), _D0(5),
-      _D4(gZeroVec), _E0(0.0f, 0.0f, 1.0f), _EC(0), mPropRotateSpeed(20.0f), _184(0.0f), _188(0), _1EC(sKoopaJrPos), _1F8(gZeroVec) {
+      _D4(gZeroVec), _E0(0.0f, 0.0f, 1.0f), _EC(0), mPropRotateSpeed(20.0f), _184(0.0f), _188(0), _1EC(::sKoopaJrPos), _1F8(gZeroVec) {
     mScrew00Mtx.identity();
     mScrew01Mtx.identity();
     mPropellerMtx.identity();
@@ -76,9 +85,9 @@ void KoopaJrShip::init(const JMapInfoIter& rIter) {
     MR::startBck(this, "KoopaJrShip", nullptr);
     MR::setBckRate(this, 0.0f);
     MR::initJointTransform(this);
-    MR::setJointTransformLocalMtx(this, cJointNamePropellerTop, mPropellerMtx);
-    MR::setJointTransformLocalMtx(this, cJointNamePropellerBack0, mScrew00Mtx);
-    MR::setJointTransformLocalMtx(this, cJointNamePropellerBack1, mScrew01Mtx);
+    MR::setJointTransformLocalMtx(this, ::cJointNamePropellerTop, mPropellerMtx);
+    MR::setJointTransformLocalMtx(this, ::cJointNamePropellerBack0, mScrew00Mtx);
+    MR::setJointTransformLocalMtx(this, ::cJointNamePropellerBack1, mScrew01Mtx);
     MR::connectToSceneCollisionEnemyStrongLight(this);
     initEffectKeeper(1, nullptr, false);
     initSound(8, false);
@@ -112,7 +121,7 @@ void KoopaJrShip::init(const JMapInfoIter& rIter) {
 
 void KoopaJrShip::initAfterPlacement() {
     MR::moveCoordAndTransToNearestRailPos(this);
-    _1F8.set< f32 >(mPosition);
+    _1F8.set(mPosition);
 }
 
 void KoopaJrShip::kill() {
@@ -123,7 +132,7 @@ void KoopaJrShip::kill() {
 void KoopaJrShip::control() {
     _EC = MR::repeat(_EC + mPropRotateSpeed, 0.0f, 360.0f);
 
-    f32 angle = deg2rad(_EC);
+    f32 angle = MR::toRadian(_EC);
     f32 s = sin(angle);
     f32 c = cos(angle);
 
@@ -137,8 +146,8 @@ void KoopaJrShip::control() {
     mPropellerMtx[1][0] = 0.0f;
     mPropellerMtx[0][1] = 0.0f;
 
-    mScrew00Mtx.setEulerZ(deg2rad(_EC));
-    mScrew01Mtx.setEulerZ(deg2rad(_EC));
+    mScrew00Mtx.setEulerZ(MR::toRadian(_EC));
+    mScrew01Mtx.setEulerZ(MR::toRadian(_EC));
     MR::setRailCoordSpeed(this, _184);
 
     if (_D0 > 0) {
@@ -174,11 +183,9 @@ void KoopaJrShip::initShells() {
 
 void KoopaJrShip::initKoopaJr(const JMapInfoIter& rIter) {
     mJr = new KoopaJr("クッパJr");
-    TMtx34f mtx;
+    TPos3f mtx;
     mtx.set(getBaseMtx());
-    mtx.mMtx[0][3] = mPosition.x;
-    mtx.mMtx[1][3] = mPosition.y;
-    mtx.mMtx[2][3] = mPosition.z;
+    mtx.setTrans(mPosition);
     mtx.mult(_1EC, mJr->mPosition);
     mJr->init(rIter);
     mJr->kill();
@@ -303,7 +310,7 @@ void KoopaJrShip::updateCoordSpeed() {
 
 void KoopaJrShip::calcLauncherInfo(TVec3f* a1, TVec3f* a2, s32 idx) const NO_INLINE {
     TPos3f mtx;
-    mtx.set(MR::getJointMtx(this, cJointNameCannon[idx]));
+    mtx.set(MR::getJointMtx(this, ::cJointNameCannon[idx]));
     mtx.getTrans(*a1);
     mtx.getXDir(*a2);
     MR::normalize(a2);
@@ -314,23 +321,18 @@ void KoopaJrShip::calcLauncherInfoKiller(TVec3f* a1, TVec3f* a2, s32 idx) const 
     TVec3f v16;
     TVec3f v15;
 
-    mtx.set(MR::getJointMtx(this, cJointNameCannon[idx]));
+    mtx.set(MR::getJointMtx(this, ::cJointNameCannon[idx]));
     mtx.getTrans(*a1);
     mtx.getXDir(*a2);
-
-    f32 z = mtx.mMtx[2][1];
-    f32 y = mtx.mMtx[1][1];
-    f32 x = mtx.mMtx[0][1];
-
-    v16.set< f32 >(x, y, z);
+    mtx.getYDir(v16);
     MR::normalize(&v16);
 
     mtx.getZDir(v15);
     MR::normalize(&v15);
-    MR::rotateVecDegree(a2, v16, sKillerLauncherAngle[idx].y);
-    MR::rotateVecDegree(a2, v15, sKillerLauncherAngle[idx].z);
+    MR::rotateVecDegree(a2, v16, ::sKillerLauncherAngle[idx].y);
+    MR::rotateVecDegree(a2, v15, ::sKillerLauncherAngle[idx].z);
     MR::normalize(a2);
-    a1->addInline(*a2 * -100.0f);
+    a1->add(*a2 * -100.0f);
 }
 
 void KoopaJrShip::shootShell(s32 idx) {
@@ -342,7 +344,7 @@ void KoopaJrShip::shootShell(s32 idx) {
         shell->launch(v8, v7 * 15.0f);
     }
 
-    MR::emitEffect(this, cEffectNameShoot[idx]);
+    MR::emitEffect(this, ::cEffectNameShoot[idx]);
 }
 
 bool KoopaJrShip::tryShootAllKillers() {
@@ -359,7 +361,7 @@ bool KoopaJrShip::tryShootAllKillers() {
         s32 idx = mKillers.indexOf(pActor);
         calcLauncherInfoKiller(&v6, &v5, idx);
         (*pActor)->appear(v6, v5);
-        MR::emitEffect(this, cEffectNameShoot[idx]);
+        MR::emitEffect(this, ::cEffectNameShoot[idx]);
     }
 
     return true;
@@ -371,7 +373,7 @@ void KoopaJrShip::shootKiller(s32 idx) {
         TVec3f v6, v5;
         calcLauncherInfoKiller(&v6, &v5, idx);
         killer->appear(v6, v5);
-        MR::emitEffect(this, cEffectNameShoot[idx]);
+        MR::emitEffect(this, ::cEffectNameShoot[idx]);
     }
 }
 
@@ -386,36 +388,16 @@ void KoopaJrShip::shootKillersAfterDamage() {
 }
 
 bool KoopaJrShip::isExistActiveKiller() const {
-    bool (*isDeadFunc)(const LiveActor*) = &MR::isDead;
-    return find_if(mKillers.begin(), mKillers.end(), not1(std::ptr_fun(isDeadFunc))) != mKillers.end();
+    return std::find_if(mKillers.begin(), mKillers.end(), std::not1(std::ptr_fun(&MR::isDead))) != mKillers.end();
 }
 
 bool KoopaJrShip::isExistActiveKameck() const {
-    bool (*isDeadFunc)(const LiveActor*) = &MR::isDead;
-    return find_if(mKamecks.begin(), mKamecks.end(), not1(std::ptr_fun(isDeadFunc))) != mKamecks.end();
+    return std::find_if(mKamecks.begin(), mKamecks.end(), std::not1(std::ptr_fun(&MR::isDead))) != mKamecks.end();
 }
 
 void KoopaJrShip::shootMainShells() {
-    /*TPos3f v16;
-    v16.set(MR::getJointMtx(this, cJointNameCannonMain));
-    TVec3f v15, v14;
-    v16.getTrans(v15);
-    v16.getZDir(v14);
-    MR::normalize(&v14);
-    mMainShellHolder->getValidShell()->launch(v15, v14 * 23.0f);
-    MR::rotateMtxLocalYDegree(v16, 15.0f);
-    TVec3f v13;
-    v16.getZDir(v13);
-    MR::normalize(&v13);
-    mMainShellHolder->getValidShell()->launch(v15, v13 * 23.0f);
-    MR::rotateMtxLocalYDegree(v16, -30.0f);
-    TVec3f v12;
-    v16.getZDir(v12);
-    MR::normalize(&v12);
-    mMainShellHolder->getValidShell()->launch(v15, v12 * 23.0f);*/
-
     TPos3f m;
-    m.set(MR::getJointMtx(this, cJointNameCannonMain));
+    m.set(MR::getJointMtx(this, ::cJointNameCannonMain));
 
     TVec3f pos;
     m.getTrans(pos);
@@ -465,22 +447,20 @@ void KoopaJrShip::emitDamageHitEffect() {
     v7.identity();
     TVec3f up;
     MR::calcUpVec(&up, this);
-    TVec3f v5;
-    JMathInlineVEC::PSVECNegate(&_E0, &v5);
-    MR::makeMtxSideUpPos(&v7, v5, up, _D4);
+    MR::makeMtxSideUpPos(&v7, -_E0, up, _D4);
     MR::emitEffectHit(this, v7, "DamageFire");
     MR::startSound(this, "SE_BM_KOOPAJR_SHIP_IGNIT");
 }
 
 void KoopaJrShip::updateKoopaJrPos() {
     if (isNerve(&NrvKoopaJrShip::HostTypeBreak::sInstance)) {
-        TMtx34f v8;
-        v8.set(MR::getJointMtx(mPodModel, cJointNamePodPos));
+        TPos3f v8;
+        v8.set(MR::getJointMtx(mPodModel, ::cJointNamePodPos));
         v8.mult(_1EC, mJr->mPosition);
     } else {
-        TMtx34f v7;
-        v7.set(MR::getJointMtx(this, cJointNameKoopaJrPos));
-        MR::faceToPoint(v7, TVec3f(*MR::getPlayerPos()), 5.0f);
+        TPos3f v7;
+        v7.set(MR::getJointMtx(this, ::cJointNameKoopaJrPos));
+        MR::faceToPoint(v7, *MR::getPlayerPos(), 5.0f);
         v7.mult(_1EC, mJr->mPosition);
     }
 }
@@ -508,9 +488,9 @@ void KoopaJrShip::setStateTurnFront() {
     mPosition.set< f32 >(_1F8);
     MR::moveCoordAndTransToNearestRailPos(this);
     mJr->setStateShipBattlePowerUp();
-    _1EC.x = sKoopaJrPosFront.x;
-    _1EC.y = sKoopaJrPosFront.y;
-    _1EC.z = sKoopaJrPosFront.z;
+    _1EC.x = ::sKoopaJrPosFront.x;
+    _1EC.y = ::sKoopaJrPosFront.y;
+    _1EC.z = ::sKoopaJrPosFront.z;
     setNerve(&NrvKoopaJrShip::HostTypeTurnFront::sInstance);
 }
 
@@ -739,7 +719,7 @@ void KoopaJrShip::exeBreakStart() {
 void KoopaJrShip::exeBreak() {
     if (MR::isFirstStep(this)) {
         MR::deleteEffect(this, "EyeLight");
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
         MR::startSound(this, "SE_BM_KOOPAJR_SHIP_BREAK_S");
         mJr->setStateShipBattleEscape();
@@ -789,7 +769,7 @@ void KoopaJrShip::exeTurnFront() {
         }
 
         mKamecks[0]->makeActorDeadForce();
-        for_each(mKillers.begin(), mKillers.end(), std::mem_fun_t< void, HomingKiller >(&HomingKiller::makeActorDead));
+        std::for_each(mKillers.begin(), mKillers.end(), std::mem_func(&HomingKiller::makeActorDead));
     }
 
     MR::startLevelSound(this, "SE_BM_LV_KOOPAJR_SHIP_3RD_DEMO");
@@ -813,9 +793,6 @@ void KoopaJrShip::exeTurnFront() {
 
         setNerve(&NrvKoopaJrShip::HostTypeMoveFrontAttack::sInstance);
     }
-}
-
-KoopaJrShip::~KoopaJrShip() {
 }
 
 void KoopaJrShip::exeBreakEnd() {

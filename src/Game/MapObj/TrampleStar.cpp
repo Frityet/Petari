@@ -1,7 +1,9 @@
 #include "Game/MapObj/TrampleStar.hpp"
 #include "Game/LiveActor/AllLiveActorGroup.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
 
@@ -226,7 +228,7 @@ void TrampleStar::divide() {
             if (readCheckFlag(vtx1, vtx2) != 0) {
                 midpoints[idx] = readCheckFlag(vtx1, vtx2);
             } else {
-                mVtxs[numVtxs] = mVtxs[vtx1].translate(mVtxs[vtx2]).scaleInline(0.5f);
+                mVtxs[numVtxs] = (mVtxs[vtx1] + mVtxs[vtx2]) * 0.5f;
 
                 // FIXME: TVec2 shenanigans
                 TVec2f midpoint = mTexST[vtx1].addInline(mTexST[vtx2]).scaleInline(0.5f);
@@ -309,7 +311,7 @@ void TrampleStar::calcSurface(bool calcDrawBuffers) {
                 MR::normalizeOrZero(&up);
                 TVec2f texST = mTexST[vtx];
 
-                pos += mPosition - up.scaleInline(mDeformCoeff[vtx]);
+                pos += mPosition - up * mDeformCoeff[vtx];
                 mDrawPos[mNumDrawVtxs] = pos;
                 mDrawNorm[mNumDrawVtxs] = up;
                 mDrawTex[mNumDrawVtxs] = texST;
@@ -430,7 +432,7 @@ void TrampleStar::exeBindingShoot() {
                         MR::startSoundPlayer("SE_PV_JUMP_M", -1);
                     }
 
-                    MR::endBindAndPlayerJump(this, up.scaleInline(mJumpVel), 0);
+                    MR::endBindAndPlayerJump(this, up * mJumpVel, 0);
                     MR::startBckPlayer("Jump2", static_cast< const char* >(nullptr));
                     setNerve(&TrampleStarNrvWait::sInstance);
                 }
@@ -451,7 +453,7 @@ void TrampleStar::exeBindingShoot() {
                 mJumpVel *= 1.5f;
             }
 
-            MR::endBindAndPlayerJump(this, up.scaleInline(mJumpVel), 0);
+            MR::endBindAndPlayerJump(this, up * mJumpVel, 0);
         }
 
         setNerve(&TrampleStarNrvWait::sInstance);
@@ -471,7 +473,7 @@ u32 TrampleStar::calcNearestVtxIndex(const TVec3f& rPos) {
     u32 nearestIndex = 0;
 
     for (u32 vtx = 0; vtx < mNumVtxs; vtx++) {
-        f32 dist = (mVtxs[vtx].translate(mPosition) - rPos).length();
+        f32 dist = (mVtxs[vtx] + mPosition - rPos).length();
         if (dist < nearestDistance) {
             nearestDistance = dist;
             nearestIndex = vtx;
@@ -524,9 +526,9 @@ bool TrampleStar::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRecei
         MR::getPlayerSideVec(&side);
         TVec3f capturePos = mVtxs[mCaptureVtx];
         TVec3f down = -capturePos;
-        down.normalizePS();
+        down.normalize();
         TPos3f mtx;
-        capturePos += mPosition.translate(down.scaleInline(mDeformCoeff[mCaptureVtx]));
+        capturePos += mPosition + down * mDeformCoeff[mCaptureVtx];
         MR::makeMtxUpSidePos(&mtx, -down, side, capturePos);
         MR::setPlayerBaseMtx(mtx);
         return true;
@@ -586,7 +588,7 @@ void TrampleStar::drawSelf() const {
     MR::makeMtxUpFront(&mtx2, -MR::getMarioShadowVec(), -front);
     PSMTXInverse(mtx2, mtx2);
 
-    PSMTXConcat(mtx2, mtx, mtx3);
+    MR::multMtx(mtx3, mtx, mtx2);
     TPos3f mtx4;
     for (u32 idx = 0; idx < 12; idx++) {
         mtx4.element(idx) = 0;
@@ -596,7 +598,7 @@ void TrampleStar::drawSelf() const {
     mtx4[2][3] = debug3;
     mtx4[0][3] = debug4;
     mtx4[1][3] = debug5;
-    PSMTXConcat(mtx4, mtx3, mtx3);
+    MR::multMtx(mtx3, mtx3, mtx4);
 
     GXLoadTexMtxImm(mtx3, GX_TEXMTX1, GX_MTX3x4);
     GXSetNumTevStages(3);
@@ -637,13 +639,16 @@ void TrampleStar::drawSelf() const {
     }
 
     GXBegin(GX_TRIANGLES, GX_VTXFMT0, mNumDrawVtxs);
-    TVec3f* pos = mDrawPos;
-    TVec3f* norm = mDrawNorm;
-    TVec2f* tex = mDrawTex;
-    for (u32 vtx = 0; vtx < mNumDrawVtxs; vtx++) {
-        MR::ddSendVtxData(*pos, *norm, *tex);
-        pos++;
-        norm++;
-        tex++;
+    {
+        TVec3f* pos = mDrawPos;
+        TVec3f* norm = mDrawNorm;
+        TVec2f* tex = mDrawTex;
+        for (u32 vtx = 0; vtx < mNumDrawVtxs; vtx++) {
+            MR::ddSendVtxData(*pos, *norm, *tex);
+            pos++;
+            norm++;
+            tex++;
+        }
     }
+    GXEnd();
 }

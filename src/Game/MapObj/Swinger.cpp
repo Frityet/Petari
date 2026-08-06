@@ -1,4 +1,6 @@
 #include "Game/MapObj/Swinger.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/MathUtil.hpp"
 
 Swinger::Swinger(const TVec3f* a1, MtxPtr a2, f32 a3, f32 a4, f32 a5, const TVec3f* a6)
@@ -14,37 +16,31 @@ void Swinger::accel(const TVec3f& a1) {
     mAcceleration.add(a1);
 }
 
-/*
-void Swinger::update()
-{
+void Swinger::update() {
     TVec3f v20;
-    if (_0) {
-        v20.set<f32>(*_0);
-    }
-    else {
-        v20.set((*_4)[3], (*_4)[7], (*_4)[11]);
+    if (_0 != nullptr) {
+        v20.set(*_0);
+    } else {
+        v20.set< f32 >(_4->mMtx[0][3], _4->mMtx[1][3], _4->mMtx[2][3]);
     }
     mAcceleration.scale(_34);
+
     if (_38) {
-        TVec3f v19(*_38);
+        TVec3f v19 = *_38;
         v19.scale(_30);
         mAcceleration.add(v19);
-    }
-    else {
+    } else {
         mAcceleration.y -= _30;
     }
     _8.add(mAcceleration);
-    TVec3f v18(_8);
-    v18.subInline4(v20);
-    _20.set<f32>(v18);
+    _20.set(_8 - v20);
 
-    if ((_20.squaredInline() <= 0.0000038146973f) > 0) {
-        _20.setInline(0.0f, -1.0f, 0.0f);
-    }
-    else {
+    if (_20.isZero()) {
+        _20.set(0.0f, -1.0f, 0.0f);
+    } else {
         MR::normalize(&_20);
     }
-    _8.set<f32>(_20);
+    _8.set< f32 >(_20);
     _8.scale(_2C);
     _8.add(v20);
 
@@ -57,7 +53,6 @@ void Swinger::update()
 
     updateSwingMtx(v20);
 }
-*/
 
 void Swinger::updateSwingMtx(const TVec3f& a1) {
     _48.set< f32 >(_20);
@@ -65,12 +60,12 @@ void Swinger::updateSwingMtx(const TVec3f& a1) {
     _48.y *= -1.0f;
     _48.z *= -1.0f;
     TVec3f v14(_3C);
-    PSVECCrossProduct(&_48, &_54, &_3C);
+    _3C.cross(_48, _54);
     if (MR::isNearZero(_3C)) {
         _3C.set< f32 >(v14);
     }
     MR::normalize(&_3C);
-    PSVECCrossProduct(&_3C, &_48, &_54);
+    _54.cross(_3C, _48);
     MR::normalize(&_54);
 
     _60.mMtx[0][0] = _3C.x;

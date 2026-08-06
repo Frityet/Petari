@@ -1,4 +1,11 @@
 #include "Game/Gravity.hpp"
+#include "Game/Util/MathUtil.hpp"
+
+void ConeGravity_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
 
 ConeGravity::ConeGravity() : PlanetGravity() {
     mValidDegree = 360.0f;
@@ -25,14 +32,27 @@ void ConeGravity::setTopCutRate(f32 val) {
 
 inline f32 absfInline(f32& orig, f32 v) {
     orig = v;
-    return __fabsf(v);
+    return MR::abs(v);
+}
+
+void ConeGravity::updateMtx(const TPos3f& rMtx) {
+    mWorldMtx.concat(rMtx, mLocalMtx);
+
+    TVec3f sideVec;
+    mWorldMtx.getXDir(sideVec);
+    mWorldRadius = sideVec.length();
+
+    TVec3f axis;  // unused
+    mWorldMtx.getYDir(axis);
+    // The developers could have left this in because there originally was a height member
+    // that they would set to ||axis|| * (1.0f - mTopCutRate)
 }
 
 bool ConeGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const TVec3f& rPos) const {
     TVec3f worldBaseCenter, worldCentralAxis;
 
     mWorldMtx.getYDir(worldCentralAxis);
-    mWorldMtx.getTransInline(worldBaseCenter);
+    mWorldMtx.getTrans(worldBaseCenter);
 
     TVec3f unitWorldCentralAxis;
     f32 centralAxisLength;
@@ -40,7 +60,7 @@ bool ConeGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const TVec3f
 
     TVec3f relativePosition = rPos - worldBaseCenter;
     TVec3f positionOnBasePlane;
-    positionOnBasePlane.rejection(relativePosition, unitWorldCentralAxis);
+    positionOnBasePlane.killElement(relativePosition, unitWorldCentralAxis);
 
     if (MR::isNearZero(positionOnBasePlane)) {
         f32 positionOnCentralAxis;
@@ -69,7 +89,7 @@ bool ConeGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const TVec3f
         return true;
     }
 
-    f32 distanceToCentralAxis = PSVECMag(&positionOnBasePlane);
+    f32 distanceToCentralAxis = positionOnBasePlane.length();
     f32 centralAxisY = unitWorldCentralAxis.dot(relativePosition);
 
     bool isInsideCone = false;
@@ -140,7 +160,7 @@ bool ConeGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const TVec3f
         MR::normalizeOrZero(&generatrixDirection);
 
         TVec3f gravity;
-        gravity.rejection((-positionOnBasePlane), generatrixDirection);
+        gravity.killElement((-positionOnBasePlane), generatrixDirection);
 
         if (MR::isNearZero(gravity)) {
             *pDest = -unitWorldCentralAxis;
@@ -159,17 +179,4 @@ bool ConeGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const TVec3f
     }
 
     return calcGravityFromMassPosition(pDest, pScalar, rPos, pointOfAttraction);
-}
-
-void ConeGravity::updateMtx(const TPos3f& rMtx) {
-    mWorldMtx.concat(rMtx, mLocalMtx);
-
-    TVec3f sideVec;
-    mWorldMtx.getXDirInline(sideVec);
-    mWorldRadius = PSVECMag(&sideVec);
-
-    TVec3f axis;  // unused
-    mWorldMtx.getYDir(axis);
-    // The developers could have left this in because there originally was a height member
-    // that they would set to ||axis|| * (1.0f - mTopCutRate)
 }

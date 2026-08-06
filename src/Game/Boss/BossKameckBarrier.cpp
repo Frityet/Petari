@@ -1,4 +1,8 @@
 #include "Game/Boss/BossKameckBarrier.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 namespace NrvBossKameckBarrier {
     NEW_NERVE(BossKameckBarrierNrvWait, BossKameckBarrier, Wait);
@@ -20,7 +24,8 @@ void BossKameckBarrier::init(const JMapInfoIter& rIter) {
     makeActorDead();
 }
 
-void BossKameckBarrier::control() {}
+void BossKameckBarrier::control() {
+}
 
 void BossKameckBarrier::exeWait() {
     if (MR::isFirstStep(this)) {
@@ -28,5 +33,3 @@ void BossKameckBarrier::exeWait() {
         MR::startBtk(this, "Wait");
     }
 }
-
-BossKameckBarrier::~BossKameckBarrier() {}

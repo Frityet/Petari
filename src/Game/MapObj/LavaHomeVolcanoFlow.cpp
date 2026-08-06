@@ -1,13 +1,10 @@
 #include "Game/MapObj/LavaHomeVolcanoFlow.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "revolution/types.h"
 
 namespace NrvLavaHomeVolcanoFlow {
     NEW_NERVE(HostTypeWait, LavaHomeVolcanoFlow, Wait);
@@ -15,7 +12,8 @@ namespace NrvLavaHomeVolcanoFlow {
     NEW_NERVE(HostTypeDone, LavaHomeVolcanoFlow, Wait);
 };  // namespace NrvLavaHomeVolcanoFlow
 
-LavaHomeVolcanoFlow::LavaHomeVolcanoFlow(const char* pName) : LiveActor(pName) {}
+LavaHomeVolcanoFlow::LavaHomeVolcanoFlow(const char* pName) : LiveActor(pName) {
+}
 
 void LavaHomeVolcanoFlow::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -63,9 +61,10 @@ void LavaHomeVolcanoFlow::exeMove() {
         MR::emitEffect(this, "Active");
         MR::emitEffect(this, "Loop");
         MR::startSound(this, "SE_OJ_VOLCANO_EXPLODE");
-        MR::tryRumblePadVeryStrong(this, 0);
+        MR::tryRumblePadVeryStrong(this, WPAD_CHAN0);
         setNerve(&NrvLavaHomeVolcanoFlow::HostTypeDone::sInstance);
     }
 }
 
-LavaHomeVolcanoFlow::~LavaHomeVolcanoFlow() {}
+LavaHomeVolcanoFlow::~LavaHomeVolcanoFlow() {
+}

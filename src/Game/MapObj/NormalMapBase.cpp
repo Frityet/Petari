@@ -1,5 +1,7 @@
 #include "Game/MapObj/NormalMapBase.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -98,7 +100,7 @@ void NormalMapBase::draw() const {
         Mtx mtx;
         PSMTXIdentity(mtx);
         MR::makeMtxTRS(mtx, this);
-        PSMTXConcat(cameraViewMtx, mtx, mtx);
+        MR::multMtx(mtx, mtx, cameraViewMtx);
         PSMTXCopy((const MtxPtr)mtx, (MtxPtr)_F4);
 
         MR::makeMtxTR(v7, this);

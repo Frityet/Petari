@@ -1,14 +1,34 @@
 #include "Game/Ride/Tamakoro.hpp"
 #include "Game/GameAudio/AudTamakoroBgmCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Ride/SphereAccelSensorController.hpp"
 #include "Game/Ride/TamakoroTutorial.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/EventUtil.hpp"
 #include "Game/Util/JointController.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include <JSystem/JGeometry/TVec.hpp>
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include <revolution/mtx.h>
 #include <revolution/wpad.h>
+
+void Tamakoro_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)3.0f;
+    (void)-1.0f;
+    (void)2.0f;
+}
 
 namespace {
     static const f32 mBaseRadius = 150.0f;
@@ -147,7 +167,7 @@ void Tamakoro::initJointControl() {
 
 bool Tamakoro::ringMtxCallBack(TPos3f* pMtx, const JointControllerInfo& pJointCtrlInfo) {
     TVec3f trans;
-    pMtx->getTransInline(trans);
+    pMtx->getTrans(trans);
 
     if (MR::isNearZero(mAccelDir) || MR::isSameDirection(mAccelDir, mRingUp, 0.01f)) {
         MR::makeMtxUpNoSupport(pMtx, mRingUp);
@@ -168,7 +188,7 @@ void Tamakoro::control() {
     if (isNerve(&NrvTamakoro::TamakoroNrvJumpHole::sInstance) || isNerve(&NrvTamakoro::TamakoroNrvJumpHoleSetUp::sInstance)) {
         speed = 0.0f;
     }
-    mBgmCtrl->control(speed, mControlDisabled, sBgmStateChangeFrames);
+    mBgmCtrl->control(speed, mControlDisabled, ::sBgmStateChangeFrames);
     mControlDisabled = false;
 }
 
@@ -179,9 +199,9 @@ void Tamakoro::calcAndSetBaseMtx() {
 
 void Tamakoro::updateBindActorMatrix() {
     if (isUseMarioOffset()) {
-        JMAVECScaleAdd(&mDirectionToMario, &mPosition, &mMarioPos, mBaseRadius);
+        mMarioPos.scaleAdd(mBaseRadius, mDirectionToMario, mPosition);
         if (mMarioOffset > 0.0f) {
-            JMAVECScaleAdd(&mGravity, &mMarioPos, &mMarioPos, -mMarioOffset);
+            mMarioPos.scaleAdd(-mMarioOffset, mGravity, mMarioPos);
         }
     }
 
@@ -197,12 +217,12 @@ void Tamakoro::updateRingUpVec() {
     if (!MR::isNearZero(mAccelDir)) {
         TVec3f v1;
         TVec3f up2 = -mGravity;
-        JMAVECScaleAdd(&mAccelDir, &up2, &v1, mAccelRate);
+        v1.scaleAdd(mAccelRate, mAccelDir, up2);
         MR::normalizeOrZero(&v1);
-        MR::turnVecToVecDegree(&up, up, v1, sRingMaxDegree, TVec3f(0, 1, 0));
+        MR::turnVecToVecDegree(&up, up, v1, ::sRingMaxDegree, TVec3f(0, 1, 0));
     }
 
-    MR::turnVecToVecDegree(&mRingUp, mRingUp, up, sRingMaxAngleSpeed, TVec3f(0, 1, 0));
+    MR::turnVecToVecDegree(&mRingUp, mRingUp, up, ::sRingMaxAngleSpeed, TVec3f(0, 1, 0));
 }
 
 void Tamakoro::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
@@ -218,9 +238,9 @@ void Tamakoro::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (isEnableEnemyAttack() && MR::isSensorEnemy(pReceiver) && pSender->isType(ATYPE_SPHERE_PLAYER)) {
         if (MR::sendMsgPlayerTrample(pReceiver, pSender)) {
             f32 downVel = mVelocity.dot(mGravity);
-            if (downVel < sStampReactionInvalidSpeed) {
-                downVel = -sStampReactionV - downVel;
-                mVelocity.add(mGravity.multiplyOperatorInline(downVel));
+            if (downVel < ::sStampReactionInvalidSpeed) {
+                downVel = -::sStampReactionV - downVel;
+                mVelocity.add(mGravity * downVel);
                 MR::tryRumblePadWeak(this, WPAD_CHAN0);
                 MR::shakeCameraNormalWeak();
             }
@@ -256,7 +276,7 @@ bool Tamakoro::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pR
 bool Tamakoro::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgExplosionAttack(msg) && isEnableEnemyAttack()) {
         MR::tryRumblePadStrong(this, WPAD_CHAN0);
-        MR::setVelocitySeparateHV(this, pSender, pReceiver, sExplosionReactionH, sExplosionReactionV);
+        MR::setVelocitySeparateHV(this, pSender, pReceiver, ::sExplosionReactionH, ::sExplosionReactionV);
         MR::startSoundPlayer("SE_PV_UPSET", -1);
         return true;
     }
@@ -319,7 +339,7 @@ bool Tamakoro::requestBind(HitSensor* pSensor) {
     TVec3f vThisToSensor = MR::getSensorPos(pSensor) - mPosition;
     MR::normalizeOrZero(&vThisToSensor);
     f32 cosPositionDegree = vThisToSensor.dot(-mGravity);
-    if (cosPositionDegree < MR::cosDegree(sBindableUpperDegree)) {
+    if (cosPositionDegree < MR::cosDegree(::sBindableUpperDegree)) {
         return false;
     }
 
@@ -328,7 +348,7 @@ bool Tamakoro::requestBind(HitSensor* pSensor) {
     MR::makeQuatRotateDegree(&mMarioRotateQuat, *MR::getPlayerRotate());
     mMarioPos.set(*MR::getPlayerPos());
     mMarioRotateQuat.getZDir(mMarioFront);
-    mMarioFront.rejection(mGravity);
+    mMarioFront.orthogonalize(mGravity);
     if (MR::normalizeOrZero(&mMarioFront)) {
         MR::makeAxisVerticalZX(&mMarioFront, mGravity);
     }
@@ -347,8 +367,8 @@ bool Tamakoro::requestBind(HitSensor* pSensor) {
     MR::normalizeOrZero(&vel);
     f32 cosVelocityDegree = -vThisToSensor.dot(vel);
 
-    if (cosVelocityDegree > MR::cosDegree(sLandStartVelocityDegree) && cosPositionDegree > MR::cosDegree(sLandStartPositionDegree)) {
-        // if angle between vel and "to this" < sLandStartVelocityDegree (40.0f) degrees and vertical angle to sensor < sLandStartPositionDegree
+    if (cosVelocityDegree > MR::cosDegree(::sLandStartVelocityDegree) && cosPositionDegree > MR::cosDegree(::sLandStartPositionDegree)) {
+        // if angle between vel and "to this" < ::sLandStartVelocityDegree (40.0f) degrees and vertical angle to sensor < ::sLandStartPositionDegree
         // (35.0f) degrees
         setNerve(&NrvTamakoro::TamakoroNrvBindStartLand::sInstance);
     } else {
@@ -357,7 +377,7 @@ bool Tamakoro::requestBind(HitSensor* pSensor) {
         TVec3f v3;  // vec order shenanigans... not used
         TVec3f vPlayerToThis;
         vPlayerToThis = mPosition - mMarioPos;
-        vPlayerToThis.rejection(mGravity);
+        vPlayerToThis.orthogonalize(mGravity);
 
         if (!MR::normalizeOrZero(&vPlayerToThis)) {
             if (vPlayerToThis.dot(mMarioFront) > 0.0f) {
@@ -377,8 +397,7 @@ bool Tamakoro::requestBind(HitSensor* pSensor) {
 bool Tamakoro::requestEndBind() {
     if (!isNerve(&NrvTamakoro::TamakoroNrvBindEnd::sInstance) && !isNerve(&NrvTamakoro::TamakoroNrvStandByBind::sInstance)) {
         MR::startBckPlayer("SwingRopeSpin", static_cast< const char* >(nullptr));
-        MR::endBindAndPlayerForceJump(
-            this, mMarioFront.multiplyOperatorInline(-sEndBindFrontPower).addOperatorInLine(mGravity.multiplyOperatorInline(-sEndBindJumpPower)), 0);
+        MR::endBindAndPlayerForceJump(this, mMarioFront * (-::sEndBindFrontPower) + mGravity * (-::sEndBindJumpPower), 0);
         MR::hideModel(this);
         MR::invalidateHitSensors(this);
         MR::invalidateClipping(this);
@@ -414,7 +433,7 @@ bool Tamakoro::requestTutorialEnd() {
 }
 
 bool Tamakoro::tryFall() {
-    if (mAirTime > sFallStartTime) {
+    if (mAirTime > ::sFallStartTime) {
         setNerve(&NrvTamakoro::TamakoroNrvFall::sInstance);
         return true;
     }
@@ -430,7 +449,7 @@ bool Tamakoro::tryJump() {
 }
 
 bool Tamakoro::tryBumpWall() {
-    if (MR::calcHitPowerToWall(this) > sNeedBumpWallPower) {
+    if (MR::calcHitPowerToWall(this) > ::sNeedBumpWallPower) {
         f32 rebound = -0.6f;
         if (isEnebleHitCollisionMessage()) {
             if (MR::sendMsgToWallSensor(ACTMES_BALL_DASH_WALL, getSensor("Body"))) {
@@ -448,7 +467,7 @@ bool Tamakoro::tryBumpWall() {
 bool Tamakoro::tryLand() {
     f32 power = MR::calcHitPowerToGround(this);
 
-    if (MR::calcHitPowerToGround(this) > sNeedLandPower) {
+    if (MR::calcHitPowerToGround(this) > ::sNeedLandPower) {
         f32 rebound = 0.0f;
         if (isEnebleHitCollisionMessage()) {
             if (MR::sendMsgToWallSensor(ACTMES_BALL_DASH_GROUND, getSensor("Body"))) {
@@ -462,7 +481,7 @@ bool Tamakoro::tryLand() {
         return true;
     }
 
-    if (MR::isGreaterStep(this, sLandTime) && MR::isBindedGround(this)) {
+    if (MR::isGreaterStep(this, ::sLandTime) && MR::isBindedGround(this)) {
         mMarioOffsetVelocity = -power;
         setNerve(&NrvTamakoro::TamakoroNrvWait::sInstance);
         return true;
@@ -483,26 +502,26 @@ void Tamakoro::reactionCollision() {
         hitPower = groundHitPower;
     }
 
-    if (wallHitPower > sCollisionWeakPower) {
+    if (wallHitPower > ::sCollisionWeakPower) {
         MR::emitEffectHit(this, *MR::getWallHitPos(this), *MR::getWallNormal(this), "WallHit");
     }
 
-    if (groundHitPower > sCollisionMiddlePower) {
+    if (groundHitPower > ::sCollisionMiddlePower) {
         MR::emitEffectHit(this, *MR::getGroundHitPos(this), *MR::getGroundNormal(this), "Land");
     }
 
-    if (wallHitPower > sCollisionWeakPower) {
+    if (wallHitPower > ::sCollisionWeakPower) {
         MR::startSound(this, "SE_SM_IRONSPH_HIT");
         MR::startSoundPlayer("SE_PV_GUARD", -1);
     }
 
-    if (hitPower > sCollisionStrongPower) {
+    if (hitPower > ::sCollisionStrongPower) {
         MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraStrong();
-    } else if (hitPower > sCollisionMiddlePower) {
+    } else if (hitPower > ::sCollisionMiddlePower) {
         MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         MR::shakeCameraNormalWeak();
-    } else if (hitPower > sCollisionWeakPower) {
+    } else if (hitPower > ::sCollisionWeakPower) {
         MR::tryRumblePadWeak(this, WPAD_CHAN0);
         MR::shakeCameraWeak();
     }
@@ -529,20 +548,20 @@ void Tamakoro::exeBindStart() {
 
     // smoothly transition arc from bind request position
     // to top of the ball using the nerve rate as time
-    f32 time = MR::calcNerveRate(this, sBindStartTime);
+    f32 time = MR::calcNerveRate(this, ::sBindStartTime);
     TVec3f expectMario;
-    JMAVECScaleAdd(&mDirectionToMario, &mPosition, &expectMario, mBaseRadius);
+    expectMario.scaleAdd(mBaseRadius, mDirectionToMario, mPosition);
     TVec3f horizontalVec;
     MR::vecBlend(mMarioBindRequestPos, expectMario, &horizontalVec, time);
     time = (time * 2.0f) - 1.0f;
     TVec3f upVec;
-    upVec.set(mGravity.multiplyOperatorInline(-(time * time * -sBindStartJumpHeight + mBaseRadius)));
+    upVec.set(mGravity * (-(time * time * -::sBindStartJumpHeight + mBaseRadius)));
 
-    MR::blendQuatUpFront(&mMarioRotateQuat, -mGravity, mMarioFront, sBindStartUpAdjustRate, sBindStartFrontAdjustRate);
+    MR::blendQuatUpFront(&mMarioRotateQuat, -mGravity, mMarioFront, ::sBindStartUpAdjustRate, ::sBindStartFrontAdjustRate);
 
-    mMarioPos.set(horizontalVec.addOperatorInLine(upVec));
+    mMarioPos.set(horizontalVec + upVec);
 
-    if (MR::isGreaterStep(this, sBindStartTime)) {
+    if (MR::isGreaterStep(this, ::sBindStartTime)) {
         setNerve(&NrvTamakoro::TamakoroNrvBindStartLand::sInstance);
     }
 }
@@ -565,7 +584,7 @@ void Tamakoro::exeBindStartLand() {
         if (MR::normalizeOrZero(&mDirectionToMario)) {
             mDirectionToMario.set(-mGravity);
         }
-        JMAVECScaleAdd(&mDirectionToMario, &mPosition, &mMarioPos, mBaseRadius);
+        mMarioPos.scaleAdd(mBaseRadius, mDirectionToMario, mPosition);
 
         mMarioUp = (mDirectionToMario - mGravity).multiplyOperatorInline(0.5f);
         if (MR::normalizeOrZero(&mMarioUp)) {
@@ -581,9 +600,9 @@ void Tamakoro::exeBindStartLand() {
         }
     }
 
-    MR::blendQuatUpFront(&mMarioRotateQuat, mMarioUp, mMarioFront, sBindStartUpAdjustRate, sBindStartFrontAdjustRate);
+    MR::blendQuatUpFront(&mMarioRotateQuat, mMarioUp, mMarioFront, ::sBindStartUpAdjustRate, ::sBindStartFrontAdjustRate);
 
-    if (MR::isGreaterStep(this, sBindStartLandTime)) {
+    if (MR::isGreaterStep(this, ::sBindStartLandTime)) {
         if (isNeedTutorial()) {
             mTutorial->requestStart();
             setNerve(&NrvTamakoro::TamakoroNrvTutorial::sInstance);
@@ -606,12 +625,12 @@ void Tamakoro::exeTutorial() {
 
     mAccelRate = mAccelSensorCtrl->calcMoveVector(&mAccelDir, mGravity);
 
-    JMAVECScaleAdd(&mAccelDir, &mKickVel, &mKickVel, mAccelRate * sTutorialAccel);
+    mKickVel.scaleAdd(mAccelRate * ::sTutorialAccel, mAccelDir, mKickVel);
 
     TVec3f moment;
     MR::calcMomentRollBall(&moment, mKickVel, -mGravity, mBaseRadius);
     MR::vecBlend(mMoment, moment, &mMoment, 0.25f);
-    mKickVel.mult(sTutorialFric);
+    mKickVel.mult(::sTutorialFric);
 
     updateMoveBckBlend(mMoment.length() * mBaseRadius);
     updateMarioPose(3.0f);
@@ -624,7 +643,7 @@ void Tamakoro::exeWait() {
     }
     reactionCollision();
     addVelocityOperate();
-    updateVelocityNormal(sGroundFric);
+    updateVelocityNormal(::sGroundFric);
     updateMoveBckBlend(mMoment.length() * mBaseRadius);
     updateMarioPose(3.0f);
     updateMarioOffset();
@@ -638,14 +657,14 @@ void Tamakoro::exeFall() {
     if (MR::isFirstStep(this)) {
         MR::startBckPlayer("Fall", "BallFall");
     }
-    mMarioOffset += sFallOffsetSpeed;
-    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, sMarioJumpOffsetMax);
+    mMarioOffset += ::sFallOffsetSpeed;
+    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, ::sMarioJumpOffsetMax);
 
     reactionCollision();
 
     if (!tryLand()) {
         addVelocityOperate();
-        updateVelocityNormal(sGroundFric);
+        updateVelocityNormal(::sGroundFric);
         updateMarioPose(3.0f);
     }
 }
@@ -655,12 +674,12 @@ void Tamakoro::exeJump() {
         MR::startBckPlayer("BallJump", "BallJump");
         MR::startSoundPlayer("SE_PV_JUMP_M", -1);
         MR::startSound(this, "SE_SM_BALLOONSPH_JUMP");
-        MR::addVelocityToGravity(this, (-sJumpPowerV - mVelocity.dot(mGravity)));
-        MR::addVelocityMoveToDirection(this, mAccelDir, mAccelRate * sJumpPowerH);
+        MR::addVelocityToGravity(this, (-::sJumpPowerV - mVelocity.dot(mGravity)));
+        MR::addVelocityMoveToDirection(this, mAccelDir, mAccelRate * ::sJumpPowerH);
     }
 
-    mMarioOffset += sJumpOffsetSpeed;
-    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, sMarioJumpOffsetMax);
+    mMarioOffset += ::sJumpOffsetSpeed;
+    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, ::sMarioJumpOffsetMax);
 
     reactionCollision();
 
@@ -669,7 +688,7 @@ void Tamakoro::exeJump() {
     }
 
     addVelocityOperate();
-    updateVelocityNormal(sGroundFric);
+    updateVelocityNormal(::sGroundFric);
     updateMarioPose(3.0f);
 }
 
@@ -683,7 +702,7 @@ void Tamakoro::exeBumpWall() {
     reactionCollision();
 
     addVelocityOperate();
-    updateVelocityNormal(sGroundFric);
+    updateVelocityNormal(::sGroundFric);
     updateMarioPose(3.0f);
     updateMarioOffset();
 
@@ -703,7 +722,7 @@ void Tamakoro::exeLand() {
     reactionCollision();
 
     addVelocityOperate();
-    updateVelocityNormal(sLandFric);
+    updateVelocityNormal(::sLandFric);
     updateMarioPose(3.0f);
     updateMarioOffset();
 
@@ -745,7 +764,7 @@ void Tamakoro::exeJumpHoleLaunch() {
     mControlDisabled = true;
 
     mMarioOffset += 3.0f;
-    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, sMarioJumpOffsetMax);
+    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, ::sMarioJumpOffsetMax);
 
     updateMarioPose(3.0f);
 }
@@ -768,7 +787,7 @@ void Tamakoro::exeDashRail() {
     mControlDisabled = true;
     updateMarioPose(10.0f);
     updateMarioOffset();
-    MR::setBckRatePlayer(mVelocity.length() / sDashBallRollSpeed);
+    MR::setBckRatePlayer(mVelocity.length() / ::sDashBallRollSpeed);
 }
 
 void Tamakoro::exeDashRailEnd() {
@@ -776,22 +795,22 @@ void Tamakoro::exeDashRailEnd() {
         mMarioOffsetVelocity = 0.0f;
     }
 
-    if (MR::isLessStep(this, sDashRailTime)) {
-        MR::setBckRatePlayer(mVelocity.length() / sDashBallRollSpeed);
+    if (MR::isLessStep(this, ::sDashRailTime)) {
+        MR::setBckRatePlayer(mVelocity.length() / ::sDashBallRollSpeed);
     }
 
-    if (MR::isStep(this, sDashRailTime)) {
+    if (MR::isStep(this, ::sDashRailTime)) {
         MR::startBckPlayer("Fall", "BallFall");
     }
 
     mMarioOffset += 3.0f;
-    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, sMarioJumpOffsetMax);
+    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, ::sMarioJumpOffsetMax);
 
     if (tryBumpWall() || tryLand()) {
         return;
     }
 
-    updateVelocityNormal(sDashRailFric);
+    updateVelocityNormal(::sDashRailFric);
     updateMarioPose(10.0f);
 }
 
@@ -803,7 +822,7 @@ void Tamakoro::exeRideRail() {
 
     f32 speed = updateRideRail();
     updateMoveBckBlend(speed);
-    if (speed > sRaidRailFastSpeed) {
+    if (speed > ::sRaidRailFastSpeed) {
         setNerve(&NrvTamakoro::TamakoroNrvRideRailFastStart::sInstance);
     }
 }
@@ -811,7 +830,7 @@ void Tamakoro::exeRideRail() {
 void Tamakoro::exeRideRailFastStart() {
     if (MR::isFirstStep(this)) {
         MR::startBckPlayer("BallRollStart", static_cast< const char* >(nullptr));
-        MR::setBckRatePlayer(sRollBckRate);
+        MR::setBckRatePlayer(::sRollBckRate);
     }
     updateRideRail();
     mControlDisabled = true;
@@ -823,14 +842,14 @@ void Tamakoro::exeRideRailFastStart() {
 void Tamakoro::exeRideRailFast() {
     if (MR::isFirstStep(this)) {
         MR::startBckPlayer("BallRoll", static_cast< const char* >(nullptr));
-        MR::setBckRatePlayer(sRollBckRate);
+        MR::setBckRatePlayer(::sRollBckRate);
     }
     mControlDisabled = true;
     f32 speed = updateRideRail();
 
-    MR::setBckRatePlayer(mVelocity.length() / sDashBallRollSpeed);
+    MR::setBckRatePlayer(mVelocity.length() / ::sDashBallRollSpeed);
 
-    if (speed < sRaidRailFastSpeed) {
+    if (speed < ::sRaidRailFastSpeed) {
         setNerve(&NrvTamakoro::TamakoroNrvRideRailFastEnd::sInstance);
     }
 }
@@ -838,7 +857,7 @@ void Tamakoro::exeRideRailFast() {
 void Tamakoro::exeRideRailFastEnd() {
     if (MR::isFirstStep(this)) {
         MR::startBckPlayer("BallRollEnd", static_cast< const char* >(nullptr));
-        MR::setBckRatePlayer(sRollBckRate);
+        MR::setBckRatePlayer(::sRollBckRate);
     }
     updateRideRail();
     if (MR::isBckStoppedPlayer()) {
@@ -861,7 +880,7 @@ void Tamakoro::exeBindEnd() {
         MR::stopStageBGM(10);
     }
 
-    if ((MR::isGreaterStep(this, 12) && MR::isOnGroundPlayer()) || MR::isGreaterStep(this, sForceBindEndTime)) {
+    if ((MR::isGreaterStep(this, 12) && MR::isOnGroundPlayer()) || MR::isGreaterStep(this, ::sForceBindEndTime)) {
         MR::startLastStageBGM();
         MR::requestAppearPowerStar(this, mPosition);
         kill();
@@ -872,7 +891,7 @@ void Tamakoro::addVelocityOperate() {
     mAccelRate = mAccelSensorCtrl->calcMoveVector(&mAccelDir, mGravity);
 
     TVec3f* vel = &mVelocity;  // this needs to be like this to match...
-    JMAVECScaleAdd(&mAccelDir, vel, &mVelocity, mAccelRate * (MR::isBindedGround(this) ? 0.4f : 0.2f));
+    mVelocity.scaleAdd(mAccelRate * (MR::isBindedGround(this) ? 0.4f : 0.2f), mAccelDir, *vel);
 }
 
 f32 Tamakoro::updateRideRail() {
@@ -895,7 +914,7 @@ f32 Tamakoro::updateRideRail() {
 void Tamakoro::updateVelocityNormal(f32 friction) {
     TVec3f vel(mVelocity);  // unused! woo!
     MR::reboundVelocityFromCollision(this, 0.0f, 0.0f, 1.0f);
-    MR::addVelocityToGravity(this, sGravityAccel);
+    MR::addVelocityToGravity(this, ::sGravityAccel);
     MR::attenuateVelocity(this, MR::isBindedGround(this) ? friction : 0.995f);
 }
 
@@ -928,14 +947,7 @@ void Tamakoro::updateAirTime() {
 }
 
 void Tamakoro::updateMarioPose(f32 degree) {
-    // TODO : rejection
-    TVec3f velH;
-
-    // these *need* to be pointers to match...
-    TVec3f* vel = &mVelocity;
-    TVec3f* grav = &mGravity;
-    f32 dot = grav->dot(*vel);
-    JMAVECScaleAdd(grav, vel, &velH, -dot);  // velH.rejection(vel, grav);
+    TVec3f velH = MR::getVelocityHorizon(this);
 
     if (MR::isNearZero(velH)) {
         if (mAccelRate > 0.001f) {
@@ -959,9 +971,9 @@ void Tamakoro::updateMarioPose(f32 degree) {
             sign = -1.0f;
         }
         dot = sign * dot;
-        mMarioRotateYAngle += dot * sMarioUpperYAccel;
+        mMarioRotateYAngle += dot * ::sMarioUpperYAccel;
     }
-    mMarioRotateYAngle *= sMarioUpperYFric;
+    mMarioRotateYAngle *= ::sMarioUpperYFric;
 
     TVec3f up;
     up.set(-mGravity);
@@ -973,24 +985,24 @@ void Tamakoro::updateMarioPose(f32 degree) {
         MR::rotateVecDegree(&up, rotAxis, mAccelRate * 35.0f);
         MR::rotateVecDegree(&mMarioUp, rotAxis, mAccelRate * 20.0f);
     }
-    MR::vecBlendSphere(mDirectionToMario, up, &mDirectionToMario, sStandDirInterRate);
+    MR::vecBlendSphere(mDirectionToMario, up, &mDirectionToMario, ::sStandDirInterRate);
 
     if (MR::normalizeOrZero(&mDirectionToMario)) {
         mDirectionToMario.set(-mGravity);
     }
-    MR::blendQuatUpFront(&mMarioRotateQuat, mMarioUp, mMarioFront, sMarioUpAdjustRate, sMarioFrontAdjustRate);
+    MR::blendQuatUpFront(&mMarioRotateQuat, mMarioUp, mMarioFront, ::sMarioUpAdjustRate, ::sMarioFrontAdjustRate);
 
     f32 rotY = mMarioRotateYAngle;
     MR::setPlayerUpperRotateY(PI_180 * rotY);
 }
 
 void Tamakoro::updateMarioOffset() {
-    f32 velocity = mMarioOffsetVelocity - sMarioOffsetGravityAccel;
-    velocity *= sMarioOffsetFric;
+    f32 velocity = mMarioOffsetVelocity - ::sMarioOffsetGravityAccel;
+    velocity *= ::sMarioOffsetFric;
 
     mMarioOffsetVelocity = velocity;
     mMarioOffset += mMarioOffsetVelocity;
-    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, sMarioJumpOffsetMax);
+    mMarioOffset = MR::clamp(mMarioOffset, 0.0f, ::sMarioJumpOffsetMax);
 }
 
 void Tamakoro::updateMoveBckBlend(f32 pSpeed) {
@@ -999,27 +1011,27 @@ void Tamakoro::updateMoveBckBlend(f32 pSpeed) {
     f32 walkBckWeight = 0.0f;
     f32 runBckWeight = 0.0f;
     f32 rate = 0.0f;
-    f32 softWalkSpeed = sSoftWalkSpeed;
-    f32 walkSpeed = sWalkSpeed;
-    f32 runSpeed = sRunSpeed;
+    f32 softWalkSpeed = ::sSoftWalkSpeed;
+    f32 walkSpeed = ::sWalkSpeed;
+    f32 runSpeed = ::sRunSpeed;
 
     if (pSpeed < softWalkSpeed) {
         softWalkBckWeight = MR::normalize(pSpeed, 0.0f, softWalkSpeed);
         idleBckWeight = 1.0f - softWalkBckWeight;
-        rate = MR::getLinerValue(softWalkBckWeight, sIdleBckRate, sSoftWalkBckRate, 1.0f);
+        rate = MR::getLinerValue(softWalkBckWeight, ::sIdleBckRate, ::sSoftWalkBckRate, 1.0f);
     } else if (pSpeed < walkSpeed) {
         walkBckWeight = MR::normalize(pSpeed, softWalkSpeed, walkSpeed);
         softWalkBckWeight = 1.0f - walkBckWeight;
-        rate = MR::getLinerValue(walkBckWeight, sSoftWalkBckRate, sWalkBckRate, 1.0f);
+        rate = MR::getLinerValue(walkBckWeight, ::sSoftWalkBckRate, ::sWalkBckRate, 1.0f);
     } else if (pSpeed < runSpeed) {
         runBckWeight = MR::normalize(pSpeed, walkSpeed, runSpeed);
         walkBckWeight = 1.0f - runBckWeight;
-        rate = MR::getLinerValue(runBckWeight, sWalkBckRate, sRunBckRate, 1.0f);
+        rate = MR::getLinerValue(runBckWeight, ::sWalkBckRate, ::sRunBckRate, 1.0f);
     } else {
         runBckWeight = 1.0f;
-        rate = (pSpeed / runSpeed) * sRunBckRate;
-        if (rate > sRunMaxBckRate) {
-            rate = sRunMaxBckRate;
+        rate = (pSpeed / runSpeed) * ::sRunBckRate;
+        if (rate > ::sRunMaxBckRate) {
+            rate = ::sRunMaxBckRate;
         }
     }
 

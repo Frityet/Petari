@@ -1,12 +1,22 @@
 #include "Game/MapObj/MeteoContainer.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvMeteoContainer {
     NEW_NERVE(MeteoContainerNrvWait, MeteoContainer, Wait);
     NEW_NERVE(MeteoContainerNrvDestroy, MeteoContainer, Destroy);
 };  // namespace NrvMeteoContainer
 
-MeteoContainer::MeteoContainer(const char* pName) : LiveActor(pName) {}
+MeteoContainer::MeteoContainer(const char* pName) : LiveActor(pName) {
+}
 
 void MeteoContainer::init(const JMapInfoIter& rIter) {
     const char* objName = nullptr;
@@ -48,11 +58,12 @@ void MeteoContainer::kill() {
     LiveActor::kill();
 }
 
-void MeteoContainer::control() {}
+void MeteoContainer::control() {
+}
 
 void MeteoContainer::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
-        pReceiver->receiveMessage(41, pSender);
+        pReceiver->receiveMessage(ACTMES_PUSH, pSender);
     }
 }
 
@@ -70,7 +81,8 @@ bool MeteoContainer::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRe
     return false;
 }
 
-void MeteoContainer::exeWait() {}
+void MeteoContainer::exeWait() {
+}
 
 void MeteoContainer::exeDestroy() {
     if (MR::isStep(this, 2)) {
@@ -83,4 +95,5 @@ void MeteoContainer::exeDestroy() {
     }
 }
 
-MeteoContainer::~MeteoContainer() {}
+MeteoContainer::~MeteoContainer() {
+}

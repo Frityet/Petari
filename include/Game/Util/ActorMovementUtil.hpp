@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/LiveActor/LiveActor.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
@@ -112,14 +113,14 @@ namespace MR {
     void killVelocityToTarget(LiveActor*, const TVec3f&);
     void forceBindOnGround(LiveActor*, f32, f32);
     bool reboundVelocityFromEachCollision(LiveActor*, f32, f32, f32, f32);
-    bool reboundVelocityFromCollision(LiveActor*, f32, f32, f32);
+    bool reboundVelocityFromCollision(LiveActor*, f32 = 0.0f, f32 = 0.0f, f32 = 1.0f);
     void zeroVelocity(LiveActor*);
     void setVelocity(LiveActor*, const TVec3f&);
     void addVelocity(LiveActor*, const TVec3f&);
     void scaleVelocity(LiveActor*, f32);
     f32 calcVelocityLength(const LiveActor*);
     f32 calcGravitySpeed(const LiveActor*);
-    void applyVelocityDampAndGravity(LiveActor*, f32, f32, f32, f32, f32);
+    void applyVelocityDampAndGravity(LiveActor*, f32 gravity, f32 groundDampH, f32 airDampH, f32 dampVUp, f32 velHMin);
     void setVelocityJumpAwayFromPlayer(LiveActor*, f32, f32);
     bool sendMsgPushAndKillVelocityToTarget(LiveActor*, HitSensor*, HitSensor*);
     void addVelocityFromPush(LiveActor*, f32, HitSensor*, HitSensor*);
@@ -137,7 +138,7 @@ namespace MR {
     void turnDirectionToTarget(const LiveActor*, TVec3f*, const TVec3f&, f32);
     void turnDirectionToTargetDegree(const LiveActor*, TVec3f*, const TVec3f&, f32) NO_INLINE;
     void turnDirectionToTargetDegreeHorizon(const LiveActor*, TVec3f*, const TVec3f&, f32) NO_INLINE;
-    void turnDirectionToTargetUseGroundNormalDegree(const LiveActor*, TVec3f*, const TVec3f&, f32);
+    bool turnDirectionToTargetUseGroundNormalDegree(const LiveActor*, TVec3f*, const TVec3f&, f32);
     void turnDirectionToPlayerDegree(const LiveActor*, TVec3f*, f32);
     void turnDirectionToPlayerDegreeHorizon(const LiveActor*, TVec3f*, f32);
     void turnDirectionFromTargetDegree(const LiveActor*, TVec3f*, const TVec3f&, f32) NO_INLINE;
@@ -156,4 +157,22 @@ namespace MR {
     void moveAndTurnToTarget(LiveActor*, const TVec3f&, f32, f32, f32, f32) NO_INLINE;
     void moveAndTurnToPlayer(LiveActor*, f32, f32, f32, f32);
     void moveAndTurnAlongRail(LiveActor*, f32, f32, f32, f32, f32, bool*);
+
+    // NOTE: symbols dont exist for these, however the exact logic is used various places
+    // If a suitable symbol is found, these can be replaced.
+    inline TVec3f getVelocityHorizon(LiveActor* pActor) {
+        TVec3f velH;
+        velH.scaleAdd(-pActor->mGravity.dot(pActor->mVelocity), pActor->mGravity, pActor->mVelocity);
+        return velH;
+    }
+
+    inline void killVelocityVertical(LiveActor* pActor) {
+        pActor->mVelocity.scaleAdd(-pActor->mGravity.dot(pActor->mVelocity), pActor->mGravity, pActor->mVelocity);
+    }
+
+    inline TVec3f killGravity(LiveActor* pActor, const TVec3f& rVec) {
+        TVec3f velH;
+        velH.scaleAdd(-pActor->mGravity.dot(rVec), pActor->mGravity, rVec);
+        return velH;
+    }
 };  // namespace MR

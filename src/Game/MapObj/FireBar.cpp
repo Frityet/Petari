@@ -1,4 +1,5 @@
 #include "Game/MapObj/FireBar.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util.hpp"
 #include "JSystem/JMath/JMath.hpp"
@@ -7,9 +8,11 @@ namespace NrvFireBar {
     NEW_NERVE(FireBarNrvWait, FireBar, Wait);
 };  // namespace NrvFireBar
 
-FireBarBall::~FireBarBall() {}
+FireBarBall::~FireBarBall() {
+}
 
-FireBar::~FireBar() {}
+FireBar::~FireBar() {
+}
 
 FireBarBall::FireBarBall(LiveActor* pParent) : ModelObj("ファイアバー玉", "FireBarBall", 0, MR::DrawBufferType_NoShadowedMapObj, -2, -2, false) {
     mFireBarParent = pParent;
@@ -109,7 +112,7 @@ void FireBar::init(const JMapInfoIter& rIter) {
         shadow_box.z = 100.0f;
         MR::initShadowVolumeBox(this, shadow_box);
         MR::calcUpVec(&up_vec, this);
-        JMAVECScaleAdd((const Vec*)&up_vec, (const Vec*)&mPosition, (Vec*)&scaled_vec, 50.0f);
+        scaled_vec.scaleAdd(50.0f, up_vec, mPosition);
         MR::setShadowDropPosition(this, 0, scaled_vec);
         MR::setShadowVolumeStartDropOffset(this, 0, 100.0f);
         MR::setShadowDropLength(this, 0, shadowDropDist);
@@ -211,18 +214,18 @@ void FireBar::fixFireBarBall() {
     for (s32 i = 0; i < mFireBallCount; i++) {
         s32 div = i / totalNum;
         div *= totalNum;
-        if (!(i - div)) {
+        if (i - div == 0) {
             TVec3f up_vec;
             MR::calcUpVec(&up_vec, this);
             MR::rotateVecDegree(&scaled, up_vec, 360.0f / mStickCount);
             TVec3f norm;
             MR::normalize(scaled, &norm);
-            JMAVECScaleAdd((const Vec*)&norm, (const Vec*)&mPosition, (Vec*)&final_pos, mStickDistance);
-            JMAVECScaleAdd((const Vec*)&up_vec, (const Vec*)&final_pos, (Vec*)&final_pos, 50.0f);
+            final_pos.scaleAdd(mStickDistance, norm, mPosition);
+            final_pos.scaleAdd(50.0f, up_vec, final_pos);
         } else {
-            JMathInlineVEC::PSVECAdd((const Vec*)&final_pos, (const Vec*)&scaled, (Vec*)&final_pos);
+            final_pos.add(scaled);
         }
 
-        mFireBalls[i]->mPosition.set< f32 >(scaled);
+        mFireBalls[i]->mPosition.set< f32 >(final_pos);
     }
 }

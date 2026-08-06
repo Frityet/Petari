@@ -1,7 +1,13 @@
 #include "Game/MapObj/ArrowSwitchMulti.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/MapObj/ArrowSwitchMultiHolder.hpp"
-#include "math_types.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 namespace NrvArrowSwitchMulti {
     NEW_NERVE(ArrowSwitchMultiNrvRotate, ArrowSwitchMulti, Rotate);
@@ -89,7 +95,8 @@ void ArrowSwitchMulti::init(const JMapInfoIter& rIter) {
     makeActorAppeared();
 }
 
-void ArrowSwitchMulti::control() {}
+void ArrowSwitchMulti::control() {
+}
 
 void ArrowSwitchMulti::calcAndSetBaseMtx() {
     LiveActor::calcAndSetBaseMtx();
@@ -160,6 +167,8 @@ void ArrowSwitchMulti::exeWait() {
 
 // ArrowSwitchMulti::exeRotate
 
-ArrowSwitchMulti::~ArrowSwitchMulti() {}
+ArrowSwitchMulti::~ArrowSwitchMulti() {
+}
 
-ArrowSwitchTarget::~ArrowSwitchTarget() {}
+ArrowSwitchTarget::~ArrowSwitchTarget() {
+}

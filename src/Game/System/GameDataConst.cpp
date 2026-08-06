@@ -7,8 +7,7 @@
 s32 GameDataConst::getPowerStarNumToOpenGalaxy(const char* pGalaxy) {
     JMapInfo info;
     info.attach(&GalaxyIDBCSV);
-    JMapInfoIter element;
-    element = info.findElement< const char* >("name", pGalaxy, 0);
+    JMapInfoIter element = info.findElement< const char* >("name", pGalaxy, 0);
     u32 powerStarNum = 0;
     element.getValue< u32 >("PowerStarNum", &powerStarNum);
     return powerStarNum;
@@ -67,8 +66,7 @@ bool GameDataConst::isGalaxyAppearGreenDriver(const char* pGalaxyName) {
 u32 GameDataConst::getIncludedGrandGalaxyId(const char* pGalaxy) {
     JMapInfo info;
     info.attach(&GalaxyIDBCSV);
-    JMapInfoIter element;
-    element = info.findElement< const char* >("name", pGalaxy, 0);
+    JMapInfoIter element = info.findElement< const char* >("name", pGalaxy, 0);
     u32 grandGalaxyNo = 0;
     element.getValue< u32 >("GrandGalaxyNo", &grandGalaxyNo);
     return grandGalaxyNo;
@@ -77,7 +75,7 @@ u32 GameDataConst::getIncludedGrandGalaxyId(const char* pGalaxy) {
 bool GameDataConst::isPowerStarSpecial(const char* pGalaxy, s32 starId, const char* pSpecial) {
     for (GameEventFlagIter iter = GameEventFlagTable::getBeginIter(); !iter.isEnd(); iter.goNext()) {
         GameEventFlagAccessor accessor(iter.getFlag());
-        
+
         if (accessor.isTypeSpecialStar() && accessor.getStarId() == starId) {
             if (MR::isEqualString(accessor.getGalaxyName(), pGalaxy) && strstr(accessor.getName(), pSpecial) != nullptr) {
                 return true;

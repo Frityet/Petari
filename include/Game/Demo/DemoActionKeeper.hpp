@@ -1,11 +1,15 @@
 #pragma once
 
-#include "Game/Demo/DemoExecutor.hpp"
-#include "Game/Util.hpp"
+#include <revolution/types.h>
 
+class JMapInfoIter;
 class LiveActor;
 class Nerve;
 class DemoExecutor;
+
+namespace MR {
+    class FunctorBase;
+};  // namespace MR
 
 class DemoActionInfo {
 public:
@@ -18,12 +22,12 @@ public:
     void executeActionFirst() const;
     void executeActionLast() const;
 
-    const char* mPartName;  // 0x00
-    const char* mCastName;  // 0x04
-    s32 mCastID;            // 0x08
-    s32 mActionType;        // 0x0C
-    const char* mPosName;   // 0x10
-    const char* mAnimName;  // 0x14
+    const char* mPartName;        // 0x00
+    const char* mCastName;        // 0x04
+    s32 mCastID;                  // 0x08
+    s32 mActionType;              // 0x0C
+    const char* mPosName;         // 0x10
+    const char* mAnimName;        // 0x14
     s32 _18;                      // 0x18
     s32 mCastCount;               // 0x1C
     LiveActor** mCastList;        // 0x20

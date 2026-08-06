@@ -1,10 +1,10 @@
-
 #include "Game/MapObj/WoodBox.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/BenefitItemObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
@@ -18,9 +18,11 @@ namespace NrvWoodBox {
     NEW_NERVE(WoodBoxNrvHit, WoodBox, Hit);
 };  // namespace NrvWoodBox
 
-WoodBox::WoodBox(const char* pName) : LiveActor(pName) {}
+WoodBox::WoodBox(const char* pName) : LiveActor(pName) {
+}
 
-WoodBox::~WoodBox() {}
+WoodBox::~WoodBox() {
+}
 
 void WoodBox::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -78,7 +80,7 @@ void WoodBox::init(const JMapInfoIter& rIter) {
     }
 
     mBreakModel = new ModelObj("壊れモデル", "WoodBoxBreak", getBaseMtx(), MR::DrawBufferType_NoSilhouettedMapObjStrongLight, -2, -2, false);
-    mBreakModel->mScale.setPS2(mScale);
+    mBreakModel->mScale = mScale;
     MR::initLightCtrl(mBreakModel);
     mBreakModel->kill();
     mFloorTouchTimer = 0;
@@ -212,7 +214,8 @@ void WoodBox::kill() {
     }
 }
 
-void WoodBox::exeWait() {}
+void WoodBox::exeWait() {
+}
 void WoodBox::exeHit() {
     if (LiveActor::getNerveStep() == 0) {
         LiveActor::getSensor("body")->invalidate();
@@ -237,10 +240,7 @@ void WoodBox::exeHit() {
             Mtx spawnMtx;
             PSMTXCopy(getBaseMtx(), spawnMtx);
 
-            f32 scale = 50.0f;
-            TVec3f spawnOffset = upVec;
-            spawnOffset.mult(scale);
-            MR::addTransMtx(spawnMtx, spawnOffset);
+            MR::addTransMtx(spawnMtx, upVec * 50.0f);
 
             MR::appearKinokoOneUpPop((BenefitItemObj*)mOneUp, spawnMtx, 30.0f);
         }
@@ -258,7 +258,8 @@ void WoodBox::exeHit() {
         kill();
     }
 }
-void WoodBox::exeKilled() {}
+void WoodBox::exeKilled() {
+}
 
 void WoodBox::doHit(HitSensor* pSender, HitSensor* pReceiver) {
     if (mHitPoint == 0) {

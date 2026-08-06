@@ -1,7 +1,7 @@
 #include "Game/MapObj/ScrewSwitch.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Map/CollisionParts.hpp"
 #include "Game/MapObj/MapObjConnector.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
@@ -13,9 +13,18 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/types.h"
+
+void ScrewSwitch_FORCE_MATCH_SDATA2() {
+    (void)0.0f;
+    (void)3.0f;
+}
+
+namespace {
+    static const s32 sStepForAdjust = 3;
+    static const s32 sStepToRumbleCamera = 30;
+    static const s32 sStepForScrewStart = 30;
+    static const s32 sStepForPause = 0;
+}  // namespace
 
 namespace NrvScrewSwitch {
     NEW_NERVE(ScrewSwitchNrvWait, ScrewSwitch, Wait);
@@ -31,8 +40,6 @@ ScrewSwitch::ScrewSwitch(const char* pName) : LiveActor(pName) {
     mMapObjConnector = new MapObjConnector(this);
 }
 
-ScrewSwitch::~ScrewSwitch() {}
-
 void ScrewSwitch::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     MR::needStageSwitchWriteA(this, rIter);
@@ -42,14 +49,14 @@ void ScrewSwitch::init(const JMapInfoIter& rIter) {
     MR::initLightCtrl(this);
     initHitSensor(2);
     MR::addBodyMessageSensorMapObj(this);
-    TVec3f var1;
-    var1.scale(-150.0f, mGravity);
-    MR::addHitSensorAtJoint(this, "binder", "Screw", ATYPE_BINDER, 8, 150.0f, var1);
+    TVec3f offset;
+    offset.scale(-150.0f, mGravity);
+    MR::addHitSensorAtJoint(this, "binder", "Screw", ATYPE_BINDER, 8, 150.0f, offset);
     MtxPtr jointMtx = MR::getJointMtx(this, "Screw");
     HitSensor* Sensor = getSensor("binder");
     MR::initCollisionParts(this, "ScrewCol", Sensor, jointMtx);
     mCollisionParts = MR::createCollisionPartsFromLiveActor(this, "ScrewReceiveCol", getSensor("body"), MR::getJointMtx(this, "ScrewReceive"),
-                                                            (MR::CollisionScaleType)1);
+                                                            MR::CollisionScaleType_NotUsingScale);
     MR::validateCollisionParts(mCollisionParts);
     initEffectKeeper(0, nullptr, false);
     initSound(4, false);
@@ -58,16 +65,21 @@ void ScrewSwitch::init(const JMapInfoIter& rIter) {
     makeActorAppeared();
 }
 
-// Theres an Inline at JMAVECLearp. Scratch: https://decomp.me/scratch/LUQFL
+void ScrewSwitch::exeWait() {
+    if (MR::isFirstStep(this)) {
+        MR::startBrk(this, "ScrewSwitchOn");
+        MR::setBrkFrameAndStop(this, 0.0f);
+    }
+}
+
 void ScrewSwitch::exeAdjust() {
     if (MR::isFirstStep(this)) {
         MR::startBrk(this, "ScrewSwitchOn");
         MR::setBrkFrameAndStop(this, 0.0f);
     }
-    f32 step = getNerveStep() / 3.0f;
-    HitSensor* sensor = getSensor("body");
-    JMAVECLerp((const Vec*)_90, &sensor->mPosition, &mPosition, step);
-    if (MR::isStep(this, 3)) {
+
+    _90->mPosition.lerp(_90->mPosition, getSensor("binder")->mPosition, static_cast< f32 >(getNerveStep()) / ::sStepForAdjust);
+    if (MR::isStep(this, ::sStepForAdjust)) {
         setNerve(&NrvScrewSwitch::ScrewSwitchNrvScrew::sInstance);
     }
 }
@@ -76,14 +88,14 @@ void ScrewSwitch::exeScrew() {
     if (MR::isFirstStep(this)) {
         MR::startBck(this, "ScrewSwitchOn", nullptr);
         MR::startBrk(this, "ScrewSwitchOn");
-        MR::startBckPlayer("ScrewSwitchOn", (const char*)0);
+        MR::startBckPlayer("ScrewSwitchOn", static_cast< const char* >(nullptr));
     }
-    if (MR::isLessStep(this, 30)) {
+    if (MR::isLessStep(this, ::sStepForScrewStart)) {
         MR::startLevelSound(this, "SE_OJ_LV_SCREW_SWITCH_MOVE");
     }
-    if (MR::isStep(this, 30)) {
+    if (MR::isStep(this, ::sStepToRumbleCamera)) {
         MR::startSound(this, "SE_OJ_SCREW_SWITCH_ON");
-        MR::tryRumblePadVeryStrong(this, 0);
+        MR::tryRumblePadVeryStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
     }
     if (MR::isBckStopped(this)) {
@@ -93,7 +105,7 @@ void ScrewSwitch::exeScrew() {
 }
 
 void ScrewSwitch::exeEnd() {
-    if (MR::isStep(this, 0)) {
+    if (MR::isStep(this, ::sStepForPause)) {
         MR::invalidateHitSensors(this);
         if (MR::isPlayerInRush()) {
             MR::endBindAndPlayerWait(this);
@@ -134,18 +146,7 @@ bool ScrewSwitch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRecei
 
 void ScrewSwitch::updateBindActorMtx() {
     TPos3f pos;
-    pos.setInline(_90->getBaseMtx());
-    HitSensor* Sensor = getSensor("binder");
-    pos.mMtx[0][3] = Sensor->mPosition.x;
-    pos.mMtx[1][3] = Sensor->mPosition.y;
-    pos.mMtx[2][3] = Sensor->mPosition.z;
-
+    pos.set(_90->getBaseMtx());
+    pos.setTrans(getSensor("binder")->mPosition);
     MR::setBaseTRMtx(_90, pos);
-}
-
-inline void ScrewSwitch::exeWait() {
-    if (MR::isFirstStep(this)) {
-        MR::startBrk(this, "ScrewSwitchOn");
-        MR::setBrkFrameAndStop(this, 0.0f);
-    }
 }

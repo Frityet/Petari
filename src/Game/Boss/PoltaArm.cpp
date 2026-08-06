@@ -1,17 +1,15 @@
 #include "Game/Boss/PoltaArm.hpp"
 #include "Game/Boss/Polta.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
-#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "JSystem/JMath/JMath.hpp"
-#include "revolution/types.h"
 
 namespace NrvPoltaArm {
     NEW_NERVE(PoltaArmNrvControlled, PoltaArm, Controlled);
@@ -77,6 +75,9 @@ void PoltaArm::control() {
     }
 }
 
+void PoltaArm::exeControlled() {
+}
+
 void PoltaArm::exeDamage() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Damage");
@@ -87,7 +88,7 @@ void PoltaArm::exeDamage() {
         f32 bvaFrame = (1.0f - ratio) * 2.0f;
         MR::setBvaFrameAndStop(this, bvaFrame);
         MR::startSound(this, "SE_BM_POLTA_ROCK_DAMAGE");
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormalStrong();
         MR::stopScene(5);
         appearBreakModel();
@@ -103,7 +104,7 @@ void PoltaArm::exeBreak() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Break");
         MR::startSound(this, "SE_BM_POLTA_ROCK_BREAK");
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormalStrong();
         MR::stopScene(5);
         appearBreakModel();
@@ -143,6 +144,10 @@ void PoltaArm::exeRepair() {
     }
 }
 
+void PoltaArm::endRepair() {
+    mFormationModel->kill();
+}
+
 void PoltaArm::exeBroken() {
     if (!_D4) {
         mBrokenCounter++;
@@ -150,6 +155,12 @@ void PoltaArm::exeBroken() {
     if (mBrokenCounter > 1200) {
         setNerve(&NrvPoltaArm::PoltaArmNrvRepair::sInstance);
     }
+}
+
+void PoltaArm::exeWaitDamageEnd() {
+}
+
+void PoltaArm::exeWaitRepairEnd() {
 }
 
 bool PoltaArm::isEnableHitSensor() const {
@@ -261,20 +272,9 @@ bool PoltaArm::requestControlled(const char* pActionName) {
 void PoltaArm::appearBreakModel() {
     TVec3f jointPos;
     MR::copyJointPos(this, mIsLeftArm ? "HandL" : "HandR", &jointPos);
-    TVec3f negativeGravity(mGravity.negateInline());
-    MR::makeMtxUpNoSupportPos(&_98, negativeGravity, jointPos);
+    MR::makeMtxUpNoSupportPos(&_98, -mGravity, jointPos);
     mBreakModel->mScale.set(1.0f, 1.0f, 1.0f);
     mBreakModel->makeActorAppeared();
     MR::invalidateClipping(mBreakModel);
     MR::startAction(mBreakModel, "Break");
 }
-
-inline void PoltaArm::exeWaitRepairEnd() {}
-
-inline void PoltaArm::exeWaitDamageEnd() {}
-
-inline void PoltaArm::endRepair() {
-    mFormationModel->kill();
-}
-
-inline void PoltaArm::exeControlled() {}

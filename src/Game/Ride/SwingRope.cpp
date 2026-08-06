@@ -1,16 +1,22 @@
 #include "Game/Ride/SwingRope.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Ride/SledRopePoint.hpp"
 #include "Game/Ride/SwingRopePoint.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/Color.hpp"
+#include "Game/Util/Functor.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <revolution/gx/GXCull.h>
 #include <revolution/gx/GXEnum.h>
@@ -167,7 +173,7 @@ void SwingRope::exeBindStretch() {
         mStretchTime = 0;
     }
 
-    if (!updateStretch() && mGrabCoord - PSVECDistance(&mBasePos, &mSledPoint->mPosition) > 5.0f) {
+    if (!updateStretch() && mGrabCoord - mBasePos.distance(mSledPoint->mPosition) > 5.0f) {
         setNerve(&NrvSwingRope::SwingRopeNrvBindLoose::sInstance);
     }
 }
@@ -187,8 +193,7 @@ void SwingRope::initPoints() {
     mPoints = new SwingRopePoint*[mNumPoints];
 
     for (s32 idx = 0; idx < mNumPoints; idx++) {
-        TVec3f pos(mGravity);
-        pos.scale(50.0f * (idx + 1));
+        TVec3f pos(mGravity * (50.0f * (idx + 1)));
         pos.add(mBasePos);
         mPoints[idx] = new SwingRopePoint(pos);
     }
@@ -206,8 +211,7 @@ void SwingRope::updateHitSensor(HitSensor* pSensor) {
     }
 
     if (MR::isSensorRide(pSensor)) {
-        TVec3f sensorPos(mSledPoint->mUp);
-        sensorPos.scale(-50.0f);
+        TVec3f sensorPos(mSledPoint->mUp * -50.0f);
         sensorPos.add(mSledPoint->mPosition);
         pSensor->mPosition.set(sensorPos);
         return;
@@ -236,7 +240,7 @@ bool SwingRope::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceive
         TVec3f grav(mGravity);
         TVec3f pos(mPosition);
 
-        MR::calcPerpendicFootToLine(&pos, *MR::getPlayerPos(), mBasePos, mBasePos.addOperatorInLine(grav.scaleInline(mRopeLength)));
+        MR::calcPerpendicFootToLine(&pos, *MR::getPlayerPos(), mBasePos, mBasePos + grav * mRopeLength);
 
         TVec3f posDiff = pos - mBasePos;
         f32 grabCoord = posDiff.dot(grav);
@@ -247,7 +251,7 @@ bool SwingRope::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceive
         TVec3f front;
         MR::getPlayerFrontVec(&front);
 
-        if (__fabsf(mRider->mPosition.y - mBasePos.y) < 1.0f) {
+        if (MR::abs(mRider->mPosition.y - mBasePos.y) < 1.0f) {
             front.set< f32 >(0.0f, -1.0f, 0.0f);
         }
         mSledPoint->mFront.set(front);
@@ -298,8 +302,7 @@ f32 SwingRope::calcFriction(s32 index) const {
 }
 
 void SwingRope::addPointGravity() {
-    TVec3f grav(mGravity);
-    grav.scale(1.0f);
+    TVec3f grav(mGravity * 1.0f);
 
     for (s32 idx = 0; idx < mNumPoints; idx++) {
         mPoints[idx]->addAccel(grav);
@@ -339,7 +342,7 @@ void SwingRope::restrictPointToHead(s32 index, const TVec3f& rAnchor, f32 length
 
 bool SwingRope::isAllPointsStop() const {
     for (s32 idx = 0; idx < mNumPoints; idx++) {
-        if (__fabsf(mPoints[idx]->mVelocity.x) > 0.1f || __fabsf(mPoints[idx]->mVelocity.y) > 0.1f || __fabsf(mPoints[idx]->mVelocity.z) > 0.1f) {
+        if (MR::abs(mPoints[idx]->mVelocity.x) > 0.1f || MR::abs(mPoints[idx]->mVelocity.y) > 0.1f || MR::abs(mPoints[idx]->mVelocity.z) > 0.1f) {
             return false;
         }
 
@@ -352,7 +355,7 @@ bool SwingRope::isAllPointsStop() const {
 }
 
 bool SwingRope::isStretched() const {
-    return __fabsf(mGrabCoord - PSVECDistance(&mBasePos, &mSledPoint->mPosition)) < 1.0f;
+    return MR::abs(mGrabCoord - mBasePos.distance(mSledPoint->mPosition)) < 1.0f;
 }
 
 bool SwingRope::tryJump() {
@@ -361,9 +364,9 @@ bool SwingRope::tryJump() {
         TVec3f proj(mGravity);
         proj.scale(mSledPoint->mVelocity.dot(mGravity));
         if (proj.length() < 25.0f) {
-            proj = mGravity.scaleInline(-25.0f);
+            proj = mGravity * -25.0f;
         } else if (proj.length() > 50.0f) {
-            proj = mGravity.scaleInline(-50.0f);
+            proj = mGravity * -50.0f;
         }
 
         TVec3f velHoriz(mSledPoint->mVelocity);
@@ -376,7 +379,7 @@ bool SwingRope::tryJump() {
             TVec3f stick(0.0f, 0.0f, 0.0f);
             MR::calcWorldStickDirectionXZ(&stick, WPAD_CHAN0);
             front.set< f32 >(stick.x, stick.y, stick.z);
-            velHoriz.set(stick.scaleInline(5.0f));
+            velHoriz.set(stick * 5.0f);
             MR::vecKillElement(velHoriz, mGravity, &velHoriz);
         } else if (!MR::isNearZero(velHoriz, 0.001f)) {
             front.set(velHoriz);
@@ -464,7 +467,7 @@ void SwingRope::updateHangPoint() {
 }
 
 void SwingRope::updateRideMtx() {
-    mRideMtx.setVecAndTransInline(mSledPoint->mSide, mSledPoint->mUp, mSledPoint->mFront, mSledPoint->mPosition);
+    mRideMtx.setTR(mSledPoint->mSide, mSledPoint->mUp, mSledPoint->mFront, mSledPoint->mPosition);
 }
 
 void SwingRope::updateFootPos() {
@@ -472,13 +475,13 @@ void SwingRope::updateFootPos() {
     MR::calcPlayerJointMtx(&footMtx, "FootL");
 
     TVec3f side, up, front;
-    footMtx.getXDirInline(side);
-    footMtx.getYDirInline(up);
-    footMtx.getZDirInline(front);
-    footMtx.getTransInline(mFootPos);
+    footMtx.getXDir(side);
+    footMtx.getYDir(up);
+    footMtx.getZDir(front);
+    footMtx.getTrans(mFootPos);
 
-    mFootPos.add(side.scaleInline(0.0f).addOperatorInLine(up.scaleInline(-20.0f)).addOperatorInLine(front.scaleInline(10.0f)));
-    mGrabToFootDist = PSVECDistance(&mFootPos, &mSledPoint->mPosition);
+    mFootPos.add(side * 0.0f + up * -20.0f + front * 10.0f);
+    mGrabToFootDist = mFootPos.distance(mSledPoint->mPosition);
     mFootCoord = mGrabCoord + mGrabToFootDist;
     mFootPointNum = calcPointNo(mFootCoord);
 }
@@ -579,14 +582,13 @@ void SwingRope::updateStretchHangUpperPoints() {
 
     TVec3f front(mSledPoint->mFront);
     for (s32 idx = 0; idx <= grabIndex; idx++) {
-        TVec3f pos(mSledPoint->mUp);
-        pos.scale(-50.0f * (idx + 1));
+        TVec3f pos(mSledPoint->mUp * (-50.0f * (idx + 1)));
         pos.add(mBasePos);
 
         if (mStretchTime < 10) {
             f32 t = MR::getEaseOutValue((mStretchTime + 1) / 10.0f, 0.0f, 1.0f, 1.0f);
             TVec3f stretchPos(pos);
-            pos = stretchPos.scaleInline(t).addOperatorInLine(mPoints[idx]->mPosition.scaleInline(1.0f - t));
+            pos = stretchPos * t + mPoints[idx]->mPosition * (1.0f - t);
         }
         mPoints[idx]->setAndUpdatePosAndAxis(pos, mSledPoint->mUp, front);
         front.set(mPoints[idx]->mFront);
@@ -613,8 +615,8 @@ void SwingRope::updateHangLowerPoints() {
         MR::normalize(&up);
         MR::normalize(&front);
 
-        PSVECCrossProduct(&up, &front, &side);
-        if (!MR::isNearZero(side, 0.001f)) {
+        side.cross(up, front);
+        if (!MR::isNearZero(side)) {
             MR::makeAxisUpFront(&side, &front, up, front);
             mPoints[nextIndex]->setPosAndAxis(mFootPos, side, up, front);
         }
@@ -633,7 +635,6 @@ void SwingRope::updateHangLowerPointPos(s32 index) {
 }
 
 namespace {
-
     void sendPoint(const TVec3f& pos, const TVec3f& side, const TVec3f& front, f32 x, f32 y, u32 color, f32 texX, f32 texY) {
         GXPosition3f32(pos.x + side.x * x + front.x * y, pos.y + side.y * x + front.y * y, pos.z + side.z * x + front.z * y);
         GXColor1u32(color);
@@ -644,24 +645,26 @@ namespace {
         // FIXME: register swap
 
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (pRope->mNumPoints + 1) * 2);
+        {
+            const TVec3f& front = pRope->mPoints[0]->mFront;
+            const TVec3f& side = pRope->mPoints[0]->mSide;
+            const TVec3f& pos = pRope->mBasePos;
 
-        const TVec3f& front = pRope->mPoints[0]->mFront;
-        const TVec3f& side = pRope->mPoints[0]->mSide;
-        const TVec3f& pos = pRope->mBasePos;
+            sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.0f);
+            sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.0f);
 
-        sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.0f);
-        sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.0f);
+            SwingRopePoint* point;
+            for (s32 idx = 0; idx < pRope->mNumPoints; idx++) {
+                point = pRope->mPoints[idx];
+                const TVec3f& front = point->mFront;
+                const TVec3f& side = point->mSide;
+                const TVec3f& pos = point->mPosition;
 
-        SwingRopePoint* point;
-        for (s32 idx = 0; idx < pRope->mNumPoints; idx++) {
-            point = pRope->mPoints[idx];
-            const TVec3f& front = point->mFront;
-            const TVec3f& side = point->mSide;
-            const TVec3f& pos = point->mPosition;
-
-            sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.13f * (idx + 1));
-            sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.13f * (idx + 1));
+                sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.13f * (idx + 1));
+                sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.13f * (idx + 1));
+            }
         }
+        GXEnd();
     }
 
     void drawLineAtHanging(const SwingRope* pRope, u32 color1, u32 color2, f32 texY1, f32 texY2, f32 x1, f32 y1, f32 x2, f32 y2) {
@@ -669,24 +672,26 @@ namespace {
         // FIXME: register swap
 
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (pRope->mNumPoints + 1) * 2);
+        {
+            const TVec3f& front = pRope->mPoints[0]->mFront;
+            const TVec3f& side = pRope->mPoints[0]->mSide;
+            const TVec3f& pos = pRope->mBasePos;
 
-        const TVec3f& front = pRope->mPoints[0]->mFront;
-        const TVec3f& side = pRope->mPoints[0]->mSide;
-        const TVec3f& pos = pRope->mBasePos;
+            sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.0f);
+            sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.0f);
 
-        sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.0f);
-        sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.0f);
+            SwingRopePoint* point;
+            for (s32 idx = 0; idx < pRope->mNumPoints; idx++) {
+                point = pRope->mPoints[idx];
+                const TVec3f& front = point->mFront;
+                const TVec3f& side = point->mSide;
+                const TVec3f& pos = point->mPosition;
 
-        SwingRopePoint* point;
-        for (s32 idx = 0; idx < pRope->mNumPoints; idx++) {
-            point = pRope->mPoints[idx];
-            const TVec3f& front = point->mFront;
-            const TVec3f& side = point->mSide;
-            const TVec3f& pos = point->mPosition;
-
-            sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.13f * (idx + 1));
-            sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.13f * (idx + 1));
+                sendPoint(pos, side, front, x1, y1, color1, 0.0f, 0.13f * (idx + 1));
+                sendPoint(pos, side, front, x2, y2, color2, 1.0f, 0.13f * (idx + 1));
+            }
         }
+        GXEnd();
     }
 };  // namespace
 
@@ -700,43 +705,52 @@ void SwingRope::drawStop() const {
     f32 texY = (mRopeLength / 50.0f) * 0.13f;
     u32 color1, color2;
 
-    color1 = sColorPlusX;
-    color2 = sColorPlusZ;
+    color1 = ::sColorPlusX;
+    color2 = ::sColorPlusZ;
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-    sendPoint(mBasePos, side, front, -30.0f, 43.0f, color1, 0.0f, 0.0f);
-    sendPoint(mBasePos, side, front, 33.0f, -43.0f, color2, 1.0f, 0.0f);
-    sendPoint(bottom, side, front, -30.0f, 43.0f, color1, 0.0f, texY);
-    sendPoint(bottom, side, front, 33.0f, -43.0f, color2, 1.0f, texY);
+    {
+        ::sendPoint(mBasePos, side, front, -30.0f, 43.0f, color1, 0.0f, 0.0f);
+        ::sendPoint(mBasePos, side, front, 33.0f, -43.0f, color2, 1.0f, 0.0f);
+        ::sendPoint(bottom, side, front, -30.0f, 43.0f, color1, 0.0f, texY);
+        ::sendPoint(bottom, side, front, 33.0f, -43.0f, color2, 1.0f, texY);
+    }
+    GXEnd();
 
-    color1 = sColorPlusZ;
-    color2 = sColorMinusX;
+    color1 = ::sColorPlusZ;
+    color2 = ::sColorMinusX;
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-    sendPoint(mBasePos, side, front, -33.0f, -43.0f, color1, 0.0f, 0.0f);
-    sendPoint(mBasePos, side, front, 30.0f, 43.0f, color2, 1.0f, 0.0f);
-    sendPoint(bottom, side, front, -33.0f, -43.0f, color1, 0.0f, texY);
-    sendPoint(bottom, side, front, 30.0f, 43.0f, color2, 1.0f, texY);
+    {
+        ::sendPoint(mBasePos, side, front, -33.0f, -43.0f, color1, 0.0f, 0.0f);
+        ::sendPoint(mBasePos, side, front, 30.0f, 43.0f, color2, 1.0f, 0.0f);
+        ::sendPoint(bottom, side, front, -33.0f, -43.0f, color1, 0.0f, texY);
+        ::sendPoint(bottom, side, front, 30.0f, 43.0f, color2, 1.0f, texY);
+    }
+    GXEnd();
 
-    color1 = sColorMinusX;
-    color2 = sColorPlusX;
+    color1 = ::sColorMinusX;
+    color2 = ::sColorPlusX;
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-    sendPoint(mBasePos, side, front, 43.0f, -3.0f, color1, 0.0f, 0.0f);
-    sendPoint(mBasePos, side, front, -43.0f, -3.0f, color2, 1.0f, 0.0f);
-    sendPoint(bottom, side, front, 43.0f, -3.0f, color1, 0.0f, texY);
-    sendPoint(bottom, side, front, -43.0f, -3.0f, color2, 1.0f, texY);
+    {
+        ::sendPoint(mBasePos, side, front, 43.0f, -3.0f, color1, 0.0f, 0.0f);
+        ::sendPoint(mBasePos, side, front, -43.0f, -3.0f, color2, 1.0f, 0.0f);
+        ::sendPoint(bottom, side, front, 43.0f, -3.0f, color1, 0.0f, texY);
+        ::sendPoint(bottom, side, front, -43.0f, -3.0f, color2, 1.0f, texY);
+    }
+    GXEnd();
 }
 
 void SwingRope::drawFree() const {
-    drawLine(this, sColorPlusZ, sColorPlusX, -30.0f, 43.0f, 33.0f, -43.0f);
-    drawLine(this, sColorMinusX, sColorPlusZ, -33.0f, -43.0f, 30.0f, 43.0f);
-    drawLine(this, sColorMinusX, sColorPlusZ, 43.0f, -3.0f, -43.0f, -3.0f);
+    ::drawLine(this, ::sColorPlusZ, ::sColorPlusX, -30.0f, 43.0f, 33.0f, -43.0f);
+    ::drawLine(this, ::sColorMinusX, ::sColorPlusZ, -33.0f, -43.0f, 30.0f, 43.0f);
+    ::drawLine(this, ::sColorMinusX, ::sColorPlusZ, 43.0f, -3.0f, -43.0f, -3.0f);
 }
 
 void SwingRope::drawBind() const {
     f32 texYGrab = (mGrabPointNum + 1.0f) * 0.13f;
     f32 texYFoot = (calcPointNo(mFootCoord) + 1.0f) * 0.13f;
-    drawLineAtHanging(this, sColorPlusZ, sColorPlusX, texYGrab, texYFoot, -30.0f, 43.0f, 33.0f, -43.0f);
-    drawLineAtHanging(this, sColorMinusX, sColorPlusZ, texYGrab, texYFoot, -33.0f, -43.0f, 30.0f, 43.0f);
-    drawLineAtHanging(this, sColorMinusX, sColorPlusZ, texYGrab, texYFoot, 43.0f, -3.0f, -43.0f, -3.0f);
+    ::drawLineAtHanging(this, ::sColorPlusZ, ::sColorPlusX, texYGrab, texYFoot, -30.0f, 43.0f, 33.0f, -43.0f);
+    ::drawLineAtHanging(this, ::sColorMinusX, ::sColorPlusZ, texYGrab, texYFoot, -33.0f, -43.0f, 30.0f, 43.0f);
+    ::drawLineAtHanging(this, ::sColorMinusX, ::sColorPlusZ, texYGrab, texYFoot, 43.0f, -3.0f, -43.0f, -3.0f);
 }
 
 SwingRopeGroup::SwingRopeGroup(const char* pName) : NameObj(pName) {

@@ -1,12 +1,23 @@
 #include "Game/MapObj/TimeAppearObj.hpp"
-#include "Game/Util.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
+
+namespace {
+    static const s32 sDefaultTimer = 30;
+};  // namespace
 
 namespace NrvTimeAppearObj {
     NEW_NERVE(TimeAppearObjNrvHide, TimeAppearObj, Hide);
     NEW_NERVE(TimeAppearObjNrvEnd, TimeAppearObj, End);
 };  // namespace NrvTimeAppearObj
 
-TimeAppearObj::TimeAppearObj(const char* pName) : MapObjActor(pName), mTimer(0x1E) {}
+TimeAppearObj::TimeAppearObj(const char* pName) : MapObjActor(pName), mTimer(::sDefaultTimer) {
+}
 
 void TimeAppearObj::init(const JMapInfoIter& rIter) {
     MapObjActorInitInfo info;
@@ -46,5 +57,3 @@ void TimeAppearObj::appear() {
     MR::invalidateCollisionParts(this);
     setNerve(&NrvTimeAppearObj::TimeAppearObjNrvHide::sInstance);
 }
-
-TimeAppearObj::~TimeAppearObj() {}

@@ -3,6 +3,7 @@
 #include "Game/MapObj/PlantRailInfo.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/Color.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -27,7 +28,8 @@ namespace {
 
 PlantStalk::PlantStalk()
     : LiveActor("茎"), mNumPlantPoints(0), mPlantPoints(nullptr), mRailInfo(nullptr), mStalkLength(0.0f), mGrowthPercent(0.0f),
-      mGrowthRate(MR::getRandom(15.0f, 100.0f)), mGrowthTimer(MR::getRandom(static_cast< s32 >(5), static_cast< s32 >(30))), mGrownPlantPoints(0) {}
+      mGrowthRate(MR::getRandom(15.0f, 100.0f)), mGrowthTimer(MR::getRandom(static_cast< s32 >(5), static_cast< s32 >(30))), mGrownPlantPoints(0) {
+}
 
 void PlantStalk::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, -1, -1, -1, 4);
@@ -171,6 +173,7 @@ void PlantStalk::drawGrowUp() const {
         GXColor1u32(::sColorPlusX);
         GXTexCoord2f32(1.0f, idx);
     }
+    GXEnd();
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mGrownPlantPoints * 2);
     for (s32 idx = 0; idx < mGrownPlantPoints; idx++) {
@@ -189,6 +192,7 @@ void PlantStalk::drawGrowUp() const {
         GXColor1u32(::sColorPlusZ);
         GXTexCoord2f32(1.0f, idx);
     }
+    GXEnd();
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mGrownPlantPoints * 2);
     for (s32 idx = 0; idx < mGrownPlantPoints; idx++) {
@@ -208,6 +212,7 @@ void PlantStalk::drawGrowUp() const {
         GXColor1u32(::sColorMinusX);
         GXTexCoord2f32(1.0f, idx);
     }
+    GXEnd();
 }
 
 PlantStalkDrawInit::PlantStalkDrawInit(const char* pName) : NameObj(pName) {

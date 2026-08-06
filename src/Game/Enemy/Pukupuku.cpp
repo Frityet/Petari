@@ -1,16 +1,26 @@
 #include "Game/Enemy/Pukupuku.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/WalkerStateBindStarPointer.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorStateUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/ParabolicPath.hpp"
-#include "Game/Util/RailUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include "Game/Util/ValueControl.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JMath/JMath.hpp"
-#include "revolution/mtx.h"
-#include "revolution/os.h"
 
 namespace {
     NEW_NERVE(PukupukuStateLandingLandingMoveLand, PukupukuStateLanding, LandingMoveLand);
@@ -205,11 +215,9 @@ void PukupukuStateLanding::emitGroundHitEffect() {
     if (!MR::isBindedGround(mHost)) {
         Triangle triangle;
         Pukupuku* parent = mHost;
-        TVec3f v3(parent->mGravity);
-        v3.scale(100.0f);
 
         TVec3f poly;
-        if (MR::getFirstPolyOnLineToMap(&poly, &triangle, parent->mPosition, v3)) {
+        if (MR::getFirstPolyOnLineToMap(&poly, &triangle, parent->mPosition, mHost->mGravity * 100.0f)) {
             MR::updateEffectFloorCode(mHost, &triangle);
         }
     }
@@ -242,7 +250,7 @@ void Pukupuku::init(const JMapInfoIter& rIter) {
     MR::connectToSceneEnemy(this);
     MR::initLightCtrl(this);
     initHitSensor(1);
-    MR::addHitSensorAtJoint(this, "body", "center", 34, 8, 60.0f, TVec3f(0.0f, 0.0f, 0.0f));
+    MR::addHitSensorAtJoint(this, "body", "center", ATYPE_NOKONOKO, 8, 60.0f, TVec3f(0.0f, 0.0f, 0.0f));
     initBinder(70.0f, 0.0f, 0);
     MR::setBinderOffsetVec(this, &_9C, false);
     initRailRider(rIter);
@@ -350,11 +358,7 @@ void Pukupuku::exeWait() {
 }
 
 void Pukupuku::exeMoveWater() {
-    bool v2 = false;
-
-    if (isNerve(&PukupukuTrampled::sInstance) || isNerve(&PukupukuBlownOff::sInstance)) {
-        v2 = true;
-    }
+    bool v2 = isNerve(&PukupukuTrampled::sInstance) || isNerve(&PukupukuBlownOff::sInstance);
 
     if (!v2 && !tryBindStarPointer()) {
         if (MR::isFirstStep(this)) {
@@ -396,9 +400,7 @@ void Pukupuku::exeTrampled() {
         TPos3f hitMtx;
         calcGroundHitMtx(&hitMtx);
         hitMtx.getQuat(_A8);
-        TVec3f v4(mGravity);
-        v4.scale(10.0f);
-        mVelocity.set< f32 >(v4);
+        mVelocity.set< f32 >(mGravity * 10.0f);
         startAnim("Flat", "CloseEye");
         MR::startSound(this, "SE_EM_STOMPED_S");
     } else if (!MR::isBinded(this)) {
@@ -426,7 +428,7 @@ void Pukupuku::exeBlownOff() {
     } else if (!MR::isBinded(this)) {
         TVec3f v11(mGravity);
         v11.scale(getBlownOffSpeedRate());
-        mVelocity.addInline(v11);
+        mVelocity.add(v11);
     }
 
     MR::stopSceneAtStep(this, 2, 4);
@@ -445,8 +447,8 @@ void Pukupuku::exeBindStarPointer() {
         u32 v4 = 0;
 
         do {
-            if (MR::isEqualStringCase(cBck2BtpTable[v4], val)) {
-                btp = cBck2BtpTable[v4 + 1];
+            if (MR::isEqualStringCase(::cBck2BtpTable[v4], val)) {
+                btp = ::cBck2BtpTable[v4 + 1];
                 break;
             }
 
@@ -551,11 +553,13 @@ void Pukupuku::control() {
 
 void Pukupuku::calcAndSetBaseMtx() {
     MR::setBaseTRMtx(this, _A8);
-    TVec3f v7(mScale);
-    JMathInlineVEC::PSVECMultiply(&v7, &mScaleCtrl->_C, &v7);
-    MR::setBaseScale(this, v7);
+    TVec3f scale = mScale;
+    scale.mul(scale, mScaleCtrl->_C);
+    MR::setBaseScale(this, scale);
 }
 
-PukupukuStateLanding::~PukupukuStateLanding() {}
+PukupukuStateLanding::~PukupukuStateLanding() {
+}
 
-Pukupuku::~Pukupuku() {}
+Pukupuku::~Pukupuku() {
+}

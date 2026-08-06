@@ -2,10 +2,13 @@
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 void Mario::checkBump() {
     if (!mMovementStates.jumping && !mMovementStates._A && mMovementStates._1) {
-        if (!isStatusActive(5) && !isStatusActive(1) && !isStatusActive(6) && !isStatusActive(29)) {
+        if (!isStatusActive(MarioStatus_Hang) && !isStatusActive(MarioStatus_Wall) && !isStatusActive(MarioStatus_Swim) &&
+            !isStatusActive(MarioStatus_Climb)) {
             if (!isDamaging() && getPlayerMode() != 5 && !isSwimming()) {
                 if (isStickOn()) {
                     if (!_750 && (mMovementStates._23 == 0)) {
@@ -64,7 +67,7 @@ void Mario::startBump(const TVec3f& rVec) {
     }
 }
 
-MarioBump::MarioBump(MarioActor* pActor) : MarioState(pActor, 0x1E) {
+MarioBump::MarioBump(MarioActor* pActor) : MarioState(pActor, MarioStatus_Bump) {
     _12 = 0;
     _14 = 0.0f;
     _18.zero();
@@ -88,7 +91,7 @@ bool MarioBump::start() {
     _12 = static_cast< u16 >(blendTimer);
 
     if (isAnimationRun(static_cast< const char* >(nullptr))) {
-        stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
+        stopAnimation(static_cast< const char* >(nullptr));
     }
 
     _18 = getFrontVec();

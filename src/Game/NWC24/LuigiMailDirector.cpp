@@ -14,15 +14,16 @@ namespace {
 };  // namespace
 
 LuigiMailDirector::LuigiMailDirector()
-    : mLostMessageLength(0), mLostMessage(nullptr), mFoundMessageLength(0), mFoundMessage(nullptr), mLostMessageNum(0), mFoundMessageNum(0) {}
+    : mLostMessageLength(0), mLostMessage(nullptr), mFoundMessageLength(0), mFoundMessage(nullptr), mLostMessageNum(0), mFoundMessageNum(0) {
+}
 
 void LuigiMailDirector::initAfterResourceLoaded() {
-    u32 lostMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(cLostMessageID)) + FileSelectFunc::getMiiNameBufferSize();
+    u32 lostMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(::cLostMessageID)) + FileSelectFunc::getMiiNameBufferSize();
 
     mLostMessageLength = lostMessageLength;
     mLostMessage = new wchar_t[lostMessageLength];
 
-    u32 foundMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(cFoundMessageID)) + FileSelectFunc::getMiiNameBufferSize();
+    u32 foundMessageLength = MR::getStringLengthWithMessageTag(MR::getGameMessageDirect(::cFoundMessageID)) + FileSelectFunc::getMiiNameBufferSize();
 
     mFoundMessageLength = foundMessageLength;
     mFoundMessage = new wchar_t[foundMessageLength];
@@ -173,9 +174,9 @@ void LuigiMailDirector::reset() {
 
 void LuigiMailDirector::prepareMessage() {
     // FIXME: Missing crclr instruction.
-    ReplaceTagFunction::ReplaceArgs(mLostMessage, mLostMessageLength, MR::getGameMessageDirect(cLostMessageID), GameDataFunction::getUserName());
+    ReplaceTagFunction::ReplaceArgs(mLostMessage, mLostMessageLength, MR::getGameMessageDirect(::cLostMessageID), GameDataFunction::getUserName());
     // FIXME: Missing crclr instruction.
-    ReplaceTagFunction::ReplaceArgs(mFoundMessage, mFoundMessageLength, MR::getGameMessageDirect(cFoundMessageID), GameDataFunction::getUserName());
+    ReplaceTagFunction::ReplaceArgs(mFoundMessage, mFoundMessageLength, MR::getGameMessageDirect(::cFoundMessageID), GameDataFunction::getUserName());
 }
 
 u8 LuigiMailDirector::calcDelayHours() const {

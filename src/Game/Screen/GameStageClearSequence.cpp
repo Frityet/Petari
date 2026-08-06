@@ -30,7 +30,8 @@ namespace NrvGameStageClearSequence {
 };  // namespace NrvGameStageClearSequence
 
 GameStageClearSequence::GameStageClearSequence()
-    : LayoutActor("ステージクリアシーケンス", true), mEffectLayout(nullptr), mEffectFollowPos(0.0f, 0.0f) {}
+    : LayoutActor("ステージクリアシーケンス", true), mEffectLayout(nullptr), mEffectFollowPos(0.0f, 0.0f) {
+}
 
 void GameStageClearSequence::init(const JMapInfoIter& rIter) {
     mEffectLayout = new SimpleEffectLayout("スター取得", "GetStar", 1, -1);
@@ -46,14 +47,14 @@ void GameStageClearSequence::init(const JMapInfoIter& rIter) {
 
 void GameStageClearSequence::startPowerStarGetDemo() {
     LayoutActor::appear();
-    mEffectFollowPos.set(TVec2f(0.0f, sLayoutOffsetYPowerStar));
+    mEffectFollowPos.set(TVec2f(0.0f, ::sLayoutOffsetYPowerStar));
     MR::setTextBoxGameMessageRecursive(mEffectLayout, "GetStar", "GetStar_PowerStar");
     setNerve(&NrvGameStageClearSequence::GameStageClearSequencePowerStarGetDemo::sInstance);
 }
 
 void GameStageClearSequence::startGrandStarGetDemo() {
     LayoutActor::appear();
-    mEffectFollowPos.set(TVec2f(0.0f, sLayoutOffsetYGrandStar));
+    mEffectFollowPos.set(TVec2f(0.0f, ::sLayoutOffsetYGrandStar));
     MR::setTextBoxGameMessageRecursive(mEffectLayout, "GetStar", "GetStar_GrandStar");
     setNerve(&NrvGameStageClearSequence::GameStageClearSequenceGrandStarGetDemo::sInstance);
 }
@@ -68,27 +69,27 @@ void GameStageClearSequence::exePowerStarGetDemo() {
     if (MR::isFirstStep(this)) {
         MR::stopStageBGM(2);
         MR::setSoundVolumeSetting(1, 20);
-        MR::stopScene(sClearDemoStopFrame);
+        MR::stopScene(::sClearDemoStopFrame);
         MR::resetGlobalTimer();
         MR::deactivateDefaultGameLayout();
         MR::endGalaxyCometEvent();
     }
 
-    if (MR::isStep(this, sFanfareStartStepPowerStar)) {
+    if (MR::isStep(this, ::sFanfareStartStepPowerStar)) {
         MR::startSubBGM("BGM_CLEAR", false);
     }
 
-    if (MR::isStep(this, sLayoutStartStepPowerStar)) {
+    if (MR::isStep(this, ::sLayoutStartStepPowerStar)) {
         appearGetStarLayout();
     }
 
-    if (MR::isStep(this, sClearDemoWipeStepPowerStar)) {
-        MR::closeWipeCircle(sClearDemoWipeFramePowerStar);
+    if (MR::isStep(this, ::sClearDemoWipeStepPowerStar)) {
+        MR::closeWipeCircle(::sClearDemoWipeFramePowerStar);
     }
 
     bool isWipeActive = MR::isWipeActive();
 
-    if (MR::isGreaterStep(this, sClearDemoWipeStepPowerStar) && !isWipeActive) {
+    if (MR::isGreaterStep(this, ::sClearDemoWipeStepPowerStar) && !isWipeActive) {
         MR::requestChangeStageAfterStageClear();
         kill();
     }
@@ -98,13 +99,13 @@ void GameStageClearSequence::exeGrandStarGetDemo() {
     if (MR::isFirstStep(this)) {
         MR::stopStageBGM(2);
         MR::setSoundVolumeSetting(1, 20);
-        MR::stopScene(sClearDemoStopFrame);
+        MR::stopScene(::sClearDemoStopFrame);
         MR::resetGlobalTimer();
         MR::deactivateDefaultGameLayout();
         MR::endGalaxyCometEvent();
     }
 
-    if (MR::isStep(this, sFanfareStartStepGrandStar)) {
+    if (MR::isStep(this, ::sFanfareStartStepGrandStar)) {
         if (PowerStar::isCurrentStageKoopaVs3()) {
             MR::startSubBGM("BGM_GRAND_STAR_GET_2", false);
         } else {
@@ -112,29 +113,29 @@ void GameStageClearSequence::exeGrandStarGetDemo() {
         }
     }
 
-    if (MR::isStep(this, sLayoutStartStepGrandStar)) {
+    if (MR::isStep(this, ::sLayoutStartStepGrandStar)) {
         appearGetStarLayout();
     }
 
     if (PowerStar::isCurrentStageKoopaVs3()) {
-        if (MR::isStep(this, sClearDemoWipeStepKoopaVs3)) {
-            MR::closeSystemWipeWhiteFade(sClearDemoWipeFrameKoopaVs3);
+        if (MR::isStep(this, ::sClearDemoWipeStepKoopaVs3)) {
+            MR::closeSystemWipeWhiteFade(::sClearDemoWipeFrameKoopaVs3);
         }
 
         bool isWipeActive = MR::isSystemWipeActive();
 
-        if (MR::isGreaterStep(this, sClearDemoWipeStepKoopaVs3) && !isWipeActive) {
+        if (MR::isGreaterStep(this, ::sClearDemoWipeStepKoopaVs3) && !isWipeActive) {
             MR::requestChangeStageAfterStageClear();
             kill();
         }
     } else {
-        if (MR::isStep(this, sClearDemoWipeStepGrandStar)) {
-            MR::closeWipeCircle(-1);
+        if (MR::isStep(this, ::sClearDemoWipeStepGrandStar)) {
+            MR::closeWipeCircle();
         }
 
         bool isWipeActive = MR::isWipeActive();
 
-        if (MR::isGreaterStep(this, sClearDemoWipeStepGrandStar) && !isWipeActive) {
+        if (MR::isGreaterStep(this, ::sClearDemoWipeStepGrandStar) && !isWipeActive) {
             MR::requestChangeStageAfterStageClear();
             kill();
         }

@@ -1,12 +1,13 @@
 #include "Game/MapObj/UFOBase.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Map/CollisionParts.hpp"
 #include "Game/MapObj/MapPartsRailMover.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapPartsUtil.hpp"
@@ -18,8 +19,6 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/types.h"
 #include <cstddef>
 #include <cstdio>
 
@@ -160,7 +159,7 @@ void UFOBase::control() {
             }
         }
         if (mRailMover->isDone() && !_B0) {
-            MR::tryRumblePadMiddle(this, 0);
+            MR::tryRumblePadMiddle(this, WPAD_CHAN0);
             MR::shakeCameraNormal();
             if (MR::isEqualString("UFOBattleStageC", _B4)) {
                 MR::startSound(this, "SE_OJ_UFO_BTL_C_STOP");
@@ -196,9 +195,11 @@ void UFOBase::initSubModel(const JMapInfoIter& rIter, const char* name) {
     }
 }
 
-UFOSolid::UFOSolid(const char* pName) : UFOBase(pName) {}
+UFOSolid::UFOSolid(const char* pName) : UFOBase(pName) {
+}
 
-UFOBreakable::UFOBreakable(const char* pName) : UFOBase(pName) {}
+UFOBreakable::UFOBreakable(const char* pName) : UFOBase(pName) {
+}
 
 void UFOBreakable::initSensorType() {
     MR::addHitSensor(this, "body", ATYPE_KILLER_TARGET_MAPOBJ, 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));

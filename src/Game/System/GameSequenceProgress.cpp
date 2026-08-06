@@ -1,7 +1,6 @@
 #include "Game/System/GameSequenceProgress.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/PlayerMissLeft.hpp"
-#include "Game/SingletonHolder.hpp"
 #include "Game/System/FindingLuigiEventScheduler.hpp"
 #include "Game/System/GalaxyCometScheduler.hpp"
 #include "Game/System/GalaxyMoveArgument.hpp"
@@ -20,6 +19,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
@@ -38,8 +38,8 @@ namespace {
 };  // namespace
 
 GameSequenceProgress::GameSequenceProgress()
-    : NerveExecutor("シーケンス進行"), mStarPointerOnOffController(nullptr), mStorySequenceExecutor(nullptr), mFindingLuigiEventScheduler(nullptr),
-      mGalaxyCometScheduler(nullptr), mLuigiLeftSupplier(nullptr), mPlayerMissLeft(nullptr), _20(0), _24(false), _25(false), _26(true) {
+    : NerveExecutor("シーケンス進行"), mStarPointerOnOffController(), mStorySequenceExecutor(), mFindingLuigiEventScheduler(),
+      mGalaxyCometScheduler(), mLuigiLeftSupplier(), mPlayerMissLeft(), _20(), _24(), _25(), _26(true) {
     initNerve(&::GameSequenceProgressBooting::sInstance);
 
     mStarPointerOnOffController = new StarPointerOnOffController();
@@ -134,13 +134,13 @@ void GameSequenceProgress::endScene() {
     }
 }
 
-void GameSequenceProgress::requestChangeScene(const char* pParam1) {
+void GameSequenceProgress::requestChangeScene(const char* pName) {
     GameSystemSceneController* pSceneController;
 
     updateGameDataBeforeChangeScene();
 
     pSceneController = SingletonHolder< GameSystem >::get()->mSceneController;
-    pSceneController->_4C.setScene(pParam1);
+    pSceneController->mNextSceneControlInfo.setScene(pName);
     pSceneController->requestChangeScene();
 
     mStarPointerOnOffController->setStateToBase(this);
@@ -197,7 +197,7 @@ void GameSequenceProgress::exeNormal() {
 
 void GameSequenceProgress::exeGalaxyMove() {
     if (_24) {
-        if (MR::isStep(this, sTimingPlayingTicoSE)) {
+        if (MR::isStep(this, ::sTimingPlayingTicoSE)) {
             MR::startSystemSE("SE_SY_TICO_WAKE_PLAYER");
         }
     }

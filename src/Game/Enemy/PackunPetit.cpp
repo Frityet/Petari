@@ -1,7 +1,25 @@
 #include "Game/Enemy/PackunPetit.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/WalkerStateBindStarPointer.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorStateUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 namespace NrvPackunPetit {
     NEW_NERVE_ONEND(PackunPetitNrvNonActive, PackunPetit, NonActive, NonActive);
@@ -24,7 +42,8 @@ namespace NrvPackunPetit {
 };  // namespace NrvPackunPetit
 
 PackunPetit::PackunPetit(const char* pName)
-    : LiveActor(pName), mScaleController(nullptr), mStarPointerState(nullptr), _94(0.0f, 0.0f, 1.0f), mBlownModel(nullptr), mDontTurn(false) {}
+    : LiveActor(pName), mScaleController(nullptr), mStarPointerState(nullptr), _94(0.0f, 0.0f, 1.0f), mBlownModel(nullptr), mDontTurn(false) {
+}
 
 void PackunPetit::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -212,7 +231,7 @@ void PackunPetit::exePunchDown() {
         MR::startBlowHitSound(this);
     }
 
-    JMAVECScaleAdd(&mGravity, &mBlownModel->mVelocity, &mBlownModel->mVelocity, 2.5f);
+    mBlownModel->mVelocity.scaleAdd(2.5f, mGravity, mBlownModel->mVelocity);
 
     if (!MR::isHiddenModel(mBlownModel) && (MR::isStep(this, 20) || MR::checkStrikeBallToMap(mBlownModel->mPosition, 50.0f))) {
         MR::emitEffect(mBlownModel, "Death");
@@ -295,12 +314,12 @@ void PackunPetit::kill() {
 void PackunPetit::calcAndSetBaseMtx() {
     TVec3f up;
     MR::calcUpVec(&up, this);
-    TPos3f mtxUp;
-    mtxUp.identity();
-    MR::makeMtxUpFrontPos(&mtxUp, up, _94, mPosition);
-    TVec3f mult;
-    mult.multPS(mScale, mScaleController->_C);
-    MR::setBaseScale(this, mult);
+    TPos3f mtx;
+    mtx.identity();
+    MR::makeMtxUpFrontPos(&mtx, up, _94, mPosition);
+    MR::setBaseTRMtx(this, mtx);
+    TVec3f scale = mScaleController->_C * mScale;
+    MR::setBaseScale(this, scale);
 }
 
 void PackunPetit::control() {
@@ -309,7 +328,7 @@ void PackunPetit::control() {
 }
 
 /*
-void PackunPetit::attackSensor(HitSensor *pSender, HitSensor *pReceiver) {
+void PackunPetit::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
         bool isTrampleOrPunch = isNerve(&NrvPackunPetit::PackunPetitNrvTrampleDown::sInstance)
             || isNerve(&NrvPackunPetit::PackunPetitNrvPunchDown::sInstance);
@@ -420,22 +439,17 @@ void PackunPetit::initBlowModel() {
     mBlownModel->makeActorDead();
 }
 
-/*
-void PackunPetit::punchDown(HitSensor *pSender, HitSensor *pReceiver) {
-    TVec3f v6;
-    v6.subtract(pReceiver->mPosition, pSender->mPosition);
-    TVec3f* grav = &mGravity;
-    f32 dot = grav->dot(v6);
-    JMAVECScaleAdd(grav, v6, v6, -dot);
+void PackunPetit::punchDown(HitSensor* pSender, HitSensor* pReceiver) {
+    TVec3f v6 = pReceiver->mPosition - pSender->mPosition;
+    v6.orthogonalize(mGravity);
     MR::normalize(&v6);
 
     TVec3f v5;
     v5.scale(20.0f, v6);
-    JMAVECScaleAdd(mGravity, v5, v5, -40.0f);
-    mBlownModel->mVelocity.setInline(v5);
+    v5.scaleAdd(-40.0f, mGravity, v5);
+    mBlownModel->mVelocity.set(v5);
     setNerve(&NrvPackunPetit::PackunPetitNrvPunchDown::sInstance);
 }
-*/
 
 void PackunPetit::selectNrvWait() {
     if (!MR::isNearPlayer(this, 1700.0f)) {
@@ -509,4 +523,5 @@ bool PackunPetit::tryDPDSwoon() {
     return true;
 }
 
-PackunPetit::~PackunPetit() {}
+PackunPetit::~PackunPetit() {
+}

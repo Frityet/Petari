@@ -1,7 +1,8 @@
 #include "Game/Enemy/EyeBeamer.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/VolumeModelDrawer.hpp"
 #include "Game/MapObj/MapPartsRailMover.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -12,7 +13,6 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/Functor.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -25,7 +25,6 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JGeometry/TQuat.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "revolution/mtx.h"
 
 namespace NrvEyeBeamer {
@@ -125,7 +124,7 @@ void EyeBeamer::initAfterPlacement() {
     TVec3f stack_68;
     f32 dist;
     if (MR::getFirstPolyOnLineToMapExceptActor(&stack_68, 0, stack_74, stack_80 * (300.0f + _15C), this)) {
-        dist = PSVECDistance(&stack_68, &mPosition);
+        dist = stack_68.distance(mPosition);
         _140.set((stack_68 + mPosition) * 0.5);
         dist = 300.0f + 0.5f * dist;
     } else {
@@ -217,7 +216,8 @@ void EyeBeamer::calcAnim() {
     MR::preScaleMtx(_9C, TVec3f(one, temp, one));
 }
 
-void EyeBeamer::calcAndSetBaseMtx(){};
+void EyeBeamer::calcAndSetBaseMtx() {
+}
 
 void EyeBeamer::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (isOnBeam() && MR::isSensorPlayer(pReceiver) && isInBeamRange(*MR::getPlayerPos())) {
@@ -248,7 +248,8 @@ bool EyeBeamer::tryPatrol() {
     return false;
 }
 
-void EyeBeamer::exeDemoStartWait() {}
+void EyeBeamer::exeDemoStartWait() {
+}
 
 void EyeBeamer::exeDemoWait() {
     if (MR::isDemoLastStep()) {
@@ -286,7 +287,8 @@ void EyeBeamer::exeDemoGotoPatrol() {
         setNerve(&NrvEyeBeamer::EyeBeamerNrvDemoWait::sInstance);
 }
 
-void EyeBeamer::exeWait() {}
+void EyeBeamer::exeWait() {
+}
 
 void EyeBeamer::exeTurn() {
     if (MR::isFirstStep(this)) {
@@ -347,7 +349,7 @@ bool EyeBeamer::isInBeamRange(const TVec3f& rVec) const {
     else {
         TVec3f stack_2C;
         stack_2C.set(stack_38 + (stack_44 * dot));
-        f32 dist = PSVECDistance(&stack_2C, &rVec);
+        f32 dist = stack_2C.distance(rVec);
 
         if (dist < 140.0f)
             return true;
@@ -363,5 +365,3 @@ bool EyeBeamer::isOnBeam() const {
 
     return false;
 }
-
-EyeBeamer::~EyeBeamer(){};

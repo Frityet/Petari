@@ -1,7 +1,12 @@
 #include "Game/Gravity.hpp"
 #include "Game/Util.hpp"
 
-GravityCreator::GravityCreator() {}
+void GravityCreator_FORCE_MATCH_SDATA2() {
+    (void)0.0f;
+}
+
+GravityCreator::GravityCreator() {
+}
 
 PlanetGravity* GravityCreator::createFromJMap(const JMapInfoIter& rIter) {
     PlanetGravity* instance = createInstance();
@@ -305,7 +310,7 @@ PlanetGravity* PointGravityCreator::createInstance() {
 
 void PointGravityCreator::settingFromSRT(const TVec3f& rTrans, const TVec3f& rRotate, const TVec3f& rScale) {
     mGravityInstance->mDistant = 500.0f * rScale.x;
-    mGravityInstance->mOrigPosition.setPS(rTrans);
+    mGravityInstance->setOrig(rTrans);
 }
 
 PlanetGravity* PointGravityCreator::getGravity() {

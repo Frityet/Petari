@@ -103,7 +103,8 @@ void AnimScaleController::exeAnim() {
     }
 }
 
-void AnimScaleController::exeStop() {}
+void AnimScaleController::exeStop() {
+}
 
 void AnimScaleController::exeHitReaction() {
     if (MR::isFirstStep(this)) {
@@ -153,8 +154,7 @@ bool AnimScaleController::isHitReaction(s32 a1) const {
 }
 
 bool AnimScaleController::tryStop() {
-    // currently not matching, probably inlined MR::isNearZero(f32);
-    if (__fabsf(1.0f - _C.y) < 0.001f && __fabsf(_18) < 0.001f) {
+    if (MR::abs(1.0f - _C.y) < 0.001f && MR::abs(_18) < 0.001f) {
         resetScale();
         setNerve(&NrvAnimScaleController::AnimScaleControllerNrvStop::sInstance);
         return true;
@@ -189,4 +189,4 @@ void AnimScaleController::updateScale(f32 f1, f32 f2) {
     _C.z = _C.x;
 }
 
-AnimScaleController::~AnimScaleController() {};
+AnimScaleController::~AnimScaleController(){};

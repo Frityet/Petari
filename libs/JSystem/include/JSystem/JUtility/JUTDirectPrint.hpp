@@ -6,6 +6,8 @@
 
 class JUTDirectPrint {
 public:
+    JUTDirectPrint();
+
     static JUTDirectPrint* start();
 
     void erase(int, int, int, int);
@@ -18,8 +20,12 @@ public:
     void setCharColor(u8, u8, u8);
     void setCharColor(JUtility::TColor);
 
-    static JUTDirectPrint* getManager() { return sDirectPrint; }
-    JUtility::TColor getCharColor() const { return mCharColor; }
+    static JUTDirectPrint* getManager() {
+        return sDirectPrint;
+    }
+    JUtility::TColor getCharColor() const {
+        return mCharColor;
+    }
 
     void* field_0x00;
     u16 mFrameBufferWidth;
@@ -40,4 +46,8 @@ public:
     u16 field_0x2A;
 
     static JUTDirectPrint* sDirectPrint;
+
+    static u8 sAsciiTable[128];
+    static u32 sFontData[64];
+    static u32 sFontData2[77];
 };

@@ -1,6 +1,8 @@
 #include "Game/Boss/DinoPackunTail.hpp"
 #include "Game/Boss/DinoPackunTailNode.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 DinoPackunTail::DinoPackunTail(u32 nodeCount) {
     mNodes = nullptr;
@@ -126,14 +128,12 @@ void DinoPackunTail::addAccelKeepBend() {
             if (MR::makeAxisAndCosignVecToVec(&v16, &v11, v19, v17) && v11 < 1.1f) {
                 f32 bendPower = mNodes[i]->getKeepBendPower();
                 f32 v8 = (_C * ((1.0f - MR::normalize(v11, -1.0f, 1.1f)) * bendPower));
-                TVec3f v15;
-                PSVECCrossProduct(&v17, &v16, &v15);
+                TVec3f v15 = v17.cross(v16);
                 MR::normalize(&v15);
                 mNodes[i]->addNodeVelocityHost(v15 * v8);
 
                 if (i >= 2) {
-                    TVec3f v14;
-                    PSVECCrossProduct(&v19, &v16, &v14);
+                    TVec3f v14 = v19.cross(v16);
                     MR::normalize(&v14);
                     mNodes[i - 2]->addNodeVelocityHost(v14 * v8);
                 }
@@ -148,14 +148,14 @@ void DinoPackunTail::addAccelKeepBend() {
 // https://decomp.me/scratch/aWhPK
 void DinoPackunTail::addAccelKeepDistance() {
     TVec3f v19;
-    v19.set< f32 >(mNodes[0]->mPosition);
+    v19.set(mNodes[0]->mPosition);
     u32 nodeCount = mNumNodes;
 
-    for (u32 i = 1; i < nodeCount; i++) {
+    for (s32 i = 1; i < nodeCount; i++) {
         TVec3f v18;
-        v18.set< f32 >(mNodes[i]->mPosition);
+        v18.set(mNodes[i]->mPosition);
         TVec3f v17;
-        v17.set< f32 >(v18 - v19);
+        v17.set(v18 - v19);
 
         if (MR::isNearZero(v17)) {
             MR::getRandomVector(&v17, 0.1f);
@@ -163,18 +163,16 @@ void DinoPackunTail::addAccelKeepDistance() {
 
         f32 scalar;
         MR::separateScalarAndDirection(&scalar, &v17, v17);
-        f32 linkLength = mNodes[i]->getLinkLength();
+        f32 linkLength = getNode(i)->getLinkLength();
         DinoPackunTailNode** nodes = mNodes;
-        f32 v7 = ((0.89999998f * (_10 * (linkLength - scalar))) * 0.5f);
+        f32 v7 = ((0.9f * (_10 * (linkLength - scalar))) / 2);
         nodes[i]->addNodeVelocityHost(v17 * v7);
 
         if (i != 0) {
-            TVec3f v13;
-            JMathInlineVEC::PSVECNegate(&v17, &v13);
-            mNodes[i - 1]->addNodeVelocityHost(v13 * v7);
+            getNode(i - 1)->addNodeVelocityHost(-v17 * v7);
         }
 
-        v19.setPS2(v18);
+        v19 = v18;
     }
 }
 

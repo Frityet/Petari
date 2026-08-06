@@ -1,6 +1,14 @@
 #include "Game/MapObj/LargeChainParts.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
-LargeChainParts::LargeChainParts(const char* pName) : LiveActor(pName) {}
+LargeChainParts::LargeChainParts(const char* pName) : LiveActor(pName) {
+}
 
 void LargeChainParts::breakChainParts() {
     kill();

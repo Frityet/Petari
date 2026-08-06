@@ -1,5 +1,5 @@
 #include "Game/NPC/TalkState.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/TalkBalloon.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
@@ -8,14 +8,14 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/types.h"
 
-TalkState::TalkState() : _04(nullptr), mBalloon(nullptr) {}
+TalkState::TalkState() : _04(nullptr), mBalloon(nullptr) {
+}
 
 void TalkState::init(TalkMessageCtrl* pArg1, TalkBalloon* pBalloon) {
     _04 = pArg1;
@@ -55,7 +55,8 @@ bool TalkState::isSelfInterrupt(const TalkMessageCtrl* pArg1) const {
     return _04->getMessageID() != mMessageID;
 }
 
-TalkStateShort::TalkStateShort() : TalkState() {}
+TalkStateShort::TalkStateShort() : TalkState() {
+}
 
 bool TalkStateShort::prep(const TalkMessageCtrl* pArg1) {
     return !TalkState::isLostMessage(pArg1);
@@ -159,7 +160,8 @@ u32 TalkStateEvent::getPageCount() const {
     return mPageCount;
 }
 
-TalkStateNormal::TalkStateNormal() : TalkStateEvent() {}
+TalkStateNormal::TalkStateNormal() : TalkStateEvent() {
+}
 
 bool TalkStateNormal::test() {
     if (!_18->isEnableTalkPlayerStateNormal() || !MR::testCorePadTriggerA(0)) {
@@ -227,10 +229,7 @@ void TalkStateNormal::updateButton() {
     f32 f2 = camY.dot(up);
     f1 = f1 * f1;
 
-    TVec3f up_but_bigger(up);  // 0x48 but should be 0x3c
-    up_but_bigger.mult(1000.0f);
-
-    MR::calcNormalizedScreenPosition(&up, up_but_bigger + centerPlayer);  // Second arg is 0x3c, but should be 0x48
+    MR::calcNormalizedScreenPosition(&up, up * 1000.0f + centerPlayer);  // Second arg is 0x3c, but should be 0x48
     MR::calcNormalizedScreenPosition(&centerPlayer, centerPlayer);
     MR::normalize(up - centerPlayer, &up);  // First arg is 0x30
     TVec2f playerScreenPos;                 // 0x28
@@ -249,7 +248,8 @@ void TalkStateNormal::updateButton() {
     mAButton->setTrans(playerScreenPos);
 }
 
-TalkStateCompose::TalkStateCompose() : TalkStateNormal() {}
+TalkStateCompose::TalkStateCompose() : TalkStateNormal() {
+}
 
 void TalkStateCompose::init(TalkMessageCtrl* pArg1, TalkBalloon* pArg2) {
     TalkState::init(pArg1, pArg2);

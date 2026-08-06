@@ -55,7 +55,7 @@ namespace JGeometry {
             return flt_80630CA0[(u32)(1023.5f * val)];
         }
 
-        static f32 PI() NO_INLINE {
+        static f32 PI() {
             return 3.1415927f;
         }
 
@@ -79,7 +79,7 @@ namespace JGeometry {
             return outVal * 0.5f * (3.0f - outVal * outVal * val);
         }
 
-        static inline double epsilon() {
+        static inline f32 epsilon() {
             return 32.0f * FLT_EPSILON;
         }
     };

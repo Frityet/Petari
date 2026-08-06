@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/Util/MathUtil.hpp"
 #include <JSystem/JGeometry.hpp>
 
 namespace MR {
@@ -8,4 +9,5 @@ namespace MR {
                          ((1.0f - (2.0f * (rQuat.x * rQuat.x))) - (2.0f * (rQuat.z * rQuat.z))),
                          ((2.0f * (rQuat.y * rQuat.z)) + (2.0f * (rQuat.w * rQuat.x))));
     }
+
 };  // namespace MR

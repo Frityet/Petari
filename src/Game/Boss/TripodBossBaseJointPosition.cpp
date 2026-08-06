@@ -1,5 +1,9 @@
 #include "Game/Boss/TripodBossBaseJointPosition.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
+#include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 TripodBossBaseJointPosition::TripodBossBaseJointPosition(const char* pName) : LiveActor(pName) {
@@ -32,7 +36,8 @@ void TripodBossBaseJointPosition::control() {
     }
 }
 
-TripodBossBaseJointPosition::~TripodBossBaseJointPosition() {}
+TripodBossBaseJointPosition::~TripodBossBaseJointPosition() {
+}
 
 MtxPtr TripodBossBaseJointPosition::getBaseMtx() const {
     return (MtxPtr)&_90;

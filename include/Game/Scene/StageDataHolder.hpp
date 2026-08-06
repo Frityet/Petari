@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Game/NameObj/NameObj.hpp"
-#include "Game/Scene/PlacementInfoOrdered.hpp"
-#include "Game/Scene/PlacementStateChecker.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/Array.hpp"
+
+class JKRArchive;
+class JMapIdInfo;
+class PlacementInfoOrdered;
 
 class StageDataHolder : public NameObj {
 public:
@@ -26,6 +28,8 @@ public:
     JMapInfoIter getGeneralPosInfoFromDataIndex(int) const;
     s32 getChildObjNum(const JMapInfoIter&) const;
     JMapInfoIter getChildObjInfoFromDataIndex(const JMapInfoIter&, int) const;
+
+    JMapInfoIter makeMarioJMapInfoIter(const JMapIdInfo&) const;
 
     const StageDataHolder* findPlacedStageDataHolder(const JMapInfoIter&) const;
     const StageDataHolder* getStageDataHolderFromZoneId(int) const;
@@ -61,6 +65,8 @@ public:
     JMapInfoIter getStartJMapInfoIterFromStartDataIndex(int) const;
 
     void calcPlacementMtx(const JMapInfoIter&);
+
+    JMapInfo* attachJmpInfoToArray(JMapInfo*, const char*);
 
     MR::AssignableArray< JMapInfo > mPlacementObjs;   // 0xC
     MR::AssignableArray< JMapInfo > mStartObjs;       // 0x14

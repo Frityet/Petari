@@ -59,9 +59,9 @@ namespace MR {
     }
 
     void makeMtxRotate(MtxPtr mtx, f32 rx, f32 ry, f32 rz) {
-        s16 angleX = (s16)(rx * 182.04445f);
-        s16 angleY = (s16)(ry * 182.04445f);
-        s16 angleZ = (s16)(rz * 182.04445f);
+        s16 angleX = (s16)(rx * DEGREE_TO_S16);
+        s16 angleY = (s16)(ry * DEGREE_TO_S16);
+        s16 angleZ = (s16)(rz * DEGREE_TO_S16);
         makeMtxRotate(mtx, angleX, angleY, angleZ);
     }
 
@@ -70,7 +70,7 @@ namespace MR {
     }
 
     void makeMtxRotateY(MtxPtr mtx, f32 ry) {
-        s16 angle = (s16)(ry * 182.04445f);
+        s16 angle = (s16)(ry * DEGREE_TO_S16);
         f32 sinY = JMASSin(angle);
         f32 cosY = JMASCos(angle);
 
@@ -221,11 +221,11 @@ namespace MR {
 
         TPos3f invMtx;
         invMtx.invert(baseCopy);
-        preScaleMtx(baseCopy.toMtxPtr(), rScale.x, rScale.y, rScale.z);
+        preScaleMtx(baseCopy, rScale.x, rScale.y, rScale.z);
 
         extractMtxTrans(src, &srcTrans);
-        PSMTXConcat(invMtx.toMtxPtr(), src, dst);
-        PSMTXConcat(baseCopy.toMtxPtr(), dst, dst);
+        multMtx(dst, src, invMtx);
+        multMtx(dst, dst, baseCopy);
         setMtxTrans(dst, srcTrans.x, srcTrans.y, srcTrans.z);
     }
 
@@ -327,15 +327,15 @@ namespace MR {
 
     void flattenMtx(MtxPtr dst, MtxPtr src, const TVec3f& rNormal) {
         TVec3f axisX, axisY, axisZ;
-        ((TRot3f*)src)->getXDir(axisX);
-        ((TRot3f*)src)->getYDir(axisY);
-        ((TRot3f*)src)->getZDir(axisZ);
+        MR::extractMtxXDir(src, &axisX);
+        MR::extractMtxYDir(src, &axisY);
+        MR::extractMtxZDir(src, &axisZ);
 
-        JMAVECScaleAdd(&rNormal, &axisX, &axisX, -rNormal.dot(axisX));
-        JMAVECScaleAdd(&rNormal, &axisY, &axisY, -rNormal.dot(axisY));
-        JMAVECScaleAdd(&rNormal, &axisZ, &axisZ, -rNormal.dot(axisZ));
+        axisX.orthogonalize(rNormal);
+        axisY.orthogonalize(rNormal);
+        axisZ.orthogonalize(rNormal);
 
-        ((TRot3f*)dst)->setXYZDir(axisX, axisY, axisZ);
+        MR::setMtxAxisXYZ(dst, axisX, axisY, axisZ);
     }
 
     void flattenMtx(MtxPtr mtx, const TVec3f& rNormal) {
@@ -402,9 +402,7 @@ namespace MR {
             ((TRot3f*)src)->getEuler(*pOutRot);
 
             if (toDegree) {
-                TVec3f scaled;
-                pOutRot->scale(57.29578f, scaled);
-                *pOutRot = scaled;
+                pOutRot->set(*pOutRot * (180.0f / PI));
             }
         }
     }
@@ -413,12 +411,10 @@ namespace MR {
         TVec3f axisX;
         MR::normalize(rSide, &axisX);
 
-        TVec3f axisZ;
-        PSVECCrossProduct(&axisX, &rUp, &axisZ);
+        TVec3f axisZ = axisX.cross(rUp);
         MR::normalize(&axisZ);
 
-        TVec3f axisY;
-        PSVECCrossProduct(&axisZ, &axisX, &axisY);
+        TVec3f axisY = axisZ.cross(axisX);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
@@ -432,12 +428,10 @@ namespace MR {
         TVec3f axisX;
         MR::normalize(rSide, &axisX);
 
-        TVec3f axisY;
-        PSVECCrossProduct(&axisX, &rFront, &axisY);
+        TVec3f axisY = axisX.cross(rFront);
         MR::normalize(&axisY);
 
-        TVec3f axisZ;
-        PSVECCrossProduct(&axisY, &axisX, &axisZ);
+        TVec3f axisZ = axisY.cross(axisX);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
@@ -446,12 +440,10 @@ namespace MR {
         TVec3f axisY;
         MR::normalize(rUp, &axisY);
 
-        TVec3f axisZ;
-        PSVECCrossProduct(&axisY, &rSide, &axisZ);
+        TVec3f axisZ = axisY.cross(rSide);
         MR::normalize(&axisZ);
 
-        TVec3f axisX;
-        PSVECCrossProduct(&axisZ, &axisY, &axisX);
+        TVec3f axisX = axisZ.cross(axisY);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
@@ -465,12 +457,10 @@ namespace MR {
         TVec3f axisY;
         MR::normalize(rUp, &axisY);
 
-        TVec3f axisX;
-        PSVECCrossProduct(&axisY, &rFront, &axisX);
+        TVec3f axisX = axisY.cross(rFront);
         MR::normalize(&axisX);
 
-        TVec3f axisZ;
-        PSVECCrossProduct(&axisX, &axisY, &axisZ);
+        TVec3f axisZ = axisX.cross(axisY);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
@@ -484,12 +474,10 @@ namespace MR {
         TVec3f axisZ;
         MR::normalize(rFront, &axisZ);
 
-        TVec3f axisY;
-        PSVECCrossProduct(&axisZ, &rSide, &axisY);
+        TVec3f axisY = axisZ.cross(rSide);
         MR::normalize(&axisY);
 
-        TVec3f axisX;
-        PSVECCrossProduct(&axisY, &axisZ, &axisX);
+        TVec3f axisX = axisY.cross(axisZ);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
         pDst->setTrans(rPos);
@@ -499,12 +487,10 @@ namespace MR {
         TVec3f axisZ;
         MR::normalize(rFront, &axisZ);
 
-        TVec3f axisX;
-        PSVECCrossProduct(&rUp, &axisZ, &axisX);
+        TVec3f axisX = rUp.cross(axisZ);
         MR::normalize(&axisX);
 
-        TVec3f axisY;
-        PSVECCrossProduct(&axisZ, &axisX, &axisY);
+        TVec3f axisY = axisZ.cross(axisX);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
@@ -525,12 +511,10 @@ namespace MR {
         TVec3f axisY;
         MR::normalize(rUp, &axisY);
 
-        TVec3f axisX;
-        PSVECCrossProduct(&axisY, &support, &axisX);
+        TVec3f axisX = axisY.cross(support);
         MR::normalize(&axisX);
 
-        TVec3f axisZ;
-        PSVECCrossProduct(&axisX, &axisY, &axisZ);
+        TVec3f axisZ = axisX.cross(axisY);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
@@ -559,12 +543,10 @@ namespace MR {
         TVec3f axisZ;
         MR::normalize(rFront, &axisZ);
 
-        TVec3f axisX;
-        PSVECCrossProduct(&support, &axisZ, &axisX);
+        TVec3f axisX = support.cross(axisZ);
         MR::normalize(&axisX);
 
-        TVec3f axisY;
-        PSVECCrossProduct(&axisZ, &axisX, &axisY);
+        TVec3f axisY = axisZ.cross(axisX);
 
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
@@ -587,14 +569,11 @@ namespace MR {
 
         pMtx->getXYZDir(axisX, axisY, axisZ);
 
-        PSVECCrossProduct(&axisY, &axisZ, &axisX);
-        PSVECCrossProduct(&axisZ, &axisX, &axisY);
+        axisX.cross(axisY, axisZ);
+        axisY.cross(axisZ, axisX);
 
-        PSVECMag(&axisX);
-        PSVECNormalize(&axisX, &axisX);
-
-        PSVECMag(&axisY);
-        PSVECNormalize(&axisY, &axisY);
+        axisX.normalize();
+        axisY.normalize();
 
         pMtx->setXYZDir(axisX, axisY, axisZ);
 
@@ -822,8 +801,7 @@ namespace MR {
         PSMTXMultVecSR(invA, &localZ, &axisZA);
         PSMTXMultVecSR(b, &localZ, &axisZB);
 
-        TVec3f cross;
-        PSVECCrossProduct(&axisZA, &axisZB, &cross);
+        TVec3f cross = axisZA.cross(axisZB);
 
         if (MR::normalizeOrZero(&cross)) {
             *pOut = localZ;
@@ -946,8 +924,8 @@ namespace MR {
             break;
         }
 
-        PSMTXConcat(first, second, dst);
-        PSMTXConcat(third, dst, dst);
+        MR::multMtx(dst, second, first);
+        MR::multMtx(dst, dst, third);
     }
 
     void rotAxisVecRad(const TVec3f& rAxis, const TVec3f& rVec, TVec3f* pOut, f32 rad) {

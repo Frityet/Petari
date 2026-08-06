@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 
 class Koopa;
@@ -11,15 +10,16 @@ public:
     /// @brief Creates a new `BossAccessor`
     BossAccessor();
 
-    /// @brief Destroys the `BossAccessor`.
-    virtual ~BossAccessor();
+    LiveActor* getBoss() const {
+        return mBoss;
+    }
 
-    LiveActor* getBoss() const { return mBoss; }
-
-    void setBoss(LiveActor* pBoss) { mBoss = pBoss; }
+    void setBoss(LiveActor* pBoss) {
+        mBoss = pBoss;
+    }
 
 private:
-    /* 0x0 */ LiveActor* mBoss;
+    /* 0x00 */ LiveActor* mBoss;
 };
 
 namespace BossAccess {

@@ -4,7 +4,6 @@
 #include "Game/Boss/BossStinkBugBombHolder.hpp"
 #include "Game/LiveActor/ActorJointCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/GroundChecker.hpp"
@@ -16,7 +15,6 @@
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/Functor.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointController.hpp"
 #include "Game/Util/JointUtil.hpp"
@@ -27,7 +25,6 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMath.hpp"
 #include "revolution/mtx.h"
 #include "revolution/types.h"
@@ -151,7 +148,7 @@ void BossStinkBug::initCollision() {
     _8C = new CollisionParts*[3];
     for (int i = 0; i < 3; i++) {
         _8C[i] = MR::createCollisionPartsFromLiveActor(this, ::sCollisionInfo[i]._0, getSensor(::sCollisionInfo[i]._8),
-                                                       MR::getJointMtx(this, sCollisionInfo[i]._4), MR::AutoEqualScale);
+                                                       MR::getJointMtx(this, sCollisionInfo[i]._4), MR::CollisionScaleType_AutoEqualScale);
     }
 }
 
@@ -188,7 +185,7 @@ void BossStinkBug::calcAndSetBaseMtx() {
     _98->setCallBackFunction();
     TPos3f pos;
     pos.setQuat(_DC);
-    pos.setPos(mPosition);
+    pos.setTrans(mPosition);
 
     _9C.setInline(pos);
 
@@ -227,7 +224,7 @@ void BossStinkBug::updateAction() {
 
 void BossStinkBug::updatePose() {
     if (!_110) {
-        _EC.rejection(mGravity);
+        _EC.orthogonalize(mGravity);
         if (MR::isNearZero(_EC)) {
             _DC.getZDir(_EC);
         } else {
@@ -248,7 +245,7 @@ void BossStinkBug::setPose(MtxPtr pMtx) {
 }
 
 void BossStinkBug::updateCamera() {
-    _F8.setPS2(mPosition);
+    _F8 = mPosition;
 }
 
 bool BossStinkBug::isValidFollowId(s32 id) const {
@@ -356,9 +353,9 @@ void BossStinkBug::appearStarPiece(s32 num) {
     MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
 }
 
-void BossStinkBug::attackSensor(HitSensor* pSender, HitSensor* pReciever) {
+void BossStinkBug::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (mActionSequencer != nullptr) {
-        mActionSequencer->attackSensor(pSender, pReciever);
+        mActionSequencer->attackSensor(pSender, pReceiver);
     }
 }
 
@@ -404,7 +401,7 @@ bool BossStinkBug::throwBomb(f32 f1, f32 f2) {
 
     jointMtx.getTrans(trans);
     jointMtx.getYDir(yDir);
-    yDir.scale(-f1);
+    yDir *= -f1;
     MR::addRandomVector(&yDir, yDir, f2);
 
     throwBomb->start(trans, yDir);

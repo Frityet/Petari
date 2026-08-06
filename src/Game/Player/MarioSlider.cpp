@@ -1,10 +1,10 @@
 #include "Game/Player/MarioSlider.hpp"
 #include "Game/Enemy/KariKariDirector.hpp"
-#include "Game/Player/Mario.hpp"
 #include "Game/Map/HitInfo.hpp"
+#include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioConst.hpp"
-#include "Game/Player/MarioModule.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 bool Mario::isSliderFloor() const {
     return _960 == 9;
@@ -20,7 +20,7 @@ bool Mario::checkSliderMode() const {
     return false;
 }
 
-MarioSlider::MarioSlider(MarioActor* pActor) : MarioState(pActor, 7) {
+MarioSlider::MarioSlider(MarioActor* pActor) : MarioState(pActor, MarioStatus_Slider) {
     _14.zero();
     _20.zero();
     _2C.zero();
@@ -31,10 +31,9 @@ MarioSlider::MarioSlider(MarioActor* pActor) : MarioState(pActor, 7) {
 
 void MarioSlider::calcGroundAccel() {
     TVec3f* val = &getPlayer()->_368;
-    TVec3f v6;
-    PSVECCrossProduct(val, getPlayer()->getGravityVec(), &v6);
+    TVec3f v6 = val->cross(*getPlayer()->getGravityVec());
     MR::normalizeOrZero(&v6);
-    PSVECCrossProduct(&v6, val, &_2C);
+    _2C.cross(v6, *val);
     MR::normalizeOrZero(&_2C);
 }
 
@@ -50,8 +49,7 @@ bool MarioSlider::postureCtrl(MtxPtr) {
 
     MarioConst* pConst = mActor->mConst;
     Mario* pPlayer = getPlayer();
-    MR::vecBlendSphere(getPlayer()->_1FC, newHeadVec, &pPlayer->_1FC,
-                       pConst->mTable[pConst->mCurrentTable]->mSliderHeadRotateRatio);
+    MR::vecBlendSphere(getPlayer()->_1FC, newHeadVec, &pPlayer->_1FC, pConst->getTable()->mSliderHeadRotateRatio);
     return false;
 }
 
@@ -65,10 +63,7 @@ void MarioSlider::calcWallHit() {
                 sideDot = -10.0f;
             }
 
-            TVec3f stack_20(*getPlayer()->mSideWallTriangle->getNormal(0));
-            stack_20.scale(sideDot);
-            TVec3f stack_2C(stack_50 - stack_20);
-            _14 = stack_2C;
+            _14 = stack_50 - *getPlayer()->mSideWallTriangle->getNormal(0) * sideDot;
         }
     }
 
@@ -82,10 +77,7 @@ void MarioSlider::calcWallHit() {
             }
 
             f32 frontScale = 0.5f * frontDot;
-            TVec3f stack_8(*getPlayer()->mFrontWallTriangle->getNormal(0));
-            stack_8.scale(frontScale);
-            TVec3f stack_14(stack_44 - stack_8);
-            _14 = stack_14;
+            _14 = stack_44 - *getPlayer()->mFrontWallTriangle->getNormal(0) * frontScale;
 
             TVec3f stack_38(_14);
             MR::normalize(&stack_38);
@@ -127,9 +119,7 @@ bool MarioSlider::start() {
 }
 
 bool MarioSlider::update() {
-    if (getPlayer()->checkSliderMode()) {
-        _40 = 10;
-    } else {
+    if (!getPlayer()->checkSliderMode()) {
         if (getPlayer()->mMovementStates._1 != 0) {
             if (isSlipPolygon(getGroundPolygon())) {
                 Mario* player = getPlayer();
@@ -144,6 +134,8 @@ bool MarioSlider::update() {
             getPlayer()->mJumpVec = mActor->getLastMove();
             return false;
         }
+    } else {
+        _40 = 10;
     }
 
     calcGroundAccel();
@@ -169,9 +161,7 @@ bool MarioSlider::update() {
 
         if (MR::isNearZero(v48)) {
             f32 slopePow = mActor->mConst->getTable()->mSliderSlopePow;
-            TVec3f v42(_2C);
-            v42.scale(slopePow);
-            v48 = v42;
+            v48 = _2C * slopePow;
         }
 
         if (MR::isNearZero(v48)) {
@@ -179,23 +169,16 @@ bool MarioSlider::update() {
         } else {
             MR::normalize(&v48);
             TVec3f v47(getPlayer()->_368);
-            TVec3f v46;
-            PSVECCrossProduct(&v48, &v47, &v46);
+            TVec3f v46 = v48.cross(v47);
             MR::vecKillElement(v46, getPlayer()->_368, &v46);
             MR::normalize(&v46);
             _14.setLength(v18);
             f32 slopePow = mActor->mConst->getTable()->mSliderSlopePow;
-            TVec3f v41(_2C);
-            v41.scale(slopePow);
-            _14 += v41;
+            _14 += _2C * slopePow;
 
             f32 v23 = _3C;
             f32 weightPow = mActor->mConst->getTable()->mSliderWeightPow;
-            TVec3f v39(v46);
-            v39.scale(v23);
-            TVec3f v40(v39);
-            v40.scale(weightPow);
-            _14 += v40;
+            _14 += v46 * v23 * weightPow;
             MR::vecKillElement(_14, getPlayer()->_368, &_14);
             if (_14.length() > mActor->mConst->getTable()->mSliderMaxSpeed) {
                 _14.setLength(mActor->mConst->getTable()->mSliderMaxSpeed);
@@ -203,11 +186,7 @@ bool MarioSlider::update() {
 
             addVelocity(_14);
 
-            TVec3f v38;
-            JMathInlineVEC::PSVECNegate(&getPlayer()->_368, &v38);
-
-            TVec3f v45(v38);
-            v45.scale(15.0f);
+            TVec3f v45(-getPlayer()->_368 * 15.0f);
 
             f32 v31 = MR::vecKillElement(v45, getFrontVec(), &v45);
             addVelocity(v45, v31);
@@ -232,7 +211,7 @@ bool MarioSlider::update() {
 
 bool MarioSlider::close() {
     if (getPlayer()->isSwimming()) {
-        stopAnimation("スライダー尻", static_cast<const char*>(nullptr));
+        stopAnimation("スライダー尻");
     } else if (getPlayer()->mMovementStates.jumping == 0) {
         stopAnimation("スライダー尻", "基本");
     } else {

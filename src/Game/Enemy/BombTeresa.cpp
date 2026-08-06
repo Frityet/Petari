@@ -2,17 +2,16 @@
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/WalkerStateBindStarPointer.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/System/NerveExecutor.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorStateUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointController.hpp"
 #include "Game/Util/JointUtil.hpp"
@@ -27,7 +26,6 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMath.hpp"
 #include "revolution/mtx.h"
 #include "revolution/types.h"
@@ -54,9 +52,11 @@ namespace NrvBombTeresa {
 BombTeresa::BombTeresa(const char* pName)
     : LiveActor(pName), mJointDelegator(nullptr), mJointDelegator2(nullptr), mScaleController(nullptr), mBindStarPointer(nullptr),
       _9C(0.0f, 0.0f, 0.0f, 1.0f), _AC(0, 0, 1), _B8(0, 0, 0), _C4(0, 0, 0), _D0(0, 0, 0), _DC(1.0f), _E0(1.0f), _E4(1.0f), _E8(0), _EC(false),
-      mDisableRespawning(false), _EE(true), _EF(false) {}
+      mDisableRespawning(false), _EE(true), _EF(false) {
+}
 
-BombTeresa::~BombTeresa() {}
+BombTeresa::~BombTeresa() {
+}
 
 void BombTeresa::init(const JMapInfoIter& rIter) {
     initFromJMapParam(rIter);
@@ -145,9 +145,8 @@ void BombTeresa::control() {
 
 void BombTeresa::calcAndSetBaseMtx() {
     MR::setBaseTRMtx(this, _9C);
-    TVec3f baseScale;
-    baseScale.multPS(mScale, mScaleController->_C);
-    MR::setBaseScale(this, baseScale);
+    TVec3f scale = mScaleController->_C * mScale;
+    MR::setBaseScale(this, scale);
     mJointDelegator->registerCallBack();
     mJointDelegator2->registerCallBack();
 }
@@ -170,20 +169,19 @@ bool BombTeresa::rootTongueMtxCallBack(TPos3f* arg0, const JointControllerInfo& 
     if (_DC == 0.0f) {
         return false;
     }
-    TVec3f v11;
-    TVec3f v12;
-    TVec3f v13;
-    TVec3f v14;
-    arg0->getTrans(v11);
-    MR::copyJointPos(this, "Tongue2", &v12);
-    arg0->getXDir(v13);
-    if (MR::normalizeOrZero(&(v12 - v11))) {
-        v14.set(v13);
+    TVec3f pos;
+    TVec3f tonguePos;
+    TVec3f side;
+    arg0->getTrans(pos);
+    MR::copyJointPos(this, "Tongue2", &tonguePos);
+    arg0->getXDir(side);
+    TVec3f dir = tonguePos - pos;
+    if (MR::normalizeOrZero(&dir)) {
+        dir.set(side);
     }
-    MR::turnMtxToXDirRate(arg0, v14, (0.5f * _DC));
-    v14.x = MR::getEaseInOutValue(MR::normalize(PSVECDistance(&v11, &v12), 400.0f, 1000.0f), 1.0f, 0.5f, 1.0f);
-    v14.y = 1.0f;
-    MR::preScaleMtx(arg0->toMtxPtr(), v14);
+    MR::turnMtxToXDirRate(arg0, dir, (0.5f * _DC));
+    f32 dist = MR::getEaseInOutValue(MR::normalize(pos.distance(tonguePos), 400.0f, 1000.0f), 1.0f, 0.5f, 1.0f);
+    MR::preScaleMtx(arg0->toMtxPtr(), TVec3f(1.0f, dist, dist));
     return true;
 }
 
@@ -191,31 +189,24 @@ bool BombTeresa::endTongueMtxCallBack(TPos3f* arg0, const JointControllerInfo& a
     if (_DC == 0.0f) {
         return false;
     }
-    TVec3f v11;
-    TVec3f v12;
-    TVec3f v13;
-    TVec3f v14;
-    arg0->getTrans(v11);
-    MR::copyJointPos(this, "Tongue1", &v12);
-    MR::vecBlend(v12, _C4, &v12, _DC);
-    arg0->getXDir(v13);
-    if (MR::normalizeOrZero(&(v12 - v11))) {
-        v14.set(v13);
+    TVec3f pos;
+    TVec3f tonguePos;
+    TVec3f side;
+    arg0->getTrans(pos);
+    MR::copyJointPos(this, "Tongue1", &tonguePos);
+    MR::vecBlend(pos, _C4, &pos, _DC);
+    arg0->getXDir(side);
+    TVec3f dir = pos - tonguePos;
+    if (MR::normalizeOrZero(&dir)) {
+        dir.set(side);
     }
-    MR::turnMtxToXDirRate(arg0, v14, _DC);
-    arg0->getXDir(v13);
-    f32 v7 = _DC;
-    TVec3f v15(v14);
-    v15 *= 0.35f;
-    TVec3f v16(v15);
-    v16 *= v7;
-    v13 += v16;
-    arg0->mMtx[0][1] = v13.x;
-    arg0->mMtx[0][2] = v13.y;
-    arg0->mMtx[0][3] = v13.z;
-    v14.x = MR::getEaseInOutValue(MR::normalize(PSVECDistance(&v11, &v12), 400.0f, 1000.0f), 1.0f, 0.5f, 1.0f);
-    v14.y = 1.0f;
-    MR::preScaleMtx(arg0->toMtxPtr(), v14);
+    MR::turnMtxToXDirRate(arg0, dir, _DC);
+    TVec3f side2;
+    arg0->getXDir(side2);
+    pos += side2 * -35.0f * _DC;
+    arg0->setTrans(pos);
+    f32 dist = MR::getEaseInOutValue(MR::normalize(pos.distance(tonguePos), 400.0f, 1000.0f), 1.0f, 0.5f, 1.0f);
+    MR::preScaleMtx(arg0->toMtxPtr(), TVec3f(1.0f, dist, dist));
     return true;
 }
 
@@ -232,7 +223,7 @@ void BombTeresa::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
             }
         } else if (isEnableHitExplosionToEnemy()) {
             if (MR::sendMsgEnemyAttackExplosion(pReceiver, pSender)) {
-                MR::tryRumbleDefaultHit(this, 0);
+                MR::tryRumbleDefaultHit(this, WPAD_CHAN0);
                 MR::zeroVelocity(this);
                 setNerve(&NrvBombTeresa::BombTeresaNrvExplosion::sInstance);
             } else {
@@ -257,11 +248,7 @@ bool BombTeresa::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
             MR::normalizeOrZero(&deltaPos);
         }
 
-        TVec3f v8(deltaPos);
-        v8.x *= 3.0f;
-        v8.y *= 3.0f;
-        v8.z *= 3.0f;
-        mVelocity += v8;
+        mVelocity += deltaPos * 3.0f;
         return true;
     }
 
@@ -297,7 +284,7 @@ bool BombTeresa::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* p
         TVec3f uVar1;
         MR::calcSensorDirectionNormalize(&uVar1, pSender, pReceiver);
         TVec3f v16(uVar1);
-        v16.mult(20.0f);
+        v16 *= 20.0f;
         mVelocity.set< f32 >(v16);
         setNerve(&NrvBombTeresa::BombTeresaNrvShock::sInstance);
         return false;
@@ -459,10 +446,9 @@ void BombTeresa::exeBallAppear() {
     }
     if (MR::isLessStep(this, 160)) {
         MR::rotateQuatRollBall(&_9C, mVelocity, -mGravity, 70.0f);
-        _AC.set< f32 >((2.0f * _9C.y * _9C.x) + (2.0f * _9C.y * _9C.z), (2.0f * _9C.z * _9C.x) - (2.0f * _9C.y * _9C.y),
-                       (1.0f - (2.0f * _9C.y * _9C.y) - (2.0f * _9C.z * _9C.z)));
+        _9C.getZDir(_AC);
     } else {
-        JMAVECScaleAdd(&mGravity, &_AC, &_AC, -mGravity.dot(_AC));
+        _AC.orthogonalize(mGravity);
         if (MR::normalizeOrZero(&_AC)) {
             MR::makeAxisVerticalZX(&_AC, mGravity);
         }
@@ -588,8 +574,10 @@ void BombTeresa::exeDrift() {
         _E4 = 7.0f;
         _DC = 1.0f;
     }
-    PSVECCrossProduct(&mGravity, &_AC, &v14);
-    PSVECCrossProduct(&mGravity, &(*MR::getPlayerPos() - MR::getCamPos()), &v15);
+
+    v14.cross(mGravity, _AC);
+    v15.cross(mGravity, *MR::getPlayerPos() - MR::getCamPos());
+
     if (MR::isNearZero(v14)) {
         MR::makeAxisVerticalZX(&v14, mGravity);
     }
@@ -606,15 +594,15 @@ void BombTeresa::exeDrift() {
     TVec3f v13;
     v16.getTrans(v13);
     TVec3f v12;
-    v12.set< f32 >(v16[2][2], v16[1][2], v16[0][2]);
+    v16.getZDir(v12);
     if (!MR::normalizeOrZero(&v12)) {
-        JMAVECScaleAdd(&v12, &v13, &v13, 20.0f);
+        v13.scaleAdd(20.0f, v12, v13);
     }
     MR::vecBlend(_C4, v13, &_C4, MR::calcNerveEaseInRate(this, 15));
     MR::turnDirectionToTarget(this, &_AC, *MR::getPlayerPos(), 0.0f);
     if (_E8 <= 0) {
         if (MR::isPadSwing(WPAD_CHAN0)) {
-            MR::tryRumblePadMiddle(this, 0);
+            MR::tryRumblePadMiddle(this, WPAD_CHAN0);
             _E8 = 40;
             _E0 += 20.0f;
             _E4 += 20.0f;
@@ -645,7 +633,7 @@ void BombTeresa::exeDrift() {
 void BombTeresa::exeDriftRelease() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Drift");
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::startSound(this, "SE_EM_BOMBTERE_THROW");
     }
     _DC = MR::calcNerveEaseInOutValue(this, 12, 1.0f, 0.0f);
@@ -670,7 +658,7 @@ void BombTeresa::endBindStarPointer() {
 void BombTeresa::exeExplosion() {
     if (MR::isFirstStep(this)) {
         MR::shakeCameraNormalStrong();
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::deleteEffect(this, "SpinBlur");
         MR::emitEffect(this, "Explosion");
         MR::hideModel(this);
@@ -756,7 +744,7 @@ bool BombTeresa::isEnableDisperse() const {
     if (isNerve(&NrvBombTeresa::BombTeresaNrvDrift::sInstance)) {
         return false;
     }
-    isEnableDrift();
+    return isEnableDrift();
 }
 
 bool BombTeresa::isEnableHitExplosionToPlayer() const {

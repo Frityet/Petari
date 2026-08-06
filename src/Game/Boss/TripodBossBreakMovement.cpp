@@ -1,7 +1,12 @@
 #include "Game/Boss/TripodBossBreakMovement.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/SpringValue.hpp"
 
 namespace NrvTripodBossBreakMovement {
     NEW_NERVE(TripodBossBreakMovementNrvWait, TripodBossBreakMovement, Wait);
@@ -121,4 +126,5 @@ void TripodBossBreakMovement::exeBreak() {
     _D8 *= _F8;
 }
 
-TripodBossBreakMovement::~TripodBossBreakMovement() {}
+TripodBossBreakMovement::~TripodBossBreakMovement() {
+}

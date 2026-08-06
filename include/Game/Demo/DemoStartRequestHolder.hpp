@@ -1,34 +1,18 @@
 #pragma once
 
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/Array.hpp"
 
 class LayoutActor;
 class LiveActor;
+class NameObj;
 class NerveExecutor;
 
 class DemoStartInfo {
 public:
-    enum DemoType {
-        DemoType_Programmable = 0,
-        DemoType_TimeKeep = 1
-    };
-
-    enum CinemaFrameType {
-        CinemaFrame_On = 0,
-        CinemaFrame_Off = 1
-    };
-
-    enum StarPointerType {
-        StarPointer_Default = 0,
-        StarPointer_StarPointer = 1,
-        StarPointer_HandPointerFinger = 2
-    };
-
-    enum DeleteEffectType {
-        DeleteEffect_Keep = 0,
-        DeleteEffect_Delete = 1
-    };
+    enum DemoType {};
+    enum CinemaFrameType {};
+    enum StarPointerType {};
+    enum DeleteEffectType {};
 
     DemoStartInfo();
     DemoStartInfo& operator=(const DemoStartInfo&);
@@ -49,10 +33,6 @@ public:
     u32 _34;
 };
 
-namespace DemoStartRequestUtil {
-    bool isEmpty(const DemoStartInfo*);
-};  // namespace DemoStartRequestUtil
-
 class DemoStartRequestHolder {
 public:
     DemoStartRequestHolder();
@@ -71,8 +51,8 @@ public:
     DemoStartInfo* find(const NameObj*, const char*) const;
     DemoStartInfo* findEmpty() const;
 
-    DemoStartInfo* mStartInfos[0x10];                                       // 0x0
-    s32 mNumInfos;                                                          // 0x40
-    MR::FixedRingBuffer<const DemoStartInfo*, 16> mRequestBuffer;           // 0x44
-    NameObj* mProxyObj;                                                     // 0xA0
+    DemoStartInfo* mStartInfos[0x10];                                // 0x0
+    s32 mNumInfos;                                                   // 0x40
+    MR::FixedRingBuffer< const DemoStartInfo*, 16 > mRequestBuffer;  // 0x44
+    NameObj* mProxyObj;                                              // 0xA0
 };

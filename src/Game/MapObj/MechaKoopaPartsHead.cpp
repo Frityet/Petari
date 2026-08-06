@@ -1,4 +1,7 @@
 #include "Game/MapObj/MechaKoopaPartsHead.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util.hpp"
 
 namespace {
     const char* sDemoPartNameBreak = "壊れ開始";
@@ -16,7 +19,8 @@ namespace NrvMechaKoopaPartsHead {
     NEW_NERVE(MechaKoopaPartsHeadNrvDemoAppearStar, MechaKoopaPartsHead, DemoAppearStar);
 };  // namespace NrvMechaKoopaPartsHead
 
-MechaKoopaPartsHead::MechaKoopaPartsHead(const char* pName) : MapObjActor(pName) {}
+MechaKoopaPartsHead::MechaKoopaPartsHead(const char* pName) : MapObjActor(pName) {
+}
 
 void MechaKoopaPartsHead::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
@@ -29,17 +33,18 @@ void MechaKoopaPartsHead::init(const JMapInfoIter& rIter) {
     initInfo.setupNerve(&NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvWait::sInstance);
     initialize(rIter, initInfo);
     MR::declarePowerStar(this);
-    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoBreak::sInstance, sDemoPartNameBreak);
-    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoWhiteFadeOut::sInstance, sDemoPartNameFadeOut);
-    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoWhiteWait::sInstance, sDemoPartNameWhite);
-    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoWhiteFadeIn::sInstance, sDemoPartNameFadeIn);
+    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoBreak::sInstance, ::sDemoPartNameBreak);
+    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoWhiteFadeOut::sInstance, ::sDemoPartNameFadeOut);
+    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoWhiteWait::sInstance, ::sDemoPartNameWhite);
+    MR::registerDemoActionNerve(this, &NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoWhiteFadeIn::sInstance, ::sDemoPartNameFadeIn);
 
     if (MR::isValidSwitchA(this)) {
         MR::onSwitchA(this);
     }
 }
 
-void MechaKoopaPartsHead::exeWait() {}
+void MechaKoopaPartsHead::exeWait() {
+}
 
 void MechaKoopaPartsHead::exeDemoBreak() {
     if (MR::isFirstStep(this)) {
@@ -48,7 +53,7 @@ void MechaKoopaPartsHead::exeDemoBreak() {
         MR::shakeCameraInfinity(this, 0.2f, 2.0f);
     }
 
-    MR::tryRumblePadMiddle(this, 0);
+    MR::tryRumblePadMiddle(this, WPAD_CHAN0);
     MR::startLevelSound(this, "SE_BM_LV_MECHA_KOOPA_PRE_BREAK");
 
     if (MR::isStep(this, 120)) {
@@ -72,7 +77,7 @@ void MechaKoopaPartsHead::exeDemoBreak() {
 void MechaKoopaPartsHead::exeDemoWhiteFadeOut() {
     if (MR::isFirstStep(this)) {
         MR::stopShakingCamera(this);
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraStrong();
         MR::startSound(this, "SE_BM_MECHA_KOOPA_EXPLODE");
         MR::closeWipeWhiteFade(60);
@@ -97,7 +102,7 @@ void MechaKoopaPartsHead::exeDemoWhiteFadeIn() {
         MR::openWipeWhiteFade(60);
     }
 
-    if (MR::isDemoPartLastStep(sDemoPartNameFadeIn)) {
+    if (MR::isDemoPartLastStep(::sDemoPartNameFadeIn)) {
         setNerve(&NrvMechaKoopaPartsHead::MechaKoopaPartsHeadNrvDemoAppearStar::sInstance);
     }
 }
@@ -113,12 +118,17 @@ void MechaKoopaPartsHead::exeDemoAppearStar() {
     }
 }
 
-MechaKoopaPartsHead::~MechaKoopaPartsHead() {}
+MechaKoopaPartsHead::~MechaKoopaPartsHead() {
+}
 
-void MechaKoopaPartsHead::initCaseNoUseSwitchB(const MapObjActorInitInfo&) {}
+void MechaKoopaPartsHead::initCaseNoUseSwitchB(const MapObjActorInitInfo&) {
+}
 
-void MechaKoopaPartsHead::initCaseUseSwitchB(const MapObjActorInitInfo&) {}
+void MechaKoopaPartsHead::initCaseUseSwitchB(const MapObjActorInitInfo&) {
+}
 
-void MechaKoopaPartsHead::initCaseNoUseSwitchA(const MapObjActorInitInfo&) {}
+void MechaKoopaPartsHead::initCaseNoUseSwitchA(const MapObjActorInitInfo&) {
+}
 
-void MechaKoopaPartsHead::initCaseUseSwitchA(const MapObjActorInitInfo&) {}
+void MechaKoopaPartsHead::initCaseUseSwitchA(const MapObjActorInitInfo&) {
+}

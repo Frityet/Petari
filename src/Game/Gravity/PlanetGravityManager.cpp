@@ -1,10 +1,12 @@
 #include "Game/Gravity.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 PlanetGravityManager::PlanetGravityManager(const char* pName) : NameObj(pName) {
     mNumGravities = 0;
 }
 
-void PlanetGravityManager::init(const JMapInfoIter& rIter) {}
+void PlanetGravityManager::init(const JMapInfoIter& rIter) {
+}
 
 bool PlanetGravityManager::calcTotalGravityVector(TVec3f* pGravity, GravityInfo* pInfo, const TVec3f& rPosition, u32 gravityType, u32 host) const {
     TVec3f totalGravity;
@@ -44,11 +46,11 @@ bool PlanetGravityManager::calcTotalGravityVector(TVec3f* pGravity, GravityInfo*
 
             if ((*pGravities)->calcGravity(&gravityVec, rPosition)) {
                 bool storeInfo = false;
-                f32 scalar = PSVECMag(&gravityVec);
+                f32 scalar = gravityVec.length();
 
                 // If same priority, add gravity vector to total result
                 if (priority == largestPriority) {
-                    JMathInlineVEC::PSVECAdd(&totalGravity, &gravityVec, &totalGravity);
+                    totalGravity += gravityVec;
                     hasCalculated = true;
 
                     if (largestScalar < scalar) {

@@ -1,6 +1,5 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "Game/NameObj/NameObjHolder.hpp"
-#include "Game/SingletonHolder.hpp"
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "Game/System/GameDataFunction.hpp"
@@ -14,6 +13,7 @@
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include <nw4r/lyt/layout.h>
 #include <nw4r/ut/ResFont.h>
 
@@ -25,7 +25,7 @@ namespace MR {
 
 namespace {
     FunctionAsyncExecutor* getFunctionAsyncExecutor() NO_INLINE {
-        return MR::getGameSystemObjHolder()->mAsyncExec;
+        return MR::getGameSystemObjHolder()->mFunctionAsyncExecutor;
     }
 };  // namespace
 
@@ -70,19 +70,19 @@ namespace MR {
     }
 
     void callMethodAllSceneNameObj(NameObjMethod pMethod) {
-        getSceneNameObjHolder()->callMethodAllObj(pMethod);
+        ::getSceneNameObjHolder()->callMethodAllObj(pMethod);
     }
 
     void suspendAllSceneNameObj() {
-        getSceneNameObjHolder()->suspendAllObj();
+        ::getSceneNameObjHolder()->suspendAllObj();
     }
 
     void resumeAllSceneNameObj() {
-        getSceneNameObjHolder()->resumeAllObj();
+        ::getSceneNameObjHolder()->resumeAllObj();
     }
 
     void syncWithFlagsAllSceneNameObj() {
-        getSceneNameObjHolder()->syncWithFlags();
+        ::getSceneNameObjHolder()->syncWithFlags();
     }
 
     void setRandomSeedFromStageName() {
@@ -96,19 +96,19 @@ namespace MR {
     }
 
     void startFunctionAsyncExecute(const MR::FunctorBase& rFunc, int threadPriority, const char* pThreadName) {
-        getFunctionAsyncExecutor()->start(rFunc, threadPriority, pThreadName);
+        ::getFunctionAsyncExecutor()->start(rFunc, threadPriority, pThreadName);
     }
 
     bool startFunctionAsyncExecuteOnMainThread(const MR::FunctorBase& rFunc, const char* pThreadName) {
-        return getFunctionAsyncExecutor()->startOnMainThread(rFunc, pThreadName);
+        return ::getFunctionAsyncExecutor()->startOnMainThread(rFunc, pThreadName);
     }
 
     void waitForEndFunctionAsyncExecute(const char* pThreadName) {
-        getFunctionAsyncExecutor()->waitForEnd(pThreadName);
+        ::getFunctionAsyncExecutor()->waitForEnd(pThreadName);
     }
 
     bool isEndFunctionAsyncExecute(const char* pThreadName) {
-        return getFunctionAsyncExecutor()->isEnd(pThreadName);
+        return ::getFunctionAsyncExecutor()->isEnd(pThreadName);
     }
 
     bool tryEndFunctionAsyncExecute(const char* pThreadName) {
@@ -122,17 +122,17 @@ namespace MR {
     }
 
     void suspendAsyncExecuteThread(const char* pThreadName) {
-        OSSuspendThread(getFunctionAsyncExecutor()->getOSThread(pThreadName));
+        OSSuspendThread(::getFunctionAsyncExecutor()->getOSThread(pThreadName));
     }
 
     void resumeAsyncExecuteThread(const char* pThreadName) {
-        OSThread* pThread = getFunctionAsyncExecutor()->getOSThread(pThreadName);
+        OSThread* pThread = ::getFunctionAsyncExecutor()->getOSThread(pThreadName);
 
-        OSResumeThread(getFunctionAsyncExecutor()->getOSThread(pThreadName));
+        OSResumeThread(::getFunctionAsyncExecutor()->getOSThread(pThreadName));
     }
 
     bool isSuspendedAsyncExecuteThread(const char* pThreadName) {
-        OSThread* pThread = getFunctionAsyncExecutor()->getOSThread(pThreadName);
+        OSThread* pThread = ::getFunctionAsyncExecutor()->getOSThread(pThreadName);
 
         if (pThread == nullptr) {
             return false;
@@ -144,11 +144,11 @@ namespace MR {
     // isScreen16Per9
 
     void initSceneMessage() {
-        getGameSystemObjHolder()->mMsgHolder->initSceneData();
+        getGameSystemObjHolder()->mMessageHolder->initSceneData();
     }
 
     void destroySceneMessage() {
-        getGameSystemObjHolder()->mMsgHolder->destroySceneData();
+        getGameSystemObjHolder()->mMessageHolder->destroySceneData();
     }
 
     void resetSystemAndGameStatus() {
@@ -158,7 +158,7 @@ namespace MR {
     }
 
     void stopAllSound(u32 param1) {
-        getGameSystemObjHolder()->mSysWrapper->stopAllSound(param1);
+        getGameSystemObjHolder()->mAudioSystem->stopAllSound(param1);
     }
 
     void setLayoutDefaultAllocator() {

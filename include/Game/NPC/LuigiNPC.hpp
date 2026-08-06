@@ -1,17 +1,25 @@
 #pragma once
 
-#include "Game/Map/CollisionParts.hpp"
 #include "Game/NPC/NPCActor.hpp"
-#include "Game/NameObj/NameObjArchiveListCollector.hpp"
-#include "Game/Util/JMapInfo.hpp"
-#include "Game/Util/NPCUtil.hpp"
-#include "revolution/types.h"
+
+class TakeOutStar;
 
 class LuigiNPC : public NPCActor {
 public:
-    LuigiNPC(const char*);
+    enum Type {
+        Type_Invalid = -1,
+        Type_Afraid,
+        Type_Normal,
+        Type_Event,
+        Type_OnTree,
+        Type_Arrested,
+        Type_Count,
+    };
 
-    virtual ~LuigiNPC();
+    /// @brief Creates a new `LuigiNPC`.
+    /// @param pName A pointer to the null-terminated name of the object.
+    LuigiNPC(const char* pName);
+
     virtual void init(const JMapInfoIter&);
     virtual void initAfterPlacement();
     virtual void control();
@@ -20,6 +28,7 @@ public:
     virtual bool receiveOtherMsg(u32, HitSensor*, HitSensor*);
 
     static void makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&);
+
     bool branchFunc(u32);
     bool eventFunc(u32);
     bool trySetNerveAfraid();
@@ -27,6 +36,7 @@ public:
     void setAfraidAction();
     bool trySetNerveArrested();
     bool isDeclarePowerStarType();
+
     void exeWait();
     void exeReaction();
     void exeTakeOutStar();
@@ -40,6 +50,6 @@ public:
     void exeOnTreeFall();
     void exeOnTreeLand();
 
-    TakeOutStar* mTakeOutStar;
-    s32 _160;
+    /* 0x15C */ TakeOutStar* mTakeOutStar;
+    /* 0x160 */ s32 mType;
 };

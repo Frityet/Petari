@@ -1,10 +1,13 @@
 #include "Game/NPC/Peach.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
 namespace NrvPeach {
     NEW_NERVE(PeachNrvWait, Peach, Wait);
 };  // namespace NrvPeach
 
-Peach::Peach(const char* pName) : NPCActor(pName) {}
+Peach::Peach(const char* pName) : NPCActor(pName) {
+}
 
 void Peach::init(const JMapInfoIter& rIter) {
     NPCActorCaps caps("Peach");
@@ -23,4 +26,5 @@ void Peach::exeWait() {
     }
 }
 
-Peach::~Peach() {}
+Peach::~Peach() {
+}

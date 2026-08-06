@@ -1,6 +1,17 @@
 #include "Game/Enemy/Birikyu.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-// #include "math_types.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 namespace NrvBirikyu {
     NEW_NERVE(HostTypeMove, Birikyu, Move);
@@ -11,9 +22,16 @@ namespace NrvBirikyu {
     NEW_NERVE(HostTypeStopPointing, Birikyu, StopPointing);
 };  // namespace NrvBirikyu
 
+void FORCE_OPERATOR() {
+    TVec3f vec;
+    vec * 1.0f;
+    vec + TVec3f(1.0f);
+}
+
 Birikyu::Birikyu(const char* pName)
     : LiveActor(pName), _8C(nullptr), _90(gZeroVec), _9C(gZeroVec), _A8(false), _A9(false), _AC(0.0f, 1.0f, 0.0f), _B8(0.0f, 0.0f, 1.0f), _C4(0.0f),
-      _C8(10.0f) {}
+      _C8(10.0f) {
+}
 
 void Birikyu::init(const JMapInfoIter& rIter) {
     MR::getObjectName(&_8C, rIter);
@@ -61,9 +79,7 @@ void Birikyu::initAfterPlacement() {
         f32 x2 = matrix.mMtx[0][2];
         _B8.set(x2, y2, z2);
         MR::normalize(&_B8);
-        TVec3f add(_9C * 400.0f);
-        TVec3f vec(_9C + add);
-        mPosition.set< f32 >(vec);
+        mPosition.set< f32 >(_9C + _9C * 400.0f);
     }
 }
 
@@ -157,7 +173,7 @@ void Birikyu::initShadow() {
         MR::onCalcShadowDropPrivateGravity(this, nullptr);
         MR::onCalcShadow(this, nullptr);
         MR::onCalcGravity(this);
-        MR::setShadowDropDirectionPtr(this, nullptr, &getSensor("body")->mPosition);
+        MR::setShadowDropPositionPtr(this, nullptr, &getSensor("body")->mPosition);
     }
 }
 
@@ -200,23 +216,19 @@ void Birikyu::exeMove() {
     }
 }
 
-/*
 void Birikyu::exeMoveCircle() {
     MR::startLevelSound(this, "SE_OJ_LV_BIRIKYU_MOVE");
     if (!tryStopPointing()) {
-        f32 divis = _C8 / 400.0f;
-        f32 sub = MR::subtractFromSum(divis, _C4, 0.0f);
-        _C4 = MR::modAndAdd(0.0f, sub, 6.283185482025146f);
+        _C4 = MR::repeat(_C4 + (_C8 / 400.0f), 0.0f, TWO_PI);
         TPos3f matrix;
         matrix.identity();
         matrix.makeRotate(_AC, _C4);
         TVec3f temp = _B8 * 400.0f;
         matrix.mult(temp, temp);
         TVec3f matrix2 = (_9C + temp);
-        mPosition.set<f32>(matrix2);
+        mPosition.set< f32 >(matrix2);
     }
 }
-*/
 
 void Birikyu::exeWaitAtEdge() {
     MR::startLevelSound(this, "SE_OJ_LV_BIRIKYU_MOVE");
@@ -244,7 +256,8 @@ void Birikyu::exeAttack() {
     }
 }
 
-void Birikyu::exeAttackWait() {}
+void Birikyu::exeAttackWait() {
+}
 
 void Birikyu::exeStopPointing() {
     if (MR::isFirstStep(this)) {

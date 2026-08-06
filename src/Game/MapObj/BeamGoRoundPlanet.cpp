@@ -1,9 +1,11 @@
 #include "Game/MapObj/BeamGoRoundPlanet.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/LiveActor/VolumeModelDrawer.hpp"
+#include "Game/Map/CollisionParts.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Scene/SceneFunction.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
-#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util.hpp"
 #include <cstdio>
 
 BeamGoRoundBeam::BeamGoRoundBeam(MtxPtr mtx) : LiveActor("ビームゴーラウンドビーム") {
@@ -40,9 +42,9 @@ void BeamGoRoundBeam::updateHitSensor(HitSensor* pSensor) {
     TVec3f up;
     MR::calcUpVec(&up, this);
     TVec3f v7;
-    JMAVECScaleAdd(&up, &mPosition, &v7, radius);
+    v7.scaleAdd(radius, up, mPosition);
     TVec3f v6;
-    JMAVECScaleAdd(&up, &v7, &v6, (2700.0f - radius));
+    v6.scaleAdd(2700.0f - radius, up, v7);
     MR::calcPerpendicFootToLineInside(&pSensor->mPosition, *MR::getPlayerPos(), v7, v6);
 }
 
@@ -75,8 +77,8 @@ void BeamGoRoundPlanet::init(const JMapInfoIter& rIter) {
     info.setupFarClipping(-1.0f);
     info.setupNerve(&NrvBeamGoRoundPlanet::BeamGoRoundPlanetNrvWait::sInstance);
     initialize(rIter, info);
-    _C8 = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("body"), MR::getJointMtx(this, "move1"), (MR::CollisionScaleType)2);
-    _CC = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("body"), MR::getJointMtx(this, "move2"), (MR::CollisionScaleType)2);
+    _C8 = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("body"), MR::getJointMtx(this, "move1"), MR::CollisionScaleType_Unk2);
+    _CC = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("body"), MR::getJointMtx(this, "move2"), MR::CollisionScaleType_Unk2);
     MR::validateCollisionParts(_CC);
     MR::validateCollisionParts(_C8);
     initBeam();
@@ -103,6 +105,8 @@ void BeamGoRoundPlanet::initBeam() {
     }
 }
 
-BeamGoRoundBeam::~BeamGoRoundBeam() {}
+BeamGoRoundBeam::~BeamGoRoundBeam() {
+}
 
-BeamGoRoundPlanet::~BeamGoRoundPlanet() {}
+BeamGoRoundPlanet::~BeamGoRoundPlanet() {
+}

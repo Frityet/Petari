@@ -1,4 +1,5 @@
 #include "Game/MapObj/PurpleCoinHolder.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/Coin.hpp"
 #include "Game/MapObj/PurpleCoinStarter.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -36,4 +37,5 @@ namespace MR {
     }
 };  // namespace MR
 
-PurpleCoinHolder::~PurpleCoinHolder() {}
+PurpleCoinHolder::~PurpleCoinHolder() {
+}

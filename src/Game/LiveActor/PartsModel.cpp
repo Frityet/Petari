@@ -1,6 +1,10 @@
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/FixedPosition.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 PartsModel::PartsModel(LiveActor* pActor, const char* pName, const char* pModelName, MtxPtr mtx, int drawBufferType, bool a6) : LiveActor(pName) {
     mHost = pActor;
@@ -50,11 +54,10 @@ void PartsModel::makeActorDead() {
     mIsDead = true;
 }
 
-// 99.9% sure the call to makeActorAppered is meant to be inlined but this matches
 void PartsModel::init(const JMapInfoIter& rIter) {
     initEffectKeeper(8, nullptr, false);
     initSound(8, false);
-    MR::isInvalidClipping(this);
+    MR::invalidateClipping(this);
     makeActorAppeared();
     mIsDead = false;
 }
@@ -87,7 +90,7 @@ void PartsModel::calcAnim() {
         return;
     }
 
-    if (mFixedPos) {
+    if (mFixedPos != nullptr) {
         mFixedPos->calc();
     }
     LiveActor::calcAnim();

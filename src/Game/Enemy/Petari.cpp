@@ -1,16 +1,33 @@
 #include "Game/Enemy/Petari.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/FootPrint.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 namespace {
     static const Vec sBodySensorOffset = {0.0f, 60.0f, 0.0f};
     static const Vec sSpinSensorOffset = {0.0f, 0.0f, 0.0f};
     const char* sBodySensorName = "body";
     const char* sSpinSensorName = "spin";
+};  // namespace
 
+namespace {
     NEW_NERVE(PetariNrvLurk, Petari, Lurk);
     NEW_NERVE(PetariNrvJumpOut, Petari, JumpOut);
     NEW_NERVE_ONEND(PetariNrvWait, Petari, Wait, Wait);
@@ -40,8 +57,8 @@ void Petari::init(const JMapInfoIter& rIter) {
     MR::connectToSceneEnemy(this);
     MR::initLightCtrl(this);
     initHitSensor(2);
-    MR::addHitSensorEnemy(this, sBodySensorName, 32, 60.0f, TVec3f(sBodySensorOffset));
-    MR::addHitSensorEnemy(this, sSpinSensorName, 32, 100.0f, TVec3f(sSpinSensorOffset));
+    MR::addHitSensorEnemy(this, ::sBodySensorName, 32, 60.0f, TVec3f(::sBodySensorOffset));
+    MR::addHitSensorEnemy(this, ::sSpinSensorName, 32, 100.0f, TVec3f(::sSpinSensorOffset));
     initBinder(60.0f, 60.0f, 0);
     initEffectKeeper(1, nullptr, false);
     MR::addEffect(this, "PointerTouchManual");
@@ -292,8 +309,6 @@ void Petari::exeSmash() {
 }
 
 void Petari::exeSpinOut() {
-    // FIXME: issue with rejection
-    // https://decomp.me/scratch/5nfwd
     if (MR::isFirstStep(this)) {
         MR::showModel(this);
         MR::startBck(this, "Damage", nullptr);
@@ -301,17 +316,18 @@ void Petari::exeSpinOut() {
         MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
     }
 
-    MR::turnDirectionDegree(this, &mFront, mVelocity.negateOperatorInternal(), 180.0f);
+    MR::turnDirectionDegree(this, &mFront, -mVelocity, 180.0f);
 
     TVec3f v8;
     if (MR::isOnGround(this)) {
-        v8.set(MR::getGroundNormal(this)->negateOperatorInternal());
+        v8.set(-*MR::getGroundNormal(this));
     } else {
         v8.set(mGravity);
     }
 
-    v8.rejection(mVelocity);
-    mVelocity.add(v8.scaleInline(1.3f));
+    const TVec3f& vel = mVelocity;
+    mVelocity.scaleAdd(-v8.dot(vel), v8, vel);
+    mVelocity.add(v8 * 1.3f);
 
     calcCenter();
     appearStarPieceGradually();
@@ -371,7 +387,7 @@ void Petari::control() {
         groundQuat.transform(upVec);
     } else {
         TQuat4f gravityQuat;
-        gravityQuat.setRotate(upVec, mGravity.negateOperatorInternal(), 0.1f);
+        gravityQuat.setRotate(upVec, -mGravity, 0.1f);
         gravityQuat.transform(upVec);
     }
     TPos3f v11;
@@ -383,25 +399,22 @@ void Petari::control() {
 }
 
 void Petari::calcAndSetBaseMtx() {
-    // FIXME: regswap in TVec3::mulInternal
-    // https://decomp.me/scratch/3mmtT
-    TVec3f v1;
-    v1.mult(mScale, mAnimScaleCtrl->_C, v1);
-    MR::setBaseScale(this, v1);
+    TVec3f scale = mAnimScaleCtrl->_C * mScale;
+    MR::setBaseScale(this, scale);
 }
 
 void Petari::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
-    if (MR::isSensor(pSender, sBodySensorName) && isSolidBody()) {
+    if (MR::isSensor(pSender, ::sBodySensorName) && isSolidBody()) {
         MR::sendMsgPush(pReceiver, pSender);
     }
 }
 
 bool Petari::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    if (MR::isSensor(pReceiver, sBodySensorName)) {
+    if (MR::isSensor(pReceiver, ::sBodySensorName)) {
         return receivePlayerAttackAtBody(msg, pSender, pReceiver);
     }
 
-    if (MR::isSensor(pReceiver, sSpinSensorName)) {
+    if (MR::isSensor(pReceiver, ::sSpinSensorName)) {
         return receivePlayerAttackAtSpin(msg, pSender, pReceiver);
     }
 
@@ -409,7 +422,7 @@ bool Petari::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pRec
 }
 
 bool Petari::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    if (!MR::isSensor(pReceiver, sBodySensorName)) {
+    if (!MR::isSensor(pReceiver, ::sBodySensorName)) {
         return false;
     }
 
@@ -423,7 +436,7 @@ bool Petari::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pRece
 }
 
 bool Petari::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
-    if (MR::isSensor(pReceiver, sBodySensorName) && isSolidBody()) {
+    if (MR::isSensor(pReceiver, ::sBodySensorName) && isSolidBody()) {
         MR::addVelocityFromPush(this, 3.0f, pSender, pReceiver);
         return true;
     }
@@ -432,7 +445,7 @@ bool Petari::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
 }
 
 bool Petari::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    if (MR::isSensor(pReceiver, sBodySensorName) && isNerve(&PetariNrvSwoon::sInstance) && MR::isMsgPlayerKick(msg)) {
+    if (MR::isSensor(pReceiver, ::sBodySensorName) && isNerve(&PetariNrvSwoon::sInstance) && MR::isMsgPlayerKick(msg)) {
         MR::setVelocityBlowAttack(this, pSender, pReceiver, 10.0f, 0.0f, 4);
         setNerve(&PetariNrvKickOut::sInstance);
         return true;
@@ -457,7 +470,7 @@ void Petari::initFootPrint(const JMapInfoIter& rIter) {
 void Petari::initFrontVec() {
     TPos3f mtx;
     MR::makeMtxTR(mtx, mPosition, mRotation);
-    mtx.getZDirInline(mFront);
+    mtx.getZDir(mFront);
 }
 
 void Petari::initStarPiece(const JMapInfoIter& rIter) {
@@ -563,14 +576,13 @@ bool Petari::receivePlayerAttackAtSpin(u32 msg, HitSensor* pSender, HitSensor* p
         return false;
     }
 
-    bool v5 = false;
-    if (isNerve(&PetariNrvWait::sInstance) || isNerve(&PetariNrvEscape::sInstance) || isNerve(&PetariNrvFreeze::sInstance)) {
-        v5 = true;
-    }
+    bool v5 = isNerve(&PetariNrvWait::sInstance) || isNerve(&PetariNrvEscape::sInstance) || isNerve(&PetariNrvFreeze::sInstance);
+
     if (v5) {
         setNerve(&PetariNrvSwoonStart::sInstance);
         return true;
     }
+
     return false;
 }
 
@@ -579,8 +591,8 @@ bool Petari::isSolidBody() const {
         return false;
     }
 
-    return (isNerve(&PetariNrvSwoonStart::sInstance) || isNerve(&PetariNrvSwoon::sInstance) || isNerve(&PetariNrvSwoonEnd::sInstance) ||
-            isNerve(&PetariNrvWait::sInstance) || isNerve(&PetariNrvFreeze::sInstance));
+    return isNerve(&PetariNrvSwoonStart::sInstance) || isNerve(&PetariNrvSwoon::sInstance) || isNerve(&PetariNrvSwoonEnd::sInstance) ||
+           isNerve(&PetariNrvWait::sInstance) || isNerve(&PetariNrvFreeze::sInstance);
 }
 
 void Petari::moveTowardTargetDirection(f32 vel, f32 f2, f32 angle) {
@@ -591,28 +603,17 @@ void Petari::moveTowardTargetDirection(f32 vel, f32 f2, f32 angle) {
 }
 
 void Petari::updateFootPrint() {
-    // FIXME: TVec3f stack order
-    // https://decomp.me/scratch/NHFYA
     if (MR::isBindedGround(this)) {
-        f32 yOffs = mFootprintYOffs;
-        TVec3f v8(*MR::getGroundNormal(this));
-        v8.scale(yOffs);
-        TVec3f v9(mPosition);
-        v9 -= v8;
-        mFootPrint->addPrint(v9, mFront, *MR::getGroundNormal(this), false);
+        mFootPrint->addPrint(mPosition - *MR::getGroundNormal(this) * mFootprintYOffs, mFront, *MR::getGroundNormal(this), false);
     }
 }
 
 void Petari::calcSpinOutVelocity(f32 speed) {
-    TVec3f* playerPos = MR::getPlayerCenterPos();
-
-    TVec3f deltaDir(mBodyCenter);
-    deltaDir -= *playerPos;
-
-    deltaDir.rejection(mGravity);
+    TVec3f deltaDir = mBodyCenter - *MR::getPlayerCenterPos();
+    deltaDir.orthogonalize(mGravity);
 
     if (!MR::isNearZero(deltaDir)) {
-        mFront.set(deltaDir.negateOperatorInternal());
+        mFront.set(-deltaDir);
         MR::normalize(&mFront);
     }
 
@@ -642,23 +643,21 @@ void Petari::calcEscapeDirection() {
 }
 
 void Petari::avoidPlayer() {
-    // FIXME: float regswap in setRotate line
-    // https://decomp.me/scratch/TFtfj
-    TVec3f crossVec(mTargetDir.cross(mFront));
+    TVec3f crossVec = mTargetDir.cross(mFront);
     f32 turnSign;
     if (crossVec.dot(mGravity) < 0.0f) {
         turnSign = -1.0f;
     } else {
         turnSign = 1.0f;
     }
-    TVec3f dirToPlayer(*MR::getPlayerCenterPos());
-    dirToPlayer -= mBodyCenter;
+
+    TVec3f dirToPlayer = *MR::getPlayerCenterPos() - mBodyCenter;
     if (!MR::isNearZero(dirToPlayer)) {
-        f32 avoidWeight = 3.0f / dirToPlayer.scaleInline(0.1f).squared();
+        f32 avoidWeight = 3.0f / (dirToPlayer * 0.1f).squared();
         MR::clamp01(&avoidWeight);
         MR::normalize(&dirToPlayer);
-        JGeometry::negateInternal((f32*)&dirToPlayer, (f32*)&dirToPlayer);
-        TVec3f playerVelocity(*MR::getPlayerVelocity());
+        dirToPlayer.negate();
+        TVec3f playerVelocity = *MR::getPlayerVelocity();
         MR::normalizeOrZero(&playerVelocity);
         f32 approaching = dirToPlayer.dot(playerVelocity);
         if (approaching < 0.0f) {
@@ -666,48 +665,46 @@ void Petari::avoidPlayer() {
         }
         avoidWeight *= approaching;
         TQuat4f quat;
-        quat.setRotate(mGravity, ((avoidWeight * ((90.0f * turnSign) * PI)) / 180.0f));
+        quat.setRotate(mGravity, ((avoidWeight * ((90.0f * turnSign) * MR::pi())) / 180.0f));
         quat.transform(mTargetDir);
     }
 }
 
 void Petari::avoidWall() {
-    TVec3f planarDir(mTargetDir);
-    planarDir.rejection(mGravity);
+    TVec3f planarDir = mTargetDir;
+    planarDir.orthogonalize(mGravity);
     if (!MR::isNearZero(planarDir)) {
         MR::normalize(&planarDir);
         Triangle rayHitTri;
         TVec3f v19;
-        if (MR::getFirstPolyOnLineToMapAndMoveLimit(&v19, &rayHitTri, mBodyCenter, planarDir.scaleInline(600.0f))) {
-            TVec3f wallNormal(*rayHitTri.getNormal(0));
-            wallNormal.rejection(mGravity);
+        if (MR::getFirstPolyOnLineToMapAndMoveLimit(&v19, &rayHitTri, mBodyCenter, planarDir * 600.0f)) {
+            TVec3f wallNormal = *rayHitTri.getNormal(0);
+            wallNormal.orthogonalize(mGravity);
             if (!MR::isNearZero(wallNormal)) {
                 MR::normalize(&wallNormal);
-                f32 proximity = 1.0f - (PSVECDistance(&v19, &mBodyCenter) / 600.0f);
+                f32 proximity = 1.0f - (v19.distance(mBodyCenter) / 600.0f);
                 MR::clamp01(&proximity);
                 f32 v8 = (proximity * proximity);
                 proximity *= proximity;
 
-                mTargetDir -= wallNormal.scaleInline(wallNormal.dot(mTargetDir)).scaleInline(2.0f).scaleInline(v8).scaleInline(2.0f);
+                mTargetDir -= wallNormal * (wallNormal.dot(mTargetDir)) * 2.0f * v8 * 2.0f;
             }
         }
     }
 }
 
 void Petari::calcCenter() {
-    mBodyCenter = mPosition.addOperatorInLine(mGravity.scaleInline(-60.0f));
+    mBodyCenter = mPosition + mGravity * -60.0f;
 }
 
 void Petari::meander() {
-    // FIXME: instruction swap
-    // https://decomp.me/scratch/rnnDM
     if (MR::isStep(this, mMeanderStep)) {
         mMeanderAngle = MR::getRandom(-90.0f, 90.0f);
         mMeanderStep = getNerveStep() + MR::getRandom((s32)60, 120);
     }
 
     TQuat4f v5;
-    v5.setRotate(mGravity.negateOperatorInternal(), (PI * mMeanderAngle) / 180.0f);
+    v5.setRotate(-mGravity, MR::pi() * mMeanderAngle / 180.0f);
     v5.transform(mTargetDir);
 }
 
@@ -761,7 +758,7 @@ bool Petari::reflectStarPointer2P() {
 void Petari::calcMouthPos(TVec3f* pOut) const {
     TPos3f mtx;
     mtx.set(MR::getJointMtx(this, "Head3"));
-    mtx.getTransInline(*pOut);
+    mtx.getTrans(*pOut);
 }
 
 void Petari::tryEmitFirstFootPrintEffect() {

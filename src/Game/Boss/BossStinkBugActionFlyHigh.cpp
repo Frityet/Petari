@@ -3,8 +3,14 @@
 #include "Game/Boss/BossStinkBugActionBase.hpp"
 #include "Game/Boss/BossStinkBugFunction.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvBossStinkBugActionFlyHigh {
     NEW_NERVE(BossStinkBugActionFlyHighNrvFlyDash, BossStinkBugActionFlyHigh, FlyDash);
@@ -62,7 +68,7 @@ void BossStinkBugActionFlyHigh::control() {
 bool BossStinkBugActionFlyHigh::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgPlayerHipDropFloor(msg) && isEnableHipDrop()) {
         getHost()->offBindLeg();
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
         MR::emitEffectHit(getHost(), MR::getSensorPos(pSender), "Hit");
 
@@ -93,7 +99,7 @@ bool BossStinkBugActionFlyHigh::receiveOtherMsg(u32 msg, HitSensor* pSender, Hit
         }
     } else if (isEnableAttack() && (MR::isMsgWallTouch(msg) || MR::isMsgCeilTouch(msg))) {
         if (MR::isFaceToTargetDegree(getHost(), MR::getSensorPos(pSender), getHost()->_EC, 45.0f)) {
-            if (MR::sendMsgEnemyAttackStrongToDir(pSender, pReceiver, getHost()->_EC.multInLine(50.0f))) {
+            if (MR::sendMsgEnemyAttackStrongToDir(pSender, pReceiver, getHost()->_EC * 50.0f)) {
                 if (isNerve(&NrvBossStinkBugActionFlyHigh::BossStinkBugActionFlyHighNrvGroundRun::sInstance)) {
                     getHost()->validateCollisionHitOnly();
                     setNerve(&NrvBossStinkBugActionFlyHigh::BossStinkBugActionFlyHighNrvToFly::sInstance);

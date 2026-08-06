@@ -1,6 +1,6 @@
 #include "Game/AreaObj/ChangeBgmCube.hpp"
-#include "Game/AudioLib/AudBgm.hpp"
 #include "Game/AudioLib/AudBgmMgr.hpp"
+#include "Game/AudioLib/AudSoundId.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/GameAudio/AudStageBgmTable.hpp"
 #include "Game/Util/DemoUtil.hpp"
@@ -9,25 +9,21 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include <JSystem/JAudio2/JAISound.hpp>
 
-ChangeBgmCube::ChangeBgmCube(int formType, const char* pName) : AreaObj(formType, pName) {
-    _3C = 0;
+ChangeBgmCube::ChangeBgmCube(int formType, const char* pName) : AreaObj(formType, pName), _3C() {
 }
-
-ChangeBgmCube::~ChangeBgmCube() {}
 
 void ChangeBgmCube::init(const JMapInfoIter& rIter) {
     AreaObj::init(rIter);
     MR::connectToSceneAreaObj(this);
 }
 
-void ChangeBgmCube::movement() {
-    bool isValid = false;
-    if (mIsValid && _15 && mIsAwake) {
-        isValid = true;
-    }
+ChangeBgmCube::~ChangeBgmCube() {
+}
 
-    if (!isValid) {
+void ChangeBgmCube::movement() {
+    if (!isValid()) {
         return;
     }
 
@@ -40,12 +36,12 @@ void ChangeBgmCube::movement() {
         return;
     }
 
-    if (MR::isPlayingStageBgmID(0x02000014)) {
+    if (MR::isPlayingStageBgmID(STM_STAR_EXIST)) {
         mIsValid = false;
         return;
     }
 
-    if (MR::isPlayingStageBgmID(0x0200003E)) {
+    if (MR::isPlayingStageBgmID(STM_STAR_EXIST_2)) {
         mIsValid = false;
         return;
     }
@@ -59,132 +55,138 @@ void ChangeBgmCube::movement() {
         return;
     }
 
-    if (MR::isPlayingStageBgmID(0x0200000A)) {
+    if (MR::isPlayingStageBgmID(STM_GALAXY_02_CHASE)) {
         return;
     }
 
-    if (MR::isPlayingStageBgmID(0x02000039)) {
+    if (MR::isPlayingStageBgmID(STM_BOSS_MECHA_KOOPA)) {
         return;
     }
 
-    if (MR::isPlayingStageBgmID(0x02000003)) {
+    if (MR::isPlayingStageBgmID(STM_BOSS_01_A)) {
         return;
     }
 
-    if (!isInVolume(*MR::getPlayerPos())) {
-        _3C = false;
-        return;
-    }
-
-    if (_3C) {
-        return;
-    }
-
-    s32 arg1 = mObjArg1;
-    s32 arg2 = mObjArg2;
-
-    switch (mObjArg0) {
-    case 0:
-        if (arg1 < 0) {
-            MR::startCurrentStageBGM();
+    if (isInVolume(*MR::getPlayerPos())) {
+        if (_3C) {
+            return;
         }
-        else {
-            u32 bgmID = AudStageBgmTable::getBgmId(MR::getCurrentStageName(), arg1);
-            if (bgmID != 0xFFFFFFFF) {
-                if (AudWrap::getBgmMgr()->_10[0] == bgmID && MR::isPlayingStageBgm()) {
-                    break;
+
+        s32 objArg0 = mObjArg0;
+        s32 objArg1 = mObjArg1;
+        s32 objArg2 = mObjArg2;
+
+        switch (objArg0) {
+        case 0:
+            if (objArg1 < 0) {
+                MR::startCurrentStageBGM();
+                break;
+            }
+
+            JAISoundID bgmId = JAISoundID(AudStageBgmTable::getBgmId(MR::getCurrentStageName(), objArg1));
+
+            if (!bgmId.isAnonymous()) {
+                if (AudWrap::getBgmMgr()->mCurrentBGM[0] == bgmId) {
+                    if (MR::isPlayingStageBgm()) {
+                        break;
+                    }
                 }
 
-                AudWrap::startStageBgm(bgmID, false);
+                AudWrap::startStageBgm(bgmId, false);
 
-                if (MR::isEqualStageName("ReverseKingdomGalaxy") && bgmID == 0x1010012) {
+                if (MR::isEqualStageName("ReverseKingdomGalaxy") && bgmId == MBGM_BOSS_05_A) {
                     MR::setCubeBgmChangeInvalid();
                 }
 
-                if (MR::isEqualStageName("CannonFleetGalaxy") && bgmID == 0x1010002) {
+                if (MR::isEqualStageName("CannonFleetGalaxy") && bgmId == MBGM_BOSS_01_A) {
                     MR::setCubeBgmChangeInvalid();
                 }
 
-                if (MR::isEqualStageName("BattleShipGalaxy") && bgmID == 0x1010002) {
+                if (MR::isEqualStageName("BattleShipGalaxy") && bgmId == MBGM_BOSS_01_A) {
                     MR::setCubeBgmChangeInvalid();
                 }
             }
 
-            if (arg2 >= 0) {
-                s32 state = AudStageBgmTable::getBgmState(MR::getCurrentStageName(), arg2);
-                if (state >= 0) {
-                    AudBgm* bgm = AudWrap::getStageBgm();
-                    if (bgm != 0) {
-                        bgm->changeTrackMuteState(state, 0);
+            if (objArg2 >= 0) {
+                s32 bgmState = AudStageBgmTable::getBgmState(MR::getCurrentStageName(), objArg2);
+
+                if (bgmState >= 0) {
+                    AudBgm* stageBgm = AudWrap::getStageBgm();
+
+                    if (stageBgm != nullptr) {
+                        stageBgm->changeTrackMuteState(bgmState, 0);
                     }
                 }
             }
-        }
-        break;
-    case 1:
-        if (mObjArg3 != 1) {
-            if (MR::isGalaxyRedCometAppearInCurrentStage()) {
-                break;
-            }
-
-            if (MR::isGalaxyBlackCometAppearInCurrentStage()) {
-                break;
-            }
-        }
-
-        if (arg1 < 0) {
-            arg1 = 0x5A;
-        }
-
-        if (arg2 >= 0) {
-            u32 bgmID = AudStageBgmTable::getBgmId(MR::getCurrentStageName(), arg2);
-            if (bgmID != 0xFFFFFFFF) {
-                if (AudWrap::getBgmMgr()->_10[0] == bgmID && MR::isPlayingStageBgm()) {
+            break;
+        case 1:
+            if (mObjArg3 != 1) {
+                if (MR::isGalaxyRedCometAppearInCurrentStage()) {
                     break;
                 }
 
-                AudWrap::setNextIdStageBgm(bgmID);
+                if (MR::isGalaxyBlackCometAppearInCurrentStage()) {
+                    break;
+                }
             }
+
+            s32 arg1 = objArg1;
+
+            if (arg1 < 0) {
+                arg1 = 90;
+            }
+
+            if (objArg2 >= 0) {
+                JAISoundID bgmId = JAISoundID(AudStageBgmTable::getBgmId(MR::getCurrentStageName(), objArg2));
+
+                if (!bgmId.isAnonymous()) {
+                    if (AudWrap::getBgmMgr()->mCurrentBGM[0] == bgmId) {
+                        if (MR::isPlayingStageBgm()) {
+                            break;
+                        }
+                    }
+
+                    AudWrap::setNextIdStageBgm(bgmId);
+                }
+            }
+
+            MR::stopStageBGM(arg1);
+            break;
+        case 2:
+            if (objArg1 < 0) {
+                AudBgm* stageBgm = AudWrap::getStageBgm();
+
+                if (stageBgm != nullptr) {
+                    s32 arg2 = 30;
+
+                    if (objArg2 >= 0) {
+                        arg2 = objArg2;
+                    }
+
+                    stageBgm->changeTrackMuteState(0, arg2);
+                }
+            } else {
+                s32 bgmState = AudStageBgmTable::getBgmState(MR::getCurrentStageName(), objArg1);
+
+                if (bgmState >= 0) {
+                    AudBgm* stageBgm = AudWrap::getStageBgm();
+
+                    if (stageBgm != nullptr) {
+                        s32 arg2 = 30;
+
+                        if (objArg2 >= 0) {
+                            arg2 = objArg2;
+                        }
+
+                        stageBgm->changeTrackMuteState(bgmState, arg2);
+                    }
+                }
+            }
+            break;
         }
 
-        MR::stopStageBGM(arg1);
-        break;
-    case 2:
-        if (arg1 < 0) {
-            AudBgm* bgm = AudWrap::getStageBgm();
-            if (bgm == 0) {
-                break;
-            }
-
-            s32 fadeFrame = 0x1E;
-            if (arg2 >= 0) {
-                fadeFrame = arg2;
-            }
-
-            bgm->changeTrackMuteState(0, fadeFrame);
-        }
-        else {
-            s32 state = AudStageBgmTable::getBgmState(MR::getCurrentStageName(), arg1);
-            if (state < 0) {
-                break;
-            }
-
-            AudBgm* bgm = AudWrap::getStageBgm();
-            if (bgm == 0) {
-                break;
-            }
-
-            s32 fadeFrame = 0x1E;
-            if (arg2 >= 0) {
-                fadeFrame = arg2;
-            }
-
-            bgm->changeTrackMuteState(state, fadeFrame);
-        }
-        break;
-    default:
-        break;
+        _3C = true;
+    } else {
+        _3C = false;
     }
-
-    _3C = true;
 }

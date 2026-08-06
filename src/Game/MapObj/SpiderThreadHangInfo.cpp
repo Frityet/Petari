@@ -1,11 +1,14 @@
 #include "Game/MapObj/SpiderThreadHangInfo.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/SpiderThreadPart.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 
 SpiderThreadHangInfo::SpiderThreadHangInfo()
-    : mBindedActor(nullptr), mPosition(nullptr), mThreadPart(nullptr), mHangIndex(-1), mIsHanging(false), _14(0) {}
+    : mBindedActor(nullptr), mPosition(nullptr), mThreadPart(nullptr), mHangIndex(-1), mIsHanging(false), _14(0) {
+}
 
 void SpiderThreadHangInfo::startBind(LiveActor* pActor, const TVec3f* pPos, SpiderThreadPart* pThreadPart, s32 hangIndex, const TVec3f& rVel,
                                      s32 a2) {

@@ -1,4 +1,5 @@
 #include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
 
 void MapPartsRailGuideDrawer::start() {
@@ -36,4 +37,5 @@ void MapPartsRailGuideDrawer::initGuidePoints(const JMapInfoIter& rIter) {
     }
 }
 
-MapPartsRailGuideDrawer::~MapPartsRailGuideDrawer() {}
+MapPartsRailGuideDrawer::~MapPartsRailGuideDrawer() {
+}

@@ -1,4 +1,7 @@
 #include "Game/MapObj/KeySwitch.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
 namespace {
@@ -11,7 +14,8 @@ namespace NrvKeySwitch {
     NEW_NERVE(KeySwitchNrvWait, KeySwitch, Wait);
 };  // namespace NrvKeySwitch
 
-KeySwitch::~KeySwitch() {}
+KeySwitch::~KeySwitch() {
+}
 
 KeySwitch::KeySwitch(const char* pName) : LiveActor(pName) {
     mCameraInfo = 0;
@@ -82,14 +86,13 @@ void KeySwitch::exeDemoStart() {
         return;
     }
 
-    if (MR::tryStartDemoWithoutCinemaFrame(this, cDemoName)) {
+    if (MR::tryStartDemoWithoutCinemaFrame(this, ::cDemoName)) {
         MR::startActorCameraTargetSelf(this, mCameraInfo, -1);
         mCurDemoFrame = 0;
         setNerve(&NrvKeySwitch::KeySwitchNrvAppear::sInstance);
     }
 }
 
-/*
 void KeySwitch::exeAppear() {
     if (MR::isFirstStep(this)) {
         MR::startBck(this, "Rotation", 0);
@@ -104,8 +107,8 @@ void KeySwitch::exeAppear() {
     bool val = false;
 
     if (MR::isBindedGround(this)) {
-        if (PSVECMag(&mVelocity) >= 10.0f) {
-            s32 mag = PSVECMag(&mVelocity);
+        if (mVelocity.length() >= 10.0f) {
+            s32 mag = mVelocity.length();
             mag *= 2;
             if (mag > 0x64) {
                 mag = 0x64;
@@ -113,10 +116,9 @@ void KeySwitch::exeAppear() {
 
             MR::startSound(this, "SE_OJ_KEY_SWITCH_BOUND", mag);
             TVec3f neg;
-            neg.negateInline_2(mGravity);
+            neg.negate(mGravity);
             MR::calcReboundVelocity(&mVelocity, neg, 0.60f, 0.7f);
-        }
-        else {
+        } else {
             val = true;
         }
     }
@@ -128,7 +130,6 @@ void KeySwitch::exeAppear() {
         }
     }
 }
-*/
 
 void KeySwitch::exeWait() {
     if (MR::isFirstStep(this)) {
@@ -164,7 +165,7 @@ void KeySwitch::control() {
     if (mCurDemoFrame != -1 && mCameraInfo) {
         if (mCurDemoFrame >= 0x28) {
             MR::endActorCamera(this, mCameraInfo, false, -1);
-            MR::endDemo(this, cDemoName);
+            MR::endDemo(this, ::cDemoName);
             mCameraInfo = 0;
             mCurDemoFrame = -1;
         } else {
@@ -188,7 +189,7 @@ bool KeySwitch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceive
 
     if (MR::isMsgItemGet(msg)) {
         MR::startSound(this, "SE_OJ_KEY_SWITCH_GET");
-        MR::tryRumblePadMiddle(this, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         kill();
         return true;
     }
@@ -196,15 +197,13 @@ bool KeySwitch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceive
     return false;
 }
 
-/*
 bool KeySwitch::tryAvoid() {
     LiveActor* sensorActor;
     HitSensor* sensor = nullptr;
 
     if (MR::isBindedGround(this)) {
         sensor = MR::getGroundSensor(this);
-    }
-    else if (MR::isBindedWall(this)) {
+    } else if (MR::isBindedWall(this)) {
         sensor = MR::getWallSensor(this);
     }
 
@@ -220,9 +219,8 @@ bool KeySwitch::tryAvoid() {
     TVec3f up;
     MR::calcUpVec(&up, sensorActor);
     TVec3f thing;
-    thing.subInline2(mPosition, sensorActor->mPosition);
-    TVec3f stack_8;
-    JMAVECScaleAdd(&up, &thing, &stack_8, -up.dot(thing));
+    thing.sub(mPosition, sensorActor->mPosition);
+    TVec3f stack_8 = thing.killElement(up);
 
     if (MR::normalizeOrZero(&stack_8)) {
         MR::calcFrontVec(&stack_8, sensorActor);
@@ -231,4 +229,3 @@ bool KeySwitch::tryAvoid() {
     mVelocity.scale(10.0f, stack_8);
     return true;
 }
-*/

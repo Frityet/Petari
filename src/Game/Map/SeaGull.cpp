@@ -1,5 +1,11 @@
 #include "Game/Map/SeaGull.hpp"
-#include "Game/Util.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvSeaGull {
     NEW_NERVE(SeaGullNrvHoverFront, SeaGull, HoverFront);
@@ -86,9 +92,8 @@ void SeaGull::exeHoverFront() {
     } else {
         TVec3f stack_8(*_9C);
         stack_8.sub(mPosition);
-        f32 dist = PSVECDistance((const Vec*)&mPosition, (const Vec*)_9C);
 
-        if (dist > 500.0f) {
+        if (mPosition.distance(*_9C) > 500.0f) {
             f32 prod = _C4.dot(stack_8);
 
             if (prod > 0.0f) {
@@ -131,7 +136,7 @@ void SeaGull::control() {
     mVelocity.y *= 0.99f;
     mVelocity.z *= 0.99f;
 
-    f32 mag = PSVECMag((const Vec*)&mVelocity);
+    f32 mag = mVelocity.length();
 
     if (mag > 0.0f) {
         MR::normalize(&mVelocity);
@@ -139,10 +144,9 @@ void SeaGull::control() {
         mVelocity.y *= 10.0f;
         mVelocity.z *= 10.0f;
     }
-
-    PSVECCrossProduct((const Vec*)&_B8, (const Vec*)&_AC, (Vec*)&_C4);
+    _C4.cross(_B8, _AC);
     MR::normalize(&_C4);
-    PSVECCrossProduct((const Vec*)&_AC, (const Vec*)&_C4, (Vec*)&_B8);
+    _B8.cross(_AC, _C4);
     MR::normalize(&_B8);
     _98 -= 1;
 
@@ -210,6 +214,8 @@ TVec3f* SeaGullGroup::updatePosInfo(s32* a1, bool a2) const {
     return &_90[*a1];
 }
 
-SeaGull::~SeaGull() {}
+SeaGull::~SeaGull() {
+}
 
-SeaGullGroup::~SeaGullGroup() {}
+SeaGullGroup::~SeaGullGroup() {
+}

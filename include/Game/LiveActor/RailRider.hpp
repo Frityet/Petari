@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Game/Map/BezierRail.hpp"
-#include "Game/Util.hpp"
 
 class RailRider {
 public:
@@ -40,9 +39,13 @@ public:
     s32 getNextPointNo() const;
     void syncPosDir();
 
-    inline TVec3f getStartPos() { return mStartPos; }
+    inline TVec3f getStartPos() {
+        return mStartPos;
+    }
 
-    inline TVec3f getEndPos() { return mEndPos; }
+    inline TVec3f getEndPos() {
+        return mEndPos;
+    }
 
     BezierRail* mBezierRail;  // 0x0
     f32 mCoord;               // 0x4

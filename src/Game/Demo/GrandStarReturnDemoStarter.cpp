@@ -1,14 +1,32 @@
 #include "Game/Demo/GrandStarReturnDemoStarter.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/Demo/ReturnDemoRailMove.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/Screen/StageResultInformer.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include <cstdio>
 
+void GrandStarReturnDemoStarter_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+}
+
 namespace {
-    const char* cDemoMovePartName = "移動";
-    const char* cDemoWaitPartName = "ウェイト→コア突入";
+    const char* const cDemoMovePartName = "移動";
+    const char* const cDemoWaitPartName = "ウェイト→コア突入";
 };  // namespace
 
 GrandStarReturnDemoStarter::GrandStarReturnDemoStarter(const char* pName)
@@ -46,8 +64,9 @@ void GrandStarReturnDemoStarter::init(const JMapInfoIter& rIter) {
     if (MR::tryRegisterDemoCast(this, rIter)) {
         MR::tryRegisterDemoCast(mPowerStar, rIter);
     } else {
-        for (int i = 1; i <= 6; i++) {
-            const char* pDemoName = AstroDemoFunction::getGrandStarReturnDemoName(i);
+        const char* pDemoName;
+        for (int i = 1; i < 6; i++) {
+            pDemoName = AstroDemoFunction::getGrandStarReturnDemoName(i);
             if (MR::isDemoExist(pDemoName) && MR::tryRegisterDemoCast(this, pDemoName, rIter)) {
                 MR::tryRegisterDemoCast(mPowerStar, pDemoName, rIter);
             }
@@ -102,7 +121,7 @@ void GrandStarReturnDemoStarter::calcOffsetStarToCore(TVec3f* pOffset) const {
     MR::findNamePos("コア中心", &namePos, nullptr);
     MR::copyJointPos(mPowerStar, "PowerStar", &jointPos);
 
-    pOffset->subInline(namePos, jointPos);
+    pOffset->sub(namePos, jointPos);
 }
 
 void GrandStarReturnDemoStarter::updateRailMoveEndDir() {
@@ -161,12 +180,12 @@ void GrandStarReturnDemoStarter::exeMove() {
             MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, "移動", -1);
         }
 
-        if (MR::isDemoPartStep(cDemoMovePartName, 300)) {
+        if (MR::isDemoPartStep(::cDemoMovePartName, 300)) {
             MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, "ウェイト", -1);
         }
     }
 
-    const char* pDemoName = cDemoMovePartName;
+    const char* pDemoName = ::cDemoMovePartName;
     mReturnDemoRailMove->update(MR::getDemoPartStep(pDemoName) + 1, MR::getDemoPartTotalStep(pDemoName));
 
     MR::startLevelSoundPlayer("SE_PM_LV_SPIN_DRV_FLY", -1);
@@ -199,10 +218,10 @@ void GrandStarReturnDemoStarter::exeFlyWait() {
 
 void GrandStarReturnDemoStarter::exeRushToCore() {
     TVec3f position;
-    mPrevTransform.getTransInline(position);
+    mPrevTransform.getTrans(position);
 
     if (MR::isFirstStep(this)) {
-        MR::startBckPlayer("ResultFlyGrandStarRush", reinterpret_cast< char* >(nullptr));
+        MR::startBckPlayer("ResultFlyGrandStarRush", static_cast< const char* >(nullptr));
         MR::startBck(mPowerStar, "ResultFlyGrandStarRush", nullptr);
         MR::startSound(mPowerStar, "SE_OJ_GND_STAR_RUSH");
 
@@ -215,7 +234,7 @@ void GrandStarReturnDemoStarter::exeRushToCore() {
     updateRushStarPos(position, getNerveStep());
     MR::startLevelSound(mPowerStar, "SE_OJ_LV_GND_STAR_RUSH");
 
-    if (MR::isDemoPartLastStep(cDemoWaitPartName)) {
+    if (MR::isDemoPartLastStep(::cDemoWaitPartName)) {
         setNerve(&NrvGrandStarReturnDemoStarter::GrandStarReturnDemoStarterNrvRevival::sInstance);
     }
 }
@@ -252,7 +271,7 @@ void GrandStarReturnDemoStarter::exeRevival() {
         MR::overlayWithPreviousScreen(2);
     }
 
-    if (!MR::isDemoPartFirstStep("リザルト画面")) {
+    if (MR::isDemoPartFirstStep("リザルト画面")) {
         MR::startMultiActorCameraTargetPlayer(this, mActorCameraInfo, "リザルト", -1);
     }
 

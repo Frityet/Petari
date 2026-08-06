@@ -1,13 +1,17 @@
 #include "Game/MapObj/IceStep.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvIceStep {
     NEW_NERVE(IceStepNrvHit, IceStep, Hit);
     NEW_NERVE(IceStepNrvWait, IceStep, Wait);
 };  // namespace NrvIceStep
 
-IceStep::IceStep(const char* pName) : LiveActor(pName) {}
+IceStep::IceStep(const char* pName) : LiveActor(pName) {
+}
 
-IceStep::~IceStep() {}
+IceStep::~IceStep() {
+}
 
 void IceStep::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -130,4 +134,5 @@ bool IceStep::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pRec
     return false;
 }
 
-void IceStep::control() {}
+void IceStep::control() {
+}

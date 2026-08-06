@@ -1,4 +1,6 @@
 #include "Game/Demo/DemoStartRequestHolder.hpp"
+#include "Game/Demo/DemoStartRequestUtil.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/StringUtil.hpp"
 
 DemoStartInfo::DemoStartInfo() {
@@ -8,7 +10,7 @@ DemoStartInfo::DemoStartInfo() {
     _C = 0;
     _10 = 0;
     _14 = 0;
-    mDemoName = 0;
+    mDemoName = nullptr;
     _1C = 0;
     _20 = 0;
     _24 = 0;
@@ -38,7 +40,7 @@ DemoStartInfo& DemoStartInfo::operator=(const DemoStartInfo& rOther) {
 
 void DemoStartRequestHolder::pushRequest(LiveActor* pActor, const char* pName) {
     const DemoStartInfo* pInfo = find(pActor, pName);
-    if (!pInfo) {
+    if (pInfo == nullptr) {
         pInfo = findEmpty();
     }
     mRequestBuffer.push_back(pInfo);
@@ -46,7 +48,7 @@ void DemoStartRequestHolder::pushRequest(LiveActor* pActor, const char* pName) {
 
 void DemoStartRequestHolder::pushRequest(LayoutActor* pActor, const char* pName) {
     const DemoStartInfo* pInfo = find(pActor, pName);
-    if (!pInfo) {
+    if (pInfo == nullptr) {
         pInfo = findEmpty();
     }
     mRequestBuffer.push_back(pInfo);
@@ -54,7 +56,7 @@ void DemoStartRequestHolder::pushRequest(LayoutActor* pActor, const char* pName)
 
 void DemoStartRequestHolder::pushRequest(NerveExecutor* pExecutor, const char* pName) {
     const DemoStartInfo* pInfo = find(pExecutor, pName);
-    if (!pInfo) {
+    if (pInfo == nullptr) {
         pInfo = findEmpty();
     }
     mRequestBuffer.push_back(pInfo);
@@ -62,7 +64,7 @@ void DemoStartRequestHolder::pushRequest(NerveExecutor* pExecutor, const char* p
 
 void DemoStartRequestHolder::pushRequest(NameObj* pObj, const char* pName) {
     const DemoStartInfo* pInfo = find(pObj, pName);
-    if (!pInfo) {
+    if (pInfo == nullptr) {
         pInfo = findEmpty();
     }
     mRequestBuffer.push_back(pInfo);
@@ -76,7 +78,7 @@ void DemoStartRequestHolder::popRequest() {
     goto check;
     do {
         pIter++;
-check:
+    check:
         if (pIter == pEnd) {
             break;
         }
@@ -100,7 +102,7 @@ bool DemoStartRequestHolder::isExistRequest() const {
 
 const DemoStartInfo* DemoStartRequestHolder::getCurrentInfo() const {
     if (mRequestBuffer.mCount == 0) {
-        return 0;
+        return nullptr;
     }
 
     return *mRequestBuffer.mHead.mHead;
@@ -117,7 +119,7 @@ DemoStartInfo* DemoStartRequestHolder::find(const LiveActor* pActor, const char*
             return *pIter;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 DemoStartInfo* DemoStartRequestHolder::find(const LayoutActor* pActor, const char* pName) const {
@@ -126,7 +128,7 @@ DemoStartInfo* DemoStartRequestHolder::find(const LayoutActor* pActor, const cha
             return *pIter;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 DemoStartInfo* DemoStartRequestHolder::find(const NerveExecutor* pExecutor, const char* pName) const {
@@ -135,7 +137,7 @@ DemoStartInfo* DemoStartRequestHolder::find(const NerveExecutor* pExecutor, cons
             return *pIter;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 DemoStartInfo* DemoStartRequestHolder::find(const NameObj* pObj, const char* pName) const {
@@ -144,7 +146,7 @@ DemoStartInfo* DemoStartRequestHolder::find(const NameObj* pObj, const char* pNa
             return *pIter;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 DemoStartInfo* DemoStartRequestHolder::findEmpty() const {
@@ -156,12 +158,12 @@ DemoStartInfo* DemoStartRequestHolder::findEmpty() const {
             return *pIter;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 DemoStartRequestHolder::DemoStartRequestHolder() : mNumInfos(0), mRequestBuffer(mRequestBuffer.mBuffer, mRequestBuffer.mBuffer) {
     mProxyObj = new NameObj("代理人");
-    for (u32 i = 0; i < 16; i++) {
+    for (u32 i = 0; i < ARRAY_SIZE(mStartInfos); i++) {
         DemoStartInfo* pInfo = new DemoStartInfo();
         s32 idx = mNumInfos;
         mNumInfos = idx + 1;
@@ -169,15 +171,15 @@ DemoStartRequestHolder::DemoStartRequestHolder() : mNumInfos(0), mRequestBuffer(
     }
 }
 
-template<>
-MR::FixedRingBuffer<const DemoStartInfo*, 16>::iterator::iterator(const DemoStartInfo** head, const DemoStartInfo** tail) {
+template <>
+MR::FixedRingBuffer< const DemoStartInfo*, 16 >::iterator::iterator(const DemoStartInfo** head, const DemoStartInfo** tail) {
     mHead = head;
     mTail = tail;
     mEnd = tail + 16;
 }
 
-template<>
-void MR::FixedRingBuffer<const DemoStartInfo*, 16>::push_back(const DemoStartInfo* const& val) {
+template <>
+void MR::FixedRingBuffer< const DemoStartInfo*, 16 >::push_back(const DemoStartInfo* const& val) {
     if ((u32)mCount >= 16) {
         return;
     }
@@ -187,8 +189,8 @@ void MR::FixedRingBuffer<const DemoStartInfo*, 16>::push_back(const DemoStartInf
     mCount++;
 }
 
-template<>
-void MR::FixedRingBuffer<const DemoStartInfo*, 16>::iterator::operator++() {
+template <>
+void MR::FixedRingBuffer< const DemoStartInfo*, 16 >::iterator::operator++() {
     const DemoStartInfo** pEnd = mEnd;
     mHead++;
 

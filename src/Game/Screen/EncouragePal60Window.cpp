@@ -7,12 +7,17 @@
 #include "Game/Util/SoundUtil.hpp"
 
 namespace {
+    static const s32 DISPLAY_MIN_SECOND = 2;
+};  // namespace
+
+namespace {
     NEW_NERVE(EncouragePal60WindowAppear, EncouragePal60Window, Appear);
     NEW_NERVE(EncouragePal60WindowDisplay, EncouragePal60Window, Display);
     NEW_NERVE(EncouragePal60WindowDisappear, EncouragePal60Window, Disappear);
 };  // namespace
 
-EncouragePal60Window::EncouragePal60Window() : LayoutActor("PAL60推奨画面", true) {}
+EncouragePal60Window::EncouragePal60Window() : LayoutActor("PAL60推奨画面", true) {
+}
 
 void EncouragePal60Window::init(const JMapInfoIter& rIter) {
     initLayoutManager("SysPALInfo", 1);
@@ -44,11 +49,11 @@ void EncouragePal60Window::exeDisplay() {
         MR::startAnim(this, "Wait", 0);
     }
 
-    if (MR::isStep(this, 120)) {
+    if (MR::isStep(this, ::DISPLAY_MIN_SECOND * 60)) {
         mAButtonIcon->openWithoutMessage();
     }
 
-    if (MR::isGreaterStep(this, 120) && MR::testCorePadTriggerAnyWithoutHome(WPAD_CHAN0)) {
+    if (MR::isGreaterStep(this, ::DISPLAY_MIN_SECOND * 60) && MR::testCorePadTriggerAnyWithoutHome(WPAD_CHAN0)) {
         MR::startSystemSE("SE_SY_TALK_FOCUS_ITEM");
         setNerve(&EncouragePal60WindowDisappear::sInstance);
     }

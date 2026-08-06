@@ -1,6 +1,7 @@
 #include "Game/MapObj/BallOpener.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/Util/GeometryBindUtil.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvBallOpener {
     NEW_NERVE(BallOpenerNrvWait, BallOpener, Wait);
@@ -8,7 +9,8 @@ namespace NrvBallOpener {
     NEW_NERVE(BallOpenerNrvOpen, BallOpener, Open);
 };  // namespace NrvBallOpener
 
-BallOpener::~BallOpener() {}
+BallOpener::~BallOpener() {
+}
 
 BallOpener::BallOpener(const char* pName) : LiveActor(pName) {
     mSensor = nullptr;
@@ -40,7 +42,8 @@ void BallOpener::initAfterPlacement() {
     _8C->setDirection(_94);
 }
 
-void BallOpener::control() {}
+void BallOpener::control() {
+}
 
 // BallOpener::receiveOtherMsg
 
@@ -81,12 +84,12 @@ void BallOpener::exeSetCenter() {
 
 void BallOpener::exeOpen() {
     if (MR::isFirstStep(this)) {
-        mSensor->receiveMessage(0xAE, getSensor("body"));
+        mSensor->receiveMessage(ACTMES_SET_UP_JUMP_HOLE, getSensor("body"));
     }
 
     if (MR::isStep(this, 45)) {
         MR::zeroVelocity(mSensor->mHost);
-        mSensor->receiveMessage(0xB3, getSensor("body"));
+        mSensor->receiveMessage(ACTMES_END_BALL_BIND, getSensor("body"));
         mSensor = nullptr;
         MR::startSound(this, "SE_OJ_BALL_OPN_OPEN");
         MR::startSystemSE("SE_SY_TAMAKORO_GOAL");

@@ -48,6 +48,10 @@ namespace JGadget {
         TLinkListNode* getNext() const {
             return mNext;
         }
+        TLinkListNode* getPrev() const {
+            return mPrev;
+        }
+
         TLinkListNode* mNext;
         TLinkListNode* mPrev;
     };
@@ -76,6 +80,17 @@ namespace JGadget {
             }
             TLinkListNode& operator*() const {
                 return *curr;
+            }
+
+            iterator operator--(int) {
+                const iterator old(*this);
+                (void)--*this;
+                return old;
+            }
+
+            iterator& operator--() {
+                curr = curr->getPrev();
+                return *this;
             }
 
             TLinkListNode* curr;
@@ -117,6 +132,10 @@ namespace JGadget {
                     ++it;
                 }
             }
+        }
+
+        u32 size() const {
+            return mLen;
         }
 
         template < typename T >
@@ -164,6 +183,17 @@ namespace JGadget {
             T* operator*() const {
                 return operator->();
             }
+
+            iterator& operator--() {
+                TNodeLinkList::iterator::operator--();
+                return *this;
+            }
+
+            iterator operator--(int) {
+                const iterator old(*this);
+                --*this;
+                return old;
+            }
         };
 
         TLinkList() : TNodeLinkList() {
@@ -191,6 +221,14 @@ namespace JGadget {
 
         static T* Element_toValue(TLinkListNode* element) NO_INLINE {
             return (T*)((u8*)element + NODE_OFFSET);
+        }
+
+        T& front() {
+            return *begin();
+        }
+
+        T& back() {
+            return *--end();
         }
 
         void Remove(T* element) NO_INLINE {

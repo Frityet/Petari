@@ -49,7 +49,7 @@ void MarioActor::initMember() {
     _218 = nullptr;
     _21C = nullptr;
     _220 = nullptr;
-    _224 = 0;
+    mDrawSearchLight = nullptr;
     _228 = nullptr;
     _22C = nullptr;
     mMario = nullptr;
@@ -66,7 +66,7 @@ void MarioActor::initMember() {
     _258.x = 0.0f;
     _258.y = 0.0f;
     _258.z = 1.0f;
-    _264.zero();
+    mLastMove.zero();
     _270.zero();
     _27C.zero();
     _288.zero();
@@ -75,10 +75,10 @@ void MarioActor::initMember() {
     _2AC.zero();
     _2B8.zero();
     _2C4.zero();
-    _2D0.zero();
+    mUpVec.zero();
     _2DC.zero();
     _2E8.zero();
-    _2F4.zero();
+    mCameraTrans.zero();
     _300.zero();
     _30C.zero();
     _318.zero();
@@ -92,9 +92,9 @@ void MarioActor::initMember() {
     _348.zero();
     _354.zero();
     _360.zero();
-    _36C = nullptr;
+    mGravityInfo = nullptr;
     _370 = 0;
-    _374 = 0.0f;
+    mGravityRatio = 0.0f;
     _378 = 0;
     _37C = 0;
     mHealth = 0;
@@ -154,7 +154,7 @@ void MarioActor::initMember() {
     _490 = 0.0f;
     _498 = nullptr;
     _49C = nullptr;
-    _4A0 = 0;
+    mSearchLightThrowPos = nullptr;
     _4A4 = 0;
     _4A8 = 0;
     _4AC = 0.0f;
@@ -208,8 +208,8 @@ void MarioActor::initMember() {
     mTornadoMario = nullptr;
     _990 = 0;
     _994 = 0;
-    _998 = 0;
-    _99C = 0;
+    mSearchLight = nullptr;
+    mSearchLightTimer = 0;
     _9A0 = 0;
     _9A4 = nullptr;
     _9A8 = 0.0f;

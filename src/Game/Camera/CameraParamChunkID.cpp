@@ -18,20 +18,18 @@ CameraParamChunkID::CameraParamChunkID(const CameraParamChunkID& other) {
 bool CameraParamChunkID::operator>(const CameraParamChunkID& other) const {
     if (mName == nullptr) {
         return other.mName != nullptr;
-    } else if (other.mName == nullptr) {
+    }
+
+    if (other.mName == nullptr) {
         return false;
     }
 
     bool result = true;
 
     if (mZoneID <= other.mZoneID) {
-        bool stringEqual = false;
+        bool isSame = mZoneID == other.mZoneID && strcmp(mName, other.mName) > 0;
 
-        if (mZoneID == other.mZoneID && strcmp(mName, other.mName) == 0) {
-            stringEqual = true;
-        }
-
-        if (!stringEqual) {
+        if (!isSame) {
             result = false;
         }
     }
@@ -42,19 +40,18 @@ bool CameraParamChunkID::operator>(const CameraParamChunkID& other) const {
 bool CameraParamChunkID::operator==(const CameraParamChunkID& other) const {
     if (mName == nullptr) {
         return other.mName == nullptr;
-    } else if (other.mName == nullptr) {
+    }
+
+    if (other.mName == nullptr) {
         return false;
     }
 
     if (mZoneID == other.mZoneID) {
-        strcmp(mName, other.mName);
+        if (strcmp(mName, other.mName) != 0) {
+        }
     }
 
     return mZoneID == other.mZoneID && strcmp(mName, other.mName) == 0;
-}
-
-char* CameraParamChunkID::getBuffer(u32 length) {
-    return new char[length];
 }
 
 bool CameraParamChunkID::equals(s32 zoneID, const char* pName) const {
@@ -63,6 +60,10 @@ bool CameraParamChunkID::equals(s32 zoneID, const char* pName) const {
     }
 
     return false;
+}
+
+char* CameraParamChunkID::getBuffer(u32 length) {
+    return new char[length];
 }
 
 void CameraParamChunkID::createCubeID(s32 zoneID, u16 id) {

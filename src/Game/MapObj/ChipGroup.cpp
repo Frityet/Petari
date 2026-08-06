@@ -1,4 +1,6 @@
 #include "Game/MapObj/ChipGroup.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Map/StageSwitch.hpp"
 #include "Game/MapObj/ChipBase.hpp"
 #include "Game/MapObj/ChipHolder.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -143,8 +145,7 @@ s32 ChipGroup::getGotCount() const {
 }
 
 bool ChipGroup::isComplete() const {
-    s32 count = mTotalCount;
-    for (s32 i = 0; i < count; i++) {
+    for (s32 i = 0; i < mTotalCount; i++) {
         if (!mChips[i].mIsGotten) {
             return false;
         }
@@ -153,11 +154,14 @@ bool ChipGroup::isComplete() const {
     return true;
 }
 
-BlueChipGroup::BlueChipGroup(const char* pName) : ChipGroup(pName, 0) {}
+BlueChipGroup::BlueChipGroup(const char* pName) : ChipGroup(pName, ChipBase::Type_Blue) {
+}
 
-ChipGroup::~ChipGroup() {}
+ChipGroup::~ChipGroup() {
+}
 
-YellowChipGroup::YellowChipGroup(const char* pName) : ChipGroup(pName, 1) {}
+YellowChipGroup::YellowChipGroup(const char* pName) : ChipGroup(pName, ChipBase::Type_Yellow) {
+}
 
 void ChipGroup::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoTrans(rIter, &_38);
@@ -268,6 +272,8 @@ void ChipGroup::receiveAppearRequest() {
     }
 }
 
-BlueChipGroup::~BlueChipGroup() {}
+BlueChipGroup::~BlueChipGroup() {
+}
 
-YellowChipGroup::~YellowChipGroup() {}
+YellowChipGroup::~YellowChipGroup() {
+}

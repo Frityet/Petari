@@ -2,6 +2,21 @@
 #include "Game/Enemy/JumpGuarder.hpp"
 #include "Game/Enemy/RingBeam.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/LiveActor/PartsModel.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvJumpBeamer {
     NEW_NERVE(JumpBeamerNrvHide, JumpBeamer, Hide);
@@ -44,9 +59,9 @@ void JumpBeamer::init(const JMapInfoIter& rIter) {
     MR::connectToSceneEnemy(this);
     MR::initLightCtrl(this);
     initHitSensor(2);
-    MR::addHitSensorMtx(this, "Jump", 31, 8, 145.0f, MR::getJointMtx(mHeadModel, "SpringJoint3"), TVec3f(0.0f, -100.0f, 0.0f));
+    MR::addHitSensorMtx(this, "Jump", ATYPE_PLAYER_AUTO_JUMP, 8, 145.0f, MR::getJointMtx(mHeadModel, "SpringJoint3"), TVec3f(0.0f, -100.0f, 0.0f));
     MR::addHitSensorMtxEnemy(this, "Body", 8, 145.0f, MR::getJointMtx(this, "Body"), TVec3f(0.0f, 35.0f, 0.0f));
-    getSensor("Body")->setType(29);
+    getSensor("Body")->setType(ATYPE_BEGOMAN);
     getSensor("Body")->validate();
     getSensor("Jump")->invalidate();
     MR::initShadowVolumeSphere(this, 140.0f);
@@ -56,7 +71,7 @@ void JumpBeamer::init(const JMapInfoIter& rIter) {
     MR::invalidateClipping(this);
     initNerve(&NrvJumpBeamer::JumpBeamerNrvHide::sInstance);
     MR::startBckWithInterpole(this, "Down", 0);
-    MR::setBckFrame(this, MR::getBckCtrl(this)->mEnd - 1);
+    MR::setBckFrame(this, MR::getBckCtrl(this)->getEnd() - 1);
     MR::calcAnimDirect(this);
     _8C = MR::getJointMtx(this, "Top");
     MR::useStageSwitchReadA(this, rIter);
@@ -86,15 +101,15 @@ void JumpBeamer::init(const JMapInfoIter& rIter) {
     }
 }
 
-void JumpBeamer::attackSensor(HitSensor* a1, HitSensor* a2) {
-    if (MR::isSensorPlayer(a2)) {
-        MR::sendMsgPush(a2, a1);
+void JumpBeamer::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
+    if (MR::isSensorPlayer(pReceiver)) {
+        MR::sendMsgPush(pReceiver, pSender);
     }
 }
 
-bool JumpBeamer::receiveMsgPlayerAttack(u32 msg, HitSensor* a2, HitSensor* a3) {
+bool JumpBeamer::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgPlayerTrample(msg)) {
-        if (a3->isType(31)) {
+        if (pReceiver->isType(ATYPE_PLAYER_AUTO_JUMP)) {
             TVec3f up;
             MR::calcUpVec(&up, this);
             MR::setPlayerJumpVec(up);
@@ -106,9 +121,7 @@ bool JumpBeamer::receiveMsgPlayerAttack(u32 msg, HitSensor* a2, HitSensor* a3) {
 
         return true;
     } else if (MR::isMsgPlayerHipDrop(msg)) {
-        TVec3f force;
-        JMathInlineVEC::PSVECNegate(&mGravity, &force);
-        MR::forceJumpPlayer(force);
+        MR::forceJumpPlayer(-mGravity);
         return true;
     } else if (MR::isMsgPlayerSpinAttack(msg)) {
         if (!isNerve(&NrvJumpBeamer::JumpBeamerNrvHopStart::sInstance)) {
@@ -129,12 +142,14 @@ void JumpBeamer::syncSwitchOffB() {
     }
 }
 
-bool JumpBeamer::receiveOtherMsg(u32 msg, HitSensor* a2, HitSensor* a3) {
-    if (msg == 106) {
+bool JumpBeamer::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+    if (msg == ACTMES_GROUP_ATTACK) {
         MR::invalidateClipping(this);
         setNerve(&NrvJumpBeamer::JumpBeamerNrvUp::sInstance);
         return true;
-    } else if (msg == 108) {
+    }
+
+    if (msg == ACTMES_GROUP_HIDE) {
         setNerve(&NrvJumpBeamer::JumpBeamerNrvDown::sInstance);
         return true;
     }
@@ -143,11 +158,7 @@ bool JumpBeamer::receiveOtherMsg(u32 msg, HitSensor* a2, HitSensor* a3) {
 }
 
 void JumpBeamer::exeHide() {
-    bool v2 = false;
-
-    if (MR::isValidSwitchB(this) && !MR::isOnSwitchB(this)) {
-        v2 = true;
-    }
+    bool v2 = MR::isValidSwitchB(this) && !MR::isOnSwitchB(this);
 
     if (!v2) {
         updateRotate();
@@ -161,7 +172,7 @@ void JumpBeamer::exeHide() {
     }
 
     if (MR::enableGroupAttack(this, 3000.0f, 500.0f)) {
-        MR::sendMsgToGroupMember(106, this, getSensor("Body"), "Body");
+        MR::sendMsgToGroupMember(ATYPE_WATER_PRESSURE_BULLET_BIND, this, getSensor("Body"), "Body");
     }
 }
 
@@ -172,7 +183,7 @@ void JumpBeamer::exeUp() {
         MR::validateShadow(this, nullptr);
     }
 
-    s16 end = MR::getBckCtrl(this)->mEnd;
+    s16 end = MR::getBckCtrl(this)->getEnd();
     f32 frame = MR::getBckFrame(this);
     MR::setShadowVolumeSphereRadius(this, nullptr, (110.0f + (30.0f * (frame / (end)))));
 
@@ -186,13 +197,9 @@ void JumpBeamer::exeWait() {
     updateRotate();
 
     if (!MR::enableGroupAttack(this, 3200.0f, 500.0f)) {
-        MR::sendMsgToGroupMember(108, this, getSensor("Body"), "Body");
+        MR::sendMsgToGroupMember(ACTMES_GROUP_HIDE, this, getSensor("Body"), "Body");
     } else {
-        bool v3 = false;
-
-        if (MR::isValidSwitchB(this) && !MR::isOnSwitchB(this)) {
-            v3 = true;
-        }
+        bool v3 = MR::isValidSwitchB(this) && !MR::isOnSwitchB(this);
 
         if (!v3) {
             setNerve(&NrvJumpBeamer::JumpBeamerNrvPreOpen::sInstance);
@@ -206,7 +213,7 @@ void JumpBeamer::exeDown() {
         MR::startSound(this, "SE_EM_JGUARDER_HIDE");
     }
 
-    s16 end = MR::getBckCtrl(this)->mEnd;
+    s16 end = MR::getBckCtrl(this)->getEnd();
     f32 frame = MR::getBckFrame(this);
     MR::setShadowVolumeSphereRadius(this, nullptr, (110.0f + (30.0f * (1.0f - frame / (end)))));
     if (MR::isBckStopped(this)) {
@@ -279,7 +286,7 @@ void JumpBeamer::exePreOpen() {
     updateRotate();
 
     if (!MR::enableGroupAttack(this, 3200.0f, 500.0f)) {
-        MR::sendMsgToGroupMember(108, this, getSensor("Body"), "Body");
+        MR::sendMsgToGroupMember(ATYPE_QUESTION_COIN_BIND, this, getSensor("Body"), "Body");
 
     } else {
         if (MR::isStep(this, 0)) {
@@ -311,37 +318,33 @@ void JumpBeamer::exeOpen() {
 }
 
 void JumpBeamer::exeClose() {
-    MR::isFirstStep(this);
+    if (MR::isFirstStep(this)) {
+    }
+
     MR::startLevelSound(this, "SE_EM_LV_JGUARDER_SHUTTER_CLOSE");
+
     if (MR::isBckStopped(this)) {
         setNerve(&NrvJumpBeamer::JumpBeamerNrvInter::sInstance);
     }
 }
 
 void JumpBeamer::exeInter() {
-    u8 v2 = false;
-
-    if (MR::isValidSwitchB(this) && !MR::isOnSwitchB(this)) {
-        v2 = true;
-    }
+    bool v2 = MR::isValidSwitchB(this) && !MR::isOnSwitchB(this);
 
     if (!v2) {
         updateRotate();
     }
 
     if (!MR::enableGroupAttack(this, 3200.0f, 500.0f)) {
-        MR::sendMsgToGroupMember(108, this, getSensor("Body"), "Body");
-    } else {
-        if (MR::isGreaterEqualStep(this, 80)) {
-            for (s32 i = 0; i < 3; i++) {
-                if (!MR::isDead(mBeams[i])) {
-                    return;
-                }
+        MR::sendMsgToGroupMember(ATYPE_QUESTION_COIN_BIND, this, getSensor("Body"), "Body");
+    } else if (MR::isGreaterEqualStep(this, 80)) {
+        for (s32 i = 0; i < 3; i++) {
+            if (!MR::isDead(mBeams[i])) {
+                return;
             }
-
-            setNerve(&NrvJumpBeamer::JumpBeamerNrvWait::sInstance);
-            return;
         }
+
+        setNerve(&NrvJumpBeamer::JumpBeamerNrvWait::sInstance);
     }
 }
 

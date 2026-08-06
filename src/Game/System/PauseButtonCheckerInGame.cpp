@@ -5,7 +5,8 @@ namespace {
     static const s32 sHoldCounterMax = 12;
 };  // namespace
 
-PauseButtonCheckerInGame::PauseButtonCheckerInGame() : mPlusHoldFrame(0), mMinusHoldFrame(0) {}
+PauseButtonCheckerInGame::PauseButtonCheckerInGame() : mPlusHoldFrame(0), mMinusHoldFrame(0) {
+}
 
 void PauseButtonCheckerInGame::update() {
     if (MR::testCorePadButtonPlus(WPAD_CHAN0)) {
@@ -22,11 +23,11 @@ void PauseButtonCheckerInGame::update() {
 }
 
 bool PauseButtonCheckerInGame::isPermitToPlusPause() const {
-    return isPermitToPause() && mPlusHoldFrame == sHoldCounterMax;
+    return isPermitToPause() && mPlusHoldFrame == ::sHoldCounterMax;
 }
 
 bool PauseButtonCheckerInGame::isPermitToMinusPause() const {
-    return isPermitToPause() && mMinusHoldFrame == sHoldCounterMax;
+    return isPermitToPause() && mMinusHoldFrame == ::sHoldCounterMax;
 }
 
 bool PauseButtonCheckerInGame::isPermitToPause() const {

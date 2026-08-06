@@ -4,21 +4,26 @@
 #include "Game/Camera/CameraParamChunk.hpp"
 #include "Game/Camera/CameraParamChunkID.hpp"
 #include "Game/Camera/DotCamParams.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include <cstring>
 
 #define CHUNK_CAPACITY 0x400
 
-CameraParamChunkHolder::CameraParamChunkHolder(CameraHolder* pCameraHolder, const char* pName) : NameObj(pName) {
-    mCameraHolder = pCameraHolder;
-    mChunkCapacity = CHUNK_CAPACITY;
-    mNrChunks = 0;
-    mChunks = new CameraParamChunk*[CHUNK_CAPACITY];
-    mIsSorted = 0;
+void CameraParamChunkHolder_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
 }
 
-CameraParamChunkHolder::~CameraParamChunkHolder() {}
+CameraParamChunkHolder::CameraParamChunkHolder(CameraHolder* pCameraHolder, const char* pName)
+    : NameObj(pName), mCameraHolder(pCameraHolder), mChunkCapacity(CHUNK_CAPACITY), mNrChunks(), mChunks(new CameraParamChunk*[CHUNK_CAPACITY]),
+      mIsSorted() {
+}
+
+CameraParamChunkHolder::~CameraParamChunkHolder() {
+}
 
 CameraParamChunk* CameraParamChunkHolder::createChunk(const CameraParamChunkID& rID, JKRHeap* pHeap) {
     if (isNewAttribute(rID)) {
@@ -67,7 +72,7 @@ void CameraParamChunkHolder::sort() {
         }
     }
 
-    mIsSorted = 1;
+    mIsSorted = true;
 }
 
 void CameraParamChunkHolder::loadCameraParameters() {
@@ -193,14 +198,7 @@ void CameraParamChunkHolder::arrangeChunk(CameraParamChunk* pChunk) {
     }
 
     if (mCameraVersion < 0x30008) {
-        TVec3f temp;
-        temp.x = 0.0f;
-        temp.y = 1.0f;
-        temp.z = 0.0f;
-
-        pChunk->mExParam.mVPanAxis.x = temp.x;
-        pChunk->mExParam.mVPanAxis.y = temp.y;
-        pChunk->mExParam.mVPanAxis.z = temp.z;
+        pChunk->mExParam.mVPanAxis.set(TVec3f(0.0f, 1.0f, 0.0f));
     }
 
     if (mCameraVersion < 0x3000A) {

@@ -1,4 +1,6 @@
 #include "Game/MapObj/FlameGun.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvFlameGun {
     NEW_NERVE(HostTypeNrvSwitchWait, FlameGun, SwitchWait);
@@ -161,4 +163,5 @@ void FlameGun::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     }
 }
 
-FlameGun::~FlameGun() {}
+FlameGun::~FlameGun() {
+}

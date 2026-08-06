@@ -1,11 +1,19 @@
 #include "Game/MapObj/FallingSmallRock.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvFallingSmallRock {
     NEW_NERVE(HostTypeWait, FallingSmallRock, Wait);
     NEW_NERVE(HostTypeMove, FallingSmallRock, Move);
 };  // namespace NrvFallingSmallRock
 
-FallingSmallRock::FallingSmallRock(const char* pName) : LiveActor(pName) {}
+FallingSmallRock::FallingSmallRock(const char* pName) : LiveActor(pName) {
+}
 
 void FallingSmallRock::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -51,4 +59,5 @@ void FallingSmallRock::exeWait() {
     }
 }
 
-FallingSmallRock::~FallingSmallRock() {}
+FallingSmallRock::~FallingSmallRock() {
+}

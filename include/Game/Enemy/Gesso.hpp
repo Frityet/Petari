@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-
 
 class Gesso : public LiveActor {
 public:

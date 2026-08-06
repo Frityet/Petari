@@ -1,10 +1,17 @@
 #include "Game/MapObj/SpiderMapBlock.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace {
     static const f32 sCoinSpeed = 35.0f;
-}
+};  // namespace
 
-SpiderMapBlock::SpiderMapBlock(const char* pName) : LiveActor(pName), mPosZ(0.0f) {
+SpiderMapBlock::SpiderMapBlock(const char* pName) : LiveActor(pName), mPosZ() {
 }
 
 bool SpiderMapBlock::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
@@ -43,7 +50,7 @@ void SpiderMapBlock::kill() {
     MtxPtr baseMtx = getBaseMtx();
     TVec3f coinVel(baseMtx[0][1], baseMtx[1][1], 0.0f);
     MR::normalizeOrZero(&coinVel);
-    coinVel.mult(sCoinSpeed);
+    coinVel *= ::sCoinSpeed;
     TVec3f coinPos(mPosition.x, mPosition.y, mPosZ);
     MR::appearCoinToVelocity(this, coinPos, coinVel, 1);
     LiveActor::kill();

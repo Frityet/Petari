@@ -2,6 +2,15 @@
 #include "Game/Enemy/TerritoryMover.hpp"
 #include "Game/Enemy/WalkerStateFunction.hpp"
 #include "Game/Enemy/WalkerStateParam.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+
+void WalkerStateWander_FORCE_MATCH_SDATA2() {
+    (void)3.0f;
+}
 
 namespace {
     WalkerStateWanderParam sDefaultParam;
@@ -21,7 +30,7 @@ WalkerStateWander::WalkerStateWander(LiveActor* pHost, TVec3f* pDirection, Walke
     initNerve(&NrvWalkerStateWander::WalkerStateWanderNrvWait::sInstance);
 
     if (mWanderParam == nullptr) {
-        mWanderParam = &sDefaultParam;
+        mWanderParam = &::sDefaultParam;
     }
 
     mTerritoryMover = new TerritoryMover(500.0f);
@@ -55,9 +64,9 @@ void WalkerStateWander::exeWalk() {
         MR::startAction(getHost(), "Walk");
     }
 
-    MR::turnDirectionToTargetUseGroundNormalDegree(getHost(), mDirection, mTerritoryMover->_10, mWanderParam->mTurnMaxRateDegree);
+    MR::turnDirectionToTargetUseGroundNormalDegree(getHost(), mDirection, mTerritoryMover->mTarget, mWanderParam->mTurnMaxRateDegree);
 
-    if (MR::isFaceToTargetHorizontalDegree(getHost(), mTerritoryMover->_10, *mDirection, 8.0f)) {
+    if (MR::isFaceToTargetHorizontalDegree(getHost(), mTerritoryMover->mTarget, *mDirection, 8.0f)) {
         MR::addVelocityMoveToDirection(getHost(), *mDirection, mWanderParam->mSpeed);
     }
 

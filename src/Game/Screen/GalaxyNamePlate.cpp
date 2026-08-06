@@ -45,7 +45,7 @@ void GalaxyNamePlate::kill() {
 }
 
 void GalaxyNamePlate::showUnknown(bool a1) {
-    show(MR::getGameMessageDirect("GalaxyNameShort_Unkonwn"), 0, true, a1);
+    show(MR::getGameMessageDirect("GalaxyNameShort_Unknown"), 0, true, a1);
 }
 
 void GalaxyNamePlate::showNew(bool a1) {
@@ -61,11 +61,10 @@ void GalaxyNamePlate::show(const wchar_t* pName, bool a2) {
 }
 
 void GalaxyNamePlate::setPos3D(const TVec3f& a1) {
-    TVec2f vec;
+    TVec3f vec;
     MR::calcScreenPosition(&vec, a1);
     setTrans(vec);
-    mDrawerEntry->mZ = __cvt_fp2unsigned(-vec.y * MR::getFarZ());
-    //the vec is a TVec3f, but I currently can't use it on SetTrans()
+    mDrawerEntry->mZ = -vec.z * MR::getFarZ();
 }
 
 void GalaxyNamePlate::setShowBalloonNozzle(bool showBalloonNozzle) {
@@ -81,18 +80,15 @@ void GalaxyNamePlate::show(const wchar_t* pName, s32 a2, bool a3, bool a4) {
         appear();
         if (a4) {
             setNerve(&NrvGalaxyNamePlate::GalaxyNamePlateNrvAppear::sInstance);
-        }
-        else {
+        } else {
             setNerve(&NrvGalaxyNamePlate::GalaxyNamePlateNrvAppearReady::sInstance);
         }
-    }
-    else {
+    } else {
         if (a4) {
             if (isNerve(&NrvGalaxyNamePlate::GalaxyNamePlateNrvAppearReady::sInstance)) {
                 setNerve(&NrvGalaxyNamePlate::GalaxyNamePlateNrvAppear::sInstance);
             }
-        }
-        else if (_25) {
+        } else if (_25) {
             setNerve(&NrvGalaxyNamePlate::GalaxyNamePlateNrvAppearReady::sInstance);
         }
 
@@ -101,11 +97,11 @@ void GalaxyNamePlate::show(const wchar_t* pName, s32 a2, bool a3, bool a4) {
         }
     }
 
-    const char* ShowNamePlate, *HideNamePlate, *shaBeak, *picBeak, *galaxyName, *txtGaxyName;
+    const char *ShowNamePlate, *HideNamePlate, *shaBeak, *picBeak, *galaxyName, *txtGaxyName;
     ShowNamePlate = (a3) ? "GalaxyNamePlate" : "GalaxyNamePlateU";
     MR::showPaneRecursive(this, ShowNamePlate);
     HideNamePlate = (a3) ? "GalaxyNamePlateU" : "GalaxyNamePlate";
-    MR::hidePaneRecursive(this, HideNamePlate);    
+    MR::hidePaneRecursive(this, HideNamePlate);
     if (!mShowBalloonNozzle) {
         shaBeak = (a3) ? "ShaBeak" : "ShaBeakU";
         picBeak = (a3) ? "PicBeak" : "PicBeakU";
@@ -132,7 +128,7 @@ void GalaxyNamePlate::exeAppearReady() {
     if (!_24) {
         kill();
     } else {
-        MR::setNerveAtStep(this, &NrvGalaxyNamePlate::GalaxyNamePlateNrvAppear::sInstance, cAppearReadyFrame);
+        MR::setNerveAtStep(this, &NrvGalaxyNamePlate::GalaxyNamePlateNrvAppear::sInstance, ::cAppearReadyFrame);
     }
 }
 

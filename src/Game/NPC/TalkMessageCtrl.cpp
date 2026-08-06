@@ -3,10 +3,12 @@
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/TalkDirector.hpp"
+#include "Game/NPC/TalkMessageFunc.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/MessageHolder.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
@@ -15,6 +17,7 @@
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/NPCUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
@@ -119,9 +122,9 @@ void TalkMessageCtrl::rootNodePre(bool arg) {
         case 1:
             if (mBranchFunc == nullptr) {
                 cond = true;
-                break;
+            } else {
+                cond = mBranchFunc->operator()(branch->mNextIdx);
             }
-            cond = mBranchFunc->operator()(branch->mNextIdx);
             break;
         case 2:
             cond = MR::isNearPlayerAnyTime(mHostActor, mTalkDistance);
@@ -501,7 +504,7 @@ bool TalkMessageCtrl::isNearPlayer(f32 distance) const {
             setY = pos[1][3];
             setX = pos[0][3];
             v4.set< f32 >(setX, setY, setZ);
-            v4.setPS2(*MR::getPlayerPos() - v4);
+            v4 = *MR::getPlayerPos() - v4;
 
             f32 f3 = MR::vecKillElement(v4, v3, &v4);
 
@@ -530,7 +533,7 @@ void TalkMessageCtrl::updateBalloonPos() {
     MR::addTransMtxLocal(tPos, _2C);
 
     v3.set< f32 >(pos[0][3], pos[1][3], pos[2][3]);
-    v3.addInline(TVec3f(tPos[0][3], tPos[1][3], tPos[2][3]));
+    v3.add(TVec3f(tPos[0][3], tPos[1][3], tPos[2][3]));
     MR::calcScreenPosition(&_1C, v3);
 }
 

@@ -1,12 +1,17 @@
 #include "Game/Screen/MoviePlayerSimple.hpp"
-#include "Game/Player/MarioActor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/THPSimplePlayerWrapper.hpp"
-#include "Game/SingletonHolder.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemFunction.hpp"
 #include "Game/System/HomeButtonStateNotifier.hpp"
+#include "Game/Util/DrawUtil.hpp"
+#include "Game/Util/FileUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include <JSystem/JKernel/JKRDisposer.hpp>
@@ -156,7 +161,8 @@ void MoviePlayerSimple::setUnpauseHomeButtonFlag() {
     mPlayerWrapper->setUnpauseFrameFlag();
 }
 
-void MoviePlayerSimple::exeSimpleOff() {}
+void MoviePlayerSimple::exeSimpleOff() {
+}
 
 void MoviePlayerSimple::exeOpen() {
     if (MR::isFirstStep(this)) {
@@ -220,7 +226,8 @@ void MoviePlayerSimple::exePlaying() {
     }
 }
 
-void MoviePlayerSimple::exeSimpleSuspend() {}
+void MoviePlayerSimple::exeSimpleSuspend() {
+}
 
 void MoviePlayerSimple::control() {
     mPlayerWrapper->updateNerve();
@@ -256,13 +263,13 @@ u32 MoviePlayerSimple::calcNeedMemoryForMovieWorks() {
 }
 
 void MoviePlayerSimple::drawCinemaFrame() const {
-    MR::fillScreenSetup(sCinemaFrameColor);
+    MR::fillScreenSetup(::sCinemaFrameColor);
 
     s16 width = MR::getFrameBufferWidth();
-    TBox2s top(0, 0, width, sCinemaFrameHeightTop);
+    TBox2s top(0, 0, width, ::sCinemaFrameHeightTop);
     MR::fillScreenArea(top.i, top.f);
 
     s16 height = MR::getFrameBufferHeight();
-    TBox2s bottom(0, sCinemaFrameHeightBottom, width, height);
+    TBox2s bottom(0, ::sCinemaFrameHeightBottom, width, height);
     MR::fillScreenArea(bottom.i, bottom.f);
 }

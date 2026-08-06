@@ -2,6 +2,10 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include <cstdio>
 #include <cstring>
 
@@ -50,7 +54,8 @@ LiveActorGroupArray::LiveActorGroupArray(const char* pName) : NameObj(pName) {
     mNumGroups = 0;
 }
 
-void LiveActorGroupArray::init(const JMapInfoIter& rIter) {}
+void LiveActorGroupArray::init(const JMapInfoIter& rIter) {
+}
 
 LiveActorGroup* LiveActorGroupArray::getLiveActorGroup(const LiveActor* pActor) const {
     return findGroup(pActor);

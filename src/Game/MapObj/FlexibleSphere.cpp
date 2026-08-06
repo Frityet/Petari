@@ -5,7 +5,7 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapPartsUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
@@ -13,7 +13,6 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include <JSystem/J3DGraphBase/J3DShape.hpp>
-#include <JSystem/JGeometry/TMatrix.hpp>
 #include <revolution/gx/GXGeometry.h>
 #include <revolution/mtx.h>
 
@@ -30,7 +29,8 @@ void shapeCallBack(J3DShape* pShape) {
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, 30, GX_FALSE, 125);
 }
 
-FlexibleSphere::FlexibleSphere(const char* pName) : LiveActor(pName), mTimer(0) {}
+FlexibleSphere::FlexibleSphere(const char* pName) : LiveActor(pName), mTimer(0) {
+}
 
 void FlexibleSphere::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);

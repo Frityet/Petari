@@ -1,6 +1,8 @@
 #include "Game/Ride/PlantLeaf.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include <JSystem/J3DGraphAnimator/J3DModelData.hpp>
@@ -8,6 +10,12 @@
 #include <JSystem/J3DGraphBase/J3DShape.hpp>
 #include <JSystem/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JGeometry/TMatrix.hpp>
+
+void PlantLeaf_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+}
 
 PlantLeaf::PlantLeaf(f32 leafCoord, const TVec3f& pPosition, const TVec3f& pGrowDirection, f32 leafSize)
     : LiveActor("葉（伸び植物）"), mSpringVel(0.0f), mSpringAccel(0.0f), mLeafCoord(leafCoord), mLeafSize(leafSize), mSide(1.0f, 0.0f, 0.0f),
@@ -40,8 +48,8 @@ void PlantLeaf::init(const JMapInfoIter&) {
 
 void PlantLeaf::updateGrowUp(const TVec3f& rStalkPos, const TVec3f& rAxisY, f32 growthPercent, f32 offset) {
     mPosition.set(mFront);
-    mPosition.mult(offset);
-    mPosition.addInline(rStalkPos);
+    mPosition *= offset;
+    mPosition.add(rStalkPos);
 
     f32 t = growthPercent * growthPercent;
     mUp.x = rAxisY.x * (1.0f - t);
@@ -65,19 +73,15 @@ bool PlantLeaf::updateSpring(const TVec3f& v, f32 springPower, f32 growthPercent
 }
 
 bool PlantLeaf::updateSpring(f32 growthPercent) {
-    // Float register alloc issues
-    // https://decomp.me/scratch/oTGS1
-
     mSpringAccel -= mSpringVel * 0.1f;
     mSpringAccel = MR::clamp(mSpringAccel, -0.5f, 0.5f);
 
     mSpringVel += mSpringAccel;
     mSpringVel = MR::clamp(mSpringVel, -0.9f, 0.9f);
 
-    // FIXME
     mSpringAccel *= 0.9f;
 
-    if (__fabsf(mSpringVel) < 0.01f && __fabsf(mSpringAccel) < 0.001f) {
+    if (MR::abs(mSpringVel) < 0.01f && MR::abs(mSpringAccel) < 0.001f) {
         mSpringVel = 0.0f;
         mSpringAccel = 0.0f;
         MR::makeAxisFrontUp(&mSide, &mUp, mFront, mUp);

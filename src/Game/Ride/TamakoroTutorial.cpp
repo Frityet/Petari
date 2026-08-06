@@ -2,16 +2,27 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Ride/Tamakoro.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/PlayerActionGuidance.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
+
+namespace {
+    static TVec3f hRaiseAcc = TVec3f(0.0f, -1.0f, 0.0f);
+    static const f32 hRaiseCheckDegree = 30.0f;
+    static const f32 hDistToStartTutorial = 400.0f;
+};  // namespace
 
 namespace NrvTamakoroTutorial {
     NEW_NERVE(HostTypeNrvFirst, TamakoroTutorial, First);
@@ -32,14 +43,8 @@ namespace NrvTamakoroTutorial {
     NEW_NERVE(HostTypeNrvRecoverBack, TamakoroTutorial, Recover);
 };  // namespace NrvTamakoroTutorial
 
-namespace {
-    static TVec3f hRaiseAcc = TVec3f(0.0f, -1.0f, 0.0f);
-    static const f32 hRaiseCheckDegree = 30.0f;
-    static const f32 hDistToStartTutorial = 400.0f;
-};  // namespace
-
 TamakoroTutorial::TamakoroTutorial(const char* pName)
-    : LiveActor(pName), mHost(nullptr), mTalkCtrl(nullptr), mTalkCtrlAutomatic(nullptr), mPadAccel(0.0f, 0.0f, 0.0f), _A4(false), _A5(false) {
+    : LiveActor(pName), mHost(), mTalkCtrl(), mTalkCtrlAutomatic(), mPadAccel(0.0f, 0.0f, 0.0f), _A4(), _A5() {
 }
 
 void TamakoroTutorial::init(const JMapInfoIter& rIter) {
@@ -80,9 +85,9 @@ void TamakoroTutorial::init(const JMapInfoIter& rIter) {
     mTalkCtrlAutomatic = MR::createTalkCtrlDirectOnRootNodeAutomatic(this, rIter, "Common_TamakoroTutorial007", TVec3f(0.0f, 0.0f, 0.0f), nullptr);
 
     MR::setMessageBalloonFollowOffset(mTalkCtrl, TVec3f(0.0f, 180.0f, 0.0f));
-    MR::setDistanceToTalk(mTalkCtrl, hDistToStartTutorial);
+    MR::setDistanceToTalk(mTalkCtrl, ::hDistToStartTutorial);
     MR::setMessageBalloonFollowOffset(mTalkCtrlAutomatic, TVec3f(0.0f, 180.0f, 0.0f));
-    MR::setDistanceToTalk(mTalkCtrlAutomatic, hDistToStartTutorial);
+    MR::setDistanceToTalk(mTalkCtrlAutomatic, ::hDistToStartTutorial);
     MR::calcGravity(this);
 }
 
@@ -116,7 +121,7 @@ void TamakoroTutorial::exeFirst() {
         f32 distPlayerToTamakoro = MR::calcDistanceToPlayer(mHost->mPosition);
 
         if (MR::isOnGroundPlayer() && !MR::isExecScenarioStarter() &&
-            (distPlayerToTutorial < hDistToStartTutorial || distPlayerToTamakoro < hDistToStartTutorial)) {
+            (distPlayerToTutorial < ::hDistToStartTutorial || distPlayerToTamakoro < ::hDistToStartTutorial)) {
             setNerve(&NrvTamakoroTutorial::HostTypeNrvFirstForceTalk::sInstance);
         }
     } else {
@@ -182,7 +187,7 @@ void TamakoroTutorial::exeWaitRaiseTalk() {
     MR::tryTalkForceWithoutDemo(mTalkCtrl);
 
     if (MR::isGreaterStep(this, 90)) {
-        if (MR::isNearAngleDegree(::hRaiseAcc, mPadAccel, hRaiseCheckDegree)) {
+        if (MR::isNearAngleDegree(::hRaiseAcc, mPadAccel, ::hRaiseCheckDegree)) {
             MR::startSystemSE("SE_SY_SURF_TUTORIAL_OK");
             setNerve(&NrvTamakoroTutorial::HostTypeNrvWaitRaiseStable::sInstance);
         }
@@ -197,7 +202,7 @@ void TamakoroTutorial::exeWaitRaiseStable() {
 
     MR::tryTalkForceWithoutDemoAtEnd(mTalkCtrl);
 
-    if (!MR::isNearAngleDegree(::hRaiseAcc, mPadAccel, hRaiseCheckDegree)) {
+    if (!MR::isNearAngleDegree(::hRaiseAcc, mPadAccel, ::hRaiseCheckDegree)) {
         setNerve(&NrvTamakoroTutorial::HostTypeNrvWaitRaiseTalk::sInstance);
         MR::startSystemSE("SE_SY_SURF_TUTORIAL_NG");
     } else {
@@ -362,10 +367,7 @@ void TamakoroTutorial::updateHitSensor(HitSensor* pSensor) {
 
     pSensor->mPosition.set(mHost->mPosition);
 
-    TVec3f up(upVec);
-    up.mult(dot);
-
-    pSensor->mPosition.addInline(up);
+    pSensor->mPosition.add(upVec * dot);
 }
 
 void TamakoroTutorial::startTimerSound(s32 step, s32 param2) {

@@ -3,13 +3,13 @@
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
-#include "Game/SingletonHolder.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
 
 namespace {
@@ -27,8 +27,8 @@ namespace MR {
         return SingletonHolder< GameSystem >::get()->mSceneController->getCurrentSelectedScenarioNo();
     }
 
-    void setCurrentScenarioNo(s32 current, s32 currentSelected) {
-        return SingletonHolder< GameSystem >::get()->mSceneController->setCurrentScenarioNo(current, currentSelected);
+    void setCurrentScenarioNo(s32 scenarioNo, s32 selectedScenarioNo) {
+        return SingletonHolder< GameSystem >::get()->mSceneController->setCurrentScenarioNo(scenarioNo, selectedScenarioNo);
     }
 
     bool isScenarioDecided() {
@@ -36,15 +36,15 @@ namespace MR {
     }
 
     const char* getCurrentStageName() {
-        return SingletonHolder< GameSystem >::get()->mSceneController->_0.mStage;
+        return SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mStage;
     }
 
     bool isEqualSceneName(const char* pSceneName) {
-        return isEqualStringCase(SingletonHolder< GameSystem >::get()->mSceneController->_0.mScene, pSceneName);
+        return isEqualStringCase(SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mScene, pSceneName);
     }
 
     bool isEqualStageName(const char* pStageName) {
-        const char* pStage = SingletonHolder< GameSystem >::get()->mSceneController->_0.mStage;
+        const char* pStage = SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mStage;
 
         if (pStage == nullptr) {
             return false;
@@ -122,23 +122,23 @@ namespace MR {
     }
 
     void setInitializeStatePlacementPlayer() {
-        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(State_PlacementPlayer);
+        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(SceneInitializeState_PlacementPlayer);
     }
 
     void setInitializeStatePlacementHighPriority() {
-        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(State_PlacementHighPrio);
+        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(SceneInitializeState_PlacementHighPriority);
     }
 
     void setInitializeStatePlacement() {
-        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(State_Placement);
+        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(SceneInitializeState_Placement);
     }
 
     void setInitializeStateAfterPlacement() {
-        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(State_AfterPlacement);
+        SingletonHolder< GameSystem >::get()->mSceneController->setSceneInitializeState(SceneInitializeState_AfterPlacement);
     }
 
     bool isInitializeStateEnd() {
-        return SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(State_End);
+        return SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_End);
     }
 
     // isInitializeStatePlacementSomething
@@ -187,20 +187,20 @@ namespace MR {
     // getCurrentScenarioStartAnimCameraData
 
     void incCoin(int term) {
-        getScenePlayingResult()->incCoin(term);
+        ::getScenePlayingResult()->incCoin(term);
         incPlayerLife(term);
     }
 
     void incPurpleCoin() {
-        getScenePlayingResult()->incPurpleCoin();
+        ::getScenePlayingResult()->incPurpleCoin();
     }
 
     s32 getCoinNum() {
-        return getScenePlayingResult()->getCoinNum();
+        return ::getScenePlayingResult()->getCoinNum();
     }
 
     s32 getPurpleCoinNum() {
-        return getScenePlayingResult()->mPurpleCoinNum;
+        return ::getScenePlayingResult()->mPurpleCoinNum;
     }
 
     s32 getPowerStarNum() {

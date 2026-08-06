@@ -2,6 +2,8 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActorGroupArray.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
@@ -66,14 +68,14 @@ void FlipPanel::exeFrontLand() {
             MapObjActorUtil::appearBloomModel(this);
             ModelObj* bloomModel = mBloomModel;
             u32 frameMax = MR::getBrkFrameMax(bloomModel);
-            u32 val = sBloomSyncStep / frameMax;
-            frameMax = sBloomSyncStep - (val)*frameMax;
+            u32 val = ::sBloomSyncStep / frameMax;
+            frameMax = ::sBloomSyncStep - (val)*frameMax;
             MR::setBrkFrame(bloomModel, frameMax);
         } else {
             MapObjActorUtil::killBloomModel(this);
         }
 
-        MR::tryRumblePadMiddle(this, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         MR::startSound(this, "SE_OJ_FLIP_PANEL_CHANGE");
 
         if (_CD) {
@@ -97,12 +99,12 @@ void FlipPanel::exeBackLand() {
             MapObjActorUtil::appearBloomModel(this);
             ModelObj* bloomModel = mBloomModel;
             u32 frameMax = MR::getBrkFrameMax(bloomModel);
-            u32 val = sBloomSyncStep / frameMax;
-            frameMax = sBloomSyncStep - (val)*frameMax;
+            u32 val = ::sBloomSyncStep / frameMax;
+            frameMax = ::sBloomSyncStep - (val)*frameMax;
             MR::setBrkFrame(bloomModel, frameMax);
         }
 
-        MR::tryRumblePadMiddle(this, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         MR::startSound(this, "SE_OJ_FLIP_PANEL_CHANGE");
 
         if (!_CD) {
@@ -172,8 +174,8 @@ void FlipPanel::endClipped() {
     if (MR::getBrkCtrl(mBloomModel)) {
         ModelObj* bloomModel = mBloomModel;
         u32 frameMax = MR::getBrkFrameMax(bloomModel);
-        u32 val = sBloomSyncStep / frameMax;
-        frameMax = sBloomSyncStep - (val)*frameMax;
+        u32 val = ::sBloomSyncStep / frameMax;
+        frameMax = ::sBloomSyncStep - (val)*frameMax;
         MR::setBrkFrame(bloomModel, frameMax);
     }
 }
@@ -216,10 +218,8 @@ bool FlipPanel::calcJointMove(TPos3f* pPos, const JointControllerInfo& rInfo) {
     MR::copyJointPos(this, "Panel", &jointPos);
     TVec3f upVec;
     MR::calcUpVec(&upVec, this);
-    JMAVECScaleAdd((const Vec*)&upVec, (const Vec*)&jointPos, (Vec*)&jointPos, -25.0f);
-    pPos->mMtx[0][3] = jointPos.x;
-    pPos->mMtx[1][3] = jointPos.y;
-    pPos->mMtx[2][3] = jointPos.z;
+    jointPos.scaleAdd(-25.0f, upVec, jointPos);
+    pPos->setTrans(jointPos);
     return true;
 }
 
@@ -241,13 +241,7 @@ bool FlipPanel::checkPlayerOnTop() {
         return false;
     }
 
-    TVec3f* groundNormal = MR::getPlayerGroundNormal();
-
-    bool ret = JGeometry::TUtil< f32 >::epsilonEquals(upVec.x, groundNormal->x, 0.0000038146973f) &&
-               JGeometry::TUtil< f32 >::epsilonEquals(upVec.y, groundNormal->y, 0.0000038146973f) &&
-               JGeometry::TUtil< f32 >::epsilonEquals(upVec.z, groundNormal->z, 0.0000038146973f);
-
-    if (!ret) {
+    if (upVec != *MR::getPlayerGroundNormal()) {
         _D0 = 0;
         return false;
     }
@@ -267,7 +261,7 @@ FlipPanelObserver::FlipPanelObserver(const char* pName) : LiveActor(pName) {
     mDemoDelay = 0;
     mPowerStarId = -1;
     _9C = 0;
-    sBloomSyncStep = 0;
+    ::sBloomSyncStep = 0;
 }
 
 void FlipPanelObserver::init(const JMapInfoIter& rIter) {
@@ -318,7 +312,7 @@ void FlipPanelObserver::exeWait() {
     if (_90 == _8C->mObjectCount - 1 && MR::tryStartDemo(this, "FlipPanelComplete")) {
         setNerve(&NrvFlipPanelObserver::FlipPanelObserverNrvComplete::sInstance);
     } else {
-        sBloomSyncStep++;
+        ::sBloomSyncStep++;
     }
 }
 
@@ -394,6 +388,8 @@ bool FlipPanelObserver::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* 
     return false;
 }
 
-FlipPanel::~FlipPanel() {}
+FlipPanel::~FlipPanel() {
+}
 
-FlipPanelObserver::~FlipPanelObserver() {}
+FlipPanelObserver::~FlipPanelObserver() {
+}

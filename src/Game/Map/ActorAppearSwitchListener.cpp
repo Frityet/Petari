@@ -1,9 +1,10 @@
 #include "Game/Map/ActorAppearSwitchListener.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
 ActorAppearSwitchListener::ActorAppearSwitchListener(LiveActor* pActor, bool usesOn, bool usesOff)
-    : mActor(pActor), mUsesOn(usesOn), mUsesOff(usesOff) {}
+    : mActor(pActor), mUsesOn(usesOn), mUsesOff(usesOff) {
+}
 
 void ActorAppearSwitchListener::listenSwitchOnEvent() {
     if (MR::isDead(mActor) && mUsesOn) {

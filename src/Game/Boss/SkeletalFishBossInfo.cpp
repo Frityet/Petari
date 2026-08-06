@@ -1,5 +1,7 @@
 #include "Game/Boss/SkeletalFishBossInfo.hpp"
 #include "Game/Boss/SkeletalFishBoss.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include <cstdio>
 
 namespace {
@@ -62,7 +64,8 @@ void SkeletalFishBossInfo::createLevelStatus() {
     }
 }
 
-SkeletalFishBossInfo::GuardStatus::GuardStatus() {}
+SkeletalFishBossInfo::GuardStatus::GuardStatus() {
+}
 
 void SkeletalFishBossInfo::loadLevelStatus(const JMapInfoIter& rIter) {
     s32 levelNum;
@@ -73,7 +76,7 @@ void SkeletalFishBossInfo::loadLevelStatus(const JMapInfoIter& rIter) {
         }
 
         for (s32 i = 0; i < levelNum; i++) {
-            char nameBuf[0x80];
+            char nameBuf[128];
             snprintf(nameBuf, sizeof(nameBuf), "%s%d", ::sParamNameEnergy, i);
             rIter.getValue< s32 >(nameBuf, &getLevelStatus(i)->mEnergyLevel);
             snprintf(nameBuf, sizeof(nameBuf), "%s%d", ::sParamNameSpeed, i);
@@ -101,4 +104,5 @@ void SkeletalFishBossInfo::loadGuardStatus(const JMapInfoIter& rIter, s32 levelI
     }
 }
 
-SkeletalFishBossInfo::~SkeletalFishBossInfo() {}
+SkeletalFishBossInfo::~SkeletalFishBossInfo() {
+}

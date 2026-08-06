@@ -17,10 +17,3 @@ void HazeCube::init(const JMapInfoIter& rIter) {
 
     MR::createSceneObj(SceneObj_HeatHazeDirector);
 }
-
-HazeCube::~HazeCube() {
-}
-
-const char* HazeCube::getManagerName() const {
-    return "HazeCube";
-}

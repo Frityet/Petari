@@ -1,4 +1,5 @@
 #include "Game/NPC/MiiDatabase.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include <JSystem/JKernel/JKRFileFinder.hpp>
 
 MiiDatabase::~MiiDatabase() {
@@ -6,4 +7,5 @@ MiiDatabase::~MiiDatabase() {
     delete mStoreDataArray;
 }
 
-JKRFileFinder::~JKRFileFinder() {}
+JKRFileFinder::~JKRFileFinder() {
+}

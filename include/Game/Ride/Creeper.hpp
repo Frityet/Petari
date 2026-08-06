@@ -1,8 +1,11 @@
 #pragma once
 
-#include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>
+
+class ActorCameraInfo;
+class JUTTexture;
+class PartsModel;
 
 class CreeperPoint {
 public:
@@ -50,7 +53,9 @@ public:
     void loadMaterial() const;
     const CreeperPoint* getHeadPoint() const;
 
-    inline const CreeperPoint* getPoint(s32 idx) const { return mPoints[idx]; }
+    inline const CreeperPoint* getPoint(s32 idx) const {
+        return mPoints[idx];
+    }
 
     /* 0x8C */ s32 mNumPoints;
     /* 0x90 */ CreeperPoint** mPoints;

@@ -43,6 +43,15 @@ void DiskTorusGravity::setBothSide(bool val) {
     mEnableBothSide = val;
 }
 
+void DiskTorusGravity::updateMtx(const TPos3f& rMtx) {
+    rMtx.mult(mLocalPosition, mTranslation);
+    rMtx.mult33(mLocalDirection, mRotation);
+
+    f32 worldScale;
+    MR::separateScalarAndDirection(&worldScale, &mRotation, mRotation);
+    mWorldRadius = mRadius * worldScale;
+}
+
 bool DiskTorusGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const TVec3f& rPos) const {
     TVec3f relativePosition;
     relativePosition = rPos - mTranslation;
@@ -73,7 +82,7 @@ bool DiskTorusGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const T
         }
 
         TVec3f nearestInnerEdgePoint;
-        JMAVECScaleAdd(&dirOnTorusPlane, &mTranslation, &nearestInnerEdgePoint, innerRadius);
+        nearestInnerEdgePoint.scaleAdd(innerRadius, dirOnTorusPlane, mTranslation);
 
         gravity = nearestInnerEdgePoint - rPos;
         MR::separateScalarAndDirection(&distance, &gravity, gravity);
@@ -83,12 +92,12 @@ bool DiskTorusGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const T
         }
 
         TVec3f nearestOuterEdgePoint;
-        JMAVECScaleAdd(&dirOnTorusPlane, &mTranslation, &nearestOuterEdgePoint, worldRadius);
+        nearestOuterEdgePoint.scaleAdd(worldRadius, dirOnTorusPlane, mTranslation);
         gravity = nearestOuterEdgePoint - rPos;
         MR::separateScalarAndDirection(&distance, &gravity, gravity);
     } else {
-        gravity = centralAxisY >= 0.0f ? mRotation.negateInline() : mRotation;
-        distance = __fabsf(centralAxisY);
+        gravity = centralAxisY >= 0.0f ? -mRotation : mRotation;
+        distance = MR::abs(centralAxisY);
     }
 
     if (!isInRangeDistance(distance)) {
@@ -102,13 +111,4 @@ bool DiskTorusGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const T
     }
 
     return true;
-}
-
-void DiskTorusGravity::updateMtx(const TPos3f& rMtx) {
-    rMtx.mult(mLocalPosition, mTranslation);
-    rMtx.mult33Inline(mLocalDirection, mRotation);
-
-    f32 worldScale;
-    MR::separateScalarAndDirection(&worldScale, &mRotation, mRotation);
-    mWorldRadius = mRadius * worldScale;
 }

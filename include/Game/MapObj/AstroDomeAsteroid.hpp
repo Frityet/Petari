@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 class AstroDomeAsteroid : public LiveActor {
 public:
     AstroDomeAsteroid(const char*);
 
-    virtual ~AstroDomeAsteroid();
     virtual void init(const JMapInfoIter&);
     virtual void appear();
     virtual void control();
@@ -15,5 +15,5 @@ public:
 
     void exeWait();
 
-    TPos3f mRotationMtx;  // 0x8C
+    /* 0x8C */ TPos3f mBaseMtx;
 };

@@ -1,10 +1,19 @@
 #include "Game/Boss/TripodBossGuardWallPart.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+
+void TripodBossGuardWallPart_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+}
 
 namespace NrvTripodBossGuardWallPart {
     NEW_NERVE(TripodBossGuardWallPartNrvNonActive, TripodBossGuardWallPart, NonActive);
@@ -49,13 +58,14 @@ void TripodBossGuardWallPart::kill() {
 }
 
 void TripodBossGuardWallPart::control() {
-    mPosition.set< f32 >(mHostMtx->get(0, 3), mHostMtx->get(1, 3), mHostMtx->get(2, 3));
+    mHostMtx->getTrans(mPosition);
 }
 
 void TripodBossGuardWallPart::calcAndSetBaseMtx() {
+    // FIXME: float swap in setEulerY
     TPos3f mtx;
     mtx.identity();
-    mtx.setRotateInline(mPlacementAngle, 0.017453292f);
+    mtx.setEulerY(MR::toRadian(mPlacementAngle));
     mtx.concat(*mHostMtx, mtx);
     MR::setBaseTRMtx(this, mtx);
 }
@@ -118,7 +128,8 @@ void TripodBossGuardWallPart::exeRepair() {
     }
 }
 
-void TripodBossGuardWallPart::exeActive() {}
+void TripodBossGuardWallPart::exeActive() {
+}
 
 void TripodBossGuardWallPart::exeDemo() {
     if (MR::isGreaterStep(this, mStartTiming)) {
@@ -126,7 +137,8 @@ void TripodBossGuardWallPart::exeDemo() {
     }
 }
 
-void TripodBossGuardWallPart::exeNonActive() {}
+void TripodBossGuardWallPart::exeNonActive() {
+}
 
 void TripodBossGuardWallPart::setHostMatrix(const TPos3f* pPos) {
     mHostMtx = pPos;

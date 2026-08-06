@@ -1,9 +1,19 @@
 #pragma once
 
-#include "Game/Enemy/WalkerStateBindStarPointer.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
+class AnimScaleController;
 class BegomanBaby;
+class JointControllerInfo;
+template < typename T >
+class JointControlDelegator;
+class WalkerStateBindStarPointer;
+
+namespace MR {
+    class ActorMoveParam;
+    class FunctorBase;
+};  // namespace MR
 
 struct BegomanSound {
     const char* mSound;
@@ -13,24 +23,19 @@ class BegomanBase : public LiveActor {
 public:
     BegomanBase(const char*);
 
-    virtual void makeActorDead();
+    virtual void initAfterPlacement();
     virtual void appear();
     virtual void kill();
-
+    virtual void makeActorDead();
+    virtual void startClipped();
     virtual void control();
     virtual void calcAndSetBaseMtx();
-    virtual void startClipped();
-
     virtual u32 getKind() const = 0;
-
     virtual bool onTouchElectric(const TVec3f&, const TVec3f&);
-
     virtual bool setNerveReturn() = 0;
     virtual void setNerveLaunch();
     virtual const Nerve* getNerveWait() = 0;
-
     virtual void addVelocityOnPushedFromElectricRail(const TVec3f&, const TVec3f&);
-
     virtual bool requestAttack();
 
     const BegomanSound* getSoundBaby();
@@ -43,7 +48,6 @@ public:
     void initCore(const JMapInfoIter&, const char*, bool);
     void initEffect(s32);
     void initEffectAndStarPointerBind();
-    void initAfterPlacement();
     void initShadow(f32, const char*);
     void initSensor(s32, f32, f32, const char*);
     void initUseSwitchB(const JMapInfoIter&, const MR::FunctorBase&);
@@ -73,7 +77,6 @@ public:
     static void launchBegomanBabyFromGuarder(LiveActor*, BegomanBaby**, s32, f32, f32, f32, const TVec3f*);
     static void launchBegomanBabyLauncher(LiveActor*, BegomanBaby**, s32, f32, f32, f32, const TVec3f*);
 
-
     void updateTargetVec();
     void updateRotateY(f32, f32);
     void addVelocityEscapeToSide(f32);
@@ -96,9 +99,9 @@ public:
     bool incAndCheckTiredCounter();
     bool isInWaterAndSetWaterNerve(const Nerve*, TPos3f*);
 
-    JointControlDelegator< BegomanBase >* mBaseDelegator; // _8C
+    JointControlDelegator< BegomanBase >* mBaseDelegator;  // _8C
 
-    TVec3f mFaceVec; //0x90
+    TVec3f mFaceVec;    // 0x90
     TVec3f mTargetVec;  // 0x9C
 
     TVec3f _A8;
@@ -107,10 +110,10 @@ public:
     TQuat4f _C0;
     TQuat4f _D0;
 
-    s32 mTiredCounter; // _E0
-    s32 mElectricCounter; //_E4
+    s32 mTiredCounter;     // _E0
+    s32 mElectricCounter;  //_E4
 
-    TVec3f mInitPos; //_E8
+    TVec3f mInitPos;  //_E8
 
     AnimScaleController* mScaleControler;
     WalkerStateBindStarPointer* mStarPointBind;
@@ -121,7 +124,7 @@ public:
 };
 
 class BegomanAttackPermitter : public LiveActor {
-public: 
+public:
     BegomanAttackPermitter(const char*);
 
     virtual void init(const JMapInfoIter&);
@@ -139,5 +142,4 @@ public:
     f32 mDistToPlayer;
 
     bool _98;
-
 };

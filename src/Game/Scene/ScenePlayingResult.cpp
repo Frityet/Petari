@@ -26,7 +26,7 @@ void ScenePlayingResult::incCoin(int num) {
     s32 currNum = MR::clamp(mCoinNum + num, COIN_NUM_MIN, COIN_NUM_MAX);
     mCoinNum = currNum;
 
-    requestOneUpIfNeed(prevNum, currNum, COIN_STEP_NUM);
+    ::requestOneUpIfNeed(prevNum, currNum, COIN_STEP_NUM);
 }
 
 s32 ScenePlayingResult::getCoinNum() const {
@@ -67,6 +67,8 @@ s32 ScenePlayingResult::getStarPieceNum() const {
     return GameDataFunction::getStarPieceNum();
 }
 
-ScenePlayingResult::~ScenePlayingResult() {}
+ScenePlayingResult::~ScenePlayingResult() {
+}
 
-ScenePlayingResult::ScenePlayingResult() : NameObj("プレイ結果保持"), mCoinNum(0), mPurpleCoinNum(0) {}
+ScenePlayingResult::ScenePlayingResult() : NameObj("プレイ結果保持"), mCoinNum(0), mPurpleCoinNum(0) {
+}

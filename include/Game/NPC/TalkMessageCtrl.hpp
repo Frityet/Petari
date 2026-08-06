@@ -1,18 +1,22 @@
 #pragma once
 
-#include "Game/LiveActor/LiveActor.hpp"
-#include "Game/NPC/TalkMessageFunc.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include <JSystem/JGeometry/TVec.hpp>
 
-class TalkNodeCtrl;
 class ActorCameraInfo;
+class LiveActor;
+class TalkMessageFuncBase;
 class TalkMessageInfo;
+class TalkNodeCtrl;
 
 class CustomTagArg {
 public:
     enum TagType { Type_Int = 0, Type_Char = 1, Type_Uninitialized = 2 };
 
-    inline CustomTagArg(int a1, TagType a2) : mIntArg(a1), mArgType(a2) {}
-    inline CustomTagArg(const wchar_t* a1, TagType a2) : mCharArg(a1), mArgType(a2) {}
+    inline CustomTagArg(int a1, TagType a2) : mIntArg(a1), mArgType(a2) {
+    }
+    inline CustomTagArg(const wchar_t* a1, TagType a2) : mCharArg(a1), mArgType(a2) {
+    }
 
     inline void operator=(const CustomTagArg& rhs) {
         mCharArg = rhs.mCharArg;
@@ -59,7 +63,9 @@ public:
     void readMessage();
     bool isSelectYesNo() const;
 
-    void setMessageArg(const CustomTagArg& rArg) { mTagArg = rArg; }
+    void setMessageArg(const CustomTagArg& rArg) {
+        mTagArg = rArg;
+    }
 
     bool inMessageArea() const;
     void startCamera(s32);

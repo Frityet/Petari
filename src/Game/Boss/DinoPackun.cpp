@@ -9,15 +9,33 @@
 #include "Game/Boss/DinoPackunTailRoot.hpp"
 #include "Game/Boss/DinoPackunVs1.hpp"
 #include "Game/Boss/DinoPackunVs2.hpp"
+#include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
+#include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/FootPrint.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/GravityUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointController.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/types.h"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace {
     static TVec3f sHeadHitOffset = TVec3f(140.0f, -110.0f, 0.0f);
@@ -82,11 +100,11 @@ void DinoPackun::init(const JMapInfoIter& rIter) {
     initSound(8, false);
     MR::onCalcGravity(this);
     initHitSensor(3);
-    MR::addHitSensorAtJointEnemy(this, "head", "Head", 8, 270.0f, sHeadHitOffset);
-    MR::addHitSensorEnemy(this, "body", 8, 200.f, sBodyHitOffset);
+    MR::addHitSensorAtJointEnemy(this, "head", "Head", 8, 270.0f, ::sHeadHitOffset);
+    MR::addHitSensorEnemy(this, "body", 8, 200.f, ::sBodyHitOffset);
 
     if (mSequence->isUseEggShell()) {
-        MR::addHitSensorEnemy(this, "egg", 8, 400.0f, sEggHitOffset);
+        MR::addHitSensorEnemy(this, "egg", 8, 400.0f, ::sEggHitOffset);
     }
 
     initBinder(150.0f, 150.0f, 0);
@@ -209,7 +227,7 @@ void DinoPackun::initCamera(const JMapInfoIter& rIter) {
     MR::initAnimCamera(this, mCameraInfo, "CryDemo");
     MR::initAnimCamera(this, mCameraInfo, "AngryDemo");
     MR::initAnimCamera(this, mCameraInfo, "DownDemo");
-    MR::initMultiActorCamera(this, rIter, &mCameraInfo, sEventCameraName);
+    MR::initMultiActorCamera(this, rIter, &mCameraInfo, ::sEventCameraName);
     MR::getJMapInfoArg7WithInit(rIter, &_F4);
 
     if (_F4 != -1) {
@@ -268,45 +286,45 @@ PartsModel* DinoPackun::getBallModel() {
     return mTailBall;
 }
 
-void DinoPackun::attackSensor(HitSensor* a1, HitSensor* a2) {
+void DinoPackun::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (mSequence != nullptr) {
-        mSequence->attackSensor(a1, a2);
+        mSequence->attackSensor(pSender, pReceiver);
     }
 }
 
-bool DinoPackun::receiveMsgPlayerAttack(u32 msg, HitSensor* a1, HitSensor* a2) {
+bool DinoPackun::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (mSequence != nullptr) {
-        return mSequence->receiveMsgPlayerAttack(msg, a1, a2);
-    }
-
-    return false;
-}
-
-bool DinoPackun::receiveMsgPush(HitSensor* a1, HitSensor* a2) {
-    if (mSequence != nullptr) {
-        return mSequence->receiveMsgPush(a1, a2);
+        return mSequence->receiveMsgPlayerAttack(msg, pSender, pReceiver);
     }
 
     return false;
 }
 
-bool DinoPackun::receiveOtherMsg(u32 msg, HitSensor* a1, HitSensor* a2) {
+bool DinoPackun::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
     if (mSequence != nullptr) {
-        return mSequence->receiveOtherMsg(msg, a1, a2);
+        return mSequence->receiveMsgPush(pSender, pReceiver);
     }
 
     return false;
 }
 
-void DinoPackun::attackSensorTail(HitSensor* a1, HitSensor* a2) {
+bool DinoPackun::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (mSequence != nullptr) {
-        mSequence->attackSensorTail(a1, a2);
+        return mSequence->receiveOtherMsg(msg, pSender, pReceiver);
+    }
+
+    return false;
+}
+
+void DinoPackun::attackSensorTail(HitSensor* pSender, HitSensor* pReceiver) {
+    if (mSequence != nullptr) {
+        mSequence->attackSensorTail(pSender, pReceiver);
     }
 }
 
-bool DinoPackun::receiveMsgPlayerAttackTail(u32 msg, HitSensor* a1, HitSensor* a2) {
+bool DinoPackun::receiveMsgPlayerAttackTail(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (mSequence != nullptr) {
-        return mSequence->receiveMsgPlayerAttackTail(msg, a1, a2);
+        return mSequence->receiveMsgPlayerAttackTail(msg, pSender, pReceiver);
     }
 
     return false;
@@ -353,9 +371,7 @@ void DinoPackun::calcAndSetBaseMtx() {
 }
 
 void DinoPackun::updatePose() {
-    TVec3f* grav = &mGravity;
-    f32 v3 = mGravity.dot(_E8);
-    JMAVECScaleAdd(grav, &_E8, &_E8, -v3);
+    _E8.orthogonalize(mGravity);
     if (MR::isNearZero(_E8)) {
         _BC.getZDir(_E8);
     } else {
@@ -423,7 +439,7 @@ void DinoPackun::updateCameraInfo() {
         TVec3f v6(0, 0, 0);
         TVec3f v5;
         _BC.getYDir(v5);
-        JMAVECScaleAdd(&v5, &mPosition, &v6, 300.0f);
+        v6.scaleAdd(300.0f, v5, mPosition);
 
         if (_108 > 0.0f) {
             TVec3f v4;
@@ -472,14 +488,12 @@ void DinoPackun::resetPosition() {
     TPos3f v28;
     v28.setQT(_BC, mPosition);
     TVec3f v27;
-    v28.mult(sMarioSetLocalPos, v27);
+    v28.mult(::sMarioSetLocalPos, v27);
     TVec3f v26;
     MR::calcGravityVector(this, v27, &v26, nullptr, 0);
 
-    TVec3f v24(mPosition);
-    JMathInlineVEC::PSVECSubtract(&v27, &v24, &v24);
     TVec3f v25;
-    v25 = v24;
+    v25 = mPosition - v27;
     MR::makeMtxUpFrontPos(&v28, -v26, v25, v27);
     MR::setPlayerBaseMtx(v28);
 }
@@ -491,7 +505,7 @@ void DinoPackun::adjustTailRootPosition(const TVec3f& rDir, f32 ratio) {
     TVec3f currPos;
     currPos = mTail->getNode(1)->mPosition;
     DinoPackunTailNode* node = mTail->getNode(1);
-    TVec3f pos = (newPos * ratio).addOperatorInLine(currPos * (1.0f - ratio));
+    TVec3f pos = newPos * ratio + currPos * (1.0f - ratio);
     node->mPosition.set(pos);
 }
 
@@ -554,13 +568,13 @@ void DinoPackun::endDemo(const char* pName) {
 
 void DinoPackun::startDamageCamera() {
     CameraTargetArg arg(nullptr, mCamTargetMtx, nullptr, nullptr);
-    MR::startMultiActorCameraTargetOther(this, mCameraInfo, sEventCameraName, arg, -1);
+    MR::startMultiActorCameraTargetOther(this, mCameraInfo, ::sEventCameraName, arg, -1);
     _10C = 0;
 }
 
 void DinoPackun::endDamageCamera() {
     if (_10C != -1) {
-        MR::endMultiActorCamera(this, mCameraInfo, sEventCameraName, false, -1);
+        MR::endMultiActorCamera(this, mCameraInfo, ::sEventCameraName, false, -1);
         _10C = -1;
     }
 }

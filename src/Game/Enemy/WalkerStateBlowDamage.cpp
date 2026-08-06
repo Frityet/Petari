@@ -1,10 +1,18 @@
 #include "Game/Enemy/WalkerStateBlowDamage.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+
+void WalkerStateBlowDamage_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+}
 
 namespace {
     static const f32 sAirFric = 0.99f;
     static const f32 sAirGravityAccel = 1.0f;
     static const f32 sDamageTurnLimit = 15.0f;
-    static const s32 sDamageLandTime = 5;
+    static const s32 sDamageLandTime = 30;
 };  // namespace
 
 namespace NrvWalkerStateBlowDamage {
@@ -26,14 +34,11 @@ void WalkerStateBlowDamage::exeBlow() {
     if (MR::isFirstStep(this)) {
         MR::startAction(getHost(), "Damage");
     }
-    MR::attenuateVelocity(getHost(), sAirFric);
-    MR::addVelocityToGravity(getHost(), sAirGravityAccel);
+    MR::attenuateVelocity(getHost(), ::sAirFric);
+    MR::addVelocityToGravity(getHost(), ::sAirGravityAccel);
+    MR::turnDirectionDegree(getHost(), mDirection, -getHost()->mVelocity, ::sDamageTurnLimit);
 
-    TVec3f mVelocityNegate;
-    JMathInlineVEC::PSVECNegate(&getHost()->mVelocity, &mVelocityNegate);
-    MR::turnDirectionDegree(getHost(), mDirection, mVelocityNegate, sDamageTurnLimit);
-
-    if (MR::isGreaterStep(this, sDamageLandTime)) {
+    if (MR::isGreaterStep(this, 5)) {
         if (MR::isBindedGround(getHost())) {
             MR::startAction(getHost(), "DamageLand");
             MR::zeroVelocity(getHost());
@@ -43,7 +48,7 @@ void WalkerStateBlowDamage::exeBlow() {
 }
 
 void WalkerStateBlowDamage::exeBlowLand() {
-    if (MR::isGreaterStep(this, 30)) {
+    if (MR::isGreaterStep(this, ::sDamageLandTime)) {
         kill();
     }
 }

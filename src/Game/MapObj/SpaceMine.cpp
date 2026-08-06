@@ -1,12 +1,15 @@
 #include "Game/MapObj/SpaceMine.hpp"
-#include "math_types.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvSpaceMine {
     NEW_NERVE(HostTypeWait, SpaceMine, Wait);
     NEW_NERVE(HostTypeAppear, SpaceMine, Appear);
 };  // namespace NrvSpaceMine
 
-SpaceMine::SpaceMine(const char* pName) : MapObjActor(pName), _C4(1.0f), mClippingRange(gZeroVec), _D4(-1), _D8(0) {}
+SpaceMine::SpaceMine(const char* pName) : MapObjActor(pName), _C4(1.0f), mClippingRange(gZeroVec), _D4(-1), _D8(0) {
+}
 
 void SpaceMine::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
@@ -163,4 +166,5 @@ void SpaceMine::exeAppear() {
     }
 }
 
-SpaceMine::~SpaceMine() {}
+SpaceMine::~SpaceMine() {
+}

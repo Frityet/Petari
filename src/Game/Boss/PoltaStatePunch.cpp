@@ -5,6 +5,7 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
 namespace NrvPoltaStatePunch {
@@ -99,4 +100,5 @@ bool PoltaStatePunch::isEnablePunchArm() const {
     return mIsLeftArmActor ? PoltaFunction::isEnableAttackLeftArm(getHost()) : PoltaFunction::isEnableAttackRightArm(getHost());
 }
 
-PoltaStatePunch::~PoltaStatePunch() {}
+PoltaStatePunch::~PoltaStatePunch() {
+}

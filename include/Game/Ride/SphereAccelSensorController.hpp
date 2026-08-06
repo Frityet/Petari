@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Game/Ride/SpherePadController.hpp"
-#include <JSystem/JGeometry/TVec.hpp>
 
 class SphereAccelSensorController : SpherePadController {
 public:
@@ -20,8 +19,6 @@ public:
     void getPadAcceleration(TVec3f*);
     bool testBrake() const;
     // void listenPropertyEvent(const JORPropertyEvent*); // DEBUG
-
-    inline bool isDeadZone(const TVec2f& vec) { return vec.dot(vec) <= 0.0000038146973f; }
 
     // everything up to 0x58 seems like it may be inhereted memory
     // however none of the inhereted classes use anything near

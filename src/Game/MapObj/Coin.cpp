@@ -1,7 +1,9 @@
 #include "Game/MapObj/Coin.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/CoinHolder.hpp"
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
+#include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/Util.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
@@ -172,7 +174,7 @@ void Coin::makeActorDead() {
 void Coin::calcAndSetBaseMtx() {
     TVec3f another_vec;
     another_vec.set< f32 >(MR::isNearZero(mGravity) ? TVec3f(0.0f, 1.0f, 0.0f) : -mGravity);
-    JMAVECScaleAdd(&another_vec, &mPosition, &mDropPosition, 70.0f);
+    mDropPosition.scaleAdd(70.0f, another_vec, mPosition);
 
     TPos3f pos;
 

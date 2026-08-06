@@ -1,11 +1,17 @@
 #include "Game/Boss/BossBegomanHead.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/JointController.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
 namespace {
     static const f32 hSpikeRotate = 0.23f;
     static const f32 hSpikeRotateTurn = 0.2f;
 };  // namespace
+
+void BossBegomanHead_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+}
 
 namespace NrvBossBegomanHead {
     NEW_NERVE(HostTypeNrvDemoWait, BossBegomanHead, DemoWait);
@@ -19,7 +25,8 @@ namespace NrvBossBegomanHead {
 };  // namespace NrvBossBegomanHead
 
 BossBegomanHead::BossBegomanHead(LiveActor* pParent, MtxPtr pMtx)
-    : PartsModel(pParent, "スイッチ頭", "BossBegomanHead", pMtx, MR::DrawBufferType_Enemy, false), _9C(0.0f), mJointDelegator(nullptr) {}
+    : PartsModel(pParent, "スイッチ頭", "BossBegomanHead", pMtx, MR::DrawBufferType_Enemy, false), _9C(0.0f), mJointDelegator(nullptr) {
+}
 
 void BossBegomanHead::init(const JMapInfoIter& rIter) {
     initNerve(&NrvBossBegomanHead::HostTypeNrvDemoWait::sInstance);
@@ -127,20 +134,9 @@ void BossBegomanHead::calcAndSetBaseMtx() {
 }
 
 bool BossBegomanHead::calcJointEdge(TPos3f* pMtx, const JointControllerInfo&) {
-    f32 v3 = _9C;
-    TVec3f v8;
-    v8.x = 0.0;
-    v8.y = 1.0;
-    v8.z = 0.0;
     TPos3f v9;
-    TVec3f v7;
-    v7.x = 0.0;
-    v7.y = 1.0;
-    v7.z = 0.0;
-    v9.makeRotateInline(v7, v3);
+    v9.makeRotate(TVec3f(0.0f, 1.0f, 0.0f), _9C);
     pMtx->concat(*pMtx, v9);
 
     return true;
 }
-
-BossBegomanHead::~BossBegomanHead() {}

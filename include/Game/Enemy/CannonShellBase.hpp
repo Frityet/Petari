@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Game/Util/Array.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/Array.hpp"
 
 class CannonShellBase : public LiveActor {
 public:
-    CannonShellBase(const char* pName) : LiveActor(pName) { }
+    CannonShellBase(const char* pName) : LiveActor(pName) {
+    }
 
+    virtual ~CannonShellBase();
     virtual void launch(const TVec3f& rStartPos, const TVec3f& rVelocity) = 0;
     // These two virtuals get moved around based on the TU so they can't be in the CPP
     virtual f32 getBaseScale() const {

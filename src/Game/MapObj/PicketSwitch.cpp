@@ -1,5 +1,7 @@
 #include "Game/MapObj/PicketSwitch.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvPicketSwitch {
     NEW_NERVE(PicketSwitchNrvWait, PicketSwitch, Wait);
@@ -7,9 +9,11 @@ namespace NrvPicketSwitch {
     NEW_NERVE(PicketSwitchNrvLastDrop, PicketSwitch, LastDrop);
 };  // namespace NrvPicketSwitch
 
-PicketSwitch::PicketSwitch(const char* pName) : LiveActor(pName) {}
+PicketSwitch::PicketSwitch(const char* pName) : LiveActor(pName) {
+}
 
-PicketSwitch::~PicketSwitch() {}
+PicketSwitch::~PicketSwitch() {
+}
 
 void PicketSwitch::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -37,7 +41,7 @@ void PicketSwitch::exeWait() {
 void PicketSwitch::exeFirstDrop() {
     if (MR::isFirstStep(this)) {
         MR::startBck(this, "First", nullptr);
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::startSound(this, "SE_OJ_PICKET_SWITCH_DROP");
     }
 }
@@ -46,7 +50,7 @@ void PicketSwitch::exeLastDrop() {
     if (MR::isFirstStep(this)) {
         MR::startBck(this, "Second", nullptr);
         MR::startBrk(this, "Second");
-        MR::tryRumblePadVeryStrong(this, 0);
+        MR::tryRumblePadVeryStrong(this, WPAD_CHAN0);
         MR::startSound(this, "SE_OJ_PICKET_SWITCH_DROP");
         MR::startSound(this, "SE_OJ_PICKET_SWITCH_ON");
     }
@@ -59,7 +63,7 @@ void PicketSwitch::exeLastDrop() {
 
 bool PicketSwitch::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgPlayerHipDropFloor(msg)) {
-        if (pReceiver->isType(79)) {
+        if (pReceiver->isType(ATYPE_SWITCH)) {
             if (isNerve(&NrvPicketSwitch::PicketSwitchNrvWait::sInstance)) {
                 setNerve(&NrvPicketSwitch::PicketSwitchNrvLastDrop::sInstance);
                 return true;

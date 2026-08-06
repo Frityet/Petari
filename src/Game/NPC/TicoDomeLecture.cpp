@@ -1,7 +1,11 @@
 #include "Game/NPC/TicoDomeLecture.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "math_types.hpp"
 
 namespace NrvTicoDomeLecture {
@@ -15,7 +19,8 @@ namespace {
     const static Vec cMoveEndRotate = {30.0f, 130.0f, 0.0f};
 };  // namespace
 
-TicoDomeLecture::TicoDomeLecture(const char* pName) : LiveActor(pName), _8C(gZeroVec), _98(gZeroVec) {}
+TicoDomeLecture::TicoDomeLecture(const char* pName) : LiveActor(pName), _8C(gZeroVec), _98(gZeroVec) {
+}
 
 void TicoDomeLecture::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -61,10 +66,8 @@ void TicoDomeLecture::exeMove() {
     MR::startLevelSound(this, "SE_SM_LV_TICO_FLY_DEMO");
     if (MR::isDemoPartActive(demoName)) {
         f32 easeOut = MR::calcNerveEaseOutRate(this, MR::getDemoPartTotalStep(demoName) - 1);
-        TVec3f v5(cMoveEndPos);
-        JMAVECLerp(&_8C, &v5, &mPosition, easeOut);
-        TVec3f v4(cMoveEndRotate);
-        JMAVECLerp(&_98, &v4, &mRotation, easeOut);
+        mPosition.lerp(_8C, ::cMoveEndPos, easeOut);
+        mRotation.lerp(_98, ::cMoveEndRotate, easeOut);
         if (MR::isDemoPartLastStep(demoName)) {
             setNerve(&NrvTicoDomeLecture::TicoDomeLectureNrvMetamorphosis::sInstance);
         }
@@ -83,4 +86,5 @@ void TicoDomeLecture::exeMetamorphosis() {
     }
 }
 
-TicoDomeLecture::~TicoDomeLecture() {}
+TicoDomeLecture::~TicoDomeLecture() {
+}

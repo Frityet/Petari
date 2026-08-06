@@ -2,6 +2,8 @@
 
 #include "Game/MapObj/MapObjActor.hpp"
 
+class ActorCameraInfo;
+
 class AnmModelObj : public MapObjActor {
 public:
     AnmModelObj(const char*);
@@ -21,7 +23,7 @@ public:
     virtual inline void moveInner();
     virtual void stopInner();
 
-    inline void exeWait();
+    void exeWait();
     void exeMove();
     void exeDone();
 
@@ -39,7 +41,7 @@ public:
 
 class AnmModelSwitchMoveEndKill : public AnmModelSwitchMove {
 public:
-    AnmModelSwitchMoveEndKill(const char* pName) : AnmModelSwitchMove(pName){};
+    AnmModelSwitchMoveEndKill(const char* pName) : AnmModelSwitchMove(pName) {};
 
     virtual ~AnmModelSwitchMoveEndKill();
     virtual bool isKilledAtMoveDone() const;

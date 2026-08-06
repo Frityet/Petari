@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
+class ActorCameraInfo;
 class DummyDisplayModel;
 class ModelObj;
 
@@ -19,7 +21,9 @@ public:
     virtual bool receiveMsgPlayerAttack(u32, HitSensor*, HitSensor*);
     virtual bool receiveMsgEnemyAttack(u32, HitSensor*, HitSensor*);
 
-    const ActorCameraInfo* getCamInfo() const { return mCameraInfo; }
+    const ActorCameraInfo* getCamInfo() const {
+        return mCameraInfo;
+    }
 
     void initMapToolInfo(const JMapInfoIter&);
     void initModel(const char*, const JMapInfoIter&);

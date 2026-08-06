@@ -3,7 +3,7 @@
 #include "Game/LiveActor/RailRider.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include <JSystem/JGeometry/TVec.hpp>
+#include "Game/Util/PlayerUtil.hpp"
 #include <JSystem/JMath/JMath.hpp>
 #include <revolution/mtx.h>
 
@@ -147,12 +147,9 @@ namespace MR {
         pActor->mRailRider->reverse();
     }
 
-    void calcMovingDirectionAlongRail(LiveActor* pActor, TVec3f* pDir, const TVec3f& rPos, f32 coord, bool horizontal, bool* pReachedGoal) {
-        // FIXME : improper float register store, float regswaps
-        // https://decomp.me/scratch/xYffl
-
+    f32 calcMovingDirectionAlongRail(LiveActor* pActor, TVec3f* pDir, const TVec3f& rPos, f32 curveRatio, bool horizontal, bool* pReachedGoal) {
         TVec3f pos, dir;
-        calcNearestRailPosAndDirection(&pos, &dir, pActor, rPos);
+        f32 coord = calcNearestRailPosAndDirection(&pos, &dir, pActor, rPos);
         setRailCoord(pActor, coord);
 
         if (!isLoopRail(pActor) && isRailReachedGoal(pActor)) {
@@ -167,24 +164,26 @@ namespace MR {
         }
 
         if (!isRailGoingToEnd(pActor)) {
-            dir = dir.negateInline();
+            dir = -dir;
         }
 
-        TVec3f fromInPos(pos - rPos);
+        TVec3f fromInPos = pos - rPos;
 
         if (horizontal) {
             vecKillElement(fromInPos, pActor->mGravity, &fromInPos);
             vecKillElement(dir, pActor->mGravity, &dir);
         }
 
-        fromInPos.mult(1.0f / fromInPos.length());
+        f32 distTravelled = fromInPos.length();
+        fromInPos /= curveRatio;
 
-        pDir->set(fromInPos.addOperatorInLine(dir));
+        pDir->set(fromInPos + dir);
         normalizeOrZero(pDir);
+        return distTravelled;
     }
 
-    void calcMovingDirectionAlongRailH(LiveActor* pActor, TVec3f* pDir, const TVec3f& rPos, f32 coord, bool* pReachedGoal) {
-        calcMovingDirectionAlongRail(pActor, pDir, rPos, coord, true, pReachedGoal);
+    f32 calcMovingDirectionAlongRailH(LiveActor* pActor, TVec3f* pDir, const TVec3f& rPos, f32 curveRatio, bool* pReachedGoal) {
+        return calcMovingDirectionAlongRail(pActor, pDir, rPos, curveRatio, true, pReachedGoal);
     }
 
     void calcRailClippingInfo(TVec3f* pCenter, f32* pRadius, const LiveActor* pActor, f32 delta, f32 padding) {
@@ -211,12 +210,12 @@ namespace MR {
 
         TVec3f padVec;
         padVec.set(padding);
-        JMathInlineVEC::PSVECSubtract(clipBox.i, padVec, clipBox.i);  // TODO: smells like clipMin.sub(offsetVec)
+        clipBox.i.sub(padVec);
         clipBox.f.add(padVec);
-        JMAVECLerp(clipBox.f, clipBox.i, pCenter, 0.5f);
+        pCenter->lerp(clipBox.f, clipBox.i, 0.5f);
 
         TVec3f diameterVec;
-        JMathInlineVEC::PSVECSubtract(clipBox.f, clipBox.i, diameterVec);
+        diameterVec.sub(clipBox.f, clipBox.i);
         *pRadius = diameterVec.length() * 0.5f;
     }
 
@@ -280,11 +279,11 @@ namespace MR {
 
         for (s32 idx = 1; idx < numPoints; idx++) {
             pRailRider->setCoord(delta * idx);
-            updateBoundingBox(pRailRider, pBox);
+            ::updateBoundingBox(pRailRider, pBox);
         }
 
         pRailRider->setCoord(pRailRider->getTotalLength());
-        updateBoundingBox(pRailRider, pBox);
+        ::updateBoundingBox(pRailRider, pBox);
         pRailRider->setCoord(coord);
     }
 
@@ -315,13 +314,9 @@ namespace MR {
     }
 
     f32 calcDistanceHorizonToCurrentPos(const LiveActor* pActor) {
-        // FIXME : reg scheduling and stack order
-        // https://decomp.me/scratch/KkQjM
-
-        TVec3f diff(getRailPos(pActor) - pActor->mPosition);
         TVec3f horizontal;
-        horizontal.rejection(diff, pActor->mGravity);
-        return PSVECMag(horizontal);
+        horizontal.killElement(getRailPos(pActor) - pActor->mPosition, pActor->mGravity);
+        return horizontal.length();
     }
 
     void calcRailPosAtCoord(TVec3f* pPos, const LiveActor* pActor, f32 coord) {
@@ -405,7 +400,7 @@ namespace MR {
             }
         } else {
             f32 coord = railRider->mCoord;
-            *pDist = __fabsf(pActor->mRailRider->getNextPointCoord() - coord);
+            *pDist = MR::abs(pActor->mRailRider->getNextPointCoord() - coord);
         }
     }
 
@@ -428,7 +423,7 @@ namespace MR {
             }
         } else {
             f32 coord = railRider->mCoord;
-            *pCurrDist = __fabsf(coord - currPointCoord);
+            *pCurrDist = MR::abs(coord - currPointCoord);
         }
 
         if (isNearZero(nextPointCoord)) {
@@ -441,7 +436,7 @@ namespace MR {
             }
         } else {
             f32 coord = railRider->mCoord;
-            *pNextDist = __fabsf(railRider->getNextPointCoord() - coord);
+            *pNextDist = MR::abs(railRider->getNextPointCoord() - coord);
         }
     }
 
@@ -515,7 +510,7 @@ namespace MR {
     }
 
     void setRailCoordSpeed(LiveActor* pActor, f32 speed) {
-        pActor->mRailRider->setSpeed(__fabsf(speed));
+        pActor->mRailRider->setSpeed(MR::abs(speed));
     }
 
     void accelerateRailCoordSpeed(LiveActor* pActor, f32 accel) {
@@ -530,7 +525,7 @@ namespace MR {
     void adjustmentRailCoordSpeed(LiveActor* pActor, f32 target, f32 rate) {
         f32 speed = pActor->mRailRider->mSpeed;
 
-        if (__fabsf(speed - target) < rate) {
+        if (MR::abs(speed - target) < rate) {
             speed = target;
         } else if (speed < target) {
             speed += rate;
@@ -689,118 +684,118 @@ namespace {
 namespace MR {
     bool getRailPointArg0WithInit(const LiveActor* pActor, s32 index, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getPointArgS32WithInit(getRailPointArgName(0), pArg, index);
+        return railRider->getPointArgS32WithInit(::getRailPointArgName(0), pArg, index);
     }
 
     bool getRailPointArg2WithInit(const LiveActor* pActor, s32 index, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getPointArgS32WithInit(getRailPointArgName(2), pArg, index);
+        return railRider->getPointArgS32WithInit(::getRailPointArgName(2), pArg, index);
     }
 
     bool getRailPointArg0NoInit(const LiveActor* pActor, s32 index, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getPointArgS32NoInit(getRailPointArgName(0), pArg, index);
+        return railRider->getPointArgS32NoInit(::getRailPointArgName(0), pArg, index);
     }
 
     bool getRailPointArg1NoInit(const LiveActor* pActor, s32 index, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getPointArgS32NoInit(getRailPointArgName(1), pArg, index);
+        return railRider->getPointArgS32NoInit(::getRailPointArgName(1), pArg, index);
     }
 
     bool getRailPointArg4NoInit(const LiveActor* pActor, s32 index, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getPointArgS32NoInit(getRailPointArgName(4), pArg, index);
+        return railRider->getPointArgS32NoInit(::getRailPointArgName(4), pArg, index);
     }
 
     bool getRailPointArg6NoInit(const LiveActor* pActor, s32 index, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getPointArgS32NoInit(getRailPointArgName(6), pArg, index);
+        return railRider->getPointArgS32NoInit(::getRailPointArgName(6), pArg, index);
     }
 
     bool getRailPointArg7NoInit(const LiveActor* pActor, s32 index, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getPointArgS32NoInit(getRailPointArgName(7), pArg, index);
+        return railRider->getPointArgS32NoInit(::getRailPointArgName(7), pArg, index);
     }
 
     bool getRailPointArg2WithInit(const LiveActor* pActor, s32 index, f32* pArg) {
-        return getRailPointArgF32WithInit(pActor, 2, index, pArg);
+        return ::getRailPointArgF32WithInit(pActor, 2, index, pArg);
     }
 
     bool getRailPointArg3WithInit(const LiveActor* pActor, s32 index, f32* pArg) {
-        return getRailPointArgF32WithInit(pActor, 3, index, pArg);
+        return ::getRailPointArgF32WithInit(pActor, 3, index, pArg);
     }
 
     bool getRailPointArg0NoInit(const LiveActor* pActor, s32 index, f32* pArg) {
-        return getRailPointArgF32NoInit(pActor, 0, index, pArg);
+        return ::getRailPointArgF32NoInit(pActor, 0, index, pArg);
     }
 
     bool getRailPointArg1NoInit(const LiveActor* pActor, s32 index, f32* pArg) {
-        return getRailPointArgF32NoInit(pActor, 1, index, pArg);
+        return ::getRailPointArgF32NoInit(pActor, 1, index, pArg);
     }
 
     bool getCurrentRailPointArg0WithInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getCurrentPointArgS32WithInit(getRailPointArgName(0), pArg);
+        return railRider->getCurrentPointArgS32WithInit(::getRailPointArgName(0), pArg);
     }
 
     bool getCurrentRailPointArg1WithInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getCurrentPointArgS32WithInit(getRailPointArgName(1), pArg);
+        return railRider->getCurrentPointArgS32WithInit(::getRailPointArgName(1), pArg);
     }
 
     bool getCurrentRailPointArg0NoInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getCurrentPointArgS32NoInit(getRailPointArgName(0), pArg);
+        return railRider->getCurrentPointArgS32NoInit(::getRailPointArgName(0), pArg);
     }
 
     bool getCurrentRailPointArg1NoInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getCurrentPointArgS32NoInit(getRailPointArgName(1), pArg);
+        return railRider->getCurrentPointArgS32NoInit(::getRailPointArgName(1), pArg);
     }
 
     bool getCurrentRailPointArg5NoInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getCurrentPointArgS32NoInit(getRailPointArgName(5), pArg);
+        return railRider->getCurrentPointArgS32NoInit(::getRailPointArgName(5), pArg);
     }
 
     bool getCurrentRailPointArg7NoInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getCurrentPointArgS32NoInit(getRailPointArgName(7), pArg);
+        return railRider->getCurrentPointArgS32NoInit(::getRailPointArgName(7), pArg);
     }
 
     bool getCurrentRailPointArg0WithInit(const LiveActor* pActor, f32* pArg) {
-        return getRailCurrentPointArgF32WithInit(pActor, 0, pArg);
+        return ::getRailCurrentPointArgF32WithInit(pActor, 0, pArg);
     }
 
     bool getCurrentRailPointArg0NoInit(const LiveActor* pActor, f32* pArg) {
-        return getRailCurrentPointArgF32NoInit(pActor, 0, pArg);
+        return ::getRailCurrentPointArgF32NoInit(pActor, 0, pArg);
     }
 
     bool getCurrentRailPointArg1NoInit(const LiveActor* pActor, f32* pArg) {
-        return getRailCurrentPointArgF32NoInit(pActor, 1, pArg);
+        return ::getRailCurrentPointArgF32NoInit(pActor, 1, pArg);
     }
 
     bool getNextRailPointArg0WithInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getNextPointArgS32WithInit(getRailPointArgName(0), pArg);
+        return railRider->getNextPointArgS32WithInit(::getRailPointArgName(0), pArg);
     }
 
     bool getNextRailPointArg1NoInit(const LiveActor* pActor, s32* pArg) {
         RailRider* railRider = pActor->mRailRider;
-        return railRider->getNextPointArgS32NoInit(getRailPointArgName(1), pArg);
+        return railRider->getNextPointArgS32NoInit(::getRailPointArgName(1), pArg);
     }
 
     bool getNextRailPointArg0NoInit(const LiveActor* pActor, f32* pArg) {
-        return getRailNextPointArgF32NoInit(pActor, 0, pArg);
+        return ::getRailNextPointArgF32NoInit(pActor, 0, pArg);
     }
 
     bool getNextRailPointArg1NoInit(const LiveActor* pActor, f32* pArg) {
-        return getRailNextPointArgF32NoInit(pActor, 1, pArg);
+        return ::getRailNextPointArgF32NoInit(pActor, 1, pArg);
     }
 
     bool getNextRailPointArg2WithInit(const LiveActor* pActor, bool* pArg) {
         *pArg = false;
-        return getRailNextPointArgBoolNoInit(pActor, 2, pArg);
+        return ::getRailNextPointArgBoolNoInit(pActor, 2, pArg);
     }
 
     bool getRailArg0WithInit(const LiveActor* pActor, s32* pArg) {

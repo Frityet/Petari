@@ -512,12 +512,17 @@ public:
     MarioConst();
 
     /// @brief Returns the working table of player character constants.
-    MarioConstTable* getTable() const { return mTable[mCurrentTable]; }
+    MarioConstTable* getTable() const {
+        return mTable[mCurrentTable];
+    }
 
     /// @brief Switches the working table of player character constants.
     /// @param tbl The new table index.
-    void changeTable(u32 tbl) { mCurrentTable = tbl; }
+    void changeTable(u32 tbl) {
+        mCurrentTable = tbl;
+    }
 
+private:
     /// @brief The array of player character constant tables.
     /* 0x00 */ MarioConstTable* mTable[2];
 

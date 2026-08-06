@@ -3,7 +3,8 @@
 
 WaterPoint::WaterPoint(const TVec3f& rPos, const TVec3f& rUpVec, f32 coordAcrossRail, f32 coordOnRail, f32 height, f32 flowSpeedRate)
     : mPosition(rPos), mOrigPos(rPos), mCoordAcrossRail(coordAcrossRail), mCoordOnRail(coordOnRail), mUpVec(rUpVec), mHeight(height),
-      mFlowSpeedRate(flowSpeedRate), mAlpha(-1) {}
+      mFlowSpeedRate(flowSpeedRate), mAlpha(-1) {
+}
 
 void WaterPoint::initAfterPlacement() {
     if (mHeight != 0.0f) {
@@ -12,7 +13,7 @@ void WaterPoint::initAfterPlacement() {
 
         if (MR::calcMapGround(v9, &v8, 400.0f)) {
             f32 v2 = ((v8.y - mPosition.y) / 200.0f);
-            f32 v3 = MR::clamp((0.1f + __fabsf(v2)), 0.1f, 1.0f);
+            f32 v3 = MR::clamp((0.1f + MR::abs(v2)), 0.1f, 1.0f);
             f32 v6 = MR::clamp((30.0f + (255.0f * -v2)), 30.0f, 255.0f);
             f32 v7 = mHeight;
             mAlpha = v6;
@@ -21,16 +22,14 @@ void WaterPoint::initAfterPlacement() {
     }
 }
 
-
 void WaterPoint::updatePos(f32 waveTheta1, f32 waveTheta2, f32 waveHeight1, f32 waveHeight2, f32 a5) {
     f32 height = calcHeight(waveTheta1, waveTheta2, waveHeight1, waveHeight2, mCoordAcrossRail, mCoordOnRail);
     f32 v9 = a5 * height;
     mPosition.x = mUpVec.x * v9;
     mPosition.y = mUpVec.y * (a5 * height);
     mPosition.z = mUpVec.z * v9;
-    mPosition.addInline(mOrigPos);
+    mPosition.add(mOrigPos);
 }
-
 
 /* thanks to WMC for naming the vars */
 f32 WaterPoint::calcHeight(f32 waveTheta1, f32 waveTheta2, f32 waveHeight1, f32 waveHeight2, f32 coordAcrossRail, f32 coordOnRail) const {

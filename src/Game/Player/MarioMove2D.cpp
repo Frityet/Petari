@@ -6,7 +6,6 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "revolution/mtx.h"
 
-
 void Mario::check2DMode() {
     mMovementStates._37 = false;
     _10._15 = false;
@@ -63,7 +62,7 @@ void Mario::calcMoveDir2D(f32 a1, f32 a2, TVec3f* pOut) {
     stack_74 = _654;
 
     TVec3f stack_50(_660);
-    PSVECCrossProduct(&stack_74, &stack_50, &stack_68);
+    stack_68.cross(stack_74, stack_50);
     MR::normalize(&stack_68);
 
     if (stack_50.dot(stack_80) < 0.0f) {
@@ -90,7 +89,7 @@ void Mario::calcMoveDir2D(f32 a1, f32 a2, TVec3f* pOut) {
     TVec3f stack_8(stack_5C * a2);
     TVec3f stack_14(stack_68 * a1);
     TVec3f stack_20(stack_14);
-    stack_20.addInline(stack_8);
+    stack_20.add(stack_8);
     *pOut = stack_20;
 }
 
@@ -121,7 +120,7 @@ void Mario::stick2Dadjust(f32& rStickX, f32& rStickY) {
     TVec3f stack_2C(1.0f, 0.0f, 0.0f);
     camDirZ = &getCamDirZ();
     const f32 absHorizontal = MR::diffAngleAbsHorizontal(getCamDirX(), stack_2C, *camDirZ);
-    if (absHorizontal <= 3.0415928f && __fabsf(angle) <= 3.0415928f) {
+    if (absHorizontal <= 3.0415928f && MR::abs(angle) <= 3.0415928f) {
         angle = 0.0f;
         rStickX = -rStickX;
     }
@@ -191,7 +190,7 @@ void Mario::stick2Dadjust(f32& rStickX, f32& rStickY) {
         }
     }
 
-    if (__fabsf(rStickY) > __fabsf(rStickX)) {
+    if (MR::abs(rStickY) > MR::abs(rStickX)) {
         isMainY = true;
         rStickX = 0.0f;
         rStickY = rStickY > 0.0f ? mStickPos.z : -mStickPos.z;
@@ -212,7 +211,7 @@ void Mario::stick2Dadjust(f32& rStickX, f32& rStickY) {
             if (_611 == 0) {
                 if (_620 == 0.0f) {
                     rStickY = 0.0f;
-                    if (isMainY && __fabsf(stickXInput) > 0.3f) {
+                    if (isMainY && MR::abs(stickXInput) > 0.3f) {
                         rStickX = stickXInput < 0.0f ? -mStickPos.z : mStickPos.z;
                         lockX = 1;
                     }
@@ -228,7 +227,7 @@ void Mario::stick2Dadjust(f32& rStickX, f32& rStickY) {
             if ((angleMove <= 1.3962635f || angleMove >= 1.7453294f) && _611 == 0) {
             } else if (_610 == 0 && _61C == 0.0f) {
                 rStickX = 0.0f;
-                if (isMainX && __fabsf(stickYInput) > 0.3f) {
+                if (isMainX && MR::abs(stickYInput) > 0.3f) {
                     rStickY = stickYInput < 0.0f ? -mStickPos.z : mStickPos.z;
                     lockY = 1;
                 }
@@ -299,10 +298,10 @@ void Mario::stick2Dadjust(f32& rStickX, f32& rStickY) {
 
     if (!isNearHalfPi) {
         rStickY = 0.0f;
-        mStickPos.z = __fabsf(rStickX);
+        mStickPos.z = MR::abs(rStickX);
     } else {
         rStickX = 0.0f;
-        mStickPos.z = __fabsf(rStickY);
+        mStickPos.z = MR::abs(rStickY);
     }
 }
 

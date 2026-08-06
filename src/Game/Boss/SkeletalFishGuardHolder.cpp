@@ -4,6 +4,9 @@
 #include "Game/Boss/SkeletalFishBossInfo.hpp"
 #include "Game/Boss/SkeletalFishBossRail.hpp"
 #include "Game/Boss/SkeletalFishGuard.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
 
 SkeletalFishGuardHolder::SkeletalFishGuardHolder(SkeletalFishBoss* pBoss, s32 numGuards, const char* pName) : NameObj(pName) {
     mFishBoss = pBoss;
@@ -166,7 +169,8 @@ void SkeletalFishGuardHolder::appearGuard(s32 numGuards, s32 startGuard) {
     }
 }
 
-SkeletalFishGuardHolder::~SkeletalFishGuardHolder() {}
+SkeletalFishGuardHolder::~SkeletalFishGuardHolder() {
+}
 
 void SkeletalFishGuardHolder::createAndInitGuard() {
     mGuards = new SkeletalFishGuard*[mNumGuards];

@@ -1,5 +1,7 @@
 #include "Game/Boss/SkeletalFishBabyRailHolder.hpp"
 #include "Game/Boss/SkeletalFishBabyRail.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/RailUtil.hpp"
 
 SkeletalFishBabyRailGroupNode::SkeletalFishBabyRailGroupNode(s32 a1) {
     _0 = a1;
@@ -45,11 +47,11 @@ void SkeletalFishBabyRailGroupNode::tidy() {
         SkeletalFishBabyRailSetLinkNode* v2 = curLink;
         TVec3f nearestRailPos;
         MR::calcNearestRailPos(&nearestRailPos, curLink->_4, endPointPos);
-        f32 totalDist = PSVECDistance(&endPointPos, &nearestRailPos);
+        f32 totalDist = endPointPos.distance(nearestRailPos);
 
         for (SkeletalFishBabyRailSetLinkNode* child = curLink->_10; child != nullptr; child = child->_10) {
             MR::calcNearestRailPos(&nearestRailPos, child->_4, endPointPos);
-            f32 dist = PSVECDistance(&endPointPos, &nearestRailPos);
+            f32 dist = endPointPos.distance(nearestRailPos);
 
             if (dist < totalDist) {
                 totalDist = dist;
@@ -125,7 +127,8 @@ namespace MR {
     }
 };  // namespace MR
 
-SkeletalFishBabyRailHolder::~SkeletalFishBabyRailHolder() {}
+SkeletalFishBabyRailHolder::~SkeletalFishBabyRailHolder() {
+}
 
 SkeletalFishBabyRailSetLinkNode::SkeletalFishBabyRailSetLinkNode() {
     _0 = 0;

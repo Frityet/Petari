@@ -1,7 +1,19 @@
 #include "Game/Enemy/Snakehead.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/WalkerStateBindStarPointer.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorStateUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
 namespace {
@@ -16,6 +28,7 @@ namespace {
         const char* _1C;
     };
 
+    // FIXME: these should be named sdata2 symbols
     static s32 sStepForWaitBig = 0x1E;
     static s32 sStepForRestBig = 0x64;
     static s32 sStepForWaitSmall = 0x3C;
@@ -27,7 +40,7 @@ namespace {
     static s32 sStepForRestSmallRace = 0x78;
     static f32 sGoHomeSpeedRace = 50.0f;
 
-    static SnakeheadData sSnakeheadDataTable[] = {
+    static const SnakeheadData sSnakeheadDataTable[] = {
         {&sStepForWaitBig, &sStepForRestBig, &sGoHomeSpeedNormal, "StraightAppear", "StraightWait", "StraightForward", "StraightForwardSmoke",
          "StraightBack"},
         {&sStepForWaitSmall, &sStepForRestSmall, &sGoHomeSpeedNormal, "StraightAppear", "Wait", "StraightForward", nullptr, "StraightBack"},
@@ -65,13 +78,11 @@ Snakehead::Snakehead(const char* pName) : LiveActor(pName) {
 void Snakehead::initAfterPlacement() {
     TVec3f headPos;
     MR::copyJointPos(this, "Head", &headPos);
-    JMathInlineVEC::PSVECSubtract(&headPos, MR::getRailPointPosStart(this), &headPos);
-    JMathInlineVEC::PSVECAdd(&headPos, MR::getRailPointPosEnd(this), &headPos);
+    headPos -= MR::getRailPointPosStart(this);
+    headPos += MR::getRailPointPosEnd(this);  // TODO: this is probably single-lined in scaleadd
     TVec3f v7;
-    JMAVECScaleAdd(&mGravity, &headPos, &v7, -50.0f);
-    TVec3f v6(mGravity);
-    v6.scale(1000.0f);
-    MR::getFirstPolyOnLineToMapExceptSensor(&_C4, nullptr, v7, v6, getSensor("body"));
+    v7.scaleAdd(-50.0f, mGravity, headPos);
+    MR::getFirstPolyOnLineToMapExceptSensor(&_C4, nullptr, v7, mGravity * 1000.0f, getSensor("body"));
     _94.set(MR::getJointMtx(this, "Body04"));
 }
 
@@ -125,8 +136,8 @@ void Snakehead::control() {
         TVec3f body01Pos;
         MR::copyJointPos(this, "Body01", &body01Pos);
         TVec3f v6;
-        f32 dist = PSVECDistance(&jointPos, &body01Pos);
-        JMathInlineVEC::PSVECAdd(&jointPos, &body01Pos, &v6);
+        f32 dist = jointPos.distance(body01Pos);
+        v6.add(jointPos, body01Pos);
         v6.scale(0.5f);
         MR::setShadowDropPosition(this, "Body", v6);
         TVec3f v5;
@@ -141,13 +152,11 @@ void Snakehead::calcAndSetBaseMtx() {
     TVec3f endPntDir;
     MR::calcRailEndPointDirection(&endPntDir, this);
     TVec3f stack_14;
-    TVec3f stack_8;
-    JMathInlineVEC::PSVECNegate(&mGravity, &stack_8);
     TPos3f frontUp;
-    MR::makeMtxFrontUpPos(&frontUp, endPntDir, stack_8, mPosition);
+    MR::makeMtxFrontUpPos(&frontUp, endPntDir, -mGravity, mPosition);
     MR::setBaseTRMtx(this, frontUp);
-    JMathInlineVEC::PSVECMultiply(mController->_C, mScale, &stack_14);
-    MR::setBaseScale(this, stack_14);
+    TVec3f scale = mController->_C * mScale;
+    MR::setBaseScale(this, scale);
 }
 
 void Snakehead::exeWaylay() {
@@ -177,7 +186,7 @@ void Snakehead::exeWait() {
         choiceAndStartBck("Wait");
     }
 
-    if (MR::isGreaterEqualStep(this, *sSnakeheadDataTable[_E8]._0)) {
+    if (MR::isGreaterEqualStep(this, *::sSnakeheadDataTable[_E8]._0)) {
         bool v3 = true;
         s32 val = _E8;
 
@@ -222,7 +231,7 @@ void Snakehead::exeMoveForward() {
 }
 
 void Snakehead::exeRest() {
-    if (MR::isStep(this, *sSnakeheadDataTable[_E8]._4)) {
+    if (MR::isStep(this, *::sSnakeheadDataTable[_E8]._4)) {
         setNerve(&NrvSnakehead::SnakeheadNrvMoveBack::sInstance);
     }
 }
@@ -250,7 +259,7 @@ void Snakehead::exeTurtleDown() {
         MR::startSound(this, "SE_EV_SNAKEHEAD_DAMAGE");
     }
 
-    f32 coord = *sSnakeheadDataTable[_E8]._8;
+    f32 coord = *::sSnakeheadDataTable[_E8]._8;
 
     if (MR::isRailReachedNearGoal(this, (300.0f + coord))) {
         MR::setRailCoord(this, 300.0f);
@@ -267,13 +276,13 @@ void Snakehead::exeTurtleDown() {
 void Snakehead::choiceAndStartBck(const char* pBck) {
     const char* v1 = nullptr;
     if (MR::isEqualString(pBck, "Forward")) {
-        v1 = sSnakeheadDataTable[_E8]._14;
+        v1 = ::sSnakeheadDataTable[_E8]._14;
     } else if (MR::isEqualString(pBck, "Back")) {
-        v1 = sSnakeheadDataTable[_E8]._1C;
+        v1 = ::sSnakeheadDataTable[_E8]._1C;
     } else if (MR::isEqualString(pBck, "Waylay")) {
-        v1 = sSnakeheadDataTable[_E8]._C;
+        v1 = ::sSnakeheadDataTable[_E8]._C;
     } else if (MR::isEqualString(pBck, "Wait")) {
-        v1 = sSnakeheadDataTable[_E8]._10;
+        v1 = ::sSnakeheadDataTable[_E8]._10;
     }
 
     if (v1 != nullptr) {
@@ -317,7 +326,8 @@ bool Snakehead::tryDPDSwoon() {
 bool Snakehead::isNearPlayerFromRail() const {
     TVec3f nearestPos;
     MR::calcNearestRailPos(&nearestPos, this, *MR::getPlayerPos());
-    return PSVECDistance(&nearestPos, *MR::getPlayerPos()) <= _D8;
+
+    return nearestPos.distance(*MR::getPlayerPos()) <= _D8;
 }
 
 Snakehead::~Snakehead() {

@@ -5,12 +5,11 @@
 #include "Game/NPC/TalkState.hpp"
 #include "Game/NPC/TalkTextFormer.hpp"
 #include "Game/Screen/IconAButton.hpp"
-#include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
@@ -31,7 +30,8 @@ namespace NrvTalkBalloonEvent {
     NEW_NERVE(TalkBalloonEventNrvClose, TalkBalloonEvent, Close);
 };  // namespace NrvTalkBalloonEvent
 
-TalkBalloon::TalkBalloon(const char* pName) : LayoutActor(pName, true), mMessageCtrl(nullptr), mTextFormer(nullptr), _28(false), _29(false) {}
+TalkBalloon::TalkBalloon(const char* pName) : LayoutActor(pName, true), mMessageCtrl(nullptr), mTextFormer(nullptr), _28(false), _29(false) {
+}
 
 void TalkBalloon::create(const char* pLayoutName, bool arg2, bool isTalkLayout) {
     _28 = arg2;
@@ -92,7 +92,8 @@ bool TalkBalloon::hasNextPage() {
     return mTextFormer->hasNextPage();
 }
 
-void TalkBalloon::skipMessage() {}
+void TalkBalloon::skipMessage() {
+}
 
 void TalkBalloon::pauseOff() {
     MR::requestMovementOn(this);
@@ -117,7 +118,7 @@ void TalkBalloon::updateBalloon() {
 
         MR::normalizeOrZero(&v2);
 
-        f32 cosine = JMAAcosRadian(v2.x * v3.x + v2.y * v3.y) * 57.29578f;
+        f32 cosine = MR::acos(v2.x * v3.x + v2.y * v3.y) * _180_PI;
 
         f32 paneAnimFrameMax = MR::getPaneAnimFrameMax(this, "Balloon", 0);
         f32 paneAnimFrame = MR::getPaneAnimFrame(this, "Balloon", 0);
@@ -144,7 +145,7 @@ void TalkBalloon::updateBalloon() {
             paneAnimFrameMax -= 1.0f;
         }
 
-        if (__fabsf(paneAnimFrame - paneAnimFrameMax) < 2.0f) {
+        if (MR::abs(paneAnimFrame - paneAnimFrameMax) < 2.0f) {
             _29 = false;
         }
 
@@ -373,7 +374,8 @@ void TalkBalloonSign::init(const JMapInfoIter& rIter) {
     MR::createAndAddPaneCtrl(this, "AButtonPosition", 1);
 }
 
-TalkBalloonInfo::TalkBalloonInfo(const char* pName) : TalkBalloon(pName) {}
+TalkBalloonInfo::TalkBalloonInfo(const char* pName) : TalkBalloon(pName) {
+}
 
 void TalkBalloonInfo::open(TalkMessageCtrl* pCtrl) {
     TalkMessageInfo* info = TalkFunction::getMessageInfo(pCtrl);
@@ -385,15 +387,18 @@ void TalkBalloonInfo::close() {
     MR::disappearInformationMessage();
 }
 
-void TalkBalloonInfo::updateTalking() {}
+void TalkBalloonInfo::updateTalking() {
+}
 
-void TalkBalloonInfo::updateBalloon() {}
+void TalkBalloonInfo::updateBalloon() {
+}
 
 bool TalkBalloonInfo::isTextAppearedAll() {
     return true;
 }
 
-TalkBalloonIcon::TalkBalloonIcon(const char* pName) : TalkBalloonShort(pName) {}
+TalkBalloonIcon::TalkBalloonIcon(const char* pName) : TalkBalloonShort(pName) {
+}
 
 void TalkBalloonIcon::init(const JMapInfoIter& rIter) {
     TalkBalloon::create("TalkBalloonLetter", false, false);
@@ -454,7 +459,8 @@ void TalkBalloonHolder::balloonOff() {
     mAButton->kill();
 }
 
-void TalkBalloonHolder::update() {}
+void TalkBalloonHolder::update() {
+}
 
 bool TalkBalloonHolder::isActiveBalloonShort() const {
     for (int i = 0; i < 4; i++) {

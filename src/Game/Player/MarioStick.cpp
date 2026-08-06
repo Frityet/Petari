@@ -4,6 +4,7 @@
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioConst.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "revolution/mtx.h"
@@ -19,7 +20,7 @@ void Mario::tryBeeStick(const HitSensor* pSensor) {
     }
 }
 
-MarioStick::MarioStick(MarioActor* pActor) : MarioState(pActor, 0x16) {
+MarioStick::MarioStick(MarioActor* pActor) : MarioState(pActor, MarioStatus_Stick) {
     _4C = 0;
     _50 = 0;
     _54.zero();
@@ -39,16 +40,14 @@ bool MarioStick::startJump() {
     TVec3f v7(_2C);
     v7.scale(mActor->getConst().getTable()->mBeeStickJumpPower);
     f32 v2 = -mActor->getConst().getTable()->mBeeStickJumpBonus;
-    TVec3f v6(getGravityVec());
-    v6.scale(v2);
-    v7 += v6;
+    v7 += getGravityVec() * v2;
     getPlayer()->tryStickJump(v7);
     getPlayer()->_408 = 0;
     return true;
 }
 
 bool MarioStick::postureCtrl(MtxPtr mtx) {
-    MR::makeMtxFrontUp(reinterpret_cast<TPos3f*>(mtx), _6C, _78);
+    MR::makeMtxFrontUp(reinterpret_cast< TPos3f* >(mtx), _6C, _78);
     return true;
 }
 
@@ -57,41 +56,36 @@ bool MarioStick::setStickSensor(const HitSensor* pSensor) {
         return false;
     }
 
-    if (getPlayer()->isStatusActive(22)) {
+    if (getPlayer()->isStatusActive(MarioStatus_Stick)) {
         return false;
     }
 
-    if (!pSensor->isType(83)) {
-        return false;
+    if (pSensor->isType(ATYPE_BEE_FLOWER)) {
+        TVec3f v12;
+        MR::getRotatedAxisY(&v12, pSensor->mHost->mRotation);
+        TVec3f v11(mActor->_2A0 - pSensor->mPosition);
+        MR::normalizeOrZero(&v11);
+
+        if (v12.dot(v11) < mActor->getConst().getTable()->mBeeStickAngleLimit) {
+            return false;
+        }
+
+        if (mActor->getLastMove().dot(v11) >= 0.0f) {
+            return false;
+        }
+
+        v11.setLength(pSensor->mRadius);
+        _14 = pSensor->mPosition + v11 * 0.9f;
+        getPlayer()->setTrans(_14, "Stick");
+        clearVelocity();
+        MR::normalize(&v11);
+        _20 = v11;
+        _2C = v12;
+        _38 = pSensor->mPosition;
+        _44 = pSensor->mRadius;
+        return true;
     }
-
-    TVec3f v12;
-    MR::getRotatedAxisY(&v12, pSensor->mHost->mRotation);
-    TVec3f v11(mActor->_2A0 - pSensor->mPosition);
-    MR::normalizeOrZero(&v11);
-
-    if (v12.dot(v11) < mActor->getConst().getTable()->mBeeStickAngleLimit) {
-        return false;
-    }
-
-    if (mActor->getLastMove().dot(v11) >= 0.0f) {
-        return false;
-    }
-
-    v11.setLength(pSensor->mRadius);
-    TVec3f v8(v11);
-    v8.scale(0.9f);
-    TVec3f v14(pSensor->mPosition);
-    v14 += v8;
-    _14 = v14;
-    getPlayer()->setTrans(_14, "Stick");
-    clearVelocity();
-    MR::normalize(&v11);
-    _20 = v11;
-    _2C = v12;
-    _38 = pSensor->mPosition;
-    _44 = pSensor->mRadius;
-    return true;
+    return false;
 }
 
 bool MarioStick::start() {
@@ -142,9 +136,9 @@ bool MarioStick::update() {
     PSMTXMultVec(rotMtx, &stack_2C, &stack_2C);
 
     if (getStickP() > 0.0f) {
-        changeAnimation("ハチ壁移動", static_cast<const char*>(nullptr));
+        changeAnimation("ハチ壁移動", static_cast< const char* >(nullptr));
     } else {
-        stopAnimation("ハチ壁移動", static_cast<const char*>(nullptr));
+        stopAnimation("ハチ壁移動");
     }
 
     if (MR::diffAngleAbs(stack_2C, _2C) < 1.308997f) {
@@ -155,9 +149,7 @@ bool MarioStick::update() {
 
         getPlayer()->setFrontVecKeepUp(stack_14);
         stack_2C.setLength(_44);
-        TVec3f stack_8(stack_2C);
-        stack_8 += _38;
-        _14 = stack_8;
+        _14 = stack_2C + _38;
     }
 
     _6C = getFrontVec();

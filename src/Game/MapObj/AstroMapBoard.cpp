@@ -1,6 +1,11 @@
 #include "Game/MapObj/AstroMapBoard.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/AstroDemoFunction.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Screen/GalaxyMapController.hpp"
+#include "Game/Util/EventUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 namespace {
     static const char* cDummyTexName = "MapDummy";
@@ -10,13 +15,14 @@ namespace NrvAstroMapBoard {
     NEW_NERVE(AstroMapBoardNrvWait, AstroMapBoard, Wait);
 };  // namespace NrvAstroMapBoard
 
-AstroMapBoard::AstroMapBoard(const char* pName) : MapObjActor(pName) {}
+AstroMapBoard::AstroMapBoard(const char* pName) : MapObjActor(pName) {
+}
 
 void AstroMapBoard::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
     MapObjActorInitInfo info;
     MapObjActorUtil::setupInitInfoSimpleMapObj(&info);
-    info.setupPrepareChangeDummyTexture(cDummyTexName);
+    info.setupPrepareChangeDummyTexture(::cDummyTexName);
     info.setupNerve(&NrvAstroMapBoard::AstroMapBoardNrvWait::sInstance);
     info.setupFarClipping(-1.0f);
     info.setupNoAppearRiddleSE();
@@ -38,10 +44,12 @@ void AstroMapBoard::connectToScene(const MapObjActorInitInfo& rInfo) {
 
 void AstroMapBoard::initAfterPlacement() {
     if (MR::isButlerMapAppear()) {
-        MR::changeModelDataTexAll(this, cDummyTexName, *MR::getGalaxyMapResTIMG());
+        MR::changeModelDataTexAll(this, ::cDummyTexName, *MR::getGalaxyMapResTIMG());
     }
 }
 
-void AstroMapBoard::exeWait() {}
+void AstroMapBoard::exeWait() {
+}
 
-AstroMapBoard::~AstroMapBoard() {}
+AstroMapBoard::~AstroMapBoard() {
+}

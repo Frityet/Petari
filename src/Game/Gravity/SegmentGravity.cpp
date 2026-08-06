@@ -1,6 +1,15 @@
 #include "Game/Gravity.hpp"
 #include "Game/Util.hpp"
+#include "JSystem/JGeometry/TUtil.hpp"
 #include <JSystem/JMath/JMATrigonometric.hpp>
+
+void SegmentGravity_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    f32 f3 = MR::epsilon();
+    (void)0.5f;
+    (void)-1.0f;
+}
 
 SegmentGravity::SegmentGravity()
     : PlanetGravity(), mSideVector(1, 0, 0), mOppositeSideVecOrtho(1, 0, 0), mWorldOppositeSideVecOrtho(1, 0, 0), mAxis(0, 0, 0) {
@@ -60,38 +69,13 @@ bool SegmentGravity::calcOwnGravityVector(TVec3f* pDest, f32* pScalar, const TVe
     return true;
 }
 
-void SegmentGravity::updateLocalParam() {
-    TRot3f rot;
-
-    // Both of these variables are present because the codegen indicates they should be.
-    // In the final game, however, they have no behavioral effect and are not given any storage.
-    bool artifact = true;
-    bool& rArtifact = artifact;
-
-    mValidSideCos = JMath::sSinCosTable.cosLap(0.5f * mValidSideDegree);
-
-    TVec3f localAxis = mGravityPoints[1] - mGravityPoints[0];
-    MR::normalizeOrZero(&localAxis);
-    if (MR::isNearZero(localAxis)) {
-        rArtifact = false;
-        mOppositeSideVecOrtho.zero();
-        return;
+void SegmentGravity::updateMtx(const TPos3f& rMtx) {
+    for (s32 i = 0; i < 2; i++) {
+        rMtx.mult(mGravityPoints[i], mWorldGravityPoints[i]);
     }
-    JMAVECScaleAdd(&localAxis, &mSideVector, &mOppositeSideVecOrtho, -localAxis.dot(mSideVector));
-    MR::normalizeOrZero(&mOppositeSideVecOrtho);
-    if (MR::isNearZero(mOppositeSideVecOrtho)) {
-        mOppositeSideVecOrtho.zero();
-        return;
-    }
-
-    rot.identity();
-    rot.setRotateInline2(localAxis, 0.5f * mValidSideDegree * (PI / 180));
-
-    // Necessary to force the compiler to load the arguments to `mult` in the correct order
-    rArtifact = false;
-    if (!artifact) {
-        rot.mult(mOppositeSideVecOrtho, mOppositeSideVecOrtho);
-    }
+    rMtx.mult33(mOppositeSideVecOrtho, mWorldOppositeSideVecOrtho);
+    mAxis = mWorldGravityPoints[1] - mWorldGravityPoints[0];
+    MR::separateScalarAndDirection(&mAxisLength, &mAxis, mAxis);
 }
 
 void SegmentGravity::setGravityPoint(u32 index, const TVec3f& rGravityPoint) {
@@ -115,11 +99,37 @@ void SegmentGravity::setEdgeValid(u32 index, bool val) {
     mEdges[index != 0] = val;
 }
 
-void SegmentGravity::updateMtx(const TPos3f& rMtx) {
-    for (s32 i = 0; i < 2; i++) {
-        rMtx.mult(mGravityPoints[i], mWorldGravityPoints[i]);
+void SegmentGravity::updateLocalParam() {
+    TRot3f rot;
+
+    // Both of these variables are present because the codegen indicates they should be.
+    // In the final game, however, they have no behavioral effect and are not given any storage.
+    bool artifact = true;
+    bool& rArtifact = artifact;
+
+    mValidSideCos = MR::cosDegree(0.5f * mValidSideDegree);
+
+    TVec3f localAxis = mGravityPoints[1] - mGravityPoints[0];
+    MR::normalizeOrZero(&localAxis);
+    if (MR::isNearZero(localAxis)) {
+        rArtifact = false;
+        mOppositeSideVecOrtho.zero();
+        return;
     }
-    rMtx.mult33Inline(mOppositeSideVecOrtho, mWorldOppositeSideVecOrtho);
-    mAxis = mWorldGravityPoints[1] - mWorldGravityPoints[0];
-    MR::separateScalarAndDirection(&mAxisLength, &mAxis, mAxis);
+
+    mOppositeSideVecOrtho.killElement2(mSideVector, localAxis);
+    MR::normalizeOrZero(&mOppositeSideVecOrtho);
+    if (MR::isNearZero(mOppositeSideVecOrtho)) {
+        mOppositeSideVecOrtho.zero();
+        return;
+    }
+
+    rot.identity();
+    rot.setRotate(localAxis, 0.5f * mValidSideDegree * (PI / 180));
+
+    // Necessary to force the compiler to load the arguments to `mult` in the correct order
+    rArtifact = false;
+    if (!artifact) {
+        rot.mult(mOppositeSideVecOrtho, mOppositeSideVecOrtho);
+    }
 }

@@ -7,14 +7,17 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
+#include "Game/Util/FileUtil.hpp"
+#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 
 MiiFacePartsHolder::MiiFacePartsHolder(int numParts)
-    : LiveActorGroup("Mii顔モデル保持", numParts), JKRDisposer(), mRFLWorkBuffer(nullptr), _34(nullptr) {
+    : LiveActorGroup("Mii顔モデル保持", numParts), JKRDisposer(), mRFLWorkBuffer(), _34() {
 }
 
 MiiFacePartsHolder::~MiiFacePartsHolder() {

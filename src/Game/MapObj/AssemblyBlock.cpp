@@ -1,6 +1,20 @@
 #include "Game/MapObj/AssemblyBlock.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
-#include "JSystem/JMath/JMath.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapPartsUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 
 namespace {
     static const char* sReturnPosName = "合体ブロック故郷点";
@@ -39,7 +53,7 @@ void AssemblyBlock::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     MR::tryRegisterNamePosLinkObj(this, rIter);
 
-    if (!MR::tryFindLinkNamePos(this, sReturnPosName, _EC.toMtxPtr())) {
+    if (!MR::tryFindLinkNamePos(this, ::sReturnPosName, _EC.toMtxPtr())) {
         stack_18.x = 0.0f;
         stack_18.y = 1000.0f;
         stack_18.z = 1000.0f;
@@ -78,7 +92,7 @@ void AssemblyBlock::init(const JMapInfoIter& rIter) {
     _124.z *= 0.5f;
     f32 boundRadius;
     MR::calcModelBoundingRadius(&boundRadius, this);
-    f32 dist = PSVECDistance(&_124, &stack_24);
+    f32 dist = _124.distance(stack_24);
     MR::setClippingTypeSphere(this, (boundRadius + dist), &_124);
     MR::getJMapInfoArg0NoInit(rIter, &mActivationRange);
     if (mActivationRange <= 0.0f) {
@@ -150,7 +164,7 @@ void AssemblyBlock::exeAssembleWait() {
             MR::deleteEffect(this, "Blur");
         }
 
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
         MR::validateCollisionParts(this);
         MR::validateHitSensors(this);
     }
@@ -164,7 +178,7 @@ void AssemblyBlock::exeAssembleWait() {
 
 void AssemblyBlock::exeReturn() {
     if (MR::isFirstStep(this)) {
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
         MR::emitEffect(this, "Blur");
 
         if (_13C) {

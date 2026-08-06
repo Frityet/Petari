@@ -1,7 +1,10 @@
 #include "Game/MapObj/DashRing.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util.hpp"
 
-DashRing::~DashRing() {}
+DashRing::~DashRing() {
+}
 
 void DashRing::initCommon(const JMapInfoIter& rIter, const char* pName) {
     MR::initDefaultPos(this, rIter);

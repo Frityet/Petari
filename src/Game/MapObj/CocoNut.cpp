@@ -1,8 +1,10 @@
 #include "Game/MapObj/CocoNut.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "JSystem/JMath.hpp"
 #include "math_types.hpp"
 
@@ -15,10 +17,6 @@ namespace NrvCocoNut {
     NEW_NERVE(CocoNutNrvReplaceReady, CocoNut, ReplaceReady);
 };  // namespace NrvCocoNut
 
-inline void negateInternalInline(const TVec3f& src, TVec3f* dst) {
-    JGeometry::negateInternal((f32*)&src, (f32*)dst);
-}
-
 CocoNut::CocoNut(const char* pName)
     : LiveActor(pName), _8C(0.0f), _90(0.0f),
       //_94(0.0f, 1.0f),
@@ -29,7 +27,8 @@ CocoNut::CocoNut(const char* pName)
     _108.identity();
 }
 
-CocoNut::~CocoNut() {}
+CocoNut::~CocoNut() {
+}
 
 void CocoNut::init(const JMapInfoIter& rIter) {
     initMapToolInfo(rIter);
@@ -78,11 +77,8 @@ void CocoNut::initAfterPlacement() {
     _94.set(stack_50.mMtx[0][2], stack_50.mMtx[1][2], stack_50.mMtx[2][2]);
 
     if (MR::isSameDirection(_94, gravity, 0.01f)) {
-        TVec3f gravityNegated;
-        negateInternalInline(gravity, &gravityNegated);
-
         TPos3f stack_20;
-        MR::makeMtxUpNoSupport(&stack_20, gravityNegated);
+        MR::makeMtxUpNoSupport(&stack_20, -gravity);
         _94.set(stack_20.mMtx[0][2], stack_20.mMtx[1][2], stack_20.mMtx[2][2]);
     }
 }
@@ -159,7 +155,7 @@ bool CocoNut::isPossibleToHit(const TVec3f& a1, const TVec3f& a2, const TVec3f& 
 }
 
 f32 CocoNut::calcMoveSpeed() const {
-    return !isNerve(&NrvCocoNut::CocoNutNrvMove::sInstance) ? 0.0f : MR::max(_8C, PSVECMag(&_150));
+    return !isNerve(&NrvCocoNut::CocoNutNrvMove::sInstance) ? 0.0f : MR::max(_8C, _150.length());
 }
 
 void CocoNut::initSensor() {
@@ -184,46 +180,16 @@ void CocoNut::initEffect() {
     MR::setEffectHostMtx(this, "SpinHitMark", _108.toMtxPtr());
 }
 
-// hell function
 void CocoNut::updateRotate(f32 a1) {
-    TMtx34f stack_38;
+    TPos3f stack_38;
     TVec3f stack_2C;
-    TVec3f stack_20;
-    TVec3f stack_14;
-    TVec3f stack_8;
+    TVec3f stack_20 = -mGravity;
 
-    negateInternalInline(mGravity, &stack_20);
     if (!MR::normalizeOrZero(mVelocity, &stack_2C) && !MR::isSameDirection(stack_2C, stack_20, 0.01f)) {
-        PSVECCrossProduct(&stack_2C, &stack_20, &stack_14);
+        TVec3f stack_14 = stack_2C.cross(stack_20);
 
-        f32 temp1 = PSVECMag(&mVelocity) * -180.0f;
-        f32 temp2 = a1 * temp1;
-        f32 f = PI_180 * (temp2 / (PI * getSize()));
-
-        stack_38.mMtx[0][3] = 0.0f;
-        stack_38.mMtx[1][3] = 0.0f;
-        stack_38.mMtx[2][3] = 0.0f;
-
-        stack_8.set(stack_14);
-        PSVECMag(&stack_8);
-        PSVECNormalize(&stack_8, &stack_8);
-
-        f32 fsin = sin(f);
-        f32 fcos = cos(f);
-        f32 rx = stack_8.x;
-        f32 ry = stack_8.y;
-        f32 rz = stack_8.z;
-        f32 fcos1 = 1.0f - fcos;
-
-        stack_38.mMtx[0][0] = (rx * rx * fcos1) + fcos;
-        stack_38.mMtx[0][1] = fcos1 * rx * ry - (fsin * rz);
-        stack_38.mMtx[0][2] = fcos1 * rx * rz + (fsin * ry);
-        stack_38.mMtx[1][0] = fcos1 * rx * ry + (fsin * rz);
-        stack_38.mMtx[1][1] = (ry * ry * fcos1) + fcos;
-        stack_38.mMtx[1][2] = fcos1 * ry * rz - (fsin * rx);
-        stack_38.mMtx[2][0] = fcos1 * rx * rz - (fsin * ry);
-        stack_38.mMtx[2][1] = fcos1 * ry * rz + (fsin * rx);
-        stack_38.mMtx[2][2] = (rz * rz * fcos1) + fcos;
+        f32 angle = (mVelocity.length() * -180.0f * a1) / (_D0 * MR::pi());
+        stack_38.makeRotate(stack_14, MR::toRadian(angle));
 
         _A0.concat(stack_38, _A0);
     }
@@ -242,7 +208,7 @@ void CocoNut::updateGravity() {
     mVelocity.add(stack_8);
 }
 
-// issues around MR::deleteEffect and PSVECNormalize calls
+// issues around MR::deleteEffect and Normalize calls
 void CocoNut::processMove() {
     TVec3f stack_2C;
     TVec3f stack_20;
@@ -290,7 +256,7 @@ void CocoNut::processMove() {
         _14C = MR::calcVelocityAreaMoveOnGround(&stack_2C, this);
         if (_14C) {
             _150.set(stack_2C);
-            _150.scaleInline(0.75f);
+            _150 * 0.75f;
         }
         _138 = 0;
         _13C = false;
@@ -306,20 +272,14 @@ void CocoNut::processMove() {
     }
 
     if (getWallNormal(&stack_20) && _94.dot(stack_20) < 0.0f) {
-        stack_14.set(_94);
-        PSVECMag(&stack_14);
-        PSVECNormalize(&stack_14, &stack_14);
-
-        stack_8.set(stack_20);
-        PSVECMag(&stack_8);
-        PSVECNormalize(&stack_8, &stack_8);
+        stack_14.normalize(_94);
+        stack_8.normalize(stack_20);
 
         f32 ok2 = -2.0f * stack_14.dot(stack_8);
-        JMAVECScaleAdd(&stack_8, &_94, &_94, ok2);
+        _94.scaleAdd(ok2, stack_8, _94);
 
-        PSVECMag(&_94);
-        PSVECNormalize(&_94, &_94);
-        _94.normalize(_94);
+        _94.normalize();
+        MR::normalize(&_94);
 
         _8C *= 0.8f;
 
@@ -331,7 +291,7 @@ void CocoNut::processMove() {
 
     bool ok = _14C && _138 < 10;
     if (!ok) {
-        _150.scaleInline(0.925f);
+        _150 * 0.925f;
     }
     mVelocity.add(_150);
     updateGravity();
@@ -399,7 +359,7 @@ bool CocoNut::tryPushedFromActor(HitSensor* pOtherSensor, HitSensor* pMySensor) 
     } else {
         f32 mySensorRadius = pMySensor->mRadius;
         f32 otherSensorRadius = pOtherSensor->mRadius;
-        if (((otherSensorRadius + mySensorRadius) - PSVECDistance(otherSensorPos, mySensorPos)) < 0.0f) {
+        if (((otherSensorRadius + mySensorRadius) - otherSensorPos->distance(*mySensorPos)) < 0.0f) {
             return false;
         }
         stack_10.sub(*otherSensorPos, *mySensorPos);
@@ -419,7 +379,7 @@ void CocoNut::reviseFrontVec() {
 
     for (int i = 0; i < eye->mSensorCount; i++) {
         sensor = eye->mSensors[i];
-        if ((sensor->isType(0x26) || sensor->isType(0x56)) && !MR::isDead(sensor->mHost)) {
+        if ((sensor->isType(ATYPE_SAMBO_BODY) || sensor->isType(ATYPE_WATER_BAZOOKA_CAPSULE)) && !MR::isDead(sensor->mHost)) {
             found_actor = sensor->mHost;
             break;
         }
@@ -439,7 +399,7 @@ void CocoNut::reviseFrontVec() {
         MR::normalize(&stack_8);
         f32 temp_f31 = stack_8.dot(_94);
         if (MR::cosDegree(15.0f) < temp_f31) {
-            JMAVECLerp(&_94, &stack_8, &_94, 0.8f);
+            _94.lerp(_94, stack_8, 0.8f);
         }
     }
 }
@@ -529,15 +489,15 @@ void CocoNut::calcHitSpeedAndFrontVec(f32* arg0, f32* arg1, TVec3f* arg2, TVec3f
     arg3->sub(arg5, arg4);
     MR::normalize(arg3);
     stack_14.set(mGravity);
-    PSVECCrossProduct(arg3, &stack_14, arg2);
+    arg2->cross(*arg3, stack_14);
     MR::normalize(arg2);
     if (MR::normalizeOrZero(mVelocity, &stack_8)) {
         stack_8.set(_94);
     }
     f32 var_f30 = stack_8.dot(*arg2);
     if (var_f30 < 0.0f) {
-        negateInternalInline(stack_14, &stack_14);
-        PSVECCrossProduct(arg3, &stack_14, arg2);
+        stack_14.negate();
+        arg2->cross(*arg3, stack_14);
         MR::normalize(arg2);
         var_f30 = stack_8.dot(*arg2);
     }
@@ -672,7 +632,7 @@ void CocoNut::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
         if (!MR::isPlayerHipDropFalling()) {
             MR::sendMsgPush(pReceiver, pSender);
         }
-    } else if (pReceiver->isType(0x17)) {
+    } else if (pReceiver->isType(ATYPE_COCO_NUT)) {
         if (MR::sendMsgPush(pReceiver, pSender)) {
             MR::startSound(this, "SE_OJ_COCONUT_HIT");
         }
@@ -689,7 +649,7 @@ bool CocoNut::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
         return false;
     }
 
-    if (pSender->isType(0x17)) {
+    if (pSender->isType(ATYPE_COCO_NUT)) {
         return tryHit(pReceiver, pSender);
     }
 
@@ -805,7 +765,7 @@ void CocoNut::statusToHide() {
 
 void CocoNut::emitEffectSpinHit(const HitSensor* pOtherSensor, const HitSensor* pMySensor) {
     TVec3f point;  // point 70% of the way between pOtherSensor and pMySensor
-    JMAVECLerp(&pOtherSensor->mPosition, &pMySensor->mPosition, &point, 0.7f);
+    point.lerp(pOtherSensor->mPosition, pMySensor->mPosition, 0.7f);
     _108.mMtx[0][0] = 1.0f;
     _108.mMtx[1][0] = 0.0f;
     _108.mMtx[2][0] = 0.0f;
@@ -813,8 +773,8 @@ void CocoNut::emitEffectSpinHit(const HitSensor* pOtherSensor, const HitSensor* 
     _108.mMtx[1][1] = 1.0f;
     _108.mMtx[2][1] = 0.0f;
     _108.mMtx[0][2] = 0.0f;
-    _108.mMtx[1][3] = 0.0f;
-    _108.mMtx[2][3] = 1.0f;
+    _108.mMtx[1][2] = 0.0f;
+    _108.mMtx[2][2] = 1.0f;
     _108.mMtx[0][3] = point.x;
     _108.mMtx[1][3] = point.y;
     _108.mMtx[2][3] = point.z;
@@ -824,8 +784,7 @@ void CocoNut::emitEffectSpinHit(const HitSensor* pOtherSensor, const HitSensor* 
 bool CocoNut::isContactWithOtherCocoNut() const {
     HitSensor* body = getSensor("body");
     for (int i = 0; i < body->mSensorCount; i++) {
-        HitSensor* sensor = body->mSensors[i];
-        if (body->mSensors[i]->isType(0x17)) {
+        if (body->mSensors[i]->isType(ATYPE_COCO_NUT)) {
             return true;
         }
     }
@@ -887,15 +846,13 @@ void CocoNut::exeInWater() {
         MR::invalidateHitSensors(this);
         MR::clearHitSensors(this);
         MR::deleteEffectAll(this);
-        TVec3f gravityNegated;
-        negateInternalInline(mGravity, &gravityNegated);
-        MR::makeMtxUpNoSupportPos(&_D8, gravityNegated, mPosition);
+        MR::makeMtxUpNoSupportPos(&_D8, -mGravity, mPosition);
         MR::emitEffect(this, "WaterColumn");
         MR::startSound(this, "SE_OJ_FALL_IN_WATER_M");
         MR::releaseSoundHandle(this, "SE_OJ_FALL_IN_WATER_M");
     }
     if (!MR::isEffectValid(this, "WaterColumn")) {
-        mPosition.set< f32 >(mSpawnPosition);
+        mPosition.set(mSpawnPosition);
         setNerve(&NrvCocoNut::CocoNutNrvReplaceReady::sInstance);
     }
 }
@@ -903,13 +860,11 @@ void CocoNut::exeInWater() {
 void CocoNut::exeBreak() {
     if (MR::isFirstStep(this)) {
         statusToHide();
-        TVec3f gravityNegated;
-        negateInternalInline(mGravity, &gravityNegated);
-        MR::makeMtxUpNoSupportPos(&_D8, gravityNegated, mPosition);
+        MR::makeMtxUpNoSupportPos(&_D8, -mGravity, mPosition);
         MR::emitEffect(this, getBreakEffectName());
     }
     if (!MR::isEffectValid(this, getBreakEffectName())) {
-        mPosition.set< f32 >(mSpawnPosition);
+        mPosition.set(mSpawnPosition);
         setNerve(&NrvCocoNut::CocoNutNrvReplaceReady::sInstance);
     }
 }

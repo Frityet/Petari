@@ -20,9 +20,11 @@ namespace nw4r {
         NW4R_UT_RUNTIME_TYPEINFO_ROOT_DEFINITION(Pane);
 
         namespace detail {
-            PaneBase::PaneBase() {}
+            PaneBase::PaneBase() {
+            }
 
-            PaneBase::~PaneBase() {}
+            PaneBase::~PaneBase() {
+            }
         }  // namespace detail
 
         Pane::Pane(const res::Pane* pRes) {
@@ -48,14 +50,16 @@ namespace nw4r {
                 PaneList::Iterator currIt = it++;
                 mChildList.Erase(currIt);
                 if (!currIt->IsUserAllocated()) {
-                    Layout::DeleteObj(&(*currIt));
+                    currIt->~Pane();
+                    Layout::FreeMemory(&*currIt);
                 }
             }
 
             UnbindAnimationSelf(0);
 
             if (mpMaterial && !mpMaterial->IsUserAllocated()) {
-                Layout::DeleteObj(mpMaterial);
+                mpMaterial->~Material();
+                Layout::FreeMemory(mpMaterial);
             }
         }
 
@@ -93,7 +97,8 @@ namespace nw4r {
             return -1;
         }
 
-        void Pane::SetVtxColor(u32 idx, ut::Color color) {}
+        void Pane::SetVtxColor(u32 idx, ut::Color color) {
+        }
 
         u8 Pane::GetColorElement(u32 idx) const {
             switch (idx) {
@@ -125,7 +130,8 @@ namespace nw4r {
             return 0xFF;
         }
 
-        void Pane::SetVtxColorElement(u32 idx, u8 value) {}
+        void Pane::SetVtxColorElement(u32 idx, u8 value) {
+        }
 
         Pane* Pane::FindPaneByName(const char* pName, bool recursive) {
             if (detail::EqualsResName(mName, pName)) {
@@ -134,7 +140,7 @@ namespace nw4r {
 
             if (recursive) {
                 for (PaneList::Iterator it = mChildList.GetBeginIter(); it != mChildList.GetEndIter(); ++it) {
-                    if (Pane* pPane = it->FindPaneByName(pName, recursive)) {
+                    if (Pane* pPane = it->FindPaneByName(pName, true)) {
                         return pPane;
                     }
                 }
@@ -150,7 +156,7 @@ namespace nw4r {
 
             if (recursive) {
                 for (PaneList::Iterator it = mChildList.GetBeginIter(); it != mChildList.GetEndIter(); ++it) {
-                    if (Material* pMat = it->FindMaterialByName(pName, recursive)) {
+                    if (Material* pMat = it->FindMaterialByName(pName, true)) {
                         return pMat;
                     }
                 }
@@ -236,7 +242,8 @@ namespace nw4r {
             }
         }
 
-        void Pane::DrawSelf(const DrawInfo& rInfo) {}
+        void Pane::DrawSelf(const DrawInfo& rInfo) {
+        }
 
         void Pane::Animate(u32 option) {
             AnimateSelf(option);

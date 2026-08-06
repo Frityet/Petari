@@ -1,7 +1,7 @@
 #include "Game/MapObj/FloaterFloatingForceTypeNormal.hpp"
-#include "Game/LiveActor/Spine.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/FloaterFunction.hpp"
-#include "Game/Util/MapPartsUtil.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvFloaterFloatingForceTypeNormal {
     NEW_NERVE(HostTypeWait, FloaterFloatingForceTypeNormal, Wait);
@@ -102,7 +102,8 @@ void FloaterFloatingForceTypeNormal::exeMove() {
     }
 }
 
-FloaterFloatingForceTypeNormal::~FloaterFloatingForceTypeNormal() {}
+FloaterFloatingForceTypeNormal::~FloaterFloatingForceTypeNormal() {
+}
 
 const TVec3f& FloaterFloatingForceTypeNormal::getCurrentVelocity() const {
     return mVelocity;

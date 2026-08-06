@@ -1,5 +1,7 @@
 #include "Game/MapObj/CrystalSwitch.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 /* Note -- this file was compiled super early on in the game's life, so it was compiled under -O2 where the release build is -O4,p. Keep this in mind!
  */
@@ -45,7 +47,7 @@ void CrystalSwitch::control() {
 
 void CrystalSwitch::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
-        pReceiver->receiveMessage(41, pSender);
+        pReceiver->receiveMessage(ACTMES_PUSH, pSender);
     }
 }
 
@@ -140,4 +142,5 @@ void CrystalSwitch::calcRotSpeed() {
     }
 }
 
-CrystalSwitch::~CrystalSwitch() {}
+CrystalSwitch::~CrystalSwitch() {
+}

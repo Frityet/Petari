@@ -1,35 +1,32 @@
 #include "Game/Player/FireMarioBall.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/GravityUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
-#include "revolution/types.h"
 
 namespace {
     f32 cSensorRadius = 80.0f;
     f32 cBinderRadius = 50.0f;
-    f32 cThrowSpeed = 30.0f;
     f32 cForceKillDistance = 3000.0f;
     f32 cBoundReduction = 0.9f;
     f32 cGravityAcc = 2.0f;
+    f32 cThrowSpeed = 30.0f;
 };  // namespace
 
 namespace NrvFireMarioBall {
     NEW_NERVE(FireMarioBallNrvThrow, FireMarioBall, Throw);
 };  // namespace NrvFireMarioBall
 
-FireMarioBall::~FireMarioBall() {}
+FireMarioBall::~FireMarioBall() {
+}
 
 FireMarioBall::FireMarioBall(const char* pName) : LiveActor(pName) {
     _8C = 0;
@@ -39,7 +36,7 @@ void FireMarioBall::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm("MarioFireBall", 0, false);
     MR::connectToSceneEnemyDecoration(this);
     initSensor();
-    initBinder(cBinderRadius, 0.0f, 0);
+    initBinder(::cBinderRadius, 0.0f, 0);
     initEffectKeeper(4, "MarioFireBall", false);
     initSound(4, false);
     MR::initShadowVolumeCylinder(this, 25.0f);
@@ -66,9 +63,9 @@ void FireMarioBall::kill() {
 
 void FireMarioBall::appearAndThrow(const TVec3f& v1, const TVec3f& v2) {
     mPosition.set< f32 >(v1);
-    mVelocity.set< f32 >(v2 * cThrowSpeed);
-    mRotation.set< f32 >(0.0f, 57.295776f * JMath::sAtanTable.atan2_(mVelocity.x, mVelocity.z), 0.0f);
-    MR::tryRumblePadWeak(this, 0);
+    mVelocity.set< f32 >(v2 * ::cThrowSpeed);
+    mRotation.set< f32 >(0.0f, MR::toDegree(MR::atan2(mVelocity.x, mVelocity.z)), 0.0f);
+    MR::tryRumblePadWeak(this, WPAD_CHAN0);
     appear();
 }
 
@@ -80,7 +77,7 @@ void FireMarioBall::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
 
 bool FireMarioBall::attackFire(HitSensor* pReceiver) {
     if (MR::sendArbitraryMsg(ACTMES_FIREBALL_ATTACK, pReceiver, getSensor("body"))) {
-        MR::tryRumblePadMiddle(this, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         kill();
 
         return true;
@@ -91,7 +88,7 @@ bool FireMarioBall::attackFire(HitSensor* pReceiver) {
 
 void FireMarioBall::initSensor() {
     initHitSensor(1);
-    MR::addHitSensorEnemy(this, "body", 8, cSensorRadius, TVec3f(0.0f, 0.0f, 0.0f));
+    MR::addHitSensorEnemy(this, "body", 8, ::cSensorRadius, TVec3f(0.0f, 0.0f, 0.0f));
 }
 
 HitSensor* FireMarioBall::isBindedAny() const {
@@ -124,7 +121,7 @@ bool FireMarioBall::tryToKill() {
     } else {
         _90 = 0;
     }
-    if (!MR::isNearPlayer(this, cForceKillDistance)) {
+    if (!MR::isNearPlayer(this, ::cForceKillDistance)) {
         kill();
         return true;
     }
@@ -146,16 +143,16 @@ void FireMarioBall::exeThrow() {
     if (MR::isBindedGround(this)) {
         MR::startSound(this, "SE_OJ_MARIO_FIRE_BALL_BOUND");
         const TVec3f* v1 = MR::getGroundNormal(this);
-        mVelocity += -*v1 * MR::vecKillElement(mVelocity, *v1, &mVelocity) * cBoundReduction;
+        mVelocity += -*v1 * MR::vecKillElement(mVelocity, *v1, &mVelocity) * ::cBoundReduction;
 
     } else if (MR::isBindedRoof(this)) {
         MR::startSound(this, "SE_OJ_MARIO_FIRE_BALL_BOUND");
         const TVec3f* v2 = MR::getRoofNormal(this);
-        mVelocity += -*v2 * MR::vecKillElement(mVelocity, *v2, &mVelocity) * cBoundReduction;
+        mVelocity += -*v2 * MR::vecKillElement(mVelocity, *v2, &mVelocity) * ::cBoundReduction;
     } else {
         TVec3f grav;
         MR::calcGravityVector(this, &grav, nullptr, 0);
-        mVelocity += grav * cGravityAcc;
+        mVelocity += grav * ::cGravityAcc;
     }
     if (!tryToKill() && getNerveStep() >= 300) {
         kill();

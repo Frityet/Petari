@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Game/Map/RailPart.hpp"
-#include "Game/Util.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
+#include <JSystem/JGeometry/TVec.hpp>
+#include <revolution/types.h>
+
+class JMapInfo;
+class JMapInfoIter;
 
 class BezierRailPart {
 public:
-    inline BezierRailPart() {}
+    BezierRailPart() {
+    }
 
     void set(const TVec3f&, const TVec3f&, const TVec3f&, const TVec3f&);
     void calcPos(TVec3f*, f32) const;
@@ -49,7 +53,9 @@ public:
 
     f32 getTotalLength() const;
 
-    inline RailPart* getRailPart(s32 idx) const { return &mRailParts[idx]; }
+    inline RailPart* getRailPart(s32 idx) const {
+        return &mRailParts[idx];
+    }
 
     /* 0x00 */ bool mIsClosed;
     /* 0x04 */ s32 mPointNum;

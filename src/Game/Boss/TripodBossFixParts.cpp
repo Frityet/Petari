@@ -1,10 +1,17 @@
 #include "Game/Boss/TripodBossFixParts.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
 #include "Game/Boss/TripodBossFixPartsBase.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapPartsUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 
 namespace NrvTripodBossFixParts {
     NEW_NERVE(TripodBossFixPartsNrvNonActive, TripodBossFixParts, NonActive);
@@ -53,7 +60,7 @@ void TripodBossFixParts::init(const JMapInfoIter& rIter) {
     setName(objName);
     TripodBossFixPartsBase::init(rIter);
     bool val = false;
-    TripodBossSetting* setting = getSetting(objName);
+    TripodBossSetting* setting = ::getSetting(objName);
 
     if (setting != nullptr) {
         val = (setting->mType & 0x1);
@@ -123,19 +130,19 @@ void TripodBossFixParts::kill() {
     case 1:
         MR::emitEffect(this, "ExplosionM");
         MR::startSound(this, "SE_BM_TRIPOD_KILL_M");
-        MR::tryRumblePadVeryWeak(this, 0);
+        MR::tryRumblePadVeryWeak(this, WPAD_CHAN0);
         break;
     case 2:
         MR::emitEffect(this, "ExplosionM");
         MR::startSound(this, "SE_BM_TRIPOD_KILL_M");
         MR::shakeCameraVeryWeak();
-        MR::tryRumblePadMiddle(this, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         break;
     case 3:
         MR::emitEffect(this, "ExplosionL");
         MR::startSound(this, "SE_BM_TRIPOD_KILL_L");
         MR::shakeCameraStrong();
-        MR::tryRumblePadVeryStrong(this, 0);
+        MR::tryRumblePadVeryStrong(this, WPAD_CHAN0);
         break;
     }
 
@@ -222,8 +229,11 @@ void TripodBossFixParts::exeBreak() {
     }
 }
 
-void TripodBossFixParts::exeNonActive() {}
+void TripodBossFixParts::exeNonActive() {
+}
 
-TripodBossFixParts::~TripodBossFixParts() {}
+TripodBossFixParts::~TripodBossFixParts() {
+}
 
-void TripodBossFixParts::exeWaitOwn() {}
+void TripodBossFixParts::exeWaitOwn() {
+}

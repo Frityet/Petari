@@ -1,9 +1,9 @@
+#include "Game/System/GameSystemErrorWatcher.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/BatteryInfo.hpp"
 #include "Game/Screen/ErrorMessageWindow.hpp"
-#include "Game/System/GameSystemErrorWatcher.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadHolder.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -58,20 +58,10 @@ namespace {
     NEW_NERVE(GameSystemErrorWatcherErrorWindowOut, GameSystemErrorWatcher, ErrorWindowOut);
 };  // namespace
 
-GameSystemErrorWatcher::GameSystemErrorWatcher() :
-    NerveExecutor("ErrorWatcher"),
-    mWindow(nullptr),
-    mMessage(nullptr),
-    mUnplaggedTexMap(nullptr),
-    mBatteryLayout(nullptr),
-    mDriveStatus(DVD_STATE_END),
-    _1C(nullptr),
-    mWiiRemoteStatus(WII_REMOTE_STATUS_OK),
-    mCounterIgnoreCheckFreeStyle(0),
-    mCounterDecideDisconnect(sCounterMaxDecideDisconnect),
-    mWiiRemoteBattery(WPAD_BATTERY_LEVEL_MAX),
-    mPermissionUpdateWiiRemoteStatus(false)
-{
+GameSystemErrorWatcher::GameSystemErrorWatcher()
+    : NerveExecutor("ErrorWatcher"), mWindow(nullptr), mMessage(nullptr), mUnplaggedTexMap(nullptr), mBatteryLayout(nullptr),
+      mDriveStatus(DVD_STATE_END), _1C(nullptr), mWiiRemoteStatus(WII_REMOTE_STATUS_OK), mCounterIgnoreCheckFreeStyle(0),
+      mCounterDecideDisconnect(::sCounterMaxDecideDisconnect), mWiiRemoteBattery(WPAD_BATTERY_LEVEL_MAX), mPermissionUpdateWiiRemoteStatus(false) {
     mWindow = new ErrorMessageWindow();
     mWindow->initWithoutIter();
 
@@ -126,8 +116,7 @@ bool GameSystemErrorWatcher::setPermissionUpdateWiiRemoteStatus(bool permission)
         if (mBatteryLayout != nullptr && MR::isDead(mBatteryLayout)) {
             mBatteryLayout->appear();
         }
-    }
-    else {
+    } else {
         mWiiRemoteStatus = WII_REMOTE_STATUS_OK;
 
         if (mBatteryLayout != nullptr && !MR::isDead(mBatteryLayout)) {
@@ -191,8 +180,7 @@ void GameSystemErrorWatcher::exeErrorWindowOut() {
             mMessage = pMessage;
 
             setNerve(&GameSystemErrorWatcherErrorWindowIn::sInstance);
-        }
-        else {
+        } else {
             if (AudWrap::getSystem() != nullptr) {
                 AudWrap::getSystem()->exitDvdErrorProcess();
             }
@@ -220,16 +208,15 @@ void GameSystemErrorWatcher::updateWiiRemoteStatus() {
         }
 
         if (_1C->getLevel()) {
-            mCounterDecideDisconnect = sCounterMaxDecideDisconnect;
-        }
-        else if (mCounterDecideDisconnect != 0) {
+            mCounterDecideDisconnect = ::sCounterMaxDecideDisconnect;
+        } else if (mCounterDecideDisconnect != 0) {
             mCounterDecideDisconnect--;
         }
 
         isWaitDecideDisconnect = mCounterDecideDisconnect != 0;
 
         if (_1C->getOnTrigger()) {
-            mCounterIgnoreCheckFreeStyle = sCounterMaxIgnoreCheckFreeStyle;
+            mCounterIgnoreCheckFreeStyle = ::sCounterMaxIgnoreCheckFreeStyle;
         }
 
         if (mCounterIgnoreCheckFreeStyle != 0) {
@@ -245,8 +232,7 @@ void GameSystemErrorWatcher::updateWiiRemoteStatus() {
             if (!isWaitDecideDisconnect) {
                 if (mWiiRemoteBattery <= WPAD_BATTERY_LEVEL_LOW) {
                     mWiiRemoteStatus = WII_REMOTE_STATUS_NO_BATTERY;
-                }
-                else {
+                } else {
                     mWiiRemoteStatus = WII_REMOTE_STATUS_DISCONNECT;
                 }
 
@@ -263,22 +249,22 @@ void GameSystemErrorWatcher::updateWiiRemoteStatus() {
 const GameSystemErrorWatcher::Message* GameSystemErrorWatcher::getProperMessageId() const {
     switch (mDriveStatus) {
     case DVD_STATE_FATAL_ERROR:
-        return &cMessageFatalError;
+        return &::cMessageFatalError;
     case DVD_STATE_NO_DISK:
-        return &cMessageNoDisk;
+        return &::cMessageNoDisk;
     case DVD_STATE_WRONG_DISK:
-        return &cMessageWrongDisk;
+        return &::cMessageWrongDisk;
     case DVD_STATE_RETRY:
-        return &cMessageRetry;
+        return &::cMessageRetry;
     }
 
     switch (mWiiRemoteStatus) {
     case WII_REMOTE_STATUS_UNPLAGGED:
-        return &cMessageUnplagged;
+        return &::cMessageUnplagged;
     case WII_REMOTE_STATUS_DISCONNECT:
-        return &cMessageDisconnect;
+        return &::cMessageDisconnect;
     case WII_REMOTE_STATUS_NO_BATTERY:
-        return &cMessageNoBattery;
+        return &::cMessageNoBattery;
     default:
         return nullptr;
     }

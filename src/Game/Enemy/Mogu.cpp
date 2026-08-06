@@ -2,7 +2,6 @@
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/MoguStone.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
@@ -11,7 +10,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/FixedPosition.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -21,7 +19,6 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMath.hpp"
 #include <math_types.hpp>
 
@@ -71,7 +68,7 @@ void Mogu::init(const JMapInfoIter& rIter) {
 
     TPos3f mtx;
     mtx.setInline(getBaseMtx());
-    mtx.getYDirInline(_A8);
+    mtx.getYDir(_A8);
 
     MR::connectToSceneEnemy(this);
     MR::declareStarPiece(this, 3);
@@ -253,9 +250,9 @@ void Mogu::exeSearch() {
 
     f32 sightParam;
     if (mIsCannonFleet) {
-        sightParam = hCannonFleetSightParam[0];
+        sightParam = ::hCannonFleetSightParam[0];
     } else {
-        sightParam = hThrowableSightParam[0];
+        sightParam = ::hThrowableSightParam[0];
     }
 
     if (distanceToPlayer < 400.0f || isPlayerExistUp()) {
@@ -281,9 +278,9 @@ void Mogu::exeSearch() {
     }
 
     if (!MR::isValidSwitchA(this) || MR::isOnSwitchA(this)) {
-        const f32* sight2 = hThrowableSightParam;
+        const f32* sight2 = ::hThrowableSightParam;
         if (mIsCannonFleet) {
-            sight2 = hCannonFleetSightParam;
+            sight2 = ::hCannonFleetSightParam;
         }
 
         if (MR::isInSightFanPlayer(this, mSight, sight2[0], sight2[1], sight2[2]) && MR::isGreaterStep(this, 45) && MR::isDead(mStone)) {
@@ -473,18 +470,18 @@ bool Mogu::isNearPlayerHipDrop() {
     return 130.0f < distanceToPlayer && distanceToPlayer < 1500.0f;
 }
 
-void Mogu::attackSensor(HitSensor* pHitSensor1, HitSensor* pHitSensor2) {
-    if (pHitSensor1 != getSensor("body") || isNerve(&NrvMogu::HostTypeNrvHideWait::sInstance) || isNerve(&NrvMogu::HostTypeNrvHide::sInstance) ||
+void Mogu::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
+    if (pSender != getSensor("body") || isNerve(&NrvMogu::HostTypeNrvHideWait::sInstance) || isNerve(&NrvMogu::HostTypeNrvHide::sInstance) ||
         isNerve(&NrvMogu::HostTypeNrvStampDeath::sInstance) || isNerve(&NrvMogu::HostTypeNrvHitBlow::sInstance)) {
         return;
     }
 
-    if (MR::isSensorPlayer(pHitSensor2)) {
-        MR::sendMsgPush(pHitSensor2, pHitSensor1);
+    if (MR::isSensorPlayer(pReceiver)) {
+        MR::sendMsgPush(pReceiver, pSender);
     }
 }
 
-bool Mogu::receiveMsgPlayerAttack(u32 msg, HitSensor* pSensor1, HitSensor* pSensor2) {
+bool Mogu::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgStarPieceAttack(msg)) {
         if (isNerve(&NrvMogu::HostTypeNrvSwoonStart::sInstance) || isNerve(&NrvMogu::HostTypeNrvSwoonEnd::sInstance) ||
             isNerve(&NrvMogu::HostTypeNrvSwoon::sInstance) || isNerve(&NrvMogu::HostTypeNrvHipDropReaction::sInstance)) {
@@ -501,7 +498,7 @@ bool Mogu::receiveMsgPlayerAttack(u32 msg, HitSensor* pSensor1, HitSensor* pSens
             isNerve(&NrvMogu::HostTypeNrvStampDeath::sInstance) || isNerve(&NrvMogu::HostTypeNrvHitBlow::sInstance)) {
             return false;
         } else {
-            return tryPunchHitted(pSensor1, pSensor2, true);
+            return tryPunchHitted(pSender, pReceiver, true);
         }
     }
 
@@ -516,33 +513,28 @@ bool Mogu::receiveMsgPlayerAttack(u32 msg, HitSensor* pSensor1, HitSensor* pSens
     }
 
     if (MR::isMsgPlayerSpinAttack(msg)) {
-        return tryPunchHitted(pSensor1, pSensor2, true);
+        return tryPunchHitted(pSender, pReceiver, true);
     }
 
     return false;
 }
 
 void Mogu::calcAndSetBaseMtx() {
-    TPos3f p1;
-    MR::makeMtxUpFrontPos(&p1, _A8, mSight, mPosition);
-    MR::setBaseTRMtx(this, p1);
-    TVec3f v2;
-    // f0 f1 regswap
-    JMathInlineVEC::PSVECMultiply(&mAnimScaleController->_C, &mScale, &v2);
-    MR::setBaseScale(this, v2);
+    TPos3f mtx;
+    MR::makeMtxUpFrontPos(&mtx, _A8, mSight, mPosition);
+    MR::setBaseTRMtx(this, mtx);
+    TVec3f scale = mAnimScaleController->_C * mScale;
+    MR::setBaseScale(this, scale);
 
     if (isNerve(&NrvMogu::HostTypeNrvThrow::sInstance) && MR::isLessStep(this, 47)) {
         _90->calc();
-        f32 z = _90->mMtx[2][3];
-        f32 y = _90->mMtx[1][3];
-        f32 x = _90->mMtx[0][3];
-        mStone->mPosition.set< f32 >(x, y, z);
+        _90->mMtx.getTrans(mStone->mPosition);
     }
 }
 
-bool Mogu::tryPunchHitted(HitSensor* pSensor1, HitSensor* pSensor2, bool arg3) {
-    TVec3f direction(pSensor2->mPosition);
-    direction -= pSensor1->mPosition;
+bool Mogu::tryPunchHitted(HitSensor* pSender, HitSensor* pReceiver, bool arg3) {
+    TVec3f direction(pReceiver->mPosition);
+    direction -= pSender->mPosition;
     MR::vecKillElement(direction, mGravity, &direction);
     MR::normalizeOrZero(&direction);
     if (MR::isNearZero(direction)) {
@@ -552,7 +544,7 @@ bool Mogu::tryPunchHitted(HitSensor* pSensor1, HitSensor* pSensor2, bool arg3) {
         TVec3f gravity(mGravity);
         gravity *= 50.0f;
         direction -= gravity;
-        mVelocity.setPS2(direction);
+        mVelocity = direction;
 
         if (MR::isOnGround(this)) {
             // r3 r4 order swap

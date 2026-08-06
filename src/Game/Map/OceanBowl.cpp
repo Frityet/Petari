@@ -1,22 +1,22 @@
 #include "Game/Map/OceanBowl.hpp"
-#include "Game/Map/OceanBowlPoint.hpp"
 #include "Game/Map/OceanBowlBloomDrawer.hpp"
+#include "Game/Map/OceanBowlPoint.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util.hpp"
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JGeometry/TMatrix.hpp>
-#include <JSystem/JMath/JMath.hpp>
 #include <JSystem/JMath/JMATrigonometric.hpp>
+#include <JSystem/JMath/JMath.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
+#include <cmath>
 #include <math_types.hpp>
 #include <revolution/gd/GDBase.h>
 #include <revolution/gx.h>
 #include <revolution/gx/GXVert.h>
 #include <revolution/mtx.h>
 #include <revolution/os/OSCache.h>
-#include <cmath>
 
 // These are from the debug symbol map
 namespace {
@@ -41,11 +41,11 @@ namespace {
     static GXColor sOceanBowlTevReg1 = {0xC8, 0xE6, 0xD2, 0xFF};
     static u8 sOceanBowlBloomTevReg0V = 0x5F;
     static u8 sOceanBowlBloomTevReg1V = 0x32;
-} // namespace
+};  // namespace
 
-OceanBowl::OceanBowl(const char* pName) : LiveActor(pName),
-    mSide(1.0f, 0.0f, 0.0f), mUp(0.0f, 1.0f, 0.0f), mFront(0.0f, 0.0f, 1.0f), mRadius(0.0f), mWaveX(0.0f), mWaveZ(0.0f),
-    mTexU0(0.0f), mTexV0(0.0f), mTexU1(0.0f), mTexV1(0.0f), mTexU2(0.0f), mTexV2(0.0f), _A98(0.041666667f) {
+OceanBowl::OceanBowl(const char* pName)
+    : LiveActor(pName), mSide(1.0f, 0.0f, 0.0f), mUp(0.0f, 1.0f, 0.0f), mFront(0.0f, 0.0f, 1.0f), mRadius(0.0f), mWaveX(0.0f), mWaveZ(0.0f),
+      mTexU0(0.0f), mTexV0(0.0f), mTexU1(0.0f), mTexV1(0.0f), mTexU2(0.0f), mTexV2(0.0f), _A98(0.041666667f) {
     mVtxTex0Array = nullptr;
     mVtxTex1Array = nullptr;
     mVtxTex2Array = nullptr;
@@ -80,11 +80,11 @@ void OceanBowl::init(const JMapInfoIter& rIter) {
 }
 
 bool OceanBowl::isInWater(const TVec3f& rPos) const {
-    if (PSVECDistance(&rPos, &mPosition) > mRadius) {
+    if (rPos.distance(mPosition) > mRadius) {
         return false;
     }
 
-    return !(mUp.dot(rPos.subOperatorInLine(mPosition)) > 0.0f);
+    return !(mUp.dot(rPos - mPosition) > 0.0f);
 }
 
 bool OceanBowl::calcWaterInfo(const TVec3f& rPos, const TVec3f& rGravity, WaterInfo* pInfo) const {
@@ -98,7 +98,7 @@ bool OceanBowl::calcWaterInfo(const TVec3f& rPos, const TVec3f& rGravity, WaterI
     fb *= PI;
     fb *= 0.5f;
 
-    pInfo->_4 = JMath::sSinCosTable.cosLapRad(fb) * B0;
+    pInfo->_4 = MR::cos(fb) * B0;
     pInfo->_4 += fa;
 
     pInfo->mCamWaterDepth = -fa;
@@ -110,8 +110,8 @@ bool OceanBowl::calcWaterInfo(const TVec3f& rPos, const TVec3f& rGravity, WaterI
 
     pInfo->mSurfaceNormal.set(mUp);
 
-    MR::vecKillElement(rPos.subOperatorInLine(*position), mUp, &v3);
-    pInfo->mSurfacePos.set(position->addOperatorInLine(v3));
+    MR::vecKillElement(rPos - *position, mUp, &v3);
+    pInfo->mSurfacePos.set(*position + v3);
 
     TVec3f v5(rPos);
     v5.sub(mPosition);
@@ -129,7 +129,7 @@ bool OceanBowl::calcWaterInfo(const TVec3f& rPos, const TVec3f& rGravity, WaterI
         MR::normalize(&v5);
         v5.scale(B0);
         v5.add(mPosition);
-        pInfo->mEdgeDistance = PSVECDistance(&v5, &rPos);
+        pInfo->mEdgeDistance = v5.distance(rPos);
         pInfo->mEdgePos.set(v5);
     }
 
@@ -140,7 +140,7 @@ void OceanBowl::movement() {
     const TVec3f* position = &getPoint(12, 12)->mPosition;
     f32 distToPlayer = MR::calcDistanceToPlayer(mPosition);
 
-    if ((MR::isCameraInWater() && WaterAreaFunction::getCameraWaterInfo()->mOceanBowl != this) || distToPlayer > sClippingDistance + mRadius) {
+    if ((MR::isCameraInWater() && WaterAreaFunction::getCameraWaterInfo()->mOceanBowl != this) || distToPlayer > ::sClippingDistance + mRadius) {
         mIsClipped = true;
         return;
     }
@@ -151,26 +151,26 @@ void OceanBowl::movement() {
     f32 dotA = mSide.dot(playerpos);
     f32 dotB = mFront.dot(playerpos);
 
-    if (dotA < -sPointIntervalHalf && dotA > -mRadius) {
+    if (dotA < -::sPointIntervalHalf && dotA > -mRadius) {
         moveToLeft();
-    } else if (dotA > sPointIntervalHalf && dotA < mRadius) {
+    } else if (dotA > ::sPointIntervalHalf && dotA < mRadius) {
         moveToRight();
-    } else if (dotB < -sPointIntervalHalf && dotB > -mRadius) {
+    } else if (dotB < -::sPointIntervalHalf && dotB > -mRadius) {
         moveToUpper();
-    } else if (dotB > sPointIntervalHalf && dotB < mRadius) {
+    } else if (dotB > ::sPointIntervalHalf && dotB < mRadius) {
         moveToLower();
     }
 
-    mWaveX += sWaveSpeed0;
-    mWaveZ += sWaveSpeed1;
+    mWaveX += ::sWaveSpeed0;
+    mWaveZ += ::sWaveSpeed1;
     updatePoints();
 
-    mTexU0 = MR::repeat(mTexU0 + sTexSpeedU0, 0.0f, 1.0f);
-    mTexV0 = MR::repeat(mTexV0 + sTexSpeedV0, 0.0f, 1.0f);
-    mTexU1 = MR::repeat(mTexU1 + sTexSpeedU1, 0.0f, 1.0f);
-    mTexV1 = MR::repeat(mTexV1 + sTexSpeedV1, 0.0f, 1.0f);
-    mTexU2 = MR::repeat(mTexU2 + sTexSpeedU2, 0.0f, 1.0f);
-    mTexV2 = MR::repeat(mTexV2 + sTexSpeedV2, 0.0f, 1.0f);
+    mTexU0 = MR::repeat(mTexU0 + ::sTexSpeedU0, 0.0f, 1.0f);
+    mTexV0 = MR::repeat(mTexV0 + ::sTexSpeedV0, 0.0f, 1.0f);
+    mTexU1 = MR::repeat(mTexU1 + ::sTexSpeedU1, 0.0f, 1.0f);
+    mTexV1 = MR::repeat(mTexV1 + ::sTexSpeedV1, 0.0f, 1.0f);
+    mTexU2 = MR::repeat(mTexU2 + ::sTexSpeedU2, 0.0f, 1.0f);
+    mTexV2 = MR::repeat(mTexV2 + ::sTexSpeedV2, 0.0f, 1.0f);
 }
 
 void OceanBowl::initPoints() {
@@ -178,8 +178,8 @@ void OceanBowl::initPoints() {
         for (s32 y = 0; y < 25; y++) {
             TVec3f vecA(mSide);
             TVec3f vecB(mFront);
-            vecA.scale(((static_cast<f32>(y) * sPointInterval) - 2500.0f) + sPointIntervalHalf);
-            vecB.scale(((static_cast<f32>(x) * sPointInterval) - 2500.0f) + sPointIntervalHalf);
+            vecA.scale(((static_cast< f32 >(y) * ::sPointInterval) - 2500.0f) + ::sPointIntervalHalf);
+            vecB.scale(((static_cast< f32 >(x) * ::sPointInterval) - 2500.0f) + ::sPointIntervalHalf);
             TVec3f finalpos(mPosition);
             finalpos.add(vecA);
             finalpos.add(vecB);
@@ -195,13 +195,13 @@ void OceanBowl::initPoints() {
 
     s32 index = 0;
 
-    f32 f5 = sTexRate0;
+    f32 f5 = ::sTexRate0;
     f32 f6 = 0.0f;
 
-    f32 f7 = sTexRate1;
+    f32 f7 = ::sTexRate1;
     f32 f8 = 0.0f;
 
-    f32 f9 = sTexRate2;
+    f32 f9 = ::sTexRate2;
     f32 f10 = 0.0f;
 
     f32 f11 = 0.0f;
@@ -217,19 +217,19 @@ void OceanBowl::initPoints() {
             mVtxTex0Array[index + 1] = r13;
             mVtxTex0Array[index + 2] = f6;
             mVtxTex0Array[index + 3] = r13;
-            r13 += sTexRate0;
+            r13 += ::sTexRate0;
 
             mVtxTex1Array[index + 0] = f7;
             mVtxTex1Array[index + 1] = r28;
             mVtxTex1Array[index + 2] = f8;
             mVtxTex1Array[index + 3] = r28;
-            r28 += sTexRate1;
+            r28 += ::sTexRate1;
 
             mVtxTex2Array[index + 0] = f9;
             mVtxTex2Array[index + 1] = r29;
             mVtxTex2Array[index + 2] = f10;
             mVtxTex2Array[index + 3] = r29;
-            r29 += sTexRate2;
+            r29 += ::sTexRate2;
 
             mVtxTex3Array[index + 0] = f12;
             mVtxTex3Array[index + 1] = r30;
@@ -243,9 +243,9 @@ void OceanBowl::initPoints() {
         f8 = f7;
         f10 = f9;
         f11 = f12;
-        f5 += sTexRate0;
-        f7 += sTexRate1;
-        f9 += sTexRate2;
+        f5 += ::sTexRate0;
+        f7 += ::sTexRate1;
+        f9 += ::sTexRate2;
         f12 += _A98;
     }
 }
@@ -273,11 +273,11 @@ void OceanBowl::moveToLeft() {
         TVec3f resetvec(mSide);
         resetvec.scale(-200.0f);
         resetvec.add(getPoint(x, 1)->mPosition);
-        mLastPoint->reset(resetvec, MR::clamp((mRadius - PSVECDistance(position, &resetvec)) / sPointWaveRateDistMax, 0.0f, 1.0f));
+        mLastPoint->reset(resetvec, MR::clamp((mRadius - position->distance(resetvec)) / ::sPointWaveRateDistMax, 0.0f, 1.0f));
     }
-    mTexV0 -= sTexRate0;
-    mTexV1 -= sTexRate1;
-    mTexV2 -= sTexRate2;
+    mTexV0 -= ::sTexRate0;
+    mTexV1 -= ::sTexRate1;
+    mTexV2 -= ::sTexRate2;
 }
 
 void OceanBowl::moveToRight() {
@@ -293,13 +293,13 @@ void OceanBowl::moveToRight() {
         setPoint(x, 24, mLastPoint);
 
         TVec3f resetvec(mSide);
-        resetvec.scale(sPointInterval);
+        resetvec.scale(::sPointInterval);
         resetvec.add(getPoint(x, 23)->mPosition);
-        mLastPoint->reset(resetvec, MR::clamp((mRadius - PSVECDistance(position, &resetvec)) / sPointWaveRateDistMax, 0.0f, 1.0f));
+        mLastPoint->reset(resetvec, MR::clamp((mRadius - position->distance(resetvec)) / ::sPointWaveRateDistMax, 0.0f, 1.0f));
     }
-    mTexV0 += sTexRate0;
-    mTexV1 += sTexRate1;
-    mTexV2 += sTexRate2;
+    mTexV0 += ::sTexRate0;
+    mTexV1 += ::sTexRate1;
+    mTexV2 += ::sTexRate2;
 }
 
 void OceanBowl::moveToUpper() {
@@ -315,13 +315,13 @@ void OceanBowl::moveToUpper() {
         setPoint(0, y, mLastPoint);
 
         TVec3f resetvec(mFront);
-        resetvec.scale(-sPointInterval);
+        resetvec.scale(-::sPointInterval);
         resetvec.add(getPoint(1, y)->mPosition);
-        mLastPoint->reset(resetvec, MR::clamp((mRadius - PSVECDistance(position, &resetvec)) / sPointWaveRateDistMax, 0.0f, 1.0f));
+        mLastPoint->reset(resetvec, MR::clamp((mRadius - position->distance(resetvec)) / ::sPointWaveRateDistMax, 0.0f, 1.0f));
     }
-    mTexU0 -= sTexRate0;
-    mTexU1 -= sTexRate1;
-    mTexU2 -= sTexRate2;
+    mTexU0 -= ::sTexRate0;
+    mTexU1 -= ::sTexRate1;
+    mTexU2 -= ::sTexRate2;
 }
 
 void OceanBowl::moveToLower() {
@@ -337,13 +337,13 @@ void OceanBowl::moveToLower() {
         setPoint(24, y, mLastPoint);
 
         TVec3f resetvec(mFront);
-        resetvec.scale(sPointInterval);
+        resetvec.scale(::sPointInterval);
         resetvec.add(getPoint(23, y)->mPosition);
-        mLastPoint->reset(resetvec, MR::clamp((mRadius - PSVECDistance(position, &resetvec)) / sPointWaveRateDistMax, 0.0f, 1.0f));
+        mLastPoint->reset(resetvec, MR::clamp((mRadius - position->distance(resetvec)) / ::sPointWaveRateDistMax, 0.0f, 1.0f));
     }
-    mTexU0 += sTexRate0;
-    mTexU1 += sTexRate1;
-    mTexU2 += sTexRate2;
+    mTexU0 += ::sTexRate0;
+    mTexU1 += ::sTexRate1;
+    mTexU2 += ::sTexRate2;
 }
 
 void OceanBowl::draw() const {
@@ -356,7 +356,7 @@ void OceanBowl::draw() const {
     u16 zero = 0;
     u16 one = 1;
     for (s32 x = 0; x < 24; x++) {
-        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 0x32);
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 50);
         for (s32 y = 0; y < 25; y++) {
             pPoint2 = getPoint(x, y);
             OceanBowlPoint* pPoint = getPoint(x + 1, y);
@@ -373,6 +373,7 @@ void OceanBowl::draw() const {
             zero += 2;
             one += 2;
         }
+        GXEnd();
     }
 }
 
@@ -436,11 +437,11 @@ void OceanBowl::loadMaterial() const {
         GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
         GXSetTevIndWarp(GX_TEVSTAGE3, GX_INDTEXSTAGE0, 1, 0, GX_ITM_0);
         f32 indmtx[2][3];
-        indmtx[0][0] = sIndirectScale;
+        indmtx[0][0] = ::sIndirectScale;
         indmtx[0][1] = 0.0f;
         indmtx[0][2] = 0.0f;
         indmtx[1][0] = 0.0f;
-        indmtx[1][1] = sIndirectScale;
+        indmtx[1][1] = ::sIndirectScale;
         indmtx[1][2] = 0.0f;
 
         GXSetIndTexMtx(GX_ITM_0, indmtx, 0);
@@ -452,8 +453,8 @@ void OceanBowl::loadMaterial() const {
         GXSetNumTevStages(4);
     }
 
-    GXSetTevColor(GX_TEVREG0, sOceanBowlTevReg0);
-    GXSetTevColor(GX_TEVREG1, sOceanBowlTevReg1);
+    GXSetTevColor(GX_TEVREG0, ::sOceanBowlTevReg0);
+    GXSetTevColor(GX_TEVREG1, ::sOceanBowlTevReg1);
 
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
@@ -524,8 +525,8 @@ void OceanBowl::loadMaterialBloom() const {
     mWaterTex->load(GX_TEXMAP0);
     GXSetNumIndStages(0);
     GXSetNumTevStages(2);
-    Color8 c0 = Color8(sOceanBowlBloomTevReg0V, sOceanBowlBloomTevReg0V, sOceanBowlBloomTevReg0V, 0xFF);
-    Color8 c1 = Color8(sOceanBowlBloomTevReg1V, sOceanBowlBloomTevReg1V, sOceanBowlBloomTevReg1V, 0xFF);
+    Color8 c0 = Color8(::sOceanBowlBloomTevReg0V, ::sOceanBowlBloomTevReg0V, ::sOceanBowlBloomTevReg0V, 0xFF);
+    Color8 c1 = Color8(::sOceanBowlBloomTevReg1V, ::sOceanBowlBloomTevReg1V, ::sOceanBowlBloomTevReg1V, 0xFF);
     GXSetTevColor(GX_TEVREG0, c0);
     GXSetTevColor(GX_TEVREG1, c1);
 
@@ -548,5 +549,3 @@ void OceanBowl::loadMaterialBloom() const {
     GXSetCullMode(GX_CULL_NONE);
     GXSetClipMode(GX_CLIP_ENABLE);
 }
-
-OceanBowl::~OceanBowl() {}

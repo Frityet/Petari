@@ -22,7 +22,8 @@ namespace NrvCoinCounter {
 
 CoinCounter::CoinCounter(const char* pName)
     : LayoutActor(pName, true), mCoinNum(0), mCoinDisplayNum(0), mInvalidCountUpFrame(0), mLayoutAppearer(nullptr), mPaneRumbler(nullptr),
-      mIsForceAppear(false), mFollowPos(0.0f, 0.0f) {}
+      mIsForceAppear(false), mFollowPos(0.0f, 0.0f) {
+}
 
 void CoinCounter::init(const JMapInfoIter& rIter) {
     initLayoutManager("CoinCounter", 2);
@@ -83,7 +84,7 @@ void CoinCounter::updateCounter() {
         mInvalidCountUpFrame--;
     } else if (mCoinDisplayNum < mCoinNum) {
         if (isNerve(&NrvCoinCounter::CoinCounterNrvWait::sInstance)) {
-            mInvalidCountUpFrame = cInvalidCountUpInterval;
+            mInvalidCountUpFrame = ::cInvalidCountUpInterval;
             mCoinDisplayNum++;
 
             MR::startAnim(this, "Flash", 0);
@@ -125,7 +126,7 @@ void CoinCounter::exeAppear() {
         MR::showLayout(this);
 
         if (MR::isStageAstroLocation()) {
-            mLayoutAppearer->appear(TVec2f(0.0f, cAstroLocationOffsetY));
+            mLayoutAppearer->appear(TVec2f(0.0f, ::cAstroLocationOffsetY));
         } else {
             mLayoutAppearer->appear(TVec2f(0.0f, 0.0f));
         }

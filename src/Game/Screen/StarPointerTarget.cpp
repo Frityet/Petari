@@ -1,8 +1,8 @@
 #include "Game/Screen/StarPointerTarget.hpp"
-#include "Game/Camera/CameraContext.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
@@ -33,7 +33,7 @@ bool StarPointerTarget::isPointing(const TVec2f& rPointerPos, f32 zMargin, f32 r
         return false;
     }
 
-    if (zMargin + mRadius3d + hZCheckAddDepth < -viewPos.z) {
+    if (zMargin + mRadius3d + ::hZCheckAddDepth < -viewPos.z) {
         return false;
     }
 
@@ -63,15 +63,13 @@ void StarPointerTarget::calcPosition(TVec3f* pWorldPos) const {
         pWorldPos->z += mMtx[2][0] * mOffset.x + mMtx[2][1] * mOffset.y + mMtx[2][2] * mOffset.z;
     } else {
         pWorldPos->set< f32 >(mPosition->x, mPosition->y, mPosition->z);
-        pWorldPos->addInline(mOffset);
+        pWorldPos->add(mOffset);
     }
 }
 
 f32 StarPointerTarget::calcRadius2d(f32 radius3d, f32 margin, f32 z) const {
     f32 fovyRad = MR::getFovy() * PI_180;
-    f32 tan = JMASinRadian(fovyRad * 0.5f) / JMACosRadian(fovyRad * 0.5f);
-
-    f32 radius2d = (radius3d * ((MR::getScreenHeight() * 0.5f) / tan) / z);
+    f32 radius2d = (radius3d * ((MR::getScreenHeight() * 0.5f) / MR::tan(fovyRad * 0.5f)) / z);
     return radius2d + margin;
 }
 
@@ -85,7 +83,7 @@ bool StarPointerTarget::calcScreenPositionFromView(TVec2f* pScreenPos, const TVe
     mtx.mult(rViewPos, pos);
     pos.y = -pos.y;
 
-    if (1.0f < __fabsf(pos.x) || 1.0f < __fabsf(pos.y)) {
+    if (1.0f < MR::abs(pos.x) || 1.0f < MR::abs(pos.y)) {
         return false;
     }
 

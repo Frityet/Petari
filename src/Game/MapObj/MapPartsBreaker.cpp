@@ -1,5 +1,8 @@
 #include "Game/MapObj/MapPartsBreaker.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
 namespace NrvMapPartsBreaker {
     NEW_NERVE(HostTypeWait, MapPartsBreaker, Wait);
@@ -7,7 +10,8 @@ namespace NrvMapPartsBreaker {
     NEW_NERVE(HostTypeBreak, MapPartsBreaker, Break);
 };  // namespace NrvMapPartsBreaker
 
-void MapPartsBreaker::exeWait() {}
+void MapPartsBreaker::exeWait() {
+}
 
 void MapPartsBreaker::exeReactToTornado() {
     if (isFirstStep()) {
@@ -16,7 +20,7 @@ void MapPartsBreaker::exeReactToTornado() {
     }
 
     if (getStep() % 3 == 0) {
-        mHost->mVelocity.invertInternal();
+        mHost->mVelocity.negate();
     }
 
     if (isStep(36)) {

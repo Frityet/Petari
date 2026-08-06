@@ -17,11 +17,14 @@ public:
 
 class TriangleFilterFunc : public TriangleFilterBase {
 public:
-    /*TriangleFilterFunc(TriangleFunc func) : TriangleFilterBase(func) {
+    TriangleFilterFunc(TriangleFunc func) : mFunction(func) {
+    }
 
-    }*/
+    virtual bool isInvalidTriangle(const Triangle* pTriangle) const {
+        return mFunction(pTriangle);
+    }
 
-    virtual bool isInvalidTriangle(const Triangle*) const;
+    /* 0x04 */ TriangleFunc mFunction;
 };
 
 namespace MR {
@@ -32,7 +35,8 @@ template < typename T >
 class TriangleFilterDelegator : public TriangleFilterBase {
 public:
     typedef bool (T::*DelegateFilter)(const Triangle*);
-    TriangleFilterDelegator(T* parent, DelegateFilter filter) : mParent(parent), mFunc(filter) {}
+    TriangleFilterDelegator(T* parent, DelegateFilter filter) : mParent(parent), mFunc(filter) {
+    }
 
     virtual bool isInvalidTriangle(const Triangle*) const;
 

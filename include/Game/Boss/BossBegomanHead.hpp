@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/LiveActor/PartsModel.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 template < typename T >
 class JointControlDelegator;
@@ -10,7 +11,6 @@ class BossBegomanHead : public PartsModel {
 public:
     BossBegomanHead(LiveActor*, MtxPtr);
 
-    virtual ~BossBegomanHead();
     virtual void init(const JMapInfoIter&);
     virtual void calcAndSetBaseMtx();
 

@@ -1,7 +1,12 @@
 #include "Game/Boss/DinoPackunTailPart.hpp"
 #include "Game/Boss/DinoPackun.hpp"
 #include "Game/Boss/DinoPackunAction.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/JointController.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
 namespace NrvDinoPackunTailPart {
@@ -21,16 +26,13 @@ void DinoPackunTailPart::init(const JMapInfoIter& rIter) {
     initBinder(_D4, 0.0f, 0);
     MR::connectToSceneEnemyDecorationMovement(this);
     initHitSensor(1);
-    TVec3f offs;
-    offs.x = 0.0f;
-    offs.y = 0.0f;
-    offs.z = 0.0f;
-    MR::addHitSensorEnemy(this, "body", 8, (1.25f + _D4), offs);
+    MR::addHitSensorEnemy(this, "body", 8, (1.25f + _D4), TVec3f(0.0f, 0.0f, 0.0f));
     MR::invalidateClipping(this);
     makeActorAppeared();
 }
 
-void DinoPackunTailPart::control() {}
+void DinoPackunTailPart::control() {
+}
 
 JointController* DinoPackunTailPart::createJointControllerOwn(LiveActor* pActor, const char* pJointName) {
     // we only do this because we already know it's a tail node type since it inherits
@@ -46,13 +48,7 @@ void DinoPackunTailPart::attackSensor(HitSensor* pSender, HitSensor* pReceiver) 
         MR::calcSensorDirectionNormalize(&v16, pReceiver, pSender);
 
         if (mVelocity.dot(v16) < 3.0f) {
-            TVec3f stack_8;
-            stack_8.setPS2(v16);
-            /* todo -- this scalar is actually 1.0f, but that causes this segment to disappear */
-            stack_8.x *= 2.0f;
-            stack_8.y *= 2.0f;
-            stack_8.z *= 2.0f;
-            JMathInlineVEC::PSVECAdd(&stack_8, &mVelocity, &mVelocity);
+            mVelocity.add(v16 * 1.0f);
         }
     }
 }
@@ -83,7 +79,8 @@ void DinoPackunTailPart::requestUnLockPosition() {
     MR::onBind(this);
 }
 
-void DinoPackunTailPart::exeLockPosition() {}
+void DinoPackunTailPart::exeLockPosition() {
+}
 
 void DinoPackunTailPart::exeWait() {
     MR::addVelocityToGravity(this, 0.69f);
@@ -91,4 +88,5 @@ void DinoPackunTailPart::exeWait() {
     MR::reboundVelocityFromCollision(this, 0.0f, 0.0f, 1.0f);
 }
 
-DinoPackunTailPart::~DinoPackunTailPart() {}
+DinoPackunTailPart::~DinoPackunTailPart() {
+}

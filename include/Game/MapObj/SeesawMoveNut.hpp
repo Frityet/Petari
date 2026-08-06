@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/MapObj/MapObjActor.hpp"
-
 
 class SeesawMoveNut : public MapObjActor {
 public:

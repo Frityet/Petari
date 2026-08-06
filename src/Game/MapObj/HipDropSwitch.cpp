@@ -1,13 +1,13 @@
 #include "Game/MapObj/HipDropSwitch.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/CollisionParts.hpp"
-#include "Game/MapObj/MapObjActor.hpp"
 #include "Game/MapObj/MapObjConnector.hpp"
-#include "Game/Util.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/SpringValue.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 
@@ -45,7 +45,7 @@ void HipDropSwitch::init(const JMapInfoIter& rIter) {
     targetOffs.z = 0.0f;
     MR::initStarPointerTarget(this, 150.0f, targetOffs);
     MR::initCollisionParts(this, "HipDropSwitch", getSensor("body"), nullptr);
-    _98 = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("hit"), (MR::CollisionScaleType)2);
+    _98 = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("hit"), MR::CollisionScaleType_Unk2);
     MR::validateCollisionParts(_98);
     initNerve(&NrvHipDropSwitch::HipDropSwitchNrvOff::sInstance);
     MR::needStageSwitchWriteA(this, rIter);
@@ -163,4 +163,5 @@ void HipDropSwitch::exeOn() {
     }
 }
 
-HipDropSwitch::~HipDropSwitch() {}
+HipDropSwitch::~HipDropSwitch() {
+}

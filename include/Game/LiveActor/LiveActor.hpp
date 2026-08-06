@@ -1,12 +1,6 @@
 #pragma once
 
-#include "Game/LiveActor/EffectKeeper.hpp"
-#include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/LiveActorFlag.hpp"
-#include "Game/LiveActor/ModelManager.hpp"
-#include "Game/LiveActor/ShadowController.hpp"
-#include "Game/LiveActor/Spine.hpp"
-#include "Game/Map/StageSwitch.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
 
@@ -16,22 +10,27 @@ class ActorPadAndCameraCtrl;
 class AudAnmSoundObject;
 class Binder;
 class CollisionParts;
+class EffectKeeper;
+class HitSensor;
+class HitSensorKeeper;
+class ModelManager;
+class Nerve;
 class RailRider;
+class ResourceHolder;
 class ShadowControllerList;
+class Spine;
+class StageSwitchCtrl;
 class StarPointerTarget;
 
 /// @brief The basis of a drawable actor that can contain states (see: Nerve)
 class LiveActor : public NameObj {
 public:
     /// @brief Creates a new `LiveActor`.
-    /// @param pName The pointer to the null-terminated name of the actor.
+    /// @param pName A pointer to the null-terminated name of the actor.
     LiveActor(const char* pName);
 
-    /// @brief Destroys the `LiveActor`.
-    virtual ~LiveActor() {}
-
     /// @brief Intializes the `LiveActor` while being placed into a scene.
-    /// @param rIter The reference to an iterator over a `JMapInfo`.
+    /// @param rIter A reference to an iterator over a `JMapInfo`.
     virtual void init(const JMapInfoIter& rIter) override;
 
     virtual void movement();
@@ -49,20 +48,55 @@ public:
     virtual MtxPtr getTakingMtx() const;
     virtual void startClipped();
     virtual void endClipped();
-    virtual void control();
+
+    virtual void control() {
+    }
 
     /// @brief Calculates and sets the base matrix of the actor.
     virtual void calcAndSetBaseMtx();
-    virtual void updateHitSensor(HitSensor* pSensor);
+
+    virtual void updateHitSensor(HitSensor* pSensor) {
+    }
+
     virtual void attackSensor(HitSensor* pSender, HitSensor* pReceiver);
-    virtual bool receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver);
-    virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
-    virtual bool receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
-    virtual bool receiveMsgTake(HitSensor* pSender, HitSensor* pReceiver);
-    virtual bool receiveMsgTaken(HitSensor* pSender, HitSensor* pReceiver);
-    virtual bool receiveMsgThrow(HitSensor* pSender, HitSensor* pReceiver);
+
+    virtual bool receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgTake(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgTaken(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgThrow(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
     virtual bool receiveMsgApart(HitSensor* pSender, HitSensor* pReceiver);
-    virtual bool receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
+
+    virtual bool receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    HitSensorKeeper* getSensorKeeper() const {
+        return mSensorKeeper;
+    }
+
+    Binder* getBinder() const {
+        return mBinder;
+    }
 
     void calcAnmMtx();
     void setNerve(const Nerve* pNerve);
@@ -107,7 +141,7 @@ public:
     /// @brief A pointer to a `ModelManager` instance, used for drawing a 3D model.
     /* 0x48 */ ModelManager* mModelManager;
 
-    /// @brief A pointer to a `ActorAnimKeeper` instance, used for storing and playing model animations.
+    /// @brief A pointer to an `ActorAnimKeeper` instance, used for storing and playing model animations.
     /* 0x4C */ ActorAnimKeeper* mAnimKeeper;
 
     /* 0x50 */ Spine* mSpine;

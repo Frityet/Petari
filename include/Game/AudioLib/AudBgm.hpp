@@ -5,6 +5,7 @@
 
 class JAISoundHandle;
 class JAISoundID;
+class AudBgmVolumeController;
 
 class AudBgm {
 public:
@@ -12,7 +13,7 @@ public:
     AudBgm();
 
     virtual void init() = 0;
-    virtual void start(u32, bool) = 0;
+    virtual JAISoundHandle* start(u32, bool) = 0;
     virtual void stop(u32) = 0;
     virtual bool isPreparedPlay() = 0;
     virtual void playAfterPrepared() = 0;
@@ -27,7 +28,7 @@ public:
     virtual bool isStopping() const = 0;
     virtual bool isPaused() const = 0;
     virtual JAISoundID getSoundID() const = 0;
-    virtual void setVolumeController();
+    virtual void setVolumeController(AudBgmVolumeController*);
     virtual AudBgmRhythmStrategy* getRhythmStrategy();
     virtual void sendToSyncStream() = 0;
     virtual void rejectFromSyncStream() = 0;
@@ -35,6 +36,9 @@ public:
 
     /* 0x04 */ u32 _4;
     /* 0x08 */ AudBgmRhythmStrategy mRhythmStrategy;
+    /* 0x014 */ JAISoundHandle* mRhythmHandle;
+    /* 0x018 */ s32 _18;
+    /* 0x01C */ AudTrackController mTrackController[16];
 };
 
 class AudSingleBgm : public AudBgm {
@@ -43,7 +47,7 @@ public:
     AudSingleBgm();
 
     virtual void init();
-    virtual void start(u32, bool);
+    virtual JAISoundHandle* start(u32, bool);
     virtual void stop(u32);
     virtual bool isPreparedPlay();
     virtual void playAfterPrepared();
@@ -65,10 +69,6 @@ public:
     void startTrackControl();
     void stopTrackControl();
     void updateTrackControl();
-
-    /* 0x14 */ u32 _14;
-    /* 0x18 */ s32 _18;
-    /* 0x1C */ AudTrackController mTrackController[16];
 };
 
 class AudMultiBgm : public AudBgm {
@@ -77,7 +77,7 @@ public:
     AudMultiBgm();
 
     virtual void init();
-    virtual void start(u32, bool);
+    virtual JAISoundHandle* start(u32, bool);
     virtual void stop(u32);
     virtual bool isPreparedPlay();
     virtual void playAfterPrepared();
@@ -105,9 +105,6 @@ public:
     void pauseSyncProcess();
     void setStreamVolume(f32, f32);
 
-    /* 0x014 */ u32 _14;
-    /* 0x018 */ s32 _18;
-    /* 0x01C */ AudTrackController mTrackController[16];
     /* 0x1DC */ AudFader mFader[2];
     /* 0x1F4 */ u32 _1F4;
     /* 0x1F8 */ s32 _1F8;

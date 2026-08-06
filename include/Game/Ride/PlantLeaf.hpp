@@ -1,27 +1,30 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/JMapInfo.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
+class J3DMaterial;
 class J3DShape;
 class J3DShapeDraw;
-
-namespace MR {
-    class FunctorBase;
-};  // namespace MR
 
 class PlantLeaf : public LiveActor {
 public:
     PlantLeaf(f32, const TVec3f&, const TVec3f&, f32);
 
     virtual void init(const JMapInfoIter&);
-    virtual MtxPtr getBaseMtx() const;
+    virtual MtxPtr getBaseMtx() const {
+        return (MtxPtr)&mBaseMtx;
+    }
     virtual void startClipped();
     virtual void endClipped();
 
     void updateGrowUp(const TVec3f&, const TVec3f&, f32, f32);
     bool updateSpring(const TVec3f&, f32, f32);
     bool updateSpring(f32);
+
+    MtxPtr getPosMtx() const {
+        return (MtxPtr)&mPosMtx;
+    }
 
     /* 0x8C */ f32 mSpringVel;    // first-order spring differential
     /* 0x90 */ f32 mSpringAccel;  // second-order spring differential

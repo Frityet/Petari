@@ -1,4 +1,7 @@
 #include "Game/MapObj/CapsuleCage.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util.hpp"
 
 namespace {
     const char* cDemoCameraName = "注目カメラ";
@@ -47,12 +50,12 @@ void CapsuleCage::exeOpen() {
     if (MR::isFirstStep(this)) {
         MR::startAllAnim(this, "Move");
         MR::startSound(this, "SE_OJ_CAPSULE_CAGE_BREAK");
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
         MR::shakeCameraWeak();
     }
 
     if (MR::isBckStopped(this)) {
-        MR::tryRumblePadWeak(this, 0);
+        MR::tryRumblePadWeak(this, WPAD_CHAN0);
         MR::shakeCameraWeak();
 
         if (mInfo != nullptr) {
@@ -84,7 +87,7 @@ void CapsuleCage::startOpen() {
     MR::invalidateClipping(this);
 
     if (mInfo != nullptr) {
-        MR::requestStartDemoWithoutCinemaFrame(this, cDemoCameraName, &NrvCapsuleCage::CapsuleCageNrvStartCamera::sInstance, nullptr);
+        MR::requestStartDemoWithoutCinemaFrame(this, ::cDemoCameraName, &NrvCapsuleCage::CapsuleCageNrvStartCamera::sInstance, nullptr);
     } else {
         setNerve(&NrvCapsuleCage::CapsuleCageNrvOpen::sInstance);
     }

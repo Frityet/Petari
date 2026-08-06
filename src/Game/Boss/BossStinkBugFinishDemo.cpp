@@ -2,11 +2,13 @@
 #include "Game/Boss/BossStinkBug.hpp"
 #include "Game/Demo/DemoPositionController.hpp"
 #include "Game/LiveActor/ActorStateBase.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
@@ -60,7 +62,7 @@ void BossStinkBugFinishDemo::exeAppearPowerStar() {
         MR::emitEffect(getHost(), "Death");
         MR::startSound(getHost(), "SE_BM_BOSS_BUG_EXPLODE");
         MR::hideModel(getHost());
-        MR::tryRumblePadVeryStrong(getHost(), 0);
+        MR::tryRumblePadVeryStrong(getHost(), WPAD_CHAN0);
     }
 
     if (MR::isStep(this, ::sAppearPowerStarStep)) {

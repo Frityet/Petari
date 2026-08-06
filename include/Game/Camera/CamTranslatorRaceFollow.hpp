@@ -4,7 +4,8 @@
 
 class CamTranslatorRaceFollow : public CamTranslatorBase {
 public:
-    inline CamTranslatorRaceFollow(CameraRaceFollow* pCamera) { mCamera = pCamera; }
+    CamTranslatorRaceFollow(CameraRaceFollow* pCamera) : mCamera(pCamera) {
+    }
 
     virtual void setParam(const CameraParamChunk*);
     virtual Camera* getCamera() const;

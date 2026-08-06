@@ -1,5 +1,9 @@
 #include "Game/MapObj/BenefitItemObj.hpp"
+#include "Game/LiveActor/FlashingCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "JSystem/JGeometry/TUtil.hpp"
 
 s16 def = 600;
@@ -314,6 +318,7 @@ void BenefitItemObj::appearGround() {
     MR::invalidateClipping(this);
 }
 
+/*
 void BenefitItemObj::appearThrowUp() {
     MR::startSystemSE("SE_SY_ITEM_APPEAR");
     runBck("Appear");
@@ -323,22 +328,22 @@ void BenefitItemObj::appearThrowUp() {
     setNerve(&NrvBenefitItemObj::HostTypeNrvShoot::sInstance);
 
     if (!_DD) {
-        TVec3f throw_velocity(rotated_axis);
-        throw_velocity.scale(cAppearThrowUpSpd);
-        mVelocity = throw_velocity;
-    } else {
-        TVec3f throw_velocity(rotated_axis);
-        throw_velocity.scale(cAppearThrowUpSpd2);
-        mVelocity = throw_velocity;
+        f32 speed = ::cAppearThrowUpSpd;
+        mVelocity = MR::createVecAndScale(rotated_axis, speed);
+    }
+    else {
+        f32 speed = ::cAppearThrowUpSpd2;
+        mVelocity = MR::createVecAndScale(rotated_axis, speed);
     }
 
     MR::invalidateClipping(this);
 }
+*/
 
 void BenefitItemObj::shoot(const TVec3f& a2, const TVec3f& a3, bool a4) {
     mPosition = a2;
 
-    if (!_DD) {
+    if (_D9) {
         _D9 = 2;
     } else {
         _D9 = 3;
@@ -425,17 +430,20 @@ void BenefitItemObj::doRotateY() {
     if (isNerve(&NrvBenefitItemObj::HostTypeNrvAppearGround::sInstance)) {
         _EC = 0.0f;
     } else {
-        _EC = (f32)fmod((6.2831855f + ((_EC + cSpdRotateY) - zero)), 6.283185482025146) + zero;
+        _EC = (f32)fmod((6.2831855f + ((_EC + ::cSpdRotateY) - zero)), 6.283185482025146) + zero;
     }
 }
 
+/*
 void BenefitItemObj::exeShoot() {
+    f32 reflect, v2, gravity, v4;
+
     if (MR::isFirstStep(this)) {
         MR::onBind(this);
     }
 
-    TVec3f velocity(mVelocity);
-    f32 gravity = MR::vecKillElement(velocity, mGravity, &velocity);
+    TVec3f v9(mVelocity);
+    v2 = MR::vecKillElement(v9, mGravity, &v9);
     if (MR::isBindedGround(this)) {
         runBck("Land");
         MR::validateHitSensors(this);
@@ -444,29 +452,28 @@ void BenefitItemObj::exeShoot() {
             if (MR::isGreaterStep(this, 10)) {
                 setNerve(&NrvBenefitItemObj::HostTypeNrvWait::sInstance);
             }
-        } else {
-            setNerve(&NrvBenefitItemObj::HostTypeNrvEscape::sInstance);
         }
-    } else {
-        gravity += cGravity;
+        else
+            setNerve(&NrvBenefitItemObj::HostTypeNrvEscape::sInstance);
+    }
+    else {
+        gravity = v2;
+        gravity += ::cGravity;
         if (getNerveStep() == 60) {
             MR::validateHitSensors(this);
         }
 
         if (MR::isBindedWall(this)) {
-            f32 wall_speed = MR::vecKillElement(velocity, *MR::getWallNormal(this), &velocity);
-            TVec3f reflect(*MR::getWallNormal(this));
-            reflect.scale(wall_speed);
-            reflect.scale(cReflectWallX);
-            velocity -= reflect;
+            v4 = MR::vecKillElement(v9, *MR::getWallNormal(this), &v9);
+            reflect = ::cReflectWallX;
+            v9 -= MR::createVecAndScale(MR::createVecAndScale(*MR::getWallNormal(this), v4), reflect);
         }
 
-        TVec3f gravity_velocity(mGravity);
-        gravity_velocity.scale(gravity);
-        velocity += gravity_velocity;
-        mVelocity.set< f32 >(velocity);
+        v9 += MR::createVecAndScale(mGravity, gravity);
+        mVelocity.set<f32>(v9);
     }
 }
+*/
 
 void BenefitItemObj::exeCatch() {
     if (MR::isFirstStep(this)) {
@@ -522,7 +529,7 @@ bool BenefitItemObj::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRe
             isNerve(&NrvBenefitItemObj::HostTypeNrvAppearGround::sInstance) || isNerve(&NrvBenefitItemObj::HostTypeNrvEscape::sInstance)) {
             mHitSensorActor = pSender->mHost;
             setNerve(&NrvBenefitItemObj::HostTypeNrvCatch::sInstance);
-            MR::tryRumblePadWeak(this, 0);
+            MR::tryRumblePadWeak(this, WPAD_CHAN0);
 
             return true;
         }
@@ -583,7 +590,7 @@ void BenefitItemObj::doEscape() {
     }
 
     if (MR::isBindedGround(this)) {
-        f32 mag = PSVECMag(&_BC);
+        f32 mag = _BC.length();
         MR::vecKillElement(_BC, mGravity, &_BC);
         _BC.setLength(mag);
 
@@ -594,23 +601,19 @@ void BenefitItemObj::doEscape() {
             MR::vecKillElement(v22, mGravity, &v22);
             MR::normalizeOrZero(&v22);
             if (_BC.dot(v22) < 0.0f) {
-                TVec3f steer(v22);
-                steer.scale(0.02f);
-                _BC += steer;
+                _BC += v22 * 0.2f;
                 _BC.x *= 1.1f;
                 _BC.y *= 1.1f;
                 _BC.z *= 1.1f;
             } else {
-                TVec3f steer(v22);
-                steer.scale(0.01f);
-                _BC += steer;
-                _BC.x *= 1.1f;
-                _BC.y *= 1.1f;
-                _BC.z *= 1.1f;
+                _BC += v22 * 0.01f;
+                _BC.x *= 0.01f;
+                _BC.y *= 0.01f;
+                _BC.z *= 0.01f;
             }
         }
 
-        if (PSVECMag(&_BC) > 7.0f) {
+        if (_BC.length() > 7.0f) {
             _BC.setLength(7.0f);
         }
 
@@ -619,20 +622,16 @@ void BenefitItemObj::doEscape() {
             runBck("Land");
         }
 
-        TVec3f fall_velocity(mGravity);
-        fall_velocity.scale(5.0f);
-        _C8 = fall_velocity;
+        _C8 = mGravity * 5.0f;
         runEfx("Move");
     } else {
         _E5 = 1;
         _BC.x *= 0.95f;
         _BC.y *= 0.95f;
         _BC.z *= 0.95f;
-        TVec3f gravity_velocity(mGravity);
-        gravity_velocity.scale(1.0f);
-        _C8 += gravity_velocity;
+        _C8 += mGravity * 1.0f;
 
-        if (PSVECMag(&_C8) > 20.0f) {
+        if (_C8.length() > 20.0f) {
             _C8.setLength(20.0f);
         }
 
@@ -642,12 +641,8 @@ void BenefitItemObj::doEscape() {
     if (MR::isBindedWall(this) && !_E5) {
         if (MR::getWallNormal(this)->dot(mGravity) < 0.0f) {
             f32 scalar = MR::vecKillElement(_BC, *MR::getWallNormal(this), &_BC);
-            TVec3f reflect = -*MR::getWallNormal(this);
-            reflect.scale(scalar);
-            _BC += reflect;
-            TVec3f bound = -mGravity;
-            bound.scale(20.0f);
-            _C8 += bound;
+            _BC += (-*MR::getWallNormal(this)) * scalar;
+            _C8 += (-mGravity) * 20.0f;
             _E5 = 1;
         }
     }
@@ -664,20 +659,15 @@ void BenefitItemObj::exeEscape() {
 
     if (_B0) {
         MR::showModel(this);
-        s16 v1 = _B0;
-        _B0 = v1 - 1;
-        s16 v2 = _B8;
+        _B0--;
 
-        if (v2) {
+        if (_B8 != 0) {
             _B8--;
             MR::hideModel(this);
         }
 
-        if (_B6) {
-            s16 v3 = _B6 - 1;
-            _B6--;
-
-            if ((s16)v3) {
+        if (_B6 != 0) {
+            if (--_B6 == 0) {
                 _B6 = _B2;
                 _B8 = _B4;
             }
@@ -696,7 +686,7 @@ void BenefitItemObj::exeEscape() {
             _B8 = 4;
         }
 
-        if (!_B0) {
+        if (_B0 == 0) {
             runEfx("Vanish");
             makeActorDead();
         }
@@ -737,8 +727,7 @@ void BenefitItemObj::calcAndSetBaseMtxInMovement() {
             MR::extractMtxTrans(mFollowMtx, &mPosition);
         }
 
-        MtxPtr mtx = MR::tmpMtxRotYRad(_EC);
-        PSMTXConcat(_F0, mtx, getBaseMtx());
+        MR::multMtx(getBaseMtx(), MR::tmpMtxRotYRad(_EC), _F0);
     } else {
         if (MR::isBindedGround(this)) {
             _A4 = *MR::getGroundNormal(this);
@@ -759,9 +748,8 @@ void BenefitItemObj::calcAndSetBaseMtxInMovement() {
             } else {
                 TPos3f pos;
                 MR::makeMtxUpFrontPos(&pos, _A4, stack_8, mPosition);
-                MR::blendMtx(_F0, pos.toMtxPtr(), 0.2f, _F0);
-                MtxPtr mtx = MR::tmpMtxRotYRad(_EC);
-                PSMTXConcat(_F0, mtx, getBaseMtx());
+                MR::blendMtx(_F0, pos, 0.2f, _F0);
+                MR::multMtx(getBaseMtx(), MR::tmpMtxRotYRad(_EC), _F0);
                 MR::setMtxTrans(getBaseMtx(), mPosition);
             }
         }

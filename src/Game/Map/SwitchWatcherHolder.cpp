@@ -4,7 +4,7 @@
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 SwitchWatcherHolder::SwitchWatcherHolder() : NameObj("SwitchWatcherHolder") {
     mWatcherCount = 0;
@@ -53,9 +53,14 @@ void SwitchWatcherHolder::addSwitchWatcher(SwitchWatcher* pWatcher) {
 }
 
 namespace MR {
-    SwitchWatcherHolder* getSwitchWatcherHolder() { return MR::getSceneObj< SwitchWatcherHolder >(SceneObj_SwitchWatcherHolder); }
+    SwitchWatcherHolder* getSwitchWatcherHolder() {
+        return MR::getSceneObj< SwitchWatcherHolder >(SceneObj_SwitchWatcherHolder);
+    }
 
-    void requestMovementOnSwitchWatcher() { MR::requestMovementOn(getSwitchWatcherHolder()); }
+    void requestMovementOnSwitchWatcher() {
+        MR::requestMovementOn(getSwitchWatcherHolder());
+    }
 };  // namespace MR
 
-SwitchWatcherHolder::~SwitchWatcherHolder() {}
+SwitchWatcherHolder::~SwitchWatcherHolder() {
+}

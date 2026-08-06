@@ -1,6 +1,8 @@
 #include "Game/MapObj/PhantomShipBridge.hpp"
 #include "Game/Animation/BckCtrl.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/CollisionParts.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 namespace NrvPhantomShipBridge {
@@ -30,7 +32,7 @@ void PhantomShipBridge::init(const JMapInfoIter& rIter) {
     MR::addBodyMessageSensorMapObj(this);
     MR::initCollisionParts(this, objName, getSensor("body"), nullptr);
     MR::addMessageSensorMapObjMoveCollision(this, "move");
-    _8C = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("move"), MR::getJointMtx(this, "Move"), (MR::CollisionScaleType)2);
+    _8C = MR::createCollisionPartsFromLiveActor(this, "Move", getSensor("move"), MR::getJointMtx(this, "Move"), MR::CollisionScaleType_Unk2);
     MR::validateCollisionParts(_8C);
     initSound(4, false);
     MR::setClippingTypeSphere(this, 2000.0f);
@@ -62,7 +64,7 @@ void PhantomShipBridge::startMoveB() {
 
 void PhantomShipBridge::setStateMoveA() {
     MR::startBck(this, "MoveA", nullptr);
-    MR::setBckFrameAndStop(this, MR::getBckCtrl(this)->mEnd);
+    MR::setBckFrameAndStop(this, MR::getBckCtrl(this)->getEnd());
     MR::calcAnimDirect(this);
     _8C->forceResetAllMtxAndSetUpdateMtxOneTime();
     setNerve(&NrvPhantomShipBridge::HostTypeWait::sInstance);
@@ -126,6 +128,8 @@ void PhantomShipBridge::exeMoveB() {
     }
 }
 
-void PhantomShipBridge::exeWait() {}
+void PhantomShipBridge::exeWait() {
+}
 
-PhantomShipBridge::~PhantomShipBridge() {}
+PhantomShipBridge::~PhantomShipBridge() {
+}

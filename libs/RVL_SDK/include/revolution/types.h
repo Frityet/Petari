@@ -74,6 +74,18 @@ typedef int BOOL;
 #define ATTRIBUTE_ALIGN(num)
 #endif
 
+#if __MWERKS__
+#define ATTRIBUTE_PACKED __attribute__((packed))
+#else
+#define ATTRIBUTE_PACKED
+#endif
+
+#if __MWERKS__
+#define ATTRIBUTE_WEAK __attribute__((weak))
+#else
+#define ATTRIBUTE_WEAK
+#endif
+
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -95,6 +107,20 @@ typedef int BOOL;
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 
 #define FOURCC(c0, c1, c2, c3) (u32)((c0 & 0xFF) << 24 | (c1 & 0xFF) << 16 | (c2 & 0xFF) << 8 | (c3 & 0xFF))
+
+#define IS_ALIGNED(x, align) (((unsigned long)(x) & ((align) - 1)) == 0)
+#define IS_NOT_ALIGNED(X, N) (((X) & ((N) - 1)) != 0)
+
+// Comparing a non-volatile reference type to NULL is tautological
+// and triggers a warning on modern compilers, but in some cases is
+// required to match the original assembly.
+#if defined(__MWERKS__) || defined(DECOMPCTX)
+#define IS_REF_NULL(r) (&(r) == NULL)
+#define IS_REF_NONNULL(r) (&(r) != NULL)
+#else
+#define IS_REF_NULL(r) (0)
+#define IS_REF_NONNULL(r) (1)
+#endif
 
 /* just some common intrinsics */
 

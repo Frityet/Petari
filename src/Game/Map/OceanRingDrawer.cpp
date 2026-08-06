@@ -1,7 +1,18 @@
 #include "Game/Map/OceanRingDrawer.hpp"
 #include "Game/Map/OceanRing.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/Color.hpp"
+#include "Game/Util/DrawUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SchedulerUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <revolution/gd/GDBase.h>
+#include <revolution/gx/GXVert.h>
 
 namespace {
     const f32 sPointNumInPart = 0.0f;
@@ -23,7 +34,6 @@ namespace {
     const f32 sBloomCameraUpMax = 0.0f;
     const f32 sBloomCameraDepthMin = 0.0f;
     const f32 sBloomCameraDepthMax = 0.0f;
-
 
     static GXColor color1 = {0x28, 0x28, 0x28, 0x14};
     static GXColor color2 = {0x76, 0xD7, 0xFF, 0xFF};
@@ -73,7 +83,7 @@ void OceanRingPartDrawer::initDisplayList(f32* a1, f32* a2, f32* a3) {
 }
 
 void OceanRingPartDrawer::draw() const {
-    if (PSVECDistance(&mPosition, MR::getPlayerPos()) < sDistancePartDL) {
+    if (mPosition.distance(*MR::getPlayerPos()) < ::sDistancePartDL) {
         drawDynamic();
     } else {
         GXCallDisplayList(mDispList, mDispListLength);
@@ -200,8 +210,8 @@ void OceanRingPartDrawer::drawDynamic() const {
         f32 f17 = 0.0f;
         f32 f16 = 0.0f;
         f32 f15 = 0.0f;
-        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (u16)mOceanRing->mStride << 1);
 
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mOceanRing->mStride * 2);
         for (s32 j = 0; j < mOceanRing->mStride; j++) {
             WaterPoint* pPoint = mOceanRing->getPoint(j, index);
             GXPosition3f32(pPoint->mPosition.x, pPoint->mPosition.y, pPoint->mPosition.z);
@@ -224,6 +234,7 @@ void OceanRingPartDrawer::drawDynamic() const {
             f19 += f28;
             f18 += f29;
         }
+        GXEnd();
 
         f27 = f26;
         f25 = f24;
@@ -263,8 +274,8 @@ void OceanRingPartDrawer::drawDynamicBloom() const {
         f32 f19 = 0.0f;
         f32 f17 = 0.0f;
         f32 f16 = 0.0f;
-        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (u16)mOceanRing->mStride << 1);
 
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mOceanRing->mStride * 2);
         for (s32 j = 0; j < mOceanRing->mStride; j++) {
             WaterPoint* pPoint = mOceanRing->getPoint(j, index);
             WaterPoint* pPoint2 = mOceanRing->getPoint(j, indexPlusOne);
@@ -281,12 +292,12 @@ void OceanRingPartDrawer::drawDynamicBloom() const {
             f20 += f28;
             f19 += f28;
         }
+        GXEnd();
 
         f27 = f26;
         f25 = f24;
     }
 }
-
 
 OceanRingDrawer::OceanRingDrawer(const OceanRing* pOceanRing) {
     mRing = pOceanRing;
@@ -310,12 +321,12 @@ OceanRingDrawer::OceanRingDrawer(const OceanRing* pOceanRing) {
 }
 
 void OceanRingDrawer::update() {
-    _C  = MR::repeat(_C  + sTexSpeed0U, 0.0f, 1.0f);
-    _10 = MR::repeat(_10 + sTexSpeed0V, 0.0f, 1.0f);
-    _14 = MR::repeat(_14 + sTexSpeed1U, 0.0f, 1.0f);
-    _18 = MR::repeat(_18 + sTexSpeed1V, 0.0f, 1.0f);
+    _C = MR::repeat(_C + ::sTexSpeed0U, 0.0f, 1.0f);
+    _10 = MR::repeat(_10 + ::sTexSpeed0V, 0.0f, 1.0f);
+    _14 = MR::repeat(_14 + ::sTexSpeed1U, 0.0f, 1.0f);
+    _18 = MR::repeat(_18 + ::sTexSpeed1V, 0.0f, 1.0f);
     _1C = MR::repeat(_1C + 0.0f, 0.0f, 1.0f);
-    _20 = MR::repeat(_20 + sTexSpeed2V, 0.0f, 1.0f);
+    _20 = MR::repeat(_20 + ::sTexSpeed2V, 0.0f, 1.0f);
 }
 
 void OceanRingDrawer::draw() const {
@@ -333,7 +344,7 @@ void OceanRingDrawer::draw() const {
 void OceanRingDrawer::drawBloom() const {
     loadMaterialBloom();
     TVec3f zDir = MR::getCamZdir();
-    zDir.scale(sBloomCameraOffsetZ);
+    zDir.scale(::sBloomCameraOffsetZ);
     TVec3f camPos = MR::getCamPos();
     zDir.add(camPos);
 
@@ -341,7 +352,7 @@ void OceanRingDrawer::drawBloom() const {
         for (s32 i = 0; i < mDrawerCount; i++) {
             OceanRingPartDrawer* drwr = getDrawer(i);
 
-            if (PSVECDistance(&drwr->mPosition, &zDir) < sDistancePartDrawBloom) {
+            if (drwr->mPosition.distance(zDir) < ::sDistancePartDrawBloom) {
                 drwr->drawDynamicBloom();
             }
         }
@@ -414,7 +425,7 @@ void OceanRingDrawer::drawGD() const {
     f32 V10 = 0.05f * m;
     f32 V20 = 0.1f * m;
 
-    GDBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (u16)(flag + mRing->mSegCount) << 1);
+    GDBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (flag + mRing->mSegCount) * 2);
 
     scalex = 1.0f;
     f32 V0 = V00 * scalex;
@@ -508,11 +519,11 @@ void OceanRingDrawer::loadMaterial() const {
         GXSetTevIndWarp(GX_TEVSTAGE3, GX_INDTEXSTAGE0, 1, 0, GX_ITM_0);
 
         Mtx23 new_mtx;
-        new_mtx[0][0] = sIndirectScale;
+        new_mtx[0][0] = ::sIndirectScale;
         new_mtx[0][1] = 0.0f;
         new_mtx[0][2] = 0.0f;
         new_mtx[1][0] = 0.0f;
-        new_mtx[1][1] = sIndirectScale;
+        new_mtx[1][1] = ::sIndirectScale;
         new_mtx[1][2] = 0.0f;
 
         GXSetIndTexMtx(GX_ITM_0, new_mtx, 0);

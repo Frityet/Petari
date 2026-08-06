@@ -1,8 +1,8 @@
 #include "Game/Camera/CameraTripodBossJoint.hpp"
-#include "Game/Camera/CamTranslatorTripodBossJoint.hpp"
-#include "Game/Camera/CameraLocalUtil.hpp"
-#include "Game/Camera/CameraCalc.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
+#include "Game/Camera/CamTranslatorTripodBossJoint.hpp"
+#include "Game/Camera/CameraCalc.hpp"
+#include "Game/Camera/CameraLocalUtil.hpp"
 
 CameraTripodBossJoint::CameraTripodBossJoint(const char* pName) : Camera(pName) {
     mAngleB = 0.0f;
@@ -28,12 +28,12 @@ CameraTargetObj* CameraTripodBossJoint::calc() {
     return CameraLocalUtil::getTarget(this);
 }
 
-CameraTripodBossJoint::~CameraTripodBossJoint() {}
+CameraTripodBossJoint::~CameraTripodBossJoint() {
+}
 
 CamTranslatorBase* CameraTripodBossJoint::createTranslator() {
     return new CamTranslatorTripodBossJoint(this);
 }
-
 
 void CameraTripodBossJoint::calcIdealPose() {
     if (mDist < 300.0f) {
@@ -61,7 +61,7 @@ void CameraTripodBossJoint::calcIdealPose() {
             _6C = _70;
         } else if (CameraLocalUtil::testCameraPadTriggerRoundLeft()) {
             f32 f = _70;
-            f32 fa = __fabsf(_70);
+            f32 fa = MR::abs(_70);
             s32 dir;
             if (f < 0.0f) {
                 dir = -1;
@@ -84,7 +84,7 @@ void CameraTripodBossJoint::calcIdealPose() {
             _6C = mulint * common;
         } else if (CameraLocalUtil::testCameraPadTriggerRoundRight()) {
             f32 f = _70;
-            f32 fa = __fabsf(_70);
+            f32 fa = MR::abs(_70);
             s32 dir;
             if (f < 0.0f) {
                 dir = -1;
@@ -116,7 +116,7 @@ void CameraTripodBossJoint::calcIdealPose() {
         TPos3f pos;
         MR::getTripodBossJointMatrix(&pos, _58);
         pos.mult33(polecrossdegree, polecrossdegree);
-        pos.getYDirInline(axis);
+        pos.getYDir(axis);
     } else {
         axis.set< f32 >(0.0f, 1.0f, 0.0f);
     }
@@ -138,7 +138,6 @@ void CameraTripodBossJoint::calcIdealPose() {
     CameraLocalUtil::setWatchPos(this, watchpoint);
     CameraLocalUtil::setWatchUpVec(this, axis);
 }
-
 
 bool CameraTripodBossJoint::isEnableToReset() const {
     return true;

@@ -1,5 +1,8 @@
 #include "Game/MapObj/CollapsePlane.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvCollapsePlane {
     NEW_NERVE(CollapsePlaneNrvWait, CollapsePlane, Wait);
@@ -28,11 +31,7 @@ void CollapsePlane::init(const JMapInfoIter& rIter) {
     info.setupNerve(&NrvCollapsePlane::CollapsePlaneNrvWait::sInstance);
     initialize(rIter, info);
     initEffectKeeper(1, nullptr, false);
-    TVec3f offs;
-    offs.x = 0.0f;
-    offs.y = 0.0f;
-    offs.z = 0.0f;
-    MR::initStarPointerTarget(this, (200.0f * mScale.x), offs);
+    MR::initStarPointerTarget(this, mScale.x * 200.0f, TVec3f(0.0f, 0.0f, 0.0f));
     mScaleController = new AnimScaleController(nullptr);
     mScaleController->setParamTight();
     mStarPointerBind = new WalkerStateBindStarPointer(this, mScaleController);
@@ -80,7 +79,8 @@ void CollapsePlane::exeDPDStop() {
     }
 }
 
-void CollapsePlane::exeEnd() {}
+void CollapsePlane::exeEnd() {
+}
 
 void CollapsePlane::calcAndSetBaseMtx() {
     MapObjActor::calcAndSetBaseMtx();
@@ -90,9 +90,8 @@ void CollapsePlane::calcAndSetBaseMtx() {
     }
 
     if (MR::isInitializeStateEnd()) {
-        TVec3f new_scale;
-        new_scale.mult(mScaleController->_C, mScale, new_scale);
-        MR::setBaseScale(this, new_scale);
+        TVec3f scale = mScaleController->_C * mScale;
+        MR::setBaseScale(this, scale);
     }
 }
 
@@ -103,13 +102,11 @@ void CollapsePlane::control() {
 
 bool CollapsePlane::calcJointPlane(TPos3f* pPos, const JointControllerInfo&) {
     f32 new_scale = (1.0f - ((0.7f * _D0)) / mTimer);
-    TMtx34f mtx;
+    TPos3f mtx;
     mtx.identity();
-    MR::preScaleMtx(mtx.toMtxPtr(), new_scale, 1.0f, new_scale);
+    MR::preScaleMtx(mtx, new_scale, 1.0f, new_scale);
     pPos->concat(mtx);
-    pPos->mMtx[0][3] = mPosition.x;
-    pPos->mMtx[1][3] = mPosition.y;
-    pPos->mMtx[2][3] = mPosition.z;
+    pPos->setTrans(mPosition);
     return true;
 }
 
@@ -130,4 +127,5 @@ bool CollapsePlane::tryDPDStop() {
     return true;
 }
 
-CollapsePlane::~CollapsePlane() {}
+CollapsePlane::~CollapsePlane() {
+}

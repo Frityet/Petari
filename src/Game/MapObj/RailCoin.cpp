@@ -1,10 +1,14 @@
 #include "Game/Mapobj/RailCoin.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace {
     class RailCoinMercatorDivInfo : public DivideMercatorRailPosInfo {
     public:
-        inline RailCoinMercatorDivInfo(CoinGroup* pGroup) { mGroup = pGroup; }
+        inline RailCoinMercatorDivInfo(CoinGroup* pGroup) {
+            mGroup = pGroup;
+        }
 
         virtual void setPosition(s32, const TVec3f&);
 
@@ -12,7 +16,8 @@ namespace {
     };
 };  // namespace
 
-RailCoin::RailCoin(const char* pName) : CoinGroup(pName) {}
+RailCoin::RailCoin(const char* pName) : CoinGroup(pName) {
+}
 
 void RailCoin::initCoinArray(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -44,7 +49,7 @@ void RailCoin::placementNormalRail() {
 }
 
 void RailCoin::placementMercatorRail() {
-    RailCoinMercatorDivInfo info(this);
+    ::RailCoinMercatorDivInfo info(this);
     MR::getDivideMercatorRailPosition(&info, this, mCoinCount, 10.0f, 10);
 }
 
@@ -66,7 +71,8 @@ namespace {
     }
 };  // namespace
 
-RailCoin::~RailCoin() {}
+RailCoin::~RailCoin() {
+}
 
 void RailCoin::placementCoin() {
     if (MR::isInAreaObj("MercatorCube", mPosition)) {

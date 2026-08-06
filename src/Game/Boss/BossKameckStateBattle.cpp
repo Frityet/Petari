@@ -4,6 +4,16 @@
 #include "Game/Boss/BossKameckMoveRail.hpp"
 #include "Game/Enemy/KameckBeam.hpp"
 #include "Game/Enemy/KameckBeamHolder.hpp"
+#include "Game/LiveActor/ActiveActorList.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvBossKameckStateBattle {
     NEW_NERVE(BossKameckStateBattleNrvWait, BossKameckStateBattle, Wait);
@@ -199,7 +209,7 @@ void BossKameckStateBattle::exeMove() {
         selectPosition();
     }
 
-    f32 mag = (100.0f * PSVECMag(&mHost->mVelocity));
+    f32 mag = 100.0f * mHost->mVelocity.length();
     MR::startLevelSound(mHost, "SE_BM_LV_KAMECK_FLOAT", mag);
 
     s32 v2 = (_3C) ? 40 : 90;
@@ -217,7 +227,9 @@ void BossKameckStateBattle::exeMove() {
     MR::addVelocityMoveToTarget(mHost, _20, 0.09f, 0.9f, 0.0f, 400.0f);
     MR::addVelocityKeepHeight(mHost, _20, 0.0f, 0.5f, 50.0f);
     MR::attenuateVelocity(mHost, 0.96f);
-    tryAttackWait();
+    if (tryAttackWait()) {
+        return;
+    }
 }
 
 void BossKameckStateBattle::exeHideMoveStart() {
@@ -427,8 +439,6 @@ void BossKameckStateBattle::selectPosition() {
 }
 
 bool BossKameckStateBattle::isEnableDamage() const {
-    bool ret = false;
-
     if (isNerve(&NrvBossKameckStateBattle::BossKameckStateBattleNrvWait::sInstance) ||
         isNerve(&NrvBossKameckStateBattle::BossKameckStateBattleNrvMove::sInstance) ||
         isNerve(&NrvBossKameckStateBattle::BossKameckStateBattleNrvHideMoveStart::sInstance) ||
@@ -440,12 +450,10 @@ bool BossKameckStateBattle::isEnableDamage() const {
         return true;
     }
 
-    return ret;
+    return false;
 }
 
 bool BossKameckStateBattle::isEnableGuard() const {
-    bool ret = false;
-
     if (isNerve(&NrvBossKameckStateBattle::BossKameckStateBattleNrvWait::sInstance) ||
         isNerve(&NrvBossKameckStateBattle::BossKameckStateBattleNrvMove::sInstance) ||
         isNerve(&NrvBossKameckStateBattle::BossKameckStateBattleNrvHideMoveStart::sInstance) ||
@@ -457,7 +465,5 @@ bool BossKameckStateBattle::isEnableGuard() const {
         return true;
     }
 
-    return ret;
+    return false;
 }
-
-BossKameckStateBattle::~BossKameckStateBattle() {}

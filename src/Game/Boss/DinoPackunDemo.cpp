@@ -3,8 +3,17 @@
 #include "Game/Boss/DinoPackunDemoPosition.hpp"
 #include "Game/Boss/DinoPackunEggShell.hpp"
 #include "Game/Boss/DinoPackunSequencer.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace {
     // static const _ sMairoHitEgg_ = _;
@@ -181,7 +190,8 @@ void DinoPackunDemo::exeAngryDemo() {
     if (getHost()->mSequence->getVsCount() == 1) {
         MR::startLevelSound(getHost(), "SE_BM_LV_D_PAKKUN_ANGRY");
         if (MR::isStep(this, ::sAngryLv1BlurStart)) {
-            MR::startCenterScreenBlur(::sAngryLv1BlurTime, ::sAngryLv1BlurOffset, ::sAngryLv1BlurAlpha, ::sAngryLv1BlurFadeIn, ::sAngryLv1BlurFadeOut);
+            MR::startCenterScreenBlur(::sAngryLv1BlurTime, ::sAngryLv1BlurOffset, ::sAngryLv1BlurAlpha, ::sAngryLv1BlurFadeIn,
+                                      ::sAngryLv1BlurFadeOut);
         }
     }
     if (getHost()->mSequence->getVsCount() == 2) {
@@ -190,7 +200,8 @@ void DinoPackunDemo::exeAngryDemo() {
         }
 
         if (MR::isStep(this, ::sAngryLv2BlurStart)) {
-            MR::startCenterScreenBlur(::sAngryLv2BlurTime, ::sAngryLv1BlurOffset, ::sAngryLv2BlurAlpha, ::sAngryLv1BlurFadeIn, ::sAngryLv1BlurFadeOut);
+            MR::startCenterScreenBlur(::sAngryLv2BlurTime, ::sAngryLv1BlurOffset, ::sAngryLv2BlurAlpha, ::sAngryLv1BlurFadeIn,
+                                      ::sAngryLv1BlurFadeOut);
         }
     }
 
@@ -224,7 +235,7 @@ void DinoPackunDemo::exeDownDemo() {
 
     if (MR::isBckStopped(getHost())) {
         MR::startSound(getHost(), "SE_BM_D_PAKKUN_EXPLODE");
-        MR::tryRumblePadVeryStrong(getHost(), 0);
+        MR::tryRumblePadVeryStrong(getHost(), WPAD_CHAN0);
         MR::hideModel(getHost());
         setNerve(&NrvDinoPackunDemo::DinoPackunDemoNrvAppearPowerStar::sInstance);
     }

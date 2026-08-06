@@ -107,7 +107,7 @@ void MainLoopFramework::drawendXfb_single() {
     JUTXfb* pXfbMgr = JUTXfb::sManager;
     if (pXfbMgr->mDrawingXfbIndex >= 0) {
         prepareCopyDisp();
-        waitDrawDoneAndSetAlarm();
+        ::waitDrawDoneAndSetAlarm();
         GXFlush();
         pXfbMgr->mDrawnXfbIndex = pXfbMgr->mDrawingXfbIndex;
     }
@@ -161,7 +161,7 @@ void MainLoopFramework::exchangeXfb_triple() {
         if (nextIdx >= 3 || nextIdx < 0) {
             nextIdx = 0;
         }
-    } while (nextIdx == getDisplayingXfbIndex());
+    } while (nextIdx == ::getDisplayingXfbIndex());
     pXfbMgr->mDrawingXfbIndex = nextIdx;
 }
 
@@ -206,7 +206,7 @@ void MainLoopFramework::endGX() {
 }
 
 void MainLoopFramework::waitForRetrace() {
-    waitForTick(mTickDuration, mRetraceCount);
+    ::waitForTick(mTickDuration, mRetraceCount);
     JUTVideo::getManager()->waitRetraceIfNeed();
 }
 
@@ -272,11 +272,11 @@ void MainLoopFramework::endFrame() {
         case 1:
             break;
         case 2:
-            waitDrawDoneAndSetAlarm();
+            ::waitDrawDoneAndSetAlarm();
             GXFlush();
             break;
         case 3:
-            waitDrawDoneAndSetAlarm();
+            ::waitDrawDoneAndSetAlarm();
             GXFlush();
             break;
         }
@@ -294,7 +294,7 @@ void MainLoopFramework::endFrame() {
 
 void MainLoopFramework::waitBlanking(int tickCount) {
     while (tickCount-- > 0) {
-        waitForTick(mTickDuration, mRetraceCount);
+        ::waitForTick(mTickDuration, mRetraceCount);
     }
 }
 
@@ -341,31 +341,34 @@ void MainLoopFramework::clearEfb(int param1, int param2, int param3, int param4,
     GXSetZTexture(GX_ZT_REPLACE, GX_TF_Z24X8, 0);
     GXSetZCompLoc(GX_FALSE);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ZERO, GX_BL_ZERO, GX_LO_NOOP);
+
     if (mUseAlpha) {
         GXSetAlphaUpdate(GX_TRUE);
         GXSetDstAlpha(GX_TRUE, color.a);
     }
+
     GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
     GXSetCullMode(GX_CULL_BACK);
+
     GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-    GX_WRITE_U16(param1);
-    GX_WRITE_U16(param2);
-    GX_WRITE_U8(0);
-    GX_WRITE_U8(0);
-    GX_WRITE_U16(param1 + param3);
-    GX_WRITE_U16(param2);
-    GX_WRITE_U8(1);
-    GX_WRITE_U8(0);
-    GX_WRITE_U16(param1 + param3);
-    GX_WRITE_U16(param2 + param4);
-    GX_WRITE_U8(1);
-    GX_WRITE_U8(1);
-    GX_WRITE_U16(param1);
-    GX_WRITE_U16(param2 + param4);
-    GX_WRITE_U8(0);
-    GX_WRITE_U8(1);
+    {
+        GXPosition2u16(param1, param2);
+        GXTexCoord2u8(0, 0);
+
+        GXPosition2u16(param1 + param3, param2);
+        GXTexCoord2u8(1, 0);
+
+        GXPosition2u16(param1 + param3, param2 + param4);
+        GXTexCoord2u8(1, 1);
+
+        GXPosition2u16(param1, param2 + param4);
+        GXTexCoord2u8(0, 1);
+    }
+    GXEnd();
+
     GXSetZTexture(GX_ZT_DISABLE, GX_TF_Z24X8, 0);
     GXSetZCompLoc(GX_TRUE);
+
     if (mUseAlpha) {
         GXSetDstAlpha(GX_FALSE, color.a);
     }

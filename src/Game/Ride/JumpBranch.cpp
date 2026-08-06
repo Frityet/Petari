@@ -1,16 +1,24 @@
 #include "Game/Ride/JumpBranch.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Ride/SwingRopePoint.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include <revolution/mtx.h>
 #include <revolution/wpad.h>
+
+void JumpBranch_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
 
 namespace {
     static Vec sStartPointVelocity = {0.0f, 0.0f, 0.0f};
@@ -24,7 +32,8 @@ namespace NrvJumpBranch {
 
 JumpBranch::JumpBranch(const char* pName)
     : LiveActor(pName), mCenter(0.0f, 0.0f, 0.0f), mSide(0.0f, 0.0f, 1.0f), mUp(0.0f, 0.0f, 1.0f), mFront(0.0f, 0.0f, 1.0f), mRider(nullptr),
-      mSwingPoint(nullptr), mSwingReverse(false) {}
+      mSwingPoint(nullptr), mSwingReverse(false) {
+}
 
 void JumpBranch::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -34,9 +43,9 @@ void JumpBranch::init(const JMapInfoIter& rIter) {
     posMtx.identity();
     MR::makeMtxTR(reinterpret_cast< MtxPtr >(&posMtx), this);
 
-    posMtx.getXDirInline(mSide);
-    posMtx.getYDirInline(mUp);
-    posMtx.getZDirInline(mFront);
+    posMtx.getXDir(mSide);
+    posMtx.getYDir(mUp);
+    posMtx.getZDir(mFront);
 
     initModelManagerWithAnm("JumpBranch", nullptr, false);
 
@@ -112,7 +121,7 @@ bool JumpBranch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         TVec3f posDiff(pSender->mHost->mPosition);
         posDiff.sub(pReceiver->mPosition);
 
-        if (__fabsf(posDiff.dot(mFront)) > 70.0f) {
+        if (MR::abs(posDiff.dot(mFront)) > 70.0f) {
             return false;
         }
 
@@ -133,7 +142,7 @@ bool JumpBranch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         f32 dotUp = mUp.dot(diff);
         f32 dotFront = mFront.dot(diff);
 
-        diff.set(mUp.scaleInline(dotUp).addOperatorInLine(mFront.scaleInline(dotFront)));
+        diff.set(mUp * dotUp + mFront * dotFront);
 
         if (MR::isNearZero(diff)) {
             diff.set(mFront);
@@ -152,21 +161,20 @@ bool JumpBranch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
 
         TVec3f swingVelocity(0.0f, 0.0f, 0.0f);
 
-        TVec3f grabFront;
-        PSVECCrossProduct(&grabUp, &mSide, &grabFront);
+        TVec3f grabFront = grabUp.cross(mSide);
 
         if (mSwingReverse) {
             grabFront.scale(-1.0f);
         }
 
         if (playerFront.dot(*MR::getPlayerVelocity()) < 0.0f) {
-            grabFront.scale(1.0f);
+            grabFront.scale(-1.0f);
         }
 
         // interesting...
-        sStartPointVelocity.x = grabFront.x;
-        sStartPointVelocity.y = grabFront.y;
-        sStartPointVelocity.z = grabFront.z;
+        ::sStartPointVelocity.x = grabFront.x;
+        ::sStartPointVelocity.y = grabFront.y;
+        ::sStartPointVelocity.z = grabFront.z;
 
         swingVelocity.set(grabFront);
         swingVelocity.scale(speed);
@@ -177,10 +185,10 @@ bool JumpBranch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         }
 
         if (mSwingReverse) {
-            swingFront.scale(1.0f);
+            swingFront.scale(-1.0f);
         }
 
-        if (__fabsf(diff.y - mPosition.y) < 1.0f) {
+        if (MR::abs(diff.y - mPosition.y) < 1.0f) {
             swingFront.set< f32 >(0.0f, -1.0f, 0.0f);
         }
 
@@ -199,7 +207,7 @@ bool JumpBranch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         TVec3f swingSide(mSwingPoint->mSide);
         TVec3f swingFront(mSwingPoint->mFront);
 
-        posMtx.setVecAndTransInline(swingSide, mSwingPoint->mUp, swingFront, mPosition);
+        posMtx.setTR(swingSide, mSwingPoint->mUp, swingFront, mPosition);
 
         MR::setBaseTRMtx(mRider, posMtx);
         return true;
@@ -259,9 +267,7 @@ bool JumpBranch::updateBind() {
         return true;
     }
 
-    TVec3f grav(mGravity);
-    grav.scale(0.2f);
-    mSwingPoint->addAccel(grav);
+    mSwingPoint->addAccel(mGravity * 0.2f);
     mSwingPoint->strain(mPosition, 30.0f);
     mSwingPoint->updatePosAndAxis(mSwingPoint->mFront, 0.995f);
     return false;

@@ -1,4 +1,6 @@
 #include "Game/MapObj/CircleCoinGroup.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 CircleCoinGroup::CircleCoinGroup(const char* pName) : CoinGroup(pName) {
     mCoinRadius = 200.0f;
@@ -24,7 +26,8 @@ namespace MR {
     }
 };  // namespace MR
 
-CircleCoinGroup::~CircleCoinGroup() {}
+CircleCoinGroup::~CircleCoinGroup() {
+}
 
 const char* CircleCoinGroup::getCoinName() const {
     return mIsPurpleCoinGroup ? "パープルコイン(円形配置)" : "コイン(円形配置)";

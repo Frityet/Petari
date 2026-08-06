@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/NameObj/NameObjArchiveListCollector.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
+
+class NameObjArchiveListCollector;
 
 class CocoNut : public LiveActor {
 public:
@@ -67,7 +69,9 @@ public:
     void exeBreak();
     void exeReplaceReady();
 
-    inline f32 getSize() { return _D0; }
+    inline f32 getSize() {
+        return _D0;
+    }
 
 private:
     f32 _8C;

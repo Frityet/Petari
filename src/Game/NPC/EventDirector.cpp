@@ -1,4 +1,5 @@
 #include "Game/NPC/EventDirector.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/PowerStarHolder.hpp"
 #include "Game/NPC/CometEventKeeper.hpp"
 #include "Game/NPC/PowerStarEventKeeper.hpp"
@@ -8,7 +9,8 @@
 
 EventDirector::EventDirector()
     : NameObj("イベント指揮"), mPowerStarEventKeeper(nullptr), mStageStateKeeper(nullptr), mPowerStarHolder(nullptr), mCometEventKeeper(nullptr),
-      mTimeAttackEventKeeper(nullptr) {}
+      mTimeAttackEventKeeper(nullptr) {
+}
 
 void EventDirector::init(const JMapInfoIter& rIter) {
     mPowerStarEventKeeper = new PowerStarEventKeeper();

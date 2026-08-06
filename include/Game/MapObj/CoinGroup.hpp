@@ -1,13 +1,16 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/MapObj/Coin.hpp"
+
+class ActorCameraInfo;
+class Coin;
 
 class CoinGroup : public LiveActor {
 public:
     CoinGroup(const char*);
 
-    virtual ~CoinGroup() {}
+    virtual ~CoinGroup() {
+    }
 
     virtual void init(const JMapInfoIter&);
     virtual void appear();

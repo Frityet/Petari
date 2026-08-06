@@ -1,4 +1,6 @@
 #include "Game/MapObj/WaveFloatingForce.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 #include <JSystem/JMath/JMATrigonometric.hpp>
 
 WaveFloatingForce::WaveFloatingForce(const LiveActor* pActor, s32 a2, f32 a3, bool a4) {
@@ -22,7 +24,7 @@ void WaveFloatingForce::update() {
 */
 
 f32 WaveFloatingForce::getCurrentValue() const {
-    return _8 * JMath::sSinCosTable.sinLapRad(_C);
+    return _8 * MR::sin(_C);
 }
 
 #define TWO_PI 6.2831855f

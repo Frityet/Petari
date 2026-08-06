@@ -6,32 +6,40 @@
 #include "Game/LiveActor/AllLiveActorGroup.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/EffectKeeper.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/HitSensorKeeper.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
 #include "Game/LiveActor/RailRider.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/Spine.hpp"
+#include "Game/Map/StageSwitch.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
+#include "Game/Screen/StarPointerTarget.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 
-class StarPointerTarget {
-public:
-    StarPointerTarget(f32, const TVec3f*, MtxPtr, TVec3f);
-
-    u8 _0[0x1C];
-};
+void LiveActor_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
 
 LiveActor::LiveActor(const char* pName)
     : NameObj(pName), mPosition(0.0f, 0.0f, 0.0f), mRotation(0.0f, 0.0f, 0.0f), mScale(1.0f, 1.0f, 1.0f), mVelocity(0.0f, 0.0f, 0.0f),
-      mGravity(0.0f, -1.0f, 0.0f), mModelManager(nullptr), mAnimKeeper(nullptr), mSpine(nullptr), mSensorKeeper(nullptr), mBinder(nullptr),
-      mRailRider(nullptr), mEffectKeeper(nullptr), mSoundObject(nullptr), mShadowControllerList(nullptr), mCollisionParts(nullptr),
-      mStageSwitchCtrl(nullptr), mStarPointerTarget(nullptr), mActorLightCtrl(nullptr), mCameraCtrl(nullptr) {
+      mGravity(0.0f, -1.0f, 0.0f), mModelManager(), mAnimKeeper(), mSpine(), mSensorKeeper(), mBinder(), mRailRider(), mEffectKeeper(),
+      mSoundObject(), mShadowControllerList(), mCollisionParts(), mStageSwitchCtrl(), mStarPointerTarget(), mActorLightCtrl(), mCameraCtrl() {
     MR::getAllLiveActorGroup()->registerActor(this);
     MR::getClippingDirector()->registerActor(this);
 }
 
-void LiveActor::init(const JMapInfoIter& rIter) {}
+void LiveActor::init(const JMapInfoIter& rIter) {
+}
 
 void LiveActor::appear() {
     makeActorAppeared();
@@ -71,11 +79,8 @@ void LiveActor::kill() {
     makeActorDead();
 }
 
-// FIXME: `mBinder` should be loaded twice.
 void LiveActor::makeActorDead() {
-    mVelocity.z = 0.0f;
-    mVelocity.y = 0.0f;
-    mVelocity.x = 0.0f;
+    mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 
     MR::clearHitSensors(this);
 
@@ -83,7 +88,7 @@ void LiveActor::makeActorDead() {
         mSensorKeeper->invalidateBySystem();
     }
 
-    if (mBinder != nullptr) {
+    if (getBinder() != nullptr) {
         mBinder->clear();
     }
 
@@ -280,11 +285,10 @@ MtxPtr LiveActor::getBaseMtx() const {
     return nullptr;
 }
 
-// FIXME: LiveActor::mSensorKeeper should be loaded twice.
 void LiveActor::startClipped() {
     mFlag.mIsClipped = true;
 
-    if (mSensorKeeper != nullptr) {
+    if (getSensorKeeper() != nullptr) {
         mSensorKeeper->invalidateBySystem();
     }
 
@@ -301,11 +305,10 @@ void LiveActor::startClipped() {
     MR::disconnectToDrawTemporarily(this);
 }
 
-// FIXME: LiveActor::mSensorKeeper should be loaded twice.
 void LiveActor::endClipped() {
     mFlag.mIsClipped = false;
 
-    if (mSensorKeeper != nullptr) {
+    if (getSensorKeeper() != nullptr) {
         mSensorKeeper->validateBySystem();
         MR::updateHitSensorsAll(this);
     }
@@ -357,9 +360,8 @@ void LiveActor::initRailRider(const JMapInfoIter& rIter) {
     mRailRider = new RailRider(rIter);
 }
 
-// FIXME: There should be an extra local variable.
 void LiveActor::initEffectKeeper(int a1, const char* a2, bool doSort) {
-    mEffectKeeper = new EffectKeeper(mName, MR::getModelResourceHolder(this), a1, a2);
+    mEffectKeeper = new EffectKeeper(getName(), MR::getModelResourceHolder(this), a1, a2);
 
     if (doSort) {
         mEffectKeeper->enableSort();
@@ -372,7 +374,6 @@ void LiveActor::initEffectKeeper(int a1, const char* a2, bool doSort) {
     }
 }
 
-// FIXME: AudAnmSoundObject should be 116 bytes in size.
 void LiveActor::initSound(int param1, bool param2) {
     if (!param2) {
         mSoundObject = new AudAnmSoundObject(&mPosition, param1, MR::getCurrentHeap());
@@ -385,32 +386,33 @@ void LiveActor::initShadowControllerList(u32 numShadows) {
     mShadowControllerList = new ShadowControllerList(this, numShadows);
 }
 
-void LiveActor::initActorCollisionParts(const char* pName, HitSensor* pSensor, ResourceHolder* pResourceHolder, MtxPtr pMtx, bool autoEqualScale,
-                                        bool notUsingScale) {
+void LiveActor::initActorCollisionParts(const char* pParam1, HitSensor* pParam2, ResourceHolder* pParam3, MtxPtr pParam4, bool param5, bool param6) {
     MR::CollisionScaleType scaleType;
 
-    if (notUsingScale) {
-        scaleType = MR::NoScale;
-    } else if (autoEqualScale) {
-        scaleType = MR::AutoEqualScale;
+    if (param6) {
+        scaleType = MR::CollisionScaleType_NotUsingScale;
     } else {
-        scaleType = MR::UNKNOWN_2;
+        scaleType = MR::CollisionScaleType_Unk2;
+
+        if (param5) {
+            scaleType = MR::CollisionScaleType_AutoEqualScale;
+        }
     }
 
-    if (pResourceHolder != nullptr) {
+    if (pParam3 != nullptr) {
         TPos3f mtx;
 
-        if (pMtx != nullptr) {
-            mtx.set(pMtx);
+        if (pParam4 != nullptr) {
+            mtx.set(pParam4);
         } else {
-            MR::makeMtxTRS(mtx, this);
+            MR::makeMtxTRS(mtx.toMtxPtr(), this);
         }
 
-        mCollisionParts = MR::createCollisionPartsFromResourceHolder(pResourceHolder, pName, pSensor, mtx, scaleType);
-    } else if (pMtx == nullptr) {
-        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pName, pSensor, scaleType);
+        mCollisionParts = MR::createCollisionPartsFromResourceHolder(pParam3, pParam1, pParam2, mtx, scaleType);
+    } else if (pParam4 == nullptr) {
+        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pParam1, pParam2, scaleType);
     } else {
-        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pName, pSensor, pMtx, scaleType);
+        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pParam1, pParam2, pParam4, scaleType);
     }
 
     MR::invalidateCollisionParts(this);
@@ -420,38 +422,15 @@ void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
     mStageSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
 }
 
-void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* pPos, MtxPtr pMtx, TVec3f offset) {
-    mStarPointerTarget = new StarPointerTarget(radius, pPos, pMtx, offset);
+void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* pTrans, MtxPtr pMtx, TVec3f offset) {
+    mStarPointerTarget = new StarPointerTarget(radius, pTrans, pMtx, offset);
 }
 
 void LiveActor::initActorLightCtrl() {
     mActorLightCtrl = new ActorLightCtrl(this);
 }
 
-void LiveActor::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {}
-
-bool LiveActor::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
-    return false;
-}
-
-bool LiveActor::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    return false;
-}
-
-bool LiveActor::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    return false;
-}
-
-bool LiveActor::receiveMsgTake(HitSensor* pSender, HitSensor* pReceiver) {
-    return false;
-}
-
-bool LiveActor::receiveMsgTaken(HitSensor* pSender, HitSensor* pReceiver) {
-    return false;
-}
-
-bool LiveActor::receiveMsgThrow(HitSensor* pSender, HitSensor* pReceiver) {
-    return false;
+void LiveActor::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
 }
 
 bool LiveActor::receiveMsgApart(HitSensor* pSender, HitSensor* pReceiver) {
@@ -460,22 +439,17 @@ bool LiveActor::receiveMsgApart(HitSensor* pSender, HitSensor* pReceiver) {
     return true;
 }
 
-bool LiveActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    return false;
-}
-
 void LiveActor::addToSoundObjHolder() {
     mSoundObject->addToSoundObjHolder();
 }
 
 void LiveActor::updateBinder() {
     if (mBinder == nullptr) {
-        mPosition.add(mVelocity);
+        mPosition += mVelocity;
     } else if (mFlag.mIsNoBind) {
-        mPosition.add(mVelocity);
+        mPosition += mVelocity;
         mBinder->clear();
     } else {
-        TVec3f bindMove = mBinder->bind(mVelocity);
-        mPosition.add(bindMove);
+        mPosition += getBinder()->bind(mVelocity);
     }
 }

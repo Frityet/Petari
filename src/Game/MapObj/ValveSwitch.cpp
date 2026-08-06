@@ -1,5 +1,7 @@
 #include "Game/MapObj/ValveSwitch.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvValveSwitch {
     NEW_NERVE(ValveSwitchNrvWait, ValveSwitch, Wait);
@@ -72,9 +74,7 @@ void ValveSwitch::exeAdjust() {
         MR::setBrkFrameAndStop(this, 0.0f);
     }
 
-    f32 step = getNerveStep() / 3.0f;
-    HitSensor* sensor = getSensor("body");
-    JMAVECLerp(&_8C->mPosition, &sensor->mPosition, &_8C->mPosition, step);
+    _8C->mPosition.lerp(_8C->mPosition, getSensor("body")->mPosition, getNerveStep() / 3.0f);
 
     if (MR::isStep(this, 3)) {
         setNerve(&NrvValveSwitch::ValveSwitchNrvValve::sInstance);
@@ -99,7 +99,7 @@ void ValveSwitch::exeValve() {
 
     if (MR::isStep(this, 30)) {
         MR::startSound(this, "SE_OJ_VALVE_SWITCH_ON");
-        MR::tryRumblePadVeryStrong(this, 0);
+        MR::tryRumblePadVeryStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
     }
 
@@ -131,4 +131,5 @@ void ValveSwitch::updateBindActorMtx() {
     MR::setBaseTRMtx(_8C, posMtx);
 }
 
-ValveSwitch::~ValveSwitch() {}
+ValveSwitch::~ValveSwitch() {
+}

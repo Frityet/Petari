@@ -1,4 +1,6 @@
 #include "Game/MapObj/CoinSpot.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvCoinSpot {
     NEW_NERVE(CoinSpotNrvWait, CoinSpot, Wait);
@@ -79,6 +81,8 @@ void CoinSpot::exeIsInTornado() {
     }
 }
 
-void CoinSpot::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {}
+void CoinSpot::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
+}
 
-CoinSpot::~CoinSpot() {}
+CoinSpot::~CoinSpot() {
+}

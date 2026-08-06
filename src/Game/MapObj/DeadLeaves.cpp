@@ -1,5 +1,7 @@
 #include "Game/MapObj/DeadLeaves.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvDeadLeaves {
     NEW_NERVE(DeadLeavesNrvWait, DeadLeaves, Wait);
@@ -31,7 +33,8 @@ void DeadLeaves::init(const JMapInfoIter& rIter) {
     }
 }
 
-void DeadLeaves::exeWait() {}
+void DeadLeaves::exeWait() {
+}
 
 void DeadLeaves::exeSpin() {
     if (MR::isFirstStep(this)) {
@@ -62,4 +65,5 @@ bool DeadLeaves::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* 
     return false;
 }
 
-DeadLeaves::~DeadLeaves() {}
+DeadLeaves::~DeadLeaves() {
+}

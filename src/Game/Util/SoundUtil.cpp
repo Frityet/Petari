@@ -13,21 +13,19 @@
 #include "Game/GameAudio/AudEffectDirector.hpp"
 #include "Game/GameAudio/AudSeKeeper.hpp"
 #include "Game/GameAudio/AudStageBgmWrap.hpp"
-#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/RhythmLib/AudChordInfo.hpp"
 #include "Game/RhythmLib/AudMeObject.hpp"
-#include "Game/SingletonHolder.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/ResourceHolder.hpp"
-#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/EventUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
-
-class AudTalkSoundData {
-public:
-    static JAISoundID getSoundIDFromTalkSoundNo(u8);
-};
 
 namespace {
     AudBgmConductor* getAudBgmConductor() {
@@ -254,42 +252,7 @@ namespace MR {
         AudWrap::getSystemMeObject()->startMe(id);
     }
 
-    s32 getMapSoundCodeFoot(const LiveActor* pActor) {
-        Binder* pBinder = pActor->mBinder;
-
-        if (pBinder == nullptr) {
-            return -1;
-        }
-
-        const HitInfo* pGround = &pBinder->mGroundInfo;
-        const HitInfo* pWall = &pBinder->mWallInfo;
-        const HitInfo* pRoof = &pBinder->mRoofInfo;
-        s32 groundCode = -1;
-        s32 wallCode = -1;
-        s32 roofCode = -1;
-
-        if (pGround != nullptr) {
-            groundCode = getSoundCodeIndex(pGround->mParentTriangle.getAttributes());
-        } else if (pWall != nullptr) {
-            wallCode = getSoundCodeIndex(pWall->mParentTriangle.getAttributes());
-        } else if (pRoof != nullptr) {
-            roofCode = getSoundCodeIndex(pRoof->mParentTriangle.getAttributes());
-        }
-
-        if (groundCode >= 0) {
-            return groundCode;
-        }
-
-        if (roofCode >= 0) {
-            return roofCode;
-        }
-
-        if (wallCode >= 0) {
-            return wallCode;
-        }
-
-        return -1;
-    }
+    // getMapSoundCodeFoot
 
     void setMapSondCodeGravity(const LiveActor* pActor, s32 code) {
         if (pActor->mSoundObject == nullptr) {
@@ -442,11 +405,11 @@ namespace MR {
         return false;
     }
 
-    void setStageBGMState(s32 param1, u32 param2) {
+    void setStageBGMState(s32 state, u32 time) {
         AudBgm* pStageBgm = AudWrap::getStageBgm();
 
         if (pStageBgm != nullptr) {
-            pStageBgm->changeTrackMuteState(param1, param2);
+            pStageBgm->changeTrackMuteState(state, time);
         }
     }
 

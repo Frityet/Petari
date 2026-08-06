@@ -1,21 +1,23 @@
 #include "Game/Ride/SlingShooter.hpp"
+#include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/SpiderThread.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/mtx.h>
 #include <revolution/wpad.h>
 
@@ -52,8 +54,8 @@ void SlingShooter::init(const JMapInfoIter& rIter) {
 
     initHitSensor(3);
     MR::addHitSensorCallbackBinder(this, "bind", 8, 80.0f);
-    MR::addHitSensorCallback(this, "npc", 14, 8, 150.0f);
-    MR::addHitSensor(this, "attack", 12, 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));
+    MR::addHitSensorCallback(this, "npc", ATYPE_SPRING_ATTACKER_KINOPIO_BIND, 8, 150.0f);
+    MR::addHitSensor(this, "attack", ATYPE_SPRING_ATTACKER, 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));
 
     initBinder(50.0f, 50.0f, 8);
     MR::offBind(this);
@@ -179,7 +181,7 @@ void SlingShooter::exeAim() {
         }
     }
 
-    f32 dist = PSVECDistance(&mPosition, mNeutralPos);
+    f32 dist = mPosition.distance(*mNeutralPos);
     if (dist >= 100.0f) {
         MR::startLevelSound(this, "SE_OJ_LV_SPACE_COCOON_DRAG", ((dist - 100.0f) / 200.0f) * 100.0f);
     }
@@ -451,14 +453,12 @@ void SlingShooter::calcAndSetBaseMtx() {
 }
 
 void SlingShooter::calcBaseMtx(TPos3f* pBaseMtx) {
-    TVec3f up(*mUp);
-    up.scale(-1.0f);
+    TVec3f up(*mUp * -1.0f);
     MR::normalize(&up);
     TVec3f front(0.0f, 0.0f, -1.0f);
-    TVec3f side;
-    PSVECCrossProduct(&up, &front, &side);
+    TVec3f side = up.cross(front);
     MR::normalize(&side);
-    PSVECCrossProduct(&side, &up, &front);
+    front.cross(side, up);
     MR::normalize(&front);
     pBaseMtx->setXYZDir(side, up, front);
     pBaseMtx->setTrans(*mBasePos);
@@ -505,15 +505,15 @@ bool SlingShooter::updateWait() {
 }
 
 void SlingShooter::updateHang() {
-    f32 dist = PSVECDistance(&mPosition, mNeutralPos);
+    f32 dist = mPosition.distance(*mNeutralPos);
 
     if (MR::isStarPointerInScreen(mPadChannel)) {
         MR::calcStarPointerPosOnPlane(&mPointerPos, *mNeutralPos, TVec3f(0.0f, 0.0f, 1.0f), mPadChannel, false);
     }
 
-    TVec3f v1(mPointerPos);
+    TVec3f v1 = mPointerPos;
 
-    if (PSVECDistance(&v1, mNeutralPos) > 300.0f) {
+    if (v1.distance(*mNeutralPos) > 300.0f) {
         v1.set(mPointerPos);
         v1.sub(*mNeutralPos);
         MR::normalize(&v1);
@@ -521,9 +521,9 @@ void SlingShooter::updateHang() {
         v1.add(*mNeutralPos);
     }
 
-    TVec3f pos(v1.scaleInline(0.1f).addOperatorInLine(mPosition.scaleInline(0.9f)));
+    TVec3f pos = v1 * 0.1f + mPosition * 0.9f;
 
-    mVelocity.setPS2(pos.subOperatorInLine(mPosition));
+    mVelocity = pos - mPosition;
 
     if (mRider == nullptr) {
         return;
@@ -573,10 +573,9 @@ void SlingShooter::updateActorMtx() {
         MR::normalize(&up);
         TVec3f front;
         mBaseMtx.getZDir(front);
-        TVec3f side;
-        PSVECCrossProduct(&up, &front, &side);
+        TVec3f side = up.cross(front);
         MR::normalize(&side);
-        PSVECCrossProduct(&front, &side, &up);
+        up.cross(front, side);
         MR::normalize(&up);
         mBaseMtx.setXYZDir(side, up, front);
     }
@@ -602,7 +601,7 @@ bool SlingShooter::tryRelease() {
         return false;
     }
 
-    if (PSVECDistance(&mPosition, mNeutralPos) < 100.0f) {
+    if (mPosition.distance(*mNeutralPos) < 100.0f) {
         MR::sendMsgToSpiderThread(ACTMES_SLING_SHOOT_ACTOR_HANG_END, getSensor("bind"));
         endCommandStream();
 
@@ -636,8 +635,7 @@ bool SlingShooter::tryRelease() {
 
     TVec3f front;
     mBaseMtx.getZDir(front);
-    TVec3f side;
-    PSVECCrossProduct(&up, &front, &side);
+    TVec3f side = up.cross(front);
     MR::normalize(&side);
     mBaseMtx.setXYZDir(side, up, front);
 

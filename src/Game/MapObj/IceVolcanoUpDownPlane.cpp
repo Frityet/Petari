@@ -1,14 +1,15 @@
 #include "Game/MapObj/IceVolcanoUpDownPlane.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/MapObj/RailMoveObj.hpp"
 #include "Game/MapObj/StageEffectDataTable.hpp"
-#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
-IceVolcanoUpDownPlane::IceVolcanoUpDownPlane(const char* pName) : RailMoveObj(pName), mNearestPosToPlayer(0.0f, 0.0f, 0.0f) {}
+IceVolcanoUpDownPlane::IceVolcanoUpDownPlane(const char* pName) : RailMoveObj(pName), mNearestPosToPlayer(0.0f, 0.0f, 0.0f) {
+}
 
 void IceVolcanoUpDownPlane::move() {
     bool success = tryCalcNearestPosToPlayer(&mNearestPosToPlayer);
@@ -19,11 +20,8 @@ void IceVolcanoUpDownPlane::move() {
 }
 
 bool IceVolcanoUpDownPlane::tryCalcNearestPosToPlayer(TVec3f* pArg) const {
-    TVec3f* playerPos = MR::getPlayerPos();
-
-    // f1 f2 paired single regswap
     TVec3f vec;
-    JMathInlineVEC::PSVECSubtract2(playerPos, &mPosition, &vec);
+    vec.sub(*MR::getPlayerPos(), mPosition);
 
     TVec3f upVec;
     MR::calcUpVec(&upVec, this);
@@ -32,18 +30,16 @@ bool IceVolcanoUpDownPlane::tryCalcNearestPosToPlayer(TVec3f* pArg) const {
         return false;
     }
 
-    TVec3f scaledAdded;
-    JMAVECScaleAdd(&upVec, &vec, &scaledAdded, -upVec.dot(vec));
+    TVec3f scaledAdded = vec.killElement(upVec);
 
     f32 radius;
     MR::calcModelBoundingRadius(&radius, this);
 
     if (scaledAdded.length() > radius) {
-        scaledAdded.setLength2(radius);
+        scaledAdded.setLength(radius);
     }
 
-    // f1 f2 paired single regswap
-    JMathInlineVEC::PSVECAdd3(&scaledAdded, &mPosition, pArg);
+    pArg->add(scaledAdded, mPosition);
     return true;
 }
 
@@ -51,4 +47,5 @@ TVec3f* IceVolcanoUpDownPlane::getSoundCalcPos() {
     return &mNearestPosToPlayer;
 }
 
-void RailMoveObj::setupInitInfo(const JMapInfoIter& rIter, MapObjActorInitInfo* pActorInitInfo) {}
+void RailMoveObj::setupInitInfo(const JMapInfoIter& rIter, MapObjActorInitInfo* pActorInitInfo) {
+}

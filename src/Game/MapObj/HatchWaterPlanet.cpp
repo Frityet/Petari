@@ -1,6 +1,8 @@
 #include "Game/MapObj/HatchWaterPlanet.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvHatchWaterPlanet {
     NEW_NERVE(HatchWaterPlanetNrvWait, HatchWaterPlanet, Wait);
@@ -20,7 +22,7 @@ void HatchWaterPlanet::init(const JMapInfoIter& rIter) {
     initHitSensor(1);
     MR::addBodyMessageSensorMapObj(this);
     MR::initCollisionParts(this, "HatchWaterPlanetBefore", getSensor(nullptr), nullptr);
-    mCollisionParts = MR::createCollisionPartsFromLiveActor(this, "HatchWaterPlanetAfter", getSensor(nullptr), (MR::CollisionScaleType)2);
+    mCollisionParts = MR::createCollisionPartsFromLiveActor(this, "HatchWaterPlanetAfter", getSensor(nullptr), MR::CollisionScaleType_Unk2);
     MR::invalidateCollisionParts(mCollisionParts);
     initEffectKeeper(0, nullptr, false);
     initSound(4, false);
@@ -40,7 +42,8 @@ void HatchWaterPlanet::control() {
     mPlanetLODCtrl->update();
 }
 
-void HatchWaterPlanet::exeWait() {}
+void HatchWaterPlanet::exeWait() {
+}
 
 void HatchWaterPlanet::exeOpen() {
     if (MR::isFirstStep(this)) {
@@ -67,4 +70,5 @@ void HatchWaterPlanet::exeWaitAfterOpen() {
     }
 }
 
-HatchWaterPlanet::~HatchWaterPlanet() {}
+HatchWaterPlanet::~HatchWaterPlanet() {
+}

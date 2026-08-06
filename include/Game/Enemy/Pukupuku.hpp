@@ -2,6 +2,9 @@
 
 #include "Game/LiveActor/ActorStateBase.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 class ParabolicPath;
 class ValueControl;
@@ -65,11 +68,17 @@ public:
         MR::startBtp(this, pBtp);
     }
 
-    inline void getCurrentRailPointPos(TVec3f* pOut) { MR::calcRailPointPos(pOut, this, MR::getCurrentRailPointNo(this)); }
+    inline void getCurrentRailPointPos(TVec3f* pOut) {
+        MR::calcRailPointPos(pOut, this, MR::getCurrentRailPointNo(this));
+    }
 
-    inline void getNextRailPointPos(TVec3f* pOut) { MR::calcRailPointPos(pOut, this, MR::getNextRailPointNo(this)); }
+    inline void getNextRailPointPos(TVec3f* pOut) {
+        MR::calcRailPointPos(pOut, this, MR::getNextRailPointNo(this));
+    }
 
-    inline void exeMoveWaterAfterJumpAfterPointing() { updateMoveWaterAfterJump(); }
+    inline void exeMoveWaterAfterJumpAfterPointing() {
+        updateMoveWaterAfterJump();
+    }
 
     PukupukuStateLanding* mStateLanding;  // 0x8C
     TVec3f _90;

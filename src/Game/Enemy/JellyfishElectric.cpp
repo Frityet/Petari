@@ -1,9 +1,23 @@
 #include "Game/Enemy/JellyfishElectric.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/WalkerStateBindStarPointer.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/Spine.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorStateUtil.hpp"
+#include "Game/Util/Color.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LightUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 namespace NrvJellyfishElectric {
     NEW_NERVE(JellyfishElectricNrvWait, JellyfishElectric, Wait);
@@ -80,7 +94,7 @@ void JellyfishElectric::kill() {
 }
 
 void JellyfishElectric::control() {
-    Color8 clr = sPointLightColor;
+    Color8 clr = ::sPointLightColor;
     MR::requestPointLight(this, TVec3f(mPosition), clr, 0.0998f, -1);
     MR::changeShowModelFlagSyncNearClipping(this, 700.0f);
     mController->updateNerve();
@@ -96,18 +110,16 @@ void JellyfishElectric::control() {
             }
         }
 
-        mVelocity.scale(JMath::sSinCosTable.sinLapRad(_94 + 0x2D), mGravity);
+        mVelocity.scale(MR::sin(_94 + 0x2D), mGravity);
         _94++;
     }
 }
 
 void JellyfishElectric::calcAndSetBaseMtx() {
-    TVec3f scale;
-    TVec3f v7 = -mGravity;
     TPos3f pos;
-    MR::makeMtxFrontUpPos(&pos, _98, v7, mPosition);
+    MR::makeMtxFrontUpPos(&pos, _98, -mGravity, mPosition);
     MR::setBaseTRMtx(this, pos);
-    JMathInlineVEC::PSVECMultiply(&mController->_C, &mScale, &scale);
+    TVec3f scale = mController->_C * mScale;
     MR::setBaseScale(this, scale);
 }
 
@@ -253,7 +265,7 @@ bool JellyfishElectric::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitS
     return false;
 }
 
-bool JellyfishElectric::receiveMsgEnemyAttack(u32 msg, HitSensor*, HitSensor*) {
+bool JellyfishElectric::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgExplosionAttack(msg) && !isNerve(&NrvJellyfishElectric::JellyfishElectricNrvDeath::sInstance)) {
         knockOut();
         return true;

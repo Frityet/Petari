@@ -1,8 +1,8 @@
 #include "Game/Util/MathUtil.hpp"
-#include "Game/SingletonHolder.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include <JSystem/JGeometry/TUtil.hpp>
 #include <JSystem/JMath/JMATrigonometric.hpp>
 #include <JSystem/JMath/JMath.hpp>
@@ -15,9 +15,14 @@ namespace {
     const f32 cMaxDegree = 360.0f;
 };  // namespace
 
+void FORCE_SETLENGTH() {
+    TVec3f vec;
+    vec.setLength(1.0f);
+}
+
 namespace MR {
     void initAcosTable() {
-        gAcosTable = new f32[256];
+        ::gAcosTable = new f32[256];
 
         for (u32 i = 0; i < 256; i++) {
             // FIXME: Double-precision floating-point numbers load from incorrect offsets.
@@ -27,22 +32,22 @@ namespace MR {
                 x = 1.0f;
             }
 
-            gAcosTable[i] = acos(x);
+            ::gAcosTable[i] = ::acos(x);
         }
     }
 
     f32 acosEx(f32 x) {
-        if (__fabsf(x) < 0.98f) {
-            return JMAAcosRadian(x);
+        if (MR::abs(x) < 0.98f) {
+            return MR::acos(x);
         } else if (x < 0.0f) {
             u32 index = static_cast< u32 >((-x - 0.98f) * 255.0f * 50.0f);
-            f32 acos = gAcosTable[index];
+            f32 acos = ::gAcosTable[index];
 
             return PI - acos;
         } else {
             u32 index = static_cast< u32 >((x - 0.98f) * 255.0f * 50.0f);
 
-            return gAcosTable[index];
+            return ::gAcosTable[index];
         }
     }
 
@@ -62,7 +67,7 @@ namespace MR {
     }
 
     f32 getRandomDegree() {
-        return getRandom(cMinDegree, cMaxDegree);
+        return getRandom(::cMinDegree, ::cMaxDegree);
     }
 
     void calcRandomVec(TVec3f* pDst, f32 min, f32 max) {
@@ -85,20 +90,12 @@ namespace MR {
         pDst->set< f32 >(getRandom(-range, range), getRandom(-range, range), getRandom(-range, range));
     }
 
-    // stack places randVec and otherVec wrongly
     void addRandomVector(TVec3f* pOut, const TVec3f& rOtherVec, f32 range) {
         f32 x = getRandom(-range, range);
         f32 y = getRandom(-range, range);
         f32 z = getRandom(-range, range);
 
-        TVec3f randVec;
-        randVec.x = x;
-        randVec.y = y;
-        randVec.z = z;
-
-        TVec3f otherVec(rOtherVec);
-        otherVec.add(randVec);
-        pOut->set(otherVec);
+        pOut->set(rOtherVec + TVec3f(x, y, z));
     }
 
     void turnRandomVector(TVec3f* pDst, const TVec3f& rSrc, f32 range) {
@@ -106,7 +103,7 @@ namespace MR {
 
         addRandomVector(pDst, rSrc, range);
 
-        if (isNearZero(rSrc)) {
+        if (isNearZero(*pDst)) {
             pDst->set(rSrc);
         } else {
             pDst->setLength(srcLength);
@@ -145,38 +142,38 @@ namespace MR {
     // getReduceVibrationValue
 
     void makeAxisFrontUp(TVec3f* pParam1, TVec3f* pParam2, const TVec3f& rParam3, const TVec3f& rParam4) {
-        PSVECCrossProduct(&rParam4, &rParam3, pParam1);
-        PSVECNormalize(pParam1, pParam1);
-        PSVECCrossProduct(&rParam3, pParam1, pParam2);
+        pParam1->cross(rParam4, rParam3);
+        normalize(pParam1);
+        pParam2->cross(rParam3, *pParam1);
     }
 
     void makeAxisFrontSide(TVec3f* pParam1, TVec3f* pParam2, const TVec3f& rParam3, const TVec3f& rParam4) {
-        PSVECCrossProduct(&rParam3, &rParam4, pParam1);
-        PSVECNormalize(pParam1, pParam1);
-        PSVECCrossProduct(pParam1, &rParam3, pParam2);
+        pParam1->cross(rParam3, rParam4);
+        normalize(pParam1);
+        pParam2->cross(*pParam1, rParam3);
     }
 
     void makeAxisUpFront(TVec3f* pParam1, TVec3f* pParam2, const TVec3f& rParam3, const TVec3f& rParam4) {
-        PSVECCrossProduct(&rParam3, &rParam4, pParam1);
-        PSVECNormalize(pParam1, pParam1);
-        PSVECCrossProduct(pParam1, &rParam3, pParam2);
+        pParam1->cross(rParam3, rParam4);
+        normalize(pParam1);
+        pParam2->cross(*pParam1, rParam3);
     }
 
     void makeAxisUpSide(TVec3f* pParam1, TVec3f* pParam2, const TVec3f& rParam3, const TVec3f& rParam4) {
-        PSVECCrossProduct(&rParam4, &rParam3, pParam1);
-        PSVECNormalize(pParam1, pParam1);
-        PSVECCrossProduct(&rParam3, pParam1, pParam2);
+        pParam1->cross(rParam4, rParam3);
+        normalize(pParam1);
+        pParam2->cross(rParam3, *pParam1);
     }
 
     void makeAxisVerticalZX(TVec3f* pParam1, const TVec3f& rParam2) {
         TVec3f z(0.0f, 0.0f, 1.0f);
 
-        pParam1->rejection(z, rParam2);
+        pParam1->killElement(z, rParam2);
 
         if (isNearZero(*pParam1)) {
             TVec3f x(1.0f, 0.0f, 0.0f);
 
-            pParam1->rejection(x, rParam2);
+            pParam1->killElement(x, rParam2);
         }
 
         normalize(pParam1);
@@ -184,7 +181,7 @@ namespace MR {
 
     void makeAxisCrossPlane(TVec3f* pParam1, TVec3f* pParam2, const TVec3f& rParam3) {
         makeAxisVerticalZX(pParam1, rParam3);
-        PSVECCrossProduct(pParam1, &rParam3, pParam2);
+        pParam2->cross(*pParam1, rParam3);
         normalizeOrZero(pParam2);
     }
 
@@ -198,9 +195,7 @@ namespace MR {
             v1.set(rParam3);
         }
 
-        TVec3f v2;
-
-        PSVECCrossProduct(&v1, &rParam4, &v2);
+        TVec3f v2 = v1.cross(rParam4);
 
         if (isNearZero(v2)) {
             pParam1->zero();
@@ -291,7 +286,7 @@ namespace MR {
         if (rSrc.squared() > length * length) {
             f32 sqr = rSrc.squared();
 
-            if (length <= 0.0000038146973f) {
+            if (length <= MR::epsilon()) {
                 pDst->zero();
             } else {
                 f32 invSqrt = JGeometry::TUtil< f32 >::inv_sqrt(sqr);
@@ -321,17 +316,14 @@ namespace MR {
         }
     }
 
-    /*
-    f32 calcRotateY(f32 a1, f32 a2) {
-        f32 val = JMath::sAtanTable.atan2_(-a2, a1);
-        return cMinDegree + mod((cMaxDegree + ((90.0f + (val * 57.295776f)) - cMinDegree)), cMaxDegree);
+    f32 calcRotateY(f32 x, f32 z) {
+        return MR::repeatDegree(MR::toDegree(MR::atan2(-z, x)) + 90.0f);
     }
-    */
 
     // Compiler refuses to cooperate, but mathematically this is correct
     f32 calcRotateZ(const TVec3f& a1, const TVec3f& a2) {
         TVec2f vec(a2.y - a1.y, a2.x - a1.x);
-        return 57.29578f * JMath::sAtanTable.atan2_(vec.x, vec.y);
+        return _180_PI * MR::atan2(vec.x, vec.y);
     }
 
     f32 calcDistanceXY(const TVec3f& rPos1, const TVec3f& rPos2) {
@@ -444,15 +436,15 @@ namespace MR {
     // calcReflectionVector
 
     bool isSameDirection(const TVec3f& rVec1, const TVec3f& rVec2, f32 tolerance) {
-        if (__fabsf(rVec1.y * rVec2.z - rVec1.z * rVec2.y) > tolerance) {
+        if (MR::abs(rVec1.y * rVec2.z - rVec1.z * rVec2.y) > tolerance) {
             return false;
         }
 
-        if (__fabsf(rVec1.z * rVec2.x - rVec1.x * rVec2.z) > tolerance) {
+        if (MR::abs(rVec1.z * rVec2.x - rVec1.x * rVec2.z) > tolerance) {
             return false;
         }
 
-        if (__fabsf(rVec1.x * rVec2.y - rVec1.y * rVec2.x) > tolerance) {
+        if (MR::abs(rVec1.x * rVec2.y - rVec1.y * rVec2.x) > tolerance) {
             return false;
         }
 
@@ -768,7 +760,7 @@ namespace MR {
     }
 
     f32 diffAngleAbsFast(const TVec3f& rParam1, const TVec3f& rParam2) {
-        return JMAAcosRadian(rParam1.dot(rParam2));
+        return MR::acos(rParam1.dot(rParam2));
     }
 
     f32 diffAngleAbs(const TVec3f& rParam1, const TVec3f& rParam2) {
@@ -802,8 +794,7 @@ namespace MR {
     f32 diffAngleSigned(const TVec3f& rParam1, const TVec3f& rParam2, const TVec3f& rParam3) {
         f32 angleDiff = diffAngleAbs(rParam1, rParam2);
 
-        TVec3f v;
-        PSVECCrossProduct(&rParam1, &rParam3, &v);
+        TVec3f v = rParam1.cross(rParam3);
 
         if (v.dot(rParam2) >= 0.0f) {
             return angleDiff;
@@ -869,7 +860,7 @@ namespace MR {
             return false;
         }
 
-        v4.rejection(rParam1, rParam3);
+        v4.killElement(rParam1, rParam3);
         normalizeOrZero(&v4);
 
         f32 cos = JMACosRadian(param4);
@@ -879,8 +870,8 @@ namespace MR {
             return false;
         }
 
-        f32 sin = __fabsf(JMASinRadian(param5));
-        f32 dot2 = __fabsf(v1.dot(v3));
+        f32 sin = MR::abs(JMASinRadian(param5));
+        f32 dot2 = MR::abs(v1.dot(v3));
 
         return !(dot2 > sin);
     }
@@ -895,7 +886,7 @@ namespace MR {
     // createBoundingBox
 
     bool isNormalize(const TVec3f& rVec, f32 tolerance) {
-        return __fabsf(1.0f - rVec.length()) <= tolerance;
+        return MR::abs(1.0f - rVec.length()) <= tolerance;
     }
 
     // Matches with no consequences, but I am not exactly sure if *THIS* is what Nintendo would've done...

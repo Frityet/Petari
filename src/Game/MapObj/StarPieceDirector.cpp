@@ -1,6 +1,8 @@
 #include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/StarPiece.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Util.hpp"
 
@@ -282,13 +284,13 @@ TVec3f StarPieceDirector::calcPosCameraShoot(s32 addOrSubXDir) {
     TVec3f camZDir(MR::getCamZdir());
 
     if (addOrSubXDir == 0) {
-        returnVec.add(camXDir.scaleInline(300.0f));
+        returnVec.add(camXDir * 300.0f);
     } else {
-        returnVec.sub(camXDir.scaleInline(300.0f));
+        returnVec.sub(camXDir * 300.0f);
     }
 
-    returnVec.add(camYDir.scaleInline(0.0f));
-    returnVec.add(camZDir.scaleInline(30.0f));
+    returnVec.add(camYDir * 0.0f);
+    returnVec.add(camZDir * 30.0f);
     return returnVec;
 }
 
@@ -362,7 +364,7 @@ void StarPieceShooter::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     }
 
     if (MR::sendMsgLockOnStarPieceShoot(pReceiver, pSender)) {
-        f32 distBetweenSensors = pReceiver->mPosition.subOperatorInLine(pSender->mPosition).length();
+        f32 distBetweenSensors = (pReceiver->mPosition - pSender->mPosition).length();
         if (distBetweenSensors < _94) {
             _90 = pReceiver;
             _94 = distBetweenSensors;
@@ -378,7 +380,7 @@ void StarPieceShooter::control() {
     MR::getPlayerUpVec(&playerUpVec);
 
     _A8.set(playerCenterPos);
-    _A8.sub(playerUpVec.scaleInline(-160.0f));
+    _A8.sub(playerUpVec * -160.0f);
 
     MR::setEffectBaseScale(this, "Charge", (0.125f + _A4 / 7.0f * 0.25f));
 }
@@ -394,10 +396,10 @@ bool StarPieceShooter::shoot() {
         pSensor = _98;
     }
 
-    TVec3f position(mPosition);
+    TVec3f position = mPosition;
     TVec3f vec;
     TVec3f posCameraShoot = MR::getStarPieceDirector()->calcPosCameraShoot(_A0);
-    TVec3f negCameraPos = MR::getCamPos().negateInline();
+    TVec3f negCameraPos = -MR::getCamPos();
 
     if (pSensor != nullptr) {
         negCameraPos.add(pSensor->mPosition);
@@ -513,7 +515,7 @@ void StarPieceShooter::calcShootGoalUsingPointingDepth() {
 
         starPointerWorldPos.set(camPos);
 
-        starPointerWorldPos.add(worldPos.scaleInline(3000.0f + dirToPlayer.length()));
+        starPointerWorldPos.add(worldPos * (3000.0f + dirToPlayer.length()));
         new_8C = 400.0f;
     } else if (9000000.0f < dirsquared) {
         dir.setLength(3000.0f);

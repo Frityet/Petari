@@ -1,7 +1,12 @@
 #include "Game/Screen/HeatHazeEffect.hpp"
 #include "Game/AreaObj/HazeCube.hpp"
+#include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 
-HeatHazeEffect::HeatHazeEffect(const char* pName) : LiveActor(pName), _8C(1500.0f) {}
+HeatHazeEffect::HeatHazeEffect(const char* pName) : LiveActor(pName), _8C(1500.0f) {
+}
 
 void HeatHazeEffect::appear() {
     LiveActor::appear();
@@ -10,7 +15,8 @@ void HeatHazeEffect::appear() {
 
 // HeatHazeEffect::control
 
-HeatHazeDirector::HeatHazeDirector(const char* pName) : NameObj(pName) {}
+HeatHazeDirector::HeatHazeDirector(const char* pName) : NameObj(pName) {
+}
 
 void HeatHazeEffect::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm("ShimmerBoard", nullptr, false);
@@ -27,7 +33,7 @@ void HeatHazeDirector::init(const JMapInfoIter& rIter) {
 }
 
 void HeatHazeDirector::movement() {
-    HazeCube* pHazeCube = static_cast<HazeCube*>(MR::getAreaObj("HazeCube", *MR::getPlayerPos()));
+    HazeCube* pHazeCube = static_cast< HazeCube* >(MR::getAreaObj("HazeCube", *MR::getPlayerPos()));
 
     if (pHazeCube != nullptr) {
         if (MR::isDead(mEffect)) {

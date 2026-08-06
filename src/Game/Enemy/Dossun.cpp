@@ -1,10 +1,18 @@
 #include "Game/Enemy/Dossun.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/Util.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvDossun {
     NEW_NERVE(DossunNrvReady, Dossun, Ready);
@@ -147,7 +155,7 @@ void Dossun::exeFallSign() {
 
 void Dossun::exeFalling() {
     f32 ease = MR::getEaseInValue(getNerveStep(), 0.0f, 1.0f, mFallingTime);
-    JMAVECLerp(&_8C, &_98, &mPosition, ease);
+    mPosition.lerp(_8C, _98, ease);
     MR::startLevelSound(this, "SE_OJ_LV_DOSSUN_FALL");
     if (MR::isStep(this, mFallingTime)) {
         setNerve(&NrvDossun::DossunNrvOnGround::sInstance);
@@ -174,7 +182,7 @@ void Dossun::exeRising() {
     }
 
     f32 ease = MR::getEaseInOutValue(getNerveStep(), 0.0f, 1.0f, mHoldTime);
-    JMAVECLerp(&_98, &_8C, &mPosition, ease);
+    mPosition.lerp(_98, _8C, ease);
     MR::startLevelSound(this, "SE_OJ_LV_DOSSUN_UPPER");
     if (MR::isStep(this, mHoldTime)) {
         MR::startSound(this, "SE_OJ_DOSSUN_STOP");

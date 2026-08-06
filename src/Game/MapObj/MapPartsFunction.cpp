@@ -2,19 +2,17 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Spine.hpp"
 
-MapPartsFunction::MapPartsFunction(LiveActor* pActor, const char* pName) : NameObj(pName != 0 ? pName : "マップパーツ機能") {
-    mSpine = 0;
-    mHost = pActor;
-    _14 = 1;
+MapPartsFunction::MapPartsFunction(LiveActor* pHost, const char* pName)
+    : NameObj(pName != nullptr ? pName : "マップパーツ機能"), mSpine(), mHost(pHost), mIsActive(true) {
 }
 
-void MapPartsFunction::sendMsgToHost(u32 msg) {
+bool MapPartsFunction::sendMsgToHost(u32 msg) {
     LiveActor* host = mHost;
-    host->receiveMessage(msg, host->getSensor("body"), host->getSensor("body"));
+    return host->receiveMessage(msg, host->getSensor("body"), host->getSensor("body"));
 }
 
 void MapPartsFunction::movement() {
-    if (_14) {
+    if (mIsActive) {
         mSpine->update();
         control();
     }

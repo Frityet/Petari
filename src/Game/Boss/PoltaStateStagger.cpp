@@ -5,10 +5,10 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JGeometry/TVec.hpp"
-#include "JSystem/JMath/JMath.hpp"
-#include "revolution/mtx.h"
 
 namespace NrvPoltaStateStagger {
     NEW_NERVE(PoltaStateStaggerNrvWait, PoltaStateStagger, Wait);
@@ -34,7 +34,7 @@ void PoltaStateStagger::exeWait() {
     MR::separateScalarAndDirection(&v17, &v2, getHost()->_E0 - getHost()->mPosition);
 
     if (v17 >= 1800.0f) {
-        MR::addVelocity(getHost(), v2.multInLine(v17 - 1800.0f));
+        MR::addVelocity(getHost(), v2 * (v17 - 1800.0f));
         _20 = MR::isClockwiseToPlayer(getHost(), v2);
     }
 
@@ -59,4 +59,5 @@ bool PoltaStateStagger::isEnableSensor() const {
     return isNerve(&NrvPoltaStateStagger::PoltaStateStaggerNrvWait::sInstance);
 }
 
-PoltaStateStagger::~PoltaStateStagger() {}
+PoltaStateStagger::~PoltaStateStagger() {
+}

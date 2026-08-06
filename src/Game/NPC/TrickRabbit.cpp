@@ -3,6 +3,7 @@
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/ActorStateBase.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/SpotMarkLight.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Map/RailGraphIter.hpp"
@@ -15,7 +16,7 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/FootPrint.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
@@ -28,9 +29,9 @@
 #include "Game/Util/RailGraphUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 
 namespace {
     class RunnawayNodeSelector : public RailGraphNodeSelecter {
@@ -845,7 +846,7 @@ bool TrickRabbit::selectEdgeStartEvent(RailGraphIter* pIter) {
 void TrickRabbit::selectEdgeRunnaway(RailGraphIter* pIter, const TVec3f& rVec, f32 f) {
     TVec3f stack_14;
     MR::normalizeOrZero(rVec, &stack_14);
-    f32 v10 = -3.4028235e38f;
+    f32 v10 = -FLOAT_MAX;
     s32 v17;
     s32 r29 = 0;
     s32 r28 = 0;
@@ -931,10 +932,8 @@ void TrickRabbit::controlRouteLevel() {
 }
 
 void TrickRabbit::addMovingAccel(const TVec3f& rVec, f32 f) {
-    TVec3f stack_20(mGravity);
-    f32 dot = stack_20.dot(rVec);
-    TVec3f stack_14;
-    JMAVECScaleAdd(&stack_20, &rVec, &stack_14, -dot);
+    TVec3f stack_20 = mGravity;
+    TVec3f stack_14 = rVec.killElement(stack_20);
     MR::separateScalarAndDirection(&_D0, &stack_14, stack_14);
 
     if (!MR::isNearZero(stack_14))
@@ -957,11 +956,8 @@ void TrickRabbit::addKeepRouteRange(f32 f1, f32 f2, f32 f3) {
         stack_3C.set(*MR::getNextNodePosition(mRailGraphIter));
     }
 
-    TVec3f stack_30;
-    TVec3f stack_24(stack_3C - mPosition);
-    TVec3f* grav = &mGravity;
-    f32 dot = -grav->dot(stack_24);
-    JMAVECScaleAdd(grav, &stack_24, &stack_30, dot);
+    TVec3f stack_30 = MR::killGravity(this, stack_3C - mPosition);  // FIXME
+
     f32 scalar;
     MR::separateScalarAndDirection(&scalar, &stack_30, stack_30);
     f32 norm = MR::normalize(scalar, f2, f3);

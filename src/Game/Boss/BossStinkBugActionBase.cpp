@@ -215,14 +215,15 @@ void BossStinkBugActionBase::updateSoundFly() {
     }
 
     _58 = _54;
-    _54 = PSVECDistance(getHost()->mPosition, MR::getCamPos());
+    _54 = getHost()->mPosition.distance(MR::getCamPos());
 
     if (_58 - _54 > 0.0f) {
         _5C = 12;
     }
 }
 
-BossStinkBugActionBase::~BossStinkBugActionBase() {};
+BossStinkBugActionBase::~BossStinkBugActionBase() {
+}
 
 bool BossStinkBugActionBase::updateGroundRegainRail(f32 f1) {
     if (MR::isFirstStep(this)) {
@@ -359,7 +360,7 @@ bool BossStinkBugActionBase::updateGroundDamage() {
         MR::startSound(getHost(), "SE_BM_BOSS_BUG_PRESSED");
         MR::startBck(getHost(), "GroundDamage", nullptr);
 
-        MR::tryRumblePadStrong(getHost(), 0);
+        MR::tryRumblePadStrong(getHost(), WPAD_CHAN0);
         MR::shakeCameraStrong();
 
         getHost()->startEventCamera("Fall");
@@ -554,7 +555,7 @@ bool BossStinkBugActionBase::updateFallDamage() {
         MR::startSound(getHost(), "SE_BM_BOSS_BUG_PRESSED");
         MR::startBck(getHost(), "FallDamage", nullptr);
         MR::startAction(getHost()->getWingModel(), "FallDamage");
-        MR::tryRumblePadStrong(getHost(), 0);
+        MR::tryRumblePadStrong(getHost(), WPAD_CHAN0);
         MR::shakeCameraStrong();
         MR::offBind(getHost());
 

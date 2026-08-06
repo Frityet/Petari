@@ -1,4 +1,6 @@
 #include "Game/MapObj/MechaKoopaPartsArm.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util.hpp"
 
 namespace NrvMechaKoopaPartsArm {
@@ -60,7 +62,7 @@ void MechaKoopaPartsArm::exeMoveStart() {
         MR::startSound(this, "SE_OJ_M_KOOPA_ARM_START");
         if (MR::isOnPlayer(this)) {
             MR::shakeCameraNormal();
-            MR::tryRumblePadMiddle(this, 0);
+            MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         }
     }
 

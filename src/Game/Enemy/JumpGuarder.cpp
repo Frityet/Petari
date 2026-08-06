@@ -1,5 +1,6 @@
 #include "Game/Enemy/JumpGuarder.hpp"
-#include "Game/Util.hpp"
+#include "Game/LiveActor/ActorCameraInfo.hpp"
+#include "Game/Util/MultiEventCamera.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
@@ -46,9 +47,7 @@ void JumpEmitter::updateEventCamera() {
             mMultEventCamera->nextForce();
         }
 
-        f32 dist = JMathInlineVEC::PSVECSquareDistance(&_C4, MR::getPlayerCenterPos());
-
-        if (6250000.0f < dist || MR::isOnGroundPlayer() || MR::isPlayerInRush()) {
+        if (6250000.0f < _C4.squared(*MR::getPlayerCenterPos()) || MR::isOnGroundPlayer() || MR::isPlayerInRush()) {
             endEventCamera();
         }
     }
@@ -65,6 +64,7 @@ void JumpEmitter::endEventCamera() {
 
 // JumpEmitter::updateRotate
 
-
-JumpGuarder::JumpGuarder(const char* pName) : NameObj(pName) {}
-JumpGuarder::~JumpGuarder() {}
+JumpGuarder::JumpGuarder(const char* pName) : NameObj(pName) {
+}
+JumpGuarder::~JumpGuarder() {
+}

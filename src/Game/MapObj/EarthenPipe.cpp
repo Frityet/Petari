@@ -2,6 +2,10 @@
 #include "Game/AudioLib/AudBgmMgr.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/GameAudio/AudStageBgmTable.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/LiveActor/PartsModel.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvEarthenPipe {
     NEW_NERVE(EarthenPipeNrvWait, EarthenPipe, Wait);
@@ -298,8 +302,8 @@ void EarthenPipe::exePlayerOut() {
         MtxPtr baseMtx = _B0->getBaseMtx();
         TVec3f v6((baseMtx)[0][2], (baseMtx)[1][2], (baseMtx)[2][2]);
         TVec3f v5((baseMtx)[0][1], (baseMtx)[1][1], (baseMtx)[2][1]);
-        v6.scale(_B0->mHorizExitForce);
-        v5.scale(_B0->mVertExitForce);
+        v6 *= (_B0->mHorizExitForce);
+        v5 *= (_B0->mVertExitForce);
         TVec3f v4(v5);
 
         if (!MR::isInWater(_B0->mPosition)) {
@@ -308,7 +312,7 @@ void EarthenPipe::exePlayerOut() {
 
         MR::startSound(mHostActor, "SE_PM_JUMP_M");
         MR::startSound(mHostActor, "SE_PV_JUMP_JOY");
-        MR::startBckPlayer("EarthenPipeJump", (const char*)nullptr);
+        MR::startBckPlayer("EarthenPipeJump", (s32)0);
         MR::endBindAndPlayerForceWeakGravityJumpInputOff(this, v4);
         mHostActor = nullptr;
         _B0->tryHideDown();
@@ -479,7 +483,7 @@ void EarthenPipe::processBgmPlayerIn() {
     if (idx >= 0) {
         u32 bgmId = AudStageBgmTable::getBgmId(MR::getCurrentStageName(), idx);
         if (bgmId != -1) {
-            s32 cur = AudWrap::getBgmMgr()->_10[0];
+            s32 cur = AudWrap::getBgmMgr()->mCurrentBGM[AudBgmMgr::BgmType_Stage];
             if (cur != bgmId) {
                 MR::stopStageBGM(60);
                 return;
@@ -504,7 +508,7 @@ void EarthenPipe::processBgmPlayerOut() {
     if (idx >= 0) {
         u32 bgmId = AudStageBgmTable::getBgmId(MR::getCurrentStageName(), idx);
         if (bgmId != -1) {
-            s32 cur = AudWrap::getBgmMgr()->_10[0];
+            s32 cur = AudWrap::getBgmMgr()->mCurrentBGM[AudBgmMgr::BgmType_Stage];
             if (cur == bgmId && MR::isPlayingStageBgm()) {
                 return;
             }

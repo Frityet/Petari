@@ -1,6 +1,11 @@
 #include "Game/Util/IKJoint.hpp"
 #include "Game/Util.hpp"
 
+void FORCE_OPERATOR() {
+    TVec3f vec;
+    vec * 1.0f;
+}
+
 IKJoint::IKJoint() : mRootBoneLength(100.0f), mMiddleBoneLength(100.0f), _0(), _30(), _60() {
     _0.identity();
     _60.identity();
@@ -101,12 +106,11 @@ void IKJoint::getEndJointPosition(TVec3f* pPos) const {
     TVec3f xDir;
     _60.getXDir(xDir);
     _60.getTrans(*pPos);
-    TVec3f scale = (xDir * mMiddleBoneLength);
-    JMathInlineVEC::PSVECAdd(pPos, &scale, pPos);
+    pPos->add(xDir * mMiddleBoneLength);
 }
 
 f32 IKJoint::getMinLimitDistance() const {
-    return __fabsf(mRootBoneLength - mMiddleBoneLength);
+    return MR::abs(mRootBoneLength - mMiddleBoneLength);
 }
 
 f32 IKJoint::getMaxLimitDistance() const {

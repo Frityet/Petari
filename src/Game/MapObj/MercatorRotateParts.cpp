@@ -1,5 +1,7 @@
 #include "Game/MapObj/MercatorRotateParts.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 MercatorRotateParts::MercatorRotateParts(const char* pName) : LiveActor(pName) {
     mRotator = nullptr;
@@ -68,4 +70,5 @@ void MercatorRotateParts::init(const JMapInfoIter& rIter) {
     MR::initMapPartsClipping(this, rIter, nullptr, false);
 }
 
-MercatorRotateParts::~MercatorRotateParts() {}
+MercatorRotateParts::~MercatorRotateParts() {
+}

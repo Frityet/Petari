@@ -1,7 +1,12 @@
 #include "Game/Enemy/WaterBazookaCapsule.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace NrvWaterBazookaCapsule {
     NEW_NERVE(WaterBazookaCapsuleNrvNormal, WaterBazookaCapsule, Normal);
@@ -10,7 +15,8 @@ namespace NrvWaterBazookaCapsule {
 };  // namespace NrvWaterBazookaCapsule
 
 WaterBazookaCapsule::WaterBazookaCapsule(LiveActor* pActor, const char* pName)
-    : PartsModel(pActor, pName, "WaterBazookaCapsule", nullptr, MR::DrawBufferType_Enemy, false) {}
+    : PartsModel(pActor, pName, "WaterBazookaCapsule", nullptr, MR::DrawBufferType_Enemy, false) {
+}
 
 void WaterBazookaCapsule::init(const JMapInfoIter& rIter) {
     initHitSensor(1);

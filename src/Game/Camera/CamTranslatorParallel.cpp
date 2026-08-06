@@ -1,22 +1,15 @@
 #include "Game/Camera/CamTranslatorParallel.hpp"
 #include "Game/Camera/CameraParamChunk.hpp"
+#include "Game/Util/MathUtil.hpp"
+
+void CamTranslatorParallel_FORCE_MATCH_SDATA2() {
+    (void)MR::pi();
+}
 
 void CamTranslatorParallel::setParam(const CameraParamChunk* pChunk) {
-    TVec2f angle;
-    f32 dist;
-    f32 axisX;
+    CameraGeneralParam* general = pChunk->mGeneralParam;
 
-    dist = pChunk->mGeneralParam->mDist;
-    angle.y = 180.0f * pChunk->mGeneralParam->mAngleA / 3.1415927f;
-    angle.x = 180.0f * pChunk->mGeneralParam->mAngleB / 3.1415927f;
-    bool var = !(pChunk->mGeneralParam->mNum1 != 1);
-
-    CameraParallel* camera = mCamera;
-
-    camera->mAngleB = angle.x;
-    camera->mAngleA = angle.y;
-    camera->mDist = dist;
-    camera->_58 = var;
+    mCamera->setParam(TVec2f(180.0f * general->mAngleB / MR::pi(), 180.0f * general->mAngleA / MR::pi()), general->mDist, general->mNum1 == 1);
 }
 
 Camera* CamTranslatorParallel::getCamera() const {

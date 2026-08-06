@@ -1,7 +1,5 @@
 #include "Game/LiveActor/ActorAnimKeeper.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/System/ResourceHolder.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
@@ -88,13 +86,14 @@ bool ActorAnimKeeper::start(const char* pName) {
     return true;
 }
 
-void ActorAnimKeeper::update() {}
+void ActorAnimKeeper::update() {
+}
 
 bool ActorAnimKeeper::isPlaying(const char* pName) const {
     ActorAnimKeeperInfo* info = findAnimInfo(pName);
 
     if (info != nullptr) {
-        return MR::isBckPlaying(mActor, getAnimName(info, info->mBckInfo));
+        return MR::isBckPlaying(mActor, ::getAnimName(info, info->mBckInfo));
     }
 
     return MR::isBckPlaying(mActor, pName);

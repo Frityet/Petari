@@ -2,8 +2,10 @@
 #include "Game/Boss/Polta.hpp"
 #include "Game/Boss/PoltaActionBase.hpp"
 #include "Game/Boss/PoltaFunction.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
-PoltaWaitStart::PoltaWaitStart(Polta* pPolta) : PoltaActionBase("ポルタ開始待ち", pPolta) {}
+PoltaWaitStart::PoltaWaitStart(Polta* pPolta) : PoltaActionBase("ポルタ開始待ち", pPolta) {
+}
 
 void PoltaWaitStart::appear() {
     mIsDead = false;
@@ -12,4 +14,5 @@ void PoltaWaitStart::appear() {
     MR::hideModel(getHost());
 }
 
-PoltaWaitStart::~PoltaWaitStart() {}
+PoltaWaitStart::~PoltaWaitStart() {
+}

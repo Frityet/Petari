@@ -1,13 +1,13 @@
 #pragma once
-#include "Game/NameObj/NameObj.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Map/CollisionParts.hpp"
-#include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+
+class ActorCameraInfo;
 class ActorJointCtrl;
 class BossStinkBugActionSequencer;
 class BossStinkBugBombHolder;
+class CollisionParts;
 class GroundChecker;
 class PartsModel;
 
@@ -75,9 +75,13 @@ public:
 
 class BossStinkBugFollowValidater : public BaseMatrixFollowValidater {
 public:
-    BossStinkBugFollowValidater(BossStinkBug* pStinkBug) { mStinkBug = pStinkBug; }
+    BossStinkBugFollowValidater(BossStinkBug* pStinkBug) {
+        mStinkBug = pStinkBug;
+    }
 
-    virtual bool isValid(s32 id) const { return mStinkBug->isValidFollowId(id); }
+    virtual bool isValid(s32 id) const {
+        return mStinkBug->isValidFollowId(id);
+    }
 
     BossStinkBug* mStinkBug;
 };

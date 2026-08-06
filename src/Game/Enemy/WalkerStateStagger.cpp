@@ -1,5 +1,20 @@
 #include "Game/Enemy/WalkerStateStagger.hpp"
 #include "Game/Enemy/WalkerStateFunction.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+
+void WalkerStateStagger_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)3.0f;
+}
 
 namespace {
     WalkerStateStaggerParam sDefaultStaggerParam;
@@ -20,7 +35,7 @@ WalkerStateStagger::WalkerStateStagger(LiveActor* pHost, TVec3f* pDirection, Wal
     : ActorStateBase< LiveActor >("歩行型よろめき状態", pHost), mStateParam(pStateParam), mStaggerParam(pStaggerParam), mVelH(0.0f, 0.0f, 1.0f),
       mDirection(pDirection) {
     if (mStaggerParam == nullptr) {
-        mStaggerParam = &sDefaultStaggerParam;
+        mStaggerParam = &::sDefaultStaggerParam;
     }
 
     initNerve(&NrvWalkerStateStagger::WalkerStateStaggerNrvStagger::sInstance);
@@ -49,7 +64,7 @@ void WalkerStateStagger::exeStagger() {
     }
 
     TVec3f dir;
-    dir.rejection(mVelH, getHost()->mGravity);
+    dir.killElement(mVelH, getHost()->mGravity);
 
     if (!MR::isNearZero(dir)) {
         MR::normalize(dir, &mVelH);
@@ -58,7 +73,7 @@ void WalkerStateStagger::exeStagger() {
     f32 t = MR::calcNerveEaseInOutValue(this, mStaggerParam->mRotateStartTime, mStaggerParam->mRotateEndTime, 1.0f, 0.0f);
     MR::rotateDirectionGravityDegree(getHost(), mDirection, mStaggerParam->mRotateRateDegree * t);
 
-    f32 s = JMath::sSinCosTable.sinLap(MR::repeatDegree(mStaggerParam->mStaggerSideCircleRateDegree * getNerveStep()));
+    f32 s = MR::sinDegree(MR::repeatDegree(mStaggerParam->mStaggerSideCircleRateDegree * getNerveStep()));
 
     MR::addVelocityClockwiseToDirection(getHost(), mVelH, t * (mStaggerParam->mStaggerSidePower * s));
     MR::addVelocityMoveToDirection(getHost(), mVelH, mStaggerParam->mStaggerFrontPower * t);
@@ -90,7 +105,7 @@ void WalkerStateStagger::reboundWall() {
 
     if (MR::calcReboundVelocity(&getHost()->mVelocity, *MR::getWallNormal(getHost()), 0.9f)) {
         TVec3f velH;
-        velH.rejection(getHost()->mVelocity, getHost()->mGravity);
+        velH.killElement(getHost()->mVelocity, getHost()->mGravity);
         if (!MR::normalizeOrZero(&velH)) {
             mVelH.set(velH);
         }

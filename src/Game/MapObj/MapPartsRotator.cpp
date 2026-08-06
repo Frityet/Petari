@@ -1,4 +1,5 @@
 #include "Game/MapObj/MapPartsRotator.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Util.hpp"
 
@@ -146,9 +147,11 @@ void MapPartsRotator::calcRotateAxisDir(AxisType type, TVec3f* pDir) const {
     }
 }
 
-void MapPartsRotator::exeNeverMove() {}
+void MapPartsRotator::exeNeverMove() {
+}
 
-void MapPartsRotator::exeWait() {}
+void MapPartsRotator::exeWait() {
+}
 
 // void MapPartsRotator::exeRotateStart() {}
 
@@ -160,7 +163,8 @@ void MapPartsRotator::exeStopAtEnd() {
     }
 }
 
-MapPartsRotator::~MapPartsRotator() {}
+MapPartsRotator::~MapPartsRotator() {
+}
 
 bool MapPartsRotator::isOnReverse() const {
     return mIsOnReverse;

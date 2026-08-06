@@ -6,9 +6,11 @@ class HazeCube : public AreaObj {
 public:
     HazeCube(int, const char*);
 
-    virtual ~HazeCube();
     virtual void init(const JMapInfoIter&);
-    virtual const char* getManagerName() const;
+
+    virtual const char* getManagerName() const {
+        return "HazeCube";
+    }
 
     /* 0x3C */ f32 mDistance;
 };

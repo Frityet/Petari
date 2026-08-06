@@ -30,7 +30,8 @@ namespace NrvRabbitStateWaitStart {
 
 RabbitStateWaitStart::RabbitStateWaitStart(LiveActor* pHost, TVec3f* pHostRotateFront, TalkMessageCtrl* pTalkMessageCtrl)
     : ActorStateBaseInterface("うさぎ会話待ち状態"), mHost(pHost), mTalkActionName("Wait"), mHostRotateFront(pHostRotateFront),
-      mTalkMessageCtrl(pTalkMessageCtrl), _1C(false), _1D(true) {}
+      mTalkMessageCtrl(pTalkMessageCtrl), _1C(false), _1D(true) {
+}
 
 void RabbitStateWaitStart::setTalkActionName(const char* pName) {
     mTalkActionName = pName;
@@ -118,7 +119,7 @@ bool RabbitStateWaitStart::isEnableReaction() const {
 }
 
 bool RabbitStateWaitStart::trySmallTurn() {
-    if (MR::isGreaterStep(this, sSmallTurnTime) && !MR::isFaceToPlayerHorizontalDegree(mHost, *mHostRotateFront, sSmallTurnStartDegree)) {
+    if (MR::isGreaterStep(this, ::sSmallTurnTime) && !MR::isFaceToPlayerHorizontalDegree(mHost, *mHostRotateFront, ::sSmallTurnStartDegree)) {
         setNerve(&NrvRabbitStateWaitStart::RabbitStateWaitStartNrvSmallTurn::sInstance);
 
         return true;
@@ -128,7 +129,7 @@ bool RabbitStateWaitStart::trySmallTurn() {
 }
 
 bool RabbitStateWaitStart::tryTalk() {
-    if (MR::isNearPlayer(mHost, sInStartTalkRange) && MR::tryTalkNearPlayer(mTalkMessageCtrl)) {
+    if (MR::isNearPlayer(mHost, ::sInStartTalkRange) && MR::tryTalkNearPlayer(mTalkMessageCtrl)) {
         setNerve(&NrvRabbitStateWaitStart::RabbitStateWaitStartNrvTalk::sInstance);
 
         return true;
@@ -164,7 +165,7 @@ void RabbitStateWaitStart::exeWait() {
 
     if (_1D) {
         if (MR::isExistBinder(mHost) && !MR::isBindedGround(mHost)) {
-            MR::addVelocityToGravity(mHost, sGravityAccel);
+            MR::addVelocityToGravity(mHost, ::sGravityAccel);
         } else {
             MR::zeroVelocity(mHost);
         }
@@ -184,10 +185,10 @@ void RabbitStateWaitStart::exeSmallTurn() {
         MR::startAction(mHost, "TurnSmall");
     }
 
-    MR::turnDirectionToPlayerDegree(mHost, mHostRotateFront, sSmallTurnDegree);
+    MR::turnDirectionToPlayerDegree(mHost, mHostRotateFront, ::sSmallTurnDegree);
     MR::zeroVelocity(mHost);
 
-    if (!tryTalk() && MR::isGreaterStep(this, sSmallTurnStopTime)) {
+    if (!tryTalk() && MR::isGreaterStep(this, ::sSmallTurnStopTime)) {
         setNerve(&NrvRabbitStateWaitStart::RabbitStateWaitStartNrvWait::sInstance);
     }
 }
@@ -228,7 +229,7 @@ void RabbitStateWaitStart::exeSpin() {
         MR::startSound(mHost, "SE_SM_RABBIT_SPIN");
     }
 
-    MR::turnDirectionToPlayerDegree(mHost, mHostRotateFront, sSpinDegree);
+    MR::turnDirectionToPlayerDegree(mHost, mHostRotateFront, ::sSpinDegree);
     MR::zeroVelocity(mHost);
 
     if (MR::isActionEnd(mHost)) {

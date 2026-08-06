@@ -1,4 +1,5 @@
 #include "Game/Player/GroupChecker.hpp"
+#include "Game/Util/HashUtil.hpp"
 
 GroupChecker::GroupChecker(const char* pName, u32 a2) : NameObj(pName) {
     mHashTable = new HashSortTable(a2);
@@ -20,9 +21,11 @@ void GroupCheckManager::add(const NameObj *pObj, s32 idx) {
 }
 */
 
-GroupChecker::~GroupChecker() {}
+GroupChecker::~GroupChecker() {
+}
 
-GroupCheckManager::~GroupCheckManager() {}
+GroupCheckManager::~GroupCheckManager() {
+}
 
 GroupCheckManager::GroupCheckManager(const char* pName) : NameObj(pName) {
     mShellSearchGroup = new GroupChecker("カメサーチ対象物グループ", 0x20);

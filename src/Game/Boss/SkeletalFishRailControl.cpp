@@ -1,4 +1,7 @@
 #include "Game/Boss/SkeletalFishRailControl.hpp"
+#include "Game/Util/GravityUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
 
 SkeletalFishRailControl::SkeletalFishRailControl() {
     _0 = 2;
@@ -136,14 +139,11 @@ void SkeletalFishRailControl::getMtx(TPos3f* pOut, f32 a2) {
     TVec3f railDir;
     TVec3f gravityVec;
     TVec3f stack_3C;
-    TVec3f v15;
-    TVec3f v14;
-    TVec3f negVector;
 
     if (normalRailInfo._4 < 0.0f && !MR::isLoopRail(normalRailInfo._0)) {
         MR::calcRailPosAtCoord(&railPos, normalRailInfo._0, 0.0f);
         MR::calcRailDirectionAtCoord(&railDir, normalRailInfo._0, 0.0f);
-        stack_3C.setPS(railDir);
+        stack_3C = railDir;
         stack_3C.scale(normalRailInfo._4);
         railPos.add(stack_3C);
     } else {
@@ -153,24 +153,12 @@ void SkeletalFishRailControl::getMtx(TPos3f* pOut, f32 a2) {
 
     MR::normalizeOrZero(&railDir);
     MR::calcGravityVector(normalRailInfo._0, railPos, &gravityVec, nullptr, 0);
-    negVector = -gravityVec;
-    PSVECCrossProduct(&negVector, &railDir, &v15);
-    PSVECCrossProduct(&railDir, &v15, &v14);
+
+    TVec3f v15 = (-gravityVec).cross(railDir);
+    TVec3f v14 = railDir.cross(v15);
 
     MR::normalizeOrZero(&v15);
     MR::normalizeOrZero(&v14);
     MR::normalizeOrZero(&railDir);
-
-    pOut->mMtx[0][0] = v15.x;
-    pOut->mMtx[1][0] = v15.y;
-    pOut->mMtx[2][0] = v15.z;
-    pOut->mMtx[0][1] = v14.x;
-    pOut->mMtx[1][1] = v14.y;
-    pOut->mMtx[2][1] = v14.z;
-    pOut->mMtx[0][2] = railDir.x;
-    pOut->mMtx[1][2] = railDir.y;
-    pOut->mMtx[2][2] = railDir.z;
-    pOut->mMtx[0][3] = railPos.x;
-    pOut->mMtx[1][3] = railPos.y;
-    pOut->mMtx[2][3] = railPos.z;
+    pOut->setTR(v15, v14, railDir, railPos);
 }

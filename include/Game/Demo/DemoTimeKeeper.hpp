@@ -6,11 +6,12 @@ class DemoExecutor;
 
 class DemoTimePartInfo {
 public:
+    /// @brief Creates a new `DemoTimePartInfo`.
     DemoTimePartInfo();
 
-    const char* mName;  // _0
-    s32 mTotalSteps;    // _4
-    bool _8;
+    /* 0x00 */ const char* mPartName;
+    /* 0x04 */ s32 mTotalStep;
+    /* 0x08 */ bool mSuspendFlag;
 };
 
 class DemoTimeKeeper {
@@ -27,12 +28,12 @@ public:
     void setCurrentPart(const char*);
     bool isCurrentDemoPartLastStep() const;
 
-    const DemoExecutor* mExecutor;
-    DemoTimePartInfo* mMainPartInfos;  // _4
-    DemoTimePartInfo* mSubPartInfos;   // _8
-    s32 mNumPartInfos;
-    s32 _10;
-    s32 mCurrentStep;  // _14
-    s32 _18;
-    bool mIsPaused;  // _1C
+    /* 0x00 */ const DemoExecutor* mExecutor;
+    /* 0x04 */ DemoTimePartInfo* mMainPartInfos;
+    /* 0x08 */ DemoTimePartInfo* mSubPartInfos;
+    /* 0x0C */ s32 mNumPartInfos;
+    /* 0x10 */ s32 _10;
+    /* 0x14 */ s32 mCurrentStep;
+    /* 0x18 */ s32 _18;
+    /* 0x1C */ bool mIsPaused;
 };

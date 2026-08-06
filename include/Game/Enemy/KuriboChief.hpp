@@ -1,23 +1,21 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "JSystem/JGeometry/TQuat.hpp"
+#include "Game/NameObj/NameObjArchiveListCollector.hpp"
 
 class AnimScaleController;
-class HitSensor;
+class WalkerStateWander;
+class WalkerStateFindPlayer;
+class WalkerStateChase;
+class WalkerStateStagger;
+class WalkerStateBindStarPointer;
 class ItemGenerator;
 class KeySwitch;
-class NameObjArchiveListCollector;
-class WalkerStateBindStarPointer;
-class WalkerStateChase;
-class WalkerStateFindPlayer;
-class WalkerStateStagger;
-class WalkerStateWander;
-class JMapInfoIter;
 
 class KuriboChief : public LiveActor {
 public:
     KuriboChief(const char*);
+
     virtual ~KuriboChief();
     virtual void init(const JMapInfoIter&);
     virtual void initAfterPlacement();
@@ -42,23 +40,23 @@ public:
     void exeChase();
     void exeStagger();
     void exeTrample();
-    void exeAttackSuccess();
     void exeBindStarPointer();
     void endBindStarPointer();
+    void exeAttackSuccess();
     void exeBlowDown();
     void exeBlowDownLand();
     bool isEnableAttack() const;
     bool isEnableKick() const;
     bool isDown() const;
 
-    AnimScaleController* mScaleController;              // 0x8C
-    WalkerStateWander* mStateWander;                    // 0x90
-    WalkerStateFindPlayer* mStateFindPlayer;            // 0x94
-    WalkerStateChase* mStateChase;                      // 0x98
-    WalkerStateStagger* mStateStagger;                  // 0x9C
-    WalkerStateBindStarPointer* mBindStarPointer;       // 0xA0
-    ItemGenerator* mItemGenerator;                      // 0xA4
-    KeySwitch* mKeySwitch;                              // 0xA8
-    TQuat4f mBaseQuat;                                  // 0xAC
-    TVec3f mFrontVec;                                   // 0xBC
+    /* 0x8C */ AnimScaleController* mScaleController;
+    /* 0x90 */ WalkerStateWander* mStateWander;
+    /* 0x94 */ WalkerStateFindPlayer* mStateFindPlayer;
+    /* 0x98 */ WalkerStateChase* mStateChase;
+    /* 0x9C */ WalkerStateStagger* mStateStagger;
+    /* 0xA0 */ WalkerStateBindStarPointer* mStateBindStarPointer;
+    /* 0xA4 */ ItemGenerator* mItemGenerator;
+    /* 0xA8 */ KeySwitch* mKeySwitch;
+    /* 0xAC */ TQuat4f _AC;
+    /* 0xBC */ TVec3f _BC;
 };

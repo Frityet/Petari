@@ -3,15 +3,21 @@
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Ride/SwingRopePoint.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/Color.hpp"
 #include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/Functor.hpp"
 #include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <revolution/gx/GXCull.h>
 #include <revolution/gx/GXEnum.h>
@@ -45,9 +51,9 @@ void Trapeze::init(const JMapInfoIter& rIter) {
     mtx.identity();
     MR::makeMtxTR(reinterpret_cast< MtxPtr >(&mtx), this);
 
-    mtx.getXDirInline(mSide);
-    mtx.getYDirInline(mUp);
-    mtx.getZDirInline(mFront);
+    mtx.getXDir(mSide);
+    mtx.getYDir(mUp);
+    mtx.getZDir(mFront);
 
     mRopeLength = mScale.y * 100.0f;
     mScale.set(1.0f, 1.0f, 1.0f);
@@ -86,10 +92,8 @@ void Trapeze::draw() const {
         return;
     }
 
-    TVec3f left(mSide);
-    left.scale(-60.0f);
-    TVec3f right(mSide);
-    right.scale(60.0f);
+    TVec3f left(mSide * -60.0f);
+    TVec3f right(mSide * 60.0f);
 
     TVec3f grabLeft(left);
     TVec3f grabRight(right);
@@ -133,7 +137,7 @@ void Trapeze::exeFree() {
     updateStickMtx();
 
     if (isNerve(&NrvTrapeze::TrapezeNrvFree::sInstance)) {
-        if (mSwingPoint->mVelocity.squared() < 1.0f && 1.0f - __fabsf(mSwingPoint->mUp.y) < 0.001f) {
+        if (mSwingPoint->mVelocity.squared() < 1.0f && 1.0f - MR::abs(mSwingPoint->mUp.y) < 0.001f) {
             setNerve(&NrvTrapeze::TrapezeNrvStop::sInstance);
         }
     }
@@ -353,9 +357,7 @@ void Trapeze::updateHitSensor(HitSensor* pSensor) {
 
     if (mRider != nullptr) {
         pSensor->mPosition.set(mRider->mPosition);
-        TVec3f down(mGrabPoint->mUp);
-        down.scale(-70.0f);
-        pSensor->mPosition.add(down);
+        pSensor->mPosition.add(mGrabPoint->mUp * -70.0f);
     }
 }
 
@@ -377,7 +379,7 @@ bool Trapeze::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
         TVec3f posDiff(pSender->mHost->mPosition);
         posDiff.sub(pReceiver->mPosition);
 
-        if (__fabsf(posDiff.dot(mFront)) > 80.0f) {
+        if (MR::abs(posDiff.dot(mFront)) > 80.0f) {
             return false;
         }
 
@@ -389,9 +391,9 @@ bool Trapeze::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
         f32 dotUp = mUp.dot(grabPos);
         f32 dotFront = mFront.dot(grabPos);
 
-        grabPos.setPS2(mPosition.addOperatorInLine(mUp.scaleInline(dotUp)).addOperatorInLine(mFront.scaleInline(dotFront)));
+        grabPos = mPosition + mUp * dotUp + mFront * dotFront;
 
-        f32 coord = PSVECDistance(&grabPos, &mPosition);
+        f32 coord = grabPos.distance(mPosition);
         coord = MR::clamp(coord, 0.0f, mRopeLength);
         mGrabCoord = coord;
 
@@ -407,13 +409,13 @@ bool Trapeze::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
         f32 vel = MR::getPlayerVelocity()->dot(mFront);
 
         TVec3f swingVel(mFront);
-        if (__fabsf(vel) < 3.0f && 3.0f < projGrabPointVel) {  // is this a bug??
+        if (MR::abs(vel) < 3.0f && 3.0f < projGrabPointVel) {  // is this a bug??
             vel = projGrabPointVel;
         }
         swingVel.scale(vel);
 
         TVec3f grabFront(mFront);
-        if (__fabsf(mPosition.y - grabPos.y) < 1.0f) {
+        if (MR::abs(mPosition.y - grabPos.y) < 1.0f) {
             grabFront.set< f32 >(0.0f, -1.0f, 0.0f);
         }
 
@@ -463,8 +465,7 @@ bool Trapeze::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
 
 bool Trapeze::tryJump() {
     if (MR::testCorePadTriggerA(WPAD_CHAN0) || MR::testSystemTriggerA()) {
-        TVec3f jumpVel(mGrabPoint->mVelocity);
-        jumpVel.scale(1.0f);
+        TVec3f jumpVel(mGrabPoint->mVelocity * 1.0f);
         jumpVel.y = MR::clamp(jumpVel.y, 20.0f, 50.0f);
 
         TVec3f grabVel(jumpVel.x, 0.0f, jumpVel.z);
@@ -516,9 +517,7 @@ bool Trapeze::tryJump() {
 }
 
 void Trapeze::updateStick(const TVec3f& rAnchor, f32 length) {
-    TVec3f grav(mGravity);
-    grav.scale(1.0f);
-    mSwingPoint->addAccel(grav);
+    mSwingPoint->addAccel(mGravity * 1.0f);
     mSwingPoint->strain(rAnchor, length);
     mSwingPoint->updatePosAndAxis(mSwingPoint->mFront, 0.995f);
 }
@@ -565,9 +564,7 @@ void Trapeze::updateHangPoint() {
         }
     }
 
-    TVec3f grav(mGravity);
-    grav.scale(1.0f);
-    mGrabPoint->addAccel(grav);
+    mGrabPoint->addAccel(mGravity * 1.0f);
     mGrabPoint->strain(mPosition, mGrabCoord);
     MR::vecKillElement(mGrabPoint->mVelocity, mSide, &mGrabPoint->mVelocity);
     mGrabPoint->updatePosAndAxis(mGrabPoint->mFront, 0.995f);
@@ -618,7 +615,7 @@ bool Trapeze::updateSwing() {
         return true;
     }
 
-    if (!mIsSwingFront && !mIsSwingBack && __fabsf(mSwingVel) < 10.0f && mGrabPoint->mUp.y >= 0.99f) {
+    if (!mIsSwingFront && !mIsSwingBack && MR::abs(mSwingVel) < 10.0f && mGrabPoint->mUp.y >= 0.99f) {
         setNerve(&NrvTrapeze::TrapezeNrvSwingWait::sInstance);
         return true;
     }
@@ -671,69 +668,78 @@ void Trapeze::drawRope(const TVec3f& rPosA, const TVec3f& rPosB, const TVec3f& r
 
     // strip 1
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-    GXPosition3f32(rPosA.x - rSide.x * 12.0f + rFront.x * 19.0f, rPosA.y - rSide.y * 12.0f + rFront.y * 19.0f,
-                   rPosA.z - rSide.z * 12.0f + rFront.z * 19.0f);
-    GXColor1u32(::sColorPlusZ);
-    GXTexCoord2f32(0.0f, texA);
+    {
+        GXPosition3f32(rPosA.x - rSide.x * 12.0f + rFront.x * 19.0f, rPosA.y - rSide.y * 12.0f + rFront.y * 19.0f,
+                       rPosA.z - rSide.z * 12.0f + rFront.z * 19.0f);
+        GXColor1u32(::sColorPlusZ);
+        GXTexCoord2f32(0.0f, texA);
 
-    GXPosition3f32(rPosA.x + rSide.x * 19.0f - rFront.x * 19.0f, rPosA.y + rSide.y * 19.0f - rFront.y * 19.0f,
-                   rPosA.z + rSide.z * 19.0f - rFront.z * 19.0f);
-    GXColor1u32(::sColorPlusX);
-    GXTexCoord2f32(1.0f, texA);
+        GXPosition3f32(rPosA.x + rSide.x * 19.0f - rFront.x * 19.0f, rPosA.y + rSide.y * 19.0f - rFront.y * 19.0f,
+                       rPosA.z + rSide.z * 19.0f - rFront.z * 19.0f);
+        GXColor1u32(::sColorPlusX);
+        GXTexCoord2f32(1.0f, texA);
 
-    GXPosition3f32(rPosB.x - rSide.x * 12.0f + rFront.x * 19.0f, rPosB.y - rSide.y * 12.0f + rFront.y * 19.0f,
-                   rPosB.z - rSide.z * 12.0f + rFront.z * 19.0f);
-    GXColor1u32(::sColorPlusZ);
-    GXTexCoord2f32(0.0f, texB);
+        GXPosition3f32(rPosB.x - rSide.x * 12.0f + rFront.x * 19.0f, rPosB.y - rSide.y * 12.0f + rFront.y * 19.0f,
+                       rPosB.z - rSide.z * 12.0f + rFront.z * 19.0f);
+        GXColor1u32(::sColorPlusZ);
+        GXTexCoord2f32(0.0f, texB);
 
-    GXPosition3f32(rPosB.x + rSide.x * 19.0f - rFront.x * 19.0f, rPosB.y + rSide.y * 19.0f - rFront.y * 19.0f,
-                   rPosB.z + rSide.z * 19.0f - rFront.z * 19.0f);
-    GXColor1u32(::sColorPlusX);
-    GXTexCoord2f32(1.0f, texB);
+        GXPosition3f32(rPosB.x + rSide.x * 19.0f - rFront.x * 19.0f, rPosB.y + rSide.y * 19.0f - rFront.y * 19.0f,
+                       rPosB.z + rSide.z * 19.0f - rFront.z * 19.0f);
+        GXColor1u32(::sColorPlusX);
+        GXTexCoord2f32(1.0f, texB);
+    }
+    GXEnd();
 
     // strip 2
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-    GXPosition3f32(rPosA.x - rSide.x * 19.0f - rFront.x * 19.0f, rPosA.y - rSide.y * 19.0f - rFront.y * 19.0f,
-                   rPosA.z - rSide.z * 19.0f - rFront.z * 19.0f);
-    GXColor1u32(::sColorMinusX);
-    GXTexCoord2f32(0.0f, texA + 0.7f);
+    {
+        GXPosition3f32(rPosA.x - rSide.x * 19.0f - rFront.x * 19.0f, rPosA.y - rSide.y * 19.0f - rFront.y * 19.0f,
+                       rPosA.z - rSide.z * 19.0f - rFront.z * 19.0f);
+        GXColor1u32(::sColorMinusX);
+        GXTexCoord2f32(0.0f, texA + 0.7f);
 
-    GXPosition3f32(rPosA.x + rSide.x * 12.0f + rFront.x * 19.0f, rPosA.y + rSide.y * 12.0f + rFront.y * 19.0f,
-                   rPosA.z + rSide.z * 12.0f + rFront.z * 19.0f);
-    GXColor1u32(::sColorPlusZ);
-    GXTexCoord2f32(1.0f, texA + 0.7f);
+        GXPosition3f32(rPosA.x + rSide.x * 12.0f + rFront.x * 19.0f, rPosA.y + rSide.y * 12.0f + rFront.y * 19.0f,
+                       rPosA.z + rSide.z * 12.0f + rFront.z * 19.0f);
+        GXColor1u32(::sColorPlusZ);
+        GXTexCoord2f32(1.0f, texA + 0.7f);
 
-    GXPosition3f32(rPosB.x - rSide.x * 19.0f - rFront.x * 19.0f, rPosB.y - rSide.y * 19.0f - rFront.y * 19.0f,
-                   rPosB.z - rSide.z * 19.0f - rFront.z * 19.0f);
-    GXColor1u32(::sColorMinusX);
-    GXTexCoord2f32(0.0f, texB + 0.7f);
+        GXPosition3f32(rPosB.x - rSide.x * 19.0f - rFront.x * 19.0f, rPosB.y - rSide.y * 19.0f - rFront.y * 19.0f,
+                       rPosB.z - rSide.z * 19.0f - rFront.z * 19.0f);
+        GXColor1u32(::sColorMinusX);
+        GXTexCoord2f32(0.0f, texB + 0.7f);
 
-    GXPosition3f32(rPosB.x + rSide.x * 12.0f + rFront.x * 19.0f, rPosB.y + rSide.y * 12.0f + rFront.y * 19.0f,
-                   rPosB.z + rSide.z * 12.0f + rFront.z * 19.0f);
-    GXColor1u32(::sColorPlusZ);
-    GXTexCoord2f32(1.0f, texB + 0.7f);
+        GXPosition3f32(rPosB.x + rSide.x * 12.0f + rFront.x * 19.0f, rPosB.y + rSide.y * 12.0f + rFront.y * 19.0f,
+                       rPosB.z + rSide.z * 12.0f + rFront.z * 19.0f);
+        GXColor1u32(::sColorPlusZ);
+        GXTexCoord2f32(1.0f, texB + 0.7f);
+    }
+    GXEnd();
 
     // strip 3
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-    GXPosition3f32(rPosA.x + rSide.x * 19.0f - rFront.x * 7.0f, rPosA.y + rSide.y * 19.0f - rFront.y * 7.0f,
-                   rPosA.z + rSide.z * 19.0f - rFront.z * 7.0f);
-    GXColor1u32(::sColorPlusX);
-    GXTexCoord2f32(0.0f, texA + 0.5f);
+    {
+        GXPosition3f32(rPosA.x + rSide.x * 19.0f - rFront.x * 7.0f, rPosA.y + rSide.y * 19.0f - rFront.y * 7.0f,
+                       rPosA.z + rSide.z * 19.0f - rFront.z * 7.0f);
+        GXColor1u32(::sColorPlusX);
+        GXTexCoord2f32(0.0f, texA + 0.5f);
 
-    GXPosition3f32(rPosA.x - rSide.x * 19.0f - rFront.x * 7.0f, rPosA.y - rSide.y * 19.0f - rFront.y * 7.0f,
-                   rPosA.z - rSide.z * 19.0f - rFront.z * 7.0f);
-    GXColor1u32(::sColorMinusX);
-    GXTexCoord2f32(1.0f, texA + 0.5f);
+        GXPosition3f32(rPosA.x - rSide.x * 19.0f - rFront.x * 7.0f, rPosA.y - rSide.y * 19.0f - rFront.y * 7.0f,
+                       rPosA.z - rSide.z * 19.0f - rFront.z * 7.0f);
+        GXColor1u32(::sColorMinusX);
+        GXTexCoord2f32(1.0f, texA + 0.5f);
 
-    GXPosition3f32(rPosB.x + rSide.x * 19.0f - rFront.x * 7.0f, rPosB.y + rSide.y * 19.0f - rFront.y * 7.0f,
-                   rPosB.z + rSide.z * 19.0f - rFront.z * 7.0f);
-    GXColor1u32(::sColorPlusX);
-    GXTexCoord2f32(0.0f, texB + 0.5f);
+        GXPosition3f32(rPosB.x + rSide.x * 19.0f - rFront.x * 7.0f, rPosB.y + rSide.y * 19.0f - rFront.y * 7.0f,
+                       rPosB.z + rSide.z * 19.0f - rFront.z * 7.0f);
+        GXColor1u32(::sColorPlusX);
+        GXTexCoord2f32(0.0f, texB + 0.5f);
 
-    GXPosition3f32(rPosB.x - rSide.x * 19.0f - rFront.x * 7.0f, rPosB.y - rSide.y * 19.0f - rFront.y * 7.0f,
-                   rPosB.z - rSide.z * 19.0f - rFront.z * 7.0f);
-    GXColor1u32(::sColorMinusX);
-    GXTexCoord2f32(1.0f, texB + 0.5f);
+        GXPosition3f32(rPosB.x - rSide.x * 19.0f - rFront.x * 7.0f, rPosB.y - rSide.y * 19.0f - rFront.y * 7.0f,
+                       rPosB.z - rSide.z * 19.0f - rFront.z * 7.0f);
+        GXColor1u32(::sColorMinusX);
+        GXTexCoord2f32(1.0f, texB + 0.5f);
+    }
+    GXEnd();
 }
 
 TrapezeRopeDrawInit::TrapezeRopeDrawInit(const char* pName) : NameObj(pName) {

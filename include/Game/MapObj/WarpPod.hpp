@@ -3,7 +3,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 
 class ActorCameraInfo;
-class JUTTexture;
+class JMapIdInfo;
 class LiveActorGroup;
 
 class WarpPod : public LiveActor {
@@ -12,7 +12,8 @@ class WarpPod : public LiveActor {
 public:
     /// @brief Creates a new `WarpPod`.
     /// @param pName A pointer to the null-terminated name of the object.
-    WarpPod(const char* pName) : LiveActor(pName), _8C(nullptr) {}
+    WarpPod(const char* pName) : LiveActor(pName), _8C(nullptr) {
+    }
 
     virtual void init(const JMapInfoIter& rIter);
     virtual void movement();
@@ -29,7 +30,6 @@ public:
     void initDraw();
     void drawCylinder(u32) const;
 
-private:
     /* 0x8C */ JMapIdInfo* _8C;
     /* 0x90 */ s32 _90;
     /* 0x94 */ ActorCameraInfo* _94;
@@ -53,8 +53,7 @@ private:
     /* 0xCC */ u8 _CC;
     /* 0xCD */ u8 _CD;
     /* 0xD0 */ WarpPod* mPairPod;
-    /* 0xD4 */ JUTTexture* mColorTexture;
-    /* 0xD8 */ JUTTexture* mMaskTexture;
+    /* 0xD4 */ u8 _D4[8];
 };
 
 class WarpPodMgr : public NameObj {

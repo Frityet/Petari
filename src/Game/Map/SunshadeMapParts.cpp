@@ -1,7 +1,6 @@
 #include "Game/Map/SunshadeMapParts.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/SunshadeMapHolder.hpp"
-#include "Game/MapObj/GeneralMapParts.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 
 SunshadeMapParts::SunshadeMapParts(const char* pName) : GeneralMapParts(pName) {
     mCollision = nullptr;
@@ -16,10 +15,13 @@ void SunshadeMapParts::calcAnim() {
 }
 
 namespace MR {
-    NameObj* createSunshadeMapParts(const char* pName) { return new SunshadeMapParts(pName); }
+    NameObj* createSunshadeMapParts(const char* pName) {
+        return new SunshadeMapParts(pName);
+    }
 };  // namespace MR
 
-SunshadeMapParts::~SunshadeMapParts() {}
+SunshadeMapParts::~SunshadeMapParts() {
+}
 
 void SunshadeMapParts::init(const JMapInfoIter& rIter) {
     GeneralMapParts::init(rIter);

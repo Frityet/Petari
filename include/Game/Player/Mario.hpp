@@ -2,54 +2,56 @@
 
 #include "Game/Player/MarioModule.hpp"
 #include "Game/Util/TriangleFilter.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
-class MarioActor;
-class MarioFlow;
-class MarioWall;
-class MarioDamage;
-class MarioFaint;
-class MarioBlown;
-class MarioHang;
-class MarioSwim;
-class MarioSlider;
-class MarioFireDamage;
-class MarioFireRun;
-class MarioFireDance;
-class MarioAbyssDamage;
-class MarioDarkDamage;
-class MarioStep;
-class MarioBump;
-class MarioParalyze;
-class MarioStun;
-class MarioCrush;
-class MarioFreeze;
-class MarioMagic;
-class MarioFpView;
-class MarioRecovery;
-class MarioFlip;
-class MarioSideStep;
-class MarioFrontStep;
-class MarioStick;
-class MarioRabbit;
-class MarioSukekiyo;
-class MarioBury;
-class MarioWait;
-class MarioClimb;
-class MarioSkate;
-class MarioFoo;
-class MarioWarp;
-class MarioTeresa;
-class MarioTalk;
-class MarioMove;
 class AreaObj;
-class CubeCameraArea;
+class FloorCode;
+class GravityInfo;
+class HashSortTable;
 class HitInfo;
 class HitSensor;
-class Triangle;
-class FloorCode;
-struct SoundList;
-class MarioState;
+class MarioAbyssDamage;
+class MarioActor;
+class MarioBlown;
+class MarioBump;
+class MarioBury;
+class MarioClimb;
+class MarioCrush;
+class MarioDamage;
+class MarioDarkDamage;
+class MarioFaint;
+class MarioFireDamage;
+class MarioFireDance;
+class MarioFireRun;
+class MarioFlip;
+class MarioFlow;
+class MarioFoo;
+class MarioFpView;
+class MarioFreeze;
+class MarioFrontStep;
+class MarioHang;
+class MarioMagic;
 class MarioModuleTask;
+class MarioMove;
+class MarioParalyze;
+class MarioRabbit;
+class MarioRecovery;
+class MarioSideStep;
+class MarioSkate;
+class MarioSlider;
+class MarioState;
+class MarioStep;
+class MarioStick;
+class MarioStun;
+class MarioSukekiyo;
+class MarioSwim;
+class MarioTalk;
+class MarioTeresa;
+class MarioWait;
+class MarioWall;
+class MarioWarp;
+class Triangle;
+struct SoundList;
 
 class Mario : public MarioModule {
 public:
@@ -101,7 +103,7 @@ public:
     void updateSoundCode();
     const TVec3f& getShadowNorm() const;
     const TVec3f& getAirGravityVec() const;
-    const TVec3f& getAirFrontVec() const;
+    const TVec3f getAirFrontVec() const;
     const TVec3f* getGravityVec() const;
     void initAfterConst();
     void writeBackPhysicalVector();
@@ -150,23 +152,23 @@ public:
     bool checkBaseTransPoint();
     bool checkHeadPoint();
     const TVec3f* calcShadowPos();
-    bool updateBinderInfo();
+    void updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
-    bool checkGround();
-    CubeCameraArea* getCameraCubeCode() const;
+    void checkGround();
+    void getCameraCubeCode() const;
     void updateCubeCode();
 
     bool isDamaging() const;
-    void damageLarge(const TVec3f&);
+    bool damageLarge(const TVec3f&);
     void decDamageAfterTimer();
     bool checkDamage();
     u16 getDamageAfterTimer() const;
     void damageFloorCheck();
     void damageWallCheck();
     void damagePolygonCheck(const Triangle*);
-    void flipLarge(const TVec3f&);
+    bool flipLarge(const TVec3f&);
     bool isEnableAddDamage() const;
-    void damage(const TVec3f&);
+    bool damage(const TVec3f&);
     void doAbyssDamage();
     void connectToFireRun();
     void doFireDanceWithInitialDamage(u8);
@@ -177,16 +179,18 @@ public:
     void doFireDance();
     void checkKarikariDamage();
     void doDarkDamage();
-    void doParalyze();
-    void doFreeze();
-    void requestCrush();
+    bool doParalyze();
+    bool doFreeze();
+    bool requestCrush();
     void tryCrush();
 
-    void doFlipWeak(const TVec3f&);
-    void faint(const TVec3f&);
+    bool doFlipWeak(const TVec3f&);
+    bool faint(const TVec3f&);
 
-    void doFlipJump(const TVec3f&);
-    void doFlipBackRoll(const TVec3f&);
+    bool doFlipJump(const TVec3f&);
+    bool doFlipBackRoll(const TVec3f&);
+    bool doFlipLarge(const TVec3f&);
+    bool doFlipRot(const TVec3f&);
 
     void doFrontStep();
 
@@ -197,7 +201,7 @@ public:
 
     bool taskOnEffectCheck(u32);
 
-    void doFlow();
+    bool doFlow();
 
     void tryStartFoo();
 
@@ -249,13 +253,13 @@ public:
     void mainMove();
     bool isEnableTurn();
     void recordTurnSlipAngle();
-    f32 decideInertia(f32);
-    f32 decideInertiaOnIce(f32);
-    f32 decideInertiaOnSlip(f32);
+    void decideInertia(f32);
+    void decideInertiaOnIce(f32);
+    void decideInertiaOnSlip(f32);
     void calcShadowDir(const TVec3f&, TVec3f*);
-    bool retainMoveDir(f32, f32, TVec3f*);
+    void retainMoveDir(f32, f32, TVec3f*);
     void calcMoveDir(f32, f32, TVec3f*, bool);
-    bool checkLockOnHoming();
+    void checkLockOnHoming();
     void doLockOnHoming();
     void fixPositionInTower();
 
@@ -289,7 +293,7 @@ public:
 
     u32 initSoundTable(SoundList* list, u32);
     void initSound();
-    bool playSoundJ(const char*, s32);
+    void playSoundJ(const char*, s32);
     void stopSoundJ(const char*, u32);
     void startBas(const char*, bool, f32, f32);
     bool isRunningBas(const char*) const;
@@ -453,11 +457,11 @@ public:
     void stopPunch();
     void startMagic();
 
-    void doObjWarp(LiveActor*);
-    void doPointWarp(const TVec3f&, const TVec3f&, s32);
+    bool doObjWarp(LiveActor*);
+    bool doPointWarp(const TVec3f&, const TVec3f&, s32);
     bool isVisibleRecoveryWarpBubble() const;
     void doCubeWarp();
-    void doPointWarpRecovery(const TVec3f&, const TVec3f&);
+    bool doPointWarpRecovery(const TVec3f&, const TVec3f&);
 
     bool isDisableStayHere() const;
     bool isDisableFpViewMode() const;
@@ -532,7 +536,7 @@ public:
         unsigned _3B : 1;
         unsigned _3C : 1;
         unsigned _3D : 1;
-        unsigned _3E : 2;
+        unsigned _3E : 2;  // clrrwi rX, rX, 2
     };
     struct DrawStates {
         unsigned _0 : 1;
@@ -736,7 +740,7 @@ public:
     /* 0x43C */ TVec3f _43C;  // front?
     /* 0x448 */ TVec3f _448;
     /* 0x454 */ f32 _454;
-    /* 0x458 */ TriangleFilterDelegator<Mario>* _458;
+    /* 0x458 */ TriangleFilterDelegator< Mario >* _458;
     /* 0x45C */ Triangle* _45C;
     /* 0x460 */ Triangle* _460;
     /* 0x464 */ Triangle* mGroundPolygon;
@@ -790,8 +794,8 @@ public:
     // NOT FAKE
 
     /* 0x564 */ s32 _564;
-    /* 0x568 */ AreaObj* _568;
-    /* 0x56C */ u32 _56C;
+    /* 0x568 */ u32 _568;
+    /* 0x56C */ AreaObj* _56C;
     /* 0x570 */ u8 _570;
     /* 0x574 */ u32 _574;
     /* 0x578 */ u32 _578;
@@ -838,7 +842,7 @@ public:
     /* 0x700 */ TVec3f _700;
     /* 0x70C */ TVec3f _70C;
     /* 0x718 */ f32 _718;
-    /* 0x71C */ u8 _71C;
+    /* 0x71C */ bool _71C;
     /* 0x71D */ u8 _71D;
     /* 0x71E */ u8 _71E;
     /* 0x71F */ u8 _71F;
@@ -903,7 +907,7 @@ public:
     /* 0x88C */ MarioStep* mStep;
     /* 0x890 */ MarioBump* mBump;
     /* 0x894 */ MarioMagic* mMagic;
-    /* 0x898 */ bool _898;
+    /* 0x898 */ u8 _898;
     /* 0x89C */ MarioFpView* mFpView;
     /* 0x8A0 */ MarioMove* mMove;
     /* 0x8A4 */ TVec3f _8A4;
@@ -949,8 +953,7 @@ public:
     /* 0x978 */ u32 _978;
     // Not fake
 
-    /* 0x97C */
-    MarioState* _97C;
+    /* 0x97C */ MarioState* _97C;
     /* 0x980 */ MarioState* _980;
 
     /* 0x984 */ Task _984[0xb];

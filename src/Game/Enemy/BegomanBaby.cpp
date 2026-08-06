@@ -1,5 +1,17 @@
 #include "Game/Enemy/BegomanBaby.hpp"
-#include "Game/Util.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JointController.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 
 namespace NrvBegomanBaby {
@@ -106,7 +118,7 @@ void BegomanBaby::kill() {
 
 void BegomanBaby::killWithGenItem() {
     TVec3f minusGravity(-mGravity);
-    TVec3f starPieceAppearPos(minusGravity.scaleInline(80.0f));
+    TVec3f starPieceAppearPos(minusGravity * 80.0f);
     starPieceAppearPos += mPosition;
 
     bool appearedStarPiece;
@@ -250,7 +262,7 @@ void BegomanBaby::exeTrample() {
     }
 
     updateRotateY(0.25f, 0.5f);
-    MR::moveAndTurnToDirection(this, &mFaceVec, mTargetVec, ::hStopParam._0, hStopParam._4, hStopParam._8, hStopParam._C);
+    MR::moveAndTurnToDirection(this, &mFaceVec, mTargetVec, ::hStopParam._0, ::hStopParam._4, ::hStopParam._8, ::hStopParam._C);
     reboundWallAndGround(&mFaceVec, false);
     if (MR::isGreaterStep(this, 180)) {
         setNerve(&NrvBegomanBaby::HostTypeNrvSignAttack::sInstance);
@@ -281,7 +293,8 @@ void BegomanBaby::exeBlow() {
     updateRotateY(0.3f, 0.5f);
     MR::startLevelSound(this, "SE_EM_LV_BEGOMAN_SPARK");
     MR::startLevelSound(this, "SE_EM_LV_BABYBEGO_ROT_MIDDLE");
-    MR::moveAndTurnToDirection(this, &mFaceVec, mTargetVec, ::hHitReactionParam._0, hHitReactionParam._4, hHitReactionParam._8, hHitReactionParam._C);
+    MR::moveAndTurnToDirection(this, &mFaceVec, mTargetVec, ::hHitReactionParam._0, ::hHitReactionParam._4, ::hHitReactionParam._8,
+                               ::hHitReactionParam._C);
     reboundWallAndGround(&mFaceVec, false);
 
     if (MR::isGreaterStep(this, 20)) {
@@ -295,15 +308,8 @@ void BegomanBaby::exeAfterLaunch() {
     }
 
     if (MR::isLessStep(this, 80)) {
-        f32 f1 = 5.0f * JMath::sSinCosTable.cosLapRad(getNerveStep() * (16 * PI) / 80.0f);
-        // TODO: fix vector math
-        TVec3f scaledGravity(mGravity);
-        scaledGravity.scale(f1);
-        TVec3f velocity = mFaceVec.scaleInline(5.0f);
-        TVec3f velocity2(velocity);
-        velocity2 -= scaledGravity;
-        mVelocity.set(velocity2);
-
+        f32 f1 = 5.0f * MR::cos(getNerveStep() * (16 * PI) / 80.0f);
+        mVelocity.set(mFaceVec * 5.0f - mGravity * f1);
     } else if (MR::isLessStep(this, 85)) {
         mVelocity.zero();
     } else {
@@ -395,7 +401,7 @@ void BegomanBaby::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
 
         if (!MR::isNearZero(dirFromSenderToReceiver)) {
             bool reflected = reboundPlaneWithEffect(dirFromSenderToReceiver, 0.0f, 0.0f, "Spark");
-            mVelocity += dirFromSenderToReceiver.scaleInline(2.0f);
+            mVelocity += dirFromSenderToReceiver * 2.0f;
 
             if (reflected) {
                 MR::startSound(this, "SE_EM_BABYBEGO_COLLI");
@@ -405,7 +411,7 @@ void BegomanBaby::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     }
 }
 
-bool BegomanBaby::receiveMsgPush(HitSensor*, HitSensor*) {
+bool BegomanBaby::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
     return false;
 }
 
@@ -423,7 +429,6 @@ bool BegomanBaby::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* 
     }
 
     if (MR::isMsgExplosionAttack(msg)) {
-
         if (!isNerve(&NrvBegomanBaby::HostTypeNrvBlow::sInstance)) {
             mAppearThreeStarPiece = false;
             calcBlowReaction(pSender->mPosition, pReceiver->mPosition, 35.0f, 15.0f);
@@ -459,10 +464,7 @@ bool BegomanBaby::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* 
         f32 bodyRadius = getSensor("body")->mRadius;
         f32 f1 = pSender->mRadius / bodyRadius;
 
-        TVec3f vec2 = TVec3f(dirFromReceiverToSender.scaleInline(4.0f));
-        vec2.scale(f1);
-
-        MR::addVelocityLimit(this, vec2);
+        MR::addVelocityLimit(this, dirFromReceiverToSender * 4.0f * f1);
 
         if (reflected) {
             MR::startSound(this, "SE_EM_BABYBEGO_COLLI_BEGOMAN");
@@ -531,7 +533,7 @@ bool BegomanBaby::receiveMsgTrample(HitSensor* pSender, HitSensor* pReceiver) {
     return true;
 }
 
-bool BegomanBaby::receiveOtherMsg(u32 msg, HitSensor*, HitSensor*) {
+bool BegomanBaby::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     return MR::isMsgHitmarkEmit(msg);
 }
 
@@ -572,12 +574,12 @@ bool BegomanBaby::calcHeadJoint(TPos3f* pPos, const JointControllerInfo& rInfo) 
     }
 
     TVec3f yDir;
-    pPos->getYDirInline(yDir);
+    pPos->getYDir(yDir);
 
     if (!MR::isSameDirection(yDir, mTargetVec, 0.01f)) {
         MR::makeMtxUpFront(pPos, yDir, mTargetVec);
     }
-    
+
     return true;
 }
 

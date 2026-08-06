@@ -1,5 +1,12 @@
 #include "Game/Enemy/WalkerStateBindStarPointer.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 namespace {
     static const s32 sPointCanceBindTime = 5;
@@ -7,7 +14,7 @@ namespace {
 
 namespace NrvWalkerStateBindStarPointer {
     NEW_NERVE(WalkerStateBindStarPointerNrvBind, WalkerStateBindStarPointer, Bind);
-};  // namespace
+};  // namespace NrvWalkerStateBindStarPointer
 
 WalkerStateBindStarPointer::WalkerStateBindStarPointer(LiveActor* pHost, AnimScaleController* pController)
     : ActorStateBase("歩行型スターポインタ拘束", pHost), mScaleController(pController), mUpdateCounter(0), mHasEffect(false) {
@@ -62,7 +69,7 @@ void WalkerStateBindStarPointer::exeBind() {
         mUpdateCounter++;
     }
 
-    if (mUpdateCounter > sPointCanceBindTime) {
+    if (mUpdateCounter > ::sPointCanceBindTime) {
         kill();
     }
 }

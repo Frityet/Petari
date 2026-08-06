@@ -8,8 +8,16 @@
 #include "JSystem/JGeometry/TVec.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
+void BossStinkBugFunction_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)-1.0f;
+    (void)2.0f;
+}
+
 void BossStinkBugFunction::addHeightOffset(TVec3f* pOut, const BossStinkBug* pStinkBug, f32 scale) {
-    pOut->addInline(pStinkBug->mGravity.multInLine(-scale));
+    pOut->add(pStinkBug->mGravity * -scale);
 }
 
 void BossStinkBugFunction::addLocalHeightOffset(TVec3f* pOut, BossStinkBug* pStinkBug, f32 scale) {
@@ -17,7 +25,7 @@ void BossStinkBugFunction::addLocalHeightOffset(TVec3f* pOut, BossStinkBug* pSti
         pStinkBug->updatePose();
         TVec3f upVec;
         pStinkBug->calcUpVec(&upVec);
-        JMAVECScaleAdd(upVec, pOut, pOut, scale);
+        pOut->scaleAdd(scale, upVec, *pOut);
     }
 }
 
@@ -83,7 +91,7 @@ void BossStinkBugFunction::regainToRail(BossStinkBug* pStinkBug, const TVec3f& r
     } else {
         MR::turnDirectionDegree(pStinkBug, &pStinkBug->_EC, MR::getRailDirection(pStinkBug), 10.0f);
     }
-    JMAVECScaleAdd(rVec, railPos, pStinkBug->mPosition, 1.0f - f1);
+    pStinkBug->mPosition.scaleAdd(1.0f - f1, rVec, railPos);
 }
 
 void BossStinkBugFunction::setFallVelocity(BossStinkBug* pStinkBug, const TVec3f& rVec, f32 f1, f32 f2, f32 f3) {
@@ -103,7 +111,7 @@ void BossStinkBugFunction::setFallVelocity(BossStinkBug* pStinkBug, const TVec3f
 
     TVec3f scaleAdd;
 
-    JMAVECScaleAdd(temp, rVec, &scaleAdd, scaleAddFactor * f3);
+    scaleAdd.scaleAdd(scaleAddFactor * f3, temp, rVec);
 
     pStinkBug->mVelocity.set(scaleAdd - pStinkBug->mPosition);
 }

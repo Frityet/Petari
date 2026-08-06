@@ -1,5 +1,7 @@
 #include "Game/MapObj/LavaGeyser.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 #define DEG_TO_RAD_0_1 0.017453292f
 
@@ -84,9 +86,7 @@ void LavaGeyser::updateHitSensor(HitSensor* pSensor) {
     }
 
     pSensor->mPosition.set(mPosition);
-    TVec3f v5 = _A0;
-    v5.mult(v4);
-    pSensor->mPosition.addInline(v5);
+    pSensor->mPosition.add(_A0 * v4);
 }
 
 void LavaGeyser::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {

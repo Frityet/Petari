@@ -14,7 +14,6 @@
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include <JSystem/JMath/JMath.hpp>
 
 namespace MR {
     HitSensor* addHitSensor(LiveActor* pActor, const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& rOffset) {
@@ -248,7 +247,7 @@ namespace MR {
 
     bool tryUpdateHitSensorsAll(LiveActor* pActor) {
         if (pActor->mSensorKeeper != nullptr) {
-            pActor->mSensorKeeper->update();
+            updateHitSensorsAll(pActor);
 
             return true;
         }
@@ -289,7 +288,7 @@ namespace MR {
     }
 
     void setSensorOffset(LiveActor* pActor, const char* pName, const TVec3f& rOffset) {
-        pActor->mSensorKeeper->getSensorInfo(pName)->_C.setPS(rOffset);
+        pActor->mSensorKeeper->getSensorInfo(pName)->setOffset(rOffset);
     }
 
     void setSensorRadius(LiveActor* pActor, const char* pName, f32 radius) {
@@ -445,9 +444,7 @@ namespace MR {
     }
 
     void calcSensorDirection(TVec3f* pDir, const HitSensor* pSensor1, const HitSensor* pSensor2) {
-        TVec3f dir(pSensor2->mPosition);
-
-        JMathInlineVEC::PSVECSubtract(&dir, &pSensor1->mPosition, &dir);
+        TVec3f dir = pSensor2->mPosition - pSensor1->mPosition;
         pDir->set(dir);
     }
 
@@ -457,10 +454,8 @@ namespace MR {
     }
 
     void calcSensorHorizon(TVec3f* pHorizon, const TVec3f& rGravity, const HitSensor* pSensor1, const HitSensor* pSensor2) {
-        TVec3f horizon(pSensor2->mPosition);
-
-        JMathInlineVEC::PSVECSubtract(&horizon, &pSensor1->mPosition, &horizon);
-        pHorizon->rejection(horizon, rGravity);
+        TVec3f horizon = pSensor2->mPosition - pSensor1->mPosition;
+        pHorizon->killElement(horizon, rGravity);
     }
 
     void calcSensorHorizonNormalize(TVec3f* pHorizon, const TVec3f& rGravity, const HitSensor* pSensor1, const HitSensor* pSensor2) {
@@ -509,9 +504,9 @@ namespace MR {
     }
 
     bool sendMsgEnemyAttackMsgToDir(u32 msg, HitSensor* pReceiver, HitSensor* pSender, const TVec3f& rDir) {
-        TVec3f senderPos(pSender->mPosition);
+        TVec3f senderPos = pSender->mPosition;
+        pSender->mPosition.sub(pReceiver->mPosition, rDir);
 
-        JMathInlineVEC::PSVECSubtract(&pReceiver->mPosition, &rDir, &pSender->mPosition);
         bool isSent = pReceiver->receiveMessage(msg, pSender);
         setSensorPos(pSender, senderPos);
 
@@ -662,7 +657,6 @@ namespace MR {
             return false;
         }
 
-        // FIXME: getGroundSensor should not be inlined.
         return getGroundSensor(getSensorHost(pSender))->receiveMessage(msg, pSender);
     }
 
@@ -671,7 +665,6 @@ namespace MR {
             return false;
         }
 
-        // FIXME: getWallSensor should not be inlined.
         return getWallSensor(getSensorHost(pSender))->receiveMessage(msg, pSender);
     }
 
@@ -688,9 +681,7 @@ namespace MR {
     }
 
     bool sendMsgToEnemyAttackBlowOrTrample(HitSensor* pReceiver, HitSensor* pSender, f32 ratio) {
-        TVec3f dir(pReceiver->mPosition);
-
-        JMathInlineVEC::PSVECSubtract(&dir, &pSender->mPosition, &dir);
+        TVec3f dir = pReceiver->mPosition - pSender->mPosition;
         normalizeOrZero(&dir);
 
         if (ratio < getSensorHost(pSender)->mGravity.dot(dir)) {
@@ -1009,22 +1000,17 @@ namespace MR {
     }
 
     void calcPosBetweenSensors(TVec3f* pPos, const HitSensor* pSensor1, const HitSensor* pSensor2, f32 offset) {
-        TVec3f dir(pSensor2->mPosition);
-
-        JMathInlineVEC::PSVECSubtract(&dir, &pSensor1->mPosition, &dir);
+        TVec3f dir = pSensor2->mPosition - pSensor1->mPosition;
         normalizeOrZero(&dir);
 
-        f32 dist = PSVECDistance(&pSensor1->mPosition, &pSensor2->mPosition);
+        f32 dist = pSensor1->mPosition.distance(pSensor2->mPosition);
         f32 radius2 = pSensor2->mRadius;
         f32 radius1 = pSensor1->mRadius;
         f32 value = (radius1 + radius2 - dist) / 2.0f;
 
         pPos->set(dir);
-        pPos->x *= value + pSensor1->mRadius + offset;
-        pPos->y *= value + pSensor1->mRadius + offset;
-        pPos->z *= value + pSensor1->mRadius + offset;
-
-        pPos->addInline2(pSensor1->mPosition);
+        *pPos *= value + pSensor1->mRadius + offset;
+        pPos->add(pSensor1->mPosition);
     }
 
     bool tryForceKillIfMsgStartPowerStarGet(LiveActor* pActor, u32 msg) {

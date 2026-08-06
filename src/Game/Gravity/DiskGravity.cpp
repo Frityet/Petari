@@ -4,6 +4,13 @@
 #include <JSystem/JMath/JMATrigonometric.hpp>
 #include <math_types.hpp>
 
+void DiskGravity_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)-1.0f;
+}
+
 DiskGravity::DiskGravity()
     : PlanetGravity(), mLocalPosition(0.0f, 50.0f, 0.0f), mWorldPosition(0.0f, 50.0f, 0.0f), mLocalNormal(0, 1, 0), mWorldNormal(0, 1, 0),
       mSideDirection(1, 0, 0), mOppositeSideVecOrtho(1, 0, 0), mWorldOppositeSideVecOrtho(1, 0, 0) {
@@ -67,8 +74,8 @@ bool DiskGravity::calcOwnGravityVector(TVec3f* pDest, f32* pDistance, const TVec
     f32 distance = 0.0f;
 
     if (distanceToCentralAxis <= mWorldRadius) {
-        gravity = centralAxisY >= 0.0f ? mWorldNormal.negateInline() : mWorldNormal;
-        distance = __fabsf(centralAxisY);
+        gravity = centralAxisY >= 0.0f ? -mWorldNormal : mWorldNormal;
+        distance = MR::abs(centralAxisY);
     } else {
         if (!mEnableEdgeGravity) {
             return false;
@@ -76,7 +83,7 @@ bool DiskGravity::calcOwnGravityVector(TVec3f* pDest, f32* pDistance, const TVec
 
         TVec3f closestEdgePoint;
         closestEdgePoint.set< f32 >(dirOnDiskPlane * mWorldRadius);
-        JMathInlineVEC::PSVECAdd(&closestEdgePoint, &mWorldPosition, &closestEdgePoint);
+        closestEdgePoint += mWorldPosition;
 
         gravity = closestEdgePoint - rPosition;
         MR::separateScalarAndDirection(&distance, &gravity, gravity);
@@ -97,35 +104,6 @@ bool DiskGravity::calcOwnGravityVector(TVec3f* pDest, f32* pDistance, const TVec
     return true;
 }
 
-void DiskGravity::updateLocalParam() {
-    TRot3f rot;
-
-    // Both of these variables are present because the codegen indicates they should be.
-    // In the final game, however, they have no behavioral effect and are not given any memory.
-    bool artifact = false;
-    bool& rArtifact = artifact;
-
-    mValidCos = JMath::sSinCosTable.cosLap(0.5f * mValidDegree);
-    if (MR::isNearZero(mLocalNormal)) {
-        rArtifact = true;
-        mOppositeSideVecOrtho.zero();
-        return;
-    }
-    JMAVECScaleAdd(&mLocalNormal, &mSideDirection, &mOppositeSideVecOrtho, -mLocalNormal.dot(mSideDirection));
-    MR::normalizeOrZero(&mOppositeSideVecOrtho);
-    if (MR::isNearZero(mOppositeSideVecOrtho)) {
-        mOppositeSideVecOrtho.zero();
-        return;
-    }
-
-    rot.identity();
-    rot.setRotateInline(mLocalNormal, 0.5f * mValidDegree * (PI / 180));
-    rArtifact = false;
-    if (!artifact) {
-        rot.mult(mOppositeSideVecOrtho, mOppositeSideVecOrtho);
-    }
-}
-
 void DiskGravity::updateMtx(const TPos3f& rMtx) {
     rMtx.mult(mLocalPosition, mWorldPosition);
     rMtx.mult33(mLocalNormal, mWorldNormal);
@@ -134,4 +112,33 @@ void DiskGravity::updateMtx(const TPos3f& rMtx) {
     f32 axisScale;
     MR::separateScalarAndDirection(&axisScale, &mWorldNormal, mWorldNormal);
     mWorldRadius = mLocalRadius * axisScale;
+}
+
+void DiskGravity::updateLocalParam() {
+    TRot3f rot;
+
+    // Both of these variables are present because the codegen indicates they should be.
+    // In the final game, however, they have no behavioral effect and are not given any memory.
+    bool artifact = false;
+    bool& rArtifact = artifact;
+
+    mValidCos = MR::cosDegree(0.5f * mValidDegree);
+    if (MR::isNearZero(mLocalNormal)) {
+        rArtifact = true;
+        mOppositeSideVecOrtho.zero();
+        return;
+    }
+    mOppositeSideVecOrtho.killElement2(mSideDirection, mLocalNormal);
+    MR::normalizeOrZero(&mOppositeSideVecOrtho);
+    if (MR::isNearZero(mOppositeSideVecOrtho)) {
+        mOppositeSideVecOrtho.zero();
+        return;
+    }
+
+    rot.identity();
+    rot.setRotate(mLocalNormal, 0.5f * mValidDegree * (PI / 180));
+    rArtifact = false;
+    if (!artifact) {
+        rot.mult(mOppositeSideVecOrtho, mOppositeSideVecOrtho);
+    }
 }

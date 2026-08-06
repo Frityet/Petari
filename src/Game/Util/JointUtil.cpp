@@ -28,16 +28,15 @@ namespace MR {
     }
 
     MtxPtr getJointMtx(const LiveActor* pActor, const char* pName) {
-        u16 idx = MR::getJointIndex(pActor, pName);
-        return MR::getJ3DModel(pActor)->mMtxBuffer->mpAnmMtx[idx];
+        return getJointMtx(pActor, getJointIndex(pActor, pName));
     }
 
     MtxPtr getJointMtx(const LiveActor* pActor, int idx) {
         return MR::getJ3DModel(pActor)->mMtxBuffer->mpAnmMtx[idx];
     }
 
-    s32 getJointIndex(const LiveActor* pActor, const char* pName) {
-        return (u16)MR::getJ3DModelData(pActor)->mJointTree.mJointName->getIndex(pName);
+    u16 getJointIndex(const LiveActor* pActor, const char* pName) {
+        return MR::getJ3DModelData(pActor)->mJointTree.mJointName->getIndex(pName);
     }
 
     const char* getJointName(const LiveActor* pActor, int idx) {
@@ -154,48 +153,43 @@ namespace MR {
         return pJoint->mTransformInfo.mTranslate.z;
     }
 
-    J3DJoint* searchChildJoint(J3DJoint* pJoint, J3DJoint* pChild) {
-        J3DJoint* parent = pJoint;
-        if (pJoint == nullptr) {
+    /*
+    J3DJoint* searchChildJoint(J3DJoint *a1, J3DJoint *a2) {
+        J3DJoint* v3 = a1;
+        if (a1 == nullptr) {
             return nullptr;
         }
 
-        if (pJoint == pChild) {
-            return reinterpret_cast< J3DJoint* >(-1);
+        if (a1 == a2) {
+            return (J3DJoint*)-1;
         }
 
-        J3DJoint* child = pJoint->mChild;
-        if (child != pChild) {
+        J3DJoint* child = a1->mChild;
+        if (child != a2) {
             while (child != nullptr) {
-                child = child->mYounger;
+                child = child->mYoung;
 
-                if (child == pChild) {
-                    return pJoint;
+                if (child == a2) {
+                    return a1;
                 }
             }
 
-            pJoint = searchChildJoint(pJoint->mYounger, pChild);
+            a1 = searchChildJoint(a1->mYoung, a2);
 
-            if (pJoint != nullptr) {
-                return pJoint;
+            if (a1 != nullptr) {
+                return searchChildJoint(v3->mYoung, a2);
             }
-
-            return searchChildJoint(parent->mChild, pChild);
         }
 
-        return pJoint;
+        return a1;
     }
 
-    J3DJoint* getParentJoint(J3DModelData* pModelData, J3DJoint* pJoint) {
-        J3DJoint* parent = searchChildJoint(pModelData->mJointTree.mJointNodePointer[0], pJoint);
-        if (parent == reinterpret_cast< J3DJoint* >(-1)) {
-            parent = nullptr;
-        }
+    J3DJoint* getParentJoint(J3DModelData *pModelData, J3DJoint *pJoint) {
 
-        return parent;
     }
+    */
 
-    J3DJoint* getParentJoint(const LiveActor* pActor, J3DJoint* pJoint) {
-        return getParentJoint(MR::getJ3DModelData(pActor), pJoint);
+    s32 getParentJoint(const LiveActor* pActor, J3DJoint* pJoint) {
+        return getParentJoint(getJ3DModelData(pActor), pJoint);
     }
 };  // namespace MR

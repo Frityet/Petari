@@ -7,6 +7,12 @@
 #include <JSystem/JGeometry/TUtil.hpp>
 #include <revolution/wpad.h>
 
+void SpherePadController_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)2.0f;
+}
+
 SpherePadController::SpherePadController() : SphereController() {
 }
 
@@ -44,9 +50,9 @@ f32 SpherePadController::calcDirSphereMove(TVec3f* pMoveDir, const TVec3f& rBase
         TVec3f dirY;
         TVec3f dirZ;
 
-        invMtx.getXDirInline(dirX);
-        invMtx.getYDirInline(dirY);
-        invMtx.getZDirInline(dirZ);
+        invMtx.getXDir(dirX);
+        invMtx.getYDir(dirY);
+        invMtx.getZDir(dirZ);
 
         MR::normalizeOrZero(&dirX);
         MR::normalizeOrZero(&dirY);

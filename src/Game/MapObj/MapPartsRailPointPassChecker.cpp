@@ -1,4 +1,5 @@
 #include "Game/MapObj/MapPartsRailPointPassChecker.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
 
 MapPartsRailPointPassChecker::MapPartsRailPointPassChecker(LiveActor* pActor) : MapPartsFunction(pActor, "レール点通過チェッカー") {
@@ -38,7 +39,8 @@ bool MapPartsRailPointPassChecker::isPassedEndPoint() const {
     return MR::getCurrentRailPointNo(host) != mRailPointNo;
 }
 
-MapPartsRailPointPassChecker::~MapPartsRailPointPassChecker() {}
+MapPartsRailPointPassChecker::~MapPartsRailPointPassChecker() {
+}
 
 bool MapPartsRailPointPassChecker::isWorking() const {
     return true;

@@ -1,9 +1,20 @@
 #include "Game/Ride/FluffWind.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
+
+void FluffWind_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
 
 namespace NrvFluffWindEffect {
     NEW_NERVE(FluffWindEffectNrvBrowWind, FluffWindEffect, BrowWind);
@@ -55,7 +66,8 @@ void FluffWindEffect::startClipped() {
     LiveActor::startClipped();
 }
 
-FluffWind::FluffWind(const char* pName) : LiveActor(pName), mNumEffects(0), mEffects(nullptr) {}
+FluffWind::FluffWind(const char* pName) : LiveActor(pName), mNumEffects(0), mEffects(nullptr) {
+}
 
 void FluffWind::init(const JMapInfoIter& rIter) {
     initRailRider(rIter);
@@ -95,7 +107,8 @@ void FluffWind::makeActorDead() {
     LiveActor::makeActorDead();
 }
 
-FluffWindHolder::FluffWindHolder() : LiveActorGroup("わたげ風", 8) {}
+FluffWindHolder::FluffWindHolder() : LiveActorGroup("わたげ風", 8) {
+}
 
 void FluffWindHolder::calcWindInfo(const TVec3f& rPosition, TVec3f* pWindDirection, f32* pWindStrength) const {
     pWindDirection->zero();
@@ -112,10 +125,10 @@ void FluffWindHolder::calcWindInfo(const TVec3f& rPosition, TVec3f* pWindDirecti
         TVec3f nearestPos;
         MR::calcNearestRailPosAndDirection(&nearestPos, &railDir, pActor, rPosition);
 
-        f32 distance = PSVECDistance(&nearestPos, &rPosition);
+        f32 distance = nearestPos.distance(rPosition);
         if (distance < bestDistance) {
             bestDistance = distance;
-            bestDir.setPS2(railDir);
+            bestDir = railDir;
         }
     }
 

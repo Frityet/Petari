@@ -1,13 +1,28 @@
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/NPC/NPCActorItem.hpp"
-#include "Game/Util.hpp"
-#include "revolution/types.h"
+#include "Game/NameObj/NameObjArchiveListCollector.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointController.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/NPCUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 
 namespace NrvNPCActor {
     NEW_NERVE(NPCActorNrvReaction, NPCActor, Reaction);
@@ -252,7 +267,7 @@ void NPCActor::makeArchiveListDefault(NameObjArchiveListCollector* pCollector, c
 
 void NPCActor::setBaseMtx(const TPos3f& rPos) {
     TVec3f trans;
-    rPos.getTransInline(trans);
+    rPos.getTrans(trans);
 
     TVec3f eulerXYZ;
     // inlined in the assembly
@@ -625,7 +640,7 @@ bool NPCActor::turnToDefault(f32 f1) {
     f32 dot = zDir.dot(zDir2);
     dot = MR::clamp(dot, -1.0f, 1.0f);
 
-    f32 flt = __fabsf((f1 * 0.17453294f) / JMAAcosRadian(dot));
+    f32 flt = MR::abs((f1 * 0.17453294f) / MR::acos(dot));
     flt = MR::clamp(flt, 0.0f, 1.0f);
 
     MR::blendQuatUpFront(&_A0, yDir, zDir, flt, flt);
@@ -834,4 +849,5 @@ void NPCActor::exeTalk() {
     }
 }
 
-void NPCActor::exeNull() {}
+void NPCActor::exeNull() {
+}

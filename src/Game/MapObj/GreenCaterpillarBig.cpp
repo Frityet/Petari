@@ -1,4 +1,7 @@
 #include "Game/MapObj/GreenCaterpillarBig.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvGreenCaterpillarBig {
     NEW_NERVE(GreenCaterpillarBigNrvHide, GreenCaterpillarBig, Hide);
@@ -29,7 +32,7 @@ void GreenCaterpillarBigBody::init(const JMapInfoIter& rIter) {
 void GreenCaterpillarBigBody::setPosAndDirection(LiveActor* pActor) {
     TVec3f jointPos;
     MR::copyJointPos(mCaterpillar, "FollowPoint", &jointPos);
-    mPosition.setPS(jointPos);
+    mPosition.set(jointPos);
     calcBodyDir(pActor, &mFrontVec);
 
     mScale.x = 1.0f;
@@ -135,7 +138,7 @@ void GreenCaterpillarBig::exeWriggle() {
 
             if (point_arg == 0.0f) {
                 _9C = 1;
-                MR::tryRumblePadStrong(this, 0);
+                MR::tryRumblePadStrong(this, WPAD_CHAN0);
                 MR::shakeCameraNormal();
                 MR::startSound(this, "SE_OJ_GRN_CATERP_IN");
             } else if (point_arg == 1.0f) {
@@ -234,12 +237,14 @@ void GreenCaterpillarBig::fixBodyPartsOnRail() {
 
 void GreenCaterpillarBig::leaveApple() {
     _9D = 1;
-    MR::tryRumblePadStrong(this, 0);
+    MR::tryRumblePadStrong(this, WPAD_CHAN0);
     MR::shakeCameraNormal();
     MR::startSound(this, "SE_OJ_GRN_CATERP_DAMAGE");
     MR::startSound(this, "SE_OJ_GRN_CATERP_OUT");
 }
 
-GreenCaterpillarBigBody::~GreenCaterpillarBigBody() {}
+GreenCaterpillarBigBody::~GreenCaterpillarBigBody() {
+}
 
-GreenCaterpillarBig::~GreenCaterpillarBig() {}
+GreenCaterpillarBig::~GreenCaterpillarBig() {
+}

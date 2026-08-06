@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Game/LiveActor/LiveActor.hpp"
-#include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/Screen/LayoutActor.hpp"
-#include "Game/System/DrawSyncManager.hpp"
-#include <revolution.h>
+#include "Game/Util/Array.hpp"
 
 class ActorCameraInfo;
+class LiveActor;
 class TalkMessageCtrl;
 class TalkBalloonHolder;
 class TalkStateHolder;
@@ -98,20 +96,11 @@ public:
     bool mIsOnGameEventFlagViewNormalEnding;  // 0x8B
 };
 
-class TalkPeekZ : public DrawSyncCallback {
+class TalkPeekZ {
 public:
     TalkPeekZ();
-
-    virtual void drawSyncCallback(u16);
-
     void setDrawSyncToken();
-
-    /* 0x04 */ u16 mToken;
-    /* 0x08 */ u32 mZ;
-    /* 0x0C */ TVec2f mScreenPos;
-    /* 0x14 */ TVec3f mWorldPos;
-    /* 0x20 */ f32 mProjection[7];
-    /* 0x3C */ f32 mViewport[6];
+    void drawSyncCallback(u16);
 };
 
 namespace MR {

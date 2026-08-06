@@ -1,11 +1,8 @@
 #include "Game/NPC/NPCSupportRail.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "revolution/types.h"
-#include <cstddef>
 
-NPCSupportRail::NPCSupportRail(const char* pName) : LiveActor(pName) {}
-
-NPCSupportRail::~NPCSupportRail() {}
+NPCSupportRail::NPCSupportRail(const char* pName) : LiveActor(pName) {
+}
 
 void NPCSupportRail::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);

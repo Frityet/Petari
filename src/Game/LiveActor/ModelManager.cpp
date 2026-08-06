@@ -5,6 +5,7 @@
 #include "Game/Animation/BtkPlayer.hpp"
 #include "Game/Animation/BtpPlayer.hpp"
 #include "Game/Animation/BvaPlayer.hpp"
+#include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/LiveActor/DisplayListMaker.hpp"
@@ -23,7 +24,8 @@ namespace MR {
 
 ModelManager::ModelManager()
     : mBtkPlayer(nullptr), mBrkPlayer(nullptr), mBtpPlayer(nullptr), mBpkPlayer(nullptr), mBvaPlayer(nullptr), mXanimeResourceTable(nullptr),
-      mXanimePlayer(nullptr), mModel(nullptr), mModelResourceHolder(nullptr), mDisplayListMaker(nullptr) {}
+      mXanimePlayer(nullptr), mModel(nullptr), mModelResourceHolder(nullptr), mDisplayListMaker(nullptr) {
+}
 
 void ModelManager::update() {
     XanimePlayer* pXanimePlayer = mXanimePlayer;

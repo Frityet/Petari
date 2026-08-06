@@ -1,10 +1,17 @@
 #include "Game/MapObj/SnowplowSwitch.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
 namespace {
     static const f32 sSensorRadius = 70.0f;
 };  // namespace
 
-SnowplowSwitch::SnowplowSwitch(const char* pName) : LiveActor(pName), mIsDiscovered() {}
+SnowplowSwitch::SnowplowSwitch(const char* pName) : LiveActor(pName), mIsDiscovered() {
+}
 
 bool SnowplowSwitch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (msg == ACTMES_ASK_HIDDEN_BY_SNOW) {
@@ -22,7 +29,8 @@ bool SnowplowSwitch::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRe
     return false;
 }
 
-SnowplowSwitch::~SnowplowSwitch() {}
+SnowplowSwitch::~SnowplowSwitch() {
+}
 
 void SnowplowSwitch::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);

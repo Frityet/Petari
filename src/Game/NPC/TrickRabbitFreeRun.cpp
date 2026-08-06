@@ -1,6 +1,13 @@
 #include "Game/NPC/TrickRabbitFreeRun.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/SpotMarkLight.hpp"
 #include "Game/NPC/TrickRabbit.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/TalkUtil.hpp"
 
 namespace NrvTrickRabbitFreeRun {
     NEW_NERVE(TrickRabbitFreeRunNrvWaitStart, TrickRabbitFreeRun, WaitStart);
@@ -15,7 +22,8 @@ namespace NrvTrickRabbitFreeRun {
 
 TrickRabbitFreeRun::TrickRabbitFreeRun(const char* pName)
     : LiveActor(pName), _8C(0.0f, 0.0f, 0.0f, 1.0f), _9C(0.0f, 0.0f, 1.0f), _A8(0), _AC(0), _B0(0), _B4(0), mTalkMessageCtrl(nullptr),
-      mFootPrint(nullptr), mSpotMarkLight(nullptr) {}
+      mFootPrint(nullptr), mSpotMarkLight(nullptr) {
+}
 
 void TrickRabbitFreeRun::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);

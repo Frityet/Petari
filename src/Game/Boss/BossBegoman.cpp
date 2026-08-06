@@ -1,8 +1,23 @@
 #include "Game/Boss/BossBegoman.hpp"
 #include "Game/Boss/BossBegomanHead.hpp"
 #include "Game/Enemy/BegomanBaby.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/ElectricRailHolder.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace {
     const MR::ActorMoveParam hWaitParam = {0.0f, 3.0f, 0.95f, 1.0f};
@@ -41,8 +56,8 @@ namespace NrvBossBegoman {
 };  // namespace NrvBossBegoman
 
 BossBegoman::BossBegoman(const char* pName)
-    : BegomanBase(pName), mBabyFollowers(nullptr), mSpikeFollowers(nullptr), mBabyFollowerNum(0), mSpikeFollowerNum(0), mFollowerKind(FollowerKind_BothFollower),
-      mPath(nullptr), mHead(nullptr), mHealth(3), _150(0.2f), mOpeningDemoInfo(nullptr) {
+    : BegomanBase(pName), mBabyFollowers(nullptr), mSpikeFollowers(nullptr), mBabyFollowerNum(0), mSpikeFollowerNum(0),
+      mFollowerKind(FollowerKind_BothFollower), mPath(nullptr), mHead(nullptr), mHealth(3), _150(0.2f), mOpeningDemoInfo(nullptr) {
     mHeadMtx.identity();
 }
 
@@ -51,7 +66,7 @@ void BossBegoman::init(const JMapInfoIter& rIter) {
 
     MR::calcGravity(this);
 
-    mInitPos.sub(mGravity.scaleInline(10.0f));
+    mInitPos.sub(mGravity * 10.0f);
     mHead = new BossBegomanHead(this, mHeadMtx);
     mHead->initWithoutIter();
 
@@ -112,7 +127,7 @@ void BossBegoman::init(const JMapInfoIter& rIter) {
         for (int i = 0; i < mBabyFollowerNum; i++) {
             MR::tryRegisterDemoCast(mBabyFollowers[i], rIter);
         }
-        //i is stored in the wrong register
+        // i is stored in the wrong register
         for (int i = 0; i < mSpikeFollowerNum; i++) {
             MR::tryRegisterDemoCast(mSpikeFollowers[i], rIter);
         }
@@ -237,7 +252,7 @@ void BossBegoman::addVelocityOnPushedFromElectricRail(const TVec3f& a1, const TV
     railPushVelH.setLength(getRailPushVelHBoss());
 
     mVelocity.add(railPushVelH);
-    mVelocity.add(mGravity.scaleInline(-getRailPushJumpBoss()));
+    mVelocity.add(mGravity * -getRailPushJumpBoss());
 }
 
 bool BossBegoman::requestAttack() {
@@ -338,7 +353,7 @@ void BossBegoman::exeTurn() {
     }
 
     if (MR::isBckPlaying(this, "Turn")) {
-        MR::emitEffectHit(this, mPosition.addOperatorInLine(mFaceVec.scaleInline(180.0f)), "EdgeSpark");
+        MR::emitEffectHit(this, mPosition + mFaceVec * 180.0f, "EdgeSpark");
     }
 
     updateRotateY(0.4f, 0.005f);
@@ -399,7 +414,7 @@ void BossBegoman::exeBrake() {
 }
 
 void BossBegoman::exeStepBack() {
-    //result of call is unused
+    // result of call is unused
     if (MR::isFirstStep(this)) {
     }
 
@@ -418,7 +433,7 @@ void BossBegoman::exeReturn() {
 }
 
 void BossBegoman::exeProvoke() {
-    //result of call is unused
+    // result of call is unused
     if (MR::isFirstStep(this)) {
     }
 
@@ -516,10 +531,10 @@ void BossBegoman::exeElectricDeath() {
         MR::normalizeOrZero(&vec);
 
         if (mHealth == 2) {
-            MR::appearStarPieceToDirection(this, mPosition.subOperatorInLine(mGravity.scaleInline(200.0f)), vec, 8, 20.0f, 40.0f, false);
+            MR::appearStarPieceToDirection(this, mPosition - mGravity * 200.0f, vec, 8, 20.0f, 40.0f, false);
             MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
         } else if (mHealth == 1) {
-            MR::appearStarPieceToDirection(this, mPosition.subOperatorInLine(mGravity.scaleInline(200.0f)), vec, 16, 20.0f, 40.0f, false);
+            MR::appearStarPieceToDirection(this, mPosition - mGravity * 200.0f, vec, 16, 20.0f, 40.0f, false);
             MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
         }
     }
@@ -527,7 +542,7 @@ void BossBegoman::exeElectricDeath() {
     if (MR::isGreaterStep(this, 60)) {
         MR::stopScene(5);
         MR::shakeCameraWeak();
-        
+
         if (mHealth == 0) {
             MR::startSound(this, "SE_BM_BBEGO_DEAD");
             kill();
@@ -565,11 +580,11 @@ void BossBegoman::exeElectricReturn() {
         if (ElectricRailFunction::isTouchRail(getSensor("check"), &vec1, &vec2)) {
             vec1.sub(mPosition);
 
-            TVec3f vec3(vec1);
-            PSVECCrossProduct(&vec2, &vec3, &vec3);
+            TVec3f vec3 = vec1;
+            vec3.cross(vec2, vec3);
 
-            TVec3f vec4(vec3);
-            PSVECCrossProduct(&vec2, &vec4, &vec4);
+            TVec3f vec4 = vec3;
+            vec4.cross(vec2, vec4);
 
             if (0.0f < vec1.dot(vec4)) {
                 vec4 = -vec4;
@@ -595,13 +610,13 @@ void BossBegoman::exeJumpToInitPos() {
         MR::startSound(this, "SE_BM_BBEGO_BIG_JUMP");
         // vec1 goes completely unused
         TVec3f vec1(mInitPos);
-        vec1.sub(mPosition);
-        vec1.scale(0.5f);
+        vec1 -= mPosition;
+        vec1 *= 0.5f;
 
         TVec3f vec2(mGravity);
         vec2 = -vec2;
 
-        mPath->initFromUpVector(mPosition, mInitPos.subOperatorInLine(mGravity.scaleInline(10.0f)), vec2, 700.0f);
+        mPath->initFromUpVector(mPosition, mInitPos - mGravity * 10.0f, vec2, 700.0f);
         mVelocity.zero();
     }
 
@@ -726,7 +741,7 @@ void BossBegoman::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
 
         if (!MR::isNearZero(dirReceiverToSender)) {
             bool rebounded = reboundPlaneWithEffect(dirReceiverToSender, 0.0f, 0.0f, "Spark");
-            mVelocity.add(dirReceiverToSender.scaleInline(2.0f));
+            mVelocity.add(dirReceiverToSender * 2.0f);
 
             if (rebounded) {
                 MR::startSound(this, "SE_EM_BEGOMAN_COLLI");
@@ -775,8 +790,8 @@ bool BossBegoman::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* 
 
         bool rebounded = reboundPlaneWithEffect(vec2, 0.0f, 0.0f, "Spark");
         // float regswap
-        MR::addVelocityLimit(this, vec2.scaleInline(6.0f).scaleInline(pSender->mRadius / getSensor("body")->mRadius));
-        
+        MR::addVelocityLimit(this, vec2 * 6.0f * (pSender->mRadius / getSensor("body")->mRadius));
+
         if (rebounded) {
             MR::startSound(this, "SE_EM_BEGOMAN_COLLI_BEGOMAN");
         }
@@ -861,16 +876,14 @@ bool BossBegoman::receiveMsgTrample(HitSensor* pSender, HitSensor* pReceiver) {
         MR::vecKillElement(vec2, mGravity, &vec2);
 
         if (!MR::isNearZero(vec2)) {
-            TVec3f vec3(vec2);
-            PSVECCrossProduct(&mGravity, &vec3, &vec3);
-
+            TVec3f vec3 = vec2;
+            vec3.cross(mGravity, vec3);
             vec3.setLength(25.0f);
             mVelocity = vec3;
         } else {
             TVec3f vec4;
             MR::getPlayerFrontVec(&vec4);
-            PSVECCrossProduct(&mGravity, &vec4, &vec4);
-
+            vec4.cross(mGravity, vec4);
             vec4.setLength(25.0f);
             mVelocity = vec4;
         }
@@ -893,7 +906,7 @@ void BossBegoman::calcAnim() {
     mHeadMtx.setInline(MR::getJointMtx(this, "Center"));
 
     TVec3f vec;
-    mHeadMtx.getYDirInline(vec);
+    mHeadMtx.getYDir(vec);
 
     if (!MR::isSameDirection(vec, mTargetVec, 0.01f)) {
         MR::makeMtxUpFront(&mHeadMtx, vec, mTargetVec);
@@ -909,7 +922,7 @@ void BossBegoman::startRotationLevelSound() {
     } else {
         MR::startLevelSound(this, "SE_BM_LV_BBEGO_ROT_MIDDLE");
     }
-    
+
     if (!mHead->isSwitchOn()) {
         f32 f1 = mVelocity.length();
         f1 *= f1;

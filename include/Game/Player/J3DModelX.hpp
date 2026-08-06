@@ -15,6 +15,7 @@ public:
 
     void viewCalc2();
     void viewCalc3(u32, MtxPtr);
+    bool simpleDrawSetup(J3DMaterial*);
     void simpleDrawShape(J3DMaterial*);
     void storeDisplayList(_GDLObj*, u32);
     void shapePacketDrawFast(J3DShapePacketX*);
@@ -28,7 +29,9 @@ public:
     void directDraw(J3DModel*);
 
     struct Flags {
-        inline void clear() { *(u32*)this = 0; }
+        inline void clear() {
+            *(u32*)this = 0;
+        }
 
         unsigned _0 : 1;
         unsigned _1 : 1;

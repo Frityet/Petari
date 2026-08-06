@@ -1,6 +1,16 @@
 #include "Game/Enemy/KariKariDirector.hpp"
+#include "Game/MapObj/BlackHole.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioConst.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/EventUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 void MarioActor::initBlackHoleOut() {
     mPosRelativeToBlackHole = mPosition - mBlackHolePosition;
@@ -34,7 +44,7 @@ void MarioActor::exeGameOverBlackHole2() {
         MR::setCubeBgmChangeInvalid();
         MR::clearBgmQueue();
 
-        if (!(mBlackHole->tryStartDemoCamera()) && !mMario->mMovementStates._28) {
+        if (!(mBlackHole->tryStartDemoCamera()) && !mMario->getMovementStates()._37) {
             MR::startBlackHoleCamera("ブラックホール", mBlackHolePosition, mPosition);
         }
 
@@ -86,8 +96,7 @@ void MarioActor::exeGameOverBlackHole2() {
     PSMTXRotAxisRad(rotationMatrix, &mBlackHoleRotateAxis, angle);
     PSMTXMultVec(rotationMatrix, &mPosRelativeToBlackHole, &mPosRelativeToBlackHole);
 
-    TVec3f camDirZNegate = mCamDirZ.invertOperatorInternal();
-    MR::vecBlendSphere(mBlackHoleRotateAxis, camDirZNegate, &mBlackHoleRotateAxis, 0.01f);
+    MR::vecBlendSphere(mBlackHoleRotateAxis, -mCamDirZ, &mBlackHoleRotateAxis, 0.01f);
 
     f32 distChangeFactor = 180 - getNerveStep();
 
@@ -97,7 +106,7 @@ void MarioActor::exeGameOverBlackHole2() {
 
     f32 newDistToBlackHole = mPosRelativeToBlackHole.length() * distChangeFactor / (1 + distChangeFactor);
 
-    mPosRelativeToBlackHole.setLength2(newDistToBlackHole);
+    mPosRelativeToBlackHole.setLength(newDistToBlackHole);
 
     f32 scale = getNerveStep() * mConst->getTable()->mBlackHoleScaleSpeed;
     scale = 1 - scale;
@@ -110,9 +119,7 @@ void MarioActor::exeGameOverBlackHole2() {
 
     mPosition = mBlackHolePosition + mPosRelativeToBlackHole;
 
-    mVelocity.z = 0.0f;
-    mVelocity.y = 0.0f;
-    mVelocity.x = 0.0f;
+    mVelocity.zeroInline();
 }
 
 namespace NrvMarioActor {

@@ -1,4 +1,5 @@
 #include "Game/MapObj/StarPieceFollowGroup.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/StarPiece.hpp"
 #include "Game/Util.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
@@ -13,7 +14,6 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
 #include "math_types.hpp"
 #include "revolution/mtx.h"
 
@@ -95,8 +95,8 @@ void StarPieceFollowGroup::placementPiece(s32 numPlace) {
     TVec3f zDir;
     TVec3f xDir;
 
-    mtxTRS.getXDirInline(xDir);
-    mtxTRS.getZDirInline(zDir);
+    mtxTRS.getXDir(xDir);
+    mtxTRS.getZDir(zDir);
 
     TVec3f position(mPosition);
     f32 currentAngle = 0.0f;
@@ -105,8 +105,7 @@ void StarPieceFollowGroup::placementPiece(s32 numPlace) {
         f32 zMag = MR::cos(currentAngle) * mRadius;
         f32 xMag = MR::sin(currentAngle) * mRadius;
 
-        mPieces[i]->mPosition.setPS2(
-            zDir.multiplyOperatorInline(zMag).addOperatorInLine(xDir.multiplyOperatorInline(xMag)).addOperatorInLine(position));
+        mPieces[i]->mPosition = zDir * zMag + xDir * xMag + position;
         currentAngle += angleBetweenPieces;
     }
 }
@@ -168,7 +167,7 @@ void StarPieceFollowGroup::followPieces() {
 
         vec2.add(vec.multiplyOperatorInline(cos2));
         currentPiece->mVelocity.set(vec2);
-        JMathInlineVEC::PSVECSubtract2(&currentPiece->mVelocity, &currentPiece->mPosition, &currentPiece->mVelocity);
+        currentPiece->mVelocity.sub(currentPiece->mPosition);
         currentPiece->mVelocity.mult(1.0f);
     }
 }
@@ -224,12 +223,14 @@ void StarPieceFollowGroup::exeFollowEnd() {
         }
 
         if (doSomeExtraTVecStuff) {
-            currentPiece->mVelocity.add(_90[i].multiplyOperatorInline(0.05f));
+            const f32 SCALE = 0.05f;
+            currentPiece->mVelocity += (_90[i] * SCALE);
         }
 
         TVec3f vec2(*MR::getPlayerVelocity());
         MR::normalizeOrZero(&vec2);
-        currentPiece->mVelocity.add(vec2.multiplyOperatorInline(10.0f));
+        const f32 TEN = 10.0f;
+        currentPiece->mVelocity += (vec2 * TEN);
     }
 
     if (MR::isGreaterStep(this, 120)) {

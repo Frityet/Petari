@@ -1,6 +1,11 @@
 #include "Game/Gravity.hpp"
 #include "Game/Util.hpp"
 
+void PlanetGravity_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+}
+
 PlanetGravity::PlanetGravity() {
     mRange = -1.0f;
     mDistant = 0.0f;
@@ -46,9 +51,7 @@ bool PlanetGravity::calcGravity(TVec3f* pDest, const TVec3f& rPosition) const {
 
     // Invert vector if necessary
     if (mIsInverse) {
-        TVec3f inverse;
-        JMathInlineVEC::PSVECNegate(&gravity, &inverse);
-        gravity = inverse;
+        gravity = -gravity;
     }
 
     // Set result vector
@@ -98,6 +101,9 @@ bool PlanetGravity::calcGravityFromMassPosition(TVec3f* pDirection, f32* pScalar
     }
 
     return true;
+}
+
+void PlanetGravity::updateMtx(const TPos3f& rMtx) {
 }
 
 void PlanetGravity::updateIdentityMtx() {

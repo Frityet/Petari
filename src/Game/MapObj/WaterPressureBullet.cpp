@@ -1,6 +1,9 @@
 #include "Game/MapObj/WaterPressureBullet.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
@@ -83,7 +86,7 @@ void WaterPressureBullet::control() {
             stack_8.set(mVelocity);
         }
 
-        MR::turnVecToVecCosOnPlane(&_8C, stack_8, _98, JMath::sSinCosTable.cosLap(-2.5f));
+        MR::turnVecToVecCosOnPlane(&_8C, stack_8, _98, MR::cosDegree(-2.5f));
     }
 }
 
@@ -100,10 +103,10 @@ void WaterPressureBullet::shotWaterBullet(LiveActor* pActor, const TPos3f& rPos,
     _B1 = a5;
     _B2 = a6;
     mCameraInfo = pInfo;
-    rPos.getZDirInline(_8C);
+    rPos.getZDir(_8C);
     mVelocity.scale(_A8, _8C);
-    rPos.getTransInline(mPosition);
-    rPos.getXDirInline(_98);
+    rPos.getTrans(mPosition);
+    rPos.getXDir(_98);
     mRotation.zero();
     makeActorAppeared();
     MR::validateHitSensors(this);
@@ -136,7 +139,7 @@ void WaterPressureBullet::exeFly() {
     }
 
     if (!_B0) {
-        JMAVECScaleAdd(&mGravity, &mVelocity, &mVelocity, 0.4f);
+        mVelocity.scaleAdd(0.4f, mGravity, mVelocity);
     }
 
     if (MR::isPadSwing(WPAD_CHAN0) && mHostActor != nullptr && !_B2) {
@@ -155,10 +158,9 @@ void WaterPressureBullet::exeFly() {
 
     if (v2) {
         if (_B1 && mHostActor != nullptr && MR::isBindedGroundSand(this)) {
-            TVec3f* vel = &mVelocity;
-            TVec3f* grav = &mGravity;
-            f32 dot = grav->dot(mVelocity);
-            JMAVECScaleAdd(grav, vel, vel, -dot);
+            const TVec3f& vel = mVelocity;
+            const TVec3f& grav = mGravity;
+            mVelocity.scaleAdd(-grav.dot(vel), grav, vel);
         } else {
             kill();
             return;
@@ -261,10 +263,7 @@ bool WaterPressureBullet::inviteMario(HitSensor* pSensor) {
 
     if (MR::isOnGroundPlayer() && MR::isNearAngleDegree(mVelocity, mGravity, 60.0f)) {
         if (_B1) {
-            TVec3f* vel = &mVelocity;
-            TVec3f* grav = &mGravity;
-            f32 dot = grav->dot(mVelocity);
-            JMAVECScaleAdd(grav, vel, vel, -dot);
+            MR::killVelocityVertical(this);
         } else {
             kill();
             MR::sendArbitraryMsg(ACTMES_ENEMY_ATTACK_FLIP_VERYWEAK, pSensor, getSensor("body"));
@@ -298,4 +297,5 @@ void WaterPressureBullet::updateSuffererMtx() {
     MR::setBaseTRMtx(mHostActor, pos);
 }
 
-WaterPressureBullet::~WaterPressureBullet() {}
+WaterPressureBullet::~WaterPressureBullet() {
+}

@@ -1,9 +1,15 @@
 #include "Game/NPC/CollectTico.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/StrayTico.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
 namespace NrvCollectTico {
@@ -60,13 +66,11 @@ void CollectTico::exeWait() {
 
 void CollectTico::exeCompleteDemo() {
     if (MR::isFirstStep(this)) {
-        mPosition.set< f32 >(*MR::getPlayerPos());
+        mPosition.set(*MR::getPlayerPos());
         MR::calcGravity(this);
 
-        TVec3f v13;
-        JMathInlineVEC::PSVECNegate(&mGravity, &v13);
-        JMAVECScaleAdd(&v13, &mPosition, &_94, 300.0f);
-        mPosition.set< f32 >(_94);
+        _94.scaleAdd(300.0f, -mGravity, mPosition);
+        mPosition.set(_94);
 
         for (s32 i = 0; i < mTicoNum; i++) {
             MR::requestMovementOn(mStrayTicos[i]);
@@ -139,6 +143,8 @@ void CollectTico::startAppearPowerStar() {
     setNerve(&NrvCollectTico::CollectTicoNrvAppearPowerStar::sInstance);
 }
 
-void CollectTico::exeTryStartDemo() {}
+void CollectTico::exeTryStartDemo() {
+}
 
-CollectTico::~CollectTico() {}
+CollectTico::~CollectTico() {
+}

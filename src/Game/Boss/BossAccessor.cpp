@@ -2,7 +2,14 @@
 #include "Game/Boss/Koopa.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 
-BossAccessor::BossAccessor() : NameObj("ボスへのアクセス"), mBoss(nullptr) {}
+namespace {
+    BossAccessor* getBossAccessor() {
+        return MR::getSceneObj< BossAccessor >(SceneObj_BossAccessor);
+    }
+};  // namespace
+
+BossAccessor::BossAccessor() : NameObj("ボスへのアクセス"), mBoss(nullptr) {
+}
 
 namespace BossAccess {
     void setBossAccessorKoopa(Koopa* pKoopa) {
@@ -12,11 +19,9 @@ namespace BossAccess {
 
     Koopa* getBossAccessorKoopa() {
         if (MR::isExistSceneObj(SceneObj_BossAccessor)) {
-            return static_cast< Koopa* >(MR::getSceneObj< BossAccessor >(SceneObj_BossAccessor)->getBoss());
+            return static_cast< Koopa* >(getBossAccessor()->getBoss());
         }
 
         return nullptr;
     }
 };  // namespace BossAccess
-
-BossAccessor::~BossAccessor() {}

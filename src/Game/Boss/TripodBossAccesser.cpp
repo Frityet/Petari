@@ -160,7 +160,7 @@ namespace MR {
 
     void setTripodBossJointAttachBaseMatrix(const TPos3f& rPos, s32 id) {
         TripodBoss* boss = MR::getSceneObj< TripodBossAccesser >(SceneObj_TripodBossAccesser)->mBoss;
-        boss->setJointAttachBaseMatrix(rPos, convertBoneIDToIndex(id));
+        boss->setJointAttachBaseMatrix(rPos, ::convertBoneIDToIndex(id));
     }
 
     void requestStartTripodBossStepSequence(s32 seq) {
@@ -173,12 +173,12 @@ namespace MR {
 
     void getTripodBossJointMatrix(TPos3f* pPos, s32 id) {
         TripodBoss* boss = MR::getSceneObj< TripodBossAccesser >(SceneObj_TripodBossAccesser)->mBoss;
-        boss->getJointMatrix(pPos, convertBoneIDToIndex(id));
+        boss->getJointMatrix(pPos, ::convertBoneIDToIndex(id));
     }
 
     void getTripodBossAttachJointMatrix(TPos3f* pPos, s32 id) {
         TripodBoss* boss = MR::getSceneObj< TripodBossAccesser >(SceneObj_TripodBossAccesser)->mBoss;
-        boss->getJointAttachMatrix(pPos, convertBoneIDToIndex(id));
+        boss->getJointAttachMatrix(pPos, ::convertBoneIDToIndex(id));
     }
 
     void concatTripodBossAttachJointMatrix(TPos3f* pPos, s32 id) {
@@ -190,19 +190,14 @@ namespace MR {
     }
 
     bool isSteppingTripodBossLegID(s32 id) {
-        bool ret = !MR::getSceneObj< TripodBossAccesser >(SceneObj_TripodBossAccesser)->mBoss->isStopLeg(id);
-        return ret;
+        return !MR::getSceneObj< TripodBossAccesser >(SceneObj_TripodBossAccesser)->mBoss->isStopLeg(id);
     }
 
     bool isSteppingTripodBossJointID(s32 id) {
-        s32 partID = TripodBoss::getPartIDFromBoneID(convertBoneIDToIndex(id));
-        bool ret = false;
+        s32 partID = TripodBoss::getPartIDFromBoneID(::convertBoneIDToIndex(id));
+        bool isValidPartID = partID >= TripodBoss::LeftLeg && partID < 3;
 
-        if (partID >= 0 && partID < 3) {
-            ret = true;
-        }
-
-        if (ret) {
+        if (isValidPartID) {
             return MR::isSteppingTripodBossLegID(partID);
         }
 
@@ -210,4 +205,5 @@ namespace MR {
     }
 };  // namespace MR
 
-TripodBossAccesser::~TripodBossAccesser() {}
+TripodBossAccesser::~TripodBossAccesser() {
+}

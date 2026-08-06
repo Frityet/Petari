@@ -2,13 +2,12 @@
 #include "Game/NameObj/NameObjAdaptor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Screen/odh.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 #include <JSystem/JUtility/JUTVideo.hpp>
-
-extern "C" u32 ODHEncodeRGB565(u8*, u8*, int, int, u32, int, u8*);
 
 namespace {
     const u32 cCaptureWidth = 488;
@@ -26,8 +25,9 @@ namespace {
 };  // namespace
 
 OdhConverter::OdhConverter()
-    : LayoutActor("ODH-jpeg変換", true), mCaptureWidth(cCaptureWidth), mCaptureHeight(cCaptureHeight), mLimitSize(cLimitSize),
-      mIsRequestedCapture(false), mImage(nullptr), mCaptureImage(nullptr) {}
+    : LayoutActor("ODH-jpeg変換", true), mCaptureWidth(::cCaptureWidth), mCaptureHeight(::cCaptureHeight), mLimitSize(::cLimitSize),
+      mIsRequestedCapture(false), mImage(nullptr), mCaptureImage(nullptr) {
+}
 
 void OdhConverter::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, -1, -1, -1, MR::DrawType_LayoutOnPause);
@@ -37,7 +37,8 @@ void OdhConverter::init(const JMapInfoIter& rIter) {
     mCaptureImage = new (32) u8[mCaptureWidth * mCaptureHeight * 3];
 }
 
-void OdhConverter::draw() const {}
+void OdhConverter::draw() const {
+}
 
 void OdhConverter::convert() {
     const GXRenderModeObj* pRenderModeObj;
@@ -47,14 +48,14 @@ void OdhConverter::convert() {
     pRenderModeObj = JUTVideo::getManager()->getRenderMode();
 
     GXSetCopyFilter(GX_FALSE, pRenderModeObj->sample_pattern, GX_FALSE, pRenderModeObj->vfilter);
-    GXSetTexCopySrc(cTexPosX, cTexPosY, mCaptureWidth, mCaptureHeight);
+    GXSetTexCopySrc(::cTexPosX, ::cTexPosY, mCaptureWidth, mCaptureHeight);
     GXSetTexCopyDst(mCaptureWidth, mCaptureHeight, GX_TF_RGB565, GX_FALSE);
     GXCopyTex(pScreenTexImage, GX_FALSE);
     GXDrawDone();
     GXSetCopyFilter(GX_FALSE, pRenderModeObj->sample_pattern, GX_TRUE, pRenderModeObj->vfilter);
     DCStoreRange(pScreenTexImage, mCaptureWidth * mCaptureHeight * 2);
 
-    mImageSize = ODHEncodeRGB565(pScreenTexImage, mImage, mCaptureWidth, mCaptureHeight, mLimitSize, cQuality, mCaptureImage);
+    mImageSize = ODHEncodeRGB565(pScreenTexImage, mImage, mCaptureWidth, mCaptureHeight, mLimitSize, ::cQuality, mCaptureImage);
 }
 
 namespace MR {
@@ -63,7 +64,7 @@ namespace MR {
     }
 
     void requestCaptureOdhImage() {
-        return getConverter()->requestCapture();
+        return ::getConverter()->requestCapture();
     }
 
     bool isRequestedCaptureOdhImage() {
@@ -71,11 +72,11 @@ namespace MR {
             return false;
         }
 
-        return getConverter()->isRequestedCapture();
+        return ::getConverter()->isRequestedCapture();
     }
 
     void captureOdhImage() {
-        getConverter()->capture();
+        ::getConverter()->capture();
     }
 
     void setPortCaptureOdhImage() {
@@ -85,8 +86,8 @@ namespace MR {
         f32 top;
         f32 left;
 
-        top = getFrameBufferHeight() * 0.5f - cCaptureOffsetX;
-        left = -getFrameBufferWidth() * 0.5f + cCaptureOffsetY;
+        top = getFrameBufferHeight() * 0.5f - ::cCaptureOffsetX;
+        left = -getFrameBufferWidth() * 0.5f + ::cCaptureOffsetY;
         right = getFrameBufferWidth() + left;
         bottom = top - getFrameBufferHeight();
 
@@ -99,7 +100,7 @@ namespace MR {
             return nullptr;
         }
 
-        return getConverter()->getImage();
+        return ::getConverter()->getImage();
     }
 
     u32 getOdhImageSize() {
@@ -107,7 +108,7 @@ namespace MR {
             return nullptr;
         }
 
-        return getConverter()->getImageSize();
+        return ::getConverter()->getImageSize();
     }
 
     NameObjAdaptor* createAdaptorAndConnectToWiiMessageBoard(const char* pParam1, const FunctorBase& rFunc) {

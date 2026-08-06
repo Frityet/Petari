@@ -2,14 +2,14 @@
 
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/Util.hpp"
 #include "Game/Util/Array.hpp"
-#include <revolution.h>
+#include <JSystem/JGeometry/TVec.hpp>
 
 class CollisionPartsFilterBase;
-class ShadowDrawer;
+class HitSensor;
 class LiveActor;
 class ShadowController;
+class ShadowDrawer;
 
 class ShadowControllerList {
 public:
@@ -97,7 +97,9 @@ public:
 
     void updateProjection();
 
-    inline void appendToHolder() { MR::getSceneObj< ShadowControllerHolder >(SceneObj_ShadowControllerHolder)->_18.push_back(this); }
+    inline void appendToHolder() {
+        MR::getSceneObj< ShadowControllerHolder >(SceneObj_ShadowControllerHolder)->_18.push_back(this);
+    }
 
     LiveActor* mActor;                                // 0x0
     const char* mName;                                // 0x4

@@ -6,7 +6,35 @@
 #include "Game/Enemy/Kameck.hpp"
 #include "Game/Enemy/KameckBeamHolder.hpp"
 #include "Game/Enemy/KameckHolder.hpp"
+#include "Game/LiveActor/ActiveActorList.hpp"
 #include "Game/LiveActor/ActorJointCtrl.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/EventUtil.hpp"
+#include "Game/Util/Functor.hpp"
+#include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
+
+void BossKameck_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)3.0f;
+    (void)2.0f;
+
+    // function order is weird here
+    (void)300.0f;
+    (void)240.0f;
+    (void)30.0f;
+    (void)40.0f;
+}
 
 BossKameck::BossKameck(const char* pName, const char* pType)
     : LiveActor(pName), _8C(pType), _90(0.0f, 1.0f), _A0(0, 0, 1), mSequencer(nullptr), mKameckHolder(nullptr), mJointCtrl(nullptr),
@@ -115,63 +143,39 @@ void BossKameck::endDemo() {
     mJointCtrl->startDynamicCtrl("Cap1", -1);
 }
 
-/* functionally matches */
 void BossKameck::setPose(MtxPtr mtx) {
     TPos3f pos;
     pos.setInline(mtx);
     pos.getQuat(_90);
-
-    f32 z = pos.mMtx[2][3];
-    f32 y = pos.mMtx[1][3];
-    f32 x = pos.mMtx[0][3];
-    mPosition.set< f32 >(x, y, z);
-
-    f32 v1 = (2.0f * (_90.x * _90.z)) + (2.0f * (_90.w * _90.y));
-    f32 v2 = (2.0f * (_90.y * _90.z)) - (2.0f * (_90.w * _90.x));
-    f32 v3 = (1.0f - (2.0f * (_90.x * _90.x))) - (2.0f * (_90.y * _90.y));
-    _A0.set< f32 >(v1, v2, v3);
+    pos.getTrans(mPosition);
+    _90.getZDir(_A0);
 }
 
 void BossKameck::killAllBeam() {
     mActorList->killAll();
 }
 
-/* stack is off */
-/*
 void BossKameck::updatePose() {
-    TVec3f v17(-mGravity);
     TVec3f v19;
-    v19.set<f32>(v17);
-    TVec3f v16(mVelocity);
-    v16.sub(_C8);
-    TVec3f* gravPtr = &mGravity;
-    f32 dot = gravPtr->dot(v16);
     TVec3f v18;
-    JMAVECScaleAdd(gravPtr, &v16, &v18, -dot);
-    f32 mag = PSVECMag(&v18);
-
-    TVec3f stack_44;
-    TVec3f* ptr = &stack_44;
+    v19.set(-mGravity);
+    v18.killElement(mVelocity - _C8, mGravity);
+    f32 mag = v18.length();
 
     if (!MR::isNearZero(mag)) {
         f32 v4 = MR::normalize(mag, 0.0f, 3.0f);
-        TVec3f v13(v18);
 
+        v19 += v18 * ((4.0f * v4) / mag);
 
-        ptr->scaleInline((4.0f * v4) / mag);
-        ptr->addInline(v13);
-
-        if (!MR::isNearZero(*ptr)) {
-            MR::normalize(ptr);
-        }
-        else {
-            ptr->set(-mGravity);
+        if (!MR::isNearZero(v19)) {
+            MR::normalize(&v19);
+        } else {
+            v19.set(-mGravity);
         }
     }
 
-    MR::blendQuatUpFront(&_90, stack_44, _A0, 0.04f, 0.2f);
+    MR::blendQuatUpFront(&_90, v19, _A0, 0.04f, 0.2f);
 }
-*/
 
 void BossKameck::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -313,6 +317,3 @@ namespace MR {
         return boss;
     }
 };  // namespace MR
-
-BossKameck::~BossKameck() {
-}

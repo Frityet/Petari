@@ -1,14 +1,18 @@
 #include "Game/MapObj/CoinBox.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util.hpp"
 
 namespace NrvCoinBox {
     NEW_NERVE(CoinBoxNrvWait, CoinBox, Wait);
     NEW_NERVE(CoinBoxNrvHit, CoinBox, Hit);
 };  // namespace NrvCoinBox
 
-CoinBox::CoinBox(const char* pName) : LiveActor(pName) {}
+CoinBox::CoinBox(const char* pName) : LiveActor(pName) {
+}
 
-CoinBox::~CoinBox() {}
+CoinBox::~CoinBox() {
+}
 
 void CoinBox::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -28,7 +32,8 @@ void CoinBox::init(const JMapInfoIter& rIter) {
     initEffectKeeper(1, "Coin", false);
 }
 
-void CoinBox::exeWait() {}
+void CoinBox::exeWait() {
+}
 
 // https://decomp.me/scratch/2bcHZ
 void CoinBox::exeHit() {
@@ -41,12 +46,9 @@ void CoinBox::exeHit() {
         TVec3f axis_y;
         MR::getRotatedAxisY(&axis_y, mRotation);
         MR::calcGravityOrZero(this);
-        TVec3f stack_38;
-        f32 val = MR::vecKillElement(axis_y, mGravity, &stack_38);
-        TVec3f stack_8 = stack_38 * 10.0f;
-        TVec3f stack_2C((mGravity * val) * 30.0f);
-
-        stack_2C.add(stack_8);
+        TVec3f horiz;
+        f32 val = MR::vecKillElement(axis_y, mGravity, &horiz);
+        axis_y = (mGravity * val) * 30.0f + horiz * 10.0f;
         MR::appearCoinToVelocity(this, mPosition, axis_y, 1);
         kill();
     }

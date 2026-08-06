@@ -2,6 +2,7 @@
 #include "Game/Boss/BossStinkBug.hpp"
 #include "Game/Boss/BossStinkBugFunction.hpp"
 #include "Game/LiveActor/ActorStateBase.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
@@ -63,7 +64,7 @@ void BossStinkBugActionGround::attackSensor(HitSensor* pSender, HitSensor* pRece
 
 bool BossStinkBugActionGround::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isMsgPlayerHipDropFloor(msg) && isEnableHipDrop()) {
-        MR::tryRumblePadStrong(this, 0);
+        MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
         MR::emitEffectHit(getHost(), MR::getSensorPos(pSender), "Hit");
         BossStinkBugFunction::invalidateAttack(getHost());

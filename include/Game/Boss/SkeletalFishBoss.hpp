@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Game/Boss/SkeletalFishBossInfo.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 
+class CameraTargetMtx;
 class JointController;
 class JointControllerInfo;
+class ModelObj;
 class SkeletalFishGuard;
 class SkeletalFishGuardHolder;
 class SkeletalFishBossScarFlash;
 class SkeletalFishBossHead;
-class SkeletalFishBossInfo;
 class SkeletalFishRailControl;
 class SkeletalFishBossBattleDirector;
 class SkeletalFishBossRail;
@@ -102,7 +102,9 @@ public:
     void endBreakDemo();
     bool isEnableToBeDamaged() const;
 
-    SkeletalFishBossInfo::LevelStatus* getLevelStatus() const { return mBossInfo->getLevelStatus(_110); }
+    SkeletalFishBossInfo::LevelStatus* getLevelStatus() const {
+        return mBossInfo->getLevelStatus(_110);
+    }
 
     JointController* mControllers[0xD];
     s32* mJointIndicies;                    // 0xC0
