@@ -11,6 +11,7 @@ class ActorLightCtrl;
 class J3DFrameCtrl;
 class Nerve;
 class JMapInfoIter;
+class MsgSharedGroup;
 struct TVec3f;
 
 class ProjmapEffectMtxSetter {
@@ -28,7 +29,12 @@ namespace MR {
     ProjmapEffectMtxSetter* initDLMakerProjmapEffectMtxSetter(LiveActor* pActor);
     void connectToSceneSky(LiveActor* pActor);
     void invalidateClipping(LiveActor* pActor);
+    void setClippingTypeSphere(LiveActor* pActor, f32 radius);
+    void setClippingTypeSphere(LiveActor* pActor, f32 radius, const TVec3f* pCenter);
+    void setClippingFar(LiveActor* pActor, f32 distance);
+    void setGroupClipping(LiveActor* pActor, const JMapInfoIter& rIter, int groupSize);
     void setClippingFar50m(LiveActor* pActor);
+    MsgSharedGroup* joinToGroupArray(LiveActor* pActor, const JMapInfoIter& rIter, const char* pGroupName, s32 capacity);
     void startBck(LiveActor* pActor, const char* pName, const char* pFileName);
     void startBrk(LiveActor* pActor, const char* pName);
     void startBtk(LiveActor* pActor, const char* pName);

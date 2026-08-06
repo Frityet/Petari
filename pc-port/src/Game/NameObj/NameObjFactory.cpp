@@ -1,6 +1,7 @@
 #include "Game/NameObj/NameObjFactory.hpp"
 
 #include "Game/Demo/PrologueDirector.hpp"
+#include "Game/Effect/SimpleEffectObj.hpp"
 #include "Game/Map/FileSelector.hpp"
 #include "Game/Map/GroupSwitchWatcher.hpp"
 #include "Game/Map/SwitchSynchronizer.hpp"
@@ -15,7 +16,7 @@ namespace {
         return new T(pName);
     }
 
-    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 5>{
+    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 6>{
         NameObjFactory::Name2CreateFunc{
             "PrologueDirector",
             createNameObj<PrologueDirector>,
@@ -39,6 +40,11 @@ namespace {
         NameObjFactory::Name2CreateFunc{
             "CollisionBlocker",
             createNameObj<CollisionBlocker>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "Steam",
+            createNameObj<SimpleEffectObj>,
             nullptr,
         },
     };

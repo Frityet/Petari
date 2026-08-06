@@ -549,7 +549,9 @@ namespace smgpc::runtime {
     class CameraSystemService final {
     public:
         enum class ShakeRequestKind {
+            Weak,
             Normal,
+            Strong,
         };
 
         struct ShakeRequestEvent {
@@ -559,7 +561,9 @@ namespace smgpc::runtime {
 
         void begin_frame(std::uint64_t frame_index);
         void reset_camera_man();
+        void request_weak_shake();
         void request_normal_shake();
+        void request_strong_shake();
         void pause_on_camera_director();
         void pause_off_camera_director();
         void declare_event_camera_programmable(std::string_view name);
@@ -571,7 +575,9 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_fovy(std::string_view name, float fovy_degrees);
 
         [[nodiscard]] std::uint32_t reset_camera_man_count() const;
+        [[nodiscard]] std::uint32_t weak_shake_request_count() const;
         [[nodiscard]] std::uint32_t normal_shake_request_count() const;
+        [[nodiscard]] std::uint32_t strong_shake_request_count() const;
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose() const;
@@ -598,7 +604,9 @@ namespace smgpc::runtime {
 
         std::uint64_t _frame_index = 0U;
         std::uint32_t _reset_camera_man_count = 0U;
+        std::uint32_t _weak_shake_request_count = 0U;
         std::uint32_t _normal_shake_request_count = 0U;
+        std::uint32_t _strong_shake_request_count = 0U;
         std::uint32_t _camera_director_pause_count = 0U;
         std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
         std::string _active_programmable_camera_name;

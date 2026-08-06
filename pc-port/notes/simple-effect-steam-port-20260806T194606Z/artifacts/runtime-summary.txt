@@ -1,0 +1,31 @@
+source_directory=/tmp/smgpc-steam.x8EJA2
+disc=/workspaces/pcport/RMGK01.wbfs
+logical_exit_frame=180
+input=F10 held for 0.1 seconds
+input_result=0
+app_result=0
+
+file_select_scheduler_before=78
+file_select_scheduler_after=2
+file_select_scheduler_removed=76
+
+stage=HeavensDoorGalaxy
+scenario=1
+total_objects=242
+created_objects=162
+intentionally_ignored_objects=72
+blocked_objects=8
+
+steam_original_factory_placements=8
+steam_first_step_effect_emissions=8
+steam_level_sound_submissions=1024
+fatal_segmentation_abort_crash_matches=0
+
+representative_log_lines:
+244 placement:stage_placement_summary FileSelect objects=4 created=2 ignored=1 blocked=1
+262 scene_lifecycle:stage_destroy_scheduler_cleanup FileSelect before_entries=78 after_entries=2 removed_entries=76
+1659 placement:stage_placement_summary HeavensDoorGalaxy objects=242 created=162 ignored=72 blocked=8
+1989 Steam emitted effect Steam
+1990 SMG requested system level sound SE_OJ_LV_HD_STEAM
+3020 SMG requested system level sound SE_OJ_LV_HD_STEAM
+3143 name_obj_lifecycle:destroy object=Steam

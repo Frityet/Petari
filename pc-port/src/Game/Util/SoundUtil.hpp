@@ -2,7 +2,11 @@
 
 #include <revolution/types.h>
 
+class LiveActor;
+
 namespace MR {
+    void startSound(const LiveActor* pActor, const char* pName, s32 param3 = -1, s32 param4 = -1);
+    void startLevelSound(const LiveActor* pActor, const char* pName, s32 param3 = -1, s32 param4 = -1, s32 param5 = -1);
     void startCurrentStageBGM();
     void startStageBGM(const char* pName, bool isPrepare);
     bool isPlayingStageBgmName(const char* pName);

@@ -2554,9 +2554,19 @@ namespace smgpc::runtime {
         ++_reset_camera_man_count;
     }
 
+    void CameraSystemService::request_weak_shake() {
+        ++_weak_shake_request_count;
+        push_shake_event(ShakeRequestKind::Weak);
+    }
+
     void CameraSystemService::request_normal_shake() {
         ++_normal_shake_request_count;
         push_shake_event(ShakeRequestKind::Normal);
+    }
+
+    void CameraSystemService::request_strong_shake() {
+        ++_strong_shake_request_count;
+        push_shake_event(ShakeRequestKind::Strong);
     }
 
     void CameraSystemService::pause_on_camera_director() {
@@ -2645,8 +2655,16 @@ namespace smgpc::runtime {
         return _reset_camera_man_count;
     }
 
+    std::uint32_t CameraSystemService::weak_shake_request_count() const {
+        return _weak_shake_request_count;
+    }
+
     std::uint32_t CameraSystemService::normal_shake_request_count() const {
         return _normal_shake_request_count;
+    }
+
+    std::uint32_t CameraSystemService::strong_shake_request_count() const {
+        return _strong_shake_request_count;
     }
 
     std::uint32_t CameraSystemService::camera_director_pause_count() const {

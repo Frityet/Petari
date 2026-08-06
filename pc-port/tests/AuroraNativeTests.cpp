@@ -1,4 +1,5 @@
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Effect/SimpleEffectObj.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/ActorAppearSwitchListener.hpp"
@@ -9,6 +10,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 
@@ -273,6 +275,32 @@ namespace {
         require(blocker.isDead(), "CollisionBlocker forceBreak should kill the actor");
     }
 
+    void test_simple_effect_host_compatibility() {
+        auto steam = SimpleEffectObj("Steam");
+        const auto* first_offset = steam.getClippingCenterOffset();
+        const auto* second_offset = steam.getClippingCenterOffset();
+
+        require(first_offset != nullptr && first_offset == second_offset,
+                "SimpleEffectObj clipping offset should use persistent host storage");
+        require(first_offset->x == 0.0F && first_offset->y == 0.0F && first_offset->z == 0.0F,
+                "SimpleEffectObj clipping offset should preserve the original zero value");
+        require(MR::isEqualString("Steam", "Steam") && !MR::isEqualString("Steam", "Smoke") && !MR::isEqualString(nullptr, "Steam"),
+                "original string equality should be null-safe on the host");
+
+        auto camera = smgpc::runtime::CameraSystemService{};
+        camera.begin_frame(42U);
+        camera.request_weak_shake();
+        camera.request_strong_shake();
+        const auto events = camera.shake_request_events();
+
+        require(camera.weak_shake_request_count() == 1U && camera.strong_shake_request_count() == 1U,
+                "weak and strong camera shake requests should remain distinct");
+        require(events.size() == 2U && events[0].kind == smgpc::runtime::CameraSystemService::ShakeRequestKind::Weak &&
+                    events[1].kind == smgpc::runtime::CameraSystemService::ShakeRequestKind::Strong && events[0].frame_index == 42U &&
+                    events[1].frame_index == 42U,
+                "camera shake events should retain their kind and frame");
+    }
+
     class EnvironmentVariableGuard {
     public:
         explicit EnvironmentVariableGuard(const char *name) : _name(name) {
@@ -382,6 +410,7 @@ int main() {
         TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
         TestCase{"stage switch zone identity and edges", test_stage_switch_zone_identity_and_edges},
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
+        TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };

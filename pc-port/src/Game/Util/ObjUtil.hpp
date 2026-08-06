@@ -25,7 +25,10 @@ namespace MR {
     bool isExistResourceInArc(const char* pArcName, const char* pResourceName);
     bool tryRumblePadStrong(const void* pSource, s32 channel);
     bool tryRumblePadWeak(const void* pSource, s32 channel);
+    bool tryRumblePad(const void* pSource, const char* pPatternName, s32 channel);
+    void shakeCameraStrong();
     void shakeCameraNormal();
+    void shakeCameraWeak();
     void listenNameObjStageSwitchOnAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnOffAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnA(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
