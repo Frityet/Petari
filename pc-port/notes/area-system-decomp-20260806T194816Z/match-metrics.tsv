@@ -1,0 +1,4 @@
+unit	exact_functions	total_functions	code_matched_bytes	code_total_bytes	data_matched_bytes	data_total_bytes	fuzzy_percent
+AreaForm	27	33	2996	3764	128	128	99.51966
+AreaObj	24	24	1984	1984	136	136	100
+SwitchArea	5	5	456	456	56	56	100
