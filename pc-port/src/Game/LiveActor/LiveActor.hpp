@@ -10,6 +10,7 @@
 #include <revolution.h>
 
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/LiveActor/LiveActorFlag.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
@@ -19,6 +20,7 @@
 class ActorLightCtrl;
 class HitSensor;
 class Nerve;
+class RailRider;
 class Spine;
 class StageSwitchCtrl;
 
@@ -59,6 +61,8 @@ public:
     void drawModel(const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
                    smgpc::render::live_actor::LiveActorModel::DrawPass pass = smgpc::render::live_actor::LiveActorModel::DrawPass::All);
     void initHitSensor(s32 sensorCount);
+    void initBinder(f32 radius, f32 offset, u32 type);
+    void initRailRider(const JMapInfoIter& rIter);
     void initStageSwitch(const JMapInfoIter& rIter);
     HitSensor* addHitSensor(const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset);
     [[nodiscard]] HitSensor* getSensor(const char* pName);
@@ -87,8 +91,26 @@ public:
     TVec3f mPosition{};
     TVec3f mRotation{};
     TVec3f mScale{1.0F, 1.0F, 1.0F};
+    TVec3f mVelocity{};
+    TVec3f mGravity{0.0F, -1.0F, 0.0F};
+    RailRider* mRailRider = nullptr;
+    LiveActorFlag mFlag{};
     StageSwitchCtrl* mStageSwitchCtrl = nullptr;
     ActorLightCtrl* mActorLightCtrl = nullptr;
+    f32 mBinderRadius = 0.0F;
+    f32 mBinderOffset = 0.0F;
+    u32 mBinderType = 0;
+    bool mBindedGround = false;
+    bool mBindedWall = false;
+    bool mBindedRoof = false;
+    bool mBindedGroundDamageFire = false;
+    TVec3f mGroundNormal{0.0F, 1.0F, 0.0F};
+    TVec3f mWallNormal{1.0F, 0.0F, 0.0F};
+    TVec3f mRoofNormal{0.0F, -1.0F, 0.0F};
+    s32 mClippingFarLevel = 0;
+    bool mShadowValid = false;
+    bool mShadowCalcEnabled = false;
+    bool mShadowPrivateGravity = false;
 
 private:
     struct ActorHitSensor {
@@ -97,7 +119,6 @@ private:
         std::unique_ptr< HitSensor > sensor{};
     };
 
-    bool mIsDead = true;
     Spine* mSpine = nullptr;
     smgpc::render::J3dMatrix3x4 mBaseMatrix{};
     J3DFrameCtrl mBrkCtrl{};

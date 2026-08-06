@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <string>
 
 namespace MR {
     namespace {
@@ -152,5 +153,15 @@ namespace MR {
     }
 
     void initPlayerAfterOpeningDemo() {
+    }
+
+    void incPlayerOxygen(u32 amount) {
+#ifndef NDEBUG
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->emit_semantic_trace_event("player", "oxygen_increased", "amount=" + std::to_string(amount));
+        }
+#else
+        static_cast< void >(amount);
+#endif
     }
 }  // namespace MR

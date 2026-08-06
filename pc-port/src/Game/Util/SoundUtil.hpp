@@ -15,13 +15,14 @@ namespace MR {
     void unlockStageBGM();
     void stopStageBGM(s32 fadeFrames);
     void setStageBGMState(s32 state, u32 changeFrames);
-    void startSystemSE(const char* pName, s32, s32);
+    void startSystemSE(const char* pName, s32 param2 = -1, s32 param3 = -1);
     void startSystemLevelSE(const char* pName, s32, s32);
     void stopSystemSE(const char* pName, u32 delay);
     void startAtmosphereSE(const char* pName, s32, s32);
     void submitLevelSE();
     void permitLevelSE();
     void startSystemME(const char* pName);
+    bool hasME();
     void startCSSound(const char* pName, s32, s32);
     void startCSSound(const char* pName, const char*, s32);
 }  // namespace MR

@@ -6,6 +6,36 @@
 #include "Game/Util/CameraUtil.hpp"
 
 namespace MR {
+    bool initActorCamera(const LiveActor*, const JMapInfoIter& rIter, ActorCameraInfo** pInfo) {
+        if (pInfo == nullptr) {
+            return false;
+        }
+        if (*pInfo == nullptr) {
+            *pInfo = new ActorCameraInfo(rIter);
+        }
+        return isExistActorCamera(*pInfo);
+    }
+
+    bool isExistActorCamera(const ActorCameraInfo* pInfo) {
+        return pInfo != nullptr && pInfo->mCameraSetID != -1;
+    }
+
+    bool startActorCameraTargetSelf(const LiveActor* pActor, const ActorCameraInfo* pInfo, s32 frames) {
+        if (pActor == nullptr || !isExistActorCamera(pInfo)) {
+            return false;
+        }
+        MR::startGlobalEventCameraNoTarget(pActor->mName, frames);
+        return true;
+    }
+
+    bool endActorCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, bool endForce, s32 frames) {
+        if (pActor == nullptr || !isExistActorCamera(pInfo)) {
+            return false;
+        }
+        MR::endGlobalEventCamera(pActor->mName, frames, endForce);
+        return true;
+    }
+
     void initAnimCamera(const LiveActor* pActor, const ActorCameraInfo*, const char* pCameraName) {
         if (pActor != nullptr && pCameraName != nullptr) {
             MR::declareEventCameraProgrammable(pCameraName);

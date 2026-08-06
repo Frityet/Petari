@@ -100,6 +100,10 @@ namespace MR {
         }
     }
 
+    bool hasME() {
+        return smgpc::runtime::RuntimeContext::try_instance() != nullptr;
+    }
+
     void startCSSound(const char* pName, s32, s32) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->start_cs_sound(pName);

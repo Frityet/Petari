@@ -6,9 +6,14 @@
 class ActorCameraInfo;
 class CameraTargetArg;
 class LiveActor;
+class JMapInfoIter;
 
 namespace MR {
     void initAnimCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName);
+    bool initActorCamera(const LiveActor* pActor, const JMapInfoIter& rIter, ActorCameraInfo** pInfo);
+    bool isExistActorCamera(const ActorCameraInfo* pInfo);
+    bool startActorCameraTargetSelf(const LiveActor* pActor, const ActorCameraInfo* pInfo, s32 frames);
+    bool endActorCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, bool endForce, s32 frames);
     void startAnimCameraTargetSelf(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName, s32 frames, f32 speed);
     void startAnimCameraTargetOther(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName, const CameraTargetArg& rTarget, s32 frames, f32 speed);
     void endAnimCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName, s32 frames, bool endForce);

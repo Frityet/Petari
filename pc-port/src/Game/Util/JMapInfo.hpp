@@ -40,6 +40,14 @@ class JMapInfoIter;
 
 class JMapInfo {
 public:
+    struct DataCompat {
+        s32 mNumEntries = 0;
+    };
+
+    // Original Game code reads this small part of JMapInfoData directly.
+    // Sharing the compatibility view preserves its lifetime across JMapInfo copies.
+    std::shared_ptr< DataCompat > mData;
+
     JMapInfo() = default;
     explicit JMapInfo(smgpc::resource::BcsvTable table);
 

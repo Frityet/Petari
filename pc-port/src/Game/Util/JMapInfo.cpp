@@ -52,7 +52,9 @@ namespace {
     }
 }  // namespace
 
-JMapInfo::JMapInfo(smgpc::resource::BcsvTable table) : mTable(std::make_shared< smgpc::resource::BcsvTable >(std::move(table))) {
+JMapInfo::JMapInfo(smgpc::resource::BcsvTable table)
+    : mData(std::make_shared< DataCompat >(DataCompat{static_cast< s32 >(table.entry_count())})),
+      mTable(std::make_shared< smgpc::resource::BcsvTable >(std::move(table))) {
 }
 
 JMapInfo JMapInfo::from_bcsv(std::span< const std::uint8_t > data) {

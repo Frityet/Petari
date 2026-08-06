@@ -1,20 +1,21 @@
 #pragma once
 
+#include <array>
+
 enum SceneObjId {
     SceneObj_StageSwitchContainer = 0x0A,
     SceneObj_SwitchWatcherHolder = 0x0B,
     SceneObj_SleepControllerHolder = 0x0C,
+    SceneObj_CoinHolder = 0x36,
+    SceneObj_PurpleCoinHolder = 0x37,
+    SceneObj_CoinRotater = 0x38,
     SceneObj_MiiFacePartsHolder = 0x6C,
     SceneObj_PrologueHolder = 0x79,
+    SceneObj_NumMax = 0x7B,
 };
 
 class MiiFacePartsHolder;
 class NameObj;
-class PrologueHolder;
-class StageSwitchContainer;
-class SleepControllerHolder;
-class SwitchWatcherHolder;
-
 class SceneObjHolder {
 public:
     SceneObjHolder() = default;
@@ -24,11 +25,10 @@ public:
     [[nodiscard]] void* getObj(int id);
 
 private:
+    [[nodiscard]] NameObj* newEachObj(int id);
+
     MiiFacePartsHolder* _mii_face_parts_holder = nullptr;
-    PrologueHolder* _prologue_holder = nullptr;
-    StageSwitchContainer* _stage_switch_container = nullptr;
-    SwitchWatcherHolder* _switch_watcher_holder = nullptr;
-    SleepControllerHolder* _sleep_controller_holder = nullptr;
+    std::array< NameObj*, SceneObj_NumMax > mObjects{};
 };
 
 namespace MR {

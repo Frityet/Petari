@@ -22,4 +22,5 @@ namespace MR {
     f32 getBckFrameMaxPlayer(const char* pName);
     bool isBckStoppedPlayer();
     void initPlayerAfterOpeningDemo();
+    void incPlayerOxygen(u32 amount);
 }  // namespace MR

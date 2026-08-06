@@ -1,6 +1,7 @@
 #include "Game/Util/NerveUtil.hpp"
 
 #include "Game/Screen/LayoutActor.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/System/NerveExecutor.hpp"
 
 namespace MR {
@@ -27,6 +28,10 @@ namespace MR {
 
     bool isGreaterStep(const LayoutActor* pActor, s32 step) {
         return pActor->getNerveStep() > step;
+    }
+
+    bool isGreaterStep(const LiveActor* pActor, s32 step) {
+        return pActor != nullptr && pActor->getNerveStep() > step;
     }
 
 }  // namespace MR

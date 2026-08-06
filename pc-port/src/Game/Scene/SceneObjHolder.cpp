@@ -4,7 +4,11 @@
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
+#include "Game/MapObj/CoinHolder.hpp"
+#include "Game/MapObj/CoinRotater.hpp"
+#include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/NPC/MiiFacePartsHolder.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 namespace {
     SceneObjHolder* sCurrentSceneObjHolder = nullptr;
@@ -17,58 +21,50 @@ namespace {
 
 SceneObjHolder::~SceneObjHolder() {
     delete _mii_face_parts_holder;
-    delete _prologue_holder;
-    delete _stage_switch_container;
-    delete _switch_watcher_holder;
-    delete _sleep_controller_holder;
+    for (auto* object : mObjects) {
+        delete object;
+    }
 }
 
 NameObj* SceneObjHolder::create(int id) {
-    if (id == SceneObj_StageSwitchContainer) {
-        if (_stage_switch_container == nullptr) {
-            _stage_switch_container = new StageSwitchContainer();
-        }
-        return _stage_switch_container;
+    if (id < 0 || id >= SceneObj_NumMax || id == SceneObj_MiiFacePartsHolder) {
+        return nullptr;
     }
 
-    if (id == SceneObj_SwitchWatcherHolder) {
-        if (_switch_watcher_holder == nullptr) {
-            _switch_watcher_holder = new SwitchWatcherHolder();
-        }
-        return _switch_watcher_holder;
+    if (mObjects[static_cast< std::size_t >(id)] != nullptr) {
+        return mObjects[static_cast< std::size_t >(id)];
     }
 
-    if (id == SceneObj_SleepControllerHolder) {
-        if (_sleep_controller_holder == nullptr) {
-            _sleep_controller_holder = new SleepControllerHolder();
-        }
-        return _sleep_controller_holder;
+    auto* object = newEachObj(id);
+    if (object != nullptr) {
+        object->initWithoutIter();
+        mObjects[static_cast< std::size_t >(id)] = object;
     }
+    return object;
+}
 
-    if (id == SceneObj_PrologueHolder) {
-        if (_prologue_holder == nullptr) {
-            _prologue_holder = new PrologueHolder("プロローグ保持");
-        }
-        return _prologue_holder;
+NameObj* SceneObjHolder::newEachObj(int id) {
+    switch (id) {
+    case SceneObj_StageSwitchContainer:
+        return new StageSwitchContainer();
+    case SceneObj_SwitchWatcherHolder:
+        return new SwitchWatcherHolder();
+    case SceneObj_SleepControllerHolder:
+        return new SleepControllerHolder();
+    case SceneObj_CoinHolder:
+        return new CoinHolder("コイン管理");
+    case SceneObj_PurpleCoinHolder:
+        return new PurpleCoinHolder();
+    case SceneObj_CoinRotater:
+        return new CoinRotater("コイン回転管理");
+    case SceneObj_PrologueHolder:
+        return new PrologueHolder("プロローグ保持");
+    default:
+        return nullptr;
     }
-
-    static_cast<void>(getObj(id));
-    return nullptr;
 }
 
 void* SceneObjHolder::getObj(int id) {
-    if (id == SceneObj_StageSwitchContainer) {
-        return create(id);
-    }
-
-    if (id == SceneObj_SwitchWatcherHolder) {
-        return create(id);
-    }
-
-    if (id == SceneObj_SleepControllerHolder) {
-        return create(id);
-    }
-
     if (id == SceneObj_MiiFacePartsHolder) {
         if (_mii_face_parts_holder == nullptr) {
             _mii_face_parts_holder = new MiiFacePartsHolder();
@@ -76,11 +72,7 @@ void* SceneObjHolder::getObj(int id) {
         return _mii_face_parts_holder;
     }
 
-    if (id == SceneObj_PrologueHolder) {
-        return create(id);
-    }
-
-    return nullptr;
+    return create(id);
 }
 
 namespace MR {

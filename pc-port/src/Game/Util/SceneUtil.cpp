@@ -32,4 +32,13 @@ namespace MR {
             *pPointInfo = point_info;
         }
     }
+
+    void getCameraRailInfo(JMapInfoIter* pPathIter, const JMapInfo** pPointInfo, s32, s32) {
+        if (pPathIter != nullptr) {
+            *pPathIter = JMapInfoIter{};
+        }
+        if (pPointInfo != nullptr) {
+            *pPointInfo = nullptr;
+        }
+    }
 }  // namespace MR

@@ -341,6 +341,24 @@ namespace MR {
         return get_arg_and_init(rIter, "CommonPath_ID", &id) && id != -1;
     }
 
+    void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut) {
+        if (pOut != nullptr) {
+            (void)get_vec3_components(rIter, "pnt0_x", "pnt0_y", "pnt0_z", pOut);
+        }
+    }
+
+    void getRailPointPos1(const JMapInfoIter& rIter, TVec3f* pOut) {
+        if (pOut != nullptr) {
+            (void)get_vec3_components(rIter, "pnt1_x", "pnt1_y", "pnt1_z", pOut);
+        }
+    }
+
+    void getRailPointPos2(const JMapInfoIter& rIter, TVec3f* pOut) {
+        if (pOut != nullptr) {
+            (void)get_vec3_components(rIter, "pnt2_x", "pnt2_y", "pnt2_z", pOut);
+        }
+    }
+
     bool isExistStageSwitchA(const JMapInfoIter& rIter) {
         auto id = s32{};
         return get_arg_and_init(rIter, "SW_A", &id) && id != -1;

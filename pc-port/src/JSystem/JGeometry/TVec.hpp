@@ -184,6 +184,17 @@ namespace JGeometry {
             return normalize();
         }
 
+        f32 setLength(f32 newLength) {
+            const f32 oldSquaredLength = squared();
+            if (oldSquaredLength <= TUtil<f32>::epsilon()) {
+                return 0.0F;
+            }
+
+            const f32 inverseLength = TUtil<f32>::inv_sqrt(oldSquaredLength);
+            scale(inverseLength * newLength);
+            return inverseLength * oldSquaredLength;
+        }
+
         void cross(const TVec3 &lhs, const TVec3 &rhs) {
             const f32 newX = lhs.y * rhs.z - lhs.z * rhs.y;
             const f32 newY = lhs.z * rhs.x - lhs.x * rhs.z;

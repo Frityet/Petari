@@ -56,7 +56,20 @@ namespace MR {
         return new ProjmapEffectMtxSetter(pActor);
     }
 
-    void invalidateClipping(LiveActor*) {
+    void validateClipping(LiveActor* pActor) {
+        if (pActor != nullptr) {
+            pActor->mFlag.mIsInvalidClipping = false;
+        }
+    }
+
+    void invalidateClipping(LiveActor* pActor) {
+        if (pActor == nullptr) {
+            return;
+        }
+        if (pActor->mFlag.mIsClipped) {
+            pActor->endClipped();
+        }
+        pActor->mFlag.mIsInvalidClipping = true;
     }
 
     void startBck(LiveActor* pActor, const char* pName, const char* pFileName) {
@@ -120,7 +133,27 @@ namespace MR {
     }
 
     PartsModel* createPartsModelMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
-        return new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_MapObj, false);
+        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_MapObj, false);
+        pModel->initWithoutIter();
+        return pModel;
+    }
+
+    PartsModel* createPartsModelNoSilhouettedMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
+        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
+        pModel->initWithoutIter();
+        return pModel;
+    }
+
+    void connectToDrawTemporarily(LiveActor* pActor) {
+        if (pActor != nullptr) {
+            pActor->mFlag.mIsClipped = false;
+        }
+    }
+
+    void disconnectToDrawTemporarily(LiveActor* pActor) {
+        if (pActor != nullptr) {
+            pActor->mFlag.mIsClipped = true;
+        }
     }
 
     void emitEffect(LiveActor* pActor, const char* pEffectName) {
@@ -217,8 +250,40 @@ namespace MR {
         (void)MR::getJMapInfoScale(rIter, &pActor->mScale);
     }
 
-    bool isHiddenModel(const LiveActor*) {
-        return false;
+    bool isHiddenModel(const LiveActor* pActor) {
+        return pActor == nullptr || pActor->mFlag.mIsHiddenModel;
+    }
+
+    bool isClipped(const LiveActor* pActor) {
+        return pActor != nullptr && pActor->mFlag.mIsClipped;
+    }
+
+    bool isNoEntryDrawBuffer(const LiveActor* pActor) {
+        return pActor == nullptr || pActor->mFlag.mIsHiddenModel;
+    }
+
+    void onEntryDrawBuffer(LiveActor* pActor) {
+        if (pActor != nullptr) {
+            pActor->mFlag.mIsHiddenModel = false;
+        }
+    }
+
+    void offEntryDrawBuffer(LiveActor* pActor) {
+        if (pActor != nullptr) {
+            pActor->mFlag.mIsHiddenModel = true;
+        }
+    }
+
+    void showModel(LiveActor* pActor) {
+        onEntryDrawBuffer(pActor);
+    }
+
+    void hideModel(LiveActor* pActor) {
+        offEntryDrawBuffer(pActor);
+    }
+
+    bool isNoCalcAnim(const LiveActor* pActor) {
+        return pActor != nullptr && pActor->mFlag.mIsNoCalcAnim;
     }
 
     bool isDead(const LiveActor* pActor) {
@@ -256,20 +321,13 @@ namespace MR {
     }
 
     MtxPtr getJointMtx(const LiveActor* pActor, const char*) {
-        static Mtx matrix{};
-        matrix[0][0] = 1.0F;
-        matrix[0][1] = 0.0F;
-        matrix[0][2] = 0.0F;
-        matrix[0][3] = pActor != nullptr ? pActor->mPosition.x : 0.0F;
-        matrix[1][0] = 0.0F;
-        matrix[1][1] = 1.0F;
-        matrix[1][2] = 0.0F;
-        matrix[1][3] = pActor != nullptr ? pActor->mPosition.y : 0.0F;
-        matrix[2][0] = 0.0F;
-        matrix[2][1] = 0.0F;
-        matrix[2][2] = 1.0F;
-        matrix[2][3] = pActor != nullptr ? pActor->mPosition.z : 0.0F;
-        return matrix;
+        if (pActor == nullptr) {
+            return nullptr;
+        }
+
+        const auto& matrix = pActor->getBaseMatrix();
+        static_assert(sizeof(matrix) == sizeof(Mtx));
+        return reinterpret_cast< MtxPtr >(const_cast< f32* >(matrix.m.data()));
     }
 
     bool isBrkOneTimeAndStopped(const LiveActor* pActor) {

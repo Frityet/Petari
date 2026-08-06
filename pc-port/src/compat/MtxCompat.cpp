@@ -1,0 +1,101 @@
+#include "Game/Util/MtxUtil.hpp"
+
+#include "Game/LiveActor/LiveActor.hpp"
+
+#include <cmath>
+
+namespace {
+    constexpr f32 cDegreesToRadians = 3.14159265358979323846F / 180.0F;
+
+    void set_axes(TPos3f* pMatrix, const TVec3f& rAxisX, const TVec3f& rAxisY, const TVec3f& rAxisZ) {
+        pMatrix->mMtx[0][0] = rAxisX.x;
+        pMatrix->mMtx[1][0] = rAxisX.y;
+        pMatrix->mMtx[2][0] = rAxisX.z;
+        pMatrix->mMtx[0][1] = rAxisY.x;
+        pMatrix->mMtx[1][1] = rAxisY.y;
+        pMatrix->mMtx[2][1] = rAxisY.z;
+        pMatrix->mMtx[0][2] = rAxisZ.x;
+        pMatrix->mMtx[1][2] = rAxisZ.y;
+        pMatrix->mMtx[2][2] = rAxisZ.z;
+    }
+}  // namespace
+
+namespace MR {
+    void makeMtxRotateY(MtxPtr pMatrix, f32 rotationY) {
+        const auto radians = rotationY * cDegreesToRadians;
+        const auto sinY = std::sin(radians);
+        const auto cosY = std::cos(radians);
+
+        pMatrix[0][0] = cosY;
+        pMatrix[1][0] = 0.0F;
+        pMatrix[2][0] = -sinY;
+        pMatrix[0][1] = 0.0F;
+        pMatrix[1][1] = 1.0F;
+        pMatrix[2][1] = 0.0F;
+        pMatrix[0][2] = sinY;
+        pMatrix[1][2] = 0.0F;
+        pMatrix[2][2] = cosY;
+        pMatrix[0][3] = 0.0F;
+        pMatrix[1][3] = 0.0F;
+        pMatrix[2][3] = 0.0F;
+    }
+
+    void makeMtxTR(MtxPtr pMatrix, f32 tx, f32 ty, f32 tz, f32 rx, f32 ry, f32 rz) {
+        const auto sinX = std::sin(rx * cDegreesToRadians);
+        const auto sinY = std::sin(ry * cDegreesToRadians);
+        const auto sinZ = std::sin(rz * cDegreesToRadians);
+        const auto cosX = std::cos(rx * cDegreesToRadians);
+        const auto cosY = std::cos(ry * cDegreesToRadians);
+        const auto cosZ = std::cos(rz * cDegreesToRadians);
+
+        pMatrix[0][0] = cosZ * cosY;
+        pMatrix[1][0] = sinZ * cosY;
+        pMatrix[2][0] = -sinY;
+        pMatrix[0][1] = cosZ * sinY * sinX - sinZ * cosX;
+        pMatrix[1][1] = sinZ * sinY * sinX + cosZ * cosX;
+        pMatrix[2][1] = cosY * sinX;
+        pMatrix[0][2] = cosZ * sinY * cosX + sinZ * sinX;
+        pMatrix[1][2] = sinZ * sinY * cosX - cosZ * sinX;
+        pMatrix[2][2] = cosY * cosX;
+        pMatrix[0][3] = tx;
+        pMatrix[1][3] = ty;
+        pMatrix[2][3] = tz;
+    }
+
+    void makeMtxTR(MtxPtr pMatrix, const TVec3f& rTranslation, const TVec3f& rRotation) {
+        makeMtxTR(pMatrix, rTranslation.x, rTranslation.y, rTranslation.z, rRotation.x, rRotation.y, rRotation.z);
+    }
+
+    void makeMtxTR(MtxPtr pMatrix, const LiveActor* pActor) {
+        if (pActor != nullptr) {
+            makeMtxTR(pMatrix, pActor->mPosition, pActor->mRotation);
+        }
+    }
+
+    void makeMtxUpNoSupportPos(TPos3f* pMatrix, const TVec3f& rUp, const TVec3f& rPosition) {
+        if (pMatrix == nullptr) {
+            return;
+        }
+
+        auto axisY = rUp;
+        if (axisY.normalize() == 0.0F) {
+            axisY.set(0.0F, 1.0F, 0.0F);
+        }
+
+        const auto absX = std::fabs(axisY.x);
+        const auto absY = std::fabs(axisY.y);
+        const auto absZ = std::fabs(axisY.z);
+        const auto maxElementIsZ = absZ >= absX && absZ >= absY;
+        const auto support = maxElementIsZ ? TVec3f{0.0F, 1.0F, 0.0F} : TVec3f{0.0F, 0.0F, 1.0F};
+
+        auto axisX = axisY.cross(support);
+        if (axisX.normalize() == 0.0F) {
+            axisX.set(1.0F, 0.0F, 0.0F);
+        }
+        auto axisZ = axisX.cross(axisY);
+        axisZ.normalize();
+
+        set_axes(pMatrix, axisX, axisY, axisZ);
+        pMatrix->setTrans(rPosition);
+    }
+}  // namespace MR

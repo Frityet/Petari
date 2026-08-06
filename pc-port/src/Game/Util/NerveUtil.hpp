@@ -4,6 +4,7 @@
 
 class NerveExecutor;
 class LayoutActor;
+class LiveActor;
 
 namespace MR {
     bool isFirstStep(const NerveExecutor* pExecutor);
@@ -12,4 +13,5 @@ namespace MR {
     bool isFirstStep(const LayoutActor* pActor);
     bool isStep(const LayoutActor* pActor, s32 step);
     bool isGreaterStep(const LayoutActor* pActor, s32 step);
+    bool isGreaterStep(const LiveActor* pActor, s32 step);
 }  // namespace MR

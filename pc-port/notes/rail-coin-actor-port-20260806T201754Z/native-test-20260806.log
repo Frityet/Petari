@@ -1,0 +1,18 @@
+[ok] revolution headers and input defaults
+[ok] JGeometry host layout and math
+[ok] Aurora VI retrace/framebuffer state
+[ok] Aurora DVD requires disc image
+[ok] Aurora OS cache and GX copy smoke
+[ok] Aurora NAND storage smoke
+[ok] player visibility can be restored
+[ok] scene scheduler registration scope cleanup
+[ok] stage switch zone identity and edges
+[ok] CollisionBlocker sensor lifecycle
+[ok] SimpleEffectObj host compatibility
+[ok] rail info ownership and per-entry lookup
+[ok] original rail part geometry
+[ok] FixedPosition and PartsModel surface
+[ok] Coin math and gravity surface
+[ok] HeavensDoor route is picturebook handoff only
+[ok] Spine pending nerve runs next tick
+17 Aurora-native test(s) passed

@@ -33,6 +33,8 @@ namespace MR {
     void closeSystemWipeCircleWithCaptureScreen(s32 frameCount);
     void closeSystemWipeFadeWithCaptureScreen(s32 frameCount);
     void deactivateDefaultGameLayout();
+    void createPurpleCoinCounter();
+    void validatePurpleCoinCounter();
     void forceOffImageEffect();
     void setImageEffectControlAuto();
     void openWipeCircle(s32 frameCount);

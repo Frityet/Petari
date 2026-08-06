@@ -6,6 +6,9 @@
 #include "Game/Map/GroupSwitchWatcher.hpp"
 #include "Game/Map/SwitchSynchronizer.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
+#include "Game/MapObj/Coin.hpp"
+#include "Game/MapObj/PurpleCoinStarter.hpp"
+#include "Game/MapObj/RailCoin.hpp"
 
 #include <array>
 #include <string_view>
@@ -16,7 +19,7 @@ namespace {
         return new T(pName);
     }
 
-    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 6>{
+    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 11>{
         NameObjFactory::Name2CreateFunc{
             "PrologueDirector",
             createNameObj<PrologueDirector>,
@@ -45,6 +48,31 @@ namespace {
         NameObjFactory::Name2CreateFunc{
             "Steam",
             createNameObj<SimpleEffectObj>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "Coin",
+            MR::createDirectSetCoin,
+            "Coin",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PurpleCoin",
+            MR::createDirectSetPurpleCoin,
+            "PurpleCoin",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "RailCoin",
+            MR::createRailCoin,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PurpleRailCoin",
+            MR::createRailPurpleCoin,
+            "PurpleCoin",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PurpleCoinStarter",
+            createNameObj<PurpleCoinStarter>,
             nullptr,
         },
     };

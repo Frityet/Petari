@@ -1,0 +1,2 @@
+rel_path	pc_path	source_path	pc_line	adaptation	reason	removal_trigger
+LiveActor/RailRider.hpp	pc-port/src/Game/LiveActor/RailRider.hpp	include/Game/LiveActor/RailRider.hpp	7	unnamed-unused-parameter	compile-only unused parameter warning cleanup; source body is otherwise normalized to root	remove when the copied source builds with the original named unused JMapInfoIter parameter

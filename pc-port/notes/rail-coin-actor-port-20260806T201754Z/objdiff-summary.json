@@ -1,0 +1,26 @@
+{
+  "configuration": "RMGK02",
+  "objects": {
+    "Game/MapObj/CoinHolder": {
+      "appearCoinPopToDirection": {
+        "target_size": 168,
+        "match_percent": 99.88095
+      },
+      "appearCoinCircle": {
+        "target_size": 372,
+        "match_percent": 97.41936
+      },
+      "appearCoin": {
+        "target_size": 332,
+        "match_percent": 99.93976
+      }
+    },
+    "Game/MapObj/CoinRotater": {
+      "movement": {
+        "target_size": 248,
+        "match_percent": 94.758064
+      }
+    }
+  },
+  "main_dol_sha1": "54b71431af0d509097bfdef4ec28617afc487e89"
+}

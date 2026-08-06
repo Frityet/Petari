@@ -15,6 +15,7 @@ namespace MR {
     void requestMovementOff(NameObj* pObj);
     void connectToSceneMapObj(LiveActor* pActor);
     void connectToSceneMapObjMovement(NameObj* pObj);
+    void connectToSceneItemStrongLight(LiveActor* pActor);
     void connectToSceneAreaObj(NameObj* pObj);
     void connectToSceneNpc(LiveActor* pActor);
     void connectToSceneNpcMovement(NameObj* pObj);
@@ -29,6 +30,7 @@ namespace MR {
     void shakeCameraStrong();
     void shakeCameraNormal();
     void shakeCameraWeak();
+    void declarePowerStarCoin100();
     void listenNameObjStageSwitchOnAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnOffAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnA(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);

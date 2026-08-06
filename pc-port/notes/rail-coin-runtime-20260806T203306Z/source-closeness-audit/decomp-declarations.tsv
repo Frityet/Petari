@@ -1,0 +1,3 @@
+rel_path	classification	target_surface	declaration_path	note
+Screen/LayoutManager.cpp	decomp-needed	yes	include/Game/Screen/LayoutManager.hpp	no root implementation counterpart; declaration counterpart include/Game/Screen/LayoutManager.hpp
+Screen/ReplaceTagProcessor.cpp	decomp-needed	yes	include/Game/Screen/ReplaceTagProcessor.hpp	no root implementation counterpart; declaration counterpart include/Game/Screen/ReplaceTagProcessor.hpp

@@ -2,15 +2,31 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 
+class FixedPosition;
+
 class PartsModel : public LiveActor {
 public:
-    PartsModel(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx, int drawBufferType, bool useLight);
-    ~PartsModel() override = default;
+    PartsModel(LiveActor*, const char*, const char*, MtxPtr, int, bool);
 
-    void movement() override;
-    void calcAndSetBaseMtx() override;
+    virtual void init(const JMapInfoIter&) override;
+    virtual void movement() override;
+    virtual void calcAnim() override;
+    virtual void calcViewAndEntry() override;
+    virtual void makeActorAppeared() override;
+    virtual void makeActorDead() override;
+    virtual void calcAndSetBaseMtx() override;
 
-private:
-    /* 0x8C */ LiveActor* mHost = nullptr;
-    /* 0x90 */ MtxPtr mMtx = nullptr;
+    void initFixedPosition(const TVec3f&, const TVec3f&, const char*);
+    void initFixedPosition(const char*);
+    void initFixedPosition(MtxPtr, const TVec3f&, const TVec3f&);
+    void loadFixedPosition(const char*);
+    void offFixedPosNormalizeScale();
+
+    /* 0x8C */ LiveActor* mHost;
+    /* 0x90 */ FixedPosition* mFixedPos;
+    /* 0x94 */ MtxPtr mMtx;
+    /* 0x98 */ bool mCalcOwnMtx;
+    /* 0x99 */ bool _99;
+    /* 0x9A */ bool mIsDead;
+    /* 0x9B */ bool _9B;
 };

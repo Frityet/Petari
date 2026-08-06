@@ -2,7 +2,10 @@
 #include "Game/Effect/SimpleEffectObj.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/PartsModel.hpp"
+#include "Game/LiveActor/RailRider.hpp"
 #include "Game/Map/ActorAppearSwitchListener.hpp"
+#include "Game/Map/RailPart.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
@@ -10,7 +13,12 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/FixedPosition.hpp"
+#include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JGeometry/TBox.hpp"
@@ -18,6 +26,7 @@
 #include "JSystem/JGeometry/TUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
+#include "resource/BcsvTable.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>
@@ -30,6 +39,7 @@
 #include <revolution.h>
 
 #include <array>
+#include <bit>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -58,10 +68,75 @@ namespace {
         bytes[offset + 3U] = static_cast<std::uint8_t>(value);
     }
 
+    void write_be16(std::vector<std::uint8_t> &bytes, std::size_t offset, std::uint16_t value) {
+        bytes[offset] = static_cast<std::uint8_t>(value >> 8U);
+        bytes[offset + 1U] = static_cast<std::uint8_t>(value);
+    }
+
+    void write_be_float(std::vector<std::uint8_t> &bytes, std::size_t offset, float value) {
+        write_be32(bytes, offset, std::bit_cast<std::uint32_t>(value));
+    }
+
+    void write_bcsv_field(std::vector<std::uint8_t> &bytes, std::size_t index, std::string_view name, std::uint16_t offset,
+                          smgpc::resource::BcsvFieldType type) {
+        const auto field_offset = 0x10U + index * 0x0cU;
+        write_be32(bytes, field_offset, smgpc::resource::jmap_hash(name));
+        write_be32(bytes, field_offset + 0x04U, 0xffffffffU);
+        write_be16(bytes, field_offset + 0x08U, offset);
+        bytes[field_offset + 0x0aU] = 0U;
+        bytes[field_offset + 0x0bU] = static_cast<std::uint8_t>(type);
+    }
+
     JMapInfo make_fieldless_jmap(std::uint32_t entry_count) {
         auto bytes = std::vector<std::uint8_t>(0x10U, 0U);
         write_be32(bytes, 0x00U, entry_count);
         write_be32(bytes, 0x08U, 0x10U);
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    JMapInfo make_open_rail_path_info() {
+        constexpr auto data_offset = 0x1cU;
+        constexpr auto entry_size = 8U;
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, 1U);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "closed", 0U, smgpc::resource::BcsvFieldType::InlineString);
+        bytes[data_offset + 0U] = 'O';
+        bytes[data_offset + 1U] = 'P';
+        bytes[data_offset + 2U] = 'E';
+        bytes[data_offset + 3U] = 'N';
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    JMapInfo make_linear_rail_point_info() {
+        constexpr auto field_count = 10U;
+        constexpr auto entry_count = 3U;
+        constexpr auto entry_size = field_count * 4U;
+        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
+        constexpr auto field_names = std::array<std::string_view, field_count>{
+            "pnt0_x", "pnt0_y", "pnt0_z", "pnt1_x", "pnt1_y", "pnt1_z", "pnt2_x", "pnt2_y", "pnt2_z", "id",
+        };
+
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_count * entry_size, 0U);
+        write_be32(bytes, 0x00U, entry_count);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        for (auto field = 0U; field < field_count; ++field) {
+            const auto type = field + 1U == field_count ? smgpc::resource::BcsvFieldType::Int32 : smgpc::resource::BcsvFieldType::Float;
+            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U), type);
+        }
+
+        for (auto entry = 0U; entry < entry_count; ++entry) {
+            const auto entry_offset = data_offset + entry * entry_size;
+            const auto x = static_cast<float>(entry * 10U);
+            write_be_float(bytes, entry_offset + 0U * 4U, x);
+            write_be_float(bytes, entry_offset + 3U * 4U, x);
+            write_be_float(bytes, entry_offset + 6U * 4U, x);
+            write_be32(bytes, entry_offset + 9U * 4U, entry);
+        }
         return JMapInfo::from_bcsv(bytes);
     }
 
@@ -424,6 +499,177 @@ namespace {
                 "each placement row should retain its own CommonPathPointInfo table");
     }
 
+    void test_original_rail_part_geometry() {
+        auto linear = RailPart{};
+        linear.init(TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{10.0F, 0.0F, 0.0F},
+                    TVec3f{10.0F, 0.0F, 0.0F});
+
+        auto position = TVec3f{};
+        linear.calcPos(&position, 0.25F);
+        require(position.epsilonEquals(TVec3f{2.5F, 0.0F, 0.0F}, 0.00001F) && std::fabs(linear.getTotalLength() - 10.0F) < 0.00001F,
+                "linear rail parts should preserve original position and arc-length behavior");
+        require(std::fabs(linear.getParam(5.0F) - 0.5F) < 0.00001F &&
+                    std::fabs(linear.getNearestParam(TVec3f{7.0F, 4.0F, 0.0F}, 0.1F) - 0.7F) < 0.00001F,
+                "linear rail coordinates should map consistently to parameters and nearest points");
+
+        auto bezier = RailPart{};
+        bezier.initForBezier(TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{0.0F, 10.0F, 0.0F}, TVec3f{10.0F, 10.0F, 0.0F},
+                             TVec3f{10.0F, 0.0F, 0.0F});
+        bezier.calcPos(&position, 0.5F);
+        require(position.epsilonEquals(TVec3f{5.0F, 7.5F, 0.0F}, 0.00001F) && bezier.getTotalLength() > 10.0F,
+                "Bezier rail parts should preserve original cubic evaluation and positive arc length");
+
+        auto placement = make_fieldless_jmap(1U);
+        placement.setRailInfo(0, make_open_rail_path_info(), make_linear_rail_point_info(), 0);
+        auto actor = LiveActor("rail-test");
+        actor.initRailRider(JMapInfoIter(&placement, 0));
+        require(actor.mRailRider != nullptr && std::fabs(MR::getRailTotalLength(&actor) - 20.0F) < 0.00001F &&
+                    MR::getRailPos(&actor).epsilonEquals(TVec3f{0.0F, 0.0F, 0.0F}, 0.00001F),
+                "LiveActor rail ownership should consume attached CommonPath metadata and start at the first point");
+
+        MR::setRailCoordSpeed(&actor, 5.0F);
+        MR::moveRailRider(&actor);
+        require(MR::getRailPos(&actor).epsilonEquals(TVec3f{5.0F, 0.0F, 0.0F}, 0.00001F),
+                "RailRider movement should advance by source-compatible world-space arc length");
+        MR::moveCoordToNearestPos(&actor, TVec3f{13.0F, 4.0F, 0.0F});
+        require(MR::getRailPos(&actor).epsilonEquals(TVec3f{13.0F, 0.0F, 0.0F}, 0.00001F),
+                "RailRider nearest-position projection should select the correct path part");
+    }
+
+    void test_fixed_position_and_parts_model_surface() {
+        auto host = LiveActor("fixed-position-host");
+        host.mPosition.set(10.0F, 20.0F, 30.0F);
+        host.mRotation.set(0.0F, 90.0F, 0.0F);
+        host.mScale.set(2.0F, 3.0F, 4.0F);
+        host.calcAndSetBaseMtx();
+        host.makeActorAppeared();
+
+        auto fixed = FixedPosition(&host, TVec3f{1.0F, 2.0F, 3.0F}, TVec3f{0.0F, 0.0F, 0.0F});
+        fixed.calc();
+        auto world = TVec3f{};
+        fixed.copyTrans(&world);
+        require(world.epsilonEquals(TVec3f{22.0F, 26.0F, 28.0F}, 0.00001F),
+                "FixedPosition should apply the host TRS matrix to its local translation");
+
+        auto axisX = TVec3f{};
+        auto axisY = TVec3f{};
+        auto axisZ = TVec3f{};
+        fixed.mMtx.getXDir(axisX);
+        fixed.mMtx.getYDir(axisY);
+        fixed.mMtx.getZDir(axisZ);
+        require(std::fabs(axisX.length() - 1.0F) < 0.00001F && std::fabs(axisY.length() - 1.0F) < 0.00001F &&
+                    std::fabs(axisZ.length() - 1.0F) < 0.00001F,
+                "FixedPosition should remove inherited host scale by default");
+
+        host.mPosition.set(100.0F, 200.0F, 300.0F);
+        host.mRotation.zero();
+        host.mScale.set(1.0F);
+        host.calcAndSetBaseMtx();
+        fixed.setLocalTrans(TVec3f{4.0F, 5.0F, 6.0F});
+        fixed.calc();
+        fixed.copyTrans(&world);
+        require(world.epsilonEquals(TVec3f{104.0F, 205.0F, 306.0F}, 0.00001F),
+                "FixedPosition should retain a live reference to the host base matrix");
+
+        auto* part = MR::createPartsModelNoSilhouettedMapObj(&host, "fixed-position-part", "", nullptr);
+        part->initFixedPosition(TVec3f{0.0F, 70.0F, 0.0F}, TVec3f{0.0F, 0.0F, 0.0F}, nullptr);
+        part->calcAnim();
+        require(part->mPosition.epsilonEquals(TVec3f{100.0F, 270.0F, 300.0F}, 0.00001F),
+                "PartsModel should expose Coin's fixed-position surface and update its actor position");
+
+        host.mPosition.set(110.0F, 220.0F, 330.0F);
+        host.calcAndSetBaseMtx();
+        part->calcAnim();
+        require(part->mPosition.epsilonEquals(TVec3f{110.0F, 290.0F, 330.0F}, 0.00001F),
+                "PartsModel should continue following host motion after construction");
+
+        MR::hideModel(&host);
+        part->movement();
+        require(part->mIsDead && MR::isClipped(part), "PartsModel should leave the draw path while its host is hidden");
+        MR::showModel(&host);
+        part->movement();
+        require(!part->mIsDead && !MR::isClipped(part), "PartsModel should reconnect to the draw path when its host returns");
+
+        auto* ownedFixedPosition = part->mFixedPos;
+        part->mFixedPos = nullptr;
+        delete ownedFixedPosition;
+        delete part;
+    }
+
+    void test_coin_math_and_gravity_surface() {
+        auto resized = TVec3f{3.0F, 4.0F, 0.0F};
+        const auto oldLength = resized.setLength(10.0F);
+        require(std::fabs(oldLength - 5.0F) < 0.00001F && resized.epsilonEquals(TVec3f{6.0F, 8.0F, 0.0F}, 0.00001F),
+                "TVec3f::setLength should return the old length and preserve direction");
+
+        auto zeroLength = TVec3f{};
+        require(zeroLength.setLength(10.0F) == 0.0F && zeroLength.epsilonEquals(TVec3f{}, 0.0F),
+                "TVec3f::setLength should leave a zero vector stable");
+
+        auto normalized = TVec3f{};
+        require(MR::normalizeOrZero(&normalized) && normalized.epsilonEquals(TVec3f{}, 0.0F),
+                "normalizeOrZero should report and preserve the zero case");
+        require(!MR::normalizeOrZero(TVec3f{0.0F, 3.0F, 4.0F}, &normalized) &&
+                    normalized.epsilonEquals(TVec3f{0.0F, 0.6F, 0.8F}, 0.00001F),
+                "normalizeOrZero should produce a unit vector for a nonzero source");
+
+        auto verticalAxis = TVec3f{};
+        MR::makeAxisVerticalZX(&verticalAxis, TVec3f{0.0F, -1.0F, 0.0F});
+        require(verticalAxis.epsilonEquals(TVec3f{0.0F, 0.0F, 1.0F}, 0.00001F),
+                "makeAxisVerticalZX should prefer projected world Z");
+        MR::makeAxisVerticalZX(&verticalAxis, TVec3f{0.0F, 0.0F, 1.0F});
+        require(verticalAxis.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.00001F),
+                "makeAxisVerticalZX should fall back to projected world X for a parallel Z axis");
+
+        auto rotated = TVec3f{};
+        MR::rotateVecDegree(&rotated, TVec3f{1.0F, 0.0F, 0.0F}, TVec3f{0.0F, 1.0F, 0.0F}, 90.0F);
+        require(rotated.epsilonEquals(TVec3f{0.0F, 0.0F, -1.0F}, 0.00001F),
+                "rotateVecDegree should use the original right-handed axis rotation");
+
+        auto rebound = TVec3f{4.0F, -10.0F, 2.0F};
+        require(MR::calcReboundVelocity(&rebound, TVec3f{0.0F, 1.0F, 0.0F}, 0.6F, 0.5F) &&
+                    rebound.epsilonEquals(TVec3f{2.0F, 6.0F, 1.0F}, 0.00001F),
+                "calcReboundVelocity should independently scale normal and tangent velocity");
+        auto simpleRebound = TVec3f{0.0F, -10.0F, 0.0F};
+        require(MR::calcReboundVelocity(&simpleRebound, TVec3f{0.0F, 1.0F, 0.0F}, 0.6F) &&
+                    simpleRebound.epsilonEquals(TVec3f{0.0F, 6.0F, 0.0F}, 0.00001F),
+                "the simple rebound overload should apply restitution along the contact normal");
+        const auto separating = rebound;
+        require(!MR::calcReboundVelocity(&rebound, TVec3f{0.0F, 1.0F, 0.0F}, 0.6F) &&
+                    rebound.epsilonEquals(separating, 0.0F),
+                "calcReboundVelocity should not alter velocity already leaving the surface");
+
+        const auto randomBase = TVec3f{10.0F, -5.0F, 3.0F};
+        auto randomized = TVec3f{};
+        MR::addRandomVector(&randomized, randomBase, 0.0F);
+        require(randomized.epsilonEquals(randomBase, 0.0F), "addRandomVector should preserve its base when the range is zero");
+        MR::addRandomVector(&randomized, randomBase, 2.0F);
+        const auto randomDelta = randomized - randomBase;
+        require(randomDelta.x >= -2.0F && randomDelta.x < 2.0F && randomDelta.y >= -2.0F && randomDelta.y < 2.0F &&
+                    randomDelta.z >= -2.0F && randomDelta.z < 2.0F,
+                "addRandomVector should keep each perturbation in the original half-open range");
+
+        auto actor = LiveActor("coin-gravity-test");
+        actor.mGravity.set(0.0F, -4.0F, 0.0F);
+        auto gravity = TVec3f{9.0F, 9.0F, 9.0F};
+        require(MR::calcGravityVector(&actor, &gravity, nullptr, nullptr) &&
+                    gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.00001F),
+                "host gravity queries should normalize a LiveActor's authoritative gravity");
+
+        auto plainObject = NameObj("positional-gravity-test");
+        gravity.set(9.0F, 9.0F, 9.0F);
+        require(!MR::calcGravityVector(&plainObject, TVec3f{1.0F, 2.0F, 3.0F}, &gravity, nullptr, nullptr) &&
+                    gravity.epsilonEquals(TVec3f{}, 0.0F),
+                "positional gravity should report zero until a host PlanetGravityManager exists");
+
+        actor.mGravity.zero();
+        actor.mBindedGround = true;
+        actor.mGroundNormal.set(0.0F, 2.0F, 0.0F);
+        MR::calcGravityOrZero(&actor);
+        require(actor.mGravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.00001F),
+                "calcGravityOrZero should retain the original grounded-normal fallback");
+    }
+
     class EnvironmentVariableGuard {
     public:
         explicit EnvironmentVariableGuard(const char *name) : _name(name) {
@@ -536,6 +782,9 @@ int main() {
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
+        TestCase{"original rail part geometry", test_original_rail_part_geometry},
+        TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
+        TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},
         TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };

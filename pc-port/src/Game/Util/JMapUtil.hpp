@@ -77,6 +77,9 @@ namespace MR {
     bool getJMapInfoViewGroupID(const JMapInfoIter& rIter, s32* pOut);
     bool getJMapInfoMessageID(const JMapInfoIter& rIter, s32* pOut);
     bool isConnectedWithRail(const JMapInfoIter& rIter);
+    void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut);
+    void getRailPointPos1(const JMapInfoIter& rIter, TVec3f* pOut);
+    void getRailPointPos2(const JMapInfoIter& rIter, TVec3f* pOut);
     bool isExistStageSwitchA(const JMapInfoIter& rIter);
     bool isExistStageSwitchB(const JMapInfoIter& rIter);
     bool isExistStageSwitchAppear(const JMapInfoIter& rIter);

@@ -6,6 +6,7 @@
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/RailRider.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -62,6 +63,7 @@ LiveActor::~LiveActor() {
     }
     delete mActorLightCtrl;
     delete mStageSwitchCtrl;
+    delete mRailRider;
     delete mSpine;
 }
 
@@ -72,7 +74,7 @@ void LiveActor::initAfterPlacement() {
 }
 
 void LiveActor::movement() {
-    if (mIsDead) {
+    if (mFlag.mIsDead) {
         return;
     }
 
@@ -82,13 +84,13 @@ void LiveActor::movement() {
         updateNerve();
     }
 
-    if (mIsDead) {
+    if (mFlag.mIsDead) {
         return;
     }
 
     control();
 
-    if (!mIsDead) {
+    if (!mFlag.mIsDead) {
         updateHitSensors();
     }
 }
@@ -113,7 +115,7 @@ void LiveActor::calcAnim() {
 }
 
 void LiveActor::calcViewAndEntry() {
-    if (!mIsDead) {
+    if (!mFlag.mIsDead && !mFlag.mIsClipped) {
         calcAndSetBaseMtx();
     }
 }
@@ -127,13 +129,17 @@ void LiveActor::kill() {
 }
 
 void LiveActor::makeActorAppeared() {
-    mIsDead = false;
+    if (mFlag.mIsClipped) {
+        endClipped();
+    }
+    mFlag.mIsDead = false;
     validateHitSensors();
     updateHitSensors();
 }
 
 void LiveActor::makeActorDead() {
-    mIsDead = true;
+    mVelocity.zero();
+    mFlag.mIsDead = true;
     invalidateHitSensors();
 }
 
@@ -152,9 +158,16 @@ void LiveActor::attackSensor(HitSensor*, HitSensor*) {
 }
 
 void LiveActor::startClipped() {
+    mFlag.mIsClipped = true;
+    invalidateHitSensors();
 }
 
 void LiveActor::endClipped() {
+    mFlag.mIsClipped = false;
+    if (!mFlag.mIsDead) {
+        validateHitSensors();
+        updateHitSensors();
+    }
 }
 
 void LiveActor::calcAndSetBaseMtx() {
@@ -228,7 +241,7 @@ void LiveActor::setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4& matrix
 
 void LiveActor::drawModel(const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
                           smgpc::render::live_actor::LiveActorModel::DrawPass pass) {
-    if (mIsDead || mModel == nullptr) {
+    if (mFlag.mIsDead || mFlag.mIsClipped || mFlag.mIsHiddenModel || mModel == nullptr) {
         return;
     }
 
@@ -242,6 +255,17 @@ void LiveActor::initHitSensor(s32 sensorCount) {
     }
 }
 
+void LiveActor::initBinder(f32 radius, f32 offset, u32 type) {
+    mBinderRadius = radius;
+    mBinderOffset = offset;
+    mBinderType = type;
+}
+
+void LiveActor::initRailRider(const JMapInfoIter& rIter) {
+    delete mRailRider;
+    mRailRider = new RailRider(rIter);
+}
+
 void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
     mStageSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
 }
@@ -253,7 +277,7 @@ HitSensor* LiveActor::addHitSensor(const char* pName, u32 type, u16 groupSize, f
     entry.sensor = std::make_unique< HitSensor >(type, groupSize, radius, this);
     entry.sensor->mPosition = mPosition + offset;
     entry.sensor->validateBySystem();
-    if (mIsDead) {
+    if (mFlag.mIsDead) {
         entry.sensor->invalidate();
     } else {
         entry.sensor->validate();
@@ -408,7 +432,7 @@ std::string_view LiveActor::currentBtkName() const {
 }
 
 bool LiveActor::isDead() const {
-    return mIsDead;
+    return mFlag.mIsDead;
 }
 
 const smgpc::render::J3dMatrix3x4& LiveActor::getBaseMatrix() const {

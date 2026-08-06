@@ -108,6 +108,16 @@ namespace MR {
         return sensor;
     }
 
+    HitSensor* addHitSensor(LiveActor* pActor, const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset) {
+        if (pActor == nullptr) {
+            return nullptr;
+        }
+
+        auto* sensor = pActor->addHitSensor(pName, type, groupSize, radius, offset);
+        emit_sensor_registration_trace(pActor, pName, nullptr, "actor", radius);
+        return sensor;
+    }
+
     HitSensor* addHitSensorAtJointEnemy(LiveActor* pActor, const char* pName, const char* pJointName, u16 groupSize, f32 radius,
                                         const TVec3f& offset) {
         if (pActor == nullptr) {
@@ -145,6 +155,12 @@ namespace MR {
         }
     }
 
+    void setSensorRadius(LiveActor* pActor, const char* pName, f32 radius) {
+        if (auto* sensor = getSensor(pActor, pName)) {
+            sensor->mRadius = radius;
+        }
+    }
+
     bool isSensor(const HitSensor* pSensor, const char* pName) {
         const auto* host = getSensorHost(pSensor);
         return host != nullptr && getSensor(host, pName) == pSensor;
@@ -172,5 +188,34 @@ namespace MR {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
             runtime->scheduler().send_message_to_live_actors(msg, pActor);
         }
+    }
+
+
+    bool isMsgItemGet(u32 msg) {
+        return msg == ACTMES_ITEM_GET;
+    }
+
+    bool isMsgItemPull(u32 msg) {
+        return msg == ACTMES_ITEM_PULL;
+    }
+
+    bool isMsgItemShow(u32 msg) {
+        return msg == ACTMES_ITEM_SHOW;
+    }
+
+    bool isMsgItemHide(u32 msg) {
+        return msg == ACTMES_ITEM_HIDE;
+    }
+
+    bool isMsgItemStartMove(u32 msg) {
+        return msg == ACTMES_ITEM_START_MOVE;
+    }
+
+    bool isMsgItemEndMove(u32 msg) {
+        return msg == ACTMES_ITEM_END_MOVE;
+    }
+
+    bool isMsgInhaleBlackHole(u32 msg) {
+        return msg == ACTMES_INHALE_BLACK_HOLE;
     }
 }  // namespace MR
