@@ -86,10 +86,21 @@ end
 
 function require_tool(name)
     local tool = find_tool(name)
-    if not tool or not tool.program then
-        raise("missing required tool `%s`", name)
+    if tool and tool.program then
+        return tool.program
     end
-    return tool.program
+
+    -- xmake's detector normalizes some mixed-case executable names and can
+    -- miss an otherwise executable PATH entry (notably Xvfb). Keep a generic,
+    -- case-preserving PATH fallback for all script tools.
+    for _, directory in ipairs(path.splitenv(os.getenv("PATH") or "")) do
+        local candidate = path.join(directory, name)
+        if os.isexec(candidate) then
+            return candidate
+        end
+    end
+
+    raise("missing required tool `%s`", name)
 end
 
 function file_exists(pathname)
@@ -342,4 +353,3 @@ function stop_xvfb(server)
     kill_process(server.proc)
     close_process(server.proc, server.log)
 end
-
