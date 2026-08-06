@@ -1,6 +1,10 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Map/ActorAppearSwitchListener.hpp"
+#include "Game/Map/StageSwitch.hpp"
+#include "Game/Map/SwitchWatcher.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -179,6 +183,79 @@ namespace {
                 "scene cleanup should preserve registrations made before its marker");
     }
 
+    class CountingSwitchListener final : public SwitchEventListener {
+    public:
+        void listenSwitchOnEvent() override {
+            ++on_count;
+        }
+
+        void listenSwitchOffEvent() override {
+            ++off_count;
+        }
+
+        int on_count = 0;
+        int off_count = 0;
+    };
+
+    class CurrentSceneObjHolderGuard {
+    public:
+        explicit CurrentSceneObjHolderGuard(SceneObjHolder &holder) {
+            MR::setCurrentSceneObjHolder(&holder);
+        }
+
+        ~CurrentSceneObjHolderGuard() {
+            MR::setCurrentSceneObjHolder(nullptr);
+        }
+    };
+
+    void test_stage_switch_zone_identity_and_edges() {
+        auto holder = SceneObjHolder{};
+        const auto holder_guard = CurrentSceneObjHolderGuard(holder);
+
+        auto zone_one_info = JMapInfo{};
+        zone_one_info.setPlacedZoneId(1);
+        auto zone_two_info = JMapInfo{};
+        zone_two_info.setPlacedZoneId(2);
+        const auto zone_one_iter = JMapInfoIter(&zone_one_info, 0);
+        const auto zone_two_iter = JMapInfoIter(&zone_two_info, 0);
+
+        auto local_zone_one = SwitchIdInfo(7, zone_one_iter);
+        auto local_zone_two = SwitchIdInfo(7, zone_two_iter);
+        auto global_zone_one = SwitchIdInfo(1007, zone_one_iter);
+        auto global_zone_two = SwitchIdInfo(1007, zone_two_iter);
+
+        auto *container = MR::getSceneObj<StageSwitchContainer>(SceneObj_StageSwitchContainer);
+        container->createAndAddZone(local_zone_one);
+        container->createAndAddZone(local_zone_two);
+
+        require(!StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_one) &&
+                    !StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_two),
+                "same-numbered local switches should start off in separate zone banks");
+
+        auto ctrl = StageSwitchCtrl(JMapInfoIter{});
+        ctrl.mSW_A = &local_zone_one;
+        auto watcher = SwitchWatcher(&ctrl);
+        auto listener = CountingSwitchListener{};
+        watcher.addSwitchListener(&listener, 1U);
+        watcher.movement();
+
+        StageSwitchFunction::onSwitchBySwitchIdInfo(local_zone_one);
+        require(StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_one), "local switch should turn on in its placed zone");
+        require(!StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_two),
+                "turning on a local switch must not affect the same number in another zone");
+        watcher.movement();
+        watcher.movement();
+        require(listener.on_count == 1 && listener.off_count == 0, "watcher should emit one rising edge and no duplicate steady-state edge");
+
+        StageSwitchFunction::onSwitchBySwitchIdInfo(global_zone_one);
+        require(StageSwitchFunction::isOnSwitchBySwitchIdInfo(global_zone_two),
+                "global switches should share their bank across placement zones");
+
+        StageSwitchFunction::offSwitchBySwitchIdInfo(local_zone_one);
+        watcher.movement();
+        require(listener.on_count == 1 && listener.off_count == 1, "watcher should emit one falling edge after the switch turns off");
+    }
+
     class EnvironmentVariableGuard {
     public:
         explicit EnvironmentVariableGuard(const char *name) : _name(name) {
@@ -286,6 +363,7 @@ int main() {
         TestCase{"Aurora NAND storage smoke", test_aurora_nand_storage_smoke},
         TestCase{"player visibility can be restored", test_player_visibility_can_be_restored},
         TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
+        TestCase{"stage switch zone identity and edges", test_stage_switch_zone_identity_and_edges},
         TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };

@@ -11,6 +11,7 @@
 #include "Game/Screen/ProloguePictureBook.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"

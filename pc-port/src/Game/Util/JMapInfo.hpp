@@ -55,6 +55,8 @@ public:
     bool attach(const void* pData);
     void setName(const char* pName);
     [[nodiscard]] const char* getName() const;
+    void setPlacedZoneId(s32 zoneId);
+    [[nodiscard]] s32 getPlacedZoneId() const;
     void setChildObjInfo(JMapInfo info);
     [[nodiscard]] const JMapInfo* getChildObjInfo() const;
     void setValue(int entryIndex, const char* pKey, f32 value);
@@ -95,6 +97,7 @@ private:
     std::shared_ptr< smgpc::resource::BcsvTable > mTable;
     std::shared_ptr< JMapInfo > mChildObjInfo;
     std::string mName;
+    s32 mPlacedZoneId = -1;
     std::map< std::pair< int, std::uint32_t >, f32 > mFloatOverrides;
     mutable std::map< std::pair< int, std::uint32_t >, std::string > mStringCache;
 };

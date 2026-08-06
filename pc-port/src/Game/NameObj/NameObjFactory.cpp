@@ -2,6 +2,8 @@
 
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Map/FileSelector.hpp"
+#include "Game/Map/GroupSwitchWatcher.hpp"
+#include "Game/Map/SwitchSynchronizer.hpp"
 
 #include <array>
 #include <string_view>
@@ -12,7 +14,7 @@ namespace {
         return new T(pName);
     }
 
-    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 2>{
+    constexpr auto cName2CreateFuncTable = std::array<NameObjFactory::Name2CreateFunc, 4>{
         NameObjFactory::Name2CreateFunc{
             "PrologueDirector",
             createNameObj<PrologueDirector>,
@@ -21,6 +23,16 @@ namespace {
         NameObjFactory::Name2CreateFunc{
             "FileSelector",
             createNameObj<FileSelector>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GroupSwitchWatcher",
+            createNameObj<GroupSwitchWatcher>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "SwitchSynchronizerReverse",
+            createNameObj<SwitchSynchronizer>,
             nullptr,
         },
     };

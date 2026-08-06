@@ -8,6 +8,7 @@
 #include <cctype>
 #include <cmath>
 #include <filesystem>
+#include <map>
 #include <set>
 #include <utility>
 
@@ -66,6 +67,66 @@ namespace smgpc::scene {
             });
             return result;
         }
+
+        [[nodiscard]] std::optional<JMapInfo> load_zone_list(smgpc::runtime::DvdFileSystemService &dvd,
+                                                              std::string_view scenario_stage_name) {
+            const auto scenario_archive_path = find_scenario_archive(dvd, scenario_stage_name);
+            if (!scenario_archive_path.has_value()) {
+                return std::nullopt;
+            }
+
+            auto &scenario_archive = dvd.archive_for_path(*scenario_archive_path);
+            if (!scenario_archive.contains_resource("/ZoneList.bcsv")) {
+                return std::nullopt;
+            }
+
+            return JMapInfo::from_bcsv(scenario_archive.resource_data("/ZoneList.bcsv"));
+        }
+
+        [[nodiscard]] std::optional<s32> find_zone_id(const JMapInfo *zone_list, std::string_view zone_name) {
+            if (zone_list == nullptr || zone_name.empty()) {
+                return std::nullopt;
+            }
+
+            const auto expected_name = lower_copy(zone_name);
+            for (auto zone_id = s32{}; zone_id < zone_list->getNumEntries(); ++zone_id) {
+                const char *candidate_name = nullptr;
+                if (zone_list->getValue(zone_id, "ZoneName", &candidate_name) && candidate_name != nullptr &&
+                    lower_copy(candidate_name) == expected_name) {
+                    return zone_id;
+                }
+            }
+
+            return std::nullopt;
+        }
+
+        class StageZoneIdResolver {
+        public:
+            explicit StageZoneIdResolver(std::optional<JMapInfo> zone_list)
+                : _zone_list(std::move(zone_list)), _next_fallback_id(_zone_list.has_value() ? _zone_list->getNumEntries() : 1) {
+            }
+
+            [[nodiscard]] s32 resolve(std::string_view zone_name) {
+                if (const auto canonical_id = find_zone_id(_zone_list.has_value() ? &*_zone_list : nullptr, zone_name)) {
+                    return *canonical_id;
+                }
+
+                const auto normalized_name = lower_copy(zone_name);
+                const auto found = _fallback_ids.find(normalized_name);
+                if (found != _fallback_ids.end()) {
+                    return found->second;
+                }
+
+                const auto fallback_id = _next_fallback_id++;
+                _fallback_ids.emplace(normalized_name, fallback_id);
+                return fallback_id;
+            }
+
+        private:
+            std::optional<JMapInfo> _zone_list;
+            std::map<std::string, s32, std::less<>> _fallback_ids;
+            s32 _next_fallback_id = 1;
+        };
 
         [[nodiscard]] bool starts_with(std::string_view value, std::string_view prefix) {
             return value.size() >= prefix.size() && value.substr(0U, prefix.size()) == prefix;
@@ -276,11 +337,12 @@ namespace smgpc::scene {
         }
 
         void collect_stage_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, std::string_view scenario_stage_name,
-                                  s32 scenario_no, s32 zone_id, const StageZoneTransform &zone_transform, std::set<std::string> &visited,
-                                  std::vector<StagePlacementTable> &tables);
+                                  s32 scenario_no, s32 zone_id, const StageZoneTransform &zone_transform, StageZoneIdResolver &zone_ids,
+                                  std::set<std::string> &visited, std::vector<StagePlacementTable> &tables);
 
         void collect_placed_zones(smgpc::runtime::DvdFileSystemService &dvd, const StagePlacementTable &table, std::string_view scenario_stage_name,
-                                  s32 scenario_no, std::set<std::string> &visited, std::vector<StagePlacementTable> &tables) {
+                                  s32 scenario_no, StageZoneIdResolver &zone_ids, std::set<std::string> &visited,
+                                  std::vector<StagePlacementTable> &tables) {
             if (table.category != "placement" || table.table_name != "stageobjinfo") {
                 return;
             }
@@ -301,19 +363,19 @@ namespace smgpc::scene {
 
                 zone_records.push_back(ZoneRecord{
                     .name = zone_name,
-                    .id = entry_index + 1,
+                    .id = zone_ids.resolve(zone_name),
                     .transform = compose_zone_transform(table.zone_transform, iter),
                 });
             }
 
             for (const auto &zone : zone_records) {
-                collect_stage_tables(dvd, zone.name, scenario_stage_name, scenario_no, zone.id, zone.transform, visited, tables);
+                collect_stage_tables(dvd, zone.name, scenario_stage_name, scenario_no, zone.id, zone.transform, zone_ids, visited, tables);
             }
         }
 
         void collect_stage_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, std::string_view scenario_stage_name,
-                                  s32 scenario_no, s32 zone_id, const StageZoneTransform &zone_transform, std::set<std::string> &visited,
-                                  std::vector<StagePlacementTable> &tables) {
+                                  s32 scenario_no, s32 zone_id, const StageZoneTransform &zone_transform, StageZoneIdResolver &zone_ids,
+                                  std::set<std::string> &visited, std::vector<StagePlacementTable> &tables) {
             const auto stage_key = lower_copy(stage_name);
             if (!visited.insert(stage_key).second) {
                 return;
@@ -346,6 +408,7 @@ namespace smgpc::scene {
                 const auto table_name = basename(entry.path);
                 const auto table_layer_id = layer_id(layer_name);
                 info.setName(table_name.c_str());
+                info.setPlacedZoneId(zone_id);
                 tables.push_back(StagePlacementTable{
                     .stage_name = std::string(stage_name),
                     .zone_name = std::string(stage_name),
@@ -363,7 +426,7 @@ namespace smgpc::scene {
             }
 
             for (auto table_index = first_new_table; table_index < tables.size(); ++table_index) {
-                collect_placed_zones(dvd, tables[table_index], scenario_stage_name, scenario_no, visited, tables);
+                collect_placed_zones(dvd, tables[table_index], scenario_stage_name, scenario_no, zone_ids, visited, tables);
             }
         }
 
@@ -521,7 +584,8 @@ namespace smgpc::scene {
     std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {
         auto tables = std::vector<StagePlacementTable>{};
         auto visited = std::set<std::string>{};
-        collect_stage_tables(dvd, stage_name, stage_name, scenario_no, 0, StageZoneTransform{}, visited, tables);
+        auto zone_ids = StageZoneIdResolver(load_zone_list(dvd, stage_name));
+        collect_stage_tables(dvd, stage_name, stage_name, scenario_no, 0, StageZoneTransform{}, zone_ids, visited, tables);
         return tables;
     }
 

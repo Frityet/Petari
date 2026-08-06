@@ -20,6 +20,7 @@ class ActorLightCtrl;
 class HitSensor;
 class Nerve;
 class Spine;
+class StageSwitchCtrl;
 
 struct TVec3f {
     f32 x = 0.0F;
@@ -135,6 +136,7 @@ public:
     void drawModel(const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
                    smgpc::render::live_actor::LiveActorModel::DrawPass pass = smgpc::render::live_actor::LiveActorModel::DrawPass::All);
     void initHitSensor(s32 sensorCount);
+    void initStageSwitch(const JMapInfoIter& rIter);
     HitSensor* addHitSensor(const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset);
     [[nodiscard]] HitSensor* getSensor(const char* pName);
     [[nodiscard]] const HitSensor* getSensor(const char* pName) const;
@@ -162,6 +164,7 @@ public:
     TVec3f mPosition{};
     TVec3f mRotation{};
     TVec3f mScale{1.0F, 1.0F, 1.0F};
+    StageSwitchCtrl* mStageSwitchCtrl = nullptr;
     ActorLightCtrl* mActorLightCtrl = nullptr;
 
 private:

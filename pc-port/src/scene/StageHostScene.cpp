@@ -1,6 +1,7 @@
 #include "scene/StageHostScene.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -81,6 +82,7 @@ namespace smgpc::scene {
                 out << "- status: " << placement_status_name(placement) << "\n";
                 out << "  object: " << placement.object_name << "\n";
                 out << "  zone: " << placement.zone_name << "\n";
+                out << "  zone_id: " << placement.zone_id << "\n";
                 out << "  table: " << placement.table_path << "\n";
                 out << "  row: " << placement.jmap_entry_index << "\n";
                 out << "  child_count: " << placement.child_object_count << "\n";
@@ -134,6 +136,7 @@ namespace smgpc::scene {
         }
 
         init_roots_after_placement();
+        SleepControlFunc::initSyncSleepController();
         appear_roots();
     }
 
@@ -203,6 +206,7 @@ namespace smgpc::scene {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("placement", "stage_object",
                                            "stage=" + placement.stage_name + ";zone=" + placement.zone_name +
+                                               ";zone_id=" + std::to_string(placement.zone_id) +
                                                ";scenario=" + std::to_string(_request.scenario_no) +
                                                ";layer=" + placement.layer_name + ";table=" + placement.table_path +
                                                ";object=" + placement.object_name +

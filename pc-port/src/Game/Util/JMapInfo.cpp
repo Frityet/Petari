@@ -93,6 +93,14 @@ const char* JMapInfo::getName() const {
     return mName.c_str();
 }
 
+void JMapInfo::setPlacedZoneId(s32 zoneId) {
+    mPlacedZoneId = zoneId;
+}
+
+s32 JMapInfo::getPlacedZoneId() const {
+    return mPlacedZoneId;
+}
+
 void JMapInfo::setChildObjInfo(JMapInfo info) {
     mChildObjInfo = std::make_shared< JMapInfo >(std::move(info));
 }

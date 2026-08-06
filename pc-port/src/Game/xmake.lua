@@ -1,5 +1,6 @@
 target("smg-pc-game")
     set_kind("static")
+    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"))
     add_files("**.cpp")
     add_files("../camera/**.cpp")
     add_files("../layout/**.cpp")

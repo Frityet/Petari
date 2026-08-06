@@ -7,6 +7,7 @@
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Spine.hpp"
+#include "Game/Map/StageSwitch.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace {
@@ -60,6 +61,7 @@ LiveActor::~LiveActor() {
         runtime->unregister_live_actor_model(*this);
     }
     delete mActorLightCtrl;
+    delete mStageSwitchCtrl;
     delete mSpine;
 }
 
@@ -238,6 +240,10 @@ void LiveActor::initHitSensor(s32 sensorCount) {
     if (sensorCount > 0) {
         mHitSensors.reserve(static_cast< std::size_t >(sensorCount));
     }
+}
+
+void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
+    mStageSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
 }
 
 HitSensor* LiveActor::addHitSensor(const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset) {
