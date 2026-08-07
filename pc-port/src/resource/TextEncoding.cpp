@@ -2,6 +2,21 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <limits>
+#include <stdexcept>
+
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#else
+#include <cerrno>
+#include <iconv.h>
+#endif
 
 namespace smgpc::resource {
     namespace {
@@ -142,6 +157,63 @@ namespace smgpc::resource {
         }
 
         return out;
+    }
+
+    std::string decode_cp932(std::string_view value) {
+        if (value.empty()) {
+            return {};
+        }
+
+#if defined(_WIN32)
+        if (value.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
+            throw std::runtime_error("CP932 string is too large to convert");
+        }
+
+        const auto input_size = static_cast<int>(value.size());
+        const auto wide_size = MultiByteToWideChar(932U, MB_ERR_INVALID_CHARS, value.data(), input_size, nullptr, 0);
+        if (wide_size <= 0) {
+            throw std::runtime_error("invalid CP932 string (Windows error " + std::to_string(GetLastError()) + ")");
+        }
+        auto wide = std::wstring(static_cast<std::size_t>(wide_size), L'\0');
+        if (MultiByteToWideChar(932U, MB_ERR_INVALID_CHARS, value.data(), input_size, wide.data(), wide_size) != wide_size) {
+            throw std::runtime_error("cannot decode CP932 string (Windows error " + std::to_string(GetLastError()) + ")");
+        }
+
+        const auto output_size = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide.data(), wide_size, nullptr, 0, nullptr, nullptr);
+        if (output_size <= 0) {
+            throw std::runtime_error("cannot size UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
+        }
+        auto output = std::string(static_cast<std::size_t>(output_size), '\0');
+        if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide.data(), wide_size, output.data(), output_size, nullptr, nullptr) != output_size) {
+            throw std::runtime_error("cannot encode UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
+        }
+        return output;
+#else
+        auto converter = iconv_open("UTF-8", "CP932");
+        if (converter == reinterpret_cast<iconv_t>(-1)) {
+            converter = iconv_open("UTF-8", "SHIFT-JIS");
+        }
+        if (converter == reinterpret_cast<iconv_t>(-1)) {
+            throw std::runtime_error("CP932 text conversion is unavailable");
+        }
+
+        auto input = std::string(value);
+        auto output = std::string(input.size() * 4U + 1U, '\0');
+        auto *input_cursor = input.data();
+        auto input_remaining = input.size();
+        auto *output_cursor = output.data();
+        auto output_remaining = output.size();
+        errno = 0;
+        const auto result = iconv(converter, &input_cursor, &input_remaining, &output_cursor, &output_remaining);
+        const auto conversion_error = errno;
+        iconv_close(converter);
+        if (result == static_cast<std::size_t>(-1) || input_remaining != 0U) {
+            throw std::runtime_error("invalid CP932 string (iconv error " + std::to_string(conversion_error) + ")");
+        }
+
+        output.resize(static_cast<std::size_t>(output_cursor - output.data()));
+        return output;
+#endif
     }
 
 }  // namespace smgpc::resource
