@@ -300,12 +300,14 @@ namespace {
         std::string cast_name;
         std::int32_t cast_id = -1;
         std::int32_t action_type = 0;
+        std::string position_name;
+        std::string animation_name;
     };
 
     [[nodiscard]] std::vector<std::uint8_t> make_action_bcsv(
         std::span<const ActionRow> rows) {
-        constexpr auto field_count = std::size_t{4U};
-        constexpr auto entry_size = std::size_t{16U};
+        constexpr auto field_count = std::size_t{6U};
+        constexpr auto entry_size = std::size_t{24U};
         constexpr auto data_offset = std::size_t{0x10U + field_count * 0x0cU};
 
         auto strings = std::vector<std::uint8_t>{};
@@ -315,9 +317,20 @@ namespace {
             strings.push_back(0U);
             return offset;
         };
-        auto offsets = std::vector<std::pair<std::uint32_t, std::uint32_t>>{};
+        struct StringOffsets {
+            std::uint32_t part = 0U;
+            std::uint32_t cast = 0U;
+            std::uint32_t position = 0U;
+            std::uint32_t animation = 0U;
+        };
+        auto offsets = std::vector<StringOffsets>{};
         for (const auto &row : rows) {
-            offsets.emplace_back(add_string(row.part_name), add_string(row.cast_name));
+            offsets.push_back(StringOffsets{
+                .part = add_string(row.part_name),
+                .cast = add_string(row.cast_name),
+                .position = add_string(row.position_name),
+                .animation = add_string(row.animation_name),
+            });
         }
 
         auto bytes = std::vector<std::uint8_t>(data_offset + rows.size() * entry_size + strings.size(), 0U);
@@ -332,15 +345,73 @@ namespace {
                          smgpc::resource::BcsvFieldType::Int32);
         write_bcsv_field(bytes, 3U, "CastName", 4U,
                          smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 4U, "PosName", 16U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 5U, "AnimName", 20U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        for (auto index = std::size_t{}; index < rows.size(); ++index) {
+            const auto entry = data_offset + index * entry_size;
+            write_be32(bytes, entry, offsets[index].part);
+            write_be32(bytes, entry + 4U, offsets[index].cast);
+            write_be32(bytes, entry + 8U, static_cast<std::uint32_t>(rows[index].cast_id));
+            write_be32(bytes, entry + 12U, static_cast<std::uint32_t>(rows[index].action_type));
+            write_be32(bytes, entry + 16U, offsets[index].position);
+            write_be32(bytes, entry + 20U, offsets[index].animation);
+        }
+        std::copy(strings.begin(), strings.end(),
+                  bytes.begin() + static_cast<std::ptrdiff_t>(data_offset + rows.size() * entry_size));
+        return bytes;
+    }
+
+    struct WipeRow {
+        std::string part_name;
+        std::string wipe_name;
+        std::int32_t wipe_type = 0;
+        std::int32_t wipe_frame = -1;
+    };
+
+    [[nodiscard]] std::vector<std::uint8_t> make_wipe_bcsv(
+        std::span<const WipeRow> rows) {
+        constexpr auto field_count = std::size_t{4U};
+        constexpr auto entry_size = std::size_t{16U};
+        constexpr auto data_offset = std::size_t{0x10U + field_count * 0x0cU};
+        auto strings = std::vector<std::uint8_t>{};
+        const auto add_string = [&strings](std::string_view value) {
+            const auto offset = static_cast<std::uint32_t>(strings.size());
+            strings.insert(strings.end(), value.begin(), value.end());
+            strings.push_back(0U);
+            return offset;
+        };
+        auto offsets = std::vector<std::pair<std::uint32_t, std::uint32_t>>{};
+        for (const auto &row : rows) {
+            offsets.emplace_back(add_string(row.part_name), add_string(row.wipe_name));
+        }
+        auto bytes = std::vector<std::uint8_t>(
+            data_offset + rows.size() * entry_size + strings.size(), 0U);
+        write_be32(bytes, 0x00U, static_cast<std::uint32_t>(rows.size()));
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "PartName", 0U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 1U, "WipeName", 4U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 2U, "WipeType", 8U,
+                         smgpc::resource::BcsvFieldType::Int32);
+        write_bcsv_field(bytes, 3U, "WipeFrame", 12U,
+                         smgpc::resource::BcsvFieldType::Int32);
         for (auto index = std::size_t{}; index < rows.size(); ++index) {
             const auto entry = data_offset + index * entry_size;
             write_be32(bytes, entry, offsets[index].first);
             write_be32(bytes, entry + 4U, offsets[index].second);
-            write_be32(bytes, entry + 8U, static_cast<std::uint32_t>(rows[index].cast_id));
-            write_be32(bytes, entry + 12U, static_cast<std::uint32_t>(rows[index].action_type));
+            write_be32(bytes, entry + 8U,
+                       static_cast<std::uint32_t>(rows[index].wipe_type));
+            write_be32(bytes, entry + 12U,
+                       static_cast<std::uint32_t>(rows[index].wipe_frame));
         }
         std::copy(strings.begin(), strings.end(),
-                  bytes.begin() + static_cast<std::ptrdiff_t>(data_offset + rows.size() * entry_size));
+                  bytes.begin() + static_cast<std::ptrdiff_t>(
+                                      data_offset + rows.size() * entry_size));
         return bytes;
     }
 
@@ -517,6 +588,44 @@ namespace {
         return make_rarc(files);
     }
 
+    [[nodiscard]] smgpc::resource::RarcArchive make_dispatch_sheet_fixture() {
+        const auto time = std::array{
+            TimeRow{.part_name = "first", .total_step = 2},
+            TimeRow{.part_name = "one", .total_step = 1},
+        };
+        const auto actions = std::array{
+            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 0},
+            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 2},
+            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 3},
+            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 7},
+            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 99, .animation_name = "Wave"},
+            ActionRow{.part_name = "one", .cast_name = "Actor", .action_type = 1},
+        };
+        const auto wipes = std::array{
+            WipeRow{.part_name = "first", .wipe_name = "CustomWipe", .wipe_type = 0, .wipe_frame = -1},
+        };
+        const auto files = std::array{
+            ArchiveFile{.name = "DemoDispatchTime.bcsv", .data = make_time_bcsv(time)},
+            ArchiveFile{.name = "DemoDispatchAction.bcsv", .data = make_action_bcsv(actions)},
+            ArchiveFile{.name = "DemoDispatchWipe.bcsv", .data = make_wipe_bcsv(wipes)},
+        };
+        return make_rarc(files);
+    }
+
+    [[nodiscard]] smgpc::resource::RarcArchive make_required_talk_sheet_fixture() {
+        const auto time = std::array{
+            TimeRow{.part_name = "talk", .total_step = 2},
+        };
+        const auto actions = std::array{
+            ActionRow{.part_name = "talk", .cast_name = "Actor", .action_type = 8},
+        };
+        const auto files = std::array{
+            ArchiveFile{.name = "DemoRequiredTalkTime.bcsv", .data = make_time_bcsv(time)},
+            ArchiveFile{.name = "DemoRequiredTalkAction.bcsv", .data = make_action_bcsv(actions)},
+        };
+        return make_rarc(files);
+    }
+
     [[nodiscard]] std::vector<smgpc::scene::StagePlacementObject> make_definition_fixture() {
         auto placements = std::vector<smgpc::scene::StagePlacementObject>{};
         placements.push_back(make_definition_placement(DefinitionRow{
@@ -636,6 +745,26 @@ namespace {
         return placements;
     }
 
+    [[nodiscard]] std::vector<smgpc::scene::StagePlacementObject>
+    make_dispatch_definition_fixture() {
+        return {make_definition_placement(DefinitionRow{
+            .demo_name = "Dispatch",
+            .sheet_name = "Dispatch",
+            .zone_id = 40,
+            .link_id = 50,
+        })};
+    }
+
+    [[nodiscard]] std::vector<smgpc::scene::StagePlacementObject>
+    make_required_talk_definition_fixture() {
+        return {make_definition_placement(DefinitionRow{
+            .demo_name = "RequiredTalk",
+            .sheet_name = "RequiredTalk",
+            .zone_id = 41,
+            .link_id = 51,
+        })};
+    }
+
     class TestNerve final : public Nerve {
     public:
         void execute(Spine *) const override {
@@ -647,6 +776,17 @@ namespace {
             ++value;
         }
         int value = 0;
+    };
+
+    struct ActionObserver {
+        void observe() {
+            ++calls;
+            saw_appeared = actor != nullptr && !actor->isDead();
+        }
+
+        LiveActor *actor = nullptr;
+        int calls = 0;
+        bool saw_appeared = false;
     };
 
     void test_definition_ingestion_and_dormant_sheets() {
@@ -1058,6 +1198,132 @@ namespace {
                 "explicit end must recover safely from the source boundary edge");
     }
 
+    void test_action_dispatch_order_pause_and_callback_invariant() {
+        const auto archive = make_dispatch_sheet_fixture();
+        const auto placements = make_dispatch_definition_fixture();
+        {
+            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+            auto actor_info = make_actor_info(50, -1, 40);
+            auto actor = LiveActor("Actor");
+            const auto initial_nerve = TestNerve{};
+            const auto action_nerve = TestNerve{};
+            actor.initNerve(&initial_nerve);
+            auto observer = ActionObserver{.actor = &actor};
+            const auto functor = MR::Functor(&observer, &ActionObserver::observe);
+            require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                        MR::tryRegisterDemoActionFunctor(&actor, functor, "first") &&
+                        MR::tryRegisterDemoActionNerve(&actor, &action_nerve, "first") &&
+                        MR::tryStartTimeKeepDemo(&actor, "Dispatch", nullptr),
+                    "the action-dispatch fixture must register callbacks and start");
+
+            runtime.movement();
+            actor.updateNerve();
+            require(observer.calls == 1 && observer.saw_appeared &&
+                        actor.isNerve(&action_nerve) && actor.mFlag.mIsHiddenModel &&
+                        actor.currentBckName() == "Wave",
+                    "Action rows must run in BCSV order, then apply animation after each row operation");
+            runtime.movement();
+            require(observer.calls == 1 && !actor.isDead(),
+                    "a multi-frame Action row must not replay its first-step operation on the last step");
+            runtime.movement();
+            require(actor.isDead(),
+                    "a one-frame Action part must execute its first branch even though it is also the last step");
+            runtime.movement();
+            require(!MR::isDemoActive(), "the dispatch fixture must end at its retail boundary");
+        }
+
+        {
+            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+            auto actor_info = make_actor_info(50, -1, 40);
+            auto actor = LiveActor("Actor");
+            const auto initial_nerve = TestNerve{};
+            const auto action_nerve = TestNerve{};
+            actor.initNerve(&initial_nerve);
+            auto observer = ActionObserver{.actor = &actor};
+            const auto functor = MR::Functor(&observer, &ActionObserver::observe);
+            require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                        MR::tryRegisterDemoActionFunctor(&actor, functor, "first") &&
+                        MR::tryRegisterDemoActionNerve(&actor, &action_nerve, "first") &&
+                        MR::tryStartTimeKeepDemo(&actor, "Dispatch", nullptr),
+                    "the paused action fixture must start");
+            MR::pauseTimeKeepDemo(&actor);
+            runtime.movement();
+            require(observer.calls == 0 && actor.isDead(),
+                    "a paused early-step correction must not dispatch Action rows");
+            MR::resumeTimeKeepDemo(&actor);
+            runtime.movement();
+            require(observer.calls == 0 && actor.isDead(),
+                    "resuming after a skipped first step must not invent or replay the missed Action operation");
+            MR::endDemo(&actor, "Dispatch");
+        }
+
+        {
+            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+            auto actor_info = make_actor_info(50, -1, 40);
+            auto actor = LiveActor("Actor");
+            require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                        MR::tryStartTimeKeepDemo(&actor, "Dispatch", nullptr),
+                    "the missing-callback fixture must start");
+            auto threw = false;
+            try {
+                runtime.movement();
+            } catch (const std::runtime_error &error) {
+                threw = std::string_view(error.what()).find("registered functor") !=
+                        std::string_view::npos;
+            }
+            require(threw,
+                    "a targeted type-2 row without its source-required callback must fail explicitly");
+        }
+
+        {
+            const auto talk_archive = make_required_talk_sheet_fixture();
+            const auto talk_placements = make_required_talk_definition_fixture();
+            auto runtime = smgpc::compat::DemoSceneRuntime(talk_archive, talk_placements);
+            auto actor_info = make_actor_info(51, -1, 41);
+            auto actor = LiveActor("Actor");
+            require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                        MR::tryStartTimeKeepDemo(&actor, "RequiredTalk", nullptr),
+                    "the missing-talk-controller fixture must start");
+            auto threw = false;
+            try {
+                runtime.movement();
+            } catch (const std::runtime_error &error) {
+                threw = std::string_view(error.what()).find("registered talk controller") !=
+                        std::string_view::npos;
+            }
+            require(threw,
+                    "a talk Action row without its source-required controller must fail explicitly");
+        }
+    }
+
+    void test_wipe_row_dispatch_uses_arbitrary_names_and_raw_frames() {
+        auto wipe = smgpc::runtime::WipeService{};
+        wipe.begin_frame(17U);
+        smgpc::compat::dispatch_demo_wipe_row(
+            smgpc::compat::DemoWipeRow{.wipe_name = "ArbitraryWipe", .wipe_type = 0, .wipe_frame = -1},
+            wipe);
+        smgpc::compat::dispatch_demo_wipe_row(
+            smgpc::compat::DemoWipeRow{.wipe_name = "ArbitraryWipe", .wipe_type = 1, .wipe_frame = 12},
+            wipe);
+        smgpc::compat::dispatch_demo_wipe_row(
+            smgpc::compat::DemoWipeRow{.wipe_name = "OtherWipe", .wipe_type = 2}, wipe);
+        smgpc::compat::dispatch_demo_wipe_row(
+            smgpc::compat::DemoWipeRow{.wipe_name = "OtherWipe", .wipe_type = 3}, wipe);
+        smgpc::compat::dispatch_demo_wipe_row(
+            smgpc::compat::DemoWipeRow{.wipe_name = "IgnoredWipe", .wipe_type = 99}, wipe);
+
+        const auto events = wipe.events();
+        require(events.size() == 4U &&
+                    events[0].kind == smgpc::runtime::WipeEventKind::Open &&
+                    events[0].name == "ArbitraryWipe" && events[0].frame_count == -1 &&
+                    events[0].frame_index == 17U &&
+                    events[1].kind == smgpc::runtime::WipeEventKind::Close &&
+                    events[1].frame_count == 12 &&
+                    events[2].kind == smgpc::runtime::WipeEventKind::ForceOpen &&
+                    events[3].kind == smgpc::runtime::WipeEventKind::ForceClose,
+                "Wipe types 0-3 must preserve arbitrary names and the raw -1 frame sentinel; unknown types are no-op");
+    }
+
     void test_no_registry_and_scene_teardown() {
         auto info = make_actor_info(3, 1, 1);
         auto actor = LiveActor("Actor");
@@ -1209,6 +1475,8 @@ int main() {
         TestCase{"timekeeper pause, resume, and preserved pause", test_timekeeper_pause_resume_and_preserved_pause_flag},
         TestCase{"registered start, suspend, and safe rejections", test_registered_start_suspend_and_safe_rejections},
         TestCase{"one-frame final paused boundary overshoot", test_one_frame_final_pause_boundary_overshoot},
+        TestCase{"Action dispatch order, pause, and callback invariant", test_action_dispatch_order_pause_and_callback_invariant},
+        TestCase{"Wipe row arbitrary names and raw frames", test_wipe_row_dispatch_uses_arbitrary_names_and_raw_frames},
         TestCase{"no registry and scene teardown", test_no_registry_and_scene_teardown},
         TestCase{"no definition skips DemoSheet archive", test_no_definition_skips_demo_sheet_archive},
         TestCase{"optional real scene definitions", test_optional_real_gateway_definitions},

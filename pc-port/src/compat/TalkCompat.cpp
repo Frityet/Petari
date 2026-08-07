@@ -6,8 +6,8 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
-#include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 #include <cstdio>
 #include <memory>
@@ -20,13 +20,13 @@ namespace {
         s32 node_index = 0;
     };
 
-    std::unordered_map<const TalkMessageCtrl*, TalkRuntimeState> sTalkStates;
-    std::unordered_map<const LiveActor*, std::unique_ptr<TalkMessageCtrl>> sOwnedTalkCtrls;
+    std::unordered_map<const TalkMessageCtrl *, TalkRuntimeState> sTalkStates;
+    std::unordered_map<const LiveActor *, std::unique_ptr<TalkMessageCtrl>> sOwnedTalkCtrls;
 
-    void trace_talk(const TalkMessageCtrl* pCtrl, const char* event) {
+    void trace_talk(const TalkMessageCtrl *pCtrl, const char *event) {
 #ifndef NDEBUG
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pCtrl != nullptr) {
-            const auto* host = pCtrl->mHostActor;
+        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pCtrl != nullptr) {
+            const auto *host = pCtrl->mHostActor;
             runtime->emit_semantic_trace_event("talk", event,
                                                "host=" + std::string(host != nullptr && host->getName() != nullptr ? host->getName() : "") +
                                                    ";message_id=" + std::to_string(sTalkStates[pCtrl].message_id) +
@@ -40,23 +40,28 @@ namespace {
 }  // namespace
 
 namespace smgpc::compat {
-    void release_talk_runtime_state(const LiveActor* actor) {
+    TalkMessageCtrl *owned_talk_ctrl(const LiveActor *actor) {
+        const auto found = sOwnedTalkCtrls.find(actor);
+        return found != sOwnedTalkCtrls.end() ? found->second.get() : nullptr;
+    }
+
+    void release_talk_runtime_state(const LiveActor *actor) {
         const auto found = sOwnedTalkCtrls.find(actor);
         if (found == sOwnedTalkCtrls.end()) {
             return;
         }
-        if (auto* npc = dynamic_cast<NPCActor*>(const_cast<LiveActor*>(actor)); npc != nullptr && npc->mMsgCtrl == found->second.get()) {
+        if (auto *npc = dynamic_cast<NPCActor *>(const_cast<LiveActor *>(actor)); npc != nullptr && npc->mMsgCtrl == found->second.get()) {
             npc->mMsgCtrl = nullptr;
         }
         sOwnedTalkCtrls.erase(found);
     }
 
-    bool has_owned_talk_ctrl(const LiveActor* actor) {
+    bool has_owned_talk_ctrl(const LiveActor *actor) {
         return sOwnedTalkCtrls.contains(actor);
     }
 }  // namespace smgpc::compat
 
-TalkMessageCtrl::TalkMessageCtrl(LiveActor* pHost, const TVec3f& rOffset, MtxPtr pMtx)
+TalkMessageCtrl::TalkMessageCtrl(LiveActor *pHost, const TVec3f &rOffset, MtxPtr pMtx)
     : NameObj("TalkMessageCtrl"), mHostActor(pHost), mNodeCtrl(nullptr), mZoneID(-1), _18(0), _1C(), mMtx(pMtx), _2C(rOffset),
       mTalkDistance(500.0F), _3C(0), mAlreadyDoneFlags(0), mIsOnRootNodeAuto(false), mIsOnReadNodeAuto(false), mIsStartOnlyFront(false),
       mCameraInfo(nullptr), mBranchFunc(nullptr), mEventFunc(nullptr), mAnimeFunc(nullptr), mKillFunc(nullptr),
@@ -68,13 +73,13 @@ TalkMessageCtrl::~TalkMessageCtrl() {
     sTalkStates.erase(this);
 }
 
-void TalkMessageCtrl::createMessage(const JMapInfoIter& rIter, const char*) {
+void TalkMessageCtrl::createMessage(const JMapInfoIter &rIter, const char *) {
     auto message_id = s32{-1};
     (void)MR::getJMapInfoMessageID(rIter, &message_id);
     sTalkStates[this].message_id = message_id;
 }
 
-void TalkMessageCtrl::createMessageDirect(const JMapInfoIter& rIter, const char* pName) {
+void TalkMessageCtrl::createMessageDirect(const JMapInfoIter &rIter, const char *pName) {
     createMessage(rIter, pName);
 }
 
@@ -117,7 +122,7 @@ void TalkMessageCtrl::endTalk() {
     trace_talk(this, "ended");
 }
 
-bool TalkMessageCtrl::isNearPlayer(const TalkMessageCtrl*) {
+bool TalkMessageCtrl::isNearPlayer(const TalkMessageCtrl *) {
     return isNearPlayer(mTalkDistance);
 }
 
@@ -130,30 +135,30 @@ bool TalkMessageCtrl::inMessageArea() const {
 }
 
 namespace MR {
-    const wchar_t* getGalaxyNameOnCurrentLanguage(const char* pGalaxyName) {
+    const wchar_t *getGalaxyNameOnCurrentLanguage(const char *pGalaxyName) {
         char message_id[256]{};
         std::snprintf(message_id, sizeof(message_id), "GalaxyName_%s", pGalaxyName != nullptr ? pGalaxyName : "");
         return getGameMessageDirect(message_id);
     }
 
-    TalkMessageCtrl* createTalkCtrl(LiveActor* pActor, const JMapInfoIter& rIter, const char* pName, const TVec3f& rOffset, MtxPtr pMtx) {
+    TalkMessageCtrl *createTalkCtrl(LiveActor *pActor, const JMapInfoIter &rIter, const char *pName, const TVec3f &rOffset, MtxPtr pMtx) {
         auto owned_ctrl = std::make_unique<TalkMessageCtrl>(pActor, rOffset, pMtx);
-        auto* ctrl = owned_ctrl.get();
+        auto *ctrl = owned_ctrl.get();
         ctrl->createMessage(rIter, pName);
         sOwnedTalkCtrls.insert_or_assign(pActor, std::move(owned_ctrl));
         return ctrl;
     }
 
-    TalkMessageCtrl* createTalkCtrlDirect(LiveActor* pActor, const JMapInfoIter& rIter, const char* pName, const TVec3f& rOffset,
+    TalkMessageCtrl *createTalkCtrlDirect(LiveActor *pActor, const JMapInfoIter &rIter, const char *pName, const TVec3f &rOffset,
                                           MtxPtr pMtx) {
         auto owned_ctrl = std::make_unique<TalkMessageCtrl>(pActor, rOffset, pMtx);
-        auto* ctrl = owned_ctrl.get();
+        auto *ctrl = owned_ctrl.get();
         ctrl->createMessageDirect(rIter, pName);
         sOwnedTalkCtrls.insert_or_assign(pActor, std::move(owned_ctrl));
         return ctrl;
     }
 
-    bool tryTalkNearPlayer(TalkMessageCtrl* pCtrl) {
+    bool tryTalkNearPlayer(TalkMessageCtrl *pCtrl) {
         if (pCtrl == nullptr || !pCtrl->requestTalk()) {
             return false;
         }
@@ -161,7 +166,7 @@ namespace MR {
         return true;
     }
 
-    bool tryTalkTimeKeepDemoMarioPuppetable(TalkMessageCtrl* pCtrl) {
+    bool tryTalkTimeKeepDemoMarioPuppetable(TalkMessageCtrl *pCtrl) {
         if (pCtrl == nullptr || !pCtrl->requestTalkForce()) {
             return false;
         }
@@ -169,11 +174,19 @@ namespace MR {
         return true;
     }
 
-    bool isNearPlayer(const TalkMessageCtrl* pCtrl, f32 distance) {
+    bool tryTalkTimeKeepDemoWithoutPauseMarioPuppetable(TalkMessageCtrl *pCtrl) {
+        if (pCtrl == nullptr || !pCtrl->requestTalkForce()) {
+            return false;
+        }
+        pCtrl->startTalkForceWithoutDemoPuppetable();
+        return true;
+    }
+
+    bool isNearPlayer(const TalkMessageCtrl *pCtrl, f32 distance) {
         return pCtrl != nullptr && pCtrl->isNearPlayer(distance);
     }
 
-    void forwardNode(TalkMessageCtrl* pCtrl) {
+    void forwardNode(TalkMessageCtrl *pCtrl) {
         if (pCtrl == nullptr) {
             return;
         }
@@ -182,19 +195,19 @@ namespace MR {
         trace_talk(pCtrl, "node_forwarded");
     }
 
-    void setDistanceToTalk(TalkMessageCtrl* pCtrl, f32 distance) {
+    void setDistanceToTalk(TalkMessageCtrl *pCtrl, f32 distance) {
         if (pCtrl != nullptr) {
             pCtrl->mTalkDistance = distance;
         }
     }
 
-    void onRootNodeAutomatic(TalkMessageCtrl* pCtrl) {
+    void onRootNodeAutomatic(TalkMessageCtrl *pCtrl) {
         if (pCtrl != nullptr) {
             pCtrl->mIsOnRootNodeAuto = true;
         }
     }
 
-    void offRootNodeAutomatic(TalkMessageCtrl* pCtrl) {
+    void offRootNodeAutomatic(TalkMessageCtrl *pCtrl) {
         if (pCtrl != nullptr) {
             pCtrl->mIsOnRootNodeAuto = false;
         }

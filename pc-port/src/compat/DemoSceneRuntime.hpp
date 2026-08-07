@@ -25,7 +25,8 @@ namespace smgpc::resource {
 
 namespace smgpc::runtime {
     class DvdFileSystemService;
-}
+    class WipeService;
+}  // namespace smgpc::runtime
 
 namespace smgpc::scene {
     struct StagePlacementObject;
@@ -160,5 +161,11 @@ namespace smgpc::compat {
     [[nodiscard]] bool has_any_demo_scene_cast(const LiveActor *actor);
     [[nodiscard]] std::size_t demo_scene_membership_count(const LiveActor *actor);
     [[nodiscard]] std::size_t demo_scene_action_count(const LiveActor *actor);
+
+    // Source-faithful DemoWipeKeeper row operation. Keeping this as a small
+    // service-level primitive lets the scene dispatcher and focused tests use
+    // the same arbitrary-name/raw-frame behavior.
+    void dispatch_demo_wipe_row(const DemoWipeRow &row,
+                                smgpc::runtime::WipeService &wipe);
 
 }  // namespace smgpc::compat

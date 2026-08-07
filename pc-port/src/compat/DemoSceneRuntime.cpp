@@ -3,10 +3,14 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/TalkUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoUtilCompat.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TextEncoding.hpp"
@@ -319,6 +323,130 @@ namespace smgpc::compat {
                 assign(cast.actions[index]);
             }
         }
+
+        [[noreturn]] void throw_missing_action_callback(
+            const DemoSceneDefinition &definition, const DemoActionRow &row,
+            const Cast &cast, std::string_view callback_kind) const {
+            throw std::runtime_error(
+                "Demo Action row is missing its registered " +
+                std::string(callback_kind) + ": demo='" + definition.demo_name +
+                "' part='" + row.part_name + "' cast='" + cast.name + "'");
+        }
+
+        [[nodiscard]] TalkMessageCtrl *require_action_talk_ctrl(
+            const DemoSceneDefinition &definition, const DemoActionRow &row,
+            const Cast &cast) const {
+            auto *ctrl = smgpc::compat::owned_talk_ctrl(cast.actor);
+            if (ctrl == nullptr) {
+                throw_missing_action_callback(definition, row, cast, "talk controller");
+            }
+            return ctrl;
+        }
+
+        void execute_action_first(const DemoSceneDefinition &definition,
+                                  std::size_t action_index, Cast &cast) {
+            const auto &row = definition.sheet.action_rows()[action_index];
+            auto *actor = cast.actor;
+            auto &action = cast.actions[action_index];
+            switch (row.action_type) {
+            case 0:
+                actor->makeActorAppeared();
+                break;
+            case 1:
+                actor->makeActorDead();
+                break;
+            case 2:
+                if (action.functor == nullptr) {
+                    throw_missing_action_callback(definition, row, cast, "functor");
+                }
+                (*action.functor)();
+                break;
+            case 3:
+                if (action.nerve == nullptr) {
+                    throw_missing_action_callback(definition, row, cast, "nerve");
+                }
+                actor->setNerve(action.nerve);
+                break;
+            case 4:
+                MR::onSwitchA(actor);
+                break;
+            case 5:
+                MR::onSwitchB(actor);
+                break;
+            case 6:
+                MR::showModel(actor);
+                break;
+            case 7:
+                MR::hideModel(actor);
+                break;
+            case 8:
+                (void)MR::tryTalkTimeKeepDemoMarioPuppetable(
+                    require_action_talk_ctrl(definition, row, cast));
+                break;
+            case 9:
+            case 10:
+                (void)MR::tryTalkTimeKeepDemoWithoutPauseMarioPuppetable(
+                    require_action_talk_ctrl(definition, row, cast));
+                break;
+            case 11:
+                break;
+            case 12:
+                MR::offSwitchA(actor);
+                break;
+            case 13:
+                MR::offSwitchB(actor);
+                break;
+            default:
+                break;
+            }
+
+            if (!row.animation_name.empty()) {
+                MR::startAction(actor, row.animation_name.c_str());
+            }
+            if (!row.position_name.empty()) {
+                // PosName is never optional in the retail operation. Until the
+                // scene-wide GeneralPos index is installed, fail visibly
+                // instead of reporting a dispatched row whose transform was
+                // silently ignored.
+                throw std::runtime_error(
+                    "Demo Action PosName requires the scene GeneralPos index: demo='" +
+                    definition.demo_name + "' part='" + row.part_name +
+                    "' position='" + row.position_name + "'");
+            }
+        }
+
+        void dispatch_action_rows(std::size_t definition_index) {
+            auto &definition = definitions[definition_index];
+            const auto rows = definition.sheet.action_rows();
+            for (auto action_index = std::size_t{}; action_index < rows.size();
+                 ++action_index) {
+                const auto &row = rows[action_index];
+                if (definition.sheet.is_part_first_step(row.part_name)) {
+                    for (auto &cast : casts[definition_index]) {
+                        if (action_targets_cast(definition_index, action_index, cast)) {
+                            execute_action_first(definition, action_index, cast);
+                        }
+                    }
+                } else if (definition.sheet.is_part_last_step(row.part_name)) {
+                    // Retail type 9 restores DemoTalkAnimCtrl interpolation
+                    // here. The PC talk-animation controller is not installed
+                    // yet; no other Action type performs a last-step operation.
+                }
+            }
+        }
+
+        void dispatch_wipe_rows(std::size_t definition_index) {
+            auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+            if (runtime == nullptr) {
+                return;
+            }
+            auto &definition = definitions[definition_index];
+            for (const auto &row : definition.sheet.wipe_rows()) {
+                if (definition.sheet.is_part_first_step(row.part_name)) {
+                    dispatch_demo_wipe_row(row, runtime->scene_wipe());
+                }
+            }
+        }
     };
 
     namespace {
@@ -416,7 +544,7 @@ namespace smgpc::compat {
 
         const auto definition_index = *_impl->active_definition;
         auto &definition = _impl->definitions[definition_index];
-        (void)definition.sheet.advance();
+        const auto dispatchable = definition.sheet.advance();
         if (!definition.sheet.is_active()) {
             const auto *starter = _impl->active_starter;
             const auto demo_name = definition.demo_name;
@@ -428,12 +556,40 @@ namespace smgpc::compat {
             return;
         }
 
+        if (dispatchable) {
+            // DemoExecutor's keeper order is Player, Camera, Action, Wipe,
+            // Sound after Time/SubPart. Player/Camera/Sound retain their slots
+            // for their dedicated compatibility slices.
+            _impl->dispatch_action_rows(definition_index);
+            _impl->dispatch_wipe_rows(definition_index);
+        }
+
         if (definition.sheet.is_final_boundary_overshoot() &&
             !_impl->final_boundary_overshoot_traced) {
             _impl->final_boundary_overshoot_traced = true;
             trace_time_event("timekeeper_final_boundary_overshoot", definition,
                              "step=" + std::to_string(
                                            definition.sheet.current_part_step().value_or(-1)));
+        }
+    }
+
+    void dispatch_demo_wipe_row(const DemoWipeRow &row,
+                                smgpc::runtime::WipeService &wipe) {
+        switch (row.wipe_type) {
+        case 0:
+            wipe.open(row.wipe_name, row.wipe_frame);
+            break;
+        case 1:
+            wipe.close(row.wipe_name, row.wipe_frame);
+            break;
+        case 2:
+            wipe.force_open(row.wipe_name);
+            break;
+        case 3:
+            wipe.force_close(row.wipe_name);
+            break;
+        default:
+            break;
         }
     }
 
