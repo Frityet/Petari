@@ -376,7 +376,7 @@ JMapInfo* StageDataHolder::attachJmpInfoToArray(JMapInfo* pInfo, const char* a2)
 }
 
 void StageDataHolder::initTableData() {
-    void* tableFile = MR::receiveArchive("/StageData/ObjTableTable.arc")->getResource('????', "ObjNameTable.tbl");
+    void* tableFile = MR::receiveArchive("/StageData/ObjNameTable.arc")->getResource('????', "ObjNameTable.tbl");
 
     mObjNameTbl = new JMapInfo();
     mObjNameTbl->attach(tableFile);

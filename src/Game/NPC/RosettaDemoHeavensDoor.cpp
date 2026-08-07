@@ -33,7 +33,7 @@ RosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1(Rosetta* pRosetta, const JMapIn
     DemoFunction::tryCreateDemoTalkAnimCtrlForActor(mRosetta, "DemoGetPower", "スピンゲット[デモ1]");
     initNerve(&NrvRosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1NrvWait::sInstance);
 
-    mLightDome = MR::createPartsModelNpc(mRosetta, "LightDome", "LightDome", nullptr);
+    mLightDome = MR::createPartsModelNpc(mRosetta, "ライトドーム", "LightDome", nullptr);
     mLightDome->makeActorAppeared();
     mLightDome->initFixedPosition(TVec3f(0.0f, -13.0f, -30.0f), TVec3f(0.0f, 0.0f, 0.0f), "Center");
     MR::startBrk(mLightDome, "LightDome");
@@ -46,7 +46,7 @@ RosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1(Rosetta* pRosetta, const JMapIn
     DemoFunction::tryCreateDemoTalkAnimCtrlForActor(mLightDome, "DemoGetPower", "スピンゲット[デモ1]");
     DemoFunction::registerDemoTalkMessageCtrl(mRosetta, mRosetta->mMsgCtrl);
 
-    mDomeHalo = MR::createPartsModelNpc(mRosetta, "DomeHalo", "DomeHalo", nullptr);
+    mDomeHalo = MR::createPartsModelNpc(mRosetta, "ライト後光", "DomeHalo", nullptr);
     mDomeHalo->initFixedPosition(TVec3f(0.0f, 25.14f, -6.16f), TVec3f(0.0f, 0.0f, 0.0f), "Center");
     mDomeHalo->makeActorAppeared();
 
