@@ -16,6 +16,8 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <exception>
@@ -56,6 +58,11 @@ namespace {
         bytes[offset + 1U] = static_cast<std::uint8_t>(value >> 16U);
         bytes[offset + 2U] = static_cast<std::uint8_t>(value >> 8U);
         bytes[offset + 3U] = static_cast<std::uint8_t>(value);
+    }
+
+    void write_be_float(std::vector<std::uint8_t> &bytes, std::size_t offset,
+                        float value) {
+        write_be32(bytes, offset, std::bit_cast<std::uint32_t>(value));
     }
 
     void write_bcsv_field(std::vector<std::uint8_t> &bytes, std::size_t index,
@@ -303,6 +310,42 @@ namespace {
         std::string position_name;
         std::string animation_name;
     };
+
+    [[nodiscard]] JMapInfo make_general_pos_info(
+        std::string_view name, const std::array<float, 3U> &position,
+        const std::array<float, 3U> &rotation) {
+        constexpr auto field_count = std::size_t{7U};
+        constexpr auto entry_size = std::size_t{28U};
+        constexpr auto data_offset = std::size_t{0x10U + field_count * 0x0cU};
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size + name.size() + 1U, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "name", 0U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        constexpr auto components = std::array<std::string_view, 6U>{
+            "pos_x",
+            "pos_y",
+            "pos_z",
+            "dir_x",
+            "dir_y",
+            "dir_z",
+        };
+        for (auto index = std::size_t{}; index < components.size(); ++index) {
+            write_bcsv_field(bytes, index + 1U, components[index],
+                             static_cast<std::uint16_t>((index + 1U) * 4U),
+                             smgpc::resource::BcsvFieldType::Float);
+        }
+        write_be32(bytes, data_offset, 0U);
+        for (auto index = std::size_t{}; index < 3U; ++index) {
+            write_be_float(bytes, data_offset + (index + 1U) * 4U, position[index]);
+            write_be_float(bytes, data_offset + (index + 4U) * 4U, rotation[index]);
+        }
+        std::copy(name.begin(), name.end(),
+                  bytes.begin() + static_cast<std::ptrdiff_t>(data_offset + entry_size));
+        return JMapInfo::from_bcsv(bytes);
+    }
 
     [[nodiscard]] std::vector<std::uint8_t> make_action_bcsv(
         std::span<const ActionRow> rows) {
@@ -598,7 +641,7 @@ namespace {
             ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 2},
             ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 3},
             ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 7},
-            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 99, .animation_name = "Wave"},
+            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 99, .position_name = "Anchor", .animation_name = "Wave"},
             ActionRow{.part_name = "one", .cast_name = "Actor", .action_type = 1},
         };
         const auto wipes = std::array{
@@ -788,6 +831,65 @@ namespace {
         int calls = 0;
         bool saw_appeared = false;
     };
+
+    void test_general_pos_table_order_and_zone_transform() {
+        auto root_layer_b = smgpc::scene::StagePlacementTable{
+            .stage_name = "Stage",
+            .zone_name = "Stage",
+            .category = "generalpos",
+            .layer_name = "layerb",
+            .table_name = "generalposinfo",
+            .table_path = "jmp/generalpos/layerb/generalposinfo",
+            .jmap_info = make_general_pos_info("Second", {4.0F, 5.0F, 6.0F},
+                                               {7.0F, 8.0F, 9.0F}),
+            .zone_id = 0,
+            .layer_id = 1,
+            .archive_entry_order = 1U,
+        };
+        auto root_layer_a = smgpc::scene::StagePlacementTable{
+            .stage_name = "Stage",
+            .zone_name = "Stage",
+            .category = "generalpos",
+            .layer_name = "layera",
+            .table_name = "generalposinfo",
+            .table_path = "jmp/generalpos/layera/generalposinfo",
+            .jmap_info = make_general_pos_info("First", {1.0F, 2.0F, 3.0F},
+                                               {10.0F, 20.0F, 30.0F}),
+            .zone_id = 0,
+            .layer_id = 0,
+            .archive_entry_order = 2U,
+        };
+        auto child = smgpc::scene::StagePlacementTable{
+            .stage_name = "Child",
+            .zone_name = "Child",
+            .category = "generalpos",
+            .layer_name = "layera",
+            .table_name = "generalposinfo",
+            .table_path = "jmp/generalpos/layera/generalposinfo",
+            .jmap_info = make_general_pos_info("ChildPoint", {1.0F, 2.0F, 3.0F},
+                                               {0.0F, 0.0F, 0.0F}),
+            .zone_id = 7,
+            .layer_id = 0,
+            .archive_entry_order = 0U,
+            .zone_transform = smgpc::scene::StageZoneTransform::from_translation_rotation(
+                {10.0F, 20.0F, 30.0F}, {0.0F, 0.0F, 90.0F}),
+        };
+        const auto tables = std::array{root_layer_b, root_layer_a, child};
+        const auto positions = smgpc::scene::select_stage_general_positions(tables);
+        const auto near = [](float lhs, float rhs) {
+            return std::abs(lhs - rhs) < 0.001F;
+        };
+        require(positions.size() == 3U && positions[0].name == "First" &&
+                    positions[1].name == "Second" && positions[2].name == "ChildPoint",
+                "GeneralPos traversal must preserve root-before-child and retail layer order");
+        require(near(positions[2].world_position[0U], 8.0F) &&
+                    near(positions[2].world_position[1U], 21.0F) &&
+                    near(positions[2].world_position[2U], 33.0F) &&
+                    near(positions[2].world_rotation[0U], 0.0F) &&
+                    near(positions[2].world_rotation[1U], 0.0F) &&
+                    near(positions[2].world_rotation[2U], 90.0F),
+                "child-zone GeneralPos data must use the real composed stage transform");
+    }
 
     void test_definition_ingestion_and_dormant_sheets() {
         const auto archive = make_sheet_fixture();
@@ -1201,8 +1303,16 @@ namespace {
     void test_action_dispatch_order_pause_and_callback_invariant() {
         const auto archive = make_dispatch_sheet_fixture();
         const auto placements = make_dispatch_definition_fixture();
+        const auto general_positions = std::array{
+            smgpc::scene::StageGeneralPos{
+                .name = "Anchor",
+                .world_position = {12.0F, 34.0F, 56.0F},
+                .world_rotation = {7.0F, 8.0F, 9.0F},
+            },
+        };
         {
-            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements,
+                                                           general_positions);
             auto actor_info = make_actor_info(50, -1, 40);
             auto actor = LiveActor("Actor");
             const auto initial_nerve = TestNerve{};
@@ -1220,8 +1330,11 @@ namespace {
             actor.updateNerve();
             require(observer.calls == 1 && observer.saw_appeared &&
                         actor.isNerve(&action_nerve) && actor.mFlag.mIsHiddenModel &&
-                        actor.currentBckName() == "Wave",
-                    "Action rows must run in BCSV order, then apply animation after each row operation");
+                        actor.currentBckName() == "Wave" && actor.mPosition.x == 12.0F &&
+                        actor.mPosition.y == 34.0F && actor.mPosition.z == 56.0F &&
+                        actor.mRotation.x == 7.0F && actor.mRotation.y == 8.0F &&
+                        actor.mRotation.z == 9.0F,
+                    "Action rows must run in BCSV order, then apply animation and real GeneralPos data after each row operation");
             runtime.movement();
             require(observer.calls == 1 && !actor.isDead(),
                     "a multi-frame Action row must not replay its first-step operation on the last step");
@@ -1233,7 +1346,8 @@ namespace {
         }
 
         {
-            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements,
+                                                           general_positions);
             auto actor_info = make_actor_info(50, -1, 40);
             auto actor = LiveActor("Actor");
             const auto initial_nerve = TestNerve{};
@@ -1273,6 +1387,31 @@ namespace {
             }
             require(threw,
                     "a targeted type-2 row without its source-required callback must fail explicitly");
+        }
+
+        {
+            auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+            auto actor_info = make_actor_info(50, -1, 40);
+            auto actor = LiveActor("Actor");
+            const auto initial_nerve = TestNerve{};
+            const auto action_nerve = TestNerve{};
+            actor.initNerve(&initial_nerve);
+            auto observer = ActionObserver{.actor = &actor};
+            const auto functor = MR::Functor(&observer, &ActionObserver::observe);
+            require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                        MR::tryRegisterDemoActionFunctor(&actor, functor, "first") &&
+                        MR::tryRegisterDemoActionNerve(&actor, &action_nerve, "first") &&
+                        MR::tryStartTimeKeepDemo(&actor, "Dispatch", nullptr),
+                    "the missing-GeneralPos fixture must start");
+            auto threw = false;
+            try {
+                runtime.movement();
+            } catch (const std::runtime_error &error) {
+                threw = std::string_view(error.what()).find("absent from the active scene GeneralPos data") !=
+                        std::string_view::npos;
+            }
+            require(threw,
+                    "a PosName row without real active-scene data must fail explicitly");
         }
 
         {
@@ -1475,6 +1614,7 @@ int main() {
         TestCase{"timekeeper pause, resume, and preserved pause", test_timekeeper_pause_resume_and_preserved_pause_flag},
         TestCase{"registered start, suspend, and safe rejections", test_registered_start_suspend_and_safe_rejections},
         TestCase{"one-frame final paused boundary overshoot", test_one_frame_final_pause_boundary_overshoot},
+        TestCase{"GeneralPos table order and zone transform", test_general_pos_table_order_and_zone_transform},
         TestCase{"Action dispatch order, pause, and callback invariant", test_action_dispatch_order_pause_and_callback_invariant},
         TestCase{"Wipe row arbitrary names and raw frames", test_wipe_row_dispatch_uses_arbitrary_names_and_raw_frames},
         TestCase{"no registry and scene teardown", test_no_registry_and_scene_teardown},

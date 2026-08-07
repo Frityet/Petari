@@ -167,6 +167,7 @@ namespace smgpc::compat {
         std::vector<std::vector<Cast>> casts;
         std::vector<DemoSceneSubGroupDefinition> subgroups;
         std::vector<std::vector<LiveActor *>> subgroup_casts;
+        std::vector<smgpc::scene::StageGeneralPos> general_positions;
         std::optional<std::size_t> active_definition;
         NameObj *active_starter = nullptr;
         bool final_boundary_overshoot_traced = false;
@@ -404,14 +405,20 @@ namespace smgpc::compat {
                 MR::startAction(actor, row.animation_name.c_str());
             }
             if (!row.position_name.empty()) {
-                // PosName is never optional in the retail operation. Until the
-                // scene-wide GeneralPos index is installed, fail visibly
-                // instead of reporting a dispatched row whose transform was
-                // silently ignored.
-                throw std::runtime_error(
-                    "Demo Action PosName requires the scene GeneralPos index: demo='" +
-                    definition.demo_name + "' part='" + row.part_name +
-                    "' position='" + row.position_name + "'");
+                const auto found = std::ranges::find_if(
+                    general_positions, [&](const auto &position) {
+                        return position.name == row.position_name;
+                    });
+                if (found == general_positions.end()) {
+                    throw std::runtime_error(
+                        "Demo Action PosName is absent from the active scene GeneralPos data: demo='" +
+                        definition.demo_name + "' part='" + row.part_name +
+                        "' position='" + row.position_name + "'");
+                }
+                actor->mPosition.set(found->world_position[0U], found->world_position[1U],
+                                     found->world_position[2U]);
+                actor->mRotation.set(found->world_rotation[0U], found->world_rotation[1U],
+                                     found->world_rotation[2U]);
             }
         }
 
@@ -505,8 +512,10 @@ namespace smgpc::compat {
 
     DemoSceneRuntime::DemoSceneRuntime(
         smgpc::runtime::DvdFileSystemService &dvd,
-        std::span<const smgpc::scene::StagePlacementObject> placements)
+        std::span<const smgpc::scene::StagePlacementObject> placements,
+        std::span<const smgpc::scene::StageGeneralPos> general_positions)
         : NameObj("DemoDirector"), _impl(std::make_unique<Impl>()) {
+        _impl->general_positions.assign(general_positions.begin(), general_positions.end());
         const auto seeds = collect_definition_seeds(placements);
         if (!seeds.definitions.empty()) {
             try {
@@ -522,8 +531,10 @@ namespace smgpc::compat {
 
     DemoSceneRuntime::DemoSceneRuntime(
         const smgpc::resource::RarcArchive &demo_sheet_archive,
-        std::span<const smgpc::scene::StagePlacementObject> placements)
+        std::span<const smgpc::scene::StagePlacementObject> placements,
+        std::span<const smgpc::scene::StageGeneralPos> general_positions)
         : NameObj("DemoDirector"), _impl(std::make_unique<Impl>()) {
+        _impl->general_positions.assign(general_positions.begin(), general_positions.end());
         const auto seeds = collect_definition_seeds(placements);
         _impl->load(seeds.definitions, demo_sheet_archive);
         _impl->load_subgroups(seeds.subgroups);

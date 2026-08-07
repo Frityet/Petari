@@ -1,6 +1,7 @@
 #include "scene/StagePlacementResolver.hpp"
 
 #include "resource/RarcArchive.hpp"
+#include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
@@ -69,7 +70,7 @@ namespace smgpc::scene {
         }
 
         [[nodiscard]] std::optional<JMapInfo> load_zone_list(smgpc::runtime::DvdFileSystemService &dvd,
-                                                              std::string_view scenario_stage_name) {
+                                                             std::string_view scenario_stage_name) {
             const auto scenario_archive_path = find_scenario_archive(dvd, scenario_stage_name);
             if (!scenario_archive_path.has_value()) {
                 return std::nullopt;
@@ -515,7 +516,9 @@ namespace smgpc::scene {
             read_s32_field(iter, "SW_SLEEP", object.switch_sleep_id);
         }
 
-        [[nodiscard]] std::optional<JMapInfo> find_child_info(const std::vector<StagePlacementTable> &tables, const StagePlacementTable &parent_table) {
+        [[nodiscard]] std::optional<JMapInfo> find_child_info(
+            std::span<const StagePlacementTable> tables,
+            const StagePlacementTable &parent_table) {
             const auto child_table = std::ranges::find_if(tables, [&](const auto &table) {
                 return table.stage_name == parent_table.stage_name && table.category == "childobj" && table.layer_name == parent_table.layer_name &&
                        table.table_name == "childobjinfo";
@@ -550,8 +553,10 @@ namespace smgpc::scene {
             return count;
         }
 
-        [[nodiscard]] std::optional<StagePlacementObject> read_placement_object(smgpc::runtime::DvdFileSystemService &dvd, const StagePlacementTable &table,
-                                                                                const std::vector<StagePlacementTable> &tables, s32 entry_index) {
+        [[nodiscard]] std::optional<StagePlacementObject> read_placement_object(
+            smgpc::runtime::DvdFileSystemService &dvd,
+            const StagePlacementTable &table,
+            std::span<const StagePlacementTable> tables, s32 entry_index) {
             if (table.category != "placement" && table.category != "mapparts") {
                 return std::nullopt;
             }
@@ -603,7 +608,7 @@ namespace smgpc::scene {
     }  // namespace
 
     StageZoneTransform StageZoneTransform::from_translation_rotation(const std::array<f32, 3U> &translation,
-                                                                      const std::array<f32, 3U> &rotation_degrees) {
+                                                                     const std::array<f32, 3U> &rotation_degrees) {
         const auto rx = rotation_degrees[0] * cDegToRad;
         const auto ry = rotation_degrees[1] * cDegToRad;
         const auto rz = rotation_degrees[2] * cDegToRad;
@@ -637,8 +642,8 @@ namespace smgpc::scene {
         for (auto row = std::size_t{}; row < 3U; ++row) {
             for (auto column = std::size_t{}; column < 3U; ++column) {
                 result.matrix[row * 4U + column] = matrix[row * 4U + 0U] * local.matrix[column + 0U] +
-                                                     matrix[row * 4U + 1U] * local.matrix[column + 4U] +
-                                                     matrix[row * 4U + 2U] * local.matrix[column + 8U];
+                                                   matrix[row * 4U + 1U] * local.matrix[column + 4U] +
+                                                   matrix[row * 4U + 2U] * local.matrix[column + 8U];
             }
             result.matrix[row * 4U + 3U] = matrix[row * 4U + 0U] * local.matrix[3U] +
                                            matrix[row * 4U + 1U] * local.matrix[7U] +
@@ -665,7 +670,7 @@ namespace smgpc::scene {
     }
 
     std::optional<StageStartInfo> select_stage_start_info(std::span<const StagePlacementTable> tables, s32 start_id,
-                                                           s32 start_zone_id) {
+                                                          s32 start_zone_id) {
         auto start_tables = std::vector<const StagePlacementTable *>{};
         for (const auto &table : tables) {
             if (table.category == "start" && table.zone_id == start_zone_id && table.layer_id >= 0) {
@@ -717,6 +722,62 @@ namespace smgpc::scene {
         return std::nullopt;
     }
 
+    std::vector<StageGeneralPos> select_stage_general_positions(
+        std::span<const StagePlacementTable> tables) {
+        auto general_pos_tables = std::vector<const StagePlacementTable *>{};
+        auto zone_order = std::vector<s32>{};
+        for (const auto &table : tables) {
+            if (std::ranges::find(zone_order, table.zone_id) == zone_order.end()) {
+                zone_order.push_back(table.zone_id);
+            }
+            if (table.category == "generalpos" && table.layer_id >= 0) {
+                general_pos_tables.push_back(&table);
+            }
+        }
+        std::ranges::stable_sort(general_pos_tables, [&](const auto *lhs, const auto *rhs) {
+            const auto lhs_zone = std::ranges::find(zone_order, lhs->zone_id);
+            const auto rhs_zone = std::ranges::find(zone_order, rhs->zone_id);
+            if (lhs_zone != rhs_zone) {
+                return lhs_zone < rhs_zone;
+            }
+            if (lhs->layer_id != rhs->layer_id) {
+                return lhs->layer_id < rhs->layer_id;
+            }
+            return lhs->archive_entry_order < rhs->archive_entry_order;
+        });
+
+        auto positions = std::vector<StageGeneralPos>{};
+        for (const auto *table : general_pos_tables) {
+            for (auto entry_index = s32{};
+                 entry_index < table->jmap_info.getNumEntries(); ++entry_index) {
+                const auto iter = JMapInfoIter(&table->jmap_info, entry_index);
+                const char *raw_name = nullptr;
+                if (!iter.getValue("name", &raw_name) || raw_name == nullptr || raw_name[0] == '\0') {
+                    continue;
+                }
+                const auto local_position = read_vec3_or(iter, "pos", {0.0F, 0.0F, 0.0F});
+                const auto local_rotation = read_vec3_or(iter, "dir", {0.0F, 0.0F, 0.0F});
+                const auto world_transform = table->zone_transform.concatenated(
+                    StageZoneTransform::from_translation_rotation(
+                        {0.0F, 0.0F, 0.0F}, local_rotation));
+                positions.push_back(StageGeneralPos{
+                    .name = smgpc::resource::decode_cp932(raw_name),
+                    .stage_name = table->stage_name,
+                    .zone_name = table->zone_name,
+                    .layer_name = table->layer_name,
+                    .table_path = table->table_path,
+                    .zone_id = table->zone_id,
+                    .jmap_entry_index = entry_index,
+                    .local_position = local_position,
+                    .local_rotation = local_rotation,
+                    .world_position = table->zone_transform.transform_point(local_position),
+                    .world_rotation = rotation_degrees(world_transform),
+                });
+            }
+        }
+        return positions;
+    }
+
     std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {
         auto tables = std::vector<StagePlacementTable>{};
         auto visited = std::set<std::string>{};
@@ -726,9 +787,10 @@ namespace smgpc::scene {
         return tables;
     }
 
-    std::vector<StagePlacementObject> resolve_stage_placement_objects(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {
+    std::vector<StagePlacementObject> resolve_stage_placement_objects(
+        smgpc::runtime::DvdFileSystemService &dvd,
+        std::span<const StagePlacementTable> tables) {
         auto objects = std::vector<StagePlacementObject>{};
-        const auto tables = resolve_stage_placement_tables(dvd, stage_name, scenario_no);
         for (const auto &table : tables) {
             for (auto entry_index = s32{}; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
                 if (auto object = read_placement_object(dvd, table, tables, entry_index)) {
@@ -738,6 +800,13 @@ namespace smgpc::scene {
         }
 
         return objects;
+    }
+
+    std::vector<StagePlacementObject> resolve_stage_placement_objects(
+        smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
+        s32 scenario_no) {
+        const auto tables = resolve_stage_placement_tables(dvd, stage_name, scenario_no);
+        return resolve_stage_placement_objects(dvd, tables);
     }
 
     std::vector<StagePlacementObject> resolve_stage_root_placements(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {

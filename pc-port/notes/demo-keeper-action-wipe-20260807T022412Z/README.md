@@ -34,10 +34,14 @@ then `AnimName`, then `PosName`:
 | 11 | no operation |
 | 12 / 13 | switch A / B off |
 
-Unknown types still retain the retail `AnimName`/`PosName` ordering. A missing
+Unknown types still retain the retail `AnimName`/`PosName` ordering. `PosName`
+now resolves against the active scenario's real `jmp/GeneralPos` tables in
+retail root-zone, layer, archive-entry, then child-zone order. CP932 names are
+decoded consistently with DemoSheet names, and child-zone positions and Euler
+rotations use the composed stage placement transform. A missing
 source-required type-2 functor, type-3 nerve, or talk controller throws a
-diagnostic instead of silently substituting behavior. `PosName` likewise stops at an explicit
-`GeneralPos`-index requirement; no transform is guessed. The remaining retail
+diagnostic instead of silently substituting behavior. An absent named
+`GeneralPos` also fails explicitly; no transform is guessed. The remaining retail
 TalkAnim interpolation calls are documented but not fabricated until the real
 scene TalkAnim controller exists.
 
@@ -57,8 +61,8 @@ general scene `WipeService`, not named demo special cases.
 ## Honest remaining keeper gaps
 
 Player, Camera, Sound, and TalkAnim keep their retail positions but are not
-claimed as implemented by this slice. GeneralPos lookup is also still absent.
-Those gaps are explicit follow-up compatibility work; this change does not use
-fallback motions, cameras, positions, or callbacks.
+claimed as implemented by this slice. Those gaps are explicit follow-up
+compatibility work; this change does not use fallback motions, cameras,
+positions, or callbacks.
 
 See `verification.log` for the focused regression result.

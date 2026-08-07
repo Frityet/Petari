@@ -10,12 +10,13 @@ $ xmake run smg-pc-demo-scene-runtime-tests
 [pass] timekeeper pause, resume, and preserved pause
 [pass] registered start, suspend, and safe rejections
 [pass] one-frame final paused boundary overshoot
+[pass] GeneralPos table order and zone transform
 [pass] Action dispatch order, pause, and callback invariant
 [pass] Wipe row arbitrary names and raw frames
 [pass] no registry and scene teardown
 [pass] no definition skips DemoSheet archive
 [pass] optional real scene definitions
-14/14 tests passed
+15/15 tests passed
 
 Focused assertions added by this slice:
 - BCSV Action row order and operation-before-animation ordering
@@ -23,4 +24,7 @@ Focused assertions added by this slice:
 - no Action dispatch on a paused/corrected tick
 - missing functor is an explicit invariant failure
 - missing talk controller is an explicit invariant failure
+- real GeneralPos operation ordering and transform assignment
+- root/layer/child GeneralPos traversal and child-zone transform composition
+- absent named GeneralPos is an explicit invariant failure
 - Wipe types 0-3, arbitrary names, raw -1 frame, and unknown no-op

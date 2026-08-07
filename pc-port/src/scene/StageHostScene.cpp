@@ -285,16 +285,20 @@ namespace smgpc::scene {
         if (_object_name_table == nullptr) {
             _object_name_table = std::make_unique<smgpc::scene::nameobj::ObjectNameTable>(_runtime.dvd());
         }
-        _placements = resolve_stage_placement_objects(_runtime.dvd(), _request.stage_name, _request.scenario_no);
+        const auto tables = resolve_stage_placement_tables(
+            _runtime.dvd(), _request.stage_name, _request.scenario_no);
+        _placements = resolve_stage_placement_objects(_runtime.dvd(), tables);
+        const auto general_positions = select_stage_general_positions(tables);
         // The original DemoDirector/executors exist before placement actors
         // initialize and attempt to join their zone-scoped groups.
-        _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(_runtime.dvd(), _placements);
+        _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(
+            _runtime.dvd(), _placements, general_positions);
         const auto collision_stats = _collision.load(_runtime.dvd(), _placements);
         _collision.activate();
         const auto gravity_stats = _gravity.load(_placements);
         _gravity.activate();
-        _stage_start_info = resolve_stage_start_info(_runtime.dvd(), _request.stage_name, _request.scenario_no,
-                                                     _request.start_id, _request.start_zone_id);
+        _stage_start_info = select_stage_start_info(tables, _request.start_id,
+                                                    _request.start_zone_id);
         init_stage_player();
 
 #ifndef NDEBUG

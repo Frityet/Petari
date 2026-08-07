@@ -23,13 +23,22 @@ namespace smgpc::scene {
         // StageDataHolder makeMtxTR transform: zone scale is not part of the
         // placement matrix.
         std::array<f32, 12U> matrix{
-            1.0F, 0.0F, 0.0F, 0.0F,
-            0.0F, 1.0F, 0.0F, 0.0F,
-            0.0F, 0.0F, 1.0F, 0.0F,
+            1.0F,
+            0.0F,
+            0.0F,
+            0.0F,
+            0.0F,
+            1.0F,
+            0.0F,
+            0.0F,
+            0.0F,
+            0.0F,
+            1.0F,
+            0.0F,
         };
 
         [[nodiscard]] static StageZoneTransform from_translation_rotation(const std::array<f32, 3U> &translation,
-                                                                           const std::array<f32, 3U> &rotation_degrees);
+                                                                          const std::array<f32, 3U> &rotation_degrees);
         [[nodiscard]] StageZoneTransform concatenated(const StageZoneTransform &local) const;
         [[nodiscard]] std::array<f32, 3U> transform_point(const std::array<f32, 3U> &point) const;
         [[nodiscard]] std::array<f32, 3U> transform_vector(const std::array<f32, 3U> &vector) const;
@@ -68,6 +77,20 @@ namespace smgpc::scene {
         std::array<f32, 3U> world_up{0.0F, 1.0F, 0.0F};
         std::array<f32, 3U> world_front{0.0F, 0.0F, 1.0F};
         StageZoneTransform zone_transform{};
+    };
+
+    struct StageGeneralPos {
+        std::string name;
+        std::string stage_name;
+        std::string zone_name;
+        std::string layer_name;
+        std::string table_path;
+        s32 zone_id = 0;
+        s32 jmap_entry_index = -1;
+        std::array<f32, 3U> local_position{};
+        std::array<f32, 3U> local_rotation{};
+        std::array<f32, 3U> world_position{};
+        std::array<f32, 3U> world_rotation{};
     };
 
     struct StagePlacementObject {
@@ -121,6 +144,9 @@ namespace smgpc::scene {
 
     [[nodiscard]] std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
                                                                                   s32 scenario_no);
+    [[nodiscard]] std::vector<StagePlacementObject> resolve_stage_placement_objects(
+        smgpc::runtime::DvdFileSystemService &dvd,
+        std::span<const StagePlacementTable> tables);
     [[nodiscard]] std::vector<StagePlacementObject> resolve_stage_placement_objects(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
                                                                                     s32 scenario_no);
     [[nodiscard]] std::vector<StagePlacementObject> resolve_stage_root_placements(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
@@ -129,6 +155,8 @@ namespace smgpc::scene {
                                                                                    s32 scenario_no);
     [[nodiscard]] std::optional<StageStartInfo> select_stage_start_info(std::span<const StagePlacementTable> tables, s32 start_id = 0,
                                                                         s32 start_zone_id = 0);
+    [[nodiscard]] std::vector<StageGeneralPos> select_stage_general_positions(
+        std::span<const StagePlacementTable> tables);
     [[nodiscard]] std::optional<StageStartInfo> resolve_stage_start_info(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
                                                                          s32 scenario_no, s32 start_id = 0, s32 start_zone_id = 0);
 

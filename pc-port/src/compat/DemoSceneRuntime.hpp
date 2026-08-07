@@ -29,8 +29,9 @@ namespace smgpc::runtime {
 }  // namespace smgpc::runtime
 
 namespace smgpc::scene {
+    struct StageGeneralPos;
     struct StagePlacementObject;
-}
+}  // namespace smgpc::scene
 
 namespace smgpc::compat {
 
@@ -69,14 +70,16 @@ namespace smgpc::compat {
 
     // Scene-owned counterpart of the original DemoDirector/DemoExecutor
     // collection. This class owns definitions, the Time/SubPart clocks, cast
-    // membership, and registered callbacks at their original per-executor
-    // granularity. The remaining keeper row dispatch stays separate.
+    // membership, registered callbacks, and the installed keeper row dispatch
+    // at their original per-executor granularity.
     class DemoSceneRuntime final : public NameObj {
     public:
         DemoSceneRuntime(smgpc::runtime::DvdFileSystemService &dvd,
-                         std::span<const smgpc::scene::StagePlacementObject> placements);
+                         std::span<const smgpc::scene::StagePlacementObject> placements,
+                         std::span<const smgpc::scene::StageGeneralPos> general_positions = {});
         DemoSceneRuntime(const smgpc::resource::RarcArchive &demo_sheet_archive,
-                         std::span<const smgpc::scene::StagePlacementObject> placements);
+                         std::span<const smgpc::scene::StagePlacementObject> placements,
+                         std::span<const smgpc::scene::StageGeneralPos> general_positions = {});
         ~DemoSceneRuntime() override;
 
         DemoSceneRuntime(const DemoSceneRuntime &) = delete;
