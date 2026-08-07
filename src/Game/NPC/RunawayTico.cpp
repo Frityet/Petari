@@ -48,9 +48,6 @@ namespace NrvRunawayTico {
 RunawayTico::RunawayTico(const char* pName) : Tico(pName), mCameraInfo(nullptr), mMode(0), mDemoCastID(0), mIsStartRunaway(false), _19D(false) {
 }
 
-RunawayTico::~RunawayTico() {
-}
-
 void RunawayTico::makeArchiveList(NameObjArchiveListCollector* pArchiveList, const JMapInfoIter& rIter) {
     s32 arg0 = 0;
     MR::getJMapInfoArg0NoInit(rIter, &arg0);

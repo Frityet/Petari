@@ -8,7 +8,6 @@ class RunawayTico : public Tico {
 public:
     RunawayTico(const char*);
 
-    virtual ~RunawayTico();
     virtual void init(const JMapInfoIter&);
     virtual void initAfterPlacement();
 

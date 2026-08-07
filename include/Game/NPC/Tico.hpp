@@ -12,7 +12,6 @@ public:
 
     Tico(const char*);
 
-    virtual ~Tico();
     virtual void init(const JMapInfoIter&);
     virtual void control();
     virtual void calcAndSetBaseMtx();
