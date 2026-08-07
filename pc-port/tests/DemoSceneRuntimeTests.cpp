@@ -322,7 +322,7 @@ namespace {
         write_be32(bytes, 0x04U, field_count);
         write_be32(bytes, 0x08U, data_offset);
         write_be32(bytes, 0x0cU, entry_size);
-        write_bcsv_field(bytes, 0U, "name", 0U,
+        write_bcsv_field(bytes, 0U, "PosName", 0U,
                          smgpc::resource::BcsvFieldType::StringOffset);
         constexpr auto components = std::array<std::string_view, 6U>{
             "pos_x",
@@ -1568,9 +1568,11 @@ namespace {
         DVDInit();
         auto dvd = smgpc::runtime::DvdFileSystemService("/");
         {
-            const auto placements = smgpc::scene::resolve_stage_placement_objects(
+            const auto tables = smgpc::scene::resolve_stage_placement_tables(
                 dvd, "HeavensDoorGalaxy", 1);
-            const auto runtime = smgpc::compat::DemoSceneRuntime(dvd, placements);
+            const auto placements = smgpc::scene::resolve_stage_placement_objects(dvd, tables);
+            const auto positions = smgpc::scene::select_stage_general_positions(tables);
+            const auto runtime = smgpc::compat::DemoSceneRuntime(dvd, placements, positions);
             if (runtime.definitions().size() != 3U) {
                 throw std::runtime_error(
                     "real scenario 1 should retain all three active primary demo definitions; got " +
@@ -1586,6 +1588,30 @@ namespace {
                         !runtime.definition(*dormant)->sheet.has_table(
                             smgpc::compat::DemoSheetTable::Time),
                     "the real missing Time family should remain dormant without an alias");
+            const auto has_general_pos = [&](std::string_view name) {
+                return std::ranges::any_of(positions, [&](const auto &position) {
+                    return position.name == name;
+                });
+            };
+            for (const auto &definition : runtime.definitions()) {
+                for (const auto &row : definition.sheet.action_rows()) {
+                    if (!row.position_name.empty() && !has_general_pos(row.position_name)) {
+                        throw std::runtime_error(
+                            "Gateway Action PosName is absent from GeneralPos: demo='" +
+                            definition.demo_name + "' part='" + row.part_name + "' position='" +
+                            row.position_name + "'");
+                    }
+                }
+                for (const auto &row : definition.sheet.player_rows()) {
+                    if (!row.position_name.empty() && !has_general_pos(row.position_name)) {
+                        throw std::runtime_error(
+                            "Gateway Player PosName is absent from GeneralPos: demo='" +
+                            definition.demo_name + "' part='" + row.part_name + "' position='" +
+                            row.position_name + "'");
+                    }
+                }
+            }
+            std::cout << "[info] Gateway scenario 1 GeneralPos rows: " << positions.size() << '\n';
         }
         const auto placements = smgpc::scene::resolve_stage_placement_objects(
             dvd, "HeavensDoorGalaxy", 2);

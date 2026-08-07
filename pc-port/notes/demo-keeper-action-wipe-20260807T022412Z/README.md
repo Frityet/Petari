@@ -45,6 +45,12 @@ diagnostic instead of silently substituting behavior. An absent named
 TalkAnim interpolation calls are documented but not fabricated until the real
 scene TalkAnim controller exists.
 
+The retail table identifies each row with the `PosName` BCSV field. That field
+name was checked against the RMGK02 `GeneralPos` reader and the actual Gateway
+archives; the first Gateway scenario exposes seven real named rows, and every
+non-empty Action/Player `PosName` in its active demo sheets resolves to one of
+them.
+
 ## Wipe behavior installed
 
 First-step Wipe rows preserve their arbitrary `WipeName` and raw `Frame` value:

@@ -752,7 +752,7 @@ namespace smgpc::scene {
                  entry_index < table->jmap_info.getNumEntries(); ++entry_index) {
                 const auto iter = JMapInfoIter(&table->jmap_info, entry_index);
                 const char *raw_name = nullptr;
-                if (!iter.getValue("name", &raw_name) || raw_name == nullptr || raw_name[0] == '\0') {
+                if (!iter.getValue("PosName", &raw_name) || raw_name == nullptr || raw_name[0] == '\0') {
                     continue;
                 }
                 const auto local_position = read_vec3_or(iter, "pos", {0.0F, 0.0F, 0.0F});

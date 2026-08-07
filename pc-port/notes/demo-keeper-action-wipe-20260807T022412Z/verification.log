@@ -15,6 +15,7 @@ $ xmake run smg-pc-demo-scene-runtime-tests
 [pass] Wipe row arbitrary names and raw frames
 [pass] no registry and scene teardown
 [pass] no definition skips DemoSheet archive
+[info] Gateway scenario 1 GeneralPos rows: 7
 [pass] optional real scene definitions
 15/15 tests passed
 
@@ -26,5 +27,7 @@ Focused assertions added by this slice:
 - missing talk controller is an explicit invariant failure
 - real GeneralPos operation ordering and transform assignment
 - root/layer/child GeneralPos traversal and child-zone transform composition
+- retail `PosName` field lookup against RMGK02 and seven real Gateway rows
+- every non-empty Gateway Action/Player `PosName` resolves without substitution
 - absent named GeneralPos is an explicit invariant failure
 - Wipe types 0-3, arbitrary names, raw -1 frame, and unknown no-op
