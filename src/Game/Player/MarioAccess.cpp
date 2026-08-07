@@ -261,7 +261,7 @@ void MarioAccess::tornadoJumpMini() {
     getMario()->tryTornadoJump();
 
     const TVec3f* gravity = getMario()->getGravityVec();
-    TVec3f booster = gravity->negateInline();
+    TVec3f booster = -*gravity;
     f32 boostPower = getMarioActor()->mConst->getTable()->mTornadoBoostPower;
     booster.mult(boostPower);
 
@@ -282,7 +282,7 @@ void MarioAccess::setFrontVecKeepUp(const TVec3f& rVec, u16) {
     if (!getMario()->isStatusActive(5)) {
         getMario()->setFrontVecKeepUp(rVec);
         getMarioActor()->_2DC = getMario()->mFrontVec;
-        getMarioActor()->_2D0 = getMario()->mHeadVec;
+        getMarioActor()->mUpVec = getMario()->mHeadVec;
         getMarioActor()->_2E8 = getMario()->mSideVec;
     }
 }
@@ -301,7 +301,7 @@ void MarioAccess::getThrowVec(TVec3f* pVec) {
         getMarioActor()->getThrowVec(pVec);
     }
     else {
-        pVec->set(getMarioActor()->_F3C_vec[getMarioActor()->_F40]);
+        pVec->set(getMarioActor()->_F3CVec[getMarioActor()->_F40]);
     }
 }
 
@@ -314,7 +314,7 @@ void MarioAccess::setTrans(const TVec3f& rPos, u16) {
     }
 
     getMarioActor()->_1C0 = true;
-    getMarioActor()->_2F4 = rPos;
+    getMarioActor()->mCameraTrans = rPos;
     MR::updateHitSensorsAll(getMarioActor());
 }
 
@@ -672,7 +672,7 @@ void MarioAccess::preventRush() {
     getMarioActor()->setNerve(&NrvMarioActor::MarioActorNrvNoRush::sInstance);
 }
 
-LiveActor* MarioAccess::getPlayerActor() {
+MarioActor* MarioAccess::getPlayerActor() {
     return getMarioActor();
 }
 

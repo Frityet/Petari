@@ -18,12 +18,12 @@ class TalkMessageCtrl;
 
 class DemoSheetKeeperBase {
 public:
-    virtual const char* getName() = 0;
-    virtual const char* getTypeString() = 0;
-    virtual void initCast(LiveActor*, const JMapInfoIter&) {};
-    virtual void start() {};
-    virtual void end() {};
-    virtual void update() {};
+    virtual const char* getName() const = 0;
+    virtual const char* getTypeString() const = 0;
+    virtual void initCast(LiveActor*, const JMapInfoIter&);
+    virtual void start();
+    virtual void end();
+    virtual void update();
 
     /* 0x04 */ DemoExecutor* mExecutor;
 };
@@ -31,20 +31,16 @@ public:
 template < class T >
 class DemoSheetKeeperInfoHolder {
 public:
-    virtual void executeType(T*);
+    virtual void executeType(const T*);
 
     /* 0x00 */ MR::Vector< MR::AssignableArray< T > > mInfo;
-};
-
-struct DemoTalkMessageCtrl {
-    /* 0x00 */ LiveActor* mActor;
-    /* 0x04 */ TalkMessageCtrl* mTalkMessageCtrl;
 };
 
 class DemoExecutor : public DemoCastGroup {
 public:
     /// @brief Creates a new `DemoExecutor`
     DemoExecutor(const char* pName);
+    virtual ~DemoExecutor();
 
     virtual void init(const JMapInfoIter& rIter);
     virtual void movement();
@@ -74,13 +70,21 @@ public:
     /* 0x028 */ DemoActionKeeper* mActionKeeper;
     /* 0x02C */ DemoWipeKeeper* mWipeKeeper;
     /* 0x030 */ DemoSoundKeeper* mSoundKeeper;
-    /* 0x034 */ MR::Vector< MR::FixedArray< DemoSheetKeeperBase*, 2 > > mSheetKeeper;
-    /* 0x040 */ StageSwitchCtrl* _40;
-    /* 0x044 */ NameObj* _44;
-    /* 0x048 */ const char* _48;
-    /* 0x04C */ s32 _4C;
+    /* 0x034 */ MR::Vector< MR::FixedArray< DemoSheetKeeperBase*, 2 > > mSheetKeepers;
+    /* 0x040 */ StageSwitchCtrl* mStageSwitchCtrl;
+    /* 0x044 */ NameObj* mDemoStarter;
+    /* 0x048 */ const char* mDemoName;
+    /* 0x04C */ s32 mStartType;
     /* 0x050 */ bool _50;
-    /* 0x054 */ MR::Vector< MR::FixedArray< LiveActor*, 192 > > mActor;
-    /* 0x358 */ MR::Vector< MR::FixedArray< DemoTalkAnimCtrl*, 8 > > mTalkAnimCtrl;
-    /* 0x37C */ MR::Vector< MR::FixedArray< DemoTalkMessageCtrl, 8 > > mTalkMessageCtrl;
+    /* 0x054 */ LiveActor* mInvalidateClippingActors[192];
+    /* 0x354 */ s32 mNumInvalidateClippingActors;
+    /* 0x358 */ DemoTalkAnimCtrl* mTalkAnimCtrls[8];
+    /* 0x378 */ s32 mNumTalkAnimCtrls;
+    struct TalkMessageInfo {
+        /* 0x00 */ const LiveActor* mActor;
+        /* 0x04 */ TalkMessageCtrl* mMessageCtrl;
+    };
+
+    /* 0x37C */ TalkMessageInfo mTalkMessageInfos[8];
+    /* 0x3BC */ s32 mNumTalkMessageInfos;
 };

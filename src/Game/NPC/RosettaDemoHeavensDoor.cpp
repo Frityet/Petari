@@ -1,5 +1,6 @@
 #include "Game/NPC/RosettaDemoHeavensDoor.hpp"
 #include "Game/Demo/DemoFunction.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/Util.hpp"
 

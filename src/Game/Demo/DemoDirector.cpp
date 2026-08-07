@@ -1,5 +1,6 @@
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoCastGroupHolder.hpp"
+#include "Game/Demo/DemoExecutor.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Demo/DemoSimpleCastHolder.hpp"
 #include "Game/Demo/DemoStartRequestHolder.hpp"
@@ -31,7 +32,7 @@ DemoDirector::DemoDirector(const char* pName) : NameObj(pName) {
     _18 = nullptr;
     _20 = new DemoSimpleCastHolder(0x200, 0x40, 0x80);
     mResourceHolder = nullptr;
-    mStartReqHolder = new DemoStartRequestHolder();
+    mStartRequestHolder = new DemoStartRequestHolder();
     _2C = nullptr;
     _30 = nullptr;
     _34 = -1;
@@ -41,8 +42,8 @@ DemoDirector::DemoDirector(const char* pName) : NameObj(pName) {
     _18 = new DemoCastGroupHolder();
     _18->initWithoutIter();
 
-    _1C = new DemoCastGroupHolder();
-    _1C->initWithoutIter();
+    mCastSubGroupHolder = new DemoCastGroupHolder();
+    mCastSubGroupHolder->initWithoutIter();
 
     mResourceHolder = DemoFunction::loadDemoArchive();
 }
@@ -77,15 +78,15 @@ void DemoDirector::startDemoExecutor(NameObj* pStarter, const char* pDemoName, s
     }
 }
 
-char* DemoDirector::getCurrentDemoName() const {
+const char* DemoDirector::getCurrentDemoName() const {
     if (mIsActive) {
-        return const_cast< char* >(_30);
+        return _30;
     }
     return nullptr;
 }
 
 void DemoDirector::endDemo(NameObj* pStarter, const char*, bool waitCamera) {
-    if (DemoStartRequestUtil::isExistStartDemoRequest(mStartReqHolder)) {
+    if (DemoStartRequestUtil::isExistStartDemoRequest(mStartRequestHolder)) {
         MR::sendMsgToAllLiveActor(0x70, nullptr);
         mExecutor = nullptr;
         doDemoEndRequest();
@@ -128,14 +129,14 @@ bool DemoDirector::registerDemoCast(LiveActor* pActor, const JMapInfoIter& rIter
         return true;
     }
 
-    return _1C->tryRegisterDemoActor(pActor, rIter, info);
+    return mCastSubGroupHolder->tryRegisterDemoActor(pActor, rIter, info);
 }
 
 bool DemoDirector::registerDemoCast(LiveActor* pActor, const char* pName, const JMapInfoIter& rIter) {
     if (_18->tryRegisterDemoActor(pActor, pName, rIter)) {
         return true;
     }
-    return _1C->tryRegisterDemoActor(pActor, pName, rIter);
+    return mCastSubGroupHolder->tryRegisterDemoActor(pActor, pName, rIter);
 }
 
 void DemoDirector::registerDemoSimpleCast(LiveActor* pActor) {
@@ -151,7 +152,7 @@ void DemoDirector::registerDemoSimpleCast(NameObj* pObj) {
 }
 
 bool DemoDirector::tryStartDemoRequested() {
-    if (!mStartReqHolder->isExistRequest()) {
+    if (!mStartRequestHolder->isExistRequest()) {
         return false;
     }
 
@@ -174,13 +175,13 @@ void DemoDirector::startDemo(NameObj* pStarter, const char* pDemoName, bool useC
 }
 
 void DemoDirector::startDemoRequested() {
-    DemoStartRequestUtil::startDemo(mStartReqHolder);
+    DemoStartRequestUtil::startDemo(mStartRequestHolder);
 
-    const DemoStartInfo* info = mStartReqHolder->getCurrentInfo();
+    const DemoStartInfo* info = mStartRequestHolder->getCurrentInfo();
     NameObj* starter = DemoStartRequestUtil::getDemoStarter(*info);
     startDemo(starter, info->mDemoName, info->_2C == 0, info->_24);
 
-    DemoStartRequestUtil::popStartDemoRequest(mStartReqHolder);
+    DemoStartRequestUtil::popStartDemoRequest(mStartRequestHolder);
 }
 
 void DemoDirector::doDemoEndRequest() {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Player/MarioState.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 class MarioActor;
 

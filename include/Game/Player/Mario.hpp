@@ -5,6 +5,7 @@
 #include <JSystem/JGeometry/TMatrix.hpp>
 
 class AreaObj;
+class CubeCameraArea;
 class FloorCode;
 class GravityInfo;
 class HashSortTable;
@@ -152,10 +153,10 @@ public:
     bool checkBaseTransPoint();
     bool checkHeadPoint();
     const TVec3f* calcShadowPos();
-    void updateBinderInfo();
+    bool updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
-    void checkGround();
-    void getCameraCubeCode() const;
+    bool checkGround();
+    CubeCameraArea* getCameraCubeCode() const;
     void updateCubeCode();
 
     bool isDamaging() const;
@@ -253,13 +254,13 @@ public:
     void mainMove();
     bool isEnableTurn();
     void recordTurnSlipAngle();
-    void decideInertia(f32);
-    void decideInertiaOnIce(f32);
-    void decideInertiaOnSlip(f32);
+    f32 decideInertia(f32);
+    f32 decideInertiaOnIce(f32);
+    f32 decideInertiaOnSlip(f32);
     void calcShadowDir(const TVec3f&, TVec3f*);
-    void retainMoveDir(f32, f32, TVec3f*);
+    bool retainMoveDir(f32, f32, TVec3f*);
     void calcMoveDir(f32, f32, TVec3f*, bool);
-    void checkLockOnHoming();
+    bool checkLockOnHoming();
     void doLockOnHoming();
     void fixPositionInTower();
 
@@ -794,7 +795,7 @@ public:
     // NOT FAKE
 
     /* 0x564 */ s32 _564;
-    /* 0x568 */ u32 _568;
+    /* 0x568 */ AreaObj* _568;
     /* 0x56C */ AreaObj* _56C;
     /* 0x570 */ u8 _570;
     /* 0x574 */ u32 _574;

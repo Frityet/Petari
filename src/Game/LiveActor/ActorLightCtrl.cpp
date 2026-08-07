@@ -25,8 +25,8 @@ void ActorLightCtrl::init(int interpolate, bool /* unused */) {
 }
 
 void ActorLightInfo::operator=(const ActorLightInfo& rInfo) {
-    u32* pDst = mInfo0.mWords;
-    const u32* pSrc = rInfo.mInfo0.mWords;
+    u32* pDst = reinterpret_cast< u32* >(&mInfo0);
+    const u32* pSrc = reinterpret_cast< const u32* >(&rInfo.mInfo0);
 
     for (s32 i = 0; i < 2; i++) {
         pDst[0] = pSrc[0];
@@ -37,8 +37,8 @@ void ActorLightInfo::operator=(const ActorLightInfo& rInfo) {
 
     pDst[0] = pSrc[0];
 
-    pDst = mInfo1.mWords;
-    pSrc = rInfo.mInfo1.mWords;
+    pDst = reinterpret_cast< u32* >(&mInfo1);
+    pSrc = reinterpret_cast< const u32* >(&rInfo.mInfo1);
 
     for (s32 i = 0; i < 2; i++) {
         pDst[0] = pSrc[0];

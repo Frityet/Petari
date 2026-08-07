@@ -31,6 +31,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include <cstring>
 
 namespace {
@@ -784,7 +785,7 @@ void CameraDirector::calcViewMtxFromPoseParam(TPos3f* pMtx, const CameraPosePara
 
     TPos3f rollMtx;
     rollMtx.zeroTrans();
-    rollMtx.setRotateInline(TVec3f(0.0f, 0.0f, 1.0f), pPoseParam->mRoll);
+    rollMtx.setRotate(TVec3f(0.0f, 0.0f, 1.0f), pPoseParam->mRoll);
     pMtx->concat(*pMtx, rollMtx);
 }
 

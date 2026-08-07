@@ -5,7 +5,6 @@ namespace {
     CreationFuncPtr getCreator(const PlacementInfoOrdered::Identifier&);
 };  // namespace
 
-// functionally equiv, just isn't reloading the array size properly
 PlacementInfoOrdered::PlacementInfoOrdered(int count) {
     mIndexArray = nullptr;
     _4 = 0;
@@ -14,8 +13,8 @@ PlacementInfoOrdered::PlacementInfoOrdered(int count) {
     mCount = count;
     mIndexArray = new Index[count];
     mSetArray = new SameIdSet[count];
-    mIdentiferArray = new Identifier*[count];
-    MR::zeroMemory(mIdentiferArray, count);
+    mIdentiferArray = new SameIdSet*[count];
+    MR::zeroMemory(mIdentiferArray, count * sizeof(SameIdSet*));
 }
 
 /*

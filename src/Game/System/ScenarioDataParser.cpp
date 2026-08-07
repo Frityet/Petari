@@ -50,8 +50,8 @@ ScenarioData::ScenarioData(const char* pFilePath) : mScenarioData(nullptr), mGal
 // ScenarioData::getPowerStarNum
 
 bool ScenarioData::getValueString(const char* pKey, s32 a2, const char** ppOut) const {
-    ScenarioDataIter iter = getScenarioDataIter(a2);
-    bool isExist = reinterpret_cast< const JMapInfo* >(iter.mParser)->getValue< const char* >(iter.mCur, pKey, ppOut);
+    JMapInfoIter iter = getScenarioDataIter(a2);
+    bool isExist = iter.getValue< const char* >(pKey, ppOut);
 
     if (isExist) {
         if (MR::isEqualString(*ppOut, "")) {
@@ -72,14 +72,14 @@ const char* ScenarioData::getZoneName(s32 zoneId) const {
 // ScenarioData::getScenarioDataIter
 
 bool ScenarioData::getValueU32(const char* pKey, s32 a2, u32* pOut) const {
-    ScenarioDataIter iter = getScenarioDataIter(a2);
-    s32 index = reinterpret_cast< const JMapInfo* >(iter.mParser)->searchItemInfo(pKey);
+    JMapInfoIter iter = getScenarioDataIter(a2);
+    s32 index = iter.mInfo->searchItemInfo(pKey);
 
     if (index < 0) {
-        return nullptr;
+        return false;
     }
 
-    return reinterpret_cast< const JMapInfo* >(iter.mParser)->getValueFast(a2, index, pOut);
+    return iter.mInfo->getValueFast(iter.mIndex, index, pOut);
 }
 
 // ScenarioData::getValueBool

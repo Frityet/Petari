@@ -56,7 +56,7 @@ public:
     ModelObj* mModelObj;                        // 0x98
     ProjmapEffectMtxSetter* mMatrixSetter;      // 0x9C
     MapPartsRailMover* mRailMover;              // 0xA0
-    MapPartsRotatorBase* mRotator;              // 0xA4
+    MapPartsRotator* mRotator;                  // 0xA4
     MapPartsRailRotator* mRailRotator;          // 0xA8
     MapPartsRailPosture* mRailPosture;          // 0xAC
     MapPartsRailGuideDrawer* mRailGuideDrawer;  // 0xB0

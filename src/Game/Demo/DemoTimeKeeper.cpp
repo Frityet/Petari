@@ -17,16 +17,16 @@ DemoTimeKeeper::DemoTimeKeeper(const DemoExecutor* pExecutor) :
 
     for (s32 i = 0; i < mNumPartInfos; i++) {
         DemoTimePartInfo* partInfo = &mMainPartInfos[i];
-        MR::getCsvDataStrOrNULL(&partInfo->mName, map, "PartName", i);
-        MR::getCsvDataS32(&partInfo->mTotalSteps, map, "TotalStep", i);
+        MR::getCsvDataStrOrNULL(&partInfo->mPartName, map, "PartName", i);
+        MR::getCsvDataS32(&partInfo->mTotalStep, map, "TotalStep", i);
 
         s32 suspendFlag = 0;
         MR::getCsvDataS32(&suspendFlag, map, "SuspendFlag", i);
-        partInfo->_8 = suspendFlag != 0;
+        partInfo->mSuspendFlag = suspendFlag != 0;
     }
 }
 
-DemoTimePartInfo::DemoTimePartInfo() : mName(nullptr), mTotalSteps(1), _8(false) {}
+DemoTimePartInfo::DemoTimePartInfo() : mPartName(nullptr), mTotalStep(1), mSuspendFlag(false) {}
 
 void DemoTimeKeeper::start() {
     _18 = 0;
@@ -49,11 +49,11 @@ void DemoTimeKeeper::update() {
     mCurrentStep++;
     _10++;
 
-    if (mSubPartInfos->mTotalSteps > mCurrentStep) {
+    if (mSubPartInfos->mTotalStep > mCurrentStep) {
         return;
     }
 
-    if (mSubPartInfos->_8) {
+    if (mSubPartInfos->mSuspendFlag) {
         return;
     }
 
@@ -79,11 +79,11 @@ bool DemoTimeKeeper::isDemoEnd() const {
         return false;
     }
 
-    if (mSubPartInfos->_8 && mSubPartInfos->mTotalSteps <= mCurrentStep) {
+    if (mSubPartInfos->mSuspendFlag && mSubPartInfos->mTotalStep <= mCurrentStep) {
         return true;
     }
 
-    if (mSubPartInfos->mTotalSteps >= mCurrentStep) {
+    if (mSubPartInfos->mTotalStep >= mCurrentStep) {
         if (mNumPartInfos == _18) {
             return true;
         }
@@ -97,7 +97,7 @@ void DemoTimeKeeper::setStartPart(const char* pPartName) {
 }
 
 bool DemoTimeKeeper::isExistSuspendFlagCurrentPart() const {
-    return mSubPartInfos->_8;
+    return mSubPartInfos->mSuspendFlag;
 }
 
 bool DemoTimeKeeper::isPartLast() const {
@@ -111,7 +111,7 @@ bool DemoTimeKeeper::isPartLast() const {
 void DemoTimeKeeper::setCurrentPart(const char* pPartName) {
     s32 partIndex = 0;
     while (partIndex < mNumPartInfos) {
-        if (!MR::isEqualString(mMainPartInfos[partIndex].mName, pPartName)) {
+        if (!MR::isEqualString(mMainPartInfos[partIndex].mPartName, pPartName)) {
             partIndex++;
         } else {
             goto set_part;
@@ -126,5 +126,5 @@ set_part:
 }
 
 bool DemoTimeKeeper::isCurrentDemoPartLastStep() const {
-    return mCurrentStep >= mSubPartInfos->mTotalSteps - 1;
+    return mCurrentStep >= mSubPartInfos->mTotalStep - 1;
 }

@@ -822,8 +822,7 @@ public:
     /* 0xB74 */ u16 _B74;
     /* 0xB78 */ J3DAnmTexPattern* mEyeRes;
     /* 0xB7C */ JUTTexture* _B7C;
-    /* 0xB80 */ JUTTexture* _B80;
-    /* 0xB84 */ JUTTexture* _B84;
+    /* 0xB80 */ JUTTexture* _B80[2];
     /* 0xB88 */ u16 _B88;
     /* 0xB8C */ MarioNullBck* mNullAnimation;
     /* 0xB90 */ bool _B90;

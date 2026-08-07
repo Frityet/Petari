@@ -3,6 +3,7 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioDamage.hpp"
 #include "Game/Player/MarioHang.hpp"
 #include "Game/Player/MarioMapCode.hpp"

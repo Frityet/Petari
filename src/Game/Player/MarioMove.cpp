@@ -1,4 +1,5 @@
 #include "Game/Map/HitInfo.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
@@ -1144,7 +1145,7 @@ bool Mario::checkLockOnHoming() {
 }
 
 void Mario::doLockOnHoming() {
-    TVec3f targetDiff(*reinterpret_cast<TVec3f*>(mActor->_470 + 4) - mPosition);
+    TVec3f targetDiff(mActor->_470->mPosition - mPosition);
     TVec3f front;
     front.x = targetDiff.x;
     front.y = targetDiff.y;

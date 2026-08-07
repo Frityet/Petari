@@ -2,6 +2,7 @@
 #include "Game/Enemy/WalkerStateBlowDamage.hpp"
 #include "Game/Enemy/WalkerStateRunaway.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/SpotMarkLight.hpp"
 #include "Game/NPC/RunawayRabbitCollect.hpp"
 #include "Game/NPC/TrickRabbit.hpp"
@@ -103,7 +104,7 @@ void RunawayRabbit::init(const JMapInfoIter& rIter) {
     MR::initShadowVolumeSphere(this, 45.0f);
 
     TVec3f shadowOffset(0.0f, 0.0f, 0.0f);
-    MR::setShadowDropPositionAtJoint(this, nullptr, "Spine", &shadowOffset);
+    MR::setShadowDropPositionAtJoint(this, nullptr, "Spine", shadowOffset);
 
     mFootPrint = TrickRabbitUtil::createRabbitFootPrint(this);
     initSound(6, false);
@@ -155,7 +156,7 @@ void RunawayRabbit::calcAndSetBaseMtx() {
 }
 
 void RunawayRabbit::updatePose() {
-    TVec3f up = mGravity.negateInline();
+    TVec3f up = -mGravity;
     MR::blendQuatUpFront(&mQuat, up, mFrontVec, 0.1f, 0.2f);
 }
 

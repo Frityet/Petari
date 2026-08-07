@@ -17,11 +17,11 @@ class DemoWipeKeeper : public DemoSheetKeeperBase, public DemoSheetKeeperInfoHol
 public:
     DemoWipeKeeper(DemoExecutor*);
 
-    virtual const char* getName() {
+    virtual const char* getName() const {
         return "ワイプ";
     }
 
-    virtual const char* getTypeString() {
+    virtual const char* getTypeString() const {
         return "Wipe";
     }
 

@@ -10,5 +10,5 @@ public:
     virtual ~MarioParts();
     virtual void init(const JMapInfoIter&) override;
 
-    /* 0x9C */ u8 _9C[4];
+    /* 0x9C */ const char* _9C;
 };

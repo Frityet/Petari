@@ -1,58 +1,18 @@
 #include "Game/Demo/DemoExecutor.hpp"
 
 #include "Game/Demo/DemoActionKeeper.hpp"
+#include "Game/Demo/DemoCameraKeeper.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Demo/DemoPlayerKeeper.hpp"
+#include "Game/Demo/DemoSoundKeeper.hpp"
+#include "Game/Demo/DemoSubPartKeeper.hpp"
 #include "Game/Demo/DemoTalkAnimCtrl.hpp"
 #include "Game/Demo/DemoTimeKeeper.hpp"
+#include "Game/Demo/DemoWipeKeeper.hpp"
+#include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Util.hpp"
 #include <algorithm>
-
-class DemoSheetKeeperBase {
-public:
-    virtual const char* getName() const = 0;
-    virtual const char* getTypeString() const = 0;
-    virtual void initCast(LiveActor*, const JMapInfoIter&);
-    virtual void start();
-    virtual void end();
-    virtual void update();
-};
-
-class DemoCameraKeeper {
-public:
-    DemoCameraKeeper(DemoExecutor*, const JMapInfoIter&);
-
-    void initCast(LiveActor*, const JMapInfoIter&);
-    void start();
-    void update();
-    void end();
-
-    u8 _0[0x14];
-};
-
-class DemoWipeKeeper : public DemoSheetKeeperBase {
-public:
-    DemoWipeKeeper(DemoExecutor*);
-
-    virtual const char* getName() const;
-    virtual const char* getTypeString() const;
-    virtual void start();
-    virtual void update();
-
-    u8 _4[0x14];
-};
-
-class DemoSoundKeeper : public DemoSheetKeeperBase {
-public:
-    DemoSoundKeeper(DemoExecutor*);
-
-    virtual const char* getName() const;
-    virtual const char* getTypeString() const;
-    virtual void update();
-
-    u8 _4[0x14];
-};
 
 DemoExecutor::DemoExecutor(const char* pName) : DemoCastGroup(pName) {
     mSheetName = nullptr;
@@ -162,7 +122,7 @@ void DemoExecutor::startPart(NameObj* pStarter, const char* pDemoName, const cha
     std::for_each(
         mTalkAnimCtrls,
         mTalkAnimCtrls + mNumTalkAnimCtrls,
-        std::bind2nd(std::mem_fun(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
+        std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
 
     start(pStarter, pDemoName, startType);
     mTimeKeeper->setStartPart(pPartName);
@@ -180,7 +140,7 @@ void DemoExecutor::startDemoSystemPart(const char* pPartName, s32 startType) {
     std::for_each(
         mTalkAnimCtrls,
         mTalkAnimCtrls + mNumTalkAnimCtrls,
-        std::bind2nd(std::mem_fun(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
+        std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
 
     switch (startType) {
     case 1:
@@ -205,7 +165,7 @@ bool DemoExecutor::tryStartDemoSystemPart(const char* pPartName, s32 startType) 
     std::for_each(
         mTalkAnimCtrls,
         mTalkAnimCtrls + mNumTalkAnimCtrls,
-        std::bind2nd(std::mem_fun(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
+        std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pPartName));
 
     bool started = false;
     switch (startType) {
@@ -252,8 +212,8 @@ void DemoExecutor::addTalkMessageCtrl(LiveActor* pActor, TalkMessageCtrl* pCtrl)
 }
 
 TalkMessageCtrl* DemoExecutor::findTalkMessageCtrl(const LiveActor* pActor) const {
-    TalkMessageInfo* it = const_cast< TalkMessageInfo* >(mTalkMessageInfos);
-    TalkMessageInfo* end = const_cast< TalkMessageInfo* >(mTalkMessageInfos + mNumTalkMessageInfos);
+    DemoExecutor::TalkMessageInfo* it = const_cast< DemoExecutor::TalkMessageInfo* >(mTalkMessageInfos);
+    DemoExecutor::TalkMessageInfo* end = const_cast< DemoExecutor::TalkMessageInfo* >(mTalkMessageInfos + mNumTalkMessageInfos);
     for (; it != end; ++it) {
         if (it->mActor == pActor) {
             return it->mMessageCtrl;
@@ -264,8 +224,8 @@ TalkMessageCtrl* DemoExecutor::findTalkMessageCtrl(const LiveActor* pActor) cons
 }
 
 void DemoExecutor::setTalkMessageCtrl(const LiveActor* pActor, TalkMessageCtrl* pCtrl) {
-    TalkMessageInfo* it = mTalkMessageInfos;
-    TalkMessageInfo* end = mTalkMessageInfos + mNumTalkMessageInfos;
+    DemoExecutor::TalkMessageInfo* it = mTalkMessageInfos;
+    DemoExecutor::TalkMessageInfo* end = mTalkMessageInfos + mNumTalkMessageInfos;
     for (; it != end; ++it) {
         if (it->mActor == pActor) {
             it->mMessageCtrl = pCtrl;
