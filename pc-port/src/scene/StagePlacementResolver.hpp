@@ -81,7 +81,6 @@ namespace smgpc::scene {
         std::string archive_path;
         std::string table_path;
         std::string object_archive_path;
-        std::string model_archive_name;
         s32 l_id = -1;
         s32 zone_id = 0;
         s32 layer_id = -1;
@@ -115,8 +114,6 @@ namespace smgpc::scene {
         bool has_rotation = false;
         bool has_scale = false;
         bool factory_supported = false;
-        bool model_fallback_supported = false;
-        bool alias_model_fallback_supported = false;
         bool intentionally_ignored = false;
         std::string support_reason;
         smgpc::scene::nameobj::NameObjPlacementSupportKind support_kind = smgpc::scene::nameobj::NameObjPlacementSupportKind::Unsupported;

@@ -37,6 +37,8 @@ namespace smgpc::scene {
     };
 
     struct StageCollisionLoadStats {
+        // Placements admitted by the real NameObjFactory gate. Unsupported
+        // and intentionally ignored rows never participate in collision.
         std::size_t placement_count = 0U;
         std::size_t archive_count = 0U;
         std::size_t mesh_count = 0U;

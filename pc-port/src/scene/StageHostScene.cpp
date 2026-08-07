@@ -38,18 +38,12 @@ namespace smgpc::scene {
         }
 
         [[nodiscard]] bool placement_is_created(const StagePlacementObject &placement) {
-            return placement.factory_supported || placement.model_fallback_supported || placement.alias_model_fallback_supported;
+            return placement.factory_supported;
         }
 
         [[nodiscard]] std::string_view placement_status_name(const StagePlacementObject &placement) {
             if (placement.factory_supported) {
                 return "created";
-            }
-            if (placement.model_fallback_supported) {
-                return "created_model_fallback";
-            }
-            if (placement.alias_model_fallback_supported) {
-                return "created_alias_model_fallback";
             }
             if (placement.intentionally_ignored) {
                 return "ignored";
@@ -126,7 +120,6 @@ namespace smgpc::scene {
                     out << "  rail_first_point: [" << rail.first_point[0] << ", " << rail.first_point[1] << ", " << rail.first_point[2] << "]\n";
                 }
                 out << "  support_reason: " << placement.support_reason << "\n";
-                out << "  model_archive: " << placement.model_archive_name << "\n";
                 out << "  archive: " << placement.object_archive_path << "\n";
             }
         }
@@ -204,7 +197,7 @@ namespace smgpc::scene {
 
     void StageHostScene::construct_root_object(std::string_view object_name, std::string_view actor_name,
                                                const StagePlacementObject *placement, bool explicit_root) {
-        if (!smgpc::scene::nameobj::can_create_name_obj(_runtime.dvd(), object_name)) {
+        if (!smgpc::scene::nameobj::can_create_name_obj(object_name)) {
             throw std::runtime_error("Unsupported stage host request object: " + std::string(object_name) + " for stage " + _request.stage_name);
         }
 
@@ -228,9 +221,7 @@ namespace smgpc::scene {
         init_stage_environment();
 
         const auto explicit_placement = std::ranges::find_if(_placements, [this](const auto &placement) {
-            return placement.object_name == _request.object_name &&
-                   (placement.factory_supported || placement.model_fallback_supported ||
-                    placement.alias_model_fallback_supported);
+            return placement.object_name == _request.object_name && placement.factory_supported;
         });
         const auto *placement = explicit_placement != _placements.end() ? &*explicit_placement : nullptr;
         const auto actor_name = !_request.actor_name.empty() ? std::string_view(_request.actor_name) :
@@ -262,8 +253,7 @@ namespace smgpc::scene {
             if (placement.intentionally_ignored) {
                 continue;
             }
-            if (!placement.factory_supported && !placement.model_fallback_supported && !placement.alias_model_fallback_supported &&
-                !placement.intentionally_ignored) {
+            if (!placement.factory_supported && !placement.intentionally_ignored) {
                 blocked_placements.push_back(&placement);
                 continue;
             }
@@ -289,10 +279,6 @@ namespace smgpc::scene {
         if (_request.fail_unsupported_placement && !blocked_placements.empty()) {
             throw std::runtime_error(unsupported_placement_error(_request.stage_name, blocked_placements));
         }
-
-        if (_roots.empty()) {
-            construct_root_object(_request.stage_name, resolve_actor_name(_request.stage_name), nullptr);
-        }
     }
 
     void StageHostScene::init_stage_environment() {
@@ -315,7 +301,8 @@ namespace smgpc::scene {
         _runtime.emit_semantic_trace_event(
             "collision", "stage_collision_loaded",
             "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                ";placements=" + std::to_string(collision_stats.placement_count) +
+                ";placement_rows=" + std::to_string(_placements.size()) +
+                ";factory_placements=" + std::to_string(collision_stats.placement_count) +
                 ";archives=" + std::to_string(collision_stats.archive_count) +
                 ";meshes=" + std::to_string(collision_stats.mesh_count) +
                 ";triangles=" + std::to_string(collision_stats.triangle_count) +
@@ -377,7 +364,6 @@ namespace smgpc::scene {
                                                                            std::to_string(rail.first_point[1]) + "," +
                                                                            std::to_string(rail.first_point[2]) :
                                                                        "none") +
-                                               ";model_archive=" + placement.model_archive_name +
                                                ";object_archive=" + placement.object_archive_path);
 #else
         (void)placement;

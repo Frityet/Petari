@@ -1,0 +1,41 @@
+2026-08-07T02:14:10Z factory-only placement verification
+
+$ xmake test 'smg-pc-nameobj-factory-placement-tests/*'
+[ok] factory-only placement support
+[info] real-disc fixture: /workspaces/pcport/RMGK01.iso
+[info] direct archive-only candidate: AirBubble
+[info] alias-only candidate: Bomb -> BombHei
+[ok] optional real-disc archive-only rejection
+2 NameObj placement test(s) passed
+100% tests passed, 0 failed
+
+$ xmake run smg-pc-aurora-native-tests
+27 Aurora-native test(s) passed
+
+$ xmake run smg-pc-demo-scene-runtime-tests
+14/14 tests passed
+
+$ xmake build smg-pc-nameobj-factory-placement-tests
+build ok
+
+$ xmake build smg-pc-aurora-native-tests
+build ok
+
+$ xmake build smg-pc-demo-scene-runtime-tests
+build ok
+
+$ xmake build smg-pc
+build ok
+
+$ git diff --check -- <factory/resolver/host/collision/test files>
+clean
+
+$ xmake aurora-route-smoke --disc=/workspaces/pcport/RMGK01.wbfs --display=334 --no-build gateway_handoff
+aurora-route-smoke: gateway_handoff passed nonblack=0.0070 render_packets=604
+aurora-route-smoke: passed
+
+Gateway placement summary:
+stage=HeavensDoorGalaxy scenario=1 total=242 created=35 blocked=135 ignored=72
+required semantic events: scene_change_applied, stage_player_created, stage_placement_summary
+required real render models: Mario, Coin, TrickRabbit, StarPiece
+forbidden construction statuses: created_model_fallback, created_alias_model_fallback

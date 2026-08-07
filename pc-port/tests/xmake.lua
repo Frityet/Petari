@@ -206,3 +206,29 @@ target("smg-pc-demo-scene-runtime-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+target("smg-pc-nameobj-factory-placement-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "NameObjFactoryPlacementTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("nameobj_factory_placement", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

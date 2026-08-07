@@ -583,7 +583,6 @@ namespace smgpc::scene {
                 .archive_path = table.archive_path,
                 .table_path = table.table_path,
                 .object_archive_path = object_archive.has_value() ? object_archive->generic_string() : "",
-                .model_archive_name = support.model_archive_name,
                 .l_id = l_id,
                 .zone_id = table.zone_id,
                 .layer_id = table.layer_id,
@@ -591,8 +590,6 @@ namespace smgpc::scene {
                 .jmap_info = info,
                 .jmap_entry_index = entry_index,
                 .factory_supported = support.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::OriginalFactory,
-                .model_fallback_supported = support.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::GenericModel,
-                .alias_model_fallback_supported = support.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::GenericAliasModel,
                 .intentionally_ignored = support.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::IntentionallyIgnored,
                 .support_reason = support.reason,
                 .support_kind = support.kind,
@@ -746,7 +743,7 @@ namespace smgpc::scene {
     std::vector<StagePlacementObject> resolve_stage_root_placements(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {
         auto objects = std::vector<StagePlacementObject>{};
         for (auto &object : resolve_stage_placement_objects(dvd, stage_name, scenario_no)) {
-            if (object.factory_supported || object.model_fallback_supported || object.alias_model_fallback_supported) {
+            if (object.factory_supported) {
                 objects.push_back(std::move(object));
             }
         }

@@ -123,10 +123,10 @@ namespace smgpc::scene {
             }
 
             const auto object_stem = lower_copy(placement.object_name);
-            const auto model_stem = lower_copy(placement.model_archive_name);
+            const auto archive_stem = lower_copy(stem(placement.object_archive_path));
             const auto exact = std::ranges::find_if(candidates, [&](const auto* entry) {
                 const auto entry_stem = lower_copy(stem(entry->path));
-                return entry_stem == object_stem || (!model_stem.empty() && entry_stem == model_stem);
+                return entry_stem == object_stem || (!archive_stem.empty() && entry_stem == archive_stem);
             });
             if (exact != candidates.end()) {
                 return *exact;
@@ -322,8 +322,11 @@ namespace smgpc::scene {
     StageCollisionLoadStats StageCollisionService::load(smgpc::runtime::DvdFileSystemService& dvd,
                                                         std::span<const StagePlacementObject> placements) {
         clear();
-        _stats.placement_count = placements.size();
         for (const auto& placement : placements) {
+            if (!placement.factory_supported) {
+                continue;
+            }
+            ++_stats.placement_count;
             if (placement.object_archive_path.empty()) {
                 continue;
             }

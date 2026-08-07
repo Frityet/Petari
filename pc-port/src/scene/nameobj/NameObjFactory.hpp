@@ -19,15 +19,12 @@ namespace smgpc::scene::nameobj {
     enum class NameObjPlacementSupportKind {
         Unsupported,
         OriginalFactory,
-        GenericModel,
-        GenericAliasModel,
         IntentionallyIgnored,
     };
 
     struct NameObjPlacementSupport {
         NameObjPlacementSupportKind kind = NameObjPlacementSupportKind::Unsupported;
         std::string reason;
-        std::string model_archive_name;
     };
 
     enum class NameObjArchiveKind {
@@ -51,7 +48,6 @@ namespace smgpc::scene::nameobj {
     };
 
     [[nodiscard]] bool can_create_name_obj(std::string_view object_name);
-    [[nodiscard]] bool can_create_name_obj(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name);
     [[nodiscard]] NameObjPlacementSupport describe_name_obj_placement_support(smgpc::runtime::DvdFileSystemService &dvd,
                                                                               std::string_view object_name,
                                                                               std::string_view table_path);

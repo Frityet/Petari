@@ -103,11 +103,29 @@ local scenarios = {
         name = "gateway_handoff",
         frame = 10350,
         description = "title through five-page picturebook advance into the HeavensDoor stage handoff",
-        min_nonblack_ratio = 0.01,
+        -- Unsupported placements are deliberately absent, so this frame is
+        -- sparse until their real factories are ported. Require the real
+        -- player and stage lifecycle below instead of fake model coverage.
+        min_nonblack_ratio = 0.005,
         min_render_packets = 1,
         button_script = gateway_button_script,
         env = {
             SMGPC_DEMO_ROUTE = "heavensdoor_after_picturebook",
+        },
+        expected_semantic_events = {
+            {category = "scene_controller", name = "scene_change_applied",
+             detail = "current_stage=HeavensDoorGalaxy;scenario=1", count = 1},
+            {category = "player", name = "stage_player_created",
+             detail = "stage=HeavensDoorGalaxy;scenario=1", count = 1},
+            {category = "placement", name = "stage_placement_summary",
+             detail = "stage=HeavensDoorGalaxy;scenario=1", count = 1},
+        },
+        expected_render_models = {
+            {name = "Mario", min_packets = 1, bck_frame_max = 180,
+             maximum_unsatisfied_light_mask = 0, require_loaded_requested_lights = true},
+            {name = "Coin", min_packets = 1},
+            {name = "TrickRabbit", min_packets = 1},
+            {name = "StarPiece", min_packets = 1},
         },
         placement_report = {
             filename = "gateway_handoff-placement-report.md",
@@ -116,11 +134,30 @@ local scenarios = {
                     stage = "HeavensDoorGalaxy",
                     scenario = 1,
                     total_objects = 242,
-                    created_objects = 168,
-                    blocked_objects = 2,
                     intentionally_ignored_objects = 72,
                 },
+                -- The baseline has 35 real factories and 135 unsupported
+                -- actor rows. Porting a real actor may only improve those
+                -- bounds; fake model/alias statuses remain forbidden below.
+                summary_minimum = {
+                    created_objects = 35,
+                },
+                summary_maximum = {
+                    blocked_objects = 135,
+                },
                 objects = {
+                    {
+                        match = {
+                            status = "created_model_fallback",
+                        },
+                        count = 0,
+                    },
+                    {
+                        match = {
+                            status = "created_alias_model_fallback",
+                        },
+                        count = 0,
+                    },
                     {
                         match = {
                             status = "created",
