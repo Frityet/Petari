@@ -1,46 +1,83 @@
 #pragma once
 
-#include <optional>
-#include <string>
-#include <string_view>
+#include "Game/System/NerveExecutor.hpp"
+#include "Game/Util/Array.hpp"
 
-#include <revolution.h>
+class GalaxyMoveArgument;
+class NameObj;
 
-class StorySequenceExecutor {
+class DemoFortressDiscoverCheckList {
 public:
-    struct StageRequest {
-        std::string mSceneName;
-        std::string mStageName;
-        std::string mObjectName;
-        std::string mActorName;
-        std::string mDemoName;
-        std::string mEventName;
-        s32 mScenarioNo = 1;
-        s32 mStartId = 0;
-        s32 mStartZoneId = 0;
-        bool mAppearAfterInit = false;
-        bool mFailUnsupportedPlacement = false;
-    };
-
-    [[nodiscard]] static StageRequest makeInitialStageRequest();
-
-    void requestChangeStageInGameAfterLoadingGameData();
-    void requestHeavensDoorBunnyDemoAfterPictureBook();
-    [[nodiscard]] std::optional< StageRequest > takePendingStageRequest();
-    [[nodiscard]] bool isStoryDemoActive(std::string_view demoName) const;
-    [[nodiscard]] bool shouldRouteToHeavensDoorBunnyDemoAfterPictureBook() const;
-    [[nodiscard]] std::string_view getActiveDemoName() const;
-    [[nodiscard]] std::string_view getActiveEventName() const;
-
-private:
-    void preparePrologueAfterLoading();
-    void prepareHeavensDoorBunnyDemoAfterPictureBook();
-
-    std::optional< StageRequest > mPendingStageRequest;
-    std::string mActiveDemoName;
-    std::string mActiveEventName;
+    /* 0x00 */ const char* mStageName;
+    /* 0x04 */ const char* mStoryEventName;
+    /* 0x08 */ bool _8;
 };
 
-namespace smgpc::game {
-    StorySequenceExecutor& story_sequence_executor();
-}  // namespace smgpc::game
+class StorySequenceExecutorType {
+public:
+    class DemoSequenceInfo {
+    public:
+        /* 0x00 */ u16 _0;
+        /* 0x02 */ u16 _2;
+        /* 0x04 */ const char* _4;
+    };
+};
+
+class StorySequenceExecutor : public NerveExecutor {
+public:
+    /// @brief Creates a new `StorySequenceExecutor`.
+    StorySequenceExecutor();
+
+    void update();
+    bool isNeedMoviePlayerExecutingEventEnum() const;
+    bool hasNextDemo() const;
+    s32 getExecutingEventEnum() const;
+    bool isEqualStageScenarioBefore(const char*, int) const;
+    void moveGalaxy(GalaxyMoveArgument*, bool);
+    void setNerveSceneStart();
+    void forceStop();
+    void exeIdle();
+    void exeWaitToSceneStart();
+    void exePlayDemoSequence();
+    void exeWaitTimeKeepDemoEnd();
+    void exeWaitSaveEnd();
+    void exeStartSaveAfterSequence();
+    void exeWaitSaveEndAfterSequence();
+    void exeFadeinAfterSequence();
+    void exeStaffRollSequence();
+    void decideNextEventForClearGalaxy(GalaxyMoveArgument*);
+    void decideNextEventForMoveGalaxy(GalaxyMoveArgument*);
+    void decideNextEventForAfterLoading(GalaxyMoveArgument*) NO_INLINE;
+    void decideNextStageForGalaxyOut(GalaxyMoveArgument*);
+    void overwriteGalaxyNameAfterLoading(GalaxyMoveArgument*);
+    void setNextStageToAstroGalaxyOrDome(GalaxyMoveArgument*);
+    void setNextStageToAstroGalaxy(GalaxyMoveArgument*);
+    void setNextStageToAstroDome(GalaxyMoveArgument*);
+    const StorySequenceExecutorType::DemoSequenceInfo* isExecuteDemoLuigiMissing(const GalaxyMoveArgument*) const;
+    void getOptionalDemoForClearGalaxy(MR::Vector< MR::FixedArray< const StorySequenceExecutorType::DemoSequenceInfo*, 8 > >*,
+                                       const GalaxyMoveArgument*) const;
+    static bool isEqualStageStopCometScheduler(const char*);
+    void prepareDemoSequence(const StorySequenceExecutorType::DemoSequenceInfo*) NO_INLINE;
+    void prepareDemoSequence(const MR::Vector< MR::FixedArray< const StorySequenceExecutorType::DemoSequenceInfo*, 8 > >&);
+    void prepareDemoSequenceButlerFortressDiscover(const GalaxyMoveArgument*, const DemoFortressDiscoverCheckList&);
+    bool tryStartDemo(const char*) NO_INLINE;
+    bool tryStartSave();
+    bool tryWaitSaveEnd();
+    bool tryStartFadein();
+    bool tryStartMovieAndWaitEnd(u32);
+    const StorySequenceExecutorType::DemoSequenceInfo* getCurrentDemoInfo() const;
+    bool tryNextDemoInfo();
+    const StorySequenceExecutorType::DemoSequenceInfo* addDynamicDemoSequenceInfo(u16, u16, const char*);
+    void setBeforeStageScenario(const GalaxyMoveArgument&, bool);
+    s32 calcAproposScenarioNoOnAstroGalaxy() const;
+    s32 calcAproposScenarioNoOnAstroDome() const;
+
+    /* 0x08 */ const Nerve* mNextNerve;
+    /* 0x0C */ NameObj* mDemoObj;
+    /* 0x10 */ NameObj* mSaveObj;
+    /* 0x14 */ char mStageName[48];
+    /* 0x44 */ s32 mScenarioNo;
+    /* 0x48 */ MR::Vector< MR::FixedArray< const StorySequenceExecutorType::DemoSequenceInfo*, 8 > > _48;
+    /* 0x6C */ MR::Vector< MR::FixedArray< StorySequenceExecutorType::DemoSequenceInfo, 8 > > _6C;
+    /* 0xB0 */ bool _B0;
+};

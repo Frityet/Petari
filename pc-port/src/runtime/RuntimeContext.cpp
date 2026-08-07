@@ -624,11 +624,12 @@ namespace smgpc::runtime {
             }
         }
 
-        const auto debug_request_heavens_door = _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_LOAD_HEAVENDOOR);
-        if (debug_request_heavens_door && !_debug_load_heavens_door_held_last_frame) {
-            _pending_heavens_door_request = true;
+        const auto debug_scene_transition =
+            _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_REQUEST_SCENE_TRANSITION);
+        if (debug_scene_transition && !_debug_scene_transition_held_last_frame) {
+            _pending_debug_scene_transition_request = true;
         }
-        _debug_load_heavens_door_held_last_frame = debug_request_heavens_door;
+        _debug_scene_transition_held_last_frame = debug_scene_transition;
 
         if (_freecam_enabled && !_freecam_target_pose.has_value()) {
             _freecam_target_pose = _scene_camera_pose.value_or(default_scene_camera_pose());
@@ -944,9 +945,9 @@ namespace smgpc::runtime {
         return _freecam_enabled;
     }
 
-    bool RuntimeContext::consume_pending_heavens_door_request() {
-        const auto pending = _pending_heavens_door_request;
-        _pending_heavens_door_request = false;
+    bool RuntimeContext::consume_pending_debug_scene_transition_request() {
+        const auto pending = _pending_debug_scene_transition_request;
+        _pending_debug_scene_transition_request = false;
         return pending;
     }
 

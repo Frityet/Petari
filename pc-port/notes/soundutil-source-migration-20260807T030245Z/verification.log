@@ -1,0 +1,23 @@
+$ cmp -s include/Game/Util/SoundUtil.hpp pc-port/src/Game/Util/SoundUtil.hpp
+PASS
+
+$ cmp -s src/Game/Util/SoundUtil.cpp pc-port/src/Game/Util/SoundUtil.cpp
+PASS
+
+$ git diff --check -- pc-port/src/Game/Util/SoundUtil.hpp pc-port/src/Game/Util/SoundUtil.cpp pc-port/src/Game/xmake.lua pc-port/src/compat/GameRuntimeCompat.cpp pc-port/src/compat/SoundUtilCompat.cpp
+PASS
+
+$ cd pc-port && xmake build smg-pc
+PASS: build ok, spent 13.189s
+
+$ cd pc-port && xmake run smg-pc-aurora-native-tests
+PASS: 27 Aurora-native tests passed
+
+$ cd pc-port && xmake run smg-pc-demo-scene-runtime-tests
+PASS: 16/16 tests passed; optional real Gateway scenario found 7 GeneralPos rows
+
+$ cd pc-port && xmake aurora-route-smoke --disc=/workspaces/pcport/RMGK01.wbfs --display=336 --no-build --work-dir=notes/soundutil-source-migration-20260807T030245Z/route gateway_handoff
+PASS: frame=10350 nonblack=0.0070 render_packets=431
+
+$ cd pc-port && xmake test
+INCONCLUSIVE (unrelated concurrent edit): NameObjFactoryPlacementTests.cpp referenced the concurrently removed StageCollisionService::load API. No SoundUtil compilation or link failure occurred before the aggregate run stopped.

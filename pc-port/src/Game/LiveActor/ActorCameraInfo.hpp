@@ -2,12 +2,12 @@
 
 #include <revolution/types.h>
 
-#include "Game/Util/JMapInfo.hpp"
+class JMapInfoIter;
 
 class ActorCameraInfo {
 public:
-    explicit ActorCameraInfo(const JMapInfoIter &rIter);
-    ActorCameraInfo(s32 cameraSetID, s32 zoneID);
+    ActorCameraInfo(const JMapInfoIter&);
+    ActorCameraInfo(s32 cameraSetID = -1, s32 zoneID = 0);
 
     /* 0x0 */ s32 mCameraSetID;
     /* 0x4 */ s32 mZoneID;

@@ -1,4 +1,3 @@
-#include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "camera/CameraParam.hpp"
 #include "camera/StageStartCamera.hpp"
@@ -6,6 +5,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "scene/StageHostService.hpp"
 #include "scene/StagePlacementResolver.hpp"
+#include "scene/SceneTransitionRequestService.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -260,9 +260,9 @@ namespace {
         require(!camera.effective_camera_pose().has_value(), "clearing a stage should release its game camera pose");
 
         const auto host_request = smgpc::scene::StageHostRequest{};
-        const auto story_request = StorySequenceExecutor::makeInitialStageRequest();
+        const auto initial_request = smgpc::scene::SceneTransitionRequestService::make_initial_stage_request();
         require(host_request.start_id == 0 && host_request.start_zone_id == 0 &&
-                    story_request.mStartId == 0 && story_request.mStartZoneId == 0,
+                    initial_request.start_id == 0 && initial_request.start_zone_id == 0,
                 "stage and story requests should preserve the original default start ID and root zone");
     }
 

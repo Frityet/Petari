@@ -20,15 +20,6 @@ namespace smgpc::scene {
     }
 
     void GameSystemService::update() {
-        if (_runtime.consume_pending_heavens_door_request()) {
-            _scene_controller.request_change_scene(StageHostRequest{
-                .scene_name = "Game",
-                .stage_name = "HeavensDoorGalaxy",
-                .scenario_no = 1,
-                .appear_after_init = true,
-                .fail_unsupported_placement = false,
-            });
-        }
         _scene_controller.check_request_and_change_scene();
         _sequence_boot.update_after_runtime_frame();
         _scene_controller.check_request_and_change_scene();

@@ -371,7 +371,7 @@ namespace smgpc::render {
             case SDLK_F9:
                 return DebugInput::CORE_PAD_TOGGLE_FREECAM;
             case SDLK_F10:
-                return DebugInput::CORE_PAD_LOAD_HEAVENDOOR;
+                return DebugInput::CORE_PAD_REQUEST_SCENE_TRANSITION;
             case SDLK_W:
                 return DebugInput::CORE_PAD_FREECAM_MOVE_FORWARD;
             case SDLK_S:

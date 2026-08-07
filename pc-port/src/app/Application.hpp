@@ -15,11 +15,11 @@
 #include "scene/GameSystemSceneControllerService.hpp"
 #include "scene/GameSystemService.hpp"
 #include "scene/NameObjLifecycleService.hpp"
+#include "scene/SceneTransitionRequestService.hpp"
 #include "scene/SceneExecutionService.hpp"
 #include "scene/SceneLifecycleService.hpp"
 #include "scene/SequenceBootService.hpp"
 #include "scene/StageHostService.hpp"
-#include "scene/StorySequenceService.hpp"
 
 namespace smgpc::app {
 
@@ -43,7 +43,7 @@ namespace smgpc::app {
         std::unique_ptr<render::AuroraRenderer> aurora_renderer = {};
         std::unique_ptr<smgpc::runtime::RuntimeContext> runtime_context = {};
         std::unique_ptr<smgpc::scene::GameSystemSceneControllerService> scene_controller = {};
-        std::unique_ptr<smgpc::scene::StorySequenceService> story_sequence = {};
+        std::unique_ptr<smgpc::scene::SceneTransitionRequestService> scene_transitions = {};
         std::unique_ptr<smgpc::scene::StageHostService> stage_host = {};
         std::unique_ptr<smgpc::scene::SequenceBootService> sequence_boot = {};
         std::unique_ptr<smgpc::scene::GameSystemService> game_system = {};
@@ -80,7 +80,7 @@ namespace smgpc::app {
         di::SingletonService<smgpc::scene::SceneExecutionService>,
         di::SingletonService<smgpc::scene::SceneLifecycleService>,
         di::SingletonService<smgpc::scene::GameSystemSceneControllerService>,
-        di::SingletonService<smgpc::scene::StorySequenceService>,
+        di::SingletonService<smgpc::scene::SceneTransitionRequestService>,
         di::SingletonService<smgpc::scene::StageHostService>,
         di::SingletonService<smgpc::scene::SequenceBootService>,
         di::SingletonService<smgpc::scene::GameSystemService>,

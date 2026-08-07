@@ -1,7 +1,7 @@
 #pragma once
 
+#include "scene/SceneTransitionRequestService.hpp"
 #include "scene/StageHostService.hpp"
-#include "scene/StorySequenceService.hpp"
 
 #include <string>
 
@@ -11,10 +11,10 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
-
     class SequenceBootService final {
     public:
-        SequenceBootService(smgpc::runtime::RuntimeContext &runtime, StorySequenceService &story_sequence, StageHostService &stage_host);
+        SequenceBootService(smgpc::runtime::RuntimeContext &runtime, SceneTransitionRequestService &scene_transitions,
+                            StageHostService &stage_host);
         ~SequenceBootService();
 
         SequenceBootService(const SequenceBootService &) = delete;
@@ -31,7 +31,7 @@ namespace smgpc::scene {
         void update_stage_transition_requests();
 
         smgpc::runtime::RuntimeContext &_runtime;
-        StorySequenceService &_story_sequence;
+        SceneTransitionRequestService &_scene_transitions;
         StageHostService &_stage_host;
         std::string _boot_stage_name;
         bool _boot_requested = false;

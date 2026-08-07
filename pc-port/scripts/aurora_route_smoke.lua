@@ -110,7 +110,11 @@ local scenarios = {
         min_render_packets = 1,
         button_script = gateway_button_script,
         env = {
-            SMGPC_DEMO_ROUTE = "heavensdoor_after_picturebook",
+            SMGPC_SCENE_TRANSITION_TRIGGER = "name_obj_dead_after_alive:プロローグの絵本",
+            SMGPC_SCENE_TRANSITION_SCENE = "Game",
+            SMGPC_SCENE_TRANSITION_STAGE = "HeavensDoorGalaxy",
+            SMGPC_SCENE_TRANSITION_SCENARIO = "1",
+            SMGPC_SCENE_TRANSITION_APPEAR_AFTER_INIT = "1",
         },
         expected_semantic_events = {
             {category = "scene_controller", name = "scene_change_applied",

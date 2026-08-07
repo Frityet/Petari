@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/workspaces/pcport/pc-port/.cache/aurora-route-smoke/latest/gateway_handoff/gateway_handoff-frame-10350.trace.sqlite"	passed	1	10350	pc-port	1766	604	1150	0

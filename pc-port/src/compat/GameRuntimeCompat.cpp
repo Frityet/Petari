@@ -6,7 +6,6 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -14,13 +13,6 @@
 #include <string_view>
 
 namespace MR {
-    bool isPlayingStageBgm() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            return !runtime->current_stage_bgm_name().empty();
-        }
-        return false;
-    }
-
     HitSensor* addHitSensorEye(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius, const TVec3f& rOffset) {
         return pActor != nullptr ? pActor->addHitSensor(pName, ATYPE_EYE, groupSize, radius, rOffset) : nullptr;
     }
@@ -56,18 +48,6 @@ namespace MR {
     void deleteEffectAll(LiveActor* pActor) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr) {
             runtime->delete_effect_all(pActor->getName(), pActor);
-        }
-    }
-
-    void startSound(const LiveActor*, const char* pName, s32, s32) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_system_sound(pName);
-        }
-    }
-
-    void startLevelSound(const LiveActor*, const char* pName, s32, s32, s32) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_system_level_sound(pName);
         }
     }
 

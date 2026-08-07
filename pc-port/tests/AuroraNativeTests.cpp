@@ -20,7 +20,6 @@
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
-#include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -43,6 +42,7 @@
 #include "scene/StageCollisionService.hpp"
 #include "scene/StageGravityService.hpp"
 #include "scene/StageHostScene.hpp"
+#include "scene/SceneTransitionRequestService.hpp"
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameGravityCompat.hpp"
@@ -1480,25 +1480,46 @@ namespace {
         std::optional<std::string> _old_value;
     };
 
-    void test_heavensdoor_route_is_picturebook_handoff_only() {
-        auto boot = EnvironmentVariableGuard("SMGPC_DEMO_BOOT");
-        auto route = EnvironmentVariableGuard("SMGPC_DEMO_ROUTE");
-        boot.set("heavensdoor_bunny");
-        route.unset();
+    void test_scene_transition_request_is_external_and_edge_triggered() {
+        auto trigger = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_TRIGGER");
+        auto scene = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_SCENE");
+        auto stage = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_STAGE");
+        auto scenario = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_SCENARIO");
+        auto appear = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_APPEAR_AFTER_INIT");
+        trigger.set("name_obj_dead_after_alive:transition-probe");
+        scene.set("Game");
+        stage.set("ConfiguredStage");
+        scenario.set("3");
+        appear.set("true");
 
-        const auto initial = StorySequenceExecutor::makeInitialStageRequest();
-        require(initial.mStageName == "FileSelect", "SMGPC_DEMO_BOOT should not bypass file select");
+        const auto initial = smgpc::scene::SceneTransitionRequestService::make_initial_stage_request();
+        require(initial.stage_name == "FileSelect", "host boot should still enter the six-slot file select");
 
-        boot.unset();
-        route.set("heavensdoor_after_picturebook");
-        auto &executor = smgpc::game::story_sequence_executor();
-        require(executor.shouldRouteToHeavensDoorBunnyDemoAfterPictureBook(),
-                "heavensdoor_after_picturebook should arm the picturebook handoff");
-        executor.requestHeavensDoorBunnyDemoAfterPictureBook();
-        const auto pending = executor.takePendingStageRequest();
-        require(pending.has_value(), "picturebook handoff should create a pending stage request");
-        require(pending->mStageName == "HeavensDoorGalaxy", "picturebook handoff should request HeavensDoorGalaxy");
-        require(pending->mScenarioNo == 1, "picturebook handoff should request scenario 1");
+        const auto configured = smgpc::scene::SceneTransitionRequestService::configured_transition_from_environment();
+        require(configured.has_value(), "a complete external transition should be parsed");
+        require(configured->request.scene_name == "Game" && configured->request.stage_name == "ConfiguredStage" &&
+                    configured->request.scenario_no == 3 && configured->request.appear_after_init,
+                "the external transition target should retain every configured field");
+
+        auto tracker = smgpc::scene::SceneTransitionTriggerTracker(configured->trigger);
+        require(!tracker.observe_name_obj("transition-probe", true), "an initially dead object must not trigger a transition");
+        require(!tracker.observe_name_obj("other", false), "an unrelated live object must not arm the trigger");
+        require(!tracker.observe_name_obj("transition-probe", false), "the matching live object should only arm the trigger");
+        require(tracker.observe_name_obj("transition-probe", true), "the matching live-to-dead edge should trigger once");
+        require(!tracker.observe_name_obj("transition-probe", true), "the configured transition must be one-shot");
+
+        stage.unset();
+        auto rejected_missing_target = false;
+        try {
+            static_cast<void>(smgpc::scene::SceneTransitionRequestService::configured_transition_from_environment());
+        } catch (const std::runtime_error &) {
+            rejected_missing_target = true;
+        }
+        require(rejected_missing_target, "a configured trigger without a real target must fail instead of silently choosing a stage");
+
+        trigger.unset();
+        require(!smgpc::scene::SceneTransitionRequestService::configured_transition_from_environment().has_value(),
+                "an absent external transition must remain absent");
     }
 
     struct SpineProbeState {
@@ -1576,7 +1597,7 @@ int main() {
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},
-        TestCase{"HeavensDoor route is picturebook handoff only", test_heavensdoor_route_is_picturebook_handoff_only},
+        TestCase{"scene transition request is external and edge triggered", test_scene_transition_request_is_external_and_edge_triggered},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };
 

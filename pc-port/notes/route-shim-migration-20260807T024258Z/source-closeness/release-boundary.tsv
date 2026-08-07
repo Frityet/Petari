@@ -1,0 +1,16 @@
+rel_path	classification	debug_guard_count	unguarded_smgpc_count	unguarded_observer_api_count	note
+Map/FileSelectItem.cpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Map/FileSelectItem.hpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Map/FileSelector.cpp	compat-temporary	47	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Map/FileSelector.hpp	compat-temporary	2	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/ButtonPaneController.cpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/ButtonPaneController.hpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/FileSelectInfo.cpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/FileSelectInfo.hpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/LayoutManager.cpp	decomp-needed	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/LayoutManager.hpp	compat-temporary	2	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/LayoutPaneCtrl.cpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/LayoutPaneCtrl.hpp	compat-temporary	2	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/SimpleLayout.cpp	compat-temporary	5	1	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Screen/SimpleLayout.hpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns
+Util/ActorSensorUtil.cpp	compat-temporary	1	0	0	counts are measured after stripping NDEBUG-only blocks for release-facing columns

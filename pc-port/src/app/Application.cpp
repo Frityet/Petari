@@ -478,12 +478,12 @@ namespace smgpc::app {
                 });
         }
 
-        if (overrides.story_sequence) {
-            graph.register_service<di::SingletonService<smgpc::scene::StorySequenceService>>(std::move(overrides.story_sequence));
+        if (overrides.scene_transitions) {
+            graph.register_service<di::SingletonService<smgpc::scene::SceneTransitionRequestService>>(std::move(overrides.scene_transitions));
         } else {
-            graph.register_service<di::SingletonService<smgpc::scene::StorySequenceService>, smgpc::runtime::RuntimeContext>(
+            graph.register_service<di::SingletonService<smgpc::scene::SceneTransitionRequestService>, smgpc::runtime::RuntimeContext>(
                 [](di::DependencyReference<smgpc::runtime::RuntimeContext> runtime) {
-                    return std::make_unique<smgpc::scene::StorySequenceService>(runtime.get());
+                    return std::make_unique<smgpc::scene::SceneTransitionRequestService>(runtime.get());
                 });
         }
 
@@ -499,12 +499,12 @@ namespace smgpc::app {
         if (overrides.sequence_boot) {
             graph.register_service<di::SingletonService<smgpc::scene::SequenceBootService>>(std::move(overrides.sequence_boot));
         } else {
-            graph.register_service<di::SingletonService<smgpc::scene::SequenceBootService>, smgpc::runtime::RuntimeContext, smgpc::scene::StorySequenceService,
-                                   smgpc::scene::StageHostService>(
+            graph.register_service<di::SingletonService<smgpc::scene::SequenceBootService>, smgpc::runtime::RuntimeContext,
+                                   smgpc::scene::SceneTransitionRequestService, smgpc::scene::StageHostService>(
                 [](di::DependencyReference<smgpc::runtime::RuntimeContext> runtime,
-                   di::DependencyReference<smgpc::scene::StorySequenceService> story_sequence,
+                   di::DependencyReference<smgpc::scene::SceneTransitionRequestService> scene_transitions,
                    di::DependencyReference<smgpc::scene::StageHostService> stage_host) {
-                    return std::make_unique<smgpc::scene::SequenceBootService>(runtime.get(), story_sequence.get(), stage_host.get());
+                    return std::make_unique<smgpc::scene::SequenceBootService>(runtime.get(), scene_transitions.get(), stage_host.get());
                 });
         }
 

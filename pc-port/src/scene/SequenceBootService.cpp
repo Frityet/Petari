@@ -1,14 +1,14 @@
 #include "scene/SequenceBootService.hpp"
 
-#include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <string>
 
 namespace smgpc::scene {
-    SequenceBootService::SequenceBootService(smgpc::runtime::RuntimeContext &runtime, StorySequenceService &story_sequence, StageHostService &stage_host)
-        : _runtime(runtime), _story_sequence(story_sequence), _stage_host(stage_host) {
+    SequenceBootService::SequenceBootService(smgpc::runtime::RuntimeContext &runtime, SceneTransitionRequestService &scene_transitions,
+                                             StageHostService &stage_host)
+        : _runtime(runtime), _scene_transitions(scene_transitions), _stage_host(stage_host) {
     }
 
     SequenceBootService::~SequenceBootService() = default;
@@ -19,29 +19,19 @@ namespace smgpc::scene {
         }
 
         _boot_requested = true;
-        const auto request = StorySequenceExecutor::makeInitialStageRequest();
-        _boot_stage_name = request.mStageName;
-        _runtime.set_current_sequence_scene_name(request.mSceneName);
-        _runtime.set_next_sequence_scene_name(request.mStageName);
-        _runtime.set_current_stage_name(request.mStageName);
+        const auto &request = _scene_transitions.initial_stage_request();
+        _boot_stage_name = request.stage_name;
+        _runtime.set_current_sequence_scene_name(request.scene_name);
+        _runtime.set_next_sequence_scene_name(request.stage_name);
+        _runtime.set_current_stage_name(request.stage_name);
 #ifndef NDEBUG
-        const auto detail = "scene=" + request.mSceneName + ";stage=" + request.mStageName +
-                            ";scenario=" + std::to_string(request.mScenarioNo);
-        _runtime.emit_sequence_state_trace_event("stage_requested", "requested_stage=" + request.mStageName +
-                                                                        ";scenario=" + std::to_string(request.mScenarioNo));
+        const auto detail = "scene=" + request.scene_name + ";stage=" + request.stage_name +
+                            ";scenario=" + std::to_string(request.scenario_no);
+        _runtime.emit_sequence_state_trace_event("stage_requested", "requested_stage=" + request.stage_name +
+                                                                        ";scenario=" + std::to_string(request.scenario_no));
         _runtime.emit_semantic_trace_event("sequence", "boot_stage_requested", detail);
 #endif
-        _stage_host.request_stage(StageHostRequest{
-            .scene_name = request.mSceneName,
-            .stage_name = request.mStageName,
-            .object_name = request.mObjectName,
-            .actor_name = request.mActorName,
-            .scenario_no = request.mScenarioNo,
-            .start_id = request.mStartId,
-            .start_zone_id = request.mStartZoneId,
-            .appear_after_init = request.mAppearAfterInit,
-            .fail_unsupported_placement = request.mFailUnsupportedPlacement,
-        });
+        _stage_host.request_stage(request);
     }
 
     void SequenceBootService::update_after_runtime_frame() {
@@ -77,8 +67,8 @@ namespace smgpc::scene {
     }
 
     void SequenceBootService::update_stage_transition_requests() {
-        _story_sequence.update_after_loading_request();
-        if (auto request = _story_sequence.take_pending_stage_request()) {
+        _scene_transitions.update();
+        if (auto request = _scene_transitions.take_pending_request()) {
             _stage_host.request_stage(*request);
         }
     }
