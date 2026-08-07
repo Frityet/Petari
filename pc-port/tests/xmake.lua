@@ -153,3 +153,30 @@ target("smg-pc-demo-sheet-runtime-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+target("smg-pc-object-name-table-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "ObjectNameTableTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("object_name_table", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

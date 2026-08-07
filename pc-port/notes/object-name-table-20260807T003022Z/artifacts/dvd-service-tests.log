@@ -1,0 +1,7 @@
+[ok] synthetic lookup and first-row semantics
+[ok] schema and archive validation
+[ok] RMGK01 extracted ObjNameTable
+[ok] RMGK02 extracted ObjNameTable
+[ok] optional extracted tables
+[ok] optional DVD service load
+4/4 tests passed

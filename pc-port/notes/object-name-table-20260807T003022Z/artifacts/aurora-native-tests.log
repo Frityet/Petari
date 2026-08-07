@@ -1,0 +1,37 @@
+[0m[38;5;2;1m[ 94%]:[0m [2m[38;5;5;1m<smg-pc-aurora-native-tests>[0m [38;5;5;1mlinking.debug smg-pc-aurora-native-tests[0m
+/usr/bin/g++ -o build/linux/x86_64/debug/smg-pc-aurora-native-tests build/.objs/smg-pc-aurora-native-tests/linux/x86_64/debug/tests/AuroraNativeTests.cpp.o build/.objs/smg-pc-aurora-native-tests/linux/x86_64/debug/aurora/lib/compat.cpp.o -m64 -L/home/vscode/.xmake/packages/e/encounter-nod/v2.0.0-alpha.8/4c8ebd8da681455a9e90085c32e19d45/lib -L/home/vscode/.xmake/packages/l/libpng/v1.6.58/0a9e1257acfb42609dd4f548211a3e3e/lib -Lbuild/linux/x86_64/debug -L/home/vscode/.xmake/packages/a/abseil/20240722.0/4b95ce6abb414a2a88068935db8f52da/lib -L/home/vscode/.xmake/packages/s/sqlite3/3.53.0+0/db8945e5be3f41b5a7da7d3fe4dec22a/lib -L/home/vscode/.xmake/packages/t/tracy/v0.11.1/6a2b5f140be44918a3b9e94f7d5329de/lib -L/home/vscode/.xmake/packages/d/dawn-build/v20260523.201736/4779ce4ab98d448fbe150db3509dccbb/lib -L/home/vscode/.xmake/packages/z/zstd/v1.5.7/b7f056e2143b418a895dd18f17faee9e/lib -L/home/vscode/.xmake/packages/f/fmt/11.1.4/09aa38d686e0485f9256c060566cc1c6/lib -L/home/vscode/.xmake/packages/x/xxhash/v0.8.3/6c9c3d1188624b3e9863255b5bf9fc93/lib -L/home/vscode/.xmake/packages/i/imgui/v1.91.9-docking/3fd586d5c57e4a2092ff189d4ea44b81/lib -L/home/vscode/.xmake/packages/l/libsdl3/3.4.8/e33732f2a33145cfb287c6138f75d8a4/lib -L/home/vscode/.xmake/packages/d/dawn-build/v20260523.201736/655b3678bd6845678cbd258d599e3598/lib -L/home/vscode/.xmake/packages/f/freetype/2.14.1/d404b5258b954ba5987dad6326c314c2/lib -L/home/vscode/.xmake/packages/z/zlib/v1.3.2/95eb630a402e40ec8568849d53fe452c/lib -lsmg-pc-game -lsmg-pc-render -lsmg-pc-common -laurora-ms -laurora-mtx -laurora-card -laurora-dvd -lnod -laurora-gd -laurora-gx -lpng -laurora-os -laurora-pad -laurora-si -laurora-vi -laurora-core -labsl_scoped_set_env -labsl_poison -labsl_failure_signal_handler -labsl_flags_parse -labsl_die_if_null -labsl_log_flags -labsl_log_initialize -labsl_periodic_sampler -labsl_random_internal_distribution_test_util -labsl_statusor -labsl_cordz_sample_token -labsl_leak_check -labsl_flags_usage -labsl_random_distributions -labsl_random_seed_sequences -labsl_status -labsl_flags_usage_internal -labsl_log_internal_check_op -labsl_random_internal_pool_urbg -labsl_bad_any_cast_impl -labsl_log_internal_conditions -labsl_random_internal_randen -labsl_random_seed_gen_exception -labsl_random_internal_seed_material -labsl_flags_internal -labsl_flags_reflection -labsl_log_internal_message -labsl_random_internal_randen_hwaes -labsl_random_internal_randen_slow -labsl_flags_marshalling -labsl_flags_private_handle_accessor -labsl_flags_config -labsl_examine_stack -labsl_log_internal_format -labsl_log_internal_proto -labsl_log_internal_nullguard -labsl_strerror -labsl_random_internal_randen_hwaes_impl -labsl_flags_commandlineflag -labsl_flags_program_name -labsl_log_internal_log_sink_set -labsl_random_internal_platform -labsl_flags_commandlineflag_internal -labsl_raw_hash_set -labsl_log_internal_globals -labsl_log_globals -labsl_log_sink -labsl_cord -labsl_hashtablez_sampler -labsl_hash -labsl_vlog_config_internal -labsl_log_entry -labsl_city -labsl_low_level_hash -labsl_log_internal_fnmatch -labsl_cordz_info -labsl_bad_variant_access -labsl_bad_optional_access -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_exponential_biased -labsl_synchronization -labsl_crc32c -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_crc_internal -labsl_time -labsl_debugging_internal -labsl_demangle_internal -labsl_malloc_internal -labsl_crc_cpu_detect -labsl_str_format_internal -labsl_civil_time -labsl_time_zone -labsl_demangle_rust -labsl_strings -labsl_decode_rust_punycode -labsl_strings_internal -labsl_int128 -labsl_utf8_for_code_point -labsl_string_view -labsl_base -labsl_throw_delegate -labsl_spinlock_wait -labsl_raw_logging_internal -labsl_log_severity -lsqlite3 -ltracy -lzstd -lfmt -lxxhash -limgui -lSDL3 -lwebgpu_dawn -lfreetype -lz -lm -lpthread -ldl -lrt
+running tests ...
+[0m[38;5;2;1m[  0%]:[0m [2mrunning.test smg-pc-aurora-native-tests/aurora_native[0m
+[ok] revolution headers and input defaults
+[ok] JGeometry host layout and math
+[ok] Aurora VI retrace/framebuffer state
+[ok] Aurora DVD requires disc image
+[ok] Aurora OS cache and GX copy smoke
+[ok] GX IA8 channel order
+[ok] Aurora NAND storage smoke
+[ok] player visibility can be restored
+[ok] scene scheduler registration scope cleanup
+[ok] stage switch zone identity and edges
+[ok] CollisionBlocker sensor lifecycle
+[ok] SimpleEffectObj host compatibility
+[ok] rail info ownership and per-entry lookup
+[ok] DemoRabbit factory archives and placement init
+[ok] demo cast optional CastId sentinel
+[ok] story-event spin entitlement boundary
+[ok] save event-name dictionary codec
+[ok] save event-state container round trip
+[ok] StarPieceGroup factory TRS and reset
+[ok] stage host preserves placement appearance state
+[ok] KCL collision queries and binder resolution
+[ok] data-driven stage gravity fields
+[ok] original rail part geometry
+[ok] FixedPosition and PartsModel surface
+[ok] Coin math and gravity surface
+[ok] HeavensDoor route is picturebook handoff only
+[ok] Spine pending nerve runs next tick
+27 Aurora-native test(s) passed
+
+report of tests:
+[0m[38;5;2;1m[100%]:[0m [2msmg-pc-aurora-native-tests/aurora_native  [38;5;2;1mpassed[0m [1m0.005s[0m
+[0m
+[38;5;2;1m100%[0m tests passed, [38;5;1;1m0[0m test(s) failed out of [1m1[0m, spent [1m0.005s[0m

@@ -27,7 +27,11 @@ namespace smgpc::compat {
 
 namespace smgpc::scene {
 
-    [[nodiscard]] bool should_apply_host_appear(const StagePlacementObject *placement);
+    namespace nameobj {
+        class ObjectNameTable;
+    }  // namespace nameobj
+
+    [[nodiscard]] bool should_apply_host_appear(const StagePlacementObject *placement, bool explicit_root = false);
 
     class StageHostScene final : public Scene {
     public:
@@ -47,7 +51,8 @@ namespace smgpc::scene {
         [[nodiscard]] s32 scenario_no() const;
 
     private:
-        void construct_root_object(std::string_view object_name, std::string_view actor_name, const StagePlacementObject *placement);
+        void construct_root_object(std::string_view object_name, std::string_view actor_name,
+                                   const StagePlacementObject *placement, bool explicit_root = false);
         void init_explicit_root();
         void init_placement_roots();
         void construct_placement_roots(const StagePlacementObject *explicit_placement = nullptr);
@@ -59,15 +64,17 @@ namespace smgpc::scene {
         void appear_roots();
         void destroy_roots();
         [[nodiscard]] std::string resolve_actor_name(std::string_view object_name) const;
+        [[nodiscard]] std::string_view resolve_placement_actor_name(const StagePlacementObject &placement) const;
 
         smgpc::runtime::RuntimeContext &_runtime;
         std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
         StageCollisionService _collision;
         StageGravityService _gravity;
+        std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;
         std::vector<StagePlacementObject> _placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
-        std::vector<const StagePlacementObject *> _root_placements;
+        std::vector<bool> _root_host_appear;
         std::optional<StageStartInfo> _stage_start_info;
         std::optional<smgpc::camera::ResolvedStageStartCamera> _stage_start_camera;
         std::unique_ptr<smgpc::compat::StagePlayerRuntime> _stage_player;

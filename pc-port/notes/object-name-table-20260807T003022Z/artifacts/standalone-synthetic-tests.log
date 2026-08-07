@@ -1,0 +1,8 @@
+[ok] synthetic lookup and first-row semantics
+[ok] schema and archive validation
+[skip] RMGK01 extracted ObjNameTable (set SMGPC_RMGK01_OBJ_NAME_TABLE)
+[skip] RMGK02 extracted ObjNameTable (set SMGPC_RMGK02_OBJ_NAME_TABLE)
+[ok] optional extracted tables
+[skip] DVD service ObjNameTable load (set SMGPC_REAL_DISC)
+[ok] optional DVD service load
+4/4 tests passed

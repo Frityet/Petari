@@ -13,6 +13,7 @@
 #include "scene/SceneExecutionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
+#include "scene/nameobj/ObjectNameTable.hpp"
 
 #include <algorithm>
 #include <array>
@@ -148,8 +149,8 @@ namespace smgpc::scene {
 
     }  // namespace
 
-    bool should_apply_host_appear(const StagePlacementObject *placement) {
-        return placement == nullptr;
+    bool should_apply_host_appear(const StagePlacementObject *placement, bool explicit_root) {
+        return explicit_root || placement == nullptr;
     }
 
     StageHostScene::StageHostScene(smgpc::runtime::RuntimeContext &runtime, StageHostRequest request)
@@ -196,7 +197,8 @@ namespace smgpc::scene {
         appear_roots();
     }
 
-    void StageHostScene::construct_root_object(std::string_view object_name, std::string_view actor_name, const StagePlacementObject *placement) {
+    void StageHostScene::construct_root_object(std::string_view object_name, std::string_view actor_name,
+                                               const StagePlacementObject *placement, bool explicit_root) {
         if (!smgpc::scene::nameobj::can_create_name_obj(_runtime.dvd(), object_name)) {
             throw std::runtime_error("Unsupported stage host request object: " + std::string(object_name) + " for stage " + _request.stage_name);
         }
@@ -214,19 +216,23 @@ namespace smgpc::scene {
                                            "host=" + std::string(object_name) + ";stage=" + _request.stage_name);
 #endif
         _roots.push_back(std::move(root));
-        _root_placements.push_back(placement);
+        _root_host_appear.push_back(should_apply_host_appear(placement, explicit_root));
     }
 
     void StageHostScene::init_explicit_root() {
         init_stage_environment();
-        construct_root_object(_request.object_name, resolve_actor_name(_request.object_name), nullptr);
 
         const auto explicit_placement = std::ranges::find_if(_placements, [this](const auto &placement) {
             return placement.object_name == _request.object_name &&
                    (placement.factory_supported || placement.model_fallback_supported ||
                     placement.alias_model_fallback_supported);
         });
-        construct_placement_roots(explicit_placement != _placements.end() ? &*explicit_placement : nullptr);
+        const auto *placement = explicit_placement != _placements.end() ? &*explicit_placement : nullptr;
+        const auto actor_name = !_request.actor_name.empty() ? std::string_view(_request.actor_name) :
+                                placement != nullptr         ? resolve_placement_actor_name(*placement) :
+                                                               std::string_view(_request.object_name);
+        construct_root_object(_request.object_name, actor_name, placement, true);
+        construct_placement_roots(placement);
     }
 
     void StageHostScene::init_placement_roots() {
@@ -257,8 +263,9 @@ namespace smgpc::scene {
                 continue;
             }
             // A request actor-name override identifies only its explicit root;
-            // data-driven placement actors retain their own identity.
-            construct_root_object(placement.object_name, placement.object_name, &placement);
+            // data-driven placement actors use the original localized runtime
+            // name while their factory/archive/model identifier stays English.
+            construct_root_object(placement.object_name, resolve_placement_actor_name(placement), &placement);
         }
 
 #ifndef NDEBUG
@@ -284,6 +291,9 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::init_stage_environment() {
+        if (_object_name_table == nullptr) {
+            _object_name_table = std::make_unique<smgpc::scene::nameobj::ObjectNameTable>(_runtime.dvd());
+        }
         _placements = resolve_stage_placement_objects(_runtime.dvd(), _request.stage_name, _request.scenario_no);
         const auto collision_stats = _collision.load(_runtime.dvd(), _placements);
         _collision.activate();
@@ -435,7 +445,7 @@ namespace smgpc::scene {
 
         auto &lifecycle = _runtime.name_obj_lifecycle();
         for (auto index = std::size_t{}; index < _roots.size(); ++index) {
-            if (should_apply_host_appear(_root_placements[index])) {
+            if (_root_host_appear[index]) {
                 lifecycle.appear(*_roots[index]);
             }
         }
@@ -447,7 +457,7 @@ namespace smgpc::scene {
             lifecycle.destroy(*root);
         }
         _roots.clear();
-        _root_placements.clear();
+        _root_host_appear.clear();
     }
 
     void StageHostScene::start() {
@@ -490,6 +500,20 @@ namespace smgpc::scene {
 
     std::string StageHostScene::resolve_actor_name(std::string_view object_name) const {
         return !_request.actor_name.empty() ? _request.actor_name : std::string(object_name);
+    }
+
+    std::string_view StageHostScene::resolve_placement_actor_name(const StagePlacementObject &placement) const {
+        const auto *localized_name = _object_name_table->lookup(placement.object_name);
+#ifndef NDEBUG
+        if (localized_name == nullptr) {
+            _runtime.emit_semantic_trace_event(
+                "placement", "object_name_table_fallback",
+                "stage=" + placement.stage_name + ";object=" + placement.object_name +
+                    ";table=" + placement.table_path + ";row=" + std::to_string(placement.jmap_entry_index));
+        }
+#endif
+        return localized_name != nullptr ? std::string_view(*localized_name) :
+                                           std::string_view(placement.object_name);
     }
 
 }  // namespace smgpc::scene

@@ -1,0 +1,310 @@
+[src/app/Application.cpp:227][APP - INFO] Opened Aurora disc image /workspaces/pcport/RMGK01.iso
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Unknown
+[aurora:info:aurora::system_info] Memory: 0 MiB
+[aurora:info:aurora::system_info] Architecture: x86_64
+[aurora:info:aurora::system_info] OS: Unknown
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Vulkan
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Vulkan
+  Device: NVIDIA GeForce RTX 3080 (DiscreteGPU)
+  Driver: NVIDIA: 610.43.03 610.43.3.0
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 32768
+  maxTextureDimension2D: 32768
+  maxTextureDimension3D: 16384
+  maxTextureArrayLayers: 2048
+  maxDynamicStorageBuffersPerPipelineLayout: 16
+  maxStorageBuffersPerShaderStage: 16
+  minUniformBufferOffsetAlignment: 64
+  minStorageBufferOffsetAlignment: 16
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Immediate
+[aurora:info:aurora::gfx::texture_replacement] Indexed 0 texture replacements
+[aurora:info:aurora] Using framebuffer size 640x480 scale 1
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=画面キャプチャ;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=45)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=画面キャプチャ;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=46)
+[src/runtime/RuntimeContext.cpp:508][APP - INFO] Using SMG disc image through Aurora DVD
+[src/runtime/RuntimeContext.cpp:511][APP - INFO] Using SMG save files from /workspaces/pcport/pc-port/notes/object-name-table-20260807T003022Z/route-file-select/file_select/save
+[src/runtime/RuntimeContext.cpp:519][APP - INFO] Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+[src/runtime/RuntimeContext.cpp:531][APP - INFO] Loaded 3327 particle names, 3327 particle resources, and 225 particle textures from /ParticleData/Effect.arc
+[src/runtime/RuntimeContext.cpp:541][APP - INFO] Loaded 18 debug WPAD button script spans
+[src/runtime/RuntimeContext.cpp:545][APP - INFO] Loaded 9 debug WPAD pointer script spans
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event runtime:runtime_context_created (disc=aurora-dvd)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=;current_stage=;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;phase=WaitingForRequest)
+[src/app/Application.cpp:245][APP - INFO] Running SMG on Aurora
+[src/app/Application.cpp:246][APP - INFO] Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input
+[src/app/Application.cpp:248][APP - INFO] Freecam debug keys: toggle F9, teleport to HeavensDoor F10, move with WASD, up/down Space/LeftShift, mouse look
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event aurora_route_smoke:file_select (first stable file-select camera after title A+B)
+[src/app/Application.cpp:275][APP - INFO] Will exit after frame 1960
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:stage_requested (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;requested_stage=FileSelect;scenario=1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence:boot_stage_requested (scene=Game;stage=FileSelect;scenario=1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;phase=RequestQueued)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_change_requested (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;next_scene=Game;next_stage=FileSelect;scenario=1;start_id=0;start_zone_id=0)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event scene_controller:scene_change_requested (next_scene=Game;next_stage=FileSelect;scenario=1;start_id=0;start_zone_id=0)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=システム用インフォメーションウィンドウ;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive SysInfoWindow -> /LayoutData/SysInfoWindow.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive IconAButton -> /LayoutData/IconAButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=システム用インフォメーションウィンドウ;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive SysInfoWindowMini -> /LayoutData/SysInfoWindowMini.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive IconAButton -> /LayoutData/IconAButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=SaveIcon;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive IconSave -> /LayoutData/IconSave.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;phase=DestroyScene)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;phase=InitializeScene)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence:stage_host_started (stage host factory created FileSelect through scene lifecycle service)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:stage_host_started (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;host=FileSelect;stage=FileSelect)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event hit_sensor:registered (object=StagePlayer;sensor=body;joint=;type=player;radius=100.000000)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event hit_sensor:registered (object=StagePlayer;sensor=spin;joint=;type=player;radius=140.000000)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=StagePlayer;kind=live_actor_model;movement=37;calc_anim=9;draw_buffer=20;draw_type=34)
+[src/runtime/RuntimeContext.cpp:1500][APP - INFO] Resolved original object archive MarioAnime -> /ObjectData/MarioAnime.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event player:stage_player_created (stage=FileSelect;scenario=1;start_id=0;start_zone_id=0;start_layer=common;start_table=jmp/start/common/startinfo;start_row=0;position=0.000000,0.000000,0.000000;model=Mario)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event collision:stage_collision_loaded (stage=FileSelect;scenario=1;placements=4;archives=1;meshes=1;triangles=2;rejected_triangles=0)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event gravity:stage_gravity_loaded (stage=FileSelect;scenario=1;placements=4;gravities=1;unsupported=0)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/objinfo;object=InvisibleWall10x10;factory=created_model_fallback;support_reason=direct_object_archive_model;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;model_archive=InvisibleWall10x10;object_archive=/ObjectData/InvisibleWall10x10.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=InvisibleWall10x10;archive=InvisibleWall10x10;kind=object;loaded=true;disc_path=InvisibleWall10x10.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=見えない壁10x10;kind=live_actor_model;movement=34;calc_anim=5;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper 見えない壁10x10 group InvisibleWall10x10 capacity 8
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:construct (object=InvisibleWall10x10;actor=見えない壁10x10)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence:stage_host_constructed (host=InvisibleWall10x10;stage=FileSelect)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:init_from_placement (object=見えない壁10x10;stage=FileSelect;zone=FileSelect;table=jmp/placement/common/objinfo;row=0;l_id=0)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence:stage_host_initialized (host=InvisibleWall10x10;stage=FileSelect)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/objinfo;object=FileSelector;factory=created;support_reason=original_factory;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;model_archive=FileSelector;object_archive=)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileInfo;kind=layout;loaded=true;disc_path=FileInfo.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileSelect;kind=layout;loaded=true;disc_path=FileSelect.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileSelectDataPlanet;kind=object;loaded=true;disc_path=FileSelectDataPlanet.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileSelectDataMario;kind=object;loaded=true;disc_path=FileSelectDataMario.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileSelectDataYoshi;kind=object;loaded=true;disc_path=FileSelectDataYoshi.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileSelectDataLuigi;kind=object;loaded=true;disc_path=FileSelectDataLuigi.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileSelectDataPeach;kind=object;loaded=true;disc_path=FileSelectDataPeach.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileSelectDataKinopio;kind=object;loaded=true;disc_path=FileSelectDataKinopio.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=CometNearOrbitSky;kind=object;loaded=true;disc_path=CometNearOrbitSky.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=MiiFaceDatabase;kind=object;loaded=true;disc_path=MiiFaceDatabase.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=BackButton;kind=layout;loaded=true;disc_path=BackButton.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=FileNumber;kind=layout;loaded=true;disc_path=FileNumber.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=TitleLogo;kind=layout;loaded=true;disc_path=TitleLogo.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=PressStart;kind=layout;loaded=true;disc_path=PressStart.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=MiiSelect;kind=layout;loaded=true;disc_path=MiiSelect.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=MiiIcon;kind=layout;loaded=true;disc_path=MiiIcon.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=MiiConfirmIcon;kind=layout;loaded=true;disc_path=MiiConfirmIcon.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=BrosButton;kind=layout;loaded=true;disc_path=BrosButton.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=P2Manual;kind=layout;loaded=true;disc_path=P2Manual.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=MiniatureGalaxySelect;kind=object;loaded=true;disc_path=MiniatureGalaxySelect.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=SysPALInfo;kind=layout;loaded=true;disc_path=SysPALInfo.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=FileSelector;archive=MiiFont;kind=layout;loaded=true;disc_path=MiiFont.arc)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:construct (object=FileSelector;actor=ファイルセレクター)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence:stage_host_constructed (host=FileSelector;stage=FileSelect)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:init_from_placement (object=ファイルセレクター;stage=FileSelect;zone=FileSelect;table=jmp/placement/common/objinfo;row=1;l_id=2)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイルセレクター;kind=name_obj;movement=33;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル選択カメラ;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル選択空;kind=live_actor_model;movement=36;calc_anim=5;draw_buffer=1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ファイル選択空 group CometNearOrbitSky capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイルセレクトアイテム;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ニューフェイス;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ニューフェイス group FileSelectDataPlanet capacity 8
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataMario capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataLuigi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataYoshi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataKinopio capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataPeach capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileNumber -> /LayoutData/FileNumber.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイルセレクトアイテム;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ニューフェイス;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ニューフェイス group FileSelectDataPlanet capacity 8
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataMario capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataLuigi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataYoshi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataKinopio capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataPeach capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileNumber -> /LayoutData/FileNumber.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイルセレクトアイテム;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ニューフェイス;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ニューフェイス group FileSelectDataPlanet capacity 8
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataMario capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataLuigi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataYoshi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataKinopio capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataPeach capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileNumber -> /LayoutData/FileNumber.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイルセレクトアイテム;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ニューフェイス;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ニューフェイス group FileSelectDataPlanet capacity 8
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataMario capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataLuigi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataYoshi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataKinopio capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataPeach capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileNumber -> /LayoutData/FileNumber.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイルセレクトアイテム;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ニューフェイス;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ニューフェイス group FileSelectDataPlanet capacity 8
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataMario capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataLuigi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataYoshi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataKinopio capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataPeach capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileNumber -> /LayoutData/FileNumber.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイルセレクトアイテム;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ニューフェイス;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ニューフェイス group FileSelectDataPlanet capacity 8
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataMario capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataLuigi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataYoshi capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataKinopio capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=キャラフェイス;kind=live_actor_model;movement=40;calc_anim=6;draw_buffer=16;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper キャラフェイス group FileSelectDataPeach capacity 0
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileNumber -> /LayoutData/FileNumber.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル番号;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル選択ボタン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileSelect -> /LayoutData/FileSelect.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Galaxy情報簡易表示;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive GalaxyNamePlate -> /LayoutData/GalaxyNamePlate.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Galaxy情報簡易表示;kind=layout_actor;movement=15;calc_anim=14;draw_buffer=-1;draw_type=61)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル選択ボタン;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=戻るボタン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive BackButton -> /LayoutData/BackButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=戻るボタン;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=61)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ルイージ切り替えボタン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive BrosButton -> /LayoutData/BrosButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ルイージ切り替えボタン;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=インフォメーションメッセージ;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive InformationWindow -> /LayoutData/InformationWindow.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=インフォメーションメッセージ;kind=layout_actor;movement=15;calc_anim=14;draw_buffer=-1;draw_type=61)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=67)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive IconAButton -> /LayoutData/IconAButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=システム用インフォメーションウィンドウ;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive SysInfoWindow -> /LayoutData/SysInfoWindow.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=67)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive IconAButton -> /LayoutData/IconAButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=システム用インフォメーションウィンドウ;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=システム用インフォメーションウィンドウ;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive SysInfoWindowMini -> /LayoutData/SysInfoWindowMini.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive IconAButton -> /LayoutData/IconAButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=システム用インフォメーションウィンドウ;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル情報;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive FileInfo -> /LayoutData/FileInfo.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファイル情報;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ロゴ;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive TitleLogo -> /KrKorean/LayoutData/TitleLogo.arc
+[src/runtime/RuntimeContext.cpp:1448][APP - INFO] Registered effect keeper ロゴ group TitleLogo capacity 1
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Press[A][B];kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive PressStart -> /KrKorean/LayoutData/PressStart.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=PAL60案内;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive SysPALInfo -> /LayoutData/SysPALInfo.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=MiiSelect;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive MiiSelect -> /LayoutData/MiiSelect.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=MiiSelect;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Mii確認用アイコン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive MiiConfirmIcon -> /LayoutData/MiiConfirmIcon.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Mii確認用アイコン;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=61)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=２Ｐマニュアル;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive P2Manual -> /LayoutData/P2Manual.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=マニュアルの戻るボタン;kind=layout_actor;movement=15;calc_anim=14;draw_buffer=-1;draw_type=61)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=マニュアルの戻るボタン;kind=layout;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1487][APP - INFO] Resolved original layout archive BackButton -> /LayoutData/BackButton.arc
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=２Ｐマニュアル;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=選択時エフェクト;kind=live_actor_model;movement=34;calc_anim=5;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=選択時エフェクト;kind=live_actor_model;movement=34;calc_anim=5;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=選択時エフェクト;kind=live_actor_model;movement=34;calc_anim=5;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=選択時エフェクト;kind=live_actor_model;movement=34;calc_anim=5;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=選択時エフェクト;kind=live_actor_model;movement=34;calc_anim=5;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=選択時エフェクト;kind=live_actor_model;movement=34;calc_anim=5;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence:stage_host_initialized (host=FileSelector;stage=FileSelect)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/objinfo;object=SphereSelectorHandle;factory=blocked;support_reason=no_original_factory_or_direct_object_archive;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;model_archive=;object_archive=)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/planetobjinfo;object=GlobalPlaneGravityInBox;factory=ignored;support_reason=non_renderable_placement_helper_table;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;model_archive=;object_archive=)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event placement:stage_placement_summary (stage=FileSelect;scenario=1;objects=4;created=2;ignored=1;blocked=1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:init_after_placement (object=見えない壁10x10)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:init_after_placement (object=ファイルセレクター)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event camera:stage_start_camera_unavailable (stage=FileSelect;scenario=1;start_id=0;start_zone_id=0;status=unsupported_camera_type;detail=unsupported start camera type CAM_TYPE_FOLLOW;fallback=start_orientation_follow)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=オブジェスリープ管理;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;phase=ReadyToStartScene)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;phase=Normal)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:scene_change_applied (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;current_scene=Game;current_stage=FileSelect;scenario=1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event scene_controller:scene_change_applied (current_scene=Game;current_stage=FileSelect;scenario=1)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence_state:autorush_begin_sent (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;message=ACTMES_AUTORUSH_BEGIN)
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event sequence:autorush_begin_sent (ACTMES_AUTORUSH_BEGIN)
+[src/runtime/RuntimeContext.cpp:1375][APP - INFO] SMG requested stage BGM STM_TITLE
+[src/runtime/RuntimeContext.cpp:1500][APP - INFO] Resolved original object archive CometNearOrbitSky -> /ObjectData/CometNearOrbitSky.arc
+[src/runtime/RuntimeContext.cpp:1380][APP - INFO] SMG unlocked stage BGM
+[src/runtime/RuntimeContext.cpp:1532][APP - INFO] SMG semantic event input:wpad_buttons_held (channel=0;buttons=A+B)
+[src/runtime/RuntimeContext.cpp:1473][APP - INFO] ロゴ emitted effect TitleLogoLight
+[src/runtime/RuntimeContext.cpp:1473][APP - INFO] ロゴ emitted effect TitleLogoLightB
+[src/runtime/RuntimeContext.cpp:1473][APP - INFO] ロゴ emitted effect TitleLogoLightC
+[src/runtime/RuntimeContext.cpp:1473][APP - INFO] ロゴ emitted effect TitleLogoLightD
+[src/runtime/RuntimeContext.cpp:1473][APP - INFO] ロゴ emitted effect TitleLogoLightE
+[src/runtime/RuntimeContext.cpp:1473][APP - INFO] ロゴ emitted effect TitleLogoLightF
+[src/runtime/RuntimeContext.cpp:1473][APP - INFO] ロゴ emitted effect TitleLogoLightG
+[src/runtime/RuntimeContext.cpp:1385][APP - INFO] SMG stopped stage BGM over 75 frames
+[src/runtime/RuntimeContext.cpp:1395][APP - INFO] SMG requested system sound SE_SY_GAME_START
+[src/runtime/RuntimeContext.cpp:1430][APP - INFO] SMG requested controller speaker sound CS_CLICK_CLOSE
+[src/runtime/RuntimeContext.cpp:1483][APP - INFO] ロゴ deleted all effects
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted effect Complete
+[src/runtime/RuntimeContext.cpp:1478][APP - INFO] キャラフェイス deleted ef[src/runtime/RuntimeContext.cpp:1508][APP - WARNING] Skipped object texture data from InvisibleWall10x10: archive contains no BDL/BMD model

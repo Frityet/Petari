@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/workspaces/pcport/pc-port/notes/object-name-table-20260807T003022Z/route/title/title-frame-90.trace.sqlite"	passed	1	90	pc-port	203	22	169	23

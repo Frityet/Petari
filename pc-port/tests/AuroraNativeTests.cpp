@@ -946,6 +946,8 @@ namespace {
                 "an explicit non-placement stage root should retain the requested host-level appear pass");
         require(!smgpc::scene::should_apply_host_appear(&placement),
                 "a placement root should retain the appeared/dead state chosen by its own initialization");
+        require(smgpc::scene::should_apply_host_appear(&placement, true),
+                "an explicit placement-backed root should still receive its requested host appear call");
 
         auto explicit_root = LiveActor("explicit-root");
         auto placement_root = LiveActor("placement-root");
@@ -955,7 +957,11 @@ namespace {
         if (smgpc::scene::should_apply_host_appear(&placement)) {
             placement_root.makeActorAppeared();
         }
-        require(!explicit_root.isDead() && placement_root.isDead(),
+        auto explicit_placement_root = LiveActor("explicit-placement-root");
+        if (smgpc::scene::should_apply_host_appear(&placement, true)) {
+            explicit_placement_root.makeActorAppeared();
+        }
+        require(!explicit_root.isDead() && placement_root.isDead() && !explicit_placement_root.isDead(),
                 "the generic host appear policy should not revive a placement actor that initialized dead");
     }
 

@@ -1,0 +1,20 @@
+  hash_0x9ff8a861="DemoRabbit" (type string-offset, offs 0)
+  hash_0xabe181e4="デモウサギ" (type string-offset, offs 4)
+--
+  hash_0x9ff8a861="HeavensDoorAppearStepA" (type string-offset, offs 0)
+  hash_0xabe181e4="ヘブンズドアミステリアス惑星階段（デモ中）" (type string-offset, offs 4)
+--
+  hash_0x9ff8a861="HeavensDoorAppearStepAAfter" (type string-offset, offs 0)
+  hash_0xabe181e4="ヘブンズドアミステリアス惑星階段（デモ後）" (type string-offset, offs 4)
+--
+  hash_0x9ff8a861="Rosetta" (type string-offset, offs 0)
+  hash_0xabe181e4="ロゼッタ" (type string-offset, offs 4)
+--
+  hash_0x9ff8a861="RunawayTico" (type string-offset, offs 0)
+  hash_0xabe181e4="逃げチコ" (type string-offset, offs 4)
+--
+  hash_0x9ff8a861="Tico" (type string-offset, offs 0)
+  hash_0xabe181e4="チコ" (type string-offset, offs 4)
+--
+  hash_0x9ff8a861="TicoBaby" (type string-offset, offs 0)
+  hash_0xabe181e4="ベビチコ" (type string-offset, offs 4)

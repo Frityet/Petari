@@ -1,0 +1,5 @@
+4d56a16857d44a86eb08748a191844a3e80109585cca8c3113163dca2f06183c  pc-port/container/orig/RMGK01/files/StageData/ObjNameTable.arc
+4d56a16857d44a86eb08748a191844a3e80109585cca8c3113163dca2f06183c  orig/RMGK02/files/StageData/ObjNameTable.arc
+df9031f45a66a67d72819a1d94bb290a9b58758ec4acf3c4427d7eefcd057e1a  pc-port/src/scene/nameobj/ObjectNameTable.hpp
+7759156ac93e1d9b45f6fbd3a70e77eac18e8b0e94c358c1d6f5780038cb569a  pc-port/src/scene/nameobj/ObjectNameTable.cpp
+0f4aed809000604bd3e5efd465a7b8ae96eee16b81eb40d4183abc9ef8f1e1f8  pc-port/tests/ObjectNameTableTests.cpp

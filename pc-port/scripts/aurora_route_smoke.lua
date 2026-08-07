@@ -182,7 +182,7 @@ local scenarios = {
         },
         expected_semantic_events = {
             {category = "name_obj_lifecycle", name = "construct",
-             detail = "object=PrologueDirector;actor=PrologueDirector", count = 1},
+             detail = "object=PrologueDirector;actor=プロローグデモ", count = 1},
             {category = "name_obj_lifecycle", name = "archive_request",
              detail = "object=PrologueDirector;archive=PrologueDemo", count = 1},
         },
