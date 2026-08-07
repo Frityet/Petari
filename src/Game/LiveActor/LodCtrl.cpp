@@ -118,6 +118,45 @@ void LodCtrl::invalidate() {
     _18 = 0;
 }
 
+void LodCtrl::update() {
+    if (MR::isDead(mActor) || !_18) {
+        return;
+    }
+
+    if (!_10 && !_14) {
+        if (*_28) {
+            hideAllModel();
+        } else {
+            showHighModel();
+        }
+
+        return;
+    }
+
+    f32 distance = calcDistanceToCamera();
+    if (*_28) {
+        hideAllModel();
+    } else if (*_1C) {
+        showHighModel();
+    } else if (_10 && *_20) {
+        showMiddleModel();
+    } else if (_14 && *_24) {
+        showLowModel();
+    } else if (distance < _0) {
+        showHighModel();
+    } else if (!_10 && distance < _4) {
+        showHighModel();
+    } else if (_10 && distance < _4) {
+        showMiddleModel();
+    } else if (_14) {
+        showLowModel();
+    }
+
+    if (_8 && _8 != mActor) {
+        MR::copyTransRotateScale(mActor, _8);
+    }
+}
+
 bool LodCtrl::isShowLowModel() const {
     return _14 != nullptr && _14 == _8;
 }
