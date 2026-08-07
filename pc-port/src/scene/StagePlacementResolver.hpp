@@ -142,6 +142,8 @@ namespace smgpc::scene {
         smgpc::scene::nameobj::NameObjPlacementSupportKind support_kind = smgpc::scene::nameobj::NameObjPlacementSupportKind::Unsupported;
     };
 
+    [[nodiscard]] std::optional<s32> find_stage_zone_id(const JMapInfo &zone_list,
+                                                        std::string_view zone_name);
     [[nodiscard]] std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
                                                                                   s32 scenario_no);
     [[nodiscard]] std::vector<StagePlacementObject> resolve_stage_placement_objects(

@@ -347,6 +347,38 @@ namespace {
         return JMapInfo::from_bcsv(bytes);
     }
 
+    [[nodiscard]] JMapInfo make_zone_list_info(
+        std::span<const std::string_view> zone_names) {
+        constexpr auto field_count = std::size_t{1U};
+        constexpr auto entry_size = std::size_t{4U};
+        constexpr auto data_offset = std::size_t{0x10U + field_count * 0x0cU};
+
+        auto strings = std::vector<std::uint8_t>{};
+        auto string_offsets = std::vector<std::uint32_t>{};
+        for (const auto zone_name : zone_names) {
+            string_offsets.push_back(static_cast<std::uint32_t>(strings.size()));
+            strings.insert(strings.end(), zone_name.begin(), zone_name.end());
+            strings.push_back(0U);
+        }
+
+        auto bytes = std::vector<std::uint8_t>(
+            data_offset + zone_names.size() * entry_size + strings.size(), 0U);
+        write_be32(bytes, 0x00U, static_cast<std::uint32_t>(zone_names.size()));
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "ZoneName", 0U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        for (auto index = std::size_t{}; index < zone_names.size(); ++index) {
+            write_be32(bytes, data_offset + index * entry_size,
+                       string_offsets[index]);
+        }
+        std::copy(strings.begin(), strings.end(),
+                  bytes.begin() + static_cast<std::ptrdiff_t>(
+                                      data_offset + zone_names.size() * entry_size));
+        return JMapInfo::from_bcsv(bytes);
+    }
+
     [[nodiscard]] std::vector<std::uint8_t> make_action_bcsv(
         std::span<const ActionRow> rows) {
         constexpr auto field_count = std::size_t{6U};
@@ -889,6 +921,33 @@ namespace {
                     near(positions[2].world_rotation[1U], 0.0F) &&
                     near(positions[2].world_rotation[2U], 90.0F),
                 "child-zone GeneralPos data must use the real composed stage transform");
+    }
+
+    void test_zone_ids_are_only_read_from_zone_list() {
+        constexpr auto zone_names = std::array<std::string_view, 3U>{
+            "RootGalaxy",
+            "KnownChild",
+            "OtherChild",
+        };
+        const auto zone_list = make_zone_list_info(zone_names);
+
+        require(smgpc::scene::find_stage_zone_id(zone_list, "RootGalaxy") ==
+                        std::optional<s32>{0} &&
+                    smgpc::scene::find_stage_zone_id(zone_list, "knownchild") ==
+                        std::optional<s32>{1} &&
+                    smgpc::scene::find_stage_zone_id(zone_list, "OTHERCHILD") ==
+                        std::optional<s32>{2},
+                "zone IDs must be the case-insensitive retail ZoneList row indices");
+        require(!smgpc::scene::find_stage_zone_id(zone_list, "InventedChild").has_value() &&
+                    !smgpc::scene::find_stage_zone_id(zone_list, "").has_value(),
+                "an absent or empty zone name must not receive a synthetic zone ID");
+
+        constexpr auto misplaced_root_names =
+            std::array<std::string_view, 2U>{"ActualRoot", "RequestedRoot"};
+        const auto misplaced_root = make_zone_list_info(misplaced_root_names);
+        require(smgpc::scene::find_stage_zone_id(misplaced_root, "RequestedRoot") ==
+                    std::optional<s32>{1},
+                "zone lookup must preserve the authoritative row index instead of remapping a requested root to zero");
     }
 
     void test_definition_ingestion_and_dormant_sheets() {
@@ -1640,6 +1699,7 @@ int main() {
         TestCase{"timekeeper pause, resume, and preserved pause", test_timekeeper_pause_resume_and_preserved_pause_flag},
         TestCase{"registered start, suspend, and safe rejections", test_registered_start_suspend_and_safe_rejections},
         TestCase{"one-frame final paused boundary overshoot", test_one_frame_final_pause_boundary_overshoot},
+        TestCase{"ZoneList-only zone IDs", test_zone_ids_are_only_read_from_zone_list},
         TestCase{"GeneralPos table order and zone transform", test_general_pos_table_order_and_zone_transform},
         TestCase{"Action dispatch order, pause, and callback invariant", test_action_dispatch_order_pause_and_callback_invariant},
         TestCase{"Wipe row arbitrary names and raw frames", test_wipe_row_dispatch_uses_arbitrary_names_and_raw_frames},
