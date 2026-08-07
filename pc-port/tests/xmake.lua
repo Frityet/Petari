@@ -101,3 +101,29 @@ target("smg-pc-jpc-billboard-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+target("smg-pc-lod-ctrl-compat-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "LodCtrlCompatTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("lod_ctrl_compat", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

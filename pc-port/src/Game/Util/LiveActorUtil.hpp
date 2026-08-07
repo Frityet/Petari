@@ -7,6 +7,7 @@
 #include <revolution.h>
 
 class LiveActor;
+class LodCtrl;
 class MirrorActor;
 class PartsModel;
 class ActorLightCtrl;
@@ -67,6 +68,7 @@ namespace MR {
     void setBaseTRMtx(LiveActor* pActor, const smgpc::render::J3dMatrix3x4& matrix);
     PartsModel* createPartsModelMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx);
     PartsModel* createPartsModelNoSilhouettedMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx);
+    LodCtrl* createLodCtrlNPC(LiveActor*, const JMapInfoIter&);
     void connectToDrawTemporarily(LiveActor* pActor);
     void disconnectToDrawTemporarily(LiveActor* pActor);
     void emitEffect(LiveActor* pActor, const char* pEffectName);

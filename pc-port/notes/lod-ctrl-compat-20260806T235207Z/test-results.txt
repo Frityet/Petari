@@ -1,0 +1,36 @@
+UTC: 2026-08-06T23:52:07Z
+
+$ cd pc-port && xmake build smg-pc-game
+build ok
+
+$ cd pc-port && xmake build smg-pc-lod-ctrl-compat-tests
+build ok
+
+$ cd pc-port && xmake build smg-pc
+build ok
+
+$ cd pc-port && xmake run smg-pc-lod-ctrl-compat-tests
+[ok] NPC capability allocates and tracks lifecycle
+[ok] disabled capability does not allocate
+[ok] controller preserves original transition order
+3 LOD compatibility test(s) passed
+
+$ cd pc-port && xmake test 'smg-pc-lod-ctrl-compat-tests/lod_ctrl_compat'
+100% tests passed, 0 test(s) failed out of 1
+
+$ cmp -s include/Game/LiveActor/LodCtrl.hpp pc-port/src/Game/LiveActor/LodCtrl.hpp
+exit status: 0
+
+$ git diff --check -- <LOD compatibility files>
+exit status: 0
+
+Final local rerun after restoring the original host base-matrix link:
+
+$ cd pc-port && xmake build smg-pc-lod-ctrl-compat-tests
+build ok
+
+$ cd pc-port && xmake run smg-pc-lod-ctrl-compat-tests
+3 LOD compatibility test(s) passed
+
+$ cd pc-port && xmake test 'smg-pc-lod-ctrl-compat-tests/lod_ctrl_compat'
+100% tests passed, 0 test(s) failed out of 1

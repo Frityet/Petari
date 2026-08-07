@@ -1,5 +1,6 @@
 #include "Game/NPC/NPCActor.hpp"
 
+#include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
@@ -191,6 +192,9 @@ void NPCActor::initialize(const JMapInfoIter& rIter, const NPCActorCaps& rCaps) 
     if (rCaps.mMessage) {
         initTalkCtrl(rIter, rCaps._10, rCaps.mMessageOffset, rCaps.mTalkMtx);
     }
+    if (rCaps.mLodCtrl) {
+        mLodCtrl = MR::createLodCtrlNPC(this, rIter);
+    }
 
     (void)MR::useStageSwitchReadA(this, rIter);
     (void)MR::useStageSwitchReadB(this, rIter);
@@ -230,9 +234,15 @@ bool NPCActor::initTalkCtrlDirect(const JMapInfoIter& rIter, const char* pName, 
 
 void NPCActor::makeActorAppeared() {
     LiveActor::makeActorAppeared();
+    if (mLodCtrl != nullptr) {
+        mLodCtrl->appear();
+    }
 }
 
 void NPCActor::makeActorDead() {
+    if (mLodCtrl != nullptr) {
+        mLodCtrl->kill();
+    }
     LiveActor::makeActorDead();
 }
 
@@ -244,6 +254,9 @@ void NPCActor::kill() {
 }
 
 void NPCActor::control() {
+    if (mLodCtrl != nullptr) {
+        mLodCtrl->update();
+    }
 }
 
 void NPCActor::calcAndSetBaseMtx() {
