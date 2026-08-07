@@ -1,0 +1,36 @@
+{
+  "timestamp_utc": "2026-08-07T01:56:10Z",
+  "merge_base": "4afa51b76c8bd30b6640cfda0f739391f5abe9c5",
+  "local_pre_merge": "229f73d37602ffbe90239367bcceeda85caf45bf",
+  "upstream": "0933a43cd4e994682d922b61b56d73d3067689bc",
+  "merge_commit": "2eb21a12e11aef0a3855270a4ac331a4b906e7f8",
+  "upstream_commit_count": 24,
+  "merged_path_count": 48,
+  "pc_port_paths_merged": 0,
+  "manual_conflict_resolutions": 0,
+  "rmgk02": {
+    "configure_version": "RMGK02",
+    "metro_trk_define_present": true,
+    "sha1": "54b71431af0d509097bfdef4ec28617afc487e89",
+    "sha1_matches_oracle": true,
+    "matched_code_percent": 64.670616,
+    "fuzzy_match_percent": 77.68499,
+    "complete_code_percent": 14.227636,
+    "complete_units": 732,
+    "total_units": 2220
+  },
+  "pc_port": {
+    "full_build": "pass",
+    "demo_sheet_tests": "11/11",
+    "demo_scene_tests": "12/12",
+    "aurora_native_tests": "27/27",
+    "route_checkpoints": {
+      "title": "pass",
+      "file_select": "pass",
+      "picturebook": "pass",
+      "gateway_handoff": "pass"
+    },
+    "route_captures_match_pre_merge": true,
+    "game_source_modified_by_sync": false
+  }
+}

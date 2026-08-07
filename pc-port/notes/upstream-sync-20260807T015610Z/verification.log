@@ -1,0 +1,89 @@
+Upstream sync verification
+UTC: 2026-08-07T01:56:10Z
+workspace: /workspaces/pcport
+
+merge base: 4afa51b76c8bd30b6640cfda0f739391f5abe9c5
+local pre-merge: 229f73d37602ffbe90239367bcceeda85caf45bf
+upstream: 0933a43cd4e994682d922b61b56d73d3067689bc
+merge commit: 2eb21a12e11aef0a3855270a4ac331a4b906e7f8
+
+$ git merge-tree <base> <local> upstream/master
+three paths changed in both; all auto-merged; no conflict markers
+
+$ git merge --no-edit upstream/master
+Auto-merging configure.py
+Auto-merging libs/JSystem/include/JSystem/JGeometry/TMatrix.hpp
+Auto-merging src/Game/Camera/CameraDirector.cpp
+Merge made by the 'ort' strategy.
+
+$ python3 configure.py --version RMGK02 --non-matching --verbose
+exit 0
+
+$ generated build graph checks
+configure.py retains VERSIONS = ["RMGK01", "RMGK02"]
+build.ninja contains -DMETRO_TRK and -DVERSION=1
+CameraRailHolder uses upstream -sym off flag
+
+$ ninja -j4
+677 linked-target steps completed; main.elf and main.dol linked
+
+$ ninja -j4 build/RMGK02/ok build/RMGK02/report.json progress
+1282 full-report steps completed
+CHECK config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+REPORT generated for 2220 units
+
+$ sha1sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+54b71431af0d509097bfdef4ec28617afc487e89  orig/RMGK02/sys/main.dol
+
+$ build/RMGK02/report.json measures
+matched_code_percent: 64.670616
+fuzzy_match_percent: 77.68499
+matched_data_percent: 30.35325
+matched_functions_percent: 79.85774
+complete_code_percent: 14.227636
+complete_data_percent: 11.955229
+complete_units: 732 / 2220
+
+$ ninja -n
+ninja: no work to do.
+
+$ cd pc-port && xmake build smg-pc
+[100%]: build ok
+
+$ xmake build smg-pc-demo-sheet-runtime-tests && ./build/linux/x86_64/debug/smg-pc-demo-sheet-runtime-tests
+11 DemoSheet runtime test(s) passed
+
+$ xmake build smg-pc-demo-scene-runtime-tests && ./build/linux/x86_64/debug/smg-pc-demo-scene-runtime-tests
+12/12 tests passed
+
+$ xmake build smg-pc-aurora-native-tests && ./build/linux/x86_64/debug/smg-pc-aurora-native-tests
+27 Aurora-native test(s) passed
+
+$ xmake aurora-route-smoke ... --display=320 --no-build title
+passed: frame=90, render_packets=22, nonblack=1.0000
+
+$ xmake aurora-route-smoke ... --display=321 --no-build file_select
+passed: frame=1900, render_packets=27, nonblack=0.9998
+
+$ xmake aurora-route-smoke ... --display=322 --no-build picturebook
+passed: frame=7600, render_packets=390, nonblack=1.0000
+
+$ xmake aurora-route-smoke ... --display=323 --no-build gateway_handoff
+passed: frame=10350, render_packets=1063, nonblack=1.0000
+
+$ sha256sum <post-merge route captures>
+9b2f57887d8644b5ad8f714d9436a0be55038373dc05c27e126eac58a2320f23  title-frame-90.png
+f100e44af973418fa5140837b06f83b347b69d50cf035fa1ab015971756fa7c8  file_select-frame-1900.png
+e145ba374696c0cf89cef835b32518ba3a18860f3ad9810642219003053f6196  picturebook-frame-7600.png
+0b6523928d288cba6395969c126a430d11ee8e5adb92110ca689688a9737dbf3  gateway_handoff-frame-10350.png
+
+$ git diff --name-only -- pc-port/src/Game
+pc-port/src/Game/Screen/SaveIcon.cpp
+pc-port/src/Game/Screen/SaveIcon.hpp
+pc-port/src/Game/Util/TriggerChecker.cpp
+pc-port/src/Game/Util/TriggerChecker.hpp
+
+Those four files are pre-existing user changes; the sync did not touch or
+stage them.
