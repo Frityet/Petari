@@ -44,8 +44,8 @@
 #define USER_FILE_NUM 6
 
 namespace {
-    // static const _ sSlopeDegree = _;
-    // static const _ sItemPosRadius = _;
+    static const f32 sSlopeDegree = 20.0f;
+    static const f32 sItemPosRadius = 5000.0f;
     // static const _ sSelectEffectOffset = _;
     const char* cMarioNameMessageID = "System_FileSelect_Icon000";
     const char* cLuigiNameMessageID = "System_FileSelect_Icon001";
@@ -53,9 +53,9 @@ namespace {
     static u32 sBgmNearStateChangeFrames = 60;
     static s32 sBgmFarState = 5;
     static u32 sBgmFarStateChangeFrames = 60;
-    // static _ sThetaOffset = _;
+    static const f32 sThetaOffset = PI / 3.0f;
     // static _ sCreatorOffset = _;
-    static const f32 sItemThetaOffset = 10.0f;
+    static const f32 sItemThetaOffset[USER_FILE_NUM] = {10.0f, -10.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     static const s32 sIndexOrder[USER_FILE_NUM] = {1, 2, 4, 6, 5, 3};
 };  // namespace
 
@@ -579,7 +579,28 @@ void FileSelector::goToNearPoint() {
     mCameraController->goToNearPoint(_98[::getItemArrayIndex(_B4->_140)]);
 }
 
-// FileSelector::calcBasePos
+void FileSelector::calcBasePos(f32 y) {
+    f32 thetaOffset = sThetaOffset;
+
+    TPos3f transMtx;
+    transMtx.makeTrans(0.0f, y, 0.0f);
+
+    TPos3f rotateMtx;
+    rotateMtx.makeRotate(TVec3f(1.0f, 0.0f, 0.0f), MR::toRadian(sSlopeDegree));
+
+    TPos3f baseMtx;
+    baseMtx.concat(transMtx, rotateMtx);
+
+    for (s32 i = 0; i < USER_FILE_NUM; i++) {
+        if (_B4 && _B4 == mItems->getActor(i)) {
+            continue;
+        }
+
+        f32 theta = -(i + 4) * thetaOffset - sItemThetaOffset[i] * PI / 180.0f;
+        _98[i].set(sItemPosRadius * JMACosRadian(theta), 0.0f, sItemPosRadius * JMASinRadian(theta));
+        baseMtx.mult(_98[i], _98[i]);
+    }
+}
 
 void FileSelector::initAllItems() {
     for (int i = 0; i < USER_FILE_NUM; i++) {
@@ -619,7 +640,19 @@ void FileSelector::validateRotateAllItems() {
     }
 }
 
-// FileSelector::getUserFileFellowID
+FileSelectIconID::EFellowID FileSelector::getUserFileFellowID(s32 id) const {
+    u32 iconId;
+
+    if (mUserFile[id - 1].getIconId(&iconId)) {
+        if (iconId <= 5) {
+            return static_cast< FileSelectIconID::EFellowID >(iconId - 1);
+        }
+
+        return FileSelectIconID::Mario;
+    }
+
+    return FileSelectIconID::Mario;
+}
 
 bool FileSelector::isUserFileMiiIdValid(s32 id) const {
     RFLCreateID createId;
