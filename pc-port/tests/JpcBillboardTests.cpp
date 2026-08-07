@@ -9,6 +9,7 @@
 #include <cmath>
 #include <exception>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -121,17 +122,24 @@ namespace {
         require_near(vertices[2U].y, 2.0F, 0.0001F, "rotated oracle opposite Y");
     }
 
-    void test_packet_path_keeps_2d_and_selects_world_billboards() {
+    void test_packet_path_only_selects_implemented_billboards() {
         using smgpc::render::effects::jpc_particle_packet_path;
         using smgpc::render::effects::JpcParticlePacketPath;
-        require(jpc_particle_packet_path(false, 2U) == JpcParticlePacketPath::ScreenSpace,
+        require(jpc_particle_packet_path(false, 2U) ==
+                    std::optional{JpcParticlePacketPath::ScreenSpace},
                 "2D draw groups must retain screen-space effects");
-        require(jpc_particle_packet_path(true, 2U) == JpcParticlePacketPath::WorldBillboard,
+        require(jpc_particle_packet_path(true, 2U) ==
+                    std::optional{JpcParticlePacketPath::WorldBillboard},
                 "3D parent billboard packets must use the world camera");
-        require(jpc_particle_packet_path(true, 2U) == JpcParticlePacketPath::WorldBillboard,
-                "3D child billboard packets must use the same world path");
-        require(jpc_particle_packet_path(true, 4U) == JpcParticlePacketPath::WorldBillboardFallback,
-                "unimplemented 3D shape geometry must never fall back to screen coordinates");
+        for (auto shape_type = std::uint8_t{}; shape_type < 16U; ++shape_type) {
+            if (shape_type == 2U) {
+                continue;
+            }
+            require(!jpc_particle_packet_path(false, shape_type).has_value(),
+                    "unimplemented shape must not produce 2D geometry");
+            require(!jpc_particle_packet_path(true, shape_type).has_value(),
+                    "unimplemented shape must not produce 3D geometry");
+        }
     }
 
     void test_duplicate_names_keep_distinct_effect_hosts() {
@@ -204,7 +212,7 @@ int main() {
             std::pair{"default camera matches view XY billboard", &test_default_camera_matches_view_xy_billboard},
             std::pair{"translated rotated camera preserves view offsets", &test_translated_rotated_camera_preserves_view_offsets},
             std::pair{"rotated billboard matches oracle matrix", &test_rotated_billboard_matches_oracle_matrix},
-            std::pair{"packet path keeps 2D and selects world billboards", &test_packet_path_keeps_2d_and_selects_world_billboards},
+            std::pair{"packet path only selects implemented billboards", &test_packet_path_only_selects_implemented_billboards},
             std::pair{"duplicate names keep distinct effect hosts", &test_duplicate_names_keep_distinct_effect_hosts},
         };
         for (const auto &[name, test] : tests) {

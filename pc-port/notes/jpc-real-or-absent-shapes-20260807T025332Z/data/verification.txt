@@ -1,0 +1,23 @@
+$ xmake build smg-pc-jpc-billboard-tests
+[  4%]: <smg-pc-jpc-billboard-tests> cache compiling.debug tests/JpcBillboardTests.cpp
+[ 45%]: <smg-pc-game> cache compiling.debug src/runtime/RuntimeServices.cpp
+[ 57%]: <smg-pc-game> cache compiling.debug src/render/effects/JpcBillboard.cpp
+[ 93%]: <smg-pc-game> archiving.debug libsmg-pc-game.a
+[ 94%]: <smg-pc-jpc-billboard-tests> linking.debug smg-pc-jpc-billboard-tests
+[100%]: build ok
+
+$ xmake run smg-pc-jpc-billboard-tests
+[ok] default camera matches view XY billboard
+[ok] translated rotated camera preserves view offsets
+[ok] rotated billboard matches oracle matrix
+[ok] packet path only selects implemented billboards
+[ok] duplicate names keep distinct effect hosts
+5 JPC billboard test(s) passed
+
+$ xmake build smg-pc
+[ 93%]: <smg-pc-app> archiving.debug libsmg-pc-app.a
+[ 94%]: <smg-pc> linking.debug smg-pc
+[100%]: build ok
+
+$ git diff --check
+(no output)

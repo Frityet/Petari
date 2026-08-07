@@ -7,6 +7,7 @@
 #include <cstring>
 #include <fstream>
 #include <limits>
+#include <optional>
 #include <stdexcept>
 #include <system_error>
 #include <utility>
@@ -626,13 +627,19 @@ namespace smgpc::runtime {
                    draw_type == MR::DrawType_EffectDrawAfterImageEffect;
         }
 
-        [[nodiscard]] std::uint8_t jpa_particle_shape_type(
+        [[nodiscard]] std::optional<std::uint8_t> jpa_particle_shape_type(
             bool child, const smgpc::render::effects::JpcBaseShapeMetadata *base_shape,
             const smgpc::render::effects::JpcChildShapeMetadata *child_shape) {
-            if (child && child_shape != nullptr) {
-                return child_shape->shape_type;
+            if (child) {
+                if (child_shape != nullptr) {
+                    return child_shape->shape_type;
+                }
+                return std::nullopt;
             }
-            return base_shape == nullptr ? 2U : base_shape->shape_type;
+            if (base_shape != nullptr) {
+                return base_shape->shape_type;
+            }
+            return std::nullopt;
         }
 
         [[nodiscard]] const char *jpa_packet_path_name(smgpc::render::effects::JpcParticlePacketPath path) {
@@ -641,10 +648,8 @@ namespace smgpc::runtime {
                 return "JpcBillboard2D";
             case smgpc::render::effects::JpcParticlePacketPath::WorldBillboard:
                 return "JpcBillboard3D";
-            case smgpc::render::effects::JpcParticlePacketPath::WorldBillboardFallback:
-                return "JpcWorldShapeFallback3D";
             }
-            return "JpcBillboard2D";
+            throw std::logic_error("Unknown JPC particle packet path");
         }
 
         [[nodiscard]] float effect_billboard_size(const smgpc::render::effects::JpcTextureMetadata &texture, const smgpc::render::effects::ResolvedEffectResource &resource) {
@@ -827,53 +832,6 @@ namespace smgpc::runtime {
             registers[0U] = jpa_register_color(prm, alpha_scale);
             registers[1U] = jpa_register_color(env, 1.0F);
             return registers;
-        }
-
-        [[nodiscard]] bool jpa_child_uses_display_list_shape(const smgpc::render::effects::JpcChildShapeMetadata *child_shape) {
-            return child_shape != nullptr && (child_shape->shape_type == 4U || child_shape->shape_type == 8U);
-        }
-
-        [[nodiscard]] std::array<render::GxMaterialVertex2D, 16U> jpa_child_display_list_vertices(float x, float y, float z, float half_size_x,
-                                                                                                  float half_size_y,
-                                                                                                  std::array<std::uint8_t, 4U> color) {
-            auto vertices = std::array<render::GxMaterialVertex2D, 16U>{};
-            constexpr auto SEGMENTS = 4U;
-            for (auto segment = 0U; segment < SEGMENTS; ++segment) {
-                const auto u0 = static_cast<float>(segment) / static_cast<float>(SEGMENTS);
-                const auto u1 = static_cast<float>(segment + 1U) / static_cast<float>(SEGMENTS);
-                const auto x0 = x - half_size_x + (half_size_x * 2.0F * u0);
-                const auto x1 = x - half_size_x + (half_size_x * 2.0F * u1);
-                const auto out = segment * 4U;
-                vertices[out + 0U] = render::GxMaterialVertex2D{.x = x0, .y = y - half_size_y, .z = z, .tex_coords = {{{u0, 1.0F, 1.0F}}}, .color = color};
-                vertices[out + 1U] = render::GxMaterialVertex2D{.x = x1, .y = y - half_size_y, .z = z, .tex_coords = {{{u1, 1.0F, 1.0F}}}, .color = color};
-                vertices[out + 2U] = render::GxMaterialVertex2D{.x = x1, .y = y + half_size_y, .z = z, .tex_coords = {{{u1, 0.0F, 1.0F}}}, .color = color};
-                vertices[out + 3U] = render::GxMaterialVertex2D{.x = x0, .y = y + half_size_y, .z = z, .tex_coords = {{{u0, 0.0F, 1.0F}}}, .color = color};
-            }
-            return vertices;
-        }
-
-        [[nodiscard]] std::array<std::uint16_t, 19U> jpa_child_display_list_indices() {
-            return {
-                0U,
-                1U,
-                3U,
-                2U,
-                4U,
-                5U,
-                7U,
-                6U,
-                6U,
-                8U,
-                8U,
-                8U,
-                9U,
-                11U,
-                10U,
-                12U,
-                13U,
-                15U,
-                14U,
-            };
         }
 
         template <std::size_t Size>
@@ -1998,6 +1956,16 @@ namespace smgpc::runtime {
                 const auto *child_shape =
                     resource.resource != nullptr && resource.resource->child_shape.has_value() ? &*resource.resource->child_shape : nullptr;
                 for (const auto &particle : emitter.particles) {
+                    const auto shape_type = jpa_particle_shape_type(particle.child, base_shape, child_shape);
+                    if (!shape_type.has_value()) {
+                        continue;
+                    }
+                    const auto packet_path =
+                        smgpc::render::effects::jpc_particle_packet_path(world_draw, *shape_type);
+                    if (!packet_path.has_value()) {
+                        continue;
+                    }
+
                     const auto &texture = particle.child ? *child_texture : *primary_texture;
                     auto texture_handle = texture_handle_for(texture);
                     if (!texture_handle.is_valid()) {
@@ -2020,15 +1988,13 @@ namespace smgpc::runtime {
                     const auto z = center.z;
                     const auto alpha = static_cast<std::uint8_t>(std::clamp(particle.alpha, 0.0F, 1.0F) * 255.0F);
                     const auto color = std::array<std::uint8_t, 4U>{255U, 255U, 255U, alpha};
-                    auto vertex_count = std::uint32_t{4U};
-                    auto index_count = std::uint32_t{6U};
+                    const auto vertex_count = std::uint32_t{4U};
+                    const auto index_count = std::uint32_t{6U};
                     auto color_channel_count = std::uint32_t{1U};
-                    auto primitive_type = std::string_view{"triangles"};
-                    const auto shape_type = jpa_particle_shape_type(particle.child, base_shape, child_shape);
-                    const auto packet_path = smgpc::render::effects::jpc_particle_packet_path(world_draw, shape_type);
+                    const auto primitive_type = std::string_view{"triangles"};
                     auto alpha_compare = jpa_alpha_compare(base_shape);
                     auto blend = jpa_blend_mode(base_shape);
-                    if (packet_path != smgpc::render::effects::JpcParticlePacketPath::ScreenSpace) {
+                    if (*packet_path == smgpc::render::effects::JpcParticlePacketPath::WorldBillboard) {
                         const auto textured_vertices = smgpc::render::effects::jpc_billboard_world_vertices(
                             *camera_pose,
                             smgpc::render::effects::JpcBillboardGeometry{
@@ -2067,36 +2033,6 @@ namespace smgpc::runtime {
                             },
                             *camera_pose);
                         color_channel_count = 0U;
-                    } else if (particle.child && jpa_child_uses_display_list_shape(child_shape)) {
-                        auto vertices = jpa_child_display_list_vertices(x, y, z, half_size_x, half_size_y, color);
-                        const auto indices = jpa_child_display_list_indices();
-                        const auto texture_stages = std::array<render::GxTextureStage2D, 1U>{
-                            render::GxTextureStage2D{
-                                .texture = texture_handle,
-                                .wrap_u = texture.wrap_s,
-                                .wrap_v = texture.wrap_t,
-                                .min_filter = texture.min_filter,
-                                .mag_filter = texture.mag_filter,
-                            },
-                        };
-                        const auto tev_stages = std::array<render::GxTevStage2D, 1U>{jpa_tev_stage(base_shape)};
-                        renderer.submit_gx_material_triangles(render::GxMaterialTriangleBatch2D{
-                            .vertices = std::span<const render::GxMaterialVertex2D>(vertices.data(), vertices.size()),
-                            .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
-                            .primitive_topology = render::PrimitiveTopology::TriangleStrip,
-                            .texture_stages = std::span<const render::GxTextureStage2D>(texture_stages.data(), texture_stages.size()),
-                            .tev_stages = std::span<const render::GxTevStage2D>(tev_stages.data(), tev_stages.size()),
-                            .initial_tev_registers = jpa_initial_tev_registers(base_shape, child_shape, particle.alpha),
-                            .alpha_compare = alpha_compare,
-                            .blend = blend,
-                            .depth_test = jpa_depth_test(base_shape),
-                            .depth_write = jpa_depth_write(base_shape),
-                            .depth_compare = jpa_depth_compare(base_shape),
-                        });
-                        vertex_count = static_cast<std::uint32_t>(vertices.size());
-                        index_count = static_cast<std::uint32_t>(indices.size());
-                        color_channel_count = 0U;
-                        primitive_type = "triangle_strip";
                     } else {
                         renderer.submit_textured_quad(texture_handle,
                                                       render::TexturedQuad2D{
@@ -2151,9 +2087,9 @@ namespace smgpc::runtime {
                         .draw_order = resource.auto_effect_draw_order,
                         .frame_index = _frame_index,
                         .draw_type = draw_type,
-                        .packet_mode = jpa_packet_path_name(packet_path),
-                        .shape_type = shape_type,
-                        .world_space = packet_path != smgpc::render::effects::JpcParticlePacketPath::ScreenSpace,
+                        .packet_mode = jpa_packet_path_name(*packet_path),
+                        .shape_type = *shape_type,
+                        .world_space = *packet_path != smgpc::render::effects::JpcParticlePacketPath::ScreenSpace,
                         .primitive_type = std::string(primitive_type),
                         .vertex_count = vertex_count,
                         .index_count = index_count,

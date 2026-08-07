@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <optional>
 
 #include "camera/CameraPose.hpp"
 #include "render/core/RenderTypes.hpp"
@@ -11,7 +12,6 @@ namespace smgpc::render::effects {
     enum class JpcParticlePacketPath {
         ScreenSpace,
         WorldBillboard,
-        WorldBillboardFallback,
     };
 
     struct JpcBillboardGeometry {
@@ -23,7 +23,8 @@ namespace smgpc::render::effects {
     };
 
     [[nodiscard]] bool jpc_shape_is_billboard(std::uint8_t shape_type);
-    [[nodiscard]] JpcParticlePacketPath jpc_particle_packet_path(bool world_draw, std::uint8_t shape_type);
+    [[nodiscard]] std::optional<JpcParticlePacketPath>
+    jpc_particle_packet_path(bool world_draw, std::uint8_t shape_type);
     [[nodiscard]] camera::CameraParamVec3
     jpc_transform_particle_center(const std::array<float, 12U> &host_matrix,
                                   const camera::CameraParamVec3 &local_center);

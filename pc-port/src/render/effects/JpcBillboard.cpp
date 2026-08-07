@@ -67,14 +67,12 @@ namespace smgpc::render::effects {
         return shape_type == 2U;
     }
 
-    JpcParticlePacketPath jpc_particle_packet_path(bool world_draw, std::uint8_t shape_type) {
-        if (!world_draw) {
-            return JpcParticlePacketPath::ScreenSpace;
+    std::optional<JpcParticlePacketPath> jpc_particle_packet_path(bool world_draw,
+                                                                  std::uint8_t shape_type) {
+        if (!jpc_shape_is_billboard(shape_type)) {
+            return std::nullopt;
         }
-        if (jpc_shape_is_billboard(shape_type)) {
-            return JpcParticlePacketPath::WorldBillboard;
-        }
-        return JpcParticlePacketPath::WorldBillboardFallback;
+        return world_draw ? JpcParticlePacketPath::WorldBillboard : JpcParticlePacketPath::ScreenSpace;
     }
 
     camera::CameraParamVec3 jpc_transform_particle_center(const std::array<float, 12U> &host_matrix,
