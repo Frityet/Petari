@@ -11,18 +11,29 @@ class FootPrint : public NameObj {
 public:
     FootPrint(const char*, s32);
     FootPrint(const char*, s32, s32);
-    void setTexture(ResTIMG*);
-    void addPrint(const TVec3f&, const TVec3f&, const TVec3f&, bool);
-    void clear();
+    virtual ~FootPrint();
 
+    virtual void movement();
+    virtual void draw() const;
+
+    void setTexture(ResTIMG*);
+    bool addPrint(const TVec3f&, const TVec3f&, const TVec3f&, bool);
+    void clear();
+    void clearForce();
+    const TVec3f& getPrintPos(u32) const;
+    void invalidate(u32);
+    bool isValid(u32) const;
+
+private:
+    void initMember(s32, s32);
+
+public:
     JUTTexture* _C;
     FootPrintInfo* _10;
-    f32 _14;
-    f32 _18;
-    f32 _1C;
+    TVec3f _14;
     s32 _20;
-    u32 _24;
-    u32 _28;
+    s32 _24;
+    s32 _28;
     f32 _2C;
     f32 _30;
     f32 _34;

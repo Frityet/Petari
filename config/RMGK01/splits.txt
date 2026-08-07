@@ -9242,12 +9242,12 @@ Game/Util/FileUtil.cpp:
 
 Game/Util/FootPrint.cpp:
 	.text       start:0x803CFE74 end:0x803D0608
-	.data       start:0x805E1030 end:0x805E1208
+	.data       start:0x805E1030 end:0x805E1058
 	.sdata2     start:0x806C1608 end:0x806C1620
 
 Game/Util/FurCtrl.cpp:
 	.text       start:0x803D0608 end:0x803D1588
-	.data       start:0x805E1208 end:0x805E1250
+	.data       start:0x805E1058 end:0x805E1250
 	.sdata2     start:0x806C1620 end:0x806C1628
 
 Game/Util/FurDrawer.cpp:

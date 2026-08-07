@@ -398,7 +398,51 @@ namespace TDDraw {
         GXEnd();
     }
 
-    // TDDraw::drawTexture3D
+    void drawTexture3D(const TVec3f& rPosition, const TVec3f& rDirection, const TVec3f& rNormal, f32 width, f32 height, JUTTexture* pTexture,
+                       bool flipHorizontal, bool flipVertical) {
+        if (pTexture != nullptr) {
+            pTexture->load(GX_TEXMAP0);
+        }
+
+        TVec3f bottomLeft;
+        TVec3f bottomRight;
+        TVec3f topRight;
+        TVec3f topLeft;
+        TVec3f heightDirection;
+        TVec3f widthDirection;
+
+        PSVECCrossProduct(rDirection, rNormal, heightDirection);
+        MR::normalizeOrZero(&heightDirection);
+
+        PSVECCrossProduct(heightDirection, rDirection, widthDirection);
+        MR::normalizeOrZero(&widthDirection);
+
+        topLeft = rPosition - heightDirection * height + widthDirection * width;
+
+        topRight = rPosition + heightDirection * height + widthDirection * width;
+
+        bottomRight = rPosition + heightDirection * height - widthDirection * width;
+
+        bottomLeft = rPosition - heightDirection * height - widthDirection * width;
+
+        f32 texLeft = flipHorizontal ? 1.0f : 0.0f;
+        f32 texRight = flipHorizontal ? 0.0f : 1.0f;
+        f32 texTop = flipVertical ? 1.0f : 0.0f;
+        f32 texBottom = flipVertical ? 0.0f : 1.0f;
+
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        {
+            GXPosition3f32(topLeft.x, topLeft.y, topLeft.z);
+            GXTexCoord2f32(texLeft, texTop);
+            sendPoint(topRight);
+            GXTexCoord2f32(texRight, texTop);
+            sendPoint(bottomRight);
+            GXTexCoord2f32(texRight, texBottom);
+            sendPoint(bottomLeft);
+            GXTexCoord2f32(texLeft, texBottom);
+        }
+        GXEnd();
+    }
 
     void drawFillBox(const TVec3f& a1, const TVec3f& a2, u32 a3) {
         GXBegin(GX_QUADS, GX_VTXFMT0, 4);

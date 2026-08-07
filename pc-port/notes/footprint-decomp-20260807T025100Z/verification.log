@@ -1,0 +1,24 @@
+2026-08-07 UTC FootPrint source-first verification
+
+$ ninja
+[253/288] CHECK config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+[288/288] PROGRESS
+
+$ sha1sum build/RMGK02/main.dol
+54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+$ git diff --check -- config/RMGK01/splits.txt include/Game/Util/DirectDraw.hpp include/Game/Util/FootPrint.hpp src/Game/Util/DirectDraw.cpp src/Game/Util/FootPrint.cpp
+(no output)
+
+Source-link/objdiff probes:
+- FootPrint .text: 1940 bytes, 99.93814%
+- all FootPrint functions 100% except initMember 99.74138% and draw 99.89796%
+- FootPrint .sdata2: 100%
+- TDDraw::drawTexture3D: 776 bytes, 99.896904%
+- remaining mismatches: constant-pool relocation labels only
+
+DirectDraw source compiles as Equivalent. Whole-unit source linking remains
+blocked by other pre-existing undecompiled DirectDraw functions outside this
+slice: fix2Dpos, drawFillBox3D, project2D, getTexel32, setTexel32,
+tileConversion16, tileConversion8, and invProject. None were stubbed.
