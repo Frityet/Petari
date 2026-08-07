@@ -136,7 +136,6 @@ namespace smgpc::render::core {
 
     enum class DebugInput {
         CORE_PAD_TOGGLE_FREECAM,
-        CORE_PAD_REQUEST_SCENE_TRANSITION,
         CORE_PAD_FREECAM_MOVE_FORWARD,
         CORE_PAD_FREECAM_MOVE_BACKWARD,
         CORE_PAD_FREECAM_MOVE_LEFT,

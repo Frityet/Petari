@@ -25,6 +25,22 @@ namespace JGeometry {
             set(source.mMtx);
         }
 
+        void setInline(const SMatrix34C &source) {
+            set(source);
+        }
+
+        void setInline(const SMatrix34C *source) {
+            if (source != nullptr) {
+                set(*source);
+            }
+        }
+
+        void setInline(MtxPtr source) {
+            if (source != nullptr) {
+                set(source);
+            }
+        }
+
         [[nodiscard]] MtxPtr toMtxPtr() {
             return mMtx;
         }
@@ -151,6 +167,28 @@ namespace JGeometry {
         void mult33(TVec3f &vector) const {
             mult33(vector, vector);
         }
+
+        void setRotate(const TVec3f& axis, f32 angle) {
+            TVec3f normalized_axis;
+            normalized_axis.normalize(axis);
+
+            const auto sine = std::sin(angle);
+            const auto cosine = std::cos(angle);
+            const auto one_minus_cosine = 1.0F - cosine;
+            const auto x = normalized_axis.x;
+            const auto y = normalized_axis.y;
+            const auto z = normalized_axis.z;
+
+            this->mMtx[0][0] = cosine + (one_minus_cosine * x * x);
+            this->mMtx[0][1] = (one_minus_cosine * x * y) - (sine * z);
+            this->mMtx[0][2] = (one_minus_cosine * x * z) + (sine * y);
+            this->mMtx[1][0] = (one_minus_cosine * x * y) + (sine * z);
+            this->mMtx[1][1] = cosine + (one_minus_cosine * y * y);
+            this->mMtx[1][2] = (one_minus_cosine * y * z) - (sine * x);
+            this->mMtx[2][0] = (one_minus_cosine * x * z) - (sine * y);
+            this->mMtx[2][1] = (one_minus_cosine * y * z) + (sine * x);
+            this->mMtx[2][2] = cosine + (one_minus_cosine * z * z);
+        }
     };
 
     template <typename T>
@@ -179,12 +217,84 @@ namespace JGeometry {
             setTrans(0.0F, 0.0F, 0.0F);
         }
     };
+
+    template <typename T>
+    struct SMatrix44C {
+        void set(const T source[4][4]) {
+            for (int row = 0; row < 4; ++row) {
+                for (int column = 0; column < 4; ++column) {
+                    mMtx[row][column] = source[row][column];
+                }
+            }
+        }
+
+        void set(const SMatrix44C& source) {
+            set(source.mMtx);
+        }
+
+        [[nodiscard]] T get(int row, int column) const {
+            return mMtx[row][column];
+        }
+
+        T mMtx[4][4]{};
+    };
+
+    template <typename T>
+    struct TMatrix44 : public T {
+        void identity() {
+            for (int row = 0; row < 4; ++row) {
+                for (int column = 0; column < 4; ++column) {
+                    this->mMtx[row][column] = row == column ? 1.0F : 0.0F;
+                }
+            }
+        }
+    };
+
+    template <typename T>
+    struct TProjection3 : public T {
+        void makePerspective(f32 fovy_degrees, f32 aspect, f32 near_clip, f32 far_clip) {
+            const auto half_angle = fovy_degrees * 3.14159265358979323846F / 360.0F;
+            const auto focal_length = 1.0F / std::tan(half_angle);
+            const auto depth_scale = 1.0F / (far_clip - near_clip);
+
+            this->mMtx[0][0] = focal_length / aspect;
+            this->mMtx[0][1] = 0.0F;
+            this->mMtx[0][2] = 0.0F;
+            this->mMtx[0][3] = 0.0F;
+            this->mMtx[1][0] = 0.0F;
+            this->mMtx[1][1] = focal_length;
+            this->mMtx[1][2] = 0.0F;
+            this->mMtx[1][3] = 0.0F;
+            this->mMtx[2][0] = 0.0F;
+            this->mMtx[2][1] = 0.0F;
+            this->mMtx[2][2] = -near_clip * depth_scale;
+            this->mMtx[2][3] = -(far_clip * near_clip) * depth_scale;
+            this->mMtx[3][0] = 0.0F;
+            this->mMtx[3][1] = 0.0F;
+            this->mMtx[3][2] = -1.0F;
+            this->mMtx[3][3] = 0.0F;
+        }
+
+        void makeTrans(f32 offset_x, f32 offset_y) {
+            this->identity();
+            this->mMtx[0][3] = offset_x;
+            this->mMtx[1][3] = offset_y;
+        }
+
+        void makeTrans(const TVec2f& offset) {
+            makeTrans(offset.x, offset.y);
+        }
+    };
 }  // namespace JGeometry
 
 using TSMtxf = JGeometry::SMatrix34C<f32>;
 using TMtx34f = JGeometry::TMatrix34<TSMtxf>;
 using TRot3f = JGeometry::TRotation3<TMtx34f>;
 using TPos3f = JGeometry::TPosition3<TMtx34f>;
+using TSMtx44f = JGeometry::SMatrix44C<f32>;
+using TMtx44f = JGeometry::TMatrix44<TSMtx44f>;
+using TProj3f = JGeometry::TProjection3<TMtx44f>;
 
 static_assert(sizeof(TSMtxf) == sizeof(Mtx));
 static_assert(sizeof(TPos3f) == sizeof(Mtx));
+static_assert(sizeof(TProj3f) == sizeof(f32) * 16U);

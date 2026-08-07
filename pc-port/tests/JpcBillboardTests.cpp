@@ -142,6 +142,25 @@ namespace {
         }
     }
 
+    void test_degenerate_camera_basis_is_absent() {
+        auto view_threw = false;
+        try {
+            (void)smgpc::camera::transform_world_to_camera({}, {});
+        } catch (const std::logic_error &) {
+            view_threw = true;
+        }
+        require(view_threw, "a degenerate camera must not produce a view transform from guessed axes");
+
+        auto billboard_threw = false;
+        try {
+            (void)smgpc::render::effects::jpc_billboard_world_vertices(
+                {}, {.center = {}, .half_size_x = 1.0F, .half_size_y = 1.0F});
+        } catch (const std::logic_error &) {
+            billboard_threw = true;
+        }
+        require(billboard_threw, "a degenerate camera must not produce billboard geometry from guessed axes");
+    }
+
     void test_duplicate_names_keep_distinct_effect_hosts() {
         auto service = smgpc::runtime::EffectService{};
         auto first_host = 1;
@@ -213,6 +232,7 @@ int main() {
             std::pair{"translated rotated camera preserves view offsets", &test_translated_rotated_camera_preserves_view_offsets},
             std::pair{"rotated billboard matches oracle matrix", &test_rotated_billboard_matches_oracle_matrix},
             std::pair{"packet path only selects implemented billboards", &test_packet_path_only_selects_implemented_billboards},
+            std::pair{"degenerate camera basis is absent", &test_degenerate_camera_basis_is_absent},
             std::pair{"duplicate names keep distinct effect hosts", &test_duplicate_names_keep_distinct_effect_hosts},
         };
         for (const auto &[name, test] : tests) {

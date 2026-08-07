@@ -28,7 +28,6 @@ namespace smgpc::scene {
 
         [[nodiscard]] bool has_boot_requested_initial_stage() const;
         [[nodiscard]] bool is_initial_stage_host_active() const;
-        [[nodiscard]] bool has_sent_autorush_begin() const;
 
     private:
         void ensure_initial_sequence_requested();

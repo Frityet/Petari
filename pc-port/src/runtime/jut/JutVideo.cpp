@@ -3,18 +3,12 @@
 #include <memory>
 
 #include "runtime/RuntimeContext.hpp"
-#include "runtime/WiiVideoService.hpp"
 
 namespace {
     std::unique_ptr<JUTVideo> s_manager;
 
     smgpc::runtime::WiiVideoService &active_video_service() {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
-            return runtime->wii_video();
-        }
-
-        static auto fallback = smgpc::runtime::WiiVideoService();
-        return fallback;
+        return smgpc::runtime::RuntimeContext::instance().wii_video();
     }
 }  // namespace
 
@@ -62,10 +56,6 @@ void JUTVideo::drawDoneCallback() {
 }
 
 JUTVideo *JUTVideo::getManager() {
-    if (s_manager == nullptr) {
-        createManager(nullptr);
-    }
-
     return s_manager.get();
 }
 

@@ -1,3 +1,4 @@
+#include "Game/Util/MapUtil.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <array>
@@ -16,6 +17,17 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
+    }
+
+    template <typename Operation>
+    void require_unavailable(Operation&& operation, std::string_view message) {
+        auto unavailable = false;
+        try {
+            operation();
+        } catch (const std::logic_error&) {
+            unavailable = true;
+        }
+        require(unavailable, message);
     }
 
     void write_be16(std::vector<std::uint8_t> &bytes, std::size_t offset, std::uint16_t value) {
@@ -84,8 +96,13 @@ namespace {
     };
 
     void test_collision_is_absent_without_explicit_registration() {
+        require_unavailable(
+            [] { (void)MR::isExistMapCollision(TVec3f{}, TVec3f{0.0F, -1.0F, 0.0F}); },
+            "an absent scene collision owner must not be reported as a collision miss");
+
         auto collision = smgpc::scene::StageCollisionService{};
         collision.build();
+        collision.activate();
 
         const auto movement = TVec3f{3.0F, -4.0F, 5.0F};
         const auto moved = collision.move_sphere(TVec3f{}, movement, 50.0F);
@@ -99,6 +116,15 @@ namespace {
                 "sphere queries must have no contacts when collision is absent");
         require(moved.contacts.empty() && moved.displacement.epsilonEquals(movement, 0.0001F),
                 "binder movement must remain unobstructed when collision is absent");
+
+        auto normal = TVec3f{4.0F, 5.0F, 6.0F};
+        auto position = TVec3f{7.0F, 8.0F, 9.0F};
+        require(!MR::getFirstPolyNormalOnLineToMap(&normal, TVec3f{0.0F, 1.0F, 0.0F},
+                                                   TVec3f{0.0F, -2.0F, 0.0F}, &position, nullptr),
+                "a real empty collision owner should produce an ordinary miss");
+        require(normal.epsilonEquals(TVec3f{4.0F, 5.0F, 6.0F}, 0.0001F) &&
+                    position.epsilonEquals(TVec3f{7.0F, 8.0F, 9.0F}, 0.0001F),
+                "a collision miss must not fabricate zero-valued hit outputs");
     }
 
     void test_only_explicit_valid_kcl_registration_adds_collision() {

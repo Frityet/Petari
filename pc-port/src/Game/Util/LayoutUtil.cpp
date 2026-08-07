@@ -17,19 +17,20 @@
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "core/RenderTypes.hpp"
+#include "layout/LayoutHost.hpp"
+#include "layout/LayoutRuntime.hpp"
 #include "layout/LytTexMap.hpp"
 #include "resource/RarcArchive.hpp"
-#include "resource/TextEncoding.hpp"
 #include "resource/TplTexture.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace {
     [[nodiscard]] std::u16string utf16_from_wide(const wchar_t* pText) {
-        auto text = std::u16string{};
         if (pText == nullptr) {
-            return text;
+            throw std::invalid_argument("Layout text conversion requires real source text");
         }
 
+        auto text = std::u16string{};
         while (*pText != L'\0') {
             const auto code = static_cast< char32_t >(*pText++);
             text.push_back(static_cast< char16_t >(std::min< char32_t >(code, 0xffffU)));
@@ -38,20 +39,34 @@ namespace {
         return text;
     }
 
-    [[nodiscard]] std::u16string runtime_message_or_tag(const char* pMessageId) {
-        const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            return runtime->messages().message_utf16_or(tag, smgpc::resource::utf16_from_utf8_lossy(tag));
+    [[nodiscard]] std::u16string runtime_message(const char* pMessageId) {
+        if (pMessageId == nullptr || *pMessageId == '\0') {
+            throw std::invalid_argument("Layout message lookup requires a real message tag");
         }
-        return smgpc::resource::utf16_from_utf8_lossy(tag);
+        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        if (runtime == nullptr) {
+            throw std::logic_error("Layout message lookup requires the active message archive");
+        }
+        const auto* message = runtime->messages().message_utf16(pMessageId);
+        if (message == nullptr) {
+            throw std::runtime_error("Layout message does not exist: " + std::string(pMessageId));
+        }
+        return *message;
     }
 
-    [[nodiscard]] std::u16string runtime_raw_message_or_tag(const char* pMessageId) {
-        const auto tag = pMessageId != nullptr ? std::string_view(pMessageId) : std::string_view{};
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            return runtime->messages().message_raw_utf16_or(tag, smgpc::resource::utf16_from_utf8_lossy(tag));
+    [[nodiscard]] std::u16string runtime_raw_message(const char* pMessageId) {
+        if (pMessageId == nullptr || *pMessageId == '\0') {
+            throw std::invalid_argument("Raw layout message lookup requires a real message tag");
         }
-        return smgpc::resource::utf16_from_utf8_lossy(tag);
+        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        if (runtime == nullptr) {
+            throw std::logic_error("Raw layout message lookup requires the active message archive");
+        }
+        const auto* message = runtime->messages().message_raw_utf16(pMessageId);
+        if (message == nullptr) {
+            throw std::runtime_error("Raw layout message does not exist: " + std::string(pMessageId));
+        }
+        return *message;
     }
 
     [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
@@ -90,74 +105,95 @@ namespace {
             std::filesystem::path("ObjectData") / archive,
         });
     }
+
+    [[nodiscard]] LayoutManager& require_layout_manager(LayoutActor* layout, std::string_view operation) {
+        if (layout == nullptr || layout->getLayoutManager() == nullptr) {
+            throw std::logic_error(std::string(operation) + " requires an initialized layout manager");
+        }
+        return *layout->getLayoutManager();
+    }
+
+    [[nodiscard]] const LayoutManager& require_layout_manager(const LayoutActor* layout, std::string_view operation) {
+        if (layout == nullptr || layout->getLayoutManager() == nullptr) {
+            throw std::logic_error(std::string(operation) + " requires an initialized layout manager");
+        }
+        return *layout->getLayoutManager();
+    }
+
+    [[nodiscard]] LayoutPaneCtrl& require_pane_ctrl(LayoutActor* layout, const char* paneName, std::string_view operation) {
+        auto& manager = require_layout_manager(layout, operation);
+        auto* pane = manager.getPaneCtrl(paneName);
+        if (pane == nullptr) {
+            throw std::runtime_error(std::string(operation) + " requires a real pane control");
+        }
+        return *pane;
+    }
 }  // namespace
 
 namespace MR {
 
     bool isDead(const SimpleLayout* pLayout) {
-        return pLayout == nullptr || pLayout->isDead();
+        return smgpc::layout::is_layout_actor_dead(pLayout);
     }
 
     bool isDead(const LayoutActor* pLayout) {
-        return pLayout == nullptr || pLayout->isDead();
+        return smgpc::layout::is_layout_actor_dead(pLayout);
     }
 
     void startAnim(SimpleLayout* pLayout, const char* pAnimName, u32 animLayer) {
-        pLayout->startAnim(pAnimName, animLayer);
+        smgpc::layout::start_layout_anim(pLayout, pAnimName, animLayer);
     }
 
     void startAnim(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
-        pLayout->startAnim(pAnimName, animLayer);
+        smgpc::layout::start_layout_anim(pLayout, pAnimName, animLayer);
     }
 
     bool isAnimStopped(SimpleLayout* pLayout, u32 animLayer) {
-        return pLayout->isAnimStopped(animLayer);
+        return smgpc::layout::is_layout_anim_stopped(pLayout, animLayer);
     }
 
     bool isAnimStopped(LayoutActor* pLayout, u32 animLayer) {
-        return pLayout->isAnimStopped(animLayer);
+        return smgpc::layout::is_layout_anim_stopped(pLayout, animLayer);
     }
 
     void setAnimFrameAndStop(SimpleLayout* pLayout, f32 frame, u32 animLayer) {
-        pLayout->setAnimFrameAndStop(frame, animLayer);
+        smgpc::layout::set_layout_anim_frame_and_stop(pLayout, frame, animLayer);
     }
 
     void setAnimFrameAndStop(LayoutActor* pLayout, f32 frame, u32 animLayer) {
-        pLayout->setAnimFrameAndStop(frame, animLayer);
+        smgpc::layout::set_layout_anim_frame_and_stop(pLayout, frame, animLayer);
     }
 
     void setAnimFrame(SimpleLayout* pLayout, f32 frame, u32 animLayer) {
-        pLayout->setAnimFrame(frame, animLayer);
+        smgpc::layout::set_layout_anim_frame(pLayout, frame, animLayer);
     }
 
     void setAnimFrame(LayoutActor* pLayout, f32 frame, u32 animLayer) {
-        pLayout->setAnimFrame(frame, animLayer);
+        smgpc::layout::set_layout_anim_frame(pLayout, frame, animLayer);
     }
 
     f32 getAnimFrame(SimpleLayout* pLayout, u32 animLayer) {
-        return pLayout->getAnimFrame(animLayer);
+        return smgpc::layout::layout_anim_frame(pLayout, animLayer);
     }
 
     f32 getAnimFrame(LayoutActor* pLayout, u32 animLayer) {
-        return pLayout->getAnimFrame(animLayer);
+        return smgpc::layout::layout_anim_frame(pLayout, animLayer);
     }
 
     J3DFrameCtrl* getAnimCtrl(LayoutActor* pLayout, u32 animLayer) {
-        return pLayout->getAnimCtrl(animLayer);
+        return smgpc::layout::layout_anim_ctrl(pLayout, animLayer);
     }
 
     void setAnimRate(SimpleLayout* pLayout, f32 rate, u32 animLayer) {
-        pLayout->setAnimRate(rate, animLayer);
+        smgpc::layout::set_layout_anim_rate(pLayout, rate, animLayer);
     }
 
     void setAnimRate(LayoutActor* pLayout, f32 rate, u32 animLayer) {
-        pLayout->setAnimRate(rate, animLayer);
+        smgpc::layout::set_layout_anim_rate(pLayout, rate, animLayer);
     }
 
     void stopAnim(LayoutActor* pLayout, u32 animLayer) {
-        if (pLayout != nullptr) {
-            pLayout->setAnimRate(0.0F, animLayer);
-        }
+        smgpc::layout::set_layout_anim_rate(pLayout, 0.0F, animLayer);
     }
 
     nw4r::lyt::TexMap* createLytTexMap(const char* pArchiveName, const char* pTextureName) {
@@ -187,10 +223,11 @@ namespace MR {
     }
 
     void replacePaneTexture(LayoutActor* pLayout, const char* pPaneName, const nw4r::lyt::TexMap* pTexMap, u8 texMapIndex) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr && pTexMap != nullptr) {
-            pLayout->getSimpleLayout()->replacePaneTexture(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, *pTexMap,
-                                                           texMapIndex);
+        if (pTexMap == nullptr) {
+            throw std::invalid_argument("Replacing a pane texture requires a real texture");
         }
+        smgpc::layout::replace_pane_texture(&require_layout_manager(pLayout, "Replacing a pane texture"), pPaneName,
+                                            *pTexMap, texMapIndex);
     }
 
     void startAnimAtFirstStep(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
@@ -200,20 +237,16 @@ namespace MR {
     }
 
     void setAnimFrameAndStopAdjustTextHeight(LayoutActor* pLayout, const char*, u32 animLayer) {
-        if (pLayout != nullptr) {
-            pLayout->setAnimFrameAndStop(pLayout->getAnimFrame(animLayer), animLayer);
-        }
+        smgpc::layout::set_layout_anim_frame_and_stop(pLayout, smgpc::layout::layout_anim_frame(pLayout, animLayer), animLayer);
     }
 
     void setTextBoxNumberRecursive(LayoutActor* pLayout, const char* pPaneName, s32 number) {
-        pLayout->setTextBoxNumberRecursive(pPaneName, number);
+        smgpc::layout::set_text_box_number(pLayout, pPaneName, number);
     }
 
     void setTextBoxGameMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxTaggedStringRecursive(pPaneName, runtime_raw_message_or_tag(pMessageId),
-                                                                        runtime_message_or_tag(pMessageId));
-        }
+        smgpc::layout::set_text_box_tagged_string(&require_layout_manager(pLayout, "Setting a game message"), pPaneName,
+                                                  runtime_raw_message(pMessageId), runtime_message(pMessageId));
     }
 
     void setTextBoxLayoutMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
@@ -225,63 +258,50 @@ namespace MR {
     }
 
     void setTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage) {
-        if (pLayout != nullptr) {
-            pLayout->setTextBoxStringRecursive(pPaneName, utf16_from_wide(pMessage));
-        }
+        smgpc::layout::set_text_box_string(pLayout, pPaneName, utf16_from_wide(pMessage));
     }
 
     void clearTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr) {
-            pLayout->setTextBoxStringRecursive(pPaneName, std::u16string_view{});
-        }
+        smgpc::layout::set_text_box_string(pLayout, pPaneName, std::u16string_view{});
     }
 
     void setTextBoxArgNumberRecursive(LayoutActor* pLayout, const char* pPaneName, s32 number, s32 argIndex) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxArgNumberRecursive(pPaneName, number, argIndex);
-        }
+        smgpc::layout::set_text_box_arg_number(&require_layout_manager(pLayout, "Setting a text-box argument"),
+                                               pPaneName, number, argIndex);
     }
 
     void setTextBoxArgStringRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage, s32 argIndex) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxArgStringRecursive(pPaneName, utf16_from_wide(pMessage), argIndex);
-        }
+        smgpc::layout::set_text_box_arg_string(&require_layout_manager(pLayout, "Setting a text-box argument"),
+                                               pPaneName, utf16_from_wide(pMessage), argIndex);
     }
 
     void setTextBoxHorizontalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxHorizontalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 1U);
-        }
+        smgpc::layout::set_text_box_horizontal_position(
+            &require_layout_manager(pLayout, "Setting text-box horizontal position"), pPaneName, 1U);
     }
 
     void setTextBoxHorizontalPositionLeftRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxHorizontalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 0U);
-        }
+        smgpc::layout::set_text_box_horizontal_position(
+            &require_layout_manager(pLayout, "Setting text-box horizontal position"), pPaneName, 0U);
     }
 
     void setTextBoxVerticalPositionTopRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxVerticalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 0U);
-        }
+        smgpc::layout::set_text_box_vertical_position(
+            &require_layout_manager(pLayout, "Setting text-box vertical position"), pPaneName, 0U);
     }
 
     void setTextBoxVerticalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxVerticalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 1U);
-        }
+        smgpc::layout::set_text_box_vertical_position(
+            &require_layout_manager(pLayout, "Setting text-box vertical position"), pPaneName, 1U);
     }
 
     void setTextBoxVerticalPositionBottomRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setTextBoxVerticalPosition(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, 2U);
-        }
+        smgpc::layout::set_text_box_vertical_position(
+            &require_layout_manager(pLayout, "Setting text-box vertical position"), pPaneName, 2U);
     }
 
     void createAndAddPaneCtrl(LayoutActor* pLayout, const char* pPaneName, u32 animLayerNum) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->createAndAddPaneCtrl(pPaneName, animLayerNum);
-        }
+        require_layout_manager(pLayout, "Creating a pane control").createAndAddPaneCtrl(pPaneName, animLayerNum);
     }
 
     bool isExistPaneCtrl(LayoutActor* pLayout, const char* pPaneName) {
@@ -289,33 +309,23 @@ namespace MR {
     }
 
     void showPane(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->showPane(pPaneName);
-        }
+        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Showing a pane"), pPaneName, true, false);
     }
 
     void showPaneRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->showPaneRecursive(pPaneName);
-        }
+        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Showing a pane tree"), pPaneName, true, true);
     }
 
     void hidePane(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->hidePane(pPaneName);
-        }
+        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Hiding a pane"), pPaneName, false, false);
     }
 
     void hidePaneRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->hidePaneRecursive(pPaneName);
-        }
+        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Hiding a pane tree"), pPaneName, false, true);
     }
 
     void setPaneAlphaFloat(LayoutActor* pLayout, const char* pPaneName, f32 alpha) {
-        if (pLayout != nullptr && pLayout->getSimpleLayout() != nullptr) {
-            pLayout->getSimpleLayout()->setPaneAlpha(pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{}, alpha);
-        }
+        smgpc::layout::set_pane_alpha(&require_layout_manager(pLayout, "Setting pane alpha"), pPaneName, alpha);
     }
 
     void showLayout(LayoutActor* pLayout) {
@@ -332,7 +342,7 @@ namespace MR {
 
     void convertScreenPosToLayoutPos(TVec2f* pLayoutPos, const TVec2f& rScreenPos) {
         if (pLayoutPos == nullptr) {
-            return;
+            throw std::invalid_argument("Screen-to-layout conversion requires output storage");
         }
 
         const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
@@ -344,7 +354,7 @@ namespace MR {
 
     void convertLayoutPosToScreenPos(TVec2f* pScreenPos, const TVec2f& rLayoutPos) {
         if (pScreenPos == nullptr) {
-            return;
+            throw std::invalid_argument("Layout-to-screen conversion requires output storage");
         }
 
         const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
@@ -356,47 +366,45 @@ namespace MR {
     }
 
     void setFollowPos(const TVec2f* pPos, LayoutActor* pLayout, const char*) {
-        if (pLayout != nullptr && pPos != nullptr) {
-            auto screen_pos = TVec2f{};
-            convertLayoutPosToScreenPos(&screen_pos, *pPos);
-            pLayout->setTrans(screen_pos);
+        if (pLayout == nullptr || pPos == nullptr) {
+            throw std::invalid_argument("Setting a layout follow position requires a layout and position");
         }
+        auto screen_pos = TVec2f{};
+        convertLayoutPosToScreenPos(&screen_pos, *pPos);
+        pLayout->setTrans(screen_pos);
     }
 
     void copyPaneTrans(TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName) {
-        if (pPos != nullptr) {
-            *pPos = {};
-            const auto* layout = pLayout != nullptr ? pLayout->getSimpleLayout() : nullptr;
-            const auto bounds =
-                layout != nullptr ? layout->paneBounds(pPaneName != nullptr ? pPaneName : "") : std::optional< SimpleLayout::PaneBounds >{};
-            if (bounds.has_value()) {
-                pPos->x = (bounds->left + bounds->right) * 0.5F;
-                pPos->y = (bounds->top + bounds->bottom) * 0.5F;
-            }
+        if (pPos == nullptr) {
+            throw std::invalid_argument("Copying a pane translation requires output storage");
         }
+        const auto& layout = smgpc::layout::require_layout_runtime(pLayout, "Copying a pane translation");
+        const auto pane_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
+        Mtx pane_matrix{};
+        if (!layout.copyPaneMatrix(pane_name, pane_matrix)) {
+            throw std::runtime_error("Layout " + layout.getLayoutName() + " has no pane " + std::string(pane_name));
+        }
+        pPos->x = pane_matrix[0][3];
+        pPos->y = pane_matrix[1][3];
     }
 
     void copyPaneScale(TVec2f* pScale, const LayoutActor* pLayout, const char* pPaneName) {
         if (pScale == nullptr) {
-            return;
+            throw std::invalid_argument("Copying a pane scale requires output storage");
         }
 
-        *pScale = TVec2f{1.0F, 1.0F};
-        const auto* layout = pLayout != nullptr ? pLayout->getSimpleLayout() : nullptr;
-        const auto scale = layout != nullptr ? layout->paneScale(pPaneName != nullptr ? pPaneName : "") : std::optional< TVec2f >{};
-        if (scale.has_value()) {
-            *pScale = *scale;
+        const auto& layout = smgpc::layout::require_layout_runtime(pLayout, "Copying a pane scale");
+        const auto scale = layout.paneScale(pPaneName != nullptr ? pPaneName : "");
+        if (!scale.has_value()) {
+            throw std::runtime_error("Cannot copy scale from an absent layout pane");
         }
+        *pScale = *scale;
     }
 
     void setLayoutScaleAtPaneScale(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
-        if (pDst == nullptr || pDst->getSimpleLayout() == nullptr) {
-            return;
-        }
-
         auto scale = TVec2f{};
         copyPaneScale(&scale, pSrc, pPaneName);
-        pDst->getSimpleLayout()->setScale(scale.x, scale.y);
+        smgpc::layout::set_layout_scale(pDst, scale.x, scale.y);
     }
 
     void setLayoutPosAtPaneTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
@@ -416,55 +424,42 @@ namespace MR {
     }
 
     void startPaneAnim(LayoutActor* pLayout, const char* pPaneName, const char* pAnimName, u32 animLayer) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->getPaneCtrl(pPaneName)->start(pAnimName, animLayer);
-        }
+        require_pane_ctrl(pLayout, pPaneName, "Starting a pane animation").start(pAnimName, animLayer);
     }
 
     void stopPaneAnim(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->getPaneCtrl(pPaneName)->stop(animLayer);
-        }
+        require_pane_ctrl(pLayout, pPaneName, "Stopping a pane animation").stop(animLayer);
     }
 
     void setPaneAnimFrame(LayoutActor* pLayout, const char* pPaneName, f32 frame, u32 animLayer) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->getPaneCtrl(pPaneName)->setFrame(frame, animLayer);
-        }
+        smgpc::layout::set_pane_anim_frame(&require_pane_ctrl(pLayout, pPaneName, "Setting a pane animation frame"),
+                                           frame, animLayer);
     }
 
     void setPaneAnimFrameAndStop(LayoutActor* pLayout, const char* pPaneName, f32 frame, u32 animLayer) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            auto* pane_ctrl = pLayout->getLayoutManager()->getPaneCtrl(pPaneName);
-            pane_ctrl->setFrame(frame, animLayer);
-            pane_ctrl->stop(animLayer);
-        }
+        auto& pane_ctrl = require_pane_ctrl(pLayout, pPaneName, "Stopping at a pane animation frame");
+        smgpc::layout::set_pane_anim_frame(&pane_ctrl, frame, animLayer);
+        pane_ctrl.stop(animLayer);
     }
 
     void setPaneAnimRate(LayoutActor* pLayout, const char* pPaneName, f32 rate, u32 animLayer) {
-        if (pLayout != nullptr && pLayout->getLayoutManager() != nullptr) {
-            pLayout->getLayoutManager()->getPaneCtrl(pPaneName)->setRate(rate, animLayer);
-        }
+        smgpc::layout::set_pane_anim_rate(&require_pane_ctrl(pLayout, pPaneName, "Setting a pane animation rate"),
+                                          rate, animLayer);
     }
 
     f32 getPaneAnimFrame(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        if (pLayout == nullptr || pLayout->getLayoutManager() == nullptr) {
-            return 0.0F;
-        }
-
-        return pLayout->getLayoutManager()->getPaneAnimFrame(pPaneName, animLayer);
+        return smgpc::layout::pane_animation_frame(&require_layout_manager(pLayout, "Reading a pane animation frame"),
+                                                   pPaneName, animLayer);
     }
 
     s16 getPaneAnimFrameMax(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        if (pLayout == nullptr || pLayout->getLayoutManager() == nullptr) {
-            return 0;
-        }
-
-        return static_cast< s16 >(pLayout->getLayoutManager()->getPaneAnimFrameMax(pPaneName, animLayer));
+        return static_cast< s16 >(smgpc::layout::pane_animation_frame_max(
+            &require_layout_manager(pLayout, "Reading a pane animation duration"), pPaneName, animLayer));
     }
 
     bool isPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        return pLayout == nullptr || pLayout->getLayoutManager() == nullptr || pLayout->getLayoutManager()->isPaneAnimStopped(pPaneName, animLayer);
+        return smgpc::layout::is_pane_animation_stopped(
+            &require_layout_manager(pLayout, "Reading a pane animation state"), pPaneName, animLayer);
     }
 
     bool isLessStep(const LayoutActor* pActor, s32 step) {
@@ -516,32 +511,22 @@ namespace MR {
     }
 
     s16 getAnimFrameMax(LayoutActor* pLayout, const char* pAnimName) {
-        if (pLayout == nullptr || pLayout->getLayoutManager() == nullptr) {
-            return 0;
-        }
-
-        return static_cast< s16 >(pLayout->getLayoutManager()->getAnimFrameMax(pAnimName));
+        return static_cast< s16 >(smgpc::layout::animation_duration(
+            &require_layout_manager(pLayout, "Reading layout animation metadata"), pAnimName));
     }
 
     s16 getAnimFrameMax(LayoutActor* pLayout, u32 animLayer) {
-        if (pLayout == nullptr || pLayout->getSimpleLayout() == nullptr) {
-            return 0;
-        }
-
-        return static_cast< s16 >(pLayout->getSimpleLayout()->getAnimFrameMax(animLayer));
+        return static_cast< s16 >(smgpc::layout::layout_anim_frame_max(pLayout, animLayer));
     }
 
     void startAnimReverseOneTime(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
-        if (pLayout == nullptr) {
-            return;
-        }
-
         MR::startAnim(pLayout, pAnimName, animLayer);
         MR::setAnimFrame(pLayout, static_cast< f32 >(MR::getAnimFrameMax(pLayout, animLayer)), animLayer);
         MR::setAnimRate(pLayout, -1.0F, animLayer);
     }
 
     void invalidateParentAnim(LayoutActor*) {
+        throw std::logic_error("Invalidating a parent NW4R layout animation is unavailable");
     }
 
     IconAButton* createAndSetupIconAButton(LayoutActor* pActor, bool connectToScene, bool connectToPause) {

@@ -12,11 +12,13 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
-#include "Game/Screen/SimpleLayout.hpp"
+#include "layout/LayoutHost.hpp"
+#include "layout/LayoutRuntime.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
+#include "compat/ActorPhysicsRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace smgpc::runtime {
@@ -416,12 +418,13 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::disconnect_name_obj(NameObj &obj) {
+        smgpc::layout::release_layout_actor_if_registered(&obj);
         std::erase_if(_entries, [&obj](const auto &entry) {
-            return entry.kind == SceneEntryKind::NameObj && entry.name_obj == &obj;
+            return entry.name_obj == &obj;
         });
     }
 
-    void SceneScheduler::register_layout(SimpleLayout &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
+    void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
         if (auto *entry = find_entry(SceneEntryKind::Layout, &layout)) {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
@@ -445,7 +448,7 @@ namespace smgpc::runtime {
 #endif
     }
 
-    void SceneScheduler::unregister_layout(SimpleLayout &layout) {
+    void SceneScheduler::unregister_layout(smgpc::layout::LayoutRuntime &layout) {
         std::erase_if(_entries, [&layout](const auto &entry) {
             return entry.kind == SceneEntryKind::Layout && entry.layout == &layout;
         });
@@ -522,12 +525,37 @@ namespace smgpc::runtime {
 #ifndef NDEBUG
         _last_execution_trace.clear();
 #endif
+        auto clipping_camera = std::optional<smgpc::camera::CameraPose>{};
+        if (auto* runtime = RuntimeContext::try_instance(); runtime != nullptr) {
+            clipping_camera = runtime->camera_system().effective_camera_pose();
+            if (!clipping_camera.has_value()) {
+                clipping_camera = runtime->scene_camera_pose();
+            }
+            if (!clipping_camera.has_value()) {
+                clipping_camera = runtime->last_camera_pose();
+            }
+        }
+        if (clipping_camera.has_value()) {
+            auto updated_actors = std::vector<LiveActor*>{};
+            for (auto& entry : _entries) {
+                auto* actor = entry_live_actor(entry);
+                if (actor == nullptr || actor->isDead() ||
+                    std::ranges::find(updated_actors, actor) != updated_actors.end()) {
+                    continue;
+                }
+                smgpc::compat::update_actor_clipping(*actor, *clipping_camera);
+                updated_actors.push_back(actor);
+            }
+        }
         for (auto *entry : sorted_entries_for_movement()) {
             if (entry->movement_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
                 continue;
             }
 
             if (auto *actor = entry_live_actor(*entry); actor != nullptr) {
+                if (actor->mFlag.mIsClipped) {
+                    continue;
+                }
                 smgpc::compat::update_live_actor_gravity(*actor);
             }
 
@@ -568,6 +596,7 @@ namespace smgpc::runtime {
         for (auto &entry : _entries) {
             auto *actor = entry_live_actor(entry);
             if (actor == nullptr || entry_is_dead(entry) || entry_is_suspended(entry) ||
+                actor->mFlag.mIsClipped ||
                 std::ranges::find(actors, actor) != actors.end()) {
                 continue;
             }
@@ -623,6 +652,9 @@ namespace smgpc::runtime {
             if (entry->calc_anim_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
                 continue;
             }
+            if (const auto* actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
+                continue;
+            }
 
             switch (entry->kind) {
             case SceneEntryKind::NameObj:
@@ -646,6 +678,9 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_calc_view_and_entry() {
         for (auto *entry : sorted_entries_for_calc_view_and_entry()) {
             if (!participates_in_calc_view_and_entry(*entry) || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
+                continue;
+            }
+            if (const auto* actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
                 continue;
             }
 
@@ -832,8 +867,11 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
         auto actor_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
+            if (entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor != nullptr && !entry.live_actor->isDead()) {
+                smgpc::compat::update_actor_clipping(*entry.live_actor, camera_pose);
+            }
             if (entry.kind == SceneEntryKind::LiveActorModel && entry.draw_buffer_type == draw_buffer_type && !entry_is_dead(entry) &&
-                !entry_is_suspended(entry)) {
+                !entry_is_suspended(entry) && !entry.live_actor->mFlag.mIsClipped) {
                 actor_entries.push_back(&entry);
             }
         }
@@ -875,7 +913,7 @@ namespace smgpc::runtime {
                 entry->layout->draw();
                 break;
             case SceneEntryKind::LayoutActor:
-                entry->layout_actor->drawLayout();
+                entry->layout_actor->draw();
                 break;
             case SceneEntryKind::LiveActorModel:
                 entry->live_actor->draw();
@@ -948,10 +986,11 @@ namespace smgpc::runtime {
         auto states = std::vector<SceneLayoutRuntimeDebugState>{};
         for (const auto &entry : _entries) {
             if ((entry.kind != SceneEntryKind::Layout || entry.layout == nullptr) &&
-                (entry.kind != SceneEntryKind::LayoutActor || entry.layout_actor == nullptr || entry.layout_actor->getSimpleLayout() == nullptr)) {
+                (entry.kind != SceneEntryKind::LayoutActor || entry.layout_actor == nullptr ||
+                 smgpc::layout::layout_runtime(entry.layout_actor) == nullptr)) {
                 continue;
             }
-            const auto *layout = entry.kind == SceneEntryKind::Layout ? entry.layout : entry.layout_actor->getSimpleLayout();
+            const auto *layout = entry.kind == SceneEntryKind::Layout ? entry.layout : smgpc::layout::layout_runtime(entry.layout_actor);
 
             auto state = SceneLayoutRuntimeDebugState {
                 .name = entry_name(entry),
@@ -987,15 +1026,19 @@ namespace smgpc::runtime {
             state.animations.reserve(layer_count);
             for (auto layer_index = std::size_t {}; layer_index < layer_count; ++layer_index) {
                 const auto layer = static_cast<u32>(layer_index);
-                state.animations.push_back(SceneLayoutAnimationDebugState {
+                auto animation = SceneLayoutAnimationDebugState {
                     .layer_index = layer_index,
+                    .active = layout->hasActiveAnimation(layer),
                     .name = std::string(layout->debugAnimName(layer)),
-                    .frame = layout->getAnimFrame(layer),
-                    .end_frame = layout->debugAnimEndFrame(layer),
-                    .rate = layout->debugAnimRate(layer),
-                    .stopped = layout->debugAnimStopped(layer),
-                    .looping = layout->debugAnimLooping(layer),
-                });
+                };
+                if (animation.active) {
+                    animation.frame = layout->getAnimFrame(layer);
+                    animation.end_frame = layout->debugAnimEndFrame(layer);
+                    animation.rate = layout->debugAnimRate(layer);
+                    animation.stopped = layout->debugAnimStopped(layer);
+                    animation.looping = layout->debugAnimLooping(layer);
+                }
+                state.animations.push_back(std::move(animation));
             }
 
             const auto panes = layout->debugPanes();
@@ -1075,7 +1118,7 @@ namespace smgpc::runtime {
             }
 
             if (entry.kind == SceneEntryKind::LayoutActor && entry.layout_actor->getLayoutManager() != nullptr) {
-                const auto pane_controls = entry.layout_actor->getLayoutManager()->debugPaneControls();
+                const auto pane_controls = smgpc::layout::debug_pane_controls(entry.layout_actor->getLayoutManager());
                 state.pane_controls.reserve(pane_controls.size());
                 for (const auto &pane_control : pane_controls) {
                     auto pane_state = SceneLayoutPaneControlDebugState {
@@ -1099,7 +1142,7 @@ namespace smgpc::runtime {
                     state.pane_controls.push_back(std::move(pane_state));
                 }
 
-                const auto button_controllers = entry.layout_actor->getLayoutManager()->debugButtonControllers();
+                const auto button_controllers = smgpc::layout::debug_button_controllers(entry.layout_actor->getLayoutManager());
                 state.button_controllers.reserve(button_controllers.size());
                 for (const auto &button : button_controllers) {
                     state.button_controllers.push_back(SceneLayoutButtonControllerDebugState {
@@ -1194,7 +1237,7 @@ namespace smgpc::runtime {
         case SceneEntryKind::Layout:
             return entry.layout == nullptr || entry.layout->isDead();
         case SceneEntryKind::LayoutActor:
-            return entry.layout_actor == nullptr || entry.layout_actor->isDead();
+            return smgpc::layout::is_layout_actor_dead(entry.layout_actor);
         case SceneEntryKind::LiveActorModel:
             return entry.live_actor == nullptr || entry.live_actor->isDead();
         }

@@ -12,6 +12,8 @@ namespace smgpc::camera {
         float aspect_ratio = 608.0F / 456.0F;
         float near_clip = 100.0F;
         float far_clip = 800000.0F;
+        float projection_offset_x = 0.0F;
+        float projection_offset_y = 0.0F;
     };
 
     struct CameraViewPoint {

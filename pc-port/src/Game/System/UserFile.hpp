@@ -1,46 +1,40 @@
 #pragma once
 
-#include <revolution.h>
-
-#include "runtime/RuntimeServices.hpp"
+#include <revolution/os.h>
 
 class ConfigDataHolder;
 class GameDataHolder;
 
 class UserFile {
 public:
+    /// @brief Creates a new `UserFile`.
     UserFile();
-    UserFile(const UserFile& rOther);
-    UserFile& operator=(const UserFile& rOther);
-    ~UserFile();
 
-    [[nodiscard]] bool isCreated() const;
-    [[nodiscard]] s32 getPowerStarNum() const;
-    [[nodiscard]] s32 getStarPieceNum() const;
-    [[nodiscard]] s32 getPlayerMissNum() const;
-    [[nodiscard]] bool getMiiId(void* pMiiId) const;
-    [[nodiscard]] bool getIconId(u32* pIconId) const;
-    [[nodiscard]] bool isLastLoadedMario() const;
-    [[nodiscard]] bool isOnCompleteEndingMarioAndLuigi() const;
-    [[nodiscard]] OSTime getLastModified() const;
+    bool isCreated() const;
+    s32 getPowerStarNum() const;
+    s32 getStarPieceNum() const;
+    s32 getPlayerMissNum() const;
+    bool getMiiId(void*) const;
+    bool getIconId(u32*) const;
+    bool isLastLoadedMario() const;
+    bool isOnCompleteEndingMarioAndLuigi() const;
+    OSTime getLastModified() const;
     void setCreated();
-    void setMiiOrIconId(const void* pMiiId, const u32* pIconId);
-    void setLastLoadedMario(bool lastLoadedMario);
+    void setMiiOrIconId(const void*, const u32*);
+    void setLastLoadedMario(bool);
     void onCompleteEndingCurrentPlayer();
     void updateLastModified();
-    void setUserName(const wchar_t* pUserName);
-    [[nodiscard]] const char* getGameDataName() const;
-    void makeGameDataBinary(u8* pBuffer, u32 size) const;
-    void loadFromGameDataBinary(const char* pName, const u8* pBuffer, u32 size);
-    [[nodiscard]] const char* getConfigDataName() const;
-    void makeConfigDataBinary(u8* pBuffer, u32 size) const;
-    void loadFromConfigDataBinary(const char* pName, const u8* pBuffer, u32 size);
+    void setUserName(const wchar_t*);
+    const char* getGameDataName() const;
+    void makeGameDataBinary(u8*, u32) const;
+    void loadFromGameDataBinary(const char*, const u8*, u32);
+    const char* getConfigDataName() const;
+    void makeConfigDataBinary(u8*, u32) const;
+    void loadFromConfigDataBinary(const char*, const u8*, u32);
     void resetAllData();
-    [[nodiscard]] bool isViewNormalEnding() const;
-    [[nodiscard]] bool isViewCompleteEnding() const;
-    [[nodiscard]] bool isPowerStarGetFinalChallengeGalaxy() const;
-    void restoreFromSaveDataServiceSlot(const smgpc::runtime::SaveDataService::SlotState& rSlot, s32 slotIndex, bool isPlayerMario);
-    [[nodiscard]] smgpc::runtime::SaveDataService::SlotState makeSaveDataServiceSlot(s32 slotIndex) const;
+    bool isViewNormalEnding() const;
+    bool isViewCompleteEnding() const;
+    bool isPowerStarGetFinalChallengeGalaxy() const;
 
     /* 0x00 */ GameDataHolder* mGameDataHolder;
     /* 0x04 */ ConfigDataHolder* mConfigDataHolder;

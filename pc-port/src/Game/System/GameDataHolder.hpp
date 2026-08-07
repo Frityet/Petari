@@ -1,55 +1,79 @@
 #pragma once
 
-#include <map>
-#include <string>
+#include <revolution/types.h>
 
-#include <revolution.h>
-
+class BinaryDataChunkHolder;
+class GameDataAllGalaxyStorage;
+class GameDataPlayerStatus;
+class GameDataSomeScenarioAccessor;
+class GameEventFlagChecker;
+class GameEventValueChecker;
+class JMapInfo;
+class ScenarioProgressTestRun;
+class SpinDriverPathStorage;
+class StarPieceAlmsStorage;
 class UserFile;
 
 class GameDataHolder {
 public:
-    explicit GameDataHolder(const UserFile* pUserFile);
+    GameDataHolder(const UserFile*);
 
-    [[nodiscard]] bool isDataMario() const;
-    [[nodiscard]] s32 getPlayerMissNum() const;
+    bool isDataMario() const;
+    s32 getGalaxyNumCanOpen() const;
+    bool canOnGameEventFlag(const char*) const;
+    bool isOnGameEventFlag(const char*) const;
+    void tryOnGameEventFlag(const char*);
+    s32 getGameEventValue(const char*) const;
+    void setGameEventValue(const char*, u16);
+    bool isOnGameEventValueForBit(const char*, int) const;
+    void setGameEventValueForBit(const char*, int, bool);
+    s32 getPictureBookChapterCanRead() const;
+    s32 getPictureBookChapterAlreadyRead() const;
+    void setPictureBookChapterAlreadyRead(int);
+    void setRaceBestTime(const char*, u32);
+    u32 getRaceBestTime(const char*) const;
+    void addMissPoint(int);
+    void resetMissPoint();
+    bool isPointCollectForLetter() const;
     void incPlayerMissNum();
-    [[nodiscard]] bool isOnGameEventFlag(const char* pName) const;
-    void tryOnGameEventFlag(const char* pName);
-    [[nodiscard]] u16 getGameEventValue(const char* pName) const;
-    void setGameEventValue(const char* pName, u16 value);
-    [[nodiscard]] s32 getPictureBookChapterCanRead() const;
-    [[nodiscard]] u16 getPictureBookChapterAlreadyRead() const;
-    void setPictureBookChapterAlreadyRead(int chapterAlreadyRead);
+    s32 getPlayerMissNum() const;
+    bool hasPowerStar(const char*, s32) const;
+    bool hasGrandStar(int) const;
+    void setPowerStar(const char*, s32, bool);
+    s32 getPowerStarNumOwned(const char*) const;
+    s32 calcCurrentPowerStarNum() const;
+    GameDataSomeScenarioAccessor makeGalaxyScenarioAccessor(const char*, s32);
+    GameDataSomeScenarioAccessor makeGalaxyScenarioAccessor(const char*, s32) const;
+    bool isOnGalaxyScenarioFlagAlreadyVisited(const char*, s32) const;
+    void onGalaxyScenarioFlagAlreadyVisited(const char*, s32);
+    bool isAppearGalaxy(const char*) const;
+    s32 getPlayerLeft() const;
+    void addPlayerLeft(int);
+    bool isPlayerLeftSupply() const;
+    void offPlayerLeftSupply();
+    s32 getStockedStarPieceNum() const;
+    void addStockedStarPiece(int);
+    s32 setupSpinDriverPathStorage(const char*, int, int, int, f32*);
+    void updateSpinDriverPathStorage(const char*, int, int, f32);
+    s32 getStarPieceNumGivingToTicoSeed(int) const;
+    s32 getStarPieceNumMaxGivingToTicoSeed(int) const;
+    void addStarPieceGivingToTicoSeed(int, int);
+    bool isCompleteMarioAndLuigi() const;
+    bool isPassedStoryEvent(const char*) const;
+    void followStoryEventByName(const char*);
     void resetAllData();
-    [[nodiscard]] s32 getStockedStarPieceNum() const;
-    void addStockedStarPiece(int num);
-    [[nodiscard]] s32 calcCurrentPowerStarNum() const;
-    [[nodiscard]] bool isCompleteMarioAndLuigi() const;
-    s32 makeFileBinary(u8* pBuffer, u32 size);
-    bool loadFromFileBinary(const char* pName, const u8* pBuffer, u32 size);
+    u32 makeFileBinary(u8*, u32);
+    bool loadFromFileBinary(const char*, const u8*, u32);
 
-private:
-    void setName(const char* pName);
-    void setSaveDataCounts(s32 powerStarNum, s32 starPieceNum, s32 playerMissNum);
-    void setEndingFlags(bool viewNormalEnding, bool viewCompleteEnding, bool finalChallengeStar);
-    void setEventState(const std::map<std::string, bool>& rFlags, const std::map<std::string, u16>& rValues);
-    [[nodiscard]] const std::map<std::string, bool>& getEventFlags() const;
-    [[nodiscard]] const std::map<std::string, u16>& getEventValues() const;
-
-    friend class UserFile;
-
-public:
-    char mName[16]{};
-
-private:
-    const UserFile* mUserFile = nullptr;
-    s32 mPowerStarNum = 0;
-    s32 mStarPieceNum = 0;
-    s32 mPlayerMissNum = 0;
-    bool mViewNormalEnding = false;
-    bool mViewCompleteEnding = false;
-    bool mFinalChallengeStar = false;
-    std::map<std::string, bool> mEventFlags;
-    std::map<std::string, u16> mEventValues;
+    /* 0x00 */ GameEventFlagChecker* mEventFlagChecker;
+    /* 0x04 */ GameEventValueChecker* mEventValueChecker;
+    /* 0x08 */ GameDataPlayerStatus* mPlayerStatus;
+    /* 0x0C */ GameDataAllGalaxyStorage* mAllGalaxyStorage;
+    /* 0x10 */ SpinDriverPathStorage* mSpinDriverPathStorage;
+    /* 0x14 */ StarPieceAlmsStorage* mStarPieceAlmsStorage;
+    /* 0x18 */ JMapInfo* mMapInfo;
+    /* 0x1C */ ScenarioProgressTestRun* mScenarioProgressTestRun;
+    /* 0x20 */ BinaryDataChunkHolder* mChunkHolder;
+    /* 0x24 */ char mName[16];
+    /* 0x34 */ const UserFile* mUserFile;
 };

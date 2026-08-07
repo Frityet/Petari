@@ -21,13 +21,16 @@
 
 #include <SDL3/SDL_mouse.h>
 
+#include <JSystem/JUtility/JUTVideo.hpp>
+
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/ScreenAlphaCapture.hpp"
-#include "Game/Screen/SimpleLayout.hpp"
-#include "Game/System/SaveDataHandleSequence.hpp"
+#include "layout/LayoutHost.hpp"
+#include "layout/LayoutRuntime.hpp"
+#include "compat/RumbleCompat.hpp"
 #include "camera/CameraParam.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionService.hpp"
@@ -384,18 +387,6 @@ namespace smgpc::runtime {
             return std::string(value);
         }
 
-        [[nodiscard]] smgpc::camera::CameraPose default_scene_camera_pose() {
-            return smgpc::camera::CameraPose{
-                .eye = {0.0F, 0.0F, 0.0F},
-                .watch = {0.0F, 0.0F, -1.0F},
-                .up = {0.0F, 1.0F, 0.0F},
-                .fovy_degrees = 45.0F,
-                .aspect_ratio = 608.0F / 456.0F,
-                .near_clip = 100.0F,
-                .far_clip = 800000.0F,
-            };
-        }
-
 #ifndef NDEBUG
         [[nodiscard]] std::string_view wipe_state_name(WipeState state) {
             switch (state) {
@@ -465,11 +456,10 @@ namespace smgpc::runtime {
             return std::sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
         }
 
-        [[nodiscard]] smgpc::camera::CameraParamVec3 camera_vec_normalized(const smgpc::camera::CameraParamVec3 &value,
-                                                                           const smgpc::camera::CameraParamVec3 &fallback) {
+        [[nodiscard]] smgpc::camera::CameraParamVec3 camera_vec_normalized(const smgpc::camera::CameraParamVec3 &value) {
             const auto length = camera_vec_length(value);
             if (length <= 0.000001F) {
-                return fallback;
+                throw std::logic_error("free-camera basis is degenerate");
             }
             return value * (1.0F / length);
         }
@@ -491,8 +481,9 @@ namespace smgpc::runtime {
         }
 
         s_runtime_context = this;
+        _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
+        JUTVideo::createManager(nullptr);
         aurora::wpad_service().clear();
-        _save_data.set_sys_config_service(_sys_config);
         if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
             _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
             _owned_scene_execution = std::make_unique<smgpc::scene::SceneExecutionService>(*this);
@@ -568,6 +559,7 @@ namespace smgpc::runtime {
         _capture_screen_camera_actor.reset();
         _capture_screen_indirect_actor.reset();
         _capture_screen_director.reset();
+        JUTVideo::destroyManager();
         aurora::wpad_service().clear();
         if (s_runtime_context == this) {
             s_runtime_context = nullptr;
@@ -599,6 +591,22 @@ namespace smgpc::runtime {
 #endif
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
+        _camera_system.clear_shake_projection_dimensions();
+        const auto camera_pose = _camera_system.active_programmable_camera_pose().has_value()
+                                     ? _camera_system.active_programmable_camera_pose()
+                                     : _camera_system.game_camera_pose();
+        if (camera_pose.has_value()) {
+            constexpr auto retail_4x3_aspect = 608.0F / 456.0F;
+            constexpr auto retail_16x9_aspect = 16.0F / 9.0F;
+            const auto shake_screen_width = camera_pose->aspect_ratio == retail_4x3_aspect
+                                                ? 608.0F
+                                                : camera_pose->aspect_ratio == retail_16x9_aspect ? 832.0F : 0.0F;
+            if (shake_screen_width == 0.0F) {
+                throw std::logic_error("Camera shake requires an exact retail 4:3 or 16:9 projection ratio.");
+            }
+            _camera_system.set_shake_projection_dimensions(shake_screen_width,
+                                                           static_cast<float>(_wii_video.render_mode().efbHeight));
+        }
         _camera_system.begin_frame(_frame_index);
         if (const auto camera_pose = _camera_system.effective_camera_pose()) {
             _scene_camera_pose = *camera_pose;
@@ -607,7 +615,10 @@ namespace smgpc::runtime {
         if (debug_toggle_freecam && !_freecam_toggle_held_last_frame) {
             _freecam_enabled = !_freecam_enabled;
             if (_freecam_enabled && !_freecam_target_pose.has_value()) {
-                _freecam_target_pose = _scene_camera_pose.value_or(default_scene_camera_pose());
+                _freecam_target_pose = _scene_camera_pose;
+                if (!_freecam_target_pose.has_value()) {
+                    _freecam_enabled = false;
+                }
             }
             _freecam_look_initialized = false;
         }
@@ -624,15 +635,11 @@ namespace smgpc::runtime {
             }
         }
 
-        const auto debug_scene_transition =
-            _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_REQUEST_SCENE_TRANSITION);
-        if (debug_scene_transition && !_debug_scene_transition_held_last_frame) {
-            _pending_debug_scene_transition_request = true;
-        }
-        _debug_scene_transition_held_last_frame = debug_scene_transition;
-
         if (_freecam_enabled && !_freecam_target_pose.has_value()) {
-            _freecam_target_pose = _scene_camera_pose.value_or(default_scene_camera_pose());
+            _freecam_target_pose = _scene_camera_pose;
+            if (!_freecam_target_pose.has_value()) {
+                _freecam_enabled = false;
+            }
         }
         if (!_freecam_enabled) {
             _freecam_target_pose.reset();
@@ -682,9 +689,6 @@ namespace smgpc::runtime {
                 debug_button_script_applied = true;
             }
         }
-        // ONE is retained as a scriptable stand-in for a Wii Remote shake;
-        // keyboard users have the dedicated X binding above.
-        core_swing = core_swing || (hold_mask & WPAD_BUTTON_1) != 0U;
         for (const auto &span : _debug_wpad_pointer_script) {
             if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
                 pointer = render::InputPointerState{
@@ -724,7 +728,7 @@ namespace smgpc::runtime {
 
             const auto freecam_world_up = smgpc::camera::CameraParamVec3{.x = 0.0F, .y = 1.0F, .z = 0.0F};
             const auto distance = camera_vec_length(freecam_pose.watch - freecam_pose.eye);
-            auto freecam_forward = camera_vec_normalized(freecam_pose.watch - freecam_pose.eye, {0.0F, 0.0F, -1.0F});
+            auto freecam_forward = camera_vec_normalized(freecam_pose.watch - freecam_pose.eye);
 
             if (!_freecam_look_initialized) {
                 _freecam_yaw_radians = std::atan2(freecam_forward.x, -freecam_forward.z);
@@ -757,7 +761,7 @@ namespace smgpc::runtime {
                 .y = std::sin(_freecam_pitch_radians),
                 .z = -std::cos(_freecam_pitch_radians) * std::cos(_freecam_yaw_radians),
             };
-            const auto right = camera_vec_normalized(camera_vec_cross(freecam_forward, freecam_world_up), {1.0F, 0.0F, 0.0F});
+            const auto right = camera_vec_normalized(camera_vec_cross(freecam_forward, freecam_world_up));
 
             const auto forward_delta = move_forward - move_backward;
             if (forward_delta != 0.0F) {
@@ -812,7 +816,6 @@ namespace smgpc::runtime {
         }
 #endif
 
-        smgpc::game::save_data_handle_sequence().update();
         auto &lifecycle = scene_lifecycle();
         if (lifecycle.active_scene() != nullptr) {
             lifecycle.update_scene();
@@ -828,7 +831,7 @@ namespace smgpc::runtime {
         if (_freecam_enabled) {
             return;
         }
-        _scene_camera_pose = camera_pose;
+        _scene_camera_pose = _camera_system.apply_shake(camera_pose);
     }
 
     void RuntimeContext::record_copy_event(render::CopyEvent event) {
@@ -869,9 +872,8 @@ namespace smgpc::runtime {
                 return;
             }
 #ifndef NDEBUG
-            emit_semantic_trace_event("camera", "missing_scene_camera_pose", "using default_scene_camera_pose");
+            emit_semantic_trace_event("camera", "missing_scene_camera_pose", "draw_3d_omitted");
 #endif
-            draw_3d_normal(default_scene_camera_pose());
             return;
         }
 
@@ -943,12 +945,6 @@ namespace smgpc::runtime {
 
     bool RuntimeContext::is_freecam_enabled() const {
         return _freecam_enabled;
-    }
-
-    bool RuntimeContext::consume_pending_debug_scene_transition_request() {
-        const auto pending = _pending_debug_scene_transition_request;
-        _pending_debug_scene_transition_request = false;
-        return pending;
     }
 
     const std::optional<smgpc::camera::CameraPose> &RuntimeContext::scene_camera_pose() const {
@@ -1159,14 +1155,6 @@ namespace smgpc::runtime {
 
     const SequenceRequestService &RuntimeContext::sequence_requests() const {
         return _sequence_requests;
-    }
-
-    SysConfigService &RuntimeContext::sys_config() {
-        return _sys_config;
-    }
-
-    const SysConfigService &RuntimeContext::sys_config() const {
-        return _sys_config;
     }
 
     SaveDataService &RuntimeContext::save_data() {
@@ -1607,7 +1595,8 @@ namespace smgpc::runtime {
             const auto &layout = *it->second;
             const auto trans = layout.getTrans();
             _effects.bind_host_transform(EffectKeeperHostKind::LayoutActor, host_name, EffectHostBindingSource::LayoutActorTransform,
-                                         effect_translation_matrix(trans.x, trans.y, 0.0F), layout.isDead(), host_identity);
+                                         effect_translation_matrix(trans.x, trans.y, 0.0F),
+                                         smgpc::layout::is_layout_actor_dead(&layout), host_identity);
             return;
         }
 
@@ -1621,13 +1610,13 @@ namespace smgpc::runtime {
         _effects.unbind_host_transform(host_name, host_identity);
     }
 
-    void RuntimeContext::register_layout(SimpleLayout &layout) {
+    void RuntimeContext::register_layout(smgpc::layout::LayoutRuntime &layout) {
         _effect_simple_layout_hosts[&layout] = &layout;
         refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.register_layout(layout, MR::MovementType_Layout, -1, MR::DrawType_Layout);
     }
 
-    void RuntimeContext::unregister_layout(SimpleLayout &layout) {
+    void RuntimeContext::unregister_layout(smgpc::layout::LayoutRuntime &layout) {
         _effect_simple_layout_hosts.erase(&layout);
         refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.unregister_layout(layout);

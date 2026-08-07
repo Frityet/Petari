@@ -1,23 +1,48 @@
 #pragma once
 
-#include <revolution.h>
+#include "Game/System/BinaryDataChunkHolder.hpp"
+#include <revolution/os.h>
+
+class BinaryDataChunkHolder;
+class BinaryDataContentHeaderSerializer;
+
+class SysConfigChunk : public BinaryDataChunkBase {
+    friend class SysConfigFile;
+
+public:
+    /// @brief Creates a new `SysConfigChunk`.
+    SysConfigChunk();
+
+    virtual u32 makeHeaderHashCode() const;
+    virtual u32 getSignature() const;
+    virtual s32 serialize(u8*, u32) const;
+    virtual s32 deserialize(const u8*, u32);
+    virtual void initializeData();
+
+    void initHeaderSerializer();
+
+private:
+    /* 0x08 */ OSTime mTimeAnnounced;
+    /* 0x10 */ OSTime mTimeSent;
+    /* 0x18 */ u32 mSentBytes;
+    /* 0x1C */ BinaryDataContentHeaderSerializer* mHeaderSerializer;
+};
 
 class SysConfigFile {
 public:
+    /// @brief Creates a new `SysConfigFile`.
     SysConfigFile();
 
-    [[nodiscard]] OSTime getTimeAnnounced() const;
-    void setTimeAnnounced(OSTime time);
+    OSTime getTimeAnnounced();
     void updateTimeAnnounced();
-    [[nodiscard]] OSTime getTimeSent() const;
-    void setTimeSent(OSTime time);
-    [[nodiscard]] u32 getSentBytes() const;
-    void setSentBytes(u32 bytes);
-    void makeDataBinary(u8* pBuffer, u32 size) const;
-    void loadFromDataBinary(const u8* pBuffer, u32 size);
+    OSTime getTimeSent();
+    void setTimeSent(OSTime);
+    u32 getSentBytes();
+    void setSentBytes(u32);
+    void makeDataBinary(u8*, u32) const;
+    void loadFromDataBinary(const u8*, u32);
 
 private:
-    OSTime mTimeAnnounced = 0;
-    OSTime mTimeSent = 0;
-    u32 mSentBytes = 0U;
+    /* 0x00 */ SysConfigChunk* mChunk;
+    /* 0x04 */ BinaryDataChunkHolder* mChunkHolder;
 };

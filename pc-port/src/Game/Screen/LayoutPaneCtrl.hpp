@@ -1,30 +1,25 @@
 #pragma once
 
-#include <string>
-#include <string_view>
-#include <vector>
-
-#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+#include "Game/Util/Array.hpp"
+#include <JSystem/JGeometry.hpp>
 #include <revolution/types.h>
 
-#include "Game/Util/GamePadUtil.hpp"
+namespace nw4r {
+    namespace lyt {
+        class Pane;
+    };  // namespace lyt
+};  // namespace nw4r
 
+class J3DFrameCtrl;
+class LayoutAnmPlayer;
 class LayoutManager;
-
-#ifndef NDEBUG
-struct LayoutPaneControlAnimationDebugState {
-    u32 layer_index = 0U;
-    std::string name;
-    f32 frame = 0.0F;
-    f32 end_frame = 0.0F;
-    f32 rate = 0.0F;
-    bool stopped = true;
-    bool looping = false;
-};
-#endif
 
 class LayoutPaneCtrl {
 public:
+    /// @brief Creates a new `LayoutGroupCtrl`.
+    /// @param pHost A pointer to the owning `LayoutManager` instance.
+    /// @param pPaneName A pointer to the null-terminated name of the pane to associate with.
+    /// @param animLayerNum The maximum number of animations to support at once.
     LayoutPaneCtrl(LayoutManager* pHost, const char* pPaneName, u32 animLayerNum);
 
     void movement();
@@ -34,29 +29,12 @@ public:
     bool isAnimStopped(u32) const;
     void reflectFollowPos();
     J3DFrameCtrl* getFrameCtrl(u32) const;
-    void recalcChildGlobalMtx(void*);
-
-    void setFrame(f32 frame, u32 animLayer);
-    void setRate(f32 rate, u32 animLayer);
-    [[nodiscard]] f32 getFrame(u32 animLayer) const;
-    [[nodiscard]] std::string_view paneName() const;
-    [[nodiscard]] u32 animLayerCount() const;
-#ifndef NDEBUG
-    [[nodiscard]] std::vector< LayoutPaneControlAnimationDebugState > debugAnimations() const;
-#endif
+    void recalcChildGlobalMtx(nw4r::lyt::Pane*);
 
     /* 0x00 */ LayoutManager* mHost;
-    /* 0x04 */ void* mPane;
+    /* 0x04 */ nw4r::lyt::Pane* mPane;
     /* 0x08 */ s32 mPaneIndex;
-    /* 0x0C */ u32 mFollowType;
-    /* 0x10 */ const TVec2f* mFollowPos;
-
-private:
-    [[nodiscard]] u32 layerIndex(u32 animLayer) const;
-    void syncLayoutFrame(u32 animLayer);
-
-    std::string mPaneName;
-    std::vector< J3DFrameCtrl > mFrameCtrls;
-    std::vector< std::string > mAnimNames;
-    std::vector< bool > mStopped;
+    /* 0x0C */ MR::AssignableArray< LayoutAnmPlayer* > mAnmPlayerArray;
+    /* 0x14 */ u32 mFollowType;
+    /* 0x18 */ const TVec2f* mFollowPos;
 };

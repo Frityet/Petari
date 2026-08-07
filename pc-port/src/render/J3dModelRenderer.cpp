@@ -5,6 +5,7 @@
 #include <cctype>
 #include <cmath>
 #include <limits>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -48,10 +49,10 @@ namespace smgpc::render {
             };
         }
 
-        [[nodiscard]] std::array<float, 3U> normalized_or(std::array<float, 3U> value, std::array<float, 3U> fallback) {
+        [[nodiscard]] std::array<float, 3U> normalized_required(std::array<float, 3U> value) {
             const auto length = std::sqrt(dot3(value, value));
             if (length <= 0.000001F) {
-                return fallback;
+                throw std::logic_error("J3D vector basis is degenerate");
             }
 
             return {value[0U] / length, value[1U] / length, value[2U] / length};
@@ -68,15 +69,16 @@ namespace smgpc::render {
             float half_height = 1.0F;
             float near_plane = 100.0F;
             float depth_range = 1.0F;
+            float projection_offset_x = 0.0F;
+            float projection_offset_y = 0.0F;
         };
 
         [[nodiscard]] CameraProjectionContext camera_projection_context(const smgpc::camera::CameraPose &pose,
                                                                         const render::core::FramebufferInfo &framebuffer) {
             constexpr auto pi = 3.14159265358979323846F;
-            const auto forward = normalized_or({pose.watch.x - pose.eye.x, pose.watch.y - pose.eye.y, pose.watch.z - pose.eye.z},
-                                               {0.0F, 0.0F, -1.0F});
-            const auto right = normalized_or(cross3(forward, {pose.up.x, pose.up.y, pose.up.z}), {1.0F, 0.0F, 0.0F});
-            const auto up = normalized_or(cross3(right, forward), {0.0F, 1.0F, 0.0F});
+            const auto forward = normalized_required({pose.watch.x - pose.eye.x, pose.watch.y - pose.eye.y, pose.watch.z - pose.eye.z});
+            const auto right = normalized_required(cross3(forward, {pose.up.x, pose.up.y, pose.up.z}));
+            const auto up = normalized_required(cross3(right, forward));
             const auto fovy = pose.fovy_degrees * pi / 180.0F;
             const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
 
@@ -91,6 +93,8 @@ namespace smgpc::render {
                 .half_height = static_cast<float>(framebuffer.height) * 0.5F,
                 .near_plane = pose.near_clip,
                 .depth_range = pose.far_clip - pose.near_clip,
+                .projection_offset_x = pose.projection_offset_x,
+                .projection_offset_y = pose.projection_offset_y,
             };
         }
 
@@ -133,13 +137,13 @@ namespace smgpc::render {
                     g * normal[0U] + h * normal[1U] + i * normal[2U],
                 };
             }
-            return normalized_or(world_normal, {0.0F, 0.0F, 1.0F});
+            return normalized_required(world_normal);
         }
 
         [[nodiscard]] std::array<float, 3U> transform_normal_to_camera(const J3dMatrix3x4 &matrix,
                                                                        const CameraProjectionContext &camera_context,
                                                                        std::array<float, 3U> normal) {
-            return normalized_or(camera_space_vector(camera_context, transform_normal_to_world(matrix, normal)), {0.0F, 0.0F, 1.0F});
+            return normalized_required(camera_space_vector(camera_context, transform_normal_to_world(matrix, normal)));
         }
 
         [[nodiscard]] std::uint8_t first_raster_channel_selector(const GXMaterialState &state, std::span<const J3dMaterialTexturePass> passes) {
@@ -231,6 +235,21 @@ namespace smgpc::render {
                                                      mip_source->bias_clamp, mip_source->do_edge_lod,
                                                      gx_anisotropy_from_bti(mip_source->max_anisotropy),
                                                      mip_source->min_filter, mip_source->mag_filter);
+        }
+
+        void apply_btp_texture_pattern(const J3dBtpAnimationSummary *animation, std::string_view material_name, float frame,
+                                       std::span<J3dMaterialTexturePass> passes) {
+            if (animation == nullptr) {
+                return;
+            }
+
+            for (auto &pass : passes) {
+                if (const auto texture_index =
+                        j3d_evaluate_btp_texture_index(*animation, material_name, pass.tex_map_slot, frame);
+                    texture_index.has_value()) {
+                    pass.texture_index = *texture_index;
+                }
+            }
         }
 
         [[nodiscard]] const J3dTevStageSummary *find_tev_stage(const J3dMaterialSummary &material, std::uint8_t stage_index) {
@@ -890,7 +909,7 @@ namespace smgpc::render {
             std::span<const J3dDrawMatrixSummary> draw_matrices;
             const J3dEnvelopeBlockSummary *envelopes = nullptr;
             const std::optional<J3dBckAnimationSummary> &animation;
-            const J3dJointTransformValue *fallback_transform = nullptr;
+            const J3dJointTransformValue *mesh_transform = nullptr;
             std::span<J3dMatrix3x4> joint_model_cache;
             std::span<std::uint8_t> joint_model_cache_valid;
             std::span<J3dMatrix3x4> draw_matrix_cache;
@@ -976,7 +995,7 @@ namespace smgpc::render {
             return result;
         }
 
-        [[nodiscard]] J3dMatrix3x4 joint_model_matrix(const MatrixPaletteContext &context, std::uint16_t joint_index) {
+        [[nodiscard]] J3dMatrix3x4 joint_model_matrix_for_context(const MatrixPaletteContext &context, std::uint16_t joint_index) {
             if (joint_index >= context.transforms.size()) {
                 return J3dMatrix3x4 {};
             }
@@ -998,7 +1017,7 @@ namespace smgpc::render {
             auto matrix = matrix_from_joint_transform(&transform);
             if (joint_index < context.parent_indices.size() && context.parent_indices[joint_index] != 0xffffU &&
                 context.parent_indices[joint_index] < context.transforms.size()) {
-                matrix = concat_matrix(joint_model_matrix(context, context.parent_indices[joint_index]), matrix);
+                matrix = concat_matrix(joint_model_matrix_for_context(context, context.parent_indices[joint_index]), matrix);
             }
 
             if (joint_index < context.joint_model_cache.size() && joint_index < context.joint_model_cache_valid.size()) {
@@ -1028,7 +1047,7 @@ namespace smgpc::render {
                     continue;
                 }
 
-                auto matrix = joint_model_matrix(context, joint_index);
+                auto matrix = joint_model_matrix_for_context(context, joint_index);
                 if (joint_index < context.envelopes->inverse_bind_matrices.size()) {
                     matrix = concat_matrix(matrix, matrix_from_array(context.envelopes->inverse_bind_matrices[joint_index]));
                 }
@@ -1061,7 +1080,7 @@ namespace smgpc::render {
                 if (draw_matrix.weighted) {
                     matrix = weighted_envelope_matrix(context, draw_matrix.index);
                 } else if (draw_matrix.index < context.transforms.size()) {
-                    matrix = joint_model_matrix(context, draw_matrix.index);
+                    matrix = joint_model_matrix_for_context(context, draw_matrix.index);
                 }
 
                 if (matrix.has_value()) {
@@ -1074,10 +1093,10 @@ namespace smgpc::render {
             }
 
             if (context.default_joint_index < context.transforms.size()) {
-                return joint_model_matrix(context, context.default_joint_index);
+                return joint_model_matrix_for_context(context, context.default_joint_index);
             }
 
-            return matrix_from_joint_transform(context.fallback_transform);
+            return matrix_from_joint_transform(context.mesh_transform);
         }
 
         [[nodiscard]] J3dMatrix3x4 model_matrix_for_source_vertex(const J3dMeshVertex &source, const MatrixPaletteContext &context) {
@@ -1529,8 +1548,8 @@ namespace smgpc::render {
                                        const ProjectedVertex &a, const ProjectedVertex &b, const ProjectedVertex &c,
                                        const CameraProjectionContext &camera_context) {
             const auto append_vertex = [&](const ProjectedVertex &projected) {
-                const auto ndc_x = (projected.x / projected.z) * camera_context.focal_x;
-                const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y;
+                const auto ndc_x = (projected.x / projected.z) * camera_context.focal_x + camera_context.projection_offset_x;
+                const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y + camera_context.projection_offset_y;
                 const auto ndc_z =
                     std::clamp((projected.z - camera_context.near_plane) / camera_context.depth_range, 0.0F, 1.0F);
                 vertices.push_back(render::TexturedVertex2D {
@@ -1560,8 +1579,8 @@ namespace smgpc::render {
                                           const ProjectedVertex &a, const ProjectedVertex &b, const ProjectedVertex &c,
                                           const CameraProjectionContext &camera_context) {
             const auto append_vertex = [&](const ProjectedVertex &projected) {
-                const auto ndc_x = (projected.x / projected.z) * camera_context.focal_x;
-                const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y;
+                const auto ndc_x = (projected.x / projected.z) * camera_context.focal_x + camera_context.projection_offset_x;
+                const auto ndc_y = (projected.y / projected.z) * camera_context.focal_y + camera_context.projection_offset_y;
                 const auto ndc_z =
                     std::clamp((projected.z - camera_context.near_plane) / camera_context.depth_range, 0.0F, 1.0F);
                 vertices.push_back(render::GxMaterialVertex2D {
@@ -1832,8 +1851,11 @@ namespace smgpc::render {
         _render_packets.clear();
         _textures.clear();
         _texture_handles.clear();
+        _joint_names.clear();
         _joint_transforms.clear();
         _joint_parent_indices.clear();
+        _joint_bound_mins.clear();
+        _joint_bound_maxs.clear();
         _draw_matrices.clear();
         _envelopes.reset();
 
@@ -1844,9 +1866,15 @@ namespace smgpc::render {
         }
         _envelopes = geometry.envelopes;
         if (geometry.joints.has_value()) {
+            _joint_names.reserve(geometry.joints->joints.size());
             _joint_transforms.reserve(geometry.joints->joints.size());
+            _joint_bound_mins.reserve(geometry.joints->joints.size());
+            _joint_bound_maxs.reserve(geometry.joints->joints.size());
             for (const auto &joint : geometry.joints->joints) {
+                _joint_names.push_back(joint.name);
                 _joint_transforms.push_back(joint_transform_from_summary(joint));
+                _joint_bound_mins.push_back(joint.min);
+                _joint_bound_maxs.push_back(joint.max);
             }
             _joint_parent_indices = geometry.joints->parent_indices;
         }
@@ -1907,38 +1935,8 @@ namespace smgpc::render {
                         if (!options.use_cpu_tev) {
                             continue;
                         }
-
                         if (material_uses_gx_lighting(material.gx_state)) {
-                            const std::array<std::uint8_t, 4U> white_pixel {255U, 255U, 255U, 255U};
-                            const auto white_texture =
-                                renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
-                            if (white_texture.is_valid()) {
-                                auto mesh = Mesh {};
-                                assign_shape_packet(mesh);
-                                mesh.texture = white_texture;
-                                mesh.material = material;
-                                mesh.material_passes = passes;
-                                mesh.packet_mode = J3dRendererPacketMode::CpuTevPerVertex;
-                                mesh.packet_mode_reason = "cpu_tev_lit_no_texture_passes";
-                                mesh.packet_mode_fallback = true;
-                                mesh.material_color = material.material_colors[0U];
-                                mesh.pass_order = 0U;
-                                mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                                mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
-                                mesh.blend_mode = material.blend.enabled ? blend_mode_for_composed_material(material, true) :
-                                                                           render::BlendMode::Opaque;
-                                mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
-                                if (material.gx_state.z_mode.enabled) {
-                                    mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                                    mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                                    mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                                }
-                                mesh.evaluate_material_per_vertex = true;
-                                if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                                    _meshes.push_back(std::move(mesh));
-                                    continue;
-                                }
-                            }
+                            continue;
                         }
 
                         const auto composed_texture = j3d_try_compose_material_constant(material, material.material_colors[0U]);
@@ -2041,142 +2039,59 @@ namespace smgpc::render {
                         }
                     }
 
-                    if (options.use_cpu_tev && (passes.size() > 1U || has_active_indirect_tev_stage(material.gx_state))) {
-                        const auto composed_texture =
-                            j3d_try_compose_material_texture(material, geometry.textures, passes, material.material_colors[0U]);
-                        if (composed_texture.has_value()) {
-                            const auto composed_handle = create_composed_texture_handle(renderer, *composed_texture, geometry.textures, passes);
-                            if (composed_handle.is_valid()) {
-                                const auto texture_has_alpha = texture_needs_blending(composed_texture->image);
-                                auto mesh = Mesh {};
-                                assign_shape_packet(mesh);
-                                mesh.texture = composed_handle;
-                                mesh.material_color = composed_texture->raster_color_baked ?
-                                                          std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
-                                                          material.material_colors[0U];
-                                mesh.material = material;
-                                mesh.material_passes = passes;
-                                mesh.packet_mode = J3dRendererPacketMode::ComposedMaterial;
-                                mesh.packet_mode_reason = "cpu_composed_multi_pass_or_indirect";
-                                mesh.packet_mode_fallback = true;
-                                mesh.pass_order = passes.front().stage;
-                                mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                                if (passes.front().texture_index < geometry.textures.size()) {
-                                    const auto &source_texture = geometry.textures[passes.front().texture_index];
-                                    mesh.wrap_u = source_texture.wrap_s;
-                                    mesh.wrap_v = source_texture.wrap_t;
-                                    mesh.min_filter = source_texture.min_filter;
-                                    mesh.mag_filter = source_texture.mag_filter;
-                                }
-                                mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
-                                mesh.blend_mode = blend_mode_for_composed_material(material, texture_has_alpha);
-                                mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
-                                if (material.gx_state.z_mode.enabled) {
-                                    mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                                    mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                                    mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                                }
-                                if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                                    _meshes.push_back(std::move(mesh));
-                                    continue;
-                                }
-                            }
-                        }
-
-                        if (material_pass_textures_available(passes, geometry.textures)) {
-                            const std::array<std::uint8_t, 4U> white_pixel {255U, 255U, 255U, 255U};
-                            const auto white_texture =
-                                renderer.create_rgba8_texture(1U, 1U, std::span<const std::uint8_t>(white_pixel.data(), white_pixel.size()));
-                            if (white_texture.is_valid()) {
-                                auto mesh = Mesh {};
-                                assign_shape_packet(mesh);
-                                mesh.texture = white_texture;
-                                mesh.material = material;
-                                mesh.material_passes = passes;
-                                mesh.packet_mode = J3dRendererPacketMode::CpuTevPerVertex;
-                                mesh.packet_mode_reason = "cpu_tev_multi_pass_or_indirect";
-                                mesh.packet_mode_fallback = true;
-                                mesh.material_color = material.material_colors[0U];
-                                mesh.pass_order = passes.front().stage;
-                                mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                                mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
-                                mesh.blend = true;
-                                mesh.blend_mode = render::BlendMode::Alpha;
-                                if (material.gx_state.z_mode.enabled) {
-                                    mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                                    mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                                    mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                                }
-                                mesh.evaluate_material_per_vertex = true;
-                                if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                                    _meshes.push_back(std::move(mesh));
-                                    continue;
-                                }
-                            }
-                        }
+                    if (passes.size() != 1U || !options.use_cpu_tev ||
+                        has_active_indirect_tev_stage(material.gx_state) || material_uses_gx_lighting(material.gx_state)) {
+                        continue;
                     }
 
-                    for (auto pass_index = std::size_t {}; pass_index < passes.size(); ++pass_index) {
-                        const auto &pass = passes[pass_index];
-                        const auto texture_index = pass.texture_index;
-                        if (texture_index >= _texture_handles.size() || !_texture_handles[texture_index].is_valid()) {
-                            continue;
-                        }
+                    const auto &pass = passes.front();
+                    const auto texture_index = pass.texture_index;
+                    if (texture_index >= geometry.textures.size()) {
+                        continue;
+                    }
 
-                        auto texture_handle = _texture_handles[texture_index];
-                        auto material_color = material.material_colors[0U];
-                        auto texture_has_alpha = texture_needs_blending(geometry.textures[texture_index].image);
-                        auto tev_baked = false;
-                        if (passes.size() == 1U && options.use_cpu_tev) {
-                            const auto composed_texture =
-                                j3d_try_compose_material_texture(material, geometry.textures[texture_index].image, material_color, pass.tex_map_slot);
-                            if (composed_texture.has_value()) {
-                                const auto composed_handle =
-                                    create_composed_texture_handle(renderer, *composed_texture, geometry.textures,
-                                                                   std::span<const J3dMaterialTexturePass>(&pass, 1U));
-                                if (composed_handle.is_valid()) {
-                                    texture_handle = composed_handle;
-                                    texture_has_alpha = texture_needs_blending(composed_texture->image);
-                                    if (composed_texture->raster_color_baked) {
-                                        material_color = {255U, 255U, 255U, 255U};
-                                        tev_baked = true;
-                                    }
-                                }
-                            }
-                        }
+                    const auto composed_texture =
+                        j3d_try_compose_material_texture(material, geometry.textures[texture_index].image,
+                                                         material.material_colors[0U], pass.tex_map_slot);
+                    if (!composed_texture.has_value()) {
+                        continue;
+                    }
 
-                        const auto *tev_stage = find_tev_stage(material, pass.stage);
-                        auto mesh = Mesh {};
-                        assign_shape_packet(mesh);
-                        mesh.texture = texture_handle;
-                        mesh.tex_coord_gen = pass.tex_coord_gen;
-                        mesh.tex_matrix = pass.tex_matrix;
-                        mesh.material = material;
-                        mesh.material_passes = passes;
-                        mesh.packet_mode = J3dRendererPacketMode::TexturePass;
-                        mesh.packet_mode_reason = tev_baked ? "single_pass_cpu_tev_baked_texture" : "texture_pass_legacy_fallback";
-                        mesh.packet_mode_fallback = !tev_baked;
-                        mesh.material_color = material_color;
-                        mesh.pass_order = pass.stage;
-                        mesh.cull_mode = cull_mode_from_gx_material_state(material);
-                        mesh.wrap_u = geometry.textures[texture_index].wrap_s;
-                        mesh.wrap_v = geometry.textures[texture_index].wrap_t;
-                        mesh.min_filter = geometry.textures[texture_index].min_filter;
-                        mesh.mag_filter = geometry.textures[texture_index].mag_filter;
-                        mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
-                        mesh.blend_mode = tev_baked ?
-                                              blend_mode_for_composed_material(material, texture_has_alpha) :
-                                              blend_mode_for_material_pass(material, texture_has_alpha, tev_stage, pass_index != 0U,
-                                                                           options.use_gx_blend_mode);
-                        mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
-                        if (material.gx_state.z_mode.enabled) {
-                            mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
-                            mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
-                            mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
-                        }
-                        if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
-                            _meshes.push_back(std::move(mesh));
-                        }
+                    const auto composed_handle =
+                        create_composed_texture_handle(renderer, *composed_texture, geometry.textures,
+                                                       std::span<const J3dMaterialTexturePass>(&pass, 1U));
+                    if (!composed_handle.is_valid()) {
+                        continue;
+                    }
+
+                    auto mesh = Mesh {};
+                    assign_shape_packet(mesh);
+                    mesh.texture = composed_handle;
+                    mesh.tex_coord_gen = pass.tex_coord_gen;
+                    mesh.tex_matrix = pass.tex_matrix;
+                    mesh.material = material;
+                    mesh.material_passes = passes;
+                    mesh.packet_mode = J3dRendererPacketMode::TexturePass;
+                    mesh.packet_mode_reason = "single_pass_cpu_tev_composed";
+                    mesh.material_color = composed_texture->raster_color_baked ?
+                                              std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
+                                              material.material_colors[0U];
+                    mesh.pass_order = pass.stage;
+                    mesh.cull_mode = cull_mode_from_gx_material_state(material);
+                    mesh.wrap_u = geometry.textures[texture_index].wrap_s;
+                    mesh.wrap_v = geometry.textures[texture_index].wrap_t;
+                    mesh.min_filter = geometry.textures[texture_index].min_filter;
+                    mesh.mag_filter = geometry.textures[texture_index].mag_filter;
+                    mesh.gx_blend = gx_blend_from_material_state(material.gx_state.blend);
+                    mesh.blend_mode = blend_mode_for_composed_material(material, texture_needs_blending(composed_texture->image));
+                    mesh.blend = mesh.blend_mode != render::BlendMode::Opaque;
+                    if (material.gx_state.z_mode.enabled) {
+                        mesh.depth_test = material.gx_state.z_mode.compare_enable != 0U;
+                        mesh.depth_write = material.gx_state.z_mode.update_enable != 0U;
+                        mesh.depth_compare = depth_compare_from_gx(material.gx_state.z_mode.function);
+                    }
+                    if (!mesh.source_vertices.empty() && !mesh.source_indices.empty()) {
+                        _meshes.push_back(std::move(mesh));
                     }
                 }
             }
@@ -2231,9 +2146,107 @@ namespace smgpc::render {
         _btk_animation.reset();
     }
 
+    bool J3dModelRenderer::set_btp_animation(render::AuroraRenderer &renderer, const J3dBtpAnimationSummary &animation) {
+        for (auto &mesh : _meshes) {
+            mesh.btp_texture_variants.clear();
+        }
+        _btp_animation.reset();
+        if (animation.materials.empty() || animation.texture_indices.empty()) {
+            return false;
+        }
+
+        auto matched_track = false;
+        for (const auto &track : animation.materials) {
+            for (auto &mesh : _meshes) {
+                if (mesh.material_name != track.material_name) {
+                    continue;
+                }
+                const auto pass = std::ranges::find_if(mesh.material_passes, [&track](const auto &candidate) {
+                    return candidate.tex_map_slot == track.texture_slot;
+                });
+                if (pass == mesh.material_passes.end()) {
+                    continue;
+                }
+                matched_track = true;
+
+                const auto first = static_cast<std::size_t>(track.texture_index_offset);
+                const auto last = first + track.max_frame;
+                if (track.max_frame == 0U || last > animation.texture_indices.size()) {
+                    return false;
+                }
+                for (auto value = first; value < last; ++value) {
+                    const auto texture_index = animation.texture_indices[value];
+                    if (texture_index >= _textures.size() || texture_index >= _texture_handles.size() ||
+                        !_texture_handles[texture_index].is_valid()) {
+                        return false;
+                    }
+                }
+
+                if (mesh.packet_mode != J3dRendererPacketMode::TexturePass) {
+                    continue;
+                }
+                if (!mesh.material.has_value() || mesh.material_passes.size() != 1U) {
+                    return false;
+                }
+
+                mesh.btp_texture_variants.resize(_textures.size());
+                for (auto value = first; value < last; ++value) {
+                    const auto texture_index = animation.texture_indices[value];
+                    if (mesh.btp_texture_variants[texture_index].has_value()) {
+                        continue;
+                    }
+
+                    auto effective_pass = *pass;
+                    effective_pass.texture_index = texture_index;
+                    const auto composed = j3d_try_compose_material_texture(
+                        *mesh.material, _textures[texture_index].image, mesh.material->material_colors[0U], effective_pass.tex_map_slot);
+                    if (!composed.has_value()) {
+                        return false;
+                    }
+                    const auto handle = create_composed_texture_handle(
+                        renderer, *composed, _textures, std::span<const J3dMaterialTexturePass>(&effective_pass, 1U));
+                    if (!handle.is_valid()) {
+                        return false;
+                    }
+
+                    const auto blend_mode = blend_mode_for_composed_material(*mesh.material, texture_needs_blending(composed->image));
+                    mesh.btp_texture_variants[texture_index] = TextureVariant {
+                        .texture = handle,
+                        .material_color = composed->raster_color_baked ?
+                                              std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U} :
+                                              mesh.material->material_colors[0U],
+                        .wrap_u = _textures[texture_index].wrap_s,
+                        .wrap_v = _textures[texture_index].wrap_t,
+                        .min_filter = _textures[texture_index].min_filter,
+                        .mag_filter = _textures[texture_index].mag_filter,
+                        .blend = blend_mode != render::BlendMode::Opaque,
+                        .blend_mode = blend_mode,
+                    };
+                }
+            }
+        }
+
+        if (!matched_track) {
+            for (auto &mesh : _meshes) {
+                mesh.btp_texture_variants.clear();
+            }
+            return false;
+        }
+        _btp_animation = animation;
+        return true;
+    }
+
+    void J3dModelRenderer::clear_btp_animation() {
+        _btp_animation.reset();
+        for (auto &mesh : _meshes) {
+            mesh.btp_texture_variants.clear();
+        }
+    }
+
     void J3dModelRenderer::clear_animations() {
         _bck_animation.reset();
         _btk_animation.reset();
+        clear_btp_animation();
     }
 
     void J3dModelRenderer::draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix,
@@ -2267,6 +2280,101 @@ namespace smgpc::render {
         return _loaded;
     }
 
+    std::optional<J3dMatrix3x4> J3dModelRenderer::joint_model_matrix(std::string_view name, float frame) const {
+        if (!_loaded || name.empty()) {
+            return std::nullopt;
+        }
+
+        const auto joint = std::ranges::find(_joint_names, name);
+        if (joint == _joint_names.end()) {
+            return std::nullopt;
+        }
+
+        const auto joint_index = static_cast<std::uint16_t>(std::distance(_joint_names.begin(), joint));
+        auto joint_cache = std::vector<J3dMatrix3x4>(_joint_transforms.size());
+        auto joint_cache_valid = std::vector<std::uint8_t>(_joint_transforms.size(), 0U);
+        auto actor_matrix = J3dMatrix3x4{};
+        const auto context = MatrixPaletteContext {
+            .actor_matrix = actor_matrix,
+            .transforms = _joint_transforms,
+            .parent_indices = _joint_parent_indices,
+            .draw_matrices = {},
+            .envelopes = nullptr,
+            .animation = _bck_animation,
+            .mesh_transform = nullptr,
+            .joint_model_cache = joint_cache,
+            .joint_model_cache_valid = joint_cache_valid,
+            .draw_matrix_cache = {},
+            .draw_matrix_cache_valid = {},
+            .model_matrix_cache = {},
+            .model_matrix_cache_valid = {},
+            .default_joint_index = joint_index,
+            .frame = frame,
+        };
+        return joint_model_matrix_for_context(context, joint_index);
+    }
+
+    std::optional<float> J3dModelRenderer::model_bounding_radius(float frame) const {
+        // Use the model's parsed joint bounds; an absent bound must stay absent.
+        if (!_loaded || _joint_transforms.empty() || _joint_bound_mins.size() != _joint_transforms.size() ||
+            _joint_bound_maxs.size() != _joint_transforms.size()) {
+            return std::nullopt;
+        }
+
+        auto joint_cache = std::vector<J3dMatrix3x4>(_joint_transforms.size());
+        auto joint_cache_valid = std::vector<std::uint8_t>(_joint_transforms.size(), 0U);
+        const auto context = MatrixPaletteContext {
+            .actor_matrix = J3dMatrix3x4{},
+            .transforms = _joint_transforms,
+            .parent_indices = _joint_parent_indices,
+            .draw_matrices = {},
+            .envelopes = nullptr,
+            .animation = _bck_animation,
+            .mesh_transform = nullptr,
+            .joint_model_cache = joint_cache,
+            .joint_model_cache_valid = joint_cache_valid,
+            .draw_matrix_cache = {},
+            .draw_matrix_cache_valid = {},
+            .model_matrix_cache = {},
+            .model_matrix_cache_valid = {},
+            .default_joint_index = 0U,
+            .frame = frame,
+        };
+
+        auto minimum = std::array<float, 3U>{
+            std::numeric_limits<float>::infinity(),
+            std::numeric_limits<float>::infinity(),
+            std::numeric_limits<float>::infinity(),
+        };
+        auto maximum = std::array<float, 3U>{
+            -std::numeric_limits<float>::infinity(),
+            -std::numeric_limits<float>::infinity(),
+            -std::numeric_limits<float>::infinity(),
+        };
+
+        for (auto joint = std::size_t{}; joint < _joint_transforms.size(); ++joint) {
+            const auto matrix = joint_model_matrix_for_context(context, static_cast<std::uint16_t>(joint));
+            const auto scale = std::array<float, 3U>{
+                std::sqrt(matrix.m[0U] * matrix.m[0U] + matrix.m[4U] * matrix.m[4U] + matrix.m[8U] * matrix.m[8U]),
+                std::sqrt(matrix.m[1U] * matrix.m[1U] + matrix.m[5U] * matrix.m[5U] + matrix.m[9U] * matrix.m[9U]),
+                std::sqrt(matrix.m[2U] * matrix.m[2U] + matrix.m[6U] * matrix.m[6U] + matrix.m[10U] * matrix.m[10U]),
+            };
+            const auto translation = std::array<float, 3U>{matrix.m[3U], matrix.m[7U], matrix.m[11U]};
+            for (auto axis = std::size_t{}; axis < 3U; ++axis) {
+                minimum[axis] = std::min(minimum[axis], _joint_bound_mins[joint][axis] * scale[axis] + translation[axis]);
+                maximum[axis] = std::max(maximum[axis], _joint_bound_maxs[joint][axis] * scale[axis] + translation[axis]);
+            }
+        }
+
+        const auto extent = std::array<float, 3U>{
+            std::max(std::abs(minimum[0U]), std::abs(maximum[0U])),
+            std::max(std::abs(minimum[1U]), std::abs(maximum[1U])),
+            std::max(std::abs(minimum[2U]), std::abs(maximum[2U])),
+        };
+        const auto radius = std::sqrt(extent[0U] * extent[0U] + extent[1U] * extent[1U] + extent[2U] * extent[2U]);
+        return std::isfinite(radius) ? std::optional<float>{radius} : std::nullopt;
+    }
+
     std::size_t J3dModelRenderer::mesh_count() const {
         return _meshes.size();
     }
@@ -2280,7 +2388,7 @@ namespace smgpc::render {
         auto packets = std::vector<J3dRendererPacketState>{};
         packets.reserve(_meshes.size());
         for (const auto &mesh : _meshes) {
-            auto state = packet_state_for_mesh(mesh, frame, scene_lights, options.bck_animation_frame);
+            auto state = packet_state_for_mesh(mesh, frame, scene_lights, options.bck_animation_frame, options.btp_animation_frame);
             state.gx_blend = gx_blend_with_draw_options(state.gx_blend, options);
             for (auto &matrix : state.tex_matrices) {
                 apply_projmap_effect_matrix(matrix, options);
@@ -2408,7 +2516,6 @@ namespace smgpc::render {
             .pass_order = mesh.pass_order,
             .packet_mode = mesh.packet_mode,
             .packet_mode_reason = mesh.packet_mode_reason,
-            .packet_mode_fallback = mesh.packet_mode_fallback,
             .material_pass_count = mesh.material_passes.size(),
             .shader_texture_stage_count = mesh.gx_texture_stage_count,
             .source_vertex_count = mesh.source_vertices.size(),
@@ -2527,7 +2634,8 @@ namespace smgpc::render {
 
     J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
                                                                    std::span<const GXLightState> scene_lights,
-                                                                   std::optional<float> bck_animation_frame) const {
+                                                                   std::optional<float> bck_animation_frame,
+                                                                   std::optional<float> btp_animation_frame) const {
         auto state = packet_state_for_mesh(mesh, scene_lights);
         const auto animation_frame = static_cast<float>(frame);
 
@@ -2564,6 +2672,49 @@ namespace smgpc::render {
             state.btk_material_count = static_cast<std::uint16_t>(_btk_animation->materials.size());
         }
 
+        if (_btp_animation.has_value()) {
+            const auto local_frame = btp_animation_frame.value_or(animation_frame);
+            for (auto &binding : state.texture_bindings) {
+                const auto texture_index =
+                    j3d_evaluate_btp_texture_index(*_btp_animation, mesh.material_name, binding.slot, local_frame);
+                if (!texture_index.has_value() || *texture_index >= _textures.size() || *texture_index >= _texture_handles.size()) {
+                    continue;
+                }
+
+                const auto &texture = _textures[*texture_index];
+                binding.texture_index = *texture_index;
+                binding.name = texture.name;
+                binding.width = texture.image.width;
+                binding.height = texture.image.height;
+                binding.format = texture.image.format;
+                binding.has_source_texture = true;
+                binding.has_sampler_metadata = true;
+                binding.transparency = texture.transparency;
+                binding.palette_format = texture.palette_format;
+                binding.palette_entry_count = texture.palette_entry_count;
+                binding.palette_data_offset = texture.palette_data_offset;
+                binding.mipmap = texture.mipmap;
+                binding.do_edge_lod = texture.do_edge_lod;
+                binding.bias_clamp = texture.bias_clamp;
+                binding.max_anisotropy = texture.max_anisotropy;
+                binding.min_lod = texture.min_lod;
+                binding.max_lod = texture.max_lod;
+                binding.image_count = texture.image_count;
+                binding.lod_bias = texture.lod_bias;
+                binding.image_data_offset = texture.image_data_offset;
+                binding.wrap_s = texture.wrap_s;
+                binding.wrap_t = texture.wrap_t;
+                binding.min_filter = texture.min_filter;
+                binding.mag_filter = texture.mag_filter;
+                binding.host_handle = _texture_handles[*texture_index];
+            }
+            state.btp_active = true;
+            state.btp_frame = local_frame;
+            state.btp_normalized_frame = j3d_animation_frame(_btp_animation->attribute, _btp_animation->frame_max, local_frame);
+            state.btp_frame_max = _btp_animation->frame_max;
+            state.btp_material_count = static_cast<std::uint16_t>(_btp_animation->materials.size());
+        }
+
         return state;
     }
 
@@ -2591,7 +2742,7 @@ namespace smgpc::render {
             }
             apply_projmap_effect_matrix(effective_tex_matrix, options);
             const auto *tex_matrix = effective_tex_matrix.has_value() ? &*effective_tex_matrix : nullptr;
-            const auto *fallback_transform = mesh.joint_transform.has_value() ? &*mesh.joint_transform : nullptr;
+            const auto *mesh_transform = mesh.joint_transform.has_value() ? &*mesh.joint_transform : nullptr;
             const auto *envelopes = _envelopes.has_value() ? &*_envelopes : nullptr;
             const auto matrix_context = MatrixPaletteContext {
                 .actor_matrix = actor_matrix,
@@ -2600,7 +2751,7 @@ namespace smgpc::render {
                 .draw_matrices = _draw_matrices,
                 .envelopes = envelopes,
                 .animation = _bck_animation,
-                .fallback_transform = fallback_transform,
+                .mesh_transform = mesh_transform,
                 .joint_model_cache = std::span<J3dMatrix3x4>(scratch.joint_model_cache.data(), scratch.joint_model_cache.size()),
                 .joint_model_cache_valid =
                     std::span<std::uint8_t>(scratch.joint_model_cache_valid.data(), scratch.joint_model_cache_valid.size()),
@@ -2617,6 +2768,9 @@ namespace smgpc::render {
                 auto effective_passes = mesh.material_passes;
                 auto effective_material = *mesh.material;
                 effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights, &scratch.camera_context);
+                const auto btp_frame = options.btp_animation_frame.value_or(static_cast<float>(frame));
+                apply_btp_texture_pattern(_btp_animation.has_value() ? &*_btp_animation : nullptr,
+                                          mesh.material_name, btp_frame, effective_passes);
                 if (_btk_animation.has_value()) {
                     for (auto &pass : effective_passes) {
                         if (!pass.tex_matrix.has_value()) {
@@ -2637,6 +2791,19 @@ namespace smgpc::render {
                 }
                 apply_projmap_effect_matrices(effective_passes, options);
                 auto gx_texture_stages = mesh.gx_texture_stages;
+                for (const auto &pass : effective_passes) {
+                    if (pass.tex_map_slot >= gx_texture_stages.size() || pass.texture_index >= _textures.size() ||
+                        pass.texture_index >= _texture_handles.size()) {
+                        continue;
+                    }
+                    auto &stage = gx_texture_stages[pass.tex_map_slot];
+                    const auto &texture = _textures[pass.texture_index];
+                    stage.texture = _texture_handles[pass.texture_index];
+                    stage.wrap_u = texture.wrap_s;
+                    stage.wrap_v = texture.wrap_t;
+                    stage.min_filter = texture.min_filter;
+                    stage.mag_filter = texture.mag_filter;
+                }
                 apply_aurora_projected_texgens(gx_texture_stages, effective_passes);
 
                 auto &gx_vertices = scratch.gx_vertices;
@@ -2734,22 +2901,33 @@ namespace smgpc::render {
                 return;
             }
 
-            emit_source_mesh_world(mesh.source_vertices, mesh.source_indices, mesh.material_color, matrix_context, tex_coord_gen, tex_matrix,
+            const auto *texture_variant = static_cast<const TextureVariant *>(nullptr);
+            if (_btp_animation.has_value() && mesh.material_passes.size() == 1U) {
+                const auto texture_index = j3d_evaluate_btp_texture_index(
+                    *_btp_animation, mesh.material_name, mesh.material_passes.front().tex_map_slot,
+                    options.btp_animation_frame.value_or(static_cast<float>(frame)));
+                if (texture_index.has_value() && *texture_index < mesh.btp_texture_variants.size() &&
+                    mesh.btp_texture_variants[*texture_index].has_value()) {
+                    texture_variant = &*mesh.btp_texture_variants[*texture_index];
+                }
+            }
+            const auto material_color = texture_variant != nullptr ? texture_variant->material_color : mesh.material_color;
+            emit_source_mesh_world(mesh.source_vertices, mesh.source_indices, material_color, matrix_context, tex_coord_gen, tex_matrix,
                                    vertices, indices);
             if (vertices.empty() || indices.empty()) {
                 return;
             }
 
-            renderer.submit_textured_triangles_3d(mesh.texture,
+            renderer.submit_textured_triangles_3d(texture_variant != nullptr ? texture_variant->texture : mesh.texture,
                                                   render::core::TexturedTriangleBatch2D {
                                                       .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
                                                       .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
-                                                      .wrap_u = mesh.wrap_u,
-                                                      .wrap_v = mesh.wrap_v,
-                                                      .min_filter = mesh.min_filter,
-                                                      .mag_filter = mesh.mag_filter,
-                                                      .blend = mesh.blend,
-                                                      .blend_mode = mesh.blend_mode,
+                                                      .wrap_u = texture_variant != nullptr ? texture_variant->wrap_u : mesh.wrap_u,
+                                                      .wrap_v = texture_variant != nullptr ? texture_variant->wrap_v : mesh.wrap_v,
+                                                      .min_filter = texture_variant != nullptr ? texture_variant->min_filter : mesh.min_filter,
+                                                      .mag_filter = texture_variant != nullptr ? texture_variant->mag_filter : mesh.mag_filter,
+                                                      .blend = texture_variant != nullptr ? texture_variant->blend : mesh.blend,
+                                                      .blend_mode = texture_variant != nullptr ? texture_variant->blend_mode : mesh.blend_mode,
                                                       .gx_blend = effective_gx_blend,
                                                       .depth_test = mesh.depth_test,
                                                       .depth_write = mesh.depth_write,

@@ -29,6 +29,7 @@ namespace smgpc::scene {
 
     struct StageCollisionMoveResult {
         TVec3f displacement{};
+        TVec3f fix_reaction{};
         std::vector<StageCollisionContact> contacts{};
     };
 

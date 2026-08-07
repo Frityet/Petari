@@ -1,134 +1,166 @@
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
-#include "Game/LiveActor/ModelObj.hpp"
-#include "Game/NPC/NPCActor.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <array>
 #include <exception>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <utility>
 
 namespace {
+
     void require(bool condition, std::string_view message) {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
     }
 
-    void test_npc_capability_allocates_and_tracks_lifecycle() {
-        auto actor = NPCActor("lod-capability-test");
-        auto caps = NPCActorCaps("unused");
-        caps.mLodCtrl = true;
-        caps.mMakeActor = true;
-        actor.initialize(JMapInfoIter{}, caps);
+    [[nodiscard]] std::string readFile(std::string_view path) {
+        auto stream = std::ifstream(std::string(path), std::ios::binary);
+        require(stream.is_open(), std::string("could not open source-boundary file: ") + std::string(path));
+        return {std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>()};
+    }
 
-        require(actor.mLodCtrl != nullptr, "the NPC LOD capability must allocate a controller");
-        require(actor.mLodCtrl->mActor == &actor && actor.mLodCtrl->_8 == &actor,
-                "the controller must retain the NPC as its high-detail host");
-        require(actor.mLodCtrl->_1B != 0, "NPC controllers must use camera-Z distance like the original factory");
-        require(!actor.isDead(), "mMakeActor must still appear an NPC after creating its LOD controller");
+    void test_game_source_boundary_is_exact() {
+        require(readFile("../src/Game/LiveActor/LodCtrl.cpp") == readFile("src/Game/LiveActor/LodCtrl.cpp"),
+                "the PC Game LodCtrl source must be byte-identical to the root decomp source");
+        require(readFile("../include/Game/LiveActor/LodCtrl.hpp") == readFile("src/Game/LiveActor/LodCtrl.hpp"),
+                "the PC Game LodCtrl header must be byte-identical to the root decomp header");
+    }
 
-        actor.mLodCtrl->invalidate();
-        require(actor.mLodCtrl->_18 == 0, "the guide-sequence invalidate call must suspend LOD updates");
-        actor.mLodCtrl->validate();
-        actor.control();
-        require(actor.mLodCtrl->_18 != 0 && actor.mLodCtrl->_8 == &actor,
-                "the guide-sequence validate call must safely restore a high-only NPC controller");
+    void test_director_must_be_explicitly_scene_owned() {
+        auto actor = LiveActor("lod-scene-owner-test");
 
-        actor.makeActorDead();
-        require(actor.isDead(), "NPC death must retain the base actor lifecycle");
-        require(actor.mLodCtrl->mActorLightCtrl == nullptr,
-                "NPC death must run the LOD kill lifecycle before killing the host");
+        auto rejected_without_scene = false;
+        try {
+            const auto ctrl = LodCtrl(&actor, JMapInfoIter{});
+            (void)ctrl;
+        } catch (const std::logic_error&) {
+            rejected_without_scene = true;
+        }
+        require(rejected_without_scene,
+                "LodCtrl construction must reject an absent scene instead of fabricating a director");
 
+        auto holder = SceneObjHolder{};
+        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+
+        auto rejected_without_director = false;
+        try {
+            const auto ctrl = LodCtrl(&actor, JMapInfoIter{});
+            (void)ctrl;
+        } catch (const std::logic_error&) {
+            rejected_without_director = true;
+        }
+        require(rejected_without_director,
+                "binding a scene must not implicitly create a ClippingDirector for LodCtrl");
+
+        auto* created = dynamic_cast< ClippingDirector* >(MR::createSceneObj(SceneObj_ClippingDirector));
+        require(created != nullptr && MR::getClippingDirector() == created,
+                "explicit creation must return the active scene's real ClippingDirector");
+
+        const auto ctrl = LodCtrl(&actor, JMapInfoIter{});
+        require(ctrl.mActor == &actor && ctrl._8 == &actor && ctrl._0 == 2000.0F && ctrl._4 == 3000.0F,
+                "a scene-backed LodCtrl must retain the retail constructor state");
+    }
+
+    void test_exact_update_uses_real_host_state() {
+        auto holder = SceneObjHolder{};
+        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
+                "the update test requires an explicitly created scene director");
+
+        auto actor = LiveActor("lod-update-test");
         actor.makeActorAppeared();
-        require(!actor.isDead(), "NPC appearance must retain the base actor lifecycle");
-        require(actor.mLodCtrl->_8 == &actor && !MR::isHiddenModel(&actor),
-                "NPC appearance must restore the high-detail host model");
-
-        delete actor.mLodCtrl;
-        actor.mLodCtrl = nullptr;
-    }
-
-    void test_disabled_capability_does_not_allocate() {
-        auto actor = NPCActor("lod-disabled-test");
-        auto caps = NPCActorCaps("unused");
-        caps.mMakeActor = true;
-        actor.initialize(JMapInfoIter{}, caps);
-
-        require(actor.mLodCtrl == nullptr, "NPCs without the LOD capability must retain a null controller");
-        require(!actor.isDead(), "the LOD capability must not alter ordinary NPC appearance");
-    }
-
-    void test_controller_preserves_original_model_transition_order() {
-        auto host = LiveActor("lod-high");
-        auto middle = ModelObj("lod-middle", "", nullptr, -1, -1, -1, false);
-        host.makeActorAppeared();
-        middle.makeActorDead();
-        host.mPosition.set(10.0F, 20.0F, 30.0F);
-        host.mRotation.set(40.0F, 50.0F, 60.0F);
-        host.mScale.set(2.0F, 3.0F, 4.0F);
-
-        auto ctrl = LodCtrl(&host, JMapInfoIter{});
-        ctrl._10 = &middle;
+        auto ctrl = LodCtrl(&actor, JMapInfoIter{});
         ctrl.validate();
 
         auto high = false;
-        auto forceMiddle = true;
+        auto middle = false;
         auto low = false;
-        auto hidden = false;
-        ctrl.setViewCtrlPtr(&high, &forceMiddle, &low, &hidden);
+        auto hidden = true;
+        ctrl.setViewCtrlPtr(&high, &middle, &low, &hidden);
         ctrl.update();
-        require(ctrl._8 == &middle && !middle.isDead(),
-                "the first middle-detail update must appear the replacement model");
-        require(!MR::isHiddenModel(&host),
-                "the original two-step transition keeps the host visible while the replacement appears");
-        require(middle.mPosition.x == host.mPosition.x && middle.mRotation.y == host.mRotation.y && middle.mScale.z == host.mScale.z,
-                "the active replacement model must follow the host transform");
-
-        ctrl.update();
-        require(MR::isHiddenModel(&host) && !middle.isDead(),
-                "the second middle-detail update must hide the high-detail model");
-
-        high = true;
-        forceMiddle = false;
-        ctrl.update();
-        require(!MR::isHiddenModel(&host) && !middle.isDead(),
-                "the first high-detail update must restore the hidden host before retiring the replacement");
-        ctrl.update();
-        require(middle.isDead() && ctrl._8 == &host,
-                "the second high-detail update must retire the replacement model");
-
-        high = false;
-        hidden = true;
-        ctrl.update();
-        require(MR::isHiddenModel(&host) && ctrl._8 == nullptr,
-                "the view-control hidden flag must suppress every LOD model");
+        require(MR::isHiddenModel(&actor) && ctrl._8 == nullptr,
+                "the recovered no-submodel update path must hide the actual high model");
 
         hidden = false;
         ctrl.update();
-        require(!MR::isHiddenModel(&host) && ctrl._8 == &host,
-                "clearing the hidden flag must restore the available high-detail model");
+        require(!MR::isHiddenModel(&actor) && ctrl._8 == &actor,
+                "clearing the real view flag must restore the actual high model");
+
+        ctrl.invalidate();
+        hidden = true;
+        ctrl.update();
+        require(!MR::isHiddenModel(&actor) && ctrl._8 == &actor && ctrl._18 == 0,
+                "an invalid controller must preserve the recovered early-return behavior");
     }
+
+    void test_missing_resources_and_shadows_stay_absent() {
+        constexpr auto missing_model = "SMGPC_LodCtrl_RealOrAbsent_Missing_5A6F2C8D";
+        require(!LodCtrlFunction::isExistLodLowModel(missing_model),
+                "a missing Low archive must remain absent instead of producing a fallback model");
+
+        auto holder = SceneObjHolder{};
+        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
+                "the resource test requires an explicitly created scene director");
+
+        auto actor = LiveActor("lod-resource-test");
+        actor.initModelManagerWithAnm(missing_model, nullptr, false);
+        actor.makeActorAppeared();
+        auto ctrl = LodCtrl(&actor, JMapInfoIter{});
+        ctrl.createLodModel(-1, -1, -1);
+        require(ctrl._10 == nullptr && ctrl._14 == nullptr && ctrl._18 == 0,
+                "only real Middle/Low archives may create LodCtrl submodels");
+
+        auto rejected_shadow_sync = false;
+        try {
+            ctrl.offSyncShadowHost();
+        } catch (const std::logic_error&) {
+            rejected_shadow_sync = true;
+        }
+        require(rejected_shadow_sync && ctrl._1A != 0,
+                "missing real shadow ownership must reject explicitly without reporting fake state");
+    }
+
+    struct TestCase {
+        std::string_view name;
+        void (*run)();
+    };
+
 }  // namespace
 
 int main() {
-    try {
-        constexpr auto tests = std::array{
-            std::pair{"NPC capability allocates and tracks lifecycle", &test_npc_capability_allocates_and_tracks_lifecycle},
-            std::pair{"disabled capability does not allocate", &test_disabled_capability_does_not_allocate},
-            std::pair{"controller preserves original transition order", &test_controller_preserves_original_model_transition_order},
-        };
-        for (const auto &[name, test] : tests) {
-            test();
-            std::cout << "[ok] " << name << '\n';
+    constexpr auto tests = std::array{
+        TestCase{"Game source boundary is exact", test_game_source_boundary_is_exact},
+        TestCase{"director must be explicitly scene-owned", test_director_must_be_explicitly_scene_owned},
+        TestCase{"exact update uses real host state", test_exact_update_uses_real_host_state},
+        TestCase{"missing resources and shadows stay absent", test_missing_resources_and_shadows_stay_absent},
+    };
+
+    auto failures = 0;
+    for (const auto& test : tests) {
+        try {
+            test.run();
+            std::cout << "[ok] " << test.name << '\n';
+        } catch (const std::exception& error) {
+            ++failures;
+            std::cerr << "[fail] " << test.name << ": " << error.what() << '\n';
         }
-        std::cout << tests.size() << " LOD compatibility test(s) passed\n";
-        return 0;
-    } catch (const std::exception &error) {
-        std::cerr << "[failed] " << error.what() << '\n';
+    }
+
+    if (failures != 0) {
+        std::cerr << failures << " LodCtrl real-or-absent test(s) failed\n";
         return 1;
     }
+
+    std::cout << tests.size() << " LodCtrl real-or-absent test(s) passed\n";
+    return 0;
 }

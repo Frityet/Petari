@@ -6,6 +6,7 @@
 #include "scene/StageCollisionService.hpp"
 
 #include <cmath>
+#include <stdexcept>
 
 namespace {
     constexpr auto cWallDot = 0.34202015F;
@@ -42,12 +43,6 @@ namespace {
                       cy * sx};
     }
 
-    void clear_bind_state(LiveActor& actor) {
-        actor.mBindedGround = false;
-        actor.mBindedWall = false;
-        actor.mBindedRoof = false;
-        actor.mBindedGroundDamageFire = false;
-    }
 }  // namespace
 
 namespace smgpc::compat {
@@ -72,12 +67,12 @@ namespace smgpc::compat {
         if (!has_binder || actor.mFlag.mIsNoBind) {
             actor.mPosition.add(actor.mVelocity);
             if (has_binder) {
-                clear_bind_state(actor);
+                clear_actor_binder_contacts(&actor);
             }
             return;
         }
 
-        clear_bind_state(actor);
+        clear_actor_binder_contacts(&actor);
         auto* collision = smgpc::scene::StageCollisionService::active();
         if (collision == nullptr || collision->empty()) {
             actor.mPosition.add(actor.mVelocity);
@@ -86,7 +81,7 @@ namespace smgpc::compat {
 
         auto gravity = actor.mGravity;
         if (!normalize(gravity)) {
-            gravity.set(0.0F, -1.0F, 0.0F);
+            throw std::logic_error("Binder contact classification requires a non-degenerate actor gravity vector.");
         }
         const auto& base_matrix = actor.getBaseMatrix().m;
         auto binder_up = TVec3f{base_matrix[1], base_matrix[5], base_matrix[9]};
@@ -109,7 +104,7 @@ namespace smgpc::compat {
         if (!normalize(binder_up)) {
             binder_up = rotation_up(actor.mRotation);
             if (!normalize(binder_up)) {
-                binder_up.set(0.0F, 1.0F, 0.0F);
+                throw std::logic_error("Binder movement requires a finite, non-degenerate actor basis.");
             }
         }
         const auto binder_center = actor.mPosition + binder_up * actor.mBinderOffset;
@@ -122,6 +117,8 @@ namespace smgpc::compat {
                                                      actor.mBinderRadius, maximum_contacts);
         actor.mPosition.add(resolved.displacement);
 
+        auto contact_state = ActorBinderContactState{};
+        contact_state.fix_reaction.set(resolved.fix_reaction);
         auto strongest_ground = -1.0F;
         auto strongest_wall = -1.0F;
         auto strongest_roof = -1.0F;
@@ -131,22 +128,23 @@ namespace smgpc::compat {
                 if (contact.penetration <= strongest_wall) {
                     continue;
                 }
-                actor.mBindedWall = true;
-                actor.mWallNormal.set(contact.normal);
+                contact_state.wall = true;
+                contact_state.wall_normal.set(contact.normal);
                 strongest_wall = contact.penetration;
             } else if (gravity_dot < 0.0F) {
                 if (contact.penetration <= strongest_ground) {
                     continue;
                 }
-                actor.mBindedGround = true;
-                actor.mGroundNormal.set(contact.normal);
+                contact_state.ground = true;
+                contact_state.ground_normal.set(contact.normal);
+                contact_state.ground_attribute = contact.attribute;
                 strongest_ground = contact.penetration;
             } else if (contact.penetration > strongest_roof) {
-                actor.mBindedRoof = true;
-                actor.mRoofNormal.set(contact.normal);
+                contact_state.roof = true;
+                contact_state.roof_normal.set(contact.normal);
                 strongest_roof = contact.penetration;
             }
         }
-
+        record_actor_binder_contacts(&actor, contact_state);
     }
 }  // namespace smgpc::compat

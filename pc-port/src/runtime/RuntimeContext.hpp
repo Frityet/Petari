@@ -23,7 +23,6 @@
 #include "runtime/WiiPlatformService.hpp"
 #include "runtime/WiiVideoService.hpp"
 
-class SimpleLayout;
 class LiveActor;
 class LayoutActor;
 class CaptureScreenActor;
@@ -34,6 +33,10 @@ namespace smgpc::scene {
     class SceneExecutionService;
     class SceneLifecycleService;
 }  // namespace smgpc::scene
+
+namespace smgpc::layout {
+    class LayoutRuntime;
+}
 
 namespace smgpc::runtime {
 
@@ -153,7 +156,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &scene_camera_pose() const;
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &last_camera_pose() const;
         [[nodiscard]] bool is_freecam_enabled() const;
-        [[nodiscard]] bool consume_pending_debug_scene_transition_request();
         [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
@@ -205,8 +207,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const RumbleService &rumble() const;
         [[nodiscard]] SequenceRequestService &sequence_requests();
         [[nodiscard]] const SequenceRequestService &sequence_requests() const;
-        [[nodiscard]] SysConfigService &sys_config();
-        [[nodiscard]] const SysConfigService &sys_config() const;
         [[nodiscard]] SaveDataService &save_data();
         [[nodiscard]] const SaveDataService &save_data() const;
         [[nodiscard]] NandFileSystemService &nand();
@@ -268,8 +268,8 @@ namespace smgpc::runtime {
                                      const smgpc::render::J3dRendererPacketState &packet);
         void record_layout_packet_trace(LayoutRuntimePacketTrace packet);
 #endif
-        void register_layout(SimpleLayout &layout);
-        void unregister_layout(SimpleLayout &layout);
+        void register_layout(smgpc::layout::LayoutRuntime &layout);
+        void unregister_layout(smgpc::layout::LayoutRuntime &layout);
         void register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
         void unregister_layout_actor(LayoutActor &layout);
         void register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
@@ -303,7 +303,6 @@ namespace smgpc::runtime {
         GameLayoutService _game_layout;
         RumbleService _rumble;
         SequenceRequestService _sequence_requests;
-        SysConfigService _sys_config;
         SaveDataService _save_data;
         MessageService _messages;
         SceneLightService _scene_lights;
@@ -328,7 +327,7 @@ namespace smgpc::runtime {
         std::map<const void *, std::string, std::less<>> _scene_effect_keeper_instances;
         bool _application_exit_requested = false;
         std::string _application_exit_reason;
-        std::map<const void *, SimpleLayout *, std::less<>> _effect_simple_layout_hosts;
+        std::map<const void *, smgpc::layout::LayoutRuntime *, std::less<>> _effect_simple_layout_hosts;
         std::map<const void *, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
         std::uint64_t _frame_index = 0;
         std::optional<smgpc::camera::CameraPose> _scene_camera_pose = {};
@@ -340,8 +339,6 @@ namespace smgpc::runtime {
         bool _freecam_look_initialized = false;
         float _freecam_yaw_radians = 0.0F;
         float _freecam_pitch_radians = 0.0F;
-        bool _debug_scene_transition_held_last_frame = false;
-        bool _pending_debug_scene_transition_request = false;
         std::optional<smgpc::camera::CameraPose> _freecam_target_pose = {};
         std::vector<render::CopyEvent> _copy_events = {};
         std::string _current_stage_name;

@@ -1,4 +1,4 @@
-#include "layout/BrlanAnimation.hpp"
+#include <aurora/nw4r/brlan.hpp>
 #include "layout/BrlytLayout.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TextEncoding.hpp"
@@ -128,8 +128,8 @@ namespace {
         return archive.file_data(*it);
     }
 
-    [[nodiscard]] std::unordered_map<std::string, smgpc::layout::BrlanAnimation> load_animations(const smgpc::resource::RarcArchive &archive) {
-        auto animations = std::unordered_map<std::string, smgpc::layout::BrlanAnimation>{};
+    [[nodiscard]] std::unordered_map<std::string, aurora::nw4r::lyt::BrlanAnimation> load_animations(const smgpc::resource::RarcArchive &archive) {
+        auto animations = std::unordered_map<std::string, aurora::nw4r::lyt::BrlanAnimation>{};
         for (const auto &entry : archive.entries()) {
             const auto lowered = lowercase(entry.path);
             if (!lowered.starts_with("anim/") || !lowered.ends_with(".brlan")) {
@@ -138,13 +138,13 @@ namespace {
 
             auto name = lowered.substr(std::string_view("anim/").size());
             name.resize(name.size() - std::string_view(".brlan").size());
-            animations.emplace(std::move(name), smgpc::layout::parse_brlan_animation(archive.file_data(entry)));
+            animations.emplace(std::move(name), aurora::nw4r::lyt::parse_brlan_animation(archive.file_data(entry)));
         }
 
         return animations;
     }
 
-    void apply_pane_frame(PaneRenderState &state, const smgpc::layout::BrlanPaneFrame &frame) {
+    void apply_pane_frame(PaneRenderState &state, const aurora::nw4r::lyt::BrlanPaneFrame &frame) {
         if (frame.translate_x.has_value()) {
             state.translate_x = *frame.translate_x;
         }
@@ -166,8 +166,8 @@ namespace {
     }
 
     [[nodiscard]] PaneRenderState pane_state_for(const smgpc::layout::BrlytLayout &layout, std::size_t pane_index,
-                                                 const std::unordered_map<std::string, smgpc::layout::BrlanPaneFrame> &committed,
-                                                 const std::vector<const smgpc::layout::BrlanAnimation *> &active_animations,
+                                                 const std::unordered_map<std::string, aurora::nw4r::lyt::BrlanPaneFrame> &committed,
+                                                 const std::vector<const aurora::nw4r::lyt::BrlanAnimation *> &active_animations,
                                                  std::span<const float> active_frames) {
         const auto &pane = layout.panes.at(pane_index);
         auto local = PaneRenderState {
@@ -256,7 +256,7 @@ namespace {
     }
 
     void write_layout_probe(const std::filesystem::path &output, std::string_view layout_name, const smgpc::layout::BrlytLayout &layout,
-                            const std::unordered_map<std::string, smgpc::layout::BrlanAnimation> &animations) {
+                            const std::unordered_map<std::string, aurora::nw4r::lyt::BrlanAnimation> &animations) {
         std::filesystem::create_directories(output.parent_path());
 
         auto out = std::ofstream(output);
@@ -370,7 +370,7 @@ namespace {
 
         const auto appear = animations.find("appear");
         const auto wait = animations.find("wait");
-        auto committed = std::unordered_map<std::string, smgpc::layout::BrlanPaneFrame>{};
+        auto committed = std::unordered_map<std::string, aurora::nw4r::lyt::BrlanPaneFrame>{};
         if (appear != animations.end()) {
             const auto frame = static_cast<float>(std::max<int>(0, appear->second.frame_size - 1));
             for (const auto &pane : layout.panes) {
@@ -379,7 +379,7 @@ namespace {
         }
 
         const auto *wait_animation = wait == animations.end() ? nullptr : &wait->second;
-        const std::vector<const smgpc::layout::BrlanAnimation *> active {wait_animation};
+        const std::vector<const aurora::nw4r::lyt::BrlanAnimation *> active {wait_animation};
         const std::vector<float> active_frames {80.0F};
         auto picture_bounds = std::optional<Rect>{};
         auto text_bounds = std::optional<Rect>{};

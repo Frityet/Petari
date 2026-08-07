@@ -1,10 +1,18 @@
 #include "Game/Util/FixedPosition.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/FixedPositionCompat.hpp"
+#include "render/live_actor/LiveActorModel.hpp"
+#include "resource/BcsvTable.hpp"
+#include "resource/RarcArchive.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 #include <cmath>
+#include <stdexcept>
+#include <string>
 #include <type_traits>
+#include <utility>
 
 namespace {
     constexpr f32 cDegToRad = 3.14159265358979323846F / 180.0F;
@@ -64,13 +72,65 @@ namespace {
             pMtx->mMtx[2][column] *= inverse;
         }
     }
+
+    [[nodiscard]] TVec3f read_vector(const smgpc::resource::BcsvTable& table, std::string_view prefix) {
+        auto result = TVec3f{};
+        if (const auto x = table.get_float(0U, std::string(prefix) + "X"); x.has_value()) {
+            result.x = *x;
+        }
+        if (const auto y = table.get_float(0U, std::string(prefix) + "Y"); y.has_value()) {
+            result.y = *y;
+        }
+        if (const auto z = table.get_float(0U, std::string(prefix) + "Z"); z.has_value()) {
+            result.z = *z;
+        }
+        return result;
+    }
 }  // namespace
 
+namespace smgpc::compat {
+    FixedPositionResourceData load_fixed_position_resource(const smgpc::resource::RarcArchive& archive, std::string_view resource_name) {
+        if (resource_name.empty()) {
+            throw std::invalid_argument("FixedPosition resource name is empty");
+        }
+
+        const auto file_name = std::string(resource_name) + ".bcsv";
+        const auto* entry = archive.find_resource(file_name);
+        if (entry == nullptr) {
+            throw std::runtime_error("FixedPosition resource does not exist: " + file_name);
+        }
+
+        const auto table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*entry));
+        if (table.entry_count() == 0U) {
+            throw std::runtime_error("FixedPosition resource has no rows: " + file_name);
+        }
+
+        auto joint_name = table.get_string(0U, "JointName");
+        if (joint_name.has_value() && joint_name->empty()) {
+            joint_name.reset();
+        }
+
+        return FixedPositionResourceData{
+            .joint_name = std::move(joint_name),
+            .translation = read_vector(table, "Trans"),
+            .rotation = read_vector(table, "Rotate"),
+        };
+    }
+}  // namespace smgpc::compat
+
 FixedPosition::FixedPosition(const LiveActor* pActor, const char* pJointName, const TVec3f& rLocalTrans, const TVec3f& rRotAxes) {
-    init(MR::getJointMtx(pActor, pJointName), rLocalTrans, rRotAxes);
+    if (pActor == nullptr || pJointName == nullptr || *pJointName == '\0') {
+        throw std::invalid_argument("FixedPosition named-joint construction requires an actor and joint name");
+    }
+
+    throw std::runtime_error("FixedPosition named-joint matrices are not available on the host: " + std::string(pJointName));
 }
 
 FixedPosition::FixedPosition(const LiveActor* pActor, const TVec3f& rLocalTrans, const TVec3f& rRotAxes) {
+    if (pActor == nullptr) {
+        throw std::invalid_argument("FixedPosition actor-relative construction requires an actor");
+    }
+
     init(actor_base_mtx(pActor), rLocalTrans, rRotAxes);
 }
 
@@ -79,11 +139,33 @@ FixedPosition::FixedPosition(MtxPtr mtx, const TVec3f& rLocalTrans, const TVec3f
 }
 
 FixedPosition::FixedPosition(const LiveActor* pActor, const char* pBcsvName, const LiveActor* pResourceActor) {
-    // The PC resource layer does not yet expose ResourceHolder BCSV lookup. Retain
-    // the host-relative behavior so callers remain deterministic until it does.
-    (void)pBcsvName;
-    (void)pResourceActor;
-    init(actor_base_mtx(pActor), TVec3f(0.0F, 0.0F, 0.0F), TVec3f(0.0F, 0.0F, 0.0F));
+    if (pActor == nullptr || pBcsvName == nullptr || *pBcsvName == '\0') {
+        throw std::invalid_argument("FixedPosition resource construction requires an actor and resource name");
+    }
+
+    const auto* resource_actor = pResourceActor != nullptr ? pResourceActor : pActor;
+    const auto* model = smgpc::compat::actor_model(resource_actor);
+    if (model == nullptr || model->model_arc_name().empty()) {
+        throw std::runtime_error("FixedPosition resource actor has no real model archive");
+    }
+
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        throw std::runtime_error("FixedPosition resource lookup requires an active runtime");
+    }
+
+    const auto archive_path = runtime->find_object_archive(model->model_arc_name());
+    if (!archive_path.has_value()) {
+        throw std::runtime_error("FixedPosition model archive does not exist: " + std::string(model->model_arc_name()));
+    }
+
+    const auto& archive = runtime->dvd().archive_for_path(*archive_path);
+    const auto resource = smgpc::compat::load_fixed_position_resource(archive, pBcsvName);
+    if (resource.joint_name.has_value()) {
+        throw std::runtime_error("FixedPosition resource requests an unavailable host joint matrix: " + *resource.joint_name);
+    }
+
+    init(actor_base_mtx(pActor), resource.translation, resource.rotation);
 }
 
 void FixedPosition::init(MtxPtr mtx, const TVec3f& rLocalTrans, const TVec3f& rRotAxes) {

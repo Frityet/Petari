@@ -7,8 +7,8 @@ class Nerve;
 
 class ButtonPaneController : public NerveExecutor {
 public:
+    /// @brief Creates a new `ButtonPaneController`.
     ButtonPaneController(LayoutActor* pHost, const char* pPaneName, const char* pBoundingPaneName, u32 animIndex, bool);
-    ~ButtonPaneController() override;
 
     void update();
     void appear();
@@ -46,9 +46,6 @@ public:
     void exeDecidedWait();
     void exeDecidedToDisappear();
     void exeDisappear();
-#ifndef NDEBUG
-    [[nodiscard]] const char* debugNerveName() const;
-#endif
 
     /* 0x08 */ LayoutActor* mHost;
     /* 0x0C */ const char* mPaneName;

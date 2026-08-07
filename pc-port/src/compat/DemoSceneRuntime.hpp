@@ -35,6 +35,11 @@ namespace smgpc::scene {
 
 namespace smgpc::compat {
 
+    enum class DemoPlayerMode : std::uint8_t {
+        Normal,
+        MarioPuppetable,
+    };
+
     struct DemoStageSwitches {
         std::int32_t appear = -1;
         std::int32_t dead = -1;
@@ -76,10 +81,12 @@ namespace smgpc::compat {
     public:
         DemoSceneRuntime(smgpc::runtime::DvdFileSystemService &dvd,
                          std::span<const smgpc::scene::StagePlacementObject> placements,
-                         std::span<const smgpc::scene::StageGeneralPos> general_positions = {});
+                         std::span<const smgpc::scene::StageGeneralPos> general_positions = {},
+                         smgpc::runtime::WipeService *wipe_service = nullptr);
         DemoSceneRuntime(const smgpc::resource::RarcArchive &demo_sheet_archive,
                          std::span<const smgpc::scene::StagePlacementObject> placements,
-                         std::span<const smgpc::scene::StageGeneralPos> general_positions = {});
+                         std::span<const smgpc::scene::StageGeneralPos> general_positions = {},
+                         smgpc::runtime::WipeService *wipe_service = nullptr);
         ~DemoSceneRuntime() override;
 
         DemoSceneRuntime(const DemoSceneRuntime &) = delete;
@@ -104,12 +111,15 @@ namespace smgpc::compat {
 
         [[nodiscard]] std::optional<DemoSheetStartResult> start_demo(
             NameObj *starter, std::string_view demo_name,
-            std::optional<std::string_view> part_name);
+            std::optional<std::string_view> part_name,
+            DemoPlayerMode player_mode);
         [[nodiscard]] std::optional<DemoSheetStartResult> start_demo_registered(
-            LiveActor *starter, std::optional<std::string_view> part_name);
+            LiveActor *starter, std::optional<std::string_view> part_name,
+            DemoPlayerMode player_mode);
         [[nodiscard]] bool stop_active_demo(
             const NameObj *starter,
             std::optional<std::string_view> demo_name);
+        void release_puppetable_control(bool force_enable);
         void pause_time_keep(const LiveActor *actor);
         void resume_time_keep(const LiveActor *actor);
 
@@ -125,6 +135,8 @@ namespace smgpc::compat {
 
         [[nodiscard]] bool has_cast(const LiveActor *actor) const;
         [[nodiscard]] bool has_cast(const LiveActor *actor, std::string_view demo_name) const;
+        [[nodiscard]] bool is_active() const;
+        [[nodiscard]] bool is_active(std::string_view demo_name) const;
         [[nodiscard]] bool is_time_keep_active() const;
         [[nodiscard]] bool is_active_registered(const LiveActor *actor) const;
         [[nodiscard]] bool registered_demo_has_player_rows(
@@ -160,6 +172,8 @@ namespace smgpc::compat {
     };
 
     [[nodiscard]] DemoSceneRuntime *active_demo_scene_runtime();
+    [[nodiscard]] DemoSceneRuntime &require_active_demo_scene_runtime(
+        std::string_view operation);
     void release_actor_from_all_demo_scenes(const LiveActor *actor);
     [[nodiscard]] bool has_any_demo_scene_cast(const LiveActor *actor);
     [[nodiscard]] std::size_t demo_scene_membership_count(const LiveActor *actor);

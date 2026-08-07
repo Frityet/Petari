@@ -147,7 +147,7 @@ namespace MR {
     }
 
     TVec3f* getPlayerGravity() {
-        return &getMarioActor()->getGravityVec();
+        return const_cast< TVec3f* >(&getMarioActor()->getGravityVec());
     }
 
     void calcPlayerSpinPullVelocity(TVec3f* pVelocity, const TVec3f& rPos) {

@@ -44,7 +44,7 @@ local route_pointer_script = table.concat({
     "2021-2079:0,0,false",
     "2080-2200:436,364,true",
     "2201-2299:0,0,false",
-    "2300-3699:187,205,true",
+    "2300-3699:152,285,true",
     "3700-5200:436,364,true",
     "5201-7000:438,404,true",
     "7001-7899:0,0,false",
@@ -58,6 +58,10 @@ local scenarios = {
         min_nonblack_ratio = 0.003,
         min_render_packets = 1,
         expected_layouts = {"TitleLogo"},
+        expected_visible_layouts = {"TitleLogo"},
+        forbidden_semantic_events = {
+            {category = "sequence", name = "title_activation_unavailable"},
+        },
     },
     title_decide = {
         name = "title_decide",
@@ -66,6 +70,10 @@ local scenarios = {
         min_nonblack_ratio = 0.003,
         min_render_packets = 1,
         expected_layouts = {"TitleLogo"},
+        expected_visible_layouts = {"TitleLogo"},
+        forbidden_semantic_events = {
+            {category = "sequence", name = "title_activation_unavailable"},
+        },
     },
     file_select = {
         name = "file_select",
@@ -74,6 +82,10 @@ local scenarios = {
         min_nonblack_ratio = 0.01,
         min_render_packets = 1,
         expected_layouts = {"FileNumber"},
+        expected_visible_layouts = {"FileNumber"},
+        forbidden_semantic_events = {
+            {category = "sequence", name = "title_activation_unavailable"},
+        },
     },
     file_confirm = {
         name = "file_confirm",
@@ -82,6 +94,10 @@ local scenarios = {
         min_nonblack_ratio = 0.01,
         min_render_packets = 1,
         expected_layouts = {"FileNumber"},
+        expected_visible_layouts = {"FileNumber"},
+        forbidden_semantic_events = {
+            {category = "sequence", name = "title_activation_unavailable"},
+        },
     },
     picturebook = {
         name = "picturebook",
@@ -103,33 +119,18 @@ local scenarios = {
         name = "gateway_handoff",
         frame = 10350,
         description = "title through five-page picturebook advance into the HeavensDoor stage handoff",
-        -- Unsupported placements are deliberately absent, so this frame is
-        -- sparse until their real factories are ported. Require the real
-        -- player and stage lifecycle below instead of fake model coverage.
+        -- Unsupported placements and MarioActor are deliberately absent, so
+        -- this frame is sparse until their real implementations are linked.
         min_nonblack_ratio = 0.005,
         min_render_packets = 1,
         button_script = gateway_button_script,
-        env = {
-            SMGPC_SCENE_TRANSITION_TRIGGER = "name_obj_dead_after_alive:プロローグの絵本",
-            SMGPC_SCENE_TRANSITION_SCENE = "Game",
-            SMGPC_SCENE_TRANSITION_STAGE = "HeavensDoorGalaxy",
-            SMGPC_SCENE_TRANSITION_SCENARIO = "1",
-            SMGPC_SCENE_TRANSITION_APPEAR_AFTER_INIT = "1",
-        },
         expected_semantic_events = {
             {category = "scene_controller", name = "scene_change_applied",
              detail = "current_stage=HeavensDoorGalaxy;scenario=1", count = 1},
-            {category = "player", name = "stage_player_created",
-             detail = "stage=HeavensDoorGalaxy;scenario=1", count = 1},
+            {category = "player", name = "stage_player_unavailable",
+             detail = "stage=HeavensDoorGalaxy;scenario=1;start_id=0;start_zone_id=0;start_layer=layera;start_table=jmp/start/layera/startinfo;start_row=0;reason=real_mario_actor_not_linked", count = 1},
             {category = "placement", name = "stage_placement_summary",
              detail = "stage=HeavensDoorGalaxy;scenario=1", count = 1},
-        },
-        expected_render_models = {
-            {name = "Mario", min_packets = 1, bck_frame_max = 180,
-             maximum_unsatisfied_light_mask = 0, require_loaded_requested_lights = true},
-            {name = "Coin", min_packets = 1},
-            {name = "TrickRabbit", min_packets = 1},
-            {name = "StarPiece", min_packets = 1},
         },
         placement_report = {
             filename = "gateway_handoff-placement-report.md",
@@ -140,14 +141,14 @@ local scenarios = {
                     total_objects = 242,
                     intentionally_ignored_objects = 72,
                 },
-                -- The baseline has 35 real factories and 135 unsupported
+                -- The baseline has 32 real factories and 138 unsupported
                 -- actor rows. Porting a real actor may only improve those
                 -- bounds; fake model/alias statuses remain forbidden below.
                 summary_minimum = {
-                    created_objects = 35,
+                    created_objects = 32,
                 },
                 summary_maximum = {
-                    blocked_objects = 135,
+                    blocked_objects = 138,
                 },
                 objects = {
                     {
@@ -164,14 +165,14 @@ local scenarios = {
                     },
                     {
                         match = {
-                            status = "created",
+                            status = "blocked",
                             object = "RailCoin",
                         },
                         count = 2,
                     },
                     {
                         match = {
-                            status = "created",
+                            status = "blocked",
                             object = "RailCoin",
                             rail_info_attached = true,
                         },
@@ -179,14 +180,14 @@ local scenarios = {
                     },
                     {
                         match = {
-                            status = "created",
+                            status = "blocked",
                             object = "DemoRabbit",
                         },
                         count = 3,
                     },
                     {
                         match = {
-                            status = "created",
+                            status = "blocked",
                             object = "DemoRabbit",
                             rail_info_attached = true,
                             rail_point_count = 5,
@@ -195,7 +196,7 @@ local scenarios = {
                     },
                     {
                         match = {
-                            status = "created",
+                            status = "blocked",
                             object = "StarPieceGroup",
                             zone = "HeavensDoorMiddleZone",
                         },
@@ -212,29 +213,11 @@ local scenarios = {
         min_nonblack_ratio = 0.25,
         min_render_packets = 300,
         button_script = opening_button_script,
-        semantic_chain = {
-            {category = "demo", name = "demo_started", detail = "name=プロローグデモ", count = 1},
-            {category = "demo", name = "demo_ended", detail = "name=プロローグデモ", count = 1},
-            {category = "demo", name = "demo_started", detail = "name=主人公ピーチ城に到着", count = 1},
-            {category = "player", name = "player_bck_started", detail = "name=DemoPeachCastleGate;file=;frame_max=299", count = 1},
-            {category = "demo", name = "demo_ended", detail = "name=主人公ピーチ城に到着", count = 1},
-            {category = "player", name = "player_opening_demo_finished",
-             detail = "animation=Wait;control=enabled;forced_matrix=cleared", count = 1},
-        },
         expected_semantic_events = {
             {category = "name_obj_lifecycle", name = "construct",
              detail = "object=PrologueDirector;actor=プロローグデモ", count = 1},
             {category = "name_obj_lifecycle", name = "archive_request",
              detail = "object=PrologueDirector;archive=PrologueDemo", count = 1},
-        },
-        expected_render_models = {
-            {name = "Mario", min_packets = 1, bck_frame_max = 180,
-             maximum_unsatisfied_light_mask = 0, require_loaded_requested_lights = true},
-            {name = "PeachCastleGardenPlanet", min_packets = 1},
-            {name = "PeachCastleTownBeforeAttack", min_packets = 1},
-            {name = "PeachCastleTownAfterAttack", min_packets = 1},
-            {name = "PeachCastleTownGate", min_packets = 1},
-            {name = "GalaxySky", min_packets = 1},
         },
         placement_report = {
             filename = "opening_arrival_complete-placement-report.md",
@@ -242,10 +225,6 @@ local scenarios = {
                 summary = {
                     stage = "PeachCastleGardenGalaxy",
                     scenario = 1,
-                    total_objects = 230,
-                    created_objects = 151,
-                    blocked_objects = 24,
-                    intentionally_ignored_objects = 55,
                 },
             },
         },
@@ -323,7 +302,8 @@ end
 
 local function validate_trace_expectations(trace_path, scenario, validation_path)
     if scenario.semantic_chain == nil and scenario.expected_semantic_events == nil and
-       scenario.expected_render_models == nil then
+       scenario.forbidden_semantic_events == nil and scenario.expected_visible_layouts == nil and
+       scenario.expected_render_models == nil and scenario.expected_render_model_groups == nil then
         return nil
     end
 
@@ -331,7 +311,10 @@ local function validate_trace_expectations(trace_path, scenario, validation_path
     local validation = {
         semantic_chain = {},
         semantic_events = {},
+        forbidden_semantic_events = {},
+        visible_layouts = {},
         render_models = {},
+        render_model_groups = {},
     }
 
     local function validate_semantic(event, destination)
@@ -370,42 +353,136 @@ local function validate_trace_expectations(trace_path, scenario, validation_path
     for _, event in ipairs(scenario.expected_semantic_events or {}) do
         validate_semantic(event, validation.semantic_events)
     end
+    for _, event in ipairs(scenario.forbidden_semantic_events or {}) do
+        local where = semantic_where(event)
+        local count = sqlite_scalar(sqlite_bin, trace_path,
+            "SELECT count(*) FROM semantic_events WHERE " .. where .. ";")
+        if count ~= 0 then
+            raise("%s contains forbidden semantic %s:%s count=%d", trace_path, event.category, event.name, count)
+        end
+        table.insert(validation.forbidden_semantic_events, {
+            category = event.category,
+            name = event.name,
+            detail = event.detail,
+            count = count,
+        })
+    end
 
-    for _, expected in ipairs(scenario.expected_render_models or {}) do
-        local model = sql_quote(expected.name)
+    for _, layout_name in ipairs(scenario.expected_visible_layouts or {}) do
+        local layout = sql_quote(layout_name)
+        local live_count = sqlite_scalar(sqlite_bin, trace_path,
+            "SELECT count(*) FROM layout_runtime WHERE layout_name = " .. layout ..
+            " AND coalesce(dead, 1) = 0 AND coalesce(pane_count, 0) > 0;")
         local packet_count = sqlite_scalar(sqlite_bin, trace_path,
-            "SELECT count(*) FROM render_packets WHERE model_name = " .. model .. ";")
+            "SELECT count(*) FROM render_packets WHERE layout_name = " .. layout .. ";")
+        if live_count == 0 or packet_count == 0 then
+            raise("%s layout %s is not visibly active (live=%d, packets=%d)", trace_path, layout_name, live_count, packet_count)
+        end
+        table.insert(validation.visible_layouts, {
+            name = layout_name,
+            live_count = live_count,
+            packet_count = packet_count,
+        })
+    end
+
+    local function validate_render_expectation(expected, destination)
+        local model_clauses = {}
+        local label
+        if expected.name ~= nil then
+            table.insert(model_clauses, "model_name = " .. sql_quote(expected.name))
+            label = expected.name
+        else
+            local quoted_names = {}
+            for _, name in ipairs(expected.names or {}) do
+                table.insert(quoted_names, sql_quote(name))
+            end
+            if #quoted_names == 0 then
+                raise("render-model expectation has no name or names")
+            end
+            table.insert(model_clauses, "model_name IN (" .. table.concat(quoted_names, ",") .. ")")
+            label = table.concat(expected.names, "|")
+        end
+        if expected.material_name ~= nil then
+            table.insert(model_clauses, "material_name = " .. sql_quote(expected.material_name))
+        end
+        local where = table.concat(model_clauses, " AND ")
+        local packet_count = sqlite_scalar(sqlite_bin, trace_path,
+            "SELECT count(*) FROM render_packets WHERE " .. where .. ";")
         if expected.min_packets ~= nil and packet_count < expected.min_packets then
-            raise("%s model %s packets=%d, expected at least %d", trace_path, expected.name, packet_count, expected.min_packets)
+            raise("%s model %s packets=%d, expected at least %d", trace_path, label, packet_count, expected.min_packets)
         end
         if expected.bck_frame_max ~= nil then
             local mismatches = sqlite_scalar(sqlite_bin, trace_path,
-                "SELECT count(*) FROM render_packets WHERE model_name = " .. model ..
+                "SELECT count(*) FROM render_packets WHERE " .. where ..
                 " AND coalesce(json_extract(payload_json, '$.bck_frame_max'), -1) <> " .. tostring(expected.bck_frame_max) .. ";")
             if mismatches ~= 0 then
-                raise("%s model %s has %d packets with unexpected BCK frame max", trace_path, expected.name, mismatches)
+                raise("%s model %s has %d packets with unexpected BCK frame max", trace_path, label, mismatches)
+            end
+        end
+        if expected.btp_active ~= nil then
+            local expected_active = expected.btp_active and 1 or 0
+            local mismatches = sqlite_scalar(sqlite_bin, trace_path,
+                "SELECT count(*) FROM render_packets WHERE " .. where ..
+                " AND coalesce(json_extract(payload_json, '$.btp_active'), 0) <> " .. tostring(expected_active) .. ";")
+            if mismatches ~= 0 then
+                raise("%s model %s has %d packets with unexpected BTP active state", trace_path, label, mismatches)
+            end
+        end
+        if expected.btp_frame_max_min ~= nil then
+            local mismatches = sqlite_scalar(sqlite_bin, trace_path,
+                "SELECT count(*) FROM render_packets WHERE " .. where ..
+                " AND coalesce(json_extract(payload_json, '$.btp_frame_max'), 0) < " .. tostring(expected.btp_frame_max_min) .. ";")
+            if mismatches ~= 0 then
+                raise("%s model %s has %d packets without a real BTP frame range", trace_path, label, mismatches)
+            end
+        end
+        if expected.btp_material_count_min ~= nil then
+            local mismatches = sqlite_scalar(sqlite_bin, trace_path,
+                "SELECT count(*) FROM render_packets WHERE " .. where ..
+                " AND coalesce(json_extract(payload_json, '$.btp_material_count'), 0) < " .. tostring(expected.btp_material_count_min) .. ";")
+            if mismatches ~= 0 then
+                raise("%s model %s has %d packets without real BTP material tracks", trace_path, label, mismatches)
+            end
+        end
+        if expected.required_texture_slot ~= nil then
+            local bound_count = sqlite_scalar(sqlite_bin, trace_path,
+                "SELECT count(*) FROM render_packets AS packet JOIN packet_texture_bindings AS binding" ..
+                " ON binding.trace_id = packet.trace_id AND binding.packet_index = packet.packet_index" ..
+                " WHERE " .. where .. " AND binding.slot = " .. tostring(expected.required_texture_slot) ..
+                " AND coalesce(binding.texture_index, 65535) <> 65535;")
+            if bound_count == 0 then
+                raise("%s model %s has no real texture binding at slot %d", trace_path, label, expected.required_texture_slot)
             end
         end
         if expected.maximum_unsatisfied_light_mask ~= nil then
             local maximum = sqlite_scalar(sqlite_bin, trace_path,
-                "SELECT coalesce(max(json_extract(payload_json, '$.unsatisfied_light_mask')), 0) FROM render_packets WHERE model_name = " .. model .. ";")
+                "SELECT coalesce(max(json_extract(payload_json, '$.unsatisfied_light_mask')), 0) FROM render_packets WHERE " .. where .. ";")
             if maximum > expected.maximum_unsatisfied_light_mask then
-                raise("%s model %s unsatisfied light mask=%d, expected at most %d", trace_path, expected.name, maximum,
+                raise("%s model %s unsatisfied light mask=%d, expected at most %d", trace_path, label, maximum,
                       expected.maximum_unsatisfied_light_mask)
             end
         end
         if expected.require_loaded_requested_lights then
             local violations = sqlite_scalar(sqlite_bin, trace_path,
-                "SELECT count(*) FROM render_packets WHERE model_name = " .. model ..
+                "SELECT count(*) FROM render_packets WHERE " .. where ..
                 " AND (coalesce(loaded_light_mask, 0) & coalesce(requested_light_mask, 0)) <> coalesce(requested_light_mask, 0);")
             if violations ~= 0 then
-                raise("%s model %s has %d packets missing requested lights", trace_path, expected.name, violations)
+                raise("%s model %s has %d packets missing requested lights", trace_path, label, violations)
             end
         end
-        table.insert(validation.render_models, {
+        table.insert(destination, {
             name = expected.name,
+            names = expected.names,
+            material_name = expected.material_name,
             packet_count = packet_count,
         })
+    end
+
+    for _, expected in ipairs(scenario.expected_render_models or {}) do
+        validate_render_expectation(expected, validation.render_models)
+    end
+    for _, expected in ipairs(scenario.expected_render_model_groups or {}) do
+        validate_render_expectation(expected, validation.render_model_groups)
     end
 
     common.write_json(validation_path, validation)

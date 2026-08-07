@@ -122,6 +122,7 @@ private:
     Spine* mSpine = nullptr;
     smgpc::render::J3dMatrix3x4 mBaseMatrix{};
     J3DFrameCtrl mBrkCtrl{};
+    bool mBrkAvailable = false;
     bool mBrkActive = false;
     std::string mCurrentBckName{};
     std::string mCurrentBrkName{};

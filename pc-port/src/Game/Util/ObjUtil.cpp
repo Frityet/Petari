@@ -136,27 +136,6 @@ namespace MR {
         return std::ranges::any_of(rarc.entries(), [&requested_name](const auto& entry) { return lower_copy(base_name(entry.path)) == requested_name; });
     }
 
-    bool tryRumblePadStrong(const void*, s32 channel) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->rumble().request_strong(channel);
-        }
-        return true;
-    }
-
-    bool tryRumblePadWeak(const void*, s32 channel) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->rumble().request_weak(channel);
-        }
-        return true;
-    }
-
-    void shakeCameraNormal() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().request_normal_shake();
-        }
-    }
-
-
     void listenNameObjStageSwitchOnAppear(const NameObj* pObj, const StageSwitchCtrl* pCtrl, const MR::FunctorBase& rOnFunctor) {
         SwitchEventFunctorListener* pListener = new SwitchEventFunctorListener();
         pListener->setOnFunctor(rOnFunctor);

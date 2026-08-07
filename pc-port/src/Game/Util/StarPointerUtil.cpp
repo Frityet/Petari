@@ -6,6 +6,7 @@
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "layout/LayoutHost.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <array>
@@ -32,10 +33,7 @@ namespace {
         }
 
         const auto pointer = runtime->wpad().pointer(channel);
-        return TVec2f{
-            .x = pointer.x,
-            .y = pointer.y,
-        };
+        return TVec2f{pointer.x, pointer.y};
     }
 
     [[nodiscard]] TVec2f pointer_screen_velocity(s32 channel) {
@@ -50,10 +48,7 @@ namespace {
             return {};
         }
 
-        return TVec2f{
-            .x = current.x - previous.x,
-            .y = current.y - previous.y,
-        };
+        return TVec2f{current.x - previous.x, current.y - previous.y};
     }
 }  // namespace
 
@@ -66,7 +61,7 @@ namespace MR {
         const auto* manager = pLayout != nullptr ? pLayout->getLayoutManager() : nullptr;
         auto pointer = TVec2f{};
         MR::getCorePadPointingPosBasedOnScreen(&pointer, WPAD_CHAN0);
-        return manager != nullptr && manager->isPointingPane(pPaneName, pointer.x, pointer.y);
+        return manager != nullptr && smgpc::layout::is_pointing_pane(manager, pPaneName, pointer.x, pointer.y);
     }
 
     bool isStarPointerPointingPaneForMeterLayout(const LayoutActor* pLayout, const char* pPaneName, s32 param3, bool param4, const char* pParam5) {

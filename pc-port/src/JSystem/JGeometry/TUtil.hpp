@@ -22,6 +22,10 @@ namespace JGeometry {
             return value <= static_cast<T>(0) ? value : static_cast<T>(1) / static_cast<T>(std::sqrt(value));
         }
 
+        [[nodiscard]] static T acos(T value) {
+            return static_cast<T>(std::acos(clamp(value, static_cast<T>(-1), static_cast<T>(1))));
+        }
+
         [[nodiscard]] static constexpr T clamp(T value, T min, T max) {
             if (value < min) {
                 return min;

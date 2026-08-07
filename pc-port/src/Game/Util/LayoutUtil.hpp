@@ -1,5 +1,6 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
 
 class SimpleLayout;
@@ -7,7 +8,6 @@ class LayoutActor;
 class J3DFrameCtrl;
 class IconAButton;
 class Nerve;
-struct TVec2f;
 
 namespace nw4r::lyt {
     class TexMap;

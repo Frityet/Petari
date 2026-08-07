@@ -63,6 +63,36 @@ namespace JGeometry {
             out.set(std::atan2(sin_x, cos_x), std::asin(sin_y), std::atan2(sin_z, cos_z));
         }
 
+        void setRotate(const TVec3f& from, const TVec3f& to, T rate) {
+            const auto axis = from.cross(to);
+            const auto cross_length = axis.length();
+            if (cross_length <= JGeometry::TUtil<T>::epsilon()) {
+                set(0, 0, 0, 1);
+                return;
+            }
+
+            const auto half_angle = rate * (std::atan2(cross_length, from.dot(to)) * static_cast<T>(0.5));
+            const auto axis_scale = std::sin(half_angle) / cross_length;
+            set(axis.x * axis_scale, axis.y * axis_scale, axis.z * axis_scale, std::cos(half_angle));
+        }
+
+        void setRotate(const TVec3f& axis, T angle) {
+            const auto half_angle = angle * static_cast<T>(0.5);
+            const auto axis_scale = std::sin(half_angle);
+            set(axis.x * axis_scale, axis.y * axis_scale, axis.z * axis_scale, std::cos(half_angle));
+        }
+
+        void rotate(TVec3f& vector) const {
+            const auto intermediate_x = (y * vector.z) - (z * vector.y) + (w * vector.x);
+            const auto intermediate_y = (-x * vector.z) + (z * vector.x) + (w * vector.y);
+            const auto intermediate_z = (x * vector.y) - (y * vector.x) + (w * vector.z);
+            const auto intermediate_w = (-x * vector.x) - (y * vector.y) - (z * vector.z);
+
+            vector.set((intermediate_x * w) - (intermediate_y * z) + (intermediate_z * y) - (intermediate_w * x),
+                       (intermediate_x * z) + (intermediate_y * w) - (intermediate_z * x) - (intermediate_w * y),
+                       -(intermediate_x * y) + (intermediate_y * x) + (intermediate_z * w) - (intermediate_w * z));
+        }
+
         void slerp(const TQuat4& from, const TQuat4& to, T rate) {
             auto target = to;
             auto dot = (from.x * target.x) + (from.y * target.y) + (from.z * target.z) + (from.w * target.w);

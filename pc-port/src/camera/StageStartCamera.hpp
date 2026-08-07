@@ -38,7 +38,6 @@ namespace smgpc::camera {
         std::string camera_key;
         StageCameraTargetState target{};
         StageCameraPoseCalculation calculation{};
-        bool used_start_orientation_up_fallback = true;
     };
 
     enum class StageStartCameraResolveStatus {
@@ -48,6 +47,7 @@ namespace smgpc::camera {
         CameraParamUnavailable,
         CameraChunkNotFound,
         UnsupportedCameraType,
+        InvalidCameraBasis,
     };
 
     struct StageStartCameraResolveResult {

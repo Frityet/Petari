@@ -245,7 +245,7 @@ namespace smgpc::app {
                 _logger->info(logging::Category::APP, logging::Message {"Running SMG on Aurora"});
                 _logger->info(logging::Category::APP, logging::Message {"Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input"});
                 _logger->info(logging::Category::APP, logging::Message {
-                    "Freecam debug keys: toggle F9, teleport to HeavensDoor F10, move with WASD, up/down Space/LeftShift, mouse look"});
+                    "Freecam debug keys: toggle F9, move with WASD, up/down Space/LeftShift, mouse look"});
 
                 auto &runtime = _runtime.get();
                 auto &game_system = _game_system.get();
@@ -429,7 +429,6 @@ namespace smgpc::app {
         register_runtime_service_reference<smgpc::runtime::GameLayoutService, &smgpc::runtime::RuntimeContext::game_layout>(graph);
         register_runtime_service_reference<smgpc::runtime::RumbleService, &smgpc::runtime::RuntimeContext::rumble>(graph);
         register_runtime_service_reference<smgpc::runtime::SequenceRequestService, &smgpc::runtime::RuntimeContext::sequence_requests>(graph);
-        register_runtime_service_reference<smgpc::runtime::SysConfigService, &smgpc::runtime::RuntimeContext::sys_config>(graph);
         register_runtime_service_reference<smgpc::runtime::SaveDataService, &smgpc::runtime::RuntimeContext::save_data>(graph);
         register_runtime_service_reference<smgpc::runtime::NandFileSystemService, &smgpc::runtime::RuntimeContext::nand>(graph);
         register_runtime_service_reference<smgpc::runtime::MessageService, &smgpc::runtime::RuntimeContext::messages>(graph);

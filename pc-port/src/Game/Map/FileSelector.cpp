@@ -330,6 +330,7 @@ void FileSelector::createSelectEffect() {
 }
 
 void FileSelector::createFileItems() {
+    MR::createSceneObj(SceneObj_MiiFacePartsHolder);
     mItemDelegator = std::make_unique< FileSelectItemDelegator< FileSelector > >(this, &FileSelector::notifyItem);
 
     for (s32 i = 0; i < cItemCount; ++i) {
@@ -1082,13 +1083,9 @@ void FileSelector::exeDemo() {
 
     if (!GameSequenceFunction::isActiveSaveDataHandleSequence()) {
         const auto file_no = mSelectedFileNo >= 1 && mSelectedFileNo <= cItemCount ? mSelectedFileNo : 1;
-        const auto* file = mFiles[static_cast< std::size_t >(file_no - 1)].get();
-        const auto is_luigi = file != nullptr && !file->mIsPlayerMario;
-        auto name = std::array< wchar_t, 11U >{};
-        const auto fallback = is_luigi ? std::wstring_view{L"Luigi"} : std::wstring_view{L"Mario"};
-        for (auto i = std::size_t{}; i < fallback.size() && i + 1U < name.size(); ++i) {
-            name[i] = fallback[i];
-        }
+        auto icon_id = FileSelectIconID();
+        getIconId(&icon_id, file_no);
+        const auto name = icon_name_wide(icon_id);
         GameSequenceFunction::reserveUserName(name.data());
         MR::requestChangeStageInGameAfterLoadingGameData();
     }

@@ -8,10 +8,10 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/StagePlayerRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionService.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "scene/nameobj/ObjectNameTable.hpp"
@@ -163,25 +163,35 @@ namespace smgpc::scene {
         // them while all actor pointers are still valid and after their
         // scheduler entries can no longer run.
         _demo_scene_runtime.reset();
-        if (_stage_player != nullptr) {
-            _stage_player.reset();
-            _runtime.player_system().clear_stage_state();
-        }
+        _runtime.player_system().clear_stage_state();
         destroy_roots();
-        if (MR::getSceneObjHolder() == mSceneObjHolder) {
-            MR::setCurrentSceneObjHolder(nullptr);
-        }
+        _scene_obj_holder_binding.reset();
     }
 
     void StageHostScene::init() {
-        if (!_roots.empty()) {
+        if (_scene_obj_holder_binding != nullptr) {
             return;
         }
 
         initSceneObjHolder();
-        MR::setCurrentSceneObjHolder(mSceneObjHolder);
+        _scene_obj_holder_binding = std::make_unique<SceneObjHolderBinding>(*mSceneObjHolder);
+        constexpr auto required_scene_objects = std::array{
+            SceneObj_MessageSensorHolder,
+            SceneObj_ClippingDirector,
+            SceneObj_StageSwitchContainer,
+            SceneObj_SwitchWatcherHolder,
+            SceneObj_SleepControllerHolder,
+        };
+        for (const auto id : required_scene_objects) {
+            if (MR::createSceneObj(id) == nullptr) {
+                throw std::runtime_error("required retail stage SceneObj is unavailable: " + std::to_string(id));
+            }
+        }
         LightFunction::initLightRegisterAll();
-        _runtime.player_system().show_player();
+        // Stage metadata is useful independently of MarioActor. Clear any
+        // prior scene's actor pointer here; the real player implementation
+        // will attach itself through the player service when it is linked.
+        _runtime.player_system().clear_stage_state();
 
         if (!_request.object_name.empty()) {
             init_explicit_root();
@@ -190,6 +200,29 @@ namespace smgpc::scene {
         }
 
         init_roots_after_placement();
+#ifndef NDEBUG
+        if (_runtime.player_system().attached_actor() != nullptr) {
+            _runtime.emit_semantic_trace_event(
+                "player", "stage_player_attached",
+                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
+                    ";source=real_actor_attachment");
+        } else if (_stage_start_info.has_value()) {
+            const auto &start = *_stage_start_info;
+            _runtime.emit_semantic_trace_event(
+                "player", "stage_player_unavailable",
+                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
+                    ";start_id=" + std::to_string(start.start_id) + ";start_zone_id=" + std::to_string(start.zone_id) +
+                    ";start_layer=" + start.layer_name + ";start_table=" + start.table_path +
+                    ";start_row=" + std::to_string(start.jmap_entry_index) +
+                    ";reason=real_mario_actor_not_linked");
+        } else {
+            _runtime.emit_semantic_trace_event(
+                "player", "stage_player_unavailable",
+                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
+                    ";start_id=" + std::to_string(_request.start_id) +
+                    ";start_zone_id=" + std::to_string(_request.start_zone_id) + ";reason=start_info_not_found");
+        }
+#endif
         init_stage_start_camera();
         SleepControlFunc::initSyncSleepController();
         appear_roots();
@@ -304,7 +337,6 @@ namespace smgpc::scene {
         _gravity.activate();
         _stage_start_info = select_stage_start_info(tables, _request.start_id,
                                                     _request.start_zone_id);
-        init_stage_player();
 
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event(
@@ -321,34 +353,6 @@ namespace smgpc::scene {
                 ";gravities=" + std::to_string(gravity_stats.gravity_count) +
                 ";unsupported=" + std::to_string(gravity_stats.unsupported_count));
 #endif
-    }
-
-    void StageHostScene::init_stage_player() {
-        _stage_player.reset();
-        if (_stage_start_info.has_value()) {
-            _stage_player = std::make_unique<smgpc::compat::StagePlayerRuntime>(_runtime, *_stage_start_info);
-#ifndef NDEBUG
-            const auto &start = *_stage_start_info;
-            _runtime.emit_semantic_trace_event(
-                "player", "stage_player_created",
-                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                    ";start_id=" + std::to_string(start.start_id) + ";start_zone_id=" + std::to_string(start.zone_id) +
-                    ";start_layer=" + start.layer_name + ";start_table=" + start.table_path +
-                    ";start_row=" + std::to_string(start.jmap_entry_index) +
-                    ";position=" + std::to_string(start.world_position[0U]) + "," +
-                    std::to_string(start.world_position[1U]) + "," + std::to_string(start.world_position[2U]) +
-                    ";model=Mario");
-#endif
-        } else {
-            _runtime.player_system().reset_stage_state();
-#ifndef NDEBUG
-            _runtime.emit_semantic_trace_event(
-                "player", "stage_player_unavailable",
-                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                    ";start_id=" + std::to_string(_request.start_id) +
-                    ";start_zone_id=" + std::to_string(_request.start_zone_id) + ";reason=start_info_not_found");
-#endif
-        }
     }
 
     void StageHostScene::trace_placement_object(const StagePlacementObject &placement) const {
@@ -394,27 +398,19 @@ namespace smgpc::scene {
 
         auto resolved = smgpc::camera::resolve_stage_start_camera(_runtime.dvd(), *_stage_start_info);
         if (!resolved.camera.has_value()) {
-            if (_stage_player != nullptr) {
-                _stage_player->use_fallback_follow_camera();
-            }
 #ifndef NDEBUG
             _runtime.emit_semantic_trace_event(
                 "camera", "stage_start_camera_unavailable",
                 "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
                     ";start_id=" + std::to_string(_request.start_id) + ";start_zone_id=" + std::to_string(_request.start_zone_id) +
                     ";status=" + std::string(smgpc::camera::stage_start_camera_status_name(resolved.status)) +
-                    ";detail=" + resolved.detail +
-                    ";fallback=" + (_stage_player != nullptr ? "start_orientation_follow" : "none"));
+                    ";detail=" + resolved.detail + ";camera=absent");
 #endif
             return;
         }
 
         _stage_start_camera = std::move(*resolved.camera);
-        if (_stage_player != nullptr) {
-            _stage_player->use_follow_camera_pose(_stage_start_camera->calculation.pose);
-        } else {
-            _runtime.camera_system().set_game_camera_pose(_stage_start_camera->calculation.pose);
-        }
+        _runtime.camera_system().set_game_camera_pose(_stage_start_camera->calculation.pose);
 #ifndef NDEBUG
         const auto &camera = *_stage_start_camera;
         const auto &pose = camera.calculation.pose;
@@ -431,11 +427,6 @@ namespace smgpc::scene {
                 ";watch=" + std::to_string(pose.watch.x) + "," + std::to_string(pose.watch.y) + "," + std::to_string(pose.watch.z) +
                 ";up=" + std::to_string(pose.up.x) + "," + std::to_string(pose.up.y) + "," + std::to_string(pose.up.z) +
                 ";fovy=" + std::to_string(pose.fovy_degrees));
-        _runtime.emit_semantic_trace_event(
-            "camera", "stage_player_follow_camera_initialized",
-            "stage=" + _request.stage_name + ";start_id=" + std::to_string(camera.start_info.start_id) +
-                ";start_zone_id=" + std::to_string(camera.start_info.zone_id) +
-                ";gravity_source=active_stage_gravity_or_start_orientation");
 #endif
     }
 
@@ -466,9 +457,6 @@ namespace smgpc::scene {
 
     void StageHostScene::update() {
         _runtime.scene_execution().execute_movement();
-        if (_stage_player != nullptr) {
-            _stage_player->synchronize_after_movement();
-        }
     }
 
     void StageHostScene::calcAnim() {

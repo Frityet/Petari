@@ -11,7 +11,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/DemoUtilCompat.hpp"
+#include "compat/PlayerUtilCompat.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -168,8 +168,12 @@ namespace smgpc::compat {
         std::vector<DemoSceneSubGroupDefinition> subgroups;
         std::vector<std::vector<LiveActor *>> subgroup_casts;
         std::vector<smgpc::scene::StageGeneralPos> general_positions;
+        smgpc::runtime::WipeService *wipe_service = nullptr;
         std::optional<std::size_t> active_definition;
         NameObj *active_starter = nullptr;
+        smgpc::runtime::PlayerSystemService *puppetable_player = nullptr;
+        bool puppetable_control_owned = false;
+        bool control_was_enabled_before_puppet = true;
         bool final_boundary_overshoot_traced = false;
 
         [[nodiscard]] Cast *find_cast(std::size_t definition_index, const LiveActor *actor) {
@@ -443,14 +447,21 @@ namespace smgpc::compat {
         }
 
         void dispatch_wipe_rows(std::size_t definition_index) {
-            auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-            if (runtime == nullptr) {
+            auto &definition = definitions[definition_index];
+            const auto has_dispatchable_row = std::ranges::any_of(
+                definition.sheet.wipe_rows(), [&](const auto &row) {
+                    return definition.sheet.is_part_first_step(row.part_name);
+                });
+            if (!has_dispatchable_row) {
                 return;
             }
-            auto &definition = definitions[definition_index];
+            if (wipe_service == nullptr) {
+                throw std::logic_error(
+                    "A dispatchable DemoWipe row requires the active scene wipe service.");
+            }
             for (const auto &row : definition.sheet.wipe_rows()) {
                 if (definition.sheet.is_part_first_step(row.part_name)) {
-                    dispatch_demo_wipe_row(row, runtime->scene_wipe());
+                    dispatch_demo_wipe_row(row, *wipe_service);
                 }
             }
         }
@@ -508,14 +519,40 @@ namespace smgpc::compat {
 #endif
         }
 
+        void trace_demo_state_event(const char *event, std::string_view demo_name,
+                                    const NameObj *owner = nullptr) {
+#ifndef NDEBUG
+            if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+                runtime != nullptr) {
+                auto detail = "name=" + std::string(demo_name);
+                if (owner != nullptr && owner->getName() != nullptr) {
+                    detail += ";owner=" + std::string(owner->getName());
+                }
+                runtime->emit_semantic_trace_event("demo", event, detail);
+            }
+#else
+            static_cast<void>(event);
+            static_cast<void>(demo_name);
+            static_cast<void>(owner);
+#endif
+        }
+
     }  // namespace
 
     DemoSceneRuntime::DemoSceneRuntime(
         smgpc::runtime::DvdFileSystemService &dvd,
         std::span<const smgpc::scene::StagePlacementObject> placements,
-        std::span<const smgpc::scene::StageGeneralPos> general_positions)
+        std::span<const smgpc::scene::StageGeneralPos> general_positions,
+        smgpc::runtime::WipeService *wipe_service)
         : NameObj("DemoDirector"), _impl(std::make_unique<Impl>()) {
         _impl->general_positions.assign(general_positions.begin(), general_positions.end());
+        _impl->wipe_service = wipe_service;
+        if (_impl->wipe_service == nullptr) {
+            if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+                runtime != nullptr) {
+                _impl->wipe_service = &runtime->scene_wipe();
+            }
+        }
         const auto seeds = collect_definition_seeds(placements);
         if (!seeds.definitions.empty()) {
             try {
@@ -532,9 +569,17 @@ namespace smgpc::compat {
     DemoSceneRuntime::DemoSceneRuntime(
         const smgpc::resource::RarcArchive &demo_sheet_archive,
         std::span<const smgpc::scene::StagePlacementObject> placements,
-        std::span<const smgpc::scene::StageGeneralPos> general_positions)
+        std::span<const smgpc::scene::StageGeneralPos> general_positions,
+        smgpc::runtime::WipeService *wipe_service)
         : NameObj("DemoDirector"), _impl(std::make_unique<Impl>()) {
         _impl->general_positions.assign(general_positions.begin(), general_positions.end());
+        _impl->wipe_service = wipe_service;
+        if (_impl->wipe_service == nullptr) {
+            if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+                runtime != nullptr) {
+                _impl->wipe_service = &runtime->scene_wipe();
+            }
+        }
         const auto seeds = collect_definition_seeds(placements);
         _impl->load(seeds.definitions, demo_sheet_archive);
         _impl->load_subgroups(seeds.subgroups);
@@ -562,8 +607,9 @@ namespace smgpc::compat {
             _impl->active_definition.reset();
             _impl->active_starter = nullptr;
             _impl->final_boundary_overshoot_traced = false;
+            release_puppetable_control(false);
             trace_time_event("timekeeper_natural_end", definition);
-            finish_demo_state(starter, demo_name);
+            trace_demo_state_event("demo_ended", demo_name, starter);
             return;
         }
 
@@ -714,6 +760,7 @@ namespace smgpc::compat {
 
     void DemoSceneRuntime::release_actor(const LiveActor *actor) {
         if (_impl->active_starter == actor) {
+            trace_demo_state_event("demo_owner_released", active_demo_name(), actor);
             (void)stop_active_demo(actor, std::nullopt);
         }
         for (auto &casts : _impl->casts) {
@@ -729,10 +776,26 @@ namespace smgpc::compat {
 
     std::optional<DemoSheetStartResult> DemoSceneRuntime::start_demo(
         NameObj *starter, std::string_view demo_name,
-        std::optional<std::string_view> part_name) {
+        std::optional<std::string_view> part_name,
+        DemoPlayerMode player_mode) {
+        if (starter == nullptr) {
+            throw std::invalid_argument(
+                "A time-keep demo requires a real starter NameObj.");
+        }
         const auto found_definition = find_definition(demo_name);
         if (!found_definition.has_value()) {
             return std::nullopt;
+        }
+
+        auto *puppetable_player =
+            player_mode == DemoPlayerMode::MarioPuppetable
+                ? active_player_system_for_player_util()
+                : nullptr;
+        if (player_mode == DemoPlayerMode::MarioPuppetable &&
+            (puppetable_player == nullptr ||
+             puppetable_player->attached_actor() == nullptr)) {
+            throw std::logic_error(
+                "A Mario-puppetable demo requires the real attached player owner.");
         }
 
         if (_impl->active_definition.has_value()) {
@@ -745,8 +808,16 @@ namespace smgpc::compat {
             _impl->active_definition = *found_definition;
             _impl->active_starter = starter;
             _impl->final_boundary_overshoot_traced = false;
+            if (puppetable_player != nullptr) {
+                _impl->puppetable_player = puppetable_player;
+                _impl->control_was_enabled_before_puppet =
+                    puppetable_player->is_control_enabled();
+                puppetable_player->disable_control();
+                _impl->puppetable_control_owned = true;
+            }
             const auto detail = part_name.has_value() ? "part=" + std::string(*part_name) : std::string{};
             trace_time_event("timekeeper_started", definition, detail);
+            trace_demo_state_event("demo_started", definition.demo_name, starter);
         } else {
             trace_time_event("timekeeper_start_rejected", definition,
                              "reason=" + std::string(demo_sheet_start_result_name(result)));
@@ -755,7 +826,8 @@ namespace smgpc::compat {
     }
 
     std::optional<DemoSheetStartResult> DemoSceneRuntime::start_demo_registered(
-        LiveActor *starter, std::optional<std::string_view> part_name) {
+        LiveActor *starter, std::optional<std::string_view> part_name,
+        DemoPlayerMode player_mode) {
         const auto found_definition = _impl->first_cast_index(starter);
         if (!found_definition.has_value()) {
             return std::nullopt;
@@ -764,7 +836,7 @@ namespace smgpc::compat {
         // resolves that executor's name through the ordered holder again.
         // Preserve that second lookup for duplicate-name definitions.
         return start_demo(starter, _impl->definitions[*found_definition].demo_name,
-                          part_name);
+                          part_name, player_mode);
     }
 
     bool DemoSceneRuntime::stop_active_demo(
@@ -785,14 +857,35 @@ namespace smgpc::compat {
         _impl->active_definition.reset();
         _impl->active_starter = nullptr;
         _impl->final_boundary_overshoot_traced = false;
+        release_puppetable_control(false);
         trace_time_event("timekeeper_stopped", definition);
-        finish_demo_state(active_starter, active_demo_name);
+        trace_demo_state_event("demo_ended", active_demo_name, active_starter);
         return true;
+    }
+
+    void DemoSceneRuntime::release_puppetable_control(bool force_enable) {
+        auto *player = _impl->puppetable_player;
+        if (force_enable && player == nullptr) {
+            player = active_player_system_for_player_util();
+        }
+        if ((_impl->puppetable_control_owned || force_enable) && player == nullptr) {
+            throw std::logic_error(
+                "Puppetable demo teardown requires the real player-system owner.");
+        }
+        if (player != nullptr &&
+            (force_enable || (_impl->puppetable_control_owned &&
+                              _impl->control_was_enabled_before_puppet))) {
+            player->enable_control(false);
+        }
+        _impl->puppetable_player = nullptr;
+        _impl->puppetable_control_owned = false;
+        _impl->control_was_enabled_before_puppet = true;
     }
 
     void DemoSceneRuntime::pause_time_keep(const LiveActor *actor) {
         if (!_impl->active_definition.has_value()) {
-            return;
+            throw std::logic_error(
+                "Cannot pause a time-keep demo without an active executor.");
         }
         const auto active_name = _impl->definitions[*_impl->active_definition].demo_name;
         for (auto index = std::size_t{}; index < _impl->definitions.size(); ++index) {
@@ -804,11 +897,14 @@ namespace smgpc::compat {
                 return;
             }
         }
+        throw std::logic_error(
+            "Cannot pause a time-keep demo for an actor outside the active executor.");
     }
 
     void DemoSceneRuntime::resume_time_keep(const LiveActor *actor) {
         if (!_impl->active_definition.has_value()) {
-            return;
+            throw std::logic_error(
+                "Cannot resume a time-keep demo without an active executor.");
         }
         const auto active_name = _impl->definitions[*_impl->active_definition].demo_name;
         for (auto index = std::size_t{}; index < _impl->definitions.size(); ++index) {
@@ -820,6 +916,8 @@ namespace smgpc::compat {
                 return;
             }
         }
+        throw std::logic_error(
+            "Cannot resume a time-keep demo for an actor outside the active executor.");
     }
 
     bool DemoSceneRuntime::try_register_action_functor(
@@ -882,6 +980,15 @@ namespace smgpc::compat {
         const auto found_definition = find_definition(demo_name);
         return found_definition.has_value() &&
                _impl->find_cast(*found_definition, actor) != nullptr;
+    }
+
+    bool DemoSceneRuntime::is_active() const {
+        return _impl->active_definition.has_value();
+    }
+
+    bool DemoSceneRuntime::is_active(std::string_view demo_name) const {
+        return _impl->active_definition.has_value() &&
+               _impl->definitions[*_impl->active_definition].demo_name == demo_name;
     }
 
     bool DemoSceneRuntime::is_time_keep_active() const {
@@ -1029,6 +1136,17 @@ namespace smgpc::compat {
     DemoSceneRuntime *active_demo_scene_runtime() {
         const auto &runtimes = installed_runtimes();
         return !runtimes.empty() ? runtimes.back() : nullptr;
+    }
+
+    DemoSceneRuntime &require_active_demo_scene_runtime(
+        std::string_view operation) {
+        auto *runtime = active_demo_scene_runtime();
+        if (runtime == nullptr) {
+            throw std::logic_error(
+                std::string(operation) +
+                " requires the active scene-owned DemoDirector runtime.");
+        }
+        return *runtime;
     }
 
     void release_actor_from_all_demo_scenes(const LiveActor *actor) {

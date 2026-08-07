@@ -1,6 +1,7 @@
 #include "CameraPose.hpp"
 
 #include <cmath>
+#include <stdexcept>
 
 namespace smgpc::camera {
     namespace {
@@ -25,10 +26,10 @@ namespace smgpc::camera {
             return a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
-        [[nodiscard]] CameraParamVec3 normalized_or(const CameraParamVec3 &value, const CameraParamVec3 &fallback) {
+        [[nodiscard]] CameraParamVec3 normalized(const CameraParamVec3 &value) {
             const auto length = std::sqrt(dot(value, value));
             if (length <= 0.000001F) {
-                return fallback;
+                throw std::logic_error("camera view basis is degenerate");
             }
 
             return CameraParamVec3 {
@@ -41,9 +42,9 @@ namespace smgpc::camera {
     }  // namespace
 
     CameraViewPoint transform_world_to_camera(const CameraPose &pose, const CameraParamVec3 &world) {
-        const auto forward = normalized_or(subtract(pose.watch, pose.eye), {0.0F, 0.0F, -1.0F});
-        const auto right = normalized_or(cross(forward, pose.up), {1.0F, 0.0F, 0.0F});
-        const auto corrected_up = normalized_or(cross(right, forward), {0.0F, 1.0F, 0.0F});
+        const auto forward = normalized(subtract(pose.watch, pose.eye));
+        const auto right = normalized(cross(forward, pose.up));
+        const auto corrected_up = normalized(cross(right, forward));
         const auto delta = subtract(world, pose.eye);
 
         return CameraViewPoint {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Scene/SceneFunction.hpp"
+#include "JSystem/JGeometry/TVec.hpp"
 
 class LiveActor;
 class LayoutActor;
@@ -11,6 +12,9 @@ class StageSwitchCtrl;
 namespace MR {
     class FunctorBase;
 
+    bool isInWater(const TVec3f&);
+    bool isInDeath(const TVec3f&);
+    bool isInDarkMatter(const TVec3f&);
     void requestMovementOn(NameObj* pObj);
     void requestMovementOff(NameObj* pObj);
     void connectToSceneMapObj(LiveActor* pActor);
@@ -25,12 +29,21 @@ namespace MR {
     void connectToSceneTalkLayout(LayoutActor* pLayout);
     void connectToSceneLayoutOnPause(LayoutActor* pLayout);
     bool isExistResourceInArc(const char* pArcName, const char* pResourceName);
-    bool tryRumblePadStrong(const void* pSource, s32 channel);
-    bool tryRumblePadWeak(const void* pSource, s32 channel);
-    bool tryRumblePad(const void* pSource, const char* pPatternName, s32 channel);
+    bool tryRumblePad(const void*, const char*, s32);
+    bool tryRumblePadVeryStrongLong(const void*, s32);
+    bool tryRumblePadVeryStrong(const void*, s32);
+    bool tryRumblePadStrong(const void*, s32);
+    bool tryRumblePadMiddle(const void*, s32);
+    bool tryRumblePadWeak(const void*, s32);
+    bool tryRumblePadVeryWeak(const void*, s32);
+    bool tryRumbleDefaultHit(const void*, s32);
+    void shakeCameraVeryStrong();
     void shakeCameraStrong();
+    void shakeCameraNormalStrong();
     void shakeCameraNormal();
+    void shakeCameraNormalWeak();
     void shakeCameraWeak();
+    void shakeCameraVeryWeak();
     void declarePowerStarCoin100();
     void declareStarPiece(const NameObj* pObj, s32 num);
     void listenNameObjStageSwitchOnAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);

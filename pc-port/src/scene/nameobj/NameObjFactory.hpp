@@ -16,6 +16,17 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene::nameobj {
 
+    enum class NameObjCreatorSupportKind {
+        Supported,
+        RuntimeClosureUnavailable,
+        NotLinked,
+    };
+
+    struct NameObjCreatorSupport {
+        NameObjCreatorSupportKind kind = NameObjCreatorSupportKind::NotLinked;
+        std::string reason;
+    };
+
     enum class NameObjPlacementSupportKind {
         Unsupported,
         OriginalFactory,
@@ -44,10 +55,12 @@ namespace smgpc::scene::nameobj {
     struct NameObjFactoryDescription {
         std::string object_name;
         bool creator_supported = false;
+        NameObjCreatorSupport creator_support;
         std::vector<NameObjArchiveRequest> archives;
     };
 
     [[nodiscard]] bool can_create_name_obj(std::string_view object_name);
+    [[nodiscard]] NameObjCreatorSupport describe_name_obj_creator_support(std::string_view object_name);
     [[nodiscard]] NameObjPlacementSupport describe_name_obj_placement_support(smgpc::runtime::DvdFileSystemService &dvd,
                                                                               std::string_view object_name,
                                                                               std::string_view table_path);

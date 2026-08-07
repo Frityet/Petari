@@ -45,10 +45,6 @@ namespace smgpc::scene {
         return _sequence_boot.is_initial_stage_host_active();
     }
 
-    bool GameSystemService::has_sent_autorush_begin() const {
-        return _sequence_boot.has_sent_autorush_begin();
-    }
-
     void GameSystemService::ensure_initial_sequence_requested() {
         if (!_sequence_boot.is_boot_requested()) {
             _sequence_boot.request_boot_to_initial_stage();

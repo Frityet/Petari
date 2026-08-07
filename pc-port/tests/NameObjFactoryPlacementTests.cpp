@@ -1,4 +1,5 @@
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjFactory.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
@@ -71,13 +72,13 @@ namespace {
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
         constexpr auto cUnsupportedFixture = std::string_view{"PcPortArchiveOnlyFixture"};
 
-        require(smgpc::scene::nameobj::can_create_name_obj("Coin"),
+        require(smgpc::scene::nameobj::can_create_name_obj("CollisionBlocker"),
                 "an object in the real NameObjFactory table should be constructible");
         require(!smgpc::scene::nameobj::can_create_name_obj(cUnsupportedFixture),
                 "the synthetic unsupported fixture must remain absent from the real factory table");
 
         const auto factory = smgpc::scene::nameobj::describe_name_obj_placement_support(
-            dvd, "Coin", "jmp/placement/common/objinfo");
+            dvd, "CollisionBlocker", "jmp/placement/common/objinfo");
         require(factory.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::OriginalFactory &&
                     factory.reason == "original_factory",
                 "ordinary placement support should come only from the real factory");
@@ -85,7 +86,7 @@ namespace {
         const auto unsupported = smgpc::scene::nameobj::describe_name_obj_placement_support(
             dvd, cUnsupportedFixture, "jmp/placement/common/objinfo");
         require(unsupported.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::Unsupported &&
-                    unsupported.reason == "no_original_factory",
+                    unsupported.reason == "retail_creator_not_linked",
                 "an ordinary placement without a real creator should be unsupported");
 
         const auto helper = smgpc::scene::nameobj::describe_name_obj_placement_support(
@@ -93,11 +94,48 @@ namespace {
         require(helper.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::IntentionallyIgnored,
                 "non-renderable helper tables should remain intentionally ignored");
 
-        const auto factory_archives = smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, "Coin");
-        require(factory_archives.size() == 1U && factory_archives.front().archive_name == "Coin",
-                "real creators should retain their original archive-list metadata even without a mounted disc");
+        for (const auto table : {"jmp/placement/common/areaobjinfo", "jmp/placement/common/cameracubeinfo",
+                                 "jmp/placement/common/planetobjinfo"}) {
+            const auto actor_bearing = smgpc::scene::nameobj::describe_name_obj_placement_support(
+                dvd, cUnsupportedFixture, table);
+            require(actor_bearing.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::Unsupported,
+                    "actor-bearing placement tables must not be blanket-hidden as helper metadata");
+        }
+
+        require(smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, "CollisionBlocker").empty(),
+                "a creator with no retail archive mapping must not infer a same-name archive");
+        const auto factory_archives = smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, "PrologueDirector");
+        const auto has_archive = [&](std::string_view name) {
+            return std::ranges::any_of(factory_archives, [&](const auto& request) {
+                return request.archive_name == name;
+            });
+        };
+        require(has_archive("DemoLetter") && has_archive("PeachLetterMini") &&
+                    has_archive("PrologueDemo") && has_archive("DemoPeachCastleGate"),
+                "supported creators should retain only their retail-derived archive mappings");
         require(smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, cUnsupportedFixture).empty(),
                 "unsupported objects should not produce preload requests");
+
+        constexpr auto cUnavailableCreators = std::array{
+            std::string_view{"FileSelector"}, std::string_view{"Steam"}, std::string_view{"Coin"},
+            std::string_view{"PurpleCoin"},
+            std::string_view{"RailCoin"}, std::string_view{"PurpleRailCoin"},
+            std::string_view{"PurpleCoinStarter"}, std::string_view{"DemoRabbit"},
+            std::string_view{"StarPieceFlow"}, std::string_view{"StarPieceGroup"},
+        };
+        for (const auto name : cUnavailableCreators) {
+            const auto support = smgpc::scene::nameobj::describe_name_obj_creator_support(name);
+            require(support.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::RuntimeClosureUnavailable &&
+                        !support.reason.empty() && NameObjFactory::getCreator(std::string(name).c_str()) == nullptr &&
+                        smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, name).empty(),
+                    "a retail creator with a mandatory unavailable init dependency must remain absent");
+        }
+
+        require_throws(
+            [&] {
+                (void)smgpc::scene::nameobj::preload_name_obj_archives(dvd, "PrologueDirector");
+            },
+            "preloading a missing explicit retail archive should reject instead of silently continuing");
 
         require_throws(
             [&] {

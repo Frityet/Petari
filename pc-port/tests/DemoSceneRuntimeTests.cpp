@@ -39,6 +39,22 @@ namespace {
         }
     }
 
+    template <typename Function>
+    void require_throws(Function &&function, std::string_view expected,
+                        std::string_view message) {
+        try {
+            function();
+        } catch (const std::exception &error) {
+            if (std::string_view(error.what()).find(expected) !=
+                std::string_view::npos) {
+                return;
+            }
+            throw std::runtime_error(std::string(message) +
+                                     "; unexpected error: " + error.what());
+        }
+        throw std::runtime_error(std::string(message) + "; no exception was raised");
+    }
+
     void write_be16(std::vector<std::uint8_t> &bytes, std::size_t offset,
                     std::uint16_t value) {
         bytes[offset] = static_cast<std::uint8_t>(value >> 8U);
@@ -1163,17 +1179,24 @@ namespace {
 
         require(MR::isDemoExist("Clock") && MR::isDemoExist("MissingClock") &&
                     MR::isDemoExist("EmptyClock") &&
-                    !MR::isDemoExist("ClockSubGroupOnly") && !MR::isDemoExist(nullptr),
+                    !MR::isDemoExist("ClockSubGroupOnly"),
                 "isDemoExist must report exact primary definitions even when Time is missing or empty");
+        require_throws([] { (void)MR::isDemoExist(nullptr); }, "real demo name",
+                       "a null demo name must not be normalized into an absent definition");
+        require_throws([] { (void)MR::isDemoPartTalk(nullptr); },
+                       "real part name",
+                       "the pure talk-part query must not normalize a null source string");
         require(MR::isDemoPartExist(&actor, "intro") &&
                     MR::isDemoPartExist(&actor, "pulse") &&
                     !MR::isDemoPartExist(&actor, "unknown") &&
                     !MR::isDemoPartExist(nullptr, "intro"),
                 "part existence must use the actor's first primary membership and include SubPart rows");
-        require(MR::getDemoPartStep("unknown") == -1 &&
-                    MR::getDemoPartTotalStep("unknown") == 0 &&
-                    MR::calcDemoPartStepRate("unknown") == 0.0f,
-                "safe compatibility sentinels must normalize invalid direct queries");
+        require_throws([] { (void)MR::getDemoPartStep("unknown"); },
+                       "real active Time/SubPart row",
+                       "a direct step query must not invent an inactive sentinel");
+        require_throws([] { (void)MR::getDemoPartTotalStep("unknown"); },
+                       "real active Time/SubPart row",
+                       "a direct total-step query must not invent zero");
 
         require(MR::tryStartTimeKeepDemo(&actor, "Clock", nullptr) &&
                     MR::isDemoActive("Clock") && MR::isTimeKeepDemoActive() &&
@@ -1246,10 +1269,12 @@ namespace {
         require(MR::isDemoPartStep("intro", 1) &&
                     !MR::isDemoPartActive("pulse"),
                 "paused movement must correct zero to one, then freeze without keeper dispatch");
-        MR::resumeTimeKeepDemo(&wrong_actor);
+        require_throws([&] { MR::resumeTimeKeepDemo(&wrong_actor); },
+                       "outside the active executor",
+                       "resume for an unrelated actor must expose the missing executor");
         runtime.movement();
         require(MR::isDemoPartStep("intro", 1),
-                "pause/resume must ignore actors outside the active executor cast");
+                "a rejected unrelated resume must leave the real clock paused");
         MR::resumeTimeKeepDemo(&actor);
         runtime.movement();
         require(MR::isDemoPartStep("intro", 2) &&
@@ -1283,6 +1308,8 @@ namespace {
         auto actor = LiveActor("ClockActor");
         auto wrong_actor = LiveActor("WrongActor");
         auto player = smgpc::runtime::PlayerSystemService{};
+        auto player_actor = LiveActor("PlayerActor");
+        player.attach_actor(player_actor);
         const auto player_context =
             smgpc::compat::ScopedPlayerSystemServiceOverride{player};
         require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&clock_info, 0)) &&
@@ -1370,8 +1397,10 @@ namespace {
             },
         };
         {
+            auto wipe = smgpc::runtime::WipeService{};
             auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements,
-                                                           general_positions);
+                                                           general_positions,
+                                                           &wipe);
             auto actor_info = make_actor_info(50, -1, 40);
             auto actor = LiveActor("Actor");
             const auto initial_nerve = TestNerve{};
@@ -1392,8 +1421,10 @@ namespace {
                         actor.currentBckName() == "Wave" && actor.mPosition.x == 12.0F &&
                         actor.mPosition.y == 34.0F && actor.mPosition.z == 56.0F &&
                         actor.mRotation.x == 7.0F && actor.mRotation.y == 8.0F &&
-                        actor.mRotation.z == 9.0F,
-                    "Action rows must run in BCSV order, then apply animation and real GeneralPos data after each row operation");
+                        actor.mRotation.z == 9.0F && wipe.events().size() == 1U &&
+                        wipe.events()[0].name == "CustomWipe" &&
+                        wipe.events()[0].frame_count == -1,
+                    "Action/Wipe rows must run against their real callback, GeneralPos, and scene wipe owners");
             runtime.movement();
             require(observer.calls == 1 && !actor.isDead(),
                     "a multi-frame Action row must not replay its first-step operation on the last step");
@@ -1520,37 +1551,52 @@ namespace {
                     events[2].kind == smgpc::runtime::WipeEventKind::ForceOpen &&
                     events[3].kind == smgpc::runtime::WipeEventKind::ForceClose,
                 "Wipe types 0-3 must preserve arbitrary names and the raw -1 frame sentinel; unknown types are no-op");
+
+        const auto archive = make_dispatch_sheet_fixture();
+        const auto placements = make_dispatch_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto starter = LiveActor("NoActionCast");
+        require(MR::tryStartTimeKeepDemo(&starter, "Dispatch", nullptr),
+                "the missing-wipe-owner fixture must start from real Time data");
+        require_throws([&] { runtime.movement(); }, "active scene wipe service",
+                       "a dispatchable Wipe row must not disappear without its scene service owner");
     }
 
     void test_no_registry_and_scene_teardown() {
         auto info = make_actor_info(3, 1, 1);
         auto actor = LiveActor("Actor");
-        auto player = smgpc::runtime::PlayerSystemService{};
-        const auto player_context =
-            smgpc::compat::ScopedPlayerSystemServiceOverride{player};
-        require(smgpc::compat::active_demo_scene_runtime() == nullptr &&
-                    !MR::tryRegisterDemoCast(&actor, JMapInfoIter(&info, 0)),
-                "cast registration without an active scene registry should fail without an orphan fallback");
-        require(!MR::tryStartTimeKeepDemo(&actor, "TryWithoutRegistry", nullptr) &&
-                    !MR::isDemoActive(),
-                "a try time-keep start without a scene registry must reject safely");
-        MR::startTimeKeepDemo(&actor, "VoidWithoutRegistry", nullptr);
-        require(MR::isDemoActive("VoidWithoutRegistry") &&
-                    !MR::isTimeKeepDemoActive(),
-                "the void time-keep API must retain its programmable fallback when no scene registry exists");
-        MR::endDemo(&actor, "VoidWithoutRegistry");
-        MR::startTimeKeepDemoMarioPuppetable(
-            &actor, "PuppetVoidWithoutRegistry", nullptr);
-        require(MR::isDemoActive("PuppetVoidWithoutRegistry") &&
-                    !MR::isTimeKeepDemoActive() &&
-                    !player.is_control_enabled(),
-                "the void Mario API must retain its no-registry global and puppetable fallback");
-        MR::endDemo(&actor, "PuppetVoidWithoutRegistry");
-        require(player.is_control_enabled(),
-                "ending the no-registry puppetable fallback must restore control");
-        require(MR::tryStartDemoWithoutCinemaFrame(&actor, "Programmable") && MR::isDemoActive(),
-                "programmable demos should remain usable without a time-keep scene executor");
-        MR::endDemo(&actor, "Programmable");
+        require(smgpc::compat::active_demo_scene_runtime() == nullptr,
+                "the no-registry fixture must begin without a scene DemoDirector");
+        require_throws(
+            [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&info, 0)); },
+            "active scene-owned DemoDirector runtime",
+            "try cast registration must distinguish missing director ownership from retail refusal");
+        require_throws(
+            [&] { (void)MR::tryStartTimeKeepDemo(&actor, "TryWithoutRegistry", nullptr); },
+            "active scene-owned DemoDirector runtime",
+            "a try time-keep start must not report false for a missing director");
+        require_throws([] { (void)MR::isDemoActive(); },
+                       "active scene-owned DemoDirector runtime",
+                       "an active query must not invent an inactive global default");
+        require_throws(
+            [&] { MR::startTimeKeepDemo(&actor, "VoidWithoutRegistry", nullptr); },
+            "active scene-owned DemoDirector runtime",
+            "the void time-keep API must fail explicitly without its scene owner");
+        require_throws(
+            [&] {
+                MR::startTimeKeepDemoMarioPuppetable(
+                    &actor, "PuppetVoidWithoutRegistry", nullptr);
+            },
+            "active scene-owned DemoDirector runtime",
+            "the void Mario API must not fabricate demo or player-control ownership");
+        require_throws(
+            [&] { (void)MR::tryStartDemoWithoutCinemaFrame(&actor, "Programmable"); },
+            "active scene-owned DemoDirector runtime",
+            "a programmable try start must not hide a missing director behind false");
+        require_throws(
+            [&] { MR::endDemo(&actor, "NothingActive"); },
+            "active scene-owned DemoDirector runtime",
+            "demo end must not become a no-op without a director");
 
         const auto archive = make_sheet_fixture();
         const auto placements = make_definition_fixture();
@@ -1561,9 +1607,83 @@ namespace {
                     "the scoped scene should own its actor membership");
         }
         require(smgpc::compat::active_demo_scene_runtime() == nullptr &&
-                    !smgpc::compat::has_registered_demo_cast(&actor) &&
-                    !MR::tryRegisterDemoCast(&actor, JMapInfoIter(&info, 0)),
+                    !smgpc::compat::has_registered_demo_cast(&actor),
                 "scene teardown should clear the active pointer and all owned memberships");
+        require_throws(
+            [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&info, 0)); },
+            "active scene-owned DemoDirector runtime",
+            "scene teardown must leave explicit owner absence, not a false result");
+    }
+
+    void test_programmable_demo_absence_does_not_impersonate_a_sheet() {
+        const auto archive = make_clock_sheet_fixture();
+        const auto placements = make_clock_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto actor = LiveActor("ClockActor");
+
+        require_throws(
+            [&] { (void)MR::tryStartDemoWithoutCinemaFrame(&actor, "プロローグデモ"); },
+            "programmable DemoDirector movement/cinema-frame closure",
+            "the prologue programmable start must not be redirected to DemoSheet data");
+        require_throws(
+            [&] { (void)MR::tryStartDemoMarioPuppetable(&actor, "主人公ピーチ城に到着"); },
+            "programmable DemoDirector movement/cinema-frame closure",
+            "a programmable Mario start must remain absent without its real director closure");
+        require_throws(
+            [&] { (void)MR::requestStartDemo(&actor, "QueuedProgrammable", nullptr, nullptr); },
+            "programmable DemoDirector movement/cinema-frame closure",
+            "a programmable request must not claim success or mutate a nerve");
+        require(!runtime.is_active() && !runtime.is_time_keep_active(),
+                "rejected programmable paths must not create synthetic scene active state");
+
+        const auto nerve = TestNerve{};
+        require(!MR::tryRegisterDemoCast(&actor, "UnknownDemo", JMapInfoIter{}) &&
+                    !MR::tryRegisterDemoActionNerve(&actor, &nerve, nullptr),
+                "try registration may still report genuine missing group/capability refusal");
+        require_throws(
+            [&] { MR::registerDemoCast(&actor, "UnknownDemo", JMapInfoIter{}); },
+            "no matching real group",
+            "required cast registration must not turn a missing group into a no-op");
+        require_throws(
+            [&] { MR::registerDemoActionNerve(&actor, &nerve, nullptr); },
+            "no matching real Action row",
+            "required nerve registration must not hide a missing Action capability");
+
+        require(MR::tryStartTimeKeepDemo(&actor, "Clock", nullptr) &&
+                    runtime.is_active("Clock") && runtime.is_time_keep_active(),
+                "real Time rows must remain executable through the scene-owned sheet runtime");
+        MR::endDemo(&actor, "Clock");
+        require_throws([&] { MR::endDemo(&actor, "Clock"); },
+                       "without a real active DemoDirector state",
+                       "a second required end must expose inactive state instead of no-oping");
+        require_throws([&] { MR::pauseTimeKeepDemo(&actor); },
+                       "without an active executor",
+                       "required pause must not no-op after the real executor ended");
+    }
+
+    void test_active_state_is_owned_by_each_installed_scene_runtime() {
+        const auto archive = make_clock_sheet_fixture();
+        const auto placements = make_clock_definition_fixture();
+        auto outer = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto outer_actor = LiveActor("OuterClockActor");
+        require(MR::tryStartTimeKeepDemo(&outer_actor, "Clock", nullptr) &&
+                    outer.is_active("Clock"),
+                "the outer scene runtime must own its started clock");
+
+        {
+            auto inner = smgpc::compat::DemoSceneRuntime(archive, placements);
+            auto inner_actor = LiveActor("InnerClockActor");
+            require(!MR::isDemoActive() && outer.is_active("Clock"),
+                    "installing another scene runtime must not expose the outer scene's active state");
+            require(MR::tryStartTimeKeepDemo(&inner_actor, "Other", nullptr) &&
+                        MR::isDemoActive("Other") && inner.is_active("Other") &&
+                        outer.is_active("Clock"),
+                    "each installed scene runtime must retain independent real active ownership");
+        }
+
+        require(MR::isDemoActive("Clock") && outer.is_time_keep_active(),
+                "uninstalling the inner runtime must reveal the still-live outer scene owner");
+        MR::endDemo(&outer_actor, "Clock");
     }
 
     void test_no_definition_skips_demo_sheet_archive() {
@@ -1704,6 +1824,8 @@ int main() {
         TestCase{"Action dispatch order, pause, and callback invariant", test_action_dispatch_order_pause_and_callback_invariant},
         TestCase{"Wipe row arbitrary names and raw frames", test_wipe_row_dispatch_uses_arbitrary_names_and_raw_frames},
         TestCase{"no registry and scene teardown", test_no_registry_and_scene_teardown},
+        TestCase{"programmable demo absence versus real Time sheets", test_programmable_demo_absence_does_not_impersonate_a_sheet},
+        TestCase{"scene-owned active demo state", test_active_state_is_owned_by_each_installed_scene_runtime},
         TestCase{"no definition skips DemoSheet archive", test_no_definition_skips_demo_sheet_archive},
         TestCase{"optional real scene definitions", test_optional_real_gateway_definitions},
     };

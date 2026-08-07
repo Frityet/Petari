@@ -15,7 +15,10 @@
 class LiveActor;
 class LayoutActor;
 class NameObj;
-class SimpleLayout;
+
+namespace smgpc::layout {
+    class LayoutRuntime;
+}
 
 namespace smgpc::runtime {
 
@@ -45,7 +48,7 @@ namespace smgpc::runtime {
     struct SceneSchedulerRegistration {
         SceneEntryKind kind = SceneEntryKind::NameObj;
         NameObj *name_obj = nullptr;
-        SimpleLayout *layout = nullptr;
+        smgpc::layout::LayoutRuntime *layout = nullptr;
         LayoutActor *layout_actor = nullptr;
         LiveActor *live_actor = nullptr;
         std::string name;
@@ -78,6 +81,7 @@ namespace smgpc::runtime {
 
     struct SceneLayoutAnimationDebugState {
         std::size_t layer_index = 0U;
+        bool active = false;
         std::string name;
         float frame = 0.0F;
         float end_frame = 0.0F;
@@ -228,8 +232,8 @@ namespace smgpc::runtime {
     public:
         void connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
         void disconnect_name_obj(NameObj &obj);
-        void register_layout(SimpleLayout &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
-        void unregister_layout(SimpleLayout &layout);
+        void register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
+        void unregister_layout(smgpc::layout::LayoutRuntime &layout);
         void register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
         void unregister_layout_actor(LayoutActor &layout);
         void register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
@@ -264,7 +268,7 @@ namespace smgpc::runtime {
         struct Entry {
             SceneEntryKind kind = SceneEntryKind::NameObj;
             NameObj *name_obj = nullptr;
-            SimpleLayout *layout = nullptr;
+            smgpc::layout::LayoutRuntime *layout = nullptr;
             LayoutActor *layout_actor = nullptr;
             LiveActor *live_actor = nullptr;
             s32 movement_type = -1;

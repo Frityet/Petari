@@ -1,134 +1,62 @@
 #include "Game/Screen/LayoutPaneCtrl.hpp"
-
-#include <algorithm>
-#include <cmath>
-
+#include "Game/Animation/LayoutAnmPlayer.hpp"
 #include "Game/Screen/LayoutManager.hpp"
+#include <nw4r/lyt/pane.h>
 
 LayoutPaneCtrl::LayoutPaneCtrl(LayoutManager* pHost, const char* pPaneName, u32 animLayerNum)
-    : mHost(pHost), mPane(nullptr), mPaneIndex(-1), mFollowType(0U), mFollowPos(nullptr), mPaneName(pPaneName != nullptr ? pPaneName : ""),
-      mFrameCtrls(std::max<u32>(animLayerNum, 1U)), mAnimNames(mFrameCtrls.size()), mStopped(mFrameCtrls.size(), true) {
+    : mHost(pHost), mPane(nullptr), mPaneIndex(-1), mAnmPlayerArray(animLayerNum), mFollowType(0), mFollowPos(nullptr) {
+    mPane = mHost->getPane(pPaneName);
+
+    for (u32 i = 0; i < mAnmPlayerArray.size(); i++) {
+        mAnmPlayerArray[i] = new LayoutAnmPlayer(pHost);
+    }
 }
 
 void LayoutPaneCtrl::movement() {
-    for (auto layer = u32{}; layer < mFrameCtrls.size(); ++layer) {
-        auto& ctrl = mFrameCtrls[layer];
-        if (mAnimNames[layer].empty() || mStopped[layer]) {
-            continue;
-        }
-
-        if (ctrl.mRate == 0.0F) {
-            mStopped[layer] = true;
-            syncLayoutFrame(layer);
-            continue;
-        }
-
-        ctrl.mFrame += ctrl.mRate;
-        const auto end_frame = static_cast< f32 >(ctrl.mEnd);
-        if (ctrl.mLoop != 0 && end_frame > 0.0F) {
-            ctrl.mFrame = std::fmod(ctrl.mFrame, end_frame);
-        } else if (ctrl.mFrame >= end_frame || ctrl.mFrame <= static_cast< f32 >(ctrl.mStart)) {
-            ctrl.mFrame = std::clamp(ctrl.mFrame, static_cast< f32 >(ctrl.mStart), end_frame);
-            mStopped[layer] = true;
-        }
-        syncLayoutFrame(layer);
+    for (u32 i = 0; i < mAnmPlayerArray.size(); i++) {
+        mAnmPlayerArray[i]->movement();
     }
 }
 
 void LayoutPaneCtrl::calcAnim() {
-}
-
-void LayoutPaneCtrl::start(const char* pAnimName, u32 animLayer) {
-    const auto layer = layerIndex(animLayer);
-    auto& ctrl = mFrameCtrls[layer];
-    mAnimNames[layer] = pAnimName != nullptr ? pAnimName : "";
-    ctrl.mStart = 0;
-    ctrl.mEnd = static_cast< s16 >(mHost != nullptr ? mHost->getAnimFrameMax(pAnimName) : 1.0F);
-    ctrl.mLoop = mHost != nullptr && mHost->isLoopingAnim(pAnimName) ? 1 : 0;
-    ctrl.mRate = 1.0F;
-    ctrl.mFrame = 0.0F;
-    mStopped[layer] = false;
-    if (mHost != nullptr) {
-        mHost->startPaneAnim(mPaneName.c_str(), pAnimName, layer);
+    for (u32 i = 0; i < mAnmPlayerArray.size(); i++) {
+        mAnmPlayerArray[i]->reflectFrame();
     }
 }
 
-void LayoutPaneCtrl::stop(u32 animLayer) {
-    const auto layer = layerIndex(animLayer);
-    mStopped[layer] = true;
-    mFrameCtrls[layer].mRate = 0.0F;
-    if (mHost != nullptr) {
-        mHost->stopPaneAnim(mPaneName.c_str(), layer);
+void LayoutPaneCtrl::start(const char* pAnimName, u32 layer) {
+    LayoutAnmPlayer* pAnmPlayer = mAnmPlayerArray[layer];
+
+    if (pAnmPlayer->mAnimTransform != nullptr) {
+        if (mHost->_61) {
+            mPane->UnbindAnimation(pAnmPlayer->mAnimTransform, true);
+        } else {
+            mHost->unbindPaneCtrlAnim(this, pAnmPlayer->mAnimTransform);
+        }
+    }
+
+    pAnmPlayer->start(pAnimName);
+
+    if (mHost->_61) {
+        mPane->UnbindAnimation(pAnmPlayer->mAnimTransform, true);
+        mPane->BindAnimation(pAnmPlayer->mAnimTransform, true);
+    } else {
+        mHost->bindPaneCtrlAnim(this, pAnmPlayer->mAnimTransform);
     }
 }
 
-bool LayoutPaneCtrl::isAnimStopped(u32 animLayer) const {
-    return mStopped[layerIndex(animLayer)];
+void LayoutPaneCtrl::stop(u32 layer) {
+    mAnmPlayerArray[layer]->stop();
 }
 
-void LayoutPaneCtrl::reflectFollowPos() {
+bool LayoutPaneCtrl::isAnimStopped(u32 layer) const {
+    return mAnmPlayerArray[layer]->isStop();
 }
 
-J3DFrameCtrl* LayoutPaneCtrl::getFrameCtrl(u32 animLayer) const {
-    return const_cast< J3DFrameCtrl* >(&mFrameCtrls[layerIndex(animLayer)]);
+// LayoutPaneCtrl::reflectFollowPos
+
+J3DFrameCtrl* LayoutPaneCtrl::getFrameCtrl(u32 layer) const {
+    return &mAnmPlayerArray[layer]->mFrameCtrl;
 }
 
-void LayoutPaneCtrl::recalcChildGlobalMtx(void*) {
-}
-
-void LayoutPaneCtrl::setFrame(f32 frame, u32 animLayer) {
-    const auto layer = layerIndex(animLayer);
-    mFrameCtrls[layer].mFrame = frame;
-    syncLayoutFrame(layer);
-}
-
-void LayoutPaneCtrl::setRate(f32 rate, u32 animLayer) {
-    const auto layer = layerIndex(animLayer);
-    mFrameCtrls[layer].mRate = rate;
-    mStopped[layer] = rate == 0.0F;
-    if (mHost != nullptr) {
-        mHost->setPaneAnimRate(mPaneName.c_str(), rate, layer);
-    }
-}
-
-f32 LayoutPaneCtrl::getFrame(u32 animLayer) const {
-    return mFrameCtrls[layerIndex(animLayer)].mFrame;
-}
-
-std::string_view LayoutPaneCtrl::paneName() const {
-    return mPaneName;
-}
-
-u32 LayoutPaneCtrl::animLayerCount() const {
-    return static_cast< u32 >(mFrameCtrls.size());
-}
-
-#ifndef NDEBUG
-std::vector< LayoutPaneControlAnimationDebugState > LayoutPaneCtrl::debugAnimations() const {
-    auto out = std::vector< LayoutPaneControlAnimationDebugState >{};
-    out.reserve(mFrameCtrls.size());
-    for (auto layer = u32{}; layer < mFrameCtrls.size(); ++layer) {
-        const auto& ctrl = mFrameCtrls[layer];
-        out.push_back(LayoutPaneControlAnimationDebugState{
-            .layer_index = layer,
-            .name = mAnimNames[layer],
-            .frame = ctrl.mFrame,
-            .end_frame = static_cast< f32 >(ctrl.mEnd),
-            .rate = ctrl.mRate,
-            .stopped = mStopped[layer],
-            .looping = ctrl.mLoop != 0,
-        });
-    }
-    return out;
-}
-#endif
-
-u32 LayoutPaneCtrl::layerIndex(u32 animLayer) const {
-    return std::min< u32 >(animLayer, static_cast< u32 >(mFrameCtrls.size() - 1U));
-}
-
-void LayoutPaneCtrl::syncLayoutFrame(u32 animLayer) {
-    if (mHost != nullptr) {
-        mHost->setPaneAnimFrame(mPaneName.c_str(), mFrameCtrls[layerIndex(animLayer)].mFrame, layerIndex(animLayer));
-    }
-}
+// LayoutPaneCtrl::recalcChildGlobalMtx

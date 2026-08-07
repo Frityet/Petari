@@ -69,7 +69,6 @@ namespace smgpc::app {
         di::SingletonService<smgpc::runtime::GameLayoutService>,
         di::SingletonService<smgpc::runtime::RumbleService>,
         di::SingletonService<smgpc::runtime::SequenceRequestService>,
-        di::SingletonService<smgpc::runtime::SysConfigService>,
         di::SingletonService<smgpc::runtime::SaveDataService>,
         di::SingletonService<smgpc::runtime::NandFileSystemService>,
         di::SingletonService<smgpc::runtime::MessageService>,

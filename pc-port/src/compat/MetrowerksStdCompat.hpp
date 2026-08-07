@@ -1,5 +1,11 @@
 #pragma once
 
+class SaveDataHandleSequence;
+
+namespace smgpc::game {
+[[noreturn]] SaveDataHandleSequence& save_data_handle_sequence();
+}
+
 #include <revolution/types.h>
 
 #include <cfloat>

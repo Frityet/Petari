@@ -17,7 +17,7 @@ namespace smgpc::runtime {
     struct RflMiiEntry {
         s32 index = 0;
         RFLDataSource source = RFLDataSource_Official;
-        bool available = true;
+        bool available = false;
         std::string name;
         std::string creator;
         RFLCreateID create_id{};
@@ -25,18 +25,17 @@ namespace smgpc::runtime {
         u32 bmonth = 0U;
         u32 bday = 0U;
         u32 color = 0U;
-        bool favorite = true;
-        u32 height = 64U;
-        u32 build = 64U;
-        GXColor skin_color{255U, 224U, 189U, 255U};
+        bool favorite = false;
+        u32 height = 0U;
+        u32 build = 0U;
+        GXColor skin_color{};
     };
 
     struct RflDbStatus {
         bool nand_bound = false;
         bool db_present = false;
-        bool fallback_used = false;
         bool async_pending = false;
-        bool resource_initialized = true;
+        bool resource_initialized = false;
         bool deluxe_textures = false;
         std::size_t byte_count = 0U;
         std::size_t entry_count = 0U;
@@ -49,7 +48,6 @@ namespace smgpc::runtime {
         LoadBegin,
         LoadComplete,
         LoadFailed,
-        Persist,
         AdditionalInfo,
         SearchOfficial,
         CheckAvailable,
@@ -67,11 +65,10 @@ namespace smgpc::runtime {
         std::string path;
         RFLDataSource source = RFLDataSource_Official;
         s32 index = -1;
-        RFLErrcode result = RFLErrcode_Success;
+        RFLErrcode result = RFLErrcode_Unknown;
         std::size_t byte_count = 0U;
         std::size_t entry_count = 0U;
         bool db_present = false;
-        bool fallback_used = false;
         bool async_pending = false;
         bool texture_available = false;
         u16 width = 0U;
@@ -111,8 +108,8 @@ namespace smgpc::runtime {
     struct RflMiiSelectSpecialIcon {
         s32 id = 0;
         std::string name;
-        bool valid = true;
-        bool texture_available = true;
+        bool valid = false;
+        bool texture_available = false;
     };
 
     struct RflMiiSelectIcon {
@@ -142,14 +139,13 @@ namespace smgpc::runtime {
 
     class RflService final {
     public:
-        RflService();
         explicit RflService(NandFileSystemService &nand);
 
         void begin_frame(std::uint64_t frame_index);
         void set_nand(NandFileSystemService &nand);
         void set_initialized(bool initialized);
         void set_error(bool error);
-        [[nodiscard]] std::size_t work_size(bool deluxe_textures) const;
+        [[nodiscard]] static std::size_t work_size(bool deluxe_textures);
         [[nodiscard]] RFLErrcode init_resources(void *work_buffer, const void *resource_buffer, std::size_t resource_size, bool deluxe_textures,
                                                 bool async);
         void exit();
@@ -158,12 +154,6 @@ namespace smgpc::runtime {
         [[nodiscard]] s32 last_reason() const;
         void request_async_load(std::uint64_t delay_frames = 1U);
         void clear_for_reload();
-        void set_miis(std::vector<RflMiiEntry> miis);
-        void add_or_replace_mii(RflMiiEntry mii);
-        void persist_to_nand();
-
-        [[nodiscard]] std::vector<std::uint8_t> serialize_miis() const;
-        [[nodiscard]] bool load_from_bytes(std::span<const std::uint8_t> bytes);
 
         [[nodiscard]] bool is_initialized() const;
         [[nodiscard]] bool has_error() const;
@@ -173,7 +163,7 @@ namespace smgpc::runtime {
         [[nodiscard]] RFLErrcode additional_info(RFLAdditionalInfo &info, RFLDataSource source, const RFLMiddleDB *db, u16 index) const;
         [[nodiscard]] bool search_official_data(const RFLCreateID &id, u16 &index) const;
         [[nodiscard]] bool is_available_official_data(u16 index) const;
-        [[nodiscard]] std::size_t model_buffer_size(RFLResolution resolution, u32 expression_flags) const;
+        [[nodiscard]] static std::size_t model_buffer_size(RFLResolution resolution, u32 expression_flags);
         [[nodiscard]] RFLErrcode init_char_model(RFLCharModel &model, RFLDataSource source, const RFLMiddleDB *db, u16 index, void *work,
                                                  RFLResolution resolution, u32 expression_flags) const;
         void set_model_expression(RFLCharModel &model, RFLExpression expression) const;
@@ -190,23 +180,21 @@ namespace smgpc::runtime {
 
     private:
         void ensure_loaded() const;
-        void rebuild_valid_miis() const;
-        void replace_cache(std::vector<RflMiiEntry> miis, RflDbStatus status, bool manual_override) const;
+        void replace_cache(RflDbStatus status) const;
         void push_trace(RflOperationTrace trace) const;
         [[nodiscard]] const RflMiiEntry *find_entry(RFLDataSource source, u16 index) const;
-        [[nodiscard]] static std::vector<RflMiiEntry> fallback_miis();
 
         NandFileSystemService *_nand = nullptr;
         bool _initialized = true;
         bool _forced_error = false;
-        bool _resource_initialized = true;
+        bool _resource_initialized = false;
+        bool _resource_init_pending = false;
         bool _deluxe_textures = false;
         s32 _last_reason = 0;
         bool _async_pending = false;
         std::uint64_t _frame_index = 0U;
         std::uint64_t _async_complete_frame = 0U;
         mutable bool _cache_loaded = false;
-        mutable bool _manual_override = false;
         mutable RflDbStatus _status;
         mutable std::vector<RflMiiEntry> _miis;
         mutable std::vector<RflMiiEntry> _valid_miis;

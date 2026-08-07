@@ -3,20 +3,21 @@
 #include "Game/System/NerveExecutor.hpp"
 
 class GameDataHolder;
-class SaveIcon;
+class NANDErrorSequence;
 class SaveDataHandler;
+class SaveIcon;
 class SysConfigFile;
 class SysInfoWindow;
 class UserFile;
 
 namespace MR {
     class FunctorBase;
-}
+};  // namespace MR
 
 class SaveDataHandleSequence : public NerveExecutor {
 public:
+    /// @brief Creates a new `SaveDataHandleSequence`.
     SaveDataHandleSequence();
-    ~SaveDataHandleSequence() override;
 
     void initAfterResourceLoaded();
     void registerFunctorOnSaveSuccess(const MR::FunctorBase&);
@@ -24,48 +25,62 @@ public:
     void update();
     void draw() const;
     void startPreLoad();
-    void startCreateUserFile(int index);
-    void startDeleteUserFile(int index);
-    void startSave(bool isConfirmRemind, bool isSaveAndQuitMsg);
-    void startSaveBackup(bool isConfirmRemind, bool isSaveAndQuitMsg);
+    void startCreateUserFile(int);
+    void startDeleteUserFile(int);
+    void startSave(bool, bool);
+    void startSaveBackup(bool, bool);
     void startSaveAll();
     void startSaveTotalMailSize();
-    void startLoad(int userFileIndex, bool isPlayerMario);
-    void storeMiiOrIconId(int userFileIndex, const void* pMiiId, const u32* pIconId);
-    void storeCopyUserFile(int indexDst, int indexSrc);
-    bool tryNANDErrorSequence(s32 code);
-    [[nodiscard]] bool isActive() const;
-    [[nodiscard]] bool isPermitToReset() const;
+    void startLoad(int, bool);
+    void storeMiiOrIconId(int, const void*, const u32*);
+    void storeCopyUserFile(int, int);
+    bool tryNANDErrorSequence(s32);
+    bool isActive() const;
+    bool isPermitToReset() const;
     void prepareReset();
-    [[nodiscard]] bool isPreparedReset() const;
+    bool isPreparedReset() const;
     void restoreFromReset();
-    [[nodiscard]] bool isInitializedGameDataHolder() const;
-    void restoreUserFile(UserFile* pUserFile, int index);
-    void restoreUserFile(UserFile* pUserFile, int index, bool isPlayerMario);
+    bool isInitializedGameDataHolder() const;
+    void restoreUserFile(UserFile*, int);
+    void restoreUserFile(UserFile*, int, bool);
     void backupCurrentUserFile();
     void exeNoOperation();
-    void exeProcessing();
+    void exeCheckEnableToCreate();
     void exeSaveConfirm();
     void exeSave();
     void exeSaveWindowDisappear();
+    void exeSaveDoneKeyWait();
     void exeSaveAllWithoutKeyWait();
     void exeSaveAllWithoutKeyWaitDisappear();
     void exeSaveAllWithoutWindow();
     void exePreLoad();
     void exePreLoadDone();
     void exeNoSaveConfirmRemind();
-    [[nodiscard]] GameDataHolder* getHolder();
-    [[nodiscard]] SysConfigFile* getSysConfigFile();
-    [[nodiscard]] UserFile* getCurrentUserFile();
-    [[nodiscard]] UserFile* getBackupUserFile();
-    void restoreUserFileConfigData(UserFile* pUserFile, int index);
-    void restoreUserFileGameData(UserFile* pUserFile, int index, bool isPlayerMario);
-    void restoreSysConfigFile(SysConfigFile* pSysConfigFile);
+    void exeErrorHandling();
+    GameDataHolder* getHolder();
+    SysConfigFile* getSysConfigFile();
+    UserFile* getCurrentUserFile();
+    UserFile* getBackupUserFile();
+    void restoreUserFileConfigData(UserFile*, int);
+    void restoreUserFileGameData(UserFile*, int, bool);
+    void restoreSysConfigFile(SysConfigFile*);
+    bool trySave();
+    bool trySaveWindowDisappear(bool*, const Nerve*);
+    bool trySaveWithoutWindow(bool*, const Nerve*);
+    bool tryConfirm(const char*, bool*);
+    bool tryProcessDoneKeyWait(const char*);
+    bool tryNoSave();
+    bool isEnablePointer() const;
+    bool executeSaveFinish(bool*, const Nerve*);
+    void syncNoSaveFlagsFromErrorSequence();
 
     /* 0x08 */ SysConfigFile* mSysConfigFile;
     /* 0x0C */ UserFile* mCurrentUserFile;
     /* 0x10 */ UserFile* mBackupUserFile;
     /* 0x14 */ SaveDataHandler* mSaveDataHandler;
+    /* 0x18 */ NANDErrorSequence* mNANDErrorSequence;
+    /* 0x1C */ SysInfoWindow* mSysInfoWindowConfirm;
+    /* 0x20 */ SysInfoWindow* mSysInfoWindowSave;
     /* 0x24 */ s32 _24;
     /* 0x28 */ bool mIsConfirmRemind;
     /* 0x29 */ bool mIsSaveAndQuitMsg;
@@ -73,24 +88,9 @@ public:
     /* 0x2B */ bool _2B;
     /* 0x2C */ bool _2C;
     /* 0x30 */ UserFile* mWorkUserFile;
-
-private:
-    void startInstantSequence();
-    void completeSequenceSuccess();
-    void storeSysConfigToService() const;
-    [[nodiscard]] bool trySave();
-    [[nodiscard]] bool trySaveWindowDisappear(bool* pIsErr);
-    [[nodiscard]] bool trySaveWithoutWindow(bool* pIsErr);
-    [[nodiscard]] bool tryConfirm(const char* pSystemMessageId, bool* pIsSelectedYes);
-    [[nodiscard]] bool tryProcessDoneKeyWait(const char* pSystemMessageId);
-    [[nodiscard]] bool executeSaveFinish(bool* pIsErr);
-
-    bool mIsActive = false;
-    SysInfoWindow* mSysInfoWindowConfirm = nullptr;
-    SysInfoWindow* mSysInfoWindowSave = nullptr;
-    SaveIcon* mSaveIcon = nullptr;
+    /* 0x34 */ const Nerve* mNerveForError;
+    /* 0x38 */ u8* mTempBuffer;
+    /* 0x3C */ MR::FunctorBase* mOnSaveSuccessFunc;
+    /* 0x40 */ MR::FunctorBase* mJustBeforeSaveFunc;
+    /* 0x44 */ SaveIcon* mSaveIcon;
 };
-
-namespace smgpc::game {
-    SaveDataHandleSequence& save_data_handle_sequence();
-}

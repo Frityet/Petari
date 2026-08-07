@@ -13,6 +13,7 @@
 #include "DumpJson.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "TraceStore.hpp"
+#include "compat/GameActorSensorCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace smgpc::runtime {
@@ -102,8 +103,20 @@ namespace smgpc::runtime {
 
         [[nodiscard]] const char *camera_shake_request_kind_name(CameraSystemService::ShakeRequestKind kind) {
             switch (kind) {
+            case CameraSystemService::ShakeRequestKind::VeryWeak:
+                return "VeryWeak";
+            case CameraSystemService::ShakeRequestKind::Weak:
+                return "Weak";
+            case CameraSystemService::ShakeRequestKind::NormalWeak:
+                return "NormalWeak";
             case CameraSystemService::ShakeRequestKind::Normal:
                 return "Normal";
+            case CameraSystemService::ShakeRequestKind::NormalStrong:
+                return "NormalStrong";
+            case CameraSystemService::ShakeRequestKind::Strong:
+                return "Strong";
+            case CameraSystemService::ShakeRequestKind::VeryStrong:
+                return "VeryStrong";
             }
 
             return "Unknown";
@@ -111,12 +124,8 @@ namespace smgpc::runtime {
 
         [[nodiscard]] const char *rumble_request_kind_name(RumbleRequestKind kind) {
             switch (kind) {
-            case RumbleRequestKind::Strong:
-                return "Strong";
-            case RumbleRequestKind::Middle:
-                return "Middle";
-            case RumbleRequestKind::Weak:
-                return "Weak";
+            case RumbleRequestKind::Named:
+                return "Named";
             }
 
             return "Unknown";
@@ -226,10 +235,6 @@ namespace smgpc::runtime {
                 return "ConstantBackdrop";
             case smgpc::render::J3dRendererPacketMode::ConstantMaterial:
                 return "ConstantMaterial";
-            case smgpc::render::J3dRendererPacketMode::ComposedMaterial:
-                return "ComposedMaterial";
-            case smgpc::render::J3dRendererPacketMode::CpuTevPerVertex:
-                return "CpuTevPerVertex";
             case smgpc::render::J3dRendererPacketMode::ShaderGxTev:
                 return "ShaderGxTev";
             case smgpc::render::J3dRendererPacketMode::TexturePass:
@@ -355,6 +360,8 @@ namespace smgpc::runtime {
                 {"aspect_ratio", pose.aspect_ratio},
                 {"near_clip", pose.near_clip},
                 {"far_clip", pose.far_clip},
+                {"projection_offset_x", pose.projection_offset_x},
+                {"projection_offset_y", pose.projection_offset_y},
             };
         }
 
@@ -676,7 +683,7 @@ namespace smgpc::runtime {
                 {"index", index},
                 {"sequence", entry.sequence},
                 {"message", entry.message},
-                {"message_name", MR::getActorMessageName(entry.message)},
+                {"message_name", smgpc::compat::actor_message_name(entry.message)},
                 {"target_name", entry.target_name},
                 {"target_kind", entry_kind_name(entry.target_kind)},
                 {"target_movement_type", entry.target_movement_type},
@@ -707,15 +714,19 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json layout_animation_json(const SceneLayoutAnimationDebugState &animation) {
-            return Json {
+            auto out = Json {
                 {"layer_index", animation.layer_index},
+                {"active", animation.active},
                 {"name", animation.name},
-                {"frame", animation.frame},
-                {"end_frame", animation.end_frame},
-                {"rate", animation.rate},
-                {"stopped", animation.stopped},
-                {"looping", animation.looping},
             };
+            if (animation.active) {
+                out["frame"] = animation.frame;
+                out["end_frame"] = animation.end_frame;
+                out["rate"] = animation.rate;
+                out["stopped"] = animation.stopped;
+                out["looping"] = animation.looping;
+            }
+            return out;
         }
 
         [[nodiscard]] Json layout_animations_json(std::span<const SceneLayoutAnimationDebugState> animations) {
@@ -1320,6 +1331,7 @@ namespace smgpc::runtime {
                 out.push_back(Json {
                     {"index", i},
                     {"kind", rumble_request_kind_name(event.kind)},
+                    {"pattern_name", event.pattern_name},
                     {"channel", event.channel},
                     {"frame_index", event.frame_index},
                 });
@@ -1400,8 +1412,6 @@ namespace smgpc::runtime {
                 return "load_complete";
             case RflOperationKind::LoadFailed:
                 return "load_failed";
-            case RflOperationKind::Persist:
-                return "persist";
             case RflOperationKind::AdditionalInfo:
                 return "additional_info";
             case RflOperationKind::SearchOfficial:
@@ -1439,7 +1449,6 @@ namespace smgpc::runtime {
                     {"byte_count", entry.byte_count},
                     {"entry_count", entry.entry_count},
                     {"db_present", entry.db_present},
-                    {"fallback_used", entry.fallback_used},
                     {"async_pending", entry.async_pending},
                     {"texture_available", entry.texture_available},
                     {"width", entry.width},
@@ -1460,7 +1469,6 @@ namespace smgpc::runtime {
             return Json {
                 {"nand_bound", status.nand_bound},
                 {"db_present", status.db_present},
-                {"fallback_used", status.fallback_used},
                 {"async_pending", status.async_pending},
                 {"resource_initialized", status.resource_initialized},
                 {"deluxe_textures", status.deluxe_textures},
@@ -1470,34 +1478,6 @@ namespace smgpc::runtime {
                 {"last_error", static_cast<int>(status.last_error)},
                 {"last_reason", status.last_reason},
             };
-        }
-
-        [[nodiscard]] Json save_slot_json(const SaveDataService::SlotState &slot) {
-            return Json {
-                {"slot_index", slot.slot_index},
-                {"created", slot.created},
-                {"game_data_corrupted", slot.game_data_corrupted},
-                {"config_data_corrupted", slot.config_data_corrupted},
-                {"last_loaded_mario", slot.last_loaded_mario},
-                {"power_star_num", slot.power_star_num},
-                {"star_piece_num", slot.star_piece_num},
-                {"player_miss_num", slot.player_miss_num},
-                {"has_mii_id", slot.has_mii_id},
-                {"rfl_mii_index", slot.rfl_mii_index.has_value() ? Json(*slot.rfl_mii_index) : Json(nullptr)},
-                {"icon_id", slot.icon_id.has_value() ? Json(*slot.icon_id) : Json(nullptr)},
-                {"view_normal_ending", slot.view_normal_ending},
-                {"view_complete_ending", slot.view_complete_ending},
-                {"complete_ending_mario_and_luigi", slot.complete_ending_mario_and_luigi},
-                {"last_modified", slot.last_modified},
-            };
-        }
-
-        [[nodiscard]] Json save_slots_json(std::span<const SaveDataService::SlotState> slots) {
-            auto out = Json::array();
-            for (const auto &slot : slots) {
-                out.push_back(save_slot_json(slot));
-            }
-            return out;
         }
 
         [[nodiscard]] Json scene_lights_json(const SceneLightService &lights) {
@@ -1580,14 +1560,7 @@ namespace smgpc::runtime {
                      {"file_count", runtime.save_data().file_count()},
                      {"host_directory",
                       runtime.save_data().host_directory().has_value() ? Json(runtime.save_data().host_directory()->string()) : Json(nullptr)},
-                     {"sys_config",
-                      Json {
-                          {"time_announced", runtime.save_data().sys_config_time_announced()},
-                          {"time_sent", runtime.save_data().sys_config_time_sent()},
-                          {"sent_bytes", runtime.save_data().sys_config_sent_bytes()},
-                      }},
-                     {"slot_count", runtime.save_data().slot_states().size()},
-                     {"slots", save_slots_json(runtime.save_data().slot_states())},
+                     {"valid_game_data_container", runtime.save_data().has_valid_game_data_container()},
                  }},
                 {"scene_lights",
                  Json {
@@ -1613,7 +1586,6 @@ namespace smgpc::runtime {
                      {"active_programmable_camera",
                       runtime.camera_system().active_programmable_camera_name().has_value() ? Json(std::string(*runtime.camera_system().active_programmable_camera_name())) : Json(nullptr)},
                      {"reset_camera_man_count", runtime.camera_system().reset_camera_man_count()},
-                     {"normal_shake_request_count", runtime.camera_system().normal_shake_request_count()},
                      {"camera_director_pause_count", runtime.camera_system().camera_director_pause_count()},
                      {"programmable_camera_declare_count", runtime.camera_system().programmable_camera_declare_count()},
                      {"programmable_camera_start_count", runtime.camera_system().programmable_camera_start_count()},
@@ -2149,7 +2121,6 @@ namespace smgpc::runtime {
                 {"pass_order", state.pass_order},
                 {"packet_mode", j3d_packet_mode_name(state.packet_mode)},
                 {"packet_mode_reason", state.packet_mode_reason},
-                {"packet_mode_fallback", state.packet_mode_fallback},
                 {"material_pass_count", state.material_pass_count},
                 {"shader_texture_stage_count", state.shader_texture_stage_count},
                 {"color_channel_count", state.color_channel_count},
@@ -2216,6 +2187,11 @@ namespace smgpc::runtime {
                 {"btk_normalized_frame", state.btk_normalized_frame},
                 {"btk_frame_max", state.btk_frame_max},
                 {"btk_material_count", state.btk_material_count},
+                {"btp_active", state.btp_active},
+                {"btp_frame", state.btp_frame},
+                {"btp_normalized_frame", state.btp_normalized_frame},
+                {"btp_frame_max", state.btp_frame_max},
+                {"btp_material_count", state.btp_material_count},
             };
         }
 

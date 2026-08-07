@@ -2,7 +2,6 @@
 
 #include "runtime/RuntimeContext.hpp"
 
-#include <algorithm>
 #include <array>
 #include <cstring>
 
@@ -12,10 +11,6 @@ namespace {
     [[nodiscard]] smgpc::runtime::RuntimeContext *active_runtime() {
         return smgpc::runtime::RuntimeContext::try_instance();
     }
-
-    [[nodiscard]] smgpc::runtime::RflService fallback_rfl_service() {
-        return smgpc::runtime::RflService();
-    }
 }  // namespace
 
 extern "C" u32 RFLGetWorkSize(BOOL deluxeTex) {
@@ -23,22 +18,21 @@ extern "C" u32 RFLGetWorkSize(BOOL deluxeTex) {
         return static_cast<u32>(runtime->rfl().work_size(deluxeTex != FALSE));
     }
 
-    auto rfl = fallback_rfl_service();
-    return static_cast<u32>(rfl.work_size(deluxeTex != FALSE));
+    return static_cast<u32>(smgpc::runtime::RflService::work_size(deluxeTex != FALSE));
 }
 
 extern "C" RFLErrcode RFLInitResAsync(void *workBuffer, void *resBuffer, u32 resSize, BOOL deluxeTex) {
     if (auto *runtime = active_runtime()) {
         return runtime->rfl().init_resources(workBuffer, resBuffer, resSize, deluxeTex != FALSE, true);
     }
-    return workBuffer != nullptr && resBuffer != nullptr && resSize != 0U ? RFLErrcode_Success : RFLErrcode_WrongParam;
+    return RFLErrcode_NotAvailable;
 }
 
 extern "C" RFLErrcode RFLInitRes(void *workBuffer, void *resBuffer, u32 resSize, BOOL deluxeTex) {
     if (auto *runtime = active_runtime()) {
         return runtime->rfl().init_resources(workBuffer, resBuffer, resSize, deluxeTex != FALSE, false);
     }
-    return workBuffer != nullptr && resBuffer != nullptr && resSize != 0U ? RFLErrcode_Success : RFLErrcode_WrongParam;
+    return RFLErrcode_NotAvailable;
 }
 
 extern "C" void RFLExit(void) {
@@ -51,14 +45,14 @@ extern "C" BOOL RFLAvailable(void) {
     if (auto *runtime = active_runtime()) {
         return runtime->rfl().available() ? TRUE : FALSE;
     }
-    return TRUE;
+    return FALSE;
 }
 
 extern "C" RFLErrcode RFLGetAsyncStatus(void) {
     if (auto *runtime = active_runtime()) {
         return runtime->rfl().async_status();
     }
-    return RFLErrcode_Success;
+    return RFLErrcode_NotAvailable;
 }
 
 extern "C" s32 RFLGetLastReason(void) {
@@ -72,7 +66,7 @@ extern "C" RFLErrcode RFLWaitAsync(void) {
     if (auto *runtime = active_runtime()) {
         return runtime->rfl().async_status();
     }
-    return RFLErrcode_Success;
+    return RFLErrcode_NotAvailable;
 }
 
 extern "C" RFLErrcode RFLGetAdditionalInfo(RFLAdditionalInfo *info, RFLDataSource source, RFLMiddleDB *db, u16 index) {
@@ -110,8 +104,7 @@ extern "C" u32 RFLGetModelBufferSize(RFLResolution resolution, u32 expressionFla
         return static_cast<u32>(runtime->rfl().model_buffer_size(resolution, expressionFlags));
     }
 
-    auto rfl = fallback_rfl_service();
-    return static_cast<u32>(rfl.model_buffer_size(resolution, expressionFlags));
+    return static_cast<u32>(smgpc::runtime::RflService::model_buffer_size(resolution, expressionFlags));
 }
 
 extern "C" RFLErrcode RFLInitCharModel(RFLCharModel *model, RFLDataSource source, RFLMiddleDB *db, u16 index, void *work,
@@ -126,10 +119,8 @@ extern "C" RFLErrcode RFLInitCharModel(RFLCharModel *model, RFLDataSource source
 }
 
 extern "C" void RFLSetMtx(RFLCharModel *model, const Mtx matrix) {
-    if (model == nullptr || matrix == nullptr) {
-        return;
-    }
-    std::memcpy(model->matrix, matrix, sizeof(Mtx));
+    (void)model;
+    (void)matrix;
 }
 
 extern "C" void RFLSetExpression(RFLCharModel *model, RFLExpression expression) {
@@ -138,9 +129,7 @@ extern "C" void RFLSetExpression(RFLCharModel *model, RFLExpression expression) 
     }
     if (auto *runtime = active_runtime()) {
         runtime->rfl().set_model_expression(*model, expression);
-        return;
     }
-    model->expression = expression;
 }
 
 extern "C" RFLExpression RFLGetExpression(const RFLCharModel *model) {
@@ -149,21 +138,20 @@ extern "C" RFLExpression RFLGetExpression(const RFLCharModel *model) {
 
 GXColor RFLGetFavoriteColor(RFLFavoriteColor color) {
     constexpr auto colors = std::array<GXColor, RFLFavoriteColor_Max>{
-        GXColor {220U, 48U, 52U, 255U},
-        GXColor {238U, 126U, 42U, 255U},
-        GXColor {245U, 206U, 73U, 255U},
-        GXColor {159U, 204U, 62U, 255U},
-        GXColor {73U, 174U, 74U, 255U},
-        GXColor {47U, 102U, 201U, 255U},
-        GXColor {64U, 180U, 220U, 255U},
-        GXColor {235U, 111U, 168U, 255U},
-        GXColor {134U, 86U, 185U, 255U},
-        GXColor {122U, 82U, 54U, 255U},
-        GXColor {238U, 238U, 238U, 255U},
-        GXColor {48U, 48U, 52U, 255U},
+        GXColor {184U, 64U, 48U, 255U},
+        GXColor {240U, 120U, 40U, 255U},
+        GXColor {248U, 216U, 32U, 255U},
+        GXColor {128U, 200U, 40U, 255U},
+        GXColor {0U, 116U, 40U, 255U},
+        GXColor {32U, 72U, 152U, 255U},
+        GXColor {64U, 160U, 216U, 255U},
+        GXColor {232U, 96U, 120U, 255U},
+        GXColor {112U, 44U, 168U, 255U},
+        GXColor {72U, 56U, 24U, 255U},
+        GXColor {224U, 224U, 224U, 255U},
+        GXColor {24U, 24U, 20U, 255U},
     };
-    const auto index = std::min<std::size_t>(static_cast<std::size_t>(color), colors.size() - 1U);
-    return colors[index];
+    return colors[static_cast<std::size_t>(color)];
 }
 
 extern "C" void RFLLoadDrawSetting(const RFLDrawSetting *) {

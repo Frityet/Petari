@@ -23,10 +23,11 @@ namespace smgpc::runtime {
 
 namespace smgpc::compat {
     class DemoSceneRuntime;
-    class StagePlayerRuntime;
 }  // namespace smgpc::compat
 
 namespace smgpc::scene {
+
+    class SceneObjHolderBinding;
 
     namespace nameobj {
         class ObjectNameTable;
@@ -58,7 +59,6 @@ namespace smgpc::scene {
         void init_placement_roots();
         void construct_placement_roots(const StagePlacementObject *explicit_placement = nullptr);
         void init_stage_environment();
-        void init_stage_player();
         void trace_placement_object(const StagePlacementObject &placement) const;
         void init_roots_after_placement();
         void init_stage_start_camera();
@@ -71,6 +71,7 @@ namespace smgpc::scene {
         StageHostRequest _request;
         StageCollisionService _collision;
         StageGravityService _gravity;
+        std::unique_ptr<SceneObjHolderBinding> _scene_obj_holder_binding;
         std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime;
         std::vector<StagePlacementObject> _placements;
@@ -78,7 +79,6 @@ namespace smgpc::scene {
         std::vector<bool> _root_host_appear;
         std::optional<StageStartInfo> _stage_start_info;
         std::optional<smgpc::camera::ResolvedStageStartCamera> _stage_start_camera;
-        std::unique_ptr<smgpc::compat::StagePlayerRuntime> _stage_player;
     };
 
 }  // namespace smgpc::scene

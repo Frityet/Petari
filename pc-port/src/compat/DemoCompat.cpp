@@ -6,9 +6,9 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/DemoUtilCompat.hpp"
 
 #include <optional>
+#include <stdexcept>
 #include <string_view>
 
 namespace {
@@ -22,34 +22,32 @@ namespace {
                                                   const char *part_name,
                                                   bool puppetable,
                                                   bool require_inactive) {
-        if (demo_name == nullptr || (require_inactive && MR::isDemoActive())) {
+        auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
+            "Time-keep demo start");
+        if (starter == nullptr || demo_name == nullptr) {
+            throw std::invalid_argument(
+                "A time-keep demo requires a real starter and demo name.");
+        }
+        if (require_inactive && runtime.is_active()) {
             return false;
         }
 
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        if (runtime == nullptr) {
-            return false;
-        }
-
-        const auto result = runtime->start_demo(starter, demo_name,
-                                                optional_name(part_name));
+        const auto result = runtime.start_demo(
+            starter, demo_name, optional_name(part_name),
+            puppetable ? smgpc::compat::DemoPlayerMode::MarioPuppetable
+                       : smgpc::compat::DemoPlayerMode::Normal);
         if (!result.has_value() ||
             *result != smgpc::compat::DemoSheetStartResult::Started) {
             return false;
         }
-
-        smgpc::compat::activate_demo_state(starter, demo_name, puppetable);
         return true;
     }
 
     [[nodiscard]] bool start_registered_scene_time_keep_demo(
         LiveActor *starter, const char *part_name, bool puppetable) {
-        if (starter == nullptr || MR::isDemoActive()) {
-            return false;
-        }
-
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        if (runtime == nullptr) {
+        auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
+            "Registered time-keep demo start");
+        if (starter == nullptr || runtime.is_active()) {
             return false;
         }
 
@@ -57,17 +55,16 @@ namespace {
         // when its Player keeper parsed at least one row. The explicit Mario
         // overload forces the same path even for an empty Player table.
         puppetable = puppetable ||
-                     runtime->registered_demo_has_player_rows(starter);
+                     runtime.registered_demo_has_player_rows(starter);
 
-        const auto result = runtime->start_demo_registered(
-            starter, optional_name(part_name));
+        const auto result = runtime.start_demo_registered(
+            starter, optional_name(part_name),
+            puppetable ? smgpc::compat::DemoPlayerMode::MarioPuppetable
+                       : smgpc::compat::DemoPlayerMode::Normal);
         if (!result.has_value() ||
             *result != smgpc::compat::DemoSheetStartResult::Started) {
             return false;
         }
-
-        smgpc::compat::activate_demo_state(starter, runtime->active_demo_name(),
-                                           puppetable);
         return true;
     }
 
@@ -76,7 +73,6 @@ namespace {
 namespace smgpc::compat {
 
     void release_demo_runtime_state(const LiveActor *actor) {
-        release_active_demo_for_owner(actor);
         release_actor_from_all_demo_scenes(actor);
     }
 
@@ -97,66 +93,85 @@ namespace smgpc::compat {
 namespace MR {
 
     bool tryRegisterDemoCast(LiveActor *pActor, const JMapInfoIter &rIter) {
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && runtime->try_register_cast(pActor, rIter);
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo-cast registration")
+            .try_register_cast(pActor, rIter);
     }
 
     bool tryRegisterDemoCast(LiveActor *pActor, const char *pName,
                              const JMapInfoIter &rIter) {
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && pName != nullptr &&
-               runtime->try_register_cast(pActor, pName, rIter);
+        if (pName == nullptr) {
+            throw std::invalid_argument(
+                "Named demo-cast registration requires a real demo name.");
+        }
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Named demo-cast registration")
+            .try_register_cast(pActor, pName, rIter);
     }
 
     void registerDemoCast(LiveActor *pActor, const char *pName,
                           const JMapInfoIter &rIter) {
-        (void)tryRegisterDemoCast(pActor, pName, rIter);
+        if (!tryRegisterDemoCast(pActor, pName, rIter)) {
+            throw std::logic_error(
+                "Required demo-cast registration has no matching real group.");
+        }
     }
 
     bool tryRegisterDemoActionFunctor(const LiveActor *pActor,
                                       const MR::FunctorBase &rFunctor,
                                       const char *pActionName) {
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && runtime->try_register_action_functor(
-                                         pActor, rFunctor, optional_name(pActionName));
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo functor registration")
+            .try_register_action_functor(pActor, rFunctor,
+                                         optional_name(pActionName));
     }
 
     bool tryRegisterDemoActionFunctorDirect(const LiveActor *pActor,
                                             const MR::FunctorBase &rFunctor,
                                             const char *pDemoName,
                                             const char *pActionName) {
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && pDemoName != nullptr &&
-               runtime->try_register_action_functor(
-                   pActor, pDemoName, rFunctor, optional_name(pActionName));
+        if (pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "Direct demo functor registration requires a real demo name.");
+        }
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Direct demo functor registration")
+            .try_register_action_functor(
+                pActor, pDemoName, rFunctor, optional_name(pActionName));
     }
 
     void registerDemoActionFunctorDirect(const LiveActor *pActor,
                                          const MR::FunctorBase &rFunctor,
                                          const char *pDemoName,
                                          const char *pActionName) {
-        (void)tryRegisterDemoActionFunctorDirect(pActor, rFunctor, pDemoName, pActionName);
+        if (!tryRegisterDemoActionFunctorDirect(pActor, rFunctor, pDemoName,
+                                                pActionName)) {
+            throw std::logic_error(
+                "Required direct demo functor registration has no matching real Action row.");
+        }
     }
 
     bool tryRegisterDemoActionNerve(const LiveActor *pActor, const Nerve *pNerve,
                                     const char *pActionName) {
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && runtime->try_register_action_nerve(
-                                         pActor, pNerve, optional_name(pActionName));
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo nerve registration")
+            .try_register_action_nerve(pActor, pNerve,
+                                       optional_name(pActionName));
     }
 
     void registerDemoActionNerve(const LiveActor *pActor, const Nerve *pNerve,
                                  const char *pActionName) {
-        (void)tryRegisterDemoActionNerve(pActor, pNerve, pActionName);
+        if (!tryRegisterDemoActionNerve(pActor, pNerve, pActionName)) {
+            throw std::logic_error(
+                "Required demo nerve registration has no matching real Action row.");
+        }
     }
 
     bool isDemoCast(const LiveActor *pActor, const char *pDemoName) {
-        auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        if (runtime == nullptr) {
-            return false;
-        }
-        return pDemoName != nullptr ? runtime->has_cast(pActor, pDemoName) :
-                                      runtime->has_cast(pActor);
+        auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
+            "Demo-cast query");
+        return pDemoName != nullptr ? runtime.has_cast(pActor, pDemoName) :
+                                      runtime.has_cast(pActor);
     }
 
     bool tryStartDemoRegistered(LiveActor *pActor, const char *pPartName) {
@@ -188,57 +203,67 @@ namespace MR {
 
     void startTimeKeepDemo(NameObj *pObj, const char *pDemoName,
                            const char *pPartName) {
-        if (smgpc::compat::active_demo_scene_runtime() == nullptr) {
-            smgpc::compat::activate_demo_state(
-                pObj, pDemoName != nullptr ? pDemoName : "", false);
-            return;
+        if (!start_scene_time_keep_demo(pObj, pDemoName, pPartName, false,
+                                        false)) {
+            throw std::logic_error("Requested time-keep demo is unavailable.");
         }
-        (void)start_scene_time_keep_demo(pObj, pDemoName, pPartName, false,
-                                         false);
     }
 
     void startTimeKeepDemoMarioPuppetable(NameObj *pObj, const char *pDemoName,
                                           const char *pPartName) {
-        if (smgpc::compat::active_demo_scene_runtime() == nullptr) {
-            smgpc::compat::activate_demo_state(
-                pObj, pDemoName != nullptr ? pDemoName : "", true);
-            return;
+        if (!start_scene_time_keep_demo(pObj, pDemoName, pPartName, true,
+                                        false)) {
+            throw std::logic_error("Requested puppetable time-keep demo is unavailable.");
         }
-        (void)start_scene_time_keep_demo(pObj, pDemoName, pPartName, true,
-                                         false);
     }
 
     bool isDemoExist(const char *pDemoName) {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && pDemoName != nullptr &&
-               runtime->find_definition(pDemoName).has_value();
+        if (pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "A demo-existence query requires a real demo name.");
+        }
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo-existence query")
+            .find_definition(pDemoName)
+            .has_value();
     }
 
     bool isTimeKeepDemoActive() {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && runtime->is_time_keep_active();
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Time-keep demo active query")
+            .is_time_keep_active();
     }
 
     bool isDemoActiveRegistered(const LiveActor *pActor) {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && runtime->is_active_registered(pActor);
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Registered demo active query")
+            .is_active_registered(pActor);
     }
 
     bool isDemoPartExist(const LiveActor *pActor, const char *pPartName) {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && pPartName != nullptr &&
-               runtime->part_exists(pActor, pPartName);
+        if (pPartName == nullptr) {
+            throw std::invalid_argument(
+                "A demo-part existence query requires a real part name.");
+        }
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo-part existence query")
+            .part_exists(pActor, pPartName);
     }
 
     bool isDemoLastStep() {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && runtime->is_demo_last_step();
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo last-step query")
+            .is_demo_last_step();
     }
 
     bool isDemoPartActive(const char *pPartName) {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        return runtime != nullptr && pPartName != nullptr &&
-               runtime->is_part_active(pPartName);
+        if (pPartName == nullptr) {
+            throw std::invalid_argument(
+                "A demo-part active query requires a real part name.");
+        }
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo-part active query")
+            .is_part_active(pPartName);
     }
 
     bool isDemoPartStep(const char *pPartName, s32 step) {
@@ -263,50 +288,71 @@ namespace MR {
     }
 
     s32 getDemoPartTotalStep(const char *pPartName) {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        if (runtime == nullptr || pPartName == nullptr) {
-            return 0;
+        if (pPartName == nullptr) {
+            throw std::invalid_argument(
+                "A demo-part total-step query requires a real part name.");
         }
-        return runtime->part_total_step(pPartName).value_or(0);
+        const auto step = smgpc::compat::require_active_demo_scene_runtime(
+                              "Demo-part total-step query")
+                              .part_total_step(pPartName);
+        if (!step.has_value()) {
+            throw std::logic_error(
+                "The requested demo part has no real active Time/SubPart row.");
+        }
+        return *step;
     }
 
     s32 getDemoPartStep(const char *pPartName) {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        if (runtime == nullptr || pPartName == nullptr) {
-            return -1;
+        if (pPartName == nullptr) {
+            throw std::invalid_argument(
+                "A demo-part step query requires a real part name.");
         }
-        return runtime->part_step(pPartName).value_or(-1);
+        const auto step = smgpc::compat::require_active_demo_scene_runtime(
+                              "Demo-part step query")
+                              .part_step(pPartName);
+        if (!step.has_value()) {
+            throw std::logic_error(
+                "The requested demo part has no real active Time/SubPart row.");
+        }
+        return *step;
     }
 
     f32 calcDemoPartStepRate(const char *pPartName) {
         const auto total_step = getDemoPartTotalStep(pPartName);
-        return total_step != 0 ? static_cast<f32>(getDemoPartStep(pPartName)) / total_step : 0.0f;
+        return static_cast<f32>(getDemoPartStep(pPartName)) / total_step;
     }
 
     void pauseTimeKeepDemo(LiveActor *pActor) {
-        if (auto *runtime = smgpc::compat::active_demo_scene_runtime()) {
-            runtime->pause_time_keep(pActor);
-        }
+        smgpc::compat::require_active_demo_scene_runtime(
+            "Time-keep demo pause")
+            .pause_time_keep(pActor);
     }
 
     void resumeTimeKeepDemo(LiveActor *pActor) {
-        if (auto *runtime = smgpc::compat::active_demo_scene_runtime()) {
-            runtime->resume_time_keep(pActor);
-        }
+        smgpc::compat::require_active_demo_scene_runtime(
+            "Time-keep demo resume")
+            .resume_time_keep(pActor);
     }
 
     const char *getCurrentDemoPartNameMain(const char *pDemoName) {
-        const auto *runtime = smgpc::compat::active_demo_scene_runtime();
-        if (runtime == nullptr || pDemoName == nullptr) {
-            return nullptr;
+        if (pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "A current demo-part query requires a real demo name.");
         }
-        const auto part_name = runtime->current_main_part_name(pDemoName);
+        const auto part_name =
+            smgpc::compat::require_active_demo_scene_runtime(
+                "Current demo-part query")
+                .current_main_part_name(pDemoName);
         return part_name.has_value() ? part_name->data() : nullptr;
     }
 
     bool isDemoPartTalk(const char *pPartName) {
-        return pPartName != nullptr &&
-               std::string_view(pPartName).find("会話") != std::string_view::npos;
+        if (pPartName == nullptr) {
+            throw std::invalid_argument(
+                "A demo-part talk query requires a real part name.");
+        }
+        return std::string_view(pPartName).find("会話") !=
+               std::string_view::npos;
     }
 
     void timeKeepDemoFadeOut() {

@@ -652,6 +652,7 @@ namespace smgpc::scene {
         auto resolved_center = first.center;
         auto first_reaction = aggregate_reaction(first.contacts);
         resolved_center.add(first_reaction);
+        result.fix_reaction.add(first_reaction);
         result.contacts.insert(result.contacts.end(), first.contacts.begin(), first.contacts.end());
 
         // Binder performs one projected retry for the unconsumed movement.
@@ -676,7 +677,9 @@ namespace smgpc::scene {
                     const auto stored_count = std::min(remaining_capacity, second.contacts.size());
                     if (stored_count != 0U) {
                         second.contacts.resize(stored_count);
-                        resolved_center.add(aggregate_reaction(second.contacts));
+                        const auto second_reaction = aggregate_reaction(second.contacts);
+                        resolved_center.add(second_reaction);
+                        result.fix_reaction.add(second_reaction);
                         result.contacts.insert(result.contacts.end(), second.contacts.begin(), second.contacts.end());
                     }
                 }

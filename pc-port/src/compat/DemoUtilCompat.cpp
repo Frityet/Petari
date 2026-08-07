@@ -6,149 +6,92 @@
 #include "Game/Util/Functor.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/DemoUtilCompat.hpp"
-#include "compat/PlayerUtilCompat.hpp"
-#include "runtime/RuntimeContext.hpp"
 
-#include <optional>
+#include <stdexcept>
 #include <string>
+#include <string_view>
 
 namespace {
-    bool sIsDemoActive = false;
-    std::string sActiveDemoName;
-    const NameObj *sActiveDemoOwner = nullptr;
-    bool sPuppetableControlOwned = false;
-    const NameObj *sPuppetableControlOwner = nullptr;
-    bool sControlWasEnabledBeforePuppet = true;
-
-    void clear_active_demo_state() {
-        smgpc::compat::release_puppetable_demo_control(false);
-        sIsDemoActive = false;
-        sActiveDemoName.clear();
-        sActiveDemoOwner = nullptr;
+    [[noreturn]] void throw_programmable_demo_unavailable(
+        std::string_view operation) {
+        throw std::logic_error(
+            std::string(operation) +
+            " requires the real programmable DemoDirector movement/cinema-frame closure; "
+            "a DemoSheet executor is not a substitute.");
     }
 }  // namespace
 
 namespace smgpc::compat {
     void release_puppetable_demo_control(bool force_enable) {
-        auto *player = active_player_system_for_player_util();
-        if (player != nullptr && (force_enable || (sPuppetableControlOwned && sControlWasEnabledBeforePuppet))) {
-            player->enable_control(false);
-        }
-        sPuppetableControlOwned = false;
-        sPuppetableControlOwner = nullptr;
-        sControlWasEnabledBeforePuppet = true;
-    }
-
-    void activate_demo_state(const NameObj *owner, std::string_view demo_name,
-                             bool puppetable) {
-        if (sIsDemoActive &&
-            (sActiveDemoOwner != owner || sActiveDemoName != demo_name)) {
-            clear_active_demo_state();
-        }
-#ifndef NDEBUG
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_semantic_trace_event("demo", "demo_started",
-                                               "name=" + std::string(demo_name));
-        }
-#endif
-        sIsDemoActive = true;
-        sActiveDemoName = demo_name;
-        sActiveDemoOwner = owner;
-
-        if (puppetable && !sPuppetableControlOwned) {
-            if (auto *player = active_player_system_for_player_util()) {
-                sControlWasEnabledBeforePuppet = player->is_control_enabled();
-                player->disable_control();
-                sPuppetableControlOwned = true;
-                sPuppetableControlOwner = owner;
-            }
-        }
-    }
-
-    void finish_demo_state(const NameObj *owner, std::string_view demo_name) {
-        if (!sIsDemoActive || sActiveDemoOwner != owner ||
-            sActiveDemoName != demo_name) {
-            return;
-        }
-#ifndef NDEBUG
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_semantic_trace_event("demo", "demo_ended",
-                                               "name=" + std::string(demo_name));
-        }
-#endif
-        clear_active_demo_state();
-    }
-
-    void release_active_demo_for_owner(const LiveActor *owner) {
-        if (owner == nullptr || sActiveDemoOwner != static_cast<const NameObj *>(owner)) {
-            return;
-        }
-#ifndef NDEBUG
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_semantic_trace_event(
-                "demo", "demo_owner_released",
-                "name=" + sActiveDemoName + ";owner=" +
-                    std::string(owner->getName() != nullptr ? owner->getName() : ""));
-        }
-#endif
-        clear_active_demo_state();
+        require_active_demo_scene_runtime("Puppetable demo teardown")
+            .release_puppetable_control(force_enable);
     }
 }  // namespace smgpc::compat
 
 namespace MR {
     void registerDemoActionFunctor(const LiveActor *pActor, const MR::FunctorBase &rFunctor, const char *pActionName) {
-        static_cast<void>(MR::tryRegisterDemoActionFunctor(pActor, rFunctor, pActionName));
+        if (!MR::tryRegisterDemoActionFunctor(pActor, rFunctor, pActionName)) {
+            throw std::logic_error(
+                "Required demo functor registration has no matching real Action row.");
+        }
     }
 
     bool tryStartDemoWithoutCinemaFrame(LiveActor *pActor, const char *pDemoName) {
-        if (auto *runtime = smgpc::compat::active_demo_scene_runtime()) {
-            (void)runtime->stop_active_demo(nullptr, std::nullopt);
+        (void)smgpc::compat::require_active_demo_scene_runtime(
+            "Programmable demo start");
+        if (pActor == nullptr || pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "A programmable demo requires a real starter and demo name.");
         }
-        smgpc::compat::activate_demo_state(pActor, pDemoName != nullptr ? pDemoName : "",
-                                           false);
-        return true;
+        throw_programmable_demo_unavailable("MR::tryStartDemoWithoutCinemaFrame");
     }
 
     bool tryStartDemoMarioPuppetable(LiveActor *pActor, const char *pDemoName) {
-        if (auto *runtime = smgpc::compat::active_demo_scene_runtime()) {
-            (void)runtime->stop_active_demo(nullptr, std::nullopt);
+        (void)smgpc::compat::require_active_demo_scene_runtime(
+            "Programmable puppetable demo start");
+        if (pActor == nullptr || pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "A programmable puppetable demo requires a real starter and demo name.");
         }
-        smgpc::compat::activate_demo_state(pActor, pDemoName != nullptr ? pDemoName : "",
-                                           true);
-        return true;
+        throw_programmable_demo_unavailable("MR::tryStartDemoMarioPuppetable");
     }
 
     bool requestStartDemo(LiveActor *pActor, const char *pDemoName, const Nerve *pCanStartNerve, const Nerve *pCannotStartNerve) {
-        const auto started = tryStartDemoWithoutCinemaFrame(pActor, pDemoName);
-        if (pActor != nullptr) {
-            pActor->setNerve(started ? pCanStartNerve : pCannotStartNerve);
+        static_cast<void>(pCanStartNerve);
+        static_cast<void>(pCannotStartNerve);
+        (void)smgpc::compat::require_active_demo_scene_runtime(
+            "Programmable demo request");
+        if (pActor == nullptr || pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "A programmable demo request requires a real starter and demo name.");
         }
-        return started;
+        throw_programmable_demo_unavailable("MR::requestStartDemo");
     }
 
     void endDemo(NameObj *pOwner, const char *pDemoName) {
         static_cast<void>(pOwner);
         static_cast<void>(pDemoName);
-        if (auto *runtime = smgpc::compat::active_demo_scene_runtime()) {
-            (void)runtime->stop_active_demo(nullptr, std::nullopt);
+        auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
+            "Demo end");
+        if (!runtime.stop_active_demo(nullptr, std::nullopt)) {
+            throw std::logic_error(
+                "Cannot end a demo without a real active DemoDirector state.");
         }
-        if (!sIsDemoActive) {
-            return;
-        }
-#ifndef NDEBUG
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
-            runtime->emit_semantic_trace_event("demo", "demo_ended",
-                                               "name=" + sActiveDemoName);
-        }
-#endif
-        clear_active_demo_state();
     }
 
     bool isDemoActive() {
-        return sIsDemoActive;
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo active query")
+            .is_active();
     }
 
     bool isDemoActive(const char *pDemoName) {
-        return sIsDemoActive && pDemoName != nullptr && sActiveDemoName == pDemoName;
+        if (pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "A named demo-active query requires a real demo name.");
+        }
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Named demo active query")
+            .is_active(pDemoName);
     }
 }  // namespace MR

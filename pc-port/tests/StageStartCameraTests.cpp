@@ -236,6 +236,11 @@ namespace {
         const auto explicit_fovy = smgpc::camera::calculate_stage_camera_pose({}, chunk, target);
         require(explicit_fovy.has_value() && explicit_fovy->pose.fovy_degrees == 60.0F,
                 "flag.nofovy set should select the BCAM fovy despite its name");
+
+        auto invalid_target = target;
+        invalid_target.front = {};
+        require(!smgpc::camera::calculate_stage_camera_pose({}, chunk, invalid_target).has_value(),
+                "a degenerate target basis must remain unavailable instead of selecting a guessed direction");
     }
 
     void test_base_programmable_camera_priority_and_request_defaults() {
@@ -260,10 +265,8 @@ namespace {
         require(!camera.effective_camera_pose().has_value(), "clearing a stage should release its game camera pose");
 
         const auto host_request = smgpc::scene::StageHostRequest{};
-        const auto initial_request = smgpc::scene::SceneTransitionRequestService::make_initial_stage_request();
-        require(host_request.start_id == 0 && host_request.start_zone_id == 0 &&
-                    initial_request.start_id == 0 && initial_request.start_zone_id == 0,
-                "stage and story requests should preserve the original default start ID and root zone");
+        require(host_request.start_id == 0 && host_request.start_zone_id == 0,
+                "stage requests should preserve the original default start ID and root zone");
     }
 
     void test_optional_real_disc_heavensdoor_camera() {

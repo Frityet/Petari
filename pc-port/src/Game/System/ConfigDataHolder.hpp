@@ -1,46 +1,55 @@
 #pragma once
 
-#include <array>
-#include <optional>
+#include "Game/System/BinaryDataChunkHolder.hpp"
+#include <revolution/os.h>
 
-#include <revolution.h>
+class ConfigDataCreateChunk;
+class ConfigDataMii;
+class ConfigDataMisc;
 
 class ConfigDataHolder {
+    friend class UserFile;
+
 public:
     ConfigDataHolder();
 
-    void setIsCreated(bool isCreated);
-    [[nodiscard]] bool isCreated() const;
-    void setLastLoadedMario(bool lastLoadedMario);
-    [[nodiscard]] bool isLastLoadedMario() const;
+    void setIsCreated(bool);
+    bool isCreated() const;
+    void setLastLoadedMario(bool);
+    bool isLastLoadedMario() const;
     void onCompleteEndingMario();
     void onCompleteEndingLuigi();
-    [[nodiscard]] bool isOnCompleteEndingMario();
-    [[nodiscard]] bool isOnCompleteEndingLuigi();
+    bool isOnCompleteEndingMario();
+    bool isOnCompleteEndingLuigi();
     void updateLastModified();
-    [[nodiscard]] OSTime getLastModified() const;
-    void setMiiOrIconId(const void* pMiiId, const u32* pIconId);
-    [[nodiscard]] bool getMiiId(void* pMiiId) const;
-    [[nodiscard]] bool getIconId(u32* pIconId) const;
+    OSTime getLastModified() const;
+    void setMiiOrIconId(const void*, const u32*);
+    bool getMiiId(void*) const;
+    bool getIconId(u32*) const;
     void resetAllData();
-    s32 makeFileBinary(u8* pBuffer, u32 size);
-    bool loadFromFileBinary(const char* pName, const u8* pBuffer, u32 size);
-    void setMiiIndex(std::optional<s32> miiIndex);
-    [[nodiscard]] std::optional<s32> getMiiIndex() const;
+    s32 makeFileBinary(u8*, u32);
+    bool loadFromFileBinary(const char*, const u8*, u32);
 
 private:
-    void setName(const char* pName);
+    /* 0x00 */ BinaryDataChunkHolder* mChunkHolder;
+    /* 0x04 */ ConfigDataCreateChunk* mCreateChunk;
+    /* 0x08 */ ConfigDataMii* mMii;
+    /* 0x0C */ ConfigDataMisc* mMisc;
+    /* 0x10 */ char mName[16];
+};
 
-    friend class UserFile;
+class ConfigDataCreateChunk : public BinaryDataChunkBase {
+    friend class ConfigDataHolder;
 
-    bool mIsCreated = false;
-    bool mLastLoadedMario = true;
-    bool mCompleteEndingMario = false;
-    bool mCompleteEndingLuigi = false;
-    bool mUsesMii = false;
-    u32 mIconId = 1U;
-    std::optional<s32> mMiiIndex{};
-    std::array<u8, 16U> mMiiId{};
-    OSTime mLastModified = 0;
-    char mName[16]{};
+public:
+    ConfigDataCreateChunk();
+
+    virtual u32 makeHeaderHashCode() const;
+    virtual u32 getSignature() const;
+    virtual s32 serialize(u8*, u32) const;
+    virtual s32 deserialize(const u8*, u32);
+    virtual void initializeData();
+
+private:
+    /* 0x04 */ bool mIsCreated;
 };

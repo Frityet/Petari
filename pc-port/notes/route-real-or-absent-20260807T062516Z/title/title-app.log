@@ -1,0 +1,64 @@
+[src/app/Application.cpp:227][APP - INFO] Opened Aurora disc image /workspaces/pcport/RMGK01.iso
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Unknown
+[aurora:info:aurora::system_info] Memory: 0 MiB
+[aurora:info:aurora::system_info] Architecture: x86_64
+[aurora:info:aurora::system_info] OS: Unknown
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Vulkan
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Vulkan
+  Device: NVIDIA GeForce RTX 3080 (DiscreteGPU)
+  Driver: NVIDIA: 610.43.03 610.43.3.0
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 32768
+  maxTextureDimension2D: 32768
+  maxTextureDimension3D: 16384
+  maxTextureArrayLayers: 2048
+  maxDynamicStorageBuffersPerPipelineLayout: 16
+  maxStorageBuffersPerShaderStage: 16
+  minUniformBufferOffsetAlignment: 64
+  minStorageBufferOffsetAlignment: 16
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Immediate
+[aurora:info:aurora::gfx::texture_replacement] Indexed 0 texture replacements
+[aurora:info:aurora] Using framebuffer size 640x480 scale 1
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=画面キャプチャ;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=45)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=画面キャプチャ;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=46)
+[src/runtime/RuntimeContext.cpp:499][APP - INFO] Using SMG disc image through Aurora DVD
+[src/runtime/RuntimeContext.cpp:502][APP - INFO] Using SMG save files from /workspaces/pcport/pc-port/notes/route-real-or-absent-20260807T062516Z/title/save
+[src/runtime/RuntimeContext.cpp:510][APP - INFO] Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+[src/runtime/RuntimeContext.cpp:522][APP - INFO] Loaded 3327 particle names, 3327 particle resources, and 225 particle textures from /ParticleData/Effect.arc
+[src/runtime/RuntimeContext.cpp:532][APP - INFO] Loaded 18 debug WPAD button script spans
+[src/runtime/RuntimeContext.cpp:536][APP - INFO] Loaded 9 debug WPAD pointer script spans
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event runtime:runtime_context_created (disc=aurora-dvd)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=;current_stage=;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;phase=WaitingForRequest)
+[src/app/Application.cpp:245][APP - INFO] Running SMG on Aurora
+[src/app/Application.cpp:246][APP - INFO] Hold keyboard A+B or Enter+Backspace to satisfy Wii A+B title input
+[src/app/Application.cpp:248][APP - INFO] Freecam debug keys: toggle F9, move with WASD, up/down Space/LeftShift, mouse look
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event aurora_route_smoke:title (title screen before scripted A+B input)
+[src/app/Application.cpp:275][APP - INFO] Will exit after frame 150
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:stage_requested (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;requested_stage=FileSelect;scenario=1)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence:boot_stage_requested (scene=Game;stage=FileSelect;scenario=1)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence:title_activation_unavailable (reason=real MarioActor auto-rush binder event is not installed)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;phase=RequestQueued)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:scene_change_requested (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=0;next_scene=Game;next_stage=FileSelect;scenario=1;start_id=0;start_zone_id=0)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event scene_controller:scene_change_requested (next_scene=Game;next_stage=FileSelect;scenario=1;start_id=0;start_zone_id=0)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;phase=DestroyScene)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;phase=InitializeScene)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence:stage_host_started (stage host factory created FileSelect through scene lifecycle service)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:stage_host_started (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;host=FileSelect;stage=FileSelect)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=クリッピング指揮;kind=name_obj;movement=4;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=SwitchWatcherHolder;kind=name_obj;movement=27;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=オブジェスリープ管理;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=DemoDirector;kind=name_obj;movement=11;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event collision:stage_collision_registry_ready (stage=FileSelect;scenario=1;placement_rows=4;registration=explicit_collision_parts;meshes=0;triangles=0;rejected_triangles=0)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event gravity:stage_gravity_loaded (stage=FileSelect;scenario=1;placements=4;gravities=1;unsupported=0)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/objinfo;object=InvisibleWall10x10;factory=blocked;support_reason=retail_creator_not_linked;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;object_archive=/ObjectData/InvisibleWall10x10.arc)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/objinfo;object=FileSelector;factory=blocked;support_reason=retail_file_select_actor_runtime_unavailable;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;object_archive=)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/objinfo;object=SphereSelectorHandle;factory=blocked;support_reason=retail_creator_not_linked;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;object_archive=)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event placement:stage_object (stage=FileSelect;zone=FileSelect;zone_id=0;scenario=1;layer=common;table=jmp/placement/common/planetobjinfo;object=GlobalPlaneGravityInBox;factory=blocked;support_reason=retail_creator_not_linked;common_path_id=-1;rail_info_attached=false;rail_path_row=-1;rail_point_count=0;rail_first_point=none;object_archive=)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event placement:stage_placement_summary (stage=FileSelect;scenario=1;objects=4;created=0;ignored=0;blocked=4)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event player:stage_player_unavailable (stage=FileSelect;scenario=1;start_id=0;start_zone_id=0;start_layer=common;start_table=jmp/start/common/startinfo;start_row=0;reason=real_mario_actor_not_linked)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event camera:stage_start_camera_unavailable (stage=FileSelect;scenario=1;start_id=0;start_zone_id=0;status=unsupported_camera_type;detail=unsupported start camera type CAM_TYPE_FOLLOW;camera=absent)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_wipe=Open;draw_phase=;frame=1;phase=ReadyToStartScene)
+[src/runtime/RuntimeContext.cpp:1521][APP - INFO] SMG semantic event sequence_state:scene_controller_phase (current_scene=Game;next_scene=FileSelect;current_stage=FileSelect;scene_wipe=Open;system_

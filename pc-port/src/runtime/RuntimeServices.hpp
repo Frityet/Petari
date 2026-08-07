@@ -22,10 +22,9 @@
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/NandFileSystemService.hpp"
-#include "runtime/SysConfigService.hpp"
 
-class UserFile;
 class LiveActor;
+struct RumblePattern;
 
 namespace smgpc::runtime {
 
@@ -563,9 +562,13 @@ namespace smgpc::runtime {
     class CameraSystemService final {
     public:
         enum class ShakeRequestKind {
+            VeryWeak,
             Weak,
+            NormalWeak,
             Normal,
+            NormalStrong,
             Strong,
+            VeryStrong,
         };
 
         struct ShakeRequestEvent {
@@ -574,10 +577,16 @@ namespace smgpc::runtime {
         };
 
         void begin_frame(std::uint64_t frame_index);
+        void set_shake_projection_dimensions(float screen_width, float efb_height);
+        void clear_shake_projection_dimensions() noexcept;
         void reset_camera_man();
+        void request_very_weak_shake();
         void request_weak_shake();
+        void request_normal_weak_shake();
         void request_normal_shake();
+        void request_normal_strong_shake();
         void request_strong_shake();
+        void request_very_strong_shake();
         void pause_on_camera_director();
         void pause_off_camera_director();
         void declare_event_camera_programmable(std::string_view name);
@@ -591,14 +600,12 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_fovy(std::string_view name, float fovy_degrees);
 
         [[nodiscard]] std::uint32_t reset_camera_man_count() const;
-        [[nodiscard]] std::uint32_t weak_shake_request_count() const;
-        [[nodiscard]] std::uint32_t normal_shake_request_count() const;
-        [[nodiscard]] std::uint32_t strong_shake_request_count() const;
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> game_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> effective_camera_pose() const;
+        [[nodiscard]] smgpc::camera::CameraPose apply_shake(const smgpc::camera::CameraPose& pose) const;
         [[nodiscard]] std::optional<std::string_view> active_programmable_camera_name() const;
         [[nodiscard]] std::uint32_t programmable_camera_declare_count() const;
         [[nodiscard]] std::uint32_t programmable_camera_start_count() const;
@@ -618,13 +625,16 @@ namespace smgpc::runtime {
         [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
         [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose_for(std::string_view name) const;
+        void request_shake(ShakeRequestKind kind);
         void push_shake_event(ShakeRequestKind kind);
 
         std::uint64_t _frame_index = 0U;
         std::uint32_t _reset_camera_man_count = 0U;
-        std::uint32_t _weak_shake_request_count = 0U;
-        std::uint32_t _normal_shake_request_count = 0U;
-        std::uint32_t _strong_shake_request_count = 0U;
+        std::array<std::optional<std::uint32_t>, 7U> _vertical_shake_steps;
+        float _shake_offset_x = 0.0F;
+        float _shake_offset_y = 0.0F;
+        std::optional<float> _shake_screen_width;
+        std::optional<float> _shake_efb_height;
         std::uint32_t _camera_director_pause_count = 0U;
         std::optional<smgpc::camera::CameraPose> _game_camera_pose;
         std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
@@ -700,30 +710,52 @@ namespace smgpc::runtime {
     };
 
     enum class RumbleRequestKind {
-        Strong,
-        Middle,
-        Weak,
+        Named,
     };
 
     struct RumbleRequestEvent {
-        RumbleRequestKind kind = RumbleRequestKind::Strong;
+        RumbleRequestKind kind = RumbleRequestKind::Named;
+        std::string pattern_name;
         s32 channel = 0;
         std::uint64_t frame_index = 0U;
     };
 
+    class RumbleActuator {
+    public:
+        virtual ~RumbleActuator() = default;
+
+        [[nodiscard]] virtual bool is_available(s32 channel) const noexcept = 0;
+        virtual void set_motor(s32 channel, bool enabled) noexcept = 0;
+    };
+
     class RumbleService final {
     public:
+        explicit RumbleService(RumbleActuator* actuator = nullptr);
+        ~RumbleService();
+
+        RumbleService(const RumbleService&) = delete;
+        RumbleService& operator=(const RumbleService&) = delete;
+
+        void attach_actuator(RumbleActuator& actuator);
         void begin_frame(std::uint64_t frame_index);
-        void request_strong(s32 channel);
-        void request_middle(s32 channel);
-        void request_weak(s32 channel);
+        [[nodiscard]] bool try_request_pattern(const void* source, std::string_view pattern_name, s32 channel);
+        void stop_all() noexcept;
 
         [[nodiscard]] std::span<const RumbleRequestEvent> events() const;
 
     private:
-        void push_event(RumbleRequestKind kind, s32 channel);
+        struct ActivePattern {
+            const void* source = nullptr;
+            const RumblePattern* pattern = nullptr;
+            std::size_t next_frame = 0U;
+        };
 
+        void set_motor(s32 channel, bool enabled) noexcept;
+
+        RumbleActuator* _actuator = nullptr;
         std::uint64_t _frame_index = 0U;
+        std::array<std::vector<ActivePattern>, WPAD_MAX_CONTROLLERS> _active_patterns;
+        std::array<bool, WPAD_MAX_CONTROLLERS> _motor_enabled = {};
         std::vector<RumbleRequestEvent> _events;
     };
 
@@ -753,32 +785,7 @@ namespace smgpc::runtime {
 
     class SaveDataService final {
     public:
-        struct SlotState {
-            s32 slot_index = 0;
-            bool created = false;
-            bool game_data_corrupted = false;
-            bool config_data_corrupted = false;
-            bool last_loaded_mario = true;
-            s32 power_star_num = 0;
-            s32 star_piece_num = 0;
-            s32 player_miss_num = 0;
-            bool has_mii_id = false;
-            std::optional<s32> rfl_mii_index{};
-            std::optional<u32> icon_id{};
-            bool view_normal_ending = false;
-            bool view_complete_ending = false;
-            bool complete_ending_mario_and_luigi = false;
-            std::map<std::string, bool> game_event_flags;
-            std::map<std::string, u16> game_event_values;
-            OSTime last_modified = 0;
-        };
-
         SaveDataService();
-        explicit SaveDataService(SysConfigService &sys_config);
-
-        void set_sys_config_service(SysConfigService &sys_config);
-        [[nodiscard]] SysConfigService &sys_config();
-        [[nodiscard]] const SysConfigService &sys_config() const;
         void write_file(std::string_view name, std::span<const std::uint8_t> bytes);
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view name) const;
         void write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes);
@@ -793,44 +800,15 @@ namespace smgpc::runtime {
         void load_host_files();
         void flush_host_files();
         [[nodiscard]] bool has_valid_game_data_container() const;
-        [[nodiscard]] const SlotState *slot_state(s32 slot_index) const;
-        [[nodiscard]] SlotState slot_state_or_default(s32 slot_index) const;
-        void set_slot_state(s32 slot_index, const SlotState &state);
-        void copy_slot_state(s32 dst_slot_index, s32 src_slot_index);
-        void clear_slot_states();
-        [[nodiscard]] std::span<const SlotState> slot_states() const;
-        void restore_user_file(UserFile &file, s32 slot_index, bool is_player_mario) const;
-        void store_user_file(s32 slot_index, const UserFile &file);
-        void set_sys_config_time_announced(OSTime time);
-        void update_sys_config_time_announced();
-        [[nodiscard]] OSTime sys_config_time_announced() const;
-        void set_sys_config_time_sent(OSTime time);
-        [[nodiscard]] OSTime sys_config_time_sent() const;
-        void set_sys_config_sent_bytes(u32 bytes);
-        [[nodiscard]] u32 sys_config_sent_bytes() const;
 
     private:
-        enum class ContainerPayloadShape {
-            SourceChunks,
-            GameBinaries,
-        };
-
         [[nodiscard]] std::filesystem::path host_file_path(std::string_view name) const;
         void write_host_file(std::string_view name, std::span<const std::uint8_t> bytes) const;
         void erase_host_file(std::string_view name) const;
         [[nodiscard]] std::optional<std::map<std::string, std::vector<std::uint8_t>>> decode_game_data_container(std::span<const std::uint8_t> bytes) const;
-        [[nodiscard]] std::vector<std::uint8_t> encode_game_data_container(ContainerPayloadShape payload_shape = ContainerPayloadShape::SourceChunks) const;
-        void set_slot_state_internal(s32 slot_index, const SlotState &state, bool materialize_files);
-        void materialize_slot_files(const SlotState &state);
-        void load_slot_states_from_files();
-        void load_sys_config_from_files();
-        void write_sys_config_file();
 
         std::map<std::string, std::vector<std::uint8_t>> _files;
-        std::vector<SlotState> _slot_states;
         std::optional<std::filesystem::path> _host_directory = {};
-        SysConfigService _owned_sys_config;
-        SysConfigService *_sys_config = &_owned_sys_config;
         NandFileSystemService _nand;
         bool _has_valid_game_data_container = false;
     };
@@ -846,12 +824,7 @@ namespace smgpc::runtime {
         [[nodiscard]] const std::u16string *message_raw_utf16(std::string_view tag) const;
         [[nodiscard]] const smgpc::resource::BmgMessageInfo *message_info(std::string_view tag) const;
         [[nodiscard]] const std::vector<smgpc::resource::BmgControlTag> *message_control_tags(std::string_view tag) const;
-        [[nodiscard]] std::string message_or(std::string_view tag, std::string_view fallback) const;
-        [[nodiscard]] std::u16string message_utf16_or(std::string_view tag, std::u16string_view fallback) const;
-        [[nodiscard]] std::u16string message_raw_utf16_or(std::string_view tag, std::u16string_view fallback) const;
         [[nodiscard]] std::u16string format_message_utf16(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args) const;
-        [[nodiscard]] std::u16string format_message_utf16_or(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args,
-                                                             std::u16string_view fallback) const;
 
     private:
         struct MessageText {

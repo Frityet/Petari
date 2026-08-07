@@ -11,6 +11,7 @@
 
 #include <cstdio>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 
@@ -27,10 +28,14 @@ namespace {
 #ifndef NDEBUG
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pCtrl != nullptr) {
             const auto *host = pCtrl->mHostActor;
+            const auto state = sTalkStates.find(pCtrl);
+            if (state == sTalkStates.end()) {
+                return;
+            }
             runtime->emit_semantic_trace_event("talk", event,
                                                "host=" + std::string(host != nullptr && host->getName() != nullptr ? host->getName() : "") +
-                                                   ";message_id=" + std::to_string(sTalkStates[pCtrl].message_id) +
-                                                   ";node=" + std::to_string(sTalkStates[pCtrl].node_index));
+                                                   ";message_id=" + std::to_string(state->second.message_id) +
+                                                   ";node=" + std::to_string(state->second.node_index));
         }
 #else
         static_cast<void>(pCtrl);
@@ -85,20 +90,22 @@ void TalkMessageCtrl::createMessageDirect(const JMapInfoIter &rIter, const char 
 
 u32 TalkMessageCtrl::getMessageID() const {
     const auto found = sTalkStates.find(this);
-    return found != sTalkStates.end() && found->second.message_id >= 0 ? static_cast<u32>(found->second.message_id) : 0U;
+    if (found == sTalkStates.end() || found->second.message_id < 0) {
+        throw std::logic_error("Talk message data is unavailable.");
+    }
+    return static_cast<u32>(found->second.message_id);
 }
 
 bool TalkMessageCtrl::requestTalk() {
-    return isNearPlayer(mTalkDistance);
+    throw std::logic_error("TalkDirector runtime is unavailable.");
 }
 
 bool TalkMessageCtrl::requestTalkForce() {
-    return mHostActor != nullptr;
+    throw std::logic_error("TalkDirector runtime is unavailable.");
 }
 
 void TalkMessageCtrl::startTalk() {
-    _18 = 3;
-    trace_talk(this, "started");
+    throw std::logic_error("TalkDirector runtime is unavailable.");
 }
 
 void TalkMessageCtrl::startTalkForce() {
@@ -118,8 +125,7 @@ void TalkMessageCtrl::startTalkForceWithoutDemoPuppetable() {
 }
 
 void TalkMessageCtrl::endTalk() {
-    _18 = 4;
-    trace_talk(this, "ended");
+    throw std::logic_error("TalkDirector runtime is unavailable.");
 }
 
 bool TalkMessageCtrl::isNearPlayer(const TalkMessageCtrl *) {
@@ -131,7 +137,8 @@ bool TalkMessageCtrl::isNearPlayer(f32 distance) const {
 }
 
 bool TalkMessageCtrl::inMessageArea() const {
-    return true;
+    throw std::logic_error(
+        "MessageArea membership is unavailable without the real TalkNodeCtrl message metadata and AreaObj ownership.");
 }
 
 namespace MR {
@@ -190,9 +197,7 @@ namespace MR {
         if (pCtrl == nullptr) {
             return;
         }
-        ++sTalkStates[pCtrl].node_index;
-        pCtrl->_18 = 0;
-        trace_talk(pCtrl, "node_forwarded");
+        throw std::logic_error("Talk node runtime is unavailable.");
     }
 
     void setDistanceToTalk(TalkMessageCtrl *pCtrl, f32 distance) {

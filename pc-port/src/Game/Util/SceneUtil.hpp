@@ -4,6 +4,7 @@
 
 class JMapInfoIter;
 class JMapInfo;
+class JMapIdInfo;
 
 namespace MR {
     void incCoin(int amount);
@@ -11,4 +12,5 @@ namespace MR {
     s32 getPlacedZoneId(const JMapInfoIter& rIter);
     void getRailInfo(JMapInfoIter* pPathIter, const JMapInfo** pPointInfo, const JMapInfoIter& rPlacementIter);
     void getCameraRailInfo(JMapInfoIter* pPathIter, const JMapInfo** pPointInfo, s32 zoneId, s32 railId);
+    const JMapIdInfo& getInitializeStartIdInfo();
 }  // namespace MR

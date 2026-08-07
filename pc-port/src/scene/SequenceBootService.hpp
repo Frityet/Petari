@@ -25,7 +25,6 @@ namespace smgpc::scene {
 
         [[nodiscard]] bool is_boot_requested() const;
         [[nodiscard]] bool is_initial_stage_host_active() const;
-        [[nodiscard]] bool has_sent_autorush_begin() const;
 
     private:
         void update_stage_transition_requests();
@@ -35,7 +34,6 @@ namespace smgpc::scene {
         StageHostService &_stage_host;
         std::string _boot_stage_name;
         bool _boot_requested = false;
-        bool _autorush_begin_sent = false;
     };
 
 }  // namespace smgpc::scene

@@ -25,6 +25,15 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void separateScalarAndDirection(f32* scalar, TVec3f* direction, const TVec3f& vector) {
+        *scalar = vector.length();
+        if (isNearZero(vector)) {
+            direction->zero();
+        } else {
+            normalize(vector, direction);
+        }
+    }
+
     f32 vecKillElement(const TVec3f& rVector, const TVec3f& rDirection, TVec3f* pOut) {
         if (pOut == nullptr) {
             return 0.0F;

@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <span>
 #include <vector>
 
@@ -10,19 +11,25 @@
 namespace smgpc::scene {
     struct StagePlacementObject;
 
+}  // namespace smgpc::scene
+
+class GravityInfo;
+class PlanetGravity;
+
+namespace smgpc::scene {
+
     struct StageGravityLoadStats {
         std::size_t placement_count = 0U;
         std::size_t gravity_count = 0U;
         std::size_t unsupported_count = 0U;
     };
 
-    // Data-driven host counterpart of PlanetGravityManager for static global
-    // gravity placements. The supported point and parallel variants cover the
-    // same SRT, range, priority, inverse, and vector-combination rules as the
-    // original implementations.
+    // Scene-owned host counterpart of PlanetGravityManager. Registered
+    // PlanetGravity objects retain the original priority, type, host, power,
+    // activation, and vector-combination behavior.
     class StageGravityService final {
     public:
-        StageGravityService() = default;
+        StageGravityService();
         ~StageGravityService();
 
         StageGravityService(const StageGravityService&) = delete;
@@ -31,8 +38,12 @@ namespace smgpc::scene {
         StageGravityLoadStats load(std::span<const StagePlacementObject> placements);
         void clear();
 
+        void register_gravity(PlanetGravity* gravity);
+
         [[nodiscard]] bool query(const TVec3f& position, TVec3f* gravity,
-                                 std::uint32_t gravity_type_mask = 1U) const;
+                                 std::uint32_t gravity_type_mask = 1U,
+                                 GravityInfo* info = nullptr,
+                                 std::uint32_t host = 0U) const;
         [[nodiscard]] const StageGravityLoadStats& stats() const;
         [[nodiscard]] bool empty() const;
 
@@ -41,34 +52,8 @@ namespace smgpc::scene {
         [[nodiscard]] static StageGravityService* active();
 
     private:
-        enum class Kind : std::uint8_t {
-            Point,
-            ParallelSphere,
-            ParallelBox,
-            ParallelCylinder,
-        };
-
-        struct Field {
-            Kind kind = Kind::Point;
-            TVec3f position{};
-            TVec3f side{1.0F, 0.0F, 0.0F};
-            TVec3f up{0.0F, 1.0F, 0.0F};
-            TVec3f front{0.0F, 0.0F, 1.0F};
-            TVec3f extent{};
-            float range = -1.0F;
-            float distant = 0.0F;
-            float base_distance = 2000.0F;
-            float cylinder_radius = 500.0F;
-            float cylinder_height = 1000.0F;
-            std::int32_t distance_axis = -1;
-            std::int32_t priority = 0;
-            std::uint32_t gravity_type = 1U;
-            bool inverse = false;
-        };
-
-        [[nodiscard]] bool calculate(const Field& field, const TVec3f& position, TVec3f& vector) const;
-
-        std::vector<Field> _fields{};
+        std::vector<std::unique_ptr<PlanetGravity>> _placement_gravities{};
+        std::vector<PlanetGravity*> _gravities{};
         StageGravityLoadStats _stats{};
     };
 

@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <optional>
+#include <stdexcept>
 #include <utility>
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
@@ -11,6 +12,7 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/GameActorSensorCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace {
@@ -253,6 +255,7 @@ void LiveActor::drawModel(const smgpc::camera::CameraPose& camera_pose, std::uin
 }
 
 void LiveActor::initHitSensor(s32 sensorCount) {
+    smgpc::compat::release_actor_sensor_bindings(this);
     mHitSensors.clear();
     if (sensorCount > 0) {
         mHitSensors.reserve(static_cast< std::size_t >(sensorCount));
@@ -365,6 +368,7 @@ void LiveActor::updateHitSensors() {
             entry.sensor->mPosition = mPosition + entry.offset;
         }
     }
+    smgpc::compat::update_actor_sensor_bindings(this);
 }
 
 void LiveActor::startBck(const char* pName, const char* pFileName) {
@@ -381,7 +385,8 @@ void LiveActor::startBrk(const char* pName) {
         frame_max = mModel->startBrk(mCurrentBrkName);
     }
 
-    mBrkActive = true;
+    mBrkAvailable = frame_max.has_value();
+    mBrkActive = mBrkAvailable;
     mBrkCtrl.mStart = 0;
     mBrkCtrl.mEnd = frame_max.value_or(0);
     mBrkCtrl.mFrame = 0.0F;
@@ -400,6 +405,9 @@ void LiveActor::startBtk(const char* pName) {
 }
 
 void LiveActor::setBrkFrame(f32 frame) {
+    if (!mBrkAvailable) {
+        throw std::logic_error("BRK animation data is unavailable.");
+    }
     mBrkActive = true;
     mBrkCtrl.mFrame = frame;
 }
@@ -414,14 +422,17 @@ void LiveActor::setBrkFrameEndAndStop() {
 }
 
 J3DFrameCtrl* LiveActor::getBrkCtrl() {
-    return &mBrkCtrl;
+    return mBrkAvailable ? &mBrkCtrl : nullptr;
 }
 
 const J3DFrameCtrl* LiveActor::getBrkCtrl() const {
-    return &mBrkCtrl;
+    return mBrkAvailable ? &mBrkCtrl : nullptr;
 }
 
 bool LiveActor::isBrkOneTimeAndStopped() const {
+    if (!mBrkAvailable) {
+        throw std::logic_error("BRK animation state is unavailable.");
+    }
     return !mBrkActive || mBrkCtrl.mRate == 0.0F || mBrkCtrl.mFrame >= static_cast< f32 >(mBrkCtrl.mEnd);
 }
 

@@ -2,6 +2,7 @@
 
 #include <cstdio>
 
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 #include <revolution.h>
 
 #include "Game/LiveActor/Nerve.hpp"

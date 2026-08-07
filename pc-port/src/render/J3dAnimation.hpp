@@ -70,6 +70,23 @@ namespace smgpc::render {
         std::int16_t frame_max = 0;
     };
 
+    struct J3dBtpMaterialAnimationSummary {
+        std::string material_name;
+        std::uint16_t material_id = 0xffffU;
+        std::uint8_t texture_slot = 0xffU;
+        std::uint16_t max_frame = 0U;
+        std::uint16_t texture_index_offset = 0U;
+    };
+
+    struct J3dBtpAnimationSummary {
+        std::uint8_t attribute = 0U;
+        std::int16_t frame_max = 0;
+        std::uint16_t material_count = 0U;
+        std::uint16_t texture_index_count = 0U;
+        std::vector<std::uint16_t> texture_indices;
+        std::vector<J3dBtpMaterialAnimationSummary> materials;
+    };
+
     struct J3dTextureSrtAnimationValue {
         std::array<float, 3U> center{};
         float scale_s = 1.0F;
@@ -93,14 +110,18 @@ namespace smgpc::render {
         std::optional<J3dBckAnimationSummary> bck;
         std::optional<J3dBtkAnimationSummary> btk;
         std::optional<J3dBrkAnimationSummary> brk;
+        std::optional<J3dBtpAnimationSummary> btp;
     };
 
     [[nodiscard]] J3dAnimationSummary inspect_j3d_animation(std::span<const std::uint8_t> animation_data);
     [[nodiscard]] float j3d_animation_frame(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame);
     [[nodiscard]] bool j3d_animation_stopped(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame);
+    [[nodiscard]] bool j3d_animation_check_pass(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame, float pass_frame);
     [[nodiscard]] std::optional<J3dJointTransformValue> j3d_evaluate_bck_joint_transform(const J3dBckAnimationSummary &bck,
                                                                                          std::uint16_t joint_index, float frame);
     [[nodiscard]] std::optional<J3dTextureSrtAnimationValue>
     j3d_evaluate_btk_texture_srt(const J3dBtkAnimationSummary &btk, std::string_view material_name, std::uint8_t tex_matrix_id, float frame);
+    [[nodiscard]] std::optional<std::uint16_t>
+    j3d_evaluate_btp_texture_index(const J3dBtpAnimationSummary &btp, std::string_view material_name, std::uint8_t texture_slot, float frame);
 
 }  // namespace smgpc::render

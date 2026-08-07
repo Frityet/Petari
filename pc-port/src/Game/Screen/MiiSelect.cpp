@@ -1,6 +1,7 @@
 #include "Game/Screen/MiiSelect.hpp"
 
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Map/FileSelectFunc.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
@@ -10,9 +11,8 @@
 #include "runtime/RuntimeContext.hpp"
 
 #include <algorithm>
-#include <cmath>
 #include <cstdio>
-#include <string_view>
+#include <RVLFaceLib.h>
 
 namespace {
     NEW_NERVE(MiiSelectNrvAppear, MiiSelect, Appear);
@@ -23,20 +23,19 @@ namespace {
     NEW_NERVE(MiiSelectNrvDisappear, MiiSelect, Disappear);
     NEW_NERVE(MiiSelectNrvDummySelected, MiiSelect, DummySelected);
 
-    constexpr std::array< const wchar_t*, 5 > cFellowNames{
-        L"Mario", L"Luigi", L"Yoshi", L"Kinopio", L"Peach",
-    };
     constexpr auto cIconsPerPage = 8;
-    constexpr std::array< TVec2f, cIconsPerPage > cIconPaneCenters{
-        TVec2f{-168.0F, 57.0F},  TVec2f{-56.0F, 57.0F},  TVec2f{56.0F, 57.0F},  TVec2f{168.0F, 57.0F},
-        TVec2f{-168.0F, -57.0F}, TVec2f{-56.0F, -57.0F}, TVec2f{56.0F, -57.0F}, TVec2f{168.0F, -57.0F},
-    };
 
-    [[nodiscard]] std::wstring widen_ascii(std::string_view value) {
-        auto result = std::wstring();
-        result.reserve(value.size());
-        for (const auto ch : value) {
-            result.push_back(static_cast< wchar_t >(static_cast< unsigned char >(ch)));
+    [[nodiscard]] std::wstring icon_name(const FileSelectIconID& icon_id) {
+        auto name = std::array< u16, RFL_NAME_LEN + 1U >{};
+        FileSelectFunc::copyMiiName(name.data(), icon_id);
+
+        auto result = std::wstring{};
+        result.reserve(name.size());
+        for (const auto character : name) {
+            if (character == 0U) {
+                break;
+            }
+            result.push_back(static_cast< wchar_t >(character));
         }
         return result;
     }
@@ -90,24 +89,6 @@ void MiiSelect::control() {
         if (MR::isStarPointerPointingPane(this, pane_name.data(), 0, true, "弱")) {
             pointed_index = icon_index;
             break;
-        }
-    }
-
-    if (pointed_index < 0 && MR::isCorePadPointInScreen(WPAD_CHAN0)) {
-        auto pointer = TVec2f{};
-        MR::getCorePadPointingPosBasedOnScreen(&pointer, WPAD_CHAN0);
-        for (auto i = 0; i < cIconsPerPage; ++i) {
-            const auto icon_index = mCurrentPageStart + i;
-            if (icon_index >= icon_count) {
-                break;
-            }
-
-            const auto center_x = 320.0F + cIconPaneCenters[static_cast< std::size_t >(i)].x;
-            const auto center_y = 228.0F + cIconPaneCenters[static_cast< std::size_t >(i)].y;
-            if (std::fabs(pointer.x - center_x) <= 64.0F && std::fabs(pointer.y - center_y) <= 64.0F) {
-                pointed_index = icon_index;
-                break;
-            }
         }
     }
 
@@ -315,7 +296,7 @@ void MiiSelect::rebuildIconList() {
         }
 
         mIconIds.push_back(icon_id);
-        mIconNames.emplace_back(cFellowNames[i]);
+        mIconNames.push_back(icon_name(icon_id));
     }
 
     const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
@@ -331,6 +312,6 @@ void MiiSelect::rebuildIconList() {
         }
 
         mIconIds.push_back(icon_id);
-        mIconNames.push_back(widen_ascii(entry.name));
+        mIconNames.push_back(icon_name(icon_id));
     }
 }

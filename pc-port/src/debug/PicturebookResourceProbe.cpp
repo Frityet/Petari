@@ -1,5 +1,5 @@
 #include "DebugPaths.hpp"
-#include "layout/BrlanAnimation.hpp"
+#include <aurora/nw4r/brlan.hpp>
 #include "layout/BrlytLayout.hpp"
 #include "render/J3dModel.hpp"
 #include "resource/RarcArchive.hpp"
@@ -104,7 +104,7 @@ namespace {
         return aggregate;
     }
 
-    [[nodiscard]] std::size_t brlan_target_count(const smgpc::layout::BrlanAnimation &animation) {
+    [[nodiscard]] std::size_t brlan_target_count(const aurora::nw4r::lyt::BrlanAnimation &animation) {
         auto count = std::size_t {};
         for (const auto &content : animation.contents) {
             for (const auto &info : content.infos) {
@@ -114,7 +114,7 @@ namespace {
         return count;
     }
 
-    [[nodiscard]] std::size_t brlan_key_count(const smgpc::layout::BrlanAnimation &animation) {
+    [[nodiscard]] std::size_t brlan_key_count(const aurora::nw4r::lyt::BrlanAnimation &animation) {
         auto count = std::size_t {};
         for (const auto &content : animation.contents) {
             for (const auto &info : content.infos) {
@@ -142,7 +142,7 @@ namespace {
 
         for (const auto brlan_path : brlan_paths) {
             require(archive.contains(brlan_path), "layout archive is missing required BRLAN");
-            const auto animation = smgpc::layout::parse_brlan_animation(archive.file_data(brlan_path));
+            const auto animation = aurora::nw4r::lyt::parse_brlan_animation(archive.file_data(brlan_path));
             require(!animation.contents.empty(), "BRLAN did not expose animation contents");
             add_line(report, "animation\t", relative_path, "\t", brlan_path, "\tframes\t", animation.frame_size, "\tloop\t",
                      animation.loop ? 1 : 0, "\tcontents\t", animation.contents.size(), "\ttargets\t", brlan_target_count(animation),

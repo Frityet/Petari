@@ -39,9 +39,12 @@ namespace smgpc::camera {
             return std::sqrt(dot(value, value));
         }
 
-        [[nodiscard]] CameraParamVec3 normalized_or(const CameraParamVec3 &value, const CameraParamVec3 &fallback) {
+        [[nodiscard]] std::optional<CameraParamVec3> normalized(const CameraParamVec3 &value) {
             const auto magnitude = length(value);
-            return magnitude > 0.000001F ? scale(value, 1.0F / magnitude) : fallback;
+            if (magnitude <= 0.000001F) {
+                return std::nullopt;
+            }
+            return scale(value, 1.0F / magnitude);
         }
 
         [[nodiscard]] CameraParamVec3 camera_vec(const std::array<f32, 3U> &value) {
@@ -73,6 +76,8 @@ namespace smgpc::camera {
             return "camera_chunk_not_found";
         case StageStartCameraResolveStatus::UnsupportedCameraType:
             return "unsupported_camera_type";
+        case StageStartCameraResolveStatus::InvalidCameraBasis:
+            return "invalid_camera_basis";
         }
         return "unknown";
     }
@@ -100,10 +105,13 @@ namespace smgpc::camera {
             return std::nullopt;
         }
 
-        const auto target_front = normalized_or(target.front, {0.0F, 0.0F, 1.0F});
-        const auto target_up = normalized_or(target.up, {0.0F, 1.0F, 0.0F});
-        const auto desired_local_offset = add(scale(target_front, camera_param.extra.l_offset),
-                                              scale(target_up, camera_param.extra.l_offset_v));
+        const auto target_front = normalized(target.front);
+        const auto target_up = normalized(target.up);
+        if (!target_front.has_value() || !target_up.has_value()) {
+            return std::nullopt;
+        }
+        const auto desired_local_offset = add(scale(*target_front, camera_param.extra.l_offset),
+                                              scale(*target_up, camera_param.extra.l_offset_v));
         const auto local_offset_factor = camera_param.is_l_offset_erp_off()
                                              ? 1.0F
                                              : std::min(1.0F, length(target.last_move) * (0.1F / 15.0F));
@@ -125,17 +133,28 @@ namespace smgpc::camera {
         const auto global_offset = transform_vector(zone_transform, camera_param.extra.w_offset);
         const auto watch = add(target.position, add(result.state.local_offset, global_offset));
         const auto eye = add(watch, world_eye_offset);
-        const auto raw_up = normalized_or(transform_vector(zone_transform, {0.0F, 1.0F, 0.0F}), {0.0F, 1.0F, 0.0F});
-
-        const auto forward = normalized_or(subtract(watch, eye), {0.0F, 0.0F, -1.0F});
-        const auto right = normalized_or(cross(forward, raw_up), {1.0F, 0.0F, 0.0F});
-        const auto corrected_up = normalized_or(cross(right, forward), raw_up);
-        const auto rolled_up = add(scale(corrected_up, std::cos(camera_param.extra.roll)),
-                                   scale(right, -std::sin(camera_param.extra.roll)));
+        const auto raw_up = normalized(transform_vector(zone_transform, {0.0F, 1.0F, 0.0F}));
+        const auto forward = normalized(subtract(watch, eye));
+        if (!raw_up.has_value() || !forward.has_value()) {
+            return std::nullopt;
+        }
+        const auto right = normalized(cross(*forward, *raw_up));
+        if (!right.has_value()) {
+            return std::nullopt;
+        }
+        const auto corrected_up = normalized(cross(*right, *forward));
+        if (!corrected_up.has_value()) {
+            return std::nullopt;
+        }
+        const auto rolled_up = normalized(add(scale(*corrected_up, std::cos(camera_param.extra.roll)),
+                                              scale(*right, -std::sin(camera_param.extra.roll))));
+        if (!rolled_up.has_value()) {
+            return std::nullopt;
+        }
 
         result.pose.eye = eye;
         result.pose.watch = watch;
-        result.pose.up = normalized_or(rolled_up, raw_up);
+        result.pose.up = *rolled_up;
         result.pose.fovy_degrees = camera_param.is_on_use_fovy() ? camera_param.extra.fovy : default_fovy_degrees;
         return result;
     }
@@ -183,17 +202,29 @@ namespace smgpc::camera {
                 };
             }
 
+            const auto target_up = normalized(camera_vec(start_info.world_up));
+            const auto target_front = normalized(camera_vec(start_info.world_front));
+            if (!target_up.has_value() || !target_front.has_value()) {
+                return {
+                    .status = StageStartCameraResolveStatus::InvalidCameraBasis,
+                    .detail = "selected StartInfo has a degenerate orientation basis",
+                };
+            }
             const auto target = StageCameraTargetState{
                 .position = camera_vec(start_info.world_position),
-                .up = normalized_or(camera_vec(start_info.world_up), {0.0F, 1.0F, 0.0F}),
-                .front = normalized_or(camera_vec(start_info.world_front), {0.0F, 0.0F, 1.0F}),
+                .up = *target_up,
+                .front = *target_front,
             };
             const auto calculation = calculate_stage_camera_pose(start_info.zone_transform, *camera_param, target, {},
                                                                   default_fovy_degrees);
             if (!calculation.has_value()) {
                 return {
-                    .status = StageStartCameraResolveStatus::UnsupportedCameraType,
-                    .detail = "unsupported start camera type " + camera_param->camera_type,
+                    .status = camera_param->camera_type == "CAM_TYPE_XZ_PARA"
+                                  ? StageStartCameraResolveStatus::InvalidCameraBasis
+                                  : StageStartCameraResolveStatus::UnsupportedCameraType,
+                    .detail = camera_param->camera_type == "CAM_TYPE_XZ_PARA"
+                                  ? "start camera basis is degenerate"
+                                  : "unsupported start camera type " + camera_param->camera_type,
                 };
             }
 
@@ -205,7 +236,6 @@ namespace smgpc::camera {
                     .camera_key = camera_key,
                     .target = target,
                     .calculation = *calculation,
-                    .used_start_orientation_up_fallback = true,
                 },
                 .detail = "resolved from selected StartInfo zone archive",
             };

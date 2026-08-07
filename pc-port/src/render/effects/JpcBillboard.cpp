@@ -1,6 +1,7 @@
 #include "JpcBillboard.hpp"
 
 #include <cmath>
+#include <stdexcept>
 
 namespace smgpc::render::effects {
     namespace {
@@ -27,11 +28,10 @@ namespace smgpc::render::effects {
             return left.x * right.x + left.y * right.y + left.z * right.z;
         }
 
-        [[nodiscard]] camera::CameraParamVec3 normalized_or(const camera::CameraParamVec3 &value,
-                                                            const camera::CameraParamVec3 &fallback) {
+        [[nodiscard]] camera::CameraParamVec3 normalized(const camera::CameraParamVec3 &value) {
             const auto length = std::sqrt(dot(value, value));
             if (length <= 0.000001F) {
-                return fallback;
+                throw std::logic_error("billboard camera basis is degenerate");
             }
 
             return {
@@ -89,9 +89,9 @@ namespace smgpc::render::effects {
 
     std::array<core::TexturedVertex2D, 4U>
     jpc_billboard_world_vertices(const camera::CameraPose &camera_pose, const JpcBillboardGeometry &geometry) {
-        const auto forward = normalized_or(subtract(camera_pose.watch, camera_pose.eye), {0.0F, 0.0F, -1.0F});
-        const auto right = normalized_or(cross(forward, camera_pose.up), {1.0F, 0.0F, 0.0F});
-        const auto corrected_up = normalized_or(cross(right, forward), {0.0F, 1.0F, 0.0F});
+        const auto forward = normalized(subtract(camera_pose.watch, camera_pose.eye));
+        const auto right = normalized(cross(forward, camera_pose.up));
+        const auto corrected_up = normalized(cross(right, forward));
 
         return {
             make_vertex(geometry, right, corrected_up, -1.0F, -1.0F, 0.0F, 1.0F),

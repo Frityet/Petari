@@ -33,13 +33,12 @@ namespace smgpc::render {
         std::span<const GXLightState> scene_lights = {};
         std::optional<J3dMatrix3x4> projmap_effect_matrix = {};
         std::optional<float> bck_animation_frame = {};
+        std::optional<float> btp_animation_frame = {};
     };
 
     enum class J3dRendererPacketMode {
         ConstantBackdrop,
         ConstantMaterial,
-        ComposedMaterial,
-        CpuTevPerVertex,
         ShaderGxTev,
         TexturePass,
     };
@@ -95,7 +94,6 @@ namespace smgpc::render {
         std::uint8_t pass_order = 0U;
         J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
         std::string packet_mode_reason;
-        bool packet_mode_fallback = false;
         std::size_t material_pass_count = 0U;
         std::size_t shader_texture_stage_count = 0U;
         std::uint8_t color_channel_count = 0U;
@@ -164,6 +162,11 @@ namespace smgpc::render {
         float btk_normalized_frame = 0.0F;
         std::int16_t btk_frame_max = 0;
         std::uint16_t btk_material_count = 0U;
+        bool btp_active = false;
+        float btp_frame = 0.0F;
+        float btp_normalized_frame = 0.0F;
+        std::int16_t btp_frame_max = 0;
+        std::uint16_t btp_material_count = 0U;
     };
 
     class J3dModelRenderer final {
@@ -176,6 +179,8 @@ namespace smgpc::render {
         void clear_bck_animation();
         void set_btk_animation(const J3dBtkAnimationSummary &animation);
         void clear_btk_animation();
+        [[nodiscard]] bool set_btp_animation(render::AuroraRenderer &renderer, const J3dBtpAnimationSummary &animation);
+        void clear_btp_animation();
         void clear_animations();
 
         void draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
@@ -187,8 +192,21 @@ namespace smgpc::render {
         [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame,
                                                                          std::span<const GXLightState> scene_lights = {},
                                                                          const J3dModelRendererDrawOptions &options = {}) const;
+        [[nodiscard]] std::optional<J3dMatrix3x4> joint_model_matrix(std::string_view name, float frame) const;
+        [[nodiscard]] std::optional<float> model_bounding_radius(float frame = 0.0F) const;
 
     private:
+        struct TextureVariant {
+            render::TextureHandle texture = {};
+            std::array<std::uint8_t, 4U> material_color{255U, 255U, 255U, 255U};
+            std::uint8_t wrap_u = 0U;
+            std::uint8_t wrap_v = 0U;
+            std::uint8_t min_filter = 1U;
+            std::uint8_t mag_filter = 1U;
+            bool blend = true;
+            render::BlendMode blend_mode = render::BlendMode::Alpha;
+        };
+
         struct Mesh {
             std::string material_name;
             std::uint16_t shape_index = 0xffffU;
@@ -209,6 +227,7 @@ namespace smgpc::render {
             std::optional<J3dTexMatrixSummary> tex_matrix = {};
             std::optional<J3dMaterialSummary> material = {};
             std::vector<J3dMaterialTexturePass> material_passes = {};
+            std::vector<std::optional<TextureVariant>> btp_texture_variants = {};
             std::array<render::GxTextureStage2D, render::core::kMaxGxMaterialTextureStages2D> gx_texture_stages = {};
             std::array<render::GxTevStage2D, render::core::kMaxGxMaterialTevStages2D> gx_tev_stages = {};
             std::array<render::core::GxIndirectTextureOrder2D, render::core::kMaxGxIndirectStages2D> gx_indirect_texture_orders = {};
@@ -224,7 +243,6 @@ namespace smgpc::render {
             std::uint8_t gx_indirect_stage_count = 0U;
             J3dRendererPacketMode packet_mode = J3dRendererPacketMode::TexturePass;
             std::string packet_mode_reason;
-            bool packet_mode_fallback = false;
             std::array<std::uint8_t, 4U> material_color{255U, 255U, 255U, 255U};
             std::uint8_t pass_order = 0U;
             std::uint8_t wrap_u = 0U;
@@ -255,7 +273,8 @@ namespace smgpc::render {
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights = {}) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
                                                                    std::span<const GXLightState> scene_lights = {},
-                                                                   std::optional<float> bck_animation_frame = {}) const;
+                                                                   std::optional<float> bck_animation_frame = {},
+                                                                   std::optional<float> btp_animation_frame = {}) const;
         void submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const smgpc::camera::CameraPose &camera_pose,
                          const J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawScratch &scratch, std::span<const GXLightState> scene_lights,
                          const J3dModelRendererDrawOptions &options) const;
@@ -263,14 +282,18 @@ namespace smgpc::render {
         bool _loaded = false;
         std::vector<J3dTexture> _textures = {};
         std::vector<render::TextureHandle> _texture_handles = {};
+        std::vector<std::string> _joint_names = {};
         std::vector<J3dJointTransformValue> _joint_transforms = {};
         std::vector<std::uint16_t> _joint_parent_indices = {};
+        std::vector<std::array<float, 3U>> _joint_bound_mins = {};
+        std::vector<std::array<float, 3U>> _joint_bound_maxs = {};
         std::vector<J3dDrawMatrixSummary> _draw_matrices = {};
         std::optional<J3dEnvelopeBlockSummary> _envelopes = {};
         std::vector<Mesh> _meshes = {};
         std::vector<J3dRendererPacketState> _render_packets = {};
         std::optional<J3dBckAnimationSummary> _bck_animation = {};
         std::optional<J3dBtkAnimationSummary> _btk_animation = {};
+        std::optional<J3dBtpAnimationSummary> _btp_animation = {};
         mutable std::unique_ptr<DrawScratch, DrawScratchDeleter> _draw_scratch = {};
     };
 

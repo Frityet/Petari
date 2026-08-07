@@ -4,22 +4,38 @@ class NameObj;
 class NameObjArchiveListCollector;
 class JMapInfoIter;
 
-using CreatorFuncPtr = NameObj* (*)(const char*);
-using ArchiveFuncPtr = void (*)(NameObjArchiveListCollector*, const JMapInfoIter&);
+typedef NameObj* (*CreatorFuncPtr)(const char*);
+typedef void (*ArchiveFuncPtr)(NameObjArchiveListCollector*, const JMapInfoIter&);
 
+namespace {
+    template < typename T >
+    NameObj* createNameObj(const char* pName) {
+        return new T(pName);
+    }
+};  // namespace
+
+/// @brief A namespace for creating `NameObj` instances.
 namespace NameObjFactory {
     struct Name2CreateFunc {
-        const char* mName;
-        CreatorFuncPtr mCreateFunc;
-        const char* mArchiveName;
+        /* 0x0 */ const char* mName;
+        /* 0x4 */ CreatorFuncPtr mCreateFunc;
+        /* 0x8 */ const char* mArchiveName;
+    };
+
+    struct Name2Archive {
+        /* 0x0* */ const char* mObjectName;
+        /* 0x4* */ const char* mArchiveName;
     };
 
     struct Name2MakeArchiveListFunc {
-        const char* mName;
-        ArchiveFuncPtr mArchiveFunc;
+        /* 0x0 */ const char* mName;
+        /* 0x4 */ ArchiveFuncPtr mArchiveFunc;
     };
 
-    [[nodiscard]] CreatorFuncPtr getCreator(const char* pName);
-    [[nodiscard]] bool canCreate(const char* pName);
-    void getMountObjectArchiveList(NameObjArchiveListCollector* pArchiveList, const char* pName, const JMapInfoIter& rIter);
-}  // namespace NameObjFactory
+    CreatorFuncPtr getCreator(const char*);
+    void requestMountObjectArchives(const char*, const JMapInfoIter&);
+    bool isReadResourceFromDVD(const char*, const JMapInfoIter&);
+    bool isPlayerArchiveLoaderObj(const char*);
+    const Name2CreateFunc* getName2CreateFunc(const char*, const Name2CreateFunc*);
+    void getMountObjectArchiveList(NameObjArchiveListCollector*, const char*, const JMapInfoIter&);
+};  // namespace NameObjFactory

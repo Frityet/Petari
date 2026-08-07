@@ -370,8 +370,6 @@ namespace smgpc::render {
             switch (key) {
             case SDLK_F9:
                 return DebugInput::CORE_PAD_TOGGLE_FREECAM;
-            case SDLK_F10:
-                return DebugInput::CORE_PAD_REQUEST_SCENE_TRANSITION;
             case SDLK_W:
                 return DebugInput::CORE_PAD_FREECAM_MOVE_FORWARD;
             case SDLK_S:
@@ -634,6 +632,8 @@ namespace smgpc::render {
             };
 
             C_MTXPerspective(projection, camera_pose.fovy_degrees, camera_pose.aspect_ratio, camera_pose.near_clip, camera_pose.far_clip);
+            projection[0][2] -= camera_pose.projection_offset_x;
+            projection[1][2] -= camera_pose.projection_offset_y;
             C_MTXLookAt(view, &eye, &up, &target);
 
             GXSetProjection(projection, GX_PERSPECTIVE);

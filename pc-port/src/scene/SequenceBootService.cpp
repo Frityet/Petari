@@ -1,6 +1,5 @@
 #include "scene/SequenceBootService.hpp"
 
-#include "Game/Util/ActorSensorUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <string>
@@ -30,6 +29,9 @@ namespace smgpc::scene {
         _runtime.emit_sequence_state_trace_event("stage_requested", "requested_stage=" + request.stage_name +
                                                                         ";scenario=" + std::to_string(request.scenario_no));
         _runtime.emit_semantic_trace_event("sequence", "boot_stage_requested", detail);
+        _runtime.emit_semantic_trace_event(
+            "sequence", "title_activation_unavailable",
+            "reason=real MarioActor auto-rush binder event is not installed");
 #endif
         _stage_host.request_stage(request);
     }
@@ -40,18 +42,11 @@ namespace smgpc::scene {
         }
 
         _stage_host.update_scene_requests();
-
-        if (!_autorush_begin_sent) {
-            MR::sendMsgToAllLiveActor(ACTMES_AUTORUSH_BEGIN, nullptr);
-            _autorush_begin_sent = true;
-#ifndef NDEBUG
-            _runtime.emit_sequence_state_trace_event("autorush_begin_sent", "message=ACTMES_AUTORUSH_BEGIN");
-            _runtime.emit_semantic_trace_event("sequence", "autorush_begin_sent", "ACTMES_AUTORUSH_BEGIN");
-#endif
-        }
+        _scene_transitions.notify_scene_started(_stage_host.active_stage_name(), _stage_host.active_scenario_no());
 
         update_stage_transition_requests();
         _stage_host.update_scene_requests();
+        _scene_transitions.notify_scene_started(_stage_host.active_stage_name(), _stage_host.active_scenario_no());
     }
 
     bool SequenceBootService::is_boot_requested() const {
@@ -60,10 +55,6 @@ namespace smgpc::scene {
 
     bool SequenceBootService::is_initial_stage_host_active() const {
         return !_boot_stage_name.empty() && _stage_host.has_active_stage(_boot_stage_name);
-    }
-
-    bool SequenceBootService::has_sent_autorush_begin() const {
-        return _autorush_begin_sent;
     }
 
     void SequenceBootService::update_stage_transition_requests() {

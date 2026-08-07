@@ -159,7 +159,7 @@ namespace {
         return smgpc::resource::RarcArchive::from_bytes(std::move(bytes));
     }
 
-    void test_synthetic_lookup_and_first_row_semantics() {
+    void test_fixture_lookup_and_first_row_semantics() {
         const auto rows = std::vector<NameRow>{
             {.english = "FixtureActor", .japanese_cp932 = raw_bytes({0x83U, 0x60U, 0x83U, 0x52U})},
             {.english = "FixtureActor", .japanese_cp932 = raw_bytes({0x83U, 0x8dU, 0x83U, 0x5bU, 0x83U, 0x62U, 0x83U, 0x5eU})},
@@ -189,12 +189,12 @@ namespace {
         const auto *missing_display_name = table.lookup("Coin");
         require(missing_display_name == nullptr,
                 "the synthetic ObjNameTable should leave Coin's display name absent");
-        auto coin = smgpc::scene::nameobj::create_name_obj(
-            dvd, "Coin", missing_display_name != nullptr ? missing_display_name->c_str() : nullptr);
-        require(coin != nullptr,
-                "an absent display name must not reject the real Coin factory");
-        require(coin->getName() == nullptr || coin->getName()[0] == '\0',
-                "an absent display name must not become the English placement identifier");
+        require_throws(
+            [&] {
+                (void)smgpc::scene::nameobj::create_name_obj(
+                    dvd, "Coin", missing_display_name != nullptr ? missing_display_name->c_str() : nullptr);
+            },
+            "Coin must remain absent until its real shadow/runtime closure exists");
     }
 
     void test_schema_and_archive_validation() {
@@ -309,7 +309,7 @@ namespace {
 
 int main() {
     const auto tests = std::vector<TestCase>{
-        {"synthetic lookup and first-row semantics", test_synthetic_lookup_and_first_row_semantics},
+        {"fixture lookup and first-row semantics", test_fixture_lookup_and_first_row_semantics},
         {"schema and archive validation", test_schema_and_archive_validation},
         {"optional extracted tables", test_optional_extracted_tables},
         {"optional DVD service load", test_optional_dvd_service_load},

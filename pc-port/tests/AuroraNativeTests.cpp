@@ -9,12 +9,9 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
-#include "Game/MapObj/StarPiece.hpp"
-#include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
-#include "Game/NPC/DemoRabbit.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/GameDataFunction.hpp"
@@ -35,18 +32,19 @@
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JGeometry/TUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
-#include "runtime/SaveEventNameDictionary.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StageGravityService.hpp"
 #include "scene/StageHostScene.hpp"
-#include "scene/SceneTransitionRequestService.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/nameobj/NameObjFactory.hpp"
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameGravityCompat.hpp"
 #include "compat/PlayerUtilCompat.hpp"
+#include "compat/SaveDataHandleSequenceCompat.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>
@@ -63,7 +61,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <map>
@@ -80,6 +77,17 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
+    }
+
+    template <typename Fn>
+    void require_logic_error(Fn&& fn, std::string_view message) {
+        auto rejected = false;
+        try {
+            fn();
+        } catch (const std::logic_error&) {
+            rejected = true;
+        }
+        require(rejected, message);
     }
 
     void write_be32(std::vector<std::uint8_t> &bytes, std::size_t offset, std::uint32_t value) {
@@ -297,38 +305,6 @@ namespace {
         // A missing group remains invalid even when CastId is present.
         write_be32(bytes, data_offset + 1U * entry_size + 0U * 4U, 0xffffffffU);
         write_be32(bytes, data_offset + 1U * entry_size + 1U * 4U, 0U);
-        return JMapInfo::from_bcsv(bytes);
-    }
-
-    JMapInfo make_star_piece_group_placement_info() {
-        constexpr auto field_count = 11U;
-        constexpr auto entry_size = field_count * 4U;
-        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
-        constexpr auto field_names = std::array<std::string_view, field_count>{
-            "Obj_arg0", "Obj_arg1", "pos_x", "pos_y", "pos_z", "dir_x", "dir_y", "dir_z", "scale_x", "scale_y", "scale_z",
-        };
-
-        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
-        write_be32(bytes, 0x00U, 1U);
-        write_be32(bytes, 0x04U, field_count);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, entry_size);
-        for (auto field = 0U; field < field_count; ++field) {
-            const auto type = field <= 1U ? smgpc::resource::BcsvFieldType::Int32 : smgpc::resource::BcsvFieldType::Float;
-            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U), type);
-        }
-
-        write_be32(bytes, data_offset + 0U * 4U, 10U);
-        write_be32(bytes, data_offset + 1U * 4U, 100U);
-        write_be_float(bytes, data_offset + 2U * 4U, 0.0F);
-        write_be_float(bytes, data_offset + 3U * 4U, 2120.580322F);
-        write_be_float(bytes, data_offset + 4U * 4U, 0.0F);
-        write_be_float(bytes, data_offset + 5U * 4U, 0.0F);
-        write_be_float(bytes, data_offset + 6U * 4U, 90.0F);
-        write_be_float(bytes, data_offset + 7U * 4U, 0.0F);
-        write_be_float(bytes, data_offset + 8U * 4U, 2.0F);
-        write_be_float(bytes, data_offset + 9U * 4U, 3.0F);
-        write_be_float(bytes, data_offset + 10U * 4U, 4.0F);
         return JMapInfo::from_bcsv(bytes);
     }
 
@@ -597,18 +573,18 @@ namespace {
 
     class CurrentSceneObjHolderGuard {
     public:
-        explicit CurrentSceneObjHolderGuard(SceneObjHolder &holder) {
-            MR::setCurrentSceneObjHolder(&holder);
+        explicit CurrentSceneObjHolderGuard(SceneObjHolder &holder) : _binding(holder) {
         }
 
-        ~CurrentSceneObjHolderGuard() {
-            MR::setCurrentSceneObjHolder(nullptr);
-        }
+    private:
+        smgpc::scene::SceneObjHolderBinding _binding;
     };
 
     void test_stage_switch_zone_identity_and_edges() {
         auto holder = SceneObjHolder{};
         const auto holder_guard = CurrentSceneObjHolderGuard(holder);
+        require(MR::createSceneObj(SceneObj_StageSwitchContainer) != nullptr,
+                "the retail stage-switch holder must be created explicitly for the scene");
 
         auto zone_one_info = JMapInfo{};
         zone_one_info.setPlacedZoneId(1);
@@ -681,17 +657,24 @@ namespace {
                 "original string equality should be null-safe on the host");
 
         auto camera = smgpc::runtime::CameraSystemService{};
+        camera.set_game_camera_pose(smgpc::camera::CameraPose{});
+        camera.set_shake_projection_dimensions(608.0F, 456.0F);
         camera.begin_frame(42U);
         camera.request_weak_shake();
         camera.request_strong_shake();
         const auto events = camera.shake_request_events();
 
-        require(camera.weak_shake_request_count() == 1U && camera.strong_shake_request_count() == 1U,
-                "weak and strong camera shake requests should remain distinct");
         require(events.size() == 2U && events[0].kind == smgpc::runtime::CameraSystemService::ShakeRequestKind::Weak &&
                     events[1].kind == smgpc::runtime::CameraSystemService::ShakeRequestKind::Strong && events[0].frame_index == 42U &&
                     events[1].frame_index == 42U,
                 "camera shake events should retain their kind and frame");
+        camera.begin_frame(43U);
+        const auto shaken = camera.effective_camera_pose();
+        const auto remaining = 24.0F;
+        const auto raw_offset = (0.2F + 6.0F) * std::sin(12.566371F * remaining / 25.0F) *
+                                std::sin(1.5707964F * remaining / 25.0F);
+        require(shaken.has_value() && std::abs(shaken->projection_offset_y - raw_offset * 30.0F / 456.0F) < 0.000001F,
+                "camera shake should apply the retail damped sine and EFB-height projection scaling");
     }
 
     void test_rail_info_ownership_and_per_entry_lookup() {
@@ -720,221 +703,66 @@ namespace {
                 "each placement row should retain its own CommonPathPointInfo table");
     }
 
-    void test_demo_rabbit_factory_archives_and_placement_init() {
-        require(NameObjFactory::canCreate("DemoRabbit"), "the Game factory should expose DemoRabbit by its placement name");
-        const auto creator = NameObjFactory::getCreator("DemoRabbit");
-        require(creator != nullptr, "DemoRabbit should have a concrete Game factory creator");
+    void test_demo_rabbit_factory_is_absent() {
+        require(!smgpc::scene::nameobj::can_create_name_obj("DemoRabbit"),
+                "DemoRabbit must remain absent until every required default NPC capability is real");
+        require(NameObjFactory::getCreator("DemoRabbit") == nullptr,
+                "an actor that cannot initialize must not expose a factory constructor");
 
         auto placement = make_demo_rabbit_placement_info();
-        auto created_count = 0U;
         for (auto row = 0; row < placement.getNumEntries(); ++row) {
-            const auto iter = JMapInfoIter(&placement, row);
             auto archives = NameObjArchiveListCollector{};
-            NameObjFactory::getMountObjectArchiveList(&archives, "DemoRabbit", iter);
-            require(archives.mCount == 1, "each DemoRabbit placement should select exactly one model archive");
-            const auto expected_archive = row == 0 ? std::string_view("TrickRabbitBaby") : std::string_view("TrickRabbit");
-            require(std::string_view(archives.getArchive(0)) == expected_archive,
-                    "DemoRabbit archive selection should use the placement's CastId");
-
-            auto actor = std::unique_ptr<NameObj>(creator("DemoRabbit"));
-            auto* rabbit = dynamic_cast<DemoRabbit*>(actor.get());
-            require(rabbit != nullptr, "the DemoRabbit factory entry should construct the exact actor type");
-            rabbit->init(iter);
-            rabbit->initAfterPlacement();
-            ++created_count;
-
-            require(!smgpc::compat::has_registered_demo_cast(rabbit) &&
-                        smgpc::compat::registered_demo_action_count(rabbit) == 0U,
-                    "placement metadata alone should not invent a demo executor outside an active scene registry");
-            const auto* body_sensor = rabbit->getSensor("Body");
-            require(body_sensor != nullptr && body_sensor->mType == ATYPE_NPC && body_sensor->mGroupSize == 8U,
-                    "the NPC base should preserve the original Body sensor type and group size");
-
-            if (row == 0) {
-                require(rabbit->isDead(), "cast 0 should preserve its original hidden Appear state until the guide demo");
-                require(rabbit->mRailRider != nullptr && rabbit->mRailRider->getPointNum() == 5,
-                        "cast 0 should consume its attached five-point placement rail");
-                require(rabbit->mMsgCtrl != nullptr, "cast 0 should create the placement-backed talk controller");
-                require(smgpc::compat::has_owned_talk_ctrl(rabbit),
-                        "the generalized talk registry should own cast 0's controller");
-            } else {
-                require(rabbit->isDead(),
-                        "without a matching scene definition, casts 1 and 2 should retain the source default Appear nerve");
-                require(rabbit->mRailRider == nullptr, "placements without CommonPath_ID should not synthesize a rail");
-                require(rabbit->mMsgCtrl == nullptr, "placements without MessageId should not synthesize talk state");
-                require(!smgpc::compat::has_owned_talk_ctrl(rabbit),
-                        "placements without talk state should not enter the ownership registry");
-            }
-
-            smgpc::compat::release_actor_runtime_state(rabbit);
-            require(!smgpc::compat::has_owned_talk_ctrl(rabbit) && !smgpc::compat::has_registered_demo_cast(rabbit),
-                    "actor teardown should release both generalized talk and demo registry state");
-            require(rabbit->mMsgCtrl == nullptr, "talk teardown should clear the exact NPC's non-owning controller pointer");
+            NameObjFactory::getMountObjectArchiveList(&archives, "DemoRabbit", JMapInfoIter(&placement, row));
+            require(archives.mCount == 0,
+                    "an absent DemoRabbit factory must not advertise actor-specific archive preload support");
         }
-        require(created_count == 3U, "all three HeavensDoor DemoRabbit placement shapes should construct");
-
-        auto revisit = std::unique_ptr<NameObj>(creator("DemoRabbit"));
-        auto* revisited_rabbit = dynamic_cast<DemoRabbit*>(revisit.get());
-        require(revisited_rabbit != nullptr, "a revisited placement should still construct the exact actor type");
-        revisited_rabbit->init(JMapInfoIter(&placement, 0));
-        require(smgpc::compat::has_owned_talk_ctrl(revisited_rabbit) &&
-                    !smgpc::compat::has_registered_demo_cast(revisited_rabbit),
-                "a revisited placement should receive fresh talk ownership without an orphan demo executor");
-        smgpc::compat::release_actor_runtime_state(revisited_rabbit);
     }
 
     void test_demo_cast_requires_scene_definition() {
         auto placement = make_demo_cast_sentinel_placement_info();
         auto actor = LiveActor("optional-cast-id");
 
-        require(!MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)),
-                "a valid group and CastId -1 should not create an executor when no scene definition is active");
+        require_logic_error(
+            [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)); },
+            "demo-cast registration without a scene-owned DemoDirector runtime must fail explicitly");
         require(!smgpc::compat::has_registered_demo_cast(&actor),
-                "failed no-registry registration should not retain orphan cast state");
+                "missing-runtime registration must not retain orphan cast state");
 
-        require(!MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 1)),
-                "a missing DemoGroupId should remain unregistered even when CastId is present");
+        require_logic_error(
+            [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 1)); },
+            "missing placement metadata must not hide an absent scene-owned DemoDirector runtime");
         require(!smgpc::compat::has_registered_demo_cast(&actor),
-                "invalid demo-group metadata should not create registry state");
+                "a second missing-runtime registration must not create registry state");
     }
 
     void test_story_event_spin_entitlement_boundary() {
-        auto* holder = smgpc::game::save_data_handle_sequence().getHolder();
-        require(holder != nullptr, "story-event tests require the active user-file holder");
-        holder->resetAllData();
-
         auto player = smgpc::runtime::PlayerSystemService{};
         player.reset_stage_state();
-        smgpc::compat::restore_stage_player_permissions(player);
+        auto actor = LiveActor("story-event-player");
+        player.attach_actor(actor);
         const auto player_context = smgpc::compat::ScopedPlayerSystemServiceOverride{player};
 
-        require(!GameDataFunction::isPassedStoryEvent("スピン権利") && !player.is_swing_permitted(),
-                "a fresh user file should begin before the spin entitlement boundary");
-        MR::onGameEventFlagEnableToSpinAndStarPointer();
-        require(GameDataFunction::isPassedStoryEvent("スピン権利") && player.is_swing_permitted(),
-                "acknowledging the original spin explanation should persist and enable spin together");
-
-        require(!MR::isOnGameEventFlagEndTicoGuideDemo(),
-                "the Tico guide story event should remain independent from spin entitlement");
-        MR::onGameEventFlagEndTicoGuideDemo();
-        require(MR::isOnGameEventFlagEndTicoGuideDemo(),
-                "the original Tico guide setter and query should share persistent story state");
-
-        holder->resetAllData();
+        require_logic_error(
+            [&] { MR::onGameEventFlagEnableToSpinAndStarPointer(); },
+            "spin entitlement must be unavailable while no retail save sequence is backed");
+        require(!player.is_swing_permitted(),
+                "an unavailable story write must not grant swing permission as a partial side effect");
+        require_logic_error(
+            [] { static_cast<void>(MR::isOnGameEventFlagEndTicoGuideDemo()); },
+            "story-event queries must be unavailable while no retail save sequence is backed");
     }
 
-    void test_save_event_name_dictionary_codec() {
-        const auto flags = std::map<std::string, bool>{
-            {"arbitrary/disabled", false},
-            {"スピン権利", true},
-        };
-        const auto values = std::map<std::string, u16>{
-            {"generalized/value", 0xbeefU},
-            {"絵本話済", 4U},
-        };
+    void test_star_piece_group_factory_is_absent_without_real_director() {
+        require(!smgpc::scene::nameobj::can_create_name_obj("StarPieceGroup") &&
+                    !smgpc::scene::nameobj::can_create_name_obj("StarPieceFlow"),
+                "StarPiece group factories must remain absent until the real StarPieceDirector closure is linked");
+        require(NameObjFactory::getCreator("StarPieceGroup") == nullptr && NameObjFactory::getCreator("StarPieceFlow") == nullptr,
+                "unsupported StarPiece placements must not expose a partial creator");
 
-        const auto encoded = smgpc::runtime::save::encode_event_name_dictionary(flags, values);
-        require(encoded.has_value(), "valid UTF-8 event names should produce host dictionary metadata");
-        const auto decoded = smgpc::runtime::save::decode_event_name_dictionary(*encoded);
-        require(decoded.has_value(), "encoded event-name metadata should decode");
-        require(decoded->flag_names == std::vector<std::string>{"arbitrary/disabled", "スピン権利"},
-                "flag-name metadata should preserve deterministic map order and UTF-8 bytes");
-        require(decoded->value_names == std::vector<std::string>{"generalized/value", "絵本話済"},
-                "value-name metadata should preserve arbitrary event keys without embedding their values");
-
-        auto truncated = *encoded;
-        truncated.pop_back();
-        require(!smgpc::runtime::save::decode_event_name_dictionary(truncated).has_value(),
-                "truncated event-name metadata should fail closed");
-        require(!smgpc::runtime::save::encode_event_name_dictionary(flags, values, 8U).has_value(),
-                "the codec should reject a dictionary that cannot fit its caller-provided budget");
-    }
-
-    void test_save_event_state_container_round_trip() {
-        auto state = smgpc::runtime::SaveDataService::SlotState{
-            .slot_index = 1,
-            .created = true,
-            .last_loaded_mario = true,
-            .power_star_num = 3,
-            .star_piece_num = 41,
-            .player_miss_num = 2,
-            .game_event_flags = {
-                {"arbitrary/disabled", false},
-                {"チコガイドデモ終了", true},
-                {"スピン権利", true},
-            },
-            .game_event_values = {
-                {"generalized/value", 0xbeefU},
-                {"絵本話済", 4U},
-            },
-        };
-
-        auto writer = smgpc::runtime::SaveDataService{};
-        writer.set_slot_state(1, state);
-        const auto container = writer.read_file("GameData.bin");
-        require(container.has_value(), "the source-chunk save container should encode from slot state");
-
-        auto reader = smgpc::runtime::SaveDataService{};
-        reader.write_file("GameData.bin", *container);
-        const auto* restored = reader.slot_state(1);
-        require(restored != nullptr && restored->created && restored->power_star_num == 3 &&
-                    restored->star_piece_num == 41 && restored->player_miss_num == 2,
-                "loading a generated container should retain the ordinary slot fields");
-        require(restored->game_event_flags == state.game_event_flags,
-                "FLG1 plus generic name metadata should round-trip true and false arbitrary event flags");
-        require(restored->game_event_values == state.game_event_values,
-                "VLE1 plus generic name metadata should round-trip arbitrary event values");
-    }
-
-    void test_star_piece_group_factory_trs_and_reset() {
-        require(NameObjFactory::canCreate("StarPieceGroup") && NameObjFactory::canCreate("StarPieceFlow"),
-                "the original factory aliases should expose both StarPieceGroup placement names");
-        const auto creator = NameObjFactory::getCreator("StarPieceGroup");
-        require(creator != nullptr, "StarPieceGroup should have a concrete original factory creator");
-
-        auto placement = make_star_piece_group_placement_info();
         auto archives = NameObjArchiveListCollector{};
-        NameObjFactory::getMountObjectArchiveList(&archives, "StarPieceGroup", JMapInfoIter(&placement, 0));
+        NameObjFactory::getMountObjectArchiveList(&archives, "StarPieceGroup", JMapInfoIter());
         require(archives.mCount == 0,
-                "StarPieceGroup should preserve the original null factory archive entry; its children request StarPiece at initialization");
-
-        auto actor = std::unique_ptr<NameObj>(creator("StarPieceGroup"));
-        auto* group = dynamic_cast<StarPieceGroup*>(actor.get());
-        require(group != nullptr, "the StarPieceGroup factory entry should construct the exact actor type");
-        group->init(JMapInfoIter(&placement, 0));
-
-        require(group->mNumPieces == 10 && group->mPieces != nullptr && group->mRailCoords != nullptr,
-                "Obj_arg0=10 should create the native ten-piece group and its original coordinate storage");
-        require(smgpc::compat::declared_star_piece_count(group) == 10U,
-                "the generalized StarPiece declaration registry should retain the group's native child count");
-        require(group->mPosition.epsilonEquals(TVec3f{0.0F, 2120.580322F, 0.0F}, 0.001F) &&
-                    group->mRotation.epsilonEquals(TVec3f{0.0F, 90.0F, 0.0F}, 0.001F) &&
-                    group->mScale.epsilonEquals(TVec3f{2.0F, 3.0F, 4.0F}, 0.001F),
-                "the original group should consume placement translation, rotation, and scale without route-specific policy");
-
-        require(group->mPieces[0]->mPosition.epsilonEquals(TVec3f{400.0F, 2120.580322F, 0.0F}, 0.01F),
-                "piece zero should use the scaled and Y-rotated local Z axis from the actor TRS matrix");
-        require(group->mPieces[5]->mPosition.epsilonEquals(TVec3f{-400.0F, 2120.580322F, 0.0F}, 0.02F),
-                "the opposite point should retain the original even-circle placement");
-        require(group->mPieces[2]->mPosition.epsilonEquals(TVec3f{123.6068F, 2120.580322F, -190.2113F}, 0.02F),
-                "non-cardinal points should combine independently scaled TRS axes with the original circle angles");
-        for (auto index = s32{}; index < group->mNumPieces; ++index) {
-            require(group->mPieces[index] != nullptr && !group->mPieces[index]->isDead() && group->mPieces[index]->isFloat(),
-                    "every native child should appear in the floating group state");
-        }
-
-        const auto original_piece_two = group->mPieces[2]->mPosition;
-        group->forceKillStarPieceAll(false);
-        require(!group->isExistAnyStarPiece(), "the original group kill path should make all floating children dead");
-        group->mPieces[2]->mPosition.set(999.0F, 999.0F, 999.0F);
-        group->forceReplaceStarPieceAll();
-        require(group->isExistAnyStarPiece() && group->mPieces[2]->mPosition.epsilonEquals(original_piece_two, 0.001F),
-                "the original reset path should restore circle placement and revive collected children");
-
-        smgpc::compat::release_actor_runtime_state(group);
-        require(group->mPieces == nullptr && group->mRailCoords == nullptr && group->mNumPieces == 0 &&
-                    smgpc::compat::declared_star_piece_count(group) == 0U,
-                "group teardown should release child actors, arrays, and generalized declaration state");
+                "an absent StarPiece group factory must not synthesize archive requests");
     }
 
     void test_stage_host_preserves_placement_appearance_state() {
@@ -1433,93 +1261,28 @@ namespace {
         auto actor = LiveActor("coin-gravity-test");
         actor.mGravity.set(0.0F, -4.0F, 0.0F);
         auto gravity = TVec3f{9.0F, 9.0F, 9.0F};
-        require(!MR::calcGravityVector(&actor, &gravity, nullptr, nullptr) &&
-                    gravity.epsilonEquals(TVec3f{}, 0.0F),
-                "a missing gravity field should return false and zero instead of echoing actor-local state");
+        require_logic_error([&] { (void)MR::calcGravityVector(&actor, &gravity, nullptr, nullptr); },
+                            "a missing scene-owned gravity system must be explicitly unavailable");
+        require(gravity.epsilonEquals(TVec3f{9.0F, 9.0F, 9.0F}, 0.0F),
+                "an unavailable gravity system must not invent or overwrite a destination vector");
 
         auto plainObject = NameObj("positional-gravity-test");
         gravity.set(9.0F, 9.0F, 9.0F);
-        require(!MR::calcGravityVector(&plainObject, TVec3f{1.0F, 2.0F, 3.0F}, &gravity, nullptr, nullptr) &&
-                    gravity.epsilonEquals(TVec3f{}, 0.0F),
-                "positional gravity should report zero until a host PlanetGravityManager exists");
+        require_logic_error(
+            [&] { (void)MR::calcGravityVector(&plainObject, TVec3f{1.0F, 2.0F, 3.0F}, &gravity, nullptr, nullptr); },
+            "a positional query must reject absence of the scene-owned gravity system");
+        require(gravity.epsilonEquals(TVec3f{9.0F, 9.0F, 9.0F}, 0.0F),
+                "an unavailable positional query must leave its destination untouched");
 
+        auto gravityService = smgpc::scene::StageGravityService{};
+        gravityService.activate();
         actor.mGravity.zero();
         actor.mBindedGround = true;
         actor.mGroundNormal.set(0.0F, 2.0F, 0.0F);
         MR::calcGravityOrZero(&actor);
         require(actor.mGravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.00001F),
                 "calcGravityOrZero should retain the original grounded-normal fallback");
-    }
-
-    class EnvironmentVariableGuard {
-    public:
-        explicit EnvironmentVariableGuard(const char *name) : _name(name) {
-            if (const auto *value = std::getenv(_name.c_str())) {
-                _old_value = value;
-            }
-        }
-
-        ~EnvironmentVariableGuard() {
-            if (_old_value.has_value()) {
-                setenv(_name.c_str(), _old_value->c_str(), 1);
-            } else {
-                unsetenv(_name.c_str());
-            }
-        }
-
-        void set(const char *value) const {
-            setenv(_name.c_str(), value, 1);
-        }
-
-        void unset() const {
-            unsetenv(_name.c_str());
-        }
-
-    private:
-        std::string _name;
-        std::optional<std::string> _old_value;
-    };
-
-    void test_scene_transition_request_is_external_and_edge_triggered() {
-        auto trigger = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_TRIGGER");
-        auto scene = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_SCENE");
-        auto stage = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_STAGE");
-        auto scenario = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_SCENARIO");
-        auto appear = EnvironmentVariableGuard("SMGPC_SCENE_TRANSITION_APPEAR_AFTER_INIT");
-        trigger.set("name_obj_dead_after_alive:transition-probe");
-        scene.set("Game");
-        stage.set("ConfiguredStage");
-        scenario.set("3");
-        appear.set("true");
-
-        const auto initial = smgpc::scene::SceneTransitionRequestService::make_initial_stage_request();
-        require(initial.stage_name == "FileSelect", "host boot should still enter the six-slot file select");
-
-        const auto configured = smgpc::scene::SceneTransitionRequestService::configured_transition_from_environment();
-        require(configured.has_value(), "a complete external transition should be parsed");
-        require(configured->request.scene_name == "Game" && configured->request.stage_name == "ConfiguredStage" &&
-                    configured->request.scenario_no == 3 && configured->request.appear_after_init,
-                "the external transition target should retain every configured field");
-
-        auto tracker = smgpc::scene::SceneTransitionTriggerTracker(configured->trigger);
-        require(!tracker.observe_name_obj("transition-probe", true), "an initially dead object must not trigger a transition");
-        require(!tracker.observe_name_obj("other", false), "an unrelated live object must not arm the trigger");
-        require(!tracker.observe_name_obj("transition-probe", false), "the matching live object should only arm the trigger");
-        require(tracker.observe_name_obj("transition-probe", true), "the matching live-to-dead edge should trigger once");
-        require(!tracker.observe_name_obj("transition-probe", true), "the configured transition must be one-shot");
-
-        stage.unset();
-        auto rejected_missing_target = false;
-        try {
-            static_cast<void>(smgpc::scene::SceneTransitionRequestService::configured_transition_from_environment());
-        } catch (const std::runtime_error &) {
-            rejected_missing_target = true;
-        }
-        require(rejected_missing_target, "a configured trigger without a real target must fail instead of silently choosing a stage");
-
-        trigger.unset();
-        require(!smgpc::scene::SceneTransitionRequestService::configured_transition_from_environment().has_value(),
-                "an absent external transition must remain absent");
+        gravityService.deactivate();
     }
 
     struct SpineProbeState {
@@ -1585,19 +1348,17 @@ int main() {
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
-        TestCase{"DemoRabbit factory archives and placement init", test_demo_rabbit_factory_archives_and_placement_init},
+        TestCase{"DemoRabbit factory is absent", test_demo_rabbit_factory_is_absent},
         TestCase{"demo cast requires scene definition", test_demo_cast_requires_scene_definition},
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
-        TestCase{"save event-name dictionary codec", test_save_event_name_dictionary_codec},
-        TestCase{"save event-state container round trip", test_save_event_state_container_round_trip},
-        TestCase{"StarPieceGroup factory TRS and reset", test_star_piece_group_factory_trs_and_reset},
+        TestCase{"StarPieceGroup factory absent without real director",
+                 test_star_piece_group_factory_is_absent_without_real_director},
         TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
         TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},
         TestCase{"data-driven stage gravity fields", test_stage_gravity_service_data_driven_fields},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},
-        TestCase{"scene transition request is external and edge triggered", test_scene_transition_request_is_external_and_edge_triggered},
         TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
     };
 

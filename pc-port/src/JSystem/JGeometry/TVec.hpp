@@ -9,6 +9,79 @@
 
 namespace JGeometry {
     template <typename T>
+    struct TVec2 {
+        constexpr TVec2() = default;
+
+        constexpr TVec2(T newX, T newY) : x(newX), y(newY) {
+        }
+
+        template <typename U>
+        constexpr TVec2(U newX, U newY)
+            : x(static_cast<T>(newX)), y(static_cast<T>(newY)) {
+        }
+
+        template <typename U>
+        void set(U newX, U newY) {
+            x = static_cast<T>(newX);
+            y = static_cast<T>(newY);
+        }
+
+        void set(T value) {
+            x = value;
+            y = value;
+        }
+
+        void add(const TVec2& value) {
+            x += value.x;
+            y += value.y;
+        }
+
+        void sub(const TVec2& value) {
+            x -= value.x;
+            y -= value.y;
+        }
+
+        void sub(const TVec2& lhs, const TVec2& rhs) {
+            x = lhs.x - rhs.x;
+            y = lhs.y - rhs.y;
+        }
+
+        void scale(f32 factor) {
+            x = static_cast<T>(x * factor);
+            y = static_cast<T>(y * factor);
+        }
+
+        [[nodiscard]] T squared() const {
+            return x * x + y * y;
+        }
+
+        [[nodiscard]] T squareDist(const TVec2& value) const {
+            const auto dx = x - value.x;
+            const auto dy = y - value.y;
+            return dx * dx + dy * dy;
+        }
+
+        [[nodiscard]] T dot(const TVec2& value) const {
+            return x * value.x + y * value.y;
+        }
+
+        [[nodiscard]] TVec2 operator+(const TVec2& value) const {
+            return TVec2{x + value.x, y + value.y};
+        }
+
+        [[nodiscard]] TVec2 operator-(const TVec2& value) const {
+            return TVec2{x - value.x, y - value.y};
+        }
+
+        [[nodiscard]] TVec2 operator*(f32 factor) const {
+            return TVec2{static_cast<T>(x * factor), static_cast<T>(y * factor)};
+        }
+
+        T x{};
+        T y{};
+    };
+
+    template <typename T>
     struct TVec3 {
         T x{};
         T y{};
@@ -288,6 +361,8 @@ namespace JGeometry {
     static_assert(std::is_trivially_copyable_v<TVec3<f32>>);
 }  // namespace JGeometry
 
+using TVec2s = JGeometry::TVec2<s16>;
+using TVec2f = JGeometry::TVec2<f32>;
 using TVec3f = JGeometry::TVec3<f32>;
 
 [[nodiscard]] constexpr TVec3f operator*(f32 scaleValue, const TVec3f &value) {

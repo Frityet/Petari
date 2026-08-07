@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cwchar>
 
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"

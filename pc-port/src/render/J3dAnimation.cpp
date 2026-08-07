@@ -1,9 +1,12 @@
 #include "J3dAnimation.hpp"
 
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+
 #include <algorithm>
 #include <bit>
 #include <cmath>
 #include <stdexcept>
+#include <utility>
 
 namespace smgpc::render {
     namespace {
@@ -294,6 +297,58 @@ namespace smgpc::render {
             };
         }
 
+        [[nodiscard]] J3dBtpAnimationSummary parse_tpt1(std::span<const std::uint8_t> data, std::size_t section_offset) {
+            if (section_offset + 0x20U > data.size()) {
+                throw std::runtime_error("TPT1 header is outside its section");
+            }
+            auto summary = J3dBtpAnimationSummary {};
+            summary.attribute = data[section_offset + 0x08U];
+            summary.frame_max = read_be_s16(data, section_offset + 0x0aU);
+            summary.material_count = read_be16(data, section_offset + 0x0cU);
+            summary.texture_index_count = read_be16(data, section_offset + 0x0eU);
+
+            const auto table_relative = read_be32(data, section_offset + 0x10U);
+            const auto values_relative = read_be32(data, section_offset + 0x14U);
+            const auto material_id_relative = read_be32(data, section_offset + 0x18U);
+            const auto names_relative = read_be32(data, section_offset + 0x1cU);
+            if (summary.material_count == 0U || summary.texture_index_count == 0U || table_relative == 0U ||
+                values_relative == 0U || material_id_relative == 0U || names_relative == 0U) {
+                throw std::runtime_error("TPT1 contains no usable texture-pattern tracks");
+            }
+
+            summary.texture_indices.reserve(summary.texture_index_count);
+            for (auto i = 0U; i < summary.texture_index_count; ++i) {
+                summary.texture_indices.push_back(read_be16(data, section_offset + values_relative + i * 2U));
+            }
+
+            const auto names = read_name_table(data, section_offset, names_relative);
+            if (names.size() != summary.material_count) {
+                throw std::runtime_error("TPT1 material-name table does not match its track count");
+            }
+
+            summary.materials.reserve(summary.material_count);
+            for (auto material = 0U; material < summary.material_count; ++material) {
+                const auto table_offset = section_offset + table_relative + material * 8U;
+                if (table_offset + 8U > data.size()) {
+                    throw std::runtime_error("TPT1 texture-pattern table is outside its section");
+                }
+                auto track = J3dBtpMaterialAnimationSummary {
+                    .material_name = names[material],
+                    .material_id = read_be16(data, section_offset + material_id_relative + material * 2U),
+                    .texture_slot = data[table_offset + 4U],
+                    .max_frame = read_be16(data, table_offset),
+                    .texture_index_offset = read_be16(data, table_offset + 2U),
+                };
+                if (track.material_name.empty() || track.texture_slot >= 8U || track.max_frame == 0U ||
+                    static_cast<std::size_t>(track.texture_index_offset) + track.max_frame > summary.texture_indices.size()) {
+                    throw std::runtime_error("TPT1 contains an invalid texture-pattern track");
+                }
+                summary.materials.push_back(std::move(track));
+            }
+
+            return summary;
+        }
+
     }  // namespace
 
     J3dAnimationSummary inspect_j3d_animation(std::span<const std::uint8_t> animation_data) {
@@ -308,8 +363,16 @@ namespace smgpc::render {
 
         auto section_offset = std::size_t {0x20U};
         for (auto block = 0U; block < summary.block_count; ++block) {
+            if (section_offset + 8U > animation_data.size()) {
+                throw std::runtime_error("J3D animation section header is outside the file");
+            }
             const auto tag = read_tag(animation_data, section_offset);
             const auto size = read_be32(animation_data, section_offset + 4U);
+            if (size < 8U || section_offset >= animation_data.size() ||
+                (block + 1U < summary.block_count && size > animation_data.size() - section_offset)) {
+                throw std::runtime_error("J3D animation section is outside the file");
+            }
+            const auto available_size = std::min<std::size_t>(size, animation_data.size() - section_offset);
             summary.sections.push_back(J3dAnimationSectionInfo {
                 .tag = tag,
                 .offset = static_cast<std::uint32_t>(section_offset),
@@ -322,6 +385,8 @@ namespace smgpc::render {
                 summary.btk = parse_ttk1(animation_data, section_offset);
             } else if (tag == "TRK1") {
                 summary.brk = parse_trk1(animation_data, section_offset);
+            } else if (tag == "TPT1") {
+                summary.btp = parse_tpt1(animation_data.subspan(section_offset, available_size), 0U);
             }
 
             section_offset += size;
@@ -382,6 +447,49 @@ namespace smgpc::render {
         }
     }
 
+    bool j3d_animation_check_pass(std::uint8_t attribute, std::int16_t frame_max, float elapsed_frame, float pass_frame) {
+        if (frame_max <= 0 || !std::isfinite(elapsed_frame) || !std::isfinite(pass_frame)) {
+            return false;
+        }
+
+        const auto end = static_cast<float>(frame_max);
+        const auto elapsed = std::max(elapsed_frame, 0.0F);
+        const auto current = j3d_animation_frame(attribute, frame_max, elapsed);
+        auto rate = 1.0F;
+        switch (attribute) {
+        case 0U:
+        case 1U:
+            if (elapsed >= end) {
+                rate = 0.0F;
+            }
+            break;
+        case 2U:
+            break;
+        case 3U:
+            rate = elapsed < end ? 1.0F : elapsed <= end * 2.0F ? -1.0F : 0.0F;
+            break;
+        case 4U: {
+            const auto turn = std::max(end - 1.0F, 0.0F);
+            if (turn == 0.0F) {
+                rate = 0.0F;
+                break;
+            }
+            const auto phase = std::fmod(elapsed, turn * 2.0F);
+            rate = phase < turn && (elapsed == 0.0F || phase != 0.0F) ? 1.0F : -1.0F;
+            break;
+        }
+        default:
+            rate = 0.0F;
+            break;
+        }
+
+        auto controller = J3DFrameCtrl{frame_max};
+        controller.setAttribute(attribute);
+        controller.setFrame(current);
+        controller.setRate(rate);
+        return controller.checkPass(pass_frame) != FALSE;
+    }
+
     std::optional<J3dJointTransformValue> j3d_evaluate_bck_joint_transform(const J3dBckAnimationSummary &bck, std::uint16_t joint_index,
                                                                            float frame) {
         if (joint_index >= bck.joints.size()) {
@@ -426,6 +534,26 @@ namespace smgpc::render {
             .translate_s = evaluate_key_table(normalized_frame, track_s.translation, btk.translation_values, 0.0F),
             .translate_t = evaluate_key_table(normalized_frame, track_t.translation, btk.translation_values, 0.0F),
         };
+    }
+
+    std::optional<std::uint16_t> j3d_evaluate_btp_texture_index(const J3dBtpAnimationSummary &btp, std::string_view material_name,
+                                                                 std::uint8_t texture_slot, float frame) {
+        const auto it = std::ranges::find_if(btp.materials, [material_name, texture_slot](const auto &material) {
+            return material.material_name == material_name && material.texture_slot == texture_slot;
+        });
+        if (it == btp.materials.end() || it->max_frame == 0U) {
+            return std::nullopt;
+        }
+
+        const auto normalized_frame = j3d_animation_frame(btp.attribute, btp.frame_max, frame);
+        const auto track_frame = normalized_frame < 0.0F ? 0U :
+                                     normalized_frame >= static_cast<float>(it->max_frame) ? it->max_frame - 1U :
+                                                                                           static_cast<std::uint16_t>(normalized_frame);
+        const auto value_index = static_cast<std::size_t>(it->texture_index_offset) + track_frame;
+        if (value_index >= btp.texture_indices.size()) {
+            return std::nullopt;
+        }
+        return btp.texture_indices[value_index];
     }
 
 }  // namespace smgpc::render
