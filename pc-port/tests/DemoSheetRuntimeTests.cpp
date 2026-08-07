@@ -450,7 +450,7 @@ namespace {
                 "resuming must continue from the corrected source step");
     }
 
-    void test_paused_final_step_is_not_last_part() {
+    void test_paused_final_step_preserves_source_boundary_overshoot() {
         auto runtime = make_timing_fixture();
         require(runtime.start_at_part("spin-12") == smgpc::compat::DemoSheetStartResult::Started &&
                     runtime.advance() && runtime.is_part_last_step("spin-12") &&
@@ -463,8 +463,17 @@ namespace {
         require(!runtime.advance() && runtime.is_active() && runtime.current_part_step() == 1,
                 "a paused final step must remain active during the source early-step correction");
         runtime.resume();
-        require(!runtime.advance() && !runtime.is_active(),
-                "resuming after the corrected final step must end before another dispatch");
+        require(runtime.advance() && runtime.is_active() &&
+                    runtime.is_final_boundary_overshoot() &&
+                    runtime.current_part_index() == runtime.time_rows().size() &&
+                    runtime.current_part_step() == 2 &&
+                    runtime.current_part()->part_name == "spin-12",
+                "the source's >= end comparison must retain the final pointer after a corrected one-frame part overshoots");
+        require(runtime.advance() && runtime.current_part_index() == runtime.time_rows().size() + 1U &&
+                    runtime.current_part_step() == 3 && !runtime.is_demo_last_step(),
+                "the exact source edge must keep running away until an explicit end instead of being normalized");
+        runtime.stop();
+        require(!runtime.is_active(), "an explicit end must safely terminate the retained-pointer edge state");
     }
 
     void test_suspend_ends_before_following_part_dispatch() {
@@ -541,7 +550,7 @@ int main() {
             std::pair{"sparse optional columns use source defaults", &test_sparse_optional_columns_use_source_defaults},
             std::pair{"spin subset timekeeper boundaries", &test_spin_subset_timekeeper_boundaries},
             std::pair{"pause matches source early-step correction", &test_pause_matches_source_early_step_correction},
-            std::pair{"paused final step is not last part", &test_paused_final_step_is_not_last_part},
+            std::pair{"paused final step source boundary overshoot", &test_paused_final_step_preserves_source_boundary_overshoot},
             std::pair{"suspend ends before following dispatch", &test_suspend_ends_before_following_part_dispatch},
             std::pair{"missing and empty Time reject start", &test_missing_and_empty_time_reject_start},
             std::pair{"malformed schemas are contextual errors", &test_malformed_schemas_are_contextual_errors},

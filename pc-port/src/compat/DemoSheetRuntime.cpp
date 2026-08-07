@@ -257,6 +257,7 @@ namespace smgpc::compat {
         load_table(DemoSheetTable::Action, "Action", [&](const auto &table) { parse_action(table, runtime._action_rows); });
         load_table(DemoSheetTable::Wipe, "Wipe", [&](const auto &table) { parse_wipe(table, runtime._wipe_rows); });
         load_table(DemoSheetTable::Sound, "Sound", [&](const auto &table) { parse_sound(table, runtime._sound_rows); });
+        runtime._sub_part_remaining.assign(runtime._sub_part_rows.size(), -1);
         return runtime;
     }
 
@@ -343,13 +344,11 @@ namespace smgpc::compat {
         _part_index.reset();
         _part_step = -1;
         _active = false;
-        _paused = false;
+        std::ranges::fill(_sub_part_remaining, -1);
     }
 
     void DemoSheetRuntime::pause() {
-        if (_active) {
-            _paused = true;
-        }
+        _paused = true;
     }
 
     void DemoSheetRuntime::resume() {
@@ -370,20 +369,55 @@ namespace smgpc::compat {
             return false;
         }
 
-        const auto &part = _time_rows[*_part_index];
+        const auto *part = current_part();
+        if (part == nullptr) {
+            return false;
+        }
         ++_part_step;
-        if (_part_step < part.total_step) {
+        if (part->total_step > _part_step) {
+            update_sub_parts();
             return true;
         }
 
-        if (part.suspend || *_part_index + 1U >= _time_rows.size()) {
+        if (part->suspend) {
             stop();
             return false;
         }
 
         ++*_part_index;
-        _part_step = 0;
+        if (*_part_index < _time_rows.size()) {
+            _part_step = 0;
+            update_sub_parts();
+            return true;
+        }
+
+        // DemoTimeKeeper retains the final part pointer after its index moves
+        // one-past-the-end. Its isDemoEnd comparison also requires the old
+        // TotalStep to be >= the current step. Usually equality ends here. If
+        // pause correction has already advanced a one-frame part past that
+        // equality, the source remains active and keeps advancing both values.
+        if (*_part_index == _time_rows.size() && part->total_step >= _part_step) {
+            stop();
+            return false;
+        }
+
+        update_sub_parts();
         return true;
+    }
+
+    void DemoSheetRuntime::update_sub_parts() {
+        for (auto index = std::size_t{}; index < _sub_part_rows.size(); ++index) {
+            auto &remaining = _sub_part_remaining[index];
+            if (remaining > 0) {
+                --remaining;
+            }
+
+            const auto &row = _sub_part_rows[index];
+            if (is_part_active(row.main_part_name) &&
+                part_step(row.main_part_name) == row.main_part_step) {
+                remaining = row.sub_part_total_step;
+            }
+        }
     }
 
     bool DemoSheetRuntime::is_active() const {
@@ -396,16 +430,53 @@ namespace smgpc::compat {
 
     bool DemoSheetRuntime::is_part_active(std::string_view part_name) const {
         const auto *part = current_part();
-        return part != nullptr && part->part_name == part_name;
+        if (part != nullptr && part->part_name == part_name) {
+            return true;
+        }
+        const auto found = find_sub_part(part_name);
+        return found.has_value() && _sub_part_remaining[*found] > 0;
     }
 
     bool DemoSheetRuntime::is_part_first_step(std::string_view part_name) const {
-        return is_part_active(part_name) && _part_step == 0;
+        return is_part_active(part_name) && part_step(part_name) == 0;
     }
 
     bool DemoSheetRuntime::is_part_last_step(std::string_view part_name) const {
+        const auto step = part_step(part_name);
+        const auto total = part_total_step(part_name);
+        return is_part_active(part_name) && step.has_value() && total.has_value() &&
+               *step == *total - 1;
+    }
+
+    bool DemoSheetRuntime::contains_part(std::string_view part_name) const {
+        return std::ranges::any_of(_time_rows, [part_name](const auto &row) {
+                   return row.part_name == part_name;
+               }) ||
+               find_sub_part(part_name).has_value();
+    }
+
+    std::optional<std::int32_t> DemoSheetRuntime::part_step(
+        std::string_view part_name) const {
         const auto *part = current_part();
-        return part != nullptr && part->part_name == part_name && _part_step == part->total_step - 1;
+        if (part != nullptr && part->part_name == part_name) {
+            return _part_step;
+        }
+        const auto found = find_sub_part(part_name);
+        if (!found.has_value()) {
+            return std::nullopt;
+        }
+        return _sub_part_rows[*found].sub_part_total_step -
+               _sub_part_remaining[*found];
+    }
+
+    std::optional<std::int32_t> DemoSheetRuntime::part_total_step(
+        std::string_view part_name) const {
+        const auto *part = current_part();
+        if (part != nullptr && part->part_name == part_name) {
+            return part->total_step;
+        }
+        const auto found = find_sub_part(part_name);
+        return found.has_value() ? std::optional(_sub_part_rows[*found].sub_part_total_step) : std::nullopt;
     }
 
     bool DemoSheetRuntime::is_last_part() const {
@@ -417,11 +488,17 @@ namespace smgpc::compat {
         return is_last_part() && part != nullptr && _part_step == part->total_step - 1;
     }
 
+    bool DemoSheetRuntime::is_final_boundary_overshoot() const {
+        return _active && _part_index.has_value() &&
+               *_part_index >= _time_rows.size();
+    }
+
     const DemoTimeRow *DemoSheetRuntime::current_part() const {
-        if (!_active || !_part_index.has_value() || *_part_index >= _time_rows.size()) {
+        if (!_active || !_part_index.has_value() || _time_rows.empty()) {
             return nullptr;
         }
-        return &_time_rows[*_part_index];
+        return *_part_index < _time_rows.size() ? &_time_rows[*_part_index] :
+                                                  &_time_rows.back();
     }
 
     std::optional<std::size_t> DemoSheetRuntime::current_part_index() const {
@@ -435,6 +512,15 @@ namespace smgpc::compat {
     std::optional<std::int32_t> DemoSheetRuntime::current_part_total_step() const {
         const auto *part = current_part();
         return part == nullptr ? std::nullopt : std::optional(part->total_step);
+    }
+
+    std::optional<std::size_t> DemoSheetRuntime::find_sub_part(
+        std::string_view part_name) const {
+        const auto found = std::ranges::find(_sub_part_rows, part_name,
+                                             &DemoSubPartRow::sub_part_name);
+        return found != _sub_part_rows.end() ? std::optional(static_cast<std::size_t>(
+                                                   std::distance(_sub_part_rows.begin(), found))) :
+                                               std::nullopt;
     }
 
 }  // namespace smgpc::compat

@@ -7,6 +7,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "compat/DemoUtilCompat.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -162,6 +163,9 @@ namespace smgpc::compat {
         std::vector<std::vector<Cast>> casts;
         std::vector<DemoSceneSubGroupDefinition> subgroups;
         std::vector<std::vector<LiveActor *>> subgroup_casts;
+        std::optional<std::size_t> active_definition;
+        NameObj *active_starter = nullptr;
+        bool final_boundary_overshoot_traced = false;
 
         [[nodiscard]] Cast *find_cast(std::size_t definition_index, const LiveActor *actor) {
             if (definition_index >= casts.size()) {
@@ -189,6 +193,16 @@ namespace smgpc::compat {
             for (auto index = std::size_t{}; index < casts.size(); ++index) {
                 if (auto *cast = find_cast(index, actor); cast != nullptr) {
                     return std::pair{index, cast};
+                }
+            }
+            return std::nullopt;
+        }
+
+        [[nodiscard]] std::optional<std::size_t> first_cast_index(
+            const LiveActor *actor) const {
+            for (auto index = std::size_t{}; index < casts.size(); ++index) {
+                if (find_cast(index, actor) != nullptr) {
+                    return index;
                 }
             }
             return std::nullopt;
@@ -341,6 +355,24 @@ namespace smgpc::compat {
 #endif
         }
 
+        void trace_time_event(const char *event, const DemoSceneDefinition &definition,
+                              std::string_view detail = {}) {
+#ifndef NDEBUG
+            if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
+                runtime->emit_semantic_trace_event(
+                    "demo", event,
+                    "demo=" + definition.demo_name +
+                        ";zone=" + std::to_string(definition.zone_id) +
+                        ";group=" + std::to_string(definition.group_link_id) +
+                        (!detail.empty() ? ";" + std::string(detail) : std::string{}));
+            }
+#else
+            static_cast<void>(event);
+            static_cast<void>(definition);
+            static_cast<void>(detail);
+#endif
+        }
+
     }  // namespace
 
     DemoSceneRuntime::DemoSceneRuntime(
@@ -371,13 +403,38 @@ namespace smgpc::compat {
     }
 
     DemoSceneRuntime::~DemoSceneRuntime() {
+        (void)stop_active_demo(nullptr, std::nullopt);
         auto &runtimes = installed_runtimes();
         runtimes.erase(std::remove(runtimes.begin(), runtimes.end(), this), runtimes.end());
         MR::disconnectToScene(this);
     }
 
     void DemoSceneRuntime::movement() {
-        // DemoSheetRuntime advancement and keeper dispatch are the next slice.
+        if (!_impl->active_definition.has_value()) {
+            return;
+        }
+
+        const auto definition_index = *_impl->active_definition;
+        auto &definition = _impl->definitions[definition_index];
+        (void)definition.sheet.advance();
+        if (!definition.sheet.is_active()) {
+            const auto *starter = _impl->active_starter;
+            const auto demo_name = definition.demo_name;
+            _impl->active_definition.reset();
+            _impl->active_starter = nullptr;
+            _impl->final_boundary_overshoot_traced = false;
+            trace_time_event("timekeeper_natural_end", definition);
+            finish_demo_state(starter, demo_name);
+            return;
+        }
+
+        if (definition.sheet.is_final_boundary_overshoot() &&
+            !_impl->final_boundary_overshoot_traced) {
+            _impl->final_boundary_overshoot_traced = true;
+            trace_time_event("timekeeper_final_boundary_overshoot", definition,
+                             "step=" + std::to_string(
+                                           definition.sheet.current_part_step().value_or(-1)));
+        }
     }
 
     std::span<const DemoSceneDefinition> DemoSceneRuntime::definitions() const {
@@ -489,6 +546,9 @@ namespace smgpc::compat {
     }
 
     void DemoSceneRuntime::release_actor(const LiveActor *actor) {
+        if (_impl->active_starter == actor) {
+            (void)stop_active_demo(actor, std::nullopt);
+        }
         for (auto &casts : _impl->casts) {
             casts.erase(std::remove_if(casts.begin(), casts.end(), [actor](const auto &cast) {
                             return cast.actor == actor;
@@ -497,6 +557,101 @@ namespace smgpc::compat {
         }
         for (auto &casts : _impl->subgroup_casts) {
             casts.erase(std::remove(casts.begin(), casts.end(), actor), casts.end());
+        }
+    }
+
+    std::optional<DemoSheetStartResult> DemoSceneRuntime::start_demo(
+        NameObj *starter, std::string_view demo_name,
+        std::optional<std::string_view> part_name) {
+        const auto found_definition = find_definition(demo_name);
+        if (!found_definition.has_value()) {
+            return std::nullopt;
+        }
+
+        if (_impl->active_definition.has_value()) {
+            (void)stop_active_demo(nullptr, std::nullopt);
+        }
+
+        auto &definition = _impl->definitions[*found_definition];
+        const auto result = part_name.has_value() ? definition.sheet.start_at_part(*part_name) : definition.sheet.start();
+        if (result == DemoSheetStartResult::Started) {
+            _impl->active_definition = *found_definition;
+            _impl->active_starter = starter;
+            _impl->final_boundary_overshoot_traced = false;
+            const auto detail = part_name.has_value() ? "part=" + std::string(*part_name) : std::string{};
+            trace_time_event("timekeeper_started", definition, detail);
+        } else {
+            trace_time_event("timekeeper_start_rejected", definition,
+                             "reason=" + std::string(demo_sheet_start_result_name(result)));
+        }
+        return result;
+    }
+
+    std::optional<DemoSheetStartResult> DemoSceneRuntime::start_demo_registered(
+        LiveActor *starter, std::optional<std::string_view> part_name) {
+        const auto found_definition = _impl->first_cast_index(starter);
+        if (!found_definition.has_value()) {
+            return std::nullopt;
+        }
+        // DemoFunction first finds the actor's executor, then its MR start path
+        // resolves that executor's name through the ordered holder again.
+        // Preserve that second lookup for duplicate-name definitions.
+        return start_demo(starter, _impl->definitions[*found_definition].demo_name,
+                          part_name);
+    }
+
+    bool DemoSceneRuntime::stop_active_demo(
+        const NameObj *starter, std::optional<std::string_view> demo_name) {
+        if (!_impl->active_definition.has_value()) {
+            return false;
+        }
+
+        auto &definition = _impl->definitions[*_impl->active_definition];
+        if ((starter != nullptr && starter != _impl->active_starter) ||
+            (demo_name.has_value() && *demo_name != definition.demo_name)) {
+            return false;
+        }
+
+        const auto *active_starter = _impl->active_starter;
+        const auto active_demo_name = definition.demo_name;
+        definition.sheet.stop();
+        _impl->active_definition.reset();
+        _impl->active_starter = nullptr;
+        _impl->final_boundary_overshoot_traced = false;
+        trace_time_event("timekeeper_stopped", definition);
+        finish_demo_state(active_starter, active_demo_name);
+        return true;
+    }
+
+    void DemoSceneRuntime::pause_time_keep(const LiveActor *actor) {
+        if (!_impl->active_definition.has_value()) {
+            return;
+        }
+        const auto active_name = _impl->definitions[*_impl->active_definition].demo_name;
+        for (auto index = std::size_t{}; index < _impl->definitions.size(); ++index) {
+            auto &definition = _impl->definitions[index];
+            if (definition.demo_name == active_name &&
+                _impl->find_cast(index, actor) != nullptr) {
+                definition.sheet.pause();
+                trace_time_event("timekeeper_paused", definition);
+                return;
+            }
+        }
+    }
+
+    void DemoSceneRuntime::resume_time_keep(const LiveActor *actor) {
+        if (!_impl->active_definition.has_value()) {
+            return;
+        }
+        const auto active_name = _impl->definitions[*_impl->active_definition].demo_name;
+        for (auto index = std::size_t{}; index < _impl->definitions.size(); ++index) {
+            auto &definition = _impl->definitions[index];
+            if (definition.demo_name == active_name &&
+                _impl->find_cast(index, actor) != nullptr) {
+                definition.sheet.resume();
+                trace_time_event("timekeeper_resumed", definition);
+                return;
+            }
         }
     }
 
@@ -560,6 +715,66 @@ namespace smgpc::compat {
         const auto found_definition = find_definition(demo_name);
         return found_definition.has_value() &&
                _impl->find_cast(*found_definition, actor) != nullptr;
+    }
+
+    bool DemoSceneRuntime::is_time_keep_active() const {
+        return _impl->active_definition.has_value() &&
+               _impl->definitions[*_impl->active_definition].sheet.is_active();
+    }
+
+    bool DemoSceneRuntime::is_active_registered(const LiveActor *actor) const {
+        const auto found_definition = _impl->first_cast_index(actor);
+        return found_definition.has_value() && _impl->active_definition == found_definition;
+    }
+
+    bool DemoSceneRuntime::registered_demo_has_player_rows(
+        const LiveActor *actor) const {
+        const auto found_definition = _impl->first_cast_index(actor);
+        return found_definition.has_value() &&
+               !_impl->definitions[*found_definition].sheet.player_rows().empty();
+    }
+
+    bool DemoSceneRuntime::part_exists(const LiveActor *actor,
+                                       std::string_view part_name) const {
+        const auto found_definition = _impl->first_cast_index(actor);
+        return found_definition.has_value() &&
+               _impl->definitions[*found_definition].sheet.contains_part(part_name);
+    }
+
+    bool DemoSceneRuntime::is_part_active(std::string_view part_name) const {
+        return is_time_keep_active() &&
+               _impl->definitions[*_impl->active_definition].sheet.is_part_active(part_name);
+    }
+
+    bool DemoSceneRuntime::is_demo_last_step() const {
+        return is_time_keep_active() &&
+               _impl->definitions[*_impl->active_definition].sheet.is_demo_last_step();
+    }
+
+    std::optional<std::int32_t> DemoSceneRuntime::part_step(
+        std::string_view part_name) const {
+        return is_time_keep_active() ? _impl->definitions[*_impl->active_definition].sheet.part_step(part_name) : std::nullopt;
+    }
+
+    std::optional<std::int32_t> DemoSceneRuntime::part_total_step(
+        std::string_view part_name) const {
+        return is_time_keep_active() ? _impl->definitions[*_impl->active_definition].sheet.part_total_step(part_name) : std::nullopt;
+    }
+
+    std::optional<std::string_view> DemoSceneRuntime::current_main_part_name(
+        std::string_view demo_name) const {
+        const auto found_definition = find_definition(demo_name);
+        if (!found_definition.has_value() ||
+            _impl->active_definition != found_definition) {
+            return std::nullopt;
+        }
+        const auto *part = _impl->definitions[*found_definition].sheet.current_part();
+        return part != nullptr ? std::optional<std::string_view>(part->part_name) :
+                                 std::nullopt;
+    }
+
+    std::string_view DemoSceneRuntime::active_demo_name() const {
+        return _impl->active_definition.has_value() ? std::string_view(_impl->definitions[*_impl->active_definition].demo_name) : std::string_view{};
     }
 
     std::size_t DemoSceneRuntime::membership_count(const LiveActor *actor) const {

@@ -5,6 +5,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/PlayerUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -151,12 +152,29 @@ namespace {
         return bytes;
     }
 
-    [[nodiscard]] std::vector<std::uint8_t> make_time_bcsv(std::string_view part_name) {
-        constexpr auto field_count = std::size_t{2U};
-        constexpr auto entry_size = std::size_t{8U};
+    struct TimeRow {
+        std::string part_name;
+        std::int32_t total_step = 1;
+        bool suspend = false;
+    };
+
+    [[nodiscard]] std::vector<std::uint8_t> make_time_bcsv(
+        std::span<const TimeRow> rows) {
+        constexpr auto field_count = std::size_t{3U};
+        constexpr auto entry_size = std::size_t{12U};
         constexpr auto data_offset = std::size_t{0x10U + field_count * 0x0cU};
-        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size + part_name.size() + 1U, 0U);
-        write_be32(bytes, 0x00U, 1U);
+
+        auto strings = std::vector<std::uint8_t>{};
+        auto string_offsets = std::vector<std::uint32_t>{};
+        for (const auto &row : rows) {
+            string_offsets.push_back(static_cast<std::uint32_t>(strings.size()));
+            strings.insert(strings.end(), row.part_name.begin(), row.part_name.end());
+            strings.push_back(0U);
+        }
+
+        auto bytes = std::vector<std::uint8_t>(
+            data_offset + rows.size() * entry_size + strings.size(), 0U);
+        write_be32(bytes, 0x00U, static_cast<std::uint32_t>(rows.size()));
         write_be32(bytes, 0x04U, field_count);
         write_be32(bytes, 0x08U, data_offset);
         write_be32(bytes, 0x0cU, entry_size);
@@ -164,10 +182,116 @@ namespace {
                          smgpc::resource::BcsvFieldType::StringOffset);
         write_bcsv_field(bytes, 1U, "TotalStep", 4U,
                          smgpc::resource::BcsvFieldType::Int32);
-        write_be32(bytes, data_offset, 0U);
-        write_be32(bytes, data_offset + 4U, 1U);
-        std::copy(part_name.begin(), part_name.end(),
-                  bytes.begin() + static_cast<std::ptrdiff_t>(data_offset + entry_size));
+        write_bcsv_field(bytes, 2U, "SuspendFlag", 8U,
+                         smgpc::resource::BcsvFieldType::Int32);
+        for (auto index = std::size_t{}; index < rows.size(); ++index) {
+            const auto entry = data_offset + index * entry_size;
+            write_be32(bytes, entry, string_offsets[index]);
+            write_be32(bytes, entry + 4U,
+                       static_cast<std::uint32_t>(rows[index].total_step));
+            write_be32(bytes, entry + 8U, rows[index].suspend ? 1U : 0U);
+        }
+        std::copy(strings.begin(), strings.end(),
+                  bytes.begin() + static_cast<std::ptrdiff_t>(
+                                      data_offset + rows.size() * entry_size));
+        return bytes;
+    }
+
+    [[nodiscard]] std::vector<std::uint8_t> make_time_bcsv(
+        std::string_view part_name) {
+        const auto rows = std::array{TimeRow{.part_name = std::string(part_name)}};
+        return make_time_bcsv(rows);
+    }
+
+    struct SubPartRow {
+        std::string sub_part_name;
+        std::int32_t total_step = 1;
+        std::string main_part_name;
+        std::int32_t main_part_step = 1;
+    };
+
+    [[nodiscard]] std::vector<std::uint8_t> make_sub_part_bcsv(
+        std::span<const SubPartRow> rows) {
+        constexpr auto field_count = std::size_t{4U};
+        constexpr auto entry_size = std::size_t{16U};
+        constexpr auto data_offset = std::size_t{0x10U + field_count * 0x0cU};
+
+        auto strings = std::vector<std::uint8_t>{};
+        const auto add_string = [&strings](std::string_view value) {
+            const auto offset = static_cast<std::uint32_t>(strings.size());
+            strings.insert(strings.end(), value.begin(), value.end());
+            strings.push_back(0U);
+            return offset;
+        };
+        auto offsets = std::vector<std::pair<std::uint32_t, std::uint32_t>>{};
+        for (const auto &row : rows) {
+            offsets.emplace_back(add_string(row.sub_part_name),
+                                 add_string(row.main_part_name));
+        }
+
+        auto bytes = std::vector<std::uint8_t>(
+            data_offset + rows.size() * entry_size + strings.size(), 0U);
+        write_be32(bytes, 0x00U, static_cast<std::uint32_t>(rows.size()));
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "SubPartName", 0U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 1U, "SubPartTotalStep", 4U,
+                         smgpc::resource::BcsvFieldType::Int32);
+        write_bcsv_field(bytes, 2U, "MainPartName", 8U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 3U, "MainPartStep", 12U,
+                         smgpc::resource::BcsvFieldType::Int32);
+        for (auto index = std::size_t{}; index < rows.size(); ++index) {
+            const auto entry = data_offset + index * entry_size;
+            write_be32(bytes, entry, offsets[index].first);
+            write_be32(bytes, entry + 4U,
+                       static_cast<std::uint32_t>(rows[index].total_step));
+            write_be32(bytes, entry + 8U, offsets[index].second);
+            write_be32(bytes, entry + 12U,
+                       static_cast<std::uint32_t>(rows[index].main_part_step));
+        }
+        std::copy(strings.begin(), strings.end(),
+                  bytes.begin() + static_cast<std::ptrdiff_t>(
+                                      data_offset + rows.size() * entry_size));
+        return bytes;
+    }
+
+    [[nodiscard]] std::vector<std::uint8_t> make_player_bcsv(
+        std::string_view part_name, std::string_view position_name,
+        std::string_view bck_name) {
+        constexpr auto field_count = std::size_t{3U};
+        constexpr auto entry_size = std::size_t{12U};
+        constexpr auto data_offset = std::size_t{0x10U + field_count * 0x0cU};
+        auto strings = std::vector<std::uint8_t>{};
+        const auto add_string = [&strings](std::string_view value) {
+            const auto offset = static_cast<std::uint32_t>(strings.size());
+            strings.insert(strings.end(), value.begin(), value.end());
+            strings.push_back(0U);
+            return offset;
+        };
+        const auto part_offset = add_string(part_name);
+        const auto position_offset = add_string(position_name);
+        const auto bck_offset = add_string(bck_name);
+        auto bytes = std::vector<std::uint8_t>(
+            data_offset + entry_size + strings.size(), 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "PartName", 0U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 1U, "PosName", 4U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_bcsv_field(bytes, 2U, "BckName", 8U,
+                         smgpc::resource::BcsvFieldType::StringOffset);
+        write_be32(bytes, data_offset, part_offset);
+        write_be32(bytes, data_offset + 4U, position_offset);
+        write_be32(bytes, data_offset + 8U, bck_offset);
+        std::copy(strings.begin(), strings.end(),
+                  bytes.begin() + static_cast<std::ptrdiff_t>(
+                                      data_offset + entry_size));
         return bytes;
     }
 
@@ -352,6 +476,47 @@ namespace {
         return make_rarc(files);
     }
 
+    [[nodiscard]] smgpc::resource::RarcArchive make_clock_sheet_fixture() {
+        const auto clock_time = std::array{
+            TimeRow{.part_name = "intro", .total_step = 3},
+            TimeRow{.part_name = "outro", .total_step = 2},
+        };
+        const auto clock_sub_parts = std::array{
+            SubPartRow{.sub_part_name = "pulse", .total_step = 2, .main_part_name = "intro", .main_part_step = 1},
+            SubPartRow{.sub_part_name = "chain", .total_step = 1, .main_part_name = "pulse", .main_part_step = 1},
+            SubPartRow{.sub_part_name = "boundary", .total_step = 3, .main_part_name = "intro", .main_part_step = 2},
+            SubPartRow{.sub_part_name = "dupe", .total_step = 2, .main_part_name = "intro", .main_part_step = 0},
+            SubPartRow{.sub_part_name = "dupe", .total_step = 5, .main_part_name = "intro", .main_part_step = 0},
+            SubPartRow{.sub_part_name = "intro", .total_step = 1, .main_part_name = "intro", .main_part_step = 0},
+        };
+        const auto other_time = std::array{
+            TimeRow{.part_name = "other", .total_step = 2},
+        };
+        const auto suspend_time = std::array{
+            TimeRow{.part_name = "hold", .total_step = 2, .suspend = true},
+            TimeRow{.part_name = "unreachable", .total_step = 1},
+        };
+        const auto runaway_time = std::array{
+            TimeRow{.part_name = "one", .total_step = 1},
+        };
+        const auto files = std::array{
+            ArchiveFile{.name = "DemoClockTime.bcsv",
+                        .data = make_time_bcsv(clock_time)},
+            ArchiveFile{.name = "DemoClockSubPart.bcsv",
+                        .data = make_sub_part_bcsv(clock_sub_parts)},
+            ArchiveFile{.name = "DemoClockPlayer.bcsv",
+                        .data = make_player_bcsv("intro", "ClockStart", "Wait")},
+            ArchiveFile{.name = "DemoOtherTime.bcsv",
+                        .data = make_time_bcsv(other_time)},
+            ArchiveFile{.name = "DemoSuspendTime.bcsv",
+                        .data = make_time_bcsv(suspend_time)},
+            ArchiveFile{.name = "DemoRunawayTime.bcsv",
+                        .data = make_time_bcsv(runaway_time)},
+            ArchiveFile{.name = "DemoEmptyClockTime.bcsv", .data = make_empty_bcsv()},
+        };
+        return make_rarc(files);
+    }
+
     [[nodiscard]] std::vector<smgpc::scene::StagePlacementObject> make_definition_fixture() {
         auto placements = std::vector<smgpc::scene::StagePlacementObject>{};
         placements.push_back(make_definition_placement(DefinitionRow{
@@ -418,6 +583,55 @@ namespace {
             .zone_id = 11,
             .link_id = 6,
             .table_path = "jmp/placement/common/objinfo",
+        }));
+        return placements;
+    }
+
+    [[nodiscard]] std::vector<smgpc::scene::StagePlacementObject>
+    make_clock_definition_fixture() {
+        auto placements = std::vector<smgpc::scene::StagePlacementObject>{};
+        placements.push_back(make_definition_placement(DefinitionRow{
+            .demo_name = "Clock",
+            .sheet_name = "Clock",
+            .zone_id = 20,
+            .link_id = 30,
+        }));
+        placements.push_back(make_definition_placement(DefinitionRow{
+            .demo_name = "Other",
+            .sheet_name = "Other",
+            .zone_id = 21,
+            .link_id = 31,
+        }));
+        placements.push_back(make_definition_placement(DefinitionRow{
+            .demo_name = "Suspend",
+            .sheet_name = "Suspend",
+            .zone_id = 22,
+            .link_id = 32,
+        }));
+        placements.push_back(make_definition_placement(DefinitionRow{
+            .demo_name = "Runaway",
+            .sheet_name = "Runaway",
+            .zone_id = 23,
+            .link_id = 33,
+        }));
+        placements.push_back(make_definition_placement(DefinitionRow{
+            .demo_name = "MissingClock",
+            .sheet_name = "MissingClock",
+            .zone_id = 24,
+            .link_id = 34,
+        }));
+        placements.push_back(make_definition_placement(DefinitionRow{
+            .demo_name = "EmptyClock",
+            .sheet_name = "EmptyClock",
+            .zone_id = 25,
+            .link_id = 35,
+        }));
+        placements.push_back(make_definition_placement(DefinitionRow{
+            .object_name = "DemoSubGroup",
+            .demo_name = "ClockSubGroupOnly",
+            .sheet_name = "Ignored",
+            .zone_id = 26,
+            .link_id = 36,
         }));
         return placements;
     }
@@ -520,6 +734,31 @@ namespace {
                 "missing and -1 DemoGroupId metadata should both reject automatic registration");
     }
 
+    void test_duplicate_registered_name_resolution_and_pause_scan() {
+        const auto archive = make_sheet_fixture();
+        const auto placements = make_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+
+        auto second_info = make_actor_info(8, -1, 5);
+        auto second_only = LiveActor("Actor");
+        require(MR::tryRegisterDemoCast(&second_only,
+                                        JMapInfoIter(&second_info, 0)) &&
+                    MR::tryStartDemoRegistered(&second_only, "shared") &&
+                    MR::getDemoPartStep("shared") == -1 &&
+                    !MR::isDemoActiveRegistered(&second_only),
+                "registered start must select actor membership first, then preserve the source's first exact-name executor resolution");
+
+        MR::pauseTimeKeepDemo(&second_only);
+        require(!runtime.definition(2U)->sheet.is_paused() &&
+                    runtime.definition(3U)->sheet.is_paused(),
+                "actor pause must scan the first registered executor whose duplicate name compares active, even when its pointer is inactive");
+        runtime.movement();
+        require(MR::getDemoPartStep("shared") == 0,
+                "pausing the inactive same-name executor must not freeze the active first duplicate");
+        MR::resumeTimeKeepDemo(&second_only);
+        MR::endDemo(&second_only, "Duplicate");
+    }
+
     void test_explicit_multi_membership_and_row_callbacks() {
         const auto archive = make_sheet_fixture();
         const auto placements = make_definition_fixture();
@@ -612,12 +851,239 @@ namespace {
                 "named lookup should scan primary definitions before same-name subgroups");
     }
 
+    void test_timekeeper_queries_subparts_and_natural_end() {
+        const auto archive = make_clock_sheet_fixture();
+        const auto placements = make_clock_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto actor_info = make_actor_info(30, -1, 20);
+        auto actor = LiveActor("ClockActor");
+        require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)),
+                "the clock actor must register with its zone-scoped primary definition");
+
+        require(MR::isDemoExist("Clock") && MR::isDemoExist("MissingClock") &&
+                    MR::isDemoExist("EmptyClock") &&
+                    !MR::isDemoExist("ClockSubGroupOnly") && !MR::isDemoExist(nullptr),
+                "isDemoExist must report exact primary definitions even when Time is missing or empty");
+        require(MR::isDemoPartExist(&actor, "intro") &&
+                    MR::isDemoPartExist(&actor, "pulse") &&
+                    !MR::isDemoPartExist(&actor, "unknown") &&
+                    !MR::isDemoPartExist(nullptr, "intro"),
+                "part existence must use the actor's first primary membership and include SubPart rows");
+        require(MR::getDemoPartStep("unknown") == -1 &&
+                    MR::getDemoPartTotalStep("unknown") == 0 &&
+                    MR::calcDemoPartStepRate("unknown") == 0.0f,
+                "safe compatibility sentinels must normalize invalid direct queries");
+
+        require(MR::tryStartTimeKeepDemo(&actor, "Clock", nullptr) &&
+                    MR::isDemoActive("Clock") && MR::isTimeKeepDemoActive() &&
+                    MR::isDemoActiveRegistered(&actor) &&
+                    MR::isDemoPartActive("intro") &&
+                    MR::isDemoPartStep("intro", -1) &&
+                    !MR::isDemoPartFirstStep("intro") &&
+                    MR::isDemoPartLessEqualStep("intro", -1) &&
+                    MR::isDemoPartGreaterStep("intro", -2) &&
+                    MR::getDemoPartStep("intro") == -1 &&
+                    MR::getDemoPartTotalStep("intro") == 3 &&
+                    !MR::isDemoPartActive("pulse") &&
+                    MR::getDemoPartStep("pulse") == 3 &&
+                    MR::getDemoPartTotalStep("pulse") == 2 &&
+                    MR::calcDemoPartStepRate("intro") == -1.0f / 3.0f &&
+                    std::string_view(MR::getCurrentDemoPartNameMain("Clock")) == "intro",
+                "start must expose the main part at step -1 and the source's total+1 sentinel for a dormant known SubPart");
+
+        runtime.movement();
+        require(MR::isDemoPartFirstStep("intro") &&
+                    MR::getDemoPartTotalStep("intro") == 3 &&
+                    MR::isDemoPartFirstStep("dupe") &&
+                    MR::getDemoPartTotalStep("dupe") == 2,
+                "step zero must dispatch SubPart triggers in BCSV order while main-name lookup keeps precedence");
+        runtime.movement();
+        require(MR::isDemoPartStep("intro", 1) &&
+                    MR::isDemoPartFirstStep("pulse") &&
+                    MR::isDemoPartLastStep("dupe"),
+                "a two-tick SubPart must expose steps zero and one from its exact main trigger");
+        runtime.movement();
+        require(MR::isDemoPartLastStep("intro") &&
+                    MR::isDemoPartLastStep("pulse") &&
+                    MR::isDemoPartFirstStep("chain") &&
+                    MR::isDemoPartFirstStep("boundary") &&
+                    !MR::isDemoPartActive("dupe") && !MR::isDemoLastStep(),
+                "ordered SubParts may trigger from an earlier SubPart, and first duplicate lookup must shadow later rows");
+        runtime.movement();
+        require(MR::isDemoPartFirstStep("outro") &&
+                    MR::isDemoPartStep("boundary", 1) &&
+                    std::string_view(MR::getCurrentDemoPartNameMain("Clock")) == "outro",
+                "SubPart activity must span a main-part boundary without resetting");
+        runtime.movement();
+        require(MR::isDemoPartLastStep("outro") &&
+                    MR::isDemoPartLastStep("boundary") && MR::isDemoLastStep(),
+                "the unpaused physical final row must expose its last dispatch step");
+        runtime.movement();
+        require(!MR::isTimeKeepDemoActive() && !MR::isDemoActive() &&
+                    MR::getCurrentDemoPartNameMain("Clock") == nullptr,
+                "the boundary update must naturally end and clear shared director state before dispatch");
+    }
+
+    void test_timekeeper_pause_resume_and_preserved_pause_flag() {
+        const auto archive = make_clock_sheet_fixture();
+        const auto placements = make_clock_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto actor_info = make_actor_info(30, -1, 20);
+        auto actor = LiveActor("ClockActor");
+        auto wrong_actor = LiveActor("WrongActor");
+        require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                    MR::tryStartTimeKeepDemo(&actor, "Clock", nullptr),
+                "the pause fixture must register and start");
+
+        MR::pauseTimeKeepDemo(&actor);
+        runtime.movement();
+        require(MR::isDemoPartFirstStep("intro") &&
+                    !MR::isDemoPartActive("dupe"),
+                "the first paused movement must correct -1 to zero without SubPart dispatch");
+        runtime.movement();
+        runtime.movement();
+        require(MR::isDemoPartStep("intro", 1) &&
+                    !MR::isDemoPartActive("pulse"),
+                "paused movement must correct zero to one, then freeze without keeper dispatch");
+        MR::resumeTimeKeepDemo(&wrong_actor);
+        runtime.movement();
+        require(MR::isDemoPartStep("intro", 1),
+                "pause/resume must ignore actors outside the active executor cast");
+        MR::resumeTimeKeepDemo(&actor);
+        runtime.movement();
+        require(MR::isDemoPartStep("intro", 2) &&
+                    !MR::isDemoPartActive("pulse") &&
+                    MR::isDemoPartFirstStep("boundary"),
+                "resume must continue at step two, permanently missing a paused step-one trigger");
+
+        MR::pauseTimeKeepDemo(&actor);
+        runtime.movement();
+        require(MR::isDemoPartStep("intro", 2),
+                "a pause after the early correction window must freeze the current step");
+        MR::endDemo(&actor, "Clock");
+        require(!MR::isDemoActive() && runtime.definition(0U)->sheet.is_paused(),
+                "DemoTimeKeeper::end must preserve its pause flag exactly");
+
+        require(MR::tryStartTimeKeepDemo(&actor, "Clock", nullptr),
+                "an ended clock must be restartable");
+        runtime.movement();
+        require(MR::isDemoPartFirstStep("intro") &&
+                    !MR::isDemoPartActive("dupe"),
+                "a restarted clock must remain paused until its registered actor resumes it");
+        MR::resumeTimeKeepDemo(&actor);
+        MR::endDemo(&actor, "Clock");
+    }
+
+    void test_registered_start_suspend_and_safe_rejections() {
+        const auto archive = make_clock_sheet_fixture();
+        const auto placements = make_clock_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto clock_info = make_actor_info(30, -1, 20);
+        auto actor = LiveActor("ClockActor");
+        auto wrong_actor = LiveActor("WrongActor");
+        auto player = smgpc::runtime::PlayerSystemService{};
+        const auto player_context =
+            smgpc::compat::ScopedPlayerSystemServiceOverride{player};
+        require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&clock_info, 0)) &&
+                    MR::tryRegisterDemoCast(&actor, "Other", JMapInfoIter{}),
+                "the registered-start actor must retain ordered multi-membership");
+        require(MR::tryStartDemoRegistered(&actor, "outro") &&
+                    MR::isDemoActiveRegistered(&actor) &&
+                    MR::getDemoPartStep("outro") == -1 &&
+                    !player.is_control_enabled(),
+                "registered start must choose the actor's first primary executor, exact part, and puppetable path for Player rows");
+        require(!MR::tryStartTimeKeepDemo(&actor, "Other", nullptr) &&
+                    MR::isDemoActive("Clock"),
+                "try-start must reject while the shared DemoDirector is already active");
+        MR::endDemo(&wrong_actor, "WrongName");
+        require(player.is_control_enabled() && !MR::isDemoActive() &&
+                    !MR::isTimeKeepDemoActive(),
+                "explicit end must ignore its informational owner/name and release auto-puppetable control like DemoDirector");
+
+        require(MR::tryStartTimeKeepDemo(&actor, "Other", nullptr) &&
+                    !MR::isDemoActiveRegistered(&actor),
+                "active-registered must compare against the actor's first membership, not any membership");
+        MR::startTimeKeepDemo(&actor, "Clock", "outro");
+        require(MR::isDemoActive("Clock") && MR::getDemoPartStep("outro") == -1,
+                "the explicit void start must replace an active demo without the try-start guard");
+        MR::endDemo(&actor, "Clock");
+        require(!MR::tryStartTimeKeepDemo(&actor, "MissingClock", nullptr) &&
+                    !MR::tryStartTimeKeepDemo(&actor, "EmptyClock", nullptr) &&
+                    !MR::tryStartTimeKeepDemo(&actor, "Unknown", nullptr) &&
+                    !MR::isDemoActive(),
+                "missing, empty, and unknown Time requests must fail safely without claiming director activity");
+
+        require(MR::tryStartTimeKeepDemoMarioPuppetable(&actor, "Suspend", nullptr),
+                "the LiveActor puppetable overload must use the same generalized clock");
+        runtime.movement();
+        runtime.movement();
+        require(MR::isDemoPartLastStep("hold") && !MR::isDemoLastStep(),
+                "a suspended non-final part must expose its last step without becoming the physical final row");
+        runtime.movement();
+        require(!MR::isDemoActive() && !MR::isTimeKeepDemoActive() &&
+                    !MR::isDemoPartActive("unreachable"),
+                "a suspend boundary must end before the following part dispatches");
+    }
+
+    void test_one_frame_final_pause_boundary_overshoot() {
+        const auto archive = make_clock_sheet_fixture();
+        const auto placements = make_clock_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto actor_info = make_actor_info(33, -1, 23);
+        auto actor = LiveActor("RunawayActor");
+        require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                    MR::tryStartTimeKeepDemo(&actor, "Runaway", nullptr),
+                "the one-frame edge fixture must start");
+        runtime.movement();
+        require(MR::isDemoLastStep() && MR::isDemoPartLastStep("one"),
+                "an unpaused one-frame physical final part must expose step zero as last");
+        MR::pauseTimeKeepDemo(&actor);
+        require(!MR::isDemoLastStep() && MR::isDemoPartLastStep("one"),
+                "physical-final detection must suppress paused state without changing the part-step predicate");
+        runtime.movement();
+        require(MR::getDemoPartStep("one") == 1 && MR::isTimeKeepDemoActive(),
+                "paused correction must advance the final one-frame part to step one");
+        MR::resumeTimeKeepDemo(&actor);
+        runtime.movement();
+        require(MR::isTimeKeepDemoActive() && MR::isDemoActive("Runaway") &&
+                    MR::getDemoPartStep("one") == 2 &&
+                    std::string_view(MR::getCurrentDemoPartNameMain("Runaway")) == "one" &&
+                    !MR::isDemoLastStep(),
+                "the exact source >= comparison must retain the final pointer after one-past-end overshoot");
+        runtime.movement();
+        require(MR::getDemoPartStep("one") == 3,
+                "the retained-pointer source edge must continue running until explicit end");
+        MR::endDemo(&actor, "Runaway");
+        require(!MR::isDemoActive() && !MR::isTimeKeepDemoActive(),
+                "explicit end must recover safely from the source boundary edge");
+    }
+
     void test_no_registry_and_scene_teardown() {
         auto info = make_actor_info(3, 1, 1);
         auto actor = LiveActor("Actor");
+        auto player = smgpc::runtime::PlayerSystemService{};
+        const auto player_context =
+            smgpc::compat::ScopedPlayerSystemServiceOverride{player};
         require(smgpc::compat::active_demo_scene_runtime() == nullptr &&
                     !MR::tryRegisterDemoCast(&actor, JMapInfoIter(&info, 0)),
                 "cast registration without an active scene registry should fail without an orphan fallback");
+        require(!MR::tryStartTimeKeepDemo(&actor, "TryWithoutRegistry", nullptr) &&
+                    !MR::isDemoActive(),
+                "a try time-keep start without a scene registry must reject safely");
+        MR::startTimeKeepDemo(&actor, "VoidWithoutRegistry", nullptr);
+        require(MR::isDemoActive("VoidWithoutRegistry") &&
+                    !MR::isTimeKeepDemoActive(),
+                "the void time-keep API must retain its programmable fallback when no scene registry exists");
+        MR::endDemo(&actor, "VoidWithoutRegistry");
+        MR::startTimeKeepDemoMarioPuppetable(
+            &actor, "PuppetVoidWithoutRegistry", nullptr);
+        require(MR::isDemoActive("PuppetVoidWithoutRegistry") &&
+                    !MR::isTimeKeepDemoActive() &&
+                    !player.is_control_enabled(),
+                "the void Mario API must retain its no-registry global and puppetable fallback");
+        MR::endDemo(&actor, "PuppetVoidWithoutRegistry");
+        require(player.is_control_enabled(),
+                "ending the no-registry puppetable fallback must restore control");
         require(MR::tryStartDemoWithoutCinemaFrame(&actor, "Programmable") && MR::isDemoActive(),
                 "programmable demos should remain usable without a time-keep scene executor");
         MR::endDemo(&actor, "Programmable");
@@ -736,8 +1202,13 @@ int main() {
     const auto tests = std::array{
         TestCase{"definition ingestion and dormant sheets", test_definition_ingestion_and_dormant_sheets},
         TestCase{"zone scoping, CastId, and duplicate choice", test_zone_scoping_cast_id_and_duplicate_choice},
+        TestCase{"duplicate registered name resolution and pause scan", test_duplicate_registered_name_resolution_and_pause_scan},
         TestCase{"multi-membership and row callbacks", test_explicit_multi_membership_and_row_callbacks},
         TestCase{"subgroup forwarding and named behavior", test_subgroup_forwarding_and_named_behavior},
+        TestCase{"timekeeper queries, SubParts, and natural end", test_timekeeper_queries_subparts_and_natural_end},
+        TestCase{"timekeeper pause, resume, and preserved pause", test_timekeeper_pause_resume_and_preserved_pause_flag},
+        TestCase{"registered start, suspend, and safe rejections", test_registered_start_suspend_and_safe_rejections},
+        TestCase{"one-frame final paused boundary overshoot", test_one_frame_final_pause_boundary_overshoot},
         TestCase{"no registry and scene teardown", test_no_registry_and_scene_teardown},
         TestCase{"no definition skips DemoSheet archive", test_no_definition_skips_demo_sheet_archive},
         TestCase{"optional real scene definitions", test_optional_real_gateway_definitions},

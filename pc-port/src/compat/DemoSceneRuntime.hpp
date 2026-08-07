@@ -67,9 +67,9 @@ namespace smgpc::compat {
     };
 
     // Scene-owned counterpart of the original DemoDirector/DemoExecutor
-    // collection. Clock advancement and sheet-row dispatch are intentionally
-    // separate follow-up work; this class owns definitions, cast membership,
-    // and registered callbacks at their original per-executor granularity.
+    // collection. This class owns definitions, the Time/SubPart clocks, cast
+    // membership, and registered callbacks at their original per-executor
+    // granularity. The remaining keeper row dispatch stays separate.
     class DemoSceneRuntime final : public NameObj {
     public:
         DemoSceneRuntime(smgpc::runtime::DvdFileSystemService &dvd,
@@ -98,6 +98,17 @@ namespace smgpc::compat {
                                              const JMapInfoIter &iter);
         void release_actor(const LiveActor *actor);
 
+        [[nodiscard]] std::optional<DemoSheetStartResult> start_demo(
+            NameObj *starter, std::string_view demo_name,
+            std::optional<std::string_view> part_name);
+        [[nodiscard]] std::optional<DemoSheetStartResult> start_demo_registered(
+            LiveActor *starter, std::optional<std::string_view> part_name);
+        [[nodiscard]] bool stop_active_demo(
+            const NameObj *starter,
+            std::optional<std::string_view> demo_name);
+        void pause_time_keep(const LiveActor *actor);
+        void resume_time_keep(const LiveActor *actor);
+
         [[nodiscard]] bool try_register_action_functor(const LiveActor *actor,
                                                        const MR::FunctorBase &functor,
                                                        std::optional<std::string_view> part_name);
@@ -110,6 +121,21 @@ namespace smgpc::compat {
 
         [[nodiscard]] bool has_cast(const LiveActor *actor) const;
         [[nodiscard]] bool has_cast(const LiveActor *actor, std::string_view demo_name) const;
+        [[nodiscard]] bool is_time_keep_active() const;
+        [[nodiscard]] bool is_active_registered(const LiveActor *actor) const;
+        [[nodiscard]] bool registered_demo_has_player_rows(
+            const LiveActor *actor) const;
+        [[nodiscard]] bool part_exists(const LiveActor *actor,
+                                       std::string_view part_name) const;
+        [[nodiscard]] bool is_part_active(std::string_view part_name) const;
+        [[nodiscard]] bool is_demo_last_step() const;
+        [[nodiscard]] std::optional<std::int32_t> part_step(
+            std::string_view part_name) const;
+        [[nodiscard]] std::optional<std::int32_t> part_total_step(
+            std::string_view part_name) const;
+        [[nodiscard]] std::optional<std::string_view> current_main_part_name(
+            std::string_view demo_name) const;
+        [[nodiscard]] std::string_view active_demo_name() const;
         [[nodiscard]] std::size_t membership_count(const LiveActor *actor) const;
         [[nodiscard]] std::size_t subgroup_membership_count(const LiveActor *actor) const;
         [[nodiscard]] std::size_t action_count(const LiveActor *actor) const;

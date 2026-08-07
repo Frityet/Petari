@@ -1,0 +1,89 @@
+UTC evidence timestamp: 2026-08-07T01:34:33Z
+workspace: /workspaces/pcport/pc-port
+
+$ xmake build smg-pc-demo-sheet-runtime-tests
+[100%]: build ok
+
+$ ./build/linux/x86_64/debug/smg-pc-demo-sheet-runtime-tests
+[ok] optional real Tico guide schema and rows
+[ok] optional real archive all Time families
+[ok] case-insensitive lookup and exact part name
+[ok] CP932 Time part and source defaults
+[ok] sparse optional columns use source defaults
+[ok] spin subset timekeeper boundaries
+[ok] pause matches source early-step correction
+[ok] paused final step source boundary overshoot
+[ok] suspend ends before following dispatch
+[ok] missing and empty Time reject start
+[ok] malformed schemas are contextual errors
+11 DemoSheet runtime test(s) passed
+
+$ xmake build smg-pc-demo-scene-runtime-tests
+[100%]: build ok
+
+$ ./build/linux/x86_64/debug/smg-pc-demo-scene-runtime-tests
+[pass] definition ingestion and dormant sheets
+[pass] zone scoping, CastId, and duplicate choice
+[pass] duplicate registered name resolution and pause scan
+[pass] multi-membership and row callbacks
+[pass] subgroup forwarding and named behavior
+[pass] timekeeper queries, SubParts, and natural end
+[pass] timekeeper pause, resume, and preserved pause
+[pass] registered start, suspend, and safe rejections
+[pass] one-frame final paused boundary overshoot
+[pass] no registry and scene teardown
+[pass] no definition skips DemoSheet archive
+[pass] optional real scene definitions
+12/12 tests passed
+
+$ xmake build smg-pc
+[100%]: build ok, spent 3.602s
+
+$ xmake build smg-pc-aurora-native-tests
+[100%]: build ok
+
+$ ./build/linux/x86_64/debug/smg-pc-aurora-native-tests
+27 Aurora-native test(s) passed
+
+$ stat -c '%i %h %s %n' container/orig/RMGK01/files/ObjectData/DemoSheet.arc ../orig/RMGK02/files/ObjectData/DemoSheet.arc
+469944 2 43456 container/orig/RMGK01/files/ObjectData/DemoSheet.arc
+469944 2 43456 ../orig/RMGK02/files/ObjectData/DemoSheet.arc
+
+$ sha256sum container/orig/RMGK01/files/ObjectData/DemoSheet.arc ../orig/RMGK02/files/ObjectData/DemoSheet.arc
+975b6c99ec882c5e56f24e4684859692fc98613dc0e021834e9895b46eae8b6d  container/orig/RMGK01/files/ObjectData/DemoSheet.arc
+975b6c99ec882c5e56f24e4684859692fc98613dc0e021834e9895b46eae8b6d  ../orig/RMGK02/files/ObjectData/DemoSheet.arc
+
+$ git diff --check -- <scoped compat and test files>
+(no output; exit 0)
+
+Production paths changed by this slice:
+src/compat/DemoCompat.cpp
+src/compat/DemoSceneRuntime.cpp
+src/compat/DemoSceneRuntime.hpp
+src/compat/DemoSheetRuntime.cpp
+src/compat/DemoSheetRuntime.hpp
+src/compat/DemoUtilCompat.cpp
+src/compat/DemoUtilCompat.hpp
+
+Test paths changed by this slice:
+tests/DemoSceneRuntimeTests.cpp
+tests/DemoSheetRuntimeTests.cpp
+
+No production pc-port/src/Game path was changed by this slice.
+
+$ xmake aurora-route-smoke --disc=../RMGK01.iso --work-dir=/tmp/smgpc-demo-clock-route-20260807T0145Z --display=306 --timeout=240 --no-build --keep-going title file_select picturebook gateway_handoff
+title: passed, frame=90, render_packets=22, nonblack=1.0000
+file_select: environment-only launch failure; replacement Xvfb could not bind the reused display and SDL reported "No available video device"
+picturebook: passed, frame=7600, render_packets=390, nonblack=1.0000
+gateway_handoff: passed, frame=10350, render_packets=1063, nonblack=1.0000
+
+$ xmake aurora-route-smoke --disc=../RMGK01.iso --work-dir=/tmp/smgpc-demo-clock-file-select-20260807T0148Z --display=307 --timeout=240 --no-build file_select
+file_select: passed, frame=1900, render_packets=27, nonblack=0.9998
+aggregate status: all four requested checkpoints passed on the final binary
+
+$ sha256sum <final route captures>
+9b2f57887d8644b5ad8f714d9436a0be55038373dc05c27e126eac58a2320f23  title-frame-90.png
+f100e44af973418fa5140837b06f83b347b69d50cf035fa1ab015971756fa7c8  file_select-frame-1900.png
+e145ba374696c0cf89cef835b32518ba3a18860f3ad9810642219003053f6196  picturebook-frame-7600.png
+0b6523928d288cba6395969c126a430d11ee8e5adb92110ca689688a9737dbf3  gateway_handoff-frame-10350.png
+All four hashes match notes/demo-scene-definitions-20260807T010317Z/route-smoke.

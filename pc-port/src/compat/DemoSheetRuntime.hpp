@@ -128,8 +128,13 @@ namespace smgpc::compat {
         [[nodiscard]] bool is_part_active(std::string_view part_name) const;
         [[nodiscard]] bool is_part_first_step(std::string_view part_name) const;
         [[nodiscard]] bool is_part_last_step(std::string_view part_name) const;
+        [[nodiscard]] bool contains_part(std::string_view part_name) const;
+        [[nodiscard]] std::optional<std::int32_t> part_step(std::string_view part_name) const;
+        [[nodiscard]] std::optional<std::int32_t> part_total_step(
+            std::string_view part_name) const;
         [[nodiscard]] bool is_last_part() const;
         [[nodiscard]] bool is_demo_last_step() const;
+        [[nodiscard]] bool is_final_boundary_overshoot() const;
         [[nodiscard]] const DemoTimeRow *current_part() const;
         [[nodiscard]] std::optional<std::size_t> current_part_index() const;
         [[nodiscard]] std::optional<std::int32_t> current_part_step() const;
@@ -139,11 +144,15 @@ namespace smgpc::compat {
         explicit DemoSheetRuntime(std::string time_sheet_name);
 
         [[nodiscard]] DemoSheetStartResult start_at_index(std::size_t index);
+        void update_sub_parts();
+        [[nodiscard]] std::optional<std::size_t> find_sub_part(
+            std::string_view part_name) const;
 
         std::string _time_sheet_name;
         std::array<bool, static_cast<std::size_t>(DemoSheetTable::Count)> _present_tables{};
         std::vector<DemoTimeRow> _time_rows;
         std::vector<DemoSubPartRow> _sub_part_rows;
+        std::vector<std::int32_t> _sub_part_remaining;
         std::vector<DemoPlayerRow> _player_rows;
         std::vector<DemoCameraRow> _camera_rows;
         std::vector<DemoActionRow> _action_rows;

@@ -1,0 +1,40 @@
+{
+  "task": "generalized DemoSheet clock and MR time-keep queries",
+  "timestamp_utc": "2026-08-07T01:34:33Z",
+  "production_scope": "pc-port/src/compat",
+  "game_source_modified_by_slice": false,
+  "route_specific_logic_added": false,
+  "focused_tests": {
+    "demo_sheet_runtime": "11/11",
+    "demo_scene_runtime": "12/12",
+    "aurora_native": "27/27"
+  },
+  "full_build": "pass",
+  "independent_review": {
+    "status": "approved",
+    "remaining_high_or_medium_findings": 0
+  },
+  "route_regression": {
+    "status": "pass",
+    "checkpoints": {
+      "title": 90,
+      "file_select": 1900,
+      "picturebook": 7600,
+      "gateway_handoff": 10350
+    },
+    "captures_match_prior_baseline": true,
+    "xvfb_retry_documented": true
+  },
+  "real_data": {
+    "region": "RMGK01",
+    "time_families": 138,
+    "demo_sheet_sha256": "975b6c99ec882c5e56f24e4684859692fc98613dc0e021834e9895b46eae8b6d",
+    "rmgk02_is_same_hardlink": true
+  },
+  "safe_invalid_query_sentinels": {
+    "step": -1,
+    "total_step": 0,
+    "rate": 0.0,
+    "current_main_part": null
+  }
+}

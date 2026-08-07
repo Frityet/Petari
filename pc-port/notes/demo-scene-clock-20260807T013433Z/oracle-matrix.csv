@@ -1,0 +1,20 @@
+behavior,source oracle,compat implementation,focused evidence
+start selects row and leaves step -1,DemoTimeKeeper::start/setStartPart,DemoSheetRuntime::start/start_at_part,timekeeper queries SubParts and natural end
+unpaused update and normal boundary,DemoTimeKeeper::update/isDemoEnd,DemoSheetRuntime::advance,spin subset timekeeper boundaries
+suspend ends before later dispatch,DemoTimeKeeper::isDemoEnd and DemoExecutor::movement,DemoSheetRuntime::advance and DemoSceneRuntime::movement,suspend ends before following dispatch; registered start suspend and safe rejections
+pause early correction and no keeper dispatch,DemoTimeKeeper::update and DemoExecutor::movement,DemoSheetRuntime::advance,timekeeper pause resume and preserved pause
+end preserves pause flag,DemoTimeKeeper::end,DemoSheetRuntime::stop,timekeeper pause resume and preserved pause
+one-frame final overshoot,DemoTimeKeeper::update/isDemoEnd,DemoSheetRuntime::advance,paused final step source boundary overshoot; one-frame final paused boundary overshoot
+SubPart decrement then trigger in row order,DemoSubPartKeeper::update,DemoSheetRuntime::update_sub_parts,timekeeper queries SubParts and natural end
+main name precedes SubPart name,DemoFunction::isCurrentMainPart/getDemoPartStepFunction,DemoSheetRuntime::is_part_active/part_step,timekeeper queries SubParts and natural end
+duplicate SubPart lookup uses first row,DemoSubPartKeeper::findSubPart,DemoSheetRuntime::find_sub_part,timekeeper queries SubParts and natural end
+primary definition existence independent of Time table,DemoDirector::isExistTimeKeepDemo,MR::isDemoExist shim,definition ingestion and dormant sheets; timekeeper queries SubParts and natural end
+actor query uses first membership,DemoFunction::findDemoExecutor,DemoSceneRuntime::first_cast_index,registered start suspend and safe rejections
+duplicate registered start re-resolves exact name,DemoFunction::tryStartDemoRegistered and MR::tryStartTimeKeepDemo,DemoSceneRuntime::start_demo_registered,duplicate registered name resolution and pause scan
+registered Player rows select puppetable start,DemoExecutor::tryStartProperDemoSystem/Part,DemoSceneRuntime::registered_demo_has_player_rows and MR start shim,registered start suspend and safe rejections
+actor pause scans active-name memberships,DemoFunction::findDemoExecutorActive,DemoSceneRuntime::pause_time_keep/resume_time_keep,duplicate registered name resolution and pause scan
+last demo step is unpaused physical final total-1,DemoFunction::isDemoLastPartLastStep,DemoSheetRuntime::is_demo_last_step,timekeeper queries SubParts and natural end; one-frame final paused boundary overshoot
+step rate is step divided by TotalStep,MR::calcDemoPartStepRate,MR compatibility shim,timekeeper queries SubParts and natural end
+natural end clears shared director state,DemoExecutor::movement and DemoDirector::endDemo,DemoSceneRuntime::movement and DemoUtilCompat,timekeeper queries SubParts and natural end
+explicit end ignores informational owner and name,MR::endDemo and DemoDirector::endDemo,DemoUtilCompat::endDemo,registered start suspend and safe rejections
+void no-registry start retains programmable fallback,prior compatibility behavior,MR startTimeKeepDemo shims,no registry and scene teardown
