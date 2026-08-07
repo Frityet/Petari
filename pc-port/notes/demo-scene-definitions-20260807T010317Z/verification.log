@@ -1,0 +1,81 @@
+Demo scene definitions verification
+2026-08-07 UTC
+
+$ xmake build -j 4 smg-pc-demo-scene-runtime-tests
+build ok
+
+$ xmake run smg-pc-demo-scene-runtime-tests
+[pass] definition ingestion and dormant sheets
+[pass] zone scoping, CastId, and duplicate choice
+[pass] multi-membership and row callbacks
+[pass] subgroup forwarding and named behavior
+[pass] no registry and scene teardown
+[pass] no definition skips DemoSheet archive
+[pass] optional real scene definitions
+7/7 tests passed
+
+$ (cd /tmp && /workspaces/pcport/pc-port/build/linux/x86_64/debug/smg-pc-demo-scene-runtime-tests)
+[pass] definition ingestion and dormant sheets
+[pass] zone scoping, CastId, and duplicate choice
+[pass] multi-membership and row callbacks
+[pass] subgroup forwarding and named behavior
+[pass] no registry and scene teardown
+[pass] no definition skips DemoSheet archive
+[skip] RMGK01 scene-demo definition check
+[pass] optional real scene definitions
+7/7 tests passed
+
+$ xmake build -j 4 smg-pc-demo-sheet-runtime-tests
+build ok
+
+$ xmake run smg-pc-demo-sheet-runtime-tests
+11 DemoSheet runtime test(s) passed
+
+$ xmake build -j 4 smg-pc-object-name-table-tests
+build ok
+
+$ xmake run smg-pc-object-name-table-tests
+[ok] RMGK01 extracted ObjNameTable
+[ok] RMGK02 extracted ObjNameTable
+4/4 tests passed
+
+$ xmake build -j 4 smg-pc-aurora-native-tests
+build ok
+
+$ xmake run smg-pc-aurora-native-tests
+27 Aurora-native test(s) passed
+
+$ xmake build -j 4 smg-pc
+build ok
+
+$ route smoke (title, file_select, picturebook, gateway_handoff)
+overall manifest status: passed
+failures: none
+title trace validator: passed (frame 90)
+file_select trace validator: passed (frame 1900)
+picturebook trace validator: passed (frame 7600)
+gateway_handoff trace validator: passed (frame 10350)
+gateway placement validation: 242 total, 168 created, 72 intentionally ignored, 2 blocked
+
+$ git diff --check
+(no output)
+
+$ clang-format --dry-run --Werror src/compat/DemoSceneRuntime.cpp src/compat/DemoSceneRuntime.hpp src/compat/DemoCompat.cpp tests/DemoSceneRuntimeTests.cpp
+(no output)
+
+$ git diff --name-only -- pc-port/src/Game
+pc-port/src/Game/Screen/SaveIcon.cpp
+pc-port/src/Game/Screen/SaveIcon.hpp
+pc-port/src/Game/Util/TriggerChecker.cpp
+pc-port/src/Game/Util/TriggerChecker.hpp
+
+Those four Game paths were pre-existing user changes and were not touched by this task.
+
+$ rg -n 'HeavensDoor|Tico|Rosetta|Spin' pc-port/src/compat/DemoSceneRuntime.cpp pc-port/src/compat/DemoSceneRuntime.hpp pc-port/src/compat/DemoCompat.cpp
+(no output)
+
+$ pc-port/dolphin/build-nogui-libcxx/Binaries/dolphin-tool header -i RMGK01.iso -j
+{"country":"Korea","game_id":"RMGK01","internal_name":"SUPER MARIO GALAXY","region":"NTSC-K","revision":0,"title_id":281476357506891}
+
+$ pc-port/dolphin/build-nogui-libcxx/Binaries/dolphin-tool header -i 'Super Mario Wii - Galaxy Adventure (Korea).rvz' -j
+{"block_size":131072,"compression_level":5,"compression_method":"Zstandard","country":"Korea","game_id":"RMGK01","internal_name":"SUPER MARIO GALAXY","region":"NTSC-K","revision":0,"title_id":281476357506891}

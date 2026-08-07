@@ -743,10 +743,9 @@ namespace {
             rabbit->initAfterPlacement();
             ++created_count;
 
-            require(smgpc::compat::has_registered_demo_cast(rabbit),
-                    "each metadata-backed DemoRabbit should be owned by the generalized demo registry");
-            require(smgpc::compat::registered_demo_action_count(rabbit) == (row == 0 ? 6U : 1U),
-                    "each cast should register only its original named action set");
+            require(!smgpc::compat::has_registered_demo_cast(rabbit) &&
+                        smgpc::compat::registered_demo_action_count(rabbit) == 0U,
+                    "placement metadata alone should not invent a demo executor outside an active scene registry");
             const auto* body_sensor = rabbit->getSensor("Body");
             require(body_sensor != nullptr && body_sensor->mType == ATYPE_NPC && body_sensor->mGroupSize == 8U,
                     "the NPC base should preserve the original Body sensor type and group size");
@@ -758,11 +757,9 @@ namespace {
                 require(rabbit->mMsgCtrl != nullptr, "cast 0 should create the placement-backed talk controller");
                 require(smgpc::compat::has_owned_talk_ctrl(rabbit),
                         "the generalized talk registry should own cast 0's controller");
-                require(MR::tryRegisterDemoCast(rabbit, JMapInfoIter(&placement, 1)) &&
-                            smgpc::compat::registered_demo_action_count(rabbit) == 0U,
-                        "re-registering a reused actor address should discard stale named demo actions");
             } else {
-                require(!rabbit->isDead(), "casts 1 and 2 should appear in their registered Demo nerve");
+                require(rabbit->isDead(),
+                        "without a matching scene definition, casts 1 and 2 should retain the source default Appear nerve");
                 require(rabbit->mRailRider == nullptr, "placements without CommonPath_ID should not synthesize a rail");
                 require(rabbit->mMsgCtrl == nullptr, "placements without MessageId should not synthesize talk state");
                 require(!smgpc::compat::has_owned_talk_ctrl(rabbit),
@@ -780,20 +777,20 @@ namespace {
         auto* revisited_rabbit = dynamic_cast<DemoRabbit*>(revisit.get());
         require(revisited_rabbit != nullptr, "a revisited placement should still construct the exact actor type");
         revisited_rabbit->init(JMapInfoIter(&placement, 0));
-        require(smgpc::compat::has_owned_talk_ctrl(revisited_rabbit) && smgpc::compat::has_registered_demo_cast(revisited_rabbit),
-                "a revisited placement should receive fresh talk ownership and a fresh demo action map");
+        require(smgpc::compat::has_owned_talk_ctrl(revisited_rabbit) &&
+                    !smgpc::compat::has_registered_demo_cast(revisited_rabbit),
+                "a revisited placement should receive fresh talk ownership without an orphan demo executor");
         smgpc::compat::release_actor_runtime_state(revisited_rabbit);
     }
 
-    void test_demo_cast_optional_cast_id_sentinel() {
+    void test_demo_cast_requires_scene_definition() {
         auto placement = make_demo_cast_sentinel_placement_info();
         auto actor = LiveActor("optional-cast-id");
 
-        require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)),
-                "a valid DemoGroupId should register even when optional CastId is -1");
-        require(smgpc::compat::has_registered_demo_cast(&actor),
-                "the generalized demo registry should retain sentinel-CastId actors");
-        smgpc::compat::release_actor_runtime_state(&actor);
+        require(!MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)),
+                "a valid group and CastId -1 should not create an executor when no scene definition is active");
+        require(!smgpc::compat::has_registered_demo_cast(&actor),
+                "failed no-registry registration should not retain orphan cast state");
 
         require(!MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 1)),
                 "a missing DemoGroupId should remain unregistered even when CastId is present");
@@ -1568,7 +1565,7 @@ int main() {
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
         TestCase{"DemoRabbit factory archives and placement init", test_demo_rabbit_factory_archives_and_placement_init},
-        TestCase{"demo cast optional CastId sentinel", test_demo_cast_optional_cast_id_sentinel},
+        TestCase{"demo cast requires scene definition", test_demo_cast_requires_scene_definition},
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
         TestCase{"save event-name dictionary codec", test_save_event_name_dictionary_codec},
         TestCase{"save event-state container round trip", test_save_event_state_container_round_trip},

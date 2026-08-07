@@ -24,6 +24,7 @@ namespace smgpc::compat {
 
     [[nodiscard]] bool has_owned_talk_ctrl(const LiveActor* actor);
     [[nodiscard]] bool has_registered_demo_cast(const LiveActor* actor);
+    [[nodiscard]] std::size_t registered_demo_membership_count(const LiveActor* actor);
     [[nodiscard]] std::size_t registered_demo_action_count(const LiveActor* actor);
     [[nodiscard]] std::size_t declared_star_piece_count(const NameObj* owner);
 }  // namespace smgpc::compat

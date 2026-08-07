@@ -230,11 +230,10 @@ namespace smgpc::compat {
     }
 
     DemoSheetRuntime DemoSheetRuntime::load(const smgpc::resource::RarcArchive &archive, std::string_view time_sheet_name) {
-        if (time_sheet_name.empty()) {
-            throw DemoSheetParseError("DemoSheet time-sheet name is empty");
-        }
-
         auto runtime = DemoSheetRuntime(std::string(time_sheet_name));
+        if (time_sheet_name.empty()) {
+            return runtime;
+        }
         const auto load_table = [&](DemoSheetTable kind, std::string_view suffix, auto &&parse) {
             const auto file_name = "Demo" + runtime._time_sheet_name + std::string(suffix) + ".bcsv";
             const auto *entry = archive.find_by_basename(file_name);

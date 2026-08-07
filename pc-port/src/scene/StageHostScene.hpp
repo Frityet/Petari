@@ -22,6 +22,7 @@ namespace smgpc::runtime {
 }  // namespace smgpc::runtime
 
 namespace smgpc::compat {
+    class DemoSceneRuntime;
     class StagePlayerRuntime;
 }  // namespace smgpc::compat
 
@@ -72,6 +73,7 @@ namespace smgpc::scene {
         StageCollisionService _collision;
         StageGravityService _gravity;
         std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;
+        std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime;
         std::vector<StagePlacementObject> _placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
         std::vector<bool> _root_host_appear;

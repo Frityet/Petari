@@ -7,6 +7,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "camera/StageStartCamera.hpp"
+#include "compat/DemoSceneRuntime.hpp"
 #include "compat/StagePlayerRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/NameObjLifecycleService.hpp"
@@ -165,6 +166,10 @@ namespace smgpc::scene {
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
+        // Demo definitions own cast memberships and callback clones. Release
+        // them while all actor pointers are still valid and after their
+        // scheduler entries can no longer run.
+        _demo_scene_runtime.reset();
         if (_stage_player != nullptr) {
             _stage_player.reset();
             _runtime.player_system().clear_stage_state();
@@ -295,6 +300,9 @@ namespace smgpc::scene {
             _object_name_table = std::make_unique<smgpc::scene::nameobj::ObjectNameTable>(_runtime.dvd());
         }
         _placements = resolve_stage_placement_objects(_runtime.dvd(), _request.stage_name, _request.scenario_no);
+        // The original DemoDirector/executors exist before placement actors
+        // initialize and attempt to join their zone-scoped groups.
+        _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(_runtime.dvd(), _placements);
         const auto collision_stats = _collision.load(_runtime.dvd(), _placements);
         _collision.activate();
         const auto gravity_stats = _gravity.load(_placements);

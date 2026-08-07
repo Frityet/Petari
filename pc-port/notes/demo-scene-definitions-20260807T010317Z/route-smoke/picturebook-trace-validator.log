@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/tmp/demo-scene-route-20260806/picturebook/picturebook-frame-7600.trace.sqlite"	passed	1	7600	pc-port	2044	390	1642	4

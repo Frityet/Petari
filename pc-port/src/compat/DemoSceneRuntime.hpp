@@ -1,0 +1,138 @@
+#pragma once
+
+#include "Game/NameObj/NameObj.hpp"
+#include "compat/DemoSheetRuntime.hpp"
+
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <span>
+#include <string>
+#include <string_view>
+
+class JMapInfoIter;
+class LiveActor;
+class Nerve;
+
+namespace MR {
+    class FunctorBase;
+}
+
+namespace smgpc::resource {
+    class RarcArchive;
+}
+
+namespace smgpc::runtime {
+    class DvdFileSystemService;
+}
+
+namespace smgpc::scene {
+    struct StagePlacementObject;
+}
+
+namespace smgpc::compat {
+
+    struct DemoStageSwitches {
+        std::int32_t appear = -1;
+        std::int32_t dead = -1;
+        std::int32_t a = -1;
+        std::int32_t b = -1;
+        std::int32_t sleep = -1;
+    };
+
+    // One source DemoGroup row. Instances remain in placement traversal order:
+    // the original holders use the first matching executor rather than a
+    // name-keyed map, so duplicate names and links must not overwrite.
+    struct DemoSceneDefinition {
+        std::int32_t zone_id = -1;
+        std::int32_t group_link_id = -1;
+        std::string demo_name;
+        std::string time_sheet_name;
+        DemoStageSwitches switches;
+        std::string source_table_path;
+        std::int32_t source_row = -1;
+        DemoSheetRuntime sheet;
+    };
+
+    // DemoSubGroup owns no sheet. Its automatic registration path first joins
+    // this zone/link group, then forwards the actor to the first primary
+    // executor with the same localized name.
+    struct DemoSceneSubGroupDefinition {
+        std::int32_t zone_id = -1;
+        std::int32_t group_link_id = -1;
+        std::string demo_name;
+        std::string source_table_path;
+        std::int32_t source_row = -1;
+    };
+
+    // Scene-owned counterpart of the original DemoDirector/DemoExecutor
+    // collection. Clock advancement and sheet-row dispatch are intentionally
+    // separate follow-up work; this class owns definitions, cast membership,
+    // and registered callbacks at their original per-executor granularity.
+    class DemoSceneRuntime final : public NameObj {
+    public:
+        DemoSceneRuntime(smgpc::runtime::DvdFileSystemService &dvd,
+                         std::span<const smgpc::scene::StagePlacementObject> placements);
+        DemoSceneRuntime(const smgpc::resource::RarcArchive &demo_sheet_archive,
+                         std::span<const smgpc::scene::StagePlacementObject> placements);
+        ~DemoSceneRuntime() override;
+
+        DemoSceneRuntime(const DemoSceneRuntime &) = delete;
+        DemoSceneRuntime &operator=(const DemoSceneRuntime &) = delete;
+
+        void movement() override;
+
+        [[nodiscard]] std::span<const DemoSceneDefinition> definitions() const;
+        [[nodiscard]] std::span<const DemoSceneSubGroupDefinition> subgroups() const;
+        [[nodiscard]] const DemoSceneDefinition *definition(std::size_t index) const;
+        [[nodiscard]] std::optional<std::size_t> find_definition(std::int32_t zone_id,
+                                                                 std::int32_t group_link_id) const;
+        [[nodiscard]] std::optional<std::size_t> find_definition(std::string_view demo_name) const;
+        [[nodiscard]] std::optional<std::size_t> find_subgroup(std::int32_t zone_id,
+                                                               std::int32_t group_link_id) const;
+        [[nodiscard]] std::optional<std::size_t> find_subgroup(std::string_view demo_name) const;
+
+        [[nodiscard]] bool try_register_cast(LiveActor *actor, const JMapInfoIter &iter);
+        [[nodiscard]] bool try_register_cast(LiveActor *actor, std::string_view demo_name,
+                                             const JMapInfoIter &iter);
+        void release_actor(const LiveActor *actor);
+
+        [[nodiscard]] bool try_register_action_functor(const LiveActor *actor,
+                                                       const MR::FunctorBase &functor,
+                                                       std::optional<std::string_view> part_name);
+        [[nodiscard]] bool try_register_action_functor(const LiveActor *actor,
+                                                       std::string_view demo_name,
+                                                       const MR::FunctorBase &functor,
+                                                       std::optional<std::string_view> part_name);
+        [[nodiscard]] bool try_register_action_nerve(const LiveActor *actor, const Nerve *nerve,
+                                                     std::optional<std::string_view> part_name);
+
+        [[nodiscard]] bool has_cast(const LiveActor *actor) const;
+        [[nodiscard]] bool has_cast(const LiveActor *actor, std::string_view demo_name) const;
+        [[nodiscard]] std::size_t membership_count(const LiveActor *actor) const;
+        [[nodiscard]] std::size_t subgroup_membership_count(const LiveActor *actor) const;
+        [[nodiscard]] std::size_t action_count(const LiveActor *actor) const;
+        [[nodiscard]] std::size_t action_count(const LiveActor *actor,
+                                               std::string_view demo_name) const;
+        [[nodiscard]] std::size_t functor_count(const LiveActor *actor,
+                                                std::string_view demo_name) const;
+        [[nodiscard]] std::size_t nerve_count(const LiveActor *actor,
+                                              std::string_view demo_name) const;
+        [[nodiscard]] std::optional<std::int32_t> cast_id(const LiveActor *actor,
+                                                          std::size_t definition_index) const;
+        [[nodiscard]] std::string_view cast_name(const LiveActor *actor,
+                                                 std::size_t definition_index) const;
+
+    private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
+    };
+
+    [[nodiscard]] DemoSceneRuntime *active_demo_scene_runtime();
+    void release_actor_from_all_demo_scenes(const LiveActor *actor);
+    [[nodiscard]] bool has_any_demo_scene_cast(const LiveActor *actor);
+    [[nodiscard]] std::size_t demo_scene_membership_count(const LiveActor *actor);
+    [[nodiscard]] std::size_t demo_scene_action_count(const LiveActor *actor);
+
+}  // namespace smgpc::compat

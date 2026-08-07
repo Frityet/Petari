@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/tmp/demo-scene-route-20260806/file_select/file_select-frame-1900.trace.sqlite"	passed	1	1900	pc-port	211	27	172	23
