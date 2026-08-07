@@ -58,11 +58,12 @@ namespace smgpc::scene {
         return requests;
     }
 
-    std::unique_ptr<NameObj> NameObjLifecycleService::construct(std::string_view object_name, std::string_view actor_name) {
+    std::unique_ptr<NameObj> NameObjLifecycleService::construct(std::string_view object_name, const char *actor_name) {
         auto object = smgpc::scene::nameobj::create_name_obj(_runtime.dvd(), object_name, actor_name);
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "construct",
-                                           "object=" + std::string(object_name) + ";actor=" + std::string(actor_name));
+                                           "object=" + std::string(object_name) + ";actor=" +
+                                               (actor_name != nullptr ? std::string(actor_name) : "<absent>"));
 #endif
         return object;
     }

@@ -57,7 +57,9 @@ namespace smgpc::scene::nameobj {
                                                                                        const JMapInfoIter *placement_iter = nullptr);
     std::vector<NameObjArchiveRequest> preload_name_obj_archives(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
                                                                  const JMapInfoIter *placement_iter = nullptr);
+    // The object name selects the retail creator. The actor name independently mirrors
+    // the nullable ObjNameTable display-name result passed to that creator.
     [[nodiscard]] std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
-                                                           std::string_view actor_name);
+                                                           const char *actor_name);
 
 }  // namespace smgpc::scene::nameobj

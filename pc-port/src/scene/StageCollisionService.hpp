@@ -9,10 +9,6 @@
 
 #include <JSystem/JGeometry/TVec.hpp>
 
-namespace smgpc::runtime {
-    class DvdFileSystemService;
-}
-
 namespace smgpc::scene {
     struct StagePlacementObject;
 
@@ -36,11 +32,7 @@ namespace smgpc::scene {
         std::vector<StageCollisionContact> contacts{};
     };
 
-    struct StageCollisionLoadStats {
-        // Placements admitted by the real NameObjFactory gate. Unsupported
-        // and intentionally ignored rows never participate in collision.
-        std::size_t placement_count = 0U;
-        std::size_t archive_count = 0U;
+    struct StageCollisionStats {
         std::size_t mesh_count = 0U;
         std::size_t triangle_count = 0U;
         std::size_t rejected_triangle_count = 0U;
@@ -59,12 +51,11 @@ namespace smgpc::scene {
         StageCollisionService& operator=(const StageCollisionService&) = delete;
 
         void clear();
-        StageCollisionLoadStats load(smgpc::runtime::DvdFileSystemService& dvd,
-                                     std::span<const StagePlacementObject> placements);
-
-        // Adds one decompressed KCL using a row-major 3x4 object matrix. This
-        // entry point also gives native tests and future dynamic collision
-        // owners a resource-level API without going through stage placement.
+        // Explicitly registers one decompressed KCL using the exact resource
+        // bytes and row-major 3x4 matrix requested by its CollisionParts
+        // owner. Stage placement and archive contents are never inspected or
+        // guessed here; callers must preserve the request's resource identity
+        // in source_name and call build() after completing registrations.
         bool add_kcl(std::span<const std::uint8_t> bytes, const std::array<float, 12U>& matrix,
                      std::string source_name = {});
         void build();
@@ -76,7 +67,7 @@ namespace smgpc::scene {
         [[nodiscard]] StageCollisionMoveResult move_sphere(const TVec3f& center, const TVec3f& movement,
                                                            float radius, std::size_t maximum_contacts = 32U) const;
 
-        [[nodiscard]] const StageCollisionLoadStats& stats() const;
+        [[nodiscard]] const StageCollisionStats& stats() const;
         [[nodiscard]] bool empty() const;
 
         void activate();
@@ -114,7 +105,7 @@ namespace smgpc::scene {
         std::vector<std::uint32_t> _triangle_indices{};
         std::vector<BvhNode> _nodes{};
         std::vector<std::string> _sources{};
-        StageCollisionLoadStats _stats{};
+        StageCollisionStats _stats{};
         bool _built = false;
     };
 

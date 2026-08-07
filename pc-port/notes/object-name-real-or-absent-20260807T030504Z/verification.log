@@ -1,0 +1,21 @@
+$ cd /workspaces/pcport/pc-port
+$ xmake run smg-pc-object-name-table-tests
+[ok] synthetic lookup and first-row semantics
+[ok] schema and archive validation
+[ok] RMGK01 extracted ObjNameTable
+[ok] RMGK02 extracted ObjNameTable
+[ok] optional extracted tables
+[skip] DVD service ObjNameTable load (set SMGPC_REAL_DISC)
+[ok] optional DVD service load
+4/4 tests passed
+
+$ xmake build smg-pc
+[100%]: build ok, spent 3.673s
+
+$ rg -n "lookup_or_self|object_name_table_fallback|resolve_actor_name" pc-port/src pc-port/tests -g '*.cpp' -g '*.hpp'
+(no matches)
+
+$ git diff --check -- <bounded object-name files>
+(no output)
+
+The separate `smg-pc-nameobj-factory-placement-tests` target was not used as evidence: an in-progress collision-service cleanup removed `StageCollisionService::load` while that test still contains two unrelated collision assertions. The focused ObjectNameTable test directly exercises the nullable real-factory path, and the complete application target builds successfully.

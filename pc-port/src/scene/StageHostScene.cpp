@@ -195,7 +195,7 @@ namespace smgpc::scene {
         appear_roots();
     }
 
-    void StageHostScene::construct_root_object(std::string_view object_name, std::string_view actor_name,
+    void StageHostScene::construct_root_object(std::string_view object_name, const char *actor_name,
                                                const StagePlacementObject *placement, bool explicit_root) {
         if (!smgpc::scene::nameobj::can_create_name_obj(object_name)) {
             throw std::runtime_error("Unsupported stage host request object: " + std::string(object_name) + " for stage " + _request.stage_name);
@@ -224,9 +224,9 @@ namespace smgpc::scene {
             return placement.object_name == _request.object_name && placement.factory_supported;
         });
         const auto *placement = explicit_placement != _placements.end() ? &*explicit_placement : nullptr;
-        const auto actor_name = !_request.actor_name.empty() ? std::string_view(_request.actor_name) :
-                                placement != nullptr         ? resolve_placement_actor_name(*placement) :
-                                                               std::string_view(_request.object_name);
+        const auto *actor_name = !_request.actor_name.empty() ? _request.actor_name.c_str() :
+                                 placement != nullptr         ? resolve_placement_actor_name(*placement) :
+                                                                nullptr;
         construct_root_object(_request.object_name, actor_name, placement, true);
         construct_placement_roots(placement);
     }
@@ -293,8 +293,13 @@ namespace smgpc::scene {
         // initialize and attempt to join their zone-scoped groups.
         _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(
             _runtime.dvd(), _placements, general_positions);
-        const auto collision_stats = _collision.load(_runtime.dvd(), _placements);
+        // Collision remains absent until source Game code issues an exact
+        // CollisionParts registration. Placement/archive discovery must not
+        // synthesize collision for actors that did not request it.
+        _collision.clear();
+        _collision.build();
         _collision.activate();
+        const auto &collision_stats = _collision.stats();
         const auto gravity_stats = _gravity.load(_placements);
         _gravity.activate();
         _stage_start_info = select_stage_start_info(tables, _request.start_id,
@@ -303,12 +308,10 @@ namespace smgpc::scene {
 
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event(
-            "collision", "stage_collision_loaded",
+            "collision", "stage_collision_registry_ready",
             "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
                 ";placement_rows=" + std::to_string(_placements.size()) +
-                ";factory_placements=" + std::to_string(collision_stats.placement_count) +
-                ";archives=" + std::to_string(collision_stats.archive_count) +
-                ";meshes=" + std::to_string(collision_stats.mesh_count) +
+                ";registration=explicit_collision_parts;meshes=" + std::to_string(collision_stats.mesh_count) +
                 ";triangles=" + std::to_string(collision_stats.triangle_count) +
                 ";rejected_triangles=" + std::to_string(collision_stats.rejected_triangle_count));
         _runtime.emit_semantic_trace_event(
@@ -496,22 +499,17 @@ namespace smgpc::scene {
         return _request.scenario_no;
     }
 
-    std::string StageHostScene::resolve_actor_name(std::string_view object_name) const {
-        return !_request.actor_name.empty() ? _request.actor_name : std::string(object_name);
-    }
-
-    std::string_view StageHostScene::resolve_placement_actor_name(const StagePlacementObject &placement) const {
+    const char *StageHostScene::resolve_placement_actor_name(const StagePlacementObject &placement) const {
         const auto *localized_name = _object_name_table->lookup(placement.object_name);
 #ifndef NDEBUG
         if (localized_name == nullptr) {
             _runtime.emit_semantic_trace_event(
-                "placement", "object_name_table_fallback",
+                "placement", "object_name_table_absent",
                 "stage=" + placement.stage_name + ";object=" + placement.object_name +
                     ";table=" + placement.table_path + ";row=" + std::to_string(placement.jmap_entry_index));
         }
 #endif
-        return localized_name != nullptr ? std::string_view(*localized_name) :
-                                           std::string_view(placement.object_name);
+        return localized_name != nullptr ? localized_name->c_str() : nullptr;
     }
 
 }  // namespace smgpc::scene

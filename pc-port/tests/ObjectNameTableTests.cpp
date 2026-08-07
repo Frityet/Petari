@@ -1,6 +1,8 @@
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "scene/nameobj/NameObjFactory.hpp"
 #include "scene/nameobj/ObjectNameTable.hpp"
 
 #include <aurora/dvd.h>
@@ -173,14 +175,26 @@ namespace {
                 "the first CP932 Japanese value should decode to UTF-8");
         require(table.lookup("FixtureActor") == fixture_name,
                 "lookup should return a stable pointer owned by the table");
-        require(table.lookup_or_self("AsciiActor") == "Runtime Actor",
-                "lookup-or-self should return the mapped runtime name");
+        const auto *ascii_name = table.lookup("AsciiActor");
+        require(ascii_name != nullptr && *ascii_name == "Runtime Actor",
+                "lookup should return the mapped runtime name");
         require(table.lookup("EmptyActor") != nullptr && table.lookup("EmptyActor")->empty(),
                 "an explicitly empty Japanese name should remain a present mapping");
         require(table.lookup("UnknownActor") == nullptr,
                 "unknown object names should use the null lookup result");
-        require(table.lookup_or_self("UnknownActor") == "UnknownActor",
-                "unknown object names should fall back to their English identifier");
+
+        aurora_dvd_close();
+        DVDInit();
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        const auto *missing_display_name = table.lookup("Coin");
+        require(missing_display_name == nullptr,
+                "the synthetic ObjNameTable should leave Coin's display name absent");
+        auto coin = smgpc::scene::nameobj::create_name_obj(
+            dvd, "Coin", missing_display_name != nullptr ? missing_display_name->c_str() : nullptr);
+        require(coin != nullptr,
+                "an absent display name must not reject the real Coin factory");
+        require(coin->getName() == nullptr || coin->getName()[0] == '\0',
+                "an absent display name must not become the English placement identifier");
     }
 
     void test_schema_and_archive_validation() {
@@ -211,26 +225,22 @@ namespace {
     void validate_real_table(const std::filesystem::path &path, std::string_view label) {
         const auto archive = smgpc::resource::RarcArchive::from_file(path);
         const auto table = smgpc::scene::nameobj::ObjectNameTable(archive);
+        const auto require_mapping = [&](std::string_view english_name, std::string_view japanese_name) {
+            const auto *mapped = table.lookup(english_name);
+            require(mapped != nullptr && *mapped == japanese_name,
+                    std::string(label) + " should map " + std::string(english_name));
+        };
         require(table.size() == 1691U, std::string(label) + " should contain all 1691 first-row mappings");
-        require(table.lookup_or_self("DemoRabbit") == "デモウサギ",
-                std::string(label) + " should map the Gateway demo rabbit name");
-        require(table.lookup_or_self("Rosetta") == "ロゼッタ",
-                std::string(label) + " should map the Gateway Rosetta name");
-        require(table.lookup_or_self("RunawayTico") == "逃げチコ",
-                std::string(label) + " should map the Gateway runaway Tico name");
-        require(table.lookup_or_self("Tico") == "チコ",
-                std::string(label) + " should map the Gateway Tico name");
-        require(table.lookup_or_self("TicoBaby") == "ベビチコ",
-                std::string(label) + " should map the Gateway baby Tico name");
-        require(table.lookup_or_self("HeavensDoorAppearStepA") ==
-                    "ヘブンズドアミステリアス惑星階段（デモ中）",
-                std::string(label) + " should map the Gateway demo-state staircase name");
-        require(table.lookup_or_self("HeavensDoorAppearStepAAfter") ==
-                    "ヘブンズドアミステリアス惑星階段（デモ後）",
-                std::string(label) + " should map the Gateway post-demo staircase name");
+        require_mapping("DemoRabbit", "デモウサギ");
+        require_mapping("Rosetta", "ロゼッタ");
+        require_mapping("RunawayTico", "逃げチコ");
+        require_mapping("Tico", "チコ");
+        require_mapping("TicoBaby", "ベビチコ");
+        require_mapping("HeavensDoorAppearStepA", "ヘブンズドアミステリアス惑星階段（デモ中）");
+        require_mapping("HeavensDoorAppearStepAAfter", "ヘブンズドアミステリアス惑星階段（デモ後）");
         for (const auto absent : {"LightDome", "DomeHalo", "TicoDemoGetPower"}) {
-            require(table.lookup(absent) == nullptr && table.lookup_or_self(absent) == absent,
-                    std::string(label) + " should preserve English fallback for absent " + absent);
+            require(table.lookup(absent) == nullptr,
+                    std::string(label) + " should preserve absence for " + absent);
         }
     }
 
@@ -283,7 +293,8 @@ namespace {
 
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
         const auto table = smgpc::scene::nameobj::ObjectNameTable(dvd);
-        require(table.size() == 1691U && table.lookup_or_self("Rosetta") == "ロゼッタ",
+        const auto *rosetta_name = table.lookup("Rosetta");
+        require(table.size() == 1691U && rosetta_name != nullptr && *rosetta_name == "ロゼッタ",
                 "the DVD-backed table should load and decode through DvdFileSystemService");
         require(dvd.archive_load_count("/StageData/ObjNameTable.arc") == 1U,
                 "the DVD service should load ObjNameTable.arc once");

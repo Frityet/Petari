@@ -232,3 +232,29 @@ target("smg-pc-nameobj-factory-placement-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+target("smg-pc-stage-collision-registration-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "StageCollisionRegistrationTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("stage_collision_registration", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

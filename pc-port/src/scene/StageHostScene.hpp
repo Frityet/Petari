@@ -52,7 +52,7 @@ namespace smgpc::scene {
         [[nodiscard]] s32 scenario_no() const;
 
     private:
-        void construct_root_object(std::string_view object_name, std::string_view actor_name,
+        void construct_root_object(std::string_view object_name, const char *actor_name,
                                    const StagePlacementObject *placement, bool explicit_root = false);
         void init_explicit_root();
         void init_placement_roots();
@@ -64,8 +64,7 @@ namespace smgpc::scene {
         void init_stage_start_camera();
         void appear_roots();
         void destroy_roots();
-        [[nodiscard]] std::string resolve_actor_name(std::string_view object_name) const;
-        [[nodiscard]] std::string_view resolve_placement_actor_name(const StagePlacementObject &placement) const;
+        [[nodiscard]] const char *resolve_placement_actor_name(const StagePlacementObject &placement) const;
 
         smgpc::runtime::RuntimeContext &_runtime;
         std::size_t _registration_scope_id = 0U;

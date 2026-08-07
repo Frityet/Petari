@@ -172,12 +172,11 @@ namespace smgpc::scene::nameobj {
         return requests;
     }
 
-    std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &, std::string_view object_name, std::string_view actor_name) {
+    std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &, std::string_view object_name, const char *actor_name) {
         const auto object = std::string(object_name);
         const auto creator = NameObjFactory::getCreator(object.c_str());
         if (creator != nullptr) {
-            const auto name = std::string(actor_name);
-            return std::unique_ptr<NameObj>(creator(name.c_str()));
+            return std::unique_ptr<NameObj>(creator(actor_name));
         }
 
         throw std::runtime_error("Unsupported NameObj factory request: " + std::string(object_name));

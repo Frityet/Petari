@@ -1,0 +1,71 @@
+2026-08-07T03:01Z
+
+Initial target build command:
+  xmake build smg-pc-stage-collision-registration-tests
+
+Collision-specific translation units completed successfully:
+  build/.objs/smg-pc-game/linux/x86_64/debug/src/scene/StageCollisionService.cpp.o
+  build/.objs/smg-pc-game/linux/x86_64/debug/src/scene/StageHostScene.cpp.o
+  build/.objs/smg-pc-stage-collision-registration-tests/linux/x86_64/debug/tests/StageCollisionRegistrationTests.cpp.o
+
+The first aggregate build stopped in an unrelated concurrent SoundUtil migration:
+  src/Game/Util/SoundUtil.cpp:2:10: fatal error:
+  Game/AudioLib/AudAnmSoundObject.hpp: No such file or directory
+
+After the shared-tree migration settled:
+
+  xmake build smg-pc-stage-collision-registration-tests
+  [100%]: build ok, spent 0.182s
+
+  xmake run smg-pc-stage-collision-registration-tests
+  [ok] collision absent without registration
+  [ok] only explicit valid KCL registers
+  2 stage collision registration test(s) passed
+
+Existing generalized collision regression suite:
+
+  xmake build smg-pc-aurora-native-tests
+  [100%]: build ok, spent 0.185s
+
+  xmake run smg-pc-aurora-native-tests
+  [ok] KCL collision queries and binder resolution
+  27 Aurora-native test(s) passed
+
+Full PC target:
+
+  xmake build smg-pc
+  [100%]: build ok, spent 0.196s
+
+Final revalidation after trace stats were made data-driven:
+
+  xmake build smg-pc-stage-collision-registration-tests
+  [100%]: build ok, spent 4.18s
+
+  xmake run smg-pc-stage-collision-registration-tests
+  [ok] collision absent without registration
+  [ok] only explicit valid KCL registers
+  2 stage collision registration test(s) passed
+
+  xmake build smg-pc
+  [100%]: build ok, spent 17.429s
+
+Review cleanup revalidation (original pointer/reference formatting restored):
+
+  xmake build smg-pc-stage-collision-registration-tests
+  [100%]: build ok, spent 3.902s
+
+  xmake run smg-pc-stage-collision-registration-tests
+  [ok] collision absent without registration
+  [ok] only explicit valid KCL registers
+  2 stage collision registration test(s) passed
+
+  xmake build smg-pc-nameobj-factory-placement-tests
+  [100%]: build ok, spent 3.521s
+
+  xmake run smg-pc-nameobj-factory-placement-tests
+  [ok] factory-only placement support
+  [info] real-disc fixture: /workspaces/pcport/RMGK01.iso
+  [info] direct archive-only candidate: AirBubble
+  [info] alias-only candidate: Bomb -> BombHei
+  [ok] optional real-disc archive-only rejection
+  2 NameObj placement test(s) passed

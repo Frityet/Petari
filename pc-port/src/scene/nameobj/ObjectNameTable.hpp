@@ -22,7 +22,6 @@ namespace smgpc::scene::nameobj {
         explicit ObjectNameTable(const smgpc::resource::RarcArchive &archive);
 
         [[nodiscard]] const std::string *lookup(std::string_view english_name) const;
-        [[nodiscard]] std::string_view lookup_or_self(std::string_view english_name) const;
         [[nodiscard]] std::size_t size() const;
 
     private:

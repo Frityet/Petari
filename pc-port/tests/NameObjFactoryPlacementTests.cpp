@@ -101,7 +101,8 @@ namespace {
 
         require_throws(
             [&] {
-                (void)smgpc::scene::nameobj::create_name_obj(dvd, cUnsupportedFixture, cUnsupportedFixture);
+                (void)smgpc::scene::nameobj::create_name_obj(dvd, cUnsupportedFixture,
+                                                             cUnsupportedFixture.data());
             },
             "an unsupported object should not be synthesized as a generic ModelObj");
     }
@@ -197,25 +198,19 @@ namespace {
                 "the resolved stage root list should contain only real factory placements");
 
         auto collision = smgpc::scene::StageCollisionService{};
+        collision.clear();
+        collision.build();
         if (!direct_archive_only_name.empty()) {
-            auto unsupported_placement = smgpc::scene::StagePlacementObject{};
-            unsupported_placement.object_name = direct_archive_only_name;
-            unsupported_placement.object_archive_path = direct_archive_only_path.generic_string();
-            unsupported_placement.factory_supported = false;
-            const auto stats = collision.load(dvd, std::array{unsupported_placement});
-            require(stats.placement_count == 0U && stats.archive_count == 0U && stats.mesh_count == 0U,
-                    "an unsupported placement must not be counted or contribute invisible archive-backed collision");
+            require(collision.empty() && collision.stats().mesh_count == 0U &&
+                        collision.stats().triangle_count == 0U,
+                    "an unsupported placement must remain absent from the explicit collision registry");
         }
 
         const auto coin_archive = dvd.find_object_archive("Coin");
         require(coin_archive.has_value(), "the real disc fixture should contain Coin.arc");
-        auto factory_placement = smgpc::scene::StagePlacementObject{};
-        factory_placement.object_name = "Coin";
-        factory_placement.object_archive_path = coin_archive->generic_string();
-        factory_placement.factory_supported = true;
-        const auto factory_stats = collision.load(dvd, std::array{factory_placement});
-        require(factory_stats.placement_count == 1U && factory_stats.archive_count == 1U,
-                "collision loading should continue to inspect archives for real factory placements");
+        require(collision.empty() && collision.stats().mesh_count == 0U &&
+                    collision.stats().triangle_count == 0U,
+                "a real factory archive must remain absent until Game/CollisionParts explicitly registers KCL");
     }
 
     struct TestCase {

@@ -1,18 +1,14 @@
 #include "scene/StageCollisionService.hpp"
 
-#include "resource/RarcArchive.hpp"
-#include "runtime/RuntimeServices.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
 #include <algorithm>
 #include <bit>
 #include <cmath>
 #include <cstddef>
-#include <cctype>
 #include <limits>
 #include <optional>
 #include <stdexcept>
-#include <string_view>
 
 namespace smgpc::scene {
     namespace {
@@ -82,56 +78,6 @@ namespace smgpc::scene {
             return TVec3f(matrix[0] * vector.x + matrix[1] * vector.y + matrix[2] * vector.z,
                           matrix[4] * vector.x + matrix[5] * vector.y + matrix[6] * vector.z,
                           matrix[8] * vector.x + matrix[9] * vector.y + matrix[10] * vector.z);
-        }
-
-        [[nodiscard]] std::string lower_copy(std::string_view value) {
-            auto result = std::string(value);
-            std::ranges::transform(result, result.begin(), [](unsigned char ch) {
-                return static_cast<char>(std::tolower(ch));
-            });
-            return result;
-        }
-
-        [[nodiscard]] std::string_view basename(std::string_view path) {
-            const auto slash = path.find_last_of("/\\");
-            return slash == std::string_view::npos ? path : path.substr(slash + 1U);
-        }
-
-        [[nodiscard]] std::string_view stem(std::string_view path) {
-            const auto name = basename(path);
-            const auto dot_pos = name.find_last_of('.');
-            return dot_pos == std::string_view::npos ? name : name.substr(0U, dot_pos);
-        }
-
-        [[nodiscard]] bool ends_with_lower(std::string_view value, std::string_view suffix) {
-            if (value.size() < suffix.size()) {
-                return false;
-            }
-            return lower_copy(value.substr(value.size() - suffix.size())) == suffix;
-        }
-
-        [[nodiscard]] const smgpc::resource::RarcEntry* select_kcl_entry(
-            const smgpc::resource::RarcArchive& archive, const StagePlacementObject& placement) {
-            auto candidates = std::vector<const smgpc::resource::RarcEntry*>{};
-            for (const auto& entry : archive.entries()) {
-                if (ends_with_lower(entry.path, ".kcl") && lower_copy(basename(entry.path)) != "movelimit.kcl") {
-                    candidates.push_back(&entry);
-                }
-            }
-            if (candidates.empty()) {
-                return nullptr;
-            }
-
-            const auto object_stem = lower_copy(placement.object_name);
-            const auto archive_stem = lower_copy(stem(placement.object_archive_path));
-            const auto exact = std::ranges::find_if(candidates, [&](const auto* entry) {
-                const auto entry_stem = lower_copy(stem(entry->path));
-                return entry_stem == object_stem || (!archive_stem.empty() && entry_stem == archive_stem);
-            });
-            if (exact != candidates.end()) {
-                return *exact;
-            }
-            return candidates.size() == 1U ? candidates.front() : nullptr;
         }
 
         template <typename Bounds>
@@ -317,36 +263,6 @@ namespace smgpc::scene {
         _sources.clear();
         _stats = {};
         _built = false;
-    }
-
-    StageCollisionLoadStats StageCollisionService::load(smgpc::runtime::DvdFileSystemService& dvd,
-                                                        std::span<const StagePlacementObject> placements) {
-        clear();
-        for (const auto& placement : placements) {
-            if (!placement.factory_supported) {
-                continue;
-            }
-            ++_stats.placement_count;
-            if (placement.object_archive_path.empty()) {
-                continue;
-            }
-            try {
-                auto& archive = dvd.archive(placement.object_archive_path);
-                ++_stats.archive_count;
-                const auto* entry = select_kcl_entry(archive, placement);
-                if (entry == nullptr) {
-                    continue;
-                }
-                (void)add_kcl(archive.file_data(*entry), stage_collision_matrix(placement),
-                              placement.object_name + ":" + entry->path);
-            } catch (const std::exception&) {
-                // Missing or malformed optional collision does not make the
-                // placement itself unconstructable. add_kcl performs strict
-                // validation before accepting any triangles.
-            }
-        }
-        build();
-        return _stats;
     }
 
     bool StageCollisionService::add_kcl(std::span<const std::uint8_t> bytes,
@@ -770,7 +686,7 @@ namespace smgpc::scene {
         return result;
     }
 
-    const StageCollisionLoadStats& StageCollisionService::stats() const {
+    const StageCollisionStats& StageCollisionService::stats() const {
         return _stats;
     }
 

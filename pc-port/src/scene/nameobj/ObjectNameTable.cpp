@@ -75,11 +75,6 @@ namespace smgpc::scene::nameobj {
         return found == _indices.end() ? nullptr : &_entries[found->second].japanese_name;
     }
 
-    std::string_view ObjectNameTable::lookup_or_self(std::string_view english_name) const {
-        const auto *japanese_name = lookup(english_name);
-        return japanese_name != nullptr ? std::string_view(*japanese_name) : english_name;
-    }
-
     std::size_t ObjectNameTable::size() const {
         return _entries.size();
     }
