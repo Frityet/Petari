@@ -64,6 +64,8 @@ private:
     std::string mBckResourceName = {};
     std::string mBrkName = {};
     std::string mBrkAnimationName = {};
+    std::string mBtkName = {};
+    std::string mBtkAnimationName = {};
     std::unique_ptr<smgpc::render::J3dModelRenderer> mRenderer = {};
     std::optional<smgpc::render::J3dBckAnimationSummary> mBckAnimation = {};
     std::optional<smgpc::render::J3dBtkAnimationSummary> mBtkAnimation = {};

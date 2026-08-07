@@ -1,0 +1,24 @@
+2026-08-07T02:49:55Z exact live-actor resource selection
+
+$ xmake build smg-pc
+build ok, spent 24.051s
+
+Focused source assertions:
+- no first-entry-with-suffix resource selector remains in LiveActorModel
+- named BTK requests retain their requested name
+- an absent named BTK clears the renderer binding
+
+$ xmake aurora-route-smoke --disc=/workspaces/pcport/RMGK01.wbfs --display=334 --no-build --work-dir=.../route-smoke
+title passed nonblack=1.0000 render_packets=22
+file_select passed nonblack=0.9998 render_packets=27
+picturebook passed nonblack=1.0000 render_packets=25
+
+$ xmake aurora-route-smoke --disc=/workspaces/pcport/RMGK01.wbfs --display=334 --no-build --work-dir=.../route-smoke gateway_handoff
+gateway_handoff passed nonblack=0.0070 render_packets=604
+
+Visual inspection:
+- title: retail logo/planet/starfield composition rendered
+- file select: six numbered slot planets rendered
+- picturebook: Korean page art/text and A prompt rendered
+- Gateway: real Mario rendered; scene remains sparse because unsupported
+  placements are absent rather than represented by generic models

@@ -17,15 +17,6 @@ namespace {
         return lower;
     }
 
-    [[nodiscard]] bool ends_with_lower(std::string_view value, std::string_view suffix) {
-        return lower_copy(value).ends_with(suffix);
-    }
-
-    [[nodiscard]] const smgpc::resource::RarcEntry *find_first_entry_with_suffix(const smgpc::resource::RarcArchive &archive, std::string_view suffix) {
-        const auto it = std::ranges::find_if(archive.entries(), [suffix](const auto &entry) { return ends_with_lower(entry.path, suffix); });
-        return it == archive.entries().end() ? nullptr : &*it;
-    }
-
     [[nodiscard]] const char *draw_pass_name(LiveActorModel::DrawPass pass) {
         switch (pass) {
         case LiveActorModel::DrawPass::All:
@@ -107,8 +98,27 @@ std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
     return mBrkAnimation.has_value() ? std::optional<std::int16_t>{mBrkAnimation->frame_max} : std::nullopt;
 }
 
-void LiveActorModel::startBtk(std::string_view) {
+void LiveActorModel::startBtk(std::string_view name) {
     mBtkStarted = true;
+    const auto requested_name = std::string(name);
+    if (mBtkName != requested_name) {
+        mBtkAnimation.reset();
+    }
+    mBtkName = requested_name;
+    if (!mBtkAnimation.has_value()) {
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        const auto archive_path = runtime != nullptr ? runtime->find_object_archive(mModelArcName) : std::nullopt;
+        if (archive_path.has_value()) {
+            try {
+                const auto &archive = runtime->dvd().archive_for_path(*archive_path);
+                mBtkAnimation = findBtkAnimation(archive);
+                mBtkAnimationName = mBtkAnimation.has_value() ? mBtkName : std::string {};
+            } catch (const std::exception &) {
+                mBtkAnimation.reset();
+                mBtkAnimationName.clear();
+            }
+        }
+    }
     applyStartedAnimations();
 }
 
@@ -229,7 +239,10 @@ void LiveActorModel::ensureLoaded() {
         if (mBckStarted && !mBckAnimation.has_value()) {
             resolveBckAnimation();
         }
-        mBtkAnimation = findBtkAnimation(archive);
+        if (mBtkStarted && (!mBtkAnimation.has_value() || mBtkAnimationName != mBtkName)) {
+            mBtkAnimation = findBtkAnimation(archive);
+            mBtkAnimationName = mBtkAnimation.has_value() ? mBtkName : std::string {};
+        }
         if ((mBrkStarted || !mBrkName.empty()) && (!mBrkAnimation.has_value() || mBrkAnimationName != mBrkName)) {
             mBrkAnimation = findBrkAnimation(archive);
             mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string {};
@@ -297,8 +310,12 @@ void LiveActorModel::applyStartedAnimations() {
             mRenderer->clear_bck_animation();
         }
     }
-    if (mBtkStarted && mBtkAnimation.has_value()) {
-        mRenderer->set_btk_animation(*mBtkAnimation);
+    if (mBtkStarted) {
+        if (mBtkAnimation.has_value()) {
+            mRenderer->set_btk_animation(*mBtkAnimation);
+        } else {
+            mRenderer->clear_btk_animation();
+        }
     }
 }
 
@@ -313,11 +330,7 @@ const smgpc::resource::RarcEntry *LiveActorModel::findModelEntry(const smgpc::re
         return entry;
     }
 
-    if (const auto *entry = find_first_entry_with_suffix(archive, ".bdl"); entry != nullptr) {
-        return entry;
-    }
-
-    return find_first_entry_with_suffix(archive, ".bmd");
+    return nullptr;
 }
 
 std::optional<smgpc::render::J3dBckAnimationSummary>
@@ -327,9 +340,6 @@ LiveActorModel::findBckAnimation(const smgpc::resource::RarcArchive &archive, st
         requested += ".bck";
     }
     auto *entry = archive.find_by_basename(requested);
-    if (entry == nullptr && resource_name.empty()) {
-        entry = find_first_entry_with_suffix(archive, ".bck");
-    }
     if (entry == nullptr) {
         return std::nullopt;
     }
@@ -338,11 +348,11 @@ LiveActorModel::findBckAnimation(const smgpc::resource::RarcArchive &archive, st
 }
 
 std::optional<smgpc::render::J3dBtkAnimationSummary> LiveActorModel::findBtkAnimation(const smgpc::resource::RarcArchive &archive) const {
-    const auto requested = lower_copy(mModelArcName) + ".btk";
-    auto *entry = archive.find_by_basename(requested);
-    if (entry == nullptr) {
-        entry = find_first_entry_with_suffix(archive, ".btk");
+    if (mBtkName.empty()) {
+        return std::nullopt;
     }
+    const auto requested = lower_copy(mBtkName) + ".btk";
+    auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         return std::nullopt;
     }
@@ -351,11 +361,11 @@ std::optional<smgpc::render::J3dBtkAnimationSummary> LiveActorModel::findBtkAnim
 }
 
 std::optional<smgpc::render::J3dBrkAnimationSummary> LiveActorModel::findBrkAnimation(const smgpc::resource::RarcArchive &archive) const {
-    const auto requested = lower_copy(mBrkName.empty() ? std::string_view {mModelArcName} : std::string_view {mBrkName}) + ".brk";
-    auto *entry = archive.find_by_basename(requested);
-    if (entry == nullptr) {
-        entry = find_first_entry_with_suffix(archive, ".brk");
+    if (mBrkName.empty()) {
+        return std::nullopt;
     }
+    const auto requested = lower_copy(mBrkName) + ".brk";
+    auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         return std::nullopt;
     }

@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/workspaces/pcport/pc-port/notes/real-or-absent-audit-20260807T024955Z/route-smoke/gateway_handoff/gateway_handoff-frame-10350.trace.sqlite"	passed	1	10350	pc-port	1766	604	1150	0

@@ -1,0 +1,2 @@
+trace	status	trace_id	frame_index	emulator	record_count	render_packet	semantic_event	layout_runtime
+"/workspaces/pcport/pc-port/notes/real-or-absent-audit-20260807T024955Z/route-smoke/title/title-frame-90.trace.sqlite"	passed	1	90	pc-port	197	22	163	23

@@ -175,6 +175,7 @@ namespace smgpc::render {
         void set_bck_animation(const J3dBckAnimationSummary &animation);
         void clear_bck_animation();
         void set_btk_animation(const J3dBtkAnimationSummary &animation);
+        void clear_btk_animation();
         void clear_animations();
 
         void draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,

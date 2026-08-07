@@ -2227,6 +2227,10 @@ namespace smgpc::render {
         _btk_animation = animation;
     }
 
+    void J3dModelRenderer::clear_btk_animation() {
+        _btk_animation.reset();
+    }
+
     void J3dModelRenderer::clear_animations() {
         _bck_animation.reset();
         _btk_animation.reset();
