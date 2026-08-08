@@ -1,0 +1,18 @@
+{
+  "target": "RMGK02",
+  "generated_report": "/tmp/blur-report.json",
+  "units": {
+    "main/Game/Screen/CenterScreenBlur": {
+      "text_bytes": 928,
+      "text_fuzzy_match_percent": 100,
+      "all_emitted_sections_fuzzy_match_percent": 100
+    },
+    "main/Game/Screen/FullScreenBlur": {
+      "text_bytes": 656,
+      "text_fuzzy_match_percent": 100,
+      "all_emitted_sections_fuzzy_match_percent": 100
+    }
+  },
+  "configuration_metadata_complete": false,
+  "note": "The project configuration remains NonMatching; the emitted object report is 100%."
+}

@@ -1,0 +1,10 @@
+unit	before_percent	after_percent	evidence
+Game/NPC/MiiFaceParts.hpp	100	100	byte-identical root/PC mirror
+Game/NPC/MiiFaceParts.cpp	100	100	byte-identical root/PC mirror
+Game/NPC/MiiFaceRecipe.hpp	100	100	byte-identical root/PC mirror
+Game/NPC/MiiFaceRecipe.cpp	100	100	byte-identical root/PC mirror
+Game/NPC/MiiFacePartsHolder.cpp	82.76251	94.51921	RMGK02 objdiff unit fuzzy match
+MiiFacePartsHolder::drawExtra() const	absent	100	RMGK02 objdiff function fuzzy match
+MiiFacePartsHolder::setTevOpa() const	77.87116	85.55828	RMGK02 objdiff function fuzzy match
+MiiFacePartsHolder::setTevXlu() const	78.52349	84.20134	RMGK02 objdiff function fuzzy match
+RVLFaceLib code	100	100	RMGK02 decomp report, 41220/41220 code bytes matched

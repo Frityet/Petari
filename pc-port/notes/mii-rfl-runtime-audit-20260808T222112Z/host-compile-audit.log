@@ -1,0 +1,44 @@
+Exact-source syntax audit, 2026-08-08
+
+MiiFaceRecipe.cpp
+-----------------
+Command used the smg-pc-game C++23/TARGET_PC/AURORA include surface.
+Result: PASS.
+
+MiiFaceParts.cpp
+----------------
+Result: BLOCKED before compilation.
+
+src/Game/NPC/MiiFaceParts.cpp:7:10: fatal error:
+JSystem/J3DGraphBase/J3DSys.hpp: No such file or directory
+
+Required generalized compatibility surface:
+- host J3DSys declaration and scene view-matrix ownership;
+- the real current view matrix used by calcViewAndEntry;
+- 32-byte-aligned `new[]` support for the actor-owned model buffer.
+
+MiiFacePartsHolder.cpp
+----------------------
+First PC-only include pass:
+
+src/Game/NPC/MiiFacePartsHolder.cpp:3:10: fatal error:
+Game/NPC/MiiDatabase.hpp: No such file or directory
+
+With root headers made visible for dependency discovery, the next blockers are:
+
+- host JKRHeap is an empty shell and cannot satisfy JKRSolidHeap/TState;
+- no `operator new[](size_t, JKRSolidHeap*, int)` allocation surface;
+- `MR::createDrawAdaptor` is not exposed on PC;
+- `MR::isNoCalcView(const LiveActor*)` is not exposed on PC.
+
+Further RFL_Model host audit
+----------------------------
+The retail model path uses indexed vertex arrays and PPC display lists. Aurora
+GX has the underlying indexed-array, texture, display-list, matrix, lighting,
+TEV, blend, and depth capabilities, but the RVLFace surface still needs a
+host-safe bridge for PPC resource representation and `GXSetArray` data. PPC
+model-resource pointers and 0x20-byte GX texture objects cannot be copied into
+the current 64-bit host structs and treated as native objects.
+
+These are compatibility-layer prerequisites. None should be worked around by
+changing the recovered Game translation units.

@@ -1616,3 +1616,6 @@ void FileSelector::exeManual() {
         setNerve(&NrvFileSelector::FileSelectorNrvFileConfirm::sInstance);
     }
 }
+
+FileSelector::~FileSelector() {
+}

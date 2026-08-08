@@ -1,6 +1,8 @@
 #include "Game/Map/FileSelectEffect.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 namespace {
@@ -26,7 +28,24 @@ void FileSelectEffect::appear() {
     setNerve(&FileSelectEffectNrvAppear::sInstance);
 }
 
-// FileSelectEffect::disappear
+void FileSelectEffect::disappear() {
+    if (MR::isDead(this) || isNerve(&FileSelectEffectNrvDisappear::sInstance)) {
+        return;
+    }
+
+    if (isNerve(&FileSelectEffectNrvAppear::sInstance)) {
+        if (MR::isNewNerve(this)) {
+            kill();
+            return;
+        }
+
+        mEffectFrame = MR::getBrkCtrl(this)->getFrame();
+    } else if (isNerve(&FileSelectEffectNrvWait::sInstance)) {
+        mEffectFrame = MR::getBrkCtrl(this)->getEnd();
+    }
+
+    setNerve(&FileSelectEffectNrvDisappear::sInstance);
+}
 
 void FileSelectEffect::exeAppear() {
     if (MR::isFirstStep(this)) {
@@ -53,7 +72,30 @@ void FileSelectEffect::exeDisappear() {
     }
 }
 
-// FileSelectEffect::calcAndSetBaseMtx
+void FileSelectEffect::calcAndSetBaseMtx() {
+    TVec3f zDir = MR::getCamPos() - mPosition;
+
+    if (MR::isNearZero(zDir, 0.001f)) {
+        return;
+    }
+
+    MR::normalize(&zDir);
+
+    TVec3f yDir(MR::getCamYdir());
+    TVec3f xDir(yDir.cross(zDir));
+
+    if (MR::isNearZero(xDir, 0.001f)) {
+        return;
+    }
+
+    MR::normalize(&xDir);
+    yDir.cross(zDir, xDir);
+
+    TPos3f baseMtx;
+    baseMtx.setXYZDir(xDir, yDir, zDir);
+    baseMtx.setTrans(mPosition);
+    MR::setBaseTRMtx(this, baseMtx);
+}
 
 FileSelectEffect::~FileSelectEffect() {
 }

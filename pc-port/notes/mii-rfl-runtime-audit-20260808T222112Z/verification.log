@@ -1,0 +1,29 @@
+2026-08-08 integrated real-or-absent verification
+
+$ xmake -j 4 smg-pc-rfl-real-or-absent-tests
+build ok
+
+$ xmake run smg-pc-rfl-real-or-absent-tests
+[pass] missing database is empty
+[pass] real resource is independent from user database
+[pass] private database format is rejected
+[pass] no-runtime APIs report absence
+4 RFL real-or-absent tests passed
+
+$ xmake -j 4 smg-pc-sceneobj-holder-real-or-absent-tests
+build ok
+
+$ xmake run smg-pc-sceneobj-holder-real-or-absent-tests
+[ok] no holder means no scene object
+[ok] bound holder requires explicit real creation
+[ok] bindings are single-scene and isolated
+3 SceneObjHolder real-or-absent test(s) passed
+
+$ nm -C build/linux/x86_64/debug/libsmg-pc-game.a | <removed-RFL/Mii-definition filter>
+0 matches
+
+The filter covered RFLSetMtx, RFLSetExpression, RFLGetExpression,
+RFLLoadDrawSetting, RFLDrawOpa, RFLDrawXlu, RFLLoadVertexSetting,
+RFLLoadMaterialSetting, RFLDrawOpaCore, RFLDrawXluCore, RFLDrawShape, and
+MiiFacePartsHolder methods. Their absence is intentional until the real model
+and draw runtime exists.

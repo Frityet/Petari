@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <RVLFaceLib.h>
+#include <aurora/rfl/ResourceArchive.hpp>
 
 #include "runtime/NandFileSystemService.hpp"
 
@@ -53,9 +54,7 @@ namespace smgpc::runtime {
         CheckAvailable,
         InitResource,
         InitCharModel,
-        SetExpression,
         MakeIcon,
-        DrawModel,
         MiiSelectPage,
     };
 
@@ -158,6 +157,7 @@ namespace smgpc::runtime {
         [[nodiscard]] bool is_initialized() const;
         [[nodiscard]] bool has_error() const;
         [[nodiscard]] const RflDbStatus &db_status() const;
+        [[nodiscard]] const aurora::rfl::ResourceArchive *resource_archive() const;
         [[nodiscard]] std::span<const RflMiiEntry> valid_miis() const;
         [[nodiscard]] std::span<const RflOperationTrace> trace() const;
         [[nodiscard]] RFLErrcode additional_info(RFLAdditionalInfo &info, RFLDataSource source, const RFLMiddleDB *db, u16 index) const;
@@ -166,8 +166,6 @@ namespace smgpc::runtime {
         [[nodiscard]] static std::size_t model_buffer_size(RFLResolution resolution, u32 expression_flags);
         [[nodiscard]] RFLErrcode init_char_model(RFLCharModel &model, RFLDataSource source, const RFLMiddleDB *db, u16 index, void *work,
                                                  RFLResolution resolution, u32 expression_flags) const;
-        void set_model_expression(RFLCharModel &model, RFLExpression expression) const;
-        void draw_model(const RFLCharModel *model) const;
         [[nodiscard]] RflIconTexture make_icon_texture(RFLDataSource source, const RFLMiddleDB *db, u16 index, RFLExpression expression,
                                                        const RFLIconSetting &setting) const;
         [[nodiscard]] RFLErrcode make_icon(void *buffer, RFLDataSource source, const RFLMiddleDB *db, u16 index, RFLExpression expression,
@@ -199,6 +197,7 @@ namespace smgpc::runtime {
         mutable std::vector<RflMiiEntry> _miis;
         mutable std::vector<RflMiiEntry> _valid_miis;
         mutable std::vector<RflOperationTrace> _trace;
+        std::optional<aurora::rfl::ResourceArchive> _resource_archive;
     };
 
 }  // namespace smgpc::runtime

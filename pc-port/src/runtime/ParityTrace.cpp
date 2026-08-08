@@ -1425,12 +1425,8 @@ namespace smgpc::runtime {
                 return "init_resource";
             case RflOperationKind::InitCharModel:
                 return "init_char_model";
-            case RflOperationKind::SetExpression:
-                return "set_expression";
             case RflOperationKind::MakeIcon:
                 return "make_icon";
-            case RflOperationKind::DrawModel:
-                return "draw_model";
             case RflOperationKind::MiiSelectPage:
                 return "mii_select_page";
             }

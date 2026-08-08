@@ -469,7 +469,7 @@ namespace smgpc::runtime {
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                                    RuntimeContextSceneServiceMode scene_service_mode)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
-          _resource_holders(_dvd), _rfl(_save_data.nand()),
+          _atmosphere_level_audio(_dvd), _resource_holders(_dvd), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
@@ -557,6 +557,7 @@ namespace smgpc::runtime {
         _scene_lifecycle = nullptr;
         _scene_execution = nullptr;
         _name_obj_lifecycle = nullptr;
+        _atmosphere_level_audio.reset_scene();
         _capture_screen_camera_actor.reset();
         _capture_screen_indirect_actor.reset();
         _capture_screen_director.reset();
@@ -647,6 +648,7 @@ namespace smgpc::runtime {
             _freecam_look_initialized = false;
         }
         _audio.begin_frame(_frame_index);
+        _atmosphere_level_audio.begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
         refresh_effect_host_bindings();
         _scene_wipe.begin_frame(_frame_index);
@@ -826,6 +828,7 @@ namespace smgpc::runtime {
             execution.execute_movement();
             execution.execute_calc_anim_and_view();
         }
+        _atmosphere_level_audio.end_frame();
     }
 
     void RuntimeContext::set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose) {
@@ -1070,6 +1073,14 @@ namespace smgpc::runtime {
         return _audio;
     }
 
+    AtmosphereLevelSoundService &RuntimeContext::atmosphere_level_audio() {
+        return _atmosphere_level_audio;
+    }
+
+    const AtmosphereLevelSoundService &RuntimeContext::atmosphere_level_audio() const {
+        return _atmosphere_level_audio;
+    }
+
     EffectService &RuntimeContext::effects() {
         return _effects;
     }
@@ -1291,6 +1302,7 @@ namespace smgpc::runtime {
         _scene_effect_keeper_hosts.clear();
         _scene_effect_emission_instances.clear();
         _scene_effect_keeper_instances.clear();
+        _atmosphere_level_audio.reset_scene();
         _active_scene_registration_scope.reset();
         _scene_scheduler_registration_marker = 0U;
         return registrations.size();
@@ -1407,6 +1419,12 @@ namespace smgpc::runtime {
     void RuntimeContext::start_atmosphere_sound(std::string_view name) {
         _audio.start_atmosphere_sound(name);
         _logger.info(logging::Category::APP, logging::Message{"SMG requested atmosphere sound {}"}, name);
+    }
+
+    JAISoundHandle *RuntimeContext::start_atmosphere_level_sound(
+        std::string_view name, s32 parameter_1, s32 parameter_2) {
+        return _atmosphere_level_audio.start_level_sound(
+            name, parameter_1, parameter_2);
     }
 
     void RuntimeContext::start_system_me(std::string_view name) {

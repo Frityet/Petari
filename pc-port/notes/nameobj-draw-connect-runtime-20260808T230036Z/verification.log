@@ -1,0 +1,19 @@
+NameObj temporary draw connection verification
+UTC: 2026-08-08T23:00:36Z
+
+$ cd pc-port
+$ xmake build --shallow smg-pc-live-actor-util-real-or-absent-tests
+$ xmake run smg-pc-live-actor-util-real-or-absent-tests
+LiveActorUtil real-or-absent tests passed: 5/5
+
+$ xmake build --shallow smg-pc-aurora-native-tests
+$ xmake run smg-pc-aurora-native-tests
+[ok] scene scheduler registration scope cleanup
+[ok] FixedPosition and PartsModel surface
+25 Aurora-native test(s) passed
+
+Policy checks:
+- retail API signature: NameObj*
+- clipping mutation used as draw fallback: absent
+- missing runtime/registration behavior: explicit exception
+- Game source edits for this boundary: none

@@ -71,6 +71,21 @@ namespace MR {
             start, end);
     }
 
+    f32 getEaseInValue(f32 x, f32 start, f32 end, f32 max) {
+        const auto rate = 1.0F - JMACosRadian(((x / max) * PI) / 2.0F);
+        return getInterpolateValue(rate, start, end);
+    }
+
+    f32 getEaseOutValue(f32 x, f32 start, f32 end, f32 max) {
+        const auto rate = JMASinRadian(((x / max) * PI) / 2.0F);
+        return getInterpolateValue(rate, start, end);
+    }
+
+    f32 getEaseInOutValue(f32 x, f32 start, f32 end, f32 max) {
+        const auto rate = (1.0F - JMACosRadian((x / max) * PI)) / 2.0F;
+        return getInterpolateValue(rate, start, end);
+    }
+
     f32 getRandomDegree() {
         return getRandom(0.0F, 360.0F);
     }
@@ -247,6 +262,15 @@ namespace MR {
 
         pDst->set(rSrc);
         return normalizeOrZero(pDst);
+    }
+
+    f32 normalize(f32 x, f32 min, f32 max) {
+        const auto range = max - min;
+        if (isNearZero(range)) {
+            return x < min ? 0.0F : 1.0F;
+        }
+
+        return (JGeometry::TUtil<f32>::clamp(x, min, max) - min) / range;
     }
 
     void separateScalarAndDirection(f32 *scalar, TVec3f *direction, const TVec3f &vector) {

@@ -10,6 +10,36 @@ target("smg-pc-game-source-mirror-tests")
         realtime_output = true
     })
 
+target("smg-pc-file-select-exact-source-compile")
+    set_kind("static")
+    set_default(false)
+    set_group("tests/source-boundary")
+    set_toolset("cxx", "clang++")
+    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
+    add_cxxflags("-include " .. path.join(os.projectdir(), "tests/FileSelectExactSourceCompileCompat.hpp"), { force = true })
+    add_files {
+        "../src/Game/Map/FileSelectEffect.cpp",
+        "../src/Game/Map/FileSelectFunc.cpp",
+        "../src/Game/Map/FileSelectItem.cpp",
+        "../src/Game/Map/FileSelector.cpp",
+        "../src/Game/Map/FileSelectSky.cpp",
+        "../src/Game/Screen/FullScreenBlur.cpp"
+    }
+    add_deps("smg-pc-game")
+
+target("smg-pc-file-select-exact-source-compile-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/source-boundary")
+    set_rundir(os.projectdir())
+    add_files("FileSelectExactSourceCompileTests.cpp")
+    add_deps("smg-pc-file-select-exact-source-compile")
+    add_tests("file_select_exact_source_compile", {
+        group = "source-boundary",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-aurora-native-tests")
     set_kind("binary")
     set_default(false)
@@ -974,6 +1004,78 @@ target("smg-pc-sphere-selector-real-or-absent-tests")
         "aurora-vi"
     }
     add_tests("sphere_selector_real_or_absent", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-atmosphere-level-sound-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "AtmosphereLevelSoundTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("atmosphere_level_sound", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-rfl-resource-archive-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "RflResourceArchiveTests.cpp",
+        "../src/resource/RarcArchive.cpp",
+        "../src/resource/Yaz0.cpp"
+    }
+    add_includedirs("../src")
+    add_deps("aurora-base")
+    add_tests("rfl_resource_archive", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-center-screen-blur-real-or-absent-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "CenterScreenBlurRealOrAbsentTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("center_screen_blur_real_or_absent", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true

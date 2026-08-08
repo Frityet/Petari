@@ -554,6 +554,17 @@ namespace {
         const auto removed_persistent = scheduler.remove_registrations_since(0U);
         require(removed_persistent.size() == 1U && removed_persistent.front().name == "persistent",
                 "scene cleanup should preserve registrations made before its marker");
+
+        auto drawable = NameObj("drawable");
+        scheduler.connect_name_obj(drawable, -1, -1, -1, 7);
+        require(scheduler.is_draw_connected(drawable),
+                "new scheduler registrations must begin connected to draw");
+        scheduler.disconnect_draw(drawable);
+        require(!scheduler.is_draw_connected(drawable),
+                "temporary draw disconnect must not remove the scheduler registration");
+        scheduler.connect_draw(drawable);
+        require(scheduler.is_draw_connected(drawable),
+                "temporary draw connect must restore the existing scheduler registration");
     }
 
     class CountingSwitchListener final : public SwitchEventListener {
@@ -1037,6 +1048,8 @@ namespace {
     }
 
     void test_fixed_position_and_parts_model_surface() {
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding{scheduler};
         auto host = LiveActor("fixed-position-host");
         host.mPosition.set(10.0F, 20.0F, 30.0F);
         host.mRotation.set(0.0F, 90.0F, 0.0F);
@@ -1072,6 +1085,7 @@ namespace {
                 "FixedPosition should retain a live reference to the host base matrix");
 
         auto* part = MR::createPartsModelNoSilhouettedMapObj(&host, "fixed-position-part", "", nullptr);
+        scheduler.connect_name_obj(*part, -1, -1, -1, 7);
         part->initFixedPosition(TVec3f{0.0F, 70.0F, 0.0F}, TVec3f{0.0F, 0.0F, 0.0F}, nullptr);
         part->calcAnim();
         require(part->mPosition.epsilonEquals(TVec3f{100.0F, 270.0F, 300.0F}, 0.00001F),
@@ -1085,10 +1099,12 @@ namespace {
 
         MR::hideModel(&host);
         part->movement();
-        require(part->mIsDead && MR::isClipped(part), "PartsModel should leave the draw path while its host is hidden");
+        require(part->mIsDead && !scheduler.is_draw_connected(*part) && !MR::isClipped(part),
+                "PartsModel should leave only the draw path while its host is hidden");
         MR::showModel(&host);
         part->movement();
-        require(!part->mIsDead && !MR::isClipped(part), "PartsModel should reconnect to the draw path when its host returns");
+        require(!part->mIsDead && scheduler.is_draw_connected(*part) && !MR::isClipped(part),
+                "PartsModel should reconnect to draw without changing clipping when its host returns");
 
         auto* ownedFixedPosition = part->mFixedPos;
         part->mFixedPos = nullptr;

@@ -1,8 +1,8 @@
-#include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RflService.hpp"
 
 #include <RVLFaceLib.h>
+#include <aurora/rfl/ResourceArchive.hpp>
 
 #include <algorithm>
 #include <array>
@@ -127,12 +127,27 @@ namespace {
         auto malformed_rfl = smgpc::runtime::RflService{nand};
         auto work = std::vector<std::uint8_t>(smgpc::runtime::RflService::work_size(false));
         auto malformed_resource = std::array<std::uint8_t, 4U>{1U, 2U, 3U, 4U};
+        require(malformed_rfl.db_status().last_error == RFLErrcode_DBNodata,
+                "the retry regression must begin with a populated NAND status cache");
+        const auto malformed_archive = aurora::rfl::ResourceArchive::copy_from(malformed_resource);
+        require(!malformed_archive.valid() &&
+                    malformed_archive.error() == aurora::rfl::ResourceArchiveError::HeaderTooSmall,
+                "the generalized RFL archive parser must preserve a precise malformed-header result");
         require(malformed_rfl.init_resources(work.data(), malformed_resource.data(), malformed_resource.size(), false, false) ==
                     RFLErrcode_Broken,
                 "arbitrary non-empty bytes must not be accepted as an initialized RFL resource");
         require(!malformed_rfl.available() && malformed_rfl.async_status() == RFLErrcode_Broken &&
                     !malformed_rfl.db_status().resource_initialized,
                 "a malformed RFL resource must remain unavailable and report an error");
+
+        auto exit_rfl = smgpc::runtime::RflService{nand};
+        require(exit_rfl.init_resources(work.data(), malformed_resource.data(), malformed_resource.size(), false, false) ==
+                    RFLErrcode_Broken,
+                "the exit regression must begin with a real malformed-resource failure");
+        exit_rfl.exit();
+        require(!exit_rfl.available() && exit_rfl.async_status() == RFLErrcode_NotAvailable &&
+                    exit_rfl.last_reason() == 0 && exit_rfl.db_status().last_reason == 0,
+                "RFLExit must clear a prior resource failure instead of leaking Broken into the next lifetime");
 
         const auto archive_path = find_real_mii_face_archive();
         if (!archive_path.has_value()) {
@@ -143,6 +158,11 @@ namespace {
         const auto archive = smgpc::resource::RarcArchive::from_file(*archive_path);
         const auto resource = archive.resource_data("/RFL_Res.dat");
         require(!resource.empty(), "the retail MiiFaceDatabase archive must contain RFL_Res.dat");
+
+        require(malformed_rfl.init_resources(work.data(), resource.data(), resource.size(), false, false) ==
+                    RFLErrcode_Success &&
+                    malformed_rfl.available() && malformed_rfl.resource_archive() != nullptr,
+                "a valid resource retry must replace a cached malformed-resource error on the same service");
 
         auto rfl = smgpc::runtime::RflService{nand};
         rfl.begin_frame(90U);
@@ -162,6 +182,21 @@ namespace {
         const auto &status = rfl.db_status();
         require(rfl.async_status() == RFLErrcode_Success && rfl.available() && status.resource_initialized,
                 "the real retail face resource should initialize successfully");
+        const auto *owned_archive = rfl.resource_archive();
+        require(owned_archive != nullptr && owned_archive->valid() && owned_archive->version() != 0U &&
+                    owned_archive->bytes().size() == resource.size() && owned_archive->bytes().data() != resource.data(),
+                "RFL must own a parsed copy of the retail resource instead of borrowing the RARC buffer");
+        for (auto archive_index = std::size_t{};
+             archive_index < aurora::rfl::ResourceArchive::archive_count; ++archive_index) {
+            const auto archive_id = static_cast<aurora::rfl::ResourceArchiveId>(archive_index);
+            const auto &section = owned_archive->section(archive_id);
+            const auto first_file = owned_archive->file(archive_id, 0U);
+            require(section.file_count != 0U && section.largest_file_size != 0U &&
+                        first_file.has_value() && !first_file->empty(),
+                    "every retail RFL resource archive must expose its first real file");
+            require(!owned_archive->file(archive_id, section.file_count).has_value(),
+                    "RFL resource file lookup must reject an out-of-range index");
+        }
         require(!status.db_present && status.last_error == RFLErrcode_DBNodata && rfl.valid_miis().empty(),
                 "successful RFL_Res initialization must remain independent from an absent user RFL_DB.dat");
 
@@ -170,18 +205,6 @@ namespace {
                                     RFLResolution_64, RFLExpFlag_Normal) == RFLErrcode_DBNodata &&
                     model.initialized == FALSE,
                 "a real face resource must not manufacture a character when the user database is empty");
-
-        model.initialized = TRUE;
-        model.expression = RFLExp_Normal;
-        rfl.clear_trace();
-        rfl.set_model_expression(model, RFLExp_Smile);
-        require(model.expression == RFLExp_Normal && !rfl.trace().empty() &&
-                    rfl.trace().back().result == RFLErrcode_NotAvailable,
-                "the host must not mutate or report success for an unsupported face model");
-        rfl.clear_trace();
-        rfl.draw_model(&model);
-        require(!rfl.trace().empty() && rfl.trace().back().result == RFLErrcode_NotAvailable,
-                "the host must not report a successful draw without an actual RFL renderer");
 
         auto icon_buffer = std::array<std::uint8_t, 64U>{};
         icon_buffer.fill(0xA5U);
@@ -201,6 +224,10 @@ namespace {
         const auto page = rfl.mii_select_page_state({}, std::nullopt, 0U, std::nullopt);
         require(page.icons.empty() && !rfl.trace().empty() && rfl.trace().back().result == RFLErrcode_DBNodata,
                 "an initialized face resource with no user database must expose an empty no-data selector page");
+
+        rfl.exit();
+        require(rfl.resource_archive() == nullptr && !rfl.available(),
+                "RFLExit must release the owned resource archive and invalidate availability");
     }
 
     void test_private_host_database_format_is_not_accepted_at_retail_path() {
@@ -248,15 +275,6 @@ namespace {
         require(RFLInitCharModel(&model, RFLDataSource_Official, nullptr, 0U, work.data(),
                                  RFLResolution_64, RFLExpFlag_Normal) == RFLErrcode_NotAvailable,
                 "the no-runtime character-model API must report NotAvailable");
-        RFLSetExpression(&model, RFLExp_Smile);
-        require(model.expression == RFLExp_Normal,
-                "the no-runtime expression API must not mutate an unowned model");
-        Mtx matrix{};
-        std::memset(matrix, 0x3F, sizeof(matrix));
-        RFLSetMtx(&model, matrix);
-        require(is_zeroed(model.matrix, sizeof(model.matrix)),
-                "the no-runtime matrix API must not mutate an unowned model");
-
         auto icon_buffer = std::vector<std::uint8_t>(0x4000U, 0U);
         const auto setting = RFLIconSetting{
             .width = 64U,
@@ -269,9 +287,6 @@ namespace {
                             RFLExp_Normal, &setting) == RFLErrcode_NotAvailable,
                 "the no-runtime icon API must report NotAvailable");
 
-        const auto holder = MiiFacePartsHolder{128};
-        require(holder.isInitEnd() && holder.isError(),
-                "the compatibility holder must expose a terminal error when no runtime exists");
     }
 
     struct TestCase {

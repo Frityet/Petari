@@ -1,37 +1,69 @@
 #include "Game/Util/NerveUtil.hpp"
-
-#include "Game/Screen/LayoutActor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/System/NerveExecutor.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 namespace MR {
-
-    bool isFirstStep(const NerveExecutor* pExecutor) {
-        return pExecutor->getNerveStep() == 0;
-    }
-
     bool isStep(const NerveExecutor* pExecutor, s32 step) {
         return pExecutor->getNerveStep() == step;
+    }
+
+    bool isFirstStep(const NerveExecutor* pExecutor) {
+        return isStep(pExecutor, 0);
+    }
+
+    bool isLessStep(const NerveExecutor* pExecutor, s32 step) {
+        return pExecutor->getNerveStep() < step;
+    }
+
+    bool isLessEqualStep(const NerveExecutor* pExecutor, s32 step) {
+        return pExecutor->getNerveStep() <= step;
     }
 
     bool isGreaterStep(const NerveExecutor* pExecutor, s32 step) {
         return pExecutor->getNerveStep() > step;
     }
 
-    bool isFirstStep(const LayoutActor* pActor) {
-        return pActor->getNerveStep() == 0;
+    bool isGreaterEqualStep(const NerveExecutor* pExecutor, s32 step) {
+        return pExecutor->getNerveStep() >= step;
     }
 
-    bool isStep(const LayoutActor* pActor, s32 step) {
-        return pActor->getNerveStep() == step;
+    bool isIntervalStep(const NerveExecutor* pExecutor, s32 step) {
+        return pExecutor->getNerveStep() % step == 0;
     }
 
-    bool isGreaterStep(const LayoutActor* pActor, s32 step) {
-        return pActor->getNerveStep() > step;
+    bool isNewNerve(const NerveExecutor* pExecutor) {
+        return pExecutor->getNerveStep() < 0;
     }
 
-    bool isGreaterStep(const LiveActor* pActor, s32 step) {
-        return pActor != nullptr && pActor->getNerveStep() > step;
+    f32 calcNerveRate(const NerveExecutor* pExecutor, s32 stepMax) {
+        return stepMax <= 0 ? 1.0f : clamp(static_cast< f32 >(pExecutor->getNerveStep()) / stepMax, 0.0f, 1.0f);
     }
 
-}  // namespace MR
+    f32 calcNerveEaseInRate(const NerveExecutor* pExecutor, s32 stepMax) {
+        return getEaseInValue(calcNerveRate(pExecutor, stepMax), 0.0f, 1.0f, 1.0f);
+    }
+
+    f32 calcNerveEaseOutRate(const NerveExecutor* pExecutor, s32 stepMax) {
+        return getEaseOutValue(calcNerveRate(pExecutor, stepMax), 0.0f, 1.0f, 1.0f);
+    }
+
+    f32 calcNerveValue(const NerveExecutor* pExecutor, s32 stepMax, f32 valueStart, f32 valueEnd) {
+        return getLinerValue(calcNerveRate(pExecutor, stepMax), valueStart, valueEnd, 1.0f);
+    }
+
+    f32 calcNerveEaseInOutValue(const NerveExecutor* pExecutor, s32 stepMax, f32 valueStart, f32 valueEnd) {
+        return getEaseInOutValue(calcNerveRate(pExecutor, stepMax), valueStart, valueEnd, 1.0f);
+    }
+
+    f32 calcNerveEaseInOutValue(const NerveExecutor* pExecutor, s32 stepMin, s32 stepMax, f32 valueStart, f32 valueEnd) {
+        f32 rate = clamp(normalize(pExecutor->getNerveStep(), stepMin, stepMax), 0.0f, 1.0f);
+
+        return getEaseInOutValue(rate, valueStart, valueEnd, 1.0f);
+    }
+
+    void setNerveAtStep(NerveExecutor* pExecutor, const Nerve* pNerve, s32 step) {
+        if (pExecutor->getNerveStep() == step) {
+            pExecutor->setNerve(pNerve);
+        }
+    }
+};  // namespace MR

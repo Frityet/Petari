@@ -22,6 +22,23 @@ namespace smgpc::layout {
 
 namespace smgpc::runtime {
 
+    class SceneScheduler;
+
+    [[nodiscard]] SceneScheduler *try_active_scene_scheduler();
+
+    class SceneSchedulerBinding final {
+    public:
+        explicit SceneSchedulerBinding(SceneScheduler &scheduler);
+        ~SceneSchedulerBinding();
+
+        SceneSchedulerBinding(const SceneSchedulerBinding &) = delete;
+        SceneSchedulerBinding &operator=(const SceneSchedulerBinding &) = delete;
+
+    private:
+        SceneScheduler *_bound = nullptr;
+        SceneScheduler *_previous = nullptr;
+    };
+
     enum class SceneEntryKind {
         NameObj,
         Layout,
@@ -66,6 +83,7 @@ namespace smgpc::runtime {
         s32 draw_type = -1;
         SceneDrawBufferPass draw_buffer_pass = SceneDrawBufferPass::None;
         std::size_t order = 0U;
+        bool draw_connected = true;
         bool suspended = false;
         bool dead = false;
         bool has_live_actor_state = false;
@@ -232,6 +250,9 @@ namespace smgpc::runtime {
     public:
         void connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
         void disconnect_name_obj(NameObj &obj);
+        void connect_draw(NameObj &obj);
+        void disconnect_draw(NameObj &obj);
+        [[nodiscard]] bool is_draw_connected(const NameObj &obj) const;
         void register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
         void unregister_layout(smgpc::layout::LayoutRuntime &layout);
         void register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
@@ -275,6 +296,7 @@ namespace smgpc::runtime {
             s32 calc_anim_type = -1;
             s32 draw_buffer_type = -1;
             s32 draw_type = -1;
+            bool draw_connected = true;
             std::size_t order = 0U;
         };
 

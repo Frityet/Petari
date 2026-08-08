@@ -56,6 +56,4 @@ namespace MR {
     bool isEqualSceneName(const char*);
     bool isStarCompleteAllGalaxy();
     void startStarPointerModeEnding(void*);
-    void openWipeFade(s32 = -1);
-    void closeWipeFade(s32 = -1);
 }  // namespace MR

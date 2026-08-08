@@ -146,6 +146,18 @@ namespace JGeometry {
             destination.set(this->mMtx[0][2], this->mMtx[1][2], this->mMtx[2][2]);
         }
 
+        void setXYZDir(const TVec3f &x_direction, const TVec3f &y_direction, const TVec3f &z_direction) {
+            this->mMtx[0][0] = x_direction.x;
+            this->mMtx[1][0] = x_direction.y;
+            this->mMtx[2][0] = x_direction.z;
+            this->mMtx[0][1] = y_direction.x;
+            this->mMtx[1][1] = y_direction.y;
+            this->mMtx[2][1] = y_direction.z;
+            this->mMtx[0][2] = z_direction.x;
+            this->mMtx[1][2] = z_direction.y;
+            this->mMtx[2][2] = z_direction.z;
+        }
+
         void getEulerXYZ(TVec3f &destination) const {
             const f32 y = std::asin(TUtil<f32>::clamp(-this->mMtx[2][0], -1.0F, 1.0F));
             const f32 cosY = std::cos(y);

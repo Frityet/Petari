@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <array>
+#include <exception>
 #include <limits>
 #include <optional>
+#include <stdexcept>
 #include <utility>
 
 #include "Game/LiveActor/HitSensor.hpp"
@@ -23,6 +25,8 @@
 
 namespace smgpc::runtime {
     namespace {
+
+        SceneScheduler *sActiveSceneScheduler = nullptr;
 
         constexpr auto ORIGINAL_MOVEMENT_ORDER = std::array<s32, 43U>{
             MR::MovementType_StopSceneDelayRequest,
@@ -391,12 +395,29 @@ namespace smgpc::runtime {
 
     }  // namespace
 
+    SceneScheduler *try_active_scene_scheduler() {
+        return sActiveSceneScheduler;
+    }
+
+    SceneSchedulerBinding::SceneSchedulerBinding(SceneScheduler &scheduler)
+        : _bound(&scheduler), _previous(sActiveSceneScheduler) {
+        sActiveSceneScheduler = &scheduler;
+    }
+
+    SceneSchedulerBinding::~SceneSchedulerBinding() {
+        if (sActiveSceneScheduler != _bound) {
+            std::terminate();
+        }
+        sActiveSceneScheduler = _previous;
+    }
+
     void SceneScheduler::connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
         if (auto *entry = find_entry(SceneEntryKind::NameObj, &obj)) {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
             entry->draw_buffer_type = draw_buffer_type;
             entry->draw_type = draw_type;
+            entry->draw_connected = true;
 #ifndef NDEBUG
             emit_connect_to_scene_trace(SceneEntryKind::NameObj, obj.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
 #endif
@@ -424,11 +445,45 @@ namespace smgpc::runtime {
         });
     }
 
+    void SceneScheduler::connect_draw(NameObj &obj) {
+        auto found = false;
+        for (auto &entry : _entries) {
+            if (entry.name_obj == &obj) {
+                entry.draw_connected = true;
+                found = true;
+            }
+        }
+        if (!found) {
+            throw std::logic_error("Cannot connect an unregistered NameObj to draw.");
+        }
+    }
+
+    void SceneScheduler::disconnect_draw(NameObj &obj) {
+        auto found = false;
+        for (auto &entry : _entries) {
+            if (entry.name_obj == &obj) {
+                entry.draw_connected = false;
+                found = true;
+            }
+        }
+        if (!found) {
+            throw std::logic_error("Cannot disconnect an unregistered NameObj from draw.");
+        }
+    }
+
+    bool SceneScheduler::is_draw_connected(const NameObj &obj) const {
+        const auto entry = std::ranges::find_if(_entries, [&obj](const auto &candidate) {
+            return candidate.name_obj == &obj;
+        });
+        return entry != _entries.end() && entry->draw_connected;
+    }
+
     void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
         if (auto *entry = find_entry(SceneEntryKind::Layout, &layout)) {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
             entry->draw_type = draw_type;
+            entry->draw_connected = true;
 #ifndef NDEBUG
             emit_connect_to_scene_trace(SceneEntryKind::Layout, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
 #endif
@@ -459,6 +514,7 @@ namespace smgpc::runtime {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
             entry->draw_type = draw_type;
+            entry->draw_connected = true;
 #ifndef NDEBUG
             emit_connect_to_scene_trace(SceneEntryKind::LayoutActor, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
 #endif
@@ -491,6 +547,7 @@ namespace smgpc::runtime {
             entry->calc_anim_type = calc_anim_type;
             entry->draw_buffer_type = draw_buffer_type;
             entry->draw_type = draw_type;
+            entry->draw_connected = true;
             MR::initActorLightInfoLightType(&actor, light_type_for_draw_buffer(draw_buffer_type));
 #ifndef NDEBUG
             emit_connect_to_scene_trace(SceneEntryKind::LiveActorModel, actor.getName(), movement_type, calc_anim_type, draw_buffer_type,
@@ -871,7 +928,7 @@ namespace smgpc::runtime {
                 smgpc::compat::update_actor_clipping(*entry.live_actor, camera_pose);
             }
             if (entry.kind == SceneEntryKind::LiveActorModel && entry.draw_buffer_type == draw_buffer_type && !entry_is_dead(entry) &&
-                !entry_is_suspended(entry) && !entry.live_actor->mFlag.mIsClipped) {
+                !entry_is_suspended(entry) && entry.draw_connected && !entry.live_actor->mFlag.mIsClipped) {
                 actor_entries.push_back(&entry);
             }
         }
@@ -898,7 +955,7 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_draw_type(s32 draw_type) {
         auto draw_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
-            if (entry.draw_type == draw_type && !entry_is_dead(entry) && !entry_is_suspended(entry)) {
+            if (entry.draw_type == draw_type && entry.draw_connected && !entry_is_dead(entry) && !entry_is_suspended(entry)) {
                 draw_entries.push_back(&entry);
             }
         }
@@ -945,6 +1002,7 @@ namespace smgpc::runtime {
                 .draw_type = entry.draw_type,
                 .draw_buffer_pass = SceneDrawBufferPass::None,
                 .order = entry.order,
+                .draw_connected = entry.draw_connected,
                 .suspended = entry_is_suspended(entry),
                 .dead = entry_is_dead(entry),
                 .has_live_actor_state = false,
@@ -1276,6 +1334,7 @@ namespace smgpc::runtime {
             .draw_type = entry.draw_type,
             .draw_buffer_pass = pass,
             .order = entry.order,
+            .draw_connected = entry.draw_connected,
             .suspended = entry_is_suspended(entry),
             .dead = entry_is_dead(entry),
             .has_live_actor_state = false,

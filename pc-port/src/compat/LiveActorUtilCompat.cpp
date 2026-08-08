@@ -12,12 +12,10 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/LiveActorMatrixCompat.hpp"
 #include "render/J3dMatrix.hpp"
 #include "render/live_actor/LiveActorModel.hpp"
 #include "runtime/RuntimeContext.hpp"
-
-ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(LiveActor* pActor) : mActor(pActor) {
-}
 
 MtxPtr LiveActor::getBaseMtx() const {
     if (smgpc::compat::actor_model(this) == nullptr) {
@@ -26,48 +24,7 @@ MtxPtr LiveActor::getBaseMtx() const {
     return reinterpret_cast<MtxPtr>(const_cast<f32*>(getBaseMatrix().m.data()));
 }
 
-namespace {
-    smgpc::render::J3dMatrix3x4 projmap_base_transform(const LiveActor& actor) {
-        return smgpc::render::j3d_remove_matrix_scale(actor.getBaseMatrix(), actor.mScale.x, actor.mScale.y, actor.mScale.z);
-    }
-}  // namespace
-
-void ProjmapEffectMtxSetter::updateMtxUseBaseMtx() {
-    if (mActor == nullptr) {
-        return;
-    }
-
-    mActor->setProjmapEffectMatrix(smgpc::render::j3d_invert_affine_matrix(projmap_base_transform(*mActor)));
-}
-
-void ProjmapEffectMtxSetter::updateMtxUseBaseMtxWithLocalOffset(const TVec3f& offset) {
-    if (mActor == nullptr) {
-        return;
-    }
-
-    const auto local_offset = smgpc::render::J3dMatrix3x4{{
-        1.0F,
-        0.0F,
-        0.0F,
-        offset.x,
-        0.0F,
-        1.0F,
-        0.0F,
-        offset.y,
-        0.0F,
-        0.0F,
-        1.0F,
-        offset.z,
-    }};
-    mActor->setProjmapEffectMatrix(
-        smgpc::render::j3d_invert_affine_matrix(smgpc::render::j3d_concat_matrix(projmap_base_transform(*mActor), local_offset)));
-}
-
 namespace MR {
-
-    ProjmapEffectMtxSetter* initDLMakerProjmapEffectMtxSetter(LiveActor* pActor) {
-        return new ProjmapEffectMtxSetter(pActor);
-    }
 
     void validateClipping(LiveActor* pActor) {
         if (pActor != nullptr) {
@@ -85,58 +42,59 @@ namespace MR {
         pActor->mFlag.mIsInvalidClipping = true;
     }
 
-    void startBck(LiveActor* pActor, const char* pName, const char* pFileName) {
+    void startBck(const LiveActor* pActor, const char* pName, const char* pFileName) {
         if (pActor != nullptr) {
-            pActor->startBck(pName, pFileName);
+            const_cast<LiveActor*>(pActor)->startBck(pName, pFileName);
         }
     }
 
-    void startBrk(LiveActor* pActor, const char* pName) {
+    void startBrk(const LiveActor* pActor, const char* pName) {
         if (pActor != nullptr) {
-            pActor->startBrk(pName);
+            const_cast<LiveActor*>(pActor)->startBrk(pName);
         }
     }
 
-    void startBtk(LiveActor* pActor, const char* pName) {
+    void startBtk(const LiveActor* pActor, const char* pName) {
         if (pActor != nullptr) {
-            pActor->startBtk(pName);
+            const_cast<LiveActor*>(pActor)->startBtk(pName);
         }
     }
 
-    void startAction(LiveActor* pActor, const char* pName) {
+    void startAction(const LiveActor* pActor, const char* pName) {
         if (pActor != nullptr) {
-            pActor->startBck(pName, nullptr);
-            pActor->startBrk(pName);
-            pActor->startBtk(pName);
+            auto* actor = const_cast<LiveActor*>(pActor);
+            actor->startBck(pName, nullptr);
+            actor->startBrk(pName);
+            actor->startBtk(pName);
             if (auto* model = smgpc::compat::actor_model(pActor); model != nullptr) {
                 model->startActionBtp(pName != nullptr ? pName : "");
             }
         }
     }
 
-    void setBrkFrame(LiveActor* pActor, f32 frame) {
+    void setBrkFrame(const LiveActor* pActor, f32 frame) {
         if (pActor != nullptr) {
-            pActor->setBrkFrame(frame);
+            const_cast<LiveActor*>(pActor)->setBrkFrame(frame);
         }
     }
 
-    void setBrkFrameAndStop(LiveActor* pActor, f32 frame) {
+    void setBrkFrameAndStop(const LiveActor* pActor, f32 frame) {
         if (pActor != nullptr) {
-            pActor->setBrkFrameAndStop(frame);
+            const_cast<LiveActor*>(pActor)->setBrkFrameAndStop(frame);
         }
     }
 
-    void setBrkFrameEndAndStop(LiveActor* pActor) {
+    void setBrkFrameEndAndStop(const LiveActor* pActor) {
         if (pActor != nullptr) {
-            pActor->setBrkFrameEndAndStop();
+            const_cast<LiveActor*>(pActor)->setBrkFrameEndAndStop();
         }
     }
 
-    J3DFrameCtrl* getBrkCtrl(LiveActor* pActor) {
+    J3DFrameCtrl* getBrkCtrl(const LiveActor* pActor) {
         if (pActor == nullptr) {
             throw std::logic_error("BRK animation state is unavailable.");
         }
-        auto* ctrl = pActor->getBrkCtrl();
+        auto* ctrl = const_cast<LiveActor*>(pActor)->getBrkCtrl();
         if (ctrl == nullptr) {
             throw std::logic_error("BRK animation data is unavailable.");
         }
@@ -147,6 +105,14 @@ namespace MR {
         if (pMtx != nullptr) {
             setBaseTRMtx(pActor, smgpc::render::j3d_matrix_from_mtx(pMtx));
         }
+    }
+
+    void setBaseTRMtx(LiveActor* pActor, const TPos3f& matrix) {
+        setBaseTRMtx(pActor, smgpc::render::J3dMatrix3x4{{
+                                 matrix.mMtx[0][0], matrix.mMtx[0][1], matrix.mMtx[0][2], matrix.mMtx[0][3],
+                                 matrix.mMtx[1][0], matrix.mMtx[1][1], matrix.mMtx[1][2], matrix.mMtx[1][3],
+                                 matrix.mMtx[2][0], matrix.mMtx[2][1], matrix.mMtx[2][2], matrix.mMtx[2][3],
+                             }});
     }
 
     void setBaseTRMtx(LiveActor* pActor, const smgpc::render::J3dMatrix3x4& matrix) {
@@ -165,18 +131,6 @@ namespace MR {
         PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObj, false);
         pModel->initWithoutIter();
         return pModel;
-    }
-
-    void connectToDrawTemporarily(LiveActor* pActor) {
-        if (pActor != nullptr) {
-            pActor->mFlag.mIsClipped = false;
-        }
-    }
-
-    void disconnectToDrawTemporarily(LiveActor* pActor) {
-        if (pActor != nullptr) {
-            pActor->mFlag.mIsClipped = true;
-        }
     }
 
     void emitEffect(LiveActor* pActor, const char* pEffectName) {
@@ -314,15 +268,59 @@ namespace MR {
     }
 
     bool isStep(const LiveActor* pActor, s32 step) {
-        return pActor != nullptr && pActor->getNerveStep() == step;
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+        }
+        return pActor->getNerveStep() == step;
     }
 
     bool isFirstStep(const LiveActor* pActor) {
         return isStep(pActor, 0);
     }
 
+    bool isLessStep(const LiveActor* pActor, s32 step) {
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+        }
+        return pActor->getNerveStep() < step;
+    }
+
+    bool isLessEqualStep(const LiveActor* pActor, s32 step) {
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+        }
+        return pActor->getNerveStep() <= step;
+    }
+
+    bool isGreaterStep(const LiveActor* pActor, s32 step) {
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+        }
+        return pActor->getNerveStep() > step;
+    }
+
     bool isGreaterEqualStep(const LiveActor* pActor, s32 step) {
-        return pActor != nullptr && pActor->getNerveStep() >= step;
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+        }
+        return pActor->getNerveStep() >= step;
+    }
+
+    bool isNewNerve(const LiveActor* pActor) {
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve query requires a real actor.");
+        }
+        return pActor->getNerveStep() < 0;
+    }
+
+    f32 calcNerveRate(const LiveActor* pActor, s32 stepMax) {
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve rate requires a real actor.");
+        }
+        return stepMax <= 0
+                   ? 1.0F
+                   : std::clamp(static_cast<f32>(pActor->getNerveStep()) / static_cast<f32>(stepMax),
+                                0.0F, 1.0F);
     }
 
     f32 calcNerveEaseInRate(const LiveActor *pActor, s32 stepMax) {

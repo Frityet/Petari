@@ -41,6 +41,7 @@ namespace MR {
     void hideMaterial(const LiveActor*, const char*);
 
     bool isUseTex(J3DMaterial*, u16);
+    bool isUseTexMtx(J3DMaterial*, u32);
 
     void updateMaterial(LiveActor*);
 

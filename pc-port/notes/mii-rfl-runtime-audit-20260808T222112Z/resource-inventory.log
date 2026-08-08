@@ -1,0 +1,30 @@
+Source: orig/RMGK02/files/ObjectData/MiiFaceDatabase.arc:/RFL_Res.dat
+Parser: aurora::rfl::ResourceArchive
+
+archive[0]  Beard           files=4  largest=943   first=9
+archive[1]  Eye             files=50 largest=2592  first=2592
+archive[2]  Eyebrow         files=24 largest=672   first=672
+archive[3]  Faceline        files=8  largest=1935  first=1619
+archive[4]  FaceTexture     files=12 largest=16416 first=16416
+archive[5]  Forehead        files=72 largest=1065  first=247
+archive[6]  Glass           files=1  largest=71    first=71
+archive[7]  GlassTexture    files=10 largest=4128  first=4128
+archive[8]  Hair            files=72 largest=3317  first=2197
+archive[9]  Mask            files=8  largest=2605  first=2593
+archive[10] Mole            files=2  largest=160   first=160
+archive[11] Mouth           files=25 largest=2848  first=2848
+archive[12] Mustache        files=4  largest=1056  first=1056
+archive[13] Nose            files=12 largest=413   first=9
+archive[14] NoseLine        files=12 largest=121   first=71
+archive[15] NoseLineTexture files=12 largest=1056  first=544
+archive[16] Cap             files=72 largest=2879  first=11
+archive[17] CapTexture      files=72 largest=1056  first=64
+
+version=925
+bytes=686372
+files=472
+fnv1a64=0x5659aa5c5532e566
+
+Every first file was non-empty and every file_count index was rejected as out
+of range. The parsed byte storage had a different address from the RARC input,
+proving an owned copy.

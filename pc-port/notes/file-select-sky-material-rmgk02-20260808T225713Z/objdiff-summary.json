@@ -1,0 +1,35 @@
+{
+  "configuration": "RMGK02",
+  "report": "build/RMGK02/report.json",
+  "units": {
+    "main/Game/Map/FileSelectSky": {
+      "text_fuzzy_match_percent": 99.60976,
+      "total_code_bytes": 820,
+      "matched_functions": 9,
+      "total_functions": 10,
+      "functions": {
+        "FileSelectSky::~FileSelectSky()": 100.0,
+        "FileSelectSky::FileSelectSky(const char*)": 100.0,
+        "FileSelectSky::init(const JMapInfoIter&)": 100.0,
+        "FileSelectSky::calcAnim()": 100.0,
+        "FileSelectSky::calcAndSetBaseMtx()": 100.0,
+        "FileSelectSky::receiveOtherMsg(unsigned long, HitSensor*, HitSensor*)": 100.0,
+        "FileSelectSky::exeWait()": 99.18367
+      }
+    },
+    "main/Game/LiveActor/MaterialCtrl": {
+      "text_fuzzy_match_percent": 32.223816,
+      "total_code_bytes": 3628,
+      "matched_functions": 8,
+      "total_functions": 33,
+      "recovered_projmap_functions": {
+        "ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(J3DModel*, const ResourceHolder*)": 92.833336,
+        "ProjmapEffectMtxSetter::update()": 95.48276,
+        "ProjmapEffectMtxSetter::getBaseTrans(TVec3f*) const": 100.0,
+        "ProjmapEffectMtxSetter::updateMtxUseBaseMtx()": 100.0,
+        "ProjmapEffectMtxSetter::updateMtxUseBaseMtxWithLocalOffset(const TVec3f&)": 97.95,
+        "ProjmapEffectMtxSetter::UpdateEffectMtxInfo::UpdateEffectMtxInfo()": 100.0
+      }
+    }
+  }
+}

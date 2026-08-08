@@ -48,7 +48,9 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
 }
 
 JUTTexture::~JUTTexture() {
+    GXDestroyTexObj(&mObj);
     if (getCaptureFlag()) {
+        GXDestroyCopyTex(mImage);
         delete[] reinterpret_cast<u8 *>(_3C);
     }
 }

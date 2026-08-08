@@ -118,24 +118,6 @@ extern "C" RFLErrcode RFLInitCharModel(RFLCharModel *model, RFLDataSource source
     return RFLErrcode_NotAvailable;
 }
 
-extern "C" void RFLSetMtx(RFLCharModel *model, const Mtx matrix) {
-    (void)model;
-    (void)matrix;
-}
-
-extern "C" void RFLSetExpression(RFLCharModel *model, RFLExpression expression) {
-    if (model == nullptr) {
-        return;
-    }
-    if (auto *runtime = active_runtime()) {
-        runtime->rfl().set_model_expression(*model, expression);
-    }
-}
-
-extern "C" RFLExpression RFLGetExpression(const RFLCharModel *model) {
-    return model != nullptr ? model->expression : RFLExp_Normal;
-}
-
 GXColor RFLGetFavoriteColor(RFLFavoriteColor color) {
     constexpr auto colors = std::array<GXColor, RFLFavoriteColor_Max>{
         GXColor {184U, 64U, 48U, 255U},
@@ -152,39 +134,6 @@ GXColor RFLGetFavoriteColor(RFLFavoriteColor color) {
         GXColor {24U, 24U, 20U, 255U},
     };
     return colors[static_cast<std::size_t>(color)];
-}
-
-extern "C" void RFLLoadDrawSetting(const RFLDrawSetting *) {
-}
-
-extern "C" void RFLDrawOpa(const RFLCharModel *model) {
-    if (auto *runtime = active_runtime()) {
-        runtime->rfl().draw_model(model);
-    }
-}
-
-extern "C" void RFLDrawXlu(const RFLCharModel *model) {
-    if (auto *runtime = active_runtime()) {
-        runtime->rfl().draw_model(model);
-    }
-}
-
-extern "C" void RFLLoadVertexSetting(const RFLDrawCoreSetting *) {
-}
-
-extern "C" void RFLLoadMaterialSetting(const RFLDrawCoreSetting *) {
-}
-
-extern "C" void RFLDrawOpaCore(const RFLCharModel *model, const RFLDrawCoreSetting *) {
-    RFLDrawOpa(model);
-}
-
-extern "C" void RFLDrawXluCore(const RFLCharModel *model, const RFLDrawCoreSetting *) {
-    RFLDrawXlu(model);
-}
-
-extern "C" void RFLDrawShape(const RFLCharModel *model) {
-    RFLDrawOpa(model);
 }
 
 extern "C" RFLErrcode RFLMakeIcon(void *buffer, RFLDataSource source, RFLMiddleDB *db, u16 index, RFLExpression expression,

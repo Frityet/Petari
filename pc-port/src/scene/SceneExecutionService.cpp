@@ -28,6 +28,7 @@ namespace smgpc::scene {
         scheduler.execute_draw_buffer_list_normal(camera_pose, false, MR::DrawType_Player, MR::LightType_Player);
         scheduler.execute_draw_type(MR::DrawType_EffectDraw3D);
         scheduler.execute_draw_type(MR::DrawType_EffectDrawForBloomEffect);
+        scheduler.execute_draw_type(MR::DrawType_CenterScreenBlur);
         scheduler.execute_draw_type(MR::DrawType_CaptureScreenIndirect);
     }
 

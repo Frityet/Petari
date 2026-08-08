@@ -15,7 +15,6 @@ namespace smgpc::runtime {
         constexpr auto RFL_DELUXE_WORK_SIZE = std::size_t {0x65F24U};
         constexpr auto RFL_CHAR_MODEL_RESOURCE_SIZE = std::size_t {0x8260U};
         constexpr auto RFL_PPC_TEX_OBJ_SIZE = std::size_t {0x20U};
-        constexpr auto RFL_RESOURCE_ARCHIVE_COUNT = std::uint16_t {18U};
         constexpr auto RFL_RESOURCE_PATH = std::string_view {"/ObjectData/MiiFaceDatabase.arc/RFL_Res.dat"};
 
         [[nodiscard]] bool is_supported_source(RFLDataSource source) {
@@ -42,70 +41,6 @@ namespace smgpc::runtime {
                 }
             }
             return size;
-        }
-
-        [[nodiscard]] std::uint16_t read_be_u16(std::span<const std::uint8_t> bytes, std::size_t offset) {
-            return static_cast<std::uint16_t>((static_cast<std::uint16_t>(bytes[offset]) << 8U) | bytes[offset + 1U]);
-        }
-
-        [[nodiscard]] std::uint32_t read_be_u32(std::span<const std::uint8_t> bytes, std::size_t offset) {
-            return (static_cast<std::uint32_t>(bytes[offset]) << 24U) |
-                   (static_cast<std::uint32_t>(bytes[offset + 1U]) << 16U) |
-                   (static_cast<std::uint32_t>(bytes[offset + 2U]) << 8U) |
-                   static_cast<std::uint32_t>(bytes[offset + 3U]);
-        }
-
-        [[nodiscard]] bool contains_range(std::size_t size, std::size_t offset, std::size_t length) {
-            return offset <= size && length <= size - offset;
-        }
-
-        [[nodiscard]] bool is_valid_resource(std::span<const std::uint8_t> bytes) {
-            const auto header_size = std::size_t {4U} +
-                                     static_cast<std::size_t>(RFL_RESOURCE_ARCHIVE_COUNT) * sizeof(std::uint32_t);
-            if (bytes.size() < header_size || read_be_u16(bytes, 0U) != RFL_RESOURCE_ARCHIVE_COUNT ||
-                read_be_u16(bytes, 2U) == 0U) {
-                return false;
-            }
-
-            auto previous_end = header_size;
-            for (auto archive_index = std::size_t {}; archive_index < RFL_RESOURCE_ARCHIVE_COUNT; ++archive_index) {
-                const auto section_offset = static_cast<std::size_t>(read_be_u32(bytes, 4U + archive_index * sizeof(std::uint32_t)));
-                if (section_offset < previous_end || !contains_range(bytes.size(), section_offset, 4U)) {
-                    return false;
-                }
-
-                const auto file_count = static_cast<std::size_t>(read_be_u16(bytes, section_offset));
-                const auto biggest_size = static_cast<std::size_t>(read_be_u16(bytes, section_offset + 2U));
-                if (file_count == 0U) {
-                    return false;
-                }
-
-                const auto table_offset = section_offset + 4U;
-                const auto table_size = (file_count + 1U) * sizeof(std::uint32_t);
-                if (!contains_range(bytes.size(), table_offset, table_size) || read_be_u32(bytes, table_offset) != 0U) {
-                    return false;
-                }
-
-                auto previous_file_end = std::size_t {};
-                auto largest_file = std::size_t {};
-                for (auto file_index = std::size_t {}; file_index < file_count; ++file_index) {
-                    const auto next_file_end = static_cast<std::size_t>(
-                        read_be_u32(bytes, table_offset + (file_index + 1U) * sizeof(std::uint32_t)));
-                    if (next_file_end < previous_file_end) {
-                        return false;
-                    }
-                    largest_file = std::max(largest_file, next_file_end - previous_file_end);
-                    previous_file_end = next_file_end;
-                }
-
-                const auto data_offset = table_offset + table_size;
-                if (largest_file != biggest_size || !contains_range(bytes.size(), data_offset, previous_file_end)) {
-                    return false;
-                }
-                previous_end = data_offset + previous_file_end;
-            }
-
-            return true;
         }
 
         [[nodiscard]] bool is_empty_create_id(const RFLCreateID &id) {
@@ -183,6 +118,7 @@ namespace smgpc::runtime {
         _deluxe_textures = deluxe_textures;
         _resource_initialized = false;
         _resource_init_pending = false;
+        _resource_archive.reset();
         _last_reason = 0;
 
         auto result = RFLErrcode_Success;
@@ -192,9 +128,15 @@ namespace smgpc::runtime {
         } else if (resource_buffer == nullptr || resource_size == 0U) {
             result = RFLErrcode_Fatal;
             _last_reason = NAND_RESULT_NOEXISTS;
-        } else if (!is_valid_resource(std::span<const std::uint8_t>(static_cast<const std::uint8_t *>(resource_buffer), resource_size))) {
-            result = RFLErrcode_Broken;
-            _last_reason = NAND_RESULT_CORRUPT;
+        } else {
+            auto archive = aurora::rfl::ResourceArchive::copy_from(
+                std::span<const std::uint8_t>(static_cast<const std::uint8_t *>(resource_buffer), resource_size));
+            if (!archive.valid()) {
+                result = RFLErrcode_Broken;
+                _last_reason = NAND_RESULT_CORRUPT;
+            } else {
+                _resource_archive.emplace(std::move(archive));
+            }
         }
 
         _status.resource_initialized = result == RFLErrcode_Success && !async;
@@ -218,6 +160,13 @@ namespace smgpc::runtime {
         }
 
         _forced_error = false;
+        // Resource initialization and the NAND database are independent. A
+        // failed resource attempt may have left a cached Broken status; force
+        // the database facet to be resolved again against the newly owned
+        // valid archive instead of carrying that resource error forward.
+        _cache_loaded = false;
+        _miis.clear();
+        _valid_miis.clear();
         if (async) {
             _resource_init_pending = true;
             request_async_load(1U);
@@ -232,13 +181,19 @@ namespace smgpc::runtime {
     void RflService::exit() {
         _resource_initialized = false;
         _resource_init_pending = false;
+        _resource_archive.reset();
         _initialized = false;
+        _forced_error = false;
+        _last_reason = 0;
         _async_pending = false;
+        _async_complete_frame = 0U;
         _cache_loaded = false;
         _miis.clear();
         _valid_miis.clear();
+        _status.async_pending = false;
         _status.resource_initialized = false;
         _status.last_error = RFLErrcode_NotAvailable;
+        _status.last_reason = 0;
     }
 
     bool RflService::available() const {
@@ -316,6 +271,10 @@ namespace smgpc::runtime {
         ensure_loaded();
         _status.async_pending = _async_pending;
         return _status;
+    }
+
+    const aurora::rfl::ResourceArchive *RflService::resource_archive() const {
+        return _resource_archive.has_value() ? &*_resource_archive : nullptr;
     }
 
     std::span<const RflMiiEntry> RflService::valid_miis() const {
@@ -592,32 +551,6 @@ namespace smgpc::runtime {
             .expression_flags = expression_flags,
         });
         return RFLErrcode_NotAvailable;
-    }
-
-    void RflService::set_model_expression(RFLCharModel &model, RFLExpression expression) const {
-        push_trace(RflOperationTrace {
-            .kind = RflOperationKind::SetExpression,
-            .frame_index = _frame_index,
-            .path = NandFileSystemService::rfl_db_path(),
-            .source = model.source,
-            .index = static_cast<s32>(model.index),
-            .result = !is_supported_expression(expression) || model.initialized == FALSE ? RFLErrcode_WrongParam : RFLErrcode_NotAvailable,
-            .expression = expression,
-            .expression_flags = model.expressionFlags,
-        });
-    }
-
-    void RflService::draw_model(const RFLCharModel *model) const {
-        push_trace(RflOperationTrace {
-            .kind = RflOperationKind::DrawModel,
-            .frame_index = _frame_index,
-            .path = NandFileSystemService::rfl_db_path(),
-            .source = model != nullptr ? model->source : RFLDataSource_Official,
-            .index = model != nullptr ? static_cast<s32>(model->index) : -1,
-            .result = model != nullptr && model->initialized ? RFLErrcode_NotAvailable : RFLErrcode_WrongParam,
-            .expression = model != nullptr ? model->expression : RFLExp_Normal,
-            .expression_flags = model != nullptr ? model->expressionFlags : 0U,
-        });
     }
 
     RflIconTexture RflService::make_icon_texture(RFLDataSource source, const RFLMiddleDB *, u16 index, RFLExpression expression,

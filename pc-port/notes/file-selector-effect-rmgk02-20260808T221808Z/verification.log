@@ -1,0 +1,53 @@
+2026-08-08 UTC
+
+$ ninja -j12
+[2061/2064] LINK build/RMGK02/main.elf
+[2062/2064] DOL build/RMGK02/main.dol
+[2063/2064] CHECK config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+[2064/2064] PROGRESS
+exit 0
+
+$ build/tools/dtk shasum -c config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+
+$ build/tools/objdiff-cli diff -p . -u main/Game/Map/FileSelectEffect ...
+FileSelectEffect .text: 1264 bytes, 99.81013%
+FileSelectEffect::disappear(): 236 bytes, 99.830505%
+FileSelectEffect::calcAndSetBaseMtx(): 308 bytes, 100%
+unmatched retail callable functions: 0
+
+$ build/tools/objdiff-cli diff -p . -u main/Game/Map/FileSelector ...
+FileSelector .text: 17428 bytes, 97.83222%
+FileSelector::~FileSelector(): 92 bytes, 100%
+unmatched retail callable functions: 0
+
+$ cmp -s src/Game/Map/FileSelectEffect.cpp pc-port/src/Game/Map/FileSelectEffect.cpp
+exit 0
+
+$ cmp -s src/Game/Map/FileSelector.cpp pc-port/src/Game/Map/FileSelector.cpp
+exit 0
+
+$ /usr/bin/clang++ -c -m64 -std=c++23 \
+    -Isrc/render -Isrc -Isrc/common -Iaurora/include \
+    -DSMGPC_DEBUG_BUILD -DAURORA_ENABLE_GX -DAURORA -DTARGET_PC \
+    -include /workspaces/pcport/pc-port/src/compat/MetrowerksStdCompat.hpp \
+    src/Game/Map/FileSelectEffect.cpp -o /tmp/FileSelectEffect-exact-wave-final.o
+exit 0
+
+$ /usr/bin/clang++ -c -m64 -std=c++23 \
+    -Isrc/render -Isrc -Isrc/common -Iaurora/include \
+    -DSMGPC_DEBUG_BUILD -DAURORA_ENABLE_GX -DAURORA -DTARGET_PC \
+    -include /workspaces/pcport/pc-port/src/compat/MetrowerksStdCompat.hpp \
+    src/Game/Map/FileSelector.cpp -o /tmp/FileSelector-exact-wave-final.o
+exit 0; one pre-existing GCC-compatibility warning for the decomp-style NO_INLINE suffix at FileSelector.cpp:63
+
+$ xmake build --shallow smg-pc-game-source-mirror-tests
+[100%]: build ok
+
+$ ./build/linux/x86_64/debug/smg-pc-game-source-mirror-tests
+Historical lane snapshot: all 32 then-configured root/PC source-header pairs, including FileSelectEffect and FileSelector: [ok]
+exit 0
+
+$ git diff --check -- src/Game/Map/FileSelectEffect.cpp src/Game/Map/FileSelector.cpp pc-port/src/Game/Map/FileSelectEffect.cpp pc-port/src/Game/Map/FileSelector.cpp
+exit 0

@@ -148,23 +148,23 @@ namespace {
             "the Sphere camera dependency must not manufacture a view matrix");
     }
 
-    void test_handle_factory_stays_absent_at_the_audio_boundary() {
+    void test_handle_factory_stays_absent_at_remaining_audio_boundaries() {
         const auto support =
             smgpc::scene::nameobj::describe_name_obj_creator_support(
                 "SphereSelectorHandle");
         require(
             support.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::RuntimeClosureUnavailable &&
                 support.reason ==
-                    "atmosphere_level_sound_playback_runtime_unavailable" &&
+                    "system_se_me_and_stage_bgm_playback_runtime_unavailable" &&
                 NameObjFactory::getCreator("SphereSelectorHandle") == nullptr,
-            "SphereSelectorHandle must remain an explicit unavailable factory row until real atmosphere-level playback exists");
+            "SphereSelectorHandle must remain absent until its reachable system-SE/ME and stage-BGM paths have real playback");
 
         require_logic_error(
             [] {
                 (void)MR::startAtmosphereLevelSE(
                     "SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1);
             },
-            "AudWrap::getAtmosphereSeObject()->startLevelSoundParam",
+            "active RuntimeContext",
             "the mandatory retail level-sound call must fail explicitly instead of becoming a silent event");
     }
 
@@ -206,7 +206,7 @@ namespace {
                     row->table_path == "jmp/placement/common/objinfo" &&
                     row->object_args[0] == 0 && !row->factory_supported &&
                     row->support_reason ==
-                        "atmosphere_level_sound_playback_runtime_unavailable",
+                        "system_se_me_and_stage_bgm_playback_runtime_unavailable",
                 "the test must use the real RMGK01 FileSelect handle row and retain its precise blocker");
 
         auto holder = SceneObjHolder{};
@@ -275,8 +275,8 @@ namespace {
         handle.mRotateSpeed = 1.0F;
         require_logic_error(
             [&handle] { handle.playRotateSE(); },
-            "AudWrap::getAtmosphereSeObject()->startLevelSoundParam",
-            "the exact runtime path must stop at the real missing audio dependency");
+            "active RuntimeContext",
+            "the exact runtime path must require the active concrete audio service");
 
         std::cout << "[info] real-disc fixture: " << disc_path_string
                   << "; SphereSelectorHandle row=" << row->jmap_entry_index << '\n';
@@ -295,8 +295,8 @@ int main() {
                  test_scene_obj_6f_is_exact_and_synchronous},
         TestCase{"generalized pointer/layout real-or-absent contract",
                  test_generalized_pointer_and_layout_contract},
-        TestCase{"factory stays absent at real audio boundary",
-                 test_handle_factory_stays_absent_at_the_audio_boundary},
+        TestCase{"factory stays absent at remaining audio boundaries",
+                 test_handle_factory_stays_absent_at_remaining_audio_boundaries},
         TestCase{"real FileSelect row exact init/message contract",
                  test_real_file_select_row_exact_init_and_messages},
     };

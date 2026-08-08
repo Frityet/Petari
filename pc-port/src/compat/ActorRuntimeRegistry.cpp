@@ -1,6 +1,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameActorSensorCompat.hpp"
+#include "compat/MaterialCtrlCompat.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include <cmath>
@@ -137,6 +138,7 @@ namespace smgpc::compat {
         release_actor_binder_state(actor);
         release_actor_model_state(actor);
         release_actor_clipping_state(actor);
+        release_actor_material_ctrl_state(actor);
         release_talk_runtime_state(actor);
         release_demo_runtime_state(actor);
     }

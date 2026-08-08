@@ -1,0 +1,77 @@
+CenterScreenBlur / FullScreenBlur verification
+UTC: 2026-08-08T22:27:24Z
+
+Exact mirror checks:
+  cmp root/CenterScreenBlur.hpp PC/CenterScreenBlur.hpp: PASS
+  cmp root/CenterScreenBlur.cpp PC/CenterScreenBlur.cpp: PASS
+  cmp root/FullScreenBlur.hpp PC/FullScreenBlur.hpp: PASS
+  cmp root/FullScreenBlur.cpp PC/FullScreenBlur.cpp: PASS
+
+Root RMGK02 object report (/tmp/blur-report.json):
+  main/Game/Screen/CenterScreenBlur
+    .ctors 4 bytes: 100%
+    .data 184 bytes: 100%
+    .rodata 8 bytes: 100%
+    .sbss 16 bytes: 100%
+    .sdata2 8 bytes: 100%
+    .text 928 bytes: 100%
+  main/Game/Screen/FullScreenBlur
+    .rodata 8 bytes: 100%
+    .sdata2 32 bytes: 100%
+    .text 656 bytes: 100%
+
+Build:
+  cd pc-port
+  xmake build smg-pc-game
+  result: PASS
+
+  xmake build --shallow -r smg-pc-file-select-exact-source-compile
+  FullScreenBlur.cpp exact-source compile: PASS
+
+  xmake build smg-pc-center-screen-blur-real-or-absent-tests
+  result: PASS
+
+CPU/strict-boundary run:
+  xmake run smg-pc-center-screen-blur-real-or-absent-tests
+  [ok] absent without scene ownership
+  [ok] exact scene object and generalized history owner
+  [ok] exact nerve lifecycle and strict capture boundary
+  [ok] Aurora capability queries are real outside a frame
+  [skip] real GPU blur proof (set SMGPC_BLUR_GPU_TEST=1)
+  [ok] real GPU captured-frame blur when requested
+
+Active-frame GPU run:
+  SMGPC_BLUR_GPU_TEST=1 \
+  SMGPC_BLUR_SCREENSHOT=notes/center-screen-blur-real-20260808T222724Z/blurred-frame.png \
+  SMGPC_ENABLE_VSYNC=0 \
+  xvfb-run -a xmake run smg-pc-center-screen-blur-real-or-absent-tests
+
+  Aurora backend: Vulkan
+  GPU: NVIDIA GeForce RTX 3080
+  window framebuffer: 640x480
+  logical Wii EFB/capture: 640x456
+  blur draw count: 2
+  history capture count: 2
+  history valid: true
+  completed history GXCopyTex: true
+  display bytes changed: 875169 / 1228800 (71.2214%)
+  scene teardown completed GXCopyTex eviction: true
+  result: PASS
+
+Mirror test:
+  xmake build smg-pc-game-source-mirror-tests
+  xmake run smg-pc-game-source-mirror-tests
+  CenterScreenBlur.hpp/.cpp: PASS
+  FullScreenBlur.hpp/.cpp: PASS
+
+SHA-256:
+  fe36d4a986c7bfeb2ee056c6cb764d5c3a79c903caa822d1284e30bb1c5acaec  baseline-frame.png
+  bb97d5f04ce3ffac4062edbd9c52eda07408d6fb27f2f336808703185485d8ef  blurred-frame.png
+  ca50522bdb647838165eb0b04e536081d131975c52d3417f23b5faf22fb8bb2c  CenterScreenBlur.hpp
+  bc359e06abf0bf019a2661b15327ed142517383ae0270a16a4e5cc1c6f60ef0f  CenterScreenBlur.cpp
+  5ec2e36a80e374e1c6f05cc217c9395a0fd0aa81586c6d5ed00fff486ae5b64f  FullScreenBlur.hpp
+  ccd9f4f7708f141295a99bc5e6f5505c70b9414e79d30a56cff58772edbc89a8  FullScreenBlur.cpp
+
+Expected teardown-only messages after PASS:
+  Device lost: Device was destroyed.
+  Error enabling screensaver: That operation is not supported

@@ -62,6 +62,9 @@ namespace {
         require(MR::createSceneObj(SceneObj_CollisionDirector) == nullptr &&
                     !MR::isExistSceneObj(SceneObj_CollisionDirector),
                 "an unsupported SceneObj factory entry must remain absent");
+        require(MR::createSceneObj(SceneObj_MiiFacePartsHolder) == nullptr &&
+                    !MR::isExistSceneObj(SceneObj_MiiFacePartsHolder),
+                "the Mii holder must remain absent until real character-model construction and drawing exist");
     }
 
     void test_bindings_are_single_scene_and_isolated() {

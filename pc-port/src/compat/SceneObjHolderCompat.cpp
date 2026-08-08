@@ -13,9 +13,10 @@
 #include "Game/MapObj/CoinHolder.hpp"
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
-#include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+#include "compat/CapturedFrameBlurService.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -33,7 +34,8 @@ namespace {
 namespace smgpc::scene {
 
     SceneObjHolderBinding::SceneObjHolderBinding(SceneObjHolder &holder)
-        : _holder(&holder), _owned_objects(), _area_obj_runtime(std::make_unique<AreaObjRuntime>()) {
+        : _holder(&holder), _owned_objects(), _area_obj_runtime(std::make_unique<AreaObjRuntime>()),
+          _captured_frame_blur_service(std::make_unique<smgpc::compat::CapturedFrameBlurService>()) {
         if (sCurrentSceneObjHolder != nullptr) {
             throw std::logic_error("a SceneObjHolder is already bound to the active scene");
         }
@@ -49,6 +51,7 @@ namespace smgpc::scene {
         }
         _owned_objects.clear();
         _area_obj_runtime.reset();
+        _captured_frame_blur_service.reset();
     }
 
     void SceneObjHolderBinding::init_after_placement() {
@@ -64,6 +67,12 @@ namespace smgpc::scene {
 
     AreaObjRuntime *current_area_obj_runtime() noexcept {
         return sCurrentSceneObjHolderBinding != nullptr ? sCurrentSceneObjHolderBinding->_area_obj_runtime.get() : nullptr;
+    }
+
+    smgpc::compat::CapturedFrameBlurService *current_captured_frame_blur_service() noexcept {
+        return sCurrentSceneObjHolderBinding != nullptr
+                   ? sCurrentSceneObjHolderBinding->_captured_frame_blur_service.get()
+                   : nullptr;
     }
 
 }  // namespace smgpc::scene
@@ -133,10 +142,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new PurpleCoinHolder();
     case SceneObj_CoinRotater:
         return new CoinRotater("コイン回転管理");
-    case SceneObj_MiiFacePartsHolder:
-        return new MiiFacePartsHolder(128);
     case SceneObj_PrologueHolder:
         return new PrologueHolder("プロローグ保持");
+    case SceneObj_CenterScreenBlur:
+        return new CenterScreenBlur();
     case SceneObj_SphereSelector:
         return new SphereSelector();
     default:

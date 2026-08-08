@@ -71,6 +71,14 @@ namespace {
                 "an x/y maximum tie must select y exactly as the retail comparison tree does");
         require(near(MR::cosDegree(60.0F), 0.5F) && near(MR::sqrt(81.0F), 9.0F) && MR::sqrt(-4.0F) == -4.0F,
                 "degree cosine and host square root must preserve the retail utility contract");
+        require(near(MR::getEaseInValue(0.5F, 2.0F, 6.0F, 1.0F), 2.0F + (4.0F * (1.0F - std::cos(PI * 0.25F)))) &&
+                    near(MR::getEaseOutValue(0.5F, 2.0F, 6.0F, 1.0F), 2.0F + (4.0F * std::sin(PI * 0.25F))) &&
+                    near(MR::getEaseInOutValue(0.5F, 2.0F, 6.0F, 1.0F), 4.0F),
+                "nerve easing providers must retain the retail trigonometric interpolation curves");
+        require(MR::normalize(-1.0F, 0.0F, 10.0F) == 0.0F && near(MR::normalize(5.0F, 0.0F, 10.0F), 0.5F) &&
+                    MR::normalize(11.0F, 0.0F, 10.0F) == 1.0F && MR::normalize(1.0F, 2.0F, 2.0F) == 0.0F &&
+                    MR::normalize(2.0F, 2.0F, 2.0F) == 1.0F,
+                "scalar normalization must preserve retail clamping and degenerate-range behavior");
         require(FLOAT_MAX > 3.0e38F && FLOAT_ZERO == 0.0F && near(PI_180 * 180.0F, PI, 0.000001F),
                 "math_types constants must have one canonical compatibility definition");
         require(gZeroVec.x == 0.0F && gZeroVec.y == 0.0F && gZeroVec.z == 0.0F,
@@ -85,6 +93,23 @@ namespace {
         orthogonal.killElement2(TVec3f{3.0F, 4.0F, 5.0F}, TVec3f{0.0F, 1.0F, 0.0F});
         require(orthogonal.epsilonEquals(TVec3f{3.0F, 0.0F, 5.0F}, 0.0F),
                 "killElement2 must remove the component parallel to its normalized direction");
+
+        auto uniform = TVec3f{};
+        uniform.setAll<f32>(2.5F);
+        require(uniform.epsilonEquals(TVec3f{2.5F, 2.5F, 2.5F}, 0.0F),
+                "TVec3f::setAll must preserve the retail uniform-scale surface");
+
+        const auto projected_source = TVec3f{4.0F, 5.0F, 6.0F};
+        const TVec2f& projected = projected_source;
+        require(projected.x == 4.0F && projected.y == 5.0F &&
+                    static_cast<const void*>(&projected) == static_cast<const void*>(&projected_source),
+                "TVec3f-to-TVec2f projection must alias the retail x/y prefix without copying");
+
+        auto lhs = TVec3f{1.0F, 2.0F, 3.0F};
+        const auto rhs = TVec3f{4.0F, 5.0F, 6.0F};
+        JMathInlineVEC::PSVECAdd(&lhs, &rhs, &lhs);
+        require(lhs.epsilonEquals(TVec3f{5.0F, 7.0F, 9.0F}, 0.0F),
+                "JMathInlineVEC addition must retain the SDK alias-safe vector contract");
     }
 
     void test_rotation_and_prescale() {
@@ -100,6 +125,15 @@ namespace {
                     near(position.mMtx[2][2], 0.0F) && position.mMtx[0][3] == 0.0F &&
                     position.mMtx[1][3] == 0.0F && position.mMtx[2][3] == 0.0F,
                 "TPos3f axis-angle construction must use the retail rotation signs and clear translation");
+
+        position.setTrans(7.0F, 8.0F, 9.0F);
+        position.setXYZDir(TVec3f{1.0F, 2.0F, 3.0F}, TVec3f{4.0F, 5.0F, 6.0F},
+                           TVec3f{7.0F, 8.0F, 9.0F});
+        require(position.mMtx[0][0] == 1.0F && position.mMtx[1][0] == 2.0F && position.mMtx[2][0] == 3.0F &&
+                    position.mMtx[0][1] == 4.0F && position.mMtx[1][1] == 5.0F && position.mMtx[2][1] == 6.0F &&
+                    position.mMtx[0][2] == 7.0F && position.mMtx[1][2] == 8.0F && position.mMtx[2][2] == 9.0F &&
+                    position.mMtx[0][3] == 7.0F && position.mMtx[1][3] == 8.0F && position.mMtx[2][3] == 9.0F,
+                "TPos3f::setXYZDir must write retail basis columns without changing translation");
 
         Mtx matrix{};
         MR::makeMtxRotate(matrix, TVec3f{0.0F, 90.0F, 0.0F});

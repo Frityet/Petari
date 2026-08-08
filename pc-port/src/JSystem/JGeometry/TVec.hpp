@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JSystem/JGeometry/TUtil.hpp"
+#include "JSystem/JMath/JMath.hpp"
 
 #include <cmath>
 #include <type_traits>
@@ -149,6 +150,10 @@ namespace JGeometry {
             return this;
         }
 
+        operator const TVec2<f32> &() const {
+            return *reinterpret_cast<const TVec2<f32> *>(this);
+        }
+
         template <typename T>
         void set(T newX, T newY, T newZ) {
             x = static_cast<f32>(newX);
@@ -177,6 +182,11 @@ namespace JGeometry {
             x = value;
             y = value;
             z = value;
+        }
+
+        template <typename T>
+        void setAll(f32 value) {
+            set(static_cast<T>(value));
         }
 
         void add(const TVec3 &value) {

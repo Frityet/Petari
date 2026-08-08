@@ -17,6 +17,7 @@
 #include "camera/CameraPose.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "render/J3dModelRenderer.hpp"
+#include "runtime/AtmosphereLevelSoundService.hpp"
 #include "runtime/RflService.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -187,6 +188,8 @@ namespace smgpc::runtime {
         [[nodiscard]] const WpadService &wpad() const;
         [[nodiscard]] AudioEventService &audio();
         [[nodiscard]] const AudioEventService &audio() const;
+        [[nodiscard]] AtmosphereLevelSoundService &atmosphere_level_audio();
+        [[nodiscard]] const AtmosphereLevelSoundService &atmosphere_level_audio() const;
         [[nodiscard]] EffectService &effects();
         [[nodiscard]] const EffectService &effects() const;
         [[nodiscard]] WipeService &scene_wipe();
@@ -244,6 +247,8 @@ namespace smgpc::runtime {
         void submit_level_sound();
         void permit_level_sound();
         void start_atmosphere_sound(std::string_view name);
+        [[nodiscard]] JAISoundHandle *start_atmosphere_level_sound(
+            std::string_view name, s32 parameter_1, s32 parameter_2);
         void start_system_me(std::string_view name);
         void start_cs_sound(std::string_view name);
         void register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
@@ -290,6 +295,7 @@ namespace smgpc::runtime {
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
+        AtmosphereLevelSoundService _atmosphere_level_audio;
         smgpc::compat::ResourceHolderService _resource_holders;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
