@@ -23,7 +23,6 @@ namespace smgpc::scene {
         s32 start_id = 0;
         s32 start_zone_id = 0;
         bool appear_after_init = false;
-        bool fail_unsupported_placement = false;
     };
 
     class StageHostService final {

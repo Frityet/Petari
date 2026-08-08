@@ -309,7 +309,9 @@ namespace smgpc::scene {
         write_stage_placement_report(_request.stage_name, _request.scenario_no, _placements, blocked_placements);
 #endif
 
-        if (_request.fail_unsupported_placement && !blocked_placements.empty()) {
+        // A stage is either backed by every required retail placement creator or
+        // remains unavailable; never expose a partially constructed scene.
+        if (!blocked_placements.empty()) {
             throw std::runtime_error(unsupported_placement_error(_request.stage_name, blocked_placements));
         }
     }

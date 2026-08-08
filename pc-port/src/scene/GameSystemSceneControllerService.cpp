@@ -46,7 +46,6 @@ namespace smgpc::scene {
             .object_name = request.object_name,
             .actor_name = request.actor_name,
             .appear_after_init = request.appear_after_init,
-            .fail_unsupported_placement = request.fail_unsupported_placement,
         };
         set_phase(SceneControllerPhase::RequestQueued);
 #ifndef NDEBUG
@@ -159,7 +158,6 @@ namespace smgpc::scene {
             .start_id = pending.start_id,
             .start_zone_id = pending.start_zone_id,
             .appear_after_init = pending.appear_after_init,
-            .fail_unsupported_placement = pending.fail_unsupported_placement,
         };
     }
 

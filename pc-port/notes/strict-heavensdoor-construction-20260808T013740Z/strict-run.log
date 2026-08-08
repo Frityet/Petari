@@ -1,0 +1,15 @@
+command: xvfb-run -a build/linux/x86_64/debug/smg-pc-stage-construction-probe --disc /workspaces/pcport/RMGK01.iso --stage HeavensDoorGalaxy --scenario 1
+exit: 1
+
+[APP - INFO] Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+[APP - INFO] Loaded 3327 particle names, 3327 particle resources, and 225 particle textures from /ParticleData/Effect.arc
+[APP - INFO] SMG semantic event scene_controller:scene_change_requested (next_scene=Game;next_stage=HeavensDoorGalaxy;scenario=1;start_id=0;start_zone_id=0)
+[APP - INFO] SMG semantic event sequence:stage_host_started (stage host factory created HeavensDoorGalaxy through scene lifecycle service)
+[APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=DemoDirector;kind=name_obj;movement=11;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[APP - FATAL] Strict stage construction failed: unsupported PlanetGravity placement requires its real implementation: GlobalPlaneGravity (switch/follower lifecycle)
+
+not present:
+- Effect deletion requires a registered effect keeper
+- std::terminate
+- SIGABRT
+- exit 134
