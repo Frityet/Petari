@@ -1,38 +1,37 @@
 #pragma once
 
-#include <array>
-#include <cstdint>
-
-#include <revolution/types.h>
-
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Map/FileSelectIconID.hpp"
 #include "Game/System/NerveExecutor.hpp"
-#include "Game/Util/GamePadUtil.hpp"
-#include "camera/CameraParam.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
-class PartsModel;
-class FileSelectModel;
-class FileSelectNumber;
+class FileSelectIconID;
 class FileSelectItem;
 class FileSelectItemDelegatorBase;
+class FileSelectModel;
+class FileSelectNumber;
+class MiiFaceParts;
+class PartsModel;
 
 namespace FileSelectItemSub {
     class ScaleController : public NerveExecutor {
     public:
         ScaleController();
 
+        virtual ~ScaleController();
+
         void exeToSmall();
         void exeToBig();
         void exeSmall();
         void exeBig();
 
-        /* 0x8 */ f32 _8 = 1.0F;
+        f32 _8;
     };
 
     class BlinkController : public NerveExecutor {
     public:
-        explicit BlinkController(FileSelectItem* pItem);
+        BlinkController(FileSelectItem*);
+
+        virtual ~BlinkController();
 
         void exeOpen();
         void exeShut();
@@ -42,110 +41,88 @@ namespace FileSelectItemSub {
         void open();
         void sleep();
 
-        /* 0x8 */ FileSelectItem* mItem = nullptr;
-        /* 0xC */ s32 _C = 0;
-        /* 0x10 */ s32 _10 = 0;
+        FileSelectItem* mItem;  // 0x08
+        s32 _C;
+        s32 _10;
     };
-}  // namespace FileSelectItemSub
+};  // namespace FileSelectItemSub
 
 class FileSelectItem : public LiveActor {
 public:
-    FileSelectItem(s32 file_no, bool is_new);
-    FileSelectItem(s32 file_no, bool is_new, const FileSelectIconID& rIconId, const char* pName = "ファイルセレクトアイテム");
-    ~FileSelectItem() override;
+    FileSelectItem(s32, bool, const FileSelectIconID&, const char*);
 
-    void init(const JMapInfoIter& rIter) override;
-    void movement() override;
-    void appear() override;
-    void makeActorDead() override;
-    void forceChange(bool is_new);
-    void forceChange(bool is_new, const FileSelectIconID& rIconId);
-    void forceChange(const FileSelectIconID& rIconId, bool isComplete);
-    void change(bool is_new);
-    void change(bool is_new, const FileSelectIconID& rIconId);
-    void change(const FileSelectIconID& rIconId, bool isComplete);
-    void copyIconID(FileSelectIconID* pIconID) const;
+    virtual ~FileSelectItem();
+    virtual void init(const JMapInfoIter&);
+    virtual void appear();
+    virtual void makeActorAppeared();
+    virtual void makeActorDead();
+    virtual void control();
+
+    bool isNew() const;
+    bool isExist() const;
     void format();
-    void exeNewWait();
-    void exeExistWait();
-    void exeFormat();
-    void exeChangeFellow();
+    void change(const FileSelectIconID&, bool);
+    void forceChange(const FileSelectIconID&, bool);
     void invalidateSelect();
     void validateSelect();
     void appearIndex();
     void disappearIndex();
-    void validateRotate();
+    void copyIconID(FileSelectIconID*);
+    void setSelectDelegator(FileSelectItemDelegatorBase*);
     void onPointing();
     void offPointing();
-    void clearPointing();
-    void turnToFront(s32 frameCount);
-    void setBasePosition(const smgpc::camera::CameraParamVec3& base_position);
-    void setSelectDelegator(FileSelectItemDelegatorBase* pDelegator);
-
-    [[nodiscard]] s32 getFileNo() const;
-    [[nodiscard]] bool isExist() const;
-    [[nodiscard]] bool isAppeared() const;
-    [[nodiscard]] bool isNew() const;
-    [[nodiscard]] bool isSelectInvalid() const;
-    [[nodiscard]] bool isRotateInvalid() const;
-    [[nodiscard]] bool isPointing() const;
-#ifndef NDEBUG
-    [[nodiscard]] bool wasPointed() const;
-    [[nodiscard]] bool wasPointingCleared() const;
-    [[nodiscard]] bool didTurnToFront() const;
-    [[nodiscard]] s32 getTurnToFrontFrameCount() const;
-    [[nodiscard]] const TVec3f& getPosition() const;
-#endif
-    [[nodiscard]] const smgpc::camera::CameraParamVec3& getBasePosition() const;
-
-private:
-    friend class FileSelectItemSub::BlinkController;
-
-    static constexpr s32 cFellowModelCount = 5;
-
+    void validateRotate();
+    void turnToFront(s32);
+    void exeFormat();
+    void exeChangeFellow();
+    void exeChangeMii();
     void createNew();
     void createFellows();
+    void createMii();
     void createNumber();
-    void killAllModels();
+    void updatePointing();
+    void updateRotate();
+    void playPointedME();
+    void playPointedNotUsingME();
     void appearFellowModel();
+    void killAllModels();
     void emitOpen();
     void emitVanish();
     void emitCopy();
     void emitCompleteEffect();
     void deleteCompleteEffect();
-    void playPointedME();
-    void playPointedNotUsingME();
-    [[nodiscard]] s32 getFellowModelIndex() const;
-    void updatePointing();
-    void updateRotate();
-    void updateModelMatrix();
 
-    s32 mFileNo = 0;
-    FileSelectIconID mIconID;
-    bool mIsNew = true;
-    bool mIsAppeared = false;
-    bool mIsSelectInvalid = false;
-    bool mIsRotateInvalid = true;
-    bool mIsPointing = false;
-    bool mWasPointed = false;
-    bool mPointingCleared = false;
-    bool mTurnedToFront = false;
-    s32 mTurnToFrontFrameCount = 0;
-    s32 mTurnToFrontDuration = 0;
-    s32 mTurnToFrontStep = 0;
-    f32 mRotationVelocityY = 0.0F;
-    bool mNeedsPointerScreenReset = true;
-    bool mPointerStrokeHit = false;
-    TVec2f mPreviousPointerScreen{};
-    bool mShouldEmitCompleteEffect = false;
-    bool mShouldEmitCopyEffect = false;
-    FileSelectItemDelegatorBase* mDelegator = nullptr;
-    FileSelectItemSub::ScaleController* mScaleCtrl = nullptr;
-    FileSelectItemSub::BlinkController* mBlinkCtrl = nullptr;
-    smgpc::camera::CameraParamVec3 mBasePosition{};
-    Mtx mPlanetMatrix{};
-    Mtx mFellowMatrix{};
-    PartsModel* mPlanetMapObj = nullptr;
-    std::array< FileSelectModel*, cFellowModelCount > mModels{};
-    FileSelectNumber* mNumber = nullptr;
+    void exeExistWait();
+    void exeNewWait();
+
+    bool _8C;
+    PartsModel* mPlanetMapObj;  // 0x90
+    FileSelectIconID* mIconID;  // 0x94
+    FileSelectModel** mModels;  // 0x98
+    MiiFaceParts* mFaceParts;   // 0x9C
+    FileSelectNumber* _A0;
+    TMtx34f _A4;
+    TMtx34f _D4;
+    TMtx34f _104;
+    TVec3f _134;
+    s32 _140;
+    u8 _144;
+    bool mIsInvalidateSelect;  // 0x145
+    u8 _146;
+    u8 _147;
+    FileSelectItemSub::ScaleController* mScaleCtrl;  // 0x148
+    FileSelectItemSub::BlinkController* mBlinkCtrl;  // 0x14C
+    FileSelectItemDelegatorBase* mDelegator;         // 0x150
+    u8 _154;
+    u8 _155;
+    u8 _156;
+    u8 _157;
+    TVec2f _158;
+    f32 _160;
+    bool mIsInvalidRotate;  // 0x164
+    u8 _165;
+    u8 _166;
+    u8 _167;
+    s32 _168;
+    s32 _16C;
 };

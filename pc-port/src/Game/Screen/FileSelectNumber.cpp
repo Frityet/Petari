@@ -1,11 +1,9 @@
 #include "Game/Screen/FileSelectNumber.hpp"
-
-#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 
 namespace {
     NEW_NERVE(FileSelectNumberNrvAppear, FileSelectNumber, Appear);
@@ -13,18 +11,18 @@ namespace {
     NEW_NERVE(FileSelectNumberNrvEnd, FileSelectNumber, End);
 };  // namespace
 
-FileSelectNumber::FileSelectNumber(const char* pName) : LayoutActor(pName, true), mNumber(-1), mSelectAnimCtrl(nullptr) {
+FileSelectNumber::FileSelectNumber(const char* pName) : LayoutActor(pName, true), mNumber(-1), mSelectAnimCtrl() {
 }
 
-void FileSelectNumber::init(const JMapInfoIter&) {
+void FileSelectNumber::init(const JMapInfoIter& rIter) {
     initLayoutManager("FileNumber", 2);
     MR::connectToSceneLayout(this);
     initNerve(&FileSelectNumberNrvWait::sInstance);
+
     mSelectAnimCtrl = new FileSelectNumberSub::SelectAnimController(this);
 }
 
 void FileSelectNumber::appear() {
-    J3DFrameCtrl* pAnimCtrl;
     f32 animFrame;
 
     if (MR::isDead(this)) {
@@ -34,22 +32,21 @@ void FileSelectNumber::appear() {
         mSelectAnimCtrl->appear();
     } else if (isNerve(&FileSelectNumberNrvEnd::sInstance)) {
         animFrame = MR::getAnimFrame(this, 0);
+
         MR::startAnim(this, "Appear", 0);
-        pAnimCtrl = MR::getAnimCtrl(this, 0);
-        MR::setAnimFrame(this, pAnimCtrl->mEnd - animFrame, 0);
+        MR::setAnimFrame(this, MR::getAnimCtrl(this, 0)->getEnd() - animFrame, 0);
         setNerve(&FileSelectNumberNrvAppear::sInstance);
     }
 }
 
 void FileSelectNumber::disappear() {
-    J3DFrameCtrl* pAnimCtrl;
     f32 animFrame;
 
     if (isNerve(&FileSelectNumberNrvAppear::sInstance)) {
         animFrame = MR::getAnimFrame(this, 0);
+
         MR::startAnim(this, "End", 0);
-        pAnimCtrl = MR::getAnimCtrl(this, 0);
-        MR::setAnimFrame(this, pAnimCtrl->mEnd - animFrame, 0);
+        MR::setAnimFrame(this, MR::getAnimCtrl(this, 0)->getEnd() - animFrame, 0);
         setNerve(&FileSelectNumberNrvEnd::sInstance);
     } else if (isNerve(&FileSelectNumberNrvWait::sInstance)) {
         MR::startAnim(this, "End", 0);
@@ -59,6 +56,7 @@ void FileSelectNumber::disappear() {
 
 void FileSelectNumber::setNumber(s32 number) {
     mNumber = number;
+
     MR::setTextBoxNumberRecursive(this, "FileNumber", number);
 }
 
@@ -95,10 +93,6 @@ void FileSelectNumber::exeEnd() {
     }
 }
 
-s32 FileSelectNumber::getNumber() const {
-    return mNumber;
-}
-
 namespace FileSelectNumberSub {
     NEW_NERVE(SelectAnimControllerNrvSelectInStart, SelectAnimController, SelectInStart);
     NEW_NERVE(SelectAnimControllerNrvSelectIn, SelectAnimController, SelectIn);
@@ -110,17 +104,15 @@ namespace FileSelectNumberSub {
     }
 
     void SelectAnimController::appear() {
-        J3DFrameCtrl* pAnimCtrl;
-
         setNerve(&SelectAnimControllerNrvSelectOut::sInstance);
         MR::startAnim(mHost, "SelectOut", 1);
-        pAnimCtrl = MR::getAnimCtrl(mHost, 1);
-        MR::setAnimFrame(mHost, pAnimCtrl->mEnd - 1.0F, 1);
+        MR::setAnimFrame(mHost, MR::getAnimCtrl(mHost, 1)->getEnd() - 1.0f, 1);
     }
 
     void SelectAnimController::selectIn() {
         if (isNerve(&SelectAnimControllerNrvSelectOut::sInstance)) {
             setNerve(&SelectAnimControllerNrvSelectInStart::sInstance);
+
             _C = nullptr;
         } else if (isNerve(&SelectAnimControllerNrvSelectOutStart::sInstance)) {
             _C = &SelectAnimControllerNrvSelectIn::sInstance;
@@ -130,6 +122,7 @@ namespace FileSelectNumberSub {
     void SelectAnimController::selectOut() {
         if (isNerve(&SelectAnimControllerNrvSelectIn::sInstance)) {
             setNerve(&SelectAnimControllerNrvSelectOutStart::sInstance);
+
             _C = nullptr;
         } else if (isNerve(&SelectAnimControllerNrvSelectInStart::sInstance)) {
             _C = &SelectAnimControllerNrvSelectOut::sInstance;
@@ -147,6 +140,7 @@ namespace FileSelectNumberSub {
             } else {
                 setNerve(&SelectAnimControllerNrvSelectIn::sInstance);
             }
+
             _C = nullptr;
         }
     }
@@ -165,6 +159,7 @@ namespace FileSelectNumberSub {
             } else {
                 setNerve(&SelectAnimControllerNrvSelectOut::sInstance);
             }
+
             _C = nullptr;
         }
     }

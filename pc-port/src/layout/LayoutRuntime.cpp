@@ -777,7 +777,6 @@ namespace {
                                                                  const smgpc::layout::BrlytTevStage& stage, std::uint8_t texture_coord_stage,
                                                                  std::uint8_t texture_map_stage) {
         return smgpc::render::GxTevStage2D{
-            .texture_stage = texture_map_stage,
             .texture_coord_stage = texture_coord_stage,
             .texture_map_stage = texture_map_stage,
             .color_channel = stage.color_chan,
@@ -1129,6 +1128,7 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
             .wrap_v = material_texture.wrap_t,
             .min_filter = material_texture.min_filter,
             .mag_filter = material_texture.mag_filter,
+            .texgen_source = static_cast<GXTexGenSrc>(GX_TG_TEX0 + tex_coord_gen_index),
         };
         tex_coord_gen_indices[slot] = tex_coord_gen_index;
         texture_stage_wrap_t[slot] = material_texture.wrap_t;
@@ -1205,7 +1205,6 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
         auto can_use = assign_texture_stage(0U, material.textures.front(), 0U);
         if (!tev_stages.empty()) {
             tev_stages[0U] = smgpc::render::GxTevStage2D{
-                .texture_stage = 0U,
                 .texture_coord_stage = 0U,
                 .texture_map_stage = 0U,
                 .color_channel = 0xffU,
@@ -1243,7 +1242,6 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
 
     const auto brlyt_default_stage_texture_replace = [](std::uint8_t texture_stage) {
         return smgpc::render::GxTevStage2D{
-            .texture_stage = texture_stage,
             .texture_coord_stage = texture_stage,
             .texture_map_stage = texture_stage,
             .color_channel = 0xffU,
@@ -1264,7 +1262,6 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
 
     const auto brlyt_default_stage_texture_lerp = [&](std::uint8_t texture_stage) {
         return smgpc::render::GxTevStage2D{
-            .texture_stage = texture_stage,
             .texture_coord_stage = texture_stage,
             .texture_map_stage = texture_stage,
             .color_channel = 0xffU,
@@ -1288,7 +1285,6 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
 
     const auto brlyt_default_stage_texture_modulate = [&](std::uint8_t texture_stage) {
         return smgpc::render::GxTevStage2D{
-            .texture_stage = texture_stage,
             .texture_coord_stage = texture_stage,
             .texture_map_stage = texture_stage,
             .color_channel = 0xffU,
@@ -1312,7 +1308,6 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
 
     const auto brlyt_default_stage_tev_color = [] {
         return smgpc::render::GxTevStage2D{
-            .texture_stage = 0xffU,
             .texture_coord_stage = 0xffU,
             .texture_map_stage = 0xffU,
             .color_channel = 0xffU,
@@ -1365,7 +1360,6 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
 
         if (material.textures.empty()) {
             return add_tev_stage(smgpc::render::GxTevStage2D{
-                .texture_stage = 0xffU,
                 .texture_coord_stage = 0xffU,
                 .texture_map_stage = 0xffU,
                 .color_channel = 4U,
@@ -1385,7 +1379,6 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
         }
         if (material.textures.size() == 1U) {
             auto stage = smgpc::render::GxTevStage2D{
-                .texture_stage = 0U,
                 .texture_coord_stage = 0U,
                 .texture_map_stage = 0U,
                 .color_channel = 0xffU,

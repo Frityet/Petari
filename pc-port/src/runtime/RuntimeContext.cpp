@@ -1593,6 +1593,12 @@ namespace smgpc::runtime {
 
         if (auto it = _effect_layout_actor_hosts.find(host_identity); it != _effect_layout_actor_hosts.end() && it->second != nullptr) {
             const auto &layout = *it->second;
+            const auto *layout_runtime = smgpc::layout::layout_runtime(&layout);
+            Mtx root_pane_matrix{};
+            if (layout_runtime == nullptr || !layout_runtime->copyPaneMatrix({}, root_pane_matrix)) {
+                _effects.unbind_host_transform(host_name, host_identity);
+                return;
+            }
             const auto trans = layout.getTrans();
             _effects.bind_host_transform(EffectKeeperHostKind::LayoutActor, host_name, EffectHostBindingSource::LayoutActorTransform,
                                          effect_translation_matrix(trans.x, trans.y, 0.0F),

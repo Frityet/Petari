@@ -6,7 +6,6 @@ class FileSelectItem;
 
 class FileSelectItemDelegatorBase {
 public:
-    virtual ~FileSelectItemDelegatorBase() = default;
     virtual void notify(FileSelectItem*, s32) = 0;
 };
 
@@ -15,11 +14,11 @@ class FileSelectItemDelegator : public FileSelectItemDelegatorBase {
 public:
     typedef void (T::*Func)(FileSelectItem*, s32);
 
-    inline FileSelectItemDelegator(T* pObject, Func pFunc) : mObject(pObject), mFunc(pFunc) {
+    inline FileSelectItemDelegator(T* object, Func func) : mObject(object), mFunc(func) {
     }
 
-    void notify(FileSelectItem* pItem, s32 action) override {
-        (mObject->*mFunc)(pItem, action);
+    void notify(FileSelectItem* pItem, s32 arg1) {
+        (mObject->*mFunc)(pItem, arg1);
     }
 
     T* mObject;

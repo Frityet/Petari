@@ -1,231 +1,196 @@
 #include "Game/Util/GamePadUtil.hpp"
-
-#include "runtime/RuntimeContext.hpp"
+#include "Game/System/WPad.hpp"
+#include "Game/System/WPadAcceleration.hpp"
+#include "Game/System/WPadButton.hpp"
+#include "Game/System/WPadHVSwing.hpp"
+#include "Game/System/WPadHolder.hpp"
+#include "Game/System/WPadPointer.hpp"
+#include "Game/System/WPadStick.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 namespace MR {
-    namespace {
-
-        constexpr auto ANY_NON_HOME_BUTTON_MASK = static_cast< u32 >(KPAD_BUTTON_MASK & ~WPAD_BUTTON_HOME);
-        constexpr auto STICK_TRIGGER_THRESHOLD = 0.5F;
-
-        [[nodiscard]] const smgpc::runtime::WpadService* wpad_service() {
-            if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-                return &runtime->wpad();
-            }
-
-            return nullptr;
-        }
-
-        [[nodiscard]] bool held(s32 channel, u32 mask) {
-            const auto* wpad = wpad_service();
-            return wpad != nullptr && wpad->is_button_held(channel, mask);
-        }
-
-        [[nodiscard]] bool triggered(s32 channel, u32 mask) {
-            const auto* wpad = wpad_service();
-            return wpad != nullptr && wpad->is_button_triggered(channel, mask);
-        }
-
-        [[nodiscard]] bool released(s32 channel, u32 mask) {
-            const auto* wpad = wpad_service();
-            return wpad != nullptr && wpad->is_button_released(channel, mask);
-        }
-
-        void set_vec2(TVec2f* pPos, const smgpc::runtime::WpadPointerState& pointer) {
-            if (pPos == nullptr) {
-                return;
-            }
-
-            pPos->x = pointer.x;
-            pPos->y = pointer.y;
-        }
-
-        void set_vec3(TVec3f* pVec, const smgpc::runtime::WpadVec3State& value) {
-            if (pVec == nullptr) {
-                return;
-            }
-
-            pVec->x = value.x;
-            pVec->y = value.y;
-            pVec->z = value.z;
-        }
-
-    }  // namespace
-
     void getCorePadPointingPosBasedOnScreen(TVec2f* pPos, s32 channel) {
-        getCorePadPointingPos(pPos, channel);
+        MR::getWPad(channel)->mPointer->getPointingPosBasedOnScreen(pPos);
     }
 
     void getCorePadPointingPos(TVec2f* pPos, s32 channel) {
-        const auto* wpad = wpad_service();
-        set_vec2(pPos, wpad == nullptr ? smgpc::runtime::WpadPointerState{} : wpad->pointer(channel));
+        MR::getWPad(channel)->mPointer->getPointingPos(pPos);
     }
 
     void getCorePadPastPointingPos(TVec2f* pPos, s32 idx, s32 channel) {
-        const auto* wpad = wpad_service();
-        set_vec2(pPos, wpad == nullptr || idx < 0 ? smgpc::runtime::WpadPointerState{} : wpad->past_pointer(channel, static_cast< u32 >(idx)));
+        MR::getWPad(channel)->mPointer->getPastPointingPos(pPos, idx);
     }
 
     s32 getCorePadEnablePastCount(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad == nullptr ? 0 : static_cast< s32 >(wpad->pointer_history_count(channel));
+        return MR::getWPad(channel)->mPointer->getEnablePastCount();
     }
 
     bool isCorePadPointInScreen(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad != nullptr && wpad->pointer(channel).valid;
+        return MR::getWPad(channel)->mPointer->mIsPointInScreen;
     }
 
     f32 getCorePadDistanceToDisplay(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad == nullptr ? 0.0F : wpad->distance_to_display(channel);
+        return MR::getWPad(channel)->mPointer->mDistDisplay;
     }
 
     void getCorePadAcceleration(TVec3f* pAccel, s32 channel) {
-        const auto* wpad = wpad_service();
-        set_vec3(pAccel, wpad == nullptr ? smgpc::runtime::WpadVec3State{} : wpad->core_acceleration(channel));
+        MR::getWPad(channel)->mCorePadAccel->getAcceleration(pAccel);
     }
 
     bool testCorePadButtonUp(s32 channel) {
-        return held(channel, WPAD_BUTTON_UP);
+        return MR::getWPad(channel)->mButton->testButtonUp();
     }
 
     bool testCorePadButtonDown(s32 channel) {
-        return held(channel, WPAD_BUTTON_DOWN);
+        return MR::getWPad(channel)->mButton->testButtonDown();
     }
 
     bool testCorePadButtonLeft(s32 channel) {
-        return held(channel, WPAD_BUTTON_LEFT);
+        return MR::getWPad(channel)->mButton->testButtonLeft();
     }
 
     bool testCorePadButtonRight(s32 channel) {
-        return held(channel, WPAD_BUTTON_RIGHT);
+        return MR::getWPad(channel)->mButton->testButtonRight();
     }
 
     bool testCorePadButtonA(s32 channel) {
-        return held(channel, WPAD_BUTTON_A);
+        return MR::getWPad(channel)->mButton->testButtonA();
     }
 
     bool testCorePadButtonB(s32 channel) {
-        return held(channel, WPAD_BUTTON_B);
+        return MR::getWPad(channel)->mButton->testButtonB();
+    }
+
+    bool testCorePadButton1(s32 channel) {
+        return MR::getWPad(channel)->mButton->testButton1();
+    }
+
+    bool testCorePadButton2(s32 channel) {
+        return MR::getWPad(channel)->mButton->testButton2();
     }
 
     bool testCorePadButtonPlus(s32 channel) {
-        return held(channel, WPAD_BUTTON_PLUS);
+        return MR::getWPad(channel)->mButton->testButtonPlus();
     }
 
     bool testCorePadButtonMinus(s32 channel) {
-        return held(channel, WPAD_BUTTON_MINUS);
+        return MR::getWPad(channel)->mButton->testButtonMinus();
     }
 
     bool testSubPadButtonC(s32 channel) {
-        return held(channel, WPAD_BUTTON_C);
+        return MR::getWPad(channel)->mButton->testButtonC();
     }
 
     bool testSubPadButtonZ(s32 channel) {
-        return held(channel, WPAD_BUTTON_Z);
+        return MR::getWPad(channel)->mButton->testButtonZ();
     }
 
     bool testPadButtonAnyWithoutHome(s32 channel) {
-        return held(channel, ANY_NON_HOME_BUTTON_MASK);
+        return testCorePadButtonUp(channel) || testCorePadButtonDown(channel) || testCorePadButtonLeft(channel) || testCorePadButtonRight(channel) ||
+               testCorePadButtonA(channel) || testCorePadButtonB(channel) || testCorePadButton1(channel) || testCorePadButton2(channel) ||
+               testCorePadButtonPlus(channel) || testCorePadButtonMinus(channel) || testSubPadButtonC(channel) || testSubPadButtonZ(channel);
     }
 
     bool testCorePadTriggerUp(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_UP);
+        return MR::getWPad(channel)->mButton->testTriggerUp();
     }
 
     bool testCorePadTriggerDown(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_DOWN);
+        return MR::getWPad(channel)->mButton->testTriggerDown();
     }
 
     bool testCorePadTriggerLeft(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_LEFT);
+        return MR::getWPad(channel)->mButton->testTriggerLeft();
     }
 
     bool testCorePadTriggerRight(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_RIGHT);
+        return MR::getWPad(channel)->mButton->testTriggerRight();
     }
 
     bool testCorePadTriggerA(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_A);
+        return MR::getWPad(channel)->mButton->testTriggerA();
     }
 
     bool testCorePadTriggerB(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_B);
+        return MR::getWPad(channel)->mButton->testTriggerB();
+    }
+
+    bool testCorePadTrigger1(s32 channel) {
+        return MR::getWPad(channel)->mButton->testTrigger1();
+    }
+
+    bool testCorePadTrigger2(s32 channel) {
+        return MR::getWPad(channel)->mButton->testTrigger2();
     }
 
     bool testCorePadTriggerPlus(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_PLUS);
+        return MR::getWPad(channel)->mButton->testTriggerPlus();
     }
 
     bool testCorePadTriggerMinus(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_MINUS);
+        return MR::getWPad(channel)->mButton->testTriggerMinus();
     }
 
     bool testCorePadTriggerAnyWithoutHome(s32 channel) {
-        return triggered(channel, ANY_NON_HOME_BUTTON_MASK);
+        return testCorePadTriggerUp(channel) || testCorePadTriggerDown(channel) || testCorePadTriggerLeft(channel) ||
+               testCorePadTriggerRight(channel) || testCorePadTriggerA(channel) || testCorePadTriggerB(channel) || testCorePadTrigger1(channel) ||
+               testCorePadTrigger2(channel) || testCorePadTriggerPlus(channel) || testCorePadTriggerMinus(channel);
     }
 
     bool testCorePadTriggerHome(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_HOME);
+        return MR::getWPad(channel)->mButton->testTriggerHome();
     }
 
     bool testSubPadTriggerC(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_C);
+        return MR::getWPad(channel)->mButton->testTriggerC();
     }
 
     bool testSubPadTriggerZ(s32 channel) {
-        return triggered(channel, WPAD_BUTTON_Z);
+        return MR::getWPad(channel)->mButton->testTriggerZ();
     }
 
     bool testSubPadReleaseZ(s32 channel) {
-        return released(channel, WPAD_BUTTON_Z);
+        return MR::getWPad(channel)->mButton->testReleaseZ();
     }
 
     bool isCorePadSwing(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad != nullptr && wpad->is_core_swing(channel);
+        return MR::getWPad(channel)->mCorePadSwing->mIsSwing;
     }
 
     bool isCorePadSwingTrigger(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad != nullptr && wpad->is_core_swing_triggered(channel);
+        return MR::getWPad(channel)->mCorePadSwing->mIsTriggerSwing;
     }
 
     f32 getSubPadStickX(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad == nullptr ? 0.0F : wpad->sub_stick(channel).x;
+        return MR::getWPad(channel)->mStick->mStick.x;
     }
 
     f32 getSubPadStickY(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad == nullptr ? 0.0F : wpad->sub_stick(channel).y;
+        return MR::getWPad(channel)->mStick->mStick.y;
     }
 
     bool testSubPadStickTriggerUp(s32 channel) {
-        return getSubPadStickY(channel) > STICK_TRIGGER_THRESHOLD;
+        return (MR::getWPad(channel)->mStick->mTrigger & 1) != 0;
     }
 
     bool testSubPadStickTriggerDown(s32 channel) {
-        return getSubPadStickY(channel) < -STICK_TRIGGER_THRESHOLD;
+        return (MR::getWPad(channel)->mStick->mTrigger & 2) != 0;
     }
 
     bool testSubPadStickTriggerLeft(s32 channel) {
-        return getSubPadStickX(channel) < -STICK_TRIGGER_THRESHOLD;
+        return (MR::getWPad(channel)->mStick->mTrigger & 8) != 0;
     }
 
     bool testSubPadStickTriggerRight(s32 channel) {
-        return getSubPadStickX(channel) > STICK_TRIGGER_THRESHOLD;
+        return (MR::getWPad(channel)->mStick->mTrigger & 4) != 0;
     }
 
     void getSubPadAcceleration(TVec3f* pAccel, s32 channel) {
-        const auto* wpad = wpad_service();
-        set_vec3(pAccel, wpad == nullptr ? smgpc::runtime::WpadVec3State{} : wpad->sub_acceleration(channel));
+        MR::getWPad(channel)->mSubPadAccel->getAcceleration(pAccel);
     }
 
     bool isSubPadSwing(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad != nullptr && wpad->is_sub_swing(channel);
+        return MR::getWPad(channel)->mSubPadSwing->mIsSwing;
     }
 
     bool isPadSwing(s32 channel) {
@@ -233,15 +198,15 @@ namespace MR {
     }
 
     bool testSystemPadTriggerDecide() {
-        return testCorePadTriggerA(WPAD_CHAN0);
+        return testCorePadTriggerA(WPAD_CHAN0) != false;
     }
 
     bool testSystemTriggerA() {
-        return testCorePadTriggerA(WPAD_CHAN0);
+        return testCorePadTriggerA(WPAD_CHAN0) != false;
     }
 
     bool testSystemTriggerB() {
-        return testCorePadTriggerB(WPAD_CHAN0);
+        return testCorePadTriggerB(WPAD_CHAN0) != false;
     }
 
     bool testDPDMenuPadDecideTrigger() {
@@ -253,16 +218,11 @@ namespace MR {
     }
 
     bool testFpViewOutTrigger() {
-        return testCorePadTriggerDown(WPAD_CHAN0) || testCorePadTriggerB(WPAD_CHAN0);
+        return testCorePadTriggerDown(WPAD_CHAN0) || testCorePadTriggerA(WPAD_CHAN0);
     }
 
-    f32 getPlayerStickX() {
-        return getSubPadStickX(WPAD_CHAN0);
-    }
-
-    f32 getPlayerStickY() {
-        return getSubPadStickY(WPAD_CHAN0);
-    }
+    // getPlayerStickX
+    // getPlayerStickY
 
     bool getPlayerTriggerA() {
         return testCorePadTriggerA(WPAD_CHAN0);
@@ -297,47 +257,45 @@ namespace MR {
     }
 
     bool isGamePadStickOperated(s32 channel) {
-        return getSubPadStickX(channel) != 0.0F || getSubPadStickY(channel) != 0.0F;
+        f32 x = getSubPadStickX(channel);
+        f32 y = getSubPadStickY(channel);
+
+        return MR::abs(x) + MR::abs(y) > 0.0f;
     }
 
-    void calcWorldStickDirectionXZ(f32* pDirX, f32* pDirZ, s32 channel) {
-        if (pDirX != nullptr) {
-            *pDirX = getSubPadStickX(channel);
-        }
-        if (pDirZ != nullptr) {
-            *pDirZ = getSubPadStickY(channel);
-        }
-    }
+    // calcWorldStickDirectionXZ
 
     void calcWorldStickDirectionXZ(TVec3f* pDir, s32 channel) {
-        if (pDir == nullptr) {
-            return;
-        }
+        pDir->y = 0.0f;
 
-        pDir->x = getSubPadStickX(channel);
-        pDir->y = 0.0F;
-        pDir->z = getSubPadStickY(channel);
+        calcWorldStickDirectionXZ(&pDir->x, &pDir->z, channel);
     }
 
     u32 getWPadMaxCount() {
-        return static_cast< u32 >(WPAD_MAX_CONTROLLERS);
+        return 2;
     }
 
     bool isConnectedWPad(s32 channel) {
-        const auto* wpad = wpad_service();
-        return wpad != nullptr && wpad->is_connected(channel);
+        return MR::getWPad(channel)->mIsConnected;
     }
 
     bool isOperatingWPad(s32 channel) {
-        return isConnectedWPad(channel);
-    }
+        WPad* pWPad = MR::getWPad(channel);
 
-}  // namespace MR
+        if (!pWPad->mCorePadAccel->isBalanced()) {
+            return true;
+        }
+
+        if (pWPad->mButton->testButtonA()) {
+            return true;
+        }
+
+        return pWPad->mButton->testButtonB();
+    }
+};  // namespace MR
 
 namespace WPadFunction {
-
-    WPadRumble* getWPadRumble(s32) {
-        return nullptr;
+    WPadRumble* getWPadRumble(s32 channel) {
+        return MR::getWPad(channel)->getRumbleInstance();
     }
-
-}  // namespace WPadFunction
+};  // namespace WPadFunction

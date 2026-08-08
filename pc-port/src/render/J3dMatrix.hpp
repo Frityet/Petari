@@ -2,6 +2,7 @@
 
 #include "render/J3dMaterialRuntime.hpp"
 
+#include <array>
 #include <revolution.h>
 
 namespace smgpc::render {
@@ -13,5 +14,6 @@ namespace smgpc::render {
     [[nodiscard]] J3dMatrix3x4 j3d_invert_affine_matrix(const J3dMatrix3x4 &matrix);
     [[nodiscard]] J3dMatrix3x4 j3d_apply_matrix_scale(const J3dMatrix3x4 &matrix, float scale_x, float scale_y, float scale_z);
     [[nodiscard]] J3dMatrix3x4 j3d_remove_matrix_scale(const J3dMatrix3x4 &matrix, float scale_x, float scale_y, float scale_z);
+    [[nodiscard]] std::array<float, 3U> j3d_transform_normal(const J3dMatrix3x4 &matrix, std::array<float, 3U> normal);
 
 }  // namespace smgpc::render

@@ -268,7 +268,7 @@ namespace smgpc::render::core {
         std::uint8_t min_filter = 1U;
         std::uint8_t mag_filter = 1U;
         GXTexGenType texgen_type = GX_TG_MTX2x4;
-        GXTexGenSrc texgen_source = GX_TG_TEX0;
+        GXTexGenSrc texgen_source = static_cast<GXTexGenSrc>(0xffU);
         GXTexMtx texgen_matrix = GX_IDENTITY;
         GXTexMtxType texgen_matrix_type = GX_MTX2x4;
         bool has_texgen_matrix = false;
@@ -276,7 +276,6 @@ namespace smgpc::render::core {
     };
 
     struct GxTevStage2D {
-        std::uint8_t texture_stage = 0U;
         std::uint8_t texture_coord_stage = 0xffU;
         std::uint8_t texture_map_stage = 0xffU;
         std::uint8_t color_channel = 4U;
@@ -292,8 +291,8 @@ namespace smgpc::render::core {
         std::uint8_t alpha_scale = 0U;
         bool alpha_clamp = true;
         std::uint8_t alpha_out = 0U;
-        std::uint8_t k_color_sel = 0xffU;
-        std::uint8_t k_alpha_sel = 0xffU;
+        std::uint8_t k_color_sel = static_cast<std::uint8_t>(GX_TEV_KCSEL_1_4);
+        std::uint8_t k_alpha_sel = static_cast<std::uint8_t>(GX_TEV_KASEL_1);
         std::uint8_t ras_swap = 0U;
         std::uint8_t tex_swap = 0U;
         std::array<std::uint8_t, 4U> konst_color = {0U, 0U, 0U, 0U};

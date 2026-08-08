@@ -4,82 +4,34 @@
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeContext.hpp"
 
+#include <aurora/dvd.h>
+
 #include <cstdlib>
 #include <exception>
 #include <memory>
+#include <stdexcept>
 
 namespace {
-
-    class ProbeWindowService final : public smgpc::render::AuroraWindow {
-    public:
-        explicit ProbeWindowService(smgpc::render::WindowConfiguration configuration = {
-                                         .width = 800,
-                                         .height = 600,
-                                         .title = "SMG PC Port",
-                                     })
-            : smgpc::render::AuroraWindow(configuration) {
-        }
-
-        bool poll_events() {
-            return true;
-        }
-
-        [[nodiscard]] bool should_close() const {
-            return false;
-        }
-
-        [[nodiscard]] bool is_focused() const {
-            return true;
-        }
-
-        [[nodiscard]] bool is_minimized() const {
-            return false;
-        }
-
-        [[nodiscard]] smgpc::render::FramebufferInfo framebuffer_size() const {
-            return {.width = 800U, .height = 600U};
-        }
-
-        [[nodiscard]] smgpc::render::NativeWindowHandle native_handle() const {
-            return {};
-        }
-
-        [[nodiscard]] bool is_input_pressed(smgpc::render::InputButton button) const {
-            switch (button) {
-            case smgpc::render::InputButton::CORE_PAD_A:
-            case smgpc::render::InputButton::CORE_PAD_B:
-                return _hold_core_ab;
-            case smgpc::render::InputButton::CORE_PAD_UP:
-            case smgpc::render::InputButton::CORE_PAD_DOWN:
-            case smgpc::render::InputButton::CORE_PAD_LEFT:
-            case smgpc::render::InputButton::CORE_PAD_RIGHT:
-            case smgpc::render::InputButton::CORE_PAD_PLUS:
-            case smgpc::render::InputButton::CORE_PAD_MINUS:
-            case smgpc::render::InputButton::CORE_PAD_HOME:
-            case smgpc::render::InputButton::CORE_PAD_C:
-            case smgpc::render::InputButton::CORE_PAD_Z:
-            case smgpc::render::InputButton::COUNT:
-                return false;
-            default:
-                return false;
-            }
-        }
-
-        void set_core_ab_buttons(bool is_pressed) {
-            _hold_core_ab = is_pressed;
-        }
-
-    private:
-        bool _hold_core_ab = false;
-    };
-
     [[nodiscard]] bool has_magic(std::span<const std::uint8_t> data, const char (&magic)[5]) {
         return data.size() >= 4U && data[0] == static_cast<std::uint8_t>(magic[0]) && data[1] == static_cast<std::uint8_t>(magic[1]) && data[2] == static_cast<std::uint8_t>(magic[2]) && data[3] == static_cast<std::uint8_t>(magic[3]);
     }
 
     [[nodiscard]] int run_probe() {
         auto logger = smgpc::logging::create_default_logger();
-        auto window = ProbeWindowService();
+        auto window = smgpc::render::AuroraWindow({
+            .width = 800,
+            .height = 600,
+            .title = "SMG PC Port title sequence probe",
+        });
+
+        const auto* disc_image = std::getenv("SMGPC_DISC_IMAGE");
+        if (disc_image == nullptr || disc_image[0] == '\0') {
+            throw std::runtime_error("SMGPC_DISC_IMAGE must name a real disc image");
+        }
+        if (!aurora_dvd_open(disc_image)) {
+            throw std::runtime_error("Aurora could not open the requested disc image");
+        }
+
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
 
         const auto title_logo = runtime.find_layout_archive("TitleLogo");
@@ -89,8 +41,8 @@ namespace {
             return 1;
         }
 
-        const auto title_logo_archive = smgpc::resource::RarcArchive::from_file(*title_logo);
-        const auto press_start_archive = smgpc::resource::RarcArchive::from_file(*press_start);
+        const auto title_logo_archive = smgpc::resource::RarcArchive::from_bytes(runtime.dvd().read_file(title_logo->generic_string()));
+        const auto press_start_archive = smgpc::resource::RarcArchive::from_bytes(runtime.dvd().read_file(press_start->generic_string()));
         if (!title_logo_archive.contains("blyt/titlelogo.brlyt") || !title_logo_archive.contains("anim/appear.brlan") || !title_logo_archive.contains("anim/wait.brlan") || !title_logo_archive.contains("anim/decide.brlan")) {
             logger->fatal(smgpc::logging::Category::APP, smgpc::logging::Message {"TitleLogo.arc does not contain the expected original title layout/animation files"});
             return 1;
@@ -125,7 +77,9 @@ namespace {
                 .is_minimized = false,
             });
 
-            window.set_core_ab_buttons(frame >= kPressComboFrame);
+            runtime.wpad().set_button_mask(
+                WPAD_CHAN0,
+                frame >= kPressComboFrame ? static_cast<u32>(WPAD_BUTTON_A | WPAD_BUTTON_B) : 0U);
             title_sequence.updateNerve();
 
             if (!title_sequence.isActive()) {

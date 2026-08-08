@@ -4,18 +4,21 @@
 
 class FileSelectCameraController : public LiveActor {
 public:
+    /// @brief Creates a new `FileSelectCameraController`.
+    /// @param pName A pointer to the null-terminated name of the object.
     FileSelectCameraController(const char* pName);
-    ~FileSelectCameraController() override;
+    virtual ~FileSelectCameraController();
 
-    void init(const JMapInfoIter& rIter) override;
-    void appear() override;
-    void kill() override;
-    void control() override;
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void appear();
+    virtual void kill();
+    virtual void control();
+
     void goToFarPoint();
-    void goToNearPoint(const TVec3f& rPos);
+    void goToNearPoint(const TVec3f&);
     bool isAtFarPoint() const;
-    bool isToOrAtFarPoint() const;
     bool isAtNearPoint() const;
+    bool isToOrAtFarPoint() const;
     bool isToOrAtNearPoint() const;
 
     void exeTitle();
@@ -25,11 +28,11 @@ public:
     void exeNearPoint();
 
 private:
-    TVec3f _8C{};
-    TVec3f _98{};
-    TVec3f _A4{};
-    TVec3f _B0{};
-    f32 _BC = 60.0F;
-    f32 _C0 = 60.0F;
-    TVec3f _C4{0.0F, 1.0F, 0.0F};
+    /* 0x8C */ TVec3f _8C;
+    /* 0x98 */ u8 _98[0xC];
+    /* 0xA4 */ TVec3f _A4;
+    /* 0xB0 */ TVec3f _B0;
+    /* 0xBC */ f32 _BC;
+    /* 0xC0 */ f32 _C0;
+    /* 0xC4 */ TVec3f _C4;
 };

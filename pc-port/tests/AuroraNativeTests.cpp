@@ -22,6 +22,7 @@
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/FixedPosition.hpp"
 #include "Game/Util/GravityUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -32,6 +33,7 @@
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JGeometry/TUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
@@ -350,6 +352,46 @@ namespace {
         require(WPADProbe(WPAD_CHAN0, nullptr) == FALSE, "WPADDisconnect should clear Aurora controller state");
     }
 
+    void test_game_pad_compat_requires_runtime_context() {
+        require(smgpc::runtime::RuntimeContext::try_instance() == nullptr,
+                "the strict GamePad boundary test must run without an active title runtime");
+        require_logic_error(
+            [] { static_cast<void>(MR::testCorePadButtonA(WPAD_CHAN0)); },
+            "GamePad button queries must not manufacture neutral input without an active runtime context");
+        require_logic_error(
+            [] { static_cast<void>(MR::testSubPadStickTriggerRight(WPAD_CHAN0)); },
+            "GamePad stick-edge queries must not bypass the active runtime context");
+    }
+
+    void test_aurora_wpad_sub_stick_edges() {
+        auto service = aurora::WpadService{};
+        service.set_connected(WPAD_CHAN0, true);
+
+        service.begin_frame();
+        service.set_sub_stick(WPAD_CHAN0, 0.2F, -0.2F);
+        require(service.sub_stick_hold(WPAD_CHAN0) == aurora::WpadStickNone &&
+                    service.sub_stick_trigger(WPAD_CHAN0) == aurora::WpadStickNone,
+                "the retail ±0.2 Nunchuk threshold must remain exclusive");
+
+        service.set_sub_stick(WPAD_CHAN0, 0.75F, 0.5F);
+        require(service.sub_stick_hold(WPAD_CHAN0) == (aurora::WpadStickRight | aurora::WpadStickUp) &&
+                    service.sub_stick_trigger(WPAD_CHAN0) == (aurora::WpadStickRight | aurora::WpadStickUp) &&
+                    service.sub_stick_release(WPAD_CHAN0) == aurora::WpadStickNone,
+                "crossing the retail Nunchuk threshold must produce directional hold and trigger bits");
+
+        service.begin_frame();
+        service.set_sub_stick(WPAD_CHAN0, 1.0F, 0.25F);
+        require(service.sub_stick_trigger(WPAD_CHAN0) == aurora::WpadStickNone &&
+                    service.sub_stick_release(WPAD_CHAN0) == aurora::WpadStickNone,
+                "remaining beyond the Nunchuk threshold must not retrigger an edge");
+
+        service.begin_frame();
+        service.set_sub_stick(WPAD_CHAN0, -0.75F, -0.5F);
+        require(service.sub_stick_trigger(WPAD_CHAN0) == (aurora::WpadStickLeft | aurora::WpadStickDown) &&
+                    service.sub_stick_release(WPAD_CHAN0) == (aurora::WpadStickRight | aurora::WpadStickUp),
+                "reversing the Nunchuk stick must release old directions and trigger new directions in one frame");
+    }
+
     void test_jgeometry_host_layout_and_math() {
         static_assert(std::is_same_v<TVec3f, JGeometry::TVec3<f32>>);
         static_assert(sizeof(TVec3f) == sizeof(Vec));
@@ -653,8 +695,8 @@ namespace {
                 "SimpleEffectObj clipping offset should use persistent host storage");
         require(first_offset->x == 0.0F && first_offset->y == 0.0F && first_offset->z == 0.0F,
                 "SimpleEffectObj clipping offset should preserve the original zero value");
-        require(MR::isEqualString("Steam", "Steam") && !MR::isEqualString("Steam", "Smoke") && !MR::isEqualString(nullptr, "Steam"),
-                "original string equality should be null-safe on the host");
+        require(MR::isEqualString("Steam", "Steam") && !MR::isEqualString("Steam", "Smoke"),
+                "host string equality should retain the retail strcmp semantics");
 
         auto camera = smgpc::runtime::CameraSystemService{};
         camera.set_game_camera_pose(smgpc::camera::CameraPose{});
@@ -1336,6 +1378,8 @@ namespace {
 int main() {
     const auto tests = std::array{
         TestCase{"revolution headers and input defaults", test_revolution_headers_and_input_defaults},
+        TestCase{"GamePad compatibility requires runtime context", test_game_pad_compat_requires_runtime_context},
+        TestCase{"Aurora WPAD sub-stick edges", test_aurora_wpad_sub_stick_edges},
         TestCase{"JGeometry host layout and math", test_jgeometry_host_layout_and_math},
         TestCase{"Aurora VI retrace/framebuffer state", test_aurora_vi_retrace_and_framebuffer_state},
         TestCase{"Aurora DVD requires disc image", test_aurora_dvd_requires_disc_image},

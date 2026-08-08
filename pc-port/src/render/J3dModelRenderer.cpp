@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 
+#include "render/J3dMatrix.hpp"
 #include "render/J3dModel.hpp"
 
 namespace smgpc::render {
@@ -115,35 +116,10 @@ namespace smgpc::render {
             return {dot3(world_vector, context.right), dot3(world_vector, context.up), dot3(world_vector, context.forward)};
         }
 
-        [[nodiscard]] std::array<float, 3U> transform_normal_to_world(const J3dMatrix3x4 &matrix, std::array<float, 3U> normal) {
-            const auto a = matrix.m[0U];
-            const auto b = matrix.m[1U];
-            const auto c = matrix.m[2U];
-            const auto d = matrix.m[4U];
-            const auto e = matrix.m[5U];
-            const auto f = matrix.m[6U];
-            const auto g = matrix.m[8U];
-            const auto h = matrix.m[9U];
-            const auto i = matrix.m[10U];
-            auto world_normal = std::array<float, 3U>{
-                (e * i - f * h) * normal[0U] + (f * g - d * i) * normal[1U] + (d * h - e * g) * normal[2U],
-                (c * h - b * i) * normal[0U] + (a * i - c * g) * normal[1U] + (b * g - a * h) * normal[2U],
-                (b * f - c * e) * normal[0U] + (c * d - a * f) * normal[1U] + (a * e - b * d) * normal[2U],
-            };
-            if (dot3(world_normal, world_normal) <= 0.0000001F) {
-                world_normal = {
-                    a * normal[0U] + b * normal[1U] + c * normal[2U],
-                    d * normal[0U] + e * normal[1U] + f * normal[2U],
-                    g * normal[0U] + h * normal[1U] + i * normal[2U],
-                };
-            }
-            return normalized_required(world_normal);
-        }
-
         [[nodiscard]] std::array<float, 3U> transform_normal_to_camera(const J3dMatrix3x4 &matrix,
                                                                        const CameraProjectionContext &camera_context,
                                                                        std::array<float, 3U> normal) {
-            return normalized_required(camera_space_vector(camera_context, transform_normal_to_world(matrix, normal)));
+            return normalized_required(camera_space_vector(camera_context, j3d_transform_normal(matrix, normal)));
         }
 
         [[nodiscard]] std::uint8_t first_raster_channel_selector(const GXMaterialState &state, std::span<const J3dMaterialTexturePass> passes) {
@@ -431,7 +407,7 @@ namespace smgpc::render {
 
         [[nodiscard]] bool pass_uses_supported_shader_texgen(const J3dMaterialTexturePass &pass) {
             if (!pass.tex_coord_gen.has_value()) {
-                return true;
+                return false;
             }
             return pass.tex_coord_gen->source == GX_TG_POS || pass.tex_coord_gen->source == GX_TG_NRM ||
                    (pass.tex_coord_gen->source >= GX_TG_TEX0 && pass.tex_coord_gen->source <= GX_TG_TEX7);
@@ -592,6 +568,9 @@ namespace smgpc::render {
                 }
 
                 const auto *gen = order.tex_coord == 0xffU ? nullptr : find_tex_coord_gen(state, order.tex_coord);
+                if (gen == nullptr) {
+                    continue;
+                }
                 const auto *matrix = find_tex_matrix(state, gen);
                 passes.push_back(J3dMaterialTexturePass {
                     .stage = order.stage,
@@ -627,6 +606,9 @@ namespace smgpc::render {
                 }
 
                 const auto *gen = order.tex_coord == 0xffU ? nullptr : find_tex_coord_gen(state, order.tex_coord);
+                if (gen == nullptr) {
+                    continue;
+                }
                 const auto *matrix = find_tex_matrix(state, gen);
                 passes.push_back(J3dMaterialTexturePass {
                     .stage = order.stage,
@@ -769,7 +751,6 @@ namespace smgpc::render {
             const auto texture_stage = texture_stage_index_for_tev_stage(passes, stage.stage);
             const auto *order = tev_order_for_stage(state, stage.stage);
             return render::GxTevStage2D {
-                .texture_stage = order != nullptr ? order->tex_map : texture_stage,
                 .texture_coord_stage = order != nullptr ? order->tex_coord : texture_stage,
                 .texture_map_stage = order != nullptr ? order->tex_map : texture_stage,
                 .color_channel = static_cast<std::uint8_t>(order != nullptr ? order->color_channel : 4U),
@@ -2039,7 +2020,7 @@ namespace smgpc::render {
                         }
                     }
 
-                    if (passes.size() != 1U || !options.use_cpu_tev ||
+                    if (passes.size() != 1U || !pass_uses_supported_shader_texgen(passes.front()) || !options.use_cpu_tev ||
                         has_active_indirect_tev_stage(material.gx_state) || material_uses_gx_lighting(material.gx_state)) {
                         continue;
                     }

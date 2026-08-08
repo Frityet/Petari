@@ -8,10 +8,11 @@ class TriggerChecker;
 
 namespace TitleSequenceProductSub {
     class LogoLayout;
-};
+};  // namespace TitleSequenceProductSub
 
 class TitleSequenceProduct : public NerveExecutor {
 public:
+    /// @brief Creates a new `TitleSequenceProduct`.
     TitleSequenceProduct();
 
     void appear();
@@ -39,6 +40,7 @@ private:
 namespace TitleSequenceProductSub {
     class LogoLayout : public SimpleLayout {
     public:
+        /// @brief Creates a new `LogoLayout`.
         LogoLayout();
     };
 };  // namespace TitleSequenceProductSub

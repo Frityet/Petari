@@ -17,6 +17,8 @@ namespace smgpc::render {
         constexpr auto GX_DIRECT = std::uint32_t {1U};
         constexpr auto GX_INDEX8 = std::uint32_t {2U};
         constexpr auto GX_INDEX16 = std::uint32_t {3U};
+        constexpr auto J3D_DEFAULT_TEV_K_COLOR_SEL = std::uint8_t {0x0cU};
+        constexpr auto J3D_DEFAULT_TEV_K_ALPHA_SEL = std::uint8_t {0x1cU};
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
@@ -1069,14 +1071,16 @@ namespace smgpc::render {
                         tev_stage.color_scale = tev_stage.raw[7U];
                         tev_stage.color_clamp = tev_stage.raw[8U];
                         tev_stage.color_out = tev_stage.raw[9U];
-                        tev_stage.k_color_sel = data[init_offset + 0x9cU + stage];
+                        const auto raw_k_color_sel = data[init_offset + 0x9cU + stage];
+                        tev_stage.k_color_sel = raw_k_color_sel == 0xffU ? J3D_DEFAULT_TEV_K_COLOR_SEL : raw_k_color_sel;
                         tev_stage.alpha_in = {tev_stage.raw[10U], tev_stage.raw[11U], tev_stage.raw[12U], tev_stage.raw[13U]};
                         tev_stage.alpha_op = tev_stage.raw[14U];
                         tev_stage.alpha_bias = tev_stage.raw[15U];
                         tev_stage.alpha_scale = tev_stage.raw[16U];
                         tev_stage.alpha_clamp = tev_stage.raw[17U];
                         tev_stage.alpha_out = tev_stage.raw[18U];
-                        tev_stage.k_alpha_sel = data[init_offset + 0xacU + stage];
+                        const auto raw_k_alpha_sel = data[init_offset + 0xacU + stage];
+                        tev_stage.k_alpha_sel = raw_k_alpha_sel == 0xffU ? J3D_DEFAULT_TEV_K_ALPHA_SEL : raw_k_alpha_sel;
                         material.tev_stages.push_back(tev_stage);
                     }
                 }

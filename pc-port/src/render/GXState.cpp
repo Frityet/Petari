@@ -1019,7 +1019,8 @@ namespace smgpc::render {
 
     core::GxTevStage2D gx_brlyt_default_texture_color_stage(std::uint8_t texture_stage) {
         return core::GxTevStage2D{
-            .texture_stage = texture_stage,
+            .texture_coord_stage = texture_stage,
+            .texture_map_stage = texture_stage,
             .color_in = {15U, 8U, 10U, 15U},
             .color_op = 0U,
             .color_bias = 0U,
@@ -1038,7 +1039,8 @@ namespace smgpc::render {
 
     core::GxTevStage2D gx_brlyt_default_raster_modulate_stage() {
         return core::GxTevStage2D{
-            .texture_stage = 0xffU,
+            .texture_coord_stage = 0xffU,
+            .texture_map_stage = 0xffU,
             .color_in = {15U, 0U, 10U, 15U},
             .color_op = 0U,
             .color_bias = 0U,

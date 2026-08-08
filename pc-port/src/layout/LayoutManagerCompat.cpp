@@ -29,6 +29,7 @@ struct ActorState {
     std::array< J3DFrameCtrl, 4U > animation_controls{};
     std::array< f32, 4U > last_frames{};
     std::array< f32, 4U > last_rates{};
+    bool effect_keeper_registered = false;
 };
 
 struct PaneMatrixReference {
@@ -274,8 +275,10 @@ void LayoutActor::appear() {
 void LayoutActor::kill() {
     mFlag.mIsDead = true;
     smgpc::layout::require_layout_runtime(this, "Killing a layout actor").kill();
-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        runtime->delete_effect_all(getName(), this);
+    if (require_actor_state(this, "Killing a layout actor").effect_keeper_registered) {
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->delete_effect_all(getName(), this);
+        }
     }
 }
 
@@ -358,6 +361,7 @@ void LayoutActor::initEffectKeeper(int effect_count, const char* effect_name, co
     const auto group_name = effect_name != nullptr ? std::string_view(effect_name) : std::string_view(layout.getLayoutName());
     runtime.register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LayoutActor, owner_name, effect_count,
                                    group_name, false, this);
+    require_actor_state(this, "Initializing layout effects").effect_keeper_registered = true;
 }
 
 void LayoutActor::initPointingTarget(int) {

@@ -529,50 +529,36 @@ namespace smgpc::render {
             case 0xffU:
                 return GX_COLOR_NULL;
             default:
-                return GX_COLOR0A0;
+                throw std::logic_error("GX material uses an invalid raster color channel");
             }
         }
 
         [[nodiscard]] GXTevKColorID gx_k_color_id(std::size_t index) {
-            return static_cast<GXTevKColorID>(GX_KCOLOR0 + std::min<std::size_t>(index, GX_MAX_KCOLOR - 1U));
-        }
-
-        [[nodiscard]] GXTevKColorSel gx_k_color_sel(std::size_t index) {
-            constexpr auto selectors = std::array<GXTevKColorSel, GX_MAX_KCOLOR> {
-                GX_TEV_KCSEL_K0,
-                GX_TEV_KCSEL_K1,
-                GX_TEV_KCSEL_K2,
-                GX_TEV_KCSEL_K3,
-            };
-            return selectors[std::min<std::size_t>(index, selectors.size() - 1U)];
-        }
-
-        [[nodiscard]] GXTevKAlphaSel gx_k_alpha_sel(std::size_t index) {
-            constexpr auto selectors = std::array<GXTevKAlphaSel, GX_MAX_KCOLOR> {
-                GX_TEV_KASEL_K0_A,
-                GX_TEV_KASEL_K1_A,
-                GX_TEV_KASEL_K2_A,
-                GX_TEV_KASEL_K3_A,
-            };
-            return selectors[std::min<std::size_t>(index, selectors.size() - 1U)];
-        }
-
-        [[nodiscard]] GXTevKColorSel gx_k_color_sel_for_stage(const GxTevStage2D &stage, std::size_t fallback_index) {
-            if (stage.k_color_sel <= 0x1fU) {
-                return static_cast<GXTevKColorSel>(stage.k_color_sel);
+            if (index >= GX_MAX_KCOLOR) {
+                throw std::logic_error("GX material uses an invalid konst color register");
             }
-            return gx_k_color_sel(fallback_index);
+            return static_cast<GXTevKColorID>(GX_KCOLOR0 + index);
         }
 
-        [[nodiscard]] GXTevKAlphaSel gx_k_alpha_sel_for_stage(const GxTevStage2D &stage, std::size_t fallback_index) {
-            if (stage.k_alpha_sel <= 0x1fU) {
-                return static_cast<GXTevKAlphaSel>(stage.k_alpha_sel);
+        [[nodiscard]] GXTevKColorSel gx_k_color_sel_for_stage(const GxTevStage2D &stage) {
+            if (stage.k_color_sel > 0x1fU) {
+                throw std::logic_error("GX material uses an invalid TEV konst color selector");
             }
-            return gx_k_alpha_sel(fallback_index);
+            return static_cast<GXTevKColorSel>(stage.k_color_sel);
+        }
+
+        [[nodiscard]] GXTevKAlphaSel gx_k_alpha_sel_for_stage(const GxTevStage2D &stage) {
+            if (stage.k_alpha_sel > 0x1fU) {
+                throw std::logic_error("GX material uses an invalid TEV konst alpha selector");
+            }
+            return static_cast<GXTevKAlphaSel>(stage.k_alpha_sel);
         }
 
         [[nodiscard]] GXTevSwapSel gx_tev_swap_sel(std::uint8_t value) {
-            return static_cast<GXTevSwapSel>(std::min<std::uint8_t>(value, GX_TEV_SWAP3));
+            if (value > GX_TEV_SWAP3) {
+                throw std::logic_error("GX material uses an invalid TEV swap selector");
+            }
+            return static_cast<GXTevSwapSel>(value);
         }
 
         void configure_copy_clear() {
@@ -921,11 +907,38 @@ namespace smgpc::render {
             return handle.texture.get();
         }
 
+        [[nodiscard]] bool material_batch_is_renderable(const GxMaterialTriangleBatch2D &batch) const {
+            if (batch.texture_stages.size() > core::kMaxGxMaterialTextureStages2D || batch.tev_stages.empty() ||
+                batch.tev_stages.size() > core::kMaxGxMaterialTevStages2D ||
+                batch.indirect_stage_count > core::kMaxGxIndirectStages2D ||
+                (!batch.has_initial_tev_k_colors && batch.tev_stages.size() > GX_MAX_KCOLOR)) {
+                return false;
+            }
+            if (!std::ranges::all_of(batch.texture_stages, [this](const auto &stage) {
+                    return texture(stage.texture) != nullptr && stage.texgen_type <= GX_TG_SRTG &&
+                           stage.texgen_source < GX_MAX_TEXGENSRC;
+                })) {
+                return false;
+            }
+
+            const auto texture_count = batch.texture_stages.size();
+            return std::ranges::all_of(batch.tev_stages, [texture_count](const auto &stage) {
+                const auto coord_is_null = stage.texture_coord_stage == 0xffU;
+                const auto map_is_null = stage.texture_map_stage == 0xffU;
+                const auto texture_order_is_valid =
+                    (coord_is_null && map_is_null) ||
+                    (!coord_is_null && !map_is_null && stage.texture_coord_stage < texture_count && stage.texture_map_stage < texture_count);
+                const auto color_channel_is_valid = stage.color_channel <= 8U || stage.color_channel == 0xffU;
+                return texture_order_is_valid && color_channel_is_valid && stage.k_color_sel <= 0x1fU &&
+                       stage.k_alpha_sel <= 0x1fU && stage.ras_swap <= GX_TEV_SWAP3 && stage.tex_swap <= GX_TEV_SWAP3;
+            });
+        }
+
         void load_texture(TextureHandle handle, GXTexMapID map_id, std::uint8_t wrap_u, std::uint8_t wrap_v, std::uint8_t min_filter,
                           std::uint8_t mag_filter) {
             auto *record = texture(handle);
             if (record == nullptr) {
-                return;
+                throw std::logic_error("GX material texture is absent");
             }
             GXInitTexObjWrapMode(&record->object, static_cast<GXTexWrapMode>(gx_wrap_mode(wrap_u)),
                                  static_cast<GXTexWrapMode>(gx_wrap_mode(wrap_v)));
@@ -971,9 +984,8 @@ namespace smgpc::render {
             configure_blend_depth(batch.blend, BlendMode::Alpha, batch.depth_test, batch.depth_write, batch.depth_compare, batch.cull_mode);
             configure_alpha_compare(batch.alpha_compare);
 
-            const auto texture_count = std::min<std::size_t>(batch.texture_stages.size(), core::kMaxGxMaterialTextureStages2D);
-            const auto tev_count = std::clamp<std::size_t>(batch.tev_stages.empty() ? 1U : batch.tev_stages.size(), 1U,
-                                                           core::kMaxGxMaterialTevStages2D);
+            const auto texture_count = batch.texture_stages.size();
+            const auto tev_count = batch.tev_stages.size();
 
             GXClearVtxDesc();
             GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -985,14 +997,10 @@ namespace smgpc::render {
                 const auto &stage = batch.texture_stages[index];
                 GXSetVtxDesc(attr, GX_DIRECT);
                 GXSetVtxAttrFmt(GX_VTXFMT0, attr, GX_TEX_ST, GX_F32, 0U);
-                const auto texgen_source = stage.has_texgen_matrix ?
-                                               stage.texgen_source :
-                                               static_cast<GXTexGenSrc>(GX_TG_TEX0 + index);
-                const auto texgen_matrix = stage.has_texgen_matrix ? stage.texgen_matrix : GX_IDENTITY;
                 if (stage.has_texgen_matrix) {
-                    GXLoadTexMtxImm(stage.texgen_matrix_values.data(), texgen_matrix, stage.texgen_matrix_type);
+                    GXLoadTexMtxImm(stage.texgen_matrix_values.data(), stage.texgen_matrix, stage.texgen_matrix_type);
                 }
-                GXSetTexCoordGen(gx_tex_coord_id(index), stage.texgen_type, texgen_source, texgen_matrix);
+                GXSetTexCoordGen(gx_tex_coord_id(index), stage.texgen_type, stage.texgen_source, stage.texgen_matrix);
                 load_texture(stage.texture, gx_tex_map_id(index), stage.wrap_u, stage.wrap_v, stage.min_filter, stage.mag_filter);
             }
             GXSetNumTexGens(static_cast<u8>(texture_count));
@@ -1010,36 +1018,23 @@ namespace smgpc::render {
             }
 
             GXSetNumTevStages(static_cast<u8>(tev_count));
-            GXSetNumIndStages(std::min<u8>(batch.indirect_stage_count, GX_MAX_INDTEXSTAGE));
+            GXSetNumIndStages(batch.indirect_stage_count);
             for (auto index = std::size_t {}; index < tev_count; ++index) {
                 GXSetTevDirect(static_cast<GXTevStageID>(GX_TEVSTAGE0 + index));
             }
             for (auto index = std::size_t {}; index < tev_count; ++index) {
                 const auto stage_id = static_cast<GXTevStageID>(GX_TEVSTAGE0 + index);
-                if (index >= batch.tev_stages.size()) {
-                    GXSetTevOrder(stage_id, texture_count == 0U ? GX_TEXCOORD_NULL : GX_TEXCOORD0,
-                                  texture_count == 0U ? GX_TEXMAP_NULL : GX_TEXMAP0, GX_COLOR0A0);
-                    GXSetTevOp(stage_id, texture_count == 0U ? GX_PASSCLR : GX_MODULATE);
-                    continue;
-                }
-
                 const auto &stage = batch.tev_stages[index];
-                auto texture_coord_stage = stage.texture_coord_stage;
-                auto texture_map_stage = stage.texture_map_stage;
-                if ((texture_coord_stage >= texture_count || texture_map_stage >= texture_count) && stage.texture_stage < texture_count) {
-                    texture_coord_stage = stage.texture_stage;
-                    texture_map_stage = stage.texture_stage;
-                }
-                const auto has_texture = texture_coord_stage < texture_count && texture_map_stage < texture_count;
+                const auto has_texture = stage.texture_coord_stage != 0xffU;
                 if (!batch.has_initial_tev_k_colors) {
                     const auto &konst = stage.konst_color;
                     GXSetTevKColor(gx_k_color_id(index), GXColor {.r = konst[0], .g = konst[1], .b = konst[2], .a = konst[3]});
                 }
-                GXSetTevKColorSel(stage_id, gx_k_color_sel_for_stage(stage, index));
-                GXSetTevKAlphaSel(stage_id, gx_k_alpha_sel_for_stage(stage, index));
+                GXSetTevKColorSel(stage_id, gx_k_color_sel_for_stage(stage));
+                GXSetTevKAlphaSel(stage_id, gx_k_alpha_sel_for_stage(stage));
                 GXSetTevSwapMode(stage_id, gx_tev_swap_sel(stage.ras_swap), gx_tev_swap_sel(stage.tex_swap));
-                GXSetTevOrder(stage_id, has_texture ? gx_tex_coord_id(texture_coord_stage) : GX_TEXCOORD_NULL,
-                              has_texture ? gx_tex_map_id(texture_map_stage) : GX_TEXMAP_NULL, gx_channel_id(stage.color_channel));
+                GXSetTevOrder(stage_id, has_texture ? gx_tex_coord_id(stage.texture_coord_stage) : GX_TEXCOORD_NULL,
+                              has_texture ? gx_tex_map_id(stage.texture_map_stage) : GX_TEXMAP_NULL, gx_channel_id(stage.color_channel));
                 GXSetTevColorIn(stage_id, static_cast<GXTevColorArg>(stage.color_in[0]), static_cast<GXTevColorArg>(stage.color_in[1]),
                                 static_cast<GXTevColorArg>(stage.color_in[2]), static_cast<GXTevColorArg>(stage.color_in[3]));
                 GXSetTevAlphaIn(stage_id, static_cast<GXTevAlphaArg>(stage.alpha_in[0]), static_cast<GXTevAlphaArg>(stage.alpha_in[1]),
@@ -1333,7 +1328,7 @@ namespace smgpc::render {
     }
 
     void AuroraRenderer::submit_gx_material_triangles(const GxMaterialTriangleBatch2D &batch) {
-        if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty()) {
+        if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty() || !_impl->material_batch_is_renderable(batch)) {
             return;
         }
 
@@ -1342,7 +1337,7 @@ namespace smgpc::render {
         dump_batch_bounds("material", _impl->frame_index, _impl->frame_textured_submits + _impl->frame_material_submits,
                           batch.vertices, batch.indices);
         _impl->configure_material_state(batch);
-        const auto texture_count = std::min<std::size_t>(batch.texture_stages.size(), core::kMaxGxMaterialTextureStages2D);
+        const auto texture_count = batch.texture_stages.size();
         GXBegin(gx_primitive(batch.primitive_topology), GX_VTXFMT0, static_cast<u16>(std::min<std::size_t>(batch.indices.size(), UINT16_MAX)));
         for (const auto index : batch.indices) {
             if (index < batch.vertices.size()) {
@@ -1354,7 +1349,7 @@ namespace smgpc::render {
 
     void AuroraRenderer::submit_gx_material_triangles_3d(const GxMaterialTriangleBatch2D &batch,
                                                          const smgpc::camera::CameraPose &camera_pose) {
-        if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty()) {
+        if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty() || !_impl->material_batch_is_renderable(batch)) {
             return;
         }
 
@@ -1363,7 +1358,7 @@ namespace smgpc::render {
         dump_batch_bounds("material3d", _impl->frame_index, _impl->frame_textured_submits + _impl->frame_material_submits,
                           batch.vertices, batch.indices);
         _impl->configure_material_state(batch, &camera_pose);
-        const auto texture_count = std::min<std::size_t>(batch.texture_stages.size(), core::kMaxGxMaterialTextureStages2D);
+        const auto texture_count = batch.texture_stages.size();
         GXBegin(gx_primitive(batch.primitive_topology), GX_VTXFMT0, static_cast<u16>(std::min<std::size_t>(batch.indices.size(), UINT16_MAX)));
         for (const auto index : batch.indices) {
             if (index < batch.vertices.size()) {

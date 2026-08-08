@@ -7,21 +7,21 @@ class GalaxyMapGalaxyPlain;
 
 namespace MR {
     class FunctorBase;
-}
+};  // namespace MR
 
 class FileSelectButton : public LayoutActor {
 public:
-    explicit FileSelectButton(const char* pName);
-    ~FileSelectButton() override;
+    /// @brief Creates a new `FileSelectButton`.
+    /// @param pName The pointer to the null-terminated name of the object.
+    FileSelectButton(const char* pName);
 
-    void init(const JMapInfoIter& rIter) override;
-    void appear() override;
-    void kill() override;
-    void control() override;
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void appear();
+    virtual void kill();
+    virtual void control();
 
     void disappear();
-    void setCallbackFunctor(const MR::FunctorBase& rStartFunctor, const MR::FunctorBase& rCopyFunctor, const MR::FunctorBase& rMiiFunctor,
-                            const MR::FunctorBase& rDeleteFunctor, const MR::FunctorBase& rManualFunctor);
+    void setCallbackFunctor(const MR::FunctorBase&, const MR::FunctorBase&, const MR::FunctorBase&, const MR::FunctorBase&, const MR::FunctorBase&);
     void shiftSelect();
     void exeSelect();
     void exeWait();
@@ -29,8 +29,6 @@ public:
     void createPaneControl();
     void createButtonController();
     void createOthers();
-
-    [[nodiscard]] const ButtonPaneController* getButtonController(s32 index) const;
 
 private:
     /* 0x20 */ ButtonPaneController* mButtonCtrl[5];

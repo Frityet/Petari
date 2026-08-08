@@ -1,5 +1,6 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/Map/FileSelector.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
@@ -18,7 +19,11 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <utility>
+
+static_assert(std::is_base_of_v<LiveActor, FileSelector>,
+              "the exact retail FileSelector declaration must coexist with the host boundary");
 
 namespace {
 

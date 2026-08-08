@@ -1,5 +1,4 @@
 #include "Game/Screen/TitleSequenceProduct.hpp"
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/EncouragePal60Window.hpp"
 #include "Game/System/GameDataFunction.hpp"
@@ -13,7 +12,7 @@
 
 namespace {
     static const s32 sPressABAppearFrame = 25;
-};
+};  // namespace
 
 namespace TitleSequenceProductSub {
     LogoLayout::LogoLayout() : SimpleLayout("ロゴ", "TitleLogo", 2, -1) {
@@ -52,6 +51,7 @@ TitleSequenceProduct::TitleSequenceProduct()
     mEncouragePal60Window->kill();
 }
 
+// FIXME: GPR4 and GPR5 are swapped and missing addi instruction.
 void TitleSequenceProduct::exeDisplayEncouragePal60Window() {
     if (MR::isFirstStep(this)) {
         OSTime timeAnnounced = GameDataFunction::getSysConfigFileTimeAnnounced();
@@ -104,7 +104,7 @@ void TitleSequenceProduct::exeLogoWait() {
         MR::emitEffect(mLogoLayout, "TitleLogoLightG");
     }
 
-    if (MR::isStep(this, sPressABAppearFrame)) {
+    if (MR::isStep(this, ::sPressABAppearFrame)) {
         setNerve(&TitleSequenceProductLogoDisplay::sInstance);
     }
 }
@@ -124,9 +124,9 @@ void TitleSequenceProduct::exeLogoDisplay() {
 
     if (mAButtonChecker->getLevel() && mBButtonChecker->getLevel()) {
         MR::stopStageBGM(75);
-        MR::startSystemSE("SE_SY_GAME_START", -1, -1);
-        MR::startCSSound("CS_CLICK_CLOSE", 0, 0);
-        MR::tryRumblePadMiddle(this, 0);
+        MR::startSystemSE("SE_SY_GAME_START");
+        MR::startCSSound("CS_CLICK_CLOSE", nullptr, 0);
+        MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         setNerve(&TitleSequenceProductDecide::sInstance);
     } else {
         updateButtonReaction(mAButtonChecker, "ReactionA");

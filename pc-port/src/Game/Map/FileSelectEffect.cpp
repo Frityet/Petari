@@ -1,5 +1,4 @@
 #include "Game/Map/FileSelectEffect.hpp"
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -8,15 +7,13 @@ namespace {
     NEW_NERVE(FileSelectEffectNrvAppear, FileSelectEffect, Appear);
     NEW_NERVE(FileSelectEffectNrvWait, FileSelectEffect, Wait);
     NEW_NERVE(FileSelectEffectNrvDisappear, FileSelectEffect, Disappear);
-}  // namespace
+};  // namespace
 
 FileSelectEffect::FileSelectEffect(const char* pName) : LiveActor(pName) {
-    mEffectFrame = 0.0F;
+    mEffectFrame = 0.0f;
 }
 
-FileSelectEffect::~FileSelectEffect() = default;
-
-void FileSelectEffect::init(const JMapInfoIter&) {
+void FileSelectEffect::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm("MiniatureGalaxySelect", nullptr, false);
     MR::connectToSceneMapObj(this);
     MR::invalidateClipping(this);
@@ -29,26 +26,7 @@ void FileSelectEffect::appear() {
     setNerve(&FileSelectEffectNrvAppear::sInstance);
 }
 
-void FileSelectEffect::disappear() {
-    if (MR::isDead(this) || isNerve(&FileSelectEffectNrvDisappear::sInstance)) {
-        return;
-    }
-
-    if (isNerve(&FileSelectEffectNrvAppear::sInstance)) {
-        if (MR::isFirstStep(this)) {
-            kill();
-            return;
-        }
-
-        J3DFrameCtrl* ctrl = MR::getBrkCtrl(this);
-        mEffectFrame = ctrl != nullptr ? ctrl->mFrame : 0.0F;
-    } else if (isNerve(&FileSelectEffectNrvWait::sInstance)) {
-        J3DFrameCtrl* ctrl = MR::getBrkCtrl(this);
-        mEffectFrame = ctrl != nullptr ? static_cast< f32 >(ctrl->mEnd) : 0.0F;
-    }
-
-    setNerve(&FileSelectEffectNrvDisappear::sInstance);
-}
+// FileSelectEffect::disappear
 
 void FileSelectEffect::exeAppear() {
     if (MR::isFirstStep(this)) {
@@ -67,10 +45,7 @@ void FileSelectEffect::exeWait() {
 void FileSelectEffect::exeDisappear() {
     if (MR::isFirstStep(this)) {
         MR::startBrk(this, "Disappear");
-        J3DFrameCtrl* ctrl = MR::getBrkCtrl(this);
-        if (ctrl != nullptr) {
-            MR::setBrkFrame(this, static_cast< f32 >(ctrl->mEnd) - mEffectFrame);
-        }
+        MR::setBrkFrame(this, MR::getBrkCtrl(this)->getEnd() - mEffectFrame);
     }
 
     if (MR::isBrkOneTimeAndStopped(this)) {
@@ -78,6 +53,7 @@ void FileSelectEffect::exeDisappear() {
     }
 }
 
-void FileSelectEffect::calcAndSetBaseMtx() {
-    LiveActor::calcAndSetBaseMtx();
+// FileSelectEffect::calcAndSetBaseMtx
+
+FileSelectEffect::~FileSelectEffect() {
 }

@@ -5,7 +5,7 @@
 namespace nw4r {
     namespace lyt {
         class TexMap;
-    };
+    };  // namespace lyt
 };  // namespace nw4r
 
 class ButtonPaneController;
@@ -55,6 +55,9 @@ public:
     void hideContents();
     f32 getFadeInAlphaTextBG(f32 alpha) const;
     f32 getFadeOutAlphaTextBG(f32 alpha) const;
+
+    // inline bool isAlreadyReadPage() const;
+    // inline bool isNotReadPage() const;
 
 private:
     /* 0x20 */ s32 mChapterMin;

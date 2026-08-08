@@ -4,31 +4,30 @@
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "JSystem/JGeometry/TVec.hpp"
 
 namespace {
-    const auto cFarTarget = TVec3f{0.0F, 800.0F, 0.0F};
-    const auto cFarPoint = TVec3f{0.0F, 0.0F, 15000.0F};
-    const auto cNearTargetOffset = TVec3f{0.0F, 1100.0F, 0.0F};
-    const auto cNearPointOffset = TVec3f{0.0F, 0.0F, 4800.0F};
+    const Vec cFarTarget = {0.0f, 800.0f, 0.0f};
+    const Vec cFarPoint = {0.0f, 0.0f, 15000.0f};
+    const Vec cNearTargetOffset = {0.0f, 1100.0f, 0.0f};
+    const Vec cNearPointOffset = {0.0f, 0.0f, 4800.0f};
 
     NEW_NERVE(FileSelectCameraControllerNrvTitle, FileSelectCameraController, Title);
     NEW_NERVE(FileSelectCameraControllerNrvMoveToFarPoint, FileSelectCameraController, MoveToFarPoint);
     NEW_NERVE(FileSelectCameraControllerNrvFarPoint, FileSelectCameraController, FarPoint);
     NEW_NERVE(FileSelectCameraControllerNrvMoveToNearPoint, FileSelectCameraController, MoveToNearPoint);
     NEW_NERVE(FileSelectCameraControllerNrvNearPoint, FileSelectCameraController, NearPoint);
-}  // namespace
+};  // namespace
 
 FileSelectCameraController::FileSelectCameraController(const char* pName) : LiveActor(pName) {
-    _A4.set(0.0F, 0.0F, 0.0F);
-    _B0.set(0.0F, 0.0F, 0.0F);
-    _BC = 60.0F;
-    _C0 = 60.0F;
-    _C4.set(0.0F, 1.0F, 0.0F);
+    _A4.set< f32 >(0.0f, 0.0f, 0.0f);
+    _B0.set< f32 >(0.0f, 0.0f, 0.0f);
+    _BC = 60.0f;
+    _C0 = 60.0f;
+    _C4.set< f32 >(0.0f, 1.0f, 0.0f);
 }
 
-FileSelectCameraController::~FileSelectCameraController() = default;
-
-void FileSelectCameraController::init(const JMapInfoIter&) {
+void FileSelectCameraController::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     MR::invalidateClipping(this);
     MR::initActorCameraProgrammable(this);
@@ -52,9 +51,10 @@ void FileSelectCameraController::goToFarPoint() {
 }
 
 void FileSelectCameraController::goToNearPoint(const TVec3f& rPos) {
-    auto target = rPos;
-    target.add(cNearTargetOffset);
-    _8C.set(target);
+    TVec3f offset(cNearTargetOffset);
+    TVec3f target(rPos);
+    target.add(offset);
+    _8C.set< f32 >(target);
     setNerve(&FileSelectCameraControllerNrvMoveToNearPoint::sInstance);
 }
 
@@ -62,75 +62,82 @@ bool FileSelectCameraController::isAtFarPoint() const {
     return isNerve(&FileSelectCameraControllerNrvFarPoint::sInstance);
 }
 
-bool FileSelectCameraController::isToOrAtFarPoint() const {
-    return isNerve(&FileSelectCameraControllerNrvMoveToFarPoint::sInstance) || isAtFarPoint();
-}
-
 bool FileSelectCameraController::isAtNearPoint() const {
     return isNerve(&FileSelectCameraControllerNrvNearPoint::sInstance);
 }
 
+bool FileSelectCameraController::isToOrAtFarPoint() const {
+    return isNerve(&FileSelectCameraControllerNrvMoveToFarPoint::sInstance) || isNerve(&FileSelectCameraControllerNrvFarPoint::sInstance);
+}
+
 bool FileSelectCameraController::isToOrAtNearPoint() const {
-    return isNerve(&FileSelectCameraControllerNrvMoveToNearPoint::sInstance) || isAtNearPoint();
+    return isNerve(&FileSelectCameraControllerNrvMoveToNearPoint::sInstance) || isNerve(&FileSelectCameraControllerNrvNearPoint::sInstance);
 }
 
 void FileSelectCameraController::exeTitle() {
     if (MR::isFirstStep(this)) {
-        _A4.set(cFarTarget.x, cFarTarget.y + 15000.0F, cFarTarget.z);
-        mPosition.set(cFarPoint.x, cFarTarget.y + 15000.0F, cFarPoint.z);
-        _C4.set(0.0F, 1.0F, 0.0F);
+        _A4.set< f32 >(cFarTarget.x, cFarTarget.y + 15000.0f, cFarTarget.z);
+        mPosition.set< f32 >(cFarPoint.x, cFarTarget.y + 15000.0f, cFarPoint.z);
+        _C4.set< f32 >(0.0f, 1.0f, 0.0f);
     }
 }
 
 void FileSelectCameraController::exeMoveToFarPoint() {
     if (MR::isFirstStep(this)) {
-        _C4.set(0.0F, 1.0F, 0.0F);
+        _C4.set< f32 >(0.0f, 1.0f, 0.0f);
     }
 
-    auto t = static_cast<f32>(getNerveStep()) / 60.0F;
+    f32 t = static_cast< f32 >(getNerveStep()) / 60.0f;
     t *= t;
 
-    const auto target_diff = cFarTarget - _A4;
-    _A4.add(target_diff * t);
+    TVec3f target(cFarTarget);
+    TVec3f targetDiff = target - _A4;
+    _A4.add(targetDiff * t);
 
-    _BC += (40.0F - _BC) * t;
+    _BC += (40.0f - _BC) * t;
 
-    const auto point_diff = cFarPoint - mPosition;
-    mPosition.add(point_diff * t);
+    TVec3f point(cFarPoint);
+    TVec3f pointDiff = point - mPosition;
+    mPosition.add(pointDiff * t);
 
     MR::setNerveAtStep(this, &FileSelectCameraControllerNrvFarPoint::sInstance, 60);
 }
 
 void FileSelectCameraController::exeFarPoint() {
-    _A4 = cFarTarget;
-    _BC = 40.0F;
-    mPosition.set(cFarPoint);
+    TVec3f target(cFarTarget);
+    _A4 = target;
+    _BC = 40.0f;
+
+    TVec3f point(cFarPoint);
+    mPosition.set< f32 >(point);
 }
 
 void FileSelectCameraController::exeMoveToNearPoint() {
-    auto point = _8C;
-    point.add(cNearPointOffset);
+    TVec3f offset(cNearPointOffset);
+    TVec3f point(_8C);
+    point.add(offset);
 
-    auto t = static_cast<f32>(getNerveStep()) / 60.0F;
+    f32 t = static_cast< f32 >(getNerveStep()) / 60.0f;
     t *= t;
 
-    const auto target_diff = _8C - _A4;
-    _A4.add(target_diff * t);
+    TVec3f targetDiff = _8C - _A4;
+    _A4.add(targetDiff * t);
 
-    _BC += (50.0F - _BC) * t;
+    _BC += (50.0f - _BC) * t;
 
-    const auto point_diff = point - mPosition;
-    mPosition.add(point_diff * t);
+    TVec3f pointDiff = point - mPosition;
+    mPosition.add(pointDiff * t);
 
     MR::setNerveAtStep(this, &FileSelectCameraControllerNrvNearPoint::sInstance, 60);
 }
 
 void FileSelectCameraController::exeNearPoint() {
-    auto point = _8C;
-    point.add(cNearPointOffset);
+    TVec3f offset(cNearPointOffset);
+    TVec3f point(_8C);
+    point.add(offset);
 
-    _BC = 50.0F;
-    mPosition.set(point);
+    _BC = 50.0f;
+    mPosition.set< f32 >(point);
 }
 
 void FileSelectCameraController::control() {
@@ -139,3 +146,5 @@ void FileSelectCameraController::control() {
     _B0 = _A4;
     _C0 = _BC;
 }
+
+FileSelectCameraController::~FileSelectCameraController() {}

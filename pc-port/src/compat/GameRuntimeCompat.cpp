@@ -7,11 +7,9 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "Game/Util/StringUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-#include <cstring>
 #include <stdexcept>
 
 namespace MR {
@@ -173,9 +171,5 @@ namespace MR {
 
     void shakeCameraVeryWeak() {
         cameraSystemForShake().request_very_weak_shake();
-    }
-
-    bool isEqualString(const char* pStr1, const char* pStr2) {
-        return pStr1 != nullptr && pStr2 != nullptr && std::strcmp(pStr1, pStr2) == 0;
     }
 }  // namespace MR

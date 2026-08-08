@@ -524,7 +524,8 @@ namespace smgpc::runtime {
             const auto color_index = static_cast<std::size_t>((flags >> 15U) & 0x07U);
             const auto alpha_index = static_cast<std::size_t>((flags >> 18U) & 0x01U);
             return render::GxTevStage2D{
-                .texture_stage = 0U,
+                .texture_coord_stage = 0U,
+                .texture_map_stage = 0U,
                 .color_in = color_index < COLOR_ARGS.size() ? COLOR_ARGS[color_index] : COLOR_ARGS.front(),
                 .alpha_in = ALPHA_ARGS[alpha_index],
             };
@@ -1744,6 +1745,7 @@ namespace smgpc::runtime {
                                 .wrap_v = texture.wrap_t,
                                 .min_filter = texture.min_filter,
                                 .mag_filter = texture.mag_filter,
+                                .texgen_source = GX_TG_TEX0,
                             },
                         };
                         const auto tev_stages = std::array<render::GxTevStage2D, 1U>{jpa_tev_stage(base_shape)};

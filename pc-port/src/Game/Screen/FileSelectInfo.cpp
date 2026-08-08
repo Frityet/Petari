@@ -1,56 +1,59 @@
 #include "Game/Screen/FileSelectInfo.hpp"
-
-#include <algorithm>
-#include <cwchar>
-
-#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 
 namespace {
-    constexpr auto sDisappearAnimRate = 0.25F;
+    static const f32 sDisappearAnimRate = 0.25f;
+};  // namespace
 
+namespace {
     NEW_NERVE(FileSelectInfoNrvAppear, FileSelectInfo, Appear);
     NEW_NERVE(FileSelectInfoNrvDisplay, FileSelectInfo, Display);
     NEW_NERVE(FileSelectInfoNrvDisappear, FileSelectInfo, Disappear);
-}  // namespace
+};  // namespace
 
 namespace FileSelectInfoSub {
     NEW_NERVE(SlideStateNrvNormalPos, SlideState, NormalPos);
     NEW_NERVE(SlideStateNrvSliding, SlideState, Sliding);
     NEW_NERVE(SlideStateNrvSlidePos, SlideState, SlidePos);
     NEW_NERVE(SlideStateNrvSlidingBack, SlideState, SlidingBack);
+};  // namespace FileSelectInfoSub
 
+namespace FileSelectInfoSub {
     NEW_NERVE(CharaStateNrvMario, CharaState, Mario);
     NEW_NERVE(CharaStateNrvToLuigi, CharaState, ToLuigi);
     NEW_NERVE(CharaStateNrvLuigi, CharaState, Luigi);
     NEW_NERVE(CharaStateNrvToMario, CharaState, ToMario);
-}  // namespace FileSelectInfoSub
+};  // namespace FileSelectInfoSub
 
+// FIXME: Any issues are likely related to dynamically allocating memory for the wide character buffer.
 FileSelectInfo::FileSelectInfo(s32 nameBufferSize, const char* pName)
-    : LayoutActor(pName, true), mNumber(0), mStarNum(0), mStarPieceNum(0), mNameBufferSize(nameBufferSize), mName(new wchar_t[nameBufferSize]{}),
-      mDateMessage{}, mTimeMessage{}, mMissNum(-1), mIsSelectedMarioPrev(true), mIsSelectedMario(true), mIsViewNormalEnding(false),
-      mIsViewCompleteEnding(false), mSlideState(new FileSelectInfoSub::SlideState(this)), mCharaState(new FileSelectInfoSub::CharaState(this)) {
+    : LayoutActor(pName, 1), mNumber(0), mStarNum(0), mStarPieceNum(0), mNameBufferSize(nameBufferSize * sizeof(wchar_t)),
+      mName(new wchar_t[nameBufferSize]), mMissNum(-1), mIsSelectedMarioPrev(true), mIsSelectedMario(true), mIsViewNormalEnding(false),
+      mIsViewCompleteEnding(false) {
+    mSlideState = new FileSelectInfoSub::SlideState(this);
+    mCharaState = new FileSelectInfoSub::CharaState(this);
+
+    MR::zeroMemory(mName, mNameBufferSize);
 }
 
-FileSelectInfo::~FileSelectInfo() {
-    delete mSlideState;
-    delete mCharaState;
-    delete[] mName;
-}
-
-void FileSelectInfo::init(const JMapInfoIter&) {
+void FileSelectInfo::init(const JMapInfoIter& rIter) {
     initLayoutManager("FileInfo", 3);
     MR::connectToSceneLayout(this);
     initNerve(&FileSelectInfoNrvAppear::sInstance);
 }
 
 void FileSelectInfo::appear() {
+    f32 animFrame;
+
     if (!MR::isDead(this) && isNerve(&FileSelectInfoNrvDisappear::sInstance)) {
-        const auto animFrame = MR::getAnimFrame(this, 0);
+        animFrame = MR::getAnimFrame(this, 0);
+
         MR::startAnim(this, "Appear", 0);
         MR::setAnimFrame(this, animFrame, 0);
     } else {
@@ -62,22 +65,22 @@ void FileSelectInfo::appear() {
 }
 
 void FileSelectInfo::disappear() {
-    if (MR::isDead(this) || isNerve(&FileSelectInfoNrvDisappear::sInstance)) {
-        return;
-    }
+    f32 animFrame;
 
-    auto animFrame = 0.0F;
-    if (isNerve(&FileSelectInfoNrvAppear::sInstance)) {
-        animFrame = MR::getAnimFrame(this, 0);
-    } else {
+    if (!MR::isDead(this) && !isNerve(&FileSelectInfoNrvDisappear::sInstance)) {
+        if (isNerve(&FileSelectInfoNrvAppear::sInstance)) {
+            animFrame = MR::getAnimFrame(this, 0);
+        } else {
+            MR::startAnim(this, "Appear", 0);
+
+            animFrame = MR::getAnimCtrl(this, 0)->getEnd() - 1.0f;
+        }
+
         MR::startAnim(this, "Appear", 0);
-        animFrame = static_cast< f32 >(MR::getAnimCtrl(this, 0)->mEnd) - 1.0F;
+        MR::setAnimFrame(this, animFrame, 0);
+        MR::setAnimRate(this, 0.0f, 0);
+        setNerve(&FileSelectInfoNrvDisappear::sInstance);
     }
-
-    MR::startAnim(this, "Appear", 0);
-    MR::setAnimFrame(this, animFrame, 0);
-    MR::setAnimRate(this, 0.0F, 0);
-    setNerve(&FileSelectInfoNrvDisappear::sInstance);
 }
 
 void FileSelectInfo::slide() {
@@ -94,39 +97,34 @@ void FileSelectInfo::setInfo(u16* pName, s32 number, s32 starNum, s32 starPieceN
     mStarNum = starNum;
     mStarPieceNum = starPieceNum;
 
-    std::wmemset(mName, 0, static_cast< std::size_t >(mNameBufferSize));
-    if (pName != nullptr) {
-        for (auto i = s32{0}; i < mNameBufferSize - 1 && pName[i] != 0U; ++i) {
-            mName[i] = static_cast< wchar_t >(pName[i]);
-        }
-    }
+    MR::copyMemory(mName, pName, mNameBufferSize * sizeof(u16));
 
     mIsSelectedMario = isSelectedMario;
     mIsViewNormalEnding = isViewNormalEnding;
     mIsViewCompleteEnding = isViewCompleteEnding;
 
-    std::wmemset(mDateMessage, 0, std::size(mDateMessage));
-    std::wmemset(mTimeMessage, 0, std::size(mTimeMessage));
-    if (pDateMessage != nullptr) {
-        std::wmemcpy(mDateMessage, pDateMessage, std::min(std::size(mDateMessage) - 1U, std::wcslen(pDateMessage)));
-    }
-    if (pTimeMessage != nullptr) {
-        std::wmemcpy(mTimeMessage, pTimeMessage, std::min(std::size(mTimeMessage) - 1U, std::wcslen(pTimeMessage)));
-    }
+    MR::copyString(mDateMessage, pDateMessage, ARRAY_SIZE(mDateMessage));
+    MR::copyString(mTimeMessage, pTimeMessage, ARRAY_SIZE(mTimeMessage));
 
     mMissNum = missNum;
 }
 
 void FileSelectInfo::change() {
+    FileSelectInfoSub::CharaState* pCharaState;
+
     if (mIsSelectedMarioPrev && !mIsSelectedMario) {
-        if (!mCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvLuigi::sInstance) &&
-            !mCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvToLuigi::sInstance)) {
-            mCharaState->setNerve(&FileSelectInfoSub::CharaStateNrvToLuigi::sInstance);
+        pCharaState = mCharaState;
+
+        if (!pCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvLuigi::sInstance) &&
+            !pCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvToLuigi::sInstance)) {
+            pCharaState->setNerve(&FileSelectInfoSub::CharaStateNrvToLuigi::sInstance);
         }
     } else if (!mIsSelectedMarioPrev && mIsSelectedMario) {
-        if (!mCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvMario::sInstance) &&
-            !mCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvToMario::sInstance)) {
-            mCharaState->setNerve(&FileSelectInfoSub::CharaStateNrvToMario::sInstance);
+        pCharaState = mCharaState;
+
+        if (!pCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvMario::sInstance) &&
+            !pCharaState->isNerve(&FileSelectInfoSub::CharaStateNrvToMario::sInstance)) {
+            pCharaState->setNerve(&FileSelectInfoSub::CharaStateNrvToMario::sInstance);
         }
     }
 
@@ -156,14 +154,16 @@ void FileSelectInfo::exeAppear() {
 }
 
 void FileSelectInfo::exeDisplay() {
+    if (MR::isFirstStep(this)) {
+    }
 }
 
 void FileSelectInfo::exeDisappear() {
     if (MR::isFirstStep(this)) {
-        MR::setAnimRate(this, -sDisappearAnimRate, 0);
+        MR::setAnimRate(this, -::sDisappearAnimRate, 0);
     }
 
-    if (MR::getAnimFrame(this, 0) - sDisappearAnimRate <= 0.0F) {
+    if (MR::getAnimFrame(this, 0) - ::sDisappearAnimRate <= 0.0f) {
         kill();
     }
 }
@@ -188,47 +188,34 @@ void FileSelectInfo::reflectInfo() {
         MR::hidePane(this, "MissCounter");
     }
 
-    mIsViewNormalEnding ? MR::showPane(this, "Complete1") : MR::hidePane(this, "Complete1");
-    mIsViewCompleteEnding ? MR::showPane(this, "Complete2") : MR::hidePane(this, "Complete2");
+    if (mIsViewNormalEnding) {
+        MR::showPane(this, "Complete1");
+    } else {
+        MR::hidePane(this, "Complete1");
+    }
 
-    if (!mIsSelectedMarioPrev || mIsViewCompleteEnding) {
+    if (mIsViewCompleteEnding) {
+        MR::showPane(this, "Complete2");
+    } else {
+        MR::hidePane(this, "Complete2");
+    }
+
+    bool bVar1 = !mIsSelectedMarioPrev || mIsViewCompleteEnding;
+
+    if (bVar1) {
         MR::showPane(this, "BrosIcon");
-        mIsSelectedMarioPrev ? MR::showPane(this, "TxtMario") : MR::hidePane(this, "TxtMario");
-        mIsSelectedMarioPrev ? MR::hidePane(this, "TxtLuigi") : MR::showPane(this, "TxtLuigi");
+
+        if (mIsSelectedMarioPrev) {
+            MR::showPane(this, "TxtMario");
+            MR::hidePane(this, "TxtLuigi");
+        } else {
+            MR::hidePane(this, "TxtMario");
+            MR::showPane(this, "TxtLuigi");
+        }
     } else {
         MR::hidePane(this, "BrosIcon");
     }
 }
-
-#ifndef NDEBUG
-s32 FileSelectInfo::getFileNumber() const {
-    return mNumber;
-}
-
-s32 FileSelectInfo::getStarNum() const {
-    return mStarNum;
-}
-
-s32 FileSelectInfo::getStarPieceNum() const {
-    return mStarPieceNum;
-}
-
-bool FileSelectInfo::isSelectedMario() const {
-    return mIsSelectedMario;
-}
-
-s32 FileSelectInfo::getMissNum() const {
-    return mMissNum;
-}
-
-const wchar_t* FileSelectInfo::getDateMessage() const {
-    return mDateMessage;
-}
-
-const wchar_t* FileSelectInfo::getTimeMessage() const {
-    return mTimeMessage;
-}
-#endif
 
 namespace FileSelectInfoSub {
     SlideState::SlideState(FileSelectInfo* pHost) : NerveExecutor("スライド状態"), mHost(pHost) {
@@ -246,6 +233,7 @@ namespace FileSelectInfoSub {
         if (MR::isFirstStep(this)) {
             MR::startAnim(mHost, "ButtonAppear", 1);
         }
+
         if (MR::isAnimStopped(mHost, 1)) {
             setNerve(&SlideStateNrvSlidePos::sInstance);
         }
@@ -262,11 +250,14 @@ namespace FileSelectInfoSub {
         if (MR::isFirstStep(this)) {
             MR::startAnim(mHost, "ButtonEnd", 1);
         }
+
         if (MR::isAnimStopped(mHost, 1)) {
             setNerve(&SlideStateNrvNormalPos::sInstance);
         }
     }
+};  // namespace FileSelectInfoSub
 
+namespace FileSelectInfoSub {
     CharaState::CharaState(FileSelectInfo* pHost) : NerveExecutor("キャラ選択状態"), mHost(pHost) {
         initNerve(&CharaStateNrvMario::sInstance);
     }
@@ -281,9 +272,11 @@ namespace FileSelectInfoSub {
         if (MR::isFirstStep(this)) {
             MR::startAnim(mHost, "MariotoLuigi", 2);
         }
+
         if (MR::isStep(this, 10)) {
             mHost->reflectInfo();
         }
+
         if (MR::isAnimStopped(mHost, 2)) {
             setNerve(&CharaStateNrvLuigi::sInstance);
         }
@@ -299,11 +292,13 @@ namespace FileSelectInfoSub {
         if (MR::isFirstStep(this)) {
             MR::startAnim(mHost, "LuigitoMario", 2);
         }
+
         if (MR::isStep(this, 10)) {
             mHost->reflectInfo();
         }
+
         if (MR::isAnimStopped(mHost, 2)) {
             setNerve(&CharaStateNrvMario::sInstance);
         }
     }
-}  // namespace FileSelectInfoSub
+};  // namespace FileSelectInfoSub

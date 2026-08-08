@@ -6,38 +6,29 @@
 namespace FileSelectInfoSub {
     class SlideState;
     class CharaState;
-}  // namespace FileSelectInfoSub
+};  // namespace FileSelectInfoSub
 
 class FileSelectInfo : public LayoutActor {
 public:
+    /// @brief Creates a new `FileSelectInfo`.
+    /// @param nameBufferSize The number of wide characters to allocate memory for in the file name buffer.
+    /// @param pName The pointer to the null-terminated name of the object.
     FileSelectInfo(s32 nameBufferSize, const char* pName);
-    ~FileSelectInfo() override;
 
-    void init(const JMapInfoIter& rIter) override;
-    void appear() override;
-    void control() override;
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void appear();
+    virtual void control();
 
     void disappear();
     void slide();
     void slideBack();
-    void setInfo(u16* pName, s32 number, s32 starNum, s32 starPieceNum, bool isSelectedMario, bool isViewNormalEnding, bool isViewCompleteEnding,
-                 const wchar_t* pDateMessage, const wchar_t* pTimeMessage, s32 missNum);
+    void setInfo(u16*, s32, s32, s32, bool, bool, bool, const wchar_t*, const wchar_t*, s32);
     void change();
     void forceChange();
     void exeAppear();
     void exeDisplay();
     void exeDisappear();
     void reflectInfo();
-
-#ifndef NDEBUG
-    [[nodiscard]] s32 getFileNumber() const;
-    [[nodiscard]] s32 getStarNum() const;
-    [[nodiscard]] s32 getStarPieceNum() const;
-    [[nodiscard]] bool isSelectedMario() const;
-    [[nodiscard]] s32 getMissNum() const;
-    [[nodiscard]] const wchar_t* getDateMessage() const;
-    [[nodiscard]] const wchar_t* getTimeMessage() const;
-#endif
 
 private:
     /* 0x20 */ s32 mNumber;
@@ -59,7 +50,9 @@ private:
 namespace FileSelectInfoSub {
     class SlideState : public NerveExecutor {
     public:
-        explicit SlideState(FileSelectInfo* pHost);
+        /// @brief Creates a new `SlideState`.
+        /// @param pHost TODO.
+        SlideState(FileSelectInfo* pHost);
 
         void exeNormalPos();
         void exeSliding();
@@ -72,7 +65,9 @@ namespace FileSelectInfoSub {
 
     class CharaState : public NerveExecutor {
     public:
-        explicit CharaState(FileSelectInfo* pHost);
+        /// @brief Creates a new `CharaState`.
+        /// @param pHost TODO.
+        CharaState(FileSelectInfo* pHost);
 
         void exeMario();
         void exeToLuigi();
@@ -82,4 +77,4 @@ namespace FileSelectInfoSub {
     private:
         /* 0x8 */ FileSelectInfo* mHost;
     };
-}  // namespace FileSelectInfoSub
+};  // namespace FileSelectInfoSub

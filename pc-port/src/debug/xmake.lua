@@ -11,7 +11,10 @@ target("smg-pc-debug-common")
 target("smg-pc-title-probe")
     set_kind("binary")
     set_default(false)
-    add_files("TitleSequenceProbe.cpp")
+    add_files {
+        "TitleSequenceProbe.cpp",
+        "../../aurora/lib/compat.cpp"
+    }
     add_deps {
         "smg-pc-game",
         "smg-pc-common"

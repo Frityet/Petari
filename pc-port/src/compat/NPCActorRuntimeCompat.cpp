@@ -177,10 +177,6 @@ namespace MR {
         throw std::logic_error("NPC joint controllers are unavailable without the real J3D joint-controller pipeline.");
     }
 
-    bool isNullOrEmptyString(const char* value) {
-        return value == nullptr || *value == '\0';
-    }
-
     void makeQuatRotateRadian(TQuat4f* destination, const TVec3f& rotation) {
         if (destination == nullptr) {
             throw std::invalid_argument("Quaternion rotation requires an output.");

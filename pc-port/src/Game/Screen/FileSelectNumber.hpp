@@ -6,6 +6,8 @@
 namespace FileSelectNumberSub {
     class SelectAnimController : public NerveExecutor {
     public:
+        /// @brief Creates a new `SelectAnimController`.
+        /// @param pHost The pointer to the owning actor instance.
         SelectAnimController(LayoutActor* pHost);
 
         void appear();
@@ -18,17 +20,19 @@ namespace FileSelectNumberSub {
 
     private:
         /* 0x8 */ LayoutActor* mHost;
-        /* 0xC */ const Nerve* _C = nullptr;
+        /* 0xC */ Nerve* _C;
     };
 };  // namespace FileSelectNumberSub
 
 class FileSelectNumber : public LayoutActor {
 public:
+    /// @brief Creates a new `FileSelectNumber`.
+    /// @param pName The pointer to the null-terminated name of the object.
     FileSelectNumber(const char* pName);
 
-    void init(const JMapInfoIter&) override;
-    void appear() override;
-    void control() override;
+    virtual void init(const JMapInfoIter&);
+    virtual void appear();
+    virtual void control();
 
     void disappear();
     void setNumber(s32);
@@ -38,9 +42,8 @@ public:
     void exeWait();
     void exeEnd();
 
-    [[nodiscard]] s32 getNumber() const;
-
 private:
     /* 0x20 */ s32 mNumber;
-    /* 0x24 */ FileSelectNumberSub::SelectAnimController* mSelectAnimCtrl;
+    /* 0x24 */ u8 _24[8];
+    /* 0x2C */ FileSelectNumberSub::SelectAnimController* mSelectAnimCtrl;
 };

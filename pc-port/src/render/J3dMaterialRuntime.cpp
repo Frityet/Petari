@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <stdexcept>
 
 namespace smgpc::render {
     namespace {
@@ -11,6 +12,7 @@ namespace smgpc::render {
         constexpr auto GX_TG_POS = 0U;
         constexpr auto GX_TG_NRM = 1U;
         constexpr auto GX_TG_TEX0 = 4U;
+        constexpr auto GX_TG_TEX7 = 11U;
 
         struct TexGenInput {
             float x = 0.0F;
@@ -77,7 +79,14 @@ namespace smgpc::render {
                 return;
             }
 
-            const auto *gen = tex_coord_slot == 0xffU ? nullptr : find_tex_coord_gen(material, tex_coord_slot);
+            if (tex_coord_slot == 0xffU) {
+                return;
+            }
+
+            const auto *gen = find_tex_coord_gen(material, tex_coord_slot);
+            if (gen == nullptr) {
+                return;
+            }
             const auto *matrix = find_tex_matrix(material, gen);
             passes.push_back(J3dMaterialTexturePass {
                 .stage = stage,
@@ -91,43 +100,37 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] TexGenInput tex_gen_input_for_source(const J3dMeshVertex &source, const J3dTexCoordGenSummary *tex_coord_gen) {
-            if (tex_coord_gen != nullptr && tex_coord_gen->source == GX_TG_POS) {
+            if (tex_coord_gen == nullptr) {
+                throw std::logic_error("J3D texture coordinate source is absent");
+            }
+            if (tex_coord_gen->source == GX_TG_POS) {
                 return TexGenInput {
                     .x = source.x,
                     .y = source.y,
                     .z = source.z,
                 };
             }
-            if (tex_coord_gen != nullptr && tex_coord_gen->source == GX_TG_NRM) {
+            if (tex_coord_gen->source == GX_TG_NRM) {
                 return TexGenInput {
                     .x = source.normal[0U],
                     .y = source.normal[1U],
                     .z = source.normal[2U],
                 };
             }
-            if (tex_coord_gen != nullptr && tex_coord_gen->source >= GX_TG_TEX0) {
+            if (tex_coord_gen->source >= GX_TG_TEX0 && tex_coord_gen->source <= GX_TG_TEX7) {
                 const auto slot = static_cast<std::size_t>(tex_coord_gen->source - GX_TG_TEX0);
-                if (slot < source.tex_coords.size() && slot < source.tex_coord_count) {
-                    return TexGenInput {
-                        .x = source.tex_coords[slot][0U],
-                        .y = source.tex_coords[slot][1U],
-                        .z = 1.0F,
-                    };
+                if (slot >= source.tex_coords.size() || slot >= source.tex_coord_count) {
+                    throw std::logic_error("J3D vertex is missing the requested texture coordinate source");
                 }
-                if (slot == 0U) {
-                    return TexGenInput {
-                        .x = source.u,
-                        .y = source.v,
-                        .z = 1.0F,
-                    };
-                }
+
+                return TexGenInput {
+                    .x = source.tex_coords[slot][0U],
+                    .y = source.tex_coords[slot][1U],
+                    .z = 1.0F,
+                };
             }
 
-            return TexGenInput {
-                .x = source.u,
-                .y = source.v,
-                .z = 1.0F,
-            };
+            throw std::logic_error("J3D texture coordinate source is not implemented exactly");
         }
 
         [[nodiscard]] J3dMatrix3x4 texture_srt_matrix(const J3dTexMatrixSummary &tex_matrix) {
@@ -721,12 +724,20 @@ namespace smgpc::render {
             return trace.has_value() ? trace->transformed_coord : coord;
         }
 
-        [[nodiscard]] TevColor texture_for_stage(std::span<const TevColor> textures_by_stage, std::uint8_t stage, const TevColor &fallback) {
+        [[nodiscard]] TevColor texture_for_stage(std::span<const TevColor> textures_by_stage, std::uint8_t stage,
+                                                 const TevColor &unbound_texture_input) {
             if (stage < textures_by_stage.size()) {
                 return textures_by_stage[stage];
             }
 
-            return fallback;
+            return unbound_texture_input;
+        }
+
+        [[nodiscard]] TevColor unbound_texture_input(const J3dMaterialSummary &material) {
+            if (material.gx_state.texgen_count == 0U) {
+                return {0, 0, 0, 0};
+            }
+            return {255, 255, 255, 255};
         }
 
         [[nodiscard]] TevRegisters initial_tev_registers_for_material(const J3dMaterialSummary &material) {
@@ -740,17 +751,17 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] TevColor evaluate_tev_stages(const J3dMaterialSummary &material, std::span<const TevColor> textures_by_stage,
-                                                   const TevColor &fallback_texture, const TevColor &raster) {
+                                                   const TevColor &unbound_texture, const TevColor &raster) {
             auto registers = initial_tev_registers_for_material(material);
             auto output = TevColor {0, 0, 0, 0};
             if (material.tev_stages.empty()) {
-                return fallback_texture;
+                return unbound_texture;
             }
 
             std::uint8_t last_color_register = 0U;
             std::uint8_t last_alpha_register = 0U;
             for (const auto &stage : material.tev_stages) {
-                const auto texture = texture_for_stage(textures_by_stage, stage.stage, fallback_texture);
+                const auto texture = texture_for_stage(textures_by_stage, stage.stage, unbound_texture);
                 const auto color_konst = konst_color(material, stage.k_color_sel);
                 const auto alpha_konst = konst_color(material, stage.k_alpha_sel);
                 const auto stage_konst = TevColor {color_konst[0U], color_konst[1U], color_konst[2U], alpha_konst[3U]};
@@ -816,8 +827,25 @@ namespace smgpc::render {
             return true;
         }
 
-        [[nodiscard]] bool pass_uses_source_uv(const J3dMaterialTexturePass &pass) {
-            return !pass.tex_coord_gen.has_value() || pass.tex_coord_gen->source >= GX_TG_TEX0;
+        [[nodiscard]] bool material_texture_orders_are_bound(const J3dMaterialSummary &material,
+                                                              std::span<const J3dMaterialTexturePass> passes) {
+            return std::ranges::all_of(material.tev_orders, [passes](const auto &order) {
+                if (order.tex_map == 0xffU) {
+                    return true;
+                }
+                return std::ranges::any_of(passes, [&order](const auto &pass) {
+                    return pass.stage == order.stage && pass.tex_coord_slot == order.tex_coord && pass.tex_map_slot == order.tex_map;
+                });
+            });
+        }
+
+        [[nodiscard]] std::optional<std::size_t> pass_source_texture_coordinate(const J3dMaterialTexturePass &pass) {
+            if (!pass.tex_coord_gen.has_value() || pass.tex_coord_gen->source < GX_TG_TEX0 ||
+                pass.tex_coord_gen->source > GX_TG_TEX7) {
+                return std::nullopt;
+            }
+
+            return static_cast<std::size_t>(pass.tex_coord_gen->source - GX_TG_TEX0);
         }
 
     }  // namespace
@@ -929,9 +957,9 @@ namespace smgpc::render {
         }
 
         const auto raster = color_to_tev(raster_color);
-        const auto fallback_texture = TevColor {255, 255, 255, 255};
+        const auto texture_input = unbound_texture_input(material);
         const auto output =
-            material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span<const TevColor>{}, fallback_texture, raster);
+            material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span<const TevColor>{}, texture_input, raster);
 
         auto composed = J3dComposedMaterialTexture {
             .image =
@@ -957,13 +985,22 @@ namespace smgpc::render {
         if (passes.empty() || material.tev_stages.empty()) {
             return std::nullopt;
         }
+        if (!material_texture_orders_are_bound(material, passes)) {
+            return std::nullopt;
+        }
 
         auto width = std::uint16_t {1U};
         auto height = std::uint16_t {1U};
+        auto source_texture_coordinate = std::optional<std::size_t>{};
         for (const auto &pass : passes) {
-            if (!pass_uses_source_uv(pass) || pass.texture_index >= textures.size()) {
+            const auto pass_source = pass_source_texture_coordinate(pass);
+            if (!pass_source.has_value() || pass.texture_index >= textures.size()) {
                 return std::nullopt;
             }
+            if (source_texture_coordinate.has_value() && *source_texture_coordinate != *pass_source) {
+                return std::nullopt;
+            }
+            source_texture_coordinate = pass_source;
             const auto &texture = textures[pass.texture_index].image;
             if (texture.width == 0U || texture.height == 0U ||
                 texture.rgba.size() < static_cast<std::size_t>(texture.width) * texture.height * 4U) {
@@ -987,11 +1024,13 @@ namespace smgpc::render {
         const auto raster = color_to_tev(raster_color);
         for (auto y = 0U; y < height; ++y) {
             for (auto x = 0U; x < width; ++x) {
-                const auto source = J3dMeshVertex {
+                auto source = J3dMeshVertex {
                     .u = (static_cast<float>(x) + 0.5F) / static_cast<float>(width),
                     .v = (static_cast<float>(y) + 0.5F) / static_cast<float>(height),
                     .color = raster_color,
                 };
+                source.tex_coords[*source_texture_coordinate] = {source.u, source.v};
+                source.tex_coord_count = static_cast<std::uint8_t>(*source_texture_coordinate + 1U);
                 auto textures_by_stage = std::array<TevColor, 16U>{};
                 textures_by_stage.fill({255, 255, 255, 255});
                 for (const auto &pass : passes) {
@@ -1021,11 +1060,14 @@ namespace smgpc::render {
     j3d_evaluate_material_color(const J3dMaterialSummary &material, std::span<const J3dTexture> textures,
                                 std::span<const J3dMaterialTexturePass> passes, const J3dMeshVertex &source,
                                 std::array<std::uint8_t, 4U> raster_color, const J3dMatrix3x4 *model_matrix) {
+        if (!material_texture_orders_are_bound(material, passes)) {
+            return std::nullopt;
+        }
         if (passes.empty()) {
             const auto raster = color_to_tev(raster_color);
-            const auto fallback_texture = TevColor {255, 255, 255, 255};
+            const auto texture_input = unbound_texture_input(material);
             const auto output =
-                material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span<const TevColor>{}, fallback_texture, raster);
+                material.tev_stages.empty() ? raster : evaluate_tev_stages(material, std::span<const TevColor>{}, texture_input, raster);
             return std::array<std::uint8_t, 4U>{
                 static_cast<std::uint8_t>(std::clamp(output[0U], 0, 255)),
                 static_cast<std::uint8_t>(std::clamp(output[1U], 0, 255)),

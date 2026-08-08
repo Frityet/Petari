@@ -1,6 +1,7 @@
 #include "J3dMatrix.hpp"
 
 #include <cmath>
+#include <stdexcept>
 
 namespace smgpc::render {
 
@@ -173,6 +174,38 @@ namespace smgpc::render {
         };
 
         return j3d_apply_matrix_scale(matrix, safe_inverse(scale_x), safe_inverse(scale_y), safe_inverse(scale_z));
+    }
+
+    std::array<float, 3U> j3d_transform_normal(const J3dMatrix3x4 &matrix, std::array<float, 3U> normal) {
+        const auto a = matrix.m[0U];
+        const auto b = matrix.m[1U];
+        const auto c = matrix.m[2U];
+        const auto d = matrix.m[4U];
+        const auto e = matrix.m[5U];
+        const auto f = matrix.m[6U];
+        const auto g = matrix.m[8U];
+        const auto h = matrix.m[9U];
+        const auto i = matrix.m[10U];
+        const auto determinant = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+        if (std::abs(determinant) <= 0.000001F) {
+            throw std::logic_error("J3D normal matrix is singular");
+        }
+
+        const auto inverse_determinant = 1.0F / determinant;
+        auto result = std::array<float, 3U>{
+            ((e * i - f * h) * normal[0U] + (f * g - d * i) * normal[1U] + (d * h - e * g) * normal[2U]) * inverse_determinant,
+            ((c * h - b * i) * normal[0U] + (a * i - c * g) * normal[1U] + (b * g - a * h) * normal[2U]) * inverse_determinant,
+            ((b * f - c * e) * normal[0U] + (c * d - a * f) * normal[1U] + (a * e - b * d) * normal[2U]) * inverse_determinant,
+        };
+        const auto length = std::sqrt(result[0U] * result[0U] + result[1U] * result[1U] + result[2U] * result[2U]);
+        if (length <= 0.000001F) {
+            throw std::logic_error("J3D normal vector is degenerate");
+        }
+
+        result[0U] /= length;
+        result[1U] /= length;
+        result[2U] /= length;
+        return result;
     }
 
 }  // namespace smgpc::render

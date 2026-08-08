@@ -159,6 +159,10 @@ namespace JGeometry {
             z = value.z;
         }
 
+        void setTrans(MtxPtr matrix) {
+            set(matrix[0][3], matrix[1][3], matrix[2][3]);
+        }
+
         void set(f32 value) {
             x = value;
             y = value;
