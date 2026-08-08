@@ -113,7 +113,7 @@ namespace {
         UnavailableCreatorRecord{"FileSelector", "retail_file_select_actor_runtime_unavailable"},
         UnavailableCreatorRecord{
             "RestartCube",
-            "player_restart_dispatch_and_audible_stage_bgm_runtime_unavailable",
+            "real_mario_update_and_restart_dispatch_runtime_unavailable",
         },
         UnavailableCreatorRecord{"Steam", "clipping_group_runtime_unavailable"},
         UnavailableCreatorRecord{"Coin", "shadow_runtime_unavailable"},

@@ -16,6 +16,7 @@ namespace smgpc::scene {
 
     using AreaObjCreator = NameObj *(*)(const char *);
     using AreaObjManagerCreator = AreaObjMgr *(*)(s32, const char *);
+    using AreaObjManagerFinalize = void (*)(AreaObjMgr &);
 
     // A descriptor is complete only when both halves of the retail placement
     // route are linked: the actor creator and the manager it enters from
@@ -28,6 +29,7 @@ namespace smgpc::scene {
         s32 retail_manager_order = -1;
         s32 manager_capacity = 0;
         AreaObjManagerCreator manager_creator = nullptr;
+        AreaObjManagerFinalize manager_finalize = nullptr;
     };
 
     [[nodiscard]] std::span<const AreaObjPlacementDescriptor> complete_area_obj_placement_descriptors() noexcept;
@@ -51,12 +53,23 @@ namespace smgpc::scene {
         AreaObjRuntime(AreaObjRuntime &&) = delete;
         AreaObjRuntime &operator=(AreaObjRuntime &&) = delete;
 
-        [[nodiscard]] AreaObjMgr *adopt_manager(std::unique_ptr<AreaObjMgr> manager);
-        void adopt_managers(std::vector<std::unique_ptr<AreaObjMgr>> managers);
+        [[nodiscard]] AreaObjMgr *adopt_manager(
+            std::unique_ptr<AreaObjMgr> manager,
+            AreaObjManagerFinalize finalize = nullptr);
+        void adopt_managers(
+            std::vector<std::unique_ptr<AreaObjMgr>> managers,
+            std::vector<AreaObjManagerFinalize> finalizers = {});
         void init_after_placement();
 
     private:
-        std::vector<std::unique_ptr<AreaObjMgr>> _owned_managers;
+        struct OwnedManager {
+            std::unique_ptr<AreaObjMgr> manager;
+            AreaObjManagerFinalize finalize = nullptr;
+            bool did_init_after_placement = false;
+            bool did_finalize = false;
+        };
+
+        std::vector<OwnedManager> _owned_managers;
         bool _did_init_after_placement = false;
     };
 

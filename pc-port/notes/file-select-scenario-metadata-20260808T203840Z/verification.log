@@ -1,0 +1,30 @@
+Command: xmake build -j1 smg-pc-restart-stage-session-tests
+Result: build ok
+
+Command: ./build/linux/x86_64/debug/smg-pc-restart-stage-session-tests
+Result: Restart/stage-session tests passed: 8/8
+
+Command: xmake build -j1 smg-pc-stage-construction-probe
+Result: build ok
+
+Command: SMGPC_STAGE_PLACEMENT_REPORT_PATH=/tmp/file-select-stage-preflight.md \
+  xvfb-run -a ./build/linux/x86_64/debug/smg-pc-stage-construction-probe \
+  --disc ../RMGK01.iso --stage FileSelect --scenario 1
+Expected result: exit 1 at the honest placement boundary
+Observed: Unsupported placement objects for FileSelect: 3 blocked;
+  first=InvisibleWall10x10 in jmp/placement/common/objinfo
+Observed preflight: total=4, complete=1, blocked=3, ignored=0
+Observed Comet-field error: absent
+
+Command: xmake build -j1 smg-pc
+Result: build ok
+
+Command: xvfb-run -a sh -c '<run aurora-route-smoke title on the allocated display>'
+Expected result: no visual artifact while FileSelector closure is absent
+Observed: app reached FileSelect placement resolution at frame 1, then exited at
+  the same 3-object strict preflight boundary; no Comet-field error occurred.
+
+Command: git diff --check -- \
+  pc-port/src/compat/StageScenarioMetadataResolver.cpp \
+  pc-port/tests/RestartStageSessionTests.cpp
+Result: clean

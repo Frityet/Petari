@@ -1,0 +1,51 @@
+MessageArea exact-source hashes
+===============================
+sha256sum /workspaces/pcport/include/Game/AreaObj/MessageArea.hpp pc-port/src/Game/AreaObj/MessageArea.hpp
+cca505e2a1c3f742dfe39e421749c5465c1bdc7c64802c1643cea5bf0dd09421  /workspaces/pcport/include/Game/AreaObj/MessageArea.hpp
+cca505e2a1c3f742dfe39e421749c5465c1bdc7c64802c1643cea5bf0dd09421  pc-port/src/Game/AreaObj/MessageArea.hpp
+
+sha256sum /workspaces/pcport/src/Game/AreaObj/MessageArea.cpp pc-port/src/Game/AreaObj/MessageArea.cpp
+5142caa6aea3822e20b6217f055b0786433605d0657c32f631661a2a9633d958  /workspaces/pcport/src/Game/AreaObj/MessageArea.cpp
+5142caa6aea3822e20b6217f055b0786433605d0657c32f631661a2a9633d958  pc-port/src/Game/AreaObj/MessageArea.cpp
+
+Focused AreaObj runtime (working directory: /workspaces/pcport/pc-port)
+======================================================================
+xmake build smg-pc-area-obj-real-or-absent-tests
+result: build ok
+
+SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso build/linux/x86_64/debug/smg-pc-area-obj-real-or-absent-tests
+[ok] AreaObj source boundaries are exact
+[ok] area queries reject missing scene owner
+[ok] scene holder owns real container and managers
+[ok] retail prefix collision uses first manager
+[ok] manager lifecycle owned ordered and once
+[ok] CubeCamera manager finalizes priority and reverse query
+[ok] descriptor registry and strict area preflight
+[ok] RMGK01 CubeCamera rows construct exactly
+[ok] RMGK01 MessageArea rows construct exactly
+[ok] water and Mercator do not fabricate results
+10 AreaObj runtime test(s) passed
+
+Neighboring NameObj placement suite
+===================================
+xmake build smg-pc-nameobj-factory-placement-tests
+result: build ok
+
+SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso build/linux/x86_64/debug/smg-pc-nameobj-factory-placement-tests
+[ok] factory-only placement support
+[ok] optional real-disc archive-only rejection
+2 NameObj placement test(s) passed
+
+Strict RMGK01 construction probe
+================================
+xmake build smg-pc-stage-construction-probe
+result: build ok
+
+xvfb-run -a build/linux/x86_64/debug/smg-pc-stage-construction-probe --disc /workspaces/pcport/RMGK01.iso --stage HeavensDoorGalaxy --scenario 1
+exit: 1 (expected strict real-or-absent failure)
+Strict stage construction failed: Unsupported placement objects for HeavensDoorGalaxy: 187 blocked; first=RestartCube in jmp/placement/common/areaobjinfo
+
+Diff hygiene
+============
+git diff --check -- src/scene/AreaObjRuntime.cpp tests/AreaObjRealOrAbsentTests.cpp
+exit: 0

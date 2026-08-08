@@ -17,6 +17,7 @@
 #include "Game/Util/RailUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
+#include <JSystem/J3DGraphAnimator/J3DJoint.hpp>
 #include <cstdio>
 
 namespace {
@@ -238,7 +239,7 @@ void SkeletalFishBaby::exeDead() {
 }
 
 bool SkeletalFishBaby::calcJoint(TPos3f* pJointPos, const JointControllerInfo& rInfo) {
-    if (mJointIndicies[rInfo._4->_14] == -1) {
+    if (mJointIndicies[rInfo.mJoint->mJntNo] == -1) {
         return false;
     }
 

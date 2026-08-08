@@ -66,8 +66,15 @@ namespace smgpc::compat {
         if (!scenario.isValid()) {
             throw std::runtime_error("ScenarioData has no requested ScenarioNo row.");
         }
+        auto metadata = StageScenarioMetadata{};
         if (scenario_info.searchItemInfo("Comet") < 0) {
-            throw std::runtime_error("ScenarioData has no Comet field; absence cannot be inferred.");
+            // ScenarioData::getValueString returns false for a missing field in
+            // the retail implementation. GalaxyStatusAccessor consequently
+            // exposes a null comet name and CometEventKeeper reports that no
+            // comet event is active. Preserve that semantic result without
+            // inventing a field or keying behavior to a particular stage.
+            metadata.comet_type = StageCometType::None;
+            return metadata;
         }
 
         const char *comet_name = nullptr;
@@ -75,7 +82,6 @@ namespace smgpc::compat {
             throw std::runtime_error("ScenarioData Comet value could not be decoded.");
         }
 
-        auto metadata = StageScenarioMetadata{};
         metadata.comet_type = parse_comet_type(comet_name != nullptr ? std::string_view(comet_name) : std::string_view{});
         return metadata;
     }

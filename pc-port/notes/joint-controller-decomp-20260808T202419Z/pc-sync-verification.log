@@ -1,0 +1,30 @@
+captured: 2026-08-08T20:28:18Z
+
+byte comparisons:
+cmp ../include/Game/Util/JointController.hpp src/Game/Util/JointController.hpp
+exit=0
+cmp ../src/Game/Util/JointController.cpp src/Game/Util/JointController.cpp
+exit=0
+
+source-boundary build:
+xmake build smg-pc-game-source-mirror-tests
+result: PASS
+
+source-boundary execution:
+xmake run smg-pc-game-source-mirror-tests
+[ok] src/Game/Util/JointController.hpp
+[ok] src/Game/Util/JointController.cpp
+result: PASS (all ten registered mirror files)
+
+full PC build:
+xmake build smg-pc
+result: PASS (7.103s)
+header consumers rebuilt:
+- src/compat/NPCActorRuntimeCompat.cpp
+- src/compat/NPCActorCompat.cpp
+final link: build/linux/x86_64/debug/smg-pc
+
+absence boundary:
+- pc-port/src/Game/xmake.lua explicitly removes Util/JointController.cpp
+- NPCActorRuntimeCompat.cpp retains the explicit unavailable error
+- no fake J3D model, joint, matrix-palette, or callback provider was added

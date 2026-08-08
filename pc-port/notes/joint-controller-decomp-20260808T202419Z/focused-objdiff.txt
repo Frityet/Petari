@@ -1,0 +1,24 @@
+command: build/tools/objdiff-cli diff -p . -u main/Game/Util/JointController
+report: build/RMGK02/report.json
+
+unit=main/Game/Util/JointController
+fuzzy_match_percent=100
+matched_code=684/684
+matched_data=16/16
+matched_functions=10/10
+
+function                                                                                                                           size  match
+JointController::JointController()                                                                                                    28  100%
+JointController::calcJointMatrix(TPos3f*, const JointControllerInfo&)                                                                   8  100%
+JointController::calcJointMatrixAfterChild(TPos3f*, const JointControllerInfo&)                                                         8  100%
+JointController::registerCallBack()                                                                                                   28  100%
+JointController::calcJointMatrixAndSetSystem(J3DJoint*)                                                                              148  100%
+JointController::calcJointMatrixAfterChildAndSetSystem(J3DJoint*)                                                                    132  100%
+JointController::staticCallBack(J3DJoint*, int)                                                                                      144  100%
+MR::setJointControllerParam(JointController*, const LiveActor*, const char*)                                                           84  100%
+MR::setJointControllerParam(JointController*, const LiveActor*, unsigned short)                                                       84  100%
+J3DModel::getAnmMtx(int)                                                                                                              20  100%
+
+objdiff sections:
+.text  size=684  match=100%
+.data  size=16   match=100%

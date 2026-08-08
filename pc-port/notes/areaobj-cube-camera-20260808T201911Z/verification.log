@@ -1,0 +1,66 @@
+CubeCamera exact-source boundary
+================================
+cmp -s include/Game/AreaObj/CubeCamera.hpp pc-port/src/Game/AreaObj/CubeCamera.hpp
+exit: 0
+
+cmp -s src/Game/AreaObj/CubeCamera.cpp pc-port/src/Game/AreaObj/CubeCamera.cpp
+exit: 0
+
+Focused AreaObj runtime
+=======================
+xmake build -j1 smg-pc-area-obj-real-or-absent-tests
+result: build ok
+
+SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-area-obj-real-or-absent-tests
+[ok] CubeCamera source boundary is exact
+[ok] area queries reject missing scene owner
+[ok] scene holder owns real container and managers
+[ok] retail prefix collision uses first manager
+[ok] manager lifecycle owned ordered and once
+[ok] CubeCamera manager finalizes priority and reverse query
+[ok] descriptor registry and strict area preflight
+[ok] RMGK01 CubeCamera rows construct exactly
+[ok] water and Mercator do not fabricate results
+9 AreaObj runtime test(s) passed
+
+Neighboring and full builds
+===========================
+xmake build -j2 smg-pc-game
+result: build ok
+
+xmake build -j2 smg-pc-nameobj-factory-placement-tests
+result: build ok
+
+SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-nameobj-factory-placement-tests
+result: 2 NameObj placement test(s) passed
+
+xmake build -j2 smg-pc-stage-construction-probe
+result: build ok
+
+xmake build -j2 smg-pc-area-obj-core-tests
+result: build ok
+
+xmake run smg-pc-area-obj-core-tests
+result: 6 AreaObj core test(s) passed
+
+xmake build -j2 smg-pc
+result: build ok
+
+CubeCamera-only strict RMGK01 preflight snapshot
+================================================
+This predates the final report-schema correction. Counts below use the final
+honest terminology: complete means the runtime route was present at preflight,
+not that construction occurred.
+total_objects: 242
+complete_objects: 45
+blocked_objects: 189
+intentionally_ignored_objects: 8
+first blocked: RestartCube in jmp/placement/common/areaobjinfo
+
+Integration note: rerun the focused suite after the MessageArea agent updates
+the shared descriptor expectation.
+
+Diff hygiene
+============
+git diff --check -- pc-port/src/compat/AreaObjRuntimeCompat.cpp pc-port/src/scene/AreaObjRuntime.cpp pc-port/src/scene/AreaObjRuntime.hpp pc-port/tests/AreaObjRealOrAbsentTests.cpp
+exit: 0

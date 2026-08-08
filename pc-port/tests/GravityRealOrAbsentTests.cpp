@@ -18,11 +18,17 @@
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <chrono>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <exception>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <iterator>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -34,6 +40,36 @@ namespace {
             throw std::runtime_error(std::string(message));
         }
     }
+
+#ifndef NDEBUG
+    class ScopedEnvironmentVariable final {
+    public:
+        ScopedEnvironmentVariable(const char* name, const std::string& value)
+            : _name(name) {
+            if (const auto* previous = std::getenv(_name.c_str()); previous != nullptr) {
+                _previous = previous;
+            }
+            if (::setenv(_name.c_str(), value.c_str(), 1) != 0) {
+                throw std::runtime_error("failed to configure test environment variable: " + _name);
+            }
+        }
+
+        ~ScopedEnvironmentVariable() {
+            if (_previous.has_value()) {
+                (void)::setenv(_name.c_str(), _previous->c_str(), 1);
+            } else {
+                (void)::unsetenv(_name.c_str());
+            }
+        }
+
+        ScopedEnvironmentVariable(const ScopedEnvironmentVariable&) = delete;
+        ScopedEnvironmentVariable& operator=(const ScopedEnvironmentVariable&) = delete;
+
+    private:
+        std::string _name;
+        std::optional<std::string> _previous;
+    };
+#endif
 
     template <typename Exception, typename Function>
     void require_throws(Function&& function, std::string_view message) {
@@ -337,14 +373,41 @@ namespace {
         const auto jmap = make_fieldless_jmap();
         auto construction_reached = false;
         auto rejected = false;
+#ifndef NDEBUG
+        const auto report_path = std::filesystem::temp_directory_path() /
+                                 ("smgpc-blocked-preflight-" +
+                                  std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()) +
+                                  ".md");
+        const auto report_environment = ScopedEnvironmentVariable(
+            "SMGPC_STAGE_PLACEMENT_REPORT_PATH", report_path.string());
+#endif
         try {
             smgpc::scene::preflight_stage_placements_or_throw(
-                "PreflightProbeGalaxy", placements, &placements[0]);
+                "PreflightProbeGalaxy", 7, placements, &placements[0]);
             construction_reached = true;
             (void)creator.createFromJMap(JMapInfoIter(&jmap, 0));
         } catch (const std::runtime_error&) {
             rejected = true;
         }
+#ifndef NDEBUG
+        auto report_stream = std::ifstream(report_path);
+        const auto report = std::string(
+            std::istreambuf_iterator<char>(report_stream), std::istreambuf_iterator<char>());
+        std::filesystem::remove(report_path);
+        require(report.find("stage: PreflightProbeGalaxy\n") != std::string::npos &&
+                    report.find("scenario: 7\n") != std::string::npos &&
+                    report.find("phase: preflight\n") != std::string::npos &&
+                    report.find("total_objects: 2\n") != std::string::npos &&
+                    report.find("complete_objects: 1\n") != std::string::npos &&
+                    report.find("blocked_objects: 1\n") != std::string::npos &&
+                    report.find("intentionally_ignored_objects: 0\n") != std::string::npos &&
+                    report.find("- status: complete\n  object: GlobalPointGravity\n") != std::string::npos &&
+                    report.find("object: RestartCube\n") != std::string::npos &&
+                    report.find("archive: \n") == std::string::npos &&
+                    report.find("created_objects:") == std::string::npos &&
+                    report.find("- status: created\n") == std::string::npos,
+                "strict preflight must write the complete placement report before rejecting construction");
+#endif
 
         auto caller = NameObj("preflight-query-caller");
         auto destination = TVec3f{9.0F, 9.0F, 9.0F};

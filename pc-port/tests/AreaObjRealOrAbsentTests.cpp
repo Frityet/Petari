@@ -1,18 +1,31 @@
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/AreaObj/CubeCamera.hpp"
+#include "Game/AreaObj/MessageArea.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
+#include "Game/Map/StageSwitch.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "runtime/RuntimeServices.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/StagePlacementResolver.hpp"
+
+#include <aurora/dvd.h>
+#include <dolphin/dvd.h>
 
 #include <algorithm>
 #include <array>
 #include <cctype>
+#include <cstdlib>
 #include <exception>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -49,6 +62,79 @@ namespace {
 
     [[nodiscard]] bool starts_with(std::string_view value, std::string_view prefix) {
         return value.size() >= prefix.size() && value.substr(0U, prefix.size()) == prefix;
+    }
+
+    [[nodiscard]] std::string read_file(const std::filesystem::path &path) {
+        auto input = std::ifstream(path, std::ios::binary);
+        require(input.is_open(), "the source-boundary fixture must be readable");
+        return std::string(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+    }
+
+    [[nodiscard]] std::optional<std::filesystem::path> find_pc_port_root() {
+        auto error = std::error_code{};
+        auto directory = std::filesystem::current_path(error);
+        if (error) {
+            return std::nullopt;
+        }
+        while (true) {
+            const auto source = directory / "src/Game/AreaObj/CubeCamera.cpp";
+            const auto retail_source = directory.parent_path() / "src/Game/AreaObj/CubeCamera.cpp";
+            if (std::filesystem::is_regular_file(source, error) && !error &&
+                std::filesystem::is_regular_file(retail_source, error) && !error) {
+                return directory;
+            }
+            error.clear();
+            const auto parent = directory.parent_path();
+            if (parent == directory || parent.empty()) {
+                break;
+            }
+            directory = parent;
+        }
+        return std::nullopt;
+    }
+
+    [[nodiscard]] std::optional<std::filesystem::path> find_real_disc() {
+        if (const auto *configured = std::getenv("SMGPC_REAL_DISC");
+            configured != nullptr && configured[0] != '\0') {
+            return std::filesystem::path(configured);
+        }
+
+        auto error = std::error_code{};
+        auto directory = std::filesystem::current_path(error);
+        if (error) {
+            return std::nullopt;
+        }
+        while (true) {
+            for (const auto name : {"RMGK01.iso", "RMGK01.wbfs"}) {
+                const auto candidate = directory / name;
+                if (std::filesystem::is_regular_file(candidate, error) && !error) {
+                    return candidate;
+                }
+                error.clear();
+            }
+            const auto parent = directory.parent_path();
+            if (parent == directory || parent.empty()) {
+                break;
+            }
+            directory = parent;
+        }
+        return std::nullopt;
+    }
+
+    void test_area_obj_source_boundaries_are_exact() {
+        const auto pc_port_root = find_pc_port_root();
+        require(pc_port_root.has_value(), "the source-boundary test must locate the pc-port source root");
+        const auto decomp_root = pc_port_root->parent_path();
+        constexpr auto source_pairs = std::array{
+            std::pair{"include/Game/AreaObj/CubeCamera.hpp", "src/Game/AreaObj/CubeCamera.hpp"},
+            std::pair{"src/Game/AreaObj/CubeCamera.cpp", "src/Game/AreaObj/CubeCamera.cpp"},
+            std::pair{"include/Game/AreaObj/MessageArea.hpp", "src/Game/AreaObj/MessageArea.hpp"},
+            std::pair{"src/Game/AreaObj/MessageArea.cpp", "src/Game/AreaObj/MessageArea.cpp"},
+        };
+        for (const auto &[retail_source, host_source] : source_pairs) {
+            require(read_file(decomp_root / retail_source) == read_file(*pc_port_root / host_source),
+                    "completed PC AreaObj sources must remain byte-identical to the decompiled source");
+        }
     }
 
     void verify_installed_descriptor_managers(AreaObjContainer &container) {
@@ -114,23 +200,35 @@ namespace {
             _events.push_back(_id);
         }
 
+        void finalize() {
+            _events.push_back(100 + _id);
+        }
+
     private:
         int _id;
         std::vector<int> &_events;
         int &_destroyed;
     };
 
+    void finalize_lifecycle_manager(AreaObjMgr &manager) {
+        dynamic_cast<LifecycleManager &>(manager).finalize();
+    }
+
     void test_manager_lifecycle_is_owned_ordered_and_once() {
         auto events = std::vector<int>{};
         auto destroyed = 0;
         {
             auto runtime = smgpc::scene::AreaObjRuntime{};
-            (void)runtime.adopt_manager(std::make_unique<LifecycleManager>(1, events, destroyed));
-            (void)runtime.adopt_manager(std::make_unique<LifecycleManager>(2, events, destroyed));
+            (void)runtime.adopt_manager(
+                std::make_unique<LifecycleManager>(1, events, destroyed),
+                finalize_lifecycle_manager);
+            (void)runtime.adopt_manager(
+                std::make_unique<LifecycleManager>(2, events, destroyed),
+                finalize_lifecycle_manager);
             runtime.init_after_placement();
             runtime.init_after_placement();
-            require(events == std::vector<int>({1, 2}),
-                    "scene-owned AreaObj managers must receive post-placement in creation order exactly once");
+            require(events == std::vector<int>({1, 2, 101, 102}),
+                    "scene-owned AreaObj managers must initialize then finalize in creation order exactly once");
             require_throws<std::logic_error>(
                 [&] {
                     (void)runtime.adopt_manager(
@@ -140,6 +238,63 @@ namespace {
         }
         require(destroyed == 3,
                 "AreaObjRuntime must destroy every adopted manager, including a rejected late adoption");
+    }
+
+    void configure_unit_cube(CubeCameraArea &area, s32 priority, s32 category_mask) {
+        area.mObjArg2 = priority;
+        area._3C = category_mask;
+        auto *form = dynamic_cast<AreaFormCube *>(area.mForm);
+        require(form != nullptr, "the priority fixture must use the exact CubeCamera cube form");
+        form->mTranslation.set(0.0F, 0.0F, 0.0F);
+        form->mRotation.set(0.0F, 0.0F, 0.0F);
+        form->mScale.set(1.0F, 1.0F, 1.0F);
+        form->updateBoxParam();
+    }
+
+    void test_cube_camera_manager_finalizes_priority_and_reverse_query() {
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto *container = dynamic_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
+        require(container != nullptr, "the CubeCamera fixture requires the real scene-owned container");
+
+        auto *manager = dynamic_cast<CubeCameraMgr *>(container->getManager("CubeCamera"));
+        require(manager != nullptr && manager->_18 == 0xA0,
+                "all CubeCamera forms must share the exact retail manager and capacity");
+        for (const auto name : {"CubeCameraBox", "CubeCameraCylinder", "CubeCameraSphere", "CubeCameraBowl"}) {
+            require(container->getManager(name) == manager,
+                    "retail prefix lookup must route every CubeCamera form to one deduplicated manager");
+        }
+
+        auto high = CubeCameraArea(AreaForm::Type_Cube1, "CubeCamera");
+        auto low = CubeCameraArea(AreaForm::Type_Cube1, "CubeCamera");
+        auto middle = CubeCameraArea(AreaForm::Type_Cube1, "CubeCamera");
+        configure_unit_cube(high, 9, 1);
+        configure_unit_cube(low, 1, 1);
+        configure_unit_cube(middle, 5, 1);
+        manager->entry(&high);
+        manager->entry(&low);
+        manager->entry(&middle);
+
+        binding.init_after_placement();
+        require(manager->getAreaObj(0) == &low && manager->getAreaObj(1) == &middle &&
+                    manager->getAreaObj(2) == &high,
+                "the generalized manager-finalize callback must run CubeCameraMgr::initAfterLoad priority sorting");
+        binding.init_after_placement();
+        require(manager->getAreaObj(0) == &low && manager->getAreaObj(1) == &middle &&
+                    manager->getAreaObj(2) == &high,
+                "the CubeCamera manager finalizer must not run a second time");
+
+        constexpr auto origin = TVec3f{0.0F, 0.0F, 0.0F};
+        CubeCameraArea::setCurrentCategory(0);
+        require(manager->find_in(origin) == &high,
+                "the sorted retail manager must reverse-query the highest-priority overlapping camera");
+        CubeCameraArea::setCurrentCategory(1);
+        require(manager->find_in(origin) == nullptr,
+                "CubeCamera queries must reject areas outside the current category mask");
+        high._3C = 2;
+        require(manager->find_in(origin) == &high,
+                "CubeCamera queries must accept the matching current category bit");
+        CubeCameraArea::setCurrentCategory(0);
     }
 
     void test_scene_holder_owns_real_container_and_managers() {
@@ -192,20 +347,27 @@ namespace {
 
         const auto descriptors = smgpc::scene::complete_area_obj_placement_descriptors();
         constexpr auto expected_descriptors = std::array{
-            std::tuple{"PullBackCylinder", "PullBackCylinder", 17, 0x40, AreaForm::Type_Cylinder},
-            std::tuple{"ViewGroupCtrlCube", "ViewGroupCtrlCube", 32, 0x40, AreaForm::Type_Cube2},
-            std::tuple{"LensFlareArea", "LensFlareArea", 33, 0x40, AreaForm::Type_Cube2},
-            std::tuple{"BlueStarGuidanceCube", "BlueStarGuidanceCube", 40, 0x10, AreaForm::Type_Cube2},
+            std::tuple{"CubeCameraBox", "CubeCamera", 4, 0xA0, AreaForm::Type_Cube1, true},
+            std::tuple{"CubeCameraCylinder", "CubeCamera", 4, 0xA0, AreaForm::Type_Cylinder, true},
+            std::tuple{"CubeCameraSphere", "CubeCamera", 4, 0xA0, AreaForm::Type_Sphere, true},
+            std::tuple{"CubeCameraBowl", "CubeCamera", 4, 0xA0, AreaForm::Type_Bowl, true},
+            std::tuple{"PullBackCylinder", "PullBackCylinder", 17, 0x40, AreaForm::Type_Cylinder, false},
+            std::tuple{"ViewGroupCtrlCube", "ViewGroupCtrlCube", 32, 0x40, AreaForm::Type_Cube2, false},
+            std::tuple{"LensFlareArea", "LensFlareArea", 33, 0x40, AreaForm::Type_Cube2, false},
+            std::tuple{"BlueStarGuidanceCube", "BlueStarGuidanceCube", 40, 0x10, AreaForm::Type_Cube2, false},
+            std::tuple{"MessageAreaCube", "MessageArea", 42, 0x10, AreaForm::Type_Cube2, false},
+            std::tuple{"MessageAreaCylinder", "MessageArea", 42, 0x10, AreaForm::Type_Cylinder, false},
         };
         require(descriptors.size() == expected_descriptors.size(),
-                "only the four completed passive Gateway AreaObj closures should be registered");
+                "the registry must contain only the completed exact and passive AreaObj closures");
         for (auto index = std::size_t{}; index < expected_descriptors.size(); ++index) {
-            const auto &[object_name, manager_name, retail_order, capacity, form_type] =
+            const auto &[object_name, manager_name, retail_order, capacity, form_type, has_finalize] =
                 expected_descriptors[index];
             const auto &descriptor = descriptors[index];
             require(descriptor.object_name == object_name && descriptor.manager_name == manager_name &&
                         descriptor.retail_manager_order == retail_order &&
-                        descriptor.manager_capacity == capacity,
+                        descriptor.manager_capacity == capacity &&
+                        (descriptor.manager_finalize != nullptr) == has_finalize,
                     "the completed descriptor subset must retain exact retail manager-table data");
             auto actor = std::unique_ptr<NameObj>(descriptor.object_creator(object_name));
             const auto *area = dynamic_cast<const AreaObj *>(actor.get());
@@ -221,6 +383,211 @@ namespace {
             require(smgpc::scene::placement_has_complete_area_obj_runtime(
                         descriptors.front().object_name, "jmp/placement/common/areaobjinfo", true),
                     "a descriptor-backed AreaObj creator must pass the shared stage preflight predicate");
+        }
+    }
+
+    void test_rmgk01_cube_camera_rows_construct_exactly() {
+        const auto disc_path = find_real_disc();
+        if (!disc_path.has_value()) {
+            std::cout << "[skip] RMGK01 CubeCamera placement test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
+            return;
+        }
+
+        aurora_dvd_close();
+        const auto disc_path_string = disc_path->string();
+        require(aurora_dvd_open(disc_path_string.c_str()),
+                "the RMGK01 CubeCamera fixture must be a readable SMG disc image");
+        struct DiscCloseGuard {
+            ~DiscCloseGuard() {
+                aurora_dvd_close();
+            }
+        } close_guard;
+        DVDInit();
+
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        const auto placements = smgpc::scene::resolve_stage_placement_objects(
+            dvd, "HeavensDoorGalaxy", 1);
+        auto camera_rows = std::vector<const smgpc::scene::StagePlacementObject *>{};
+        for (const auto &placement : placements) {
+            if (starts_with(placement.object_name, "CubeCamera")) {
+                camera_rows.push_back(&placement);
+            }
+        }
+        require(camera_rows.size() == 16U,
+                "RMGK01 HeavensDoor scenario 1 must expose the known 16 CubeCamera rows");
+
+        const auto count_name = [&](std::string_view name) {
+            return std::ranges::count_if(camera_rows, [&](const auto *placement) {
+                return placement->object_name == name;
+            });
+        };
+        require(count_name("CubeCameraBox") == 2 && count_name("CubeCameraCylinder") == 8 &&
+                    count_name("CubeCameraSphere") == 6 && count_name("CubeCameraBowl") == 0,
+                "the real-disc CubeCamera form counts must match the RMGK01 placement frontier");
+        require(std::ranges::all_of(camera_rows, [](const auto *placement) {
+                    return placement->factory_supported && !placement->intentionally_ignored &&
+                           placement->follow_id == -1 && placement->parent_id == -1 &&
+                           placement->group_id == -1 && placement->clipping_group_id == -1 &&
+                           placement->view_group_id == -1 && placement->object_args[3] == -1;
+                }),
+                "all 16 real CubeCamera rows must be factory-backed, standalone, and use the default category");
+
+        require(std::ranges::count_if(camera_rows, [](const auto *placement) {
+                    return placement->switch_appear_id == 1015;
+                }) == 3 &&
+                    std::ranges::count_if(camera_rows, [](const auto *placement) {
+                        return placement->switch_a_id == 1125;
+                    }) == 1 &&
+                    std::ranges::count_if(camera_rows, [](const auto *placement) {
+                        return placement->switch_a_id == 1127;
+                    }) == 1 &&
+                    std::ranges::all_of(camera_rows, [](const auto *placement) {
+                        return (placement->switch_appear_id == -1 || placement->switch_appear_id == 1015) &&
+                               (placement->switch_a_id == -1 || placement->switch_a_id == 1125 ||
+                                placement->switch_a_id == 1127) &&
+                               placement->switch_b_id == -1 && placement->switch_dead_id == -1 &&
+                               placement->switch_sleep_id == -1;
+                    }),
+                "the exact RMGK01 CubeCamera switch frontier must remain three appear and two A-switch rows");
+
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
+                                     SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
+            require(holder.create(scene_obj) != nullptr,
+                    "real CubeCamera placement init requires each retail scene service");
+        }
+        auto *manager = dynamic_cast<CubeCameraMgr *>(MR::getAreaObjContainer()->getManager("CubeCamera"));
+        require(manager != nullptr, "the real-disc rows must enter the exact CubeCamera manager");
+
+        auto objects = std::vector<std::unique_ptr<NameObj>>{};
+        objects.reserve(camera_rows.size());
+        for (const auto *placement : camera_rows) {
+            const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(
+                placement->object_name);
+            require(descriptor != nullptr, "each real CubeCamera row must have one complete descriptor");
+            auto object = std::unique_ptr<NameObj>(descriptor->object_creator(placement->object_name.c_str()));
+            auto *camera = dynamic_cast<CubeCameraArea *>(object.get());
+            require(camera != nullptr, "each CubeCamera descriptor must construct the exact retail actor");
+            const auto iter = JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index);
+            object->init(iter);
+
+            const auto has_appear = placement->switch_appear_id >= 0;
+            const auto has_a = placement->switch_a_id >= 0;
+            const char *validity = nullptr;
+            const auto explicitly_invalid = iter.getValue("Validity", &validity) &&
+                                            std::string_view(validity) == "Invalid";
+            require(camera->mObjArg2 == placement->object_args[2] && camera->mZoneID == placement->zone_id &&
+                        camera->_3C == 1 && camera->mSwitchCtrl->isValidSwitchAppear() == has_appear &&
+                        camera->isValidSwitchA() == has_a &&
+                        camera->mIsValid == !(has_appear || has_a || explicitly_invalid),
+                    "exact CubeCamera init must preserve priority/zone/category and switch-gated validity");
+            objects.push_back(std::move(object));
+        }
+
+        binding.init_after_placement();
+        require(manager->mArray.size() == camera_rows.size(),
+                "all 16 real rows must enter the one scene-owned CubeCamera manager");
+        constexpr auto expected_priorities = std::array<s32, 16U>{
+            -1, 0, 0, 0, 1, 2, 5, 8, 8, 8, 9, 10, 10, 11, 12, 13,
+        };
+        for (auto index = std::size_t{}; index < expected_priorities.size(); ++index) {
+            require(manager->getAreaObj(static_cast<int>(index))->mObjArg2 == expected_priorities[index],
+                    "CubeCameraMgr::initAfterLoad must sort all real rows by retail priority");
+        }
+    }
+
+    void test_rmgk01_message_area_rows_construct_exactly() {
+        const auto disc_path = find_real_disc();
+        if (!disc_path.has_value()) {
+            std::cout << "[skip] RMGK01 MessageArea placement test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
+            return;
+        }
+
+        aurora_dvd_close();
+        const auto disc_path_string = disc_path->string();
+        require(aurora_dvd_open(disc_path_string.c_str()),
+                "the RMGK01 MessageArea fixture must be a readable SMG disc image");
+        struct DiscCloseGuard {
+            ~DiscCloseGuard() {
+                aurora_dvd_close();
+            }
+        } close_guard;
+        DVDInit();
+
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        const auto placements = smgpc::scene::resolve_stage_placement_objects(
+            dvd, "HeavensDoorGalaxy", 1);
+        constexpr auto expected_rows = std::array{
+            std::tuple{"MessageAreaCube", "HeavensDoorSmallZone", 1, 1, 0,
+                       AreaForm::Type_Cube2},
+            std::tuple{"MessageAreaCylinder", "HeavensDoorMysteriousZone", 3, 14, 1,
+                       AreaForm::Type_Cylinder},
+        };
+
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
+                                     SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
+            require(holder.create(scene_obj) != nullptr,
+                    "real MessageArea placement init requires each retail scene service");
+        }
+        auto *manager = MR::getAreaObjContainer()->getManager("MessageArea");
+        require(manager != nullptr && manager->_18 == 0x10 &&
+                    MR::getAreaObjContainer()->getManager("MessageAreaCube") == manager &&
+                    MR::getAreaObjContainer()->getManager("MessageAreaCylinder") == manager,
+                "both MessageArea forms must share the retail order-42 manager and capacity");
+
+        auto objects = std::vector<std::unique_ptr<NameObj>>{};
+        objects.reserve(expected_rows.size());
+        for (const auto &[object_name, zone_name, row_index, l_id, arg0, form_type] : expected_rows) {
+            const auto placement = std::ranges::find_if(placements, [&](const auto &candidate) {
+                return candidate.object_name == object_name && candidate.zone_name == zone_name &&
+                       candidate.table_path == "jmp/placement/common/areaobjinfo" &&
+                       candidate.jmap_entry_index == row_index;
+            });
+            require(placement != placements.end(),
+                    "RMGK01 HeavensDoor scenario 1 must retain both exact MessageArea rows");
+            require(placement->stage_name == zone_name && placement->layer_name == "common" &&
+                        placement->l_id == l_id && placement->object_args[0] == arg0 &&
+                        placement->factory_supported && !placement->intentionally_ignored &&
+                        placement->switch_appear_id == -1 && placement->switch_dead_id == -1 &&
+                        placement->switch_a_id == -1 && placement->switch_b_id == -1 &&
+                        placement->switch_sleep_id == -1 && placement->follow_id == -1 &&
+                        placement->group_id == -1 && placement->clipping_group_id == -1,
+                    "each real MessageArea row must preserve its retail zone, argument, and switch metadata");
+            for (auto index = std::size_t{1U}; index < placement->object_args.size(); ++index) {
+                require(placement->object_args[index] == -1,
+                        "unused real MessageArea arguments must remain at the retail sentinel");
+            }
+
+            const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(
+                placement->object_name);
+            require(descriptor != nullptr,
+                    "each real MessageArea row must have one complete creator-manager descriptor");
+            auto object = std::unique_ptr<NameObj>(descriptor->object_creator(object_name));
+            auto *message_area = dynamic_cast<MessageArea *>(object.get());
+            require(message_area != nullptr && message_area->mFormType == form_type,
+                    "each MessageArea descriptor must construct the exact retail actor and form");
+            object->init(JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index));
+            require(message_area->mZoneID == placement->zone_id && message_area->mObjArg0 == arg0 &&
+                        message_area->mObjArg1 == -1 && message_area->mObjArg2 == -1 &&
+                        message_area->mObjArg3 == -1 && message_area->mObjArg4 == -1 &&
+                        message_area->mObjArg5 == -1 && message_area->mObjArg6 == -1 &&
+                        message_area->mObjArg7 == -1 &&
+                        !message_area->mSwitchCtrl->isValidSwitchAppear() &&
+                        !message_area->isValidSwitchA() && !message_area->isValidSwitchB(),
+                    "exact MessageArea init must retain placed-zone, argument, and absent-switch state");
+            objects.push_back(std::move(object));
+        }
+
+        binding.init_after_placement();
+        require(manager->mArray.size() == expected_rows.size(),
+                "both real MessageArea rows must enter their one scene-owned manager");
+        for (const auto &object : objects) {
+            const auto *area = dynamic_cast<const MessageArea *>(object.get());
+            require(std::ranges::find(manager->mArray, area) != manager->mArray.end(),
+                    "the shared MessageArea manager must own each exact constructed placement");
         }
     }
 
@@ -257,11 +624,15 @@ namespace {
 
 int main() {
     constexpr auto tests = std::array{
+        TestCase{"AreaObj source boundaries are exact", test_area_obj_source_boundaries_are_exact},
         TestCase{"area queries reject missing scene owner", test_area_queries_reject_missing_scene_owner},
         TestCase{"scene holder owns real container and managers", test_scene_holder_owns_real_container_and_managers},
         TestCase{"retail prefix collision uses first manager", test_retail_prefix_collision_uses_first_manager},
         TestCase{"manager lifecycle owned ordered and once", test_manager_lifecycle_is_owned_ordered_and_once},
+        TestCase{"CubeCamera manager finalizes priority and reverse query", test_cube_camera_manager_finalizes_priority_and_reverse_query},
         TestCase{"descriptor registry and strict area preflight", test_descriptor_registry_and_strict_area_preflight},
+        TestCase{"RMGK01 CubeCamera rows construct exactly", test_rmgk01_cube_camera_rows_construct_exactly},
+        TestCase{"RMGK01 MessageArea rows construct exactly", test_rmgk01_message_area_rows_construct_exactly},
         TestCase{"water and Mercator do not fabricate results", test_water_and_mercator_do_not_fabricate_results},
     };
 

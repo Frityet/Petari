@@ -1,3 +1,15 @@
+target("smg-pc-game-source-mirror-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/source-boundary")
+    set_rundir(os.projectdir())
+    add_files("GameSourceMirrorTests.cpp")
+    add_tests("game_source_mirrors", {
+        group = "source-boundary",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-aurora-native-tests")
     set_kind("binary")
     set_default(false)

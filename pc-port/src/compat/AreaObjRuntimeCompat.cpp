@@ -42,6 +42,7 @@ void AreaObjContainer::init(const JMapInfoIter &) {
         s32 retail_order;
         s32 capacity;
         smgpc::scene::AreaObjManagerCreator creator;
+        smgpc::scene::AreaObjManagerFinalize finalize;
     };
     auto manager_specs = std::vector<InstalledManager>{};
     auto previous_retail_order = s32{-1};
@@ -64,7 +65,8 @@ void AreaObjContainer::init(const JMapInfoIter &) {
         if (existing != manager_specs.end()) {
             if (existing->retail_order != descriptor.retail_manager_order ||
                 existing->capacity != descriptor.manager_capacity ||
-                existing->creator != descriptor.manager_creator) {
+                existing->creator != descriptor.manager_creator ||
+                existing->finalize != descriptor.manager_finalize) {
                 throw std::logic_error("AreaObj placement registry disagrees about manager construction for " +
                                        std::string(descriptor.manager_name));
             }
@@ -80,11 +82,14 @@ void AreaObjContainer::init(const JMapInfoIter &) {
             .retail_order = descriptor.retail_manager_order,
             .capacity = descriptor.manager_capacity,
             .creator = descriptor.manager_creator,
+            .finalize = descriptor.manager_finalize,
         });
     }
 
     auto constructed_managers = std::vector<std::unique_ptr<AreaObjMgr>>{};
+    auto manager_finalizers = std::vector<smgpc::scene::AreaObjManagerFinalize>{};
     constructed_managers.reserve(manager_specs.size());
+    manager_finalizers.reserve(manager_specs.size());
     for (const auto &spec : manager_specs) {
         const auto manager_name = std::string(spec.name);
         auto manager = std::unique_ptr<AreaObjMgr>(
@@ -95,6 +100,7 @@ void AreaObjContainer::init(const JMapInfoIter &) {
         }
         manager->init(JMapInfoIter{});
         constructed_managers.push_back(std::move(manager));
+        manager_finalizers.push_back(spec.finalize);
     }
 
     auto manager_pointers = std::vector<AreaObjMgr *>{};
@@ -102,7 +108,7 @@ void AreaObjContainer::init(const JMapInfoIter &) {
     for (const auto &manager : constructed_managers) {
         manager_pointers.push_back(manager.get());
     }
-    runtime->adopt_managers(std::move(constructed_managers));
+    runtime->adopt_managers(std::move(constructed_managers), std::move(manager_finalizers));
     for (auto *manager : manager_pointers) {
         mManagerArray[mNumManagers] = manager;
         ++mNumManagers;

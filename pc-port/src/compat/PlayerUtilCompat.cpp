@@ -111,7 +111,7 @@ namespace MR {
         return actor != nullptr ? &actor->mVelocity : nullptr;
     }
 
-    TVec3f* getPlayerGravity() {
+    const TVec3f* getPlayerGravity() {
         auto* actor = activePlayerActor();
         return actor != nullptr ? &actor->mGravity : nullptr;
     }

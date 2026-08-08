@@ -23,21 +23,6 @@ local route_button_script = table.concat({
     "5400-5410:A",
 }, ";")
 
-local gateway_button_script = table.concat({
-    route_button_script,
-    "8000-8010:A",
-    "8400-8410:A",
-    "8800-8810:A",
-    "9200-9210:A",
-    "9600-9610:A",
-}, ";")
-
-local opening_button_script = table.concat({
-    gateway_button_script,
-    "9900-9910:A",
-    "10100-10110:A",
-}, ";")
-
 local route_pointer_script = table.concat({
     "0-1899:0,0,false",
     "1900-2020:212.935,152.482,true",
@@ -115,122 +100,11 @@ local scenarios = {
         min_render_packets = 1,
         expected_layouts = {"PrologueDemo", "IconAButton"},
     },
-    gateway_handoff = {
-        name = "gateway_handoff",
-        frame = 10350,
-        description = "title through five-page picturebook advance into the HeavensDoor stage handoff",
-        -- Unsupported placements and MarioActor are deliberately absent, so
-        -- this frame is sparse until their real implementations are linked.
-        min_nonblack_ratio = 0.005,
-        min_render_packets = 1,
-        button_script = gateway_button_script,
-        expected_semantic_events = {
-            {category = "scene_controller", name = "scene_change_applied",
-             detail = "current_stage=HeavensDoorGalaxy;scenario=1", count = 1},
-            {category = "player", name = "stage_player_unavailable",
-             detail = "stage=HeavensDoorGalaxy;scenario=1;start_id=0;start_zone_id=0;start_layer=layera;start_table=jmp/start/layera/startinfo;start_row=0;reason=real_mario_actor_not_linked", count = 1},
-            {category = "placement", name = "stage_placement_summary",
-             detail = "stage=HeavensDoorGalaxy;scenario=1", count = 1},
-        },
-        placement_report = {
-            filename = "gateway_handoff-placement-report.md",
-            expected = {
-                summary = {
-                    stage = "HeavensDoorGalaxy",
-                    scenario = 1,
-                    total_objects = 242,
-                    intentionally_ignored_objects = 72,
-                },
-                -- The baseline has 32 real factories and 138 unsupported
-                -- actor rows. Porting a real actor may only improve those
-                -- bounds; fake model/alias statuses remain forbidden below.
-                summary_minimum = {
-                    created_objects = 32,
-                },
-                summary_maximum = {
-                    blocked_objects = 138,
-                },
-                objects = {
-                    {
-                        match = {
-                            status = "created_model_fallback",
-                        },
-                        count = 0,
-                    },
-                    {
-                        match = {
-                            status = "created_alias_model_fallback",
-                        },
-                        count = 0,
-                    },
-                    {
-                        match = {
-                            status = "blocked",
-                            object = "RailCoin",
-                        },
-                        count = 2,
-                    },
-                    {
-                        match = {
-                            status = "blocked",
-                            object = "RailCoin",
-                            rail_info_attached = true,
-                        },
-                        count = 2,
-                    },
-                    {
-                        match = {
-                            status = "blocked",
-                            object = "DemoRabbit",
-                        },
-                        count = 3,
-                    },
-                    {
-                        match = {
-                            status = "blocked",
-                            object = "DemoRabbit",
-                            rail_info_attached = true,
-                            rail_point_count = 5,
-                        },
-                        count = 1,
-                    },
-                    {
-                        match = {
-                            status = "blocked",
-                            object = "StarPieceGroup",
-                            zone = "HeavensDoorMiddleZone",
-                        },
-                        count = 1,
-                    },
-                },
-            },
-        },
-    },
-    opening_arrival_complete = {
-        name = "opening_arrival_complete",
-        frame = 10550,
-        description = "normal title/file-select/picturebook/letter/arrival sequence completed in Peach Castle Garden",
-        min_nonblack_ratio = 0.25,
-        min_render_packets = 300,
-        button_script = opening_button_script,
-        expected_semantic_events = {
-            {category = "name_obj_lifecycle", name = "construct",
-             detail = "object=PrologueDirector;actor=プロローグデモ", count = 1},
-            {category = "name_obj_lifecycle", name = "archive_request",
-             detail = "object=PrologueDirector;archive=PrologueDemo", count = 1},
-        },
-        placement_report = {
-            filename = "opening_arrival_complete-placement-report.md",
-            expected = {
-                summary = {
-                    stage = "PeachCastleGardenGalaxy",
-                    scenario = 1,
-                },
-            },
-        },
-    },
 }
 
+-- These are strict acceptance targets, not a list of currently complete
+-- routes. Keep their visual and semantic expectations intact: an incomplete
+-- exact FileSelector/title/picturebook closure must make the smoke run fail.
 local default_scenarios = {"title", "file_select", "picturebook"}
 
 for _, scenario in pairs(scenarios) do

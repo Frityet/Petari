@@ -1,0 +1,15 @@
+command: ninja -j 12
+result: PASS
+
+[CHECK config/RMGK02/build.sha1]
+build/RMGK02/main.dol: OK
+
+computed SHA-1:
+54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+canonical config/RMGK02/build.sha1:
+54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+post-change progress:
+All code:  3509328/5413352 bytes
+Game code: 2569812/4147644 bytes

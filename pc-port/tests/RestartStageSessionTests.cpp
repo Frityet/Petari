@@ -59,7 +59,9 @@ int main() {
 
     const auto disc_path = std::filesystem::path("../RMGK01.iso");
     require(std::filesystem::is_regular_file(disc_path), "the real RMGK01 disc image is required for this focused test");
-    const auto metadata = [&] {
+    auto metadata = smgpc::compat::StageScenarioMetadata{};
+    auto file_select_metadata = smgpc::compat::StageScenarioMetadata{};
+    [&] {
         aurora_dvd_close();
         require(aurora_dvd_open(disc_path.c_str()), "the real RMGK01 disc image must open");
         struct DiscCloseGuard {
@@ -69,10 +71,37 @@ int main() {
         } close_guard;
         DVDInit();
         auto dvd = smgpc::runtime::DvdFileSystemService("/");
-        return smgpc::compat::resolve_stage_scenario_metadata(dvd, "HeavensDoorGalaxy", 1);
+        metadata = smgpc::compat::resolve_stage_scenario_metadata(dvd, "HeavensDoorGalaxy", 1);
+        file_select_metadata = smgpc::compat::resolve_stage_scenario_metadata(dvd, "FileSelect", 1);
     }();
     require(metadata.comet_type == smgpc::compat::StageCometType::None,
             "HeavensDoor scenario 1 must resolve explicit no-comet metadata from ScenarioData.bcsv");
+    ++passed;
+
+    require(file_select_metadata.comet_type == smgpc::compat::StageCometType::None,
+            "a retail ScenarioData row without a Comet field must resolve the retail no-active-comet result");
+    {
+        auto file_select_session = smgpc::compat::StageSessionState(
+            "Game", "FileSelect", 1, JMapIdInfo(0, 0), file_select_metadata);
+        const auto file_select_session_binding =
+            smgpc::compat::StageSessionBinding(file_select_session);
+        require(!MR::isGalaxyRedCometAppearInCurrentStage() &&
+                    !MR::isGalaxyDarkCometAppearInCurrentStage() &&
+                    !MR::isGalaxyGhostCometAppearInCurrentStage() &&
+                    !MR::isGalaxyQuickCometAppearInCurrentStage() &&
+                    !MR::isGalaxyBlackCometAppearInCurrentStage() &&
+                    static_cast<u32>(AudStageBgmWrap::getCometEventBgm(
+                        MR::getCurrentStageName())) == static_cast<u32>(-1),
+                "the schema-level absence must flow through the exact retail comet queries as no event");
+
+        auto file_select_audio = smgpc::runtime::AudioEventService{};
+        smgpc::compat::begin_stage_audio(
+            file_select_audio, "Game", "FileSelect", 1);
+        require(file_select_audio.is_stage_bgm_identity_resolved() &&
+                    !file_select_audio.has_active_stage_bgm(),
+                "the exact stage BGM table must prove FileSelect has no initial stage BGM");
+        smgpc::compat::end_stage_audio(file_select_audio);
+    }
     ++passed;
 
     auto session = smgpc::compat::StageSessionState("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0), metadata);
@@ -162,6 +191,6 @@ int main() {
             "a second stage-audio lifetime must reconstruct the exact known-empty state without stale BGM objects");
     ++passed;
 
-    std::cout << "Restart/stage-session tests passed: " << passed << "/7\n";
+    std::cout << "Restart/stage-session tests passed: " << passed << "/8\n";
     return 0;
 }

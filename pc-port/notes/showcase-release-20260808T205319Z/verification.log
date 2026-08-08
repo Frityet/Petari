@@ -1,0 +1,137 @@
+2026-08-08 exact retail title showcase verification
+
+Source parity
+-------------
+$ cmp ../src/Game/Screen/TitleSequenceProduct.cpp src/Game/Screen/TitleSequenceProduct.cpp
+exit: 0
+$ cmp ../include/Game/Screen/TitleSequenceProduct.hpp src/Game/Screen/TitleSequenceProduct.hpp
+exit: 0
+
+Release build
+-------------
+$ xmake f -m release -y --policies=build.release.strip
+$ xmake build -j2 smg-pc-showcase
+result: build ok (105.531 seconds)
+
+After the final unrelated StageHost report-format adjustment:
+$ xmake build -j2 smg-pc-showcase
+result: StageHostScene.cpp recompiled, game/app re-archived, showcase relinked;
+        build ok (2.656 seconds)
+
+release binary: build/linux/x86_64/release/smg-pc-showcase
+size: 23452072 bytes
+sha256: e4d35a890c9c8ed86da57a08f82c7ff95816d552647669935448aad27b21e18a
+ELF: 64-bit little-endian x86-64 PIE
+release evidence:
+  NDEBUG defined
+  build.release.strip policy enabled
+  nm: no symbols
+  readelf: no .symtab or .debug_* section
+
+Dynamic-link check
+------------------
+$ ldd -r build/linux/x86_64/release/smg-pc-showcase
+result: exit 0; no "not found" line and no undefined symbol
+direct dynamic dependencies:
+  libstdc++.so.6
+  libm.so.6
+  libgcc_s.so.1
+  libc.so.6
+  /lib64/ld-linux-x86-64.so.2
+
+Successful runtime 1: frame 210, then decision
+------------------------------------------------
+environment: Xvfb; SMGPC_ENABLE_VSYNC=0
+command shape:
+  build/linux/x86_64/release/smg-pc-showcase title \
+    --disc /workspaces/pcport/RMGK01.iso \
+    --screenshot /tmp/smgpc-title-release.y51sbD/title-frame-210.png \
+    --screenshot-frame 210 --max-frames 2000
+driver:
+  wait for the screenshot, focus the showcase window, hold Return+BackSpace
+  for 0.25 seconds, then release both keys
+exit: 0
+component completion: frame 334
+screenshot size: 2765798 bytes
+screenshot sha256: 82dcae3f35ce489629d3d4653f56e22f1399139d5bebb82e0dd23fa3316dc386
+
+Successful runtime 2: visible prompt, then decision
+---------------------------------------------------
+environment: Xvfb; SMGPC_ENABLE_VSYNC=0
+command shape:
+  build/linux/x86_64/release/smg-pc-showcase title \
+    --disc /workspaces/pcport/RMGK01.iso \
+    --screenshot /tmp/smgpc-title-release-prompt.19veAp/title-prompt-frame-250.png \
+    --screenshot-frame 250 --max-frames 2000
+driver:
+  wait for the screenshot, focus the showcase window, hold Return+BackSpace
+  for 0.25 seconds, then release both keys
+exit: 0
+component completion: frame 357
+screenshot size: 2765798 bytes
+screenshot sha256: 7cfb97895fc9201412e3dd8a100f73b3bd93981510a83f64ab4bcf72ab54110e
+visual inspection: complete Korean retail logo plus visible Korean A+B prompt
+
+Observed in both successful runs
+--------------------------------
+Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+Loaded 3327 particle names, 3327 particle resources, and 225 particle textures
+Resolved original layout archive TitleLogo -> /KrKorean/LayoutData/TitleLogo.arc
+Resolved original layout archive PressStart -> /KrKorean/LayoutData/PressStart.arc
+Resolved original layout archive SysPALInfo -> /LayoutData/SysPALInfo.arc
+Emitted TitleLogoLight and TitleLogoLightB through TitleLogoLightG
+After input:
+  SMG stopped stage BGM over 75 frames
+  SMG requested system sound SE_SY_GAME_START
+  SMG requested controller speaker sound CS_CLICK_CLOSE
+  Retail title component completed
+
+Package creation and audit
+--------------------------
+$ ./showcase-package/package-showcase.sh \
+    ./build/linux/x86_64/release/smg-pc-showcase \
+    build/showcase-dist/smg-pc-title-showcase-linux-x86_64-20260808T204728Z
+result: success
+
+$ tar -C build/showcase-dist -czf \
+    build/showcase-dist/smg-pc-title-showcase-linux-x86_64-20260808T204728Z.tar.gz \
+    smg-pc-title-showcase-linux-x86_64-20260808T204728Z
+result: success
+
+$ cmp build/linux/x86_64/release/smg-pc-showcase \
+    build/showcase-dist/smg-pc-title-showcase-linux-x86_64-20260808T204728Z/bin/smg-pc-showcase
+exit: 0
+
+package directory:
+  build/showcase-dist/smg-pc-title-showcase-linux-x86_64-20260808T204728Z/
+archive:
+  build/showcase-dist/smg-pc-title-showcase-linux-x86_64-20260808T204728Z.tar.gz
+archive size: 9680084 bytes
+archive sha256: cf6d4aed70ffd5d428b37cac007777f5151d257f08185912f9e6fcea427499e0
+packaged executable sha256: e4d35a890c9c8ed86da57a08f82c7ff95816d552647669935448aad27b21e18a
+forbidden-content scan: no disc, extracted asset, ObjectData, LayoutData,
+  ParticleData, MessageData, ISO, WBFS, or RVZ path
+
+Packaged-launcher follow-up
+---------------------------
+Attempt 1: 75-second bound. The packaged executable resolved TitleLogo,
+PressStart, and SysPALInfo and emitted all seven title effects just as Xvfb's
+bound expired, before input injection. Not counted as a pass.
+
+Attempt 2: self-cleaning 120-second driver, stopped at 130 seconds while disc
+resources were still initializing. At that point the process was using about
+99% CPU while two pre-existing debugger loops were also each using about 100%
+CPU. All attempt processes were removed. Not counted as a pass.
+
+The packaged executable is byte-identical to the directly verified release
+binary. The launcher attempts remain explicitly inconclusive under concurrent
+host CPU pressure rather than being reported green.
+
+Build state after task
+----------------------
+xmake mode at note finalization: debug
+The main task restored debug mode for its final writer/report verification
+after this release artifact was built. This showcase task did not reconfigure
+Xmake again after the request to stop.
+runtime/source files changed by this release task: none
+generated outputs only: showcase-dist package/archive and this ignored note

@@ -1,0 +1,43 @@
+Super Mario Galaxy PC exact-title showcase package manifest
+Package generated: 2026-08-08T20:47:40Z
+
+Archive
+-------
+path: pc-port/build/showcase-dist/smg-pc-title-showcase-linux-x86_64-20260808T204728Z.tar.gz
+size: 9680084 bytes
+sha256: cf6d4aed70ffd5d428b37cac007777f5151d257f08185912f9e6fcea427499e0
+
+Payload entries (six, excluding the archive root directory)
+-----------------------------------------------------------
+d  bin/                          30 bytes
+f  BUILD-INFO                   397 bytes
+f  LICENSE                     6555 bytes
+f  README.md                   2031 bytes
+f  bin/smg-pc-showcase     23452072 bytes
+f  run-title-showcase.sh        990 bytes
+
+Regular-file SHA-256
+-------------------
+BUILD-INFO
+  6bc8f8d05f11088af7f3c86982ff191b4d047137eebb36edace89a76f9155d5b
+LICENSE
+  36ffd9dc085d529a7e60e1276d73ae5a030b020313e6c5408593a6ae2af39673
+README.md
+  5aed506ab30df4c4455afa3e9dc6ce9cfc50424df33542c78064ca7e468c6ac2
+bin/smg-pc-showcase
+  e4d35a890c9c8ed86da57a08f82c7ff95816d552647669935448aad27b21e18a
+run-title-showcase.sh
+  dc5fa572cc0f136d281c493f4faf4659e7e5a5dc4f297b388b21376abac63d0b
+
+BUILD-INFO provenance
+---------------------
+source Git commit: 0c88b7c93f93161d52c8ace9afbc0f2fd549a78f
+source Git worktree: dirty
+Aurora Git commit: 4a21d57c0012943aca1c895c4fd88dc20a478c0c
+Aurora Git worktree: clean
+
+Excluded by construction
+------------------------
+No disc image, extracted disc file, retail game asset, generated source tree,
+or gameplay/stage payload is present. A user-owned readable retail disc image
+must be supplied at runtime.

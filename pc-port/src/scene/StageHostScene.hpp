@@ -37,7 +37,8 @@ namespace smgpc::scene {
 
     [[nodiscard]] bool should_apply_host_appear(const StagePlacementObject *placement, bool explicit_root = false);
     void preflight_stage_placements_or_throw(
-        std::string_view stage_name, std::span<const StagePlacementObject> placements,
+        std::string_view stage_name, s32 scenario_no,
+        std::span<const StagePlacementObject> placements,
         const StagePlacementObject *explicit_placement = nullptr);
 
     class StageHostScene final : public Scene {

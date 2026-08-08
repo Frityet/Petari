@@ -160,6 +160,10 @@ namespace {
                         smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, name).empty(),
                     "a retail creator with a mandatory unavailable init dependency must remain absent");
         }
+        require(
+            smgpc::scene::nameobj::describe_name_obj_creator_support("RestartCube").reason ==
+                "real_mario_update_and_restart_dispatch_runtime_unavailable",
+            "RestartCube must identify its real Mario update/restart-dispatch closure as the remaining blocker");
 
         require_throws(
             [&] {

@@ -1,0 +1,46 @@
+Gateway exact AreaObj integration verification
+UTC date: 2026-08-08
+
+$ SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake test -g aurora -j1
+PASS: 35/35 test targets, 0 failures.
+Relevant focused results:
+- AreaObj runtime: 10/10
+- AreaObj core: 6/6
+- gravity real-or-absent: 6/6
+- NameObj factory placement: 2/2
+- game source mirrors: FileSelectInfo, JointController, PlayerUtil,
+  SequenceUtil, and SystemUtil all exact
+- real RMGK01 ObjectNameTable and HeavensDoor start-camera fixtures exercised
+
+$ xmake build -j1 smg-pc
+PASS
+
+$ xmake build -j1 smg-pc-title-probe
+PASS
+
+$ SMGPC_DISC_IMAGE=/workspaces/pcport/RMGK01.iso xvfb-run -a \
+    build/linux/x86_64/debug/smg-pc-title-probe
+PASS: completed at frame 373; loaded 1,994 Korean messages and 3,327
+particle resources; decoded TitleLogo.arc (18 entries) and PressStart.arc
+(5 entries); resolved TitleLogo, PressStart, and SysPALInfo from Aurora DVD.
+
+$ SMGPC_STAGE_PLACEMENT_REPORT_PATH=/tmp/gateway-integrated-placement-report.md \
+    xvfb-run -a build/linux/x86_64/debug/smg-pc-stage-construction-probe \
+    --disc /workspaces/pcport/RMGK01.iso \
+    --stage HeavensDoorGalaxy --scenario 1
+EXPECTED EXIT: 1
+FATAL: Unsupported placement objects for HeavensDoorGalaxy: 187 blocked;
+first=RestartCube in jmp/placement/common/areaobjinfo
+REPORT: phase=preflight, total=242, complete=47, blocked=187, ignored=8
+
+$ sha256sum /tmp/gateway-integrated-placement-report.md
+38584ed1e4484db7634795d33b5f4117ae555b7c4dc19d44b03eb6def03e9d30
+
+$ wc -l -c /tmp/gateway-integrated-placement-report.md
+3165 76676
+
+$ sha1sum --check config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+
+$ git diff --check
+PASS

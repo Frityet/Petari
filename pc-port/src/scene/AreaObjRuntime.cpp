@@ -2,6 +2,8 @@
 
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
+#include "Game/AreaObj/CubeCamera.hpp"
+#include "Game/AreaObj/MessageArea.hpp"
 
 #include <algorithm>
 #include <array>
@@ -21,11 +23,60 @@ namespace smgpc::scene {
             return new AreaObjMgr(capacity, name);
         }
 
+        [[nodiscard]] AreaObjMgr *create_cube_camera_manager(s32 capacity, const char *name) {
+            return new CubeCameraMgr(capacity, name);
+        }
+
+        void finalize_cube_camera_manager(AreaObjMgr &manager) {
+            auto *camera_manager = dynamic_cast<CubeCameraMgr *>(&manager);
+            if (camera_manager == nullptr) {
+                throw std::logic_error(
+                    "CubeCamera descriptor did not construct its exact retail manager");
+            }
+            camera_manager->initAfterLoad();
+        }
+
         // Add an entry only after its exact actor init path and every manager
         // dependency are linked. The host factory consumes this same table, so
         // a manager by itself can never make a placement appear supported.
         constexpr auto cCompleteAreaObjPlacementDescriptors =
             std::array{
+                AreaObjPlacementDescriptor{
+                    .object_name = "CubeCameraBox",
+                    .object_creator = create_area_obj<CubeCameraArea, AreaForm::Type_Cube1>,
+                    .manager_name = "CubeCamera",
+                    .retail_manager_order = 4,
+                    .manager_capacity = 0xA0,
+                    .manager_creator = create_cube_camera_manager,
+                    .manager_finalize = finalize_cube_camera_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "CubeCameraCylinder",
+                    .object_creator = create_area_obj<CubeCameraArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "CubeCamera",
+                    .retail_manager_order = 4,
+                    .manager_capacity = 0xA0,
+                    .manager_creator = create_cube_camera_manager,
+                    .manager_finalize = finalize_cube_camera_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "CubeCameraSphere",
+                    .object_creator = create_area_obj<CubeCameraArea, AreaForm::Type_Sphere>,
+                    .manager_name = "CubeCamera",
+                    .retail_manager_order = 4,
+                    .manager_capacity = 0xA0,
+                    .manager_creator = create_cube_camera_manager,
+                    .manager_finalize = finalize_cube_camera_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "CubeCameraBowl",
+                    .object_creator = create_area_obj<CubeCameraArea, AreaForm::Type_Bowl>,
+                    .manager_name = "CubeCamera",
+                    .retail_manager_order = 4,
+                    .manager_capacity = 0xA0,
+                    .manager_creator = create_cube_camera_manager,
+                    .manager_finalize = finalize_cube_camera_manager,
+                },
                 AreaObjPlacementDescriptor{
                     .object_name = "PullBackCylinder",
                     .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
@@ -55,6 +106,22 @@ namespace smgpc::scene {
                     .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
                     .manager_name = "BlueStarGuidanceCube",
                     .retail_manager_order = 40,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "MessageAreaCube",
+                    .object_creator = create_area_obj<MessageArea, AreaForm::Type_Cube2>,
+                    .manager_name = "MessageArea",
+                    .retail_manager_order = 42,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "MessageAreaCylinder",
+                    .object_creator = create_area_obj<MessageArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "MessageArea",
+                    .retail_manager_order = 42,
                     .manager_capacity = 0x10,
                     .manager_creator = create_area_obj_manager,
                 },
@@ -126,7 +193,9 @@ namespace smgpc::scene {
 
     AreaObjRuntime::~AreaObjRuntime() = default;
 
-    AreaObjMgr *AreaObjRuntime::adopt_manager(std::unique_ptr<AreaObjMgr> manager) {
+    AreaObjMgr *AreaObjRuntime::adopt_manager(
+        std::unique_ptr<AreaObjMgr> manager,
+        AreaObjManagerFinalize finalize) {
         if (manager == nullptr) {
             throw std::invalid_argument("AreaObjRuntime cannot own a null retail manager");
         }
@@ -134,21 +203,35 @@ namespace smgpc::scene {
             throw std::logic_error("AreaObjRuntime cannot adopt a manager after the scene post-placement phase");
         }
         auto *result = manager.get();
-        _owned_managers.push_back(std::move(manager));
+        _owned_managers.push_back(OwnedManager{
+            .manager = std::move(manager),
+            .finalize = finalize,
+        });
         return result;
     }
 
-    void AreaObjRuntime::adopt_managers(std::vector<std::unique_ptr<AreaObjMgr>> managers) {
+    void AreaObjRuntime::adopt_managers(
+        std::vector<std::unique_ptr<AreaObjMgr>> managers,
+        std::vector<AreaObjManagerFinalize> finalizers) {
         if (_did_init_after_placement) {
             throw std::logic_error("AreaObjRuntime cannot adopt managers after the scene post-placement phase");
         }
         if (std::ranges::any_of(managers, [](const auto &manager) { return manager == nullptr; })) {
             throw std::invalid_argument("AreaObjRuntime cannot own a null retail manager");
         }
+        if (finalizers.empty()) {
+            finalizers.resize(managers.size(), nullptr);
+        } else if (finalizers.size() != managers.size()) {
+            throw std::invalid_argument(
+                "AreaObjRuntime manager finalizers must match the adopted manager count");
+        }
 
         _owned_managers.reserve(_owned_managers.size() + managers.size());
-        for (auto &manager : managers) {
-            _owned_managers.push_back(std::move(manager));
+        for (auto index = std::size_t{}; index < managers.size(); ++index) {
+            _owned_managers.push_back(OwnedManager{
+                .manager = std::move(managers[index]),
+                .finalize = finalizers[index],
+            });
         }
     }
 
@@ -156,8 +239,19 @@ namespace smgpc::scene {
         if (_did_init_after_placement) {
             return;
         }
-        for (auto &manager : _owned_managers) {
-            manager->initAfterPlacement();
+        for (auto &owned : _owned_managers) {
+            if (!owned.did_init_after_placement) {
+                owned.manager->initAfterPlacement();
+                owned.did_init_after_placement = true;
+            }
+        }
+        for (auto &owned : _owned_managers) {
+            if (!owned.did_finalize) {
+                if (owned.finalize != nullptr) {
+                    owned.finalize(*owned.manager);
+                }
+                owned.did_finalize = true;
+            }
         }
         _did_init_after_placement = true;
     }

@@ -56,13 +56,13 @@ namespace smgpc::scene {
             return std::filesystem::path(path);
         }
 
-        [[nodiscard]] bool placement_is_created(const StagePlacementObject &placement) {
+        [[nodiscard]] bool placement_runtime_is_complete(const StagePlacementObject &placement) {
             return placement_has_complete_runtime(placement);
         }
 
-        [[nodiscard]] std::string_view placement_status_name(const StagePlacementObject &placement) {
+        [[nodiscard]] std::string_view placement_preflight_status_name(const StagePlacementObject &placement) {
             if (placement_has_complete_runtime(placement)) {
-                return "created";
+                return "complete";
             }
             if (placement.intentionally_ignored) {
                 return "ignored";
@@ -95,7 +95,8 @@ namespace smgpc::scene {
             };
         }
 
-        void write_stage_placement_report(std::string_view stage_name, s32 scenario_no, const std::vector<StagePlacementObject> &placements,
+        void write_stage_placement_report(std::string_view stage_name, s32 scenario_no,
+                                          std::span<const StagePlacementObject> placements,
                                           const std::vector<const StagePlacementObject *> &blocked_placements) {
             const auto report_path = debug_stage_placement_report_path();
             if (report_path.empty()) {
@@ -112,19 +113,20 @@ namespace smgpc::scene {
                 return;
             }
 
-            const auto created_count = std::ranges::count_if(placements, placement_is_created);
+            const auto complete_count = std::ranges::count_if(placements, placement_runtime_is_complete);
             const auto ignored_count = std::ranges::count_if(placements, [](const auto &placement) { return placement.intentionally_ignored; });
             out << "# Stage Placement Report\n";
+            out << "phase: preflight\n";
             out << "stage: " << stage_name << "\n";
             out << "scenario: " << scenario_no << "\n";
             out << "total_objects: " << placements.size() << "\n";
-            out << "created_objects: " << created_count << "\n";
+            out << "complete_objects: " << complete_count << "\n";
             out << "blocked_objects: " << blocked_placements.size() << "\n";
             out << "intentionally_ignored_objects: " << ignored_count << "\n\n";
             out << "## Objects\n";
             for (const auto &placement : placements) {
                 const auto rail = placement_rail_summary(placement);
-                out << "- status: " << placement_status_name(placement) << "\n";
+                out << "- status: " << placement_preflight_status_name(placement) << "\n";
                 out << "  object: " << placement.object_name << "\n";
                 out << "  zone: " << placement.zone_name << "\n";
                 out << "  zone_id: " << placement.zone_id << "\n";
@@ -139,7 +141,11 @@ namespace smgpc::scene {
                     out << "  rail_first_point: [" << rail.first_point[0] << ", " << rail.first_point[1] << ", " << rail.first_point[2] << "]\n";
                 }
                 out << "  support_reason: " << placement_runtime_support_reason(placement) << "\n";
-                out << "  archive: " << placement.object_archive_path << "\n";
+                out << "  archive:";
+                if (!placement.object_archive_path.empty()) {
+                    out << " " << placement.object_archive_path;
+                }
+                out << "\n";
             }
         }
 #endif
@@ -181,7 +187,8 @@ namespace smgpc::scene {
     }
 
     void preflight_stage_placements_or_throw(
-        std::string_view stage_name, std::span<const StagePlacementObject> placements,
+        std::string_view stage_name, s32 scenario_no,
+        std::span<const StagePlacementObject> placements,
         const StagePlacementObject *explicit_placement) {
         auto blocked_placements = std::vector<const StagePlacementObject *>{};
         for (const auto &placement : placements) {
@@ -191,6 +198,11 @@ namespace smgpc::scene {
             blocked_placements.push_back(&placement);
         }
         (void)explicit_placement;
+#ifndef NDEBUG
+        write_stage_placement_report(stage_name, scenario_no, placements, blocked_placements);
+#else
+        (void)scenario_no;
+#endif
         if (!blocked_placements.empty()) {
             throw std::runtime_error(unsupported_placement_error(stage_name, blocked_placements));
         }
@@ -339,7 +351,8 @@ namespace smgpc::scene {
         const auto *actor_name = !_request.actor_name.empty() ? _request.actor_name.c_str() :
                                  placement != nullptr         ? resolve_placement_actor_name(*placement) :
                                                                 nullptr;
-        preflight_stage_placements_or_throw(_request.stage_name, _placements, placement);
+        preflight_stage_placements_or_throw(
+            _request.stage_name, _request.scenario_no, _placements, placement);
         init_stage_audio();
         construct_root_object(_request.object_name, actor_name, placement, true);
         construct_placement_roots(placement);
@@ -347,13 +360,14 @@ namespace smgpc::scene {
 
     void StageHostScene::init_placement_roots() {
         init_stage_environment();
+        preflight_stage_placements_or_throw(
+            _request.stage_name, _request.scenario_no, _placements);
+        init_stage_audio();
         construct_placement_roots();
     }
 
     void StageHostScene::construct_placement_roots(const StagePlacementObject *explicit_placement) {
         const auto blocked_placements = collect_blocked_placements(_placements, explicit_placement);
-        preflight_stage_placements_or_throw(_request.stage_name, _placements, explicit_placement);
-        init_stage_audio();
         for (const auto &placement : _placements) {
             trace_placement_object(placement);
             if (explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) {
@@ -375,13 +389,12 @@ namespace smgpc::scene {
         _runtime.emit_semantic_trace_event("placement", "stage_placement_summary",
                                            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
                                                ";objects=" + std::to_string(_placements.size()) +
-                                               ";created=" + std::to_string(std::ranges::count_if(_placements, placement_is_created)) +
+                                               ";complete=" + std::to_string(std::ranges::count_if(_placements, placement_runtime_is_complete)) +
                                                ";ignored=" +
                                                std::to_string(std::ranges::count_if(_placements, [](const auto &placement) {
                                                    return placement.intentionally_ignored;
                                                })) +
                                                ";blocked=" + std::to_string(blocked_placements.size()));
-        write_stage_placement_report(_request.stage_name, _request.scenario_no, _placements, blocked_placements);
 #endif
 
         for (const auto &placement : _placements) {
@@ -454,7 +467,7 @@ namespace smgpc::scene {
                                                ";scenario=" + std::to_string(_request.scenario_no) +
                                                ";layer=" + placement.layer_name + ";table=" + placement.table_path +
                                                ";object=" + placement.object_name +
-                                               ";factory=" + std::string(placement_status_name(placement)) +
+                                               ";runtime_support=" + std::string(placement_preflight_status_name(placement)) +
                                                ";support_reason=" + std::string(placement_runtime_support_reason(placement)) +
                                                ";common_path_id=" + std::to_string(placement.common_path_id) +
                                                ";rail_info_attached=" + (rail.attached ? "true" : "false") +
