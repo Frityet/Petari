@@ -1,0 +1,43 @@
+2026-08-08 UTC final integration verification
+
+$ cd /workspaces/pcport/pc-port
+$ xmake test -g aurora -j 1
+100% tests passed, 0 test(s) failed out of 35, spent 1.514s
+
+$ SMGPC_DISC_IMAGE=/workspaces/pcport/RMGK01.iso \
+    xvfb-run -a build/linux/x86_64/debug/smg-pc-title-probe
+Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+Loaded 3327 particle names, 3327 particle resources, and 225 particle textures
+Decoded TitleLogo.arc entries: 18, PressStart.arc entries: 5
+Title sequence probe completed at frame 373
+exit 0
+
+$ SMGPC_DISC_IMAGE=/workspaces/pcport/RMGK01.iso \
+    xvfb-run -a build/linux/x86_64/debug/smg-pc-stage-construction-probe \
+    --stage HeavensDoorGalaxy --scenario 1
+Strict stage construction failed: Unsupported placement objects for
+HeavensDoorGalaxy: 205 blocked; first=RestartCube in
+jmp/placement/common/areaobjinfo
+exit 1 (expected explicit absence)
+
+Trace audit of the failed strict probe:
+stage_host_started: 0
+stage_host_constructed: 0
+StageBgmStart: 0
+gravity registration: 0
+
+$ cd /workspaces/pcport
+$ sha1sum --check config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+
+$ git -C pc-port/aurora log -2 --oneline
+129e5d7 Add logical JAudio sound compatibility types
+7b80ef3 Add Metrowerks functional compatibility header
+
+Final source-boundary verification:
+EventUtil.cpp and six added AudioLib/System implementation TUs: cmp exact
+compile_commands.json entries for the seven excluded retail TUs: 0
+picturebook MR providers in EventUtilCompat.cpp.o: exactly one owner each
+story sequence: 3/3
+file-select naming: 5/5
+game data: 17/17

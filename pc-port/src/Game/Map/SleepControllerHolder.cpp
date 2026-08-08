@@ -1,4 +1,5 @@
 #include "Game/Map/SleepControllerHolder.hpp"
+#include "Game/AreaObj/AreaObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/SleepController.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -35,6 +36,20 @@ void SleepControllerHolder::initSync() {
 namespace SleepControlFunc {
     void initSyncSleepController() {
         ::getSleepControllerHolder()->initSync();
+    }
+
+    void addSleepControl(AreaObj* pObj, const JMapInfoIter& rIter) {
+        SwitchEventFunctorListener* listener;
+
+        if (!MR::isExistStageSwitchSleep(rIter)) {
+            return;
+        }
+
+        listener = new SwitchEventFunctorListener();
+        listener->setOnFunctor(MR::Functor(pObj, &AreaObj::awake));
+        listener->setOffFunctor(MR::Functor(pObj, &AreaObj::sleep));
+
+        ::getSleepControllerHolder()->add(pObj, rIter, listener);
     }
 
     void addSleepControl(LiveActor* pActor, const JMapInfoIter& rIter) {

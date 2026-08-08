@@ -1,0 +1,44 @@
+StageHost lifetime API
+======================
+
+resolve_stage_scenario_metadata(dvd, stage, scenario)
+  Decode required retail ScenarioData metadata. Missing/unknown data throws.
+
+StageSessionState(scene, stage, scenario, initial_id, metadata)
+  Own immutable initial start ID, mutable restart ID, resolved scenario
+  metadata, and explicit Power Star get-demo state.
+
+StageSessionBinding(session)
+  RAII thread-local binding for exact SceneUtil/SystemUtil/EventUtil providers.
+  Unbound queries throw.
+
+begin_stage_audio(audio, scene, stage, scenario)
+  Reset audio, verify it matches the active session, use exact
+  AudStageBgmWrap to resolve the retail raw initial ID/absence, and synchronize
+  the genuinely constructed AudBgmMgr facade.
+
+end_stage_audio(audio)
+  Reset logical state before binding/synchronizing the facade, which releases
+  BGM objects and handles without constructing teardown-only state.
+
+AudioEventService
+  Own raw current/next/last IDs, identity resolution, track mute and BGM state,
+  cube-change invalidation, and stage reset. Unknown identity is distinct from
+  a proven absent BGM.
+
+ScopedAudioEventServiceOverride(audio)
+  RAII service routing for exact AudWrap consumers. Construction rolls back on
+  synchronization failure; destruction cannot leak exceptions or leave a
+  dangling override.
+
+PlayerSystemService::set_player_dead_state / clear_player_dead_state
+  Explicit optional Mario nerve/death state. Generic LiveActor death is never
+  used as a substitute.
+
+Aurora dependency
+=================
+
+Nested commit 129e5d73a31d701420ab4d35f746969bbed1496d adds the generalized
+JSystem/JAudio2/JAISound.hpp compatibility surface with public retail ID fields,
+constructors/accessors, endian-correct composite semantics, and logical handle
+attachment state.

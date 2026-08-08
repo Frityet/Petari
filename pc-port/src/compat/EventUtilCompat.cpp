@@ -4,6 +4,18 @@
 #include "Game/Util/PlayerUtil.hpp"
 
 namespace MR {
+    s32 getPictureBookChapterCanRead() {
+        return GameDataFunction::getPictureBookChapterCanRead();
+    }
+
+    s32 getPictureBookChapterAlreadyRead() {
+        return GameDataFunction::getPictureBookChapterAlreadyRead();
+    }
+
+    void setPictureBookChapterAlreadyRead(int chapter_already_read) {
+        GameDataFunction::setPictureBookChapterAlreadyRead(chapter_already_read);
+    }
+
     bool isOnGameEventFlagEndTicoGuideDemo() {
         return GameDataFunction::isPassedStoryEvent("チコガイドデモ終了");
     }

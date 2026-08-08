@@ -1,0 +1,60 @@
+AreaObj core verification — 2026-08-08 UTC
+
+1. Root decomp, configured RMGK02
+
+Command: ninja
+Exit: 0
+Result: the final current-tree pass completed all 44 invalidated steps, relinked the RMGK02 ELF/DOL, and ran the canonical CHECK target successfully. The earlier AreaForm-specific pass rebuilt AreaForm/AreaObj/AreaObjUtil and completed successfully as well.
+
+Command: ninja build/RMGK02/ok && sha1sum -c config/RMGK02/build.sha1
+Exit: 0
+Result:
+  ninja: no work to do.
+  build/RMGK02/main.dol: OK
+Canonical SHA-1:
+  54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+2. Exact Game source boundary
+
+Command: cmp each root/PC pair listed in exact-cmp.txt
+Exit: 0
+Result: 10/10 pairs byte-identical
+
+The focused runtime test repeats the same byte comparisons for:
+  AreaForm.hpp/.cpp
+  AreaObj.hpp/.cpp
+  AreaObjFollower.hpp/.cpp
+  AreaObjUtil.hpp/.cpp
+  SleepControllerHolder.hpp/.cpp
+
+3. Focused PC build and behavior
+
+Command: xmake build smg-pc-area-obj-core-tests && xmake run smg-pc-area-obj-core-tests
+Working directory: pc-port
+Exit: 0
+Result:
+  [ok] Game source boundary is exact
+  [ok] rotated scaled cube volume
+  [ok] Cube2 base origin
+  [ok] followed scaled cylinder volume
+  [ok] retail area math helpers
+  [ok] manager reverse priority
+  6 AreaObj core test(s) passed
+
+Command: xmake test '*/area_obj_core'
+Exit: 0
+Result: 100% tests passed, 0 failed; registered test runtime 0.005s
+
+4. Aurora legacy functional compatibility
+
+Header: aurora/include/functional.hpp
+Independent Aurora commit: 7b80ef30bb813f544637fb9350bf99644babc7a6
+C++23 probes: zero-argument mem_func/for_each and bind2nd(mem_func)/rfind_if both compiled, linked, and returned 0.
+
+5. Static checks
+
+Commands:
+  clang-format --dry-run --Werror pc-port/tests/AreaObjCoreTests.cpp
+  clang-format --dry-run --Werror include/Game/AreaObj/AreaForm.hpp
+  git diff --check
+Exit: 0 for all checks

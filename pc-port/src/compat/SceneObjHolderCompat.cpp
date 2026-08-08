@@ -1,5 +1,6 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 
+#include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
@@ -13,6 +14,7 @@
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+#include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
 #include <memory>
@@ -28,7 +30,8 @@ namespace {
 
 namespace smgpc::scene {
 
-    SceneObjHolderBinding::SceneObjHolderBinding(SceneObjHolder &holder) : _holder(&holder), _owned_objects() {
+    SceneObjHolderBinding::SceneObjHolderBinding(SceneObjHolder &holder)
+        : _holder(&holder), _owned_objects(), _area_obj_runtime(std::make_unique<AreaObjRuntime>()) {
         if (sCurrentSceneObjHolder != nullptr) {
             throw std::logic_error("a SceneObjHolder is already bound to the active scene");
         }
@@ -43,16 +46,22 @@ namespace smgpc::scene {
             sCurrentSceneObjHolderBinding = nullptr;
         }
         _owned_objects.clear();
+        _area_obj_runtime.reset();
     }
 
     void SceneObjHolderBinding::init_after_placement() {
         for (std::size_t index = 0; index < _owned_objects.size(); ++index) {
             _owned_objects[index]->initAfterPlacement();
         }
+        _area_obj_runtime->init_after_placement();
     }
 
     SceneObjHolder *current_scene_obj_holder() noexcept {
         return sCurrentSceneObjHolder;
+    }
+
+    AreaObjRuntime *current_area_obj_runtime() noexcept {
+        return sCurrentSceneObjHolderBinding != nullptr ? sCurrentSceneObjHolderBinding->_area_obj_runtime.get() : nullptr;
     }
 
 }  // namespace smgpc::scene
@@ -113,8 +122,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_SleepControllerHolder:
         return new SleepControllerHolder();
     case SceneObj_AreaObjContainer:
-        throw std::logic_error(
-            "AreaObjContainer construction is unavailable until retail managers and parsed stage placement are hosted.");
+        return new AreaObjContainer("エリアオブジェクトコンテナ管理");
     case SceneObj_CoinHolder:
         return new CoinHolder("コイン管理");
     case SceneObj_PurpleCoinHolder:

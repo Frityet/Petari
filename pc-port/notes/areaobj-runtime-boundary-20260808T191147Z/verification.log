@@ -1,0 +1,30 @@
+AreaObj runtime boundary verification
+UTC date: 2026-08-08
+
+$ cmp src/Game/AreaObj/AreaObjContainer.cpp pc-port/src/Game/AreaObj/AreaObjContainer.cpp
+PASS (byte-identical)
+
+$ cmp include/Game/AreaObj/AreaObjContainer.hpp pc-port/src/Game/AreaObj/AreaObjContainer.hpp
+PASS (byte-identical)
+
+$ sha256sum src/Game/AreaObj/AreaObjContainer.cpp pc-port/src/Game/AreaObj/AreaObjContainer.cpp
+2a7d373345ad24e56c5d1d925590cb301a3e438f2a7464e943ca13fa0bd41347  src/Game/AreaObj/AreaObjContainer.cpp
+2a7d373345ad24e56c5d1d925590cb301a3e438f2a7464e943ca13fa0bd41347  pc-port/src/Game/AreaObj/AreaObjContainer.cpp
+
+$ xmake --files='src/scene/AreaObjRuntime.cpp:src/compat/AreaObjRuntimeCompat.cpp:src/compat/SceneObjHolderCompat.cpp:src/scene/StageHostScene.cpp' smg-pc-game
+[100%]: build ok
+
+$ xmake -j12 smg-pc-area-obj-real-or-absent-tests
+[100%]: build ok
+
+$ xmake run smg-pc-area-obj-real-or-absent-tests
+[ok] area queries reject missing scene owner
+[ok] scene holder owns real container and managers
+[ok] retail prefix collision uses first manager
+[ok] manager lifecycle owned ordered and once
+[ok] descriptor registry and strict area preflight
+[ok] water and Mercator do not fabricate results
+6 AreaObj runtime test(s) passed
+
+$ git diff --check -- <AreaObj runtime boundary paths>
+PASS

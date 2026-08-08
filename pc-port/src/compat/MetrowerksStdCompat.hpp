@@ -3,14 +3,14 @@
 class SaveDataHandleSequence;
 
 namespace smgpc::game {
-[[noreturn]] SaveDataHandleSequence& save_data_handle_sequence();
+    [[noreturn]] SaveDataHandleSequence &save_data_handle_sequence();
 }
 
-#include <revolution/types.h>
 #include <math_types.hpp>
+#include <revolution/types.h>
 
 #include <cmath>
-#include <functional>
+#include <functional.hpp>
 
 #include "compat/GameGravityCompat.hpp"
 
@@ -45,14 +45,3 @@ inline s32 __abs(s32 value) {
 // separate REL/DOL contexts; make only placeholder function definitions
 // translation-unit local without changing the recovered Game sources.
 #define DUMMY(...) static DUMMY(__VA_ARGS__)
-
-// The original Metrowerks Standard Library exposes std::mem_func, while
-// modern host standard libraries expose the equivalent std::mem_fn.
-#if !defined(__MWERKS__)
-namespace std {
-    template <typename MemberPointer>
-    constexpr auto mem_func(MemberPointer member) {
-        return std::mem_fn(member);
-    }
-}  // namespace std
-#endif

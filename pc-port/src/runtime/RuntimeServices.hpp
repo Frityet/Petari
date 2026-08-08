@@ -143,6 +143,7 @@ namespace smgpc::runtime {
         StageBgmUnlock,
         StageBgmStop,
         StageBgmStateChange,
+        StageBgmTrackMuteStateChange,
         SystemSoundStart,
         SystemSoundStop,
         SystemLevelSoundStart,
@@ -156,6 +157,7 @@ namespace smgpc::runtime {
     struct AudioEvent {
         AudioEventKind kind = AudioEventKind::StageBgmStart;
         std::string name;
+        std::optional<u32> sound_id;
         s32 fade_frames = 0;
         s32 state = 0;
         u32 change_frames = 0U;
@@ -166,10 +168,20 @@ namespace smgpc::runtime {
     class AudioEventService final {
     public:
         void begin_frame(std::uint64_t frame_index);
+        void reset_stage_state();
+        void resolve_stage_bgm_absent();
         void start_stage_bgm(std::string_view name);
+        void start_stage_bgm(u32 sound_id);
+        void start_stage_bgm(std::string_view name, u32 sound_id);
         void unlock_stage_bgm();
         void stop_stage_bgm(s32 fade_frames);
         void set_stage_bgm_state(s32 state, u32 change_frames);
+        void set_stage_bgm_track_mute_state(s32 state, s32 change_frames);
+        void set_next_stage_bgm_id(u32 sound_id);
+        void clear_next_stage_bgm_id();
+        void clear_last_stage_bgm_id();
+        [[nodiscard]] u32 start_last_stage_bgm();
+        void set_cube_bgm_change_invalid(bool invalid);
         void start_system_sound(std::string_view name);
         void stop_system_sound(std::string_view name, u32 delay_frames);
         void start_system_level_sound(std::string_view name);
@@ -180,23 +192,38 @@ namespace smgpc::runtime {
         void start_controller_speaker_sound(std::string_view name);
 
         [[nodiscard]] bool is_stage_bgm_prepared() const;
+        [[nodiscard]] bool has_active_stage_bgm() const;
+        [[nodiscard]] bool is_stage_bgm_identity_resolved() const;
         [[nodiscard]] bool is_stage_bgm_unlocked() const;
         [[nodiscard]] std::string_view current_stage_bgm_name() const;
+        [[nodiscard]] std::optional<u32> current_stage_bgm_id() const;
+        [[nodiscard]] std::optional<u32> next_stage_bgm_id() const;
+        [[nodiscard]] std::optional<u32> last_stage_bgm_id() const;
         [[nodiscard]] s32 stage_bgm_state() const;
         [[nodiscard]] u32 stage_bgm_state_change_frames() const;
+        [[nodiscard]] s32 stage_bgm_track_mute_state() const;
+        [[nodiscard]] s32 stage_bgm_track_mute_change_frames() const;
+        [[nodiscard]] bool is_cube_bgm_change_invalid() const;
         [[nodiscard]] std::span<const AudioEvent> events() const;
 
     private:
         void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0, s32 state = 0, u32 change_frames = 0U,
-                        u32 delay_frames = 0U);
+                        u32 delay_frames = 0U, std::optional<u32> sound_id = std::nullopt);
 
         std::uint64_t _frame_index = 0U;
         std::uint64_t _stage_bgm_start_frame = 0U;
         std::string _stage_bgm_name;
+        std::optional<u32> _stage_bgm_id;
+        std::optional<u32> _next_stage_bgm_id;
+        std::optional<u32> _last_stage_bgm_id;
         s32 _stage_bgm_state = 0;
         u32 _stage_bgm_state_change_frames = 0U;
+        s32 _stage_bgm_track_mute_state = 0;
+        s32 _stage_bgm_track_mute_change_frames = 0;
         bool _stage_bgm_requested = false;
+        bool _stage_bgm_identity_resolved = false;
         bool _stage_bgm_unlocked = false;
+        bool _cube_bgm_change_invalid = false;
         std::vector<AudioEvent> _events;
     };
 
@@ -606,7 +633,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> game_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> effective_camera_pose() const;
-        [[nodiscard]] smgpc::camera::CameraPose apply_shake(const smgpc::camera::CameraPose& pose) const;
+        [[nodiscard]] smgpc::camera::CameraPose apply_shake(const smgpc::camera::CameraPose &pose) const;
         [[nodiscard]] std::optional<std::string_view> active_programmable_camera_name() const;
         [[nodiscard]] std::uint32_t programmable_camera_declare_count() const;
         [[nodiscard]] std::uint32_t programmable_camera_start_count() const;
@@ -660,6 +687,8 @@ namespace smgpc::runtime {
         void hide_player();
         void set_base_matrix(MtxPtr matrix);
         void set_swing_permission(bool permitted);
+        void set_player_dead_state(bool dead);
+        void clear_player_dead_state();
         void disable_control();
         void enable_control(bool reset_condition);
         void finish_opening_demo();
@@ -672,6 +701,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::span<const f32, 3U> velocity() const;
         [[nodiscard]] std::span<const f32, 3U> gravity() const;
         [[nodiscard]] bool is_on_ground() const;
+        [[nodiscard]] std::optional<bool> player_dead_state() const;
         [[nodiscard]] bool is_swing_permitted() const;
         [[nodiscard]] bool is_control_enabled() const;
         [[nodiscard]] std::uint64_t base_matrix_revision() const;
@@ -686,6 +716,7 @@ namespace smgpc::runtime {
         bool _has_base_matrix = false;
         bool _has_forced_base_matrix = false;
         bool _on_ground = false;
+        std::optional<bool> _player_dead_state;
         bool _swing_permitted = false;
         bool _control_enabled = true;
         bool _reset_condition_requested = false;
@@ -731,29 +762,29 @@ namespace smgpc::runtime {
 
     class RumbleService final {
     public:
-        explicit RumbleService(RumbleActuator* actuator = nullptr);
+        explicit RumbleService(RumbleActuator *actuator = nullptr);
         ~RumbleService();
 
-        RumbleService(const RumbleService&) = delete;
-        RumbleService& operator=(const RumbleService&) = delete;
+        RumbleService(const RumbleService &) = delete;
+        RumbleService &operator=(const RumbleService &) = delete;
 
-        void attach_actuator(RumbleActuator& actuator);
+        void attach_actuator(RumbleActuator &actuator);
         void begin_frame(std::uint64_t frame_index);
-        [[nodiscard]] bool try_request_pattern(const void* source, std::string_view pattern_name, s32 channel);
+        [[nodiscard]] bool try_request_pattern(const void *source, std::string_view pattern_name, s32 channel);
         void stop_all() noexcept;
 
         [[nodiscard]] std::span<const RumbleRequestEvent> events() const;
 
     private:
         struct ActivePattern {
-            const void* source = nullptr;
-            const RumblePattern* pattern = nullptr;
+            const void *source = nullptr;
+            const RumblePattern *pattern = nullptr;
             std::size_t next_frame = 0U;
         };
 
         void set_motor(s32 channel, bool enabled) noexcept;
 
-        RumbleActuator* _actuator = nullptr;
+        RumbleActuator *_actuator = nullptr;
         std::uint64_t _frame_index = 0U;
         std::array<std::vector<ActivePattern>, WPAD_MAX_CONTROLLERS> _active_patterns;
         std::array<bool, WPAD_MAX_CONTROLLERS> _motor_enabled = {};

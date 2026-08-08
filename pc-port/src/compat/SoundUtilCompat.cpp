@@ -1,6 +1,9 @@
 #include "Game/Util/SoundUtil.hpp"
 
+#include "compat/AudioFacadeCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
+
+#include <stdexcept>
 
 namespace MR {
     JAISoundHandle *startSystemSE(const char *pName, s32, s32) {
@@ -82,23 +85,34 @@ namespace MR {
     }
 
     bool isPlayingStageBgm() {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            return !runtime->current_stage_bgm_name().empty();
-        }
+        return smgpc::compat::require_active_audio_event_service().has_active_stage_bgm();
+    }
 
-        return false;
+    bool isPlayingStageBgmID(u32 id) {
+        const auto &audio = smgpc::compat::require_active_audio_event_service();
+        if (!audio.is_stage_bgm_identity_resolved()) {
+            throw std::logic_error("The current stage-BGM raw ID has not been resolved.");
+        }
+        if (!audio.has_active_stage_bgm()) {
+            return false;
+        }
+        const auto current_id = audio.current_stage_bgm_id();
+        if (!current_id.has_value()) {
+            throw std::logic_error("An active stage BGM is missing its resolved raw ID.");
+        }
+        return *current_id == id;
     }
 
     bool isPlayingStageBgmName(const char *pName) {
         if (pName == nullptr) {
             return false;
         }
+        const auto &audio = smgpc::compat::require_active_audio_event_service();
+        return audio.has_active_stage_bgm() && audio.current_stage_bgm_name() == pName;
+    }
 
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            return runtime->current_stage_bgm_name() == pName;
-        }
-
-        return false;
+    bool isStopOrFadeoutStageBgmID(u32 id) {
+        return !isPlayingStageBgmID(id);
     }
 
     bool isStopOrFadeoutBgmName(const char *pName) {
@@ -117,6 +131,14 @@ namespace MR {
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->set_stage_bgm_state(state, changeFrames);
         }
+    }
+
+    void setCubeBgmChangeInvalid() {
+        smgpc::compat::require_active_audio_event_service().set_cube_bgm_change_invalid(true);
+    }
+
+    bool isCubeBgmChangeInvalid() {
+        return smgpc::compat::require_active_audio_event_service().is_cube_bgm_change_invalid();
     }
 
     void submitLevelSE() {

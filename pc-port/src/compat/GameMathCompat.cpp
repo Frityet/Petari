@@ -8,7 +8,7 @@
 namespace {
     auto sRandomSeed = std::uint32_t{0U};
 
-    TQuat4f quaternion_from_axes(const TVec3f& side, const TVec3f& up, const TVec3f& front) {
+    TQuat4f quaternion_from_axes(const TVec3f &side, const TVec3f &up, const TVec3f &front) {
         const auto trace = side.x + up.y + front.z;
         auto result = TQuat4f{};
         if (trace > 0.0F) {
@@ -33,7 +33,7 @@ namespace MR {
     f32 getRandom() {
         sRandomSeed = (sRandomSeed * 0x0019660DU) + 0x3C6EF35FU;
         const auto value = (sRandomSeed >> 9U) | 0x3F800000U;
-        return std::bit_cast< f32 >(value) - 1.0F;
+        return std::bit_cast<f32>(value) - 1.0F;
     }
 
     f32 getRandom(f32 min, f32 max) {
@@ -41,14 +41,14 @@ namespace MR {
     }
 
     s32 getRandom(s32 min, s32 max) {
-        return static_cast< s32 >(getRandom(static_cast< f32 >(min), static_cast< f32 >(max)));
+        return static_cast<s32>(getRandom(static_cast<f32>(min), static_cast<f32>(max)));
     }
 
     f32 getRandomDegree() {
         return getRandom(0.0F, 360.0F);
     }
 
-    void getRandomVector(TVec3f* pDst, f32 range) {
+    void getRandomVector(TVec3f *pDst, f32 range) {
         if (pDst == nullptr) {
             return;
         }
@@ -59,7 +59,7 @@ namespace MR {
         pDst->set(x, y, z);
     }
 
-    void addRandomVector(TVec3f* pDst, const TVec3f& rSrc, f32 range) {
+    void addRandomVector(TVec3f *pDst, const TVec3f &rSrc, f32 range) {
         if (pDst == nullptr) {
             return;
         }
@@ -74,15 +74,29 @@ namespace MR {
         return std::fmod(x, y);
     }
 
+    bool isInRange(f32 value, f32 bound1, f32 bound2) {
+        if (bound1 > bound2) {
+            if (value < bound2) {
+                return false;
+            }
+            return !(value > bound1);
+        }
+
+        if (value < bound1) {
+            return false;
+        }
+        return !(value > bound2);
+    }
+
     bool isNearZero(f32 x, f32 tolerance) {
         return std::fabs(x) < tolerance;
     }
 
-    bool isNearZero(const TVec3f& rVec, f32 tolerance) {
+    bool isNearZero(const TVec3f &rVec, f32 tolerance) {
         return std::fabs(rVec.x) <= tolerance && std::fabs(rVec.y) <= tolerance && std::fabs(rVec.z) <= tolerance;
     }
 
-    void makeAxisVerticalZX(TVec3f* pDst, const TVec3f& rAxis) {
+    void makeAxisVerticalZX(TVec3f *pDst, const TVec3f &rAxis) {
         if (pDst == nullptr) {
             return;
         }
@@ -94,18 +108,18 @@ namespace MR {
         normalize(pDst);
     }
 
-    f32 calcPerpendicFootToLineInside(TVec3f* pOut, const TVec3f& rPoint, const TVec3f& rTip,
-                                      const TVec3f& rTail) {
+    f32 calcPerpendicFootToLineInside(TVec3f *pOut, const TVec3f &rPoint, const TVec3f &rTip,
+                                      const TVec3f &rTail) {
         auto line = rTail - rTip;
         auto parameter = (rPoint.dot(line) - rTip.dot(line)) / line.squared();
-        parameter = JGeometry::TUtil< f32 >::clamp(parameter, 0.0F, 1.0F);
+        parameter = JGeometry::TUtil<f32>::clamp(parameter, 0.0F, 1.0F);
         line.scale(parameter);
         pOut->set(rTip);
         pOut->add(line);
         return parameter;
     }
 
-    bool calcReboundVelocity(TVec3f* pVelocity, const TVec3f& rNormal, f32 restitution) {
+    bool calcReboundVelocity(TVec3f *pVelocity, const TVec3f &rNormal, f32 restitution) {
         if (pVelocity == nullptr) {
             return false;
         }
@@ -119,7 +133,7 @@ namespace MR {
         return true;
     }
 
-    bool calcReboundVelocity(TVec3f* pVelocity, const TVec3f& rNormal, f32 restitution, f32 tangentScale) {
+    bool calcReboundVelocity(TVec3f *pVelocity, const TVec3f &rNormal, f32 restitution, f32 tangentScale) {
         if (pVelocity == nullptr) {
             return false;
         }
@@ -135,7 +149,7 @@ namespace MR {
         return true;
     }
 
-    void rotateVecDegree(TVec3f* pDst, const TVec3f& rAxis, f32 degree) {
+    void rotateVecDegree(TVec3f *pDst, const TVec3f &rAxis, f32 degree) {
         if (pDst == nullptr) {
             return;
         }
@@ -144,25 +158,25 @@ namespace MR {
         rotateVecDegree(pDst, source, rAxis, degree);
     }
 
-    void rotateVecDegree(TVec3f* pDst, const TVec3f& rSrc, const TVec3f& rAxis, f32 degree) {
+    void rotateVecDegree(TVec3f *pDst, const TVec3f &rSrc, const TVec3f &rAxis, f32 degree) {
         if (pDst == nullptr) {
             return;
         }
 
         auto axis = rAxis;
-        if (axis.normalize() <= JGeometry::TUtil< f32 >::epsilon()) {
+        if (axis.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
             pDst->set(rSrc);
             return;
         }
 
-        const auto radians = degree * (std::numbers::pi_v< f32 > / 180.0F);
+        const auto radians = degree * (std::numbers::pi_v<f32> / 180.0F);
         const auto sine = std::sin(radians);
         const auto cosine = std::cos(radians);
         const auto axisProjection = axis * (axis.dot(rSrc) * (1.0F - cosine));
         pDst->set((rSrc * cosine) + (axis.cross(rSrc) * sine) + axisProjection);
     }
 
-    void normalize(TVec3f* pVec) {
+    void normalize(TVec3f *pVec) {
         if (pVec == nullptr) {
             return;
         }
@@ -176,7 +190,7 @@ namespace MR {
         pVec->scale(1.0F / length);
     }
 
-    void normalize(const TVec3f& rSrc, TVec3f* pDst) {
+    void normalize(const TVec3f &rSrc, TVec3f *pDst) {
         if (pDst == nullptr) {
             return;
         }
@@ -185,7 +199,7 @@ namespace MR {
         normalize(pDst);
     }
 
-    bool normalizeOrZero(TVec3f* pVec) {
+    bool normalizeOrZero(TVec3f *pVec) {
         if (pVec == nullptr) {
             return true;
         }
@@ -199,7 +213,7 @@ namespace MR {
         return false;
     }
 
-    bool normalizeOrZero(const TVec3f& rSrc, TVec3f* pDst) {
+    bool normalizeOrZero(const TVec3f &rSrc, TVec3f *pDst) {
         if (pDst == nullptr) {
             return true;
         }
@@ -208,7 +222,7 @@ namespace MR {
         return normalizeOrZero(pDst);
     }
 
-    void separateScalarAndDirection(f32* scalar, TVec3f* direction, const TVec3f& vector) {
+    void separateScalarAndDirection(f32 *scalar, TVec3f *direction, const TVec3f &vector) {
         *scalar = vector.length();
         if (isNearZero(vector)) {
             direction->zero();
@@ -217,7 +231,7 @@ namespace MR {
         }
     }
 
-    f32 vecKillElement(const TVec3f& rVector, const TVec3f& rDirection, TVec3f* pOut) {
+    f32 vecKillElement(const TVec3f &rVector, const TVec3f &rDirection, TVec3f *pOut) {
         if (pOut == nullptr) {
             return 0.0F;
         }
@@ -231,7 +245,7 @@ namespace MR {
         return scalar;
     }
 
-    f32 getMaxElement(const TVec3f& rVec) {
+    f32 getMaxElement(const TVec3f &rVec) {
         if (rVec.x > rVec.y && rVec.x > rVec.z) {
             return rVec.x;
         }
@@ -246,7 +260,7 @@ namespace MR {
         return x > 0.0F ? std::sqrt(x) : x;
     }
 
-    void blendQuatUpFront(TQuat4f* pQuat, const TVec3f& rUp, const TVec3f& rFront, f32 upRate, f32 frontRate) {
+    void blendQuatUpFront(TQuat4f *pQuat, const TVec3f &rUp, const TVec3f &rFront, f32 upRate, f32 frontRate) {
         if (pQuat == nullptr) {
             return;
         }

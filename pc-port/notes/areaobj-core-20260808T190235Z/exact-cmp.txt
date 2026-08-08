@@ -1,0 +1,25 @@
+Command: sha256sum <root-file> <pc-port-file>
+Result: each adjacent source/port pair has the same SHA-256 digest.
+
+49586242fa9a10062d298686646e8d3f53774716e478f7327ecd3f354ff15c4b  include/Game/AreaObj/AreaForm.hpp
+49586242fa9a10062d298686646e8d3f53774716e478f7327ecd3f354ff15c4b  pc-port/src/Game/AreaObj/AreaForm.hpp
+fc740b81444c875f6d258ce40ed4795e481e40bf958bc4eb804caa354e1239da  src/Game/AreaObj/AreaForm.cpp
+fc740b81444c875f6d258ce40ed4795e481e40bf958bc4eb804caa354e1239da  pc-port/src/Game/AreaObj/AreaForm.cpp
+9edc6985044cd54a8de4696b1a32a50212f05c3d61da2d2257c05f6456cf6c68  include/Game/AreaObj/AreaObj.hpp
+9edc6985044cd54a8de4696b1a32a50212f05c3d61da2d2257c05f6456cf6c68  pc-port/src/Game/AreaObj/AreaObj.hpp
+67b56da5b688b6469c1a4c2e35b717b1893321625fae01e58af3cc9dabe517b0  src/Game/AreaObj/AreaObj.cpp
+67b56da5b688b6469c1a4c2e35b717b1893321625fae01e58af3cc9dabe517b0  pc-port/src/Game/AreaObj/AreaObj.cpp
+db1bbb7a58df089ab1124e2243940b86043a22305646f360176939b8cdbb0c83  include/Game/AreaObj/AreaObjFollower.hpp
+db1bbb7a58df089ab1124e2243940b86043a22305646f360176939b8cdbb0c83  pc-port/src/Game/AreaObj/AreaObjFollower.hpp
+dfbb0fb870b64be810fc07657f906b8825f001e34ebcce409837fa95f17ff29c  src/Game/AreaObj/AreaObjFollower.cpp
+dfbb0fb870b64be810fc07657f906b8825f001e34ebcce409837fa95f17ff29c  pc-port/src/Game/AreaObj/AreaObjFollower.cpp
+e7eca6bb53d699af8ec079879a3760744c5b6499a800a5655e52c133985d53d7  include/Game/Util/AreaObjUtil.hpp
+e7eca6bb53d699af8ec079879a3760744c5b6499a800a5655e52c133985d53d7  pc-port/src/Game/Util/AreaObjUtil.hpp
+255197f5b4a53bfaab60593bf3fd12fe3e0bde7f6a96c2eeee9dc0e0c365b121  src/Game/Util/AreaObjUtil.cpp
+255197f5b4a53bfaab60593bf3fd12fe3e0bde7f6a96c2eeee9dc0e0c365b121  pc-port/src/Game/Util/AreaObjUtil.cpp
+2b55054e06e1ce89dc46d58d0d1a2cc9fe473af8ea5a6e1e8761d0cbfc6101a5  include/Game/Map/SleepControllerHolder.hpp
+2b55054e06e1ce89dc46d58d0d1a2cc9fe473af8ea5a6e1e8761d0cbfc6101a5  pc-port/src/Game/Map/SleepControllerHolder.hpp
+37dac27e0f9d9eb0ed555fca39fb9a078fc5e2b338158aa3fe974c25bca8ab5b  src/Game/Map/SleepControllerHolder.cpp
+37dac27e0f9d9eb0ed555fca39fb9a078fc5e2b338158aa3fe974c25bca8ab5b  pc-port/src/Game/Map/SleepControllerHolder.cpp
+
+cmp result: 10/10 AreaObj core source-boundary pairs byte-identical

@@ -77,6 +77,21 @@ void test_source_is_exact_and_scene_shims_are_absent() {
     require(port_executor == decomp_executor,
             "pc-port StorySequenceExecutor.cpp must remain byte-exact with the decompiled source");
 
+    const auto port_event_util = read_file(project / "src/Game/Util/EventUtil.cpp");
+    const auto decomp_event_util = read_file(project / "../src/Game/Util/EventUtil.cpp");
+    require(port_event_util == decomp_event_util,
+            "pc-port EventUtil.cpp must remain byte-exact with the decompiled source");
+
+    const auto game_xmake = read_file(project / "src/Game/xmake.lua");
+    require(game_xmake.find("remove_files(\"Util/EventUtil.cpp\")") != std::string::npos,
+            "the exact EventUtil TU must remain excluded while host providers own its available symbols");
+
+    const auto event_compat = read_file(project / "src/compat/EventUtilCompat.cpp");
+    require(event_compat.find("s32 getPictureBookChapterCanRead()") != std::string::npos &&
+                event_compat.find("s32 getPictureBookChapterAlreadyRead()") != std::string::npos &&
+                event_compat.find("void setPictureBookChapterAlreadyRead(int") != std::string::npos,
+            "picture-book EventUtil providers must remain in the EventUtil compatibility boundary");
+
     const auto boot = read_file(project / "src/scene/SequenceBootService.cpp");
     require(boot.find("ACTMES_AUTORUSH_BEGIN") == std::string::npos &&
                 boot.find("sendMsgToAllLiveActor") == std::string::npos,

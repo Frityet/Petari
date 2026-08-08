@@ -23,6 +23,8 @@ namespace smgpc::runtime {
 
 namespace smgpc::compat {
     class DemoSceneRuntime;
+    class StageSessionBinding;
+    class StageSessionState;
 }  // namespace smgpc::compat
 
 namespace smgpc::scene {
@@ -62,6 +64,7 @@ namespace smgpc::scene {
         void init_placement_roots();
         void construct_placement_roots(const StagePlacementObject *explicit_placement = nullptr);
         void init_stage_environment();
+        void init_stage_audio();
         void trace_placement_object(const StagePlacementObject &placement) const;
         void init_roots_after_placement();
         void init_stage_start_camera();
@@ -70,8 +73,14 @@ namespace smgpc::scene {
         [[nodiscard]] const char *resolve_placement_actor_name(const StagePlacementObject &placement) const;
 
         smgpc::runtime::RuntimeContext &_runtime;
+        bool _initialized = false;
         std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
+        // State precedes its binding so normal reverse member destruction also
+        // closes the active-session scope before releasing the referenced state.
+        std::unique_ptr<smgpc::compat::StageSessionState> _stage_session;
+        std::unique_ptr<smgpc::compat::StageSessionBinding> _stage_session_binding;
+        bool _stage_audio_started = false;
         StageCollisionService _collision;
         std::unique_ptr<SceneObjHolderBinding> _scene_obj_holder_binding;
         std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;

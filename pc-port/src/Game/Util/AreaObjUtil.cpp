@@ -1,6 +1,8 @@
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/AreaObj/AreaForm.hpp"
+#include "Game/AreaObj/RestartCube.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 
 namespace MR {
@@ -46,5 +48,17 @@ namespace MR {
 
     AreaObj* getCurrentAstroOverlookAreaObj() {
         return getAreaIn("AstroOverlookArea", *MR::getPlayerPos());
+    }
+
+    void calcCylinderPos(TVec3f* pPos, const AreaObj* pAreaObj) {
+        static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcPos(pPos);
+    }
+
+    void tryToUpdatePlayerRestartIdInfo(const TVec3f& rPos) {
+        RestartCube* cube = static_cast< RestartCube* >(getAreaIn("RestartCube", rPos));
+
+        if (cube != nullptr) {
+            cube->updatePlayerRestartIdInfo();
+        }
     }
 };  // namespace MR

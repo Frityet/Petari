@@ -702,6 +702,33 @@ target("smg-pc-area-obj-real-or-absent-tests")
         realtime_output = true
     })
 
+target("smg-pc-area-obj-core-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "AreaObjCoreTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("area_obj_core", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-npc-actor-real-or-absent-tests")
     set_kind("binary")
     set_default(false)
@@ -854,6 +881,33 @@ target("smg-pc-j3d-gx-real-or-absent-tests")
         "aurora-vi"
     }
     add_tests("j3d_gx_real_or_absent", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-restart-stage-session-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "RestartStageSessionTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("restart_stage_session", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true

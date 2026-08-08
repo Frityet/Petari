@@ -4,14 +4,14 @@
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
-#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorPhysicsRuntime.hpp"
@@ -32,29 +32,29 @@ namespace {
         throw std::logic_error("GameSceneLayoutHolder is unavailable in the active scene.");
     }
 
-    LiveActor& require_actor(LiveActor* actor) {
+    LiveActor &require_actor(LiveActor *actor) {
         if (actor == nullptr) {
             throw std::invalid_argument("Actor utility requires a LiveActor.");
         }
         return *actor;
     }
 
-    const LiveActor& require_actor(const LiveActor* actor) {
+    const LiveActor &require_actor(const LiveActor *actor) {
         if (actor == nullptr) {
             throw std::invalid_argument("Actor utility requires a LiveActor.");
         }
         return *actor;
     }
 
-    TVec3f& require_vector(TVec3f* vector) {
+    TVec3f &require_vector(TVec3f *vector) {
         if (vector == nullptr) {
             throw std::invalid_argument("Actor utility requires an output vector.");
         }
         return *vector;
     }
 
-    const TVec3f& require_player_position() {
-        const auto* position = MR::getPlayerPos();
+    const TVec3f &require_player_position() {
+        const auto *position = MR::getPlayerPos();
         if (position == nullptr) {
             throw std::logic_error("Player position is unavailable.");
         }
@@ -67,11 +67,11 @@ namespace {
 }  // namespace
 
 namespace MR {
-    void resetPosition(LiveActor* pActor) {
-        auto& actor = require_actor(pActor);
-        auto sensors = std::vector<HitSensor*>{};
+    void resetPosition(LiveActor *pActor) {
+        auto &actor = require_actor(pActor);
+        auto sensors = std::vector<HitSensor *>{};
         actor.collectHitSensors(sensors);
-        for (auto* sensor : sensors) {
+        for (auto *sensor : sensors) {
             if (sensor != nullptr) {
                 sensor->mSensorCount = 0U;
             }
@@ -88,32 +88,32 @@ namespace MR {
         actor.mFlag.mIsNoCalcAnim = was_no_calc_anim;
     }
 
-    void resetPosition(LiveActor* pActor, const TVec3f& rPosition) {
+    void resetPosition(LiveActor *pActor, const TVec3f &rPosition) {
         require_actor(pActor).mPosition.set(rPosition);
         resetPosition(pActor);
     }
 
-    void resetPosition(LiveActor*, const char*) {
+    void resetPosition(LiveActor *, const char *) {
         throw std::logic_error("Named-position reset is unavailable without NamePosHolder.");
     }
 
-    bool isInDeath(const LiveActor* pActor, const TVec3f& rOffset) {
+    bool isInDeath(const LiveActor *pActor, const TVec3f &rOffset) {
         (void)require_actor(pActor);
         (void)rOffset;
         throw std::logic_error("DeathArea queries are unavailable without parsed AreaObj ownership.");
     }
 
-    void calcActorAxisY(TVec3f* pOut, const LiveActor* pActor) {
-        auto& output = require_vector(pOut);
-        const auto& actor = require_actor(pActor);
+    void calcActorAxisY(TVec3f *pOut, const LiveActor *pActor) {
+        auto &output = require_vector(pOut);
+        const auto &actor = require_actor(pActor);
         Mtx matrix{};
         MR::makeMtxTR(matrix, &actor);
         output.set(matrix[0][1], matrix[1][1], matrix[2][1]);
     }
 
-    bool isNearPlayer(const LiveActor* pActor, f32 distance) {
-        const auto& actor = require_actor(pActor);
-        auto* player = smgpc::compat::active_player_system_for_player_util();
+    bool isNearPlayer(const LiveActor *pActor, f32 distance) {
+        const auto &actor = require_actor(pActor);
+        auto *player = smgpc::compat::active_player_system_for_player_util();
         if (player == nullptr || player->attached_actor() == nullptr) {
             throw std::logic_error("Player state is unavailable.");
         }
@@ -121,20 +121,20 @@ namespace MR {
                actor.mPosition.squareDistance(require_player_position()) < (distance * distance);
     }
 
-    void calcVecToPlayerH(TVec3f* pOut, const LiveActor* pActor, const TVec3f* pUp) {
-        auto& output = require_vector(pOut);
-        const auto& actor = require_actor(pActor);
+    void calcVecToPlayerH(TVec3f *pOut, const LiveActor *pActor, const TVec3f *pUp) {
+        auto &output = require_vector(pOut);
+        const auto &actor = require_actor(pActor);
         output.set(require_player_position() - actor.mPosition);
         MR::vecKillElement(output, pUp != nullptr ? *pUp : actor.mGravity, &output);
         MR::normalizeOrZero(&output);
     }
 
-    void attenuateVelocity(LiveActor* pActor, f32 scalar) {
+    void attenuateVelocity(LiveActor *pActor, f32 scalar) {
         require_actor(pActor).mVelocity.scale(scalar);
     }
 
-    void addVelocityMoveToDirection(LiveActor* pActor, const TVec3f& rDirection, f32 speed) {
-        auto& actor = require_actor(pActor);
+    void addVelocityMoveToDirection(LiveActor *pActor, const TVec3f &rDirection, f32 speed) {
+        auto &actor = require_actor(pActor);
         auto direction = rDirection;
         MR::vecKillElement(direction, actor.mGravity, &direction);
         if (!MR::normalizeOrZero(&direction)) {
@@ -146,18 +146,18 @@ namespace MR {
         }
     }
 
-    void addVelocityJump(LiveActor* pActor, f32 speed) {
-        auto& actor = require_actor(pActor);
+    void addVelocityJump(LiveActor *pActor, f32 speed) {
+        auto &actor = require_actor(pActor);
         actor.mVelocity.add(actor.mGravity * -speed);
     }
 
-    void addVelocityToGravity(LiveActor* pActor, f32 acceleration) {
-        auto& actor = require_actor(pActor);
+    void addVelocityToGravity(LiveActor *pActor, f32 acceleration) {
+        auto &actor = require_actor(pActor);
         actor.mVelocity.add(actor.mGravity * acceleration);
     }
 
-    void addVelocityToGravityOrGround(LiveActor* pActor, f32 acceleration) {
-        auto& actor = require_actor(pActor);
+    void addVelocityToGravityOrGround(LiveActor *pActor, f32 acceleration) {
+        auto &actor = require_actor(pActor);
         if (MR::isBindedGround(&actor)) {
             actor.mVelocity.add(*MR::getGroundNormal(&actor) * -acceleration);
         } else {
@@ -165,9 +165,9 @@ namespace MR {
         }
     }
 
-    bool reboundVelocityFromCollision(LiveActor* pActor, f32 restitution, f32 threshold, f32 tangentScale) {
-        auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    bool reboundVelocityFromCollision(LiveActor *pActor, f32 restitution, f32 threshold, f32 tangentScale) {
+        auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || (!contacts->ground && !contacts->wall && !contacts->roof)) {
             return false;
         }
@@ -188,9 +188,9 @@ namespace MR {
         return false;
     }
 
-    void turnDirectionDegree(const LiveActor* pActor, TVec3f* pDirection, const TVec3f& rTargetDirection, f32 degree) {
-        const auto& actor = require_actor(pActor);
-        auto& direction = require_vector(pDirection);
+    void turnDirectionDegree(const LiveActor *pActor, TVec3f *pDirection, const TVec3f &rTargetDirection, f32 degree) {
+        const auto &actor = require_actor(pActor);
+        auto &direction = require_vector(pDirection);
         auto current = direction;
         auto target = rTargetDirection;
         MR::vecKillElement(current, actor.mGravity, &current);
@@ -210,22 +210,20 @@ namespace MR {
         MR::normalizeOrZero(&direction);
     }
 
-    void turnDirectionToPlayerDegree(const LiveActor* pActor, TVec3f* pDirection, f32 degree) {
-        const auto& actor = require_actor(pActor);
+    void turnDirectionToPlayerDegree(const LiveActor *pActor, TVec3f *pDirection, f32 degree) {
+        const auto &actor = require_actor(pActor);
         turnDirectionDegree(&actor, pDirection, require_player_position() - actor.mPosition, degree);
     }
 
-    f32 calcNerveValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {
-        const auto& actor = require_actor(pActor);
-        const auto rate = stepMax <= 0
-                              ? 1.0F
-                              : MR::clamp(static_cast<f32>(actor.getNerveStep()) / static_cast<f32>(stepMax), 0.0F, 1.0F);
+    f32 calcNerveValue(const LiveActor *pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {
+        const auto &actor = require_actor(pActor);
+        const auto rate = stepMax <= 0 ? 1.0F : MR::clamp(static_cast<f32>(actor.getNerveStep()) / static_cast<f32>(stepMax), 0.0F, 1.0F);
         return valueStart + ((valueEnd - valueStart) * rate);
     }
 
-    f32 calcHitPowerToWall(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    f32 calcHitPowerToWall(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->wall) {
             return 0.0F;
         }
@@ -233,16 +231,16 @@ namespace MR {
         return speed < 0.0F ? -speed : 0.0F;
     }
 
-    void zeroVelocity(LiveActor* pActor) {
+    void zeroVelocity(LiveActor *pActor) {
         require_actor(pActor).mVelocity.zero();
     }
 
-    MirrorActor* tryCreateMirrorActor(LiveActor* pActor, const char*) {
+    MirrorActor *tryCreateMirrorActor(LiveActor *pActor, const char *) {
         (void)require_actor(pActor);
         throw std::logic_error("MirrorActor creation is unavailable without parsed MirrorArea ownership and mirror rendering.");
     }
 
-    void setBinderExceptSensorType(LiveActor* pActor, const TVec3f* pCenter, f32) {
+    void setBinderExceptSensorType(LiveActor *pActor, const TVec3f *pCenter, f32) {
         (void)require_actor(pActor);
         if (pCenter == nullptr) {
             throw std::invalid_argument("Clip-area binder filtering requires a center position.");
@@ -251,13 +249,13 @@ namespace MR {
             "Clip-area binder filtering is unavailable without CollisionParts sensor ownership and ClipAreaHolder.");
     }
 
-    void setClippingFar100m(LiveActor* pActor) {
+    void setClippingFar100m(LiveActor *pActor) {
         smgpc::compat::configure_actor_clipping_far_level(pActor, 6);
     }
 
-    bool isPressedRoofAndGround(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    bool isPressedRoofAndGround(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->roof || !contacts->ground) {
             return false;
         }
@@ -265,88 +263,88 @@ namespace MR {
             "Pressed roof/ground resolution is unavailable without bound sensors and moving CollisionParts force data.");
     }
 
-    bool isOnGround(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    bool isOnGround(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         return contacts != nullptr && contacts->ground && actor.mVelocity.dot(contacts->ground_normal) <= 0.0F;
     }
 
-    bool isBindedGround(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    bool isBindedGround(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         return contacts != nullptr && contacts->ground;
     }
 
-    bool isBindedWall(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    bool isBindedWall(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         return contacts != nullptr && contacts->wall;
     }
 
-    bool isBindedRoof(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    bool isBindedRoof(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         return contacts != nullptr && contacts->roof;
     }
 
-    const TVec3f* getGroundNormal(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    const TVec3f *getGroundNormal(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->ground) {
             throw std::logic_error("Ground normal is unavailable without a real Binder ground contact.");
         }
         return &contacts->ground_normal;
     }
 
-    const TVec3f* getWallNormal(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    const TVec3f *getWallNormal(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->wall) {
             throw std::logic_error("Wall normal is unavailable without a real Binder wall contact.");
         }
         return &contacts->wall_normal;
     }
 
-    const TVec3f* getRoofNormal(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    const TVec3f *getRoofNormal(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->roof) {
             throw std::logic_error("Roof normal is unavailable without a real Binder roof contact.");
         }
         return &contacts->roof_normal;
     }
 
-    bool isNoBind(const LiveActor* pActor) {
+    bool isNoBind(const LiveActor *pActor) {
         return require_actor(pActor).mFlag.mIsNoBind;
     }
 
-    void onBind(LiveActor* pActor) {
+    void onBind(LiveActor *pActor) {
         require_actor(pActor).mFlag.mIsNoBind = false;
     }
 
-    void offBind(LiveActor* pActor) {
-        auto& actor = require_actor(pActor);
+    void offBind(LiveActor *pActor) {
+        auto &actor = require_actor(pActor);
         actor.mFlag.mIsNoBind = true;
         if (smgpc::compat::has_actor_binder(&actor)) {
             smgpc::compat::clear_actor_binder_contacts(&actor);
         }
     }
 
-    void offCalcGravity(LiveActor* pActor) {
+    void offCalcGravity(LiveActor *pActor) {
         require_actor(pActor).mFlag.mIsCalcGravity = false;
     }
 
-    void onCalcGravity(LiveActor* pActor) {
-        auto& actor = require_actor(pActor);
+    void onCalcGravity(LiveActor *pActor) {
+        auto &actor = require_actor(pActor);
         actor.mFlag.mIsCalcGravity = true;
         if (!actor.isDead()) {
             smgpc::compat::update_live_actor_gravity(actor);
         }
     }
 
-    bool isBindedGroundDamageFire(const LiveActor* pActor) {
-        const auto& actor = require_actor(pActor);
-        const auto* contacts = smgpc::compat::actor_binder_contacts(&actor);
+    bool isBindedGroundDamageFire(const LiveActor *pActor) {
+        const auto &actor = require_actor(pActor);
+        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->ground) {
             return false;
         }
@@ -354,60 +352,56 @@ namespace MR {
             "Ground DamageFire code is unavailable without the contacted CollisionParts attribute table.");
     }
 
-    void initShadowSurfaceCircle(LiveActor*, f32) {
+    void initShadowSurfaceCircle(LiveActor *, f32) {
         throw_shadow_unavailable();
     }
 
-    void initShadowVolumeSphere(LiveActor*, f32) {
+    void initShadowVolumeSphere(LiveActor *, f32) {
         throw_shadow_unavailable();
     }
 
-    void initShadowVolumeCylinder(LiveActor*, f32) {
+    void initShadowVolumeCylinder(LiveActor *, f32) {
         throw_shadow_unavailable();
     }
 
-    void setShadowDropPositionPtr(LiveActor*, const char*, const TVec3f*) {
+    void setShadowDropPositionPtr(LiveActor *, const char *, const TVec3f *) {
         throw_shadow_unavailable();
     }
 
-    void setShadowDropLength(LiveActor*, const char*, f32) {
+    void setShadowDropLength(LiveActor *, const char *, f32) {
         throw_shadow_unavailable();
     }
 
-    void onCalcShadow(LiveActor*, const char*) {
+    void onCalcShadow(LiveActor *, const char *) {
         throw_shadow_unavailable();
     }
 
-    void offCalcShadow(LiveActor*, const char*) {
+    void offCalcShadow(LiveActor *, const char *) {
         throw_shadow_unavailable();
     }
 
-    void onCalcShadowOneTime(LiveActor*, const char*) {
+    void onCalcShadowOneTime(LiveActor *, const char *) {
         throw_shadow_unavailable();
     }
 
-    void onCalcShadowDropPrivateGravity(LiveActor*, const char*) {
+    void onCalcShadowDropPrivateGravity(LiveActor *, const char *) {
         throw_shadow_unavailable();
     }
 
-    void onCalcShadowDropPrivateGravityOneTime(LiveActor*, const char*) {
+    void onCalcShadowDropPrivateGravityOneTime(LiveActor *, const char *) {
         throw_shadow_unavailable();
     }
 
-    void invalidateShadow(LiveActor*, const char*) {
+    void invalidateShadow(LiveActor *, const char *) {
         throw_shadow_unavailable();
     }
 
-    void validateShadow(LiveActor*, const char*) {
+    void validateShadow(LiveActor *, const char *) {
         throw_shadow_unavailable();
     }
 
-    void setClippingRangeIncludeShadow(LiveActor*, TVec3f*, f32) {
+    void setClippingRangeIncludeShadow(LiveActor *, TVec3f *, f32) {
         throw_shadow_unavailable();
-    }
-
-    bool isGalaxyDarkCometAppearInCurrentStage() {
-        throw std::logic_error("Current-stage Dark Comet state is unavailable.");
     }
 
     void incCoin(int) {

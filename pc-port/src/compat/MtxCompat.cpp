@@ -8,8 +8,23 @@
 
 namespace {
     constexpr f32 cDegreesToRadians = 3.14159265358979323846F / 180.0F;
+    Mtx sTemporaryRotationX = {
+        {1.0F, 0.0F, 0.0F, 0.0F},
+        {0.0F, 1.0F, 0.0F, 0.0F},
+        {0.0F, 0.0F, 1.0F, 0.0F},
+    };
+    Mtx sTemporaryRotationY = {
+        {1.0F, 0.0F, 0.0F, 0.0F},
+        {0.0F, 1.0F, 0.0F, 0.0F},
+        {0.0F, 0.0F, 1.0F, 0.0F},
+    };
+    Mtx sTemporaryRotationZ = {
+        {1.0F, 0.0F, 0.0F, 0.0F},
+        {0.0F, 1.0F, 0.0F, 0.0F},
+        {0.0F, 0.0F, 1.0F, 0.0F},
+    };
 
-    void set_axes(TPos3f* pMatrix, const TVec3f& rAxisX, const TVec3f& rAxisY, const TVec3f& rAxisZ) {
+    void set_axes(TPos3f *pMatrix, const TVec3f &rAxisX, const TVec3f &rAxisY, const TVec3f &rAxisZ) {
         pMatrix->mMtx[0][0] = rAxisX.x;
         pMatrix->mMtx[1][0] = rAxisX.y;
         pMatrix->mMtx[2][0] = rAxisX.z;
@@ -64,7 +79,7 @@ namespace MR {
                       static_cast<s16>(rotationZ * DEGREE_TO_S16));
     }
 
-    void makeMtxRotate(MtxPtr pMatrix, const TVec3f& rRotation) {
+    void makeMtxRotate(MtxPtr pMatrix, const TVec3f &rRotation) {
         makeMtxRotate(pMatrix, rRotation.x, rRotation.y, rRotation.z);
     }
 
@@ -109,11 +124,11 @@ namespace MR {
         pMatrix[2][3] = tz;
     }
 
-    void makeMtxTR(MtxPtr pMatrix, const TVec3f& rTranslation, const TVec3f& rRotation) {
+    void makeMtxTR(MtxPtr pMatrix, const TVec3f &rTranslation, const TVec3f &rRotation) {
         makeMtxTR(pMatrix, rTranslation.x, rTranslation.y, rTranslation.z, rRotation.x, rRotation.y, rRotation.z);
     }
 
-    void makeMtxTR(MtxPtr pMatrix, const LiveActor* pActor) {
+    void makeMtxTR(MtxPtr pMatrix, const LiveActor *pActor) {
         if (pActor != nullptr) {
             makeMtxTR(pMatrix, pActor->mPosition, pActor->mRotation);
         }
@@ -132,12 +147,12 @@ namespace MR {
         pMatrix[2][2] *= sz;
     }
 
-    void makeMtxTRS(MtxPtr pMatrix, const TVec3f& rTranslation, const TVec3f& rRotation, const TVec3f& rScale) {
+    void makeMtxTRS(MtxPtr pMatrix, const TVec3f &rTranslation, const TVec3f &rRotation, const TVec3f &rScale) {
         makeMtxTRS(pMatrix, rTranslation.x, rTranslation.y, rTranslation.z, rRotation.x, rRotation.y, rRotation.z, rScale.x,
                    rScale.y, rScale.z);
     }
 
-    void makeMtxTRS(MtxPtr pMatrix, const LiveActor* pActor) {
+    void makeMtxTRS(MtxPtr pMatrix, const LiveActor *pActor) {
         if (pActor != nullptr) {
             makeMtxTRS(pMatrix, pActor->mPosition, pActor->mRotation, pActor->mScale);
         }
@@ -147,7 +162,7 @@ namespace MR {
         preScaleMtx(pMatrix, scale, scale, scale);
     }
 
-    void preScaleMtx(MtxPtr pMatrix, const TVec3f& rScale) {
+    void preScaleMtx(MtxPtr pMatrix, const TVec3f &rScale) {
         preScaleMtx(pMatrix, rScale.x, rScale.y, rScale.z);
     }
 
@@ -163,7 +178,37 @@ namespace MR {
         }
     }
 
-    void makeMtxUpNoSupportPos(TPos3f* pMatrix, const TVec3f& rUp, const TVec3f& rPosition) {
+    MtxPtr tmpMtxRotXDeg(f32 degrees) {
+        const auto cosine = JMACosDegree(degrees);
+        const auto sine = JMASinDegree(degrees);
+        sTemporaryRotationX[1][1] = cosine;
+        sTemporaryRotationX[1][2] = sine;
+        sTemporaryRotationX[2][1] = -sine;
+        sTemporaryRotationX[2][2] = cosine;
+        return sTemporaryRotationX;
+    }
+
+    MtxPtr tmpMtxRotYDeg(f32 degrees) {
+        const auto cosine = JMACosDegree(degrees);
+        const auto sine = JMASinDegree(degrees);
+        sTemporaryRotationY[0][0] = cosine;
+        sTemporaryRotationY[0][2] = -sine;
+        sTemporaryRotationY[2][0] = sine;
+        sTemporaryRotationY[2][2] = cosine;
+        return sTemporaryRotationY;
+    }
+
+    MtxPtr tmpMtxRotZDeg(f32 degrees) {
+        const auto cosine = JMACosDegree(degrees);
+        const auto sine = JMASinDegree(degrees);
+        sTemporaryRotationZ[0][0] = cosine;
+        sTemporaryRotationZ[0][1] = sine;
+        sTemporaryRotationZ[1][0] = -sine;
+        sTemporaryRotationZ[1][1] = cosine;
+        return sTemporaryRotationZ;
+    }
+
+    void makeMtxUpNoSupportPos(TPos3f *pMatrix, const TVec3f &rUp, const TVec3f &rPosition) {
         if (pMatrix == nullptr) {
             return;
         }

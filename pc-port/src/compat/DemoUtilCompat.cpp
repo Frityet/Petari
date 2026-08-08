@@ -6,6 +6,7 @@
 #include "Game/Util/Functor.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/DemoUtilCompat.hpp"
+#include "compat/StageSessionState.hpp"
 
 #include <stdexcept>
 #include <string>
@@ -93,5 +94,9 @@ namespace MR {
         return smgpc::compat::require_active_demo_scene_runtime(
                    "Named demo active query")
             .is_active(pDemoName);
+    }
+
+    bool isPowerStarGetDemoActive() {
+        return smgpc::compat::require_active_stage_session().is_power_star_get_demo_active();
     }
 }  // namespace MR

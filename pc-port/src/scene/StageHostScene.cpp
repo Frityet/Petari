@@ -8,7 +8,10 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/StageScenarioMetadataResolver.hpp"
+#include "compat/StageSessionState.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "scene/AreaObjRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -27,6 +30,22 @@
 namespace smgpc::scene {
     namespace {
 
+        [[nodiscard]] bool placement_has_complete_runtime(const StagePlacementObject &placement) {
+            return placement_has_complete_area_obj_runtime(
+                placement.object_name, placement.table_path,
+                placement.factory_supported);
+        }
+
+        [[nodiscard]] std::string_view placement_runtime_support_reason(
+            const StagePlacementObject &placement) {
+            if (placement.factory_supported &&
+                is_area_obj_placement_table(placement.table_path) &&
+                find_complete_area_obj_placement_descriptor(placement.object_name) == nullptr) {
+                return "area_obj_creator_manager_closure_unavailable";
+            }
+            return placement.support_reason;
+        }
+
 #ifndef NDEBUG
         [[nodiscard]] std::filesystem::path debug_stage_placement_report_path() {
             const auto *path = std::getenv("SMGPC_STAGE_PLACEMENT_REPORT_PATH");
@@ -38,11 +57,11 @@ namespace smgpc::scene {
         }
 
         [[nodiscard]] bool placement_is_created(const StagePlacementObject &placement) {
-            return placement.factory_supported;
+            return placement_has_complete_runtime(placement);
         }
 
         [[nodiscard]] std::string_view placement_status_name(const StagePlacementObject &placement) {
-            if (placement.factory_supported) {
+            if (placement_has_complete_runtime(placement)) {
                 return "created";
             }
             if (placement.intentionally_ignored) {
@@ -119,7 +138,7 @@ namespace smgpc::scene {
                 if (rail.has_first_point) {
                     out << "  rail_first_point: [" << rail.first_point[0] << ", " << rail.first_point[1] << ", " << rail.first_point[2] << "]\n";
                 }
-                out << "  support_reason: " << placement.support_reason << "\n";
+                out << "  support_reason: " << placement_runtime_support_reason(placement) << "\n";
                 out << "  archive: " << placement.object_archive_path << "\n";
             }
         }
@@ -146,12 +165,12 @@ namespace smgpc::scene {
             const StagePlacementObject *explicit_placement) {
             auto blocked = std::vector<const StagePlacementObject *>{};
             for (const auto &placement : placements) {
-                if ((explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) ||
-                    placement.intentionally_ignored || placement.factory_supported) {
+                if (placement.intentionally_ignored || placement_has_complete_runtime(placement)) {
                     continue;
                 }
                 blocked.push_back(&placement);
             }
+            (void)explicit_placement;
             return blocked;
         }
 
@@ -166,12 +185,12 @@ namespace smgpc::scene {
         const StagePlacementObject *explicit_placement) {
         auto blocked_placements = std::vector<const StagePlacementObject *>{};
         for (const auto &placement : placements) {
-            if ((explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) ||
-                placement.intentionally_ignored || placement.factory_supported) {
+            if (placement.intentionally_ignored || placement_has_complete_runtime(placement)) {
                 continue;
             }
             blocked_placements.push_back(&placement);
         }
+        (void)explicit_placement;
         if (!blocked_placements.empty()) {
             throw std::runtime_error(unsupported_placement_error(stage_name, blocked_placements));
         }
@@ -195,11 +214,33 @@ namespace smgpc::scene {
         _runtime.player_system().clear_stage_state();
         destroy_roots();
         _scene_obj_holder_binding.reset();
+        if (_stage_audio_started) {
+            smgpc::compat::end_stage_audio(_runtime.audio());
+            _stage_audio_started = false;
+        }
+        _stage_session_binding.reset();
+        _stage_session.reset();
     }
 
     void StageHostScene::init() {
-        if (_scene_obj_holder_binding != nullptr) {
+        if (_initialized) {
             return;
+        }
+        if (_stage_session_binding != nullptr || _scene_obj_holder_binding != nullptr) {
+            throw std::logic_error(
+                "A partially initialized stage host must be destroyed before another initialization attempt.");
+        }
+
+        if (_stage_session_binding == nullptr) {
+            const auto scenario_metadata = smgpc::compat::resolve_stage_scenario_metadata(
+                _runtime.dvd(), _request.stage_name, _request.scenario_no);
+            auto stage_session = std::make_unique<smgpc::compat::StageSessionState>(
+                _request.scene_name, _request.stage_name, _request.scenario_no,
+                JMapIdInfo(_request.start_id, _request.start_zone_id), scenario_metadata);
+            auto stage_session_binding =
+                std::make_unique<smgpc::compat::StageSessionBinding>(*stage_session);
+            _stage_session = std::move(stage_session);
+            _stage_session_binding = std::move(stage_session_binding);
         }
 
         initSceneObjHolder();
@@ -211,6 +252,7 @@ namespace smgpc::scene {
             SceneObj_StageSwitchContainer,
             SceneObj_SwitchWatcherHolder,
             SceneObj_SleepControllerHolder,
+            SceneObj_AreaObjContainer,
         };
         for (const auto id : required_scene_objects) {
             if (MR::createSceneObj(id) == nullptr) {
@@ -257,12 +299,17 @@ namespace smgpc::scene {
         init_stage_start_camera();
         SleepControlFunc::initSyncSleepController();
         appear_roots();
+        _initialized = true;
     }
 
     void StageHostScene::construct_root_object(std::string_view object_name, const char *actor_name,
                                                const StagePlacementObject *placement, bool explicit_root) {
         if (!smgpc::scene::nameobj::can_create_name_obj(object_name)) {
             throw std::runtime_error("Unsupported stage host request object: " + std::string(object_name) + " for stage " + _request.stage_name);
+        }
+        if (find_complete_area_obj_placement_descriptor(object_name) != nullptr && placement == nullptr) {
+            throw std::runtime_error(
+                "An exact AreaObj requires its retail placement row: " + std::string(object_name));
         }
 
         auto &lifecycle = _runtime.name_obj_lifecycle();
@@ -285,13 +332,15 @@ namespace smgpc::scene {
         init_stage_environment();
 
         const auto explicit_placement = std::ranges::find_if(_placements, [this](const auto &placement) {
-            return placement.object_name == _request.object_name && placement.factory_supported;
+            return placement.object_name == _request.object_name &&
+                   placement_has_complete_runtime(placement);
         });
         const auto *placement = explicit_placement != _placements.end() ? &*explicit_placement : nullptr;
         const auto *actor_name = !_request.actor_name.empty() ? _request.actor_name.c_str() :
                                  placement != nullptr         ? resolve_placement_actor_name(*placement) :
                                                                 nullptr;
         preflight_stage_placements_or_throw(_request.stage_name, _placements, placement);
+        init_stage_audio();
         construct_root_object(_request.object_name, actor_name, placement, true);
         construct_placement_roots(placement);
     }
@@ -304,6 +353,7 @@ namespace smgpc::scene {
     void StageHostScene::construct_placement_roots(const StagePlacementObject *explicit_placement) {
         const auto blocked_placements = collect_blocked_placements(_placements, explicit_placement);
         preflight_stage_placements_or_throw(_request.stage_name, _placements, explicit_placement);
+        init_stage_audio();
         for (const auto &placement : _placements) {
             trace_placement_object(placement);
             if (explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) {
@@ -380,6 +430,21 @@ namespace smgpc::scene {
 #endif
     }
 
+    void StageHostScene::init_stage_audio() {
+        if (_stage_audio_started) {
+            return;
+        }
+        try {
+            smgpc::compat::begin_stage_audio(
+                _runtime.audio(), _request.scene_name, _request.stage_name,
+                _request.scenario_no);
+        } catch (...) {
+            smgpc::compat::end_stage_audio(_runtime.audio());
+            throw;
+        }
+        _stage_audio_started = true;
+    }
+
     void StageHostScene::trace_placement_object(const StagePlacementObject &placement) const {
 #ifndef NDEBUG
         const auto rail = placement_rail_summary(placement);
@@ -390,7 +455,7 @@ namespace smgpc::scene {
                                                ";layer=" + placement.layer_name + ";table=" + placement.table_path +
                                                ";object=" + placement.object_name +
                                                ";factory=" + std::string(placement_status_name(placement)) +
-                                               ";support_reason=" + placement.support_reason +
+                                               ";support_reason=" + std::string(placement_runtime_support_reason(placement)) +
                                                ";common_path_id=" + std::to_string(placement.common_path_id) +
                                                ";rail_info_attached=" + (rail.attached ? "true" : "false") +
                                                ";rail_path_row=" + std::to_string(rail.path_info_index) +

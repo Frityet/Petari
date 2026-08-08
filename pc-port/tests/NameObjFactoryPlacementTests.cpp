@@ -1,7 +1,11 @@
+#include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/Map/FileSelector.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
-#include "Game/Map/FileSelector.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "scene/AreaObjRuntime.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
@@ -111,7 +115,7 @@ namespace {
                 "a creator with no retail archive mapping must not infer a same-name archive");
         const auto factory_archives = smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, "PrologueDirector");
         const auto has_archive = [&](std::string_view name) {
-            return std::ranges::any_of(factory_archives, [&](const auto& request) {
+            return std::ranges::any_of(factory_archives, [&](const auto &request) {
                 return request.archive_name == name;
             });
         };
@@ -121,12 +125,33 @@ namespace {
         require(smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, cUnsupportedFixture).empty(),
                 "unsupported objects should not produce preload requests");
 
+        for (const auto &descriptor : smgpc::scene::complete_area_obj_placement_descriptors()) {
+            const auto object_name = std::string(descriptor.object_name);
+            const auto *table_entry = NameObjFactory::getName2CreateFunc(object_name.c_str(), nullptr);
+            require(smgpc::scene::nameobj::can_create_name_obj(descriptor.object_name) &&
+                        NameObjFactory::getCreator(object_name.c_str()) == descriptor.object_creator &&
+                        table_entry != nullptr && table_entry->mCreateFunc == descriptor.object_creator,
+                    "AreaObj factory support must derive from the same complete creator-manager descriptor");
+
+            auto object = smgpc::scene::nameobj::create_name_obj(
+                dvd, descriptor.object_name, "localized actor label");
+            require(dynamic_cast<AreaObj *>(object.get()) != nullptr &&
+                        std::string_view(object->getName()) == "localized actor label",
+                    "the factory must preserve the resolved actor name until exact placement init applies JMap naming");
+        }
+
         constexpr auto cUnavailableCreators = std::array{
-            std::string_view{"FileSelector"}, std::string_view{"Steam"}, std::string_view{"Coin"},
+            std::string_view{"FileSelector"},
+            std::string_view{"RestartCube"},
+            std::string_view{"Steam"},
+            std::string_view{"Coin"},
             std::string_view{"PurpleCoin"},
-            std::string_view{"RailCoin"}, std::string_view{"PurpleRailCoin"},
-            std::string_view{"PurpleCoinStarter"}, std::string_view{"DemoRabbit"},
-            std::string_view{"StarPieceFlow"}, std::string_view{"StarPieceGroup"},
+            std::string_view{"RailCoin"},
+            std::string_view{"PurpleRailCoin"},
+            std::string_view{"PurpleCoinStarter"},
+            std::string_view{"DemoRabbit"},
+            std::string_view{"StarPieceFlow"},
+            std::string_view{"StarPieceGroup"},
         };
         for (const auto name : cUnavailableCreators) {
             const auto support = smgpc::scene::nameobj::describe_name_obj_creator_support(name);
@@ -223,6 +248,41 @@ namespace {
         }
 
         const auto placements = smgpc::scene::resolve_stage_placement_objects(dvd, "HeavensDoorGalaxy", 1);
+        const auto passive_area_placement = std::ranges::find_if(placements, [](const auto &placement) {
+            if (smgpc::scene::find_complete_area_obj_placement_descriptor(placement.object_name) == nullptr) {
+                return false;
+            }
+            for (const auto *field : {"FollowId", "SW_A", "SW_B", "SW_APPEAR", "SW_DEAD", "SW_SLEEP"}) {
+                auto value = s32{-1};
+                if (placement.jmap_info.getValue(placement.jmap_entry_index, field, &value) && value >= 0) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        require(passive_area_placement != placements.end(),
+                "Gateway must retain a passive placement for the completed AreaObj subset");
+        {
+            auto holder = SceneObjHolder{};
+            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+            require(holder.create(SceneObj_AreaObjContainer) != nullptr,
+                    "the exact placement test requires its scene-owned retail AreaObj container");
+
+            auto object = smgpc::scene::nameobj::create_name_obj(
+                dvd, passive_area_placement->object_name, "localized actor label");
+            auto *area = dynamic_cast<AreaObj *>(object.get());
+            require(area != nullptr, "the completed passive descriptor must construct its exact AreaObj type");
+            object->init(JMapInfoIter(
+                &passive_area_placement->jmap_info, passive_area_placement->jmap_entry_index));
+
+            const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(
+                passive_area_placement->object_name);
+            auto *manager = MR::getAreaObjContainer()->getManager(descriptor->manager_name.data());
+            require(std::string_view(object->getName()) == passive_area_placement->object_name &&
+                        manager->getAreaObj(0) == area,
+                    "exact placement init must apply JMap naming before entering the canonical retail manager");
+            binding.init_after_placement();
+        }
         const auto archive_only_placement = std::ranges::find_if(placements, [](const auto &placement) {
             return !placement.intentionally_ignored && !placement.factory_supported &&
                    !placement.object_archive_path.empty();
@@ -235,9 +295,9 @@ namespace {
         }
         const auto roots = smgpc::scene::resolve_stage_root_placements(dvd, "HeavensDoorGalaxy", 1);
         require(!roots.empty() && std::ranges::all_of(roots, [](const auto &placement) {
-                    return placement.factory_supported &&
-                           placement.support_kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::OriginalFactory;
-                }),
+            return placement.factory_supported &&
+                   placement.support_kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::OriginalFactory;
+        }),
                 "the resolved stage root list should contain only real factory placements");
 
         auto collision = smgpc::scene::StageCollisionService{};

@@ -11,6 +11,7 @@
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "scene/AreaObjRuntime.hpp"
 
 #include <algorithm>
 #include <array>
@@ -23,7 +24,7 @@
 namespace {
 
     template <typename T>
-    NameObj* create_supported_name_obj(const char* pName) {
+    NameObj *create_supported_name_obj(const char *pName) {
         return new T(pName);
     }
 
@@ -110,6 +111,10 @@ namespace {
 
     constexpr auto cUnavailableCreatorTable = std::array{
         UnavailableCreatorRecord{"FileSelector", "retail_file_select_actor_runtime_unavailable"},
+        UnavailableCreatorRecord{
+            "RestartCube",
+            "player_restart_dispatch_and_audible_stage_bgm_runtime_unavailable",
+        },
         UnavailableCreatorRecord{"Steam", "clipping_group_runtime_unavailable"},
         UnavailableCreatorRecord{"Coin", "shadow_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleCoin", "shadow_runtime_unavailable"},
@@ -143,20 +148,45 @@ namespace {
 
     [[nodiscard]] bool equal_string_case(std::string_view lhs, std::string_view rhs) {
         return lhs.size() == rhs.size() && std::ranges::equal(lhs, rhs, [](char left, char right) {
-            return std::tolower(static_cast<unsigned char>(left)) ==
-                   std::tolower(static_cast<unsigned char>(right));
-        });
+                   return std::tolower(static_cast<unsigned char>(left)) ==
+                          std::tolower(static_cast<unsigned char>(right));
+               });
     }
 
-    [[nodiscard]] const NameObjFactory::Name2CreateFunc* find_supported_entry(std::string_view object_name) {
-        const auto found = std::ranges::find_if(cSupportedCreateTable, [&](const auto& entry) {
+    [[nodiscard]] const NameObjFactory::Name2CreateFunc *find_supported_entry(std::string_view object_name) {
+        const auto found = std::ranges::find_if(cSupportedCreateTable, [&](const auto &entry) {
             return equal_string_case(entry.mName, object_name);
         });
         return found != cSupportedCreateTable.end() ? &*found : nullptr;
     }
 
-    [[nodiscard]] const UnavailableCreatorRecord* find_unavailable_entry(std::string_view object_name) {
-        const auto found = std::ranges::find_if(cUnavailableCreatorTable, [&](const auto& entry) {
+    [[nodiscard]] const std::vector<NameObjFactory::Name2CreateFunc> &area_obj_create_table() {
+        static const auto table = [] {
+            auto result = std::vector<NameObjFactory::Name2CreateFunc>{};
+            const auto descriptors = smgpc::scene::complete_area_obj_placement_descriptors();
+            result.reserve(descriptors.size());
+            for (const auto &descriptor : descriptors) {
+                result.push_back(NameObjFactory::Name2CreateFunc{
+                    descriptor.object_name.data(),
+                    descriptor.object_creator,
+                    nullptr,
+                });
+            }
+            return result;
+        }();
+        return table;
+    }
+
+    [[nodiscard]] const NameObjFactory::Name2CreateFunc *find_area_obj_entry(std::string_view object_name) {
+        const auto &table = area_obj_create_table();
+        const auto found = std::ranges::find_if(table, [&](const auto &entry) {
+            return equal_string_case(entry.mName, object_name);
+        });
+        return found != table.end() ? &*found : nullptr;
+    }
+
+    [[nodiscard]] const UnavailableCreatorRecord *find_unavailable_entry(std::string_view object_name) {
+        const auto found = std::ranges::find_if(cUnavailableCreatorTable, [&](const auto &entry) {
             return equal_string_case(entry.object_name, object_name);
         });
         return found != cUnavailableCreatorTable.end() ? &*found : nullptr;
@@ -172,7 +202,13 @@ namespace {
                 .reason = "compiled_retail_creator",
             };
         }
-        if (const auto* unavailable = find_unavailable_entry(object_name); unavailable != nullptr) {
+        if (find_area_obj_entry(object_name) != nullptr) {
+            return NameObjCreatorSupport{
+                .kind = NameObjCreatorSupportKind::Supported,
+                .reason = "compiled_retail_area_creator_and_manager",
+            };
+        }
+        if (const auto *unavailable = find_unavailable_entry(object_name); unavailable != nullptr) {
             return NameObjCreatorSupport{
                 .kind = NameObjCreatorSupportKind::RuntimeClosureUnavailable,
                 .reason = std::string(unavailable->reason),
@@ -184,8 +220,8 @@ namespace {
         };
     }
 
-    [[nodiscard]] std::filesystem::path disc_relative(const std::filesystem::path& root,
-                                                       const std::filesystem::path& path) {
+    [[nodiscard]] std::filesystem::path disc_relative(const std::filesystem::path &root,
+                                                      const std::filesystem::path &path) {
         std::error_code error{};
         auto relative = std::filesystem::relative(path, root, error);
         if (!error && !relative.empty()) {
@@ -195,7 +231,7 @@ namespace {
     }
 
     [[nodiscard]] smgpc::scene::nameobj::NameObjArchiveRequest describe_archive(
-        smgpc::runtime::DvdFileSystemService& dvd, std::string_view archive_name) {
+        smgpc::runtime::DvdFileSystemService &dvd, std::string_view archive_name) {
         using smgpc::scene::nameobj::NameObjArchiveKind;
         using smgpc::scene::nameobj::NameObjArchiveRequest;
 
@@ -227,9 +263,9 @@ namespace {
         return request;
     }
 
-    void add_archive_request(std::vector<smgpc::scene::nameobj::NameObjArchiveRequest>& requests,
+    void add_archive_request(std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> &requests,
                              smgpc::scene::nameobj::NameObjArchiveRequest request) {
-        const auto duplicate = std::ranges::find_if(requests, [&](const auto& existing) {
+        const auto duplicate = std::ranges::find_if(requests, [&](const auto &existing) {
             return existing.archive_name == request.archive_name && existing.kind == request.kind &&
                    existing.resolved_path == request.resolved_path;
         });
@@ -255,12 +291,16 @@ namespace {
 
 namespace NameObjFactory {
 
-    CreatorFuncPtr getCreator(const char* pName) {
-        const auto* entry = find_supported_entry(pName != nullptr ? std::string_view(pName) : std::string_view{});
-        return entry != nullptr ? entry->mCreateFunc : nullptr;
+    CreatorFuncPtr getCreator(const char *pName) {
+        const auto name = pName != nullptr ? std::string_view(pName) : std::string_view{};
+        if (const auto *entry = find_supported_entry(name); entry != nullptr) {
+            return entry->mCreateFunc;
+        }
+        const auto *area_entry = find_area_obj_entry(name);
+        return area_entry != nullptr ? area_entry->mCreateFunc : nullptr;
     }
 
-    void requestMountObjectArchives(const char* pName, const JMapInfoIter& rIter) {
+    void requestMountObjectArchives(const char *pName, const JMapInfoIter &rIter) {
         auto archive_list = NameObjArchiveListCollector{};
         getMountObjectArchiveList(&archive_list, pName, rIter);
         for (auto index = s32{}; index < archive_list.mCount; ++index) {
@@ -268,7 +308,7 @@ namespace NameObjFactory {
         }
     }
 
-    bool isReadResourceFromDVD(const char* pName, const JMapInfoIter& rIter) {
+    bool isReadResourceFromDVD(const char *pName, const JMapInfoIter &rIter) {
         auto archive_list = NameObjArchiveListCollector{};
         getMountObjectArchiveList(&archive_list, pName, rIter);
         for (auto index = s32{}; index < archive_list.mCount; ++index) {
@@ -279,7 +319,7 @@ namespace NameObjFactory {
         return false;
     }
 
-    bool isPlayerArchiveLoaderObj(const char* pArchive) {
+    bool isPlayerArchiveLoaderObj(const char *pArchive) {
         if (pArchive == nullptr) {
             return false;
         }
@@ -288,34 +328,39 @@ namespace NameObjFactory {
         });
     }
 
-    const Name2CreateFunc* getName2CreateFunc(const char* pName, const Name2CreateFunc* pTable) {
+    const Name2CreateFunc *getName2CreateFunc(const char *pName, const Name2CreateFunc *pTable) {
         if (pTable != nullptr && pTable != cSupportedCreateTable.data()) {
             throw std::invalid_argument(
                 "External NameObj creator tables are unavailable without an explicit table extent.");
         }
-        return find_supported_entry(pName != nullptr ? std::string_view(pName) : std::string_view{});
+        const auto name = pName != nullptr ? std::string_view(pName) : std::string_view{};
+        if (const auto *entry = find_supported_entry(name); entry != nullptr || pTable != nullptr) {
+            return entry;
+        }
+        return find_area_obj_entry(name);
     }
 
-    void getMountObjectArchiveList(NameObjArchiveListCollector* pArchiveList, const char* pName,
-                                   const JMapInfoIter&) {
+    void getMountObjectArchiveList(NameObjArchiveListCollector *pArchiveList, const char *pName,
+                                   const JMapInfoIter &) {
         if (pArchiveList == nullptr) {
             throw std::invalid_argument("NameObj archive collection requires a real collector.");
         }
 
         const auto object_name = pName != nullptr ? std::string_view(pName) : std::string_view{};
-        const auto* creator_entry = find_supported_entry(object_name);
-        if (creator_entry == nullptr) {
+        const auto *creator_entry = find_supported_entry(object_name);
+        if (creator_entry == nullptr && find_area_obj_entry(object_name) == nullptr) {
             return;
         }
 
-        if (creator_entry->mArchiveName != nullptr) {
+        if (creator_entry != nullptr && creator_entry->mArchiveName != nullptr) {
             pArchiveList->addArchive(creator_entry->mArchiveName);
         }
-        for (const auto& archive : cOriginalArchiveRecords) {
+        for (const auto &archive : cOriginalArchiveRecords) {
             if (archive.object_name != object_name) {
                 continue;
             }
-            if (creator_entry->mArchiveName != nullptr && archive.archive_name == creator_entry->mArchiveName) {
+            if (creator_entry != nullptr && creator_entry->mArchiveName != nullptr &&
+                archive.archive_name == creator_entry->mArchiveName) {
                 continue;
             }
             pArchiveList->addArchive(archive.archive_name.data());
@@ -327,14 +372,14 @@ namespace NameObjFactory {
 namespace smgpc::scene::nameobj {
 
     bool can_create_name_obj(std::string_view object_name) {
-        return find_supported_entry(object_name) != nullptr;
+        return find_supported_entry(object_name) != nullptr || find_area_obj_entry(object_name) != nullptr;
     }
 
     NameObjCreatorSupport describe_name_obj_creator_support(std::string_view object_name) {
         return describe_creator_support(object_name);
     }
 
-    NameObjPlacementSupport describe_name_obj_placement_support(smgpc::runtime::DvdFileSystemService&,
+    NameObjPlacementSupport describe_name_obj_placement_support(smgpc::runtime::DvdFileSystemService &,
                                                                 std::string_view object_name,
                                                                 std::string_view table_path) {
         if (is_proven_non_actor_helper_table(table_path)) {
@@ -359,8 +404,8 @@ namespace smgpc::scene::nameobj {
     }
 
     std::vector<NameObjArchiveRequest> collect_name_obj_archive_requests(
-        smgpc::runtime::DvdFileSystemService& dvd, std::string_view object_name,
-        const JMapInfoIter* placement_iter) {
+        smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
+        const JMapInfoIter *placement_iter) {
         auto requests = std::vector<NameObjArchiveRequest>{};
         if (!can_create_name_obj(object_name)) {
             return requests;
@@ -377,7 +422,7 @@ namespace smgpc::scene::nameobj {
         return requests;
     }
 
-    NameObjFactoryDescription describe_name_obj_factory(smgpc::runtime::DvdFileSystemService& dvd,
+    NameObjFactoryDescription describe_name_obj_factory(smgpc::runtime::DvdFileSystemService &dvd,
                                                         std::string_view object_name) {
         const auto creator_support = describe_creator_support(object_name);
         return NameObjFactoryDescription{
@@ -389,23 +434,23 @@ namespace smgpc::scene::nameobj {
     }
 
     std::vector<NameObjArchiveRequest> preload_name_obj_archives(
-        smgpc::runtime::DvdFileSystemService& dvd, std::string_view object_name,
-        const JMapInfoIter* placement_iter) {
+        smgpc::runtime::DvdFileSystemService &dvd, std::string_view object_name,
+        const JMapInfoIter *placement_iter) {
         auto requests = collect_name_obj_archive_requests(dvd, object_name, placement_iter);
-        for (auto& request : requests) {
+        for (auto &request : requests) {
             if (request.kind == NameObjArchiveKind::Missing || request.resolved_path.empty()) {
                 throw std::runtime_error("Required retail archive is unavailable for " +
                                          std::string(object_name) + ": " + request.archive_name);
             }
-            auto& archive = dvd.archive_for_path(request.resolved_path);
+            auto &archive = dvd.archive_for_path(request.resolved_path);
             (void)archive;
             request.loaded = true;
         }
         return requests;
     }
 
-    std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService&,
-                                             std::string_view object_name, const char* actor_name) {
+    std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &,
+                                             std::string_view object_name, const char *actor_name) {
         const auto object = std::string(object_name);
         const auto creator = NameObjFactory::getCreator(object.c_str());
         if (creator == nullptr) {

@@ -1394,11 +1394,51 @@ namespace smgpc::runtime {
         _frame_index = frame_index;
     }
 
+    void AudioEventService::reset_stage_state() {
+        _stage_bgm_start_frame = _frame_index;
+        _stage_bgm_name.clear();
+        _stage_bgm_id.reset();
+        _next_stage_bgm_id.reset();
+        _last_stage_bgm_id.reset();
+        _stage_bgm_state = 0;
+        _stage_bgm_state_change_frames = 0U;
+        _stage_bgm_track_mute_state = 0;
+        _stage_bgm_track_mute_change_frames = 0;
+        _stage_bgm_requested = false;
+        _stage_bgm_identity_resolved = false;
+        _stage_bgm_unlocked = false;
+        _cube_bgm_change_invalid = false;
+    }
+
+    void AudioEventService::resolve_stage_bgm_absent() {
+        _stage_bgm_name.clear();
+        _stage_bgm_id.reset();
+        _stage_bgm_requested = false;
+        _stage_bgm_identity_resolved = true;
+    }
+
     void AudioEventService::start_stage_bgm(std::string_view name) {
+        _last_stage_bgm_id = _stage_bgm_requested ? _stage_bgm_id : std::nullopt;
         _stage_bgm_requested = true;
+        _stage_bgm_identity_resolved = false;
         _stage_bgm_start_frame = _frame_index;
         _stage_bgm_name = name;
+        _stage_bgm_id.reset();
         push_event(AudioEventKind::StageBgmStart, name);
+    }
+
+    void AudioEventService::start_stage_bgm(u32 sound_id) {
+        start_stage_bgm({}, sound_id);
+    }
+
+    void AudioEventService::start_stage_bgm(std::string_view name, u32 sound_id) {
+        _last_stage_bgm_id = _stage_bgm_requested ? _stage_bgm_id : std::nullopt;
+        _stage_bgm_requested = true;
+        _stage_bgm_identity_resolved = true;
+        _stage_bgm_start_frame = _frame_index;
+        _stage_bgm_name = name;
+        _stage_bgm_id = sound_id;
+        push_event(AudioEventKind::StageBgmStart, name, 0, 0, 0U, 0U, sound_id);
     }
 
     void AudioEventService::unlock_stage_bgm() {
@@ -1408,15 +1448,57 @@ namespace smgpc::runtime {
 
     void AudioEventService::stop_stage_bgm(s32 fade_frames) {
         const auto stopped_name = _stage_bgm_name;
+        const auto stopped_id = _stage_bgm_id;
+        _last_stage_bgm_id = _stage_bgm_id;
         _stage_bgm_requested = false;
+        _stage_bgm_identity_resolved = true;
         _stage_bgm_name.clear();
-        push_event(AudioEventKind::StageBgmStop, stopped_name, fade_frames);
+        _stage_bgm_id.reset();
+        push_event(AudioEventKind::StageBgmStop, stopped_name, fade_frames, 0, 0U, 0U, stopped_id);
     }
 
     void AudioEventService::set_stage_bgm_state(s32 state, u32 change_frames) {
         _stage_bgm_state = state;
         _stage_bgm_state_change_frames = change_frames;
         push_event(AudioEventKind::StageBgmStateChange, _stage_bgm_name, 0, state, change_frames);
+    }
+
+    void AudioEventService::set_stage_bgm_track_mute_state(s32 state, s32 change_frames) {
+        if (!_stage_bgm_requested) {
+            throw std::logic_error("Cannot change track mute state without an active stage BGM.");
+        }
+        if (change_frames < 0) {
+            throw std::invalid_argument("A stage BGM track-mute transition cannot use negative frames.");
+        }
+        _stage_bgm_track_mute_state = state;
+        _stage_bgm_track_mute_change_frames = change_frames;
+        push_event(AudioEventKind::StageBgmTrackMuteStateChange, _stage_bgm_name, 0, state,
+                   static_cast<u32>(change_frames), 0U, _stage_bgm_id);
+    }
+
+    void AudioEventService::set_next_stage_bgm_id(u32 sound_id) {
+        _next_stage_bgm_id = sound_id;
+    }
+
+    void AudioEventService::clear_next_stage_bgm_id() {
+        _next_stage_bgm_id.reset();
+    }
+
+    void AudioEventService::clear_last_stage_bgm_id() {
+        _last_stage_bgm_id.reset();
+    }
+
+    u32 AudioEventService::start_last_stage_bgm() {
+        if (!_last_stage_bgm_id.has_value()) {
+            throw std::logic_error("No resolved last stage BGM is available.");
+        }
+        const auto sound_id = *_last_stage_bgm_id;
+        start_stage_bgm(sound_id);
+        return sound_id;
+    }
+
+    void AudioEventService::set_cube_bgm_change_invalid(bool invalid) {
+        _cube_bgm_change_invalid = invalid;
     }
 
     void AudioEventService::start_system_sound(std::string_view name) {
@@ -1455,12 +1537,32 @@ namespace smgpc::runtime {
         return _stage_bgm_requested && _frame_index > _stage_bgm_start_frame;
     }
 
+    bool AudioEventService::has_active_stage_bgm() const {
+        return _stage_bgm_requested;
+    }
+
+    bool AudioEventService::is_stage_bgm_identity_resolved() const {
+        return _stage_bgm_identity_resolved;
+    }
+
     bool AudioEventService::is_stage_bgm_unlocked() const {
         return _stage_bgm_unlocked;
     }
 
     std::string_view AudioEventService::current_stage_bgm_name() const {
         return _stage_bgm_name;
+    }
+
+    std::optional<u32> AudioEventService::current_stage_bgm_id() const {
+        return _stage_bgm_id;
+    }
+
+    std::optional<u32> AudioEventService::next_stage_bgm_id() const {
+        return _next_stage_bgm_id;
+    }
+
+    std::optional<u32> AudioEventService::last_stage_bgm_id() const {
+        return _last_stage_bgm_id;
     }
 
     s32 AudioEventService::stage_bgm_state() const {
@@ -1471,15 +1573,28 @@ namespace smgpc::runtime {
         return _stage_bgm_state_change_frames;
     }
 
+    s32 AudioEventService::stage_bgm_track_mute_state() const {
+        return _stage_bgm_track_mute_state;
+    }
+
+    s32 AudioEventService::stage_bgm_track_mute_change_frames() const {
+        return _stage_bgm_track_mute_change_frames;
+    }
+
+    bool AudioEventService::is_cube_bgm_change_invalid() const {
+        return _cube_bgm_change_invalid;
+    }
+
     std::span<const AudioEvent> AudioEventService::events() const {
         return _events;
     }
 
     void AudioEventService::push_event(AudioEventKind kind, std::string_view name, s32 fade_frames, s32 state, u32 change_frames,
-                                       u32 delay_frames) {
+                                       u32 delay_frames, std::optional<u32> sound_id) {
         _events.push_back(AudioEvent{
             .kind = kind,
             .name = std::string(name),
+            .sound_id = sound_id,
             .fade_frames = fade_frames,
             .state = state,
             .change_frames = change_frames,
@@ -2414,7 +2529,7 @@ namespace smgpc::runtime {
         _shake_offset_x = 0.0F;
         _shake_offset_y = 0.0F;
         for (auto index = std::size_t{}; index < _vertical_shake_steps.size(); ++index) {
-            auto& step = _vertical_shake_steps[index];
+            auto &step = _vertical_shake_steps[index];
             if (!step.has_value()) {
                 continue;
             }
@@ -2590,7 +2705,7 @@ namespace smgpc::runtime {
         return _game_camera_pose.has_value() ? std::optional{apply_shake(*_game_camera_pose)} : std::nullopt;
     }
 
-    smgpc::camera::CameraPose CameraSystemService::apply_shake(const smgpc::camera::CameraPose& pose) const {
+    smgpc::camera::CameraPose CameraSystemService::apply_shake(const smgpc::camera::CameraPose &pose) const {
         auto shaken = pose;
         if (_shake_offset_x == 0.0F && _shake_offset_y == 0.0F) {
             return shaken;
@@ -2639,7 +2754,7 @@ namespace smgpc::runtime {
         if (!_shake_screen_width.has_value() || !_shake_efb_height.has_value()) {
             throw std::logic_error("Camera shake requires an exact retail projection size.");
         }
-        auto& step = _vertical_shake_steps[camera_shake_index(kind)];
+        auto &step = _vertical_shake_steps[camera_shake_index(kind)];
         if (step.has_value()) {
             return;
         }
@@ -2684,6 +2799,7 @@ namespace smgpc::runtime {
         _has_base_matrix = false;
         _has_forced_base_matrix = false;
         _on_ground = false;
+        _player_dead_state.reset();
         _swing_permitted = false;
         // Control ownership can span scene boundaries (notably puppetable
         // demos), so stage-local actor teardown must not release it.
@@ -2701,6 +2817,7 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::attach_actor(LiveActor &actor) {
         _attached_actor = &actor;
+        _player_dead_state.reset();
         copy_actor_state();
         actor.mFlag.mIsHiddenModel = _player_hidden;
     }
@@ -2708,6 +2825,7 @@ namespace smgpc::runtime {
     void PlayerSystemService::detach_actor(const LiveActor *actor) {
         if (actor == nullptr || _attached_actor == actor) {
             _attached_actor = nullptr;
+            _player_dead_state.reset();
         }
     }
 
@@ -2761,6 +2879,17 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::set_swing_permission(bool permitted) {
         _swing_permitted = permitted;
+    }
+
+    void PlayerSystemService::set_player_dead_state(bool dead) {
+        if (_attached_actor == nullptr) {
+            throw std::logic_error("Cannot resolve player-death state without an attached player actor.");
+        }
+        _player_dead_state = dead;
+    }
+
+    void PlayerSystemService::clear_player_dead_state() {
+        _player_dead_state.reset();
     }
 
     void PlayerSystemService::disable_control() {
@@ -2822,6 +2951,10 @@ namespace smgpc::runtime {
         return _on_ground;
     }
 
+    std::optional<bool> PlayerSystemService::player_dead_state() const {
+        return _player_dead_state;
+    }
+
     bool PlayerSystemService::is_swing_permitted() const {
         return _swing_permitted;
     }
@@ -2875,14 +3008,14 @@ namespace smgpc::runtime {
         return _game_scene_draw_3d_active;
     }
 
-    RumbleService::RumbleService(RumbleActuator* actuator) : _actuator(actuator) {
+    RumbleService::RumbleService(RumbleActuator *actuator) : _actuator(actuator) {
     }
 
     RumbleService::~RumbleService() {
         stop_all();
     }
 
-    void RumbleService::attach_actuator(RumbleActuator& actuator) {
+    void RumbleService::attach_actuator(RumbleActuator &actuator) {
         if (_actuator == &actuator) {
             return;
         }
@@ -2895,7 +3028,7 @@ namespace smgpc::runtime {
         _frame_index = frame_index;
 
         for (auto channel = std::size_t{}; channel < _active_patterns.size(); ++channel) {
-            auto& patterns = _active_patterns[channel];
+            auto &patterns = _active_patterns[channel];
             const auto channel_index = static_cast<s32>(channel);
             if (_actuator == nullptr || !_actuator->is_available(channel_index)) {
                 set_motor(channel_index, false);
@@ -2904,7 +3037,7 @@ namespace smgpc::runtime {
             }
 
             auto enabled = false;
-            std::erase_if(patterns, [&enabled](ActivePattern& active) {
+            std::erase_if(patterns, [&enabled](ActivePattern &active) {
                 if (active.pattern == nullptr || active.next_frame >= static_cast<std::size_t>(active.pattern->mFrame)) {
                     return true;
                 }
@@ -2917,15 +3050,15 @@ namespace smgpc::runtime {
         }
     }
 
-    bool RumbleService::try_request_pattern(const void* source, std::string_view pattern_name, s32 channel) {
+    bool RumbleService::try_request_pattern(const void *source, std::string_view pattern_name, s32 channel) {
         if (pattern_name.empty() || channel < 0 || channel >= static_cast<s32>(_active_patterns.size()) ||
             _actuator == nullptr || !_actuator->is_available(channel)) {
             return false;
         }
 
-        const auto* pattern = static_cast<const RumblePattern*>(nullptr);
+        const auto *pattern = static_cast<const RumblePattern *>(nullptr);
         for (auto index = u16{}; index < RumbleData::getTableSize(); ++index) {
-            const auto* candidate = RumbleData::getData(index);
+            const auto *candidate = RumbleData::getData(index);
             if (candidate != nullptr && candidate->mName != nullptr && pattern_name == candidate->mName) {
                 pattern = candidate;
                 break;
@@ -2935,8 +3068,8 @@ namespace smgpc::runtime {
             return false;
         }
 
-        auto& patterns = _active_patterns[static_cast<std::size_t>(channel)];
-        if (std::ranges::any_of(patterns, [source, pattern](const ActivePattern& active) {
+        auto &patterns = _active_patterns[static_cast<std::size_t>(channel)];
+        if (std::ranges::any_of(patterns, [source, pattern](const ActivePattern &active) {
                 return active.source == source && active.pattern == pattern;
             }) ||
             patterns.size() >= 8U) {
@@ -2950,7 +3083,7 @@ namespace smgpc::runtime {
         });
 
         auto enabled = false;
-        for (const auto& active : patterns) {
+        for (const auto &active : patterns) {
             const auto current_frame = active.next_frame == 0U ? 0U : active.next_frame - 1U;
             enabled = enabled || (current_frame < static_cast<std::size_t>(active.pattern->mFrame) &&
                                   active.pattern->mPattern[current_frame] == WPAD_MOTOR_RUMBLE);
@@ -2981,7 +3114,7 @@ namespace smgpc::runtime {
             return;
         }
 
-        auto& current = _motor_enabled[static_cast<std::size_t>(channel)];
+        auto &current = _motor_enabled[static_cast<std::size_t>(channel)];
         if (current == enabled) {
             return;
         }
@@ -3256,7 +3389,7 @@ namespace smgpc::runtime {
                 ++name_size;
             }
 
-            const auto name = std::string(reinterpret_cast<const char*>(bytes.data() + info_offset), name_size);
+            const auto name = std::string(reinterpret_cast<const char *>(bytes.data() + info_offset), name_size);
             const auto file_size = save_data_file_size(name);
             const auto data_offset = read_save_u32(bytes, info_offset + SAVE_DATA_FILE_NAME_SIZE, byte_order);
             if (name.empty() || !file_size.has_value() || data_offset > data_size || *file_size > data_size - data_offset ||
