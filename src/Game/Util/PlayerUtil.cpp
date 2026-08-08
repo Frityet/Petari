@@ -146,8 +146,8 @@ namespace MR {
         MarioAccess::setWalkingResist(resist);
     }
 
-    TVec3f* getPlayerGravity() {
-        return const_cast< TVec3f* >(&getMarioActor()->getGravityVec());
+    const TVec3f* getPlayerGravity() {
+        return &getMarioActor()->getGravityVec();
     }
 
     void calcPlayerSpinPullVelocity(TVec3f* pVelocity, const TVec3f& rPos) {
@@ -186,8 +186,8 @@ namespace MR {
         getMarioActor()->getGroundPos(pVec);
     }
 
-    TVec3f* getPlayerGroundNormal() {
-        return const_cast< TVec3f* >(MarioAccess::getGroundingPolygon(0)->getFaceNormal());
+    const TVec3f* getPlayerGroundNormal() {
+        return MarioAccess::getGroundingPolygon(0)->getFaceNormal();
     }
 
     void setPlayerFrontTargetVec(const TVec3f& rVec, s32 step) {

@@ -1,0 +1,34 @@
+2026-08-08 UTC upstream sync verification
+
+$ git fetch --prune upstream
+upstream/master: 1dbda8c89
+previous upstream/master: 7432ca994
+merge base: 0933a43cd4e994682d922b61b56d73d3067689bc
+ahead/behind before merge: local 126, upstream 12
+
+$ ninja -j 12
+620 build steps completed
+build/RMGK02/main.dol: OK
+
+Fresh RMGK02 objdiff measures:
+main/Game/Util/PlayerUtil
+  fuzzy: 97.68733%
+  code: 5596 / 5872 (95.29973%)
+  functions: 170 / 174 (97.70115%)
+
+main/Game/Util/SequenceUtil
+  fuzzy/code/data/functions: 100%
+  code: 976 / 976
+  functions: 23 / 23
+
+main/Game/Util/SystemUtil
+  fuzzy/code/data/functions: 100%
+  code: 1148 / 1148
+  functions: 34 / 34
+
+Whole-project progress after merge:
+  All: 64.82% matched, 14.25% linked (734 / 2219 files)
+  Game: 61.94% matched, 13.30% linked (532 / 1605 files)
+
+$ git diff --cached --check
+(no output)
