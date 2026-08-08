@@ -6,6 +6,7 @@
 
 #include <cmath>
 
+#include <revolution/mtx.h>
 #include <revolution/types.h>
 
 namespace JGeometry {
@@ -104,6 +105,10 @@ namespace JGeometry {
 
         void concat(const T &rhs) {
             concat(static_cast<const T &>(*this), rhs);
+        }
+
+        void invert(const TMatrix34<T> &source) {
+            MTXInverse(source.mMtx, this->mMtx);
         }
 
         void mult(const TVec3f &source, TVec3f &destination) const {

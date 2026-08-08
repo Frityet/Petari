@@ -39,6 +39,7 @@ public:
     virtual void makeActorAppeared();
     virtual void makeActorDead();
     virtual bool receiveMessage(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
+    virtual MtxPtr getBaseMtx() const;
     virtual bool receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
     virtual void control();
     virtual void attackSensor(HitSensor* pSender, HitSensor* pReceiver);

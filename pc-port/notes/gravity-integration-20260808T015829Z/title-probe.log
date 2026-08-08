@@ -1,0 +1,10 @@
+command: SMGPC_DISC_IMAGE=/workspaces/pcport/RMGK01.iso xvfb-run -a xmake run smg-pc-title-probe
+exit: 0
+
+[APP - INFO] Using SMG disc image through Aurora DVD
+[APP - INFO] Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+[APP - INFO] Loaded 3327 particle names, 3327 particle resources, and 225 particle textures from /ParticleData/Effect.arc
+[APP - INFO] Decoded TitleLogo.arc entries: 18, PressStart.arc entries: 5
+[APP - INFO] Resolved original layout archive TitleLogo -> /KrKorean/LayoutData/TitleLogo.arc
+[APP - INFO] Resolved original layout archive PressStart -> /KrKorean/LayoutData/PressStart.arc
+[APP - INFO] Title sequence probe completed at frame 373

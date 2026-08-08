@@ -1,0 +1,33 @@
+RMGK02 main.elf: calcPerpendicFootToLineInside at 0x803e4d64, size 0xc8
+
+803e4d90: 38 61 00 08   addi 3, 1, 8
+803e4d94: 4b c3 41 5d   bl   TVec3 copy constructor       # line = tail
+803e4d98: 38 61 00 08   addi 3, 1, 8
+803e4d9c: 7f e4 fb 78   mr   4, 31
+803e4da0: 7c 65 1b 78   mr   5, 3
+803e4da4: 4b c3 92 35   bl   PSVECSubtract                # line -= tip
+803e4da8: 7f e3 fb 78   mr   3, 31
+803e4dac: 38 81 00 08   addi 4, 1, 8
+803e4db0: 4b c3 84 f9   bl   TVec3::dot                   # tip.dot(line)
+803e4db4: ff e0 08 90   fmr  31, 1
+803e4db8: 7f c3 f3 78   mr   3, 30
+803e4dbc: 38 81 00 08   addi 4, 1, 8
+803e4dc0: 4b c3 84 e9   bl   TVec3::dot                   # point.dot(line)
+803e4dc4: ef e1 f8 28   fsubs 31, 1, 31                  # numerator
+803e4dc8: 38 61 00 08   addi 3, 1, 8
+803e4dcc: 4b c9 29 e5   bl   TVec3::squared
+803e4dd0: ef ff 08 24   fdivs 31, 31, 1                  # normalized t
+803e4dd4: c0 42 1b 44   lfs  2, constant                 # 0.0f
+803e4dd8: c0 62 1b 40   lfs  3, constant                 # 1.0f
+803e4ddc: fc 20 f8 90   fmr  1, 31
+803e4de0: 4b d8 c8 b1   bl   TUtil<float>::clamp
+803e4de4: ff e0 08 90   fmr  31, 1
+803e4de8: 38 61 00 08   addi 3, 1, 8
+803e4dec: 4b c3 b2 e5   bl   TVec3::scale                 # line *= t
+803e4df0: 7f a3 eb 78   mr   3, 29
+803e4df4: 7f e4 fb 78   mr   4, 31
+803e4df8: 4b c3 84 d1   bl   TVec3::set                   # out = tip
+803e4dfc: 7f a3 eb 78   mr   3, 29
+803e4e00: 38 81 00 08   addi 4, 1, 8
+803e4e04: 4b c3 84 e1   bl   TVec3::add                   # out += line
+803e4e08: fc 20 f8 90   fmr  1, 31                       # return t

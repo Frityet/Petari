@@ -226,17 +226,6 @@ namespace MR {
         destination->set(matrix[0][3], matrix[1][3], matrix[2][3]);
     }
 
-    void preScaleMtx(MtxPtr matrix, const TVec3f& scale) {
-        if (matrix == nullptr) {
-            throw std::invalid_argument("Matrix scaling requires a real matrix.");
-        }
-        for (auto row = 0; row < 3; ++row) {
-            matrix[row][0] *= scale.x;
-            matrix[row][1] *= scale.y;
-            matrix[row][2] *= scale.z;
-        }
-    }
-
     void makeAxisFrontUp(TVec3f* side, TVec3f* up, const TVec3f& front, const TVec3f& supportUp) {
         if (side == nullptr || up == nullptr) {
             throw std::invalid_argument("Axis construction requires two outputs.");

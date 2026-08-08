@@ -1,6 +1,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 
 #include "Game/Demo/PrologueDirector.hpp"
+#include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
@@ -11,6 +12,7 @@
 #include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
 #include <memory>
@@ -41,6 +43,12 @@ namespace smgpc::scene {
             sCurrentSceneObjHolderBinding = nullptr;
         }
         _owned_objects.clear();
+    }
+
+    void SceneObjHolderBinding::init_after_placement() {
+        for (std::size_t index = 0; index < _owned_objects.size(); ++index) {
+            _owned_objects[index]->initAfterPlacement();
+        }
     }
 
     SceneObjHolder *current_scene_obj_holder() noexcept {
@@ -92,6 +100,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     switch (id) {
     case SceneObj_ClippingDirector:
         return new ClippingDirector();
+    case SceneObj_PlanetGravityManager:
+        return new PlanetGravityManager("重力");
+    case SceneObj_BaseMatrixFollowTargetHolder:
+        return new BaseMatrixFollowTargetHolder("行列追随先リスト", 256, 256);
     case SceneObj_MessageSensorHolder:
         return new MessageSensorHolder("システム汎用センサー");
     case SceneObj_StageSwitchContainer:

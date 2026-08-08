@@ -1,3 +1,5 @@
+#include "compat/MetrowerksStdCompat.hpp"
+
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Effect/SimpleEffectObj.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -38,7 +40,6 @@
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StageGravityService.hpp"
 #include "scene/StageHostScene.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
@@ -122,50 +123,6 @@ namespace {
         auto bytes = std::vector<std::uint8_t>(0x10U, 0U);
         write_be32(bytes, 0x00U, entry_count);
         write_be32(bytes, 0x08U, 0x10U);
-        return JMapInfo::from_bcsv(bytes);
-    }
-
-    JMapInfo make_gravity_inverse_jmap(std::int32_t inverse) {
-        constexpr auto data_offset = 0x1cU;
-        auto bytes = std::vector<std::uint8_t>(data_offset + 4U, 0U);
-        write_be32(bytes, 0x00U, 1U);
-        write_be32(bytes, 0x04U, 1U);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, 4U);
-        write_bcsv_field(bytes, 0U, "Inverse", 0U, smgpc::resource::BcsvFieldType::Int32);
-        write_be32(bytes, data_offset, static_cast<std::uint32_t>(inverse));
-        return JMapInfo::from_bcsv(bytes);
-    }
-
-    JMapInfo make_gravity_priority_jmap(std::int32_t priority) {
-        constexpr auto data_offset = 0x1cU;
-        auto bytes = std::vector<std::uint8_t>(data_offset + 4U, 0U);
-        write_be32(bytes, 0x00U, 1U);
-        write_be32(bytes, 0x04U, 1U);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, 4U);
-        write_bcsv_field(bytes, 0U, "Priority", 0U, smgpc::resource::BcsvFieldType::Int32);
-        write_be32(bytes, data_offset, static_cast<std::uint32_t>(priority));
-        return JMapInfo::from_bcsv(bytes);
-    }
-
-    JMapInfo make_gravity_negative_sentinel_jmap() {
-        constexpr auto field_count = 4U;
-        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
-        constexpr auto entry_size = 16U;
-        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
-        write_be32(bytes, 0x00U, 1U);
-        write_be32(bytes, 0x04U, field_count);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, entry_size);
-        write_bcsv_field(bytes, 0U, "Range", 0U, smgpc::resource::BcsvFieldType::Float);
-        write_bcsv_field(bytes, 1U, "Distant", 4U, smgpc::resource::BcsvFieldType::Float);
-        write_bcsv_field(bytes, 2U, "Priority", 8U, smgpc::resource::BcsvFieldType::Int32);
-        write_bcsv_field(bytes, 3U, "Inverse", 12U, smgpc::resource::BcsvFieldType::Int32);
-        write_be_float(bytes, data_offset + 0U, -1.0F);
-        write_be_float(bytes, data_offset + 4U, -1.0F);
-        write_be32(bytes, data_offset + 8U, 0xffffffffU);
-        write_be32(bytes, data_offset + 12U, 0xffffffffU);
         return JMapInfo::from_bcsv(bytes);
     }
 
@@ -1042,114 +999,6 @@ namespace {
                 "stage teardown should clear the active collision boundary");
     }
 
-    void test_stage_gravity_service_data_driven_fields() {
-        auto point = smgpc::scene::StagePlacementObject{};
-        point.object_name = "GlobalPointGravity";
-        point.translation = {10.0F, 20.0F, 30.0F};
-        point.object_args.fill(-1);
-        point.jmap_info = make_fieldless_jmap(1U);
-        point.jmap_entry_index = 0;
-
-        auto gravity_service = smgpc::scene::StageGravityService{};
-        auto placements = std::array{point};
-        const auto point_stats = gravity_service.load(placements);
-        require(point_stats.placement_count == 1U && point_stats.gravity_count == 1U &&
-                    point_stats.unsupported_count == 0U,
-                "a GlobalPointGravity placement should become one supported host gravity field");
-
-        auto gravity = TVec3f{};
-        require(gravity_service.query(TVec3f{10.0F, 30.0F, 30.0F}, &gravity) &&
-                    gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
-                "point gravity should point from the queried position toward its placement origin");
-
-        gravity_service.activate();
-        auto caller = NameObj("gravity-query-caller");
-        gravity.zero();
-        require(MR::calcGravityVector(&caller, TVec3f{10.0F, 30.0F, 30.0F}, &gravity, nullptr, 0U) &&
-                    gravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
-                "the original MR gravity query boundary should consume the active generalized field service");
-        require(MR::calcGravityVector(&caller, TVec3f{10.0F, 30.0F, 30.0F}, nullptr, nullptr, 0U),
-                "gravity queries should report an applicable field even when the caller only requests the boolean");
-
-        for (const auto inverse : std::array<std::int32_t, 3U>{-1, 0, 1}) {
-            point.jmap_info = make_gravity_inverse_jmap(inverse);
-            placements[0] = point;
-            gravity_service.load(placements);
-            require(gravity_service.query(TVec3f{10.0F, 30.0F, 30.0F}, &gravity),
-                    "an explicit or sentinel Inverse value should leave the gravity field queryable");
-            const auto expected_y = inverse == 1 ? 1.0F : -1.0F;
-            require(gravity.epsilonEquals(TVec3f{0.0F, expected_y, 0.0F}, 0.0001F),
-                    "Inverse=-1 must preserve the default, zero must remain normal, and one must reverse the field");
-        }
-
-        auto sentinel_point = point;
-        sentinel_point.translation = {-100.0F, 0.0F, 0.0F};
-        sentinel_point.jmap_info = make_gravity_negative_sentinel_jmap();
-        auto default_point = point;
-        default_point.translation = {0.0F, -100.0F, 0.0F};
-        default_point.jmap_info = make_fieldless_jmap(1U);
-        auto combined_points = std::array{sentinel_point, default_point};
-        gravity_service.load(combined_points);
-        require(gravity_service.query(TVec3f{}, &gravity) &&
-                    gravity.epsilonEquals(TVec3f{-0.70710678F, -0.70710678F, 0.0F}, 0.0001F),
-                "negative Range, Distant, Priority, and Inverse sentinels should preserve constructor defaults and equal-priority combination");
-
-        auto plane = smgpc::scene::StagePlacementObject{};
-        plane.object_name = "GlobalPlaneGravity";
-        plane.rotation = {0.0F, 0.0F, 90.0F};
-        plane.object_args.fill(-1);
-        plane.jmap_info = make_fieldless_jmap(1U);
-        plane.jmap_entry_index = 0;
-        placements[0] = plane;
-        gravity_service.load(placements);
-        require(gravity_service.query(TVec3f{100.0F, 200.0F, 300.0F}, &gravity) &&
-                    gravity.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
-                "parallel gravity should derive its direction from the placement rotation without stage-name policy");
-
-        plane.scale = {1.0F, 0.0F, 1.0F};
-        placements[0] = plane;
-        gravity_service.load(placements);
-        require(gravity_service.query(TVec3f{100.0F, 200.0F, 300.0F}, &gravity) &&
-                    gravity.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
-                "a zero range scale axis must not collapse the rotation-only parallel-gravity direction");
-
-        auto center_point = point;
-        center_point.translation = {0.0F, 0.0F, 0.0F};
-        center_point.jmap_info = make_gravity_priority_jmap(10);
-        plane.rotation = {0.0F, 0.0F, 0.0F};
-        plane.scale = {1.0F, 1.0F, 1.0F};
-        plane.jmap_info = make_fieldless_jmap(1U);
-        auto priority_fields = std::array{plane, center_point};
-        gravity_service.load(priority_fields);
-        gravity.set(9.0F, 9.0F, 9.0F);
-        require(gravity_service.query(TVec3f{}, &gravity) && gravity.epsilonEquals(TVec3f{}, 0.0F),
-                "a valid zero vector at a high-priority point center should suppress lower-priority gravity");
-        gravity.set(9.0F, 9.0F, 9.0F);
-        require(gravity_service.query(TVec3f{0.0005F, 0.0F, 0.0F}, &gravity) &&
-                    gravity.epsilonEquals(TVec3f{}, 0.0F),
-                "PointGravity's 0.001 near-center region should remain a valid priority-winning zero vector");
-
-        auto grounded_center_actor = LiveActor("grounded-center-gravity-test");
-        grounded_center_actor.mPosition.zero();
-        grounded_center_actor.mGravity.set(1.0F, 0.0F, 0.0F);
-        grounded_center_actor.mBindedGround = true;
-        grounded_center_actor.mGroundNormal.set(0.0F, 2.0F, 0.0F);
-        MR::calcGravityOrZero(&grounded_center_actor);
-        require(grounded_center_actor.mGravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
-                "a valid zero field should still select calcGravityOrZero's grounded-normal fallback");
-
-        auto airborne_center_actor = LiveActor("airborne-center-gravity-test");
-        airborne_center_actor.mPosition.zero();
-        airborne_center_actor.mGravity.set(1.0F, 0.0F, 0.0F);
-        MR::calcGravityOrZero(&airborne_center_actor);
-        require(airborne_center_actor.mGravity.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0F),
-                "a zero field without ground contact should preserve the actor's prior gravity");
-
-        gravity_service.deactivate();
-        require(smgpc::scene::StageGravityService::active() == nullptr,
-                "stage teardown should clear the active gravity boundary");
-    }
-
     void test_original_rail_part_geometry() {
         auto linear = RailPart{};
         linear.init(TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{10.0F, 0.0F, 0.0F},
@@ -1316,15 +1165,17 @@ namespace {
         require(gravity.epsilonEquals(TVec3f{9.0F, 9.0F, 9.0F}, 0.0F),
                 "an unavailable positional query must leave its destination untouched");
 
-        auto gravityService = smgpc::scene::StageGravityService{};
-        gravityService.activate();
+        auto gravity_holder = SceneObjHolder{};
+        const auto gravity_binding =
+            smgpc::scene::SceneObjHolderBinding(gravity_holder);
+        require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
+                "the grounded fallback test requires the exact scene-owned gravity manager");
         actor.mGravity.zero();
         actor.mBindedGround = true;
         actor.mGroundNormal.set(0.0F, 2.0F, 0.0F);
         MR::calcGravityOrZero(&actor);
         require(actor.mGravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.00001F),
                 "calcGravityOrZero should retain the original grounded-normal fallback");
-        gravityService.deactivate();
     }
 
     struct SpineProbeState {
@@ -1399,7 +1250,6 @@ int main() {
                  test_star_piece_group_factory_is_absent_without_real_director},
         TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
         TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},
-        TestCase{"data-driven stage gravity fields", test_stage_gravity_service_data_driven_fields},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},

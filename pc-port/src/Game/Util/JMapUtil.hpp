@@ -2,6 +2,7 @@
 
 #include "Game/Util/JMapInfo.hpp"
 
+#include <JSystem/JGeometry/TMatrix.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
 
 class NameObj;
@@ -67,6 +68,7 @@ namespace MR {
     bool getJMapInfoTransLocal(const JMapInfoIter& rIter, TVec3f* pOut);
     bool getJMapInfoRotateLocal(const JMapInfoIter& rIter, TVec3f* pOut);
     bool getJMapInfoV3f(const JMapInfoIter& rIter, const char* pName, TVec3f* pOut);
+    bool getJMapInfoMatrixFromRT(const JMapInfoIter& rIter, TPos3f* pOut);
 
     bool getJMapInfoFollowID(const JMapInfoIter& rIter, s32* pOut);
     bool getJMapInfoGroupID(const JMapInfoIter& rIter, s32* pOut);

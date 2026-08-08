@@ -1,0 +1,29 @@
+RMGK02 main.elf: getMaxElement at 0x803e7d04, size 0x34
+RMGK02 main.elf: getMaxElementIndex at 0x803e7d6c, size 0x44
+
+803e7d18: 48 00 00 55   bl   getMaxElementIndex
+803e7d1c: 54 60 10 3a   slwi 0, 3, 2
+803e7d20: 7c 3f 04 2e   lfsx 1, 31, 0       # return (&vector.x)[index]
+
+803e7d6c: c0 23 00 00   lfs  1, 0(3)        # x
+803e7d70: c0 03 00 04   lfs  0, 4(3)        # y
+803e7d74: fc 01 00 40   fcmpo 0, 1, 0
+803e7d78: 40 81 00 18   bf   1, 0x803e7d90  # branch unless x > y
+803e7d7c: c0 03 00 08   lfs  0, 8(3)        # z
+803e7d80: fc 01 00 40   fcmpo 0, 1, 0
+803e7d84: 40 81 00 0c   bf   1, 0x803e7d90  # branch unless x > z
+803e7d88: 38 60 00 00   li   3, 0            # select x
+803e7d8c: 4e 80 00 20   blr
+803e7d90: c0 23 00 04   lfs  1, 4(3)        # y
+803e7d94: c0 03 00 08   lfs  0, 8(3)        # z
+803e7d98: fc 01 00 40   fcmpo 0, 1, 0
+803e7d9c: 40 81 00 0c   bf   1, 0x803e7da8  # branch unless y > z
+803e7da0: 38 60 00 01   li   3, 1            # select y
+803e7da4: 4e 80 00 20   blr
+803e7da8: 38 60 00 02   li   3, 2            # select z
+803e7dac: 4e 80 00 20   blr
+
+PowerPC ordered comparisons set no greater-than bit for NaN. Consequently an
+x NaN falls through to y versus z, a y NaN selects z, and a z NaN is selected.
+Equal components follow the same false branches, so ties favor the later
+component (subject to the second comparison).

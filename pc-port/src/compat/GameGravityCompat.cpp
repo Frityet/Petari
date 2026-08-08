@@ -2,24 +2,30 @@
 
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"
+#include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "scene/StageGravityService.hpp"
-
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
 
 namespace {
-    [[nodiscard]] smgpc::scene::StageGravityService& gravity_service() {
-        auto* service = smgpc::scene::StageGravityService::active();
-        if (service == nullptr) {
-            throw std::logic_error("PlanetGravity is unavailable without a scene-owned gravity service");
+    [[nodiscard]] PlanetGravityManager& gravity_manager() {
+        auto* holder = MR::getSceneObjHolder();
+        if (holder == nullptr) {
+            throw std::logic_error("PlanetGravity is unavailable without a scene-owned SceneObjHolder");
         }
-        return *service;
+
+        auto* manager = static_cast<PlanetGravityManager*>(
+            holder->getObj(SceneObj_PlanetGravityManager));
+        if (manager == nullptr) {
+            throw std::logic_error("PlanetGravity is unavailable without the scene-owned PlanetGravityManager");
+        }
+        return *manager;
     }
 
     [[nodiscard]] u32 host_id(const void* object, u32 host) {
@@ -34,7 +40,8 @@ namespace {
         if (object == nullptr) {
             throw std::invalid_argument("gravity queries require a real requesting NameObj");
         }
-        return gravity_service().query(position, destination, type_mask, info, host_id(object, host));
+        return gravity_manager().calcTotalGravityVector(
+            destination, info, position, type_mask, host_id(object, host));
     }
 
     bool query_actor_gravity(const LiveActor* actor, TVec3f* destination, GravityInfo* info,
@@ -62,7 +69,14 @@ namespace {
 
 namespace MR {
     void registerGravity(PlanetGravity* gravity) {
-        gravity_service().register_gravity(gravity);
+        if (gravity == nullptr) {
+            throw std::invalid_argument("cannot register a null PlanetGravity");
+        }
+        auto& manager = gravity_manager();
+        if (gravity->mIsRegistered) {
+            throw std::logic_error("PlanetGravity is already registered");
+        }
+        manager.registerGravity(gravity);
     }
 
     bool calcGravityVector(const LiveActor* actor, TVec3f* destination, GravityInfo* info, u32 host) {

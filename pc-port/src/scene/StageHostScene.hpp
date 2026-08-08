@@ -5,13 +5,13 @@
 #include "camera/CameraPose.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StageGravityService.hpp"
 #include "scene/StageHostService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
 #include <cstddef>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string_view>
 #include <vector>
 
@@ -34,6 +34,9 @@ namespace smgpc::scene {
     }  // namespace nameobj
 
     [[nodiscard]] bool should_apply_host_appear(const StagePlacementObject *placement, bool explicit_root = false);
+    void preflight_stage_placements_or_throw(
+        std::string_view stage_name, std::span<const StagePlacementObject> placements,
+        const StagePlacementObject *explicit_placement = nullptr);
 
     class StageHostScene final : public Scene {
     public:
@@ -70,7 +73,6 @@ namespace smgpc::scene {
         std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
         StageCollisionService _collision;
-        StageGravityService _gravity;
         std::unique_ptr<SceneObjHolderBinding> _scene_obj_holder_binding;
         std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime;

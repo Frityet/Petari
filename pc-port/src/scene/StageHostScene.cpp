@@ -141,10 +141,40 @@ namespace smgpc::scene {
                    left.zone_id == right.zone_id && left.jmap_entry_index == right.jmap_entry_index;
         }
 
+        [[nodiscard]] std::vector<const StagePlacementObject *> collect_blocked_placements(
+            const std::vector<StagePlacementObject> &placements,
+            const StagePlacementObject *explicit_placement) {
+            auto blocked = std::vector<const StagePlacementObject *>{};
+            for (const auto &placement : placements) {
+                if ((explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) ||
+                    placement.intentionally_ignored || placement.factory_supported) {
+                    continue;
+                }
+                blocked.push_back(&placement);
+            }
+            return blocked;
+        }
+
     }  // namespace
 
     bool should_apply_host_appear(const StagePlacementObject *placement, bool explicit_root) {
         return explicit_root || placement == nullptr;
+    }
+
+    void preflight_stage_placements_or_throw(
+        std::string_view stage_name, std::span<const StagePlacementObject> placements,
+        const StagePlacementObject *explicit_placement) {
+        auto blocked_placements = std::vector<const StagePlacementObject *>{};
+        for (const auto &placement : placements) {
+            if ((explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) ||
+                placement.intentionally_ignored || placement.factory_supported) {
+                continue;
+            }
+            blocked_placements.push_back(&placement);
+        }
+        if (!blocked_placements.empty()) {
+            throw std::runtime_error(unsupported_placement_error(stage_name, blocked_placements));
+        }
     }
 
     StageHostScene::StageHostScene(smgpc::runtime::RuntimeContext &runtime, StageHostRequest request)
@@ -155,7 +185,6 @@ namespace smgpc::scene {
     StageHostScene::~StageHostScene() {
         _runtime.camera_system().clear_game_camera_pose();
         _collision.deactivate();
-        _gravity.deactivate();
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
@@ -178,6 +207,7 @@ namespace smgpc::scene {
         constexpr auto required_scene_objects = std::array{
             SceneObj_MessageSensorHolder,
             SceneObj_ClippingDirector,
+            SceneObj_PlanetGravityManager,
             SceneObj_StageSwitchContainer,
             SceneObj_SwitchWatcherHolder,
             SceneObj_SleepControllerHolder,
@@ -199,6 +229,7 @@ namespace smgpc::scene {
             init_placement_roots();
         }
 
+        _scene_obj_holder_binding->init_after_placement();
         init_roots_after_placement();
 #ifndef NDEBUG
         if (_runtime.player_system().attached_actor() != nullptr) {
@@ -260,6 +291,7 @@ namespace smgpc::scene {
         const auto *actor_name = !_request.actor_name.empty() ? _request.actor_name.c_str() :
                                  placement != nullptr         ? resolve_placement_actor_name(*placement) :
                                                                 nullptr;
+        preflight_stage_placements_or_throw(_request.stage_name, _placements, placement);
         construct_root_object(_request.object_name, actor_name, placement, true);
         construct_placement_roots(placement);
     }
@@ -270,7 +302,8 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::construct_placement_roots(const StagePlacementObject *explicit_placement) {
-        auto blocked_placements = std::vector<const StagePlacementObject *>{};
+        const auto blocked_placements = collect_blocked_placements(_placements, explicit_placement);
+        preflight_stage_placements_or_throw(_request.stage_name, _placements, explicit_placement);
         for (const auto &placement : _placements) {
             trace_placement_object(placement);
             if (explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) {
@@ -286,14 +319,6 @@ namespace smgpc::scene {
             if (placement.intentionally_ignored) {
                 continue;
             }
-            if (!placement.factory_supported && !placement.intentionally_ignored) {
-                blocked_placements.push_back(&placement);
-                continue;
-            }
-            // A request actor-name override identifies only its explicit root;
-            // data-driven placement actors use the original localized runtime
-            // name while their factory/archive/model identifier stays English.
-            construct_root_object(placement.object_name, resolve_placement_actor_name(placement), &placement);
         }
 
 #ifndef NDEBUG
@@ -309,10 +334,16 @@ namespace smgpc::scene {
         write_stage_placement_report(_request.stage_name, _request.scenario_no, _placements, blocked_placements);
 #endif
 
-        // A stage is either backed by every required retail placement creator or
-        // remains unavailable; never expose a partially constructed scene.
-        if (!blocked_placements.empty()) {
-            throw std::runtime_error(unsupported_placement_error(_request.stage_name, blocked_placements));
+        for (const auto &placement : _placements) {
+            if ((explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) ||
+                placement.intentionally_ignored) {
+                continue;
+            }
+
+            // A request actor-name override identifies only its explicit root;
+            // data-driven placement actors use the original localized runtime
+            // name while their factory/archive/model identifier stays English.
+            construct_root_object(placement.object_name, resolve_placement_actor_name(placement), &placement);
         }
     }
 
@@ -335,8 +366,6 @@ namespace smgpc::scene {
         _collision.build();
         _collision.activate();
         const auto &collision_stats = _collision.stats();
-        const auto gravity_stats = _gravity.load(_placements);
-        _gravity.activate();
         _stage_start_info = select_stage_start_info(tables, _request.start_id,
                                                     _request.start_zone_id);
 
@@ -348,12 +377,6 @@ namespace smgpc::scene {
                 ";registration=explicit_collision_parts;meshes=" + std::to_string(collision_stats.mesh_count) +
                 ";triangles=" + std::to_string(collision_stats.triangle_count) +
                 ";rejected_triangles=" + std::to_string(collision_stats.rejected_triangle_count));
-        _runtime.emit_semantic_trace_event(
-            "gravity", "stage_gravity_loaded",
-            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                ";placements=" + std::to_string(gravity_stats.placement_count) +
-                ";gravities=" + std::to_string(gravity_stats.gravity_count) +
-                ";unsupported=" + std::to_string(gravity_stats.unsupported_count));
 #endif
     }
 

@@ -17,6 +17,13 @@
 ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(LiveActor* pActor) : mActor(pActor) {
 }
 
+MtxPtr LiveActor::getBaseMtx() const {
+    if (smgpc::compat::actor_model(this) == nullptr) {
+        return nullptr;
+    }
+    return reinterpret_cast<MtxPtr>(const_cast<f32*>(getBaseMatrix().m.data()));
+}
+
 namespace {
     smgpc::render::J3dMatrix3x4 projmap_base_transform(const LiveActor& actor) {
         return smgpc::render::j3d_remove_matrix_scale(actor.getBaseMatrix(), actor.mScale.x, actor.mScale.y, actor.mScale.z);

@@ -1,0 +1,18 @@
+command: xvfb-run -a xmake run smg-pc-stage-construction-probe -- --disc /workspaces/pcport/RMGK01.iso --stage HeavensDoorGalaxy --scenario 1
+exit: 1 (expected real-or-absent boundary)
+
+[APP - INFO] Using SMG disc image through Aurora DVD
+[APP - INFO] Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+[APP - INFO] Loaded 3327 particle names, 3327 particle resources, and 225 particle textures from /ParticleData/Effect.arc
+[APP - INFO] SMG semantic event sequence:stage_host_started (stage host factory created HeavensDoorGalaxy through scene lifecycle service)
+[APP - INFO] SMG semantic event collision:stage_collision_registry_ready (stage=HeavensDoorGalaxy;scenario=1;placement_rows=242;registration=explicit_collision_parts;meshes=0;triangles=0;rejected_triangles=0)
+[APP - FATAL] Strict stage construction failed: Unsupported placement objects for HeavensDoorGalaxy: 216 blocked; first=RestartCube in jmp/placement/common/areaobjinfo
+
+Preflight evidence after the collision/environment setup line:
+- no stage_host_constructed event
+- no placement actor init event
+- no gravity registration event
+- no partial active stage
+
+The earlier diagnostic scan counted 242 rows: 18 factory-supported, 8 ignored,
+and 216 blocked. Exact GlobalPointGravity rows reported factory=created.

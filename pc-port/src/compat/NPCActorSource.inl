@@ -45,9 +45,6 @@ namespace MR {
     bool turnQuatYDirRad(TQuat4f*, const TQuat4f&, const TVec3f&, f32);
     bool isSameDirection(const TVec3f&, const TVec3f&, f32);
     bool isOppositeDirection(const TVec3f&, const TVec3f&, f32);
-    inline f32 acos(f32 value) {
-        return JGeometry::TUtil<f32>::acos(value);
-    }
 
     JointControlDelegator<NPCActor>* createNPCActorJointDelegator(NPCActor*, const char*);
 }  // namespace MR

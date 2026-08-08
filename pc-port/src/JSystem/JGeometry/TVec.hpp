@@ -308,6 +308,10 @@ namespace JGeometry {
             scaleAdd(-killDirection.dot(value), killDirection, value);
         }
 
+        void killElement2(const TVec3 &value, const TVec3 &killDirection) {
+            scaleAdd(-killDirection.dot(value), killDirection, value);
+        }
+
         [[nodiscard]] TVec3 killElement(const TVec3 &killDirection) const {
             TVec3 result;
             result.killElement(*this, killDirection);
@@ -320,6 +324,10 @@ namespace JGeometry {
 
         void zeroInline() {
             zero();
+        }
+
+        [[nodiscard]] constexpr bool isZero() const {
+            return squared() <= TUtil<f32>::epsilon();
         }
 
         [[nodiscard]] constexpr TVec3 operator+(const TVec3 &value) const {
@@ -367,6 +375,7 @@ namespace JGeometry {
 
 using TVec2s = JGeometry::TVec2<s16>;
 using TVec2f = JGeometry::TVec2<f32>;
+using TVec3s = JGeometry::TVec3<s16>;
 using TVec3f = JGeometry::TVec3<f32>;
 
 [[nodiscard]] constexpr TVec3f operator*(f32 scaleValue, const TVec3f &value) {

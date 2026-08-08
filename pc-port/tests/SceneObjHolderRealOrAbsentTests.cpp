@@ -1,3 +1,4 @@
+#include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -49,6 +50,15 @@ namespace {
         require(MR::createSceneObj(SceneObj_StageSwitchContainer) == created,
                 "repeated creation must return the scene's existing object");
 
+        auto *gravity_manager = MR::createSceneObj(SceneObj_PlanetGravityManager);
+        require(gravity_manager != nullptr &&
+                    MR::getSceneObj<PlanetGravityManager>(
+                        SceneObj_PlanetGravityManager) == gravity_manager &&
+                    std::string_view(gravity_manager->getName()) == "重力",
+                "SceneObj 0x32 must be the exact scene-owned PlanetGravityManager");
+        require(MR::createSceneObj(SceneObj_PlanetGravityManager) == gravity_manager,
+                "repeated gravity-manager creation must return the scene singleton");
+
         require(MR::createSceneObj(SceneObj_CollisionDirector) == nullptr &&
                     !MR::isExistSceneObj(SceneObj_CollisionDirector),
                 "an unsupported SceneObj factory entry must remain absent");
@@ -60,6 +70,8 @@ namespace {
             const auto first_binding = smgpc::scene::SceneObjHolderBinding(first_holder);
             require(MR::createSceneObj(SceneObj_StageSwitchContainer) != nullptr,
                     "the first scene should create its own supported object");
+            require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
+                    "the first scene should create its own gravity manager");
 
             auto second_holder = SceneObjHolder{};
             auto rejected_parallel_binding = false;
@@ -83,6 +95,10 @@ namespace {
         require(!MR::isExistSceneObj(SceneObj_StageSwitchContainer) &&
                     MR::getSceneObj<StageSwitchContainer>(SceneObj_StageSwitchContainer) == nullptr,
                 "a later scene must not inherit objects from the previous holder");
+        require(!MR::isExistSceneObj(SceneObj_PlanetGravityManager) &&
+                    MR::getSceneObj<PlanetGravityManager>(
+                        SceneObj_PlanetGravityManager) == nullptr,
+                "a later scene must not inherit the previous scene's gravity manager");
     }
 
     struct TestCase {

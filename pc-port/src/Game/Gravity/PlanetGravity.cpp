@@ -1,26 +1,9 @@
-#include "Game/Gravity/GravityInfo.hpp"
-#include "Game/Gravity/PlanetGravity.hpp"
+#include "Game/Gravity.hpp"
+#include "Game/Util.hpp"
 
-#include "Game/Util/MathUtil.hpp"
-
-namespace MR {
-    void separateScalarAndDirection(f32* scalar, TVec3f* direction, const TVec3f& vector);
-}
-
-GravityInfo::GravityInfo() {
-    mLargestPriority = -1;
-    mGravityVector.x = 0.0f;
-    mGravityVector.y = 0.0f;
-    mGravityVector.z = 0.0f;
-    mGravityInstance = nullptr;
-}
-
-void GravityInfo::init() {
-    mLargestPriority = -1;
-    mGravityVector.z = 0.0f;
-    mGravityVector.y = 0.0f;
-    mGravityVector.x = 0.0f;
-    mGravityInstance = nullptr;
+void PlanetGravity_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
 }
 
 PlanetGravity::PlanetGravity() {
@@ -43,6 +26,7 @@ void PlanetGravity::setPriority(s32 priority) {
 }
 
 bool PlanetGravity::calcGravity(TVec3f* pDest, const TVec3f& rPosition) const {
+    // Calculate raw gravity vector
     f32 radius = 0.0f;
     TVec3f gravity;
     gravity.x = 0.0f;
@@ -52,21 +36,25 @@ bool PlanetGravity::calcGravity(TVec3f* pDest, const TVec3f& rPosition) const {
     if (!calcOwnGravityVector(&gravity, &radius, rPosition))
         return false;
 
+    // Adjust radius
     radius -= mDistant;
 
     if (radius < 1.0f) {
         radius = 1.0f;
     }
 
+    // Apply gravity speed
     f32 scalar = 4000000.0f / (radius * radius);
     gravity.x *= scalar;
     gravity.y *= scalar;
     gravity.z *= scalar;
 
+    // Invert vector if necessary
     if (mIsInverse) {
         gravity = -gravity;
     }
 
+    // Set result vector
     pDest->x = gravity.x;
     pDest->y = gravity.y;
     pDest->z = gravity.z;
@@ -96,8 +84,7 @@ bool PlanetGravity::isInRangeDistance(f32 radius) const {
     }
 }
 
-bool PlanetGravity::calcGravityFromMassPosition(TVec3f* pDirection, f32* pScalar, const TVec3f& rPosition,
-                                                const TVec3f& rMassPosition) const {
+bool PlanetGravity::calcGravityFromMassPosition(TVec3f* pDirection, f32* pScalar, const TVec3f& rPosition, const TVec3f& rMassPosition) const {
     TVec3f direction = rMassPosition - rPosition;
     f32 scalar;
 
@@ -116,7 +103,7 @@ bool PlanetGravity::calcGravityFromMassPosition(TVec3f* pDirection, f32* pScalar
     return true;
 }
 
-void PlanetGravity::updateMtx(const TPos3f&) {
+void PlanetGravity::updateMtx(const TPos3f& rMtx) {
 }
 
 void PlanetGravity::updateIdentityMtx() {

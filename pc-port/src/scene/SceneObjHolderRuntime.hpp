@@ -18,6 +18,8 @@ namespace smgpc::scene {
         SceneObjHolderBinding(SceneObjHolderBinding &&) = delete;
         SceneObjHolderBinding &operator=(SceneObjHolderBinding &&) = delete;
 
+        void init_after_placement();
+
     private:
         friend class ::SceneObjHolder;
 

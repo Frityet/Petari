@@ -1,8 +1,10 @@
 #include "Game/Util/MtxUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
 
 #include <cmath>
+#include <stdexcept>
 
 namespace {
     constexpr f32 cDegreesToRadians = 3.14159265358979323846F / 180.0F;
@@ -21,6 +23,51 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void makeMtxRotate(MtxPtr pMatrix, s16 rotationX, s16 rotationY, s16 rotationZ) {
+        const auto sinY = JMASSin(rotationY);
+        const auto cosZ = JMASCos(rotationZ);
+        const auto sinZ = JMASSin(rotationZ);
+        const auto cosX = JMASCos(rotationX);
+        const auto sinX = JMASSin(rotationX);
+        const auto cosY = JMASCos(rotationY);
+
+        const auto sinZSinY = sinZ * sinY;
+        const auto cosZSinY = cosZ * sinY;
+        const auto sinXSinZSinY = sinX * sinZSinY;
+        const auto cosXCosZ = cosX * cosZ;
+
+        pMatrix[2][0] = -sinY;
+        pMatrix[0][0] = cosZ * cosY;
+        pMatrix[1][0] = sinZ * cosY;
+
+        const auto cosXSinZ = cosX * sinZ;
+        const auto sinXSinZ = sinX * sinZ;
+        const auto sinXCosZ = sinX * cosZ;
+        const auto sinXCosZSinY = sinX * cosZSinY;
+        const auto cosXCosZSinY = cosX * cosZSinY;
+        const auto cosXSinZSinY = cosX * sinZSinY;
+
+        pMatrix[0][3] = 0.0F;
+        pMatrix[0][1] = sinXCosZSinY - cosXSinZ;
+        pMatrix[0][2] = cosXCosZSinY + sinXSinZ;
+        pMatrix[2][1] = sinX * cosY;
+        pMatrix[1][1] = sinXSinZSinY + cosXCosZ;
+        pMatrix[1][2] = cosXSinZSinY - sinXCosZ;
+        pMatrix[2][2] = cosX * cosY;
+        pMatrix[1][3] = 0.0F;
+        pMatrix[2][3] = 0.0F;
+    }
+
+    void makeMtxRotate(MtxPtr pMatrix, f32 rotationX, f32 rotationY, f32 rotationZ) {
+        makeMtxRotate(pMatrix, static_cast<s16>(rotationX * DEGREE_TO_S16),
+                      static_cast<s16>(rotationY * DEGREE_TO_S16),
+                      static_cast<s16>(rotationZ * DEGREE_TO_S16));
+    }
+
+    void makeMtxRotate(MtxPtr pMatrix, const TVec3f& rRotation) {
+        makeMtxRotate(pMatrix, rRotation.x, rRotation.y, rRotation.z);
+    }
+
     void makeMtxRotateY(MtxPtr pMatrix, f32 rotationY) {
         const auto radians = rotationY * cDegreesToRadians;
         const auto sinY = std::sin(radians);
@@ -93,6 +140,26 @@ namespace MR {
     void makeMtxTRS(MtxPtr pMatrix, const LiveActor* pActor) {
         if (pActor != nullptr) {
             makeMtxTRS(pMatrix, pActor->mPosition, pActor->mRotation, pActor->mScale);
+        }
+    }
+
+    void preScaleMtx(MtxPtr pMatrix, f32 scale) {
+        preScaleMtx(pMatrix, scale, scale, scale);
+    }
+
+    void preScaleMtx(MtxPtr pMatrix, const TVec3f& rScale) {
+        preScaleMtx(pMatrix, rScale.x, rScale.y, rScale.z);
+    }
+
+    void preScaleMtx(MtxPtr pMatrix, f32 scaleX, f32 scaleY, f32 scaleZ) {
+        if (pMatrix == nullptr) {
+            throw std::invalid_argument("Matrix scaling requires a real matrix.");
+        }
+
+        for (auto row = 0; row < 3; ++row) {
+            pMatrix[row][0] *= scaleX;
+            pMatrix[row][1] *= scaleY;
+            pMatrix[row][2] *= scaleZ;
         }
     }
 

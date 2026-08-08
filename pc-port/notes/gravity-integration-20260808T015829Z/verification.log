@@ -1,0 +1,32 @@
+command: xmake build -vD smg-pc
+exit: 0
+result: full debug executable linked successfully (17.383s)
+
+command: xmake build smg-pc-gravity-real-or-absent-tests
+exit: 0
+result: focused test binary linked successfully
+
+command: xmake run smg-pc-gravity-real-or-absent-tests
+exit: 0
+[ok] absent service is explicit
+[ok] real manager rules and info
+[ok] JMap parameters are real
+[ok] exact creator registration without placement synthesis
+[ok] explicit blocked preflight has no side effects
+[ok] generic scene object post-placement follower binding
+6 gravity real-or-absent test(s) passed
+
+command: cmp audit of root sources against pc-port copies
+exit: 0
+result: byte-identical exact files: 33
+coverage: Game/Gravity.hpp; 14 Game/Gravity headers; 13 concrete gravity
+sources; BaseMatrixFollowTargetHolder.hpp/.cpp; JMapLinkInfo.hpp/.cpp;
+JSystem/JMath.hpp
+
+command: nm -C RailPart.cpp.o ParallelGravity.cpp.o | inspect DUMMY
+exit: 0
+RailPart.cpp.o:          0000000000000000 t DUMMY()
+ParallelGravity.cpp.o:  0000000000000000 t DUMMY()
+
+command: git diff --check
+exit: 0

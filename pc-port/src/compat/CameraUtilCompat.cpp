@@ -10,7 +10,7 @@
 #include <stdexcept>
 
 namespace {
-    constexpr auto PI = 3.14159265358979323846F;
+    constexpr auto cPi = 3.14159265358979323846F;
 
     struct CameraBasis {
         smgpc::camera::CameraParamVec3 forward;
@@ -130,7 +130,7 @@ namespace {
             return false;
         }
 
-        const auto fovy = pose->fovy_degrees * PI / 180.0F;
+        const auto fovy = pose->fovy_degrees * cPi / 180.0F;
         const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
         const auto focal_x = focal_y / pose->aspect_ratio;
         const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
@@ -153,7 +153,7 @@ namespace {
 
         const auto basis = camera_basis(*pose);
         const auto world_distance = distance < 0.0F ? pose->near_clip : distance;
-        const auto fovy = pose->fovy_degrees * PI / 180.0F;
+        const auto fovy = pose->fovy_degrees * cPi / 180.0F;
         const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
         const auto focal_x = focal_y / pose->aspect_ratio;
         const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
@@ -300,7 +300,7 @@ namespace MR {
             return false;
         }
 
-        const auto fovy = pose->fovy_degrees * PI / 180.0F;
+        const auto fovy = pose->fovy_degrees * cPi / 180.0F;
         const auto focal_y = 1.0F / std::tan(fovy * 0.5F);
         const auto focal_x = focal_y / pose->aspect_ratio;
         pResult->x = (rViewPos.x / rViewPos.z) * focal_x;

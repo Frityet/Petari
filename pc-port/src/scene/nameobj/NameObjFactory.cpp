@@ -1,6 +1,7 @@
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include "Game/Demo/PrologueDirector.hpp"
+#include "Game/Gravity/GlobalGravityObj.hpp"
 #include "Game/Map/GroupSwitchWatcher.hpp"
 #include "Game/Map/SwitchSynchronizer.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
@@ -48,6 +49,56 @@ namespace {
         NameObjFactory::Name2CreateFunc{
             "CollisionBlocker",
             create_supported_name_obj<CollisionBlocker>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalCubeGravity",
+            MR::createGlobalCubeGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalConeGravity",
+            MR::createGlobalConeGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalDiskGravity",
+            MR::createGlobalDiskGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalDiskTorusGravity",
+            MR::createGlobalDiskTorusGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalPlaneGravity",
+            MR::createGlobalPlaneGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalPlaneGravityInBox",
+            MR::createGlobalPlaneInBoxGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalPlaneGravityInCylinder",
+            MR::createGlobalPlaneInCylinderGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalPointGravity",
+            MR::createGlobalPointGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalSegmentGravity",
+            MR::createGlobalSegmentGravityObj,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GlobalWireGravity",
+            MR::createGlobalWireGravityObj,
             nullptr,
         },
     };

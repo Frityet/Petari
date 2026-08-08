@@ -1,13 +1,19 @@
 #include "Game/Gravity/GravityInfo.hpp"
+#include "Game/Gravity/GravityCreator.hpp"
+#include "Game/Gravity/GlobalGravityObj.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"
+#include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "compat/GameGravityCompat.hpp"
 #include "resource/BcsvTable.hpp"
-#include "scene/StageGravityService.hpp"
-#include "scene/StagePlacementResolver.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/StageHostScene.hpp"
 
 #include <algorithm>
 #include <array>
@@ -73,6 +79,35 @@ namespace {
         return JMapInfo::from_bcsv(bytes);
     }
 
+    JMapInfo make_linked_gravity_jmap() {
+        constexpr auto field_count = 8U;
+        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
+        constexpr auto entry_size = 32U;
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
+        write_be32(bytes, 0U, 1U);
+        write_be32(bytes, 4U, field_count);
+        write_be32(bytes, 8U, data_offset);
+        write_be32(bytes, 12U, entry_size);
+        write_field(bytes, 0U, "Obj_ID", 0U, smgpc::resource::BcsvFieldType::Int32);
+        write_field(bytes, 1U, "l_id", 4U, smgpc::resource::BcsvFieldType::Int32);
+        write_field(bytes, 2U, "pos_x", 8U, smgpc::resource::BcsvFieldType::Float);
+        write_field(bytes, 3U, "pos_y", 12U, smgpc::resource::BcsvFieldType::Float);
+        write_field(bytes, 4U, "pos_z", 16U, smgpc::resource::BcsvFieldType::Float);
+        write_field(bytes, 5U, "dir_x", 20U, smgpc::resource::BcsvFieldType::Float);
+        write_field(bytes, 6U, "dir_y", 24U, smgpc::resource::BcsvFieldType::Float);
+        write_field(bytes, 7U, "dir_z", 28U, smgpc::resource::BcsvFieldType::Float);
+        write_be32(bytes, data_offset, 42U);
+        write_be32(bytes, data_offset + 4U, 42U);
+        write_be_float(bytes, data_offset + 8U, 10.0F);
+        write_be_float(bytes, data_offset + 12U, 20.0F);
+        write_be_float(bytes, data_offset + 16U, 30.0F);
+
+        auto info = JMapInfo::from_bcsv(bytes);
+        info.setName("objinfo");
+        info.setPlacedZoneId(3);
+        return info;
+    }
+
     JMapInfo make_complete_gravity_jmap() {
         constexpr auto field_count = 7U;
         constexpr auto data_offset = 0x10U + field_count * 0x0cU;
@@ -122,26 +157,64 @@ namespace {
         float _distance;
     };
 
-    void test_absent_service_is_explicit() {
+    class FollowBindingProbe final : public BaseMatrixFollower {
+    public:
+        FollowBindingProbe(NameObj* owner, const JMapInfoIter& iter)
+            : BaseMatrixFollower(owner, iter) {
+        }
+
+        void setGravityFollowHost(const NameObj* host) override {
+            bound_host = host;
+        }
+
+        const NameObj* bound_host = nullptr;
+    };
+
+    class GravityScene final {
+    public:
+        GravityScene()
+            : holder(), binding(holder),
+              manager(static_cast<PlanetGravityManager*>(
+                  MR::createSceneObj(SceneObj_PlanetGravityManager))) {
+            require(manager != nullptr,
+                    "a bound stage scene must create the exact PlanetGravityManager SceneObj");
+        }
+
+        SceneObjHolder holder;
+        smgpc::scene::SceneObjHolderBinding binding;
+        PlanetGravityManager* manager;
+    };
+
+    void test_absent_manager_is_explicit() {
         auto actor = LiveActor("gravity-absence-probe");
         auto destination = TVec3f{3.0F, 4.0F, 5.0F};
         require_throws<std::logic_error>(
             [&] { (void)MR::calcGravityVector(&actor, &destination, nullptr, 0U); },
-            "gravity queries must reject a missing scene-owned service");
+            "gravity queries must reject a missing scene-owned manager");
         require(destination.epsilonEquals(TVec3f{3.0F, 4.0F, 5.0F}, 0.0F),
                 "an unavailable gravity query must not fabricate a zero vector");
 
         auto gravity = ConstantGravity(TVec3f{0.0F, -1.0F, 0.0F}, 100.0F);
         require_throws<std::logic_error>([&] { MR::registerGravity(&gravity); },
                                          "registration must reject a missing scene owner");
+        require_throws<std::invalid_argument>([&] { MR::registerGravity(nullptr); },
+                                              "null registration must be rejected before scene lookup");
         require_throws<std::invalid_argument>(
             [&] { (void)MR::calcGravityVector(static_cast<const LiveActor*>(nullptr), &destination, nullptr, 0U); },
             "a null actor must not be treated as zero gravity");
+
+        auto holder = SceneObjHolder{};
+        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        destination.set(3.0F, 4.0F, 5.0F);
+        require_throws<std::logic_error>(
+            [&] { (void)MR::calcGravityVector(&actor, &destination, nullptr, 0U); },
+            "a bound holder must not lazily fabricate a missing gravity manager");
+        require(destination.epsilonEquals(TVec3f{3.0F, 4.0F, 5.0F}, 0.0F),
+                "a missing manager in an active scene must leave the query destination untouched");
     }
 
     void test_real_manager_rules_and_info() {
-        auto service = smgpc::scene::StageGravityService{};
-        service.activate();
+        auto scene = GravityScene{};
 
         auto caller = NameObj("gravity-caller");
         auto destination = TVec3f{9.0F, 9.0F, 9.0F};
@@ -189,8 +262,6 @@ namespace {
                                          "duplicate registration must not corrupt manager ordering");
         require_throws<std::invalid_argument>([&] { MR::registerGravity(nullptr); },
                                                "null registration must be explicitly rejected");
-        service.clear();
-        service.deactivate();
     }
 
     void test_jmap_parameters_are_real() {
@@ -212,45 +283,110 @@ namespace {
             "JMap setters must reject a missing PlanetGravity instead of silently doing nothing");
     }
 
-    void test_placement_support_or_explicit_rejection() {
-        auto point = smgpc::scene::StagePlacementObject{};
-        point.object_name = "GlobalPointGravity";
-        point.translation = {0.0F, 0.0F, 0.0F};
-        point.scale = {1.0F, 1.0F, 1.0F};
-        point.object_args.fill(-1);
-        point.jmap_info = make_fieldless_jmap();
-        point.jmap_entry_index = 0;
+    void test_exact_creator_registration_and_no_placement_synthesis() {
+        auto scene = GravityScene{};
+        auto destination = TVec3f{9.0F, 9.0F, 9.0F};
+        require(!scene.manager->calcTotalGravityVector(
+                    &destination, nullptr, TVec3f{}, GRAVITY_TYPE_NORMAL, 0U) &&
+                    destination.epsilonEquals(TVec3f{}, 0.0F),
+                "the exact scene manager must start empty without synthesized gravity");
 
-        auto service = smgpc::scene::StageGravityService{};
-        const auto placements = std::array{point};
-        const auto stats = service.load(placements);
-        auto destination = TVec3f{};
-        require(stats.gravity_count == 1U && stats.unsupported_count == 0U &&
-                    service.query(TVec3f{0.0F, 600.0F, 0.0F}, &destination) &&
+        auto creator = PointGravityCreator{};
+        const auto jmap = make_fieldless_jmap();
+        auto* instance = creator.createFromJMap(JMapInfoIter(&jmap, 0));
+        require(instance == creator.getGravity() &&
+                    scene.manager->calcTotalGravityVector(
+                        &destination, nullptr, TVec3f{0.0F, 600.0F, 0.0F},
+                        GRAVITY_TYPE_NORMAL, 0U) &&
                     destination.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
-                "supported point placement data should create a real PlanetGravity field");
+                "the exact PointGravityCreator must own construction and register its retail field");
+        require(NameObjFactory::getCreator("GlobalPointGravity") == MR::createGlobalPointGravityObj &&
+                    NameObjFactory::getCreator("GlobalCubeGravity") == MR::createGlobalCubeGravityObj &&
+                    NameObjFactory::getCreator("GlobalConeGravity") == MR::createGlobalConeGravityObj &&
+                    NameObjFactory::getCreator("GlobalDiskGravity") == MR::createGlobalDiskGravityObj &&
+                    NameObjFactory::getCreator("GlobalDiskTorusGravity") == MR::createGlobalDiskTorusGravityObj &&
+                    NameObjFactory::getCreator("GlobalPlaneGravity") == MR::createGlobalPlaneGravityObj &&
+                    NameObjFactory::getCreator("GlobalPlaneGravityInBox") == MR::createGlobalPlaneInBoxGravityObj &&
+                    NameObjFactory::getCreator("GlobalPlaneGravityInCylinder") == MR::createGlobalPlaneInCylinderGravityObj &&
+                    NameObjFactory::getCreator("GlobalSegmentGravity") == MR::createGlobalSegmentGravityObj &&
+                    NameObjFactory::getCreator("GlobalWireGravity") == MR::createGlobalWireGravityObj,
+                "the host factory must expose the exact retail gravity actor creators");
 
-        auto switched_point = point;
-        switched_point.switch_a_id = 3;
-        const auto dynamic = std::array{switched_point};
-        require_throws<std::runtime_error>([&] { (void)service.load(dynamic); },
-                                           "dynamic gravity must require the real switch/follower actor lifecycle");
-        require(service.empty() && service.stats().unsupported_count == 1U,
-                "a rejected dynamic placement must not retain a static substitute field");
+        auto other_holder = SceneObjHolder{};
+        require_throws<std::logic_error>(
+            [&] {
+                const auto other_binding =
+                    smgpc::scene::SceneObjHolderBinding(other_holder);
+                (void)other_binding;
+            },
+            "two scenes must not silently replace gravity ownership");
+        delete creator.mGravityInstance;
+        creator.mGravityInstance = nullptr;
+    }
 
-        auto cube = point;
-        cube.object_name = "GlobalCubeGravity";
-        const auto unsupported = std::array{cube};
-        require_throws<std::runtime_error>([&] { (void)service.load(unsupported); },
-                                           "unimplemented gravity classes must be explicitly unavailable");
-        require(service.empty() && service.stats().unsupported_count == 1U,
-                "a rejected gravity load must not retain a partial stand-in field");
+    void test_explicit_blocked_preflight_has_no_side_effects() {
+        auto placements = std::array<smgpc::scene::StagePlacementObject, 2U>{};
+        placements[0].object_name = "GlobalPointGravity";
+        placements[0].factory_supported = true;
+        placements[0].table_path = "jmp/placement/common/planetobjinfo";
+        placements[1].object_name = "RestartCube";
+        placements[1].table_path = "jmp/placement/common/areaobjinfo";
 
-        auto other = smgpc::scene::StageGravityService{};
-        service.activate();
-        require_throws<std::logic_error>([&] { other.activate(); },
-                                         "two scenes must not silently replace gravity ownership");
-        service.deactivate();
+        auto scene = GravityScene{};
+        auto creator = PointGravityCreator{};
+        const auto jmap = make_fieldless_jmap();
+        auto construction_reached = false;
+        auto rejected = false;
+        try {
+            smgpc::scene::preflight_stage_placements_or_throw(
+                "PreflightProbeGalaxy", placements, &placements[0]);
+            construction_reached = true;
+            (void)creator.createFromJMap(JMapInfoIter(&jmap, 0));
+        } catch (const std::runtime_error&) {
+            rejected = true;
+        }
+
+        auto caller = NameObj("preflight-query-caller");
+        auto destination = TVec3f{9.0F, 9.0F, 9.0F};
+        const auto has_gravity =
+            MR::calcGravityVector(&caller, TVec3f{}, &destination, nullptr, 0U);
+        require(rejected && !construction_reached && creator.mGravityInstance == nullptr &&
+                    !has_gravity && destination.epsilonEquals(TVec3f{}, 0.0F),
+                "an explicit root request must reject all blockers before constructing or registering gravity");
+    }
+
+    void test_generic_scene_obj_post_placement_binds_followers() {
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto link_info = make_linked_gravity_jmap();
+        const auto iter = JMapInfoIter(&link_info, 0);
+        auto follower_owner = NameObj("follow-binding-probe");
+        auto follower = FollowBindingProbe(&follower_owner, iter);
+        auto target = LiveActor("follow-target");
+        auto explicit_host_mtx = TPos3f{};
+        explicit_host_mtx.identity();
+        explicit_host_mtx.setTrans(16.0F, 27.0F, 41.0F);
+
+        MR::addBaseMatrixFollower(&follower);
+        MR::addBaseMatrixFollowTarget(&target, iter, &explicit_host_mtx, nullptr);
+        require(follower.bound_host == nullptr,
+                "followers must remain unbound until the scene post-placement phase");
+        binding.init_after_placement();
+        require(follower.bound_host == &target && follower.getFollowTargetActor() == &target,
+                "the generic SceneObjHolder pass must run the exact BaseMatrix follower binding");
+
+        auto follow_mtx = TPos3f{};
+        follower.calcFollowMatrix(&follow_mtx);
+        auto follow_translation = TVec3f{};
+        follow_mtx.getTrans(follow_translation);
+        require(follow_translation.epsilonEquals(TVec3f{6.0F, 7.0F, 11.0F}, 0.0001F),
+                "the exact follower must compute host * inverse(placement) with in-place matrix inversion");
+        require(target.getBaseMtx() == nullptr,
+                "a model-less LiveActor must retain the retail absent base-matrix result");
+        auto modeled_target = LiveActor("modeled-follow-target");
+        modeled_target.initModelManagerWithAnm("FollowTargetProbe", nullptr, false);
+        require(modeled_target.getBaseMtx() != nullptr,
+                "a LiveActor with a real host model must expose its base matrix");
     }
 
     struct TestCase {
@@ -261,10 +397,12 @@ namespace {
 
 int main() {
     const auto tests = std::array{
-        TestCase{"absent service is explicit", test_absent_service_is_explicit},
+        TestCase{"absent manager is explicit", test_absent_manager_is_explicit},
         TestCase{"real manager rules and info", test_real_manager_rules_and_info},
         TestCase{"JMap parameters are real", test_jmap_parameters_are_real},
-        TestCase{"placement support or explicit rejection", test_placement_support_or_explicit_rejection},
+        TestCase{"exact creator registration without placement synthesis", test_exact_creator_registration_and_no_placement_synthesis},
+        TestCase{"explicit blocked preflight has no side effects", test_explicit_blocked_preflight_has_no_side_effects},
+        TestCase{"generic scene object post-placement follower binding", test_generic_scene_obj_post_placement_binds_followers},
     };
 
     auto failures = 0;
