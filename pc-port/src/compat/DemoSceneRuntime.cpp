@@ -3,6 +3,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapInfo.hpp"
@@ -167,6 +168,12 @@ namespace smgpc::compat {
         std::vector<std::vector<Cast>> casts;
         std::vector<DemoSceneSubGroupDefinition> subgroups;
         std::vector<std::vector<LiveActor *>> subgroup_casts;
+        // DemoSimpleCastHolder owns three typed append-only arrays. Preserve
+        // their distinct registration paths and movement order rather than
+        // folding them into the time-sheet cast registry.
+        std::vector<LiveActor *> simple_live_actors;
+        std::vector<LayoutActor *> simple_layout_actors;
+        std::vector<NameObj *> simple_name_objs;
         std::vector<smgpc::scene::StageGeneralPos> general_positions;
         smgpc::runtime::WipeService *wipe_service = nullptr;
         std::optional<std::size_t> active_definition;
@@ -175,6 +182,42 @@ namespace smgpc::compat {
         bool puppetable_control_owned = false;
         bool control_was_enabled_before_puppet = true;
         bool final_boundary_overshoot_traced = false;
+
+        Impl() {
+            simple_live_actors.reserve(0x200U);
+            simple_layout_actors.reserve(0x40U);
+            simple_name_objs.reserve(0x80U);
+        }
+
+        void request_movement_on_all_simple_casts() {
+            for (auto *actor : simple_live_actors) {
+                NameObjFunction::requestMovementOn(actor);
+            }
+            for (auto *actor : simple_layout_actors) {
+                NameObjFunction::requestMovementOn(actor);
+            }
+            for (auto *object : simple_name_objs) {
+                NameObjFunction::requestMovementOn(object);
+            }
+        }
+
+        void release_simple_cast(const NameObj *object) {
+            simple_live_actors.erase(
+                std::remove_if(simple_live_actors.begin(), simple_live_actors.end(),
+                               [object](const auto *actor) {
+                                   return static_cast<const NameObj *>(actor) == object;
+                               }),
+                simple_live_actors.end());
+            simple_layout_actors.erase(
+                std::remove_if(simple_layout_actors.begin(), simple_layout_actors.end(),
+                               [object](const auto *actor) {
+                                   return static_cast<const NameObj *>(actor) == object;
+                               }),
+                simple_layout_actors.end());
+            simple_name_objs.erase(
+                std::remove(simple_name_objs.begin(), simple_name_objs.end(), object),
+                simple_name_objs.end());
+        }
 
         [[nodiscard]] Cast *find_cast(std::size_t definition_index, const LiveActor *actor) {
             if (definition_index >= casts.size()) {
@@ -758,6 +801,30 @@ namespace smgpc::compat {
         return true;
     }
 
+    void DemoSceneRuntime::register_simple_cast(LiveActor *actor) {
+        if (actor == nullptr) {
+            throw std::invalid_argument(
+                "Simple-cast registration requires a real LiveActor.");
+        }
+        _impl->simple_live_actors.push_back(actor);
+    }
+
+    void DemoSceneRuntime::register_simple_cast(LayoutActor *actor) {
+        if (actor == nullptr) {
+            throw std::invalid_argument(
+                "Simple-cast registration requires a real LayoutActor.");
+        }
+        _impl->simple_layout_actors.push_back(actor);
+    }
+
+    void DemoSceneRuntime::register_simple_cast(NameObj *object) {
+        if (object == nullptr) {
+            throw std::invalid_argument(
+                "Simple-cast registration requires a real NameObj.");
+        }
+        _impl->simple_name_objs.push_back(object);
+    }
+
     void DemoSceneRuntime::release_actor(const LiveActor *actor) {
         if (_impl->active_starter == actor) {
             trace_demo_state_event("demo_owner_released", active_demo_name(), actor);
@@ -772,6 +839,7 @@ namespace smgpc::compat {
         for (auto &casts : _impl->subgroup_casts) {
             casts.erase(std::remove(casts.begin(), casts.end(), actor), casts.end());
         }
+        _impl->release_simple_cast(actor);
     }
 
     std::optional<DemoSheetStartResult> DemoSceneRuntime::start_demo(
@@ -803,6 +871,9 @@ namespace smgpc::compat {
         }
 
         auto &definition = _impl->definitions[*found_definition];
+        // DemoDirector::startDemo resumes every simple cast before it starts
+        // the selected executor. This is independent of DemoGroup membership.
+        _impl->request_movement_on_all_simple_casts();
         const auto result = part_name.has_value() ? definition.sheet.start_at_part(*part_name) : definition.sheet.start();
         if (result == DemoSheetStartResult::Started) {
             _impl->active_definition = *found_definition;
@@ -1065,6 +1136,20 @@ namespace smgpc::compat {
             count += std::ranges::find(casts, actor) != casts.end() ? 1U : 0U;
         }
         return count;
+    }
+
+    std::size_t DemoSceneRuntime::simple_cast_registration_count(
+        const NameObj *object) const {
+        const auto live_count = std::ranges::count_if(
+            _impl->simple_live_actors, [object](const auto *actor) {
+                return static_cast<const NameObj *>(actor) == object;
+            });
+        const auto layout_count = std::ranges::count_if(
+            _impl->simple_layout_actors, [object](const auto *actor) {
+                return static_cast<const NameObj *>(actor) == object;
+            });
+        const auto name_count = std::ranges::count(_impl->simple_name_objs, object);
+        return static_cast<std::size_t>(live_count + layout_count + name_count);
     }
 
     std::size_t DemoSceneRuntime::action_count(const LiveActor *actor) const {

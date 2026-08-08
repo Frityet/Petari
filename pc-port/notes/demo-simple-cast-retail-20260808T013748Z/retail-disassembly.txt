@@ -1,0 +1,53 @@
+Source: build/RMGK02/main.elf, llvm-objdump
+
+Retail symbols:
+
+800bd738  __ct__20DemoSimpleCastHolderFlll                 size 0x98
+800bd7d0  registerActor__20DemoSimpleCastHolderFP9LiveActor size 0x1c
+800bd7ec  registerActor__20DemoSimpleCastHolderFP11LayoutActor size 0x1c
+800bd808  registerNameObj__20DemoSimpleCastHolderFP7NameObj size 0x1c
+800bd824  movementOnAllCasts__20DemoSimpleCastHolderFv      size 0xb4
+800baa48  registerDemoSimpleCast__12DemoDirectorFP9LiveActor
+800baa50  registerDemoSimpleCast__12DemoDirectorFP11LayoutActor
+800baa58  registerDemoSimpleCast__12DemoDirectorFP7NameObj
+803ca798  registerDemoSimpleCastAll__2MRFP9LiveActor
+803ca79c  registerDemoSimpleCastAll__2MRFP11LayoutActor
+803ca7a0  registerDemoSimpleCastAll__2MRFP7NameObj
+
+Constructor capacities:
+
+800bd784: slwi 3, 4, 2       # LiveActor count argument
+800bd788: bl 0x8040b47c      # new[]
+800bd790: slwi 3, 30, 2      # LayoutActor count argument
+800bd794: stw 29, 4(28)      # retain LiveActor capacity
+800bd798: bl 0x8040b47c      # new[]
+800bd7a0: slwi 3, 31, 2      # NameObj count argument
+800bd7a4: stw 30, 16(28)     # retain LayoutActor capacity
+800bd7a8: bl 0x8040b47c      # new[]
+800bd7b8: stw 31, 28(28)     # retain NameObj capacity
+
+Each registration increments its typed count and stores the pointer without
+deduplication. Example LiveActor path:
+
+800bd7d0: lwz 7, 8(3)
+800bd7d4: lwz 5, 0(3)
+800bd7d8: addi 6, 7, 1
+800bd7dc: slwi 0, 7, 2
+800bd7e0: stw 6, 8(3)
+800bd7e4: stwx 4, 5, 0
+
+Typed movement order:
+
+800bd848: bl 0x803f0fcc  # MR::requestMovementOn(LiveActor*)
+800bd874: bl 0x803f1010  # MR::requestMovementOn(LayoutActor*)
+800bd8a0: bl 0x803f0fc8  # MR::requestMovementOn(NameObj*)
+
+DemoDirector start ordering:
+
+800baacc: li 0, 1
+800baad0: stw 4, 44(3)   # starter
+800baad4: stb 0, 12(3)   # active = true
+800baad8: stw 5, 48(3)   # demo name
+800baae4: lwz 3, 32(3)   # DemoSimpleCastHolder
+800baae8: bl 0x800bd824  # movementOnAllCasts
+800baaec: bl 0x803f24d4  # initStarPieceGetCSSound

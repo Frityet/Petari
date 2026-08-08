@@ -12,6 +12,7 @@
 #include <string_view>
 
 class JMapInfoIter;
+class LayoutActor;
 class LiveActor;
 class Nerve;
 
@@ -107,6 +108,9 @@ namespace smgpc::compat {
         [[nodiscard]] bool try_register_cast(LiveActor *actor, const JMapInfoIter &iter);
         [[nodiscard]] bool try_register_cast(LiveActor *actor, std::string_view demo_name,
                                              const JMapInfoIter &iter);
+        void register_simple_cast(LiveActor *actor);
+        void register_simple_cast(LayoutActor *actor);
+        void register_simple_cast(NameObj *object);
         void release_actor(const LiveActor *actor);
 
         [[nodiscard]] std::optional<DemoSheetStartResult> start_demo(
@@ -154,6 +158,8 @@ namespace smgpc::compat {
         [[nodiscard]] std::string_view active_demo_name() const;
         [[nodiscard]] std::size_t membership_count(const LiveActor *actor) const;
         [[nodiscard]] std::size_t subgroup_membership_count(const LiveActor *actor) const;
+        [[nodiscard]] std::size_t simple_cast_registration_count(
+            const NameObj *object) const;
         [[nodiscard]] std::size_t action_count(const LiveActor *actor) const;
         [[nodiscard]] std::size_t action_count(const LiveActor *actor,
                                                std::string_view demo_name) const;

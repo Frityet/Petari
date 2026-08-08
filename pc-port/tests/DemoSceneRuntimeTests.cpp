@@ -1,5 +1,6 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapInfo.hpp"
@@ -1615,6 +1616,66 @@ namespace {
             "scene teardown must leave explicit owner absence, not a false result");
     }
 
+    void test_simple_cast_registration_start_and_release() {
+        const auto archive = make_sheet_fixture();
+        const auto placements = make_definition_fixture();
+        auto live_actor = LiveActor("SimpleLive");
+        auto layout_actor = LayoutActor("SimpleLayout", false);
+        auto name_obj = NameObj("SimpleNameObj");
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+
+        live_actor.requestSuspend();
+        layout_actor.requestSuspend();
+        name_obj.requestSuspend();
+        MR::registerDemoSimpleCastAll(&live_actor);
+        MR::registerDemoSimpleCastAll(&layout_actor);
+        MR::registerDemoSimpleCastAll(&name_obj);
+        MR::registerDemoSimpleCastAll(&live_actor);
+        require(runtime.membership_count(&live_actor) == 0U &&
+                    runtime.simple_cast_registration_count(&live_actor) == 2U &&
+                    runtime.simple_cast_registration_count(&layout_actor) == 1U &&
+                    runtime.simple_cast_registration_count(&name_obj) == 1U,
+                "simple casts must remain an append-only registry distinct from DemoGroup membership");
+
+        require(MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr) &&
+                    !live_actor.isSuspended() && !layout_actor.isSuspended() &&
+                    !name_obj.isSuspended(),
+                "a real demo start must resume all three simple-cast lists");
+        MR::endDemo(&name_obj, "Alpha");
+
+        const NameObj *transient_identity = nullptr;
+        {
+            auto transient = LiveActor("TransientSimpleLive");
+            transient_identity = &transient;
+            MR::registerDemoSimpleCastAll(&transient);
+            MR::registerDemoSimpleCastAll(&transient);
+            require(runtime.simple_cast_registration_count(&transient) == 2U,
+                    "repeat retail registration must retain both simple-cast entries");
+        }
+
+        require(runtime.simple_cast_registration_count(transient_identity) == 0U,
+                "LiveActor teardown must release every simple-cast entry for that identity");
+
+        live_actor.requestSuspend();
+        layout_actor.requestSuspend();
+        name_obj.requestSuspend();
+        smgpc::compat::release_demo_runtime_state(&live_actor);
+        require(runtime.simple_cast_registration_count(&live_actor) == 0U &&
+                    MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr) &&
+                    live_actor.isSuspended() && !layout_actor.isSuspended() &&
+                    !name_obj.isSuspended(),
+                "released LiveActor identities must not be resumed by a later demo start");
+        MR::endDemo(&name_obj, "Alpha");
+
+        require_throws(
+            [] {
+                MR::registerDemoSimpleCastAll(
+                    static_cast<LiveActor *>(nullptr));
+            },
+            "real LiveActor",
+            "simple-cast registration must reject a missing retail object instead of storing a null entry");
+    }
+
     void test_programmable_demo_absence_does_not_impersonate_a_sheet() {
         const auto archive = make_clock_sheet_fixture();
         const auto placements = make_clock_definition_fixture();
@@ -1824,6 +1885,7 @@ int main() {
         TestCase{"Action dispatch order, pause, and callback invariant", test_action_dispatch_order_pause_and_callback_invariant},
         TestCase{"Wipe row arbitrary names and raw frames", test_wipe_row_dispatch_uses_arbitrary_names_and_raw_frames},
         TestCase{"no registry and scene teardown", test_no_registry_and_scene_teardown},
+        TestCase{"simple-cast registration, start, and release", test_simple_cast_registration_start_and_release},
         TestCase{"programmable demo absence versus real Time sheets", test_programmable_demo_absence_does_not_impersonate_a_sheet},
         TestCase{"scene-owned active demo state", test_active_state_is_owned_by_each_installed_scene_runtime},
         TestCase{"no definition skips DemoSheet archive", test_no_definition_skips_demo_sheet_archive},

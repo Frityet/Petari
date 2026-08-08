@@ -2,6 +2,7 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -91,6 +92,24 @@ namespace smgpc::compat {
 }  // namespace smgpc::compat
 
 namespace MR {
+
+    void registerDemoSimpleCastAll(LiveActor *pActor) {
+        smgpc::compat::require_active_demo_scene_runtime(
+            "LiveActor simple-cast registration")
+            .register_simple_cast(pActor);
+    }
+
+    void registerDemoSimpleCastAll(LayoutActor *pActor) {
+        smgpc::compat::require_active_demo_scene_runtime(
+            "LayoutActor simple-cast registration")
+            .register_simple_cast(pActor);
+    }
+
+    void registerDemoSimpleCastAll(NameObj *pObj) {
+        smgpc::compat::require_active_demo_scene_runtime(
+            "NameObj simple-cast registration")
+            .register_simple_cast(pObj);
+    }
 
     bool tryRegisterDemoCast(LiveActor *pActor, const JMapInfoIter &rIter) {
         return smgpc::compat::require_active_demo_scene_runtime(

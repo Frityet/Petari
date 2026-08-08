@@ -76,11 +76,6 @@ namespace MR {
             "LiveActorGroupArray registration is unavailable without the real scene-owned group manager.");
     }
 
-    void registerDemoSimpleCastAll(LiveActor*) {
-        throw std::logic_error(
-            "Simple-cast demo registration is unavailable without the real DemoDirector executor registry.");
-    }
-
     void deleteEffectAll(LiveActor* pActor) {
         if (pActor == nullptr) {
             throw std::invalid_argument("Effect deletion requires a LiveActor.");
