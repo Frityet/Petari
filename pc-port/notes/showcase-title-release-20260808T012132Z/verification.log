@@ -1,0 +1,54 @@
+2026-08-08 authentic title showcase verification
+
+Source parity
+-------------
+cmp src/Game/Screen/TitleSequenceProduct.cpp pc-port/src/Game/Screen/TitleSequenceProduct.cpp
+exit: 0
+cmp include/Game/Screen/TitleSequenceProduct.hpp pc-port/src/Game/Screen/TitleSequenceProduct.hpp
+exit: 0
+
+Release build
+-------------
+cd pc-port
+xmake f -m release
+xmake -vD smg-pc-showcase
+result: build ok
+artifact: build/linux/x86_64/release/smg-pc-showcase
+size: 23294984 bytes
+sha256: acd6f950068ddcc040a4205497d7abdfd2112d4bcceeb25e13dd891e4c2ab1fe
+
+Packaged-binary runtime
+-----------------------
+xvfb-run -a env SMGPC_ENABLE_VSYNC=0 \
+  build/showcase-dist/smg-pc-title-showcase-linux-x86_64/bin/smg-pc-showcase \
+  title --disc /workspaces/pcport/RMGK01.iso \
+  --screenshot /tmp/smgpc-showcase-bundle-verify.png \
+  --screenshot-frame 210 --exit-after-screenshot --max-frames 220
+exit: 0
+observed:
+  Aurora Vulkan adapter initialized
+  loaded 1994 Korean messages
+  loaded 3327 particle names and resources, 225 particle textures
+  resolved original TitleLogo, PressStart, and SysPALInfo archives
+  emitted TitleLogoLight and TitleLogoLightB through TitleLogoLightG
+  screenshot written at frame 210
+shutdown-only warnings:
+  WebGPU device destroyed
+  Xvfb screensaver unsupported
+
+Regression suite
+----------------
+xmake f -m debug
+xmake test -g aurora -j 1
+result: 32/32 test targets passed, 0 failures, 1.497s
+
+Bundle
+------
+archive: build/showcase-dist/smg-pc-title-showcase-linux-x86_64.tar.gz
+sha256: f818fa6b2a2d404cbab0629728af8af7d4137f7795f5e53a46761254314290f9
+contents:
+  BUILD-INFO
+  LICENSE
+  README.md
+  bin/smg-pc-showcase
+  run-title-showcase.sh
