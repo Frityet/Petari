@@ -3,6 +3,8 @@
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "Game/System/GameDataFunction.hpp"
+#include "Game/System/GameDataTemporaryInGalaxy.hpp"
+#include "Game/System/GameSequenceDirector.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemFontHolder.hpp"
 #include "Game/System/GameSystemFunction.hpp"
@@ -167,5 +169,14 @@ namespace MR {
 
     bool isDisplayEncouragePal60Window() {
         return VIGetTvFormat() == 1;
+    }
+
+    JMapIdInfo* getPlayerRestartIdInfo() {
+        return SingletonHolder< GameSystem >::get()->mSequenceDirector->mGameDataTemporaryInGalaxy->mPlayerRestartIdInfo;
+    }
+
+    void setPlayerRestartIdInfo(const JMapIdInfo& rPlayerRestartIdInfo) {
+        SingletonHolder< GameSystem >::get()->mSequenceDirector->mGameDataTemporaryInGalaxy->setPlayerRestartIdInfo(
+            rPlayerRestartIdInfo);
     }
 };  // namespace MR

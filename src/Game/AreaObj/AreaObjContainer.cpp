@@ -7,9 +7,17 @@
 #include "Game/AreaObj/WarpCube.hpp"
 #include "Game/AreaObj/WaterArea.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include <algorithm>
 #include <cstring>
 
 namespace {
+    struct AreaObjMgrNameComparator : public std::binary_function< AreaObjMgr*, const char*, bool > {
+        bool operator()(AreaObjMgr* pManager, const char* pName) const {
+            const char* str = strstr(pName, pManager->mName);
+            return str != nullptr && str == pName;
+        }
+    };
+
     template < typename T >
     AreaObjMgr* createManager(s32 type, const char* pName) {
         return new T(type, pName);
@@ -369,20 +377,9 @@ void AreaObjContainer::init(const JMapInfoIter& rIter) {
     }
 }
 
-/* this function is nearly impossible to match without context behind the random stack storages */
 AreaObjMgr* AreaObjContainer::getManager(const char* pName) const {
-    const char* str;
-    AreaObjMgr** first = (AreaObjMgr**)&mManagerArray[0];
-    AreaObjMgr** last = (AreaObjMgr**)&mManagerArray[mNumManagers];
-
-    while ((str && str == pName) == false) {
-        if (++first == last)
-            break;
-
-        str = strstr(pName, (*first)->mName);
-    }
-
-    return *first;
+    return *std::find_if(&mManagerArray[0], &mManagerArray[mNumManagers],
+                         std::binder2nd< AreaObjMgrNameComparator, const char* >(AreaObjMgrNameComparator(), pName));
 }
 
 AreaObj* AreaObjContainer::getAreaObj(const char* pName, const TVec3f& rVec) const {

@@ -33,3 +33,23 @@ bool LightAreaHolder::tryFindLightID(const TVec3f& rArea, ZoneLightID* pLightID)
 void LightAreaHolder::initAfterPlacement() {
     sort();
 }
+
+void LightAreaHolder::sort() {
+    for (s32 i = 0; i < mArray.size() - 1; i++) {
+        s32 swapIndex = i;
+        AreaObj* swapObj = getAreaObj(i);
+        AreaObj* curObj = swapObj;
+        for (s32 j = i + 1; j < mArray.size(); j++) {
+            AreaObj* nextObj = getAreaObj(j);
+            if (swapObj->mObjArg1 > nextObj->mObjArg1) {
+                swapIndex = j;
+                swapObj = nextObj;
+            }
+        }
+
+        if (swapIndex != i) {
+            mArray[i] = swapObj;
+            mArray[swapIndex] = curObj;
+        }
+    }
+}
