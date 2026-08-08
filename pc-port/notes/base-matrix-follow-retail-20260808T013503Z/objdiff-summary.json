@@ -1,0 +1,15 @@
+{
+  "source_path": "src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+  "version": "RMGK02",
+  "fuzzy_match_percent": 100.0,
+  "total_code": 2264,
+  "matched_code": 2264,
+  "total_data": 56,
+  "matched_data": 56,
+  "total_functions": 25,
+  "matched_functions": 25,
+  "verification": {
+    "command": "ninja -j 12",
+    "dol_check": "build/RMGK02/main.dol: OK"
+  }
+}

@@ -56,8 +56,13 @@ public:
     virtual void initAfterPlacement();
     virtual void movement();
 
-    MR::Vector< MR::AssignableArray< BaseMatrixFollower* > > mFollowers;    // 0xC
-    MR::Vector< MR::AssignableArray< BaseMatrixFollowTarget* > > mTargets;  // 0x18
+    void addFollower(BaseMatrixFollower*);
+    void setFollowTargetInfo(LiveActor*, const JMapInfoIter&, const TPos3f*, BaseMatrixFollowValidater*);
+    BaseMatrixFollowTarget* findFollowTarget(const JMapLinkInfo*);
+    BaseMatrixFollowTarget* findFollowTarget(const BaseMatrixFollower*);
+
+    MR::Vector< MR::AssignableArray< BaseMatrixFollowTarget* > > mTargets;  // 0xC
+    MR::Vector< MR::AssignableArray< BaseMatrixFollower* > > mFollowers;    // 0x18
 };
 
 namespace MR {
