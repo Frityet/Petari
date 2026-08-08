@@ -1,0 +1,9 @@
+Package: Super Mario Galaxy PC title showcase
+Target: Linux x86_64
+Minimum glibc: 2.34
+Packaged at (UTC): @PACKAGED_AT_UTC@
+Source Git commit: @SOURCE_GIT_COMMIT@
+Source Git worktree: @SOURCE_GIT_WORKTREE@
+Aurora Git commit: @AURORA_GIT_COMMIT@
+Aurora Git worktree: @AURORA_GIT_WORKTREE@
+SHA-256 (bin/smg-pc-showcase): @SHOWCASE_SHA256@

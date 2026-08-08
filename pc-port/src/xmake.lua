@@ -2,7 +2,8 @@ local subdirs = {
     "common",
     "render",
     "Game",
-    "app"
+    "app",
+    "showcase"
 }
 
 if is_mode("debug") then
