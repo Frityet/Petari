@@ -1,0 +1,15 @@
+command: build/linux/x86_64/debug/smg-pc-feedback-real-or-absent-tests
+exit: 0
+[ok] exact rumble pattern drives real actuator
+[ok] camera shake changes projection exactly
+[ok] effect deletion requires keeper
+[ok] effect lifecycle release is identity-safe
+[ok] Game feedback boundary reports absence
+5 feedback real-or-absent test(s) passed
+
+command: xmake test -g aurora -j 1
+exit: 0
+test targets: 32
+passed: 32
+failed: 0
+reported runtime: 1.551s

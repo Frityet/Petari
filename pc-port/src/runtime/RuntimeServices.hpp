@@ -350,6 +350,7 @@ namespace smgpc::runtime {
         void emit(std::string_view actor_name, std::string_view effect_name, const void *host_identity = nullptr);
         void delete_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity = nullptr);
         void delete_all(std::string_view actor_name, const void *host_identity = nullptr);
+        void release_host_state(std::string_view host_name, const void *host_identity = nullptr) noexcept;
         void draw(s32 draw_type, const smgpc::camera::CameraPose *camera_pose = nullptr);
 
         [[nodiscard]] std::span<const EffectEvent> events() const;

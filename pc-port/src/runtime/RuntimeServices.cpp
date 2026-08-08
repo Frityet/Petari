@@ -1523,15 +1523,24 @@ namespace smgpc::runtime {
     }
 
     void EffectService::unregister_keeper(std::string_view host_name, const void *host_identity) {
-        if (registered_keeper(host_name, host_identity).has_value()) {
-            delete_all(host_name, host_identity);
-        }
+        release_host_state(host_name, host_identity);
+    }
+
+    void EffectService::release_host_state(std::string_view host_name, const void *host_identity) noexcept {
+        std::erase_if(_active_effects, [host_name, host_identity](const auto &active) {
+            return effect_host_matches(active, host_name, host_identity);
+        });
         if (host_identity != nullptr) {
             _registered_keeper_instances.erase(host_identity);
-        } else if (const auto it = _registered_keepers.find(host_name); it != _registered_keepers.end()) {
-            _registered_keepers.erase(it);
+            _host_binding_instances.erase(host_identity);
+            return;
         }
-        unbind_host_transform(host_name, host_identity);
+        if (const auto keeper = _registered_keepers.find(host_name); keeper != _registered_keepers.end()) {
+            _registered_keepers.erase(keeper);
+        }
+        if (const auto binding = _host_bindings.find(host_name); binding != _host_bindings.end()) {
+            _host_bindings.erase(binding);
+        }
     }
 
     void EffectService::bind_host_transform(EffectKeeperHostKind host_kind, std::string_view host_name, EffectHostBindingSource source,

@@ -133,6 +133,63 @@ namespace {
                                          "the required Game delete API must reject an absent runtime");
     }
 
+    void test_effect_host_lifecycle_release_is_identity_safe() {
+        auto effects = smgpc::runtime::EffectService{};
+        effects.release_host_state("Absent");
+        effects.release_host_state("Absent");
+        require(effects.events().empty(),
+                "absent lifecycle release must be idempotent and must not emit a retail deletion event");
+
+        auto first_host = 1;
+        auto second_host = 2;
+        constexpr auto identity_matrix = std::array<float, 12U>{
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+
+        effects.register_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, "Shared", 1, "Shared", false);
+        effects.register_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, "Shared", 1, "Shared", false,
+                                &first_host);
+        effects.register_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, "Shared", 1, "Shared", false,
+                                &second_host);
+        effects.bind_host_transform(smgpc::runtime::EffectKeeperHostKind::LiveActor, "Shared",
+                                    smgpc::runtime::EffectHostBindingSource::LiveActorBaseMatrix,
+                                    identity_matrix, false);
+        effects.bind_host_transform(smgpc::runtime::EffectKeeperHostKind::LiveActor, "Shared",
+                                    smgpc::runtime::EffectHostBindingSource::LiveActorBaseMatrix,
+                                    identity_matrix, false, &first_host);
+        effects.bind_host_transform(smgpc::runtime::EffectKeeperHostKind::LiveActor, "Shared",
+                                    smgpc::runtime::EffectHostBindingSource::LiveActorBaseMatrix,
+                                    identity_matrix, false, &second_host);
+        effects.emit("Shared", "Shared");
+        effects.emit("Shared", "Shared", &first_host);
+        effects.emit("Shared", "Shared", &second_host);
+        const auto event_count = effects.events().size();
+
+        effects.release_host_state("Shared", &first_host);
+        effects.release_host_state("Shared", &first_host);
+        require(effects.events().size() == event_count,
+                "host lifecycle release must not manufacture a retail DeleteAll event");
+        require(!effects.registered_keeper("Shared", &first_host).has_value() &&
+                    !effects.host_binding("Shared", &first_host).has_value() &&
+                    effects.active_effects("Shared", &first_host).empty(),
+                "identity release must clear that host's keeper, binding, and active effects");
+        require(effects.registered_keeper("Shared").has_value() && effects.host_binding("Shared").has_value() &&
+                    effects.active_effects("Shared").size() == 1U,
+                "identity release must preserve a persistent name-keyed owner with the same name");
+        require(effects.registered_keeper("Shared", &second_host).has_value() &&
+                    effects.host_binding("Shared", &second_host).has_value() &&
+                    effects.active_effects("Shared", &second_host).size() == 1U,
+                "identity release must preserve another same-name actor");
+
+        effects.unregister_keeper("Shared", &second_host);
+        require(effects.events().size() == event_count &&
+                    !effects.registered_keeper("Shared", &second_host).has_value() &&
+                    effects.active_effects("Shared", &second_host).empty(),
+                "keeper unregistration must use lifecycle release without a retail delete event");
+    }
+
     void test_game_feedback_boundary_reports_absence() {
         auto source = 0;
         require(!MR::tryRumblePad(&source, "最強", WPAD_CHAN0) &&
@@ -149,6 +206,7 @@ int main() {
             std::pair{"exact rumble pattern drives real actuator", &test_rumble_uses_exact_named_pattern_and_real_actuator},
             std::pair{"camera shake changes projection exactly", &test_camera_shake_is_exact_projection_motion},
             std::pair{"effect deletion requires keeper", &test_effect_deletion_requires_a_real_keeper},
+            std::pair{"effect lifecycle release is identity-safe", &test_effect_host_lifecycle_release_is_identity_safe},
             std::pair{"Game feedback boundary reports absence", &test_game_feedback_boundary_reports_absence},
         };
         for (const auto& [name, test] : tests) {

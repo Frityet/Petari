@@ -1234,11 +1234,7 @@ namespace smgpc::runtime {
         }
 
         const auto registrations = _scheduler.remove_registrations_since(_scene_scheduler_registration_marker);
-        auto registered_host_names = std::set<std::string, std::less<>>{};
         for (const auto &registration : registrations) {
-            if (!registration.name.empty()) {
-                registered_host_names.insert(registration.name);
-            }
             if (registration.live_actor != nullptr) {
                 _star_pointer.unregister_target(*registration.live_actor);
                 _effect_live_actor_hosts.erase(registration.live_actor);
@@ -1258,33 +1254,35 @@ namespace smgpc::runtime {
             }
         }
 
-        auto effect_cleanup_hosts = registered_host_names;
-        effect_cleanup_hosts.insert(_scene_effect_emission_hosts.begin(), _scene_effect_emission_hosts.end());
-        effect_cleanup_hosts.insert(_scene_effect_keeper_hosts.begin(), _scene_effect_keeper_hosts.end());
-        for (const auto &host_name : effect_cleanup_hosts) {
-            _effects.delete_all(host_name);
+        for (const auto &host_name : _scene_effect_emission_hosts) {
+            _effects.release_host_state(host_name);
+        }
+        for (const auto &host_name : _scene_effect_keeper_hosts) {
+            _effects.release_host_state(host_name);
         }
         for (const auto &[host_identity, host_name] : _scene_effect_emission_instances) {
-            _effects.delete_all(host_name, host_identity);
+            _effects.release_host_state(host_name, host_identity);
         }
         for (const auto &[host_identity, host_name] : _scene_effect_keeper_instances) {
-            _effects.delete_all(host_name, host_identity);
+            _effects.release_host_state(host_name, host_identity);
         }
-
-        for (const auto &host_name : _scene_effect_keeper_hosts) {
-            _effects.unregister_keeper(host_name);
-        }
-        for (const auto &[host_identity, host_name] : _scene_effect_keeper_instances) {
-            _effects.unregister_keeper(host_name, host_identity);
-        }
-
-        auto binding_cleanup_hosts = registered_host_names;
-        binding_cleanup_hosts.insert(_scene_effect_keeper_hosts.begin(), _scene_effect_keeper_hosts.end());
-        for (const auto &host_name : binding_cleanup_hosts) {
-            refresh_effect_host_binding(host_name);
-        }
-        for (const auto &[host_identity, host_name] : _scene_effect_keeper_instances) {
-            _effects.unbind_host_transform(host_name, host_identity);
+        for (const auto &registration : registrations) {
+            const void *host_identity = nullptr;
+            switch (registration.kind) {
+            case SceneEntryKind::NameObj:
+            case SceneEntryKind::LiveActorModel:
+                host_identity = registration.live_actor;
+                break;
+            case SceneEntryKind::Layout:
+                host_identity = registration.layout;
+                break;
+            case SceneEntryKind::LayoutActor:
+                host_identity = registration.layout_actor;
+                break;
+            }
+            if (host_identity != nullptr) {
+                _effects.release_host_state(registration.name, host_identity);
+            }
         }
 
         _scene_effect_emission_hosts.clear();
@@ -1446,6 +1444,15 @@ namespace smgpc::runtime {
             _effect_live_actor_hosts.erase(host_identity);
             _effect_layout_actor_hosts.erase(host_identity);
             _effect_simple_layout_hosts.erase(host_identity);
+        } else {
+            if (const auto keeper = _scene_effect_keeper_hosts.find(host_name);
+                keeper != _scene_effect_keeper_hosts.end()) {
+                _scene_effect_keeper_hosts.erase(keeper);
+            }
+            if (const auto emission = _scene_effect_emission_hosts.find(host_name);
+                emission != _scene_effect_emission_hosts.end()) {
+                _scene_effect_emission_hosts.erase(emission);
+            }
         }
     }
 
