@@ -36,6 +36,12 @@ namespace MR {
         return nullptr;
     }
 
+    JAISoundHandle *startAtmosphereLevelSE(const char *, s32, s32) {
+        throw std::logic_error(
+            "Atmosphere level sound playback is unavailable: the PC audio backend "
+            "does not implement AudWrap::getAtmosphereSeObject()->startLevelSoundParam.");
+    }
+
     JAISoundHandle *startSound(const LiveActor *, const char *pName, s32, s32) {
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
             runtime->start_system_sound(pName);

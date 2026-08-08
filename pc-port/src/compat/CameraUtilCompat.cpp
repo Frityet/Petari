@@ -11,6 +11,7 @@
 
 namespace {
     constexpr auto cPi = 3.14159265358979323846F;
+    TPos3f sCameraViewMatrix;
 
     struct CameraBasis {
         smgpc::camera::CameraParamVec3 forward;
@@ -168,6 +169,26 @@ namespace {
 }  // namespace
 
 namespace MR {
+    const MtxPtr getCameraViewMtx() {
+        const auto &pose = require_camera_pose();
+        const auto basis = camera_basis(pose);
+        const auto back = scale(basis.forward, -1.0F);
+
+        sCameraViewMatrix.mMtx[0][0] = basis.right.x;
+        sCameraViewMatrix.mMtx[0][1] = basis.right.y;
+        sCameraViewMatrix.mMtx[0][2] = basis.right.z;
+        sCameraViewMatrix.mMtx[0][3] = -dot(basis.right, pose.eye);
+        sCameraViewMatrix.mMtx[1][0] = basis.up.x;
+        sCameraViewMatrix.mMtx[1][1] = basis.up.y;
+        sCameraViewMatrix.mMtx[1][2] = basis.up.z;
+        sCameraViewMatrix.mMtx[1][3] = -dot(basis.up, pose.eye);
+        sCameraViewMatrix.mMtx[2][0] = back.x;
+        sCameraViewMatrix.mMtx[2][1] = back.y;
+        sCameraViewMatrix.mMtx[2][2] = back.z;
+        sCameraViewMatrix.mMtx[2][3] = -dot(back, pose.eye);
+        return sCameraViewMatrix.mMtx;
+    }
+
     const TVec3f getCamPos() {
         return tv_vec3(require_camera_pose().eye);
     }

@@ -1,4 +1,5 @@
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Scene/PlacementStateChecker.hpp"
 
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
@@ -6,6 +7,7 @@
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
+#include "Game/Map/SphereSelector.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/MapObj/CoinHolder.hpp"
@@ -123,6 +125,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new SleepControllerHolder();
     case SceneObj_AreaObjContainer:
         return new AreaObjContainer("エリアオブジェクトコンテナ管理");
+    case SceneObj_PlacementStateChecker:
+        return new PlacementStateChecker("オブジェクト配置状態の監視");
     case SceneObj_CoinHolder:
         return new CoinHolder("コイン管理");
     case SceneObj_PurpleCoinHolder:
@@ -133,6 +137,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new MiiFacePartsHolder(128);
     case SceneObj_PrologueHolder:
         return new PrologueHolder("プロローグ保持");
+    case SceneObj_SphereSelector:
+        return new SphereSelector();
     default:
         return nullptr;
     }

@@ -221,6 +221,21 @@ namespace JGeometry {
         void zeroTrans() {
             setTrans(0.0F, 0.0F, 0.0F);
         }
+
+        void makeTrans(const TVec3f &translation) {
+            this->identity();
+            setTrans(translation);
+        }
+
+        void makeTrans(f32 x, f32 y, f32 z) {
+            this->identity();
+            setTrans(x, y, z);
+        }
+
+        void makeRotate(const TVec3f &axis, f32 angle) {
+            zeroTrans();
+            this->setRotate(axis, angle);
+        }
     };
 
     template <typename T>

@@ -3,7 +3,9 @@
 #include <bit>
 #include <cmath>
 #include <cstdint>
+#include <limits>
 #include <numbers>
+#include <stdexcept>
 
 namespace {
     auto sRandomSeed = std::uint32_t{0U};
@@ -42,6 +44,31 @@ namespace MR {
 
     s32 getRandom(s32 min, s32 max) {
         return static_cast<s32>(getRandom(static_cast<f32>(min), static_cast<f32>(max)));
+    }
+
+    s32 getRandom(long min, long max) {
+        if (min < std::numeric_limits<s32>::min() ||
+            min > std::numeric_limits<s32>::max() ||
+            max < std::numeric_limits<s32>::min() ||
+            max > std::numeric_limits<s32>::max()) {
+            throw std::out_of_range("A retail long random range must fit in s32.");
+        }
+
+        return getRandom(static_cast<s32>(min), static_cast<s32>(max));
+    }
+
+    f32 getInterpolateValue(f32 t, f32 start, f32 end) {
+        return start + ((end - start) * t);
+    }
+
+    f32 getLinerValue(f32 x, f32 start, f32 end, f32 max) {
+        return getInterpolateValue(x / max, start, end);
+    }
+
+    f32 getLinerValueFromMinMax(f32 x, f32 min, f32 max, f32 start, f32 end) {
+        return getInterpolateValue(
+            (JGeometry::TUtil<f32>::clamp(x, min, max) - min) / (max - min),
+            start, end);
     }
 
     f32 getRandomDegree() {

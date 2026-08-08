@@ -38,6 +38,31 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void makeMtxUpFront(TPos3f *pMatrix, const TVec3f &rUp,
+                        const TVec3f &rFront) {
+        if (pMatrix == nullptr) {
+            throw std::invalid_argument("An up/front matrix requires a real destination.");
+        }
+
+        auto axisY = rUp;
+        if (axisY.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
+            throw std::invalid_argument("An up/front matrix requires a non-degenerate up axis.");
+        }
+        auto axisX = axisY.cross(rFront);
+        if (axisX.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
+            throw std::invalid_argument(
+                "An up/front matrix requires independent up and front axes.");
+        }
+        const auto axisZ = axisX.cross(axisY);
+        set_axes(pMatrix, axisX, axisY, axisZ);
+    }
+
+    void makeMtxUpFrontPos(TPos3f *pMatrix, const TVec3f &rUp,
+                           const TVec3f &rFront, const TVec3f &rPosition) {
+        makeMtxUpFront(pMatrix, rUp, rFront);
+        pMatrix->setTrans(rPosition);
+    }
+
     void makeMtxRotate(MtxPtr pMatrix, s16 rotationX, s16 rotationY, s16 rotationZ) {
         const auto sinY = JMASSin(rotationY);
         const auto cosZ = JMASCos(rotationZ);
@@ -100,6 +125,18 @@ namespace MR {
         pMatrix[0][3] = 0.0F;
         pMatrix[1][3] = 0.0F;
         pMatrix[2][3] = 0.0F;
+    }
+
+    void makeMtxTransRotateY(MtxPtr pMatrix, f32 tx, f32 ty, f32 tz, f32 rotationY) {
+        makeMtxRotateY(pMatrix, rotationY);
+        pMatrix[0][3] = tx;
+        pMatrix[1][3] = ty;
+        pMatrix[2][3] = tz;
+    }
+
+    void makeMtxTransRotateY(MtxPtr pMatrix, const LiveActor *pActor) {
+        makeMtxTransRotateY(pMatrix, pActor->mPosition.x, pActor->mPosition.y,
+                            pActor->mPosition.z, pActor->mRotation.y);
     }
 
     void makeMtxTR(MtxPtr pMatrix, f32 tx, f32 ty, f32 tz, f32 rx, f32 ry, f32 rz) {

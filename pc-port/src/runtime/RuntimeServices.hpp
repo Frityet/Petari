@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <filesystem>
 #include <initializer_list>
@@ -207,8 +208,9 @@ namespace smgpc::runtime {
         [[nodiscard]] std::span<const AudioEvent> events() const;
 
     private:
-        void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0, s32 state = 0, u32 change_frames = 0U,
-                        u32 delay_frames = 0U, std::optional<u32> sound_id = std::nullopt);
+        void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0, s32 state = 0,
+                        u32 change_frames = 0U, u32 delay_frames = 0U,
+                        std::optional<u32> sound_id = std::nullopt);
 
         std::uint64_t _frame_index = 0U;
         std::uint64_t _stage_bgm_start_frame = 0U;
@@ -504,6 +506,8 @@ namespace smgpc::runtime {
         TargetSelection,
         SystemModal,
         DocumentViewer,
+        SphereSelectorReaction,
+        SphereSelectorFinger,
     };
 
     enum class StarPointerGuidanceRequest {
@@ -555,6 +559,9 @@ namespace smgpc::runtime {
         void unregister_target(const LiveActor &actor);
         void set_target_radius(const LiveActor &actor, float radius);
         void start_mode(StarPointerMode mode);
+        void push_mode(const void *requester, StarPointerMode mode);
+        void pop_mode(const void *requester);
+        void clear_mode_requests(const void *requester);
         void set_guidance_active(bool active);
         void request_guidance(StarPointerGuidanceRequest request);
 
@@ -565,11 +572,18 @@ namespace smgpc::runtime {
         [[nodiscard]] bool is_guidance_requested(StarPointerGuidanceRequest request) const;
         [[nodiscard]] std::span<const StarPointerGuidanceRequest> guidance_requests() const;
         [[nodiscard]] std::span<const StarPointerModeEvent> mode_events() const;
+        [[nodiscard]] std::size_t mode_request_count(const void *requester) const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const StarPointerTargetEvent> target_events() const;
 #endif
 
     private:
+        struct ModeRequest {
+            const void *requester = nullptr;
+            StarPointerMode mode = StarPointerMode::None;
+        };
+
+        void update_mode_from_requests();
 #ifndef NDEBUG
         void record_target_pointing_sample(StarPointerTargetState &target, bool pointing, const WpadPointerState &pointer,
                                            bool has_projection, float target_x, float target_y, float projected_radius, bool check_z,
@@ -577,9 +591,11 @@ namespace smgpc::runtime {
 #endif
 
         std::uint64_t _frame_index = 0U;
+        StarPointerMode _base_mode = StarPointerMode::None;
         StarPointerMode _mode = StarPointerMode::None;
         bool _guidance_active = false;
         std::vector<StarPointerGuidanceRequest> _guidance_requests;
+        std::vector<ModeRequest> _mode_requests;
         std::map<const LiveActor *, StarPointerTargetState> _targets;
         std::vector<StarPointerModeEvent> _mode_events;
 #ifndef NDEBUG
@@ -729,6 +745,7 @@ namespace smgpc::runtime {
 
     class GameLayoutService final {
     public:
+        void activate_default_game_layout();
         void deactivate_default_game_layout();
         void activate_game_scene_draw_3d();
         void deactivate_game_scene_draw_3d();

@@ -26,6 +26,12 @@ namespace JGeometry {
             y = static_cast<T>(newY);
         }
 
+        template <typename U>
+        void set(const TVec2<U> &value) {
+            x = static_cast<T>(value.x);
+            y = static_cast<T>(value.y);
+        }
+
         void set(T value) {
             x = value;
             y = value;
@@ -53,6 +59,10 @@ namespace JGeometry {
 
         [[nodiscard]] T squared() const {
             return x * x + y * y;
+        }
+
+        [[nodiscard]] T length() const {
+            return TUtil<T>::sqrt(squared());
         }
 
         [[nodiscard]] T squareDist(const TVec2& value) const {
@@ -219,6 +229,12 @@ namespace JGeometry {
             const f32 newY = scaleValue * scaled.y + base.y;
             const f32 newZ = scaleValue * scaled.z + base.z;
             set(newX, newY, newZ);
+        }
+
+        void lerp(const TVec3 &start, const TVec3 &end, f32 rate) {
+            x = start.x + ((end.x - start.x) * rate);
+            y = start.y + ((end.y - start.y) * rate);
+            z = start.z + ((end.z - start.z) * rate);
         }
 
         [[nodiscard]] constexpr f32 dot(const TVec3 &value) const {

@@ -10,6 +10,7 @@ class JMapInfoIter;
 class StageSwitchCtrl;
 
 namespace MR {
+    void connectToSceneMapObjDecorationMovement(NameObj* pObj);
     class FunctorBase;
 
     bool isInWater(const TVec3f&);

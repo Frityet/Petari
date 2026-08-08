@@ -1,0 +1,36 @@
+Exact source SHA-256 pairs
+===========================
+0a0637f37c37a63e0cb121f9967993b6a3dd9daa22132b1c2fb9635d35127027  include/Game/MapObj/InvisiblePolygonObj.hpp
+0a0637f37c37a63e0cb121f9967993b6a3dd9daa22132b1c2fb9635d35127027  pc-port/src/Game/MapObj/InvisiblePolygonObj.hpp
+8bde426ac690bfb89e8df3d8d72c85a258bc6f560032a65ee78264ad2f63010d  src/Game/MapObj/InvisiblePolygonObj.cpp
+8bde426ac690bfb89e8df3d8d72c85a258bc6f560032a65ee78264ad2f63010d  pc-port/src/Game/MapObj/InvisiblePolygonObj.cpp
+4d0ec3a0d3efa6a70a37d05ce6cb12f3da9b8194fc55ff636f54d01eda42a66b  include/Game/MapObj/InvisiblePolygonObjGCapture.hpp
+4d0ec3a0d3efa6a70a37d05ce6cb12f3da9b8194fc55ff636f54d01eda42a66b  pc-port/src/Game/MapObj/InvisiblePolygonObjGCapture.hpp
+63138e53d7ec60f213d2015241f1b61551ed63404fb995db2038b63cafa81fd6  src/Game/MapObj/InvisiblePolygonObjGCapture.cpp
+63138e53d7ec60f213d2015241f1b61551ed63404fb995db2038b63cafa81fd6  pc-port/src/Game/MapObj/InvisiblePolygonObjGCapture.cpp
+
+Commands and results
+====================
+
+xmake -j4 smg-pc-game-source-mirror-tests
+./build/linux/x86_64/debug/smg-pc-game-source-mirror-tests
+RESULT: PASS; all 22 asserted source mirror pairs, including all four InvisiblePolygon files.
+
+xmake -j4 smg-pc-stage-collision-registration-tests
+./build/linux/x86_64/debug/smg-pc-stage-collision-registration-tests
+RESULT: PASS; 2/2 tests.
+
+xmake -j4 smg-pc-nameobj-factory-placement-tests
+SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso ./build/linux/x86_64/debug/smg-pc-nameobj-factory-placement-tests
+RESULT: PASS; 3/3 tests, including real FileSelect invisible-wall collision lifecycle.
+
+xmake -j4 smg-pc
+RESULT: PASS; full executable linked.
+
+xmake -j4 smg-pc-stage-construction-probe
+SMGPC_STAGE_PLACEMENT_REPORT_PATH=/tmp/file-select-stage-post.md xvfb-run -a ./build/linux/x86_64/debug/smg-pc-stage-construction-probe --disc /workspaces/pcport/RMGK01.iso --stage FileSelect --scenario 1
+RESULT: EXPECTED EXIT 1; strict stage construction failed with exactly 2 blocked rows, first FileSelector. Report retained beside this file.
+
+Final retained report: 4 total / 2 complete / 2 blocked / 0 ignored.
+The SphereSelectorHandle row records
+`atmosphere_level_sound_playback_runtime_unavailable`.

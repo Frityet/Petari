@@ -252,6 +252,23 @@ namespace smgpc::scene {
 
     }  // namespace
 
+    StageCollisionRegistrationState::StageCollisionRegistrationState(const bool *inactive_flag) noexcept
+        : _inactive_flag(inactive_flag) {
+    }
+
+    void StageCollisionRegistrationState::set_enabled(bool enabled) noexcept {
+        _enabled = enabled;
+    }
+
+    void StageCollisionRegistrationState::release_owner() noexcept {
+        _inactive_flag = nullptr;
+        _released = true;
+    }
+
+    bool StageCollisionRegistrationState::enabled() const noexcept {
+        return !_released && _enabled && (_inactive_flag == nullptr || !*_inactive_flag);
+    }
+
     StageCollisionService::~StageCollisionService() {
         deactivate();
     }
@@ -266,9 +283,15 @@ namespace smgpc::scene {
     }
 
     bool StageCollisionService::add_kcl(std::span<const std::uint8_t> bytes,
-                                        const std::array<float, 12U>& matrix, std::string source_name) {
+                                        const std::array<float, 12U> &matrix, std::string source_name) {
+        return register_kcl(bytes, matrix, std::move(source_name), nullptr).accepted;
+    }
+
+    StageCollisionRegistrationResult StageCollisionService::register_kcl(
+        std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
+        std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration) {
         if (bytes.size() < 0x38U) {
-            return false;
+            return {};
         }
 
         const auto position_offset = static_cast<std::size_t>(read_be32(bytes, 0x00U));
@@ -281,19 +304,20 @@ namespace smgpc::scene {
             prism_offset > octree_offset || octree_offset > bytes.size() ||
             (normal_offset - position_offset) % 12U != 0U || (prism_offset - normal_offset) % 12U != 0U ||
             (octree_offset - prism_offset) % 16U != 0U || !std::isfinite(thickness)) {
-            return false;
+            return {};
         }
 
         const auto position_count = (normal_offset - position_offset) / 12U;
         const auto normal_count = (prism_offset - normal_offset) / 12U;
         const auto prism_count = (octree_offset - prism_offset) / 16U;
         if (position_count == 0U || normal_count == 0U || prism_count == 0U) {
-            return false;
+            return {};
         }
 
         const auto source_index = static_cast<std::uint32_t>(_sources.size());
         _sources.push_back(std::move(source_name));
         const auto triangle_count_before = _triangles.size();
+        auto local_bounding_radius_squared = 0.0F;
         for (auto prism_index = std::size_t{}; prism_index < prism_count; ++prism_index) {
             const auto offset = prism_offset + prism_index * 16U;
             const auto height = read_bef32(bytes, offset);
@@ -339,6 +363,10 @@ namespace smgpc::scene {
                 !(local_ac_length > 1.0e-8F) || !(local_bc_length > 1.0e-8F)) {
                 ++_stats.rejected_triangle_count;
                 continue;
+            }
+            for (const auto &vertex : local_vertices) {
+                local_bounding_radius_squared =
+                    std::max(local_bounding_radius_squared, length_squared(vertex));
             }
 
             auto triangle = Triangle{};
@@ -391,17 +419,21 @@ namespace smgpc::scene {
             triangle.centroid = (triangle.vertices[0] + triangle.vertices[1] + triangle.vertices[2]) * (1.0F / 3.0F);
             triangle.attribute = attribute;
             triangle.source_index = source_index;
+            triangle.registration = registration;
             _triangles.push_back(triangle);
         }
 
         if (_triangles.size() == triangle_count_before) {
             _sources.pop_back();
-            return false;
+            return {};
         }
         ++_stats.mesh_count;
         _stats.triangle_count = _triangles.size();
         _built = false;
-        return true;
+        return StageCollisionRegistrationResult{
+            .accepted = true,
+            .local_bounding_radius = std::sqrt(local_bounding_radius_squared),
+        };
     }
 
     void StageCollisionService::build() {
@@ -472,7 +504,10 @@ namespace smgpc::scene {
             }
             if (node.count != 0U) {
                 for (auto leaf_index = std::uint32_t{}; leaf_index < node.count; ++leaf_index) {
-                    const auto& triangle = _triangles[_triangle_indices[node.first + leaf_index]];
+                    const auto &triangle = _triangles[_triangle_indices[node.first + leaf_index]];
+                    if (triangle.registration != nullptr && !triangle.registration->enabled()) {
+                        continue;
+                    }
                     // KCHitArrow only accepts a ray beginning on the front
                     // side of a KCL prism. Map queries therefore remain
                     // one-sided even though the host triangle routine is not.
@@ -532,7 +567,10 @@ namespace smgpc::scene {
             }
             for (auto leaf_index = std::uint32_t{}; leaf_index < node.count; ++leaf_index) {
                 const auto triangle_index = _triangle_indices[node.first + leaf_index];
-                const auto& triangle = _triangles[triangle_index];
+                const auto &triangle = _triangles[triangle_index];
+                if (triangle.registration != nullptr && !triangle.registration->enabled()) {
+                    continue;
+                }
                 const auto plane_distance = dot(center - triangle.vertices[0], triangle.normal);
                 if (plane_distance > radius) {
                     continue;

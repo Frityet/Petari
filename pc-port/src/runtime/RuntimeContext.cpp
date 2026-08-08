@@ -468,7 +468,8 @@ namespace smgpc::runtime {
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                                    RuntimeContextSceneServiceMode scene_service_mode)
-        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _rfl(_save_data.nand()),
+        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
+          _resource_holders(_dvd), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
@@ -1237,6 +1238,7 @@ namespace smgpc::runtime {
         for (const auto &registration : registrations) {
             if (registration.live_actor != nullptr) {
                 _star_pointer.unregister_target(*registration.live_actor);
+                _star_pointer.clear_mode_requests(registration.live_actor);
                 _effect_live_actor_hosts.erase(registration.live_actor);
             }
 

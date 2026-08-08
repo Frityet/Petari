@@ -42,7 +42,42 @@ void MarioActor::setupSensors() {
 
 // void MarioActor::trampleJump(f32, f32) {}
 
-//void MarioActor::attackSensor(HitSensor*, HitSensor*) {}
+void MarioActor::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
+    if (!isEnableNerveChange()) {
+        return;
+    }
+
+    if (pSender->mType == ATYPE_PLAYER) {
+        if (!_934) {
+            return;
+        }
+
+        if (getSensor("eye")->isValid()) {
+            return;
+        }
+
+        addRushSensor(pReceiver, false);
+        return;
+    }
+
+    if (pSender == getSensor("eye")) {
+        if (MR::isDead(pReceiver->mHost)) {
+            return;
+        }
+
+        if (_934) {
+            attackOrPushSensorInRush(pReceiver, (pReceiver->mPosition - pSender->mPosition).length());
+        } else if (isDamaging()) {
+            attackOrPushSensorInDamage(pReceiver, (pReceiver->mPosition - pSender->mPosition).length());
+        } else {
+            attackOrPushSensor(pReceiver, (pReceiver->mPosition - pSender->mPosition).length());
+        }
+    }
+
+    if (pSender == getSensor("ex-eye")) {
+        recordScoutingObject(pReceiver);
+    }
+}
 
 bool MarioActor::sendMsgToSensor(HitSensor* pSensor, u32 msg) {
     return pSensor->receiveMessage(msg, getSensor("body"));

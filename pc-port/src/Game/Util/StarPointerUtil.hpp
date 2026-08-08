@@ -15,11 +15,15 @@ namespace MR {
     bool isExistStarPointerTarget(const LiveActor* pActor);
     void setStarPointerTargetRadius3d(LiveActor* pActor, f32 radius);
     TVec2f* getStarPointerScreenPosition(s32 channel);
+    TVec2f getStarPointerScreenPositionOrEdge(s32 channel);
     TVec2f* getStarPointerScreenVelocity(s32 channel);
     f32 getStarPointerScreenSpeed(s32 channel);
     bool isStarPointerInScreen(s32 channel);
     void startStarPointerModeTitle(void* host);
     void startStarPointerModeFileSelect(void* host);
+    void startStarPointerModeSphereSelectorFinger(void* host);
+    void startStarPointerModeSphereSelectorOnReaction(void* host);
+    void endStarPointerMode(void* host);
     void requestStarPointerModeSaveLoad(void* host);
     void requestStarPointerModePictureBook(void* host);
     void activeStarPointerGuidance();

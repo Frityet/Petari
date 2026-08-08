@@ -21,8 +21,12 @@ namespace FileSelectItemSub {
 
         void exeToSmall();
         void exeToBig();
-        void exeSmall();
-        void exeBig();
+        void exeSmall() {
+            _8 = 1.0f;
+        }
+        void exeBig() {
+            _8 = 1.2f;
+        }
 
         f32 _8;
     };
@@ -92,8 +96,10 @@ public:
     void emitCompleteEffect();
     void deleteCompleteEffect();
 
-    void exeExistWait();
-    void exeNewWait();
+    void exeExistWait() {
+    }
+    void exeNewWait() {
+    }
 
     bool _8C;
     PartsModel* mPlanetMapObj;  // 0x90

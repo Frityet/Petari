@@ -1589,7 +1589,8 @@ namespace smgpc::runtime {
         return _events;
     }
 
-    void AudioEventService::push_event(AudioEventKind kind, std::string_view name, s32 fade_frames, s32 state, u32 change_frames,
+    void AudioEventService::push_event(AudioEventKind kind, std::string_view name,
+                                       s32 fade_frames, s32 state, u32 change_frames,
                                        u32 delay_frames, std::optional<u32> sound_id) {
         _events.push_back(AudioEvent{
             .kind = kind,
@@ -2412,13 +2413,94 @@ namespace smgpc::runtime {
     }
 
     void StarPointerService::start_mode(StarPointerMode mode) {
-        if (_mode == mode) {
+        _base_mode = mode;
+        _mode_requests.clear();
+        update_mode_from_requests();
+    }
+
+    void StarPointerService::push_mode(const void *requester, StarPointerMode mode) {
+        if (requester == nullptr) {
+            throw std::invalid_argument("A star-pointer mode request requires a real requester.");
+        }
+        if (mode == StarPointerMode::None) {
+            throw std::invalid_argument("A requester cannot push the absent star-pointer mode.");
+        }
+        constexpr auto cRetailRequestCapacity = std::size_t{16U};
+        if (_mode_requests.size() >= cRetailRequestCapacity) {
+            throw std::overflow_error("The retail star-pointer mode request table is full.");
+        }
+
+        _mode_requests.push_back(ModeRequest{.requester = requester, .mode = mode});
+        update_mode_from_requests();
+    }
+
+    void StarPointerService::pop_mode(const void *requester) {
+        if (requester == nullptr) {
             return;
         }
 
-        _mode = mode;
+        const auto request = std::find_if(_mode_requests.rbegin(), _mode_requests.rend(),
+                                          [requester](const auto &candidate) {
+                                              return candidate.requester == requester;
+                                          });
+        if (request == _mode_requests.rend()) {
+            return;
+        }
+        _mode_requests.erase(std::next(request).base());
+        update_mode_from_requests();
+    }
+
+    void StarPointerService::clear_mode_requests(const void *requester) {
+        if (requester == nullptr) {
+            return;
+        }
+
+        const auto old_size = _mode_requests.size();
+        std::erase_if(_mode_requests, [requester](const auto &request) {
+            return request.requester == requester;
+        });
+        if (_mode_requests.size() != old_size) {
+            update_mode_from_requests();
+        }
+    }
+
+    void StarPointerService::update_mode_from_requests() {
+        const auto retail_priority = [](StarPointerMode mode) {
+            switch (mode) {
+            case StarPointerMode::SystemModal:
+                return 2;
+            case StarPointerMode::ScreenMenu:
+                return 4;
+            case StarPointerMode::TargetSelection:
+                return 5;
+            case StarPointerMode::DocumentViewer:
+                return 9;
+            case StarPointerMode::SphereSelectorReaction:
+                return 16;
+            case StarPointerMode::SphereSelectorFinger:
+                return 17;
+            case StarPointerMode::None:
+                return 26;
+            }
+            return 26;
+        };
+
+        auto selected = _base_mode;
+        auto selected_priority = retail_priority(selected);
+        for (const auto &request : _mode_requests) {
+            const auto priority = retail_priority(request.mode);
+            if (priority < selected_priority) {
+                selected = request.mode;
+                selected_priority = priority;
+            }
+        }
+        if (_mode == selected) {
+            return;
+        }
+
+        _mode = selected;
         _mode_events.push_back(StarPointerModeEvent{
-            .mode = mode,
+            .mode = selected,
             .frame_index = _frame_index,
         });
     }
@@ -2487,6 +2569,13 @@ namespace smgpc::runtime {
 
     std::span<const StarPointerModeEvent> StarPointerService::mode_events() const {
         return _mode_events;
+    }
+
+    std::size_t StarPointerService::mode_request_count(const void *requester) const {
+        return static_cast<std::size_t>(std::ranges::count_if(
+            _mode_requests, [requester](const auto &request) {
+                return request.requester == requester;
+            }));
     }
 
 #ifndef NDEBUG
@@ -2986,6 +3075,10 @@ namespace smgpc::runtime {
         _velocity = {_attached_actor->mVelocity.x, _attached_actor->mVelocity.y, _attached_actor->mVelocity.z};
         _gravity = {_attached_actor->mGravity.x, _attached_actor->mGravity.y, _attached_actor->mGravity.z};
         _on_ground = _attached_actor->mBindedGround;
+    }
+
+    void GameLayoutService::activate_default_game_layout() {
+        _default_game_layout_active = true;
     }
 
     void GameLayoutService::deactivate_default_game_layout() {

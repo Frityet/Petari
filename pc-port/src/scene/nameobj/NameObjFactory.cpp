@@ -5,6 +5,8 @@
 #include "Game/Map/GroupSwitchWatcher.hpp"
 #include "Game/Map/SwitchSynchronizer.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
+#include "Game/MapObj/InvisiblePolygonObj.hpp"
+#include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
@@ -51,6 +53,51 @@ namespace {
             "CollisionBlocker",
             create_supported_name_obj<CollisionBlocker>,
             nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GhostShipCavePipeCollision",
+            create_supported_name_obj<InvisiblePolygonObj>,
+            "GhostShipCavePipeCollision",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "InvisibleWall10x10",
+            create_supported_name_obj<InvisiblePolygonObj>,
+            "InvisibleWall10x10",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "InvisibleWall10x20",
+            create_supported_name_obj<InvisiblePolygonObj>,
+            "InvisibleWall10x20",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "InvisibleWallJump10x10",
+            create_supported_name_obj<InvisiblePolygonObj>,
+            "InvisibleWallJump10x10",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "InvisibleWallJump10x20",
+            create_supported_name_obj<InvisiblePolygonObj>,
+            "InvisibleWallJump10x20",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "InvisibleWallGCapture10x10",
+            create_supported_name_obj<InvisiblePolygonObjGCapture>,
+            "InvisibleWallGCapture10x10",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "InvisibleWallGCapture10x20",
+            create_supported_name_obj<InvisiblePolygonObjGCapture>,
+            "InvisibleWallGCapture10x20",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PolygonCodeRecoveryPlate",
+            create_supported_name_obj<InvisiblePolygonObj>,
+            "PolygonCodeRecoveryPlate",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PolygonCodeRecoveryBowl",
+            create_supported_name_obj<InvisiblePolygonObj>,
+            "PolygonCodeRecoveryBowl",
         },
         NameObjFactory::Name2CreateFunc{
             "GlobalCubeGravity",
@@ -111,6 +158,10 @@ namespace {
 
     constexpr auto cUnavailableCreatorTable = std::array{
         UnavailableCreatorRecord{"FileSelector", "retail_file_select_actor_runtime_unavailable"},
+        UnavailableCreatorRecord{
+            "SphereSelectorHandle",
+            "atmosphere_level_sound_playback_runtime_unavailable",
+        },
         UnavailableCreatorRecord{
             "RestartCube",
             "real_mario_update_and_restart_dispatch_runtime_unavailable",

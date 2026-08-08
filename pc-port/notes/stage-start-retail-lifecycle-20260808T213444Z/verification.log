@@ -1,0 +1,50 @@
+$ cmp -s include/Game/Scene/PlacementStateChecker.hpp pc-port/src/Game/Scene/PlacementStateChecker.hpp
+PASS
+
+$ cmp -s src/Game/Scene/PlacementStateChecker.cpp pc-port/src/Game/Scene/PlacementStateChecker.cpp
+PASS
+
+$ compile_commands entries: PlacementStateChecker.cpp, NameObjLifecycleService.cpp, StageHostScene.cpp, StagePlacementResolver.cpp, SceneObjHolderCompat.cpp, SceneSystemUtilCompat.cpp
+PASS (all six production translation units compiled with their exact generated command lines)
+
+$ compile_commands entry: tests/StageStartCameraTests.cpp
+PASS
+
+$ git diff --check
+PASS at initial lifecycle checkpoint
+
+$ cd pc-port
+$ xmake build smg-pc-stage-start-camera-tests
+PASS
+
+$ SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-stage-start-camera-tests
+[ok] rigid zone matrix and StartInfo selection
+[ok] camera migration, key, and XZ_PARA pose
+[ok] base and programmable camera priority
+[ok] retail placement-zone SceneObj
+[ok] optional real-disc HeavensDoor camera
+5 stage-start camera test(s) passed
+
+$ xmake build smg-pc-game-source-mirror-tests && xmake run smg-pc-game-source-mirror-tests
+PASS: 22/22 asserted root-to-PC Game source/header mirrors, including both
+PlacementStateChecker files.
+
+$ xmake build smg-pc
+PASS: full debug application linked.
+
+$ SMGPC_STAGE_PLACEMENT_REPORT_PATH=/tmp/smgpc-fileselect-probe.f0zTyY/placement-report.md \
+    xvfb-run -a build/linux/x86_64/debug/smg-pc-stage-construction-probe \
+    --disc /workspaces/pcport/RMGK01.iso --stage FileSelect --scenario 1
+EXPECTED EXIT 1: Unsupported placement objects for FileSelect: 2 blocked;
+first=FileSelector in jmp/placement/common/objinfo
+
+placement-report.md:
+phase: preflight
+total_objects: 4
+complete_objects: 2
+blocked_objects: 2
+intentionally_ignored_objects: 0
+
+The second blocker is SphereSelectorHandle with
+support_reason=atmosphere_level_sound_playback_runtime_unavailable. The exact
+InvisibleWall10x10 and GlobalPlaneGravityInBox routes are complete.

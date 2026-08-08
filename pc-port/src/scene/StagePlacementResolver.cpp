@@ -4,6 +4,7 @@
 #include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
+#include "Game/Util/JMapUtil.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -669,14 +670,22 @@ namespace smgpc::scene {
                     continue;
                 }
 
+                const char *object_name = nullptr;
+                (void)MR::getObjectName(&object_name, iter);
+
                 const auto local_position = read_vec3_or(iter, "pos", {0.0F, 0.0F, 0.0F});
                 const auto local_rotation = read_vec3_or(iter, "dir", {0.0F, 0.0F, 0.0F});
                 const auto world_rotation = table->zone_transform.concatenated(
                     StageZoneTransform::from_translation_rotation({0.0F, 0.0F, 0.0F}, local_rotation));
                 auto camera_id = s32{-1};
                 (void)iter.getValue("Camera_id", &camera_id);
+                auto start_jmap_info = table->jmap_info;
+                apply_zone_transform(start_jmap_info, table->zone_transform);
+                start_jmap_info.setName(table->table_name.c_str());
+                start_jmap_info.setPlacedZoneId(table->zone_id);
 
                 return StageStartInfo{
+                    .object_name = object_name != nullptr ? object_name : "",
                     .stage_name = table->stage_name,
                     .zone_name = table->zone_name,
                     .layer_name = table->layer_name,
@@ -693,6 +702,7 @@ namespace smgpc::scene {
                     .world_up = {world_rotation.matrix[1U], world_rotation.matrix[5U], world_rotation.matrix[9U]},
                     .world_front = {world_rotation.matrix[2U], world_rotation.matrix[6U], world_rotation.matrix[10U]},
                     .zone_transform = table->zone_transform,
+                    .jmap_info = std::move(start_jmap_info),
                 };
             }
         }

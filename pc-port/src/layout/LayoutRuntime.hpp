@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <filesystem>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
@@ -22,6 +23,11 @@
 
 namespace nw4r::lyt {
     class TexMap;
+}
+
+namespace nw4r::ut {
+    class Font;
+    struct HostFontResourceState;
 }
 
 namespace smgpc::layout {
@@ -64,6 +70,7 @@ public:
     void setTextBoxNumberRecursive(const char* pPaneName, s32 number);
     void setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text);
     void setTextBoxTaggedStringRecursive(const char* pPaneName, std::u16string_view rawText, std::u16string_view displayText);
+    void setTextBoxFontRecursive(const char* pPaneName, const nw4r::ut::Font& font);
     void setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex);
     void setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex);
     void replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex);
@@ -169,9 +176,22 @@ public:
         std::size_t rgba_byte_count = 0U;
     };
 
+    struct DebugTextRasterState {
+        std::string text_box_name;
+        bool external_font = false;
+        std::uint64_t font_generation = 0U;
+        std::uint16_t width = 0U;
+        std::uint16_t height = 0U;
+        std::uint16_t font_width = 0U;
+        std::uint16_t font_height = 0U;
+        std::size_t nontransparent_pixel_count = 0U;
+        std::uint64_t rgba_hash = 0U;
+    };
+
     [[nodiscard]] std::vector< DebugPaneState > debugPanes() const;
     [[nodiscard]] std::vector< DebugMaterialState > debugMaterials() const;
     [[nodiscard]] std::vector< DebugTextureState > debugTextures() const;
+    [[nodiscard]] std::vector< DebugTextRasterState > debugTextRasters(std::string_view paneName) const;
 #endif
 
     struct RenderTexture {
@@ -194,6 +214,8 @@ public:
         std::uint16_t font_height = 1U;
         std::vector< std::uint8_t > rgba = {};
         smgpc::render::TextureHandle handle = {};
+        bool external_font = false;
+        std::uint64_t font_generation = 0U;
     };
 
 private:
@@ -233,6 +255,11 @@ private:
         std::vector< smgpc::resource::BmgFormatArg > args;
     };
 
+    struct ExternalTextBoxFontBinding {
+        std::size_t text_box_index = 0U;
+        std::weak_ptr< const nw4r::ut::HostFontResourceState > state;
+    };
+
     [[nodiscard]] AnimationState& animation(u32 animLayer);
     [[nodiscard]] const AnimationState& animation(u32 animLayer) const;
     [[nodiscard]] PaneAnimationState& paneAnimation(std::string_view paneName);
@@ -242,7 +269,7 @@ private:
     void applyLayoutMessagesFromPaneUserData();
     void ensureTextureUploads(smgpc::render::AuroraRenderer& renderer);
     void ensureTextTextureUploads(smgpc::render::AuroraRenderer& renderer);
-    [[nodiscard]] RenderTextTexture composeTextTexture(std::size_t text_box_index, const RenderFont& font) const;
+    [[nodiscard]] RenderTextTexture composeTextTexture(std::size_t text_box_index, const BrfntFont& font) const;
     void drawPicture(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t picture_index);
     void drawWindow(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t window_index);
     void submitLayoutQuad(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t pane_index, std::uint16_t material_index,
@@ -281,6 +308,7 @@ private:
     std::unordered_map< std::string, f32 > mPaneAlphaOverrides = {};
     std::unordered_map< std::string, TextBoxTemplateState > mTextBoxTemplates = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};
+    std::vector< ExternalTextBoxFontBinding > mExternalTextBoxFonts = {};
 };
 
 }  // namespace smgpc::layout

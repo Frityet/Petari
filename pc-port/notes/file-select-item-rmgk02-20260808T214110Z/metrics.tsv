@@ -1,0 +1,9 @@
+phase	section	target_bytes	object_bytes	match_percent	note
+baseline	.text	9304	-	76.852104	before reconstruction
+baseline	.rodata	32	-	66.66667	before reconstruction
+baseline	.data	1016	-	36.68639	before reconstruction
+baseline	.sdata2	72	-	94.44444	before reconstruction
+final	.text	9304	9392	99.80353	primary text section; extra inline/COMDAT text remains outside target span
+final	.rodata	32	32	100
+final	.data	1016	1016	36.68639	raw bytes identical; percentage reflects relocation symbol pairing
+final	.sdata2	72	76	100	target span fully matched; object has one extra constant

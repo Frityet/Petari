@@ -1,0 +1,55 @@
+RMGK02
+======
+
+$ ninja -j12
+PASS; overall progress regenerated at 64.97% matched.
+
+$ build/tools/dtk shasum -c config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+
+PC focused and full verification
+================================
+
+$ SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-stage-start-camera-tests
+PASS: 5/5, including real HeavensDoor root/child StartInfo camera rows.
+
+$ xmake run smg-pc-game-source-mirror-tests
+PASS: 22/22 asserted source/header pairs.
+
+$ xmake run smg-pc-mii-font-compat-tests
+PASS: 2/2; real FileInfo/FileName descendants ShaName and TxtName use the real
+MiiFont26 resource.
+
+$ SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-nameobj-factory-placement-tests
+PASS: 3/3; real InvisibleWall10x10 KCL/PA lifecycle.
+
+$ xmake run smg-pc-stage-collision-registration-tests
+PASS: 2/2.
+
+$ SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-sphere-selector-real-or-absent-tests
+PASS: 4/4; exact real-disc row/message contract and explicit audio absence.
+
+$ xmake test -g aurora -j 1
+PASS: 37/37 targets, 0 failures.
+
+$ xmake build smg-pc
+PASS: full debug application linked.
+
+$ SMGPC_DISC_IMAGE=/workspaces/pcport/RMGK01.iso SMGPC_ENABLE_VSYNC=0 \
+    xvfb-run -a build/linux/x86_64/debug/smg-pc-title-probe
+PASS: exact title completed at frame 373; TitleLogo, PressStart, SysPALInfo, and
+all seven title effects resolved.
+
+Strict real-disc probes
+=======================
+
+FileSelect scenario 1: EXPECTED EXIT 1
+total=4 complete=2 blocked=2 ignored=0
+first=FileSelector
+second=SphereSelectorHandle
+second_reason=atmosphere_level_sound_playback_runtime_unavailable
+
+HeavensDoorGalaxy scenario 1: EXPECTED EXIT 1
+total=242 complete=47 blocked=187 ignored=8
+first=RestartCube
+report_sha256=38584ed1e4484db7634795d33b5f4117ae555b7c4dc19d44b03eb6def03e9d30

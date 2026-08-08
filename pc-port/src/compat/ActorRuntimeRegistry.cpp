@@ -1,4 +1,5 @@
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -131,6 +132,7 @@ namespace smgpc::compat {
     }
 
     void release_actor_runtime_state(const LiveActor* actor) {
+        release_actor_collision_parts(actor);
         release_actor_sensor_bindings(actor);
         release_actor_binder_state(actor);
         release_actor_model_state(actor);

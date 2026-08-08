@@ -1,12 +1,18 @@
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Map/FileSelector.hpp"
+#include "Game/MapObj/InvisiblePolygonObj.hpp"
+#include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/CollisionPartsCompat.hpp"
+#include "compat/ResourceHolderCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
+#include "scene/StageHostScene.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
@@ -18,7 +24,9 @@
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -46,6 +54,30 @@ namespace {
         }
         throw std::runtime_error(std::string(message));
     }
+
+    class ScopedEnvironmentVariable final {
+    public:
+        ScopedEnvironmentVariable(const char *name, std::string value) : _name(name) {
+            if (const auto *previous = std::getenv(name); previous != nullptr) {
+                _previous = previous;
+            }
+            if (setenv(_name.c_str(), value.c_str(), 1) != 0) {
+                throw std::runtime_error("could not set test environment variable " + _name);
+            }
+        }
+
+        ~ScopedEnvironmentVariable() {
+            if (_previous.has_value()) {
+                (void)setenv(_name.c_str(), _previous->c_str(), 1);
+            } else {
+                (void)unsetenv(_name.c_str());
+            }
+        }
+
+    private:
+        std::string _name;
+        std::optional<std::string> _previous;
+    };
 
     [[nodiscard]] std::optional<std::filesystem::path> find_real_disc() {
         if (const auto *configured = std::getenv("SMGPC_REAL_DISC");
@@ -124,6 +156,31 @@ namespace {
                 "supported creators should retain only their retail-derived archive mappings");
         require(smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, cUnsupportedFixture).empty(),
                 "unsupported objects should not produce preload requests");
+
+        constexpr auto cInvisiblePolygonFamily = std::array{
+            std::pair<std::string_view, bool>{"GhostShipCavePipeCollision", false},
+            std::pair<std::string_view, bool>{"InvisibleWall10x10", false},
+            std::pair<std::string_view, bool>{"InvisibleWall10x20", false},
+            std::pair<std::string_view, bool>{"InvisibleWallJump10x10", false},
+            std::pair<std::string_view, bool>{"InvisibleWallJump10x20", false},
+            std::pair<std::string_view, bool>{"InvisibleWallGCapture10x10", true},
+            std::pair<std::string_view, bool>{"InvisibleWallGCapture10x20", true},
+            std::pair<std::string_view, bool>{"PolygonCodeRecoveryPlate", false},
+            std::pair<std::string_view, bool>{"PolygonCodeRecoveryBowl", false},
+        };
+        for (const auto &[name, gravity_capture] : cInvisiblePolygonFamily) {
+            const auto support = smgpc::scene::nameobj::describe_name_obj_creator_support(name);
+            const auto archives = smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, name);
+            require(support.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::Supported &&
+                        NameObjFactory::getCreator(std::string(name).c_str()) != nullptr &&
+                        archives.size() == 1U && archives.front().archive_name == name,
+                    "the whole retail InvisiblePolygonObj family must expose its exact creator/archive pair");
+
+            auto object = smgpc::scene::nameobj::create_name_obj(dvd, name, name.data());
+            require(dynamic_cast<InvisiblePolygonObj *>(object.get()) != nullptr &&
+                        (dynamic_cast<InvisiblePolygonObjGCapture *>(object.get()) != nullptr) == gravity_capture,
+                    "each InvisiblePolygonObj family entry must construct its exact retail class");
+        }
 
         for (const auto &descriptor : smgpc::scene::complete_area_obj_placement_descriptors()) {
             const auto object_name = std::string(descriptor.object_name);
@@ -320,6 +377,144 @@ namespace {
                 "a real factory archive must remain absent until Game/CollisionParts explicitly registers KCL");
     }
 
+    [[nodiscard]] bool line_query_hits_registered_wall(
+        const smgpc::scene::StageCollisionService &collision) {
+        constexpr auto coordinates = std::array{-750.0F, -500.0F, -250.0F, 0.0F,
+                                                250.0F, 500.0F, 750.0F, 1000.0F};
+        for (auto axis = 0U; axis < 3U; ++axis) {
+            for (const auto first : coordinates) {
+                for (const auto second : coordinates) {
+                    for (const auto direction : {-1.0F, 1.0F}) {
+                        auto start = TVec3f{};
+                        auto offset = TVec3f{};
+                        auto *start_values = &start.x;
+                        auto *offset_values = &offset.x;
+                        start_values[axis] = -direction * 2000.0F;
+                        offset_values[axis] = direction * 4000.0F;
+                        start_values[(axis + 1U) % 3U] = first;
+                        start_values[(axis + 2U) % 3U] = second;
+                        if (collision.line_cast(start, offset)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    void test_real_file_select_invisible_wall_collision_lifecycle() {
+        const auto disc_path = find_real_disc();
+        if (!disc_path.has_value()) {
+            std::cout << "[skip] real FileSelect InvisiblePolygonObj test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
+            return;
+        }
+
+        aurora_dvd_close();
+        const auto disc_path_string = disc_path->string();
+        require(aurora_dvd_open(disc_path_string.c_str()),
+                "the selected real-disc fixture should be a readable SMG image");
+        struct DiscCloseGuard {
+            ~DiscCloseGuard() {
+                aurora_dvd_close();
+            }
+        } close_guard;
+        DVDInit();
+
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        const auto placements =
+            smgpc::scene::resolve_stage_placement_objects(dvd, "FileSelect", 1);
+        require(placements.size() == 4U,
+                "retail FileSelect scenario 1 must retain its four actor-bearing rows");
+        const auto wall = std::ranges::find_if(placements, [](const auto &placement) {
+            return placement.object_name == "InvisibleWall10x10";
+        });
+        require(wall != placements.end() && wall->factory_supported &&
+                    wall->object_archive_path == "/ObjectData/InvisibleWall10x10.arc",
+                "the real FileSelect wall row must resolve through its exact creator and archive");
+        const auto blocked_count = std::ranges::count_if(placements, [](const auto &placement) {
+            return !placement.intentionally_ignored && !placement.factory_supported;
+        });
+        require(blocked_count == 2U,
+                "FileSelect must retain only FileSelector and SphereSelectorHandle as blocked rows");
+
+#ifndef NDEBUG
+        const auto report_path = std::filesystem::temp_directory_path() /
+                                 "smgpc-file-select-invisible-wall-preflight.md";
+        {
+            const auto report_environment = ScopedEnvironmentVariable(
+                "SMGPC_STAGE_PLACEMENT_REPORT_PATH", report_path.string());
+            require_throws(
+                [&] {
+                    smgpc::scene::preflight_stage_placements_or_throw(
+                        "FileSelect", 1, placements);
+                },
+                "strict FileSelect preflight must remain red for its two real blockers");
+        }
+        auto report_stream = std::ifstream(report_path);
+        const auto report = std::string(std::istreambuf_iterator<char>(report_stream),
+                                        std::istreambuf_iterator<char>());
+        std::filesystem::remove(report_path);
+        require(report.find("total_objects: 4\n") != std::string::npos &&
+                    report.find("complete_objects: 2\n") != std::string::npos &&
+                    report.find("blocked_objects: 2\n") != std::string::npos &&
+                    report.find("- status: complete\n  object: InvisibleWall10x10\n") !=
+                        std::string::npos &&
+                    report.find("created_objects:") == std::string::npos,
+                "strict preflight must report the exact 2-blocker closure without fabricating roots");
+#endif
+
+        auto resource_holders = smgpc::compat::ResourceHolderService{dvd};
+        auto *wall_resources =
+            resource_holders.create_and_add("InvisibleWall10x10.arc");
+        require(wall_resources->resource_data("InvisibleWall10x10.kcl").size() == 1222U &&
+                    wall_resources->resource_data("InvisibleWall10x10.pa").size() == 96U &&
+                    wall_resources->resource_data("CollisionVersion").size() == 7U,
+                "the ResourceHolder must expose the real RMGK01 KCL, attribute, and version resources");
+
+        auto collision = smgpc::scene::StageCollisionService{};
+        collision.clear();
+        collision.build();
+        collision.activate();
+        require(collision.empty(),
+                "strict preflight must not synthesize collision before exact actor construction");
+
+        auto object = smgpc::scene::nameobj::create_name_obj(
+            dvd, wall->object_name, wall->object_name.c_str());
+        auto *actor = dynamic_cast<InvisiblePolygonObj *>(object.get());
+        require(actor != nullptr, "the real FileSelect row must construct InvisiblePolygonObj");
+        const auto iter = JMapInfoIter(&wall->jmap_info, wall->jmap_entry_index);
+        const auto archives = smgpc::scene::nameobj::preload_name_obj_archives(
+            dvd, wall->object_name, &iter);
+        require(archives.size() == 1U && archives.front().loaded,
+                "the exact wall lifecycle must preload its real retail archive");
+        actor->init(iter);
+        require(smgpc::compat::has_actor_collision_parts(actor) &&
+                    smgpc::compat::actor_collision_parts_source(actor).find(
+                        "InvisibleWall10x10.arc") != std::string_view::npos &&
+                    MR::getCollisionBoundingSphereRange(actor) > 0.0F,
+                "exact actor init must retain real CollisionParts ownership and clipping bounds");
+        require(!line_query_hits_registered_wall(collision),
+                "registered KCL must remain unqueryable before the generic post-placement build");
+
+        actor->initAfterPlacement();
+        collision.build();
+        require(collision.stats().mesh_count == 1U &&
+                    collision.stats().triangle_count > 0U &&
+                    line_query_hits_registered_wall(collision),
+                "the post-placement build must expose the exact wall KCL to map queries");
+
+        actor->makeActorDead();
+        require(!line_query_hits_registered_wall(collision),
+                "dead CollisionParts owners must stop contributing map collision");
+        actor->makeActorAppeared();
+        require(line_query_hits_registered_wall(collision),
+                "reappeared CollisionParts owners must restore their retained map collision");
+        object.reset();
+        require(!line_query_hits_registered_wall(collision),
+                "destroyed CollisionParts owners must invalidate retained BVH registrations");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -331,6 +526,7 @@ int main() {
     constexpr auto tests = std::array{
         TestCase{"factory-only placement support", test_factory_is_the_only_constructible_support_kind},
         TestCase{"optional real-disc archive-only rejection", test_optional_real_disc_archive_presence_does_not_create_support},
+        TestCase{"real FileSelect invisible wall collision lifecycle", test_real_file_select_invisible_wall_collision_lifecycle},
     };
 
     auto failures = 0;

@@ -100,6 +100,7 @@ namespace MR {
     bool isBckStopped(const LiveActor* pActor);
     bool checkPassBckFrame(const LiveActor* pActor, f32 frame);
     f32 calcNerveValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd);
+    f32 calcNerveEaseInRate(const LiveActor* pActor, s32 stepMax);
     f32 calcHitPowerToWall(const LiveActor* pActor);
     f32 getBckFrameMax(const LiveActor* pActor);
     MtxPtr getJointMtx(const LiveActor* pActor, const char* pJointName);

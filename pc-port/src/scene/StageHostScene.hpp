@@ -30,6 +30,7 @@ namespace smgpc::compat {
 namespace smgpc::scene {
 
     class SceneObjHolderBinding;
+    struct NameObjPlacementContext;
 
     namespace nameobj {
         class ObjectNameTable;
@@ -60,9 +61,11 @@ namespace smgpc::scene {
 
     private:
         void construct_root_object(std::string_view object_name, const char *actor_name,
-                                   const StagePlacementObject *placement, bool explicit_root = false);
+                                   const NameObjPlacementContext *placement, bool apply_host_appear);
         void init_explicit_root();
         void init_placement_roots();
+        void preflight_stage_start_or_throw() const;
+        void construct_stage_start_root();
         void construct_placement_roots(const StagePlacementObject *explicit_placement = nullptr);
         void init_stage_environment();
         void init_stage_audio();
@@ -71,7 +74,8 @@ namespace smgpc::scene {
         void init_stage_start_camera();
         void appear_roots();
         void destroy_roots();
-        [[nodiscard]] const char *resolve_placement_actor_name(const StagePlacementObject &placement) const;
+        [[nodiscard]] const char *resolve_actor_name(std::string_view object_name,
+                                                     const NameObjPlacementContext *placement) const;
 
         smgpc::runtime::RuntimeContext &_runtime;
         bool _initialized = false;

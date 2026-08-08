@@ -432,7 +432,7 @@ public:
     f32 getFaceLookHeight(const char*) const;
 
     // Defined in MarioActorMorph
-    void setPlayerMode(u8, bool);
+    void setPlayerMode(u16, bool);
     void resetPlayerModeOnDamage();
     void resetPlayerModeOnNoDamage();
     void updatePlayerMode();

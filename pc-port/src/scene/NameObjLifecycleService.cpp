@@ -2,10 +2,11 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
-#include "scene/StagePlacementResolver.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 
 #include <string>
@@ -33,7 +34,45 @@ namespace smgpc::scene {
         [[nodiscard]] std::string object_name(const NameObj &object) {
             return object.getName() != nullptr ? object.getName() : "";
         }
+
+        [[nodiscard]] std::string_view placement_source_name(NameObjPlacementSource source) {
+            switch (source) {
+            case NameObjPlacementSource::StagePlacement:
+                return "placement";
+            case NameObjPlacementSource::StageStart:
+                return "start";
+            }
+            return "unknown";
+        }
 #endif
+
+        void require_valid_placement_context(const NameObjPlacementContext &placement) {
+            if (!placement.iter.isValid() || placement.row != placement.iter.mIndex) {
+                throw std::logic_error("NameObj placement context does not own a valid retail JMap row.");
+            }
+        }
+
+        class PlacementZoneScope final {
+        public:
+            explicit PlacementZoneScope(const NameObjPlacementContext &placement)
+                : _checker(MR::getPlacementStateChecker()) {
+                if (_checker == nullptr) {
+                    throw std::logic_error(
+                        "A retail placement lifecycle requires SceneObj_PlacementStateChecker.");
+                }
+                _checker->setCurrentPlacementZoneId(MR::getPlacedZoneId(placement.iter));
+            }
+
+            ~PlacementZoneScope() {
+                _checker->clearCurrentPlacementZoneId();
+            }
+
+            PlacementZoneScope(const PlacementZoneScope &) = delete;
+            PlacementZoneScope &operator=(const PlacementZoneScope &) = delete;
+
+        private:
+            PlacementStateChecker *_checker;
+        };
 
     }  // namespace
 
@@ -43,10 +82,12 @@ namespace smgpc::scene {
     NameObjLifecycleService::~NameObjLifecycleService() = default;
 
     std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> NameObjLifecycleService::preload_archives(
-        std::string_view object_name, const StagePlacementObject *placement) {
-        const auto placement_iter = placement != nullptr ? JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index) : JMapInfoIter{};
+        std::string_view object_name, const NameObjPlacementContext *placement) {
+        if (placement != nullptr) {
+            require_valid_placement_context(*placement);
+        }
         auto requests = smgpc::scene::nameobj::preload_name_obj_archives(_runtime.dvd(), object_name,
-                                                                         placement != nullptr ? &placement_iter : nullptr);
+                                                                         placement != nullptr ? &placement->iter : nullptr);
 #ifndef NDEBUG
         for (const auto &request : requests) {
             _runtime.emit_semantic_trace_event("name_obj_lifecycle", "archive_request",
@@ -68,17 +109,45 @@ namespace smgpc::scene {
         return object;
     }
 
-    void NameObjLifecycleService::init(NameObj &object, const StagePlacementObject *placement) {
+    std::unique_ptr<NameObj> NameObjLifecycleService::construct_and_init(
+        std::string_view object_name, const char *actor_name,
+        const NameObjPlacementContext *placement) {
+        if (placement == nullptr) {
+            auto object = construct(object_name, actor_name);
+            try {
+                init(*object, nullptr);
+            } catch (...) {
+                destroy(*object);
+                throw;
+            }
+            return object;
+        }
+
+        require_valid_placement_context(*placement);
+        auto zone_scope = PlacementZoneScope(*placement);
+        auto object = construct(object_name, actor_name);
+        try {
+            init(*object, placement);
+        } catch (...) {
+            destroy(*object);
+            throw;
+        }
+        return object;
+    }
+
+    void NameObjLifecycleService::init(NameObj &object, const NameObjPlacementContext *placement) {
         if (placement != nullptr) {
-            const auto placement_iter = JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index);
+            require_valid_placement_context(*placement);
 #ifndef NDEBUG
-            _runtime.emit_semantic_trace_event("name_obj_lifecycle", "init_from_placement",
-                                               "object=" + object_name(object) + ";stage=" + placement->stage_name +
-                                                   ";zone=" + placement->zone_name + ";table=" + placement->table_path +
-                                                   ";row=" + std::to_string(placement->jmap_entry_index) +
-                                                   ";l_id=" + std::to_string(placement->l_id));
+            _runtime.emit_semantic_trace_event(
+                "name_obj_lifecycle", "init_from_jmap",
+                "object=" + object_name(object) + ";source=" +
+                    std::string(placement_source_name(placement->source)) + ";stage=" +
+                    std::string(placement->stage_name) + ";zone=" + std::string(placement->zone_name) +
+                    ";table=" + std::string(placement->table_path) + ";row=" +
+                    std::to_string(placement->row) + ";local_id=" + std::to_string(placement->local_id));
 #endif
-            object.init(placement_iter);
+            object.init(placement->iter);
             return;
         }
 

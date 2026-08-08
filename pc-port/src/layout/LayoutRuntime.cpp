@@ -17,6 +17,7 @@
 #include "core/RenderTypes.hpp"
 #include "layout/LayoutResourceResolver.hpp"
 #include "layout/LytTexMap.hpp"
+#include "nw4r/ut/Font.h"
 #include "render/GXState.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -1823,6 +1824,43 @@ void smgpc::layout::LayoutRuntime::setTextBoxTaggedStringRecursive(const char* p
     mRenderTextTextures.clear();
 }
 
+void smgpc::layout::LayoutRuntime::setTextBoxFontRecursive(const char* pPaneName, const nw4r::ut::Font& font) {
+    loadRenderData();
+
+    const auto state = font.GetHostResourceState().lock();
+    if (state == nullptr || state->font == nullptr) {
+        throw std::invalid_argument("Setting a text-box font requires an installed BRFNT resource");
+    }
+
+    const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
+    auto matched = false;
+    for (auto text_box_index = std::size_t{}; text_box_index < mBrlytLayout.text_boxes.size(); ++text_box_index) {
+        const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
+        if (!text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
+            continue;
+        }
+
+        const auto binding = std::ranges::find_if(mExternalTextBoxFonts, [text_box_index](const auto& candidate) {
+            return candidate.text_box_index == text_box_index;
+        });
+        if (binding == mExternalTextBoxFonts.end()) {
+            mExternalTextBoxFonts.push_back(ExternalTextBoxFontBinding{
+                .text_box_index = text_box_index,
+                .state = font.GetHostResourceState(),
+            });
+        } else {
+            binding->state = font.GetHostResourceState();
+        }
+        matched = true;
+    }
+
+    if (!matched) {
+        throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
+    }
+
+    mRenderTextTextures.clear();
+}
+
 void smgpc::layout::LayoutRuntime::setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex) {
     loadRenderData();
     if (argIndex < 0) {
@@ -2603,6 +2641,71 @@ std::vector< smgpc::layout::LayoutRuntime::DebugTextureState > smgpc::layout::La
 
     return states;
 }
+
+std::vector< smgpc::layout::LayoutRuntime::DebugTextRasterState >
+smgpc::layout::LayoutRuntime::debugTextRasters(std::string_view paneName) const {
+    auto* runtime = const_cast< LayoutRuntime* >(this);
+    runtime->loadRenderData();
+
+    auto states = std::vector< DebugTextRasterState >{};
+    for (auto text_box_index = std::size_t{}; text_box_index < mBrlytLayout.text_boxes.size(); ++text_box_index) {
+        const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
+        if (!text_box_matches_recursive(mBrlytLayout, text_box, paneName)) {
+            continue;
+        }
+
+        const auto binding = std::ranges::find_if(mExternalTextBoxFonts, [text_box_index](const auto& candidate) {
+            return candidate.text_box_index == text_box_index;
+        });
+        auto external_state = std::shared_ptr< const nw4r::ut::HostFontResourceState >{};
+        const auto* font = static_cast< const BrfntFont* >(nullptr);
+        auto external = false;
+        auto generation = std::uint64_t{};
+        if (binding != mExternalTextBoxFonts.end()) {
+            external_state = binding->state.lock();
+            if (external_state == nullptr || external_state->font == nullptr) {
+                continue;
+            }
+            font = external_state->font.get();
+            external = true;
+            generation = external_state->generation;
+        } else {
+            const auto* render_font = find_font(runtime->mRenderFonts, text_box.font_name);
+            if (render_font == nullptr) {
+                continue;
+            }
+            font = &render_font->font;
+        }
+
+        if (font->width == 0U || font->height == 0U || font->sheets.empty()) {
+            continue;
+        }
+
+        const auto raster = composeTextTexture(text_box_index, *font);
+        auto nontransparent_pixels = std::size_t{};
+        auto rgba_hash = std::uint64_t{14695981039346656037ULL};
+        for (auto offset = std::size_t{3U}; offset < raster.rgba.size(); offset += 4U) {
+            nontransparent_pixels += raster.rgba[offset] != 0U ? 1U : 0U;
+        }
+        for (const auto byte : raster.rgba) {
+            rgba_hash ^= byte;
+            rgba_hash *= 1099511628211ULL;
+        }
+        states.push_back(DebugTextRasterState{
+            .text_box_name = text_box.name,
+            .external_font = external,
+            .font_generation = generation,
+            .width = raster.width,
+            .height = raster.height,
+            .font_width = raster.font_width,
+            .font_height = raster.font_height,
+            .nontransparent_pixel_count = nontransparent_pixels,
+            .rgba_hash = rgba_hash,
+        });
+    }
+
+    return states;
+}
 #endif
 
 smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime::animation(u32 animLayer) {
@@ -2902,17 +3005,42 @@ void smgpc::layout::LayoutRuntime::ensureTextureUploads(smgpc::render::AuroraRen
 
 void smgpc::layout::LayoutRuntime::ensureTextTextureUploads(smgpc::render::AuroraRenderer& renderer) {
     for (std::size_t text_box_index = 0U; text_box_index < mBrlytLayout.text_boxes.size(); ++text_box_index) {
-        if (find_text_texture(mRenderTextTextures, text_box_index) != nullptr) {
-            continue;
-        }
-
         const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
-        auto* render_font = find_font(mRenderFonts, text_box.font_name);
-        if (render_font == nullptr || render_font->font.width == 0U || render_font->font.height == 0U || render_font->font.sheets.empty()) {
+        const auto binding = std::ranges::find_if(mExternalTextBoxFonts, [text_box_index](const auto& candidate) {
+            return candidate.text_box_index == text_box_index;
+        });
+        auto external_state = std::shared_ptr< const nw4r::ut::HostFontResourceState >{};
+        const auto* font = static_cast< const BrfntFont* >(nullptr);
+        auto external = false;
+        auto generation = std::uint64_t{};
+        if (binding != mExternalTextBoxFonts.end()) {
+            external_state = binding->state.lock();
+            if (external_state != nullptr) {
+                font = external_state->font.get();
+                generation = external_state->generation;
+            }
+            external = true;
+        } else if (auto* render_font = find_font(mRenderFonts, text_box.font_name); render_font != nullptr) {
+            font = &render_font->font;
+        }
+
+        auto* existing = find_text_texture(mRenderTextTextures, text_box_index);
+        if (existing != nullptr && external && (!existing->external_font || existing->font_generation != generation)) {
+            std::erase_if(mRenderTextTextures, [text_box_index](const auto& texture) {
+                return texture.text_box_index == text_box_index;
+            });
+            existing = nullptr;
+        }
+        if (existing != nullptr) {
+            continue;
+        }
+        if (font == nullptr || font->width == 0U || font->height == 0U || font->sheets.empty()) {
             continue;
         }
 
-        auto text_texture = composeTextTexture(text_box_index, *render_font);
+        auto text_texture = composeTextTexture(text_box_index, *font);
+        text_texture.external_font = external;
+        text_texture.font_generation = generation;
         text_texture.handle = renderer.create_rgba8_texture(text_texture.width, text_texture.height,
                                                             std::span< const std::uint8_t >(text_texture.rgba.data(), text_texture.rgba.size()));
         if (text_texture.handle.is_valid()) {
@@ -2921,9 +3049,8 @@ void smgpc::layout::LayoutRuntime::ensureTextTextureUploads(smgpc::render::Auror
     }
 }
 
-smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::composeTextTexture(std::size_t text_box_index, const RenderFont& render_font) const {
+smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::composeTextTexture(std::size_t text_box_index, const BrfntFont& font) const {
     const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
-    const auto& font = render_font.font;
     const auto scale_x = text_box.font_width > 0.0F ? text_box.font_width / static_cast< float >(font.width) : 1.0F;
     const auto scale_y = text_box.font_height > 0.0F ? text_box.font_height / static_cast< float >(font.height) : 1.0F;
     const auto native_char_space = scale_x > 0.0F ? text_box.char_space / scale_x : text_box.char_space;

@@ -15,6 +15,7 @@
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
+#include "compat/ResourceHolderCompat.hpp"
 #include "render/J3dModelRenderer.hpp"
 #include "runtime/RflService.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -289,6 +290,7 @@ namespace smgpc::runtime {
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
+        smgpc::compat::ResourceHolderService _resource_holders;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
         WiiVideoService _wii_video;

@@ -88,6 +88,19 @@ namespace {
     }
 
     void test_rotation_and_prescale() {
+        auto position = TPos3f{};
+        position.makeTrans(4.0F, 5.0F, 6.0F);
+        require(position.mMtx[0][0] == 1.0F && position.mMtx[1][1] == 1.0F &&
+                    position.mMtx[2][2] == 1.0F && position.mMtx[0][3] == 4.0F &&
+                    position.mMtx[1][3] == 5.0F && position.mMtx[2][3] == 6.0F,
+                "TPos3f translation construction must reset the affine basis and retain all three offsets");
+        position.makeRotate(TVec3f{1.0F, 0.0F, 0.0F}, PI * 0.5F);
+        require(near(position.mMtx[0][0], 1.0F) && near(position.mMtx[1][1], 0.0F) &&
+                    near(position.mMtx[1][2], -1.0F) && near(position.mMtx[2][1], 1.0F) &&
+                    near(position.mMtx[2][2], 0.0F) && position.mMtx[0][3] == 0.0F &&
+                    position.mMtx[1][3] == 0.0F && position.mMtx[2][3] == 0.0F,
+                "TPos3f axis-angle construction must use the retail rotation signs and clear translation");
+
         Mtx matrix{};
         MR::makeMtxRotate(matrix, TVec3f{0.0F, 90.0F, 0.0F});
 

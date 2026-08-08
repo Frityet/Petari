@@ -13,6 +13,10 @@ namespace nw4r::lyt {
     class TexMap;
 }
 
+namespace nw4r::ut {
+    class Font;
+}
+
 namespace MR {
     bool isDead(const SimpleLayout* pLayout);
     bool isDead(const LayoutActor* pLayout);
@@ -39,6 +43,7 @@ namespace MR {
     void setTextBoxLayoutMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId);
     void setTextBoxSystemMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId);
     void setTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage);
+    void setTextBoxFontRecursive(LayoutActor* pLayout, const char* pPaneName, nw4r::ut::Font* pFont);
     void clearTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName);
     void setTextBoxArgNumberRecursive(LayoutActor* pLayout, const char* pPaneName, s32 number, s32 argIndex);
     void setTextBoxArgStringRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage, s32 argIndex);

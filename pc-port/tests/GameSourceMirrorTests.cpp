@@ -15,6 +15,18 @@ namespace {
     };
 
     constexpr auto cSourcePairs = std::array{
+        SourcePair{"../include/Game/MapObj/InvisiblePolygonObj.hpp", "src/Game/MapObj/InvisiblePolygonObj.hpp"},
+        SourcePair{"../src/Game/MapObj/InvisiblePolygonObj.cpp", "src/Game/MapObj/InvisiblePolygonObj.cpp"},
+        SourcePair{"../include/Game/MapObj/InvisiblePolygonObjGCapture.hpp", "src/Game/MapObj/InvisiblePolygonObjGCapture.hpp"},
+        SourcePair{"../src/Game/MapObj/InvisiblePolygonObjGCapture.cpp", "src/Game/MapObj/InvisiblePolygonObjGCapture.cpp"},
+        SourcePair{"../include/Game/Map/FIleSelectItem.hpp", "src/Game/Map/FileSelectItem.hpp"},
+        SourcePair{"../src/Game/Map/FileSelectItem.cpp", "src/Game/Map/FileSelectItem.cpp"},
+        SourcePair{"../include/Game/Map/SphereSelector.hpp", "src/Game/Map/SphereSelector.hpp"},
+        SourcePair{"../src/Game/Map/SphereSelector.cpp", "src/Game/Map/SphereSelector.cpp"},
+        SourcePair{"../include/Game/Map/SphereSelectorHandle.hpp", "src/Game/Map/SphereSelectorHandle.hpp"},
+        SourcePair{"../src/Game/Map/SphereSelectorHandle.cpp", "src/Game/Map/SphereSelectorHandle.cpp"},
+        SourcePair{"../include/Game/Scene/PlacementStateChecker.hpp", "src/Game/Scene/PlacementStateChecker.hpp"},
+        SourcePair{"../src/Game/Scene/PlacementStateChecker.cpp", "src/Game/Scene/PlacementStateChecker.cpp"},
         SourcePair{"../include/Game/Screen/FileSelectInfo.hpp", "src/Game/Screen/FileSelectInfo.hpp"},
         SourcePair{"../src/Game/Screen/FileSelectInfo.cpp", "src/Game/Screen/FileSelectInfo.cpp"},
         SourcePair{"../include/Game/Util/JointController.hpp", "src/Game/Util/JointController.hpp"},

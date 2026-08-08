@@ -1,0 +1,17 @@
+function	target_bytes	match_percent	status
+checkCollisionOfPointAndCylinder	220	99.90909	reconstructed
+FileSelectItem::control	500	99.624	reconstructed
+FileSelectItem::updateRotate	1656	99.40821	completed; exact target size
+FileSelectItem::playPointedME	156	99.35897	reconstructed
+FileSelectItem::playPointedNotUsingME	156	99.35897	reconstructed
+FileSelectItem::appearFellowModel	80	100	reconstructed
+FileSelectItem::killAllModels	136	100	reconstructed
+FileSelectItem::emitOpen	168	100	reconstructed
+FileSelectItem::emitVanish	168	100	reconstructed
+FileSelectItem::emitCopy	168	100	reconstructed
+FileSelectItem::emitCompleteEffect	148	100	reconstructed
+FileSelectItem::deleteCompleteEffect	100	100	reconstructed
+FileSelectItemNrvNewWait::execute	4	100	retail inline empty body
+FileSelectItemNrvExistWait::execute	4	100	retail inline empty body
+ScaleControllerNrvSmall::execute	16	98.75	retail inline constant body
+ScaleControllerNrvBig::execute	16	98.75	retail inline constant body

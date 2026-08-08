@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/Util/JMapInfo.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include <memory>
@@ -14,7 +15,20 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
-    struct StagePlacementObject;
+    enum class NameObjPlacementSource {
+        StagePlacement,
+        StageStart,
+    };
+
+    struct NameObjPlacementContext {
+        JMapInfoIter iter;
+        NameObjPlacementSource source = NameObjPlacementSource::StagePlacement;
+        std::string_view stage_name;
+        std::string_view zone_name;
+        std::string_view table_path;
+        s32 row = -1;
+        s32 local_id = -1;
+    };
 
     class NameObjLifecycleService final {
     public:
@@ -25,9 +39,12 @@ namespace smgpc::scene {
         NameObjLifecycleService &operator=(const NameObjLifecycleService &) = delete;
 
         std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> preload_archives(std::string_view object_name,
-                                                                                  const StagePlacementObject *placement = nullptr);
+                                                                                  const NameObjPlacementContext *placement = nullptr);
         [[nodiscard]] std::unique_ptr<NameObj> construct(std::string_view object_name, const char *actor_name);
-        void init(NameObj &object, const StagePlacementObject *placement);
+        [[nodiscard]] std::unique_ptr<NameObj> construct_and_init(
+            std::string_view object_name, const char *actor_name,
+            const NameObjPlacementContext *placement);
+        void init(NameObj &object, const NameObjPlacementContext *placement);
         void init_after_placement(NameObj &object);
         void appear(NameObj &object);
         void destroy(NameObj &object);

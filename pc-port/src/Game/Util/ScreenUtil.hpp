@@ -32,6 +32,7 @@ namespace MR {
     u8* getScreenTexImage();
     void closeSystemWipeCircleWithCaptureScreen(s32 frameCount);
     void closeSystemWipeFadeWithCaptureScreen(s32 frameCount);
+    void activateDefaultGameLayout();
     void deactivateDefaultGameLayout();
     void createPurpleCoinCounter();
     void validatePurpleCoinCounter();

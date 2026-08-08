@@ -13,6 +13,14 @@ namespace smgpc::game {
 #include <functional.hpp>
 
 #include "compat/GameGravityCompat.hpp"
+#include "compat/CollisionPartsCompat.hpp"
+
+// Metrowerks targets ILP32, so recovered `long` integer literals bind to the
+// retail s32 overload. Keep that call shape unambiguous on LP64 hosts without
+// changing the recovered Game translation units.
+namespace MR {
+    s32 getRandom(long min, long max);
+}
 
 #ifndef NO_INLINE
 #if defined(__GNUC__) || defined(__clang__)

@@ -61,6 +61,7 @@ namespace smgpc::scene {
     };
 
     struct StageStartInfo {
+        std::string object_name;
         std::string stage_name;
         std::string zone_name;
         std::string layer_name;
@@ -77,6 +78,13 @@ namespace smgpc::scene {
         std::array<f32, 3U> world_up{0.0F, 1.0F, 0.0F};
         std::array<f32, 3U> world_front{0.0F, 0.0F, 1.0F};
         StageZoneTransform zone_transform{};
+        JMapInfo jmap_info;
+
+        [[nodiscard]] JMapInfoIter iter() const & {
+            return JMapInfoIter(&jmap_info, jmap_entry_index);
+        }
+
+        [[nodiscard]] JMapInfoIter iter() const && = delete;
     };
 
     struct StageGeneralPos {

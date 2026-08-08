@@ -1,0 +1,37 @@
+Exact PC Game mirrors:
+pc-port/src/Game/Map/SphereSelector.hpp
+pc-port/src/Game/Map/SphereSelector.cpp
+pc-port/src/Game/Map/SphereSelectorHandle.hpp
+pc-port/src/Game/Map/SphereSelectorHandle.cpp
+
+Generalized declarations and geometry:
+pc-port/src/Game/Util.hpp
+pc-port/src/Game/Util/LiveActorUtil.hpp
+pc-port/src/Game/Util/ObjUtil.hpp
+pc-port/src/Game/Util/ScreenUtil.hpp
+pc-port/src/Game/Util/StarPointerUtil.hpp
+pc-port/src/JSystem/JGeometry/TVec.hpp
+
+Compatibility/runtime implementation:
+pc-port/src/compat/SphereSelectorRuntimeCompat.cpp
+pc-port/src/compat/SceneObjHolderCompat.cpp (SphereSelector include and SceneObj 0x6F case only)
+pc-port/src/compat/LiveActorUtilCompat.cpp (calcNerveEaseInRate only)
+pc-port/src/compat/CameraUtilCompat.cpp (getCameraViewMtx only)
+pc-port/src/compat/MtxCompat.cpp (makeMtxUpFront and makeMtxUpFrontPos only)
+pc-port/src/compat/GameMathCompat.cpp (LP64 getRandom and interpolation functions only)
+pc-port/src/compat/MetrowerksStdCompat.hpp (LP64 getRandom declaration/comment only)
+pc-port/src/compat/SoundUtilCompat.cpp (explicit startAtmosphereLevelSE boundary only)
+pc-port/src/runtime/RuntimeServices.hpp (Sphere pointer-mode stack and layout inverse only)
+pc-port/src/runtime/RuntimeServices.cpp (Sphere pointer-mode stack and layout inverse only)
+pc-port/src/runtime/RuntimeContext.cpp (scene-scope pointer requester cleanup only)
+pc-port/src/scene/nameobj/NameObjFactory.cpp (explicit unavailable SphereSelectorHandle record only)
+
+Tests/build registration:
+pc-port/tests/SphereSelectorRealOrAbsentTests.cpp
+pc-port/tests/GameSourceMirrorTests.cpp (four Sphere pairs and two coordinated PlacementStateChecker pairs only)
+pc-port/tests/xmake.lua (smg-pc-sphere-selector-real-or-absent-tests target only)
+
+Evidence:
+pc-port/notes/sphere-selector-real-or-absent-20260808T215216Z/README.md
+pc-port/notes/sphere-selector-real-or-absent-20260808T215216Z/verification.log
+pc-port/notes/sphere-selector-real-or-absent-20260808T215216Z/owned-paths.txt

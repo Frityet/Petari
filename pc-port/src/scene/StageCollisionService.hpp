@@ -3,6 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <span>
 #include <string>
 #include <vector>
@@ -39,6 +40,28 @@ namespace smgpc::scene {
         std::size_t rejected_triangle_count = 0U;
     };
 
+    // Shared validity for one CollisionParts registration. The inactive flag
+    // is the original owning actor's dead/alive state; release_owner() makes
+    // cached BVH triangles inert before that actor storage is destroyed.
+    class StageCollisionRegistrationState final {
+    public:
+        explicit StageCollisionRegistrationState(const bool *inactive_flag = nullptr) noexcept;
+
+        void set_enabled(bool enabled) noexcept;
+        void release_owner() noexcept;
+        [[nodiscard]] bool enabled() const noexcept;
+
+    private:
+        const bool *_inactive_flag;
+        bool _enabled = true;
+        bool _released = false;
+    };
+
+    struct StageCollisionRegistrationResult {
+        bool accepted = false;
+        float local_bounding_radius = 0.0F;
+    };
+
     // Host-side map collision assembled from the original KCL resources. The
     // original game owns equivalent data through CollisionDirector and
     // CollisionParts; keeping this implementation outside Game lets source-
@@ -57,8 +80,11 @@ namespace smgpc::scene {
         // owner. Stage placement and archive contents are never inspected or
         // guessed here; callers must preserve the request's resource identity
         // in source_name and call build() after completing registrations.
-        bool add_kcl(std::span<const std::uint8_t> bytes, const std::array<float, 12U>& matrix,
+        bool add_kcl(std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
                      std::string source_name = {});
+        [[nodiscard]] StageCollisionRegistrationResult register_kcl(
+            std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
+            std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration);
         void build();
 
         [[nodiscard]] bool line_cast(const TVec3f& start, const TVec3f& offset,
@@ -90,6 +116,7 @@ namespace smgpc::scene {
             std::array<float, 3U> arrow_edge_tolerances{};
             std::uint16_t attribute = 0U;
             std::uint32_t source_index = 0U;
+            std::shared_ptr<StageCollisionRegistrationState> registration{};
         };
 
         struct BvhNode {

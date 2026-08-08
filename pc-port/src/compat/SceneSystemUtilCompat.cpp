@@ -1,6 +1,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 
+#include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Util/JMapInfo.hpp"
 
 #include <revolution.h>
@@ -11,6 +12,30 @@ namespace MR {
 
     s32 getPlacedZoneId(const JMapInfoIter &rIter) {
         return rIter.mInfo != nullptr ? rIter.mInfo->getPlacedZoneId() : -1;
+    }
+
+    void setCurrentPlacementZoneId(s32 zoneId) {
+        auto *checker = getPlacementStateChecker();
+        if (checker == nullptr) {
+            throw std::logic_error("Setting the current placement zone requires SceneObj_PlacementStateChecker.");
+        }
+        checker->setCurrentPlacementZoneId(zoneId);
+    }
+
+    void clearCurrentPlacementZoneId() {
+        auto *checker = getPlacementStateChecker();
+        if (checker == nullptr) {
+            throw std::logic_error("Clearing the current placement zone requires SceneObj_PlacementStateChecker.");
+        }
+        checker->clearCurrentPlacementZoneId();
+    }
+
+    s32 getCurrentPlacementZoneId() {
+        auto *checker = getPlacementStateChecker();
+        if (checker == nullptr) {
+            throw std::logic_error("Reading the current placement zone requires SceneObj_PlacementStateChecker.");
+        }
+        return checker->getCurrentPlacementZoneId();
     }
 
     void getRailInfo(JMapInfoIter *pPathIter, const JMapInfo **pPointInfo, const JMapInfoIter &rPlacementIter) {

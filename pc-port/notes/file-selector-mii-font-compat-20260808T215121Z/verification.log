@@ -1,0 +1,59 @@
+2026-08-08 UTC
+
+$ xmake b smg-pc-mii-font-compat-tests
+[100%] build ok
+
+$ ./build/linux/x86_64/debug/smg-pc-mii-font-compat-tests
+FileInfo/FileName recursive text boxes: ShaName TxtName
+Mii font compatibility tests passed: 2/2
+
+$ /usr/bin/g++ -DNDEBUG -DTARGET_PC -DAURORA -std=c++23 -O0 \
+    -Isrc/render -Isrc -Isrc/common -Iaurora/include \
+    tests/MiiFontCompatTests.cpp src/compat/Nw4rFontCompat.cpp \
+    src/layout/BrfntFont.cpp src/resource/RarcArchive.cpp \
+    src/resource/TplTexture.cpp src/resource/Yaz0.cpp \
+    -o /tmp/smgpc-mii-font-resource-tests && \
+    /tmp/smgpc-mii-font-resource-tests
+Mii font compatibility tests passed: 2/2
+
+$ /usr/bin/g++ -DNDEBUG -DTARGET_PC -DAURORA -std=c++23 -O1 -g \
+    -fsanitize=address,undefined -fno-omit-frame-pointer \
+    -Isrc/render -Isrc -Isrc/common -Iaurora/include \
+    tests/MiiFontCompatTests.cpp src/compat/Nw4rFontCompat.cpp \
+    src/layout/BrfntFont.cpp src/resource/RarcArchive.cpp \
+    src/resource/TplTexture.cpp src/resource/Yaz0.cpp \
+    -o /tmp/smgpc-mii-font-resource-tests-asan && \
+    ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 \
+    UBSAN_OPTIONS=halt_on_error=1 \
+    /tmp/smgpc-mii-font-resource-tests-asan
+Mii font compatibility tests passed: 2/2
+
+$ /usr/bin/clang++ -c -m64 -std=c++23 \
+    -Isrc/render -Isrc -Isrc/common -Iaurora/include \
+    -DSMGPC_DEBUG_BUILD -DAURORA_ENABLE_GX -DAURORA -DTARGET_PC \
+    -include /workspaces/pcport/pc-port/src/compat/MetrowerksStdCompat.hpp \
+    src/Game/Map/FileSelector.cpp -o /tmp/FileSelector-font-bridge-audit.o
+exit 0; one GCC-compatibility warning for the pre-existing NO_INLINE suffix at FileSelector.cpp:63
+
+$ nm -C /tmp/FileSelector-font-bridge-audit.o | rg 'ResFont|setTextBoxFontRecursive|JKRArchive::getResource'
+                 U MR::setTextBoxFontRecursive(LayoutActor*, char const*, nw4r::ut::Font*)
+                 U nw4r::ut::ResFont::SetResource(void*)
+                 U nw4r::ut::ResFont::SetAlternateChar(unsigned short)
+                 U nw4r::ut::ResFont::ResFont()
+0000000000000000 W JKRArchive::getResource(char const*) const
+
+$ nm -C build/linux/x86_64/debug/libsmg-pc-game.a | \
+    rg 'nw4r::ut::ResFont::SetResource\\(void\\*\\)|MR::setTextBoxFontRecursive'
+0000000000000776 T nw4r::ut::ResFont::SetResource(void*)
+0000000000000000 T MR::setTextBoxFontRecursive(LayoutActor*, char const*, nw4r::ut::Font*)
+
+$ xmake b --shallow smg-pc-game-source-mirror-tests && \
+    ./build/linux/x86_64/debug/smg-pc-game-source-mirror-tests
+[100%] build ok
+all configured source-mirror checks: [ok]
+
+$ sha256sum /workspaces/pcport/orig/RMGK02/files/LayoutData/MiiFont.arc \
+    /workspaces/pcport/orig/RMGK02/files/LayoutData/FileInfo.arc /tmp/MiiFont26.brfnt
+328c06b966ca40a36635a5abacc1f2dc87db89171fd289cc1c13ebf38ffe3e8e  MiiFont.arc
+c3e77384e65d1f0d2aa50513869ea9f91a12d0bb17452a0ed01e9e18d855991a  FileInfo.arc
+44ac37eac8fcebe885ee3c94797af243242e374936f30cd6510b8e61a87d3355  MiiFont26.brfnt

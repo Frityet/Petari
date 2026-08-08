@@ -1,0 +1,23 @@
+RMGK02 focused objdiff
+======================
+
+MarioActorRushMsg gameplay functions: 10/10 at 100%
+MarioActor::attackSensor: 100%
+MarioActor::setPlayerMode(u16, bool): 99.60% fuzzy
+
+The rebuilt RushMsg unit reports 3492/3600 code bytes because its remaining
+108 bytes are compiler static-init/data material; the implemented gameplay
+functions themselves are exact.
+
+Full decomp verification
+========================
+
+$ ninja -j12
+PASS
+
+$ build/tools/dtk shasum -c config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+SHA-1: 54b71431af0d509097bfdef4ec28617afc487e89
+
+$ git diff --check
+PASS

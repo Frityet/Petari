@@ -1,0 +1,48 @@
+$ cmp -s pc-port/src/Game/Map/SphereSelector.hpp include/Game/Map/SphereSelector.hpp
+PASS
+
+$ cmp -s pc-port/src/Game/Map/SphereSelector.cpp src/Game/Map/SphereSelector.cpp
+PASS
+
+$ cmp -s pc-port/src/Game/Map/SphereSelectorHandle.hpp include/Game/Map/SphereSelectorHandle.hpp
+PASS
+
+$ cmp -s pc-port/src/Game/Map/SphereSelectorHandle.cpp src/Game/Map/SphereSelectorHandle.cpp
+PASS
+
+$ xmake build smg-pc-game
+[100%]: build ok!
+
+$ SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-sphere-selector-real-or-absent-tests
+[ok] SceneObj 0x6F exact synchronous init
+[ok] generalized pointer/layout real-or-absent contract
+[ok] factory stays absent at real audio boundary
+[info] handle source: zone=FileSelect;layer=common;table=jmp/placement/common/objinfo;arg0=0;factory=0;reason=atmosphere_level_sound_playback_runtime_unavailable
+[info] real-disc fixture: /workspaces/pcport/RMGK01.iso; SphereSelectorHandle row=2
+[ok] real FileSelect row exact init/message contract
+4 SphereSelector real-or-absent test(s) passed
+
+$ xmake run smg-pc-game-source-mirror-tests
+[ok] src/Game/MapObj/InvisiblePolygonObj.hpp
+[ok] src/Game/MapObj/InvisiblePolygonObj.cpp
+[ok] src/Game/MapObj/InvisiblePolygonObjGCapture.hpp
+[ok] src/Game/MapObj/InvisiblePolygonObjGCapture.cpp
+[ok] src/Game/Map/SphereSelector.hpp
+[ok] src/Game/Map/SphereSelector.cpp
+[ok] src/Game/Map/SphereSelectorHandle.hpp
+[ok] src/Game/Map/SphereSelectorHandle.cpp
+[ok] src/Game/Scene/PlacementStateChecker.hpp
+[ok] src/Game/Scene/PlacementStateChecker.cpp
+[ok] src/Game/Screen/FileSelectInfo.hpp
+[ok] src/Game/Screen/FileSelectInfo.cpp
+[ok] src/Game/Util/JointController.hpp
+[ok] src/Game/Util/JointController.cpp
+[ok] src/Game/Util/PlayerUtil.hpp
+[ok] src/Game/Util/PlayerUtil.cpp
+[ok] src/Game/Util/SequenceUtil.hpp
+[ok] src/Game/Util/SequenceUtil.cpp
+[ok] src/Game/Util/SystemUtil.hpp
+[ok] src/Game/Util/SystemUtil.cpp
+
+$ git diff --check
+PASS

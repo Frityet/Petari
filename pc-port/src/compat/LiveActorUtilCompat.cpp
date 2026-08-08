@@ -1,5 +1,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 
+#include <algorithm>
+#include <cmath>
 #include <stdexcept>
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
@@ -321,6 +323,19 @@ namespace MR {
 
     bool isGreaterEqualStep(const LiveActor* pActor, s32 step) {
         return pActor != nullptr && pActor->getNerveStep() >= step;
+    }
+
+    f32 calcNerveEaseInRate(const LiveActor *pActor, s32 stepMax) {
+        if (pActor == nullptr) {
+            throw std::invalid_argument("A LiveActor nerve rate requires a real actor.");
+        }
+        const auto rate = stepMax <= 0
+                              ? 1.0F
+                              : std::clamp(static_cast<f32>(pActor->getNerveStep()) /
+                                               static_cast<f32>(stepMax),
+                                           0.0F, 1.0F);
+        constexpr auto cHalfPi = 1.57079632679489661923F;
+        return 1.0F - std::cos(rate * cHalfPi);
     }
 
     void setNerveAtStep(LiveActor* pActor, const Nerve* pNerve, s32 step) {

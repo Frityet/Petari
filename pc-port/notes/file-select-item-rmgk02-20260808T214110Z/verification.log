@@ -1,0 +1,38 @@
+FileSelectItem RMGK02 final verification, 2026-08-08 UTC
+
+$ ninja build/RMGK02/src/Game/Map/FileSelectItem.o
+[1/1] MWCC build/RMGK02/src/Game/Map/FileSelectItem.o
+
+$ ./build/tools/objdiff-cli diff -p . -u main/Game/Map/FileSelectItem -o /tmp/file-select-item-final.json --format json
+INFO Writing to /tmp/file-select-item-final.json
+
+Primary target section metrics:
+.text    9304 bytes  99.80353%
+.rodata    32 bytes  100%
+.data    1016 bytes  36.68639% (raw bytes are identical; local relocation pairing differs)
+.sdata2    72 bytes  100%
+Unmatched target symbols: 0
+
+$ ninja
+[1/1] PROGRESS
+Progress:
+  All: 64.97% matched, 14.25% linked (734 / 2219 files)
+    Code: 3517268 / 5413352 bytes (33710 / 42036 functions)
+    Data: 504280 / 1657852 bytes (30.42%)
+  Game: 62.15% matched, 13.30% linked (532 / 1605 files)
+    Code: 2577752 / 4147644 bytes (28316 / 35720 functions)
+    Data: 288024 / 668696 bytes (43.07%)
+
+$ ninja build/RMGK02/ok
+ninja: no work to do.
+
+$ sha1sum -c config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+
+$ git diff --check
+(no output)
+
+$ sha1sum build/RMGK02/asm/Game/Map/FileSelectItem.s build/RMGK02/src/Game/Map/FileSelectItem.o build/RMGK02/main.dol
+83ad9cab285f84baf80688f652a5d9b65ef82abc  build/RMGK02/asm/Game/Map/FileSelectItem.s
+e413adf95eda643ebdc0ee53845780a7ffd97f42  build/RMGK02/src/Game/Map/FileSelectItem.o
+54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol

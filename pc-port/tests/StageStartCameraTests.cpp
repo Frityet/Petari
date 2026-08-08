@@ -1,4 +1,7 @@
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Scene/PlacementStateChecker.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "camera/CameraParam.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "resource/BcsvTable.hpp"
@@ -6,6 +9,7 @@
 #include "scene/StageHostService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/SceneTransitionRequestService.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -73,27 +77,40 @@ namespace {
     }
 
     JMapInfo make_start_info(s32 mario_no, s32 camera_id, const std::array<float, 3U> &position,
-                             const std::array<float, 3U> &rotation) {
-        constexpr auto cFieldCount = 8U;
-        constexpr auto cEntrySize = 32U;
-        constexpr auto cDataOffset = 0x10U + cFieldCount * 0x0cU;
-        constexpr auto cNames = std::array<std::string_view, cFieldCount>{
-            "MarioNo", "Camera_id", "pos_x", "pos_y", "pos_z", "dir_x", "dir_y", "dir_z",
+                             const std::array<float, 3U> &rotation,
+                             std::string_view object_name = "Mario",
+                             std::string_view object_type = {}) {
+        auto names = std::vector<std::string_view>{
+            "MarioNo", "Camera_id", "pos_x", "pos_y", "pos_z", "dir_x", "dir_y", "dir_z", "name",
         };
-        auto bytes = std::vector<std::uint8_t>(cDataOffset + cEntrySize, 0U);
-        write_be32(bytes, 0x00U, 1U);
-        write_be32(bytes, 0x04U, cFieldCount);
-        write_be32(bytes, 0x08U, cDataOffset);
-        write_be32(bytes, 0x0cU, cEntrySize);
-        for (auto field = std::size_t{}; field < cFieldCount; ++field) {
-            write_bcsv_field(bytes, field, cNames[field], static_cast<std::uint16_t>(field * 4U),
-                             field < 2U ? smgpc::resource::BcsvFieldType::Int32 : smgpc::resource::BcsvFieldType::Float);
+        if (!object_type.empty()) {
+            names.push_back("type");
         }
-        write_be32(bytes, cDataOffset + 0U, static_cast<std::uint32_t>(mario_no));
-        write_be32(bytes, cDataOffset + 4U, static_cast<std::uint32_t>(camera_id));
+        const auto field_count = names.size();
+        constexpr auto cEntrySize = 80U;
+        const auto data_offset = 0x10U + field_count * 0x0cU;
+        auto bytes = std::vector<std::uint8_t>(data_offset + cEntrySize, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, static_cast<std::uint32_t>(field_count));
+        write_be32(bytes, 0x08U, static_cast<std::uint32_t>(data_offset));
+        write_be32(bytes, 0x0cU, cEntrySize);
+        for (auto field = std::size_t{}; field < field_count; ++field) {
+            const auto field_type = field < 2U ? smgpc::resource::BcsvFieldType::Int32 :
+                                    field < 8U ? smgpc::resource::BcsvFieldType::Float :
+                                                 smgpc::resource::BcsvFieldType::InlineString;
+            const auto field_offset = field == 9U ? 48U : field * 4U;
+            write_bcsv_field(bytes, field, names[field], static_cast<std::uint16_t>(field_offset),
+                             field_type);
+        }
+        write_be32(bytes, data_offset + 0U, static_cast<std::uint32_t>(mario_no));
+        write_be32(bytes, data_offset + 4U, static_cast<std::uint32_t>(camera_id));
         for (auto axis = std::size_t{}; axis < 3U; ++axis) {
-            write_be_float(bytes, cDataOffset + 8U + axis * 4U, position[axis]);
-            write_be_float(bytes, cDataOffset + 20U + axis * 4U, rotation[axis]);
+            write_be_float(bytes, data_offset + 8U + axis * 4U, position[axis]);
+            write_be_float(bytes, data_offset + 20U + axis * 4U, rotation[axis]);
+        }
+        write_inline_string(bytes, data_offset + 32U, object_name);
+        if (!object_type.empty()) {
+            write_inline_string(bytes, data_offset + 48U, object_type);
         }
         return JMapInfo::from_bcsv(bytes);
     }
@@ -181,16 +198,53 @@ namespace {
             .zone_transform = child_transform,
         });
 
-        const auto selected = smgpc::scene::select_stage_start_info(tables, 0, 5);
+        auto selected = smgpc::scene::select_stage_start_info(tables, 0, 5);
         require(selected.has_value(), "selection should find the requested MarioNo in the requested zone");
-        require(selected->camera_id == 78 && selected->layer_name == "layera" &&
+        require(selected->object_name == "Mario" && selected->camera_id == 78 &&
+                    selected->layer_name == "layera" &&
                     selected->archive_path == "/StageData/ChildZone.arc",
-                "selection should preserve layer order and the selected child-zone archive");
+                "selection should preserve the actor, layer order, and selected child-zone archive");
+        tables.clear();
+        const auto selected_iter = selected->iter();
+        const char *selected_name = nullptr;
+        auto selected_mario_no = s32{-1};
+        require(selected_iter.isValid() && selected_iter.getValue("name", &selected_name) &&
+                    selected_name != nullptr && std::string_view(selected_name) == "Mario" &&
+                    selected_iter.getValue("MarioNo", &selected_mario_no) && selected_mario_no == 0 &&
+                    std::string_view(selected_iter.mInfo->getName()) == "startinfo" &&
+                    selected_iter.mInfo->getPlacedZoneId() == 5,
+                "selected StartInfo must own its exact JMap row and zone metadata after source tables die");
         require_near(selected->world_position[0], 13.0F, 0.0001F, "child-zone transform should rotate StartInfo X");
         require_near(selected->world_position[1], 22.0F, 0.0001F, "child-zone transform should preserve StartInfo Y");
         require_near(selected->world_position[2], 29.0F, 0.0001F, "child-zone transform should rotate StartInfo Z");
         require_near(selected->world_front[0], 1.0F, 0.0001F, "child-zone orientation should rotate StartInfo front");
         require_near(selected->world_up[1], 1.0F, 0.0001F, "child-zone orientation should preserve StartInfo up");
+        auto iter_position = std::array<float, 3U>{};
+        require(selected_iter.getValue("pos_x", &iter_position[0]) &&
+                    selected_iter.getValue("pos_y", &iter_position[1]) &&
+                    selected_iter.getValue("pos_z", &iter_position[2]),
+                "the retained StartInfo row must expose its transformed position to exact Game init");
+        for (auto axis = std::size_t{}; axis < 3U; ++axis) {
+            require_near(iter_position[axis], selected->world_position[axis], 0.0001F,
+                         "the retained JMap row and derived world position must agree");
+        }
+
+        auto typed_tables = std::vector<smgpc::scene::StagePlacementTable>{};
+        typed_tables.push_back({
+            .stage_name = "RootGalaxy",
+            .zone_name = "RootGalaxy",
+            .category = "start",
+            .layer_name = "common",
+            .table_name = "startinfo",
+            .archive_path = "/StageData/RootGalaxy.arc",
+            .table_path = "jmp/start/common/startinfo",
+            .jmap_info = make_start_info(0, 11, {}, {}, "Mario", "MarioTypeOverride"),
+            .zone_id = 0,
+            .layer_id = 0,
+        });
+        const auto typed = smgpc::scene::select_stage_start_info(typed_tables, 0, 0);
+        require(typed.has_value() && typed->object_name == "MarioTypeOverride",
+                "StartInfo creator selection must prefer retail type over name");
     }
 
     void test_camera_version_key_and_xz_parallel_pose() {
@@ -269,6 +323,21 @@ namespace {
                 "stage requests should preserve the original default start ID and root zone");
     }
 
+    void test_retail_placement_zone_scene_object() {
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto *checker = dynamic_cast<PlacementStateChecker *>(
+            holder.create(SceneObj_PlacementStateChecker));
+        require(checker != nullptr && MR::getCurrentPlacementZoneId() == -1,
+                "the exact placement-state SceneObj must begin outside a placement scope");
+        MR::setCurrentPlacementZoneId(5);
+        require(MR::getCurrentPlacementZoneId() == 5,
+                "the generalized SceneUtil bridge must delegate placement-zone state to the exact SceneObj");
+        MR::clearCurrentPlacementZoneId();
+        require(MR::getCurrentPlacementZoneId() == -1,
+                "clearing a retail placement scope must restore the absent zone sentinel");
+    }
+
     void test_optional_real_disc_heavensdoor_camera() {
         const auto *disc_path = std::getenv("SMGPC_REAL_DISC");
         if (disc_path == nullptr || disc_path[0] == '\0') {
@@ -290,6 +359,7 @@ namespace {
         require(root.status == smgpc::camera::StageStartCameraResolveStatus::Resolved && root.camera.has_value(),
                 "real scenario 1 should resolve its root StartInfo camera");
         require(root.camera->start_info.zone_id == 0 && root.camera->start_info.layer_name == "layera" &&
+                    root.camera->start_info.object_name == "Mario" &&
                     root.camera->start_info.camera_id == 78 && root.camera->camera_key == "s:004e" &&
                     root.camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
                 "real scenario data should select root LayerA MarioNo 0 and s:004e");
@@ -300,6 +370,14 @@ namespace {
         require(child.has_value() && child->zone_name == "HeavensDoorMysteriousZone" && child->camera_id == 999 &&
                     child->archive_path.find("HeavensDoorMysteriousZone.arc") != std::string::npos,
                 "a child-zone start must retain its own zone archive rather than the root archive");
+        const auto child_iter = child->iter();
+        const char *child_object_name = nullptr;
+        auto child_camera_id = s32{-1};
+        require(child_iter.isValid() && child_iter.getValue("name", &child_object_name) &&
+                    child_object_name != nullptr && std::string_view(child_object_name) == child->object_name &&
+                    child_iter.getValue("Camera_id", &child_camera_id) && child_camera_id == child->camera_id &&
+                    child_iter.mInfo->getPlacedZoneId() == 5,
+                "a resolved real-disc StartInfo must retain its exact actor row and placed-zone identity");
         const auto &child_archive = dvd.archive_for_path(child->archive_path);
         const auto child_chunk = smgpc::camera::load_start_camera_chunk(child_archive,
                                                                         smgpc::camera::make_start_camera_key(child->camera_id));
@@ -320,6 +398,7 @@ int main() {
         TestCase{"rigid zone matrix and StartInfo selection", test_rigid_zone_matrix_and_start_selection},
         TestCase{"camera migration, key, and XZ_PARA pose", test_camera_version_key_and_xz_parallel_pose},
         TestCase{"base and programmable camera priority", test_base_programmable_camera_priority_and_request_defaults},
+        TestCase{"retail placement-zone SceneObj", test_retail_placement_zone_scene_object},
         TestCase{"optional real-disc HeavensDoor camera", test_optional_real_disc_heavensdoor_camera},
     };
 
