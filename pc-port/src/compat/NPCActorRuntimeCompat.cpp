@@ -318,7 +318,7 @@ namespace MR {
         if (actor == nullptr || name == nullptr || *name == '\0') {
             throw std::invalid_argument("BCK playback requires an actor and animation name.");
         }
-        const_cast<LiveActor*>(actor)->startBck(name, nullptr);
+        smgpc::compat::start_actor_bck(const_cast<LiveActor*>(actor), name, nullptr);
     }
 
     void setBckFrameAtRandom(const LiveActor*) {

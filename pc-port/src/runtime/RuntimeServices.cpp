@@ -15,6 +15,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/WPadRumbleData.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "render/effects/JpcBillboard.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TextEncoding.hpp"
@@ -2445,7 +2446,7 @@ namespace smgpc::runtime {
         auto projection = std::optional<StarPointerProjection>{};
         auto pointing = false;
 
-        if (!actor.isDead() && camera_pose.has_value() && pointer.valid) {
+        if (!actor.mFlag.mIsDead && camera_pose.has_value() && pointer.valid) {
             projection = project_star_pointer_target(target, *camera_pose, check_z);
             if (projection.has_value()) {
                 const auto dx = pointer.x - projection->x;
@@ -2868,7 +2869,7 @@ namespace smgpc::runtime {
         _position = {_base_matrix[3U], _base_matrix[7U], _base_matrix[11U]};
 
         if (_attached_actor != nullptr) {
-            _attached_actor->setBaseMatrix(smgpc::render::J3dMatrix3x4{_base_matrix});
+            smgpc::compat::set_actor_base_matrix(_attached_actor, smgpc::render::J3dMatrix3x4{_base_matrix});
             _attached_actor->mPosition.set(_position[0U], _position[1U], _position[2U]);
         }
     }
@@ -2908,9 +2909,7 @@ namespace smgpc::runtime {
         }
 
         _attached_actor->mVelocity.zero();
-        _attached_actor->mBindedGround = false;
-        _attached_actor->mBindedWall = false;
-        _attached_actor->mBindedRoof = false;
+        smgpc::compat::clear_actor_binder_contacts(_attached_actor);
         _attached_actor->mFlag.mIsNoBind = false;
         copy_actor_state();
     }
@@ -2977,11 +2976,12 @@ namespace smgpc::runtime {
         }
 
         _has_base_matrix = true;
-        _base_matrix = _attached_actor->getBaseMatrix().m;
+        _base_matrix = smgpc::compat::actor_base_matrix(_attached_actor).m;
         _position = {_attached_actor->mPosition.x, _attached_actor->mPosition.y, _attached_actor->mPosition.z};
         _velocity = {_attached_actor->mVelocity.x, _attached_actor->mVelocity.y, _attached_actor->mVelocity.z};
         _gravity = {_attached_actor->mGravity.x, _attached_actor->mGravity.y, _attached_actor->mGravity.z};
-        _on_ground = _attached_actor->mBindedGround;
+        const auto* contacts = smgpc::compat::actor_binder_contacts(_attached_actor);
+        _on_ground = contacts != nullptr && contacts->ground;
     }
 
     void GameLayoutService::activate_default_game_layout() {

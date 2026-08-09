@@ -1,0 +1,45 @@
+{
+  "frozen_closure_tus": 96,
+  "attempted_source_tus": 93,
+  "frozen_baseline_passed_tus": 52,
+  "live_header_passed_tus": 56,
+  "newly_unlocked": [
+    "src/Game/Player/MarioCollision.cpp",
+    "src/Game/Player/MarioEnforce.cpp",
+    "src/Game/Player/MarioSpecial.cpp",
+    "src/Game/Player/MarioWalk.cpp"
+  ],
+  "expected_actor_abi_unlocks_present": [
+    "src/Game/Player/MarioCollision.cpp",
+    "src/Game/Player/MarioEnforce.cpp",
+    "src/Game/Player/MarioSpecial.cpp",
+    "src/Game/Player/MarioWalk.cpp"
+  ],
+  "expected_actor_abi_unlocks_missing": [],
+  "baseline_regressions": [],
+  "command": [
+    "g++",
+    "-fsyntax-only",
+    "-fmax-errors=200",
+    "-Wno-multichar",
+    "-m64",
+    "-g",
+    "-O0",
+    "-std=c++23",
+    "-DSMGPC_DEBUG_BUILD",
+    "-DAURORA_ENABLE_GX",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-include",
+    "pc-port/src/compat/MetrowerksStdCompat.hpp",
+    "-Ipc-port/src/render",
+    "-Ipc-port/src",
+    "-Ipc-port/src/common",
+    "-Ipc-port/notes/pc-player-compile-probe-20260809T035937Z/revolution-overlay",
+    "-Ipc-port/aurora/include",
+    "-Iinclude",
+    "-Ilibs/JSystem/include",
+    "-Ilibs/nw4r/include",
+    "-Ilibs/RVLFaceLib/include"
+  ]
+}

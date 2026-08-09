@@ -1,87 +1,519 @@
 #include "compat/ActorRuntimeRegistry.hpp"
+
+#include "Game/LiveActor/ActorLightCtrl.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/RailRider.hpp"
+#include "Game/LiveActor/Spine.hpp"
+#include "Game/Map/StageSwitch.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 #include "compat/MaterialCtrlCompat.hpp"
+#include "runtime/RuntimeContext.hpp"
 
-#include "Game/LiveActor/LiveActor.hpp"
 #include <cmath>
+#include <memory>
 #include <stdexcept>
+#include <string>
 #include <unordered_map>
+#include <utility>
 
 namespace {
-    auto& actor_binders() {
-        static auto actors = std::unordered_map<const LiveActor*, smgpc::compat::ActorBinderContactState>{};
-        return actors;
-    }
+    struct NameObjRuntimeState {
+        std::string name{};
+    };
 
-    auto& actor_models() {
-        static auto models = std::unordered_map<const LiveActor*, smgpc::render::live_actor::LiveActorModel*>{};
-        return models;
-    }
+    struct ActorHitSensorState {
+        std::string name{};
+        TVec3f offset{};
+        std::unique_ptr<HitSensor> sensor{};
+    };
 
-    auto& actor_clipping_states() {
-        static auto states = std::unordered_map<const LiveActor*, smgpc::compat::ActorClippingRuntimeState>{};
+    struct ActorAnimationRuntimeState {
+        J3DFrameCtrl brk_ctrl{};
+        bool brk_available = false;
+        bool brk_active = false;
+        std::string current_bck_name{};
+        std::string current_brk_name{};
+        std::string current_btk_name{};
+    };
+
+    struct LiveActorRuntimeState {
+        smgpc::render::J3dMatrix3x4 base_matrix{};
+        std::unique_ptr<smgpc::render::live_actor::LiveActorModel> model{};
+        ActorAnimationRuntimeState animation{};
+        std::vector<ActorHitSensorState> hit_sensors{};
+        std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
+        smgpc::compat::ActorBinderContactState binder_contacts{};
+        std::optional<smgpc::compat::ActorClippingRuntimeState> clipping{};
+        std::optional<smgpc::compat::ActorShadowRuntimeState> shadow{};
+        std::unique_ptr<Spine> spine{};
+        std::unique_ptr<RailRider> rail_rider{};
+        std::unique_ptr<StageSwitchCtrl> stage_switch{};
+        std::unique_ptr<ActorLightCtrl> light_ctrl{};
+    };
+
+    [[nodiscard]] auto& name_obj_states() {
+        static auto states = std::unordered_map<const NameObj*, NameObjRuntimeState>{};
         return states;
+    }
+
+    [[nodiscard]] auto& actor_states() {
+        static auto states = std::unordered_map<const LiveActor*, LiveActorRuntimeState>{};
+        return states;
+    }
+
+    [[nodiscard]] LiveActorRuntimeState& require_actor_state(const LiveActor* actor) {
+        if (actor == nullptr) {
+            throw std::invalid_argument("LiveActor runtime state requires a real actor.");
+        }
+        const auto found = actor_states().find(actor);
+        if (found == actor_states().end()) {
+            throw std::logic_error("LiveActor has no registered native runtime state.");
+        }
+        return found->second;
+    }
+
+    void destroy_hit_sensors(LiveActorRuntimeState& state) {
+        for (auto& entry : state.hit_sensors) {
+            if (entry.sensor != nullptr) {
+                delete[] entry.sensor->mSensors;
+                entry.sensor->mSensors = nullptr;
+                entry.sensor->mSensorCount = 0U;
+            }
+        }
+        state.hit_sensors.clear();
     }
 }  // namespace
 
 namespace smgpc::compat {
+    const char* register_name_obj_runtime_state(NameObj* object, const char* name) {
+        if (object == nullptr) {
+            throw std::invalid_argument("NameObj runtime state requires a real object.");
+        }
+        auto [found, inserted] = name_obj_states().try_emplace(object);
+        if (!inserted) {
+            throw std::logic_error("NameObj runtime state is already registered.");
+        }
+        found->second.name = name != nullptr ? name : "";
+        return found->second.name.c_str();
+    }
+
+    const char* update_name_obj_runtime_name(NameObj* object, const char* name) {
+        if (object == nullptr) {
+            throw std::invalid_argument("NameObj runtime state requires a real object.");
+        }
+        const auto found = name_obj_states().find(object);
+        if (found == name_obj_states().end()) {
+            throw std::logic_error("NameObj has no registered native runtime state.");
+        }
+        found->second.name = name != nullptr ? name : "";
+        return found->second.name.c_str();
+    }
+
+    void release_name_obj_runtime_state(const NameObj* object) {
+        name_obj_states().erase(object);
+    }
+
+    bool has_name_obj_runtime_state(const NameObj* object) {
+        return object != nullptr && name_obj_states().contains(object);
+    }
+
+    std::size_t name_obj_runtime_state_count() {
+        return name_obj_states().size();
+    }
+
+    bool name_obj_is_suspended(const NameObj* object) {
+        if (object == nullptr) {
+            return true;
+        }
+        constexpr auto movement_off = u16{1U};
+        constexpr auto suspend_requested = u16{2U};
+        constexpr auto resume_requested = u16{4U};
+        return (object->mFlag & (movement_off | suspend_requested)) != 0U &&
+               (object->mFlag & resume_requested) == 0U;
+    }
+
+    void register_actor_runtime_state(LiveActor* actor) {
+        if (actor == nullptr) {
+            throw std::invalid_argument("LiveActor runtime state requires a real actor.");
+        }
+        if (!actor_states().try_emplace(actor).second) {
+            throw std::logic_error("LiveActor runtime state is already registered.");
+        }
+    }
+
+    bool has_actor_runtime_state(const LiveActor* actor) {
+        return actor != nullptr && actor_states().contains(actor);
+    }
+
+    std::size_t actor_runtime_state_count() {
+        return actor_states().size();
+    }
+
+    void release_actor_runtime_state(const LiveActor* actor) {
+        const auto found = actor_states().find(actor);
+        if (found == actor_states().end()) {
+            return;
+        }
+
+        release_actor_collision_parts(actor);
+        release_actor_sensor_bindings(actor);
+        release_actor_material_ctrl_state(actor);
+        release_talk_runtime_state(actor);
+        release_demo_runtime_state(actor);
+
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->star_pointer().unregister_target(*actor);
+            runtime->unregister_effect_keeper(actor->getName(), actor);
+            runtime->unregister_live_actor_model(*const_cast<LiveActor*>(actor));
+        }
+
+        destroy_hit_sensors(found->second);
+        actor_states().erase(found);
+    }
+
+    void replace_actor_spine(LiveActor* actor, const Nerve* nerve) {
+        auto& state = require_actor_state(actor);
+        state.spine = std::make_unique<Spine>(actor, nerve);
+        actor->mSpine = state.spine.get();
+    }
+
+    void update_actor_nerve(LiveActor* actor) {
+        if (actor != nullptr && actor->mSpine != nullptr) {
+            actor->mSpine->update();
+        }
+    }
+
+    void replace_actor_rail_rider(LiveActor* actor, const JMapInfoIter& iter) {
+        auto& state = require_actor_state(actor);
+        state.rail_rider = std::make_unique<RailRider>(iter);
+        actor->mRailRider = state.rail_rider.get();
+    }
+
+    void adopt_actor_stage_switch(LiveActor* actor, StageSwitchCtrl* controller) {
+        auto& state = require_actor_state(actor);
+        state.stage_switch.reset(controller);
+        actor->mStageSwitchCtrl = state.stage_switch.get();
+    }
+
+    void replace_actor_light_ctrl(LiveActor* actor) {
+        auto& state = require_actor_state(actor);
+        state.light_ctrl = std::make_unique<ActorLightCtrl>(actor);
+        actor->mActorLightCtrl = state.light_ctrl.get();
+    }
+
+    void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive) {
+        auto& state = require_actor_state(actor);
+        state.model = std::make_unique<smgpc::render::live_actor::LiveActorModel>(
+            model_archive != nullptr ? model_archive : "", animation_archive != nullptr ? animation_archive : "");
+    }
+
+    smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor) {
+        const auto found = actor_states().find(actor);
+        return found != actor_states().end() ? found->second.model.get() : nullptr;
+    }
+
+    void release_actor_model_state(const LiveActor* actor) {
+        const auto found = actor_states().find(actor);
+        if (found != actor_states().end()) {
+            found->second.model.reset();
+        }
+    }
+
+    const smgpc::render::J3dMatrix3x4& actor_base_matrix(const LiveActor* actor) {
+        return require_actor_state(actor).base_matrix;
+    }
+
+    void set_actor_base_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix) {
+        require_actor_state(actor).base_matrix = matrix;
+    }
+
+    void set_actor_projmap_effect_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix) {
+        if (auto* model = actor_model(actor); model != nullptr) {
+            model->setProjmapEffectMatrix(matrix);
+        }
+    }
+
+    void draw_actor_model(LiveActor* actor, const smgpc::camera::CameraPose& camera_pose,
+                          std::uint64_t frame, smgpc::render::live_actor::LiveActorModel::DrawPass pass) {
+        auto* model = actor_model(actor);
+        if (actor == nullptr || actor->mFlag.mIsDead || actor->mFlag.mIsClipped ||
+            actor->mFlag.mIsHiddenModel || model == nullptr) {
+            return;
+        }
+        model->draw(camera_pose, actor_base_matrix(actor), frame, pass);
+    }
+
+    void start_actor_bck(LiveActor* actor, const char* name, const char* file_name) {
+        auto& state = require_actor_state(actor);
+        state.animation.current_bck_name = name != nullptr ? name : "";
+        if (state.model != nullptr) {
+            state.model->startBck(state.animation.current_bck_name, file_name != nullptr ? file_name : "");
+        }
+    }
+
+    void start_actor_brk(LiveActor* actor, const char* name) {
+        auto& state = require_actor_state(actor);
+        auto& animation = state.animation;
+        animation.current_brk_name = name != nullptr ? name : "";
+        auto frame_max = std::optional<std::int16_t>{};
+        if (state.model != nullptr) {
+            frame_max = state.model->startBrk(animation.current_brk_name);
+        }
+        animation.brk_available = frame_max.has_value();
+        animation.brk_active = animation.brk_available;
+        animation.brk_ctrl.mStart = 0;
+        animation.brk_ctrl.mEnd = frame_max.value_or(0);
+        animation.brk_ctrl.mFrame = 0.0F;
+        animation.brk_ctrl.mRate = 1.0F;
+        if (animation.brk_ctrl.mEnd <= animation.brk_ctrl.mStart) {
+            animation.brk_ctrl.mFrame = static_cast<float>(animation.brk_ctrl.mEnd);
+            animation.brk_ctrl.mRate = 0.0F;
+        }
+    }
+
+    void start_actor_btk(LiveActor* actor, const char* name) {
+        auto& state = require_actor_state(actor);
+        state.animation.current_btk_name = name != nullptr ? name : "";
+        if (state.model != nullptr) {
+            state.model->startBtk(state.animation.current_btk_name);
+        }
+    }
+
+    void set_actor_brk_frame(LiveActor* actor, float frame) {
+        auto& animation = require_actor_state(actor).animation;
+        if (!animation.brk_available) {
+            throw std::logic_error("BRK animation data is unavailable.");
+        }
+        animation.brk_active = true;
+        animation.brk_ctrl.mFrame = frame;
+    }
+
+    void set_actor_brk_frame_and_stop(LiveActor* actor, float frame) {
+        set_actor_brk_frame(actor, frame);
+        require_actor_state(actor).animation.brk_ctrl.mRate = 0.0F;
+    }
+
+    void set_actor_brk_frame_end_and_stop(LiveActor* actor) {
+        auto& animation = require_actor_state(actor).animation;
+        set_actor_brk_frame_and_stop(actor, static_cast<float>(animation.brk_ctrl.mEnd));
+    }
+
+    J3DFrameCtrl* actor_brk_ctrl(const LiveActor* actor) {
+        auto& animation = require_actor_state(actor).animation;
+        return animation.brk_available ? &animation.brk_ctrl : nullptr;
+    }
+
+    bool is_actor_brk_one_time_and_stopped(const LiveActor* actor) {
+        const auto& animation = require_actor_state(actor).animation;
+        if (!animation.brk_available) {
+            throw std::logic_error("BRK animation state is unavailable.");
+        }
+        return !animation.brk_active || animation.brk_ctrl.mRate == 0.0F ||
+               animation.brk_ctrl.mFrame >= static_cast<float>(animation.brk_ctrl.mEnd);
+    }
+
+    std::string_view actor_current_bck_name(const LiveActor* actor) {
+        return require_actor_state(actor).animation.current_bck_name;
+    }
+
+    std::string_view actor_current_brk_name(const LiveActor* actor) {
+        return require_actor_state(actor).animation.current_brk_name;
+    }
+
+    std::string_view actor_current_btk_name(const LiveActor* actor) {
+        return require_actor_state(actor).animation.current_btk_name;
+    }
+
+    void advance_actor_animation(LiveActor* actor) {
+        auto& animation = require_actor_state(actor).animation;
+        if (!animation.brk_active || animation.brk_ctrl.mRate == 0.0F) {
+            return;
+        }
+        animation.brk_ctrl.mFrame += animation.brk_ctrl.mRate;
+        if (animation.brk_ctrl.mRate > 0.0F &&
+            animation.brk_ctrl.mFrame >= static_cast<float>(animation.brk_ctrl.mEnd)) {
+            animation.brk_ctrl.mFrame = static_cast<float>(animation.brk_ctrl.mEnd);
+            animation.brk_ctrl.mRate = 0.0F;
+        } else if (animation.brk_ctrl.mRate < 0.0F &&
+                   animation.brk_ctrl.mFrame <= static_cast<float>(animation.brk_ctrl.mStart)) {
+            animation.brk_ctrl.mFrame = static_cast<float>(animation.brk_ctrl.mStart);
+            animation.brk_ctrl.mRate = 0.0F;
+        }
+    }
+
+    void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count) {
+        auto& state = require_actor_state(actor);
+        release_actor_sensor_bindings(actor);
+        destroy_hit_sensors(state);
+        if (sensor_count > 0) {
+            state.hit_sensors.reserve(static_cast<std::size_t>(sensor_count));
+        }
+    }
+
+    HitSensor* add_actor_hit_sensor(LiveActor* actor, const char* name, std::uint32_t type,
+                                    std::uint16_t group_size, float radius, const TVec3f& offset) {
+        auto& state = require_actor_state(actor);
+        auto entry = ActorHitSensorState{};
+        entry.name = name != nullptr ? name : "";
+        entry.offset = offset;
+        entry.sensor = std::make_unique<HitSensor>(type, group_size, radius, actor);
+        entry.sensor->mPosition = actor->mPosition + offset;
+        entry.sensor->validateBySystem();
+        if (actor->mFlag.mIsDead) {
+            entry.sensor->invalidate();
+        } else {
+            entry.sensor->validate();
+        }
+        state.hit_sensors.push_back(std::move(entry));
+        return state.hit_sensors.back().sensor.get();
+    }
+
+    HitSensor* actor_hit_sensor(const LiveActor* actor, const char* name) {
+        if (actor == nullptr || name == nullptr) {
+            return nullptr;
+        }
+        auto& sensors = require_actor_state(actor).hit_sensors;
+        for (auto& entry : sensors) {
+            if (entry.name == name) {
+                return entry.sensor.get();
+            }
+        }
+        return nullptr;
+    }
+
+    const char* actor_hit_sensor_name(const LiveActor* actor, const HitSensor* sensor) {
+        if (actor == nullptr || sensor == nullptr) {
+            return "";
+        }
+        for (const auto& entry : require_actor_state(actor).hit_sensors) {
+            if (entry.sensor.get() == sensor) {
+                return entry.name.c_str();
+            }
+        }
+        return "";
+    }
+
+    void collect_actor_hit_sensors(const LiveActor* actor, std::vector<HitSensor*>& sensors) {
+        if (actor == nullptr) {
+            return;
+        }
+        for (const auto& entry : require_actor_state(actor).hit_sensors) {
+            if (entry.sensor != nullptr) {
+                sensors.push_back(entry.sensor.get());
+            }
+        }
+    }
+
+    void validate_actor_hit_sensors(LiveActor* actor) {
+        if (actor == nullptr) {
+            return;
+        }
+        for (const auto& entry : require_actor_state(actor).hit_sensors) {
+            if (entry.sensor != nullptr) {
+                entry.sensor->validate();
+            }
+        }
+    }
+
+    void invalidate_actor_hit_sensors(LiveActor* actor) {
+        if (actor == nullptr) {
+            return;
+        }
+        for (const auto& entry : require_actor_state(actor).hit_sensors) {
+            if (entry.sensor != nullptr) {
+                entry.sensor->invalidate();
+            }
+        }
+    }
+
+    void update_actor_hit_sensors(LiveActor* actor) {
+        if (actor == nullptr) {
+            return;
+        }
+        for (const auto& entry : require_actor_state(actor).hit_sensors) {
+            if (entry.sensor != nullptr) {
+                entry.sensor->mPosition = actor->mPosition + entry.offset;
+            }
+        }
+        update_actor_sensor_bindings(actor);
+    }
+
+    std::size_t actor_hit_sensor_count(const LiveActor* actor) {
+        const auto found = actor_states().find(actor);
+        return found != actor_states().end() ? found->second.hit_sensors.size() : 0U;
+    }
+
+    void configure_actor_binder(LiveActor* actor, float radius, float offset, std::uint32_t plane_capacity) {
+        auto& state = require_actor_state(actor);
+        state.binder = ActorBinderRuntimeConfig{radius, offset, plane_capacity};
+        state.binder_contacts = {};
+    }
+
     void register_actor_binder(const LiveActor* actor) {
         if (actor != nullptr) {
-            actor_binders().try_emplace(actor);
+            auto& state = require_actor_state(actor);
+            state.binder.emplace();
+            state.binder_contacts = {};
         }
     }
 
     bool has_actor_binder(const LiveActor* actor) {
-        return actor != nullptr && actor_binders().contains(actor);
+        const auto found = actor_states().find(actor);
+        return found != actor_states().end() && found->second.binder.has_value();
+    }
+
+    const ActorBinderRuntimeConfig* actor_binder_config(const LiveActor* actor) {
+        if (actor == nullptr) {
+            return nullptr;
+        }
+        const auto found = actor_states().find(actor);
+        if (found == actor_states().end()) {
+            return nullptr;
+        }
+        const auto& binder = found->second.binder;
+        return binder.has_value() ? &*binder : nullptr;
     }
 
     void clear_actor_binder_contacts(LiveActor* actor) {
         if (actor == nullptr) {
             return;
         }
-        if (const auto found = actor_binders().find(actor); found != actor_binders().end()) {
-            found->second = {};
+        auto& state = require_actor_state(actor);
+        if (state.binder.has_value()) {
+            state.binder_contacts = {};
         }
-        actor->mBindedGround = false;
-        actor->mBindedWall = false;
-        actor->mBindedRoof = false;
-        actor->mBindedGroundDamageFire = false;
     }
 
     void record_actor_binder_contacts(LiveActor* actor, const ActorBinderContactState& contacts) {
         if (actor == nullptr) {
             return;
         }
-        const auto found = actor_binders().find(actor);
-        if (found == actor_binders().end()) {
-            return;
-        }
-        found->second = contacts;
-        actor->mBindedGround = contacts.ground;
-        actor->mBindedWall = contacts.wall;
-        actor->mBindedRoof = contacts.roof;
-        // A KCL prism attribute is an index into CollisionParts' attribute
-        // table, not a ground code. Do not invent a DamageFire result from it.
-        actor->mBindedGroundDamageFire = false;
-        if (contacts.ground) {
-            actor->mGroundNormal.set(contacts.ground_normal);
-        }
-        if (contacts.wall) {
-            actor->mWallNormal.set(contacts.wall_normal);
-        }
-        if (contacts.roof) {
-            actor->mRoofNormal.set(contacts.roof_normal);
+        auto& state = require_actor_state(actor);
+        if (state.binder.has_value()) {
+            state.binder_contacts = contacts;
         }
     }
 
     const ActorBinderContactState* actor_binder_contacts(const LiveActor* actor) {
-        const auto found = actor_binders().find(actor);
-        return found != actor_binders().end() ? &found->second : nullptr;
+        if (actor == nullptr) {
+            return nullptr;
+        }
+        const auto found = actor_states().find(actor);
+        return found != actor_states().end() && found->second.binder.has_value()
+                   ? &found->second.binder_contacts
+                   : nullptr;
     }
 
     void release_actor_binder_state(const LiveActor* actor) {
-        actor_binders().erase(actor);
+        if (actor == nullptr) {
+            return;
+        }
+        auto& state = require_actor_state(actor);
+        state.binder.reset();
+        state.binder_contacts = {};
     }
 
     void configure_actor_clipping_sphere(LiveActor* actor, float radius, const TVec3f* center) {
@@ -91,10 +523,14 @@ namespace smgpc::compat {
         if (!std::isfinite(radius) || radius < 0.0F) {
             throw std::invalid_argument("Actor clipping radius must be finite and non-negative.");
         }
-        auto& state = actor_clipping_states()[actor];
-        state.sphere_configured = true;
-        state.sphere_radius = radius;
-        state.sphere_center = center;
+        auto& stored_clipping = require_actor_state(actor).clipping;
+        if (!stored_clipping.has_value()) {
+            stored_clipping.emplace();
+        }
+        auto& clipping = *stored_clipping;
+        clipping.sphere_configured = true;
+        clipping.sphere_radius = radius;
+        clipping.sphere_center = center;
     }
 
     void configure_actor_clipping_far_level(LiveActor* actor, int level) {
@@ -104,42 +540,51 @@ namespace smgpc::compat {
         if (level < 0 || level > 7) {
             throw std::invalid_argument("Actor clipping far level must be in the original 0..7 range.");
         }
-        actor_clipping_states()[actor].far_level = level;
-        actor->mClippingFarLevel = level;
+        auto& clipping = require_actor_state(actor).clipping;
+        if (!clipping.has_value()) {
+            clipping.emplace();
+        }
+        clipping->far_level = level;
     }
 
     const ActorClippingRuntimeState* actor_clipping_runtime_state(const LiveActor* actor) {
-        const auto found = actor_clipping_states().find(actor);
-        return found != actor_clipping_states().end() ? &found->second : nullptr;
+        if (actor == nullptr) {
+            return nullptr;
+        }
+        const auto found = actor_states().find(actor);
+        if (found == actor_states().end()) {
+            return nullptr;
+        }
+        const auto& clipping = found->second.clipping;
+        return clipping.has_value() ? &*clipping : nullptr;
     }
 
     void release_actor_clipping_state(const LiveActor* actor) {
-        actor_clipping_states().erase(actor);
-    }
-
-    void register_actor_model(const LiveActor* actor, smgpc::render::live_actor::LiveActorModel* model) {
         if (actor != nullptr) {
-            actor_models().insert_or_assign(actor, model);
+            require_actor_state(actor).clipping.reset();
         }
     }
 
-    smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor) {
-        const auto found = actor_models().find(actor);
-        return found != actor_models().end() ? found->second : nullptr;
+    ActorShadowRuntimeState* actor_shadow_runtime_state(LiveActor* actor) {
+        if (actor == nullptr) {
+            return nullptr;
+        }
+        auto& shadow = require_actor_state(actor).shadow;
+        if (!shadow.has_value()) {
+            shadow.emplace();
+        }
+        return &*shadow;
     }
 
-    void release_actor_model_state(const LiveActor* actor) {
-        actor_models().erase(actor);
-    }
-
-    void release_actor_runtime_state(const LiveActor* actor) {
-        release_actor_collision_parts(actor);
-        release_actor_sensor_bindings(actor);
-        release_actor_binder_state(actor);
-        release_actor_model_state(actor);
-        release_actor_clipping_state(actor);
-        release_actor_material_ctrl_state(actor);
-        release_talk_runtime_state(actor);
-        release_demo_runtime_state(actor);
+    const ActorShadowRuntimeState* actor_shadow_runtime_state(const LiveActor* actor) {
+        if (actor == nullptr) {
+            return nullptr;
+        }
+        const auto found = actor_states().find(actor);
+        if (found == actor_states().end()) {
+            return nullptr;
+        }
+        const auto& shadow = found->second.shadow;
+        return shadow.has_value() ? &*shadow : nullptr;
     }
 }  // namespace smgpc::compat

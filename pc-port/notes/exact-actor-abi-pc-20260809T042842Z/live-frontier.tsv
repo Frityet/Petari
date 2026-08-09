@@ -1,0 +1,94 @@
+source	status	first_error
+src/Game/Player/DrawAdaptor.cpp	pass	-
+src/Game/Player/FireMarioBall.cpp	fail	src/Game/Player/FireMarioBall.cpp:37:9: error: ‘connectToSceneEnemyDecoration’ is not a member of ‘MR’; did you mean ‘connectToSceneLayoutDecoration’?
+src/Game/Player/J3DModelX.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/JetTurtleShadow.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarineSnow.cpp	fail	src/Game/Player/MarineSnow.cpp:12:15: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+src/Game/Player/Mario.cpp	fail	src/Game/Player/Mario.cpp:748:37: error: invalid operands of types ‘bool’ and ‘std::nullptr_t’ to binary ‘operator==’
+src/Game/Player/Mario2D.cpp	pass	-
+src/Game/Player/MarioAccess.cpp	fail	include/Game/Animation/XanimePlayer.hpp:72:16: error: ‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioActor.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:66:32: error: ‘_GXTlutSize’ has not been declared
+src/Game/Player/MarioActorCamera.cpp	pass	-
+src/Game/Player/MarioActorClap.cpp	pass	-
+src/Game/Player/MarioActorDefensiveMsg.cpp	pass	-
+src/Game/Player/MarioActorDraw.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioActorEye.cpp	fail	src/Game/Player/MarioActorEye.cpp:28:16: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+src/Game/Player/MarioActorGameOver.cpp	fail	src/Game/Player/MarioActorGameOver.cpp:134:9: error: ‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+src/Game/Player/MarioActorGravity.cpp	fail	src/Game/Player/MarioActorGravity.cpp:54:34: error: call of overloaded ‘setFrontVecKeepUp(TVec3f&, long unsigned int)’ is ambiguous
+src/Game/Player/MarioActorHand.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioActorInit.cpp	pass	-
+src/Game/Player/MarioActorMatrix.cpp	pass	-
+src/Game/Player/MarioActorMorph.cpp	pass	-
+src/Game/Player/MarioActorOffensiveMsg.cpp	fail	src/Game/Player/MarioActorOffensiveMsg.cpp:125:36: error: call of overloaded ‘calcGravityVectorOrZero(MarioActor*, TVec3f&, TVec3f*, GravityInfo*&, int)’ is ambiguous
+src/Game/Player/MarioActorPad.cpp	fail	src/Game/Player/MarioActorPad.cpp:91:48: error: ‘isStarPointerPointing2P’ is not a member of ‘MR’; did you mean ‘isStarPointerPointingPane’?
+src/Game/Player/MarioActorParts.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:66:32: error: ‘_GXTlutSize’ has not been declared
+src/Game/Player/MarioActorPunch.cpp	pass	-
+src/Game/Player/MarioActorRush.cpp	pass	-
+src/Game/Player/MarioActorRushMsg.cpp	pass	-
+src/Game/Player/MarioActorSensor.cpp	fail	src/Game/Player/MarioActorSensor.cpp:85:18: error: invalid operands of types ‘u32’ {aka ‘unsigned int’} and ‘std::nullptr_t’ to binary ‘operator!=’
+src/Game/Player/MarioActorShadow.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioActorSpecialDraw.cpp	pass	-
+src/Game/Player/MarioActorTakeMsg.cpp	fail	src/Game/Player/MarioActorTakeMsg.cpp:58:19: error: ‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘set2’; did you mean ‘set’?
+src/Game/Player/MarioActorWipe.cpp	pass	-
+src/Game/Player/MarioAnimationEfx.cpp	fail	include/Game/Animation/XanimePlayer.hpp:72:16: error: ‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioAnimator.cpp	fail	include/Game/Animation/XanimePlayer.hpp:72:16: error: ‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioBee.cpp	fail	src/Game/Player/MarioBee.cpp:35:34: error: call of overloaded ‘setFrontVecKeepUp(TVec3f&, long unsigned int)’ is ambiguous
+src/Game/Player/MarioBlown.cpp	pass	-
+src/Game/Player/MarioBump.cpp	pass	-
+src/Game/Player/MarioClimb.cpp	pass	-
+src/Game/Player/MarioCollision.cpp	pass	-
+src/Game/Player/MarioConst.cpp	pass	-
+src/Game/Player/MarioDamage.cpp	pass	-
+src/Game/Player/MarioDamageCrush.cpp	fail	src/Game/Player/MarioDamageCrush.cpp:115:40: error: initializer-string for ‘const char [72]’ is too long [-fpermissive]
+src/Game/Player/MarioDamageFreeze.cpp	pass	-
+src/Game/Player/MarioDamageParalyze.cpp	pass	-
+src/Game/Player/MarioDamageStun.cpp	pass	-
+src/Game/Player/MarioEffect.cpp	fail	src/Game/Player/MarioEffect.cpp:146:33: error: ‘emitEffectWithEmitterCallBack’ is not a member of ‘MR’
+src/Game/Player/MarioEnforce.cpp	pass	-
+src/Game/Player/MarioFaint.cpp	pass	-
+src/Game/Player/MarioFlip.cpp	pass	-
+src/Game/Player/MarioFlow.cpp	pass	-
+src/Game/Player/MarioFoo.cpp	fail	src/Game/Player/MarioFoo.cpp:44:52: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+src/Game/Player/MarioFpView.cpp	fail	src/Game/Player/MarioFpView.cpp:130:29: error: invalid cast from type ‘std::nullptr_t’ to type ‘char*’
+src/Game/Player/MarioFrontStep.cpp	pass	-
+src/Game/Player/MarioHolder.cpp	pass	-
+src/Game/Player/MarioInit.cpp	fail	src/Game/Player/MarioInit.cpp:41:10: error: ‘using TVec2f = struct JGeometry::TVec2<float>’ {aka ‘struct JGeometry::TVec2<float>’} has no member named ‘zero’
+src/Game/Player/MarioJump.cpp	fail	src/Game/Player/MarioJump.cpp:1:10: fatal error: Game/Enemy/KariKariDirector.hpp: No such file or directory
+src/Game/Player/MarioMagic.cpp	pass	-
+src/Game/Player/MarioMapCode.cpp	pass	-
+src/Game/Player/MarioMessenger.cpp	pass	-
+src/Game/Player/MarioModule.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:66:32: error: ‘_GXTlutSize’ has not been declared
+src/Game/Player/MarioMove.cpp	fail	src/Game/Player/MarioMove.cpp:946:22: error: ‘JMath’ has not been declared
+src/Game/Player/MarioMove25D.cpp	pass	-
+src/Game/Player/MarioMove2D.cpp	pass	-
+src/Game/Player/MarioMoveSphere.cpp	pass	-
+src/Game/Player/MarioNullBck.cpp	pass	-
+src/Game/Player/MarioParts.cpp	pass	-
+src/Game/Player/MarioPress.cpp	fail	src/Game/Player/MarioPress.cpp:202:1: error: jump to label ‘Failure’
+src/Game/Player/MarioRabbit.cpp	pass	-
+src/Game/Player/MarioRecovery.cpp	pass	-
+src/Game/Player/MarioSearchLight.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioSideStep.cpp	pass	-
+src/Game/Player/MarioSkate.cpp	pass	-
+src/Game/Player/MarioSlider.cpp	fail	src/Game/Player/MarioSlider.cpp:2:10: fatal error: Game/Enemy/KariKariDirector.hpp: No such file or directory
+src/Game/Player/MarioSlip.cpp	pass	-
+src/Game/Player/MarioSlope.cpp	pass	-
+src/Game/Player/MarioSound.cpp	fail	libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:231:32: error: ‘getSystemHeap’ is not a member of ‘JKRHeap’
+src/Game/Player/MarioSpecial.cpp	pass	-
+src/Game/Player/MarioSpin.cpp	pass	-
+src/Game/Player/MarioState.cpp	pass	-
+src/Game/Player/MarioStep.cpp	pass	-
+src/Game/Player/MarioStick.cpp	fail	src/Game/Player/MarioStick.cpp:94:16: error: call of overloaded ‘startPadVib(long unsigned int)’ is ambiguous
+src/Game/Player/MarioSukekiyo.cpp	pass	-
+src/Game/Player/MarioSwim.cpp	fail	src/Game/Player/MarioSwim.cpp:37:59: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+src/Game/Player/MarioSwimDamage.cpp	pass	-
+src/Game/Player/MarioTalk.cpp	pass	-
+src/Game/Player/MarioTask.cpp	pass	-
+src/Game/Player/MarioWait.cpp	fail	include/Game/Animation/XanimePlayer.hpp:72:16: error: ‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioWalk.cpp	pass	-
+src/Game/Player/MarioWall.cpp	pass	-
+src/Game/Player/MarioWarp.cpp	pass	-
+src/Game/Player/MatrixControl.cpp	pass	-
+src/Game/Player/ModelHolder.cpp	fail	libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/RushEndInfo.cpp	pass	-
+src/Game/Player/TornadoMario.cpp	pass	-

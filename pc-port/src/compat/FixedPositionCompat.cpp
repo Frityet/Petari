@@ -27,7 +27,7 @@ namespace {
             return nullptr;
         }
 
-        const auto& matrix = pActor->getBaseMatrix();
+        const auto& matrix = smgpc::compat::actor_base_matrix(pActor);
         return reinterpret_cast< MtxPtr >(const_cast< f32* >(matrix.m.data()));
     }
 

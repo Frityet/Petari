@@ -6,6 +6,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <algorithm>
@@ -95,7 +96,7 @@ namespace {
             return nullptr;
         }
 
-        auto* sensor = actor->addHitSensor(name, type, group_size, radius, {});
+        auto* sensor = smgpc::compat::add_actor_hit_sensor(actor, name, type, group_size, radius, {});
         if (sensor == nullptr) {
             return nullptr;
         }
@@ -115,7 +116,7 @@ namespace {
             return nullptr;
         }
 
-        auto* sensor = actor->addHitSensor(name, type, group_size, radius, {});
+        auto* sensor = smgpc::compat::add_actor_hit_sensor(actor, name, type, group_size, radius, {});
         if (sensor == nullptr) {
             return nullptr;
         }
@@ -133,7 +134,7 @@ namespace {
             return nullptr;
         }
         auto sensors = std::vector<HitSensor*>{};
-        actor->collectHitSensors(sensors);
+        smgpc::compat::collect_actor_hit_sensors(actor, sensors);
         const auto sensor_index = static_cast<std::size_t>(index);
         return sensor_index < sensors.size() ? sensors[sensor_index] : nullptr;
     }
@@ -211,7 +212,9 @@ namespace smgpc::compat {
 namespace MR {
 
     HitSensor* addHitSensor(LiveActor* actor, const char* name, u32 type, u16 group_size, f32 radius, const TVec3f& offset) {
-        return can_register_sensor(actor, name) ? actor->addHitSensor(name, type, group_size, radius, offset) : nullptr;
+        return can_register_sensor(actor, name)
+                   ? smgpc::compat::add_actor_hit_sensor(actor, name, type, group_size, radius, offset)
+                   : nullptr;
     }
 
     HitSensor* addHitSensorBinder(LiveActor* actor, const char* name, u16 group_size, f32 radius, const TVec3f& offset) {
@@ -303,7 +306,7 @@ namespace MR {
             return nullptr;
         }
 
-        auto* sensor = actor->addHitSensor(name, type, group_size, radius, {});
+        auto* sensor = smgpc::compat::add_actor_hit_sensor(actor, name, type, group_size, radius, {});
         if (sensor == nullptr) {
             return nullptr;
         }
@@ -436,17 +439,17 @@ namespace MR {
             return false;
         }
         auto sensors = std::vector<HitSensor*>{};
-        actor->collectHitSensors(sensors);
+        smgpc::compat::collect_actor_hit_sensors(actor, sensors);
         if (sensors.empty()) {
             return false;
         }
-        actor->updateHitSensors();
+        smgpc::compat::update_actor_hit_sensors(actor);
         return true;
     }
 
     void updateHitSensorsAll(LiveActor* actor) {
         if (actor != nullptr) {
-            actor->updateHitSensors();
+            smgpc::compat::update_actor_hit_sensors(actor);
         }
     }
 
@@ -481,15 +484,24 @@ namespace MR {
         }
     }
 
+    void setHitSensorApart(HitSensor* sender, HitSensor* receiver) {
+        // Native sensor ownership lives in ActorRuntimeRegistry; the PC
+        // provider does not currently retain the retail taking/taken links.
+        // Keep the exact dispatch endpoint total while there is no link to
+        // clear.
+        (void)sender;
+        (void)receiver;
+    }
+
     void validateHitSensors(LiveActor* actor) {
         if (actor != nullptr) {
-            actor->validateHitSensors();
+            smgpc::compat::validate_actor_hit_sensors(actor);
         }
     }
 
     void invalidateHitSensors(LiveActor* actor) {
         if (actor != nullptr) {
-            actor->invalidateHitSensors();
+            smgpc::compat::invalidate_actor_hit_sensors(actor);
         }
     }
 
@@ -519,7 +531,7 @@ namespace MR {
             return;
         }
         auto sensors = std::vector<HitSensor*>{};
-        actor->collectHitSensors(sensors);
+        smgpc::compat::collect_actor_hit_sensors(actor, sensors);
         for (auto* sensor : sensors) {
             if (sensor != nullptr) {
                 sensor->mSensorCount = 0U;
@@ -684,7 +696,7 @@ namespace MR {
 
     bool receiveItemShowMsg(u32 message, HitSensor*, HitSensor* receiver) {
         auto* host = getSensorHost(receiver);
-        if (message != ACTMES_ITEM_SHOW || host == nullptr || !host->isDead()) {
+        if (message != ACTMES_ITEM_SHOW || host == nullptr || !host->mFlag.mIsDead) {
             return false;
         }
         host->makeActorAppeared();
@@ -693,7 +705,7 @@ namespace MR {
 
     bool receiveItemHideMsg(u32 message, HitSensor*, HitSensor* receiver) {
         auto* host = getSensorHost(receiver);
-        if (message != ACTMES_ITEM_HIDE || host == nullptr || host->isDead()) {
+        if (message != ACTMES_ITEM_HIDE || host == nullptr || host->mFlag.mIsDead) {
             return false;
         }
         host->makeActorDead();

@@ -2,6 +2,7 @@
 #include "Game/LiveActor/MaterialCtrl.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "render/J3dMatrix.hpp"
 
 #include <cmath>
@@ -77,7 +78,7 @@ int main() {
     require_unavailable([&] { (void)MR::initDLMakerProjmapEffectMtxSetter(&actor); },
                         "a projection material controller must not exist without a real actor model renderer");
     actor.initModelManagerWithAnm("", "", false);
-    actor.setBaseMatrix(smgpc::render::J3dMatrix3x4{{
+    smgpc::compat::set_actor_base_matrix(&actor, smgpc::render::J3dMatrix3x4{{
         2.0F, 0.0F, 0.0F, 4.0F,
         0.0F, 4.0F, 0.0F, 8.0F,
         0.0F, 0.0F, 5.0F, 10.0F,

@@ -61,7 +61,7 @@ namespace {
                     "actor-relative registration must use the actor position and requested offset");
 
         actor.mPosition.set(-5.0F, 6.0F, 7.0F);
-        actor.updateHitSensors();
+        MR::updateHitSensorsAll(&actor);
         require_vec(ordinary->mPosition, TVec3f{-4.0F, 8.0F, 10.0F},
                     "actor-relative sensor position must update with its actor");
     }
@@ -87,7 +87,7 @@ namespace {
         matrix[0][3] = 40.0F;
         matrix[1][3] = 50.0F;
         matrix[2][3] = 60.0F;
-        actor.updateHitSensors();
+        MR::updateHitSensorsAll(&actor);
         require_vec(sensor->mPosition, TVec3f{37.0F, 52.0F, 64.0F},
                     "matrix-bound sensor must track matrix changes instead of falling back to the actor");
 
@@ -108,7 +108,7 @@ namespace {
 
         actor.mPosition.set(100.0F, 100.0F, 100.0F);
         position.set(-2.0F, -4.0F, -6.0F);
-        actor.updateHitSensors();
+        MR::updateHitSensorsAll(&actor);
         require_vec(sensor->mPosition, TVec3f{-1.0F, -2.0F, -3.0F},
                     "position-bound sensor must not silently switch to actor-relative placement");
     }

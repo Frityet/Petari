@@ -28,6 +28,7 @@
 #include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/ScreenAlphaCapture.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "compat/AudioFacadeCompat.hpp"
@@ -68,7 +69,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::array<float, 12U> live_actor_effect_matrix(const LiveActor &actor) {
-            auto matrix = actor.getBaseMatrix().m;
+            auto matrix = smgpc::compat::actor_base_matrix(&actor).m;
             matrix[3U] = actor.mPosition.x;
             matrix[7U] = actor.mPosition.y;
             matrix[11U] = actor.mPosition.z;
@@ -1671,7 +1672,7 @@ namespace smgpc::runtime {
         if (auto it = _effect_live_actor_hosts.find(host_identity); it != _effect_live_actor_hosts.end() && it->second != nullptr) {
             const auto &actor = *it->second;
             _effects.bind_host_transform(EffectKeeperHostKind::LiveActor, host_name, EffectHostBindingSource::LiveActorBaseMatrix,
-                                         live_actor_effect_matrix(actor), actor.isDead(), host_identity);
+                                         live_actor_effect_matrix(actor), actor.mFlag.mIsDead, host_identity);
             return;
         }
 

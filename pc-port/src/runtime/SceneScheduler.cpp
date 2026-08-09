@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -21,6 +22,7 @@
 #include "Game/Util/LightUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorPhysicsRuntime.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace smgpc::runtime {
@@ -596,7 +598,7 @@ namespace smgpc::runtime {
             auto updated_actors = std::vector<LiveActor*>{};
             for (auto& entry : _entries) {
                 auto* actor = entry_live_actor(entry);
-                if (actor == nullptr || actor->isDead() ||
+                if (actor == nullptr || actor->mFlag.mIsDead ||
                     std::ranges::find(updated_actors, actor) != updated_actors.end()) {
                     continue;
                 }
@@ -631,7 +633,7 @@ namespace smgpc::runtime {
                 break;
             }
 
-            if (auto *actor = entry_live_actor(*entry); actor != nullptr && !actor->isDead()) {
+            if (auto *actor = entry_live_actor(*entry); actor != nullptr && !actor->mFlag.mIsDead) {
                 smgpc::compat::integrate_live_actor_velocity(*actor);
                 if (auto *runtime = RuntimeContext::try_instance();
                     runtime != nullptr && runtime->player_system().attached_actor() == actor) {
@@ -658,8 +660,8 @@ namespace smgpc::runtime {
                 continue;
             }
 
-            actor->updateHitSensors();
-            actor->collectHitSensors(sensors);
+            smgpc::compat::update_actor_hit_sensors(actor);
+            smgpc::compat::collect_actor_hit_sensors(actor, sensors);
             actors.push_back(actor);
         }
 
@@ -671,14 +673,14 @@ namespace smgpc::runtime {
 
         for (auto lhs_index = std::size_t{}; lhs_index < sensors.size(); ++lhs_index) {
             auto *lhs = sensors[lhs_index];
-            if (lhs == nullptr || lhs->mHost == nullptr || !lhs->mValidByHost || !lhs->mValidBySystem || lhs->mHost->isDead()) {
+            if (lhs == nullptr || lhs->mHost == nullptr || !lhs->mValidByHost || !lhs->mValidBySystem || lhs->mHost->mFlag.mIsDead) {
                 continue;
             }
 
             for (auto rhs_index = lhs_index + 1U; rhs_index < sensors.size(); ++rhs_index) {
                 auto *rhs = sensors[rhs_index];
                 if (rhs == nullptr || rhs->mHost == nullptr || rhs->mHost == lhs->mHost || !rhs->mValidByHost ||
-                    !rhs->mValidBySystem || rhs->mHost->isDead()) {
+                    !rhs->mValidBySystem || rhs->mHost->mFlag.mIsDead) {
                     continue;
                 }
 
@@ -694,10 +696,10 @@ namespace smgpc::runtime {
                 lhs->addHitSensor(rhs);
                 rhs->addHitSensor(lhs);
 
-                if (!lhs->mHost->isDead()) {
+                if (!lhs->mHost->mFlag.mIsDead) {
                     lhs->mHost->attackSensor(lhs, rhs);
                 }
-                if (!rhs->mHost->isDead()) {
+                if (!rhs->mHost->mFlag.mIsDead) {
                     rhs->mHost->attackSensor(rhs, lhs);
                 }
             }
@@ -924,7 +926,7 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
         auto actor_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
-            if (entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor != nullptr && !entry.live_actor->isDead()) {
+            if (entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor != nullptr && !entry.live_actor->mFlag.mIsDead) {
                 smgpc::compat::update_actor_clipping(*entry.live_actor, camera_pose);
             }
             if (entry.kind == SceneEntryKind::LiveActorModel && entry.draw_buffer_type == draw_buffer_type && !entry_is_dead(entry) &&
@@ -944,8 +946,11 @@ namespace smgpc::runtime {
         const auto phase = pass == SceneDrawBufferPass::Translucent ? SceneSchedulerPhase::DrawBufferXlu : SceneSchedulerPhase::DrawBufferOpa;
 #endif
         for (auto *entry : actor_entries) {
-            entry->live_actor->loadActorLight();
-            entry->live_actor->drawModel(camera_pose, static_cast<std::uint64_t>(entry->live_actor->getNerveStep()), model_pass);
+            if (entry->live_actor->mActorLightCtrl != nullptr) {
+                entry->live_actor->mActorLightCtrl->loadLight();
+            }
+            smgpc::compat::draw_actor_model(entry->live_actor, camera_pose,
+                                            static_cast<std::uint64_t>(entry->live_actor->getNerveStep()), model_pass);
 #ifndef NDEBUG
             push_trace(*entry, phase, pass);
 #endif
@@ -1021,10 +1026,10 @@ namespace smgpc::runtime {
                 state.live_actor_position = vec3_state(actor->mPosition);
                 state.live_actor_rotation = vec3_state(actor->mRotation);
                 state.live_actor_scale = vec3_state(actor->mScale);
-                state.live_actor_base_matrix = actor->getBaseMatrix().m;
-                state.live_actor_bck_name = std::string(actor->currentBckName());
-                state.live_actor_brk_name = std::string(actor->currentBrkName());
-                state.live_actor_btk_name = std::string(actor->currentBtkName());
+                state.live_actor_base_matrix = smgpc::compat::actor_base_matrix(actor).m;
+                state.live_actor_bck_name = std::string(smgpc::compat::actor_current_bck_name(actor));
+                state.live_actor_brk_name = std::string(smgpc::compat::actor_current_brk_name(actor));
+                state.live_actor_btk_name = std::string(smgpc::compat::actor_current_btk_name(actor));
             }
             states.push_back(std::move(state));
         }
@@ -1297,14 +1302,14 @@ namespace smgpc::runtime {
         case SceneEntryKind::LayoutActor:
             return smgpc::layout::is_layout_actor_dead(entry.layout_actor);
         case SceneEntryKind::LiveActorModel:
-            return entry.live_actor == nullptr || entry.live_actor->isDead();
+            return entry.live_actor == nullptr || entry.live_actor->mFlag.mIsDead;
         }
 
         return true;
     }
 
     bool SceneScheduler::entry_is_suspended(const Entry &entry) {
-        return entry.name_obj != nullptr && entry.name_obj->isSuspended();
+        return smgpc::compat::name_obj_is_suspended(entry.name_obj);
     }
 
     std::string SceneScheduler::entry_name(const Entry &entry) {
@@ -1353,10 +1358,10 @@ namespace smgpc::runtime {
             state.live_actor_position = vec3_state(actor->mPosition);
             state.live_actor_rotation = vec3_state(actor->mRotation);
             state.live_actor_scale = vec3_state(actor->mScale);
-            state.live_actor_base_matrix = actor->getBaseMatrix().m;
-            state.live_actor_bck_name = std::string(actor->currentBckName());
-            state.live_actor_brk_name = std::string(actor->currentBrkName());
-            state.live_actor_btk_name = std::string(actor->currentBtkName());
+            state.live_actor_base_matrix = smgpc::compat::actor_base_matrix(actor).m;
+            state.live_actor_bck_name = std::string(smgpc::compat::actor_current_bck_name(actor));
+            state.live_actor_brk_name = std::string(smgpc::compat::actor_current_brk_name(actor));
+            state.live_actor_btk_name = std::string(smgpc::compat::actor_current_btk_name(actor));
         }
         _last_execution_trace.push_back(std::move(state));
     }

@@ -79,8 +79,8 @@ int main() {
         ProbeActor actor;
         actor.makeActorAppeared();
         actor.initHitSensor(2);
-        auto* first = actor.addHitSensor("first", 1U, 1U, 10.0F, {});
-        auto* second = actor.addHitSensor("second", 1U, 1U, 10.0F, {});
+        auto* first = smgpc::compat::add_actor_hit_sensor(&actor, "first", 1U, 1U, 10.0F, {});
+        auto* second = smgpc::compat::add_actor_hit_sensor(&actor, "second", 1U, 1U, 10.0F, {});
         first->addHitSensor(second);
         actor.initBinder(50.0F, 0.0F, 8U);
         auto contacts = smgpc::compat::ActorBinderContactState{};

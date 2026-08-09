@@ -873,7 +873,7 @@ namespace {
     struct ActionObserver {
         void observe() {
             ++calls;
-            saw_appeared = actor != nullptr && !actor->isDead();
+            saw_appeared = actor != nullptr && !actor->mFlag.mIsDead;
         }
 
         LiveActor *actor = nullptr;
@@ -1416,10 +1416,10 @@ namespace {
                     "the action-dispatch fixture must register callbacks and start");
 
             runtime.movement();
-            actor.updateNerve();
+            smgpc::compat::update_actor_nerve(&actor);
             require(observer.calls == 1 && observer.saw_appeared &&
                         actor.isNerve(&action_nerve) && actor.mFlag.mIsHiddenModel &&
-                        actor.currentBckName() == "Wave" && actor.mPosition.x == 12.0F &&
+                        smgpc::compat::actor_current_bck_name(&actor) == "Wave" && actor.mPosition.x == 12.0F &&
                         actor.mPosition.y == 34.0F && actor.mPosition.z == 56.0F &&
                         actor.mRotation.x == 7.0F && actor.mRotation.y == 8.0F &&
                         actor.mRotation.z == 9.0F && wipe.events().size() == 1U &&
@@ -1427,10 +1427,10 @@ namespace {
                         wipe.events()[0].frame_count == -1,
                     "Action/Wipe rows must run against their real callback, GeneralPos, and scene wipe owners");
             runtime.movement();
-            require(observer.calls == 1 && !actor.isDead(),
+            require(observer.calls == 1 && !actor.mFlag.mIsDead,
                     "a multi-frame Action row must not replay its first-step operation on the last step");
             runtime.movement();
-            require(actor.isDead(),
+            require(actor.mFlag.mIsDead,
                     "a one-frame Action part must execute its first branch even though it is also the last step");
             runtime.movement();
             require(!MR::isDemoActive(), "the dispatch fixture must end at its retail boundary");
@@ -1453,11 +1453,11 @@ namespace {
                     "the paused action fixture must start");
             MR::pauseTimeKeepDemo(&actor);
             runtime.movement();
-            require(observer.calls == 0 && actor.isDead(),
+            require(observer.calls == 0 && actor.mFlag.mIsDead,
                     "a paused early-step correction must not dispatch Action rows");
             MR::resumeTimeKeepDemo(&actor);
             runtime.movement();
-            require(observer.calls == 0 && actor.isDead(),
+            require(observer.calls == 0 && actor.mFlag.mIsDead,
                     "resuming after a skipped first step must not invent or replay the missed Action operation");
             MR::endDemo(&actor, "Dispatch");
         }
@@ -1638,8 +1638,9 @@ namespace {
                 "simple casts must remain an append-only registry distinct from DemoGroup membership");
 
         require(MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr) &&
-                    !live_actor.isSuspended() && !layout_actor.isSuspended() &&
-                    !name_obj.isSuspended(),
+                    !smgpc::compat::name_obj_is_suspended(&live_actor) &&
+                    !smgpc::compat::name_obj_is_suspended(&layout_actor) &&
+                    !smgpc::compat::name_obj_is_suspended(&name_obj),
                 "a real demo start must resume all three simple-cast lists");
         MR::endDemo(&name_obj, "Alpha");
 
@@ -1662,8 +1663,9 @@ namespace {
         smgpc::compat::release_demo_runtime_state(&live_actor);
         require(runtime.simple_cast_registration_count(&live_actor) == 0U &&
                     MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr) &&
-                    live_actor.isSuspended() && !layout_actor.isSuspended() &&
-                    !name_obj.isSuspended(),
+                    smgpc::compat::name_obj_is_suspended(&live_actor) &&
+                    !smgpc::compat::name_obj_is_suspended(&layout_actor) &&
+                    !smgpc::compat::name_obj_is_suspended(&name_obj),
                 "released LiveActor identities must not be resumed by a later demo start");
         MR::endDemo(&name_obj, "Alpha");
 

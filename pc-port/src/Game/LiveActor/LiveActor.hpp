@@ -1,133 +1,176 @@
 #pragma once
 
-#include <memory>
-#include <string>
-#include <string_view>
-#include <vector>
-
-#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
-#include <JSystem/JGeometry/TVec.hpp>
-#include <revolution.h>
-
-#include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActorFlag.hpp"
-#include "Game/Util/JMapInfo.hpp"
-#include "RendererService.hpp"
-#include "camera/CameraPose.hpp"
-#include "render/J3dMaterialRuntime.hpp"
-#include "render/live_actor/LiveActorModel.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include <JSystem/JGeometry/TVec.hpp>
 
+class ActorAnimKeeper;
 class ActorLightCtrl;
+class ActorPadAndCameraCtrl;
+class AudAnmSoundObject;
+class Binder;
+class CollisionParts;
+class EffectKeeper;
 class HitSensor;
+class HitSensorKeeper;
+class ModelManager;
 class Nerve;
 class RailRider;
+class ResourceHolder;
+class ShadowControllerList;
 class Spine;
 class StageSwitchCtrl;
+class StarPointerTarget;
 
+/// @brief The basis of a drawable actor that can contain states (see: Nerve)
 class LiveActor : public NameObj {
 public:
+    /// @brief Creates a new `LiveActor`.
+    /// @param pName A pointer to the null-terminated name of the actor.
     LiveActor(const char* pName);
+
+    // Native cleanup only. This occupies the same inherited virtual
+    // destructor slot as the retail compiler-generated destructor and adds no
+    // object storage.
     virtual ~LiveActor();
 
-    void init(const JMapInfoIter& rIter) override;
-    virtual void initAfterPlacement() override;
-    void movement() override;
-    void calcAnim() override;
-    void calcViewAndEntry() override;
+    /// @brief Intializes the `LiveActor` while being placed into a scene.
+    /// @param rIter A reference to an iterator over a `JMapInfo`.
+    virtual void init(const JMapInfoIter& rIter) override;
+
+    virtual void movement();
+    virtual void calcAnim();
+    virtual void calcViewAndEntry();
     virtual void appear();
-    virtual void kill();
     virtual void makeActorAppeared();
+    virtual void kill();
     virtual void makeActorDead();
     virtual bool receiveMessage(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
+
+    /// @brief Gets the base matrix of the model used for the actor.
+    /// @returns A MtxPtr to the base matrix. NULL if there is no model present.
     virtual MtxPtr getBaseMtx() const;
-    virtual bool receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver);
-    virtual void control();
-    virtual void attackSensor(HitSensor* pSender, HitSensor* pReceiver);
+    virtual MtxPtr getTakingMtx() const;
     virtual void startClipped();
     virtual void endClipped();
+
+    virtual void control() {
+    }
+
+    /// @brief Calculates and sets the base matrix of the actor.
     virtual void calcAndSetBaseMtx();
 
-    void initNerve(const Nerve* pNerve);
-    void updateNerve();
+    virtual void updateHitSensor(HitSensor* pSensor) {
+    }
+
+    virtual void attackSensor(HitSensor* pSender, HitSensor* pReceiver);
+
+    virtual bool receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgTake(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgTaken(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgThrow(HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    virtual bool receiveMsgApart(HitSensor* pSender, HitSensor* pReceiver);
+
+    virtual bool receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+        return false;
+    }
+
+    HitSensorKeeper* getSensorKeeper() const {
+        return mSensorKeeper;
+    }
+
+    Binder* getBinder() const {
+        return mBinder;
+    }
+
+    void calcAnmMtx();
     void setNerve(const Nerve* pNerve);
     bool isNerve(const Nerve* pNerve) const;
     s32 getNerveStep() const;
-    void initSound(s32 soundCount, bool usesCallback);
+
+    /// @brief Gets a sensor.
+    /// @param pSensorName The name of the sensor to get.
+    /// @returns The sensor that contains the name given. Returns the result of HitSensorKeeper::getSensor or NULL if there is no HitSensorKeeper
+    /// created.
+    HitSensor* getSensor(const char* pSensorName) const;
     void initModelManagerWithAnm(const char* pModelArcName, const char* pAnimArcName, bool);
-    void initEffectKeeper(int effectNum, const char* pEffectName, bool);
-    void initActorLightCtrl();
-    void loadActorLight() const;
-    void setBaseMatrix(const smgpc::render::J3dMatrix3x4& matrix);
-    void setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4& matrix);
-    void drawModel(const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
-                   smgpc::render::live_actor::LiveActorModel::DrawPass pass = smgpc::render::live_actor::LiveActorModel::DrawPass::All);
-    void initHitSensor(s32 sensorCount);
-    void initBinder(f32 radius, f32 offset, u32 type);
+    void initNerve(const Nerve*);
+    void initHitSensor(int);
+    void initBinder(f32, f32, u32);
     void initRailRider(const JMapInfoIter& rIter);
+    void initEffectKeeper(int, const char*, bool);
+    void initSound(int, bool);
+    void initShadowControllerList(u32);
+    void initActorCollisionParts(const char*, HitSensor*, ResourceHolder*, MtxPtr, bool, bool);
     void initStageSwitch(const JMapInfoIter& rIter);
-    HitSensor* addHitSensor(const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset);
-    [[nodiscard]] HitSensor* getSensor(const char* pName);
-    [[nodiscard]] const HitSensor* getSensor(const char* pName) const;
-    [[nodiscard]] const char* getSensorName(const HitSensor* pSensor) const;
-    void collectHitSensors(std::vector< HitSensor* >& sensors);
-    void validateHitSensors();
-    void invalidateHitSensors();
-    void updateHitSensors();
-    void startBck(const char* pName, const char* pFileName);
-    void startBrk(const char* pName);
-    void startBtk(const char* pName);
-    void setBrkFrame(f32 frame);
-    void setBrkFrameAndStop(f32 frame);
-    void setBrkFrameEndAndStop();
-    [[nodiscard]] J3DFrameCtrl* getBrkCtrl();
-    [[nodiscard]] const J3DFrameCtrl* getBrkCtrl() const;
-    [[nodiscard]] bool isBrkOneTimeAndStopped() const;
-    [[nodiscard]] std::string_view currentBckName() const;
-    [[nodiscard]] std::string_view currentBrkName() const;
-    [[nodiscard]] std::string_view currentBtkName() const;
+    void initActorStarPointerTarget(f32, const TVec3f*, MtxPtr, TVec3f);
+    void initActorLightCtrl();
+    void addToSoundObjHolder();
+    void updateBinder();
 
-    [[nodiscard]] bool isDead() const;
-    [[nodiscard]] const smgpc::render::J3dMatrix3x4& getBaseMatrix() const;
+    /// @brief The three-dimensional location vector.
+    /* 0x0C */ TVec3f mPosition;
 
-    TVec3f mPosition{};
-    TVec3f mRotation{};
-    TVec3f mScale{1.0F, 1.0F, 1.0F};
-    TVec3f mVelocity{};
-    TVec3f mGravity{0.0F, -1.0F, 0.0F};
-    RailRider* mRailRider = nullptr;
-    LiveActorFlag mFlag{};
-    StageSwitchCtrl* mStageSwitchCtrl = nullptr;
-    ActorLightCtrl* mActorLightCtrl = nullptr;
-    f32 mBinderRadius = 0.0F;
-    f32 mBinderOffset = 0.0F;
-    u32 mBinderType = 0;
-    bool mBindedGround = false;
-    bool mBindedWall = false;
-    bool mBindedRoof = false;
-    bool mBindedGroundDamageFire = false;
-    TVec3f mGroundNormal{0.0F, 1.0F, 0.0F};
-    TVec3f mWallNormal{1.0F, 0.0F, 0.0F};
-    TVec3f mRoofNormal{0.0F, -1.0F, 0.0F};
-    s32 mClippingFarLevel = 0;
-    bool mShadowValid = false;
-    bool mShadowCalcEnabled = false;
-    bool mShadowPrivateGravity = false;
+    /// @brief The three-dimensional rotation vector, in degrees.
+    /* 0x18 */ TVec3f mRotation;
 
-private:
-    struct ActorHitSensor {
-        std::string name{};
-        TVec3f offset{};
-        std::unique_ptr< HitSensor > sensor{};
-    };
+    /// @brief The three-dimensional scale vector.
+    /* 0x24 */ TVec3f mScale;
 
-    Spine* mSpine = nullptr;
-    smgpc::render::J3dMatrix3x4 mBaseMatrix{};
-    J3DFrameCtrl mBrkCtrl{};
-    bool mBrkAvailable = false;
-    bool mBrkActive = false;
-    std::string mCurrentBckName{};
-    std::string mCurrentBrkName{};
-    std::string mCurrentBtkName{};
-    std::vector< ActorHitSensor > mHitSensors{};
-    std::unique_ptr< smgpc::render::live_actor::LiveActorModel > mModel{};
+    /// @brief The three-dimensional velocity vector, in units per step.
+    /* 0x30 */ TVec3f mVelocity;
+
+    /// @brief The three-dimensional gravity unit vector.
+    /* 0x3C */ TVec3f mGravity;
+
+    /// @brief A pointer to a `ModelManager` instance, used for drawing a 3D model.
+    /* 0x48 */ ModelManager* mModelManager;
+
+    /// @brief A pointer to an `ActorAnimKeeper` instance, used for storing and playing model animations.
+    /* 0x4C */ ActorAnimKeeper* mAnimKeeper;
+
+    /* 0x50 */ Spine* mSpine;
+
+    /// @brief A pointer to a `HitSensorKeeper` instance, used for storing `HitSensor` instances.
+    /* 0x54 */ HitSensorKeeper* mSensorKeeper;
+
+    /* 0x58 */ Binder* mBinder;
+
+    /// @brief A pointer to a `RailRider` instance, used for allowing the actor to ride on paths.
+    /* 0x5C */ RailRider* mRailRider;
+    /* 0x60 */ EffectKeeper* mEffectKeeper;
+    /* 0x64 */ AudAnmSoundObject* mSoundObject;
+
+    /// @brief Flags relating to drawing, animation calculation, etc.
+    /* 0x68 */ LiveActorFlag mFlag;
+
+    /* 0x74 */ ShadowControllerList* mShadowControllerList;
+    /* 0x78 */ CollisionParts* mCollisionParts;
+
+    /// @brief A pointer to a `StageSwitchCtrl` instance, used for activating and deactivating switches.
+    /* 0x7C */ StageSwitchCtrl* mStageSwitchCtrl;
+
+    /* 0x80 */ StarPointerTarget* mStarPointerTarget;
+    /* 0x84 */ ActorLightCtrl* mActorLightCtrl;
+    /* 0x88 */ ActorPadAndCameraCtrl* mCameraCtrl;
 };

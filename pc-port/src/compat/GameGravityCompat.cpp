@@ -9,6 +9,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
@@ -227,9 +228,10 @@ namespace MR {
             return;
         }
 
-        if (actor->mBindedGround) {
+        const auto* contacts = smgpc::compat::actor_binder_contacts(actor);
+        if (contacts != nullptr && contacts->ground) {
             auto ground_normal = TVec3f{};
-            if (!normalizeOrZero(actor->mGroundNormal, &ground_normal)) {
+            if (!normalizeOrZero(contacts->ground_normal, &ground_normal)) {
                 actor->mGravity.set(-ground_normal);
             }
         }

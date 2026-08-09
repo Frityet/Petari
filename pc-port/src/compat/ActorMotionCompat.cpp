@@ -47,7 +47,7 @@ namespace {
 
 namespace smgpc::compat {
     void update_live_actor_gravity(LiveActor& actor) {
-        if (!actor.isDead() && actor.mFlag.mIsCalcGravity) {
+        if (!actor.mFlag.mIsDead && actor.mFlag.mIsCalcGravity) {
             // LiveActor::movement calls calcGravity, whose no-field behavior
             // keeps the actor's previous gravity. calcGravityOrZero is a
             // separate opt-in helper used by actors such as Coin.
@@ -59,7 +59,7 @@ namespace smgpc::compat {
     }
 
     void integrate_live_actor_velocity(LiveActor &actor) {
-        if (actor.isDead()) {
+        if (actor.mFlag.mIsDead) {
             return;
         }
 
@@ -83,7 +83,7 @@ namespace smgpc::compat {
         if (!normalize(gravity)) {
             throw std::logic_error("Binder contact classification requires a non-degenerate actor gravity vector.");
         }
-        const auto& base_matrix = actor.getBaseMatrix().m;
+        const auto& base_matrix = actor_base_matrix(&actor).m;
         auto binder_up = TVec3f{base_matrix[1], base_matrix[5], base_matrix[9]};
         // The original model base matrix supplied to Binder contains the
         // actor basis but not model scale. The host render matrix is TRS, so
@@ -107,14 +107,18 @@ namespace smgpc::compat {
                 throw std::logic_error("Binder movement requires a finite, non-degenerate actor basis.");
             }
         }
-        const auto binder_center = actor.mPosition + binder_up * actor.mBinderOffset;
+        const auto* binder_config = actor_binder_config(&actor);
+        if (binder_config == nullptr) {
+            throw std::logic_error("Binder movement requires registered binder configuration.");
+        }
+        const auto binder_center = actor.mPosition + binder_up * binder_config->offset;
         // LiveActor's third initBinder argument is Binder's stored-plane
         // capacity (_24), with zero selecting its temporary 32-plane array.
-        const auto maximum_contacts = actor.mBinderType == 0U
+        const auto maximum_contacts = binder_config->plane_capacity == 0U
                                           ? std::size_t{32U}
-                                          : static_cast<std::size_t>(actor.mBinderType);
+                                          : static_cast<std::size_t>(binder_config->plane_capacity);
         const auto resolved = collision->move_sphere(binder_center, actor.mVelocity,
-                                                     actor.mBinderRadius, maximum_contacts);
+                                                     binder_config->radius, maximum_contacts);
         actor.mPosition.add(resolved.displacement);
 
         auto contact_state = ActorBinderContactState{};

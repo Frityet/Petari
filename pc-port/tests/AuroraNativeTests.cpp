@@ -660,10 +660,10 @@ namespace {
         require(sensor != nullptr, "CollisionBlocker should create its original eye sensor");
         require(sensor->mType == ATYPE_EYE && sensor->mGroupSize == 4U && sensor->mRadius == 50.0F,
                 "CollisionBlocker eye sensor should preserve the original type, group size, and radius");
-        require(!blocker.isDead(), "CollisionBlocker should appear after initialization");
+        require(!MR::isDead(&blocker), "CollisionBlocker should appear after initialization");
 
         blocker.forceBreak();
-        require(blocker.isDead(), "CollisionBlocker forceBreak should kill the actor");
+        require(MR::isDead(&blocker), "CollisionBlocker forceBreak should kill the actor");
     }
 
     void test_simple_effect_host_compatibility() {
@@ -808,7 +808,8 @@ namespace {
         if (smgpc::scene::should_apply_host_appear(&placement, true)) {
             explicit_placement_root.makeActorAppeared();
         }
-        require(!explicit_root.isDead() && placement_root.isDead() && !explicit_placement_root.isDead(),
+        require(!MR::isDead(&explicit_root) && MR::isDead(&placement_root) &&
+                    !MR::isDead(&explicit_placement_root),
                 "the generic host appear policy should not revive a placement actor that initialized dead");
     }
 
@@ -968,21 +969,25 @@ namespace {
         zero_binder.mPosition.set(0.25F, -1.0F, 0.25F);
         zero_binder.initBinder(0.0F, 0.0F, 0U);
         smgpc::compat::integrate_live_actor_velocity(zero_binder);
-        require(smgpc::compat::has_actor_binder(&zero_binder) && zero_binder.mBindedGround &&
+        const auto* zero_binder_contacts = smgpc::compat::actor_binder_contacts(&zero_binder);
+        require(smgpc::compat::has_actor_binder(&zero_binder) && zero_binder_contacts != nullptr &&
+                    zero_binder_contacts->ground &&
                     zero_binder.mPosition.y > 1.0F,
                 "a zero-radius Binder should remain explicit and resolve a strict-interior point-prism hit");
 
         auto matrix_binder = LiveActor("matrix-binder-test");
         matrix_binder.makeActorAppeared();
         matrix_binder.mPosition.set(0.25F, 2.0F, 0.25F);
-        matrix_binder.setBaseMatrix(smgpc::render::J3dMatrix3x4{{
+        smgpc::compat::set_actor_base_matrix(&matrix_binder, smgpc::render::J3dMatrix3x4{{
             1.0F, 0.0F, 0.0F, 0.25F,
             0.0F, -2.0F, 0.0F, 2.0F,
             0.0F, 0.0F, -1.0F, 0.25F,
         }});
         matrix_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(matrix_binder);
-        require(matrix_binder.mBindedGround && matrix_binder.mPosition.y > 3.0F,
+        const auto* matrix_binder_contacts = smgpc::compat::actor_binder_contacts(&matrix_binder);
+        require(matrix_binder_contacts != nullptr && matrix_binder_contacts->ground &&
+                    matrix_binder.mPosition.y > 3.0F,
                 "Binder offset should use the unscaled base-matrix Y direction instead of inferred anti-gravity");
 
         auto negative_scale_binder = LiveActor("negative-scale-binder-test");
@@ -992,7 +997,9 @@ namespace {
         negative_scale_binder.calcAndSetBaseMtx();
         negative_scale_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(negative_scale_binder);
-        require(negative_scale_binder.mBindedGround && negative_scale_binder.mPosition.y > -1.0F,
+        const auto* negative_scale_contacts = smgpc::compat::actor_binder_contacts(&negative_scale_binder);
+        require(negative_scale_contacts != nullptr && negative_scale_contacts->ground &&
+                    negative_scale_binder.mPosition.y > -1.0F,
                 "host model-scale sign should not invert the scale-free Binder offset basis");
 
         collision.deactivate();
@@ -1015,7 +1022,9 @@ namespace {
         collapsed_axis_binder.calcAndSetBaseMtx();
         collapsed_axis_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(collapsed_axis_binder);
-        require(collapsed_axis_binder.mBindedWall && collapsed_axis_binder.mPosition.x > 3.0F,
+        const auto* collapsed_axis_contacts = smgpc::compat::actor_binder_contacts(&collapsed_axis_binder);
+        require(collapsed_axis_contacts != nullptr && collapsed_axis_contacts->wall &&
+                    collapsed_axis_binder.mPosition.x > 3.0F,
                 "a collapsed host scale should reconstruct Binder's rotated scale-free Y basis");
         collapsed_axis_collision.deactivate();
         require(smgpc::scene::StageCollisionService::active() == nullptr,
@@ -1199,8 +1208,11 @@ namespace {
         require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
                 "the grounded fallback test requires the exact scene-owned gravity manager");
         actor.mGravity.zero();
-        actor.mBindedGround = true;
-        actor.mGroundNormal.set(0.0F, 2.0F, 0.0F);
+        smgpc::compat::register_actor_binder(&actor);
+        auto grounded_contacts = smgpc::compat::ActorBinderContactState{};
+        grounded_contacts.ground = true;
+        grounded_contacts.ground_normal.set(0.0F, 2.0F, 0.0F);
+        smgpc::compat::record_actor_binder_contacts(&actor, grounded_contacts);
         MR::calcGravityOrZero(&actor);
         require(actor.mGravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.00001F),
                 "calcGravityOrZero should retain the original grounded-normal fallback");

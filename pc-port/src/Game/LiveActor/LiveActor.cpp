@@ -1,19 +1,19 @@
 #include "Game/LiveActor/LiveActor.hpp"
 
-#include <cmath>
-#include <optional>
-#include <stdexcept>
-#include <utility>
-
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/RailRider.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/StageSwitch.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/GameActorSensorCompat.hpp"
+#include "compat/CollisionPartsCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
+
+#include <cmath>
+#include <stdexcept>
+#include <string_view>
 
 namespace {
     constexpr f32 cDegToRad = 3.14159265358979323846F / 180.0F;
@@ -56,26 +56,21 @@ namespace {
     }
 }  // namespace
 
-LiveActor::LiveActor(const char* pName) : NameObj(pName) {
+LiveActor::LiveActor(const char* pName)
+    : NameObj(pName), mPosition(0.0F, 0.0F, 0.0F), mRotation(0.0F, 0.0F, 0.0F),
+      mScale(1.0F, 1.0F, 1.0F), mVelocity(0.0F, 0.0F, 0.0F), mGravity(0.0F, -1.0F, 0.0F),
+      mModelManager(nullptr), mAnimKeeper(nullptr), mSpine(nullptr), mSensorKeeper(nullptr), mBinder(nullptr),
+      mRailRider(nullptr), mEffectKeeper(nullptr), mSoundObject(nullptr), mFlag(), mShadowControllerList(nullptr),
+      mCollisionParts(nullptr), mStageSwitchCtrl(nullptr), mStarPointerTarget(nullptr), mActorLightCtrl(nullptr),
+      mCameraCtrl(nullptr) {
+    smgpc::compat::register_actor_runtime_state(this);
 }
 
 LiveActor::~LiveActor() {
     smgpc::compat::release_actor_runtime_state(this);
-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        runtime->star_pointer().unregister_target(*this);
-        runtime->unregister_effect_keeper(getName(), this);
-        runtime->unregister_live_actor_model(*this);
-    }
-    delete mActorLightCtrl;
-    delete mStageSwitchCtrl;
-    delete mRailRider;
-    delete mSpine;
 }
 
 void LiveActor::init(const JMapInfoIter&) {
-}
-
-void LiveActor::initAfterPlacement() {
 }
 
 void LiveActor::movement() {
@@ -83,11 +78,8 @@ void LiveActor::movement() {
         return;
     }
 
-    updateHitSensors();
-
-    if (mSpine != nullptr) {
-        updateNerve();
-    }
+    smgpc::compat::update_actor_hit_sensors(this);
+    smgpc::compat::update_actor_nerve(this);
 
     if (mFlag.mIsDead) {
         return;
@@ -96,31 +88,28 @@ void LiveActor::movement() {
     control();
 
     if (!mFlag.mIsDead) {
-        updateHitSensors();
+        smgpc::compat::update_actor_hit_sensors(this);
     }
 }
 
 void LiveActor::calcAnim() {
-    if (mModel != nullptr) {
-        calcAndSetBaseMtx();
-    }
-
-    if (!mBrkActive || mBrkCtrl.mRate == 0.0F) {
+    if (mFlag.mIsNoCalcAnim) {
         return;
     }
+    if (smgpc::compat::actor_model(this) != nullptr) {
+        calcAndSetBaseMtx();
+    }
+    smgpc::compat::advance_actor_animation(this);
+}
 
-    mBrkCtrl.mFrame += mBrkCtrl.mRate;
-    if (mBrkCtrl.mRate > 0.0F && mBrkCtrl.mFrame >= static_cast< f32 >(mBrkCtrl.mEnd)) {
-        mBrkCtrl.mFrame = static_cast< f32 >(mBrkCtrl.mEnd);
-        mBrkCtrl.mRate = 0.0F;
-    } else if (mBrkCtrl.mRate < 0.0F && mBrkCtrl.mFrame <= static_cast< f32 >(mBrkCtrl.mStart)) {
-        mBrkCtrl.mFrame = static_cast< f32 >(mBrkCtrl.mStart);
-        mBrkCtrl.mRate = 0.0F;
+void LiveActor::calcAnmMtx() {
+    if (smgpc::compat::actor_model(this) != nullptr) {
+        calcAndSetBaseMtx();
     }
 }
 
 void LiveActor::calcViewAndEntry() {
-    if (!mFlag.mIsDead && !mFlag.mIsClipped) {
+    if (!mFlag.mIsDead && !mFlag.mIsClipped && !mFlag.mIsNoCalcView) {
         calcAndSetBaseMtx();
     }
 }
@@ -138,56 +127,81 @@ void LiveActor::makeActorAppeared() {
         endClipped();
     }
     mFlag.mIsDead = false;
-    validateHitSensors();
-    updateHitSensors();
+    smgpc::compat::validate_actor_hit_sensors(this);
+    smgpc::compat::update_actor_hit_sensors(this);
 }
 
 void LiveActor::makeActorDead() {
     mVelocity.zero();
     mFlag.mIsDead = true;
-    invalidateHitSensors();
-}
-
-bool LiveActor::receiveOtherMsg(u32, HitSensor*, HitSensor*) {
-    return false;
+    smgpc::compat::invalidate_actor_hit_sensors(this);
+    smgpc::compat::clear_actor_binder_contacts(this);
 }
 
 bool LiveActor::receiveMessage(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+    if (msg == ACTMES_PUSH) {
+        return receiveMsgPush(pSender, pReceiver);
+    }
+    if (msg > ACTMES_PLAYER_ATTACK_START && msg < ACTMES_PLAYER_ATTACK_END) {
+        return receiveMsgPlayerAttack(msg, pSender, pReceiver);
+    }
+    if (msg > ACTMES_ENEMY_ATTACK_START && msg < ACTMES_ENEMY_ATTACK_END) {
+        return receiveMsgEnemyAttack(msg, pSender, pReceiver);
+    }
+    if (msg == ACTMES_TAKE) {
+        return receiveMsgTake(pSender, pReceiver);
+    }
+    if (msg == ACTMES_TAKEN) {
+        return receiveMsgTaken(pSender, pReceiver);
+    }
+    if (msg == ACTMES_THROW) {
+        return receiveMsgThrow(pSender, pReceiver);
+    }
+    if (msg == ACTMES_APART) {
+        return receiveMsgApart(pSender, pReceiver);
+    }
     return receiveOtherMsg(msg, pSender, pReceiver);
 }
 
-void LiveActor::control() {
+MtxPtr LiveActor::getBaseMtx() const {
+    if (smgpc::compat::actor_model(this) == nullptr) {
+        return nullptr;
+    }
+    const auto& matrix = smgpc::compat::actor_base_matrix(this);
+    return reinterpret_cast<MtxPtr>(const_cast<f32*>(matrix.m.data()));
+}
+
+MtxPtr LiveActor::getTakingMtx() const {
+    return getBaseMtx();
 }
 
 void LiveActor::attackSensor(HitSensor*, HitSensor*) {
 }
 
+bool LiveActor::receiveMsgApart(HitSensor* pSender, HitSensor* pReceiver) {
+    MR::setHitSensorApart(pSender, pReceiver);
+    return true;
+}
+
 void LiveActor::startClipped() {
     mFlag.mIsClipped = true;
-    invalidateHitSensors();
+    smgpc::compat::invalidate_actor_hit_sensors(this);
 }
 
 void LiveActor::endClipped() {
     mFlag.mIsClipped = false;
     if (!mFlag.mIsDead) {
-        validateHitSensors();
-        updateHitSensors();
+        smgpc::compat::validate_actor_hit_sensors(this);
+        smgpc::compat::update_actor_hit_sensors(this);
     }
 }
 
 void LiveActor::calcAndSetBaseMtx() {
-    mBaseMatrix = make_trs_matrix(mPosition, mRotation, mScale);
+    smgpc::compat::set_actor_base_matrix(this, make_trs_matrix(mPosition, mRotation, mScale));
 }
 
 void LiveActor::initNerve(const Nerve* pNerve) {
-    delete mSpine;
-    mSpine = new Spine(this, pNerve);
-}
-
-void LiveActor::updateNerve() {
-    if (mSpine != nullptr) {
-        mSpine->update();
-    }
+    smgpc::compat::replace_actor_spine(this, pNerve);
 }
 
 void LiveActor::setNerve(const Nerve* pNerve) {
@@ -201,257 +215,82 @@ bool LiveActor::isNerve(const Nerve* pNerve) const {
 }
 
 s32 LiveActor::getNerveStep() const {
-    if (mSpine == nullptr) {
-        return 0;
-    }
-
-    return mSpine->mStep;
+    return mSpine != nullptr ? mSpine->mStep : 0;
 }
 
-void LiveActor::initSound(s32, bool) {
+void LiveActor::initSound(int, bool) {
+    // Audio is intentionally absent from the current native compatibility
+    // boundary. Keep the exact retail slot null.
 }
 
 void LiveActor::initModelManagerWithAnm(const char* pModelArcName, const char* pAnimArcName, bool) {
-    mModel = std::make_unique< smgpc::render::live_actor::LiveActorModel >(pModelArcName != nullptr ? pModelArcName : "", pAnimArcName != nullptr ? pAnimArcName : "");
-    smgpc::compat::register_actor_model(this, mModel.get());
+    smgpc::compat::initialize_actor_model(this, pModelArcName, pAnimArcName);
+    calcAndSetBaseMtx();
 }
 
 void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        const auto group_name =
-            pEffectName != nullptr ? std::string_view(pEffectName) : (mModel != nullptr ? mModel->model_arc_name() : std::string_view{});
-        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, getName(), effectNum, group_name, sort, this);
+        const auto* model = smgpc::compat::actor_model(this);
+        const auto groupName = pEffectName != nullptr ? std::string_view(pEffectName) :
+                                                       (model != nullptr ? model->model_arc_name() : std::string_view{});
+        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, getName(), effectNum,
+                                        groupName, sort, this);
     }
 }
 
 void LiveActor::initActorLightCtrl() {
-    delete mActorLightCtrl;
-    mActorLightCtrl = new ActorLightCtrl(this);
+    smgpc::compat::replace_actor_light_ctrl(this);
 }
 
-void LiveActor::loadActorLight() const {
-    if (mActorLightCtrl != nullptr) {
-        mActorLightCtrl->loadLight();
-    }
-}
-
-void LiveActor::setBaseMatrix(const smgpc::render::J3dMatrix3x4& matrix) {
-    mBaseMatrix = matrix;
-}
-
-void LiveActor::setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4& matrix) {
-    if (mModel != nullptr) {
-        mModel->setProjmapEffectMatrix(matrix);
-    }
-}
-
-void LiveActor::drawModel(const smgpc::camera::CameraPose& camera_pose, std::uint64_t frame,
-                          smgpc::render::live_actor::LiveActorModel::DrawPass pass) {
-    if (mFlag.mIsDead || mFlag.mIsClipped || mFlag.mIsHiddenModel || mModel == nullptr) {
-        return;
-    }
-
-    mModel->draw(camera_pose, mBaseMatrix, frame, pass);
-}
-
-void LiveActor::initHitSensor(s32 sensorCount) {
-    smgpc::compat::release_actor_sensor_bindings(this);
-    mHitSensors.clear();
-    if (sensorCount > 0) {
-        mHitSensors.reserve(static_cast< std::size_t >(sensorCount));
-    }
+void LiveActor::initHitSensor(int sensorCount) {
+    smgpc::compat::initialize_actor_hit_sensors(this, sensorCount);
 }
 
 void LiveActor::initBinder(f32 radius, f32 offset, u32 type) {
-    mBinderRadius = radius;
-    mBinderOffset = offset;
-    mBinderType = type;
-    smgpc::compat::register_actor_binder(this);
+    smgpc::compat::configure_actor_binder(this, radius, offset, type);
     MR::onBind(this);
 }
 
 void LiveActor::initRailRider(const JMapInfoIter& rIter) {
-    delete mRailRider;
-    mRailRider = new RailRider(rIter);
+    smgpc::compat::replace_actor_rail_rider(this, rIter);
+}
+
+void LiveActor::initShadowControllerList(u32) {
+    // Shadow rendering is real-or-absent today. Its native bookkeeping is
+    // external, while the unavailable retail controller slot remains null.
+    (void)smgpc::compat::actor_shadow_runtime_state(this);
+}
+
+void LiveActor::initActorCollisionParts(const char* resourceName, HitSensor* sensor,
+                                        ResourceHolder* resourceHolder, MtxPtr matrix, bool, bool) {
+    if (resourceHolder == nullptr) {
+        throw std::logic_error("Model-owned CollisionParts are unavailable without an exact ModelManager resource provider.");
+    }
+    MR::initCollisionPartsFromResourceHolder(this, resourceName, sensor, resourceHolder, matrix);
 }
 
 void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
-    mStageSwitchCtrl = MR::createStageSwitchCtrl(this, rIter);
+    smgpc::compat::adopt_actor_stage_switch(this, MR::createStageSwitchCtrl(this, rIter));
 }
 
-HitSensor* LiveActor::addHitSensor(const char* pName, u32 type, u16 groupSize, f32 radius, const TVec3f& offset) {
-    auto entry = ActorHitSensor{};
-    entry.name = pName != nullptr ? pName : "";
-    entry.offset = offset;
-    entry.sensor = std::make_unique< HitSensor >(type, groupSize, radius, this);
-    entry.sensor->mPosition = mPosition + offset;
-    entry.sensor->validateBySystem();
-    if (mFlag.mIsDead) {
-        entry.sensor->invalidate();
-    } else {
-        entry.sensor->validate();
+void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* position, MtxPtr matrix, TVec3f offset) {
+    if (position != nullptr || matrix != nullptr) {
+        throw std::logic_error("Pointer- or matrix-bound StarPointerTarget requires the exact retail target provider.");
     }
-
-    mHitSensors.push_back(std::move(entry));
-    return mHitSensors.back().sensor.get();
-}
-
-HitSensor* LiveActor::getSensor(const char* pName) {
-    if (pName == nullptr) {
-        return nullptr;
-    }
-
-    for (auto& entry : mHitSensors) {
-        if (entry.name == pName) {
-            return entry.sensor.get();
-        }
-    }
-
-    return nullptr;
-}
-
-const HitSensor* LiveActor::getSensor(const char* pName) const {
-    if (pName == nullptr) {
-        return nullptr;
-    }
-
-    for (const auto& entry : mHitSensors) {
-        if (entry.name == pName) {
-            return entry.sensor.get();
-        }
-    }
-
-    return nullptr;
-}
-
-const char* LiveActor::getSensorName(const HitSensor* pSensor) const {
-    if (pSensor == nullptr) {
-        return "";
-    }
-
-    for (const auto& entry : mHitSensors) {
-        if (entry.sensor.get() == pSensor) {
-            return entry.name.c_str();
-        }
-    }
-
-    return "";
-}
-
-void LiveActor::collectHitSensors(std::vector< HitSensor* >& sensors) {
-    for (auto& entry : mHitSensors) {
-        if (entry.sensor != nullptr) {
-            sensors.push_back(entry.sensor.get());
-        }
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+        runtime->star_pointer().register_target(
+            *this, radius, smgpc::camera::CameraParamVec3{.x = offset.x, .y = offset.y, .z = offset.z});
     }
 }
 
-void LiveActor::validateHitSensors() {
-    for (auto& entry : mHitSensors) {
-        if (entry.sensor != nullptr) {
-            entry.sensor->validate();
-        }
-    }
+HitSensor* LiveActor::getSensor(const char* pSensorName) const {
+    return smgpc::compat::actor_hit_sensor(this, pSensorName);
 }
 
-void LiveActor::invalidateHitSensors() {
-    for (auto& entry : mHitSensors) {
-        if (entry.sensor != nullptr) {
-            entry.sensor->invalidate();
-        }
-    }
+void LiveActor::addToSoundObjHolder() {
+    // Audio is intentionally absent.
 }
 
-void LiveActor::updateHitSensors() {
-    for (auto& entry : mHitSensors) {
-        if (entry.sensor != nullptr) {
-            entry.sensor->mPosition = mPosition + entry.offset;
-        }
-    }
-    smgpc::compat::update_actor_sensor_bindings(this);
-}
-
-void LiveActor::startBck(const char* pName, const char* pFileName) {
-    mCurrentBckName = pName != nullptr ? pName : "";
-    if (mModel != nullptr) {
-        mModel->startBck(mCurrentBckName, pFileName != nullptr ? pFileName : "");
-    }
-}
-
-void LiveActor::startBrk(const char* pName) {
-    mCurrentBrkName = pName != nullptr ? pName : "";
-    auto frame_max = std::optional< std::int16_t >{};
-    if (mModel != nullptr) {
-        frame_max = mModel->startBrk(mCurrentBrkName);
-    }
-
-    mBrkAvailable = frame_max.has_value();
-    mBrkActive = mBrkAvailable;
-    mBrkCtrl.mStart = 0;
-    mBrkCtrl.mEnd = frame_max.value_or(0);
-    mBrkCtrl.mFrame = 0.0F;
-    mBrkCtrl.mRate = 1.0F;
-    if (mBrkCtrl.mEnd <= mBrkCtrl.mStart) {
-        mBrkCtrl.mFrame = static_cast< f32 >(mBrkCtrl.mEnd);
-        mBrkCtrl.mRate = 0.0F;
-    }
-}
-
-void LiveActor::startBtk(const char* pName) {
-    mCurrentBtkName = pName != nullptr ? pName : "";
-    if (mModel != nullptr) {
-        mModel->startBtk(mCurrentBtkName);
-    }
-}
-
-void LiveActor::setBrkFrame(f32 frame) {
-    if (!mBrkAvailable) {
-        throw std::logic_error("BRK animation data is unavailable.");
-    }
-    mBrkActive = true;
-    mBrkCtrl.mFrame = frame;
-}
-
-void LiveActor::setBrkFrameAndStop(f32 frame) {
-    setBrkFrame(frame);
-    mBrkCtrl.mRate = 0.0F;
-}
-
-void LiveActor::setBrkFrameEndAndStop() {
-    setBrkFrameAndStop(static_cast< f32 >(mBrkCtrl.mEnd));
-}
-
-J3DFrameCtrl* LiveActor::getBrkCtrl() {
-    return mBrkAvailable ? &mBrkCtrl : nullptr;
-}
-
-const J3DFrameCtrl* LiveActor::getBrkCtrl() const {
-    return mBrkAvailable ? &mBrkCtrl : nullptr;
-}
-
-bool LiveActor::isBrkOneTimeAndStopped() const {
-    if (!mBrkAvailable) {
-        throw std::logic_error("BRK animation state is unavailable.");
-    }
-    return !mBrkActive || mBrkCtrl.mRate == 0.0F || mBrkCtrl.mFrame >= static_cast< f32 >(mBrkCtrl.mEnd);
-}
-
-std::string_view LiveActor::currentBckName() const {
-    return mCurrentBckName;
-}
-
-std::string_view LiveActor::currentBrkName() const {
-    return mCurrentBrkName;
-}
-
-std::string_view LiveActor::currentBtkName() const {
-    return mCurrentBtkName;
-}
-
-bool LiveActor::isDead() const {
-    return mFlag.mIsDead;
-}
-
-const smgpc::render::J3dMatrix3x4& LiveActor::getBaseMatrix() const {
-    return mBaseMatrix;
+void LiveActor::updateBinder() {
+    smgpc::compat::integrate_live_actor_velocity(*this);
 }

@@ -37,7 +37,7 @@ namespace {
     }
 
     const smgpc::render::J3dMatrix3x4& require_invertible_base_transform(const LiveActor& actor) {
-        const auto& matrix = actor.getBaseMatrix();
+        const auto& matrix = smgpc::compat::actor_base_matrix(&actor);
         for (const auto value : matrix.m) {
             if (!std::isfinite(value)) {
                 throw std::logic_error("Projection material controller requires a finite model transform.");
@@ -74,7 +74,7 @@ namespace {
                                  const smgpc::render::J3dMatrix3x4& matrix) {
         auto& actor = require_controller_actor(controller);
         set_matrix(&controller->mBaseMtx, matrix);
-        actor.setProjmapEffectMatrix(matrix);
+        smgpc::compat::set_actor_projmap_effect_matrix(&actor, matrix);
     }
 }
 
@@ -103,14 +103,15 @@ ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(J3DModel* model, const ResourceHo
 
 void ProjmapEffectMtxSetter::update() {
     auto& actor = require_controller_actor(this);
-    actor.setProjmapEffectMatrix(get_matrix(mBaseMtx));
+    smgpc::compat::set_actor_projmap_effect_matrix(&actor, get_matrix(mBaseMtx));
 }
 
 void ProjmapEffectMtxSetter::getBaseTrans(TVec3f* destination) const {
     if (destination == nullptr) {
         throw std::invalid_argument("Projection material translation requires an output vector.");
     }
-    const auto& matrix = require_controller_actor(this).getBaseMatrix();
+    const auto& actor = require_controller_actor(this);
+    const auto& matrix = smgpc::compat::actor_base_matrix(&actor);
     destination->set(matrix.m[3U], matrix.m[7U], matrix.m[11U]);
 }
 

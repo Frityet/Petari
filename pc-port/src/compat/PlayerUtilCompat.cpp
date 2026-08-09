@@ -168,7 +168,7 @@ namespace MR {
         if (actor == nullptr || pName == nullptr) {
             throw std::logic_error("Cannot start animation on an unavailable player actor.");
         }
-        actor->startBck(pName, pFileName);
+        smgpc::compat::start_actor_bck(actor, pName, pFileName);
 #ifndef NDEBUG
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             const auto *model = smgpc::compat::actor_model(actor);
@@ -219,7 +219,7 @@ namespace MR {
         }
         smgpc::compat::release_puppetable_demo_control(true);
         player->finish_opening_demo();
-        actor->startBck("Wait", nullptr);
+        smgpc::compat::start_actor_bck(actor, "Wait", nullptr);
 #ifndef NDEBUG
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->emit_semantic_trace_event("player", "player_opening_demo_finished",

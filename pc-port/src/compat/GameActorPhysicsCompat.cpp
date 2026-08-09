@@ -70,7 +70,7 @@ namespace MR {
     void resetPosition(LiveActor *pActor) {
         auto &actor = require_actor(pActor);
         auto sensors = std::vector<HitSensor *>{};
-        actor.collectHitSensors(sensors);
+        smgpc::compat::collect_actor_hit_sensors(&actor, sensors);
         for (auto *sensor : sensors) {
             if (sensor != nullptr) {
                 sensor->mSensorCount = 0U;
@@ -337,7 +337,7 @@ namespace MR {
     void onCalcGravity(LiveActor *pActor) {
         auto &actor = require_actor(pActor);
         actor.mFlag.mIsCalcGravity = true;
-        if (!actor.isDead()) {
+        if (!actor.mFlag.mIsDead) {
             smgpc::compat::update_live_actor_gravity(actor);
         }
     }

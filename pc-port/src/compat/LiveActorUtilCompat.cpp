@@ -17,13 +17,6 @@
 #include "render/live_actor/LiveActorModel.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-MtxPtr LiveActor::getBaseMtx() const {
-    if (smgpc::compat::actor_model(this) == nullptr) {
-        return nullptr;
-    }
-    return reinterpret_cast<MtxPtr>(const_cast<f32*>(getBaseMatrix().m.data()));
-}
-
 namespace MR {
 
     void validateClipping(LiveActor* pActor) {
@@ -44,28 +37,28 @@ namespace MR {
 
     void startBck(const LiveActor* pActor, const char* pName, const char* pFileName) {
         if (pActor != nullptr) {
-            const_cast<LiveActor*>(pActor)->startBck(pName, pFileName);
+            smgpc::compat::start_actor_bck(const_cast<LiveActor*>(pActor), pName, pFileName);
         }
     }
 
     void startBrk(const LiveActor* pActor, const char* pName) {
         if (pActor != nullptr) {
-            const_cast<LiveActor*>(pActor)->startBrk(pName);
+            smgpc::compat::start_actor_brk(const_cast<LiveActor*>(pActor), pName);
         }
     }
 
     void startBtk(const LiveActor* pActor, const char* pName) {
         if (pActor != nullptr) {
-            const_cast<LiveActor*>(pActor)->startBtk(pName);
+            smgpc::compat::start_actor_btk(const_cast<LiveActor*>(pActor), pName);
         }
     }
 
     void startAction(const LiveActor* pActor, const char* pName) {
         if (pActor != nullptr) {
             auto* actor = const_cast<LiveActor*>(pActor);
-            actor->startBck(pName, nullptr);
-            actor->startBrk(pName);
-            actor->startBtk(pName);
+            smgpc::compat::start_actor_bck(actor, pName, nullptr);
+            smgpc::compat::start_actor_brk(actor, pName);
+            smgpc::compat::start_actor_btk(actor, pName);
             if (auto* model = smgpc::compat::actor_model(pActor); model != nullptr) {
                 model->startActionBtp(pName != nullptr ? pName : "");
             }
@@ -74,19 +67,19 @@ namespace MR {
 
     void setBrkFrame(const LiveActor* pActor, f32 frame) {
         if (pActor != nullptr) {
-            const_cast<LiveActor*>(pActor)->setBrkFrame(frame);
+            smgpc::compat::set_actor_brk_frame(const_cast<LiveActor*>(pActor), frame);
         }
     }
 
     void setBrkFrameAndStop(const LiveActor* pActor, f32 frame) {
         if (pActor != nullptr) {
-            const_cast<LiveActor*>(pActor)->setBrkFrameAndStop(frame);
+            smgpc::compat::set_actor_brk_frame_and_stop(const_cast<LiveActor*>(pActor), frame);
         }
     }
 
     void setBrkFrameEndAndStop(const LiveActor* pActor) {
         if (pActor != nullptr) {
-            const_cast<LiveActor*>(pActor)->setBrkFrameEndAndStop();
+            smgpc::compat::set_actor_brk_frame_end_and_stop(const_cast<LiveActor*>(pActor));
         }
     }
 
@@ -94,7 +87,7 @@ namespace MR {
         if (pActor == nullptr) {
             throw std::logic_error("BRK animation state is unavailable.");
         }
-        auto* ctrl = const_cast<LiveActor*>(pActor)->getBrkCtrl();
+        auto* ctrl = smgpc::compat::actor_brk_ctrl(pActor);
         if (ctrl == nullptr) {
             throw std::logic_error("BRK animation data is unavailable.");
         }
@@ -117,7 +110,9 @@ namespace MR {
 
     void setBaseTRMtx(LiveActor* pActor, const smgpc::render::J3dMatrix3x4& matrix) {
         if (pActor != nullptr) {
-            pActor->setBaseMatrix(smgpc::render::j3d_apply_matrix_scale(matrix, pActor->mScale.x, pActor->mScale.y, pActor->mScale.z));
+            smgpc::compat::set_actor_base_matrix(
+                pActor, smgpc::render::j3d_apply_matrix_scale(matrix, pActor->mScale.x,
+                                                              pActor->mScale.y, pActor->mScale.z));
         }
     }
 
@@ -196,7 +191,9 @@ namespace MR {
 
     void loadActorLight(const LiveActor* pActor) {
         if (pActor != nullptr) {
-            pActor->loadActorLight();
+            if (pActor->mActorLightCtrl != nullptr) {
+                pActor->mActorLightCtrl->loadLight();
+            }
         }
     }
 
@@ -264,7 +261,7 @@ namespace MR {
     }
 
     bool isDead(const LiveActor* pActor) {
-        return pActor == nullptr || pActor->isDead();
+        return pActor == nullptr || pActor->mFlag.mIsDead;
     }
 
     bool isStep(const LiveActor* pActor, s32 step) {
@@ -386,11 +383,15 @@ namespace MR {
 
     f32 getBckFrameMax(const LiveActor* pActor) {
         const auto* model = smgpc::compat::actor_model(pActor);
-        if (pActor == nullptr || model == nullptr || pActor->currentBckName().empty()) {
+        if (pActor == nullptr || model == nullptr) {
+            throw std::logic_error("BCK animation state is unavailable.");
+        }
+        const auto bck_name = smgpc::compat::actor_current_bck_name(pActor);
+        if (bck_name.empty()) {
             throw std::logic_error("BCK animation state is unavailable.");
         }
 
-        const auto frame_max = model->bck_frame_max(pActor->currentBckName());
+        const auto frame_max = model->bck_frame_max(bck_name);
         if (!frame_max.has_value()) {
             throw std::logic_error("BCK animation data is unavailable.");
         }
@@ -404,7 +405,8 @@ namespace MR {
             return nullptr;
         }
 
-        const auto* matrix = model->joint_world_matrix(pJointName, pActor->getBaseMatrix(), runtime->frame_index());
+        const auto* matrix = model->joint_world_matrix(
+            pJointName, smgpc::compat::actor_base_matrix(pActor), runtime->frame_index());
         if (matrix == nullptr) {
             return nullptr;
         }
@@ -416,7 +418,7 @@ namespace MR {
         if (pActor == nullptr) {
             throw std::logic_error("BRK animation state is unavailable.");
         }
-        return pActor->isBrkOneTimeAndStopped();
+        return smgpc::compat::is_actor_brk_one_time_and_stopped(pActor);
     }
 
 }  // namespace MR

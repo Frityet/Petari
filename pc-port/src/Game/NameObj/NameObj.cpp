@@ -1,19 +1,23 @@
 #include "Game/NameObj/NameObj.hpp"
 
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace {
-    constexpr auto FLAG_SUSPENDED = u16{1U << 0U};
+    constexpr auto FLAG_MOVEMENT_OFF = u16{1U};
+    constexpr auto FLAG_SUSPEND = u16{2U};
+    constexpr auto FLAG_RESUME = u16{4U};
 }
 
-NameObj::NameObj(const char* pName) {
-    setName(pName);
+NameObj::NameObj(const char* pName)
+    : mName(smgpc::compat::register_name_obj_runtime_state(this, pName)), mFlag(), mExecutorIdx(-1) {
 }
 
 NameObj::~NameObj() {
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->scheduler().disconnect_name_obj(*this);
     }
+    smgpc::compat::release_name_obj_runtime_state(this);
 }
 
 void NameObj::init(const JMapInfoIter&) {
@@ -40,43 +44,55 @@ void NameObj::initWithoutIter() {
 }
 
 void NameObj::setName(const char* pName) {
-    mNameStorage = pName != nullptr ? pName : "";
-    mName = mNameStorage.c_str();
+    mName = smgpc::compat::update_name_obj_runtime_name(this, pName);
 }
 
 void NameObj::executeMovement() {
-    if (!isSuspended()) {
-        movement();
+    if ((mFlag & FLAG_MOVEMENT_OFF) == FLAG_MOVEMENT_OFF) {
+        return;
     }
+
+    movement();
 }
 
 void NameObj::requestSuspend() {
-    mFlag |= FLAG_SUSPENDED;
+    if ((getFlag() & FLAG_RESUME) == FLAG_RESUME) {
+        mFlag &= ~FLAG_RESUME;
+    }
+
+    mFlag |= FLAG_SUSPEND;
 }
 
 void NameObj::requestResume() {
-    mFlag &= static_cast< u16 >(~FLAG_SUSPENDED);
+    if ((getFlag() & FLAG_SUSPEND) == FLAG_SUSPEND) {
+        mFlag &= ~FLAG_SUSPEND;
+    }
+
+    mFlag |= FLAG_RESUME;
 }
 
 void NameObj::syncWithFlags() {
-}
+    if ((getFlag() & FLAG_SUSPEND) == FLAG_SUSPEND) {
+        mFlag &= ~FLAG_SUSPEND;
+        mFlag |= FLAG_MOVEMENT_OFF;
+    }
 
-bool NameObj::isSuspended() const {
-    return (mFlag & FLAG_SUSPENDED) != 0U;
-}
-
-const char* NameObj::getName() const {
-    return mName;
+    if ((getFlag() & FLAG_RESUME) == FLAG_RESUME) {
+        mFlag &= ~FLAG_RESUME;
+        mFlag &= ~FLAG_MOVEMENT_OFF;
+    }
 }
 
 void NameObjFunction::requestMovementOn(NameObj* pObj) {
     if (pObj != nullptr) {
         pObj->requestResume();
+        pObj->syncWithFlags();
     }
 }
 
 void NameObjFunction::requestMovementOff(NameObj* pObj) {
     if (pObj != nullptr) {
         pObj->requestSuspend();
+        pObj->syncWithFlags();
     }
 }
