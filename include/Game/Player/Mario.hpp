@@ -288,7 +288,7 @@ public:
     void endRabbitMode();
 
     bool checkWallJumpCode();
-    void doSideStep();
+    bool doSideStep();
 
     bool isSkatableFloor() const;
     void doSkate();
@@ -340,20 +340,20 @@ public:
 
     bool isWalling() const;
     void checkWallStick();
-    void checkStickWallSide();
+    u8 checkStickWallSide();
     s32 checkStickFrontBack();
-    void fixWallingPosition(bool);
-    void fixWallingDir();
-    void fixWallingTop();
-    void checkWallFloorCode(u16) const;
+    bool fixWallingPosition(bool);
+    void fixWallingDir(bool);
+    bool fixWallingTop();
+    bool checkWallFloorCode(u16) const;
     bool checkWallCode(const char*, bool) const;
-    void checkWallCodeNorm(u16, TVec3f*, bool) const;
+    bool checkWallCodeNorm(u16, TVec3f*, bool) const;
     void setWallCancel();
     void keepDistFrontWall();
     bool isEnableStickWall();
-    void fixWallingDist();
+    bool fixWallingDist();
     bool isInhibitWall() const;
-    bool tryWallPunch();
+    void tryWallPunch();
 
     bool isHanging() const;
     void fixHangDir(const TVec3f&, TVec3f*);

@@ -1,0 +1,41 @@
+MarioSideStep focused comparison
+================================
+
+Retail unit
+  .text:   2,428 bytes
+  .ctors:      4 bytes
+  .data:     600 bytes
+  .sdata2:    48 bytes
+  functions:   7
+
+Fresh project-report fuzzy metrics
+  .text / unit:                         99.96375%
+  checkWallJumpCode (492 bytes):        99.91870%
+  constructor (64 bytes):              100.00000%
+  close (148 bytes):                    99.89189%
+  doSideStep (504 bytes):              100.00000%
+  start (116 bytes):                   100.00000%
+  update (996 bytes):                   99.96787%
+  __sinit_\\MarioSideStep_cpp (108):   100.00000%
+  .ctors:                              100.00000%
+  .sdata2:                             100.00000%
+
+Focused one-shot objdiff metrics
+  .text:                                99.691925%
+  checkWallJumpCode:                    99.796745%
+  constructor:                         100.000000%
+  close:                                99.351350%
+  doSideStep:                           99.682540%
+  start:                                98.965515%
+  update:                               99.726906%
+  __sinit_\\MarioSideStep_cpp:         100.000000%
+  .ctors:                              100.000000%
+  .sdata2:                             100.000000%
+
+All seven focused source functions have the exact retail byte size.
+
+Data note
+  Focused source .data: 300 bytes
+  Retail split .data:   600 bytes
+  The extra retail split range is unreferenced gap/adjacent pooled payload and
+  was not recreated as artificial filler.

@@ -1,0 +1,72 @@
+MarioWall RMGK02 verification
+UTC timestamp: 2026-08-09T03:21:18Z
+
+Focused compilation
+-------------------
+command:
+  ninja build/RMGK02/src/Game/Player/MarioWall.o
+result:
+  success
+notes:
+  Only the repository's pre-existing MarioActor nontrivial-union warnings were emitted.
+
+Focused objdiff
+---------------
+command:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioWall -o /tmp/mariowall-diff-tuned.json --format json
+result:
+  target .text: 9,328 bytes
+  source .text: 9,120 bytes
+  MarioWall .text: 93.256430% focused match
+  all 26 retail functions present
+  .ctors / target-side .sdata2: 100% / 100%
+
+Fresh project report
+--------------------
+command:
+  build/tools/objdiff-cli report generate -p . -o /tmp/report-mariowall-final.json --format json
+result:
+  success; 2,219-unit report regenerated
+MarioWall result:
+  93.436540% fuzzy .text match
+  13 / 26 functions at 100% fuzzy
+  24 / 26 functions above 90% fuzzy
+
+Full RMGK02 build and integrity
+-------------------------------
+command:
+  ninja -j12
+result:
+  success
+
+command:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+result:
+  build/RMGK02/main.dol: OK
+
+command:
+  sha1sum build/RMGK02/main.dol
+result:
+  54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+command:
+  cmp -s build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  identical (exit 0)
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- include/Game/Player/Mario.hpp include/Game/Player/MarioWall.hpp src/Game/Player/MarioWall.cpp
+result:
+  success (no output)
+
+PC/config/protected paths
+-------------------------
+  none

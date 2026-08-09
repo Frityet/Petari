@@ -1,0 +1,64 @@
+MarioWall focused comparison
+============================
+
+Retail unit
+  address:   0x802F5760..0x802F7BD0
+  .text:     9,328 bytes
+  .ctors:        4 bytes
+  .data:       648 bytes
+  .sdata2:      80 bytes
+  functions:    26
+
+Fresh project-report fuzzy metrics
+  .text / unit:                         93.436540%
+  isWalling (44 bytes):                100.000000%
+  checkWallStick (372 bytes):           98.752686%
+  checkStickWallSide (168 bytes):      100.000000%
+  checkStickFrontBack (176 bytes):      93.159090%
+  constructor (112 bytes):             100.000000%
+  initTriangleJump (96 bytes):         100.000000%
+  isCancel (172 bytes):                 95.348840%
+  fixWallingPosition (88 bytes):       100.000000%
+  fixWallingDir (288 bytes):           100.000000%
+  fixWallingTop (216 bytes):           100.000000%
+  checkWallFloorCode (116 bytes):      100.000000%
+  checkWallCode (244 bytes):            94.836070%
+  checkWallCodeNorm (308 bytes):        93.766235%
+  setWallCancel (72 bytes):            100.000000%
+  keepDistFrontWall (200 bytes):        99.880000%
+  isEnableStickWall (1,308 bytes):      93.094800%
+  start (440 bytes):                    96.527275%
+  update (1,872 bytes):                 93.136750%
+  close (172 bytes):                   100.000000%
+  startJump (480 bytes):                97.266670%
+  startBackJump (556 bytes):            84.647484%
+  fixWallingDist (836 bytes):           93.009570%
+  isInhibitWall (112 bytes):           100.000000%
+  tryWallPunch (764 bytes):             78.465965%
+  __sinit_\\MarioWall_cpp (108 bytes): 100.000000%
+  notice (8 bytes):                    100.000000%
+  .ctors:                              100.000000%
+  .data:                                86.713290%
+  .sdata2:                             100.000000%
+
+Focused one-shot objdiff metrics
+  target .text:                         9,328 bytes
+  source .text:                         9,120 bytes
+  .text match:                          93.256430%
+  .ctors:                              100.000000%
+  target-side .data:                    86.713290%
+  target-side .sdata2:                 100.000000%
+
+Focused one-shot source sizes for large/non-exact functions
+  isEnableStickWall: target 1,308 / source 1,244 bytes
+  update:            target 1,872 / source 1,812 bytes
+  startJump:         target   480 / source   468 bytes
+  startBackJump:     target   556 / source   536 bytes
+  fixWallingDist:    target   836 / source   832 bytes
+  tryWallPunch:      target   764 / source   696 bytes
+
+Data note
+  Focused source .data: 496 bytes
+  Retail split .data:   648 bytes
+  The extra 152-byte retail split range is an adjacent retained string blob
+  not referenced by these 26 functions and was not recreated as filler.
