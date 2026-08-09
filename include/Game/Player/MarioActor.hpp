@@ -755,7 +755,7 @@ public:
     /* 0x9C8 */ ModelHolder* _9C8;
     /* 0x9CC */ f32 _9CC;
     /* 0x9D0 */ f32 _9D0;
-    /* 0x9D4 */ u32 _9D4;
+    /* 0x9D4 */ HitSensor* _9D4;
     /* 0x9D8 */ TVec3f _9D8;
     /* 0x9E4 */ ModelHolder* _9E4;
     /* 0x9E8 */ MarioParts* _9E8;

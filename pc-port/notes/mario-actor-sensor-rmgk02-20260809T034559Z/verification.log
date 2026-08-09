@@ -1,0 +1,29 @@
+$ ninja -j2 build/RMGK02/src/Game/Player/MarioActorSensor.o
+[1/1] MWCC build/RMGK02/src/Game/Player/MarioActorSensor.o
+PASS
+
+$ build/tools/objdiff-cli report generate -o /tmp/marioactorsensor-final-report.json
+PASS
+
+$ jq MarioActorSensor metrics /tmp/marioactorsensor-final-report.json
+.ctors  4     100
+.data   584   91.449814
+.sdata  8     100
+.sdata2 72    100
+.text   4312  96.38497
+
+$ sha256sum build/RMGK02/src/Game/Player/MarioActorSensor.o
+67c8e312ac7580f5389c629d653e416e37b2cc54d63f9df85733eaa02069e935  build/RMGK02/src/Game/Player/MarioActorSensor.o
+
+$ git diff --check -- include/Game/Player/MarioActor.hpp src/Game/Player/MarioActorSensor.cpp
+PASS
+
+$ ninja -j12
+PASS
+
+$ build/tools/dtk shasum -c config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+
+$ sha256sum build/RMGK02/main.dol orig/RMGK02/main.dol
+8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/main.dol
