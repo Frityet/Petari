@@ -1,0 +1,70 @@
+MarioMoveSphere and MarioParts RMGK02 verification
+UTC timestamp: 2026-08-09T02:36:51Z
+
+Focused compile
+---------------
+command:
+  ninja build/RMGK02/src/Game/Player/MarioMoveSphere.o build/RMGK02/src/Game/Player/MarioParts.o
+result:
+  success
+
+Objdiff commands
+----------------
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioMoveSphere -o /tmp/MarioMoveSphere-final.json --format json-pretty
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioParts -o /tmp/MarioParts-final.json --format json-pretty
+
+MarioMoveSphere
+---------------
+.text:   176 bytes, 100%
+.data:    24 bytes, 100%
+.sdata2:   8 bytes, 100%
+
+MarioMove::MarioMove(MarioActor*)   20 bytes  100%
+MarioMove::initAfter()             156 bytes  100%
+MarioMove::__vtable                 20 bytes  100%
+
+MarioParts
+----------
+.text:   560 bytes, 100%
+.sdata2:   8 bytes, 100%
+
+MarioParts::MarioParts(LiveActor*, const char*, const char*, bool, MtxPtr, MtxPtr)  228 bytes  100%
+MarioParts::MarioParts(LiveActor*, const char*, const char*, MtxPtr)                 124 bytes  100%
+MarioParts::init(const JMapInfoIter&)                                                120 bytes  100%
+MarioParts::~MarioParts()                                                            88 bytes  100%
+MarioParts::__vtable                                                                120 bytes  100%
+
+The target-only 288-byte lbl_805C8FB0 data label is a Shift-JIS string pool not referenced by these four functions. It remains absent rather than being duplicated as inert source data.
+
+Full DOL build
+--------------
+command:
+  ninja -j12 build/RMGK02/main.dol
+result:
+  [1/3] MWCC build/RMGK02/src/Game/Player/MarioInit.o
+  [2/3] LINK build/RMGK02/main.elf
+  [3/3] DOL build/RMGK02/main.dol
+
+DOL integrity
+-------------
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+command:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+result:
+  build/RMGK02/main.dol: OK
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- include/Game/Player/MarioMove.hpp src/Game/Player/MarioMoveSphere.cpp src/Game/Player/MarioParts.cpp
+result:
+  success (no output)
+
+PC activation
+-------------
+  none
