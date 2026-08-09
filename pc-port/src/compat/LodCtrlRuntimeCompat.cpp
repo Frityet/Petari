@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <cstring>
 #include <limits>
+#include <memory>
 #include <stdexcept>
 
 namespace {
@@ -39,8 +40,21 @@ namespace {
         return name;
     }
 
-    [[noreturn]] void throwShadowUnavailable() {
-        throw std::logic_error("LOD shadow visibility synchronization is unavailable without real ShadowController ownership.");
+    smgpc::compat::ActorShadowRuntimeState& requireShadowControllers(LiveActor* pActor) {
+        const auto* existing = smgpc::compat::actor_shadow_runtime_state(
+            static_cast<const LiveActor*>(pActor));
+        if (existing == nullptr || existing->controllers.empty()) {
+            throw std::logic_error(
+                "LOD shadow visibility synchronization is unavailable without real ShadowController ownership.");
+        }
+        return *smgpc::compat::actor_shadow_runtime_state(pActor);
+    }
+
+    void setShadowVisibleSyncHostAll(LiveActor* pActor, bool visibleSyncHost) {
+        auto& shadow = requireShadowControllers(pActor);
+        for (auto& controller : shadow.controllers) {
+            controller.visible_sync_host = visibleSyncHost;
+        }
     }
 }  // namespace
 
@@ -117,23 +131,31 @@ namespace MR {
         smgpc::compat::configure_actor_clipping_sphere(pActor, *radius + margin, nullptr);
     }
 
-    void offShadowVisibleSyncHostAll(LiveActor*) {
-        throwShadowUnavailable();
+    void offShadowVisibleSyncHostAll(LiveActor* pActor) {
+        setShadowVisibleSyncHostAll(pActor, false);
     }
 
-    void onShadowVisibleSyncHostAll(LiveActor*) {
-        throwShadowUnavailable();
+    void onShadowVisibleSyncHostAll(LiveActor* pActor) {
+        setShadowVisibleSyncHostAll(pActor, true);
     }
 
     LodCtrl* createLodCtrlNPC(LiveActor* pActor, const JMapInfoIter& rIter) {
-        auto* lod = new LodCtrl(pActor, rIter);
+        if (pActor == nullptr) {
+            throw std::invalid_argument("NPC LodCtrl requires a LiveActor.");
+        }
+
+        auto lod = std::make_unique<LodCtrl>(pActor, rIter);
         lod->createLodModel(MR::DrawBufferType_NPC, MR::MovementType_NPC, -1);
         lod->syncMaterialAnimation();
         lod->syncJointAnimation();
         lod->initLightCtrl();
         lod->offSyncShadowHost();
         lod->_1B = true;
-        return lod;
+
+        auto* result = lod.get();
+        smgpc::compat::adopt_actor_lod_ctrl(pActor, result);
+        (void)lod.release();
+        return result;
     }
 
 }  // namespace MR

@@ -3,12 +3,16 @@
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/NPC/DemoRabbit.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/JMapInfo.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "resource/BcsvTable.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
@@ -22,6 +26,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdlib>
+#include <cstdint>
 #include <exception>
 #include <filesystem>
 #include <fstream>
@@ -33,6 +38,7 @@
 #include <string_view>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
 static_assert(std::is_base_of_v<LiveActor, FileSelector>,
               "the exact retail FileSelector declaration must coexist with the host boundary");
@@ -43,6 +49,34 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
+    }
+
+    void write_be32(std::vector<std::uint8_t> &bytes, std::size_t offset,
+                    std::uint32_t value) {
+        bytes[offset] = static_cast<std::uint8_t>(value >> 24U);
+        bytes[offset + 1U] = static_cast<std::uint8_t>(value >> 16U);
+        bytes[offset + 2U] = static_cast<std::uint8_t>(value >> 8U);
+        bytes[offset + 3U] = static_cast<std::uint8_t>(value);
+    }
+
+    JMapInfo make_demo_rabbit_archive_placement_info() {
+        constexpr auto cEntryCount = 3U;
+        constexpr auto cFieldOffset = 0x10U;
+        constexpr auto cDataOffset = 0x1cU;
+        constexpr auto cEntrySize = 4U;
+        auto bytes = std::vector<std::uint8_t>(
+            cDataOffset + cEntryCount * cEntrySize, 0U);
+        write_be32(bytes, 0x00U, cEntryCount);
+        write_be32(bytes, 0x04U, 1U);
+        write_be32(bytes, 0x08U, cDataOffset);
+        write_be32(bytes, 0x0cU, cEntrySize);
+        write_be32(bytes, cFieldOffset,
+                   smgpc::resource::jmap_hash("CastId"));
+        write_be32(bytes, cFieldOffset + 0x04U, 0xffffffffU);
+        for (auto cast_id = 0U; cast_id < cEntryCount; ++cast_id) {
+            write_be32(bytes, cDataOffset + cast_id * cEntrySize, cast_id);
+        }
+        return JMapInfo::from_bcsv(bytes);
     }
 
     template <typename Function>
@@ -206,7 +240,6 @@ namespace {
             std::string_view{"RailCoin"},
             std::string_view{"PurpleRailCoin"},
             std::string_view{"PurpleCoinStarter"},
-            std::string_view{"DemoRabbit"},
             std::string_view{"StarPieceFlow"},
             std::string_view{"StarPieceGroup"},
         };
@@ -234,6 +267,72 @@ namespace {
                                                              cUnsupportedFixture.data());
             },
             "an unsupported object should not be synthesized as a generic ModelObj");
+    }
+
+    void test_demo_rabbit_creator_and_placement_archive_callback_are_atomic() {
+        aurora_dvd_close();
+        DVDInit();
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+
+        const auto support =
+            smgpc::scene::nameobj::describe_name_obj_creator_support("DemoRabbit");
+        const auto *entry = NameObjFactory::getName2CreateFunc("DemoRabbit", nullptr);
+        require(support.kind ==
+                        smgpc::scene::nameobj::NameObjCreatorSupportKind::Supported &&
+                    smgpc::scene::nameobj::can_create_name_obj("DemoRabbit") &&
+                    NameObjFactory::getCreator("DemoRabbit") != nullptr &&
+                    entry != nullptr && entry->mArchiveName == nullptr,
+                "DemoRabbit creator support must become available atomically without a fabricated fixed archive");
+
+        auto object = smgpc::scene::nameobj::create_name_obj(
+            dvd, "DemoRabbit", "localized DemoRabbit");
+        require(dynamic_cast<DemoRabbit *>(object.get()) != nullptr &&
+                    std::string_view(object->getName()) == "localized DemoRabbit",
+                "the supported DemoRabbit creator must construct its exact retail actor class and preserve its actor name");
+
+        auto fixed_then_aliases = NameObjArchiveListCollector{};
+        NameObjFactory::getMountObjectArchiveList(
+            &fixed_then_aliases, "PrologueDirector", JMapInfoIter{});
+        constexpr auto cExpectedFixedThenAliases = std::array<std::string_view, 5>{
+            "DemoLetter",
+            "DemoLetter",
+            "PeachLetterMini",
+            "PrologueDemo",
+            "DemoPeachCastleGate",
+        };
+        require(fixed_then_aliases.mCount ==
+                    static_cast<s32>(cExpectedFixedThenAliases.size()),
+                "retail archive collection must retain the fixed archive followed by every exact original alias");
+        for (auto index = 0U; index < cExpectedFixedThenAliases.size(); ++index) {
+            require(std::string_view(fixed_then_aliases.getArchive(static_cast<s32>(index))) ==
+                        cExpectedFixedThenAliases[index],
+                    "fixed and original-alias archives must retain retail table order without duplicate suppression");
+        }
+
+        auto placement = make_demo_rabbit_archive_placement_info();
+        constexpr auto cExpectedArchives = std::array<std::string_view, 3>{
+            "TrickRabbitBaby",
+            "TrickRabbit",
+            "TrickRabbit",
+        };
+        for (auto row = 0; row < placement.getNumEntries(); ++row) {
+            const auto iter = JMapInfoIter(&placement, row);
+            auto collector = NameObjArchiveListCollector{};
+            NameObjFactory::getMountObjectArchiveList(
+                &collector, "DemoRabbit", iter);
+            require(collector.mCount == 1 &&
+                        std::string_view(collector.getArchive(0)) ==
+                            cExpectedArchives[static_cast<std::size_t>(row)],
+                    "DemoRabbit CastId 0/1/2 must select baby/adult/adult through the real placement iterator");
+
+            const auto requests =
+                smgpc::scene::nameobj::collect_name_obj_archive_requests(
+                    dvd, "DemoRabbit", &iter);
+            require(requests.size() == 1U &&
+                        requests.front().archive_name ==
+                            cExpectedArchives[static_cast<std::size_t>(row)],
+                    "the host preload description must retain the exact placement-selected DemoRabbit archive");
+        }
     }
 
     void test_optional_real_disc_archive_presence_does_not_create_support() {
@@ -525,6 +624,7 @@ namespace {
 int main() {
     constexpr auto tests = std::array{
         TestCase{"factory-only placement support", test_factory_is_the_only_constructible_support_kind},
+        TestCase{"DemoRabbit creator/archive callback atomicity", test_demo_rabbit_creator_and_placement_archive_callback_are_atomic},
         TestCase{"optional real-disc archive-only rejection", test_optional_real_disc_archive_presence_does_not_create_support},
         TestCase{"real FileSelect invisible wall collision lifecycle", test_real_file_select_invisible_wall_collision_lifecycle},
     };

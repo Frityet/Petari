@@ -14,6 +14,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/NPC/DemoRabbit.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -245,6 +246,11 @@ namespace {
             "PolygonCodeRecoveryBowl",
         },
         NameObjFactory::Name2CreateFunc{
+            "DemoRabbit",
+            create_supported_name_obj<DemoRabbit>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
             "GlobalCubeGravity",
             MR::createGlobalCubeGravityObj,
             nullptr,
@@ -325,7 +331,6 @@ namespace {
         UnavailableCreatorRecord{"RailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleRailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleCoinStarter", "event_power_star_and_scene_layout_runtime_unavailable"},
-        UnavailableCreatorRecord{"DemoRabbit", "npc_joint_controller_and_behavior_runtime_unavailable"},
         UnavailableCreatorRecord{"StarPieceFlow", "star_piece_director_runtime_unavailable"},
         UnavailableCreatorRecord{"StarPieceGroup", "star_piece_director_runtime_unavailable"},
     };
@@ -337,6 +342,17 @@ namespace {
 
     constexpr OriginalArchiveRecord cOriginalArchiveRecords[] = {
 #include "NameObjArchiveTable.inc"
+    };
+
+    // This is the supported subset of retail cName2MakeArchiveListFuncTable.
+    // Keeping placement-dependent archive callbacks beside the creator subset
+    // makes actor construction and its complete preload description one
+    // atomic compatibility capability.
+    constexpr auto cSupportedMakeArchiveListFuncTable = std::array{
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "DemoRabbit",
+            DemoRabbit::makeArchiveList,
+        },
     };
 
     constexpr auto cPlayerArchiveLoaderObjTable = std::array<std::string_view, 8>{
@@ -582,7 +598,7 @@ namespace NameObjFactory {
     }
 
     void getMountObjectArchiveList(NameObjArchiveListCollector *pArchiveList, const char *pName,
-                                   const JMapInfoIter &) {
+                                   const JMapInfoIter &rIter) {
         if (pArchiveList == nullptr) {
             throw std::invalid_argument("NameObj archive collection requires a real collector.");
         }
@@ -613,11 +629,15 @@ namespace NameObjFactory {
             if (archive.object_name != object_name) {
                 continue;
             }
-            if (creator_entry != nullptr && creator_entry->mArchiveName != nullptr &&
-                archive.archive_name == creator_entry->mArchiveName) {
-                continue;
-            }
             pArchiveList->addArchive(archive.archive_name.data());
+        }
+        if (creator_entry != nullptr) {
+            for (const auto &callback : cSupportedMakeArchiveListFuncTable) {
+                if (callback.mName != object_name) {
+                    continue;
+                }
+                callback.mArchiveFunc(pArchiveList, rIter);
+            }
         }
     }
 

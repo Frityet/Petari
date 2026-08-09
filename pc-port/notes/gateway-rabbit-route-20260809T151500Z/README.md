@@ -133,7 +133,7 @@ Run serially at `-j2` from `pc-port/`:
 - AuthoredPlacementInstantiator: strict/subset/order/rollback contract passed.
 - AreaObj/SwitchArea real-disc suite: 13/13.
 
-These are subsystem gates only. `DemoRabbit` remains unavailable in the factory until the scene-owned Talk graph/request/pause lifecycle is green; no partial actor activation is being hidden behind these passes.
+At this checkpoint `DemoRabbit` remained unavailable in the factory pending the scene-owned Talk graph/request/pause lifecycle. The later Talk and generic NPC LOD/shadow closures below activate the creator and its placement archive callback together; no partial actor activation was hidden behind these earlier passes.
 
 ## Talk/FLW source checkpoint
 
@@ -204,6 +204,16 @@ The focused Talk target previously compiled all Talk/FLW sources and stopped at 
 - `NameObjLifecycleService` installs a copied placement-zone name together with the exact `PlacementStateChecker` zone ID for actor construction. The scope is nested and restores both prior values, so `TalkNodeCtrl::createFlowNode` can build general placement keys without a stage-name lookup or process-global owner.
 - `PlayerUtilCompat` supplies hidden-independent attached-player distance. Element-mode branches require an explicit `PlayerActorEntitlementBridge::read_element_mode` capability installed by the concrete player owner; the real Mario owner reads `MarioActor::mPlayerMode`, while missing, generic, and name-spoofed players fail explicitly.
 - `ScreenUtilCompat` retains the Yes/No query ABI but throws until a scene-owned selector provides real state. No default answer is fabricated.
+
+### DemoRabbit factory and NPC LOD/shadow closure
+
+`DemoRabbit` is now an exact supported creator with no fabricated fixed archive. The active compatibility factory has a generalized supported `Name2MakeArchiveListFunc` table and preserves retail archive-description order: creator-fixed archive, every exact original alias row (including a repeated fixed-name alias), then placement callback. `DemoRabbit::makeArchiveList` receives the original `JMapInfoIter`; the focused proof locks `CastId` 0/1/2 to `TrickRabbitBaby`, `TrickRabbit`, and `TrickRabbit`. Creator and callback availability are one supported capability, while blocked creators remain unable to produce host preload requests.
+
+`MR::createLodCtrlNPC` now retains its new controller in a local owner through every throwing initialization step and transfers it to `ActorRuntimeRegistry` only after the complete retail setup succeeds. Releasing the `LiveActor` therefore releases the adopted `LodCtrl`. Each real shadow controller retains `visible_sync_host`, defaulting true. The all-shadow on/off utilities reject an absent controller list exactly as before, but now update every owned controller; the recovered `LodCtrl` sequence is off -> false, kill -> true, and appear/validate -> false.
+
+No `Game/` source was changed in this closure. The committed PC `LodCtrl.cpp` already places `NO_INLINE` before two helper return types because host GCC rejects the root decomp's suffix spelling. The source-boundary test now normalizes only those two known syntax-equivalent spellings; every other source byte and the complete header still must match.
+
+Focused serialized evidence is green: `smg-pc-nameobj-factory-placement-tests` passed 4/4 against real RMGK01, and `smg-pc-lod-ctrl-real-or-absent-tests` passed 5/5, including missing-shadow rollback, two-controller all-shadow synchronization, and actor-release ownership. Gateway scene/player integration was intentionally not exercised in this isolated tranche.
 
 ## EarthenPipe route audit checkpoint
 

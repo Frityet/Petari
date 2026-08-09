@@ -3,6 +3,7 @@
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
 #include <array>
@@ -28,9 +29,27 @@ namespace {
         return {std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>()};
     }
 
-    void test_game_source_boundary_is_exact() {
-        require(readFile("../src/Game/LiveActor/LodCtrl.cpp") == readFile("src/Game/LiveActor/LodCtrl.cpp"),
-                "the PC Game LodCtrl source must be byte-identical to the root decomp source");
+    [[nodiscard]] std::string normalizeLodCtrlNoInlinePlacement(std::string source) {
+        constexpr auto replacements = std::array{
+            std::pair{
+                "    void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*)) NO_INLINE {",
+                "    NO_INLINE void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*)) {"},
+            std::pair{
+                "    void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*, T), T arg) NO_INLINE {",
+                "    NO_INLINE void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*, T), T arg) {"},
+        };
+        for (const auto& [suffix_form, prefix_form] : replacements) {
+            if (const auto offset = source.find(suffix_form); offset != std::string::npos) {
+                source.replace(offset, std::char_traits<char>::length(suffix_form), prefix_form);
+            }
+        }
+        return source;
+    }
+
+    void test_game_source_boundary_retains_only_gcc_attribute_relocation() {
+        require(normalizeLodCtrlNoInlinePlacement(readFile("../src/Game/LiveActor/LodCtrl.cpp")) ==
+                    readFile("src/Game/LiveActor/LodCtrl.cpp"),
+                "the PC Game LodCtrl source may differ only by the GCC-required NO_INLINE prefix placement");
         require(readFile("../include/Game/LiveActor/LodCtrl.hpp") == readFile("src/Game/LiveActor/LodCtrl.hpp"),
                 "the PC Game LodCtrl header must be byte-identical to the root decomp header");
     }
@@ -128,6 +147,60 @@ namespace {
         }
         require(rejected_shadow_sync && ctrl._1A != 0,
                 "missing real shadow ownership must reject explicitly without reporting fake state");
+
+        const auto lod_baseline = smgpc::compat::actor_lod_ctrl_runtime_state_count();
+        auto rejected_npc_lod = false;
+        try {
+            (void)MR::createLodCtrlNPC(&actor, JMapInfoIter{});
+        } catch (const std::logic_error&) {
+            rejected_npc_lod = true;
+        }
+        require(rejected_npc_lod &&
+                    smgpc::compat::actor_lod_ctrl_runtime_state_count() == lod_baseline,
+                "NPC LodCtrl construction must reject a missing real shadow without retaining partial ownership");
+    }
+
+    void test_npc_lod_owns_controller_and_synchronizes_all_shadows() {
+        auto holder = SceneObjHolder{};
+        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
+                "the NPC LOD test requires an explicitly created scene director");
+
+        const auto lod_baseline = smgpc::compat::actor_lod_ctrl_runtime_state_count();
+        {
+            auto actor = LiveActor("lod-npc-owner-test");
+            actor.initModelManagerWithAnm("SMGPC_LodCtrl_RealOrAbsent_Missing_5A6F2C8D", nullptr, false);
+            actor.makeActorAppeared();
+            actor.initShadowControllerList(2U);
+            auto& primary = smgpc::compat::add_actor_shadow_controller(
+                &actor, "primary", smgpc::compat::ActorShadowControllerKind::VolumeSphere,
+                75.0F);
+            auto& secondary = smgpc::compat::add_actor_shadow_controller(
+                &actor, "secondary", smgpc::compat::ActorShadowControllerKind::VolumeSphere,
+                50.0F);
+            require(primary.visible_sync_host && secondary.visible_sync_host,
+                    "every real shadow controller must default to host visibility synchronization");
+
+            auto* ctrl = MR::createLodCtrlNPC(&actor, JMapInfoIter{});
+            require(ctrl != nullptr && ctrl->_1A == 0 && !primary.visible_sync_host &&
+                        !secondary.visible_sync_host &&
+                        smgpc::compat::actor_lod_ctrl_runtime_state_count() == lod_baseline + 1U,
+                    "NPC LOD creation must atomically adopt its controller and disable host shadow visibility sync");
+
+            ctrl->kill();
+            require(primary.visible_sync_host && secondary.visible_sync_host,
+                    "killing an independently synchronized NPC LOD must restore every host shadow visibility sync");
+            ctrl->appear();
+            require(!primary.visible_sync_host && !secondary.visible_sync_host,
+                    "appearing an independently synchronized NPC LOD must disable every host shadow visibility sync again");
+            ctrl->kill();
+            ctrl->validate();
+            require(!primary.visible_sync_host && !secondary.visible_sync_host &&
+                        ctrl->_18 != 0,
+                    "validating an NPC LOD must appear it and retain independent shadow visibility");
+        }
+        require(smgpc::compat::actor_lod_ctrl_runtime_state_count() == lod_baseline,
+                "LiveActor release must destroy its adopted NPC LodCtrl");
     }
 
     struct TestCase {
@@ -139,10 +212,11 @@ namespace {
 
 int main() {
     constexpr auto tests = std::array{
-        TestCase{"Game source boundary is exact", test_game_source_boundary_is_exact},
+        TestCase{"Game source boundary retains only GCC attribute relocation", test_game_source_boundary_retains_only_gcc_attribute_relocation},
         TestCase{"director must be explicitly scene-owned", test_director_must_be_explicitly_scene_owned},
         TestCase{"exact update uses real host state", test_exact_update_uses_real_host_state},
         TestCase{"missing resources and shadows stay absent", test_missing_resources_and_shadows_stay_absent},
+        TestCase{"NPC LOD ownership and shadow sync", test_npc_lod_owns_controller_and_synchronizes_all_shadows},
     };
 
     auto failures = 0;

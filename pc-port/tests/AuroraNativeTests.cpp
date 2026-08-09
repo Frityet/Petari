@@ -726,18 +726,25 @@ namespace {
                 "each placement row should retain its own CommonPathPointInfo table");
     }
 
-    void test_demo_rabbit_factory_is_absent() {
-        require(!smgpc::scene::nameobj::can_create_name_obj("DemoRabbit"),
-                "DemoRabbit must remain absent until every required default NPC capability is real");
-        require(NameObjFactory::getCreator("DemoRabbit") == nullptr,
-                "an actor that cannot initialize must not expose a factory constructor");
+    void test_demo_rabbit_factory_and_archives_are_active() {
+        require(smgpc::scene::nameobj::can_create_name_obj("DemoRabbit"),
+                "DemoRabbit must be available once its generic NPC runtime closure is real");
+        require(NameObjFactory::getCreator("DemoRabbit") != nullptr,
+                "the active DemoRabbit factory must expose its exact constructor");
 
         auto placement = make_demo_rabbit_placement_info();
+        constexpr auto expected = std::array<std::string_view, 3>{
+            "TrickRabbitBaby",
+            "TrickRabbit",
+            "TrickRabbit",
+        };
         for (auto row = 0; row < placement.getNumEntries(); ++row) {
             auto archives = NameObjArchiveListCollector{};
             NameObjFactory::getMountObjectArchiveList(&archives, "DemoRabbit", JMapInfoIter(&placement, row));
-            require(archives.mCount == 0,
-                    "an absent DemoRabbit factory must not advertise actor-specific archive preload support");
+            require(archives.mCount == 1 &&
+                        std::string_view(archives.getArchive(0)) ==
+                            expected[static_cast<std::size_t>(row)],
+                    "the active DemoRabbit factory must select baby/adult/adult from CastId 0/1/2");
         }
     }
 
@@ -1412,7 +1419,7 @@ int main() {
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
-        TestCase{"DemoRabbit factory is absent", test_demo_rabbit_factory_is_absent},
+        TestCase{"DemoRabbit factory and archives are active", test_demo_rabbit_factory_and_archives_are_active},
         TestCase{"demo cast requires scene definition", test_demo_cast_requires_scene_definition},
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
         TestCase{"StarPieceGroup factory absent without real director",

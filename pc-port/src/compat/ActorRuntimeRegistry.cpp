@@ -328,6 +328,12 @@ namespace smgpc::compat {
         state.lod_ctrl.reset(lod_ctrl);
     }
 
+    std::size_t actor_lod_ctrl_runtime_state_count() {
+        return std::ranges::count_if(actor_states(), [](const auto& entry) {
+            return entry.second.lod_ctrl != nullptr;
+        });
+    }
+
     void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive) {
         auto& state = require_actor_state(actor);
         state.model = std::make_unique<smgpc::render::live_actor::LiveActorModel>(
@@ -885,6 +891,7 @@ namespace smgpc::compat {
             .drop_direction = &actor->mGravity,
             .drop_length = 1000.0F,
             .valid = true,
+            .visible_sync_host = true,
             .calculation_mode = ActorShadowCalculationMode::Disabled,
             .gravity_mode = ActorShadowGravityMode::HostDirection,
         });

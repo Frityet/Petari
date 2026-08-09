@@ -110,6 +110,7 @@ namespace smgpc::compat {
         const TVec3f* drop_direction = nullptr;
         float drop_length = 1000.0F;
         bool valid = true;
+        bool visible_sync_host = true;
         ActorShadowCalculationMode calculation_mode = ActorShadowCalculationMode::Disabled;
         ActorShadowGravityMode gravity_mode = ActorShadowGravityMode::HostDirection;
     };
@@ -159,6 +160,7 @@ namespace smgpc::compat {
     void adopt_actor_stage_switch(LiveActor* actor, StageSwitchCtrl* controller);
     void replace_actor_light_ctrl(LiveActor* actor);
     void adopt_actor_lod_ctrl(LiveActor* actor, LodCtrl* lod_ctrl);
+    [[nodiscard]] std::size_t actor_lod_ctrl_runtime_state_count();
 
     void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive);
     [[nodiscard]] smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor);
