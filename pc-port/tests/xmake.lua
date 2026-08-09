@@ -77,6 +77,33 @@ target("smg-pc-binder-kcl-mario-walk-tests")
         realtime_output = true
     })
 
+target("smg-pc-gateway-demo-scene-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "GatewayDemoSceneTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("gateway_demo_scene", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-file-select-exact-source-compile")
     set_kind("static")
     set_default(false)
