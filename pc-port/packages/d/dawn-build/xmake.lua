@@ -1,27 +1,30 @@
 package("dawn-build")
-    set_homepage("https://github.com/encounter/dawn-build")
+    set_homepage("https://github.com/encounter/dawn")
     set_description("Prebuilt Dawn/WebGPU install trees used by Aurora")
     set_license("BSD-3-Clause")
 
     add_configs("shared", {description = "Use a shared Dawn library when one is provided", default = false, type = "boolean"})
 
     local hashes = {
-        ["v20260523.201736"] = {
-            ["linux-x86_64"] = "f8d0886fe7ddd05227781d3d4feb73eb4ee2484d1d1ae9ea29d1adbb665a3457",
-        },
-        ["v20260423.175430"] = {
-            ["darwin-arm64"] = "8c0518bc143bd53dbef6f238c00cc9874099882f41f647cd2baf49b9fe8e5c60",
-            ["darwin-x86_64"] = "deab8a47deec3ae17d8315026d38d05bbb83c405d073f3dd8ab2b9443993db58",
-            ["linux-aarch64"] = "10ce5ed7df7a7234c37d983038c66180c3fb87ff2b3319fd1d644ced39f4f4dd",
-            ["linux-x86_64"] = "9e45b00d3c7863349cdde8a6d6b2227ba6ea9da8deac25f021af54d7e417c111",
-            ["windows-amd64"] = "8969fb7390af8c194677c5d81caff6037e67c79b03c409b0e94b55520b647899",
-            ["windows-arm64"] = "66785d47a3f8b84114053226404fe9a35a5e48982cd3546a7df5e16cb1fa72b0",
+        ["v20260618.032059"] = {
+            ["android-aarch64"] = "ee54be2311b714a7c079629654317b06737909aa30829c44c694907dec361060",
+            ["darwin-arm64"] = "a9cc9903761e60cf70d7d771bd0c482be1943e273717782d71c33313afeb6080",
+            ["darwin-x86_64"] = "d9cb3fd6f59d6fb69a356c0f832db9a6792a610e9de9ad2b0254f1533cf18e2e",
+            ["ios-arm64"] = "ada0bafc173152d80eba7c3b2f9609a71185d5809cbd5dd3251b91a0803a7ae2",
+            ["linux-aarch64"] = "4c02f50500831d1e4bf568f4aa7db34a8286842ee156443c9dcc3ac1a44fb1b0",
+            ["linux-x86_64"] = "650a5479d8ecdfaad1a74079715010427fc30dab6c266fe46320948340897962",
+            ["windows-amd64"] = "d26d3107142c5a123d2102979c7403308668038372616fbd33a537e45c22f0dc",
+            ["windows-arm64"] = "489838fb247a5b35b16da42100099cea0b06e6071159014a411d35330ab1745b",
         },
     }
 
     local function platform_key(package)
         local system
-        if package:is_plat("windows", "mingw", "msys") then
+        if package:is_plat("android") then
+            system = "android"
+        elseif package:is_plat("iphoneos") then
+            system = "ios"
+        elseif package:is_plat("windows", "mingw", "msys") then
             system = "windows"
         elseif package:is_plat("macosx") then
             system = "darwin"
@@ -36,7 +39,7 @@ package("dawn-build")
             arch = system == "windows" and "amd64" or "x86_64"
         elseif package:is_arch("arm64", "aarch64") then
             arch = "arm64"
-            if system == "linux" then
+            if system == "linux" or system == "android" then
                 arch = "aarch64"
             end
         end
@@ -60,7 +63,7 @@ package("dawn-build")
             if not version_hashes or not version_hashes[key] then
                 raise("package(dawn-build): no hash for Dawn %s on %s", version, key)
             end
-            package:add("urls", "https://github.com/encounter/dawn-build/releases/download/$(version)/dawn-" .. key .. ".tar.gz")
+            package:add("urls", "https://github.com/encounter/dawn/releases/download/$(version)/dawn-" .. key .. ".tar.gz")
             package:add("versions", version, version_hashes[key])
         end)
     end

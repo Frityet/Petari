@@ -6,6 +6,11 @@ package("encounter-nod")
     add_configs("shared", {description = "Use the shared nod library when one is provided", default = false, type = "boolean"})
 
     local hashes = {
+        ["v2.0.0-alpha.10"] = {
+            ["linux-x86_64"] = "f0d02a071d57bc7c7378b0456e3fc9b67061f0a50580d98612ec0f3556c40eb4",
+            ["macos-arm64"] = "878fa0afb92175c555ec949322c263886b38a304499a43c12861261e5be61e87",
+            ["windows-x86_64"] = "48616461145b979744821c5076b793fa246f4d55bfe647c1defc1e40699d0a1f",
+        },
         ["v2.0.0-alpha.8"] = {
             ["linux-x86_64"] = "d9812d435600333a13bfacd9043d027e308fc29ba0bd65801858fe35ee77e584",
             ["macos-arm64"] = "1969f4311bb3e44ff7e772f2d660937cdc629f8ab0937f05b12f041195f07c41",

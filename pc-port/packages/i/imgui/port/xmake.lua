@@ -6,9 +6,10 @@ option("sdl3",          {showmenu = true, default = false})
 option("sdl3_renderer", {showmenu = true, default = false})
 option("wgpu",          {showmenu = true, default = false})
 option("wgpu_backend",  {showmenu = true, default = "wgpu", type = "string", values = {"wgpu", "dawn"}})
-option("dawn_version",  {showmenu = true, default = "v20260523.201736", type = "string"})
+option("dawn_version",  {showmenu = true, default = "v20260618.032059", type = "string"})
 option("freetype",      {showmenu = true, default = false})
 option("user_config",   {showmenu = true, default = nil, type = "string"})
+option("user_config_source", {showmenu = true, default = nil, type = "string"})
 
 if has_config("sdl3") or has_config("sdl3_renderer") then
     add_requires("libsdl3", {
@@ -64,4 +65,9 @@ target("imgui")
 
     if has_config("user_config") then
         add_defines("IMGUI_USER_CONFIG=\"" .. get_config("user_config") .. "\"")
+        add_includedirs(path.directory(path.directory(get_config("user_config"))))
+    end
+
+    if has_config("user_config_source") then
+        add_files(get_config("user_config_source"))
     end

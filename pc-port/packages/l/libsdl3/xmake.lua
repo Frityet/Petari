@@ -13,6 +13,7 @@ package("libsdl3")
 
     add_urls("https://github.com/libsdl-org/SDL/releases/download/release-$(version)/SDL3-$(version).tar.gz")
     add_versions("3.4.8", "e9fff7467fb60f037e6708da18b25560649e4c63edc2a69bb871b960d9cbfbba")
+    add_versions("3.4.10", "12b34280415ec8418c864408b93d008a20a6530687ee613d60bfbd20411f2785")
 
     add_deps("cmake", "egl-headers", "opengl-headers")
 

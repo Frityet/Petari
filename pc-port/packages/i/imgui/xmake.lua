@@ -5,14 +5,16 @@ package("imgui")
 
     add_urls("https://github.com/ocornut/imgui.git", {alias = "git"})
     add_versions("git:v1.91.9-docking", "v1.91.9-docking")
+    add_versions("git:v1.91.9b-docking", "v1.91.9b-docking")
 
     add_configs("sdl3",          {description = "Enable the SDL3 platform backend", default = false, type = "boolean"})
     add_configs("sdl3_renderer", {description = "Enable the SDL3 renderer backend", default = false, type = "boolean"})
     add_configs("wgpu",          {description = "Enable the WebGPU backend", default = false, type = "boolean"})
     add_configs("wgpu_backend",  {description = "Use specific WebGPU backend", default = "wgpu", type = "string", values = {"wgpu", "dawn"}})
-    add_configs("dawn_version",  {description = "Dawn prebuilt version for the Dawn WebGPU backend", default = "v20260523.201736", type = "string"})
+    add_configs("dawn_version",  {description = "Dawn prebuilt version for the Dawn WebGPU backend", default = "v20260618.032059", type = "string"})
     add_configs("freetype",      {description = "Use FreeType to build and rasterize the font atlas", default = false, type = "boolean"})
     add_configs("user_config",   {description = "Use user config", default = nil, type = "string"})
+    add_configs("user_config_source", {description = "Compile the user config implementation", default = nil, type = "string"})
 
     add_includedirs("include", "include/imgui", "include/backends", "include/misc/cpp")
 
@@ -45,6 +47,7 @@ package("imgui")
             dawn_version = package:config("dawn_version"),
             freetype = package:config("freetype"),
             user_config = package:config("user_config"),
+            user_config_source = package:config("user_config_source"),
         }
         os.cp(path.join(package:scriptdir(), "port", "xmake.lua"), "xmake.lua")
         import("package.tools.xmake").install(package, configs)
