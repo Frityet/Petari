@@ -1,5 +1,7 @@
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/LightUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <stdexcept>
@@ -31,5 +33,15 @@ namespace MR {
     bool isConnectToDrawTemporarily(const NameObj *object) {
         auto &scheduler = require_scheduler(const_cast<NameObj *>(object));
         return scheduler.is_draw_connected(*object);
+    }
+
+    void findActorLightInfo(const LiveActor *actor) {
+        if (actor == nullptr) {
+            throw std::invalid_argument("Actor light lookup requires a LiveActor.");
+        }
+        auto &scheduler = require_scheduler(const_cast<LiveActor *>(actor));
+        if (const auto type = scheduler.light_type_for_actor(*actor); type.has_value()) {
+            MR::initActorLightInfoLightType(const_cast<LiveActor *>(actor), *type);
+        }
     }
 }

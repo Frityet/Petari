@@ -15,15 +15,21 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
+#include "Game/Screen/LensFlare.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorPhysicsRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "render/BrightVisibilityService.hpp"
 #include "runtime/RuntimeContext.hpp"
+
+#include <dolphin/gx.h>
 
 namespace smgpc::runtime {
     namespace {
@@ -220,7 +226,43 @@ namespace smgpc::runtime {
             DrawBufferPassCommand {MR::DrawBufferType_PlayerDecoration, SceneDrawBufferPass::Translucent},
         };
 
-        constexpr auto NORMAL_2D_DRAW_TYPES = std::array<s32, 9U>{
+        // SceneFunction::executeDrawAfterIndirect executes these draw buffers
+        // after CaptureScreenIndirect has populated the shared capture texture.
+        constexpr auto AFTER_INDIRECT_COMMANDS = std::array<DrawBufferPassCommand, 16U>{
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectPlanet, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectMapObj, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectMapObjStrongLight, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectNpc, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectEnemy, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_GlaringLight, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_UNK_0x17, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_CrystalBox, SceneDrawBufferPass::Opaque},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectPlanet, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectMapObj, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectMapObjStrongLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectNpc, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_IndirectEnemy, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_GlaringLight, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_UNK_0x17, SceneDrawBufferPass::Translucent},
+            DrawBufferPassCommand {MR::DrawBufferType_CrystalBox, SceneDrawBufferPass::Translucent},
+        };
+
+        constexpr auto AFTER_INDIRECT_DRAW_TYPES = std::array<s32, 12U>{
+            MR::DrawType_0x11,
+            MR::DrawType_GCapture,
+            MR::DrawType_WaterRoad,
+            MR::DrawType_BigBubble,
+            MR::DrawType_ElectricRailHolder,
+            MR::DrawType_OceanRing,
+            MR::DrawType_OceanBowl,
+            MR::DrawType_0x20,
+            MR::DrawType_EffectDrawIndirect,
+            MR::DrawType_EffectDrawAfterIndirect,
+            MR::DrawType_OceanRingPipeInside,
+            MR::DrawType_WaterCameraFilter,
+        };
+
+        constexpr auto NORMAL_2D_DRAW_TYPES_BEFORE_0X25 = std::array<s32, 7U>{
             MR::DrawType_CometScreenFilter,
             MR::DrawType_GalaxyNamePlate,
             MR::DrawType_Layout,
@@ -228,9 +270,24 @@ namespace smgpc::runtime {
             MR::DrawType_CinemaFrame,
             MR::DrawType_TalkLayout,
             MR::DrawType_0x44,
+        };
+
+        constexpr auto NORMAL_2D_DRAW_TYPES_AFTER_0X25 = std::array<s32, 2U>{
             MR::DrawType_EffectDraw2D,
             MR::DrawType_EffectDrawFor2DModel,
         };
+
+        [[nodiscard]] bool draw_buffer_uses_model_3d_for_2d(s32 draw_buffer_type) {
+            return draw_buffer_type == MR::DrawBufferType_Model3DFor2D ||
+                   draw_buffer_type == MR::DrawBufferType_0x25;
+        }
+
+        [[nodiscard]] smgpc::render::Model3DFor2DProjection model_3d_for_2d_projection() {
+            return {
+                .screen_width = static_cast<float>(MR::getScreenWidth()),
+                .screen_height = static_cast<float>(MR::getScreenHeight()),
+            };
+        }
 
         [[nodiscard]] std::size_t category_rank(s32 category, std::span<const s32> order) {
             if (category < 0) {
@@ -480,6 +537,14 @@ namespace smgpc::runtime {
         return entry != _entries.end() && entry->draw_connected;
     }
 
+    std::optional<s32> SceneScheduler::light_type_for_actor(const LiveActor &actor) const {
+        const auto *entry = find_entry(SceneEntryKind::LiveActorModel, &actor);
+        if (entry == nullptr) {
+            return std::nullopt;
+        }
+        return light_type_for_draw_buffer(entry->draw_buffer_type);
+    }
+
     void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
         if (auto *entry = find_entry(SceneEntryKind::Layout, &layout)) {
             entry->movement_type = movement_type;
@@ -599,6 +664,7 @@ namespace smgpc::runtime {
             for (auto& entry : _entries) {
                 auto* actor = entry_live_actor(entry);
                 if (actor == nullptr || actor->mFlag.mIsDead ||
+                    draw_buffer_uses_model_3d_for_2d(entry.draw_buffer_type) ||
                     std::ranges::find(updated_actors, actor) != updated_actors.end()) {
                     continue;
                 }
@@ -812,12 +878,33 @@ namespace smgpc::runtime {
         if (runtime != nullptr) {
             runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = true});
         }
+        GXSetColorUpdate(GX_TRUE);
+        GXSetAlphaUpdate(GX_TRUE);
+        GXSetDstAlpha(GX_TRUE, 0U);
         execute_draw_buffer_list_normal_opa_before_volume_shadow(camera_pose, prior_draw_air);
         if (runtime != nullptr) {
             runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = true});
         }
+        GXSetAlphaUpdate(GX_TRUE);
+        execute_draw_type(MR::DrawType_ShadowVolume);
+        GXSetColorUpdate(GX_TRUE);
+        GXSetDstAlpha(GX_TRUE, 0U);
+        if (runtime != nullptr) {
+            runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = true});
+        }
         execute_draw_buffer_list_normal_opa_before_silhouette(camera_pose);
+        execute_draw_type(MR::DrawType_0x28);
         MR::fillSilhouetteColor();
+        MR::loadViewMtx();
+        MR::loadProjectionMtx();
+        execute_draw_type(MR::DrawType_AlphaShadow);
+        MR::loadViewMtx();
+        smgpc::render::begin_bright_visibility_draw_pass(
+            MR::getLensFlareDrawSyncTokenIndex());
+        execute_draw_type(MR::DrawType_BrightSun);
+        MR::setLensFlareDrawSyncToken();
+        GXSetAlphaUpdate(GX_FALSE);
+        GXSetDstAlpha(GX_FALSE, 0U);
         if (runtime != nullptr) {
             runtime->set_j3d_pixel_update_state(RuntimeContext::GxPixelUpdateState {.color_update = true, .alpha_update = false});
         }
@@ -834,8 +921,35 @@ namespace smgpc::runtime {
         }
     }
 
+    void SceneScheduler::execute_draw_after_indirect(const smgpc::camera::CameraPose &camera_pose) {
+        for (const auto &command : AFTER_INDIRECT_COMMANDS) {
+            execute_draw_buffer(camera_pose, command.draw_buffer_type, command.pass);
+        }
+        for (const auto draw_type : AFTER_INDIRECT_DRAW_TYPES) {
+            execute_draw_type(draw_type);
+        }
+    }
+
     void SceneScheduler::execute_draw_list_2d_normal() {
-        for (const auto draw_type : NORMAL_2D_DRAW_TYPES) {
+        const auto projection = model_3d_for_2d_projection();
+        MR::drawInitFor2DModel();
+        execute_draw_buffer_model_3d_for_2d(
+            projection, MR::DrawBufferType_Model3DFor2D,
+            SceneDrawBufferPass::Opaque);
+        execute_draw_buffer_model_3d_for_2d(
+            projection, MR::DrawBufferType_Model3DFor2D,
+            SceneDrawBufferPass::Translucent);
+        for (const auto draw_type : NORMAL_2D_DRAW_TYPES_BEFORE_0X25) {
+            execute_draw_type(draw_type);
+        }
+        MR::drawInitFor2DModel();
+        execute_draw_buffer_model_3d_for_2d(
+            projection, MR::DrawBufferType_0x25,
+            SceneDrawBufferPass::Opaque);
+        execute_draw_buffer_model_3d_for_2d(
+            projection, MR::DrawBufferType_0x25,
+            SceneDrawBufferPass::Translucent);
+        for (const auto draw_type : NORMAL_2D_DRAW_TYPES_AFTER_0X25) {
             execute_draw_type(draw_type);
         }
     }
@@ -920,9 +1034,17 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
+        if (draw_buffer_uses_model_3d_for_2d(draw_buffer_type)) {
+            execute_draw_buffer_model_3d_for_2d(
+                model_3d_for_2d_projection(), draw_buffer_type, pass);
+            return;
+        }
+
         auto actor_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
-            if (entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor != nullptr && !entry.live_actor->mFlag.mIsDead) {
+            if (entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor != nullptr &&
+                !entry.live_actor->mFlag.mIsDead &&
+                !draw_buffer_uses_model_3d_for_2d(entry.draw_buffer_type)) {
                 smgpc::compat::update_actor_clipping(*entry.live_actor, camera_pose);
             }
             if (entry.kind == SceneEntryKind::LiveActorModel && entry.draw_buffer_type == draw_buffer_type && !entry_is_dead(entry) &&
@@ -947,6 +1069,52 @@ namespace smgpc::runtime {
                 entry->live_actor->mActorLightCtrl->loadLight();
             }
             smgpc::compat::draw_actor_model(entry->live_actor, camera_pose, model_frame, model_pass);
+#ifndef NDEBUG
+            push_trace(*entry, phase, pass);
+#endif
+        }
+    }
+
+    void SceneScheduler::execute_draw_buffer_model_3d_for_2d(
+        const smgpc::render::Model3DFor2DProjection &projection,
+        s32 draw_buffer_type, SceneDrawBufferPass pass) {
+        if (!draw_buffer_uses_model_3d_for_2d(draw_buffer_type)) {
+            throw std::logic_error(
+                "Only retail 0x24/0x25 draw buffers may use Model3DFor2D");
+        }
+
+        auto actor_entries = std::vector<Entry *> {};
+        for (auto &entry : _entries) {
+            // The retail 2D-model pass has an identity view and does not run
+            // the perspective camera's clipping calculation.
+            if (entry.kind == SceneEntryKind::LiveActorModel &&
+                entry.draw_buffer_type == draw_buffer_type &&
+                !entry_is_dead(entry) && !entry_is_suspended(entry) &&
+                entry.draw_connected && !entry.live_actor->mFlag.mIsClipped) {
+                actor_entries.push_back(&entry);
+            }
+        }
+        if (actor_entries.empty()) {
+            return;
+        }
+
+        std::ranges::stable_sort(actor_entries, draw_category_less);
+        MR::loadLight(MR::LightType_None);
+        const auto *runtime = RuntimeContext::try_instance();
+        const auto model_frame = runtime != nullptr ? runtime->frame_index() : 0U;
+        const auto model_pass =
+            pass == SceneDrawBufferPass::Translucent ?
+                smgpc::render::live_actor::LiveActorModel::DrawPass::Translucent :
+                smgpc::render::live_actor::LiveActorModel::DrawPass::Opaque;
+#ifndef NDEBUG
+        const auto phase =
+            pass == SceneDrawBufferPass::Translucent ?
+                SceneSchedulerPhase::DrawBufferXlu :
+                SceneSchedulerPhase::DrawBufferOpa;
+#endif
+        for (auto *entry : actor_entries) {
+            smgpc::compat::draw_actor_model_3d_for_2d(
+                entry->live_actor, projection, model_frame, model_pass);
 #ifndef NDEBUG
             push_trace(*entry, phase, pass);
 #endif

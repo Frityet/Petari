@@ -2,14 +2,24 @@
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
+#include "Game/AreaObj/LightArea.hpp"
+#include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
+#include "Game/LiveActor/ActorLightCtrl.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
 #include "Game/Map/StageSwitch.hpp"
+#include "Game/Map/LightZoneDataHolder.hpp"
+#include "Game/Map/LightFunction.hpp"
+#include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/SceneScheduler.hpp"
+#include "render/light/LightData.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/StageLightSceneBinding.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
 #include <aurora/dvd.h>
@@ -130,6 +140,10 @@ namespace {
             std::pair{"src/Game/AreaObj/CubeCamera.cpp", "src/Game/AreaObj/CubeCamera.cpp"},
             std::pair{"include/Game/AreaObj/MessageArea.hpp", "src/Game/AreaObj/MessageArea.hpp"},
             std::pair{"src/Game/AreaObj/MessageArea.cpp", "src/Game/AreaObj/MessageArea.cpp"},
+            std::pair{"include/Game/AreaObj/LightArea.hpp", "src/Game/AreaObj/LightArea.hpp"},
+            std::pair{"src/Game/AreaObj/LightArea.cpp", "src/Game/AreaObj/LightArea.cpp"},
+            std::pair{"include/Game/AreaObj/LightAreaHolder.hpp", "src/Game/AreaObj/LightAreaHolder.hpp"},
+            std::pair{"src/Game/AreaObj/LightAreaHolder.cpp", "src/Game/AreaObj/LightAreaHolder.cpp"},
         };
         for (const auto &[retail_source, host_source] : source_pairs) {
             require(read_file(decomp_root / retail_source) == read_file(*pc_port_root / host_source),
@@ -297,6 +311,74 @@ namespace {
         CubeCameraArea::setCurrentCategory(0);
     }
 
+    void configure_light_cube(LightArea &area, const TVec3f &translation, s32 zone_id,
+                              s32 light_id, s32 priority) {
+        area.mPlacedZoneID = zone_id;
+        area.mObjArg0 = light_id;
+        area.mObjArg1 = priority;
+        auto *form = dynamic_cast<AreaFormCube *>(area.mForm);
+        require(form != nullptr, "the light-area fixture must use the exact base-origin cube form");
+        form->mTranslation = translation;
+        form->mRotation.set(0.0F, 0.0F, 0.0F);
+        form->mScale.set(1.0F, 1.0F, 1.0F);
+        form->updateBoxParam();
+    }
+
+    void test_light_area_priority_and_stable_zone_identity() {
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto *container = dynamic_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
+        require(container != nullptr, "the LightArea fixture requires the real scene-owned container");
+        auto *manager = dynamic_cast<LightAreaHolder *>(container->getManager("LightArea"));
+        require(manager != nullptr && manager->_18 == 0x80,
+                "both exact LightCtrl forms must share the retail LightArea manager and capacity");
+
+        auto lower = LightArea(AreaForm::Type_Cube2, "LightCtrlCube");
+        auto higher = LightArea(AreaForm::Type_Cube2, "LightCtrlCube");
+        configure_light_cube(lower, TVec3f{0.0F, 0.0F, 0.0F}, 2, 4, 3);
+        configure_light_cube(higher, TVec3f{0.0F, 0.0F, 0.0F}, 5, 7, 10);
+        manager->entry(&higher);
+        manager->entry(&lower);
+        binding.init_after_placement();
+        require(manager->getAreaObj(0) == &lower && manager->getAreaObj(1) == &higher,
+                "LightAreaHolder must sort authored priorities before reverse-volume lookup");
+
+        auto light_id = ZoneLightID{};
+        require(manager->tryFindLightID(TVec3f{0.0F, 100.0F, 0.0F}, &light_id) &&
+                    light_id._0 == 5 && light_id.mLightID == 7,
+                "overlapping LightCtrl volumes must select the highest authored priority and zone ID");
+        require(!manager->tryFindLightID(TVec3f{0.0F, 100.0F, 0.0F}, &light_id),
+                "ZoneLightID::isTargetArea must suppress a repeated change inside the same authored area");
+        require(manager->tryFindLightID(TVec3f{5000.0F, 5000.0F, 5000.0F}, &light_id) &&
+                    light_id._0 == -1 && light_id.mLightID == -1,
+                "leaving a LightCtrl volume must clear the exact zone/light identity once");
+        require(!manager->tryFindLightID(TVec3f{5000.0F, 5000.0F, 5000.0F}, &light_id),
+                "remaining outside every LightCtrl volume must not retrigger a light transition");
+
+        auto moving_actor = LiveActor{"moving LightArea fixture"};
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding{scheduler};
+        scheduler.register_live_actor_model(
+            moving_actor, MR::MovementType_NPC, MR::CalcAnimType_NPC,
+            MR::DrawBufferType_NPC, -1);
+        auto light_ctrl = std::make_unique<ActorLightCtrl>(&moving_actor);
+        moving_actor.mActorLightCtrl = light_ctrl.get();
+        light_ctrl->init(-1, false);
+        require(light_ctrl->_4 == MR::LightType_Strong,
+                "a controller created after connectToScene must inherit the draw-buffer's retained retail light type");
+        moving_actor.makeActorAppeared();
+        moving_actor.mPosition.set(0.0F, 100.0F, 0.0F);
+        moving_actor.movement();
+        require(light_ctrl->mLightID._0 == 5 && light_ctrl->mLightID.mLightID == 7,
+                "LiveActor movement must update its controller into the highest-priority authored LightArea");
+        moving_actor.mPosition.set(5000.0F, 5000.0F, 5000.0F);
+        moving_actor.movement();
+        require(light_ctrl->mLightID._0 == -1 && light_ctrl->mLightID.mLightID == -1,
+                "LiveActor movement must update its controller when leaving authored LightAreas");
+        scheduler.unregister_live_actor_model(moving_actor);
+        moving_actor.mActorLightCtrl = nullptr;
+    }
+
     void test_scene_holder_owns_real_container_and_managers() {
         {
             auto holder = SceneObjHolder{};
@@ -320,9 +402,17 @@ namespace {
             binding.init_after_placement();
         }
 
+        auto detached_light = ZoneLightID{};
+        require(!LightFunction::tryFindNewAreaLightID(TVec3f{}, &detached_light) &&
+                    detached_light._0 == -1 && detached_light.mLightID == -1,
+                "destroying the scene-owned LightArea manager must detach its non-owning lookup before reuse");
+
         auto second_holder = SceneObjHolder{};
         const auto second_binding = smgpc::scene::SceneObjHolderBinding(second_holder);
-        require(second_holder.create(SceneObj_AreaObjContainer) != nullptr,
+        auto *second_container = dynamic_cast<AreaObjContainer *>(
+            second_holder.create(SceneObj_AreaObjContainer));
+        require(second_container != nullptr &&
+                    dynamic_cast<LightAreaHolder *>(second_container->getManager("LightArea")) != nullptr,
                 "destroying a scene binding must release container and manager ownership for the next scene");
     }
 
@@ -354,6 +444,8 @@ namespace {
             std::tuple{"PullBackCylinder", "PullBackCylinder", 17, 0x40, AreaForm::Type_Cylinder, false},
             std::tuple{"ViewGroupCtrlCube", "ViewGroupCtrlCube", 32, 0x40, AreaForm::Type_Cube2, false},
             std::tuple{"LensFlareArea", "LensFlareArea", 33, 0x40, AreaForm::Type_Cube2, false},
+            std::tuple{"LightCtrlCube", "LightArea", 35, 0x80, AreaForm::Type_Cube2, false},
+            std::tuple{"LightCtrlCylinder", "LightArea", 35, 0x80, AreaForm::Type_Cylinder, false},
             std::tuple{"BlueStarGuidanceCube", "BlueStarGuidanceCube", 40, 0x10, AreaForm::Type_Cube2, false},
             std::tuple{"MessageAreaCube", "MessageArea", 42, 0x10, AreaForm::Type_Cube2, false},
             std::tuple{"MessageAreaCylinder", "MessageArea", 42, 0x10, AreaForm::Type_Cylinder, false},
@@ -591,6 +683,124 @@ namespace {
         }
     }
 
+    void test_rmgk01_zone_light_data_resolves_child_tables() {
+        const auto disc_path = find_real_disc();
+        if (!disc_path.has_value()) {
+            std::cout << "[skip] RMGK01 zone-light data test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
+            return;
+        }
+
+        aurora_dvd_close();
+        const auto disc_path_string = disc_path->string();
+        require(aurora_dvd_open(disc_path_string.c_str()),
+                "the RMGK01 zone-light fixture must be a readable SMG disc image");
+        struct DiscCloseGuard {
+            ~DiscCloseGuard() {
+                aurora_dvd_close();
+            }
+        } close_guard;
+        DVDInit();
+
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        auto &light_data = smgpc::render::light::StageLightData::instance();
+        light_data.reset();
+        const auto light_tables = std::array{
+            smgpc::scene::StagePlacementTable{
+                .stage_name = "HeavensDoorGalaxy",
+                .zone_name = "HeavensDoorMysteriousZone",
+                .zone_id = 5,
+            },
+            smgpc::scene::StagePlacementTable{
+                .stage_name = "HeavensDoorGalaxy",
+                .zone_name = "HeavensDoorGalaxy",
+                .zone_id = 0,
+            },
+            // Duplicate table metadata is intentionally accepted; resolved
+            // scenario tables repeat zones across placement categories.
+            smgpc::scene::StagePlacementTable{
+                .stage_name = "HeavensDoorGalaxy",
+                .zone_name = "HeavensDoorMysteriousZone",
+                .zone_id = 5,
+            },
+        };
+        auto light_binding = std::make_unique<smgpc::scene::StageLightSceneBinding>(
+            dvd, "HeavensDoorGalaxy", light_tables);
+        require(light_data.stage_zones().size() == 2U &&
+                    light_data.stage_zones()[0].zone_id == 0 &&
+                    light_data.stage_zones()[1].zone_id == 5,
+                "scene-owned stage lighting must deduplicate and order authored placement-zone IDs");
+
+        auto root_id = ZoneLightID{};
+        auto *root = light_data.area_light_info(root_id);
+        require(root != nullptr && root->mAreaLightName != nullptr &&
+                    std::string_view(root->mAreaLightName) == "[共通]宇宙の星" &&
+                    std::string_view(light_data.default_area_light_name()) == "[共通]宇宙の星",
+                "the clear ZoneLightID must resolve the exact root-zone default row");
+
+        auto child_id = ZoneLightID{};
+        child_id._0 = 5;
+        child_id.mLightID = 0;
+        auto *child = light_data.area_light_info(child_id);
+        require(child != nullptr && child != root && child->mAreaLightName != nullptr &&
+                    std::string_view(child->mAreaLightName) == "ロゼッタ出会い" &&
+                    child->mPlayerLight.mInfo0.mColor.r == 90U &&
+                    child->mPlayerLight.mInfo0.mColor.g == 90U &&
+                    child->mPlayerLight.mInfo0.mColor.b == 90U &&
+                    !child->mPlayerLight.mInfo0.mIsFollowCamera &&
+                    child->mPlayerLight.mInfo1.mIsFollowCamera &&
+                    child->mPlayerLight.mColor.r == 90U &&
+                    child->mPlayerLight.mColor.g == 90U &&
+                    child->mPlayerLight.mColor.b == 115U &&
+                    child->mPlayerLight.mColor.a == 60U,
+                "zone 5/light 0 must resolve exact child-zone Rosetta player lighting and ambient data");
+
+        child_id.mLightID = 1;
+        auto *observatory = light_data.area_light_info(child_id);
+        require(observatory != nullptr && observatory->mAreaLightName != nullptr &&
+                    std::string_view(observatory->mAreaLightName) == "天文台（ロゼッタ）",
+                "zone 5/light 1 must resolve the second exact child-zone light row");
+
+        child_id.mLightID = 999;
+        require(light_data.area_light_info(child_id) == root,
+                "an absent child light ID must use the exact root-stage default rather than another child row");
+
+        const auto conflicting = std::array{
+            smgpc::render::light::StageLightZone{.zone_id = 5, .zone_name = "HeavensDoorMysteriousZone"},
+            smgpc::render::light::StageLightZone{.zone_id = 5, .zone_name = "HeavensDoorGalaxy"},
+        };
+        require_throws<std::invalid_argument>(
+            [&] { light_data.configure_stage_zones(conflicting); },
+            "cannot name multiple authored zones");
+
+        light_binding.reset();
+        require(light_data.stage_zones().empty() &&
+                    light_data.area_light_info(ZoneLightID{}) == nullptr,
+                "stage-light scene teardown must release every cached zone and AreaLight row");
+
+        const auto next_scene_tables = std::array{
+            smgpc::scene::StagePlacementTable{
+                .stage_name = "HeavensDoorGalaxy",
+                .zone_name = "HeavensDoorGalaxy",
+                .zone_id = 0,
+            },
+        };
+        {
+            const auto next_scene_binding = smgpc::scene::StageLightSceneBinding{
+                dvd, "HeavensDoorGalaxy", next_scene_tables};
+            auto stale_child = ZoneLightID{};
+            stale_child._0 = 5;
+            stale_child.mLightID = 0;
+            const auto* next_scene_light = light_data.area_light_info(stale_child);
+            require(light_data.stage_zones().size() == 1U &&
+                        next_scene_light != nullptr &&
+                        std::string_view(next_scene_light->mAreaLightName) ==
+                            "[共通]宇宙の星",
+                    "a recreated scene without child metadata must not inherit the previous scene's child light table");
+        }
+        require(light_data.stage_zones().empty(),
+                "recreated stage-light ownership must also reset on teardown");
+    }
+
     class RecordingDivideInfo final : public DivideMercatorRailPosInfo {
     public:
         void setPosition(s32, const TVec3f &) override {
@@ -630,9 +840,11 @@ int main() {
         TestCase{"retail prefix collision uses first manager", test_retail_prefix_collision_uses_first_manager},
         TestCase{"manager lifecycle owned ordered and once", test_manager_lifecycle_is_owned_ordered_and_once},
         TestCase{"CubeCamera manager finalizes priority and reverse query", test_cube_camera_manager_finalizes_priority_and_reverse_query},
+        TestCase{"LightArea priority and stable zone identity", test_light_area_priority_and_stable_zone_identity},
         TestCase{"descriptor registry and strict area preflight", test_descriptor_registry_and_strict_area_preflight},
         TestCase{"RMGK01 CubeCamera rows construct exactly", test_rmgk01_cube_camera_rows_construct_exactly},
         TestCase{"RMGK01 MessageArea rows construct exactly", test_rmgk01_message_area_rows_construct_exactly},
+        TestCase{"RMGK01 zone-light data resolves child tables", test_rmgk01_zone_light_data_resolves_child_tables},
         TestCase{"water and Mercator do not fabricate results", test_water_and_mercator_do_not_fabricate_results},
     };
 

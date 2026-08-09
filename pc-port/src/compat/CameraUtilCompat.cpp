@@ -3,8 +3,11 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "camera/CameraPose.hpp"
+#include "compat/J3dSystemCompat.hpp"
 #include "core/RenderTypes.hpp"
 #include "runtime/RuntimeContext.hpp"
+
+#include <dolphin/gx.h>
 
 #include <cmath>
 #include <stdexcept>
@@ -12,6 +15,7 @@
 namespace {
     constexpr auto cPi = 3.14159265358979323846F;
     TPos3f sCameraViewMatrix;
+    TProj3f sCameraProjectionMatrix;
 
     struct CameraBasis {
         smgpc::camera::CameraParamVec3 forward;
@@ -169,6 +173,23 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void loadProjectionMtx() {
+        GXSetProjection(getCameraProjectionMtx()->mMtx, GX_PERSPECTIVE);
+    }
+
+    void loadViewMtx() {
+        smgpc::compat::load_j3d_view_matrix(getCameraViewMtx());
+    }
+
+    TProj3f* getCameraProjectionMtx() {
+        const auto& pose = require_camera_pose();
+        sCameraProjectionMatrix.makePerspective(pose.fovy_degrees, pose.aspect_ratio,
+                                                pose.near_clip, pose.far_clip);
+        sCameraProjectionMatrix.mMtx[0][2] -= pose.projection_offset_x;
+        sCameraProjectionMatrix.mMtx[1][2] -= pose.projection_offset_y;
+        return &sCameraProjectionMatrix;
+    }
+
     const MtxPtr getCameraViewMtx() {
         const auto &pose = require_camera_pose();
         const auto basis = camera_basis(pose);
@@ -219,6 +240,11 @@ namespace MR {
 
     f32 getFovy() {
         return require_camera_pose().fovy_degrees;
+    }
+
+    bool isStartAnimCameraEnd() {
+        throw std::logic_error(
+            "Start-animation camera completion is unavailable without the exact CameraDirector start-camera owner.");
     }
 
     void resetCameraMan() {

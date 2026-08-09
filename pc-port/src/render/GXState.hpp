@@ -75,6 +75,15 @@ namespace smgpc::render {
 
     using GXColorValue = std::array<std::uint8_t, 4U>;
 
+    enum class GXLightCoordinateSpace : std::uint8_t {
+        // GX material display-list lights are authored in view space.  Keep
+        // that as the default so decoded register state remains unchanged.
+        View,
+        // Scene LightData positions are authored in world space and must be
+        // transformed by the active camera before GX channel evaluation.
+        World,
+    };
+
     struct GXColorChannelControlState {
         std::uint32_t raw = 0x400U;
         std::uint8_t material_source = 0U;
@@ -95,6 +104,7 @@ namespace smgpc::render {
 
     struct GXLightState {
         bool loaded = false;
+        GXLightCoordinateSpace coordinate_space = GXLightCoordinateSpace::View;
         GXColorValue color = {};
         std::array<float, 3U> cosine_attenuation = {1.0F, 0.0F, 0.0F};
         std::array<float, 3U> distance_attenuation = {1.0F, 0.0F, 0.0F};
@@ -287,6 +297,8 @@ namespace smgpc::render {
     using GXBPRegisterState = std::array<std::uint32_t, 256U>;
 
     [[nodiscard]] GXColorValue gx_color_from_xf_value(std::uint32_t value);
+    [[nodiscard]] std::array<float, 3U> gx_light_distance_attenuation(
+        float reference_distance, float reference_brightness, std::uint32_t function);
     [[nodiscard]] GXColorChannelControlState gx_color_channel_control_from_xf(std::uint32_t value);
     [[nodiscard]] GXColorChannelControlState gx_color_channel_control_from_j3d(std::uint8_t enable, std::uint8_t material_source,
                                                                                std::uint8_t light_mask, std::uint8_t diffuse_function,

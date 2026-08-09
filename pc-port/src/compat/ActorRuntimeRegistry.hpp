@@ -17,6 +17,7 @@ class ActorLightCtrl;
 class HitSensor;
 class JMapInfoIter;
 class LiveActor;
+class LodCtrl;
 class NameObj;
 class Nerve;
 class RailRider;
@@ -25,6 +26,34 @@ class StageSwitchCtrl;
 class TalkMessageCtrl;
 
 namespace smgpc::compat {
+    struct NameObjRuntimeRegistrationMarker final {
+        std::uint64_t next_registration_order = 0U;
+    };
+
+    // Construction capture shares the process-global NameObj registry and is
+    // therefore restricted to the scene-construction thread. Overlapping or
+    // nested capture scopes are rejected instead of exposing the same raw
+    // child identity to two owners.
+    class NameObjRuntimeRegistrationCapture final {
+    public:
+        NameObjRuntimeRegistrationCapture();
+        ~NameObjRuntimeRegistrationCapture();
+
+        NameObjRuntimeRegistrationCapture(
+            const NameObjRuntimeRegistrationCapture &) = delete;
+        NameObjRuntimeRegistrationCapture &operator=(
+            const NameObjRuntimeRegistrationCapture &) = delete;
+        NameObjRuntimeRegistrationCapture(
+            NameObjRuntimeRegistrationCapture &&) = delete;
+        NameObjRuntimeRegistrationCapture &operator=(
+            NameObjRuntimeRegistrationCapture &&) = delete;
+
+        [[nodiscard]] NameObjRuntimeRegistrationMarker marker() const noexcept;
+
+    private:
+        NameObjRuntimeRegistrationMarker _marker{};
+    };
+
     struct ActorBinderContactState {
         bool ground = false;
         bool wall = false;
@@ -66,10 +95,18 @@ namespace smgpc::compat {
     void release_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] bool has_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] std::size_t name_obj_runtime_state_count();
-    // Returns the currently live host-tracked NameObj identities. This lets
-    // compatibility owners adopt retail child objects allocated with raw new
+    // Returns the currently live host-tracked NameObj identities in their
+    // construction order. A marker provides the matching ordered suffix so a
+    // compatibility owner can adopt raw-new retail construction children
     // without changing the original Game class layout or source.
     [[nodiscard]] std::vector<NameObj*> snapshot_name_obj_runtime_objects();
+    [[nodiscard]] NameObjRuntimeRegistrationMarker mark_name_obj_runtime_registrations();
+    [[nodiscard]] std::vector<NameObj*> snapshot_name_obj_runtime_objects_since(
+        NameObjRuntimeRegistrationMarker marker);
+    // Failure rollback for compatibility owners. This performs no allocation
+    // and retires the still-live suffix in reverse construction order.
+    void destroy_name_obj_runtime_objects_since(
+        NameObjRuntimeRegistrationMarker marker) noexcept;
     [[nodiscard]] bool name_obj_is_suspended(const NameObj* object);
 
     // One generalized record owns every native-only LiveActor resource. The
@@ -85,6 +122,7 @@ namespace smgpc::compat {
     void replace_actor_rail_rider(LiveActor* actor, const JMapInfoIter& iter);
     void adopt_actor_stage_switch(LiveActor* actor, StageSwitchCtrl* controller);
     void replace_actor_light_ctrl(LiveActor* actor);
+    void adopt_actor_lod_ctrl(LiveActor* actor, LodCtrl* lod_ctrl);
 
     void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive);
     [[nodiscard]] smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor);
@@ -96,19 +134,33 @@ namespace smgpc::compat {
     void set_actor_projmap_effect_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix);
     void draw_actor_model(LiveActor* actor, const smgpc::camera::CameraPose& camera_pose,
                           std::uint64_t frame, smgpc::render::live_actor::LiveActorModel::DrawPass pass);
+    void draw_actor_model_3d_for_2d(
+        LiveActor* actor,
+        const smgpc::render::Model3DFor2DProjection& projection,
+        std::uint64_t frame,
+        smgpc::render::live_actor::LiveActorModel::DrawPass pass);
 
     void start_actor_bck(LiveActor* actor, const char* name, const char* file_name);
     [[nodiscard]] std::int16_t require_actor_bck(LiveActor* actor, const char* name, const char* file_name);
     void start_actor_brk(LiveActor* actor, const char* name);
     void start_actor_btk(LiveActor* actor, const char* name);
+    void start_actor_btp(LiveActor* actor, const char* name);
+    [[nodiscard]] bool try_start_actor_bck(LiveActor* actor, const char* name, const char* file_name);
+    [[nodiscard]] bool try_start_actor_brk(LiveActor* actor, const char* name);
+    [[nodiscard]] bool try_start_actor_btk(LiveActor* actor, const char* name);
+    [[nodiscard]] bool try_start_actor_btp(LiveActor* actor, const char* name);
     void set_actor_brk_frame(LiveActor* actor, float frame);
+    void set_actor_brk_rate(LiveActor* actor, float rate);
     void set_actor_brk_frame_and_stop(LiveActor* actor, float frame);
     void set_actor_brk_frame_end_and_stop(LiveActor* actor);
+    void set_actor_bck_frame_and_stop(LiveActor* actor, float frame);
+    [[nodiscard]] J3DFrameCtrl* actor_bck_ctrl(const LiveActor* actor);
     [[nodiscard]] J3DFrameCtrl* actor_brk_ctrl(const LiveActor* actor);
     [[nodiscard]] bool is_actor_brk_one_time_and_stopped(const LiveActor* actor);
     [[nodiscard]] std::string_view actor_current_bck_name(const LiveActor* actor);
     [[nodiscard]] std::string_view actor_current_brk_name(const LiveActor* actor);
     [[nodiscard]] std::string_view actor_current_btk_name(const LiveActor* actor);
+    [[nodiscard]] std::string_view actor_current_btp_name(const LiveActor* actor);
     void advance_actor_animation(LiveActor* actor);
 
     void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count);

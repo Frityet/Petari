@@ -30,10 +30,12 @@ namespace smgpc::compat {
 namespace smgpc::scene {
 
     class SceneObjHolderBinding;
+    class StageLightSceneBinding;
     struct NameObjPlacementContext;
 
     namespace nameobj {
         class ObjectNameTable;
+        class PlanetMapCatalog;
     }  // namespace nameobj
 
     [[nodiscard]] bool should_apply_host_appear(const StagePlacementObject *placement, bool explicit_root = false);
@@ -88,6 +90,8 @@ namespace smgpc::scene {
         bool _stage_audio_started = false;
         StageCollisionService _collision;
         std::unique_ptr<SceneObjHolderBinding> _scene_obj_holder_binding;
+        std::unique_ptr<StageLightSceneBinding> _stage_light_binding;
+        std::unique_ptr<smgpc::scene::nameobj::PlanetMapCatalog> _planet_map_catalog;
         std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime;
         std::vector<StagePlacementObject> _placements;

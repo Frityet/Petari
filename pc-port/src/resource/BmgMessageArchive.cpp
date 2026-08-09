@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <charconv>
+#include <limits>
 #include <stdexcept>
 #include <string>
 
@@ -21,6 +22,11 @@ namespace smgpc::resource {
         constexpr std::uint16_t BMG_STRING_TAG_TYPE_A = 0x0005;
         constexpr std::uint16_t BMG_NUMERIC_TAG_TYPE = 0x0006;
         constexpr std::uint16_t BMG_STRING_TAG_TYPE_B = 0x0007;
+        constexpr std::uint16_t BMG_PICTURE_TAG_TYPE = 0x0003;
+        constexpr std::uint16_t BMG_PICTURE_PLAYER_PAYLOAD = 0x002b;
+        constexpr std::uint16_t BMG_PICTURE_MARIO_PAYLOAD = 0x0012;
+        constexpr std::uint16_t BMG_PICTURE_LUIGI_PAYLOAD = 0x001c;
+        constexpr std::uint16_t BMG_PICTURE_CODE_BASE = 0x0030;
         constexpr std::uint16_t BMG_ZERO_PAD_TWO_DIGITS = 0x0005;
 
         struct BmgHeader {
@@ -73,20 +79,51 @@ namespace smgpc::resource {
             return index < args.size() ? &args[index] : nullptr;
         }
 
+        void append_token(std::vector<BmgTextToken> &tokens, BmgTextToken::Role role,
+                          std::u16string_view text) {
+            if (text.empty()) {
+                return;
+            }
+            if (!tokens.empty() && tokens.back().role == role) {
+                tokens.back().text.append(text);
+                return;
+            }
+            tokens.push_back(BmgTextToken{
+                .role = role,
+                .text = std::u16string(text),
+            });
+        }
+
+        void append_format_arg(std::vector<BmgTextToken> &tokens, const BmgFormatArg &arg,
+                               bool zero_pad_two_digits) {
+            if (arg.type == BmgFormatArg::Type::String) {
+                append_token(tokens, BmgTextToken::Role::Ordinary, arg.string_value);
+                return;
+            }
+            const auto text = number_text(arg.number_value, zero_pad_two_digits);
+            append_token(tokens, BmgTextToken::Role::Ordinary, text);
+        }
+
         [[nodiscard]] std::vector<BmgControlTag> scan_bmg_control_tags(std::u16string_view raw_text) {
             auto tags = std::vector<BmgControlTag>{};
 
             for (auto cursor = std::size_t {}; cursor < raw_text.size();) {
-                if (raw_text[cursor] != BMG_CONTROL_MARKER || cursor + 1U >= raw_text.size()) {
+                if (raw_text[cursor] != BMG_CONTROL_MARKER) {
                     ++cursor;
                     continue;
                 }
+                if (cursor + 1U >= raw_text.size()) {
+                    throw std::invalid_argument(
+                        "BMG control marker has no size/type word");
+                }
 
                 const auto packed_size_type = raw_text[cursor + 1U];
+                const auto size = tag_size(packed_size_type);
                 const auto word_count = tag_word_count(packed_size_type);
-                if (word_count == 0U || cursor + word_count >= raw_text.size()) {
-                    ++cursor;
-                    continue;
+                if (size < 4U || (size & 1U) != 0U || word_count == 0U ||
+                    cursor + word_count >= raw_text.size()) {
+                    throw std::invalid_argument(
+                        "BMG control tag has an invalid size or truncated payload");
                 }
 
                 auto tag = BmgControlTag {
@@ -480,6 +517,75 @@ namespace smgpc::resource {
         }
 
         return formatted;
+    }
+
+    std::vector<BmgTextToken>
+    format_bmg_tokens(std::u16string_view raw_text, std::span<const BmgFormatArg> args,
+                      std::optional<BmgPlayerCharacter> player_character) {
+        auto tokens = std::vector<BmgTextToken>{};
+
+        for (auto cursor = std::size_t{}; cursor < raw_text.size();) {
+            const auto code = raw_text[cursor];
+            if (code != BMG_CONTROL_MARKER) {
+                append_token(tokens, BmgTextToken::Role::Ordinary,
+                             std::u16string_view(&raw_text[cursor], 1U));
+                ++cursor;
+                continue;
+            }
+            if (cursor + 1U >= raw_text.size()) {
+                throw std::invalid_argument(
+                    "BMG control marker has no size/type word");
+            }
+
+            const auto packed_size_type = raw_text[cursor + 1U];
+            const auto size = tag_size(packed_size_type);
+            const auto word_count = tag_word_count(packed_size_type);
+            if (size < 4U || (size & 1U) != 0U || word_count == 0U ||
+                cursor + word_count >= raw_text.size()) {
+                throw std::invalid_argument(
+                    "BMG control tag has an invalid size or truncated payload");
+            }
+
+            const auto type = tag_type(packed_size_type);
+            if (type == BMG_PICTURE_TAG_TYPE && tag_size(packed_size_type) == 6U &&
+                word_count == 2U) {
+                auto payload = static_cast<std::uint16_t>(raw_text[cursor + 2U]);
+                if (payload == BMG_PICTURE_PLAYER_PAYLOAD) {
+                    if (!player_character.has_value()) {
+                        throw std::logic_error(
+                            "BMG player-picture tag requires an explicit Mario or Luigi policy");
+                    }
+                    payload = *player_character == BmgPlayerCharacter::Mario
+                                  ? BMG_PICTURE_MARIO_PAYLOAD
+                                  : BMG_PICTURE_LUIGI_PAYLOAD;
+                }
+                if (payload > std::numeric_limits<std::uint16_t>::max() -
+                                  BMG_PICTURE_CODE_BASE) {
+                    throw std::out_of_range("BMG picture-tag payload is outside UTF-16");
+                }
+                const auto picture_code = static_cast<char16_t>(payload + BMG_PICTURE_CODE_BASE);
+                append_token(tokens, BmgTextToken::Role::Picture,
+                             std::u16string_view(&picture_code, 1U));
+            } else if (type == BMG_NUMERIC_TAG_TYPE && word_count >= 6U) {
+                const auto format = static_cast<std::uint16_t>(raw_text[cursor + 2U]);
+                const auto arg_index = static_cast<std::size_t>(raw_text[cursor + 6U]);
+                if (const auto *arg = arg_at(args, arg_index); arg != nullptr) {
+                    append_format_arg(tokens, *arg, format == BMG_ZERO_PAD_TWO_DIGITS);
+                }
+            } else if ((type == BMG_STRING_TAG_TYPE_A ||
+                        type == BMG_STRING_TAG_TYPE_B) &&
+                       word_count >= 2U) {
+                const auto arg_index =
+                    static_cast<std::size_t>(raw_text[cursor + word_count]);
+                if (const auto *arg = arg_at(args, arg_index); arg != nullptr) {
+                    append_format_arg(tokens, *arg, false);
+                }
+            }
+
+            cursor += 1U + word_count;
+        }
+
+        return tokens;
     }
 
     BmgMessageArchive BmgMessageArchive::from_message_archive(const RarcArchive &archive) {

@@ -561,7 +561,11 @@ namespace smgpc::compat {
             MR::connectToScene(&runtime, MR::MovementType_DemoDirector, -1, -1, -1);
             try {
                 installed_runtimes().push_back(&runtime);
+                adopt_deferred_scene_simple_casts(runtime);
             } catch (...) {
+                auto &runtimes = installed_runtimes();
+                runtimes.erase(std::remove(runtimes.begin(), runtimes.end(), &runtime),
+                               runtimes.end());
                 MR::disconnectToScene(&runtime);
                 throw;
             }
@@ -1087,6 +1091,22 @@ namespace smgpc::compat {
         trace_cast_event("nerve_registered", _impl->definitions[found->first],
                          *found->second, part_name.value_or(std::string_view{}));
         return true;
+    }
+
+    bool DemoSceneRuntime::has_action_capability(
+        const LiveActor *actor, std::int32_t action_type) const {
+        if (actor == nullptr) {
+            return false;
+        }
+        for (auto definition_index = std::size_t{};
+             definition_index < _impl->definitions.size(); ++definition_index) {
+            const auto *cast = _impl->find_cast(definition_index, actor);
+            if (cast != nullptr &&
+                _impl->has_action_capability(definition_index, *cast, action_type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     bool DemoSceneRuntime::has_cast(const LiveActor *actor) const {

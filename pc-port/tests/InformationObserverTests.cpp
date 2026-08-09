@@ -10,6 +10,7 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
+#include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
@@ -156,8 +157,11 @@ namespace {
             .height = 456,
             .title = "SMG PC InformationObserver proof",
         });
+        auto renderer = smgpc::render::AuroraRenderer(window);
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
+        const auto renderer_context =
+            smgpc::render::ScopedAuroraRendererContext(renderer);
         runtime.player_system().clear_stage_state();
 
         auto logical_audio = smgpc::runtime::AudioEventService{};
@@ -185,6 +189,15 @@ namespace {
 #endif
         {
             auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
+            const auto camera = smgpc::camera::resolve_stage_start_camera(
+                runtime.dvd(), scene.start_info());
+            require(camera.status ==
+                            smgpc::camera::StageStartCameraResolveStatus::Resolved &&
+                        camera.camera.has_value(),
+                    "the InformationObserver proof could not resolve Gateway's exact start camera");
+            runtime.camera_system().set_game_camera_pose(
+                camera.camera->calculation.pose);
+            runtime.set_scene_camera_pose(camera.camera->calculation.pose);
             auto information_message =
                 smgpc::compat::InformationMessageBinding{};
             auto* observer = dynamic_cast<InformationObserver*>(
@@ -194,8 +207,7 @@ namespace {
             require(MR::getLayoutMessageDirect("InformationObserverSpin") != nullptr,
                     "the spin prompt must resolve the real layout message");
 
-            auto demo = smgpc::compat::DemoSceneRuntime{
-                runtime.dvd(), scene.placements(), scene.general_positions()};
+            auto &demo = scene.demo_runtime();
             auto trigger = SpinPromptTrigger{};
             const auto tico = std::ranges::find_if(
                 scene.placements(), [](const auto& placement) {

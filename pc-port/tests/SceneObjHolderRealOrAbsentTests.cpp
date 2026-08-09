@@ -1,7 +1,10 @@
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/Map/StageSwitch.hpp"
+#include "Game/Map/SwitchWatcher.hpp"
+#include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
@@ -172,6 +175,32 @@ namespace {
                 "a later scene must not inherit the previous scene's gravity manager");
     }
 
+    void test_switch_watcher_holder_retires_children_before_recreation() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+
+        for (auto generation = 0; generation < 2; ++generation) {
+            {
+                auto holder = SceneObjHolder{};
+                const auto binding =
+                    smgpc::scene::SceneObjHolderBinding(holder);
+                auto *watcher_holder = dynamic_cast<SwitchWatcherHolder *>(
+                    MR::createSceneObj(SceneObj_SwitchWatcherHolder));
+                require(watcher_holder != nullptr,
+                        "the scene must create its real SwitchWatcherHolder");
+
+                watcher_holder->addSwitchWatcher(new SwitchWatcher(nullptr));
+                watcher_holder->addSwitchWatcher(new SwitchWatcher(nullptr));
+                require(smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline + 3U,
+                        "SwitchWatcherHolder did not retain exactly its two registered children");
+            }
+
+            require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+                    "SwitchWatcherHolder teardown left registered children before scene recreation");
+        }
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -187,6 +216,8 @@ int main() {
         TestCase{"StageHost creates MarioHolder before StartInfo", test_stage_host_creates_mario_holder_before_start_preflight},
         TestCase{"MarioHolder does not install a player creator", test_holder_does_not_install_a_player_creator},
         TestCase{"bindings are single-scene and isolated", test_bindings_are_single_scene_and_isolated},
+        TestCase{"SwitchWatcher holder retires children before recreation",
+                 test_switch_watcher_holder_retires_children_before_recreation},
     };
 
     auto failures = 0;

@@ -10,18 +10,29 @@ namespace smgpc::runtime {
     namespace {
         [[nodiscard]] GXRenderModeObj default_render_mode() {
             auto mode = GXRenderModeObj {};
+            // The PC bootstrap currently exposes the same NTSC/interlaced,
+            // 4:3 platform state that selects GXNtscIntDf[0] in
+            // MR::getSuitableRenderMode. Keep this copy byte-for-byte aligned
+            // with that retail mode until the SC provider is in the host
+            // runtime closure.
             mode.viTVmode = VI_TVMODE_NTSC_INT;
             mode.fbWidth = smgpc::render::core::kWiiLogicalFramebufferWidth;
             mode.efbHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;
             mode.xfbHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;
-            mode.viWidth = smgpc::render::core::kWiiLogicalFramebufferWidth;
+            mode.viXOrigin = 25U;
+            mode.viYOrigin = 12U;
+            mode.viWidth = 670U;
             mode.viHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;
-            mode.xFBmode = VI_XFBMODE_SF;
-            mode.vfilter[0U] = 0U;
+            mode.xFBmode = VI_XFBMODE_DF;
+            for (auto &sample : mode.sample_pattern) {
+                sample[0U] = 6U;
+                sample[1U] = 6U;
+            }
+            mode.vfilter[0U] = 32U;
             mode.vfilter[1U] = 0U;
-            mode.vfilter[2U] = 21U;
-            mode.vfilter[3U] = 22U;
-            mode.vfilter[4U] = 21U;
+            mode.vfilter[2U] = 32U;
+            mode.vfilter[3U] = 0U;
+            mode.vfilter[4U] = 0U;
             mode.vfilter[5U] = 0U;
             mode.vfilter[6U] = 0U;
             return mode;

@@ -70,6 +70,7 @@ public:
     void setTextBoxNumberRecursive(const char* pPaneName, s32 number);
     void setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text);
     void setTextBoxTaggedStringRecursive(const char* pPaneName, std::u16string_view rawText, std::u16string_view displayText);
+    void setPictureTagPlayerCharacter(std::optional<smgpc::resource::BmgPlayerCharacter> playerCharacter);
     void setTextBoxFontRecursive(const char* pPaneName, const nw4r::ut::Font& font);
     void setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex);
     void setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex);
@@ -184,7 +185,11 @@ public:
         std::uint16_t height = 0U;
         std::uint16_t font_width = 0U;
         std::uint16_t font_height = 0U;
+        std::size_t ordinary_glyph_count = 0U;
+        std::size_t picture_glyph_count = 0U;
         std::size_t nontransparent_pixel_count = 0U;
+        std::size_t nontransparent_rgb_color_count = 0U;
+        std::size_t nontransparent_alpha_value_count = 0U;
         std::uint64_t rgba_hash = 0U;
     };
 
@@ -192,6 +197,10 @@ public:
     [[nodiscard]] std::vector< DebugMaterialState > debugMaterials() const;
     [[nodiscard]] std::vector< DebugTextureState > debugTextures() const;
     [[nodiscard]] std::vector< DebugTextRasterState > debugTextRasters(std::string_view paneName) const;
+    void debugSetTextBoxRasterColors(
+        std::string_view paneName,
+        const std::array<std::uint8_t, 4U>& color,
+        const std::array<std::uint8_t, 4U>& colorMappingMax);
 #endif
 
     struct RenderTexture {
@@ -216,6 +225,8 @@ public:
         smgpc::render::TextureHandle handle = {};
         bool external_font = false;
         std::uint64_t font_generation = 0U;
+        std::size_t ordinary_glyph_count = 0U;
+        std::size_t picture_glyph_count = 0U;
     };
 
 private:
@@ -267,9 +278,11 @@ private:
     void commitAnimationState(const AnimationState& anim);
     void loadRenderData();
     void applyLayoutMessagesFromPaneUserData();
+    void ensurePictureFontLoaded();
     void ensureTextureUploads(smgpc::render::AuroraRenderer& renderer);
     void ensureTextTextureUploads(smgpc::render::AuroraRenderer& renderer);
-    [[nodiscard]] RenderTextTexture composeTextTexture(std::size_t text_box_index, const BrfntFont& font) const;
+    [[nodiscard]] RenderTextTexture composeTextTexture(std::size_t text_box_index, const BrfntFont& font,
+                                                       const BrfntFont* picture_font) const;
     void drawPicture(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t picture_index);
     void drawWindow(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t window_index);
     void submitLayoutQuad(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t pane_index, std::uint16_t material_index,
@@ -309,6 +322,7 @@ private:
     std::unordered_map< std::string, TextBoxTemplateState > mTextBoxTemplates = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};
     std::vector< ExternalTextBoxFontBinding > mExternalTextBoxFonts = {};
+    std::optional<smgpc::resource::BmgPlayerCharacter> mPictureTagPlayerCharacter = std::nullopt;
 };
 
 }  // namespace smgpc::layout

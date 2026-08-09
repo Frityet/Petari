@@ -1,5 +1,6 @@
 #include "scene/SceneExecutionService.hpp"
 
+#include "Game/Map/Air.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -25,11 +26,13 @@ namespace smgpc::scene {
         auto &scheduler = _runtime.scheduler();
         // SceneExecutor loads player light and runs DrawType_Player after the
         // normal opaque lists but before the normal translucent lists.
-        scheduler.execute_draw_buffer_list_normal(camera_pose, false, MR::DrawType_Player, MR::LightType_Player);
+        scheduler.execute_draw_buffer_list_normal(
+            camera_pose, MR::isExistPriorDrawAir(), MR::DrawType_Player, MR::LightType_Player);
         scheduler.execute_draw_type(MR::DrawType_EffectDraw3D);
         scheduler.execute_draw_type(MR::DrawType_EffectDrawForBloomEffect);
         scheduler.execute_draw_type(MR::DrawType_CenterScreenBlur);
         scheduler.execute_draw_type(MR::DrawType_CaptureScreenIndirect);
+        scheduler.execute_draw_after_indirect(camera_pose);
     }
 
     void SceneExecutionService::draw_2d_normal() {

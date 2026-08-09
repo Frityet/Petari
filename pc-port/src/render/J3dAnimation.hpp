@@ -68,6 +68,16 @@ namespace smgpc::render {
     struct J3dBrkAnimationSummary {
         std::uint8_t attribute = 0U;
         std::int16_t frame_max = 0;
+        struct RegisterTrack {
+            std::string material_name;
+            std::uint16_t stored_material_id = 0xffffU;
+            std::uint8_t register_id = 0xffU;
+            std::array<J3dAnimationKeyTableSummary, 4U> channels{};
+        };
+        std::array<std::vector<std::int16_t>, 4U> color_values;
+        std::array<std::vector<std::int16_t>, 4U> konst_values;
+        std::vector<RegisterTrack> color_tracks;
+        std::vector<RegisterTrack> konst_tracks;
     };
 
     struct J3dBtpMaterialAnimationSummary {
@@ -123,5 +133,11 @@ namespace smgpc::render {
     j3d_evaluate_btk_texture_srt(const J3dBtkAnimationSummary &btk, std::string_view material_name, std::uint8_t tex_matrix_id, float frame);
     [[nodiscard]] std::optional<std::uint16_t>
     j3d_evaluate_btp_texture_index(const J3dBtpAnimationSummary &btp, std::string_view material_name, std::uint8_t texture_slot, float frame);
+    [[nodiscard]] std::array<std::int16_t, 4U>
+    j3d_evaluate_brk_color_track(const J3dBrkAnimationSummary &brk,
+                                 std::size_t track_index, float raw_frame);
+    [[nodiscard]] std::array<std::uint8_t, 4U>
+    j3d_evaluate_brk_konst_track(const J3dBrkAnimationSummary &brk,
+                                 std::size_t track_index, float raw_frame);
 
 }  // namespace smgpc::render

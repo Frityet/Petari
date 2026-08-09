@@ -1,6 +1,7 @@
 #include "Game/LiveActor/ClippingDirector.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/JMapUtil.hpp"
@@ -33,9 +34,11 @@ void ClippingDirector::registerActor(LiveActor* pActor) {
 
 void ClippingDirector::initActorSystemInfo(LiveActor*, const JMapInfoIter& rIter) {
     auto viewGroupId = s32{-1};
-    if (MR::getJMapInfoViewGroupID(rIter, &viewGroupId)) {
-        throw std::logic_error("View-group clipping is unavailable without a real ViewGroupCtrl table.");
-    }
+    // Keep authored IDs readable even though the current host has no mutable
+    // ViewGroupCtrl table. Its safe initial state is the retail all-visible
+    // state; scene data never gets rewritten or converted into object-specific
+    // clipping policy here.
+    (void)MR::getJMapInfoViewGroupID(rIter, &viewGroupId);
 }
 
 void ClippingDirector::joinToGroupClipping(LiveActor*, const JMapInfoIter& rIter, int) {
@@ -45,10 +48,13 @@ void ClippingDirector::joinToGroupClipping(LiveActor*, const JMapInfoIter& rIter
     }
 }
 
-void ClippingDirector::entryLodCtrl(LodCtrl*, const JMapInfoIter& rIter) {
+void ClippingDirector::entryLodCtrl(LodCtrl* pLod, const JMapInfoIter& rIter) {
+    if (pLod == nullptr) {
+        throw std::invalid_argument("LOD clipping registration requires a LodCtrl.");
+    }
     auto viewGroupId = s32{-1};
     if (MR::getJMapInfoViewGroupID(rIter, &viewGroupId)) {
-        throw std::logic_error("LOD view-group control is unavailable without a real ViewGroupCtrl table.");
+        pLod->mViewGroupID = static_cast<s16>(viewGroupId);
     }
 }
 

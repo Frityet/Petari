@@ -28,6 +28,21 @@ namespace smgpc::resource {
         std::u16string string_value;
     };
 
+    enum class BmgPlayerCharacter {
+        Mario,
+        Luigi,
+    };
+
+    struct BmgTextToken {
+        enum class Role {
+            Ordinary,
+            Picture,
+        };
+
+        Role role = Role::Ordinary;
+        std::u16string text;
+    };
+
     struct BmgControlTag {
         std::size_t raw_offset = 0U;
         std::uint16_t size_bytes = 0U;
@@ -90,6 +105,9 @@ namespace smgpc::resource {
 
     [[nodiscard]] std::vector<BmgControlTag> bmg_control_tags(std::u16string_view raw_text);
     [[nodiscard]] std::u16string format_bmg_text(std::u16string_view raw_text, std::span<const BmgFormatArg> args);
+    [[nodiscard]] std::vector<BmgTextToken>
+    format_bmg_tokens(std::u16string_view raw_text, std::span<const BmgFormatArg> args,
+                      std::optional<BmgPlayerCharacter> player_character = std::nullopt);
 
     class BmgMessageArchive final {
     public:

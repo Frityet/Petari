@@ -319,7 +319,7 @@ namespace smgpc::app {
                     }
 #endif
 
-                    _renderer->end_frame();
+                    _renderer->end_frame(runtime.wii_video().render_mode());
 #ifndef NDEBUG
                     if (screenshot_path.has_value() && !screenshot_written && frame_context.frame_index >= screenshot_frame) {
                         _renderer->request_screenshot_png(std::filesystem::path(*screenshot_path));

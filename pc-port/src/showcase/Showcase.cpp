@@ -1,9 +1,9 @@
 #include "Application.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/Map/PlanetMap.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioHolder.hpp"
-#include "Game/Screen/TitleSequenceProduct.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -11,10 +11,11 @@
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/AudioFacadeCompat.hpp"
-#include "render/J3dModelRenderer.hpp"
+#include "compat/CollisionPartsCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/GatewaySpinCheckpoint.hpp"
+#include "scene/TitleFileSelectRoute.hpp"
 
 #include <aurora/dvd.h>
 #include <aurora/gfx.h>
@@ -40,7 +41,7 @@
 
 namespace {
     constexpr auto cGatewayCollisionSource =
-        std::string_view{"HeavensDoorMysteriousPlanet.arc/heavensdoormysteriousplanet.kcl"};
+        std::string_view{"HeavensDoorMysteriousPlanet.arc:/heavensdoormysteriousplanet.kcl"};
 
     enum class ShowcaseRoute {
         Title,
@@ -57,6 +58,18 @@ namespace {
         std::optional<std::uint64_t> screenshot_frame;
         bool exit_after_screenshot = false;
         bool smoke = false;
+    };
+
+    enum class TitleShowcaseDisposition : std::uint8_t {
+        Exit,
+        LaunchGatewaySpin,
+    };
+
+    struct TitleShowcaseOutcome final {
+        TitleShowcaseDisposition disposition =
+            TitleShowcaseDisposition::Exit;
+        std::optional<smgpc::scene::TitleFileSelectRouteSelection>
+            selection{};
     };
 
     class DvdCloseGuard final {
@@ -175,7 +188,7 @@ namespace {
         throw std::runtime_error(
             "usage: smg-pc-showcase <title|gateway|gateway-spin> --disc PATH "
             "[--width N] [--height N] [--max-frames N] [--screenshot PATH] "
-            "[--screenshot-frame N] [--exit-after-screenshot] [--smoke (gateway only)]");
+            "[--screenshot-frame N] [--exit-after-screenshot] [--smoke (title/gateway)]");
     }
 
     [[nodiscard]] ShowcaseOptions parse_options(std::span<const std::string> arguments) {
@@ -215,8 +228,8 @@ namespace {
         if (options.window_width <= 0 || options.window_height <= 0) {
             throw std::runtime_error("showcase window dimensions must be positive");
         }
-        if (options.smoke && options.route != ShowcaseRoute::Gateway) {
-            throw std::runtime_error("--smoke is only available for the gateway showcase");
+        if (options.smoke && options.route == ShowcaseRoute::GatewaySpin) {
+            throw std::runtime_error("--smoke is available for the title and gateway showcases");
         }
         if (options.smoke && options.max_frames == 0U) {
             options.max_frames = 360U;
@@ -269,8 +282,15 @@ namespace {
         };
     }
 
-    [[nodiscard]] int run_title_showcase(const ShowcaseOptions& options,
-                                         const smgpc::app::BootstrapConfiguration& configuration) {
+    [[nodiscard]] TitleShowcaseOutcome run_title_showcase(
+        const ShowcaseOptions& options,
+        const smgpc::app::BootstrapConfiguration& configuration) {
+#ifdef NDEBUG
+        if (options.smoke) {
+            throw std::runtime_error(
+                "Title --smoke requires a debug build for exact sky packet proof");
+        }
+#endif
         auto logger = smgpc::logging::create_default_logger();
         const auto disc_image = smgpc::app::required_disc_image(configuration);
         if (!aurora_dvd_open(disc_image.string().c_str())) {
@@ -286,41 +306,111 @@ namespace {
         auto renderer = smgpc::render::AuroraRenderer(window);
         auto captured = false;
         auto frame_index = std::uint64_t{};
+        auto rendered_frames = std::uint64_t{};
+        auto gpu_draw_seen = false;
+        auto sky_packet_submission_seen = false;
+        auto outcome = TitleShowcaseOutcome{};
 
         {
             auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
-            auto title_sequence = TitleSequenceProduct{};
-            title_sequence.appear();
+            const auto scene_renderer_context =
+                smgpc::render::ScopedAuroraRendererContext(renderer);
+            auto route = smgpc::scene::TitleFileSelectRoute(runtime);
             logger->info(smgpc::logging::Category::APP,
-                         smgpc::logging::Message{"Showing the exact retail TitleSequenceProduct with original disc resources"});
+                         smgpc::logging::Message{"Showing the exact retail title and retained-sky blank File Select route with original disc resources"});
             logger->info(smgpc::logging::Category::APP,
-                         smgpc::logging::Message{"Hold keyboard A+B or Enter+Backspace when prompted"});
+                         smgpc::logging::Message{"Hold keyboard A+B or Enter+Backspace at the title prompt; use arrows and a fresh A/Enter to select a blank file"});
 
             while (window.poll_events()) {
                 auto frame_context = renderer.begin_frame();
                 frame_index = frame_context.frame_index;
                 {
                     const auto renderer_context = smgpc::render::ScopedAuroraRendererContext(renderer);
+#ifndef NDEBUG
+                    if (options.smoke) {
+                        runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
+                    }
+#endif
                     runtime.begin_frame(frame_context);
-                    title_sequence.updateNerve();
+                    route.update();
+                    runtime.draw_3d_normal();
                     runtime.draw_2d_normal();
+#ifndef NDEBUG
+                    if (options.smoke) {
+                        sky_packet_submission_seen =
+                            sky_packet_submission_seen ||
+                            std::ranges::any_of(
+                                runtime.j3d_packet_trace(),
+                                [frame_index](const auto& packet) {
+                                    return packet.model_name == "CometNearOrbitSky" &&
+                                           packet.frame_index == frame_index &&
+                                           packet.state.source_triangle_count != 0U &&
+                                           packet.state.parsed_display_list_bytes != 0U &&
+                                           packet.state.bck_active &&
+                                           packet.state.btk_active &&
+                                           packet.state.btk_material_count != 0U;
+                                });
+                    }
+#endif
+                    ++rendered_frames;
                 }
-                renderer.end_frame();
+                renderer.end_frame(runtime.wii_video().render_mode());
 
-                if (capture_requested_frame(renderer, options, frame_index, captured)) {
-                    window.close();
+                if (const auto* stats = aurora_get_stats(); stats != nullptr) {
+                    gpu_draw_seen = gpu_draw_seen ||
+                                    (stats->drawCallCount != 0U &&
+                                     stats->lastVertSize != 0U);
                 }
-                if (!title_sequence.isActive()) {
-                    logger->info(smgpc::logging::Category::APP,
-                                 smgpc::logging::Message{"Retail title component completed at frame {}"}, frame_index);
+
+                const auto screenshot_exit = capture_requested_frame(
+                    renderer, options, frame_index, captured);
+                const auto smoke_complete =
+                    options.smoke && rendered_frames >= 2U && gpu_draw_seen &&
+                    sky_packet_submission_seen;
+                const auto max_frames_reached =
+                    options.max_frames != 0U &&
+                    frame_index >= options.max_frames;
+
+                // Decide only after end_frame. Explicit session termination
+                // always wins over a launch published on the same frame.
+                if (screenshot_exit || smoke_complete ||
+                    max_frames_reached) {
                     window.close();
-                }
-                if (options.max_frames != 0U && frame_index >= options.max_frames) {
-                    window.close();
+                } else if (!options.smoke) {
+                    if (const auto launch = route.launch_request();
+                        launch.has_value()) {
+                        outcome = TitleShowcaseOutcome{
+                            .disposition =
+                                TitleShowcaseDisposition::LaunchGatewaySpin,
+                            .selection = launch,
+                        };
+                        logger->info(
+                            smgpc::logging::Category::APP,
+                            smgpc::logging::Message{
+                                "Blank file {} selected; launching the current Gateway spin checkpoint after a full session unwind (rabbit_route=absent)"},
+                            launch->file_number);
+                        window.close();
+                    }
                 }
             }
         }
-        return 0;
+
+        if (options.smoke) {
+            if (rendered_frames < 2U || !gpu_draw_seen ||
+                !sky_packet_submission_seen) {
+                throw std::runtime_error(
+                    "Title sky smoke proof incomplete: frames=" +
+                    std::to_string(rendered_frames) + ";gpu_draw=" +
+                    std::to_string(gpu_draw_seen) + ";sky_packets=" +
+                    std::to_string(sky_packet_submission_seen));
+            }
+            logger->info(
+                smgpc::logging::Category::APP,
+                smgpc::logging::Message{
+                    "Title smoke passed: {} rendered frames with exact CometNearOrbitSky BCK/BTK packets before retail title layouts"},
+                rendered_frames);
+        }
+        return outcome;
     }
 
     [[nodiscard]] float length(const TVec3f& value) {
@@ -439,7 +529,8 @@ namespace {
         const auto first_real_contact = !probe.real_kcl_contact_seen;
         for (const auto& contact : movement.contacts) {
             const auto surface = scene.collision().surface(contact.triangle_index);
-            if (!surface.has_value() || surface->source_name != cGatewayCollisionSource ||
+            if (!surface.has_value() ||
+                !std::string_view(surface->source_name).ends_with(cGatewayCollisionSource) ||
                 surface->attributes.empty()) {
                 throw std::runtime_error(
                     "Gateway development probe contacted a surface without exact planet KCL/PA provenance");
@@ -582,6 +673,7 @@ namespace {
         auto rendered_frames = std::uint64_t{};
         auto gpu_draw_seen = false;
         auto mario_packet_submission_seen = false;
+        auto planet_packet_submission_seen = false;
         auto mario_center_on_screen_seen = false;
         auto gravity_velocity_change_seen = false;
         auto real_kcl_contact_seen = false;
@@ -589,6 +681,11 @@ namespace {
         {
             auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
             runtime.set_current_stage_name("HeavensDoorGalaxy");
+            // Authored scene visuals initialize and retire native model state
+            // inside the Gateway scene lifetime. Keep the renderer binding
+            // outside that lifetime; per-frame bindings nest and restore it.
+            const auto scene_renderer_context =
+                smgpc::render::ScopedAuroraRendererContext(renderer);
             auto ignored_audio = std::unique_ptr<smgpc::runtime::AudioEventService>{};
             auto ignored_audio_binding =
                 std::unique_ptr<smgpc::compat::ScopedAudioEventServiceOverride>{};
@@ -618,19 +715,24 @@ namespace {
             runtime.camera_system().set_game_camera_pose(initial_camera);
             runtime.set_freecam_enabled(false);
 
-            auto planet_model = smgpc::render::J3dModelRenderer{};
             auto sphere_renderer = DebugSphereRenderer(renderer);
-            {
-                const auto renderer_context = smgpc::render::ScopedAuroraRendererContext(renderer);
-                planet_model.load(renderer, scene.planet_bdl());
-            }
-            if (!planet_model.is_loaded() || planet_model.mesh_count() == 0U ||
-                planet_model.render_packets().empty()) {
+            auto *planet_actor = scene.planet();
+            auto *planet_model = smgpc::compat::actor_model(planet_actor);
+            if (planet_actor == nullptr || planet_model == nullptr) {
                 throw std::runtime_error(
-                    "the real Gateway planet BDL did not produce renderable J3D packets");
+                    "the authored Gateway row did not create an ordinary PlanetMap model");
             }
-            const auto planet_matrix = smgpc::render::J3dMatrix3x4{
-                smgpc::scene::stage_collision_matrix(scene.planet_placement())};
+            planet_model->requireLoaded();
+            if (!planet_model->isLoaded()) {
+                throw std::runtime_error(
+                    "the ordinary Gateway PlanetMap did not load its real BDL");
+            }
+            const auto planet_collision_resources =
+                smgpc::compat::actor_collision_parts_resources(planet_actor);
+            if (planet_collision_resources.size() != 2U) {
+                throw std::runtime_error(
+                    "the ordinary Gateway PlanetMap did not retain its main and MoveLimit CollisionParts");
+            }
 
             if (NameObjFactory::getCreator("Mario") != nullptr ||
                 NameObjFactory::getCreator("MarioActor") != nullptr) {
@@ -664,7 +766,7 @@ namespace {
                 }
                 runtime.game_layout().activate_game_scene_draw_3d();
             }
-            renderer.end_frame();
+            renderer.end_frame(runtime.wii_video().render_mode());
 
             auto probes = std::vector<GatewayPhysicsProbe>{};
             auto next_probe_id = std::uint64_t{1U};
@@ -688,8 +790,14 @@ namespace {
             logger->info(
                 smgpc::logging::Category::APP,
                 smgpc::logging::Message{
-                    "Loaded real RMGK01 HeavensDoorMysteriousPlanet: {} J3D meshes, {} KCL triangles; development probes use its exact point gravity and KCL"},
-                planet_model.mesh_count(), scene.collision().stats().triangle_count);
+                    "Loaded real RMGK01 HeavensDoorMysteriousPlanet through ordinary PlanetMap with {} actor-owned CollisionParts (main KCL/PA {} / {} bytes; MoveLimit KCL/PA {} / {} bytes). Gateway scene total: {} KCL triangles across {} registered meshes; development probes use the mysterious planet's exact point gravity and main KCL"},
+                planet_collision_resources.size(),
+                planet_collision_resources[0].kcl_size,
+                planet_collision_resources[0].attributes_size,
+                planet_collision_resources[1].kcl_size,
+                planet_collision_resources[1].attributes_size,
+                scene.collision().stats().triangle_count,
+                scene.collision().stats().mesh_count);
             if (options.smoke) {
                 logger->info(smgpc::logging::Category::APP,
                              smgpc::logging::Message{
@@ -749,11 +857,6 @@ namespace {
                             real_kcl_contact_seen || probe.real_kcl_contact_seen;
                     }
 
-                    planet_model.draw(
-                        renderer, camera, planet_matrix, frame_index,
-                        smgpc::render::J3dModelRendererDrawOptions{
-                            .translucent_filter = false,
-                        });
                     runtime.draw_3d_normal(camera);
 #ifndef NDEBUG
                     if (options.smoke) {
@@ -768,6 +871,17 @@ namespace {
                                            packet.state.parsed_display_list_bytes != 0U &&
                                            packet.state.bck_active &&
                                            packet.state.bck_joint_count != 0U;
+                                });
+                        planet_packet_submission_seen =
+                            planet_packet_submission_seen ||
+                            std::ranges::any_of(
+                                runtime.j3d_packet_trace(),
+                                [frame_index](const auto& packet) {
+                                    return packet.model_name ==
+                                               "HeavensDoorMysteriousPlanet" &&
+                                           packet.frame_index == frame_index &&
+                                           packet.state.source_triangle_count != 0U &&
+                                           packet.state.parsed_display_list_bytes != 0U;
                                 });
                     }
 #endif
@@ -786,15 +900,10 @@ namespace {
                                  static_cast<float>(logical_framebuffer.height));
                     }
                     sphere_renderer.draw(renderer, camera, probes);
-                    planet_model.draw(
-                        renderer, camera, planet_matrix, frame_index,
-                        smgpc::render::J3dModelRendererDrawOptions{
-                            .translucent_filter = true,
-                        });
                     runtime.draw_2d_normal();
                     ++rendered_frames;
                 }
-                renderer.end_frame();
+                renderer.end_frame(runtime.wii_video().render_mode());
 
                 if (const auto* stats = aurora_get_stats(); stats != nullptr) {
                     gpu_draw_seen = gpu_draw_seen ||
@@ -812,7 +921,8 @@ namespace {
                             "Gateway spin access granted by the exact InformationObserver flow; press X for the retained unlocked swing request (visible spin action remains outside this checkpoint)"});
                 }
                 if (options.smoke && rendered_frames >= 2U && gpu_draw_seen &&
-                    mario_packet_submission_seen && mario_center_on_screen_seen &&
+                    mario_packet_submission_seen && planet_packet_submission_seen &&
+                    mario_center_on_screen_seen &&
                     gravity_velocity_change_seen && real_kcl_contact_seen) {
                     window.close();
                 }
@@ -837,13 +947,16 @@ namespace {
 
         if (options.smoke) {
             if (rendered_frames < 2U || !gpu_draw_seen || !mario_packet_submission_seen ||
-                !mario_center_on_screen_seen || !gravity_velocity_change_seen ||
+                !planet_packet_submission_seen || !mario_center_on_screen_seen ||
+                !gravity_velocity_change_seen ||
                 !real_kcl_contact_seen) {
                 throw std::runtime_error(
                     "Gateway smoke proof incomplete: frames=" + std::to_string(rendered_frames) +
                     ";gpu_draw=" + std::to_string(gpu_draw_seen) +
                     ";mario_packets=" +
                     std::to_string(mario_packet_submission_seen) +
+                    ";planet_packets=" +
+                    std::to_string(planet_packet_submission_seen) +
                     ";mario_center_on_screen=" +
                     std::to_string(mario_center_on_screen_seen) +
                     ";gravity_velocity_change=" +
@@ -853,7 +966,7 @@ namespace {
             logger->info(
                 smgpc::logging::Category::APP,
                 smgpc::logging::Message{
-                    "Gateway smoke passed: {} rendered frames, real animated Mario packet submission with an on-screen actor center, GPU draw submission, probe gravity acceleration, and exact planet KCL contact"},
+                    "Gateway smoke passed: {} rendered frames, ordinary PlanetMap and real animated Mario packet submission with an on-screen actor center, GPU draw submission, probe gravity acceleration, and exact planet KCL contact"},
                 rendered_frames);
         }
         return 0;
@@ -869,7 +982,30 @@ int main(int argc, char* argv[]) try {
     if (options.route != ShowcaseRoute::Title) {
         return run_gateway_showcase(options, configuration);
     }
-    return run_title_showcase(options, configuration);
+
+    const auto title_outcome = run_title_showcase(options, configuration);
+    if (title_outcome.disposition == TitleShowcaseDisposition::Exit) {
+        return 0;
+    }
+    if (!title_outcome.selection.has_value()) {
+        throw std::logic_error(
+            "the title showcase requested Gateway without a blank-file selection");
+    }
+
+    // The title call has returned, so its route, RuntimeContext, renderer,
+    // window and DVD guard are all gone. Start the bounded destination in a
+    // completely fresh host session. Title capture/termination controls are
+    // one-shot and must not overwrite or prematurely stop the destination.
+    auto gateway_options = options;
+    gateway_options.route = ShowcaseRoute::GatewaySpin;
+    gateway_options.max_frames = 0U;
+    gateway_options.screenshot_path.reset();
+    gateway_options.screenshot_frame.reset();
+    gateway_options.exit_after_screenshot = false;
+    gateway_options.smoke = false;
+    const auto gateway_configuration =
+        bootstrap_configuration(gateway_options, arguments);
+    return run_gateway_showcase(gateway_options, gateway_configuration);
 } catch (const std::exception& error) {
     auto logger = smgpc::logging::create_default_logger();
     logger->fatal(smgpc::logging::Category::APP,

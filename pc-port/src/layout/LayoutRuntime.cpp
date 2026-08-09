@@ -15,6 +15,7 @@
 #include <utility>
 
 #include "core/RenderTypes.hpp"
+#include "Game/Util/EventUtil.hpp"
 #include "layout/LayoutResourceResolver.hpp"
 #include "layout/LytTexMap.hpp"
 #include "nw4r/ut/Font.h"
@@ -151,6 +152,16 @@ namespace {
         return words;
     }
 
+    [[nodiscard]] std::u16string
+    decode_utf16_words(std::span<const std::uint16_t> words) {
+        auto text = std::u16string{};
+        text.reserve(words.size());
+        for (const auto code : words) {
+            text.push_back(static_cast<char16_t>(code));
+        }
+        return text;
+    }
+
     [[nodiscard]] bool pane_name_matches_request(std::string_view pane_name, std::string_view requested_name) {
         if (pane_name == requested_name) {
             return true;
@@ -275,6 +286,42 @@ namespace {
         return it == archive.entries().end() ? nullptr : &(*it);
     }
 
+    constexpr auto kPictureFontName = std::string_view{"PictureFont"};
+
+    [[nodiscard]] bool has_picture_font_tag(
+        const smgpc::layout::BrlytTextBox& text_box) {
+        return std::ranges::any_of(text_box.control_tags, [](const auto& tag) {
+            return tag.type == 3U && tag.size_bytes == 6U &&
+                   tag.payload_words.size() == 1U;
+        });
+    }
+
+    [[nodiscard]] bool layout_requires_picture_font(
+        const smgpc::layout::BrlytLayout& layout) {
+        return std::ranges::any_of(layout.text_boxes, has_picture_font_tag);
+    }
+
+    [[nodiscard]] bool add_render_font_from_archive(
+        std::vector<smgpc::layout::LayoutRuntime::RenderFont>& fonts,
+        const smgpc::resource::RarcArchive& archive, std::string_view font_name) {
+        if (contains_font(fonts, font_name)) {
+            return true;
+        }
+        const auto* entry = find_font_entry(archive, font_name);
+        if (entry == nullptr) {
+            return false;
+        }
+
+        auto font = smgpc::layout::parse_brfnt_font(archive.file_data(*entry));
+        fonts.push_back(smgpc::layout::LayoutRuntime::RenderFont{
+            .name = std::string(font_name),
+            .font = std::move(font),
+            .sheet_handles = {},
+        });
+        fonts.back().sheet_handles.resize(fonts.back().font.sheets.size());
+        return true;
+    }
+
     [[nodiscard]] std::optional< std::filesystem::path >
     find_companion_font_archive(const std::optional< std::filesystem::path >& layout_archive_path) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
@@ -314,8 +361,12 @@ namespace {
 
     struct TextLayoutGlyph {
         std::uint16_t code = 0U;
+        smgpc::resource::BmgTextToken::Role role =
+            smgpc::resource::BmgTextToken::Role::Ordinary;
+        const smgpc::layout::BrfntFont* font = nullptr;
         smgpc::layout::BrfntGlyph glyph{};
         float advance = 0.0F;
+        float y_offset = 0.0F;
     };
 
     struct TextLayoutLine {
@@ -323,15 +374,41 @@ namespace {
         float width = 0.0F;
     };
 
-    [[nodiscard]] bool is_wrap_space(std::uint16_t code) {
-        return code == 0x0009U || code == 0x0020U || code == 0x3000U;
+    [[nodiscard]] bool is_wrap_space(const TextLayoutGlyph& glyph) {
+        return glyph.role == smgpc::resource::BmgTextToken::Role::Ordinary &&
+               (glyph.code == 0x0009U || glyph.code == 0x0020U ||
+                glyph.code == 0x3000U);
     }
 
-    [[nodiscard]] bool is_line_break(std::uint16_t code) {
-        return code == 0x000aU || code == 0x000dU;
+    struct TextInputGlyph {
+        std::uint16_t code = 0U;
+        smgpc::resource::BmgTextToken::Role role =
+            smgpc::resource::BmgTextToken::Role::Ordinary;
+    };
+
+    [[nodiscard]] bool is_line_break(const TextInputGlyph& glyph) {
+        return glyph.role == smgpc::resource::BmgTextToken::Role::Ordinary &&
+               (glyph.code == 0x000aU || glyph.code == 0x000dU);
     }
 
-    [[nodiscard]] std::uint16_t resolve_layout_glyph_code(std::uint16_t code, const smgpc::layout::BrfntFont& font, bool use_button_icon_aliases);
+    [[nodiscard]] std::vector<TextInputGlyph>
+    flatten_text_tokens(std::span<const smgpc::resource::BmgTextToken> tokens) {
+        auto glyphs = std::vector<TextInputGlyph>{};
+        auto glyph_count = std::size_t{};
+        for (const auto& token : tokens) {
+            glyph_count += token.text.size();
+        }
+        glyphs.reserve(glyph_count);
+        for (const auto& token : tokens) {
+            for (const auto code : token.text) {
+                glyphs.push_back(TextInputGlyph{
+                    .code = static_cast<std::uint16_t>(code),
+                    .role = token.role,
+                });
+            }
+        }
+        return glyphs;
+    }
 
     [[nodiscard]] float text_line_width(const std::vector< TextLayoutGlyph >& glyphs, float native_char_space) {
         if (glyphs.empty()) {
@@ -342,25 +419,30 @@ namespace {
         for (const auto& glyph : glyphs) {
             width += glyph.advance;
         }
-        width += native_char_space * static_cast< float >(glyphs.size() - 1U);
+        auto char_space_count = glyphs.size() - 1U;
+        if (glyphs.back().role ==
+            smgpc::resource::BmgTextToken::Role::Picture) {
+            ++char_space_count;
+        }
+        width += native_char_space * static_cast<float>(char_space_count);
         return std::max(width, 0.0F);
     }
 
     void trim_trailing_wrap_spaces(std::vector< TextLayoutGlyph >& glyphs) {
-        while (!glyphs.empty() && is_wrap_space(glyphs.back().code)) {
+        while (!glyphs.empty() && is_wrap_space(glyphs.back())) {
             glyphs.pop_back();
         }
     }
 
     void trim_leading_wrap_spaces(std::vector< TextLayoutGlyph >& glyphs) {
-        while (!glyphs.empty() && is_wrap_space(glyphs.front().code)) {
+        while (!glyphs.empty() && is_wrap_space(glyphs.front())) {
             glyphs.erase(glyphs.begin());
         }
     }
 
     [[nodiscard]] std::optional< std::size_t > last_wrap_space_index(const std::vector< TextLayoutGlyph >& glyphs) {
         for (auto index = glyphs.size(); index > 0U; --index) {
-            if (is_wrap_space(glyphs[index - 1U].code)) {
+            if (is_wrap_space(glyphs[index - 1U])) {
                 return index - 1U;
             }
         }
@@ -368,10 +450,15 @@ namespace {
         return std::nullopt;
     }
 
-    [[nodiscard]] std::vector< TextLayoutLine > layout_text_lines(std::span< const std::uint16_t > text, const smgpc::layout::BrfntFont& font,
-                                                                  float native_char_space, float native_wrap_width, bool use_button_icon_aliases) {
+    [[nodiscard]] std::vector< TextLayoutLine >
+    layout_text_lines(std::span<const smgpc::resource::BmgTextToken> tokens,
+                      const smgpc::layout::BrfntFont& font,
+                      const smgpc::layout::BrfntFont* picture_font,
+                      float native_char_space, float native_wrap_width,
+                      float scale_y) {
         auto lines = std::vector< TextLayoutLine >{};
         auto current = std::vector< TextLayoutGlyph >{};
+        const auto text = flatten_text_tokens(tokens);
 
         const auto measure_current = [&]() { return text_line_width(current, native_char_space); };
         const auto push_current = [&]() {
@@ -385,25 +472,42 @@ namespace {
 
         const auto wrap_width = native_wrap_width > 0.0F ? native_wrap_width : 4096.0F;
         for (auto index = std::size_t{}; index < text.size(); ++index) {
-            const auto code = text[index];
-            if (is_line_break(code)) {
+            const auto input = text[index];
+            if (is_line_break(input)) {
                 push_current();
-                if (code == 0x000dU && index + 1U < text.size() && text[index + 1U] == 0x000aU) {
+                if (input.code == 0x000dU && index + 1U < text.size() &&
+                    text[index + 1U].role ==
+                        smgpc::resource::BmgTextToken::Role::Ordinary &&
+                    text[index + 1U].code == 0x000aU) {
                     ++index;
                 }
                 continue;
             }
 
-            const auto glyph_code = resolve_layout_glyph_code(code, font, use_button_icon_aliases);
-            const auto glyph = font.glyph_for(glyph_code);
+            const auto* glyph_font = &font;
+            auto y_offset = 0.0F;
+            if (input.role == smgpc::resource::BmgTextToken::Role::Picture) {
+                if (picture_font == nullptr) {
+                    throw std::logic_error(
+                        "BMG picture tag requires PictureFont.brfnt from the resolved Font.arc");
+                }
+                glyph_font = picture_font;
+                y_offset = static_cast<float>(font.ascent) -
+                           static_cast<float>(picture_font->ascent) -
+                           (2.0F / std::max(scale_y, 0.0001F));
+            }
+            const auto glyph = glyph_font->glyph_for(input.code);
             if (!glyph.has_value()) {
                 continue;
             }
 
             current.push_back(TextLayoutGlyph{
-                .code = code,
+                .code = input.code,
+                .role = input.role,
+                .font = glyph_font,
                 .glyph = *glyph,
                 .advance = glyph_advance(*glyph, 1.0F),
+                .y_offset = y_offset,
             });
 
             if (current.size() <= 1U || measure_current() <= wrap_width) {
@@ -435,82 +539,6 @@ namespace {
         }
 
         return lines;
-    }
-
-    struct ButtonIconAlias {
-        std::uint16_t ascii_code = 0U;
-        std::uint16_t icon_code = 0U;
-    };
-
-    constexpr std::array< ButtonIconAlias, 2U > kButtonIconAliases{
-        ButtonIconAlias{.ascii_code = 'A', .icon_code = 0xe000U},
-        ButtonIconAlias{.ascii_code = 'B', .icon_code = 0xe00bU},
-    };
-
-    [[nodiscard]] std::optional< std::uint16_t > fullwidth_ascii_to_ascii(std::uint16_t code) {
-        if (code >= 0xff01U && code <= 0xff5eU) {
-            return static_cast< std::uint16_t >(code - 0xfee0U);
-        }
-
-        return std::nullopt;
-    }
-
-    [[nodiscard]] std::uint16_t normalize_layout_ascii(std::uint16_t code) {
-        if (const auto normalized = fullwidth_ascii_to_ascii(code)) {
-            return *normalized;
-        }
-
-        return code;
-    }
-
-    [[nodiscard]] std::optional< std::uint16_t > button_icon_alias_for(std::uint16_t code) {
-        const auto ascii_code = normalize_layout_ascii(code);
-        const auto it = std::ranges::find_if(kButtonIconAliases, [ascii_code](const auto& alias) { return alias.ascii_code == ascii_code; });
-        if (it == kButtonIconAliases.end()) {
-            return std::nullopt;
-        }
-
-        return it->icon_code;
-    }
-
-    [[nodiscard]] bool is_button_icon_code(std::uint16_t code) {
-        return std::ranges::any_of(kButtonIconAliases, [code](const auto& alias) { return alias.icon_code == code; });
-    }
-
-    [[nodiscard]] bool is_cjk_code(std::uint16_t code) {
-        return (code >= 0x1100U && code <= 0x11ffU) || (code >= 0x3040U && code <= 0x30ffU) || (code >= 0x3130U && code <= 0x318fU) ||
-               (code >= 0xac00U && code <= 0xd7afU);
-    }
-
-    [[nodiscard]] bool text_uses_button_icon_aliases(std::span< const std::uint16_t > text) {
-        auto has_button_marker = false;
-        auto has_cjk_text = false;
-
-        for (const auto code : text) {
-            if (button_icon_alias_for(code).has_value()) {
-                has_button_marker = true;
-                continue;
-            }
-
-            const auto normalized = normalize_layout_ascii(code);
-            if (normalized < 0x80U && std::isalnum(static_cast< unsigned char >(normalized)) != 0) {
-                return false;
-            }
-
-            has_cjk_text = has_cjk_text || is_cjk_code(code);
-        }
-
-        return has_button_marker && has_cjk_text;
-    }
-
-    [[nodiscard]] std::uint16_t resolve_layout_glyph_code(std::uint16_t code, const smgpc::layout::BrfntFont& font, bool use_button_icon_aliases) {
-        if (use_button_icon_aliases) {
-            if (const auto icon_code = button_icon_alias_for(code); icon_code.has_value() && font.glyph_for_exact(*icon_code).has_value()) {
-                return *icon_code;
-            }
-        }
-
-        return code;
     }
 
     [[nodiscard]] float base_position_x(std::uint8_t base_position, float width) {
@@ -1757,6 +1785,8 @@ void smgpc::layout::LayoutRuntime::setTextBoxNumberRecursive(const char* pPaneNa
     for (auto& text_box : mBrlytLayout.text_boxes) {
         if (text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             text_box.text = text;
+            text_box.raw_text = text;
+            text_box.control_tags.clear();
             mTextBoxTemplates.erase(text_box.name);
             matched = true;
         }
@@ -1771,6 +1801,13 @@ void smgpc::layout::LayoutRuntime::setTextBoxNumberRecursive(const char* pPaneNa
 void smgpc::layout::LayoutRuntime::setTextBoxStringRecursive(const char* pPaneName, std::u16string_view text) {
     loadRenderData();
 
+    const auto control_tags = smgpc::resource::bmg_control_tags(text);
+    if (!control_tags.empty()) {
+        const auto display_text = smgpc::resource::format_bmg_text(text, {});
+        setTextBoxTaggedStringRecursive(pPaneName, text, display_text);
+        return;
+    }
+
     auto encoded = std::vector< std::uint16_t >{};
     encoded.reserve(text.size());
     for (const auto code : text) {
@@ -1782,6 +1819,8 @@ void smgpc::layout::LayoutRuntime::setTextBoxStringRecursive(const char* pPaneNa
     for (auto& text_box : mBrlytLayout.text_boxes) {
         if (text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             text_box.text = encoded;
+            text_box.raw_text = encoded;
+            text_box.control_tags.clear();
             mTextBoxTemplates.erase(text_box.name);
             matched = true;
         }
@@ -1799,6 +1838,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxTaggedStringRecursive(const char* p
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
     const auto formatted = smgpc::resource::format_bmg_text(rawText, {});
     const auto text = !formatted.empty() || rawText.empty() ? std::u16string_view(formatted) : displayText;
+    const auto control_tags = smgpc::resource::bmg_control_tags(rawText);
 
     auto encoded = std::vector< std::uint16_t >{};
     encoded.reserve(text.size());
@@ -1807,13 +1847,18 @@ void smgpc::layout::LayoutRuntime::setTextBoxTaggedStringRecursive(const char* p
     }
 
     auto matched = false;
+    auto needs_picture_font = false;
     for (auto& text_box : mBrlytLayout.text_boxes) {
         if (text_box_matches_recursive(mBrlytLayout, text_box, requested_name)) {
             text_box.text = encoded;
+            text_box.raw_text = encode_utf16_words(rawText);
+            text_box.control_tags = control_tags;
             mTextBoxTemplates[text_box.name] = TextBoxTemplateState{
                 .raw_text = std::u16string(rawText),
                 .args = {},
             };
+            needs_picture_font = needs_picture_font ||
+                                 has_picture_font_tag(text_box);
             matched = true;
         }
     }
@@ -1821,6 +1866,15 @@ void smgpc::layout::LayoutRuntime::setTextBoxTaggedStringRecursive(const char* p
         throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
     }
 
+    if (needs_picture_font) {
+        ensurePictureFontLoaded();
+    }
+    mRenderTextTextures.clear();
+}
+
+void smgpc::layout::LayoutRuntime::setPictureTagPlayerCharacter(
+    std::optional<smgpc::resource::BmgPlayerCharacter> playerCharacter) {
+    mPictureTagPlayerCharacter = playerCharacter;
     mRenderTextTextures.clear();
 }
 
@@ -2681,12 +2735,38 @@ smgpc::layout::LayoutRuntime::debugTextRasters(std::string_view paneName) const 
             continue;
         }
 
-        const auto raster = composeTextTexture(text_box_index, *font);
+        const auto* picture_render_font =
+            find_font(runtime->mRenderFonts, kPictureFontName);
+        const auto raster = composeTextTexture(
+            text_box_index, *font,
+            picture_render_font != nullptr ? &picture_render_font->font
+                                           : nullptr);
         auto nontransparent_pixels = std::size_t{};
+        auto nontransparent_colors = std::vector<std::uint32_t>{};
+        auto nontransparent_alpha_values = std::vector<std::uint8_t>{};
         auto rgba_hash = std::uint64_t{14695981039346656037ULL};
-        for (auto offset = std::size_t{3U}; offset < raster.rgba.size(); offset += 4U) {
-            nontransparent_pixels += raster.rgba[offset] != 0U ? 1U : 0U;
+        for (auto offset = std::size_t{}; offset + 3U < raster.rgba.size();
+             offset += 4U) {
+            if (raster.rgba[offset + 3U] == 0U) {
+                continue;
+            }
+            ++nontransparent_pixels;
+            nontransparent_alpha_values.push_back(raster.rgba[offset + 3U]);
+            nontransparent_colors.push_back(
+                (static_cast<std::uint32_t>(raster.rgba[offset]) << 16U) |
+                (static_cast<std::uint32_t>(raster.rgba[offset + 1U]) << 8U) |
+                static_cast<std::uint32_t>(raster.rgba[offset + 2U]));
         }
+        std::ranges::sort(nontransparent_colors);
+        const auto unique_colors =
+            std::ranges::unique(nontransparent_colors);
+        nontransparent_colors.erase(unique_colors.begin(),
+                                    unique_colors.end());
+        std::ranges::sort(nontransparent_alpha_values);
+        const auto unique_alpha_values =
+            std::ranges::unique(nontransparent_alpha_values);
+        nontransparent_alpha_values.erase(unique_alpha_values.begin(),
+                                          unique_alpha_values.end());
         for (const auto byte : raster.rgba) {
             rgba_hash ^= byte;
             rgba_hash *= 1099511628211ULL;
@@ -2699,12 +2779,39 @@ smgpc::layout::LayoutRuntime::debugTextRasters(std::string_view paneName) const 
             .height = raster.height,
             .font_width = raster.font_width,
             .font_height = raster.font_height,
+            .ordinary_glyph_count = raster.ordinary_glyph_count,
+            .picture_glyph_count = raster.picture_glyph_count,
             .nontransparent_pixel_count = nontransparent_pixels,
+            .nontransparent_rgb_color_count = nontransparent_colors.size(),
+            .nontransparent_alpha_value_count =
+                nontransparent_alpha_values.size(),
             .rgba_hash = rgba_hash,
         });
     }
 
     return states;
+}
+
+void smgpc::layout::LayoutRuntime::debugSetTextBoxRasterColors(
+    std::string_view paneName,
+    const std::array<std::uint8_t, 4U>& color,
+    const std::array<std::uint8_t, 4U>& colorMappingMax) {
+    loadRenderData();
+    auto matched = false;
+    for (auto& text_box : mBrlytLayout.text_boxes) {
+        if (!text_box_matches_recursive(mBrlytLayout, text_box, paneName)) {
+            continue;
+        }
+        text_box.color = color;
+        text_box.color_mapping_max = colorMappingMax;
+        matched = true;
+    }
+    if (!matched) {
+        throw std::runtime_error("Layout " + mLayoutName +
+                                 " has no text box in pane " +
+                                 std::string(paneName));
+    }
+    mRenderTextTextures.clear();
 }
 #endif
 
@@ -2827,6 +2934,15 @@ void smgpc::layout::LayoutRuntime::loadRenderData() {
         }
 
         mBrlytLayout = smgpc::layout::parse_brlyt_layout(archive->file_data(*brlyt_entry));
+        for (const auto& text_box : mBrlytLayout.text_boxes) {
+            if (text_box.control_tags.empty()) {
+                continue;
+            }
+            mTextBoxTemplates[text_box.name] = TextBoxTemplateState{
+                .raw_text = decode_utf16_words(text_box.raw_text),
+                .args = {},
+            };
+        }
         applyLayoutMessagesFromPaneUserData();
         for (const auto& entry : archive->entries()) {
             const auto animation_name = animation_name_from_path(entry.path);
@@ -2881,22 +2997,8 @@ void smgpc::layout::LayoutRuntime::loadRenderData() {
                     }
 
                     for (const auto& text_box : mBrlytLayout.text_boxes) {
-                        if (contains_font(mRenderFonts, text_box.font_name)) {
-                            continue;
-                        }
-
-                        const auto* font_entry = find_font_entry(*font_archive, text_box.font_name);
-                        if (font_entry == nullptr) {
-                            continue;
-                        }
-
-                        auto font = smgpc::layout::parse_brfnt_font(font_archive->file_data(*font_entry));
-                        mRenderFonts.push_back(RenderFont{
-                            .name = text_box.font_name,
-                            .font = std::move(font),
-                            .sheet_handles = {},
-                        });
-                        mRenderFonts.back().sheet_handles.resize(mRenderFonts.back().font.sheets.size());
+                        (void)add_render_font_from_archive(
+                            mRenderFonts, *font_archive, text_box.font_name);
                     }
                 } catch (const std::exception& e) {
                     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
@@ -2904,6 +3006,9 @@ void smgpc::layout::LayoutRuntime::loadRenderData() {
                     }
                 }
             }
+        }
+        if (layout_requires_picture_font(mBrlytLayout)) {
+            ensurePictureFontLoaded();
         }
     } catch (const std::exception& e) {
         mBrlytLayout = {};
@@ -2916,6 +3021,50 @@ void smgpc::layout::LayoutRuntime::loadRenderData() {
         mTextBoxTemplates.clear();
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->note_layout_texture_decode_failed(mLayoutName, "<layout>", e.what());
+        }
+    }
+}
+
+void smgpc::layout::LayoutRuntime::ensurePictureFontLoaded() {
+    if (contains_font(mRenderFonts, kPictureFontName)) {
+        return;
+    }
+
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    const auto font_path = find_companion_font_archive(mArchivePath);
+    if (!font_path.has_value()) {
+        if (runtime != nullptr) {
+            runtime->note_layout_texture_decode_failed(
+                mLayoutName, "PictureFont.brfnt",
+                "resolved layout has no companion Font.arc");
+        }
+        return;
+    }
+
+    try {
+        auto local_archive =
+            std::optional<smgpc::resource::RarcArchive>{};
+        const auto* archive =
+            static_cast<const smgpc::resource::RarcArchive*>(nullptr);
+        if (runtime != nullptr) {
+            archive = &runtime->dvd().archive_for_path(*font_path);
+        } else {
+            local_archive =
+                smgpc::resource::RarcArchive::from_file(*font_path);
+            archive = &*local_archive;
+        }
+
+        if (!add_render_font_from_archive(mRenderFonts, *archive,
+                                          kPictureFontName) &&
+            runtime != nullptr) {
+            runtime->note_layout_texture_decode_failed(
+                mLayoutName, "PictureFont.brfnt",
+                "resolved Font.arc has no exact PictureFont.brfnt");
+        }
+    } catch (const std::exception& e) {
+        if (runtime != nullptr) {
+            runtime->note_layout_texture_decode_failed(
+                mLayoutName, "PictureFont.brfnt", e.what());
         }
     }
 }
@@ -3038,7 +3187,12 @@ void smgpc::layout::LayoutRuntime::ensureTextTextureUploads(smgpc::render::Auror
             continue;
         }
 
-        auto text_texture = composeTextTexture(text_box_index, *font);
+        const auto* picture_font =
+            find_font(mRenderFonts, kPictureFontName);
+        auto text_texture =
+            composeTextTexture(text_box_index, *font,
+                               picture_font != nullptr ? &picture_font->font
+                                                       : nullptr);
         text_texture.external_font = external;
         text_texture.font_generation = generation;
         text_texture.handle = renderer.create_rgba8_texture(text_texture.width, text_texture.height,
@@ -3049,7 +3203,10 @@ void smgpc::layout::LayoutRuntime::ensureTextTextureUploads(smgpc::render::Auror
     }
 }
 
-smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::composeTextTexture(std::size_t text_box_index, const BrfntFont& font) const {
+smgpc::layout::LayoutRuntime::RenderTextTexture
+smgpc::layout::LayoutRuntime::composeTextTexture(
+    std::size_t text_box_index, const BrfntFont& font,
+    const BrfntFont* picture_font) const {
     const auto& text_box = mBrlytLayout.text_boxes[text_box_index];
     const auto scale_x = text_box.font_width > 0.0F ? text_box.font_width / static_cast< float >(font.width) : 1.0F;
     const auto scale_y = text_box.font_height > 0.0F ? text_box.font_height / static_cast< float >(font.height) : 1.0F;
@@ -3057,20 +3214,78 @@ smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::co
     const auto native_line_space = scale_y > 0.0F ? text_box.line_space / scale_y : text_box.line_space;
     const auto native_line_height = static_cast< float >(std::max< std::uint16_t >(font.height, 1U));
     const auto native_line_advance = std::max(1.0F, native_line_height + native_line_space);
-    const auto use_button_icon_aliases = text_uses_button_icon_aliases(std::span< const std::uint16_t >(text_box.text.data(), text_box.text.size()));
+
+    auto tokens = std::vector<smgpc::resource::BmgTextToken>{};
+    if (const auto found = mTextBoxTemplates.find(text_box.name);
+        found != mTextBoxTemplates.end()) {
+        try {
+            auto player_character = mPictureTagPlayerCharacter;
+            if (!player_character.has_value()) {
+                const auto control_tags = smgpc::resource::bmg_control_tags(
+                    found->second.raw_text);
+                const auto has_player_picture_tag =
+                    std::ranges::any_of(control_tags, [](const auto& tag) {
+                        return tag.type == 3U && tag.size_bytes == 6U &&
+                               tag.payload_words.size() == 1U &&
+                               tag.payload_words.front() == 0x002bU;
+                    });
+                if (has_player_picture_tag) {
+                    player_character = MR::isPlayerLuigi()
+                                           ? smgpc::resource::BmgPlayerCharacter::Luigi
+                                           : smgpc::resource::BmgPlayerCharacter::Mario;
+                }
+            }
+            tokens = smgpc::resource::format_bmg_tokens(
+                found->second.raw_text, found->second.args,
+                player_character);
+        } catch (const std::exception& e) {
+            throw std::logic_error("Layout " + mLayoutName + " text box " +
+                                   text_box.name + ": " + e.what());
+        }
+    } else if (!text_box.text.empty()) {
+        tokens.push_back(smgpc::resource::BmgTextToken{
+            .role = smgpc::resource::BmgTextToken::Role::Ordinary,
+            .text = decode_utf16_words(text_box.text),
+        });
+    }
 
     auto box_width = text_box.width;
     if (text_box.pane_index < mBrlytLayout.panes.size()) {
         box_width = mBrlytLayout.panes[text_box.pane_index].width;
     }
     const auto native_wrap_width = scale_x > 0.0F ? box_width / scale_x : box_width;
-    const auto lines = layout_text_lines(std::span< const std::uint16_t >(text_box.text.data(), text_box.text.size()), font, native_char_space,
-                                         native_wrap_width, use_button_icon_aliases);
+    const auto lines = layout_text_lines(tokens, font, picture_font,
+                                         native_char_space,
+                                         native_wrap_width, scale_y);
 
     auto max_line_width = 0.0F;
     auto has_multiline_text = lines.size() > 1U;
+    auto native_glyph_top = 0.0F;
+    auto native_glyph_bottom =
+        native_line_height + static_cast<float>(lines.size() - 1U) *
+                                 native_line_advance;
+    auto ordinary_glyph_count = std::size_t{};
+    auto picture_glyph_count = std::size_t{};
     for (const auto& line : lines) {
         max_line_width = std::max(max_line_width, line.width);
+    }
+    for (auto line_index = std::size_t{}; line_index < lines.size();
+         ++line_index) {
+        const auto line_y = static_cast<float>(line_index) *
+                            native_line_advance;
+        for (const auto& glyph : lines[line_index].glyphs) {
+            native_glyph_top =
+                std::min(native_glyph_top, line_y + glyph.y_offset);
+            native_glyph_bottom = std::max(
+                native_glyph_bottom,
+                line_y + glyph.y_offset + static_cast<float>(glyph.glyph.height));
+            if (glyph.role ==
+                smgpc::resource::BmgTextToken::Role::Picture) {
+                ++picture_glyph_count;
+            } else {
+                ++ordinary_glyph_count;
+            }
+        }
     }
 
     const auto text_horizontal_position = static_cast< std::uint8_t >(text_box.text_position % 3U);
@@ -3078,7 +3293,8 @@ smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::co
                                                                                                                             text_box.text_alignment);
     const auto native_texture_width =
         native_wrap_width > 0.0F && (has_multiline_text || line_alignment != 0U) ? std::max(native_wrap_width, max_line_width) : max_line_width;
-    const auto native_texture_height = native_line_height + static_cast< float >(lines.size() - 1U) * native_line_advance;
+    const auto native_texture_height =
+        std::max(1.0F, native_glyph_bottom - native_glyph_top);
 
     auto texture = RenderTextTexture{
         .text_box_index = text_box_index,
@@ -3088,6 +3304,8 @@ smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::co
         .font_height = std::max< std::uint16_t >(font.height, 1U),
         .rgba = {},
         .handle = {},
+        .ordinary_glyph_count = ordinary_glyph_count,
+        .picture_glyph_count = picture_glyph_count,
     };
     texture.rgba.assign(static_cast< std::size_t >(texture.width) * texture.height * 4U, 0U);
 
@@ -3101,22 +3319,31 @@ smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::co
     for (auto line_index = std::size_t{}; line_index < lines.size(); ++line_index) {
         const auto& line = lines[line_index];
         auto cursor_x = (static_cast< float >(texture.width) - line.width) * text_factor(line_alignment);
-        const auto line_y = static_cast< float >(line_index) * native_line_advance;
+        const auto line_y = static_cast< float >(line_index) * native_line_advance - native_glyph_top;
 
         for (const auto& layout_glyph : line.glyphs) {
             const auto& glyph = layout_glyph.glyph;
-            if (glyph.sheet_index >= font.sheets.size()) {
+            const auto* glyph_font = layout_glyph.font;
+            if (glyph_font == nullptr ||
+                glyph.sheet_index >= glyph_font->sheets.size()) {
                 cursor_x += layout_glyph.advance + native_char_space;
                 continue;
             }
 
-            const auto glyph_code = resolve_layout_glyph_code(layout_glyph.code, font, use_button_icon_aliases);
-            const auto is_button_icon = is_button_icon_code(glyph_code);
-            const auto& sheet = font.sheets[glyph.sheet_index];
+            const auto is_picture =
+                layout_glyph.role ==
+                smgpc::resource::BmgTextToken::Role::Picture;
+            const auto& sheet = glyph_font->sheets[glyph.sheet_index];
+            const auto draw_width =
+                is_picture && glyph.widths.glyph_width != 0U
+                    ? std::min<std::uint8_t>(glyph.width,
+                                             glyph.widths.glyph_width)
+                    : glyph.width;
             const auto glyph_x = static_cast< int >(std::round(cursor_x)) + static_cast< int >(glyph.widths.left);
-            const auto glyph_y = static_cast< int >(std::round(line_y));
+            const auto glyph_y = static_cast< int >(
+                std::round(line_y + layout_glyph.y_offset));
             for (auto y = 0U; y < glyph.height; ++y) {
-                for (auto x = 0U; x < glyph.width; ++x) {
+                for (auto x = 0U; x < draw_width; ++x) {
                     const auto source_x = static_cast< std::uint16_t >(glyph.x + x);
                     const auto source_y = static_cast< std::uint16_t >(glyph.y + y);
                     if (source_x >= sheet.width || source_y >= sheet.height) {
@@ -3130,22 +3357,38 @@ smgpc::layout::LayoutRuntime::RenderTextTexture smgpc::layout::LayoutRuntime::co
                     }
 
                     const auto source_offset = (static_cast< std::size_t >(source_y) * sheet.width + source_x) * 4U;
-                    const auto source_alpha =
-                        static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 3U]) * mapped_color[3U]) / 255U);
+                    const auto& color_modulation =
+                        is_picture ? text_box.color : mapped_color;
+                    const auto source_alpha = static_cast<std::uint8_t>(
+                        (static_cast<std::uint16_t>(
+                             sheet.rgba[source_offset + 3U]) *
+                         color_modulation[3U]) /
+                        255U);
                     if (source_alpha == 0U) {
                         continue;
                     }
 
                     const auto dest_offset = (static_cast< std::size_t >(dest_y) * texture.width + static_cast< std::size_t >(dest_x)) * 4U;
-                    const auto dest_alpha = is_button_icon ? mapped_color[3U] : source_alpha;
-                    if (dest_alpha >= texture.rgba[dest_offset + 3U]) {
+                    if (source_alpha >= texture.rgba[dest_offset + 3U]) {
                         texture.rgba[dest_offset] =
-                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset]) * mapped_color[0U]) / 255U);
+                            static_cast<std::uint8_t>(
+                                (static_cast<std::uint16_t>(
+                                     sheet.rgba[source_offset]) *
+                                 color_modulation[0U]) /
+                                255U);
                         texture.rgba[dest_offset + 1U] =
-                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 1U]) * mapped_color[1U]) / 255U);
+                            static_cast<std::uint8_t>(
+                                (static_cast<std::uint16_t>(
+                                     sheet.rgba[source_offset + 1U]) *
+                                 color_modulation[1U]) /
+                                255U);
                         texture.rgba[dest_offset + 2U] =
-                            static_cast< std::uint8_t >((static_cast< std::uint16_t >(sheet.rgba[source_offset + 2U]) * mapped_color[2U]) / 255U);
-                        texture.rgba[dest_offset + 3U] = dest_alpha;
+                            static_cast<std::uint8_t>(
+                                (static_cast<std::uint16_t>(
+                                     sheet.rgba[source_offset + 2U]) *
+                                 color_modulation[2U]) /
+                                255U);
+                        texture.rgba[dest_offset + 3U] = source_alpha;
                     }
                 }
             }

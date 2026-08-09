@@ -788,6 +788,43 @@ namespace smgpc::render {
         };
     }
 
+    std::array<float, 3U> gx_light_distance_attenuation(
+        float reference_distance, float reference_brightness, std::uint32_t function) {
+        // This is GXInitLightDistAttn's register math. Invalid authored values
+        // disable attenuation exactly as GX does.
+        if (reference_distance < 0.0F || reference_brightness <= 0.0F ||
+            reference_brightness >= 1.0F) {
+            function = 0U;
+        }
+
+        switch (function) {
+        case 1U:
+            return {
+                1.0F,
+                (1.0F - reference_brightness) /
+                    (reference_brightness * reference_distance),
+                0.0F,
+            };
+        case 2U:
+            return {
+                1.0F,
+                0.5F * (1.0F - reference_brightness) /
+                    (reference_brightness * reference_distance),
+                0.5F * (1.0F - reference_brightness) /
+                    (reference_brightness * reference_distance * reference_distance),
+            };
+        case 3U:
+            return {
+                1.0F,
+                0.0F,
+                (1.0F - reference_brightness) /
+                    (reference_brightness * reference_distance * reference_distance),
+            };
+        default:
+            return {1.0F, 0.0F, 0.0F};
+        }
+    }
+
     GXColorChannelControlState gx_color_channel_control_from_xf(std::uint32_t value) {
         const auto attenuation_mode = bits(value, 9U, 2U);
         return GXColorChannelControlState{

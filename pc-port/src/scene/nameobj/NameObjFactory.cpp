@@ -2,8 +2,12 @@
 
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Gravity/GlobalGravityObj.hpp"
+#include "Game/Map/Air.hpp"
 #include "Game/Map/GroupSwitchWatcher.hpp"
+#include "Game/Map/PlanetMap.hpp"
+#include "Game/Map/Sky.hpp"
 #include "Game/Map/SwitchSynchronizer.hpp"
+#include "Game/MapObj/BrightObj.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
@@ -14,6 +18,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/AreaObjRuntime.hpp"
+#include "scene/nameobj/PlanetMapCatalog.hpp"
 
 #include <algorithm>
 #include <array>
@@ -28,6 +33,10 @@ namespace {
     template <typename T>
     NameObj *create_supported_name_obj(const char *pName) {
         return new T(pName);
+    }
+
+    NameObj *create_supported_planet_map(const char *pName) {
+        return new PlanetMap(pName, nullptr);
     }
 
     // This is a compiled subset of the retail cCreateTable, not an alternate
@@ -48,6 +57,141 @@ namespace {
             "SwitchSynchronizerReverse",
             create_supported_name_obj<SwitchSynchronizer>,
             nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "VROrbit",
+            create_supported_name_obj<ProjectionMapSky>,
+            "VROrbit",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "VRDarkSpace",
+            create_supported_name_obj<Sky>,
+            "VRDarkSpace",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "VRSandwichSun",
+            create_supported_name_obj<ProjectionMapSky>,
+            "VRSandwichSun",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GalaxySky",
+            create_supported_name_obj<Sky>,
+            "GalaxySky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "MilkyWaySky",
+            create_supported_name_obj<Sky>,
+            "MilkyWaySky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HalfGalaxySky",
+            create_supported_name_obj<ProjectionMapSky>,
+            "HalfGalaxySky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GreenPlanetOrbitSky",
+            create_supported_name_obj<ProjectionMapSky>,
+            "GreenPlanetOrbitSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PhantomSky",
+            create_supported_name_obj<Sky>,
+            "PhantomSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "KoopaVS1Sky",
+            create_supported_name_obj<ProjectionMapSky>,
+            "KoopaVS1Sky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "KoopaVS2Sky",
+            create_supported_name_obj<Sky>,
+            "KoopaVS2Sky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "FamicomMarioSky",
+            create_supported_name_obj<Sky>,
+            "FamicomMarioSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "DesertSky",
+            create_supported_name_obj<Sky>,
+            "DesertSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "ChildRoomSky",
+            create_supported_name_obj<Sky>,
+            "ChildRoomSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "AuroraSky",
+            create_supported_name_obj<Sky>,
+            "AuroraSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "CloudSky",
+            create_supported_name_obj<ProjectionMapSky>,
+            "CloudSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "RockPlanetOrbitSky",
+            create_supported_name_obj<ProjectionMapSky>,
+            "RockPlanetOrbitSky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "StarrySky",
+            create_supported_name_obj<Sky>,
+            "StarrySky",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "AstroDomeSkyA",
+            create_supported_name_obj<Sky>,
+            "AstroDomeSkyA",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HomeAir",
+            create_supported_name_obj<Air>,
+            "HomeAir",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "SphereAir",
+            create_supported_name_obj<PriorDrawAir>,
+            "SphereAir",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "SunsetAir",
+            create_supported_name_obj<ProjectionMapAir>,
+            "SunsetAir",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "FineAir",
+            create_supported_name_obj<ProjectionMapAir>,
+            "FineAir",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "DimensionAir",
+            create_supported_name_obj<AirFar100m>,
+            "DimensionAir",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "DarknessRoomAir",
+            create_supported_name_obj<Air>,
+            "DarknessRoomAir",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "TwilightAir",
+            create_supported_name_obj<Air>,
+            "TwilightAir",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "BrightObj",
+            create_supported_name_obj<BrightObj>,
+            "LensFlare",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "BrightSun",
+            create_supported_name_obj<BrightSun>,
+            "LensFlare",
         },
         NameObjFactory::Name2CreateFunc{
             "CollisionBlocker",
@@ -157,6 +301,14 @@ namespace {
     };
 
     constexpr auto cUnavailableCreatorTable = std::array{
+        UnavailableCreatorRecord{
+            "SummerSky",
+            "exact_space_inner_child_and_switch_runtime_unavailable",
+        },
+        UnavailableCreatorRecord{
+            "AstroDomeSky",
+            "exact_astro_dome_sky_actor_and_arg_archive_runtime_unavailable",
+        },
         UnavailableCreatorRecord{"FileSelector", "retail_file_select_actor_runtime_unavailable"},
         UnavailableCreatorRecord{
             "SphereSelectorHandle",
@@ -243,6 +395,28 @@ namespace {
         return found != cUnavailableCreatorTable.end() ? &*found : nullptr;
     }
 
+    [[nodiscard]] const smgpc::scene::nameobj::PlanetMapCatalogEntry *
+    find_planet_map_entry(std::string_view object_name) {
+        const auto *catalog = smgpc::scene::nameobj::PlanetMapCatalog::active();
+        return catalog != nullptr ? catalog->find(object_name) : nullptr;
+    }
+
+    [[nodiscard]] std::string_view planet_map_support_reason(
+        smgpc::scene::nameobj::PlanetMapCatalogCreatorKind kind) {
+        using Kind = smgpc::scene::nameobj::PlanetMapCatalogCreatorKind;
+        switch (kind) {
+        case Kind::OrdinaryPlanetMap:
+            return "compiled_retail_planet_map_creator";
+        case Kind::ForceLowRuntimeUnavailable:
+            return "planet_force_low_creator_runtime_unavailable";
+        case Kind::UniqueCreatorRuntimeUnavailable:
+            return "planet_unique_creator_runtime_unavailable";
+        case Kind::OptionalSubmodelsRuntimeUnavailable:
+            return "planet_optional_submodel_runtime_unavailable";
+        }
+        return "planet_creator_runtime_unavailable";
+    }
+
     [[nodiscard]] smgpc::scene::nameobj::NameObjCreatorSupport describe_creator_support(std::string_view object_name) {
         using smgpc::scene::nameobj::NameObjCreatorSupport;
         using smgpc::scene::nameobj::NameObjCreatorSupportKind;
@@ -257,6 +431,15 @@ namespace {
             return NameObjCreatorSupport{
                 .kind = NameObjCreatorSupportKind::Supported,
                 .reason = "compiled_retail_area_creator_and_manager",
+            };
+        }
+        if (const auto *planet = find_planet_map_entry(object_name); planet != nullptr) {
+            const auto supported = planet->creator_kind ==
+                                   smgpc::scene::nameobj::PlanetMapCatalogCreatorKind::OrdinaryPlanetMap;
+            return NameObjCreatorSupport{
+                .kind = supported ? NameObjCreatorSupportKind::Supported :
+                                    NameObjCreatorSupportKind::RuntimeClosureUnavailable,
+                .reason = std::string(planet_map_support_reason(planet->creator_kind)),
             };
         }
         if (const auto *unavailable = find_unavailable_entry(object_name); unavailable != nullptr) {
@@ -347,8 +530,14 @@ namespace NameObjFactory {
         if (const auto *entry = find_supported_entry(name); entry != nullptr) {
             return entry->mCreateFunc;
         }
-        const auto *area_entry = find_area_obj_entry(name);
-        return area_entry != nullptr ? area_entry->mCreateFunc : nullptr;
+        if (const auto *area_entry = find_area_obj_entry(name); area_entry != nullptr) {
+            return area_entry->mCreateFunc;
+        }
+        const auto *planet = find_planet_map_entry(name);
+        return planet != nullptr &&
+                       planet->creator_kind == smgpc::scene::nameobj::PlanetMapCatalogCreatorKind::OrdinaryPlanetMap ?
+                   create_supported_planet_map :
+                   nullptr;
     }
 
     void requestMountObjectArchives(const char *pName, const JMapInfoIter &rIter) {
@@ -399,7 +588,20 @@ namespace NameObjFactory {
 
         const auto object_name = pName != nullptr ? std::string_view(pName) : std::string_view{};
         const auto *creator_entry = find_supported_entry(object_name);
-        if (creator_entry == nullptr && find_area_obj_entry(object_name) == nullptr) {
+        const auto *area_entry = find_area_obj_entry(object_name);
+        const auto *planet_entry = find_planet_map_entry(object_name);
+        if (creator_entry == nullptr && area_entry == nullptr &&
+            (planet_entry == nullptr ||
+             planet_entry->creator_kind !=
+                 smgpc::scene::nameobj::PlanetMapCatalogCreatorKind::OrdinaryPlanetMap)) {
+            return;
+        }
+
+        if (creator_entry == nullptr && area_entry == nullptr && planet_entry != nullptr) {
+            const auto *catalog = smgpc::scene::nameobj::PlanetMapCatalog::active();
+            for (const auto &archive_name : catalog->archive_names(*planet_entry)) {
+                pArchiveList->addArchive(archive_name.c_str());
+            }
             return;
         }
 
@@ -423,7 +625,39 @@ namespace NameObjFactory {
 namespace smgpc::scene::nameobj {
 
     bool can_create_name_obj(std::string_view object_name) {
-        return find_supported_entry(object_name) != nullptr || find_area_obj_entry(object_name) != nullptr;
+        const auto *planet = find_planet_map_entry(object_name);
+        return find_supported_entry(object_name) != nullptr ||
+               find_area_obj_entry(object_name) != nullptr ||
+               (planet != nullptr &&
+                planet->creator_kind == PlanetMapCatalogCreatorKind::OrdinaryPlanetMap);
+    }
+
+    NameObjSceneVisualKind scene_visual_kind(std::string_view object_name) {
+        const auto *entry = find_supported_entry(object_name);
+        if (entry == nullptr) {
+            const auto *planet = find_planet_map_entry(object_name);
+            return planet != nullptr &&
+                           planet->creator_kind == PlanetMapCatalogCreatorKind::OrdinaryPlanetMap ?
+                       NameObjSceneVisualKind::Planet :
+                       NameObjSceneVisualKind::None;
+        }
+
+        const auto creator = entry->mCreateFunc;
+        if (creator == create_supported_name_obj<Sky> ||
+            creator == create_supported_name_obj<ProjectionMapSky>) {
+            return NameObjSceneVisualKind::Sky;
+        }
+        if (creator == create_supported_name_obj<Air> ||
+            creator == create_supported_name_obj<AirFar100m> ||
+            creator == create_supported_name_obj<ProjectionMapAir> ||
+            creator == create_supported_name_obj<PriorDrawAir>) {
+            return NameObjSceneVisualKind::Air;
+        }
+        if (creator == create_supported_name_obj<BrightObj> ||
+            creator == create_supported_name_obj<BrightSun>) {
+            return NameObjSceneVisualKind::Bright;
+        }
+        return NameObjSceneVisualKind::None;
     }
 
     NameObjCreatorSupport describe_name_obj_creator_support(std::string_view object_name) {

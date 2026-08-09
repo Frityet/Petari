@@ -6,6 +6,7 @@
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
+#include "Game/Map/Air.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/Map/SphereSelector.hpp"
 #include "Game/Map/StageSwitch.hpp"
@@ -17,6 +18,7 @@
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Screen/InformationObserver.hpp"
+#include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
 #include "scene/AreaObjRuntime.hpp"
@@ -152,8 +154,12 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new CenterScreenBlur();
     case SceneObj_InformationObserver:
         return new InformationObserver();
+    case SceneObj_LensFlareDirector:
+        return new LensFlareDirector();
     case SceneObj_SphereSelector:
         return new SphereSelector();
+    case SceneObj_PriorDrawAirHolder:
+        return new PriorDrawAirHolder();
     default:
         return nullptr;
     }

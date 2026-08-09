@@ -1,11 +1,26 @@
+#include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/AreaObj/LightArea.hpp"
+#include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/Gravity/PointGravity.hpp"
+#include "Game/Map/PlanetMap.hpp"
+#include "Game/Map/StageSwitch.hpp"
+#include "Game/MapObj/BrightObj.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Scene/SceneFunction.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Screen/LensFlare.hpp"
+#include "Logger.hpp"
+#include "RendererService.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/CollisionPartsCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "resource/BcsvTable.hpp"
+#include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/StageHostScene.hpp"
+#include "scene/nameobj/NameObjFactory.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -74,26 +89,6 @@ namespace {
         return left.x * right.x + left.y * right.y + left.z * right.z;
     }
 
-    [[nodiscard]] std::size_t model_packet_count(
-        const smgpc::render::J3dModelGeometry &geometry) {
-        auto count = std::size_t{};
-        for (const auto &shape : geometry.shapes) {
-            count += shape.draw_packets.size();
-        }
-        return count;
-    }
-
-    [[nodiscard]] std::size_t model_triangle_count(
-        const smgpc::render::J3dModelGeometry &geometry) {
-        auto count = std::size_t{};
-        for (const auto &shape : geometry.shapes) {
-            for (const auto &packet : shape.draw_packets) {
-                count += packet.indices.size() / 3U;
-            }
-        }
-        return count;
-    }
-
     void test_real_gateway_spawn_planet_collision_and_gravity() {
         const auto disc_path = require_real_disc();
         aurora_dvd_close();
@@ -107,10 +102,62 @@ namespace {
         } disc_close_guard;
         DVDInit();
 
-        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        auto logger = smgpc::logging::create_default_logger();
+        auto window = smgpc::render::AuroraWindow({
+            .width = 640,
+            .height = 456,
+            .title = "SMG PC exact Gateway scene proof",
+        });
+        auto renderer = smgpc::render::AuroraRenderer(window);
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        runtime.set_current_stage_name("HeavensDoorGalaxy");
+        auto frame = renderer.begin_frame();
+        const auto renderer_context =
+            smgpc::render::ScopedAuroraRendererContext(renderer);
+        runtime.begin_frame(frame);
+        auto &dvd = runtime.dvd();
         auto scene = smgpc::scene::GatewayDemoScene{dvd};
-        auto demo = smgpc::compat::DemoSceneRuntime{
-            dvd, scene.placements(), scene.general_positions()};
+        auto light_area_placements = std::size_t{};
+        const smgpc::scene::StagePlacementObject *child_light_placement = nullptr;
+        for (const auto &placement : scene.placements()) {
+            if (placement.object_name == "LightCtrlCube") {
+                ++light_area_placements;
+                if (placement.zone_id == 5 && placement.table_path ==
+                                                  "jmp/placement/layera/areaobjinfo") {
+                    child_light_placement = &placement;
+                }
+            }
+        }
+        require(light_area_placements == 8U && child_light_placement != nullptr &&
+                    child_light_placement->jmap_entry_index == 0 &&
+                    child_light_placement->switch_appear_id == 90 &&
+                    child_light_placement->object_args[0] == 0 &&
+                    child_light_placement->object_args[1] == 10,
+                "Gateway must retain all eight authored LightCtrl placements and the exact child-zone switch row");
+        auto *area_container = dynamic_cast<AreaObjContainer *>(
+            scene.scene_obj_holder().getObj(SceneObj_AreaObjContainer));
+        auto *light_area_holder = area_container != nullptr
+                                      ? dynamic_cast<LightAreaHolder *>(
+                                            area_container->getManager("LightArea"))
+                                      : nullptr;
+        require(light_area_holder != nullptr && light_area_holder->mArray.size() == 8,
+                "Gateway must construct every complete LightCtrl through the shared AreaObj manager");
+        LightArea *child_light_area = nullptr;
+        for (auto index = 0; index < light_area_holder->mArray.size(); ++index) {
+            auto *candidate = dynamic_cast<LightArea *>(light_area_holder->getAreaObj(index));
+            if (candidate != nullptr && candidate->mPlacedZoneID == 5 &&
+                candidate->mObjArg0 == 0) {
+                child_light_area = candidate;
+                break;
+            }
+        }
+        require(child_light_area != nullptr && child_light_area->mObjArg1 == 10 &&
+                    child_light_area->mSwitchCtrl != nullptr &&
+                    child_light_area->mSwitchCtrl->isValidSwitchAppear() &&
+                    !child_light_area->mSwitchCtrl->isOnSwitchAppear() &&
+                    !child_light_area->isValid(),
+                "the child LightCtrl must honor authored SW_APPEAR 90's real initial off state rather than bypassing it");
+        const auto &demo = scene.demo_runtime();
         const auto guide_index = demo.find_definition(5, 0);
         require(guide_index.has_value(),
                 "the Gateway spin checkpoint requires the zone-5/link-0 guide demo");
@@ -218,15 +265,112 @@ namespace {
                         0.0005F),
                 "the forthcoming real MarioActor must receive the retained exact JMap row");
 
-        const auto packets = model_packet_count(scene.planet_geometry());
-        const auto triangles = model_triangle_count(scene.planet_geometry());
-        require(!scene.planet_bdl().empty() && packets != 0U && triangles != 0U,
-                "HeavensDoorMysteriousPlanet.bdl must parse into real draw packets");
-        const auto attributes = smgpc::resource::BcsvTable::from_bytes(scene.planet_pa());
-        require(!scene.planet_kcl().empty() && attributes.entry_count() != 0U &&
-                    scene.collision().stats().mesh_count == 1U &&
+        auto *planet = scene.planet();
+        auto *planet_model = smgpc::compat::actor_model(planet);
+        require(planet != nullptr && planet_model != nullptr &&
+                    planet_model->model_arc_name() == "HeavensDoorMysteriousPlanet",
+                "Gateway must expose the production-owned ordinary PlanetMap model");
+        planet_model->requireLoaded();
+        const auto planet_resources =
+            smgpc::compat::actor_collision_parts_resources(planet);
+        require(planet_model->isLoaded() && planet_model->has_indirect_texture() &&
+                    planet_resources.size() == 2U &&
+                    planet_resources[0].resource_name ==
+                        "HeavensDoorMysteriousPlanet" &&
+                    planet_resources[0].kcl_size == 632430U &&
+                    planet_resources[0].attributes_size == 31232U &&
+                    planet_resources[0].kcl_source.ends_with(
+                        "HeavensDoorMysteriousPlanet.arc:/heavensdoormysteriousplanet.kcl") &&
+                    planet_resources[0].attributes_source.ends_with(
+                        "HeavensDoorMysteriousPlanet.arc:/heavensdoormysteriousplanet.pa") &&
+                    planet_resources[1].resource_name == "MoveLimit" &&
+                    planet_resources[1].kcl_size == 25868U &&
+                    planet_resources[1].attributes_size == 1152U &&
+                    planet_resources[1].kcl_source.ends_with(
+                        "HeavensDoorMysteriousPlanet.arc:/movelimit.kcl") &&
+                    planet_resources[1].attributes_source.ends_with(
+                        "HeavensDoorMysteriousPlanet.arc:/movelimit.pa"),
+                "ordinary PlanetMap must own exact main and MoveLimit model/collision resources");
+        const auto ordinary_planet_count = std::ranges::count_if(
+            scene.visuals(), [](const auto &visual) {
+                return dynamic_cast<PlanetMap *>(visual.actor) != nullptr;
+            });
+        require(scene.visuals().size() == 7U && ordinary_planet_count == 4 &&
+                    scene.collision().stats().mesh_count == 6U &&
                     scene.collision().stats().triangle_count != 0U,
-                "the exact planet KCL and PA must form the development collision surface");
+                "Gateway must retain Sky, Air, BrightSun, four ordinary planets, and their six shared collision meshes");
+
+        const auto bright_placement = std::ranges::find_if(
+            scene.placements(), [](const auto& placement) {
+                return placement.object_name == "BrightSun" &&
+                       placement.zone_name == "HeavensDoorGalaxy" &&
+                       placement.table_path == "jmp/placement/common/objinfo";
+            });
+        require(bright_placement != scene.placements().end() &&
+                    bright_placement->jmap_entry_index == 1U &&
+                    bright_placement->l_id == 10 && bright_placement->zone_id == 0 &&
+                    bright_placement->factory_supported,
+                "Gateway did not retain the exact root-common BrightSun placement");
+        require_near(bright_placement->translation[0], 26110.0F, 0.001F,
+                     "BrightSun placement X");
+        require_near(bright_placement->translation[1], 0.0F, 0.001F,
+                     "BrightSun placement Y");
+        require_near(bright_placement->translation[2], -35950.0F, 0.001F,
+                     "BrightSun placement Z");
+
+        const auto bright_visual = std::ranges::find_if(
+            scene.visuals(), [&](const auto& visual) {
+                return visual.placement == &*bright_placement;
+            });
+        require(bright_visual != scene.visuals().end() &&
+                    dynamic_cast<BrightSun*>(bright_visual->actor) != nullptr &&
+                    MR::isExistSceneObj(SceneObj_LensFlareDirector),
+                "the generic visual lifecycle did not create exact BrightSun and LensFlareDirector actors");
+
+        const auto bright_factory =
+            smgpc::scene::nameobj::describe_name_obj_factory(runtime.dvd(), "BrightSun");
+        const auto has_archive = [&](std::string_view name) {
+            return std::ranges::any_of(bright_factory.archives, [&](const auto& archive) {
+                return archive.archive_name == name && archive.loaded;
+            });
+        };
+        require(bright_factory.creator_supported &&
+                    bright_factory.archives.size() == 4U &&
+                    has_archive("LensFlare") && has_archive("GlareGlow") &&
+                    has_archive("GlareLine") && has_archive("Sun"),
+                "BrightSun did not preload its exact shared flare and Sun archives");
+
+#ifndef NDEBUG
+        const auto scheduler_entries = runtime.scheduler().snapshot();
+        const auto has_scheduler_entry = [&](std::string_view name, s32 movement,
+                                             s32 calc_anim, s32 draw_buffer,
+                                             s32 draw_type) {
+            return std::ranges::any_of(scheduler_entries, [&](const auto& entry) {
+                return entry.name == name && entry.movement_type == movement &&
+                       entry.calc_anim_type == calc_anim &&
+                       entry.draw_buffer_type == draw_buffer &&
+                       entry.draw_type == draw_type;
+            });
+        };
+        require(has_scheduler_entry("BrightSun", MR::MovementType_Environment, -1,
+                                    -1, MR::DrawType_BrightSun) &&
+                    has_scheduler_entry("太陽", MR::MovementType_Sky,
+                                        MR::CalcAnimType_MapObj,
+                                        MR::DrawBufferType_Sun, -1) &&
+                    has_scheduler_entry("レンズフレアリング",
+                                        MR::MovementType_Layout,
+                                        MR::CalcAnimType_Layout,
+                                        MR::DrawBufferType_Model3DFor2D, -1) &&
+                    has_scheduler_entry("グレア（円形）",
+                                        MR::MovementType_Layout,
+                                        MR::CalcAnimType_Layout,
+                                        MR::DrawBufferType_Model3DFor2D, -1) &&
+                    has_scheduler_entry("グレア（ライン）",
+                                        MR::MovementType_Layout,
+                                        MR::CalcAnimType_Layout,
+                                        MR::DrawBufferType_Model3DFor2D, -1),
+                "BrightSun, Sun, or lens-flare children bypassed their retail scheduler categories");
+#endif
 
         const auto *point_gravity = dynamic_cast<const PointGravity *>(&scene.gravity());
         require(point_gravity != nullptr,
@@ -253,9 +397,12 @@ namespace {
                 "resolved Gateway gravity must point toward the exact child-zone center");
 
         const auto contact = scene.prove_start_contact(requester);
-        require(contact.surface.source_name ==
-                        "HeavensDoorMysteriousPlanet.arc/heavensdoormysteriousplanet.kcl" &&
-                    contact.surface.attributes.size() == scene.planet_pa().size() &&
+        const auto attributes =
+            smgpc::resource::BcsvTable::from_bytes(contact.surface.attributes);
+        require(contact.surface.source_name.ends_with(
+                        "HeavensDoorMysteriousPlanet.arc:/heavensdoormysteriousplanet.kcl") &&
+                    contact.surface.attributes.size() ==
+                        planet_resources[0].attributes_size &&
                     contact.surface.sensor != nullptr &&
                     contact.collision.attribute < attributes.entry_count(),
                 "the start contact must retain exact KCL, PA, and body-sensor provenance");
@@ -264,35 +411,30 @@ namespace {
         require(dot(contact.collision.normal, contact.gravity) < -0.95F,
                 "the contacted planet face must oppose the resolved inward gravity");
 
-        // This focused development surface must not silently turn an archive
-        // model into a production NameObj creator. StageHost preflight remains
-        // strict until the original planet actor closure exists.
-        require(!scene.planet_placement().factory_supported,
-                "the development scene must not mark the planet as production-factory supported");
-        auto strict_preflight_rejected = false;
-        try {
-            smgpc::scene::preflight_stage_placements_or_throw(
-                "HeavensDoorGalaxy", 1,
-                std::span<const smgpc::scene::StagePlacementObject>{
-                    &scene.planet_placement(), 1U});
-        } catch (const std::runtime_error &) {
-            strict_preflight_rejected = true;
-        }
-        require(strict_preflight_rejected,
-                "strict StageHost preflight must remain unchanged by the development scene");
+        require(scene.planet_placement().factory_supported &&
+                    smgpc::scene::nameobj::can_create_name_obj(
+                        "HeavensDoorMysteriousPlanet"),
+                "the exact ordinary PlanetMap must be supported by the production factory");
+        smgpc::scene::preflight_stage_placements_or_throw(
+            "HeavensDoorGalaxy", 1,
+            std::span<const smgpc::scene::StagePlacementObject>{
+                &scene.planet_placement(), 1U});
 
         std::cout << "[proof] disc=" << disc_path.string()
                   << "; start=(" << start_position.x << ',' << start_position.y << ','
                   << start_position.z << ")"
-                  << "; planet_bdl_bytes=" << scene.planet_bdl().size()
-                  << "; model_packets=" << packets << "; model_triangles=" << triangles
-                  << "; kcl_bytes=" << scene.planet_kcl().size()
+                  << "; planet_model=" << planet_model->model_arc_name()
+                  << "; visual_count=" << scene.visuals().size()
+                  << "; ordinary_planets=" << ordinary_planet_count
+                  << "; main_kcl_bytes=" << planet_resources[0].kcl_size
+                  << "; move_limit_kcl_bytes=" << planet_resources[1].kcl_size
                   << "; kcl_triangles=" << scene.collision().stats().triangle_count
-                  << "; pa_bytes=" << scene.planet_pa().size()
+                  << "; collision_meshes=" << scene.collision().stats().mesh_count
                   << "; gravity_center=(" << point_gravity->mTranslation.x << ','
                   << point_gravity->mTranslation.y << ','
                   << point_gravity->mTranslation.z << ')'
                   << "; start_surface_separation=" << contact.separation << '\n';
+        renderer.end_frame();
     }
 
 }  // namespace

@@ -11,7 +11,7 @@
 #include <cstdio>
 
 namespace {
-    void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*)) NO_INLINE {
+    NO_INLINE void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*)) {
         pFunc(pCtrl->mActor);
 
         if (pCtrl->_10) {
@@ -24,7 +24,7 @@ namespace {
     }
 
     template < typename T >
-    void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*, T), T arg) NO_INLINE {
+    NO_INLINE void LodFuntionCall(LodCtrl* pCtrl, void (*pFunc)(LiveActor*, T), T arg) {
         pFunc(pCtrl->mActor, arg);
 
         if (pCtrl->_10) {

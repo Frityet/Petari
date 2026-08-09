@@ -3,7 +3,10 @@
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
+#include "Game/AreaObj/LightArea.hpp"
+#include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
+#include "Game/Map/LightFunction.hpp"
 
 #include <algorithm>
 #include <array>
@@ -25,6 +28,10 @@ namespace smgpc::scene {
 
         [[nodiscard]] AreaObjMgr *create_cube_camera_manager(s32 capacity, const char *name) {
             return new CubeCameraMgr(capacity, name);
+        }
+
+        [[nodiscard]] AreaObjMgr *create_light_area_manager(s32 capacity, const char *name) {
+            return new LightAreaHolder(capacity, name);
         }
 
         void finalize_cube_camera_manager(AreaObjMgr &manager) {
@@ -100,6 +107,22 @@ namespace smgpc::scene {
                     .retail_manager_order = 33,
                     .manager_capacity = 0x40,
                     .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "LightCtrlCube",
+                    .object_creator = create_area_obj<LightArea, AreaForm::Type_Cube2>,
+                    .manager_name = "LightArea",
+                    .retail_manager_order = 35,
+                    .manager_capacity = 0x80,
+                    .manager_creator = create_light_area_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "LightCtrlCylinder",
+                    .object_creator = create_area_obj<LightArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "LightArea",
+                    .retail_manager_order = 35,
+                    .manager_capacity = 0x80,
+                    .manager_creator = create_light_area_manager,
                 },
                 AreaObjPlacementDescriptor{
                     .object_name = "BlueStarGuidanceCube",
@@ -191,7 +214,14 @@ namespace smgpc::scene {
 
     AreaObjRuntime::AreaObjRuntime() = default;
 
-    AreaObjRuntime::~AreaObjRuntime() = default;
+    AreaObjRuntime::~AreaObjRuntime() {
+        for (const auto &owned : _owned_managers) {
+            if (const auto *holder = dynamic_cast<const LightAreaHolder *>(owned.manager.get());
+                holder != nullptr) {
+                LightFunction::unregisterLightAreaHolder(holder);
+            }
+        }
+    }
 
     AreaObjMgr *AreaObjRuntime::adopt_manager(
         std::unique_ptr<AreaObjMgr> manager,

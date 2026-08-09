@@ -11,6 +11,7 @@
 
 #include "render/J3dMatrix.hpp"
 #include "render/J3dModel.hpp"
+#include "runtime/RuntimeServices.hpp"
 
 namespace smgpc::render {
     namespace {
@@ -136,7 +137,10 @@ namespace smgpc::render {
         [[nodiscard]] std::array<std::uint8_t, 4U> gx_raster_color(const J3dMeshVertex &source, const GXMaterialState &state,
                                                                    std::uint8_t color_channel, std::array<float, 3U> position,
                                                                    std::array<float, 3U> normal) {
-            return gx_evaluate_lit_raster_color(state, color_channel, source.color, position, normal);
+            return gx_evaluate_lit_raster_color(
+                state, color_channel, source.color,
+                j3d_host_view_vector_to_gx_view(position),
+                j3d_host_view_vector_to_gx_view(normal));
         }
 
         [[nodiscard]] std::array<std::uint8_t, 4U> gx_raster_color(const J3dMeshVertex &source, const GXMaterialState &state,
@@ -671,16 +675,12 @@ namespace smgpc::render {
             return mask;
         }
 
-        [[nodiscard]] GXMaterialState material_with_scene_lights(const GXMaterialState &material, std::span<const GXLightState> scene_lights,
-                                                                 const CameraProjectionContext *camera_context = nullptr) {
-            (void)camera_context;
-            auto state = material;
-            for (auto light = std::size_t {}; light < state.lights.size() && light < scene_lights.size(); ++light) {
-                if (!state.lights[light].loaded && scene_lights[light].loaded) {
-                    state.lights[light] = scene_lights[light];
-                }
-            }
-            return state;
+        [[nodiscard]] GXMaterialState material_with_scene_lights(
+            const GXMaterialState &material, std::span<const GXLightState> scene_lights,
+            const smgpc::camera::CameraPose *camera_pose = nullptr,
+            std::optional<GXColorValue> scene_ambient_color = {}) {
+            return j3d_material_with_scene_lights(material, scene_lights, scene_ambient_color,
+                                                  camera_pose);
         }
 
         [[nodiscard]] std::array<std::uint8_t, 4U> konst_color_for_selector(const GXMaterialState &state, std::uint8_t selector) {
@@ -1790,6 +1790,72 @@ namespace smgpc::render {
 
     }  // namespace
 
+    std::array<float, 3U> j3d_host_view_vector_to_gx_view(
+        std::array<float, 3U> value) {
+        value[2U] = -value[2U];
+        return value;
+    }
+
+    GXLightState j3d_resolve_scene_light_for_camera(
+        const GXLightState &light, const smgpc::camera::CameraPose &camera_pose) {
+        if (light.coordinate_space != GXLightCoordinateSpace::World) {
+            return light;
+        }
+
+        auto resolved = light;
+        const auto view_position = smgpc::camera::transform_world_to_camera(
+            camera_pose,
+            smgpc::camera::CameraParamVec3{light.position[0U], light.position[1U],
+                                           light.position[2U]});
+        // Camera-space vectors are points relative to the eye, whose view
+        // coordinate is exactly zero.
+        const auto view_direction = smgpc::camera::transform_world_to_camera(
+            camera_pose,
+            smgpc::camera::CameraParamVec3{
+                camera_pose.eye.x + light.direction[0U],
+                camera_pose.eye.y + light.direction[1U],
+                camera_pose.eye.z + light.direction[2U]});
+        resolved.position = j3d_host_view_vector_to_gx_view(
+            {view_position.x, view_position.y, view_position.z});
+        resolved.direction = j3d_host_view_vector_to_gx_view(
+            {view_direction.x, view_direction.y, view_direction.z});
+        resolved.coordinate_space = GXLightCoordinateSpace::View;
+        return resolved;
+    }
+
+    GXMaterialState j3d_material_with_scene_lights(
+        const GXMaterialState &material, std::span<const GXLightState> scene_lights,
+        std::optional<GXColorValue> scene_ambient_color,
+        const smgpc::camera::CameraPose *camera_pose) {
+        auto state = material;
+        for (auto light = std::size_t{};
+             light < state.lights.size() && light < scene_lights.size(); ++light) {
+            if (!scene_lights[light].loaded) {
+                continue;
+            }
+            // J3D material display lists execute before ActorLightCtrl loads
+            // the packet's actor lights. A loaded scene register therefore
+            // replaces, rather than merely fills, the material register.
+            state.lights[light] = camera_pose != nullptr
+                                      ? j3d_resolve_scene_light_for_camera(scene_lights[light], *camera_pose)
+                                      : scene_lights[light];
+        }
+        // ActorLightInfo owns GX_COLOR0A0's ambient register. Channel 1 keeps
+        // its material-authored register, matching the retail single load.
+        if (scene_ambient_color.has_value()) {
+            state.color_channels[0U].ambient_color = *scene_ambient_color;
+        }
+        return state;
+    }
+
+    J3dModelRendererDrawOptions j3d_scene_light_draw_options(
+        const smgpc::runtime::SceneLightService &scene_lights) {
+        auto options = J3dModelRendererDrawOptions{};
+        options.scene_lights = scene_lights.lights();
+        options.scene_ambient_color = scene_lights.actor_ambient();
+        return options;
+    }
+
     struct J3dModelRenderer::DrawScratch {
         CameraProjectionContext camera_context = {};
         std::vector<ProjectedVertex> projected_sources = {};
@@ -2127,6 +2193,49 @@ namespace smgpc::render {
         _btk_animation.reset();
     }
 
+    bool J3dModelRenderer::set_brk_animation(
+        const J3dBrkAnimationSummary& animation) {
+        _brk_animation.reset();
+        _brk_color_bindings.clear();
+        _brk_konst_bindings.clear();
+
+        const auto bind_tracks = [this](const auto& tracks, auto& bindings) {
+            for (auto track_index = std::size_t{};
+                 track_index < tracks.size(); ++track_index) {
+                auto material_index = std::optional<std::uint16_t>{};
+                for (const auto& mesh : _meshes) {
+                    if (mesh.material_name != tracks[track_index].material_name ||
+                        mesh.material_index == 0xffffU) {
+                        continue;
+                    }
+                    if (!material_index.has_value() ||
+                        mesh.material_index < *material_index) {
+                        material_index = mesh.material_index;
+                    }
+                }
+                if (material_index.has_value()) {
+                    bindings.push_back(BrkTrackBinding{
+                        .material_index = *material_index,
+                        .track_index = track_index,
+                    });
+                }
+            }
+        };
+        bind_tracks(animation.color_tracks, _brk_color_bindings);
+        bind_tracks(animation.konst_tracks, _brk_konst_bindings);
+        if (_brk_color_bindings.empty() && _brk_konst_bindings.empty()) {
+            return false;
+        }
+        _brk_animation = animation;
+        return true;
+    }
+
+    void J3dModelRenderer::clear_brk_animation() {
+        _brk_animation.reset();
+        _brk_color_bindings.clear();
+        _brk_konst_bindings.clear();
+    }
+
     bool J3dModelRenderer::set_btp_animation(render::AuroraRenderer &renderer, const J3dBtpAnimationSummary &animation) {
         for (auto &mesh : _meshes) {
             mesh.btp_texture_variants.clear();
@@ -2227,13 +2336,35 @@ namespace smgpc::render {
     void J3dModelRenderer::clear_animations() {
         _bck_animation.reset();
         _btk_animation.reset();
+        clear_brk_animation();
         clear_btp_animation();
     }
 
     void J3dModelRenderer::draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix,
                                 std::uint64_t frame, const J3dModelRendererDrawOptions &options) const {
+        draw_impl(renderer, &camera_pose, nullptr, actor_matrix, frame, options);
+    }
+
+    void J3dModelRenderer::draw_model_3d_for_2d(
+        render::AuroraRenderer &renderer,
+        const render::Model3DFor2DProjection &projection,
+        const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+        const J3dModelRendererDrawOptions &options) const {
+        draw_impl(renderer, nullptr, &projection, actor_matrix, frame, options);
+    }
+
+    void J3dModelRenderer::draw_impl(
+        render::AuroraRenderer &renderer,
+        const smgpc::camera::CameraPose *camera_pose,
+        const render::Model3DFor2DProjection *model_3d_for_2d,
+        const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+        const J3dModelRendererDrawOptions &options) const {
         if (!_loaded) {
             return;
+        }
+        if ((camera_pose == nullptr) == (model_3d_for_2d == nullptr)) {
+            throw std::logic_error(
+                "J3D draw requires exactly one perspective or Model3DFor2D projection");
         }
 
         if (_draw_scratch == nullptr) {
@@ -2241,7 +2372,10 @@ namespace smgpc::render {
         }
         auto &scratch = *_draw_scratch;
         scratch.prepare(_joint_transforms.size(), _draw_matrices.size());
-        scratch.camera_context = camera_projection_context(camera_pose, renderer.logical_framebuffer_size());
+        scratch.camera_context = camera_pose != nullptr ?
+                                     camera_projection_context(*camera_pose,
+                                                               renderer.logical_framebuffer_size()) :
+                                     CameraProjectionContext {};
         for (const auto &mesh : _meshes) {
             if (!material_filter_allows_mesh(options.material_filter, mesh.material_name, mesh.material_index)) {
                 continue;
@@ -2253,7 +2387,8 @@ namespace smgpc::render {
                 }
             }
 
-            submit_mesh(renderer, mesh, camera_pose, actor_matrix, frame, scratch, options.scene_lights, options);
+            submit_mesh(renderer, mesh, camera_pose, model_3d_for_2d, actor_matrix,
+                        frame, scratch, options.scene_lights, options);
         }
     }
 
@@ -2373,7 +2508,10 @@ namespace smgpc::render {
         auto packets = std::vector<J3dRendererPacketState>{};
         packets.reserve(_meshes.size());
         for (const auto &mesh : _meshes) {
-            auto state = packet_state_for_mesh(mesh, frame, scene_lights, options.bck_animation_frame, options.btp_animation_frame);
+            auto state = packet_state_for_mesh(
+                mesh, frame, scene_lights, options.bck_animation_frame,
+                options.brk_animation_frame, options.btp_animation_frame,
+                options.scene_ambient_color);
             state.gx_blend = gx_blend_with_draw_options(state.gx_blend, options);
             for (auto &matrix : state.tex_matrices) {
                 apply_projmap_effect_matrix(matrix, options);
@@ -2479,7 +2617,9 @@ namespace smgpc::render {
         return mesh;
     }
 
-    J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights) const {
+    J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(
+        const Mesh &mesh, std::span<const GXLightState> scene_lights,
+        std::optional<GXColorValue> scene_ambient_color) const {
         auto state = J3dRendererPacketState {
             .material_name = mesh.material_name,
             .shape_index = mesh.shape_index,
@@ -2520,7 +2660,8 @@ namespace smgpc::render {
         };
 
         if (mesh.material.has_value()) {
-            const auto effective_material = material_with_scene_lights(mesh.material->gx_state, scene_lights);
+            const auto effective_material = material_with_scene_lights(
+                mesh.material->gx_state, scene_lights, nullptr, scene_ambient_color);
             state.color_channel_count = effective_material.color_channel_count;
             for (auto channel = 0U; channel < state.color_channel_material_colors.size(); ++channel) {
                 state.color_channel_material_colors[channel] = effective_material.color_channels[channel].material_color;
@@ -2620,8 +2761,10 @@ namespace smgpc::render {
     J3dRendererPacketState J3dModelRenderer::packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
                                                                    std::span<const GXLightState> scene_lights,
                                                                    std::optional<float> bck_animation_frame,
-                                                                   std::optional<float> btp_animation_frame) const {
-        auto state = packet_state_for_mesh(mesh, scene_lights);
+                                                                   std::optional<float> brk_animation_frame,
+                                                                   std::optional<float> btp_animation_frame,
+                                                                   std::optional<GXColorValue> scene_ambient_color) const {
+        auto state = packet_state_for_mesh(mesh, scene_lights, scene_ambient_color);
         const auto animation_frame = static_cast<float>(frame);
 
         if (_bck_animation.has_value()) {
@@ -2655,6 +2798,27 @@ namespace smgpc::render {
                                              : animation_frame;
             state.btk_frame_max = _btk_animation->frame_max;
             state.btk_material_count = static_cast<std::uint16_t>(_btk_animation->materials.size());
+        }
+
+        if (_brk_animation.has_value()) {
+            const auto raw_frame = brk_animation_frame.value_or(animation_frame);
+            apply_brk_to_mesh(mesh, raw_frame, state.gx_initial_tev_registers,
+                              state.gx_initial_tev_k_colors);
+            for (auto color = 0U; color < state.tev_k_colors.size(); ++color) {
+                state.tev_k_colors[color] = GXColorValue{
+                    state.gx_initial_tev_k_colors[color][0U],
+                    state.gx_initial_tev_k_colors[color][1U],
+                    state.gx_initial_tev_k_colors[color][2U],
+                    state.gx_initial_tev_k_colors[color][3U],
+                };
+            }
+            state.brk_active = true;
+            state.brk_frame = raw_frame;
+            state.brk_frame_max = _brk_animation->frame_max;
+            state.brk_color_track_count = static_cast<std::uint16_t>(
+                _brk_animation->color_tracks.size());
+            state.brk_konst_track_count = static_cast<std::uint16_t>(
+                _brk_animation->konst_tracks.size());
         }
 
         if (_btp_animation.has_value()) {
@@ -2703,11 +2867,75 @@ namespace smgpc::render {
         return state;
     }
 
-    void J3dModelRenderer::submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const smgpc::camera::CameraPose &camera_pose,
-                                       const J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawScratch &scratch,
-                                       std::span<const GXLightState> scene_lights,
-                                       const J3dModelRendererDrawOptions &options) const {
+    void J3dModelRenderer::apply_brk_to_mesh(
+        const Mesh& mesh, float raw_frame,
+        std::array<render::GxTevRegisterColor2D, 4U>& registers,
+        std::array<std::array<std::uint8_t, 4U>, 4U>& konst_colors,
+        J3dMaterialSummary* material) const {
+        if (!_brk_animation.has_value()) {
+            return;
+        }
+
+        for (const auto& binding : _brk_color_bindings) {
+            if (binding.material_index != mesh.material_index) {
+                continue;
+            }
+            const auto& track =
+                _brk_animation->color_tracks[binding.track_index];
+            const auto register_index =
+                static_cast<std::size_t>(track.register_id) + 1U;
+            const auto value = j3d_evaluate_brk_color_track(
+                *_brk_animation, binding.track_index, raw_frame);
+            registers[register_index] = value;
+            if (material != nullptr) {
+                material->tev_colors[register_index] = value;
+                material->gx_state.tev_registers[register_index] = value;
+            }
+        }
+        for (const auto& binding : _brk_konst_bindings) {
+            if (binding.material_index != mesh.material_index) {
+                continue;
+            }
+            const auto& track =
+                _brk_animation->konst_tracks[binding.track_index];
+            const auto register_index =
+                static_cast<std::size_t>(track.register_id);
+            const auto value = j3d_evaluate_brk_konst_track(
+                *_brk_animation, binding.track_index, raw_frame);
+            konst_colors[register_index] = value;
+            if (material != nullptr) {
+                material->tev_k_colors[register_index] = value;
+                material->gx_state.tev_k_colors[register_index] = value;
+            }
+        }
+    }
+
+    void J3dModelRenderer::submit_mesh(
+        render::AuroraRenderer &renderer, const Mesh &mesh,
+        const smgpc::camera::CameraPose *camera_pose,
+        const render::Model3DFor2DProjection *model_3d_for_2d,
+        const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+        DrawScratch &scratch, std::span<const GXLightState> scene_lights,
+        const J3dModelRendererDrawOptions &options) const {
         const auto effective_gx_blend = gx_blend_with_draw_options(mesh.gx_blend, options);
+        const auto submit_textured = [&](render::TextureHandle texture,
+                                         const render::core::TexturedTriangleBatch2D &batch) {
+            if (model_3d_for_2d != nullptr) {
+                renderer.submit_textured_triangles_model_3d_for_2d(
+                    texture, batch, *model_3d_for_2d);
+            } else {
+                renderer.submit_textured_triangles_3d(texture, batch, *camera_pose);
+            }
+        };
+        const auto submit_gx_material =
+            [&](const render::core::GxMaterialTriangleBatch2D &batch) {
+                if (model_3d_for_2d != nullptr) {
+                    renderer.submit_gx_material_triangles_model_3d_for_2d(
+                        batch, *model_3d_for_2d);
+                } else {
+                    renderer.submit_gx_material_triangles_3d(batch, *camera_pose);
+                }
+            };
         if (mesh.project_source_vertices) {
             auto &vertices = scratch.textured_vertices;
             auto &indices = scratch.indices;
@@ -2752,7 +2980,17 @@ namespace smgpc::render {
             if (mesh.packet_mode == J3dRendererPacketMode::ShaderGxTev && mesh.gx_texture_stage_count > 0U) {
                 auto effective_passes = mesh.material_passes;
                 auto effective_material = *mesh.material;
-                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights, &scratch.camera_context);
+                effective_material.gx_state = material_with_scene_lights(
+                    mesh.material->gx_state, scene_lights, camera_pose,
+                    options.scene_ambient_color);
+                auto effective_tev_registers = mesh.gx_initial_tev_registers;
+                auto effective_tev_k_colors = mesh.gx_initial_tev_k_colors;
+                apply_brk_to_mesh(
+                    mesh,
+                    options.brk_animation_frame.value_or(
+                        static_cast<float>(frame)),
+                    effective_tev_registers, effective_tev_k_colors,
+                    &effective_material);
                 const auto btp_frame = options.btp_animation_frame.value_or(static_cast<float>(frame));
                 apply_btp_texture_pattern(_btp_animation.has_value() ? &*_btp_animation : nullptr,
                                           mesh.material_name, btp_frame, effective_passes);
@@ -2799,7 +3037,7 @@ namespace smgpc::render {
                     return;
                 }
 
-                renderer.submit_gx_material_triangles_3d(render::core::GxMaterialTriangleBatch2D {
+                submit_gx_material(render::core::GxMaterialTriangleBatch2D {
                     .vertices = std::span<const render::GxMaterialVertex2D>(gx_vertices.data(), gx_vertices.size()),
                     .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                     .texture_stages = std::span<const render::GxTextureStage2D>(gx_texture_stages.data(), mesh.gx_texture_stage_count),
@@ -2816,8 +3054,8 @@ namespace smgpc::render {
                                                                                     mesh.gx_indirect_texture_scale_count),
                     .indirect_tev_stages =
                         std::span<const render::core::GxIndirectTevStage2D>(mesh.gx_indirect_tev_stages.data(), mesh.gx_indirect_tev_stage_count),
-                    .initial_tev_registers = mesh.gx_initial_tev_registers,
-                    .initial_tev_k_colors = mesh.gx_initial_tev_k_colors,
+                    .initial_tev_registers = effective_tev_registers,
+                    .initial_tev_k_colors = effective_tev_k_colors,
                     .has_initial_tev_k_colors = true,
                     .alpha_compare = mesh.gx_alpha_compare,
                     .blend = effective_gx_blend,
@@ -2826,13 +3064,23 @@ namespace smgpc::render {
                     .depth_compare = mesh.depth_compare,
                     .cull_mode = mesh.cull_mode,
                     .fog = gx_fog_for_mesh(mesh.material),
-                }, camera_pose);
+                });
                 return;
             }
             if (mesh.evaluate_material_per_vertex && mesh.material.has_value()) {
                 auto effective_passes = mesh.material_passes;
                 auto effective_material = *mesh.material;
-                effective_material.gx_state = material_with_scene_lights(mesh.material->gx_state, scene_lights, &scratch.camera_context);
+                effective_material.gx_state = material_with_scene_lights(
+                    mesh.material->gx_state, scene_lights, camera_pose,
+                    options.scene_ambient_color);
+                auto effective_tev_registers = mesh.gx_initial_tev_registers;
+                auto effective_tev_k_colors = mesh.gx_initial_tev_k_colors;
+                apply_brk_to_mesh(
+                    mesh,
+                    options.brk_animation_frame.value_or(
+                        static_cast<float>(frame)),
+                    effective_tev_registers, effective_tev_k_colors,
+                    &effective_material);
                 if (_btk_animation.has_value()) {
                     for (auto &pass : effective_passes) {
                         if (!pass.tex_matrix.has_value()) {
@@ -2865,8 +3113,8 @@ namespace smgpc::render {
                     return;
                 }
 
-                renderer.submit_textured_triangles_3d(mesh.texture,
-                                                      render::core::TexturedTriangleBatch2D {
+                submit_textured(mesh.texture,
+                                render::core::TexturedTriangleBatch2D {
                                                           .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
                                                           .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                                                           .wrap_u = mesh.wrap_u,
@@ -2881,8 +3129,7 @@ namespace smgpc::render {
                                                           .depth_compare = mesh.depth_compare,
                                                           .cull_mode = mesh.cull_mode,
                                                           .fog = gx_fog_for_mesh(mesh.material),
-                                                      },
-                                                      camera_pose);
+                                });
                 return;
             }
 
@@ -2903,8 +3150,8 @@ namespace smgpc::render {
                 return;
             }
 
-            renderer.submit_textured_triangles_3d(texture_variant != nullptr ? texture_variant->texture : mesh.texture,
-                                                  render::core::TexturedTriangleBatch2D {
+            submit_textured(texture_variant != nullptr ? texture_variant->texture : mesh.texture,
+                            render::core::TexturedTriangleBatch2D {
                                                       .vertices = std::span<const render::TexturedVertex2D>(vertices.data(), vertices.size()),
                                                       .indices = std::span<const std::uint16_t>(indices.data(), indices.size()),
                                                       .wrap_u = texture_variant != nullptr ? texture_variant->wrap_u : mesh.wrap_u,
@@ -2919,13 +3166,11 @@ namespace smgpc::render {
                                                       .depth_compare = mesh.depth_compare,
                                                       .cull_mode = mesh.cull_mode,
                                                       .fog = gx_fog_for_mesh(mesh.material),
-                                                  },
-                                                  camera_pose);
+                            });
             return;
         }
 
-        renderer.submit_textured_triangles(mesh.texture,
-                                           render::core::TexturedTriangleBatch2D {
+        const auto batch = render::core::TexturedTriangleBatch2D {
                                                .vertices = std::span<const render::TexturedVertex2D>(mesh.vertices.data(), mesh.vertices.size()),
                                                .indices = std::span<const std::uint16_t>(mesh.indices.data(), mesh.indices.size()),
                                                .space = render::RenderSpace2D::CenteredFramebuffer,
@@ -2941,7 +3186,13 @@ namespace smgpc::render {
                                                .depth_compare = mesh.depth_compare,
                                                .cull_mode = mesh.cull_mode,
                                                .fog = gx_fog_for_mesh(mesh.material),
-                                           });
+                                           };
+        if (model_3d_for_2d != nullptr) {
+            renderer.submit_textured_triangles_model_3d_for_2d(
+                mesh.texture, batch, *model_3d_for_2d);
+        } else {
+            renderer.submit_textured_triangles(mesh.texture, batch);
+        }
     }
 
     J3dMatrix3x4 j3d_matrix_from_translation_scale(const smgpc::camera::CameraParamVec3 &translation, float scale) {

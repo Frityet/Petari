@@ -19,6 +19,10 @@ namespace MR {
     void requestMovementOn(NameObj* pObj);
     void requestMovementOff(NameObj* pObj);
     void connectToSceneMapObj(LiveActor* pActor);
+    void connectToScenePlanet(LiveActor* pActor);
+    void connectToSceneAir(LiveActor* pActor);
+    void connectToSceneSun(LiveActor* pActor);
+    void connectToScene3DModelFor2D(LiveActor* pActor);
     void connectToSceneMapObjMovement(NameObj* pObj);
     void connectToSceneNoSilhouettedMapObj(LiveActor* pActor);
     void connectToSceneItemStrongLight(LiveActor* pActor);

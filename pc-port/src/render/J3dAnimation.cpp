@@ -291,10 +291,138 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dBrkAnimationSummary parse_trk1(std::span<const std::uint8_t> data, std::size_t section_offset) {
-            return J3dBrkAnimationSummary {
+            if (section_offset + 0x58U > data.size()) {
+                throw std::runtime_error("TRK1 header is outside its section");
+            }
+
+            auto summary = J3dBrkAnimationSummary {
                 .attribute = data[section_offset + 0x08U],
                 .frame_max = read_be_s16(data, section_offset + 0x0aU),
             };
+            const auto color_track_count = read_be16(data, section_offset + 0x0cU);
+            const auto konst_track_count = read_be16(data, section_offset + 0x0eU);
+            const auto color_counts = std::array<std::uint16_t, 4U>{
+                read_be16(data, section_offset + 0x10U),
+                read_be16(data, section_offset + 0x12U),
+                read_be16(data, section_offset + 0x14U),
+                read_be16(data, section_offset + 0x16U),
+            };
+            const auto konst_counts = std::array<std::uint16_t, 4U>{
+                read_be16(data, section_offset + 0x18U),
+                read_be16(data, section_offset + 0x1aU),
+                read_be16(data, section_offset + 0x1cU),
+                read_be16(data, section_offset + 0x1eU),
+            };
+            const auto color_table_relative = read_be32(data, section_offset + 0x20U);
+            const auto konst_table_relative = read_be32(data, section_offset + 0x24U);
+            const auto color_ids_relative = read_be32(data, section_offset + 0x28U);
+            const auto konst_ids_relative = read_be32(data, section_offset + 0x2cU);
+            const auto color_names_relative = read_be32(data, section_offset + 0x30U);
+            const auto konst_names_relative = read_be32(data, section_offset + 0x34U);
+
+            auto read_component_values = [&](auto& destination,
+                                             const auto& counts,
+                                             std::size_t relative_base) {
+                for (auto channel = 0U; channel < destination.size(); ++channel) {
+                    const auto relative = read_be32(
+                        data, section_offset + relative_base + channel * 4U);
+                    if (counts[channel] == 0U) {
+                        destination[channel].clear();
+                        continue;
+                    }
+                    if (relative == 0U) {
+                        throw std::runtime_error(
+                            "TRK1 value table is missing for a nonempty channel");
+                    }
+                    destination[channel] = read_s16_values(
+                        data, section_offset + relative, counts[channel]);
+                }
+            };
+            read_component_values(summary.color_values, color_counts, 0x38U);
+            read_component_values(summary.konst_values, konst_counts, 0x48U);
+
+            const auto validate_channel = [](
+                                              const J3dAnimationKeyTableSummary& table,
+                                              const std::vector<std::int16_t>& values) {
+                if (table.max_frame == 0U) {
+                    return;
+                }
+                if (table.max_frame == 1U) {
+                    if (table.offset >= values.size()) {
+                        throw std::runtime_error(
+                            "TRK1 single-value channel is outside its value table");
+                    }
+                    return;
+                }
+                if (table.type > 1U) {
+                    throw std::runtime_error("TRK1 uses an unsupported tangent type");
+                }
+                const auto stride = table.type == 0U ? 3U : 4U;
+                const auto required = static_cast<std::size_t>(table.offset) +
+                                      static_cast<std::size_t>(table.max_frame) * stride;
+                if (required > values.size()) {
+                    throw std::runtime_error(
+                        "TRK1 keyframe channel is outside its value table");
+                }
+            };
+
+            auto read_tracks = [&](std::uint16_t track_count,
+                                   std::uint32_t table_relative,
+                                   std::uint32_t ids_relative,
+                                   std::uint32_t names_relative,
+                                   const auto& values, std::uint8_t max_register,
+                                   auto& destination) {
+                if (track_count == 0U) {
+                    return;
+                }
+                if (table_relative == 0U || ids_relative == 0U ||
+                    names_relative == 0U) {
+                    throw std::runtime_error("TRK1 track metadata is incomplete");
+                }
+                const auto names = read_name_table(data, section_offset,
+                                                   names_relative);
+                if (names.size() != track_count) {
+                    throw std::runtime_error(
+                        "TRK1 material-name table does not match its track count");
+                }
+                destination.reserve(track_count);
+                for (auto track_index = 0U; track_index < track_count;
+                     ++track_index) {
+                    const auto track_offset = section_offset + table_relative +
+                                              track_index * 0x1cU;
+                    if (track_offset + 0x1cU > data.size()) {
+                        throw std::runtime_error(
+                            "TRK1 register track is outside its section");
+                    }
+                    auto track = J3dBrkAnimationSummary::RegisterTrack{
+                        .material_name = names[track_index],
+                        .stored_material_id = read_be16(
+                            data, section_offset + ids_relative +
+                                      track_index * 2U),
+                        .register_id = data[track_offset + 0x18U],
+                    };
+                    if (track.material_name.empty() ||
+                        track.register_id > max_register) {
+                        throw std::runtime_error(
+                            "TRK1 contains an invalid material/register binding");
+                    }
+                    for (auto channel = 0U; channel < track.channels.size();
+                         ++channel) {
+                        track.channels[channel] =
+                            read_key_table(data, track_offset + channel * 6U);
+                        validate_channel(track.channels[channel], values[channel]);
+                    }
+                    destination.push_back(std::move(track));
+                }
+            };
+
+            read_tracks(color_track_count, color_table_relative,
+                        color_ids_relative, color_names_relative,
+                        summary.color_values, 2U, summary.color_tracks);
+            read_tracks(konst_track_count, konst_table_relative,
+                        konst_ids_relative, konst_names_relative,
+                        summary.konst_values, 3U, summary.konst_tracks);
+            return summary;
         }
 
         [[nodiscard]] J3dBtpAnimationSummary parse_tpt1(std::span<const std::uint8_t> data, std::size_t section_offset) {
@@ -384,7 +512,8 @@ namespace smgpc::render {
             } else if (tag == "TTK1") {
                 summary.btk = parse_ttk1(animation_data, section_offset);
             } else if (tag == "TRK1") {
-                summary.brk = parse_trk1(animation_data, section_offset);
+                summary.brk = parse_trk1(
+                    animation_data.subspan(section_offset, available_size), 0U);
             } else if (tag == "TPT1") {
                 summary.btp = parse_tpt1(animation_data.subspan(section_offset, available_size), 0U);
             }
@@ -554,6 +683,57 @@ namespace smgpc::render {
             return std::nullopt;
         }
         return btp.texture_indices[value_index];
+    }
+
+    std::array<std::int16_t, 4U> j3d_evaluate_brk_color_track(
+        const J3dBrkAnimationSummary& brk, std::size_t track_index,
+        float raw_frame) {
+        if (track_index >= brk.color_tracks.size() ||
+            !std::isfinite(raw_frame)) {
+            throw std::runtime_error("TRK1 color-track evaluation is invalid");
+        }
+
+        const auto& track = brk.color_tracks[track_index];
+        auto result = std::array<std::int16_t, 4U>{};
+        for (auto channel = 0U; channel < result.size(); ++channel) {
+            const auto& table = track.channels[channel];
+            const auto value = evaluate_key_table(raw_frame, table,
+                                                  brk.color_values[channel],
+                                                  0.0F);
+            if (table.max_frame <= 1U) {
+                result[channel] = static_cast<std::int16_t>(value);
+            } else {
+                result[channel] = static_cast<std::int16_t>(
+                    std::clamp(value, -1024.0F, 1023.0F));
+            }
+        }
+        return result;
+    }
+
+    std::array<std::uint8_t, 4U> j3d_evaluate_brk_konst_track(
+        const J3dBrkAnimationSummary& brk, std::size_t track_index,
+        float raw_frame) {
+        if (track_index >= brk.konst_tracks.size() ||
+            !std::isfinite(raw_frame)) {
+            throw std::runtime_error("TRK1 konst-track evaluation is invalid");
+        }
+
+        const auto& track = brk.konst_tracks[track_index];
+        auto result = std::array<std::uint8_t, 4U>{};
+        for (auto channel = 0U; channel < result.size(); ++channel) {
+            const auto& table = track.channels[channel];
+            const auto value = evaluate_key_table(raw_frame, table,
+                                                  brk.konst_values[channel],
+                                                  0.0F);
+            if (table.max_frame <= 1U) {
+                result[channel] = static_cast<std::uint8_t>(
+                    static_cast<std::int32_t>(value));
+            } else {
+                result[channel] = static_cast<std::uint8_t>(
+                    std::clamp(value, 0.0F, 255.0F));
+            }
+        }
+        return result;
     }
 
 }  // namespace smgpc::render

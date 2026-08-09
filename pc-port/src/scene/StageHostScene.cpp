@@ -16,8 +16,10 @@
 #include "scene/SceneExecutionService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StagePlacementResolver.hpp"
+#include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "scene/nameobj/ObjectNameTable.hpp"
+#include "scene/nameobj/PlanetMapCatalog.hpp"
 
 #include <algorithm>
 #include <array>
@@ -286,7 +288,6 @@ namespace smgpc::scene {
 
     StageHostScene::~StageHostScene() {
         _runtime.camera_system().clear_game_camera_pose();
-        _collision.deactivate();
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
@@ -296,7 +297,12 @@ namespace smgpc::scene {
         _demo_scene_runtime.reset();
         _runtime.player_system().clear_stage_state();
         destroy_roots();
+        // Exact actor destruction releases every owned KCL registration while
+        // the stage collision service is still the active scene owner.
+        _collision.deactivate();
         _scene_obj_holder_binding.reset();
+        _planet_map_catalog.reset();
+        _stage_light_binding.reset();
         if (_stage_audio_started) {
             smgpc::compat::end_stage_audio(_runtime.audio());
             _stage_audio_started = false;
@@ -545,6 +551,10 @@ namespace smgpc::scene {
         }
         const auto tables = resolve_stage_placement_tables(
             _runtime.dvd(), _request.stage_name, _request.scenario_no);
+        _planet_map_catalog =
+            std::make_unique<smgpc::scene::nameobj::PlanetMapCatalog>(_runtime.dvd());
+        _stage_light_binding = std::make_unique<StageLightSceneBinding>(
+            _runtime.dvd(), _request.stage_name, tables);
         _placements = resolve_stage_placement_objects(_runtime.dvd(), tables);
         const auto general_positions = select_stage_general_positions(tables);
         // The original DemoDirector/executors exist before placement actors

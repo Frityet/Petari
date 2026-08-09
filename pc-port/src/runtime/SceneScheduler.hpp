@@ -3,6 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <span>
 #include <string>
 #include <vector>
@@ -253,6 +254,7 @@ namespace smgpc::runtime {
         void connect_draw(NameObj &obj);
         void disconnect_draw(NameObj &obj);
         [[nodiscard]] bool is_draw_connected(const NameObj &obj) const;
+        [[nodiscard]] std::optional<s32> light_type_for_actor(const LiveActor &actor) const;
         void register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
         void unregister_layout(smgpc::layout::LayoutRuntime &layout);
         void register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type);
@@ -271,6 +273,7 @@ namespace smgpc::runtime {
         void execute_draw_buffer_list_normal_xlu(const smgpc::camera::CameraPose &camera_pose);
         void execute_draw_buffer_list_normal(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air = false,
                                              s32 interleaved_draw_type = -1, s32 interleaved_light_type = -1);
+        void execute_draw_after_indirect(const smgpc::camera::CameraPose &camera_pose);
         void execute_draw_type(s32 draw_type);
         void execute_draw_list_2d_normal();
         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
@@ -311,6 +314,9 @@ namespace smgpc::runtime {
         [[nodiscard]] static std::string entry_name(const Entry &entry);
         void execute_sensor_hit_check();
         void execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass);
+        void execute_draw_buffer_model_3d_for_2d(
+            const smgpc::render::Model3DFor2DProjection &projection,
+            s32 draw_buffer_type, SceneDrawBufferPass pass);
 #ifndef NDEBUG
         void push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass = SceneDrawBufferPass::None);
         void push_message_trace(SceneSchedulerMessageTraceEntry trace);

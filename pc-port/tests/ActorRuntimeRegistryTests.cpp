@@ -1,7 +1,9 @@
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameActorSensorCompat.hpp"
+#include "scene/NameObjChildOwner.hpp"
 
 #include <array>
 #include <cstddef>
@@ -10,6 +12,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace {
     void require(bool condition, std::string_view message) {
@@ -118,6 +121,78 @@ namespace {
                 "LiveActor destruction must remove every external record for the stale identity");
     }
 
+    class CapturedNameObj final : public NameObj {
+    public:
+        CapturedNameObj(int identity, std::vector<int> &destruction_order)
+            : NameObj("construction-capture-probe"), _identity(identity),
+              _destruction_order(&destruction_order) {
+        }
+
+        ~CapturedNameObj() override {
+            _destruction_order->push_back(_identity);
+        }
+
+    private:
+        int _identity;
+        std::vector<int> *_destruction_order;
+    };
+
+    void test_construction_child_capture_is_ordered_and_exception_safe() {
+        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        auto destruction_order = std::vector<int>{};
+        auto owner = smgpc::scene::NameObjChildOwner{};
+        auto construction_rejected = false;
+
+        try {
+            owner.capture_construction_children([&] {
+                (void)new CapturedNameObj(1, destruction_order);
+                (void)new CapturedNameObj(2, destruction_order);
+                throw std::runtime_error("intentional construction failure");
+            });
+        } catch (const std::runtime_error &error) {
+            construction_rejected =
+                std::string_view(error.what()) ==
+                "intentional construction failure";
+        }
+
+        require(construction_rejected && owner.size() == 2U &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline + 2U,
+                "construction capture did not adopt live raw-new children while preserving the original exception");
+        owner.clear();
+        require(destruction_order == std::vector<int>{2, 1} &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "construction capture did not retire children in reverse registration order");
+    }
+
+    void test_construction_child_capture_rejects_nested_ownership() {
+        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        auto destruction_order = std::vector<int>{};
+        auto outer = smgpc::scene::NameObjChildOwner{};
+        auto inner = smgpc::scene::NameObjChildOwner{};
+        auto nested_rejected = false;
+
+        outer.capture_construction_children([&] {
+            (void)new CapturedNameObj(1, destruction_order);
+            try {
+                inner.capture_construction_children([&] {
+                    (void)new CapturedNameObj(99, destruction_order);
+                });
+            } catch (const std::logic_error &) {
+                nested_rejected = true;
+            }
+            (void)new CapturedNameObj(2, destruction_order);
+        });
+
+        require(nested_rejected && outer.size() == 2U && inner.empty() &&
+                    smgpc::compat::name_obj_runtime_state_count() ==
+                        baseline + 2U,
+                "nested construction capture was not rejected before exposing children to two owners");
+        outer.clear();
+        require(destruction_order == std::vector<int>{2, 1} &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "the outer capture did not remain ordered after rejecting a nested capture");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -129,6 +204,10 @@ int main() {
         TestCase{"exact native Game layout", test_exact_native_game_layout},
         TestCase{"external NameObj name lifetime", test_name_storage_is_external_and_stable},
         TestCase{"external LiveActor state lifetime", test_actor_state_is_external_and_released},
+        TestCase{"ordered exception-safe construction child capture",
+                 test_construction_child_capture_is_ordered_and_exception_safe},
+        TestCase{"construction child capture rejects nested ownership",
+                 test_construction_child_capture_rejects_nested_ownership},
     };
 
     auto failures = 0;

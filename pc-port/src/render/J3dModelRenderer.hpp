@@ -15,7 +15,20 @@
 #include "render/J3dAnimation.hpp"
 #include "render/J3dMaterialRuntime.hpp"
 
+namespace smgpc::runtime {
+    class SceneLightService;
+}
+
 namespace smgpc::render {
+
+    [[nodiscard]] std::array<float, 3U> j3d_host_view_vector_to_gx_view(
+        std::array<float, 3U> value);
+    [[nodiscard]] GXLightState j3d_resolve_scene_light_for_camera(
+        const GXLightState &light, const smgpc::camera::CameraPose &camera_pose);
+    [[nodiscard]] GXMaterialState j3d_material_with_scene_lights(
+        const GXMaterialState &material, std::span<const GXLightState> scene_lights,
+        std::optional<GXColorValue> scene_ambient_color = {},
+        const smgpc::camera::CameraPose *camera_pose = nullptr);
 
     struct J3dModelRendererLoadOptions {
         std::uint16_t min_material_index = 0U;
@@ -31,10 +44,15 @@ namespace smgpc::render {
         std::optional<bool> gx_color_update = {};
         std::optional<bool> gx_alpha_update = {};
         std::span<const GXLightState> scene_lights = {};
+        std::optional<GXColorValue> scene_ambient_color = {};
         std::optional<J3dMatrix3x4> projmap_effect_matrix = {};
         std::optional<float> bck_animation_frame = {};
+        std::optional<float> brk_animation_frame = {};
         std::optional<float> btp_animation_frame = {};
     };
+
+    [[nodiscard]] J3dModelRendererDrawOptions j3d_scene_light_draw_options(
+        const smgpc::runtime::SceneLightService &scene_lights);
 
     enum class J3dRendererPacketMode {
         ConstantBackdrop,
@@ -162,6 +180,11 @@ namespace smgpc::render {
         float btk_normalized_frame = 0.0F;
         std::int16_t btk_frame_max = 0;
         std::uint16_t btk_material_count = 0U;
+        bool brk_active = false;
+        float brk_frame = 0.0F;
+        std::int16_t brk_frame_max = 0;
+        std::uint16_t brk_color_track_count = 0U;
+        std::uint16_t brk_konst_track_count = 0U;
         bool btp_active = false;
         float btp_frame = 0.0F;
         float btp_normalized_frame = 0.0F;
@@ -179,12 +202,19 @@ namespace smgpc::render {
         void clear_bck_animation();
         void set_btk_animation(const J3dBtkAnimationSummary &animation);
         void clear_btk_animation();
+        [[nodiscard]] bool set_brk_animation(const J3dBrkAnimationSummary &animation);
+        void clear_brk_animation();
         [[nodiscard]] bool set_btp_animation(render::AuroraRenderer &renderer, const J3dBtpAnimationSummary &animation);
         void clear_btp_animation();
         void clear_animations();
 
         void draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
                   const J3dModelRendererDrawOptions &options = {}) const;
+        void draw_model_3d_for_2d(
+            render::AuroraRenderer &renderer,
+            const render::Model3DFor2DProjection &projection,
+            const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+            const J3dModelRendererDrawOptions &options = {}) const;
 
         [[nodiscard]] bool is_loaded() const;
         [[nodiscard]] std::size_t joint_count() const;
@@ -271,14 +301,37 @@ namespace smgpc::render {
 
         static void fill_indirect_state(Mesh &mesh, const GXIndirectState &indirect);
         [[nodiscard]] Mesh make_constant_backdrop(render::AuroraRenderer &renderer, std::array<std::uint8_t, 4U> color) const;
-        [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::span<const GXLightState> scene_lights = {}) const;
+        [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(
+            const Mesh &mesh, std::span<const GXLightState> scene_lights = {},
+            std::optional<GXColorValue> scene_ambient_color = {}) const;
         [[nodiscard]] J3dRendererPacketState packet_state_for_mesh(const Mesh &mesh, std::uint64_t frame,
                                                                    std::span<const GXLightState> scene_lights = {},
                                                                    std::optional<float> bck_animation_frame = {},
-                                                                   std::optional<float> btp_animation_frame = {}) const;
-        void submit_mesh(render::AuroraRenderer &renderer, const Mesh &mesh, const smgpc::camera::CameraPose &camera_pose,
-                         const J3dMatrix3x4 &actor_matrix, std::uint64_t frame, DrawScratch &scratch, std::span<const GXLightState> scene_lights,
-                         const J3dModelRendererDrawOptions &options) const;
+                                                                   std::optional<float> brk_animation_frame = {},
+                                                                   std::optional<float> btp_animation_frame = {},
+                                                                   std::optional<GXColorValue> scene_ambient_color = {}) const;
+        struct BrkTrackBinding {
+            std::uint16_t material_index = 0xffffU;
+            std::size_t track_index = 0U;
+        };
+        void apply_brk_to_mesh(
+            const Mesh &mesh, float raw_frame,
+            std::array<render::GxTevRegisterColor2D, 4U> &registers,
+            std::array<std::array<std::uint8_t, 4U>, 4U> &konst_colors,
+            J3dMaterialSummary *material = nullptr) const;
+        void draw_impl(
+            render::AuroraRenderer &renderer,
+            const smgpc::camera::CameraPose *camera_pose,
+            const render::Model3DFor2DProjection *model_3d_for_2d,
+            const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+            const J3dModelRendererDrawOptions &options) const;
+        void submit_mesh(
+            render::AuroraRenderer &renderer, const Mesh &mesh,
+            const smgpc::camera::CameraPose *camera_pose,
+            const render::Model3DFor2DProjection *model_3d_for_2d,
+            const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+            DrawScratch &scratch, std::span<const GXLightState> scene_lights,
+            const J3dModelRendererDrawOptions &options) const;
 
         bool _loaded = false;
         std::vector<J3dTexture> _textures = {};
@@ -294,6 +347,9 @@ namespace smgpc::render {
         std::vector<J3dRendererPacketState> _render_packets = {};
         std::optional<J3dBckAnimationSummary> _bck_animation = {};
         std::optional<J3dBtkAnimationSummary> _btk_animation = {};
+        std::optional<J3dBrkAnimationSummary> _brk_animation = {};
+        std::vector<BrkTrackBinding> _brk_color_bindings = {};
+        std::vector<BrkTrackBinding> _brk_konst_bindings = {};
         std::optional<J3dBtpAnimationSummary> _btp_animation = {};
         mutable std::unique_ptr<DrawScratch, DrawScratchDeleter> _draw_scratch = {};
     };

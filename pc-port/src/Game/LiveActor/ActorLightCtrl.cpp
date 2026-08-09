@@ -2,6 +2,7 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/LightFunction.hpp"
+#include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 
 namespace {
@@ -107,6 +108,12 @@ const ActorLightInfo* ActorLightCtrl::getActorLight() const {
 }
 
 void ActorLightCtrl::initActorLightInfo() {
+    if (_C) {
+        return;
+    }
+
+    MR::findActorLightInfo(mActor);
+    return;
 }
 
 void ActorLightCtrl::tryFindNewAreaLight(bool direct) {

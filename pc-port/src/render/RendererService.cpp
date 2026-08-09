@@ -1,4 +1,5 @@
 #include "RendererService.hpp"
+#include "render/AuroraBrightVisibilityService.hpp"
 
 #include <algorithm>
 #include <array>
@@ -165,6 +166,16 @@ namespace smgpc::render {
                 auto *destination = rows.data() + static_cast<std::size_t>(y) * (static_cast<std::size_t>(width) * 4U + 1U);
                 destination[0] = 0U;
                 std::memcpy(destination + 1U, source, static_cast<std::size_t>(width) * 4U);
+                // The host window presents the display copy as an opaque
+                // surface. EFB alpha remains meaningful for retail effects
+                // such as BrightObj visibility, but exporting it in a PNG
+                // makes ordinary image viewers darken otherwise-correct scene
+                // colors against their checkerboard/background. Preserve RGB
+                // exactly and capture the image as it is actually displayed.
+                for (auto x = 0U; x < width; ++x) {
+                    destination[1U + static_cast<std::size_t>(x) * 4U + 3U] =
+                        0xffU;
+                }
             }
 
             auto ihdr = std::vector<std::uint8_t> {};
@@ -561,8 +572,14 @@ namespace smgpc::render {
             return static_cast<GXTevSwapSel>(value);
         }
 
-        void configure_copy_clear() {
-            GXSetCopyClear(GXColor {.r = 0U, .g = 0U, .b = 0U, .a = 255U}, GX_MAX_Z24);
+        void configure_copy_clear(const CopyClearState &state) {
+            GXSetCopyClear(GXColor {
+                               .r = state.color[0U],
+                               .g = state.color[1U],
+                               .b = state.color[2U],
+                               .a = state.color[3U],
+                           },
+                           state.depth);
             GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
             GXSetDispCopySrc(0U, 0U, kLogicalFramebuffer.width, kLogicalFramebuffer.height);
             GXSetDispCopyDst(kLogicalFramebuffer.width, kLogicalFramebuffer.height);
@@ -626,6 +643,28 @@ namespace smgpc::render {
             GXLoadPosMtxImm(view, GX_PNMTX0);
             GXSetCurrentMtx(GX_PNMTX0);
             GXSetViewport(0.0F, 0.0F, width, height, 0.0F, 1.0F);
+            GXSetScissor(0U, 0U, kLogicalFramebuffer.width, kLogicalFramebuffer.height);
+        }
+
+        void configure_model_3d_for_2d_projection(const Model3DFor2DProjection &screen) {
+            if (!std::isfinite(screen.screen_width) || !std::isfinite(screen.screen_height) ||
+                screen.screen_width <= 0.0F || screen.screen_height <= 0.0F) {
+                throw std::logic_error("Model3DFor2D requires finite positive screen dimensions");
+            }
+
+            constexpr auto near_z = -10000.0F;
+            constexpr auto far_z = 10000.0F;
+            Mtx44 projection {};
+            Mtx view {};
+            C_MTXOrtho(projection, 0.0F, -screen.screen_height, 0.0F,
+                       screen.screen_width, near_z, far_z);
+            PSMTXIdentity(view);
+
+            GXSetProjection(projection, GX_ORTHOGRAPHIC);
+            GXLoadPosMtxImm(view, GX_PNMTX0);
+            GXSetCurrentMtx(GX_PNMTX0);
+            GXSetViewport(0.0F, 0.0F, static_cast<float>(kLogicalFramebuffer.width),
+                          static_cast<float>(kLogicalFramebuffer.height), 0.0F, 1.0F);
             GXSetScissor(0U, 0U, kLogicalFramebuffer.width, kLogicalFramebuffer.height);
         }
 
@@ -739,7 +778,7 @@ namespace smgpc::render {
             size = info.windowSize;
             AuroraSetViewportPolicy(AURORA_VIEWPORT_STRETCH);
             GXInit(nullptr, 0U);
-            configure_copy_clear();
+            configure_copy_clear(CopyClearState{});
         }
 
         ~Impl() {
@@ -946,10 +985,14 @@ namespace smgpc::render {
             GXLoadTexObj(&record->object, map_id);
         }
 
-        void configure_textured_state(TextureHandle texture_handle, const TexturedTriangleBatch2D &batch,
-                                      const smgpc::camera::CameraPose *camera_pose = nullptr) {
+        void configure_textured_state(
+            TextureHandle texture_handle, const TexturedTriangleBatch2D &batch,
+            const smgpc::camera::CameraPose *camera_pose = nullptr,
+            const Model3DFor2DProjection *model_3d_for_2d = nullptr) {
             if (camera_pose != nullptr) {
                 configure_3d_projection(*camera_pose);
+            } else if (model_3d_for_2d != nullptr) {
+                configure_model_3d_for_2d_projection(*model_3d_for_2d);
             } else {
                 configure_2d_projection(batch.space);
             }
@@ -972,10 +1015,14 @@ namespace smgpc::render {
             GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
         }
 
-        void configure_material_state(const GxMaterialTriangleBatch2D &batch,
-                                      const smgpc::camera::CameraPose *camera_pose = nullptr) {
+        void configure_material_state(
+            const GxMaterialTriangleBatch2D &batch,
+            const smgpc::camera::CameraPose *camera_pose = nullptr,
+            const Model3DFor2DProjection *model_3d_for_2d = nullptr) {
             if (camera_pose != nullptr) {
                 configure_3d_projection(*camera_pose);
+            } else if (model_3d_for_2d != nullptr) {
+                configure_model_3d_for_2d_projection(*model_3d_for_2d);
             } else {
                 configure_2d_projection(batch.space);
             }
@@ -1089,12 +1136,14 @@ namespace smgpc::render {
         }
 
         AuroraWindow &window;
+        AuroraBrightVisibilityService bright_visibility;
         std::uint64_t frame_index = 0U;
         double frame_time = 0.0;
         std::uint64_t frame_created_textures = 0U;
         std::uint64_t frame_textured_submits = 0U;
         std::uint64_t frame_material_submits = 0U;
         std::uint64_t frame_submitted_vertices = 0U;
+        CopyClearState copy_clear = {};
         bool frame_open = false;
     };
 
@@ -1112,7 +1161,7 @@ namespace smgpc::render {
             _impl->frame_textured_submits = 0U;
             _impl->frame_material_submits = 0U;
             _impl->frame_submitted_vertices = 0U;
-            configure_copy_clear();
+            configure_copy_clear(_impl->copy_clear);
         }
         return {
             .frame_index = _impl->frame_index,
@@ -1125,8 +1174,21 @@ namespace smgpc::render {
     }
 
     void AuroraRenderer::end_frame() {
+        end_frame_impl(nullptr, true);
+    }
+
+    void AuroraRenderer::end_frame(const GXRenderModeObj &render_mode, bool use_vertical_filter) {
+        end_frame_impl(&render_mode, use_vertical_filter);
+    }
+
+    void AuroraRenderer::end_frame_impl(const GXRenderModeObj *render_mode, bool use_vertical_filter) {
         if (_impl->frame_open) {
             GXFlush();
+            if (render_mode != nullptr) {
+                GXSetCopyFilter(render_mode->aa, render_mode->sample_pattern,
+                                use_vertical_filter ? GX_TRUE : GX_FALSE,
+                                render_mode->vfilter);
+            }
             GXCopyDisp(nullptr, GX_TRUE);
             aurora_end_frame();
             if (environment_flag_enabled("SMGPC_AURORA_RENDER_STATS", false)) {
@@ -1148,7 +1210,22 @@ namespace smgpc::render {
     }
 
     void AuroraRenderer::shutdown() {
+        _impl->bright_visibility.reset();
         _impl->window.shutdown();
+    }
+
+    void AuroraRenderer::set_copy_clear(const CopyClearState &state) {
+        if (state.depth > GX_MAX_Z24) {
+            throw std::invalid_argument("GX copy-clear depth must fit the retail 24-bit Z buffer");
+        }
+        _impl->copy_clear = state;
+        if (_impl->frame_open) {
+            configure_copy_clear(_impl->copy_clear);
+        }
+    }
+
+    const CopyClearState &AuroraRenderer::copy_clear() const {
+        return _impl->copy_clear;
     }
 
     void AuroraRenderer::request_screenshot_png(const std::filesystem::path &path) {
@@ -1326,6 +1403,30 @@ namespace smgpc::render {
         GXEnd();
     }
 
+    void AuroraRenderer::submit_textured_triangles_model_3d_for_2d(
+        TextureHandle texture, const TexturedTriangleBatch2D &batch,
+        const Model3DFor2DProjection &projection) {
+        if (!_impl->frame_open || _impl->texture(texture) == nullptr || batch.vertices.empty() ||
+            batch.indices.empty()) {
+            return;
+        }
+
+        ++_impl->frame_textured_submits;
+        _impl->frame_submitted_vertices += std::min<std::size_t>(batch.indices.size(), UINT16_MAX);
+        dump_batch_bounds("textured-model3d-for-2d", _impl->frame_index,
+                          _impl->frame_textured_submits + _impl->frame_material_submits,
+                          batch.vertices, batch.indices);
+        _impl->configure_textured_state(texture, batch, nullptr, &projection);
+        GXBegin(gx_primitive(batch.primitive_topology), GX_VTXFMT0,
+                static_cast<u16>(std::min<std::size_t>(batch.indices.size(), UINT16_MAX)));
+        for (const auto index : batch.indices) {
+            if (index < batch.vertices.size()) {
+                emit_textured_vertex(batch.vertices[index]);
+            }
+        }
+        GXEnd();
+    }
+
     void AuroraRenderer::submit_gx_material_triangles(const GxMaterialTriangleBatch2D &batch) {
         if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty() || !_impl->material_batch_is_renderable(batch)) {
             return;
@@ -1367,12 +1468,54 @@ namespace smgpc::render {
         GXEnd();
     }
 
+    void AuroraRenderer::submit_gx_material_triangles_model_3d_for_2d(
+        const GxMaterialTriangleBatch2D &batch,
+        const Model3DFor2DProjection &projection) {
+        if (!_impl->frame_open || batch.vertices.empty() || batch.indices.empty() ||
+            !_impl->material_batch_is_renderable(batch)) {
+            return;
+        }
+
+        ++_impl->frame_material_submits;
+        _impl->frame_submitted_vertices += std::min<std::size_t>(batch.indices.size(), UINT16_MAX);
+        dump_batch_bounds("material-model3d-for-2d", _impl->frame_index,
+                          _impl->frame_textured_submits + _impl->frame_material_submits,
+                          batch.vertices, batch.indices);
+        _impl->configure_material_state(batch, nullptr, &projection);
+        const auto texture_count = batch.texture_stages.size();
+        GXBegin(gx_primitive(batch.primitive_topology), GX_VTXFMT0,
+                static_cast<u16>(std::min<std::size_t>(batch.indices.size(), UINT16_MAX)));
+        for (const auto index : batch.indices) {
+            if (index < batch.vertices.size()) {
+                emit_material_vertex(batch.vertices[index], texture_count);
+            }
+        }
+        GXEnd();
+    }
+
+    void AuroraRenderer::prepare_model_3d_for_2d(
+        const Model3DFor2DProjection &projection) {
+        if (!_impl->frame_open) {
+            return;
+        }
+
+        // drawInitFor2DModel disables depth before installing the camera-free
+        // orthographic projection and identity J3D view. Individual material
+        // display lists remain free to load their authored Z state afterward.
+        GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
+        configure_model_3d_for_2d_projection(projection);
+    }
+
     FramebufferInfo AuroraRenderer::framebuffer_size() const {
         return _impl->window.framebuffer_size();
     }
 
     FramebufferInfo AuroraRenderer::logical_framebuffer_size() const {
         return kLogicalFramebuffer;
+    }
+
+    BrightVisibilityService &AuroraRenderer::bright_visibility_service() {
+        return _impl->bright_visibility;
     }
 
     AuroraRenderer &current_aurora_renderer() {
@@ -1382,7 +1525,13 @@ namespace smgpc::render {
         return *s_current_renderer;
     }
 
-    ScopedAuroraRendererContext::ScopedAuroraRendererContext(AuroraRenderer &renderer) : _previous(s_current_renderer) {
+    AuroraRenderer *try_current_aurora_renderer() noexcept {
+        return s_current_renderer;
+    }
+
+    ScopedAuroraRendererContext::ScopedAuroraRendererContext(AuroraRenderer &renderer)
+        : _previous(s_current_renderer),
+          _bright_visibility_context(renderer.bright_visibility_service()) {
         s_current_renderer = &renderer;
     }
 

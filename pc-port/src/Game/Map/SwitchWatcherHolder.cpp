@@ -62,4 +62,12 @@ namespace MR {
 };  // namespace MR
 
 SwitchWatcherHolder::~SwitchWatcherHolder() {
+    // Wii scene heaps reclaim these watcher allocations with their scene. PC
+    // scenes can be destroyed and recreated in one process, so the holder must
+    // explicitly retire the raw children it owns before the next scene binds.
+    while (mWatcherCount > 0) {
+        --mWatcherCount;
+        delete mWatchers[mWatcherCount];
+        mWatchers[mWatcherCount] = nullptr;
+    }
 }

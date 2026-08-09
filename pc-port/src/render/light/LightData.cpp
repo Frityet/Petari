@@ -13,6 +13,7 @@
 
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
+#include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace smgpc::render::light {
@@ -137,7 +138,7 @@ namespace smgpc::render::light {
         return s_instance;
     }
 
-    void StageLightData::reset() {
+    void StageLightData::clear_loaded_data() {
         _loaded = false;
         _load_failed = false;
         _root_key.clear();
@@ -148,26 +149,71 @@ namespace smgpc::render::light {
         _zone_area_lights.clear();
     }
 
+    void StageLightData::reset() {
+        clear_loaded_data();
+        _stage_zones.clear();
+    }
+
+    void StageLightData::configure_stage_zones(std::span<const StageLightZone> zones) {
+        auto configured = std::vector<StageLightZone> {};
+        configured.reserve(zones.size());
+        for (const auto &zone : zones) {
+            if (zone.zone_id < 0 || zone.zone_name.empty()) {
+                throw std::invalid_argument("stage light zones require a non-negative ID and authored zone name");
+            }
+            const auto existing = std::ranges::find_if(configured, [&zone](const auto &candidate) {
+                return candidate.zone_id == zone.zone_id;
+            });
+            if (existing != configured.end()) {
+                if (existing->zone_name != zone.zone_name) {
+                    throw std::invalid_argument("one stage light zone ID cannot name multiple authored zones");
+                }
+                continue;
+            }
+            configured.push_back(zone);
+        }
+        std::ranges::sort(configured, {}, &StageLightZone::zone_id);
+        if (configured == _stage_zones) {
+            return;
+        }
+
+        clear_loaded_data();
+        _stage_zones = std::move(configured);
+    }
+
+    std::span<const StageLightZone> StageLightData::stage_zones() const {
+        return _stage_zones;
+    }
+
+    void StageLightData::load_stage(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name) {
+        if (stage_name.empty()) {
+            throw std::invalid_argument("stage light data requires a non-empty authored stage name");
+        }
+
+        clear_loaded_data();
+        _root_key = dvd.root().generic_string();
+        _stage_key = stage_name;
+        try {
+            load_current_stage(dvd, stage_name);
+            _loaded = true;
+        } catch (...) {
+            _load_failed = true;
+            throw;
+        }
+    }
+
     AreaLightInfo *StageLightData::area_light_info(const ZoneLightID &zone_id) {
         if (!ensure_loaded() || _area_lights.empty()) {
             return nullptr;
         }
 
         auto area_name = std::string_view {};
-        if (!_zone_area_lights.empty()) {
-            const auto exact = std::ranges::find_if(_zone_area_lights, [&zone_id](const auto &entry) {
-                return entry.light_id == zone_id.mLightID;
-            });
-            if (exact != _zone_area_lights.end()) {
-                area_name = exact->area_light_name;
-            } else {
-                const auto fallback = std::ranges::find_if(_zone_area_lights, [](const auto &entry) {
-                    return entry.light_id < 0;
-                });
-                if (fallback != _zone_area_lights.end()) {
-                    area_name = fallback->area_light_name;
-                }
-            }
+        const auto resolved_zone_id = zone_id._0 < 0 ? 0 : zone_id._0;
+        const auto exact = std::ranges::find_if(_zone_area_lights, [&](const auto &entry) {
+            return entry.zone_id == resolved_zone_id && entry.light_id == zone_id.mLightID;
+        });
+        if (exact != _zone_area_lights.end()) {
+            area_name = exact->area_light_name;
         }
 
         if (area_name.empty()) {
@@ -205,7 +251,11 @@ namespace smgpc::render::light {
     bool StageLightData::ensure_loaded() {
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr) {
-            return false;
+            // Explicit callers (including tooling and deterministic data tests)
+            // can load from a supplied DVD service without installing the
+            // process-wide RuntimeContext.  A live runtime still owns cache-key
+            // validation below.
+            return _loaded;
         }
 
         auto stage_name = std::string(runtime->current_stage_name());
@@ -221,13 +271,8 @@ namespace smgpc::render::light {
             return false;
         }
 
-        reset();
-        _root_key = root_key;
-        _stage_key = stage_name;
-
         try {
-            load_current_stage(stage_name);
-            _loaded = true;
+            load_stage(runtime->dvd(), stage_name);
             return true;
         } catch (const std::exception &error) {
             _load_failed = true;
@@ -240,9 +285,8 @@ namespace smgpc::render::light {
         }
     }
 
-    void StageLightData::load_current_stage(std::string_view stage_name) {
-        auto &runtime = smgpc::runtime::RuntimeContext::instance();
-        const auto &archive = runtime.dvd().archive(cLightDataArchivePath);
+    void StageLightData::load_current_stage(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name) {
+        const auto &archive = dvd.archive(cLightDataArchivePath);
 
         const auto *main_entry = find_archive_file(archive, cMainLightDataPath);
         if (main_entry == nullptr) {
@@ -254,7 +298,8 @@ namespace smgpc::render::light {
         _area_lights.reserve(light_table.entry_count());
         for (auto row = std::size_t {}; row < light_table.entry_count(); ++row) {
             auto info = AreaLightInfo {};
-            _area_light_names.push_back(light_table.get_string(row, "AreaLightName").value_or(std::string {}));
+            _area_light_names.push_back(smgpc::resource::decode_cp932(
+                light_table.get_string(row, "AreaLightName").value_or(std::string {})));
             info.mAreaLightName = _area_light_names.back().c_str();
             info.mInterpolate = get_s32_or(light_table, row, "Interpolate", -1);
             read_actor_light_info(light_table, row, info.mPlayerLight, "Player");
@@ -265,23 +310,41 @@ namespace smgpc::render::light {
             _area_lights.push_back(info);
         }
 
-        const auto zone_file = zone_light_file_name(stage_name);
-        if (const auto *zone_entry = find_archive_file(archive, zone_file); zone_entry != nullptr) {
+        auto zones = _stage_zones;
+        if (std::ranges::none_of(zones, [](const auto &zone) { return zone.zone_id == 0; })) {
+            zones.push_back(StageLightZone {.zone_id = 0, .zone_name = std::string(stage_name)});
+        }
+        std::ranges::sort(zones, {}, &StageLightZone::zone_id);
+        for (const auto &zone : zones) {
+            const auto zone_file = zone_light_file_name(zone.zone_name);
+            const auto *zone_entry = find_archive_file(archive, zone_file);
+            if (zone_entry == nullptr) {
+                continue;
+            }
             const auto zone_table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*zone_entry));
-            _zone_area_lights.reserve(zone_table.entry_count());
+            _zone_area_lights.reserve(_zone_area_lights.size() + zone_table.entry_count());
             for (auto row = std::size_t {}; row < zone_table.entry_count(); ++row) {
                 _zone_area_lights.push_back(ZoneAreaLight {
+                    .zone_id = zone.zone_id,
                     .light_id = get_s32_or(zone_table, row, "LightID", -1),
-                    .area_light_name = zone_table.get_string(row, "AreaLightName").value_or(std::string {}),
+                    .area_light_name = smgpc::resource::decode_cp932(
+                        zone_table.get_string(row, "AreaLightName").value_or(std::string {})),
                 });
             }
         }
 
         if (!_zone_area_lights.empty()) {
             const auto fallback = std::ranges::find_if(_zone_area_lights, [](const auto &entry) {
-                return entry.light_id < 0;
+                return entry.zone_id == 0 && entry.light_id < 0;
             });
-            _default_stage_area_light_name = fallback != _zone_area_lights.end() ? fallback->area_light_name : _zone_area_lights.front().area_light_name;
+            const auto root_first = std::ranges::find_if(_zone_area_lights, [](const auto &entry) {
+                return entry.zone_id == 0;
+            });
+            if (fallback != _zone_area_lights.end()) {
+                _default_stage_area_light_name = fallback->area_light_name;
+            } else if (root_first != _zone_area_lights.end()) {
+                _default_stage_area_light_name = root_first->area_light_name;
+            }
         } else if (!_area_light_names.empty()) {
             _default_stage_area_light_name = _area_light_names.front();
         }

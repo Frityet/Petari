@@ -136,6 +136,8 @@ namespace smgpc::compat {
                                                        std::optional<std::string_view> part_name);
         [[nodiscard]] bool try_register_action_nerve(const LiveActor *actor, const Nerve *nerve,
                                                      std::optional<std::string_view> part_name);
+        [[nodiscard]] bool has_action_capability(const LiveActor *actor,
+                                                 std::int32_t action_type) const;
 
         [[nodiscard]] bool has_cast(const LiveActor *actor) const;
         [[nodiscard]] bool has_cast(const LiveActor *actor, std::string_view demo_name) const;
@@ -180,6 +182,12 @@ namespace smgpc::compat {
     [[nodiscard]] DemoSceneRuntime *active_demo_scene_runtime();
     [[nodiscard]] DemoSceneRuntime &require_active_demo_scene_runtime(
         std::string_view operation);
+    // Placement actors can initialize after SceneObjHolder is bound but just
+    // before the scene's DemoDirector runtime is installed. Preserve their
+    // exact simple-cast request and adopt it when that owner appears.
+    void register_or_defer_scene_simple_cast(LiveActor *actor);
+    void adopt_deferred_scene_simple_casts(DemoSceneRuntime &runtime);
+    void release_deferred_scene_simple_cast(const LiveActor *actor);
     void release_actor_from_all_demo_scenes(const LiveActor *actor);
     [[nodiscard]] bool has_any_demo_scene_cast(const LiveActor *actor);
     [[nodiscard]] std::size_t demo_scene_membership_count(const LiveActor *actor);

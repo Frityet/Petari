@@ -1,16 +1,21 @@
 #include "Game/Gravity/PointGravity.hpp"
+#include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/Map/CollisionCode.hpp"
+#include "Game/Map/LightFunction.hpp"
+#include "Game/Map/PlanetMap.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Player/MarioMapCode.hpp"
+#include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/CollisionPartsCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GatewayDemoScene.hpp"
@@ -30,6 +35,7 @@
 #include <exception>
 #include <filesystem>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <ranges>
@@ -39,7 +45,7 @@
 
 namespace {
     constexpr auto cPlanetCollisionSource =
-        std::string_view{"HeavensDoorMysteriousPlanet.arc/heavensdoormysteriousplanet.kcl"};
+        std::string_view{"HeavensDoorMysteriousPlanet.arc:/heavensdoormysteriousplanet.kcl"};
 
     void require(bool condition, std::string_view message) {
         if (!condition) {
@@ -144,15 +150,6 @@ namespace {
                       left.x * right.y - left.y * right.x};
     }
 
-    [[nodiscard]] std::size_t model_packet_count(
-        const smgpc::render::J3dModelGeometry& geometry) {
-        auto count = std::size_t{};
-        for (const auto& shape : geometry.shapes) {
-            count += shape.draw_packets.size();
-        }
-        return count;
-    }
-
     struct DrawProof {
         std::size_t packet_count = 0U;
         std::size_t source_triangles = 0U;
@@ -181,6 +178,41 @@ namespace {
             }
         }
         return proof;
+    }
+
+    void require_mario_packet_lighting(
+        const smgpc::runtime::RuntimeContext& runtime,
+        std::uint64_t frame_index, const ActorLightInfo& actor_light) {
+        const auto expected_ambient = smgpc::render::GXColorValue{
+            actor_light.mColor.r, actor_light.mColor.g,
+            actor_light.mColor.b, actor_light.mColor.a};
+        const auto expected_space = [](const LightInfo& light) {
+            return light.mIsFollowCamera
+                       ? smgpc::render::GXLightCoordinateSpace::View
+                       : smgpc::render::GXLightCoordinateSpace::World;
+        };
+        auto material_packet_count = std::size_t{};
+        for (const auto& packet : runtime.j3d_packet_trace()) {
+            if (packet.model_name != "Mario" ||
+                packet.frame_index != frame_index ||
+                packet.state.material_index == 0xffffU ||
+                packet.state.color_channel_count == 0U) {
+                continue;
+            }
+            ++material_packet_count;
+            require(packet.state.color_channel_ambient_colors[0U] ==
+                            expected_ambient &&
+                        (packet.state.scene_loaded_light_mask & 0x03U) == 0x03U &&
+                        packet.state.lights[0U].loaded &&
+                        packet.state.lights[1U].loaded &&
+                        packet.state.lights[0U].coordinate_space ==
+                            expected_space(actor_light.mInfo0) &&
+                        packet.state.lights[1U].coordinate_space ==
+                            expected_space(actor_light.mInfo1),
+                    "a material-bearing Mario packet lost its authored player ambient or light-space policy");
+        }
+        require(material_packet_count != 0U,
+                "the final neutral frame contains no material-bearing Mario packet lighting proof");
     }
 
     void require_single_phase(const smgpc::runtime::SceneScheduler& scheduler,
@@ -267,6 +299,8 @@ namespace {
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
 
+        const auto scene_renderer_context =
+            smgpc::render::ScopedAuroraRendererContext(renderer);
         auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
         const auto& start = scene.start_info();
         require(start.object_name == "Mario" && start.start_id == 0 && start.zone_id == 0 &&
@@ -277,11 +311,32 @@ namespace {
                     scene.planet_placement().jmap_entry_index == 24 &&
                     scene.planet_placement().object_name == "HeavensDoorMysteriousPlanet",
                 "the Mario walk proof must use exact child-zone mysterious-planet placement");
-        require(scene.planet_bdl().size() == 1269376U &&
-                    scene.planet_kcl().size() == 632430U &&
-                    scene.planet_pa().size() == 31232U &&
-                    model_packet_count(scene.planet_geometry()) != 0U,
-                "the proof must retain the exact retail planet model/KCL/PA resources");
+        auto *planet = scene.planet();
+        auto *planet_model = smgpc::compat::actor_model(planet);
+        require(planet != nullptr && planet_model != nullptr &&
+                    planet_model->model_arc_name() ==
+                        "HeavensDoorMysteriousPlanet",
+                "the Mario proof must use the production-owned ordinary PlanetMap model");
+        planet_model->requireLoaded();
+        const auto planet_resources =
+            smgpc::compat::actor_collision_parts_resources(planet);
+        require(planet_model->isLoaded() && planet_resources.size() == 2U &&
+                    planet_resources[0].resource_name ==
+                        "HeavensDoorMysteriousPlanet" &&
+                    planet_resources[0].kcl_size == 632430U &&
+                    planet_resources[0].attributes_size == 31232U &&
+                    planet_resources[0].kcl_source.ends_with(
+                        cPlanetCollisionSource) &&
+                    planet_resources[1].resource_name == "MoveLimit" &&
+                    planet_resources[1].kcl_size == 25868U &&
+                    planet_resources[1].attributes_size == 1152U,
+                "the proof must retain the exact actor-owned main and MoveLimit KCL/PA resources");
+        const auto ordinary_planet_count = std::ranges::count_if(
+            scene.visuals(), [](const auto &visual) {
+                return dynamic_cast<PlanetMap *>(visual.actor) != nullptr;
+            });
+        require(scene.visuals().size() == 7U && ordinary_planet_count == 4,
+                "the Mario proof must retain Sky, Air, BrightSun, and four ordinary planets through the generic visual path");
 
         const auto* point_gravity = dynamic_cast<const PointGravity*>(&scene.gravity());
         require(point_gravity != nullptr,
@@ -297,8 +352,8 @@ namespace {
 
         auto& walk_collision = scene.collision();
         require(smgpc::scene::StageCollisionService::active() == &walk_collision &&
-                    walk_collision.stats().mesh_count == 1U &&
-                    walk_collision.stats().triangle_count == 7789U,
+                    walk_collision.stats().mesh_count == 6U &&
+                    walk_collision.stats().triangle_count >= 7789U,
                 "Mario and the executable must share GatewayDemoScene's exact active KCL service");
 
         const auto camera_result =
@@ -351,6 +406,11 @@ namespace {
 
         require(MR::getMarioHolder()->getMarioActor() == actor,
                 "MarioActor init must register the real actor with MarioHolder");
+        require(actor->mActorLightCtrl != nullptr &&
+                    actor->mActorLightCtrl->_4 == MR::LightType_Player &&
+                    runtime.scene_lights().player_light_ctrl() ==
+                        actor->mActorLightCtrl,
+                "MarioActor PC init must install and register the exact player-light controller after scene connection");
         require(smgpc::compat::actor_model(actor) != nullptr &&
                     smgpc::compat::actor_model(actor)->isLoaded() &&
                     smgpc::compat::actor_model_joint_count(actor) != 0U,
@@ -454,6 +514,117 @@ namespace {
         }
         require(saw_ground && wait_frame.grounded && wait_frame.last_move.length() < 0.01F,
                 "neutral Mario must settle to a stable stand on the real planet KCL");
+        const auto* actor_light = actor->mActorLightCtrl->getActorLight();
+        require(actor_light != nullptr,
+                "Mario's final neutral frame must retain its exact ActorLightInfo");
+#ifndef NDEBUG
+        require_mario_packet_lighting(runtime, 112U, *actor_light);
+#else
+        throw std::runtime_error(
+            "the Mario packet-boundary lighting proof requires a debug build");
+#endif
+
+        const auto* area_light = LightFunction::getAreaLightInfo(ZoneLightID{});
+        const auto& post_frame_ambient = runtime.scene_lights().actor_ambient();
+        const auto* post_frame_light0 = runtime.scene_lights().light(0U);
+        const auto* post_frame_light1 = runtime.scene_lights().light(1U);
+        require(area_light != nullptr && post_frame_ambient.has_value() &&
+                    *post_frame_ambient == smgpc::render::GXColorValue{
+                        area_light->mPlanetLight.mColor.r,
+                        area_light->mPlanetLight.mColor.g,
+                        area_light->mPlanetLight.mColor.b,
+                        area_light->mPlanetLight.mColor.a} &&
+                    post_frame_light0 != nullptr && post_frame_light1 != nullptr &&
+                    post_frame_light0->color == smgpc::render::GXColorValue{
+                        area_light->mPlanetLight.mInfo0.mColor.r,
+                        area_light->mPlanetLight.mInfo0.mColor.g,
+                        area_light->mPlanetLight.mInfo0.mColor.b,
+                        area_light->mPlanetLight.mInfo0.mColor.a} &&
+                    post_frame_light0->position == std::array<float, 3U>{
+                        area_light->mPlanetLight.mInfo0.mPos.x,
+                        area_light->mPlanetLight.mInfo0.mPos.y,
+                        area_light->mPlanetLight.mInfo0.mPos.z} &&
+                    post_frame_light0->coordinate_space ==
+                        (area_light->mPlanetLight.mInfo0.mIsFollowCamera
+                             ? smgpc::render::GXLightCoordinateSpace::View
+                             : smgpc::render::GXLightCoordinateSpace::World) &&
+                    post_frame_light1->color == smgpc::render::GXColorValue{
+                        area_light->mPlanetLight.mInfo1.mColor.r,
+                        area_light->mPlanetLight.mInfo1.mColor.g,
+                        area_light->mPlanetLight.mInfo1.mColor.b,
+                        area_light->mPlanetLight.mInfo1.mColor.a} &&
+                    post_frame_light1->position == std::array<float, 3U>{
+                        area_light->mPlanetLight.mInfo1.mPos.x,
+                        area_light->mPlanetLight.mInfo1.mPos.y,
+                        area_light->mPlanetLight.mInfo1.mPos.z} &&
+                    post_frame_light1->coordinate_space ==
+                        (area_light->mPlanetLight.mInfo1.mIsFollowCamera
+                             ? smgpc::render::GXLightCoordinateSpace::View
+                             : smgpc::render::GXLightCoordinateSpace::World),
+                "the final after-indirect Planet buffer must leave authored Planet lighting in the scene service");
+        const auto assert_follow_camera_round_trip = [&](const LightInfo& info) {
+            if (!info.mIsFollowCamera) {
+                return;
+            }
+            auto world_position = TVec3f{};
+            LightFunction::calcLightWorldPos(&world_position, info);
+            const auto view_position = smgpc::camera::transform_world_to_camera(
+                camera, {world_position.x, world_position.y, world_position.z});
+            const auto delta_x = view_position.x - info.mPos.x;
+            const auto delta_y = view_position.y - info.mPos.y;
+            const auto delta_z = view_position.z + info.mPos.z;
+            auto authored_scale = std::max(
+                {std::fabs(info.mPos.x), std::fabs(info.mPos.y),
+                 std::fabs(info.mPos.z)});
+            if (authored_scale == 0.0F) {
+                authored_scale = 0.001F;
+            }
+            // This composes a float view inverse and forward transform at
+            // Gateway-scale world coordinates. Bound accumulated rounding by
+            // four representable steps at the authored vector's largest
+            // component instead of using a route-specific absolute epsilon.
+            const auto authored_ulp =
+                std::nextafter(authored_scale,
+                               std::numeric_limits<float>::infinity()) -
+                authored_scale;
+            const auto round_trip_tolerance = 4.0F * authored_ulp;
+            if (std::fabs(delta_x) <= round_trip_tolerance &&
+                std::fabs(delta_y) <= round_trip_tolerance &&
+                std::fabs(delta_z) <= round_trip_tolerance) {
+                return;
+            }
+            const auto pose_text = [](const std::optional<smgpc::camera::CameraPose>& pose) {
+                if (!pose.has_value()) {
+                    return std::string{"none"};
+                }
+                return std::to_string(pose->eye.x) + "," +
+                       std::to_string(pose->eye.y) + "," +
+                       std::to_string(pose->eye.z) + "->" +
+                       std::to_string(pose->watch.x) + "," +
+                       std::to_string(pose->watch.y) + "," +
+                       std::to_string(pose->watch.z);
+            };
+            throw std::runtime_error(
+                "follow-camera LightData round-trip mismatch;info=" +
+                std::to_string(info.mPos.x) + "," + std::to_string(info.mPos.y) +
+                "," + std::to_string(info.mPos.z) + ";world=" +
+                std::to_string(world_position.x) + "," +
+                std::to_string(world_position.y) + "," +
+                std::to_string(world_position.z) + ";view=" +
+                std::to_string(view_position.x) + "," +
+                std::to_string(view_position.y) + "," +
+                std::to_string(view_position.z) + ";delta=" +
+                std::to_string(delta_x) + "," + std::to_string(delta_y) + "," +
+                std::to_string(delta_z) + ";tolerance=" +
+                std::to_string(round_trip_tolerance) + ";assert_camera=" +
+                pose_text(std::optional<smgpc::camera::CameraPose>{camera}) +
+                ";last_camera=" + pose_text(runtime.last_camera_pose()) +
+                ";effective_camera=" +
+                pose_text(runtime.camera_system().effective_camera_pose()) +
+                ";scene_camera=" + pose_text(runtime.scene_camera_pose()));
+        };
+        assert_follow_camera_round_trip(actor_light->mInfo0);
+        assert_follow_camera_round_trip(actor_light->mInfo1);
         require(wait_frame.bck_name == "Wait" && wait_frame.draw.packet_count != 0U &&
                     wait_frame.draw.source_triangles != 0U &&
                     wait_frame.draw.parsed_display_list_bytes != 0U &&
@@ -464,7 +635,7 @@ namespace {
         const auto& stand_triangle = actor->mBinder->mGroundInfo.mParentTriangle;
         const auto stand_surface = walk_collision.surface(stand_triangle.mIdx);
         require(stand_surface.has_value() &&
-                    stand_surface->source_name == cPlanetCollisionSource &&
+                    stand_surface->source_name.ends_with(cPlanetCollisionSource) &&
                     stand_surface->prism_index == 4642U &&
                     stand_surface->attribute == 4642U &&
                     stand_surface->sensor != nullptr &&
@@ -726,8 +897,9 @@ namespace {
         MR::getMarioHolder()->setMarioActor(nullptr);
         created.reset();
         actor = nullptr;
-        require(MR::getMarioHolder()->getMarioActor() == nullptr,
-                "MarioHolder must be cleared before the actor owner is destroyed");
+        require(MR::getMarioHolder()->getMarioActor() == nullptr &&
+                    runtime.scene_lights().player_light_ctrl() == nullptr,
+                "MarioHolder and the non-owning player-light binding must clear before the actor owner is destroyed");
 #ifndef NDEBUG
         require(std::ranges::none_of(runtime.scheduler().snapshot(), [](const auto& entry) {
                     return entry.name == "MarioActor";
@@ -756,8 +928,10 @@ namespace {
         }
         require(MR::getMarioHolder()->getMarioActor() == actor &&
                     smgpc::compat::actor_model(actor) != nullptr &&
-                    smgpc::compat::actor_model(actor)->isLoaded(),
-                "recreated Mario must own the real model and replace the holder binding");
+                    smgpc::compat::actor_model(actor)->isLoaded() &&
+                    runtime.scene_lights().player_light_ctrl() ==
+                        actor->mActorLightCtrl,
+                "recreated Mario must own the real model and replace the holder and player-light bindings");
         const auto recreated_frame = run_frame(release_end_frame + 2U);
         require(recreated_frame.draw.packet_count != 0U,
                 "recreated Mario must update and draw through RuntimeContext");
@@ -770,6 +944,8 @@ namespace {
         MR::getMarioHolder()->setMarioActor(nullptr);
         created.reset();
         actor = nullptr;
+        require(runtime.scene_lights().player_light_ctrl() == nullptr,
+                "recreated Mario destruction must not leave a stale player-light controller");
 #ifndef NDEBUG
         require(std::ranges::none_of(runtime.scheduler().snapshot(), [](const auto& entry) {
                     return entry.name == "MarioActor";

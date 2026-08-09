@@ -24,6 +24,7 @@
 #include "resource/RarcArchive.hpp"
 #include "runtime/NandFileSystemService.hpp"
 
+class ActorLightCtrl;
 class LiveActor;
 struct RumblePattern;
 
@@ -872,13 +873,21 @@ namespace smgpc::runtime {
         void clear();
         void clear_light(std::size_t index);
         void set_light(std::size_t index, const smgpc::render::GXLightState &light);
+        void clear_actor_ambient();
+        void set_actor_ambient(smgpc::render::GXColorValue color);
+        void register_player_light_ctrl(const ActorLightCtrl *light_ctrl);
+        void unregister_player_light_ctrl(const ActorLightCtrl *light_ctrl);
 
         [[nodiscard]] const smgpc::render::GXLightState *light(std::size_t index) const;
         [[nodiscard]] std::span<const smgpc::render::GXLightState> lights() const;
+        [[nodiscard]] const std::optional<smgpc::render::GXColorValue> &actor_ambient() const;
+        [[nodiscard]] const ActorLightCtrl *player_light_ctrl() const;
         [[nodiscard]] std::uint8_t loaded_mask() const;
 
     private:
         std::array<smgpc::render::GXLightState, 8U> _lights = {};
+        std::optional<smgpc::render::GXColorValue> _actor_ambient = {};
+        const ActorLightCtrl *_player_light_ctrl = nullptr;
     };
 
 }  // namespace smgpc::runtime

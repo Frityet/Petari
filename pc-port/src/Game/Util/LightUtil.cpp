@@ -4,6 +4,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 namespace MR {
     namespace {
@@ -30,6 +31,21 @@ namespace MR {
     void loadLight(s32 type) {
         if (type == MR::LightType_None) {
             return;
+        }
+
+        if (type == MR::LightType_Player) {
+            if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+                runtime != nullptr) {
+                if (const auto* player_light =
+                        runtime->scene_lights().player_light_ctrl();
+                    player_light != nullptr) {
+                    // LightDirector::loadLightPlayer loads the registered
+                    // ActorLightCtrl.  Loading slots 0..2 here deliberately
+                    // preserves independently managed point-light slots.
+                    player_light->loadLight();
+                    return;
+                }
+            }
         }
 
         const auto* info = actorLightInfoForType(LightFunction::getAreaLightInfo(ZoneLightID{}), type);

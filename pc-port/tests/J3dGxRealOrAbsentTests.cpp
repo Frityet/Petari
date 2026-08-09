@@ -3,7 +3,9 @@
 #include "render/J3dMaterialRuntime.hpp"
 #include "render/J3dMatrix.hpp"
 #include "render/J3dModel.hpp"
+#include "render/J3dModelRenderer.hpp"
 #include "render/core/RenderTypes.hpp"
+#include "runtime/RuntimeServices.hpp"
 
 #include <algorithm>
 #include <array>
@@ -171,6 +173,114 @@ namespace {
                             "a singular normal basis must not fall back to the model matrix");
     }
 
+    void test_scene_light_space_and_actor_ambient() {
+        auto material = smgpc::render::GXMaterialState{};
+        material.color_channels[0U].ambient_color = {1U, 2U, 3U, 4U};
+        material.color_channels[1U].ambient_color = {5U, 6U, 7U, 8U};
+        material.lights[0U].loaded = true;
+        material.lights[0U].position = {90.0F, 91.0F, 92.0F};
+
+        auto scene_lights = std::array<smgpc::render::GXLightState, 8U>{};
+        scene_lights[0U].loaded = true;
+        scene_lights[0U].coordinate_space = smgpc::render::GXLightCoordinateSpace::World;
+        scene_lights[0U].position = {100.0F, 100.0F, 100.0F};
+        scene_lights[1U].loaded = true;
+        scene_lights[1U].coordinate_space = smgpc::render::GXLightCoordinateSpace::World;
+        scene_lights[1U].position = {7.0F, 25.0F, 42.0F};
+        scene_lights[1U].direction = {1.0F, 0.0F, 0.0F};
+        scene_lights[2U].loaded = true;
+        scene_lights[2U].coordinate_space = smgpc::render::GXLightCoordinateSpace::View;
+        scene_lights[2U].position = {2.0F, 3.0F, 4.0F};
+        scene_lights[2U].direction = {0.0F, 0.0F, -1.0F};
+
+        const auto camera = smgpc::camera::CameraPose{
+            .eye = {10.0F, 20.0F, 30.0F},
+            .watch = {10.0F, 20.0F, 31.0F},
+            .up = {0.0F, 1.0F, 0.0F},
+        };
+        const auto ambient = smgpc::render::GXColorValue{90U, 91U, 92U, 60U};
+        const auto effective = smgpc::render::j3d_material_with_scene_lights(
+            material, scene_lights, ambient, &camera);
+
+        require(effective.lights[0U].position != material.lights[0U].position &&
+                    near(effective.lights[0U].position[0U], -90.0F) &&
+                    near(effective.lights[0U].position[1U], 80.0F) &&
+                    near(effective.lights[0U].position[2U], -70.0F),
+                "ActorLightCtrl loads must replace the earlier material display-list light register");
+        require(effective.lights[1U].coordinate_space ==
+                        smgpc::render::GXLightCoordinateSpace::View &&
+                    near(effective.lights[1U].position[0U], 3.0F) &&
+                    near(effective.lights[1U].position[1U], 5.0F) &&
+                    near(effective.lights[1U].position[2U], -12.0F) &&
+                    near(effective.lights[1U].direction[0U], -1.0F),
+                "world LightData positions and directions must enter GX's -Z-front active camera basis");
+        require(effective.lights[2U].position == scene_lights[2U].position &&
+                    effective.lights[2U].direction == scene_lights[2U].direction,
+                "authored follow-camera lights already use GX view space and must not be transformed a second time");
+        require(effective.color_channels[0U].ambient_color == ambient &&
+                    effective.color_channels[1U].ambient_color ==
+                        material.color_channels[1U].ambient_color,
+                "ActorLightInfo ambient must replace only the GX_COLOR0A0 ambient register");
+
+        const auto unresolved = smgpc::render::j3d_material_with_scene_lights(
+            smgpc::render::GXMaterialState{}, scene_lights, {}, nullptr);
+        require(unresolved.lights[1U].coordinate_space ==
+                    smgpc::render::GXLightCoordinateSpace::World,
+                "packet inspection without a camera must retain an explicit world-space marker");
+
+        auto service = smgpc::runtime::SceneLightService{};
+        service.set_actor_ambient(ambient);
+        service.set_light(1U, scene_lights[1U]);
+        require(service.actor_ambient().has_value() && *service.actor_ambient() == ambient,
+                "the scene light service must carry the actor ambient alongside its light registers");
+        const auto draw_options =
+            smgpc::render::j3d_scene_light_draw_options(service);
+        require(draw_options.scene_lights.size() == 8U &&
+                    draw_options.scene_lights[1U].loaded &&
+                    draw_options.scene_ambient_color == ambient,
+                "renderer-only exact models must be able to consume the same generalized resolved scene-light state");
+        service.clear();
+        require(!service.actor_ambient().has_value(),
+                "scene reset must not leak one actor's ambient register into a later scene");
+
+        auto material_light = smgpc::render::GXMaterialState{};
+        material_light.color_channel_count = 1U;
+        material_light.color_channels[0U].material_color = {255U, 255U, 255U, 255U};
+        material_light.color_channels[0U].ambient_color = {0U, 0U, 0U, 0U};
+        material_light.color_channels[0U].color_control.lighting_enabled = true;
+        material_light.color_channels[0U].color_control.light_mask = 1U;
+        material_light.color_channels[0U].color_control.diffuse_function = 2U;
+        material_light.lights[0U].loaded = true;
+        material_light.lights[0U].coordinate_space =
+            smgpc::render::GXLightCoordinateSpace::View;
+        material_light.lights[0U].color = {255U, 255U, 255U, 255U};
+        material_light.lights[0U].position = {0.0F, 0.0F, -20.0F};
+        const auto gx_vertex = smgpc::render::j3d_host_view_vector_to_gx_view(
+            {0.0F, 0.0F, 10.0F});
+        const auto gx_normal = smgpc::render::j3d_host_view_vector_to_gx_view(
+            {0.0F, 0.0F, 1.0F});
+        const auto lit = smgpc::render::gx_evaluate_lit_raster_color(
+            material_light, 0U, {255U, 255U, 255U, 255U}, gx_vertex, gx_normal);
+        const auto mirrored = smgpc::render::gx_evaluate_lit_raster_color(
+            material_light, 0U, {255U, 255U, 255U, 255U},
+            {0.0F, 0.0F, 10.0F}, {0.0F, 0.0F, 1.0F});
+        require(lit[0U] > 250U && mirrored[0U] == 0U,
+                "decoded material-DL GX-view lights must evaluate against -Z-front vertex and normal coordinates");
+
+        const auto gentle = smgpc::render::gx_light_distance_attenuation(100.0F, 0.5F, 1U);
+        const auto medium = smgpc::render::gx_light_distance_attenuation(100.0F, 0.5F, 2U);
+        const auto steep = smgpc::render::gx_light_distance_attenuation(100.0F, 0.5F, 3U);
+        const auto disabled = smgpc::render::gx_light_distance_attenuation(100.0F, 1.0F, 2U);
+        const auto zero_brightness =
+            smgpc::render::gx_light_distance_attenuation(100.0F, 0.0F, 2U);
+        require(near(gentle[0U], 1.0F) && near(gentle[1U], 0.01F) &&
+                    near(gentle[2U], 0.0F) && near(medium[1U], 0.005F) &&
+                    near(medium[2U], 0.00005F) && near(steep[1U], 0.0F) &&
+                    near(steep[2U], 0.0001F) && disabled == std::array{1.0F, 0.0F, 0.0F} &&
+                    zero_brightness == std::array{1.0F, 0.0F, 0.0F},
+                "point lights must use GXInitLightDistAttn coefficients for every authored attenuation mode");
+    }
+
     void test_retail_j3d_selector_defaults(const std::filesystem::path &archive_path) {
         const auto geometry = load_model(archive_path, "begomanroomplanet.bmd");
         require(geometry.materials.has_value(), "retail BegomanRoomPlanet must contain MAT3");
@@ -217,6 +327,8 @@ int main() {
     test_hardware_unbound_texture_input();
     ++passed;
     test_inverse_transpose_normal_basis();
+    ++passed;
+    test_scene_light_space_and_actor_ambient();
     ++passed;
 
     if (const auto archive = find_object_archive("BegomanRoomPlanet.arc")) {

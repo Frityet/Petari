@@ -4,13 +4,18 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/Functor.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
+#include <algorithm>
 #include <optional>
 #include <stdexcept>
 #include <string_view>
+#include <vector>
 
 namespace {
 
@@ -73,7 +78,47 @@ namespace {
 
 namespace smgpc::compat {
 
+    namespace {
+        [[nodiscard]] std::vector<LiveActor *> &deferred_scene_simple_casts() {
+            static auto casts = std::vector<LiveActor *>{};
+            return casts;
+        }
+    }  // namespace
+
+    void register_or_defer_scene_simple_cast(LiveActor *actor) {
+        if (actor == nullptr) {
+            throw std::invalid_argument(
+                "Simple-cast registration requires a real LiveActor.");
+        }
+        if (auto *runtime = active_demo_scene_runtime(); runtime != nullptr) {
+            runtime->register_simple_cast(actor);
+            return;
+        }
+        if (smgpc::runtime::RuntimeContext::try_instance() != nullptr &&
+            smgpc::scene::current_scene_obj_holder() != nullptr) {
+            auto &casts = deferred_scene_simple_casts();
+            if (std::ranges::find(casts, actor) == casts.end()) {
+                casts.push_back(actor);
+            }
+            return;
+        }
+        (void)require_active_demo_scene_runtime("LiveActor simple-cast registration");
+    }
+
+    void adopt_deferred_scene_simple_casts(DemoSceneRuntime &runtime) {
+        auto &casts = deferred_scene_simple_casts();
+        for (auto *actor : casts) {
+            runtime.register_simple_cast(actor);
+        }
+        casts.clear();
+    }
+
+    void release_deferred_scene_simple_cast(const LiveActor *actor) {
+        std::erase(deferred_scene_simple_casts(), actor);
+    }
+
     void release_demo_runtime_state(const LiveActor *actor) {
+        release_deferred_scene_simple_cast(actor);
         release_actor_from_all_demo_scenes(actor);
     }
 
@@ -94,9 +139,7 @@ namespace smgpc::compat {
 namespace MR {
 
     void registerDemoSimpleCastAll(LiveActor *pActor) {
-        smgpc::compat::require_active_demo_scene_runtime(
-            "LiveActor simple-cast registration")
-            .register_simple_cast(pActor);
+        smgpc::compat::register_or_defer_scene_simple_cast(pActor);
     }
 
     void registerDemoSimpleCastAll(LayoutActor *pActor) {
@@ -112,20 +155,24 @@ namespace MR {
     }
 
     bool tryRegisterDemoCast(LiveActor *pActor, const JMapInfoIter &rIter) {
-        return smgpc::compat::require_active_demo_scene_runtime(
-                   "Demo-cast registration")
-            .try_register_cast(pActor, rIter);
+        // DemoUtil first resolves the scene's DemoDirector and only then does
+        // DemoDirector::registerDemoCast inspect placement metadata. Preserve
+        // that ownership boundary so an absent scene object cannot be hidden
+        // by an invalid iterator or an unassigned DemoGroupId.
+        auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
+            "Demo-cast registration");
+        return runtime.try_register_cast(pActor, rIter);
     }
 
     bool tryRegisterDemoCast(LiveActor *pActor, const char *pName,
                              const JMapInfoIter &rIter) {
+        auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
+            "Named demo-cast registration");
         if (pName == nullptr) {
             throw std::invalid_argument(
                 "Named demo-cast registration requires a real demo name.");
         }
-        return smgpc::compat::require_active_demo_scene_runtime(
-                   "Named demo-cast registration")
-            .try_register_cast(pActor, pName, rIter);
+        return runtime.try_register_cast(pActor, pName, rIter);
     }
 
     void registerDemoCast(LiveActor *pActor, const char *pName,
@@ -191,6 +238,12 @@ namespace MR {
             "Demo-cast query");
         return pDemoName != nullptr ? runtime.has_cast(pActor, pDemoName) :
                                       runtime.has_cast(pActor);
+    }
+
+    bool isRegisteredDemoActionAppear(const LiveActor *pActor) {
+        return smgpc::compat::require_active_demo_scene_runtime(
+                   "Demo appearance-action query")
+            .has_action_capability(pActor, 0);
     }
 
     bool tryStartDemoRegistered(LiveActor *pActor, const char *pPartName) {

@@ -12,6 +12,7 @@
 #include <array>
 #include <cmath>
 #include <memory>
+#include <ranges>
 #include <span>
 #include <stdexcept>
 #include <string>
@@ -26,12 +27,15 @@ namespace {
         std::span<const std::uint8_t> attributes{};
         std::array<float, 12U> matrix{};
         float bounding_radius = 0.0F;
+        std::string resource_name;
         std::string source;
+        std::string attributes_source;
         std::shared_ptr<smgpc::scene::StageCollisionRegistrationState> registration;
     };
 
     auto &actor_collision_parts() {
-        static auto states = std::unordered_map<const LiveActor *, ActorCollisionPartsState>{};
+        static auto states =
+            std::unordered_map<const LiveActor *, std::vector<ActorCollisionPartsState>>{};
         return states;
     }
 
@@ -69,7 +73,10 @@ namespace {
         if (found == actor_collision_parts().end()) {
             throw std::logic_error("LiveActor has no registered CollisionParts.");
         }
-        return found->second;
+        if (found->second.empty()) {
+            throw std::logic_error("LiveActor has an empty CollisionParts registration list.");
+        }
+        return found->second.front();
     }
 
 }  // namespace
@@ -77,13 +84,45 @@ namespace {
 namespace smgpc::compat {
 
     bool has_actor_collision_parts(const LiveActor *actor) noexcept {
-        return actor != nullptr && actor_collision_parts().contains(actor);
+        const auto found = actor_collision_parts().find(actor);
+        return actor != nullptr && found != actor_collision_parts().end() &&
+               !found->second.empty();
+    }
+
+    std::size_t actor_collision_parts_count(const LiveActor *actor) noexcept {
+        const auto found = actor_collision_parts().find(actor);
+        return actor != nullptr && found != actor_collision_parts().end() ?
+                   found->second.size() :
+                   0U;
     }
 
     std::string_view actor_collision_parts_source(const LiveActor *actor) noexcept {
         const auto found = actor_collision_parts().find(actor);
-        return found != actor_collision_parts().end() ? std::string_view(found->second.source) :
-                                                        std::string_view{};
+        return found != actor_collision_parts().end() && !found->second.empty() ?
+                   std::string_view(found->second.front().source) :
+                   std::string_view{};
+    }
+
+    std::vector<ActorCollisionPartsResource>
+    actor_collision_parts_resources(const LiveActor *actor) {
+        auto resources = std::vector<ActorCollisionPartsResource>{};
+        const auto found = actor_collision_parts().find(actor);
+        if (actor == nullptr || found == actor_collision_parts().end()) {
+            return resources;
+        }
+
+        resources.reserve(found->second.size());
+        for (const auto &state : found->second) {
+            resources.push_back(ActorCollisionPartsResource{
+                .resource_name = state.resource_name,
+                .kcl_source = state.source,
+                .attributes_source = state.attributes_source,
+                .kcl_size = state.kcl.size(),
+                .attributes_size = state.attributes.size(),
+                .bounding_radius = state.bounding_radius,
+            });
+        }
+        return resources;
     }
 
     void release_actor_collision_parts(const LiveActor *actor) noexcept {
@@ -91,7 +130,11 @@ namespace smgpc::compat {
         if (found == actor_collision_parts().end()) {
             return;
         }
-        found->second.registration->release_owner();
+        for (const auto &state : found->second) {
+            if (state.registration != nullptr) {
+                state.registration->release_owner();
+            }
+        }
         actor_collision_parts().erase(found);
     }
 
@@ -143,6 +186,21 @@ namespace MR {
                                     std::span<const std::uint8_t>{};
         const auto source = resource_holder->resolved_path().generic_string() + ":/" +
                             kcl_entry->path;
+        const auto attributes_source =
+            attributes_entry != nullptr ?
+                resource_holder->resolved_path().generic_string() + ":/" +
+                    attributes_entry->path :
+                std::string{};
+
+        if (const auto found = actor_collision_parts().find(actor);
+            found != actor_collision_parts().end()) {
+            if (std::ranges::any_of(found->second, [&](const auto &state) {
+                    return state.resource_holder == resource_holder && state.source == source;
+                })) {
+                return;
+            }
+        }
+
         auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>(
             &actor->mFlag.mIsDead);
         const auto result = collision->register_kcl(kcl, host_matrix, source, registration,
@@ -152,19 +210,18 @@ namespace MR {
             throw std::runtime_error("Required CollisionParts KCL is malformed: " + source);
         }
 
-        smgpc::compat::release_actor_collision_parts(actor);
-        actor_collision_parts().insert_or_assign(
-            actor,
-            ActorCollisionPartsState{
-                .resource_holder = resource_holder,
-                .sensor = sensor,
-                .kcl = kcl,
-                .attributes = attributes,
-                .matrix = host_matrix,
-                .bounding_radius = result.local_bounding_radius * average_matrix_scale(host_matrix),
-                .source = source,
-                .registration = std::move(registration),
-            });
+        actor_collision_parts()[actor].push_back(ActorCollisionPartsState{
+            .resource_holder = resource_holder,
+            .sensor = sensor,
+            .kcl = kcl,
+            .attributes = attributes,
+            .matrix = host_matrix,
+            .bounding_radius = result.local_bounding_radius * average_matrix_scale(host_matrix),
+            .resource_name = resource_name,
+            .source = source,
+            .attributes_source = attributes_source,
+            .registration = std::move(registration),
+        });
     }
 
     f32 getCollisionBoundingSphereRange(const LiveActor *actor) {

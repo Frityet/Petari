@@ -59,7 +59,16 @@ namespace smgpc::scene::nameobj {
         std::vector<NameObjArchiveRequest> archives;
     };
 
+    enum class NameObjSceneVisualKind {
+        None,
+        Sky,
+        Air,
+        Planet,
+        Bright,
+    };
+
     [[nodiscard]] bool can_create_name_obj(std::string_view object_name);
+    [[nodiscard]] NameObjSceneVisualKind scene_visual_kind(std::string_view object_name);
     [[nodiscard]] NameObjCreatorSupport describe_name_obj_creator_support(std::string_view object_name);
     [[nodiscard]] NameObjPlacementSupport describe_name_obj_placement_support(smgpc::runtime::DvdFileSystemService &dvd,
                                                                               std::string_view object_name,

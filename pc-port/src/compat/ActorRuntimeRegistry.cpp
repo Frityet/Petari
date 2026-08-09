@@ -4,6 +4,7 @@
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/RailRider.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/StageSwitch.hpp"
@@ -14,6 +15,7 @@
 #include "compat/MaterialCtrlCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <memory>
 #include <stdexcept>
@@ -24,6 +26,7 @@
 namespace {
     struct NameObjRuntimeState {
         std::string name{};
+        std::uint64_t registration_order = 0U;
     };
 
     struct ActorHitSensorState {
@@ -33,12 +36,16 @@ namespace {
     };
 
     struct ActorAnimationRuntimeState {
+        J3DFrameCtrl bck_ctrl{};
         J3DFrameCtrl brk_ctrl{};
+        bool bck_available = false;
+        bool bck_active = false;
         bool brk_available = false;
         bool brk_active = false;
         std::string current_bck_name{};
         std::string current_brk_name{};
         std::string current_btk_name{};
+        std::string current_btp_name{};
     };
 
     struct LiveActorRuntimeState {
@@ -55,11 +62,40 @@ namespace {
         std::unique_ptr<RailRider> rail_rider{};
         std::unique_ptr<StageSwitchCtrl> stage_switch{};
         std::unique_ptr<ActorLightCtrl> light_ctrl{};
+        std::unique_ptr<LodCtrl> lod_ctrl{};
     };
 
     [[nodiscard]] auto& name_obj_states() {
         static auto states = std::unordered_map<const NameObj*, NameObjRuntimeState>{};
         return states;
+    }
+
+    [[nodiscard]] auto& next_name_obj_registration_order() {
+        static auto order = std::uint64_t{1U};
+        return order;
+    }
+
+    [[nodiscard]] const smgpc::compat::NameObjRuntimeRegistrationCapture*&
+    active_name_obj_registration_capture() {
+        static const smgpc::compat::NameObjRuntimeRegistrationCapture* capture =
+            nullptr;
+        return capture;
+    }
+
+    [[nodiscard]] std::vector<NameObj*> snapshot_name_obj_runtime_objects_from(
+        std::uint64_t first_registration_order) {
+        auto objects = std::vector<NameObj*>{};
+        objects.reserve(name_obj_states().size());
+        for (const auto& [object, state] : name_obj_states()) {
+            if (state.registration_order >= first_registration_order) {
+                objects.push_back(const_cast<NameObj*>(object));
+            }
+        }
+        std::ranges::sort(objects, [](const NameObj* left, const NameObj* right) {
+            return name_obj_states().at(left).registration_order <
+                   name_obj_states().at(right).registration_order;
+        });
+        return objects;
     }
 
     [[nodiscard]] auto& actor_states() {
@@ -91,15 +127,41 @@ namespace {
 }  // namespace
 
 namespace smgpc::compat {
+    NameObjRuntimeRegistrationCapture::NameObjRuntimeRegistrationCapture() {
+        auto& active = active_name_obj_registration_capture();
+        if (active != nullptr) {
+            throw std::logic_error(
+                "NameObj construction capture cannot overlap or nest.");
+        }
+        _marker = mark_name_obj_runtime_registrations();
+        active = this;
+    }
+
+    NameObjRuntimeRegistrationCapture::~NameObjRuntimeRegistrationCapture() {
+        auto& active = active_name_obj_registration_capture();
+        if (active == this) {
+            active = nullptr;
+        }
+    }
+
+    NameObjRuntimeRegistrationMarker
+    NameObjRuntimeRegistrationCapture::marker() const noexcept {
+        return _marker;
+    }
+
     const char* register_name_obj_runtime_state(NameObj* object, const char* name) {
         if (object == nullptr) {
             throw std::invalid_argument("NameObj runtime state requires a real object.");
         }
-        auto [found, inserted] = name_obj_states().try_emplace(object);
+        const auto registration_order = next_name_obj_registration_order()++;
+        auto [found, inserted] = name_obj_states().try_emplace(
+            object, NameObjRuntimeState{
+                        .name = name != nullptr ? name : "",
+                        .registration_order = registration_order,
+                    });
         if (!inserted) {
             throw std::logic_error("NameObj runtime state is already registered.");
         }
-        found->second.name = name != nullptr ? name : "";
         return found->second.name.c_str();
     }
 
@@ -128,13 +190,47 @@ namespace smgpc::compat {
     }
 
     std::vector<NameObj*> snapshot_name_obj_runtime_objects() {
-        auto objects = std::vector<NameObj*>{};
-        objects.reserve(name_obj_states().size());
-        for (const auto& [object, state] : name_obj_states()) {
-            static_cast<void>(state);
-            objects.push_back(const_cast<NameObj*>(object));
+        return snapshot_name_obj_runtime_objects_from(0U);
+    }
+
+    NameObjRuntimeRegistrationMarker mark_name_obj_runtime_registrations() {
+        return NameObjRuntimeRegistrationMarker{
+            .next_registration_order = next_name_obj_registration_order(),
+        };
+    }
+
+    std::vector<NameObj*> snapshot_name_obj_runtime_objects_since(
+        NameObjRuntimeRegistrationMarker marker) {
+        if (marker.next_registration_order == 0U ||
+            marker.next_registration_order > next_name_obj_registration_order()) {
+            throw std::invalid_argument("NameObj runtime registration marker is invalid.");
         }
-        return objects;
+        return snapshot_name_obj_runtime_objects_from(marker.next_registration_order);
+    }
+
+    void destroy_name_obj_runtime_objects_since(
+        NameObjRuntimeRegistrationMarker marker) noexcept {
+        if (marker.next_registration_order == 0U) {
+            return;
+        }
+
+        // Selecting the newest identity on each pass avoids allocating while
+        // allowing each destructor to mutate the registry safely.
+        while (true) {
+            auto* newest = static_cast<const NameObj*>(nullptr);
+            auto newest_order = std::uint64_t{};
+            for (const auto& [object, state] : name_obj_states()) {
+                if (state.registration_order >= marker.next_registration_order &&
+                    state.registration_order > newest_order) {
+                    newest = object;
+                    newest_order = state.registration_order;
+                }
+            }
+            if (newest == nullptr) {
+                return;
+            }
+            delete const_cast<NameObj*>(newest);
+        }
     }
 
     bool name_obj_is_suspended(const NameObj* object) {
@@ -178,6 +274,7 @@ namespace smgpc::compat {
         release_demo_runtime_state(actor);
 
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->scene_lights().unregister_player_light_ctrl(actor->mActorLightCtrl);
             runtime->star_pointer().unregister_target(*actor);
             runtime->unregister_effect_keeper(actor->getName(), actor);
             runtime->unregister_live_actor_model(*const_cast<LiveActor*>(actor));
@@ -213,8 +310,22 @@ namespace smgpc::compat {
 
     void replace_actor_light_ctrl(LiveActor* actor) {
         auto& state = require_actor_state(actor);
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->scene_lights().unregister_player_light_ctrl(state.light_ctrl.get());
+        }
         state.light_ctrl = std::make_unique<ActorLightCtrl>(actor);
         actor->mActorLightCtrl = state.light_ctrl.get();
+    }
+
+    void adopt_actor_lod_ctrl(LiveActor* actor, LodCtrl* lod_ctrl) {
+        if (lod_ctrl == nullptr) {
+            throw std::invalid_argument("LiveActor LOD ownership requires a real LodCtrl.");
+        }
+        auto& state = require_actor_state(actor);
+        if (state.lod_ctrl != nullptr && state.lod_ctrl.get() != lod_ctrl) {
+            throw std::logic_error("LiveActor already owns a different LodCtrl.");
+        }
+        state.lod_ctrl.reset(lod_ctrl);
     }
 
     void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive) {
@@ -275,11 +386,36 @@ namespace smgpc::compat {
         model->draw(camera_pose, actor_base_matrix(actor), frame, pass);
     }
 
+    void draw_actor_model_3d_for_2d(
+        LiveActor* actor,
+        const smgpc::render::Model3DFor2DProjection& projection,
+        std::uint64_t frame,
+        smgpc::render::live_actor::LiveActorModel::DrawPass pass) {
+        auto* model = actor_model(actor);
+        if (actor == nullptr || actor->mFlag.mIsDead || actor->mFlag.mIsClipped ||
+            actor->mFlag.mIsHiddenModel || model == nullptr) {
+            return;
+        }
+        model->drawModel3DFor2D(projection, actor_base_matrix(actor), frame, pass);
+    }
+
     void start_actor_bck(LiveActor* actor, const char* name, const char* file_name) {
         auto& state = require_actor_state(actor);
-        state.animation.current_bck_name = name != nullptr ? name : "";
+        auto& animation = state.animation;
+        animation.current_bck_name = name != nullptr ? name : "";
+        auto frame_max = std::optional<std::int16_t>{};
         if (state.model != nullptr) {
-            state.model->startBck(state.animation.current_bck_name, file_name != nullptr ? file_name : "");
+            frame_max = state.model->startBck(animation.current_bck_name, file_name != nullptr ? file_name : "");
+        }
+        animation.bck_available = frame_max.has_value();
+        animation.bck_active = animation.bck_available;
+        animation.bck_ctrl.init(frame_max.value_or(0));
+        animation.bck_ctrl.setAttribute(
+            state.model != nullptr
+                ? state.model->bck_attribute().value_or(2U)
+                : 2U);
+        if (!animation.bck_available || animation.bck_ctrl.mEnd <= 0) {
+            animation.bck_ctrl.mRate = 0.0F;
         }
     }
 
@@ -291,7 +427,16 @@ namespace smgpc::compat {
         const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
         const auto resource_name = file_name != nullptr ? std::string_view(file_name) : std::string_view{};
         const auto frame_max = state.model->requireBck(animation_name, resource_name);
-        state.animation.current_bck_name = std::string(animation_name);
+        auto& animation = state.animation;
+        animation.current_bck_name = std::string(animation_name);
+        animation.bck_available = true;
+        animation.bck_active = true;
+        animation.bck_ctrl.init(frame_max);
+        animation.bck_ctrl.setAttribute(
+            state.model->bck_attribute().value_or(2U));
+        if (frame_max <= 0) {
+            animation.bck_ctrl.mRate = 0.0F;
+        }
         return frame_max;
     }
 
@@ -305,12 +450,12 @@ namespace smgpc::compat {
         }
         animation.brk_available = frame_max.has_value();
         animation.brk_active = animation.brk_available;
-        animation.brk_ctrl.mStart = 0;
-        animation.brk_ctrl.mEnd = frame_max.value_or(0);
-        animation.brk_ctrl.mFrame = 0.0F;
-        animation.brk_ctrl.mRate = 1.0F;
-        if (animation.brk_ctrl.mEnd <= animation.brk_ctrl.mStart) {
-            animation.brk_ctrl.mFrame = static_cast<float>(animation.brk_ctrl.mEnd);
+        animation.brk_ctrl.init(frame_max.value_or(0));
+        animation.brk_ctrl.setAttribute(
+            state.model != nullptr
+                ? state.model->brk_attribute().value_or(2U)
+                : 2U);
+        if (!animation.brk_available || animation.brk_ctrl.mEnd <= 0) {
             animation.brk_ctrl.mRate = 0.0F;
         }
     }
@@ -319,8 +464,57 @@ namespace smgpc::compat {
         auto& state = require_actor_state(actor);
         state.animation.current_btk_name = name != nullptr ? name : "";
         if (state.model != nullptr) {
-            state.model->startBtk(state.animation.current_btk_name);
+            (void)state.model->startBtk(state.animation.current_btk_name);
         }
+    }
+
+    void start_actor_btp(LiveActor* actor, const char* name) {
+        auto& state = require_actor_state(actor);
+        state.animation.current_btp_name = name != nullptr ? name : "";
+        if (state.model != nullptr) {
+            (void)state.model->startBtp(state.animation.current_btp_name);
+        }
+    }
+
+    bool try_start_actor_bck(LiveActor* actor, const char* name, const char* file_name) {
+        auto& state = require_actor_state(actor);
+        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
+        const auto resource_name = file_name != nullptr ? std::string_view(file_name) : std::string_view{};
+        if (state.model == nullptr || !state.model->hasBck(animation_name, resource_name)) {
+            return false;
+        }
+        start_actor_bck(actor, name, file_name);
+        return true;
+    }
+
+    bool try_start_actor_brk(LiveActor* actor, const char* name) {
+        auto& state = require_actor_state(actor);
+        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
+        if (state.model == nullptr || !state.model->hasBrk(animation_name)) {
+            return false;
+        }
+        start_actor_brk(actor, name);
+        return true;
+    }
+
+    bool try_start_actor_btk(LiveActor* actor, const char* name) {
+        auto& state = require_actor_state(actor);
+        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
+        if (state.model == nullptr || !state.model->hasBtk(animation_name)) {
+            return false;
+        }
+        start_actor_btk(actor, name);
+        return true;
+    }
+
+    bool try_start_actor_btp(LiveActor* actor, const char* name) {
+        auto& state = require_actor_state(actor);
+        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
+        if (state.model == nullptr || !state.model->hasBtp(animation_name)) {
+            return false;
+        }
+        start_actor_btp(actor, name);
+        return true;
     }
 
     void set_actor_brk_frame(LiveActor* actor, float frame) {
@@ -330,6 +524,18 @@ namespace smgpc::compat {
         }
         animation.brk_active = true;
         animation.brk_ctrl.mFrame = frame;
+        if (auto* model = require_actor_state(actor).model.get(); model != nullptr) {
+            model->setBrkFrame(frame);
+        }
+    }
+
+    void set_actor_brk_rate(LiveActor* actor, float rate) {
+        auto& animation = require_actor_state(actor).animation;
+        if (!animation.brk_available) {
+            throw std::logic_error("BRK animation data is unavailable.");
+        }
+        animation.brk_active = true;
+        animation.brk_ctrl.mRate = rate;
     }
 
     void set_actor_brk_frame_and_stop(LiveActor* actor, float frame) {
@@ -340,6 +546,23 @@ namespace smgpc::compat {
     void set_actor_brk_frame_end_and_stop(LiveActor* actor) {
         auto& animation = require_actor_state(actor).animation;
         set_actor_brk_frame_and_stop(actor, static_cast<float>(animation.brk_ctrl.mEnd));
+    }
+
+    void set_actor_bck_frame_and_stop(LiveActor* actor, float frame) {
+        auto& state = require_actor_state(actor);
+        auto& animation = state.animation;
+        if (!animation.bck_available || state.model == nullptr) {
+            throw std::logic_error("BCK animation data is unavailable.");
+        }
+        animation.bck_active = true;
+        animation.bck_ctrl.mFrame = frame;
+        animation.bck_ctrl.mRate = 0.0F;
+        state.model->setBckFrameAndStop(frame);
+    }
+
+    J3DFrameCtrl* actor_bck_ctrl(const LiveActor* actor) {
+        auto& animation = require_actor_state(actor).animation;
+        return animation.bck_available ? &animation.bck_ctrl : nullptr;
     }
 
     J3DFrameCtrl* actor_brk_ctrl(const LiveActor* actor) {
@@ -368,20 +591,22 @@ namespace smgpc::compat {
         return require_actor_state(actor).animation.current_btk_name;
     }
 
+    std::string_view actor_current_btp_name(const LiveActor* actor) {
+        return require_actor_state(actor).animation.current_btp_name;
+    }
+
     void advance_actor_animation(LiveActor* actor) {
-        auto& animation = require_actor_state(actor).animation;
-        if (!animation.brk_active || animation.brk_ctrl.mRate == 0.0F) {
-            return;
+        auto& state = require_actor_state(actor);
+        auto& animation = state.animation;
+        if (animation.bck_active && animation.bck_ctrl.mRate != 0.0F) {
+            animation.bck_ctrl.update();
         }
-        animation.brk_ctrl.mFrame += animation.brk_ctrl.mRate;
-        if (animation.brk_ctrl.mRate > 0.0F &&
-            animation.brk_ctrl.mFrame >= static_cast<float>(animation.brk_ctrl.mEnd)) {
-            animation.brk_ctrl.mFrame = static_cast<float>(animation.brk_ctrl.mEnd);
-            animation.brk_ctrl.mRate = 0.0F;
-        } else if (animation.brk_ctrl.mRate < 0.0F &&
-                   animation.brk_ctrl.mFrame <= static_cast<float>(animation.brk_ctrl.mStart)) {
-            animation.brk_ctrl.mFrame = static_cast<float>(animation.brk_ctrl.mStart);
-            animation.brk_ctrl.mRate = 0.0F;
+        if (animation.brk_active && animation.brk_ctrl.mRate != 0.0F) {
+            animation.brk_ctrl.update();
+        }
+        if (animation.brk_active && animation.brk_available &&
+            state.model != nullptr) {
+            state.model->setBrkFrame(animation.brk_ctrl.mFrame);
         }
     }
 

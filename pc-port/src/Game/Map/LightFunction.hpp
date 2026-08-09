@@ -36,6 +36,7 @@ public:
     static void loadLightInfoCoin(const LightInfoCoin*);
 
     static void registerLightAreaHolder(LightAreaHolder*);
+    static void unregisterLightAreaHolder(const LightAreaHolder*);
 
     static void calcLightWorldPos(TVec3f*, const LightInfo&);
 

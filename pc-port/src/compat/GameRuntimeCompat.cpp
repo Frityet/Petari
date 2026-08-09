@@ -56,8 +56,15 @@ namespace MR {
         }
     }
 
-    void setGroupClipping(LiveActor*, const JMapInfoIter&, int) {
-        throw std::logic_error("Group clipping is unavailable without ClippingGroupHolder.");
+    void setGroupClipping(LiveActor* pActor, const JMapInfoIter& rIter, int) {
+        if (pActor == nullptr) {
+            throw std::invalid_argument("Group clipping requires a LiveActor.");
+        }
+
+        auto clipping_group_id = s32{-1};
+        if (MR::getJMapInfoClippingGroupID(rIter, &clipping_group_id) && clipping_group_id >= 0) {
+            throw std::logic_error("Group clipping is unavailable without ClippingGroupHolder.");
+        }
     }
 
     MsgSharedGroup* joinToGroupArray(LiveActor* pActor, const JMapInfoIter& rIter, const char*, s32) {

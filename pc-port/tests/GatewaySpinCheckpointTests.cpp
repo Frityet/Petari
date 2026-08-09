@@ -165,6 +165,8 @@ namespace {
         auto renderer = smgpc::render::AuroraRenderer(window);
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
+        const auto scene_renderer_context =
+            smgpc::render::ScopedAuroraRendererContext(renderer);
         auto logical_audio = smgpc::runtime::AudioEventService{};
         const auto audio_binding =
             smgpc::compat::ScopedAudioEventServiceOverride{logical_audio};
@@ -198,6 +200,9 @@ namespace {
                     runtime.dvd(), scene.placements(), scene.general_positions(),
                     runtime.player_system(), runtime.scene_wipe(), *mario);
         }
+
+        require(&checkpoint->demo_runtime() == &scene.demo_runtime(),
+                "Gateway spin checkpoint installed a nested DemoDirector instead of borrowing the scene owner");
 
         require(smgpc::compat::current_information_message() != nullptr &&
                     MR::isExistSceneObj(SceneObj_InformationObserver),

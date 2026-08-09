@@ -12,6 +12,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/Functor.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SwitchEventFunctorListener.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -55,6 +56,27 @@ namespace MR {
 
     void connectToSceneMapObj(LiveActor* pActor) {
         MR::connectToScene(pActor, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_MapObj, -1);
+    }
+
+    void connectToScenePlanet(LiveActor* pActor) {
+        const auto draw_buffer = MR::isExistIndirectTexture(pActor) ?
+                                     MR::DrawBufferType_IndirectPlanet :
+                                     MR::DrawBufferType_Planet;
+        MR::connectToScene(pActor, MR::MovementType_Planet,
+                           MR::CalcAnimType_Planet, draw_buffer, -1);
+    }
+
+    void connectToSceneAir(LiveActor* pActor) {
+        MR::connectToScene(pActor, MR::MovementType_Sky, MR::CalcAnimType_MapObj, MR::DrawBufferType_Air, -1);
+    }
+
+    void connectToSceneSun(LiveActor* pActor) {
+        MR::connectToScene(pActor, MR::MovementType_Sky, MR::CalcAnimType_MapObj, MR::DrawBufferType_Sun, -1);
+    }
+
+    void connectToScene3DModelFor2D(LiveActor* pActor) {
+        MR::connectToScene(pActor, MR::MovementType_Layout, MR::CalcAnimType_Layout,
+                           MR::DrawBufferType_Model3DFor2D, -1);
     }
 
     void connectToSceneMapObjMovement(NameObj* pObj) {

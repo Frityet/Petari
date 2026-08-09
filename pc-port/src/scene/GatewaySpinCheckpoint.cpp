@@ -160,7 +160,7 @@ namespace smgpc::scene {
 
     class GatewaySpinCheckpoint::Impl final {
     public:
-        Impl(smgpc::runtime::DvdFileSystemService &dvd,
+        Impl(smgpc::runtime::DvdFileSystemService &,
              std::span<const StagePlacementObject> placements,
              std::span<const StageGeneralPos> general_positions,
              smgpc::runtime::PlayerSystemService &player,
@@ -189,8 +189,11 @@ namespace smgpc::scene {
                       _game_data)),
               _information_message_binding(
                   std::make_unique<smgpc::compat::InformationMessageBinding>()),
-              _demo(std::make_unique<smgpc::compat::DemoSceneRuntime>(
-                  dvd, placements, general_positions, &_wipe)),
+              // GameScene owns one DemoDirector for the complete scene. The
+              // bounded checkpoint joins that owner instead of installing a
+              // second active runtime after Gateway actors and Mario exist.
+              _demo(&smgpc::compat::require_active_demo_scene_runtime(
+                  "Gateway spin checkpoint")),
               _tico(std::make_unique<GatewaySpinRouteTico>(_tico_source)),
               _rosetta(std::make_unique<GatewaySpinRosettaTrigger>(
                   _rosetta_source)) {
@@ -223,7 +226,6 @@ namespace smgpc::scene {
         }
 
         ~Impl() {
-            _demo.reset();
             _information_message_binding.reset();
             _game_data_binding.reset();
             _player_binding.reset();
@@ -413,7 +415,7 @@ namespace smgpc::scene {
             _game_data_binding;
         std::unique_ptr<smgpc::compat::InformationMessageBinding>
             _information_message_binding;
-        std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo;
+        smgpc::compat::DemoSceneRuntime *_demo;
         std::unique_ptr<GatewaySpinRouteTico> _tico;
         std::unique_ptr<GatewaySpinRosettaTrigger> _rosetta;
         GatewaySpinCheckpointState _state =

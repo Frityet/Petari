@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <cstdlib>
 #include <exception>
 
@@ -73,9 +74,17 @@ std::optional<std::int16_t> LiveActorModel::startBck(std::string_view name, std:
         mBckStartFrame = 0U;
     }
     mBckAnimation = loadBckAnimation(mBckResourceName);
+    mBckManualFrame.reset();
     ++mJointAnimationVersion;
     applyStartedAnimations();
     return mBckAnimation.has_value() ? std::optional<std::int16_t>{mBckAnimation->frame_max} : std::nullopt;
+}
+
+void LiveActorModel::setBckFrameAndStop(float frame) {
+    if (!mBckStarted || !mBckAnimation.has_value()) {
+        throw std::logic_error("BCK animation data is unavailable.");
+    }
+    mBckManualFrame = std::clamp(frame, 0.0F, static_cast<float>(mBckAnimation->frame_max));
 }
 
 std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
@@ -86,13 +95,14 @@ std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
         mBrkAnimation.reset();
     }
     mBrkName = requested_name;
+    mBrkFrame = 0.0F;
     if (!mBrkAnimation.has_value()) {
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         const auto archive_path = runtime != nullptr ? runtime->find_object_archive(mModelArcName) : std::nullopt;
         if (archive_path.has_value()) {
             try {
                 const auto &archive = runtime->dvd().archive_for_path(*archive_path);
-                mBrkAnimation = findBrkAnimation(archive);
+                mBrkAnimation = findBrkAnimation(archive, mBrkName);
                 mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string {};
             } catch (const std::exception &) {
                 mBrkAnimation.reset();
@@ -105,7 +115,14 @@ std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
     return mBrkAnimation.has_value() ? std::optional<std::int16_t>{mBrkAnimation->frame_max} : std::nullopt;
 }
 
-void LiveActorModel::startBtk(std::string_view name) {
+void LiveActorModel::setBrkFrame(float frame) {
+    if (!mBrkStarted || !mBrkAnimation.has_value() || !std::isfinite(frame)) {
+        throw std::logic_error("BRK animation data is unavailable.");
+    }
+    mBrkFrame = frame;
+}
+
+bool LiveActorModel::startBtk(std::string_view name) {
     mMaterialAnimationSource = nullptr;
     mBtkStarted = true;
     const auto requested_name = std::string(name);
@@ -119,7 +136,7 @@ void LiveActorModel::startBtk(std::string_view name) {
         if (archive_path.has_value()) {
             try {
                 const auto &archive = runtime->dvd().archive_for_path(*archive_path);
-                mBtkAnimation = findBtkAnimation(archive);
+                mBtkAnimation = findBtkAnimation(archive, mBtkName);
                 mBtkAnimationName = mBtkAnimation.has_value() ? mBtkName : std::string {};
             } catch (const std::exception &) {
                 mBtkAnimation.reset();
@@ -129,6 +146,7 @@ void LiveActorModel::startBtk(std::string_view name) {
     }
     ++mMaterialAnimationVersion;
     applyStartedAnimations();
+    return mBtkAnimation.has_value();
 }
 
 std::optional<std::int16_t> LiveActorModel::startBtp(std::string_view name) {
@@ -158,6 +176,40 @@ std::optional<std::int16_t> LiveActorModel::startActionBtp(std::string_view acti
         return std::nullopt;
     }
     return startBtp(*resource_name);
+}
+
+bool LiveActorModel::hasBck(std::string_view name, std::string_view file_name) const {
+    return loadBckAnimation(file_name.empty() ? name : file_name).has_value();
+}
+
+bool LiveActorModel::hasBrk(std::string_view name) const {
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    const auto archive_path = runtime != nullptr ? runtime->find_object_archive(mModelArcName) : std::nullopt;
+    if (!archive_path.has_value()) {
+        return false;
+    }
+    try {
+        return findBrkAnimation(runtime->dvd().archive_for_path(*archive_path), name).has_value();
+    } catch (const std::exception&) {
+        return false;
+    }
+}
+
+bool LiveActorModel::hasBtk(std::string_view name) const {
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    const auto archive_path = runtime != nullptr ? runtime->find_object_archive(mModelArcName) : std::nullopt;
+    if (!archive_path.has_value()) {
+        return false;
+    }
+    try {
+        return findBtkAnimation(runtime->dvd().archive_for_path(*archive_path), name).has_value();
+    } catch (const std::exception&) {
+        return false;
+    }
+}
+
+bool LiveActorModel::hasBtp(std::string_view name) const {
+    return loadBtpAnimation(name).has_value();
 }
 
 void LiveActorModel::syncJointAnimationFrom(const LiveActorModel &source) {
@@ -196,6 +248,25 @@ std::int16_t LiveActorModel::requireBck(std::string_view name, std::string_view 
 
 void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const smgpc::render::J3dMatrix3x4 &actor_matrix,
                           std::uint64_t frame, DrawPass pass) {
+    drawImpl(&camera_pose, nullptr, actor_matrix, frame, pass);
+}
+
+void LiveActorModel::drawModel3DFor2D(
+    const smgpc::render::Model3DFor2DProjection &projection,
+    const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+    DrawPass pass) {
+    drawImpl(nullptr, &projection, actor_matrix, frame, pass);
+}
+
+void LiveActorModel::drawImpl(
+    const smgpc::camera::CameraPose *camera_pose,
+    const smgpc::render::Model3DFor2DProjection *model_3d_for_2d,
+    const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
+    DrawPass pass) {
+    if ((camera_pose == nullptr) == (model_3d_for_2d == nullptr)) {
+        throw std::logic_error(
+            "LiveActorModel draw requires exactly one perspective or Model3DFor2D projection");
+    }
     auto &renderer = smgpc::render::current_aurora_renderer();
     ensureLoaded();
     if (mRenderer == nullptr || !mRenderer->is_loaded()) {
@@ -220,6 +291,9 @@ void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const sm
         options.bck_animation_frame = joint_animation.bck_frame(frame);
     }
     const auto &material_animation = materialAnimationSource();
+    if (material_animation.mBrkStarted && material_animation.mBrkAnimation.has_value()) {
+        options.brk_animation_frame = material_animation.brk_frame();
+    }
     if (material_animation.mBtpStarted && material_animation.mBtpAnimation.has_value()) {
         options.btp_animation_frame = material_animation.btp_frame(frame);
     }
@@ -231,12 +305,18 @@ void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const sm
     auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime != nullptr) {
         options.scene_lights = runtime->scene_lights().lights();
+        options.scene_ambient_color = runtime->scene_lights().actor_ambient();
         if (runtime->j3d_pixel_update_state().has_value()) {
             options.gx_color_update = runtime->j3d_pixel_update_state()->color_update;
             options.gx_alpha_update = runtime->j3d_pixel_update_state()->alpha_update;
         }
     }
-    mRenderer->draw(renderer, camera_pose, actor_matrix, frame, options);
+    if (model_3d_for_2d != nullptr) {
+        mRenderer->draw_model_3d_for_2d(renderer, *model_3d_for_2d, actor_matrix,
+                                        frame, options);
+    } else {
+        mRenderer->draw(renderer, *camera_pose, actor_matrix, frame, options);
+    }
 
 #ifndef NDEBUG
     if (runtime == nullptr || !runtime->should_record_j3d_packet_trace()) {
@@ -277,6 +357,31 @@ std::optional<std::int16_t> LiveActorModel::bck_frame_max(std::string_view name)
     return animation.has_value() ? std::optional<std::int16_t>{animation->frame_max} : std::nullopt;
 }
 
+std::optional<std::uint8_t> LiveActorModel::bck_attribute() const {
+    const auto& source = jointAnimationSource();
+    if (&source != this) {
+        return source.bck_attribute();
+    }
+    return mBckAnimation.has_value()
+               ? std::optional<std::uint8_t>{mBckAnimation->attribute}
+               : std::nullopt;
+}
+
+std::optional<std::uint8_t> LiveActorModel::brk_attribute() const {
+    const auto& source = materialAnimationSource();
+    if (&source != this) {
+        return source.brk_attribute();
+    }
+    return mBrkAnimation.has_value()
+               ? std::optional<std::uint8_t>{mBrkAnimation->attribute}
+               : std::nullopt;
+}
+
+float LiveActorModel::brk_frame() const {
+    const auto& source = materialAnimationSource();
+    return &source != this ? source.brk_frame() : mBrkFrame;
+}
+
 float LiveActorModel::bck_frame(std::uint64_t runtime_frame) const {
     const auto &source = jointAnimationSource();
     if (&source != this) {
@@ -284,6 +389,9 @@ float LiveActorModel::bck_frame(std::uint64_t runtime_frame) const {
     }
     if (!mBckStarted || !mBckAnimation.has_value()) {
         return 0.0F;
+    }
+    if (mBckManualFrame.has_value()) {
+        return *mBckManualFrame;
     }
     const auto elapsed = runtime_frame >= mBckStartFrame ? static_cast<float>(runtime_frame - mBckStartFrame) : 0.0F;
     return smgpc::render::j3d_animation_frame(mBckAnimation->attribute, mBckAnimation->frame_max, elapsed);
@@ -376,6 +484,31 @@ std::optional<float> LiveActorModel::model_bounding_radius() {
     return mRenderer->model_bounding_radius(animation_frame);
 }
 
+bool LiveActorModel::has_effect_texture_matrix() {
+    ensureLoaded();
+    if (mRenderer == nullptr || !mRenderer->is_loaded()) {
+        return false;
+    }
+
+    return std::ranges::any_of(mRenderer->render_packets(), [](const auto &packet) {
+        return std::ranges::any_of(packet.tex_matrices, [](const auto &matrix) {
+            // J3D texture-matrix mode 8 is the model effect/projection matrix
+            // consumed by ProjmapEffectMtxSetter in the original runtime.
+            return (matrix.info & 0x3FU) == 8U;
+        });
+    });
+}
+
+bool LiveActorModel::has_indirect_texture() {
+    ensureLoaded();
+    if (mRenderer == nullptr || !mRenderer->is_loaded()) {
+        return false;
+    }
+    return std::ranges::any_of(mRenderer->render_packets(), [](const auto &packet) {
+        return packet.indirect_stage_count != 0U;
+    });
+}
+
 const LiveActorModel &LiveActorModel::jointAnimationSource() const {
     return mJointAnimationSource != nullptr ? mJointAnimationSource->jointAnimationSource() : *this;
 }
@@ -414,14 +547,14 @@ void LiveActorModel::ensureLoaded() {
             resolveBckAnimation();
         }
         if (mBtkStarted && (!mBtkAnimation.has_value() || mBtkAnimationName != mBtkName)) {
-            mBtkAnimation = findBtkAnimation(archive);
+            mBtkAnimation = findBtkAnimation(archive, mBtkName);
             mBtkAnimationName = mBtkAnimation.has_value() ? mBtkName : std::string {};
         }
         if (mBtpStarted && !mBtpAnimation.has_value() && !mBtpName.empty()) {
             mBtpAnimation = findBtpAnimation(archive, mBtpName);
         }
         if ((mBrkStarted || !mBrkName.empty()) && (!mBrkAnimation.has_value() || mBrkAnimationName != mBrkName)) {
-            mBrkAnimation = findBrkAnimation(archive);
+            mBrkAnimation = findBrkAnimation(archive, mBrkName);
             mBrkAnimationName = mBrkAnimation.has_value() ? mBrkName : std::string {};
         }
         mRenderer = std::make_unique<smgpc::render::J3dModelRenderer>();
@@ -599,6 +732,14 @@ void LiveActorModel::applyStartedAnimations() {
     } else {
         mRenderer->clear_btk_animation();
     }
+    if (material_animation.mBrkStarted) {
+        if (!material_animation.mBrkAnimation.has_value() ||
+            !mRenderer->set_brk_animation(*material_animation.mBrkAnimation)) {
+            mRenderer->clear_brk_animation();
+        }
+    } else {
+        mRenderer->clear_brk_animation();
+    }
     if (material_animation.mBtpStarted) {
         if (material_animation.mBtpAnimation.has_value()) {
             auto &renderer = smgpc::render::current_aurora_renderer();
@@ -642,11 +783,12 @@ LiveActorModel::findBckAnimation(const smgpc::resource::RarcArchive &archive, st
     return smgpc::render::inspect_j3d_animation(archive.file_data(*entry)).bck;
 }
 
-std::optional<smgpc::render::J3dBtkAnimationSummary> LiveActorModel::findBtkAnimation(const smgpc::resource::RarcArchive &archive) const {
-    if (mBtkName.empty()) {
+std::optional<smgpc::render::J3dBtkAnimationSummary> LiveActorModel::findBtkAnimation(
+    const smgpc::resource::RarcArchive &archive, std::string_view name) const {
+    if (name.empty()) {
         return std::nullopt;
     }
-    const auto requested = lower_copy(mBtkName) + ".btk";
+    const auto requested = lower_copy(name) + ".btk";
     auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         return std::nullopt;
@@ -655,11 +797,12 @@ std::optional<smgpc::render::J3dBtkAnimationSummary> LiveActorModel::findBtkAnim
     return smgpc::render::inspect_j3d_animation(archive.file_data(*entry)).btk;
 }
 
-std::optional<smgpc::render::J3dBrkAnimationSummary> LiveActorModel::findBrkAnimation(const smgpc::resource::RarcArchive &archive) const {
-    if (mBrkName.empty()) {
+std::optional<smgpc::render::J3dBrkAnimationSummary> LiveActorModel::findBrkAnimation(
+    const smgpc::resource::RarcArchive &archive, std::string_view name) const {
+    if (name.empty()) {
         return std::nullopt;
     }
-    const auto requested = lower_copy(mBrkName) + ".brk";
+    const auto requested = lower_copy(name) + ".brk";
     auto *entry = archive.find_by_basename(requested);
     if (entry == nullptr) {
         return std::nullopt;

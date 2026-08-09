@@ -36,10 +36,22 @@ namespace MR {
         pActor->mFlag.mIsInvalidClipping = true;
     }
 
+    void setClippingFarMax(LiveActor* pActor) {
+        smgpc::compat::configure_actor_clipping_far_level(pActor, 0);
+    }
+
     void startBck(const LiveActor* pActor, const char* pName, const char* pFileName) {
         if (pActor != nullptr) {
             smgpc::compat::start_actor_bck(const_cast<LiveActor*>(pActor), pName, pFileName);
         }
+    }
+
+    void startBckWithInterpole(const LiveActor* pActor, const char* pName, s32 interpolation) {
+        if (interpolation != 0) {
+            throw std::logic_error(
+                "Nonzero BCK interpolation is unavailable without the generalized J3D blend controller.");
+        }
+        startBck(pActor, pName, nullptr);
     }
 
     void startBrk(const LiveActor* pActor, const char* pName) {
@@ -52,6 +64,94 @@ namespace MR {
         if (pActor != nullptr) {
             smgpc::compat::start_actor_btk(const_cast<LiveActor*>(pActor), pName);
         }
+    }
+
+    void newDifferedDLBuffer(LiveActor* pActor) {
+        if (pActor == nullptr || smgpc::compat::actor_model(pActor) == nullptr) {
+            throw std::logic_error(
+                "A deferred display-list request requires a real LiveActor model renderer.");
+        }
+
+        // LiveActorModel already retains its renderer packets for both scene
+        // draw-buffer passes. The retail request therefore needs no second
+        // host buffer, but it must not silently accept an actor without the
+        // model resource that the original DisplayListMaker would own.
+    }
+
+    bool tryStartAllAnim(const LiveActor* pActor, const char* pName) {
+        if (pActor == nullptr || pName == nullptr) {
+            return false;
+        }
+
+        auto* actor = const_cast<LiveActor*>(pActor);
+        if (smgpc::compat::actor_model(actor) == nullptr) {
+            throw std::logic_error("Starting all animations requires a real LiveActor model renderer.");
+        }
+
+        auto started = false;
+        started |= smgpc::compat::try_start_actor_bck(actor, pName, nullptr);
+        started |= smgpc::compat::try_start_actor_btk(actor, pName);
+        started |= smgpc::compat::try_start_actor_brk(actor, pName);
+        started |= smgpc::compat::try_start_actor_btp(actor, pName);
+        return started;
+    }
+
+    void startAllAnim(const LiveActor* pActor, const char* pName) {
+        (void)tryStartAllAnim(pActor, pName);
+    }
+
+    void setAllAnimFrameAtEnd(const LiveActor* pActor, const char* pName) {
+        if (pActor == nullptr || pName == nullptr) {
+            return;
+        }
+
+        auto* actor = const_cast<LiveActor*>(pActor);
+        auto* model = smgpc::compat::actor_model(actor);
+        if (model == nullptr) {
+            throw std::logic_error("Setting all animation frames requires a real LiveActor model renderer.");
+        }
+
+        if (model->hasBck(pName, {})) {
+            throw std::logic_error("BCK end-frame control is unavailable without a host J3D frame controller.");
+        }
+        if (model->hasBtk(pName)) {
+            throw std::logic_error("BTK end-frame control is unavailable without a host J3D frame controller.");
+        }
+        if (model->hasBrk(pName)) {
+            auto* ctrl = smgpc::compat::actor_brk_ctrl(actor);
+            if (ctrl == nullptr) {
+                throw std::logic_error("BRK animation data is unavailable.");
+            }
+            smgpc::compat::set_actor_brk_frame(actor, static_cast<f32>(ctrl->mEnd));
+        }
+        if (model->hasBtp(pName)) {
+            throw std::logic_error("BTP end-frame control is unavailable without a host J3D frame controller.");
+        }
+    }
+
+    bool isAnyAnimStopped(const LiveActor* pActor, const char* pName) {
+        if (pActor == nullptr || pName == nullptr) {
+            return false;
+        }
+
+        auto* model = smgpc::compat::actor_model(pActor);
+        if (model == nullptr) {
+            throw std::logic_error("Animation stop state requires a real LiveActor model renderer.");
+        }
+
+        if (model->hasBck(pName, {}) && MR::isBckStopped(pActor)) {
+            return true;
+        }
+        if (model->hasBtk(pName)) {
+            throw std::logic_error("BTK stop state is unavailable without a host J3D frame controller.");
+        }
+        if (model->hasBrk(pName) && smgpc::compat::is_actor_brk_one_time_and_stopped(pActor)) {
+            return true;
+        }
+        if (model->hasBtp(pName) && MR::isBtpStopped(pActor)) {
+            return true;
+        }
+        return false;
     }
 
     void startAction(const LiveActor* pActor, const char* pName) {
@@ -69,6 +169,18 @@ namespace MR {
     void setBrkFrame(const LiveActor* pActor, f32 frame) {
         if (pActor != nullptr) {
             smgpc::compat::set_actor_brk_frame(const_cast<LiveActor*>(pActor), frame);
+        }
+    }
+
+    void setBckFrameAndStop(const LiveActor* pActor, f32 frame) {
+        if (pActor != nullptr) {
+            smgpc::compat::set_actor_bck_frame_and_stop(const_cast<LiveActor*>(pActor), frame);
+        }
+    }
+
+    void setBrkRate(const LiveActor* pActor, f32 rate) {
+        if (pActor != nullptr) {
+            smgpc::compat::set_actor_brk_rate(const_cast<LiveActor*>(pActor), rate);
         }
     }
 
@@ -91,6 +203,17 @@ namespace MR {
         auto* ctrl = smgpc::compat::actor_brk_ctrl(pActor);
         if (ctrl == nullptr) {
             throw std::logic_error("BRK animation data is unavailable.");
+        }
+        return ctrl;
+    }
+
+    J3DFrameCtrl* getBckCtrl(const LiveActor* pActor) {
+        if (pActor == nullptr) {
+            throw std::logic_error("BCK animation state is unavailable.");
+        }
+        auto* ctrl = smgpc::compat::actor_bck_ctrl(pActor);
+        if (ctrl == nullptr) {
+            throw std::logic_error("BCK animation data is unavailable.");
         }
         return ctrl;
     }
@@ -259,6 +382,12 @@ namespace MR {
 
     bool isNoCalcAnim(const LiveActor* pActor) {
         return pActor != nullptr && pActor->mFlag.mIsNoCalcAnim;
+    }
+
+    void offCalcAnim(LiveActor* pActor) {
+        if (pActor != nullptr) {
+            pActor->mFlag.mIsNoCalcAnim = true;
+        }
     }
 
     bool isDead(const LiveActor* pActor) {

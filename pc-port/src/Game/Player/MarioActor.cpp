@@ -318,6 +318,7 @@ void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {
     initDrawAndModel();
 
     MR::connectToScene(this, MR::MovementType_Player, MR::CalcAnimType_Player, MR::DrawBufferType_Player, MR::DrawType_Player);
+    MR::initLightCtrlForPlayer(this);
     mMarioAnim = new MarioAnimator(this);
     mConst = new MarioConst();
     mMario->initAfterConst();
@@ -1976,7 +1977,6 @@ void MarioActor::forceSetBaseMtx(MtxPtr mtx) {
 void MarioActor::calcAnim() {
     calcAndSetBaseMtx();
     smgpc::compat::require_actor_model(this);
-    smgpc::compat::advance_actor_animation(this);
 }
 #else  // SMGPC_RETAIL_SOURCE
 void MarioActor::calcAnim() {

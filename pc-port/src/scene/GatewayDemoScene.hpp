@@ -1,6 +1,5 @@
 #pragma once
 
-#include "render/J3dModel.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
@@ -11,10 +10,16 @@
 class GravityInfo;
 class NameObj;
 class PlanetGravity;
+class PlanetMap;
+class ProjectionMapSky;
 class SceneObjHolder;
 
 namespace smgpc::runtime {
     class DvdFileSystemService;
+}
+
+namespace smgpc::compat {
+    class DemoSceneRuntime;
 }
 
 namespace smgpc::scene {
@@ -28,11 +33,17 @@ namespace smgpc::scene {
         float separation = 0.0F;
     };
 
+    struct GatewayDemoVisual {
+        const StagePlacementObject *placement = nullptr;
+        NameObj *actor = nullptr;
+    };
+
     // A deliberately narrow, real-data scene surface for bringing up Mario.
-    // It is not a permissive StageHost replacement: it loads only the retail
-    // Gateway scenario-1 StartInfo, the specifically placed mysterious planet,
-    // and that child zone's exact point gravity. Production placement/factory
-    // policy remains owned by StageHostScene.
+    // It is not a permissive StageHost replacement: the Gateway scenario-1
+    // route selects authored visual rows and resources through the shared
+    // production factory, while exposing the mysterious planet and its child
+    // zone gravity as the exact player-start surface. Production placement and
+    // factory policy remain owned by StageHostScene.
     class GatewayDemoScene final {
     public:
         explicit GatewayDemoScene(smgpc::runtime::DvdFileSystemService &dvd);
@@ -51,13 +62,18 @@ namespace smgpc::scene {
 
         [[nodiscard]] const StagePlacementObject &planet_placement() const;
         [[nodiscard]] const StagePlacementObject &gravity_placement() const;
+        [[nodiscard]] const StagePlacementObject &sky_placement() const;
+        // Runtime-free data probes still retain the authored sky placement;
+        // the playable route constructs and exposes its exact actor.
+        [[nodiscard]] ProjectionMapSky *sky();
+        [[nodiscard]] const ProjectionMapSky *sky() const;
+        [[nodiscard]] PlanetMap *planet();
+        [[nodiscard]] const PlanetMap *planet() const;
+        [[nodiscard]] std::span<const GatewayDemoVisual> visuals() const;
         [[nodiscard]] std::span<const StagePlacementObject> placements() const;
         [[nodiscard]] std::span<const StageGeneralPos> general_positions() const;
-        [[nodiscard]] const smgpc::render::J3dModelGeometry &planet_geometry() const;
-        [[nodiscard]] std::span<const std::uint8_t> planet_bdl() const;
-        [[nodiscard]] std::span<const std::uint8_t> planet_kcl() const;
-        [[nodiscard]] std::span<const std::uint8_t> planet_pa() const;
-
+        [[nodiscard]] smgpc::compat::DemoSceneRuntime &demo_runtime();
+        [[nodiscard]] const smgpc::compat::DemoSceneRuntime &demo_runtime() const;
         [[nodiscard]] SceneObjHolder &scene_obj_holder();
         [[nodiscard]] StageCollisionService &collision();
         [[nodiscard]] const StageCollisionService &collision() const;

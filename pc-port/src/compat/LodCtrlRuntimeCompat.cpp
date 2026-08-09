@@ -10,6 +10,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <limits>
 #include <stdexcept>
 
 namespace {
@@ -70,7 +71,11 @@ namespace MR {
         if (pActor == nullptr) {
             throw std::invalid_argument("Player distance requires a LiveActor.");
         }
-        return MR::calcDistanceToPlayer(pActor->mPosition);
+        const auto* player_position = MR::getPlayerPos();
+        if (player_position == nullptr) {
+            return std::numeric_limits<f32>::max();
+        }
+        return pActor->mPosition.distance(*player_position);
     }
 
     void calcAnimDirect(LiveActor* pActor) {

@@ -74,6 +74,9 @@ void LiveActor::init(const JMapInfoIter&) {
 }
 
 void LiveActor::movement() {
+    if (smgpc::compat::actor_model(this) != nullptr && !mFlag.mIsStoppedAnim) {
+        smgpc::compat::advance_actor_animation(this);
+    }
     if (mFlag.mIsDead) {
         return;
     }
@@ -95,6 +98,9 @@ void LiveActor::movement() {
     if (!mFlag.mIsDead) {
         updateBinder();
         smgpc::compat::update_actor_hit_sensors(this);
+        if (mActorLightCtrl != nullptr) {
+            MR::updateLightCtrl(this);
+        }
     }
 }
 
@@ -105,7 +111,6 @@ void LiveActor::calcAnim() {
     if (smgpc::compat::actor_model(this) != nullptr) {
         calcAndSetBaseMtx();
     }
-    smgpc::compat::advance_actor_animation(this);
 }
 
 void LiveActor::calcAnmMtx() {
