@@ -1,0 +1,16 @@
+xmake build -y -j2 smg-pc-showcase
+PASS
+
+env SMGPC_ENABLE_VSYNC=0 xvfb-run -a xmake run smg-pc-showcase gateway --disc /workspaces/pcport/RMGK01.iso --smoke
+PASS
+frame=22
+retail_j3d_meshes=17
+retail_kcl_triangles=7789
+gpu_draws=18
+gravity_velocity_change=true
+real_kcl_contact=true
+real_kcl_triangle=4642
+source=HeavensDoorMysteriousPlanet.arc/heavensdoormysteriousplanet.kcl
+
+git diff --check
+PASS
