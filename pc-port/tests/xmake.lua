@@ -66,6 +66,19 @@ target("smg-pc-aurora-native-tests")
         realtime_output = true
     })
 
+target("smg-pc-gx-copy-fifo-order-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files("GxCopyFifoOrderTests.cpp")
+    add_deps("smg-pc-render")
+    add_tests("gx_copy_fifo_order", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-stage-start-camera-tests")
     set_kind("binary")
     set_default(false)

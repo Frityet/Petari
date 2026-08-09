@@ -1,0 +1,27 @@
+2026-08-09 UTC
+
+Aurora commit:
+  4544bbb68f46ace97d4db525c1ee3af1e0f93d05 Preserve GX copy ordering
+  pushed: origin/pcp-general-pcm-voices
+
+PASS  cd pc-port && xmake build smg-pc-gx-copy-fifo-order-tests
+
+PASS  SMGPC_ENABLE_VSYNC=0 xvfb-run -a \
+      build/linux/x86_64/debug/smg-pc-gx-copy-fifo-order-tests
+  GXCopyTex -> GXCopyDisp FNV-1a: 0x79a06d1c07c3db25
+  ordered red -> green center RGBA: 64,128,0,159
+  ordered GXCopyDisp FNV-1a: 0xbda95ea81d584325
+
+PASS  five runs with distinct XDG_DATA_HOME directories
+  5/5 GXCopyTex -> GXCopyDisp FNV-1a: 0x79a06d1c07c3db25
+  5/5 ordered center RGBA: 64,128,0,159
+  5/5 ordered GXCopyDisp FNV-1a: 0xbda95ea81d584325
+
+PASS  Aurora commit contains only:
+  lib/dolphin/gx/GXFrameBuffer.cpp
+  lib/gfx/common.cpp
+  lib/gfx/pipeline_cache.cpp
+  lib/gfx/pipeline_cache.hpp
+
+Production RFL bridge: absent
+GXSetZScaleOffset nonzero-offset closure: excluded from this commit
