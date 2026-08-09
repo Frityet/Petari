@@ -1,0 +1,53 @@
+Mario2D RMGK02 verification
+UTC timestamp: 2026-08-09T02:58:48Z
+
+Focused compile
+---------------
+command:
+  ninja build/RMGK02/src/Game/Player/Mario2D.o
+result:
+  success
+notes:
+  Only the repository's pre-existing MarioActor nontrivial-union warnings were emitted.
+
+Objdiff
+-------
+command:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/Mario2D -o /tmp/Mario2D-final.json --format json-pretty
+
+results:
+  .text                                      1,008 bytes   95.54365%
+  .ctors                                         4 bytes  100%
+  .sdata2                                       40 bytes  100%
+  Mario::stick2DadjustGround(float&, float&)   688 bytes  100%
+  Mario::calcDir2D(float, float, TVec3f*)      212 bytes   78.81132%
+  __sinit_\\Mario2D_cpp                        108 bytes  100%
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- src/Game/Player/Mario2D.cpp
+result:
+  success (no output)
+
+PC activation
+-------------
+  none
+
+Full DOL build and integrity
+----------------------------
+command:
+  ninja -j12 build/RMGK02/main.dol
+result:
+  success (no work to do after the concurrent MarioMove25D lane rebuilt it)
+
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+command:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+result:
+  build/RMGK02/main.dol: OK

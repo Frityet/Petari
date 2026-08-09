@@ -1,0 +1,14 @@
+MarioSlope RMGK02 focused objdiff
+
+Unit: main/Game/Player/MarioSlope
+Retail .text: 2060 bytes
+Source .text: 2060 bytes
+Overall .text match: 99.3767%
+.ctors match: 100%
+.sdata2 measured match: 100%
+
+lockGroundCheck__5MarioFPvb: 36 bytes, 95.888885%
+unlockGroundCheck__5MarioFPv: 44 bytes, 100%
+isUseSimpleGroundCheck__5MarioCFv: 396 bytes, 99.71717%
+checkGroundOnSlope__5MarioFv: 1476 bytes, 99.30624%
+__sinit_\MarioSlope_cpp: 108 bytes, 100%

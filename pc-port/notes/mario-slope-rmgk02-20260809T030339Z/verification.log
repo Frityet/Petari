@@ -1,0 +1,28 @@
+MarioSlope RMGK02 verification
+Date: 2026-08-09 UTC
+
+Focused MWCC object build:
+  ninja build/RMGK02/src/Game/Player/MarioSlope.o
+  PASS
+  Only the pre-existing MarioActor.hpp nontrivial-union warnings were emitted.
+
+Focused objdiff:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioSlope \
+    -o /tmp/mario-slope-4.json --format json-pretty
+  PASS
+  .text: 99.3767% (2060 retail bytes; 2060 source bytes)
+  .ctors: 100%
+  .sdata2: 100% measured match
+
+Full retail build/checksum:
+  ninja -j12 build/RMGK02/main.dol
+  PASS (no work remained after the focused build)
+
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+  PASS: build/RMGK02/main.dol: OK
+
+Explicit DOL SHA-256:
+  build/RMGK02/main.dol:
+    8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf
+  orig/RMGK02/sys/main.dol:
+    8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf

@@ -1,0 +1,65 @@
+MarioMove25D RMGK02 verification
+UTC timestamp: 2026-08-09T02:55:42Z
+
+Focused compilation
+-------------------
+command:
+  ninja -j2 build/RMGK02/src/Game/Player/MarioMove25D.o build/RMGK02/src/Game/Player/MarioInit.o
+result:
+  success
+notes:
+  Only the repository's pre-existing MarioActor nontrivial-union warnings were emitted.
+
+Focused objdiff
+---------------
+commands:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioMove25D -o /tmp/mario25d-formatted.json --format json-pretty
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioInit -o /tmp/mario-init-tvec2.json --format json-pretty
+results:
+  MarioMove25D .text: 1,976 bytes, 99.64575% focused match
+  MarioMove25D .ctors / .sdata2: 100% / 100%
+  MarioInit .text / .sdata2: 100% / 100%
+
+Fresh project report
+--------------------
+command:
+  ninja -j12
+result:
+  success; report regenerated
+MarioMove25D result:
+  99.79757% fuzzy .text match
+  4 / 5 functions at 100% fuzzy; update25Dmode at 99.35897%
+
+Full RMGK02 build and integrity
+-------------------------------
+command:
+  ninja -j12
+result:
+  success
+
+command:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+result:
+  build/RMGK02/main.dol: OK
+
+command:
+  sha1sum build/RMGK02/main.dol
+result:
+  54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- include/Game/Player/Mario.hpp src/Game/Player/MarioInit.cpp src/Game/Player/MarioMove25D.cpp
+result:
+  success (no output)
+
+PC/config/protected paths
+-------------------------
+  none

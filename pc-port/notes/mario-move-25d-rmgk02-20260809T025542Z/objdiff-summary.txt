@@ -1,0 +1,31 @@
+MarioMove25D focused comparison
+===============================
+
+Retail unit
+  .text:   1,976 bytes
+  .ctors:      4 bytes
+  .sdata2:    32 bytes
+
+Fresh project-report fuzzy metrics
+  .text / unit:                         99.79757%
+  set25Dmode (216 bytes):              100.00000%
+  update25Dmode (624 bytes):            99.35897%
+  updateAxisFromMode (868 bytes):      100.00000%
+  calcMoveDir25D (160 bytes):          100.00000%
+  __sinit_\\MarioMove25D_cpp (108):    100.00000%
+  .ctors:                              100.00000%
+  .sdata2:                             100.00000%
+
+Focused one-shot objdiff metrics
+  .text:                                99.64575%
+  set25Dmode:                           99.53704%
+  update25Dmode:                        99.198715%
+  updateAxisFromMode:                   99.884796%
+  calcMoveDir25D:                      100.00000%
+  __sinit_\\MarioMove25D_cpp:          100.00000%
+  .ctors:                              100.00000%
+  .sdata2:                             100.00000%
+
+Dependent ABI validation
+  main/Game/Player/MarioInit .text:    100.00000%
+  main/Game/Player/MarioInit .sdata2:  100.00000%
