@@ -70,7 +70,7 @@ public:
     void doExtraServices();
     bool isEnableCheckGround() NO_INLINE;
     void setGroundNorm(const TVec3f&);
-    bool checkForceGrounding();
+    void checkForceGrounding();
     void updateGroundInfo();
     void fixHeadFrontVecByGravity();
     bool isNonFixHeadVec() const;
@@ -108,7 +108,7 @@ public:
     const TVec3f getAirFrontVec() const;
     const TVec3f* getGravityVec() const;
     void initAfterConst();
-    void writeBackPhysicalVector();
+    void writeBackPhyisicalVector();
     void update();
     void updateLookOfs();
     void actionMain();
