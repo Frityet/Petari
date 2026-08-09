@@ -1,0 +1,79 @@
+Mario constructor-seeded state recovery verification
+UTC timestamp: 2026-08-09T02:10:50Z
+
+Focused compile
+---------------
+command:
+  ninja -v build/RMGK02/src/Game/Player/MarioClimb.o build/RMGK02/src/Game/Player/MarioFrontStep.o build/RMGK02/src/Game/Player/MarioFaint.o build/RMGK02/src/Game/Player/MarioBlown.o
+result:
+  success (ninja: no work to do after the final focused rebuilds)
+
+Objdiff commands
+----------------
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioClimb -o /tmp/MarioClimb.json --format json-pretty
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioFrontStep -o /tmp/MarioFrontStep.json --format json-pretty
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioFaint -o /tmp/MarioFaint.json --format json-pretty
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioBlown -o /tmp/MarioBlown.json --format json-pretty
+
+MarioClimb .text: 700 bytes, 99.942856%
+  Mario::connectToClimb()                         92 bytes   100%
+  MarioClimb::MarioClimb(MarioActor*)             72 bytes   100%
+  MarioClimb::update()                           164 bytes   100%
+  MarioClimb::start()                            104 bytes   100%
+  MarioClimb::close()                            160 bytes    99.75%
+  MarioClimb::__vtable                            72 bytes   100%
+
+MarioFrontStep .text: 1508 bytes, 99.84881%
+  Mario::doFrontStep()                           480 bytes    99.875%
+  MarioFrontStep::start()                         92 bytes   100%
+  MarioFrontStep::MarioFrontStep(MarioActor*)     64 bytes   100%
+  MarioFrontStep::update()                       476 bytes    99.7479%
+  MarioFrontStep::close()                         80 bytes   100%
+  MarioFrontStep::postureCtrl(float(*)[4])       208 bytes    99.76923%
+  MarioFrontStep::__vtable                        72 bytes   100%
+
+MarioFaint .text: 1736 bytes, 98.951614%
+  Mario::doFlipWeak(const TVec3f&)               164 bytes    99.87805%
+  Mario::faint(const TVec3f&)                    192 bytes   100%
+  MarioFaint::MarioFaint(MarioActor*)            104 bytes   100%
+  MarioFaint::setVec(const TVec3f&)              212 bytes    99.90566%
+  MarioFaint::update()                           356 bytes    99.7191%
+  MarioFaint::start()                            472 bytes    96.94915%
+  MarioFaint::close()                            128 bytes    98.125%
+  MarioFaint::__vtable                            72 bytes   100%
+
+MarioBlown .text: 1920 bytes, 99.74792%
+  Mario::blown(const TVec3f&)                    188 bytes    99.3617%
+  MarioBlown::MarioBlown(MarioActor*)            100 bytes    99.92%
+  MarioBlown::close()                            188 bytes    99.74468%
+  MarioBlown::start()                            352 bytes    99.795456%
+  MarioBlown::update()                           984 bytes    99.76016%
+  MarioBlown::__vtable                            72 bytes   100%
+
+Full DOL build
+--------------
+command:
+  ninja build/RMGK02/main.dol
+result:
+  [1/3] MWCC build/RMGK02/src/Game/Player/MarioInit.o
+  [2/3] LINK build/RMGK02/main.elf
+  [3/3] DOL build/RMGK02/main.dol
+
+DOL integrity
+-------------
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- include/Game/Player/Mario.hpp include/Game/Player/MarioBlown.hpp include/Game/Player/MarioClimb.hpp include/Game/Player/MarioFaint.hpp include/Game/Player/MarioFrontStep.hpp src/Game/Player/MarioBlown.cpp src/Game/Player/MarioClimb.cpp src/Game/Player/MarioFaint.cpp src/Game/Player/MarioFrontStep.cpp
+result:
+  success (no output)
+
+PC activation
+-------------
+  none

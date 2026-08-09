@@ -96,6 +96,7 @@ public:
     void draw() const;
     void addTrans(const TVec3f&, const char*);
     void setTrans(const TVec3f&, const char*);
+    void setJumpVec(const TVec3f&);
     bool isEnableRush() const;
     bool isForceStopRush() const;
     bool isInvincible() const;
@@ -166,7 +167,7 @@ public:
     u16 getDamageAfterTimer() const;
     void damageFloorCheck();
     void damageWallCheck();
-    void damagePolygonCheck(const Triangle*);
+    bool damagePolygonCheck(const Triangle*);
     bool flipLarge(const TVec3f&);
     bool isEnableAddDamage() const;
     bool damage(const TVec3f&);
@@ -193,12 +194,12 @@ public:
     bool doFlipLarge(const TVec3f&);
     bool doFlipRot(const TVec3f&);
 
-    void doFrontStep();
+    bool doFrontStep();
 
     void beeMarioOnGround();
     bool beeMarioOnAir();
 
-    void blown(const TVec3f&);
+    bool blown(const TVec3f&);
 
     bool taskOnEffectCheck(u32);
 
