@@ -1,14 +1,21 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/Map/SwitchWatcher.hpp"
+#include "Game/Map/SwitchWatcherHolder.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Screen/LensFlare.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/AuthoredPlacementInstantiator.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <algorithm>
 #include <array>
 #include <cstdint>
 #include <cstdio>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <limits>
@@ -238,6 +245,162 @@ namespace {
         std::vector<std::string> *_destructor_events = nullptr;
     };
 
+    class SyntheticDescendantRoot final : public NameObj {
+    public:
+        SyntheticDescendantRoot(
+            const char *name,
+            std::vector<std::string> *destructor_events)
+            : NameObj(name != nullptr ? name : "synthetic:null"),
+              _destructor_events(destructor_events) {
+            (void)new SyntheticNameObj(
+                "constructor-descendant", _destructor_events);
+        }
+
+        ~SyntheticDescendantRoot() override {
+            if (_destructor_events != nullptr) {
+                _destructor_events->push_back(
+                    "delete:" + std::string(getName()));
+            }
+        }
+
+        void create_init_descendant() {
+            (void)new SyntheticNameObj(
+                "init-descendant", _destructor_events);
+        }
+
+    private:
+        std::vector<std::string> *_destructor_events = nullptr;
+    };
+
+    struct SyntheticSceneObjContext final {
+        std::vector<std::string> events{};
+        bool throw_outer_init = false;
+        bool return_null_after_nested = false;
+        bool create_nested_in_postpass = false;
+    };
+
+    class SyntheticNestedSceneObjB final : public NameObj {
+    public:
+        explicit SyntheticNestedSceneObjB(
+            SyntheticSceneObjContext &context)
+            : NameObj("nested-scene-b"), _context(&context) {
+            _context->events.push_back("construct:B");
+        }
+
+        ~SyntheticNestedSceneObjB() override {
+            _context->events.push_back("delete:B");
+        }
+
+        void init(const JMapInfoIter &) override {
+            _context->events.push_back("init:B");
+        }
+
+        void initAfterPlacement() override {
+            _context->events.push_back("after:B");
+        }
+
+    private:
+        SyntheticSceneObjContext *_context;
+    };
+
+    class SyntheticNestedSceneObjA final : public NameObj {
+    public:
+        explicit SyntheticNestedSceneObjA(
+            SyntheticSceneObjContext &context)
+            : NameObj("nested-scene-a"), _context(&context) {
+            _context->events.push_back("construct:A");
+        }
+
+        ~SyntheticNestedSceneObjA() override {
+            _context->events.push_back("delete:A");
+        }
+
+        void init(const JMapInfoIter &) override {
+            _context->events.push_back("init:A");
+            if (!_context->create_nested_in_postpass) {
+                require(MR::createSceneObj(SceneObj_35) != nullptr,
+                        "recursive synthetic SceneObj B was not created");
+            }
+            if (_context->throw_outer_init) {
+                throw std::runtime_error(
+                    "synthetic outer SceneObj init failure");
+            }
+        }
+
+        void initAfterPlacement() override {
+            _context->events.push_back("after:A");
+            if (_context->create_nested_in_postpass) {
+                require(MR::createSceneObj(SceneObj_35) != nullptr,
+                        "postpass synthetic SceneObj B was not created");
+            }
+        }
+
+    private:
+        SyntheticSceneObjContext *_context;
+    };
+
+    class SyntheticSwitchWatcherHolder final
+        : public SwitchWatcherHolder {
+    public:
+        explicit SyntheticSwitchWatcherHolder(
+            SyntheticSceneObjContext &context)
+            : _context(&context) {
+            _context->events.push_back("construct:watcher-holder");
+        }
+
+        ~SyntheticSwitchWatcherHolder() override {
+            _context->events.push_back("delete:watcher-holder");
+        }
+
+        void initAfterPlacement() override {
+            _context->events.push_back("after:watcher-holder");
+        }
+
+    private:
+        SyntheticSceneObjContext *_context;
+    };
+
+    class SyntheticSwitchWatcher final : public SwitchWatcher {
+    public:
+        explicit SyntheticSwitchWatcher(
+            SyntheticSceneObjContext &context)
+            : SwitchWatcher(nullptr), _context(&context) {
+            _context->events.push_back("construct:watcher");
+        }
+
+        ~SyntheticSwitchWatcher() override {
+            _context->events.push_back("delete:watcher");
+        }
+
+        void initAfterPlacement() override {
+            _context->events.push_back("after:watcher");
+        }
+
+    private:
+        SyntheticSceneObjContext *_context;
+    };
+
+    [[nodiscard]] NameObj *synthetic_scene_obj_factory(
+        int id, void *raw_context) {
+        auto &context = *static_cast<SyntheticSceneObjContext *>(
+            raw_context);
+        switch (id) {
+        case SceneObj_15:
+            if (context.return_null_after_nested) {
+                require(MR::createSceneObj(SceneObj_35) != nullptr,
+                        "null synthetic SceneObj factory could not create its nested object");
+                return nullptr;
+            }
+            return new SyntheticNestedSceneObjA(context);
+        case SceneObj_35:
+            return new SyntheticNestedSceneObjB(context);
+        case SceneObj_SwitchWatcherHolder:
+            return new SyntheticSwitchWatcherHolder(context);
+        default:
+            return nullptr;
+        }
+    }
+
     class RecordingLifecycle final
         : public smgpc::scene::AuthoredPlacementLifecycle {
     public:
@@ -294,7 +457,7 @@ namespace {
             };
         }
 
-        std::unique_ptr<NameObj> construct_and_init(
+        std::unique_ptr<NameObj> construct(
             std::string_view object_name, const char *actor_name,
             const smgpc::scene::NameObjPlacementContext &placement) override {
             require(placement.iter.isValid(),
@@ -312,11 +475,16 @@ namespace {
                 actor_name != nullptr
                     ? std::optional<std::string>{actor_name}
                     : std::nullopt);
+            if (descendant_object.has_value() &&
+                object_name == *descendant_object) {
+                return std::make_unique<SyntheticDescendantRoot>(
+                    actor_name, &destructor_events);
+            }
             return std::make_unique<SyntheticNameObj>(
                 actor_name, &destructor_events);
         }
 
-        std::unique_ptr<NameObj> construct_model_changing_and_init(
+        std::unique_ptr<NameObj> construct_model_changing(
             std::string_view object_name, s32 shape_model_no,
             const char *actor_name,
             const smgpc::scene::NameObjPlacementContext &placement) override {
@@ -342,8 +510,50 @@ namespace {
                 actor_name, &destructor_events);
         }
 
+        void init(
+            NameObj &object,
+            const smgpc::scene::NameObjPlacementContext &) override {
+            if (auto *root =
+                    dynamic_cast<SyntheticDescendantRoot *>(&object);
+                root != nullptr) {
+                root->create_init_descendant();
+            }
+            if (lazy_scene_obj_object.has_value() &&
+                std::string_view(object.getName()) ==
+                    *lazy_scene_obj_object) {
+                lazy_scene_obj = MR::createSceneObj(
+                    lazy_scene_obj_id);
+                require(lazy_scene_obj != nullptr,
+                        "synthetic lifecycle could not create its lazy SceneObj");
+            }
+            if (descendant_after_lazy_name.has_value() &&
+                lazy_scene_obj_object.has_value() &&
+                std::string_view(object.getName()) ==
+                    *lazy_scene_obj_object) {
+                (void)new SyntheticNameObj(
+                    descendant_after_lazy_name->c_str(),
+                    &destructor_events);
+            }
+            if (init_hook) {
+                init_hook(object);
+            }
+            if (throw_init_actor_name.has_value() &&
+                std::string_view(object.getName()) ==
+                    *throw_init_actor_name) {
+                throw std::runtime_error(
+                    "synthetic authored init failure");
+            }
+        }
+
         void init_after_placement(NameObj &object) override {
             events.push_back("after:" + std::string(object.getName()));
+            if (throw_after_actor_name.has_value() &&
+                std::string_view(object.getName()) ==
+                    *throw_after_actor_name) {
+                throw std::runtime_error(
+                    "synthetic authored postpass failure");
+            }
+            object.initAfterPlacement();
         }
 
         void destroy(NameObj &object) override {
@@ -352,6 +562,14 @@ namespace {
 
         std::optional<std::string> unloaded_object{};
         std::optional<std::string> throw_construct_object{};
+        std::optional<std::string> descendant_object{};
+        std::optional<std::string> throw_init_actor_name{};
+        std::optional<std::string> throw_after_actor_name{};
+        std::optional<std::string> lazy_scene_obj_object{};
+        std::optional<std::string> descendant_after_lazy_name{};
+        s32 lazy_scene_obj_id = SceneObj_GroupCheckManager;
+        NameObj *lazy_scene_obj = nullptr;
+        std::function<void(NameObj &)> init_hook{};
         std::vector<std::string> events{};
         std::vector<std::string> destructor_events{};
         std::vector<std::optional<std::string>> constructed_actor_names{};
@@ -367,6 +585,23 @@ namespace {
                std::string(
                    smgpc::scene::authored_placement_identifier(placement)) +
                '@' + std::to_string(placement.l_id);
+    }
+
+    [[nodiscard]] smgpc::scene::AuthoredPlacementInstantiationOptions
+    synthetic_ready_options() {
+        return smgpc::scene::AuthoredPlacementInstantiationOptions{
+            .mode = smgpc::scene::AuthoredPlacementMode::Strict,
+            .actor_name_resolver = synthetic_actor_name,
+            .deferred_archive_resolver = [](const auto &) {
+                return false;
+            },
+            .group_load_order_resolver = [](const auto &) {
+                return AuthoredPlacementGroupLoadOrder::ArchivesReady;
+            },
+            .creator_availability_resolver = [](const auto &) {
+                return true;
+            },
+        };
     }
 
     [[nodiscard]] const smgpc::scene::AuthoredPlacementReportEntry &
@@ -390,6 +625,55 @@ namespace {
             result.push_back(entry.source_index);
         }
         return result;
+    }
+
+    void test_synthetic_default_construction_scope_needs_no_holder() {
+        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+                "synthetic no-scope proof unexpectedly inherited a SceneObjHolder");
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "NoScope", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto lifecycle = RecordingLifecycle{};
+        auto instantiator =
+            smgpc::scene::AuthoredPlacementInstantiator(
+                data, lifecycle, synthetic_ready_options());
+        (void)instantiator.preload();
+        require(instantiator.instantiate().created_count == 1U,
+                "default synthetic construction scope did not remain a null token");
+        (void)instantiator.init_after_placement();
+        instantiator.clear();
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "default synthetic construction scope changed registry lifetime");
+    }
+
+    void test_nameobj_adapter_retains_strict_zone_scope_source() {
+        auto input = std::ifstream(
+            "src/scene/AuthoredPlacementInstantiator.cpp",
+            std::ios::binary);
+        require(input.good(),
+                "could not inspect the production NameObj placement adapter source");
+        const auto source = std::string(
+            std::istreambuf_iterator<char>(input),
+            std::istreambuf_iterator<char>());
+        const auto adapter = source.find(
+            "class NameObjPlacementLifecycleAdapter final");
+        const auto strict_scope = source.find(
+            "PlacementZoneNameScope _scope;", adapter);
+        const auto adapter_factory = source.find(
+            "std::make_unique<ConstructionScope>(placement)", adapter);
+        const auto scope_use = source.find(
+            "_lifecycle->begin_construction_scope(context)");
+        const auto capture_use = source.find(
+            "NameObjRuntimeRegistrationCapture{}", scope_use);
+        require(adapter != std::string::npos &&
+                    strict_scope != std::string::npos &&
+                    adapter_factory != std::string::npos &&
+                    scope_use != std::string::npos &&
+                    capture_use != std::string::npos &&
+                    scope_use < capture_use,
+                "production adapter lost its strict zone scope or construct+init lifetime");
     }
 
     void test_model_changing_rows_require_their_exact_creator() {
@@ -1454,10 +1738,819 @@ namespace {
                 "construction rollback lifecycle hooks were not reverse ordered");
     }
 
+    void test_authored_descendants_share_global_postpass_and_reverse_teardown() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({
+            make_placement(
+                "Nested", StagePlacementLoadBatch::CommonBootstrap,
+                "ObjInfo", true, 0U, 0),
+            make_placement(
+                "Plain", StagePlacementLoadBatch::CommonBootstrap,
+                "ObjInfo", true, 1U, 1),
+        });
+
+        const auto run_generation = [&] {
+            auto lifecycle = RecordingLifecycle{};
+            lifecycle.descendant_object = "Nested";
+            auto instantiator =
+                smgpc::scene::AuthoredPlacementInstantiator(
+                    data, lifecycle, synthetic_ready_options());
+            (void)instantiator.preload();
+            const auto &created = instantiator.instantiate();
+            require(created.created_count == 2U &&
+                        created.ready_count == 2U &&
+                        created.descendants.size() == 2U &&
+                        instantiator.descendants().size() == 2U,
+                    "raw constructor/init descendants changed top-level authored accounting");
+
+            const auto &constructor_child = created.descendants[0U];
+            const auto &init_child = created.descendants[1U];
+            require(constructor_child.parent_source_index == 0U &&
+                        constructor_child.parent_report_index == 0U &&
+                        constructor_child.construction_ordinal == 1U &&
+                        constructor_child.parent_placement ==
+                            &data.placements()[0U] &&
+                        constructor_child.object != nullptr &&
+                        std::string_view(
+                            constructor_child.object->getName()) ==
+                            "constructor-descendant" &&
+                        init_child.parent_source_index == 0U &&
+                        init_child.parent_report_index == 0U &&
+                        init_child.construction_ordinal == 2U &&
+                        init_child.parent_placement ==
+                            &data.placements()[0U] &&
+                        init_child.object != nullptr &&
+                        std::string_view(init_child.object->getName()) ==
+                            "init-descendant",
+                    "authored descendant evidence lost its parent or exact construction ordinal");
+
+            const auto events_before_after = lifecycle.events.size();
+            const auto &after = instantiator.init_after_placement();
+            require(after.initialized_after_placement_count == 2U &&
+                        std::vector<std::string>(
+                            lifecycle.events.begin() +
+                                static_cast<std::ptrdiff_t>(
+                                    events_before_after),
+                            lifecycle.events.end()) ==
+                            std::vector<std::string>{
+                                "after:actor:Nested@0",
+                                "after:constructor-descendant",
+                                "after:init-descendant",
+                                "after:actor:Plain@1",
+                            } &&
+                        std::ranges::all_of(
+                            after.descendants, [](const auto &descendant) {
+                                return descendant.outcome ==
+                                    smgpc::scene::
+                                        AuthoredPlacementOutcome::
+                                            InitializedAfterPlacement;
+                            }),
+                    "scene-wide postpass did not visit roots and descendants once in construction order");
+
+            const auto events_before_clear = lifecycle.events.size();
+            instantiator.clear();
+            const auto expected_reverse = std::vector<std::string>{
+                "destroy:actor:Plain@1",
+                "destroy:init-descendant",
+                "destroy:constructor-descendant",
+                "destroy:actor:Nested@0",
+            };
+            require(std::vector<std::string>(
+                        lifecycle.events.begin() +
+                            static_cast<std::ptrdiff_t>(events_before_clear),
+                        lifecycle.events.end()) == expected_reverse &&
+                        lifecycle.destructor_events ==
+                            std::vector<std::string>{
+                                "delete:actor:Plain@1",
+                                "delete:init-descendant",
+                                "delete:constructor-descendant",
+                                "delete:actor:Nested@0",
+                            } &&
+                        instantiator.report().destroyed_count == 2U &&
+                        std::ranges::all_of(
+                            instantiator.report().descendants,
+                            [](const auto &descendant) {
+                                return descendant.object == nullptr &&
+                                       descendant.outcome ==
+                                           smgpc::scene::
+                                               AuthoredPlacementOutcome::
+                                                   Destroyed;
+                            }) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline,
+                    "root/descendant ownership was doubled or did not retire in exact reverse order");
+        };
+
+        run_generation();
+        run_generation();
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "authored descendant ownership could not recreate a clean second generation");
+    }
+
+    void test_authored_descendant_init_failure_rolls_back_exact_suffix() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "Failing", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto lifecycle = RecordingLifecycle{};
+        lifecycle.descendant_object = "Failing";
+        lifecycle.throw_init_actor_name = "actor:Failing@0";
+        auto instantiator = smgpc::scene::AuthoredPlacementInstantiator(
+            data, lifecycle, synthetic_ready_options());
+        (void)instantiator.preload();
+
+        auto preserved_failure = false;
+        try {
+            (void)instantiator.instantiate();
+        } catch (const std::runtime_error &error) {
+            preserved_failure = std::string_view(error.what()) ==
+                                "synthetic authored init failure";
+        }
+        auto destroy_events = std::vector<std::string>{};
+        for (const auto &event : lifecycle.events) {
+            if (event.starts_with("destroy:")) {
+                destroy_events.push_back(event);
+            }
+        }
+        require(preserved_failure && instantiator.instances().empty() &&
+                    instantiator.report().created_count == 0U &&
+                    instantiator.report().destroyed_count == 0U &&
+                    instantiator.report().descendants.empty() &&
+                    require_source_entry(instantiator.report(), 0U).outcome ==
+                        smgpc::scene::AuthoredPlacementOutcome::Failed &&
+                    destroy_events ==
+                        std::vector<std::string>{
+                            "destroy:init-descendant",
+                            "destroy:constructor-descendant",
+                            "destroy:actor:Failing@0",
+                        } &&
+                    lifecycle.destructor_events ==
+                        std::vector<std::string>{
+                            "delete:init-descendant",
+                            "delete:constructor-descendant",
+                            "delete:actor:Failing@0",
+                        } &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "init failure did not preserve its exception and reverse-roll back the complete live suffix");
+    }
+
+    void test_scene_obj_created_inside_capture_keeps_independent_owner() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "Lazy", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto holder = SceneObjHolder{};
+
+        const auto run_generation = [&] {
+            require(!holder.isExist(SceneObj_LensFlareDirector),
+                    "SceneObj holder retained a stale prior generation");
+            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+            auto lifecycle = RecordingLifecycle{};
+            lifecycle.lazy_scene_obj_object = "actor:Lazy@0";
+            lifecycle.lazy_scene_obj_id = SceneObj_LensFlareDirector;
+            lifecycle.descendant_after_lazy_name = "synthetic-sun";
+            auto instantiator =
+                smgpc::scene::AuthoredPlacementInstantiator(
+                    data, lifecycle, synthetic_ready_options());
+            (void)instantiator.preload();
+            const auto &created = instantiator.instantiate();
+            auto *lens_flare =
+                dynamic_cast<LensFlareDirector *>(lifecycle.lazy_scene_obj);
+            require(created.created_count == 1U &&
+                        created.descendants.size() == 5U &&
+                        std::ranges::all_of(
+                            created.descendants |
+                                std::views::take(4U),
+                            [](const auto &descendant) {
+                                return !descendant.owned_by_placement;
+                            }) &&
+                        created.descendants[4U].owned_by_placement &&
+                        created.descendants[4U].construction_ordinal ==
+                            5U &&
+                        std::string_view(
+                            created.descendants[4U].object->getName()) ==
+                            "synthetic-sun" &&
+                        lens_flare != nullptr &&
+                        created.descendants[0U].object == lens_flare &&
+                        created.descendants[0U].construction_ordinal ==
+                            1U &&
+                        created.descendants[1U].object ==
+                            lens_flare->mRing &&
+                        created.descendants[1U].construction_ordinal ==
+                            2U &&
+                        created.descendants[2U].object ==
+                            lens_flare->mGlow &&
+                        created.descendants[2U].construction_ordinal ==
+                            3U &&
+                        created.descendants[3U].object ==
+                            lens_flare->mLine &&
+                        created.descendants[3U].construction_ordinal ==
+                            4U &&
+                        holder.getObj(SceneObj_LensFlareDirector) ==
+                            lifecycle.lazy_scene_obj &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lifecycle.lazy_scene_obj) &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lens_flare->mRing) &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lens_flare->mGlow) &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lens_flare->mLine),
+                    "placement capture adopted a lazy SceneObj synchronous graph already owned by its holder");
+            binding.init_after_placement();
+            const auto events_before_after = lifecycle.events.size();
+            (void)instantiator.init_after_placement();
+            auto expected_postpass = std::vector<std::string>{
+                "after:actor:Lazy@0",
+            };
+            for (const auto &descendant : created.descendants) {
+                expected_postpass.push_back(
+                    "after:" + std::string(descendant.object->getName()));
+            }
+            require(std::vector<std::string>(
+                        lifecycle.events.begin() +
+                            static_cast<std::ptrdiff_t>(
+                                events_before_after),
+                        lifecycle.events.end()) == expected_postpass &&
+                        std::ranges::all_of(
+                            created.descendants,
+                            [](const auto &descendant) {
+                                return descendant.outcome ==
+                                    smgpc::scene::
+                                        AuthoredPlacementOutcome::
+                                            InitializedAfterPlacement;
+                            }) &&
+                        std::ranges::none_of(
+                            created.descendants |
+                                std::views::take(4U),
+                            [](const auto &descendant) {
+                                return smgpc::compat::
+                                    name_obj_runtime_postpass_is_delegated(
+                                        descendant.object);
+                            }),
+                    "lazy SceneObj graph was skipped or duplicated instead of delegated in registration order");
+            instantiator.clear();
+            require(holder.isExist(SceneObj_LensFlareDirector) &&
+                        smgpc::compat::has_name_obj_runtime_state(
+                            lifecycle.lazy_scene_obj) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline + 4U,
+                    "placement teardown deleted the independently-owned lazy SceneObj graph");
+        };
+
+        run_generation();
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
+                    !holder.isExist(SceneObj_LensFlareDirector),
+                "SceneObj owner did not retire and reset its first generation");
+        run_generation();
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
+                    !holder.isExist(SceneObj_LensFlareDirector),
+                "lazy SceneObj exclusion did not support clean recreation");
+    }
+
+    void test_failed_authored_root_preserves_lazy_scene_obj_graph() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "LazyFail", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto holder = SceneObjHolder{};
+
+        const auto run_generation = [&] {
+            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+            auto lifecycle = RecordingLifecycle{};
+            lifecycle.lazy_scene_obj_object = "actor:LazyFail@0";
+            lifecycle.lazy_scene_obj_id = SceneObj_LensFlareDirector;
+            lifecycle.throw_init_actor_name = "actor:LazyFail@0";
+            auto instantiator =
+                smgpc::scene::AuthoredPlacementInstantiator(
+                    data, lifecycle, synthetic_ready_options());
+            (void)instantiator.preload();
+
+            auto preserved_failure = false;
+            try {
+                (void)instantiator.instantiate();
+            } catch (const std::runtime_error &error) {
+                preserved_failure = std::string_view(error.what()) ==
+                                    "synthetic authored init failure";
+            }
+            auto *lens_flare = dynamic_cast<LensFlareDirector *>(
+                holder.getObj(SceneObj_LensFlareDirector));
+            require(preserved_failure && lens_flare != nullptr &&
+                        instantiator.instances().empty() &&
+                        instantiator.report().created_count == 0U &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lens_flare) &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lens_flare->mRing) &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lens_flare->mGlow) &&
+                        smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                lens_flare->mLine) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline + 4U,
+                    "authored root rollback deleted or detached the lazy SceneObj synchronous graph");
+        };
+
+        run_generation();
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
+                    !holder.isExist(SceneObj_LensFlareDirector),
+                "failed-root SceneObj graph did not retire after its first holder generation");
+        run_generation();
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
+                    !holder.isExist(SceneObj_LensFlareDirector),
+                "failed-root SceneObj graph could not recreate and retire cleanly");
+    }
+
+    void test_cross_owner_postpass_stays_in_registration_order_once() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "CrossOwner", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto holder = SceneObjHolder{};
+
+        const auto run_generation = [&] {
+            auto context = SyntheticSceneObjContext{};
+            {
+                auto binding = smgpc::scene::SceneObjHolderBinding(
+                    holder, synthetic_scene_obj_factory, &context);
+                auto lifecycle = RecordingLifecycle{};
+                lifecycle.descendant_object = "CrossOwner";
+                lifecycle.lazy_scene_obj_object = "actor:CrossOwner@0";
+                lifecycle.lazy_scene_obj_id = SceneObj_15;
+                auto instantiator =
+                    smgpc::scene::AuthoredPlacementInstantiator(
+                        data, lifecycle, synthetic_ready_options());
+                (void)instantiator.preload();
+                const auto &created = instantiator.instantiate();
+                require(created.descendants.size() == 4U &&
+                            created.descendants[0U].construction_ordinal ==
+                                1U &&
+                            created.descendants[0U].owned_by_placement &&
+                            created.descendants[1U].construction_ordinal ==
+                                2U &&
+                            created.descendants[1U].owned_by_placement &&
+                            created.descendants[2U].construction_ordinal ==
+                                3U &&
+                            !created.descendants[2U].owned_by_placement &&
+                            created.descendants[3U].construction_ordinal ==
+                                4U &&
+                            !created.descendants[3U].owned_by_placement &&
+                            context.events ==
+                                std::vector<std::string>{
+                                    "construct:A", "init:A",
+                                    "construct:B", "init:B"},
+                        "cross-owner capture lost an owned or delegated registration identity");
+
+                binding.init_after_placement();
+                require(context.events ==
+                            std::vector<std::string>{
+                                "construct:A", "init:A",
+                                "construct:B", "init:B"},
+                        "SceneObj pre-pass duplicated a delegated placement identity");
+
+                const auto events_before_after = lifecycle.events.size();
+                (void)instantiator.init_after_placement();
+                require(std::vector<std::string>(
+                            lifecycle.events.begin() +
+                                static_cast<std::ptrdiff_t>(
+                                    events_before_after),
+                            lifecycle.events.end()) ==
+                            std::vector<std::string>{
+                                "after:actor:CrossOwner@0",
+                                "after:constructor-descendant",
+                                "after:init-descendant",
+                                "after:nested-scene-a",
+                                "after:nested-scene-b"} &&
+                            context.events ==
+                                std::vector<std::string>{
+                                    "construct:A", "init:A",
+                                    "construct:B", "init:B",
+                                    "after:A", "after:B"} &&
+                            !smgpc::compat::
+                                name_obj_runtime_postpass_is_delegated(
+                                    created.descendants[2U].object) &&
+                            !smgpc::compat::
+                                name_obj_runtime_postpass_is_delegated(
+                                    created.descendants[3U].object),
+                        "cross-owner postpass did not follow exact global registration order once");
+                instantiator.clear();
+            }
+            require(context.events ==
+                        std::vector<std::string>{
+                            "construct:A", "init:A",
+                            "construct:B", "init:B",
+                            "after:A", "after:B",
+                            "delete:B", "delete:A"} &&
+                        !holder.isExist(SceneObj_15) &&
+                        !holder.isExist(SceneObj_35) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline,
+                    "delegated cross-owner graph did not cleanly retire");
+        };
+
+        run_generation();
+        run_generation();
+    }
+
+    void test_postpass_delegation_cleans_up_on_early_clear() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "EarlyClear", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto holder = SceneObjHolder{};
+        auto context = SyntheticSceneObjContext{};
+        {
+            auto binding = smgpc::scene::SceneObjHolderBinding(
+                holder, synthetic_scene_obj_factory, &context);
+            auto lifecycle = RecordingLifecycle{};
+            lifecycle.lazy_scene_obj_object = "actor:EarlyClear@0";
+            lifecycle.lazy_scene_obj_id = SceneObj_15;
+            auto instantiator =
+                smgpc::scene::AuthoredPlacementInstantiator(
+                    data, lifecycle, synthetic_ready_options());
+            (void)instantiator.preload();
+            const auto &created = instantiator.instantiate();
+            require(created.descendants.size() == 2U &&
+                        std::ranges::all_of(
+                            created.descendants,
+                            [](const auto &descendant) {
+                                return smgpc::compat::
+                                    name_obj_runtime_postpass_is_delegated(
+                                        descendant.object);
+                            }),
+                    "early-clear fixture did not establish external postpass delegates");
+            auto *outer = created.descendants[0U].object;
+            auto *inner = created.descendants[1U].object;
+            instantiator.clear();
+            require(!smgpc::compat::
+                        name_obj_runtime_postpass_is_delegated(outer) &&
+                        !smgpc::compat::
+                            name_obj_runtime_postpass_is_delegated(inner),
+                    "clear-before-postpass retained a dangling instantiator delegate");
+
+            binding.init_after_placement();
+            require(context.events ==
+                        std::vector<std::string>{
+                            "construct:A", "init:A",
+                            "construct:B", "init:B",
+                            "after:A", "after:B"},
+                    "released early-clear identities were not available to the holder fallback postpass");
+        }
+        require(context.events ==
+                    std::vector<std::string>{
+                        "construct:A", "init:A",
+                        "construct:B", "init:B",
+                        "after:A", "after:B",
+                        "delete:B", "delete:A"} &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "early-clear delegation cleanup did not support clean teardown");
+    }
+
+    void test_postpass_failure_releases_current_and_pending_delegates() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "PostpassFail", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto holder = SceneObjHolder{};
+        auto context = SyntheticSceneObjContext{};
+        {
+            auto binding = smgpc::scene::SceneObjHolderBinding(
+                holder, synthetic_scene_obj_factory, &context);
+            auto lifecycle = RecordingLifecycle{};
+            lifecycle.lazy_scene_obj_object = "actor:PostpassFail@0";
+            lifecycle.lazy_scene_obj_id = SceneObj_15;
+            lifecycle.throw_after_actor_name = "nested-scene-a";
+            auto instantiator =
+                smgpc::scene::AuthoredPlacementInstantiator(
+                    data, lifecycle, synthetic_ready_options());
+            (void)instantiator.preload();
+            const auto &created = instantiator.instantiate();
+            auto *outer = created.descendants[0U].object;
+            auto *inner = created.descendants[1U].object;
+            binding.init_after_placement();
+
+            auto preserved_failure = false;
+            try {
+                (void)instantiator.init_after_placement();
+            } catch (const std::runtime_error &error) {
+                preserved_failure = std::string_view(error.what()) ==
+                                    "synthetic authored postpass failure";
+            }
+            require(preserved_failure &&
+                        !smgpc::compat::
+                            name_obj_runtime_postpass_is_delegated(outer) &&
+                        smgpc::compat::
+                            name_obj_runtime_postpass_is_delegated(inner),
+                    "postpass failure did not release its attempted external identity exactly");
+            instantiator.clear();
+            require(!smgpc::compat::
+                        name_obj_runtime_postpass_is_delegated(outer) &&
+                        !smgpc::compat::
+                            name_obj_runtime_postpass_is_delegated(inner),
+                    "failed postpass clear retained a pending external delegate");
+        }
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "failed postpass delegation cleanup leaked its SceneObj graph");
+    }
+
+    void test_recursive_scene_obj_transaction_preserves_global_order() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto holder = SceneObjHolder{};
+
+        const auto run_generation = [&] {
+            auto context = SyntheticSceneObjContext{};
+            {
+                auto binding = smgpc::scene::SceneObjHolderBinding(
+                    holder, synthetic_scene_obj_factory, &context);
+                auto *outer = holder.create(SceneObj_15);
+                auto *inner = holder.getObj(SceneObj_35);
+                require(outer != nullptr && inner != nullptr &&
+                            smgpc::scene::
+                                current_scene_obj_holder_binding_owns(
+                                    outer) &&
+                            smgpc::scene::
+                                current_scene_obj_holder_binding_owns(
+                                    inner) &&
+                            context.events ==
+                                std::vector<std::string>{
+                                    "construct:A", "init:A",
+                                    "construct:B", "init:B"},
+                        "recursive SceneObj transaction lost a root or construction order");
+                binding.init_after_placement();
+                require(context.events ==
+                            std::vector<std::string>{
+                                "construct:A", "init:A",
+                                "construct:B", "init:B",
+                                "after:A", "after:B"},
+                        "recursive SceneObj postpass did not retain global A-to-B construction order");
+            }
+            require(context.events ==
+                        std::vector<std::string>{
+                            "construct:A", "init:A",
+                            "construct:B", "init:B",
+                            "after:A", "after:B",
+                            "delete:B", "delete:A"} &&
+                        !holder.isExist(SceneObj_15) &&
+                        !holder.isExist(SceneObj_35) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline,
+                    "recursive SceneObj graph did not retire in exact B-to-A reverse order");
+        };
+
+        run_generation();
+        run_generation();
+    }
+
+    void test_scene_obj_postpass_consumes_callback_appends_once() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto holder = SceneObjHolder{};
+        auto context = SyntheticSceneObjContext{
+            .create_nested_in_postpass = true,
+        };
+        {
+            auto binding = smgpc::scene::SceneObjHolderBinding(
+                holder, synthetic_scene_obj_factory, &context);
+            require(holder.create(SceneObj_15) != nullptr &&
+                        !holder.isExist(SceneObj_35),
+                    "postpass fixture created its nested SceneObj too early");
+            binding.init_after_placement();
+            binding.init_after_placement();
+            require(context.events ==
+                            std::vector<std::string>{
+                                "construct:A", "init:A", "after:A",
+                                "construct:B", "init:B", "after:B"} &&
+                        holder.isExist(SceneObj_35),
+                    "SceneObj postpass did not consume a callback-time append exactly once in order");
+        }
+        require(context.events ==
+                        std::vector<std::string>{
+                            "construct:A", "init:A", "after:A",
+                            "construct:B", "init:B", "after:B", "delete:B",
+                            "delete:A"} &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "callback-appended SceneObj generation did not retire in reverse order");
+    }
+
+    void test_recursive_scene_obj_failure_rolls_back_slots_and_recreates() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto holder = SceneObjHolder{};
+        auto context = SyntheticSceneObjContext{
+            .throw_outer_init = true,
+        };
+        {
+            auto binding = smgpc::scene::SceneObjHolderBinding(
+                holder, synthetic_scene_obj_factory, &context);
+            auto preserved_failure = false;
+            try {
+                (void)holder.create(SceneObj_15);
+            } catch (const std::runtime_error &error) {
+                preserved_failure = std::string_view(error.what()) ==
+                                    "synthetic outer SceneObj init failure";
+            }
+            require(preserved_failure &&
+                        context.events ==
+                            std::vector<std::string>{
+                                "construct:A", "init:A",
+                                "construct:B", "init:B",
+                                "delete:B", "delete:A"} &&
+                        !holder.isExist(SceneObj_15) &&
+                        !holder.isExist(SceneObj_35) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline,
+                    "outer SceneObj init failure left a nested slot, dangling owner, or changed the exception");
+
+            context.events.clear();
+            context.throw_outer_init = false;
+            require(holder.create(SceneObj_15) != nullptr &&
+                        holder.getObj(SceneObj_35) != nullptr,
+                    "recursive SceneObj graph could not recreate after rollback");
+            binding.init_after_placement();
+            require(context.events ==
+                        std::vector<std::string>{
+                            "construct:A", "init:A",
+                            "construct:B", "init:B",
+                            "after:A", "after:B"},
+                    "recreated recursive SceneObj graph lost its postpass order");
+        }
+        require(context.events ==
+                    std::vector<std::string>{
+                        "construct:A", "init:A",
+                        "construct:B", "init:B",
+                        "after:A", "after:B",
+                        "delete:B", "delete:A"} &&
+                    !holder.isExist(SceneObj_15) &&
+                    !holder.isExist(SceneObj_35) &&
+                    smgpc::compat::name_obj_runtime_state_count() ==
+                        baseline,
+                "recreated recursive SceneObj graph did not cleanly retire");
+    }
+
+    void test_recursive_scene_obj_null_factory_rolls_back_side_effects() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto holder = SceneObjHolder{};
+        auto context = SyntheticSceneObjContext{
+            .return_null_after_nested = true,
+        };
+        {
+            auto binding = smgpc::scene::SceneObjHolderBinding(
+                holder, synthetic_scene_obj_factory, &context);
+            auto rejected_side_effecting_null = false;
+            try {
+                (void)holder.create(SceneObj_15);
+            } catch (const std::logic_error& error) {
+                rejected_side_effecting_null =
+                    std::string_view(error.what()).find(
+                        "returned null after creating nested") !=
+                    std::string_view::npos;
+            }
+            require(rejected_side_effecting_null &&
+                        context.events ==
+                            std::vector<std::string>{
+                                "construct:B", "init:B", "delete:B"} &&
+                        !holder.isExist(SceneObj_15) &&
+                        !holder.isExist(SceneObj_35) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline,
+                    "a null outer SceneObj factory leaked its nested slot or registration");
+
+            context.events.clear();
+            context.return_null_after_nested = false;
+            require(holder.create(SceneObj_15) != nullptr &&
+                        holder.getObj(SceneObj_35) != nullptr,
+                    "recursive SceneObj graph did not recreate after null-factory rollback");
+            binding.init_after_placement();
+        }
+        require(context.events ==
+                        std::vector<std::string>{
+                            "construct:A", "init:A", "construct:B",
+                            "init:B", "after:A", "after:B", "delete:B",
+                            "delete:A"} &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "recreated null-factory SceneObj graph did not retire cleanly");
+    }
+
+    void test_scene_obj_holder_adopts_switch_watchers_without_parent_delete() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto data = make_data({make_placement(
+            "SwitchRoot", StagePlacementLoadBatch::CommonBootstrap,
+            "ObjInfo", true, 0U, 0)});
+        auto holder = SceneObjHolder{};
+
+        const auto run_generation = [&] {
+            auto context = SyntheticSceneObjContext{};
+            {
+                auto binding = smgpc::scene::SceneObjHolderBinding(
+                    holder, synthetic_scene_obj_factory, &context);
+                auto *watcher_holder =
+                    dynamic_cast<SyntheticSwitchWatcherHolder *>(
+                        holder.create(SceneObj_SwitchWatcherHolder));
+                require(watcher_holder != nullptr,
+                        "synthetic SwitchWatcherHolder was not created");
+                auto *watcher = static_cast<SyntheticSwitchWatcher *>(
+                    nullptr);
+                auto lifecycle = RecordingLifecycle{};
+                lifecycle.init_hook = [&](NameObj &object) {
+                    if (std::string_view(object.getName()) !=
+                        "actor:SwitchRoot@0") {
+                        return;
+                    }
+                    watcher = new SyntheticSwitchWatcher(context);
+                    watcher_holder->addSwitchWatcher(watcher);
+                };
+                auto instantiator =
+                    smgpc::scene::AuthoredPlacementInstantiator(
+                        data, lifecycle, synthetic_ready_options());
+                (void)instantiator.preload();
+                const auto &created = instantiator.instantiate();
+                require(watcher != nullptr &&
+                            created.descendants.size() == 1U &&
+                            created.descendants[0U].object == watcher &&
+                            !created.descendants[0U].owned_by_placement &&
+                            smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                watcher_holder) &&
+                            smgpc::scene::
+                                current_scene_obj_holder_binding_owns(
+                                    watcher) &&
+                            !smgpc::compat::
+                                name_obj_runtime_ownership_is_claimed(
+                                    watcher),
+                        "SwitchWatcher remained parent-owned or escaped the SceneObj graph");
+                binding.init_after_placement();
+                require(context.events ==
+                            std::vector<std::string>{
+                                "construct:watcher-holder",
+                                "construct:watcher",
+                                "after:watcher-holder"},
+                        "SceneObj pre-pass duplicated its delegated SwitchWatcher");
+                const auto events_before_after = lifecycle.events.size();
+                (void)instantiator.init_after_placement();
+                const std::string watcher_lifecycle_event =
+                    "after:" + std::string(watcher->getName());
+                require(std::vector<std::string>(
+                            lifecycle.events.begin() +
+                                static_cast<std::ptrdiff_t>(
+                                    events_before_after),
+                            lifecycle.events.end()) ==
+                            std::vector<std::string>{
+                                "after:actor:SwitchRoot@0",
+                                watcher_lifecycle_event} &&
+                            context.events ==
+                                std::vector<std::string>{
+                                    "construct:watcher-holder",
+                                    "construct:watcher",
+                                    "after:watcher-holder",
+                                    "after:watcher"} &&
+                            !smgpc::compat::
+                                name_obj_runtime_postpass_is_delegated(
+                                    watcher),
+                        "delegated SwitchWatcher lost registration order or ran twice");
+                instantiator.clear();
+            }
+            require(context.events ==
+                        std::vector<std::string>{
+                            "construct:watcher-holder",
+                            "construct:watcher",
+                            "after:watcher-holder",
+                            "after:watcher",
+                            "delete:watcher",
+                            "delete:watcher-holder"} &&
+                        !holder.isExist(SceneObj_SwitchWatcherHolder) &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline,
+                    "SwitchWatcher was not retired before its retail-empty holder or was double-owned");
+        };
+
+        run_generation();
+        run_generation();
+    }
+
 }  // namespace
 
 int main() {
     try {
+        test_synthetic_default_construction_scope_needs_no_holder();
+        test_nameobj_adapter_retains_strict_zone_scope_source();
         test_model_changing_rows_require_their_exact_creator();
         test_holder_occurrence_discovery_preserves_duplicates_and_bounds_cycles();
         test_resolver_retains_missing_and_authored_empty_identifiers();
@@ -1469,6 +2562,18 @@ int main() {
         test_retail_shell_equal_key_permutation();
         test_archive_failure_precedes_all_construction();
         test_construction_failure_rolls_back_actual_actors_in_reverse();
+        test_authored_descendants_share_global_postpass_and_reverse_teardown();
+        test_authored_descendant_init_failure_rolls_back_exact_suffix();
+        test_scene_obj_created_inside_capture_keeps_independent_owner();
+        test_failed_authored_root_preserves_lazy_scene_obj_graph();
+        test_cross_owner_postpass_stays_in_registration_order_once();
+        test_postpass_delegation_cleans_up_on_early_clear();
+        test_postpass_failure_releases_current_and_pending_delegates();
+        test_recursive_scene_obj_transaction_preserves_global_order();
+        test_scene_obj_postpass_consumes_callback_appends_once();
+        test_recursive_scene_obj_failure_rolls_back_slots_and_recreates();
+        test_recursive_scene_obj_null_factory_rolls_back_side_effects();
+        test_scene_obj_holder_adopts_switch_watchers_without_parent_delete();
         std::cout << "[ok] shared authored placement instantiator contract passed\n";
         return 0;
     } catch (const std::exception &error) {

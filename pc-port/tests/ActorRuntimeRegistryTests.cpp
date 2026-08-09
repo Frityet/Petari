@@ -7,8 +7,10 @@
 
 #include <array>
 #include <cstddef>
+#include <cstdint>
 #include <exception>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -193,6 +195,78 @@ namespace {
                 "the outer capture did not remain ordered after rejecting a nested capture");
     }
 
+    class RegistrationGraphNameObj final : public NameObj {
+    public:
+        RegistrationGraphNameObj(int identity,
+                                 std::vector<int>& postpass_order,
+                                 std::vector<int>& destruction_order)
+            : NameObj("registration-graph-probe"), _identity(identity),
+              _postpass_order(&postpass_order),
+              _destruction_order(&destruction_order) {
+        }
+
+        ~RegistrationGraphNameObj() override {
+            _destruction_order->push_back(_identity);
+        }
+
+        void initAfterPlacement() override {
+            _postpass_order->push_back(_identity);
+        }
+
+    private:
+        int _identity;
+        std::vector<int>* _postpass_order;
+        std::vector<int>* _destruction_order;
+    };
+
+    void test_root_registration_graph_owns_and_delegates_in_order() {
+        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        auto postpass_order = std::vector<int>{};
+        auto destruction_order = std::vector<int>{};
+        auto graph = smgpc::scene::NameObjChildOwner{};
+        const auto root_owner = std::uint8_t{};
+        const auto external_owner = std::uint8_t{};
+        const auto capture =
+            smgpc::compat::NameObjRuntimeRegistrationCapture{};
+        auto root = std::make_unique<RegistrationGraphNameObj>(
+            1, postpass_order, destruction_order);
+        (void)new RegistrationGraphNameObj(
+            2, postpass_order, destruction_order);
+        auto external = std::make_unique<RegistrationGraphNameObj>(
+            3, postpass_order, destruction_order);
+        smgpc::compat::claim_name_obj_runtime_ownership(
+            external.get(), &external_owner);
+
+        graph.adopt_root_registration_suffix(
+            capture.marker(), *root, &root_owner);
+        require(graph.size() == 1U &&
+                    smgpc::compat::name_obj_runtime_owner(root.get()) ==
+                        &root_owner &&
+                    smgpc::compat::name_obj_runtime_owner(external.get()) ==
+                        &external_owner &&
+                    smgpc::compat::
+                        name_obj_runtime_postpass_is_delegated(root.get()) &&
+                    smgpc::compat::
+                        name_obj_runtime_postpass_is_delegated(external.get()),
+                "root registration graph lost its owned or delegated identities");
+
+        graph.init_registration_suffix_after_placement();
+        graph.init_registration_suffix_after_placement();
+        require(postpass_order == std::vector<int>({1, 2, 3}) &&
+                    !smgpc::compat::
+                        name_obj_runtime_postpass_is_delegated(root.get()) &&
+                    !smgpc::compat::
+                        name_obj_runtime_postpass_is_delegated(external.get()),
+                "root registration graph did not dispatch the global suffix once in order");
+
+        graph.clear();
+        root.reset();
+        external.reset();
+        require(destruction_order == std::vector<int>({2, 1, 3}) &&
+                    smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "root registration graph did not retire owned descendants before the root");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -208,6 +282,8 @@ int main() {
                  test_construction_child_capture_is_ordered_and_exception_safe},
         TestCase{"construction child capture rejects nested ownership",
                  test_construction_child_capture_rejects_nested_ownership},
+        TestCase{"root registration graph owns and delegates in order",
+                 test_root_registration_graph_owns_and_delegates_in_order},
     };
 
     auto failures = 0;

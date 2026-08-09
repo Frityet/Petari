@@ -1672,3 +1672,30 @@ target("smg-pc-authored-placement-instantiator-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+target("smg-pc-actor-event-camera-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "ActorEventCameraTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("actor_event_camera", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

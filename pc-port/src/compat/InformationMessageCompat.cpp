@@ -7,8 +7,6 @@
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
-#include <algorithm>
-#include <exception>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -17,9 +15,22 @@ namespace {
 
     InformationMessage* sCurrentInformationMessage = nullptr;
 
-    [[nodiscard]] bool contains_identity(const std::vector<NameObj*>& objects,
-                                         const NameObj* wanted) {
-        return std::ranges::find(objects, wanted) != objects.end();
+    [[nodiscard]] bool is_unowned_information_message_child(
+        const NameObj* object, const void*) noexcept {
+        return !smgpc::compat::
+                   name_obj_runtime_ownership_is_claimed(object) &&
+               !smgpc::scene::
+                   current_scene_obj_holder_binding_owns(object);
+    }
+
+    void rollback_information_message_children(
+        smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept {
+        while (auto* object =
+                   smgpc::compat::newest_name_obj_runtime_object_since_if(
+                       marker, is_unowned_information_message_child,
+                       nullptr)) {
+            delete object;
+        }
     }
 
 }  // namespace
@@ -49,29 +60,37 @@ namespace smgpc::compat {
         }
 
         _impl->message = std::make_unique<InformationMessage>();
-        const auto existing = snapshot_name_obj_runtime_objects();
+        smgpc::compat::claim_name_obj_runtime_ownership(
+            _impl->message.get(), _impl.get());
+        // The exact init raw-news IconAButton. Keep every potentially
+        // allocating operation before the ownership commit so an exception
+        // can retire the still-unclaimed registration suffix without
+        // replacing the original failure.
+        const auto marker = mark_name_obj_runtime_registrations();
         try {
             _impl->message->initWithoutIter();
-        } catch (...) {
-            for (auto* object : snapshot_name_obj_runtime_objects()) {
-                if (object != _impl->message.get() &&
-                    !contains_identity(existing, object)) {
-                    _impl->children.emplace_back(object);
-                }
+            const auto registered =
+                snapshot_name_obj_runtime_objects_since(marker);
+            if (registered.size() != 1U ||
+                registered.front() == _impl->message.get() ||
+                dynamic_cast<IconAButton*>(registered.front()) == nullptr ||
+                name_obj_runtime_ownership_is_claimed(
+                    registered.front()) ||
+                smgpc::scene::current_scene_obj_holder_binding_owns(
+                    registered.front())) {
+                throw std::logic_error(
+                    "the exact InformationMessage did not create its one unowned IconAButton child");
             }
-            throw;
-        }
 
-        for (auto* object : snapshot_name_obj_runtime_objects()) {
-            if (object != _impl->message.get() &&
-                !contains_identity(existing, object)) {
+            _impl->children.reserve(registered.size());
+            for (auto* object : registered) {
+                smgpc::compat::claim_name_obj_runtime_ownership(
+                    object, _impl.get());
                 _impl->children.emplace_back(object);
             }
-        }
-        if (_impl->children.size() != 1U ||
-            dynamic_cast<IconAButton*>(_impl->children.front().get()) == nullptr) {
-            throw std::logic_error(
-                "the exact InformationMessage did not create its one IconAButton child");
+        } catch (...) {
+            rollback_information_message_children(marker);
+            throw;
         }
 
         sCurrentInformationMessage = _impl->message.get();

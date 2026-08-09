@@ -295,10 +295,7 @@ void BrightObj::getNowCenter(TVec2f* center) const {
 BrightSun::BrightSun(const char* name) : LiveActor(name), BrightObjBase(), mSun(nullptr) {
 }
 
-BrightSun::~BrightSun() {
-    delete mSun;
-    mSun = nullptr;
-}
+BrightSun::~BrightSun() = default;
 
 void BrightSun::init(const JMapInfoIter& iter) {
     MR::initDefaultPos(this, iter);

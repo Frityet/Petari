@@ -18,6 +18,7 @@
 
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
+#include "camera/EventCamera.hpp"
 #include "render/GXState.hpp"
 #include "render/effects/EffectResource.hpp"
 #include "resource/BmgMessageArchive.hpp"
@@ -144,18 +145,31 @@ namespace smgpc::runtime {
         StageBgmStart,
         StageBgmUnlock,
         StageBgmStop,
+        SubBgmStart,
+        SubBgmStop,
         SystemSoundStart,
         SystemSoundStop,
         SystemLevelSoundStart,
+        ActorSoundStart,
+        ActorLevelSoundStart,
+        LimitedSoundRegister,
         LevelSoundSubmit,
         LevelSoundPermit,
         AtmosphereSoundStart,
     };
 
     struct AudioEvent {
+        // Actor events capture logical request identity only. They do not
+        // claim a positional mixer voice or retain ownership of the source.
         AudioEventKind kind = AudioEventKind::StageBgmStart;
         std::string name;
         std::optional<u32> sound_id;
+        const void *source_identity = nullptr;
+        std::string source_name;
+        s32 parameter_1 = -1;
+        s32 parameter_2 = -1;
+        s32 parameter_3 = -1;
+        bool prepared = false;
         s32 fade_frames = 0;
         u32 delay_frames = 0U;
         std::uint64_t frame_index = 0U;
@@ -163,6 +177,8 @@ namespace smgpc::runtime {
 
     class AudioEventService final {
     public:
+        static constexpr std::size_t cEventRetentionLimit = 8192U;
+
         void begin_frame(std::uint64_t frame_index);
         void reset_stage_state();
         void resolve_stage_bgm_absent();
@@ -175,6 +191,14 @@ namespace smgpc::runtime {
         void start_system_sound(std::string_view name);
         void stop_system_sound(std::string_view name, u32 delay_frames);
         void start_system_level_sound(std::string_view name);
+        void start_actor_sound(const void *actor_identity, std::string_view actor_name,
+                               std::string_view name, s32 parameter_1, s32 parameter_2);
+        void start_actor_level_sound(const void *actor_identity, std::string_view actor_name,
+                                     std::string_view name, s32 parameter_1, s32 parameter_2,
+                                     s32 parameter_3);
+        void register_limited_sound(std::string_view name, s32 limit);
+        void start_sub_bgm(std::string_view name, bool prepared);
+        void stop_sub_bgm(u32 fade_frames);
         void submit_level_sound();
         void permit_level_sound();
         void start_atmosphere_sound(std::string_view name);
@@ -184,13 +208,20 @@ namespace smgpc::runtime {
         [[nodiscard]] std::string_view current_stage_bgm_name() const;
         [[nodiscard]] std::optional<u32> current_stage_bgm_id() const;
         [[nodiscard]] std::optional<u32> last_stage_bgm_id() const;
+        [[nodiscard]] bool has_active_sub_bgm() const;
+        [[nodiscard]] bool is_sub_bgm_stopping() const;
+        [[nodiscard]] bool is_sub_bgm_prepared() const;
+        [[nodiscard]] std::string_view current_sub_bgm_name() const;
+        [[nodiscard]] u32 sub_bgm_fade_frames_remaining() const;
         [[nodiscard]] bool is_cube_bgm_change_invalid() const;
         [[nodiscard]] std::span<const AudioEvent> events() const;
+        [[nodiscard]] std::uint64_t dropped_event_count() const;
 
     private:
-        void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0,
-                        u32 delay_frames = 0U,
-                        std::optional<u32> sound_id = std::nullopt);
+        static constexpr std::size_t cEventRetentionTrimCount =
+            cEventRetentionLimit / 2U;
+
+        void push_event(AudioEvent event);
 
         std::uint64_t _frame_index = 0U;
         std::string _stage_bgm_name;
@@ -199,7 +230,13 @@ namespace smgpc::runtime {
         bool _stage_bgm_requested = false;
         bool _stage_bgm_identity_resolved = false;
         bool _cube_bgm_change_invalid = false;
+        std::string _sub_bgm_name;
+        std::uint64_t _sub_bgm_stop_frame = 0U;
+        bool _sub_bgm_active = false;
+        bool _sub_bgm_stopping = false;
+        bool _sub_bgm_prepared = false;
         std::vector<AudioEvent> _events;
+        std::uint64_t _dropped_event_count = 0U;
     };
 
     enum class EffectEventKind {
@@ -606,6 +643,22 @@ namespace smgpc::runtime {
         void request_very_strong_shake();
         void pause_on_camera_director();
         void pause_off_camera_director();
+        void attach_event_camera_catalog(
+            const smgpc::camera::EventCameraCatalog &catalog);
+        void detach_event_camera_catalog(
+            const smgpc::camera::EventCameraCatalog &catalog) noexcept;
+        void declare_event_camera(std::int32_t zone_id, std::string_view name);
+        void declare_event_camera_animation(
+            std::int32_t zone_id, std::string_view name,
+            smgpc::camera::CameraAnimation animation);
+        void start_event_camera(
+            std::int32_t zone_id, std::string_view name,
+            smgpc::camera::EventCameraTarget target,
+            std::int32_t interpolation_frames, float speed = 1.0F);
+        void end_event_camera(std::int32_t zone_id, std::string_view name,
+                              bool force, std::int32_t interpolation_frames);
+        [[nodiscard]] ActorCameraInfo *create_actor_camera_info(
+            std::int32_t camera_set_id, std::int32_t zone_id);
         void declare_event_camera_programmable(std::string_view name);
         void start_global_event_camera_no_target(std::string_view name);
         void end_global_event_camera(std::string_view name);
@@ -620,6 +673,19 @@ namespace smgpc::runtime {
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> game_camera_pose() const;
+        [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_event_camera_pose() const;
+        [[nodiscard]] std::optional<smgpc::camera::EventCameraKey> active_event_camera_key() const;
+        [[nodiscard]] bool is_event_camera_active(std::int32_t zone_id,
+                                                  std::string_view name) const;
+        [[nodiscard]] bool is_event_camera_declared(
+            std::int32_t zone_id, std::string_view name) const;
+        [[nodiscard]] bool is_event_camera_animation_end(
+            std::int32_t zone_id, std::string_view name) const;
+        [[nodiscard]] std::int32_t event_camera_animation_frame(
+            std::int32_t zone_id, std::string_view name) const;
+        [[nodiscard]] std::int32_t event_camera_frames(
+            std::int32_t zone_id, std::string_view name) const;
+        [[nodiscard]] std::size_t actor_camera_info_count() const noexcept;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> effective_camera_pose() const;
         [[nodiscard]] smgpc::camera::CameraPose apply_shake(const smgpc::camera::CameraPose &pose) const;
@@ -654,6 +720,7 @@ namespace smgpc::runtime {
         std::optional<float> _shake_efb_height;
         std::uint32_t _camera_director_pause_count = 0U;
         std::optional<smgpc::camera::CameraPose> _game_camera_pose;
+        smgpc::camera::EventCameraRuntime _event_cameras;
         std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
         std::string _active_programmable_camera_name;
         std::uint32_t _programmable_camera_declare_count = 0U;

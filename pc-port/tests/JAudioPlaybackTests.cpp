@@ -3,6 +3,7 @@
 #include "Game/AudioLib/AudBgm.hpp"
 #include "Game/AudioLib/AudBgmMgr.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -1503,6 +1504,142 @@ namespace {
                 "fresh-process RuntimeContext/SoundUtil binding proof must pass under Xvfb");
     }
 
+    void test_logical_actor_and_sub_bgm_requests() {
+        auto audio = smgpc::runtime::AudioEventService{};
+        const auto binding =
+            smgpc::compat::ScopedAudioEventServiceOverride{audio};
+        auto actor = LiveActor{"LogicalAudioProbe"};
+        audio.begin_frame(50U);
+
+        require(MR::startSound(&actor, "SE_SM_RABBIT_JUMP", 12, 34) ==
+                    nullptr,
+                "logical actor sound must not manufacture a concrete positional handle");
+        const auto &actor_sound = audio.events().back();
+        require(actor_sound.kind ==
+                        smgpc::runtime::AudioEventKind::ActorSoundStart &&
+                    actor_sound.name == "SE_SM_RABBIT_JUMP" &&
+                    actor_sound.source_identity == &actor &&
+                    actor_sound.source_name == "LogicalAudioProbe" &&
+                    actor_sound.parameter_1 == 12 &&
+                    actor_sound.parameter_2 == 34 &&
+                    actor_sound.parameter_3 == -1 &&
+                    actor_sound.frame_index == 50U,
+                "logical actor sound must retain its source, retail name, parameters, and frame");
+
+        require(MR::startLevelSound(
+                    &actor, "SE_SM_LV_TICO_FLOAT", 56, 78, 90) == nullptr,
+                "logical actor level sound must not manufacture a concrete positional handle");
+        const auto &actor_level_sound = audio.events().back();
+        require(actor_level_sound.kind ==
+                        smgpc::runtime::AudioEventKind::ActorLevelSoundStart &&
+                    actor_level_sound.name == "SE_SM_LV_TICO_FLOAT" &&
+                    actor_level_sound.source_identity == &actor &&
+                    actor_level_sound.source_name == "LogicalAudioProbe" &&
+                    actor_level_sound.parameter_1 == 56 &&
+                    actor_level_sound.parameter_2 == 78 &&
+                    actor_level_sound.parameter_3 == 90,
+                "logical actor level sound must preserve all three retail request parameters");
+        const auto first_level_event_count = audio.events().size();
+        require(MR::startLevelSound(
+                    &actor, "SE_SM_LV_TICO_FLOAT", 23, 45, 67) == nullptr &&
+                    audio.events().size() == first_level_event_count &&
+                    audio.events().back().parameter_1 == 23 &&
+                    audio.events().back().parameter_2 == 45 &&
+                    audio.events().back().parameter_3 == 67,
+                "same-frame actor level refreshes must coalesce by actor and retail sound identity");
+        audio.begin_frame(51U);
+        require(MR::startLevelSound(
+                    &actor, "SE_SM_LV_TICO_FLOAT", 23, 45, 67) == nullptr &&
+                    audio.events().size() == first_level_event_count + 1U &&
+                    audio.events().back().frame_index == 51U,
+                "a new frame must retain a new logical actor level refresh");
+
+        MR::limitedSound("SE_SM_LV_TICO_OOP_WAIT", 1);
+        const auto &limited_sound = audio.events().back();
+        require(limited_sound.kind ==
+                        smgpc::runtime::AudioEventKind::LimitedSoundRegister &&
+                    limited_sound.name == "SE_SM_LV_TICO_OOP_WAIT" &&
+                    limited_sound.parameter_1 == 1,
+                "limitedSound must remain a non-throwing logical registration with retail identity");
+
+        require(!audio.has_active_stage_bgm(),
+                "the logical audio probe must begin without stage BGM state");
+        audio.begin_frame(60U);
+        require(MR::startSubBGM("BGM_MEET_TICO_ZOOM_OUT", false) == nullptr &&
+                    audio.has_active_sub_bgm() &&
+                    !audio.is_sub_bgm_stopping() &&
+                    !audio.is_sub_bgm_prepared() &&
+                    audio.current_sub_bgm_name() ==
+                        "BGM_MEET_TICO_ZOOM_OUT" &&
+                    audio.sub_bgm_fade_frames_remaining() == 0U &&
+                    !audio.has_active_stage_bgm(),
+                "logical sub-BGM must occupy a separate non-SDL slot without changing stage BGM");
+        const auto &sub_start = audio.events().back();
+        require(sub_start.kind ==
+                        smgpc::runtime::AudioEventKind::SubBgmStart &&
+                    sub_start.name == "BGM_MEET_TICO_ZOOM_OUT" &&
+                    !sub_start.prepared,
+                "logical sub-BGM start evidence must retain name and preparation mode");
+
+        MR::stopSubBGM(4U);
+        const auto &sub_stop = audio.events().back();
+        require(audio.has_active_sub_bgm() && audio.is_sub_bgm_stopping() &&
+                    audio.current_sub_bgm_name() ==
+                        "BGM_MEET_TICO_ZOOM_OUT" &&
+                    audio.sub_bgm_fade_frames_remaining() == 4U &&
+                    sub_stop.kind ==
+                        smgpc::runtime::AudioEventKind::SubBgmStop &&
+                    sub_stop.name == "BGM_MEET_TICO_ZOOM_OUT" &&
+                    sub_stop.fade_frames == 4,
+                "logical sub-BGM stop must expose its retained identity and fade state");
+        audio.begin_frame(63U);
+        require(audio.has_active_sub_bgm() && audio.is_sub_bgm_stopping() &&
+                    audio.sub_bgm_fade_frames_remaining() == 1U,
+                "logical sub-BGM fade must advance on the scene frame clock");
+        audio.begin_frame(64U);
+        require(!audio.has_active_sub_bgm() &&
+                    !audio.is_sub_bgm_stopping() &&
+                    audio.current_sub_bgm_name().empty() &&
+                    audio.sub_bgm_fade_frames_remaining() == 0U,
+                "logical sub-BGM fade must retire at its exact frame boundary");
+
+        require(MR::startSubBGM("BGM_MUTEKI_A", true) == nullptr &&
+                    audio.is_sub_bgm_prepared(),
+                "a replacement logical sub-BGM must retain its preparation parameter");
+        MR::stopSubBGM(0U);
+        require(!audio.has_active_sub_bgm() &&
+                    !audio.is_sub_bgm_stopping() &&
+                    !audio.is_sub_bgm_prepared(),
+                "a zero-frame logical sub-BGM stop must retire immediately");
+
+        const auto retained_before = audio.events().size();
+        const auto dropped_before = audio.dropped_event_count();
+        const auto expected_trim =
+            smgpc::runtime::AudioEventService::cEventRetentionLimit / 2U;
+        require(retained_before < expected_trim,
+                "logical audio retention probe setup must fit inside one trim window");
+        for (auto index = std::size_t{};
+             index <= smgpc::runtime::AudioEventService::cEventRetentionLimit;
+             ++index) {
+            audio.start_actor_sound(
+                &actor, actor.getName(), "SE_SM_RABBIT_JUMP",
+                static_cast<s32>(index), -1);
+        }
+        require(audio.events().size() ==
+                        retained_before +
+                            smgpc::runtime::AudioEventService::cEventRetentionLimit +
+                            1U - expected_trim &&
+                    audio.dropped_event_count() ==
+                        dropped_before + expected_trim &&
+                    audio.events().front().kind ==
+                        smgpc::runtime::AudioEventKind::ActorSoundStart &&
+                    audio.events().front().parameter_1 ==
+                        static_cast<s32>(expected_trim - retained_before) &&
+                    audio.events().back().parameter_1 == static_cast<s32>(
+                        smgpc::runtime::AudioEventService::cEventRetentionLimit),
+                "logical audio history must trim the oldest half in order while retaining the newest request and cumulative drop evidence");
+    }
+
 } // namespace
 
 int main(int argc, char **argv) {
@@ -1534,6 +1671,7 @@ int main(int argc, char **argv) {
         test_deterministic_mixer_release();
         test_recovered_parameter_semantics();
         test_missing_device_fails_in_fresh_process(argv[0]);
+        test_logical_actor_and_sub_bgm_requests();
 
         const auto fixture = load_retail_audio_fixture();
         if (!fixture.has_value()) {

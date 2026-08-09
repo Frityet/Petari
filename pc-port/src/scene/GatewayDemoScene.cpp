@@ -24,6 +24,7 @@
 #include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageAuthoredData.hpp"
+#include "scene/StageEventCameraBinding.hpp"
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "scene/nameobj/ObjectNameTable.hpp"
@@ -208,6 +209,10 @@ namespace smgpc::scene {
             _runtime = smgpc::runtime::RuntimeContext::try_instance();
             require(_runtime != nullptr,
                     "Gateway placement construction requires the active RuntimeContext lifecycle");
+            _event_camera_binding =
+                std::make_unique<StageEventCameraBinding>(
+                    _runtime->camera_system(), _dvd,
+                    _authored_data->tables());
             _authored_placements =
                 std::make_unique<AuthoredPlacementInstantiator>(
                     *_authored_data, _runtime->name_obj_lifecycle(),
@@ -375,6 +380,7 @@ namespace smgpc::scene {
             // instances and is retired after their actor wrappers.
             _scene_binding.reset();
             _stage_light_binding.reset();
+            _event_camera_binding.reset();
             _planet_map_catalog.reset();
         }
 
@@ -517,6 +523,7 @@ namespace smgpc::scene {
         std::unique_ptr<smgpc::compat::StageSessionBinding>
             _stage_session_binding{};
         std::unique_ptr<StageAuthoredData> _authored_data{};
+        std::unique_ptr<StageEventCameraBinding> _event_camera_binding{};
         const StageStartInfo *_start = nullptr;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime{};
         const StagePlacementObject *_planet_placement = nullptr;

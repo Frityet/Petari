@@ -21,12 +21,14 @@
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
 #include "compat/TalkRuntime.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 #include <utility>
@@ -36,12 +38,36 @@ namespace {
     SceneObjHolder *sCurrentSceneObjHolder = nullptr;
     smgpc::scene::SceneObjHolderBinding *sCurrentSceneObjHolderBinding = nullptr;
 
+    [[nodiscard]] bool is_unclaimed_scene_obj_registration(
+        const NameObj *object, const void *) noexcept {
+        return !smgpc::compat::
+                   name_obj_runtime_ownership_is_claimed(object) &&
+               !smgpc::scene::
+                   current_scene_obj_holder_binding_owns(object);
+    }
+
+    void rollback_scene_obj_registrations(
+        smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept {
+        while (auto *object =
+                   smgpc::compat::newest_name_obj_runtime_object_since_if(
+                       marker, is_unclaimed_scene_obj_registration,
+                       nullptr)) {
+            delete object;
+        }
+    }
+
 }  // namespace
 
 namespace smgpc::scene {
 
-    SceneObjHolderBinding::SceneObjHolderBinding(SceneObjHolder &holder)
+    SceneObjHolderBinding::SceneObjHolderBinding(
+        SceneObjHolder &holder,
+        SceneObjFactoryOverride factory_override,
+        void *factory_context)
         : _holder(&holder), _owned_objects(),
+          _owned_registration_objects(),
+          _provisional_slots(), _factory_override(factory_override),
+          _factory_context(factory_context),
           _global_gravity_ownership(
               std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder)),
           _area_obj_runtime(std::make_unique<AreaObjRuntime>()),
@@ -65,6 +91,7 @@ namespace smgpc::scene {
         while (!_owned_objects.empty()) {
             _owned_objects.pop_back();
         }
+        _owned_registration_objects.clear();
         // The external holder storage outlives this binding in test and scene
         // hosts. Reconstruct its exact empty value so no slot retains a freed
         // SceneObj and a later generation can bind/recreate normally.
@@ -79,14 +106,63 @@ namespace smgpc::scene {
     }
 
     void SceneObjHolderBinding::init_after_placement() {
-        for (std::size_t index = 0; index < _owned_objects.size(); ++index) {
-            _owned_objects[index]->initAfterPlacement();
+        // Advance by index so callback-time SceneObj creation can append to
+        // the graph without invalidating this traversal. A failed callback
+        // stays current for an explicit retry; completed and delegated
+        // identities are consumed exactly once.
+        while (_next_registration_postpass_index <
+               _owned_registration_objects.size()) {
+            auto *object = _owned_registration_objects[
+                _next_registration_postpass_index];
+            if (!smgpc::compat::
+                     name_obj_runtime_postpass_is_delegated(object)) {
+                object->initAfterPlacement();
+            }
+            ++_next_registration_postpass_index;
         }
         _area_obj_runtime->init_after_placement();
     }
 
     SceneObjHolder *current_scene_obj_holder() noexcept {
         return sCurrentSceneObjHolder;
+    }
+
+    bool current_scene_obj_holder_binding_owns(
+        const NameObj *object) noexcept {
+        return object != nullptr && sCurrentSceneObjHolderBinding != nullptr &&
+               std::ranges::any_of(
+                   sCurrentSceneObjHolderBinding
+                       ->_owned_registration_objects,
+                   [object](const auto *owned) {
+                       return owned == object;
+                   });
+    }
+
+    void adopt_current_scene_obj_holder_descendant(NameObj *object) {
+        if (object == nullptr || sCurrentSceneObjHolderBinding == nullptr) {
+            throw std::logic_error(
+                "cannot adopt a NameObj without an active SceneObjHolder binding");
+        }
+        if (current_scene_obj_holder_binding_owns(object)) {
+            return;
+        }
+        if (!smgpc::compat::has_name_obj_runtime_state(object) ||
+            smgpc::compat::name_obj_runtime_ownership_is_claimed(object)) {
+            throw std::logic_error(
+                "SceneObjHolder descendant must be registered and unclaimed");
+        }
+
+        auto *binding = sCurrentSceneObjHolderBinding;
+        if (binding->_construction_depth != 0U) {
+            // The outermost SceneObj transaction will adopt this identity in
+            // exact global registration order after the root finishes init.
+            return;
+        }
+        binding->_owned_objects.reserve(binding->_owned_objects.size() + 1U);
+        binding->_owned_registration_objects.reserve(
+            binding->_owned_registration_objects.size() + 1U);
+        binding->_owned_objects.emplace_back(object);
+        binding->_owned_registration_objects.push_back(object);
     }
 
     AreaObjRuntime *current_area_obj_runtime() noexcept {
@@ -124,16 +200,102 @@ NameObj *SceneObjHolder::create(int id) {
         return mObj[id];
     }
 
-    auto object = std::unique_ptr<NameObj>(newEachObj(id));
-    if (object == nullptr) {
-        return nullptr;
-    }
+    auto *binding = sCurrentSceneObjHolderBinding;
+    const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
+    const auto slot_checkpoint = binding->_provisional_slots.size();
+    const auto outermost = binding->_construction_depth == 0U;
+    ++binding->_construction_depth;
+    auto object = std::unique_ptr<NameObj>{};
+    try {
+        object.reset(newEachObj(id));
+        if (object == nullptr) {
+            if (binding->_provisional_slots.size() != slot_checkpoint ||
+                smgpc::compat::newest_name_obj_runtime_object_since_if(
+                    marker, nullptr, nullptr) != nullptr) {
+                throw std::logic_error(
+                    "SceneObj factory returned null after creating nested scene objects");
+            }
+            --binding->_construction_depth;
+            return nullptr;
+        }
 
-    object->initWithoutIter();
-    auto *result = object.get();
-    sCurrentSceneObjHolderBinding->_owned_objects.push_back(std::move(object));
-    mObj[id] = result;
-    return result;
+        object->initWithoutIter();
+        auto registrations =
+            smgpc::compat::snapshot_name_obj_runtime_objects_since(
+                marker);
+        if (std::ranges::count(registrations, object.get()) != 1 ||
+            registrations.empty() || registrations.front() != object.get() ||
+            smgpc::compat::name_obj_runtime_ownership_is_claimed(
+                object.get()) ||
+            smgpc::scene::current_scene_obj_holder_binding_owns(
+                object.get())) {
+            throw std::logic_error(
+                "SceneObj construction did not register one leading, unclaimed root");
+        }
+        auto *result = object.get();
+        binding->_provisional_slots.push_back({id, result});
+        mObj[id] = result;
+        (void)object.release();
+
+        if (outermost) {
+            registrations =
+                smgpc::compat::snapshot_name_obj_runtime_objects_since(
+                    marker);
+            const auto unclaimed_count = static_cast<std::size_t>(
+                std::ranges::count_if(
+                    registrations, [](const NameObj *registered) {
+                        return !smgpc::compat::
+                                   name_obj_runtime_ownership_is_claimed(
+                                       registered) &&
+                               !smgpc::scene::
+                                   current_scene_obj_holder_binding_owns(
+                                       registered);
+                    }));
+            binding->_owned_objects.reserve(
+                binding->_owned_objects.size() + unclaimed_count);
+            binding->_owned_registration_objects.reserve(
+                binding->_owned_registration_objects.size() +
+                registrations.size());
+
+            for (auto *registered : registrations) {
+                if (!smgpc::compat::
+                         name_obj_runtime_ownership_is_claimed(registered) &&
+                    !smgpc::scene::
+                         current_scene_obj_holder_binding_owns(registered)) {
+                    binding->_owned_objects.emplace_back(registered);
+                }
+                if (std::ranges::find(
+                        binding->_owned_registration_objects,
+                        registered) ==
+                    binding->_owned_registration_objects.end()) {
+                    binding->_owned_registration_objects.push_back(
+                        registered);
+                }
+            }
+            binding->_provisional_slots.clear();
+        }
+        --binding->_construction_depth;
+        return result;
+    } catch (...) {
+        if (object != nullptr &&
+            smgpc::compat::name_obj_runtime_object_was_registered_since(
+                object.get(), marker)) {
+            (void)object.release();
+        }
+        while (binding->_provisional_slots.size() > slot_checkpoint) {
+            const auto slot = binding->_provisional_slots.back();
+            binding->_provisional_slots.pop_back();
+            if (mObj[slot.id] == slot.object) {
+                mObj[slot.id] = nullptr;
+            }
+        }
+        rollback_scene_obj_registrations(marker);
+        --binding->_construction_depth;
+        if (outermost) {
+            binding->_provisional_slots.clear();
+        }
+        throw;
+    }
 }
 
 NameObj *SceneObjHolder::getObj(int id) const {
@@ -148,6 +310,16 @@ bool SceneObjHolder::isExist(int id) const {
 }
 
 NameObj *SceneObjHolder::newEachObj(int id) {
+    if (sCurrentSceneObjHolderBinding != nullptr &&
+        sCurrentSceneObjHolderBinding->_factory_override != nullptr) {
+        if (auto *object =
+                sCurrentSceneObjHolderBinding->_factory_override(
+                    id,
+                    sCurrentSceneObjHolderBinding->_factory_context)) {
+            return object;
+        }
+    }
+
     switch (id) {
     case SceneObj_ClippingDirector:
         return new ClippingDirector();

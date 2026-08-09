@@ -3,6 +3,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 
 #include <array>
 #include <memory>
@@ -126,7 +127,11 @@ namespace smgpc::compat {
 
         auto state = GroupCheckManagerRuntimeState{};
         state.groups[0] = std::make_unique<GroupChecker>("カメサーチ対象物グループ", 0x20U);
+        smgpc::compat::claim_name_obj_runtime_ownership(
+            state.groups[0].get(), manager);
         state.groups[1] = std::make_unique<GroupChecker>("スピニングボックス反射グループ", 0x8U);
+        smgpc::compat::claim_name_obj_runtime_ownership(
+            state.groups[1].get(), manager);
         auto *shell_search_group = state.groups[0].get();
         auto *spinning_box_search_group = state.groups[1].get();
 

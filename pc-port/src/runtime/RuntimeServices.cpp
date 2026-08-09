@@ -1393,6 +1393,13 @@ namespace smgpc::runtime {
 
     void AudioEventService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
+        if (_sub_bgm_stopping && frame_index >= _sub_bgm_stop_frame) {
+            _sub_bgm_name.clear();
+            _sub_bgm_stop_frame = 0U;
+            _sub_bgm_active = false;
+            _sub_bgm_stopping = false;
+            _sub_bgm_prepared = false;
+        }
     }
 
     void AudioEventService::reset_stage_state() {
@@ -1402,6 +1409,11 @@ namespace smgpc::runtime {
         _stage_bgm_requested = false;
         _stage_bgm_identity_resolved = false;
         _cube_bgm_change_invalid = false;
+        _sub_bgm_name.clear();
+        _sub_bgm_stop_frame = 0U;
+        _sub_bgm_active = false;
+        _sub_bgm_stopping = false;
+        _sub_bgm_prepared = false;
     }
 
     void AudioEventService::resolve_stage_bgm_absent() {
@@ -1421,11 +1433,15 @@ namespace smgpc::runtime {
         _stage_bgm_identity_resolved = true;
         _stage_bgm_name = name;
         _stage_bgm_id = sound_id;
-        push_event(AudioEventKind::StageBgmStart, name, 0, 0U, sound_id);
+        push_event(AudioEvent{
+            .kind = AudioEventKind::StageBgmStart,
+            .name = std::string(name),
+            .sound_id = sound_id,
+        });
     }
 
     void AudioEventService::unlock_stage_bgm() {
-        push_event(AudioEventKind::StageBgmUnlock, {});
+        push_event(AudioEvent{.kind = AudioEventKind::StageBgmUnlock});
     }
 
     void AudioEventService::stop_stage_bgm(s32 fade_frames) {
@@ -1436,7 +1452,12 @@ namespace smgpc::runtime {
         _stage_bgm_identity_resolved = true;
         _stage_bgm_name.clear();
         _stage_bgm_id.reset();
-        push_event(AudioEventKind::StageBgmStop, stopped_name, fade_frames, 0U, stopped_id);
+        push_event(AudioEvent{
+            .kind = AudioEventKind::StageBgmStop,
+            .name = stopped_name,
+            .sound_id = stopped_id,
+            .fade_frames = fade_frames,
+        });
     }
 
     void AudioEventService::clear_last_stage_bgm_id() {
@@ -1448,27 +1469,133 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::start_system_sound(std::string_view name) {
-        push_event(AudioEventKind::SystemSoundStart, name);
+        push_event(AudioEvent{
+            .kind = AudioEventKind::SystemSoundStart,
+            .name = std::string(name),
+        });
     }
 
     void AudioEventService::stop_system_sound(std::string_view name, u32 delay_frames) {
-        push_event(AudioEventKind::SystemSoundStop, name, 0, delay_frames);
+        push_event(AudioEvent{
+            .kind = AudioEventKind::SystemSoundStop,
+            .name = std::string(name),
+            .delay_frames = delay_frames,
+        });
     }
 
     void AudioEventService::start_system_level_sound(std::string_view name) {
-        push_event(AudioEventKind::SystemLevelSoundStart, name);
+        push_event(AudioEvent{
+            .kind = AudioEventKind::SystemLevelSoundStart,
+            .name = std::string(name),
+        });
+    }
+
+    void AudioEventService::start_actor_sound(const void *actor_identity, std::string_view actor_name,
+                                              std::string_view name, s32 parameter_1, s32 parameter_2) {
+        push_event(AudioEvent{
+            .kind = AudioEventKind::ActorSoundStart,
+            .name = std::string(name),
+            .source_identity = actor_identity,
+            .source_name = std::string(actor_name),
+            .parameter_1 = parameter_1,
+            .parameter_2 = parameter_2,
+        });
+    }
+
+    void AudioEventService::start_actor_level_sound(const void *actor_identity, std::string_view actor_name,
+                                                    std::string_view name, s32 parameter_1, s32 parameter_2,
+                                                    s32 parameter_3) {
+        // Level sounds are refreshed calls, not independent one-shot voices.
+        // Preserve one logical request per actor/sound key in a frame and
+        // retain the final parameters submitted for that frame.
+        for (auto event_iter = _events.rbegin();
+             event_iter != _events.rend() &&
+             event_iter->frame_index == _frame_index;
+             ++event_iter) {
+            if (event_iter->kind != AudioEventKind::ActorLevelSoundStart ||
+                event_iter->source_identity != actor_identity ||
+                event_iter->name != name) {
+                continue;
+            }
+            event_iter->source_name = actor_name;
+            event_iter->parameter_1 = parameter_1;
+            event_iter->parameter_2 = parameter_2;
+            event_iter->parameter_3 = parameter_3;
+            return;
+        }
+
+        push_event(AudioEvent{
+            .kind = AudioEventKind::ActorLevelSoundStart,
+            .name = std::string(name),
+            .source_identity = actor_identity,
+            .source_name = std::string(actor_name),
+            .parameter_1 = parameter_1,
+            .parameter_2 = parameter_2,
+            .parameter_3 = parameter_3,
+        });
+    }
+
+    void AudioEventService::register_limited_sound(std::string_view name, s32 limit) {
+        push_event(AudioEvent{
+            .kind = AudioEventKind::LimitedSoundRegister,
+            .name = std::string(name),
+            .parameter_1 = limit,
+        });
+    }
+
+    void AudioEventService::start_sub_bgm(std::string_view name, bool prepared) {
+        _sub_bgm_name = name;
+        _sub_bgm_stop_frame = 0U;
+        _sub_bgm_active = true;
+        _sub_bgm_stopping = false;
+        _sub_bgm_prepared = prepared;
+        push_event(AudioEvent{
+            .kind = AudioEventKind::SubBgmStart,
+            .name = std::string(name),
+            .prepared = prepared,
+        });
+    }
+
+    void AudioEventService::stop_sub_bgm(u32 fade_frames) {
+        if (!_sub_bgm_active) {
+            return;
+        }
+
+        push_event(AudioEvent{
+            .kind = AudioEventKind::SubBgmStop,
+            .name = _sub_bgm_name,
+            .fade_frames = static_cast<s32>(std::min<u32>(
+                fade_frames, static_cast<u32>(std::numeric_limits<s32>::max()))),
+        });
+        if (fade_frames == 0U) {
+            _sub_bgm_name.clear();
+            _sub_bgm_stop_frame = 0U;
+            _sub_bgm_active = false;
+            _sub_bgm_stopping = false;
+            _sub_bgm_prepared = false;
+            return;
+        }
+
+        const auto maximum_frame = std::numeric_limits<std::uint64_t>::max();
+        _sub_bgm_stop_frame = fade_frames > maximum_frame - _frame_index
+                                  ? maximum_frame
+                                  : _frame_index + fade_frames;
+        _sub_bgm_stopping = true;
     }
 
     void AudioEventService::submit_level_sound() {
-        push_event(AudioEventKind::LevelSoundSubmit, {});
+        push_event(AudioEvent{.kind = AudioEventKind::LevelSoundSubmit});
     }
 
     void AudioEventService::permit_level_sound() {
-        push_event(AudioEventKind::LevelSoundPermit, {});
+        push_event(AudioEvent{.kind = AudioEventKind::LevelSoundPermit});
     }
 
     void AudioEventService::start_atmosphere_sound(std::string_view name) {
-        push_event(AudioEventKind::AtmosphereSoundStart, name);
+        push_event(AudioEvent{
+            .kind = AudioEventKind::AtmosphereSoundStart,
+            .name = std::string(name),
+        });
     }
 
     bool AudioEventService::has_active_stage_bgm() const {
@@ -1491,6 +1618,31 @@ namespace smgpc::runtime {
         return _last_stage_bgm_id;
     }
 
+    bool AudioEventService::has_active_sub_bgm() const {
+        return _sub_bgm_active;
+    }
+
+    bool AudioEventService::is_sub_bgm_stopping() const {
+        return _sub_bgm_stopping;
+    }
+
+    bool AudioEventService::is_sub_bgm_prepared() const {
+        return _sub_bgm_active && _sub_bgm_prepared;
+    }
+
+    std::string_view AudioEventService::current_sub_bgm_name() const {
+        return _sub_bgm_name;
+    }
+
+    u32 AudioEventService::sub_bgm_fade_frames_remaining() const {
+        if (!_sub_bgm_stopping || _frame_index >= _sub_bgm_stop_frame) {
+            return 0U;
+        }
+        const auto remaining = _sub_bgm_stop_frame - _frame_index;
+        return static_cast<u32>(std::min<std::uint64_t>(
+            remaining, std::numeric_limits<u32>::max()));
+    }
+
     bool AudioEventService::is_cube_bgm_change_invalid() const {
         return _cube_bgm_change_invalid;
     }
@@ -1499,17 +1651,21 @@ namespace smgpc::runtime {
         return _events;
     }
 
-    void AudioEventService::push_event(AudioEventKind kind, std::string_view name,
-                                       s32 fade_frames, u32 delay_frames,
-                                       std::optional<u32> sound_id) {
-        _events.push_back(AudioEvent{
-            .kind = kind,
-            .name = std::string(name),
-            .sound_id = sound_id,
-            .fade_frames = fade_frames,
-            .delay_frames = delay_frames,
-            .frame_index = _frame_index,
-        });
+    std::uint64_t AudioEventService::dropped_event_count() const {
+        return _dropped_event_count;
+    }
+
+    void AudioEventService::push_event(AudioEvent event) {
+        if (_events.size() >= cEventRetentionLimit) {
+            const auto trim_count = std::min(
+                cEventRetentionTrimCount, _events.size());
+            _events.erase(
+                _events.begin(),
+                _events.begin() + static_cast<std::ptrdiff_t>(trim_count));
+            _dropped_event_count += trim_count;
+        }
+        event.frame_index = _frame_index;
+        _events.push_back(std::move(event));
     }
 
     void EffectService::load_resources(const smgpc::resource::RarcArchive &archive) {
@@ -2538,6 +2694,7 @@ namespace smgpc::runtime {
             }
             _shake_offset_y += camera_singly_vertical_offset(CAMERA_SHAKE_AMPLITUDES[index], *step);
         }
+        _event_cameras.begin_frame(is_camera_director_paused());
     }
 
     void CameraSystemService::set_shake_projection_dimensions(float screen_width, float efb_height) {
@@ -2593,6 +2750,45 @@ namespace smgpc::runtime {
         if (_camera_director_pause_count > 0U) {
             --_camera_director_pause_count;
         }
+    }
+
+    void CameraSystemService::attach_event_camera_catalog(
+        const smgpc::camera::EventCameraCatalog &catalog) {
+        _event_cameras.attach_catalog(catalog);
+    }
+
+    void CameraSystemService::detach_event_camera_catalog(
+        const smgpc::camera::EventCameraCatalog &catalog) noexcept {
+        _event_cameras.detach_catalog(catalog);
+    }
+
+    void CameraSystemService::declare_event_camera(std::int32_t zone_id,
+                                                   std::string_view name) {
+        _event_cameras.declare_static(zone_id, name);
+    }
+
+    void CameraSystemService::declare_event_camera_animation(
+        std::int32_t zone_id, std::string_view name,
+        smgpc::camera::CameraAnimation animation) {
+        _event_cameras.declare_animation(zone_id, name, std::move(animation));
+    }
+
+    void CameraSystemService::start_event_camera(
+        std::int32_t zone_id, std::string_view name,
+        smgpc::camera::EventCameraTarget target,
+        std::int32_t interpolation_frames, float speed) {
+        _event_cameras.start(zone_id, name, target, interpolation_frames, speed);
+    }
+
+    void CameraSystemService::end_event_camera(
+        std::int32_t zone_id, std::string_view name, bool force,
+        std::int32_t interpolation_frames) {
+        _event_cameras.end(zone_id, name, force, interpolation_frames);
+    }
+
+    ActorCameraInfo *CameraSystemService::create_actor_camera_info(
+        std::int32_t camera_set_id, std::int32_t zone_id) {
+        return _event_cameras.create_actor_camera_info(camera_set_id, zone_id);
     }
 
     void CameraSystemService::declare_event_camera_programmable(std::string_view name) {
@@ -2691,11 +2887,51 @@ namespace smgpc::runtime {
         return _game_camera_pose;
     }
 
+    std::optional<smgpc::camera::CameraPose> CameraSystemService::active_event_camera_pose() const {
+        return _event_cameras.active_pose();
+    }
+
+    std::optional<smgpc::camera::EventCameraKey> CameraSystemService::active_event_camera_key() const {
+        return _event_cameras.active_key();
+    }
+
+    bool CameraSystemService::is_event_camera_active(std::int32_t zone_id,
+                                                     std::string_view name) const {
+        return _event_cameras.is_active(zone_id, name);
+    }
+
+    bool CameraSystemService::is_event_camera_declared(
+        std::int32_t zone_id, std::string_view name) const {
+        return _event_cameras.is_declared(zone_id, name);
+    }
+
+    bool CameraSystemService::is_event_camera_animation_end(
+        std::int32_t zone_id, std::string_view name) const {
+        return _event_cameras.is_animation_end(zone_id, name);
+    }
+
+    std::int32_t CameraSystemService::event_camera_animation_frame(
+        std::int32_t zone_id, std::string_view name) const {
+        return _event_cameras.animation_frame(zone_id, name);
+    }
+
+    std::int32_t CameraSystemService::event_camera_frames(
+        std::int32_t zone_id, std::string_view name) const {
+        return _event_cameras.event_frames(zone_id, name);
+    }
+
+    std::size_t CameraSystemService::actor_camera_info_count() const noexcept {
+        return _event_cameras.actor_camera_info_count();
+    }
+
     std::optional<smgpc::camera::CameraPose> CameraSystemService::active_programmable_camera_pose() const {
         return active_programmable_camera_pose_for(_active_programmable_camera_name);
     }
 
     std::optional<smgpc::camera::CameraPose> CameraSystemService::effective_camera_pose() const {
+        if (const auto event = active_event_camera_pose()) {
+            return apply_shake(*event);
+        }
         if (const auto programmable = active_programmable_camera_pose()) {
             return apply_shake(*programmable);
         }

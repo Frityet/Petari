@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -131,7 +132,31 @@ namespace smgpc::compat {
     [[nodiscard]] const char* update_name_obj_runtime_name(NameObj* object, const char* name);
     void release_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] bool has_name_obj_runtime_state(const NameObj* object);
+    [[nodiscard]] std::uint64_t name_obj_runtime_generation(
+        const NameObj* object) noexcept;
     [[nodiscard]] std::size_t name_obj_runtime_state_count();
+    // Host-side owners that retain a registered NameObj independently of the
+    // scene heap must claim it at adoption time. Construction captures treat
+    // claimed identities as non-owning observations and never adopt/delete
+    // them a second time.
+    void claim_name_obj_runtime_ownership(NameObj* object,
+                                          const void* owner);
+    [[nodiscard]] bool name_obj_runtime_ownership_is_claimed(
+        const NameObj* object) noexcept;
+    [[nodiscard]] const void* name_obj_runtime_owner(
+        const NameObj* object) noexcept;
+    // A construction boundary can observe an independently-owned NameObj in
+    // its ordered registration suffix and take responsibility only for that
+    // object's one scene-wide initAfterPlacement callback. The storage owner
+    // remains unchanged and can skip its pre-pass using this marker.
+    void delegate_name_obj_runtime_postpass(NameObj* object,
+                                            const void* delegate);
+    void release_name_obj_runtime_postpass_delegation(
+        const NameObj* object, const void* delegate) noexcept;
+    [[nodiscard]] bool name_obj_runtime_postpass_is_delegated(
+        const NameObj* object) noexcept;
+    [[nodiscard]] const void* name_obj_runtime_postpass_delegate(
+        const NameObj* object) noexcept;
     // Returns the currently live host-tracked NameObj identities in their
     // construction order. A marker provides the matching ordered suffix so a
     // compatibility owner can adopt raw-new retail construction children
@@ -140,6 +165,19 @@ namespace smgpc::compat {
     [[nodiscard]] NameObjRuntimeRegistrationMarker mark_name_obj_runtime_registrations();
     [[nodiscard]] std::vector<NameObj*> snapshot_name_obj_runtime_objects_since(
         NameObjRuntimeRegistrationMarker marker);
+    using NameObjRuntimeRegistrationFilter =
+        bool (*)(const NameObj* object, const void* context) noexcept;
+    // Finds the newest still-live identity in a captured suffix without
+    // allocating. Compatibility owners use this to unwind a partially built
+    // graph in exact reverse construction order while excluding identities
+    // that another scene service already owns.
+    [[nodiscard]] NameObj* newest_name_obj_runtime_object_since_if(
+        NameObjRuntimeRegistrationMarker marker,
+        NameObjRuntimeRegistrationFilter filter,
+        const void* context) noexcept;
+    [[nodiscard]] bool name_obj_runtime_object_was_registered_since(
+        const NameObj* object,
+        NameObjRuntimeRegistrationMarker marker) noexcept;
     // Failure rollback for compatibility owners. This performs no allocation
     // and retires the still-live suffix in reverse construction order.
     void destroy_name_obj_runtime_objects_since(
@@ -164,6 +202,9 @@ namespace smgpc::compat {
 
     void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive);
     [[nodiscard]] smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor);
+    [[nodiscard]] std::optional<std::span<const std::uint8_t>>
+    actor_model_resource_data_if_present(const LiveActor* actor,
+                                         std::string_view resource_name);
     void require_actor_model(LiveActor* actor);
     [[nodiscard]] std::size_t actor_model_joint_count(const LiveActor* actor);
     void release_actor_model_state(const LiveActor* actor);

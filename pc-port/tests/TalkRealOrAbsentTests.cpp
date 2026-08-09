@@ -1,4 +1,5 @@
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/NPC/NPCActor.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -31,6 +32,7 @@
 #include <filesystem>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -371,16 +373,61 @@ namespace {
                             registrations_after_talk,
                     "re-requesting SceneObj_TalkDirector must be idempotent");
 
+            // A rejected same-actor replacement must not retire the live
+            // controller before the incoming ownership claim succeeds. Use a
+            // real NPC field so the proof covers both host ownership surfaces.
+            const auto replacement_registry_baseline =
+                smgpc::compat::name_obj_runtime_state_count();
+            {
+                auto replacement_host = NPCActor("Talk replacement transaction proof");
+                auto* old_controller = MR::createTalkCtrlDirect(
+                    &replacement_host, JMapInfoIter{}, cFlowKey.data(), TVec3f{}, nullptr);
+                replacement_host.mMsgCtrl = old_controller;
+                const auto owned_registry_count =
+                    smgpc::compat::name_obj_runtime_state_count();
+
+                auto rejected_controller = std::make_unique<TalkMessageCtrl>(
+                    &replacement_host, TVec3f{}, nullptr);
+                const auto foreign_owner = std::uint8_t{};
+                smgpc::compat::claim_name_obj_runtime_ownership(
+                    rejected_controller.get(), &foreign_owner);
+                require_logic_error(
+                    [&] {
+                        static_cast<void>(talk->adopt_owned_controller(
+                            &replacement_host, std::move(rejected_controller)));
+                    },
+                    "a preclaimed same-actor replacement must fail before retiring the old controller");
+                require(rejected_controller == nullptr &&
+                            talk->owned_controller(&replacement_host) == old_controller &&
+                            replacement_host.mMsgCtrl == old_controller &&
+                            smgpc::compat::name_obj_runtime_owner(old_controller) == talk &&
+                            smgpc::compat::has_name_obj_runtime_state(old_controller) &&
+                            smgpc::compat::name_obj_runtime_state_count() ==
+                                owned_registry_count,
+                        "a rejected replacement must preserve the old owner and NPC pointer while retiring the incoming registry state");
+
+                smgpc::compat::release_talk_runtime_state(&replacement_host);
+                require(replacement_host.mMsgCtrl == nullptr &&
+                            smgpc::compat::name_obj_runtime_state_count() ==
+                                replacement_registry_baseline + 1U,
+                        "replacement-proof teardown must clear its NPC pointer and controller registry state");
+            }
+            require(smgpc::compat::name_obj_runtime_state_count() ==
+                        replacement_registry_baseline,
+                    "replacement-proof host teardown must restore the exact NameObj registry baseline");
+
             auto actor = LiveActor("DemoRabbit talk proof");
             auto* controller = MR::createTalkCtrlDirect(
                 &actor, JMapInfoIter{}, cFlowKey.data(), TVec3f{}, nullptr);
             require(controller != nullptr &&
                         smgpc::compat::owned_talk_ctrl(&actor) == controller &&
                         smgpc::compat::has_owned_talk_ctrl(&actor) &&
+                        smgpc::compat::name_obj_runtime_owner(controller) ==
+                            talk &&
                         MR::createSceneObj(SceneObj_TalkDirector) == talk &&
                         runtime.scheduler().registration_marker() ==
                             registrations_after_talk,
-                    "TalkMessageCtrl's retail createSceneObj call must reuse the pre-created owner");
+                    "TalkMessageCtrl's retail createSceneObj call must reuse the pre-created owner and retain one TalkRuntime storage owner");
             require(talk->flow_key(*controller) == cFlowKey &&
                         talk->current_node_index(*controller) ==
                             std::optional<std::uint32_t>{268U} &&

@@ -32,6 +32,8 @@ namespace smgpc::scene {
         Child &adopt(std::unique_ptr<Child> child) {
             auto *identity = child.get();
             validate_candidate(identity);
+            smgpc::compat::claim_name_obj_runtime_ownership(
+                identity, this);
             _children.emplace_back(std::move(child));
             return *identity;
         }
@@ -70,8 +72,7 @@ namespace smgpc::scene {
                     try {
                         adopt_registered_since(marker);
                     } catch (...) {
-                        smgpc::compat::destroy_name_obj_runtime_objects_since(
-                            marker);
+                        rollback_unowned_registered_since(marker);
                     }
                     std::rethrow_exception(construction_failure);
                 }
@@ -81,8 +82,7 @@ namespace smgpc::scene {
                 try {
                     adopt_registered_since(marker);
                 } catch (...) {
-                    smgpc::compat::destroy_name_obj_runtime_objects_since(
-                        marker);
+                    rollback_unowned_registered_since(marker);
                     throw;
                 }
             };
@@ -99,6 +99,17 @@ namespace smgpc::scene {
 
         void clear() noexcept;
 
+        // Captures the complete registration suffix for an externally-owned
+        // root. Unclaimed descendants are stored here, while SceneObj- or
+        // service-owned identities remain non-owning ordered entries with
+        // their one scene-wide postpass delegated to this graph.
+        void adopt_root_registration_suffix(
+            smgpc::compat::NameObjRuntimeRegistrationMarker marker,
+            NameObj &root, const void *root_owner);
+        void init_registration_suffix_after_placement();
+        static void rollback_registration_suffix(
+            smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept;
+
         [[nodiscard]] bool empty() const noexcept;
         [[nodiscard]] std::size_t size() const noexcept;
 
@@ -106,8 +117,17 @@ namespace smgpc::scene {
         void validate_candidate(const NameObj *child) const;
         void adopt_registered_since(
             smgpc::compat::NameObjRuntimeRegistrationMarker marker);
+        static void rollback_unowned_registered_since(
+            smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept;
+
+        struct Registration final {
+            NameObj *object = nullptr;
+            bool delegated_postpass = false;
+        };
 
         std::vector<std::unique_ptr<NameObj>> _children{};
+        std::vector<Registration> _registrations{};
+        std::size_t _next_registration_postpass_index = 0U;
     };
 
 }  // namespace smgpc::scene

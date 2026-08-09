@@ -250,3 +250,123 @@ The serialized real-disc gates for this boundary are green:
 - `smg-pc-sceneobj-holder-real-or-absent-tests`: 9/9.
 - `smg-pc-title-file-select-route-tests`: title 332 frames, File Select Far 63 frames, fresh A selects file 2, the fresh progress-5 Gateway finalizes and retires cleanly, and all title/scene baselines are restored.
 - `smg-pc-showcase gateway --smoke`: the production route rendered 28 frames, submitted the ordinary PlanetMap, real Mario, and exact DemoRabbit scene, accelerated the physics probe, contacted authored KCL triangle 4620, and unwound the placement lease before the player and scene services.
+
+## Logical actor and secondary-BGM audio checkpoint
+
+The exact Tico and rabbit actors can now retain their retail audio intent
+without requiring positional host mixing. `MR::startSound` and
+`MR::startLevelSound` validate the actor and retail sound name, then emit an
+`AudioEventService` record containing the actor pointer identity for in-process
+matching, a copied actor name, the retail sound name, all supplied parameters,
+and the scene frame. They return `nullptr` because no positional JAudio voice
+exists; the compatibility layer does not manufacture a handle or route the
+request through the non-positional system-SE mixer. Repeated level refreshes
+for the same `(actor identity, retail sound name)` in one frame coalesce and
+retain the final parameter values.
+
+`MR::limitedSound` is a non-throwing logical registration with the exact sound
+name and requested limit. This covers the repeated
+`SE_SM_LV_TICO_OOP_WAIT`/`SE_SM_LV_TICO_WAIT` calls in the original
+`RunawayTico` state machine without inventing an `AudSystem` object.
+
+Secondary BGM has a separate logical slot in `AudioEventService`.
+`startSubBGM` records name and preparation mode; `stopSubBGM` retains the name
+while a nonzero fade is active and retires it at the exact service-frame
+deadline. Active, stopping, prepared, and remaining-fade queries are independent
+of stage BGM. This path opens no SDL device and does not replace, pause, or
+otherwise mutate the concrete stage-BGM voice. A zero-frame stop retires the
+slot immediately, while a later start replaces any stopping identity.
+
+Audio history remains historical for existing event-only scene bindings, but
+is no longer unbounded: it retains at most 8,192 entries and amortizes overflow
+by dropping the oldest 4,096. The cumulative dropped count is exposed and
+serialized. Parity traces deliberately serialize only
+`source_identity_present`, the copied source name, and request parameters; raw
+pointer values are never written, so ASLR cannot make traces nondeterministic.
+
+Focused serialized verification was run from `pc-port/`:
+
+- `xmake build -j2 smg-pc-j-audio-playback-tests`: passed and linked in 5.261 seconds.
+- `xmake run smg-pc-j-audio-playback-tests`: passed in 4.828 seconds. The new fixture-independent proof covered actor one-shot identity/parameters, same-frame level coalescing, next-frame level refresh, limited-sound registration, sub-BGM replacement/immediate and four-frame fades, stage-BGM independence, and exact oldest-half retention ordering/drop evidence.
+- The same run found the audited retail fixture and also completed the existing concrete RuntimeContext/JAudio proof, ending with `[ok] retail AFC metadata/PCM, SDL callback, handle, and lifetime proof`. Existing system, atmosphere, level, and stage playback therefore remained concrete and green.
+
+No `Game/` source, actor factory, Gateway policy, camera provider, or positional
+audio backend was changed in this checkpoint.
+
+## General actor event-camera source checkpoint
+
+The bounded camera provider is general and zone-qualified. StageHost and Gateway publish one scene-owned catalog built from every active zone's authored `CameraParam.bcam`; catalog ingestion decodes retail CP932 chunk IDs to UTF-8, and runtime identity is the exact pair `(placed zone ID, event name)`, never a bare name or a Gateway/object allowlist. Static execution supports the route's real `CAM_TYPE_EYEPOS_FIX` collector chunk and root/child `CAM_TYPE_XZ_PARA` pipe chunks, reusing the existing camera-parameter parser and XZ evaluator. Animation execution parses bounded big-endian ANDO `CANM` and `CKAN` resources, samples linear or Hermite channels, transforms eye/watch/up through the selected target matrix, and advances the real player-target `DemoMeetTico` camera.
+
+`ActorCameraInfo` again reads `CameraSetId` and the placed zone. Actor-camera names preserve retail unique/common and multi suffix rules (`固有`, `共通`, three-digit IDs); animation names remain actor name plus camera suffix. `createActorCameraInfoIfExist` probes before allocation so `CameraSetId=-1` leaves the caller's output untouched. Raw Game pointers are backed by a stable event-provider pool that is reclaimed when the stage catalog detaches, after placement actors retire; the focused test covers two attach/detach generations returning the allocation count to baseline.
+
+Real RMGK01/RMGK02 evidence locked by `ActorEventCameraTests` is:
+
+- zone 5 `e:逃げウサギ集め固有016`, `CAM_TYPE_EYEPOS_FIX`, with the same name absent in zone 0;
+- zone 5 `e:土管固有出現017` and zone 0 `e:土管固有出現054`, both `CAM_TYPE_XZ_PARA`, without cross-zone aliasing;
+- collector placement `CameraSetId=16` and its retained RunawayTico child row `CameraSetId=-1`, both retaining placed zone 5;
+- `TicoBaby` `DemoMeetTico` as a 1,199-frame CKAN whose finite sampled motion follows the player base matrix.
+
+Camera activation is transactional. A candidate target, pose, and active event are
+fully resolved before replacing the current event or retained target, so a failed
+start cannot poison a valid camera. Live-actor and matrix targets retain the
+monotonic NameObj registration generation as well as the address; sampling
+rejects retirement and same-address object replacement before dereferencing the
+target.
+
+The serialized `smg-pc-actor-event-camera-tests` gate is green: the focused build succeeded, the synthetic run passed 5/5 with its real-disc case explicitly skipped, and `SMGPC_REAL_DISC=../RMGK01.iso` passed 5/5 including the exact catalog, static poses, retained child fields, real CKAN, failed-start rollback, destroyed matrix rejection, and matrix-address ABA rejection. Event priority/FIFO arbitration, exact CameraViewInterpolator start/end blending, landing-delayed release, arbitrary `CameraTargetObj`, and camera types outside `XZ_PARA`, `EYEPOS_FIX`, and `ANIM` remain explicitly unavailable. EarthenPipe activation, pipe collision/player binding, and route-specific actor policy are not part of this tranche.
+
+## Authored construction-forest ownership checkpoint
+
+Authored placement capture now spans the returned root's complete constructor and init lifetime. The process-wide NameObj registry supplies one exact ordered suffix; the root must occur exactly once at ordinal zero, and every later identity is retained as descendant evidence with parent source/report identity, construction ordinal, raw pointer, and whether the placement owns its storage. Top-level ready/created/destroyed counts remain per authored row.
+
+Placement-owned roots and raw scene-heap descendants receive the one global `initAfterPlacement` pass in registration order and lifecycle destruction plus actual deletion in exact reverse construction order. Constructor/init failure rollback preserves the original exception and selects the newest live unowned registration without allocating. The root `unique_ptr` is released only when that reverse suffix owns the registered identity, preventing both root double deletion and leaks.
+
+Independently-owned identities remain non-owning entries in the same ordered placement postpass. A transient registry delegate makes `SceneObjHolderBinding` skip those identities in its earlier pre-pass; the placement invokes them at their exact registration position, then clears the delegate on success or failure. Early clear releases every pending delegate so the holder can perform the fallback postpass, and failed placement construction installs no delegation.
+
+`SceneObjHolder::create` is one outermost transaction across recursive SceneObj creation. Nested roots provision their slots but defer ownership transfer; the outer ordered registry suffix is committed once. Each nested failure clears only its provisional slot suffix and reverse-deletes only unclaimed/non-binding-owned registrations. Thus synthetic `A -> createSceneObj(B)` postpasses `A, B`, tears down `B, A`, and can recreate after an outer-init failure. Lazy `LensFlareDirector` owns its full synchronous `Director, Ring, Glow, Line` graph; an authored root failure leaves that graph valid with the holder. The exact BrightSun construction remains retail `BrightSun -> LensFlare graph -> Sun` (`MR::addBrightObj` stays in `BrightObjBase` construction).
+
+The PC-only `BrightSun` and `LensFlareDirector` parent deletes that conflicted with this forest are removed: their registered children now have the same scene-heap ownership shape as retail. Dynamic `SwitchWatcher` identities are adopted by the generic SceneObj binding and the holder destructor is again retail-empty; the graph deletes each watcher before its holder and recreates cleanly. Existing host-owned GroupChecker and InformationMessage graphs explicitly claim their retained NameObjs so placement capture can observe/postpass them without taking storage ownership.
+
+Focused synthetic coverage locks constructor/init descendants, descendant report identity, exact root/descendant/cross-owner postpass order with no duplicate, normal reverse destruction, allocation-free exception rollback, recursive SceneObj success/failure/recreation, lazy LensFlare success plus authored-root failure, SwitchWatcher adoption, delegation cleanup on success/failure/early clear, and two-generation registry baselines. `xmake build -j2 smg-pc-authored-placement-instantiator-tests` linked successfully in 5.85 seconds, and `xmake run smg-pc-authored-placement-instantiator-tests` completed in 0.61 seconds with `[ok] shared authored placement instantiator contract passed`.
+
+## Foundation integration closure
+
+The retained-NameObj ownership boundary is now consistent across every scene
+service needed by the Gateway placements. TalkRuntime strongly claims a new
+controller before retiring an actor's prior controller. InformationMessage
+validates and reserves its complete registration suffix before committing the
+IconAButton child. AreaObjRuntime owns its managers, while the holder and
+authored-placement postpasses coordinate through the same once-only delegation
+ledger. SwitchWatcher guards its raw construction until scene adoption commits.
+Recursive SceneObj creation rolls back provisional slots and registrations even
+when an outer factory returns null after creating a nested object.
+
+`SceneObjHolderBinding::init_after_placement` advances an index only after each
+successful callback, so repeated calls are idempotent, a failed callback is
+retryable, and SceneObjs appended during a callback are consumed safely in the
+same ordered pass. StageHost explicit/start roots use the same full registration
+graph as authored placements: the leading root is validated and claimed, raw
+unclaimed descendants are owned in reverse-retirement order, independently
+owned descendants are delegated in registration order, and every delegate is
+released on success, failure, or early teardown.
+
+The final serialized integration matrix is green:
+
+- ActorRuntimeRegistry: six focused registration/ownership cases.
+- Authored placement: shared construction-forest contract passed.
+- SceneObjHolder: 10/10, including recursive null rollback and callback-time append.
+- AreaObj: 14/14, including claimed/delegated manager once-only postpass.
+- Talk: real RMGK01 flow/controller ownership and strong replacement passed.
+- InformationObserver: exact timekeep, prompt, guard, and lifecycle route passed.
+- Actor event cameras: synthetic and real RMGK01 runs passed 5/5.
+- JAudio/logical actor audio: retained AFC/PCM/SDL/handle/lifetime proof passed.
+- Gateway development scene: four ordinary planets, seven visual actors, six
+  collision meshes / 14,521 triangles, exact start separation 0.0271512, and
+  clean reverse teardown.
+- BrightSun: exact tagged-depth and LensFlare route passed under real RMGK01.
+
+The next bounded production slice is the generalized Tico actor foundation:
+continuing/random BCK frame control, stable joint-matrix refresh after animation,
+and exact NPC float offset/base-matrix behavior. Shadow CSV, StarPointer/player
+capabilities, and dynamic point light remain separate follow-on providers; none
+requires a Gateway-name or switch-ID branch.

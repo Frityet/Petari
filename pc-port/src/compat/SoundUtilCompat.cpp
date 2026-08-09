@@ -1,4 +1,5 @@
 #include "Game/GameAudio/AudStageBgmWrap.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
@@ -81,18 +82,35 @@ namespace MR {
                 parameter1, parameter2);
     }
 
-    JAISoundHandle *startSound(const LiveActor *, const char *pName, s32,
-                               s32) {
-        (void)require_sound_name(pName, "Actor sound playback");
-        throw std::logic_error(
-            "Actor sound playback requires the retail positional JAudio sound-object backend");
+    JAISoundHandle *startSound(const LiveActor *actor, const char *pName,
+                               s32 parameter1, s32 parameter2) {
+        if (actor == nullptr) {
+            throw std::invalid_argument(
+                "Actor sound playback requires an actor identity");
+        }
+        const auto name = require_sound_name(pName, "Actor sound playback");
+        smgpc::compat::require_active_audio_event_service().start_actor_sound(
+            actor, actor->getName() != nullptr ? actor->getName() : "", name,
+            parameter1, parameter2);
+        // Positional JAudio mixing remains optional. A null handle truthfully
+        // reports that this logical request has no concrete backend voice.
+        return nullptr;
     }
 
-    JAISoundHandle *startLevelSound(const LiveActor *, const char *pName,
-                                    s32, s32, s32) {
-        (void)require_sound_name(pName, "Actor level-sound playback");
-        throw std::logic_error(
-            "Actor level-sound playback requires the retail positional JAudio sound-object backend");
+    JAISoundHandle *startLevelSound(const LiveActor *actor, const char *pName,
+                                    s32 parameter1, s32 parameter2,
+                                    s32 parameter3) {
+        if (actor == nullptr) {
+            throw std::invalid_argument(
+                "Actor level-sound playback requires an actor identity");
+        }
+        const auto name =
+            require_sound_name(pName, "Actor level-sound playback");
+        smgpc::compat::require_active_audio_event_service()
+            .start_actor_level_sound(
+                actor, actor->getName() != nullptr ? actor->getName() : "",
+                name, parameter1, parameter2, parameter3);
+        return nullptr;
     }
 
     bool hasME() {
@@ -114,15 +132,22 @@ namespace MR {
                 require_sound_name(pName, "Stage-BGM playback"), prepared);
     }
 
-    JAISoundHandle *startSubBGM(const char *pName, bool) {
-        (void)require_sound_name(pName, "Sub-BGM playback");
-        throw std::logic_error(
-            "Sub-BGM playback requires the retail secondary JAudio BGM scheduler");
+    void limitedSound(const char *pName, s32 limit) {
+        smgpc::compat::require_active_audio_event_service()
+            .register_limited_sound(
+                require_sound_name(pName, "Limited-sound registration"),
+                limit);
     }
 
-    void stopSubBGM(u32) {
-        throw std::logic_error(
-            "Sub-BGM stop requires the retail secondary JAudio BGM scheduler");
+    JAISoundHandle *startSubBGM(const char *pName, bool prepared) {
+        smgpc::compat::require_active_audio_event_service().start_sub_bgm(
+            require_sound_name(pName, "Sub-BGM playback"), prepared);
+        return nullptr;
+    }
+
+    void stopSubBGM(u32 fadeFrames) {
+        smgpc::compat::require_active_audio_event_service().stop_sub_bgm(
+            fadeFrames);
     }
 
     void stopStageBGM(u32 fadeFrames) {

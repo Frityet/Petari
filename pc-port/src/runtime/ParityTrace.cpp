@@ -78,12 +78,22 @@ namespace smgpc::runtime {
                 return "StageBgmUnlock";
             case AudioEventKind::StageBgmStop:
                 return "StageBgmStop";
+            case AudioEventKind::SubBgmStart:
+                return "SubBgmStart";
+            case AudioEventKind::SubBgmStop:
+                return "SubBgmStop";
             case AudioEventKind::SystemSoundStart:
                 return "SystemSoundStart";
             case AudioEventKind::SystemSoundStop:
                 return "SystemSoundStop";
             case AudioEventKind::SystemLevelSoundStart:
                 return "SystemLevelSoundStart";
+            case AudioEventKind::ActorSoundStart:
+                return "ActorSoundStart";
+            case AudioEventKind::ActorLevelSoundStart:
+                return "ActorLevelSoundStart";
+            case AudioEventKind::LimitedSoundRegister:
+                return "LimitedSoundRegister";
             case AudioEventKind::LevelSoundSubmit:
                 return "LevelSoundSubmit";
             case AudioEventKind::LevelSoundPermit:
@@ -944,6 +954,12 @@ namespace smgpc::runtime {
                     {"kind", audio_event_kind_name(event.kind)},
                     {"name", event.name},
                     {"sound_id", event.sound_id.has_value() ? Json(*event.sound_id) : Json(nullptr)},
+                    {"source_identity_present", event.source_identity != nullptr},
+                    {"source_name", event.source_name},
+                    {"parameter_1", event.parameter_1},
+                    {"parameter_2", event.parameter_2},
+                    {"parameter_3", event.parameter_3},
+                    {"prepared", event.prepared},
                     {"fade_frames", event.fade_frames},
                     {"delay_frames", event.delay_frames},
                     {"frame_index", event.frame_index},
@@ -2305,6 +2321,11 @@ namespace smgpc::runtime {
                  {"stage_bgm", runtime.current_stage_bgm_name()},
                  {"stage_bgm_active", runtime.j_audio_playback().has_active_stage_bgm()},
                  {"stage_bgm_prepared", runtime.is_stage_bgm_prepared()},
+                 {"sub_bgm", runtime.audio().current_sub_bgm_name()},
+                 {"sub_bgm_active", runtime.audio().has_active_sub_bgm()},
+                 {"sub_bgm_stopping", runtime.audio().is_sub_bgm_stopping()},
+                 {"sub_bgm_fade_frames_remaining", runtime.audio().sub_bgm_fade_frames_remaining()},
+                 {"dropped_event_count", runtime.audio().dropped_event_count()},
                  {"events", audio_events_json(runtime.audio().events())},
              }},
             {"effects",

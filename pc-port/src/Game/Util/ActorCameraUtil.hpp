@@ -9,17 +9,50 @@ class LiveActor;
 class JMapInfoIter;
 
 namespace MR {
-    void initAnimCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName);
-    bool initActorCamera(const LiveActor* pActor, const JMapInfoIter& rIter, ActorCameraInfo** pInfo);
-    bool isExistActorCamera(const ActorCameraInfo* pInfo);
-    bool startActorCameraTargetSelf(const LiveActor* pActor, const ActorCameraInfo* pInfo, s32 frames);
-    bool endActorCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, bool endForce, s32 frames);
-    void startAnimCameraTargetSelf(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName, s32 frames, f32 speed);
-    void startAnimCameraTargetOther(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName, const CameraTargetArg& rTarget, s32 frames, f32 speed);
-    void endAnimCamera(const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pCameraName, s32 frames, bool endForce);
-    void initActorCameraProgrammable(const LiveActor* pActor);
-    void startActorCameraProgrammable(const LiveActor* pActor, s32 frames);
-    void endActorCameraProgrammable(const LiveActor* pActor, s32 frames, bool endForce);
-    void setProgrammableCameraParam(const LiveActor* pActor, const TVec3f& rWPoint, const TVec3f& rEye, const TVec3f& rUpVec);
-    void setProgrammableCameraParamFovy(const LiveActor* pActor, f32 fovy);
+    void initAnimCamera(const LiveActor*, const ActorCameraInfo*, const char*);
+
+    ActorCameraInfo* createActorCameraInfo(const JMapInfoIter&);
+    bool createActorCameraInfoIfExist(const JMapInfoIter&, ActorCameraInfo**);
+
+    bool initActorCamera(const LiveActor*, const JMapInfoIter&, ActorCameraInfo**);
+    bool initMultiActorCamera(const LiveActor*, const JMapInfoIter&, ActorCameraInfo**, const char*);
+    bool initMultiActorCameraNoInit(const LiveActor*, ActorCameraInfo*, const char*);
+
+    void initActorCameraProgrammable(const LiveActor*);
+
+    bool startActorCameraNoTarget(const LiveActor*, const ActorCameraInfo*, s32);
+    bool startActorCameraTargetPlayer(const LiveActor*, const ActorCameraInfo*, s32);
+    bool startActorCameraTargetSelf(const LiveActor*, const ActorCameraInfo*, s32);
+    bool startActorCameraTargetOther(const LiveActor*, const ActorCameraInfo*, const CameraTargetArg&, s32);
+
+    bool startMultiActorCameraNoTarget(const LiveActor*, const ActorCameraInfo*, const char*, s32);
+    bool startMultiActorCameraTargetPlayer(const LiveActor*, const ActorCameraInfo*, const char*, s32);
+    bool startMultiActorCameraTargetSelf(const LiveActor*, const ActorCameraInfo*, const char*, s32);
+    bool startMultiActorCameraTargetOther(const LiveActor*, const ActorCameraInfo*, const char*, const CameraTargetArg&, s32);
+
+    void startAnimCameraTargetPlayer(const LiveActor*, const ActorCameraInfo*, const char*, s32, f32);
+    void startAnimCameraTargetSelf(const LiveActor*, const ActorCameraInfo*, const char*, s32, f32);
+    void startAnimCameraTargetOther(const LiveActor*, const ActorCameraInfo*, const char*, const CameraTargetArg&, s32, f32);
+
+    void startActorCameraProgrammable(const LiveActor*, s32);
+
+    bool endActorCamera(const LiveActor*, const ActorCameraInfo*, bool, s32);
+    bool endMultiActorCamera(const LiveActor*, const ActorCameraInfo*, const char*, bool, s32);
+    bool endActorCameraAtLanding(const LiveActor*, const ActorCameraInfo*, s32);
+    bool endMultiActorCameraAtLanding(const LiveActor*, const ActorCameraInfo*, const char*, s32);
+    void endActorCameraProgrammable(const LiveActor*, s32, bool);
+
+    bool isActiveActorCamera(const LiveActor*, const ActorCameraInfo*);
+    bool isActiveMultiActorCamera(const LiveActor*, const ActorCameraInfo*, const char*);
+
+    void setProgrammableCameraParam(const LiveActor*, const TVec3f&, const TVec3f&, const TVec3f&);
+    void setProgrammableCameraParamFovy(const LiveActor*, f32);
+
+    void endAnimCamera(const LiveActor*, const ActorCameraInfo*, const char*, s32, bool);
+    s32 getAnimCameraFrame(const LiveActor*, const ActorCameraInfo*, const char*);
+    bool isAnimCameraEnd(const LiveActor*, const ActorCameraInfo*, const char*);
+    s32 getActorCameraFrames(const LiveActor*, const ActorCameraInfo*);
+    s32 getMultiActorCameraFrames(const LiveActor*, const ActorCameraInfo*, const char*);
+
+    bool isExistActorCamera(const ActorCameraInfo*);
 }  // namespace MR

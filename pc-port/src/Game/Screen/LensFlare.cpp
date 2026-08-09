@@ -221,9 +221,6 @@ LensFlareDirector::~LensFlareDirector() {
     }
 
     mBrightObjArray.clear();
-    delete mRing;
-    delete mGlow;
-    delete mLine;
     delete mBrightCamInfo;
     mRing = nullptr;
     mGlow = nullptr;

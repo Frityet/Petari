@@ -8,6 +8,8 @@
 #include "Game/AreaObj/MessageArea.hpp"
 #include "Game/AreaObj/SwitchArea.hpp"
 #include "Game/Map/LightFunction.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <algorithm>
 #include <array>
@@ -257,7 +259,9 @@ namespace smgpc::scene {
         if (_did_init_after_placement) {
             throw std::logic_error("AreaObjRuntime cannot adopt a manager after the scene post-placement phase");
         }
+        _owned_managers.reserve(_owned_managers.size() + 1U);
         auto *result = manager.get();
+        smgpc::compat::claim_name_obj_runtime_ownership(result, this);
         _owned_managers.push_back(OwnedManager{
             .manager = std::move(manager),
             .finalize = finalize,
@@ -282,6 +286,10 @@ namespace smgpc::scene {
         }
 
         _owned_managers.reserve(_owned_managers.size() + managers.size());
+        for (const auto &manager : managers) {
+            smgpc::compat::claim_name_obj_runtime_ownership(
+                manager.get(), this);
+        }
         for (auto index = std::size_t{}; index < managers.size(); ++index) {
             _owned_managers.push_back(OwnedManager{
                 .manager = std::move(managers[index]),
@@ -296,7 +304,18 @@ namespace smgpc::scene {
         }
         for (auto &owned : _owned_managers) {
             if (!owned.did_init_after_placement) {
-                owned.manager->initAfterPlacement();
+                // Managers constructed synchronously by the real
+                // AreaObjContainer participate in the SceneObjHolder's one
+                // ordered NameObj postpass. Standalone test/runtime owners do
+                // not, so retain the direct path for them without running a
+                // holder-owned manager twice.
+                if (!current_scene_obj_holder_binding_owns(
+                        owned.manager.get()) &&
+                    !smgpc::compat::
+                        name_obj_runtime_postpass_is_delegated(
+                            owned.manager.get())) {
+                    owned.manager->initAfterPlacement();
+                }
                 owned.did_init_after_placement = true;
             }
         }

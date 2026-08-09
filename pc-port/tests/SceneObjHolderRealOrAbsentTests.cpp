@@ -331,6 +331,27 @@ namespace {
         }
     }
 
+    void test_switch_watcher_adoption_failure_releases_raw_child() {
+        const auto baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        {
+            auto watcher_holder = SwitchWatcherHolder{};
+            auto rejected_without_scene_owner = false;
+            try {
+                watcher_holder.addSwitchWatcher(new SwitchWatcher(nullptr));
+            } catch (const std::logic_error&) {
+                rejected_without_scene_owner = true;
+            }
+            require(rejected_without_scene_owner &&
+                        watcher_holder.mWatcherCount == 0 &&
+                        smgpc::compat::name_obj_runtime_state_count() ==
+                            baseline + 1U,
+                    "failed SwitchWatcher adoption leaked its raw-new child registration");
+        }
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "standalone SwitchWatcherHolder fixture did not restore the registry baseline");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -352,6 +373,8 @@ int main() {
         TestCase{"bindings are single-scene and isolated", test_bindings_are_single_scene_and_isolated},
         TestCase{"SwitchWatcher holder retires children before recreation",
                  test_switch_watcher_holder_retires_children_before_recreation},
+        TestCase{"SwitchWatcher adoption failure releases raw child",
+                 test_switch_watcher_adoption_failure_releases_raw_child},
     };
 
     auto failures = 0;

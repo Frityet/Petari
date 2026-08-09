@@ -1,8 +1,14 @@
 #include "Game/Util/CameraUtil.hpp"
 
+#include "Game/Camera/CameraTargetArg.hpp"
+#include "Game/Camera/CameraTargetMtx.hpp"
+#include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "camera/CameraPose.hpp"
+#include "camera/EventCamera.hpp"
+#include "compat/CameraUtilCompat.hpp"
 #include "compat/J3dSystemCompat.hpp"
 #include "core/RenderTypes.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -10,7 +16,10 @@
 #include <dolphin/gx.h>
 
 #include <cmath>
+#include <cstdint>
+#include <span>
 #include <stdexcept>
+#include <utility>
 
 namespace {
     constexpr auto cPi = 3.14159265358979323846F;
@@ -115,6 +124,52 @@ namespace {
         }
     }
 
+    void sync_active_event_camera_pose(smgpc::runtime::RuntimeContext& runtime) {
+        if (const auto pose = runtime.camera_system().active_event_camera_pose()) {
+            runtime.set_scene_camera_pose(*pose);
+        }
+    }
+
+    [[nodiscard]] smgpc::camera::EventCameraTarget event_target(
+        smgpc::runtime::RuntimeContext& runtime, const CameraTargetArg& target) {
+        if (target.mTargetMtx != nullptr) {
+            return smgpc::camera::EventCameraTarget::target_matrix(
+                *target.mTargetMtx);
+        }
+        if (target.mLiveActor != nullptr) {
+            return smgpc::camera::EventCameraTarget::target_actor(
+                *target.mLiveActor);
+        }
+        if (target.mMarioActor != nullptr) {
+            return smgpc::camera::EventCameraTarget::target_player(
+                runtime.player_system());
+        }
+        if (target.mTargetObj != nullptr) {
+            throw std::logic_error(
+                "Arbitrary CameraTargetObj event targets are not available in the bounded host provider.");
+        }
+        return smgpc::camera::EventCameraTarget::retain();
+    }
+
+    [[nodiscard]] std::size_t inferred_camera_animation_size(const void* data) {
+        if (data == nullptr) {
+            throw std::invalid_argument(
+                "Animation event camera requires a real CANM resource.");
+        }
+        const auto* bytes = static_cast<const std::uint8_t*>(data);
+        const auto read_u32 = [bytes](std::size_t offset) {
+            return (static_cast<std::uint32_t>(bytes[offset]) << 24U) |
+                   (static_cast<std::uint32_t>(bytes[offset + 1U]) << 16U) |
+                   (static_cast<std::uint32_t>(bytes[offset + 2U]) << 8U) |
+                   static_cast<std::uint32_t>(bytes[offset + 3U]);
+        };
+        constexpr auto cHeaderSize = std::size_t{0x20U};
+        const auto value_offset =
+            cHeaderSize + static_cast<std::size_t>(read_u32(0x1cU));
+        return value_offset + 4U +
+               static_cast<std::size_t>(read_u32(value_offset));
+    }
+
     [[nodiscard]] bool project_world_to_screen(TVec3f* pResult, const TVec3f& rWorldPos) {
         if (pResult == nullptr) {
             return false;
@@ -171,6 +226,46 @@ namespace {
         return world_distance >= pose->near_clip && world_distance <= pose->far_clip;
     }
 }  // namespace
+
+namespace smgpc::compat {
+
+    namespace {
+        thread_local smgpc::runtime::CameraSystemService *
+            sCameraSystemOverride = nullptr;
+    }
+
+    ScopedCameraSystemServiceOverride::ScopedCameraSystemServiceOverride(
+        smgpc::runtime::CameraSystemService &service)
+        : _previous(std::exchange(sCameraSystemOverride, &service)) {
+    }
+
+    ScopedCameraSystemServiceOverride::~ScopedCameraSystemServiceOverride() {
+        sCameraSystemOverride = _previous;
+    }
+
+    smgpc::runtime::CameraSystemService *
+    active_camera_system_for_camera_util() {
+        if (sCameraSystemOverride != nullptr) {
+            return sCameraSystemOverride;
+        }
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime != nullptr ? &runtime->camera_system() : nullptr;
+    }
+
+    void declare_event_camera_animation(
+        const ActorCameraInfo& info, std::string_view name,
+        std::span<const std::uint8_t> resource) {
+        auto* camera_system = active_camera_system_for_camera_util();
+        if (camera_system == nullptr) {
+            throw std::logic_error(
+                "Animation event-camera declaration requires the active RuntimeContext.");
+        }
+        camera_system->declare_event_camera_animation(
+            info.mZoneID, name,
+            smgpc::camera::CameraAnimation::from_bytes(resource));
+    }
+
+}  // namespace smgpc::compat
 
 namespace MR {
     void loadProjectionMtx() {
@@ -263,6 +358,164 @@ namespace MR {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->camera_system().pause_off_camera_director();
         }
+    }
+
+    void declareEventCamera(const ActorCameraInfo* pInfo,
+                            const char* pEventName) {
+        if (pInfo == nullptr) {
+            throw std::invalid_argument(
+                "Event-camera declaration requires ActorCameraInfo.");
+        }
+        if (auto* camera_system =
+                smgpc::compat::active_camera_system_for_camera_util()) {
+            camera_system->declare_event_camera(pInfo->mZoneID,
+                                                event_name(pEventName));
+        }
+    }
+
+    void declareEventCameraAnim(const ActorCameraInfo* pInfo,
+                                const char* pEventName, void* pData) {
+        if (pInfo == nullptr) {
+            throw std::invalid_argument(
+                "Animation event-camera declaration requires ActorCameraInfo.");
+        }
+        smgpc::compat::declare_event_camera_animation(
+            *pInfo, event_name(pEventName),
+            std::span<const std::uint8_t>(
+                static_cast<const std::uint8_t*>(pData),
+                inferred_camera_animation_size(pData)));
+    }
+
+    void startEventCamera(const ActorCameraInfo* pInfo,
+                          const char* pEventName,
+                          const CameraTargetArg& rTarget, s32 frames) {
+        if (pInfo == nullptr) {
+            throw std::invalid_argument(
+                "Event-camera start requires ActorCameraInfo.");
+        }
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->camera_system().start_event_camera(
+                pInfo->mZoneID, event_name(pEventName),
+                event_target(*runtime, rTarget), frames);
+            sync_active_event_camera_pose(*runtime);
+        }
+    }
+
+    void startEventCameraNoTarget(const ActorCameraInfo* pInfo,
+                                  const char* pEventName, s32 frames) {
+        startEventCamera(pInfo, pEventName, CameraTargetArg{}, frames);
+    }
+
+    void startEventCameraTargetPlayer(const ActorCameraInfo* pInfo,
+                                      const char* pEventName, s32 frames) {
+        if (pInfo == nullptr) {
+            throw std::invalid_argument(
+                "Player-target event-camera start requires ActorCameraInfo.");
+        }
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->camera_system().start_event_camera(
+                pInfo->mZoneID, event_name(pEventName),
+                smgpc::camera::EventCameraTarget::target_player(
+                    runtime->player_system()),
+                frames);
+            sync_active_event_camera_pose(*runtime);
+        }
+    }
+
+    void startEventCameraAnim(const ActorCameraInfo* pInfo,
+                              const char* pEventName,
+                              const CameraTargetArg& rTarget, s32 frames,
+                              f32 speed) {
+        if (pInfo == nullptr) {
+            throw std::invalid_argument(
+                "Animation event-camera start requires ActorCameraInfo.");
+        }
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->camera_system().start_event_camera(
+                pInfo->mZoneID, event_name(pEventName),
+                event_target(*runtime, rTarget), frames, speed);
+            sync_active_event_camera_pose(*runtime);
+        }
+    }
+
+    void endEventCamera(const ActorCameraInfo* pInfo, const char* pEventName,
+                        bool endForce, s32 frames) {
+        if (pInfo == nullptr) {
+            throw std::invalid_argument(
+                "Event-camera end requires ActorCameraInfo.");
+        }
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            runtime->camera_system().end_event_camera(
+                pInfo->mZoneID, event_name(pEventName), endForce, frames);
+            const auto pose = runtime->camera_system().active_event_camera_pose()
+                                  ? runtime->camera_system().active_event_camera_pose()
+                              : runtime->camera_system().active_programmable_camera_pose()
+                                  ? runtime->camera_system().active_programmable_camera_pose()
+                                  : runtime->camera_system().game_camera_pose();
+            if (pose.has_value()) {
+                runtime->set_scene_camera_pose(*pose);
+            }
+        }
+    }
+
+    void endEventCameraAtLanding(const ActorCameraInfo*, const char*, s32) {
+        throw std::logic_error(
+            "Landing-delayed event-camera release requires the unavailable retail landing owner.");
+    }
+
+    bool isEventCameraActive() {
+        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime != nullptr &&
+               runtime->camera_system().active_event_camera_key().has_value();
+    }
+
+    bool isEventCameraActive(const ActorCameraInfo* pInfo,
+                             const char* pEventName) {
+        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime != nullptr && pInfo != nullptr &&
+               runtime->camera_system().is_event_camera_active(
+                   pInfo->mZoneID, event_name(pEventName));
+    }
+
+    bool isAnimCameraEnd(const ActorCameraInfo* pInfo,
+                         const char* pEventName) {
+        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime == nullptr || pInfo == nullptr ||
+               runtime->camera_system().is_event_camera_animation_end(
+                   pInfo->mZoneID, event_name(pEventName));
+    }
+
+    s32 getAnimCameraFrame(const ActorCameraInfo* pInfo,
+                           const char* pEventName) {
+        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime != nullptr && pInfo != nullptr
+                   ? runtime->camera_system().event_camera_animation_frame(
+                         pInfo->mZoneID, event_name(pEventName))
+                   : 0;
+    }
+
+    u32 getEventCameraFrames(const ActorCameraInfo* pInfo,
+                             const char* pEventName) {
+        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime != nullptr && pInfo != nullptr
+                   ? static_cast<u32>(runtime->camera_system().event_camera_frames(
+                         pInfo->mZoneID, event_name(pEventName)))
+                   : 0U;
+    }
+
+    void setCameraTargetToPlayer(CameraTargetArg* pTarget) {
+        if (pTarget == nullptr) {
+            return;
+        }
+        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        pTarget->mTargetObj = nullptr;
+        pTarget->mTargetMtx = nullptr;
+        pTarget->mLiveActor = nullptr;
+        pTarget->mMarioActor =
+            runtime != nullptr
+                ? reinterpret_cast<MarioActor*>(
+                      runtime->player_system().attached_actor())
+                : nullptr;
     }
 
     void declareEventCameraProgrammable(const char* pEventName) {

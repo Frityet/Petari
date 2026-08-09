@@ -606,7 +606,9 @@ namespace smgpc::runtime {
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
         _camera_system.clear_shake_projection_dimensions();
-        const auto camera_pose = _camera_system.active_programmable_camera_pose().has_value()
+        const auto camera_pose = _camera_system.active_event_camera_pose().has_value()
+                                     ? _camera_system.active_event_camera_pose()
+                                 : _camera_system.active_programmable_camera_pose().has_value()
                                      ? _camera_system.active_programmable_camera_pose()
                                      : _camera_system.game_camera_pose();
         if (camera_pose.has_value()) {

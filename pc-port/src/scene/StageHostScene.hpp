@@ -5,6 +5,7 @@
 #include "camera/CameraPose.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "scene/AuthoredPlacementInstantiator.hpp"
+#include "scene/NameObjChildOwner.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StageHostService.hpp"
 #include "scene/StageAuthoredData.hpp"
@@ -31,6 +32,7 @@ namespace smgpc::compat {
 namespace smgpc::scene {
 
     class SceneObjHolderBinding;
+    class StageEventCameraBinding;
     class StageLightSceneBinding;
     struct NameObjPlacementContext;
 
@@ -102,8 +104,11 @@ namespace smgpc::scene {
         std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime;
         std::unique_ptr<StageAuthoredData> _authored_data;
+        std::unique_ptr<StageEventCameraBinding> _event_camera_binding;
         std::unique_ptr<AuthoredPlacementInstantiator> _authored_placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
+        std::vector<std::unique_ptr<NameObjChildOwner>>
+            _root_registration_graphs;
         std::vector<bool> _root_host_appear;
         const StagePlacementObject *_explicit_placement_source = nullptr;
         NameObj *_explicit_placement_root = nullptr;

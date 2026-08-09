@@ -126,6 +126,23 @@ namespace smgpc::scene {
         std::string failure_detail{};
     };
 
+    // Retail's scene-wide initAfterPlacement pass includes raw NameObjs that
+    // a placement root constructs from its constructor or init method. Keep
+    // those identities visible without counting them as additional authored
+    // rows. construction_ordinal is the zero-based registration position in
+    // the complete placement construction suffix; the returned root normally
+    // occupies ordinal zero.
+    struct AuthoredPlacementDescendantReportEntry final {
+        std::size_t parent_source_index = 0U;
+        std::size_t parent_report_index = 0U;
+        std::size_t construction_ordinal = 0U;
+        const StagePlacementObject *parent_placement = nullptr;
+        NameObj *object = nullptr;
+        bool owned_by_placement = false;
+        AuthoredPlacementOutcome outcome = AuthoredPlacementOutcome::Pending;
+        std::string failure_detail{};
+    };
+
     struct AuthoredPlacementInstantiationReport final {
         AuthoredPlacementMode mode = AuthoredPlacementMode::Strict;
         AuthoredPlacementRuntimeState state =
@@ -138,6 +155,7 @@ namespace smgpc::scene {
         std::size_t initialized_after_placement_count = 0U;
         std::size_t destroyed_count = 0U;
         std::vector<AuthoredPlacementReportEntry> entries{};
+        std::vector<AuthoredPlacementDescendantReportEntry> descendants{};
     };
 
     struct AuthoredPlacementInstance final {
@@ -148,9 +166,23 @@ namespace smgpc::scene {
     // Injection boundary used by synthetic tests and by the ordinary
     // NameObjLifecycleService adapter. It deliberately contains no stage or
     // object-name policy.
+    class AuthoredPlacementConstructionScope {
+    public:
+        virtual ~AuthoredPlacementConstructionScope() = default;
+    };
+
     class AuthoredPlacementLifecycle {
     public:
         virtual ~AuthoredPlacementLifecycle() = default;
+
+        // Production placement adapters can retain strict scene-local state
+        // across construct+init. Synthetic lifecycles need no SceneObjHolder
+        // and inherit this null RAII token.
+        virtual std::unique_ptr<AuthoredPlacementConstructionScope>
+        begin_construction_scope(
+            const NameObjPlacementContext &) {
+            return {};
+        }
 
         virtual std::vector<smgpc::scene::nameobj::NameObjArchiveRequest>
         preload_archives(std::string_view object_name,
@@ -159,14 +191,16 @@ namespace smgpc::scene {
         preload_model_changing_archive(
             std::string_view object_name, s32 shape_model_no,
             const NameObjPlacementContext &placement) = 0;
-        [[nodiscard]] virtual std::unique_ptr<NameObj> construct_and_init(
+        [[nodiscard]] virtual std::unique_ptr<NameObj> construct(
             std::string_view object_name, const char *actor_name,
             const NameObjPlacementContext &placement) = 0;
         [[nodiscard]] virtual std::unique_ptr<NameObj>
-        construct_model_changing_and_init(
-            std::string_view object_name, s32 shape_model_no,
-            const char *actor_name,
-            const NameObjPlacementContext &placement) = 0;
+        construct_model_changing(std::string_view object_name,
+                                 s32 shape_model_no,
+                                 const char *actor_name,
+                                 const NameObjPlacementContext &placement) = 0;
+        virtual void init(NameObj &object,
+                          const NameObjPlacementContext &placement) = 0;
         virtual void init_after_placement(NameObj &object) = 0;
         virtual void destroy(NameObj &object) = 0;
     };
@@ -219,11 +253,22 @@ namespace smgpc::scene {
             noexcept;
         [[nodiscard]] std::span<const AuthoredPlacementInstance> instances() const
             noexcept;
+        [[nodiscard]] std::span<
+            const AuthoredPlacementDescendantReportEntry>
+        descendants() const noexcept;
 
     private:
+        struct OwnedObject final {
+            NameObj *object = nullptr;
+            std::unique_ptr<NameObj> ownership{};
+            std::optional<std::size_t> descendant_report_index{};
+            bool delegated_postpass = false;
+        };
+
         struct OwnedInstance final {
             std::size_t report_index = 0U;
-            std::unique_ptr<NameObj> actor{};
+            NameObj *actor = nullptr;
+            std::vector<OwnedObject> objects{};
         };
 
         void build_report();

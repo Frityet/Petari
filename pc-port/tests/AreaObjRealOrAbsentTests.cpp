@@ -15,6 +15,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -258,6 +259,32 @@ namespace {
                 "AreaObjRuntime must destroy every adopted manager, including a rejected late adoption");
     }
 
+    void test_delegated_manager_postpass_runs_once() {
+        auto events = std::vector<int>{};
+        auto destroyed = 0;
+        {
+            auto runtime = smgpc::scene::AreaObjRuntime{};
+            auto* manager = runtime.adopt_manager(
+                std::make_unique<LifecycleManager>(1, events, destroyed),
+                finalize_lifecycle_manager);
+            const auto delegate_identity = std::uint8_t{};
+            smgpc::compat::delegate_name_obj_runtime_postpass(
+                manager, &delegate_identity);
+
+            // The authored-placement delegate owns the scene-wide callback;
+            // AreaObjRuntime retains only its manager-specific finalizer.
+            manager->initAfterPlacement();
+            runtime.init_after_placement();
+            runtime.init_after_placement();
+            require(events == std::vector<int>({1, 101}),
+                    "a delegated AreaObj manager must run one global postpass and one finalizer");
+            smgpc::compat::release_name_obj_runtime_postpass_delegation(
+                manager, &delegate_identity);
+        }
+        require(destroyed == 1,
+                "delegated AreaObj manager storage must remain owned by its runtime");
+    }
+
     void configure_unit_cube(CubeCameraArea &area, s32 priority, s32 category_mask) {
         area.mObjArg2 = priority;
         area._3C = category_mask;
@@ -384,6 +411,8 @@ namespace {
     }
 
     void test_scene_holder_owns_real_container_and_managers() {
+        const auto registry_baseline =
+            smgpc::compat::name_obj_runtime_state_count();
         {
             auto holder = SceneObjHolder{};
             auto binding = smgpc::scene::SceneObjHolderBinding(holder);
@@ -396,6 +425,10 @@ namespace {
             require(holder.create(SceneObj_AreaObjContainer) == container,
                     "SceneObj creation must retain one container per scene");
             verify_installed_descriptor_managers(*container);
+            require(smgpc::compat::name_obj_runtime_owner(
+                        container->getManager("SwitchArea")) ==
+                        smgpc::scene::current_area_obj_runtime(),
+                    "AreaObj managers must retain one independent scene-runtime storage owner");
             require_throws<std::logic_error>(
                 [&] { (void)container->getManager("__SMGPC_missing_area_manager__"); },
                 "No complete retail AreaObj manager");
@@ -411,13 +444,24 @@ namespace {
                     detached_light._0 == -1 && detached_light.mLightID == -1,
                 "destroying the scene-owned LightArea manager must detach its non-owning lookup before reuse");
 
-        auto second_holder = SceneObjHolder{};
-        const auto second_binding = smgpc::scene::SceneObjHolderBinding(second_holder);
-        auto *second_container = dynamic_cast<AreaObjContainer *>(
-            second_holder.create(SceneObj_AreaObjContainer));
-        require(second_container != nullptr &&
-                    dynamic_cast<LightAreaHolder *>(second_container->getManager("LightArea")) != nullptr,
-                "destroying a scene binding must release container and manager ownership for the next scene");
+        {
+            auto second_holder = SceneObjHolder{};
+            const auto second_binding =
+                smgpc::scene::SceneObjHolderBinding(second_holder);
+            auto *second_container = dynamic_cast<AreaObjContainer *>(
+                second_holder.create(SceneObj_AreaObjContainer));
+            require(second_container != nullptr &&
+                        dynamic_cast<LightAreaHolder *>(
+                            second_container->getManager("LightArea")) !=
+                            nullptr &&
+                        smgpc::compat::name_obj_runtime_owner(
+                            second_container->getManager("LightArea")) ==
+                            smgpc::scene::current_area_obj_runtime(),
+                    "destroying a scene binding must release container and manager ownership for the next scene");
+        }
+        require(smgpc::compat::name_obj_runtime_state_count() ==
+                    registry_baseline,
+                "two AreaObj scene generations must restore the NameObj registry baseline");
     }
 
     void test_descriptor_registry_and_strict_area_preflight() {
@@ -953,6 +997,7 @@ int main() {
         TestCase{"scene holder owns real container and managers", test_scene_holder_owns_real_container_and_managers},
         TestCase{"retail prefix collision uses first manager", test_retail_prefix_collision_uses_first_manager},
         TestCase{"manager lifecycle owned ordered and once", test_manager_lifecycle_is_owned_ordered_and_once},
+        TestCase{"delegated manager postpass runs once", test_delegated_manager_postpass_runs_once},
         TestCase{"CubeCamera manager finalizes priority and reverse query", test_cube_camera_manager_finalizes_priority_and_reverse_query},
         TestCase{"LightArea priority and stable zone identity", test_light_area_priority_and_stable_zone_identity},
         TestCase{"descriptor registry and strict area preflight", test_descriptor_registry_and_strict_area_preflight},

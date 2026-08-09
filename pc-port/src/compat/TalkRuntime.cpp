@@ -17,6 +17,7 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -703,8 +704,31 @@ namespace smgpc::compat {
         if (actor == nullptr || controller == nullptr) {
             throw std::logic_error("TalkRuntime cannot adopt a null actor or controller.");
         }
-        release_owned_controller(actor);
+        const auto existing = _impl->owned_controllers.find(actor);
         auto* result = controller.get();
+        // TalkMessageCtrl is a registered NameObj, but its storage belongs to
+        // this scene-owned TalkRuntime rather than the retail scene heap. Mark
+        // that boundary before publishing the pointer so construction-suffix
+        // capture can observe it without adopting and deleting it a second
+        // time. A failed claim leaves any same-actor controller untouched.
+        smgpc::compat::claim_name_obj_runtime_ownership(result, this);
+
+        if (existing != _impl->owned_controllers.end()) {
+            // Replacing the mapped unique_ptr is allocation-free and noexcept.
+            // Keep the old controller alive until the incoming controller is
+            // fully published, then clear only a retail NPC pointer that still
+            // names the retired identity.
+            auto old_controller = std::move(existing->second);
+            existing->second = std::move(controller);
+            if (auto* npc = dynamic_cast<NPCActor*>(actor);
+                npc != nullptr && npc->mMsgCtrl == old_controller.get()) {
+                npc->mMsgCtrl = nullptr;
+            }
+            return result;
+        }
+
+        // If node allocation throws, the local unique_ptr still retires the
+        // controller and its claimed registry state transactionally.
         _impl->owned_controllers.emplace(actor, std::move(controller));
         return result;
     }

@@ -3,8 +3,12 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Util/FileUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
+#include "scene/PlacementZoneNameScope.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 
 #include <algorithm>
@@ -351,12 +355,57 @@ namespace smgpc::scene {
             return out.str();
         }
 
+        [[nodiscard]] bool is_unowned_authored_registration(
+            const NameObj *object, const void *) noexcept {
+            return !current_scene_obj_holder_binding_owns(object) &&
+                   !smgpc::compat::
+                       name_obj_runtime_ownership_is_claimed(object);
+        }
+
+        void rollback_authored_registrations(
+            smgpc::compat::NameObjRuntimeRegistrationMarker marker,
+            AuthoredPlacementLifecycle &lifecycle) noexcept {
+            while (auto *object =
+                       smgpc::compat::newest_name_obj_runtime_object_since_if(
+                           marker, is_unowned_authored_registration,
+                           nullptr)) {
+                try {
+                    lifecycle.destroy(*object);
+                } catch (...) {
+                    // Construction rollback must preserve the original
+                    // lifecycle exception. The actual destructor still owns
+                    // final native-state reclamation.
+                }
+                delete object;
+            }
+        }
+
         class NameObjPlacementLifecycleAdapter final
             : public AuthoredPlacementLifecycle {
         public:
             explicit NameObjPlacementLifecycleAdapter(
                 NameObjLifecycleService &lifecycle)
                 : _lifecycle(lifecycle) {
+            }
+
+            class ConstructionScope final
+                : public AuthoredPlacementConstructionScope {
+            public:
+                explicit ConstructionScope(
+                    const NameObjPlacementContext &placement)
+                    : _scope(
+                          MR::getPlacedZoneId(placement.iter),
+                          placement.zone_name) {
+                }
+
+            private:
+                PlacementZoneNameScope _scope;
+            };
+
+            std::unique_ptr<AuthoredPlacementConstructionScope>
+            begin_construction_scope(
+                const NameObjPlacementContext &placement) override {
+                return std::make_unique<ConstructionScope>(placement);
             }
 
             std::vector<smgpc::scene::nameobj::NameObjArchiveRequest>
@@ -374,18 +423,24 @@ namespace smgpc::scene {
                     object_name, shape_model_no, &placement);
             }
 
-            std::unique_ptr<NameObj> construct_and_init(
-                std::string_view object_name, const char *actor_name,
-                const NameObjPlacementContext &placement) override {
-                return _lifecycle.construct_and_init(
-                    object_name, actor_name, &placement);
+            std::unique_ptr<NameObj> construct(
+                std::string_view object_name,
+                const char *actor_name,
+                const NameObjPlacementContext &) override {
+                return _lifecycle.construct(object_name, actor_name);
             }
 
-            std::unique_ptr<NameObj> construct_model_changing_and_init(
+            std::unique_ptr<NameObj> construct_model_changing(
                 std::string_view, s32, const char *,
                 const NameObjPlacementContext &) override {
                 throw std::runtime_error(
                     "Model-changing NameObj creator is unavailable on PC.");
+            }
+
+            void init(
+                NameObj &object,
+                const NameObjPlacementContext &placement) override {
+                _lifecycle.init(object, &placement);
             }
 
             void init_after_placement(NameObj &object) override {
@@ -779,33 +834,170 @@ namespace smgpc::scene {
                     current_entry = &entry;
                     const auto context =
                         _data.placement_context(entry.source_index);
+                    [[maybe_unused]] auto construction_scope =
+                        _lifecycle->begin_construction_scope(context);
 
-                    auto actor = entry.placement->shape_model_no == -1
-                                     ? _lifecycle->construct_and_init(
-                                           authored_placement_identifier(
-                                               *entry.placement),
-                                           group_actor_name, context)
-                                     : _lifecycle
-                                           ->construct_model_changing_and_init(
-                                               authored_placement_identifier(
-                                                   *entry.placement),
-                                               entry.placement->shape_model_no,
-                                               group_actor_name, context);
-                    if (actor == nullptr) {
-                        throw std::runtime_error(
-                            "Authored placement lifecycle returned a null actor.");
+                    const auto capture = smgpc::compat::
+                        NameObjRuntimeRegistrationCapture{};
+                    const auto marker = capture.marker();
+                    auto actor = std::unique_ptr<NameObj>{};
+                    auto registrations = std::vector<NameObj *>{};
+                    try {
+                        actor = entry.placement->shape_model_no == -1
+                                    ? _lifecycle->construct(
+                                          authored_placement_identifier(
+                                              *entry.placement),
+                                          group_actor_name, context)
+                                    : _lifecycle->construct_model_changing(
+                                          authored_placement_identifier(
+                                              *entry.placement),
+                                          entry.placement->shape_model_no,
+                                          group_actor_name, context);
+                        if (actor == nullptr) {
+                            throw std::runtime_error(
+                                "Authored placement lifecycle returned a null actor.");
+                        }
+                        _lifecycle->init(*actor, context);
+
+                        registrations = smgpc::compat::
+                            snapshot_name_obj_runtime_objects_since(marker);
+                        const auto actor_occurrences =
+                            std::ranges::count(registrations, actor.get());
+                        if (actor_occurrences != 1 ||
+                            registrations.empty() ||
+                            registrations.front() != actor.get() ||
+                            current_scene_obj_holder_binding_owns(actor.get()) ||
+                            smgpc::compat::
+                                name_obj_runtime_ownership_is_claimed(
+                                    actor.get())) {
+                            throw std::logic_error(
+                                "Authored placement construction did not register "
+                                "one globally-leading, independently-owned root.");
+                        }
+
+                        const auto descendant_count =
+                            registrations.size() - 1U;
+                        _report.descendants.reserve(
+                            _report.descendants.size() + descendant_count);
+                        auto owned = OwnedInstance{
+                            .report_index = entry_index,
+                            .actor = actor.get(),
+                        };
+                        owned.objects.reserve(registrations.size());
+
+                        // Reserve every potentially-throwing container before
+                        // taking raw ownership. From this point through the
+                        // batch commit, unique_ptr moves are noexcept.
+                        auto descendant_indices =
+                            std::vector<std::optional<std::size_t>>{};
+                        descendant_indices.reserve(registrations.size());
+
+                        // Independently-owned identities still occupy their
+                        // retail position in this placement's one global
+                        // postpass. Mark that delegation before the holder's
+                        // pre-pass so the storage owner skips duplicates.
+                        for (auto *object : registrations) {
+                            if (current_scene_obj_holder_binding_owns(object) ||
+                                smgpc::compat::
+                                    name_obj_runtime_ownership_is_claimed(
+                                        object)) {
+                                smgpc::compat::
+                                    delegate_name_obj_runtime_postpass(
+                                        object, this);
+                            }
+                        }
+
+                        for (auto ordinal = std::size_t{};
+                             ordinal < registrations.size(); ++ordinal) {
+                            auto *object = registrations[ordinal];
+                            if (object == actor.get()) {
+                                descendant_indices.push_back(std::nullopt);
+                                continue;
+                            }
+                            const auto independently_owned =
+                                current_scene_obj_holder_binding_owns(object) ||
+                                smgpc::compat::
+                                    name_obj_runtime_ownership_is_claimed(
+                                        object);
+                            const auto descendant_index =
+                                _report.descendants.size();
+                            _report.descendants.push_back(
+                                AuthoredPlacementDescendantReportEntry{
+                                    .parent_source_index = entry.source_index,
+                                    .parent_report_index = entry_index,
+                                    .construction_ordinal = ordinal,
+                                    .parent_placement = entry.placement,
+                                    .object = object,
+                                    .owned_by_placement =
+                                        !independently_owned,
+                                    .outcome =
+                                        AuthoredPlacementOutcome::Created,
+                                });
+                            descendant_indices.push_back(descendant_index);
+                        }
+
+                        for (auto index = std::size_t{};
+                             index < registrations.size(); ++index) {
+                            auto *object = registrations[index];
+                            const auto independently_owned =
+                                current_scene_obj_holder_binding_owns(object) ||
+                                smgpc::compat::
+                                    name_obj_runtime_ownership_is_claimed(
+                                        object);
+                            if (object == actor.get()) {
+                                owned.objects.push_back(OwnedObject{
+                                    .object = object,
+                                    .ownership = std::move(actor),
+                                });
+                            } else if (independently_owned) {
+                                owned.objects.push_back(OwnedObject{
+                                    .object = object,
+                                    .descendant_report_index =
+                                        descendant_indices[index],
+                                    .delegated_postpass = true,
+                                });
+                            } else {
+                                owned.objects.push_back(OwnedObject{
+                                    .object = object,
+                                    .ownership =
+                                        std::unique_ptr<NameObj>(object),
+                                    .descendant_report_index =
+                                        descendant_indices[index],
+                                });
+                            }
+                        }
+
+                        auto *actor_ptr = owned.actor;
+                        _owned_instances.push_back(std::move(owned));
+                        _instance_views.push_back(AuthoredPlacementInstance{
+                            .placement = entry.placement,
+                            .actor = actor_ptr,
+                        });
+                        entry.actor = actor_ptr;
+                    } catch (...) {
+                        for (auto *object : registrations) {
+                            smgpc::compat::
+                                release_name_obj_runtime_postpass_delegation(
+                                    object, this);
+                        }
+                        if (actor != nullptr &&
+                            (smgpc::compat::
+                                 name_obj_runtime_object_was_registered_since(
+                                     actor.get(), marker) ||
+                             current_scene_obj_holder_binding_owns(
+                                 actor.get()) ||
+                             smgpc::compat::
+                                 name_obj_runtime_ownership_is_claimed(
+                                     actor.get()))) {
+                            // The suffix rollback deletes an unowned root at
+                            // its exact registration position. A SceneObj root
+                            // remains with its independent holder owner.
+                            (void)actor.release();
+                        }
+                        rollback_authored_registrations(marker, *_lifecycle);
+                        throw;
                     }
 
-                    auto *actor_ptr = actor.get();
-                    _owned_instances.push_back(OwnedInstance{
-                        .report_index = entry_index,
-                        .actor = std::move(actor),
-                    });
-                    _instance_views.push_back(AuthoredPlacementInstance{
-                        .placement = entry.placement,
-                        .actor = actor_ptr,
-                    });
-                    entry.actor = actor_ptr;
                     entry.outcome = AuthoredPlacementOutcome::Created;
                     ++_report.created_count;
                 }
@@ -843,22 +1035,59 @@ namespace smgpc::scene {
 
         for (auto &instance : _owned_instances) {
             auto &entry = _report.entries[instance.report_index];
-            try {
-                _lifecycle->init_after_placement(*instance.actor);
-                entry.outcome =
-                    AuthoredPlacementOutcome::InitializedAfterPlacement;
-                ++_report.initialized_after_placement_count;
-            } catch (const std::exception &error) {
-                entry.outcome = AuthoredPlacementOutcome::Failed;
-                entry.failure_detail = error.what();
-                _report.state = AuthoredPlacementRuntimeState::Failed;
-                throw;
-            } catch (...) {
-                entry.outcome = AuthoredPlacementOutcome::Failed;
-                entry.failure_detail = "unknown_init_after_placement_failure";
-                _report.state = AuthoredPlacementRuntimeState::Failed;
-                throw;
+            for (auto &owned : instance.objects) {
+                const auto release_postpass_delegation = [&] {
+                    if (!owned.delegated_postpass) {
+                        return;
+                    }
+                    smgpc::compat::
+                        release_name_obj_runtime_postpass_delegation(
+                            owned.object, this);
+                    owned.delegated_postpass = false;
+                };
+                try {
+                    _lifecycle->init_after_placement(*owned.object);
+                    // The holder pre-pass has already skipped this identity.
+                    // Clear the transient delegate immediately after its one
+                    // ordered placement callback succeeds.
+                    release_postpass_delegation();
+                    if (owned.descendant_report_index.has_value()) {
+                        _report
+                            .descendants[*owned.descendant_report_index]
+                            .outcome = AuthoredPlacementOutcome::
+                            InitializedAfterPlacement;
+                    }
+                } catch (const std::exception &error) {
+                    release_postpass_delegation();
+                    entry.outcome = AuthoredPlacementOutcome::Failed;
+                    entry.failure_detail = error.what();
+                    if (owned.descendant_report_index.has_value()) {
+                        auto &descendant = _report.descendants[
+                            *owned.descendant_report_index];
+                        descendant.outcome = AuthoredPlacementOutcome::Failed;
+                        descendant.failure_detail = error.what();
+                    }
+                    _report.state = AuthoredPlacementRuntimeState::Failed;
+                    throw;
+                } catch (...) {
+                    release_postpass_delegation();
+                    entry.outcome = AuthoredPlacementOutcome::Failed;
+                    entry.failure_detail =
+                        "unknown_init_after_placement_failure";
+                    if (owned.descendant_report_index.has_value()) {
+                        auto &descendant = _report.descendants[
+                            *owned.descendant_report_index];
+                        descendant.outcome = AuthoredPlacementOutcome::Failed;
+                        descendant.failure_detail =
+                            "unknown_init_after_placement_failure";
+                    }
+                    _report.state = AuthoredPlacementRuntimeState::Failed;
+                    throw;
+                }
             }
+            entry.outcome =
+                AuthoredPlacementOutcome::InitializedAfterPlacement;
+            ++_report.initialized_after_placement_count;
         }
 
         _report.state =
@@ -877,17 +1106,51 @@ namespace smgpc::scene {
             auto &instance = *instance_iter;
             auto &entry = _report.entries[instance.report_index];
             if (instance.actor != nullptr) {
-                try {
-                    _lifecycle->destroy(*instance.actor);
-                } catch (...) {
-                    if (first_error == nullptr) {
-                        first_error = std::current_exception();
+                for (auto object_iter = instance.objects.rbegin();
+                     object_iter != instance.objects.rend(); ++object_iter) {
+                    auto &owned = *object_iter;
+                    if (owned.object == nullptr) {
+                        continue;
                     }
+                    if (owned.delegated_postpass) {
+                        smgpc::compat::
+                            release_name_obj_runtime_postpass_delegation(
+                                owned.object, this);
+                        owned.delegated_postpass = false;
+                    }
+                    if (owned.ownership == nullptr) {
+                        continue;
+                    }
+                    try {
+                        _lifecycle->destroy(*owned.object);
+                    } catch (...) {
+                        if (first_error == nullptr) {
+                            first_error = std::current_exception();
+                        }
+                        if (owned.descendant_report_index.has_value()) {
+                            _report.descendants[
+                                *owned.descendant_report_index]
+                                .outcome = AuthoredPlacementOutcome::Failed;
+                        }
+                    }
+                    if (owned.descendant_report_index.has_value()) {
+                        auto &descendant = _report.descendants[
+                            *owned.descendant_report_index];
+                        descendant.object = nullptr;
+                        if (descendant.outcome !=
+                            AuthoredPlacementOutcome::Failed) {
+                            descendant.outcome =
+                                AuthoredPlacementOutcome::Destroyed;
+                        }
+                    }
+                    // Actual destructors can unregister or consult peers.
+                    // Delete each object at its exact reverse construction
+                    // point, even when the lifecycle hook failed.
+                    owned.ownership.reset();
+                    owned.object = nullptr;
                 }
-                // Actual actor destructors can unregister or consult peers.
-                // Delete each object at its reverse-order retirement point,
-                // even when the lifecycle destroy hook failed.
-                instance.actor.reset();
+                instance.objects.clear();
+                instance.actor = nullptr;
                 ++_report.destroyed_count;
             }
             entry.actor = nullptr;
@@ -916,6 +1179,11 @@ namespace smgpc::scene {
     std::span<const AuthoredPlacementInstance>
     AuthoredPlacementInstantiator::instances() const noexcept {
         return _instance_views;
+    }
+
+    std::span<const AuthoredPlacementDescendantReportEntry>
+    AuthoredPlacementInstantiator::descendants() const noexcept {
+        return _report.descendants;
     }
 
 }  // namespace smgpc::scene

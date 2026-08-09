@@ -1,5 +1,6 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Screen/IconAButton.hpp"
 #include "Game/Screen/InformationMessage.hpp"
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/System/GameDataFunction.hpp"
@@ -22,6 +23,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GatewayDemoScene.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/dvd.h>
 #include <aurora/wpad.hpp>
@@ -229,8 +231,30 @@ namespace {
                         !player.is_permitted() &&
                         player.post_placement_count() == 1U,
                     "the prompt proof must finalize one initially-locked external player");
+            const auto information_registration_marker =
+                smgpc::compat::mark_name_obj_runtime_registrations();
             auto information_message =
                 smgpc::compat::InformationMessageBinding{};
+            const auto information_registrations =
+                smgpc::compat::snapshot_name_obj_runtime_objects_since(
+                    information_registration_marker);
+            require(information_registrations.size() == 2U &&
+                        information_registrations.front() ==
+                            &information_message.message() &&
+                        dynamic_cast<InformationMessage*>(
+                            information_registrations.front()) != nullptr &&
+                        dynamic_cast<IconAButton*>(
+                            information_registrations.back()) != nullptr &&
+                        smgpc::compat::name_obj_runtime_owner(
+                            information_registrations.front()) != nullptr &&
+                        smgpc::compat::name_obj_runtime_owner(
+                            information_registrations.front()) ==
+                            smgpc::compat::name_obj_runtime_owner(
+                                information_registrations.back()) &&
+                        !smgpc::scene::
+                            current_scene_obj_holder_binding_owns(
+                                information_registrations.back()),
+                    "InformationMessage and its raw-new IconAButton must share one explicit non-SceneObj owner");
             auto* observer = dynamic_cast<InformationObserver*>(
                 MR::createSceneObj(SceneObj_InformationObserver));
             require(observer != nullptr && observer->mFlag.mIsDead,

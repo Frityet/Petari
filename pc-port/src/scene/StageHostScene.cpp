@@ -16,6 +16,7 @@
 #include "scene/SceneExecutionService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StagePlacementResolver.hpp"
+#include "scene/StageEventCameraBinding.hpp"
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "scene/nameobj/ObjectNameTable.hpp"
@@ -213,6 +214,7 @@ namespace smgpc::scene {
         _scene_obj_holder_binding.reset();
         _planet_map_catalog.reset();
         _stage_light_binding.reset();
+        _event_camera_binding.reset();
         _authored_data.reset();
         if (_stage_audio_started) {
             smgpc::compat::end_stage_audio(_runtime.audio());
@@ -340,12 +342,37 @@ namespace smgpc::scene {
 
         auto &lifecycle = _runtime.name_obj_lifecycle();
         lifecycle.preload_archives(object_name, placement);
-        auto root = lifecycle.construct_and_init(object_name, actor_name, placement);
+        _roots.reserve(_roots.size() + 1U);
+        _root_registration_graphs.reserve(
+            _root_registration_graphs.size() + 1U);
+        _root_host_appear.reserve(_root_host_appear.size() + 1U);
+        auto registration_graph = std::make_unique<NameObjChildOwner>();
+        const auto capture =
+            smgpc::compat::NameObjRuntimeRegistrationCapture{};
+        auto root = std::unique_ptr<NameObj>{};
+        try {
+            root = lifecycle.construct_and_init(
+                object_name, actor_name, placement);
+            if (root == nullptr) {
+                throw std::runtime_error(
+                    "Stage root lifecycle returned a null actor.");
+            }
+            registration_graph->adopt_root_registration_suffix(
+                capture.marker(), *root, this);
+        } catch (...) {
+            const auto construction_failure = std::current_exception();
+            registration_graph.reset();
+            NameObjChildOwner::rollback_registration_suffix(
+                capture.marker());
+            std::rethrow_exception(construction_failure);
+        }
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("sequence", "stage_host_initialized",
                                            "host=" + std::string(object_name) + ";stage=" + _request.stage_name);
 #endif
         _roots.push_back(std::move(root));
+        _root_registration_graphs.push_back(
+            std::move(registration_graph));
         _root_host_appear.push_back(apply_host_appear);
     }
 
@@ -513,6 +540,8 @@ namespace smgpc::scene {
             StageAuthoredData::resolve(
                 _runtime.dvd(), _request.stage_name, _request.scenario_no,
                 _request.start_id, _request.start_zone_id));
+        _event_camera_binding = std::make_unique<StageEventCameraBinding>(
+            _runtime.camera_system(), _runtime.dvd(), _authored_data->tables());
         _stage_light_binding = std::make_unique<StageLightSceneBinding>(
             _runtime.dvd(), _request.stage_name, _authored_data->tables());
         // The original DemoDirector/executors exist before placement actors
@@ -582,9 +611,8 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::init_roots_after_placement() {
-        auto &lifecycle = _runtime.name_obj_lifecycle();
-        for (auto &root : _roots) {
-            lifecycle.init_after_placement(*root);
+        for (auto &registration_graph : _root_registration_graphs) {
+            registration_graph->init_registration_suffix_after_placement();
         }
         if (_authored_placements != nullptr) {
             (void)_authored_placements->init_after_placement();
@@ -661,19 +689,22 @@ namespace smgpc::scene {
         }
         _explicit_placement_root = nullptr;
         _explicit_placement_source = nullptr;
-        for (auto root = _roots.rbegin(); root != _roots.rend(); ++root) {
-            if (*root == nullptr) {
+        for (auto index = _roots.size(); index > 0U; --index) {
+            auto &root = _roots[index - 1U];
+            _root_registration_graphs[index - 1U]->clear();
+            if (root == nullptr) {
                 continue;
             }
             try {
-                lifecycle.destroy(**root);
+                lifecycle.destroy(*root);
             } catch (...) {
                 // Scene destruction cannot propagate, but actor deletion must
                 // still happen at this exact reverse-order retirement point.
             }
-            root->reset();
+            root.reset();
         }
         _roots.clear();
+        _root_registration_graphs.clear();
         _root_host_appear.clear();
     }
 

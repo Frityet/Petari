@@ -27,6 +27,8 @@ namespace {
     struct NameObjRuntimeState {
         std::string name{};
         std::uint64_t registration_order = 0U;
+        const void* owner = nullptr;
+        const void* postpass_delegate = nullptr;
     };
 
     struct ActorHitSensorState {
@@ -185,8 +187,90 @@ namespace smgpc::compat {
         return object != nullptr && name_obj_states().contains(object);
     }
 
+    std::uint64_t name_obj_runtime_generation(
+        const NameObj* object) noexcept {
+        const auto found = name_obj_states().find(object);
+        return found != name_obj_states().end()
+                   ? found->second.registration_order
+                   : 0U;
+    }
+
     std::size_t name_obj_runtime_state_count() {
         return name_obj_states().size();
+    }
+
+    void claim_name_obj_runtime_ownership(NameObj* object,
+                                          const void* owner) {
+        if (object == nullptr || owner == nullptr) {
+            throw std::invalid_argument(
+                "NameObj runtime ownership requires real object and owner identities.");
+        }
+        const auto found = name_obj_states().find(object);
+        if (found == name_obj_states().end()) {
+            throw std::logic_error(
+                "NameObj runtime ownership requires a registered object.");
+        }
+        if (found->second.owner != nullptr) {
+            throw std::logic_error(
+                "NameObj runtime ownership is already claimed.");
+        }
+        found->second.owner = owner;
+    }
+
+    bool name_obj_runtime_ownership_is_claimed(
+        const NameObj* object) noexcept {
+        const auto found = name_obj_states().find(object);
+        return found != name_obj_states().end() &&
+               found->second.owner != nullptr;
+    }
+
+    const void* name_obj_runtime_owner(const NameObj* object) noexcept {
+        const auto found = name_obj_states().find(object);
+        return found != name_obj_states().end() ? found->second.owner
+                                                : nullptr;
+    }
+
+    void delegate_name_obj_runtime_postpass(NameObj* object,
+                                            const void* delegate) {
+        if (object == nullptr || delegate == nullptr) {
+            throw std::invalid_argument(
+                "NameObj postpass delegation requires real object and delegate identities.");
+        }
+        const auto found = name_obj_states().find(object);
+        if (found == name_obj_states().end()) {
+            throw std::logic_error(
+                "NameObj postpass delegation requires a registered object.");
+        }
+        if (found->second.postpass_delegate != nullptr &&
+            found->second.postpass_delegate != delegate) {
+            throw std::logic_error(
+                "NameObj postpass is already delegated to another boundary.");
+        }
+        found->second.postpass_delegate = delegate;
+    }
+
+    void release_name_obj_runtime_postpass_delegation(
+        const NameObj* object, const void* delegate) noexcept {
+        const auto found = name_obj_states().find(object);
+        if (found != name_obj_states().end() &&
+            found->second.postpass_delegate == delegate) {
+            found->second.postpass_delegate = nullptr;
+        }
+    }
+
+    bool name_obj_runtime_postpass_is_delegated(
+        const NameObj* object) noexcept {
+        const auto found = name_obj_states().find(object);
+        return found != name_obj_states().end() &&
+               found->second.postpass_delegate != nullptr;
+    }
+
+    const void* name_obj_runtime_postpass_delegate(
+        const NameObj* object) noexcept {
+        const auto found = name_obj_states().find(object);
+        return found != name_obj_states().end()
+                   ? found->second.postpass_delegate
+                   : nullptr;
     }
 
     std::vector<NameObj*> snapshot_name_obj_runtime_objects() {
@@ -208,6 +292,42 @@ namespace smgpc::compat {
         return snapshot_name_obj_runtime_objects_from(marker.next_registration_order);
     }
 
+    NameObj* newest_name_obj_runtime_object_since_if(
+        NameObjRuntimeRegistrationMarker marker,
+        NameObjRuntimeRegistrationFilter filter,
+        const void* context) noexcept {
+        if (marker.next_registration_order == 0U ||
+            marker.next_registration_order > next_name_obj_registration_order()) {
+            return nullptr;
+        }
+
+        auto* newest = static_cast<const NameObj*>(nullptr);
+        auto newest_order = std::uint64_t{};
+        for (const auto& [object, state] : name_obj_states()) {
+            if (state.registration_order < marker.next_registration_order ||
+                state.registration_order <= newest_order ||
+                (filter != nullptr && !filter(object, context))) {
+                continue;
+            }
+            newest = object;
+            newest_order = state.registration_order;
+        }
+        return const_cast<NameObj*>(newest);
+    }
+
+    bool name_obj_runtime_object_was_registered_since(
+        const NameObj* object,
+        NameObjRuntimeRegistrationMarker marker) noexcept {
+        if (object == nullptr || marker.next_registration_order == 0U ||
+            marker.next_registration_order > next_name_obj_registration_order()) {
+            return false;
+        }
+        const auto found = name_obj_states().find(object);
+        return found != name_obj_states().end() &&
+               found->second.registration_order >=
+                   marker.next_registration_order;
+    }
+
     void destroy_name_obj_runtime_objects_since(
         NameObjRuntimeRegistrationMarker marker) noexcept {
         if (marker.next_registration_order == 0U) {
@@ -216,20 +336,9 @@ namespace smgpc::compat {
 
         // Selecting the newest identity on each pass avoids allocating while
         // allowing each destructor to mutate the registry safely.
-        while (true) {
-            auto* newest = static_cast<const NameObj*>(nullptr);
-            auto newest_order = std::uint64_t{};
-            for (const auto& [object, state] : name_obj_states()) {
-                if (state.registration_order >= marker.next_registration_order &&
-                    state.registration_order > newest_order) {
-                    newest = object;
-                    newest_order = state.registration_order;
-                }
-            }
-            if (newest == nullptr) {
-                return;
-            }
-            delete const_cast<NameObj*>(newest);
+        while (auto* newest = newest_name_obj_runtime_object_since_if(
+                   marker, nullptr, nullptr)) {
+            delete newest;
         }
     }
 
@@ -343,6 +452,26 @@ namespace smgpc::compat {
     smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor) {
         const auto found = actor_states().find(actor);
         return found != actor_states().end() ? found->second.model.get() : nullptr;
+    }
+
+    std::optional<std::span<const std::uint8_t>>
+    actor_model_resource_data_if_present(
+        const LiveActor* actor, std::string_view resource_name) {
+        auto* model = actor_model(actor);
+        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        if (model == nullptr || runtime == nullptr || resource_name.empty()) {
+            return std::nullopt;
+        }
+        const auto archive_path =
+            runtime->dvd().find_object_archive(model->model_arc_name());
+        if (!archive_path.has_value()) {
+            return std::nullopt;
+        }
+        const auto& archive = runtime->dvd().archive_for_path(*archive_path);
+        if (!archive.contains_resource(resource_name)) {
+            return std::nullopt;
+        }
+        return archive.resource_data(resource_name);
     }
 
     void require_actor_model(LiveActor* actor) {
