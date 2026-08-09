@@ -94,14 +94,15 @@ namespace {
             require(smgpc::compat::actor_model(&actor) != nullptr && sensor != nullptr &&
                         smgpc::compat::actor_hit_sensor_count(&actor) == 1U &&
                         smgpc::compat::actor_sensor_binding_count(&actor) == 1U && binder != nullptr &&
+                        actor.mBinder != nullptr &&
                         binder->radius == 50.0F && binder->offset == 25.0F && binder->plane_capacity == 4U &&
                         clipping != nullptr && clipping->sphere_configured && clipping->sphere_radius == 100.0F &&
                         clipping->far_level == 3 && shadow->valid,
                     "the generalized record must retain model, animation, sensor, binder, clipping, and shadow state");
             require(actor.mModelManager == nullptr && actor.mAnimKeeper == nullptr &&
-                        actor.mSensorKeeper == nullptr && actor.mBinder == nullptr &&
+                        actor.mSensorKeeper == nullptr &&
                         actor.mShadowControllerList == nullptr,
-                    "native host state must not be smuggled through retail provider slots");
+                    "only a real exact provider may occupy a retail provider slot");
         }
 
         require(smgpc::compat::name_obj_runtime_state_count() == name_baseline &&

@@ -1,6 +1,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/RailRider.hpp"
@@ -8,6 +9,7 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "compat/CollisionPartsCompat.hpp"
+#include "compat/BinderCompat.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 #include "compat/MaterialCtrlCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -45,6 +47,7 @@ namespace {
         ActorAnimationRuntimeState animation{};
         std::vector<ActorHitSensorState> hit_sensors{};
         std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
+        std::unique_ptr<Binder> binder_provider{};
         smgpc::compat::ActorBinderContactState binder_contacts{};
         std::optional<smgpc::compat::ActorClippingRuntimeState> clipping{};
         std::optional<smgpc::compat::ActorShadowRuntimeState> shadow{};
@@ -215,6 +218,22 @@ namespace smgpc::compat {
         return found != actor_states().end() ? found->second.model.get() : nullptr;
     }
 
+    void require_actor_model(LiveActor* actor) {
+        auto& state = require_actor_state(actor);
+        if (state.model == nullptr) {
+            throw std::logic_error("LiveActor has no native model binding.");
+        }
+        state.model->requireLoaded();
+    }
+
+    std::size_t actor_model_joint_count(const LiveActor* actor) {
+        auto& state = require_actor_state(actor);
+        if (state.model == nullptr) {
+            throw std::logic_error("LiveActor has no native model binding.");
+        }
+        return state.model->joint_count();
+    }
+
     void release_actor_model_state(const LiveActor* actor) {
         const auto found = actor_states().find(actor);
         if (found != actor_states().end()) {
@@ -252,6 +271,18 @@ namespace smgpc::compat {
         if (state.model != nullptr) {
             state.model->startBck(state.animation.current_bck_name, file_name != nullptr ? file_name : "");
         }
+    }
+
+    std::int16_t require_actor_bck(LiveActor* actor, const char* name, const char* file_name) {
+        auto& state = require_actor_state(actor);
+        if (state.model == nullptr) {
+            throw std::logic_error("LiveActor has no native model binding.");
+        }
+        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
+        const auto resource_name = file_name != nullptr ? std::string_view(file_name) : std::string_view{};
+        const auto frame_max = state.model->requireBck(animation_name, resource_name);
+        state.animation.current_bck_name = std::string(animation_name);
+        return frame_max;
     }
 
     void start_actor_brk(LiveActor* actor, const char* name) {
@@ -449,6 +480,11 @@ namespace smgpc::compat {
     void configure_actor_binder(LiveActor* actor, float radius, float offset, std::uint32_t plane_capacity) {
         auto& state = require_actor_state(actor);
         state.binder = ActorBinderRuntimeConfig{radius, offset, plane_capacity};
+        state.binder_provider = std::make_unique<Binder>(
+            reinterpret_cast<MtxPtr>(state.base_matrix.m.data()), &actor->mPosition, &actor->mGravity,
+            radius, offset, plane_capacity);
+        actor->mBinder = state.binder_provider.get();
+        register_binder_owner(actor->mBinder, actor);
         state.binder_contacts = {};
     }
 
@@ -456,6 +492,12 @@ namespace smgpc::compat {
         if (actor != nullptr) {
             auto& state = require_actor_state(actor);
             state.binder.emplace();
+            auto* mutable_actor = const_cast<LiveActor*>(actor);
+            state.binder_provider = std::make_unique<Binder>(
+                reinterpret_cast<MtxPtr>(state.base_matrix.m.data()), &mutable_actor->mPosition,
+                &mutable_actor->mGravity, 0.0F, 0.0F, 0U);
+            mutable_actor->mBinder = state.binder_provider.get();
+            register_binder_owner(mutable_actor->mBinder, mutable_actor);
             state.binder_contacts = {};
         }
     }
@@ -512,6 +554,8 @@ namespace smgpc::compat {
             return;
         }
         auto& state = require_actor_state(actor);
+        const_cast<LiveActor*>(actor)->mBinder = nullptr;
+        state.binder_provider.reset();
         state.binder.reset();
         state.binder_contacts = {};
     }

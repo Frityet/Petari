@@ -4,6 +4,32 @@
 // Game translation units. Aurora provides that surface through revolution.h.
 #include <revolution.h>
 
+#include <cmath>
+#include <cstring>
+
+inline f32 JMAFastSqrt(f32 input) {
+    return input > 0.0F ? std::sqrt(input) : input;
+}
+
+namespace JMath {
+    [[nodiscard]] inline f32 fastReciprocal(f32 value) {
+        return 1.0F / value;
+    }
+
+    template <typename T>
+    [[nodiscard]] inline T fastSqrt(T value) {
+        return value > static_cast<T>(0) ? static_cast<T>(std::sqrt(value)) : value;
+    }
+
+    inline void gekko_ps_copy12(void* destination, const void* source) {
+        std::memcpy(destination, source, 12U * sizeof(f32));
+    }
+
+    inline void gekko_ps_copy16(void* destination, const void* source) {
+        std::memcpy(destination, source, 16U * sizeof(f32));
+    }
+}  // namespace JMath
+
 namespace JMathInlineVEC {
     inline void PSVECCopy(const Vec* source, Vec* destination) {
         *destination = *source;

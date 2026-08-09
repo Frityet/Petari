@@ -4,11 +4,16 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <span>
 #include <string>
+#include <string_view>
+#include <unordered_map>
 #include <vector>
 
 #include <JSystem/JGeometry/TVec.hpp>
+
+class HitSensor;
 
 namespace smgpc::scene {
     struct StagePlacementObject;
@@ -18,6 +23,7 @@ namespace smgpc::scene {
         TVec3f normal{};
         float fraction = 0.0F;
         std::uint16_t attribute = 0U;
+        std::uint32_t triangle_index = 0U;
     };
 
     struct StageCollisionContact {
@@ -26,6 +32,17 @@ namespace smgpc::scene {
         TVec3f reaction_normal{};
         float penetration = 0.0F;
         std::uint16_t attribute = 0U;
+        std::uint32_t triangle_index = 0U;
+    };
+
+    struct StageCollisionSurface {
+        std::uint32_t triangle_index = 0U;
+        std::uint32_t source_index = 0U;
+        std::uint32_t prism_index = 0U;
+        std::uint16_t attribute = 0U;
+        std::span<const std::uint8_t> attributes{};
+        std::string_view source_name{};
+        HitSensor* sensor = nullptr;
     };
 
     struct StageCollisionMoveResult {
@@ -84,15 +101,20 @@ namespace smgpc::scene {
                      std::string source_name = {});
         [[nodiscard]] StageCollisionRegistrationResult register_kcl(
             std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
-            std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration);
+            std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration,
+            std::span<const std::uint8_t> attributes = {}, HitSensor* sensor = nullptr);
         void build();
 
         [[nodiscard]] bool line_cast(const TVec3f& start, const TVec3f& offset,
                                      StageCollisionHit* hit = nullptr) const;
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts(const TVec3f& center, float radius,
                                                                          std::size_t maximum = 32U) const;
+        [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_with_thickness(
+            const TVec3f& center, float radius, float thickness, std::size_t maximum = 32U) const;
         [[nodiscard]] StageCollisionMoveResult move_sphere(const TVec3f& center, const TVec3f& movement,
                                                            float radius, std::size_t maximum_contacts = 32U) const;
+        [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index) const;
+        [[nodiscard]] std::uint64_t revision() const noexcept;
 
         [[nodiscard]] const StageCollisionStats& stats() const;
         [[nodiscard]] bool empty() const;
@@ -115,8 +137,16 @@ namespace smgpc::scene {
             float thickness = 0.0F;
             std::array<float, 3U> arrow_edge_tolerances{};
             std::uint16_t attribute = 0U;
+            std::uint32_t triangle_index = 0U;
             std::uint32_t source_index = 0U;
+            std::uint32_t prism_index = 0U;
             std::shared_ptr<StageCollisionRegistrationState> registration{};
+        };
+
+        struct Source {
+            std::string name{};
+            std::vector<std::uint8_t> attributes{};
+            HitSensor* sensor = nullptr;
         };
 
         struct BvhNode {
@@ -128,12 +158,17 @@ namespace smgpc::scene {
         };
 
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
+        [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_impl(
+            const TVec3f& center, float radius, std::size_t maximum,
+            std::optional<float> thickness_override) const;
 
         std::vector<Triangle> _triangles{};
+        std::unordered_map<std::uint32_t, std::uint32_t> _triangle_lookup{};
         std::vector<std::uint32_t> _triangle_indices{};
         std::vector<BvhNode> _nodes{};
-        std::vector<std::string> _sources{};
+        std::vector<Source> _sources{};
         StageCollisionStats _stats{};
+        std::uint64_t _revision = 0U;
         bool _built = false;
     };
 

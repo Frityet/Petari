@@ -4,6 +4,7 @@
 #include "Game/Effect/SimpleEffectObj.hpp"
 #include "Game/LiveActor/ActorStateBase.hpp"
 #include "Game/LiveActor/ActorStateKeeper.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
@@ -1031,6 +1032,58 @@ namespace {
                 "stage teardown should clear the active collision boundary");
     }
 
+    class DerivedMovementBinderProbe final : public LiveActor {
+    public:
+        DerivedMovementBinderProbe() : LiveActor("derived-movement-binder-probe") {
+        }
+
+        void control() override {
+            ++control_count;
+            mVelocity.set(0.0F, -0.5F, 0.0F);
+        }
+
+        void movement() override {
+            LiveActor::movement();
+            post_base_position.set(mPosition);
+            saw_fresh_ground = mBinder != nullptr && mBinder->isBindedGround() &&
+                               mBinder->mPlaneNum == 1 && mBinder->getPlane(0) != nullptr;
+        }
+
+        int control_count = 0;
+        bool saw_fresh_ground = false;
+        TVec3f post_base_position{};
+    };
+
+    void test_derived_actor_consumes_same_frame_binder_before_scheduler_returns() {
+        auto collision = smgpc::scene::StageCollisionService{};
+        constexpr auto identity = std::array<float, 12U>{
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+        require(collision.add_kcl(make_single_triangle_kcl(), identity, "movement-order-floor.kcl"),
+                "the movement-order proof requires one real KCL floor");
+        collision.build();
+        collision.activate();
+
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto actor = DerivedMovementBinderProbe{};
+        actor.mPosition.set(0.25F, 0.75F, 0.25F);
+        actor.makeActorAppeared();
+        actor.initBinder(0.5F, 0.0F, 1U);
+        scheduler.connect_name_obj(actor, 0, -1, -1, -1);
+        scheduler.execute_movement();
+
+        require(actor.control_count == 1 && actor.saw_fresh_ground,
+                "a MarioActor-shaped override must consume this frame's exact Binder plane after LiveActor::movement");
+        require(actor.mPosition.epsilonEquals(actor.post_base_position, 0.0001F),
+                "the scheduler must not integrate actor velocity again after the derived movement override returns");
+        require(actor.mPosition.y >= 0.5F && actor.mPosition.y < 2.0F,
+                "the same-frame exact Binder must resolve the actor onto the real KCL floor");
+
+        collision.deactivate();
+    }
+
     void test_original_rail_part_geometry() {
         auto linear = RailPart{};
         linear.init(TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{0.0F, 0.0F, 0.0F}, TVec3f{10.0F, 0.0F, 0.0F},
@@ -1366,6 +1419,8 @@ int main() {
                  test_star_piece_group_factory_is_absent_without_real_director},
         TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
         TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},
+        TestCase{"derived actor same-frame Binder ownership",
+                 test_derived_actor_consumes_same_frame_binder_before_scheduler_returns},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},

@@ -2261,6 +2261,10 @@ namespace smgpc::render {
         return _loaded;
     }
 
+    std::size_t J3dModelRenderer::joint_count() const {
+        return _loaded ? _joint_transforms.size() : 0U;
+    }
+
     std::optional<J3dMatrix3x4> J3dModelRenderer::joint_model_matrix(std::string_view name, float frame) const {
         if (!_loaded || name.empty()) {
             return std::nullopt;

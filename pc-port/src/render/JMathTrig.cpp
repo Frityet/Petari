@@ -1,6 +1,14 @@
 #include "JMathTrig.hpp"
 
+#include <JSystem/JMath/JMATrigonometric.hpp>
+
 #include <cmath>
+
+namespace JMath {
+    TSinCosTable<14, f32> sSinCosTable;
+    TAtanTable<1024, f32> sAtanTable;
+    TAsinAcosTable<1024, f32> sAsinAcosTable;
+}  // namespace JMath
 
 namespace smgpc::render {
     namespace {

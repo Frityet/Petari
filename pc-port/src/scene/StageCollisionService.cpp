@@ -3,6 +3,7 @@
 #include "scene/StagePlacementResolver.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <bit>
 #include <cmath>
 #include <cstddef>
@@ -18,6 +19,7 @@ namespace smgpc::scene {
         constexpr auto cArrowEdgeTolerance = 0.01F;
 
         StageCollisionService* sActiveService = nullptr;
+        std::atomic<std::uint64_t> sNextTriangleIndex{};
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> bytes, std::size_t offset) {
             if (offset + 2U > bytes.size()) {
@@ -275,10 +277,12 @@ namespace smgpc::scene {
 
     void StageCollisionService::clear() {
         _triangles.clear();
+        _triangle_lookup.clear();
         _triangle_indices.clear();
         _nodes.clear();
         _sources.clear();
         _stats = {};
+        ++_revision;
         _built = false;
     }
 
@@ -289,7 +293,8 @@ namespace smgpc::scene {
 
     StageCollisionRegistrationResult StageCollisionService::register_kcl(
         std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
-        std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration) {
+        std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration,
+        std::span<const std::uint8_t> attributes, HitSensor* sensor) {
         if (bytes.size() < 0x38U) {
             return {};
         }
@@ -315,7 +320,11 @@ namespace smgpc::scene {
         }
 
         const auto source_index = static_cast<std::uint32_t>(_sources.size());
-        _sources.push_back(std::move(source_name));
+        _sources.push_back(Source{
+            .name = std::move(source_name),
+            .attributes = std::vector<std::uint8_t>(attributes.begin(), attributes.end()),
+            .sensor = sensor,
+        });
         const auto triangle_count_before = _triangles.size();
         auto local_bounding_radius_squared = 0.0F;
         for (auto prism_index = std::size_t{}; prism_index < prism_count; ++prism_index) {
@@ -418,8 +427,16 @@ namespace smgpc::scene {
             triangle.bounds.maximum += TVec3f(edge_padding, edge_padding, edge_padding);
             triangle.centroid = (triangle.vertices[0] + triangle.vertices[1] + triangle.vertices[2]) * (1.0F / 3.0F);
             triangle.attribute = attribute;
+            const auto triangle_index = sNextTriangleIndex.fetch_add(1U, std::memory_order_relaxed);
+            if (triangle_index >= std::numeric_limits<std::uint32_t>::max()) {
+                throw std::overflow_error("Stage collision exhausted stable Triangle identities.");
+            }
+            triangle.triangle_index = static_cast<std::uint32_t>(triangle_index);
             triangle.source_index = source_index;
+            triangle.prism_index = static_cast<std::uint32_t>(prism_index);
             triangle.registration = registration;
+            _triangle_lookup.emplace(triangle.triangle_index,
+                                     static_cast<std::uint32_t>(_triangles.size()));
             _triangles.push_back(triangle);
         }
 
@@ -427,6 +444,7 @@ namespace smgpc::scene {
             _sources.pop_back();
             return {};
         }
+        ++_revision;
         ++_stats.mesh_count;
         _stats.triangle_count = _triangles.size();
         _built = false;
@@ -536,16 +554,32 @@ namespace smgpc::scene {
             hit->position = start + offset * best_fraction;
             hit->normal = best_triangle->normal;
             hit->attribute = best_triangle->attribute;
+            hit->triangle_index = best_triangle->triangle_index;
         }
         return true;
     }
 
     std::vector<StageCollisionContact> StageCollisionService::sphere_contacts(const TVec3f& center, float radius,
                                                                               std::size_t maximum) const {
+        return sphere_contacts_impl(center, radius, maximum, std::nullopt);
+    }
+
+    std::vector<StageCollisionContact> StageCollisionService::sphere_contacts_with_thickness(
+        const TVec3f& center, float radius, float thickness, std::size_t maximum) const {
+        if (thickness < 0.0F || !std::isfinite(thickness)) {
+            return {};
+        }
+        return sphere_contacts_impl(center, radius, maximum, thickness);
+    }
+
+    std::vector<StageCollisionContact> StageCollisionService::sphere_contacts_impl(
+        const TVec3f& center, float radius, std::size_t maximum,
+        std::optional<float> thickness_override) const {
         auto contacts = std::vector<StageCollisionContact>{};
         if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum == 0U) {
             return contacts;
         }
+        const auto broad_radius = radius + thickness_override.value_or(0.0F);
         struct IndexedContact {
             std::uint32_t triangle_index = 0U;
             StageCollisionContact contact{};
@@ -557,7 +591,7 @@ namespace smgpc::scene {
             const auto node_index = stack.back();
             stack.pop_back();
             const auto& node = _nodes[node_index];
-            if (!overlaps_sphere(node.bounds, center, radius)) {
+            if (!overlaps_sphere(node.bounds, center, broad_radius)) {
                 continue;
             }
             if (node.count == 0U) {
@@ -598,7 +632,8 @@ namespace smgpc::scene {
                                              ? radius
                                              : std::sqrt(std::max(0.0F, radius * radius - lateral_square));
                 const auto penetration = axial_reach - plane_distance;
-                if (!(penetration >= 0.0F) || penetration > triangle.thickness) {
+                const auto maximum_penetration = thickness_override.value_or(triangle.thickness);
+                if (!(penetration >= 0.0F) || penetration > maximum_penetration) {
                     continue;
                 }
                 indexed_contacts.push_back(IndexedContact{
@@ -609,6 +644,7 @@ namespace smgpc::scene {
                         .reaction_normal = triangle.normal,
                         .penetration = penetration,
                         .attribute = triangle.attribute,
+                        .triangle_index = triangle.triangle_index,
                     },
                 });
             }
@@ -725,6 +761,34 @@ namespace smgpc::scene {
         }
         result.displacement = resolved_center - center;
         return result;
+    }
+
+    std::optional<StageCollisionSurface> StageCollisionService::surface(std::uint32_t triangle_index) const {
+        const auto lookup = _triangle_lookup.find(triangle_index);
+        if (lookup == _triangle_lookup.end() || lookup->second >= _triangles.size()) {
+            return std::nullopt;
+        }
+        const auto& triangle = _triangles[lookup->second];
+        if (triangle.registration != nullptr && !triangle.registration->enabled()) {
+            return std::nullopt;
+        }
+        if (triangle.source_index >= _sources.size()) {
+            return std::nullopt;
+        }
+        const auto& source = _sources[triangle.source_index];
+        return StageCollisionSurface{
+            .triangle_index = triangle.triangle_index,
+            .source_index = triangle.source_index,
+            .prism_index = triangle.prism_index,
+            .attribute = triangle.attribute,
+            .attributes = source.attributes,
+            .source_name = source.name,
+            .sensor = source.sensor,
+        };
+    }
+
+    std::uint64_t StageCollisionService::revision() const noexcept {
+        return _revision;
     }
 
     const StageCollisionStats& StageCollisionService::stats() const {

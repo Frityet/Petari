@@ -177,15 +177,15 @@ namespace {
     static_assert(cPlayerSources.size() == 96);
     static_assert(cPlayerHeaders.size() == 63);
 
-    constexpr auto cDebugDivergentSources = std::array{
+    constexpr auto cPcDivergentSources = std::array{
         std::string_view{"MarioActor"},
         std::string_view{"MarioActorDraw"},
         std::string_view{"MarioAnimator"},
     };
 
-    constexpr auto cDebugBegin = std::string_view{"#if !defined(NDEBUG)  // SMGPC_DEBUG_DIVERGENCE"};
+    constexpr auto cPcBegin = std::string_view{"#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE"};
     constexpr auto cRetailBegin = std::string_view{"#else  // SMGPC_RETAIL_SOURCE"};
-    constexpr auto cDebugEnd = std::string_view{"#endif  // SMGPC_DEBUG_DIVERGENCE"};
+    constexpr auto cPcEnd = std::string_view{"#endif  // SMGPC_PC_DIVERGENCE"};
 
     [[nodiscard]] std::string readFile(const std::string &path) {
         auto stream = std::ifstream(path, std::ios::binary);
@@ -196,8 +196,8 @@ namespace {
         return {std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>()};
     }
 
-    [[nodiscard]] bool permitsDebugDivergence(const std::string_view name) {
-        for (const auto permitted : cDebugDivergentSources) {
+    [[nodiscard]] bool permitsPcDivergence(const std::string_view name) {
+        for (const auto permitted : cPcDivergentSources) {
             if (name == permitted) {
                 return true;
             }
@@ -221,19 +221,19 @@ namespace {
         auto cursor = std::size_t{};
 
         while (true) {
-            const auto debugMarker = source.find(cDebugBegin, cursor);
-            if (debugMarker == std::string::npos) {
+            const auto pcMarker = source.find(cPcBegin, cursor);
+            if (pcMarker == std::string::npos) {
                 selected.append(source, cursor, std::string::npos);
                 break;
             }
 
-            const auto blockStart = lineStart(source, debugMarker);
-            const auto retailMarker = source.find(cRetailBegin, debugMarker + cDebugBegin.size());
+            const auto blockStart = lineStart(source, pcMarker);
+            const auto retailMarker = source.find(cRetailBegin, pcMarker + cPcBegin.size());
             const auto endMarker = retailMarker == std::string::npos
                                        ? std::string::npos
-                                       : source.find(cDebugEnd, retailMarker + cRetailBegin.size());
+                                       : source.find(cPcEnd, retailMarker + cRetailBegin.size());
             if (retailMarker == std::string::npos || endMarker == std::string::npos) {
-                throw std::runtime_error("malformed SMGPC debug-divergence guard");
+                throw std::runtime_error("malformed SMGPC PC-divergence guard");
             }
 
             const auto retailStart = lineEnd(source, retailMarker);
@@ -254,13 +254,13 @@ namespace {
             return;
         }
 
-        if (!permitsDebugDivergence(name)) {
+        if (!permitsPcDivergence(name)) {
             throw std::runtime_error("PC Game mirror is not byte-identical: " + portPath);
         }
 
         auto guardCount = std::size_t{};
         if (selectRetailSource(port, &guardCount) != root || guardCount == 0) {
-            throw std::runtime_error("PC debug mirror does not retain byte-identical retail branches: " + portPath);
+            throw std::runtime_error("PC platform mirror does not retain byte-identical retail branches: " + portPath);
         }
     }
 

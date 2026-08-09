@@ -1,6 +1,7 @@
 #pragma once
 
 class SaveDataHandleSequence;
+class JKRHeap;
 
 namespace smgpc::game {
     [[noreturn]] SaveDataHandleSequence &save_data_handle_sequence();
@@ -10,7 +11,20 @@ namespace smgpc::game {
 #include <revolution/types.h>
 
 #include <cmath>
+#include <cstddef>
 #include <functional.hpp>
+
+// Metrowerks exposes integer-alignment placement new for JKR allocations.
+// The native provider keeps the same source contract while using host-owned
+// aligned storage; ordinary delete/delete[] remain valid for the result.
+void* operator new(std::size_t size, int alignment);
+void* operator new[](std::size_t size, int alignment);
+void* operator new(std::size_t size, JKRHeap* heap, int alignment);
+void* operator new[](std::size_t size, JKRHeap* heap, int alignment);
+void operator delete(void* memory, int alignment) noexcept;
+void operator delete[](void* memory, int alignment) noexcept;
+void operator delete(void* memory, JKRHeap* heap, int alignment) noexcept;
+void operator delete[](void* memory, JKRHeap* heap, int alignment) noexcept;
 
 #include "compat/GameGravityCompat.hpp"
 #include "compat/CollisionPartsCompat.hpp"

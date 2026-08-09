@@ -187,6 +187,7 @@ namespace smgpc::render {
                   const J3dModelRendererDrawOptions &options = {}) const;
 
         [[nodiscard]] bool is_loaded() const;
+        [[nodiscard]] std::size_t joint_count() const;
         [[nodiscard]] std::size_t mesh_count() const;
         [[nodiscard]] std::span<const J3dRendererPacketState> render_packets() const;
         [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame,

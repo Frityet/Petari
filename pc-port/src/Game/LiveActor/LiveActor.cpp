@@ -78,6 +78,11 @@ void LiveActor::movement() {
         return;
     }
 
+    // Keep physics ownership at the retail virtual-call boundary. Derived
+    // actors such as MarioActor call LiveActor::movement() and immediately
+    // inspect the displacement and contact planes after it returns, so the
+    // scheduler cannot legally run either phase outside this call.
+    smgpc::compat::update_live_actor_gravity(*this);
     smgpc::compat::update_actor_hit_sensors(this);
     smgpc::compat::update_actor_nerve(this);
 
@@ -88,6 +93,7 @@ void LiveActor::movement() {
     control();
 
     if (!mFlag.mIsDead) {
+        updateBinder();
         smgpc::compat::update_actor_hit_sensors(this);
     }
 }

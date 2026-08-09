@@ -84,6 +84,8 @@ namespace smgpc::compat {
 
     void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive);
     [[nodiscard]] smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor);
+    void require_actor_model(LiveActor* actor);
+    [[nodiscard]] std::size_t actor_model_joint_count(const LiveActor* actor);
     void release_actor_model_state(const LiveActor* actor);
     [[nodiscard]] const smgpc::render::J3dMatrix3x4& actor_base_matrix(const LiveActor* actor);
     void set_actor_base_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix);
@@ -92,6 +94,7 @@ namespace smgpc::compat {
                           std::uint64_t frame, smgpc::render::live_actor::LiveActorModel::DrawPass pass);
 
     void start_actor_bck(LiveActor* actor, const char* name, const char* file_name);
+    [[nodiscard]] std::int16_t require_actor_bck(LiveActor* actor, const char* name, const char* file_name);
     void start_actor_brk(LiveActor* actor, const char* name);
     void start_actor_btk(LiveActor* actor, const char* name);
     void set_actor_brk_frame(LiveActor* actor, float frame);

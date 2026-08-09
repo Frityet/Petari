@@ -11,6 +11,7 @@
 #include "Game/Util/ScreenUtil.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
@@ -344,12 +345,10 @@ namespace MR {
 
     bool isBindedGroundDamageFire(const LiveActor *pActor) {
         const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        if (contacts == nullptr || !contacts->ground) {
+        if (actor.mBinder == nullptr || !actor.mBinder->isBindedGround()) {
             return false;
         }
-        throw std::logic_error(
-            "Ground DamageFire code is unavailable without the contacted CollisionParts attribute table.");
+        return MR::isGroundCodeDamageFire(&actor.mBinder->mGroundInfo.mParentTriangle);
     }
 
     void initShadowSurfaceCircle(LiveActor *, f32) {

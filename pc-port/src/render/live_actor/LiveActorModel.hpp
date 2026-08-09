@@ -38,10 +38,13 @@ public:
     void syncJointAnimationFrom(const LiveActorModel &source);
     void syncMaterialAnimationFrom(const LiveActorModel &source);
     void setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4 &matrix);
+    void requireLoaded();
+    [[nodiscard]] std::int16_t requireBck(std::string_view name, std::string_view file_name);
     void draw(const smgpc::camera::CameraPose &camera_pose, const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
               DrawPass pass = DrawPass::All);
 
     [[nodiscard]] bool isLoaded() const;
+    [[nodiscard]] std::size_t joint_count();
     [[nodiscard]] std::string_view model_arc_name() const;
     [[nodiscard]] std::optional<std::int16_t> bck_frame_max(std::string_view name) const;
     [[nodiscard]] float bck_frame(std::uint64_t runtime_frame) const;

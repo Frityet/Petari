@@ -185,8 +185,8 @@ int main() {
         floor.ground_normal.set(0.0F, 1.0F, 0.0F);
         floor.ground_attribute = 7U;
         smgpc::compat::record_actor_binder_contacts(&actor, floor);
-        require_unavailable([&] { (void)MR::isBindedGroundDamageFire(&actor); },
-                            "a raw KCL attribute index must not be fabricated into a DamageFire floor code");
+        require(!MR::isBindedGroundDamageFire(&actor),
+                "a raw host snapshot attribute must not be fabricated into a DamageFire floor code");
         floor.roof = true;
         floor.roof_normal.set(0.0F, -1.0F, 0.0F);
         smgpc::compat::record_actor_binder_contacts(&actor, floor);

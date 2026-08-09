@@ -58,6 +58,10 @@ namespace JGeometry {
             y = static_cast<T>(y * factor);
         }
 
+        void zero() {
+            set(static_cast<T>(0));
+        }
+
         [[nodiscard]] T squared() const {
             return x * x + y * y;
         }
@@ -184,6 +188,12 @@ namespace JGeometry {
             z = value;
         }
 
+        void set2(f32 value) {
+            z = value;
+            y = value;
+            x = value;
+        }
+
         template <typename T>
         void setAll(f32 value) {
             set(static_cast<T>(value));
@@ -225,6 +235,18 @@ namespace JGeometry {
             auto result = *this;
             result.scale(value);
             return result;
+        }
+
+        [[nodiscard]] TVec3 multiplyOperatorInline(f32 value) const {
+            return scaleInline(value);
+        }
+
+        [[nodiscard]] TVec3 multiplyOperatorInline2(f32 value) const {
+            return scaleInline(value);
+        }
+
+        void mult(f32 value) {
+            scale(value);
         }
 
         void scale(f32 value, const TVec3 &source) {

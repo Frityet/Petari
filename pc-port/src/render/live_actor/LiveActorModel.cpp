@@ -176,6 +176,24 @@ void LiveActorModel::setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4 &m
     mProjmapEffectMatrix = matrix;
 }
 
+void LiveActorModel::requireLoaded() {
+    ensureLoaded();
+    if (mRenderer == nullptr || !mRenderer->is_loaded()) {
+        throw std::runtime_error("Required J3D model archive/model is unavailable: " + mModelArcName);
+    }
+}
+
+std::int16_t LiveActorModel::requireBck(std::string_view name, std::string_view file_name) {
+    requireLoaded();
+    const auto frame_max = startBck(name, file_name);
+    if (!frame_max.has_value()) {
+        const auto resource = file_name.empty() ? name : file_name;
+        throw std::runtime_error("Required BCK animation is unavailable for " + mModelArcName + ": " +
+                                 std::string(resource));
+    }
+    return *frame_max;
+}
+
 void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const smgpc::render::J3dMatrix3x4 &actor_matrix,
                           std::uint64_t frame, DrawPass pass) {
     auto &renderer = smgpc::render::current_aurora_renderer();
@@ -236,6 +254,11 @@ void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const sm
 
 bool LiveActorModel::isLoaded() const {
     return mRenderer != nullptr && mRenderer->is_loaded();
+}
+
+std::size_t LiveActorModel::joint_count() {
+    requireLoaded();
+    return mRenderer->joint_count();
 }
 
 std::string_view LiveActorModel::model_arc_name() const {
@@ -365,13 +388,13 @@ void LiveActorModel::ensureLoaded() {
     if (mLoadAttempted) {
         return;
     }
-    mLoadAttempted = true;
 
-    auto &renderer = smgpc::render::current_aurora_renderer();
     auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
     if (runtime == nullptr || mModelArcName.empty()) {
         return;
     }
+    auto &renderer = smgpc::render::current_aurora_renderer();
+    mLoadAttempted = true;
 
     const auto archive_path = runtime->find_object_archive(mModelArcName);
     if (!archive_path.has_value()) {

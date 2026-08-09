@@ -611,11 +611,8 @@ namespace smgpc::runtime {
                 continue;
             }
 
-            if (auto *actor = entry_live_actor(*entry); actor != nullptr) {
-                if (actor->mFlag.mIsClipped) {
-                    continue;
-                }
-                smgpc::compat::update_live_actor_gravity(*actor);
+            if (auto *actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
+                continue;
             }
 
             switch (entry->kind) {
@@ -634,7 +631,6 @@ namespace smgpc::runtime {
             }
 
             if (auto *actor = entry_live_actor(*entry); actor != nullptr && !actor->mFlag.mIsDead) {
-                smgpc::compat::integrate_live_actor_velocity(*actor);
                 if (auto *runtime = RuntimeContext::try_instance();
                     runtime != nullptr && runtime->player_system().attached_actor() == actor) {
                     runtime->player_system().synchronize_attached_actor();
@@ -939,6 +935,7 @@ namespace smgpc::runtime {
         }
         std::ranges::stable_sort(actor_entries, draw_category_less);
         MR::loadLight(light_type_for_draw_buffer(draw_buffer_type));
+        const auto model_frame = RuntimeContext::instance().frame_index();
 
         const auto model_pass = pass == SceneDrawBufferPass::Translucent ? smgpc::render::live_actor::LiveActorModel::DrawPass::Translucent :
                                                                            smgpc::render::live_actor::LiveActorModel::DrawPass::Opaque;
@@ -949,8 +946,7 @@ namespace smgpc::runtime {
             if (entry->live_actor->mActorLightCtrl != nullptr) {
                 entry->live_actor->mActorLightCtrl->loadLight();
             }
-            smgpc::compat::draw_actor_model(entry->live_actor, camera_pose,
-                                            static_cast<std::uint64_t>(entry->live_actor->getNerveStep()), model_pass);
+            smgpc::compat::draw_actor_model(entry->live_actor, camera_pose, model_frame, model_pass);
 #ifndef NDEBUG
             push_trace(*entry, phase, pass);
 #endif

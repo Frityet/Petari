@@ -26,6 +26,10 @@ namespace JGeometry {
             return static_cast<T>(std::acos(clamp(value, static_cast<T>(-1), static_cast<T>(1))));
         }
 
+        [[nodiscard]] static constexpr T PI() {
+            return static_cast<T>(3.14159265358979323846);
+        }
+
         [[nodiscard]] static constexpr T clamp(T value, T min, T max) {
             if (value < min) {
                 return min;

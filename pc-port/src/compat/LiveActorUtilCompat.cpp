@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <stdexcept>
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
@@ -412,6 +413,14 @@ namespace MR {
         }
         static_assert(sizeof(*matrix) == sizeof(Mtx));
         return reinterpret_cast<MtxPtr>(const_cast<f32*>(matrix->m.data()));
+    }
+
+    s32 getJointNum(const LiveActor* pActor) {
+        const auto count = smgpc::compat::actor_model_joint_count(pActor);
+        if (count > static_cast<std::size_t>(std::numeric_limits<s32>::max())) {
+            throw std::overflow_error("J3D joint count exceeds the retail s32 surface.");
+        }
+        return static_cast<s32>(count);
     }
 
     bool isBrkOneTimeAndStopped(const LiveActor* pActor) {

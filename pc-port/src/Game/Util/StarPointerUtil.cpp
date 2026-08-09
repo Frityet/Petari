@@ -11,6 +11,7 @@
 
 #include <array>
 #include <cmath>
+#include <stdexcept>
 
 namespace {
     std::array< TVec2f, WPAD_MAX_CONTROLLERS > sScreenPositions{};
@@ -141,6 +142,10 @@ namespace MR {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->star_pointer().start_mode(cStarPointerModeFileSelect);
         }
+    }
+
+    void startStarPointerModeDemoMarioDeath(void*) {
+        throw std::logic_error("Mario-death star-pointer mode is outside the PC walking-demo surface.");
     }
 
     void requestStarPointerModeSaveLoad(void*) {

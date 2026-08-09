@@ -90,6 +90,13 @@ namespace MR {
         runtime->delete_effect_all(pActor->getName(), pActor);
     }
 
+    void forceDeleteEffectAll(LiveActor* pActor) {
+        // The host effect service owns no deferred particle command buffer, so
+        // deleting the registered keeper's active instances is already the
+        // retail force-delete boundary.
+        deleteEffectAll(pActor);
+    }
+
     bool tryRumblePad(const void* pSource, const char* pPatternName, s32 channel) {
         if (pPatternName == nullptr) {
             return false;

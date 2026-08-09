@@ -23,6 +23,7 @@ namespace MR {
     void startStarPointerModeFileSelect(void* host);
     void startStarPointerModeSphereSelectorFinger(void* host);
     void startStarPointerModeSphereSelectorOnReaction(void* host);
+    void startStarPointerModeDemoMarioDeath(void* host);
     void endStarPointerMode(void* host);
     void requestStarPointerModeSaveLoad(void* host);
     void requestStarPointerModePictureBook(void* host);

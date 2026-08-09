@@ -159,16 +159,25 @@ namespace JGeometry {
         }
 
         void getEulerXYZ(TVec3f &destination) const {
-            const f32 y = std::asin(TUtil<f32>::clamp(-this->mMtx[2][0], -1.0F, 1.0F));
-            const f32 cosY = std::cos(y);
-
-            if (std::fabs(cosY) <= TUtil<f32>::epsilon()) {
-                destination.set(std::atan2(-this->mMtx[0][1], this->mMtx[1][1]), y, 0.0F);
+            if (this->mMtx[2][0] - 1.0F >= -TUtil<f32>::epsilon()) {
+                destination.set(std::atan2(-this->mMtx[0][1], this->mMtx[1][1]),
+                                -1.57079632679489661923F, 0.0F);
                 return;
             }
 
-            destination.set(std::atan2(this->mMtx[2][1], this->mMtx[2][2]), y,
+            if (this->mMtx[2][0] + 1.0F <= TUtil<f32>::epsilon()) {
+                destination.set(std::atan2(this->mMtx[0][1], this->mMtx[1][1]),
+                                1.57079632679489661923F, 0.0F);
+                return;
+            }
+
+            destination.set(std::atan2(this->mMtx[2][1], this->mMtx[2][2]),
+                            std::asin(TUtil<f32>::clamp(-this->mMtx[2][0], -1.0F, 1.0F)),
                             std::atan2(this->mMtx[1][0], this->mMtx[0][0]));
+        }
+
+        void getEuler(TVec3f &destination) const {
+            getEulerXYZ(destination);
         }
 
         void mult33(const TVec3f &source, TVec3f &destination) const {
@@ -212,8 +221,13 @@ namespace JGeometry {
     struct TPosition3 : public TRotation3<T> {
         TPosition3() = default;
 
-        explicit TPosition3(MtxPtr source) {
+        TPosition3(MtxPtr source) {
             this->set(source);
+        }
+
+        TPosition3 &operator=(MtxPtr source) {
+            this->set(source);
+            return *this;
         }
 
         void getTrans(TVec3f &destination) const {

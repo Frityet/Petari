@@ -2,6 +2,8 @@
 
 #include <revolution/types.h>
 
+class J3DModelData;
+
 class J3DFrameCtrl {
 public:
     enum Attribute_e {

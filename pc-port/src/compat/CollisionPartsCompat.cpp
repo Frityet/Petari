@@ -145,7 +145,8 @@ namespace MR {
                             kcl_entry->path;
         auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>(
             &actor->mFlag.mIsDead);
-        const auto result = collision->register_kcl(kcl, host_matrix, source, registration);
+        const auto result = collision->register_kcl(kcl, host_matrix, source, registration,
+                                                    attributes, sensor);
         if (!result.accepted) {
             registration->release_owner();
             throw std::runtime_error("Required CollisionParts KCL is malformed: " + source);

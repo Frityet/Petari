@@ -28,7 +28,12 @@
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphBase/J3DTexture.hpp"
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <stdexcept>
+#else  // SMGPC_RETAIL_SOURCE
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
+#endif  // SMGPC_PC_DIVERGENCE
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
 #include <cstring>
@@ -93,6 +98,38 @@ namespace {
     };
 };  // namespace
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioActor::initDrawAndModel() {
+    initModelManagerWithAnm(gIsLuigi ? "Luigi" : "Mario", "MarioAnime", true);
+    smgpc::compat::require_actor_model(this);
+    _218 = nullptr;
+    _21C = nullptr;
+    _220 = nullptr;
+    _228 = nullptr;
+    _22C = nullptr;
+    mDLchanger = nullptr;
+    mDL[0] = nullptr;
+    mDL[1] = nullptr;
+    mDLSize = 0;
+    mCurrDL = 0;
+    _1A4 = 0.0f;
+    _9E4 = nullptr;
+    _9C0 = nullptr;
+    _9C8 = nullptr;
+    _A00 = nullptr;
+    _A04 = nullptr;
+    mTornadoMario = nullptr;
+    for (u32 i = 0; i < ARRAY_SIZE(mModels); ++i) {
+        mModels[i] = nullptr;
+    }
+    mCurrModel = 0;
+    _A0B = 0;
+    _B7C = nullptr;
+    _B80[0] = nullptr;
+    _B80[1] = nullptr;
+    _B88 = 0;
+}
+#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::initDrawAndModel() {
     _218 = new DrawAdaptor(MR::Functor(this, &MarioActor::drawShadow), MR::DrawType_AlphaShadow);
     _21C = new DrawAdaptor(MR::Functor(this, &MarioActor::drawSilhouette), MR::DrawType_0x28);
@@ -185,6 +222,7 @@ void MarioActor::initDrawAndModel() {
     initScreenBox();
     MR::startBtp(this, "ElementEnd");
 }
+#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::initBeeMario() {
     const char* modelName;
@@ -483,6 +521,11 @@ void MarioActor::swapTextureInit() {
     initBlink();
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioActor::initBlur() {
+    throw std::logic_error("Mario motion-blur matrix buffers require the deferred raw J3DModelX path.");
+}
+#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::initBlur() {
     _B14 = 0;
     for (u32 i = 0; i < 6; i++) {
@@ -509,7 +552,13 @@ void MarioActor::initBlur() {
     _B12 = 0;
     _B10 = 0;
 }
+#endif  // SMGPC_PC_DIVERGENCE
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioActor::calcViewAndEntry() {
+    smgpc::compat::require_actor_model(this);
+}
+#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::calcViewAndEntry() {
     decideShadowMode();
 
@@ -585,6 +634,7 @@ void MarioActor::calcViewAndEntry() {
         _1B8->control();
     }
 }
+#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::initFace() {
     _A5B = 8;
@@ -788,6 +838,14 @@ void MarioActor::calcViewMainModel() {
     MR::multMtx(_BC8, invBase, invView);
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioActor::draw() const {
+    // SceneScheduler owns the opaque/translucent model passes for every
+    // LiveActorModel. This exact draw-type callback only validates that the
+    // Mario binding is still real; it must not submit the model twice.
+    smgpc::compat::require_actor_model(const_cast<MarioActor*>(this));
+}
+#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::draw() const {
     if (_B48) {
         _B48->draw();
@@ -809,6 +867,7 @@ void MarioActor::draw() const {
     drawMarioModel();
     mMario->draw();
 }
+#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::drawIndirect() const {
     drawModelBlur();
@@ -964,6 +1023,11 @@ void MarioActor::drawReflectModel() const {
     }
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioActor::drawModelBlur() const {
+    throw std::logic_error("Mario motion blur requires the deferred raw J3DModelX matrix history.");
+}
+#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::drawModelBlur() const {
     if (isAllHidden()) {
         return;
@@ -1009,7 +1073,15 @@ void MarioActor::drawModelBlur() const {
 
     model->mFlags._C = false;
 }
+#endif  // SMGPC_PC_DIVERGENCE
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioActor::drawMarioModel() const {
+    // The real model is submitted by SceneScheduler's LiveActorModel draw
+    // buffer pass; the retail raw display-list path is intentionally absent.
+    smgpc::compat::require_actor_model(const_cast<MarioActor*>(this));
+}
+#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::drawMarioModel() const {
     if (isAllHidden()) {
         return;
@@ -1094,6 +1166,7 @@ void MarioActor::drawMarioModel() const {
         GXSetDstAlpha(0, 0);
     }
 }
+#endif  // SMGPC_PC_DIVERGENCE
 
 J3DModelX* MarioActor::getJ3DModel() const {
     return mModels[mCurrModel];

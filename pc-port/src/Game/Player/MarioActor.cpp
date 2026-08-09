@@ -41,6 +41,10 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#include "compat/ActorRuntimeRegistry.hpp"
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JUtility/JUTVideo.hpp>
 
@@ -1208,7 +1212,11 @@ void MarioActor::updateSwingAction() {
     }
     u8 action = selectAction("スピンアタック");
     switch (action) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    case 1: {
+#else  // SMGPC_RETAIL_SOURCE
     case 1:
+#endif  // SMGPC_PC_DIVERGENCE
         bool didSpinPunch = true;
         if (!mMario->mMovementStates._F && isJumping() && !mMario->isDamaging() && !mMario->mMovementStates._2B) {
             bool tmp = false;
@@ -1252,6 +1260,10 @@ void MarioActor::updateSwingAction() {
             _946 = mConst->getTable()->mSpinIntervalTime + 0x22;
         }
         break;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    }
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
     case 2:
         if (isEnableSpinPunch() && !mMario->isSwimming()) {
             shootFireBall();
@@ -1263,6 +1275,17 @@ void MarioActor::updateSwingAction() {
             setPunchHitTimer(0x1e);
         }
         break;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    case 4: {
+        if (mMario->_418 != 0) {
+            break;
+        }
+        mMario->startTeresaDisappear();
+        const MarioConstTable* pConstants = mConst->getTable();
+        _946 = pConstants->mTeresaWallThroughTime + pConstants->mSpinIntervalTime;
+        break;
+    }
+#else  // SMGPC_RETAIL_SOURCE
     case 4:
         if (mMario->_418 != 0) {
             break;
@@ -1271,6 +1294,7 @@ void MarioActor::updateSwingAction() {
         const MarioConstTable* pConstants = mConst->getTable();
         _946 = pConstants->mTeresaWallThroughTime + pConstants->mSpinIntervalTime;
         break;
+#endif  // SMGPC_PC_DIVERGENCE
     case 5:
         if (!isEnableSpinPunch()) {
             break;
@@ -1746,6 +1770,13 @@ void MarioActor::forceSetBaseMtx(MtxPtr mtx) {
     mMario->mMovementStates._23 = 0;
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioActor::calcAnim() {
+    LiveActor::calcAndSetBaseMtx();
+    smgpc::compat::require_actor_model(this);
+    smgpc::compat::advance_actor_animation(this);
+}
+#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::calcAnim() {
     // FIXME: switch stuff
     // https://decomp.me/scratch/Xf6TH
@@ -1983,6 +2014,7 @@ void MarioActor::calcAnim() {
 
     updateRasterScroll();
 }
+#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::calcAndSetBaseMtx() {
     // FIXME: biiiig mess, barely got started
