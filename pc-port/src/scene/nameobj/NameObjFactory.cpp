@@ -160,7 +160,7 @@ namespace {
         UnavailableCreatorRecord{"FileSelector", "retail_file_select_actor_runtime_unavailable"},
         UnavailableCreatorRecord{
             "SphereSelectorHandle",
-            "system_se_me_and_stage_bgm_playback_runtime_unavailable",
+            "me_and_multi_stage_bgm_playback_runtime_unavailable",
         },
         UnavailableCreatorRecord{
             "RestartCube",

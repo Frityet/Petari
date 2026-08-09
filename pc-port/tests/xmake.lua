@@ -1009,13 +1009,13 @@ target("smg-pc-sphere-selector-real-or-absent-tests")
         realtime_output = true
     })
 
-target("smg-pc-atmosphere-level-sound-tests")
+target("smg-pc-j-audio-playback-tests")
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_files {
-        "AtmosphereLevelSoundTests.cpp",
+        "JAudioPlaybackTests.cpp",
         "../aurora/lib/compat.cpp"
     }
     add_deps {
@@ -1030,7 +1030,7 @@ target("smg-pc-atmosphere-level-sound-tests")
         "aurora-si",
         "aurora-vi"
     }
-    add_tests("atmosphere_level_sound", {
+    add_tests("j_audio_playback", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true

@@ -143,16 +143,12 @@ namespace smgpc::runtime {
         StageBgmStart,
         StageBgmUnlock,
         StageBgmStop,
-        StageBgmStateChange,
-        StageBgmTrackMuteStateChange,
         SystemSoundStart,
         SystemSoundStop,
         SystemLevelSoundStart,
         LevelSoundSubmit,
         LevelSoundPermit,
         AtmosphereSoundStart,
-        SystemMEStart,
-        ControllerSpeakerSoundStart,
     };
 
     struct AudioEvent {
@@ -160,8 +156,6 @@ namespace smgpc::runtime {
         std::string name;
         std::optional<u32> sound_id;
         s32 fade_frames = 0;
-        s32 state = 0;
-        u32 change_frames = 0U;
         u32 delay_frames = 0U;
         std::uint64_t frame_index = 0U;
     };
@@ -171,17 +165,11 @@ namespace smgpc::runtime {
         void begin_frame(std::uint64_t frame_index);
         void reset_stage_state();
         void resolve_stage_bgm_absent();
-        void start_stage_bgm(std::string_view name);
         void start_stage_bgm(u32 sound_id);
         void start_stage_bgm(std::string_view name, u32 sound_id);
         void unlock_stage_bgm();
         void stop_stage_bgm(s32 fade_frames);
-        void set_stage_bgm_state(s32 state, u32 change_frames);
-        void set_stage_bgm_track_mute_state(s32 state, s32 change_frames);
-        void set_next_stage_bgm_id(u32 sound_id);
-        void clear_next_stage_bgm_id();
         void clear_last_stage_bgm_id();
-        [[nodiscard]] u32 start_last_stage_bgm();
         void set_cube_bgm_change_invalid(bool invalid);
         void start_system_sound(std::string_view name);
         void stop_system_sound(std::string_view name, u32 delay_frames);
@@ -189,42 +177,26 @@ namespace smgpc::runtime {
         void submit_level_sound();
         void permit_level_sound();
         void start_atmosphere_sound(std::string_view name);
-        void start_system_me(std::string_view name);
-        void start_controller_speaker_sound(std::string_view name);
 
-        [[nodiscard]] bool is_stage_bgm_prepared() const;
         [[nodiscard]] bool has_active_stage_bgm() const;
         [[nodiscard]] bool is_stage_bgm_identity_resolved() const;
-        [[nodiscard]] bool is_stage_bgm_unlocked() const;
         [[nodiscard]] std::string_view current_stage_bgm_name() const;
         [[nodiscard]] std::optional<u32> current_stage_bgm_id() const;
-        [[nodiscard]] std::optional<u32> next_stage_bgm_id() const;
         [[nodiscard]] std::optional<u32> last_stage_bgm_id() const;
-        [[nodiscard]] s32 stage_bgm_state() const;
-        [[nodiscard]] u32 stage_bgm_state_change_frames() const;
-        [[nodiscard]] s32 stage_bgm_track_mute_state() const;
-        [[nodiscard]] s32 stage_bgm_track_mute_change_frames() const;
         [[nodiscard]] bool is_cube_bgm_change_invalid() const;
         [[nodiscard]] std::span<const AudioEvent> events() const;
 
     private:
-        void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0, s32 state = 0,
-                        u32 change_frames = 0U, u32 delay_frames = 0U,
+        void push_event(AudioEventKind kind, std::string_view name, s32 fade_frames = 0,
+                        u32 delay_frames = 0U,
                         std::optional<u32> sound_id = std::nullopt);
 
         std::uint64_t _frame_index = 0U;
-        std::uint64_t _stage_bgm_start_frame = 0U;
         std::string _stage_bgm_name;
         std::optional<u32> _stage_bgm_id;
-        std::optional<u32> _next_stage_bgm_id;
         std::optional<u32> _last_stage_bgm_id;
-        s32 _stage_bgm_state = 0;
-        u32 _stage_bgm_state_change_frames = 0U;
-        s32 _stage_bgm_track_mute_state = 0;
-        s32 _stage_bgm_track_mute_change_frames = 0;
         bool _stage_bgm_requested = false;
         bool _stage_bgm_identity_resolved = false;
-        bool _stage_bgm_unlocked = false;
         bool _cube_bgm_change_invalid = false;
         std::vector<AudioEvent> _events;
     };

@@ -1,74 +1,95 @@
+#include "Game/GameAudio/AudStageBgmWrap.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
 #include "compat/AudioFacadeCompat.hpp"
+#include "compat/StageSessionState.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <stdexcept>
+#include <string>
 
-namespace MR {
-    JAISoundHandle *startSystemSE(const char *pName, s32, s32) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_system_sound(pName);
+namespace {
+    [[nodiscard]] smgpc::runtime::RuntimeContext &
+    require_audio_runtime(const char *operation) {
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        if (runtime == nullptr) {
+            throw std::logic_error(
+                std::string(operation) +
+                " requires an active RuntimeContext audio backend");
         }
-
-        return nullptr;
+        return *runtime;
     }
 
-    JAISoundHandle *startSystemLevelSE(const char *pName, s32, s32) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_system_level_sound(pName);
+    [[nodiscard]] std::string_view require_sound_name(
+        const char *name, const char *operation) {
+        if (name == nullptr || name[0] == '\0') {
+            throw std::invalid_argument(
+                std::string(operation) + " requires a retail sound name");
         }
+        return name;
+    }
+}  // namespace
 
-        return nullptr;
+namespace MR {
+    JAISoundHandle *startSystemSE(const char *pName, s32 parameter1,
+                                  s32 parameter2) {
+        const auto name = require_sound_name(pName, "System-SE playback");
+        if (name == "SE_SY_READ_RIDDLE_S" && MR::isPlayerDead()) {
+            return nullptr;
+        }
+        return require_audio_runtime("System-SE playback")
+            .start_system_sound(name, parameter1, parameter2);
+    }
+
+    JAISoundHandle *startSystemLevelSE(const char *pName, s32 parameter1,
+                                       s32 parameter2) {
+        return require_audio_runtime("System level-SE playback")
+            .start_system_level_sound(
+                require_sound_name(pName, "System level-SE playback"),
+                parameter1, parameter2);
     }
 
     void stopSystemSE(const char *pName, u32 delay) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->stop_system_sound(pName, delay);
-        }
+        require_audio_runtime("System-SE stop")
+            .stop_system_sound(
+                require_sound_name(pName, "System-SE stop"), delay);
     }
 
-    JAISoundHandle *startAtmosphereSE(const char *pName, s32, s32) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_atmosphere_sound(pName);
-        }
-
-        return nullptr;
+    JAISoundHandle *startAtmosphereSE(const char *pName, s32 parameter1,
+                                      s32 parameter2) {
+        return require_audio_runtime("Atmosphere-SE playback")
+            .start_atmosphere_sound(
+                require_sound_name(pName, "Atmosphere-SE playback"),
+                parameter1, parameter2);
     }
 
     JAISoundHandle *startAtmosphereLevelSE(const char *pName, s32 parameter1,
                                            s32 parameter2) {
-        if (pName == nullptr) {
-            throw std::invalid_argument(
-                "Atmosphere level sound playback requires a sound name.");
-        }
-        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (runtime == nullptr) {
-            throw std::logic_error(
-                "Atmosphere level sound playback requires an active RuntimeContext.");
-        }
-        return runtime->start_atmosphere_level_sound(
-            pName, parameter1, parameter2);
+        return require_audio_runtime("JAudio atmosphere level-sound playback")
+            .start_atmosphere_level_sound(
+                require_sound_name(
+                    pName, "JAudio atmosphere level-sound playback"),
+                parameter1, parameter2);
     }
 
-    JAISoundHandle *startSound(const LiveActor *, const char *pName, s32, s32) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_system_sound(pName);
-        }
-
-        return nullptr;
+    JAISoundHandle *startSound(const LiveActor *, const char *pName, s32,
+                               s32) {
+        (void)require_sound_name(pName, "Actor sound playback");
+        throw std::logic_error(
+            "Actor sound playback requires the retail positional JAudio sound-object backend");
     }
 
-    JAISoundHandle *startLevelSound(const LiveActor *, const char *pName, s32, s32, s32) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_system_level_sound(pName);
-        }
-
-        return nullptr;
+    JAISoundHandle *startLevelSound(const LiveActor *, const char *pName,
+                                    s32, s32, s32) {
+        (void)require_sound_name(pName, "Actor level-sound playback");
+        throw std::logic_error(
+            "Actor level-sound playback requires the retail positional JAudio sound-object backend");
     }
 
     bool hasME() {
-        return smgpc::runtime::RuntimeContext::try_instance() != nullptr;
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime != nullptr && runtime->j_audio_playback().has_me();
     }
 
     void startSystemME(const char *pName) {
@@ -79,39 +100,37 @@ namespace MR {
         smgpc::runtime::RuntimeContext::instance().start_system_me(pName);
     }
 
-    JAISoundHandle *startStageBGM(const char *pName, bool) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_stage_bgm(pName);
-        }
-
-        return nullptr;
+    JAISoundHandle *startStageBGM(const char *pName, bool prepared) {
+        return require_audio_runtime("Stage-BGM playback")
+            .start_stage_bgm(
+                require_sound_name(pName, "Stage-BGM playback"), prepared);
     }
 
     void stopStageBGM(u32 fadeFrames) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->stop_stage_bgm(fadeFrames);
-        }
+        require_audio_runtime("Stage-BGM stop")
+            .stop_stage_bgm(static_cast<s32>(fadeFrames));
     }
 
     void unlockStageBGM() {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->unlock_stage_bgm();
-        }
+        require_audio_runtime("Stage-BGM prepared unlock")
+            .unlock_stage_bgm();
     }
 
     bool isPlayingStageBgm() {
-        return smgpc::compat::require_active_audio_event_service().has_active_stage_bgm();
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        return runtime != nullptr &&
+               runtime->j_audio_playback().has_active_stage_bgm() &&
+               !runtime->j_audio_playback().is_stage_bgm_stopping();
     }
 
     bool isPlayingStageBgmID(u32 id) {
-        const auto &audio = smgpc::compat::require_active_audio_event_service();
-        if (!audio.is_stage_bgm_identity_resolved()) {
-            throw std::logic_error("The current stage-BGM raw ID has not been resolved.");
-        }
-        if (!audio.has_active_stage_bgm()) {
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        if (runtime == nullptr ||
+            !runtime->j_audio_playback().has_active_stage_bgm() ||
+            runtime->j_audio_playback().is_stage_bgm_stopping()) {
             return false;
         }
-        const auto current_id = audio.current_stage_bgm_id();
+        const auto current_id = runtime->j_audio_playback().stage_bgm_id();
         if (!current_id.has_value()) {
             throw std::logic_error("An active stage BGM is missing its resolved raw ID.");
         }
@@ -122,8 +141,19 @@ namespace MR {
         if (pName == nullptr) {
             return false;
         }
-        const auto &audio = smgpc::compat::require_active_audio_event_service();
-        return audio.has_active_stage_bgm() && audio.current_stage_bgm_name() == pName;
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        if (runtime == nullptr ||
+            !runtime->j_audio_playback().has_active_stage_bgm() ||
+            runtime->j_audio_playback().is_stage_bgm_stopping()) {
+            return false;
+        }
+        const auto wanted = runtime->j_audio_playback().find_sound_id(pName);
+        if (!wanted.has_value()) {
+            throw std::invalid_argument(
+                "Stage-BGM name is absent from the retail JAudio table: " +
+                std::string(pName));
+        }
+        return runtime->j_audio_playback().stage_bgm_id() == wanted;
     }
 
     bool isStopOrFadeoutStageBgmID(u32 id) {
@@ -143,9 +173,8 @@ namespace MR {
     }
 
     void setStageBGMState(s32 state, u32 changeFrames) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->set_stage_bgm_state(state, changeFrames);
-        }
+        require_audio_runtime("Stage-BGM track-state transition")
+            .set_stage_bgm_state(state, changeFrames);
     }
 
     void setCubeBgmChangeInvalid() {
@@ -157,26 +186,33 @@ namespace MR {
     }
 
     void submitLevelSE() {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->submit_level_sound();
-        }
+        require_audio_runtime("Level-SE submission").submit_level_sound();
     }
 
     void permitLevelSE() {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->permit_level_sound();
-        }
+        require_audio_runtime("Level-SE permission").permit_level_sound();
     }
 
-    void startCSSound(const char *pName, const char *, s32) {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pName != nullptr) {
-            runtime->start_cs_sound(pName);
+    void startCSSound(const char *, const char *pSEName, s32) {
+        // AudSpeakerWrap::isPlayable(-1) is false without a controller-speaker
+        // backend. Retail then plays only the optional ordinary-SE substitute.
+        if (pSEName != nullptr) {
+            (void)startSystemSE(pSEName, -1, -1);
         }
     }
 
     void startCurrentStageBGM() {
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->start_stage_bgm(runtime->current_stage_name());
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        if (runtime == nullptr) {
+            throw std::logic_error(
+                "Current-stage BGM playback requires an active RuntimeContext");
+        }
+        const auto &session = smgpc::compat::require_active_stage_session();
+        const auto sound_id = AudStageBgmWrap::changeStageNameToSoundID(
+            session.scene_name().c_str(), session.stage_name().c_str(),
+            session.scenario_no());
+        if (!sound_id.isAnonymous()) {
+            (void)runtime->start_stage_bgm(static_cast<u32>(sound_id), false);
         }
     }
 }  // namespace MR

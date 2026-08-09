@@ -1395,18 +1395,11 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::reset_stage_state() {
-        _stage_bgm_start_frame = _frame_index;
         _stage_bgm_name.clear();
         _stage_bgm_id.reset();
-        _next_stage_bgm_id.reset();
         _last_stage_bgm_id.reset();
-        _stage_bgm_state = 0;
-        _stage_bgm_state_change_frames = 0U;
-        _stage_bgm_track_mute_state = 0;
-        _stage_bgm_track_mute_change_frames = 0;
         _stage_bgm_requested = false;
         _stage_bgm_identity_resolved = false;
-        _stage_bgm_unlocked = false;
         _cube_bgm_change_invalid = false;
     }
 
@@ -1417,16 +1410,6 @@ namespace smgpc::runtime {
         _stage_bgm_identity_resolved = true;
     }
 
-    void AudioEventService::start_stage_bgm(std::string_view name) {
-        _last_stage_bgm_id = _stage_bgm_requested ? _stage_bgm_id : std::nullopt;
-        _stage_bgm_requested = true;
-        _stage_bgm_identity_resolved = false;
-        _stage_bgm_start_frame = _frame_index;
-        _stage_bgm_name = name;
-        _stage_bgm_id.reset();
-        push_event(AudioEventKind::StageBgmStart, name);
-    }
-
     void AudioEventService::start_stage_bgm(u32 sound_id) {
         start_stage_bgm({}, sound_id);
     }
@@ -1435,14 +1418,12 @@ namespace smgpc::runtime {
         _last_stage_bgm_id = _stage_bgm_requested ? _stage_bgm_id : std::nullopt;
         _stage_bgm_requested = true;
         _stage_bgm_identity_resolved = true;
-        _stage_bgm_start_frame = _frame_index;
         _stage_bgm_name = name;
         _stage_bgm_id = sound_id;
-        push_event(AudioEventKind::StageBgmStart, name, 0, 0, 0U, 0U, sound_id);
+        push_event(AudioEventKind::StageBgmStart, name, 0, 0U, sound_id);
     }
 
     void AudioEventService::unlock_stage_bgm() {
-        _stage_bgm_unlocked = true;
         push_event(AudioEventKind::StageBgmUnlock, {});
     }
 
@@ -1454,47 +1435,11 @@ namespace smgpc::runtime {
         _stage_bgm_identity_resolved = true;
         _stage_bgm_name.clear();
         _stage_bgm_id.reset();
-        push_event(AudioEventKind::StageBgmStop, stopped_name, fade_frames, 0, 0U, 0U, stopped_id);
-    }
-
-    void AudioEventService::set_stage_bgm_state(s32 state, u32 change_frames) {
-        _stage_bgm_state = state;
-        _stage_bgm_state_change_frames = change_frames;
-        push_event(AudioEventKind::StageBgmStateChange, _stage_bgm_name, 0, state, change_frames);
-    }
-
-    void AudioEventService::set_stage_bgm_track_mute_state(s32 state, s32 change_frames) {
-        if (!_stage_bgm_requested) {
-            throw std::logic_error("Cannot change track mute state without an active stage BGM.");
-        }
-        if (change_frames < 0) {
-            throw std::invalid_argument("A stage BGM track-mute transition cannot use negative frames.");
-        }
-        _stage_bgm_track_mute_state = state;
-        _stage_bgm_track_mute_change_frames = change_frames;
-        push_event(AudioEventKind::StageBgmTrackMuteStateChange, _stage_bgm_name, 0, state,
-                   static_cast<u32>(change_frames), 0U, _stage_bgm_id);
-    }
-
-    void AudioEventService::set_next_stage_bgm_id(u32 sound_id) {
-        _next_stage_bgm_id = sound_id;
-    }
-
-    void AudioEventService::clear_next_stage_bgm_id() {
-        _next_stage_bgm_id.reset();
+        push_event(AudioEventKind::StageBgmStop, stopped_name, fade_frames, 0U, stopped_id);
     }
 
     void AudioEventService::clear_last_stage_bgm_id() {
         _last_stage_bgm_id.reset();
-    }
-
-    u32 AudioEventService::start_last_stage_bgm() {
-        if (!_last_stage_bgm_id.has_value()) {
-            throw std::logic_error("No resolved last stage BGM is available.");
-        }
-        const auto sound_id = *_last_stage_bgm_id;
-        start_stage_bgm(sound_id);
-        return sound_id;
     }
 
     void AudioEventService::set_cube_bgm_change_invalid(bool invalid) {
@@ -1506,7 +1451,7 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::stop_system_sound(std::string_view name, u32 delay_frames) {
-        push_event(AudioEventKind::SystemSoundStop, name, 0, 0, 0U, delay_frames);
+        push_event(AudioEventKind::SystemSoundStop, name, 0, delay_frames);
     }
 
     void AudioEventService::start_system_level_sound(std::string_view name) {
@@ -1525,28 +1470,12 @@ namespace smgpc::runtime {
         push_event(AudioEventKind::AtmosphereSoundStart, name);
     }
 
-    void AudioEventService::start_system_me(std::string_view name) {
-        push_event(AudioEventKind::SystemMEStart, name);
-    }
-
-    void AudioEventService::start_controller_speaker_sound(std::string_view name) {
-        push_event(AudioEventKind::ControllerSpeakerSoundStart, name);
-    }
-
-    bool AudioEventService::is_stage_bgm_prepared() const {
-        return _stage_bgm_requested && _frame_index > _stage_bgm_start_frame;
-    }
-
     bool AudioEventService::has_active_stage_bgm() const {
         return _stage_bgm_requested;
     }
 
     bool AudioEventService::is_stage_bgm_identity_resolved() const {
         return _stage_bgm_identity_resolved;
-    }
-
-    bool AudioEventService::is_stage_bgm_unlocked() const {
-        return _stage_bgm_unlocked;
     }
 
     std::string_view AudioEventService::current_stage_bgm_name() const {
@@ -1557,28 +1486,8 @@ namespace smgpc::runtime {
         return _stage_bgm_id;
     }
 
-    std::optional<u32> AudioEventService::next_stage_bgm_id() const {
-        return _next_stage_bgm_id;
-    }
-
     std::optional<u32> AudioEventService::last_stage_bgm_id() const {
         return _last_stage_bgm_id;
-    }
-
-    s32 AudioEventService::stage_bgm_state() const {
-        return _stage_bgm_state;
-    }
-
-    u32 AudioEventService::stage_bgm_state_change_frames() const {
-        return _stage_bgm_state_change_frames;
-    }
-
-    s32 AudioEventService::stage_bgm_track_mute_state() const {
-        return _stage_bgm_track_mute_state;
-    }
-
-    s32 AudioEventService::stage_bgm_track_mute_change_frames() const {
-        return _stage_bgm_track_mute_change_frames;
     }
 
     bool AudioEventService::is_cube_bgm_change_invalid() const {
@@ -1590,15 +1499,13 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::push_event(AudioEventKind kind, std::string_view name,
-                                       s32 fade_frames, s32 state, u32 change_frames,
-                                       u32 delay_frames, std::optional<u32> sound_id) {
+                                       s32 fade_frames, u32 delay_frames,
+                                       std::optional<u32> sound_id) {
         _events.push_back(AudioEvent{
             .kind = kind,
             .name = std::string(name),
             .sound_id = sound_id,
             .fade_frames = fade_frames,
-            .state = state,
-            .change_frames = change_frames,
             .delay_frames = delay_frames,
             .frame_index = _frame_index,
         });

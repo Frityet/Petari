@@ -161,20 +161,14 @@ int main() {
     auto restart_cube = RestartCube(0, "RestartCube");
     restart_cube._40 = 1;
     restart_cube._44 = -1;
-    restart_cube.changeBgm();
-    require(audio.current_stage_bgm_id() == static_cast<u32>(MBGM_GALAXY_25) && MR::isPlayingStageBgmID(MBGM_GALAXY_25),
-            "exact RestartCube must select HeavensDoor retail BGM slot 1 by raw ID");
-    require(AudWrap::getBgmMgr()->mCurrentBGM[AudBgmMgr::BgmType_Stage] == static_cast<u32>(MBGM_GALAXY_25),
-            "AudBgmMgr direct current-ID reads must stay synchronized with logical audio state");
-    auto unresolved_audio = smgpc::runtime::AudioEventService{};
-    unresolved_audio.start_stage_bgm("unresolved-host-name");
-    require_unavailable([&] {
-        const auto invalid_binding = smgpc::compat::ScopedAudioEventServiceOverride(unresolved_audio);
-    },
-                        "a scoped facade binding must reject an active BGM whose raw identity is unresolved");
-    require(&smgpc::compat::require_active_audio_event_service() == &audio &&
-                AudWrap::getBgmMgr()->mCurrentBGM[AudBgmMgr::BgmType_Stage] == static_cast<u32>(MBGM_GALAXY_25),
-            "a failed nested facade binding must restore the prior service and genuine manager state");
+    require_unavailable(
+        [&] { restart_cube.changeBgm(); },
+        "RestartCube multi-BGM must stay unavailable without the concrete retail scheduler");
+    require(!audio.current_stage_bgm_id().has_value() &&
+                !audio.has_active_stage_bgm() &&
+                AudWrap::getBgmMgr()->mCurrentBGM[AudBgmMgr::BgmType_Stage] ==
+                    static_cast<u32>(-1),
+            "failed multi-BGM playback must not leave an event-only current ID");
     MR::setCubeBgmChangeInvalid();
     require(MR::isCubeBgmChangeInvalid(), "cube BGM invalidation must be retained as real stage-audio state");
     ++passed;
@@ -182,8 +176,8 @@ int main() {
     smgpc::compat::end_stage_audio(audio);
     require(!audio.has_active_stage_bgm() && !audio.is_stage_bgm_identity_resolved() && !audio.is_cube_bgm_change_invalid(),
             "stage-audio teardown must clear active IDs, resolution, handles, and cube-local state");
-    require_unavailable([] { (void)MR::isPlayingStageBgmID(MBGM_GALAXY_25); },
-                        "a torn-down stage must not answer raw-ID queries from stale facade state");
+    require(!MR::isPlayingStageBgmID(MBGM_GALAXY_25),
+            "a torn-down stage must report no concrete raw-ID playback");
     require_unavailable([] { (void)AudWrap::getStageBgm(); },
                         "a torn-down stage must not turn unknown facade identity into a null BGM fallback");
     smgpc::compat::begin_stage_audio(audio, "Game", "HeavensDoorGalaxy", 1);

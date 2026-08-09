@@ -9,6 +9,9 @@ namespace smgpc::compat {
     [[nodiscard]] smgpc::runtime::AudioEventService *try_active_audio_event_service();
     [[nodiscard]] smgpc::runtime::AudioEventService &require_active_audio_event_service();
     void synchronize_audio_facade_state();
+    // Advances facade-owned retail BGM object lifetimes after the concrete
+    // RuntimeContext backend has completed its audio frame.
+    void advance_audio_facade_state();
 
     class ScopedAudioEventServiceOverride final {
     public:

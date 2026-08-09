@@ -4,6 +4,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "resource/RarcArchive.hpp"
+#include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <JSystem/JAudio2/JAISound.hpp>
@@ -100,7 +101,13 @@ namespace smgpc::compat {
         if (static_cast<u32>(sound_id) == static_cast<u32>(-1)) {
             audio.resolve_stage_bgm_absent();
         } else {
-            audio.start_stage_bgm(static_cast<u32>(sound_id));
+            auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+            if (runtime == nullptr || &runtime->audio() != &audio) {
+                throw std::logic_error(
+                    "A nonempty stage-BGM table entry requires a concrete RuntimeContext backend");
+            }
+            (void)runtime->start_stage_bgm(
+                static_cast<u32>(sound_id), false);
         }
         synchronize_audio_facade_state();
     }

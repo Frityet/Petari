@@ -17,7 +17,7 @@
 #include "camera/CameraPose.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "render/J3dModelRenderer.hpp"
-#include "runtime/AtmosphereLevelSoundService.hpp"
+#include "runtime/JAudioPlaybackService.hpp"
 #include "runtime/RflService.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -127,6 +127,11 @@ namespace smgpc::runtime {
 
         RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                        RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
+        // Allows a host to supply a fully concrete playback service (for
+        // example an explicit SDL test sink backed by retail fixtures).
+        RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
+                       std::unique_ptr<JAudioPlaybackService> audio_playback,
+                       RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
         ~RuntimeContext();
 
         RuntimeContext(const RuntimeContext &) = delete;
@@ -188,8 +193,8 @@ namespace smgpc::runtime {
         [[nodiscard]] const WpadService &wpad() const;
         [[nodiscard]] AudioEventService &audio();
         [[nodiscard]] const AudioEventService &audio() const;
-        [[nodiscard]] AtmosphereLevelSoundService &atmosphere_level_audio();
-        [[nodiscard]] const AtmosphereLevelSoundService &atmosphere_level_audio() const;
+        [[nodiscard]] JAudioPlaybackService &j_audio_playback();
+        [[nodiscard]] const JAudioPlaybackService &j_audio_playback() const;
         [[nodiscard]] EffectService &effects();
         [[nodiscard]] const EffectService &effects() const;
         [[nodiscard]] WipeService &scene_wipe();
@@ -237,20 +242,25 @@ namespace smgpc::runtime {
         void attach_scene_execution(smgpc::scene::SceneExecutionService &service);
         void attach_scene_lifecycle(smgpc::scene::SceneLifecycleService &service);
 
-        void start_stage_bgm(std::string_view name);
+        [[nodiscard]] JAISoundHandle *start_stage_bgm(
+            std::string_view name, bool prepared);
+        [[nodiscard]] JAISoundHandle *start_stage_bgm(
+            u32 sound_id, bool prepared);
         void unlock_stage_bgm();
         void stop_stage_bgm(s32 fade_frames);
         void set_stage_bgm_state(s32 state, u32 change_frames);
-        void start_system_sound(std::string_view name);
+        [[nodiscard]] JAISoundHandle *start_system_sound(
+            std::string_view name, s32 parameter_1, s32 parameter_2);
         void stop_system_sound(std::string_view name, u32 delay_frames);
-        void start_system_level_sound(std::string_view name);
+        [[nodiscard]] JAISoundHandle *start_system_level_sound(
+            std::string_view name, s32 parameter_1, s32 parameter_2);
         void submit_level_sound();
         void permit_level_sound();
-        void start_atmosphere_sound(std::string_view name);
+        [[nodiscard]] JAISoundHandle *start_atmosphere_sound(
+            std::string_view name, s32 parameter_1, s32 parameter_2);
         [[nodiscard]] JAISoundHandle *start_atmosphere_level_sound(
             std::string_view name, s32 parameter_1, s32 parameter_2);
         void start_system_me(std::string_view name);
-        void start_cs_sound(std::string_view name);
         void register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                                     std::string_view resource_group_name, bool sort_enabled,
                                     const void *host_identity = nullptr);
@@ -295,7 +305,7 @@ namespace smgpc::runtime {
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
-        AtmosphereLevelSoundService _atmosphere_level_audio;
+        std::unique_ptr<JAudioPlaybackService> _j_audio_playback;
         smgpc::compat::ResourceHolderService _resource_holders;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;

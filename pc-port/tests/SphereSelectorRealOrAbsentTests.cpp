@@ -155,9 +155,9 @@ namespace {
         require(
             support.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::RuntimeClosureUnavailable &&
                 support.reason ==
-                    "system_se_me_and_stage_bgm_playback_runtime_unavailable" &&
+                    "me_and_multi_stage_bgm_playback_runtime_unavailable" &&
                 NameObjFactory::getCreator("SphereSelectorHandle") == nullptr,
-            "SphereSelectorHandle must remain absent until its reachable system-SE/ME and stage-BGM paths have real playback");
+            "SphereSelectorHandle must remain absent until its reachable ME and multi-stage-BGM paths have real playback");
 
         require_logic_error(
             [] {
@@ -206,7 +206,7 @@ namespace {
                     row->table_path == "jmp/placement/common/objinfo" &&
                     row->object_args[0] == 0 && !row->factory_supported &&
                     row->support_reason ==
-                        "system_se_me_and_stage_bgm_playback_runtime_unavailable",
+                        "me_and_multi_stage_bgm_playback_runtime_unavailable",
                 "the test must use the real RMGK01 FileSelect handle row and retain its precise blocker");
 
         auto holder = SceneObjHolder{};
@@ -295,7 +295,7 @@ int main() {
                  test_scene_obj_6f_is_exact_and_synchronous},
         TestCase{"generalized pointer/layout real-or-absent contract",
                  test_generalized_pointer_and_layout_contract},
-        TestCase{"factory stays absent at remaining audio boundaries",
+        TestCase{"factory stays absent at ME/multi-BGM boundaries",
                  test_handle_factory_stays_absent_at_remaining_audio_boundaries},
         TestCase{"real FileSelect row exact init/message contract",
                  test_real_file_select_row_exact_init_and_messages},

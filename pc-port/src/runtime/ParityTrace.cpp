@@ -78,10 +78,6 @@ namespace smgpc::runtime {
                 return "StageBgmUnlock";
             case AudioEventKind::StageBgmStop:
                 return "StageBgmStop";
-            case AudioEventKind::StageBgmStateChange:
-                return "StageBgmStateChange";
-            case AudioEventKind::StageBgmTrackMuteStateChange:
-                return "StageBgmTrackMuteStateChange";
             case AudioEventKind::SystemSoundStart:
                 return "SystemSoundStart";
             case AudioEventKind::SystemSoundStop:
@@ -94,10 +90,6 @@ namespace smgpc::runtime {
                 return "LevelSoundPermit";
             case AudioEventKind::AtmosphereSoundStart:
                 return "AtmosphereSoundStart";
-            case AudioEventKind::SystemMEStart:
-                return "SystemMEStart";
-            case AudioEventKind::ControllerSpeakerSoundStart:
-                return "ControllerSpeakerSoundStart";
             }
 
             return "Unknown";
@@ -953,8 +945,6 @@ namespace smgpc::runtime {
                     {"name", event.name},
                     {"sound_id", event.sound_id.has_value() ? Json(*event.sound_id) : Json(nullptr)},
                     {"fade_frames", event.fade_frames},
-                    {"state", event.state},
-                    {"change_frames", event.change_frames},
                     {"delay_frames", event.delay_frames},
                     {"frame_index", event.frame_index},
                 });
@@ -2313,11 +2303,8 @@ namespace smgpc::runtime {
             {"audio",
              Json{
                  {"stage_bgm", runtime.current_stage_bgm_name()},
-                 {"stage_bgm_active", !runtime.current_stage_bgm_name().empty()},
+                 {"stage_bgm_active", runtime.j_audio_playback().has_active_stage_bgm()},
                  {"stage_bgm_prepared", runtime.is_stage_bgm_prepared()},
-                 {"stage_bgm_unlocked", runtime.audio().is_stage_bgm_unlocked()},
-                 {"stage_bgm_state", runtime.audio().stage_bgm_state()},
-                 {"stage_bgm_state_change_frames", runtime.audio().stage_bgm_state_change_frames()},
                  {"events", audio_events_json(runtime.audio().events())},
              }},
             {"effects",

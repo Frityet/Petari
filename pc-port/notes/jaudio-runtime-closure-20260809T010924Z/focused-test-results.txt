@@ -1,0 +1,36 @@
+2026-08-09 UTC focused validation
+
+PASS  xmake build smg-pc-j-audio-playback-tests
+PASS  xmake run smg-pc-j-audio-playback-tests
+      [info] SDL default(dummy) callbacks=38; mixed_frames=38912; nonzero_samples=34928
+      [ok] retail AFC metadata/PCM, SDL callback, handle, and lifetime proof
+      The target also launches its RuntimeContext/SoundUtil/AudWrap proof under xvfb-run.
+
+      Coverage includes independent prepared/host-pause ordering, prepared and
+      explicitly-paused fade retirement, impossible STRM allocation rejection,
+      checked malformed BSC shifts/gate multiplication, concrete
+      STM_PROLOGUE_01/02 render, and concrete Prologue finite-SE start/stop.
+
+PASS  xvfb-run -a build/linux/x86_64/debug/smg-pc-j-audio-playback-tests --runtime-audio-binding-probe
+      Concrete SE and level handles, submit/permit gate, prepared STM_TITLE,
+      one active RuntimeContext frame, explicit track/queue rejection, fade,
+      and lifecycle keeper release all passed.
+
+PASS  xmake build smg-pc-restart-stage-session-tests
+PASS  xmake run smg-pc-restart-stage-session-tests
+      Restart/stage-session tests passed: 8/8
+
+PASS  xmake build smg-pc-sphere-selector-real-or-absent-tests
+PASS  xmake run smg-pc-sphere-selector-real-or-absent-tests
+      4 SphereSelector real-or-absent tests passed; factory remains absent at
+      ME/multi-stage-BGM boundaries; its reachable system-SE paths are real.
+
+PASS  xmake build smg-pc-story-sequence-real-or-absent-tests
+PASS  xmake run smg-pc-story-sequence-real-or-absent-tests
+      3 StorySequence real-or-absent tests passed.
+
+PASS  xmake build smg-pc-title-probe
+PASS  xmake build smg-pc-game
+PASS  xmake build smg-pc
+
+PASS  git diff --check (parent and Aurora owned diffs)

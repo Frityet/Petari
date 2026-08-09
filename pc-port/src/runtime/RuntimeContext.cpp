@@ -30,6 +30,7 @@
 #include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
+#include "compat/AudioFacadeCompat.hpp"
 #include "compat/RumbleCompat.hpp"
 #include "camera/CameraParam.hpp"
 #include "scene/NameObjLifecycleService.hpp"
@@ -468,8 +469,18 @@ namespace smgpc::runtime {
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                                    RuntimeContextSceneServiceMode scene_service_mode)
+        : RuntimeContext(logger, window_service, nullptr, scene_service_mode) {
+    }
+
+    RuntimeContext::RuntimeContext(
+        logging::ILogger &logger, render::AuroraWindow &window_service,
+        std::unique_ptr<JAudioPlaybackService> audio_playback,
+        RuntimeContextSceneServiceMode scene_service_mode)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
-          _atmosphere_level_audio(_dvd), _resource_holders(_dvd), _rfl(_save_data.nand()),
+          _j_audio_playback(audio_playback != nullptr
+                                ? std::move(audio_playback)
+                                : std::make_unique<JAudioPlaybackService>(_dvd)),
+          _resource_holders(_dvd), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
@@ -557,7 +568,7 @@ namespace smgpc::runtime {
         _scene_lifecycle = nullptr;
         _scene_execution = nullptr;
         _name_obj_lifecycle = nullptr;
-        _atmosphere_level_audio.reset_scene();
+        _j_audio_playback->reset_scene();
         _capture_screen_camera_actor.reset();
         _capture_screen_indirect_actor.reset();
         _capture_screen_director.reset();
@@ -648,7 +659,7 @@ namespace smgpc::runtime {
             _freecam_look_initialized = false;
         }
         _audio.begin_frame(_frame_index);
-        _atmosphere_level_audio.begin_frame(_frame_index);
+        _j_audio_playback->begin_frame(_frame_index);
         _effects.begin_frame(_frame_index);
         refresh_effect_host_bindings();
         _scene_wipe.begin_frame(_frame_index);
@@ -828,7 +839,8 @@ namespace smgpc::runtime {
             execution.execute_movement();
             execution.execute_calc_anim_and_view();
         }
-        _atmosphere_level_audio.end_frame();
+        _j_audio_playback->end_frame();
+        smgpc::compat::advance_audio_facade_state();
     }
 
     void RuntimeContext::set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose) {
@@ -1010,11 +1022,11 @@ namespace smgpc::runtime {
     }
 
     bool RuntimeContext::is_stage_bgm_prepared() const {
-        return _audio.is_stage_bgm_prepared();
+        return _j_audio_playback->is_stage_bgm_prepared();
     }
 
     std::string_view RuntimeContext::current_stage_bgm_name() const {
-        return _audio.current_stage_bgm_name();
+        return _j_audio_playback->stage_bgm_name();
     }
 
     std::optional<std::filesystem::path> RuntimeContext::find_layout_archive(std::string_view layout_name) const {
@@ -1073,12 +1085,12 @@ namespace smgpc::runtime {
         return _audio;
     }
 
-    AtmosphereLevelSoundService &RuntimeContext::atmosphere_level_audio() {
-        return _atmosphere_level_audio;
+    JAudioPlaybackService &RuntimeContext::j_audio_playback() {
+        return *_j_audio_playback;
     }
 
-    const AtmosphereLevelSoundService &RuntimeContext::atmosphere_level_audio() const {
-        return _atmosphere_level_audio;
+    const JAudioPlaybackService &RuntimeContext::j_audio_playback() const {
+        return *_j_audio_playback;
     }
 
     EffectService &RuntimeContext::effects() {
@@ -1302,7 +1314,7 @@ namespace smgpc::runtime {
         _scene_effect_keeper_hosts.clear();
         _scene_effect_emission_instances.clear();
         _scene_effect_keeper_instances.clear();
-        _atmosphere_level_audio.reset_scene();
+        _j_audio_playback->reset_scene();
         _active_scene_registration_scope.reset();
         _scene_scheduler_registration_marker = 0U;
         return registrations.size();
@@ -1371,70 +1383,115 @@ namespace smgpc::runtime {
         _scene_lifecycle = &service;
     }
 
-    void RuntimeContext::start_stage_bgm(std::string_view name) {
-        _audio.start_stage_bgm(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested stage BGM {}"}, name);
+    JAISoundHandle *RuntimeContext::start_stage_bgm(
+        std::string_view name, bool prepared) {
+        auto *handle = _j_audio_playback->start_stage_bgm(name, prepared);
+        const auto sound_id = _j_audio_playback->stage_bgm_id();
+        if (!sound_id.has_value()) {
+            throw std::logic_error(
+                "A concrete stage-BGM voice has no retail sound ID");
+        }
+        _audio.start_stage_bgm(name, *sound_id);
+        _logger.info(logging::Category::APP,
+                     logging::Message{"SMG started retail stage BGM {} ({:#010x})"},
+                     name, *sound_id);
+        return handle;
+    }
+
+    JAISoundHandle *RuntimeContext::start_stage_bgm(
+        u32 sound_id, bool prepared) {
+        auto *handle = _j_audio_playback->start_stage_bgm(sound_id, prepared);
+        _audio.start_stage_bgm(sound_id);
+        _logger.info(logging::Category::APP,
+                     logging::Message{"SMG started retail stage BGM {:#010x}"},
+                     sound_id);
+        return handle;
     }
 
     void RuntimeContext::unlock_stage_bgm() {
+        _j_audio_playback->unlock_stage_bgm();
         _audio.unlock_stage_bgm();
         _logger.info(logging::Category::APP, logging::Message{"SMG unlocked stage BGM"});
     }
 
     void RuntimeContext::stop_stage_bgm(s32 fade_frames) {
+        if (fade_frames < 0) {
+            throw std::invalid_argument(
+                "A stage-BGM fade cannot use negative frames");
+        }
+        _j_audio_playback->stop_stage_bgm(static_cast<u32>(fade_frames));
         _audio.stop_stage_bgm(fade_frames);
         _logger.info(logging::Category::APP, logging::Message{"SMG stopped stage BGM over {} frames"}, fade_frames);
     }
 
     void RuntimeContext::set_stage_bgm_state(s32 state, u32 change_frames) {
-        _audio.set_stage_bgm_state(state, change_frames);
-        _logger.info(logging::Category::APP, logging::Message{"SMG set stage BGM state {} over {} frames"}, state, change_frames);
+        if (!_j_audio_playback->has_active_stage_bgm()) {
+            return;
+        }
+        throw std::logic_error(
+            "Stage-BGM track-state transitions require the retail multi-BGM scheduler");
     }
 
-    void RuntimeContext::start_system_sound(std::string_view name) {
+    JAISoundHandle *RuntimeContext::start_system_sound(
+        std::string_view name, s32 parameter_1, s32 parameter_2) {
+        auto *handle = _j_audio_playback->start_sound_effect(
+            name, parameter_1, parameter_2);
         _audio.start_system_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested system sound {}"}, name);
+        _logger.info(logging::Category::APP,
+                     logging::Message{"SMG started retail system sound {}"}, name);
+        return handle;
     }
 
     void RuntimeContext::stop_system_sound(std::string_view name, u32 delay_frames) {
+        _j_audio_playback->stop_sound_effect(name, delay_frames);
         _audio.stop_system_sound(name, delay_frames);
         _logger.info(logging::Category::APP, logging::Message{"SMG stopped system sound {} after {} frames"}, name, delay_frames);
     }
 
-    void RuntimeContext::start_system_level_sound(std::string_view name) {
+    JAISoundHandle *RuntimeContext::start_system_level_sound(
+        std::string_view name, s32 parameter_1, s32 parameter_2) {
+        auto *handle = _j_audio_playback->start_level_sound(
+            name, parameter_1, parameter_2);
+        if (handle == nullptr) {
+            return nullptr;
+        }
         _audio.start_system_level_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested system level sound {}"}, name);
+        _logger.info(logging::Category::APP,
+                     logging::Message{"SMG started retail system level sound {}"}, name);
+        return handle;
     }
 
     void RuntimeContext::submit_level_sound() {
+        _j_audio_playback->set_level_sound_permitted(false);
         _audio.submit_level_sound();
         _logger.info(logging::Category::APP, logging::Message{"SMG submitted level sounds"});
     }
 
     void RuntimeContext::permit_level_sound() {
+        _j_audio_playback->set_level_sound_permitted(true);
         _audio.permit_level_sound();
         _logger.info(logging::Category::APP, logging::Message{"SMG permitted level sounds"});
     }
 
-    void RuntimeContext::start_atmosphere_sound(std::string_view name) {
+    JAISoundHandle *RuntimeContext::start_atmosphere_sound(
+        std::string_view name, s32 parameter_1, s32 parameter_2) {
+        auto *handle = _j_audio_playback->start_sound_effect(
+            name, parameter_1, parameter_2);
         _audio.start_atmosphere_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested atmosphere sound {}"}, name);
+        _logger.info(logging::Category::APP,
+                     logging::Message{"SMG started retail atmosphere sound {}"}, name);
+        return handle;
     }
 
     JAISoundHandle *RuntimeContext::start_atmosphere_level_sound(
         std::string_view name, s32 parameter_1, s32 parameter_2) {
-        return _atmosphere_level_audio.start_level_sound(
+        return _j_audio_playback->start_level_sound(
             name, parameter_1, parameter_2);
     }
 
     void RuntimeContext::start_system_me(std::string_view name) {
-        _audio.start_system_me(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested system ME {}"}, name);
-    }
-
-    void RuntimeContext::start_cs_sound(std::string_view name) {
-        _audio.start_controller_speaker_sound(name);
-        _logger.info(logging::Category::APP, logging::Message{"SMG requested controller speaker sound {}"}, name);
+        throw std::logic_error(
+            "JAudio ME scheduler is unavailable for " + std::string(name));
     }
 
     void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,

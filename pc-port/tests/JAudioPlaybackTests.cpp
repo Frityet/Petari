@@ -1,7 +1,16 @@
-#include "compat/JAudioLevelSoundArchive.hpp"
+#include <aurora/j_audio_sound_archive.hpp>
+#include <aurora/j_audio_stream.hpp>
+#include "Game/AudioLib/AudBgm.hpp"
+#include "Game/AudioLib/AudBgmMgr.hpp"
+#include "Game/AudioLib/AudWrap.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Logger.hpp"
+#include "RendererService.hpp"
+#include "compat/AudioFacadeCompat.hpp"
 #include "compat/JAudioSoundParameterSemantics.hpp"
 #include "resource/Yaz0.hpp"
-#include "runtime/AtmosphereLevelSoundService.hpp"
+#include "runtime/JAudioPlaybackService.hpp"
+#include "runtime/RuntimeContext.hpp"
 
 #include <aurora/audio.hpp>
 #include <SDL3/SDL.h>
@@ -18,6 +27,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <span>
@@ -231,7 +241,7 @@ namespace {
     }
 
     [[nodiscard]] std::vector<std::uint8_t>
-    pcm16_little_endian(const aurora::audio::LoopingPcmLayer &layer) {
+    pcm16_little_endian(const aurora::audio::PcmLayer &layer) {
         auto bytes = std::vector<std::uint8_t>{};
         bytes.reserve(layer.samples->size() * 2U);
         for (const auto sample : *layer.samples) {
@@ -247,6 +257,7 @@ namespace {
     struct RetailAudioFixture {
         std::shared_ptr<const std::vector<std::uint8_t>> baa;
         std::shared_ptr<const std::vector<std::uint8_t>> wave_archive;
+        std::filesystem::path localized_audio_root;
     };
 
     constexpr std::uint32_t fourcc(char a, char b, char c, char d) {
@@ -398,32 +409,49 @@ namespace {
                 std::move(baa)),
             .wave_archive =
                 std::make_shared<const std::vector<std::uint8_t>>(wave),
+            .localized_audio_root = *root,
         };
     }
 
-    [[nodiscard]] std::unique_ptr<smgpc::compat::JAudioLevelSoundArchive>
+    [[nodiscard]] std::vector<std::uint8_t> load_fixture_wave(
+        const RetailAudioFixture &fixture, std::string_view name) {
+        if (name == "B64kawa_0.aw") {
+            return *fixture.wave_archive;
+        }
+        const auto filename = std::filesystem::path(name);
+        require(!filename.empty() && !filename.is_absolute() &&
+                    filename.filename() == filename,
+                "retail fixture AW name must be a plain filename");
+        const auto disc_root =
+            fixture.localized_audio_root.parent_path().parent_path();
+        for (const auto &candidate : {
+                 fixture.localized_audio_root / "Waves" / filename,
+                 disc_root / "AudioRes" / "Waves" / filename,
+             }) {
+            if (std::filesystem::is_regular_file(candidate)) {
+                return read_file(candidate);
+            }
+        }
+        throw std::runtime_error(
+            "retail fixture is missing referenced AW archive " +
+            std::string(name));
+    }
+
+    [[nodiscard]] std::unique_ptr<aurora::audio::JAudioSoundArchive>
     make_archive(const RetailAudioFixture &fixture) {
-        return std::make_unique<smgpc::compat::JAudioLevelSoundArchive>(
+        return std::make_unique<aurora::audio::JAudioSoundArchive>(
             *fixture.baa,
-            [wave = fixture.wave_archive](std::string_view name) {
-                if (name != "B64kawa_0.aw") {
-                    throw std::runtime_error(
-                        "test fixture was asked for an unaudited AW archive");
-                }
-                return *wave;
+            [fixture](std::string_view name) {
+                return load_fixture_wave(fixture, name);
             });
     }
 
-    [[nodiscard]] std::unique_ptr<smgpc::compat::JAudioLevelSoundArchive>
+    [[nodiscard]] std::unique_ptr<aurora::audio::JAudioSoundArchive>
     make_archive(std::span<const std::uint8_t> baa,
                  const RetailAudioFixture &fixture) {
-        return std::make_unique<smgpc::compat::JAudioLevelSoundArchive>(
-            baa, [wave = fixture.wave_archive](std::string_view name) {
-                if (name != "B64kawa_0.aw") {
-                    throw std::runtime_error(
-                        "test fixture was asked for an unaudited AW archive");
-                }
-                return *wave;
+        return std::make_unique<aurora::audio::JAudioSoundArchive>(
+            baa, [fixture](std::string_view name) {
+                return load_fixture_wave(fixture, name);
             });
     }
 
@@ -494,9 +522,9 @@ namespace {
                     !archive->find_sound_id("SE_AT_LV_NOT_A_RETAIL_SOUND").has_value(),
                 "BSTN must dynamically resolve the two SphereSelector level sounds");
 
-        const auto wind1 = archive->resolve_level_sound(
+        const auto wind1 = archive->resolve_persistent_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1");
-        const auto wind2 = archive->resolve_level_sound(
+        const auto wind2 = archive->resolve_persistent_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_2");
         require(wind1.has_value() && wind2.has_value() &&
                     wind1->priority == 128U && wind1->table_volume == 80U &&
@@ -578,6 +606,136 @@ namespace {
                 "decoded PCM16 must match independent retail AFC SHA-256 oracles");
     }
 
+    void test_retail_title_and_picturebook_recipes(
+        const RetailAudioFixture &fixture) {
+        auto archive = make_archive(fixture);
+        for (const auto &expected : {
+                 std::tuple{"STM_TITLE", 0x02000001U,
+                            std::string_view{"SMG_title_strm.ast"}},
+                 std::tuple{"STM_PROLOGUE_01", 0x0200001fU,
+                            std::string_view{"SMG_ev_prolo01_strm.ast"}},
+                 std::tuple{"STM_PROLOGUE_01_B", 0x02000046U,
+                            std::string_view{"SMG_ev_prolo01_b_strm.ast"}},
+                 std::tuple{"STM_PROLOGUE_02", 0x02000020U,
+                            std::string_view{"SMG_ev_prolo02_strm.ast"}},
+             }) {
+            const auto metadata = archive->resolve_sound(std::get<0>(expected));
+            if (!metadata.has_value() ||
+                metadata->sound_id != std::get<1>(expected) ||
+                metadata->kind != aurora::audio::JAudioSoundKind::Stream ||
+                !metadata->stream_path.ends_with(std::get<2>(expected))) {
+                throw std::runtime_error(
+                    std::string("unexpected retail stream metadata for ") +
+                    std::get<0>(expected) +
+                    (metadata.has_value()
+                         ? " id=" + std::to_string(metadata->sound_id) +
+                               " path=" + metadata->stream_path
+                         : " (name absent)"));
+            }
+        }
+
+        const auto disc_root =
+            fixture.localized_audio_root.parent_path().parent_path();
+        auto impossible_stream = read_file(
+            disc_root / "AudioRes" / "Stream" / "SMG_title_strm.ast");
+        write_be32(impossible_stream, 0x14U,
+                   std::numeric_limits<std::uint32_t>::max());
+        require_throws<std::runtime_error>(
+            [&] {
+                (void)aurora::audio::decode_jaudio_stream(
+                    impossible_stream, 0U);
+            },
+            "cannot fit in the block payload",
+            "a tiny malformed STRM header must reject an impossible sample count before allocation");
+
+        constexpr auto finite_names = std::array{
+            "SE_SY_GAME_START",
+            "SE_SY_TALK_FOCUS_ITEM",
+            "SE_SY_PICTUREBOOK_NEXT_ST",
+            "SE_SY_PICBOOK_CONTENTS_CUR",
+            "SE_SY_TALK_OK",
+            "SE_SY_PICTUREBOOK_NEXT_F_ST",
+            "SE_SY_PICTUREBOOK_NEXT_F_ED",
+            "SE_SY_PICTUREBOOK_NEXT_ED",
+            "SE_SY_PICTUREBOOK_END",
+            "SE_SY_GALAXY_DECIDE_CANCEL",
+            "SE_SY_GALAXY_SELECTED",
+            "SE_SY_BUTTON_CURSOR_ON",
+            "SE_SY_LETTER_APPEAR",
+            "SE_SV_PEACH_OPENING_LETTER",
+            "SE_DM_ARRIVE_CASTLE_STAR",
+            "SE_DM_ASTRO_HANDLE_GRAB",
+        };
+        for (const auto *name : finite_names) {
+            try {
+                const auto recipe = archive->resolve_sound_effect(name);
+                require(recipe.has_value() && !recipe->voice.layers.empty() &&
+                            recipe->voice.layers.size() == recipe->layers.size(),
+                        "reachable system SE must resolve a concrete finite PCM recipe");
+                for (std::size_t index = 0; index < recipe->voice.layers.size();
+                     ++index) {
+                    const auto &layer = recipe->voice.layers[index];
+                    require(layer.samples != nullptr && !layer.samples->empty() &&
+                                layer.sample_rate != 0U,
+                            "finite JAudio layer must own decoded retail PCM");
+                    require(layer.loop_end == 0U ||
+                                (layer.gate_seconds > 0.0 &&
+                                 layer.release_seconds >= 0.0),
+                            "a looping finite layer must have a scheduled retail gate");
+                }
+            } catch (const std::exception &error) {
+                throw std::runtime_error(std::string(name) + ": " + error.what());
+            }
+        }
+
+        const auto game_start =
+            archive->resolve_sound_effect("SE_SY_GAME_START");
+        require(game_start.has_value() && game_start->sound_id == 0x20U &&
+                    game_start->layers.size() == 21U &&
+                    std::ranges::any_of(game_start->layers, [](const auto &layer) {
+                        return layer.bank == 65U;
+                    }),
+                "Title start must include every retail bank-64/bank-65 note");
+        const auto focus =
+            archive->resolve_sound_effect("SE_SY_TALK_FOCUS_ITEM");
+        require(focus.has_value() && focus->sound_id == 0x36U &&
+                    focus->layers.size() == 4U,
+                "PictureBook focus must include its four-note retail recipe");
+        const auto peach =
+            archive->resolve_sound_effect("SE_SV_PEACH_OPENING_LETTER");
+        require(peach.has_value() && peach->layers.size() == 2U &&
+                    peach->layers[0].waits_for_sample_completion &&
+                    peach->layers[1].waits_for_sample_completion &&
+                    std::abs(peach->layers[1].start_delay_seconds -
+                             2.0752333333333333) < 0.00001,
+                "Peach letter note two must wait for note one's natural sample lifetime");
+        const auto arrive =
+            archive->resolve_sound_effect("SE_DM_ARRIVE_CASTLE_STAR");
+        const auto grab =
+            archive->resolve_sound_effect("SE_DM_ASTRO_HANDLE_GRAB");
+        const auto selected =
+            archive->resolve_sound_effect("SE_SY_GALAXY_SELECTED");
+        if (!(arrive.has_value() && arrive->sound_id == 0x00070016U &&
+              arrive->layers.size() == 1U && grab.has_value() &&
+              grab->sound_id == 0x00070005U && grab->layers.size() == 2U &&
+              std::ranges::all_of(grab->layers, [](const auto &layer) {
+                  return layer.bank == 88U;
+              }) && selected.has_value() && selected->sound_id == 0x5eU &&
+              selected->layers.size() == 17U)) {
+            const auto shape = [](const auto &recipe) {
+                if (!recipe.has_value()) {
+                    return std::string{"absent"};
+                }
+                return std::to_string(recipe->sound_id) + "/" +
+                       std::to_string(recipe->layers.size());
+            };
+            throw std::runtime_error(
+                "unexpected audited finite recipe shape: arrive=" +
+                shape(arrive) + ", grab=" + shape(grab) +
+                ", selected=" + shape(selected));
+        }
+    }
+
     void test_archive_rejects_cross_segment_references(
         const RetailAudioFixture &fixture) {
         constexpr auto wind_name = "SE_AT_LV_ASTRO_DOME_WIND_1";
@@ -602,13 +760,20 @@ namespace {
                        static_cast<std::uint32_t>(bst.size));
             auto archive = make_archive(corrupted, fixture);
             require_throws<std::runtime_error>(
-                [&] { (void)archive->resolve_level_sound(wind_name); },
+                [&] { (void)archive->resolve_persistent_sound(wind_name); },
                 "invalid BST root",
                 "BST references must not escape their declared segment");
         }
 
         const auto bsc = find_baa_table_segment(
             *fixture.baa, fourcc('b', 's', 'c', ' '));
+        const auto wind_sequence_entry = [&](const auto &bytes) {
+            const auto group = bsc.offset +
+                               read_be32(bytes,
+                                         bsc.offset + 8U + 6U * 4U);
+            return bsc.offset +
+                   read_be32(bytes, group + 4U + 0x1aU * 4U);
+        };
 
         {
             auto corrupted = *fixture.baa;
@@ -616,7 +781,7 @@ namespace {
                        static_cast<std::uint32_t>(bsc.size));
             auto archive = make_archive(corrupted, fixture);
             require_throws<std::runtime_error>(
-                [&] { (void)archive->resolve_level_sound(wind_name); },
+                [&] { (void)archive->resolve_persistent_sound(wind_name); },
                 "invalid BSC group offset",
                 "BSC references must not escape their declared segment");
         }
@@ -630,7 +795,7 @@ namespace {
                        static_cast<std::uint32_t>(bank.data.size));
             auto archive = make_archive(corrupted, fixture);
             require_throws<std::runtime_error>(
-                [&] { (void)archive->resolve_level_sound(wind_name); },
+                [&] { (void)archive->resolve_persistent_sound(wind_name); },
                 "invalid IBNK instrument offset",
                 "IBNK references must not escape their declared bank");
         }
@@ -643,9 +808,52 @@ namespace {
                        static_cast<std::uint32_t>(wsys.size));
             auto archive = make_archive(corrupted, fixture);
             require_throws<std::runtime_error>(
-                [&] { (void)archive->resolve_level_sound(wind_name); },
+                [&] { (void)archive->resolve_persistent_sound(wind_name); },
                 "invalid WSYS archive-bank offset",
                 "WSYS references must not escape their declared wave bank");
+        }
+
+        {
+            auto corrupted = *fixture.baa;
+            const auto cursor = wind_sequence_entry(corrupted);
+            require(cursor <= bsc.offset + bsc.size &&
+                        bsc.offset + bsc.size - cursor >= 6U,
+                    "shift-corruption fixture must stay inside its BSC segment");
+            corrupted[cursor] = 0xdaU;
+            corrupted[cursor + 1U] = 9U;
+            corrupted[cursor + 2U] = 0U;
+            corrupted[cursor + 3U] = 0U;
+            corrupted[cursor + 4U] = 16U;
+            corrupted[cursor + 5U] = 0xffU;
+            auto archive = make_archive(corrupted, fixture);
+            require_throws<std::runtime_error>(
+                [&] { (void)archive->resolve_sound_effect(wind_name); },
+                "shift operand exceeds",
+                "a BSC register shift must reject operands outside its 16-bit register width");
+        }
+
+        {
+            auto corrupted = *fixture.baa;
+            const auto cursor = wind_sequence_entry(corrupted);
+            require(cursor <= bsc.offset + bsc.size &&
+                        bsc.offset + bsc.size - cursor >= 11U,
+                    "gate-overflow fixture must stay inside its BSC segment");
+            corrupted[cursor] = 0xd8U;
+            corrupted[cursor + 1U] = 0x65U;
+            corrupted[cursor + 2U] = 0xffU;
+            corrupted[cursor + 3U] = 0xffU;
+            corrupted[cursor + 4U] = 0x3cU;
+            corrupted[cursor + 5U] = 0U;
+            corrupted[cursor + 6U] = 0x7fU;
+            corrupted[cursor + 7U] = 0x84U;
+            corrupted[cursor + 8U] = 0x80U;
+            corrupted[cursor + 9U] = 0x02U;
+            corrupted[cursor + 10U] = 0xffU;
+            auto archive = make_archive(corrupted, fixture);
+            require_throws<std::runtime_error>(
+                [&] { (void)archive->resolve_sound_effect(wind_name); },
+                "gate duration overflows",
+                "a BSC note gate must reject duration/rate products outside the JAS tick range");
         }
 
         {
@@ -681,7 +889,7 @@ namespace {
             }
             auto archive = make_archive(corrupted, fixture);
             require_throws<std::runtime_error>(
-                [&] { (void)archive->resolve_level_sound(wind_name); },
+                [&] { (void)archive->resolve_persistent_sound(wind_name); },
                 "lacks an end command",
                 "a BSC root without 0xff must fail at its instruction bound");
         }
@@ -690,9 +898,9 @@ namespace {
     void test_deterministic_mixer_release() {
         auto samples = std::make_shared<const std::vector<float>>(
             std::initializer_list<float>{0.25F, -0.25F, 0.5F, -0.5F});
-        auto mixer = aurora::audio::LoopingAudioMixer(8U);
-        const auto token = mixer.start_voice(aurora::audio::LoopingVoiceSpec{
-            .layers = {aurora::audio::LoopingPcmLayer{
+        auto mixer = aurora::audio::PcmAudioMixer(8U);
+        const auto token = mixer.start_voice(aurora::audio::PcmVoiceSpec{
+            .layers = {aurora::audio::PcmLayer{
                 .samples = samples,
                 .sample_rate = 4U,
                 .loop_start = 0U,
@@ -760,7 +968,7 @@ namespace {
 
     void test_missing_device_fails_explicitly() {
         set_audio_driver("smgpc-intentionally-missing-audio-driver");
-        auto mixer = aurora::audio::LoopingAudioMixer{};
+        auto mixer = aurora::audio::PcmAudioMixer{};
         require_throws<std::runtime_error>(
             [&] { mixer.open_default_playback(); },
             "SDL audio initialization failed",
@@ -771,7 +979,7 @@ namespace {
 
     void test_production_rejects_dummy_sink() {
         set_audio_driver("dummy");
-        auto mixer = aurora::audio::LoopingAudioMixer{};
+        auto mixer = aurora::audio::PcmAudioMixer{};
         require_throws<std::runtime_error>(
             [&] { mixer.open_default_playback(); }, "not an audible",
             "production playback must reject SDL's non-audible dummy sink");
@@ -794,12 +1002,208 @@ namespace {
     void test_real_stream_handle_and_lifetime(const RetailAudioFixture &fixture) {
         set_audio_driver("dummy");
         auto factory = [fixture] { return make_archive(fixture); };
-        auto mixer = std::make_unique<aurora::audio::LoopingAudioMixer>(
+        auto mixer = std::make_unique<aurora::audio::PcmAudioMixer>(
             48000U,
             aurora::audio::PlaybackDevicePolicy::AllowExplicitTestSink);
         auto *mixer_observer = mixer.get();
-        auto service = smgpc::runtime::AtmosphereLevelSoundService(
-            std::move(factory), std::move(mixer));
+        const auto disc_root =
+            fixture.localized_audio_root.parent_path().parent_path();
+        auto service = smgpc::runtime::JAudioPlaybackService(
+            std::move(factory),
+            [disc_root](std::string_view path) {
+                auto relative = std::filesystem::path(path);
+                if (relative.is_absolute()) {
+                    relative = relative.relative_path();
+                }
+                return read_file(disc_root / relative);
+            },
+            std::move(mixer));
+
+        auto *title = service.start_stage_bgm("STM_TITLE", true);
+        const auto prepared_stop_token = aurora::audio::VoiceToken{
+            service.stage_bgm_backend_token()};
+        require(title != nullptr && title->isSoundAttached() &&
+                    title->backendOwner() == &service &&
+                    prepared_stop_token &&
+                    service.stage_bgm_id() == 0x02000001U &&
+                    service.is_stage_bgm_prepared() &&
+                    service.is_stage_bgm_paused() &&
+                    service.active_voice_count() == 1U,
+                "prepared Title BGM must own a paused concrete retail stream token");
+        const auto paused_callback_deadline =
+            std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (service.playback_stats().device_callbacks == 0U &&
+               std::chrono::steady_clock::now() < paused_callback_deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        require(service.playback_stats().device_callbacks != 0U &&
+                    mixer_observer->voice_rendered_frames(prepared_stop_token) ==
+                        0U,
+                "prepared stream callbacks must not advance the paused backend token");
+        service.pause_stage_bgm(true);
+        service.pause_stage_bgm(false);
+        require(service.is_stage_bgm_prepared() &&
+                    service.is_stage_bgm_paused() &&
+                    mixer_observer->voice_rendered_frames(prepared_stop_token) ==
+                        0U,
+                "clearing host pause must not bypass a prepared stream's unlock gate");
+
+        constexpr auto prepared_stop_fade_frames = 6U;
+        service.stop_stage_bgm(prepared_stop_fade_frames);
+        require(service.is_stage_bgm_stopping() &&
+                    !service.is_stage_bgm_prepared() &&
+                    !service.is_stage_bgm_paused() &&
+                    title->isSoundAttached(),
+                "stopping a prepared stream must release the host pause and retain its handle through the fade");
+        const auto prepared_stop_deadline =
+            std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (mixer_observer->is_voice_active(prepared_stop_token) &&
+               std::chrono::steady_clock::now() < prepared_stop_deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        require(!mixer_observer->is_voice_active(prepared_stop_token),
+                "a prepared stream stopped before unlock must retire its concrete token");
+        service.begin_frame(0U);
+        service.end_frame();
+        require(!title->isSoundAttached() &&
+                    !service.has_active_stage_bgm(),
+                "a prepared stream stopped before unlock must detach after retirement");
+
+        title = service.start_stage_bgm("STM_TITLE", true);
+        const auto title_token = aurora::audio::VoiceToken{
+            service.stage_bgm_backend_token()};
+        require(title != nullptr && title->isSoundAttached() && title_token &&
+                    title_token != prepared_stop_token &&
+                    service.is_stage_bgm_prepared() &&
+                    service.is_stage_bgm_paused(),
+                "a new prepared stream must own a fresh paused backend token");
+        service.pause_stage_bgm(true);
+        service.unlock_stage_bgm();
+        require(!service.is_stage_bgm_prepared() &&
+                    service.is_stage_bgm_paused() &&
+                    mixer_observer->voice_rendered_frames(title_token) == 0U,
+                "Title unlock must preserve an independent host pause");
+        service.pause_stage_bgm(false);
+        require(!service.is_stage_bgm_paused(),
+                "clearing host pause after unlock must resume the concrete stream");
+        const auto unlocked_deadline =
+            std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (mixer_observer->voice_rendered_frames(title_token) == 0U &&
+               std::chrono::steady_clock::now() < unlocked_deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        require(mixer_observer->voice_rendered_frames(title_token).value_or(0U) !=
+                    0U,
+                "unlock must advance the same prepared stream token");
+
+        constexpr auto title_fade_frames = 12U;
+        service.pause_stage_bgm(true);
+        require(service.is_stage_bgm_paused(),
+                "explicit stage pause must freeze the active stream before stop");
+        service.stop_stage_bgm(title_fade_frames);
+        require(service.is_stage_bgm_stopping() && title->isSoundAttached() &&
+                    service.has_active_stage_bgm() &&
+                    !service.is_stage_bgm_paused(),
+                "a nonzero Title fade must release an explicit host pause and remain attached while stopping");
+        const auto fade_deadline =
+            std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (mixer_observer->is_voice_active(title_token) &&
+               std::chrono::steady_clock::now() < fade_deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        require(!mixer_observer->is_voice_active(title_token),
+                "a nonzero stage-BGM fade must retire its mixer token");
+        service.begin_frame(1U);
+        service.end_frame();
+        require(!title->isSoundAttached() &&
+                    !service.has_active_stage_bgm() &&
+                    service.active_voice_count() == 0U,
+                "completed stage-BGM fade must detach its concrete stream handle");
+
+        for (const auto &prologue_stream : {
+                 std::pair{"STM_PROLOGUE_01", 0x0200001fU},
+                 std::pair{"STM_PROLOGUE_02", 0x02000020U},
+             }) {
+            auto *prologue =
+                service.start_stage_bgm(prologue_stream.first, false);
+            const auto prologue_token = aurora::audio::VoiceToken{
+                service.stage_bgm_backend_token()};
+            require(prologue != nullptr && prologue->isSoundAttached() &&
+                        prologue->backendOwner() == &service &&
+                        prologue_token &&
+                        service.stage_bgm_id() == prologue_stream.second &&
+                        !service.is_stage_bgm_prepared() &&
+                        !service.is_stage_bgm_paused(),
+                    std::string("Prologue route must decode and start its concrete retail stream: ") +
+                        prologue_stream.first);
+            const auto prologue_deadline =
+                std::chrono::steady_clock::now() + std::chrono::seconds(3);
+            while (mixer_observer->voice_rendered_frames(prologue_token) ==
+                       0U &&
+                   std::chrono::steady_clock::now() < prologue_deadline) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+            require(mixer_observer->voice_rendered_frames(prologue_token)
+                            .value_or(0U) != 0U,
+                    std::string("Prologue route stream must advance on the concrete mixer: ") +
+                        prologue_stream.first);
+            service.stop_stage_bgm(0U);
+            require(!prologue->isSoundAttached() &&
+                        !service.has_active_stage_bgm(),
+                    std::string("Prologue route stream must detach on immediate teardown: ") +
+                        prologue_stream.first);
+        }
+
+        constexpr auto prologue_effects = std::array{
+            "SE_SY_LETTER_APPEAR",
+            "SE_SV_PEACH_OPENING_LETTER",
+            "SE_SY_TALK_OK",
+            "SE_SY_TALK_FOCUS_ITEM",
+            "SE_DM_ARRIVE_CASTLE_STAR",
+        };
+        for (const auto *name : prologue_effects) {
+            auto *effect = service.start_sound_effect(name, -1, -1);
+            require(effect != nullptr && effect->isSoundAttached() &&
+                        effect->backendOwner() == &service &&
+                        effect->backendToken() != 0U &&
+                        service.active_voice_count() == 1U,
+                    std::string("Prologue finite SE must start a concrete mixer voice: ") +
+                        name);
+            service.stop_sound_effect(name, 0U);
+            require(!effect->isSoundAttached() &&
+                        service.active_voice_count() == 0U,
+                    std::string("Prologue finite SE must detach on teardown: ") +
+                        name);
+        }
+
+        auto *game_start = service.start_sound_effect(
+            "SE_SY_GAME_START", -1, -1);
+        require(game_start != nullptr && game_start->isSoundAttached() &&
+                    game_start->backendOwner() == &service &&
+                    game_start->backendToken() != 0U &&
+                    service.active_voice_count() == 1U,
+                "Title confirm must return a handle attached to real finite PCM");
+        service.stop_sound_effect("SE_SY_GAME_START", 0U);
+        require(!game_start->isSoundAttached() &&
+                    service.active_voice_count() == 0U,
+                "system-SE stop-by-name must retire every matching concrete token");
+        require_throws<std::logic_error>(
+            [&] {
+                (void)service.start_sound_effect(
+                    "SE_SY_GAME_START", 10, -1);
+            },
+            "Parameterized",
+            "unproven one-shot parameters must fail instead of changing fake state");
+
+        service.set_level_sound_permitted(false);
+        require(!service.is_level_sound_permitted() &&
+                    service.start_level_sound(
+                        "SE_AT_LV_ASTRO_DOME_WIND_1", 0, -1) == nullptr &&
+                    service.active_voice_count() == 0U,
+                "submitted level sounds must suppress allocation without a logical-only event");
+        service.set_level_sound_permitted(true);
+        require(service.is_level_sound_permitted(),
+                "permitting level sounds must restore concrete allocation eligibility");
 
         require_throws<std::invalid_argument>(
             [&] {
@@ -815,7 +1219,7 @@ namespace {
             "semantics have not been proven",
             "a known but unaudited sound ID must fail before playback");
 
-        service.begin_frame(1U);
+        service.begin_frame(2U);
         auto *wind1 = service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1);
         require(wind1 != nullptr && wind1->isSoundAttached() &&
@@ -868,25 +1272,47 @@ namespace {
 
         // Refresh wind 1, but omit wind 2. Its one-second direct release must
         // run to completion and detach only after the backend token is gone.
-        service.begin_frame(2U);
+        const auto dying_wind2_token = wind2->backendToken();
+        const auto attack_deadline =
+            std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (mixer_observer->voice_rendered_frames(
+                   aurora::audio::VoiceToken{dying_wind2_token})
+                   .value_or(0U) < 24000U &&
+               std::chrono::steady_clock::now() < attack_deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        require(mixer_observer->voice_rendered_frames(
+                    aurora::audio::VoiceToken{dying_wind2_token})
+                    .value_or(0U) >= 24000U,
+                "release test must advance past the retail attack before synchronizing the callback");
+        mixer_observer->set_voice_paused(
+            aurora::audio::VoiceToken{dying_wind2_token}, true);
+        service.begin_frame(3U);
         (void)service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 40, -1);
         service.end_frame();
-        const auto dying_wind2_token = wind2->backendToken();
-        service.begin_frame(3U);
+        service.begin_frame(4U);
         auto *same_dying_wind2 = service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_2", -1, -1);
-        require(same_dying_wind2 == wind2 &&
-                    wind2->backendToken() == dying_wind2_token &&
-                    service.active_voice_count() == 2U,
-                "a retail level-sound call during release must return the same dying handle");
+        if (!(same_dying_wind2 == wind2 &&
+              wind2->backendToken() == dying_wind2_token &&
+              service.active_voice_count() == 2U)) {
+            throw std::runtime_error(
+                "a retail level-sound call during release must return the same dying handle: same=" +
+                std::to_string(same_dying_wind2 == wind2) +
+                ";old-token=" + std::to_string(dying_wind2_token) +
+                ";new-token=" + std::to_string(wind2->backendToken()) +
+                ";active=" + std::to_string(service.active_voice_count()));
+        }
+        mixer_observer->set_voice_paused(
+            aurora::audio::VoiceToken{dying_wind2_token}, false);
         (void)service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 40, -1);
         service.end_frame();
 
         const auto release_deadline = std::chrono::steady_clock::now() +
                                       std::chrono::seconds(3);
-        auto frame = std::uint64_t{4U};
+        auto frame = std::uint64_t{5U};
         while (wind2->isSoundAttached() &&
                std::chrono::steady_clock::now() < release_deadline) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -950,6 +1376,133 @@ namespace {
         service.reset_scene();
     }
 
+    void test_runtime_sound_util_backend_binding(
+        const RetailAudioFixture &fixture) {
+        set_audio_driver("dummy");
+        auto factory = [fixture] { return make_archive(fixture); };
+        const auto disc_root =
+            fixture.localized_audio_root.parent_path().parent_path();
+        auto playback = std::make_unique<smgpc::runtime::JAudioPlaybackService>(
+            std::move(factory),
+            [disc_root](std::string_view path) {
+                auto relative = std::filesystem::path(path);
+                if (relative.is_absolute()) {
+                    relative = relative.relative_path();
+                }
+                return read_file(disc_root / relative);
+            },
+            std::make_unique<aurora::audio::PcmAudioMixer>(
+                48000U,
+                aurora::audio::PlaybackDevicePolicy::AllowExplicitTestSink));
+        auto *playback_observer = playback.get();
+        auto logger = smgpc::logging::create_default_logger();
+        auto window = smgpc::render::AuroraWindow({
+            .width = 320,
+            .height = 228,
+            .title = "SMG PC JAudio runtime binding proof",
+        });
+        auto runtime = smgpc::runtime::RuntimeContext(
+            *logger, window, std::move(playback));
+
+        const auto system_event_count = runtime.audio().events().size();
+        auto *game_start = MR::startSystemSE("SE_SY_GAME_START", -1, -1);
+        require(game_start != nullptr && game_start->isSoundAttached() &&
+                    game_start->backendOwner() == playback_observer &&
+                    game_start->backendToken() != 0U &&
+                    runtime.audio().events().size() == system_event_count + 1U &&
+                    runtime.audio().events().back().kind ==
+                        smgpc::runtime::AudioEventKind::SystemSoundStart,
+                "SoundUtil system-SE must return a concrete RuntimeContext backend handle before recording telemetry");
+        MR::stopSystemSE("SE_SY_GAME_START", 0U);
+        require(!game_start->isSoundAttached(),
+                "SoundUtil stop-by-name must detach its concrete system-SE handle");
+
+        MR::submitLevelSE();
+        const auto submitted_event_count = runtime.audio().events().size();
+        require(MR::startSystemLevelSE(
+                    "SE_AT_LV_ASTRO_DOME_WIND_1", 0, -1) == nullptr &&
+                    runtime.audio().events().size() == submitted_event_count,
+                "SoundUtil submit must suppress a real level allocation without emitting a fake start event");
+        MR::permitLevelSE();
+        auto *wind = MR::startSystemLevelSE(
+            "SE_AT_LV_ASTRO_DOME_WIND_1", 0, -1);
+        require(wind != nullptr && wind->isSoundAttached() &&
+                    wind->backendOwner() == playback_observer &&
+                    runtime.audio().events().back().kind ==
+                        smgpc::runtime::AudioEventKind::SystemLevelSoundStart,
+                "SoundUtil permit must restore a concrete level-sound allocation and only then record the event");
+
+        auto *title = MR::startStageBGM("STM_TITLE", true);
+        require(title != nullptr && title->isSoundAttached() &&
+                    title->backendOwner() == playback_observer &&
+                    runtime.audio().has_active_stage_bgm() &&
+                    playback_observer->has_active_stage_bgm() &&
+                    runtime.audio().current_stage_bgm_id() ==
+                        playback_observer->stage_bgm_id(),
+                "SoundUtil stage start must keep logical identity and concrete backend token consistent");
+        smgpc::compat::synchronize_audio_facade_state();
+        auto *stage_bgm = AudWrap::getStageBgm();
+        auto *facade_handle = stage_bgm != nullptr
+                                  ? stage_bgm->getHandle()
+                                  : nullptr;
+        require(facade_handle != nullptr && facade_handle->isSoundAttached() &&
+                    facade_handle->backendOwner() == playback_observer &&
+                    facade_handle->backendToken() == title->backendToken(),
+                "AudWrap must expose the same concrete RuntimeContext stage token");
+        require_throws<std::logic_error>(
+            [&] { stage_bgm->mTrackController[0].mute(); },
+            "active JAudio track muting",
+            "active track mutation must fail until it controls concrete backend layers");
+        require_throws<std::logic_error>(
+            [] { AudWrap::setNextIdStageBgm(0x0200001fU); },
+            "next-BGM scheduler",
+            "next-BGM queueing must fail until the concrete retail scheduler exists");
+
+        MR::unlockStageBGM();
+        runtime.begin_frame(smgpc::render::FrameContext{
+            .frame_index = 1U,
+            .frame_time_seconds = 1.0 / 60.0,
+            .frame_delta_seconds = 1.0 / 60.0,
+            .framebuffer = {.width = 320U, .height = 228U},
+        });
+        require(playback_observer->has_active_stage_bgm() &&
+                    facade_handle->isSoundAttached(),
+                "a normal RuntimeContext frame must preserve an active default track controller and stage token");
+        constexpr auto fade_frames = 6U;
+        stage_bgm->stop(fade_frames);
+        require(!runtime.audio().has_active_stage_bgm() &&
+                    playback_observer->has_active_stage_bgm() &&
+                    playback_observer->is_stage_bgm_stopping(),
+                "logical stop and concrete fade state must describe the same in-progress teardown");
+        const auto fade_deadline =
+            std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (playback_observer->has_active_stage_bgm() &&
+               std::chrono::steady_clock::now() < fade_deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        require(!playback_observer->has_active_stage_bgm() &&
+                    !playback_observer->stage_bgm_id().has_value(),
+                "RuntimeContext stage fade must reach backend-token retirement");
+        auto *manager = AudWrap::getBgmMgr();
+        runtime.begin_frame(smgpc::render::FrameContext{
+            .frame_index = 2U,
+            .frame_time_seconds = 2.0 / 60.0,
+            .frame_delta_seconds = 1.0 / 60.0,
+            .framebuffer = {.width = 320U, .height = 228U},
+        });
+        require(manager->mBgm[AudBgmMgr::BgmType_Stage] == nullptr &&
+                    manager->mKeeper.mSingleBgmActiveFlags == 0U,
+                "post-fade manager movement must release the detached BGM keeper object");
+    }
+
+    void test_runtime_sound_util_backend_binding_in_fresh_process(
+        const std::filesystem::path &executable) {
+        const auto command = "xvfb-run -a \"" + executable.string() +
+                             "\" --runtime-audio-binding-probe";
+        require(std::system(command.c_str()) == 0,
+                "fresh-process RuntimeContext/SoundUtil binding proof must pass under Xvfb");
+    }
+
 } // namespace
 
 int main(int argc, char **argv) {
@@ -962,6 +1515,15 @@ int main(int argc, char **argv) {
         if (argc == 2 &&
             std::string_view(argv[1]) == "--dummy-production-probe") {
             test_production_rejects_dummy_sink();
+            return 0;
+        }
+        if (argc == 2 &&
+            std::string_view(argv[1]) ==
+                "--runtime-audio-binding-probe") {
+            const auto fixture = load_retail_audio_fixture();
+            require(fixture.has_value(),
+                    "RuntimeContext audio binding probe requires the retail fixture");
+            test_runtime_sound_util_backend_binding(*fixture);
             return 0;
         }
         constexpr auto abc = std::array<std::uint8_t, 3U>{'a', 'b', 'c'};
@@ -980,12 +1542,14 @@ int main(int argc, char **argv) {
             return 0;
         }
         test_retail_archive_metadata_and_pcm(*fixture);
+        test_retail_title_and_picturebook_recipes(*fixture);
         test_archive_rejects_cross_segment_references(*fixture);
         test_real_stream_handle_and_lifetime(*fixture);
+        test_runtime_sound_util_backend_binding_in_fresh_process(argv[0]);
         std::cout << "[ok] retail AFC metadata/PCM, SDL callback, handle, and lifetime proof\n";
         return 0;
     } catch (const std::exception &error) {
-        std::cerr << "[fail] atmosphere level sound: " << error.what() << '\n';
+        std::cerr << "[fail] JAudio playback: " << error.what() << '\n';
         return 1;
     }
 }
