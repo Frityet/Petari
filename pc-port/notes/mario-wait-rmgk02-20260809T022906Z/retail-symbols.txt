@@ -1,0 +1,30 @@
+RMGK02 Game/Player/MarioWait.cpp retail symbol inventory
+
+0x802CE398 0x308 MarioAnimator::controlWaitAnimation()
+0x802CE6A0 0x098 MarioAnimator::stopWaitAnimation()
+0x802CE738 0x384 MarioWait::checkStart()
+0x802CEABC 0x078 MarioWait::start()
+0x802CEB34 0x1E8 MarioWait::update()
+0x802CED1C 0x070 MarioWait::close()
+0x802CED8C 0x06C __sinit_\\MarioWait_cpp
+0x802CEDF8 0x034 Mario::isBlendWaitGround() const
+0x802CEE2C 0x044 Mario::checkSpecialWaitAnimation()
+0x802CEE70 0x050 Mario::resetSleepTimer()
+0x802CEEC0 0x050 MarioWait::MarioWait(MarioActor*)
+0x802CEF10 0x004 MarioState::hitPoly(...)
+0x802CEF14 0x008 MarioState::keep()
+0x802CEF1C 0x008 MarioState::notice()
+0x802CEF24 0x004 MarioState::init()
+
+Retail unit totals:
+  .text  0xB90 / 2960 bytes
+  functions 15
+  .ctors 0x4
+  .data 0xE8
+  .sdata2 0x20
+
+Primary discovery inputs:
+  build/RMGK02/asm/Game/Player/MarioWait.s
+  build/RMGK02/obj/Game/Player/MarioWait.o
+  /tmp/ghidra-projects/RMGK02/main.elf
+  /tmp/ghidra-scripts/DecompileAt.java

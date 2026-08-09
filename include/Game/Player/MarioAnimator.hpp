@@ -49,6 +49,8 @@ public:
     void setHipSliderTilt();
     void setHipSlipTilt();
     void setWalkMode();
+    void controlWaitAnimation();
+    void stopWaitAnimation();
     void updateJointRumble();
     void addRumblePower(f32, u32);
     void clearAllJointTransform();

@@ -1,0 +1,65 @@
+MarioWait RMGK02 recovery verification
+UTC timestamp: 2026-08-09T02:29:06Z
+
+Focused compile
+---------------
+command:
+  ninja build/RMGK02/src/Game/Player/MarioWait.o
+result:
+  success
+notes:
+  Only the repository's pre-existing MarioActor nontrivial-union warnings were emitted.
+
+Objdiff
+-------
+command:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioWait -o /tmp/MarioWait-final.json --format json-pretty
+
+.text: 2,960 bytes, 98.38243%
+.ctors: 4 bytes, 100%
+.sdata2: 32 bytes, 100%
+
+MarioAnimator::controlWaitAnimation()        776 bytes   98.12371%
+MarioAnimator::stopWaitAnimation()           152 bytes   99.47369%
+MarioWait::checkStart()                      900 bytes   99.77778%
+MarioWait::start()                           120 bytes   99.333336%
+MarioWait::update()                          488 bytes   99.05738%
+MarioWait::close()                           112 bytes   99.10714%
+__sinit_\\MarioWait_cpp                     108 bytes  100%
+Mario::isBlendWaitGround() const              52 bytes  100%
+Mario::checkSpecialWaitAnimation()            68 bytes  100%
+Mario::resetSleepTimer()                      80 bytes  100%
+MarioWait::MarioWait(MarioActor*)             80 bytes   99.85%
+
+Compiled sizes match retail for every listed function except MarioWait::update,
+whose candidate is 484 bytes versus the retail 488 bytes.
+
+Full DOL build
+--------------
+command:
+  ninja -j12 build/RMGK02/main.dol
+result:
+  success
+output:
+  [1/3] MWCC build/RMGK02/src/Game/Player/MarioInit.o
+  [2/3] LINK build/RMGK02/main.elf
+  [3/3] DOL build/RMGK02/main.dol
+
+DOL integrity
+-------------
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- include/Game/Player/Mario.hpp include/Game/Player/MarioAnimator.hpp include/Game/Player/MarioWait.hpp src/Game/Player/MarioWait.cpp
+result:
+  success (no output)
+
+PC activation
+-------------
+  none

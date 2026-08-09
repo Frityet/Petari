@@ -1,0 +1,21 @@
+{
+  "unit": "main/Game/Player/MarioWait",
+  "text": {
+    "bytes": 2960,
+    "fuzzy_match_percent": 98.38243
+  },
+  "functions": [
+    {"name": "MarioAnimator::controlWaitAnimation()", "bytes": 776, "fuzzy_match_percent": 98.12371},
+    {"name": "MarioAnimator::stopWaitAnimation()", "bytes": 152, "fuzzy_match_percent": 99.47369},
+    {"name": "MarioWait::checkStart()", "bytes": 900, "fuzzy_match_percent": 99.77778},
+    {"name": "MarioWait::start()", "bytes": 120, "fuzzy_match_percent": 99.333336},
+    {"name": "MarioWait::update()", "bytes": 488, "candidate_bytes": 484, "fuzzy_match_percent": 99.05738},
+    {"name": "MarioWait::close()", "bytes": 112, "fuzzy_match_percent": 99.10714},
+    {"name": "__sinit_\\MarioWait_cpp", "bytes": 108, "fuzzy_match_percent": 100.0},
+    {"name": "Mario::isBlendWaitGround() const", "bytes": 52, "fuzzy_match_percent": 100.0},
+    {"name": "Mario::checkSpecialWaitAnimation()", "bytes": 68, "fuzzy_match_percent": 100.0},
+    {"name": "Mario::resetSleepTimer()", "bytes": 80, "fuzzy_match_percent": 100.0},
+    {"name": "MarioWait::MarioWait(MarioActor*)", "bytes": 80, "fuzzy_match_percent": 99.85}
+  ],
+  "dol_sha256": "8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf"
+}
