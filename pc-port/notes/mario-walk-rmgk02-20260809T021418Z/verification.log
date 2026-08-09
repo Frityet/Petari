@@ -1,0 +1,36 @@
+MarioWalk RMGK02 verification
+Date: 2026-08-09 UTC
+
+Focused MWCC object build:
+  ninja build/RMGK02/src/Game/Player/MarioWalk.o
+  PASS (exit 0)
+  Only the pre-existing MarioActor.hpp nontrivial-union warnings were emitted.
+
+Focused objdiff:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioWalk \
+    -o /tmp/mario-walk-objdiff-11.json --format json-pretty
+  PASS
+  .text: 94.33228% (8860 retail bytes)
+
+Full retail build:
+  ninja -j12
+  PASS (exit 0)
+  Build step: CHECK config/RMGK02/build.sha1
+  Result: build/RMGK02/main.dol: OK
+
+Explicit retail checksum verification:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+  PASS
+  build/RMGK02/main.dol: OK
+
+Whitespace/error checks:
+  git diff --check -- include/Game/Player/Mario.hpp
+  rg -n '[[:blank:]]+$' src/Game/Player/MarioWalk.cpp \
+    pc-port/notes/mario-walk-rmgk02-20260809T021418Z
+  PASS
+
+Post-build project report:
+  All: 65.11% matched, 14.25% linked (734 / 2219 files)
+  Code: 3,524,676 / 5,413,352 bytes (33,769 / 42,036 functions)
+  Data: 509,140 / 1,657,852 bytes (30.71%)
+  Game: 62.33% matched, 13.30% linked (532 / 1605 files)

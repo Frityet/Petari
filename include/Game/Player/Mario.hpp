@@ -388,7 +388,7 @@ public:
     void decideWalkSpeed();
     void decideWalkAnimation();
     void doBrakingAnimation();
-    bool checkWallPush();
+    void checkWallPush();
     void updateBrakeAnimation();
     void updateWalkSpeed();
     void decideOnIceAnimation();
@@ -844,7 +844,7 @@ public:
     /* 0x700 */ TVec3f _700;
     /* 0x70C */ TVec3f _70C;
     /* 0x718 */ f32 _718;
-    /* 0x71C */ bool _71C;
+    /* 0x71C */ u8 _71C;
     /* 0x71D */ u8 _71D;
     /* 0x71E */ u8 _71E;
     /* 0x71F */ u8 _71F;

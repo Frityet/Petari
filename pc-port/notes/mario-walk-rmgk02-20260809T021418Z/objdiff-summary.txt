@@ -1,0 +1,28 @@
+RMGK02 objdiff unit: main/Game/Player/MarioWalk
+Generated: 2026-08-09 UTC
+
+Section metrics (retail size, match):
+.text    8860 bytes   94.33228%
+.ctors      4 bytes    0.00000%
+.rodata    40 bytes   90.909096%
+.data     888 bytes   89.330025%
+.sdata2   120 bytes  100.00000%
+
+Function metrics (retail address, retail size, compiled size, match):
+0x80306B68  stopWalk                    208  208  98.51923%
+0x80306C38  cancelSquatMode             300  300  97.84000%
+0x80306D64  getTargetWalkSpeed          272  272  99.26471%
+0x80306E74  decideSquatWalkAnimation   1320 1316  96.57879%
+0x8030739C  decideWalkSpeed             464  464  95.77586%
+0x8030756C  decideWalkAnimation        2420 2432  93.11570%
+0x80307EE0  doBrakingAnimation          136  136  99.85294%
+0x80307F68  checkWallPush               412  400  96.55340%
+0x80308104  updateBrakeAnimation        408  412  98.82353%
+0x8030829C  updateWalkSpeed            1280 1264  94.05937%
+0x8030879C  decideOnIceAnimation        268  264  97.910446%
+0x803088A8  updateOnSand                676  664  94.11243%
+0x80308B4C  updateOnPoison              304  304  99.802635%
+0x80308C7C  updateOnWater               284  276  96.478874%
+
+Retail unit also contains the compiler-generated 0x6C local static initializer at
+0x80308D98. It is generated from the translation unit rather than handwritten.
