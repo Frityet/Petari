@@ -1,0 +1,59 @@
+{
+  "frozen_closure_tus": 96,
+  "attempted_source_tus": 93,
+  "frozen_baseline_passed_tus": 52,
+  "live_combined_passed_tus": 61,
+  "live_combined_closure_ratio": "61/96",
+  "newly_unlocked": [
+    "src/Game/Player/JetTurtleShadow.cpp",
+    "src/Game/Player/MarioActorHand.cpp",
+    "src/Game/Player/MarioActorShadow.cpp",
+    "src/Game/Player/MarioCollision.cpp",
+    "src/Game/Player/MarioEnforce.cpp",
+    "src/Game/Player/MarioModule.cpp",
+    "src/Game/Player/MarioSpecial.cpp",
+    "src/Game/Player/MarioWalk.cpp",
+    "src/Game/Player/ModelHolder.cpp"
+  ],
+  "actor_abi_unlocks": [
+    "src/Game/Player/MarioCollision.cpp",
+    "src/Game/Player/MarioEnforce.cpp",
+    "src/Game/Player/MarioSpecial.cpp",
+    "src/Game/Player/MarioWalk.cpp"
+  ],
+  "gx_surface_unlocks": [
+    "src/Game/Player/JetTurtleShadow.cpp",
+    "src/Game/Player/MarioActorHand.cpp",
+    "src/Game/Player/MarioActorShadow.cpp",
+    "src/Game/Player/MarioModule.cpp",
+    "src/Game/Player/ModelHolder.cpp"
+  ],
+  "expected_unlocks_missing": [],
+  "unexpected_unlocks": [],
+  "baseline_regressions": [],
+  "command": [
+    "g++",
+    "-fsyntax-only",
+    "-fmax-errors=200",
+    "-Wno-multichar",
+    "-m64",
+    "-g",
+    "-O0",
+    "-std=c++23",
+    "-DSMGPC_DEBUG_BUILD",
+    "-DAURORA_ENABLE_GX",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-include",
+    "pc-port/src/compat/MetrowerksStdCompat.hpp",
+    "-Ipc-port/src/render",
+    "-Ipc-port/src",
+    "-Ipc-port/src/common",
+    "-Ipc-port/notes/pc-player-compile-probe-20260809T035937Z/revolution-overlay",
+    "-Ipc-port/aurora/include",
+    "-Iinclude",
+    "-Ilibs/JSystem/include",
+    "-Ilibs/nw4r/include",
+    "-Ilibs/RVLFaceLib/include"
+  ]
+}
