@@ -3,6 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "resource/BmgMessageArchive.hpp"
 
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -51,7 +52,14 @@ namespace smgpc::compat {
 
         [[nodiscard]] TalkMessageCtrl* adopt_owned_controller(
             LiveActor*, std::unique_ptr<TalkMessageCtrl>);
+        // NPCActor::mMsgCtrl is the preferred retail placement controller
+        // while it names an owned identity; otherwise the first controller is
+        // the stable fallback. Additional direct controllers (for example
+        // Tico's Common_Tico000 reaction flow) never replace either identity.
         [[nodiscard]] TalkMessageCtrl* owned_controller(const LiveActor*) const;
+        [[nodiscard]] std::size_t owned_controller_count(const LiveActor*) const;
+        // Actor teardown is an all-or-nothing boundary for every controller
+        // retained under the actor identity.
         void release_owned_controller(const LiveActor*);
         [[nodiscard]] bool has_owned_controller(const LiveActor*) const;
 

@@ -546,3 +546,54 @@ This checkpoint does not activate `RunawayTico`, star-pointer input, typed Mario
 swing state, or the rabbit collector. It supplies their generalized shadow and
 dynamic-light prerequisites without a Gateway name, switch ID, or actor-specific
 scene-service branch.
+
+## Multi-controller Talk ownership
+
+TalkRuntime now retains an insertion-ordered controller collection per actor
+instead of replacing the actor's previous controller. `NPCActor::mMsgCtrl`
+remains the preferred placement controller while it names an owned identity;
+otherwise the first controller remains the stable fallback. A later direct
+controller, including Tico's `Common_Tico000` reaction flow, is a distinct
+TalkRuntime-owned NameObj and cannot retire or null the placement controller.
+
+Ownership is committed claim-first. A foreign claim, map allocation failure, or
+vector growth failure destroys only the incoming local controller and leaves
+every existing controller and NPC pointer unchanged. Construction-suffix
+capture observes all controllers as independently stored and delegates each
+postpass once without adopting its storage. Actor teardown releases the entire
+collection; TalkRuntime-first scene teardown also clears an NPC primary pointer
+that names any member before destroying all controller state and callbacks.
+
+The real RMGK01 Talk gate rebuilt and passed under Xvfb. It now proves the
+distinct `HeavensDoorMysteriousZone_RunawayTico007` placement controller and
+`Common_Tico000` direct controller, insertion/owner/delegation order,
+preclaimed third-controller rollback, root and controller once-only postpass,
+actor-first teardown, and scene-runtime-first teardown. The existing DemoRabbit
+825/826/827 flow, AlreadyDone, timekeep, malformed-graph, callback, and player
+capability proofs remain green.
+
+## Start-position camera suspend and restore
+
+CameraSystemService now owns the full resolved `StageStartCamera`, not only its
+published pose. `MR::endStartPosCamera()` suspends that base pose while retaining
+the resolved source. `MR::startStartPosCamera(true)` validates and republishes
+the identical pose with the retail zero interpolation count; `false` uses five.
+An event or programmable camera stays dominant over the restored base pose, and
+the countdown advances only while the camera manager is unpaused and neither of
+those higher-priority cameras owns the effective view.
+
+Publication and restoration are transactional: an invalid retained camera
+cannot poison the current pose. Missing camera service or retained owner fails
+explicitly. Every StageHost publication receives a monotonic lease token;
+matching teardown clears its camera, while a stale or absent host cannot erase a
+newer StageHost generation or a generic base-camera owner. Repeated start/end
+calls preserve the retail state writes rather than inventing a new state
+machine.
+
+The serialized `smg-pc-stage-start-camera-tests` build and real-disc run passed
+7/7, including Guide0 end, Guide1 true/false restore, event-camera priority,
+paused countdown, invalid restore rollback, stale/new/generic ownership,
+two-generation teardown, and exact HeavensDoor `s:004e` pose restoration.
+Adjacent regressions are green: ActorEventCamera synthetic and real-disc 5/5,
+SceneObjHolder 10/10, and the real RMGK01 Gateway development scene with clean
+reverse teardown.

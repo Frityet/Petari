@@ -20,6 +20,7 @@
 #include "compat/StageSessionState.hpp"
 #include "compat/TalkRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "scene/NameObjChildOwner.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/PlacementZoneNameScope.hpp"
 #include "scene/StagePlacementResolver.hpp"
@@ -44,6 +45,9 @@ namespace {
 
     constexpr auto cFlowKey = std::string_view{
         "HeavensDoorMysteriousZone_DemoRabbit000"};
+    constexpr auto cRunawayTicoFlowKey = std::string_view{
+        "HeavensDoorMysteriousZone_RunawayTico007"};
+    constexpr auto cTicoReactionFlowKey = std::string_view{"Common_Tico000"};
 
     class ElementModeFixtureActor final : public LiveActor {
     public:
@@ -51,6 +55,19 @@ namespace {
         }
 
         s32 mode = 0;
+    };
+
+    class MultiControllerFixtureActor final : public NPCActor {
+    public:
+        MultiControllerFixtureActor()
+            : NPCActor("synthetic Tico talk-controller ownership proof") {
+        }
+
+        void initAfterPlacement() override {
+            ++postpass_count;
+        }
+
+        std::size_t postpass_count = 0U;
     };
 
     s32 read_fixture_element_mode(const LiveActor& actor) {
@@ -291,6 +308,107 @@ namespace {
         checker->clearCurrentPlacementZoneId();
     }
 
+    void test_same_actor_multi_controller_ownership(
+        smgpc::compat::TalkRuntime& talk) {
+        const auto registry_baseline =
+            smgpc::compat::name_obj_runtime_state_count();
+        const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
+        auto host = std::make_unique<MultiControllerFixtureActor>();
+        auto* placement_controller = MR::createTalkCtrlDirect(
+            host.get(), JMapInfoIter{}, cRunawayTicoFlowKey.data(),
+            TVec3f{}, nullptr);
+        host->mMsgCtrl = placement_controller;
+        auto* reaction_controller = MR::createTalkCtrlDirect(
+            host.get(), JMapInfoIter{}, cTicoReactionFlowKey.data(),
+            TVec3f{}, nullptr);
+
+        require(placement_controller != nullptr &&
+                    reaction_controller != nullptr &&
+                    placement_controller != reaction_controller &&
+                    host->mMsgCtrl == placement_controller &&
+                    talk.owned_controller(host.get()) == placement_controller &&
+                    smgpc::compat::owned_talk_ctrl(host.get()) ==
+                        placement_controller &&
+                    talk.owned_controller_count(host.get()) == 2U &&
+                    talk.flow_key(*placement_controller) ==
+                        cRunawayTicoFlowKey &&
+                    talk.flow_key(*reaction_controller) ==
+                        cTicoReactionFlowKey,
+                "one actor must retain distinct placement and Common_Tico000 controller identities");
+        require(smgpc::compat::name_obj_runtime_owner(placement_controller) ==
+                        &talk &&
+                    smgpc::compat::name_obj_runtime_owner(reaction_controller) ==
+                        &talk &&
+                    smgpc::compat::name_obj_runtime_state_count() ==
+                        registry_baseline + 3U,
+                "both same-actor controllers must belong to TalkRuntime without replacing the host NameObj");
+
+        // This is the construction topology produced by real Tico::initMessage:
+        // the actor is the root while both TalkMessageCtrls have independent
+        // TalkRuntime storage. The root postpass must delegate both identities
+        // exactly once without taking their storage ownership.
+        auto postpass_owner = smgpc::scene::NameObjChildOwner{};
+        postpass_owner.adopt_root_registration_suffix(
+            marker, *host, &host);
+        require(smgpc::compat::name_obj_runtime_postpass_delegate(
+                    placement_controller) == &postpass_owner &&
+                    smgpc::compat::name_obj_runtime_postpass_delegate(
+                        reaction_controller) == &postpass_owner,
+                "the placement root must delegate both independently-owned controller postpasses");
+        postpass_owner.init_registration_suffix_after_placement();
+        require(host->postpass_count == 1U &&
+                    !smgpc::compat::name_obj_runtime_postpass_is_delegated(
+                    placement_controller) &&
+                    !smgpc::compat::name_obj_runtime_postpass_is_delegated(
+                        reaction_controller),
+                "both same-actor controller postpass delegations must clear after execution");
+
+        // A failed append must retire only the incoming controller. In
+        // particular, neither stable controller nor NPCActor::mMsgCtrl may be
+        // changed before a new ownership claim succeeds.
+        const auto owned_registry_count =
+            smgpc::compat::name_obj_runtime_state_count();
+        auto rejected_controller = std::make_unique<TalkMessageCtrl>(
+            host.get(), TVec3f{}, nullptr);
+        const auto foreign_owner = std::uint8_t{};
+        smgpc::compat::claim_name_obj_runtime_ownership(
+            rejected_controller.get(), &foreign_owner);
+        require_logic_error(
+            [&] {
+                static_cast<void>(talk.adopt_owned_controller(
+                    host.get(), std::move(rejected_controller)));
+            },
+            "a preclaimed same-actor controller insertion must fail transactionally");
+        require(rejected_controller == nullptr &&
+                    host->mMsgCtrl == placement_controller &&
+                    talk.owned_controller(host.get()) == placement_controller &&
+                    talk.owned_controller_count(host.get()) == 2U &&
+                    talk.flow_key(*placement_controller) ==
+                        cRunawayTicoFlowKey &&
+                    talk.flow_key(*reaction_controller) ==
+                        cTicoReactionFlowKey &&
+                    smgpc::compat::name_obj_runtime_state_count() ==
+                        owned_registry_count,
+                "a rejected third insertion must preserve both stable controllers and retire its temporary NameObj state");
+
+        postpass_owner.clear();
+        smgpc::compat::release_talk_runtime_state(host.get());
+        require(host->mMsgCtrl == nullptr &&
+                    talk.owned_controller(host.get()) == nullptr &&
+                    talk.owned_controller_count(host.get()) == 0U &&
+                    !smgpc::compat::has_name_obj_runtime_state(
+                        placement_controller) &&
+                    !smgpc::compat::has_name_obj_runtime_state(
+                        reaction_controller) &&
+                    smgpc::compat::name_obj_runtime_state_count() ==
+                        registry_baseline + 1U,
+                "actor teardown must release every controller while retaining only the still-live host");
+        host.reset();
+        require(smgpc::compat::name_obj_runtime_state_count() ==
+                    registry_baseline,
+                "the same-actor ownership proof must restore its exact NameObj baseline");
+    }
+
     void require_exact_flow_data(const smgpc::runtime::MessageService& messages) {
         const auto root_message = messages.message_index(cFlowKey);
         require(root_message == std::optional<std::uint32_t>{824U},
@@ -350,8 +468,15 @@ namespace {
     void test_real_gateway_talk_runtime(smgpc::runtime::RuntimeContext& runtime) {
         runtime.set_current_stage_name("HeavensDoorGalaxy");
         require_exact_flow_data(runtime.messages());
+        require(runtime.messages().message_index(cRunawayTicoFlowKey).has_value() &&
+                    runtime.messages().message_index(cTicoReactionFlowKey).has_value(),
+                "RMGK01 must contain RunawayTico007 and Common_Tico000 talk flows");
         test_player_and_screen_providers(runtime);
 
+        auto runtime_teardown_host = NPCActor(
+            "TalkRuntime multi-controller teardown proof");
+        const auto scene_registry_baseline =
+            smgpc::compat::name_obj_runtime_state_count();
         auto holder = SceneObjHolder{};
         {
             auto holder_binding = smgpc::scene::SceneObjHolderBinding(holder);
@@ -373,48 +498,7 @@ namespace {
                             registrations_after_talk,
                     "re-requesting SceneObj_TalkDirector must be idempotent");
 
-            // A rejected same-actor replacement must not retire the live
-            // controller before the incoming ownership claim succeeds. Use a
-            // real NPC field so the proof covers both host ownership surfaces.
-            const auto replacement_registry_baseline =
-                smgpc::compat::name_obj_runtime_state_count();
-            {
-                auto replacement_host = NPCActor("Talk replacement transaction proof");
-                auto* old_controller = MR::createTalkCtrlDirect(
-                    &replacement_host, JMapInfoIter{}, cFlowKey.data(), TVec3f{}, nullptr);
-                replacement_host.mMsgCtrl = old_controller;
-                const auto owned_registry_count =
-                    smgpc::compat::name_obj_runtime_state_count();
-
-                auto rejected_controller = std::make_unique<TalkMessageCtrl>(
-                    &replacement_host, TVec3f{}, nullptr);
-                const auto foreign_owner = std::uint8_t{};
-                smgpc::compat::claim_name_obj_runtime_ownership(
-                    rejected_controller.get(), &foreign_owner);
-                require_logic_error(
-                    [&] {
-                        static_cast<void>(talk->adopt_owned_controller(
-                            &replacement_host, std::move(rejected_controller)));
-                    },
-                    "a preclaimed same-actor replacement must fail before retiring the old controller");
-                require(rejected_controller == nullptr &&
-                            talk->owned_controller(&replacement_host) == old_controller &&
-                            replacement_host.mMsgCtrl == old_controller &&
-                            smgpc::compat::name_obj_runtime_owner(old_controller) == talk &&
-                            smgpc::compat::has_name_obj_runtime_state(old_controller) &&
-                            smgpc::compat::name_obj_runtime_state_count() ==
-                                owned_registry_count,
-                        "a rejected replacement must preserve the old owner and NPC pointer while retiring the incoming registry state");
-
-                smgpc::compat::release_talk_runtime_state(&replacement_host);
-                require(replacement_host.mMsgCtrl == nullptr &&
-                            smgpc::compat::name_obj_runtime_state_count() ==
-                                replacement_registry_baseline + 1U,
-                        "replacement-proof teardown must clear its NPC pointer and controller registry state");
-            }
-            require(smgpc::compat::name_obj_runtime_state_count() ==
-                        replacement_registry_baseline,
-                    "replacement-proof host teardown must restore the exact NameObj registry baseline");
+            test_same_actor_multi_controller_ownership(*talk);
 
             auto actor = LiveActor("DemoRabbit talk proof");
             auto* controller = MR::createTalkCtrlDirect(
@@ -642,9 +726,27 @@ namespace {
                         "the duplicate exact placement key must recover the same completed AlreadyDone value");
                 smgpc::compat::release_talk_runtime_state(&replacement_actor);
             }
+
+            auto* runtime_teardown_placement = MR::createTalkCtrlDirect(
+                &runtime_teardown_host, JMapInfoIter{},
+                cRunawayTicoFlowKey.data(), TVec3f{}, nullptr);
+            runtime_teardown_host.mMsgCtrl = runtime_teardown_placement;
+            auto* runtime_teardown_reaction = MR::createTalkCtrlDirect(
+                &runtime_teardown_host, JMapInfoIter{},
+                cTicoReactionFlowKey.data(), TVec3f{}, nullptr);
+            require(runtime_teardown_placement !=
+                            runtime_teardown_reaction &&
+                        talk->owned_controller(&runtime_teardown_host) ==
+                            runtime_teardown_placement &&
+                        talk->owned_controller_count(
+                            &runtime_teardown_host) == 2U,
+                    "the runtime-teardown proof must leave two live same-actor controllers owned by TalkRuntime");
         }
-        require(smgpc::compat::current_talk_runtime() == nullptr,
-                "SceneObjHolder teardown must remove the non-owning TalkRuntime binding");
+        require(smgpc::compat::current_talk_runtime() == nullptr &&
+                    runtime_teardown_host.mMsgCtrl == nullptr &&
+                    smgpc::compat::name_obj_runtime_state_count() ==
+                        scene_registry_baseline,
+                "SceneObjHolder teardown must release both same-actor controllers, clear the NPC pointer, and remove the TalkRuntime binding");
     }
 
 }  // namespace

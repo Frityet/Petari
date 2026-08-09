@@ -37,6 +37,47 @@ namespace smgpc::runtime {
             return amplitude * primary * attenuation;
         }
 
+        void validate_stage_start_camera_pose(
+            const smgpc::camera::CameraPose &pose) {
+            const auto finite_vec = [](const auto &value) {
+                return std::isfinite(value.x) && std::isfinite(value.y) &&
+                       std::isfinite(value.z);
+            };
+            if (!finite_vec(pose.eye) || !finite_vec(pose.watch) ||
+                !finite_vec(pose.up) || !std::isfinite(pose.fovy_degrees) ||
+                !std::isfinite(pose.aspect_ratio) ||
+                !std::isfinite(pose.near_clip) ||
+                !std::isfinite(pose.far_clip) ||
+                !std::isfinite(pose.projection_offset_x) ||
+                !std::isfinite(pose.projection_offset_y) ||
+                !(pose.fovy_degrees > 0.0F && pose.fovy_degrees < 180.0F) ||
+                !(pose.aspect_ratio > 0.0F) || !(pose.near_clip > 0.0F) ||
+                !(pose.far_clip > pose.near_clip)) {
+                throw std::invalid_argument(
+                    "Stage-start camera ownership requires a finite valid projection pose.");
+            }
+
+            const auto view_x = pose.watch.x - pose.eye.x;
+            const auto view_y = pose.watch.y - pose.eye.y;
+            const auto view_z = pose.watch.z - pose.eye.z;
+            const auto view_length_squared =
+                view_x * view_x + view_y * view_y + view_z * view_z;
+            const auto up_length_squared = pose.up.x * pose.up.x +
+                                           pose.up.y * pose.up.y +
+                                           pose.up.z * pose.up.z;
+            const auto cross_x = view_y * pose.up.z - view_z * pose.up.y;
+            const auto cross_y = view_z * pose.up.x - view_x * pose.up.z;
+            const auto cross_z = view_x * pose.up.y - view_y * pose.up.x;
+            const auto cross_length_squared =
+                cross_x * cross_x + cross_y * cross_y + cross_z * cross_z;
+            if (!(view_length_squared > 0.000001F) ||
+                !(up_length_squared > 0.000001F) ||
+                !(cross_length_squared > 0.000001F)) {
+                throw std::invalid_argument(
+                    "Stage-start camera ownership requires a non-degenerate view basis.");
+            }
+        }
+
         [[nodiscard]] bool exists_regular_file(const std::filesystem::path &path) {
             std::error_code error{};
             return std::filesystem::is_regular_file(path, error);
@@ -2679,6 +2720,12 @@ namespace smgpc::runtime {
 
     void CameraSystemService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
+        if (_start_position_camera_active && !is_camera_director_paused() &&
+            !active_event_camera_pose().has_value() &&
+            !active_programmable_camera_pose().has_value() &&
+            _start_position_camera_zero_interpolation_frames > 0U) {
+            --_start_position_camera_zero_interpolation_frames;
+        }
         _shake_offset_x = 0.0F;
         _shake_offset_y = 0.0F;
         for (auto index = std::size_t{}; index < _vertical_shake_steps.size(); ++index) {
@@ -2831,11 +2878,83 @@ namespace smgpc::runtime {
         ++_programmable_camera_end_count;
     }
 
+    std::uint64_t CameraSystemService::set_stage_start_camera(
+        smgpc::camera::ResolvedStageStartCamera camera) {
+        auto candidate = std::optional<smgpc::camera::ResolvedStageStartCamera>{
+            std::move(camera)};
+        const auto restored_pose = candidate->calculation.pose;
+        validate_stage_start_camera_pose(restored_pose);
+        if (_next_stage_start_camera_owner_generation == 0U) {
+            throw std::overflow_error(
+                "Stage-start camera owner generation space is exhausted.");
+        }
+        const auto owner_generation =
+            _next_stage_start_camera_owner_generation++;
+
+        _stage_start_camera.swap(candidate);
+        _stage_start_camera_owner_generation = owner_generation;
+        _game_camera_pose = restored_pose;
+        _start_position_camera_active = true;
+        // RMGK02 CameraManGame::startStartPosCamera(false) seeds _70 with
+        // five camera calculations. The true Guide1 restart is immediate.
+        _start_position_camera_zero_interpolation_frames = 5U;
+        return owner_generation;
+    }
+
+    void CameraSystemService::clear_stage_start_camera(
+        std::uint64_t owner_generation) noexcept {
+        if (owner_generation == 0U ||
+            owner_generation != _stage_start_camera_owner_generation) {
+            return;
+        }
+        _stage_start_camera.reset();
+        _stage_start_camera_owner_generation = 0U;
+        _start_position_camera_active = false;
+        _start_position_camera_zero_interpolation_frames = 0U;
+        _game_camera_pose.reset();
+    }
+
+    void CameraSystemService::start_start_position_camera(bool immediate) {
+        if (!_stage_start_camera.has_value()) {
+            throw std::logic_error(
+                "Start-position camera restore requires an active stage-start camera owner.");
+        }
+
+        auto restored_pose = std::optional<smgpc::camera::CameraPose>{
+            _stage_start_camera->calculation.pose};
+        validate_stage_start_camera_pose(*restored_pose);
+
+        _game_camera_pose.swap(restored_pose);
+        _start_position_camera_active = true;
+        _start_position_camera_zero_interpolation_frames = immediate ? 0U : 5U;
+    }
+
+    void CameraSystemService::end_start_position_camera() {
+        if (!_stage_start_camera.has_value()) {
+            throw std::logic_error(
+                "Start-position camera termination requires an active stage-start camera owner.");
+        }
+
+        // RMGK02 CameraDirector::started() clears the director flag, then
+        // CameraManGame::endStartPosCamera() clears both start-camera fields.
+        _game_camera_pose.reset();
+        _start_position_camera_active = false;
+        _start_position_camera_zero_interpolation_frames = 0U;
+    }
+
     void CameraSystemService::set_game_camera_pose(const smgpc::camera::CameraPose &pose) {
+        _stage_start_camera.reset();
+        _stage_start_camera_owner_generation = 0U;
+        _start_position_camera_active = false;
+        _start_position_camera_zero_interpolation_frames = 0U;
         _game_camera_pose = pose;
     }
 
     void CameraSystemService::clear_game_camera_pose() {
+        _stage_start_camera.reset();
+        _stage_start_camera_owner_generation = 0U;
+        _start_position_camera_active = false;
+        _start_position_camera_zero_interpolation_frames = 0U;
         _game_camera_pose.reset();
     }
 
@@ -2881,6 +3000,28 @@ namespace smgpc::runtime {
 
     bool CameraSystemService::is_camera_director_paused() const {
         return _camera_director_pause_count > 0U;
+    }
+
+    const smgpc::camera::ResolvedStageStartCamera *
+    CameraSystemService::stage_start_camera() const noexcept {
+        return _stage_start_camera.has_value() ? &*_stage_start_camera : nullptr;
+    }
+
+    bool CameraSystemService::is_start_position_camera_end() const {
+        if (!_stage_start_camera.has_value()) {
+            throw std::logic_error(
+                "Start-position camera state requires an active stage-start camera owner.");
+        }
+        return !_start_position_camera_active;
+    }
+
+    std::uint32_t
+    CameraSystemService::start_position_camera_zero_interpolation_frames() const {
+        if (!_stage_start_camera.has_value()) {
+            throw std::logic_error(
+                "Start-position camera countdown requires an active stage-start camera owner.");
+        }
+        return _start_position_camera_zero_interpolation_frames;
     }
 
     std::optional<smgpc::camera::CameraPose> CameraSystemService::game_camera_pose() const {

@@ -3,7 +3,6 @@
 #include "Game/Scene/Scene.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
-#include "camera/StageStartCamera.hpp"
 #include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/NameObjChildOwner.hpp"
 #include "scene/StageCollisionService.hpp"
@@ -11,8 +10,8 @@
 #include "scene/StageAuthoredData.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <memory>
-#include <optional>
 #include <span>
 #include <string_view>
 #include <vector>
@@ -112,7 +111,7 @@ namespace smgpc::scene {
         std::vector<bool> _root_host_appear;
         const StagePlacementObject *_explicit_placement_source = nullptr;
         NameObj *_explicit_placement_root = nullptr;
-        std::optional<smgpc::camera::ResolvedStageStartCamera> _stage_start_camera;
+        std::uint64_t _stage_start_camera_owner_generation = 0U;
     };
 
 }  // namespace smgpc::scene

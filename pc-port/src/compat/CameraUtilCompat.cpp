@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <span>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 namespace {
@@ -252,6 +253,16 @@ namespace smgpc::compat {
         return runtime != nullptr ? &runtime->camera_system() : nullptr;
     }
 
+    smgpc::runtime::CameraSystemService &
+    require_camera_system_for_camera_util(std::string_view operation) {
+        auto *camera_system = active_camera_system_for_camera_util();
+        if (camera_system == nullptr) {
+            throw std::logic_error(std::string(operation) +
+                                   " requires the active RuntimeContext camera service.");
+        }
+        return *camera_system;
+    }
+
     void declare_event_camera_animation(
         const ActorCameraInfo& info, std::string_view name,
         std::span<const std::uint8_t> resource) {
@@ -335,6 +346,24 @@ namespace MR {
 
     f32 getFovy() {
         return require_camera_pose().fovy_degrees;
+    }
+
+    void startStartPosCamera(bool immediate) {
+        smgpc::compat::require_camera_system_for_camera_util(
+            "Start-position camera restore")
+            .start_start_position_camera(immediate);
+    }
+
+    void endStartPosCamera() {
+        smgpc::compat::require_camera_system_for_camera_util(
+            "Start-position camera termination")
+            .end_start_position_camera();
+    }
+
+    bool isStartPosCameraEnd() {
+        return smgpc::compat::require_camera_system_for_camera_util(
+                   "Start-position camera state query")
+            .is_start_position_camera_end();
     }
 
     bool isStartAnimCameraEnd() {

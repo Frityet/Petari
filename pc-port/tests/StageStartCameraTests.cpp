@@ -1,9 +1,13 @@
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "camera/CameraAnimation.hpp"
 #include "camera/CameraParam.hpp"
+#include "camera/EventCamera.hpp"
 #include "camera/StageStartCamera.hpp"
+#include "compat/CameraUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/StageHostService.hpp"
@@ -14,6 +18,7 @@
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
 
+#include <algorithm>
 #include <array>
 #include <bit>
 #include <cmath>
@@ -22,10 +27,12 @@
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <limits>
 #include <span>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -137,6 +144,68 @@ namespace {
             write_inline_string(bytes, entry + 16U, "CAM_TYPE_XZ_PARA");
         }
         return smgpc::resource::BcsvTable::from_bytes(bytes);
+    }
+
+    [[nodiscard]] std::vector<std::uint8_t> make_guide_animation() {
+        constexpr auto cHeaderSize = std::size_t{0x20U};
+        constexpr auto cComponentTableSize = std::size_t{8U * 8U};
+        constexpr auto cValueOffset = cHeaderSize + cComponentTableSize;
+        constexpr auto cValueCount = std::size_t{16U};
+        auto bytes = std::vector<std::uint8_t>(
+            cValueOffset + 4U + cValueCount * sizeof(float), 0U);
+        std::copy_n("ANDO", 4U, bytes.begin());
+        std::copy_n("CANM", 4U, bytes.begin() + 4U);
+        write_be32(bytes, 0x08U, 1U);
+        write_be32(bytes, 0x10U, 1U);
+        write_be32(bytes, 0x18U, 1U);
+        write_be32(bytes, 0x1cU, cComponentTableSize);
+        for (auto component = std::size_t{}; component < 8U; ++component) {
+            const auto offset = cHeaderSize + component * 8U;
+            write_be32(bytes, offset, 2U);
+            write_be32(bytes, offset + 4U,
+                       static_cast<std::uint32_t>(component * 2U));
+        }
+        write_be32(bytes, cValueOffset,
+                   static_cast<std::uint32_t>(cValueCount * sizeof(float)));
+        const auto values = std::array<float, cValueCount>{
+            0.0F, 10.0F, 100.0F, 100.0F, 500.0F, 500.0F,
+            0.0F, 10.0F, 100.0F, 100.0F, 0.0F,   0.0F,
+            0.0F, 0.0F,  45.0F,  45.0F,
+        };
+        for (auto index = std::size_t{}; index < values.size(); ++index) {
+            write_be_float(bytes, cValueOffset + 4U + index * 4U,
+                           values[index]);
+        }
+        return bytes;
+    }
+
+    [[nodiscard]] smgpc::camera::ResolvedStageStartCamera
+    make_resolved_start_camera(float marker) {
+        auto result = smgpc::camera::ResolvedStageStartCamera{};
+        result.start_info.camera_id = static_cast<s32>(marker);
+        result.camera_key = "synthetic:" + std::to_string(marker);
+        result.camera_param.camera_type = "CAM_TYPE_XZ_PARA";
+        result.calculation.pose = smgpc::camera::CameraPose{
+            .eye = {marker, 100.0F, 200.0F},
+            .watch = {marker + 10.0F, 100.0F, 200.0F},
+            .up = {0.0F, 1.0F, 0.0F},
+        };
+        return result;
+    }
+
+    [[nodiscard]] bool same_pose(const smgpc::camera::CameraPose &lhs,
+                                 const smgpc::camera::CameraPose &rhs) {
+        return lhs.eye.x == rhs.eye.x && lhs.eye.y == rhs.eye.y &&
+               lhs.eye.z == rhs.eye.z && lhs.watch.x == rhs.watch.x &&
+               lhs.watch.y == rhs.watch.y && lhs.watch.z == rhs.watch.z &&
+               lhs.up.x == rhs.up.x && lhs.up.y == rhs.up.y &&
+               lhs.up.z == rhs.up.z &&
+               lhs.fovy_degrees == rhs.fovy_degrees &&
+               lhs.aspect_ratio == rhs.aspect_ratio &&
+               lhs.near_clip == rhs.near_clip &&
+               lhs.far_clip == rhs.far_clip &&
+               lhs.projection_offset_x == rhs.projection_offset_x &&
+               lhs.projection_offset_y == rhs.projection_offset_y;
     }
 
     void test_rigid_zone_matrix_and_start_selection() {
@@ -323,6 +392,208 @@ namespace {
                 "stage requests should preserve the original default start ID and root zone");
     }
 
+    void test_runaway_tico_start_camera_handoff() {
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto resolved = make_resolved_start_camera(78.0F);
+        const auto start_pose = resolved.calculation.pose;
+        const auto owner_generation = camera.set_stage_start_camera(resolved);
+        const auto *retained = camera.stage_start_camera();
+        require(retained != nullptr && retained->camera_key == resolved.camera_key &&
+                    camera.game_camera_pose().has_value() &&
+                    same_pose(*camera.game_camera_pose(), start_pose),
+                "stage camera ownership must retain the complete resolved camera and publish its pose");
+
+        auto camera_override =
+            smgpc::compat::ScopedCameraSystemServiceOverride(camera);
+        require(!MR::isStartPosCameraEnd() &&
+                    camera.start_position_camera_zero_interpolation_frames() ==
+                        5U,
+                "retail stage-camera creation must start active with the false-call five-calculation window");
+        camera.begin_frame(1U);
+        require(camera.start_position_camera_zero_interpolation_frames() == 4U,
+                "the false-call zero-interpolation window must count down once per camera frame");
+
+        // RunawayTico Guide0 ends this camera before starting DemoMeetTico.
+        MR::endStartPosCamera();
+        require(MR::isStartPosCameraEnd() &&
+                    camera.stage_start_camera() == retained &&
+                    !camera.game_camera_pose().has_value() &&
+                    camera.start_position_camera_zero_interpolation_frames() ==
+                        0U,
+                "Guide0 end must suspend the pose without releasing the resolved stage camera");
+        MR::endStartPosCamera();
+        require(MR::isStartPosCameraEnd() &&
+                    camera.stage_start_camera() == retained,
+                "retail start-camera end must be repeatable while ownership remains live");
+
+        auto player = smgpc::runtime::PlayerSystemService{};
+        Mtx player_matrix{
+            {1.0F, 0.0F, 0.0F, 1000.0F},
+            {0.0F, 1.0F, 0.0F, 0.0F},
+            {0.0F, 0.0F, 1.0F, 0.0F},
+        };
+        player.set_base_matrix(player_matrix);
+        camera.declare_event_camera_animation(
+            0, "DemoMeetTico",
+            smgpc::camera::CameraAnimation::from_bytes(make_guide_animation()));
+        camera.start_event_camera(
+            0, "DemoMeetTico",
+            smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
+        const auto guide_pose = camera.effective_camera_pose();
+        require(guide_pose.has_value() && !same_pose(*guide_pose, start_pose),
+                "DemoMeetTico must own the effective pose after the Guide0 suspension");
+
+        MR::startStartPosCamera(false);
+        require(camera.start_position_camera_zero_interpolation_frames() == 5U,
+                "a false restart under an event camera must seed the retail countdown");
+        camera.begin_frame(2U);
+        require(camera.start_position_camera_zero_interpolation_frames() == 5U &&
+                    camera.effective_camera_pose().has_value() &&
+                    !same_pose(*camera.effective_camera_pose(), start_pose) &&
+                    camera.active_event_camera_key().has_value() &&
+                    camera.active_event_camera_key()->name == "DemoMeetTico",
+                "the game-camera countdown must not advance while an event camera owns the effective pose");
+        MR::endStartPosCamera();
+        const auto guide_pose_before_restart = camera.effective_camera_pose();
+
+        // RunawayTico Guide1 part 5 restores start-pos first, then ends CANM.
+        MR::startStartPosCamera(true);
+        require(!MR::isStartPosCameraEnd() &&
+                    camera.stage_start_camera() == retained &&
+                    camera.game_camera_pose().has_value() &&
+                    same_pose(*camera.game_camera_pose(), start_pose) &&
+                    camera.start_position_camera_zero_interpolation_frames() ==
+                        0U &&
+                    camera.effective_camera_pose().has_value() &&
+                    guide_pose_before_restart.has_value() &&
+                    same_pose(*camera.effective_camera_pose(),
+                              *guide_pose_before_restart),
+                "Guide1 true restart must restore immediately underneath the still-active event camera");
+        MR::startStartPosCamera(true);
+        require(camera.start_position_camera_zero_interpolation_frames() == 0U,
+                "a repeated true restart must remain an immediate retail restart");
+        camera.end_event_camera(0, "DemoMeetTico", true, -1);
+        require(camera.effective_camera_pose().has_value() &&
+                    same_pose(*camera.effective_camera_pose(), start_pose),
+                "ending DemoMeetTico after the Guide1 restart must reveal the exact retained start pose");
+
+        MR::startStartPosCamera(false);
+        require(camera.start_position_camera_zero_interpolation_frames() == 5U,
+                "a false restart must reproduce the exact five-calculation retail window");
+        camera.begin_frame(3U);
+        require(camera.start_position_camera_zero_interpolation_frames() == 4U,
+                "a false restart must resume its countdown from five");
+        MR::startStartPosCamera(false);
+        require(camera.start_position_camera_zero_interpolation_frames() == 5U,
+                "a repeated false restart must reseed the retail countdown");
+        camera.clear_stage_start_camera(owner_generation);
+    }
+
+    void test_start_camera_errors_and_scene_generations() {
+        const auto throws_logic_error = [](auto &&call) {
+            try {
+                call();
+            } catch (const std::logic_error &) {
+                return true;
+            }
+            return false;
+        };
+
+        require(throws_logic_error([] { MR::startStartPosCamera(true); }) &&
+                    throws_logic_error([] { MR::endStartPosCamera(); }) &&
+                    throws_logic_error([] { (void)MR::isStartPosCameraEnd(); }),
+                "MR start-camera calls must reject a missing camera service explicitly");
+
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto generic_pose = make_resolved_start_camera(-100.0F)
+                                      .calculation.pose;
+        camera.set_game_camera_pose(generic_pose);
+        {
+            auto camera_override =
+                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
+            require(throws_logic_error([] { MR::startStartPosCamera(true); }) &&
+                        throws_logic_error([] { MR::endStartPosCamera(); }) &&
+                        throws_logic_error(
+                            [] { (void)MR::isStartPosCameraEnd(); }) &&
+                        camera.game_camera_pose().has_value() &&
+                        same_pose(*camera.game_camera_pose(), generic_pose),
+                    "an absent stage owner must fail without poisoning an unrelated base pose");
+        }
+
+        auto invalid = make_resolved_start_camera(999.0F);
+        invalid.calculation.pose.eye.x =
+            std::numeric_limits<float>::quiet_NaN();
+        auto rejected_invalid = false;
+        try {
+            (void)camera.set_stage_start_camera(std::move(invalid));
+        } catch (const std::invalid_argument &) {
+            rejected_invalid = true;
+        }
+        require(rejected_invalid && camera.stage_start_camera() == nullptr &&
+                    camera.game_camera_pose().has_value() &&
+                    same_pose(*camera.game_camera_pose(), generic_pose),
+                "an invalid restore candidate must leave prior camera state untouched");
+
+        for (auto generation = 0U; generation < 2U; ++generation) {
+            const auto resolved =
+                make_resolved_start_camera(200.0F + 100.0F * generation);
+            const auto expected_pose = resolved.calculation.pose;
+            const auto owner_generation =
+                camera.set_stage_start_camera(resolved);
+            {
+                auto camera_override =
+                    smgpc::compat::ScopedCameraSystemServiceOverride(camera);
+                MR::endStartPosCamera();
+                MR::startStartPosCamera(true);
+                require(camera.game_camera_pose().has_value() &&
+                            same_pose(*camera.game_camera_pose(), expected_pose),
+                        "each stage generation must restore only its own retained pose");
+            }
+            camera.clear_stage_start_camera(owner_generation);
+            require(camera.stage_start_camera() == nullptr &&
+                        !camera.game_camera_pose().has_value(),
+                    "stage teardown must return the longer-lived camera service to baseline");
+
+            auto camera_override =
+                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
+            require(throws_logic_error([] { MR::startStartPosCamera(true); }) &&
+                        camera.stage_start_camera() == nullptr &&
+                        !camera.game_camera_pose().has_value(),
+                    "a failed post-teardown restore must not poison the next scene generation");
+        }
+
+        const auto old_generation = camera.set_stage_start_camera(
+            make_resolved_start_camera(600.0F));
+        const auto replacement = make_resolved_start_camera(650.0F);
+        const auto replacement_pose = replacement.calculation.pose;
+        const auto new_generation =
+            camera.set_stage_start_camera(replacement);
+        camera.clear_stage_start_camera(old_generation);
+        require(camera.stage_start_camera() != nullptr &&
+                    camera.stage_start_camera()->camera_key ==
+                        replacement.camera_key &&
+                    camera.game_camera_pose().has_value() &&
+                    same_pose(*camera.game_camera_pose(), replacement_pose),
+                "a stale StageHost teardown must not clear a newer stage-camera generation");
+        camera.clear_stage_start_camera(new_generation);
+        require(camera.stage_start_camera() == nullptr &&
+                    !camera.game_camera_pose().has_value(),
+                "the matching replacement owner must still release its generation");
+
+        const auto stale = make_resolved_start_camera(700.0F);
+        const auto stale_owner_generation =
+            camera.set_stage_start_camera(stale);
+        camera.set_game_camera_pose(generic_pose);
+        camera.clear_stage_start_camera(stale_owner_generation);
+        auto camera_override =
+            smgpc::compat::ScopedCameraSystemServiceOverride(camera);
+        require(camera.stage_start_camera() == nullptr &&
+                    throws_logic_error([] { MR::startStartPosCamera(true); }) &&
+                    camera.game_camera_pose().has_value() &&
+                    same_pose(*camera.game_camera_pose(), generic_pose),
+                "a new generic base-camera owner must invalidate stale stage restore state");
+    }
+
     void test_retail_placement_zone_scene_object() {
         auto holder = SceneObjHolder{};
         auto binding = smgpc::scene::SceneObjHolderBinding(holder);
@@ -366,6 +637,30 @@ namespace {
         require_near(root.camera->calculation.pose.eye.x, 13402.355347F, 0.5F,
                      "real-disc XZ_PARA should use transformed StartInfo up while gravity is unavailable");
 
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto real_start_pose = root.camera->calculation.pose;
+        const auto owner_generation =
+            camera.set_stage_start_camera(*root.camera);
+        {
+            auto camera_override =
+                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
+            MR::endStartPosCamera();
+            require(camera.stage_start_camera() != nullptr &&
+                        camera.stage_start_camera()->camera_key == "s:004e" &&
+                        !camera.game_camera_pose().has_value(),
+                    "Guide0 suspension must retain the resolved real HeavensDoor camera");
+            MR::startStartPosCamera(true);
+            require(camera.game_camera_pose().has_value() &&
+                        same_pose(*camera.game_camera_pose(), real_start_pose) &&
+                        camera.start_position_camera_zero_interpolation_frames() ==
+                            0U,
+                    "Guide1 true restart must reproduce the resolved real-stage pose exactly");
+        }
+        camera.clear_stage_start_camera(owner_generation);
+        require(camera.stage_start_camera() == nullptr &&
+                    !camera.game_camera_pose().has_value(),
+                "real-stage teardown must release all retained start-camera state");
+
         const auto child = smgpc::scene::resolve_stage_start_info(dvd, "HeavensDoorGalaxy", 1, 0, 5);
         require(child.has_value() && child->zone_name == "HeavensDoorMysteriousZone" && child->camera_id == 999 &&
                     child->archive_path.find("HeavensDoorMysteriousZone.arc") != std::string::npos,
@@ -398,6 +693,8 @@ int main() {
         TestCase{"rigid zone matrix and StartInfo selection", test_rigid_zone_matrix_and_start_selection},
         TestCase{"camera migration, key, and XZ_PARA pose", test_camera_version_key_and_xz_parallel_pose},
         TestCase{"base and programmable camera priority", test_base_programmable_camera_priority_and_request_defaults},
+        TestCase{"RunawayTico start-camera handoff", test_runaway_tico_start_camera_handoff},
+        TestCase{"start-camera errors and scene generations", test_start_camera_errors_and_scene_generations},
         TestCase{"retail placement-zone SceneObj", test_retail_placement_zone_scene_object},
         TestCase{"optional real-disc HeavensDoor camera", test_optional_real_disc_heavensdoor_camera},
     };

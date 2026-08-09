@@ -339,10 +339,6 @@ namespace MR {
         unavailable("all-galaxy Power Star completion state");
     }
 
-    void endStartPosCamera() {
-        unavailable("start-position camera termination");
-    }
-
     void startStarPointerModeEnding(void *) {
         unavailable("ending Star Pointer mode");
     }

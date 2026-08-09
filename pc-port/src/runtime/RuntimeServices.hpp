@@ -662,6 +662,12 @@ namespace smgpc::runtime {
         void declare_event_camera_programmable(std::string_view name);
         void start_global_event_camera_no_target(std::string_view name);
         void end_global_event_camera(std::string_view name);
+        [[nodiscard]] std::uint64_t set_stage_start_camera(
+            smgpc::camera::ResolvedStageStartCamera camera);
+        void clear_stage_start_camera(
+            std::uint64_t owner_generation) noexcept;
+        void start_start_position_camera(bool immediate);
+        void end_start_position_camera();
         void set_game_camera_pose(const smgpc::camera::CameraPose &pose);
         void clear_game_camera_pose();
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
@@ -672,6 +678,11 @@ namespace smgpc::runtime {
         [[nodiscard]] std::uint32_t reset_camera_man_count() const;
         [[nodiscard]] std::uint32_t camera_director_pause_count() const;
         [[nodiscard]] bool is_camera_director_paused() const;
+        [[nodiscard]] const smgpc::camera::ResolvedStageStartCamera *
+        stage_start_camera() const noexcept;
+        [[nodiscard]] bool is_start_position_camera_end() const;
+        [[nodiscard]] std::uint32_t
+        start_position_camera_zero_interpolation_frames() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> game_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_event_camera_pose() const;
         [[nodiscard]] std::optional<smgpc::camera::EventCameraKey> active_event_camera_key() const;
@@ -719,6 +730,12 @@ namespace smgpc::runtime {
         std::optional<float> _shake_screen_width;
         std::optional<float> _shake_efb_height;
         std::uint32_t _camera_director_pause_count = 0U;
+        std::optional<smgpc::camera::ResolvedStageStartCamera>
+            _stage_start_camera;
+        std::uint64_t _stage_start_camera_owner_generation = 0U;
+        std::uint64_t _next_stage_start_camera_owner_generation = 1U;
+        bool _start_position_camera_active = false;
+        std::uint32_t _start_position_camera_zero_interpolation_frames = 0U;
         std::optional<smgpc::camera::CameraPose> _game_camera_pose;
         smgpc::camera::EventCameraRuntime _event_cameras;
         std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;

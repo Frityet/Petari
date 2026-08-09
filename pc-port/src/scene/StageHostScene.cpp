@@ -199,7 +199,9 @@ namespace smgpc::scene {
     }
 
     StageHostScene::~StageHostScene() {
-        _runtime.camera_system().clear_game_camera_pose();
+        _runtime.camera_system().clear_stage_start_camera(
+            _stage_start_camera_owner_generation);
+        _stage_start_camera_owner_generation = 0U;
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
@@ -621,8 +623,9 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::init_stage_start_camera() {
-        _runtime.camera_system().clear_game_camera_pose();
-        _stage_start_camera.reset();
+        _runtime.camera_system().clear_stage_start_camera(
+            _stage_start_camera_owner_generation);
+        _stage_start_camera_owner_generation = 0U;
 
         if (_authored_data == nullptr ||
             !_authored_data->start_info().has_value()) {
@@ -643,10 +646,17 @@ namespace smgpc::scene {
             return;
         }
 
-        _stage_start_camera = std::move(*resolved.camera);
-        _runtime.camera_system().set_game_camera_pose(_stage_start_camera->calculation.pose);
+        _stage_start_camera_owner_generation =
+            _runtime.camera_system().set_stage_start_camera(
+                std::move(*resolved.camera));
 #ifndef NDEBUG
-        const auto &camera = *_stage_start_camera;
+        const auto *retained_camera =
+            _runtime.camera_system().stage_start_camera();
+        if (retained_camera == nullptr) {
+            throw std::logic_error(
+                "Stage-start camera service lost its retained resolved camera.");
+        }
+        const auto &camera = *retained_camera;
         const auto &pose = camera.calculation.pose;
         _runtime.emit_semantic_trace_event(
             "camera", "stage_start_camera_selected",

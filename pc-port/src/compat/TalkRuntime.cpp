@@ -120,6 +120,21 @@ namespace smgpc::compat {
             CallbackAllocation kill_func;
         };
 
+        struct OwnedControllerSet {
+            std::vector<std::unique_ptr<TalkMessageCtrl>> controllers;
+
+            [[nodiscard]] TalkMessageCtrl* primary() const noexcept {
+                return controllers.empty() ? nullptr : controllers.front().get();
+            }
+
+            [[nodiscard]] bool contains(const TalkMessageCtrl* controller) const noexcept {
+                return std::ranges::any_of(
+                    controllers, [controller](const auto& owned) {
+                        return owned.get() == controller;
+                    });
+            }
+        };
+
         explicit Impl(TalkRuntime& runtime) : owner(runtime) {
         }
 
@@ -130,7 +145,7 @@ namespace smgpc::compat {
         std::vector<TalkNode> nodes;
         std::unordered_map<TalkMessageCtrl*, ControllerState> controllers;
         std::unordered_map<const TalkNodeCtrl*, TalkMessageCtrl*> controller_by_node;
-        std::unordered_map<const LiveActor*, std::unique_ptr<TalkMessageCtrl>> owned_controllers;
+        std::unordered_map<const LiveActor*, OwnedControllerSet> owned_controllers;
         TalkMessageCtrl* pending = nullptr;
         TalkMessageCtrl* selected = nullptr;
         TalkMessageCtrl* active = nullptr;
@@ -634,9 +649,9 @@ namespace smgpc::compat {
             selected = nullptr;
             presentation.reset();
 
-            for (auto& [actor, controller] : owned_controllers) {
+            for (auto& [actor, controller_set] : owned_controllers) {
                 if (auto* npc = dynamic_cast<NPCActor*>(const_cast<LiveActor*>(actor));
-                    npc != nullptr && npc->mMsgCtrl == controller.get()) {
+                    npc != nullptr && controller_set.contains(npc->mMsgCtrl)) {
                     npc->mMsgCtrl = nullptr;
                 }
             }
@@ -704,38 +719,46 @@ namespace smgpc::compat {
         if (actor == nullptr || controller == nullptr) {
             throw std::logic_error("TalkRuntime cannot adopt a null actor or controller.");
         }
-        const auto existing = _impl->owned_controllers.find(actor);
         auto* result = controller.get();
         // TalkMessageCtrl is a registered NameObj, but its storage belongs to
         // this scene-owned TalkRuntime rather than the retail scene heap. Mark
         // that boundary before publishing the pointer so construction-suffix
         // capture can observe it without adopting and deleting it a second
-        // time. A failed claim leaves any same-actor controller untouched.
+        // time. A failed claim leaves every same-actor controller untouched.
         smgpc::compat::claim_name_obj_runtime_ownership(result, this);
 
-        if (existing != _impl->owned_controllers.end()) {
-            // Replacing the mapped unique_ptr is allocation-free and noexcept.
-            // Keep the old controller alive until the incoming controller is
-            // fully published, then clear only a retail NPC pointer that still
-            // names the retired identity.
-            auto old_controller = std::move(existing->second);
-            existing->second = std::move(controller);
-            if (auto* npc = dynamic_cast<NPCActor*>(actor);
-                npc != nullptr && npc->mMsgCtrl == old_controller.get()) {
-                npc->mMsgCtrl = nullptr;
+        auto [found, inserted] = _impl->owned_controllers.try_emplace(actor);
+        try {
+            // Each retail new-expression returns a distinct stable controller.
+            // vector growth has a strong exception guarantee for unique_ptr,
+            // so a failed append destroys only the incoming local owner.
+            found->second.controllers.emplace_back(std::move(controller));
+        } catch (...) {
+            if (inserted) {
+                _impl->owned_controllers.erase(found);
             }
-            return result;
+            throw;
         }
-
-        // If node allocation throws, the local unique_ptr still retires the
-        // controller and its claimed registry state transactionally.
-        _impl->owned_controllers.emplace(actor, std::move(controller));
         return result;
     }
 
     TalkMessageCtrl* TalkRuntime::owned_controller(const LiveActor* actor) const {
         const auto found = _impl->owned_controllers.find(actor);
-        return found != _impl->owned_controllers.end() ? found->second.get() : nullptr;
+        if (found == _impl->owned_controllers.end()) {
+            return nullptr;
+        }
+        if (const auto* npc = dynamic_cast<const NPCActor*>(actor);
+            npc != nullptr && found->second.contains(npc->mMsgCtrl)) {
+            return npc->mMsgCtrl;
+        }
+        return found->second.primary();
+    }
+
+    std::size_t TalkRuntime::owned_controller_count(const LiveActor* actor) const {
+        const auto found = _impl->owned_controllers.find(actor);
+        return found != _impl->owned_controllers.end()
+                   ? found->second.controllers.size()
+                   : 0U;
     }
 
     void TalkRuntime::release_owned_controller(const LiveActor* actor) {
@@ -743,17 +766,17 @@ namespace smgpc::compat {
         if (found == _impl->owned_controllers.end()) {
             return;
         }
-        auto controller = std::move(found->second);
+        auto controllers = std::move(found->second);
         _impl->owned_controllers.erase(found);
         if (auto* npc = dynamic_cast<NPCActor*>(const_cast<LiveActor*>(actor));
-            npc != nullptr && npc->mMsgCtrl == controller.get()) {
+            npc != nullptr && controllers.contains(npc->mMsgCtrl)) {
             npc->mMsgCtrl = nullptr;
         }
-        controller.reset();
+        controllers.controllers.clear();
     }
 
     bool TalkRuntime::has_owned_controller(const LiveActor* actor) const {
-        return _impl->owned_controllers.contains(actor);
+        return owned_controller_count(actor) != 0U;
     }
 
     bool TalkRuntime::consume_end(const TalkMessageCtrl& controller) {
