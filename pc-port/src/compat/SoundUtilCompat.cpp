@@ -38,6 +38,14 @@ namespace MR {
         if (name == "SE_SY_READ_RIDDLE_S" && MR::isPlayerDead()) {
             return nullptr;
         }
+        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+        auto *logical_audio =
+            smgpc::compat::try_active_audio_event_service();
+        if (logical_audio != nullptr &&
+            (runtime == nullptr || logical_audio != &runtime->audio())) {
+            logical_audio->start_system_sound(name);
+            return nullptr;
+        }
         return require_audio_runtime("System-SE playback")
             .start_system_sound(name, parameter1, parameter2);
     }
@@ -104,6 +112,17 @@ namespace MR {
         return require_audio_runtime("Stage-BGM playback")
             .start_stage_bgm(
                 require_sound_name(pName, "Stage-BGM playback"), prepared);
+    }
+
+    JAISoundHandle *startSubBGM(const char *pName, bool) {
+        (void)require_sound_name(pName, "Sub-BGM playback");
+        throw std::logic_error(
+            "Sub-BGM playback requires the retail secondary JAudio BGM scheduler");
+    }
+
+    void stopSubBGM(u32) {
+        throw std::logic_error(
+            "Sub-BGM stop requires the retail secondary JAudio BGM scheduler");
     }
 
     void stopStageBGM(u32 fadeFrames) {

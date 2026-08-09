@@ -69,6 +69,21 @@ namespace MR {
         throw_programmable_demo_unavailable("MR::requestStartDemo");
     }
 
+    bool requestStartDemoWithoutCinemaFrame(
+        LiveActor *pActor, const char *pDemoName,
+        const Nerve *pCanStartNerve, const Nerve *pCannotStartNerve) {
+        static_cast<void>(pCanStartNerve);
+        static_cast<void>(pCannotStartNerve);
+        (void)smgpc::compat::require_active_demo_scene_runtime(
+            "Programmable demo request without cinema frame");
+        if (pActor == nullptr || pDemoName == nullptr) {
+            throw std::invalid_argument(
+                "A programmable demo request requires a real starter and demo name.");
+        }
+        throw_programmable_demo_unavailable(
+            "MR::requestStartDemoWithoutCinemaFrame");
+    }
+
     void endDemo(NameObj *pOwner, const char *pDemoName) {
         static_cast<void>(pOwner);
         static_cast<void>(pDemoName);

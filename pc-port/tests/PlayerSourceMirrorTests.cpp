@@ -180,6 +180,7 @@ namespace {
     constexpr auto cPcDivergentSources = std::array{
         std::string_view{"Mario"},
         std::string_view{"MarioActor"},
+        std::string_view{"MarioActorPad"},
         std::string_view{"MarioActorDraw"},
         std::string_view{"MarioActorInit"},
         std::string_view{"MarioAnimator"},

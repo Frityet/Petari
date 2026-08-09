@@ -1172,9 +1172,21 @@ namespace {
     void test_timekeeper_queries_subparts_and_natural_end() {
         const auto archive = make_clock_sheet_fixture();
         const auto placements = make_clock_definition_fixture();
-        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        const auto positions = std::array{
+            smgpc::scene::StageGeneralPos{
+                .name = "ClockStart",
+                .world_position = {12.0F, 34.0F, 56.0F},
+                .world_rotation = {7.0F, 8.0F, 9.0F},
+            },
+        };
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements, positions);
         auto actor_info = make_actor_info(30, -1, 20);
         auto actor = LiveActor("ClockActor");
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto player_actor = LiveActor("PlayerActor");
+        player.attach_actor(player_actor);
+        const auto player_context =
+            smgpc::compat::ScopedPlayerSystemServiceOverride{player};
         require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)),
                 "the clock actor must register with its zone-scoped primary definition");
 
@@ -1304,7 +1316,14 @@ namespace {
     void test_registered_start_suspend_and_safe_rejections() {
         const auto archive = make_clock_sheet_fixture();
         const auto placements = make_clock_definition_fixture();
-        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        const auto positions = std::array{
+            smgpc::scene::StageGeneralPos{
+                .name = "ClockStart",
+                .world_position = {12.0F, 34.0F, 56.0F},
+                .world_rotation = {7.0F, 8.0F, 9.0F},
+            },
+        };
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements, positions);
         auto clock_info = make_actor_info(30, -1, 20);
         auto actor = LiveActor("ClockActor");
         auto wrong_actor = LiveActor("WrongActor");
@@ -1316,6 +1335,17 @@ namespace {
         require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&clock_info, 0)) &&
                     MR::tryRegisterDemoCast(&actor, "Other", JMapInfoIter{}),
                 "the registered-start actor must retain ordered multi-membership");
+        require(MR::tryStartTimeKeepDemoMarioPuppetable(&actor, "Clock", "intro"),
+                "the Player-row fixture must start through the original puppetable boundary");
+        runtime.movement();
+        require(player_actor.mPosition.x == 12.0F && player_actor.mPosition.y == 34.0F &&
+                    player_actor.mPosition.z == 56.0F && player_actor.mRotation.x == 7.0F &&
+                    player_actor.mRotation.y == 8.0F && player_actor.mRotation.z == 9.0F &&
+                    player_actor.mVelocity.isZero() &&
+                    smgpc::compat::actor_current_bck_name(&player_actor) == "Wait" &&
+                    !player.is_control_enabled(),
+                "the original Player keeper order must apply GeneralPos/BCK before other keepers");
+        MR::endDemo(&actor, "Clock");
         require(MR::tryStartDemoRegistered(&actor, "outro") &&
                     MR::isDemoActiveRegistered(&actor) &&
                     MR::getDemoPartStep("outro") == -1 &&

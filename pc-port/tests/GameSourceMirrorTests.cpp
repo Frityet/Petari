@@ -66,6 +66,8 @@ namespace {
         SourcePair{"../src/Game/Screen/BrosButton.cpp", "src/Game/Screen/BrosButton.cpp"},
         SourcePair{"../include/Game/Screen/InformationMessage.hpp", "src/Game/Screen/InformationMessage.hpp"},
         SourcePair{"../src/Game/Screen/InformationMessage.cpp", "src/Game/Screen/InformationMessage.cpp"},
+        SourcePair{"../include/Game/Screen/InformationObserver.hpp", "src/Game/Screen/InformationObserver.hpp"},
+        SourcePair{"../src/Game/Screen/InformationObserver.cpp", "src/Game/Screen/InformationObserver.cpp"},
         SourcePair{"../include/Game/Screen/MiiConfirmIcon.hpp", "src/Game/Screen/MiiConfirmIcon.hpp"},
         SourcePair{"../src/Game/Screen/MiiConfirmIcon.cpp", "src/Game/Screen/MiiConfirmIcon.cpp"},
         SourcePair{"../include/Game/Screen/SysInfoWindow.hpp", "src/Game/Screen/SysInfoWindow.hpp"},

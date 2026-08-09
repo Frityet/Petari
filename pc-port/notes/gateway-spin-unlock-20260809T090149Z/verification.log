@@ -1,0 +1,51 @@
+2026-08-09 UTC Gateway spin-unlock checkpoint verification
+
+PASS  xmake build -y -j2 smg-pc-information-observer-tests
+PASS  SMGPC_REAL_DISC=../RMGK01.iso xvfb-run -a xmake run smg-pc-information-observer-tests
+      InformationObserver tests passed: exact timekeep/prompt/guard/lifecycle
+      Debug proof requires a nontransparent raster for the real prompt text.
+
+PASS  xmake build -y -j2 smg-pc-gateway-spin-checkpoint-tests
+PASS  SMGPC_REAL_DISC=../RMGK01.iso xvfb-run -a xmake run smg-pc-gateway-spin-checkpoint-tests
+      checkpoint=progress10;trigger_radius=500;fade_handoff=90;
+      demo_start_row=15;pre_prompt_ticks=1670;prompt_row=22;
+      information_guard=30;spin_progress=15;rabbit_route=absent
+
+PASS  SMGPC_REAL_DISC=../RMGK01.iso xvfb-run -a xmake run smg-pc-mario-gateway-walk-tests
+      stand/walk/release proof; Wait->Run->Wait; grounded idle; recreate
+
+PASS  SMGPC_REAL_DISC=../RMGK01.iso xvfb-run -a xmake run smg-pc-gateway-demo-scene-tests
+      17 model packets; 40,225 model triangles; 7,789 KCL triangles
+
+PASS  xmake run smg-pc-demo-scene-runtime-tests                 19/19
+PASS  xmake run smg-pc-game-data-real-or-absent-tests          20/20
+PASS  xmake run smg-pc-sceneobj-holder-real-or-absent-tests      6/6
+PASS  xmake run smg-pc-player-util-real-or-absent-tests          4/4
+PASS  xmake run smg-pc-restart-stage-session-tests               8/8
+PASS  xmake run smg-pc-aurora-native-tests                      28/28
+PASS  xmake run smg-pc-message-real-or-absent-tests               3
+PASS  SMGPC_REAL_DISC=../RMGK01.iso xvfb-run -a xmake run smg-pc-layout-real-or-absent-tests  7/7
+PASS  xmake run smg-pc-game-source-mirror-tests
+PASS  xmake run smg-pc-player-source-mirror-tests
+      96/96 retail source branches; 63/63 headers; 1 production TU;
+      95 explicit exclusions
+
+PASS  xvfb-run -a xmake run smg-pc-showcase gateway --disc ../RMGK01.iso --smoke
+      28 rendered frames; animated Mario packet; on-screen actor center;
+      GPU draw; real gravity; exact KCL contact
+
+PASS  SMGPC_DEBUG_WPAD_BUTTON_SCRIPT='1792:A;1794:A;1796:A'
+      xvfb-run -a xmake run smg-pc-showcase gateway-spin
+      --disc ../RMGK01.iso --max-frames 1800
+      Full authored handoff/prompt/dismissal/unlock completed, exit 0.
+
+PASS  ninja -j12 build/RMGK02/main.dol
+PASS  sha1sum -c config/RMGK02/build.sha1
+      build/RMGK02/main.dol: OK
+      SHA-1 54b71431af0d509097bfdef4ec28617afc487e89
+
+PASS  python3 configure.py progress -v RMGK02
+      Overall 65.695120% matched / 14.254311% linked
+      Game    63.091045% matched / 13.299020% linked
+
+PASS  git diff --check

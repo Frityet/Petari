@@ -9,8 +9,12 @@
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
+#include "compat/GameDataFunctionCompat.hpp"
 
 namespace {
+thread_local GameDataHolder* sCurrentGameDataOverride = nullptr;
+thread_local GameDataHolder* sSceneStartGameDataOverride = nullptr;
+
 [[noreturn]] void unavailable(std::string_view operation) {
     throw std::logic_error("GameDataFunction operation is unavailable: " + std::string(operation));
 }
@@ -39,6 +43,23 @@ SysConfigFile& require_sys_config_file() {
     return *file;
 }
 }  // namespace
+
+namespace smgpc::compat {
+
+ScopedGameDataHolderOverride::ScopedGameDataHolderOverride(
+    GameDataHolder& current, GameDataHolder* scene_start)
+    : _previous_current(sCurrentGameDataOverride),
+      _previous_scene_start(sSceneStartGameDataOverride) {
+    sCurrentGameDataOverride = &current;
+    sSceneStartGameDataOverride = scene_start != nullptr ? scene_start : &current;
+}
+
+ScopedGameDataHolderOverride::~ScopedGameDataHolderOverride() {
+    sCurrentGameDataOverride = _previous_current;
+    sSceneStartGameDataOverride = _previous_scene_start;
+}
+
+}  // namespace smgpc::compat
 
 namespace GameDataFunction {
 
@@ -115,10 +136,16 @@ void resetAllGameData() {
 }
 
 GameDataHolder* getCurrentGameDataHolder() {
+    if (sCurrentGameDataOverride != nullptr) {
+        return sCurrentGameDataOverride;
+    }
     return require_current_user_file().mGameDataHolder;
 }
 
 GameDataHolder* getSceneStartGameDataHolder() {
+    if (sSceneStartGameDataOverride != nullptr) {
+        return sSceneStartGameDataOverride;
+    }
     return require_backup_user_file().mGameDataHolder;
 }
 

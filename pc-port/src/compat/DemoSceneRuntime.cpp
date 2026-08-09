@@ -9,6 +9,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -489,6 +490,50 @@ namespace smgpc::compat {
             }
         }
 
+        void dispatch_player_rows(std::size_t definition_index) {
+            auto &definition = definitions[definition_index];
+            for (const auto &row : definition.sheet.player_rows()) {
+                if (!definition.sheet.is_part_first_step(row.part_name)) {
+                    continue;
+                }
+                auto *player = puppetable_player != nullptr
+                                   ? puppetable_player
+                                   : active_player_system_for_player_util();
+                if (player == nullptr || player->attached_actor() == nullptr) {
+                    throw std::logic_error(
+                        "A dispatchable Demo Player row requires the attached Mario owner.");
+                }
+
+                auto *actor = player->attached_actor();
+                if (!row.position_name.empty()) {
+                    const auto found = std::ranges::find_if(
+                        general_positions, [&](const auto &position) {
+                            return position.name == row.position_name;
+                        });
+                    if (found == general_positions.end()) {
+                        throw std::runtime_error(
+                            "Demo Player PosName is absent from the active scene GeneralPos data: demo='" +
+                            definition.demo_name + "' part='" + row.part_name +
+                            "' position='" + row.position_name + "'");
+                    }
+                    actor->mPosition.set(found->world_position[0U],
+                                         found->world_position[1U],
+                                         found->world_position[2U]);
+                    actor->mRotation.set(found->world_rotation[0U],
+                                         found->world_rotation[1U],
+                                         found->world_rotation[2U]);
+                    actor->mVelocity.zero();
+                    clear_actor_binder_contacts(actor);
+                    actor->mFlag.mIsNoBind = false;
+                    player->synchronize_attached_actor();
+                }
+                if (!row.bck_name.empty()) {
+                    MR::startBckPlayer(row.bck_name.c_str(),
+                                       static_cast<const char *>(nullptr));
+                }
+            }
+        }
+
         void dispatch_wipe_rows(std::size_t definition_index) {
             auto &definition = definitions[definition_index];
             const auto has_dispatchable_row = std::ranges::any_of(
@@ -658,8 +703,9 @@ namespace smgpc::compat {
 
         if (dispatchable) {
             // DemoExecutor's keeper order is Player, Camera, Action, Wipe,
-            // Sound after Time/SubPart. Player/Camera/Sound retain their slots
-            // for their dedicated compatibility slices.
+            // Sound after Time/SubPart. Camera/Sound retain their slots for
+            // their dedicated compatibility slices.
+            _impl->dispatch_player_rows(definition_index);
             _impl->dispatch_action_rows(definition_index);
             _impl->dispatch_wipe_rows(definition_index);
         }

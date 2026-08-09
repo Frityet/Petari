@@ -29,6 +29,7 @@ namespace MR {
     void connectToSceneLayoutDecoration(LayoutActor* pLayout);
     void connectToSceneTalkLayout(LayoutActor* pLayout);
     void connectToSceneLayoutOnPause(LayoutActor* pLayout);
+    void connectToSceneLayoutMovement(NameObj* pObj);
     bool isExistResourceInArc(const char* pArcName, const char* pResourceName);
     bool tryRumblePad(const void*, const char*, s32);
     bool tryRumblePadVeryStrongLong(const void*, s32);

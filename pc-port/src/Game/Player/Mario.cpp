@@ -1336,6 +1336,15 @@ void Mario::setTrans(const TVec3f& rShift, const char* a2) {
 }
 
 bool Mario::isEnableRush() const {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    // Hanging, damage, Flow, and their state modules are structurally absent
+    // from the stand/walk controller. Preserve the retail jumping denial that
+    // is represented by the retained movement-state fields.
+    if (mMovementStates._B && mMovementStates.jumping) {
+        return false;
+    }
+    return true;
+#else  // SMGPC_RETAIL_SOURCE
     if (isHanging()) {
         return false;
     }
@@ -1349,6 +1358,7 @@ bool Mario::isEnableRush() const {
         return false;
     }
     return true;
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 bool Mario::isInvincible() const {
@@ -1386,7 +1396,7 @@ void Mario::inputStick() {
         mStickPos.z = 0.0f;
     }
 
-    f32 angle = JMath::sAtanTable.atan2_(mStickPos.x, mStickPos.y);
+    f32 angle = JMath::sAtanTable.atan2_(mStickPos.y, mStickPos.x);
     angle = MR::normalizeAngleAbs(angle);
 
     MarioConstTable* table = mActor->mConst->getTable();

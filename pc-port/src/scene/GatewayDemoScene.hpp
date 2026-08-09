@@ -51,6 +51,8 @@ namespace smgpc::scene {
 
         [[nodiscard]] const StagePlacementObject &planet_placement() const;
         [[nodiscard]] const StagePlacementObject &gravity_placement() const;
+        [[nodiscard]] std::span<const StagePlacementObject> placements() const;
+        [[nodiscard]] std::span<const StageGeneralPos> general_positions() const;
         [[nodiscard]] const smgpc::render::J3dModelGeometry &planet_geometry() const;
         [[nodiscard]] std::span<const std::uint8_t> planet_bdl() const;
         [[nodiscard]] std::span<const std::uint8_t> planet_kcl() const;

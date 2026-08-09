@@ -66,6 +66,10 @@ namespace smgpc::compat {
     void release_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] bool has_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] std::size_t name_obj_runtime_state_count();
+    // Returns the currently live host-tracked NameObj identities. This lets
+    // compatibility owners adopt retail child objects allocated with raw new
+    // without changing the original Game class layout or source.
+    [[nodiscard]] std::vector<NameObj*> snapshot_name_obj_runtime_objects();
     [[nodiscard]] bool name_obj_is_suspended(const NameObj* object);
 
     // One generalized record owns every native-only LiveActor resource. The

@@ -663,11 +663,18 @@ namespace smgpc::runtime {
         std::vector<ShakeRequestEvent> _shake_request_events;
     };
 
+    struct PlayerActorEntitlementBridge {
+        using SwingPermissionWriter = void (*)(LiveActor &, bool);
+
+        SwingPermissionWriter set_swing_permission = nullptr;
+    };
+
     class PlayerSystemService final {
     public:
         void reset_stage_state();
         void clear_stage_state();
-        void attach_actor(LiveActor &actor);
+        void attach_actor(LiveActor &actor,
+                          PlayerActorEntitlementBridge entitlement_bridge = {});
         void detach_actor(const LiveActor *actor = nullptr);
         void synchronize_attached_actor();
 
@@ -713,6 +720,7 @@ namespace smgpc::runtime {
         std::array<f32, 3U> _position{};
         std::array<f32, 3U> _velocity{};
         std::array<f32, 3U> _gravity{0.0F, -1.0F, 0.0F};
+        PlayerActorEntitlementBridge _entitlement_bridge{};
     };
 
     class GameLayoutService final {

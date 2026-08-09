@@ -1316,7 +1316,7 @@ void Mario::inputStick() {
         mStickPos.z = 0.0f;
     }
 
-    f32 angle = JMath::sAtanTable.atan2_(mStickPos.x, mStickPos.y);
+    f32 angle = JMath::sAtanTable.atan2_(mStickPos.y, mStickPos.x);
     angle = MR::normalizeAngleAbs(angle);
 
     MarioConstTable* table = mActor->mConst->getTable();

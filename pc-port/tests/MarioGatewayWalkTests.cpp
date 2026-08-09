@@ -6,6 +6,7 @@
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Player/MarioMapCode.hpp"
 #include "Game/Util/MapUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
@@ -18,6 +19,7 @@
 #include <aurora/dvd.h>
 #include <aurora/wpad.hpp>
 #include <dolphin/dvd.h>
+#include <SDL3/SDL.h>
 
 #include <algorithm>
 #include <array>
@@ -52,6 +54,25 @@ namespace {
                                      std::to_string(actual) + ";expected=" +
                                      std::to_string(expected));
         }
+    }
+
+    void set_mario_swing_permission(LiveActor& actor, bool permitted) {
+        auto* mario = dynamic_cast<MarioActor*>(&actor);
+        if (mario == nullptr) {
+            throw std::logic_error(
+                "the test player entitlement bridge requires MarioActor");
+        }
+        mario->_EEB = permitted;
+    }
+
+    void set_host_swing_key(smgpc::render::AuroraWindow& window, bool held) {
+        auto event = SDL_Event{};
+        event.type = held ? SDL_EVENT_KEY_DOWN : SDL_EVENT_KEY_UP;
+        event.key.key = SDLK_X;
+        require(SDL_PushEvent(&event),
+                "the deterministic proof must inject a real SDL swing-key event");
+        require(window.poll_events(),
+                "the Gateway window must remain open while sampling the swing key");
     }
 
     class ScopedEnvironmentVariable final {
@@ -302,6 +323,14 @@ namespace {
         auto* actor = dynamic_cast<MarioActor*>(created.get());
         require(actor != nullptr,
                 "the typed development creator must construct the real MarioActor");
+        const auto entitlement_bridge =
+            smgpc::runtime::PlayerActorEntitlementBridge{
+                .set_swing_permission = &set_mario_swing_permission,
+            };
+        runtime.player_system().attach_actor(*actor, entitlement_bridge);
+        require(runtime.player_system().attached_actor() == actor &&
+                    !runtime.player_system().is_swing_permitted() && !actor->_EEB,
+                "the real Gateway player owner must attach Mario with spin entitlement initially locked");
 
         auto wait_frame_max = std::int16_t{};
         {
@@ -477,9 +506,11 @@ namespace {
         const auto walk_displacement = actor->mPosition - stand_position;
         const auto walk_distance = walk_displacement.length();
         const auto walk_speed = actor->mMario->_278;
-        require(actor->mMario->mStickPos.z > 0.9F && walk_speed > 0.0F &&
+        require(std::fabs(actor->mMario->mStickPos.x) < 0.01F &&
+                    actor->mMario->mStickPos.y > 0.9F &&
+                    actor->mMario->mStickPos.z > 0.9F && walk_speed > 0.0F &&
                     actor->mMario->mWorldPadDir.length() > 0.9F,
-                "the runtime input path must reach Mario's stick, direction, and speed state");
+                "the runtime UP path must retain retail forward-stick orientation, direction, and speed");
         require(walked_every_frame_on_ground,
                 "stick-driven Mario must remain grounded across the real planet KCL seam");
         require(saw_run && smgpc::compat::actor_current_bck_name(actor) == "Run" &&
@@ -625,6 +656,72 @@ namespace {
         require_grounded_base_matrix(
             release_frame, *actor->mBinder->mGroundInfo.mParentTriangle.getNormal(0));
 
+        const auto entitlement_magic = actor->mMario->mMagic;
+        const auto entitlement_action = actor->_1E1;
+        const auto entitlement_cooldown = actor->_946;
+        require(entitlement_magic == nullptr && !entitlement_action &&
+                    entitlement_cooldown == 0U,
+                "the walk slice must begin without fabricated spin Magic/action state");
+
+        set_host_swing_key(window, true);
+        const auto locked_swing_frame = run_frame(++release_end_frame);
+        require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
+                    aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+                    actor->_F00 && !actor->_EEB && !actor->isRequestRush() &&
+                    locked_swing_frame.bck_name == "Wait",
+                "a real host swing edge must be sampled but denied before entitlement");
+
+        const auto locked_held_frame = run_frame(++release_end_frame);
+        require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
+                    !aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+                    !actor->_F00 && !actor->isRequestRush() &&
+                    locked_held_frame.bck_name == "Wait",
+                "holding the locked swing key must not synthesize another controller edge");
+
+        set_host_swing_key(window, false);
+        const auto rearm_swing_frame = run_frame(++release_end_frame);
+        require(!aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
+                    !actor->_F20 && !actor->_F00 && !actor->isRequestRush() &&
+                    rearm_swing_frame.bck_name == "Wait",
+                "releasing the host swing key must rearm Mario's retail edge detector");
+
+        MR::setPlayerSwingPermission(true);
+        require(runtime.player_system().is_swing_permitted() && actor->_EEB &&
+                    actor->mMario->mMagic == entitlement_magic &&
+                    actor->_1E1 == entitlement_action &&
+                    actor->_946 == entitlement_cooldown,
+                "swing entitlement must mirror only MarioActor::_EEB without fabricating action state");
+
+        set_host_swing_key(window, true);
+        const auto unlocked_swing_frame = run_frame(++release_end_frame);
+        require(aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+                    actor->_F00 && actor->isRequestRush() &&
+                    actor->mMario->mMagic == entitlement_magic &&
+                    actor->_1E1 == entitlement_action &&
+                    actor->_946 == entitlement_cooldown &&
+                    unlocked_swing_frame.bck_name == "Wait",
+                "a fresh real host swing edge must request Rush after entitlement without starting the spin action");
+
+        const auto unlocked_held_frame = run_frame(++release_end_frame);
+        require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
+                    !aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+                    !actor->_F00 && !actor->isRequestRush() &&
+                    actor->mMario->mMagic == entitlement_magic &&
+                    actor->_1E1 == entitlement_action &&
+                    actor->_946 == entitlement_cooldown &&
+                    unlocked_held_frame.bck_name == "Wait",
+                "holding an entitled swing must remain debounced without entering spin action state");
+
+        set_host_swing_key(window, false);
+        const auto released_swing_frame = run_frame(++release_end_frame);
+        require(!actor->_F00 && !actor->isRequestRush() &&
+                    released_swing_frame.bck_name == "Wait",
+                "Rush permission must remain edge-triggered after the host key is released");
+
+        runtime.player_system().detach_actor(actor);
+        require(runtime.player_system().attached_actor() == nullptr &&
+                    runtime.player_system().is_swing_permitted() && !actor->_EEB,
+                "Gateway owner detach must revoke the outgoing actor bit while retaining same-stage entitlement");
         runtime.unregister_live_actor_model(*actor);
         MR::getMarioHolder()->setMarioActor(nullptr);
         created.reset();
@@ -649,6 +746,9 @@ namespace {
                 actor = dynamic_cast<MarioActor*>(created.get());
                 require(actor != nullptr,
                         "Mario must be constructible again after ordered teardown");
+                runtime.player_system().attach_actor(*actor, entitlement_bridge);
+                require(actor->_EEB,
+                        "same-stage Mario replacement must inherit the retained spin entitlement");
                 actor->init(scene.player_start_iter());
                 actor->initAfterPlacement();
             }
@@ -662,6 +762,10 @@ namespace {
         require(recreated_frame.draw.packet_count != 0U,
                 "recreated Mario must update and draw through RuntimeContext");
 
+        runtime.player_system().detach_actor(actor);
+        require(runtime.player_system().attached_actor() == nullptr &&
+                    !actor->_EEB,
+                "recreated Mario must detach and revoke its entitlement bit before destruction");
         runtime.unregister_live_actor_model(*actor);
         MR::getMarioHolder()->setMarioActor(nullptr);
         created.reset();

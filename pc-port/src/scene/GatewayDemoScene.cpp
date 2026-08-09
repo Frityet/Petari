@@ -130,11 +130,12 @@ namespace smgpc::scene {
             _start = *start;
             validate_start();
 
-            const auto placements = resolve_stage_placement_objects(_dvd, tables);
+            _placements = resolve_stage_placement_objects(_dvd, tables);
+            _general_positions = select_stage_general_positions(tables);
             _planet_placement = require_unique_placement(
-                placements, cPlanetName, cPlanetZoneName, "jmp/placement/common/objinfo");
+                _placements, cPlanetName, cPlanetZoneName, "jmp/placement/common/objinfo");
             _gravity_placement = require_unique_placement(
-                placements, cGravityName, cPlanetZoneName,
+                _placements, cGravityName, cPlanetZoneName,
                 "jmp/placement/common/planetobjinfo");
             validate_placements();
 
@@ -259,6 +260,8 @@ namespace smgpc::scene {
 
         smgpc::runtime::DvdFileSystemService &_dvd;
         StageStartInfo _start{};
+        std::vector<StagePlacementObject> _placements{};
+        std::vector<StageGeneralPos> _general_positions{};
         StagePlacementObject _planet_placement{};
         StagePlacementObject _gravity_placement{};
         std::vector<std::uint8_t> _planet_bdl{};
@@ -296,6 +299,14 @@ namespace smgpc::scene {
 
     const StagePlacementObject &GatewayDemoScene::gravity_placement() const {
         return _impl->_gravity_placement;
+    }
+
+    std::span<const StagePlacementObject> GatewayDemoScene::placements() const {
+        return _impl->_placements;
+    }
+
+    std::span<const StageGeneralPos> GatewayDemoScene::general_positions() const {
+        return _impl->_general_positions;
     }
 
     const smgpc::render::J3dModelGeometry &GatewayDemoScene::planet_geometry() const {

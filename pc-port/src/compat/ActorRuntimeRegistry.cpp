@@ -127,6 +127,16 @@ namespace smgpc::compat {
         return name_obj_states().size();
     }
 
+    std::vector<NameObj*> snapshot_name_obj_runtime_objects() {
+        auto objects = std::vector<NameObj*>{};
+        objects.reserve(name_obj_states().size());
+        for (const auto& [object, state] : name_obj_states()) {
+            static_cast<void>(state);
+            objects.push_back(const_cast<NameObj*>(object));
+        }
+        return objects;
+    }
+
     bool name_obj_is_suspended(const NameObj* object) {
         if (object == nullptr) {
             return true;

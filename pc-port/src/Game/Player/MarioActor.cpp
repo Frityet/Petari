@@ -1043,6 +1043,10 @@ void MarioActor::control() {
     mCamDirX = MR::getCamXdir();
     mCamDirY = MR::getCamYdir();
     mCamDirZ = MR::getCamZdir();
+    // Preserve the retail controller edge/timer state without entering the
+    // unavailable spin-action controller. Entitlement remains gated by
+    // isRequestRush() through MarioActor::_EEB.
+    updateControllerSwing();
     mMario->update();
 #else  // SMGPC_RETAIL_SOURCE
     if (mSuperKinokoCollected) {

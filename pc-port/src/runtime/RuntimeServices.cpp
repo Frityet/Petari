@@ -2791,7 +2791,12 @@ namespace smgpc::runtime {
     }
 
     void PlayerSystemService::reset_stage_state() {
+        if (_attached_actor != nullptr &&
+            _entitlement_bridge.set_swing_permission != nullptr) {
+            _entitlement_bridge.set_swing_permission(*_attached_actor, false);
+        }
         _attached_actor = nullptr;
+        _entitlement_bridge = {};
         _player_hidden = false;
         _has_base_matrix = false;
         _has_forced_base_matrix = false;
@@ -2812,16 +2817,32 @@ namespace smgpc::runtime {
         reset_stage_state();
     }
 
-    void PlayerSystemService::attach_actor(LiveActor &actor) {
+    void PlayerSystemService::attach_actor(
+        LiveActor &actor, PlayerActorEntitlementBridge entitlement_bridge) {
+        if (_attached_actor != nullptr && _attached_actor != &actor) {
+            detach_actor(_attached_actor);
+        } else if (_attached_actor == &actor &&
+                   _entitlement_bridge.set_swing_permission != nullptr) {
+            _entitlement_bridge.set_swing_permission(*_attached_actor, false);
+        }
         _attached_actor = &actor;
+        _entitlement_bridge = entitlement_bridge;
         _player_dead_state.reset();
         copy_actor_state();
         actor.mFlag.mIsHiddenModel = _player_hidden;
+        if (_entitlement_bridge.set_swing_permission != nullptr) {
+            _entitlement_bridge.set_swing_permission(actor, _swing_permitted);
+        }
     }
 
     void PlayerSystemService::detach_actor(const LiveActor *actor) {
         if (actor == nullptr || _attached_actor == actor) {
+            if (_attached_actor != nullptr &&
+                _entitlement_bridge.set_swing_permission != nullptr) {
+                _entitlement_bridge.set_swing_permission(*_attached_actor, false);
+            }
             _attached_actor = nullptr;
+            _entitlement_bridge = {};
             _player_dead_state.reset();
         }
     }
@@ -2875,7 +2896,15 @@ namespace smgpc::runtime {
     }
 
     void PlayerSystemService::set_swing_permission(bool permitted) {
+        if (_attached_actor != nullptr &&
+            _entitlement_bridge.set_swing_permission == nullptr) {
+            throw std::logic_error(
+                "The attached player actor does not expose swing entitlement state.");
+        }
         _swing_permitted = permitted;
+        if (_attached_actor != nullptr) {
+            _entitlement_bridge.set_swing_permission(*_attached_actor, permitted);
+        }
     }
 
     void PlayerSystemService::set_player_dead_state(bool dead) {

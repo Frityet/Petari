@@ -16,6 +16,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
+#include "Game/Screen/InformationObserver.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
 #include "scene/AreaObjRuntime.hpp"
@@ -149,6 +150,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new PrologueHolder("プロローグ保持");
     case SceneObj_CenterScreenBlur:
         return new CenterScreenBlur();
+    case SceneObj_InformationObserver:
+        return new InformationObserver();
     case SceneObj_SphereSelector:
         return new SphereSelector();
     default:

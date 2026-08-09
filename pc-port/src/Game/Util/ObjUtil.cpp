@@ -106,6 +106,10 @@ namespace MR {
         }
     }
 
+    void connectToSceneLayoutMovement(NameObj* pObj) {
+        MR::connectToScene(pObj, MR::MovementType_Layout, -1, -1, -1);
+    }
+
     bool isExistResourceInArc(const char* pArcName, const char* pResourceName) {
         if (pArcName == nullptr || pResourceName == nullptr) {
             return false;

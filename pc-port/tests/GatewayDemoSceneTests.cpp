@@ -1,6 +1,7 @@
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/Gravity/PointGravity.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "compat/DemoSceneRuntime.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/GatewayDemoScene.hpp"
@@ -9,6 +10,8 @@
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
 
+#include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
@@ -18,6 +21,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 
 namespace {
 
@@ -105,6 +109,83 @@ namespace {
 
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
         auto scene = smgpc::scene::GatewayDemoScene{dvd};
+        auto demo = smgpc::compat::DemoSceneRuntime{
+            dvd, scene.placements(), scene.general_positions()};
+        const auto guide_index = demo.find_definition(5, 0);
+        require(guide_index.has_value(),
+                "the Gateway spin checkpoint requires the zone-5/link-0 guide demo");
+        const auto* guide = demo.definition(*guide_index);
+        require(guide != nullptr && guide->time_sheet_name == "TicoGuideDemo" &&
+                    guide->source_row == 0 &&
+                    guide->source_table_path == "jmp/placement/layera/demoobjinfo",
+                "the guide DemoGroup must select the retail TicoGuideDemo sheet");
+        constexpr auto spin_parts = std::array{
+            std::pair{std::string_view{"スピンゲット[デモ1]"}, 420},
+            std::pair{std::string_view{"スピンゲット[会話1]"}, 120},
+            std::pair{std::string_view{"スピンゲット[デモ2]"}, 150},
+            std::pair{std::string_view{"スピンゲット[会話2]"}, 120},
+            std::pair{std::string_view{"スピンゲット[デモ3]"}, 240},
+            std::pair{std::string_view{"スピンゲット[会話3]"}, 120},
+            std::pair{std::string_view{"スピンゲット[デモ4]"}, 500},
+            std::pair{std::string_view{"スピンゲット[デモ5]"}, 60},
+        };
+        require(guide->sheet.time_rows().size() == 27U,
+                "the guide checkpoint requires the complete retail Time sheet");
+        auto pre_prompt_frames = 0;
+        for (auto offset = std::size_t{}; offset < spin_parts.size(); ++offset) {
+            const auto& row = guide->sheet.time_rows()[15U + offset];
+            require(row.part_name == spin_parts[offset].first &&
+                        row.total_step == spin_parts[offset].second && !row.suspend,
+                    "the spin checkpoint Time rows must retain their retail order and duration");
+            if (offset + 1U < spin_parts.size()) {
+                pre_prompt_frames += row.total_step;
+            }
+        }
+        require(pre_prompt_frames == 1670,
+                "the retail guide must reach the spin prompt after exactly 1670 demo frames");
+        require(guide->sheet.sound_rows().empty() &&
+                    std::ranges::none_of(guide->sheet.camera_rows(), [&](const auto& row) {
+                        return std::ranges::any_of(spin_parts, [&](const auto& part) {
+                            return row.part_name == part.first;
+                        });
+                    }),
+                "the spin checkpoint must not invent sound or camera work absent from parts 15-22");
+        require(std::ranges::any_of(guide->sheet.player_rows(), [](const auto& row) {
+                    return row.part_name == "スピンゲット[デモ1]" &&
+                           row.position_name == "MarioDemoPos4";
+                }),
+                "part 15 must retain the retail MarioDemoPos4 Player row");
+
+        const auto require_position = [&](std::string_view name,
+                                          const std::array<float, 3U>& local) {
+            const auto found = std::ranges::find_if(scene.general_positions(),
+                                                    [&](const auto& position) {
+                                                        return position.name == name;
+                                                    });
+            require(found != scene.general_positions().end(),
+                    "the spin checkpoint GeneralPos row is absent");
+            for (auto axis = std::size_t{}; axis < local.size(); ++axis) {
+                require_near(found->local_position[axis], local[axis], 0.001F,
+                             "spin checkpoint GeneralPos local position");
+            }
+        };
+        require_position("MarioDemoPos2", {-1490.0F, 1303.19043F, 720.0F});
+        require_position("MarioDemoPos4", {-140.0F, 2500.0F, -700.0F});
+
+        const auto require_cast = [&](std::string_view name, int row, int cast_id) {
+            const auto found = std::ranges::find_if(scene.placements(),
+                                                    [&](const auto& placement) {
+                                                        return placement.object_name == name &&
+                                                               placement.zone_id == 5 &&
+                                                               placement.table_path ==
+                                                                   "jmp/placement/layera/objinfo";
+                                                    });
+            require(found != scene.placements().end() &&
+                        found->jmap_entry_index == row && found->cast_id == cast_id,
+                    "the spin checkpoint cast row differs from RMGK01");
+        };
+        require_cast("Rosetta", 12, -1);
+        require_cast("TicoBaby", 13, 0);
 
         const auto &start = scene.start_info();
         require(start.object_name == "Mario" && start.start_id == 0 && start.zone_id == 0 &&

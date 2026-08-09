@@ -2,6 +2,7 @@
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/UserFile.hpp"
 #include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataFunctionCompat.hpp"
 
 #include <functional>
 #include <iostream>
@@ -84,6 +85,23 @@ int main() {
     require_throws<std::logic_error>([] { static_cast<void>(GameDataFunction::getSysConfigFileTimeAnnounced()); },
                                      "global system state must be unavailable without retail backing");
 
-    std::cout << "Game-data real-or-absent tests passed: 17/17\n";
+    auto checkpoint = GameDataHolder{nullptr};
+    smgpc::compat::game_data::set_holder_story_progress(checkpoint, 10U);
+    {
+        const auto binding = smgpc::compat::ScopedGameDataHolderOverride{checkpoint};
+        require(GameDataFunction::getCurrentGameDataHolder() == &checkpoint &&
+                    GameDataFunction::getSceneStartGameDataHolder() == &checkpoint &&
+                    GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
+                    !GameDataFunction::isPassedStoryEvent("スピン権利"),
+                "an authored checkpoint must expose its real holder without fabricating save-data ownership");
+        GameDataFunction::followStoryEventByName("スピン権利");
+        require(GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    smgpc::compat::game_data::holder_story_progress(checkpoint) == 15U,
+                "the original story-event API must advance the bound checkpoint holder");
+    }
+    require_throws<std::logic_error>([] { static_cast<void>(GameDataFunction::getCurrentGameDataHolder()); },
+                                     "checkpoint holder binding must restore global save-data absence");
+
+    std::cout << "Game-data real-or-absent tests passed: 20/20\n";
     return 0;
 }
