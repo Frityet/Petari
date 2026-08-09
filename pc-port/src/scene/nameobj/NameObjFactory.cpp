@@ -17,6 +17,7 @@
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "compat/GlobalGravityOwnership.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 
@@ -747,6 +748,10 @@ namespace smgpc::scene::nameobj {
         auto result = std::unique_ptr<NameObj>(creator(actor_name));
         if (result == nullptr) {
             throw std::runtime_error("Retail NameObj creator returned null: " + object);
+        }
+        if (auto *gravity = dynamic_cast<GlobalGravityObj *>(result.get());
+            gravity != nullptr) {
+            smgpc::compat::adopt_global_gravity_children(*gravity);
         }
         return result;
     }

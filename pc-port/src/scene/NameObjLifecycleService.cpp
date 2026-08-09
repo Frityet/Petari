@@ -8,6 +8,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/GlobalGravityOwnership.hpp"
 #include "scene/PlacementZoneNameScope.hpp"
 
 #include <array>
@@ -199,14 +200,28 @@ namespace smgpc::scene {
                     ";table=" + std::string(placement->table_path) + ";row=" +
                     std::to_string(placement->row) + ";local_id=" + std::to_string(placement->local_id));
 #endif
-            object.init(placement->iter);
+            smgpc::compat::prepare_global_gravity_init(object);
+            try {
+                object.init(placement->iter);
+            } catch (...) {
+                smgpc::compat::capture_failed_global_gravity_children(object);
+                throw;
+            }
+            smgpc::compat::capture_global_gravity_children(object);
             return;
         }
 
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "init_without_iter", "object=" + object_name(object));
 #endif
-        object.initWithoutIter();
+        smgpc::compat::prepare_global_gravity_init(object);
+        try {
+            object.initWithoutIter();
+        } catch (...) {
+            smgpc::compat::capture_failed_global_gravity_children(object);
+            throw;
+        }
+        smgpc::compat::capture_global_gravity_children(object);
     }
 
     void NameObjLifecycleService::init_after_placement(NameObj &object) {
@@ -231,6 +246,7 @@ namespace smgpc::scene {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "destroy", "object=" + object_name(object));
 #endif
+        smgpc::compat::capture_failed_global_gravity_children(object);
         if (auto *live_actor = dynamic_cast<LiveActor *>(&object)) {
             smgpc::compat::release_actor_runtime_state(live_actor);
         }

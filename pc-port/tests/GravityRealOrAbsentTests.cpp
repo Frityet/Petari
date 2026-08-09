@@ -1,4 +1,5 @@
 #include "Game/Gravity/GravityInfo.hpp"
+#include "Game/Gravity/GraviryFollower.hpp"
 #include "Game/Gravity/GravityCreator.hpp"
 #include "Game/Gravity/GlobalGravityObj.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"
@@ -10,10 +11,15 @@
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/JMapLinkInfo.hpp"
 #include "compat/GameGravityCompat.hpp"
+#include "compat/DemoSceneRuntime.hpp"
+#include "compat/GlobalGravityOwnership.hpp"
 #include "resource/BcsvTable.hpp"
+#include "runtime/RuntimeServices.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageHostScene.hpp"
+#include "scene/nameobj/NameObjFactory.hpp"
 
 #include <algorithm>
 #include <array>
@@ -28,10 +34,12 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -116,9 +124,9 @@ namespace {
     }
 
     JMapInfo make_linked_gravity_jmap() {
-        constexpr auto field_count = 8U;
+        constexpr auto field_count = 9U;
         constexpr auto data_offset = 0x10U + field_count * 0x0cU;
-        constexpr auto entry_size = 32U;
+        constexpr auto entry_size = 36U;
         auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
         write_be32(bytes, 0U, 1U);
         write_be32(bytes, 4U, field_count);
@@ -132,16 +140,64 @@ namespace {
         write_field(bytes, 5U, "dir_x", 20U, smgpc::resource::BcsvFieldType::Float);
         write_field(bytes, 6U, "dir_y", 24U, smgpc::resource::BcsvFieldType::Float);
         write_field(bytes, 7U, "dir_z", 28U, smgpc::resource::BcsvFieldType::Float);
+        write_field(bytes, 8U, "FollowId", 32U, smgpc::resource::BcsvFieldType::Int32);
         write_be32(bytes, data_offset, 42U);
         write_be32(bytes, data_offset + 4U, 42U);
         write_be_float(bytes, data_offset + 8U, 10.0F);
         write_be_float(bytes, data_offset + 12U, 20.0F);
         write_be_float(bytes, data_offset + 16U, 30.0F);
+        write_be32(bytes, data_offset + 32U, 7U);
 
         auto info = JMapInfo::from_bcsv(bytes);
         info.setName("objinfo");
         info.setPlacedZoneId(3);
         return info;
+    }
+
+    JMapInfo make_wire_gravity_jmap() {
+        auto placement = make_fieldless_jmap();
+
+        constexpr auto path_field_count = 1U;
+        constexpr auto path_data_offset = 0x10U + path_field_count * 0x0cU;
+        constexpr auto path_entry_size = 16U;
+        auto path_bytes = std::vector<std::uint8_t>(
+            path_data_offset + path_entry_size, 0U);
+        write_be32(path_bytes, 0U, 1U);
+        write_be32(path_bytes, 4U, path_field_count);
+        write_be32(path_bytes, 8U, path_data_offset);
+        write_be32(path_bytes, 12U, path_entry_size);
+        write_field(path_bytes, 0U, "closed", 0U,
+                    smgpc::resource::BcsvFieldType::InlineString);
+        auto path_info = JMapInfo::from_bcsv(path_bytes);
+
+        constexpr auto point_field_count = 9U;
+        constexpr auto point_data_offset =
+            0x10U + point_field_count * 0x0cU;
+        constexpr auto point_entry_size = 36U;
+        auto point_bytes = std::vector<std::uint8_t>(
+            point_data_offset + 2U * point_entry_size, 0U);
+        write_be32(point_bytes, 0U, 2U);
+        write_be32(point_bytes, 4U, point_field_count);
+        write_be32(point_bytes, 8U, point_data_offset);
+        write_be32(point_bytes, 12U, point_entry_size);
+        constexpr auto point_fields = std::array{
+            "pnt0_x", "pnt0_y", "pnt0_z", "pnt1_x", "pnt1_y",
+            "pnt1_z", "pnt2_x", "pnt2_y", "pnt2_z",
+        };
+        for (auto index = std::size_t{}; index < point_fields.size(); ++index) {
+            write_field(point_bytes, index, point_fields[index],
+                        static_cast<std::uint16_t>(index * sizeof(float)),
+                        smgpc::resource::BcsvFieldType::Float);
+        }
+        for (const auto field_index : {1U, 4U, 7U}) {
+            write_be_float(point_bytes,
+                           point_data_offset + point_entry_size +
+                               field_index * sizeof(float),
+                           1000.0F);
+        }
+        auto point_info = JMapInfo::from_bcsv(point_bytes);
+        placement.setRailInfo(0, std::move(path_info), std::move(point_info), 0);
+        return placement;
     }
 
     JMapInfo make_complete_gravity_jmap() {
@@ -209,17 +265,31 @@ namespace {
     class GravityScene final {
     public:
         GravityScene()
-            : holder(), binding(holder),
+            : dvd("/"), placements(), demo(dvd, placements), holder(), binding(holder),
               manager(static_cast<PlanetGravityManager*>(
                   MR::createSceneObj(SceneObj_PlanetGravityManager))) {
             require(manager != nullptr,
                     "a bound stage scene must create the exact PlanetGravityManager SceneObj");
         }
 
+        smgpc::runtime::DvdFileSystemService dvd;
+        std::array<smgpc::scene::StagePlacementObject, 0U> placements;
+        smgpc::compat::DemoSceneRuntime demo;
         SceneObjHolder holder;
         smgpc::scene::SceneObjHolderBinding binding;
         PlanetGravityManager* manager;
     };
+
+    void init_captured_gravity(NameObj& object, const JMapInfoIter& iter) {
+        smgpc::compat::prepare_global_gravity_init(object);
+        try {
+            object.init(iter);
+        } catch (...) {
+            smgpc::compat::capture_failed_global_gravity_children(object);
+            throw;
+        }
+        smgpc::compat::capture_global_gravity_children(object);
+    }
 
     void test_absent_manager_is_explicit() {
         auto actor = LiveActor("gravity-absence-probe");
@@ -360,12 +430,275 @@ namespace {
         creator.mGravityInstance = nullptr;
     }
 
+    void test_factory_owned_creator_field_and_wire_graph_reclamation() {
+        constexpr auto creator_names = std::array<std::string_view, 10U>{
+            "GlobalCubeGravity",
+            "GlobalConeGravity",
+            "GlobalDiskGravity",
+            "GlobalDiskTorusGravity",
+            "GlobalPlaneGravity",
+            "GlobalPlaneGravityInBox",
+            "GlobalPlaneGravityInCylinder",
+            "GlobalPointGravity",
+            "GlobalSegmentGravity",
+            "GlobalWireGravity",
+        };
+        const auto totals_before =
+            smgpc::compat::global_gravity_ownership_totals();
+        {
+            auto dvd = smgpc::runtime::DvdFileSystemService("/");
+            auto scene = GravityScene{};
+            auto wrappers = std::vector<std::unique_ptr<NameObj>>{};
+            wrappers.reserve(creator_names.size());
+            auto fieldless = make_fieldless_jmap();
+            auto wire = make_wire_gravity_jmap();
+
+            for (const auto creator_name : creator_names) {
+                auto object = smgpc::scene::nameobj::create_name_obj(
+                    dvd, creator_name, creator_name.data());
+                auto* actor = dynamic_cast<GlobalGravityObj*>(object.get());
+                require(actor != nullptr && actor->mGravityCreator != nullptr,
+                        "the generic factory hook must retain each exact gravity wrapper and creator");
+                const auto& info = creator_name == "GlobalWireGravity" ? wire : fieldless;
+                init_captured_gravity(*actor, JMapInfoIter(&info, 0));
+                require(actor->getGravity() != nullptr &&
+                            actor->getGravity()->mIsRegistered,
+                        "each exact creator field must remain registered until scene teardown");
+                if (creator_name == "GlobalWireGravity") {
+                    auto* creator = dynamic_cast<WireGravityCreator*>(
+                        actor->mGravityCreator);
+                    require(creator != nullptr && creator->mRailRider != nullptr &&
+                                creator->mRailRider->mBezierRail != nullptr &&
+                                creator->mRailRider->mBezierRail->mNumRailParts == 1 &&
+                                creator->mGravityInstance != nullptr &&
+                                creator->mGravityInstance->mPoints.size() == 21,
+                            "WireGravity must retain its complete retail rail and sampled-point graph before teardown");
+                }
+                wrappers.push_back(std::move(object));
+            }
+            wrappers.clear();
+        }
+        const auto totals_after =
+            smgpc::compat::global_gravity_ownership_totals();
+        require(totals_after.adopted_creators ==
+                        totals_before.adopted_creators + creator_names.size() &&
+                    totals_after.reclaimed_creators ==
+                        totals_before.reclaimed_creators + creator_names.size() &&
+                    totals_after.reclaimed_fields ==
+                        totals_before.reclaimed_fields + creator_names.size() &&
+                    totals_after.reclaimed_wire_rail_riders ==
+                        totals_before.reclaimed_wire_rail_riders + 1U &&
+                    totals_after.reclaimed_wire_bezier_rails ==
+                        totals_before.reclaimed_wire_bezier_rails + 1U &&
+                    totals_after.reclaimed_wire_rail_parts ==
+                        totals_before.reclaimed_wire_rail_parts + 1U,
+                "scene teardown must type-delete all ten creator/field variants and the complete Wire rail graph");
+    }
+
+    void test_transactional_rejection_and_duplicate_rules() {
+        auto dvd = smgpc::runtime::DvdFileSystemService("/");
+        const auto totals_before =
+            smgpc::compat::global_gravity_ownership_totals();
+        require_throws<std::logic_error>(
+            [&] {
+                (void)smgpc::scene::nameobj::create_name_obj(
+                    dvd, "GlobalPointGravity", "missing-owner");
+            },
+            "gravity factory construction without an active scene owner must be rejected transactionally");
+
+        {
+            auto scene = GravityScene{};
+            auto first = smgpc::scene::nameobj::create_name_obj(
+                dvd, "GlobalPointGravity", "first-open-gravity");
+            require_throws<std::logic_error>(
+                [&] {
+                    (void)smgpc::scene::nameobj::create_name_obj(
+                        dvd, "GlobalPointGravity", "overlapping-open-gravity");
+                },
+                "overlapping uninitialized gravity actors must be rejected and reclaimed");
+
+            auto* actor = dynamic_cast<GlobalGravityObj*>(first.get());
+            require(actor != nullptr, "the first adopted gravity wrapper must remain alive");
+            require_throws<std::logic_error>(
+                [&] { smgpc::compat::adopt_global_gravity_children(*actor); },
+                "the same gravity creator must not be adopted twice");
+            require(actor->mGravityCreator != nullptr,
+                    "duplicate rejection must not reclaim the already-owned creator");
+            auto info = make_fieldless_jmap();
+            init_captured_gravity(*actor, JMapInfoIter(&info, 0));
+            first.reset();
+        }
+
+        const auto totals_after =
+            smgpc::compat::global_gravity_ownership_totals();
+        require(totals_after.rejected_adoptions ==
+                        totals_before.rejected_adoptions + 3U &&
+                    totals_after.transactional_creator_reclaims ==
+                        totals_before.transactional_creator_reclaims + 2U,
+                "missing-owner and overlap failures must reclaim new raw creators while duplicate adoption preserves the owned one");
+    }
+
+    void test_partial_follower_capture_preserves_original_failure() {
+        auto dvd = smgpc::runtime::DvdFileSystemService("/");
+        const auto totals_before =
+            smgpc::compat::global_gravity_ownership_totals();
+        {
+            auto scene = GravityScene{};
+            auto object = smgpc::scene::nameobj::create_name_obj(
+                dvd, "GlobalPointGravity", "partial-follow-gravity");
+            auto* actor = dynamic_cast<GlobalGravityObj*>(object.get());
+            require(actor != nullptr,
+                    "the partial-init probe must create its exact gravity wrapper");
+            auto linked = make_linked_gravity_jmap();
+            const auto iter = JMapInfoIter(&linked, 0);
+            smgpc::compat::prepare_global_gravity_init(*actor);
+            auto* field = actor->mGravityCreator->createFromJMap(iter);
+            auto* holder = static_cast<BaseMatrixFollowTargetHolder*>(
+                MR::createSceneObj(SceneObj_BaseMatrixFollowTargetHolder));
+            require(field != nullptr && holder != nullptr,
+                    "the partial-init probe requires its registered field and follower holder");
+            auto* partial_follower = new GraviryFollower(actor, iter);
+            holder->mFollowers.push_back(partial_follower);
+
+            auto observed_error = std::string{};
+            try {
+                try {
+                    throw std::runtime_error("retail-init-sentinel");
+                } catch (...) {
+                    smgpc::compat::capture_failed_global_gravity_children(*actor);
+                    throw;
+                }
+            } catch (const std::runtime_error& error) {
+                observed_error = error.what();
+            }
+            require(observed_error == "retail-init-sentinel" &&
+                        partial_follower->mGravity == field &&
+                        partial_follower->mLinkInfo != nullptr &&
+                        partial_follower->mFollowTarget == nullptr,
+                    "failure capture must retain the partial follower/link without replacing the original init error");
+            smgpc::compat::capture_failed_global_gravity_children(*actor);
+            object.reset();
+        }
+        const auto totals_after =
+            smgpc::compat::global_gravity_ownership_totals();
+        require(totals_after.reclaimed_creators ==
+                        totals_before.reclaimed_creators + 1U &&
+                    totals_after.reclaimed_fields ==
+                        totals_before.reclaimed_fields + 1U &&
+                    totals_after.reclaimed_followers ==
+                        totals_before.reclaimed_followers + 1U &&
+                    totals_after.reclaimed_link_infos ==
+                        totals_before.reclaimed_link_infos + 1U &&
+                    totals_after.reclaimed_follow_targets ==
+                        totals_before.reclaimed_follow_targets,
+                "partial init teardown must reclaim its creator, field, follower, and link exactly once without inventing a target");
+    }
+
+    void test_deferred_field_follower_and_same_holder_recreation() {
+        auto dvd = smgpc::runtime::DvdFileSystemService("/");
+        auto placements =
+            std::array<smgpc::scene::StagePlacementObject, 0U>{};
+        auto demo = smgpc::compat::DemoSceneRuntime(dvd, placements);
+        auto holder = SceneObjHolder{};
+        const auto totals_before =
+            smgpc::compat::global_gravity_ownership_totals();
+        auto* external_target = static_cast<BaseMatrixFollowTarget*>(nullptr);
+        auto* external_link = static_cast<JMapLinkInfo*>(nullptr);
+        {
+            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+            auto* manager = static_cast<PlanetGravityManager*>(
+                MR::createSceneObj(SceneObj_PlanetGravityManager));
+            require(manager != nullptr, "the first ownership generation requires its exact manager");
+
+            auto linked = make_linked_gravity_jmap();
+            {
+                auto stale_owner = NameObj("expired-external-follower-owner");
+                auto stale_follower = FollowBindingProbe(
+                    &stale_owner, JMapInfoIter(&linked, 0));
+                MR::addBaseMatrixFollower(&stale_follower);
+                external_target = stale_follower.mFollowTarget;
+                external_link = stale_follower.mLinkInfo;
+            }
+
+            auto object = smgpc::scene::nameobj::create_name_obj(
+                dvd, "GlobalPointGravity", "owned-follow-gravity");
+            auto* actor = dynamic_cast<GlobalGravityObj*>(object.get());
+            require(actor != nullptr, "the followed point gravity must use the exact wrapper");
+            init_captured_gravity(*actor, JMapInfoIter(&linked, 0));
+            auto* field = actor->getGravity();
+            auto* followers = static_cast<BaseMatrixFollowTargetHolder*>(
+                holder.getObj(SceneObj_BaseMatrixFollowTargetHolder));
+            auto* owned_follower = followers != nullptr && followers->mFollowers.size() == 2 ?
+                                       dynamic_cast<GraviryFollower*>(followers->mFollowers[1]) :
+                                       nullptr;
+            require(owned_follower != nullptr && owned_follower->mFollowID == 7 &&
+                        owned_follower->mGravity == field,
+                    "capture must skip the expired prefix and retain the exact FollowId gravity suffix");
+
+            object.reset();
+            auto caller = NameObj("post-wrapper-gravity-query");
+            auto destination = TVec3f{};
+            require(manager->calcTotalGravityVector(
+                        &destination, nullptr, TVec3f{10.0F, 620.0F, 30.0F},
+                        GRAVITY_TYPE_NORMAL, 0U) &&
+                        destination.epsilonEquals(
+                            TVec3f{0.0F, -1.0F, 0.0F}, 0.0001F),
+                    "the manager must keep its registered field alive after the actor wrapper retires");
+        }
+        require(!holder.isExist(SceneObj_PlanetGravityManager) &&
+                    !holder.isExist(SceneObj_BaseMatrixFollowTargetHolder),
+                "reverse SceneObj teardown must reconstruct the external holder with empty slots");
+        const auto first_generation_totals =
+            smgpc::compat::global_gravity_ownership_totals();
+        require(first_generation_totals.reclaimed_follow_targets ==
+                    totals_before.reclaimed_follow_targets,
+                "a gravity follower that reused the external prefix target must leave that borrowed target unreclaimed");
+        require(external_target != nullptr && external_link != nullptr,
+                "the expired prefix must retain its independently owned target/link fixture");
+        delete external_target;
+        delete external_link;
+
+        {
+            auto second_binding = smgpc::scene::SceneObjHolderBinding(holder);
+            auto* second_manager = static_cast<PlanetGravityManager*>(
+                MR::createSceneObj(SceneObj_PlanetGravityManager));
+            require(second_manager != nullptr,
+                    "the same external holder must create a fresh second-generation manager");
+            auto object = smgpc::scene::nameobj::create_name_obj(
+                dvd, "GlobalPointGravity", "second-generation-gravity");
+            auto* actor = dynamic_cast<GlobalGravityObj*>(object.get());
+            require(actor != nullptr,
+                    "the second generation must create its exact gravity wrapper");
+            auto info = make_linked_gravity_jmap();
+            init_captured_gravity(*actor, JMapInfoIter(&info, 0));
+            object.reset();
+        }
+        require(!holder.isExist(SceneObj_PlanetGravityManager),
+                "the recreated holder must also finish with no stale SceneObj slots");
+
+        const auto totals_after =
+            smgpc::compat::global_gravity_ownership_totals();
+        require(totals_after.reclaimed_creators ==
+                        totals_before.reclaimed_creators + 2U &&
+                    totals_after.reclaimed_fields ==
+                        totals_before.reclaimed_fields + 2U &&
+                    totals_after.reclaimed_followers ==
+                        totals_before.reclaimed_followers + 2U &&
+                    totals_after.reclaimed_link_infos ==
+                        totals_before.reclaimed_link_infos + 2U &&
+                    totals_after.reclaimed_follow_targets ==
+                        totals_before.reclaimed_follow_targets + 1U,
+                "two ownership generations must reclaim fields, the proven follower/link/target graph, and recreate cleanly");
+    }
+
     void test_explicit_blocked_preflight_has_no_side_effects() {
         auto placements = std::array<smgpc::scene::StagePlacementObject, 2U>{};
         placements[0].object_name = "GlobalPointGravity";
+        placements[0].creator_identifier = "GlobalPointGravity";
         placements[0].factory_supported = true;
         placements[0].table_path = "jmp/placement/common/planetobjinfo";
         placements[1].object_name = "RestartCube";
+        placements[1].creator_identifier = "RestartCube";
         placements[1].table_path = "jmp/placement/common/areaobjinfo";
 
         auto scene = GravityScene{};
@@ -464,6 +797,10 @@ int main() {
         TestCase{"real manager rules and info", test_real_manager_rules_and_info},
         TestCase{"JMap parameters are real", test_jmap_parameters_are_real},
         TestCase{"exact creator registration without placement synthesis", test_exact_creator_registration_and_no_placement_synthesis},
+        TestCase{"factory-owned creator field and wire graph reclamation", test_factory_owned_creator_field_and_wire_graph_reclamation},
+        TestCase{"transactional rejection and duplicate rules", test_transactional_rejection_and_duplicate_rules},
+        TestCase{"partial follower capture preserves original failure", test_partial_follower_capture_preserves_original_failure},
+        TestCase{"deferred field follower and same-holder recreation", test_deferred_field_follower_and_same_holder_recreation},
         TestCase{"explicit blocked preflight has no side effects", test_explicit_blocked_preflight_has_no_side_effects},
         TestCase{"generic scene object post-placement follower binding", test_generic_scene_obj_post_placement_binds_followers},
     };

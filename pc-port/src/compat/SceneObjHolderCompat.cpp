@@ -22,6 +22,7 @@
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
+#include "compat/GlobalGravityOwnership.hpp"
 #include "compat/TalkRuntime.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -40,7 +41,10 @@ namespace {
 namespace smgpc::scene {
 
     SceneObjHolderBinding::SceneObjHolderBinding(SceneObjHolder &holder)
-        : _holder(&holder), _owned_objects(), _area_obj_runtime(std::make_unique<AreaObjRuntime>()),
+        : _holder(&holder), _owned_objects(),
+          _global_gravity_ownership(
+              std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder)),
+          _area_obj_runtime(std::make_unique<AreaObjRuntime>()),
           _captured_frame_blur_service(std::make_unique<smgpc::compat::CapturedFrameBlurService>()) {
         if (sCurrentSceneObjHolder != nullptr) {
             throw std::logic_error("a SceneObjHolder is already bound to the active scene");
@@ -55,7 +59,21 @@ namespace smgpc::scene {
             sCurrentSceneObjHolder = nullptr;
             sCurrentSceneObjHolderBinding = nullptr;
         }
-        _owned_objects.clear();
+        // SceneObj dependency order is creation order. Retire each exact
+        // object in reverse while the holder is already unavailable, which
+        // also prevents destructor-time recreation through MR::createSceneObj.
+        while (!_owned_objects.empty()) {
+            _owned_objects.pop_back();
+        }
+        // The external holder storage outlives this binding in test and scene
+        // hosts. Reconstruct its exact empty value so no slot retains a freed
+        // SceneObj and a later generation can bind/recreate normally.
+        *_holder = SceneObjHolder{};
+        // PlanetGravityManager and BaseMatrixFollowTargetHolder retain raw
+        // pointers into the retail scene heap. Only reclaim their registered
+        // children after both SceneObjs have retired.
+        _global_gravity_ownership->reclaim();
+        _global_gravity_ownership.reset();
         _area_obj_runtime.reset();
         _captured_frame_blur_service.reset();
     }
@@ -79,6 +97,13 @@ namespace smgpc::scene {
         return sCurrentSceneObjHolderBinding != nullptr
                    ? sCurrentSceneObjHolderBinding->_captured_frame_blur_service.get()
                    : nullptr;
+    }
+
+    smgpc::compat::GlobalGravityOwnership *
+    current_global_gravity_ownership() noexcept {
+        return sCurrentSceneObjHolderBinding != nullptr ?
+                   sCurrentSceneObjHolderBinding->_global_gravity_ownership.get() :
+                   nullptr;
     }
 
 }  // namespace smgpc::scene
