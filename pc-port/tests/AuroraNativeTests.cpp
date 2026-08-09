@@ -2,6 +2,8 @@
 
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Effect/SimpleEffectObj.hpp"
+#include "Game/LiveActor/ActorStateBase.hpp"
+#include "Game/LiveActor/ActorStateKeeper.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
@@ -1226,7 +1228,7 @@ namespace {
         }
     };
 
-    void test_spine_pending_nerve_runs_next_tick() {
+    void test_spine_uses_retail_two_phase_transition() {
         const auto first = SpineProbeFirstNerve{};
         const auto second = SpineProbeSecondNerve{};
         auto state = SpineProbeState{
@@ -1238,11 +1240,64 @@ namespace {
         spine.update();
         require(state.first_executions == 1, "first nerve should execute on the first update");
         require(state.second_executions == 0, "queued nerve should not execute in the same update");
-        require(spine.getCurrentNerve() == &first, "queued nerve should not appear current before it executes");
+        require(spine.getCurrentNerve() == &second,
+                "the retail post-execution phase should commit the queued nerve in the same update");
+        require(spine.mStep == 0, "committing a queued nerve should reset its step before the next update");
 
         spine.update();
         require(state.second_executions == 1, "queued nerve should execute on the next update");
         require(spine.getCurrentNerve() == &second, "executed nerve should become current after its first tick");
+        require(spine.mStep == 1, "the second nerve should advance exactly once after its first execution");
+    }
+
+    class ActorStateProbe final : public ActorStateBaseInterface {
+    public:
+        explicit ActorStateProbe(const char* name) : ActorStateBaseInterface(name) {
+            mIsDead = true;
+        }
+
+        void appear() override {
+            ActorStateBaseInterface::appear();
+            ++appear_count;
+        }
+
+        void kill() override {
+            ActorStateBaseInterface::kill();
+            ++kill_count;
+        }
+
+        void control() override {
+            ++control_count;
+        }
+
+        int appear_count = 0;
+        int kill_count = 0;
+        int control_count = 0;
+    };
+
+    void test_actor_state_keeper_uses_exact_state_lifecycle() {
+        const auto first_nerve = SpineProbeFirstNerve{};
+        const auto second_nerve = SpineProbeSecondNerve{};
+        auto first = ActorStateProbe{"first"};
+        auto second = ActorStateProbe{"second"};
+        auto keeper = ActorStateKeeper{2};
+
+        keeper.addState(&first, &first_nerve, "first");
+        keeper.addState(&second, &second_nerve, "second");
+        require(!keeper.updateCurrentState(), "an exact state keeper starts without an active state");
+
+        keeper.startState(&first_nerve);
+        require(!first.mIsDead && first.appear_count == 1,
+                "starting a registered state should invoke its real appear lifecycle once");
+        require(!keeper.updateCurrentState() && first.control_count == 1,
+                "updating an active real state should execute its control path");
+
+        keeper.endState(&first_nerve);
+        require(first.mIsDead && first.kill_count == 1,
+                "ending a live registered state should invoke its real kill lifecycle once");
+        keeper.startState(&second_nerve);
+        require(!second.mIsDead && second.appear_count == 1,
+                "the next registered state should own the active lifecycle");
     }
 
     struct TestCase {
@@ -1278,7 +1333,8 @@ int main() {
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},
-        TestCase{"Spine pending nerve runs next tick", test_spine_pending_nerve_runs_next_tick},
+        TestCase{"Spine retail two-phase transition", test_spine_uses_retail_two_phase_transition},
+        TestCase{"ActorStateKeeper exact lifecycle", test_actor_state_keeper_uses_exact_state_lifecycle},
     };
 
     auto failures = 0;

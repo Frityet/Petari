@@ -1,14 +1,14 @@
 #include "Game/LiveActor/Spine.hpp"
-
 #include "Game/LiveActor/ActorStateKeeper.hpp"
-#include "Game/LiveActor/Nerve.hpp"
 
-Spine::Spine(void* pExecutor, const Nerve* pNerve) : mExecutor(pExecutor), mCurrNerve(pNerve), mNextNerve(nullptr), mStep(0), mStateKeeper(nullptr) {}
+Spine::Spine(void* pExecutor, const Nerve* pNerve) : mExecutor(pExecutor), mCurrNerve(pNerve), mNextNerve(nullptr), mStep(0), mStateKeeper(nullptr) {
+}
 
 void Spine::update() {
     changeNerve();
     mCurrNerve->execute(this);
     mStep++;
+    changeNerve();
 }
 
 void Spine::setNerve(const Nerve* pNerve) {
@@ -21,6 +21,10 @@ void Spine::setNerve(const Nerve* pNerve) {
 }
 
 const Nerve* Spine::getCurrentNerve() const {
+    if (mNextNerve != nullptr) {
+        return mNextNerve;
+    }
+
     return mCurrNerve;
 }
 
@@ -39,6 +43,6 @@ void Spine::changeNerve() {
     mStep = 0;
 }
 
-void Spine::initStateKeeper(int) {
-    mStateKeeper = new ActorStateKeeper();
+void Spine::initStateKeeper(int capacity) {
+    mStateKeeper = new ActorStateKeeper(capacity);
 }

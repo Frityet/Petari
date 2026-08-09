@@ -247,12 +247,12 @@ namespace {
         const auto target_selected = MR::sendSimpleMsgToActor(
             ACTMES_SPHERE_SELECTOR_TARGET_SELECTED, &handle);
         require(message_sensor != nullptr && target_selected &&
-                    !handle.isHolding() && handle.getNerveStep() == -1,
-                "the real message sensor must queue Wait-to-Hold at the retail deferred-nerve boundary");
+                    handle.isHolding() && handle.getNerveStep() == -1,
+                "the real message sensor must expose the queued Hold nerve at the retail deferred boundary");
         require(MR::sendSimpleMsgToActor(
                     ACTMES_SPHERE_SELECTOR_CONFIRM_START, &handle) &&
                     !handle.isHolding() && handle.getNerveStep() == -1,
-                "the real FileSelect-row confirm-start must replace the pending nerve through the exact message path");
+                "the real FileSelect-row confirm-start must expose its replacement pending nerve through the exact message path");
         require(MR::sendSimpleMsgToActor(
                     ACTMES_SPHERE_SELECTOR_CONFIRM_CANCEL, &handle) &&
                     MR::sendSimpleMsgToActor(

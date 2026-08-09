@@ -1,0 +1,32 @@
+$ cmp root pc-port mirrors (six files)
+PASS
+
+$ jq canonical RMGK02 report
+ActorStateBase: code 88/88, functions 1/1, fuzzy 100%
+ActorStateKeeper: code 448/448, functions 6/6, fuzzy 100%
+Spine: code 428/428, functions 6/6, fuzzy 100%
+
+$ xmake build smg-pc-game-source-mirror-tests
+build ok
+$ xmake run smg-pc-game-source-mirror-tests
+PASS: 75/75 configured source pairs
+
+$ xmake build smg-pc-aurora-native-tests
+build ok
+$ xmake run smg-pc-aurora-native-tests
+PASS: 26/26
+
+$ xmake build smg-pc-sphere-selector-real-or-absent-tests
+build ok
+$ xmake run smg-pc-sphere-selector-real-or-absent-tests
+PASS: 4/4; real fixture /workspaces/pcport/RMGK01.iso, FileSelect row 2
+
+$ xmake run smg-pc-layout-real-or-absent-tests
+PASS: 7/7
+$ xmake run smg-pc-demo-scene-runtime-tests
+PASS: 19/19
+$ xmake run smg-pc-file-select-name-real-or-absent-tests
+PASS: 5/5
+
+$ xmake build smg-pc
+build ok
