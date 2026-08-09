@@ -1,0 +1,21 @@
+unit: main/Game/Player/MarioAnimationEfx
+retail .text: 2000 bytes
+project fuzzy .text: 99.212%
+focused fuzzy .text: 98.912%
+.ctors: 100%
+.sdata2: 100%
+
+initCallbackTable: 192 bytes, 100%
+entryCallback: 156 bytes, 91.89744%
+runningCallback: 224 bytes, 100%
+closeCallback: 128 bytes, 99.28125%
+spinEntry: 124 bytes, 98.70968%
+spinUpdate: 72 bytes, 99.166664%
+spinClose: 124 bytes, 98.70968%
+stageInCheck: 116 bytes, 99.655174%
+throwCheck: 108 bytes, 99.44444%
+throwEntry: 68 bytes, 97.64706%
+throwClose: 68 bytes, 97.64706%
+squatSpinCheck: 96 bytes, 99.791664%
+walkinClose: 80 bytes, 100%
+generated static initializer: 444 bytes, 100%
