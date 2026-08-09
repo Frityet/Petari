@@ -7,11 +7,11 @@ class ButtonPaneController;
 class BackButton : public LayoutActor {
 public:
     BackButton(const char* pName, bool param2);
-    ~BackButton() override;
 
-    void init(const JMapInfoIter& rIter) override;
-    void appear() override;
-    void control() override;
+    virtual ~BackButton();
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void appear();
+    virtual void control();
 
     void disappear();
     bool isHidden() const;
@@ -21,5 +21,5 @@ public:
 
     /* 0x20 */ ButtonPaneController* mPaneCtrl;
     /* 0x24 */ bool _24;
-    /* 0x25 */ bool _25;
+    /* 0x24 */ bool _25;
 };

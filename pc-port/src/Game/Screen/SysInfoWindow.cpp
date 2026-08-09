@@ -1,27 +1,24 @@
 #include "Game/Screen/SysInfoWindow.hpp"
-
-#include <cstdio>
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/IconAButton.hpp"
 #include "Game/Screen/YesNoController.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
-#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include <cstdio>
 
 namespace {
     const MessageChangeFuncTableEntry cMessageChangeFuncTable[] = {
         {MR::setTextBoxSystemMessageRecursive},
         {MR::setTextBoxGameMessageRecursive},
     };
-}  // namespace
+};  // namespace
 
 namespace NrvSysInfoWindow {
     NEW_NERVE(SysInfoWindowNrvAppear, SysInfoWindow, Appear);
     NEW_NERVE(SysInfoWindowNrvWait, SysInfoWindow, Wait);
     NEW_NERVE(SysInfoWindowNrvDisappear, SysInfoWindow, Disappear);
-}  // namespace NrvSysInfoWindow
+};  // namespace NrvSysInfoWindow
 
 SysInfoWindow::SysInfoWindow(SysInfoWindowType windowType, SysInfoExecuteType executeType)
     : LayoutActor("システム用インフォメーションウィンドウ", true), mWindowType(windowType), mType(Type_Key), mYesNoSelector(nullptr),
@@ -38,12 +35,7 @@ SysInfoWindow::SysInfoWindow(SysInfoWindowType windowType, SysInfoExecuteType ex
     }
 }
 
-SysInfoWindow::~SysInfoWindow() {
-    delete mYesNoSelector;
-    delete mIconAButton;
-}
-
-void SysInfoWindow::init(const JMapInfoIter&) {
+void SysInfoWindow::init(const JMapInfoIter& rIter) {
     initLayoutManager(getLayoutName(), 1);
     MR::createAndAddPaneCtrl(this, mTextParentPaneName, 1);
     MR::createAndAddPaneCtrl(this, mWindowParentPaneName, 1);
@@ -57,13 +49,14 @@ void SysInfoWindow::init(const JMapInfoIter&) {
     }
 
     mIconAButton = MR::createAndSetupIconAButton(this, !_38, false);
+
     initNerve(&NrvSysInfoWindow::SysInfoWindowNrvAppear::sInstance);
 }
 
 void SysInfoWindow::movement() {
     LayoutActor::movement();
 
-    if (_38 && mIconAButton != nullptr) {
+    if (_38) {
         mIconAButton->movement();
     }
 }
@@ -71,7 +64,7 @@ void SysInfoWindow::movement() {
 void SysInfoWindow::calcAnim() {
     LayoutActor::calcAnim();
 
-    if (_38 && mIconAButton != nullptr) {
+    if (_38) {
         mIconAButton->calcAnim();
     }
 }
@@ -79,14 +72,16 @@ void SysInfoWindow::calcAnim() {
 void SysInfoWindow::draw() const {
     LayoutActor::draw();
 
-    if (_38 && mIconAButton != nullptr) {
+    if (_38) {
         mIconAButton->draw();
     }
 }
 
 void SysInfoWindow::appear() {
-    MR::startPaneAnim(this, mTextParentPaneName, "ButtonAppear", 0);
-    MR::startPaneAnim(this, mWindowParentPaneName, "ButtonAppear", 0);
+    const char* pAnimName = "ButtonAppear";
+
+    MR::startPaneAnim(this, mTextParentPaneName, pAnimName, 0);
+    MR::startPaneAnim(this, mWindowParentPaneName, pAnimName, 0);
     setNerve(&NrvSysInfoWindow::SysInfoWindowNrvAppear::sInstance);
     LayoutActor::appear();
 }
@@ -117,16 +112,17 @@ void SysInfoWindow::appear(const char* pMessageId, SysInfoType type, SysInfoText
         break;
     }
 
-    const auto message_index = messageType == MessageType_Game ? 1U : 0U;
-    cMessageChangeFuncTable[message_index].mFuncPtr(this, mTextParentPaneName, pMessageId);
+    MessageChangeFunc* pMessageChangeFunc = ::cMessageChangeFuncTable[messageType].mFuncPtr;
+
+    pMessageChangeFunc(this, mTextParentPaneName, pMessageId);
 
     if (type == Type_YesNo) {
-        char yes_message_id[48]{};
-        char no_message_id[48]{};
-        std::snprintf(yes_message_id, sizeof(yes_message_id), "%s_Yes", pMessageId != nullptr ? pMessageId : "");
-        std::snprintf(no_message_id, sizeof(no_message_id), "%s_No", pMessageId != nullptr ? pMessageId : "");
-        cMessageChangeFuncTable[message_index].mFuncPtr(this, "Right", yes_message_id);
-        cMessageChangeFuncTable[message_index].mFuncPtr(this, "Left", no_message_id);
+        char yesMessageId[48];
+        char noMessageId[48];
+        snprintf(yesMessageId, sizeof(yesMessageId), "%s_Yes", pMessageId);
+        snprintf(noMessageId, sizeof(noMessageId), "%s_No", pMessageId);
+        pMessageChangeFunc(this, "Right", yesMessageId);
+        pMessageChangeFunc(this, "Left", noMessageId);
     }
 
     appear();
@@ -138,9 +134,7 @@ void SysInfoWindow::appear(const char* pMessageId, SysInfoType type, SysInfoText
     case Type_Blocking:
         break;
     case Type_YesNo:
-        if (mYesNoSelector != nullptr) {
-            mYesNoSelector->appear();
-        }
+        mYesNoSelector->appear();
         break;
     }
 }
@@ -151,13 +145,12 @@ void SysInfoWindow::disappear() {
 
 void SysInfoWindow::kill() {
     LayoutActor::kill();
-    if (mIconAButton != nullptr) {
-        mIconAButton->kill();
-    }
+    mIconAButton->kill();
 }
 
 void SysInfoWindow::forceKill() {
     kill();
+
     if (mYesNoSelector != nullptr) {
         mYesNoSelector->kill();
     }
@@ -168,7 +161,7 @@ bool SysInfoWindow::isWait() const {
 }
 
 bool SysInfoWindow::isSelectedYes() const {
-    return mYesNoSelector != nullptr && mYesNoSelector->isSelectedYes();
+    return mYesNoSelector->isSelectedYes();
 }
 
 bool SysInfoWindow::isDisappear() const {
@@ -182,7 +175,16 @@ void SysInfoWindow::control() {
 }
 
 const char* SysInfoWindow::getLayoutName() const {
-    return mWindowType == WindowType_Mini ? "SysInfoWindowMini" : "SysInfoWindow";
+    switch (mWindowType) {
+    case WindowType_Normal:
+        return "SysInfoWindow";
+        break;
+    case WindowType_Mini:
+        return "SysInfoWindowMini";
+        break;
+    }
+
+    return nullptr;
 }
 
 void SysInfoWindow::exeAppear() {
@@ -191,34 +193,41 @@ void SysInfoWindow::exeAppear() {
 
 void SysInfoWindow::exeWait() {
     if (MR::isFirstStep(this)) {
-        MR::startPaneAnim(this, mTextParentPaneName, "ButtonWait", 0);
-        MR::startPaneAnim(this, mWindowParentPaneName, "ButtonWait", 0);
+        const char* pAnimName = "ButtonWait";
+
+        MR::startPaneAnim(this, mTextParentPaneName, pAnimName, 0);
+        MR::startPaneAnim(this, mWindowParentPaneName, pAnimName, 0);
     }
 
     if (mType == Type_Key) {
         if (MR::testSystemPadTriggerDecide()) {
-            MR::startSystemSE("SE_SY_TALK_OK", -1, -1);
-            MR::startCSSound("CS_CLICK_CLOSE", 0, 0);
+            MR::startSystemSE("SE_SY_TALK_OK");
+            MR::startCSSound("CS_CLICK_CLOSE", nullptr, 0);
             setNerve(&NrvSysInfoWindow::SysInfoWindowNrvDisappear::sInstance);
         }
-    } else if (mYesNoSelector != nullptr && mYesNoSelector->isDisappearStart()) {
-        setNerve(&NrvSysInfoWindow::SysInfoWindowNrvDisappear::sInstance);
+    } else if (mYesNoSelector != nullptr) {
+        if (mYesNoSelector->isDisappearStart()) {
+            setNerve(&NrvSysInfoWindow::SysInfoWindowNrvDisappear::sInstance);
+        }
     }
-}
+};
 
 void SysInfoWindow::exeDisappear() {
     if (MR::isFirstStep(this)) {
-        MR::startPaneAnim(this, mTextParentPaneName, "ButtonEnd", 0);
-        MR::startPaneAnim(this, mWindowParentPaneName, "ButtonEnd", 0);
+        const char* pAnimName = "ButtonEnd";
 
-        if (mType == Type_Key && mIconAButton != nullptr) {
+        MR::startPaneAnim(this, mTextParentPaneName, pAnimName, 0);
+        MR::startPaneAnim(this, mWindowParentPaneName, pAnimName, 0);
+
+        if (mType == Type_Key) {
             mIconAButton->term();
         }
     }
 
-    if (MR::isPaneAnimStopped(this, mTextParentPaneName, 0) &&
-        (mType == Type_Key || mType == Type_Blocking || (mYesNoSelector != nullptr && !mYesNoSelector->_C))) {
-        kill();
+    if (MR::isPaneAnimStopped(this, mTextParentPaneName, 0)) {
+        if (mType == Type_Key || mType == Type_Blocking || mYesNoSelector != nullptr && !mYesNoSelector->_C) {
+            kill();
+        }
     }
 }
 
@@ -229,33 +238,41 @@ void SysInfoWindow::setYesNoSelectorSE(const char* pCursorSE, const char* pYesSE
 }
 
 void SysInfoWindow::resetYesNoSelectorSE() {
-    setYesNoSelectorSE(nullptr, nullptr, nullptr);
+    if (mYesNoSelector != nullptr) {
+        mYesNoSelector->setSE(nullptr, nullptr, nullptr);
+    }
 }
 
-void SysInfoWindow::setTextBoxArgNumber(s32 arg, s32 argIndex) {
-    MR::setTextBoxArgNumberRecursive(this, mTextParentPaneName, arg, argIndex);
+void SysInfoWindow::setTextBoxArgNumber(s32 arg, s32 param2) {
+    MR::setTextBoxArgNumberRecursive(this, mTextParentPaneName, arg, param2);
 }
 
-void SysInfoWindow::setTextBoxArgString(const wchar_t* pArg, s32 argIndex) {
-    MR::setTextBoxArgStringRecursive(this, mTextParentPaneName, pArg, argIndex);
+void SysInfoWindow::setTextBoxArgString(const wchar_t* pArg, s32 param2) {
+    MR::setTextBoxArgStringRecursive(this, mTextParentPaneName, pArg, param2);
 }
 
 namespace MR {
     SysInfoWindow* createSysInfoWindow() {
-        auto* window = new SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Normal);
-        window->initWithoutIter();
-        return window;
+        SysInfoWindow* pWindow = new SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Normal);
+
+        pWindow->initWithoutIter();
+
+        return pWindow;
     }
 
     SysInfoWindow* createSysInfoWindowExecuteWithChildren() {
-        auto* window = new SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Children);
-        window->initWithoutIter();
-        return window;
+        SysInfoWindow* pWindow = new SysInfoWindow(SysInfoWindow::WindowType_Normal, SysInfoWindow::ExecuteType_Children);
+
+        pWindow->initWithoutIter();
+
+        return pWindow;
     }
 
     SysInfoWindow* createSysInfoWindowMiniExecuteWithChildren() {
-        auto* window = new SysInfoWindow(SysInfoWindow::WindowType_Mini, SysInfoWindow::ExecuteType_Children);
-        window->initWithoutIter();
-        return window;
+        SysInfoWindow* pWindow = new SysInfoWindow(SysInfoWindow::WindowType_Mini, SysInfoWindow::ExecuteType_Children);
+
+        pWindow->initWithoutIter();
+
+        return pWindow;
     }
-}  // namespace MR
+};  // namespace MR

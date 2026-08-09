@@ -1,25 +1,21 @@
 #include "Game/Screen/InformationMessage.hpp"
-
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/IconAButton.hpp"
+#include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
-#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 namespace NrvInformationMessage {
     NEW_NERVE(InformationMessageNrvAppear, InformationMessage, Appear);
     NEW_NERVE(InformationMessageNrvWait, InformationMessage, Wait);
     NEW_NERVE(InformationMessageNrvDisappear, InformationMessage, Disappear);
-}  // namespace NrvInformationMessage
+};  // namespace NrvInformationMessage
 
 InformationMessage::InformationMessage() : LayoutActor("インフォメーションメッセージ", true), mAButtonIcon(nullptr), mIsCenter(false) {
 }
 
-InformationMessage::~InformationMessage() {
-    delete mAButtonIcon;
-}
-
-void InformationMessage::init(const JMapInfoIter&) {
+void InformationMessage::init(const JMapInfoIter& rIter) {
     initLayoutManager("InformationWindow", 2);
     MR::createAndAddPaneCtrl(this, "AButtonPosC", 1);
     MR::createAndAddPaneCtrl(this, "AButtonPosU", 1);
@@ -27,6 +23,11 @@ void InformationMessage::init(const JMapInfoIter&) {
 
     mAButtonIcon = new IconAButton(true, false);
     mAButtonIcon->initWithoutIter();
+
+    if (MR::isExistSceneObj(SceneObj_DemoDirector)) {
+        MR::registerDemoSimpleCastAll(this);
+        MR::registerDemoSimpleCastAll(mAButtonIcon);
+    }
 
     initNerve(&NrvInformationMessage::InformationMessageNrvAppear::sInstance);
 }
@@ -66,8 +67,8 @@ void InformationMessage::setMessage(const wchar_t* pMessage) {
     MR::setTextBoxMessageRecursive(this, nullptr, pMessage);
 }
 
-void InformationMessage::setReplaceString(const wchar_t* pString, s32 param2) {
-    MR::setTextBoxArgStringRecursive(this, nullptr, pString, param2);
+void InformationMessage::setReplaceString(const wchar_t* pMessage, s32 param2) {
+    MR::setTextBoxArgStringRecursive(this, nullptr, pMessage, param2);
 }
 
 void InformationMessage::exeAppear() {

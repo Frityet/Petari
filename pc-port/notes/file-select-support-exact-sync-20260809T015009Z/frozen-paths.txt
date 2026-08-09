@@ -1,0 +1,14 @@
+src/Game/Screen/FileSelectInfo.cpp
+pc-port/src/Game/Screen/FileSelectInfo.cpp
+pc-port/src/Game/Screen/BackButton.cpp
+pc-port/src/Game/Screen/BackButton.hpp
+pc-port/src/Game/Screen/BrosButton.cpp
+pc-port/src/Game/Screen/BrosButton.hpp
+pc-port/src/Game/Screen/InformationMessage.cpp
+pc-port/src/Game/Screen/InformationMessage.hpp
+pc-port/src/Game/Screen/MiiConfirmIcon.cpp
+pc-port/src/Game/Screen/MiiConfirmIcon.hpp
+pc-port/src/Game/Screen/SysInfoWindow.cpp
+pc-port/src/Game/Screen/SysInfoWindow.hpp
+pc-port/tests/GameSourceMirrorTests.cpp
+pc-port/tests/xmake.lua

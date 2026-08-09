@@ -23,6 +23,7 @@ target("smg-pc-file-select-exact-source-compile")
         "../src/Game/Map/FileSelectItem.cpp",
         "../src/Game/Map/FileSelector.cpp",
         "../src/Game/Map/FileSelectSky.cpp",
+        "../src/Game/Screen/FileSelectInfo.cpp",
         "../src/Game/Screen/FullScreenBlur.cpp"
     }
     add_deps("smg-pc-game")

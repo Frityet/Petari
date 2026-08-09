@@ -6,14 +6,13 @@ class ButtonPaneController;
 
 class BrosButton : public LayoutActor {
 public:
-    explicit BrosButton(const char* pName);
-    ~BrosButton() override;
+    BrosButton(const char* pName);
 
-    void init(const JMapInfoIter& rIter) override;
-    void appear() override;
-    void control() override;
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void appear();
+    virtual void control();
 
-    void appear(bool isSelectedMario);
+    void appear(bool);
     void disappear();
     bool isSelected() const;
     bool isSelectedMario() const;

@@ -39,31 +39,30 @@ public:
         MessageType_System,
     };
 
-    SysInfoWindow(SysInfoWindowType windowType, SysInfoExecuteType executeType);
-    ~SysInfoWindow() override;
+    SysInfoWindow(SysInfoWindowType, SysInfoExecuteType);
 
-    void init(const JMapInfoIter& rIter) override;
-    void movement() override;
-    void draw() const override;
-    void calcAnim() override;
-    void appear() override;
-    void kill() override;
-    void control() override;
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void movement();
+    virtual void draw() const;
+    virtual void calcAnim();
+    virtual void appear();
+    virtual void kill();
+    virtual void control();
 
-    void appear(const char* pMessageId, SysInfoType type, SysInfoTextPos textPos, SysInfoMessageType messageType);
+    void appear(const char*, SysInfoType, SysInfoTextPos, SysInfoMessageType);
     void disappear();
     void forceKill();
-    [[nodiscard]] bool isWait() const;
-    [[nodiscard]] bool isSelectedYes() const;
-    [[nodiscard]] bool isDisappear() const;
-    [[nodiscard]] const char* getLayoutName() const;
+    bool isWait() const;
+    bool isSelectedYes() const;
+    bool isDisappear() const;
+    const char* getLayoutName() const;
     void exeAppear();
     void exeWait();
     void exeDisappear();
-    void setYesNoSelectorSE(const char* pCursorSE, const char* pYesSE, const char* pNoSE);
+    void setYesNoSelectorSE(const char*, const char*, const char*);
     void resetYesNoSelectorSE();
-    void setTextBoxArgNumber(s32 arg, s32 argIndex);
-    void setTextBoxArgString(const wchar_t* pArg, s32 argIndex);
+    void setTextBoxArgNumber(s32, s32);
+    void setTextBoxArgString(const wchar_t*, s32);
 
     /* 0x20 */ SysInfoWindowType mWindowType;
     /* 0x24 */ SysInfoType mType;
@@ -78,4 +77,4 @@ namespace MR {
     SysInfoWindow* createSysInfoWindow();
     SysInfoWindow* createSysInfoWindowExecuteWithChildren();
     SysInfoWindow* createSysInfoWindowMiniExecuteWithChildren();
-}  // namespace MR
+};  // namespace MR

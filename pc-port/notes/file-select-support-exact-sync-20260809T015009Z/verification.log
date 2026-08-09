@@ -1,0 +1,45 @@
+PASS  cmp/sha256: all eleven root-to-PC File Select support paths are byte-identical
+
+Source-pair SHA-256:
+FileSelectInfo.cpp       5fa502bc6506aa16f90a3be08b958187e2f0dd79001d85277e2978e5eea65525
+BackButton.cpp           001553dfd3200895062fe40315b42002755ae5ab02a8065c76efddfaf1612b16
+BackButton.hpp           b7d7febc63a8b9371012cb4551bb2156704c7a209261c2ab634a3c94e6d9629d
+BrosButton.cpp           920d383e0c12e73c08942c2029f25c55208b99c727876db657ada4cfedcc2d88
+BrosButton.hpp           020b7942788017fddeb0e451a4ec489d7f44c8fe6c85896d34a21054f790affb
+InformationMessage.cpp   e25681b6135066318dbde76411380e5aa3eb89e934f38564f2851ce4107c8cd3
+InformationMessage.hpp   244154bffda8e68331f338b5a8ac26eca0e8db17eab80f8f580318967dc3f40c
+MiiConfirmIcon.cpp       22d55dd1d3999bbfbc962d892d33f843292baf87a7f0d3656456d808b6a48267
+MiiConfirmIcon.hpp       434f2db93f825e7a2f53ef95c5b9471073805bf292f43bd8c34425b9d606bd79
+SysInfoWindow.cpp        5f7fb6e219ca4106bebdce10b3fc6f61dd40fb5f7f3ea2228a11a9418966eada
+SysInfoWindow.hpp        8acaba4133c14ea737ef00747fd25104c47aee2654c92ffa6feaa3125d10bded
+
+PASS  ninja exact RMGK02 objects and main.dol (no work after already-current focused objects)
+PASS  build/tools/objdiff-cli report generate -o build/RMGK02/report.json
+
+RMGK02 objdiff report after regeneration:
+unit                                 fuzzy       code        functions   complete
+main/Game/Screen/BackButton          100         100         100         100
+main/Game/Screen/BrosButton          100         100         100         100
+main/Game/Screen/FileSelectInfo      100         100         100         n/a (unlinked unit)
+main/Game/Screen/InformationMessage  100         100         100         100
+main/Game/Screen/MiiConfirmIcon      100         100         100         100
+main/Game/Screen/SysInfoWindow       100         100         100         100
+
+PASS  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+      both 8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf
+
+PASS  cd pc-port && xmake build -j 16 smg-pc-game
+PASS  cd pc-port && xmake build -j 16 smg-pc-game-source-mirror-tests
+PASS  cd pc-port && xmake run smg-pc-game-source-mirror-tests
+PASS  cd pc-port && xmake build -j 16 smg-pc-file-select-exact-source-compile-tests
+PASS  cd pc-port && xmake run smg-pc-file-select-exact-source-compile-tests
+PASS  cd pc-port && xmake build/run smg-pc-file-select-name-real-or-absent-tests (5/5)
+PASS  cd pc-port && xmake build/run smg-pc-layout-real-or-absent-tests (7/7)
+
+PASS  registered xmake tests:
+      smg-pc-game-source-mirror-tests/game_source_mirrors
+      smg-pc-file-select-exact-source-compile-tests/file_select_exact_source_compile
+      smg-pc-file-select-name-real-or-absent-tests/file_select_name_real_or_absent
+      smg-pc-layout-real-or-absent-tests/layout_real_or_absent
+
+PASS  git diff --check (frozen scope)

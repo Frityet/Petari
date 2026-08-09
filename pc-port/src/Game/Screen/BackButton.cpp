@@ -1,5 +1,4 @@
 #include "Game/Screen/BackButton.hpp"
-
 #include "Game/Screen/ButtonPaneController.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -9,17 +8,6 @@ BackButton::BackButton(const char* pName, bool param2) : LayoutActor(pName, true
     if (param2) {
         MR::connectToSceneLayoutDecoration(this);
     }
-}
-
-BackButton::~BackButton() {
-    delete mPaneCtrl;
-}
-
-void BackButton::init(const JMapInfoIter&) {
-    initLayoutManager("BackButton", 1);
-    MR::createAndAddPaneCtrl(this, "Back", 1);
-
-    mPaneCtrl = new ButtonPaneController(this, "Back", "BoxButton", 0, true);
 }
 
 void BackButton::appear() {
@@ -49,14 +37,24 @@ bool BackButton::isPointing() const {
     return mPaneCtrl->isPointing();
 }
 
+BackButton::~BackButton() {
+}
+
+void BackButton::init(const JMapInfoIter& rIter) {
+    initLayoutManager("BackButton", 1);
+    MR::createAndAddPaneCtrl(this, "Back", 1);
+
+    mPaneCtrl = new ButtonPaneController(this, "Back", "BoxButton", 0, true);
+}
+
 void BackButton::control() {
     if (mPaneCtrl->isPointingTrigger()) {
-        MR::startSystemSE("SE_SY_BUTTON_CURSOR_ON", -1, -1);
+        MR::startSystemSE("SE_SY_BUTTON_CURSOR_ON");
     }
 
     if (_25 && mPaneCtrl->trySelect()) {
         if (!_24) {
-            MR::startSystemSE("SE_SY_GALAXY_DECIDE_CANCEL", -1, -1);
+            MR::startSystemSE("SE_SY_GALAXY_DECIDE_CANCEL");
         }
 
         _24 = true;

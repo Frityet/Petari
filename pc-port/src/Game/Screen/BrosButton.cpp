@@ -1,9 +1,7 @@
 #include "Game/Screen/BrosButton.hpp"
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/ButtonPaneController.hpp"
 #include "Game/Util/LayoutUtil.hpp"
-#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
@@ -12,16 +10,12 @@ namespace {
     NEW_NERVE(BrosButtonNrvSelect, BrosButton, Select);
     NEW_NERVE(BrosButtonNrvDecide, BrosButton, Decide);
     NEW_NERVE(BrosButtonNrvDisappear, BrosButton, Disappear);
-}  // namespace
+};  // namespace
 
 BrosButton::BrosButton(const char* pName) : LayoutActor(pName, true), mIsSelectedMario(true), mPaneCtrl(nullptr) {
 }
 
-BrosButton::~BrosButton() {
-    delete mPaneCtrl;
-}
-
-void BrosButton::init(const JMapInfoIter&) {
+void BrosButton::init(const JMapInfoIter& rIter) {
     initLayoutManager("BrosButton", 1);
 
     mPaneCtrl = new ButtonPaneController(this, "BrosButton", "BoxBButton", 0, true);
@@ -72,12 +66,12 @@ void BrosButton::exeSelect() {
 
     mIsSelectedMario = !mIsSelectedMario;
 
-    if (mIsSelectedMario) {
-        MR::stopSystemSE("SE_SY_FILE_SEL_SW_LUIGI", 0);
-        MR::startSystemSE("SE_SY_FILE_SEL_SW_MARIO", -1, -1);
+    if (mIsSelectedMario == true) {
+        MR::stopSystemSE("SE_SY_FILE_SEL_SW_LUIGI");
+        MR::startSystemSE("SE_SY_FILE_SEL_SW_MARIO");
     } else {
-        MR::stopSystemSE("SE_SY_FILE_SEL_SW_MARIO", 0);
-        MR::startSystemSE("SE_SY_FILE_SEL_SW_LUIGI", -1, -1);
+        MR::stopSystemSE("SE_SY_FILE_SEL_SW_MARIO");
+        MR::startSystemSE("SE_SY_FILE_SEL_SW_LUIGI");
     }
 
     setNerve(&BrosButtonNrvDecide::sInstance);
@@ -104,6 +98,6 @@ void BrosButton::control() {
     mPaneCtrl->update();
 
     if (mPaneCtrl->isPointingTrigger()) {
-        MR::startSystemSE("SE_SY_BUTTON_CURSOR_ON", -1, -1);
+        MR::startSystemSE("SE_SY_BUTTON_CURSOR_ON");
     }
 }

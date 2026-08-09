@@ -1,19 +1,17 @@
 #include "Game/Screen/MiiConfirmIcon.hpp"
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
-#include "Game/Util/NerveUtil.hpp"
 
 namespace {
     NEW_NERVE(MiiConfirmIconNrvAppear, MiiConfirmIcon, Appear);
     NEW_NERVE(MiiConfirmIconNrvWait, MiiConfirmIcon, Wait);
     NEW_NERVE(MiiConfirmIconNrvDisappear, MiiConfirmIcon, Disappear);
-}  // namespace
+};  // namespace
 
 MiiConfirmIcon::MiiConfirmIcon(const char* pName) : LayoutActor(pName, true) {
 }
 
-void MiiConfirmIcon::init(const JMapInfoIter&) {
+void MiiConfirmIcon::init(const JMapInfoIter& rIter) {
     initLayoutManager("MiiConfirmIcon", 1);
     initNerve(&MiiConfirmIconNrvAppear::sInstance);
 }

@@ -33,13 +33,13 @@ namespace FileSelectInfoSub {
 
 // FIXME: Any issues are likely related to dynamically allocating memory for the wide character buffer.
 FileSelectInfo::FileSelectInfo(s32 nameBufferSize, const char* pName)
-    : LayoutActor(pName, 1), mNumber(0), mStarNum(0), mStarPieceNum(0), mNameBufferSize(nameBufferSize * sizeof(wchar_t)),
+    : LayoutActor(pName, 1), mNumber(0), mStarNum(0), mStarPieceNum(0), mNameBufferSize(nameBufferSize),
       mName(new wchar_t[nameBufferSize]), mMissNum(-1), mIsSelectedMarioPrev(true), mIsSelectedMario(true), mIsViewNormalEnding(false),
       mIsViewCompleteEnding(false) {
     mSlideState = new FileSelectInfoSub::SlideState(this);
     mCharaState = new FileSelectInfoSub::CharaState(this);
 
-    MR::zeroMemory(mName, mNameBufferSize);
+    MR::zeroMemory(mName, nameBufferSize * sizeof(wchar_t));
 }
 
 void FileSelectInfo::init(const JMapInfoIter& rIter) {

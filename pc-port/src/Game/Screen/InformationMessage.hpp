@@ -7,10 +7,9 @@ class IconAButton;
 class InformationMessage : public LayoutActor {
 public:
     InformationMessage();
-    ~InformationMessage() override;
 
-    void init(const JMapInfoIter& rIter) override;
-    void appear() override;
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void appear();
 
     void appearWithButtonLayout();
     void disappear();
@@ -21,7 +20,9 @@ public:
     void exeWait();
     void exeDisappear();
 
-    void setCenter(bool isCenter) { mIsCenter = isCenter; }
+    void setCenter(bool isCenter) {
+        mIsCenter = isCenter;
+    }
 
 private:
     /* 0x20 */ IconAButton* mAButtonIcon;
