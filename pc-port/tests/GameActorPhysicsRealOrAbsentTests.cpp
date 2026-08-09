@@ -164,6 +164,79 @@ int main() {
     }
 
     {
+        const auto shadow_baseline = smgpc::compat::actor_shadow_runtime_state_count();
+        {
+            ProbeActor actor;
+            require(!MR::isExistShadow(&actor, nullptr),
+                    "an actor without a controller list must not report a fabricated shadow");
+            MR::initShadowVolumeSphere(&actor, 50.0F);
+
+            const auto* shadow = smgpc::compat::actor_shadow_runtime_state(&actor);
+            require(shadow != nullptr && shadow->capacity == 1U && shadow->controllers.size() == 1U,
+                    "sphere initialization must create one actor-owned controller in a one-slot list");
+            const auto* controller = smgpc::compat::actor_shadow_controller_runtime_state(&actor, nullptr);
+            require(controller != nullptr && controller->name == "ボリューム影(球)" &&
+                        controller->kind == smgpc::compat::ActorShadowControllerKind::VolumeSphere,
+                    "sphere initialization must preserve the source controller name and shape kind");
+            require_near(controller->radius, 50.0F,
+                         "sphere initialization must retain the authored shadow radius");
+            require(controller->drop_position == &actor.mPosition && controller->drop_direction == &actor.mGravity &&
+                        controller->valid,
+                    "a new volume controller must follow the host transform and begin valid");
+            require(actor.mShadowControllerList == nullptr,
+                    "native controller ownership must not place a host pointer in the retail Wii field");
+            require(MR::isExistShadow(&actor, nullptr) && MR::isExistShadow(&actor, "any-single-controller-name"),
+                    "the exact single-controller lookup must succeed without requiring a name match");
+
+            MR::onCalcShadowOneTime(&actor, nullptr);
+            require(controller->calculation_mode == smgpc::compat::ActorShadowCalculationMode::OneTime,
+                    "one-time shadow calculation must update the owned controller");
+            MR::onCalcShadow(&actor, nullptr);
+            require(controller->calculation_mode == smgpc::compat::ActorShadowCalculationMode::Continuous,
+                    "continuous shadow calculation must replace one-time mode");
+            MR::offCalcShadow(&actor, nullptr);
+            require(controller->calculation_mode == smgpc::compat::ActorShadowCalculationMode::Disabled,
+                    "offCalcShadow must disable the owned controller");
+
+            MR::onCalcShadowDropPrivateGravity(&actor, nullptr);
+            require(controller->gravity_mode == smgpc::compat::ActorShadowGravityMode::PrivateContinuous,
+                    "private-gravity calculation must be tracked per controller");
+            MR::onCalcShadowDropPrivateGravityOneTime(&actor, nullptr);
+            require(controller->gravity_mode == smgpc::compat::ActorShadowGravityMode::PrivateOneTime,
+                    "one-time private gravity must replace continuous mode");
+            MR::offCalcShadowDropPrivateGravity(&actor, nullptr);
+            require(controller->gravity_mode == smgpc::compat::ActorShadowGravityMode::PrivateDisabled,
+                    "private-gravity disable must remain controller-local");
+
+            auto drop_position = TVec3f{4.0F, 5.0F, 6.0F};
+            MR::setShadowDropPositionPtr(&actor, nullptr, &drop_position);
+            MR::setShadowDropLength(&actor, nullptr, 250.0F);
+            require(controller->drop_position == &drop_position && std::abs(controller->drop_length - 250.0F) < 0.0001F,
+                    "shadow position and length setters must update the named controller state");
+            MR::invalidateShadow(&actor, nullptr);
+            require(!controller->valid, "shadow invalidation must update the owned controller");
+            MR::validateShadow(&actor, nullptr);
+            require(controller->valid, "shadow validation must update the owned controller");
+        }
+        {
+            ProbeActor actor;
+            actor.initShadowControllerList(2U);
+            auto& first = smgpc::compat::add_actor_shadow_controller(
+                &actor, "first", smgpc::compat::ActorShadowControllerKind::SurfaceCircle, 20.0F);
+            auto& second = smgpc::compat::add_actor_shadow_controller(
+                &actor, "second", smgpc::compat::ActorShadowControllerKind::VolumeCylinder, 30.0F);
+            require(smgpc::compat::actor_shadow_controller_runtime_state(&actor, "first") == &first &&
+                        smgpc::compat::actor_shadow_controller_runtime_state(&actor, "second") == &second,
+                    "multi-controller lookup must select the exact authored name");
+            require(!MR::isExistShadow(&actor, nullptr) && !MR::isExistShadow(&actor, "missing"),
+                    "multi-controller lookup must not turn an absent or unnamed controller into success");
+        }
+        require(smgpc::compat::actor_shadow_runtime_state_count() == shadow_baseline,
+                "LiveActor destruction must release its complete shadow-controller state");
+        ++passed;
+    }
+
+    {
         ProbeActor actor;
         actor.initBinder(50.0F, 0.0F, 8U);
         auto center = TVec3f{};
@@ -173,10 +246,8 @@ int main() {
                             "ClipArea Binder filtering must not pretend to apply without CollisionParts sensor ownership");
         require_unavailable([&] { (void)MR::isInDeath(&actor, {}); },
                             "DeathArea membership must not become false while AreaObj ownership is absent");
-        require_unavailable([&] { MR::initShadowVolumeSphere(&actor, 50.0F); },
-                            "shadow initialization must not succeed without projection, collision, and drawing");
-        require_unavailable([&] { MR::validateShadow(&actor, nullptr); },
-                            "shadow validation must not mutate a placeholder boolean");
+        require_unavailable([&] { MR::onCalcShadow(&actor, nullptr); },
+                            "shadow calculation must reject an actor without a controller list");
         require_unavailable([&] { MR::setClippingRangeIncludeShadow(&actor, &center, 100.0F); },
                             "shadow-aware clipping must not fabricate an unprojected center");
 
@@ -195,6 +266,6 @@ int main() {
         ++passed;
     }
 
-    std::cout << "Game actor physics real-or-absent tests passed: " << passed << "/7\n";
+    std::cout << "Game actor physics real-or-absent tests passed: " << passed << "/8\n";
     return 0;
 }

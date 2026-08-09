@@ -15,6 +15,7 @@
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Player/GroupChecker.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Screen/InformationObserver.hpp"
@@ -158,6 +159,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new LensFlareDirector();
     case SceneObj_SphereSelector:
         return new SphereSelector();
+    case SceneObj_GroupCheckManager:
+        return new GroupCheckManager("属性グループマネージャー");
     case SceneObj_PriorDrawAirHolder:
         return new PriorDrawAirHolder();
     default:

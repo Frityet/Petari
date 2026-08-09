@@ -6,6 +6,7 @@
 #include "Game/AreaObj/LightArea.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
+#include "Game/AreaObj/SwitchArea.hpp"
 #include "Game/Map/LightFunction.hpp"
 
 #include <algorithm>
@@ -48,6 +49,30 @@ namespace smgpc::scene {
         // a manager by itself can never make a placement appear supported.
         constexpr auto cCompleteAreaObjPlacementDescriptors =
             std::array{
+                AreaObjPlacementDescriptor{
+                    .object_name = "SwitchCube",
+                    .object_creator = create_area_obj<SwitchArea, AreaForm::Type_Cube2>,
+                    .manager_name = "SwitchArea",
+                    .retail_manager_order = 0,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "SwitchSphere",
+                    .object_creator = create_area_obj<SwitchArea, AreaForm::Type_Sphere>,
+                    .manager_name = "SwitchArea",
+                    .retail_manager_order = 0,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "SwitchCylinder",
+                    .object_creator = create_area_obj<SwitchArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "SwitchArea",
+                    .retail_manager_order = 0,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
                 AreaObjPlacementDescriptor{
                     .object_name = "CubeCameraBox",
                     .object_creator = create_area_obj<CubeCameraArea, AreaForm::Type_Cube1>,

@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <optional>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -82,10 +83,45 @@ namespace smgpc::compat {
         std::optional<int> far_level{};
     };
 
+    enum class ActorShadowControllerKind {
+        SurfaceCircle,
+        VolumeSphere,
+        VolumeCylinder,
+    };
+
+    enum class ActorShadowCalculationMode {
+        Disabled,
+        Continuous,
+        OneTime,
+    };
+
+    enum class ActorShadowGravityMode {
+        HostDirection,
+        PrivateDisabled,
+        PrivateContinuous,
+        PrivateOneTime,
+    };
+
+    struct ActorShadowControllerRuntimeState {
+        std::string name{};
+        ActorShadowControllerKind kind = ActorShadowControllerKind::VolumeSphere;
+        float radius = 0.0F;
+        const TVec3f* drop_position = nullptr;
+        const TVec3f* drop_direction = nullptr;
+        float drop_length = 1000.0F;
+        bool valid = true;
+        ActorShadowCalculationMode calculation_mode = ActorShadowCalculationMode::Disabled;
+        ActorShadowGravityMode gravity_mode = ActorShadowGravityMode::HostDirection;
+    };
+
     struct ActorShadowRuntimeState {
+        // Retain the original aggregate observability while the exact
+        // controller list carries the per-shadow state below.
         bool valid = false;
         bool calculation_enabled = false;
         bool private_gravity = false;
+        std::uint32_t capacity = 0U;
+        std::vector<ActorShadowControllerRuntimeState> controllers{};
     };
 
     // NameObj keeps the retail const-char pointer. The host-owned copy lives
@@ -188,8 +224,16 @@ namespace smgpc::compat {
     [[nodiscard]] const ActorClippingRuntimeState* actor_clipping_runtime_state(const LiveActor* actor);
     void release_actor_clipping_state(const LiveActor* actor);
 
+    void initialize_actor_shadow_controller_list(LiveActor* actor, std::uint32_t capacity);
+    [[nodiscard]] ActorShadowControllerRuntimeState& add_actor_shadow_controller(
+        LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
+    [[nodiscard]] ActorShadowControllerRuntimeState* actor_shadow_controller_runtime_state(
+        LiveActor* actor, const char* name);
+    [[nodiscard]] const ActorShadowControllerRuntimeState* actor_shadow_controller_runtime_state(
+        const LiveActor* actor, const char* name);
     [[nodiscard]] ActorShadowRuntimeState* actor_shadow_runtime_state(LiveActor* actor);
     [[nodiscard]] const ActorShadowRuntimeState* actor_shadow_runtime_state(const LiveActor* actor);
+    [[nodiscard]] std::size_t actor_shadow_runtime_state_count();
 
     void release_talk_runtime_state(const LiveActor* actor);
     [[nodiscard]] TalkMessageCtrl* owned_talk_ctrl(const LiveActor* actor);

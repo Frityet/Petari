@@ -5,6 +5,7 @@
 #include "Game/AreaObj/LightArea.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
+#include "Game/AreaObj/SwitchArea.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
@@ -14,6 +15,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "render/light/LightData.hpp"
@@ -136,6 +138,8 @@ namespace {
         require(pc_port_root.has_value(), "the source-boundary test must locate the pc-port source root");
         const auto decomp_root = pc_port_root->parent_path();
         constexpr auto source_pairs = std::array{
+            std::pair{"include/Game/AreaObj/SwitchArea.hpp", "src/Game/AreaObj/SwitchArea.hpp"},
+            std::pair{"src/Game/AreaObj/SwitchArea.cpp", "src/Game/AreaObj/SwitchArea.cpp"},
             std::pair{"include/Game/AreaObj/CubeCamera.hpp", "src/Game/AreaObj/CubeCamera.hpp"},
             std::pair{"src/Game/AreaObj/CubeCamera.cpp", "src/Game/AreaObj/CubeCamera.cpp"},
             std::pair{"include/Game/AreaObj/MessageArea.hpp", "src/Game/AreaObj/MessageArea.hpp"},
@@ -437,6 +441,9 @@ namespace {
 
         const auto descriptors = smgpc::scene::complete_area_obj_placement_descriptors();
         constexpr auto expected_descriptors = std::array{
+            std::tuple{"SwitchCube", "SwitchArea", 0, 0x40, AreaForm::Type_Cube2, false},
+            std::tuple{"SwitchSphere", "SwitchArea", 0, 0x40, AreaForm::Type_Sphere, false},
+            std::tuple{"SwitchCylinder", "SwitchArea", 0, 0x40, AreaForm::Type_Cylinder, false},
             std::tuple{"CubeCameraBox", "CubeCamera", 4, 0xA0, AreaForm::Type_Cube1, true},
             std::tuple{"CubeCameraCylinder", "CubeCamera", 4, 0xA0, AreaForm::Type_Cylinder, true},
             std::tuple{"CubeCameraSphere", "CubeCamera", 4, 0xA0, AreaForm::Type_Sphere, true},
@@ -683,6 +690,113 @@ namespace {
         }
     }
 
+    void test_rmgk01_switch_area_rows_drive_authored_switches() {
+        const auto disc_path = find_real_disc();
+        if (!disc_path.has_value()) {
+            std::cout << "[skip] RMGK01 SwitchArea placement test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
+            return;
+        }
+
+        aurora_dvd_close();
+        const auto disc_path_string = disc_path->string();
+        require(aurora_dvd_open(disc_path_string.c_str()),
+                "the RMGK01 SwitchArea fixture must be a readable SMG disc image");
+        struct DiscCloseGuard {
+            ~DiscCloseGuard() {
+                aurora_dvd_close();
+            }
+        } close_guard;
+        DVDInit();
+
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        const auto placements = smgpc::scene::resolve_stage_placement_objects(
+            dvd, "HeavensDoorGalaxy", 1);
+        auto switch_rows = std::vector<const smgpc::scene::StagePlacementObject *>{};
+        for (const auto &placement : placements) {
+            if (placement.object_name == "SwitchCube" &&
+                placement.zone_name == "HeavensDoorMysteriousZone" &&
+                placement.table_path == "jmp/placement/common/areaobjinfo") {
+                switch_rows.push_back(&placement);
+            }
+        }
+        require(switch_rows.size() == 2U,
+                "RMGK01 must retain the two authored MysteriousZone rabbit SwitchCube rows");
+        std::ranges::sort(switch_rows, {}, [](const auto *placement) {
+            return placement->jmap_entry_index;
+        });
+        require(switch_rows[0]->jmap_entry_index == 1U && switch_rows[0]->l_id == 8 &&
+                    switch_rows[0]->switch_a_id == 1113 && switch_rows[0]->switch_b_id == 1111 &&
+                    switch_rows[1]->jmap_entry_index == 2U && switch_rows[1]->l_id == 11 &&
+                    switch_rows[1]->switch_a_id == 1114 && switch_rows[1]->switch_b_id == 1111,
+                "the exact rabbit SwitchCube rows must retain their A outputs and shared B gate");
+        require(std::ranges::all_of(switch_rows, [](const auto *placement) {
+                    return placement->factory_supported && !placement->intentionally_ignored &&
+                           placement->switch_appear_id == -1 && placement->switch_dead_id == -1 &&
+                           placement->switch_sleep_id == -1 && placement->follow_id == -1 &&
+                           placement->group_id == -1 && placement->clipping_group_id == -1 &&
+                           std::ranges::all_of(placement->object_args, [](auto argument) {
+                               return argument == -1;
+                           });
+                }),
+                "the exact rabbit SwitchCube rows must remain standalone latching volumes");
+
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
+                                     SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
+            require(holder.create(scene_obj) != nullptr,
+                    "real SwitchArea placement init requires each retail scene service");
+        }
+        auto *manager = MR::getAreaObjContainer()->getManager("SwitchArea");
+        require(manager != nullptr && manager->_18 == 0x40,
+                "all exact SwitchArea forms must share the retail order-0 manager and capacity");
+
+        auto player_service = smgpc::runtime::PlayerSystemService{};
+        auto player = LiveActor{"SwitchArea player fixture"};
+        player.calcAndSetBaseMtx();
+        player_service.attach_actor(player);
+        const auto player_binding = smgpc::compat::ScopedPlayerSystemServiceOverride{player_service};
+        auto objects = std::vector<std::unique_ptr<NameObj>>{};
+        for (const auto *placement : switch_rows) {
+            const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(
+                placement->object_name);
+            require(descriptor != nullptr,
+                    "each real SwitchCube row must have one complete creator-manager descriptor");
+            auto object = std::unique_ptr<NameObj>(descriptor->object_creator(placement->object_name.c_str()));
+            auto *switch_area = dynamic_cast<SwitchArea *>(object.get());
+            require(switch_area != nullptr && switch_area->mFormType == AreaForm::Type_Cube2,
+                    "SwitchCube must construct the exact retail actor and base-origin cube form");
+            object->init(JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index));
+            require(switch_area->isValidSwitchA() && switch_area->isValidSwitchB() &&
+                        !switch_area->isOnSwitchA() && !switch_area->isOnSwitchB() &&
+                        switch_area->mObjArg0 == -1 && switch_area->mObjArg1 == -1 &&
+                        switch_area->mObjArg2 == -1,
+                    "exact SwitchArea init must retain its authored latching mode and gated switches");
+
+            player.mPosition.set(placement->translation[0], placement->translation[1],
+                                 placement->translation[2]);
+            switch_area->movement();
+            require(!switch_area->isOnSwitchA(),
+                    "a player inside the volume must not bypass the authored B gate");
+            switch_area->mSwitchCtrl->onSwitchB();
+            switch_area->movement();
+            require(switch_area->isOnSwitchA(),
+                    "an inside player with the authored B gate enabled must turn on switch A");
+            player.mPosition.set(placement->translation[0] + 1000000.0F,
+                                 placement->translation[1] + 1000000.0F,
+                                 placement->translation[2] + 1000000.0F);
+            switch_area->movement();
+            require(switch_area->isOnSwitchA(),
+                    "Obj_arg0=-1 must preserve the retail latching switch after the player exits");
+            switch_area->mSwitchCtrl->offSwitchB();
+            objects.push_back(std::move(object));
+        }
+
+        binding.init_after_placement();
+        require(manager->mArray.size() == switch_rows.size(),
+                "both exact rabbit SwitchCube rows must enter the one scene-owned SwitchArea manager");
+    }
+
     void test_rmgk01_zone_light_data_resolves_child_tables() {
         const auto disc_path = find_real_disc();
         if (!disc_path.has_value()) {
@@ -844,6 +958,7 @@ int main() {
         TestCase{"descriptor registry and strict area preflight", test_descriptor_registry_and_strict_area_preflight},
         TestCase{"RMGK01 CubeCamera rows construct exactly", test_rmgk01_cube_camera_rows_construct_exactly},
         TestCase{"RMGK01 MessageArea rows construct exactly", test_rmgk01_message_area_rows_construct_exactly},
+        TestCase{"RMGK01 SwitchArea rows drive authored switches", test_rmgk01_switch_area_rows_drive_authored_switches},
         TestCase{"RMGK01 zone-light data resolves child tables", test_rmgk01_zone_light_data_resolves_child_tables},
         TestCase{"water and Mercator do not fabricate results", test_water_and_mercator_do_not_fabricate_results},
     };

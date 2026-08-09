@@ -329,10 +329,6 @@ namespace MR {
         connectToScene(actor, MovementType_NPC, CalcAnimType_NPC, DrawBufferType_IndirectNpc, -1);
     }
 
-    void addToAttributeGroupSearchTurtle(const LiveActor*) {
-        throw std::logic_error("NPC SearchTurtle attributes are unavailable without the real GroupCheckManager.");
-    }
-
     void initStarPointerTargetAtJoint(LiveActor*, const char*, f32, const TVec3f&) {
         throw std::logic_error("Joint-bound StarPointer targets are unavailable without real joint-matrix binding.");
     }
@@ -381,7 +377,4 @@ namespace MR {
         throw std::logic_error("Actor shadows are unavailable without real projection, collision, and draw behavior.");
     }
 
-    bool isExistShadow(const LiveActor*, const char*) {
-        throw std::logic_error("Actor shadow queries are unavailable without real shadow-controller ownership.");
-    }
 }  // namespace MR

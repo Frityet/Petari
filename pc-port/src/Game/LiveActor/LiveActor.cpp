@@ -266,10 +266,10 @@ void LiveActor::initRailRider(const JMapInfoIter& rIter) {
     smgpc::compat::replace_actor_rail_rider(this, rIter);
 }
 
-void LiveActor::initShadowControllerList(u32) {
-    // Shadow rendering is real-or-absent today. Its native bookkeeping is
-    // external, while the unavailable retail controller slot remains null.
-    (void)smgpc::compat::actor_shadow_runtime_state(this);
+void LiveActor::initShadowControllerList(u32 controllerCount) {
+    // The native runtime owns the controller records without expanding the
+    // retail LiveActor layout or writing a host object into its Wii pointer.
+    smgpc::compat::initialize_actor_shadow_controller_list(this, controllerCount);
 }
 
 void LiveActor::initActorCollisionParts(const char* resourceName, HitSensor* sensor,

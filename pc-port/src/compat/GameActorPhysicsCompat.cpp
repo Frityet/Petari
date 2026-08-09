@@ -47,6 +47,45 @@ namespace {
         return *actor;
     }
 
+    smgpc::compat::ActorShadowControllerRuntimeState &require_shadow_controller(
+        LiveActor *actor, const char *name) {
+        (void)require_actor(actor);
+        auto *controller = smgpc::compat::actor_shadow_controller_runtime_state(actor, name);
+        if (controller == nullptr) {
+            throw std::logic_error("Actor has no matching shadow controller.");
+        }
+        return *controller;
+    }
+
+    template < typename Operation >
+    void for_each_shadow_controller(LiveActor *actor, const char *name, Operation &&operation) {
+        (void)require_actor(actor);
+        if (name != nullptr) {
+            operation(require_shadow_controller(actor, name));
+            return;
+        }
+
+        auto *shadow = smgpc::compat::actor_shadow_runtime_state(actor);
+        if (shadow == nullptr) {
+            throw std::logic_error("Actor has no initialized shadow controller list.");
+        }
+        if (shadow->controllers.empty()) {
+            throw std::logic_error("Actor has no shadow controllers.");
+        }
+        for (auto &controller : shadow->controllers) {
+            operation(controller);
+        }
+    }
+
+    smgpc::compat::ActorShadowRuntimeState &require_shadow_state(LiveActor *actor) {
+        (void)require_actor(actor);
+        auto *shadow = smgpc::compat::actor_shadow_runtime_state(actor);
+        if (shadow == nullptr) {
+            throw std::logic_error("Actor has no initialized shadow controller list.");
+        }
+        return *shadow;
+    }
+
     TVec3f &require_vector(TVec3f *vector) {
         if (vector == nullptr) {
             throw std::invalid_argument("Actor utility requires an output vector.");
@@ -62,8 +101,8 @@ namespace {
         return *position;
     }
 
-    [[noreturn]] void throw_shadow_unavailable() {
-        throw std::logic_error("Actor shadows are unavailable without real projection, collision, and draw behavior.");
+    [[noreturn]] void throw_shadow_projection_unavailable() {
+        throw std::logic_error("Shadow-aware clipping is unavailable without real projection and draw behavior.");
     }
 }  // namespace
 
@@ -351,56 +390,98 @@ namespace MR {
         return MR::isGroundCodeDamageFire(&actor.mBinder->mGroundInfo.mParentTriangle);
     }
 
-    void initShadowSurfaceCircle(LiveActor *, f32) {
-        throw_shadow_unavailable();
+    void initShadowSurfaceCircle(LiveActor *actor, f32 radius) {
+        actor = &require_actor(actor);
+        actor->initShadowControllerList(1U);
+        (void)smgpc::compat::add_actor_shadow_controller(
+            actor, "水面丸影", smgpc::compat::ActorShadowControllerKind::SurfaceCircle, radius);
     }
 
-    void initShadowVolumeSphere(LiveActor *, f32) {
-        throw_shadow_unavailable();
+    void initShadowVolumeSphere(LiveActor *actor, f32 radius) {
+        actor = &require_actor(actor);
+        actor->initShadowControllerList(1U);
+        (void)smgpc::compat::add_actor_shadow_controller(
+            actor, "ボリューム影(球)", smgpc::compat::ActorShadowControllerKind::VolumeSphere, radius);
     }
 
-    void initShadowVolumeCylinder(LiveActor *, f32) {
-        throw_shadow_unavailable();
+    void initShadowVolumeCylinder(LiveActor *actor, f32 radius) {
+        actor = &require_actor(actor);
+        actor->initShadowControllerList(1U);
+        (void)smgpc::compat::add_actor_shadow_controller(
+            actor, "ボリューム影(円柱)", smgpc::compat::ActorShadowControllerKind::VolumeCylinder, radius);
     }
 
-    void setShadowDropPositionPtr(LiveActor *, const char *, const TVec3f *) {
-        throw_shadow_unavailable();
+    void setShadowDropPositionPtr(LiveActor *actor, const char *name, const TVec3f *position) {
+        require_shadow_controller(actor, name).drop_position = position;
     }
 
-    void setShadowDropLength(LiveActor *, const char *, f32) {
-        throw_shadow_unavailable();
+    void setShadowDropLength(LiveActor *actor, const char *name, f32 length) {
+        if (!std::isfinite(length) || length < 0.0F) {
+            throw std::invalid_argument("Actor shadow drop length must be finite and non-negative.");
+        }
+        require_shadow_controller(actor, name).drop_length = length;
     }
 
-    void onCalcShadow(LiveActor *, const char *) {
-        throw_shadow_unavailable();
+    void onCalcShadow(LiveActor *actor, const char *name) {
+        for_each_shadow_controller(actor, name, [](auto &controller) {
+            controller.calculation_mode = smgpc::compat::ActorShadowCalculationMode::Continuous;
+        });
+        require_shadow_state(actor).calculation_enabled = true;
     }
 
-    void offCalcShadow(LiveActor *, const char *) {
-        throw_shadow_unavailable();
+    void offCalcShadow(LiveActor *actor, const char *name) {
+        for_each_shadow_controller(actor, name, [](auto &controller) {
+            controller.calculation_mode = smgpc::compat::ActorShadowCalculationMode::Disabled;
+        });
+        require_shadow_state(actor).calculation_enabled = false;
     }
 
-    void onCalcShadowOneTime(LiveActor *, const char *) {
-        throw_shadow_unavailable();
+    void onCalcShadowOneTime(LiveActor *actor, const char *name) {
+        for_each_shadow_controller(actor, name, [](auto &controller) {
+            controller.calculation_mode = smgpc::compat::ActorShadowCalculationMode::OneTime;
+        });
+        require_shadow_state(actor).calculation_enabled = true;
     }
 
-    void onCalcShadowDropPrivateGravity(LiveActor *, const char *) {
-        throw_shadow_unavailable();
+    void onCalcShadowDropPrivateGravity(LiveActor *actor, const char *name) {
+        require_shadow_controller(actor, name).gravity_mode =
+            smgpc::compat::ActorShadowGravityMode::PrivateContinuous;
+        require_shadow_state(actor).private_gravity = true;
     }
 
-    void onCalcShadowDropPrivateGravityOneTime(LiveActor *, const char *) {
-        throw_shadow_unavailable();
+    void onCalcShadowDropPrivateGravityOneTime(LiveActor *actor, const char *name) {
+        require_shadow_controller(actor, name).gravity_mode =
+            smgpc::compat::ActorShadowGravityMode::PrivateOneTime;
+        require_shadow_state(actor).private_gravity = true;
     }
 
-    void invalidateShadow(LiveActor *, const char *) {
-        throw_shadow_unavailable();
+    void offCalcShadowDropPrivateGravity(LiveActor *actor, const char *name) {
+        require_shadow_controller(actor, name).gravity_mode =
+            smgpc::compat::ActorShadowGravityMode::PrivateDisabled;
+        require_shadow_state(actor).private_gravity = false;
     }
 
-    void validateShadow(LiveActor *, const char *) {
-        throw_shadow_unavailable();
+    bool isExistShadow(const LiveActor *actor, const char *name) {
+        (void)require_actor(actor);
+        return smgpc::compat::actor_shadow_controller_runtime_state(actor, name) != nullptr;
+    }
+
+    void invalidateShadow(LiveActor *actor, const char *name) {
+        for_each_shadow_controller(actor, name, [](auto &controller) {
+            controller.valid = false;
+        });
+        require_shadow_state(actor).valid = false;
+    }
+
+    void validateShadow(LiveActor *actor, const char *name) {
+        for_each_shadow_controller(actor, name, [](auto &controller) {
+            controller.valid = true;
+        });
+        require_shadow_state(actor).valid = true;
     }
 
     void setClippingRangeIncludeShadow(LiveActor *, TVec3f *, f32) {
-        throw_shadow_unavailable();
+        throw_shadow_projection_unavailable();
     }
 
     void incCoin(int) {
