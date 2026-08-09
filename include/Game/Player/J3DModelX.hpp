@@ -1,5 +1,6 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include <revolution/gd/GDBase.h>
 
@@ -15,10 +16,12 @@ public:
 
     void viewCalc2();
     void viewCalc3(u32, MtxPtr);
+    void viewCalcRef(u32, J3DModel*);
+    void viewCalcRefPos(u32, J3DModel*, const TVec3f&, const TVec3f&);
     bool simpleDrawSetup(J3DMaterial*);
     void simpleDrawShape(J3DMaterial*);
     void storeDisplayList(_GDLObj*, u32);
-    void shapePacketDrawFast(J3DShapePacketX*);
+    void shapePacketDrawFast(J3DShapePacketX*) const;
     void shapeDrawFast(J3DShapeX*) const;
     void copyExtraMtxBuffer(const J3DModelX*);
     void copyAnmMtxBuffer(const J3DModelX*);
@@ -27,6 +30,7 @@ public:
     void setDrawViewBuffer(MtxPtr);
     void setDrawView(u32);
     void directDraw(J3DModel*);
+    void drawIn(J3DMaterial*, bool, MtxPtr, J3DModel*);
 
     struct Flags {
         inline void clear() {
@@ -84,19 +88,21 @@ public:
             Mtx* _114;
             Mtx* _118;
             Mtx* _11C;
-            Mtx* _120;
         };
-        Mtx* mExtraMtxBuffer[17];
+        Mtx* mExtraMtxBuffer[16];
     };
+    void (*mMaterialCallback)(void*, u16);
     void (*mShapeCallback)(J3DShape*);
     u32 _128;
     u32 _12C;
-    u8 _130[0x1B0 - 0x130];
+    u8* mDisplayLists[16];
+    u32 mDisplayListSizes[16];
     Flags mFlags;
     u32 _1B4;
     u8* _1B8;
     u32 _1BC;
-    u32 _1C0;
+    u16 _1C0;
+    u16 _1C2;
     u32* _1C4;
     u8** _1C8;
     u16* _1CC;
