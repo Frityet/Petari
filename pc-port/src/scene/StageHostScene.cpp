@@ -332,6 +332,7 @@ namespace smgpc::scene {
             SceneObj_MessageSensorHolder,
             SceneObj_ClippingDirector,
             SceneObj_PlanetGravityManager,
+            SceneObj_MarioHolder,
             SceneObj_StageSwitchContainer,
             SceneObj_SwitchWatcherHolder,
             SceneObj_SleepControllerHolder,

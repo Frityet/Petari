@@ -1,11 +1,15 @@
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/Map/StageSwitch.hpp"
+#include "Game/Player/MarioHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/nameobj/NameObjFactory.hpp"
 
 #include <array>
 #include <exception>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -16,6 +20,14 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
+    }
+
+    [[nodiscard]] std::string read_file(std::string_view path) {
+        auto stream = std::ifstream(std::string(path), std::ios::binary);
+        if (!stream.is_open()) {
+            throw std::runtime_error("could not open source-order file: " + std::string(path));
+        }
+        return {std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>()};
     }
 
     void test_no_holder_means_no_scene_object() {
@@ -67,6 +79,62 @@ namespace {
                 "the Mii holder must remain absent until real character-model construction and drawing exist");
     }
 
+    void test_mario_holder_precedes_real_actor_creation() {
+        auto holder = SceneObjHolder{};
+        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+
+        require(!MR::isExistSceneObj(SceneObj_MarioHolder) &&
+                    holder.getObj(SceneObj_MarioHolder) == nullptr,
+                "MarioHolder must remain absent until the scene explicitly creates it");
+
+        auto *created = MR::createSceneObj(SceneObj_MarioHolder);
+        auto *mario_holder = dynamic_cast<MarioHolder *>(created);
+        require(mario_holder != nullptr && MR::isExistSceneObj(SceneObj_MarioHolder),
+                "SceneObj 0x14 must construct the exact MarioHolder");
+        require(MR::getMarioHolder() == mario_holder &&
+                    holder.getObj(SceneObj_MarioHolder) == mario_holder,
+                "the retail MarioHolder accessor must return the active scene-owned object");
+        require(std::string_view(mario_holder->getName()) == "マリオ保持" &&
+                    mario_holder->getMarioActor() == nullptr,
+                "MarioHolder must exist with its exact name and a null actor before real MarioActor init2");
+        require(MR::createSceneObj(SceneObj_MarioHolder) == mario_holder &&
+                    mario_holder->getMarioActor() == nullptr,
+                "repeated creation must preserve the same empty holder until the real actor registers itself");
+    }
+
+    void test_stage_host_creates_mario_holder_before_start_preflight() {
+        const auto source = read_file("src/scene/StageHostScene.cpp");
+        const auto required_objects = source.find("constexpr auto required_scene_objects");
+        const auto mario_holder = source.find("SceneObj_MarioHolder", required_objects);
+        const auto create_loop = source.find("for (const auto id : required_scene_objects)", mario_holder);
+        const auto placement_init_call = source.find("init_placement_roots();", create_loop);
+        const auto placement_init = source.find("void StageHostScene::init_placement_roots()", placement_init_call);
+        const auto start_preflight = source.find("preflight_stage_start_or_throw();", placement_init);
+        const auto start_construction = source.find("construct_stage_start_root();", start_preflight);
+
+        require(required_objects != std::string::npos && mario_holder != std::string::npos &&
+                    create_loop != std::string::npos && placement_init_call != std::string::npos &&
+                    placement_init != std::string::npos && start_preflight != std::string::npos &&
+                    start_construction != std::string::npos && required_objects < mario_holder &&
+                    mario_holder < create_loop && create_loop < placement_init_call &&
+                    placement_init_call < placement_init && placement_init < start_preflight &&
+                    start_preflight < start_construction,
+                "StageHost must create SceneObj_MarioHolder before StartInfo preflight and construction");
+    }
+
+    void test_holder_does_not_install_a_player_creator() {
+        const auto mario = smgpc::scene::nameobj::describe_name_obj_creator_support("Mario");
+        const auto mario_actor = smgpc::scene::nameobj::describe_name_obj_creator_support("MarioActor");
+
+        require(!smgpc::scene::nameobj::can_create_name_obj("Mario") &&
+                    !smgpc::scene::nameobj::can_create_name_obj("MarioActor") &&
+                    mario.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::NotLinked &&
+                    mario_actor.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::NotLinked &&
+                    mario.reason == "retail_creator_not_linked" &&
+                    mario_actor.reason == "retail_creator_not_linked",
+                "MarioHolder must not enable either player factory entry before the real closure exists");
+    }
+
     void test_bindings_are_single_scene_and_isolated() {
         auto first_holder = SceneObjHolder{};
         {
@@ -115,6 +183,9 @@ int main() {
     constexpr auto tests = std::array{
         TestCase{"no holder means no scene object", test_no_holder_means_no_scene_object},
         TestCase{"bound holder requires explicit real creation", test_bound_holder_requires_explicit_real_creation},
+        TestCase{"MarioHolder precedes real actor creation", test_mario_holder_precedes_real_actor_creation},
+        TestCase{"StageHost creates MarioHolder before StartInfo", test_stage_host_creates_mario_holder_before_start_preflight},
+        TestCase{"MarioHolder does not install a player creator", test_holder_does_not_install_a_player_creator},
         TestCase{"bindings are single-scene and isolated", test_bindings_are_single_scene_and_isolated},
     };
 

@@ -14,6 +14,7 @@
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Player/MarioHolder.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
@@ -136,6 +137,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new AreaObjContainer("エリアオブジェクトコンテナ管理");
     case SceneObj_PlacementStateChecker:
         return new PlacementStateChecker("オブジェクト配置状態の監視");
+    case SceneObj_MarioHolder:
+        return new MarioHolder();
     case SceneObj_CoinHolder:
         return new CoinHolder("コイン管理");
     case SceneObj_PurpleCoinHolder:

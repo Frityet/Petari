@@ -372,6 +372,7 @@ target("smg-pc-sceneobj-holder-real-or-absent-tests")
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
+    set_rundir(os.projectdir())
     add_files {
         "SceneObjHolderRealOrAbsentTests.cpp",
         "../aurora/lib/compat.cpp"

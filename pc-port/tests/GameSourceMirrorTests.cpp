@@ -44,6 +44,8 @@ namespace {
         SourcePair{"../src/Game/NPC/MiiFaceRecipe.cpp", "src/Game/NPC/MiiFaceRecipe.cpp"},
         SourcePair{"../include/Game/NPC/MiiFacePartsHolder.hpp", "src/Game/NPC/MiiFacePartsHolder.hpp"},
         SourcePair{"../src/Game/NPC/MiiFacePartsHolder.cpp", "src/Game/NPC/MiiFacePartsHolder.cpp"},
+        SourcePair{"../include/Game/Player/MarioHolder.hpp", "src/Game/Player/MarioHolder.hpp"},
+        SourcePair{"../src/Game/Player/MarioHolder.cpp", "src/Game/Player/MarioHolder.cpp"},
         SourcePair{"../include/Game/Scene/PlacementStateChecker.hpp", "src/Game/Scene/PlacementStateChecker.hpp"},
         SourcePair{"../src/Game/Scene/PlacementStateChecker.cpp", "src/Game/Scene/PlacementStateChecker.cpp"},
         SourcePair{"../include/Game/Screen/FileSelectInfo.hpp", "src/Game/Screen/FileSelectInfo.hpp"},

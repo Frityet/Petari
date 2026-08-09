@@ -1,0 +1,51 @@
+Exact MarioHolder prerequisite verification
+UTC: 2026-08-09T01:57:28Z
+
+Source identity:
+  cmp ../include/Game/Player/MarioHolder.hpp src/Game/Player/MarioHolder.hpp: PASS
+  cmp ../src/Game/Player/MarioHolder.cpp src/Game/Player/MarioHolder.cpp: PASS
+
+Root decompilation:
+  ninja build/RMGK02/src/Game/Player/MarioHolder.o: PASS (no work to do)
+  configure.py status: Matching
+  build/tools/dtk shasum -c config/RMGK02/build.sha1:
+    build/RMGK02/main.dol: OK
+
+SHA-256:
+  02cf7c4248a832506e226a1f79e754408e5f97b0f9cfacd4d2dc5012fda481c9  root MarioHolder.hpp
+  02cf7c4248a832506e226a1f79e754408e5f97b0f9cfacd4d2dc5012fda481c9  PC MarioHolder.hpp
+  a17e21bcb47ec316396e317311431629552f64e0fcfcc2c48605bd9de3419fa3  root MarioHolder.cpp
+  a17e21bcb47ec316396e317311431629552f64e0fcfcc2c48605bd9de3419fa3  PC MarioHolder.cpp
+
+Builds:
+  xmake build smg-pc-game: PASS
+  xmake build smg-pc-game-source-mirror-tests: PASS
+  xmake build smg-pc-sceneobj-holder-real-or-absent-tests: PASS
+  xmake build smg-pc-stage-start-camera-tests: PASS
+  xmake build smg-pc-nameobj-factory-placement-tests: PASS
+  xmake build smg-pc: PASS
+
+Runs:
+  xmake run smg-pc-game-source-mirror-tests: PASS
+    src/Game/Player/MarioHolder.hpp: PASS
+    src/Game/Player/MarioHolder.cpp: PASS
+
+  xmake run smg-pc-sceneobj-holder-real-or-absent-tests: PASS
+    [ok] no holder means no scene object
+    [ok] bound holder requires explicit real creation
+    [ok] MarioHolder precedes real actor creation
+    [ok] StageHost creates MarioHolder before StartInfo
+    [ok] MarioHolder does not install a player creator
+    [ok] bindings are single-scene and isolated
+    6 SceneObjHolder real-or-absent test(s) passed
+
+  xmake run smg-pc-stage-start-camera-tests: PASS
+    5 stage-start camera test(s) passed
+    real-disc camera proof remained opt-in and was skipped
+
+  xmake run smg-pc-nameobj-factory-placement-tests: PASS
+    3 NameObj placement test(s) passed
+    real-disc fixture: /workspaces/pcport/RMGK01.iso
+
+Diff hygiene:
+  git diff --check (lane files): PASS
