@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <map>
 #include <string>
 
@@ -9,6 +10,7 @@ class GameDataHolder;
 
 namespace smgpc::compat::game_data {
 
+[[nodiscard]] std::size_t holder_state_count() noexcept;
 void destroy_holder_state(const GameDataHolder& holder);
 void copy_holder_state(GameDataHolder& destination, const GameDataHolder& source);
 void set_holder_name(GameDataHolder& holder, const char* name);

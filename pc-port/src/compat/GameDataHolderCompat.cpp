@@ -300,6 +300,10 @@ bool GameDataHolder::loadFromFileBinary(const char* name, const u8* buffer, u32 
 }
 
 namespace smgpc::compat::game_data {
+std::size_t holder_state_count() noexcept {
+    return sHolderStates.size();
+}
+
 void destroy_holder_state(const GameDataHolder& holder) {
     sHolderStates.erase(&holder);
 }
