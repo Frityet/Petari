@@ -1,0 +1,46 @@
+{
+  "external_unresolved_symbols": 830,
+  "symbols_with_retail_provider": 830,
+  "symbols_without_retail_provider": 0,
+  "selected_provider_objects": 146,
+  "category_symbol_counts": {
+    "RVL/platform": 82,
+    "J3D/model/animation": 245,
+    "other Game/runtime provider": 195,
+    "effects/audio": 74,
+    "compiler/MSL runtime": 30,
+    "resources": 14,
+    "Binder/KCL": 60,
+    "LiveActor/NameObj/Nerve ABI": 91,
+    "HitSensor": 39
+  },
+  "category_provider_object_counts": {
+    "RVL/platform": 23,
+    "J3D/model/animation": 60,
+    "other Game/runtime provider": 47,
+    "effects/audio": 13,
+    "compiler/MSL runtime": 6,
+    "resources": 8,
+    "Binder/KCL": 7,
+    "LiveActor/NameObj/Nerve ABI": 11,
+    "HitSensor": 6
+  },
+  "pc_status_symbol_counts": {
+    "Aurora subsystem present; retail API compatibility incomplete": 82,
+    "PC JSystem/Aurora provider requires API audit": 53,
+    "PC Game source absent": 289,
+    "PC Game source byte-identical, included": 36,
+    "native compiler/runtime mapping": 30,
+    "PC Game source byte-identical, excluded": 257,
+    "PC Game source divergent, included": 83
+  },
+  "pc_status_provider_object_counts": {
+    "Aurora subsystem present; retail API compatibility incomplete": 23,
+    "PC JSystem/Aurora provider requires API audit": 19,
+    "PC Game source absent": 60,
+    "PC Game source byte-identical, included": 6,
+    "native compiler/runtime mapping": 6,
+    "PC Game source byte-identical, excluded": 20,
+    "PC Game source divergent, included": 12
+  }
+}

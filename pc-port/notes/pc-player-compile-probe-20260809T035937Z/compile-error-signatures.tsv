@@ -1,0 +1,60 @@
+category	count	normalized_signature
+J3D/model/animation	160	invalid conversion from <symbol> to <symbol> [-fpermissive]
+other exact Game/API surface	90	<symbol> is not a member of <symbol>
+J3D/model/animation	29	invalid use of incomplete type <symbol>
+J3D/model/animation	25	<symbol> is not a member of <symbol>
+RVL/platform	22	too few arguments to function <symbol>
+effects/audio	21	<symbol> does not name a type; did you mean <symbol>?
+RVL/platform	18	<symbol> has not been declared
+RVL/platform	18	conflicting declaration of C function <symbol>
+other exact Game/API surface	14	<symbol> was not declared in this scope
+other exact Game/API surface	11	<symbol> is not a member of <symbol>; did you mean <symbol>?
+modern C++/64-bit compiler	10	invalid conversion from <symbol> to <symbol> [-fpermissive]
+Binder/KCL	9	<symbol> has no member named <symbol>
+J3D/model/animation	9	<symbol> has not been declared
+modern C++/64-bit compiler	9	<symbol> is not a member of <symbol>; did you mean <symbol>?
+Binder/KCL	8	<symbol> was not declared in this scope; did you mean <symbol>?
+effects/audio	7	<symbol> takes type <symbol> (<symbol>) as first parameter [-fpermissive]
+J3D/model/animation	6	<symbol> {aka <symbol>} has no member named <symbol>
+effects/audio	6	<symbol> has not been declared
+effects/audio	6	<symbol> was not declared in this scope; did you mean <symbol>?
+J3D/model/animation	5	<symbol> {aka <symbol>} has no member named <symbol>; did you mean <symbol>?
+J3D/model/animation	5	call of overloaded <symbol> is ambiguous
+effects/audio	5	<symbol> does not name a type
+other exact Game/API surface	5	<symbol> has not been declared
+J3D/model/animation	4	<symbol> does not name a type; did you mean <symbol>?
+effects/audio	4	<symbol> has no member named <symbol>
+effects/audio	4	<symbol> was not declared in this scope
+effects/audio	4	expected class-name before <symbol> token
+modern C++/64-bit compiler	4	jump to case label
+other exact Game/API surface	4	invalid operands of types <symbol> {aka <symbol>} and <symbol> to binary <symbol>
+other exact Game/API surface	4	jump to label <symbol>
+Binder/KCL	3	<symbol> has no member named <symbol>; did you mean <symbol>?
+J3D/model/animation	3	jump to label <symbol>
+effects/audio	3	expected <symbol> or <symbol> before <symbol> token
+other exact Game/API surface	3	redefinition of <symbol>
+other exact Game/API surface	3	void value not ignored as it ought to be
+resources	3	<symbol> has not been declared
+J3D/model/animation	2	<symbol> has no member named <symbol>
+J3D/model/animation	2	cast from <symbol> {aka <symbol>} to <symbol> {aka <symbol>} loses precision [-fpermissive]
+J3D/model/animation	2	expected primary-expression before <symbol> token
+modern C++/64-bit compiler	2	cast from <symbol> to <symbol> {aka <symbol>} loses precision [-fpermissive]
+other exact Game/API surface	2	<symbol> has no member named <symbol>; did you mean <symbol>?
+other exact Game/API surface	2	<symbol> was not declared in this scope; did you mean <symbol>?
+other exact Game/API surface	2	Game/Enemy/KariKariDirector.hpp: No such file or directory
+other exact Game/API surface	2	call of overloaded <symbol> is ambiguous
+other exact Game/API surface	2	invalid operands of types <symbol> and <symbol> to binary <symbol>
+HitSensor	1	<symbol> has no member named <symbol>
+J3D/model/animation	1	<symbol> was not declared in this scope; did you mean <symbol>?
+J3D/model/animation	1	no match for <symbol> (operand types are <symbol> {aka <symbol>} and <symbol> {aka <symbol>})
+effects/audio	1	<symbol> has no member named <symbol>; did you mean <symbol>?
+effects/audio	1	<symbol> is not a member of <symbol>
+effects/audio	1	expected <symbol> at end of member declaration
+other exact Game/API surface	1	<symbol> has no member named <symbol>
+other exact Game/API surface	1	initializer-string for <symbol> is too long [-fpermissive]
+other exact Game/API surface	1	invalid cast from type <symbol> to type <symbol>
+other exact Game/API surface	1	no matching function for call to <symbol>
+other exact Game/API surface	1	redefinition of default argument for <symbol>
+other exact Game/API surface	1	return-statement with no value, in function returning <symbol> [-fpermissive]
+resources	1	<symbol> is not a member of <symbol>
+resources	1	no matching function for call to <symbol>

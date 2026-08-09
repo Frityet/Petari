@@ -1,0 +1,23 @@
+In file included from src/Game/Player/MarioAccess.cpp:3:
+include/Game/Animation/XanimePlayer.hpp:72:16: error: ‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+   72 |     /* 0x04 */ J3DModelData* mModelData;
+      |                ^~~~~~~~~~~~
+      |                J3DModel
+src/Game/Player/MarioAccess.cpp: In static member function ‘static Triangle* MarioAccess::getGroundingPolygon(u32)’:
+src/Game/Player/MarioAccess.cpp:186:47: error: ‘class LiveActor’ has no member named ‘mBinder’; did you mean ‘initBinder’?
+  186 |         return &getMarioActor()->_924->mHost->mBinder->mGroundInfo.mParentTriangle;
+      |                                               ^~~~~~~
+      |                                               initBinder
+src/Game/Player/MarioAccess.cpp: In static member function ‘static void MarioAccess::tornadoJumpMini()’:
+src/Game/Player/MarioAccess.cpp:266:13: error: ‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘mult’
+  266 |     booster.mult(boostPower);
+      |             ^~~~
+src/Game/Player/MarioAccess.cpp: In static member function ‘static void MarioAccess::hide()’:
+src/Game/Player/MarioAccess.cpp:394:9: error: ‘forceDeleteEffectAll’ is not a member of ‘MR’; did you mean ‘deleteEffectAll’?
+  394 |     MR::forceDeleteEffectAll(getMarioActor());
+      |         ^~~~~~~~~~~~~~~~~~~~
+      |         deleteEffectAll
+src/Game/Player/MarioAccess.cpp: In static member function ‘static void MarioAccess::readyRemoteDemo()’:
+src/Game/Player/MarioAccess.cpp:583:29: error: cast from ‘const char*’ to ‘u32’ {aka ‘unsigned int’} loses precision [-fpermissive]
+  583 |     getMarioActor()->_EE4 = reinterpret_cast< u32 >(getMarioActor()->mMarioAnim->mXanimePlayer->getCurrentAnimationName());
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

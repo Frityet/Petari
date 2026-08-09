@@ -1,0 +1,4 @@
+src/Game/Player/MarioFpView.cpp: In member function ‘virtual bool MarioFpView::start()’:
+src/Game/Player/MarioFpView.cpp:130:29: error: invalid cast from type ‘std::nullptr_t’ to type ‘char*’
+  130 |     changeAnimation("見る", reinterpret_cast< char* >(nullptr));
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

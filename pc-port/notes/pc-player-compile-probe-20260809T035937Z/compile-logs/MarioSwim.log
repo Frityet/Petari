@@ -1,0 +1,88 @@
+src/Game/Player/MarioSwim.cpp:37:59: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   37 |     static f32 cLimitAngleSink = JGeometry::TUtil< f32 >::PI() / 1.0001f;
+      |                                                           ^~
+src/Game/Player/MarioSwim.cpp:38:62: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   38 |     static f32 cNeutralAngleWait = (JGeometry::TUtil< f32 >::PI() / 2.0f) - (JGeometry::TUtil< f32 >::PI() / 6.0f);
+      |                                                              ^~
+src/Game/Player/MarioSwim.cpp:38:103: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   38 |     static f32 cNeutralAngleWait = (JGeometry::TUtil< f32 >::PI() / 2.0f) - (JGeometry::TUtil< f32 >::PI() / 6.0f);
+      |                                                                                                       ^~
+src/Game/Player/MarioSwim.cpp:39:59: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   39 |     static f32 cLimitAngleWait = JGeometry::TUtil< f32 >::PI() / 1.5f;
+      |                                                           ^~
+src/Game/Player/MarioSwim.cpp:40:59: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   40 |     static f32 cUpperAngleWait = JGeometry::TUtil< f32 >::PI() / 100.0f;
+      |                                                           ^~
+src/Game/Player/MarioSwim.cpp: In function ‘f32 get100Deg()’:
+src/Game/Player/MarioSwim.cpp:47:12: error: ‘DEG_TO_RAD’ was not declared in this scope
+   47 |     return DEG_TO_RAD(100);
+      |            ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp: In member function ‘virtual bool MarioSwim::start()’:
+src/Game/Player/MarioSwim.cpp:334:22: error: ‘DEG_TO_RAD’ was not declared in this scope
+  334 |     mVerticalAngle = DEG_TO_RAD(30);
+      |                      ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp:478:23: error: ‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘mult’
+  478 |         mKnockbackVel.mult(0.5f);
+      |                       ^~~~
+src/Game/Player/MarioSwim.cpp: In member function ‘virtual bool MarioSwim::update()’:
+src/Game/Player/MarioSwim.cpp:716:34: error: ‘DEG_TO_RAD’ was not declared in this scope
+  716 |                 mVerticalAngle = DEG_TO_RAD(90) + 0.9f * marioAcos(dot1);
+      |                                  ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp:718:34: error: ‘DEG_TO_RAD’ was not declared in this scope
+  718 |                 mVerticalAngle = DEG_TO_RAD(90) - 0.5f * marioAcos(dot1);
+      |                                  ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp:722:34: error: ‘DEG_TO_RAD’ was not declared in this scope
+  722 |                 mVerticalAngle = DEG_TO_RAD(90) - angle;
+      |                                  ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp:1049:27: error: ‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘mult’
+ 1049 |             mKnockbackVel.mult(0.98f);
+      |                           ^~~~
+src/Game/Player/MarioSwim.cpp:1078:19: error: ‘DEG_TO_RAD’ was not declared in this scope
+ 1078 |         f32 cmp = DEG_TO_RAD(60);
+      |                   ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp: In member function ‘void MarioSwim::decideVelocity()’:
+src/Game/Player/MarioSwim.cpp:1282:66: error: ‘DEG_TO_RAD’ was not declared in this scope
+ 1282 |                         mVerticalAngle = ((1.0f - normalizedY) * DEG_TO_RAD(120)) + (normalizedY * DEG_TO_RAD(150));
+      |                                                                  ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp: In member function ‘virtual bool MarioSwim::close()’:
+src/Game/Player/MarioSwim.cpp:1614:13: error: ‘forceDeleteEffect’ is not a member of ‘MR’; did you mean ‘deleteEffect’?
+ 1614 |         MR::forceDeleteEffect(shell, "BrakeLamp");
+      |             ^~~~~~~~~~~~~~~~~
+      |             deleteEffect
+src/Game/Player/MarioSwim.cpp: In member function ‘void MarioSwim::jet()’:
+src/Game/Player/MarioSwim.cpp:2187:17: error: ‘forceDeleteEffect’ is not a member of ‘MR’; did you mean ‘deleteEffect’?
+ 2187 |             MR::forceDeleteEffect(mActor->getCarrySensor()->mHost, "BrakeLamp");
+      |                 ^~~~~~~~~~~~~~~~~
+      |                 deleteEffect
+src/Game/Player/MarioSwim.cpp: In member function ‘void MarioSwim::dropJet(bool)’:
+src/Game/Player/MarioSwim.cpp:2238:13: error: ‘forceDeleteEffect’ is not a member of ‘MR’; did you mean ‘deleteEffect’?
+ 2238 |         MR::forceDeleteEffect(shell, "BrakeLamp");
+      |             ^~~~~~~~~~~~~~~~~
+      |             deleteEffect
+src/Game/Player/MarioSwim.cpp: In member function ‘void MarioSwim::hitHead(const HitInfo*)’:
+src/Game/Player/MarioSwim.cpp:2555:29: warning: ignoring return value of ‘f32 JGeometry::TVec3<float>::length() const’, declared with attribute ‘nodiscard’ [-Wunused-result]
+ 2555 |             direction.length();
+      |             ~~~~~~~~~~~~~~~~^~
+In file included from pc-port/src/compat/GameGravityCompat.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:15,
+                 from <command-line>:
+pc-port/src/JSystem/JGeometry/TVec.hpp:269:27: note: declared here
+  269 |         [[nodiscard]] f32 length() const {
+      |                           ^~~~~~
+src/Game/Player/MarioSwim.cpp: In member function ‘virtual void MarioSwim::hitWall(const TVec3f&, HitSensor*)’:
+src/Game/Player/MarioSwim.cpp:2597:87: error: ‘RAD_TO_DEG’ was not declared in this scope
+ 2597 |             if (MR::diffAngleAbsHorizontal(-getAirGravityVec(), mFrontVec, rNormal) < RAD_TO_DEG(45)) {
+      |                                                                                       ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp:2669:46: error: ‘DEG_TO_RAD’ was not declared in this scope
+ 2669 |                             if (headAngle <= DEG_TO_RAD(150)) {
+      |                                              ^~~~~~~~~~
+src/Game/Player/MarioSwim.cpp: In member function ‘void MarioSwim::doJetJump(u8)’:
+src/Game/Player/MarioSwim.cpp:3169:19: warning: ignoring return value of ‘constexpr f32 JGeometry::TVec3<float>::dot(const JGeometry::TVec3<float>&) const’, declared with attribute ‘nodiscard’ [-Wunused-result]
+ 3169 |         mUpVec.dot(getPlayer()->mHeadVec);
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/src/compat/GameGravityCompat.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:15,
+                 from <command-line>:
+pc-port/src/JSystem/JGeometry/TVec.hpp:250:37: note: declared here
+  250 |         [[nodiscard]] constexpr f32 dot(const TVec3 &value) const {
+      |                                     ^~~

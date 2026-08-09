@@ -1,0 +1,328 @@
+src/Game/Player/MarioEffect.cpp: In function ‘void {anonymous}::addMarioEffectAtJoint(LiveActor*, const char*, const char*, const char*)’:
+src/Game/Player/MarioEffect.cpp:110:17: error: ‘class LiveActor’ has no member named ‘mEffectKeeper’; did you mean ‘initEffectKeeper’?
+  110 |         pActor->mEffectKeeper->registerEffect(pEffectName, mtx, &pActor->mScale, pGroupName, pJointName);
+      |                 ^~~~~~~~~~~~~
+      |                 initEffectKeeper
+src/Game/Player/MarioEffect.cpp: In member function ‘JPABaseEmitter* MarioEffect::addRequest(const char*, MtxPtr)’:
+src/Game/Player/MarioEffect.cpp:146:33: error: ‘emitEffectWithEmitterCallBack’ is not a member of ‘MR’
+  146 |     MultiEmitter* emitter = MR::emitEffectWithEmitterCallBack(mActor, pEffectName, this);
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp: In member function ‘void MarioActor::initMaterialEffect()’:
+src/Game/Player/MarioEffect.cpp:220:22: error: ‘isRegisteredEffect’ is not a member of ‘MR’
+  220 |             if (!MR::isRegisteredEffect(this, entry->mEffects[i])) {
+      |                      ^~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:221:17: error: ‘mEffectKeeper’ was not declared in this scope; did you mean ‘EffectKeeper’?
+  221 |                 mEffectKeeper->registerEffectWithoutSRT(entry->mEffects[i], nullptr);
+      |                 ^~~~~~~~~~~~~
+      |                 EffectKeeper
+src/Game/Player/MarioEffect.cpp:223:21: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+  223 |                 MR::setEffectHostSRT(this, entry->mEffects[i], nullptr, nullptr, nullptr);
+      |                     ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:236:33: error: cast from ‘MaterialEffectEntry*’ to ‘u32’ {aka ‘unsigned int’} loses precision [-fpermissive]
+  236 |         _BA4->add(entry->mName, reinterpret_cast< u32 >(entry), false);
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp: In member function ‘MultiEmitter* MarioActor::playMaterialEffect(const char*)’:
+src/Game/Player/MarioEffect.cpp:364:43: error: void value not ignored as it ought to be
+  364 |     MultiEmitter* emitter = MR::emitEffect(this, effectName);
+      |                             ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp: In member function ‘void MarioActor::initCommonEffect()’:
+src/Game/Player/MarioEffect.cpp:492:17: error: ‘mEffectKeeper’ was not declared in this scope; did you mean ‘EffectKeeper’?
+  492 |                 mEffectKeeper->registerEffectWithoutSRT(effectName, name + materialIndex);
+      |                 ^~~~~~~~~~~~~
+      |                 EffectKeeper
+src/Game/Player/MarioEffect.cpp:498:21: error: ‘mEffectKeeper’ was not declared in this scope; did you mean ‘EffectKeeper’?
+  498 |                     mEffectKeeper->registerEffectWithoutSRT(effectName, name + materialIndex);
+      |                     ^~~~~~~~~~~~~
+      |                     EffectKeeper
+src/Game/Player/MarioEffect.cpp:503:25: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+  503 |                     MR::setEffectHostSRT(this, hostName, &mPosition, &mRotation, nullptr);
+      |                         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:521:21: error: ‘getEffect’ is not a member of ‘MR’; did you mean ‘emitEffect’?
+  521 |                 MR::getEffect(this, name + materialIndex)->forceFollowOn();
+      |                     ^~~~~~~~~
+      |                     emitEffect
+src/Game/Player/MarioEffect.cpp:524:21: error: ‘getEffect’ is not a member of ‘MR’; did you mean ‘emitEffect’?
+  524 |                 MR::getEffect(this, name + materialIndex)->forceScaleOn();
+      |                     ^~~~~~~~~
+      |                     emitEffect
+src/Game/Player/MarioEffect.cpp: In member function ‘MultiEmitter* MarioActor::playCommonEffect(const char*)’:
+src/Game/Player/MarioEffect.cpp:642:29: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+  642 |                         MR::setEffectHostSRT(this, pName + materialIndex, hostPos, hostRot, hostScale);
+      |                             ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:645:45: error: void value not ignored as it ought to be
+  645 |                     emitter = MR::emitEffect(this, pName + materialIndex);
+      |                               ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp: In member function ‘MultiEmitter* MarioActor::playEffect(const char*)’:
+src/Game/Player/MarioEffect.cpp:782:26: error: void value not ignored as it ought to be
+  782 |     return MR::emitEffect(this, pName);
+      |            ~~~~~~~~~~~~~~^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp: In member function ‘void MarioActor::stopEffectForce(const char*)’:
+src/Game/Player/MarioEffect.cpp:898:9: error: ‘forceDeleteEffect’ is not a member of ‘MR’; did you mean ‘deleteEffect’?
+  898 |     MR::forceDeleteEffect(this, pName);
+      |         ^~~~~~~~~~~~~~~~~
+      |         deleteEffect
+src/Game/Player/MarioEffect.cpp: In member function ‘void MarioActor::initEffect()’:
+src/Game/Player/MarioEffect.cpp:1047:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1047 |     MR::setEffectName(this, "SlipUp", "スリップアップ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1048:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1048 |     MR::setEffectName(this, "WallSpark", "壁スパーク");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1049:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1049 |     MR::setEffectName(this, "Damage", "ダメージ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1050:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1050 |     MR::setEffectName(this, "StepOn", "ふみつぶし");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1051:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1051 |     MR::setEffectName(this, "SuperSpinDriverEnd", "スーパースピンドライバ終了");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1052:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1052 |     MR::setEffectName(this, "BringBubble", "引き戻し泡");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1053:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1053 |     MR::setEffectName(this, "BringBubbleBreak", "引き戻し泡破裂");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1054:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1054 |     MR::setEffectName(this, "WaterSplashRight", "水はね右");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1055:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1055 |     MR::setEffectName(this, "WaterSplashLeft", "水はね左");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1056:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1056 |     MR::setEffectName(this, "WaterSplashSRight", "水はね右弱");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1057:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1057 |     MR::setEffectName(this, "WaterSplashSLeft", "水はね左弱");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1058:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1058 |     MR::setEffectName(this, "SpinLightBurst", "スピンライト消去");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1059:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1059 |     MR::setEffectName(this, "ElectricDamage", "ビリビリ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1060:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1060 |     MR::setEffectName(this, "FireDamageSmoke", "炎ダメージ煙");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1061:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1061 |     MR::setEffectName(this, "BlueFireDamageSmoke", "炎ダメージ青煙");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1062:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1062 |     MR::setEffectName(this, "SpinLight", "スピンライト");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1063:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1063 |     MR::setEffectName(this, "IceMarioSpinLight", "アイススピン");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1064:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1064 |     MR::setEffectName(this, "FireMarioSpinLight", "ファイアスピン");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1065:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1065 |     MR::setEffectName(this, "BeeMarioSpinLight", "ハチスピン");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1066:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1066 |     MR::setEffectName(this, "BeeLuigiSpinLight", "ハチルイージスピン");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1067:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1067 |     MR::setEffectName(this, "Sweat", "いい汗");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1068:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1068 |     MR::setEffectName(this, "CarryStartShort", "ひろいクイック");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1069:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1069 |     MR::setEffectName(this, "AirRecover", "酸素回復");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1070:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1070 |     MR::setEffectName(this, "Invincible", "無敵中");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1071:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1071 |     MR::setEffectHostSRT(this, "無敵中", &mPosition, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1072:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1072 |     MR::setEffectName(this, "Ice", "アイス中");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1073:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1073 |     MR::setEffectHostSRT(this, "アイス中", &mPosition, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1074:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1074 |     MR::setEffectName(this, "FireBallThrow", "ファイアボール投げ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1075:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1075 |     MR::setEffectName(this, "Throw", "こうら投げ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1076:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1076 |     MR::setEffectName(this, "DieBuryBody", "砂埋まり体");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1077:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1077 |     MR::setEffectName(this, "DieBuryHand", "砂埋まり手");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1078:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1078 |     MR::setEffectName(this, "DieDeathMudBody", "泥埋まり体");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1079:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1079 |     MR::setEffectName(this, "DieDeathMudHand", "泥埋まり手");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1080:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1080 |     MR::setEffectName(this, "SpinLightConcentrate", "スピン許可");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1081:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1081 |     MR::setEffectName(this, "FooMarioHandGlowL", "フーマリオグロー左");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1082:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1082 |     MR::setEffectName(this, "FooMarioHandGlowR", "フーマリオグロー右");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1083:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1083 |     MR::setEffectName(this, "FooMarioBrakeLampL", "フーマリオブレーキ左");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1084:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1084 |     MR::setEffectName(this, "FooMarioBrakeLampR", "フーマリオブレーキ右");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1085:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1085 |     MR::setEffectName(this, "FooMarioEndL", "フーマリオ解除左");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1086:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1086 |     MR::setEffectName(this, "FooMarioEndR", "フーマリオ解除右");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1087:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1087 |     MR::setEffectName(this, "WallHit", "壁ヒット");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1088:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1088 |     MR::setEffectName(this, "BarrierBound", "結界ヒット");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1089:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1089 |     MR::setEffectName(this, "WaterBound", "水壁ヒット");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1090:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1090 |     MR::setEffectName(this, "IceWallJump", "氷壁ジャンプ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1091:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1091 |     MR::setEffectHostSRT(this, "氷壁ジャンプ", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1092:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1092 |     MR::setEffectName(this, "CeilingCrash", "天井ヒット");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1093:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1093 |     MR::setEffectName(this, "Coin", "コイン");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1094:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1094 |     MR::setEffectName(this, "PunchHit", "パンチヒット");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1095:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1095 |     MR::setEffectName(this, "WaterRipple", "水波紋");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1096:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1096 |     MR::setEffectName(this, "SwimWaitRipple", "水面ウエイト波紋");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1097:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1097 |     MR::setEffectHostSRT(this, "水面ウエイト波紋", &_BAC, &_BB8, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1098:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1098 |     MR::setEffectName(this, "SwimSpinLight", "水泳スピン");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1099:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1099 |     MR::setEffectName(this, "DiveBubble", "水面Ｚ沈降");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1100:9: error: ‘addEffect’ is not a member of ‘MR’
+ 1100 |     MR::addEffect(this, "WaterColumnS");
+      |         ^~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1101:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1101 |     MR::setEffectName(this, "WaterColumnS", "水面ジャンプ水柱");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1102:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1102 |     MR::setEffectName(this, "SurfaceWave", "水面泳ぎ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1103:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1103 |     MR::setEffectHostSRT(this, "水面泳ぎ", &_BAC, &_BB8, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1104:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1104 |     MR::setEffectName(this, "BodyBubble", "水中身体泡");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1105:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1105 |     MR::setEffectName(this, "MouthBubble", "水中口泡");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1106:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1106 |     MR::setEffectName(this, "SeaSmoke", "水底接触");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1107:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1107 |     MR::setEffectName(this, "Metamorphosis", "変身");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1108:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1108 |     MR::setEffectName(this, "MetamorphosisEnd", "変身解除");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1109:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1109 |     MR::setEffectName(this, "BeeFlowerPollen", "ハチ花くっつき");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1110:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1110 |     MR::setEffectHostSRT(this, "ハチ花くっつき", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1111:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1111 |     MR::setEffectName(this, "SkateL", "スケート左");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1112:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1112 |     MR::setEffectName(this, "SkateR", "スケート右");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1113:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1113 |     MR::setEffectName(this, "IceJumpLand", "スケート着地");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1115:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1115 |     MR::setEffectHostSRT(this, "天井ヒット", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1116:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1116 |     MR::setEffectHostSRT(this, "壁ヒット", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1117:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1117 |     MR::setEffectHostSRT(this, "パンチヒット", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1118:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1118 |     MR::setEffectHostSRT(this, "FlowerSpin", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1119:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1119 |     MR::setEffectHostSRT(this, "水波紋", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1120:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1120 |     MR::setEffectHostSRT(this, "結界ヒット", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1121:9: error: ‘setEffectHostSRT’ is not a member of ‘MR’
+ 1121 |     MR::setEffectHostSRT(this, "水壁ヒット", nullptr, nullptr, nullptr);
+      |         ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1123:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1123 |     MR::setEffectName(this, "Blur", "ワープポッドブラー");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1124:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1124 |     MR::setEffectName(this, "SpinRing", "スピンリング");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1125:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1125 |     MR::setEffectName(this, "Vanish", "ブラックホール消滅");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1127:5: error: ‘mEffectKeeper’ was not declared in this scope; did you mean ‘EffectKeeper’?
+ 1127 |     mEffectKeeper->registerEffect("CrestGetFlyC", _D1C.toMtxPtr(), "雪煙レベル", nullptr);
+      |     ^~~~~~~~~~~~~
+      |     EffectKeeper
+src/Game/Player/MarioEffect.cpp:1143:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1143 |     MR::setEffectName(this, "LandRubber", "特殊着地");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1144:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1144 |     MR::setEffectName(this, "DieDarkMatter", "ダークマター死亡");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1145:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1145 |     MR::setEffectName(this, "HopperMarioHipDropBlur", "ホッパー尻落");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1146:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1146 |     MR::setEffectName(this, "HopperLuigiHipDropBlur", "ホッパー尻落ルイージ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1147:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1147 |     MR::setEffectName(this, "HipDropBlur", "尻落");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1148:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1148 |     MR::setEffectName(this, "HipDropBlurLuigi", "尻落ルイージ");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1149:9: error: ‘setEffectName’ is not a member of ‘MR’
+ 1149 |     MR::setEffectName(this, "GetAgain", "アイテム再ゲット");
+      |         ^~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:1152:9: error: ‘getEffect’ is not a member of ‘MR’; did you mean ‘emitEffect’?
+ 1152 |     MR::getEffect(this, "パンチブラー左")->forceFollowOn();
+      |         ^~~~~~~~~
+      |         emitEffect
+src/Game/Player/MarioEffect.cpp:1154:9: error: ‘getEffect’ is not a member of ‘MR’; did you mean ‘emitEffect’?
+ 1154 |     MR::getEffect(this, "パンチブラー右")->forceFollowOn();
+      |         ^~~~~~~~~
+      |         emitEffect

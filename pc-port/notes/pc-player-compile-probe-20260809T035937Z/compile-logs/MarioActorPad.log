@@ -1,0 +1,15 @@
+src/Game/Player/MarioActorPad.cpp: In member function ‘bool MarioActor::isRequestSpin() const’:
+src/Game/Player/MarioActorPad.cpp:91:48: error: ‘isStarPointerPointing2P’ is not a member of ‘MR’; did you mean ‘isStarPointerPointingPane’?
+   91 |     if (isJumping() && mMario->_3BC > 6 && MR::isStarPointerPointing2P(this, "弱", true, false) && MR::testCorePadTriggerA(1)) {
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~
+      |                                                isStarPointerPointingPane
+src/Game/Player/MarioActorPad.cpp: In member function ‘bool MarioActor::isRequestJump2P() const’:
+src/Game/Player/MarioActorPad.cpp:127:13: error: ‘isStarPointerPointing2P’ is not a member of ‘MR’; did you mean ‘isStarPointerPointingPane’?
+  127 |     if (MR::isStarPointerPointing2P(this, "弱", true, false) && MR::testCorePadTriggerA(1)) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~~
+      |             isStarPointerPointingPane
+src/Game/Player/MarioActorPad.cpp: In member function ‘bool MarioActor::isRequestSpinJump2P() const’:
+src/Game/Player/MarioActorPad.cpp:357:48: error: ‘isStarPointerPointing2P’ is not a member of ‘MR’; did you mean ‘isStarPointerPointingPane’?
+  357 |     if (isJumping() && mMario->_3BC > 6 && MR::isStarPointerPointing2P(this, "弱", true, false) && MR::testCorePadTriggerA(1)) {
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~
+      |                                                isStarPointerPointingPane

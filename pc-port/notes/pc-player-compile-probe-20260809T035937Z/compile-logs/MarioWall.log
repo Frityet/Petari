@@ -1,0 +1,10 @@
+src/Game/Player/MarioWall.cpp: In member function ‘bool Mario::fixWallingTop()’:
+src/Game/Player/MarioWall.cpp:173:22: warning: ignoring return value of ‘constexpr f32 JGeometry::TVec3<float>::dot(const JGeometry::TVec3<float>&) const’, declared with attribute ‘nodiscard’ [-Wunused-result]
+  173 |     getWallNorm().dot(getAirGravityVec());
+      |     ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/src/compat/GameGravityCompat.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:15,
+                 from <command-line>:
+pc-port/src/JSystem/JGeometry/TVec.hpp:250:37: note: declared here
+  250 |         [[nodiscard]] constexpr f32 dot(const TVec3 &value) const {
+      |                                     ^~~

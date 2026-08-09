@@ -1,0 +1,59 @@
+{
+  "attempted_source_tus": 93,
+  "passed_tus": 52,
+  "failed_tus": 41,
+  "total_diagnostics_classified": 576,
+  "category_error_counts": {
+    "other exact Game/API surface": 150,
+    "J3D/model/animation": 254,
+    "RVL/platform": 58,
+    "modern C++/64-bit compiler": 25,
+    "Binder/KCL": 20,
+    "effects/audio": 63,
+    "resources": 5,
+    "HitSensor": 1
+  },
+  "category_tu_incidence": {
+    "J3D/model/animation": 20,
+    "other exact Game/API surface": 19,
+    "RVL/platform": 11,
+    "modern C++/64-bit compiler": 8,
+    "Binder/KCL": 6,
+    "effects/audio": 3,
+    "resources": 2,
+    "HitSensor": 1
+  },
+  "first_error_category_counts": {
+    "other exact Game/API surface": 9,
+    "RVL/platform": 10,
+    "modern C++/64-bit compiler": 3,
+    "J3D/model/animation": 13,
+    "Binder/KCL": 4,
+    "effects/audio": 2
+  },
+  "command": [
+    "g++",
+    "-fsyntax-only",
+    "-fmax-errors=200",
+    "-Wno-multichar",
+    "-m64",
+    "-g",
+    "-O0",
+    "-std=c++23",
+    "-DSMGPC_DEBUG_BUILD",
+    "-DAURORA_ENABLE_GX",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-include",
+    "pc-port/src/compat/MetrowerksStdCompat.hpp",
+    "-Ipc-port/src/render",
+    "-Ipc-port/src",
+    "-Ipc-port/src/common",
+    "-Ipc-port/notes/pc-player-compile-probe-20260809T035937Z/revolution-overlay",
+    "-Ipc-port/aurora/include",
+    "-Iinclude",
+    "-Ilibs/JSystem/include",
+    "-Ilibs/nw4r/include",
+    "-Ilibs/RVLFaceLib/include"
+  ]
+}

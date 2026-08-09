@@ -1,0 +1,31 @@
+src/Game/Player/Mario.cpp: In member function ‘void Mario::fixFrontVecByGravity()’:
+src/Game/Player/Mario.cpp:670:37: error: invalid operands of types ‘bool’ and ‘std::nullptr_t’ to binary ‘operator==’
+  670 |     if (MR::normalizeOrZero(&front) == nullptr) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/Mario.cpp: In member function ‘void Mario::setFrontVecKeepSide(const TVec3f&)’:
+src/Game/Player/Mario.cpp:821:39: error: invalid operands of types ‘bool’ and ‘std::nullptr_t’ to binary ‘operator!=’
+  821 |     if (MR::normalizeOrZero(&headVec) != nullptr) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/Mario.cpp: In member function ‘void Mario::draw() const’:
+src/Game/Player/Mario.cpp:863:9: error: ‘TDDraw’ has not been declared
+  863 |         TDDraw::cameraInit3D();
+      |         ^~~~~~
+src/Game/Player/Mario.cpp:864:9: error: ‘TDDraw’ has not been declared
+  864 |         TDDraw::setup(0, 1, 0);
+      |         ^~~~~~
+src/Game/Player/Mario.cpp:868:9: error: ‘TDDraw’ has not been declared
+  868 |         TDDraw::drawCylinder(mPosition, diff31C_2A0, 32.0f, 0xffff0010, 0xff000004, 8);
+      |         ^~~~~~
+src/Game/Player/Mario.cpp:878:13: error: ‘TDDraw’ has not been declared
+  878 |             TDDraw::drawCircle(_31CPlusStuff, diff2A0_31C, 100.0f, 0xffffff70, 0x10);
+      |             ^~~~~~
+src/Game/Player/Mario.cpp: In member function ‘bool Mario::isForceStopRush() const’:
+src/Game/Player/Mario.cpp:1053:1: error: jump to label ‘exit_false’
+ 1053 | exit_false:
+      | ^~~~~~~~~~
+src/Game/Player/Mario.cpp:1019:14: note:   from here
+ 1019 |         goto exit_false;
+      |              ^~~~~~~~~~
+src/Game/Player/Mario.cpp:1021:9: note:   crosses initialization of ‘u16 temp’
+ 1021 |     u16 temp = _960;
+      |         ^~~~

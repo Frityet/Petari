@@ -1,0 +1,13 @@
+src/Game/Player/MarioDamageCrush.cpp:115:40: error: initializer-string for ‘const char [72]’ is too long [-fpermissive]
+  115 | extern const char lbl_805C64D8[0x48] = "後方小ダメージ\0"
+      |                                        ^~~~~~~~~~~~~~~~~~
+  116 |                                        "前方小ダメージ\0"
+      |                                        ~~~~~~~~~~~~~~~~~~
+  117 |                                        "ノーダメージ\0"
+      |                                        ~~~~~~~~~~~~~~~~
+  118 |                                        "声小ダメージ\0"
+      |                                        ~~~~~~~~~~~~~~~~
+  119 |                                        "ダメージ\0"
+      |                                        ~~~~~~~~~~~~
+  120 |                                        "基本";
+      |                                        ~~~~~~

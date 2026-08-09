@@ -1,0 +1,49 @@
+src/Game/Player/MarioPress.cpp: In member function ‘bool Mario::checkVerticalPress(bool)’:
+src/Game/Player/MarioPress.cpp:202:1: error: jump to label ‘Failure’
+  202 | Failure:
+      | ^~~~~~~
+src/Game/Player/MarioPress.cpp:165:14: note:   from here
+  165 |         goto Failure;
+      |              ^~~~~~~
+src/Game/Player/MarioPress.cpp:180:10: note:   crosses initialization of ‘bool hasPushDir’
+  180 |     bool hasPushDir = MR::vecBlendSphere(*firstTriangle.getNormal(0), *secondTriangle.getNormal(0), &pushDir, 0.5f);
+      |          ^~~~~~~~~~
+src/Game/Player/MarioPress.cpp:179:12: note:   crosses initialization of ‘TVec3f pushDir’
+  179 |     TVec3f pushDir;
+      |            ^~~~~~~
+src/Game/Player/MarioPress.cpp:170:12: note:   crosses initialization of ‘TVec3f pushVec’
+  170 |     TVec3f pushVec;
+      |            ^~~~~~~
+src/Game/Player/MarioPress.cpp:202:1: error: jump to label ‘Failure’
+  202 | Failure:
+      | ^~~~~~~
+src/Game/Player/MarioPress.cpp:144:18: note:   from here
+  144 |             goto Failure;
+      |                  ^~~~~~~
+src/Game/Player/MarioPress.cpp:180:10: note:   crosses initialization of ‘bool hasPushDir’
+  180 |     bool hasPushDir = MR::vecBlendSphere(*firstTriangle.getNormal(0), *secondTriangle.getNormal(0), &pushDir, 0.5f);
+      |          ^~~~~~~~~~
+src/Game/Player/MarioPress.cpp:179:12: note:   crosses initialization of ‘TVec3f pushDir’
+  179 |     TVec3f pushDir;
+      |            ^~~~~~~
+src/Game/Player/MarioPress.cpp:170:12: note:   crosses initialization of ‘TVec3f pushVec’
+  170 |     TVec3f pushVec;
+      |            ^~~~~~~
+src/Game/Player/MarioPress.cpp:202:1: error: jump to label ‘Failure’
+  202 | Failure:
+      | ^~~~~~~
+src/Game/Player/MarioPress.cpp:131:14: note:   from here
+  131 |         goto Failure;
+      |              ^~~~~~~
+src/Game/Player/MarioPress.cpp:180:10: note:   crosses initialization of ‘bool hasPushDir’
+  180 |     bool hasPushDir = MR::vecBlendSphere(*firstTriangle.getNormal(0), *secondTriangle.getNormal(0), &pushDir, 0.5f);
+      |          ^~~~~~~~~~
+src/Game/Player/MarioPress.cpp:179:12: note:   crosses initialization of ‘TVec3f pushDir’
+  179 |     TVec3f pushDir;
+      |            ^~~~~~~
+src/Game/Player/MarioPress.cpp:170:12: note:   crosses initialization of ‘TVec3f pushVec’
+  170 |     TVec3f pushVec;
+      |            ^~~~~~~
+src/Game/Player/MarioPress.cpp:134:12: note:   crosses initialization of ‘TVec3f secondBase’
+  134 |     TVec3f secondBase;
+      |            ^~~~~~~~~~

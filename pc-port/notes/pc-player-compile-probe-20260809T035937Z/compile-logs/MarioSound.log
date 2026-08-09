@@ -1,0 +1,389 @@
+In file included from libs/JSystem/include/JSystem/JAudio2/JASChannel.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:5,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp: In member function ‘bool JASMemChunkPool<ChunkSize, T>::createNewChunk()’:
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:231:32: error: ‘getSystemHeap’ is not a member of ‘JKRHeap’
+  231 |         mChunk = new (JKRHeap::getSystemHeap(), 0) MemoryChunk(pMVar4);
+      |                                ^~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp: At global scope:
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:295:18: error: ‘operator new’ takes type ‘size_t’ (‘long unsigned int’) as first parameter [-fpermissive]
+  295 |     static void* operator new(u32 size) {
+      |                  ^~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:334:18: error: ‘operator new’ takes type ‘size_t’ (‘long unsigned int’) as first parameter [-fpermissive]
+  334 |     static void* operator new(u32 size) {
+      |                  ^~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp: In instantiation of ‘class JASPoolAllocObject_MultiThreaded<JASChannel>’:
+libs/JSystem/include/JSystem/JAudio2/JASChannel.hpp:43:27:   required from here
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:334:18: error: ‘operator new’ takes type ‘size_t’ (‘long unsigned int’) as first parameter [-fpermissive]
+In file included from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:11,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JGadget/linklist.hpp:14:12: error: redefinition of ‘struct std::input_iterator_tag’
+   14 |     struct input_iterator_tag {};
+      |            ^~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:65,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/bits/stl_iterator_base_types.h:93:10: note: previous definition of ‘struct std::input_iterator_tag’
+   93 |   struct input_iterator_tag { };
+      |          ^~~~~~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:11,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JGadget/linklist.hpp:15:12: error: redefinition of ‘struct std::forward_iterator_tag’
+   15 |     struct forward_iterator_tag : public input_iterator_tag {};
+      |            ^~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:65,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/bits/stl_iterator_base_types.h:99:10: note: previous definition of ‘struct std::forward_iterator_tag’
+   99 |   struct forward_iterator_tag : public input_iterator_tag { };
+      |          ^~~~~~~~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:11,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JGadget/linklist.hpp:16:12: error: redefinition of ‘struct std::bidirectional_iterator_tag’
+   16 |     struct bidirectional_iterator_tag : public forward_iterator_tag {};
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:65,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/bits/stl_iterator_base_types.h:103:10: note: previous definition of ‘struct std::bidirectional_iterator_tag’
+  103 |   struct bidirectional_iterator_tag : public forward_iterator_tag { };
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:11,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JGadget/linklist.hpp:19:11: error: redefinition of default argument for ‘class Distance’
+   19 |     class iterator {
+      |           ^~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:65,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/bits/stl_iterator_base_types.h:125:46: note: original definition appeared here
+  125 |   template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t,
+      |                                              ^~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JASChannel.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:5,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp: In instantiation of ‘class JASPoolAllocObject_MultiThreaded<JASTrack>’:
+libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:23:26:   required from here
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:334:18: error: ‘operator new’ takes type ‘size_t’ (‘long unsigned int’) as first parameter [-fpermissive]
+  334 |     static void* operator new(u32 size) {
+      |                  ^~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp: In instantiation of ‘class JASPoolAllocObject_MultiThreaded<JASTrack::TChannelMgr>’:
+libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:34:33:   required from here
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:334:18: error: ‘operator new’ takes type ‘size_t’ (‘long unsigned int’) as first parameter [-fpermissive]
+In file included from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:91:67: error: expected ‘;’ at end of member declaration
+   91 |     JASChannel* channelStart(JASTrack::TChannelMgr*, u32, u32, u32) ATTRIBUTE_WEAK;
+      |                                                                   ^
+      |                                                                    ;
+libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:91:69: error: ‘ATTRIBUTE_WEAK’ does not name a type; did you mean ‘ATTRIBUTE_ALIGN’?
+   91 |     JASChannel* channelStart(JASTrack::TChannelMgr*, u32, u32, u32) ATTRIBUTE_WEAK;
+      |                                                                     ^~~~~~~~~~~~~~
+      |                                                                     ATTRIBUTE_ALIGN
+In file included from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:8:55: error: expected class-name before ‘,’ token
+    8 | class JAISe : public JSULink< JAISe >, public JAISound, public JASPoolAllocObject< JAISe > {
+      |                                                       ^
+In file included from libs/JSystem/include/JSystem/JAudio2/JASChannel.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:5,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp: In instantiation of ‘class JASPoolAllocObject<JAISe>’:
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:8:64:   required from here
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:295:18: error: ‘operator new’ takes type ‘size_t’ (‘long unsigned int’) as first parameter [-fpermissive]
+  295 |     static void* operator new(u32 size) {
+      |                  ^~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:22:21: error: ‘JAISoundStrategyMgr’ does not name a type
+   22 |         /* 0x274 */ JAISoundStrategyMgr< JAISe >* mSoundStrategyMgr;
+      |                     ^~~~~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:23:21: error: ‘JAISoundStrategy’ does not name a type
+   23 |         /* 0x278 */ JAISoundStrategy< JAISe >* mSoundStrategy;
+      |                     ^~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:24:21: error: ‘JAITempoMgr’ does not name a type; did you mean ‘JAISeMgr’?
+   24 |         /* 0x27c */ JAITempoMgr mTempoMgr;
+      |                     ^~~~~~~~~~~
+      |                     JAISeMgr
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:28:13: error: ‘JAISoundChild’ does not name a type; did you mean ‘JAISoundID’?
+   28 |     virtual JAISoundChild* getChild(int);
+      |             ^~~~~~~~~~~~~
+      |             JAISoundID
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:33:13: error: ‘JAITempoMgr’ does not name a type; did you mean ‘JAISeMgr’?
+   33 |     virtual JAITempoMgr* getTempoMgr();
+      |             ^~~~~~~~~~~
+      |             JAISeMgr
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:36:28: error: ‘JAISoundStrategyMgr’ has not been declared
+   36 |     JAISe(JAISeMgr* seMgr, JAISoundStrategyMgr< JAISe >* soundStrategyMgr, u32 priority);
+      |                            ^~~~~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:36:47: error: expected ‘,’ or ‘...’ before ‘<’ token
+   36 |     JAISe(JAISeMgr* seMgr, JAISoundStrategyMgr< JAISe >* soundStrategyMgr, u32 priority);
+      |                                               ^
+libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:40:71: error: ‘JAISoundActivity’ has not been declared
+   40 |     void JAISeCategoryMgr_mixOut_(bool, const JASSoundParams& params, JAISoundActivity activity);
+      |                                                                       ^~~~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:49:33: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+   49 |     void JAISeMgr_mixOut_(const JAISoundParamsMove& params, JAISoundActivity activity);
+      |                                 ^~~~~~~~~~~~~~~~~~
+      |                                 JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:49:61: error: ‘JAISoundActivity’ has not been declared
+   49 |     void JAISeMgr_mixOut_(const JAISoundParamsMove& params, JAISoundActivity activity);
+      |                                                             ^~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:60:5: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+   60 |     JAISoundParamsMove* getParams() {
+      |     ^~~~~~~~~~~~~~~~~~
+      |     JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:91:16: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+   91 |     /* 0x08 */ JAISoundParamsMove mParams;
+      |                ^~~~~~~~~~~~~~~~~~
+      |                JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp: In constructor ‘JAISeCategoryMgr::JAISeCategoryMgr()’:
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:51:9: error: ‘mParams’ was not declared in this scope
+   51 |         mParams.init();
+      |         ^~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp: At global scope:
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:97:106: error: expected class-name before ‘{’ token
+   97 | class JAISeMgr : public JASGlobalInstance< JAISeMgr >, public JAISeqDataUser, public JAISoundActivityMgr {
+      |                                                                                                          ^
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:107:25: error: ‘JAISoundStrategyMgr’ has not been declared
+  107 |     void setStrategyMgr(JAISoundStrategyMgr< JAISe >* soundStrategyMgr);
+      |                         ^~~~~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:107:44: error: expected ‘,’ or ‘...’ before ‘<’ token
+  107 |     void setStrategyMgr(JAISoundStrategyMgr< JAISe >* soundStrategyMgr);
+      |                                            ^
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:137:5: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+  137 |     JAISoundParamsMove* getParams() {
+      |     ^~~~~~~~~~~~~~~~~~
+      |     JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:149:17: error: ‘JAISoundStrategyMgr’ does not name a type
+  149 |     /* 0x014 */ JAISoundStrategyMgr< JAISe >* mStrategyMgr;
+      |                 ^~~~~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:151:17: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+  151 |     /* 0x6D8 */ JAISoundParamsMove mParams;
+      |                 ^~~~~~~~~~~~~~~~~~
+      |                 JASSoundParams
+In file included from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:4,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp:8:108: error: expected class-name before ‘{’ token
+    8 | class JAISeqMgr : public JASGlobalInstance< JAISeqMgr >, public JAISeqDataUser, public JAISoundActivityMgr {
+      |                                                                                                            ^
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp:59:5: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+   59 |     JAISoundParamsMove* getParams() {
+      |     ^~~~~~~~~~~~~~~~~~
+      |     JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp:75:16: error: ‘JAISoundStrategyMgr’ does not name a type
+   75 |     /* 0x10 */ JAISoundStrategyMgr< JAISeq >* soundStrategyMgr;
+      |                ^~~~~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp:76:16: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+   76 |     /* 0x14 */ JAISoundParamsMove mMove;
+      |                ^~~~~~~~~~~~~~~~~~
+      |                JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp: In member function ‘void JAISeqMgr::initParams()’:
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp:25:9: error: ‘mMove’ was not declared in this scope
+   25 |         mMove.init();
+      |         ^~~~~
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp: In member function ‘void JAISeqMgr::pause(bool)’:
+libs/JSystem/include/JSystem/JAudio2/JAISeqMgr.hpp:69:9: error: ‘mSoundActivity’ was not declared in this scope
+   69 |         mSoundActivity.pause(paused);
+      |         ^~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JASTaskThread.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JASAramStream.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:6,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JKernel/JKRThread.hpp: In member function ‘void JKRThread::setCurrentHeap(JKRHeap*)’:
+libs/JSystem/include/JSystem/JKernel/JKRThread.hpp:54:47: error: ‘getCurrentHeap’ is not a member of ‘JKRHeap’
+   54 |         mCurrentHeap = heap ? heap : JKRHeap::getCurrentHeap();
+      |                                               ^~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:6,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp: At global scope:
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:9:34: error: expected class-name before ‘,’ token
+    9 | class JAIStream : public JAISound, public JSULink< JAIStream >, public JASPoolAllocObject< JAIStream > {
+      |                                  ^
+In file included from libs/JSystem/include/JSystem/JAudio2/JASChannel.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JASTrack.hpp:5,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISe.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAISeMgr.hpp:3,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:3,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp: In instantiation of ‘class JASPoolAllocObject<JAIStream>’:
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:9:72:   required from here
+libs/JSystem/include/JSystem/JAudio2/JASHeapCtrl.hpp:295:18: error: ‘operator new’ takes type ‘size_t’ (‘long unsigned int’) as first parameter [-fpermissive]
+  295 |     static void* operator new(u32 size) {
+      |                  ^~~~~~~~
+In file included from libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:4,
+                 from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:6,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:15:40: error: ‘JAISoundStrategyMgr’ has not been declared
+   15 |     JAIStream(JAIStreamMgr* streamMgr, JAISoundStrategyMgr< JAIStream >* soundStrategyMgr);
+      |                                        ^~~~~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:15:59: error: expected ‘,’ or ‘...’ before ‘<’ token
+   15 |     JAIStream(JAIStreamMgr* streamMgr, JAISoundStrategyMgr< JAIStream >* soundStrategyMgr);
+      |                                                           ^
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:20:63: error: ‘JAISoundActivity’ has not been declared
+   20 |     void JAIStreamMgr_mixOut_(const JASSoundParams& inParams, JAISoundActivity activity);
+      |                                                               ^~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:25:5: error: ‘JAISoundChild’ does not name a type; did you mean ‘JAISoundID’?
+   25 |     JAISoundChild* getChild(int index);
+      |     ^~~~~~~~~~~~~
+      |     JAISoundID
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:30:5: error: ‘JAITempoMgr’ does not name a type; did you mean ‘JAISeqMgr’?
+   30 |     JAITempoMgr* getTempoMgr();
+      |     ^~~~~~~~~~~
+      |     JAISeqMgr
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:47:17: error: ‘JAISoundChild’ does not name a type; did you mean ‘JAISoundID’?
+   47 |     /* 0x2A0 */ JAISoundChild* children[NUM_CHILDREN];
+      |                 ^~~~~~~~~~~~~
+      |                 JAISoundID
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:49:17: error: ‘JAISoundStrategy’ does not name a type; did you mean ‘JAISoundStarter’?
+   49 |     /* 0x2BC */ JAISoundStrategy< JAIStream >* soundStrategy;
+      |                 ^~~~~~~~~~~~~~~~
+      |                 JAISoundStarter
+libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp:50:17: error: ‘JAISoundStrategyMgr’ does not name a type; did you mean ‘JAISoundStarter’?
+   50 |     /* 0x2C0 */ JAISoundStrategyMgr< JAIStream >* soundStrategyMgr;
+      |                 ^~~~~~~~~~~~~~~~~~~
+      |                 JAISoundStarter
+In file included from libs/JSystem/include/JSystem/JAudio2/JAUSoundMgr.hpp:6,
+                 from include/Game/AudioLib/AudSystem.hpp:8,
+                 from include/Game/AudioLib/AudSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:32:5: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+   32 |     JAISoundParamsMove* getParams() {
+      |     ^~~~~~~~~~~~~~~~~~
+      |     JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:63:16: error: ‘JAISoundActivity’ does not name a type
+   63 |     /* 0x00 */ JAISoundActivity mActivity;
+      |                ^~~~~~~~~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:64:16: error: ‘JAISoundParamsMove’ does not name a type; did you mean ‘JASSoundParams’?
+   64 |     /* 0x04 */ JAISoundParamsMove mParams;
+      |                ^~~~~~~~~~~~~~~~~~
+      |                JASSoundParams
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:69:16: error: ‘JAISoundStrategyMgr’ does not name a type; did you mean ‘JAISoundStarter’?
+   69 |     /* 0x6C */ JAISoundStrategyMgr< JAIStream >* soundStrategyMgr;
+      |                ^~~~~~~~~~~~~~~~~~~
+      |                JAISoundStarter
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp: In member function ‘void JAIStreamMgr::pause(bool)’:
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:51:9: error: ‘mActivity’ was not declared in this scope
+   51 |         mActivity.pause(paused);
+      |         ^~~~~~~~~
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp: In member function ‘void JAIStreamMgr::initParams()’:
+libs/JSystem/include/JSystem/JAudio2/JAIStreamMgr.hpp:55:9: error: ‘mParams’ was not declared in this scope; did you mean ‘initParams’?
+   55 |         mParams.init();
+      |         ^~~~~~~
+      |         initParams
+In file included from libs/JSystem/include/JSystem/JAudio2/JAUSoundObject.hpp:3,
+                 from include/Game/AudioLib/AudSoundObject.hpp:5,
+                 from include/Game/AudioLib/AudAnmSoundObject.hpp:3,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAISoundHandles.hpp: At global scope:
+libs/JSystem/include/JSystem/JAudio2/JAISoundHandles.hpp:23:5: error: ‘JAISound’ does not name a type; did you mean ‘JAISoundID’?
+   23 |     JAISound* getSound(int n) {
+      |     ^~~~~~~~
+      |     JAISoundID
+In file included from include/Game/AudioLib/AudAnmSoundObject.hpp:4,
+                 from src/Game/Player/MarioSound.cpp:1:
+libs/JSystem/include/JSystem/JAudio2/JAUSoundAnimator.hpp:153:5: error: ‘JAISound’ does not name a type; did you mean ‘JAISoundID’?
+  153 |     JAISound* getSound(int index) {
+      |     ^~~~~~~~
+      |     JAISoundID
+src/Game/Player/MarioSound.cpp: In member function ‘void Mario::startBas(const char*, bool, f32, f32)’:
+src/Game/Player/MarioSound.cpp:1804:17: error: ‘class MarioActor’ has no member named ‘mSoundObject’
+ 1804 |     if (mActor->mSoundObject) {
+      |                 ^~~~~~~~~~~~
+src/Game/Player/MarioSound.cpp:1813:21: error: ‘class MarioActor’ has no member named ‘mSoundObject’
+ 1813 |             mActor->mSoundObject->startAnimation(pRes, arg2, startFrame, speed);
+      |                     ^~~~~~~~~~~~
+src/Game/Player/MarioSound.cpp:1815:21: error: ‘class MarioActor’ has no member named ‘mSoundObject’
+ 1815 |             mActor->mSoundObject->removeAnimation();
+      |                     ^~~~~~~~~~~~
+src/Game/Player/MarioSound.cpp: In member function ‘void Mario::skipBas(f32)’:
+src/Game/Player/MarioSound.cpp:1835:13: error: ‘class MarioActor’ has no member named ‘mSoundObject’
+ 1835 |     mActor->mSoundObject->skip(frame);
+      |             ^~~~~~~~~~~~

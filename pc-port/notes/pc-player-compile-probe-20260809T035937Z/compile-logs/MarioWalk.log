@@ -1,0 +1,4 @@
+src/Game/Player/MarioWalk.cpp: In member function ‘void Mario::updateWalkSpeed()’:
+src/Game/Player/MarioWalk.cpp:563:62: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  563 |                     CollisionParts* pParts = pSensor->mHost->mCollisionParts;
+      |                                                              ^~~~~~~~~~~~~~~

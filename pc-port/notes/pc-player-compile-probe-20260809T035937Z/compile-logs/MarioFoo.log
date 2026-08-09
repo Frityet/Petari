@@ -1,0 +1,63 @@
+src/Game/Player/MarioFoo.cpp:31:52: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   31 |     f32 cLimitAngleSink = JGeometry::TUtil< f32 >::PI() / 1.0001f;
+      |                                                    ^~
+src/Game/Player/MarioFoo.cpp:32:54: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   32 |     f32 cNeutralAngleWait = JGeometry::TUtil< f32 >::PI() * 0.5f - JGeometry::TUtil< f32 >::PI() / 6.0f;
+      |                                                      ^~
+src/Game/Player/MarioFoo.cpp:32:93: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   32 |     f32 cNeutralAngleWait = JGeometry::TUtil< f32 >::PI() * 0.5f - JGeometry::TUtil< f32 >::PI() / 6.0f;
+      |                                                                                             ^~
+src/Game/Player/MarioFoo.cpp:33:52: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   33 |     f32 cLimitAngleWait = JGeometry::TUtil< f32 >::PI() / 1.0001f;
+      |                                                    ^~
+src/Game/Player/MarioFoo.cpp:34:52: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+   34 |     f32 cUpperAngleWait = JGeometry::TUtil< f32 >::PI() / 100.0f;
+      |                                                    ^~
+src/Game/Player/MarioFoo.cpp: In member function ‘virtual bool MarioFoo::start()’:
+src/Game/Player/MarioFoo.cpp:113:36: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  113 |     _2C = JGeometry::TUtil< f32 >::PI() / 6.0f;
+      |                                    ^~
+src/Game/Player/MarioFoo.cpp: In member function ‘virtual bool MarioFoo::update()’:
+src/Game/Player/MarioFoo.cpp:192:44: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  192 |         if (_2C > JGeometry::TUtil< f32 >::PI() * 0.5f) {
+      |                                            ^~
+src/Game/Player/MarioFoo.cpp:194:42: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  194 |             if (JGeometry::TUtil< f32 >::PI() / 6.0f
+      |                                          ^~
+src/Game/Player/MarioFoo.cpp:195:63: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  195 |                     + getStickY() * (JGeometry::TUtil< f32 >::PI() / 6.0f)
+      |                                                               ^~
+src/Game/Player/MarioFoo.cpp:259:48: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  259 |         targetAngle = JGeometry::TUtil< f32 >::PI() / 3.0f;
+      |                                                ^~
+src/Game/Player/MarioFoo.cpp:262:79: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  262 |             targetAngle = cLimitAngleSink * ratio + (JGeometry::TUtil< f32 >::PI() / 3.0f) * (1.0f - ratio);
+      |                                                                               ^~
+src/Game/Player/MarioFoo.cpp:265:79: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  265 |             targetAngle = cUpperAngleWait * ratio + (JGeometry::TUtil< f32 >::PI() / 3.0f) * (1.0f - ratio);
+      |                                                                               ^~
+src/Game/Player/MarioFoo.cpp:275:56: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  275 |         const f32 realAngle = JGeometry::TUtil< f32 >::PI() / mActor->mConst->getTable()->mSwimTiltReal;
+      |                                                        ^~
+src/Game/Player/MarioFoo.cpp:276:62: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  276 |         const f32 targetRealAngle = JGeometry::TUtil< f32 >::PI() / 6.0f
+      |                                                              ^~
+src/Game/Player/MarioFoo.cpp:277:67: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  277 |             + getStickY() * (realAngle - JGeometry::TUtil< f32 >::PI() / 6.0f);
+      |                                                                   ^~
+src/Game/Player/MarioFoo.cpp: In member function ‘void MarioFoo::updateTilt()’:
+src/Game/Player/MarioFoo.cpp:523:55: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  523 |     f32 roll = getStickX() * JGeometry::TUtil< f32 >::PI() / 5.0f;
+      |                                                       ^~
+src/Game/Player/MarioFoo.cpp:528:56: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  528 |         pitch = getStickY() * JGeometry::TUtil< f32 >::PI() / 12.0f;
+      |                                                        ^~
+src/Game/Player/MarioFoo.cpp:530:60: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  530 |             pitch = getStickY() * JGeometry::TUtil< f32 >::PI() * 0.125f;
+      |                                                            ^~
+src/Game/Player/MarioFoo.cpp:533:56: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  533 |         pitch = getStickY() * JGeometry::TUtil< f32 >::PI() / mActor->mConst->getTable()->mSwimTiltZup;
+      |                                                        ^~
+src/Game/Player/MarioFoo.cpp:535:56: error: ‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+  535 |         pitch = getStickY() * JGeometry::TUtil< f32 >::PI() / mActor->mConst->getTable()->mSwimTiltZdown;
+      |                                                        ^~

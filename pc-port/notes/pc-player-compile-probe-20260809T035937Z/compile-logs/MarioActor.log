@@ -1,0 +1,222 @@
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActor.cpp:2:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:66:32: error: ‘_GXTlutSize’ has not been declared
+   66 | void J3DGDLoadTlut(void*, u32, _GXTlutSize);
+      |                                ^~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DPacket.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActor.cpp:2:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelDrawMtx(f32 (*)[3][4])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  121 |         GXSetArray(GX_POS_MTX_ARRAY, mModelDrawMtx, sizeof(*mModelDrawMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DPacket.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActor.cpp:2:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelNrmMtx(f32 (*)[3][3])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:126:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  126 |         GXSetArray(GX_NRM_MTX_ARRAY, mModelNrmMtx, sizeof(*mModelNrmMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:5,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActor.cpp:2:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp: At global scope:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:120:29: error: ‘_GXAttr’ has not been declared
+  120 |     void addTexMtxIndexInDL(_GXAttr, u32);
+      |                             ^~~~~~~
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:121:30: error: ‘_GXAttr’ has not been declared
+  121 |     void addTexMtxIndexInVcd(_GXAttr);
+      |                              ^~~~~~~
+src/Game/Player/MarioActor.cpp: In member function ‘void MarioActor::init2(const TVec3f&, const TVec3f&, s32)’:
+src/Game/Player/MarioActor.cpp:320:5: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+  320 |     mBinder->_1EC._0 = false;
+      |     ^~~~~~~
+      |     Binder
+src/Game/Player/MarioActor.cpp:340:5: error: ‘addToSoundObjHolder’ was not declared in this scope; did you mean ‘addSoundObjHolder’?
+  340 |     addToSoundObjHolder();
+      |     ^~~~~~~~~~~~~~~~~~~
+      |     addSoundObjHolder
+src/Game/Player/MarioActor.cpp:400:17: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  400 |     _1D8 = new (0x20) FBO[MR::getFrameBufferWidth()];
+      |                 ^~~~
+      |                 |
+      |                 int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActor.cpp:400:52: warning: placement new constructing an array of objects of type ‘MarioActor::FBO’ and size ‘8’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  400 |     _1D8 = new (0x20) FBO[MR::getFrameBufferWidth()];
+      |                                                    ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActor.cpp:401:17: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  401 |     _1DC = new (0x20) FBO[MR::getFrameBufferWidth()];
+      |                 ^~~~
+      |                 |
+      |                 int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActor.cpp:401:52: warning: placement new constructing an array of objects of type ‘MarioActor::FBO’ and size ‘8’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  401 |     _1DC = new (0x20) FBO[MR::getFrameBufferWidth()];
+      |                                                    ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActor.cpp: In member function ‘void MarioActor::updateRotationInfo()’:
+src/Game/Player/MarioActor.cpp:642:14: error: ‘using TRot3f = struct JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’ {aka ‘struct JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’} has no member named ‘getEuler’; did you mean ‘getEulerXYZ’?
+  642 |     stack_44.getEuler(_318);
+      |              ^~~~~~~~
+      |              getEulerXYZ
+src/Game/Player/MarioActor.cpp:643:10: error: ‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘mult’
+  643 |     _318.mult(57.2957763672f);
+      |          ^~~~
+src/Game/Player/MarioActor.cpp:644:14: error: ‘using TRot3f = struct JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’ {aka ‘struct JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’} has no member named ‘getEuler’; did you mean ‘getEulerXYZ’?
+  644 |     stack_44.getEuler(_324);
+      |              ^~~~~~~~
+      |              getEulerXYZ
+src/Game/Player/MarioActor.cpp:645:10: error: ‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘mult’
+  645 |     _324.mult(57.2957763672f);
+      |          ^~~~
+src/Game/Player/MarioActor.cpp: In member function ‘virtual void MarioActor::movement()’:
+src/Game/Player/MarioActor.cpp:764:38: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+  764 |                     const u32 stop = mBinder->mPlaneNum;
+      |                                      ^~~~~~~
+      |                                      Binder
+src/Game/Player/MarioActor.cpp:798:30: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+  798 |             const u32 stop = mBinder->mPlaneNum;
+      |                              ^~~~~~~
+      |                              Binder
+src/Game/Player/MarioActor.cpp: In member function ‘void MarioActor::control2()’:
+src/Game/Player/MarioActor.cpp:904:13: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+  904 |             mBinder->_1EC._1 = false;
+      |             ^~~~~~~
+      |             Binder
+src/Game/Player/MarioActor.cpp:906:13: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+  906 |             mBinder->_1EC._1 = true;
+      |             ^~~~~~~
+      |             Binder
+src/Game/Player/MarioActor.cpp: In member function ‘void MarioActor::updateSwingAction()’:
+src/Game/Player/MarioActor.cpp:1255:10: error: jump to case label
+ 1255 |     case 2:
+      |          ^
+src/Game/Player/MarioActor.cpp:1212:14: note:   crosses initialization of ‘bool didSpinPunch’
+ 1212 |         bool didSpinPunch = true;
+      |              ^~~~~~~~~~~~
+src/Game/Player/MarioActor.cpp:1260:10: error: jump to case label
+ 1260 |     case 3:
+      |          ^
+src/Game/Player/MarioActor.cpp:1212:14: note:   crosses initialization of ‘bool didSpinPunch’
+ 1212 |         bool didSpinPunch = true;
+      |              ^~~~~~~~~~~~
+src/Game/Player/MarioActor.cpp:1266:10: error: jump to case label
+ 1266 |     case 4:
+      |          ^
+src/Game/Player/MarioActor.cpp:1212:14: note:   crosses initialization of ‘bool didSpinPunch’
+ 1212 |         bool didSpinPunch = true;
+      |              ^~~~~~~~~~~~
+src/Game/Player/MarioActor.cpp:1274:10: error: jump to case label
+ 1274 |     case 5:
+      |          ^
+src/Game/Player/MarioActor.cpp:1271:32: note:   crosses initialization of ‘const MarioConstTable* pConstants’
+ 1271 |         const MarioConstTable* pConstants = mConst->getTable();
+      |                                ^~~~~~~~~~
+src/Game/Player/MarioActor.cpp:1212:14: note:   crosses initialization of ‘bool didSpinPunch’
+ 1212 |         bool didSpinPunch = true;
+      |              ^~~~~~~~~~~~
+src/Game/Player/MarioActor.cpp: In member function ‘virtual void MarioActor::calcAndSetBaseMtx()’:
+src/Game/Player/MarioActor.cpp:2102:37: error: no match for ‘operator=’ (operand types are ‘TPos3f’ {aka ‘JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’} and ‘MtxPtr’ {aka ‘float (*)[4]’})
+ 2102 |         mtxD8 = MR::tmpMtxTrans(-vec);
+      |                                     ^
+In file included from include/Game/Player/Mario.hpp:5,
+                 from include/Game/Player/MarioActor.hpp:4,
+                 from src/Game/Player/MarioActor.cpp:1:
+pc-port/src/JSystem/JGeometry/TMatrix.hpp:212:12: note: candidate: ‘constexpr JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >& JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >::operator=(const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >&)’
+  212 |     struct TPosition3 : public TRotation3<T> {
+      |            ^~~~~~~~~~
+pc-port/src/JSystem/JGeometry/TMatrix.hpp:212:12: note:   no known conversion for argument 1 from ‘MtxPtr’ {aka ‘float (*)[4]’} to ‘const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >&’
+pc-port/src/JSystem/JGeometry/TMatrix.hpp:212:12: note: candidate: ‘constexpr JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >& JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >::operator=(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >&&)’
+pc-port/src/JSystem/JGeometry/TMatrix.hpp:212:12: note:   no known conversion for argument 1 from ‘MtxPtr’ {aka ‘float (*)[4]’} to ‘JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >&&’
+src/Game/Player/MarioActor.cpp: In member function ‘void MarioActor::calcCenterPos()’:
+src/Game/Player/MarioActor.cpp:2588:22: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+ 2588 |         val = 0.8f * mBinder->mRadius + (1.0f - 0.8f) * 40.0f;
+      |                      ^~~~~~~
+      |                      Binder
+src/Game/Player/MarioActor.cpp:2591:22: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+ 2591 |         val = 0.9f * mBinder->mRadius + (1.0f - 0.9f) * 60.0f;
+      |                      ^~~~~~~
+      |                      Binder
+src/Game/Player/MarioActor.cpp:2596:27: error: ‘mBinder’ was not declared in this scope; did you mean ‘Binder’?
+ 2596 |         f32 val2 = 0.8f * mBinder->mRadius + (1.0f - 0.8f) * 100.0f;
+      |                           ^~~~~~~
+      |                           Binder
+src/Game/Player/MarioActor.cpp: In member function ‘void MarioActor::setPress(u8, s32)’:
+src/Game/Player/MarioActor.cpp:2636:9: error: ‘forceDeleteEffectAll’ is not a member of ‘MR’; did you mean ‘deleteEffectAll’?
+ 2636 |     MR::forceDeleteEffectAll(this);
+      |         ^~~~~~~~~~~~~~~~~~~~
+      |         deleteEffectAll
+src/Game/Player/MarioActor.cpp:2681:9: error: ‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+ 2681 |     MR::startStarPointerModeDemoMarioDeath(this);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         startStarPointerModeTitle
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActor.cpp:2:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp: At global scope:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:31:13: warning: inline function ‘void J3DGDWriteBPCmd(u32)’ used but never defined
+   31 | inline void J3DGDWriteBPCmd(u32 regval);
+      |             ^~~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActor.cpp:2:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:106:13: warning: inline function ‘void J3DGDSetZMode(u8, GXCompare, u8)’ used but never defined
+  106 | inline void J3DGDSetZMode(u8 compareEnable, GXCompare func, u8 writeEnable);
+      |             ^~~~~~~~~~~~~

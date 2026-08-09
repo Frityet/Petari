@@ -1,0 +1,29 @@
+src/Game/Player/MarineSnow.cpp: In constructor ‘MarineSnow::MarineSnow()’:
+src/Game/Player/MarineSnow.cpp:12:15: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+   12 |     _4 = new (32) TVec3f[_0];
+      |               ^~
+      |               |
+      |               int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarineSnow.cpp:12:28: warning: placement new constructing an array of objects of type ‘TVec3f’ {aka ‘JGeometry::TVec3<float>’} and size ‘12’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+   12 |     _4 = new (32) TVec3f[_0];
+      |                            ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarineSnow.cpp:23:35: error: ‘loadTexFromArc’ is not a member of ‘MR’
+   23 |     mTexture = new JUTTexture(MR::loadTexFromArc("MarineSnow"), 0);
+      |                                   ^~~~~~~~~~~~~~
+src/Game/Player/MarineSnow.cpp: In member function ‘void MarineSnow::draw(const TVec3f&, const TVec3f&, f32) const’:
+src/Game/Player/MarineSnow.cpp:122:43: warning: narrowing conversion of ‘u_val’ from ‘u32’ {aka ‘unsigned int’} to ‘u8’ {aka ‘unsigned char’} [-Wnarrowing]
+  122 |                 GXColor color = {0, 0, 0, u_val};
+      |                                           ^~~~~

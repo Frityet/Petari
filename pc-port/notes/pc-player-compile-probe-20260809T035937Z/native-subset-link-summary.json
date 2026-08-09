@@ -1,0 +1,19 @@
+{
+  "syntax_pass_tus_requested": 52,
+  "native_objects_built": 52,
+  "native_compile_failures": [],
+  "native_subset_defined_symbols": 696,
+  "native_subset_external_symbols": 413,
+  "symbols_found_in_current_pc_archives": 119,
+  "symbols_not_found_in_current_pc_archives": 294,
+  "category_counts": {
+    "other Game/runtime provider": 172,
+    "RVL/platform": 8,
+    "native compiler/system runtime": 14,
+    "effects/audio": 21,
+    "J3D/model/animation": 99,
+    "HitSensor": 15,
+    "LiveActor/NameObj/Nerve ABI": 62,
+    "Binder/KCL": 22
+  }
+}

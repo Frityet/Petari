@@ -1,0 +1,4 @@
+src/Game/Player/MarioInit.cpp: In member function ‘void Mario::initMember()’:
+src/Game/Player/MarioInit.cpp:41:10: error: ‘using TVec2f = struct JGeometry::TVec2<float>’ {aka ‘struct JGeometry::TVec2<float>’} has no member named ‘zero’
+   41 |     _6C8.zero();
+      |          ^~~~

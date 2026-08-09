@@ -1,0 +1,16 @@
+src/Game/Player/MarioActorGravity.cpp: In member function ‘bool MarioActor::checkBeeWallStick(TVec3f&)’:
+src/Game/Player/MarioActorGravity.cpp:54:34: error: call of overloaded ‘setFrontVecKeepUp(TVec3f&, long unsigned int)’ is ambiguous
+   54 |         mMario->setFrontVecKeepUp(vec20, 1UL);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+In file included from include/Game/Player/MarioActor.hpp:4,
+                 from src/Game/Player/MarioActorGravity.cpp:3:
+include/Game/Player/Mario.hpp:88:10: note: candidate: ‘void Mario::setFrontVecKeepUp(const TVec3f&, f32)’
+   88 |     void setFrontVecKeepUp(const TVec3f&, f32);
+      |          ^~~~~~~~~~~~~~~~~
+include/Game/Player/Mario.hpp:89:10: note: candidate: ‘void Mario::setFrontVecKeepUp(const TVec3f&, u32)’
+   89 |     void setFrontVecKeepUp(const TVec3f&, u32);
+      |          ^~~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorGravity.cpp: In member function ‘bool MarioActor::checkBeeCeilStick(TVec3f&)’:
+src/Game/Player/MarioActorGravity.cpp:141:81: error: ‘struct JGeometry::TVec3<float>’ has no member named ‘multiplyOperatorInline’
+  141 |             if (MR::getFirstPolyOnLineToMap(&vec, &triangle, mPosition, (-_240).multiplyOperatorInline(200.0f))) {
+      |                                                                                 ^~~~~~~~~~~~~~~~~~~~~~

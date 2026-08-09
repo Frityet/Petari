@@ -1,0 +1,28 @@
+{
+  "baseline_passed": 52,
+  "exact_actor_abi": {
+    "passed_tus": 56,
+    "newly_unlocked": [
+      "src/Game/Player/MarioCollision.cpp",
+      "src/Game/Player/MarioEnforce.cpp",
+      "src/Game/Player/MarioSpecial.cpp",
+      "src/Game/Player/MarioWalk.cpp"
+    ],
+    "baseline_regressions": []
+  },
+  "exact_actor_abi_plus_legacy_gx": {
+    "passed_tus": 61,
+    "newly_unlocked": [
+      "src/Game/Player/JetTurtleShadow.cpp",
+      "src/Game/Player/MarioActorHand.cpp",
+      "src/Game/Player/MarioActorShadow.cpp",
+      "src/Game/Player/MarioCollision.cpp",
+      "src/Game/Player/MarioEnforce.cpp",
+      "src/Game/Player/MarioModule.cpp",
+      "src/Game/Player/MarioSpecial.cpp",
+      "src/Game/Player/MarioWalk.cpp",
+      "src/Game/Player/ModelHolder.cpp"
+    ],
+    "baseline_regressions": []
+  }
+}

@@ -1,0 +1,6 @@
+In file included from include/Game/Player/MarioAnimator.hpp:3,
+                 from src/Game/Player/MarioAnimationEfx.cpp:1:
+include/Game/Animation/XanimePlayer.hpp:72:16: error: ‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+   72 |     /* 0x04 */ J3DModelData* mModelData;
+      |                ^~~~~~~~~~~~
+      |                J3DModel

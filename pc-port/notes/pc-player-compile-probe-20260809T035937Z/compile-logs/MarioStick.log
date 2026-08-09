@@ -1,0 +1,13 @@
+src/Game/Player/MarioStick.cpp: In member function ‘virtual bool MarioStick::start()’:
+src/Game/Player/MarioStick.cpp:94:16: error: call of overloaded ‘startPadVib(long unsigned int)’ is ambiguous
+   94 |     startPadVib(0ul);
+      |     ~~~~~~~~~~~^~~~~
+In file included from include/Game/Player/MarioState.hpp:3,
+                 from include/Game/Player/MarioStick.hpp:3,
+                 from src/Game/Player/MarioStick.cpp:1:
+include/Game/Player/MarioModule.hpp:83:10: note: candidate: ‘void MarioModule::startPadVib(u32)’
+   83 |     void startPadVib(u32);
+      |          ^~~~~~~~~~~
+include/Game/Player/MarioModule.hpp:84:10: note: candidate: ‘void MarioModule::startPadVib(const char*)’
+   84 |     void startPadVib(const char*);
+      |          ^~~~~~~~~~~

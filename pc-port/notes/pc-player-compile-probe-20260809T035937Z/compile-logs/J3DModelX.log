@@ -1,0 +1,2691 @@
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelDrawMtx(f32 (*)[3][4])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  121 |         GXSetArray(GX_POS_MTX_ARRAY, mModelDrawMtx, sizeof(*mModelDrawMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelNrmMtx(f32 (*)[3][3])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:126:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  126 |         GXSetArray(GX_NRM_MTX_ARRAY, mModelNrmMtx, sizeof(*mModelNrmMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from src/Game/Player/J3DModelX.cpp:12:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp: At global scope:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:66:32: error: ‘_GXTlutSize’ has not been declared
+   66 | void J3DGDLoadTlut(void*, u32, _GXTlutSize);
+      |                                ^~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:5,
+                 from src/Game/Player/J3DModelX.cpp:12:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:120:29: error: ‘_GXAttr’ has not been declared
+  120 |     void addTexMtxIndexInDL(_GXAttr, u32);
+      |                             ^~~~~~~
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:121:30: error: ‘_GXAttr’ has not been declared
+  121 |     void addTexMtxIndexInVcd(_GXAttr);
+      |                              ^~~~~~~
+src/Game/Player/J3DModelX.cpp:22:6: error: conflicting declaration of C function ‘void GDSetCullMode(int)’
+   22 | void GDSetCullMode(int);
+      |      ^~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:515:6: note: previous declaration ‘void GDSetCullMode(GXCullMode)’
+  515 | void GDSetCullMode(GXCullMode mode);
+      |      ^~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:23:6: error: conflicting declaration of C function ‘void GDSetAlphaCompare(int, int, int, int, int)’
+   23 | void GDSetAlphaCompare(int, int, int, int, int);
+      |      ^~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:6: note: previous declaration ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |      ^~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:24:6: error: conflicting declaration of C function ‘void GDSetZMode(int, int, int)’
+   24 | void GDSetZMode(int, int, int);
+      |      ^~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:87:6: note: previous declaration ‘void GDSetZMode(u8, GXCompare, u8)’
+   87 | void GDSetZMode(u8 compare_enable, GXCompare func, u8 update_enable);
+      |      ^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:25:6: error: conflicting declaration of C function ‘void GDSetGenMode2(int, int, int, int, int)’
+   25 | void GDSetGenMode2(int, int, int, int, int);
+      |      ^~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:517:6: note: previous declaration ‘void GDSetGenMode2(u8, u8, u8, u8, GXCullMode)’
+  517 | void GDSetGenMode2(u8 nTexGens, u8 nChans, u8 nTevs, u8 nInds, GXCullMode cm);
+      |      ^~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:26:6: error: conflicting declaration of C function ‘void GDSetTevDirect(int)’
+   26 | void GDSetTevDirect(int);
+      |      ^~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:8,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDIndirect.h:75:6: note: previous declaration ‘void GDSetTevDirect(GXTevStageID)’
+   75 | void GDSetTevDirect(GXTevStageID tev_stage);
+      |      ^~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:27:6: error: conflicting declaration of C function ‘void GDSetChanCtrl(int, int, int, int, int, int, int)’
+   27 | void GDSetChanCtrl(int, int, int, int, int, int, int);
+      |      ^~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:6: note: previous declaration ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |      ^~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:28:6: error: conflicting declaration of C function ‘void GDSetBlendModeEtc(int, int, int, int, int, int, int)’
+   28 | void GDSetBlendModeEtc(int, int, int, int, int, int, int);
+      |      ^~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:6: note: previous declaration ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |      ^~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:29:6: error: conflicting declaration of C function ‘void GDSetDstAlpha(int, int)’
+   29 | void GDSetDstAlpha(int, int);
+      |      ^~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:88:6: note: previous declaration ‘void GDSetDstAlpha(u8, u8)’
+   88 | void GDSetDstAlpha(u8 enable, u8 alpha);
+      |      ^~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:30:6: error: conflicting declaration of C function ‘void GDSetTevAlphaCalcAndSwap(int, int, int, int, int, int, int, int, int, int, int, int)’
+   30 | void GDSetTevAlphaCalcAndSwap(int, int, int, int, int, int, int, int, int, int, int, int);
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:6: note: previous declaration ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:31:6: error: conflicting declaration of C function ‘void GDSetTevOrder(int, int, int, int, int, int, int)’
+   31 | void GDSetTevOrder(int, int, int, int, int, int, int);
+      |      ^~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:125:6: note: previous declaration ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  125 | void GDSetTevOrder(GXTevStageID evenStage, GXTexCoordID coord0, GXTexMapID map0,
+      |      ^~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:32:6: error: conflicting declaration of C function ‘void GDSetTevColorCalc(int, int, int, int, int, int, int, int, int, int)’
+   32 | void GDSetTevColorCalc(int, int, int, int, int, int, int, int, int, int);
+      |      ^~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:6: note: previous declaration ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |      ^~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:33:6: error: conflicting declaration of C function ‘void GDSetTevColor(int, GXColor)’
+   33 | void GDSetTevColor(int, GXColor);
+      |      ^~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:114:6: note: previous declaration ‘void GDSetTevColor(GXTevRegID, GXColor)’
+  114 | void GDSetTevColor(GXTevRegID reg, GXColor color);
+      |      ^~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:34:6: error: conflicting declaration of C function ‘void GDSetTexLookupMode(int, int, int, int, int, f32, f32, f32, int, int, int)’
+   34 | void GDSetTexLookupMode(int, int, int, int, int, f32, f32, f32, int, int, int);
+      |      ^~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:12,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTexture.h:100:6: note: previous declaration ‘void GDSetTexLookupMode(GXTexMapID, GXTexWrapMode, GXTexWrapMode, GXTexFilter, GXTexFilter, f32, f32, f32, u8, u8, GXAnisotropy)’
+  100 | void GDSetTexLookupMode(GXTexMapID id, GXTexWrapMode wrap_s,
+      |      ^~~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:35:6: error: conflicting declaration of C function ‘void GDSetTexImgAttr(int, int, int, int)’
+   35 | void GDSetTexImgAttr(int, int, int, int);
+      |      ^~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:12,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTexture.h:106:6: note: previous declaration ‘void GDSetTexImgAttr(GXTexMapID, u16, u16, GXTexFmt)’
+  106 | void GDSetTexImgAttr(GXTexMapID id, u16 width, u16 height, GXTexFmt format);
+      |      ^~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:36:6: error: conflicting declaration of C function ‘void GDSetTexImgPtr(int, void*)’
+   36 | void GDSetTexImgPtr(int, void*);
+      |      ^~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:12,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTexture.h:107:6: note: previous declaration ‘void GDSetTexImgPtr(GXTexMapID, void*)’
+  107 | void GDSetTexImgPtr(GXTexMapID id, void* image_ptr);
+      |      ^~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:37:6: error: conflicting declaration of C function ‘void GDSetTexCoordGen(int, int, int, int, int)’
+   37 | void GDSetTexCoordGen(int, int, int, int, int);
+      |      ^~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:514:6: note: previous declaration ‘void GDSetTexCoordGen(GXTexCoordID, GXTexGenType, GXTexGenSrc, u8, u32)’
+  514 | void GDSetTexCoordGen(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u8 normalize, u32 postmtx);
+      |      ^~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:38:6: error: conflicting declaration of C function ‘void GDSetChanAmbColor(int, GXColor)’
+   38 | void GDSetChanAmbColor(int, GXColor);
+      |      ^~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:49:6: note: previous declaration ‘void GDSetChanAmbColor(GXChannelID, GXColor)’
+   49 | void GDSetChanAmbColor(GXChannelID chan, GXColor color);
+      |      ^~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:39:6: error: conflicting declaration of C function ‘void GDSetChanMatColor(int, GXColor)’
+   39 | void GDSetChanMatColor(int, GXColor);
+      |      ^~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:50:6: note: previous declaration ‘void GDSetChanMatColor(GXChannelID, GXColor)’
+   50 | void GDSetChanMatColor(GXChannelID chan, GXColor color);
+      |      ^~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DModelX::viewCalc2()’:
+src/Game/Player/J3DModelX.cpp:64:51: error: invalid use of incomplete type ‘class J3DModelData’
+   64 |     DCStoreRangeNoSync(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+      |                                                   ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DModelX::viewCalc3(u32, MtxPtr)’:
+src/Game/Player/J3DModelX.cpp:97:51: error: invalid use of incomplete type ‘class J3DModelData’
+   97 |     DCStoreRangeNoSync(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+      |                                                   ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DModelX::viewCalcRef(u32, J3DModel*)’:
+src/Game/Player/J3DModelX.cpp:105:51: error: invalid use of incomplete type ‘class J3DModelData’
+  105 |     DCStoreRangeNoSync(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+      |                                                   ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DModelX::viewCalcRefPos(u32, J3DModel*, const TVec3f&, const TVec3f&)’:
+src/Game/Player/J3DModelX.cpp:113:51: error: invalid use of incomplete type ‘class J3DModelData’
+  113 |     DCStoreRangeNoSync(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+      |                                                   ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DMtxBuffer2::calcNrmMtx2()’:
+src/Game/Player/J3DModelX.cpp:118:38: error: invalid use of incomplete type ‘class J3DJointTree’
+  118 |     const u16 drawMtxNum = mJointTree->getDrawMtxNum();
+      |                                      ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:8:7: note: forward declaration of ‘class J3DJointTree’
+    8 | class J3DJointTree;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DMtxBuffer2::calcDrawMtx2(u32, const Vec&, const f32 (&)[3][4], J3DMtxBuffer*)’:
+src/Game/Player/J3DModelX.cpp:131:41: error: invalid use of incomplete type ‘class J3DJointTree’
+  131 |     const u16 fullWeightNum = mJointTree->getDrawFullWgtMtxNum();
+      |                                         ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:8:7: note: forward declaration of ‘class J3DJointTree’
+    8 | class J3DJointTree;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:133:65: error: invalid use of incomplete type ‘class J3DJointTree’
+  133 |         PSMTXConcat(viewBaseMtx, reference->getAnmMtx(mJointTree->getDrawMtxIndex(i)), *getDrawMtx(i));
+      |                                                                 ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:8:7: note: forward declaration of ‘class J3DJointTree’
+    8 | class J3DJointTree;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:136:19: error: invalid use of incomplete type ‘class J3DJointTree’
+  136 |     if (mJointTree->getDrawMtxNum() > fullWeightNum) {
+      |                   ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:8:7: note: forward declaration of ‘class J3DJointTree’
+    8 | class J3DJointTree;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:137:111: error: invalid use of incomplete type ‘class J3DJointTree’
+  137 |         J3DPSMtxArrayConcat(viewBaseMtx, reference->getWeightAnmMtx(0), *getDrawMtx(fullWeightNum), mJointTree->getWEvlpMtxNum());
+      |                                                                                                               ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:8:7: note: forward declaration of ‘class J3DJointTree’
+    8 | class J3DJointTree;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DMtxBuffer2::calcDrawMtx3(u32, const Vec&, const f32 (&)[3][4], J3DMtxBuffer*, const TVec3f&, const TVec3f&)’:
+src/Game/Player/J3DModelX.cpp:146:41: error: invalid use of incomplete type ‘class J3DJointTree’
+  146 |     const u16 fullWeightNum = mJointTree->getDrawFullWgtMtxNum();
+      |                                         ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:8:7: note: forward declaration of ‘class J3DJointTree’
+    8 | class J3DJointTree;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:148:68: error: invalid use of incomplete type ‘class J3DJointTree’
+  148 |         const MtxPtr referenceMtx = reference->getAnmMtx(mJointTree->getDrawMtxIndex(i));
+      |                                                                    ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:8:7: note: forward declaration of ‘class J3DJointTree’
+    8 | class J3DJointTree;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DModelX::directDraw(J3DModel*)’:
+src/Game/Player/J3DModelX.cpp:200:15: error: invalid use of incomplete type ‘class J3DModelData’
+  200 |     mModelData->syncJ3DSysFlags();
+      |               ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:201:33: error: invalid use of incomplete type ‘class J3DModelData’
+  201 |     j3dSys.mTexture = mModelData->getTexture();
+      |                                 ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:209:35: error: invalid use of incomplete type ‘class J3DModelData’
+  209 |     for (u16 i = 0; i < mModelData->getMaterialNum(); i++) {
+      |                                   ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:210:43: error: invalid use of incomplete type ‘class J3DModelData’
+  210 |         J3DMaterial* material = mModelData->getMaterialNodePointer(i);
+      |                                           ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/J3DModelX.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DModelX::drawIn(J3DMaterial*, bool, MtxPtr, J3DModel*)’:
+src/Game/Player/J3DModelX.cpp:262:16: error: cast from ‘u8*’ {aka ‘unsigned char*’} to ‘u32’ {aka ‘unsigned int’} loses precision [-fpermissive]
+  262 |         _1B4 = reinterpret_cast< u32 >(_1B8);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:271:22: error: cast from ‘u8*’ {aka ‘unsigned char*’} to ‘u32’ {aka ‘unsigned int’} loses precision [-fpermissive]
+  271 |         _1C4[_1C0] = reinterpret_cast< u32 >(_1C8[_1C0]);
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/J3DModelX.cpp: In member function ‘void J3DModelX::storeDisplayList(GDLObj*, u32)’:
+src/Game/Player/J3DModelX.cpp:326:33: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  326 |     mDisplayLists[index] = new (0x20) u8[alignedSize];
+      |                                 ^~~~
+      |                                 |
+      |                                 int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/J3DModelX.cpp:326:53: warning: placement new constructing an array of objects of type ‘u8’ {aka ‘unsigned char’} and size ‘1’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  326 |     mDisplayLists[index] = new (0x20) u8[alignedSize];
+      |                                                     ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/J3DModelX.cpp: In constructor ‘J3DModelX::J3DModelX(J3DModelData*, u32, u32)’:
+src/Game/Player/J3DModelX.cpp:351:19: error: invalid conversion from ‘int’ to ‘GXCullMode’ [-fpermissive]
+  351 |     GDSetCullMode(1);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:515:31: note:   initializing argument 1 of ‘void GDSetCullMode(GXCullMode)’
+  515 | void GDSetCullMode(GXCullMode mode);
+      |                    ~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:354:23: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  354 |     GDSetAlphaCompare(7, 0, 1, 7, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:34: note:   initializing argument 1 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                        ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:354:29: error: invalid conversion from ‘int’ to ‘GXAlphaOp’ [-fpermissive]
+  354 |     GDSetAlphaCompare(7, 0, 1, 7, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:60: note:   initializing argument 3 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                  ~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:354:32: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  354 |     GDSetAlphaCompare(7, 0, 1, 7, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:74: note:   initializing argument 4 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                                ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:355:19: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  355 |     GDSetZMode(0, 7, 0);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:87:46: note:   initializing argument 2 of ‘void GDSetZMode(u8, GXCompare, u8)’
+   87 | void GDSetZMode(u8 compare_enable, GXCompare func, u8 update_enable);
+      |                                    ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:356:31: error: invalid conversion from ‘int’ to ‘GXCullMode’ [-fpermissive]
+  356 |     GDSetGenMode2(0, 1, 1, 0, 2);
+      |                               ^
+      |                               |
+      |                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:517:75: note:   initializing argument 5 of ‘void GDSetGenMode2(u8, u8, u8, u8, GXCullMode)’
+  517 | void GDSetGenMode2(u8 nTexGens, u8 nChans, u8 nTevs, u8 nInds, GXCullMode cm);
+      |                                                                ~~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:357:20: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  357 |     GDSetTevDirect(0);
+      |                    ^
+      |                    |
+      |                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:8,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDIndirect.h:75:34: note:   initializing argument 1 of ‘void GDSetTevDirect(GXTevStageID)’
+   75 | void GDSetTevDirect(GXTevStageID tev_stage);
+      |                     ~~~~~~~~~~~~~^~~~~~~~~
+src/Game/Player/J3DModelX.cpp:358:19: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  358 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:32: note:   initializing argument 1 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                    ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:358:25: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  358 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                         ^
+      |                         |
+      |                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:60: note:   initializing argument 3 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                                                 ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:358:28: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  358 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                            ^
+      |                            |
+      |                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:31: note:   initializing argument 4 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                    ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:358:34: error: invalid conversion from ‘int’ to ‘GXDiffuseFn’ [-fpermissive]
+  358 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                  ^
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:68: note:   initializing argument 6 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                                                        ~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:358:37: error: invalid conversion from ‘int’ to ‘GXAttnFn’ [-fpermissive]
+  358 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                     ^
+      |                                     |
+      |                                     int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:53:29: note:   initializing argument 7 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   53 |                    GXAttnFn attn_fn);
+      |                    ~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:359:23: error: invalid conversion from ‘int’ to ‘GXBlendMode’ [-fpermissive]
+  359 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:36: note:   initializing argument 1 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                        ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:359:26: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  359 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                          ^
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:56: note:   initializing argument 2 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                                          ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:359:29: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  359 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:38: note:   initializing argument 3 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                        ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:359:32: error: invalid conversion from ‘int’ to ‘GXLogicOp’ [-fpermissive]
+  359 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:60: note:   initializing argument 4 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                                                  ~~~~~~~~~~^~~~~~~~
+src/Game/Player/J3DModelX.cpp:361:30: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                              ^
+      |                              |
+      |                              int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:44: note:   initializing argument 1 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                               ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:361:33: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                 ^
+      |                                 |
+      |                                 int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:65: note:   initializing argument 2 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                                                   ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:361:36: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                    ^
+      |                                    |
+      |                                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:45: note:   initializing argument 3 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                               ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:361:39: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                       ^
+      |                                       |
+      |                                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:62: note:   initializing argument 4 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:361:42: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                          ^
+      |                                          |
+      |                                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:79: note:   initializing argument 5 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                                 ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:361:45: error: invalid conversion from ‘int’ to ‘GXTevOp’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                             ^
+      |                                             |
+      |                                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:39: note:   initializing argument 6 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                               ~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:361:48: error: invalid conversion from ‘int’ to ‘GXTevBias’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                ^
+      |                                                |
+      |                                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:53: note:   initializing argument 7 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                           ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:361:51: error: invalid conversion from ‘int’ to ‘GXTevScale’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                   ^
+      |                                                   |
+      |                                                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:70: note:   initializing argument 8 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                                           ~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:361:57: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                         ^
+      |                                                         |
+      |                                                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:112:52: note:   initializing argument 10 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  112 |                               u8 clamp, GXTevRegID out_reg,
+      |                                         ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:361:60: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                            ^
+      |                                                            |
+      |                                                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:44: note:   initializing argument 11 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                               ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:361:63: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  361 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                               ^
+      |                                                               |
+      |                                                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:66: note:   initializing argument 12 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                                                     ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:364:19: error: invalid conversion from ‘int’ to ‘GXCullMode’ [-fpermissive]
+  364 |     GDSetCullMode(1);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:515:31: note:   initializing argument 1 of ‘void GDSetCullMode(GXCullMode)’
+  515 | void GDSetCullMode(GXCullMode mode);
+      |                    ~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:365:19: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  365 |     GDSetZMode(1, 3, 1);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:87:46: note:   initializing argument 2 of ‘void GDSetZMode(u8, GXCompare, u8)’
+   87 | void GDSetZMode(u8 compare_enable, GXCompare func, u8 update_enable);
+      |                                    ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:366:23: error: invalid conversion from ‘int’ to ‘GXBlendMode’ [-fpermissive]
+  366 |     GDSetBlendModeEtc(1, 4, 1, 0, 1, 0, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:36: note:   initializing argument 1 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                        ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:366:26: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  366 |     GDSetBlendModeEtc(1, 4, 1, 0, 1, 0, 0);
+      |                          ^
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:56: note:   initializing argument 2 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                                          ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:366:29: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  366 |     GDSetBlendModeEtc(1, 4, 1, 0, 1, 0, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:38: note:   initializing argument 3 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                        ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:366:32: error: invalid conversion from ‘int’ to ‘GXLogicOp’ [-fpermissive]
+  366 |     GDSetBlendModeEtc(1, 4, 1, 0, 1, 0, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:60: note:   initializing argument 4 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                                                  ~~~~~~~~~~^~~~~~~~
+src/Game/Player/J3DModelX.cpp:367:31: error: invalid conversion from ‘int’ to ‘GXCullMode’ [-fpermissive]
+  367 |     GDSetGenMode2(1, 0, 1, 0, 1);
+      |                               ^
+      |                               |
+      |                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:517:75: note:   initializing argument 5 of ‘void GDSetGenMode2(u8, u8, u8, u8, GXCullMode)’
+  517 | void GDSetGenMode2(u8 nTexGens, u8 nChans, u8 nTevs, u8 nInds, GXCullMode cm);
+      |                                                                ~~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:368:19: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  368 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:32: note:   initializing argument 1 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                    ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:368:25: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  368 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                         ^
+      |                         |
+      |                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:60: note:   initializing argument 3 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                                                 ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:368:28: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  368 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                            ^
+      |                            |
+      |                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:31: note:   initializing argument 4 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                    ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:368:34: error: invalid conversion from ‘int’ to ‘GXDiffuseFn’ [-fpermissive]
+  368 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                  ^
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:68: note:   initializing argument 6 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                                                        ~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:368:37: error: invalid conversion from ‘int’ to ‘GXAttnFn’ [-fpermissive]
+  368 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                     ^
+      |                                     |
+      |                                     int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:53:29: note:   initializing argument 7 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   53 |                    GXAttnFn attn_fn);
+      |                    ~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:369:19: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  369 |     GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:32: note:   initializing argument 1 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                    ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:369:25: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  369 |     GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
+      |                         ^
+      |                         |
+      |                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:60: note:   initializing argument 3 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                                                 ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:369:28: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  369 |     GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
+      |                            ^
+      |                            |
+      |                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:31: note:   initializing argument 4 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                    ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:369:34: error: invalid conversion from ‘int’ to ‘GXDiffuseFn’ [-fpermissive]
+  369 |     GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
+      |                                  ^
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:68: note:   initializing argument 6 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                                                        ~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:369:37: error: invalid conversion from ‘int’ to ‘GXAttnFn’ [-fpermissive]
+  369 |     GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
+      |                                     ^
+      |                                     |
+      |                                     int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:53:29: note:   initializing argument 7 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   53 |                    GXAttnFn attn_fn);
+      |                    ~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:370:19: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  370 |     GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:125:33: note:   initializing argument 1 of ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  125 | void GDSetTevOrder(GXTevStageID evenStage, GXTexCoordID coord0, GXTexMapID map0,
+      |                    ~~~~~~~~~~~~~^~~~~~~~~
+src/Game/Player/J3DModelX.cpp:370:22: error: invalid conversion from ‘int’ to ‘GXTexCoordID’ [-fpermissive]
+  370 |     GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+      |                      ^
+      |                      |
+      |                      int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:125:57: note:   initializing argument 2 of ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  125 | void GDSetTevOrder(GXTevStageID evenStage, GXTexCoordID coord0, GXTexMapID map0,
+      |                                            ~~~~~~~~~~~~~^~~~~~
+src/Game/Player/J3DModelX.cpp:370:25: error: invalid conversion from ‘int’ to ‘GXTexMapID’ [-fpermissive]
+  370 |     GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+      |                         ^
+      |                         |
+      |                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:125:76: note:   initializing argument 3 of ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  125 | void GDSetTevOrder(GXTevStageID evenStage, GXTexCoordID coord0, GXTexMapID map0,
+      |                                                                 ~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:370:28: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  370 |     GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+      |                            ^~~~
+      |                            |
+      |                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:126:32: note:   initializing argument 4 of ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  126 |                    GXChannelID color0, GXTexCoordID coord1, GXTexMapID map1,
+      |                    ~~~~~~~~~~~~^~~~~~
+src/Game/Player/J3DModelX.cpp:370:34: error: invalid conversion from ‘int’ to ‘GXTexCoordID’ [-fpermissive]
+  370 |     GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+      |                                  ^
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:126:53: note:   initializing argument 5 of ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  126 |                    GXChannelID color0, GXTexCoordID coord1, GXTexMapID map1,
+      |                                        ~~~~~~~~~~~~~^~~~~~
+src/Game/Player/J3DModelX.cpp:370:37: error: invalid conversion from ‘int’ to ‘GXTexMapID’ [-fpermissive]
+  370 |     GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+      |                                     ^
+      |                                     |
+      |                                     int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:126:72: note:   initializing argument 6 of ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  126 |                    GXChannelID color0, GXTexCoordID coord1, GXTexMapID map1,
+      |                                                             ~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:370:40: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  370 |     GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+      |                                        ^~~~
+      |                                        |
+      |                                        int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:127:32: note:   initializing argument 7 of ‘void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID)’
+  127 |                    GXChannelID color1);
+      |                    ~~~~~~~~~~~~^~~~~~
+src/Game/Player/J3DModelX.cpp:371:23: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:37: note:   initializing argument 1 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                        ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:371:26: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                          ^
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:58: note:   initializing argument 2 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                                            ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:371:29: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                             ^~~
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:75: note:   initializing argument 3 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                                                             ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:371:34: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                  ^~~
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:38: note:   initializing argument 4 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                        ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:371:39: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                       ^~~
+      |                                       |
+      |                                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:55: note:   initializing argument 5 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                                         ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:371:44: error: invalid conversion from ‘int’ to ‘GXTevOp’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                            ^
+      |                                            |
+      |                                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:66: note:   initializing argument 6 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                                                          ~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:371:47: error: invalid conversion from ‘int’ to ‘GXTevBias’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                               ^
+      |                                               |
+      |                                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:107:34: note:   initializing argument 7 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  107 |                        GXTevBias bias, GXTevScale scale, u8 clamp,
+      |                        ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:371:50: error: invalid conversion from ‘int’ to ‘GXTevScale’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                                  ^
+      |                                                  |
+      |                                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:107:51: note:   initializing argument 8 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  107 |                        GXTevBias bias, GXTevScale scale, u8 clamp,
+      |                                        ~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:371:56: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  371 |     GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                                        ^
+      |                                                        |
+      |                                                        int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:108:35: note:   initializing argument 10 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  108 |                        GXTevRegID out_reg);
+      |                        ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:372:30: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                              ^
+      |                              |
+      |                              int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:44: note:   initializing argument 1 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                               ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:372:33: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                 ^
+      |                                 |
+      |                                 int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:65: note:   initializing argument 2 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                                                   ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:372:36: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                    ^
+      |                                    |
+      |                                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:45: note:   initializing argument 3 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                               ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:372:39: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                       ^
+      |                                       |
+      |                                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:62: note:   initializing argument 4 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:372:42: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                          ^
+      |                                          |
+      |                                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:79: note:   initializing argument 5 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                                 ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:372:45: error: invalid conversion from ‘int’ to ‘GXTevOp’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                             ^
+      |                                             |
+      |                                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:39: note:   initializing argument 6 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                               ~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:372:48: error: invalid conversion from ‘int’ to ‘GXTevBias’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                ^
+      |                                                |
+      |                                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:53: note:   initializing argument 7 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                           ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:372:51: error: invalid conversion from ‘int’ to ‘GXTevScale’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                   ^
+      |                                                   |
+      |                                                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:70: note:   initializing argument 8 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                                           ~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:372:57: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                         ^
+      |                                                         |
+      |                                                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:112:52: note:   initializing argument 10 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  112 |                               u8 clamp, GXTevRegID out_reg,
+      |                                         ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:372:60: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                            ^
+      |                                                            |
+      |                                                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:44: note:   initializing argument 11 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                               ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:372:63: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  372 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                               ^
+      |                                                               |
+      |                                                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:66: note:   initializing argument 12 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                                                     ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:375:23: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  375 |     GDSetAlphaCompare(7, 0, 1, 7, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:34: note:   initializing argument 1 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                        ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:375:29: error: invalid conversion from ‘int’ to ‘GXAlphaOp’ [-fpermissive]
+  375 |     GDSetAlphaCompare(7, 0, 1, 7, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:60: note:   initializing argument 3 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                  ~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:375:32: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  375 |     GDSetAlphaCompare(7, 0, 1, 7, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:74: note:   initializing argument 4 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                                ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:376:19: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  376 |     GDSetZMode(1, 6, 0);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:87:46: note:   initializing argument 2 of ‘void GDSetZMode(u8, GXCompare, u8)’
+   87 | void GDSetZMode(u8 compare_enable, GXCompare func, u8 update_enable);
+      |                                    ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:377:31: error: invalid conversion from ‘int’ to ‘GXCullMode’ [-fpermissive]
+  377 |     GDSetGenMode2(0, 1, 1, 0, 2);
+      |                               ^
+      |                               |
+      |                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:517:75: note:   initializing argument 5 of ‘void GDSetGenMode2(u8, u8, u8, u8, GXCullMode)’
+  517 | void GDSetGenMode2(u8 nTexGens, u8 nChans, u8 nTevs, u8 nInds, GXCullMode cm);
+      |                                                                ~~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:378:20: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  378 |     GDSetTevDirect(0);
+      |                    ^
+      |                    |
+      |                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:8,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDIndirect.h:75:34: note:   initializing argument 1 of ‘void GDSetTevDirect(GXTevStageID)’
+   75 | void GDSetTevDirect(GXTevStageID tev_stage);
+      |                     ~~~~~~~~~~~~~^~~~~~~~~
+src/Game/Player/J3DModelX.cpp:379:19: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  379 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:32: note:   initializing argument 1 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                    ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:379:25: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  379 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                         ^
+      |                         |
+      |                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:60: note:   initializing argument 3 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                                                 ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:379:28: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  379 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                            ^
+      |                            |
+      |                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:31: note:   initializing argument 4 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                    ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:379:34: error: invalid conversion from ‘int’ to ‘GXDiffuseFn’ [-fpermissive]
+  379 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                  ^
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:68: note:   initializing argument 6 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                                                        ~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:379:37: error: invalid conversion from ‘int’ to ‘GXAttnFn’ [-fpermissive]
+  379 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                     ^
+      |                                     |
+      |                                     int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:53:29: note:   initializing argument 7 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   53 |                    GXAttnFn attn_fn);
+      |                    ~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:380:23: error: invalid conversion from ‘int’ to ‘GXBlendMode’ [-fpermissive]
+  380 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:36: note:   initializing argument 1 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                        ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:380:26: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  380 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                          ^
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:56: note:   initializing argument 2 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                                          ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:380:29: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  380 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:38: note:   initializing argument 3 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                        ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:380:32: error: invalid conversion from ‘int’ to ‘GXLogicOp’ [-fpermissive]
+  380 |     GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:60: note:   initializing argument 4 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                                                  ~~~~~~~~~~^~~~~~~~
+src/Game/Player/J3DModelX.cpp:382:30: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                              ^
+      |                              |
+      |                              int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:44: note:   initializing argument 1 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                               ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:382:33: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                 ^
+      |                                 |
+      |                                 int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:65: note:   initializing argument 2 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                                                   ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:382:36: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                    ^
+      |                                    |
+      |                                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:45: note:   initializing argument 3 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                               ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:382:39: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                       ^
+      |                                       |
+      |                                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:62: note:   initializing argument 4 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:382:42: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                          ^
+      |                                          |
+      |                                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:79: note:   initializing argument 5 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                                 ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:382:45: error: invalid conversion from ‘int’ to ‘GXTevOp’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                             ^
+      |                                             |
+      |                                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:39: note:   initializing argument 6 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                               ~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:382:48: error: invalid conversion from ‘int’ to ‘GXTevBias’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                ^
+      |                                                |
+      |                                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:53: note:   initializing argument 7 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                           ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:382:51: error: invalid conversion from ‘int’ to ‘GXTevScale’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                   ^
+      |                                                   |
+      |                                                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:70: note:   initializing argument 8 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                                           ~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:382:57: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                         ^
+      |                                                         |
+      |                                                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:112:52: note:   initializing argument 10 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  112 |                               u8 clamp, GXTevRegID out_reg,
+      |                                         ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:382:60: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                            ^
+      |                                                            |
+      |                                                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:44: note:   initializing argument 11 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                               ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:382:63: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  382 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+      |                                                               ^
+      |                                                               |
+      |                                                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:66: note:   initializing argument 12 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                                                     ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:385:23: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  385 |     GDSetAlphaCompare(7, 0, 0, 7, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:34: note:   initializing argument 1 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                        ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:385:29: error: invalid conversion from ‘int’ to ‘GXAlphaOp’ [-fpermissive]
+  385 |     GDSetAlphaCompare(7, 0, 0, 7, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:60: note:   initializing argument 3 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                  ~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:385:32: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  385 |     GDSetAlphaCompare(7, 0, 0, 7, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:74: note:   initializing argument 4 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                                ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:386:19: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  386 |     GDSetZMode(1, 3, 0);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:87:46: note:   initializing argument 2 of ‘void GDSetZMode(u8, GXCompare, u8)’
+   87 | void GDSetZMode(u8 compare_enable, GXCompare func, u8 update_enable);
+      |                                    ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:387:31: error: invalid conversion from ‘int’ to ‘GXCullMode’ [-fpermissive]
+  387 |     GDSetGenMode2(0, 1, 1, 0, 1);
+      |                               ^
+      |                               |
+      |                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:517:75: note:   initializing argument 5 of ‘void GDSetGenMode2(u8, u8, u8, u8, GXCullMode)’
+  517 | void GDSetGenMode2(u8 nTexGens, u8 nChans, u8 nTevs, u8 nInds, GXCullMode cm);
+      |                                                                ~~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:388:20: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  388 |     GDSetTevDirect(0);
+      |                    ^
+      |                    |
+      |                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:8,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDIndirect.h:75:34: note:   initializing argument 1 of ‘void GDSetTevDirect(GXTevStageID)’
+   75 | void GDSetTevDirect(GXTevStageID tev_stage);
+      |                     ~~~~~~~~~~~~~^~~~~~~~~
+src/Game/Player/J3DModelX.cpp:389:19: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  389 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:32: note:   initializing argument 1 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                    ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:389:25: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  389 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                         ^
+      |                         |
+      |                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:60: note:   initializing argument 3 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                                                 ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:389:28: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  389 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                            ^
+      |                            |
+      |                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:31: note:   initializing argument 4 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                    ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:389:34: error: invalid conversion from ‘int’ to ‘GXDiffuseFn’ [-fpermissive]
+  389 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                  ^
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:68: note:   initializing argument 6 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                                                        ~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:389:37: error: invalid conversion from ‘int’ to ‘GXAttnFn’ [-fpermissive]
+  389 |     GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+      |                                     ^
+      |                                     |
+      |                                     int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:53:29: note:   initializing argument 7 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   53 |                    GXAttnFn attn_fn);
+      |                    ~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:390:23: error: invalid conversion from ‘int’ to ‘GXBlendMode’ [-fpermissive]
+  390 |     GDSetBlendModeEtc(1, 4, 5, 0, 1, 0, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:36: note:   initializing argument 1 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                        ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:390:26: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  390 |     GDSetBlendModeEtc(1, 4, 5, 0, 1, 0, 0);
+      |                          ^
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:56: note:   initializing argument 2 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                                          ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:390:29: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  390 |     GDSetBlendModeEtc(1, 4, 5, 0, 1, 0, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:38: note:   initializing argument 3 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                        ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:390:32: error: invalid conversion from ‘int’ to ‘GXLogicOp’ [-fpermissive]
+  390 |     GDSetBlendModeEtc(1, 4, 5, 0, 1, 0, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:60: note:   initializing argument 4 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                                                  ~~~~~~~~~~^~~~~~~~
+src/Game/Player/J3DModelX.cpp:392:19: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  392 |     GDSetTevColor(1, yellow);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:114:31: note:   initializing argument 1 of ‘void GDSetTevColor(GXTevRegID, GXColor)’
+  114 | void GDSetTevColor(GXTevRegID reg, GXColor color);
+      |                    ~~~~~~~~~~~^~~
+src/Game/Player/J3DModelX.cpp:393:23: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:37: note:   initializing argument 1 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                        ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:393:26: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                          ^
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:58: note:   initializing argument 2 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                                            ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:393:29: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                             ^~~
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:75: note:   initializing argument 3 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                                                             ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:393:34: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                  ^~~
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:38: note:   initializing argument 4 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                        ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:393:39: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                       ^~~
+      |                                       |
+      |                                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:55: note:   initializing argument 5 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                                         ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:393:44: error: invalid conversion from ‘int’ to ‘GXTevOp’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                            ^
+      |                                            |
+      |                                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:66: note:   initializing argument 6 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                                                          ~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:393:47: error: invalid conversion from ‘int’ to ‘GXTevBias’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                               ^
+      |                                               |
+      |                                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:107:34: note:   initializing argument 7 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  107 |                        GXTevBias bias, GXTevScale scale, u8 clamp,
+      |                        ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:393:50: error: invalid conversion from ‘int’ to ‘GXTevScale’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                                  ^
+      |                                                  |
+      |                                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:107:51: note:   initializing argument 8 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  107 |                        GXTevBias bias, GXTevScale scale, u8 clamp,
+      |                                        ~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:393:56: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  393 |     GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                                        ^
+      |                                                        |
+      |                                                        int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:108:35: note:   initializing argument 10 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  108 |                        GXTevRegID out_reg);
+      |                        ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:394:30: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                              ^
+      |                              |
+      |                              int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:44: note:   initializing argument 1 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                               ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:394:33: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                 ^
+      |                                 |
+      |                                 int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:65: note:   initializing argument 2 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                                                   ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:394:36: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                    ^
+      |                                    |
+      |                                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:45: note:   initializing argument 3 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                               ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:394:39: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                       ^
+      |                                       |
+      |                                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:62: note:   initializing argument 4 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:394:42: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                          ^
+      |                                          |
+      |                                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:79: note:   initializing argument 5 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                                                                 ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:394:45: error: invalid conversion from ‘int’ to ‘GXTevOp’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                             ^
+      |                                             |
+      |                                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:39: note:   initializing argument 6 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                               ~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:394:48: error: invalid conversion from ‘int’ to ‘GXTevBias’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                                ^
+      |                                                |
+      |                                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:53: note:   initializing argument 7 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                           ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:394:51: error: invalid conversion from ‘int’ to ‘GXTevScale’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                                   ^
+      |                                                   |
+      |                                                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:111:70: note:   initializing argument 8 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  111 |                               GXTevOp op, GXTevBias bias, GXTevScale scale,
+      |                                                           ~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:394:57: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                                         ^
+      |                                                         |
+      |                                                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:112:52: note:   initializing argument 10 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  112 |                               u8 clamp, GXTevRegID out_reg,
+      |                                         ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:394:60: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                                            ^
+      |                                                            |
+      |                                                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:44: note:   initializing argument 11 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                               ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:394:63: error: invalid conversion from ‘int’ to ‘GXTevSwapSel’ [-fpermissive]
+  394 |     GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                                               ^
+      |                                                               |
+      |                                                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:113:66: note:   initializing argument 12 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  113 |                               GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+      |                                                     ~~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:397:23: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  397 |     GDSetAlphaCompare(7, 0, 0, 7, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:34: note:   initializing argument 1 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                        ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:397:29: error: invalid conversion from ‘int’ to ‘GXAlphaOp’ [-fpermissive]
+  397 |     GDSetAlphaCompare(7, 0, 0, 7, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:60: note:   initializing argument 3 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                  ~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:397:32: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  397 |     GDSetAlphaCompare(7, 0, 0, 7, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:123:74: note:   initializing argument 4 of ‘void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8)’
+  123 | void GDSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+      |                                                                ~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:398:19: error: invalid conversion from ‘int’ to ‘GXCompare’ [-fpermissive]
+  398 |     GDSetZMode(1, 7, 1);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:87:46: note:   initializing argument 2 of ‘void GDSetZMode(u8, GXCompare, u8)’
+   87 | void GDSetZMode(u8 compare_enable, GXCompare func, u8 update_enable);
+      |                                    ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:399:31: error: invalid conversion from ‘int’ to ‘GXCullMode’ [-fpermissive]
+  399 |     GDSetGenMode2(0, 1, 1, 0, 1);
+      |                               ^
+      |                               |
+      |                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:7,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDGeometry.h:517:75: note:   initializing argument 5 of ‘void GDSetGenMode2(u8, u8, u8, u8, GXCullMode)’
+  517 | void GDSetGenMode2(u8 nTexGens, u8 nChans, u8 nTevs, u8 nInds, GXCullMode cm);
+      |                                                                ~~~~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:400:23: error: invalid conversion from ‘int’ to ‘GXBlendMode’ [-fpermissive]
+  400 |     GDSetBlendModeEtc(0, 4, 1, 0, 0, 0, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:36: note:   initializing argument 1 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                        ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:400:26: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  400 |     GDSetBlendModeEtc(0, 4, 1, 0, 0, 0, 0);
+      |                          ^
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:82:56: note:   initializing argument 2 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   82 | void GDSetBlendModeEtc(GXBlendMode type, GXBlendFactor src_factor,
+      |                                          ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:400:29: error: invalid conversion from ‘int’ to ‘GXBlendFactor’ [-fpermissive]
+  400 |     GDSetBlendModeEtc(0, 4, 1, 0, 0, 0, 0);
+      |                             ^
+      |                             |
+      |                             int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:38: note:   initializing argument 3 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                        ~~~~~~~~~~~~~~^~~~~~~~~~
+src/Game/Player/J3DModelX.cpp:400:32: error: invalid conversion from ‘int’ to ‘GXLogicOp’ [-fpermissive]
+  400 |     GDSetBlendModeEtc(0, 4, 1, 0, 0, 0, 0);
+      |                                ^
+      |                                |
+      |                                int
+In file included from pc-port/aurora/include/dolphin/gd.h:10,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDPixel.h:83:60: note:   initializing argument 4 of ‘void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8)’
+   83 |                        GXBlendFactor dst_factor, GXLogicOp logic_op,
+      |                                                  ~~~~~~~~~~^~~~~~~~
+src/Game/Player/J3DModelX.cpp:401:19: error: invalid conversion from ‘int’ to ‘GXChannelID’ [-fpermissive]
+  401 |     GDSetChanCtrl(4, 0, 1, 1, 0, 2, 2);
+      |                   ^
+      |                   |
+      |                   int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:32: note:   initializing argument 1 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                    ~~~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:401:25: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  401 |     GDSetChanCtrl(4, 0, 1, 1, 0, 2, 2);
+      |                         ^
+      |                         |
+      |                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:51:60: note:   initializing argument 3 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   51 | void GDSetChanCtrl(GXChannelID chan, u8 enable, GXColorSrc amb_src,
+      |                                                 ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:401:28: error: invalid conversion from ‘int’ to ‘GXColorSrc’ [-fpermissive]
+  401 |     GDSetChanCtrl(4, 0, 1, 1, 0, 2, 2);
+      |                            ^
+      |                            |
+      |                            int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:31: note:   initializing argument 4 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                    ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:401:34: error: invalid conversion from ‘int’ to ‘GXDiffuseFn’ [-fpermissive]
+  401 |     GDSetChanCtrl(4, 0, 1, 1, 0, 2, 2);
+      |                                  ^
+      |                                  |
+      |                                  int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:52:68: note:   initializing argument 6 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   52 |                    GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn,
+      |                                                        ~~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:401:37: error: invalid conversion from ‘int’ to ‘GXAttnFn’ [-fpermissive]
+  401 |     GDSetChanCtrl(4, 0, 1, 1, 0, 2, 2);
+      |                                     ^
+      |                                     |
+      |                                     int
+In file included from pc-port/aurora/include/dolphin/gd.h:9,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDLight.h:53:29: note:   initializing argument 7 of ‘void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn)’
+   53 |                    GXAttnFn attn_fn);
+      |                    ~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:402:23: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                       ^
+      |                       |
+      |                       int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:37: note:   initializing argument 1 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                        ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:402:26: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                          ^~~
+      |                          |
+      |                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:58: note:   initializing argument 2 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                                            ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:402:31: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                               ^~~
+      |                               |
+      |                               int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:105:75: note:   initializing argument 3 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  105 | void GDSetTevColorCalc(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b,
+      |                                                             ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:402:36: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                    ^~~
+      |                                    |
+      |                                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:38: note:   initializing argument 4 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                        ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:402:41: error: invalid conversion from ‘int’ to ‘GXTevColorArg’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                         ^~~
+      |                                         |
+      |                                         int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:55: note:   initializing argument 5 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                                         ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:402:46: error: invalid conversion from ‘int’ to ‘GXTevOp’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                              ^
+      |                                              |
+      |                                              int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:106:66: note:   initializing argument 6 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  106 |                        GXTevColorArg c, GXTevColorArg d, GXTevOp op,
+      |                                                          ~~~~~~~~^~
+src/Game/Player/J3DModelX.cpp:402:49: error: invalid conversion from ‘int’ to ‘GXTevBias’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                                 ^
+      |                                                 |
+      |                                                 int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:107:34: note:   initializing argument 7 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  107 |                        GXTevBias bias, GXTevScale scale, u8 clamp,
+      |                        ~~~~~~~~~~^~~~
+src/Game/Player/J3DModelX.cpp:402:52: error: invalid conversion from ‘int’ to ‘GXTevScale’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                                    ^
+      |                                                    |
+      |                                                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:107:51: note:   initializing argument 8 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  107 |                        GXTevBias bias, GXTevScale scale, u8 clamp,
+      |                                        ~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:402:58: error: invalid conversion from ‘int’ to ‘GXTevRegID’ [-fpermissive]
+  402 |     GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
+      |                                                          ^
+      |                                                          |
+      |                                                          int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:108:35: note:   initializing argument 10 of ‘void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID)’
+  108 |                        GXTevRegID out_reg);
+      |                        ~~~~~~~~~~~^~~~~~~
+src/Game/Player/J3DModelX.cpp:403:30: error: invalid conversion from ‘int’ to ‘GXTevStageID’ [-fpermissive]
+  403 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                              ^
+      |                              |
+      |                              int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:44: note:   initializing argument 1 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                               ~~~~~~~~~~~~~^~~~~
+src/Game/Player/J3DModelX.cpp:403:33: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  403 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                 ^
+      |                                 |
+      |                                 int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:109:65: note:   initializing argument 2 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  109 | void GDSetTevAlphaCalcAndSwap(GXTevStageID stage, GXTevAlphaArg a,
+      |                                                   ~~~~~~~~~~~~~~^
+src/Game/Player/J3DModelX.cpp:403:36: error: invalid conversion from ‘int’ to ‘GXTevAlphaArg’ [-fpermissive]
+  403 |     GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+      |                                    ^
+      |                                    |
+      |                                    int
+In file included from pc-port/aurora/include/dolphin/gd.h:11,
+                 from pc-port/aurora/include/revolution.h:6,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gd/GDTev.h:110:45: note:   initializing argument 3 of ‘void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel)’
+  110 |                               GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d,
+      |                               ~~~~~~~~~~~~~~^
+compilation terminated due to -fmax-errors=200.

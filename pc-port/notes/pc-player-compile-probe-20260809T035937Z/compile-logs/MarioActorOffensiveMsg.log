@@ -1,0 +1,13 @@
+src/Game/Player/MarioActorOffensiveMsg.cpp: In member function ‘bool MarioActor::isUnderTarget(HitSensor*)’:
+src/Game/Player/MarioActorOffensiveMsg.cpp:125:36: error: call of overloaded ‘calcGravityVectorOrZero(MarioActor*, TVec3f&, TVec3f*, GravityInfo*&, int)’ is ambiguous
+  125 |         MR::calcGravityVectorOrZero(this, pSensor->mPosition, &down, mGravityInfo, 0);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from src/Game/Player/MarioActorOffensiveMsg.cpp:7:
+pc-port/src/Game/Util/GravityUtil.hpp:20:10: note: candidate: ‘bool MR::calcGravityVectorOrZero(const NameObj*, const TVec3f&, TVec3f*, GravityInfo*, u32)’
+   20 |     bool calcGravityVectorOrZero(const NameObj* pObj, const TVec3f& rPosition, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+In file included from ./pc-port/src/compat/MetrowerksStdCompat.hpp:15,
+                 from <command-line>:
+pc-port/src/compat/GameGravityCompat.hpp:42:17: note: candidate: ‘bool MR::calcGravityVectorOrZero(const NameObj*, const TVec3f&, TVec3f*, GravityInfo*, std::nullptr_t)’
+   42 |     inline bool calcGravityVectorOrZero(const NameObj* object, const TVec3f& position, TVec3f* destination,
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~

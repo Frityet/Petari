@@ -1,0 +1,89 @@
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActorParts.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:66:32: error: ‘_GXTlutSize’ has not been declared
+   66 | void J3DGDLoadTlut(void*, u32, _GXTlutSize);
+      |                                ^~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DPacket.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActorParts.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelDrawMtx(f32 (*)[3][4])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  121 |         GXSetArray(GX_POS_MTX_ARRAY, mModelDrawMtx, sizeof(*mModelDrawMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DPacket.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActorParts.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelNrmMtx(f32 (*)[3][3])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:126:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  126 |         GXSetArray(GX_NRM_MTX_ARRAY, mModelNrmMtx, sizeof(*mModelNrmMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:5,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActorParts.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp: At global scope:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:120:29: error: ‘_GXAttr’ has not been declared
+  120 |     void addTexMtxIndexInDL(_GXAttr, u32);
+      |                             ^~~~~~~
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:121:30: error: ‘_GXAttr’ has not been declared
+  121 |     void addTexMtxIndexInVcd(_GXAttr);
+      |                              ^~~~~~~
+src/Game/Player/MarioActorParts.cpp: In member function ‘const HitSensor* MarioActor::getCarrySensor() const’:
+src/Game/Player/MarioActorParts.cpp:129:14: error: invalid operands of types ‘const u32’ {aka ‘const unsigned int’} and ‘std::nullptr_t’ to binary ‘operator==’
+  129 |     if (_468 == nullptr) {
+      |         ~~~~~^~~~~~~~~~
+src/Game/Player/MarioActorParts.cpp: In member function ‘void MarioActor::createIceFloor(const TVec3f&)’:
+src/Game/Player/MarioActorParts.cpp:208:9: error: ‘using TPos3f = struct JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’ {aka ‘struct JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’} has no member named ‘getEuler’; did you mean ‘getEulerXYZ’?
+  208 |     mtx.getEuler(vec);
+      |         ^~~~~~~~
+      |         getEulerXYZ
+src/Game/Player/MarioActorParts.cpp: In member function ‘void MarioActor::createIceWall(const TVec3f&, const TVec3f&)’:
+src/Game/Player/MarioActorParts.cpp:233:9: error: ‘using TPos3f = struct JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’ {aka ‘struct JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >’} has no member named ‘getEuler’; did you mean ‘getEulerXYZ’?
+  233 |     mtx.getEuler(vec);
+      |         ^~~~~~~~
+      |         getEulerXYZ
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActorParts.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp: At global scope:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:31:13: warning: inline function ‘void J3DGDWriteBPCmd(u32)’ used but never defined
+   31 | inline void J3DGDWriteBPCmd(u32 regval);
+      |             ^~~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp:4,
+                 from include/Game/Animation/XanimeCore.hpp:3,
+                 from src/Game/Player/MarioActorParts.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:106:13: warning: inline function ‘void J3DGDSetZMode(u8, GXCompare, u8)’ used but never defined
+  106 | inline void J3DGDSetZMode(u8 compareEnable, GXCompare func, u8 writeEnable);
+      |             ^~~~~~~~~~~~~

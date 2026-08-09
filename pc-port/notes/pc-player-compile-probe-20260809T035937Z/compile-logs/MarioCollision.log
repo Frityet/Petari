@@ -1,0 +1,5 @@
+src/Game/Player/MarioCollision.cpp: In member function ‘bool Mario::updateBinderInfo()’:
+src/Game/Player/MarioCollision.cpp:1348:31: error: ‘class MarioActor’ has no member named ‘mBinder’; did you mean ‘initBinder’?
+ 1348 |     Binder* pBinder = mActor->mBinder;
+      |                               ^~~~~~~
+      |                               initBinder

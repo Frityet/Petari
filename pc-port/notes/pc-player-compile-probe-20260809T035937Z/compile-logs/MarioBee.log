@@ -1,0 +1,21 @@
+src/Game/Player/MarioBee.cpp: In member function ‘void MarioActor::entryWallWalkMode(const TVec3f&, const TVec3f&)’:
+src/Game/Player/MarioBee.cpp:35:34: error: call of overloaded ‘setFrontVecKeepUp(TVec3f&, long unsigned int)’ is ambiguous
+   35 |         mMario->setFrontVecKeepUp(oldHead, 1UL);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+In file included from src/Game/Player/MarioBee.cpp:1:
+include/Game/Player/Mario.hpp:88:10: note: candidate: ‘void Mario::setFrontVecKeepUp(const TVec3f&, f32)’
+   88 |     void setFrontVecKeepUp(const TVec3f&, f32);
+      |          ^~~~~~~~~~~~~~~~~
+include/Game/Player/Mario.hpp:89:10: note: candidate: ‘void Mario::setFrontVecKeepUp(const TVec3f&, u32)’
+   89 |     void setFrontVecKeepUp(const TVec3f&, u32);
+      |          ^~~~~~~~~~~~~~~~~
+src/Game/Player/MarioBee.cpp: In member function ‘bool Mario::beeMarioOnAir()’:
+src/Game/Player/MarioBee.cpp:174:42: warning: ignoring return value of ‘constexpr f32 JGeometry::TVec3<float>::dot(const JGeometry::TVec3<float>&) const’, declared with attribute ‘nodiscard’ [-Wunused-result]
+  174 |                         jumpDirection.dot(getWorldPadDir());
+      |                         ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+In file included from pc-port/src/compat/GameGravityCompat.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:15,
+                 from <command-line>:
+pc-port/src/JSystem/JGeometry/TVec.hpp:250:37: note: declared here
+  250 |         [[nodiscard]] constexpr f32 dot(const TVec3 &value) const {
+      |                                     ^~~

@@ -1,0 +1,831 @@
+symbol	category	provider_object	provider_candidate_count	pc_status
+C_MTXOrtho	RVL/platform	RVL_SDK/mtx/mtx44.o	1	Aurora subsystem present; retail API compatibility incomplete
+DCStoreRange	RVL/platform	RVL_SDK/os/OSCache.o	1	Aurora subsystem present; retail API compatibility incomplete
+DCStoreRangeNoSync	RVL/platform	RVL_SDK/os/OSCache.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDInitGDLObj	RVL/platform	RVL_SDK/gd/GDBase.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDPadCurr32	RVL/platform	RVL_SDK/gd/GDBase.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetAlphaCompare	RVL/platform	RVL_SDK/gd/GDTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetBlendMode	RVL/platform	RVL_SDK/gd/GDPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetBlendModeEtc	RVL/platform	RVL_SDK/gd/GDPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetChanAmbColor	RVL/platform	RVL_SDK/gd/GDLight.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetChanCtrl	RVL/platform	RVL_SDK/gd/GDLight.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetChanMatColor	RVL/platform	RVL_SDK/gd/GDLight.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetCullMode	RVL/platform	RVL_SDK/gd/GDGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetDstAlpha	RVL/platform	RVL_SDK/gd/GDPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetFog	RVL/platform	RVL_SDK/gd/GDPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetGenMode	RVL/platform	RVL_SDK/gd/GDGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetGenMode2	RVL/platform	RVL_SDK/gd/GDGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTevAlphaCalcAndSwap	RVL/platform	RVL_SDK/gd/GDTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTevColor	RVL/platform	RVL_SDK/gd/GDTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTevColorCalc	RVL/platform	RVL_SDK/gd/GDTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTevDirect	RVL/platform	RVL_SDK/gd/GDIndirect.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTevOrder	RVL/platform	RVL_SDK/gd/GDTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTexCoordGen	RVL/platform	RVL_SDK/gd/GDGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTexImgAttr	RVL/platform	RVL_SDK/gd/GDTexture.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTexImgPtr	RVL/platform	RVL_SDK/gd/GDTexture.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetTexLookupMode	RVL/platform	RVL_SDK/gd/GDTexture.o	1	Aurora subsystem present; retail API compatibility incomplete
+GDSetZMode	RVL/platform	RVL_SDK/gd/GDPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXBegin	RVL/platform	RVL_SDK/gx/GXGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXCallDisplayList	RVL/platform	RVL_SDK/gx/GXDisplayList.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXClearVtxDesc	RVL/platform	RVL_SDK/gx/GXAttr.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXCopyTex	RVL/platform	RVL_SDK/gx/GXFrameBuf.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXDrawDone	RVL/platform	RVL_SDK/gx/GXMisc.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXInitTexObj	RVL/platform	RVL_SDK/gx/GXTexture.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXInvalidateTexAll	RVL/platform	RVL_SDK/gx/GXTexture.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXLoadPosMtxImm	RVL/platform	RVL_SDK/gx/GXTransform.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXLoadTexObj	RVL/platform	RVL_SDK/gx/GXTexture.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXPixModeSync	RVL/platform	RVL_SDK/gx/GXMisc.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetAlphaCompare	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetAlphaUpdate	RVL/platform	RVL_SDK/gx/GXPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetBlendMode	RVL/platform	RVL_SDK/gx/GXPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetColorUpdate	RVL/platform	RVL_SDK/gx/GXPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetCopyClear	RVL/platform	RVL_SDK/gx/GXFrameBuf.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetCopyFilter	RVL/platform	RVL_SDK/gx/GXFrameBuf.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetCullMode	RVL/platform	RVL_SDK/gx/GXGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetDstAlpha	RVL/platform	RVL_SDK/gx/GXPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetLineWidth	RVL/platform	RVL_SDK/gx/GXGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetMisc	RVL/platform	RVL_SDK/gx/GXMisc.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetPointSize	RVL/platform	RVL_SDK/gx/GXGeometry.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetProjection	RVL/platform	RVL_SDK/gx/GXTransform.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetScissor	RVL/platform	RVL_SDK/gx/GXTransform.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevAlphaIn	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevAlphaOp	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevColor	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevColorIn	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevColorOp	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevColorS10	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevOp	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTevOrder	RVL/platform	RVL_SDK/gx/GXTev.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTexCopyDst	RVL/platform	RVL_SDK/gx/GXFrameBuf.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetTexCopySrc	RVL/platform	RVL_SDK/gx/GXFrameBuf.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetViewport	RVL/platform	RVL_SDK/gx/GXTransform.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetVtxAttrFmt	RVL/platform	RVL_SDK/gx/GXAttr.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetVtxDesc	RVL/platform	RVL_SDK/gx/GXAttr.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetZCompLoc	RVL/platform	RVL_SDK/gx/GXPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetZMode	RVL/platform	RVL_SDK/gx/GXPixel.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXSetZScaleOffset	RVL/platform	RVL_SDK/gx/GXTransform.o	1	Aurora subsystem present; retail API compatibility incomplete
+GXTexModeSync	RVL/platform	RVL_SDK/gx/GXMisc.o	1	Aurora subsystem present; retail API compatibility incomplete
+J3DCalcViewBaseMtx__FPA4_fRC3VecRA3_A4_CfPA4_f	J3D/model/animation	JSystem/J3DGraphAnimator/J3DMtxBuffer.o	1	PC JSystem/Aurora provider requires API audit
+J3DFifoLoadNrmMtxImm__FPA4_fUl	J3D/model/animation	JSystem/J3DGraphBase/J3DGD.o	1	PC JSystem/Aurora provider requires API audit
+J3DFifoLoadPosMtxImm__FPA4_fUl	J3D/model/animation	JSystem/J3DGraphBase/J3DGD.o	1	PC JSystem/Aurora provider requires API audit
+J3DPSCalcInverseTranspose__FPA4_fPA3_f	J3D/model/animation	JSystem/J3DGraphBase/J3DTransform.o	1	PC JSystem/Aurora provider requires API audit
+J3DPSMtxArrayConcat__FPA4_fPA4_fPA4_fUl	J3D/model/animation	JSystem/J3DGraphBase/J3DTransform.o	1	PC JSystem/Aurora provider requires API audit
+JMAAcosRadian__Ff	other Game/runtime provider	Game/Camera/CameraCalc.o	1	PC Game source absent
+JPASetRMtxTVecfromMtx__FPA4_CfPA4_fPQ29JGeometry8TVec3<f>	effects/audio	JSystem/JParticle/JPAMath.o	1	PC JSystem/Aurora provider requires API audit
+OSGetTime	RVL/platform	RVL_SDK/os/OSTime.o	1	Aurora subsystem present; retail API compatibility incomplete
+OSLockMutex	RVL/platform	RVL_SDK/os/OSMutex.o	1	Aurora subsystem present; retail API compatibility incomplete
+OSUnlockMutex	RVL/platform	RVL_SDK/os/OSMutex.o	1	Aurora subsystem present; retail API compatibility incomplete
+PI__Q29JGeometry8TUtil<f>Fv	J3D/model/animation	Game/Camera/CameraCover.o	1	PC Game source absent
+PSMTXConcat	RVL/platform	RVL_SDK/mtx/mtx.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXCopy	RVL/platform	RVL_SDK/mtx/mtx.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXIdentity	RVL/platform	RVL_SDK/mtx/mtx.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXInverse	RVL/platform	RVL_SDK/mtx/mtx.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXMultVec	RVL/platform	RVL_SDK/mtx/mtxvec.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXMultVecSR	RVL/platform	RVL_SDK/mtx/mtxvec.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXRotAxisRad	RVL/platform	RVL_SDK/mtx/mtx.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXRotRad	other Game/runtime provider	Game/System/Overwrite.o	1	PC Game source absent
+PSMTXScale	RVL/platform	RVL_SDK/mtx/mtx.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSMTXTrans	RVL/platform	RVL_SDK/mtx/mtx.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSVECCrossProduct	RVL/platform	RVL_SDK/mtx/vec.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSVECMag	RVL/platform	RVL_SDK/mtx/vec.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSVECNormalize	RVL/platform	RVL_SDK/mtx/vec.o	1	Aurora subsystem present; retail API compatibility incomplete
+PSVECSubtract__14JMathInlineVECFPC3VecPC3VecP3Vec	J3D/model/animation	Game/AreaObj/AreaForm.o	1	PC Game source byte-identical, included
+__GDCurrentDL	RVL/platform	RVL_SDK/gd/GDBase.o	1	Aurora subsystem present; retail API compatibility incomplete
+__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/AreaObj/CameraRepulsiveArea.o	1	PC Game source absent
+__amu__Q29JGeometry8TVec3<f>Ff	J3D/model/animation	Game/AreaObj/MercatorTransformCube.o	1	PC Game source absent
+__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+__as__8_GXColorFRC8_GXColor	effects/audio	Game/Effect/MultiEmitterCallBack.o	1	PC Game source absent
+__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+__construct_new_array	compiler/MSL runtime	Runtime/NMWException.o	1	native compiler/runtime mapping
+__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+__ct__10JUTTextureFii9_GXTexFmt	other Game/runtime provider	JSystem/JUtility/JUTTexture.o	1	PC JSystem/Aurora provider requires API audit
+__ct__10PartsModelFP9LiveActorPCcPCcPA4_fib	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+__ct__11GravityInfoFv	other Game/runtime provider	Game/Gravity/GravityInfo.o	1	PC Game source byte-identical, included
+__ct__12XanimePlayerFP8J3DModelP19XanimeResourceTable	resources	Game/Animation/XanimePlayer.o	1	PC Game source absent
+__ct__12XanimePlayerFP8J3DModelP19XanimeResourceTableP12XanimePlayer	resources	Game/Animation/XanimePlayer.o	1	PC Game source absent
+__ct__13FixedPositionFPC9LiveActorPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/FixedPosition.o	1	PC Game source byte-identical, excluded
+__ct__13HashSortTableFUl	other Game/runtime provider	Game/Util/HashUtil.o	1	PC Game source absent
+__ct__14CollectCounterFPCc	other Game/runtime provider	Game/MapObj/CollectCounter.o	1	PC Game source absent
+__ct__19XanimeResourceTableFP14ResourceHolderP15XanimeGroupInfoP13XanimeAuxInfoP13XanimeOfsInfoP14XanimeBckTableP15XanimeBckTable2P15XanimeBckTable3P15XanimeBckTable4P15XanimeSwapTable	resources	Game/Animation/XanimeResource.o	1	PC Game source absent
+__ct__7HitInfoFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+__ct__7IceStepFPCc	other Game/runtime provider	Game/MapObj/IceStep.o	1	PC Game source absent
+__ct__7NameObjFPCc	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+__ct__8ModelObjFPCcPCcPA4_fiiib	J3D/model/animation	Game/LiveActor/ModelObj.o	1	PC Game source divergent, included
+__ct__8TriangleFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+__ct__9FootPrintFPCcll	other Game/runtime provider	Game/Util/FootPrint.o	1	PC Game source absent
+__ct__9LiveActorFPCc	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+__ct__9WaterInfoFv	other Game/runtime provider	Game/Map/WaterInfo.o	1	PC Game source absent
+__ct__Q213NrvMarioActor17MarioActorNrvWaitFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor19MarioActorNrvNoRushFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor21MarioActorNrvGameOverFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor21MarioActorNrvTimeWaitFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor25MarioActorNrvGameOverFireFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor25MarioActorNrvGameOverSinkFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor26MarioActorNrvGameOverAbyssFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor27MarioActorNrvGameOverAbyss2Fv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor28MarioActorNrvGameOverNonStopFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q213NrvMarioActor30MarioActorNrvGameOverBlackHoleFv	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+__ct__Q22MR19CurrentHeapRestorerFP7JKRHeap	resources	Game/Util/MemoryUtil.o	1	PC Game source absent
+__ct__Q22MR30ProhibitSchedulerAndInterruptsFb	other Game/runtime provider	Game/Util/SchedulerUtil.o	1	PC Game source absent
+__ct__Q29JGeometry8TVec3<f>FRC3Vec	J3D/model/animation	Game/Boss/Dodoryu.o	1	PC Game source absent
+__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+__ct__Q29JGeometry8TVec3<f>Fv	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+__cvt_fp2unsigned	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+__dl__FPv	resources	JSystem/JKernel/JKRHeap.o	1	PC JSystem/Aurora provider requires API audit
+__dt__10PartsModelFv	J3D/model/animation	Game/Boss/BossBegomanHead.o	1	PC Game source absent
+__dt__15J3DVertexBufferFv	J3D/model/animation	JSystem/J3DGraphBase/J3DVertex.o	1	PC JSystem/Aurora provider requires API audit
+__dt__24MultiEmitterCallBackBaseFv	effects/audio	Game/Effect/MultiEmitterCallBack.o	1	PC Game source absent
+__dt__7NameObjFv	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+__dt__Q22MR19CurrentHeapRestorerFv	other Game/runtime provider	Game/Util/MemoryUtil.o	1	PC Game source absent
+__dt__Q22MR30ProhibitSchedulerAndInterruptsFv	other Game/runtime provider	Game/Util/SchedulerUtil.o	1	PC Game source absent
+__dv__Q29JGeometry8TVec3<f>CFf	J3D/model/animation	Game/Map/KCollision.o	1	PC Game source absent
+__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>	J3D/model/animation	Game/Map/Butterfly.o	1	PC Game source absent
+__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+__mi__Q29JGeometry8TVec3<f>CFv	Binder/KCL	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+__ml__Q29JGeometry8TVec3<f>CFf	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+__nw__FUl	resources	JSystem/JKernel/JKRHeap.o	1	PC JSystem/Aurora provider requires API audit
+__nw__FUlP7JKRHeapi	resources	JSystem/JKernel/JKRHeap.o	1	PC JSystem/Aurora provider requires API audit
+__nwa__FUl	resources	JSystem/JKernel/JKRHeap.o	1	PC JSystem/Aurora provider requires API audit
+__nwa__FUli	resources	JSystem/JKernel/JKRHeap.o	1	PC JSystem/Aurora provider requires API audit
+__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>	J3D/model/animation	Game/Camera/CameraDPD.o	1	PC Game source absent
+__pl__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/AreaObj/AreaFormDrawer.o	1	PC Game source absent
+__ptmf_cmpr	compiler/MSL runtime	Runtime/ptmf.o	1	native compiler/runtime mapping
+__ptmf_null	compiler/MSL runtime	Runtime/ptmf.o	1	native compiler/runtime mapping
+__ptmf_scall	compiler/MSL runtime	Runtime/ptmf.o	1	native compiler/runtime mapping
+__ptmf_test	compiler/MSL runtime	Runtime/ptmf.o	1	native compiler/runtime mapping
+__vt__8J3DModel	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+_restgpr_14	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_19	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_22	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_23	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_24	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_25	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_26	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_27	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_28	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_restgpr_29	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_14	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_19	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_22	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_23	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_24	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_25	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_26	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_27	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_28	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+_savegpr_29	compiler/MSL runtime	Runtime/runtime.o	1	native compiler/runtime mapping
+acosEx__2MRFf	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+addEffect__2MRFP9LiveActorPCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+addHitSensorCallback__2MRFP9LiveActorPCcUlUsf	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+addHitSensorEnemy__2MRFP9LiveActorPCcUsfRCQ29JGeometry8TVec3<f>	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+addHitSensor__2MRFP9LiveActorPCcUlUsfRCQ29JGeometry8TVec3<f>	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+addPrint__9FootPrintFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b	J3D/model/animation	Game/Util/FootPrint.o	1	PC Game source absent
+addShapePacket__12J3DMatPacketFP14J3DShapePacket	J3D/model/animation	JSystem/J3DGraphBase/J3DPacket.o	1	PC JSystem/Aurora provider requires API audit
+addStarPiece__2MRFi	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+addToSoundObjHolder__9LiveActorFv	effects/audio	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+addTransMtx__2MRFPA4_fRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+add__13HashSortTableFPCcUlb	other Game/runtime provider	Game/Util/HashUtil.o	1	PC Game source absent
+add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/AreaObj/AreaForm.o	1	PC Game source byte-identical, included
+appear__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+asin__Q29JGeometry8TUtil<f>Ff	J3D/model/animation	Game/AreaObj/AreaForm.o	1	PC Game source byte-identical, included
+atan2___Q25JMath18TAtanTable<1024,f>CFff	J3D/model/animation	JSystem/JMath/JMATrigonometric.o	1	PC JSystem/Aurora provider requires API audit
+attackSensor__9LiveActorFP9HitSensorP9HitSensor	HitSensor	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+blendMtxRotateSlerp__2MRFPA4_fPA4_ffPA4_f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+blendMtx__2MRFPA4_fPA4_ffPA4_f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+calcActorAxisY__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor	J3D/model/animation	Game/Util/ActorMovementUtil.o	1	PC Game source byte-identical, excluded
+calcAndGetEdgeNormal__8TriangleFi	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+calcAndGetNormal__8TriangleFi	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+calcAndGetPos__8TriangleFi	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+calcAndSetBaseMtx__10PartsModelFv	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+calcAndSetBaseMtx__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+calcAnimDirect__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+calcAnimModelManager__2MRFP9LiveActor	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+calcAnim__10PartsModelFv	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+calcAnim__7NameObjFv	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+calcAnim__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+calcAnm__12XanimePlayerFUs	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+calcAreaMoveVelocity__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcBBoardMtx__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+calcBumpMtx__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+calcCubeAxisZ__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcCubePos__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcCubeRotate__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcCylinderCenterPos__2MRFPQ29JGeometry8TVec3<f>PC7AreaObj	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcCylinderPos__2MRFPQ29JGeometry8TVec3<f>PC7AreaObj	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcCylinderUpVec__2MRFPQ29JGeometry8TVec3<f>PC7AreaObj	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcDiffTexMtx__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+calcDistance__2MRFPC9HitSensorPC9HitSensorPQ29JGeometry8TVec3<f>	HitSensor	Game/Util/ActorMovementUtil.o	1	PC Game source byte-identical, excluded
+calcDrawMtx__12J3DMtxBufferFUlRC3VecRA3_A4_Cf	J3D/model/animation	JSystem/J3DGraphAnimator/J3DMtxBuffer.o	1	PC JSystem/Aurora provider requires API audit
+calcFogStartEnd__2MRFQ29JGeometry8TVec3<f>fPfPf	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+calcFrontVec__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor	J3D/model/animation	Game/Util/ActorMovementUtil.o	1	PC Game source byte-identical, excluded
+calcGravityVectorOrZero__2MRFPC7NameObjRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>P11GravityInfoUl	J3D/model/animation	Game/Util/GravityUtil.o	1	PC Game source byte-identical, excluded
+calcGravityVector__2MRFPC9LiveActorPQ29JGeometry8TVec3<f>P11GravityInfoUl	J3D/model/animation	Game/Util/GravityUtil.o	1	PC Game source byte-identical, excluded
+calcJ3DModel__2MRFP9LiveActor	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+calcMaterial__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+calcMtxRotAxis__2MRFPQ29JGeometry8TVec3<f>PA4_fPA4_f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+calcNearestRailDirection__2MRFPQ29JGeometry8TVec3<f>PC9LiveActorRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/RailUtil.o	1	PC Game source absent
+calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+calcSpherePos__2MRFPQ29JGeometry8TVec3<f>PC7AreaObj	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcVelocityMovingPoint__2MRFPC8TriangleRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+calcViewAndEntry__10PartsModelFv	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+calcViewAndEntry__7NameObjFv	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+calcViewAndEntry__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+calcWhirlPoolAccelInfo__2MRFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+calcWindInfo__14BigFanFunctionFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Pf	J3D/model/animation	Game/MapObj/BigFanHolder.o	1	PC Game source absent
+calc__13FixedPositionFv	other Game/runtime provider	Game/Util/FixedPosition.o	1	PC Game source byte-identical, excluded
+calc__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+callDL__17J3DDisplayListObjCFv	J3D/model/animation	JSystem/J3DGraphBase/J3DPacket.o	1	PC JSystem/Aurora provider requires API audit
+callDL__19ShapePacketUserDataCFv	other Game/runtime provider	Game/System/ShapePacketUserData.o	1	PC Game source absent
+cameraInit3D__6TDDrawFv	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+captureDolTexture__10JUTTextureFPviiiib9_GXTexFmt	other Game/runtime provider	Game/System/Overwrite.o	1	PC Game source absent
+changeAnimation__12XanimePlayerFPCc	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+changeInterpoleFrame__12XanimePlayerFl	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+changeLifeMeterModeBee__21GameSceneLayoutHolderFv	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+changeLifeMeterModeGround__21GameSceneLayoutHolderFv	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+changeLifeMeterModeWater__21GameSceneLayoutHolderFv	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+changeSpeed__12XanimePlayerFf	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+changeTrackAnimation__12XanimePlayerFUcPCc	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+changeTrackWeight__12XanimePlayerFUlf	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+checkStrikeBallToMapWithThickness__9CollisionFRCQ29JGeometry8TVec3<f>ffPC24CollisionPartsFilterBasePC18TriangleFilterBase	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+checkStrikeBallToMap__9CollisionFRCQ29JGeometry8TVec3<f>fPC24CollisionPartsFilterBasePC18TriangleFilterBase	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+checkStrikePointToMap__2MRFRCQ29JGeometry8TVec3<f>P7HitInfo	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+clamp01__2MRFPf	other Game/runtime provider	Game/Enemy/Petari.o	1	PC Game source absent
+clamp__2MRFfff	other Game/runtime provider	Game/Boss/TripodBossLeg.o	1	PC Game source absent
+clamp__2MRFlll	other Game/runtime provider	Game/Enemy/KirairaChain.o	1	PC Game source absent
+clearAlphaBuffer__2MRFUcRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>	J3D/model/animation	Game/Util/DrawUtil.o	1	PC Game source divergent, included
+clearAnm__12XanimePlayerFUs	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+clearBgmQueue__2MRFv	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+clearMtxCalc__12XanimePlayerFUs	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+clear__6BinderFv	Binder/KCL	Game/LiveActor/Binder.o	1	PC Game source absent
+clear__9WaterInfoFv	other Game/runtime provider	Game/Map/WaterInfo.o	1	PC Game source absent
+close__6TDDrawFv	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+connectToSceneEnemyDecoration__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+connectToScene__2MRFP7NameObjiiii	LiveActor/NameObj/Nerve ABI	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+connectToScene__2MRFP9LiveActoriiii	LiveActor/NameObj/Nerve ABI	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+control__9LiveActorFv	Binder/KCL	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+convertFrameBufferPosToScreenPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>	J3D/model/animation	Game/Util/ScreenUtil.o	1	PC Game source divergent, included
+convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>	J3D/model/animation	Game/Util/ScreenUtil.o	1	PC Game source divergent, included
+copyJointPos__2MRFPC9LiveActorPCcPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+copyMemory__2MRFPvPCvUl	other Game/runtime provider	Game/Util/MemoryUtil.o	1	PC Game source absent
+copyRotate__13FixedPositionCFPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Enemy/DharmaSambo.o	1	PC Game source absent
+copyTrans__13FixedPositionCFPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Boss/OtaKing.o	1	PC Game source absent
+cos__2MRFf	other Game/runtime provider	Game/AreaObj/MercatorTransformCube.o	1	PC Game source absent
+createAndAddResourceHolder__2MRFPCc	resources	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+createAreaPolygonListArray__2MRFP8TriangleUlPQ29JGeometry8TVec3<f>Ul	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+createAreaPolygonList__2MRFP8TriangleUlRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+createBoundingBox__2MRFPCQ29JGeometry8TVec3<f>UlPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+ddLightingOff__2MRFv	J3D/model/animation	Game/Util/DirectDrawUtil.o	1	PC Game source absent
+ddSendVtxData__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>	J3D/model/animation	Game/Util/DirectDrawUtil.o	1	PC Game source absent
+ddSetVtxFormat__2MRFUl	J3D/model/animation	Game/Util/DirectDrawUtil.o	1	PC Game source absent
+deactivateDefaultGameLayout__2MRFv	other Game/runtime provider	Game/Util/ScreenUtil.o	1	PC Game source divergent, included
+declareBlackHoleCamera__2MRFPCc	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+declareEventCameraProgrammable__2MRFPCc	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+declareGlobalEventCameraAbyss__2MRFPCc	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+declareGlobalEventCameraDead__2MRFPCcfll	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+declareGlobalEventCamera__2MRFPCc	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+deleteEffectAll__2MRFP9LiveActor	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+deleteEffect__2MRFP9LiveActorPCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+deleteEmitter__12MultiEmitterFv	effects/audio	Game/Effect/MultiEmitter.o	1	PC Game source absent
+destroy__7IceStepFv	other Game/runtime provider	Game/MapObj/IceStep.o	1	PC Game source absent
+diffAngleAbsFast__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+diffAngleAbsHorizontal__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+diffAngleAbs__2MRFRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+diffAngleAbs__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+diffAngleAbs__2MRFff	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+diffAngleSignedHorizontal__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/AreaObj/AreaForm.o	1	PC Game source byte-identical, included
+drawAfter__18JPAEmitterCallBackFP14JPABaseEmitter	effects/audio	Game/Effect/MultiEmitterCallBack.o	1	PC Game source absent
+drawCircle__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUlUl	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+drawCylinder__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUlUlUl	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+drawFast__14J3DShapePacketFv	J3D/model/animation	JSystem/J3DGraphBase/J3DPacket.o	1	PC JSystem/Aurora provider requires API audit
+drawFillBox3D__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+drawFillBox__6TDDrawFRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>Ul	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+drawFillBox__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+drawFillCircle__6TDDrawFRCQ29JGeometry8TVec3<f>fUlUlUl	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+drawFullScreenBlur__2MRFf	other Game/runtime provider	Game/Screen/FullScreenBlur.o	1	PC Game source byte-identical, excluded
+drawFullScreenBlur__2MRFffUcUc	other Game/runtime provider	Game/Screen/FullScreenBlur.o	1	PC Game source byte-identical, excluded
+drawInitFor2DModel__2MRFv	J3D/model/animation	Game/Util/DrawUtil.o	1	PC Game source divergent, included
+drawLine__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+drawSphere3D__6TDDrawFQ29JGeometry8TVec3<f>fUlUl	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+draw__12J3DShapeDrawCFv	J3D/model/animation	JSystem/J3DGraphBase/J3DShapeDraw.o	1	PC JSystem/Aurora provider requires API audit
+draw__18JPAEmitterCallBackFP14JPABaseEmitter	effects/audio	Game/Effect/MultiEmitterCallBack.o	1	PC Game source absent
+draw__7NameObjCFv	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+emitEffectHit__2MRFP9LiveActorRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+emitEffectWithEmitterCallBack__2MRFP9LiveActorPCcP24MultiEmitterCallBackBase	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+emitEffect__2MRFP9LiveActorPCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+enableJointTransform__10XanimeCoreFP12J3DModelData	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+endClipped__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+endDemo__2MRFP7NameObjPCc	LiveActor/NameObj/Nerve ABI	Game/Util/DemoUtil.o	1	PC Game source byte-identical, excluded
+endEventCamera__10WarpPodMgrFv	other Game/runtime provider	Game/MapObj/WarpPod.o	1	PC Game source absent
+endEventCamera__11WarpCubeMgrFv	other Game/runtime provider	Game/AreaObj/WarpCube.o	1	PC Game source absent
+endGlobalEventCamera__2MRFPCclb	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+endSubjectiveCamera__2MRFl	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+entryModelData__8J3DModelFP12J3DModelDataUlUl	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+entry__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+epsilonEquals__Q29JGeometry8TUtil<f>Ffff	J3D/model/animation	Game/Animation/AnmPlayer.o	1	PC Game source absent
+executeAfter__18JPAEmitterCallBackFP14JPABaseEmitter	effects/audio	Game/Effect/MultiEmitterCallBack.o	1	PC Game source absent
+executeOnEnd__5NerveCFP5Spine	LiveActor/NameObj/Nerve ABI	Game/LiveActor/Nerve.o	1	PC Game source divergent, included
+explainBeeMarioIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+explainFireMarioIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+explainFlyingMarioIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+explainHopperMarioIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+explainIceMarioIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+explainInvincibleMarioIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+explainLifeUpIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+explainTeresaMarioIfAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+extractMtxTrans__2MRFPA4_fPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+finalizeSort__12EffectKeeperFv	effects/audio	Game/LiveActor/EffectKeeper.o	1	PC Game source absent
+fix2Dpos__6TDDrawFPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+fmod	compiler/MSL runtime	MSL_C/MSL_Common_Embedded/Math/Double_precision/w_fmod.o	1	native compiler/runtime mapping
+forceDeleteEffectAll__2MRFP9LiveActor	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+forceDeleteEffect__2MRFP9LiveActorPCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+forceFollowOff__12MultiEmitterFv	effects/audio	Game/Effect/MultiEmitter.o	1	PC Game source absent
+forceFollowOn__12MultiEmitterFv	effects/audio	Game/Effect/MultiEmitter.o	1	PC Game source absent
+forceScaleOn__12MultiEmitterFv	effects/audio	Game/Effect/MultiEmitter.o	1	PC Game source absent
+freezeCopy__10XanimeCoreFP12J3DModelDataP10XanimeCoreUlUl	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+gZeroVec	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getAreaObjArg__2MRFPC7AreaObjl	other Game/runtime provider	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+getAreaObjManager__2MRFPCc	other Game/runtime provider	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+getAreaObj__2MRFPCcRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+getAttributes__8TriangleCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+getBaseInvMtx__8TriangleCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+getBaseMtx__8TriangleCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+getBaseMtx__9LiveActorCFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+getBckCtrl__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getBrkFrame__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getCamPos__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+getCamXdir__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+getCamYdir__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+getCamZdir__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+getCameraPolyFast__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC9HitSensor	HitSensor	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getCameraViewMtx__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+getCurrentAnimationName__12XanimePlayerCFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+getCurrentBckName__12XanimePlayerCFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+getCurrentScenarioNo__2MRFv	other Game/runtime provider	Game/Util/SceneUtil.o	1	PC Game source byte-identical, excluded
+getCylinderRadius__2MRFPC7AreaObj	other Game/runtime provider	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+getDeadStarPiece__2MRFv	other Game/runtime provider	Game/MapObj/StarPieceDirector.o	1	PC Game source absent
+getDefaultAnimationName__12XanimePlayerCFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+getEdgeNormal__8TriangleCFi	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+getEffect__2MRFPC9LiveActorPCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+getFarZ__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+getFirstPolyOnLineBFast__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>P8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC24CollisionPartsFilterBasePC18TriangleFilterBase	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getFloorCodeIndex__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getFloorCodeString__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getFollowMtx__7AreaObjCFv	other Game/runtime provider	Game/AreaObj/AreaObj.o	1	PC Game source byte-identical, included
+getFootPoint__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getGameSceneLayoutHolder__2MRFv	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+getGroundNormal__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getGroundSensor__2MRFPC9LiveActor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+getHashCode__2MRFPCc	other Game/runtime provider	Game/Util/HashUtil.o	1	PC Game source absent
+getInterpolateValue__2MRFfff	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getJ3DModelData__2MRFPC9LiveActor	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+getJ3DModel__2MRFPC9LiveActor	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+getJ3DShapePacketUserData__2MRFPC14J3DShapePacket	J3D/model/animation	Game/System/ShapePacketUserData.o	1	PC Game source absent
+getJMapInfoArg0NoInit__2MRFRC12JMapInfoIterPl	Binder/KCL	Game/Util/JMapUtil.o	1	PC Game source divergent, included
+getJMapInfoRotate__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>	Binder/KCL	Game/Util/JMapUtil.o	1	PC Game source divergent, included
+getJMapInfoScale__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>	Binder/KCL	Game/Util/JMapUtil.o	1	PC Game source divergent, included
+getJMapInfoTrans__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>	Binder/KCL	Game/Util/JMapUtil.o	1	PC Game source divergent, included
+getJointIndex__2MRFPC9LiveActorPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+getJointMtx__2MRFP8J3DModelPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+getJointMtx__2MRFPC9LiveActorPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+getJointMtx__2MRFPC9LiveActori	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+getJointNum__2MRFPC9LiveActor	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+getJoint__2MRFPC9LiveActorUs	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+getKarikariClingNum__2MRFv	other Game/runtime provider	Game/Enemy/KarikariDirector.o	1	PC Game source absent
+getLightAmbientColor__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getLightNumMax__2MRFPC9LiveActor	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+getMainAnimationTrans__12XanimePlayerCFUlPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+getMaterialNo__2MRFP12J3DModelDataPCc	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+getModelResourceHolder__2MRFPC9LiveActor	resources	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getNameStringPointer__12XanimePlayerCFPCc	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+getName__10JUTNameTabCFUs	other Game/runtime provider	JSystem/JUtility/JUTNameTab.o	1	PC JSystem/Aurora provider requires API audit
+getNearPolyOnLineSort__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC9HitSensor	HitSensor	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getNearZ__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+getNerveStep__9LiveActorCFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+getNormal__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getNormal__8TriangleCFi	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+getObj__14SceneObjHolderCFi	other Game/runtime provider	Game/Scene/SceneObjHolder.o	1	PC Game source byte-identical, excluded
+getPairCube__11WarpCubeMgrFPC7AreaObj	other Game/runtime provider	Game/AreaObj/WarpCube.o	1	PC Game source absent
+getPairPod__10WarpPodMgrFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/MapObj/WarpPod.o	1	PC Game source absent
+getParticleEmitter__12MultiEmitterCFi	effects/audio	Game/Effect/MultiEmitter.o	1	PC Game source absent
+getPlane__6BinderCFi	Binder/KCL	Game/LiveActor/Binder.o	1	PC Game source absent
+getPlayerLeft__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+getPlayerLevelA__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerLevelB__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerLevelC__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerLevelZ__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerStickX__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerStickY__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerTriggerA__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerTriggerB__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerTriggerC__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPlayerTriggerZ__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+getPos__8TriangleCFi	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+getPrevBaseMtx__8TriangleCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+getPrintPos__9FootPrintCFUl	other Game/runtime provider	Game/Util/FootPrint.o	1	PC Game source absent
+getRailArg3NoInit__2MRFPC9LiveActorPl	LiveActor/NameObj/Nerve ABI	Game/Util/RailUtil.o	1	PC Game source absent
+getRandom__2MRFff	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getRandom__2MRFll	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getRandom__2MRFv	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getResTIMG__2MRFPC9LiveActori	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+getRes__8ResTableCFPCc	other Game/runtime provider	Game/System/ResourceInfo.o	1	PC Game source absent
+getResourceHolder__2MRFPC9LiveActor	resources	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getRoofNormal__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getRoofSensor__2MRFPC9LiveActor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+getRotatedAxisY__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getRotatedAxisZ__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+getSceneHeapGDDR3__2MRFv	other Game/runtime provider	Game/Util/MemoryUtil.o	1	PC Game source absent
+getSceneObjHolder__2MRFv	other Game/runtime provider	Game/Scene/SceneObjHolder.o	1	PC Game source byte-identical, excluded
+getScreenHeight__2MRFv	other Game/runtime provider	Game/Camera/CameraContext.o	1	PC Game source absent
+getScreenResTIMG__2MRFv	other Game/runtime provider	Game/Util/ScreenUtil.o	1	PC Game source divergent, included
+getScreenWidth__2MRFv	other Game/runtime provider	Game/Util/ScreenUtil.o	1	PC Game source divergent, included
+getSensor__9LiveActorCFPCc	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+getSortedPoly__2MRFPQ29JGeometry8TVec3<f>P8TriangleUl	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getSoundCodeIndex__2MRFRC12JMapInfoIter	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getSoundCodeString__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getSphereRadius__2MRFPC7AreaObj	other Game/runtime provider	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+getStarPieceNum__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+getStrikeInfoMap__9CollisionFUl	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getTakingMtx__9LiveActorCFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+getTalkingActor__2MRFv	other Game/runtime provider	Game/Util/DemoUtil.o	1	PC Game source byte-identical, excluded
+getTexFromArc__2MRFPCcPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+getTexNo__16J3DAnmTexPatternCFUsPUs	J3D/model/animation	JSystem/J3DGraphAnimator/J3DAnimation.o	1	PC JSystem/Aurora provider requires API audit
+getTexture__2MRFP14ResourceHolderPCc	resources	Game/Util/ModelUtil.o	1	PC Game source absent
+getWallCodeIndex__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getWallCodeString__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+getWallSensor__2MRFPC9LiveActor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+getWarpPodManager__2MRFv	other Game/runtime provider	Game/MapObj/WarpPod.o	1	PC Game source absent
+getWaterAreaInfo__2MRFP9WaterInfoRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+getWaterAreaObj__2MRFP9WaterInfoRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+getXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>	Binder/KCL	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+getYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>	Binder/KCL	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+getZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>	Binder/KCL	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+hideJointAndChildren__2MRFP8J3DModelPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+hideJoint__2MRFP8J3DJoint	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+hideJoint__2MRFP8J3DModelPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+hideJoint__2MRFPC9LiveActorPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+hideMaterial__2MRFP8J3DModelPCc	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+hideModel__2MRFP9LiveActor	J3D/model/animation	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+identity__Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>Fv	J3D/model/animation	Game/Animation/AnmPlayer.o	1	PC Game source absent
+incPlayerLeft__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+initAfterPlacement__7NameObjFv	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+initBinder__9LiveActorFffUl	Binder/KCL	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+initDLMakerFog__2MRFP9LiveActorb	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+initEffectKeeper__9LiveActorFiPCcb	effects/audio	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+initFixedPosition__10PartsModelFPA4_fRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+initFixedPosition__10PartsModelFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PCc	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+initFurPlayer__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+initHitSensor__9LiveActorFi	HitSensor	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+initJointTransform__2MRFPC9LiveActor	J3D/model/animation	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+initLifeCount__21GameSceneLayoutHolderFUl	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+initLightCtrlForPlayer__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+initLightCtrl__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+initModelManagerWithAnm__9LiveActorFPCcPCcb	J3D/model/animation	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+initNerve__9LiveActorFPC5Nerve	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+initShadowVolumeCylinder__2MRFP9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/ActorShadowUtil.o	1	PC Game source byte-identical, excluded
+initShadowVolumeSphere__2MRFP9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/ActorShadowUtil.o	1	PC Game source byte-identical, excluded
+initSound__9LiveActorFib	effects/audio	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+initStarPointerTarget__2MRFP9LiveActorfRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/StarPointerUtil.o	1	PC Game source divergent, included
+initWithoutIter__7NameObjFv	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+init__10JUTTextureFv	other Game/runtime provider	JSystem/JUtility/JUTTexture.o	1	PC JSystem/Aurora provider requires API audit
+init__10PartsModelFRC12JMapInfoIter	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+init__15J3DVertexBufferFv	J3D/model/animation	JSystem/J3DGraphBase/J3DVertex.o	1	PC JSystem/Aurora provider requires API audit
+init__24MultiEmitterCallBackBaseFP14JPABaseEmitter	effects/audio	Game/Effect/MultiEmitterCallBack.o	1	PC Game source absent
+init__7NameObjFRC12JMapInfoIter	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+init__9LiveActorFRC12JMapInfoIter	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+initialize__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+inv_sqrt__Q29JGeometry8TUtil<f>Ff	Binder/KCL	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+invalidateClipping__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+invalidateHitSensors__2MRFP9LiveActor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+invalidate__9FootPrintFUl	other Game/runtime provider	Game/Util/FootPrint.o	1	PC Game source absent
+invalidate__9HitSensorFv	HitSensor	Game/LiveActor/HitSensor.o	1	PC Game source divergent, included
+isAngleBetween__2MRFfff	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isAnimationRunSimple__12XanimePlayerCFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+isBckOneTimeAndStopped__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isBckPlaying__2MRFPC9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isBckStopped__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isBindedGround__2MRFPC9LiveActor	Binder/KCL	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isBindedRoof__2MRFPC9LiveActor	Binder/KCL	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isBindedWall__2MRFPC9LiveActor	Binder/KCL	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isCollisionAtCorner__7HitInfoCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+isCollisionAtEdge__7HitInfoCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+isCollisionAtFace__7HitInfoCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+isCorePadSwingTrigger__2MRFl	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+isCorePadSwing__2MRFl	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+isDead__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isDemoActive__2MRFv	other Game/runtime provider	Game/Util/DemoUtil.o	1	PC Game source byte-identical, excluded
+isEqualStageName__2MRFPCc	other Game/runtime provider	Game/Util/SceneUtil.o	1	PC Game source byte-identical, excluded
+isEqualString__2MRFPCcPCc	other Game/runtime provider	Game/Util/StringUtil.o	1	PC Game source byte-identical, excluded
+isExistBtp__2MRFPC9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isExistInAttributeGroupSearchTurtle__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isExistJMapArg__2MRFRC12JMapInfoIter	Binder/KCL	Game/Util/JMapUtil.o	1	PC Game source divergent, included
+isExistMapCollisionExceptActor__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC9LiveActor	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+isExistMapCollision__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+isExistRes__8ResTableCFPCc	other Game/runtime provider	Game/System/ResourceInfo.o	1	PC Game source absent
+isFirstStep__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isGalaxyDarkCometAppearInCurrentStage__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isHiddenModel__2MRFPC9LiveActor	J3D/model/animation	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isInRange__2MRFfff	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isInShadeFromTheSun__2MRFRCQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Map/SunshadeMapHolder.o	1	PC Game source absent
+isInWater__2MRFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+isInWater__9WaterInfoCFv	other Game/runtime provider	Game/Map/WaterInfo.o	1	PC Game source absent
+isInitializeStatePlacementSomething__2MRFv	other Game/runtime provider	Game/Util/SceneUtil.o	1	PC Game source byte-identical, excluded
+isLightGravity__2MRFRC11GravityInfo	other Game/runtime provider	Game/Util/GravityUtil.o	1	PC Game source byte-identical, excluded
+isLoadedObjectOrLayoutArchive__2MRFPCc	resources	Game/Util/FileUtil.o	1	PC Game source divergent, included
+isNan__2MRFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isNearPlayer__2MRFPC9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/ActorMovementUtil.o	1	PC Game source byte-identical, excluded
+isNearZero__2MRFRCQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isNearZero__2MRFff	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isNerve__9LiveActorCFPC5Nerve	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+isNormalTalking__2MRFv	other Game/runtime provider	Game/Util/DemoUtil.o	1	PC Game source byte-identical, excluded
+isNormalize__2MRFRCQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isOnGameEventFlagBeeMarioAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isOnGameEventFlagFireMarioAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isOnGameEventFlagFlyingMarioAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isOnGameEventFlagHopperMarioAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isOnGameEventFlagIceMarioAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isOnGameEventFlagTeresaMarioAtFirst__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isOnGround__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+isOppositeDirection__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isPermitSE__2MRFv	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+isPlayerLuigi__2MRFv	other Game/runtime provider	Game/Util/EventUtil.o	1	PC Game source byte-identical, excluded
+isPossibleToShiftToFirstPersonCamera__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+isPowerStarGetDemoActive__2MRFv	other Game/runtime provider	Game/Util/DemoUtil.o	1	PC Game source byte-identical, excluded
+isRegisteredEffect__2MRFPC9LiveActorPCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+isRotAxisY__2MRFPA4_fPA4_f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+isRun__12XanimePlayerCFPCc	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+isSameDirection__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+isSameMtxRot__2MRFPA4_fPA4_f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+isSameMtx__2MRFPA4_fPA4_f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+isSensorAutoRush__2MRFPC9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+isSensorEnemy__2MRFPC9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+isSensorMapObj__2MRFPC9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+isSensorPlayer__2MRFPC9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+isSensorPressObj__2MRFPC9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+isSensorRide__2MRFPC9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+isSensorRush__2MRFPC9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+isStageSwimAngleLimit__2MRFv	other Game/runtime provider	Game/Util/SceneUtil.o	1	PC Game source byte-identical, excluded
+isStarPointerPointing2P__2MRFPC9LiveActorPCcbb	LiveActor/NameObj/Nerve ABI	Game/Util/StarPointerUtil.o	1	PC Game source divergent, included
+isSubPadSwing__2MRFl	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+isSystemTalking__2MRFv	other Game/runtime provider	Game/Util/DemoUtil.o	1	PC Game source byte-identical, excluded
+isTerminate__12XanimePlayerCFPCc	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+isTerminate__12XanimePlayerCFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+isThroughPolygon__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+isType__9HitSensorCFUl	HitSensor	Game/LiveActor/HitSensor.o	1	PC Game source divergent, included
+isValidInfo__2MRFRC12JMapInfoIter	Binder/KCL	Game/Util/JMapUtil.o	1	PC Game source divergent, included
+isValid__8TriangleCFv	Binder/KCL	Game/Map/HitInfo.o	1	PC Game source absent
+isValid__9FootPrintCFUl	other Game/runtime provider	Game/Util/FootPrint.o	1	PC Game source absent
+isWallCodeNoAction__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+isWaterPolygon__2MRFPC8Triangle	Binder/KCL	Game/Util/MapUtil.o	1	PC Game source byte-identical, excluded
+j3dSys	J3D/model/animation	JSystem/J3DGraphBase/J3DSys.o	1	PC JSystem/Aurora provider requires API audit
+kill__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+launch__9StarPieceFRCQ29JGeometry8TVec3<f>ffbb	J3D/model/animation	Game/MapObj/StarPiece.o	1	PC Game source byte-identical, excluded
+lbl_806B62B0	effects/audio	Game/RhythmLib/AudRhythmSeqParser.o	1	PC Game source absent
+length__Q29JGeometry8TVec2<f>CFv	J3D/model/animation	Game/Map/SphereSelectorHandle.o	1	PC Game source byte-identical, included
+loadActorLight__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+loadPreDrawSetting__8J3DShapeCFv	J3D/model/animation	JSystem/J3DGraphBase/J3DShape.o	1	PC JSystem/Aurora provider requires API audit
+loadProjectionMtx__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+loadTexFromArc__2MRFPCc	other Game/runtime provider	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+loadViewMtx__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+load__10JUTTextureF11_GXTexMapID	other Game/runtime provider	JSystem/JUtility/JUTTexture.o	1	PC JSystem/Aurora provider requires API audit
+makeActorAppeared__10PartsModelFv	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+makeActorAppeared__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+makeActorDead__10PartsModelFv	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+makeActorDead__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+makeAxisAndCosignVecToVec__2MRFPQ29JGeometry8TVec3<f>PfRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+makeMtxFrontUp__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+makeMtxTR__2MRFPA4_fffffff	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+makeMtxUpFrontPos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+makeMtxUpFront__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+makeMtxUpNoSupportPos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+makeMtxUpSide__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+makeMtxWithoutScale__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+makeRTFromMtxPtr__2MRFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PA4_fb	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+mixFogColor__6TDDrawFQ29JGeometry8TVec3<f>fUl	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+movement__10PartsModelFv	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+movement__7NameObjFv	LiveActor/NameObj/Nerve ABI	Game/NameObj/NameObj.o	1	PC Game source divergent, included
+movement__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+negateInternal__9JGeometryFPCfPf	J3D/model/animation	Game/Boss/DodoryuStateLv1.o	1	PC Game source absent
+newDifferedDLBuffer__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+normalizeAngleAbs__2MRFf	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+normalize__2MRFPQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+notifyWarpEnd__10WarpPodMgrFP7WarpPod	other Game/runtime provider	Game/MapObj/WarpPod.o	1	PC Game source absent
+offBind__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+offCalcAnim__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+offDraw__8FurMultiFUl	other Game/runtime provider	Game/Util/FurMulti.o	1	PC Game source absent
+offFixedPosNormalizeScale__10PartsModelFv	J3D/model/animation	Game/LiveActor/PartsModel.o	1	PC Game source byte-identical, included
+onBind__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+onCalcAnim__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+onCalcGravity__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+onCalcShadow__2MRFP9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/ActorShadowUtil.o	1	PC Game source byte-identical, excluded
+onDraw__8FurMultiFUl	other Game/runtime provider	Game/Util/FurMulti.o	1	PC Game source absent
+onShadowVolumeCutDropLength__2MRFP9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/ActorShadowUtil.o	1	PC Game source byte-identical, excluded
+orderRotateMtx__2MRFsRCQ29JGeometry8TVec3<f>PA4_f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+overWriteMtxCalc__12XanimePlayerFUs	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+prepareDraw__14J3DShapePacketCFv	J3D/model/animation	JSystem/J3DGraphBase/J3DPacket.o	1	PC JSystem/Aurora provider requires API audit
+prepareShapePackets__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+project2D__6TDDrawFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+receiveMessage__9HitSensorFUlP9HitSensor	HitSensor	Game/LiveActor/HitSensor.o	1	PC Game source divergent, included
+receiveMessage__9LiveActorFUlP9HitSensorP9HitSensor	HitSensor	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+receiveMsgApart__9LiveActorFP9HitSensorP9HitSensor	HitSensor	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+receiveMsgEnemyAttack__9LiveActorFUlP9HitSensorP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+receiveMsgPlayerAttack__9LiveActorFUlP9HitSensorP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+receiveMsgPush__9LiveActorFP9HitSensorP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+receiveMsgTake__9LiveActorFP9HitSensorP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+receiveMsgTaken__9LiveActorFP9HitSensorP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+receiveMsgThrow__9LiveActorFP9HitSensorP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+receiveOtherMsg__9LiveActorFUlP9HitSensorP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+reflectBckCtrlData__2MRFP9LiveActorRC11BckCtrlData	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+registerEffectWithoutSRT__12EffectKeeperFPCcPCc	effects/audio	Game/LiveActor/EffectKeeper.o	1	PC Game source absent
+registerEffect__12EffectKeeperFPCcPA4_fPCQ29JGeometry8TVec3<f>PCcPCc	effects/audio	Game/LiveActor/EffectKeeper.o	1	PC Game source absent
+registerEffect__12EffectKeeperFPCcPA4_fPCcPCc	effects/audio	Game/LiveActor/EffectKeeper.o	1	PC Game source absent
+registerEffect__12EffectKeeperFPCcPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCc	effects/audio	Game/LiveActor/EffectKeeper.o	1	PC Game source absent
+releaseAnimFrame__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+removeAllClingingKarikari__2MRFv	other Game/runtime provider	Game/Enemy/KarikariDirector.o	1	PC Game source absent
+removeAnimation__16JAUSoundAnimatorFv	effects/audio	JSystem/JAudio2/JAUSoundAnimator.o	1	PC JSystem/Aurora provider requires API audit
+requestMovementOn__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+requestOneUp__2MRFv	other Game/runtime provider	Game/Util/ScreenUtil.o	1	PC Game source divergent, included
+requestPointLight__2MRFPC9LiveActorQ29JGeometry8TVec3<f>6Color8fl	J3D/model/animation	Game/Util/LightUtil.o	1	PC Game source divergent, included
+requestPowerUpHPMeter__2MRFv	other Game/runtime provider	Game/Util/ScreenUtil.o	1	PC Game source divergent, included
+requestStartGameOverDemo__2MRFv	other Game/runtime provider	Game/Util/SequenceUtil.o	1	PC Game source byte-identical, excluded
+resetMtxLoadCache__11J3DShapeMtxFv	J3D/model/animation	JSystem/J3DGraphBase/J3DShapeMtx.o	1	PC JSystem/Aurora provider requires API audit
+rotAxisVecRad__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+sAtanTable__5JMath	J3D/model/animation	JSystem/J3DGraphAnimator/J3DMtxBuffer.o	1	PC JSystem/Aurora provider requires API audit
+sEnvelopeFlag__8J3DShape	J3D/model/animation	JSystem/J3DGraphBase/J3DShape.o	1	PC JSystem/Aurora provider requires API audit
+sInstance__Q213NrvMarioActor17MarioActorNrvWait	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor19MarioActorNrvNoRush	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor21MarioActorNrvGameOver	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor21MarioActorNrvTimeWait	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor25MarioActorNrvGameOverFire	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor25MarioActorNrvGameOverSink	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor26MarioActorNrvGameOverAbyss	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor27MarioActorNrvGameOverAbyss2	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor28MarioActorNrvGameOverNonStop	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sInstance__Q213NrvMarioActor30MarioActorNrvGameOverBlackHole	other Game/runtime provider	Game/Camera/CamHeliEffector.o	1	PC Game source absent
+sLODFlag__11J3DShapeMtx	J3D/model/animation	JSystem/J3DGraphBase/J3DShapeMtx.o	1	PC JSystem/Aurora provider requires API audit
+sManager__8JUTVideo	other Game/runtime provider	JSystem/JUtility/JUTVideo.o	1	PC JSystem/Aurora provider requires API audit
+sMutex__Q22MR14MutexHolder<0>	J3D/model/animation	Game/LiveActor/ModelManager.o	1	PC Game source absent
+sOldVcdVatCmd__8J3DShape	J3D/model/animation	JSystem/J3DGraphBase/J3DShape.o	1	PC JSystem/Aurora provider requires API audit
+sSinCosTable__5JMath	J3D/model/animation	JSystem/J3DGraphAnimator/J3DMtxBuffer.o	1	PC JSystem/Aurora provider requires API audit
+sTexGenBlock__17J3DDifferedTexMtx	J3D/model/animation	JSystem/J3DGraphBase/J3DShapeMtx.o	1	PC JSystem/Aurora provider requires API audit
+sTexMtxObj__17J3DDifferedTexMtx	J3D/model/animation	JSystem/J3DGraphBase/J3DShapeMtx.o	1	PC JSystem/Aurora provider requires API audit
+scale__Q29JGeometry8TVec3<f>Ff	J3D/model/animation	Game/AreaObj/CameraRepulsiveArea.o	1	PC Game source absent
+search__13HashSortTableFPCcPCcPUl	other Game/runtime provider	Game/Util/HashUtil.o	1	PC Game source absent
+search__13HashSortTableFPCcPUl	other Game/runtime provider	Game/Util/HashUtil.o	1	PC Game source absent
+sendArbitraryMsg__2MRFUlP9HitSensorP9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+sendMsgPlayerPunch__2MRFP9HitSensorP9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+sendMsgPush__2MRFP9HitSensorP9HitSensor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+sendPoint__6TDDrawFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+set<f>__Q29JGeometry8TVec2<f>Fff_v	effects/audio	Game/Effect/MultiEmitterAccess.o	1	PC Game source absent
+set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v	J3D/model/animation	Game/AreaObj/AreaForm.o	1	PC Game source byte-identical, included
+set<f>__Q29JGeometry8TVec3<f>Ffff_v	J3D/model/animation	Game/Animation/AnmPlayer.o	1	PC Game source absent
+setArrayAndBindPipeline__8J3DShapeCFv	J3D/model/animation	JSystem/J3DGraphBase/J3DShape.o	1	PC JSystem/Aurora provider requires API audit
+setBaseMtx__13FixedPositionFPA4_f	other Game/runtime provider	Game/Util/FixedPosition.o	1	PC Game source byte-identical, excluded
+setBaseTRMtx__2MRFP9LiveActorPA4_f	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setBaseTRMtx__2MRFP9LiveActorRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>	J3D/model/animation	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setBckFrame__2MRFPC9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setBckRate__2MRFPC9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setBeePowerRatio__21GameSceneLayoutHolderFf	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+setBinderOffsetVec__2MRFP9LiveActorPCQ29JGeometry8TVec3<f>b	Binder/KCL	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setBrkFrameAndStop__2MRFPC9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setBrkFrame__2MRFPC9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setBtpFrameAndStop__2MRFPC9LiveActorf	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+setCount__14CollectCounterFl	other Game/runtime provider	Game/MapObj/CollectCounter.o	1	PC Game source absent
+setCubeBgmChangeInvalid__2MRFv	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+setDefaultAnimation__12XanimePlayerFPCc	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+setDefaultViewportAndScissor__2MRFv	other Game/runtime provider	Game/Util/DrawUtil.o	1	PC Game source divergent, included
+setDrawOrder__12MultiEmitterFl	effects/audio	Game/Effect/MultiEmitter.o	1	PC Game source absent
+setEffectHostSRT__2MRFP9LiveActorPCcPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+setEffectName__2MRFP9LiveActorPCcPCc	effects/audio	Game/Util/EffectUtil.o	1	PC Game source absent
+setGameCameraTargetToPlayer__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+setGlobalEnvColor__12MultiEmitterFUcUcUcl	effects/audio	Game/Effect/MultiEmitterAccess.o	1	PC Game source absent
+setGlobalPrmColor__12MultiEmitterFUcUcUcl	effects/audio	Game/Effect/MultiEmitterAccess.o	1	PC Game source absent
+setGlobalRotationDegree__12MultiEmitterFRCQ29JGeometry8TVec3<f>l	effects/audio	Game/Effect/MultiEmitter.o	1	PC Game source absent
+setGlobalScale__12MultiEmitterFRCQ29JGeometry8TVec3<f>l	effects/audio	Game/Effect/MultiEmitterAccess.o	1	PC Game source absent
+setGlobalTranslation__12MultiEmitterFRCQ29JGeometry8TVec3<f>l	effects/audio	Game/Effect/MultiEmitterAccess.o	1	PC Game source absent
+setInvalidateTimer__11WarpCubeMgrFP7AreaObjUs	other Game/runtime provider	Game/AreaObj/WarpCube.o	1	PC Game source absent
+setLength__Q29JGeometry8TVec3<f>Ff	Binder/KCL	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+setLifeCount__21GameSceneLayoutHolderFUl	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+setMapSondCodeGravity__2MRFPC9LiveActorl	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+setMarioShadowTex__2MRFPC10JUTTexture	other Game/runtime provider	Game/Util/DrawUtil.o	1	PC Game source divergent, included
+setMarioShadowVec__2MRFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/DrawUtil.o	1	PC Game source divergent, included
+setModel__12XanimePlayerFP8J3DModel	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+setMtxTrans__2MRFPA4_ffff	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+setNan__2MRFRQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+setNerve__9LiveActorFPC5Nerve	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+setOn__7IceStepFUlRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/MapObj/IceStep.o	1	PC Game source absent
+setOxygenRatio__21GameSceneLayoutHolderFf	other Game/runtime provider	Game/Screen/GameSceneLayoutHolder.o	1	PC Game source absent
+setProgrammableCameraParam__2MRFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b	J3D/model/animation	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+setRate__12MultiEmitterFfl	effects/audio	Game/Effect/MultiEmitterAccess.o	1	PC Game source absent
+setSeVersion__2MRFPC9LiveActorUl	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+setShadowDropDirection__2MRFP9LiveActorPCcRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/ActorShadowUtil.o	1	PC Game source byte-identical, excluded
+setShadowDropLength__2MRFP9LiveActorPCcf	LiveActor/NameObj/Nerve ABI	Game/Util/ActorShadowUtil.o	1	PC Game source byte-identical, excluded
+setShadowVolumeEndDropOffset__2MRFP9LiveActorPCcf	LiveActor/NameObj/Nerve ABI	Game/Util/ActorShadowUtil.o	1	PC Game source byte-identical, excluded
+setStageBGMStateBit__2MRFUl	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+setTexture__9FootPrintFP7ResTIMG	other Game/runtime provider	Game/Util/FootPrint.o	1	PC Game source absent
+setTriangleFilter__6BinderFP18TriangleFilterBase	Binder/KCL	Game/LiveActor/Binder.o	1	PC Game source absent
+setType__9HitSensorFUl	HitSensor	Game/LiveActor/HitSensor.o	1	PC Game source divergent, included
+setViewMtx__6TDDrawFPA4_f	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+setXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Boss/SkeletalFishGuard.o	1	PC Game source absent
+setYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Boss/SkeletalFishGuard.o	1	PC Game source absent
+setZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Boss/SkeletalFishGuard.o	1	PC Game source absent
+set__6Color8FUcUcUcUc	effects/audio	Game/Effect/MultiEmitterAccess.o	1	PC Game source absent
+set__Q29JGeometry13SMatrix34C<f>FPA4_Cf	effects/audio	Game/AudioLib/AudSystem.o	1	PC Game source absent
+setup__6TDDrawFUlUlUc	J3D/model/animation	Game/Util/DirectDraw.o	1	PC Game source absent
+shakeCameraNormalStrong__2MRFv	other Game/runtime provider	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+shakeCameraNormal__2MRFv	other Game/runtime provider	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+shakeCameraStrong__2MRFv	other Game/runtime provider	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+shakeCameraWeak__2MRFv	other Game/runtime provider	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+shareJointTransform__10XanimeCoreFPC10XanimeCore	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+showJointAndChildren__2MRFP8J3DModelPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+showJoint__2MRFP8J3DJoint	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+showJoint__2MRFP8J3DModelPCc	J3D/model/animation	Game/Util/JointUtil.o	1	PC Game source absent
+showMaterial__2MRFP8J3DModelPCc	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+showModel__2MRFP9LiveActor	J3D/model/animation	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+sin__2MRFf	other Game/runtime provider	Game/AreaObj/MercatorTransformCube.o	1	PC Game source absent
+skip__17AudAnmSoundObjectFf	effects/audio	Game/AudioLib/AudAnmSoundObject.o	1	PC Game source absent
+sortSmall__2MRFlPfPl	other Game/runtime provider	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+sort__13HashSortTableFv	other Game/runtime provider	Game/Util/HashUtil.o	1	PC Game source absent
+sprintf	compiler/MSL runtime	MSL_C/printf.o	1	native compiler/runtime mapping
+sqrt<f>__2MRFf_f	other Game/runtime provider	Game/Boss/TripodBossMovableArea.o	1	PC Game source absent
+start2PJumpAssistJustSound__2MRFv	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+start2PJumpAssistSound__2MRFv	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startAnimation__16JAUSoundAnimatorFPC17JAUSoundAnimationbff	effects/audio	JSystem/JAudio2/JAUSoundAnimator.o	1	PC JSystem/Aurora provider requires API audit
+startBckWithInterpole__2MRFPC9LiveActorPCcl	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+startBck__2MRFPC9LiveActorPCcPCc	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+startBrk__2MRFPC9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+startBtk__2MRFPC9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+startBtp__2MRFPC9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+startBva__2MRFPC9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+startCSSound__2MRFPCcPCcl	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startClipped__9LiveActorFv	LiveActor/NameObj/Nerve ABI	Game/LiveActor/LiveActor.o	1	PC Game source divergent, included
+startCurrentStageBGM__2MRFv	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startEventCamera__10WarpPodMgrFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/MapObj/WarpPod.o	1	PC Game source absent
+startEventCamera__11WarpCubeMgrFPC7AreaObj	other Game/runtime provider	Game/AreaObj/WarpCube.o	1	PC Game source absent
+startGlobalEventCameraNoTarget__2MRFPCcl	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+startGlobalEventCamera__2MRFPCcRC15CameraTargetArgl	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+startLevelSound__2MRFPC9LiveActor10JAISoundIDlll	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startLevelSound__2MRFPC9LiveActorPCclll	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startPlayerEvent__2MRFPCc	other Game/runtime provider	Game/Util/PlayerUtil.o	1	PC Game source byte-identical, excluded
+startSound__2MRFPC9LiveActor10JAISoundIDll	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startSound__2MRFPC9LiveActorPCcll	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startSpinHitSound__2MRFPC9LiveActor	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startStageBGM__2MRFPCcb	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startStarPointerModeDemoMarioDeath__2MRFPv	other Game/runtime provider	Game/Util/StarPointerUtil.o	1	PC Game source divergent, included
+startSubBGM__2MRFPCcb	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startSubjectiveCamera__2MRFl	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+startSystemLevelSE__2MRF10JAISoundIDll	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startSystemSE__2MRF10JAISoundIDll	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+startSystemSE__2MRFPCcll	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+stopAnimFrame__2MRFP9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+stopAnimation__12XanimePlayerFPCc	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+stopAnimation__12XanimePlayerFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+stopBrk__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+stopBtk__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+stopBtp__2MRFPC9LiveActor	LiveActor/NameObj/Nerve ABI	Game/Util/LiveActorUtil.o	1	PC Game source byte-identical, excluded
+stopSound__2MRFPC9LiveActor10JAISoundIDUl	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+stopSubBGM__2MRFUl	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+stopSystemSE__2MRF10JAISoundIDUl	effects/audio	Game/Util/SoundUtil.o	1	PC Game source byte-identical, excluded
+storeTIMG__10JUTTextureFPC7ResTIMGUc	other Game/runtime provider	JSystem/JUtility/JUTTexture.o	1	PC JSystem/Aurora provider requires API audit
+strcasecmp__2MRFPCcPCc	other Game/runtime provider	Game/Util/StringUtil.o	1	PC Game source byte-identical, excluded
+strcmp	compiler/MSL runtime	MSL_C/string.o	1	native compiler/runtime mapping
+strstr	compiler/MSL runtime	MSL_C/string.o	1	native compiler/runtime mapping
+syncJ3DSysFlags__12J3DModelDataCFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModelData.o	1	PC JSystem/Aurora provider requires API audit
+testCorePadButtonA__2MRFl	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+testCorePadTriggerA__2MRFl	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+testFpViewOutTrigger__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+testFpViewStartTrigger__2MRFv	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+testSubPadButtonC__2MRFl	other Game/runtime provider	Game/Util/GamePadUtil.o	1	PC Game source byte-identical, excluded
+tmpMtxRotXRad__2MRFf	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+tmpMtxRotYDeg__2MRFf	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+tmpMtxRotYRad__2MRFf	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+tmpMtxRotZRad__2MRFf	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+tmpMtxTrans__2MRFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MtxUtil.o	1	PC Game source absent
+tryRumblePadMiddle__2MRFPCvl	effects/audio	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+tryRumblePadStrong__2MRFPCvl	effects/audio	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+tryRumblePadVeryWeak__2MRFPCvl	effects/audio	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+tryRumblePadWeak__2MRFPCvl	effects/audio	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+tryRumblePad__2MRFPCvPCcl	effects/audio	Game/Util/ObjUtil.o	1	PC Game source divergent, included
+tryStartDemoWithoutCinemaFrame__2MRFP9LiveActorPCc	LiveActor/NameObj/Nerve ABI	Game/Util/DemoUtil.o	1	PC Game source byte-identical, excluded
+tryToUpdatePlayerRestartIdInfo__2MRFRCQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/AreaObjUtil.o	1	PC Game source byte-identical, included
+updateAfterMovement__12XanimePlayerFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+updateBeforeMovement__12XanimePlayerFv	J3D/model/animation	Game/Animation/XanimePlayer.o	1	PC Game source absent
+updateHitSensor__9LiveActorFP9HitSensor	HitSensor	Game/AreaObj/CollisionArea.o	1	PC Game source absent
+updateHitSensorsAll__2MRFP9LiveActor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+updateModelDiffDL__2MRFP9LiveActor	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+updateModelManager__2MRFP9LiveActor	J3D/model/animation	Game/Util/ModelUtil.o	1	PC Game source absent
+update__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+validateHitSensors__2MRFP9LiveActor	HitSensor	Game/Util/ActorSensorUtil.o	1	PC Game source byte-identical, excluded
+validate__9HitSensorFv	HitSensor	Game/LiveActor/HitSensor.o	1	PC Game source divergent, included
+vecBlendSphere__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+vecRotAxis__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f	J3D/model/animation	Game/Util/MathUtil.o	1	PC Game source byte-identical, excluded
+viewCalc__8J3DModelFv	J3D/model/animation	JSystem/J3DGraphAnimator/J3DModel.o	1	PC JSystem/Aurora provider requires API audit
+zeroMemory__2MRFPvUl	other Game/runtime provider	Game/Util/MemoryUtil.o	1	PC Game source absent
+zero__Q29JGeometry8TVec3<f>Fv	J3D/model/animation	Game/Animation/XanimeCore.o	1	PC Game source absent
+zoomInTargetGameCamera__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded
+zoomOutTargetGameCamera__2MRFv	other Game/runtime provider	Game/Util/CameraUtil.o	1	PC Game source byte-identical, excluded

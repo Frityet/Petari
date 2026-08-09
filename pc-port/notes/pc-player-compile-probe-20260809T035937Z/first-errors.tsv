@@ -1,0 +1,42 @@
+source	category	first_error
+src/Game/Player/FireMarioBall.cpp	other exact Game/API surface	‘connectToSceneEnemyDecoration’ is not a member of ‘MR’; did you mean ‘connectToSceneLayoutDecoration’?
+src/Game/Player/J3DModelX.cpp	RVL/platform	too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/JetTurtleShadow.cpp	RVL/platform	too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarineSnow.cpp	modern C++/64-bit compiler	invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+src/Game/Player/Mario.cpp	other exact Game/API surface	invalid operands of types ‘bool’ and ‘std::nullptr_t’ to binary ‘operator==’
+src/Game/Player/MarioAccess.cpp	J3D/model/animation	‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioActor.cpp	RVL/platform	‘_GXTlutSize’ has not been declared
+src/Game/Player/MarioActorDraw.cpp	RVL/platform	too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioActorEye.cpp	J3D/model/animation	invalid use of incomplete type ‘class J3DAnmTexPattern’
+src/Game/Player/MarioActorGameOver.cpp	modern C++/64-bit compiler	‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+src/Game/Player/MarioActorGravity.cpp	J3D/model/animation	call of overloaded ‘setFrontVecKeepUp(TVec3f&, long unsigned int)’ is ambiguous
+src/Game/Player/MarioActorHand.cpp	RVL/platform	too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioActorOffensiveMsg.cpp	J3D/model/animation	call of overloaded ‘calcGravityVectorOrZero(MarioActor*, TVec3f&, TVec3f*, GravityInfo*&, int)’ is ambiguous
+src/Game/Player/MarioActorPad.cpp	modern C++/64-bit compiler	‘isStarPointerPointing2P’ is not a member of ‘MR’; did you mean ‘isStarPointerPointingPane’?
+src/Game/Player/MarioActorParts.cpp	RVL/platform	‘_GXTlutSize’ has not been declared
+src/Game/Player/MarioActorSensor.cpp	other exact Game/API surface	invalid operands of types ‘u32’ {aka ‘unsigned int’} and ‘std::nullptr_t’ to binary ‘operator!=’
+src/Game/Player/MarioActorShadow.cpp	RVL/platform	too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioActorTakeMsg.cpp	J3D/model/animation	‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘set2’; did you mean ‘set’?
+src/Game/Player/MarioAnimationEfx.cpp	J3D/model/animation	‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioAnimator.cpp	J3D/model/animation	‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioBee.cpp	J3D/model/animation	call of overloaded ‘setFrontVecKeepUp(TVec3f&, long unsigned int)’ is ambiguous
+src/Game/Player/MarioCollision.cpp	Binder/KCL	‘class MarioActor’ has no member named ‘mBinder’; did you mean ‘initBinder’?
+src/Game/Player/MarioDamageCrush.cpp	other exact Game/API surface	initializer-string for ‘const char [72]’ is too long [-fpermissive]
+src/Game/Player/MarioEffect.cpp	effects/audio	‘class LiveActor’ has no member named ‘mEffectKeeper’; did you mean ‘initEffectKeeper’?
+src/Game/Player/MarioEnforce.cpp	Binder/KCL	‘class MarioActor’ has no member named ‘mBinder’; did you mean ‘initBinder’?
+src/Game/Player/MarioFoo.cpp	J3D/model/animation	‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+src/Game/Player/MarioFpView.cpp	other exact Game/API surface	invalid cast from type ‘std::nullptr_t’ to type ‘char*’
+src/Game/Player/MarioInit.cpp	J3D/model/animation	‘using TVec2f = struct JGeometry::TVec2<float>’ {aka ‘struct JGeometry::TVec2<float>’} has no member named ‘zero’
+src/Game/Player/MarioJump.cpp	other exact Game/API surface	Game/Enemy/KariKariDirector.hpp: No such file or directory
+src/Game/Player/MarioModule.cpp	RVL/platform	‘_GXTlutSize’ has not been declared
+src/Game/Player/MarioMove.cpp	J3D/model/animation	‘JMath’ has not been declared
+src/Game/Player/MarioPress.cpp	other exact Game/API surface	jump to label ‘Failure’
+src/Game/Player/MarioSearchLight.cpp	RVL/platform	too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+src/Game/Player/MarioSlider.cpp	other exact Game/API surface	Game/Enemy/KariKariDirector.hpp: No such file or directory
+src/Game/Player/MarioSound.cpp	effects/audio	‘getSystemHeap’ is not a member of ‘JKRHeap’
+src/Game/Player/MarioSpecial.cpp	Binder/KCL	‘class LiveActor’ has no member named ‘mCollisionParts’
+src/Game/Player/MarioStick.cpp	other exact Game/API surface	call of overloaded ‘startPadVib(long unsigned int)’ is ambiguous
+src/Game/Player/MarioSwim.cpp	J3D/model/animation	‘PI’ is not a member of ‘JGeometry::TUtil<float>’
+src/Game/Player/MarioWait.cpp	J3D/model/animation	‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+src/Game/Player/MarioWalk.cpp	Binder/KCL	‘class LiveActor’ has no member named ‘mCollisionParts’
+src/Game/Player/ModelHolder.cpp	RVL/platform	too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’

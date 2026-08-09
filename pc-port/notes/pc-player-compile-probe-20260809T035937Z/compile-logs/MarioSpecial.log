@@ -1,0 +1,25 @@
+src/Game/Player/MarioSpecial.cpp: In member function ‘void Mario::updateOnimasu()’:
+src/Game/Player/MarioSpecial.cpp:125:42: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  125 |     TPos3f* inverseMtx = &sensor->mHost->mCollisionParts->mInvBaseMatrix;
+      |                                          ^~~~~~~~~~~~~~~
+src/Game/Player/MarioSpecial.cpp:140:41: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  140 |             PSMTXMultVec(sensor->mHost->mCollisionParts->mBaseMatrix.toMtxPtr(), &currentLocal, &worldPosition);
+      |                                         ^~~~~~~~~~~~~~~
+src/Game/Player/MarioSpecial.cpp:165:41: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  165 |             PSMTXMultVec(sensor->mHost->mCollisionParts->mBaseMatrix.toMtxPtr(), &currentLocal, &worldPosition);
+      |                                         ^~~~~~~~~~~~~~~
+src/Game/Player/MarioSpecial.cpp:183:24: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  183 |         sensor->mHost->mCollisionParts->mBaseMatrix.getXDir(axisX);
+      |                        ^~~~~~~~~~~~~~~
+src/Game/Player/MarioSpecial.cpp:184:24: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  184 |         sensor->mHost->mCollisionParts->mBaseMatrix.getYDir(axisY);
+      |                        ^~~~~~~~~~~~~~~
+src/Game/Player/MarioSpecial.cpp:185:24: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  185 |         sensor->mHost->mCollisionParts->mBaseMatrix.getZDir(axisZ);
+      |                        ^~~~~~~~~~~~~~~
+src/Game/Player/MarioSpecial.cpp:288:41: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  288 |             PSMTXMultVec(sensor->mHost->mCollisionParts->mBaseMatrix.toMtxPtr(), &currentLocal, &worldPosition);
+      |                                         ^~~~~~~~~~~~~~~
+src/Game/Player/MarioSpecial.cpp:325:41: error: ‘class LiveActor’ has no member named ‘mCollisionParts’
+  325 |             PSMTXMultVec(sensor->mHost->mCollisionParts->mBaseMatrix.toMtxPtr(), &_600, &worldPosition);
+      |                                         ^~~~~~~~~~~~~~~

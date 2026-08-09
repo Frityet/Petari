@@ -1,0 +1,34 @@
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from src/Game/Player/ModelHolder.cpp:4:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelDrawMtx(f32 (*)[3][4])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  121 |         GXSetArray(GX_POS_MTX_ARRAY, mModelDrawMtx, sizeof(*mModelDrawMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from src/Game/Player/ModelHolder.cpp:4:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelNrmMtx(f32 (*)[3][3])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:126:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  126 |         GXSetArray(GX_NRM_MTX_ARRAY, mModelNrmMtx, sizeof(*mModelNrmMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~

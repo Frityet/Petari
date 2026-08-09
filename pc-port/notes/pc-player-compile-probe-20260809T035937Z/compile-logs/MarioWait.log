@@ -1,0 +1,5 @@
+In file included from src/Game/Player/MarioWait.cpp:2:
+include/Game/Animation/XanimePlayer.hpp:72:16: error: ‘J3DModelData’ does not name a type; did you mean ‘J3DModel’?
+   72 |     /* 0x04 */ J3DModelData* mModelData;
+      |                ^~~~~~~~~~~~
+      |                J3DModel

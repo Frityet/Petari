@@ -1,0 +1,58 @@
+src/Game/Player/MarioActorEye.cpp: In member function ‘void MarioActor::setBlink(const char*)’:
+src/Game/Player/MarioActorEye.cpp:28:16: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   28 |         mEyeRes->mFrame = 0.0f;
+      |                ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorEye.cpp: In member function ‘void MarioActor::updateBlink()’:
+src/Game/Player/MarioActorEye.cpp:46:21: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   46 |         if (pPattern->mAttribute == 2) {
+      |                     ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorEye.cpp:47:29: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   47 |             frame = pPattern->mFrame + 1.0f;
+      |                             ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorEye.cpp:49:34: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   49 |             if (frame >= pPattern->mFrameMax - 1.0f) {
+      |                                  ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorEye.cpp:56:16: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   56 |         mEyeRes->mFrame = frame;
+      |                ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorEye.cpp:60:36: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   60 |         for (u16 i = 0; i < mEyeRes->mUpdateMaterialNum; i++) {
+      |                                    ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorEye.cpp:62:20: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   62 |             mEyeRes->getTexNo(i, &texNo);
+      |                    ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioActorEye.cpp:64:24: error: invalid use of incomplete type ‘class J3DAnmTexPattern’
+   64 |             if (mEyeRes->mUpdateMaterialID[i] == eyeLidMaterial) {
+      |                        ^~
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+include/Game/Player/MarioActor.hpp:18:7: note: forward declaration of ‘class J3DAnmTexPattern’
+   18 | class J3DAnmTexPattern;
+      |       ^~~~~~~~~~~~~~~~

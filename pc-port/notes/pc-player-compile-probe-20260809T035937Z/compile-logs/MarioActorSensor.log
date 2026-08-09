@@ -1,0 +1,31 @@
+src/Game/Player/MarioActorSensor.cpp: In member function ‘virtual void MarioActor::updateHitSensor(HitSensor*)’:
+src/Game/Player/MarioActorSensor.cpp:85:18: error: invalid operands of types ‘u32’ {aka ‘unsigned int’} and ‘std::nullptr_t’ to binary ‘operator!=’
+   85 |         if (_468 != nullptr || mMario->isSwimming()) {
+      |             ~~~~~^~~~~~~~~~
+src/Game/Player/MarioActorSensor.cpp: In member function ‘void MarioActor::trampleJump(f32, f32)’:
+src/Game/Player/MarioActorSensor.cpp:294:24: error: call of overloaded ‘startPadVib(long unsigned int)’ is ambiguous
+  294 |     mMario->startPadVib(0ul);
+      |     ~~~~~~~~~~~~~~~~~~~^~~~~
+In file included from include/Game/Player/Mario.hpp:3,
+                 from include/Game/Player/MarioActor.hpp:4,
+                 from src/Game/Player/MarioActorSensor.cpp:3:
+include/Game/Player/MarioModule.hpp:83:10: note: candidate: ‘void MarioModule::startPadVib(u32)’
+   83 |     void startPadVib(u32);
+      |          ^~~~~~~~~~~
+include/Game/Player/MarioModule.hpp:84:10: note: candidate: ‘void MarioModule::startPadVib(const char*)’
+   84 |     void startPadVib(const char*);
+      |          ^~~~~~~~~~~
+src/Game/Player/MarioActorSensor.cpp: In member function ‘virtual void MarioActor::attackSensor(HitSensor*, HitSensor*)’:
+src/Game/Player/MarioActorSensor.cpp:310:31: error: ‘class HitSensor’ has no member named ‘isValid’
+  310 |         if (getSensor("eye")->isValid()) {
+      |                               ^~~~~~~
+src/Game/Player/MarioActorSensor.cpp: In member function ‘void MarioActor::updateScouter()’:
+src/Game/Player/MarioActorSensor.cpp:373:14: error: invalid operands of types ‘u32’ {aka ‘unsigned int’} and ‘std::nullptr_t’ to binary ‘operator!=’
+  373 |     if (_468 != nullptr) {
+      |         ~~~~~^~~~~~~~~~
+src/Game/Player/MarioActorSensor.cpp:404:14: error: invalid operands of types ‘u32’ {aka ‘unsigned int’} and ‘std::nullptr_t’ to binary ‘operator!=’
+  404 |     if (_468 != nullptr) {
+      |         ~~~~~^~~~~~~~~~
+src/Game/Player/MarioActorSensor.cpp:433:19: error: ‘JMath’ has not been declared
+  433 |         f32 sin = JMath::sSinCosTable.table[0xE3].a1;
+      |                   ^~~~~

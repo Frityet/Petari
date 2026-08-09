@@ -1,0 +1,5 @@
+src/Game/Player/MarioEnforce.cpp: In member function ‘void Mario::checkEnforceMoveInner()’:
+src/Game/Player/MarioEnforce.cpp:81:21: error: ‘class MarioActor’ has no member named ‘mBinder’; did you mean ‘initBinder’?
+   81 |             mActor->mBinder->clear();
+      |                     ^~~~~~~
+      |                     initBinder

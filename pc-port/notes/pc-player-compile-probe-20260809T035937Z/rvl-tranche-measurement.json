@@ -1,0 +1,16 @@
+{
+  "baseline_failed_tus": 41,
+  "tus_unlocked_by_legacy_gx_declaration_tranche": 5,
+  "unlocked": [
+    "src/Game/Player/JetTurtleShadow.cpp",
+    "src/Game/Player/MarioActorHand.cpp",
+    "src/Game/Player/MarioActorShadow.cpp",
+    "src/Game/Player/MarioModule.cpp",
+    "src/Game/Player/ModelHolder.cpp"
+  ],
+  "still_failed": 36,
+  "tranche": [
+    "preserve retail enum tags _GXAttr and _GXTlutSize in Aurora",
+    "accept retail GXSetArray(GXAttr, const void*, u8) while retaining the sized PC upload path"
+  ]
+}

@@ -1,0 +1,4 @@
+src/Game/Player/MarioJump.cpp:1:10: fatal error: Game/Enemy/KariKariDirector.hpp: No such file or directory
+    1 | #include "Game/Enemy/KariKariDirector.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.

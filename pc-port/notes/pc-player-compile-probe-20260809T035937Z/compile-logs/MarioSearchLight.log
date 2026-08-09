@@ -1,0 +1,112 @@
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/MarioSearchLight.cpp:4:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelDrawMtx(f32 (*)[3][4])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  121 |         GXSetArray(GX_POS_MTX_ARRAY, mModelDrawMtx, sizeof(*mModelDrawMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/MarioSearchLight.cpp:4:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelNrmMtx(f32 (*)[3][3])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:126:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  126 |         GXSetArray(GX_NRM_MTX_ARRAY, mModelNrmMtx, sizeof(*mModelNrmMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+src/Game/Player/MarioSearchLight.cpp: In member function ‘void MarioActor::initSearchLight()’:
+src/Game/Player/MarioSearchLight.cpp:133:43: error: invalid use of incomplete type ‘class J3DModelData’
+  133 |     s32 drawMtxNum = model->getModelData()->getDrawMtxNum();
+      |                                           ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/MarioSearchLight.cpp:4:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/MarioSearchLight.cpp:135:42: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  135 |         model->mExtraMtxBuffer[i] = new (0x20) Mtx[drawMtxNum];
+      |                                          ^~~~
+      |                                          |
+      |                                          int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioSearchLight.cpp:135:62: warning: placement new constructing an array of objects of type ‘Mtx’ {aka ‘float [3][4]’} and size ‘48’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  135 |         model->mExtraMtxBuffer[i] = new (0x20) Mtx[drawMtxNum];
+      |                                                              ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioSearchLight.cpp:138:58: error: no matching function for call to ‘Functor_Inline(MarioActor*, void (MarioActor::*)() const)’
+  138 |     mDrawSearchLight = new DrawAdaptor(MR::Functor_Inline(this, &MarioActor::drawSearchLight), MR::DrawType_0x33);
+      |                                        ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from include/Game/Player/DrawAdaptor.hpp:4,
+                 from src/Game/Player/MarioSearchLight.cpp:3:
+pc-port/src/Game/Util/Functor.hpp:42:51: note: candidate: ‘template<class T> MR::FunctorV0M<T*, void (T::*)()> MR::Functor_Inline(T*, void (T::*)())’
+   42 |     [[nodiscard]] FunctorV0M< T*, void (T::*)() > Functor_Inline(T* pCaller, void (T::*pCallee)()) {
+      |                                                   ^~~~~~~~~~~~~~
+pc-port/src/Game/Util/Functor.hpp:42:51: note:   template argument deduction/substitution failed:
+src/Game/Player/MarioSearchLight.cpp:138:58: note:   types ‘void (T::)()’ and ‘void (MarioActor::)() const’ have incompatible cv-qualifiers
+  138 |     mDrawSearchLight = new DrawAdaptor(MR::Functor_Inline(this, &MarioActor::drawSearchLight), MR::DrawType_0x33);
+      |                                        ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioSearchLight.cpp: In member function ‘void MarioActor::drawSearchLight() const’:
+src/Game/Player/MarioSearchLight.cpp:229:5: error: ‘TBox2f’ was not declared in this scope; did you mean ‘TBox3f’?
+  229 |     TBox2f drawRect;
+      |     ^~~~~~
+      |     TBox3f
+src/Game/Player/MarioSearchLight.cpp:231:9: error: ‘drawRect’ was not declared in this scope
+  231 |         drawRect.i.x = screenPos2.x;
+      |         ^~~~~~~~
+src/Game/Player/MarioSearchLight.cpp:234:9: error: ‘drawRect’ was not declared in this scope
+  234 |         drawRect.i.x = screenPos1.x;
+      |         ^~~~~~~~
+src/Game/Player/MarioSearchLight.cpp:239:9: error: ‘drawRect’ was not declared in this scope
+  239 |         drawRect.i.y = screenPos2.y;
+      |         ^~~~~~~~
+src/Game/Player/MarioSearchLight.cpp:242:9: error: ‘drawRect’ was not declared in this scope
+  242 |         drawRect.i.y = screenPos1.y;
+      |         ^~~~~~~~
+src/Game/Player/MarioSearchLight.cpp:246:5: error: ‘drawRect’ was not declared in this scope
+  246 |     drawRect.i = drawRect.i + TVec2f(-10.0f, -10.0f);
+      |     ^~~~~~~~
+src/Game/Player/MarioSearchLight.cpp:261:50: error: invalid use of incomplete type ‘class J3DModelData’
+  261 |     J3DMaterial* material = model->getModelData()->getMaterialNodePointer(0);
+      |                                                  ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/Player/J3DModelX.hpp:4,
+                 from src/Game/Player/MarioSearchLight.cpp:4:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~

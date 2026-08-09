@@ -1,0 +1,9 @@
+src/Game/Player/MarioActorTakeMsg.cpp: In member function ‘bool MarioActor::tryThrow()’:
+src/Game/Player/MarioActorTakeMsg.cpp:58:19: error: ‘using TVec3f = struct JGeometry::TVec3<float>’ {aka ‘struct JGeometry::TVec3<float>’} has no member named ‘set2’; did you mean ‘set’?
+   58 |         mVelocity.set2(0.0f);
+      |                   ^~~~
+      |                   set
+src/Game/Player/MarioActorTakeMsg.cpp: In member function ‘bool MarioActor::tryReleaseBombTeresa()’:
+src/Game/Player/MarioActorTakeMsg.cpp:343:9: error: return-statement with no value, in function returning ‘bool’ [-fpermissive]
+  343 |         return;
+      |         ^~~~~~

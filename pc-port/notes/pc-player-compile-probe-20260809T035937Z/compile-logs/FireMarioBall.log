@@ -1,0 +1,18 @@
+src/Game/Player/FireMarioBall.cpp: In member function ‘virtual void FireMarioBall::init(const JMapInfoIter&)’:
+src/Game/Player/FireMarioBall.cpp:37:9: error: ‘connectToSceneEnemyDecoration’ is not a member of ‘MR’; did you mean ‘connectToSceneLayoutDecoration’?
+   37 |     MR::connectToSceneEnemyDecoration(this);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         connectToSceneLayoutDecoration
+src/Game/Player/FireMarioBall.cpp: In member function ‘void FireMarioBall::exeThrow()’:
+src/Game/Player/FireMarioBall.cpp:154:30: error: call of overloaded ‘calcGravityVector(FireMarioBall*, TVec3f*, std::nullptr_t, int)’ is ambiguous
+  154 |         MR::calcGravityVector(this, &grav, nullptr, 0);
+      |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from src/Game/Player/FireMarioBall.cpp:8:
+pc-port/src/Game/Util/GravityUtil.hpp:13:10: note: candidate: ‘bool MR::calcGravityVector(const LiveActor*, TVec3f*, GravityInfo*, u32)’
+   13 |     bool calcGravityVector(const LiveActor* pActor, TVec3f* pDest, GravityInfo* pInfo, u32 host);
+      |          ^~~~~~~~~~~~~~~~~
+In file included from ./pc-port/src/compat/MetrowerksStdCompat.hpp:15,
+                 from <command-line>:
+pc-port/src/compat/GameGravityCompat.hpp:22:17: note: candidate: ‘bool MR::calcGravityVector(const LiveActor*, TVec3f*, GravityInfo*, std::nullptr_t)’
+   22 |     inline bool calcGravityVector(const LiveActor* actor, TVec3f* destination, GravityInfo* info,
+      |                 ^~~~~~~~~~~~~~~~~

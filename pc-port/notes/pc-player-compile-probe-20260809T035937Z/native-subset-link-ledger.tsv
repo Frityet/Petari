@@ -1,0 +1,414 @@
+symbol	demangled	category	pc_archive_provider	pc_archive_status
+C_MTXConcat	C_MTXConcat	other Game/runtime provider	libaurora-mtx.a[mtx.c.o]	provided
+C_MTXCopy	C_MTXCopy	other Game/runtime provider	libaurora-mtx.a[mtx.c.o]	provided
+C_MTXIdentity	C_MTXIdentity	other Game/runtime provider	libaurora-mtx.a[mtx.c.o]	provided
+C_MTXMultVec	C_MTXMultVec	other Game/runtime provider	libaurora-mtx.a[mtxvec.c.o]	provided
+C_MTXMultVecSR	C_MTXMultVecSR	other Game/runtime provider	libaurora-mtx.a[mtxvec.c.o]	provided
+C_MTXRotAxisRad	C_MTXRotAxisRad	other Game/runtime provider	libaurora-mtx.a[mtx.c.o]	provided
+C_VECCrossProduct	C_VECCrossProduct	other Game/runtime provider	libaurora-mtx.a[vec.c.o]	provided
+GXCopyTex	GXCopyTex	RVL/platform	libaurora-gx.a[GXFrameBuffer.cpp.o]	provided
+GXSetAlphaUpdate	GXSetAlphaUpdate	RVL/platform	libaurora-gx.a[GXPixel.cpp.o]	provided
+GXSetColorUpdate	GXSetColorUpdate	RVL/platform	libaurora-gx.a[GXPixel.cpp.o]	provided
+GXSetCopyClear	GXSetCopyClear	RVL/platform	libaurora-gx.a[GXFrameBuffer.cpp.o]	provided
+GXSetDstAlpha	GXSetDstAlpha	RVL/platform	libaurora-gx.a[GXPixel.cpp.o]	provided
+GXSetTexCopyDst	GXSetTexCopyDst	RVL/platform	libaurora-gx.a[GXFrameBuffer.cpp.o]	provided
+GXSetTexCopySrc	GXSetTexCopySrc	RVL/platform	libaurora-gx.a[GXFrameBuffer.cpp.o]	provided
+_Unwind_Resume	_Unwind_Resume	native compiler/system runtime		not found in PC archives
+_Z13JMAAcosRadianf	JMAAcosRadian(float)	native compiler/system runtime	libsmg-pc-game.a[NPCActorCompat.cpp.o]	provided
+_ZN10MarioActor10hideBeeFurEv	MarioActor::hideBeeFur()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor10playEffectEPKc	MarioActor::playEffect(char const*)	effects/audio		not found in PC archives
+_ZN10MarioActor10stopEffectEPKc	MarioActor::stopEffect(char const*)	effects/audio		not found in PC archives
+_ZN10MarioActor10updateFaceEv	MarioActor::updateFace()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor10updateHandEv	MarioActor::updateHand()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor11exeGameOverEv	MarioActor::exeGameOver()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor11exeTimeWaitEv	MarioActor::exeTimeWait()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor11trampleJumpEff	MarioActor::trampleJump(float, float)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor12decLifeLargeEv	MarioActor::decLifeLarge()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor12decLifeSmallEv	MarioActor::decLifeSmall()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor13createIceWallERKN9JGeometry5TVec3IfEES4_	MarioActor::createIceWall(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN10MarioActor13decLifeMiddleEv	MarioActor::decLifeMiddle()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor13forceGameOverEv	MarioActor::forceGameOver()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor13resetPadSwingEv	MarioActor::resetPadSwing()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor13stopAnimationEPKc	MarioActor::stopAnimation(char const*)	J3D/model/animation		not found in PC archives
+_ZN10MarioActor13updateAlphaDLEh	MarioActor::updateAlphaDL(unsigned char)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor13updateTornadoEv	MarioActor::updateTornado()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor15changeAnimationEPKcS1_	MarioActor::changeAnimation(char const*, char const*)	J3D/model/animation		not found in PC archives
+_ZN10MarioActor15exeGameOverFireEv	MarioActor::exeGameOverFire()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor15exeGameOverSinkEv	MarioActor::exeGameOverSink()	native compiler/system runtime		not found in PC archives
+_ZN10MarioActor15hideFreezeModelEv	MarioActor::hideFreezeModel()	J3D/model/animation		not found in PC archives
+_ZN10MarioActor15playEffectTransEPKcRKN9JGeometry5TVec3IfEE	MarioActor::playEffectTrans(char const*, JGeometry::TVec3<float> const&)	effects/audio		not found in PC archives
+_ZN10MarioActor15showFreezeModelEv	MarioActor::showFreezeModel()	J3D/model/animation		not found in PC archives
+_ZN10MarioActor15updateFairyStarEv	MarioActor::updateFairyStar()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor16exeGameOverAbyssEv	MarioActor::exeGameOverAbyss()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor16resetSensorCountEv	MarioActor::resetSensorCount()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor16setBlendMtxTimerEt	MarioActor::setBlendMtxTimer(unsigned short)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor16setPunchHitTimerEh	MarioActor::setPunchHitTimer(unsigned char)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor16updateGravityVecEbb	MarioActor::updateGravityVec(bool, bool)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor17updateHandAtMorphEv	MarioActor::updateHandAtMorph()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor18changeHandMaterialEv	MarioActor::changeHandMaterial()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor18exeGameOverNonStopEv	MarioActor::exeGameOverNonStop()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor18forceGameOverAbyssEv	MarioActor::forceGameOverAbyss()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor19changeNullAnimationEPKca	MarioActor::changeNullAnimation(char const*, signed char)	J3D/model/animation		not found in PC archives
+_ZN10MarioActor19finalizeFreezeModelEv	MarioActor::finalizeFreezeModel()	J3D/model/animation		not found in PC archives
+_ZN10MarioActor19memorizeSensorThrowEP9HitSensor	MarioActor::memorizeSensorThrow(HitSensor*)	HitSensor		not found in PC archives
+_ZN10MarioActor20forceGameOverNonStopEv	MarioActor::forceGameOverNonStop()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor20tryReleaseBombTeresaEv	MarioActor::tryReleaseBombTeresa()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor21exeGameOverBlackHole2Ev	MarioActor::exeGameOverBlackHole2()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor22runTeresaBaseAnimationEv	MarioActor::runTeresaBaseAnimation()	J3D/model/animation		not found in PC archives
+_ZN10MarioActor23changeGameOverAnimationEv	MarioActor::changeGameOverAnimation()	J3D/model/animation		not found in PC archives
+_ZN10MarioActor23rushDropThrowMemoSensorEv	MarioActor::rushDropThrowMemoSensor()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor25damageDropThrowMemoSensorEv	MarioActor::damageDropThrowMemoSensor()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor7decLifeEt	MarioActor::decLife(unsigned short)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor7endRushEPK11RushEndInfo	MarioActor::endRush(RushEndInfo const*)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor7exeWaitEv	MarioActor::exeWait()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor7jumpHopEv	MarioActor::jumpHop()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor9beginRushEv	MarioActor::beginRush()	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor9forceKillEj	MarioActor::forceKill(unsigned int)	other Game/runtime provider		not found in PC archives
+_ZN10MarioActor9playSoundEPKci	MarioActor::playSound(char const*, int)	effects/audio		not found in PC archives
+_ZN10MarioState4initEv	MarioState::init()	other Game/runtime provider		not found in PC archives
+_ZN10MarioState4keepEv	MarioState::keep()	other Game/runtime provider		not found in PC archives
+_ZN10MarioState6noticeEv	MarioState::notice()	other Game/runtime provider		not found in PC archives
+_ZN10MarioState7hitPolyEhRKN9JGeometry5TVec3IfEEP9HitSensor	MarioState::hitPoly(unsigned char, JGeometry::TVec3<float> const&, HitSensor*)	HitSensor		not found in PC archives
+_ZN10PartsModel13makeActorDeadEv	PartsModel::makeActorDead()	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModel16calcViewAndEntryEv	PartsModel::calcViewAndEntry()	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModel17calcAndSetBaseMtxEv	PartsModel::calcAndSetBaseMtx()	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModel17initFixedPositionEPA4_fRKN9JGeometry5TVec3IfEES6_	PartsModel::initFixedPosition(float (*) [4], JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModel17makeActorAppearedEv	PartsModel::makeActorAppeared()	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModel25offFixedPosNormalizeScaleEv	PartsModel::offFixedPosNormalizeScale()	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModel8calcAnimEv	PartsModel::calcAnim()	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModel8movementEv	PartsModel::movement()	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10PartsModelC2EP9LiveActorPKcS3_PA4_fib	PartsModel::PartsModel(LiveActor*, char const*, char const*, float (*) [4], int, bool)	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZN10WarpPodMgr10getPairPodEPK9LiveActor	WarpPodMgr::getPairPod(LiveActor const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN11MarioAccess9forceKillEjj	MarioAccess::forceKill(unsigned int, unsigned int)	other Game/runtime provider		not found in PC archives
+_ZN11MarioModule10playEffectEPKc	MarioModule::playEffect(char const*)	effects/audio		not found in PC archives
+_ZN11MarioModule10stopEffectEPKc	MarioModule::stopEffect(char const*)	effects/audio		not found in PC archives
+_ZN11MarioModule11addVelocityERKN9JGeometry5TVec3IfEE	MarioModule::addVelocity(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule11addVelocityERKN9JGeometry5TVec3IfEEf	MarioModule::addVelocity(JGeometry::TVec3<float> const&, float)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule11startCamVibEj	MarioModule::startCamVib(unsigned int)	other Game/runtime provider		not found in PC archives
+_ZN11MarioModule11startPadVibEPKc	MarioModule::startPadVib(char const*)	other Game/runtime provider		not found in PC archives
+_ZN11MarioModule11startPadVibEj	MarioModule::startPadVib(unsigned int)	other Game/runtime provider		not found in PC archives
+_ZN11MarioModule12playEffectRTEPKcRKN9JGeometry5TVec3IfEES6_	MarioModule::playEffectRT(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	effects/audio		not found in PC archives
+_ZN11MarioModule13clearVelocityEv	MarioModule::clearVelocity()	other Game/runtime provider		not found in PC archives
+_ZN11MarioModule13playEffectRTZEPKcRKN9JGeometry5TVec3IfEES6_	MarioModule::playEffectRTZ(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	effects/audio		not found in PC archives
+_ZN11MarioModule13stopAnimationEPKcS1_	MarioModule::stopAnimation(char const*, char const*)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule14isAnimationRunEPKcj	MarioModule::isAnimationRun(char const*, unsigned int)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule15changeAnimationEPKcS1_	MarioModule::changeAnimation(char const*, char const*)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule15changeAnimationEPKcj	MarioModule::changeAnimation(char const*, unsigned int)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule15playEffectTransEPKcRKN9JGeometry5TVec3IfEE	MarioModule::playEffectTrans(char const*, JGeometry::TVec3<float> const&)	effects/audio		not found in PC archives
+_ZN11MarioModule15setYangleOffsetEf	MarioModule::setYangleOffset(float)	other Game/runtime provider		not found in PC archives
+_ZN11MarioModule15stopEffectForceEPKc	MarioModule::stopEffectForce(char const*)	effects/audio		not found in PC archives
+_ZN11MarioModule16addVelocityAfterERKN9JGeometry5TVec3IfEE	MarioModule::addVelocityAfter(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule17setJointGlobalMtxEtPA4_f	MarioModule::setJointGlobalMtx(unsigned short, float (*) [4])	J3D/model/animation		not found in PC archives
+_ZN11MarioModule18stopAnimationUpperEPKcS1_	MarioModule::stopAnimationUpper(char const*, char const*)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule20changeAnimationUpperEPKcS1_	MarioModule::changeAnimationUpper(char const*, char const*)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule22changeAnimationNonStopEPKc	MarioModule::changeAnimationNonStop(char const*)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule24cutVecElementFromJumpVecERKN9JGeometry5TVec3IfEE	MarioModule::cutVecElementFromJumpVec(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule28cutGravityElementFromJumpVecEb	MarioModule::cutGravityElementFromJumpVec(bool)	other Game/runtime provider		not found in PC archives
+_ZN11MarioModule29changeAnimationInterpoleFrameEj	MarioModule::changeAnimationInterpoleFrame(unsigned int)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule8addTransERKN9JGeometry5TVec3IfEEPKc	MarioModule::addTrans(JGeometry::TVec3<float> const&, char const*)	J3D/model/animation		not found in PC archives
+_ZN11MarioModule9playSoundEPKci	MarioModule::playSound(char const*, int)	effects/audio		not found in PC archives
+_ZN11MarioModule9sendPunchEP9HitSensorb	MarioModule::sendPunch(HitSensor*, bool)	HitSensor		not found in PC archives
+_ZN11WarpCubeMgr16startEventCameraEPK7AreaObj	WarpCubeMgr::startEventCamera(AreaObj const*)	other Game/runtime provider		not found in PC archives
+_ZN11WarpCubeMgr18setInvalidateTimerEP7AreaObjt	WarpCubeMgr::setInvalidateTimer(AreaObj*, unsigned short)	other Game/runtime provider		not found in PC archives
+_ZN13HashSortTable3addEPKcjb	HashSortTable::add(char const*, unsigned int, bool)	other Game/runtime provider		not found in PC archives
+_ZN13HashSortTable4sortEv	HashSortTable::sort()	other Game/runtime provider		not found in PC archives
+_ZN13HashSortTable6searchEPKcPj	HashSortTable::search(char const*, unsigned int*)	other Game/runtime provider		not found in PC archives
+_ZN13HashSortTableC1Ej	HashSortTable::HashSortTable(unsigned int)	other Game/runtime provider		not found in PC archives
+_ZN13MarioAnimator13waterToGroundEv	MarioAnimator::waterToGround()	J3D/model/animation		not found in PC archives
+_ZN13MarioAnimator21updateTakingAnimationEPK9HitSensor	MarioAnimator::updateTakingAnimation(HitSensor const*)	HitSensor		not found in PC archives
+_ZN13MarioAnimator8setSpeedEf	MarioAnimator::setSpeed(float)	J3D/model/animation		not found in PC archives
+_ZN21GameSceneLayoutHolder22changeLifeMeterModeBeeEv	GameSceneLayoutHolder::changeLifeMeterModeBee()	other Game/runtime provider		not found in PC archives
+_ZN21GameSceneLayoutHolder25changeLifeMeterModeGroundEv	GameSceneLayoutHolder::changeLifeMeterModeGround()	other Game/runtime provider		not found in PC archives
+_ZN2MR10emitEffectEP9LiveActorPKc	MR::emitEffect(LiveActor*, char const*)	effects/audio	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR10getAreaObjEPKcRKN9JGeometry5TVec3IfEE	MR::getAreaObj(char const*, JGeometry::TVec3<float> const&)	J3D/model/animation	libsmg-pc-game.a[AreaObjUtil.cpp.o]	provided
+_ZN2MR10getBckCtrlEPK9LiveActor	MR::getBckCtrl(LiveActor const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR10isNearZeroERKN9JGeometry5TVec3IfEEf	MR::isNearZero(JGeometry::TVec3<float> const&, float)	J3D/model/animation	libsmg-pc-game.a[GameMathCompat.cpp.o]	provided
+_ZN2MR10isNearZeroEff	MR::isNearZero(float, float)	other Game/runtime provider	libsmg-pc-game.a[GameMathCompat.cpp.o]	provided
+_ZN2MR10onCalcAnimEP9LiveActor	MR::onCalcAnim(LiveActor*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR10setBckRateEPK9LiveActorf	MR::setBckRate(LiveActor const*, float)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR10stopSubBGMEj	MR::stopSubBGM(unsigned int)	effects/audio		not found in PC archives
+_ZN2MR11calcCubePosEPK7AreaObjPN9JGeometry5TVec3IfEE	MR::calcCubePos(AreaObj const*, JGeometry::TVec3<float>*)	J3D/model/animation		not found in PC archives
+_ZN2MR11getHashCodeEPKc	MR::getHashCode(char const*)	other Game/runtime provider	libsmg-pc-game.a[StorySequencePlatformCompat.cpp.o]	provided
+_ZN2MR11getJointMtxEPK9LiveActorPKc	MR::getJointMtx(LiveActor const*, char const*)	J3D/model/animation	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR11loadViewMtxEv	MR::loadViewMtx()	other Game/runtime provider		not found in PC archives
+_ZN2MR11offCalcAnimEP9LiveActor	MR::offCalcAnim(LiveActor*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR11setBckFrameEPK9LiveActorf	MR::setBckFrame(LiveActor const*, float)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR11startSubBGMEPKcb	MR::startSubBGM(char const*, bool)	effects/audio		not found in PC archives
+_ZN2MR12copyJointPosEPK9LiveActorPKcPN9JGeometry5TVec3IfEE	MR::copyJointPos(LiveActor const*, char const*, JGeometry::TVec3<float>*)	J3D/model/animation		not found in PC archives
+_ZN2MR12deleteEffectEP9LiveActorPKc	MR::deleteEffect(LiveActor*, char const*)	effects/audio	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR12diffAngleAbsERKN9JGeometry5TVec2IfEES4_	MR::diffAngleAbs(JGeometry::TVec2<float> const&, JGeometry::TVec2<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR12diffAngleAbsERKN9JGeometry5TVec3IfEES4_	MR::diffAngleAbs(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR12isDemoActiveEv	MR::isDemoActive()	other Game/runtime provider	libsmg-pc-game.a[DemoUtilCompat.cpp.o]	provided
+_ZN2MR12isSensorRushEPK9HitSensor	MR::isSensorRush(HitSensor const*)	HitSensor	libsmg-pc-game.a[GameActorSensorCompat.cpp.o]	provided
+_ZN2MR12onCalcShadowEP9LiveActorPKc	MR::onCalcShadow(LiveActor*, char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[GameActorPhysicsCompat.cpp.o]	provided
+_ZN2MR12setBaseTRMtxEP9LiveActorRKN9JGeometry10TPosition3INS2_9TMatrix34INS2_10SMatrix34CIfEEEEEE	MR::setBaseTRMtx(LiveActor*, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > > const&)	J3D/model/animation	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR13getJointIndexEPK9LiveActorPKc	MR::getJointIndex(LiveActor const*, char const*)	J3D/model/animation		not found in PC archives
+_ZN2MR13getPlayerLeftEv	MR::getPlayerLeft()	other Game/runtime provider		not found in PC archives
+_ZN2MR13initLightCtrlEP9LiveActor	MR::initLightCtrl(LiveActor*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR13isSensorEnemyEPK9HitSensor	MR::isSensorEnemy(HitSensor const*)	HitSensor	libsmg-pc-game.a[GameActorSensorCompat.cpp.o]	provided
+_ZN2MR13makeMtxUpSideEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEERKNS0_5TVec3IfEESB_	MR::makeMtxUpSide(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR13startStageBGMEPKcb	MR::startStageBGM(char const*, bool)	effects/audio	libsmg-pc-game.a[SoundUtilCompat.cpp.o]	provided
+_ZN2MR13stopAnimFrameEP9LiveActor	MR::stopAnimFrame(LiveActor*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR13tmpMtxRotXRadEf	MR::tmpMtxRotXRad(float)	other Game/runtime provider		not found in PC archives
+_ZN2MR13tmpMtxRotYDegEf	MR::tmpMtxRotYDeg(float)	other Game/runtime provider	libsmg-pc-game.a[MtxCompat.cpp.o]	provided
+_ZN2MR13tmpMtxRotYRadEf	MR::tmpMtxRotYRad(float)	other Game/runtime provider		not found in PC archives
+_ZN2MR13tmpMtxRotZRadEf	MR::tmpMtxRotZRad(float)	other Game/runtime provider		not found in PC archives
+_ZN2MR14calcActorAxisYEPN9JGeometry5TVec3IfEEPK9LiveActor	MR::calcActorAxisY(JGeometry::TVec3<float>*, LiveActor const*)	J3D/model/animation	libsmg-pc-game.a[GameActorPhysicsCompat.cpp.o]	provided
+_ZN2MR14calcCubeRotateEPK7AreaObjPN9JGeometry5TVec3IfEE	MR::calcCubeRotate(AreaObj const*, JGeometry::TVec3<float>*)	J3D/model/animation		not found in PC archives
+_ZN2MR14connectToSceneEP7NameObjiiii	MR::connectToScene(NameObj*, int, int, int, int)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[SceneFunction.cpp.o]	provided
+_ZN2MR14getLightNumMaxEPK9LiveActor	MR::getLightNumMax(LiveActor const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR14getScreenWidthEv	MR::getScreenWidth()	other Game/runtime provider		not found in PC archives
+_ZN2MR14initDLMakerFogEP9LiveActorb	MR::initDLMakerFog(LiveActor*, bool)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR14loadActorLightEPK9LiveActor	MR::loadActorLight(LiveActor const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR14makeMtxUpFrontEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEERKNS0_5TVec3IfEESB_	MR::makeMtxUpFront(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation	libsmg-pc-game.a[MtxCompat.cpp.o]	provided
+_ZN2MR14vecBlendSphereERKN9JGeometry5TVec3IfEES4_PS2_f	MR::vecBlendSphere(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, float)	J3D/model/animation		not found in PC archives
+_ZN2MR14vecKillElementERKN9JGeometry5TVec3IfEES4_PS2_	MR::vecKillElement(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)	J3D/model/animation	libsmg-pc-game.a[GameMathCompat.cpp.o]	provided
+_ZN2MR15extractMtxTransEPA4_fPN9JGeometry5TVec3IfEE	MR::extractMtxTrans(float (*) [4], JGeometry::TVec3<float>*)	J3D/model/animation	libsmg-pc-game.a[NPCActorRuntimeCompat.cpp.o]	provided
+_ZN2MR15getRotatedAxisYEPN9JGeometry5TVec3IfEERKS2_	MR::getRotatedAxisY(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR15getRotatedAxisZEPN9JGeometry5TVec3IfEERKS2_	MR::getRotatedAxisZ(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR15isNormalTalkingEv	MR::isNormalTalking()	other Game/runtime provider		not found in PC archives
+_ZN2MR15isSameDirectionERKN9JGeometry5TVec3IfEES4_f	MR::isSameDirection(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float)	J3D/model/animation	libsmg-pc-game.a[NPCActorRuntimeCompat.cpp.o]	provided
+_ZN2MR15normalizeOrZeroEPN9JGeometry5TVec3IfEE	MR::normalizeOrZero(JGeometry::TVec3<float>*)	J3D/model/animation	libsmg-pc-game.a[GameMathCompat.cpp.o]	provided
+_ZN2MR15startLevelSoundEPK9LiveActorPKciii	MR::startLevelSound(LiveActor const*, char const*, int, int, int)	effects/audio	libsmg-pc-game.a[SoundUtilCompat.cpp.o]	provided
+_ZN2MR16getWallCodeIndexEPK8Triangle	MR::getWallCodeIndex(Triangle const*)	Binder/KCL		not found in PC archives
+_ZN2MR16isSensorAutoRushEPK9HitSensor	MR::isSensorAutoRush(HitSensor const*)	HitSensor	libsmg-pc-game.a[GameActorSensorCompat.cpp.o]	provided
+_ZN2MR16isSensorPressObjEPK9HitSensor	MR::isSensorPressObj(HitSensor const*)	HitSensor	libsmg-pc-game.a[GameActorSensorCompat.cpp.o]	provided
+_ZN2MR16makeRTFromMtxPtrEPN9JGeometry5TVec3IfEES3_PA4_fb	MR::makeRTFromMtxPtr(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, float (*) [4], bool)	J3D/model/animation		not found in PC archives
+_ZN2MR16sendArbitraryMsgEjP9HitSensorS1_	MR::sendArbitraryMsg(unsigned int, HitSensor*, HitSensor*)	HitSensor	libsmg-pc-game.a[GameActorSensorCompat.cpp.o]	provided
+_ZN2MR17getAreaObjManagerEPKc	MR::getAreaObjManager(char const*)	other Game/runtime provider	libsmg-pc-game.a[AreaObjUtil.cpp.o]	provided
+_ZN2MR17getFloorCodeIndexEPK8Triangle	MR::getFloorCodeIndex(Triangle const*)	Binder/KCL		not found in PC archives
+_ZN2MR17getSceneObjHolderEv	MR::getSceneObjHolder()	other Game/runtime provider	libsmg-pc-game.a[SceneObjHolderCompat.cpp.o]	provided
+_ZN2MR17getWallCodeStringEPK8Triangle	MR::getWallCodeString(Triangle const*)	Binder/KCL		not found in PC archives
+_ZN2MR17getWarpPodManagerEv	MR::getWarpPodManager()	other Game/runtime provider		not found in PC archives
+_ZN2MR17loadProjectionMtxEv	MR::loadProjectionMtx()	other Game/runtime provider		not found in PC archives
+_ZN2MR17makeMtxUpFrontPosEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEERKNS0_5TVec3IfEESB_SB_	MR::makeMtxUpFrontPos(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > >*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation	libsmg-pc-game.a[MtxCompat.cpp.o]	provided
+_ZN2MR17startSpinHitSoundEPK9LiveActor	MR::startSpinHitSound(LiveActor const*)	effects/audio		not found in PC archives
+_ZN2MR18drawInitFor2DModelEv	MR::drawInitFor2DModel()	J3D/model/animation		not found in PC archives
+_ZN2MR18getFloorCodeStringEPK8Triangle	MR::getFloorCodeString(Triangle const*)	Binder/KCL		not found in PC archives
+_ZN2MR18initJointTransformEPK9LiveActor	MR::initJointTransform(LiveActor const*)	J3D/model/animation		not found in PC archives
+_ZN2MR18invalidateClippingEP9LiveActor	MR::invalidateClipping(LiveActor*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR18sendMsgPlayerPunchEP9HitSensorS1_	MR::sendMsgPlayerPunch(HitSensor*, HitSensor*)	HitSensor	libsmg-pc-game.a[GameActorSensorCompat.cpp.o]	provided
+_ZN2MR18setBrkFrameAndStopEPK9LiveActorf	MR::setBrkFrameAndStop(LiveActor const*, float)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR18setBtpFrameAndStopEPK9LiveActorf	MR::setBtpFrameAndStop(LiveActor const*, float)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR18updateModelManagerEP9LiveActor	MR::updateModelManager(LiveActor*)	J3D/model/animation		not found in PC archives
+_ZN2MR19getInterpolateValueEfff	MR::getInterpolateValue(float, float, float)	other Game/runtime provider	libsmg-pc-game.a[GameMathCompat.cpp.o]	provided
+_ZN2MR19getKarikariClingNumEv	MR::getKarikariClingNum()	other Game/runtime provider		not found in PC archives
+_ZN2MR19isExistMapCollisionERKN9JGeometry5TVec3IfEES4_	MR::isExistMapCollision(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	Binder/KCL	libsmg-pc-game.a[GameMapCollisionCompat.cpp.o]	provided
+_ZN2MR19isOppositeDirectionERKN9JGeometry5TVec3IfEES4_f	MR::isOppositeDirection(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float)	J3D/model/animation	libsmg-pc-game.a[NPCActorRuntimeCompat.cpp.o]	provided
+_ZN2MR19newDifferedDLBufferEP9LiveActor	MR::newDifferedDLBuffer(LiveActor*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR19setShadowDropLengthEP9LiveActorPKcf	MR::setShadowDropLength(LiveActor*, char const*, float)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[GameActorPhysicsCompat.cpp.o]	provided
+_ZN2MR20calcAnimModelManagerEP9LiveActor	MR::calcAnimModelManager(LiveActor*)	J3D/model/animation		not found in PC archives
+_ZN2MR20endGlobalEventCameraEPKcib	MR::endGlobalEventCamera(char const*, int, bool)	other Game/runtime provider	libsmg-pc-game.a[CameraUtilCompat.cpp.o]	provided
+_ZN2MR20startCurrentStageBGMEv	MR::startCurrentStageBGM()	effects/audio	libsmg-pc-game.a[SoundUtilCompat.cpp.o]	provided
+_ZN2MR21checkStrikePointToMapERKN9JGeometry5TVec3IfEEP7HitInfo	MR::checkStrikePointToMap(JGeometry::TVec3<float> const&, HitInfo*)	J3D/model/animation		not found in PC archives
+_ZN2MR22diffAngleAbsHorizontalERKN9JGeometry5TVec3IfEES4_S4_	MR::diffAngleAbsHorizontal(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR22isBckOneTimeAndStoppedEPK9LiveActor	MR::isBckOneTimeAndStopped(LiveActor const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR22setShadowDropDirectionEP9LiveActorPKcRKN9JGeometry5TVec3IfEE	MR::setShadowDropDirection(LiveActor*, char const*, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR23getFirstPolyOnLineBFastERKN9JGeometry5TVec3IfEES4_PS2_P8Triangle	MR::getFirstPolyOnLineBFast(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, Triangle*)	Binder/KCL		not found in PC archives
+_ZN2MR23getFirstPolyOnLineToMapEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_	MR::getFirstPolyOnLineToMap(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	Binder/KCL	libsmg-pc-game.a[GameMapCollisionCompat.cpp.o]	provided
+_ZN2MR24getGameSceneLayoutHolderEv	MR::getGameSceneLayoutHolder()	other Game/runtime provider		not found in PC archives
+_ZN2MR24initShadowVolumeCylinderEP9LiveActorf	MR::initShadowVolumeCylinder(LiveActor*, float)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[GameActorPhysicsCompat.cpp.o]	provided
+_ZN2MR24requestStartGameOverDemoEv	MR::requestStartGameOverDemo()	other Game/runtime provider		not found in PC archives
+_ZN2MR25diffAngleSignedHorizontalERKN9JGeometry5TVec3IfEES4_S4_	MR::diffAngleSignedHorizontal(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN2MR25removeAllClingingKarikariEv	MR::removeAllClingingKarikari()	other Game/runtime provider		not found in PC archives
+_ZN2MR27onShadowVolumeCutDropLengthEP9LiveActorPKc	MR::onShadowVolumeCutDropLength(LiveActor*, char const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR28setShadowVolumeEndDropOffsetEP9LiveActorPKcf	MR::setShadowVolumeEndDropOffset(LiveActor*, char const*, float)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR30startGlobalEventCameraNoTargetEPKci	MR::startGlobalEventCameraNoTarget(char const*, int)	other Game/runtime provider	libsmg-pc-game.a[CameraUtilCompat.cpp.o]	provided
+_ZN2MR6isDeadEPK9LiveActor	MR::isDead(LiveActor const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR7endDemoEP7NameObjPKc	MR::endDemo(NameObj*, char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[DemoUtilCompat.cpp.o]	provided
+_ZN2MR7stopBrkEPK9LiveActor	MR::stopBrk(LiveActor const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR7stopBtkEPK9LiveActor	MR::stopBtk(LiveActor const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR8startBckEPK9LiveActorPKcS4_	MR::startBck(LiveActor const*, char const*, char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR8startBrkEPK9LiveActorPKc	MR::startBrk(LiveActor const*, char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR8startBtkEPK9LiveActorPKc	MR::startBtk(LiveActor const*, char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR8startBtpEPK9LiveActorPKc	MR::startBtp(LiveActor const*, char const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR8startBvaEPK9LiveActorPKc	MR::startBva(LiveActor const*, char const*)	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZN2MR9getNormalEPK8Triangle	MR::getNormal(Triangle const*)	Binder/KCL		not found in PC archives
+_ZN2MR9hideModelEP9LiveActor	MR::hideModel(LiveActor*)	J3D/model/animation	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN2MR9isInRangeEfff	MR::isInRange(float, float, float)	native compiler/system runtime	libsmg-pc-game.a[GameMathCompat.cpp.o]	provided
+_ZN2MR9isSameMtxEPA4_fS1_	MR::isSameMtx(float (*) [4], float (*) [4])	other Game/runtime provider		not found in PC archives
+_ZN2MR9makeMtxTREPA4_fffffff	MR::makeMtxTR(float (*) [4], float, float, float, float, float, float)	other Game/runtime provider	libsmg-pc-game.a[MtxCompat.cpp.o]	provided
+_ZN2MR9normalizeEPN9JGeometry5TVec3IfEE	MR::normalize(JGeometry::TVec3<float>*)	J3D/model/animation	libsmg-pc-game.a[GameMathCompat.cpp.o]	provided
+_ZN2MR9showModelEP9LiveActor	MR::showModel(LiveActor*)	J3D/model/animation	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZN5Mario10setHeadVecERKN9JGeometry5TVec3IfEE	Mario::setHeadVec(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN5Mario10touchWaterEv	Mario::touchWater()	other Game/runtime provider		not found in PC archives
+_ZN5Mario11addReactionERKN9JGeometry5TVec3IfEE	Mario::addReaction(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN5Mario11tryFreeJumpERKN9JGeometry5TVec3IfEEb	Mario::tryFreeJump(JGeometry::TVec3<float> const&, bool)	J3D/model/animation		not found in PC archives
+_ZN5Mario11trySpinJumpEh	Mario::trySpinJump(unsigned char)	other Game/runtime provider		not found in PC archives
+_ZN5Mario11tryWallJumpERKN9JGeometry5TVec3IfEEb	Mario::tryWallJump(JGeometry::TVec3<float> const&, bool)	J3D/model/animation		not found in PC archives
+_ZN5Mario12requestCrushEv	Mario::requestCrush()	other Game/runtime provider		not found in PC archives
+_ZN5Mario12setSeVersionEj	Mario::setSeVersion(unsigned int)	other Game/runtime provider		not found in PC archives
+_ZN5Mario13checkBeeStickEv	Mario::checkBeeStick()	other Game/runtime provider		not found in PC archives
+_ZN5Mario13initJumpParamEv	Mario::initJumpParam()	other Game/runtime provider		not found in PC archives
+_ZN5Mario13jumpToHipDropEv	Mario::jumpToHipDrop()	other Game/runtime provider		not found in PC archives
+_ZN5Mario13moveWallSlideEf	Mario::moveWallSlide(float)	other Game/runtime provider		not found in PC archives
+_ZN5Mario13setGroundNormERKN9JGeometry5TVec3IfEE	Mario::setGroundNorm(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN5Mario14calcDistToCeilEb	Mario::calcDistToCeil(bool)	other Game/runtime provider		not found in PC archives
+_ZN5Mario15cancelSquatModeEv	Mario::cancelSquatMode()	other Game/runtime provider		not found in PC archives
+_ZN5Mario15resetTeresaModeEv	Mario::resetTeresaMode()	other Game/runtime provider		not found in PC archives
+_ZN5Mario15startTeresaModeEv	Mario::startTeresaMode()	other Game/runtime provider		not found in PC archives
+_ZN5Mario15updateWalkSpeedEv	Mario::updateWalkSpeed()	other Game/runtime provider		not found in PC archives
+_ZN5Mario16recordLastGroundEv	Mario::recordLastGround()	other Game/runtime provider		not found in PC archives
+_ZN5Mario17cancelTornadoJumpEv	Mario::cancelTornadoJump()	other Game/runtime provider		not found in PC archives
+_ZN5Mario17setFrontVecKeepUpERKN9JGeometry5TVec3IfEE	Mario::setFrontVecKeepUp(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN5Mario17setFrontVecKeepUpERKN9JGeometry5TVec3IfEEf	Mario::setFrontVecKeepUp(JGeometry::TVec3<float> const&, float)	J3D/model/animation		not found in PC archives
+_ZN5Mario17setFrontVecKeepUpERKN9JGeometry5TVec3IfEEj	Mario::setFrontVecKeepUp(JGeometry::TVec3<float> const&, unsigned int)	J3D/model/animation		not found in PC archives
+_ZN5Mario17tryForcePowerJumpERKN9JGeometry5TVec3IfEEb	Mario::tryForcePowerJump(JGeometry::TVec3<float> const&, bool)	J3D/model/animation		not found in PC archives
+_ZN5Mario17tryPushToVelocityEv	Mario::tryPushToVelocity()	other Game/runtime provider		not found in PC archives
+_ZN5Mario18createDirectionMtxEPA4_f	Mario::createDirectionMtx(float (*) [4])	other Game/runtime provider		not found in PC archives
+_ZN5Mario18doTeresaReflectionERKN9JGeometry5TVec3IfEEb	Mario::doTeresaReflection(JGeometry::TVec3<float> const&, bool)	J3D/model/animation		not found in PC archives
+_ZN5Mario22setFrontVecKeepUpAngleERKN9JGeometry5TVec3IfEEf	Mario::setFrontVecKeepUpAngle(JGeometry::TVec3<float> const&, float)	J3D/model/animation		not found in PC archives
+_ZN5Mario23forceSetHeadVecKeepSideERKN9JGeometry5TVec3IfEE	Mario::forceSetHeadVecKeepSide(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN5Mario4pushERKN9JGeometry5TVec3IfEE	Mario::push(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN5Mario7tryDropEv	Mario::tryDrop()	other Game/runtime provider		not found in PC archives
+_ZN5Mario7tryJumpEv	Mario::tryJump()	other Game/runtime provider		not found in PC archives
+_ZN5Mario8addTransERKN9JGeometry5TVec3IfEEPKc	Mario::addTrans(JGeometry::TVec3<float> const&, char const*)	J3D/model/animation		not found in PC archives
+_ZN5Mario8mainMoveEv	Mario::mainMove()	other Game/runtime provider		not found in PC archives
+_ZN5Mario8procJumpEb	Mario::procJump(bool)	other Game/runtime provider		not found in PC archives
+_ZN5Mario8setTransERKN9JGeometry5TVec3IfEEPKc	Mario::setTrans(JGeometry::TVec3<float> const&, char const*)	J3D/model/animation		not found in PC archives
+_ZN5Mario8startBasEPKcbff	Mario::startBas(char const*, bool, float, float)	other Game/runtime provider		not found in PC archives
+_ZN5Mario8stopJumpEv	Mario::stopJump()	other Game/runtime provider		not found in PC archives
+_ZN5Mario8stopWalkEv	Mario::stopWalk()	other Game/runtime provider		not found in PC archives
+_ZN5Mario8tryCrushEv	Mario::tryCrush()	other Game/runtime provider		not found in PC archives
+_ZN6TDDraw11drawFillBoxERKN9JGeometry5TVec3IfEES4_j	TDDraw::drawFillBox(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, unsigned int)	J3D/model/animation		not found in PC archives
+_ZN6TDDraw5setupEjjh	TDDraw::setup(unsigned int, unsigned int, unsigned char)	other Game/runtime provider		not found in PC archives
+_ZN7HitInfoC1Ev	HitInfo::HitInfo()	other Game/runtime provider		not found in PC archives
+_ZN7NameObj16calcViewAndEntryEv	NameObj::calcViewAndEntry()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZN7NameObj18initAfterPlacementEv	NameObj::initAfterPlacement()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZN7NameObj4initERK12JMapInfoIter	NameObj::init(JMapInfoIter const&)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZN7NameObj8calcAnimEv	NameObj::calcAnim()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZN7NameObj8movementEv	NameObj::movement()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZN7NameObjC2EPKc	NameObj::NameObj(char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZN7NameObjD2Ev	NameObj::~NameObj()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZN8JUTVideo10getManagerEv	JUTVideo::getManager()	other Game/runtime provider	libsmg-pc-game.a[JutVideo.cpp.o]	provided
+_ZN8TriangleC1Ev	Triangle::Triangle()	Binder/KCL		not found in PC archives
+_ZN9Collision20checkStrikeBallToMapERKN9JGeometry5TVec3IfEEfPK24CollisionPartsFilterBasePK18TriangleFilterBase	Collision::checkStrikeBallToMap(JGeometry::TVec3<float> const&, float, CollisionPartsFilterBase const*, TriangleFilterBase const*)	Binder/KCL		not found in PC archives
+_ZN9HitSensor14receiveMessageEjPS_	HitSensor::receiveMessage(unsigned int, HitSensor*)	HitSensor	libsmg-pc-game.a[HitSensor.cpp.o]	provided
+_ZN9LiveActor10endClippedEv	LiveActor::endClipped()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor12attackSensorEP9HitSensorS1_	LiveActor::attackSensor(HitSensor*, HitSensor*)	HitSensor	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor12startClippedEv	LiveActor::startClipped()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor13makeActorDeadEv	LiveActor::makeActorDead()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor14receiveMessageEjP9HitSensorS1_	LiveActor::receiveMessage(unsigned int, HitSensor*, HitSensor*)	HitSensor	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor15receiveOtherMsgEjP9HitSensorS1_	LiveActor::receiveOtherMsg(unsigned int, HitSensor*, HitSensor*)	HitSensor	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor16calcViewAndEntryEv	LiveActor::calcViewAndEntry()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor16initEffectKeeperEiPKcb	LiveActor::initEffectKeeper(int, char const*, bool)	effects/audio	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor17calcAndSetBaseMtxEv	LiveActor::calcAndSetBaseMtx()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor17makeActorAppearedEv	LiveActor::makeActorAppeared()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor18initAfterPlacementEv	LiveActor::initAfterPlacement()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor23initModelManagerWithAnmEPKcS1_b	LiveActor::initModelManagerWithAnm(char const*, char const*, bool)	J3D/model/animation	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor4killEv	LiveActor::kill()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor6appearEv	LiveActor::appear()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor7controlEv	LiveActor::control()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor8calcAnimEv	LiveActor::calcAnim()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor8movementEv	LiveActor::movement()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor9getSensorEPKc	LiveActor::getSensor(char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActor9initSoundEib	LiveActor::initSound(int, bool)	effects/audio	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActorC2EPKc	LiveActor::LiveActor(char const*)	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9LiveActorD2Ev	LiveActor::~LiveActor()	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZN9MarioFlip6updateEv	MarioFlip::update()	other Game/runtime provider		not found in PC archives
+_ZN9MarioSwim14checkWaterCubeEb	MarioSwim::checkWaterCube(bool)	other Game/runtime provider		not found in PC archives
+_ZN9MarioSwim8addFaintERKN9JGeometry5TVec3IfEE	MarioSwim::addFaint(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN9MarioSwim8hitPunchERKN9JGeometry5TVec3IfEE	MarioSwim::hitPunch(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZN9MarioSwim8resetJetEv	MarioSwim::resetJet()	other Game/runtime provider		not found in PC archives
+_ZN9MarioSwim8startJetEj	MarioSwim::startJet(unsigned int)	other Game/runtime provider		not found in PC archives
+_ZN9MarioSwim9addDamageERKN9JGeometry5TVec3IfEE	MarioSwim::addDamage(JGeometry::TVec3<float> const&)	J3D/model/animation		not found in PC archives
+_ZNK10MarioActor10isDamagingEv	MarioActor::isDamaging() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor10isPunchingEv	MarioActor::isPunching() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor13getGravityVecEv	MarioActor::getGravityVec() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor13isRequestJumpEv	MarioActor::isRequestJump() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor13isRequestRushEv	MarioActor::isRequestRush() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor13isRequestSpinEv	MarioActor::isRequestSpin() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor14drawMarioModelEv	MarioActor::drawMarioModel() const	J3D/model/animation		not found in PC archives
+_ZNK10MarioActor14isAnimationRunEPKc	MarioActor::isAnimationRun(char const*) const	J3D/model/animation		not found in PC archives
+_ZNK10MarioActor16getGravityVectorEv	MarioActor::getGravityVector() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor16isRequestHipDropEv	MarioActor::isRequestHipDrop() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioActor19isEnableNerveChangeEv	MarioActor::isEnableNerveChange() const	LiveActor/NameObj/Nerve ABI		not found in PC archives
+_ZNK10MarioActor9isJumpingEv	MarioActor::isJumping() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioState13getBlurOffsetEv	MarioState::getBlurOffset() const	other Game/runtime provider		not found in PC archives
+_ZNK10MarioState6draw3DEv	MarioState::draw3D() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule10calcAngleDERKN9JGeometry5TVec3IfEE	MarioModule::calcAngleD(JGeometry::TVec3<float> const&) const	J3D/model/animation		not found in PC archives
+_ZNK11MarioModule10getCamDirXEv	MarioModule::getCamDirX() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule10getCamDirYEv	MarioModule::getCamDirY() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule10getCamDirZEv	MarioModule::getCamDirZ() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule11getAnimatorEv	MarioModule::getAnimator() const	J3D/model/animation		not found in PC archives
+_ZNK11MarioModule11getFrontVecEv	MarioModule::getFrontVec() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule12getShadowPosEv	MarioModule::getShadowPos() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule13getGravityVecEv	MarioModule::getGravityVec() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule13getPlayerModeEv	MarioModule::getPlayerMode() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule13isSlipPolygonEPK8Triangle	MarioModule::isSlipPolygon(Triangle const*) const	Binder/KCL		not found in PC archives
+_ZNK11MarioModule14getWorldPadDirEv	MarioModule::getWorldPadDir() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule14isAnimationRunEPKc	MarioModule::isAnimationRun(char const*) const	J3D/model/animation		not found in PC archives
+_ZNK11MarioModule14isOnSlipGroundEv	MarioModule::isOnSlipGround() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule15isSlipFloorCodeEi	MarioModule::isSlipFloorCode(int) const	Binder/KCL		not found in PC archives
+_ZNK11MarioModule16getAirGravityVecEv	MarioModule::getAirGravityVec() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule16getGroundPolygonEv	MarioModule::getGroundPolygon() const	Binder/KCL		not found in PC archives
+_ZNK11MarioModule16isStatusActiveIDEj	MarioModule::isStatusActiveID(unsigned int) const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule17calcPolygonAngleDEPK8Triangle	MarioModule::calcPolygonAngleD(Triangle const*) const	Binder/KCL		not found in PC archives
+_ZNK11MarioModule18isPlayerModeHopperEv	MarioModule::isPlayerModeHopper() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule18isPlayerModeTeresaEv	MarioModule::isPlayerModeTeresa() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule20isAnimationTerminateEPKc	MarioModule::isAnimationTerminate(char const*) const	J3D/model/animation		not found in PC archives
+_ZNK11MarioModule8getTransEv	MarioModule::getTrans() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule9checkTrgAEv	MarioModule::checkTrgA() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule9checkTrgZEv	MarioModule::checkTrgZ() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule9getPlayerEv	MarioModule::getPlayer() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule9getSensorEPK8Triangle	MarioModule::getSensor(Triangle const*) const	Binder/KCL		not found in PC archives
+_ZNK11MarioModule9getStickPEv	MarioModule::getStickP() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule9getStickXEv	MarioModule::getStickX() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule9getStickYEv	MarioModule::getStickY() const	other Game/runtime provider		not found in PC archives
+_ZNK11MarioModule9isStickOnEv	MarioModule::isStickOn() const	other Game/runtime provider		not found in PC archives
+_ZNK13MarioAnimator21isLandingAnimationRunEv	MarioAnimator::isLandingAnimationRun() const	J3D/model/animation		not found in PC archives
+_ZNK13MarioAnimator8getFrameEv	MarioAnimator::getFrame() const	J3D/model/animation		not found in PC archives
+_ZNK14SceneObjHolder6getObjEi	SceneObjHolder::getObj(int) const	other Game/runtime provider	libsmg-pc-game.a[SceneObjHolderCompat.cpp.o]	provided
+_ZNK5Mario10getWallPosEv	Mario::getWallPos() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario10isSwimmingEv	Mario::isSwimming() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario11getWallNormEv	Mario::getWallNorm() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario12isEnableRushEv	Mario::isEnableRush() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario12isInvincibleEv	Mario::isInvincible() const	native compiler/system runtime		not found in PC archives
+_ZNK5Mario13getGravityVecEv	Mario::getGravityVec() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario13getShadowNormEv	Mario::getShadowNorm() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario14getWallPolygonEv	Mario::getWallPolygon() const	Binder/KCL		not found in PC archives
+_ZNK5Mario16getAirGravityVecEv	Mario::getAirGravityVec() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario16getFrontWallNormEv	Mario::getFrontWallNorm() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario16getGroundPolygonEv	Mario::getGroundPolygon() const	Binder/KCL		not found in PC archives
+_ZNK5Mario18getLastSafetyTransEPN9JGeometry5TVec3IfEE	Mario::getLastSafetyTrans(JGeometry::TVec3<float>*) const	J3D/model/animation		not found in PC archives
+_ZNK5Mario18isCurrentFloorSandEv	Mario::isCurrentFloorSand() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario21isStageCameraRotate2DEv	Mario::isStageCameraRotate2D() const	other Game/runtime provider		not found in PC archives
+_ZNK5Mario27checkCurrentFloorCodeSevereEj	Mario::checkCurrentFloorCodeSevere(unsigned int) const	Binder/KCL		not found in PC archives
+_ZNK5Mario8isRisingEv	Mario::isRising() const	native compiler/system runtime		not found in PC archives
+_ZNK5Mario9isHangingEv	Mario::isHanging() const	other Game/runtime provider		not found in PC archives
+_ZNK5Nerve12executeOnEndEP5Spine	Nerve::executeOnEnd(Spine*) const	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[Nerve.cpp.o]	provided
+_ZNK7NameObj4drawEv	NameObj::draw() const	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZNK8JUTVideo13getRenderModeEv	JUTVideo::getRenderMode() const	other Game/runtime provider	libsmg-pc-game.a[JutVideo.cpp.o]	provided
+_ZNK8Triangle10getBaseMtxEv	Triangle::getBaseMtx() const	Binder/KCL		not found in PC archives
+_ZNK8Triangle14getPrevBaseMtxEv	Triangle::getPrevBaseMtx() const	Binder/KCL		not found in PC archives
+_ZNK8Triangle7isValidEv	Triangle::isValid() const	Binder/KCL		not found in PC archives
+_ZNK8Triangle9getNormalEi	Triangle::getNormal(int) const	Binder/KCL		not found in PC archives
+_ZNK9HitSensor6isTypeEj	HitSensor::isType(unsigned int) const	HitSensor	libsmg-pc-game.a[HitSensor.cpp.o]	provided
+_ZNK9LiveActor10getBaseMtxEv	LiveActor::getBaseMtx() const	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActorUtilCompat.cpp.o]	provided
+_ZNK9LiveActor7isNerveEPK5Nerve	LiveActor::isNerve(Nerve const*) const	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZTI10MarioState	typeinfo for MarioState	other Game/runtime provider		not found in PC archives
+_ZTI10PartsModel	typeinfo for PartsModel	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZTI11MarioModule	typeinfo for MarioModule	other Game/runtime provider		not found in PC archives
+_ZTI5Nerve	typeinfo for Nerve	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[Nerve.cpp.o]	provided
+_ZTI7NameObj	typeinfo for NameObj	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[NameObj.cpp.o]	provided
+_ZTI9LiveActor	typeinfo for LiveActor	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[LiveActor.cpp.o]	provided
+_ZTV10MarioState	vtable for MarioState	other Game/runtime provider		not found in PC archives
+_ZTV10PartsModel	vtable for PartsModel	J3D/model/animation	libsmg-pc-game.a[PartsModel.cpp.o]	provided
+_ZTV11MarioModule	vtable for MarioModule	other Game/runtime provider		not found in PC archives
+_ZTV5Nerve	vtable for Nerve	LiveActor/NameObj/Nerve ABI	libsmg-pc-game.a[Nerve.cpp.o]	provided
+_ZTV9MarioWarp	vtable for MarioWarp	other Game/runtime provider		not found in PC archives
+_ZTVN10__cxxabiv120__si_class_type_infoE	vtable for __cxxabiv1::__si_class_type_info	other Game/runtime provider		not found in PC archives
+_ZTVN10__cxxabiv121__vmi_class_type_infoE	vtable for __cxxabiv1::__vmi_class_type_info	other Game/runtime provider		not found in PC archives
+_ZdlPvm	operator delete(void*, unsigned long)	native compiler/system runtime		not found in PC archives
+_Znam	operator new[](unsigned long)	native compiler/system runtime		not found in PC archives
+_Znwm	operator new(unsigned long)	native compiler/system runtime		not found in PC archives
+__gxx_personality_v0	__gxx_personality_v0	RVL/platform		not found in PC archives
+__stack_chk_fail	__stack_chk_fail	other Game/runtime provider		not found in PC archives
+cosf	cosf	native compiler/system runtime		not found in PC archives
+gIsLuigi	gIsLuigi	other Game/runtime provider		not found in PC archives
+lbl_805C64D8	lbl_805C64D8	other Game/runtime provider		not found in PC archives
+lbl_806B6288	lbl_806B6288	other Game/runtime provider		not found in PC archives
+sin	sin	native compiler/system runtime		not found in PC archives
+sqrt	sqrt	native compiler/system runtime		not found in PC archives
+sqrtf	sqrtf	native compiler/system runtime		not found in PC archives
+strcmp	strcmp	native compiler/system runtime		not found in PC archives

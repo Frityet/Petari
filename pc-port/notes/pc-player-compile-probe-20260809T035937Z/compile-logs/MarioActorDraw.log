@@ -1,0 +1,298 @@
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/LiveActor/ModelManager.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelDrawMtx(f32 (*)[3][4])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:121:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  121 |         GXSetArray(GX_POS_MTX_ARRAY, mModelDrawMtx, sizeof(*mModelDrawMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/LiveActor/ModelManager.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:1:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp: In member function ‘void J3DSys::setModelNrmMtx(f32 (*)[3][3])’:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp:126:19: error: too few arguments to function ‘void GXSetArray(GXAttr, const void*, u32, u8, bool)’
+  126 |         GXSetArray(GX_NRM_MTX_ARRAY, mModelNrmMtx, sizeof(*mModelNrmMtx));
+      |         ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from pc-port/aurora/include/dolphin/gx.h:18,
+                 from pc-port/aurora/include/revolution.h:7,
+                 from pc-port/src/revolution.h:5,
+                 from pc-port/src/math_types.hpp:3,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:9,
+                 from <command-line>:
+pc-port/aurora/include/dolphin/gx/GXGeometry.h:23:6: note: declared here
+   23 | void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
+      |      ^~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:29:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp: At global scope:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:66:32: error: ‘_GXTlutSize’ has not been declared
+   66 | void J3DGDLoadTlut(void*, u32, _GXTlutSize);
+      |                                ^~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:5,
+                 from src/Game/Player/MarioActorDraw.cpp:29:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:120:29: error: ‘_GXAttr’ has not been declared
+  120 |     void addTexMtxIndexInDL(_GXAttr, u32);
+      |                             ^~~~~~~
+libs/JSystem/include/JSystem/J3DGraphBase/J3DShape.hpp:121:30: error: ‘_GXAttr’ has not been declared
+  121 |     void addTexMtxIndexInVcd(_GXAttr);
+      |                              ^~~~~~~
+In file included from src/Game/Player/MarioActorDraw.cpp:31:
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:34:46: error: ‘JKRHeap::TState’ has not been declared
+   34 |     /* vt[21] */ virtual void state_register(JKRHeap::TState*, u32) const;                         /* override */
+      |                                              ^~~~~~~
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:35:45: error: ‘JKRHeap::TState’ has not been declared
+   35 |     /* vt[22] */ virtual bool state_compare(JKRHeap::TState const&, JKRHeap::TState const&) const; /* override */
+      |                                             ^~~~~~~
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:35:69: error: ‘JKRHeap::TState’ has not been declared
+   35 |     /* vt[22] */ virtual bool state_compare(JKRHeap::TState const&, JKRHeap::TState const&) const; /* override */
+      |                                                                     ^~~~~~~
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:45:28: error: ‘TState’ has not been declared
+   45 |     static void* getState_(TState* state) {
+      |                            ^~~~~~
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp: In static member function ‘static s32 JKRSolidHeap::getUsedSize(JKRSolidHeap*)’:
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:42:22: error: ‘class JKRSolidHeap’ has no member named ‘mSize’
+   42 |         return heap->mSize - heap->getTotalFreeSize();
+      |                      ^~~~~
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:42:36: error: ‘class JKRSolidHeap’ has no member named ‘getTotalFreeSize’; did you mean ‘do_getTotalFreeSize’?
+   42 |         return heap->mSize - heap->getTotalFreeSize();
+      |                                    ^~~~~~~~~~~~~~~~
+      |                                    do_getTotalFreeSize
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp: In static member function ‘static void* JKRSolidHeap::getState_(int*)’:
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:46:16: error: ‘getState_buf_’ was not declared in this scope; did you mean ‘getState_’?
+   46 |         return getState_buf_(state);
+      |                ^~~~~~~~~~~~~
+      |                getState_
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp: In function ‘void JKRDestroySolidHeap(JKRSolidHeap*)’:
+libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp:62:11: error: ‘class JKRSolidHeap’ has no member named ‘destroy’; did you mean ‘do_destroy’?
+   62 |     heap->destroy();
+      |           ^~~~~~~
+      |           do_destroy
+src/Game/Player/MarioActorDraw.cpp: In member function ‘void MarioActor::initDrawAndModel()’:
+src/Game/Player/MarioActorDraw.cpp:113:46: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  113 |         baseModel->mExtraMtxBuffer[i] = new (0x20) Mtx[0xC00 / sizeof(Mtx)];
+      |                                              ^~~~
+      |                                              |
+      |                                              int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActorDraw.cpp:113:75: warning: placement new constructing an object of type ‘Mtx {aka float [3][4]} [768]’ and size ‘3072’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  113 |         baseModel->mExtraMtxBuffer[i] = new (0x20) Mtx[0xC00 / sizeof(Mtx)];
+      |                                                                           ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActorDraw.cpp:148:19: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  148 |     mDL[0] = new (0x20) u8[0x100];
+      |                   ^~~~
+      |                   |
+      |                   int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActorDraw.cpp:148:33: warning: placement new constructing an object of type ‘u8 {aka unsigned char} [256]’ and size ‘256’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  148 |     mDL[0] = new (0x20) u8[0x100];
+      |                                 ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActorDraw.cpp:149:19: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  149 |     mDL[1] = new (0x20) u8[0x100];
+      |                   ^~~~
+      |                   |
+      |                   int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActorDraw.cpp:149:33: warning: placement new constructing an object of type ‘u8 {aka unsigned char} [256]’ and size ‘256’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  149 |     mDL[1] = new (0x20) u8[0x100];
+      |                                 ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActorDraw.cpp:158:41: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  158 |         changer->mBuffers[i].mDL = new (0x20) u8[0x100];
+      |                                         ^~~~
+      |                                         |
+      |                                         int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActorDraw.cpp:158:55: warning: placement new constructing an object of type ‘u8 {aka unsigned char} [256]’ and size ‘256’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  158 |         changer->mBuffers[i].mDL = new (0x20) u8[0x100];
+      |                                                       ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActorDraw.cpp: In member function ‘void MarioActor::initBlur()’:
+src/Game/Player/MarioActorDraw.cpp:490:56: error: invalid use of incomplete type ‘class J3DModelData’
+  490 |             const u16 jointNum = mModels[i]->mModelData->getJointNum();
+      |                                                        ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/LiveActor/ModelManager.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/MarioActorDraw.cpp:499:36: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  499 |             _A70[i * 8 + j] = new (0x20) Mtx[_B14];
+      |                                    ^~~~
+      |                                    |
+      |                                    int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActorDraw.cpp:499:50: warning: placement new constructing an array of objects of type ‘Mtx’ {aka ‘float [3][4]’} and size ‘48’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  499 |             _A70[i * 8 + j] = new (0x20) Mtx[_B14];
+      |                                                  ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActorDraw.cpp: In member function ‘void MarioActor::createTextureDL(DLholder*, u16, u16)’:
+src/Game/Player/MarioActorDraw.cpp:723:25: error: invalid conversion from ‘int’ to ‘void*’ [-fpermissive]
+  723 |     pHolder->mDL = new (0x20) u8[alignedSize];
+      |                         ^~~~
+      |                         |
+      |                         int
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:176:67: note:   initializing argument 2 of ‘void* operator new [](std::size_t, void*)’
+  176 | _GLIBCXX_NODISCARD inline void* operator new[](std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                                             ~~~~~~^~~
+src/Game/Player/MarioActorDraw.cpp:723:45: warning: placement new constructing an array of objects of type ‘u8’ {aka ‘unsigned char’} and size ‘1’ in a region of type ‘long int’ and size ‘0’ [-Wplacement-new=]
+  723 |     pHolder->mDL = new (0x20) u8[alignedSize];
+      |                                             ^
+In file included from <command-line>:
+/usr/include/stdc-predef.h:1:109: note: ‘‘integer_cst’ not supported by dump_decl<declaration error>’ declared here
+    1 | /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+      |                                                                                                             ^
+src/Game/Player/MarioActorDraw.cpp: In member function ‘void MarioActor::changeDisplayMode(u8)’:
+src/Game/Player/MarioActorDraw.cpp:764:95: error: ‘mModelManager’ was not declared in this scope; did you mean ‘ModelManager’?
+  764 |     DisplayListMakerForModelSwap* dlMaker = reinterpret_cast< DisplayListMakerForModelSwap* >(mModelManager->mDisplayListMaker);
+      |                                                                                               ^~~~~~~~~~~~~
+      |                                                                                               ModelManager
+src/Game/Player/MarioActorDraw.cpp: In member function ‘void MarioActor::drawModelBlur() const’:
+src/Game/Player/MarioActorDraw.cpp:994:55: error: invalid use of incomplete type ‘class J3DModelData’
+  994 |             for (u16 joint = 0; joint < getModelData()->getJointNum(); joint++) {
+      |                                                       ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/LiveActor/ModelManager.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/MarioActorDraw.cpp:1003:46: error: invalid use of incomplete type ‘class J3DModelData’
+ 1003 |         const u32 jointCount = getModelData()->getJointNum();
+      |                                              ^~
+In file included from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp:3,
+                 from include/Game/LiveActor/ModelManager.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:1:
+pc-port/src/JSystem/J3DGraphAnimator/J3DModelData.hpp:3:7: note: forward declaration of ‘class J3DModelData’
+    3 | class J3DModelData;
+      |       ^~~~~~~~~~~~
+src/Game/Player/MarioActorDraw.cpp: In member function ‘MR::FunctorBase* MR::FunctorV0M<T, U>::clone(JKRHeap*) const [with T = const MarioActor*; U = void (MarioActor::*)() const]’:
+src/Game/Player/MarioActorDraw.cpp:1133:94: error: no matching function for call to ‘operator new(sizetype, JKRHeap*&, int)’
+ 1133 |     return new (pHeap, 0) FunctorV0M< const MarioActor*, void (MarioActor::*)() const >(*this);
+      |                                                                                              ^
+In file included from /usr/include/c++/11/bits/stl_iterator.h:82,
+                 from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from ./pc-port/src/compat/MetrowerksStdCompat.hpp:12,
+                 from <command-line>:
+/usr/include/c++/11/new:126:26: note: candidate: ‘void* operator new(std::size_t)’
+  126 | _GLIBCXX_NODISCARD void* operator new(std::size_t) _GLIBCXX_THROW (std::bad_alloc)
+      |                          ^~~~~~~~
+/usr/include/c++/11/new:126:26: note:   candidate expects 1 argument, 3 provided
+/usr/include/c++/11/new:149:26: note: candidate: ‘void* operator new(std::size_t, std::align_val_t)’
+  149 | _GLIBCXX_NODISCARD void* operator new(std::size_t, std::align_val_t)
+      |                          ^~~~~~~~
+/usr/include/c++/11/new:149:26: note:   candidate expects 2 arguments, 3 provided
+/usr/include/c++/11/new:140:26: note: candidate: ‘void* operator new(std::size_t, const std::nothrow_t&)’
+  140 | _GLIBCXX_NODISCARD void* operator new(std::size_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+      |                          ^~~~~~~~
+/usr/include/c++/11/new:140:26: note:   candidate expects 2 arguments, 3 provided
+/usr/include/c++/11/new:151:26: note: candidate: ‘void* operator new(std::size_t, std::align_val_t, const std::nothrow_t&)’
+  151 | _GLIBCXX_NODISCARD void* operator new(std::size_t, std::align_val_t, const std::nothrow_t&)
+      |                          ^~~~~~~~
+/usr/include/c++/11/new:151:52: note:   no known conversion for argument 2 from ‘JKRHeap*’ to ‘std::align_val_t’
+  151 | _GLIBCXX_NODISCARD void* operator new(std::size_t, std::align_val_t, const std::nothrow_t&)
+      |                                                    ^~~~~~~~~~~~~~~~
+/usr/include/c++/11/new:174:33: note: candidate: ‘void* operator new(std::size_t, void*)’
+  174 | _GLIBCXX_NODISCARD inline void* operator new(std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+      |                                 ^~~~~~~~
+/usr/include/c++/11/new:174:33: note:   candidate expects 2 arguments, 3 provided
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:29:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp: At global scope:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:31:13: warning: inline function ‘void J3DGDWriteBPCmd(u32)’ used but never defined
+   31 | inline void J3DGDWriteBPCmd(u32 regval);
+      |             ^~~~~~~~~~~~~~~
+In file included from libs/JSystem/include/JSystem/J3DGraphBase/J3DTevs.hpp:3,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMatBlock.hpp:4,
+                 from libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp:3,
+                 from src/Game/Player/MarioActorDraw.cpp:29:
+libs/JSystem/include/JSystem/J3DGraphBase/J3DGD.hpp:106:13: warning: inline function ‘void J3DGDSetZMode(u8, GXCompare, u8)’ used but never defined
+  106 | inline void J3DGDSetZMode(u8 compareEnable, GXCompare func, u8 writeEnable);
+      |             ^~~~~~~~~~~~~

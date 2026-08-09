@@ -1,0 +1,25 @@
+src/Game/Player/MarioActorGameOver.cpp: In member function ‘void MarioActor::exeGameOver()’:
+src/Game/Player/MarioActorGameOver.cpp:134:9: error: ‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+  134 |     MR::startStarPointerModeDemoMarioDeath(this);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         startStarPointerModeTitle
+src/Game/Player/MarioActorGameOver.cpp: In member function ‘void MarioActor::exeGameOverAbyss()’:
+src/Game/Player/MarioActorGameOver.cpp:157:9: error: ‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+  157 |     MR::startStarPointerModeDemoMarioDeath(this);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         startStarPointerModeTitle
+src/Game/Player/MarioActorGameOver.cpp: In member function ‘void MarioActor::exeGameOverFire()’:
+src/Game/Player/MarioActorGameOver.cpp:187:9: error: ‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+  187 |     MR::startStarPointerModeDemoMarioDeath(this);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         startStarPointerModeTitle
+src/Game/Player/MarioActorGameOver.cpp: In member function ‘void MarioActor::exeGameOverSink()’:
+src/Game/Player/MarioActorGameOver.cpp:212:13: error: ‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+  212 |         MR::startStarPointerModeDemoMarioDeath(this);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |             startStarPointerModeTitle
+src/Game/Player/MarioActorGameOver.cpp: In member function ‘void MarioActor::exeGameOverNonStop()’:
+src/Game/Player/MarioActorGameOver.cpp:256:9: error: ‘startStarPointerModeDemoMarioDeath’ is not a member of ‘MR’; did you mean ‘startStarPointerModeTitle’?
+  256 |     MR::startStarPointerModeDemoMarioDeath(this);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         startStarPointerModeTitle
