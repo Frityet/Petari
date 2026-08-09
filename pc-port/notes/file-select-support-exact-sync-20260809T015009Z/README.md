@@ -23,9 +23,11 @@ because they are protected, independently dirty user work.
 
 ## Mechanical boundaries
 
-`GameSourceMirrorTests.cpp` now checks all eleven source/header pairs in this
-slice. `FileSelectInfo.cpp` was also added to the existing exact File Select
-host-compile target so that byte identity cannot hide a host syntax regression.
+`GameSourceMirrorTests.cpp` now checks the eleven newly frozen paths in this
+slice. Together with its pre-existing `FileSelectInfo.hpp` check, that is twelve
+File Select support mirror pairs. `FileSelectInfo.cpp` was also added to the
+existing exact File Select host-compile target so that byte identity cannot hide
+a host syntax regression.
 
 See `frozen-paths.txt` for the exact commit review/staging scope and
 `verification.log` for the focused proof.

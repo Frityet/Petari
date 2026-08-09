@@ -1,7 +1,9 @@
-PASS  cmp/sha256: all eleven root-to-PC File Select support paths are byte-identical
+PASS  cmp/sha256: all eleven newly frozen root-to-PC paths are byte-identical
+PASS  source mirror test: twelve File Select support pairs including the pre-existing FileSelectInfo.hpp pair
 
 Source-pair SHA-256:
 FileSelectInfo.cpp       5fa502bc6506aa16f90a3be08b958187e2f0dd79001d85277e2978e5eea65525
+FileSelectInfo.hpp       0b9cdf2db96c25b984920761d5c4c9fa87d14acf217f50997fc012449a2ef82c
 BackButton.cpp           001553dfd3200895062fe40315b42002755ae5ab02a8065c76efddfaf1612b16
 BackButton.hpp           b7d7febc63a8b9371012cb4551bb2156704c7a209261c2ab634a3c94e6d9629d
 BrosButton.cpp           920d383e0c12e73c08942c2029f25c55208b99c727876db657ada4cfedcc2d88
