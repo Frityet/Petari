@@ -76,7 +76,7 @@ public:
     bool isNonFixHeadVec() const;
     void createMtxDir(MtxPtr, const TVec3f&, const TVec3f&, const TVec3f&);
     void createDirectionMtx(MtxPtr);
-    void createCorrectionMtx(MtxPtr, TVec3f*);
+    bool createCorrectionMtx(MtxPtr, TVec3f*);
     void createAngleMtx(MtxPtr, bool);
     void slopeTiltHead(TVec3f*);
     void fixFrontVecByGravity();
