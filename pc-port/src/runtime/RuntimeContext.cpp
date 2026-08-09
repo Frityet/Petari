@@ -964,6 +964,20 @@ namespace smgpc::runtime {
         return _freecam_enabled;
     }
 
+    void RuntimeContext::set_freecam_enabled(bool enabled) {
+        if (_freecam_enabled == enabled) {
+            return;
+        }
+
+        _freecam_enabled = enabled;
+        _freecam_look_initialized = false;
+        if (!enabled) {
+            _freecam_target_pose.reset();
+        } else if (!_freecam_target_pose.has_value()) {
+            _freecam_target_pose = _scene_camera_pose;
+        }
+    }
+
     const std::optional<smgpc::camera::CameraPose> &RuntimeContext::scene_camera_pose() const {
         return _scene_camera_pose;
     }

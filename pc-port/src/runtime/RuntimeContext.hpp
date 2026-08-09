@@ -163,6 +163,7 @@ namespace smgpc::runtime {
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &scene_camera_pose() const;
         [[nodiscard]] const std::optional<smgpc::camera::CameraPose> &last_camera_pose() const;
         [[nodiscard]] bool is_freecam_enabled() const;
+        void set_freecam_enabled(bool enabled);
         [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
         [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
