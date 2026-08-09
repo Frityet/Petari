@@ -16,6 +16,8 @@ namespace {
 
     constexpr auto cSourcePairs = std::array{
         SourcePair{"../include/Game/Animation/AnmPlayer.hpp", "src/Game/Animation/AnmPlayer.hpp"},
+        SourcePair{"../include/Game/AudioLib/AudBgmSetting.hpp", "src/Game/AudioLib/AudBgmSetting.hpp"},
+        SourcePair{"../src/Game/AudioLib/AudBgmSetting.cpp", "src/Game/AudioLib/AudBgmSetting.cpp"},
         SourcePair{"../include/Game/LiveActor/MaterialCtrl.hpp", "src/Game/LiveActor/MaterialCtrl.hpp"},
         SourcePair{"../src/Game/LiveActor/MaterialCtrl.cpp", "src/Game/LiveActor/MaterialCtrl.cpp"},
         SourcePair{"../include/Game/MapObj/InvisiblePolygonObj.hpp", "src/Game/MapObj/InvisiblePolygonObj.hpp"},

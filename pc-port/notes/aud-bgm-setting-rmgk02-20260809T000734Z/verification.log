@@ -1,0 +1,84 @@
+RMGK02 AudBgmSetting verification
+UTC: 2026-08-09T00:07:34Z
+
+Configure and focused compile:
+  python3 configure.py --version RMGK02
+  ninja build/RMGK02/src/Game/AudioLib/AudBgmSetting.o
+Result:
+  [1/1] MWCC build/RMGK02/src/Game/AudioLib/AudBgmSetting.o
+
+Initializer byte audit against generated retail assembly:
+  cBgmSettingInfo: entries=105 bytes=840 target=840 exact=True
+  cMuteStateTable: entries=1520 bytes=1520 target=1520 exact=True
+  cExtraChordNum: entries=8 bytes=16 target=16 exact=True
+  cMultiBgmSet: entries=62 bytes=1736 target=1736 exact=True
+
+Focused objdiff:
+  ./build/tools/objdiff-cli diff \
+    -1 build/RMGK02/obj/Game/AudioLib/AudBgmSetting.o \
+    -2 build/RMGK02/src/Game/AudioLib/AudBgmSetting.o \
+    -o - --format json
+
+Sections:
+  .text   size=300  match=100%
+  .rodata size=4112 match=100%
+
+Functions:
+  getMuteState                         size=64 match=100%
+  getExtraChordNum                     size=72 match=100%
+  getSeqIdForMultiBgm                  size=20 match=100%
+  getStreamIdForMultiBgm               size=24 match=100%
+  getBeatMulForMultiBgm                size=24 match=100%
+  getIntroBeatsForMultiBgm             size=24 match=100%
+  getLoopBeatsForMultiBgm              size=24 match=100%
+  getLoopStartSamplesForMultiBgm       size=24 match=100%
+  getLoopEndSamplesForMultiBgm         size=24 match=100%
+
+Full normal RMGK02 build/check:
+  ninja build/RMGK02/ok
+Result:
+  ninja: no work to do.
+
+SHA-1:
+  54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+  54b71431af0d509097bfdef4ec28617afc487e89  orig/RMGK02/sys/main.dol
+  54b71431af0d509097bfdef4ec28617afc487e89  config/RMGK02/build.sha1 expected
+
+Formatting/static checks:
+  clang-format -i include/Game/AudioLib/AudBgmSetting.hpp src/Game/AudioLib/AudBgmSetting.cpp
+  git diff --check -- include/Game/AudioLib/AudBgmSetting.hpp src/Game/AudioLib/AudBgmSetting.cpp
+Result: pass
+
+PC-port byte mirror:
+  cmp -s include/Game/AudioLib/AudBgmSetting.hpp pc-port/src/Game/AudioLib/AudBgmSetting.hpp
+  cmp -s src/Game/AudioLib/AudBgmSetting.cpp pc-port/src/Game/AudioLib/AudBgmSetting.cpp
+Result: pass
+
+Host syntax compilation of the exact mirrored source:
+  g++ -std=c++23 -Isrc -Isrc/common -Isrc/render -Iaurora/include \
+    -DAURORA -DTARGET_PC \
+    -include src/compat/MetrowerksStdCompat.hpp \
+    -fsyntax-only src/Game/AudioLib/AudBgmSetting.cpp
+Result: pass
+
+Mirror target:
+  xmake build smg-pc-game-source-mirror-tests
+  xmake run smg-pc-game-source-mirror-tests
+Result: pass; both AudBgmSetting paths report [ok].
+
+Initial full host target attempt:
+  xmake build smg-pc-game
+Result at 2026-08-09T00:12Z:
+  blocked outside this lane while concurrent audio-runtime work had deleted
+  src/compat/JAudioLevelSoundArchive.hpp but
+  src/runtime/AtmosphereLevelSoundService.hpp still included it.
+  AudBgmSetting.cpp itself passes the focused host compilation above.
+
+Second full host target attempt after the concurrent file move settled:
+  xmake build smg-pc-game
+Result:
+  AudBgmSetting compiled successfully to
+  build/.objs/smg-pc-game/linux/x86_64/debug/src/Game/AudioLib/AudBgmSetting.cpp.o.
+  The aggregate target then stopped outside this lane because the concurrently
+  changed JAISoundHandle API no longer has attach(), while existing calls remain
+  in src/compat/AudioFacadeCompat.cpp at lines 126, 240, and 354.
