@@ -66,12 +66,15 @@ public:
     virtual void calcViewAndEntry();
     virtual void control();
     virtual void calcAndSetBaseMtx();
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
     virtual void updateHitSensor(HitSensor*);
     virtual void attackSensor(HitSensor*, HitSensor*);
     virtual bool receiveMsgPush(HitSensor*, HitSensor*);
     virtual bool receiveMsgEnemyAttack(u32, HitSensor*, HitSensor*);
     virtual bool receiveMsgTaken(HitSensor*, HitSensor*);
     virtual bool receiveOtherMsg(u32, HitSensor*, HitSensor*);
+#endif  // SMGPC_PC_DIVERGENCE
     virtual const TVec3f& getLastMove() const;
     virtual void getLastMove(TVec3f*) const;
     virtual void getFrontVec(TVec3f*) const;
@@ -941,6 +944,16 @@ public:
 // and in sinit of NameObjFactory
 namespace NrvMarioActor {
     NERVE_DECL_EXE(MarioActorNrvWait, MarioActor, Wait);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvGameOver, "MarioActor GameOver nerve is unavailable in the PC walk slice");
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvGameOverAbyss, "MarioActor GameOverAbyss nerve is unavailable in the PC walk slice");
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvGameOverAbyss2, "MarioActor GameOverAbyss2 nerve is unavailable in the PC walk slice");
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvGameOverFire, "MarioActor GameOverFire nerve is unavailable in the PC walk slice");
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvGameOverBlackHole, "MarioActor GameOverBlackHole nerve is unavailable in the PC walk slice");
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvGameOverNonStop, "MarioActor GameOverNonStop nerve is unavailable in the PC walk slice");
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvGameOverSink, "MarioActor GameOverSink nerve is unavailable in the PC walk slice");
+    NERVE_DECL_UNAVAILABLE(MarioActorNrvTimeWait, "MarioActor TimeWait nerve is unavailable in the PC walk slice");
+#else  // SMGPC_RETAIL_SOURCE
     NERVE_DECL_EXE(MarioActorNrvGameOver, MarioActor, GameOver);
     NERVE_DECL_EXE(MarioActorNrvGameOverAbyss, MarioActor, GameOverAbyss);
     NERVE_DECL_EXE(MarioActorNrvGameOverAbyss2, MarioActor, GameOverAbyss);
@@ -949,5 +962,6 @@ namespace NrvMarioActor {
     NERVE_DECL_EXE(MarioActorNrvGameOverNonStop, MarioActor, GameOverNonStop);
     NERVE_DECL_EXE(MarioActorNrvGameOverSink, MarioActor, GameOverSink);
     NERVE_DECL_EXE(MarioActorNrvTimeWait, MarioActor, TimeWait);
+#endif  // SMGPC_PC_DIVERGENCE
     NERVE_DECL_EXE(MarioActorNrvNoRush, MarioActor, Wait);
 };  // namespace NrvMarioActor

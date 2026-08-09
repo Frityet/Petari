@@ -175,8 +175,9 @@ namespace {
         require(contact.surface.source_name ==
                         "HeavensDoorMysteriousPlanet.arc/heavensdoormysteriousplanet.kcl" &&
                     contact.surface.attributes.size() == scene.planet_pa().size() &&
+                    contact.surface.sensor != nullptr &&
                     contact.collision.attribute < attributes.entry_count(),
-                "the start contact must retain exact KCL and PA provenance");
+                "the start contact must retain exact KCL, PA, and body-sensor provenance");
         require(contact.separation < 0.1F,
                 "scenario-1 StartInfo must rest on the real planet KCL face");
         require(dot(contact.collision.normal, contact.gravity) < -0.95F,

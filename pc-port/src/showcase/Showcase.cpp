@@ -1,9 +1,14 @@
 #include "Application.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioHolder.hpp"
 #include "Game/Screen/TitleSequenceProduct.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
+#include "camera/StageStartCamera.hpp"
 #include "render/J3dModelRenderer.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
@@ -21,6 +26,7 @@
 #include <cstdint>
 #include <exception>
 #include <filesystem>
+#include <memory>
 #include <optional>
 #include <span>
 #include <stdexcept>
@@ -56,6 +62,36 @@ namespace {
         ~DvdCloseGuard() {
             aurora_dvd_close();
         }
+    };
+
+    class GatewayMarioOwner final {
+    public:
+        GatewayMarioOwner() : _owned(createNameObj<MarioActor>("MarioActor")) {
+            _actor = dynamic_cast<MarioActor*>(_owned.get());
+            if (_actor == nullptr) {
+                throw std::runtime_error("the typed Gateway MarioActor creator returned the wrong object");
+            }
+        }
+
+        GatewayMarioOwner(const GatewayMarioOwner&) = delete;
+        GatewayMarioOwner& operator=(const GatewayMarioOwner&) = delete;
+
+        ~GatewayMarioOwner() {
+            if (auto* holder = MR::getMarioHolder();
+                holder != nullptr && holder->getMarioActor() == _actor) {
+                holder->setMarioActor(nullptr);
+            }
+            _owned.reset();
+            _actor = nullptr;
+        }
+
+        [[nodiscard]] MarioActor& actor() const {
+            return *_actor;
+        }
+
+    private:
+        std::unique_ptr<NameObj> _owned;
+        MarioActor* _actor = nullptr;
     };
 
     [[nodiscard]] std::vector<std::string> copy_arguments(int argc, char* argv[]) {
@@ -193,7 +229,7 @@ namespace {
             .window_height = options.window_height,
             .window_title = options.route == ShowcaseRoute::Title
                                 ? "Super Mario Galaxy PC - retail title showcase"
-                                : "SMG PC Gateway - F9 mouse | WASD fly | + physics sphere",
+                                : "SMG PC Gateway - arrow keys walk | F9 freecam | + physics sphere",
             .arguments = arguments,
         };
     }
@@ -278,28 +314,6 @@ namespace {
 
     [[nodiscard]] smgpc::camera::CameraParamVec3 camera_vector(const TVec3f& value) {
         return {.x = value.x, .y = value.y, .z = value.z};
-    }
-
-    [[nodiscard]] smgpc::camera::CameraPose gateway_camera(
-        const smgpc::scene::GatewayDemoStartContact& contact) {
-        auto side = TVec3f{-contact.gravity.z, 0.0F, contact.gravity.x};
-        if (length(side) <= 0.0001F) {
-            side.set(1.0F, 0.0F, 0.0F);
-        }
-        side = normalized(side);
-
-        auto eye = contact.collision.position;
-        eye.add(scaled(contact.gravity, -900.0F));
-        eye.add(scaled(side, 240.0F));
-        return {
-            .eye = camera_vector(eye),
-            .watch = camera_vector(contact.collision.position),
-            .up = {0.0F, 1.0F, 0.0F},
-            .fovy_degrees = 55.0F,
-            .aspect_ratio = 608.0F / 456.0F,
-            .near_clip = 5.0F,
-            .far_clip = 800000.0F,
-        };
     }
 
     struct GatewayPhysicsProbe {
@@ -463,6 +477,12 @@ namespace {
     [[nodiscard]] int run_gateway_showcase(
         const ShowcaseOptions& options,
         const smgpc::app::BootstrapConfiguration& configuration) {
+#ifdef NDEBUG
+        if (options.smoke) {
+            throw std::runtime_error(
+                "Gateway --smoke requires a debug build for Mario packet-trace proof");
+        }
+#endif
         auto logger = smgpc::logging::create_default_logger();
         const auto disc_image = smgpc::app::required_disc_image(configuration);
         if (!aurora_dvd_open(disc_image.string().c_str())) {
@@ -481,6 +501,8 @@ namespace {
         auto frame_index = std::uint64_t{};
         auto rendered_frames = std::uint64_t{};
         auto gpu_draw_seen = false;
+        auto mario_packet_submission_seen = false;
+        auto mario_center_on_screen_seen = false;
         auto gravity_velocity_change_seen = false;
         auto real_kcl_contact_seen = false;
 
@@ -489,10 +511,19 @@ namespace {
             runtime.set_current_stage_name("HeavensDoorGalaxy");
             auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
             auto gravity_requester = NameObj{"Gateway development physics probes"};
-            const auto start_contact = scene.prove_start_contact(gravity_requester);
-            const auto initial_camera = gateway_camera(start_contact);
+            (void)scene.prove_start_contact(gravity_requester);
+            const auto resolved_camera =
+                smgpc::camera::resolve_stage_start_camera(runtime.dvd(), scene.start_info());
+            if (resolved_camera.status !=
+                    smgpc::camera::StageStartCameraResolveStatus::Resolved ||
+                !resolved_camera.camera.has_value()) {
+                throw std::runtime_error(
+                    "Gateway exact StartInfo camera could not be resolved: " +
+                    resolved_camera.detail);
+            }
+            const auto initial_camera = resolved_camera.camera->calculation.pose;
             runtime.camera_system().set_game_camera_pose(initial_camera);
-            runtime.set_freecam_enabled(true);
+            runtime.set_freecam_enabled(false);
 
             auto planet_model = smgpc::render::J3dModelRenderer{};
             auto sphere_renderer = DebugSphereRenderer(renderer);
@@ -508,6 +539,23 @@ namespace {
             const auto planet_matrix = smgpc::render::J3dMatrix3x4{
                 smgpc::scene::stage_collision_matrix(scene.planet_placement())};
 
+            if (NameObjFactory::getCreator("Mario") != nullptr ||
+                NameObjFactory::getCreator("MarioActor") != nullptr) {
+                throw std::runtime_error(
+                    "the production Mario factory was enabled before the Gateway slice was proven complete");
+            }
+            auto mario_owner = GatewayMarioOwner{};
+            auto setup_frame = renderer.begin_frame();
+            {
+                const auto renderer_context =
+                    smgpc::render::ScopedAuroraRendererContext(renderer);
+                runtime.begin_frame(setup_frame);
+                mario_owner.actor().init(scene.player_start_iter());
+                mario_owner.actor().initAfterPlacement();
+                runtime.game_layout().activate_game_scene_draw_3d();
+            }
+            renderer.end_frame();
+
             auto probes = std::vector<GatewayPhysicsProbe>{};
             auto next_probe_id = std::uint64_t{1U};
             if (options.smoke) {
@@ -518,7 +566,7 @@ namespace {
             logger->info(
                 smgpc::logging::Category::APP,
                 smgpc::logging::Message{
-                    "Gateway freecam: mouse look; WASD move; Space/LeftShift rise/fall; F9 release/toggle mouse; =/numpad + spawn a physics sphere; Esc quit"});
+                    "Gateway Mario: arrow keys walk; F9 toggles development freecam; =/numpad + spawns a physics sphere; Esc quits"});
             logger->info(
                 smgpc::logging::Category::APP,
                 smgpc::logging::Message{
@@ -527,7 +575,7 @@ namespace {
             if (options.smoke) {
                 logger->info(smgpc::logging::Category::APP,
                              smgpc::logging::Message{
-                                 "Gateway smoke automatically spawned physics probe 1 in front of the free camera"});
+                                 "Gateway smoke automatically spawned physics probe 1 in front of the game camera"});
             }
 
             while (window.poll_events()) {
@@ -536,6 +584,11 @@ namespace {
                 {
                     const auto renderer_context =
                         smgpc::render::ScopedAuroraRendererContext(renderer);
+#ifndef NDEBUG
+                    if (options.smoke) {
+                        runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
+                    }
+#endif
                     runtime.begin_frame(frame_context);
                     const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
                     // Retain the latest development camera pose when F9 releases
@@ -578,6 +631,37 @@ namespace {
                         smgpc::render::J3dModelRendererDrawOptions{
                             .translucent_filter = false,
                         });
+                    runtime.draw_3d_normal(camera);
+#ifndef NDEBUG
+                    if (options.smoke) {
+                        mario_packet_submission_seen =
+                            mario_packet_submission_seen ||
+                            std::ranges::any_of(
+                                runtime.j3d_packet_trace(),
+                                [frame_index](const auto& packet) {
+                                    return packet.model_name == "Mario" &&
+                                           packet.frame_index == frame_index &&
+                                           packet.state.source_triangle_count != 0U &&
+                                           packet.state.parsed_display_list_bytes != 0U &&
+                                           packet.state.bck_active &&
+                                           packet.state.bck_joint_count != 0U;
+                                });
+                    }
+#endif
+                    if (options.smoke) {
+                        auto mario_center = mario_owner.actor().mPosition;
+                        mario_center.add(scaled(mario_owner.actor().mMario->mHeadVec, 60.0F));
+                        auto mario_screen = TVec2f{};
+                        const auto logical_framebuffer = renderer.logical_framebuffer_size();
+                        mario_center_on_screen_seen =
+                            mario_center_on_screen_seen ||
+                            (MR::calcScreenPosition(&mario_screen, mario_center) &&
+                             mario_screen.x >= 0.0F && mario_screen.y >= 0.0F &&
+                             mario_screen.x <=
+                                 static_cast<float>(logical_framebuffer.width) &&
+                             mario_screen.y <=
+                                 static_cast<float>(logical_framebuffer.height));
+                    }
                     sphere_renderer.draw(renderer, camera, probes);
                     planet_model.draw(
                         renderer, camera, planet_matrix, frame_index,
@@ -596,6 +680,7 @@ namespace {
                     window.close();
                 }
                 if (options.smoke && rendered_frames >= 2U && gpu_draw_seen &&
+                    mario_packet_submission_seen && mario_center_on_screen_seen &&
                     gravity_velocity_change_seen && real_kcl_contact_seen) {
                     window.close();
                 }
@@ -619,11 +704,16 @@ namespace {
         }
 
         if (options.smoke) {
-            if (rendered_frames < 2U || !gpu_draw_seen || !gravity_velocity_change_seen ||
+            if (rendered_frames < 2U || !gpu_draw_seen || !mario_packet_submission_seen ||
+                !mario_center_on_screen_seen || !gravity_velocity_change_seen ||
                 !real_kcl_contact_seen) {
                 throw std::runtime_error(
                     "Gateway smoke proof incomplete: frames=" + std::to_string(rendered_frames) +
                     ";gpu_draw=" + std::to_string(gpu_draw_seen) +
+                    ";mario_packets=" +
+                    std::to_string(mario_packet_submission_seen) +
+                    ";mario_center_on_screen=" +
+                    std::to_string(mario_center_on_screen_seen) +
                     ";gravity_velocity_change=" +
                     std::to_string(gravity_velocity_change_seen) +
                     ";real_kcl_contact=" + std::to_string(real_kcl_contact_seen));
@@ -631,7 +721,7 @@ namespace {
             logger->info(
                 smgpc::logging::Category::APP,
                 smgpc::logging::Message{
-                    "Gateway smoke passed: {} rendered frames, GPU draw submission, probe gravity acceleration, and exact planet KCL contact"},
+                    "Gateway smoke passed: {} rendered frames, real animated Mario packet submission with an on-screen actor center, GPU draw submission, probe gravity acceleration, and exact planet KCL contact"},
                 rendered_frames);
         }
         return 0;

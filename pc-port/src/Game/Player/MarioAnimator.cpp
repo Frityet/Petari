@@ -1115,6 +1115,20 @@ afterRotate:
 }
 
 void MarioAnimator::update() {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    Mario* player = getPlayer();
+    player->_71D = player->_71C;
+    player->decideWalkSpeed();
+
+    // Retail decideWalkAnimation keeps the locomotion animation active while
+    // release inertia is still carrying Mario forward.  Selecting Wait from
+    // the current stick band alone visibly slides the model after release.
+    const char* desiredBck = player->_71C != 0 || player->_278 >= 0.2f ? "Run" : "Wait";
+    if (smgpc::compat::actor_current_bck_name(mActor) != desiredBck) {
+        (void)smgpc::compat::require_actor_bck(mActor, desiredBck, nullptr);
+    }
+    mCurrBck = desiredBck;
+#else  // SMGPC_RETAIL_SOURCE
     if (mXanimePlayer->isAnimationRunSimple()) {
         if (!mActor->_EA4 && !mActor->_3C0) {
             Mario* player = getPlayer();
@@ -1353,6 +1367,7 @@ afterBrake:
     if (isAnimationStop()) {
         mCurrBck = mXanimePlayer->getCurrentBckName();
     }
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 f32 XanimePlayer::tellAnimationFrame() const {

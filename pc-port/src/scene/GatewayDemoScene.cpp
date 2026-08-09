@@ -4,8 +4,10 @@
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
@@ -153,9 +155,15 @@ namespace smgpc::scene {
             require(attributes.entry_count() != 0U,
                     "retail planet PA has no collision-attribute rows");
 
+            _planet_collision_host.initHitSensor(1);
+            auto *planet_body_sensor =
+                MR::addBodyMessageSensorMapObj(&_planet_collision_host);
+            require(planet_body_sensor != nullptr,
+                    "mysterious-planet collision has no real map-object body sensor");
             const auto registration = _collision.register_kcl(
                 _planet_kcl, stage_collision_matrix(_planet_placement),
-                std::string(cPlanetCollisionSource), nullptr, _planet_pa);
+                std::string(cPlanetCollisionSource), nullptr, _planet_pa,
+                planet_body_sensor);
             require(registration.accepted,
                     "retail mysterious-planet KCL could not be registered");
             _collision.build();
@@ -257,6 +265,10 @@ namespace smgpc::scene {
         std::vector<std::uint8_t> _planet_kcl{};
         std::vector<std::uint8_t> _planet_pa{};
         smgpc::render::J3dModelGeometry _planet_geometry{};
+        // The development subset has no broad placement actor, but its exact
+        // KCL still needs the same real sensor provenance Binder would receive
+        // from that actor in a full stage.
+        LiveActor _planet_collision_host{"Gateway mysterious-planet collision host"};
         StageCollisionService _collision{};
         SceneObjHolder _scene_obj_holder{};
         std::unique_ptr<SceneObjHolderBinding> _scene_binding{};

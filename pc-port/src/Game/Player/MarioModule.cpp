@@ -263,10 +263,16 @@ void MarioModule::addVelocity(const TVec3f& rAdd) {
     mActor->mMario->mVelocity += rAdd;
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+void MarioModule::addVelocity(const TVec3f& rAdd, f32 scale) {
+    mActor->mMario->mVelocity += rAdd * scale;
+}
+#else  // SMGPC_RETAIL_SOURCE
 // vecScaleAdd is inlined
 /* void MarioModule::addVelocity(const TVec3f &rAdd, f32 scale) {
     MR::vecScaleAdd(&mActor->mMario->_160, &rAdd, scale);
 } */
+#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioModule::addVelocityAfter(const TVec3f& rAdd) {
     mActor->mMario->mVelocityAfter += rAdd;
@@ -572,6 +578,9 @@ f32 MarioModule::marioAcos(f32 a1) const {
 }
 
 bool MarioModule::isInputDisable() const {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    return mActor->mMario->mMovementStates._22 || mActor->_3C0;
+#else  // SMGPC_RETAIL_SOURCE
     if (mActor->mMario->mMovementStates._22) {
         return true;
     }
@@ -591,4 +600,5 @@ bool MarioModule::isInputDisable() const {
         return true;
     }
     return mActor->_3C0;
+#endif  // SMGPC_PC_DIVERGENCE
 }

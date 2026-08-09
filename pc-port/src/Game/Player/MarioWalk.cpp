@@ -14,6 +14,10 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include <cstring>
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#include <stdexcept>
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 
 extern u8 lbl_806B6288;
 
@@ -81,6 +85,12 @@ void Mario::cancelSquatMode() {
 }
 
 f32 Mario::getTargetWalkSpeed() const {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    if (mMovementStates._A || _735 != 0 || _2D0 != 0.0f || _434 != 0) {
+        throw std::logic_error("modified Mario target speed is unavailable in the PC walk slice");
+    }
+    return sWalkTargetTable[_71C];
+#else  // SMGPC_RETAIL_SOURCE
     if (mMovementStates._A) {
         return 0.0f;
     }
@@ -102,6 +112,7 @@ f32 Mario::getTargetWalkSpeed() const {
     }
 
     return speed;
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::decideSquatWalkAnimation() {
@@ -214,6 +225,9 @@ void Mario::decideWalkSpeed() {
         _71C = speed;
     }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    return;
+#else  // SMGPC_RETAIL_SOURCE
     s32 clingNum = MR::getKarikariClingNum();
     if (clingNum != 0) {
         if (clingNum > 5) {
@@ -258,6 +272,7 @@ void Mario::decideWalkSpeed() {
         speedRate = 1.0f;
     }
     getAnimator()->mXanimePlayer->_0C = speedRate;
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::decideWalkAnimation() {
@@ -527,6 +542,27 @@ void Mario::updateBrakeAnimation() {
 }
 
 void Mario::updateWalkSpeed() {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    if (mMovementStates._F || mMovementStates._A || _735 != 0 || getPlayerMode() != 0) {
+        throw std::logic_error("special Mario walk-speed mode is unavailable in the PC walk slice");
+    }
+
+    f32 targetSpeed = getTargetWalkSpeed();
+    f32 startRatio = 1.0f;
+    if (targetSpeed == 0.0f) {
+        _404 = mActor->getConst().getTable()->mSlowStartTime;
+    }
+    if (_404 != 0) {
+        const u16 slowStartTime = mActor->getConst().getTable()->mSlowStartTime;
+        const u16 timer = _404;
+        _404--;
+        startRatio = static_cast< f32 >(slowStartTime - timer) / static_cast< f32 >(slowStartTime);
+    }
+
+    targetSpeed *= startRatio * startRatio;
+    const f32 inertia = decideInertia(targetSpeed);
+    _278 = (_278 * inertia) + (targetSpeed * (1.0f - inertia));
+#else  // SMGPC_RETAIL_SOURCE
     f32 targetSpeed = getTargetWalkSpeed();
     f32 startRatio = 1.0f;
 
@@ -637,6 +673,7 @@ void Mario::updateWalkSpeed() {
     }
 
     _278 = (_278 * inertia) + (targetSpeed * static_cast< f32 >(256 - _735) * (1.0f / 256.0f) * (1.0f - inertia));
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::decideOnIceAnimation() {

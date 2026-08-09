@@ -113,6 +113,16 @@ namespace smgpc::compat {
     }
 }  // namespace smgpc::compat
 
+namespace MR {
+    void setBinderOffsetVec(LiveActor* actor, const TVec3f* offset, bool local_space) {
+        if (actor == nullptr || actor->mBinder == nullptr) {
+            throw std::invalid_argument("setBinderOffsetVec requires a real actor Binder.");
+        }
+        actor->mBinder->mOffsetVec = offset;
+        actor->mBinder->_1EC._4 = local_space;
+    }
+}  // namespace MR
+
 Binder::Binder(MtxPtr matrix, const TVec3f* position, const TVec3f* gravity, f32 radius,
                f32 offset, u32 plane_capacity)
     : BinderParent(matrix), _10(position), _14(gravity), mRadius(radius), _1C(offset),
@@ -204,8 +214,14 @@ const TVec3f Binder::bind(const TVec3f& movement) {
         return movement;
     }
 
+    auto gravity = *_14;
+    if (!normalize(gravity)) {
+        throw std::logic_error("Binder contact classification requires a non-degenerate gravity vector.");
+    }
+
     const auto maximum_contacts = _24 == 0U ? std::size_t{32U} : static_cast<std::size_t>(_24);
-    const auto resolved = collision->move_sphere(center, movement, mRadius, maximum_contacts);
+    const auto resolved =
+        collision->move_sphere(center, movement, mRadius, maximum_contacts, _1EC._3);
     mFixReactionVector.set(resolved.fix_reaction);
 
     // A zero-capacity retail Binder uses a temporary 32-plane query array but
@@ -225,10 +241,6 @@ const TVec3f Binder::bind(const TVec3f& movement) {
         }
     }
 
-    auto gravity = *_14;
-    if (!normalize(gravity)) {
-        throw std::logic_error("Binder contact classification requires a non-degenerate gravity vector.");
-    }
     for (auto index = std::size_t{}; index < resolved.contacts.size(); ++index) {
         auto info = HitInfo{};
         fill_hit_info(info, resolved.contacts[index], static_cast<u32>(index));

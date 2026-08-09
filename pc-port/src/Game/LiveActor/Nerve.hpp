@@ -2,6 +2,10 @@
 
 #include "Game/LiveActor/Spine.hpp"
 
+#if defined(TARGET_PC)
+#include <stdexcept>
+#endif
+
 /// @brief Used for executing states of a LiveActor.
 class Nerve {
 public:
@@ -33,7 +37,11 @@ public:
     };
 
 /* Initializes the static instance of a nerve */
+#if defined(TARGET_PC)
+#define INIT_NERVE(name) inline name name::sInstance;
+#else
 #define INIT_NERVE(name) name name::sInstance;
+#endif
 
 /* Initalizes the static instance of a nerve and also defines the body of said nerve's execute function */
 #define INIT_NERVE_NEW(name, parent_class, func)                                                                                                     \
@@ -66,6 +74,19 @@ public:
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
     };
+
+#if defined(TARGET_PC)
+/* Declares a PC-unavailable nerve whose accidental execution fails explicitly. */
+#define NERVE_DECL_UNAVAILABLE(name, reason)                                                                                                        \
+    class name : public Nerve {                                                                                                                      \
+    public:                                                                                                                                          \
+        name() NO_INLINE{};                                                                                                                          \
+        virtual void execute(Spine*) const {                                                                                                         \
+            throw std::logic_error(reason);                                                                                                          \
+        };                                                                                                                                           \
+        static name sInstance;                                                                                                                       \
+    };
+#endif
 
 /* Declares a nerve and also defines the body of the nerve's execution and executeOnEndfunctions, which calls a specified member function */
 #define NERVE_DECL_ONEND(name, parent_class, func, onEndFunc)                                                                                        \

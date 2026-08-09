@@ -178,9 +178,14 @@ namespace {
     static_assert(cPlayerHeaders.size() == 63);
 
     constexpr auto cPcDivergentSources = std::array{
+        std::string_view{"Mario"},
         std::string_view{"MarioActor"},
         std::string_view{"MarioActorDraw"},
+        std::string_view{"MarioActorInit"},
         std::string_view{"MarioAnimator"},
+        std::string_view{"MarioModule"},
+        std::string_view{"MarioMove"},
+        std::string_view{"MarioWalk"},
     };
 
     constexpr auto cPcBegin = std::string_view{"#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE"};

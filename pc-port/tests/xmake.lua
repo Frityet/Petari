@@ -104,6 +104,36 @@ target("smg-pc-gateway-demo-scene-tests")
         realtime_output = true
     })
 
+target("smg-pc-mario-gateway-walk-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    set_toolset("cxx", "clang++")
+    add_files {
+        "MarioGatewayWalkTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_ldflags("-Wl,--gc-sections", {force = true})
+    add_deps {
+        "smg-pc-mario-gateway-walk-slice",
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("mario_gateway_walk", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-file-select-exact-source-compile")
     set_kind("static")
     set_default(false)

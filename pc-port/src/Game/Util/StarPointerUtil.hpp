@@ -11,6 +11,7 @@ namespace MR {
     bool isStarPointerPointingPaneForMeterLayout(const LayoutActor* pLayout, const char* pPaneName, s32, bool, const char*);
     void initStarPointerTarget(LiveActor* pActor, f32 radius, const TVec3f& rOffset);
     bool isStarPointerPointing1PWithoutCheckZ(const LiveActor* pActor, const char*, bool, bool);
+    bool isStarPointerPointing2P(const LiveActor* pActor, const char*, bool, bool);
     bool isStarPointerPointingFileSelect(const LiveActor* pActor);
     bool isExistStarPointerTarget(const LiveActor* pActor);
     void setStarPointerTargetRadius3d(LiveActor* pActor, f32 radius);

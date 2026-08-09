@@ -1,5 +1,6 @@
 #include "Game/Util/MathUtil.hpp"
 
+#include <algorithm>
 #include <bit>
 #include <cmath>
 #include <cstdint>
@@ -32,6 +33,84 @@ namespace {
 }  // namespace
 
 namespace MR {
+    f32 normalizeAngleAbs(f32 angle) {
+        auto normalized = std::fmod(angle, 2.0F * std::numbers::pi_v<f32>);
+        if (normalized < 0.0F) {
+            normalized += 2.0F * std::numbers::pi_v<f32>;
+        }
+        return normalized;
+    }
+
+    f32 diffAngleAbs(const TVec3f& left, const TVec3f& right) {
+        const auto left_length = left.length();
+        const auto right_length = right.length();
+        if (!(left_length > 1.0e-8F) || !(right_length > 1.0e-8F)) {
+            return 0.0F;
+        }
+        const auto cosine = std::clamp(left.dot(right) / (left_length * right_length), -1.0F, 1.0F);
+        return std::acos(cosine);
+    }
+
+    bool vecBlendSphere(const TVec3f& left, const TVec3f& right, TVec3f* destination, f32 blend) {
+        if (destination == nullptr) {
+            return false;
+        }
+
+        const auto left_length = left.length();
+        const auto right_length = right.length();
+        if (!(left_length > 1.0e-8F) || !(right_length > 1.0e-8F)) {
+            destination->set(left * (1.0F - blend) + right * blend);
+            return false;
+        }
+
+        auto left_direction = left * (1.0F / left_length);
+        auto right_direction = right * (1.0F / right_length);
+        const auto cosine = std::clamp(left_direction.dot(right_direction), -1.0F, 1.0F);
+        if (cosine < -0.9999F) {
+            return false;
+        }
+
+        auto direction = TVec3f{};
+        if (cosine > 0.9999F) {
+            direction.set(left_direction * (1.0F - blend) + right_direction * blend);
+            if (normalizeOrZero(&direction)) {
+                return false;
+            }
+        } else {
+            const auto angle = std::acos(cosine);
+            const auto divisor = std::sin(angle);
+            const auto left_weight = std::sin((1.0F - blend) * angle) / divisor;
+            const auto right_weight = std::sin(blend * angle) / divisor;
+            direction.set(left_direction * left_weight + right_direction * right_weight);
+        }
+
+        direction.scale(left_length * (1.0F - blend) + right_length * blend);
+        destination->set(direction);
+        return true;
+    }
+
+    void vecRotAxis(const TVec3f& source, const TVec3f& target, const TVec3f& axis,
+                    TVec3f* destination, f32 maximum_angle) {
+        if (destination == nullptr) {
+            return;
+        }
+
+        auto unit_axis = axis;
+        if (normalizeOrZero(&unit_axis)) {
+            destination->set(source);
+            return;
+        }
+
+        auto angle = std::min(diffAngleAbs(source, target), std::fabs(maximum_angle));
+        if (source.cross(target).dot(unit_axis) < 0.0F) {
+            angle = -angle;
+        }
+        const auto cosine = std::cos(angle);
+        const auto sine = std::sin(angle);
+        destination->set(source * cosine + unit_axis.cross(source) * sine +
+                         unit_axis * (unit_axis.dot(source) * (1.0F - cosine)));
+    }
+
     f32 getRandom() {
         sRandomSeed = (sRandomSeed * 0x0019660DU) + 0x3C6EF35FU;
         const auto value = (sRandomSeed >> 9U) | 0x3F800000U;

@@ -46,8 +46,16 @@
 #include "Game/Player/MarioWait.hpp"
 #include "Game/Player/MarioWall.hpp"
 #include "Game/Player/MarioWarp.hpp"
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#include "Game/Util/DirectDraw.hpp"
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 #include "Game/Util.hpp"
 #include "revolution/mtx.h"
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#include <stdexcept>
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 
 void FORCE_OPERATOR() {
     TVec3f vec;
@@ -187,7 +195,11 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _24 = 0;
     _28 = 0;
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    _458 = nullptr;
+#else  // SMGPC_RETAIL_SOURCE
     _458 = TriangleFilterDelegator< Mario >::allocateDelegator(this, &Mario::isIgnoreTriangle);
+#endif  // SMGPC_PC_DIVERGENCE
 
     _45C = new Triangle();
     _460 = new Triangle();
@@ -298,6 +310,50 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _654.set(0.0f, 0.0f, 1.0f);
     _6A0 = _654;
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    _96C = nullptr;
+    _970 = nullptr;
+    _97C = nullptr;
+    _980 = nullptr;
+
+    mFlow = nullptr;
+    mWall = nullptr;
+    mDamage = nullptr;
+    mFaint = nullptr;
+    mBlown = nullptr;
+    mHang = nullptr;
+    mSwim = nullptr;
+    mSlider = nullptr;
+    mFireDamage = nullptr;
+    mFireRun = nullptr;
+    mFireDance = nullptr;
+    mAbyssDamage = nullptr;
+    mDarkDamage = nullptr;
+    mStep = nullptr;
+    mBump = nullptr;
+    mParalyze = nullptr;
+    mStun = nullptr;
+    mCrush = nullptr;
+    mFreeze = nullptr;
+    mMagic = nullptr;
+    mFpView = nullptr;
+    mRecovery = nullptr;
+    mFlip = nullptr;
+    mSideStep = nullptr;
+    mFrontStep = nullptr;
+    mStick = nullptr;
+    mRabbit = nullptr;
+    mSukekiyo = nullptr;
+    mBury = nullptr;
+    mWait = nullptr;
+    mClimb = nullptr;
+    mSkate = nullptr;
+    mFoo = nullptr;
+    mWarp = nullptr;
+    mTeresa = nullptr;
+    mTalk = nullptr;
+    mMove = nullptr;
+#else  // SMGPC_RETAIL_SOURCE
     initSound();
 
     _97C = 0;
@@ -339,6 +395,7 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     mTeresa = new MarioTeresa(mActor);
     mTalk = new MarioTalk(mActor);
     mMove = new MarioMove(mActor);
+#endif  // SMGPC_PC_DIVERGENCE
 
     initTask();
     _95C = new FloorCode();
@@ -1000,7 +1057,11 @@ void Mario::fixFrontVecByGravity() {
         }
     }
     TVec3f front = _344.cross(up);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    if (MR::normalizeOrZero(&front) == false) {
+#else  // SMGPC_RETAIL_SOURCE
     if (MR::normalizeOrZero(&front) == nullptr) {
+#endif  // SMGPC_PC_DIVERGENCE
         setFrontVec(front);
         _22C = mFrontVec;
         f32 _328mag = _328.length();
@@ -1038,6 +1099,10 @@ void Mario::setHeadVec(const TVec3f& rHead) {
 }
 
 void Mario::setFrontVec(const TVec3f& rFront) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    mFrontVec = rFront;
+    MR::normalize(&mFrontVec);
+#else  // SMGPC_RETAIL_SOURCE
     TVec3f plusMinus6A0;
     TVec3f frontWithout6A0;
     if (mMovementStates._37 && !isStatusActive(MarioStatus_Talk)) {
@@ -1060,6 +1125,7 @@ void Mario::setFrontVec(const TVec3f& rFront) {
         mFrontVec = rFront;
     }
     MR::normalize(&mFrontVec);
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::setFrontVecKeepUp(const TVec3f& rFront, f32 blendFactor) {
@@ -1151,7 +1217,11 @@ void Mario::setFrontVecKeepSide(const TVec3f& rFront) {
     }
 
     headVec.cross(mFrontVec, mSideVec);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    if (MR::normalizeOrZero(&headVec) != false) {
+#else  // SMGPC_RETAIL_SOURCE
     if (MR::normalizeOrZero(&headVec) != nullptr) {
+#endif  // SMGPC_PC_DIVERGENCE
         const TVec3f* gravity = getGravityVec();
         TVec3f up = -(*gravity);
         mHeadVec = up;
@@ -1367,6 +1437,11 @@ void Mario::inputStick() {
     _524 = _528;
     _528 = quantizedAngle;
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    if (mMovementStates._37 || _10._15 || mMovementStates._3A) {
+        throw std::logic_error("2D and 2.5D stick modes are unavailable in the PC walk slice");
+    }
+#else  // SMGPC_RETAIL_SOURCE
     if (mMovementStates._37) {
         stick2DadjustGround(mStickPos.x, mStickPos.y);
     }
@@ -1377,6 +1452,7 @@ void Mario::inputStick() {
         update25Dmode();
         updateAxisFromMode(_6AC);
     }
+#endif  // SMGPC_PC_DIVERGENCE
     if (_10._13) {
         mStickPos.y = 0.0f;
     }
@@ -1444,10 +1520,17 @@ void Mario::updateSoundCode() {
 
 // nearly, last conditional doesn't want to cooperate
 bool Mario::isForceStopRush() const {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    u16 temp = _960;
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
     if (mVerticalSpeed != 0.0f) {
         goto exit_false;
     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
     u16 temp = _960;
+#endif  // SMGPC_PC_DIVERGENCE
     if (temp < (s16)0xf) {
         if (temp == (s16)4) {
             goto exit_true;
@@ -1511,16 +1594,25 @@ void Mario::initAfterConst() {
     mPosition = mActor->mPosition;
     mShadowPos = mPosition;
     mGroundPos = mPosition;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
     mMove->initAfter();
     mFoo->init();
     mSwim->init();
+#endif  // SMGPC_PC_DIVERGENCE
     _7D4 = mPosition;
     _814 = mPosition;
     PSMTXIdentity(_7E4);
     PSMTXIdentity(_824);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    _720 = nullptr;
+    _724 = nullptr;
+    _728 = nullptr;
+#else  // SMGPC_RETAIL_SOURCE
     _720 = getAnimationStringPointer("ヒップドロップ開始");
     _724 = getAnimationStringPointer("ヒップドロップ");
     _728 = getAnimationStringPointer("ヒップドロップ着地");
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::writeBackPhyisicalVector() {
@@ -1686,6 +1778,55 @@ void Mario::writeBackPhyisicalVector() {
 
 #pragma dont_inline on
 void Mario::update() {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    _43C = mFrontVec;
+    _16C = mVelocity;
+    mPosition = mActor->mPosition;
+    mVelocityAfter.zero();
+    mVelocity.zero();
+
+    mMovementStates._1 = mActor->mBinder != nullptr && mActor->mBinder->isBindedGround();
+    if (mMovementStates._1) {
+        _3CE++;
+    } else {
+        _3CE = 0;
+    }
+
+    inputStick();
+    const bool hadActiveWalkVelocity =
+        !MR::isNearZero(mStickPos.z, 0.001f) || _278 > 0.0f;
+    if (MR::isNearZero(mStickPos.z, 0.001f) && _278 < 0.001f) {
+        // The retained interpolation otherwise approaches zero forever. End
+        // the sub-pixel release before mainMove so the final moving frame can
+        // still seat Binder and the following frame is a true idle query.
+        _278 = 0.0f;
+    }
+    mainMove();
+    updateWalkSpeed();
+
+    const f32 grounding = mActor->mConst->getTable()->mGravityGrounding;
+    TVec3f groundingDirection(mAirGravityVec);
+    if (mMovementStates._1 && mGroundPolygon->isValid()) {
+        groundingDirection = -*mGroundPolygon->getNormal(0);
+        MR::normalize(&groundingDirection);
+        MR::vecKillElement(mVelocity, groundingDirection, &mVelocity);
+        // The PC collision boundary already retains Binder's retail 1.2-unit
+        // contact skin. A narrow inward bias follows the faceted Gateway KCL
+        // while Mario is seating or actually walking, without feeding the
+        // unused raw table value through every grounded frame. Leaving that
+        // bias active after a long grounded release turns successive face
+        // corrections into a visible tangent drift on the curved planet; the
+        // collision boundary retains the numerically stable idle skin shell.
+        const bool needsActiveGrounding =
+            _3CE < 30 || hadActiveWalkVelocity || _278 >= 0.001f;
+        if (needsActiveGrounding) {
+            mVelocity += groundingDirection * (grounding * 0.1f);
+        }
+    } else {
+        mVelocity += groundingDirection * grounding;
+    }
+    mActor->mVelocity = mVelocity;
+#else  // SMGPC_RETAIL_SOURCE
     OSGetTime();
     updateAndClearStrideParameter();
     checkKeyLock();
@@ -1843,6 +1984,7 @@ void Mario::update() {
     writeBackPhyisicalVector();
     updateTimers();
     doExtraServices();
+#endif  // SMGPC_PC_DIVERGENCE
 }
 #pragma dont_inline reset
 
@@ -1958,6 +2100,11 @@ void Mario::updateGroundInfo() {
 }
 
 bool Mario::postureCtrl(MtxPtr mtx) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    PSMTXIdentity(mtx);
+    _1FC = mHeadVec;
+    return false;
+#else  // SMGPC_RETAIL_SOURCE
     TVec3f oldHeadUp(_1FC);
     TVec3f targetHeadUp(mHeadVec);
 
@@ -2038,6 +2185,7 @@ bool Mario::postureCtrl(MtxPtr mtx) {
     }
 
     return false;
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::createAngleMtx(MtxPtr mtx, bool forceNoFix) {
@@ -2233,6 +2381,9 @@ void Mario::updateLookOfs() {
 
 // conditionals won't behave
 const TVec3f* Mario::getGravityVec() const {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    return &mAirGravityVec;
+#else  // SMGPC_RETAIL_SOURCE
     if (isStatusActive(MarioStatus_Bump) || isStatusActive(MarioStatus_Climb)) {
         return &_790;
     }
@@ -2270,6 +2421,7 @@ const TVec3f* Mario::getGravityVec() const {
         return &_374;
     }
     return &mAirGravityVec;
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::touchWater() {

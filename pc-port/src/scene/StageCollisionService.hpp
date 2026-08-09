@@ -112,7 +112,8 @@ namespace smgpc::scene {
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_with_thickness(
             const TVec3f& center, float radius, float thickness, std::size_t maximum = 32U) const;
         [[nodiscard]] StageCollisionMoveResult move_sphere(const TVec3f& center, const TVec3f& movement,
-                                                           float radius, std::size_t maximum_contacts = 32U) const;
+                                                           float radius, std::size_t maximum_contacts = 32U,
+                                                           bool skip_initial_check = false) const;
         [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index) const;
         [[nodiscard]] std::uint64_t revision() const noexcept;
 
@@ -160,7 +161,7 @@ namespace smgpc::scene {
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_impl(
             const TVec3f& center, float radius, std::size_t maximum,
-            std::optional<float> thickness_override) const;
+            std::optional<float> thickness_override, float outer_margin = 0.0F) const;
 
         std::vector<Triangle> _triangles{};
         std::unordered_map<std::uint32_t, std::uint32_t> _triangle_lookup{};

@@ -30,6 +30,7 @@
 #include "JSystem/J3DGraphBase/J3DTexture.hpp"
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "runtime/RuntimeContext.hpp"
 #include <stdexcept>
 #else  // SMGPC_RETAIL_SOURCE
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
@@ -840,10 +841,21 @@ void MarioActor::calcViewMainModel() {
 
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 void MarioActor::draw() const {
-    // SceneScheduler owns the opaque/translucent model passes for every
-    // LiveActorModel. This exact draw-type callback only validates that the
-    // Mario binding is still real; it must not submit the model twice.
-    smgpc::compat::require_actor_model(const_cast<MarioActor*>(this));
+    // Player is interleaved through DrawType_Player in the retail normal-draw
+    // sequence; it is intentionally absent from the generic normal draw-buffer
+    // lists. Submit both material passes at that exact callback boundary.
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr || !runtime->last_camera_pose().has_value()) {
+        throw std::logic_error("MarioActor draw requires the active scene camera");
+    }
+    auto* actor = const_cast<MarioActor*>(this);
+    smgpc::compat::require_actor_model(actor);
+    smgpc::compat::draw_actor_model(
+        actor, *runtime->last_camera_pose(), runtime->frame_index(),
+        smgpc::render::live_actor::LiveActorModel::DrawPass::Opaque);
+    smgpc::compat::draw_actor_model(
+        actor, *runtime->last_camera_pose(), runtime->frame_index(),
+        smgpc::render::live_actor::LiveActorModel::DrawPass::Translucent);
 }
 #else  // SMGPC_RETAIL_SOURCE
 void MarioActor::draw() const {

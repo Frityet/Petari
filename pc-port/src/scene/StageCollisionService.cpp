@@ -3,6 +3,7 @@
 #include "scene/StagePlacementResolver.hpp"
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <bit>
 #include <cmath>
@@ -16,6 +17,13 @@ namespace smgpc::scene {
         constexpr auto cPi = 3.14159265358979323846F;
         constexpr auto cLeafTriangleCount = std::uint32_t{8U};
         constexpr auto cCollisionSkin = 1.2F;
+        // Internal Binder margin queries can reconstruct an exact shell a few
+        // ulps outside the face at retail-scale world coordinates. Public
+        // exact sphere queries keep a zero margin and therefore zero epsilon.
+        constexpr auto cCollisionContactEpsilon = 0.01F;
+        constexpr auto cReactionConstraintTolerance = 1.0e-4F;
+        constexpr auto cReactionPivotTolerance = 1.0e-8;
+        constexpr auto cReactionTieTolerance = 1.0e-6F;
         constexpr auto cArrowEdgeTolerance = 0.01F;
 
         StageCollisionService* sActiveService = nullptr;
@@ -68,6 +76,146 @@ namespace smgpc::scene {
             }
             value.scale(1.0F / std::sqrt(square_length));
             return true;
+        }
+
+        [[nodiscard]] TVec3f component_extrema_reaction(
+            const std::vector<StageCollisionContact>& contacts) {
+            auto positive = TVec3f{};
+            auto negative = TVec3f{};
+            for (const auto& contact : contacts) {
+                const auto reaction = contact.normal * contact.penetration;
+                positive.x = std::max(positive.x, reaction.x);
+                positive.y = std::max(positive.y, reaction.y);
+                positive.z = std::max(positive.z, reaction.z);
+                negative.x = std::min(negative.x, reaction.x);
+                negative.y = std::min(negative.y, reaction.y);
+                negative.z = std::min(negative.z, reaction.z);
+            }
+            return positive + negative;
+        }
+
+        [[nodiscard]] bool solve_active_reaction(
+            const std::vector<StageCollisionContact>& contacts,
+            const std::array<std::size_t, 3U>& active_indices,
+            std::size_t active_count, TVec3f* reaction) {
+            auto system = std::array<std::array<double, 4U>, 3U>{};
+            for (auto row = std::size_t{}; row < active_count; ++row) {
+                const auto& row_contact = contacts[active_indices[row]];
+                for (auto column = std::size_t{}; column < active_count; ++column) {
+                    system[row][column] = static_cast<double>(
+                        dot(row_contact.normal,
+                            contacts[active_indices[column]].normal));
+                }
+                system[row][active_count] =
+                    static_cast<double>(row_contact.penetration);
+            }
+
+            // The active set is at most three planes in three-dimensional
+            // space. Partial-pivot Gaussian elimination rejects dependent
+            // normals so another smaller independent subset can win.
+            for (auto column = std::size_t{}; column < active_count; ++column) {
+                auto pivot_row = column;
+                for (auto row = column + 1U; row < active_count; ++row) {
+                    if (std::abs(system[row][column]) >
+                        std::abs(system[pivot_row][column])) {
+                        pivot_row = row;
+                    }
+                }
+                if (std::abs(system[pivot_row][column]) <=
+                    cReactionPivotTolerance) {
+                    return false;
+                }
+                if (pivot_row != column) {
+                    std::swap(system[pivot_row], system[column]);
+                }
+                const auto inverse_pivot = 1.0 / system[column][column];
+                for (auto entry = column; entry <= active_count; ++entry) {
+                    system[column][entry] *= inverse_pivot;
+                }
+                for (auto row = std::size_t{}; row < active_count; ++row) {
+                    if (row == column) {
+                        continue;
+                    }
+                    const auto factor = system[row][column];
+                    for (auto entry = column; entry <= active_count; ++entry) {
+                        system[row][entry] -= factor * system[column][entry];
+                    }
+                }
+            }
+
+            auto candidate = TVec3f{};
+            for (auto index = std::size_t{}; index < active_count; ++index) {
+                const auto lambda = system[index][active_count];
+                if (!std::isfinite(lambda) ||
+                    lambda < -static_cast<double>(cReactionConstraintTolerance)) {
+                    return false;
+                }
+                candidate += contacts[active_indices[index]].normal *
+                             static_cast<float>(std::max(0.0, lambda));
+            }
+            if (!std::isfinite(candidate.x) || !std::isfinite(candidate.y) ||
+                !std::isfinite(candidate.z)) {
+                return false;
+            }
+            for (const auto& contact : contacts) {
+                if (dot(contact.normal, candidate) <
+                    contact.penetration - cReactionConstraintTolerance) {
+                    return false;
+                }
+            }
+            reaction->set(candidate);
+            return true;
+        }
+
+        [[nodiscard]] TVec3f minimum_norm_reaction(
+            const std::vector<StageCollisionContact>& contacts) {
+            auto best = TVec3f{};
+            auto best_square_length = std::numeric_limits<float>::infinity();
+            auto found = std::ranges::all_of(contacts, [](const auto& contact) {
+                return contact.penetration <= cReactionConstraintTolerance;
+            });
+            if (found) {
+                best_square_length = 0.0F;
+            }
+
+            const auto consider = [&](const std::array<std::size_t, 3U>& indices,
+                                      std::size_t count) {
+                auto candidate = TVec3f{};
+                if (!solve_active_reaction(contacts, indices, count, &candidate)) {
+                    return;
+                }
+                const auto square_length = length_squared(candidate);
+                // Contact order is stable source-prism order. Keeping the
+                // first candidate within the tie tolerance makes active-set
+                // selection deterministic as well.
+                if (!found ||
+                    square_length < best_square_length - cReactionTieTolerance) {
+                    best = candidate;
+                    best_square_length = square_length;
+                    found = true;
+                }
+            };
+
+            for (auto first = std::size_t{}; first < contacts.size(); ++first) {
+                consider({first, 0U, 0U}, 1U);
+            }
+            for (auto first = std::size_t{}; first < contacts.size(); ++first) {
+                for (auto second = first + 1U; second < contacts.size(); ++second) {
+                    consider({first, second, 0U}, 2U);
+                }
+            }
+            for (auto first = std::size_t{}; first < contacts.size(); ++first) {
+                for (auto second = first + 1U; second < contacts.size(); ++second) {
+                    for (auto third = second + 1U; third < contacts.size(); ++third) {
+                        consider({first, second, third}, 3U);
+                    }
+                }
+            }
+
+            // Opposing or fully degenerate constraints can have no feasible
+            // half-space intersection. Preserve Binder's retail component
+            // extrema in that exceptional case rather than inventing motion.
+            return found ? best : component_extrema_reaction(contacts);
         }
 
         [[nodiscard]] TVec3f transform_point(const std::array<float, 12U>& matrix, const TVec3f& point) {
@@ -574,12 +722,16 @@ namespace smgpc::scene {
 
     std::vector<StageCollisionContact> StageCollisionService::sphere_contacts_impl(
         const TVec3f& center, float radius, std::size_t maximum,
-        std::optional<float> thickness_override) const {
+        std::optional<float> thickness_override, float outer_margin) const {
         auto contacts = std::vector<StageCollisionContact>{};
-        if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum == 0U) {
+        if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) ||
+            outer_margin < 0.0F || !std::isfinite(outer_margin) || maximum == 0U) {
             return contacts;
         }
-        const auto broad_radius = radius + thickness_override.value_or(0.0F);
+        const auto contact_epsilon =
+            outer_margin > 0.0F ? cCollisionContactEpsilon : 0.0F;
+        const auto query_radius = radius + outer_margin + contact_epsilon;
+        const auto broad_radius = query_radius + thickness_override.value_or(0.0F);
         struct IndexedContact {
             std::uint32_t triangle_index = 0U;
             StageCollisionContact contact{};
@@ -606,7 +758,7 @@ namespace smgpc::scene {
                     continue;
                 }
                 const auto plane_distance = dot(center - triangle.vertices[0], triangle.normal);
-                if (plane_distance > radius) {
+                if (plane_distance > query_radius) {
                     continue;
                 }
                 const auto closest = closest_point_on_triangle(center, triangle.vertices[0], triangle.vertices[1],
@@ -628,12 +780,15 @@ namespace smgpc::scene {
                 // face axis: sqrt(r^2 - lateral^2) - face distance. This is
                 // deliberately not the radial Euclidean overlap of a generic
                 // two-sided triangle.
-                const auto axial_reach = is_face_interior
-                                             ? radius
-                                             : std::sqrt(std::max(0.0F, radius * radius - lateral_square));
-                const auto penetration = axial_reach - plane_distance;
+                const auto axial_reach =
+                    is_face_interior
+                        ? radius
+                        : std::sqrt(std::max(0.0F,
+                                             radius * radius - lateral_square));
+                const auto penetration = axial_reach + outer_margin - plane_distance;
                 const auto maximum_penetration = thickness_override.value_or(triangle.thickness);
-                if (!(penetration >= 0.0F) || penetration > maximum_penetration) {
+                if (penetration < -contact_epsilon ||
+                    penetration > maximum_penetration + outer_margin) {
                     continue;
                 }
                 indexed_contacts.push_back(IndexedContact{
@@ -642,7 +797,7 @@ namespace smgpc::scene {
                         .position = closest,
                         .normal = triangle.normal,
                         .reaction_normal = triangle.normal,
-                        .penetration = penetration,
+                        .penetration = std::max(0.0F, penetration),
                         .attribute = triangle.attribute,
                         .triangle_index = triangle.triangle_index,
                     },
@@ -665,7 +820,8 @@ namespace smgpc::scene {
     }
 
     StageCollisionMoveResult StageCollisionService::move_sphere(const TVec3f& center, const TVec3f& movement,
-                                                                float radius, std::size_t maximum_contacts) const {
+                                                                float radius, std::size_t maximum_contacts,
+                                                                bool skip_initial_check) const {
         auto result = StageCollisionMoveResult{};
         if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum_contacts == 0U) {
             result.displacement = movement;
@@ -693,7 +849,9 @@ namespace smgpc::scene {
                     continue;
                 }
 
-                sweep_result.contacts = sphere_contacts(sweep_result.center, radius, detection_limit);
+                sweep_result.contacts = sphere_contacts_impl(
+                    sweep_result.center, radius, detection_limit, std::nullopt,
+                    cCollisionSkin);
                 if (!sweep_result.contacts.empty()) {
                     sweep_result.can_move_more = step_index != step_count;
                     return sweep_result;
@@ -702,29 +860,14 @@ namespace smgpc::scene {
             return sweep_result;
         };
 
-        const auto aggregate_reaction = [](const std::vector<StageCollisionContact>& contacts) {
-            auto positive = TVec3f{};
-            auto negative = TVec3f{};
-            for (const auto& contact : contacts) {
-                const auto reaction = contact.normal * (contact.penetration + cCollisionSkin);
-                positive.x = std::max(positive.x, reaction.x);
-                positive.y = std::max(positive.y, reaction.y);
-                positive.z = std::max(positive.z, reaction.z);
-                negative.x = std::min(negative.x, reaction.x);
-                negative.y = std::min(negative.y, reaction.y);
-                negative.z = std::min(negative.z, reaction.z);
-            }
-            return positive + negative;
-        };
-
-        auto first = sweep(center, movement, false, maximum_contacts);
+        auto first = sweep(center, movement, skip_initial_check, maximum_contacts);
         if (first.contacts.empty()) {
             result.displacement = first.movement;
             return result;
         }
 
         auto resolved_center = first.center;
-        auto first_reaction = aggregate_reaction(first.contacts);
+        auto first_reaction = minimum_norm_reaction(first.contacts);
         resolved_center.add(first_reaction);
         result.fix_reaction.add(first_reaction);
         result.contacts.insert(result.contacts.end(), first.contacts.begin(), first.contacts.end());
@@ -751,7 +894,7 @@ namespace smgpc::scene {
                     const auto stored_count = std::min(remaining_capacity, second.contacts.size());
                     if (stored_count != 0U) {
                         second.contacts.resize(stored_count);
-                        const auto second_reaction = aggregate_reaction(second.contacts);
+                        const auto second_reaction = minimum_norm_reaction(second.contacts);
                         resolved_center.add(second_reaction);
                         result.fix_reaction.add(second_reaction);
                         result.contacts.insert(result.contacts.end(), second.contacts.begin(), second.contacts.end());
