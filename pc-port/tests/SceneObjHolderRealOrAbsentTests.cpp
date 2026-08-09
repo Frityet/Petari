@@ -109,20 +109,101 @@ namespace {
         const auto source = read_file("src/scene/StageHostScene.cpp");
         const auto required_objects = source.find("constexpr auto required_scene_objects");
         const auto mario_holder = source.find("SceneObj_MarioHolder", required_objects);
+        const auto group_check = source.find("SceneObj_GroupCheckManager", mario_holder);
+        const auto talk_director = source.find("SceneObj_TalkDirector", group_check);
         const auto create_loop = source.find("for (const auto id : required_scene_objects)", mario_holder);
         const auto placement_init_call = source.find("init_placement_roots();", create_loop);
         const auto placement_init = source.find("void StageHostScene::init_placement_roots()", placement_init_call);
+        const auto placement_preflight = source.find("prepare_authored_placements();", placement_init);
         const auto start_preflight = source.find("preflight_stage_start_or_throw();", placement_init);
-        const auto start_construction = source.find("construct_stage_start_root();", start_preflight);
+        const auto placement_preload = source.find("preload_authored_placements();", start_preflight);
+        const auto start_construction = source.find("construct_stage_start_root();", placement_preload);
+        const auto placement_construction = source.find("construct_authored_placements();", start_construction);
 
         require(required_objects != std::string::npos && mario_holder != std::string::npos &&
+                    group_check != std::string::npos &&
+                    talk_director != std::string::npos &&
                     create_loop != std::string::npos && placement_init_call != std::string::npos &&
-                    placement_init != std::string::npos && start_preflight != std::string::npos &&
-                    start_construction != std::string::npos && required_objects < mario_holder &&
-                    mario_holder < create_loop && create_loop < placement_init_call &&
-                    placement_init_call < placement_init && placement_init < start_preflight &&
-                    start_preflight < start_construction,
-                "StageHost must create SceneObj_MarioHolder before StartInfo preflight and construction");
+                    placement_init != std::string::npos &&
+                    placement_preflight != std::string::npos &&
+                    start_preflight != std::string::npos &&
+                    placement_preload != std::string::npos &&
+                    start_construction != std::string::npos &&
+                    placement_construction != std::string::npos &&
+                    required_objects < mario_holder && mario_holder < group_check &&
+                    group_check < talk_director && talk_director < create_loop &&
+                    create_loop < placement_init_call &&
+                    placement_init_call < placement_init &&
+                    placement_init < placement_preflight &&
+                    placement_preflight < start_preflight &&
+                    start_preflight < placement_preload &&
+                    placement_preload < start_construction &&
+                    start_construction < placement_construction,
+                "StageHost must create Mario/group services, strictly preflight, preload every holder, then construct StartInfo before authored placements");
+    }
+
+    void test_planet_catalog_precedes_authored_data_resolution() {
+        const auto host = read_file("src/scene/StageHostScene.cpp");
+        const auto host_environment =
+            host.find("void StageHostScene::init_stage_environment()");
+        const auto host_catalog =
+            host.find("_planet_map_catalog =", host_environment);
+        const auto host_data = host.find("_authored_data =", host_catalog);
+
+        const auto gateway = read_file("src/scene/GatewayDemoScene.cpp");
+        const auto gateway_constructor = gateway.find("explicit Impl(");
+        const auto gateway_session =
+            gateway.find("_stage_session_binding =", gateway_constructor);
+        const auto gateway_catalog =
+            gateway.find("_planet_map_catalog =", gateway_session);
+        const auto gateway_data =
+            gateway.find("_authored_data =", gateway_catalog);
+        const auto gateway_placements =
+            gateway.find("_authored_placements =", gateway_data);
+        const auto gateway_preload = gateway.find(
+            "_authored_placements->preload()", gateway_placements);
+        const auto gateway_construct = gateway.find(
+            "_authored_placements->instantiate()", gateway_preload);
+
+        require(host_environment != std::string::npos &&
+                    host_catalog != std::string::npos &&
+                    host_data != std::string::npos &&
+                    host_environment < host_catalog &&
+                    host_catalog < host_data &&
+                    gateway_constructor != std::string::npos &&
+                    gateway_session != std::string::npos &&
+                    gateway_catalog != std::string::npos &&
+                    gateway_data != std::string::npos &&
+                    gateway_placements != std::string::npos &&
+                    gateway_preload != std::string::npos &&
+                    gateway_construct != std::string::npos &&
+                    gateway_constructor < gateway_session &&
+                    gateway_session < gateway_catalog &&
+                    gateway_catalog < gateway_data &&
+                    gateway_data < gateway_placements &&
+                    gateway_placements < gateway_preload &&
+                    gateway_preload < gateway_construct,
+                "both scene owners must publish session/catalog services and expose preload before authored construction");
+    }
+
+    void test_model_changing_archive_path_uses_retail_mounted_prefix() {
+        const auto uses_retail_flag = [](std::string_view path) {
+            const auto source = read_file(path);
+            const auto call = source.find(
+                "MR::makeObjectArchiveFileNameFromPrefix(");
+            const auto call_end = source.find(")) {", call);
+            if (call == std::string::npos || call_end == std::string::npos) {
+                return false;
+            }
+            const auto invocation = source.substr(call, call_end - call);
+            return invocation.find("true") != std::string::npos &&
+                   invocation.find("false") == std::string::npos;
+        };
+
+        require(
+            uses_retail_flag("src/scene/AuthoredPlacementInstantiator.cpp") &&
+                uses_retail_flag("src/scene/NameObjLifecycleService.cpp"),
+            "model-changing rank and preload must request the mounted-object `%s%02d` archive path");
     }
 
     void test_holder_does_not_install_a_player_creator() {
@@ -214,6 +295,10 @@ int main() {
         TestCase{"bound holder requires explicit real creation", test_bound_holder_requires_explicit_real_creation},
         TestCase{"MarioHolder precedes real actor creation", test_mario_holder_precedes_real_actor_creation},
         TestCase{"StageHost creates MarioHolder before StartInfo", test_stage_host_creates_mario_holder_before_start_preflight},
+        TestCase{"planet catalog precedes authored data resolution",
+                 test_planet_catalog_precedes_authored_data_resolution},
+        TestCase{"model-changing archive path uses retail mounted prefix",
+                 test_model_changing_archive_path_uses_retail_mounted_prefix},
         TestCase{"MarioHolder does not install a player creator", test_holder_does_not_install_a_player_creator},
         TestCase{"bindings are single-scene and isolated", test_bindings_are_single_scene_and_isolated},
         TestCase{"SwitchWatcher holder retires children before recreation",

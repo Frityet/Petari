@@ -1,3 +1,4 @@
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -67,6 +68,7 @@ namespace {
 
     struct ExpectedGatewayPlanet {
         std::string_view name;
+        std::string_view runtime_name;
         std::size_t collision_count;
         s32 draw_buffer_type;
         bool has_indirect_texture;
@@ -74,13 +76,17 @@ namespace {
 
     constexpr std::array cExpectedGatewayPlanets = {
         ExpectedGatewayPlanet{
-            "HeavensDoorMysteriousPlanet", 2U, MR::DrawBufferType_IndirectPlanet, true},
+            "HeavensDoorMysteriousPlanet", "ヘブンズドアミステリアス惑星",
+            2U, MR::DrawBufferType_IndirectPlanet, true},
         ExpectedGatewayPlanet{
-            "HeavensDoorSmallPlanet", 1U, MR::DrawBufferType_IndirectPlanet, true},
+            "HeavensDoorSmallPlanet", "ヘブンズドア惑星（小）", 1U,
+            MR::DrawBufferType_IndirectPlanet, true},
         ExpectedGatewayPlanet{
-            "HeavensDoorMiddlePlanet", 2U, MR::DrawBufferType_IndirectPlanet, true},
+            "HeavensDoorMiddlePlanet", "ヘブンズドア惑星（中）", 2U,
+            MR::DrawBufferType_IndirectPlanet, true},
         ExpectedGatewayPlanet{
-            "HeavensDoorBlackHolePlanet", 1U, MR::DrawBufferType_Planet, false},
+            "HeavensDoorBlackHolePlanet", "ヘブンズドアブラックホール惑星",
+            1U, MR::DrawBufferType_Planet, false},
     };
 
     void test_gateway_ordinary_planet_actor() {
@@ -114,6 +120,8 @@ namespace {
         };
 
         auto retired_planets = std::array<const PlanetMap *, cExpectedGatewayPlanets.size()>{};
+        auto retired_planet_runtime_names =
+            std::array<std::string, cExpectedGatewayPlanets.size()>{};
         {
             auto frame = renderer.begin_frame();
             frame.frame_index = 91U;
@@ -124,6 +132,11 @@ namespace {
 #ifndef NDEBUG
             runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
+            auto gateway_scheduler_player =
+                LiveActor{"Planet route scheduler player"};
+            gateway_scheduler_player.mPosition.set(1000000.0F, 1000000.0F,
+                                                   1000000.0F);
+            gateway_scheduler_player.calcAndSetBaseMtx();
             {
                 auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
                 auto *planet = scene.planet();
@@ -159,10 +172,16 @@ namespace {
 
                     auto *expected_planet = dynamic_cast<PlanetMap *>(visual->actor);
                     retired_planets[i] = expected_planet;
+                    require(expected_planet != nullptr &&
+                                expected_planet->getName() != nullptr,
+                            "Gateway ordinary PlanetMap has no runtime actor identity");
+                    retired_planet_runtime_names[i] = expected_planet->getName();
                     auto *expected_model = smgpc::compat::actor_model(expected_planet);
                     const auto expected_resources =
                         smgpc::compat::actor_collision_parts_resources(expected_planet);
-                    require(expected_model != nullptr &&
+                    require(retired_planet_runtime_names[i] ==
+                                    expected.runtime_name &&
+                                expected_model != nullptr &&
                                 expected_model->model_arc_name() == expected.name &&
                                 expected_model->has_indirect_texture() ==
                                     expected.has_indirect_texture &&
@@ -174,8 +193,10 @@ namespace {
                             "Gateway ordinary PlanetMap identity has the wrong model or CollisionParts closure");
 #ifndef NDEBUG
                     const auto scheduled = std::ranges::find_if(
-                        entries, [&expected](const auto &entry) {
-                            return entry.name == expected.name &&
+                        entries, [&retired_planet_runtime_names,
+                                  i](const auto &entry) {
+                            return entry.name ==
+                                       retired_planet_runtime_names[i] &&
                                    entry.kind ==
                                        smgpc::runtime::SceneEntryKind::LiveActorModel;
                         });
@@ -210,8 +231,8 @@ namespace {
                         "PlanetMap did not retain exact main and MoveLimit KCL/PA provenance");
 
 #ifndef NDEBUG
-                const auto scheduled = std::ranges::find_if(entries, [](const auto &entry) {
-                    return entry.name == "HeavensDoorMysteriousPlanet" &&
+                const auto scheduled = std::ranges::find_if(entries, [&](const auto &entry) {
+                    return entry.name == retired_planet_runtime_names.front() &&
                            entry.kind == smgpc::runtime::SceneEntryKind::LiveActorModel;
                 });
                 require(model->has_indirect_texture(),
@@ -223,6 +244,7 @@ namespace {
                         "PlanetMap did not use the retail planet scheduler categories");
 #endif
 
+                runtime.player_system().attach_actor(gateway_scheduler_player);
                 runtime.scheduler().execute_movement();
                 runtime.scheduler().execute_calc_anim();
                 runtime.scheduler().execute_calc_view_and_entry();
@@ -262,6 +284,7 @@ namespace {
                 // draining the frame FIFO, so scene-owned models must outlive
                 // end_frame just as they do in the production scene loop.
                 renderer.end_frame();
+                runtime.player_system().detach_actor(&gateway_scheduler_player);
             }
 
             require(smgpc::scene::nameobj::PlanetMapCatalog::active() == nullptr,
@@ -273,11 +296,11 @@ namespace {
                     "destroying Gateway left stale ordinary PlanetMap CollisionParts state");
 #ifndef NDEBUG
             const auto retired_entries = runtime.scheduler().snapshot();
-            require(std::ranges::all_of(cExpectedGatewayPlanets,
-                                        [&retired_entries](const auto &expected) {
+            require(std::ranges::all_of(retired_planet_runtime_names,
+                                        [&retired_entries](const auto &runtime_name) {
                                             return std::ranges::none_of(
-                                                retired_entries, [&expected](const auto &entry) {
-                                                    return entry.name == expected.name;
+                                                retired_entries, [&runtime_name](const auto &entry) {
+                                                    return entry.name == runtime_name;
                                                 });
                                         }),
                     "destroying Gateway left a stale ordinary PlanetMap scheduler entry");

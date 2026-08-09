@@ -193,7 +193,8 @@ namespace {
     }
 
     void require_exact_scheduler_route(
-        const smgpc::runtime::RuntimeContext& runtime) {
+        const smgpc::runtime::RuntimeContext& runtime,
+        std::string_view bright_runtime_name) {
         const auto entries = runtime.scheduler().snapshot();
         const auto has_entry = [&](std::string_view name,
                                    smgpc::runtime::SceneEntryKind kind,
@@ -209,7 +210,8 @@ namespace {
         };
 
         require(
-            has_entry("BrightSun", smgpc::runtime::SceneEntryKind::NameObj,
+            has_entry(bright_runtime_name,
+                      smgpc::runtime::SceneEntryKind::NameObj,
                       MR::MovementType_Environment, -1, -1,
                       MR::DrawType_BrightSun) &&
                 has_entry("太陽",
@@ -325,6 +327,11 @@ namespace {
                         director->mRing != nullptr && director->mGlow != nullptr &&
                         director->mLine != nullptr,
                     "the authored BrightSun did not create its exact director and three children");
+            require(bright->getName() != nullptr &&
+                        std::string_view(bright->getName()) ==
+                            "レンズフレア用太陽",
+                    "BrightSun did not retain its exact ObjNameTable actor identity");
+            const auto bright_runtime_name = std::string(bright->getName());
 
             const auto require_model = [](LiveActor* actor,
                                           std::string_view actor_name,
@@ -341,7 +348,7 @@ namespace {
             require_model(director->mRing, "レンズフレアリング", "LensFlare");
             require_model(director->mGlow, "グレア（円形）", "GlareGlow");
             require_model(director->mLine, "グレア（ライン）", "GlareLine");
-            require_exact_scheduler_route(runtime);
+            require_exact_scheduler_route(runtime, bright_runtime_name);
 
             const auto flare_placement = std::ranges::find_if(
                 scene.placements(), [](const auto& placement) {

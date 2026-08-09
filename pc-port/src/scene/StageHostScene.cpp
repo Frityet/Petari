@@ -23,7 +23,6 @@
 
 #include <algorithm>
 #include <array>
-#include <cctype>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -34,19 +33,13 @@ namespace smgpc::scene {
     namespace {
 
         [[nodiscard]] bool placement_has_complete_runtime(const StagePlacementObject &placement) {
-            return placement_has_complete_area_obj_runtime(
-                placement.object_name, placement.table_path,
-                placement.factory_supported);
+            return classify_authored_placement(placement).kind ==
+                   AuthoredPlacementSupportKind::Ready;
         }
 
-        [[nodiscard]] std::string_view placement_runtime_support_reason(
+        [[nodiscard]] std::string placement_runtime_support_reason(
             const StagePlacementObject &placement) {
-            if (placement.factory_supported &&
-                is_area_obj_placement_table(placement.table_path) &&
-                find_complete_area_obj_placement_descriptor(placement.object_name) == nullptr) {
-                return "area_obj_creator_manager_closure_unavailable";
-            }
-            return placement.support_reason;
+            return classify_authored_placement(placement).reason;
         }
 
 #ifndef NDEBUG
@@ -130,7 +123,9 @@ namespace smgpc::scene {
             for (const auto &placement : placements) {
                 const auto rail = placement_rail_summary(placement);
                 out << "- status: " << placement_preflight_status_name(placement) << "\n";
-                out << "  object: " << placement.object_name << "\n";
+                out << "  object: "
+                    << authored_placement_identifier(placement) << "\n";
+                out << "  authored_name: " << placement.object_name << "\n";
                 out << "  zone: " << placement.zone_name << "\n";
                 out << "  zone_id: " << placement.zone_id << "\n";
                 out << "  table: " << placement.table_path << "\n";
@@ -158,99 +153,14 @@ namespace smgpc::scene {
             auto out = std::ostringstream();
             out << "Unsupported placement objects for " << stage_name << ": " << blocked_placements.size() << " blocked";
             if (!blocked_placements.empty()) {
-                out << "; first=" << blocked_placements.front()->object_name << " in " << blocked_placements.front()->table_path;
+                out << "; first="
+                    << authored_placement_identifier(
+                           *blocked_placements.front())
+                    << "; raw_name="
+                    << blocked_placements.front()->object_name << " in "
+                    << blocked_placements.front()->table_path;
             }
             return out.str();
-        }
-
-        [[nodiscard]] bool same_placement_identity(const StagePlacementObject &left,
-                                                   const StagePlacementObject &right) {
-            return left.archive_path == right.archive_path && left.table_path == right.table_path &&
-                   left.zone_id == right.zone_id && left.jmap_entry_index == right.jmap_entry_index;
-        }
-
-        [[nodiscard]] std::vector<const StagePlacementObject *> collect_blocked_placements(
-            const std::vector<StagePlacementObject> &placements,
-            const StagePlacementObject *explicit_placement) {
-            auto blocked = std::vector<const StagePlacementObject *>{};
-            for (const auto &placement : placements) {
-                if (placement.intentionally_ignored || placement_has_complete_runtime(placement)) {
-                    continue;
-                }
-                blocked.push_back(&placement);
-            }
-            (void)explicit_placement;
-            return blocked;
-        }
-
-        [[nodiscard]] NameObjPlacementContext placement_context(const StagePlacementObject &placement) {
-            return NameObjPlacementContext{
-                .iter = JMapInfoIter(&placement.jmap_info, placement.jmap_entry_index),
-                .source = NameObjPlacementSource::StagePlacement,
-                .stage_name = placement.stage_name,
-                .zone_name = placement.zone_name,
-                .table_path = placement.table_path,
-                .row = placement.jmap_entry_index,
-                .local_id = placement.l_id,
-            };
-        }
-
-        [[nodiscard]] NameObjPlacementContext start_context(const StageStartInfo &start) {
-            return NameObjPlacementContext{
-                .iter = start.iter(),
-                .source = NameObjPlacementSource::StageStart,
-                .stage_name = start.stage_name,
-                .zone_name = start.zone_name,
-                .table_path = start.table_path,
-                .row = start.jmap_entry_index,
-                .local_id = start.start_id,
-            };
-        }
-
-        [[nodiscard]] bool equal_case_insensitive(std::string_view left,
-                                                  std::string_view right) {
-            if (left.size() != right.size()) {
-                return false;
-            }
-            for (auto index = std::size_t{}; index < left.size(); ++index) {
-                if (std::tolower(static_cast<unsigned char>(left[index])) !=
-                    std::tolower(static_cast<unsigned char>(right[index]))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        [[nodiscard]] bool is_high_priority_placement(
-            const StagePlacementObject &placement) {
-            constexpr auto high_priority_tables = std::array<std::string_view, 4U>{
-                "AreaObjInfo", "PlanetObjInfo", "DemoObjInfo", "CameraCubeInfo"};
-            return std::ranges::any_of(high_priority_tables, [&](std::string_view name) {
-                return equal_case_insensitive(placement.table_name, name);
-            });
-        }
-
-        [[nodiscard]] int retail_placement_phase(
-            const StagePlacementObject &placement) {
-            const auto common = equal_case_insensitive(placement.layer_name, "common");
-            if (is_high_priority_placement(placement)) {
-                return common ? 0 : 1;
-            }
-            return common ? 2 : 3;
-        }
-
-        [[nodiscard]] std::vector<const StagePlacementObject *>
-        retail_ordered_placements(
-            const std::vector<StagePlacementObject> &placements) {
-            auto ordered = std::vector<const StagePlacementObject *>{};
-            ordered.reserve(placements.size());
-            for (const auto &placement : placements) {
-                ordered.push_back(&placement);
-            }
-            std::ranges::stable_sort(ordered, [](const auto *left, const auto *right) {
-                return retail_placement_phase(*left) < retail_placement_phase(*right);
-            });
-            return ordered;
         }
 
     }  // namespace
@@ -265,7 +175,8 @@ namespace smgpc::scene {
         const StagePlacementObject *explicit_placement) {
         auto blocked_placements = std::vector<const StagePlacementObject *>{};
         for (const auto &placement : placements) {
-            if (placement.intentionally_ignored || placement_has_complete_runtime(placement)) {
+            const auto support = classify_authored_placement(placement);
+            if (support.kind != AuthoredPlacementSupportKind::Blocked) {
                 continue;
             }
             blocked_placements.push_back(&placement);
@@ -291,18 +202,18 @@ namespace smgpc::scene {
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
-        // Demo definitions own cast memberships and callback clones. Release
-        // them while all actor pointers are still valid and after their
-        // scheduler entries can no longer run.
-        _demo_scene_runtime.reset();
         _runtime.player_system().clear_stage_state();
         destroy_roots();
+        // Placement teardown releases cast memberships while the one
+        // pre-placement DemoDirector counterpart is still available.
+        _demo_scene_runtime.reset();
         // Exact actor destruction releases every owned KCL registration while
         // the stage collision service is still the active scene owner.
         _collision.deactivate();
         _scene_obj_holder_binding.reset();
         _planet_map_catalog.reset();
         _stage_light_binding.reset();
+        _authored_data.reset();
         if (_stage_audio_started) {
             smgpc::compat::end_stage_audio(_runtime.audio());
             _stage_audio_started = false;
@@ -344,6 +255,9 @@ namespace smgpc::scene {
             SceneObj_SleepControllerHolder,
             SceneObj_AreaObjContainer,
             SceneObj_PlacementStateChecker,
+            SceneObj_BaseMatrixFollowTargetHolder,
+            SceneObj_GroupCheckManager,
+            SceneObj_TalkDirector,
         };
         for (const auto id : required_scene_objects) {
             if (MR::createSceneObj(id) == nullptr) {
@@ -388,8 +302,9 @@ namespace smgpc::scene {
                 "player", "stage_player_attached",
                 "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
                     ";source=real_actor_attachment");
-        } else if (_stage_start_info.has_value()) {
-            const auto &start = *_stage_start_info;
+        } else if (_authored_data != nullptr &&
+                   _authored_data->start_info().has_value()) {
+            const auto &start = *_authored_data->start_info();
             _runtime.emit_semantic_trace_event(
                 "player", "stage_player_unavailable",
                 "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
@@ -437,43 +352,50 @@ namespace smgpc::scene {
     void StageHostScene::init_explicit_root() {
         init_stage_environment();
 
-        const auto explicit_placement = std::ranges::find_if(_placements, [this](const auto &placement) {
-            return placement.object_name == _request.object_name &&
+        const auto placements = _authored_data->placements();
+        const auto explicit_placement = std::ranges::find_if(placements, [this](const auto &placement) {
+            return authored_placement_identifier(placement) ==
+                       _request.object_name &&
                    placement_has_complete_runtime(placement);
         });
-        const auto *placement = explicit_placement != _placements.end() ? &*explicit_placement : nullptr;
-        auto context = placement != nullptr ? std::optional<NameObjPlacementContext>(placement_context(*placement)) :
-                                              std::nullopt;
-        const auto *actor_name = !_request.actor_name.empty() ? _request.actor_name.c_str() :
-                                 placement != nullptr         ? resolve_actor_name(placement->object_name, &*context) :
-                                                                nullptr;
-        preflight_stage_placements_or_throw(
-            _request.stage_name, _request.scenario_no, _placements, placement);
+        const auto *placement = explicit_placement != placements.end() ?
+                                    &*explicit_placement :
+                                    nullptr;
+        prepare_authored_placements(placement);
+        preload_authored_placements();
         init_stage_audio();
-        construct_root_object(_request.object_name, actor_name,
-                              context.has_value() ? &*context : nullptr, true);
-        construct_placement_roots(placement);
+        if (placement == nullptr) {
+            const auto *actor_name = !_request.actor_name.empty() ?
+                                         _request.actor_name.c_str() :
+                                         nullptr;
+            construct_root_object(
+                _request.object_name, actor_name, nullptr, true);
+        }
+        construct_authored_placements();
     }
 
     void StageHostScene::init_placement_roots() {
         init_stage_environment();
-        preflight_stage_placements_or_throw(
-            _request.stage_name, _request.scenario_no, _placements);
+        prepare_authored_placements();
         preflight_stage_start_or_throw();
+        // PlacementInfoOrdered ranks and requests every holder before retail
+        // inserts initPlacementMario at the actor-construction boundary.
+        preload_authored_placements();
         init_stage_audio();
         construct_stage_start_root();
-        construct_placement_roots();
+        construct_authored_placements();
     }
 
     void StageHostScene::preflight_stage_start_or_throw() const {
-        if (!_stage_start_info.has_value()) {
+        if (_authored_data == nullptr ||
+            !_authored_data->start_info().has_value()) {
             throw std::runtime_error(
                 "No active StartInfo matches stage " + _request.stage_name + ";start_id=" +
                 std::to_string(_request.start_id) + ";start_zone_id=" +
                 std::to_string(_request.start_zone_id));
         }
 
-        const auto &start = *_stage_start_info;
+        const auto &start = *_authored_data->start_info();
         if (start.object_name.empty()) {
             throw std::runtime_error(
                 "StartInfo is missing its retail object name: " + start.table_path +
@@ -488,79 +410,116 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::construct_stage_start_root() {
-        const auto &start = *_stage_start_info;
-        const auto context = start_context(start);
+        const auto &start = *_authored_data->start_info();
+        const auto context = _authored_data->start_context();
         // StageDataHolder::initPlacementMario passes this retail actor name
         // directly; StartInfo does not use ObjNameTable display-name lookup.
         construct_root_object(start.object_name, "マリオアクター", &context, false);
     }
 
-    void StageHostScene::construct_placement_roots(const StagePlacementObject *explicit_placement) {
-        const auto blocked_placements = collect_blocked_placements(_placements, explicit_placement);
-        const auto ordered_placements = retail_ordered_placements(_placements);
-        for (const auto *placement_ptr : ordered_placements) {
-            const auto &placement = *placement_ptr;
+    void StageHostScene::prepare_authored_placements(
+        const StagePlacementObject *explicit_placement) {
+        if (_authored_data == nullptr || _authored_placements != nullptr) {
+            throw std::logic_error(
+                "Authored stage placement preparation requires one retained data owner.");
+        }
+
+        _explicit_placement_source = explicit_placement;
+        auto options = AuthoredPlacementInstantiationOptions{
+            .mode = AuthoredPlacementMode::Strict,
+            .actor_name_resolver = [this, explicit_placement](
+                                       const StagePlacementObject &placement)
+                -> std::optional<std::string> {
+                if (explicit_placement == &placement &&
+                    !_request.actor_name.empty()) {
+                    return _request.actor_name;
+                }
+                const auto *localized_name = resolve_actor_name(
+                    authored_placement_identifier(placement), &placement);
+                if (localized_name == nullptr) {
+                    return std::string(
+                        authored_placement_identifier(placement));
+                }
+                return std::string(localized_name);
+            },
+        };
+        _authored_placements =
+            std::make_unique<AuthoredPlacementInstantiator>(
+                *_authored_data, _runtime.name_obj_lifecycle(),
+                std::move(options));
+
+        preflight_stage_placements_or_throw(
+            _request.stage_name, _request.scenario_no,
+            _authored_data->placements(), explicit_placement);
+        (void)_authored_placements->preflight();
+
+        for (const auto &entry : _authored_placements->report().entries) {
+            if (entry.placement == nullptr) {
+                continue;
+            }
+            const auto &placement = *entry.placement;
             trace_placement_object(placement);
-            if (explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) {
-#ifndef NDEBUG
-                _runtime.emit_semantic_trace_event(
-                    "placement", "stage_object_deduplicated",
-                    "stage=" + placement.stage_name + ";object=" + placement.object_name +
-                        ";table=" + placement.table_path + ";row=" + std::to_string(placement.jmap_entry_index) +
-                        ";reason=explicit_root_same_data_identity");
-#endif
-                continue;
+        }
+    }
+
+    void StageHostScene::preload_authored_placements() {
+        if (_authored_placements == nullptr) {
+            throw std::logic_error(
+                "Authored stage placements were not prepared before preload.");
+        }
+        (void)_authored_placements->preload();
+    }
+
+    void StageHostScene::construct_authored_placements() {
+        if (_authored_placements == nullptr) {
+            throw std::logic_error(
+                "Authored stage placements were not prepared before construction.");
+        }
+
+        const auto &report = _authored_placements->instantiate();
+        if (_explicit_placement_source != nullptr) {
+            const auto found = std::ranges::find_if(
+                _authored_placements->instances(), [this](const auto &instance) {
+                    return instance.placement == _explicit_placement_source;
+                });
+            if (found == _authored_placements->instances().end()) {
+                throw std::logic_error(
+                    "The explicit placement root was accepted but not constructed.");
             }
-            if (placement.intentionally_ignored) {
-                continue;
-            }
+            _explicit_placement_root = found->actor;
         }
 
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("placement", "stage_placement_summary",
                                            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                                               ";objects=" + std::to_string(_placements.size()) +
-                                               ";complete=" + std::to_string(std::ranges::count_if(_placements, placement_runtime_is_complete)) +
-                                               ";ignored=" +
-                                               std::to_string(std::ranges::count_if(_placements, [](const auto &placement) {
-                                                   return placement.intentionally_ignored;
-                                               })) +
-                                               ";blocked=" + std::to_string(blocked_placements.size()));
+                                               ";objects=" + std::to_string(report.entries.size()) +
+                                               ";complete=" + std::to_string(report.ready_count) +
+                                               ";ignored=" + std::to_string(report.ignored_count) +
+                                               ";blocked=" + std::to_string(report.blocked_count) +
+                                               ";created=" + std::to_string(report.created_count) +
+                                               ";mode=strict");
 #endif
-
-        for (const auto *placement_ptr : ordered_placements) {
-            const auto &placement = *placement_ptr;
-            if ((explicit_placement != nullptr && same_placement_identity(placement, *explicit_placement)) ||
-                placement.intentionally_ignored) {
-                continue;
-            }
-
-            // A request actor-name override identifies only its explicit root;
-            // data-driven placement actors use the original localized runtime
-            // name while their factory/archive/model identifier stays English.
-            const auto context = placement_context(placement);
-            construct_root_object(placement.object_name,
-                                  resolve_actor_name(placement.object_name, &context),
-                                  &context, false);
-        }
     }
 
     void StageHostScene::init_stage_environment() {
         if (_object_name_table == nullptr) {
             _object_name_table = std::make_unique<smgpc::scene::nameobj::ObjectNameTable>(_runtime.dvd());
         }
-        const auto tables = resolve_stage_placement_tables(
-            _runtime.dvd(), _request.stage_name, _request.scenario_no);
         _planet_map_catalog =
             std::make_unique<smgpc::scene::nameobj::PlanetMapCatalog>(_runtime.dvd());
+        // Planet rows acquire factory support from the active catalog. Publish
+        // it before the single retained authored-data resolution pass.
+        _authored_data = std::make_unique<StageAuthoredData>(
+            StageAuthoredData::resolve(
+                _runtime.dvd(), _request.stage_name, _request.scenario_no,
+                _request.start_id, _request.start_zone_id));
         _stage_light_binding = std::make_unique<StageLightSceneBinding>(
-            _runtime.dvd(), _request.stage_name, tables);
-        _placements = resolve_stage_placement_objects(_runtime.dvd(), tables);
-        const auto general_positions = select_stage_general_positions(tables);
+            _runtime.dvd(), _request.stage_name, _authored_data->tables());
         // The original DemoDirector/executors exist before placement actors
         // initialize and attempt to join their zone-scoped groups.
         _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(
-            _runtime.dvd(), _placements, general_positions);
+            _runtime.dvd(), _authored_data->placements(),
+            _authored_data->general_positions());
         // Collision remains absent until source Game code issues an exact
         // CollisionParts registration. Placement/archive discovery must not
         // synthesize collision for actors that did not request it.
@@ -568,14 +527,12 @@ namespace smgpc::scene {
         _collision.build();
         _collision.activate();
         const auto &collision_stats = _collision.stats();
-        _stage_start_info = select_stage_start_info(tables, _request.start_id,
-                                                    _request.start_zone_id);
-
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event(
             "collision", "stage_collision_registry_ready",
             "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                ";placement_rows=" + std::to_string(_placements.size()) +
+                ";placement_rows=" +
+                std::to_string(_authored_data->placements().size()) +
                 ";registration=explicit_collision_parts;meshes=" + std::to_string(collision_stats.mesh_count) +
                 ";triangles=" + std::to_string(collision_stats.triangle_count) +
                 ";rejected_triangles=" + std::to_string(collision_stats.rejected_triangle_count));
@@ -605,7 +562,8 @@ namespace smgpc::scene {
                                                ";zone_id=" + std::to_string(placement.zone_id) +
                                                ";scenario=" + std::to_string(_request.scenario_no) +
                                                ";layer=" + placement.layer_name + ";table=" + placement.table_path +
-                                               ";object=" + placement.object_name +
+                                               ";object=" + std::string(authored_placement_identifier(placement)) +
+                                               ";raw_name=" + placement.object_name +
                                                ";runtime_support=" + std::string(placement_preflight_status_name(placement)) +
                                                ";support_reason=" + std::string(placement_runtime_support_reason(placement)) +
                                                ";common_path_id=" + std::to_string(placement.common_path_id) +
@@ -628,17 +586,22 @@ namespace smgpc::scene {
         for (auto &root : _roots) {
             lifecycle.init_after_placement(*root);
         }
+        if (_authored_placements != nullptr) {
+            (void)_authored_placements->init_after_placement();
+        }
     }
 
     void StageHostScene::init_stage_start_camera() {
         _runtime.camera_system().clear_game_camera_pose();
         _stage_start_camera.reset();
 
-        if (!_stage_start_info.has_value()) {
+        if (_authored_data == nullptr ||
+            !_authored_data->start_info().has_value()) {
             return;
         }
 
-        auto resolved = smgpc::camera::resolve_stage_start_camera(_runtime.dvd(), *_stage_start_info);
+        auto resolved = smgpc::camera::resolve_stage_start_camera(
+            _runtime.dvd(), *_authored_data->start_info());
         if (!resolved.camera.has_value()) {
 #ifndef NDEBUG
             _runtime.emit_semantic_trace_event(
@@ -683,12 +646,32 @@ namespace smgpc::scene {
                 lifecycle.appear(*_roots[index]);
             }
         }
+        if (_explicit_placement_root != nullptr) {
+            lifecycle.appear(*_explicit_placement_root);
+        }
     }
 
     void StageHostScene::destroy_roots() {
         auto &lifecycle = _runtime.name_obj_lifecycle();
-        for (auto &root : _roots) {
-            lifecycle.destroy(*root);
+        if (_authored_placements != nullptr) {
+            // The instantiator destructor performs the same reverse teardown
+            // while containing any actor-specific destruction exception; this
+            // scene destructor must remain noexcept.
+            _authored_placements.reset();
+        }
+        _explicit_placement_root = nullptr;
+        _explicit_placement_source = nullptr;
+        for (auto root = _roots.rbegin(); root != _roots.rend(); ++root) {
+            if (*root == nullptr) {
+                continue;
+            }
+            try {
+                lifecycle.destroy(**root);
+            } catch (...) {
+                // Scene destruction cannot propagate, but actor deletion must
+                // still happen at this exact reverse-order retirement point.
+            }
+            root->reset();
         }
         _roots.clear();
         _root_host_appear.clear();
@@ -714,7 +697,17 @@ namespace smgpc::scene {
     }
 
     NameObj *StageHostScene::root() const {
-        return !_roots.empty() ? _roots.front().get() : nullptr;
+        if (!_roots.empty()) {
+            return _roots.front().get();
+        }
+        if (_explicit_placement_root != nullptr) {
+            return _explicit_placement_root;
+        }
+        if (_authored_placements != nullptr &&
+            !_authored_placements->instances().empty()) {
+            return _authored_placements->instances().front().actor;
+        }
+        return nullptr;
     }
 
     std::string_view StageHostScene::scene_name() const {
@@ -730,20 +723,19 @@ namespace smgpc::scene {
     }
 
     const char *StageHostScene::resolve_actor_name(
-        std::string_view object_name, const NameObjPlacementContext *placement) const {
+        std::string_view object_name,
+        const StagePlacementObject *placement) const {
         const auto *localized_name = _object_name_table->lookup(object_name);
 #ifndef NDEBUG
         if (localized_name == nullptr) {
-            const auto source = placement != nullptr && placement->source == NameObjPlacementSource::StageStart ?
-                                    std::string_view{"start"} :
-                                    std::string_view{"placement"};
             _runtime.emit_semantic_trace_event(
                 "placement", "object_name_table_absent",
                 "stage=" + _request.stage_name + ";object=" + std::string(object_name) +
-                    ";source=" + std::string(source) +
+                    ";source=placement" +
                     (placement != nullptr ?
                          ";table=" + std::string(placement->table_path) +
-                             ";row=" + std::to_string(placement->row) :
+                             ";row=" +
+                             std::to_string(placement->jmap_entry_index) :
                          ""));
         }
 #endif

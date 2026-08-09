@@ -154,18 +154,23 @@ namespace smgpc::scene::nameobj {
     }
 
     bool PlanetMapCatalogEntry::has_force_low_scenarios() const noexcept {
-        // Retail scans slots in order and treats the literal "Low" as an
-        // immediate end sentinel. Only authored scenario names in the prefix
-        // before that sentinel can ever select PlanetMapWithoutHighModel.
+        // Force-low selection walks the authored prefix and stops at the first
+        // empty cell. The literal text "Low" is data, not that empty-string
+        // terminator.
         for (const auto &scenario : force_low_scenarios) {
-            if (scenario == "Low") {
-                return false;
+            if (scenario.empty()) {
+                break;
             }
-            if (!scenario.empty()) {
-                return true;
-            }
+            return true;
         }
         return false;
+    }
+
+    bool PlanetMapCatalogEntry::requires_scenario_selected_archive_load()
+        const noexcept {
+        return std::ranges::any_of(
+            force_low_scenarios,
+            [](const std::string &scenario) { return !scenario.empty(); });
     }
 
     const std::optional<std::string> &PlanetMapCatalogEntry::submodel_name(PlanetMapSubmodelKind kind) const {
@@ -302,6 +307,13 @@ namespace smgpc::scene::nameobj {
     bool PlanetMapCatalog::is_ordinary_planet(std::string_view planet_name) const {
         const auto *entry = find(planet_name);
         return entry != nullptr && entry->creator_kind == PlanetMapCatalogCreatorKind::OrdinaryPlanetMap;
+    }
+
+    bool PlanetMapCatalog::requires_scenario_selected_archive_load(
+        std::string_view planet_name) const {
+        const auto *entry = find(planet_name);
+        return entry != nullptr &&
+               entry->requires_scenario_selected_archive_load();
     }
 
     std::vector<std::string> PlanetMapCatalog::archive_names(const PlanetMapCatalogEntry &entry) const {

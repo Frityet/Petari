@@ -164,6 +164,12 @@ namespace {
 #ifndef NDEBUG
             runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
+            auto gateway_sky_runtime_name = std::string{};
+            auto gateway_scheduler_player =
+                LiveActor{"Sky route scheduler player"};
+            gateway_scheduler_player.mPosition.set(1000000.0F, 1000000.0F,
+                                                   1000000.0F);
+            gateway_scheduler_player.calcAndSetBaseMtx();
             {
                 auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
                 const auto &placement = scene.sky_placement();
@@ -187,6 +193,10 @@ namespace {
                             model->model_arc_name() == "VROrbit" &&
                             !sky->mFlag.mIsDead,
                         "Gateway did not construct the exact live ProjectionMapSky model");
+                require(sky->getName() != nullptr &&
+                            std::string_view(sky->getName()) == "VR軌道",
+                        "Gateway sky did not retain its exact ObjNameTable actor identity");
+                gateway_sky_runtime_name = sky->getName();
                 model->requireLoaded();
                 require(model->isLoaded(), "VROrbit retail BDL did not load");
 
@@ -210,12 +220,14 @@ namespace {
 
 #ifndef NDEBUG
                 const auto before = runtime.scheduler().snapshot();
-                const auto &entry = require_sky_entry(before, "VROrbit");
+                const auto &entry =
+                    require_sky_entry(before, gateway_sky_runtime_name);
                 require(entry.live_actor_bck_name.empty() &&
                             entry.live_actor_brk_name.empty() &&
                             entry.live_actor_btk_name == "VROrbit",
                         "VROrbit did not start only its exact same-name BTK");
 #endif
+                runtime.player_system().attach_actor(gateway_scheduler_player);
                 runtime.scheduler().execute_movement();
                 runtime.scheduler().execute_calc_anim();
                 runtime.scheduler().execute_calc_view_and_entry();
@@ -230,11 +242,14 @@ namespace {
 #ifndef NDEBUG
                 gateway_packets = collect_packet_proof(runtime, "VROrbit", frame.frame_index);
 #endif
+                runtime.player_system().detach_actor(&gateway_scheduler_player);
             }
 #ifndef NDEBUG
-            require(std::ranges::none_of(runtime.scheduler().snapshot(), [](const auto &entry) {
-                        return entry.name == "VROrbit";
-                    }),
+            require(std::ranges::none_of(
+                        runtime.scheduler().snapshot(),
+                        [&gateway_sky_runtime_name](const auto &entry) {
+                            return entry.name == gateway_sky_runtime_name;
+                        }),
                     "destroying GatewayDemoScene left a stale VROrbit scheduler entry");
 #endif
             renderer.end_frame();

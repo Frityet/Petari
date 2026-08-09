@@ -45,6 +45,8 @@ namespace smgpc::scene::nameobj {
         [[nodiscard]] bool has_authored_submodels() const noexcept;
         [[nodiscard]] bool has_retained_submodels() const noexcept;
         [[nodiscard]] bool has_force_low_scenarios() const noexcept;
+        [[nodiscard]] bool requires_scenario_selected_archive_load() const
+            noexcept;
         [[nodiscard]] const std::optional<std::string> &submodel_name(PlanetMapSubmodelKind kind) const;
     };
 
@@ -67,6 +69,12 @@ namespace smgpc::scene::nameobj {
         [[nodiscard]] std::span<const PlanetMapCatalogEntry> entries() const noexcept;
         [[nodiscard]] const PlanetMapCatalogEntry *find(std::string_view planet_name) const;
         [[nodiscard]] bool is_ordinary_planet(std::string_view planet_name) const;
+        // Exact PlanetMapCreatorFunction archive-timing predicate: a
+        // registered row is deferred when any of its eight raw scenario cells
+        // is nonempty. This is intentionally distinct from scenario force-low
+        // selection semantics.
+        [[nodiscard]] bool requires_scenario_selected_archive_load(
+            std::string_view planet_name) const;
         [[nodiscard]] std::vector<std::string> archive_names(const PlanetMapCatalogEntry &entry) const;
         [[nodiscard]] std::vector<std::string> archive_names(std::string_view planet_name) const;
 

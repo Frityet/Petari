@@ -85,18 +85,27 @@ namespace {
         return result;
     }
 
-    void test_force_low_prefix_semantics() {
+    void test_force_low_and_archive_timing_semantics() {
         auto entry = smgpc::scene::nameobj::PlanetMapCatalogEntry{};
-        require(!entry.has_force_low_scenarios(),
-                "eight empty force-low cells must not block an ordinary row");
+        require(!entry.has_force_low_scenarios() &&
+                    !entry.requires_scenario_selected_archive_load(),
+                "eight empty force-low cells must affect neither selection nor archive timing");
 
-        entry.force_low_scenarios = {"Low", "UnreachableGalaxy_1"};
-        require(!entry.has_force_low_scenarios(),
-                "the retail Low sentinel must terminate the force-low prefix");
+        entry.force_low_scenarios = {"", "AuthoredGalaxy_1"};
+        require(!entry.has_force_low_scenarios() &&
+                    entry.requires_scenario_selected_archive_load(),
+                "a sparse slot after the first empty must defer archives without entering the selectable prefix");
 
-        entry.force_low_scenarios = {"", "AuthoredGalaxy_1", "Low"};
-        require(entry.has_force_low_scenarios(),
-                "a scenario name before the Low sentinel must retain force-low precedence");
+        entry.force_low_scenarios = {"Low"};
+        require(entry.has_force_low_scenarios() &&
+                    entry.requires_scenario_selected_archive_load(),
+                "literal Low must remain nonempty authored data, not an empty-string terminator");
+
+        entry.force_low_scenarios = {
+            "A", "B", "C", "D", "E", "F", "G", "H"};
+        require(entry.has_force_low_scenarios() &&
+                    entry.requires_scenario_selected_archive_load(),
+                "eight nonempty cells must affect both selection and archive timing");
     }
 
     void test_real_planet_map_catalog() {
@@ -192,6 +201,35 @@ namespace {
                         !catalog.is_ordinary_planet(force_low.planet_name),
                     "a force-low-capable row must stay unavailable before creator selection");
 
+            const auto deferred_names = std::array<std::string_view, 10U>{
+                "DandelionHillPlanet",
+                "DinoPackunBattlePlanet",
+                "DoughnutPlanet",
+                "ElectricBazookaPlanet",
+                "LavaJShapePlanet",
+                "LavaMazeCubePlanet",
+                "LavaMeteoPlanet",
+                "PeanutPlanet",
+                "TwinPeanutsPlanetA",
+                "DinoPackunBattleLv2Planet",
+            };
+            auto deferred_census = std::vector<std::string_view>{};
+            for (const auto &entry : catalog.entries()) {
+                const auto deferred =
+                    entry.requires_scenario_selected_archive_load();
+                require(
+                    catalog.requires_scenario_selected_archive_load(
+                        entry.planet_name) == deferred,
+                    "catalog archive-timing lookup diverged from retained raw slots");
+                if (deferred) {
+                    deferred_census.push_back(entry.planet_name);
+                }
+            }
+            require(std::ranges::equal(deferred_census, deferred_names) &&
+                        !catalog.requires_scenario_selected_archive_load(
+                            "NotAPlanet"),
+                    "RMGK01 scenario-selected archive census differs from its ten authored rows");
+
             require(catalog.find("heavensdoormysteriousplanet") == nullptr &&
                         catalog.find("NotAPlanet") == nullptr &&
                         catalog.archive_names("NotAPlanet").empty(),
@@ -204,6 +242,8 @@ namespace {
                       << ";ordinary_gateway=HeavensDoorMysteriousPlanet"
                       << ";optional_blocked=AsteroidBlockPlanet"
                       << ";force_low_blocked=DandelionHillPlanet"
+                      << ";scenario_selected_archive_rows="
+                      << deferred_census.size()
                       << ";unique_blocked=HeavensDoorInsidePlanet"
                       << ";gateway_force_low_raw="
                       << format_force_low_slots(gateway.force_low_scenarios)
@@ -218,7 +258,7 @@ namespace {
 
 int main() {
     try {
-        test_force_low_prefix_semantics();
+        test_force_low_and_archive_timing_semantics();
         test_real_planet_map_catalog();
         std::cout << "[ok] PlanetMap catalog bounds the ordinary zero-submodel tranche\n";
         return 0;

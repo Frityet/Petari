@@ -15,9 +15,11 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/StageSessionState.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/StageHostScene.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
@@ -33,6 +35,7 @@
 #include <exception>
 #include <filesystem>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -116,7 +119,82 @@ namespace {
             smgpc::render::ScopedAuroraRendererContext(renderer);
         runtime.begin_frame(frame);
         auto &dvd = runtime.dvd();
-        auto scene = smgpc::scene::GatewayDemoScene{dvd};
+        auto outer_stage_session = smgpc::compat::StageSessionState(
+            "FileSelect", "OuterSessionGalaxy", 2, JMapIdInfo(9, 4));
+        auto outer_stage_session_binding =
+            smgpc::compat::StageSessionBinding(outer_stage_session);
+        (void)outer_stage_session_binding;
+        auto *const previous_stage_session =
+            smgpc::compat::try_active_stage_session();
+        require(previous_stage_session == &outer_stage_session,
+                "Gateway session-shadow proof did not install a real outer owner");
+        auto scene_owner =
+            std::make_unique<smgpc::scene::GatewayDemoScene>(dvd);
+        auto &scene = *scene_owner;
+        const auto &stage_session = scene.stage_session();
+        require(smgpc::compat::try_active_stage_session() == &stage_session &&
+                    stage_session.scene_name() == "Game" &&
+                    stage_session.stage_name() == "HeavensDoorGalaxy" &&
+                    stage_session.scenario_no() == 1 &&
+                    stage_session.initial_start_id()._0 == 0 &&
+                    stage_session.initial_start_id().mZoneID == 0 &&
+                    stage_session.restart_id()._0 == 0 &&
+                    stage_session.restart_id().mZoneID == 0,
+                "Gateway must bind one exact scenario/start session above all authored placements");
+        const auto &placement_report = scene.authored_placement_report();
+        require(placement_report.mode ==
+                        smgpc::scene::AuthoredPlacementMode::
+                            SupportedSubsetForDevelopment &&
+                    placement_report.preflight_accepted &&
+                    placement_report.state ==
+                        smgpc::scene::AuthoredPlacementRuntimeState::
+                            InitializedAfterPlacement &&
+                    placement_report.entries.size() == scene.placements().size() &&
+                    placement_report.created_count ==
+                        placement_report.ready_count &&
+                    placement_report.initialized_after_placement_count ==
+                        placement_report.created_count,
+                "Gateway must explicitly report its complete development subset after one placement pass");
+        auto prior_pass =
+            smgpc::scene::AuthoredPlacementRetailPass::CommonHighPriority;
+        auto shaped_row_count = std::size_t{};
+        auto ready_shaped_row_count = std::size_t{};
+        for (const auto &entry : placement_report.entries) {
+            require(entry.retail_pass >= prior_pass,
+                    "Gateway placement report lost retail five-pass order");
+            prior_pass = entry.retail_pass;
+            if (entry.placement != nullptr &&
+                entry.placement->shape_model_no != -1) {
+                ++shaped_row_count;
+                if (entry.support.kind ==
+                    smgpc::scene::AuthoredPlacementSupportKind::Ready) {
+                    ++ready_shaped_row_count;
+                }
+            }
+            if (entry.support.kind ==
+                smgpc::scene::AuthoredPlacementSupportKind::Ready) {
+                require(entry.actor != nullptr &&
+                            entry.outcome ==
+                                smgpc::scene::AuthoredPlacementOutcome::
+                                    InitializedAfterPlacement,
+                        "a ready Gateway placement bypassed the shared lifecycle");
+            } else if (entry.support.kind ==
+                       smgpc::scene::AuthoredPlacementSupportKind::Blocked) {
+                require(entry.actor == nullptr && !entry.support.reason.empty(),
+                        "a blocked Gateway row was not retained as explicit evidence");
+            }
+        }
+        require(ready_shaped_row_count == 0U,
+                "Gateway allowed a ShapeModelNo row to borrow an ordinary creator");
+        const auto planet_report = std::ranges::find_if(
+            placement_report.entries, [&scene](const auto &entry) {
+                return entry.placement == &scene.planet_placement();
+            });
+        require(planet_report != placement_report.entries.end() &&
+                    planet_report->support.kind ==
+                        smgpc::scene::AuthoredPlacementSupportKind::Ready &&
+                    planet_report->actor == scene.planet(),
+                "the active planet catalog must classify and construct the exact authored planet row");
         auto light_area_placements = std::size_t{};
         const smgpc::scene::StagePlacementObject *child_light_placement = nullptr;
         for (const auto &placement : scene.placements()) {
@@ -326,6 +404,18 @@ namespace {
                     dynamic_cast<BrightSun*>(bright_visual->actor) != nullptr &&
                     MR::isExistSceneObj(SceneObj_LensFlareDirector),
                 "the generic visual lifecycle did not create exact BrightSun and LensFlareDirector actors");
+        const auto bright_report = std::ranges::find_if(
+            placement_report.entries, [&](const auto& entry) {
+                return entry.placement == &*bright_placement;
+            });
+        require(bright_report != placement_report.entries.end() &&
+                    bright_report->actor == bright_visual->actor &&
+                    bright_report->actor_name == "レンズフレア用太陽" &&
+                    bright_visual->actor->getName() != nullptr &&
+                    std::string_view(bright_visual->actor->getName()) ==
+                        *bright_report->actor_name,
+                "BrightSun did not retain its exact ObjNameTable actor identity");
+        const auto bright_runtime_name = *bright_report->actor_name;
 
         const auto bright_factory =
             smgpc::scene::nameobj::describe_name_obj_factory(runtime.dvd(), "BrightSun");
@@ -352,8 +442,9 @@ namespace {
                        entry.draw_type == draw_type;
             });
         };
-        require(has_scheduler_entry("BrightSun", MR::MovementType_Environment, -1,
-                                    -1, MR::DrawType_BrightSun) &&
+        require(has_scheduler_entry(bright_runtime_name,
+                                    MR::MovementType_Environment, -1, -1,
+                                    MR::DrawType_BrightSun) &&
                     has_scheduler_entry("太陽", MR::MovementType_Sky,
                                         MR::CalcAnimType_MapObj,
                                         MR::DrawBufferType_Sun, -1) &&
@@ -434,6 +525,20 @@ namespace {
                   << point_gravity->mTranslation.y << ','
                   << point_gravity->mTranslation.z << ')'
                   << "; start_surface_separation=" << contact.separation << '\n';
+        std::cout << "[proof] gateway_shaped_rows=" << shaped_row_count
+                  << ";gateway_ready_shaped_rows="
+                  << ready_shaped_row_count << '\n';
+        scene_owner.reset();
+        require(smgpc::compat::try_active_stage_session() ==
+                        previous_stage_session &&
+                    previous_stage_session == &outer_stage_session &&
+                    outer_stage_session.scene_name() == "FileSelect" &&
+                    outer_stage_session.stage_name() ==
+                        "OuterSessionGalaxy" &&
+                    outer_stage_session.scenario_no() == 2 &&
+                    outer_stage_session.initial_start_id()._0 == 9 &&
+                    outer_stage_session.initial_start_id().mZoneID == 4,
+                "Gateway teardown did not restore the exact outer stage-session identity");
         renderer.end_frame();
     }
 

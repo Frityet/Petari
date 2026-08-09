@@ -40,6 +40,10 @@ namespace smgpc::scene {
 
         std::vector<smgpc::scene::nameobj::NameObjArchiveRequest> preload_archives(std::string_view object_name,
                                                                                   const NameObjPlacementContext *placement = nullptr);
+        std::vector<smgpc::scene::nameobj::NameObjArchiveRequest>
+        preload_model_changing_archive(
+            std::string_view object_name, s32 shape_model_no,
+            const NameObjPlacementContext *placement = nullptr);
         [[nodiscard]] std::unique_ptr<NameObj> construct(std::string_view object_name, const char *actor_name);
         [[nodiscard]] std::unique_ptr<NameObj> construct_and_init(
             std::string_view object_name, const char *actor_name,

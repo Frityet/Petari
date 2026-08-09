@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <functional>
 #include <optional>
 #include <span>
 #include <string>
@@ -17,6 +18,15 @@ namespace smgpc::runtime {
 }  // namespace smgpc::runtime
 
 namespace smgpc::scene {
+
+    // StageDataHolder retains common-layer tables loaded during its initial
+    // bootstrap separately from every table discovered after scenario
+    // selection. A common-layer table in a scenario-discovered child zone is
+    // therefore ScenarioSelected, not CommonBootstrap.
+    enum class StagePlacementLoadBatch {
+        CommonBootstrap,
+        ScenarioSelected,
+    };
 
     struct StageZoneTransform {
         // Row-major rigid 3x4 placement matrix. This mirrors the original
@@ -44,6 +54,43 @@ namespace smgpc::scene {
         [[nodiscard]] std::array<f32, 3U> transform_vector(const std::array<f32, 3U> &vector) const;
     };
 
+    // Pure holder-occurrence discovery seam shared by the live archive
+    // resolver and focused synthetic graph tests. Child descriptors are
+    // returned in StageObj table/row order. The traversal preserves repeated
+    // sibling zones and rejects cycles only along the current ancestry path.
+    struct StageHolderChildDescriptor {
+        std::string stage_name;
+        s32 zone_id = 0;
+        StageZoneTransform zone_transform{};
+    };
+
+    struct StageHolderOccurrence {
+        std::size_t instance_id = 0U;
+        std::optional<std::size_t> parent_instance_id{};
+        std::size_t depth = 0U;
+        std::size_t sibling_order = 0U;
+        std::size_t traversal_order = 0U;
+        StagePlacementLoadBatch discovery_batch =
+            StagePlacementLoadBatch::CommonBootstrap;
+        std::string stage_name;
+        s32 zone_id = 0;
+        StageZoneTransform zone_transform{};
+        std::vector<std::size_t> children{};
+    };
+
+    using StageHolderChildrenResolver = std::function<
+        std::vector<StageHolderChildDescriptor>(
+            const StageHolderOccurrence &, StagePlacementLoadBatch)>;
+    using StageHolderCreatedObserver =
+        std::function<void(const StageHolderOccurrence &)>;
+
+    [[nodiscard]] std::vector<StageHolderOccurrence>
+    discover_stage_holder_occurrences(
+        std::string_view root_stage_name, s32 root_zone_id,
+        const StageZoneTransform &root_transform,
+        const StageHolderChildrenResolver &children_resolver,
+        const StageHolderCreatedObserver &created_observer = {});
+
     struct StagePlacementTable {
         std::string stage_name;
         std::string zone_name;
@@ -57,6 +104,23 @@ namespace smgpc::scene {
         s32 layer_id = -1;
         u32 layer_mask = 0U;
         u32 archive_entry_order = 0U;
+        // A StageObj row creates a distinct StageDataHolder even when another
+        // row names the same zone. These fields retain occurrence identity and
+        // ancestry instead of collapsing ownership by ZoneList id.
+        std::size_t holder_instance_id = 0U;
+        std::optional<std::size_t> parent_holder_instance_id{};
+        std::size_t holder_depth = 0U;
+        std::size_t holder_sibling_order = 0U;
+        std::size_t holder_traversal_order = 0U;
+        StagePlacementLoadBatch holder_discovery_batch =
+            StagePlacementLoadBatch::CommonBootstrap;
+        // Root PlacementInfoOrdered attaches only the root holder and its
+        // immediate mStageDataArray children. Deeper holder tables remain for
+        // recursive start/general/rail evidence, not actor construction.
+        bool participates_in_root_placement = true;
+        StagePlacementLoadBatch load_batch =
+            StagePlacementLoadBatch::ScenarioSelected;
+        std::size_t placement_attachment_order = 0U;
         StageZoneTransform zone_transform{};
     };
 
@@ -102,8 +166,12 @@ namespace smgpc::scene {
     };
 
     struct StagePlacementObject {
+        // Raw authored `name` evidence. Creation and SameIdSet identity use
+        // creator_identifier, which is MR::getObjectName's exact `type`-field
+        // preference (including an authored empty type value).
         std::string object_name;
         std::string type_name;
+        std::string creator_identifier;
         std::string stage_name;
         std::string zone_name;
         std::string category;
@@ -115,6 +183,12 @@ namespace smgpc::scene {
         s32 l_id = -1;
         s32 zone_id = 0;
         s32 layer_id = -1;
+        std::size_t holder_instance_id = 0U;
+        std::optional<std::size_t> parent_holder_instance_id{};
+        std::size_t holder_depth = 0U;
+        StagePlacementLoadBatch load_batch =
+            StagePlacementLoadBatch::ScenarioSelected;
+        std::size_t placement_attachment_order = 0U;
         s32 child_object_count = 0;
         s32 camera_set_id = -1;
         s32 camera_id = -1;
@@ -152,6 +226,13 @@ namespace smgpc::scene {
 
     [[nodiscard]] std::optional<s32> find_stage_zone_id(const JMapInfo &zone_list,
                                                         std::string_view zone_name);
+    // Retains the two StageDataHolder load batches and exact table-array
+    // attachment ordinals used by PlacementInfoOrdered. Normal callers receive
+    // this through resolve_stage_placement_tables; focused fixtures use it to
+    // prove table attachment policy after occurrence discovery.
+    void assign_stage_placement_provenance(
+        std::vector<StagePlacementTable> &tables,
+        const JMapInfo &zone_list);
     [[nodiscard]] std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
                                                                                   s32 scenario_no);
     [[nodiscard]] std::vector<StagePlacementObject> resolve_stage_placement_objects(

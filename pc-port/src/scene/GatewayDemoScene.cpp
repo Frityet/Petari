@@ -1,7 +1,7 @@
 #include "scene/GatewayDemoScene.hpp"
 
-#include "Game/Gravity/GravityCreator.hpp"
 #include "Game/Gravity/GravityInfo.hpp"
+#include "Game/Gravity/GlobalGravityObj.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -11,19 +11,21 @@
 #include "Game/Map/Sky.hpp"
 #include "Game/MapObj/BrightObj.hpp"
 #include "Game/NameObj/NameObj.hpp"
-#include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/StageScenarioMetadataResolver.hpp"
+#include "compat/StageSessionState.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
-#include "scene/NameObjLifecycleService.hpp"
-#include "scene/AreaObjRuntime.hpp"
+#include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/StageAuthoredData.hpp"
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
+#include "scene/nameobj/ObjectNameTable.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 
 #include <algorithm>
@@ -31,6 +33,7 @@
 #include <cmath>
 #include <filesystem>
 #include <iterator>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -41,6 +44,7 @@ namespace smgpc::scene {
     namespace {
 
         constexpr auto cStageName = std::string_view{"HeavensDoorGalaxy"};
+        constexpr auto cSceneName = std::string_view{"Game"};
         constexpr auto cPlanetZoneName = std::string_view{"HeavensDoorMysteriousZone"};
         constexpr auto cPlanetName = std::string_view{"HeavensDoorMysteriousPlanet"};
         constexpr auto cGravityName = std::string_view{"GlobalPointGravity"};
@@ -84,17 +88,19 @@ namespace smgpc::scene {
         }
 
         [[nodiscard]] const StagePlacementObject &require_unique_placement(
-            const std::vector<StagePlacementObject> &placements, std::string_view object_name,
+            std::span<const StagePlacementObject> placements,
+            std::string_view object_name,
             std::string_view zone_name, std::string_view table_path) {
             const auto first = std::ranges::find_if(placements, [&](const auto &placement) {
-                return placement.object_name == object_name && placement.zone_name == zone_name &&
+                return authored_placement_identifier(placement) == object_name &&
+                       placement.zone_name == zone_name &&
                        placement.table_path == table_path;
             });
             require(first != placements.end(),
                     std::string(object_name) + " exact placement row is absent");
             const auto duplicate = std::ranges::find_if(std::next(first), placements.end(),
                                                         [&](const auto &placement) {
-                                                            return placement.object_name == object_name &&
+                                                            return authored_placement_identifier(placement) == object_name &&
                                                                    placement.zone_name == zone_name &&
                                                                    placement.table_path == table_path;
                                                         });
@@ -107,54 +113,57 @@ namespace smgpc::scene {
             return TVec3f(value[0], value[1], value[2]);
         }
 
-        [[nodiscard]] NameObjPlacementContext placement_context(
-            const StagePlacementObject &placement) {
-            return NameObjPlacementContext{
-                .iter = JMapInfoIter(&placement.jmap_info, placement.jmap_entry_index),
-                .source = NameObjPlacementSource::StagePlacement,
-                .stage_name = placement.stage_name,
-                .zone_name = placement.zone_name,
-                .table_path = placement.table_path,
-                .row = placement.jmap_entry_index,
-                .local_id = placement.l_id,
-            };
-        }
-
     }  // namespace
 
     class GatewayDemoScene::Impl final {
     public:
-        explicit Impl(smgpc::runtime::DvdFileSystemService &dvd) : _dvd(dvd) {
-            const auto tables = resolve_stage_placement_tables(_dvd, cStageName, 1);
-            require(!tables.empty(), "HeavensDoorGalaxy scenario 1 placement tables are absent");
+        explicit Impl(smgpc::runtime::DvdFileSystemService &dvd)
+            : _dvd(dvd) {
+            const auto scenario_metadata =
+                smgpc::compat::resolve_stage_scenario_metadata(
+                    _dvd, cStageName, 1);
+            _stage_session =
+                std::make_unique<smgpc::compat::StageSessionState>(
+                    cSceneName, cStageName, 1, JMapIdInfo(0, 0),
+                    scenario_metadata);
+            _stage_session_binding =
+                std::make_unique<smgpc::compat::StageSessionBinding>(
+                    *_stage_session);
             _planet_map_catalog =
                 std::make_unique<smgpc::scene::nameobj::PlanetMapCatalog>(_dvd);
+            _object_name_table =
+                std::make_unique<smgpc::scene::nameobj::ObjectNameTable>(_dvd);
+            // Ordinary PlanetMap support is catalog-derived, so resolve the
+            // retained authored set only after publishing that shared catalog.
+            _authored_data = std::make_unique<StageAuthoredData>(
+                StageAuthoredData::resolve(_dvd, cStageName, 1, 0, 0));
+            require(!_authored_data->tables().empty(),
+                    "HeavensDoorGalaxy scenario 1 placement tables are absent");
             _stage_light_binding = std::make_unique<StageLightSceneBinding>(
-                _dvd, cStageName, tables);
+                _dvd, cStageName, _authored_data->tables());
 
-            const auto start = select_stage_start_info(tables, 0, 0);
-            require(start.has_value(), "scenario-1 root MarioNo 0 StartInfo is absent");
-            _start = *start;
+            require(_authored_data->start_info().has_value(),
+                    "scenario-1 root MarioNo 0 StartInfo is absent");
+            _start = &*_authored_data->start_info();
             validate_start();
 
-            _placements = resolve_stage_placement_objects(_dvd, tables);
-            _general_positions = select_stage_general_positions(tables);
             // GameScene creates its one DemoDirector from initForLiveActor
             // before SceneDataInitializer starts placement. Install the same
             // scene owner before any Gateway placement actor can register a
             // simple cast, DemoGroup cast, or demo action.
             _demo_scene_runtime =
                 std::make_unique<smgpc::compat::DemoSceneRuntime>(
-                    _dvd, _placements, _general_positions);
-            _planet_placement_source = &require_unique_placement(
-                _placements, cPlanetName, cPlanetZoneName, "jmp/placement/common/objinfo");
-            _planet_placement = *_planet_placement_source;
-            _gravity_placement = require_unique_placement(
-                _placements, cGravityName, cPlanetZoneName,
+                    _dvd, _authored_data->placements(),
+                    _authored_data->general_positions());
+            _planet_placement = &require_unique_placement(
+                _authored_data->placements(), cPlanetName, cPlanetZoneName,
+                "jmp/placement/common/objinfo");
+            _gravity_placement = &require_unique_placement(
+                _authored_data->placements(), cGravityName, cPlanetZoneName,
                 "jmp/placement/common/planetobjinfo");
-            _sky_placement_source = &require_unique_placement(
-                _placements, cSkyName, cStageName, "jmp/placement/common/objinfo");
-            _sky_placement = *_sky_placement_source;
+            _sky_placement = &require_unique_placement(
+                _authored_data->placements(), cSkyName, cStageName,
+                "jmp/placement/common/objinfo");
             validate_placements();
 
             const auto archive_path = _dvd.find_object_archive(cPlanetName);
@@ -172,6 +181,7 @@ namespace smgpc::scene {
 
             _scene_binding = std::make_unique<SceneObjHolderBinding>(_scene_obj_holder);
             constexpr auto required_scene_objects = std::array{
+                SceneObj_MessageSensorHolder,
                 SceneObj_PlacementStateChecker,
                 SceneObj_ClippingDirector,
                 SceneObj_StageSwitchContainer,
@@ -181,6 +191,8 @@ namespace smgpc::scene {
                 SceneObj_BaseMatrixFollowTargetHolder,
                 SceneObj_PlanetGravityManager,
                 SceneObj_MarioHolder,
+                SceneObj_GroupCheckManager,
+                SceneObj_TalkDirector,
             };
             for (const auto id : required_scene_objects) {
                 require(MR::createSceneObj(id) != nullptr,
@@ -192,118 +204,130 @@ namespace smgpc::scene {
                     "exact PlanetGravityManager SceneObj could not be created");
             LightFunction::initLightRegisterAll();
 
-            for (const auto &placement : _placements) {
-                if (!is_area_obj_placement_table(placement.table_path) ||
-                    !placement_has_complete_area_obj_runtime(
-                        placement.object_name, placement.table_path,
-                        placement.factory_supported)) {
+            auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
+            require(runtime != nullptr,
+                    "Gateway placement construction requires the active RuntimeContext lifecycle");
+            _authored_placements =
+                std::make_unique<AuthoredPlacementInstantiator>(
+                    *_authored_data, runtime->name_obj_lifecycle(),
+                    AuthoredPlacementInstantiationOptions{
+                        .mode = AuthoredPlacementMode::
+                            SupportedSubsetForDevelopment,
+                        .actor_name_resolver = [this](
+                                                   const auto &placement) {
+                            const auto *localized =
+                                _object_name_table->lookup(
+                                    authored_placement_identifier(placement));
+                            return localized != nullptr
+                                       ? std::optional<std::string>{*localized}
+                                       : std::optional<std::string>{
+                                             std::string(
+                                                 authored_placement_identifier(
+                                                     placement))};
+                        },
+                    });
+            (void)_authored_placements->preload();
+            // Gateway remains an explicitly bounded development scene with no
+            // Mario owner. Keeping the exact preload/construction boundary
+            // visible lets the player tranche insert externally owned Mario
+            // here without changing placement ordering policy.
+            const auto &report = _authored_placements->instantiate();
+#ifndef NDEBUG
+            runtime->emit_semantic_trace_event(
+                "placement", "gateway_development_subset_summary",
+                "stage=" + std::string(cStageName) +
+                    ";scenario=1;objects=" +
+                    std::to_string(report.entries.size()) +
+                    ";ready=" + std::to_string(report.ready_count) +
+                    ";ignored=" + std::to_string(report.ignored_count) +
+                    ";blocked=" + std::to_string(report.blocked_count) +
+                    ";created=" + std::to_string(report.created_count) +
+                    ";mode=supported_subset_for_development");
+            for (const auto &entry : report.entries) {
+                if (entry.support.kind !=
+                        AuthoredPlacementSupportKind::Blocked ||
+                    entry.placement == nullptr) {
                     continue;
                 }
-                const auto *descriptor = find_complete_area_obj_placement_descriptor(
-                    placement.object_name);
-                const auto creator = NameObjFactory::getCreator(
-                    placement.object_name.c_str());
-                require(descriptor != nullptr && creator != nullptr &&
-                            creator == descriptor->object_creator,
-                        "complete Gateway AreaObj placement lost its shared descriptor/factory closure");
-                auto object = std::unique_ptr<NameObj>{
-                    creator(placement.object_name.c_str())};
-                require(object != nullptr,
-                        "complete Gateway AreaObj creator returned null");
-                object->init(JMapInfoIter(&placement.jmap_info,
-                                          placement.jmap_entry_index));
-                _area_objects.push_back(std::move(object));
+                runtime->emit_semantic_trace_event(
+                    "placement", "gateway_development_subset_blocked",
+                    "object=" + std::string(
+                                    authored_placement_identifier(
+                                        *entry.placement)) +
+                        ";raw_name=" + entry.placement->object_name +
+                        ";zone=" + entry.placement->zone_name +
+                        ";table=" + entry.placement->table_path +
+                        ";row=" +
+                        std::to_string(
+                            entry.placement->jmap_entry_index) +
+                        ";reason=" + entry.support.reason);
             }
-            if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-                runtime != nullptr) {
-                auto &lifecycle = runtime->name_obj_lifecycle();
-                for (const auto &placement : _placements) {
-                    const auto visual_kind =
-                        smgpc::scene::nameobj::scene_visual_kind(placement.object_name);
-                    if (visual_kind ==
-                        smgpc::scene::nameobj::NameObjSceneVisualKind::None) {
-                        continue;
-                    }
+#endif
 
-                    const auto context = placement_context(placement);
-                    const auto requests = lifecycle.preload_archives(
-                        placement.object_name, &context);
-                    require(!requests.empty() &&
-                                std::ranges::all_of(requests, [](const auto &request) {
-                                    return request.loaded;
-                                }),
-                            "authored visual archives were not accepted by the retail factory lifecycle");
-                    auto object = lifecycle.construct_and_init(
-                        placement.object_name, placement.object_name.c_str(), &context);
+            for (const auto &instance : _authored_placements->instances()) {
+                const auto visual_kind =
+                    smgpc::scene::nameobj::scene_visual_kind(
+                        authored_placement_identifier(
+                            *instance.placement));
+                if (visual_kind !=
+                    smgpc::scene::nameobj::NameObjSceneVisualKind::None) {
                     const auto has_exact_type =
-                        (visual_kind ==
-                             smgpc::scene::nameobj::NameObjSceneVisualKind::Sky &&
-                         dynamic_cast<Sky *>(object.get()) != nullptr) ||
-                        (visual_kind ==
-                             smgpc::scene::nameobj::NameObjSceneVisualKind::Air &&
-                         dynamic_cast<Air *>(object.get()) != nullptr) ||
-                        (visual_kind ==
-                             smgpc::scene::nameobj::NameObjSceneVisualKind::Planet &&
-                         dynamic_cast<PlanetMap *>(object.get()) != nullptr) ||
-                        (visual_kind ==
-                             smgpc::scene::nameobj::NameObjSceneVisualKind::Bright &&
-                         dynamic_cast<BrightObjBase *>(object.get()) != nullptr);
+                        (visual_kind == smgpc::scene::nameobj::
+                                            NameObjSceneVisualKind::Sky &&
+                         dynamic_cast<Sky *>(instance.actor) != nullptr) ||
+                        (visual_kind == smgpc::scene::nameobj::
+                                            NameObjSceneVisualKind::Air &&
+                         dynamic_cast<Air *>(instance.actor) != nullptr) ||
+                        (visual_kind == smgpc::scene::nameobj::
+                                            NameObjSceneVisualKind::Planet &&
+                         dynamic_cast<PlanetMap *>(instance.actor) != nullptr) ||
+                        (visual_kind == smgpc::scene::nameobj::
+                                            NameObjSceneVisualKind::Bright &&
+                         dynamic_cast<BrightObjBase *>(instance.actor) != nullptr);
                     require(has_exact_type,
                             "authored visual creator kind differs from its exact Game actor");
-
-                    auto *actor = object.get();
-                    _visual_objects.push_back(std::move(object));
                     _visual_views.push_back(GatewayDemoVisual{
-                        .placement = &placement,
-                        .actor = actor,
+                        .placement = instance.placement,
+                        .actor = instance.actor,
                     });
-                    if (&placement == _sky_placement_source) {
-                        _sky_actor = dynamic_cast<ProjectionMapSky *>(actor);
-                        require(_sky_actor != nullptr,
-                                "authored Gateway sky row did not create ProjectionMapSky");
-                    }
-                    if (&placement == _planet_placement_source) {
-                        _planet_actor = dynamic_cast<PlanetMap *>(actor);
-                        require(_planet_actor != nullptr,
-                                "authored Gateway planet row did not create PlanetMap");
-                    }
                 }
-                require(_sky_actor != nullptr,
-                        "authored Gateway sky was absent from the generic visual lifecycle");
-                require(_planet_actor != nullptr,
-                        "authored Gateway planet was absent from the generic visual lifecycle");
 
-                _collision.build();
-                _scene_binding->init_after_placement();
-                for (auto &object : _area_objects) {
-                    object->initAfterPlacement();
+                if (instance.placement == _sky_placement) {
+                    _sky_actor =
+                        dynamic_cast<ProjectionMapSky *>(instance.actor);
                 }
-                for (auto &object : _visual_objects) {
-                    lifecycle.init_after_placement(*object);
+                if (instance.placement == _planet_placement) {
+                    _planet_actor = dynamic_cast<PlanetMap *>(instance.actor);
                 }
-                _collision.build();
-                const auto planet_collision =
-                    smgpc::compat::actor_collision_parts_resources(_planet_actor);
-                require(planet_collision.size() == 2U &&
-                            planet_collision[0].resource_name == cPlanetName &&
-                            planet_collision[1].resource_name == "MoveLimit" &&
-                            !planet_collision[0].attributes_source.empty() &&
-                            !planet_collision[1].attributes_source.empty() &&
-                            _collision.stats().mesh_count >= planet_collision.size() &&
-                            _collision.stats().triangle_count != 0U,
-                        "ordinary PlanetMap did not retain main and MoveLimit KCL/PA registrations");
-            } else {
-                _scene_binding->init_after_placement();
-                for (auto &object : _area_objects) {
-                    object->initAfterPlacement();
+                if (instance.placement == _gravity_placement) {
+                    _gravity_actor =
+                        dynamic_cast<GlobalGravityObj *>(instance.actor);
                 }
             }
+            require(_sky_actor != nullptr,
+                    "authored Gateway sky was absent from the shared placement lifecycle");
+            require(_planet_actor != nullptr,
+                    "authored Gateway planet was absent from the shared placement lifecycle");
+            require(_gravity_actor != nullptr &&
+                        _gravity_actor->getGravity() != nullptr,
+                    "authored Gateway point gravity was absent from the shared placement lifecycle");
+            _gravity = _gravity_actor->getGravity();
 
-            auto *gravity = _gravity_creator.createFromJMap(JMapInfoIter(
-                &_gravity_placement.jmap_info, _gravity_placement.jmap_entry_index));
-            require(gravity != nullptr && gravity == _gravity_creator.getGravity(),
-                    "exact PointGravityCreator did not create the child-zone gravity");
-            _gravity.reset(gravity);
+            _collision.build();
+            _scene_binding->init_after_placement();
+            (void)_authored_placements->init_after_placement();
+            _collision.build();
+            const auto planet_collision =
+                smgpc::compat::actor_collision_parts_resources(_planet_actor);
+            require(planet_collision.size() == 2U &&
+                        planet_collision[0].resource_name == cPlanetName &&
+                        planet_collision[1].resource_name == "MoveLimit" &&
+                        !planet_collision[0].attributes_source.empty() &&
+                        !planet_collision[1].attributes_source.empty() &&
+                        _collision.stats().mesh_count >=
+                            planet_collision.size() &&
+                        _collision.stats().triangle_count != 0U,
+                    "ordinary PlanetMap did not retain main and MoveLimit KCL/PA registrations");
             validate_gravity();
         }
 
@@ -311,84 +335,89 @@ namespace smgpc::scene {
             _visual_views.clear();
             _sky_actor = nullptr;
             _planet_actor = nullptr;
-            if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-                runtime != nullptr) {
-                auto &lifecycle = runtime->name_obj_lifecycle();
-                for (auto iter = _visual_objects.rbegin();
-                     iter != _visual_objects.rend(); ++iter) {
-                    if (*iter != nullptr) {
-                        lifecycle.destroy(**iter);
-                    }
-                }
-            }
+            _gravity_actor = nullptr;
+            _gravity = nullptr;
             // PriorDrawAirHolder owns exact non-owning actor pointers. No
-            // scene execution occurs between retiring the visual actors and
+            // scene execution occurs between reverse placement teardown and
             // destroying the SceneObj binding that owns that holder.
-            _visual_objects.clear();
+            if (_authored_placements != nullptr) {
+                // Reverse teardown is owned by the instantiator destructor so
+                // an actor-specific destroy failure cannot escape this scene
+                // destructor.
+                _authored_placements.reset();
+            }
             _collision.deactivate();
-            _area_objects.clear();
-            // The exact manager keeps non-owning retail pointers. Retire it
-            // before releasing the development scene's gravity instance.
+            // The exact manager keeps non-owning pointers to authored gravity
+            // instances and is retired after their actor wrappers.
             _scene_binding.reset();
-            _gravity.reset();
             _stage_light_binding.reset();
             _planet_map_catalog.reset();
         }
 
         void validate_start() const {
-            require(_start.object_name == "Mario" && _start.stage_name == cStageName &&
-                        _start.zone_name == cStageName && _start.layer_name == "layera" &&
-                        _start.table_path == "jmp/start/layera/startinfo" &&
-                        _start.start_id == 0 && _start.zone_id == 0 &&
-                        _start.camera_id == 78 && _start.jmap_entry_index == 0,
+            require(_start != nullptr && _start->object_name == "Mario" &&
+                        _start->stage_name == cStageName &&
+                        _start->zone_name == cStageName &&
+                        _start->layer_name == "layera" &&
+                        _start->table_path == "jmp/start/layera/startinfo" &&
+                        _start->start_id == 0 && _start->zone_id == 0 &&
+                        _start->camera_id == 78 &&
+                        _start->jmap_entry_index == 0,
                     "scenario-1 StartInfo identity differs from RMGK01");
-            require_vec_near(_start.local_position, cStartPosition, 0.0005F,
+            require_vec_near(_start->local_position, cStartPosition, 0.0005F,
                              "scenario-1 StartInfo position differs from RMGK01");
-            require_vec_near(_start.world_position, cStartPosition, 0.0005F,
+            require_vec_near(_start->world_position, cStartPosition, 0.0005F,
                              "scenario-1 StartInfo world transform differs from RMGK01");
-            require_vec_near(_start.local_rotation, cStartRotation, 0.0005F,
+            require_vec_near(_start->local_rotation, cStartRotation, 0.0005F,
                              "scenario-1 StartInfo rotation differs from RMGK01");
         }
 
         void validate_placements() const {
-            require(_planet_placement.jmap_entry_index == 24 &&
-                        _planet_placement.l_id == 69 && _planet_placement.zone_id == 5 &&
-                        _planet_placement.layer_name == "common" &&
-                        _planet_placement.object_archive_path.ends_with(
+            require(_planet_placement != nullptr &&
+                        _planet_placement->jmap_entry_index == 24 &&
+                        _planet_placement->l_id == 69 &&
+                        _planet_placement->zone_id == 5 &&
+                        _planet_placement->layer_name == "common" &&
+                        _planet_placement->object_archive_path.ends_with(
                             "/ObjectData/HeavensDoorMysteriousPlanet.arc"),
                     "mysterious-planet placement identity differs from RMGK01");
-            require_vec_near(_planet_placement.translation, cPlanetCenter, 0.001F,
+            require_vec_near(_planet_placement->translation, cPlanetCenter, 0.001F,
                              "mysterious-planet child-zone translation differs from RMGK01");
 
-            require(_gravity_placement.jmap_entry_index == 0 &&
-                        _gravity_placement.l_id == 0 && _gravity_placement.zone_id == 5 &&
-                        _gravity_placement.layer_name == "common",
+            require(_gravity_placement != nullptr &&
+                        _gravity_placement->jmap_entry_index == 0 &&
+                        _gravity_placement->l_id == 0 &&
+                        _gravity_placement->zone_id == 5 &&
+                        _gravity_placement->layer_name == "common",
                     "child-zone GlobalPointGravity identity differs from RMGK01");
-            require_vec_near(_gravity_placement.translation, cPlanetCenter, 0.001F,
+            require_vec_near(_gravity_placement->translation, cPlanetCenter, 0.001F,
                              "child-zone GlobalPointGravity center differs from RMGK01");
-            require_vec_near(_gravity_placement.scale, {2.88F, 2.88F, 2.88F}, 0.0001F,
+            require_vec_near(_gravity_placement->scale, {2.88F, 2.88F, 2.88F}, 0.0001F,
                              "child-zone GlobalPointGravity scale differs from RMGK01");
 
-            require(_sky_placement.jmap_entry_index == 0 &&
-                        _sky_placement.l_id == 0 && _sky_placement.zone_id == 0 &&
-                        _sky_placement.zone_name == cStageName &&
-                        _sky_placement.layer_name == "common" &&
-                        _sky_placement.object_archive_path.ends_with(
+            require(_sky_placement != nullptr &&
+                        _sky_placement->jmap_entry_index == 0 &&
+                        _sky_placement->l_id == 0 &&
+                        _sky_placement->zone_id == 0 &&
+                        _sky_placement->zone_name == cStageName &&
+                        _sky_placement->layer_name == "common" &&
+                        _sky_placement->object_archive_path.ends_with(
                             "/ObjectData/VROrbit.arc") &&
-                        _sky_placement.switch_appear_id == -1 &&
-                        _sky_placement.switch_a_id == -1 &&
-                        _sky_placement.switch_b_id == -1 &&
-                        _sky_placement.object_args[0] == -1,
+                        _sky_placement->switch_appear_id == -1 &&
+                        _sky_placement->switch_a_id == -1 &&
+                        _sky_placement->switch_b_id == -1 &&
+                        _sky_placement->object_args[0] == -1,
                     "Gateway sky placement identity differs from RMGK01");
-            require_vec_near(_sky_placement.translation, cSkyPosition, 0.0005F,
+            require_vec_near(_sky_placement->translation, cSkyPosition, 0.0005F,
                              "Gateway sky placement position differs from RMGK01");
-            require_vec_near(_sky_placement.rotation, {0.0F, 0.0F, 0.0F}, 0.0001F,
+            require_vec_near(_sky_placement->rotation, {0.0F, 0.0F, 0.0F}, 0.0001F,
                              "Gateway sky placement rotation differs from RMGK01");
-            require_vec_near(_sky_placement.scale, {1.0F, 1.0F, 1.0F}, 0.0001F,
+            require_vec_near(_sky_placement->scale, {1.0F, 1.0F, 1.0F}, 0.0001F,
                              "Gateway sky placement scale differs from RMGK01");
 
             const auto gravity_iter = JMapInfoIter(
-                &_gravity_placement.jmap_info, _gravity_placement.jmap_entry_index);
+                &_gravity_placement->jmap_info,
+                _gravity_placement->jmap_entry_index);
             auto range = float{};
             auto distant = float{};
             const char *gravity_type = nullptr;
@@ -415,27 +444,30 @@ namespace smgpc::scene {
         }
 
         smgpc::runtime::DvdFileSystemService &_dvd;
-        StageStartInfo _start{};
-        std::vector<StagePlacementObject> _placements{};
-        std::vector<StageGeneralPos> _general_positions{};
+        // Session state precedes its binding and all stage owners so reverse
+        // destruction keeps it active through Talk and placement teardown.
+        std::unique_ptr<smgpc::compat::StageSessionState> _stage_session{};
+        std::unique_ptr<smgpc::compat::StageSessionBinding>
+            _stage_session_binding{};
+        std::unique_ptr<StageAuthoredData> _authored_data{};
+        const StageStartInfo *_start = nullptr;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime{};
-        StagePlacementObject _planet_placement{};
-        const StagePlacementObject *_planet_placement_source = nullptr;
-        StagePlacementObject _gravity_placement{};
-        StagePlacementObject _sky_placement{};
-        const StagePlacementObject *_sky_placement_source = nullptr;
+        const StagePlacementObject *_planet_placement = nullptr;
+        const StagePlacementObject *_gravity_placement = nullptr;
+        const StagePlacementObject *_sky_placement = nullptr;
         StageCollisionService _collision{};
         SceneObjHolder _scene_obj_holder{};
         std::unique_ptr<SceneObjHolderBinding> _scene_binding{};
         std::unique_ptr<StageLightSceneBinding> _stage_light_binding{};
         std::unique_ptr<smgpc::scene::nameobj::PlanetMapCatalog> _planet_map_catalog{};
-        std::vector<std::unique_ptr<NameObj>> _area_objects{};
-        std::vector<std::unique_ptr<NameObj>> _visual_objects{};
+        std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable>
+            _object_name_table{};
+        std::unique_ptr<AuthoredPlacementInstantiator> _authored_placements{};
         std::vector<GatewayDemoVisual> _visual_views{};
         ProjectionMapSky *_sky_actor = nullptr;
         PlanetMap *_planet_actor = nullptr;
-        PointGravityCreator _gravity_creator{};
-        std::unique_ptr<PlanetGravity> _gravity{};
+        GlobalGravityObj *_gravity_actor = nullptr;
+        PlanetGravity *_gravity = nullptr;
     };
 
     GatewayDemoScene::GatewayDemoScene(smgpc::runtime::DvdFileSystemService &dvd)
@@ -445,23 +477,23 @@ namespace smgpc::scene {
     GatewayDemoScene::~GatewayDemoScene() = default;
 
     const StageStartInfo &GatewayDemoScene::start_info() const {
-        return _impl->_start;
+        return *_impl->_start;
     }
 
     JMapInfoIter GatewayDemoScene::player_start_iter() const & {
-        return _impl->_start.iter();
+        return _impl->_start->iter();
     }
 
     const StagePlacementObject &GatewayDemoScene::planet_placement() const {
-        return _impl->_planet_placement;
+        return *_impl->_planet_placement;
     }
 
     const StagePlacementObject &GatewayDemoScene::gravity_placement() const {
-        return _impl->_gravity_placement;
+        return *_impl->_gravity_placement;
     }
 
     const StagePlacementObject &GatewayDemoScene::sky_placement() const {
-        return _impl->_sky_placement;
+        return *_impl->_sky_placement;
     }
 
     ProjectionMapSky *GatewayDemoScene::sky() {
@@ -484,12 +516,22 @@ namespace smgpc::scene {
         return _impl->_visual_views;
     }
 
+    const AuthoredPlacementInstantiationReport &
+    GatewayDemoScene::authored_placement_report() const {
+        return _impl->_authored_placements->report();
+    }
+
+    const smgpc::compat::StageSessionState &
+    GatewayDemoScene::stage_session() const {
+        return *_impl->_stage_session;
+    }
+
     std::span<const StagePlacementObject> GatewayDemoScene::placements() const {
-        return _impl->_placements;
+        return _impl->_authored_data->placements();
     }
 
     std::span<const StageGeneralPos> GatewayDemoScene::general_positions() const {
-        return _impl->_general_positions;
+        return _impl->_authored_data->general_positions();
     }
 
     smgpc::compat::DemoSceneRuntime &GatewayDemoScene::demo_runtime() {
@@ -524,7 +566,7 @@ namespace smgpc::scene {
     GatewayDemoStartContact GatewayDemoScene::prove_start_contact(
         const NameObj &requester) const {
         auto proof = GatewayDemoStartContact{};
-        const auto start = as_vec3(_impl->_start.world_position);
+        const auto start = as_vec3(_impl->_start->world_position);
         require(resolve_gravity(requester, start, &proof.gravity),
                 "child-zone gravity does not reach the scenario-1 start point");
 

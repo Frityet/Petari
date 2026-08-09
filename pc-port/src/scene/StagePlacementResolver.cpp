@@ -10,6 +10,7 @@
 #include <cctype>
 #include <cmath>
 #include <filesystem>
+#include <limits>
 #include <set>
 #include <utility>
 
@@ -244,7 +245,9 @@ namespace smgpc::scene {
                                                                  std::string_view table_name) {
             const auto normalized_name = lower_copy(table_name);
             const auto found = std::ranges::find_if(tables, [&](const auto &candidate) {
-                return candidate.stage_name == placement_table.stage_name && candidate.category == "path" &&
+                return candidate.holder_instance_id ==
+                           placement_table.holder_instance_id &&
+                       candidate.category == "path" &&
                        lower_copy(candidate.table_name) == normalized_name;
             });
             return found != tables.end() ? &*found : nullptr;
@@ -315,67 +318,30 @@ namespace smgpc::scene {
             return layer_mask;
         }
 
-        void collect_stage_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, std::string_view scenario_stage_name,
-                                  s32 scenario_no, s32 zone_id, const StageZoneTransform &zone_transform, const JMapInfo &zone_list,
-                                  std::set<std::string> &visited, std::vector<StagePlacementTable> &tables);
-
-        void collect_placed_zones(smgpc::runtime::DvdFileSystemService &dvd, const StagePlacementTable &table, std::string_view scenario_stage_name,
-                                  s32 scenario_no, const JMapInfo &zone_list, std::set<std::string> &visited,
-                                  std::vector<StagePlacementTable> &tables) {
-            if (table.category != "placement" || table.table_name != "stageobjinfo") {
-                return;
-            }
-
-            struct ZoneRecord {
-                std::string name;
-                s32 id = 0;
-                StageZoneTransform transform{};
-            };
-
-            auto zone_records = std::vector<ZoneRecord>{};
-            for (auto entry_index = s32{}; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
-                const auto iter = JMapInfoIter(&table.jmap_info, entry_index);
-                const char *zone_name = nullptr;
-                if (!iter.getValue("name", &zone_name) || zone_name == nullptr || zone_name[0] == '\0') {
-                    continue;
-                }
-
-                const auto zone_id = find_stage_zone_id(zone_list, zone_name);
-                if (!zone_id.has_value()) {
-                    continue;
-                }
-
-                zone_records.push_back(ZoneRecord{
-                    .name = zone_name,
-                    .id = *zone_id,
-                    .transform = compose_zone_transform(table.zone_transform, iter),
-                });
-            }
-
-            for (const auto &zone : zone_records) {
-                collect_stage_tables(dvd, zone.name, scenario_stage_name, scenario_no, zone.id, zone.transform, zone_list, visited, tables);
-            }
+        [[nodiscard]] bool is_stage_obj_table(
+            const StagePlacementTable &table) {
+            return table.category == "placement" &&
+                   lower_copy(table.table_name) == "stageobjinfo";
         }
 
-        void collect_stage_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, std::string_view scenario_stage_name,
-                                  s32 scenario_no, s32 zone_id, const StageZoneTransform &zone_transform, const JMapInfo &zone_list,
-                                  std::set<std::string> &visited, std::vector<StagePlacementTable> &tables) {
-            const auto stage_key = lower_copy(stage_name);
-            if (!visited.insert(stage_key).second) {
-                return;
-            }
-
-            const auto stage_archive_path = find_stage_archive(dvd, stage_name);
+        void load_stage_holder_tables(
+            smgpc::runtime::DvdFileSystemService &dvd,
+            std::string_view scenario_stage_name, s32 scenario_no,
+            const StageHolderOccurrence &holder,
+            std::vector<StagePlacementTable> &tables) {
+            const auto stage_archive_path =
+                find_stage_archive(dvd, holder.stage_name);
             if (!stage_archive_path.has_value()) {
                 return;
             }
 
             auto &archive = dvd.archive_for_path(*stage_archive_path);
-            const auto layer_mask = resolve_stage_layer_mask(dvd, scenario_stage_name, stage_name, scenario_no);
-            const auto first_new_table = tables.size();
+            const auto layer_mask = resolve_stage_layer_mask(
+                dvd, scenario_stage_name, holder.stage_name, scenario_no);
             for (const auto &entry : archive.entries()) {
                 auto layer_name = std::string{};
-                auto category = layered_jmp_category(entry.path, layer_name);
+                auto category =
+                    layered_jmp_category(entry.path, layer_name);
                 if (category.has_value()) {
                     if (!layer_is_active(layer_name, layer_mask)) {
                         continue;
@@ -391,27 +357,156 @@ namespace smgpc::scene {
                 auto info = JMapInfo::from_bcsv(archive.file_data(entry));
                 const auto table_name = basename(entry.path);
                 const auto table_layer_id = layer_id(layer_name);
+                const auto load_batch =
+                    holder.discovery_batch ==
+                            StagePlacementLoadBatch::CommonBootstrap &&
+                        table_layer_id == 0
+                        ? StagePlacementLoadBatch::CommonBootstrap
+                        : StagePlacementLoadBatch::ScenarioSelected;
                 info.setName(table_name.c_str());
-                info.setPlacedZoneId(zone_id);
+                info.setPlacedZoneId(holder.zone_id);
                 tables.push_back(StagePlacementTable{
-                    .stage_name = std::string(stage_name),
-                    .zone_name = std::string(stage_name),
+                    .stage_name = holder.stage_name,
+                    .zone_name = holder.stage_name,
                     .category = std::move(*category),
                     .layer_name = std::move(layer_name),
                     .table_name = table_name,
                     .archive_path = stage_archive_path->generic_string(),
                     .table_path = entry.path,
                     .jmap_info = std::move(info),
-                    .zone_id = zone_id,
+                    .zone_id = holder.zone_id,
                     .layer_id = table_layer_id,
                     .layer_mask = layer_mask,
                     .archive_entry_order = entry.file_entry_index,
-                    .zone_transform = zone_transform,
+                    .holder_instance_id = holder.instance_id,
+                    .parent_holder_instance_id =
+                        holder.parent_instance_id,
+                    .holder_depth = holder.depth,
+                    .holder_sibling_order = holder.sibling_order,
+                    .holder_discovery_batch =
+                        holder.discovery_batch,
+                    .participates_in_root_placement = holder.depth <= 1U,
+                    .load_batch = load_batch,
+                    .placement_attachment_order =
+                        std::numeric_limits<std::size_t>::max(),
+                    .zone_transform = holder.zone_transform,
                 });
             }
+        }
 
-            for (auto table_index = first_new_table; table_index < tables.size(); ++table_index) {
-                collect_placed_zones(dvd, tables[table_index], scenario_stage_name, scenario_no, zone_list, visited, tables);
+        [[nodiscard]] std::vector<std::size_t>
+        ordered_stage_obj_table_indices(
+            std::span<const StagePlacementTable> tables,
+            std::size_t holder_instance_id,
+            StagePlacementLoadBatch load_batch) {
+            auto result = std::vector<std::size_t>{};
+            for (auto index = std::size_t{}; index < tables.size(); ++index) {
+                const auto &table = tables[index];
+                if (table.holder_instance_id == holder_instance_id &&
+                    table.load_batch == load_batch &&
+                    is_stage_obj_table(table)) {
+                    result.push_back(index);
+                }
+            }
+            std::ranges::stable_sort(
+                result, [&](std::size_t left, std::size_t right) {
+                    const auto &left_table = tables[left];
+                    const auto &right_table = tables[right];
+                    if (left_table.layer_id != right_table.layer_id) {
+                        return left_table.layer_id < right_table.layer_id;
+                    }
+                    return left_table.archive_entry_order <
+                           right_table.archive_entry_order;
+                });
+            return result;
+        }
+
+        [[nodiscard]] std::vector<StageHolderChildDescriptor>
+        describe_stage_holder_children(
+            const JMapInfo &zone_list,
+            const StageHolderOccurrence &holder,
+            StagePlacementLoadBatch load_batch,
+            std::span<const StagePlacementTable> tables) {
+            auto children = std::vector<StageHolderChildDescriptor>{};
+            const auto table_indices = ordered_stage_obj_table_indices(
+                tables, holder.instance_id, load_batch);
+            for (const auto table_index : table_indices) {
+                const auto entry_count =
+                    tables[table_index].jmap_info.getNumEntries();
+                for (auto entry_index = s32{}; entry_index < entry_count;
+                     ++entry_index) {
+                    const auto iter = JMapInfoIter(
+                        &tables[table_index].jmap_info, entry_index);
+                    const char *zone_name = "";
+                    (void)MR::getObjectName(&zone_name, iter);
+                    if (zone_name == nullptr || zone_name[0] == '\0') {
+                        continue;
+                    }
+                    const auto zone_id =
+                        find_stage_zone_id(zone_list, zone_name);
+                    if (!zone_id.has_value()) {
+                        continue;
+                    }
+                    children.push_back(StageHolderChildDescriptor{
+                        .stage_name = zone_name,
+                        .zone_id = *zone_id,
+                        .zone_transform = compose_zone_transform(
+                            holder.zone_transform, iter),
+                    });
+                }
+            }
+            return children;
+        }
+
+        void assign_placement_provenance_impl(
+            std::vector<StagePlacementTable> &tables,
+            const JMapInfo &zone_list) {
+            (void)zone_list;
+
+            for (const auto batch : {
+                     StagePlacementLoadBatch::CommonBootstrap,
+                     StagePlacementLoadBatch::ScenarioSelected}) {
+                auto placement_tables =
+                    std::vector<StagePlacementTable *>{};
+                for (auto &table : tables) {
+                    if (table.load_batch == batch &&
+                        table.participates_in_root_placement &&
+                        (table.category == "placement" ||
+                         table.category == "mapparts")) {
+                        placement_tables.push_back(&table);
+                    }
+                }
+                std::ranges::stable_sort(
+                    placement_tables, [](const auto *left,
+                                         const auto *right) {
+                        if (left->holder_depth != right->holder_depth) {
+                            return left->holder_depth <
+                                   right->holder_depth;
+                        }
+                        if (left->holder_sibling_order !=
+                            right->holder_sibling_order) {
+                            return left->holder_sibling_order <
+                                   right->holder_sibling_order;
+                        }
+                        if (left->holder_instance_id !=
+                            right->holder_instance_id) {
+                            return left->holder_instance_id <
+                                   right->holder_instance_id;
+                        }
+                        if (left->layer_id != right->layer_id) {
+                            return left->layer_id < right->layer_id;
+                        }
+                        if (left->category != right->category) {
+                            return left->category == "placement";
+                        }
+                        return left->archive_entry_order <
+                               right->archive_entry_order;
+                    });
+                for (auto order = std::size_t{};
+                     order < placement_tables.size(); ++order) {
+                    placement_tables[order]->placement_attachment_order =
+                        order;
+                }
             }
         }
 
@@ -480,7 +575,10 @@ namespace smgpc::scene {
             std::span<const StagePlacementTable> tables,
             const StagePlacementTable &parent_table) {
             const auto child_table = std::ranges::find_if(tables, [&](const auto &table) {
-                return table.stage_name == parent_table.stage_name && table.category == "childobj" && table.layer_name == parent_table.layer_name &&
+                return table.holder_instance_id ==
+                           parent_table.holder_instance_id &&
+                       table.category == "childobj" &&
+                       table.layer_name == parent_table.layer_name &&
                        table.table_name == "childobjinfo";
             });
             if (child_table == tables.end()) {
@@ -528,18 +626,24 @@ namespace smgpc::scene {
             }
 
             const auto iter = JMapInfoIter(&info, entry_index);
-            const char *object_name = nullptr;
-            if (!iter.getValue("name", &object_name) || object_name == nullptr || object_name[0] == '\0') {
-                return std::nullopt;
+            const char *raw_name = "";
+            (void)iter.getValue("name", &raw_name);
+            const char *creator_identifier = "";
+            // PlacementInfoOrdered initializes the destination to the shared
+            // empty string and ignores getObjectName's return. A row missing
+            // both fields therefore remains an empty-identifier SameIdSet;
+            // it is not discarded from retail sorting evidence.
+            (void)MR::getObjectName(&creator_identifier, iter);
+            if (creator_identifier == nullptr) {
+                creator_identifier = "";
             }
 
             auto l_id = s32{-1};
             (void)iter.getValue("l_id", &l_id);
-            const auto object_archive = dvd.find_object_archive(object_name);
-            const auto support = smgpc::scene::nameobj::describe_name_obj_placement_support(dvd, object_name, table.table_path);
             auto object = StagePlacementObject{
-                .object_name = object_name,
+                .object_name = raw_name != nullptr ? raw_name : "",
                 .type_name = "",
+                .creator_identifier = creator_identifier,
                 .stage_name = table.stage_name,
                 .zone_name = table.zone_name,
                 .category = table.category,
@@ -547,25 +651,178 @@ namespace smgpc::scene {
                 .table_name = table.table_name,
                 .archive_path = table.archive_path,
                 .table_path = table.table_path,
-                .object_archive_path = object_archive.has_value() ? object_archive->generic_string() : "",
+                .object_archive_path = "",
                 .l_id = l_id,
                 .zone_id = table.zone_id,
                 .layer_id = table.layer_id,
+                .holder_instance_id = table.holder_instance_id,
+                .parent_holder_instance_id =
+                    table.parent_holder_instance_id,
+                .holder_depth = table.holder_depth,
+                .load_batch = table.load_batch,
+                .placement_attachment_order =
+                    table.placement_attachment_order,
                 .child_object_count = count_child_objects(info, iter),
                 .jmap_info = info,
                 .jmap_entry_index = entry_index,
-                .factory_supported = support.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::OriginalFactory,
-                .intentionally_ignored = support.kind == smgpc::scene::nameobj::NameObjPlacementSupportKind::IntentionallyIgnored,
-                .support_reason = support.reason,
-                .support_kind = support.kind,
             };
             read_object_args(object, iter);
             read_standard_placement_fields(object, iter);
             read_optional_ids(object, iter);
+            const auto object_archive =
+                dvd.find_object_archive(object.creator_identifier);
+            object.object_archive_path = object_archive.has_value()
+                                             ? object_archive->generic_string()
+                                             : "";
+            const auto support =
+                smgpc::scene::nameobj::describe_name_obj_placement_support(
+                    dvd, object.creator_identifier, table.table_path);
+            object.factory_supported =
+                support.kind == smgpc::scene::nameobj::
+                                    NameObjPlacementSupportKind::OriginalFactory;
+            object.intentionally_ignored =
+                support.kind == smgpc::scene::nameobj::
+                                    NameObjPlacementSupportKind::
+                                        IntentionallyIgnored;
+            object.support_reason = support.reason;
+            object.support_kind = support.kind;
             return object;
         }
 
     }  // namespace
+
+    std::vector<StageHolderOccurrence>
+    discover_stage_holder_occurrences(
+        std::string_view root_stage_name, s32 root_zone_id,
+        const StageZoneTransform &root_transform,
+        const StageHolderChildrenResolver &children_resolver,
+        const StageHolderCreatedObserver &created_observer) {
+        if (root_stage_name.empty() || !children_resolver) {
+            return {};
+        }
+
+        auto holders = std::vector<StageHolderOccurrence>{};
+        auto ancestries = std::vector<std::set<std::string>>{};
+        const auto append_holder = [&holders, &ancestries,
+                                    &created_observer](
+                                       std::string stage_name, s32 zone_id,
+                                       const StageZoneTransform &transform,
+                                       std::optional<std::size_t> parent_id,
+                                       StagePlacementLoadBatch batch,
+                                       std::set<std::string> ancestry) {
+            const auto instance_id = holders.size();
+            const auto depth = parent_id.has_value()
+                                   ? holders[*parent_id].depth + 1U
+                                   : 0U;
+            const auto sibling_order = parent_id.has_value()
+                                           ? holders[*parent_id]
+                                                 .children.size()
+                                           : 0U;
+            holders.push_back(StageHolderOccurrence{
+                .instance_id = instance_id,
+                .parent_instance_id = parent_id,
+                .depth = depth,
+                .sibling_order = sibling_order,
+                .discovery_batch = batch,
+                .stage_name = std::move(stage_name),
+                .zone_id = zone_id,
+                .zone_transform = transform,
+            });
+            ancestries.push_back(std::move(ancestry));
+            if (parent_id.has_value()) {
+                holders[*parent_id].children.push_back(instance_id);
+            }
+            if (created_observer) {
+                created_observer(holders[instance_id]);
+            }
+            return instance_id;
+        };
+
+        auto root_ancestry =
+            std::set<std::string>{lower_copy(root_stage_name)};
+        const auto root_id = append_holder(
+            std::string(root_stage_name), root_zone_id, root_transform,
+            std::nullopt, StagePlacementLoadBatch::CommonBootstrap,
+            std::move(root_ancestry));
+
+        const auto append_child =
+            [&](std::size_t parent_id, StagePlacementLoadBatch batch,
+                const StageHolderChildDescriptor &descriptor)
+                -> std::optional<std::size_t> {
+            if (descriptor.stage_name.empty()) {
+                return std::nullopt;
+            }
+            const auto stage_key = lower_copy(descriptor.stage_name);
+            if (ancestries[parent_id].contains(stage_key)) {
+                // Bound malformed data by the current holder path. No global
+                // visited set may suppress a later sibling occurrence.
+                return std::nullopt;
+            }
+            auto ancestry = ancestries[parent_id];
+            ancestry.insert(stage_key);
+            return append_holder(
+                descriptor.stage_name, descriptor.zone_id,
+                descriptor.zone_transform, parent_id, batch,
+                std::move(ancestry));
+        };
+
+        const auto append_children =
+            [&](std::size_t parent_id, StagePlacementLoadBatch batch) {
+                auto child_ids = std::vector<std::size_t>{};
+                for (const auto &descriptor :
+                     children_resolver(holders[parent_id], batch)) {
+                    if (const auto child_id =
+                            append_child(parent_id, batch, descriptor)) {
+                        child_ids.push_back(*child_id);
+                    }
+                }
+                return child_ids;
+            };
+
+        auto discover_common = std::function<void(std::size_t)>{};
+        discover_common = [&](std::size_t holder_id) {
+            const auto descriptors = children_resolver(
+                holders[holder_id],
+                StagePlacementLoadBatch::CommonBootstrap);
+            for (const auto &descriptor : descriptors) {
+                const auto child_id = append_child(
+                    holder_id,
+                    StagePlacementLoadBatch::CommonBootstrap,
+                    descriptor);
+                if (!child_id.has_value()) {
+                    continue;
+                }
+                // StageDataHolder::initWithoutIter initializes a new common
+                // child immediately, yielding depth-first holder creation.
+                discover_common(*child_id);
+            }
+        };
+        discover_common(root_id);
+
+        auto discover_scenario = std::function<void(std::size_t)>{};
+        discover_scenario = [&](std::size_t holder_id) {
+            // initAfterScenarioSelected appends this holder's entire scenario
+            // child set, then recurses through common and scenario children.
+            (void)append_children(
+                holder_id, StagePlacementLoadBatch::ScenarioSelected);
+            const auto children = holders[holder_id].children;
+            for (const auto child_id : children) {
+                discover_scenario(child_id);
+            }
+        };
+        discover_scenario(root_id);
+
+        auto next_traversal_order = std::size_t{};
+        auto assign_traversal = std::function<void(std::size_t)>{};
+        assign_traversal = [&](std::size_t holder_id) {
+            holders[holder_id].traversal_order = next_traversal_order++;
+            for (const auto child_id : holders[holder_id].children) {
+                assign_traversal(child_id);
+            }
+        };
+        assign_traversal(root_id);
+        return holders;
+    }
 
     std::optional<s32> find_stage_zone_id(const JMapInfo &zone_list,
                                           std::string_view zone_name) {
@@ -583,6 +840,12 @@ namespace smgpc::scene {
         }
 
         return std::nullopt;
+    }
+
+    void assign_stage_placement_provenance(
+        std::vector<StagePlacementTable> &tables,
+        const JMapInfo &zone_list) {
+        assign_placement_provenance_impl(tables, zone_list);
     }
 
     StageZoneTransform StageZoneTransform::from_translation_rotation(const std::array<f32, 3U> &translation,
@@ -656,6 +919,11 @@ namespace smgpc::scene {
             }
         }
         std::ranges::stable_sort(start_tables, [](const auto *lhs, const auto *rhs) {
+            if (lhs->holder_traversal_order !=
+                rhs->holder_traversal_order) {
+                return lhs->holder_traversal_order <
+                       rhs->holder_traversal_order;
+            }
             if (lhs->layer_id != rhs->layer_id) {
                 return lhs->layer_id < rhs->layer_id;
             }
@@ -712,20 +980,16 @@ namespace smgpc::scene {
     std::vector<StageGeneralPos> select_stage_general_positions(
         std::span<const StagePlacementTable> tables) {
         auto general_pos_tables = std::vector<const StagePlacementTable *>{};
-        auto zone_order = std::vector<s32>{};
         for (const auto &table : tables) {
-            if (std::ranges::find(zone_order, table.zone_id) == zone_order.end()) {
-                zone_order.push_back(table.zone_id);
-            }
             if (table.category == "generalpos" && table.layer_id >= 0) {
                 general_pos_tables.push_back(&table);
             }
         }
-        std::ranges::stable_sort(general_pos_tables, [&](const auto *lhs, const auto *rhs) {
-            const auto lhs_zone = std::ranges::find(zone_order, lhs->zone_id);
-            const auto rhs_zone = std::ranges::find(zone_order, rhs->zone_id);
-            if (lhs_zone != rhs_zone) {
-                return lhs_zone < rhs_zone;
+        std::ranges::stable_sort(general_pos_tables, [](const auto *lhs, const auto *rhs) {
+            if (lhs->holder_traversal_order !=
+                rhs->holder_traversal_order) {
+                return lhs->holder_traversal_order <
+                       rhs->holder_traversal_order;
             }
             if (lhs->layer_id != rhs->layer_id) {
                 return lhs->layer_id < rhs->layer_id;
@@ -779,8 +1043,22 @@ namespace smgpc::scene {
             return tables;
         }
 
-        auto visited = std::set<std::string>{};
-        collect_stage_tables(dvd, stage_name, stage_name, scenario_no, *root_zone_id, StageZoneTransform{}, *zone_list, visited, tables);
+        const auto holders = discover_stage_holder_occurrences(
+            stage_name, *root_zone_id, StageZoneTransform{},
+            [&](const StageHolderOccurrence &holder,
+                StagePlacementLoadBatch batch) {
+                return describe_stage_holder_children(
+                    *zone_list, holder, batch, tables);
+            },
+            [&](const StageHolderOccurrence &holder) {
+                load_stage_holder_tables(
+                    dvd, stage_name, scenario_no, holder, tables);
+            });
+        for (auto &table : tables) {
+            table.holder_traversal_order =
+                holders.at(table.holder_instance_id).traversal_order;
+        }
+        assign_stage_placement_provenance(tables, *zone_list);
         attach_rail_info(tables);
         return tables;
     }
@@ -790,6 +1068,9 @@ namespace smgpc::scene {
         std::span<const StagePlacementTable> tables) {
         auto objects = std::vector<StagePlacementObject>{};
         for (const auto &table : tables) {
+            if (!table.participates_in_root_placement) {
+                continue;
+            }
             for (auto entry_index = s32{}; entry_index < table.jmap_info.getNumEntries(); ++entry_index) {
                 if (auto object = read_placement_object(dvd, table, tables, entry_index)) {
                     objects.push_back(std::move(*object));

@@ -160,6 +160,7 @@ namespace {
         runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
 
+        auto player = LiveActor{"Air lifecycle player"};
         {
             auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
             const auto found = std::ranges::find_if(
@@ -213,6 +214,10 @@ namespace {
                         air_model->model_arc_name() == "SphereAir" &&
                         MR::isExistSceneObj(SceneObj_PriorDrawAirHolder),
                     "SphereAir did not construct exact PriorDrawAir and its scene holder");
+            require(air->getName() != nullptr &&
+                        std::string_view(air->getName()) == "球状青空",
+                    "SphereAir did not retain its exact ObjNameTable actor identity");
+            const auto air_runtime_name = std::string(air->getName());
             air_model->requireLoaded();
 
             // The scene owns MarioHolder before the real Mario actor is attached.
@@ -242,6 +247,9 @@ namespace {
             };
             runtime.set_scene_camera_pose(camera);
             auto execution = smgpc::scene::SceneExecutionService{runtime};
+            player.mPosition.set(1000000.0F, 1000000.0F, 1000000.0F);
+            player.calcAndSetBaseMtx();
+            runtime.player_system().attach_actor(player);
             execution.execute_movement();
             execution.execute_calc_anim_and_view();
             execution.draw_3d_normal(camera);
@@ -253,17 +261,16 @@ namespace {
                     trace, "Planet pass sentinel",
                     smgpc::runtime::SceneSchedulerPhase::DrawBufferOpa);
                 const auto air_opa = require_trace_index(
-                    trace, "SphereAir",
+                    trace, air_runtime_name,
                     smgpc::runtime::SceneSchedulerPhase::DrawBufferOpa);
                 require(planet_opa < air_opa,
                         "ordinary Air ordering must follow Planet while no PriorDrawAir is visible");
             }
 #endif
 
-            auto player = LiveActor{"Air lifecycle player"};
             player.mPosition.set(air->mPosition);
             player.calcAndSetBaseMtx();
-            runtime.player_system().attach_actor(player);
+            runtime.player_system().synchronize_attached_actor();
 
             renderer.end_frame();
             frame = renderer.begin_frame();
@@ -282,10 +289,10 @@ namespace {
 #ifndef NDEBUG
             const auto trace = runtime.scheduler().last_execution_trace();
             const auto air_opa = require_trace_index(
-                trace, "SphereAir",
+                trace, air_runtime_name,
                 smgpc::runtime::SceneSchedulerPhase::DrawBufferOpa);
             const auto air_xlu = require_trace_index(
-                trace, "SphereAir",
+                trace, air_runtime_name,
                 smgpc::runtime::SceneSchedulerPhase::DrawBufferXlu);
             const auto planet_opa = require_trace_index(
                 trace, "Planet pass sentinel",

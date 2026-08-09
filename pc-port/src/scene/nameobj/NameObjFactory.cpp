@@ -588,19 +588,19 @@ namespace NameObjFactory {
 
         const auto object_name = pName != nullptr ? std::string_view(pName) : std::string_view{};
         const auto *creator_entry = find_supported_entry(object_name);
-        const auto *area_entry = find_area_obj_entry(object_name);
         const auto *planet_entry = find_planet_map_entry(object_name);
-        if (creator_entry == nullptr && area_entry == nullptr &&
-            (planet_entry == nullptr ||
-             planet_entry->creator_kind !=
-                 smgpc::scene::nameobj::PlanetMapCatalogCreatorKind::OrdinaryPlanetMap)) {
-            return;
-        }
-
-        if (creator_entry == nullptr && area_entry == nullptr && planet_entry != nullptr) {
+        // Retail archive description is independent of creator availability:
+        // PlacementInfoOrdered ranks every SameIdSet before creator lookup.
+        // Retain catalog/static metadata for blocked groups so they remain
+        // exact sort participants even when this PC tranche cannot create
+        // their actors yet.
+        if (planet_entry != nullptr) {
             const auto *catalog = smgpc::scene::nameobj::PlanetMapCatalog::active();
-            for (const auto &archive_name : catalog->archive_names(*planet_entry)) {
-                pArchiveList->addArchive(archive_name.c_str());
+            if (catalog != nullptr) {
+                for (const auto &archive_name :
+                     catalog->archive_names(*planet_entry)) {
+                    pArchiveList->addArchive(archive_name.c_str());
+                }
             }
             return;
         }
