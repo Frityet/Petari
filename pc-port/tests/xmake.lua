@@ -10,6 +10,18 @@ target("smg-pc-game-source-mirror-tests")
         realtime_output = true
     })
 
+target("smg-pc-player-source-mirror-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/source-boundary")
+    set_rundir(os.projectdir())
+    add_files("PlayerSourceMirrorTests.cpp")
+    add_tests("player_source_mirrors", {
+        group = "source-boundary",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-file-select-exact-source-compile")
     set_kind("static")
     set_default(false)
