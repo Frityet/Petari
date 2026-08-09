@@ -1,0 +1,22 @@
+$ ninja -j4 build/RMGK02/src/Game/LiveActor/HitSensorInfo.o
+[1/1] MWCC build/RMGK02/src/Game/LiveActor/HitSensorInfo.o
+
+$ build/tools/objdiff-cli diff -p . -u main/Game/LiveActor/HitSensorInfo update__13HitSensorInfoFv -o /tmp/hitsensor-update.json --format json
+HitSensorInfo::update(): target 604 bytes, base 604 bytes, match 100%
+
+$ build/tools/objdiff-cli report generate -o /tmp/hitsensor-report.json
+main/Game/LiveActor/HitSensorInfo:
+  fuzzy_match_percent: 100
+  total_code: 864
+  matched_code: 864
+  total_functions: 3
+  matched_functions: 3
+
+$ build/tools/dtk shasum -c config/RMGK02/build.sha1
+build/RMGK02/main.dol: OK
+
+$ sha256sum build/RMGK02/main.dol
+8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+
+$ git diff --check -- src/Game/LiveActor/HitSensorInfo.cpp
+PASS
