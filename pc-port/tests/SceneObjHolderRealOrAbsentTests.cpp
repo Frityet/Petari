@@ -162,8 +162,34 @@ namespace {
             gateway.find("_authored_placements =", gateway_data);
         const auto gateway_preload = gateway.find(
             "_authored_placements->preload()", gateway_placements);
+        const auto gateway_finalize = gateway.find(
+            "void finalize_placements(LiveActor &player)", gateway_preload);
         const auto gateway_construct = gateway.find(
-            "_authored_placements->instantiate()", gateway_preload);
+            "_authored_placements->instantiate()", gateway_finalize);
+        const auto gateway_collision_prepass = gateway.find(
+            "_collision.build()", gateway_construct);
+        const auto gateway_scene_postpass = gateway.find(
+            "_scene_binding->init_after_placement()", gateway_collision_prepass);
+        const auto gateway_player_postpass = gateway.find(
+            "_runtime->name_obj_lifecycle().init_after_placement(player)",
+            gateway_scene_postpass);
+        const auto gateway_player_sync = gateway.find(
+            "_runtime->player_system().synchronize_attached_actor()",
+            gateway_player_postpass);
+        const auto gateway_placement_postpass = gateway.find(
+            "_authored_placements->init_after_placement()",
+            gateway_player_sync);
+        const auto gateway_collision_validation = gateway.find(
+            "validate_planet_collision()", gateway_placement_postpass);
+        const auto gateway_collision_rebuild = gateway.find(
+            "_collision.build()", gateway_collision_validation);
+        const auto gateway_retire = gateway.find("void retire() noexcept");
+        const auto gateway_clear_placements = gateway.find(
+            "_authored_placements->clear()", gateway_retire);
+        const auto gateway_clear_collision = gateway.find(
+            "_collision.clear()", gateway_clear_placements);
+        const auto gateway_deactivate_collision = gateway.find(
+            "_collision.deactivate()", gateway_clear_collision);
 
         require(host_environment != std::string::npos &&
                     host_catalog != std::string::npos &&
@@ -176,14 +202,37 @@ namespace {
                     gateway_data != std::string::npos &&
                     gateway_placements != std::string::npos &&
                     gateway_preload != std::string::npos &&
+                    gateway_finalize != std::string::npos &&
                     gateway_construct != std::string::npos &&
+                    gateway_collision_prepass != std::string::npos &&
+                    gateway_scene_postpass != std::string::npos &&
+                    gateway_player_postpass != std::string::npos &&
+                    gateway_player_sync != std::string::npos &&
+                    gateway_placement_postpass != std::string::npos &&
+                    gateway_collision_validation != std::string::npos &&
+                    gateway_collision_rebuild != std::string::npos &&
+                    gateway_retire != std::string::npos &&
+                    gateway_clear_placements != std::string::npos &&
+                    gateway_clear_collision != std::string::npos &&
+                    gateway_deactivate_collision != std::string::npos &&
                     gateway_constructor < gateway_session &&
                     gateway_session < gateway_catalog &&
                     gateway_catalog < gateway_data &&
                     gateway_data < gateway_placements &&
                     gateway_placements < gateway_preload &&
-                    gateway_preload < gateway_construct,
-                "both scene owners must publish session/catalog services and expose preload before authored construction");
+                    gateway_preload < gateway_finalize &&
+                    gateway_finalize < gateway_construct &&
+                    gateway_construct < gateway_collision_prepass &&
+                    gateway_collision_prepass < gateway_scene_postpass &&
+                    gateway_scene_postpass < gateway_player_postpass &&
+                    gateway_player_postpass < gateway_player_sync &&
+                    gateway_player_sync < gateway_placement_postpass &&
+                    gateway_placement_postpass < gateway_collision_validation &&
+                    gateway_collision_validation < gateway_collision_rebuild &&
+                    gateway_retire < gateway_clear_placements &&
+                    gateway_clear_placements < gateway_clear_collision &&
+                    gateway_clear_collision < gateway_deactivate_collision,
+                "Gateway must stop after preload, finalize around one external-player postpass, and retire placements before collision");
     }
 
     void test_model_changing_archive_path_uses_retail_mounted_prefix() {

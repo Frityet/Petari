@@ -4,6 +4,7 @@
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioHolder.hpp"
+#include "Game/System/GameDataFunction.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -12,6 +13,8 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "compat/CollisionPartsCompat.hpp"
+#include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataSession.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/GatewaySpinCheckpoint.hpp"
@@ -62,7 +65,7 @@ namespace {
 
     enum class TitleShowcaseDisposition : std::uint8_t {
         Exit,
-        LaunchGatewaySpin,
+        LaunchGateway,
     };
 
     struct TitleShowcaseOutcome final {
@@ -70,6 +73,7 @@ namespace {
             TitleShowcaseDisposition::Exit;
         std::optional<smgpc::scene::TitleFileSelectRouteSelection>
             selection{};
+        std::unique_ptr<smgpc::compat::GameDataSession> game_data_session{};
     };
 
     class DvdCloseGuard final {
@@ -391,13 +395,16 @@ namespace {
                         launch.has_value()) {
                         outcome = TitleShowcaseOutcome{
                             .disposition =
-                                TitleShowcaseDisposition::LaunchGatewaySpin,
+                                TitleShowcaseDisposition::LaunchGateway,
                             .selection = launch,
+                            .game_data_session = std::make_unique<
+                                smgpc::compat::GameDataSession>(
+                                static_cast<u16>(launch->file_number)),
                         };
                         logger->info(
                             smgpc::logging::Category::APP,
                             smgpc::logging::Message{
-                                "Blank file {} selected; launching the current Gateway spin checkpoint after a full session unwind (rabbit_route=absent)"},
+                                "Blank file {} selected; launching ordinary Gateway at the post-castle-rise story boundary after a full title session unwind"},
                             launch->file_number);
                         window.close();
                     }
@@ -469,29 +476,6 @@ namespace {
         pose.watch = camera_vector(watch);
         pose.up = camera_vector(up);
         return pose;
-    }
-
-    void place_mario_inside_spin_checkpoint_trigger(
-        MarioActor& mario, const smgpc::scene::GatewayDemoScene& scene,
-        smgpc::runtime::PlayerSystemService& player_system) {
-        const auto rosetta = std::ranges::find_if(
-            scene.placements(), [](const auto& placement) {
-                return placement.object_name == "Rosetta" &&
-                       placement.zone_id == 5 &&
-                       placement.table_path ==
-                           "jmp/placement/layera/objinfo" &&
-                       placement.jmap_entry_index == 12;
-            });
-        if (rosetta == scene.placements().end()) {
-            throw std::runtime_error(
-                "the Gateway spin showcase could not resolve exact Rosetta row 12");
-        }
-        mario.mPosition.set(rosetta->translation[0U], rosetta->translation[1U],
-                            rosetta->translation[2U]);
-        mario.mVelocity.zero();
-        smgpc::compat::clear_actor_binder_contacts(&mario);
-        mario.mFlag.mIsNoBind = false;
-        player_system.synchronize_attached_actor();
     }
 
     struct GatewayPhysicsProbe {
@@ -655,9 +639,19 @@ namespace {
 
     [[nodiscard]] int run_gateway_showcase(
         const ShowcaseOptions& options,
-        const smgpc::app::BootstrapConfiguration& configuration) {
+        const smgpc::app::BootstrapConfiguration& configuration,
+        smgpc::compat::GameDataSession& game_data_session) {
         const auto is_spin_route =
             options.route == ShowcaseRoute::GatewaySpin;
+        if (GameDataFunction::getCurrentGameDataHolder() !=
+                &game_data_session.holder() ||
+            GameDataFunction::getSceneStartGameDataHolder() !=
+                &game_data_session.holder() ||
+            smgpc::compat::game_data::holder_story_progress(
+                game_data_session.holder()) != 5U) {
+            throw std::logic_error(
+                "Gateway requires one active selected-file session at exact story progress 5");
+        }
 #ifdef NDEBUG
         if (options.smoke) {
             throw std::runtime_error(
@@ -710,8 +704,6 @@ namespace {
                     *ignored_audio);
             }
             auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
-            auto gravity_requester = NameObj{"Gateway development physics probes"};
-            (void)scene.prove_start_contact(gravity_requester);
             const auto resolved_camera =
                 smgpc::camera::resolve_stage_start_camera(runtime.dvd(), scene.start_info());
             if (resolved_camera.status !=
@@ -725,6 +717,49 @@ namespace {
             runtime.camera_system().set_game_camera_pose(initial_camera);
             runtime.set_freecam_enabled(false);
 
+            if (NameObjFactory::getCreator("Mario") != nullptr ||
+                NameObjFactory::getCreator("MarioActor") != nullptr) {
+                throw std::runtime_error(
+                    "the production Mario factory was enabled before the Gateway slice was proven complete");
+            }
+            auto mario_owner = GatewayMarioOwner{runtime.player_system()};
+            auto placement_lease =
+                smgpc::scene::GatewayDemoScene::PlacementLease{};
+            auto spin_checkpoint =
+                std::unique_ptr<smgpc::scene::GatewaySpinCheckpoint>{};
+            auto setup_frame = renderer.begin_frame();
+            {
+                const auto renderer_context =
+                    smgpc::render::ScopedAuroraRendererContext(renderer);
+                runtime.begin_frame(setup_frame);
+                mario_owner.actor().init(scene.player_start_iter());
+                placement_lease =
+                    scene.finalize_placements(mario_owner.actor());
+                if (is_spin_route) {
+                    GameDataFunction::followStoryEventByName(
+                        "チコガイドデモ終了");
+                    if (smgpc::compat::game_data::holder_story_progress(
+                            game_data_session.holder()) != 10U) {
+                        throw std::logic_error(
+                            "the Gateway spin development caller could not advance its selected-file holder from progress 5 to 10");
+                    }
+                    spin_checkpoint = std::make_unique<
+                        smgpc::scene::GatewaySpinCheckpoint>(
+                        runtime.dvd(), scene.placements(),
+                        scene.general_positions(), game_data_session.holder(),
+                        runtime.player_system(),
+                        runtime.scene_wipe(), mario_owner.actor());
+                    runtime.camera_system().set_game_camera_pose(
+                        gateway_player_camera(initial_camera,
+                                              mario_owner.actor()));
+                }
+                runtime.game_layout().activate_game_scene_draw_3d();
+            }
+            renderer.end_frame(runtime.wii_video().render_mode());
+
+            auto gravity_requester =
+                NameObj{"Gateway development physics probes"};
+            (void)scene.prove_start_contact(gravity_requester);
             auto sphere_renderer = DebugSphereRenderer(renderer);
             auto *planet_actor = scene.planet();
             auto *planet_model = smgpc::compat::actor_model(planet_actor);
@@ -744,40 +779,6 @@ namespace {
                     "the ordinary Gateway PlanetMap did not retain its main and MoveLimit CollisionParts");
             }
 
-            if (NameObjFactory::getCreator("Mario") != nullptr ||
-                NameObjFactory::getCreator("MarioActor") != nullptr) {
-                throw std::runtime_error(
-                    "the production Mario factory was enabled before the Gateway slice was proven complete");
-            }
-            auto mario_owner = GatewayMarioOwner{runtime.player_system()};
-            auto spin_checkpoint =
-                std::unique_ptr<smgpc::scene::GatewaySpinCheckpoint>{};
-            auto setup_frame = renderer.begin_frame();
-            {
-                const auto renderer_context =
-                    smgpc::render::ScopedAuroraRendererContext(renderer);
-                runtime.begin_frame(setup_frame);
-                mario_owner.actor().init(scene.player_start_iter());
-                mario_owner.actor().initAfterPlacement();
-                if (is_spin_route) {
-                    spin_checkpoint = std::make_unique<
-                        smgpc::scene::GatewaySpinCheckpoint>(
-                        runtime.dvd(), scene.placements(),
-                        scene.general_positions(), runtime.player_system(),
-                        runtime.scene_wipe(), mario_owner.actor());
-                    // This dedicated route is a quick authored checkpoint,
-                    // so begin within the exact 500-unit Rosetta trigger. The
-                    // ordinary `gateway` route remains the free walking demo.
-                    place_mario_inside_spin_checkpoint_trigger(
-                        mario_owner.actor(), scene, runtime.player_system());
-                    runtime.camera_system().set_game_camera_pose(
-                        gateway_player_camera(initial_camera,
-                                              mario_owner.actor()));
-                }
-                runtime.game_layout().activate_game_scene_draw_3d();
-            }
-            renderer.end_frame(runtime.wii_video().render_mode());
-
             auto probes = std::vector<GatewayPhysicsProbe>{};
             auto next_probe_id = std::uint64_t{1U};
             if (options.smoke) {
@@ -790,7 +791,7 @@ namespace {
                 logger->info(
                     smgpc::logging::Category::APP,
                     smgpc::logging::Message{
-                        "Gateway spin checkpoint: the exact 90-frame handoff and 1670-frame guide prelude begin automatically; press A, Enter, Space, or left-click when the spin prompt appears; X tests the unlocked swing request"});
+                        "Gateway spin checkpoint: walk into the exact Rosetta trigger to begin the 90-frame handoff and 1670-frame guide prelude; press A, Enter, Space, or left-click when the spin prompt appears; X tests the unlocked swing request"});
             } else {
                 logger->info(
                     smgpc::logging::Category::APP,
@@ -990,16 +991,23 @@ int main(int argc, char* argv[]) try {
     prepare_screenshot_path(options);
     const auto configuration = bootstrap_configuration(options, arguments);
     if (options.route != ShowcaseRoute::Title) {
-        return run_gateway_showcase(options, configuration);
+        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        return run_gateway_showcase(options, configuration, game_data_session);
     }
 
     const auto title_outcome = run_title_showcase(options, configuration);
     if (title_outcome.disposition == TitleShowcaseDisposition::Exit) {
         return 0;
     }
-    if (!title_outcome.selection.has_value()) {
+    if (!title_outcome.selection.has_value() ||
+        title_outcome.game_data_session == nullptr) {
         throw std::logic_error(
             "the title showcase requested Gateway without a blank-file selection");
+    }
+    if (title_outcome.game_data_session->selected_file() !=
+        static_cast<u16>(title_outcome.selection->file_number)) {
+        throw std::logic_error(
+            "the title showcase lost the selected file's game-data session identity");
     }
 
     // The title call has returned, so its route, RuntimeContext, renderer,
@@ -1007,7 +1015,7 @@ int main(int argc, char* argv[]) try {
     // completely fresh host session. Title capture/termination controls are
     // one-shot and must not overwrite or prematurely stop the destination.
     auto gateway_options = options;
-    gateway_options.route = ShowcaseRoute::GatewaySpin;
+    gateway_options.route = ShowcaseRoute::Gateway;
     gateway_options.max_frames = 0U;
     gateway_options.screenshot_path.reset();
     gateway_options.screenshot_frame.reset();
@@ -1015,7 +1023,8 @@ int main(int argc, char* argv[]) try {
     gateway_options.smoke = false;
     const auto gateway_configuration =
         bootstrap_configuration(gateway_options, arguments);
-    return run_gateway_showcase(gateway_options, gateway_configuration);
+    return run_gateway_showcase(gateway_options, gateway_configuration,
+                                *title_outcome.game_data_session);
 } catch (const std::exception& error) {
     auto logger = smgpc::logging::create_default_logger();
     logger->fatal(smgpc::logging::Category::APP,

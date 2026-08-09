@@ -3,19 +3,28 @@
 #include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/Gravity/PointGravity.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
+#include "Game/LiveActor/RailRider.hpp"
+#include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/MapObj/BrightObj.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NPC/DemoRabbit.hpp"
+#include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
+#include "Game/System/GameDataFunction.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataSession.hpp"
 #include "compat/StageSessionState.hpp"
+#include "compat/TalkRuntime.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -23,6 +32,7 @@
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/StageHostScene.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
+#include "GatewayDemoSceneTestSupport.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -31,17 +41,25 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <utility>
 
 namespace {
+
+    static_assert(!std::is_copy_constructible_v<
+                  smgpc::scene::GatewayDemoScene::PlacementLease>);
+    static_assert(std::is_nothrow_move_constructible_v<
+                  smgpc::scene::GatewayDemoScene::PlacementLease>);
 
     void require(bool condition, std::string_view message) {
         if (!condition) {
@@ -92,6 +110,223 @@ namespace {
         return left.x * right.x + left.y * right.y + left.z * right.z;
     }
 
+    struct DemoRabbitExpectation final {
+        s32 source_row = -1;
+        s32 l_id = -1;
+        s32 cast_id = -1;
+        s32 message_id = -1;
+        s32 common_path_id = -1;
+        std::string_view archive_name{};
+        bool dead = false;
+        bool has_rail = false;
+        bool has_talk = false;
+        std::size_t action_count = 0U;
+        bool shadow_visible_sync_host = false;
+    };
+
+    constexpr auto cDemoRabbitExpectations = std::array{
+        DemoRabbitExpectation{
+            .source_row = 8,
+            .l_id = 66,
+            .cast_id = 0,
+            .message_id = 0,
+            .common_path_id = 0,
+            .archive_name = "TrickRabbitBaby",
+            .dead = true,
+            .has_rail = true,
+            .has_talk = true,
+            .action_count = 6U,
+            .shadow_visible_sync_host = true,
+        },
+        DemoRabbitExpectation{
+            .source_row = 9,
+            .l_id = 67,
+            .cast_id = 1,
+            .message_id = -1,
+            .common_path_id = -1,
+            .archive_name = "TrickRabbit",
+            .dead = false,
+            .has_rail = false,
+            .has_talk = false,
+            .action_count = 1U,
+            .shadow_visible_sync_host = false,
+        },
+        DemoRabbitExpectation{
+            .source_row = 10,
+            .l_id = 68,
+            .cast_id = 2,
+            .message_id = -1,
+            .common_path_id = -1,
+            .archive_name = "TrickRabbit",
+            .dead = false,
+            .has_rail = false,
+            .has_talk = false,
+            .action_count = 1U,
+            .shadow_visible_sync_host = false,
+        },
+    };
+
+    [[nodiscard]] std::array<const DemoRabbit *,
+                             cDemoRabbitExpectations.size()>
+    require_progress_five_demo_rabbits(
+        smgpc::scene::GatewayDemoScene &scene) {
+        const auto &report = scene.authored_placement_report();
+        require(std::ranges::count_if(report.entries, [](const auto &entry) {
+                    return entry.placement != nullptr &&
+                           entry.placement->object_name == "DemoRabbit";
+                }) == cDemoRabbitExpectations.size(),
+                "progress 5 must contain exactly three authored DemoRabbit rows");
+
+        const auto &demo = scene.demo_runtime();
+        const auto guide_index = demo.find_definition(5, 0);
+        const auto *guide = guide_index.has_value()
+                                ? demo.definition(*guide_index)
+                                : nullptr;
+        require(guide != nullptr && guide->demo_name == "チコガイドデモ" &&
+                    guide->time_sheet_name == "TicoGuideDemo",
+                "the three DemoRabbit actors must join the exact guide demo");
+
+        auto *talk = dynamic_cast<smgpc::compat::TalkRuntime *>(
+            scene.scene_obj_holder().getObj(SceneObj_TalkDirector));
+        require(talk != nullptr &&
+                    smgpc::compat::current_talk_runtime() == talk,
+                "the progress-5 rabbit talk controller must retain its scene owner");
+
+        auto rabbits = std::array<const DemoRabbit *,
+                                  cDemoRabbitExpectations.size()>{};
+        for (auto index = std::size_t{};
+             index < cDemoRabbitExpectations.size(); ++index) {
+            const auto &expected = cDemoRabbitExpectations[index];
+            const auto found = std::ranges::find_if(
+                report.entries, [&](const auto &entry) {
+                    return entry.placement != nullptr &&
+                           entry.placement->object_name == "DemoRabbit" &&
+                           entry.placement->jmap_entry_index ==
+                               expected.source_row;
+                });
+            require(found != report.entries.end(),
+                    "an exact progress-5 DemoRabbit report row is absent");
+
+            const auto &placement = *found->placement;
+            auto *rabbit = dynamic_cast<DemoRabbit *>(found->actor);
+            require(placement.creator_identifier == "DemoRabbit" &&
+                        placement.zone_name ==
+                            "HeavensDoorMysteriousZone" &&
+                        placement.zone_id == 5 &&
+                        placement.layer_name == "layera" &&
+                        placement.table_path ==
+                            "jmp/placement/layera/objinfo" &&
+                        placement.l_id == expected.l_id &&
+                        placement.demo_group_id == 0 &&
+                        placement.cast_id == expected.cast_id &&
+                        placement.message_id == expected.message_id &&
+                        placement.common_path_id ==
+                            expected.common_path_id &&
+                        found->support.kind ==
+                            smgpc::scene::AuthoredPlacementSupportKind::Ready &&
+                        found->outcome ==
+                            smgpc::scene::AuthoredPlacementOutcome::
+                                InitializedAfterPlacement &&
+                        found->actor_name ==
+                            std::optional<std::string>{"デモウサギ"} &&
+                        rabbit != nullptr && rabbit->getName() != nullptr &&
+                        std::string_view(rabbit->getName()) == "デモウサギ",
+                    "a DemoRabbit lost its exact row, cast, message, path, or actor identity");
+
+            require(found->archives.size() == 1U &&
+                        found->archives.front().archive_name ==
+                            expected.archive_name &&
+                        found->archives.front().kind ==
+                            smgpc::scene::nameobj::NameObjArchiveKind::Object &&
+                        found->archives.front().loaded,
+                    "a DemoRabbit lost its placement-selected mounted archive");
+            auto *model = smgpc::compat::actor_model(rabbit);
+            require(model != nullptr &&
+                        model->model_arc_name() == expected.archive_name,
+                    "a DemoRabbit model does not match its placement-selected archive");
+            model->requireLoaded();
+            require(model->isLoaded(),
+                    "a DemoRabbit must load its exact real model resource");
+
+            require(rabbit->mSpine != nullptr &&
+                        rabbit->mWaitNerve != nullptr &&
+                        rabbit->mSpine->getCurrentNerve() ==
+                            rabbit->mWaitNerve &&
+                        rabbit->mFlag.mIsDead == expected.dead,
+                    "a progress-5 DemoRabbit lost its initial nerve/dead-state contract");
+            require((rabbit->mRailRider != nullptr) == expected.has_rail &&
+                        (!expected.has_rail ||
+                         rabbit->mRailRider->getPointNum() == 5),
+                    "only the baby DemoRabbit may own the exact five-point rail");
+
+            require(demo.membership_count(rabbit) == 1U &&
+                        demo.cast_id(rabbit, *guide_index) ==
+                            std::optional<std::int32_t>{expected.cast_id} &&
+                        demo.cast_name(rabbit, *guide_index) ==
+                            "デモウサギ" &&
+                        demo.action_count(rabbit) ==
+                            expected.action_count &&
+                        demo.action_count(rabbit, "チコガイドデモ") ==
+                            expected.action_count &&
+                        smgpc::compat::registered_demo_membership_count(
+                            rabbit) == 1U &&
+                        smgpc::compat::registered_demo_action_count(rabbit) ==
+                            expected.action_count,
+                    "a DemoRabbit lost its exact guide-demo membership, CastId, or action count");
+
+            require((rabbit->mMsgCtrl != nullptr) == expected.has_talk &&
+                        (smgpc::compat::owned_talk_ctrl(rabbit) != nullptr) ==
+                            expected.has_talk &&
+                        smgpc::compat::has_owned_talk_ctrl(rabbit) ==
+                            expected.has_talk,
+                    "only DemoRabbit CastId 0 may own a talk controller");
+            if (expected.has_talk) {
+                require(smgpc::compat::owned_talk_ctrl(rabbit) ==
+                                rabbit->mMsgCtrl &&
+                            talk->flow_key(*rabbit->mMsgCtrl) ==
+                                "HeavensDoorMysteriousZone_DemoRabbit000" &&
+                            talk->current_node_index(*rabbit->mMsgCtrl) ==
+                                std::optional<std::uint32_t>{268U} &&
+                            rabbit->mMsgCtrl->getMessageID() == 825U,
+                        "the baby DemoRabbit must start on exact flow node 268/message 825");
+            }
+
+            const auto *shadow = smgpc::compat::actor_shadow_runtime_state(
+                static_cast<const LiveActor *>(rabbit));
+            require(rabbit->mLodCtrl != nullptr &&
+                        rabbit->mLodCtrl->mActor == rabbit &&
+                        rabbit->mLodCtrl->_1A == 0U && shadow != nullptr &&
+                        shadow->valid && shadow->calculation_enabled &&
+                        shadow->capacity == 1U &&
+                        shadow->controllers.size() == 1U &&
+                        shadow->controllers.front().name ==
+                            "ボリューム影(球)" &&
+                        shadow->controllers.front().kind ==
+                            smgpc::compat::ActorShadowControllerKind::
+                                VolumeSphere &&
+                        shadow->controllers.front().radius == 50.0F &&
+                        shadow->controllers.front().calculation_mode ==
+                            smgpc::compat::ActorShadowCalculationMode::
+                                Continuous &&
+                        shadow->controllers.front().visible_sync_host ==
+                            expected.shadow_visible_sync_host,
+                    "a DemoRabbit lost exact NPC LOD/shadow ownership or visibility sync state");
+            rabbits[index] = rabbit;
+        }
+
+        require(rabbits[0]->mWaitNerve != rabbits[1]->mWaitNerve &&
+                    rabbits[1]->mWaitNerve == rabbits[2]->mWaitNerve,
+                "progress 5 must retain one Appear baby nerve and two shared Demo adult nerves");
+        require(std::ranges::count_if(
+                    smgpc::compat::snapshot_name_obj_runtime_objects(),
+                    [](const auto *object) {
+                        return dynamic_cast<const DemoRabbit *>(object) !=
+                               nullptr;
+                    }) == cDemoRabbitExpectations.size(),
+                "Gateway finalization must publish exactly three live DemoRabbit instances");
+        return rabbits;
+    }
+
     void test_real_gateway_spawn_planet_collision_and_gravity() {
         const auto disc_path = require_real_disc();
         aurora_dvd_close();
@@ -128,6 +363,17 @@ namespace {
             smgpc::compat::try_active_stage_session();
         require(previous_stage_session == &outer_stage_session,
                 "Gateway session-shadow proof did not install a real outer owner");
+        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        require(smgpc::compat::game_data::holder_story_progress(
+                    game_data_session.holder()) == 5U &&
+                    GameDataFunction::getCurrentGameDataHolder() ==
+                        &game_data_session.holder() &&
+                    GameDataFunction::getSceneStartGameDataHolder() ==
+                        &game_data_session.holder() &&
+                    !GameDataFunction::isPassedStoryEvent(
+                        "チコガイドデモ終了") &&
+                    !GameDataFunction::isPassedStoryEvent("スピン権利"),
+                "the Gateway actor proof must begin on one exact progress-5 selected-file holder");
         auto scene_owner =
             std::make_unique<smgpc::scene::GatewayDemoScene>(dvd);
         auto &scene = *scene_owner;
@@ -141,6 +387,39 @@ namespace {
                     stage_session.restart_id()._0 == 0 &&
                     stage_session.restart_id().mZoneID == 0,
                 "Gateway must bind one exact scenario/start session above all authored placements");
+        require(scene.state() == smgpc::scene::GatewayDemoSceneState::Preloaded &&
+                    scene.authored_placement_report().state ==
+                        smgpc::scene::AuthoredPlacementRuntimeState::Preloaded,
+                "Gateway construction must stop at the exact external-player insertion boundary");
+        auto inactive_actor_surface_rejected = false;
+        try {
+            (void)scene.sky();
+        } catch (const std::logic_error&) {
+            inactive_actor_surface_rejected = true;
+        }
+        require(inactive_actor_surface_rejected,
+                "placement-derived actor access must reject a merely preloaded scene");
+        auto player = smgpc::test::GatewayPlayerSentinel{runtime, scene};
+        const auto placement_lod_baseline =
+            smgpc::compat::actor_lod_ctrl_runtime_state_count();
+        auto placement_lease = scene.finalize_placements(player);
+        require(placement_lease &&
+                    scene.state() == smgpc::scene::GatewayDemoSceneState::Active &&
+                    player.post_placement_count() == 1U,
+                "Gateway finalization must post-initialize its attached external player exactly once");
+        const auto demo_rabbits =
+            require_progress_five_demo_rabbits(scene);
+        const auto placement_planet_lod_count = std::ranges::count_if(
+            scene.visuals(), [](const auto &visual) {
+                const auto *planet =
+                    dynamic_cast<const PlanetMap *>(visual.actor);
+                return planet != nullptr && planet->mLODCtrl != nullptr;
+            });
+        require(smgpc::compat::actor_lod_ctrl_runtime_state_count() ==
+                        placement_lod_baseline + demo_rabbits.size() +
+                            placement_planet_lod_count &&
+                    placement_planet_lod_count == 4U,
+                "Gateway finalization must add exactly three rabbit and four ordinary-planet LOD owners");
         const auto &placement_report = scene.authored_placement_report();
         require(placement_report.mode ==
                         smgpc::scene::AuthoredPlacementMode::
@@ -529,7 +808,30 @@ namespace {
                   << ";gateway_ready_shaped_rows="
                   << ready_shaped_row_count << '\n';
         scene_owner.reset();
-        require(smgpc::compat::try_active_stage_session() ==
+        require(smgpc::compat::actor_lod_ctrl_runtime_state_count() ==
+                        placement_lod_baseline &&
+                    smgpc::compat::current_talk_runtime() == nullptr &&
+                    std::ranges::none_of(
+                        smgpc::compat::snapshot_name_obj_runtime_objects(),
+                        [](const auto *object) {
+                            return dynamic_cast<const DemoRabbit *>(object) !=
+                                   nullptr;
+                        }),
+                "Gateway fallback teardown must release every rabbit LOD, talk, and live identity");
+        for (const auto *rabbit : demo_rabbits) {
+            require(!smgpc::compat::has_name_obj_runtime_state(rabbit) &&
+                        !smgpc::compat::has_actor_runtime_state(rabbit) &&
+                        smgpc::compat::actor_model(rabbit) == nullptr &&
+                        smgpc::compat::actor_shadow_runtime_state(
+                            static_cast<const LiveActor *>(rabbit)) == nullptr &&
+                        smgpc::compat::registered_demo_membership_count(
+                            rabbit) == 0U &&
+                        smgpc::compat::registered_demo_action_count(rabbit) ==
+                            0U,
+                    "Gateway fallback teardown left compatibility state attached to a retired DemoRabbit identity");
+        }
+        require(!placement_lease &&
+                    smgpc::compat::try_active_stage_session() ==
                         previous_stage_session &&
                     previous_stage_session == &outer_stage_session &&
                     outer_stage_session.scene_name() == "FileSelect" &&
@@ -538,7 +840,7 @@ namespace {
                     outer_stage_session.scenario_no() == 2 &&
                     outer_stage_session.initial_start_id()._0 == 9 &&
                     outer_stage_session.initial_start_id().mZoneID == 4,
-                "Gateway teardown did not restore the exact outer stage-session identity");
+                "Gateway fallback teardown did not disarm the weak lease or restore the outer session");
         renderer.end_frame();
     }
 

@@ -6,10 +6,12 @@
 #include "Logger.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/GameDataSession.hpp"
 #include "render/RendererService.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
+#include "GatewayDemoSceneTestSupport.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -165,11 +167,7 @@ namespace {
             runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
             auto gateway_sky_runtime_name = std::string{};
-            auto gateway_scheduler_player =
-                LiveActor{"Sky route scheduler player"};
-            gateway_scheduler_player.mPosition.set(1000000.0F, 1000000.0F,
-                                                   1000000.0F);
-            gateway_scheduler_player.calcAndSetBaseMtx();
+            auto game_data_session = smgpc::compat::GameDataSession{1U};
             {
                 auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
                 const auto &placement = scene.sky_placement();
@@ -186,6 +184,14 @@ namespace {
                              "VROrbit placement Y");
                 require_near(placement.translation[2], -1040.0F, 0.0001F,
                              "VROrbit placement Z");
+
+                auto gateway_player =
+                    smgpc::test::GatewayPlayerSentinel{runtime, scene};
+                gateway_player.mPosition.set(1000000.0F, 1000000.0F,
+                                             1000000.0F);
+                runtime.player_system().synchronize_attached_actor();
+                auto placement_lease =
+                    scene.finalize_placements(gateway_player);
 
                 auto *sky = scene.sky();
                 auto *model = smgpc::compat::actor_model(sky);
@@ -227,7 +233,6 @@ namespace {
                             entry.live_actor_btk_name == "VROrbit",
                         "VROrbit did not start only its exact same-name BTK");
 #endif
-                runtime.player_system().attach_actor(gateway_scheduler_player);
                 runtime.scheduler().execute_movement();
                 runtime.scheduler().execute_calc_anim();
                 runtime.scheduler().execute_calc_view_and_entry();
@@ -242,7 +247,6 @@ namespace {
 #ifndef NDEBUG
                 gateway_packets = collect_packet_proof(runtime, "VROrbit", frame.frame_index);
 #endif
-                runtime.player_system().detach_actor(&gateway_scheduler_player);
             }
 #ifndef NDEBUG
             require(std::ranges::none_of(

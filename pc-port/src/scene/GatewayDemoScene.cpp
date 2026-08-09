@@ -14,6 +14,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/GravityUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/StageScenarioMetadataResolver.hpp"
@@ -204,12 +205,12 @@ namespace smgpc::scene {
                     "exact PlanetGravityManager SceneObj could not be created");
             LightFunction::initLightRegisterAll();
 
-            auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-            require(runtime != nullptr,
+            _runtime = smgpc::runtime::RuntimeContext::try_instance();
+            require(_runtime != nullptr,
                     "Gateway placement construction requires the active RuntimeContext lifecycle");
             _authored_placements =
                 std::make_unique<AuthoredPlacementInstantiator>(
-                    *_authored_data, runtime->name_obj_lifecycle(),
+                    *_authored_data, _runtime->name_obj_lifecycle(),
                     AuthoredPlacementInstantiationOptions{
                         .mode = AuthoredPlacementMode::
                             SupportedSubsetForDevelopment,
@@ -227,43 +228,58 @@ namespace smgpc::scene {
                         },
                     });
             (void)_authored_placements->preload();
-            // Gateway remains an explicitly bounded development scene with no
-            // Mario owner. Keeping the exact preload/construction boundary
-            // visible lets the player tranche insert externally owned Mario
-            // here without changing placement ordering policy.
-            const auto &report = _authored_placements->instantiate();
-#ifndef NDEBUG
-            runtime->emit_semantic_trace_event(
-                "placement", "gateway_development_subset_summary",
-                "stage=" + std::string(cStageName) +
-                    ";scenario=1;objects=" +
-                    std::to_string(report.entries.size()) +
-                    ";ready=" + std::to_string(report.ready_count) +
-                    ";ignored=" + std::to_string(report.ignored_count) +
-                    ";blocked=" + std::to_string(report.blocked_count) +
-                    ";created=" + std::to_string(report.created_count) +
-                    ";mode=supported_subset_for_development");
-            for (const auto &entry : report.entries) {
-                if (entry.support.kind !=
-                        AuthoredPlacementSupportKind::Blocked ||
-                    entry.placement == nullptr) {
-                    continue;
-                }
-                runtime->emit_semantic_trace_event(
-                    "placement", "gateway_development_subset_blocked",
-                    "object=" + std::string(
-                                    authored_placement_identifier(
-                                        *entry.placement)) +
-                        ";raw_name=" + entry.placement->object_name +
-                        ";zone=" + entry.placement->zone_name +
-                        ";table=" + entry.placement->table_path +
-                        ";row=" +
-                        std::to_string(
-                            entry.placement->jmap_entry_index) +
-                        ";reason=" + entry.support.reason);
-            }
-#endif
+            _state = GatewayDemoSceneState::Preloaded;
+        }
 
+        void finalize_placements(LiveActor &player) {
+            if (_state != GatewayDemoSceneState::Preloaded) {
+                throw std::logic_error(
+                    "Gateway placements can only be finalized once from the preloaded boundary.");
+            }
+
+            _state = GatewayDemoSceneState::Finalizing;
+            try {
+                require(smgpc::runtime::RuntimeContext::try_instance() == _runtime,
+                        "Gateway finalization lost its active RuntimeContext owner");
+                require(_runtime->player_system().attached_actor() == &player,
+                        "Gateway finalization requires the supplied external player to be attached");
+                require(smgpc::compat::has_actor_runtime_state(&player) &&
+                            _runtime->scheduler()
+                                .light_type_for_actor(player)
+                                .has_value(),
+                        "Gateway finalization requires an initialized external player scene registration");
+                require(StageCollisionService::active() == &_collision,
+                        "Gateway collision service is no longer the active scene owner");
+
+                const auto &report = _authored_placements->instantiate();
+                derive_authored_actors();
+                validate_gravity();
+
+                // Exact placement init has registered its collision and
+                // SceneObjs. Publish that first registry before any retail
+                // initAfterPlacement callback can query it.
+                _collision.build();
+                _scene_binding->init_after_placement();
+                _runtime->name_obj_lifecycle().init_after_placement(player);
+                require(_runtime->player_system().attached_actor() == &player,
+                        "the external player detached during initAfterPlacement");
+                _runtime->player_system().synchronize_attached_actor();
+                (void)_authored_placements->init_after_placement();
+
+                validate_planet_collision();
+                _collision.build();
+                _state = GatewayDemoSceneState::Active;
+
+#ifndef NDEBUG
+                emit_placement_report(report);
+#endif
+            } catch (...) {
+                retire();
+                throw;
+            }
+        }
+
+        void derive_authored_actors() {
             for (const auto &instance : _authored_placements->instances()) {
                 const auto visual_kind =
                     smgpc::scene::nameobj::scene_visual_kind(
@@ -312,11 +328,9 @@ namespace smgpc::scene {
                         _gravity_actor->getGravity() != nullptr,
                     "authored Gateway point gravity was absent from the shared placement lifecycle");
             _gravity = _gravity_actor->getGravity();
+        }
 
-            _collision.build();
-            _scene_binding->init_after_placement();
-            (void)_authored_placements->init_after_placement();
-            _collision.build();
+        void validate_planet_collision() const {
             const auto planet_collision =
                 smgpc::compat::actor_collision_parts_resources(_planet_actor);
             require(planet_collision.size() == 2U &&
@@ -328,10 +342,13 @@ namespace smgpc::scene {
                             planet_collision.size() &&
                         _collision.stats().triangle_count != 0U,
                     "ordinary PlanetMap did not retain main and MoveLimit KCL/PA registrations");
-            validate_gravity();
         }
 
-        ~Impl() {
+        void retire() noexcept {
+            if (_state == GatewayDemoSceneState::Retired) {
+                return;
+            }
+            _state = GatewayDemoSceneState::Retired;
             _visual_views.clear();
             _sky_actor = nullptr;
             _planet_actor = nullptr;
@@ -341,18 +358,58 @@ namespace smgpc::scene {
             // scene execution occurs between reverse placement teardown and
             // destroying the SceneObj binding that owns that holder.
             if (_authored_placements != nullptr) {
-                // Reverse teardown is owned by the instantiator destructor so
-                // an actor-specific destroy failure cannot escape this scene
-                // destructor.
-                _authored_placements.reset();
+                try {
+                    _authored_placements->clear();
+                } catch (...) {
+                    // The lifecycle still resets every actor at its reverse
+                    // retirement point before propagating a destroy failure.
+                }
             }
+            _collision.clear();
             _collision.deactivate();
+        }
+
+        ~Impl() {
+            retire();
             // The exact manager keeps non-owning pointers to authored gravity
             // instances and is retired after their actor wrappers.
             _scene_binding.reset();
             _stage_light_binding.reset();
             _planet_map_catalog.reset();
         }
+
+#ifndef NDEBUG
+        void emit_placement_report(
+            const AuthoredPlacementInstantiationReport &report) const {
+            _runtime->emit_semantic_trace_event(
+                "placement", "gateway_development_subset_summary",
+                "stage=" + std::string(cStageName) +
+                    ";scenario=1;objects=" +
+                    std::to_string(report.entries.size()) +
+                    ";ready=" + std::to_string(report.ready_count) +
+                    ";ignored=" + std::to_string(report.ignored_count) +
+                    ";blocked=" + std::to_string(report.blocked_count) +
+                    ";created=" + std::to_string(report.created_count) +
+                    ";mode=supported_subset_for_development");
+            for (const auto &entry : report.entries) {
+                if (entry.support.kind !=
+                        AuthoredPlacementSupportKind::Blocked ||
+                    entry.placement == nullptr) {
+                    continue;
+                }
+                _runtime->emit_semantic_trace_event(
+                    "placement", "gateway_development_subset_blocked",
+                    "object=" + std::string(authored_placement_identifier(
+                                    *entry.placement)) +
+                        ";raw_name=" + entry.placement->object_name +
+                        ";zone=" + entry.placement->zone_name +
+                        ";table=" + entry.placement->table_path +
+                        ";row=" +
+                        std::to_string(entry.placement->jmap_entry_index) +
+                        ";reason=" + entry.support.reason);
+            }
+        }
+#endif
 
         void validate_start() const {
             require(_start != nullptr && _start->object_name == "Mario" &&
@@ -443,7 +500,17 @@ namespace smgpc::scene {
                          "exact point-gravity runtime distant differs from the retail row");
         }
 
+        void require_active(std::string_view surface) const {
+            if (_state != GatewayDemoSceneState::Active) {
+                throw std::logic_error(
+                    "Gateway placement surface requires an active placement lease: " +
+                    std::string(surface));
+            }
+        }
+
         smgpc::runtime::DvdFileSystemService &_dvd;
+        smgpc::runtime::RuntimeContext *_runtime = nullptr;
+        GatewayDemoSceneState _state = GatewayDemoSceneState::Preloaded;
         // Session state precedes its binding and all stage owners so reverse
         // destruction keeps it active through Talk and placement teardown.
         std::unique_ptr<smgpc::compat::StageSessionState> _stage_session{};
@@ -470,11 +537,64 @@ namespace smgpc::scene {
         PlanetGravity *_gravity = nullptr;
     };
 
+    GatewayDemoScene::PlacementLease::PlacementLease(
+        std::weak_ptr<Impl> impl) noexcept
+        : _impl(std::move(impl)), _armed(true) {
+    }
+
+    GatewayDemoScene::PlacementLease::~PlacementLease() {
+        reset();
+    }
+
+    GatewayDemoScene::PlacementLease::PlacementLease(
+        PlacementLease &&other) noexcept
+        : _impl(std::move(other._impl)),
+          _armed(std::exchange(other._armed, false)) {
+    }
+
+    GatewayDemoScene::PlacementLease &
+    GatewayDemoScene::PlacementLease::operator=(PlacementLease &&other) noexcept {
+        if (this == &other) {
+            return *this;
+        }
+        reset();
+        _impl = std::move(other._impl);
+        _armed = std::exchange(other._armed, false);
+        return *this;
+    }
+
+    GatewayDemoScene::PlacementLease::operator bool() const noexcept {
+        const auto impl = _impl.lock();
+        return _armed && impl != nullptr &&
+               impl->_state == GatewayDemoSceneState::Active;
+    }
+
+    void GatewayDemoScene::PlacementLease::reset() noexcept {
+        if (!_armed) {
+            return;
+        }
+        _armed = false;
+        if (const auto impl = _impl.lock(); impl != nullptr) {
+            impl->retire();
+        }
+        _impl.reset();
+    }
+
     GatewayDemoScene::GatewayDemoScene(smgpc::runtime::DvdFileSystemService &dvd)
-        : _impl(std::make_unique<Impl>(dvd)) {
+        : _impl(std::make_shared<Impl>(dvd)) {
     }
 
     GatewayDemoScene::~GatewayDemoScene() = default;
+
+    GatewayDemoScene::PlacementLease GatewayDemoScene::finalize_placements(
+        LiveActor &player) {
+        _impl->finalize_placements(player);
+        return PlacementLease{_impl};
+    }
+
+    GatewayDemoSceneState GatewayDemoScene::state() const noexcept {
+        return _impl->_state;
+    }
 
     const StageStartInfo &GatewayDemoScene::start_info() const {
         return *_impl->_start;
@@ -497,22 +617,27 @@ namespace smgpc::scene {
     }
 
     ProjectionMapSky *GatewayDemoScene::sky() {
+        _impl->require_active("sky");
         return _impl->_sky_actor;
     }
 
     const ProjectionMapSky *GatewayDemoScene::sky() const {
+        _impl->require_active("sky");
         return _impl->_sky_actor;
     }
 
     PlanetMap *GatewayDemoScene::planet() {
+        _impl->require_active("planet");
         return _impl->_planet_actor;
     }
 
     const PlanetMap *GatewayDemoScene::planet() const {
+        _impl->require_active("planet");
         return _impl->_planet_actor;
     }
 
     std::span<const GatewayDemoVisual> GatewayDemoScene::visuals() const {
+        _impl->require_active("visuals");
         return _impl->_visual_views;
     }
 
@@ -547,24 +672,29 @@ namespace smgpc::scene {
     }
 
     StageCollisionService &GatewayDemoScene::collision() {
+        _impl->require_active("collision");
         return _impl->_collision;
     }
 
     const StageCollisionService &GatewayDemoScene::collision() const {
+        _impl->require_active("collision");
         return _impl->_collision;
     }
 
     const PlanetGravity &GatewayDemoScene::gravity() const {
+        _impl->require_active("gravity");
         return *_impl->_gravity;
     }
 
     bool GatewayDemoScene::resolve_gravity(const NameObj &requester, const TVec3f &position,
                                            TVec3f *destination, GravityInfo *info) const {
+        _impl->require_active("gravity query");
         return MR::calcGravityVector(&requester, position, destination, info, 0U);
     }
 
     GatewayDemoStartContact GatewayDemoScene::prove_start_contact(
         const NameObj &requester) const {
+        _impl->require_active("start contact");
         auto proof = GatewayDemoStartContact{};
         const auto start = as_vec3(_impl->_start->world_position);
         require(resolve_gravity(requester, start, &proof.gravity),

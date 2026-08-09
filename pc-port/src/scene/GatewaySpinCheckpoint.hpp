@@ -37,20 +37,24 @@ namespace smgpc::scene {
         bool player_row_dispatched_to_mario_demo_pos4 = false;
     };
 
-    // A deliberately bounded post-high-tower route. It starts at the authored
-    // story-progress-10 checkpoint and stops at the spin explanation handoff;
-    // rabbit pursuit and the remainder of the prologue are outside this owner.
+    // A deliberately bounded post-high-tower route. It borrows the caller's
+    // already-active story-progress-10 holder and stops at the spin explanation
+    // handoff; rabbit pursuit and the remainder of the prologue remain owned by
+    // the authored Gateway placement lifetime.
     //
     // The exact InformationObserver, not this controller, owns pausing and
     // resuming the time keeper, displaying the prompt, accepting A, and
     // granting the spin event flag. The caller must pre-attach Mario with its
-    // real PlayerActorEntitlementBridge so that grant reaches MarioActor.
+    // real PlayerActorEntitlementBridge so that grant reaches MarioActor. This
+    // checkpoint never binds or seeds game data and never moves Mario at
+    // construction.
     class GatewaySpinCheckpoint final : public NameObj {
     public:
         GatewaySpinCheckpoint(
             smgpc::runtime::DvdFileSystemService &dvd,
             std::span<const StagePlacementObject> placements,
             std::span<const StageGeneralPos> general_positions,
+            GameDataHolder &game_data,
             smgpc::runtime::PlayerSystemService &player,
             smgpc::runtime::WipeService &wipe, LiveActor &mario);
         ~GatewaySpinCheckpoint() override;

@@ -3,7 +3,6 @@
 #include "Game/Screen/InformationMessage.hpp"
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/System/GameDataFunction.hpp"
-#include "Game/System/GameDataHolder.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
@@ -14,8 +13,8 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/GameDataFunctionCompat.hpp"
 #include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataSession.hpp"
 #include "compat/InformationMessageCompat.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
@@ -35,7 +34,6 @@
 #include <exception>
 #include <filesystem>
 #include <iostream>
-#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -112,12 +110,40 @@ namespace {
             static_cast<SwingEntitlementProbe&>(actor)._permitted = permitted;
         }
 
+        void init(const JMapInfoIter& iter) override {
+            if (!iter.isValid() || !iter.getValue("pos_x", &mPosition.x) ||
+                !iter.getValue("pos_y", &mPosition.y) ||
+                !iter.getValue("pos_z", &mPosition.z)) {
+                throw std::logic_error(
+                    "the entitlement probe requires Gateway's retained StartInfo");
+            }
+            calcAndSetBaseMtx();
+            MR::connectToScene(
+                this, MR::MovementType_Player, MR::CalcAnimType_Player,
+                MR::DrawBufferType_Player, MR::DrawType_Player);
+            _initialized = true;
+        }
+
+        void initAfterPlacement() override {
+            if (!_initialized) {
+                throw std::logic_error(
+                    "the entitlement probe postpass preceded player init");
+            }
+            ++_post_placement_count;
+        }
+
         [[nodiscard]] bool is_permitted() const {
             return _permitted;
         }
 
+        [[nodiscard]] std::size_t post_placement_count() const {
+            return _post_placement_count;
+        }
+
     private:
         bool _permitted = false;
+        bool _initialized = false;
+        std::size_t _post_placement_count = 0U;
     };
 
     class PlayerDetachGuard final {
@@ -128,6 +154,11 @@ namespace {
 
         ~PlayerDetachGuard() {
             _service.detach_actor(&_actor);
+            if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+                runtime != nullptr) {
+                runtime->unregister_live_actor_model(
+                    const_cast<LiveActor&>(_actor));
+            }
         }
 
         PlayerDetachGuard(const PlayerDetachGuard&) = delete;
@@ -167,20 +198,8 @@ namespace {
         auto logical_audio = smgpc::runtime::AudioEventService{};
         const auto audio_binding =
             smgpc::compat::ScopedAudioEventServiceOverride{logical_audio};
-        auto game_data = GameDataHolder{nullptr};
-        auto game_data_binding =
-            std::make_unique<smgpc::compat::ScopedGameDataHolderOverride>(
-                game_data);
+        auto game_data_session = smgpc::compat::GameDataSession{1U};
         auto player = SwingEntitlementProbe{};
-        runtime.player_system().attach_actor(
-            player,
-            {.set_swing_permission =
-                 &SwingEntitlementProbe::set_swing_permission});
-        const auto player_detach_guard =
-            PlayerDetachGuard{runtime.player_system(), player};
-        require(runtime.player_system().attached_actor() == &player &&
-                    !player.is_permitted(),
-                "the prompt proof must attach an initially-locked entitlement writer");
 
         const auto baseline_name_objects =
             smgpc::compat::name_obj_runtime_state_count();
@@ -198,6 +217,18 @@ namespace {
             runtime.camera_system().set_game_camera_pose(
                 camera.camera->calculation.pose);
             runtime.set_scene_camera_pose(camera.camera->calculation.pose);
+            runtime.player_system().attach_actor(
+                player,
+                {.set_swing_permission =
+                     &SwingEntitlementProbe::set_swing_permission});
+            player.init(scene.player_start_iter());
+            const auto player_detach_guard =
+                PlayerDetachGuard{runtime.player_system(), player};
+            auto placement_lease = scene.finalize_placements(player);
+            require(runtime.player_system().attached_actor() == &player &&
+                        !player.is_permitted() &&
+                        player.post_placement_count() == 1U,
+                    "the prompt proof must finalize one initially-locked external player");
             auto information_message =
                 smgpc::compat::InformationMessageBinding{};
             auto* observer = dynamic_cast<InformationObserver*>(
@@ -224,6 +255,17 @@ namespace {
                         &trigger,
                         JMapInfoIter(&tico->jmap_info, tico->jmap_entry_index)),
                     "the prompt trigger must be a real active-executor cast");
+            require(smgpc::compat::game_data::holder_story_progress(
+                        game_data_session.holder()) == 5U &&
+                        GameDataFunction::getCurrentGameDataHolder() ==
+                            &game_data_session.holder() &&
+                        GameDataFunction::getSceneStartGameDataHolder() ==
+                            &game_data_session.holder(),
+                    "the explicit prompt proof must retain its selected-file progress-5 holder");
+            GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+            require(smgpc::compat::game_data::holder_story_progress(
+                        game_data_session.holder()) == 10U,
+                    "the explicit part-22 proof must advance the same selected-file holder from progress 5 to 10");
             MR::startTimeKeepDemo(&trigger, "チコガイドデモ", cPromptPart);
 
             const auto guide_index = demo.find_definition("チコガイドデモ");
@@ -327,6 +369,8 @@ namespace {
             require(observer->mFlag.mIsDead && !guide->sheet.is_paused() &&
                         guide->sheet.current_part_step() == 1 &&
                         GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                        smgpc::compat::game_data::holder_story_progress(
+                            game_data_session.holder()) == 15U &&
                         runtime.player_system().is_swing_permitted() &&
                         player.is_permitted(),
                     "the first post-guard fresh A edge must dismiss, resume, and grant spin entitlement");
@@ -358,11 +402,8 @@ namespace {
                     baseline_scheduler_entries,
                 "scene teardown must leave no scheduler entry pointing at released prompt objects");
 #endif
-        runtime.player_system().detach_actor(&player);
         require(!player.is_permitted(),
                 "detaching the prompt proof player must revoke its entitlement bit");
-        game_data_binding.reset();
-        smgpc::compat::game_data::destroy_holder_state(game_data);
     }
 
 }  // namespace

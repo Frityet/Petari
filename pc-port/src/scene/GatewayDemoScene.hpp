@@ -8,6 +8,7 @@
 #include <span>
 
 class GravityInfo;
+class LiveActor;
 class NameObj;
 class PlanetGravity;
 class PlanetMap;
@@ -26,6 +27,13 @@ namespace smgpc::compat {
 namespace smgpc::scene {
 
     struct AuthoredPlacementInstantiationReport;
+
+    enum class GatewayDemoSceneState : std::uint8_t {
+        Preloaded,
+        Finalizing,
+        Active,
+        Retired,
+    };
 
     // Evidence returned by the development scene's exact spawn-point query.
     // The surface span remains valid for the lifetime of GatewayDemoScene.
@@ -46,13 +54,37 @@ namespace smgpc::scene {
     // route reports the complete authored set and constructs every ready row
     // through the shared placement lifecycle, while exposing the mysterious
     // planet and its child-zone gravity as exact player-start evidence.
-    // This tranche has no Mario owner: it keeps the shared preload/construction
-    // boundary explicit but executes the two phases adjacently. The player
-    // tranche must insert externally owned Mario at that boundary and retire
-    // placement actors before it.
+    // Construction stops after the exact placement archive preload. The caller
+    // owns and initializes Mario at that boundary, then receives a move-only
+    // lease which keeps all placement actors active. Declaring the lease after
+    // the external player makes reverse local destruction retire placements
+    // and collision first.
     // Production placement policy remains Strict in StageHostScene.
     class GatewayDemoScene final {
+        class Impl;
+
     public:
+        class PlacementLease final {
+        public:
+            PlacementLease() = default;
+            ~PlacementLease();
+
+            PlacementLease(const PlacementLease &) = delete;
+            PlacementLease &operator=(const PlacementLease &) = delete;
+            PlacementLease(PlacementLease &&other) noexcept;
+            PlacementLease &operator=(PlacementLease &&other) noexcept;
+
+            [[nodiscard]] explicit operator bool() const noexcept;
+            void reset() noexcept;
+
+        private:
+            friend class GatewayDemoScene;
+            explicit PlacementLease(std::weak_ptr<Impl> impl) noexcept;
+
+            std::weak_ptr<Impl> _impl{};
+            bool _armed = false;
+        };
+
         explicit GatewayDemoScene(smgpc::runtime::DvdFileSystemService &dvd);
         ~GatewayDemoScene();
 
@@ -61,9 +93,16 @@ namespace smgpc::scene {
         GatewayDemoScene(GatewayDemoScene &&) = delete;
         GatewayDemoScene &operator=(GatewayDemoScene &&) = delete;
 
+        // The supplied player must already be attached to the active runtime
+        // and must have completed its ordinary init(JMapInfoIter) scene
+        // registration. This call owns its initAfterPlacement boundary but
+        // never owns or destroys the player itself.
+        [[nodiscard]] PlacementLease finalize_placements(LiveActor &player);
+        [[nodiscard]] GatewayDemoSceneState state() const noexcept;
+
         [[nodiscard]] const StageStartInfo &start_info() const;
-        // A forthcoming real MarioActor can consume the retained retail row
-        // directly through its normal init boundary.
+        // The external player consumes the retained retail row directly
+        // through its normal init boundary before finalization.
         [[nodiscard]] JMapInfoIter player_start_iter() const &;
         [[nodiscard]] JMapInfoIter player_start_iter() const && = delete;
 
@@ -95,8 +134,7 @@ namespace smgpc::scene {
         [[nodiscard]] GatewayDemoStartContact prove_start_contact(const NameObj &requester) const;
 
     private:
-        class Impl;
-        std::unique_ptr<Impl> _impl;
+        std::shared_ptr<Impl> _impl;
     };
 
 }  // namespace smgpc::scene

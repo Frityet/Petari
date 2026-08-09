@@ -8,9 +8,7 @@
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/GameDataFunctionCompat.hpp"
 #include "compat/GameDataHolderCompat.hpp"
 #include "compat/InformationMessageCompat.hpp"
 #include "compat/PlayerUtilCompat.hpp"
@@ -32,7 +30,6 @@ namespace smgpc::scene {
         constexpr auto cGuideSheetName = std::string_view{"TicoGuideDemo"};
         constexpr auto cSpinPartFirst = std::string_view{"スピンゲット[デモ1]"};
         constexpr auto cSpinPromptPart = std::string_view{"スピンゲット[デモ5]"};
-        constexpr auto cMarioDemoPos2 = std::string_view{"MarioDemoPos2"};
         constexpr auto cMarioDemoPos4 = std::string_view{"MarioDemoPos4"};
         constexpr auto cMysteriousZone = std::string_view{"HeavensDoorMysteriousZone"};
         constexpr auto cLayerAObjInfo = std::string_view{"jmp/placement/layera/objinfo"};
@@ -124,16 +121,6 @@ namespace smgpc::scene {
                           placement.translation[2U]};
         }
 
-        void place_actor(LiveActor &actor, const StageGeneralPos &position) {
-            actor.mPosition.set(position.world_position[0U], position.world_position[1U],
-                                position.world_position[2U]);
-            actor.mRotation.set(position.world_rotation[0U], position.world_rotation[1U],
-                                position.world_rotation[2U]);
-            actor.mVelocity.zero();
-            smgpc::compat::clear_actor_binder_contacts(&actor);
-            actor.mFlag.mIsNoBind = false;
-        }
-
         class GatewaySpinRouteTico final : public LiveActor {
         public:
             explicit GatewaySpinRouteTico(const StagePlacementObject &source)
@@ -163,9 +150,10 @@ namespace smgpc::scene {
         Impl(smgpc::runtime::DvdFileSystemService &,
              std::span<const StagePlacementObject> placements,
              std::span<const StageGeneralPos> general_positions,
+             GameDataHolder &game_data,
              smgpc::runtime::PlayerSystemService &player,
              smgpc::runtime::WipeService &wipe, LiveActor &mario)
-            : _player(player), _wipe(wipe), _mario(mario),
+            : _player(player), _wipe(wipe), _mario(mario), _game_data(game_data),
               _rosetta_source(require_unique_placement(
                   placements, "Rosetta", cLayerAObjInfo, 12)),
               _tico_source(require_unique_placement(
@@ -174,19 +162,12 @@ namespace smgpc::scene {
                   placements, "HeavensDoorAppearStepA", cLayerAObjInfo, 14)),
               _step_after_source(require_unique_placement(
                   placements, "HeavensDoorAppearStepAAfter", cCommonObjInfo, 48)),
-              _mario_pos2(require_unique_position(
-                  general_positions, cMarioDemoPos2, "common", 1,
-                  {-1490.0F, 1303.19043F, 720.0F})),
               _mario_pos4(require_unique_position(
                   general_positions, cMarioDemoPos4, "layera", 0,
                   {-140.0F, 2500.0F, -700.0F})),
               _player_binding(
                   std::make_unique<smgpc::compat::ScopedPlayerSystemServiceOverride>(
                       _player)),
-              _game_data(nullptr),
-              _game_data_binding(
-                  std::make_unique<smgpc::compat::ScopedGameDataHolderOverride>(
-                      _game_data)),
               _information_message_binding(
                   std::make_unique<smgpc::compat::InformationMessageBinding>()),
               // GameScene owns one DemoDirector for the complete scene. The
@@ -203,15 +184,15 @@ namespace smgpc::scene {
                     "exact InformationObserver SceneObj could not be created eagerly");
             validate_route_data();
 
-            smgpc::compat::game_data::set_holder_story_progress(_game_data, 10U);
-            require(GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
+            require(GameDataFunction::getCurrentGameDataHolder() == &_game_data &&
+                        GameDataFunction::getSceneStartGameDataHolder() == &_game_data &&
+                        smgpc::compat::game_data::holder_story_progress(_game_data) == 10U &&
+                        GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
                         !GameDataFunction::isPassedStoryEvent("スピン権利"),
-                    "checkpoint must begin at retail story progress 10");
+                    "checkpoint must borrow the active selected-file holder at retail story progress 10");
 
             require(_player.attached_actor() == &_mario,
                     "checkpoint requires Mario to be pre-attached with its real entitlement bridge");
-            place_actor(_mario, _mario_pos2);
-            _player.synchronize_attached_actor();
 
             const auto tico_iter = JMapInfoIter(
                 &_tico_source.jmap_info, _tico_source.jmap_entry_index);
@@ -227,9 +208,7 @@ namespace smgpc::scene {
 
         ~Impl() {
             _information_message_binding.reset();
-            _game_data_binding.reset();
             _player_binding.reset();
-            smgpc::compat::game_data::destroy_holder_state(_game_data);
         }
 
         void validate_route_data() const {
@@ -402,17 +381,14 @@ namespace smgpc::scene {
         smgpc::runtime::PlayerSystemService &_player;
         smgpc::runtime::WipeService &_wipe;
         LiveActor &_mario;
+        GameDataHolder &_game_data;
         const StagePlacementObject &_rosetta_source;
         const StagePlacementObject &_tico_source;
         const StagePlacementObject &_step_during_source;
         const StagePlacementObject &_step_after_source;
-        const StageGeneralPos &_mario_pos2;
         const StageGeneralPos &_mario_pos4;
         std::unique_ptr<smgpc::compat::ScopedPlayerSystemServiceOverride>
             _player_binding;
-        GameDataHolder _game_data;
-        std::unique_ptr<smgpc::compat::ScopedGameDataHolderOverride>
-            _game_data_binding;
         std::unique_ptr<smgpc::compat::InformationMessageBinding>
             _information_message_binding;
         smgpc::compat::DemoSceneRuntime *_demo;
@@ -427,11 +403,12 @@ namespace smgpc::scene {
         smgpc::runtime::DvdFileSystemService &dvd,
         std::span<const StagePlacementObject> placements,
         std::span<const StageGeneralPos> general_positions,
+        GameDataHolder &game_data,
         smgpc::runtime::PlayerSystemService &player,
         smgpc::runtime::WipeService &wipe, LiveActor &mario)
         : NameObj("GatewaySpinCheckpoint"),
           _impl(std::make_unique<Impl>(
-              dvd, placements, general_positions, player, wipe, mario)) {
+              dvd, placements, general_positions, game_data, player, wipe, mario)) {
         MR::connectToScene(this, MR::MovementType_NPC, -1, -1, -1);
     }
 

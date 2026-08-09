@@ -5,12 +5,14 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Logger.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/GameDataSession.hpp"
 #include "render/RendererService.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionService.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
+#include "GatewayDemoSceneTestSupport.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -160,7 +162,7 @@ namespace {
         runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
 
-        auto player = LiveActor{"Air lifecycle player"};
+        auto game_data_session = smgpc::compat::GameDataSession{1U};
         {
             auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
             const auto found = std::ranges::find_if(
@@ -196,6 +198,11 @@ namespace {
                         requests.front().loaded,
                     "the exact SphereAir archive was not accepted by the retail lifecycle");
 
+            auto player = smgpc::test::GatewayPlayerSentinel{runtime, scene};
+            player.mPosition.set(1000000.0F, 1000000.0F, 1000000.0F);
+            runtime.player_system().synchronize_attached_actor();
+            auto placement_lease = scene.finalize_placements(player);
+
             const auto ordinary_planet_count = std::ranges::count_if(
                 scene.visuals(), [](const auto &entry) {
                     return dynamic_cast<PlanetMap *>(entry.actor) != nullptr;
@@ -220,13 +227,13 @@ namespace {
             const auto air_runtime_name = std::string(air->getName());
             air_model->requireLoaded();
 
-            // The scene owns MarioHolder before the real Mario actor is attached.
-            // Exact Air must remain alive but hidden rather than dereferencing a
-            // null player position or inventing a Gateway-specific deferred ctor.
-            require(runtime.player_system().attached_actor() == nullptr &&
+            // The required external player exists at the retail construction
+            // boundary but starts far outside SphereAir. Exact Air must remain
+            // alive in its hidden Out state without a deferred constructor.
+            require(runtime.player_system().attached_actor() == &player &&
                         !air->isDrawing() && !MR::isExistPriorDrawAir() &&
                         smgpc::compat::actor_current_brk_name(air) == "Disappear",
-                    "unattached-player Air initialization was not the exact hidden Out state");
+                    "distant-player Air initialization was not the exact hidden Out state");
 
             auto planet = LiveActor{"Planet pass sentinel"};
             // This actor is intentionally a scheduler-only sentinel. SphereAir
@@ -247,9 +254,6 @@ namespace {
             };
             runtime.set_scene_camera_pose(camera);
             auto execution = smgpc::scene::SceneExecutionService{runtime};
-            player.mPosition.set(1000000.0F, 1000000.0F, 1000000.0F);
-            player.calcAndSetBaseMtx();
-            runtime.player_system().attach_actor(player);
             execution.execute_movement();
             execution.execute_calc_anim_and_view();
             execution.draw_3d_normal(camera);
@@ -325,7 +329,6 @@ namespace {
             throw std::runtime_error("the exact prior-air scheduler proof requires a debug build");
 #endif
 
-            runtime.player_system().detach_actor(&player);
             // Drain deferred GX work while every scene-owned model referenced
             // by the FIFO remains alive.
             renderer.end_frame();

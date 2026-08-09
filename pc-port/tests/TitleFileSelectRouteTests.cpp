@@ -2,6 +2,7 @@
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/GameDataSession.hpp"
 #include "render/light/LightData.hpp"
 #include "resource/Yaz0.hpp"
 #include "runtime/JAudioPlaybackService.hpp"
@@ -10,6 +11,7 @@
 #include "scene/FileSelectFarVisual.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/TitleFileSelectRoute.hpp"
+#include "GatewayDemoSceneTestSupport.hpp"
 
 #include <aurora/dvd.h>
 #include <aurora/audio.hpp>
@@ -490,6 +492,7 @@ namespace {
                         },
                 "fresh A did not publish the selected blank-slot launch request");
 
+        auto game_data_session = smgpc::compat::GameDataSession{2U};
         route.reset();
         require(!runtime.game_layout().is_game_scene_draw_3d_active() &&
                     smgpc::compat::name_obj_runtime_state_count() ==
@@ -528,6 +531,9 @@ namespace {
         {
             auto gateway =
                 std::make_unique<smgpc::scene::GatewayDemoScene>(runtime.dvd());
+            auto player =
+                smgpc::test::GatewayPlayerSentinel{runtime, *gateway};
+            auto placement_lease = gateway->finalize_placements(player);
             require(gateway->sky() != nullptr && gateway->planet() != nullptr,
                     "a fresh Gateway scene could not start after File Select teardown");
         }

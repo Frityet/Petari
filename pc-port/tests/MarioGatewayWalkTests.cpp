@@ -16,6 +16,7 @@
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
+#include "compat/GameDataSession.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GatewayDemoScene.hpp"
@@ -301,6 +302,7 @@ namespace {
 
         const auto scene_renderer_context =
             smgpc::render::ScopedAuroraRendererContext(renderer);
+        auto game_data_session = smgpc::compat::GameDataSession{1U};
         auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
         const auto& start = scene.start_info();
         require(start.object_name == "Mario" && start.start_id == 0 && start.zone_id == 0 &&
@@ -311,6 +313,56 @@ namespace {
                     scene.planet_placement().jmap_entry_index == 24 &&
                     scene.planet_placement().object_name == "HeavensDoorMysteriousPlanet",
                 "the Mario walk proof must use exact child-zone mysterious-planet placement");
+        const auto camera_result =
+            smgpc::camera::resolve_stage_start_camera(runtime.dvd(), start);
+        require(camera_result.status ==
+                        smgpc::camera::StageStartCameraResolveStatus::Resolved &&
+                    camera_result.camera.has_value() &&
+                    camera_result.camera->camera_key == "s:004e" &&
+                    camera_result.camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
+                "the proof must resolve exact Gateway StartInfo camera 78");
+        const auto camera = camera_result.camera->calculation.pose;
+        runtime.camera_system().set_game_camera_pose(camera);
+        runtime.set_freecam_enabled(false);
+
+        require(NameObjFactory::getCreator("Mario") == nullptr &&
+                    NameObjFactory::getCreator("MarioActor") == nullptr &&
+                    !smgpc::scene::nameobj::can_create_name_obj("Mario") &&
+                    !smgpc::scene::nameobj::can_create_name_obj("MarioActor"),
+                "the production Mario factory must remain absent in the development slice");
+
+        auto created = std::unique_ptr<NameObj>{createNameObj<MarioActor>("MarioActor")};
+        auto* actor = dynamic_cast<MarioActor*>(created.get());
+        require(actor != nullptr,
+                "the typed development creator must construct the real MarioActor");
+        const auto entitlement_bridge =
+            smgpc::runtime::PlayerActorEntitlementBridge{
+                .set_swing_permission = &set_mario_swing_permission,
+            };
+        runtime.player_system().attach_actor(*actor, entitlement_bridge);
+        require(runtime.player_system().attached_actor() == actor &&
+                    !runtime.player_system().is_swing_permitted() && !actor->_EEB,
+                "the real Gateway player owner must attach Mario with spin entitlement initially locked");
+
+        auto placement_lease =
+            smgpc::scene::GatewayDemoScene::PlacementLease{};
+        auto wait_frame_max = std::int16_t{};
+        {
+            auto frame = renderer.begin_frame();
+            frame.frame_index = 100U;
+            {
+                const auto renderer_context =
+                    smgpc::render::ScopedAuroraRendererContext(renderer);
+                runtime.begin_frame(frame);
+                actor->init(scene.player_start_iter());
+                placement_lease = scene.finalize_placements(*actor);
+                wait_frame_max =
+                    smgpc::compat::require_actor_bck(actor, "Wait", nullptr);
+                runtime.game_layout().activate_game_scene_draw_3d();
+            }
+            renderer.end_frame();
+        }
+
         auto *planet = scene.planet();
         auto *planet_model = smgpc::compat::actor_model(planet);
         require(planet != nullptr && planet_model != nullptr &&
@@ -355,54 +407,7 @@ namespace {
                     walk_collision.stats().mesh_count == 6U &&
                     walk_collision.stats().triangle_count >= 7789U,
                 "Mario and the executable must share GatewayDemoScene's exact active KCL service");
-
-        const auto camera_result =
-            smgpc::camera::resolve_stage_start_camera(runtime.dvd(), start);
-        require(camera_result.status ==
-                        smgpc::camera::StageStartCameraResolveStatus::Resolved &&
-                    camera_result.camera.has_value() &&
-                    camera_result.camera->camera_key == "s:004e" &&
-                    camera_result.camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
-                "the proof must resolve exact Gateway StartInfo camera 78");
-        const auto camera = camera_result.camera->calculation.pose;
-        runtime.camera_system().set_game_camera_pose(camera);
-        runtime.set_freecam_enabled(false);
-
-        require(NameObjFactory::getCreator("Mario") == nullptr &&
-                    NameObjFactory::getCreator("MarioActor") == nullptr &&
-                    !smgpc::scene::nameobj::can_create_name_obj("Mario") &&
-                    !smgpc::scene::nameobj::can_create_name_obj("MarioActor"),
-                "the production Mario factory must remain absent in the development slice");
-
-        auto created = std::unique_ptr<NameObj>{createNameObj<MarioActor>("MarioActor")};
-        auto* actor = dynamic_cast<MarioActor*>(created.get());
-        require(actor != nullptr,
-                "the typed development creator must construct the real MarioActor");
-        const auto entitlement_bridge =
-            smgpc::runtime::PlayerActorEntitlementBridge{
-                .set_swing_permission = &set_mario_swing_permission,
-            };
-        runtime.player_system().attach_actor(*actor, entitlement_bridge);
-        require(runtime.player_system().attached_actor() == actor &&
-                    !runtime.player_system().is_swing_permitted() && !actor->_EEB,
-                "the real Gateway player owner must attach Mario with spin entitlement initially locked");
-
-        auto wait_frame_max = std::int16_t{};
-        {
-            auto frame = renderer.begin_frame();
-            frame.frame_index = 100U;
-            {
-                const auto renderer_context =
-                    smgpc::render::ScopedAuroraRendererContext(renderer);
-                runtime.begin_frame(frame);
-                actor->init(scene.player_start_iter());
-                actor->initAfterPlacement();
-                wait_frame_max =
-                    smgpc::compat::require_actor_bck(actor, "Wait", nullptr);
-                runtime.game_layout().activate_game_scene_draw_3d();
-            }
-            renderer.end_frame();
-        }
+        const auto walk_triangle_count = walk_collision.stats().triangle_count;
 
         require(MR::getMarioHolder()->getMarioActor() == actor,
                 "MarioActor init must register the real actor with MarioHolder");
@@ -913,15 +918,21 @@ namespace {
             {
                 const auto renderer_context =
                     smgpc::render::ScopedAuroraRendererContext(renderer);
-                runtime.begin_frame(frame);
                 created.reset(createNameObj<MarioActor>("MarioActor"));
                 actor = dynamic_cast<MarioActor*>(created.get());
                 require(actor != nullptr,
-                        "Mario must be constructible again after ordered teardown");
+                        "Mario must be constructible again while the Gateway placement lease remains active");
                 runtime.player_system().attach_actor(*actor, entitlement_bridge);
                 require(actor->_EEB,
                         "same-stage Mario replacement must inherit the retained spin entitlement");
+                // Authored SwitchArea movement has the retail non-null player
+                // contract, so publish the replacement before advancing the
+                // next scene frame, then initialize it at that frame boundary.
+                runtime.begin_frame(frame);
                 actor->init(scene.player_start_iter());
+                // Gateway finalization owns the one retail player postpass at
+                // scene start. A later same-scene replacement crosses its own
+                // ordinary actor postpass while the placement lease is active.
                 actor->initAfterPlacement();
             }
             renderer.end_frame();
@@ -935,6 +946,21 @@ namespace {
         const auto recreated_frame = run_frame(release_end_frame + 2U);
         require(recreated_frame.draw.packet_count != 0U,
                 "recreated Mario must update and draw through RuntimeContext");
+
+        placement_lease.reset();
+        require(scene.state() == smgpc::scene::GatewayDemoSceneState::Retired &&
+                    walk_collision.empty() &&
+                    smgpc::scene::StageCollisionService::active() == nullptr,
+                "Gateway placement collision must retire before the live replacement Mario");
+        auto retired_scene_rejected_retry = false;
+        try {
+            auto invalid_retry = scene.finalize_placements(*actor);
+            (void)invalid_retry;
+        } catch (const std::logic_error&) {
+            retired_scene_rejected_retry = true;
+        }
+        require(retired_scene_rejected_retry,
+                "a retired Gateway scene must reject placement finalization retry");
 
         runtime.player_system().detach_actor(actor);
         require(runtime.player_system().attached_actor() == nullptr &&
@@ -952,6 +978,7 @@ namespace {
                 }),
                 "recreated Mario must also tear down without a stale scheduler entry");
 #endif
+
         require(NameObjFactory::getCreator("MarioActor") == nullptr &&
                     !smgpc::scene::nameobj::can_create_name_obj("MarioActor"),
                 "the passing development route must not enable the global Mario factory");
@@ -959,14 +986,14 @@ namespace {
         std::cout << "[proof] disc=" << disc_path.string()
                   << ";start=(" << start.world_position[0] << ','
                   << start.world_position[1] << ',' << start.world_position[2] << ')'
-                  << ";kcl_triangles=" << walk_collision.stats().triangle_count
+                  << ";kcl_triangles=" << walk_triangle_count
                   << ";stand_prism=" << stand_surface->prism_index
                   << ";floor=NoSlip;sound=Lawn"
                   << ";walk_distance=" << walk_distance
                   << ";bck=Wait->Run->Wait"
                   << ";release_frame=" << release_end_frame
                   << ";run_packets=" << run_draw.packet_count
-                  << ";recreated=1\n";
+                  << ";recreated=1;lease_retired_before_mario=1;retry=rejected\n";
     }
 }  // namespace
 

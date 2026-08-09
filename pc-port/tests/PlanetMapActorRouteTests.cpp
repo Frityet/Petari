@@ -5,10 +5,12 @@
 #include "Logger.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
+#include "compat/GameDataSession.hpp"
 #include "render/RendererService.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
+#include "GatewayDemoSceneTestSupport.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -132,13 +134,16 @@ namespace {
 #ifndef NDEBUG
             runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
-            auto gateway_scheduler_player =
-                LiveActor{"Planet route scheduler player"};
-            gateway_scheduler_player.mPosition.set(1000000.0F, 1000000.0F,
-                                                   1000000.0F);
-            gateway_scheduler_player.calcAndSetBaseMtx();
+            auto game_data_session = smgpc::compat::GameDataSession{1U};
             {
                 auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
+                auto gateway_player =
+                    smgpc::test::GatewayPlayerSentinel{runtime, scene};
+                gateway_player.mPosition.set(1000000.0F, 1000000.0F,
+                                             1000000.0F);
+                runtime.player_system().synchronize_attached_actor();
+                auto placement_lease =
+                    scene.finalize_placements(gateway_player);
                 auto *planet = scene.planet();
                 auto *model = smgpc::compat::actor_model(planet);
                 const auto ordinary_planet_count = std::ranges::count_if(
@@ -244,7 +249,6 @@ namespace {
                         "PlanetMap did not use the retail planet scheduler categories");
 #endif
 
-                runtime.player_system().attach_actor(gateway_scheduler_player);
                 runtime.scheduler().execute_movement();
                 runtime.scheduler().execute_calc_anim();
                 runtime.scheduler().execute_calc_view_and_entry();
@@ -284,7 +288,6 @@ namespace {
                 // draining the frame FIFO, so scene-owned models must outlive
                 // end_frame just as they do in the production scene loop.
                 renderer.end_frame();
-                runtime.player_system().detach_actor(&gateway_scheduler_player);
             }
 
             require(smgpc::scene::nameobj::PlanetMapCatalog::active() == nullptr,

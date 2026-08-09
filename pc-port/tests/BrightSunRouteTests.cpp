@@ -9,8 +9,10 @@
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/GameDataSession.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
+#include "GatewayDemoSceneTestSupport.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -281,8 +283,11 @@ namespace {
         runtime.begin_frame(initial_frame);
         runtime.set_scene_camera_pose(seed_camera);
 
+        auto game_data_session = smgpc::compat::GameDataSession{1U};
         {
             auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
+            auto player = smgpc::test::GatewayPlayerSentinel{runtime, scene};
+            auto placement_lease = scene.finalize_placements(player);
 
             const auto bright_placement = std::ranges::find_if(
                 scene.placements(), [](const auto& placement) {
@@ -414,10 +419,9 @@ namespace {
                         area_manager->find_in(outside) == nullptr,
                     "the real LensFlareArea volume did not accept its center and reject an exterior point");
 
-            auto player = LiveActor{"BrightSun route area-query player"};
             player.mPosition.set(inside);
             player.calcAndSetBaseMtx();
-            runtime.player_system().attach_actor(player);
+            runtime.player_system().synchronize_attached_actor();
 
             // Let the authored rotation produce the actual camera-relative Sun
             // position once, then point exactly opposite it for the initial
@@ -513,7 +517,6 @@ namespace {
                         director->mLine->mFlag.mIsHiddenModel,
                     "looking away and leaving LensFlareArea did not complete the exact fade/hide path");
 
-            runtime.player_system().detach_actor(&player);
             std::cout << "[proof] disc=" << disc_path.string()
                       << ";visible_frame=" << visible_packets.frame_index
                       << ";sun_packets=" << visible_packets.sun_packets
