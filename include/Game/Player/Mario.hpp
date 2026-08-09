@@ -291,7 +291,7 @@ public:
     bool doSideStep();
 
     bool isSkatableFloor() const;
-    void doSkate();
+    bool doSkate();
 
     u32 initSoundTable(SoundList* list, u32);
     void initSound();
@@ -304,13 +304,13 @@ public:
     void playSoundTrampleCombo(u8);
     void setSeVersion(u32);
 
-    bool checkOnimasu(const HitSensor*);
+    void checkOnimasu(const HitSensor*);
     bool isDossun(const Triangle*) const;
     bool isStageCameraRotate2D() const;
     bool isNoWalkFallOnDossun() const;
     bool isNotReflectGlassGround() const;
     bool isUseAnotherMovingPolygon() const;
-    bool isUseFoolSpecialGravity(const TVec3f&, TVec3f*) const;
+    bool isUseFooSpecialGravity(const TVec3f&, TVec3f*) const;
     void updateOnimasu();
     bool isHeadPushEnableArea() const;
     bool isOnimasuBinderPressSkip() const;
@@ -396,7 +396,7 @@ public:
     void updateOnPoison();
     void updateOnWater();
 
-    void doRecovery();
+    bool doRecovery();
 
     bool isSliderFloor() const NO_INLINE;
     bool checkSliderMode() const;
@@ -802,7 +802,7 @@ public:
     /* 0x574 */ void* _574;
     /* 0x578 */ u32 _578;
     /* 0x57C */ Triangle* _57C[0x20];
-    /* 0x5FC */ u32 _5FC;
+    /* 0x5FC */ HitSensor* _5FC;
     /* 0x600 */ TVec3f _600;
     /* 0x60C */ u8 _60C;
     /* 0x60D */ u8 _60D;  // bool?

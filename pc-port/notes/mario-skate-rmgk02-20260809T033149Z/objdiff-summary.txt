@@ -1,0 +1,29 @@
+MarioSkate focused objdiff (RMGK02)
+===================================
+
+Target .text size: 3184 bytes
+Source .text size: 3184 bytes
+Raw focused .text match: 99.19598%
+.ctors match: 100%
+.sdata2 match: 100%
+
+Normalized project report:
+  fuzzy match: 99.72990%
+  exact code: 544 / 3184 bytes (17.085426%)
+  exact functions: 7 / 10 (70%)
+  data: 324 / 324 bytes (100%)
+
+Functions:
+  Mario::isSkatableFloor() const              36 bytes   100.000000%
+  Mario::doSkate()                            40 bytes   100.000000%
+  MarioSkate::MarioSkate(MarioActor*)        108 bytes   100.000000%
+  MarioSkate::postureCtrl(float(*)[4])       168 bytes   100.000000%
+  MarioSkate::exitJump()                      76 bytes   100.000000%
+  MarioSkate::start()                        376 bytes    99.851070%
+  MarioSkate::update()                      1860 bytes    99.666664%
+  MarioSkate::close()                        404 bytes    99.544556%
+  __sinit_\MarioSkate_cpp                    108 bytes   100.000000%
+  MarioSkate::notice()                         8 bytes   100.000000%
+
+The focused raw differences remaining in update are argument-level relocation
+and floating-point register choices; its opcode/control-flow sequence aligns.

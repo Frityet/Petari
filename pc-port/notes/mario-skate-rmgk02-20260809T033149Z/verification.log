@@ -1,0 +1,72 @@
+MarioSkate RMGK02 verification
+UTC timestamp: 2026-08-09T03:31:49Z
+
+Focused compilation
+-------------------
+command:
+  ninja -j4 build/RMGK02/src/Game/Player/MarioSkate.o
+result:
+  success
+notes:
+  Only the repository's pre-existing MarioActor nontrivial-union warnings were emitted.
+
+Focused objdiff
+---------------
+command:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioSkate \
+    -o /tmp/mario-skate-5.json --format json-pretty
+result:
+  .text: 3184 retail bytes / 3184 source bytes, 99.19598% raw focused match
+  all ten retail functions present at exact retail sizes
+  .ctors / .sdata2: 100% / 100%
+
+Fresh project report
+--------------------
+command:
+  build/tools/objdiff-cli report generate -p . \
+    -o /tmp/report-mario-skate-final.json --format json
+result:
+  success; 2219-unit report regenerated
+  MarioSkate fuzzy .text: 99.72990%
+  exact functions: 7 / 10
+  data: 324 / 324 bytes (100%)
+
+Full RMGK02 integrity
+---------------------
+command:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+result:
+  build/RMGK02/main.dol: OK
+
+command:
+  sha1sum build/RMGK02/main.dol
+result:
+  54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+command:
+  cmp -s build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  identical (exit 0)
+
+Owned-path whitespace validation
+--------------------------------
+command:
+  git diff --check -- include/Game/Player/Mario.hpp \
+    include/Game/Player/MarioSkate.hpp src/Game/Player/MarioSkate.cpp
+result:
+  success (no output)
+
+Owned production paths
+----------------------
+  include/Game/Player/Mario.hpp
+    - only `Mario::doSkate()` return type
+  include/Game/Player/MarioSkate.hpp
+  src/Game/Player/MarioSkate.cpp
+
+No PC/config/protected paths were changed by this task.

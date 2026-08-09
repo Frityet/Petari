@@ -1,0 +1,39 @@
+MarioSpecial RMGK02 verification
+Date: 2026-08-09 UTC
+
+Focused object build:
+  ninja -j12 build/RMGK02/src/Game/Player/MarioSpecial.o
+  PASS
+
+Focused objdiff:
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioSpecial \
+    -o /tmp/mariospecial-final4.json --format json-pretty
+  PASS
+  .text: 99.72414% (3712 retail bytes)
+  .ctors: 100% (4 retail bytes)
+  .sdata2: 100% (88 retail bytes)
+  isDossun: 100% (96 retail/source bytes)
+  updateOnimasu: 99.947914% (2304 retail bytes; 2304 source bytes)
+  static initializer: 100% (108 retail/source bytes)
+
+Final focused object SHA-256:
+  e8f9af39b6220f7d8bfc702960a12bb4f249cf49848da7b92b09e74805a9dc65
+
+Full retail build:
+  ninja -j12 build/RMGK02/main.dol
+  PASS (incremental MWCC, link, and DOL generation completed)
+
+Retail checksum:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+  PASS: build/RMGK02/main.dol: OK
+
+Explicit SHA-256:
+  build/RMGK02/main.dol:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf
+  orig/RMGK02/sys/main.dol:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf
+
+Owned-path diff check:
+  git diff --check -- include/Game/Player/Mario.hpp \
+    src/Game/Player/MarioSpecial.cpp
+  PASS

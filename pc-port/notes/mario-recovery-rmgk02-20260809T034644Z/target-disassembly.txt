@@ -1,0 +1,1203 @@
+
+build/RMGK02/obj/Game/Player/MarioRecovery.o:     file format elf32-powerpc
+
+
+Disassembly of section .text:
+
+00000000 <doRecovery__5MarioFv>:
+   0:	94 21 ff c0 	stwu    r1,-64(r1)
+   4:	7c 08 02 a6 	mflr    r0
+   8:	38 80 00 18 	li      r4,24
+   c:	90 01 00 44 	stw     r0,68(r1)
+  10:	93 e1 00 3c 	stw     r31,60(r1)
+  14:	7c 7f 1b 78 	mr      r31,r3
+  18:	48 00 00 01 	bl      18 <doRecovery__5MarioFv+0x18>
+			18: R_PPC_REL24	isStatusActive__5MarioCFUl
+  1c:	2c 03 00 00 	cmpwi   r3,0
+  20:	41 82 00 0c 	beq     2c <doRecovery__5MarioFv+0x2c>
+  24:	38 60 00 00 	li      r3,0
+  28:	48 00 01 04 	b       12c <doRecovery__5MarioFv+0x12c>
+  2c:	7f e3 fb 78 	mr      r3,r31
+  30:	38 80 00 13 	li      r4,19
+  34:	48 00 00 01 	bl      34 <doRecovery__5MarioFv+0x34>
+			34: R_PPC_REL24	isStatusActive__5MarioCFUl
+  38:	2c 03 00 00 	cmpwi   r3,0
+  3c:	41 82 00 0c 	beq     48 <doRecovery__5MarioFv+0x48>
+  40:	38 60 00 00 	li      r3,0
+  44:	48 00 00 e8 	b       12c <doRecovery__5MarioFv+0x12c>
+  48:	7f e3 fb 78 	mr      r3,r31
+  4c:	38 80 00 13 	li      r4,19
+  50:	48 00 00 01 	bl      50 <doRecovery__5MarioFv+0x50>
+			50: R_PPC_REL24	isStatusActive__5MarioCFUl
+  54:	2c 03 00 00 	cmpwi   r3,0
+  58:	41 82 00 0c 	beq     64 <doRecovery__5MarioFv+0x64>
+  5c:	38 60 00 00 	li      r3,0
+  60:	48 00 00 cc 	b       12c <doRecovery__5MarioFv+0x12c>
+  64:	80 7f 00 04 	lwz     r3,4(r31)
+  68:	88 03 09 34 	lbz     r0,2356(r3)
+  6c:	2c 00 00 00 	cmpwi   r0,0
+  70:	41 82 00 0c 	beq     7c <doRecovery__5MarioFv+0x7c>
+  74:	38 60 00 00 	li      r3,0
+  78:	48 00 00 b4 	b       12c <doRecovery__5MarioFv+0x12c>
+  7c:	88 03 0e a4 	lbz     r0,3748(r3)
+  80:	2c 00 00 00 	cmpwi   r0,0
+  84:	41 82 00 0c 	beq     90 <doRecovery__5MarioFv+0x90>
+  88:	38 60 00 00 	li      r3,0
+  8c:	48 00 00 a0 	b       12c <doRecovery__5MarioFv+0x12c>
+  90:	7f e3 fb 78 	mr      r3,r31
+  94:	48 00 00 01 	bl      94 <doRecovery__5MarioFv+0x94>
+			94: R_PPC_REL24	cancelSquatMode__5MarioFv
+  98:	7f e3 fb 78 	mr      r3,r31
+  9c:	48 00 00 01 	bl      9c <doRecovery__5MarioFv+0x9c>
+			9c: R_PPC_REL24	stopWalk__5MarioFv
+  a0:	80 9f 07 a0 	lwz     r4,1952(r31)
+  a4:	88 04 00 12 	lbz     r0,18(r4)
+  a8:	2c 00 00 00 	cmpwi   r0,0
+  ac:	41 82 00 18 	beq     c4 <doRecovery__5MarioFv+0xc4>
+  b0:	7f e3 fb 78 	mr      r3,r31
+  b4:	48 00 00 01 	bl      b4 <doRecovery__5MarioFv+0xb4>
+			b4: R_PPC_REL24	changeStatus__5MarioFP10MarioState
+  b8:	7f e3 fb 78 	mr      r3,r31
+  bc:	48 00 00 01 	bl      bc <doRecovery__5MarioFv+0xbc>
+			bc: R_PPC_REL24	stopJump__5MarioFv
+  c0:	48 00 00 68 	b       128 <doRecovery__5MarioFv+0x128>
+  c4:	7f e3 fb 78 	mr      r3,r31
+  c8:	38 81 00 2c 	addi    r4,r1,44
+  cc:	48 00 00 01 	bl      cc <doRecovery__5MarioFv+0xcc>
+			cc: R_PPC_REL24	getLastSafetyTrans__5MarioCFPQ29JGeometry8TVec3<f>
+  d0:	7c 64 1b 78 	mr      r4,r3
+  d4:	38 61 00 20 	addi    r3,r1,32
+  d8:	48 00 00 01 	bl      d8 <doRecovery__5MarioFv+0xd8>
+			d8: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+  dc:	38 61 00 08 	addi    r3,r1,8
+  e0:	38 81 00 2c 	addi    r4,r1,44
+  e4:	48 00 00 01 	bl      e4 <doRecovery__5MarioFv+0xe4>
+			e4: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+  e8:	c0 20 00 00 	lfs     f1,0(0)
+			e8: R_PPC_EMB_SDA21	@59208
+  ec:	38 61 00 08 	addi    r3,r1,8
+  f0:	48 00 00 01 	bl      f0 <doRecovery__5MarioFv+0xf0>
+			f0: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+  f4:	38 61 00 20 	addi    r3,r1,32
+  f8:	38 81 00 08 	addi    r4,r1,8
+  fc:	48 00 00 01 	bl      fc <doRecovery__5MarioFv+0xfc>
+			fc: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 100:	38 61 00 14 	addi    r3,r1,20
+ 104:	38 9f 01 30 	addi    r4,r31,304
+ 108:	38 a1 00 20 	addi    r5,r1,32
+ 10c:	48 00 00 01 	bl      10c <doRecovery__5MarioFv+0x10c>
+			10c: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 110:	38 61 00 14 	addi    r3,r1,20
+ 114:	48 00 00 01 	bl      114 <doRecovery__5MarioFv+0x114>
+			114: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ 118:	7f e3 fb 78 	mr      r3,r31
+ 11c:	38 81 00 20 	addi    r4,r1,32
+ 120:	38 a1 00 14 	addi    r5,r1,20
+ 124:	48 00 00 01 	bl      124 <doRecovery__5MarioFv+0x124>
+			124: R_PPC_REL24	doPointWarpRecovery__5MarioFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>
+ 128:	38 60 00 01 	li      r3,1
+ 12c:	80 01 00 44 	lwz     r0,68(r1)
+ 130:	83 e1 00 3c 	lwz     r31,60(r1)
+ 134:	7c 08 03 a6 	mtlr    r0
+ 138:	38 21 00 40 	addi    r1,r1,64
+ 13c:	4e 80 00 20 	blr
+
+00000140 <__ct__13MarioRecoveryFP10MarioActor>:
+ 140:	94 21 ff f0 	stwu    r1,-16(r1)
+ 144:	7c 08 02 a6 	mflr    r0
+ 148:	38 a0 00 13 	li      r5,19
+ 14c:	90 01 00 14 	stw     r0,20(r1)
+ 150:	93 e1 00 0c 	stw     r31,12(r1)
+ 154:	93 c1 00 08 	stw     r30,8(r1)
+ 158:	7c 7e 1b 78 	mr      r30,r3
+ 15c:	48 00 00 01 	bl      15c <__ct__13MarioRecoveryFP10MarioActor+0x1c>
+			15c: R_PPC_REL24	__ct__10MarioStateFP10MarioActorUl
+ 160:	3c 80 00 00 	lis     r4,0
+			162: R_PPC_ADDR16_HA	__vt__13MarioRecovery
+ 164:	3c 60 00 01 	lis     r3,1
+ 168:	38 03 ff ff 	addi    r0,r3,-1
+ 16c:	3b e0 00 00 	li      r31,0
+ 170:	38 84 00 00 	addi    r4,r4,0
+			172: R_PPC_ADDR16_LO	__vt__13MarioRecovery
+ 174:	b3 fe 00 16 	sth     r31,22(r30)
+ 178:	38 7e 00 58 	addi    r3,r30,88
+ 17c:	90 9e 00 00 	stw     r4,0(r30)
+ 180:	b0 1e 00 1a 	sth     r0,26(r30)
+ 184:	48 00 00 01 	bl      184 <__ct__13MarioRecoveryFP10MarioActor+0x44>
+			184: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 188:	9b fe 00 12 	stb     r31,18(r30)
+ 18c:	38 7e 00 1c 	addi    r3,r30,28
+ 190:	9b fe 00 11 	stb     r31,17(r30)
+ 194:	b3 fe 00 14 	sth     r31,20(r30)
+ 198:	b3 fe 00 18 	sth     r31,24(r30)
+ 19c:	48 00 00 01 	bl      19c <__ct__13MarioRecoveryFP10MarioActor+0x5c>
+			19c: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 1a0:	38 7e 00 28 	addi    r3,r30,40
+ 1a4:	48 00 00 01 	bl      1a4 <__ct__13MarioRecoveryFP10MarioActor+0x64>
+			1a4: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 1a8:	38 7e 00 34 	addi    r3,r30,52
+ 1ac:	48 00 00 01 	bl      1ac <__ct__13MarioRecoveryFP10MarioActor+0x6c>
+			1ac: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 1b0:	38 7e 00 40 	addi    r3,r30,64
+ 1b4:	48 00 00 01 	bl      1b4 <__ct__13MarioRecoveryFP10MarioActor+0x74>
+			1b4: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 1b8:	38 7e 00 4c 	addi    r3,r30,76
+ 1bc:	48 00 00 01 	bl      1bc <__ct__13MarioRecoveryFP10MarioActor+0x7c>
+			1bc: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 1c0:	38 7e 00 64 	addi    r3,r30,100
+ 1c4:	48 00 00 01 	bl      1c4 <__ct__13MarioRecoveryFP10MarioActor+0x84>
+			1c4: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 1c8:	38 7e 00 70 	addi    r3,r30,112
+ 1cc:	48 00 00 01 	bl      1cc <__ct__13MarioRecoveryFP10MarioActor+0x8c>
+			1cc: R_PPC_REL24	zero__Q29JGeometry8TVec3<f>Fv
+ 1d0:	c0 00 00 00 	lfs     f0,0(0)
+			1d0: R_PPC_EMB_SDA21	@57981
+ 1d4:	7f c3 f3 78 	mr      r3,r30
+ 1d8:	b3 fe 00 88 	sth     r31,136(r30)
+ 1dc:	d0 1e 00 7c 	stfs    f0,124(r30)
+ 1e0:	d0 1e 00 80 	stfs    f0,128(r30)
+ 1e4:	d0 1e 00 84 	stfs    f0,132(r30)
+ 1e8:	83 e1 00 0c 	lwz     r31,12(r1)
+ 1ec:	83 c1 00 08 	lwz     r30,8(r1)
+ 1f0:	80 01 00 14 	lwz     r0,20(r1)
+ 1f4:	7c 08 03 a6 	mtlr    r0
+ 1f8:	38 21 00 10 	addi    r1,r1,16
+ 1fc:	4e 80 00 20 	blr
+
+00000200 <calcFirstVector__13MarioRecoveryFv>:
+ 200:	94 21 ff 70 	stwu    r1,-144(r1)
+ 204:	7c 08 02 a6 	mflr    r0
+ 208:	90 01 00 94 	stw     r0,148(r1)
+ 20c:	db e1 00 80 	stfd    f31,128(r1)
+ 210:	f3 e1 00 88 	xsmsubasp vs31,vs1,vs0
+ 214:	39 61 00 80 	addi    r11,r1,128
+ 218:	48 00 00 01 	bl      218 <calcFirstVector__13MarioRecoveryFv+0x18>
+			218: R_PPC_REL24	_savegpr_29
+ 21c:	7c 7f 1b 78 	mr      r31,r3
+ 220:	48 00 00 01 	bl      220 <calcFirstVector__13MarioRecoveryFv+0x20>
+			220: R_PPC_REL24	getTrans__11MarioModuleCFv
+ 224:	7c 64 1b 78 	mr      r4,r3
+ 228:	38 7f 00 40 	addi    r3,r31,64
+ 22c:	48 00 00 01 	bl      22c <calcFirstVector__13MarioRecoveryFv+0x2c>
+			22c: R_PPC_REL24	__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 230:	83 bf 00 04 	lwz     r29,4(r31)
+ 234:	7f e3 fb 78 	mr      r3,r31
+ 238:	48 00 00 01 	bl      238 <calcFirstVector__13MarioRecoveryFv+0x38>
+			238: R_PPC_REL24	getGravityVec__11MarioModuleCFv
+ 23c:	81 9d 00 00 	lwz     r12,0(r29)
+ 240:	7c 7e 1b 78 	mr      r30,r3
+ 244:	7f a3 eb 78 	mr      r3,r29
+ 248:	81 8c 00 78 	lwz     r12,120(r12)
+ 24c:	7d 89 03 a6 	mtctr   r12
+ 250:	4e 80 04 21 	bctrl
+ 254:	7f c4 f3 78 	mr      r4,r30
+ 258:	38 bf 00 1c 	addi    r5,r31,28
+ 25c:	48 00 00 01 	bl      25c <calcFirstVector__13MarioRecoveryFv+0x5c>
+			25c: R_PPC_REL24	vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>
+ 260:	ff e0 08 90 	fmr     f31,f1
+ 264:	7f e3 fb 78 	mr      r3,r31
+ 268:	48 00 00 01 	bl      268 <calcFirstVector__13MarioRecoveryFv+0x68>
+			268: R_PPC_REL24	getGravityVec__11MarioModuleCFv
+ 26c:	7c 64 1b 78 	mr      r4,r3
+ 270:	38 61 00 38 	addi    r3,r1,56
+ 274:	48 00 00 01 	bl      274 <calcFirstVector__13MarioRecoveryFv+0x74>
+			274: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 278:	fc 20 f8 90 	fmr     f1,f31
+ 27c:	38 61 00 38 	addi    r3,r1,56
+ 280:	48 00 00 01 	bl      280 <calcFirstVector__13MarioRecoveryFv+0x80>
+			280: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ 284:	38 7f 00 28 	addi    r3,r31,40
+ 288:	38 81 00 38 	addi    r4,r1,56
+ 28c:	48 00 00 01 	bl      28c <calcFirstVector__13MarioRecoveryFv+0x8c>
+			28c: R_PPC_REL24	__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 290:	7f e3 fb 78 	mr      r3,r31
+ 294:	48 00 00 01 	bl      294 <calcFirstVector__13MarioRecoveryFv+0x94>
+			294: R_PPC_REL24	getTrans__11MarioModuleCFv
+ 298:	7c 64 1b 78 	mr      r4,r3
+ 29c:	38 61 00 5c 	addi    r3,r1,92
+ 2a0:	38 bf 00 34 	addi    r5,r31,52
+ 2a4:	48 00 00 01 	bl      2a4 <calcFirstVector__13MarioRecoveryFv+0xa4>
+			2a4: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 2a8:	c0 20 00 00 	lfs     f1,0(0)
+			2a8: R_PPC_EMB_SDA21	@59324
+ 2ac:	38 61 00 5c 	addi    r3,r1,92
+ 2b0:	48 00 00 01 	bl      2b0 <calcFirstVector__13MarioRecoveryFv+0xb0>
+			2b0: R_PPC_REL24	setLength__Q29JGeometry8TVec3<f>Ff
+ 2b4:	38 7f 00 1c 	addi    r3,r31,28
+ 2b8:	38 81 00 5c 	addi    r4,r1,92
+ 2bc:	48 00 00 01 	bl      2bc <calcFirstVector__13MarioRecoveryFv+0xbc>
+			2bc: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 2c0:	38 60 00 3c 	li      r3,60
+ 2c4:	38 00 00 00 	li      r0,0
+ 2c8:	b0 7f 00 14 	sth     r3,20(r31)
+ 2cc:	7f e3 fb 78 	mr      r3,r31
+ 2d0:	98 1f 00 11 	stb     r0,17(r31)
+ 2d4:	48 00 00 01 	bl      2d4 <calcFirstVector__13MarioRecoveryFv+0xd4>
+			2d4: R_PPC_REL24	getTrans__11MarioModuleCFv
+ 2d8:	7c 64 1b 78 	mr      r4,r3
+ 2dc:	38 61 00 2c 	addi    r3,r1,44
+ 2e0:	38 bf 00 34 	addi    r5,r31,52
+ 2e4:	48 00 00 01 	bl      2e4 <calcFirstVector__13MarioRecoveryFv+0xe4>
+			2e4: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 2e8:	38 7f 00 70 	addi    r3,r31,112
+ 2ec:	38 81 00 2c 	addi    r4,r1,44
+ 2f0:	48 00 00 01 	bl      2f0 <calcFirstVector__13MarioRecoveryFv+0xf0>
+			2f0: R_PPC_REL24	__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 2f4:	38 7f 00 70 	addi    r3,r31,112
+ 2f8:	48 00 00 01 	bl      2f8 <calcFirstVector__13MarioRecoveryFv+0xf8>
+			2f8: R_PPC_REL24	PSVECMag
+ 2fc:	ff e0 08 90 	fmr     f31,f1
+ 300:	38 7f 00 70 	addi    r3,r31,112
+ 304:	48 00 00 01 	bl      304 <calcFirstVector__13MarioRecoveryFv+0x104>
+			304: R_PPC_REL24	PSVECMag
+ 308:	d0 3f 00 84 	stfs    f1,132(r31)
+ 30c:	38 7f 00 70 	addi    r3,r31,112
+ 310:	48 00 00 01 	bl      310 <calcFirstVector__13MarioRecoveryFv+0x110>
+			310: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ 314:	2c 03 00 00 	cmpwi   r3,0
+ 318:	41 82 00 0c 	beq     324 <calcFirstVector__13MarioRecoveryFv+0x124>
+ 31c:	38 60 00 00 	li      r3,0
+ 320:	48 00 01 c8 	b       4e8 <calcFirstVector__13MarioRecoveryFv+0x2e8>
+ 324:	7f e3 fb 78 	mr      r3,r31
+ 328:	48 00 00 01 	bl      328 <calcFirstVector__13MarioRecoveryFv+0x128>
+			328: R_PPC_REL24	getGravityVec__11MarioModuleCFv
+ 32c:	7c 64 1b 78 	mr      r4,r3
+ 330:	38 7f 00 70 	addi    r3,r31,112
+ 334:	38 a1 00 50 	addi    r5,r1,80
+ 338:	48 00 00 01 	bl      338 <calcFirstVector__13MarioRecoveryFv+0x138>
+			338: R_PPC_REL24	vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>
+ 33c:	88 1f 00 12 	lbz     r0,18(r31)
+ 340:	2c 00 00 00 	cmpwi   r0,0
+ 344:	41 82 00 3c 	beq     380 <calcFirstVector__13MarioRecoveryFv+0x180>
+ 348:	7f e3 fb 78 	mr      r3,r31
+ 34c:	48 00 00 01 	bl      34c <calcFirstVector__13MarioRecoveryFv+0x14c>
+			34c: R_PPC_REL24	getGravityVec__11MarioModuleCFv
+ 350:	7c 7e 1b 78 	mr      r30,r3
+ 354:	38 61 00 20 	addi    r3,r1,32
+ 358:	38 9f 00 4c 	addi    r4,r31,76
+ 35c:	38 bf 00 34 	addi    r5,r31,52
+ 360:	48 00 00 01 	bl      360 <calcFirstVector__13MarioRecoveryFv+0x160>
+			360: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 364:	7f c4 f3 78 	mr      r4,r30
+ 368:	38 61 00 20 	addi    r3,r1,32
+ 36c:	38 a1 00 44 	addi    r5,r1,68
+ 370:	48 00 00 01 	bl      370 <calcFirstVector__13MarioRecoveryFv+0x170>
+			370: R_PPC_REL24	vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>
+ 374:	38 61 00 50 	addi    r3,r1,80
+ 378:	38 81 00 44 	addi    r4,r1,68
+ 37c:	48 00 00 01 	bl      37c <calcFirstVector__13MarioRecoveryFv+0x17c>
+			37c: R_PPC_REL24	__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 380:	38 61 00 50 	addi    r3,r1,80
+ 384:	48 00 00 01 	bl      384 <calcFirstVector__13MarioRecoveryFv+0x184>
+			384: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ 388:	2c 03 00 00 	cmpwi   r3,0
+ 38c:	41 82 00 0c 	beq     398 <calcFirstVector__13MarioRecoveryFv+0x198>
+ 390:	38 60 00 00 	li      r3,0
+ 394:	48 00 01 54 	b       4e8 <calcFirstVector__13MarioRecoveryFv+0x2e8>
+ 398:	7f e3 fb 78 	mr      r3,r31
+ 39c:	48 00 00 01 	bl      39c <calcFirstVector__13MarioRecoveryFv+0x19c>
+			39c: R_PPC_REL24	getGravityVec__11MarioModuleCFv
+ 3a0:	38 81 00 50 	addi    r4,r1,80
+ 3a4:	38 bf 00 64 	addi    r5,r31,100
+ 3a8:	48 00 00 01 	bl      3a8 <calcFirstVector__13MarioRecoveryFv+0x1a8>
+			3a8: R_PPC_REL24	PSVECCrossProduct
+ 3ac:	38 7f 00 64 	addi    r3,r31,100
+ 3b0:	48 00 00 01 	bl      3b0 <calcFirstVector__13MarioRecoveryFv+0x1b0>
+			3b0: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ 3b4:	2c 03 00 00 	cmpwi   r3,0
+ 3b8:	41 82 00 0c 	beq     3c4 <calcFirstVector__13MarioRecoveryFv+0x1c4>
+ 3bc:	38 60 00 00 	li      r3,0
+ 3c0:	48 00 01 28 	b       4e8 <calcFirstVector__13MarioRecoveryFv+0x2e8>
+ 3c4:	88 1f 00 12 	lbz     r0,18(r31)
+ 3c8:	2c 00 00 00 	cmpwi   r0,0
+ 3cc:	41 82 00 38 	beq     404 <calcFirstVector__13MarioRecoveryFv+0x204>
+ 3d0:	e0 1f 00 70 	lq      r0,112(r31)
+ 3d4:	38 81 00 14 	addi    r4,r1,20
+ 3d8:	38 61 00 50 	addi    r3,r1,80
+ 3dc:	10 00 00 50 	ps_neg  f0,f0
+ 3e0:	f0 04 00 00 	xsaddsp vs0,vs4,vs0
+ 3e4:	c0 1f 00 78 	lfs     f0,120(r31)
+ 3e8:	fc 00 00 50 	fneg    f0,f0
+ 3ec:	d0 01 00 1c 	stfs    f0,28(r1)
+ 3f0:	48 00 00 01 	bl      3f0 <calcFirstVector__13MarioRecoveryFv+0x1f0>
+			3f0: R_PPC_REL24	diffAngleAbs__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>
+ 3f4:	c0 00 00 00 	lfs     f0,0(0)
+			3f4: R_PPC_EMB_SDA21	@59125
+ 3f8:	ec 01 00 2a 	fadds   f0,f1,f0
+ 3fc:	d0 1f 00 7c 	stfs    f0,124(r31)
+ 400:	48 00 00 1c 	b       41c <calcFirstVector__13MarioRecoveryFv+0x21c>
+ 404:	38 61 00 50 	addi    r3,r1,80
+ 408:	38 9f 00 70 	addi    r4,r31,112
+ 40c:	48 00 00 01 	bl      40c <calcFirstVector__13MarioRecoveryFv+0x20c>
+			40c: R_PPC_REL24	diffAngleAbs__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>
+ 410:	c0 00 00 00 	lfs     f0,0(0)
+			410: R_PPC_EMB_SDA21	@59325
+ 414:	ec 00 08 28 	fsubs   f0,f0,f1
+ 418:	d0 1f 00 7c 	stfs    f0,124(r31)
+ 41c:	c0 00 00 00 	lfs     f0,0(0)
+			41c: R_PPC_EMB_SDA21	@59326
+ 420:	38 00 00 c8 	li      r0,200
+ 424:	c0 20 00 00 	lfs     f1,0(0)
+			424: R_PPC_EMB_SDA21	@59327
+ 428:	ec 5f 00 28 	fsubs   f2,f31,f0
+ 42c:	c0 00 00 00 	lfs     f0,0(0)
+			42c: R_PPC_EMB_SDA21	@57981
+ 430:	b0 1f 00 18 	sth     r0,24(r31)
+ 434:	ec 22 08 24 	fdivs   f1,f2,f1
+ 438:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ 43c:	40 81 00 18 	ble     454 <calcFirstVector__13MarioRecoveryFv+0x254>
+ 440:	fc 00 08 1e 	fctiwz  f0,f1
+ 444:	d8 01 00 68 	stfd    f0,104(r1)
+ 448:	80 61 00 6c 	lwz     r3,108(r1)
+ 44c:	38 03 00 c8 	addi    r0,r3,200
+ 450:	b0 1f 00 18 	sth     r0,24(r31)
+ 454:	a0 9f 00 18 	lhz     r4,24(r31)
+ 458:	3c 00 43 30 	lis     r0,17200
+ 45c:	3c 60 00 00 	lis     r3,0
+			45e: R_PPC_ADDR16_HA	lbl_80539C70
+ 460:	90 01 00 68 	stw     r0,104(r1)
+ 464:	c8 63 00 00 	lfd     f3,0(r3)
+			466: R_PPC_ADDR16_LO	lbl_80539C70
+ 468:	3b c0 00 00 	li      r30,0
+ 46c:	90 81 00 6c 	stw     r4,108(r1)
+ 470:	7f e3 fb 78 	mr      r3,r31
+ 474:	c0 3f 00 7c 	lfs     f1,124(r31)
+ 478:	c8 41 00 68 	lfd     f2,104(r1)
+ 47c:	c0 00 00 00 	lfs     f0,0(0)
+			47c: R_PPC_EMB_SDA21	@57981
+ 480:	ec 42 18 28 	fsubs   f2,f2,f3
+ 484:	b0 9f 00 88 	sth     r4,136(r31)
+ 488:	80 9f 00 04 	lwz     r4,4(r31)
+ 48c:	d0 1f 00 7c 	stfs    f0,124(r31)
+ 490:	ec 01 10 24 	fdivs   f0,f1,f2
+ 494:	d0 1f 00 80 	stfs    f0,128(r31)
+ 498:	9b c4 0f 44 	stb     r30,3908(r4)
+ 49c:	80 9f 00 04 	lwz     r4,4(r31)
+ 4a0:	3b a4 00 0c 	addi    r29,r4,12
+ 4a4:	48 00 00 01 	bl      4a4 <calcFirstVector__13MarioRecoveryFv+0x2a4>
+			4a4: R_PPC_REL24	getTrans__11MarioModuleCFv
+ 4a8:	7c 65 1b 78 	mr      r5,r3
+ 4ac:	7f a4 eb 78 	mr      r4,r29
+ 4b0:	38 61 00 08 	addi    r3,r1,8
+ 4b4:	48 00 00 01 	bl      4b4 <calcFirstVector__13MarioRecoveryFv+0x2b4>
+			4b4: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 4b8:	3c a0 00 00 	lis     r5,0
+			4ba: R_PPC_ADDR16_HA	lbl_805CC960
+ 4bc:	7f e3 fb 78 	mr      r3,r31
+ 4c0:	38 81 00 08 	addi    r4,r1,8
+ 4c4:	38 a5 00 00 	addi    r5,r5,0
+			4c6: R_PPC_ADDR16_LO	lbl_805CC960
+ 4c8:	48 00 00 01 	bl      4c8 <calcFirstVector__13MarioRecoveryFv+0x2c8>
+			4c8: R_PPC_REL24	addTrans__11MarioModuleFRCQ29JGeometry8TVec3<f>PCc
+ 4cc:	81 9f 00 00 	lwz     r12,0(r31)
+ 4d0:	7f e3 fb 78 	mr      r3,r31
+ 4d4:	81 8c 00 24 	lwz     r12,36(r12)
+ 4d8:	7d 89 03 a6 	mtctr   r12
+ 4dc:	4e 80 04 21 	bctrl
+ 4e0:	9b df 00 12 	stb     r30,18(r31)
+ 4e4:	38 60 00 01 	li      r3,1
+ 4e8:	e3 e1 00 88 	psq_l   f31,136(r1),0,0
+ 4ec:	39 61 00 80 	addi    r11,r1,128
+ 4f0:	cb e1 00 80 	lfd     f31,128(r1)
+ 4f4:	48 00 00 01 	bl      4f4 <calcFirstVector__13MarioRecoveryFv+0x2f4>
+			4f4: R_PPC_REL24	_restgpr_29
+ 4f8:	80 01 00 94 	lwz     r0,148(r1)
+ 4fc:	7c 08 03 a6 	mtlr    r0
+ 500:	38 21 00 90 	addi    r1,r1,144
+ 504:	4e 80 00 20 	blr
+
+00000508 <updateJump__13MarioRecoveryFv>:
+ 508:	94 21 ff 40 	stwu    r1,-192(r1)
+ 50c:	7c 08 02 a6 	mflr    r0
+ 510:	90 01 00 c4 	stw     r0,196(r1)
+ 514:	db e1 00 b0 	stfd    f31,176(r1)
+ 518:	f3 e1 00 b8 	xxsel   vs31,vs1,vs0,vs34
+ 51c:	39 61 00 b0 	addi    r11,r1,176
+ 520:	48 00 00 01 	bl      520 <updateJump__13MarioRecoveryFv+0x18>
+			520: R_PPC_REL24	_savegpr_29
+ 524:	7c 7d 1b 78 	mr      r29,r3
+ 528:	38 61 00 5c 	addi    r3,r1,92
+ 52c:	c0 3d 00 7c 	lfs     f1,124(r29)
+ 530:	38 9d 00 64 	addi    r4,r29,100
+ 534:	48 00 00 01 	bl      534 <updateJump__13MarioRecoveryFv+0x2c>
+			534: R_PPC_REL24	PSMTXRotAxisRad
+ 538:	38 61 00 5c 	addi    r3,r1,92
+ 53c:	38 9d 00 70 	addi    r4,r29,112
+ 540:	38 a1 00 50 	addi    r5,r1,80
+ 544:	48 00 00 01 	bl      544 <updateJump__13MarioRecoveryFv+0x3c>
+			544: R_PPC_REL24	PSMTXMultVec
+ 548:	a0 7d 00 88 	lhz     r3,136(r29)
+ 54c:	28 03 00 3c 	cmplwi  r3,60
+ 550:	40 81 00 70 	ble     5c0 <updateJump__13MarioRecoveryFv+0xb8>
+ 554:	28 03 00 78 	cmplwi  r3,120
+ 558:	40 80 00 68 	bge     5c0 <updateJump__13MarioRecoveryFv+0xb8>
+ 55c:	c0 3d 00 7c 	lfs     f1,124(r29)
+ 560:	c0 00 00 00 	lfs     f0,0(0)
+			560: R_PPC_EMB_SDA21	@59255
+ 564:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ 568:	40 80 00 3c 	bge     5a4 <updateJump__13MarioRecoveryFv+0x9c>
+ 56c:	38 63 ff c4 	addi    r3,r3,-60
+ 570:	3c 00 43 30 	lis     r0,17200
+ 574:	6c 63 80 00 	xoris   r3,r3,32768
+ 578:	3c 80 00 00 	lis     r4,0
+			57a: R_PPC_ADDR16_HA	lbl_80539C68
+ 57c:	90 61 00 94 	stw     r3,148(r1)
+ 580:	c0 3d 00 84 	lfs     f1,132(r29)
+ 584:	90 01 00 90 	stw     r0,144(r1)
+ 588:	c8 64 00 00 	lfd     f3,0(r4)
+			58a: R_PPC_ADDR16_LO	lbl_80539C68
+ 58c:	fc 00 08 50 	fneg    f0,f1
+ 590:	c8 41 00 90 	lfd     f2,144(r1)
+ 594:	ec 42 18 28 	fsubs   f2,f2,f3
+ 598:	ec 00 10 24 	fdivs   f0,f0,f2
+ 59c:	ec 01 00 2a 	fadds   f0,f1,f0
+ 5a0:	d0 1d 00 84 	stfs    f0,132(r29)
+ 5a4:	c0 40 00 00 	lfs     f2,0(0)
+			5a4: R_PPC_EMB_SDA21	@59017
+ 5a8:	c0 3d 00 80 	lfs     f1,128(r29)
+ 5ac:	c0 1d 00 7c 	lfs     f0,124(r29)
+ 5b0:	ec 22 00 72 	fmuls   f1,f2,f1
+ 5b4:	ec 00 08 2a 	fadds   f0,f0,f1
+ 5b8:	d0 1d 00 7c 	stfs    f0,124(r29)
+ 5bc:	48 00 00 14 	b       5d0 <updateJump__13MarioRecoveryFv+0xc8>
+ 5c0:	c0 3d 00 7c 	lfs     f1,124(r29)
+ 5c4:	c0 1d 00 80 	lfs     f0,128(r29)
+ 5c8:	ec 01 00 2a 	fadds   f0,f1,f0
+ 5cc:	d0 1d 00 7c 	stfs    f0,124(r29)
+ 5d0:	a0 7d 00 88 	lhz     r3,136(r29)
+ 5d4:	2c 03 00 00 	cmpwi   r3,0
+ 5d8:	41 82 00 0c 	beq     5e4 <updateJump__13MarioRecoveryFv+0xdc>
+ 5dc:	38 03 ff ff 	addi    r0,r3,-1
+ 5e0:	b0 1d 00 88 	sth     r0,136(r29)
+ 5e4:	c0 3d 00 84 	lfs     f1,132(r29)
+ 5e8:	c0 00 00 00 	lfs     f0,0(0)
+			5e8: R_PPC_EMB_SDA21	@59256
+ 5ec:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ 5f0:	40 80 00 08 	bge     5f8 <updateJump__13MarioRecoveryFv+0xf0>
+ 5f4:	fc 20 00 90 	fmr     f1,f0
+ 5f8:	38 61 00 50 	addi    r3,r1,80
+ 5fc:	48 00 00 01 	bl      5fc <updateJump__13MarioRecoveryFv+0xf4>
+			5fc: R_PPC_REL24	setLength__Q29JGeometry8TVec3<f>Ff
+ 600:	38 61 00 44 	addi    r3,r1,68
+ 604:	38 9d 00 34 	addi    r4,r29,52
+ 608:	48 00 00 01 	bl      608 <updateJump__13MarioRecoveryFv+0x100>
+			608: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 60c:	38 61 00 44 	addi    r3,r1,68
+ 610:	38 81 00 50 	addi    r4,r1,80
+ 614:	48 00 00 01 	bl      614 <updateJump__13MarioRecoveryFv+0x10c>
+			614: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 618:	7f a3 eb 78 	mr      r3,r29
+ 61c:	48 00 00 01 	bl      61c <updateJump__13MarioRecoveryFv+0x114>
+			61c: R_PPC_REL24	getTrans__11MarioModuleCFv
+ 620:	7c 65 1b 78 	mr      r5,r3
+ 624:	38 61 00 38 	addi    r3,r1,56
+ 628:	38 81 00 44 	addi    r4,r1,68
+ 62c:	48 00 00 01 	bl      62c <updateJump__13MarioRecoveryFv+0x124>
+			62c: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 630:	a0 1d 00 88 	lhz     r0,136(r29)
+ 634:	3f e0 43 30 	lis     r31,17200
+ 638:	3f c0 00 00 	lis     r30,0
+			63a: R_PPC_ADDR16_HA	lbl_80539C70
+ 63c:	93 e1 00 90 	stw     r31,144(r1)
+ 640:	c8 5e 00 00 	lfd     f2,0(r30)
+			642: R_PPC_ADDR16_LO	lbl_80539C70
+ 644:	38 61 00 2c 	addi    r3,r1,44
+ 648:	90 01 00 94 	stw     r0,148(r1)
+ 64c:	38 81 00 38 	addi    r4,r1,56
+ 650:	c0 20 00 00 	lfs     f1,0(0)
+			650: R_PPC_EMB_SDA21	@59257
+ 654:	c8 01 00 90 	lfd     f0,144(r1)
+ 658:	ec 00 10 28 	fsubs   f0,f0,f2
+ 65c:	ec 01 00 2a 	fadds   f0,f1,f0
+ 660:	ef e1 00 24 	fdivs   f31,f1,f0
+ 664:	48 00 00 01 	bl      664 <updateJump__13MarioRecoveryFv+0x15c>
+			664: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 668:	fc 20 f8 90 	fmr     f1,f31
+ 66c:	38 61 00 2c 	addi    r3,r1,44
+ 670:	48 00 00 01 	bl      670 <updateJump__13MarioRecoveryFv+0x168>
+			670: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ 674:	38 61 00 38 	addi    r3,r1,56
+ 678:	38 81 00 2c 	addi    r4,r1,44
+ 67c:	48 00 00 01 	bl      67c <updateJump__13MarioRecoveryFv+0x174>
+			67c: R_PPC_REL24	__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 680:	a0 7d 00 88 	lhz     r3,136(r29)
+ 684:	a0 1d 00 18 	lhz     r0,24(r29)
+ 688:	7c 03 00 50 	subf    r0,r3,r0
+ 68c:	28 00 00 3c 	cmplwi  r0,60
+ 690:	40 80 00 78 	bge     708 <updateJump__13MarioRecoveryFv+0x200>
+ 694:	90 01 00 94 	stw     r0,148(r1)
+ 698:	38 61 00 20 	addi    r3,r1,32
+ 69c:	c8 7e 00 00 	lfd     f3,0(r30)
+			69e: R_PPC_ADDR16_LO	lbl_80539C70
+ 6a0:	38 9d 00 1c 	addi    r4,r29,28
+ 6a4:	93 e1 00 90 	stw     r31,144(r1)
+ 6a8:	c0 40 00 00 	lfs     f2,0(0)
+			6a8: R_PPC_EMB_SDA21	@59258
+ 6ac:	c8 01 00 90 	lfd     f0,144(r1)
+ 6b0:	c0 20 00 00 	lfs     f1,0(0)
+			6b0: R_PPC_EMB_SDA21	@57980
+ 6b4:	ec 60 18 28 	fsubs   f3,f0,f3
+ 6b8:	c0 00 00 00 	lfs     f0,0(0)
+			6b8: R_PPC_EMB_SDA21	@59259
+ 6bc:	ec 43 10 24 	fdivs   f2,f3,f2
+ 6c0:	ef e1 10 28 	fsubs   f31,f1,f2
+ 6c4:	ef ff 00 32 	fmuls   f31,f31,f0
+ 6c8:	48 00 00 01 	bl      6c8 <updateJump__13MarioRecoveryFv+0x1c0>
+			6c8: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 6cc:	fc 20 f8 90 	fmr     f1,f31
+ 6d0:	38 61 00 20 	addi    r3,r1,32
+ 6d4:	48 00 00 01 	bl      6d4 <updateJump__13MarioRecoveryFv+0x1cc>
+			6d4: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ 6d8:	38 61 00 38 	addi    r3,r1,56
+ 6dc:	38 81 00 20 	addi    r4,r1,32
+ 6e0:	48 00 00 01 	bl      6e0 <updateJump__13MarioRecoveryFv+0x1d8>
+			6e0: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 6e4:	38 61 00 14 	addi    r3,r1,20
+ 6e8:	38 9d 00 28 	addi    r4,r29,40
+ 6ec:	48 00 00 01 	bl      6ec <updateJump__13MarioRecoveryFv+0x1e4>
+			6ec: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 6f0:	fc 20 f8 90 	fmr     f1,f31
+ 6f4:	38 61 00 14 	addi    r3,r1,20
+ 6f8:	48 00 00 01 	bl      6f8 <updateJump__13MarioRecoveryFv+0x1f0>
+			6f8: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ 6fc:	38 61 00 38 	addi    r3,r1,56
+ 700:	38 81 00 14 	addi    r4,r1,20
+ 704:	48 00 00 01 	bl      704 <updateJump__13MarioRecoveryFv+0x1fc>
+			704: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 708:	7f a3 eb 78 	mr      r3,r29
+ 70c:	48 00 00 01 	bl      70c <updateJump__13MarioRecoveryFv+0x204>
+			70c: R_PPC_REL24	getGravityVec__11MarioModuleCFv
+ 710:	7c 64 1b 78 	mr      r4,r3
+ 714:	38 61 00 38 	addi    r3,r1,56
+ 718:	7c 65 1b 78 	mr      r5,r3
+ 71c:	48 00 00 01 	bl      71c <updateJump__13MarioRecoveryFv+0x214>
+			71c: R_PPC_REL24	vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>
+ 720:	ff e0 08 90 	fmr     f31,f1
+ 724:	38 61 00 38 	addi    r3,r1,56
+ 728:	48 00 00 01 	bl      728 <updateJump__13MarioRecoveryFv+0x220>
+			728: R_PPC_REL24	PSVECMag
+ 72c:	c0 00 00 00 	lfs     f0,0(0)
+			72c: R_PPC_EMB_SDA21	@59260
+ 730:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ 734:	40 81 00 10 	ble     744 <updateJump__13MarioRecoveryFv+0x23c>
+ 738:	fc 20 00 90 	fmr     f1,f0
+ 73c:	38 61 00 38 	addi    r3,r1,56
+ 740:	48 00 00 01 	bl      740 <updateJump__13MarioRecoveryFv+0x238>
+			740: R_PPC_REL24	setLength__Q29JGeometry8TVec3<f>Ff
+ 744:	7f a3 eb 78 	mr      r3,r29
+ 748:	48 00 00 01 	bl      748 <updateJump__13MarioRecoveryFv+0x240>
+			748: R_PPC_REL24	getGravityVec__11MarioModuleCFv
+ 74c:	7c 64 1b 78 	mr      r4,r3
+ 750:	38 61 00 08 	addi    r3,r1,8
+ 754:	48 00 00 01 	bl      754 <updateJump__13MarioRecoveryFv+0x24c>
+			754: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 758:	fc 20 f8 90 	fmr     f1,f31
+ 75c:	38 61 00 08 	addi    r3,r1,8
+ 760:	48 00 00 01 	bl      760 <updateJump__13MarioRecoveryFv+0x258>
+			760: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ 764:	38 61 00 38 	addi    r3,r1,56
+ 768:	38 81 00 08 	addi    r4,r1,8
+ 76c:	48 00 00 01 	bl      76c <updateJump__13MarioRecoveryFv+0x264>
+			76c: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 770:	3c a0 00 00 	lis     r5,0
+			772: R_PPC_ADDR16_HA	lbl_805CC960
+ 774:	7f a3 eb 78 	mr      r3,r29
+ 778:	38 81 00 38 	addi    r4,r1,56
+ 77c:	38 a5 00 00 	addi    r5,r5,0
+			77e: R_PPC_ADDR16_LO	lbl_805CC960
+ 780:	48 00 00 01 	bl      780 <updateJump__13MarioRecoveryFv+0x278>
+			780: R_PPC_REL24	addTrans__11MarioModuleFRCQ29JGeometry8TVec3<f>PCc
+ 784:	e3 e1 00 b8 	psq_l   f31,184(r1),0,0
+ 788:	39 61 00 b0 	addi    r11,r1,176
+ 78c:	cb e1 00 b0 	lfd     f31,176(r1)
+ 790:	48 00 00 01 	bl      790 <updateJump__13MarioRecoveryFv+0x288>
+			790: R_PPC_REL24	_restgpr_29
+ 794:	80 01 00 c4 	lwz     r0,196(r1)
+ 798:	7c 08 03 a6 	mtlr    r0
+ 79c:	38 21 00 c0 	addi    r1,r1,192
+ 7a0:	4e 80 00 20 	blr
+
+000007a4 <start__13MarioRecoveryFv>:
+ 7a4:	94 21 ff 90 	stwu    r1,-112(r1)
+ 7a8:	7c 08 02 a6 	mflr    r0
+ 7ac:	90 01 00 74 	stw     r0,116(r1)
+ 7b0:	39 61 00 70 	addi    r11,r1,112
+ 7b4:	48 00 00 01 	bl      7b4 <start__13MarioRecoveryFv+0x10>
+			7b4: R_PPC_REL24	_savegpr_29
+ 7b8:	3b e0 00 00 	li      r31,0
+ 7bc:	3f c0 00 00 	lis     r30,0
+			7be: R_PPC_ADDR16_HA	lbl_805CC960
+ 7c0:	b3 e3 00 16 	sth     r31,22(r3)
+ 7c4:	7c 7d 1b 78 	mr      r29,r3
+ 7c8:	3b de 00 00 	addi    r30,r30,0
+			7ca: R_PPC_ADDR16_LO	lbl_805CC960
+ 7cc:	b3 e3 00 1a 	sth     r31,26(r3)
+ 7d0:	48 00 00 01 	bl      7d0 <start__13MarioRecoveryFv+0x2c>
+			7d0: R_PPC_REL24	getPlayer__11MarioModuleCFv
+ 7d4:	38 80 00 00 	li      r4,0
+ 7d8:	48 00 00 01 	bl      7d8 <start__13MarioRecoveryFv+0x34>
+			7d8: R_PPC_REL24	getLastSafetyTrans__5MarioCFPQ29JGeometry8TVec3<f>
+ 7dc:	7c 64 1b 78 	mr      r4,r3
+ 7e0:	38 7d 00 34 	addi    r3,r29,52
+ 7e4:	48 00 00 01 	bl      7e4 <start__13MarioRecoveryFv+0x40>
+			7e4: R_PPC_REL24	__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 7e8:	7f a3 eb 78 	mr      r3,r29
+ 7ec:	38 9e 00 07 	addi    r4,r30,7
+ 7f0:	48 00 00 01 	bl      7f0 <start__13MarioRecoveryFv+0x4c>
+			7f0: R_PPC_REL24	changeAnimationNonStop__11MarioModuleFPCc
+ 7f4:	7f a3 eb 78 	mr      r3,r29
+ 7f8:	38 9e 00 10 	addi    r4,r30,16
+ 7fc:	38 a0 ff ff 	li      r5,-1
+ 800:	48 00 00 01 	bl      800 <start__13MarioRecoveryFv+0x5c>
+			800: R_PPC_REL24	playSound__11MarioModuleFPCcl
+ 804:	7f a3 eb 78 	mr      r3,r29
+ 808:	38 9e 00 17 	addi    r4,r30,23
+ 80c:	48 00 00 01 	bl      80c <start__13MarioRecoveryFv+0x68>
+			80c: R_PPC_REL24	playEffect__11MarioModuleFPCc
+ 810:	88 1d 00 12 	lbz     r0,18(r29)
+ 814:	2c 00 00 00 	cmpwi   r0,0
+ 818:	41 82 01 38 	beq     950 <start__13MarioRecoveryFv+0x1ac>
+ 81c:	38 60 00 03 	li      r3,3
+ 820:	38 00 00 b4 	li      r0,180
+ 824:	b0 7d 00 1a 	sth     r3,26(r29)
+ 828:	38 61 00 38 	addi    r3,r1,56
+ 82c:	80 dd 00 04 	lwz     r6,4(r29)
+ 830:	38 9d 00 34 	addi    r4,r29,52
+ 834:	b0 1d 00 16 	sth     r0,22(r29)
+ 838:	38 bd 00 4c 	addi    r5,r29,76
+ 83c:	9b e6 0f 44 	stb     r31,3908(r6)
+ 840:	48 00 00 01 	bl      840 <start__13MarioRecoveryFv+0x9c>
+			840: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 844:	38 61 00 38 	addi    r3,r1,56
+ 848:	38 9d 00 58 	addi    r4,r29,88
+ 84c:	48 00 00 01 	bl      84c <start__13MarioRecoveryFv+0xa8>
+			84c: R_PPC_REL24	diffAngleAbs__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>
+ 850:	c0 00 00 00 	lfs     f0,0(0)
+			850: R_PPC_EMB_SDA21	@59127
+ 854:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ 858:	4c 41 13 82 	cror    eq,gt,eq
+ 85c:	40 82 01 0c 	bne     968 <start__13MarioRecoveryFv+0x1c4>
+ 860:	38 61 00 50 	addi    r3,r1,80
+ 864:	38 9d 00 34 	addi    r4,r29,52
+ 868:	38 bd 00 4c 	addi    r5,r29,76
+ 86c:	48 00 00 01 	bl      86c <start__13MarioRecoveryFv+0xc8>
+			86c: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ 870:	38 61 00 50 	addi    r3,r1,80
+ 874:	48 00 00 01 	bl      874 <start__13MarioRecoveryFv+0xd0>
+			874: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ 878:	2c 03 00 00 	cmpwi   r3,0
+ 87c:	41 82 00 18 	beq     894 <start__13MarioRecoveryFv+0xf0>
+ 880:	c0 40 00 00 	lfs     f2,0(0)
+			880: R_PPC_EMB_SDA21	@57981
+ 884:	38 61 00 50 	addi    r3,r1,80
+ 888:	c0 20 00 00 	lfs     f1,0(0)
+			888: R_PPC_EMB_SDA21	@57980
+ 88c:	fc 60 10 90 	fmr     f3,f2
+ 890:	48 00 00 01 	bl      890 <start__13MarioRecoveryFv+0xec>
+			890: R_PPC_REL24	set<f>__Q29JGeometry8TVec3<f>Ffff_v
+ 894:	38 7d 00 58 	addi    r3,r29,88
+ 898:	38 81 00 50 	addi    r4,r1,80
+ 89c:	38 a1 00 44 	addi    r5,r1,68
+ 8a0:	48 00 00 01 	bl      8a0 <start__13MarioRecoveryFv+0xfc>
+			8a0: R_PPC_REL24	PSVECCrossProduct
+ 8a4:	38 61 00 44 	addi    r3,r1,68
+ 8a8:	48 00 00 01 	bl      8a8 <start__13MarioRecoveryFv+0x104>
+			8a8: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ 8ac:	2c 03 00 00 	cmpwi   r3,0
+ 8b0:	41 82 00 18 	beq     8c8 <start__13MarioRecoveryFv+0x124>
+ 8b4:	c0 20 00 00 	lfs     f1,0(0)
+			8b4: R_PPC_EMB_SDA21	@57981
+ 8b8:	38 61 00 44 	addi    r3,r1,68
+ 8bc:	c0 60 00 00 	lfs     f3,0(0)
+			8bc: R_PPC_EMB_SDA21	@57980
+ 8c0:	fc 40 08 90 	fmr     f2,f1
+ 8c4:	48 00 00 01 	bl      8c4 <start__13MarioRecoveryFv+0x120>
+			8c4: R_PPC_REL24	set<f>__Q29JGeometry8TVec3<f>Ffff_v
+ 8c8:	38 61 00 44 	addi    r3,r1,68
+ 8cc:	38 9d 00 58 	addi    r4,r29,88
+ 8d0:	38 a1 00 50 	addi    r5,r1,80
+ 8d4:	48 00 00 01 	bl      8d4 <start__13MarioRecoveryFv+0x130>
+			8d4: R_PPC_REL24	PSVECCrossProduct
+ 8d8:	38 61 00 50 	addi    r3,r1,80
+ 8dc:	48 00 00 01 	bl      8dc <start__13MarioRecoveryFv+0x138>
+			8dc: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ 8e0:	38 61 00 08 	addi    r3,r1,8
+ 8e4:	38 81 00 50 	addi    r4,r1,80
+ 8e8:	48 00 00 01 	bl      8e8 <start__13MarioRecoveryFv+0x144>
+			8e8: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 8ec:	c0 20 00 00 	lfs     f1,0(0)
+			8ec: R_PPC_EMB_SDA21	@59343
+ 8f0:	38 61 00 08 	addi    r3,r1,8
+ 8f4:	48 00 00 01 	bl      8f4 <start__13MarioRecoveryFv+0x150>
+			8f4: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ 8f8:	38 61 00 14 	addi    r3,r1,20
+ 8fc:	38 9d 00 58 	addi    r4,r29,88
+ 900:	48 00 00 01 	bl      900 <start__13MarioRecoveryFv+0x15c>
+			900: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 904:	c0 20 00 00 	lfs     f1,0(0)
+			904: R_PPC_EMB_SDA21	@59343
+ 908:	38 61 00 14 	addi    r3,r1,20
+ 90c:	48 00 00 01 	bl      90c <start__13MarioRecoveryFv+0x168>
+			90c: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ 910:	38 61 00 20 	addi    r3,r1,32
+ 914:	38 9d 00 4c 	addi    r4,r29,76
+ 918:	48 00 00 01 	bl      918 <start__13MarioRecoveryFv+0x174>
+			918: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 91c:	38 61 00 20 	addi    r3,r1,32
+ 920:	38 81 00 14 	addi    r4,r1,20
+ 924:	48 00 00 01 	bl      924 <start__13MarioRecoveryFv+0x180>
+			924: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 928:	38 61 00 2c 	addi    r3,r1,44
+ 92c:	38 81 00 20 	addi    r4,r1,32
+ 930:	48 00 00 01 	bl      930 <start__13MarioRecoveryFv+0x18c>
+			930: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 934:	38 61 00 2c 	addi    r3,r1,44
+ 938:	38 81 00 08 	addi    r4,r1,8
+ 93c:	48 00 00 01 	bl      93c <start__13MarioRecoveryFv+0x198>
+			93c: R_PPC_REL24	__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 940:	38 7d 00 34 	addi    r3,r29,52
+ 944:	38 81 00 2c 	addi    r4,r1,44
+ 948:	48 00 00 01 	bl      948 <start__13MarioRecoveryFv+0x1a4>
+			948: R_PPC_REL24	__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ 94c:	48 00 00 1c 	b       968 <start__13MarioRecoveryFv+0x1c4>
+ 950:	7f a3 eb 78 	mr      r3,r29
+ 954:	48 00 00 01 	bl      954 <start__13MarioRecoveryFv+0x1b0>
+			954: R_PPC_REL24	calcFirstVector__13MarioRecoveryFv
+ 958:	2c 03 00 00 	cmpwi   r3,0
+ 95c:	40 82 00 0c 	bne     968 <start__13MarioRecoveryFv+0x1c4>
+ 960:	38 60 00 00 	li      r3,0
+ 964:	48 00 00 14 	b       978 <start__13MarioRecoveryFv+0x1d4>
+ 968:	38 7e 00 07 	addi    r3,r30,7
+ 96c:	38 80 ff ff 	li      r4,-1
+ 970:	48 00 00 01 	bl      970 <start__13MarioRecoveryFv+0x1cc>
+			970: R_PPC_REL24	startGlobalEventCameraNoTarget__2MRFPCcl
+ 974:	38 60 00 01 	li      r3,1
+ 978:	39 61 00 70 	addi    r11,r1,112
+ 97c:	48 00 00 01 	bl      97c <start__13MarioRecoveryFv+0x1d8>
+			97c: R_PPC_REL24	_restgpr_29
+ 980:	80 01 00 74 	lwz     r0,116(r1)
+ 984:	7c 08 03 a6 	mtlr    r0
+ 988:	38 21 00 70 	addi    r1,r1,112
+ 98c:	4e 80 00 20 	blr
+
+00000990 <update__13MarioRecoveryFv>:
+ 990:	94 21 ff 50 	stwu    r1,-176(r1)
+ 994:	7c 08 02 a6 	mflr    r0
+ 998:	90 01 00 b4 	stw     r0,180(r1)
+ 99c:	db e1 00 a0 	stfd    f31,160(r1)
+ 9a0:	f3 e1 00 a8 	psq_st  f31,168(r1),0,0
+ 9a4:	db c1 00 90 	stfd    f30,144(r1)
+ 9a8:	f3 c1 00 98 	xscmpgedp vs30,vs1,vs0
+ 9ac:	39 61 00 90 	addi    r11,r1,144
+ 9b0:	48 00 00 01 	bl      9b0 <update__13MarioRecoveryFv+0x20>
+			9b0: R_PPC_REL24	_savegpr_28
+ 9b4:	3f e0 00 00 	lis     r31,0
+			9b6: R_PPC_ADDR16_HA	lbl_805CC960
+ 9b8:	7c 7e 1b 78 	mr      r30,r3
+ 9bc:	3b ff 00 00 	addi    r31,r31,0
+			9be: R_PPC_ADDR16_LO	lbl_805CC960
+ 9c0:	48 00 00 01 	bl      9c0 <update__13MarioRecoveryFv+0x30>
+			9c0: R_PPC_REL24	clearVelocity__11MarioModuleFv
+ 9c4:	a0 9e 00 1a 	lhz     r4,26(r30)
+ 9c8:	2c 04 00 02 	cmpwi   r4,2
+ 9cc:	41 82 02 68 	beq     c34 <update__13MarioRecoveryFv+0x2a4>
+ 9d0:	40 80 00 14 	bge     9e4 <update__13MarioRecoveryFv+0x54>
+ 9d4:	2c 04 00 00 	cmpwi   r4,0
+ 9d8:	41 82 00 18 	beq     9f0 <update__13MarioRecoveryFv+0x60>
+ 9dc:	40 80 00 28 	bge     a04 <update__13MarioRecoveryFv+0x74>
+ 9e0:	48 00 03 7c 	b       d5c <update__13MarioRecoveryFv+0x3cc>
+ 9e4:	2c 04 00 04 	cmpwi   r4,4
+ 9e8:	40 80 03 74 	bge     d5c <update__13MarioRecoveryFv+0x3cc>
+ 9ec:	48 00 02 68 	b       c54 <update__13MarioRecoveryFv+0x2c4>
+ 9f0:	a0 7e 00 18 	lhz     r3,24(r30)
+ 9f4:	38 04 00 01 	addi    r0,r4,1
+ 9f8:	b0 1e 00 1a 	sth     r0,26(r30)
+ 9fc:	38 03 00 3c 	addi    r0,r3,60
+ a00:	b0 1e 00 16 	sth     r0,22(r30)
+ a04:	a0 1e 00 16 	lhz     r0,22(r30)
+ a08:	2c 00 00 00 	cmpwi   r0,0
+ a0c:	40 82 00 0c 	bne     a18 <update__13MarioRecoveryFv+0x88>
+ a10:	3b a0 00 00 	li      r29,0
+ a14:	48 00 00 1c 	b       a30 <update__13MarioRecoveryFv+0xa0>
+ a18:	a0 7e 00 18 	lhz     r3,24(r30)
+ a1c:	54 1d fc 7e 	rlwinm  r29,r0,31,17,31
+ a20:	7c 00 18 40 	cmplw   r0,r3
+ a24:	40 81 00 0c 	ble     a30 <update__13MarioRecoveryFv+0xa0>
+ a28:	7c 03 00 50 	subf    r0,r3,r0
+ a2c:	23 a0 00 64 	subfic  r29,r0,100
+ a30:	2c 1d 00 00 	cmpwi   r29,0
+ a34:	40 80 00 08 	bge     a3c <update__13MarioRecoveryFv+0xac>
+ a38:	3b a0 00 00 	li      r29,0
+ a3c:	2c 1d 00 64 	cmpwi   r29,100
+ a40:	40 81 00 08 	ble     a48 <update__13MarioRecoveryFv+0xb8>
+ a44:	3b a0 00 64 	li      r29,100
+ a48:	7f c3 f3 78 	mr      r3,r30
+ a4c:	38 9f 00 22 	addi    r4,r31,34
+ a50:	38 a0 ff ff 	li      r5,-1
+ a54:	48 00 00 01 	bl      a54 <update__13MarioRecoveryFv+0xc4>
+			a54: R_PPC_REL24	playSound__11MarioModuleFPCcl
+ a58:	7f c3 f3 78 	mr      r3,r30
+ a5c:	7f a5 eb 78 	mr      r5,r29
+ a60:	38 9f 00 2f 	addi    r4,r31,47
+ a64:	48 00 00 01 	bl      a64 <update__13MarioRecoveryFv+0xd4>
+			a64: R_PPC_REL24	playSound__11MarioModuleFPCcl
+ a68:	7f c3 f3 78 	mr      r3,r30
+ a6c:	48 00 00 01 	bl      a6c <update__13MarioRecoveryFv+0xdc>
+			a6c: R_PPC_REL24	getPlayer__11MarioModuleCFv
+ a70:	c0 20 00 00 	lfs     f1,0(0)
+			a70: R_PPC_EMB_SDA21	@59407
+ a74:	38 9e 00 1c 	addi    r4,r30,28
+ a78:	48 00 00 01 	bl      a78 <update__13MarioRecoveryFv+0xe8>
+			a78: R_PPC_REL24	setFrontVecKeepUp__5MarioFRCQ29JGeometry8TVec3<f>f
+ a7c:	a0 7e 00 14 	lhz     r3,20(r30)
+ a80:	2c 03 00 00 	cmpwi   r3,0
+ a84:	41 82 00 20 	beq     aa4 <update__13MarioRecoveryFv+0x114>
+ a88:	38 63 ff ff 	addi    r3,r3,-1
+ a8c:	54 60 04 3f 	clrlwi. r0,r3,16
+ a90:	b0 7e 00 14 	sth     r3,20(r30)
+ a94:	40 82 00 10 	bne     aa4 <update__13MarioRecoveryFv+0x114>
+ a98:	80 7e 00 04 	lwz     r3,4(r30)
+ a9c:	38 00 00 01 	li      r0,1
+ aa0:	98 03 0f 44 	stb     r0,3908(r3)
+ aa4:	a0 7e 00 16 	lhz     r3,22(r30)
+ aa8:	2c 03 00 00 	cmpwi   r3,0
+ aac:	41 82 00 0c 	beq     ab8 <update__13MarioRecoveryFv+0x128>
+ ab0:	38 03 ff ff 	addi    r0,r3,-1
+ ab4:	b0 1e 00 16 	sth     r0,22(r30)
+ ab8:	a0 1e 00 16 	lhz     r0,22(r30)
+ abc:	2c 00 00 00 	cmpwi   r0,0
+ ac0:	41 82 00 30 	beq     af0 <update__13MarioRecoveryFv+0x160>
+ ac4:	7f c3 f3 78 	mr      r3,r30
+ ac8:	48 00 00 01 	bl      ac8 <update__13MarioRecoveryFv+0x138>
+			ac8: R_PPC_REL24	getTrans__11MarioModuleCFv
+ acc:	7c 65 1b 78 	mr      r5,r3
+ ad0:	38 61 00 44 	addi    r3,r1,68
+ ad4:	38 9e 00 34 	addi    r4,r30,52
+ ad8:	48 00 00 01 	bl      ad8 <update__13MarioRecoveryFv+0x148>
+			ad8: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ adc:	38 61 00 44 	addi    r3,r1,68
+ ae0:	48 00 00 01 	bl      ae0 <update__13MarioRecoveryFv+0x150>
+			ae0: R_PPC_REL24	PSVECMag
+ ae4:	c0 00 00 00 	lfs     f0,0(0)
+			ae4: R_PPC_EMB_SDA21	@59327
+ ae8:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ aec:	40 80 00 34 	bge     b20 <update__13MarioRecoveryFv+0x190>
+ af0:	7f c3 f3 78 	mr      r3,r30
+ af4:	48 00 00 01 	bl      af4 <update__13MarioRecoveryFv+0x164>
+			af4: R_PPC_REL24	getTrans__11MarioModuleCFv
+ af8:	7c 65 1b 78 	mr      r5,r3
+ afc:	38 61 00 38 	addi    r3,r1,56
+ b00:	38 9e 00 34 	addi    r4,r30,52
+ b04:	48 00 00 01 	bl      b04 <update__13MarioRecoveryFv+0x174>
+			b04: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ b08:	7f c3 f3 78 	mr      r3,r30
+ b0c:	38 81 00 38 	addi    r4,r1,56
+ b10:	38 bf 00 00 	addi    r5,r31,0
+ b14:	48 00 00 01 	bl      b14 <update__13MarioRecoveryFv+0x184>
+			b14: R_PPC_REL24	addTrans__11MarioModuleFRCQ29JGeometry8TVec3<f>PCc
+ b18:	38 60 00 00 	li      r3,0
+ b1c:	48 00 02 44 	b       d60 <update__13MarioRecoveryFv+0x3d0>
+ b20:	7f c3 f3 78 	mr      r3,r30
+ b24:	48 00 00 01 	bl      b24 <update__13MarioRecoveryFv+0x194>
+			b24: R_PPC_REL24	updateJump__13MarioRecoveryFv
+ b28:	7f c3 f3 78 	mr      r3,r30
+ b2c:	3b a0 00 00 	li      r29,0
+ b30:	3b 80 00 01 	li      r28,1
+ b34:	48 00 00 01 	bl      b34 <update__13MarioRecoveryFv+0x1a4>
+			b34: R_PPC_REL24	getShadowPos__11MarioModuleCFv
+ b38:	7c 64 1b 78 	mr      r4,r3
+ b3c:	38 61 00 74 	addi    r3,r1,116
+ b40:	48 00 00 01 	bl      b40 <update__13MarioRecoveryFv+0x1b0>
+			b40: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ b44:	38 61 00 68 	addi    r3,r1,104
+ b48:	38 81 00 74 	addi    r4,r1,116
+ b4c:	38 be 00 34 	addi    r5,r30,52
+ b50:	48 00 00 01 	bl      b50 <update__13MarioRecoveryFv+0x1c0>
+			b50: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ b54:	38 61 00 5c 	addi    r3,r1,92
+ b58:	38 9e 00 40 	addi    r4,r30,64
+ b5c:	38 be 00 34 	addi    r5,r30,52
+ b60:	48 00 00 01 	bl      b60 <update__13MarioRecoveryFv+0x1d0>
+			b60: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ b64:	c0 20 00 00 	lfs     f1,0(0)
+			b64: R_PPC_EMB_SDA21	@59408
+ b68:	38 61 00 68 	addi    r3,r1,104
+ b6c:	48 00 00 01 	bl      b6c <update__13MarioRecoveryFv+0x1dc>
+			b6c: R_PPC_REL24	isNearZero__2MRFRCQ29JGeometry8TVec3<f>f
+ b70:	2c 03 00 00 	cmpwi   r3,0
+ b74:	41 82 00 08 	beq     b7c <update__13MarioRecoveryFv+0x1ec>
+ b78:	3b a0 00 01 	li      r29,1
+ b7c:	38 61 00 68 	addi    r3,r1,104
+ b80:	48 00 00 01 	bl      b80 <update__13MarioRecoveryFv+0x1f0>
+			b80: R_PPC_REL24	PSVECMag
+ b84:	c0 00 00 00 	lfs     f0,0(0)
+			b84: R_PPC_EMB_SDA21	@59409
+ b88:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ b8c:	40 80 00 08 	bge     b94 <update__13MarioRecoveryFv+0x204>
+ b90:	3b 80 00 00 	li      r28,0
+ b94:	38 61 00 68 	addi    r3,r1,104
+ b98:	48 00 00 01 	bl      b98 <update__13MarioRecoveryFv+0x208>
+			b98: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ b9c:	38 61 00 5c 	addi    r3,r1,92
+ ba0:	48 00 00 01 	bl      ba0 <update__13MarioRecoveryFv+0x210>
+			ba0: R_PPC_REL24	normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>
+ ba4:	38 61 00 68 	addi    r3,r1,104
+ ba8:	38 81 00 5c 	addi    r4,r1,92
+ bac:	48 00 00 01 	bl      bac <update__13MarioRecoveryFv+0x21c>
+			bac: R_PPC_REL24	dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ bb0:	c0 00 00 00 	lfs     f0,0(0)
+			bb0: R_PPC_EMB_SDA21	@57981
+ bb4:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ bb8:	40 80 00 08 	bge     bc0 <update__13MarioRecoveryFv+0x230>
+ bbc:	3b a0 00 01 	li      r29,1
+ bc0:	2c 1d 00 00 	cmpwi   r29,0
+ bc4:	41 82 01 98 	beq     d5c <update__13MarioRecoveryFv+0x3cc>
+ bc8:	2c 1c 00 00 	cmpwi   r28,0
+ bcc:	41 82 00 30 	beq     bfc <update__13MarioRecoveryFv+0x26c>
+ bd0:	7f c3 f3 78 	mr      r3,r30
+ bd4:	48 00 00 01 	bl      bd4 <update__13MarioRecoveryFv+0x244>
+			bd4: R_PPC_REL24	getTrans__11MarioModuleCFv
+ bd8:	7c 65 1b 78 	mr      r5,r3
+ bdc:	38 61 00 2c 	addi    r3,r1,44
+ be0:	38 81 00 74 	addi    r4,r1,116
+ be4:	48 00 00 01 	bl      be4 <update__13MarioRecoveryFv+0x254>
+			be4: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ be8:	38 61 00 2c 	addi    r3,r1,44
+ bec:	48 00 00 01 	bl      bec <update__13MarioRecoveryFv+0x25c>
+			bec: R_PPC_REL24	PSVECMag
+ bf0:	c0 00 00 00 	lfs     f0,0(0)
+			bf0: R_PPC_EMB_SDA21	@59256
+ bf4:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ bf8:	41 81 01 64 	bgt     d5c <update__13MarioRecoveryFv+0x3cc>
+ bfc:	7f c3 f3 78 	mr      r3,r30
+ c00:	38 9f 00 17 	addi    r4,r31,23
+ c04:	48 00 00 01 	bl      c04 <update__13MarioRecoveryFv+0x274>
+			c04: R_PPC_REL24	stopEffectForce__11MarioModuleFPCc
+ c08:	7f c3 f3 78 	mr      r3,r30
+ c0c:	38 9f 00 3c 	addi    r4,r31,60
+ c10:	48 00 00 01 	bl      c10 <update__13MarioRecoveryFv+0x280>
+			c10: R_PPC_REL24	playEffect__11MarioModuleFPCc
+ c14:	7f c3 f3 78 	mr      r3,r30
+ c18:	38 9f 00 3c 	addi    r4,r31,60
+ c1c:	38 a0 ff ff 	li      r5,-1
+ c20:	48 00 00 01 	bl      c20 <update__13MarioRecoveryFv+0x290>
+			c20: R_PPC_REL24	playSound__11MarioModuleFPCcl
+ c24:	a0 7e 00 1a 	lhz     r3,26(r30)
+ c28:	38 03 00 01 	addi    r0,r3,1
+ c2c:	b0 1e 00 1a 	sth     r0,26(r30)
+ c30:	48 00 01 2c 	b       d5c <update__13MarioRecoveryFv+0x3cc>
+ c34:	7f c3 f3 78 	mr      r3,r30
+ c38:	3b c0 00 01 	li      r30,1
+ c3c:	48 00 00 01 	bl      c3c <update__13MarioRecoveryFv+0x2ac>
+			c3c: R_PPC_REL24	getPlayer__11MarioModuleCFv
+ c40:	80 03 00 10 	lwz     r0,16(r3)
+ c44:	53 c0 e8 84 	rlwimi  r0,r30,29,2,2
+ c48:	90 03 00 10 	stw     r0,16(r3)
+ c4c:	38 60 00 00 	li      r3,0
+ c50:	48 00 01 10 	b       d60 <update__13MarioRecoveryFv+0x3d0>
+ c54:	a0 7e 00 16 	lhz     r3,22(r30)
+ c58:	2c 03 00 00 	cmpwi   r3,0
+ c5c:	41 82 00 0c 	beq     c68 <update__13MarioRecoveryFv+0x2d8>
+ c60:	38 03 ff ff 	addi    r0,r3,-1
+ c64:	b0 1e 00 16 	sth     r0,22(r30)
+ c68:	a0 1e 00 16 	lhz     r0,22(r30)
+ c6c:	2c 00 00 00 	cmpwi   r0,0
+ c70:	40 82 00 18 	bne     c88 <update__13MarioRecoveryFv+0x2f8>
+ c74:	38 00 00 00 	li      r0,0
+ c78:	7f c3 f3 78 	mr      r3,r30
+ c7c:	b0 1e 00 1a 	sth     r0,26(r30)
+ c80:	48 00 00 01 	bl      c80 <update__13MarioRecoveryFv+0x2f0>
+			c80: R_PPC_REL24	calcFirstVector__13MarioRecoveryFv
+ c84:	48 00 00 d8 	b       d5c <update__13MarioRecoveryFv+0x3cc>
+ c88:	7f c3 f3 78 	mr      r3,r30
+ c8c:	48 00 00 01 	bl      c8c <update__13MarioRecoveryFv+0x2fc>
+			c8c: R_PPC_REL24	getTrans__11MarioModuleCFv
+ c90:	7c 65 1b 78 	mr      r5,r3
+ c94:	38 61 00 20 	addi    r3,r1,32
+ c98:	38 9e 00 34 	addi    r4,r30,52
+ c9c:	48 00 00 01 	bl      c9c <update__13MarioRecoveryFv+0x30c>
+			c9c: R_PPC_REL24	__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>
+ ca0:	38 61 00 20 	addi    r3,r1,32
+ ca4:	38 9e 00 58 	addi    r4,r30,88
+ ca8:	38 a1 00 50 	addi    r5,r1,80
+ cac:	48 00 00 01 	bl      cac <update__13MarioRecoveryFv+0x31c>
+			cac: R_PPC_REL24	vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>
+ cb0:	fc 40 0a 10 	fabs    f2,f1
+ cb4:	c0 00 00 00 	lfs     f0,0(0)
+			cb4: R_PPC_EMB_SDA21	@59324
+ cb8:	ff c0 08 90 	fmr     f30,f1
+ cbc:	fc 02 00 40 	fcmpo   cr0,f2,f0
+ cc0:	40 80 00 40 	bge     d00 <update__13MarioRecoveryFv+0x370>
+ cc4:	38 61 00 14 	addi    r3,r1,20
+ cc8:	38 9e 00 58 	addi    r4,r30,88
+ ccc:	48 00 00 01 	bl      ccc <update__13MarioRecoveryFv+0x33c>
+			ccc: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ cd0:	fc 20 f0 90 	fmr     f1,f30
+ cd4:	38 61 00 14 	addi    r3,r1,20
+ cd8:	48 00 00 01 	bl      cd8 <update__13MarioRecoveryFv+0x348>
+			cd8: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ cdc:	7f c3 f3 78 	mr      r3,r30
+ ce0:	38 81 00 14 	addi    r4,r1,20
+ ce4:	38 bf 00 00 	addi    r5,r31,0
+ ce8:	48 00 00 01 	bl      ce8 <update__13MarioRecoveryFv+0x358>
+			ce8: R_PPC_REL24	addTrans__11MarioModuleFRCQ29JGeometry8TVec3<f>PCc
+ cec:	38 00 00 00 	li      r0,0
+ cf0:	7f c3 f3 78 	mr      r3,r30
+ cf4:	b0 1e 00 1a 	sth     r0,26(r30)
+ cf8:	48 00 00 01 	bl      cf8 <update__13MarioRecoveryFv+0x368>
+			cf8: R_PPC_REL24	calcFirstVector__13MarioRecoveryFv
+ cfc:	48 00 00 50 	b       d4c <update__13MarioRecoveryFv+0x3bc>
+ d00:	c3 e0 00 00 	lfs     f31,0(0)
+			d00: R_PPC_EMB_SDA21	@59411
+ d04:	fc 01 f8 40 	fcmpo   cr0,f1,f31
+ d08:	40 80 00 08 	bge     d10 <update__13MarioRecoveryFv+0x380>
+ d0c:	48 00 00 18 	b       d24 <update__13MarioRecoveryFv+0x394>
+ d10:	fc 01 00 40 	fcmpo   cr0,f1,f0
+ d14:	40 81 00 0c 	ble     d20 <update__13MarioRecoveryFv+0x390>
+ d18:	ff e0 00 90 	fmr     f31,f0
+ d1c:	48 00 00 08 	b       d24 <update__13MarioRecoveryFv+0x394>
+ d20:	ff e0 f0 90 	fmr     f31,f30
+ d24:	38 61 00 08 	addi    r3,r1,8
+ d28:	38 9e 00 58 	addi    r4,r30,88
+ d2c:	48 00 00 01 	bl      d2c <update__13MarioRecoveryFv+0x39c>
+			d2c: R_PPC_REL24	__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>
+ d30:	fc 20 f8 90 	fmr     f1,f31
+ d34:	38 61 00 08 	addi    r3,r1,8
+ d38:	48 00 00 01 	bl      d38 <update__13MarioRecoveryFv+0x3a8>
+			d38: R_PPC_REL24	scale__Q29JGeometry8TVec3<f>Ff
+ d3c:	7f c3 f3 78 	mr      r3,r30
+ d40:	38 81 00 08 	addi    r4,r1,8
+ d44:	38 bf 00 00 	addi    r5,r31,0
+ d48:	48 00 00 01 	bl      d48 <update__13MarioRecoveryFv+0x3b8>
+			d48: R_PPC_REL24	addTrans__11MarioModuleFRCQ29JGeometry8TVec3<f>PCc
+ d4c:	7f c3 f3 78 	mr      r3,r30
+ d50:	38 9f 00 22 	addi    r4,r31,34
+ d54:	38 a0 ff ff 	li      r5,-1
+ d58:	48 00 00 01 	bl      d58 <update__13MarioRecoveryFv+0x3c8>
+			d58: R_PPC_REL24	playSound__11MarioModuleFPCcl
+ d5c:	38 60 00 01 	li      r3,1
+ d60:	e3 e1 00 a8 	psq_l   f31,168(r1),0,0
+ d64:	cb e1 00 a0 	lfd     f31,160(r1)
+ d68:	e3 c1 00 98 	lq      r30,144(r1)
+ d6c:	39 61 00 90 	addi    r11,r1,144
+ d70:	cb c1 00 90 	lfd     f30,144(r1)
+ d74:	48 00 00 01 	bl      d74 <update__13MarioRecoveryFv+0x3e4>
+			d74: R_PPC_REL24	_restgpr_28
+ d78:	80 01 00 b4 	lwz     r0,180(r1)
+ d7c:	7c 08 03 a6 	mtlr    r0
+ d80:	38 21 00 b0 	addi    r1,r1,176
+ d84:	4e 80 00 20 	blr
+
+00000d88 <close__13MarioRecoveryFv>:
+ d88:	94 21 ff e0 	stwu    r1,-32(r1)
+ d8c:	7c 08 02 a6 	mflr    r0
+ d90:	90 01 00 24 	stw     r0,36(r1)
+ d94:	39 61 00 20 	addi    r11,r1,32
+ d98:	48 00 00 01 	bl      d98 <close__13MarioRecoveryFv+0x10>
+			d98: R_PPC_REL24	_savegpr_28
+ d9c:	3f a0 00 00 	lis     r29,0
+			d9e: R_PPC_ADDR16_HA	lbl_805CC960
+ da0:	7c 7c 1b 78 	mr      r28,r3
+ da4:	3b bd 00 00 	addi    r29,r29,0
+			da6: R_PPC_ADDR16_LO	lbl_805CC960
+ da8:	38 80 ff ff 	li      r4,-1
+ dac:	38 7d 00 07 	addi    r3,r29,7
+ db0:	38 a0 00 01 	li      r5,1
+ db4:	48 00 00 01 	bl      db4 <close__13MarioRecoveryFv+0x2c>
+			db4: R_PPC_REL24	endGlobalEventCamera__2MRFPCclb
+ db8:	7f 83 e3 78 	mr      r3,r28
+ dbc:	3b c0 00 01 	li      r30,1
+ dc0:	48 00 00 01 	bl      dc0 <close__13MarioRecoveryFv+0x38>
+			dc0: R_PPC_REL24	getPlayer__11MarioModuleCFv
+ dc4:	80 03 00 08 	lwz     r0,8(r3)
+ dc8:	53 c0 f0 42 	rlwimi  r0,r30,30,1,1
+ dcc:	3b e0 00 00 	li      r31,0
+ dd0:	90 03 00 08 	stw     r0,8(r3)
+ dd4:	7f 83 e3 78 	mr      r3,r28
+ dd8:	48 00 00 01 	bl      dd8 <close__13MarioRecoveryFv+0x50>
+			dd8: R_PPC_REL24	getPlayer__11MarioModuleCFv
+ ddc:	80 03 00 08 	lwz     r0,8(r3)
+ de0:	53 e0 f8 00 	rlwimi  r0,r31,31,0,0
+ de4:	90 03 00 08 	stw     r0,8(r3)
+ de8:	7f 83 e3 78 	mr      r3,r28
+ dec:	48 00 00 01 	bl      dec <close__13MarioRecoveryFv+0x64>
+			dec: R_PPC_REL24	getPlayer__11MarioModuleCFv
+ df0:	38 00 00 10 	li      r0,16
+ df4:	38 9d 00 17 	addi    r4,r29,23
+ df8:	b0 03 04 20 	sth     r0,1056(r3)
+ dfc:	7f 83 e3 78 	mr      r3,r28
+ e00:	48 00 00 01 	bl      e00 <close__13MarioRecoveryFv+0x78>
+			e00: R_PPC_REL24	stopEffectForce__11MarioModuleFPCc
+ e04:	7f 83 e3 78 	mr      r3,r28
+ e08:	38 9d 00 3c 	addi    r4,r29,60
+ e0c:	48 00 00 01 	bl      e0c <close__13MarioRecoveryFv+0x84>
+			e0c: R_PPC_REL24	playEffect__11MarioModuleFPCc
+ e10:	7f 83 e3 78 	mr      r3,r28
+ e14:	38 80 00 00 	li      r4,0
+ e18:	38 a0 00 00 	li      r5,0
+ e1c:	48 00 00 01 	bl      e1c <close__13MarioRecoveryFv+0x94>
+			e1c: R_PPC_REL24	stopAnimation__11MarioModuleFPCcPCc
+ e20:	7f 83 e3 78 	mr      r3,r28
+ e24:	38 bd 00 4b 	addi    r5,r29,75
+ e28:	38 80 00 00 	li      r4,0
+ e2c:	48 00 00 01 	bl      e2c <close__13MarioRecoveryFv+0xa4>
+			e2c: R_PPC_REL24	changeAnimation__11MarioModuleFPCcPCc
+ e30:	80 9c 00 04 	lwz     r4,4(r28)
+ e34:	39 61 00 20 	addi    r11,r1,32
+ e38:	38 60 00 01 	li      r3,1
+ e3c:	9b c4 0f 44 	stb     r30,3908(r4)
+ e40:	48 00 00 01 	bl      e40 <close__13MarioRecoveryFv+0xb8>
+			e40: R_PPC_REL24	_restgpr_28
+ e44:	80 01 00 24 	lwz     r0,36(r1)
+ e48:	7c 08 03 a6 	mtlr    r0
+ e4c:	38 21 00 20 	addi    r1,r1,32
+ e50:	4e 80 00 20 	blr
+
+00000e54 <__sinit_\MarioRecovery_cpp>:
+ e54:	94 21 ff f0 	stwu    r1,-16(r1)
+ e58:	7c 08 02 a6 	mflr    r0
+ e5c:	38 60 00 00 	li      r3,0
+			e5c: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor17MarioActorNrvWait
+ e60:	90 01 00 14 	stw     r0,20(r1)
+ e64:	48 00 00 01 	bl      e64 <__sinit_\MarioRecovery_cpp+0x10>
+			e64: R_PPC_REL24	__ct__Q213NrvMarioActor17MarioActorNrvWaitFv
+ e68:	38 60 00 00 	li      r3,0
+			e68: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor21MarioActorNrvGameOver
+ e6c:	48 00 00 01 	bl      e6c <__sinit_\MarioRecovery_cpp+0x18>
+			e6c: R_PPC_REL24	__ct__Q213NrvMarioActor21MarioActorNrvGameOverFv
+ e70:	38 60 00 00 	li      r3,0
+			e70: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor26MarioActorNrvGameOverAbyss
+ e74:	48 00 00 01 	bl      e74 <__sinit_\MarioRecovery_cpp+0x20>
+			e74: R_PPC_REL24	__ct__Q213NrvMarioActor26MarioActorNrvGameOverAbyssFv
+ e78:	38 60 00 00 	li      r3,0
+			e78: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor27MarioActorNrvGameOverAbyss2
+ e7c:	48 00 00 01 	bl      e7c <__sinit_\MarioRecovery_cpp+0x28>
+			e7c: R_PPC_REL24	__ct__Q213NrvMarioActor27MarioActorNrvGameOverAbyss2Fv
+ e80:	38 60 00 00 	li      r3,0
+			e80: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor25MarioActorNrvGameOverFire
+ e84:	48 00 00 01 	bl      e84 <__sinit_\MarioRecovery_cpp+0x30>
+			e84: R_PPC_REL24	__ct__Q213NrvMarioActor25MarioActorNrvGameOverFireFv
+ e88:	38 60 00 00 	li      r3,0
+			e88: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor30MarioActorNrvGameOverBlackHole
+ e8c:	48 00 00 01 	bl      e8c <__sinit_\MarioRecovery_cpp+0x38>
+			e8c: R_PPC_REL24	__ct__Q213NrvMarioActor30MarioActorNrvGameOverBlackHoleFv
+ e90:	38 60 00 00 	li      r3,0
+			e90: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor28MarioActorNrvGameOverNonStop
+ e94:	48 00 00 01 	bl      e94 <__sinit_\MarioRecovery_cpp+0x40>
+			e94: R_PPC_REL24	__ct__Q213NrvMarioActor28MarioActorNrvGameOverNonStopFv
+ e98:	38 60 00 00 	li      r3,0
+			e98: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor25MarioActorNrvGameOverSink
+ e9c:	48 00 00 01 	bl      e9c <__sinit_\MarioRecovery_cpp+0x48>
+			e9c: R_PPC_REL24	__ct__Q213NrvMarioActor25MarioActorNrvGameOverSinkFv
+ ea0:	38 60 00 00 	li      r3,0
+			ea0: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor21MarioActorNrvTimeWait
+ ea4:	48 00 00 01 	bl      ea4 <__sinit_\MarioRecovery_cpp+0x50>
+			ea4: R_PPC_REL24	__ct__Q213NrvMarioActor21MarioActorNrvTimeWaitFv
+ ea8:	38 60 00 00 	li      r3,0
+			ea8: R_PPC_EMB_SDA21	sInstance__Q213NrvMarioActor19MarioActorNrvNoRush
+ eac:	48 00 00 01 	bl      eac <__sinit_\MarioRecovery_cpp+0x58>
+			eac: R_PPC_REL24	__ct__Q213NrvMarioActor19MarioActorNrvNoRushFv
+ eb0:	80 01 00 14 	lwz     r0,20(r1)
+ eb4:	7c 08 03 a6 	mtlr    r0
+ eb8:	38 21 00 10 	addi    r1,r1,16
+ ebc:	4e 80 00 20 	blr
