@@ -250,6 +250,7 @@ namespace smgpc::scene {
         constexpr auto required_scene_objects = std::array{
             SceneObj_MessageSensorHolder,
             SceneObj_ClippingDirector,
+            SceneObj_LightDirector,
             SceneObj_PlanetGravityManager,
             SceneObj_MarioHolder,
             SceneObj_StageSwitchContainer,

@@ -126,6 +126,17 @@ namespace {
         }
         state.hit_sensors.clear();
     }
+
+    void invalidate_shadow_joint_matrix_bindings(LiveActorRuntimeState& state) noexcept {
+        if (!state.shadow.has_value()) {
+            return;
+        }
+        for (auto& controller : state.shadow->controllers) {
+            if (controller.position_binding == smgpc::compat::ActorShadowPositionBinding::JointMatrix) {
+                controller.drop_position_matrix = nullptr;
+            }
+        }
+    }
 }  // namespace
 
 namespace smgpc::compat {
@@ -445,8 +456,10 @@ namespace smgpc::compat {
 
     void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive) {
         auto& state = require_actor_state(actor);
-        state.model = std::make_unique<smgpc::render::live_actor::LiveActorModel>(
+        auto replacement = std::make_unique<smgpc::render::live_actor::LiveActorModel>(
             model_archive != nullptr ? model_archive : "", animation_archive != nullptr ? animation_archive : "");
+        invalidate_shadow_joint_matrix_bindings(state);
+        state.model = std::move(replacement);
     }
 
     smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor) {
@@ -493,6 +506,7 @@ namespace smgpc::compat {
     void release_actor_model_state(const LiveActor* actor) {
         const auto found = actor_states().find(actor);
         if (found != actor_states().end()) {
+            invalidate_shadow_joint_matrix_bindings(found->second);
             found->second.model.reset();
         }
     }
@@ -995,19 +1009,79 @@ namespace smgpc::compat {
             .controllers = {},
         };
         shadow.controllers.reserve(capacity);
-        require_actor_state(actor).shadow = std::move(shadow);
+        replace_actor_shadow_runtime_state(actor, std::move(shadow));
+    }
+
+    ActorShadowControllerRuntimeState make_actor_shadow_controller_runtime_state(
+        LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius) {
+        if (actor == nullptr) {
+            throw std::invalid_argument("Actor shadow ownership requires a LiveActor.");
+        }
+        if (!std::isfinite(radius) || radius < 0.0F) {
+            throw std::invalid_argument("Actor shadow radius must be finite and non-negative.");
+        }
+        return ActorShadowControllerRuntimeState{
+            .name = std::string{name},
+            .name_raw = std::string{name},
+            .group_name = {},
+            .kind = kind,
+            .position_binding = ActorShadowPositionBinding::ActorTranslation,
+            .joint_name = {},
+            .joint_name_raw = {},
+            .model_name = {},
+            .line_start_name = {},
+            .line_end_name = {},
+            .line_start_name_raw = {},
+            .line_end_name_raw = {},
+            .radius = radius,
+            .size = TVec3f{100.0F, 100.0F, 100.0F},
+            .drop_offset = {},
+            .fixed_drop_position = {},
+            .fixed_drop_direction = TVec3f{0.0F, -1.0F, 0.0F},
+            .drop_position = &actor->mPosition,
+            .drop_position_matrix = nullptr,
+            .drop_direction = &actor->mGravity,
+            .drop_length = 1000.0F,
+            .drop_start_offset = 50.0F,
+            .volume_start_offset = 100.0F,
+            .volume_end_offset = 100.0F,
+            .line_start_radius = 100.0F,
+            .line_end_radius = 100.0F,
+            .line_start_controller_index = {},
+            .line_end_controller_index = {},
+            .volume_cut_drop_length = false,
+            .follow_host_scale = false,
+            .valid = true,
+            .visible_sync_host = true,
+            .calculation_mode = ActorShadowCalculationMode::Continuous,
+            .gravity_mode = ActorShadowGravityMode::HostDirection,
+        };
+    }
+
+    void replace_actor_shadow_runtime_state(LiveActor* actor, ActorShadowRuntimeState state) {
+        if (actor == nullptr) {
+            throw std::invalid_argument("Actor shadow ownership requires a LiveActor.");
+        }
+        if (state.controllers.size() > state.capacity) {
+            throw std::length_error("Actor shadow controller list exceeds its retail capacity.");
+        }
+        const auto index_is_valid = [&state](const std::optional<std::size_t>& index) {
+            return !index.has_value() || *index < state.controllers.size();
+        };
+        for (const auto& controller : state.controllers) {
+            if (!index_is_valid(controller.line_start_controller_index) ||
+                !index_is_valid(controller.line_end_controller_index)) {
+                throw std::out_of_range("Actor shadow line endpoint index is outside the controller list.");
+            }
+        }
+        state.controllers.reserve(state.capacity);
+        require_actor_state(actor).shadow = std::move(state);
     }
 
     ActorShadowControllerRuntimeState& add_actor_shadow_controller(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius) {
         if (actor == nullptr) {
             throw std::invalid_argument("Actor shadow ownership requires a LiveActor.");
-        }
-        if (name.empty()) {
-            throw std::invalid_argument("Actor shadow controllers require a name.");
-        }
-        if (!std::isfinite(radius) || radius < 0.0F) {
-            throw std::invalid_argument("Actor shadow radius must be finite and non-negative.");
         }
         auto* shadow = actor_shadow_runtime_state(actor);
         if (shadow == nullptr) {
@@ -1016,19 +1090,9 @@ namespace smgpc::compat {
         if (shadow->controllers.size() >= shadow->capacity) {
             throw std::length_error("Actor shadow controller list has reached its retail capacity.");
         }
-        shadow->controllers.push_back(ActorShadowControllerRuntimeState{
-            .name = std::string{name},
-            .kind = kind,
-            .radius = radius,
-            .drop_position = &actor->mPosition,
-            .drop_direction = &actor->mGravity,
-            .drop_length = 1000.0F,
-            .valid = true,
-            .visible_sync_host = true,
-            .calculation_mode = ActorShadowCalculationMode::Disabled,
-            .gravity_mode = ActorShadowGravityMode::HostDirection,
-        });
+        shadow->controllers.push_back(make_actor_shadow_controller_runtime_state(actor, name, kind, radius));
         shadow->valid = true;
+        shadow->calculation_enabled = true;
         return shadow->controllers.back();
     }
 

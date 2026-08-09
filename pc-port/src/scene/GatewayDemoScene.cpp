@@ -186,6 +186,7 @@ namespace smgpc::scene {
                 SceneObj_MessageSensorHolder,
                 SceneObj_PlacementStateChecker,
                 SceneObj_ClippingDirector,
+                SceneObj_LightDirector,
                 SceneObj_StageSwitchContainer,
                 SceneObj_SwitchWatcherHolder,
                 SceneObj_SleepControllerHolder,

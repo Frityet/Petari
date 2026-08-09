@@ -22,6 +22,8 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <string_view>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -84,6 +86,26 @@ namespace {
             throw std::logic_error("Actor has no initialized shadow controller list.");
         }
         return *shadow;
+    }
+
+    void initialize_single_shadow(LiveActor *actor, std::string_view name,
+                                  smgpc::compat::ActorShadowControllerKind kind, float radius) {
+        actor = &require_actor(actor);
+        auto shadow = smgpc::compat::ActorShadowRuntimeState{
+            .valid = true,
+            .calculation_enabled = true,
+            .private_gravity = false,
+            .capacity = 1U,
+            .controllers = {},
+        };
+        shadow.controllers.reserve(1U);
+        auto controller = smgpc::compat::make_actor_shadow_controller_runtime_state(actor, name, kind, radius);
+        if (kind == smgpc::compat::ActorShadowControllerKind::VolumeCylinder) {
+            controller.calculation_mode = smgpc::compat::ActorShadowCalculationMode::Disabled;
+            shadow.calculation_enabled = false;
+        }
+        shadow.controllers.push_back(std::move(controller));
+        smgpc::compat::replace_actor_shadow_runtime_state(actor, std::move(shadow));
     }
 
     TVec3f &require_vector(TVec3f *vector) {
@@ -391,24 +413,15 @@ namespace MR {
     }
 
     void initShadowSurfaceCircle(LiveActor *actor, f32 radius) {
-        actor = &require_actor(actor);
-        actor->initShadowControllerList(1U);
-        (void)smgpc::compat::add_actor_shadow_controller(
-            actor, "水面丸影", smgpc::compat::ActorShadowControllerKind::SurfaceCircle, radius);
+        initialize_single_shadow(actor, "水面丸影", smgpc::compat::ActorShadowControllerKind::SurfaceCircle, radius);
     }
 
     void initShadowVolumeSphere(LiveActor *actor, f32 radius) {
-        actor = &require_actor(actor);
-        actor->initShadowControllerList(1U);
-        (void)smgpc::compat::add_actor_shadow_controller(
-            actor, "ボリューム影(球)", smgpc::compat::ActorShadowControllerKind::VolumeSphere, radius);
+        initialize_single_shadow(actor, "ボリューム影(球)", smgpc::compat::ActorShadowControllerKind::VolumeSphere, radius);
     }
 
     void initShadowVolumeCylinder(LiveActor *actor, f32 radius) {
-        actor = &require_actor(actor);
-        actor->initShadowControllerList(1U);
-        (void)smgpc::compat::add_actor_shadow_controller(
-            actor, "ボリューム影(円柱)", smgpc::compat::ActorShadowControllerKind::VolumeCylinder, radius);
+        initialize_single_shadow(actor, "ボリューム影(円柱)", smgpc::compat::ActorShadowControllerKind::VolumeCylinder, radius);
     }
 
     void setShadowDropPositionPtr(LiveActor *actor, const char *name, const TVec3f *position) {

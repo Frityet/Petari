@@ -10,6 +10,7 @@
 
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
+#include <revolution/mtx.h>
 
 #include "camera/CameraPose.hpp"
 #include "render/J3dMatrix.hpp"
@@ -86,8 +87,24 @@ namespace smgpc::compat {
 
     enum class ActorShadowControllerKind {
         SurfaceCircle,
+        SurfaceOval,
+        SurfaceBox,
         VolumeSphere,
+        VolumeOval,
+        VolumeOvalPole,
         VolumeCylinder,
+        VolumeBox,
+        VolumeFlatModel,
+        VolumeLine,
+    };
+
+    enum class ActorShadowPositionBinding {
+        ActorTranslation,
+        BaseMatrix,
+        FixedPosition,
+        OtherTranslation,
+        OtherMatrix,
+        JointMatrix,
     };
 
     enum class ActorShadowCalculationMode {
@@ -98,6 +115,8 @@ namespace smgpc::compat {
 
     enum class ActorShadowGravityMode {
         HostDirection,
+        HostContinuous,
+        HostOneTime,
         PrivateDisabled,
         PrivateContinuous,
         PrivateOneTime,
@@ -105,11 +124,35 @@ namespace smgpc::compat {
 
     struct ActorShadowControllerRuntimeState {
         std::string name{};
+        std::string name_raw{};
+        std::string group_name{};
         ActorShadowControllerKind kind = ActorShadowControllerKind::VolumeSphere;
+        ActorShadowPositionBinding position_binding = ActorShadowPositionBinding::ActorTranslation;
+        std::string joint_name{};
+        std::string joint_name_raw{};
+        std::optional<std::string> model_name{};
+        std::optional<std::string> line_start_name{};
+        std::optional<std::string> line_end_name{};
+        std::optional<std::string> line_start_name_raw{};
+        std::optional<std::string> line_end_name_raw{};
         float radius = 0.0F;
+        TVec3f size{};
+        TVec3f drop_offset{};
+        TVec3f fixed_drop_position{};
+        TVec3f fixed_drop_direction{};
         const TVec3f* drop_position = nullptr;
+        MtxPtr drop_position_matrix = nullptr;
         const TVec3f* drop_direction = nullptr;
         float drop_length = 1000.0F;
+        float drop_start_offset = 0.0F;
+        float volume_start_offset = 100.0F;
+        float volume_end_offset = 100.0F;
+        float line_start_radius = 100.0F;
+        float line_end_radius = 100.0F;
+        std::optional<std::size_t> line_start_controller_index{};
+        std::optional<std::size_t> line_end_controller_index{};
+        bool volume_cut_drop_length = false;
+        bool follow_host_scale = false;
         bool valid = true;
         bool visible_sync_host = true;
         ActorShadowCalculationMode calculation_mode = ActorShadowCalculationMode::Disabled;
@@ -268,6 +311,9 @@ namespace smgpc::compat {
     void release_actor_clipping_state(const LiveActor* actor);
 
     void initialize_actor_shadow_controller_list(LiveActor* actor, std::uint32_t capacity);
+    [[nodiscard]] ActorShadowControllerRuntimeState make_actor_shadow_controller_runtime_state(
+        LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
+    void replace_actor_shadow_runtime_state(LiveActor* actor, ActorShadowRuntimeState state);
     [[nodiscard]] ActorShadowControllerRuntimeState& add_actor_shadow_controller(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
     [[nodiscard]] ActorShadowControllerRuntimeState* actor_shadow_controller_runtime_state(

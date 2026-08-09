@@ -7,6 +7,7 @@
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Map/Air.hpp"
+#include "Game/Map/LightDirector.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/Map/SphereSelector.hpp"
 #include "Game/Map/StageSwitch.hpp"
@@ -323,6 +324,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     switch (id) {
     case SceneObj_ClippingDirector:
         return new ClippingDirector();
+    case SceneObj_LightDirector:
+        return new LightDirector();
     case SceneObj_PlanetGravityManager:
         return new PlanetGravityManager("重力");
     case SceneObj_BaseMatrixFollowTargetHolder:

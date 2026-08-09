@@ -16,6 +16,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/ActorShadowCsvCompat.hpp"
 #include "compat/LiveActorMatrixCompat.hpp"
 #include "render/J3dMaterialRuntime.hpp"
 #include "render/live_actor/LiveActorModel.hpp"
@@ -434,8 +435,11 @@ namespace MR {
     bool tryTalkNearPlayerAndStartTalkAction(NPCActor*) { throwNPCBehaviorUnavailable(); }
     bool tryTalkNearPlayerAtEndAndStartMoveTalkAction(NPCActor*) { throwNPCBehaviorUnavailable(); }
 
-    void initShadowFromCSV(LiveActor*, const char*) {
-        throw std::logic_error("Actor shadows are unavailable without real projection, collision, and draw behavior.");
+    void initShadowFromCSV(LiveActor* actor, const char* definitionName) {
+        if (definitionName == nullptr) {
+            throw std::invalid_argument("Shadow CSV initialization requires an exact definition name.");
+        }
+        smgpc::compat::initialize_actor_shadow_from_model_archive(actor, definitionName);
     }
 
 }  // namespace MR

@@ -1,8 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
 #include <revolution.h>
 
 #include "Game/LiveActor/LiveActor.hpp"
+
+class Color8;
 
 class PointLightInfo {
 public:
@@ -23,24 +27,32 @@ public:
 
 class LightPointCtrl {
 public:
-    LightPointCtrl() = default;
+    LightPointCtrl();
+    ~LightPointCtrl();
 
-    void loadPointLight() {}
-    void update() {}
-    void clearPointLight(PointLightInfo*) {}
+    void loadPointLight();
+    void update();
+    void clearPointLight(PointLightInfo*);
+    void requestPointLight(const LiveActor*, TVec3f, Color8, f32, s32);
 
-    bool tryBlendStart() {
-        return false;
-    }
+    bool tryBlendStart();
+    void updatePointLight();
+    void blendPointLight(PointLightInfo*, const PointLightInfo&, const PointLightInfo&, f32);
+    bool isUpdateCandidateActor(const LiveActor*) const;
 
-    void updatePointLight() {}
-
-    s32 _0 = 0;
-    u32 _4 = 0U;
-    u32 _8 = 0U;
-    u32 _C = 0U;
-    u32 _10 = 0U;
+    s32 _0 = -1;
+    s32 _4 = 30;
+    const LiveActor* _8 = nullptr;
+    const LiveActor* _C = nullptr;
+    const LiveActor* _10 = nullptr;
     PointLightInfo* _14 = nullptr;
     PointLightInfo* _18 = nullptr;
     PointLightInfo* _1C = nullptr;
+
+    // Native pointers are generation-qualified on the host. This preserves
+    // the retail identity comparisons while rejecting a destroyed actor and
+    // pointer-address reuse before any candidate is dereferenced.
+    std::uint64_t _8Generation = 0U;
+    std::uint64_t _CGeneration = 0U;
+    std::uint64_t _10Generation = 0U;
 };

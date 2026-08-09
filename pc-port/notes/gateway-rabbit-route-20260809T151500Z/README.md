@@ -435,3 +435,114 @@ The serialized focused gates are green:
 
 Shadow CSV ownership/projection, joint-bound StarPointer, typed player swing,
 and dynamic point light remain deliberately separate generalized providers.
+
+## Generalized actor shadow-CSV provider
+
+The next bounded provider restores the authored `MR::initShadowFromCSV`
+ownership/configuration boundary without claiming projection, collision-query,
+or drawing behavior. It resolves the actor model archive's exact `%s.bcsv`
+resource. A missing resource installs retail's one-slot empty controller list;
+a present table retains its row count as capacity, walks in row order, and
+silently skips missing or unknown `Type` rows.
+
+The table-driven mapping covers all ten retail drawer types in exact order:
+`SurfaceCircle`, `SurfaceOval`, `SurfaceBox`, `VolumeSphere`, `VolumeOval`,
+`VolumeOvalPole`, `VolumeCylinder`, `VolumeBox`, `VolumeFlatModel`, and
+`VolumeLine`. Shape-specific fields are read only for the applicable drawer,
+including the no-dot `DropOffsetX/Y/Z` and `SizeX/Y/Z` names. Authored strings
+are copied out of the BCSV and decoded from CP932 to owned UTF-8; the original
+raw Joint spelling is retained separately because the current J3D joint table
+is still keyed by retail bytes.
+
+Drop-position bindings now distinguish actor translation, base matrix, fixed
+position, other translation/matrix, and named joint matrices. VolumeLine stores
+controller indices resolved immediately after its own row is appended, which
+preserves the retail single-controller self lookup and backward-only link
+visibility. Endpoint matching uses retained raw CP932 bytes rather than decoded
+UTF-8, because distinct valid CP932 sequences can map to the same Unicode text
+while retail `strcmp` still treats them as different names. The six gravity
+modes and three collision modes retain their exact
+constructor/CSV interaction: the generic controller starts collision-continuous,
+DropStart 50, and fixed direction `(0,-1,0)`; CSV missing values explicitly
+select collision-disabled and DropStart 0; gravity modes 1/2/4/5 clear the host
+pointer and seed `(0,1,0)`, while 0/3/unknown retain the actor-gravity pointer
+and constructor fixed direction.
+
+Replacement is a strong transaction. Parsing, CP932 conversion, row storage,
+line-index validation, and final capacity reservation complete before the old
+actor state is moved out. Model replacement similarly constructs its candidate
+first, then invalidates only named-joint matrix pointers before the no-throw
+swap. Base/other matrix bindings point into stable actor-registry storage and
+remain valid. Actor teardown releases the complete record with the existing
+LiveActor runtime state.
+
+The focused target is
+`smg-pc-actor-shadow-csv-real-or-absent-tests`. Its synthetic matrix covers all
+types/defaults, empty and missing resources/tables/types, CP932 success and
+failure transactions, all special bindings, all six gravity values plus an
+invalid value, collision modes, row-ordered/self line links, generic ctor
+defaults, model replacement/release lifetime, and reverse teardown. The real
+RMGK02 proof verifies byte-identical Tico/TicoBaby `shadow.bcsv` data with SHA256
+`1547591fb4d1941ac96bdebe0b4a25e2909efcf3f5bc2c801c0b579925050748`, then
+checks the single `体` / `Body` / `VolumeSphere` row at radius 40, DropStart 50,
+DropLength 1000, collision 1, gravity 0, FollowScale true, and SyncShow true.
+
+The serialized focused build passed, and the Xvfb runtime completed 7/7: missing
+CSV/transaction, all types/defaults, authored bindings/modes, single-line self
+lookup, model-binding lifetime, real RMGK02 Tico data, and registry teardown.
+The host deliberately retains an unresolved endpoint as null for a malformed
+multi-controller `VolumeLine`; retail appears to pass that null into `strcmp`.
+No shadow projection or drawing behavior is claimed by this checkpoint.
+
+## Scene-owned dynamic point-light provider
+
+`SceneObj_LightDirector` now owns one real `LightPointCtrl` and is pre-created by
+both StageHost and Gateway before placement construction. The director runs in
+`MovementType_MapObj`, so it consumes the previous frame's request before NPC
+movement submits the next one. `MR::requestPointLight` requires a live actor and
+an already-bound, already-created, initialized director; missing ownership fails
+explicitly and never lazily fabricates a scene service.
+
+The controller retains the retail current, pending, and transition-start
+records. Idle arbitration selects only a strictly nearer requester, freezes one
+candidate per frame, clamps ordinary brightness into `[0.95, 0.999999]`, and
+preserves PPC unordered NaN behavior. Negative duration selects 30; duration
+zero executes the one finite rate-zero endpoint produced by the retail cosine
+path. Fade-in, same-actor tracking, actor switching, and fade-out preserve the
+retail position/color/brightness/radius rules and inclusive cosine endpoint.
+The host qualifies each actor address with its monotonic NameObj generation so
+retired and same-address replacement candidates are rejected before any
+dereference. Rejecting a stale candidate also clears its pending light record,
+so a later valid fade cannot inherit dead color state.
+
+Player light loading publishes the point record only in GX slot 4, in world
+space, with radius 15 and `GX_DA_STEEP` attenuation. Slots 0 through 2 and actor
+ambient still come from a registered player `ActorLightCtrl`; simplified scenes
+without that controller explicitly fall back to the default authored
+`StageLightData` player record. Non-player light loads do not publish slot 4.
+Only the scene-owned `LightDirector` clears slot 4 on teardown; a standalone
+controller cannot erase another scene owner's light. Director construction and
+destruction are transactional and recreate cleanly.
+
+The serialized `smg-pc-point-light-runtime-tests` target built successfully and
+the real RMGK01/Xvfb run passed 6/6, covering fail-loud service boundaries,
+strict candidate/NaN behavior, stale and tracked ABA generations, duration zero,
+an actual NPC-scheduled one-frame request, full same/switch/fade endpoints,
+independently computed active/absent GX attenuation, authored player fallback,
+and two-generation scene ownership. The adjacent shadow target passed 7/7.
+
+Focused regressions after both providers were linked were also green:
+
+- Game actor physics: 8/8.
+- LodCtrl: 5/5.
+- SceneObjHolder: 10/10.
+- LiveActorUtil with real RMGK01: 6/6.
+- NPCActor: 6/6.
+- Gateway development scene with real RMGK01: four ordinary planets, seven
+  visual actors, six collision meshes / 14,521 triangles, exact start separation
+  0.0271512, and clean reverse teardown.
+
+This checkpoint does not activate `RunawayTico`, star-pointer input, typed Mario
+swing state, or the rabbit collector. It supplies their generalized shadow and
+dynamic-light prerequisites without a Gateway name, switch ID, or actor-specific
+scene-service branch.
