@@ -451,7 +451,7 @@ public:
     void startJumpDropSlide(const HitSensor*);
 
     void startTeresaMode();
-    void getHitWallNorm(TVec3f*);
+    bool getHitWallNorm(TVec3f*);
     void resetTeresaMode();
     void doTeresaReflection(const TVec3f&, bool);
     void startTeresaDisappear();
