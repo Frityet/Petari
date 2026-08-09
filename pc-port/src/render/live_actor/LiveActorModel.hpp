@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <span>
@@ -31,6 +32,7 @@ public:
     LiveActorModel(std::string model_arc_name, std::string animation_arc_name);
 
     std::optional<std::int16_t> startBck(std::string_view name, std::string_view file_name);
+    void syncBckFrameController(float frame, float rate, std::uint8_t state);
     void setBckFrameAndStop(float frame);
     std::optional<std::int16_t> startBrk(std::string_view name);
     void setBrkFrame(float frame);
@@ -70,6 +72,7 @@ public:
     [[nodiscard]] bool has_indirect_texture();
     [[nodiscard]] const smgpc::render::J3dMatrix3x4 *joint_world_matrix(
         std::string_view name, const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t runtime_frame);
+    void refresh_resolved_joint_matrices(const smgpc::render::J3dMatrix3x4 &actor_matrix);
 
 private:
     [[nodiscard]] const LiveActorModel &jointAnimationSource() const;
@@ -104,7 +107,6 @@ private:
     bool mBrkStarted = false;
     bool mBtkStarted = false;
     bool mBtpStarted = false;
-    std::uint64_t mBckStartFrame = 0U;
     std::uint64_t mBtpStartFrame = 0U;
     std::string mBckResourceName = {};
     std::string mBrkName = {};
@@ -114,7 +116,9 @@ private:
     std::string mBtpName = {};
     std::unique_ptr<smgpc::render::J3dModelRenderer> mRenderer = {};
     std::optional<smgpc::render::J3dBckAnimationSummary> mBckAnimation = {};
-    std::optional<float> mBckManualFrame = {};
+    float mBckFrame = 0.0F;
+    float mBckRate = 0.0F;
+    std::uint8_t mBckState = 0U;
     std::optional<smgpc::render::J3dBtkAnimationSummary> mBtkAnimation = {};
     std::optional<smgpc::render::J3dBrkAnimationSummary> mBrkAnimation = {};
     float mBrkFrame = 0.0F;

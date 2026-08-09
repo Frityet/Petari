@@ -733,8 +733,12 @@ namespace smgpc::compat {
     void advance_actor_animation(LiveActor* actor) {
         auto& state = require_actor_state(actor);
         auto& animation = state.animation;
-        if (animation.bck_active && animation.bck_ctrl.mRate != 0.0F) {
+        if (animation.bck_active && !animation.bck_ctrl.checkState(1U)) {
+            const auto rate = animation.bck_ctrl.mRate;
             animation.bck_ctrl.update();
+            if (animation.bck_ctrl.checkState(1U)) {
+                animation.bck_ctrl.mRate = rate;
+            }
         }
         if (animation.brk_active && animation.brk_ctrl.mRate != 0.0F) {
             animation.brk_ctrl.update();

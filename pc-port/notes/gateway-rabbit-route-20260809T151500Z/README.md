@@ -370,3 +370,68 @@ continuing/random BCK frame control, stable joint-matrix refresh after animation
 and exact NPC float offset/base-matrix behavior. Shadow CSV, StarPointer/player
 capabilities, and dynamic point light remain separate follow-on providers; none
 requires a Gateway-name or switch-ID branch.
+
+## Generalized Tico actor foundation checkpoint
+
+The first Tico actor tranche now follows the RMGK02 controller and NPC utility
+contracts without a Gateway, object-name, camera, or switch-ID branch. The
+primary evidence was the checked-in RMGK02 assembly for
+`MR::setBckFrameAtRandom` (`0x803DCA78`), `MR::setBckFrameAndStop`
+(`0x803DCBA4`), `MR::setBckFrame` (`0x803DD544`),
+`MR::calcFloatOffset` (`0x803EF99C`), and
+`MR::calcAndSetFloatBaseMtx` (`0x803EFACC`), together with the decompiled
+`LiveActor::calcAnim`/`calcAnmMtx` boundary.
+
+BCK playback no longer derives actor phase from the global RuntimeContext
+frame. Each model retains the authoritative raw controller frame, rate, and
+state. Continuing `setBckFrame` is a raw store that preserves both rate and
+terminal state; `setBckFrameAndStop` raw-stores the requested phase and only
+zeros the rate. The stopped query reads state bit 1, while pass-frame checks use
+the current controller frame/rate, including both intervals of a loop wrap.
+Random phase selection performs the retail truncation-toward-zero of
+`s16(end) * MR::getRandom()` and then uses the continuing setter.
+
+The host BCK update now also matches Xanime's terminal edge: every active,
+nonterminal controller updates even at rate zero, and a newly terminal update
+restores the rate that was present before that update. Thus a zero-rate
+one-shot already at end acquires state bit 1 without beginning playback, while
+a naturally terminating one-shot retains its prior nonzero rate. Paused actor
+animation, `mIsNoCalcAnim`, and direct `calcAnmMtx` are distinct just as in
+retail; global wall-clock advancement cannot move a skipped actor animation.
+
+`LiveActor::calcAnim` now guards and delegates to `calcAnmMtx`.
+`calcAnmMtx` performs the virtual base-matrix calculation, synchronizes the
+current BCK controller, and refreshes every named joint matrix already handed
+out by `MR::getJointMtx`. Refresh assigns into the existing map values, so raw
+`MtxPtr` addresses remain stable across cache growth, base movement, and BCK
+phase changes. `calcViewAndEntry` does not recalculate animation or joints; the
+native renderer retains the view/entry responsibility.
+
+NPC floating follows the exact finite arithmetic and strict comparisons:
+ordinary offset decays by 0.5 toward zero; non-short active talk can rise only
+when the player is above the NPC and strictly nearer than 200 units; the target
+interpolates `maximum -> 0`, and the rise is capped in retail order as
+`0.5 + (5 + decayed)`. Float base calculation derives the raw, unnormalized
+quaternion Y direction, temporarily offsets position, directly calls the
+qualified `NPCActor::calcAndSetBaseMtx`, and restores position. Qualified
+dispatch is required because Tico's virtual override delegates back to this
+utility. The PC compatibility boundary adds only explicit null-argument errors
+and exception-safe position restoration; ordinary retail call order and
+results are unchanged.
+
+The serialized focused gates are green:
+
+- `xmake build -j2 smg-pc-live-actor-util-real-or-absent-tests` passed.
+- `SMGPC_REAL_DISC=../RMGK01.iso` under Xvfb passed LiveActorUtil 6/6,
+  including raw/preserved controller state, natural/frozen terminal edges,
+  loop-wrap pass checks, random integer phase, pause/no-calc behavior, all 13
+  retail Tico joints, stable retained pointers, in-place base refresh, in-place
+  Wait BCK refresh, and the calc-view exclusion.
+- `xmake build -j2 smg-pc-npc-actor-real-or-absent-tests` passed.
+- The NPCActor Xvfb run passed 6/6, including decay/NaN behavior, first-rise
+  5.5 cap, later rise cap, strict above/200-unit/short-talk boundaries, raw
+  quaternion-Y translation, restored position, and direct nonvirtual NPC base
+  dispatch.
+
+Shadow CSV ownership/projection, joint-bound StarPointer, typed player swing,
+and dynamic point light remain deliberately separate generalized providers.

@@ -54,6 +54,19 @@ namespace {
             position.z,
         }};
     }
+
+    void refresh_actor_joint_matrices(LiveActor* actor) {
+        auto* model = smgpc::compat::actor_model(actor);
+        if (model == nullptr) {
+            return;
+        }
+        if (auto* controller = smgpc::compat::actor_bck_ctrl(actor); controller != nullptr) {
+            model->syncBckFrameController(
+                controller->mFrame, controller->mRate, controller->mState);
+        }
+        model->refresh_resolved_joint_matrices(
+            smgpc::compat::actor_base_matrix(actor));
+    }
 }  // namespace
 
 LiveActor::LiveActor(const char* pName)
@@ -108,21 +121,19 @@ void LiveActor::calcAnim() {
     if (mFlag.mIsNoCalcAnim) {
         return;
     }
-    if (smgpc::compat::actor_model(this) != nullptr) {
-        calcAndSetBaseMtx();
-    }
+    calcAnmMtx();
 }
 
 void LiveActor::calcAnmMtx() {
     if (smgpc::compat::actor_model(this) != nullptr) {
         calcAndSetBaseMtx();
+        refresh_actor_joint_matrices(this);
     }
 }
 
 void LiveActor::calcViewAndEntry() {
-    if (!mFlag.mIsDead && !mFlag.mIsClipped && !mFlag.mIsNoCalcView) {
-        calcAndSetBaseMtx();
-    }
+    // Model view calculation and entry are performed by the native renderer.
+    // Retail does not recalculate the base or animation matrices in this pass.
 }
 
 void LiveActor::appear() {

@@ -1,5 +1,7 @@
 #include "render/live_actor/LiveActorModel.hpp"
 
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+
 #include <algorithm>
 #include <cctype>
 #include <cmath>
@@ -68,23 +70,30 @@ std::optional<std::int16_t> LiveActorModel::startBck(std::string_view name, std:
     mJointAnimationSource = nullptr;
     mBckStarted = true;
     mBckResourceName = std::string(file_name.empty() ? name : file_name);
-    if (const auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        mBckStartFrame = runtime->frame_index();
-    } else {
-        mBckStartFrame = 0U;
-    }
     mBckAnimation = loadBckAnimation(mBckResourceName);
-    mBckManualFrame.reset();
+    mBckFrame = 0.0F;
+    mBckRate = mBckAnimation.has_value() && mBckAnimation->frame_max > 0 ? 1.0F : 0.0F;
+    mBckState = 0U;
     ++mJointAnimationVersion;
     applyStartedAnimations();
     return mBckAnimation.has_value() ? std::optional<std::int16_t>{mBckAnimation->frame_max} : std::nullopt;
+}
+
+void LiveActorModel::syncBckFrameController(float frame, float rate, std::uint8_t state) {
+    if (!mBckStarted || !mBckAnimation.has_value()) {
+        throw std::logic_error("BCK animation data is unavailable.");
+    }
+    mBckFrame = frame;
+    mBckRate = rate;
+    mBckState = state;
 }
 
 void LiveActorModel::setBckFrameAndStop(float frame) {
     if (!mBckStarted || !mBckAnimation.has_value()) {
         throw std::logic_error("BCK animation data is unavailable.");
     }
-    mBckManualFrame = std::clamp(frame, 0.0F, static_cast<float>(mBckAnimation->frame_max));
+    mBckFrame = frame;
+    mBckRate = 0.0F;
 }
 
 std::optional<std::int16_t> LiveActorModel::startBrk(std::string_view name) {
@@ -390,11 +399,8 @@ float LiveActorModel::bck_frame(std::uint64_t runtime_frame) const {
     if (!mBckStarted || !mBckAnimation.has_value()) {
         return 0.0F;
     }
-    if (mBckManualFrame.has_value()) {
-        return *mBckManualFrame;
-    }
-    const auto elapsed = runtime_frame >= mBckStartFrame ? static_cast<float>(runtime_frame - mBckStartFrame) : 0.0F;
-    return smgpc::render::j3d_animation_frame(mBckAnimation->attribute, mBckAnimation->frame_max, elapsed);
+    static_cast<void>(runtime_frame);
+    return mBckFrame;
 }
 
 std::optional<bool> LiveActorModel::is_bck_stopped(std::uint64_t runtime_frame) const {
@@ -405,8 +411,8 @@ std::optional<bool> LiveActorModel::is_bck_stopped(std::uint64_t runtime_frame) 
     if (!mBckStarted || !mBckAnimation.has_value()) {
         return std::nullopt;
     }
-    const auto elapsed = runtime_frame >= mBckStartFrame ? static_cast<float>(runtime_frame - mBckStartFrame) : 0.0F;
-    return smgpc::render::j3d_animation_stopped(mBckAnimation->attribute, mBckAnimation->frame_max, elapsed);
+    static_cast<void>(runtime_frame);
+    return (mBckState & 1U) != 0U;
 }
 
 std::optional<bool> LiveActorModel::check_pass_bck_frame(std::uint64_t runtime_frame, float frame) const {
@@ -417,8 +423,12 @@ std::optional<bool> LiveActorModel::check_pass_bck_frame(std::uint64_t runtime_f
     if (!mBckStarted || !mBckAnimation.has_value()) {
         return std::nullopt;
     }
-    const auto elapsed = runtime_frame >= mBckStartFrame ? static_cast<float>(runtime_frame - mBckStartFrame) : 0.0F;
-    return smgpc::render::j3d_animation_check_pass(mBckAnimation->attribute, mBckAnimation->frame_max, elapsed, frame);
+    static_cast<void>(runtime_frame);
+    auto controller = J3DFrameCtrl{mBckAnimation->frame_max};
+    controller.setAttribute(mBckAnimation->attribute);
+    controller.setFrame(mBckFrame);
+    controller.setRate(mBckRate);
+    return controller.checkPass(frame) == TRUE;
 }
 
 float LiveActorModel::btp_frame(std::uint64_t runtime_frame) const {
@@ -468,6 +478,29 @@ const smgpc::render::J3dMatrix3x4 *LiveActorModel::joint_world_matrix(
         std::string(name), smgpc::render::j3d_concat_matrix(actor_matrix, *joint_matrix));
     static_cast<void>(inserted);
     return &entry->second;
+}
+
+void LiveActorModel::refresh_resolved_joint_matrices(const smgpc::render::J3dMatrix3x4 &actor_matrix) {
+    if (mResolvedJointMatrices.empty()) {
+        return;
+    }
+
+    ensureLoaded();
+    if (mRenderer == nullptr || !mRenderer->is_loaded()) {
+        return;
+    }
+
+    applyStartedAnimations();
+    const auto &source = jointAnimationSource();
+    const auto animation_frame = source.mBckStarted && source.mBckAnimation.has_value()
+                                     ? source.mBckFrame
+                                     : 0.0F;
+    for (auto &[name, matrix] : mResolvedJointMatrices) {
+        const auto joint_matrix = mRenderer->joint_model_matrix(name, animation_frame);
+        if (joint_matrix.has_value()) {
+            matrix = smgpc::render::j3d_concat_matrix(actor_matrix, *joint_matrix);
+        }
+    }
 }
 
 std::optional<float> LiveActorModel::model_bounding_radius() {

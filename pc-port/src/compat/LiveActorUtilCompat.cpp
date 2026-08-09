@@ -178,6 +178,21 @@ namespace MR {
         }
     }
 
+    void setBckFrame(const LiveActor* pActor, f32 frame) {
+        if (pActor == nullptr) {
+            return;
+        }
+
+        auto* controller = smgpc::compat::actor_bck_ctrl(pActor);
+        auto* model = smgpc::compat::actor_model(pActor);
+        if (controller == nullptr || model == nullptr) {
+            throw std::logic_error("BCK animation data is unavailable.");
+        }
+        controller->setFrame(frame);
+        model->syncBckFrameController(
+            controller->mFrame, controller->mRate, controller->mState);
+    }
+
     void setBrkRate(const LiveActor* pActor, f32 rate) {
         if (pActor != nullptr) {
             smgpc::compat::set_actor_brk_rate(const_cast<LiveActor*>(pActor), rate);
@@ -484,31 +499,23 @@ namespace MR {
     }
 
     bool isBckStopped(const LiveActor* pActor) {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        const auto* model = smgpc::compat::actor_model(pActor);
-        if (runtime == nullptr || model == nullptr) {
+        auto* controller = pActor != nullptr
+                               ? smgpc::compat::actor_bck_ctrl(pActor)
+                               : nullptr;
+        if (controller == nullptr) {
             throw std::logic_error("BCK animation state is unavailable.");
         }
-
-        const auto stopped = model->is_bck_stopped(runtime->frame_index());
-        if (!stopped.has_value()) {
-            throw std::logic_error("BCK animation data is unavailable.");
-        }
-        return *stopped;
+        return controller->checkState(1U);
     }
 
     bool checkPassBckFrame(const LiveActor* pActor, f32 frame) {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        const auto* model = smgpc::compat::actor_model(pActor);
-        if (runtime == nullptr || model == nullptr) {
+        auto* controller = pActor != nullptr
+                               ? smgpc::compat::actor_bck_ctrl(pActor)
+                               : nullptr;
+        if (controller == nullptr) {
             throw std::logic_error("BCK animation state is unavailable.");
         }
-
-        const auto passed = model->check_pass_bck_frame(runtime->frame_index(), frame);
-        if (!passed.has_value()) {
-            throw std::logic_error("BCK animation data is unavailable.");
-        }
-        return *passed;
+        return controller->checkPass(frame) == TRUE;
     }
 
     f32 getBckFrameMax(const LiveActor* pActor) {
