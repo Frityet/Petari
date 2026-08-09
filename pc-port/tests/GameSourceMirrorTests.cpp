@@ -71,6 +71,8 @@ namespace {
         SourcePair{"../include/Game/Util/ModelUtil.hpp", "src/Game/Util/ModelUtil.hpp"},
         SourcePair{"../include/Game/Util/Color.hpp", "src/Game/Util/Color.hpp"},
         SourcePair{"../include/Game/Util/DirectDraw.hpp", "src/Game/Util/DirectDraw.hpp"},
+        SourcePair{"../include/Game/Util/GamePadUtil.hpp", "src/Game/Util/GamePadUtil.hpp"},
+        SourcePair{"../src/Game/Util/GamePadUtil.cpp", "src/Game/Util/GamePadUtil.cpp"},
         SourcePair{"../include/Game/Util/NerveUtil.hpp", "src/Game/Util/NerveUtil.hpp"},
         SourcePair{"../src/Game/Util/NerveUtil.cpp", "src/Game/Util/NerveUtil.cpp"},
         SourcePair{"../include/Game/Util/PlayerUtil.hpp", "src/Game/Util/PlayerUtil.hpp"},

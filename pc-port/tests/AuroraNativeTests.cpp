@@ -318,6 +318,15 @@ namespace {
         require_logic_error(
             [] { static_cast<void>(MR::testSubPadStickTriggerRight(WPAD_CHAN0)); },
             "GamePad stick-edge queries must not bypass the active runtime context");
+        require_logic_error(
+            [] { static_cast<void>(MR::getPlayerStickX()); },
+            "player stick queries must not manufacture neutral input without an active runtime context");
+        require_logic_error(
+            [] {
+                auto direction = TVec3f{};
+                MR::calcWorldStickDirectionXZ(&direction, WPAD_CHAN0);
+            },
+            "world-stick projection must not manufacture a camera basis without an active runtime context");
     }
 
     void test_aurora_wpad_sub_stick_edges() {

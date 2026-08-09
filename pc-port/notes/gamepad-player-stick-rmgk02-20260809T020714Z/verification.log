@@ -1,0 +1,41 @@
+Exact player-stick input prerequisite verification
+UTC: 2026-08-09T02:07:14Z
+
+Root build:
+  ninja -j12: PASS
+  build/tools/dtk shasum -c config/RMGK02/build.sha1: PASS
+    build/RMGK02/main.dol: OK
+
+Objdiff (`main/Game/Util/GamePadUtil`):
+  fuzzy: 98.694214%
+  code: 4044 / 4356 (92.83746%)
+  functions: 62 / 63 (98.4127%)
+  data: 24 / 24 (100%)
+  getPlayerStickX: 216 bytes, 100%
+  getPlayerStickY: 180 bytes, 100%
+  calcWorldStickDirectionXZ(float*, float*, long): 312 bytes, 81.76923%
+  calcWorldStickDirectionXZ(TVec3f*, long): 20 bytes, 100%
+
+Exact source identity:
+  cmp src/Game/Util/GamePadUtil.cpp pc-port/src/Game/Util/GamePadUtil.cpp: PASS
+  cmp include/Game/Util/GamePadUtil.hpp pc-port/src/Game/Util/GamePadUtil.hpp: PASS
+
+SHA-256:
+  d928d9d41df6e6b6f7d4a00e58b9cd8855f275d8dd80456097c4feff299539da  root GamePadUtil.cpp
+  d928d9d41df6e6b6f7d4a00e58b9cd8855f275d8dd80456097c4feff299539da  PC GamePadUtil.cpp
+  81b63b5a8fe6185305c16779e5a07bbe875b4124bd37cde1488c7090775ef3c1  root GamePadUtil.hpp
+  81b63b5a8fe6185305c16779e5a07bbe875b4124bd37cde1488c7090775ef3c1  PC GamePadUtil.hpp
+
+PC builds/runs:
+  xmake build smg-pc-game: PASS
+  xmake build smg-pc-game-source-mirror-tests: PASS
+  xmake run smg-pc-game-source-mirror-tests: PASS
+    src/Game/Util/GamePadUtil.hpp: PASS
+    src/Game/Util/GamePadUtil.cpp: PASS
+  xmake build smg-pc-aurora-native-tests: PASS
+  xmake run smg-pc-aurora-native-tests: PASS (25/25)
+    GamePad compatibility requires runtime context: PASS
+    Aurora WPAD sub-stick edges: PASS
+
+Diff hygiene:
+  git diff --check (owned paths): PASS

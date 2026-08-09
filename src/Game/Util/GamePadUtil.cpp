@@ -6,7 +6,10 @@
 #include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPadPointer.hpp"
 #include "Game/System/WPadStick.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+
+#include <JSystem/JMath/JMath.hpp>
 
 namespace MR {
     void getCorePadPointingPosBasedOnScreen(TVec2f* pPos, s32 channel) {
@@ -221,8 +224,37 @@ namespace MR {
         return testCorePadTriggerDown(WPAD_CHAN0) || testCorePadTriggerA(WPAD_CHAN0);
     }
 
-    // getPlayerStickX
-    // getPlayerStickY
+    f32 getPlayerStickX() {
+        WPadStick* pStick = MR::getWPad(WPAD_CHAN0)->mStick;
+        f32 stick = 0.0f;
+        f32 subStick = pStick->mStick.x;
+        if (stick != subStick) {
+            return subStick;
+        }
+
+        if (stick != 0.0f) {
+            f32 angle = JMath::sAtanTable.atan2_(stick, stick);
+            stick *= 1.0f + MR::abs(JMath::sSinCosTable.sinRadian(angle));
+        }
+
+        return stick;
+    }
+
+    f32 getPlayerStickY() {
+        WPadStick* pStick = MR::getWPad(WPAD_CHAN0)->mStick;
+        f32 stick = 0.0f;
+        f32 subStick = pStick->mStick.y;
+        if (stick != subStick) {
+            return subStick;
+        }
+
+        if (stick != 0.0f) {
+            f32 angle = JMath::sAtanTable.atan2_(stick, stick);
+            stick *= 1.0f + MR::abs(JMath::sSinCosTable.cosRadian(angle));
+        }
+
+        return stick;
+    }
 
     bool getPlayerTriggerA() {
         return testCorePadTriggerA(WPAD_CHAN0);
@@ -263,7 +295,33 @@ namespace MR {
         return MR::abs(x) + MR::abs(y) > 0.0f;
     }
 
-    // calcWorldStickDirectionXZ
+    void calcWorldStickDirectionXZ(f32* pDirX, f32* pDirZ, s32 channel) {
+        TPos3f cameraInvView;
+        JMath::gekko_ps_copy12(&cameraInvView, getCameraInvViewMtx());
+
+        TVec3f cameraRight;
+        cameraRight.set< f32 >(cameraInvView.mMtx[0][0], cameraInvView.mMtx[1][0], cameraInvView.mMtx[2][0]);
+        cameraRight.y = 0.0f;
+        MR::normalizeOrZero(&cameraRight);
+
+        TVec3f cameraFront;
+        cameraFront.set< f32 >(cameraInvView.mMtx[0][2], cameraInvView.mMtx[1][2], cameraInvView.mMtx[2][2]);
+        cameraFront.y = 0.0f;
+        MR::normalizeOrZero(&cameraFront);
+        cameraFront.scale(-1.0f);
+
+        f32 stickX = MR::getWPad(channel)->mStick->mStick.x;
+        f32 stickY = MR::getWPad(channel)->mStick->mStick.y;
+        cameraRight.scale(stickX);
+        cameraFront.scale(stickY);
+
+        TVec3f direction(cameraRight);
+        direction += cameraFront;
+        MR::normalizeOrZero(&direction);
+
+        *pDirX = direction.x;
+        *pDirZ = direction.z;
+    }
 
     void calcWorldStickDirectionXZ(TVec3f* pDir, s32 channel) {
         pDir->y = 0.0f;

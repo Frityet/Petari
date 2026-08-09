@@ -1,4 +1,6 @@
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 #include "runtime/RuntimeContext.hpp"
 
@@ -213,6 +215,14 @@ namespace MR {
         return testCorePadTriggerDown(WPAD_CHAN0) || testCorePadTriggerA(WPAD_CHAN0);
     }
 
+    f32 getPlayerStickX() {
+        return getSubPadStickX(WPAD_CHAN0);
+    }
+
+    f32 getPlayerStickY() {
+        return getSubPadStickY(WPAD_CHAN0);
+    }
+
     bool getPlayerTriggerA() {
         return testCorePadTriggerA(WPAD_CHAN0);
     }
@@ -248,6 +258,30 @@ namespace MR {
     bool isGamePadStickOperated(s32 channel) {
         const auto stick = wpad_service().sub_stick(channel);
         return std::abs(stick.x) + std::abs(stick.y) > 0.0F;
+    }
+
+    void calcWorldStickDirectionXZ(f32* pDirX, f32* pDirZ, s32 channel) {
+        auto camera_right = getCamXdir();
+        camera_right.y = 0.0F;
+        normalizeOrZero(&camera_right);
+
+        auto camera_front = getCamZdir();
+        camera_front.y = 0.0F;
+        normalizeOrZero(&camera_front);
+
+        const auto stick = wpad_service().sub_stick(channel);
+        camera_right.scale(stick.x);
+        camera_front.scale(stick.y);
+
+        camera_right.add(camera_front);
+        normalizeOrZero(&camera_right);
+        *pDirX = camera_right.x;
+        *pDirZ = camera_right.z;
+    }
+
+    void calcWorldStickDirectionXZ(TVec3f* pDir, s32 channel) {
+        pDir->y = 0.0F;
+        calcWorldStickDirectionXZ(&pDir->x, &pDir->z, channel);
     }
 
     u32 getWPadMaxCount() {
