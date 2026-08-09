@@ -322,7 +322,7 @@ public:
     void forceStopTornado();
     void startRotationTask(u32);
     void doSpinWallEffect();
-    void taskOnRotation(u32);
+    bool taskOnRotation(u32);
 
     void sendStateMsg(u32);
     bool updatePosture(MtxPtr);

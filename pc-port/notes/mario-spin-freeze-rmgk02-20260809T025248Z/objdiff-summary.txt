@@ -1,0 +1,44 @@
+MarioSpin and MarioDamageFreeze RMGK02 objdiff summary
+Generated: 2026-08-09T02:52:48Z
+
+main/Game/Player/MarioSpin
+--------------------------
+.text     1,412 bytes   99.65156%
+.ctors        4 bytes  100.00000%
+.data       536 bytes    3.1914895%
+.sdata2       8 bytes  100.00000%
+
+Retail address  Function                                Size  Match
+0x802F3DA0      Mario::checkTornado                       28  100.00000%
+0x802F3DBC      Mario::resetTornado                       52   99.23077%
+0x802F3DF0      Mario::calcTornadoTilt                   568   99.57746%
+0x802F4028      Mario::reflectWallOnSpinning              80  100.00000%
+0x802F4078      Mario::forceStopTornado                  120  100.00000%
+0x802F40F0      Mario::startRotationTask                  68   99.411766%
+0x802F4134      Mario::doSpinWallEffect                  208   99.46154%
+0x802F4204      Mario::taskOnRotation                    180   99.666664%
+
+The retail unit also contains the compiler-generated 108-byte static initializer
+at 0x802F42B8. The low .data percentage reflects neighboring pooled strings,
+padding, and split attribution that are not behaviorally owned by this source.
+
+main/Game/Player/MarioDamageFreeze
+----------------------------------
+.text     1,660 bytes   99.821686%
+.ctors        4 bytes  100.00000%
+.data       352 bytes   64.55224%
+.sdata2      24 bytes  100.00000%
+
+Retail address  Function                                      Size  Match
+0x802D8AB8      Mario::doFreeze                                200  100.00000%
+0x802D8B80      MarioFreeze::MarioFreeze                        92  100.00000%
+0x802D8BDC      MarioFreeze::close                              88   99.545456%
+0x802D8C34      MarioFreeze::notice                            100  100.00000%
+0x802D8C98      MarioFreeze::start                             204   99.52941%
+0x802D8D64      MarioFreeze::update                            848   99.81132%
+0x802D9120      Mario::setJumpVec                               20  100.00000%
+data            MarioFreeze::__vtable                           72  100.00000%
+
+The retail unit also contains the compiler-generated 108-byte static initializer
+at 0x802D90B4. Remaining sub-100% function deltas are argument/register or pooled
+constant/string relocation identity only.

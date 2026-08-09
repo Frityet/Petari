@@ -1,0 +1,63 @@
+MarioSpin and MarioDamageFreeze RMGK02 verification
+UTC timestamp: 2026-08-09T02:52:48Z
+
+Focused compilation
+-------------------
+command:
+  ninja -j2 build/RMGK02/src/Game/Player/MarioSpin.o build/RMGK02/src/Game/Player/MarioDamageFreeze.o
+result:
+  success
+notes:
+  Only the repository's pre-existing MarioActor nontrivial-union warnings were emitted.
+
+Objdiff commands
+----------------
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioSpin -o /tmp/mario-spin-final.json --format json-pretty
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioDamageFreeze -o /tmp/mario-freeze-final.json --format json-pretty
+
+Focused objdiff results
+-----------------------
+  MarioSpin .text:         1,412 bytes, 99.65156%
+  MarioDamageFreeze .text: 1,660 bytes, 99.821686%
+  Both .ctors:             4 bytes, 100%
+  Both .sdata2:            100%
+
+Full RMGK02 build
+-----------------
+command:
+  ninja -j12
+result:
+  success
+
+Progress after this tranche and concurrent player work:
+  All:  65.18% matched, 14.25% linked (734 / 2219 files)
+  Game: 62.42% matched, 13.30% linked (532 / 1605 files)
+
+DOL integrity
+-------------
+command:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+result:
+  build/RMGK02/main.dol: OK
+
+command:
+  sha1sum build/RMGK02/main.dol
+result:
+  54b71431af0d509097bfdef4ec28617afc487e89  build/RMGK02/main.dol
+
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- include/Game/Player/Mario.hpp include/Game/Player/MarioFreeze.hpp src/Game/Player/MarioSpin.cpp src/Game/Player/MarioDamageFreeze.cpp
+result:
+  success (no output)
+
+PC activation and protected paths
+---------------------------------
+  none
