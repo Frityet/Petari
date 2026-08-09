@@ -1,0 +1,42 @@
+MarioActorWipe RMGK02 verification
+UTC: 2026-08-09T02:52:58Z
+
+Focused build:
+  ninja build/RMGK02/src/Game/Player/MarioActorWipe.o
+
+Result:
+  [1/1] MWCC build/RMGK02/src/Game/Player/MarioActorWipe.o
+  PASS
+
+Focused objdiff:
+  build/tools/objdiff-cli diff -p . \
+    -u main/Game/Player/MarioActorWipe \
+    -o /tmp/MarioActorWipe-final.json --format json-pretty
+
+Result:
+  .text:  388 bytes, 99.896904%
+  .ctors:   4 bytes, 100%
+  .sdata2:  8 bytes, 100%
+  MarioActor::drawPreWipe() const: 280 bytes, 99.85714%
+  __sinit_\\MarioActorWipe_cpp: 108 bytes, 100%
+
+Full integration build:
+  ninja -j12 build/RMGK02/main.dol
+
+Result:
+  ninja: no work to do.
+  PASS
+
+Full DOL identity:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+
+Result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+  cmp -s: PASS (byte-identical)
+
+Whitespace audit:
+  git diff --check -- src/Game/Player/MarioActorWipe.cpp
+
+Result:
+  PASS

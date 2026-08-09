@@ -1,0 +1,21 @@
+RMGK02 focused objdiff: main/Game/Player/MarioActorWipe
+
+Target sections
+  .text    388 bytes   99.896904%
+  .ctors     4 bytes  100%
+  .sdata2    8 bytes  100%
+
+Target functions
+  MarioActor::drawPreWipe() const          280 bytes   99.85714%
+  __sinit_\\MarioActorWipe_cpp            108 bytes  100%
+
+Remaining drawPreWipe differences
+  target: lis r7, lbl_80539CB8@ha
+  base:   lis r7, @3230@ha
+
+  target: lfd f1, lbl_80539CB8@l(r7)
+  base:   lfd f1, @3230@l(r7)
+
+These are relocations to the same 8-byte compiler conversion constant
+(0x4330000080000000 / 4503601774854144.0). No instruction opcode, register,
+ordering, branch, or function-size mismatch remains.
