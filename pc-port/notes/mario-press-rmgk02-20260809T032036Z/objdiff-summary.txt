@@ -1,0 +1,14 @@
+MarioPress RMGK02 focused objdiff
+
+Unit: main/Game/Player/MarioPress
+Retail .text: 5144 bytes
+Source .text: 5144 bytes
+Overall .text match: 99.72006%
+.ctors match: 100%
+.sdata2 match: 100%
+
+checkPressDamage__5MarioFv: 712 bytes, 99.77528%
+checkVerticalPress__5MarioFb: 1072 bytes, 99.83209%
+checkSidePressPre__5MarioFv: 560 bytes, 99.89286%
+checkSidePress__5MarioFv: 2692 bytes, 99.61367%
+__sinit_\MarioPress_cpp: 108 bytes, 100%
