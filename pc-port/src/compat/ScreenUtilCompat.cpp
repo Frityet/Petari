@@ -123,4 +123,14 @@ namespace MR {
         smgpc::compat::require_information_message().disappear();
     }
 
+    bool isYesNoSelected() {
+        throw std::logic_error(
+            "Yes/No selection state is unavailable without a scene-owned selector.");
+    }
+
+    bool isYesNoSelectedYes() {
+        throw std::logic_error(
+            "Yes/No selection state is unavailable without a scene-owned selector.");
+    }
+
 }  // namespace MR

@@ -2979,6 +2979,13 @@ namespace smgpc::runtime {
         return _player_dead_state;
     }
 
+    std::optional<s32> PlayerSystemService::player_element_mode() const {
+        if (_attached_actor == nullptr || _entitlement_bridge.read_element_mode == nullptr) {
+            return std::nullopt;
+        }
+        return _entitlement_bridge.read_element_mode(*_attached_actor);
+    }
+
     bool PlayerSystemService::is_swing_permitted() const {
         return _swing_permitted;
     }
@@ -3448,6 +3455,10 @@ namespace smgpc::runtime {
 
     std::size_t MessageService::load_message_archive(const smgpc::resource::RarcArchive &archive) {
         const auto messages = smgpc::resource::BmgMessageArchive::from_message_archive(archive);
+        _message_indices.clear();
+        _message_ids_by_index.clear();
+        _message_ids_by_index.reserve(messages.message_count());
+        auto message_index = std::uint32_t{};
         for (const auto &message : messages.messages()) {
             _messages[message.id] = MessageText{
                 .raw_utf16 = message.raw_text,
@@ -3456,7 +3467,10 @@ namespace smgpc::runtime {
                 .info = message.info,
                 .control_tags = message.control_tags,
             };
+            _message_indices[message.id] = message_index++;
+            _message_ids_by_index.push_back(message.id);
         }
+        _flow_data = messages.flow();
 
         return messages.message_count();
     }
@@ -3512,6 +3526,49 @@ namespace smgpc::runtime {
         }
 
         return smgpc::resource::format_bmg_text(*raw_text, args);
+    }
+
+    std::optional<std::uint32_t> MessageService::message_index(std::string_view tag) const {
+        const auto found = _message_indices.find(tag);
+        return found != _message_indices.end() ? std::optional<std::uint32_t>(found->second) : std::nullopt;
+    }
+
+    const std::string *MessageService::message_id(std::uint32_t index) const {
+        return index < _message_ids_by_index.size() ? &_message_ids_by_index[index] : nullptr;
+    }
+
+    const smgpc::resource::BmgFlowData *MessageService::flow_data() const {
+        return _flow_data.has_value() ? &*_flow_data : nullptr;
+    }
+
+    const smgpc::resource::BmgFlowNode *MessageService::flow_node(std::uint32_t index) const {
+        const auto *flow = flow_data();
+        return flow != nullptr && index < flow->nodes.size() ? &flow->nodes[index] : nullptr;
+    }
+
+    std::optional<std::uint32_t> MessageService::first_flow_node_for_message(std::uint32_t message_index) const {
+        const auto *flow = flow_data();
+        if (flow == nullptr) {
+            return std::nullopt;
+        }
+
+        for (auto index = std::size_t{}; index < flow->nodes.size(); ++index) {
+            const auto &node = flow->nodes[index];
+            if (node.node_type == 1U && node.index == message_index) {
+                return static_cast<std::uint32_t>(index);
+            }
+        }
+
+        return std::nullopt;
+    }
+
+    std::optional<std::uint16_t> MessageService::branch_flow_node(std::uint32_t branch_index) const {
+        const auto *flow = flow_data();
+        if (flow == nullptr || branch_index >= flow->branch_node_indices.size()) {
+            return std::nullopt;
+        }
+        const auto node_index = flow->branch_node_indices[branch_index];
+        return node_index < flow->nodes.size() ? std::optional<std::uint16_t>(node_index) : std::nullopt;
     }
 
     void SceneLightService::clear() {

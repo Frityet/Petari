@@ -666,8 +666,12 @@ namespace smgpc::runtime {
 
     struct PlayerActorEntitlementBridge {
         using SwingPermissionWriter = void (*)(LiveActor &, bool);
+        using ElementModeReader = s32 (*)(const LiveActor &);
 
         SwingPermissionWriter set_swing_permission = nullptr;
+        // Concrete player owners install this capability only when their
+        // attached object really exposes the retail MarioActor mode field.
+        ElementModeReader read_element_mode = nullptr;
     };
 
     class PlayerSystemService final {
@@ -698,6 +702,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::span<const f32, 3U> gravity() const;
         [[nodiscard]] bool is_on_ground() const;
         [[nodiscard]] std::optional<bool> player_dead_state() const;
+        [[nodiscard]] std::optional<s32> player_element_mode() const;
         [[nodiscard]] bool is_swing_permitted() const;
         [[nodiscard]] bool is_control_enabled() const;
         [[nodiscard]] std::uint64_t base_matrix_revision() const;
@@ -855,6 +860,12 @@ namespace smgpc::runtime {
         [[nodiscard]] const smgpc::resource::BmgMessageInfo *message_info(std::string_view tag) const;
         [[nodiscard]] const std::vector<smgpc::resource::BmgControlTag> *message_control_tags(std::string_view tag) const;
         [[nodiscard]] std::u16string format_message_utf16(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args) const;
+        [[nodiscard]] std::optional<std::uint32_t> message_index(std::string_view tag) const;
+        [[nodiscard]] const std::string *message_id(std::uint32_t index) const;
+        [[nodiscard]] const smgpc::resource::BmgFlowData *flow_data() const;
+        [[nodiscard]] const smgpc::resource::BmgFlowNode *flow_node(std::uint32_t index) const;
+        [[nodiscard]] std::optional<std::uint32_t> first_flow_node_for_message(std::uint32_t message_index) const;
+        [[nodiscard]] std::optional<std::uint16_t> branch_flow_node(std::uint32_t branch_index) const;
 
     private:
         struct MessageText {
@@ -866,6 +877,9 @@ namespace smgpc::runtime {
         };
 
         std::map<std::string, MessageText> _messages;
+        std::map<std::string, std::uint32_t, std::less<>> _message_indices;
+        std::vector<std::string> _message_ids_by_index;
+        std::optional<smgpc::resource::BmgFlowData> _flow_data;
     };
 
     class SceneLightService final {

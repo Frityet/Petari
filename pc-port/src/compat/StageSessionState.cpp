@@ -70,6 +70,46 @@ namespace smgpc::compat {
         _power_star_get_demo_active = active;
     }
 
+    s32 StageSessionState::setup_already_done_flag(u16 name_hash, s32 zone_id,
+                                                   s32 link_id, u32 *value) {
+        if (value == nullptr) {
+            throw std::invalid_argument("Already-done setup requires an output value.");
+        }
+
+        const auto masked_hash = static_cast<u16>(name_hash & 0x7fffU);
+        const auto stored_zone = static_cast<u16>(zone_id);
+        const auto stored_link = static_cast<u16>(link_id);
+        for (auto index = std::size_t{}; index < _already_done_count; ++index) {
+            const auto &entry = _already_done[index];
+            if (entry.name_hash == masked_hash && entry.zone_id == stored_zone &&
+                entry.link_id == stored_link) {
+                *value = entry.value ? 1U : 0U;
+                return static_cast<s32>(index);
+            }
+        }
+
+        if (_already_done_count == _already_done.size()) {
+            throw std::logic_error("The stage AlreadyDoneInfo registry exceeded its retail 64-entry capacity.");
+        }
+
+        const auto index = _already_done_count++;
+        _already_done[index] = AlreadyDoneEntry{
+            .name_hash = masked_hash,
+            .zone_id = stored_zone,
+            .link_id = stored_link,
+            .value = false,
+        };
+        *value = 0U;
+        return static_cast<s32>(index);
+    }
+
+    void StageSessionState::update_already_done_flag(s32 index, u32 value) {
+        if (index < 0 || static_cast<std::size_t>(index) >= _already_done_count) {
+            throw std::out_of_range("Already-done update refers to an unallocated stage entry.");
+        }
+        _already_done[static_cast<std::size_t>(index)].value = value != 0U;
+    }
+
     StageSessionBinding::StageSessionBinding(StageSessionState &session)
         : _previous(s_active_binding), _session(&session) {
         s_active_binding = this;

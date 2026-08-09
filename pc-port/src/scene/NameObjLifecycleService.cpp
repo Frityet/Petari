@@ -2,12 +2,12 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
-#include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "scene/PlacementZoneNameScope.hpp"
 
 #include <string>
 
@@ -51,28 +51,6 @@ namespace smgpc::scene {
                 throw std::logic_error("NameObj placement context does not own a valid retail JMap row.");
             }
         }
-
-        class PlacementZoneScope final {
-        public:
-            explicit PlacementZoneScope(const NameObjPlacementContext &placement)
-                : _checker(MR::getPlacementStateChecker()) {
-                if (_checker == nullptr) {
-                    throw std::logic_error(
-                        "A retail placement lifecycle requires SceneObj_PlacementStateChecker.");
-                }
-                _checker->setCurrentPlacementZoneId(MR::getPlacedZoneId(placement.iter));
-            }
-
-            ~PlacementZoneScope() {
-                _checker->clearCurrentPlacementZoneId();
-            }
-
-            PlacementZoneScope(const PlacementZoneScope &) = delete;
-            PlacementZoneScope &operator=(const PlacementZoneScope &) = delete;
-
-        private:
-            PlacementStateChecker *_checker;
-        };
 
     }  // namespace
 
@@ -124,7 +102,8 @@ namespace smgpc::scene {
         }
 
         require_valid_placement_context(*placement);
-        auto zone_scope = PlacementZoneScope(*placement);
+        auto zone_scope = smgpc::scene::PlacementZoneNameScope(
+            MR::getPlacedZoneId(placement->iter), placement->zone_name);
         auto object = construct(object_name, actor_name);
         try {
             init(*object, placement);

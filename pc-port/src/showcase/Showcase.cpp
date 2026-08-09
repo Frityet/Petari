@@ -96,6 +96,7 @@ namespace {
                 *_actor,
                 smgpc::runtime::PlayerActorEntitlementBridge{
                     .set_swing_permission = &GatewayMarioOwner::set_swing_permission,
+                    .read_element_mode = &GatewayMarioOwner::read_element_mode,
                 });
         }
 
@@ -127,6 +128,15 @@ namespace {
                     "Gateway player entitlement bridge requires MarioActor");
             }
             mario->_EEB = permitted;
+        }
+
+        static s32 read_element_mode(const LiveActor& actor) {
+            const auto* mario = dynamic_cast<const MarioActor*>(&actor);
+            if (mario == nullptr) {
+                throw std::logic_error(
+                    "Gateway player element-mode bridge requires MarioActor");
+            }
+            return mario->mPlayerMode;
         }
 
         smgpc::runtime::PlayerSystemService* _player_system = nullptr;

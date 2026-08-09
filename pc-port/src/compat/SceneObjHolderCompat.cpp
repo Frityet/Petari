@@ -22,6 +22,7 @@
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
+#include "compat/TalkRuntime.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -155,6 +156,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new CenterScreenBlur();
     case SceneObj_InformationObserver:
         return new InformationObserver();
+    case SceneObj_TalkDirector:
+        return new smgpc::compat::TalkRuntime();
     case SceneObj_LensFlareDirector:
         return new LensFlareDirector();
     case SceneObj_SphereSelector:

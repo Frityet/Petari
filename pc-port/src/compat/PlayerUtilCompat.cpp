@@ -1,6 +1,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoUtilCompat.hpp"
 #include "compat/PlayerUtilCompat.hpp"
@@ -39,6 +40,20 @@ namespace MR {
         [[nodiscard]] LiveActor* activePlayerActor() {
             auto* player = smgpc::compat::active_player_system_for_player_util();
             return player != nullptr ? player->attached_actor() : nullptr;
+        }
+
+        [[nodiscard]] s32 activePlayerElementMode() {
+            auto* player = smgpc::compat::active_player_system_for_player_util();
+            if (player == nullptr || player->attached_actor() == nullptr) {
+                throw std::logic_error(
+                    "Player element mode requires an attached player actor.");
+            }
+            const auto mode = player->player_element_mode();
+            if (!mode.has_value()) {
+                throw std::logic_error(
+                    "The attached player actor does not expose a retail element-mode capability.");
+            }
+            return *mode;
         }
 
         void copyPlayerAxis(TVec3f* pOut, int column) {
@@ -122,6 +137,47 @@ namespace MR {
             throw std::logic_error("Player position is unavailable.");
         }
         return position.distance(*player_position);
+    }
+
+    bool isNearPlayerAnyTime(const LiveActor* actor, f32 distance) {
+        const auto* player = activePlayerActor();
+        if (actor == nullptr || player == nullptr) {
+            throw std::logic_error(
+                "Player-distance queries require a host actor and attached player actor.");
+        }
+        return actor->mPosition.squared(player->mPosition) < (distance * distance);
+    }
+
+    bool isPlayerElementMode(s32 mode) {
+        return activePlayerElementMode() == mode;
+    }
+
+    bool isPlayerElementModeTornado() {
+        return isPlayerElementMode(9);
+    }
+
+    bool isPlayerElementModeInvincible() {
+        return isPlayerElementMode(1);
+    }
+
+    bool isPlayerElementModeBee() {
+        return isPlayerElementMode(4);
+    }
+
+    bool isPlayerElementModeHopper() {
+        return isPlayerElementMode(5);
+    }
+
+    bool isPlayerElementModeTeresa() {
+        return isPlayerElementMode(6);
+    }
+
+    bool isPlayerElementModeIce() {
+        return isPlayerElementMode(3);
+    }
+
+    bool isPlayerElementModeNormal() {
+        return isPlayerElementMode(0);
     }
 
     void getPlayerUpVec(TVec3f* pOut) {

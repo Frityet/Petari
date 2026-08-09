@@ -2,219 +2,395 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/NPCActor.hpp"
-#include "Game/Util/ActorMovementUtil.hpp"
-#include "Game/Util/JMapUtil.hpp"
+#include "Game/NPC/TalkMessageFunc.hpp"
+#include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "runtime/RuntimeContext.hpp"
+#include "compat/DemoSceneRuntime.hpp"
+#include "compat/TalkRuntime.hpp"
 
 #include <cstdio>
 #include <memory>
 #include <stdexcept>
-#include <string>
-#include <unordered_map>
 
 namespace {
-    struct TalkRuntimeState {
-        s32 message_id = -1;
-        s32 node_index = 0;
-    };
 
-    std::unordered_map<const TalkMessageCtrl *, TalkRuntimeState> sTalkStates;
-    std::unordered_map<const LiveActor *, std::unique_ptr<TalkMessageCtrl>> sOwnedTalkCtrls;
-
-    void trace_talk(const TalkMessageCtrl *pCtrl, const char *event) {
-#ifndef NDEBUG
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pCtrl != nullptr) {
-            const auto *host = pCtrl->mHostActor;
-            const auto state = sTalkStates.find(pCtrl);
-            if (state == sTalkStates.end()) {
-                return;
-            }
-            runtime->emit_semantic_trace_event("talk", event,
-                                               "host=" + std::string(host != nullptr && host->getName() != nullptr ? host->getName() : "") +
-                                                   ";message_id=" + std::to_string(state->second.message_id) +
-                                                   ";node=" + std::to_string(state->second.node_index));
-        }
-#else
-        static_cast<void>(pCtrl);
-        static_cast<void>(event);
-#endif
+    [[nodiscard]] bool time_keep_demo_active() {
+        const auto* runtime = smgpc::compat::active_demo_scene_runtime();
+        return runtime != nullptr && runtime->is_time_keep_active();
     }
+
+    [[nodiscard]] bool consume_talk_end(TalkMessageCtrl* controller) {
+        return controller != nullptr &&
+               smgpc::compat::require_talk_runtime("Talk AtEnd query")
+                   .consume_end(*controller);
+    }
+
 }  // namespace
 
 namespace smgpc::compat {
-    TalkMessageCtrl *owned_talk_ctrl(const LiveActor *actor) {
-        const auto found = sOwnedTalkCtrls.find(actor);
-        return found != sOwnedTalkCtrls.end() ? found->second.get() : nullptr;
+
+    TalkMessageCtrl* owned_talk_ctrl(const LiveActor* actor) {
+        const auto* runtime = current_talk_runtime();
+        return runtime != nullptr ? runtime->owned_controller(actor) : nullptr;
     }
 
-    void release_talk_runtime_state(const LiveActor *actor) {
-        const auto found = sOwnedTalkCtrls.find(actor);
-        if (found == sOwnedTalkCtrls.end()) {
-            return;
+    void release_talk_runtime_state(const LiveActor* actor) {
+        if (auto* runtime = current_talk_runtime(); runtime != nullptr) {
+            runtime->release_owned_controller(actor);
         }
-        if (auto *npc = dynamic_cast<NPCActor *>(const_cast<LiveActor *>(actor)); npc != nullptr && npc->mMsgCtrl == found->second.get()) {
-            npc->mMsgCtrl = nullptr;
-        }
-        sOwnedTalkCtrls.erase(found);
     }
 
-    bool has_owned_talk_ctrl(const LiveActor *actor) {
-        return sOwnedTalkCtrls.contains(actor);
+    bool has_owned_talk_ctrl(const LiveActor* actor) {
+        const auto* runtime = current_talk_runtime();
+        return runtime != nullptr && runtime->has_owned_controller(actor);
     }
+
 }  // namespace smgpc::compat
 
-TalkMessageCtrl::TalkMessageCtrl(LiveActor *pHost, const TVec3f &rOffset, MtxPtr pMtx)
-    : NameObj("TalkMessageCtrl"), mHostActor(pHost), mNodeCtrl(nullptr), mZoneID(-1), _18(0), _1C(), mMtx(pMtx), _2C(rOffset),
-      mTalkDistance(500.0F), _3C(0), mAlreadyDoneFlags(0), mIsOnRootNodeAuto(false), mIsOnReadNodeAuto(false), mIsStartOnlyFront(false),
-      mCameraInfo(nullptr), mBranchFunc(nullptr), mEventFunc(nullptr), mAnimeFunc(nullptr), mKillFunc(nullptr),
-      mTagArg(0, CustomTagArg::Type_Uninitialized) {
-    sTalkStates.emplace(this, TalkRuntimeState{});
-}
-
-TalkMessageCtrl::~TalkMessageCtrl() {
-    sTalkStates.erase(this);
-}
-
-void TalkMessageCtrl::createMessage(const JMapInfoIter &rIter, const char *) {
-    auto message_id = s32{-1};
-    (void)MR::getJMapInfoMessageID(rIter, &message_id);
-    sTalkStates[this].message_id = message_id;
-}
-
-void TalkMessageCtrl::createMessageDirect(const JMapInfoIter &rIter, const char *pName) {
-    createMessage(rIter, pName);
-}
-
-u32 TalkMessageCtrl::getMessageID() const {
-    const auto found = sTalkStates.find(this);
-    if (found == sTalkStates.end() || found->second.message_id < 0) {
-        throw std::logic_error("Talk message data is unavailable.");
-    }
-    return static_cast<u32>(found->second.message_id);
-}
-
-bool TalkMessageCtrl::requestTalk() {
-    throw std::logic_error("TalkDirector runtime is unavailable.");
-}
-
-bool TalkMessageCtrl::requestTalkForce() {
-    throw std::logic_error("TalkDirector runtime is unavailable.");
-}
-
-void TalkMessageCtrl::startTalk() {
-    throw std::logic_error("TalkDirector runtime is unavailable.");
-}
-
-void TalkMessageCtrl::startTalkForce() {
-    startTalk();
-}
-
-void TalkMessageCtrl::startTalkForcePuppetable() {
-    startTalk();
-}
-
-void TalkMessageCtrl::startTalkForceWithoutDemo() {
-    startTalk();
-}
-
-void TalkMessageCtrl::startTalkForceWithoutDemoPuppetable() {
-    startTalk();
-}
-
-void TalkMessageCtrl::endTalk() {
-    throw std::logic_error("TalkDirector runtime is unavailable.");
-}
-
-bool TalkMessageCtrl::isNearPlayer(const TalkMessageCtrl *) {
-    return isNearPlayer(mTalkDistance);
-}
-
-bool TalkMessageCtrl::isNearPlayer(f32 distance) const {
-    return mHostActor != nullptr && MR::isNearPlayer(mHostActor, distance);
-}
-
-bool TalkMessageCtrl::inMessageArea() const {
-    throw std::logic_error(
-        "MessageArea membership is unavailable without the real TalkNodeCtrl message metadata and AreaObj ownership.");
-}
-
 namespace MR {
-    const wchar_t *getGalaxyNameOnCurrentLanguage(const char *pGalaxyName) {
+
+    const wchar_t* getGalaxyNameOnCurrentLanguage(const char* galaxy_name) {
         char message_id[256]{};
-        std::snprintf(message_id, sizeof(message_id), "GalaxyName_%s", pGalaxyName != nullptr ? pGalaxyName : "");
+        std::snprintf(message_id, sizeof(message_id), "GalaxyName_%s",
+                      galaxy_name != nullptr ? galaxy_name : "");
         return getGameMessageDirect(message_id);
     }
 
-    TalkMessageCtrl *createTalkCtrl(LiveActor *pActor, const JMapInfoIter &rIter, const char *pName, const TVec3f &rOffset, MtxPtr pMtx) {
-        auto owned_ctrl = std::make_unique<TalkMessageCtrl>(pActor, rOffset, pMtx);
-        auto *ctrl = owned_ctrl.get();
-        ctrl->createMessage(rIter, pName);
-        sOwnedTalkCtrls.insert_or_assign(pActor, std::move(owned_ctrl));
-        return ctrl;
+    void registerBranchFunc(TalkMessageCtrl* controller, const TalkMessageFuncBase& function) {
+        if (controller != nullptr) {
+            controller->registerBranchFunc(function);
+        }
     }
 
-    TalkMessageCtrl *createTalkCtrlDirect(LiveActor *pActor, const JMapInfoIter &rIter, const char *pName, const TVec3f &rOffset,
-                                          MtxPtr pMtx) {
-        auto owned_ctrl = std::make_unique<TalkMessageCtrl>(pActor, rOffset, pMtx);
-        auto *ctrl = owned_ctrl.get();
-        ctrl->createMessageDirect(rIter, pName);
-        sOwnedTalkCtrls.insert_or_assign(pActor, std::move(owned_ctrl));
-        return ctrl;
+    void registerEventFunc(TalkMessageCtrl* controller, const TalkMessageFuncBase& function) {
+        if (controller != nullptr) {
+            controller->registerEventFunc(function);
+        }
     }
 
-    bool tryTalkNearPlayer(TalkMessageCtrl *pCtrl) {
-        if (pCtrl == nullptr || !pCtrl->requestTalk()) {
+    void registerAnimeFunc(TalkMessageCtrl* controller, const TalkMessageFuncBase& function) {
+        if (controller != nullptr) {
+            controller->registerAnimeFunc(function);
+        }
+    }
+
+    void registerKillFunc(TalkMessageCtrl* controller, const TalkMessageFuncBase& function) {
+        if (controller != nullptr) {
+            controller->registerKillFunc(function);
+        }
+    }
+
+    void setMessageArg(TalkMessageCtrl* controller, int value) {
+        if (controller != nullptr) {
+            controller->setMessageArg(CustomTagArg(value, CustomTagArg::Type_Int));
+        }
+    }
+
+    void setMessageArg(TalkMessageCtrl* controller, const wchar_t* value) {
+        if (controller != nullptr) {
+            controller->setMessageArg(CustomTagArg(value, CustomTagArg::Type_Char));
+        }
+    }
+
+    TalkMessageCtrl* createTalkCtrl(LiveActor* actor, const JMapInfoIter& iter,
+                                    const char* name, const TVec3f& offset, MtxPtr matrix) {
+        auto controller = std::make_unique<TalkMessageCtrl>(actor, offset, matrix);
+        controller->createMessage(iter, name);
+        return smgpc::compat::require_talk_runtime("Placement talk-controller ownership")
+            .adopt_owned_controller(actor, std::move(controller));
+    }
+
+    TalkMessageCtrl* createTalkCtrlDirect(LiveActor* actor, const JMapInfoIter& iter,
+                                          const char* name, const TVec3f& offset,
+                                          MtxPtr matrix) {
+        auto controller = std::make_unique<TalkMessageCtrl>(actor, offset, matrix);
+        controller->createMessageDirect(iter, name);
+        return smgpc::compat::require_talk_runtime("Direct talk-controller ownership")
+            .adopt_owned_controller(actor, std::move(controller));
+    }
+
+    TalkMessageCtrl* createTalkCtrlDirectOnRootNodeAutomatic(
+        LiveActor* actor, const JMapInfoIter& iter, const char* name,
+        const TVec3f& offset, MtxPtr matrix) {
+        auto* controller = createTalkCtrlDirect(actor, iter, name, offset, matrix);
+        controller->mIsOnRootNodeAuto = true;
+        return controller;
+    }
+
+    bool tryTalkNearPlayer(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active() || !controller->requestTalk()) {
             return false;
         }
-        pCtrl->startTalk();
+        controller->startTalk();
         return true;
     }
 
-    bool tryTalkTimeKeepDemoMarioPuppetable(TalkMessageCtrl *pCtrl) {
-        if (pCtrl == nullptr || !pCtrl->requestTalkForce()) {
+    bool tryTalkNearPlayerAtEnd(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active()) {
             return false;
         }
-        pCtrl->startTalkForcePuppetable();
+        if (consume_talk_end(controller)) {
+            static_cast<void>(controller->requestTalk());
+            return true;
+        }
+        if (controller->requestTalk()) {
+            controller->startTalk();
+        }
+        return false;
+    }
+
+    bool tryTalkForce(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active() || !controller->requestTalkForce()) {
+            return false;
+        }
+        controller->startTalkForce();
         return true;
     }
 
-    bool tryTalkTimeKeepDemoWithoutPauseMarioPuppetable(TalkMessageCtrl *pCtrl) {
-        if (pCtrl == nullptr || !pCtrl->requestTalkForce()) {
+    bool tryTalkForceAtEnd(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active()) {
             return false;
         }
-        pCtrl->startTalkForceWithoutDemoPuppetable();
+        if (consume_talk_end(controller)) {
+            return true;
+        }
+        if (controller->requestTalkForce()) {
+            controller->startTalkForce();
+        }
+        return false;
+    }
+
+    bool tryTalkForceWithoutDemo(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active() || !controller->requestTalkForce()) {
+            return false;
+        }
+        controller->startTalkForceWithoutDemo();
         return true;
     }
 
-    bool isNearPlayer(const TalkMessageCtrl *pCtrl, f32 distance) {
-        return pCtrl != nullptr && pCtrl->isNearPlayer(distance);
+    bool tryTalkForceWithoutDemoMarioPuppetable(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active() || !controller->requestTalkForce()) {
+            return false;
+        }
+        controller->startTalkForceWithoutDemoPuppetable();
+        return true;
     }
 
-    void forwardNode(TalkMessageCtrl *pCtrl) {
-        if (pCtrl == nullptr) {
+    bool tryTalkForceWithoutDemoAtEnd(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active()) {
+            return false;
+        }
+        if (consume_talk_end(controller)) {
+            return true;
+        }
+        if (controller->requestTalkForce()) {
+            controller->startTalkForceWithoutDemo();
+        }
+        return false;
+    }
+
+    bool tryTalkForceWithoutDemoMarioPuppetableAtEnd(TalkMessageCtrl* controller) {
+        if (controller == nullptr || time_keep_demo_active()) {
+            return false;
+        }
+        if (consume_talk_end(controller)) {
+            return true;
+        }
+        if (controller->requestTalkForce()) {
+            controller->startTalkForceWithoutDemoPuppetable();
+        }
+        return false;
+    }
+
+    bool tryTalkTimeKeepDemo(TalkMessageCtrl* controller) {
+        if (controller == nullptr || !controller->requestTalkForce()) {
+            return false;
+        }
+        controller->startTalkForce();
+        return true;
+    }
+
+    bool tryTalkTimeKeepDemoMarioPuppetable(TalkMessageCtrl* controller) {
+        if (controller == nullptr || !controller->requestTalkForce()) {
+            return false;
+        }
+        controller->startTalkForcePuppetable();
+        return true;
+    }
+
+    bool tryTalkTimeKeepDemoWithoutPauseMarioPuppetable(TalkMessageCtrl* controller) {
+        if (controller == nullptr || !controller->requestTalkForce()) {
+            return false;
+        }
+        controller->startTalkForceWithoutDemoPuppetable();
+        return true;
+    }
+
+    bool tryTalkRequest(TalkMessageCtrl* controller) {
+        return controller != nullptr && controller->requestTalk();
+    }
+
+    bool tryTalkSelectLeft(TalkMessageCtrl*) {
+        return isYesNoSelected() && isYesNoSelectedYes();
+    }
+
+    bool tryTalkSelectRight(TalkMessageCtrl*) {
+        return isYesNoSelected() && !isYesNoSelectedYes();
+    }
+
+    const MtxPtr getMessageBalloonFollowMatrix(const TalkMessageCtrl* controller) {
+        return controller != nullptr ? controller->mMtx : nullptr;
+    }
+
+    const TVec3f& getMessageBalloonFollowOffset(const TalkMessageCtrl* controller) {
+        if (controller == nullptr) {
+            throw std::logic_error("Talk balloon offset query requires a TalkMessageCtrl.");
+        }
+        return controller->_2C;
+    }
+
+    void setMessageBalloonFollowOffset(TalkMessageCtrl* controller, const TVec3f& offset) {
+        if (controller != nullptr) {
+            controller->_2C = offset;
+        }
+    }
+
+    bool isNearPlayer(const TalkMessageCtrl* controller, f32 distance) {
+        return controller != nullptr && controller->isNearPlayer(distance);
+    }
+
+    bool inMessageArea(const TalkMessageCtrl* controller) {
+        return controller != nullptr && controller->inMessageArea();
+    }
+
+    bool isTalkNone(const TalkMessageCtrl* controller) {
+        return controller != nullptr && controller->_18 == 0U;
+    }
+
+    bool isTalkEntry(const TalkMessageCtrl* controller) {
+        return controller != nullptr && controller->_18 == 1U;
+    }
+
+    bool isTalkTalking(const TalkMessageCtrl* controller) {
+        return controller != nullptr && controller->_18 == 3U;
+    }
+
+    bool isTalkEnableEnd(const TalkMessageCtrl* controller) {
+        return controller != nullptr && controller->_18 == 4U;
+    }
+
+    void clearTalkState(TalkMessageCtrl* controller) {
+        TalkFunction::onTalkStateNone(controller);
+    }
+
+    void resetNode(TalkMessageCtrl* controller) {
+        if (controller == nullptr || controller->mNodeCtrl == nullptr) {
             return;
         }
-        throw std::logic_error("Talk node runtime is unavailable.");
+        TalkFunction::onTalkStateNone(controller);
+        controller->mNodeCtrl->resetFlowNode();
     }
 
-    void setDistanceToTalk(TalkMessageCtrl *pCtrl, f32 distance) {
-        if (pCtrl != nullptr) {
-            pCtrl->mTalkDistance = distance;
+    void readMessage(TalkMessageCtrl* controller) {
+        if (controller != nullptr) {
+            controller->readMessage();
         }
     }
 
-    void onRootNodeAutomatic(TalkMessageCtrl *pCtrl) {
-        if (pCtrl != nullptr) {
-            pCtrl->mIsOnRootNodeAuto = true;
+    void forwardNode(TalkMessageCtrl* controller) {
+        if (controller == nullptr || controller->mNodeCtrl == nullptr) {
+            return;
+        }
+        TalkFunction::onTalkStateNone(controller);
+        controller->mNodeCtrl->forwardFlowNode();
+        controller->mNodeCtrl->recordTempFlowNode();
+    }
+
+    void resetAndForwardNode(TalkMessageCtrl* controller, s32 count) {
+        if (controller == nullptr || controller->mNodeCtrl == nullptr) {
+            return;
+        }
+        TalkFunction::onTalkStateNone(controller);
+        controller->mNodeCtrl->resetFlowNode();
+        for (auto index = s32{}; index < count; ++index) {
+            TalkFunction::onTalkStateNone(controller);
+            controller->mNodeCtrl->forwardFlowNode();
+            controller->mNodeCtrl->recordTempFlowNode();
         }
     }
 
-    void offRootNodeAutomatic(TalkMessageCtrl *pCtrl) {
-        if (pCtrl != nullptr) {
-            pCtrl->mIsOnRootNodeAuto = false;
+    void forwardNodeNextBranchLeft(TalkMessageCtrl* controller) {
+        if (controller == nullptr || controller->mNodeCtrl == nullptr) return;
+        TalkFunction::onTalkStateNone(controller);
+        controller->mNodeCtrl->forwardFlowNode();
+        controller->mNodeCtrl->forwardCurrentBranchNode(true);
+        controller->mNodeCtrl->recordTempFlowNode();
+    }
+
+    void forwardNodeNextBranchRight(TalkMessageCtrl* controller) {
+        if (controller == nullptr || controller->mNodeCtrl == nullptr) return;
+        TalkFunction::onTalkStateNone(controller);
+        controller->mNodeCtrl->forwardFlowNode();
+        controller->mNodeCtrl->forwardCurrentBranchNode(false);
+        controller->mNodeCtrl->recordTempFlowNode();
+    }
+
+    void forwardNodeCurrentBranchLeft(TalkMessageCtrl* controller) {
+        if (controller == nullptr || controller->mNodeCtrl == nullptr) return;
+        TalkFunction::onTalkStateNone(controller);
+        controller->mNodeCtrl->forwardCurrentBranchNode(true);
+        controller->mNodeCtrl->recordTempFlowNode();
+    }
+
+    void forwardNodeCurrentBranchRight(TalkMessageCtrl* controller) {
+        if (controller == nullptr || controller->mNodeCtrl == nullptr) return;
+        TalkFunction::onTalkStateNone(controller);
+        controller->mNodeCtrl->forwardCurrentBranchNode(false);
+        controller->mNodeCtrl->recordTempFlowNode();
+    }
+
+    void tryForwardNode(TalkMessageCtrl* controller) {
+        if (controller != nullptr && controller->mNodeCtrl != nullptr &&
+            controller->mNodeCtrl->isExistNextNode()) {
+            forwardNode(controller);
         }
     }
+
+    bool isExistNextNode(const TalkMessageCtrl* controller) {
+        return controller != nullptr && controller->mNodeCtrl != nullptr &&
+               controller->mNodeCtrl->isExistNextNode();
+    }
+
+    bool isShortTalk(const TalkMessageCtrl* controller) {
+        return TalkFunction::isShortTalk(controller);
+    }
+
+    void setDistanceToTalk(TalkMessageCtrl* controller, f32 distance) {
+        if (controller != nullptr) controller->mTalkDistance = distance;
+    }
+    void onRootNodeAutomatic(TalkMessageCtrl* controller) {
+        if (controller != nullptr) controller->mIsOnRootNodeAuto = true;
+    }
+    void offRootNodeAutomatic(TalkMessageCtrl* controller) {
+        if (controller != nullptr) controller->mIsOnRootNodeAuto = false;
+    }
+    void onReadNodeAutomatic(TalkMessageCtrl* controller) {
+        if (controller != nullptr) controller->mIsOnReadNodeAuto = true;
+    }
+    void offReadNodeAutomatic(TalkMessageCtrl* controller) {
+        if (controller != nullptr) controller->mIsOnReadNodeAuto = false;
+    }
+    void onStartOnlyFront(TalkMessageCtrl* controller) {
+        if (controller != nullptr) controller->mIsStartOnlyFront = true;
+    }
+    bool isTalkStart(const TalkMessageCtrl* controller) {
+        return TalkFunction::isTalkSystemStart(controller);
+    }
+    bool isTalkEnd(const TalkMessageCtrl* controller) {
+        return TalkFunction::isTalkSystemEnd(controller);
+    }
+
 }  // namespace MR

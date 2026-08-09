@@ -3,10 +3,52 @@
 
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "scene/PlacementZoneNameScope.hpp"
 
 #include <revolution.h>
 
+#include <exception>
 #include <stdexcept>
+#include <utility>
+
+namespace {
+    thread_local const std::string *sCurrentPlacementZoneName = nullptr;
+}  // namespace
+
+namespace smgpc::scene {
+
+    PlacementZoneNameScope::PlacementZoneNameScope(s32 zone_id, std::string_view zone_name)
+        : _checker(MR::getPlacementStateChecker()),
+          _previous_zone_id(_checker != nullptr ? _checker->getCurrentPlacementZoneId() : -1),
+          _zone_name(zone_name), _previous(sCurrentPlacementZoneName) {
+        if (_checker == nullptr) {
+            throw std::logic_error(
+                "A retail placement lifecycle requires SceneObj_PlacementStateChecker.");
+        }
+        if (_zone_name.empty()) {
+            throw std::invalid_argument("A placement-zone scope requires a copied zone name.");
+        }
+        _checker->setCurrentPlacementZoneId(zone_id);
+        sCurrentPlacementZoneName = &_zone_name;
+    }
+
+    PlacementZoneNameScope::~PlacementZoneNameScope() {
+        if (sCurrentPlacementZoneName != &_zone_name) {
+            std::terminate();
+        }
+        sCurrentPlacementZoneName = _previous;
+        if (_previous_zone_id >= 0) {
+            _checker->setCurrentPlacementZoneId(_previous_zone_id);
+        } else {
+            _checker->clearCurrentPlacementZoneId();
+        }
+    }
+
+    const char *try_current_placement_zone_name() noexcept {
+        return sCurrentPlacementZoneName != nullptr ? sCurrentPlacementZoneName->c_str() : nullptr;
+    }
+
+}  // namespace smgpc::scene
 
 namespace MR {
 
@@ -36,6 +78,15 @@ namespace MR {
             throw std::logic_error("Reading the current placement zone requires SceneObj_PlacementStateChecker.");
         }
         return checker->getCurrentPlacementZoneId();
+    }
+
+    const char* getCurrentPlacementZoneName() {
+        const auto *zone_name = smgpc::scene::try_current_placement_zone_name();
+        if (zone_name == nullptr) {
+            throw std::logic_error(
+                "Reading the current placement-zone name requires an active placement lifecycle.");
+        }
+        return zone_name;
     }
 
     void getRailInfo(JMapInfoIter *pPathIter, const JMapInfo **pPointInfo, const JMapInfoIter &rPlacementIter) {

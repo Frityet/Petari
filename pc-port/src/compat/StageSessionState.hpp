@@ -2,6 +2,8 @@
 
 #include "Game/Util/JMapIdInfo.hpp"
 
+#include <array>
+#include <cstddef>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -48,7 +50,23 @@ namespace smgpc::compat {
         [[nodiscard]] bool is_power_star_get_demo_active() const;
         void set_power_star_get_demo_active(bool active);
 
+        // GameDataTemporaryInGalaxy owns 64 AlreadyDoneInfo entries for one
+        // stage lifetime. Keep the same bounded, insertion-ordered identity
+        // here without widening any retail Game object.
+        [[nodiscard]] s32 setup_already_done_flag(u16 name_hash, s32 zone_id,
+                                                  s32 link_id, u32 *value);
+        void update_already_done_flag(s32 index, u32 value);
+
     private:
+        struct AlreadyDoneEntry {
+            u16 name_hash = 0U;
+            u16 zone_id = 0xffffU;
+            u16 link_id = 0xffffU;
+            bool value = false;
+        };
+
+        static constexpr std::size_t cAlreadyDoneCapacity = 64U;
+
         std::string _scene_name;
         std::string _stage_name;
         s32 _scenario_no = 0;
@@ -56,6 +74,8 @@ namespace smgpc::compat {
         JMapIdInfo _restart_id;
         StageScenarioMetadata _metadata;
         bool _power_star_get_demo_active = false;
+        std::array<AlreadyDoneEntry, cAlreadyDoneCapacity> _already_done{};
+        std::size_t _already_done_count = 0U;
     };
 
     class StageSessionBinding final {
