@@ -1,0 +1,78 @@
+MarioDamageCrush and MarioDamageParalyze RMGK02 verification
+UTC timestamp: 2026-08-09T02:44:04Z
+
+Focused compile
+---------------
+command:
+  ninja build/RMGK02/src/Game/Player/MarioDamageCrush.o build/RMGK02/src/Game/Player/MarioDamageParalyze.o
+result:
+  success
+notes:
+  Only the repository's pre-existing MarioActor nontrivial-union warnings were emitted.
+
+Objdiff commands
+----------------
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioDamageCrush -o /tmp/MarioDamageCrush-final.json --format json-pretty
+  build/tools/objdiff-cli diff -p . -u main/Game/Player/MarioDamageParalyze -o /tmp/MarioDamageParalyze-final.json --format json-pretty
+
+MarioDamageCrush
+----------------
+.text:  1,000 bytes, 99.96%
+.ctors:     4 bytes, 100%
+.sdata2:    8 bytes, 100%
+
+Mario::requestCrush()                 20 bytes  100%
+Mario::tryCrush()                    188 bytes  100%
+MarioCrush::MarioCrush(MarioActor*)   76 bytes  100%
+MarioCrush::close()                  128 bytes  100%
+MarioCrush::start()                  200 bytes   99.8%
+MarioCrush::update()                 280 bytes  100%
+__sinit_\\MarioDamageCrush_cpp       108 bytes  100%
+MarioCrush::__vtable                  72 bytes  100%
+
+MarioDamageParalyze
+-------------------
+.text:  1,244 bytes, 99.877815%
+.ctors:     4 bytes, 100%
+.sdata2:    8 bytes, 100%
+
+Mario::doParalyze()                         244 bytes  100%
+MarioParalyze::MarioParalyze(MarioActor*)    84 bytes  100%
+MarioParalyze::close()                      296 bytes   99.797295%
+MarioParalyze::start()                      180 bytes   99.6%
+MarioParalyze::update()                     332 bytes   99.93976%
+__sinit_\\MarioDamageParalyze_cpp           108 bytes  100%
+MarioParalyze::__vtable                      72 bytes  100%
+
+Full DOL build
+--------------
+command:
+  ninja -j12 build/RMGK02/main.dol
+result:
+  [1/3] MWCC build/RMGK02/src/Game/Player/MarioInit.o
+  [2/3] LINK build/RMGK02/main.elf
+  [3/3] DOL build/RMGK02/main.dol
+
+DOL integrity
+-------------
+command:
+  sha256sum build/RMGK02/main.dol orig/RMGK02/sys/main.dol
+result:
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  build/RMGK02/main.dol
+  8b7f28d193170f998f92e02ea638107822fb72073691d0893eb18857be0c6fcf  orig/RMGK02/sys/main.dol
+
+command:
+  build/tools/dtk shasum -c config/RMGK02/build.sha1
+result:
+  build/RMGK02/main.dol: OK
+
+Whitespace validation
+---------------------
+command:
+  git diff --check -- include/Game/Player/Mario.hpp include/Game/Player/MarioCrush.hpp include/Game/Player/MarioParalyze.hpp src/Game/Player/MarioDamageCrush.cpp src/Game/Player/MarioDamageParalyze.cpp
+result:
+  success (no output)
+
+PC activation
+-------------
+  none

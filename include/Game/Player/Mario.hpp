@@ -184,7 +184,7 @@ public:
     bool doParalyze();
     bool doFreeze();
     bool requestCrush();
-    void tryCrush();
+    bool tryCrush();
 
     bool doFlipWeak(const TVec3f&);
     bool faint(const TVec3f&);
