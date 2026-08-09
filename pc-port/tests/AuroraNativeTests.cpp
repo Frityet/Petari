@@ -20,6 +20,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameDataHolder.hpp"
+#include "Game/System/NerveExecutor.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
@@ -1300,6 +1301,29 @@ namespace {
                 "the next registered state should own the active lifecycle");
     }
 
+    void test_nerve_executor_uses_exact_initialized_contract() {
+        const auto first = SpineProbeFirstNerve{};
+        const auto second = SpineProbeSecondNerve{};
+        auto state = SpineProbeState{
+            0,
+            0,
+            nullptr,
+        };
+        auto executor = NerveExecutor{"exact nerve executor"};
+
+        executor.initNerve(&first);
+        executor.mSpine->mExecutor = &state;
+        require(executor.isNerve(&first) && executor.getNerveStep() == 0,
+                "the exact executor should expose its initialized retail nerve and step");
+
+        executor.setNerve(&second);
+        require(executor.isNerve(&second) && executor.getNerveStep() == -1,
+                "the exact executor should expose a pending replacement nerve immediately");
+        executor.updateNerve();
+        require(state.second_executions == 1 && executor.getNerveStep() == 1,
+                "the exact executor should run the replacement nerve on the next update");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -1335,6 +1359,7 @@ int main() {
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},
         TestCase{"Spine retail two-phase transition", test_spine_uses_retail_two_phase_transition},
         TestCase{"ActorStateKeeper exact lifecycle", test_actor_state_keeper_uses_exact_state_lifecycle},
+        TestCase{"NerveExecutor exact initialized contract", test_nerve_executor_uses_exact_initialized_contract},
     };
 
     auto failures = 0;

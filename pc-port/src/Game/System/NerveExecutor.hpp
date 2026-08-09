@@ -1,6 +1,6 @@
 #pragma once
 
-#include <revolution.h>
+#include <revolution/types.h>
 
 class Nerve;
 class Spine;
@@ -19,4 +19,3 @@ public:
 
     /* 0x4 */ Spine* mSpine;
 };
-

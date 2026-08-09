@@ -1,0 +1,27 @@
+$ cmp include/Game/System/NerveExecutor.hpp pc-port/src/Game/System/NerveExecutor.hpp
+PASS
+$ cmp src/Game/System/NerveExecutor.cpp pc-port/src/Game/System/NerveExecutor.cpp
+PASS
+
+$ canonical RMGK02 report
+code 308/308; data 16/16; functions 7/7; fuzzy 100%
+
+$ xmake run smg-pc-game-source-mirror-tests
+PASS: 77/77
+$ xmake run smg-pc-aurora-native-tests
+PASS: 27/27
+$ xmake run smg-pc-layout-real-or-absent-tests
+PASS: 7/7
+$ xmake run smg-pc-demo-scene-runtime-tests
+PASS: 19/19
+$ xmake run smg-pc-file-select-name-real-or-absent-tests
+PASS: 5/5
+$ xmake run smg-pc-story-sequence-real-or-absent-tests
+PASS: 3/3
+$ xmake run smg-pc-restart-stage-session-tests
+PASS: 8/8
+$ xmake run smg-pc-sphere-selector-real-or-absent-tests
+PASS: 4/4 using the real RMGK01 FileSelect row
+
+$ xmake build smg-pc
+build ok
