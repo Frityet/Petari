@@ -1,5 +1,6 @@
 #include "compat/ResourceHolderCompat.hpp"
 
+#include "Game/System/StationedFileInfo.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -80,6 +81,16 @@ namespace smgpc::compat {
         auto *result = holder.get();
         _holders.emplace(key, std::move(holder));
         return result;
+    }
+
+    std::vector<ResourceHolder *> ResourceHolderService::create_and_add_stationed(std::int32_t load_type) {
+        auto resources = std::vector<ResourceHolder *>{};
+        for (auto *info = MR::getStationedFileInfoTable(); info->mArchive != nullptr; ++info) {
+            if (info->mLoadType == load_type) {
+                resources.push_back(create_and_add(info->mArchive));
+            }
+        }
+        return resources;
     }
 
     ResourceHolderService *ResourceHolderService::active() noexcept {

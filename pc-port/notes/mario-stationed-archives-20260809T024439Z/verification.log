@@ -1,0 +1,27 @@
+Mario stationed archive foundation verification
+UTC timestamp: 2026-08-09T02:44:39Z
+
+Exact source boundary
+---------------------
+cmp include/Game/System/StationedFileInfo.hpp pc-port/src/Game/System/StationedFileInfo.hpp
+result: PASS
+
+cmp src/Game/System/StationedFileInfo.cpp pc-port/src/Game/System/StationedFileInfo.cpp
+result: PASS
+
+Focused build and real-disc execution
+-------------------------------------
+xmake build -y smg-pc-stationed-archive-real-or-absent-tests
+result: PASS
+
+SMGPC_REAL_DISC=/workspaces/pcport/RMGK01.iso xmake run smg-pc-stationed-archive-real-or-absent-tests
+result:
+  [ok] exact Mario stationed table
+  [ok] real Mario stationed archives
+  Stationed archive real-or-absent tests passed (2/2).
+
+Mirror regression gate
+----------------------
+xmake build -y smg-pc-game-source-mirror-tests
+xmake run smg-pc-game-source-mirror-tests
+result: PASS, including both StationedFileInfo pairs

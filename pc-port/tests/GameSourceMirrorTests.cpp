@@ -24,6 +24,8 @@ namespace {
         SourcePair{"../src/Game/MapObj/InvisiblePolygonObj.cpp", "src/Game/MapObj/InvisiblePolygonObj.cpp"},
         SourcePair{"../include/Game/MapObj/InvisiblePolygonObjGCapture.hpp", "src/Game/MapObj/InvisiblePolygonObjGCapture.hpp"},
         SourcePair{"../src/Game/MapObj/InvisiblePolygonObjGCapture.cpp", "src/Game/MapObj/InvisiblePolygonObjGCapture.cpp"},
+        SourcePair{"../include/Game/System/StationedFileInfo.hpp", "src/Game/System/StationedFileInfo.hpp"},
+        SourcePair{"../src/Game/System/StationedFileInfo.cpp", "src/Game/System/StationedFileInfo.cpp"},
         SourcePair{"../include/Game/Map/FIleSelectItem.hpp", "src/Game/Map/FileSelectItem.hpp"},
         SourcePair{"../src/Game/Map/FileSelectItem.cpp", "src/Game/Map/FileSelectItem.cpp"},
         SourcePair{"../include/Game/Map/FileSelectEffect.hpp", "src/Game/Map/FileSelectEffect.hpp"},

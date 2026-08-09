@@ -106,6 +106,26 @@ target("smg-pc-stage-start-camera-tests")
         realtime_output = true
     })
 
+target("smg-pc-stationed-archive-real-or-absent-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "StationedArchiveRealOrAbsentTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-dvd"
+    }
+    add_tests("stationed_archive_real_or_absent", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-jpc-billboard-tests")
     set_kind("binary")
     set_default(false)

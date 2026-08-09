@@ -7,6 +7,7 @@
 #include <span>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace smgpc::resource {
     class RarcArchive;
@@ -49,6 +50,7 @@ namespace smgpc::compat {
         ResourceHolderService &operator=(const ResourceHolderService &) = delete;
 
         [[nodiscard]] ResourceHolder *create_and_add(std::string_view archive_name);
+        [[nodiscard]] std::vector<ResourceHolder *> create_and_add_stationed(std::int32_t load_type);
         [[nodiscard]] static ResourceHolderService *active() noexcept;
 
     private:
