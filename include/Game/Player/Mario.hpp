@@ -356,7 +356,7 @@ public:
     void tryWallPunch();
 
     bool isHanging() const;
-    void fixHangDir(const TVec3f&, TVec3f*);
+    bool fixHangDir(const TVec3f&, TVec3f*);
     bool isEnableBackHang();
     bool isEnableSideHang();
     void checkHang();
