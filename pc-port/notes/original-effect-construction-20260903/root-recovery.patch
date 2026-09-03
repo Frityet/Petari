@@ -1,0 +1,315 @@
+--- a/include/Game/Util/Array.hpp
++++ b/include/Game/Util/Array.hpp
+@@ -170,7 +170,8 @@
+             return &mArr[N];
+         }
+ 
+-        void callAllFunc(void (Base::*func)()) {
++        template < class U >
++        void callAllFunc(void (U::*func)()) {
+             for (T* it = begin(); it != end(); ++it) {
+                 ((*it)->*func)();
+             }
+--- a/include/Game/Effect/ParticleResourceHolder.hpp
++++ b/include/Game/Effect/ParticleResourceHolder.hpp
+@@ -9,12 +9,16 @@
+ class ParticleResourceHolder {
+ public:
+     struct Particle {
++        Particle(const char* pGroupName) : mGroupName(pGroupName), mCount(1) {
++        }
++
+         const char* mGroupName;  // 0x0
+         int mCount;              // 0x4
+     };
+ 
+     ParticleResourceHolder(const char*);
+ 
++    u16 getUserIndex(const char*) const;
+     void countAutoEffectNum();
+     void swapTexture(const ResTIMG*, const char*);
+     bool isExistInResource(const char*, u16*) const;
+@@ -24,6 +28,6 @@
+     JPAResourceManager* mResourceMgr;  // 0x0
+     JMapInfo* mAutoEffectList;         // 0x4
+     JMapInfo* mParticleNames;          // 0x8
+-    Particle mParticles[512];          // 0xC
++    Particle* mParticles[1024];        // 0xC
+     int mNumParticles;                 // 0x100C
+-};+};
+--- a/src/Game/Effect/MultiEmitter.cpp
++++ b/src/Game/Effect/MultiEmitter.cpp
+@@ -1,11 +1,15 @@
+ #include "Game/Effect/MultiEmitter.hpp"
+ #include "Game/Effect/EffectSystem.hpp"
++#include "Game/Effect/EffectSystemUtil.hpp"
+ #include "Game/Effect/MultiEmitterCallBack.hpp"
+ #include "Game/Effect/MultiEmitterParticleCallBack.hpp"
+ #include "Game/Effect/SingleEmitter.hpp"
+ #include "Game/Util/HashUtil.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
+ #include <JSystem/JParticle/JPAEmitter.hpp>
+ #include <algorithm>
++#include <cstring>
+ 
+ MultiEmitter::MultiEmitter(const char* pName, const TVec3f* pScale, const TVec3f* pRotation, const TVec3f* pTranslation, const TVec3f& rVec)
+     : mEmitters(), mCallBack(), mParticleCallBack(), _24(), _28(), _2C(), _30(), mHash(), mFlags() {
+@@ -228,8 +232,45 @@
+     setGlobalRotation(TVec3s(rRotation.x * DEGREE_TO_S16, rRotation.y * DEGREE_TO_S16, rRotation.z * DEGREE_TO_S16), idx);
+ }
+ 
+-/* void MultiEmitter::allocateEmitter(const char* pName) {
+-} */
++void MultiEmitter::allocateEmitter(const char* pName) {
++    MR::Vector< MR::FixedArray< u16, 32 > > indices;
++    bool isNumbered = !MR::hasStringSpace(pName) && !MR::isDigitStringTail(pName, 2);
++
++    if (isNumbered) {
++        u16 index = 0;
++        while (MR::Effect::isExistInResource(&index, pName, indices.size())) {
++            indices.push_back(index);
++        }
++    } else {
++        u32 length = strlen(pName);
++        s32 nameLength = 0;
++        char name[40];
++        MR::zeroMemory(name, sizeof(name));
++
++        for (u32 i = 0; i <= length; i++) {
++            char c = pName[i];
++            if (c == ' ' || c == '\0') {
++                name[nameLength] = '\0';
++                u16 index;
++                MR::Effect::isExistInResource(&index, name);
++                indices.push_back(index);
++                nameLength = 0;
++                MR::zeroMemory(name, sizeof(name));
++            } else {
++                name[nameLength++] = c;
++            }
++        }
++    }
++
++    mEmitters.init(indices.size());
++    for (s32 i = 0; i < indices.size(); i++) {
++        mEmitters[i].init(indices[i]);
++    }
++
++    if (isNumbered) {
++        mHash = MR::getHashCode(pName);
++    }
++}
+ 
+ SingleEmitter* MultiEmitter::getValidEmitter(s32 idx, bool) {
+     SingleEmitter* pEmitter = &mEmitters[idx];
+--- /dev/null
++++ b/src/Game/Effect/ParticleResourceHolder.cpp
+@@ -0,0 +1,102 @@
++#include "Game/Effect/ParticleResourceHolder.hpp"
++#include "Game/Util/FileUtil.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include "JSystem/JKernel/JKRMemArchive.hpp"
++#include <cstring>
++
++ParticleResourceHolder::ParticleResourceHolder(const char* pArchiveName)
++    : mResourceMgr(), mAutoEffectList(new JMapInfo()), mParticleNames(new JMapInfo()), mNumParticles() {
++    JKRMemArchive* archive = MR::mountArchive(pArchiveName, nullptr);
++    mResourceMgr = new JPAResourceManager(archive->getResource("Particles.jpc"), MR::getCurrentHeap());
++    mParticleNames->attach(archive->getResource("ParticleNames.bcsv"));
++    mAutoEffectList->attach(archive->getResource("AutoEffectList.bcsv"));
++    countAutoEffectNum();
++}
++
++u16 ParticleResourceHolder::getUserIndex(const char* pName) const {
++    const JMapInfo* names = mParticleNames;
++    s32 first = 0;
++    s32 last = names->getNumEntries() - 1;
++
++    while (first < last) {
++        s32 middle = (first + last) / 2;
++        const char* name = "";
++        if (!names->getValue(middle, "name", &name)) {
++            return 0xFFFF;
++        }
++
++        s32 comparison = strcmp(name, pName);
++        if (comparison == 0) {
++            return middle;
++        }
++        if (comparison < 0) {
++            first = middle + 1;
++        }
++        if (comparison >= 0) {
++            last = middle;
++        }
++    }
++
++    const char* name = "";
++    if (!names->getValue(first, "name", &name)) {
++        return 0xFFFF;
++    }
++    return strcmp(name, pName) == 0 ? first : 0xFFFF;
++}
++
++void ParticleResourceHolder::countAutoEffectNum() {
++    for (JMapInfoIter iter(mAutoEffectList, 0); iter != mAutoEffectList->end(); iter.mIndex++) {
++        const char* groupName = nullptr;
++        iter.getValue("GroupName", &groupName);
++        if (groupName == nullptr) {
++            continue;
++        }
++
++        bool isFound = false;
++        for (Particle** particle = mParticles; particle != mParticles + mNumParticles; particle++) {
++            if (MR::isEqualStringCase((*particle)->mGroupName, groupName)) {
++                (*particle)->mCount++;
++                isFound = true;
++                break;
++            }
++        }
++
++        if (!isFound) {
++            mParticles[mNumParticles++] = new Particle(groupName);
++        }
++    }
++}
++
++void ParticleResourceHolder::swapTexture(const ResTIMG* pImage, const char* pName) {
++    mResourceMgr->swapTexture(pImage, pName);
++}
++
++bool ParticleResourceHolder::isExistInResource(const char* pName, u16* pIndex) const {
++    u16 index = getUserIndex(pName);
++    if (index == 0xFFFF) {
++        return false;
++    }
++
++    if (pIndex != nullptr) {
++        *pIndex = index;
++    }
++    return true;
++}
++
++JMapInfo* ParticleResourceHolder::getAutoEffectListBinary() const {
++    return mAutoEffectList;
++}
++
++int ParticleResourceHolder::getAutoEffectNum(const char* pName) const {
++    if (pName == nullptr) {
++        return 0;
++    }
++
++    for (Particle* const* particle = mParticles; particle != mParticles + mNumParticles; particle++) {
++        if (MR::isEqualStringCase((*particle)->mGroupName, pName)) {
++            return (*particle)->mCount;
++        }
++    }
++    return 0;
++}
+--- /dev/null
++++ b/src/Game/Effect/EffectSystemUtil.cpp
+@@ -0,0 +1,26 @@
++#include "Game/Effect/EffectSystemUtil.hpp"
++#include "Game/Effect/ParticleResourceHolder.hpp"
++#include "Game/Util/SystemUtil.hpp"
++#include <cstdio>
++
++namespace MR {
++    namespace Effect {
++        bool isExistInResource(u16* pIndex, const char* pName) {
++            return MR::getParticleResourceHolder()->isExistInResource(pName, pIndex);
++        }
++
++        int getAutoEffectNum(const char* pName) {
++            return MR::getParticleResourceHolder()->getAutoEffectNum(pName);
++        }
++
++        JMapInfo* getAutoEffectListBinary() {
++            return MR::getParticleResourceHolder()->getAutoEffectListBinary();
++        }
++
++        bool isExistInResource(u16* pIndex, const char* pName, s32 index) {
++            char name[42];
++            snprintf(name, sizeof(name), "%s%02d", pName, index);
++            return MR::getParticleResourceHolder()->isExistInResource(name, pIndex);
++        }
++    };  // namespace Effect
++};  // namespace MR
+--- a/src/Game/System/Overwrite.cpp
++++ b/src/Game/System/Overwrite.cpp
+@@ -1,4 +1,5 @@
+ #include "Game/System/ShapePacketUserData.hpp"
++#include "Game/Util/MathUtil.hpp"
+ #include "JSystem/J3DGraphBase/J3DFifo.hpp"
+ #include "JSystem/J3DGraphBase/J3DPacket.hpp"
+ #include "JSystem/J3DGraphBase/J3DShape.hpp"
+@@ -6,6 +7,9 @@
+ #include "JSystem/JAudio2/JASHeapCtrl.hpp"
+ #include "JSystem/JKernel/JKRSolidHeap.hpp"
+ #include "JSystem/JKernel/JKRThread.hpp"
++#include "JSystem/JParticle/JPABaseShape.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
+ #include <JSystem/JAudio2/JASAudioThread.hpp>
+ #include <JSystem/JUtility/JUTTexture.hpp>
+ 
+@@ -34,3 +38,46 @@
+         userData->loadTexMtx(j3dSys.getShapePacket()->getShape()->getMaterial(), slot, index);
+     }
+ }
++
++void JPABaseEmitter::init(JPAEmitterManager* pManager, JPAResource* pResource) {
++    mpEmtrMgr = pManager;
++    mpRes = pResource;
++    mpRes->getDyn()->getEmitterScl(&mLocalScl);
++    mpRes->getDyn()->getEmitterTrs(&mLocalTrs);
++    mpRes->getDyn()->getEmitterDir(&mLocalDir);
++    if (!MR::isNearZero(mLocalDir, 0.001f)) {
++        MR::normalize(&mLocalDir);
++    }
++    mpRes->getDyn()->getEmitterRot(&mLocalRot);
++    mMaxFrame = mpRes->getDyn()->getMaxFrame();
++    mLifeTime = mpRes->getDyn()->getLifetime();
++    mVolumeSize = mpRes->getDyn()->getVolumeSize();
++    mRate = mpRes->getDyn()->getRate();
++    mRateStep = mpRes->getDyn()->getRateStep();
++    mVolumeSweep = mpRes->getDyn()->getVolumeSweep();
++    mVolumeMinRad = mpRes->getDyn()->getVolumeMinRad();
++    mAwayFromCenterSpeed = mpRes->getDyn()->getInitVelOmni();
++    mAwayFromAxisSpeed = mpRes->getDyn()->getInitVelAxis();
++    mDirSpeed = mpRes->getDyn()->getInitVelDir();
++    mSpread = mpRes->getDyn()->getInitVelDirSp();
++    mRndmDirSpeed = mpRes->getDyn()->getInitVelRndm();
++    mAirResist = mpRes->getDyn()->getAirRes();
++    mRndm.set_seed(mpEmtrMgr->pWd->mRndm.get_rndm_u());
++    PSMTXIdentity(mGlobalRot);
++    mGlobalScl.set(1.0f);
++    mGlobalTrs.zero();
++    mGlobalPScl.set(1.0f, 1.0f);
++    mGlobalPrmClr.r = mGlobalPrmClr.g = mGlobalPrmClr.b = mGlobalPrmClr.a =
++        mGlobalEnvClr.r = mGlobalEnvClr.g = mGlobalEnvClr.b = mGlobalEnvClr.a = 255;
++    pResource->getBsp()->getPrmClr(&mPrmClr);
++    pResource->getBsp()->getEnvClr(&mEnvClr);
++    mpUserWork = 0;
++    mScaleOut = 1.0f;
++    mEmitCount = 0.0f;
++    mStatus = JPAEmtrStts_FirstEmit | JPAEmtrStts_RateStepEmit;
++    mDrawTimes = 1;
++    mTick = 0;
++    mWaitTime = 0;
++    mRateStepTimer = 0;
++    mTexAnmIdx = 0;
++}
+--- a/libs/JSystem/include/JSystem/JParticle/JPAEmitter.hpp
++++ b/libs/JSystem/include/JSystem/JParticle/JPAEmitter.hpp
+@@ -367,7 +367,7 @@
+     /* 0xB0 */ JGeometry::TVec2< f32 > mGlobalPScl;
+     /* 0xB8 */ GXColor mGlobalPrmClr;
+     /* 0xBC */ GXColor mGlobalEnvClr;
+-    /* 0xC0 */ s32 mpUserWork;
++    /* 0xC0 */ uintptr_t mpUserWork;
+     /* 0xC4 */ JPARandom mRndm;
+     /* 0xC8 */ JPAList< JPABaseParticle > mAlivePtclBase;
+     /* 0xD4 */ JPAList< JPABaseParticle > mAlivePtclChld;

@@ -1,0 +1,53 @@
+--- a/pc-port/src/Game/Util/Array.hpp
++++ b/pc-port/src/Game/Util/Array.hpp
+@@ -170,7 +170,8 @@
+             return &mArr[N];
+         }
+ 
+-        void callAllFunc(void (Base::*func)()) {
++        template < class U >
++        void callAllFunc(void (U::*func)()) {
+             for (T* it = begin(); it != end(); ++it) {
+                 ((*it)->*func)();
+             }
+--- a/pc-port/src/Game/Util/JMapInfo.hpp
++++ b/pc-port/src/Game/Util/JMapInfo.hpp
+@@ -136,6 +136,14 @@
+     JMapInfoIter(const JMapInfo* pInfo, s32 index) : mInfo(pInfo), mIndex(index) {
+     }
+ 
++    bool operator==(const JMapInfoIter& rIter) const {
++        return mIndex == rIter.mIndex && mInfo != nullptr && rIter.mInfo != nullptr && *mInfo == *rIter.mInfo;
++    }
++
++    bool operator!=(const JMapInfoIter& rIter) const {
++        return !(*this == rIter);
++    }
++
+     [[nodiscard]] bool isValid() const {
+         return mInfo != nullptr && mIndex >= 0 && mIndex < mInfo->getNumEntries();
+     }
+--- a/pc-port/src/JSystem/JGeometry/TMatrix.hpp
++++ b/pc-port/src/JSystem/JGeometry/TMatrix.hpp
+@@ -212,6 +212,21 @@
+             this->mMtx[0][2] = z_direction.x;
+             this->mMtx[1][2] = z_direction.y;
+             this->mMtx[2][2] = z_direction.z;
++        }
++
++        void setEulerZ(f32 angle) {
++            f32 s = sin(angle);
++            f32 c = cos(angle);
++
++            this->mMtx[1][0] = s;
++            this->mMtx[0][0] = c;
++            this->mMtx[0][1] = -s;
++            this->mMtx[1][1] = c;
++            this->mMtx[2][2] = 1.0f;
++            this->mMtx[2][1] = 0.0f;
++            this->mMtx[1][2] = 0.0f;
++            this->mMtx[2][0] = 0.0f;
++            this->mMtx[0][2] = 0.0f;
+         }
+ 
+         void getQuat(TQuat4f& rDest) const;

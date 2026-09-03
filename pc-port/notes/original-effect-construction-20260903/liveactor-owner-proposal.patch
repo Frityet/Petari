@@ -1,0 +1,32 @@
+--- a/pc-port/src/Game/LiveActor/LiveActor.cpp
++++ b/pc-port/src/Game/LiveActor/LiveActor.cpp
+@@ -1,3 +1,4 @@
++#include "Game/LiveActor/EffectKeeper.hpp"
+ #include "Game/AudioLib/AudAnmSoundObject.hpp"
+ #include "Game/Util/MemoryUtil.hpp"
+ #include "Game/Util/SoundUtil.hpp"
+@@ -257,13 +258,17 @@
+     smgpc::compat::adopt_actor_animation_helpers(this);
+ }
+ 
+-void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
+-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+-        const auto* model = mModelManager;
+-        const auto groupName = pEffectName != nullptr ? std::string_view(pEffectName) :
+-                                                       (model != nullptr ? std::string_view(MR::getModelResourceHolder(this)->getModelName()) : std::string_view{});
+-        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, getName(), effectNum,
+-                                        groupName, sort, this);
++void LiveActor::initEffectKeeper(int a1, const char* a2, bool doSort) {
++    mEffectKeeper = new EffectKeeper(getName(), MR::getModelResourceHolder(this), a1, a2);
++
++    if (doSort) {
++        mEffectKeeper->enableSort();
++    }
++
++    mEffectKeeper->init(this);
++
++    if (mBinder != nullptr) {
++        mEffectKeeper->setBinder(mBinder);
+     }
+ }
+ 

@@ -1,0 +1,17 @@
+[
+  {
+    "path": "pc-port/src/Game/Util/Array.hpp",
+    "before_sha256": "3587890cac85e79a6a0d632e8491aef7c44e49902d53ac205ada7fb6c7c3e7d9",
+    "after_sha256": "81bf253b9a7add39f28d2062047ff883369693bbbacf2c9eb0d015d1afcecbce"
+  },
+  {
+    "path": "pc-port/src/Game/Util/JMapInfo.hpp",
+    "before_sha256": "4662d04637cdd7a6422781a829d0c1e7a766d2c43cd8a25c94e8f69e9f8d5257",
+    "after_sha256": "0a2693c8579c29a2a8208838d3a9c629043e45afa5fa8144efc4be32e2110bbe"
+  },
+  {
+    "path": "pc-port/src/JSystem/JGeometry/TMatrix.hpp",
+    "before_sha256": "d7c7f4c017ccd8d8e90e29aa8c8cda19cc25bcdd9fe44253676f60c154e9040a",
+    "after_sha256": "3c6d611dd2e09221972ccd3bd4a84fee20ff4a3284e86625fcda0715cc47b984"
+  }
+]
