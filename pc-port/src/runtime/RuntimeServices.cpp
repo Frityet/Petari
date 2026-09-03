@@ -2722,11 +2722,9 @@ namespace smgpc::runtime {
 
     void CameraSystemService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
-        if (!is_camera_director_paused()) {
-            auto *player = _event_cameras.active_key().has_value()
-                               ? _event_cameras.active_player_target()
-                               : (_authored_game_camera.has_value()
-                                      ? _authored_game_camera->player_target : nullptr);
+        if (!is_camera_director_paused() && !_event_cameras.active_key().has_value()) {
+            auto *player = _authored_game_camera.has_value()
+                               ? _authored_game_camera->player_target : nullptr;
             if (player != nullptr) {
                 // CameraDirector advances its selected target once before
                 // calculating the camera manager, before Player movement.
@@ -2749,7 +2747,7 @@ namespace smgpc::runtime {
             }
             _shake_offset_y += camera_singly_vertical_offset(CAMERA_SHAKE_AMPLITUDES[index], *step);
         }
-        _event_cameras.begin_frame(is_camera_director_paused());
+        _event_cameras.begin_frame(frame_index, is_camera_director_paused());
     }
 
     void CameraSystemService::set_shake_projection_dimensions(float screen_width, float efb_height) {

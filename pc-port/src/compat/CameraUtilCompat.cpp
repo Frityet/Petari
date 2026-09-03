@@ -133,6 +133,9 @@ namespace {
 
     [[nodiscard]] smgpc::camera::EventCameraTarget event_target(
         smgpc::runtime::RuntimeContext& runtime, const CameraTargetArg& target) {
+        if (target.mTargetObj != nullptr) {
+            return smgpc::camera::EventCameraTarget::target_object(*target.mTargetObj);
+        }
         if (target.mTargetMtx != nullptr) {
             return smgpc::camera::EventCameraTarget::target_matrix(
                 *target.mTargetMtx);
@@ -144,10 +147,6 @@ namespace {
         if (target.mMarioActor != nullptr) {
             return smgpc::camera::EventCameraTarget::target_player(
                 runtime.player_system());
-        }
-        if (target.mTargetObj != nullptr) {
-            throw std::logic_error(
-                "Arbitrary CameraTargetObj event targets are not available in the bounded host provider.");
         }
         return smgpc::camera::EventCameraTarget::retain();
     }

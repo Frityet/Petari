@@ -25,7 +25,7 @@ namespace smgpc::camera {
 
     struct OriginalAnimationCamera::Impl {
         Impl(const CameraAnimation &animation, const StageCameraTargetState &initial_target,
-             float speed, const CameraPoseParam *manager_seed)
+             float speed, const CameraPoseParam *manager_seed, CameraTargetObj *original_target = nullptr)
             : data(animation.native_data()), man("OriginalAnimationCameraMan"),
               camera("OriginalAnimationCamera"), man_pose(man.mPoseParam),
               camera_pose(camera.mPoseParam),
@@ -38,9 +38,12 @@ namespace smgpc::camera {
             // immutable owner retains its alignment and lifetime independently
             // of the declaration/catalog which supplied the animation.
             camera.setParam(const_cast<u8*>(data.bytes().data()), speed);
-            target.publish(initial_target);
+            if (original_target == nullptr) {
+                target.publish(initial_target);
+                original_target = &target;
+            }
             const auto binding = smgpc::compat::ScopedCameraTargetBinding(
-                camera, target, smgpc::compat::OriginalCameraMode::Event);
+                camera, *original_target, smgpc::compat::OriginalCameraMode::Event);
             camera.reset();
         }
 
@@ -78,10 +81,24 @@ namespace smgpc::camera {
 
     OriginalAnimationCamera::~OriginalAnimationCamera() = default;
 
+    OriginalAnimationCamera::OriginalAnimationCamera(
+        const CameraAnimation &animation, CameraTargetObj &target,
+        float speed, const CameraPoseParam *manager_seed) {
+        validate_speed(speed);
+        if (animation.native_data().bytes().empty()) {
+            throw std::invalid_argument("Original animation camera requires a decoded CANM or CKAN resource.");
+        }
+        _impl = std::make_unique<Impl>(animation, StageCameraTargetState{}, speed, manager_seed, &target);
+    }
+
     CameraPose OriginalAnimationCamera::calc(const StageCameraTargetState &target) {
         _impl->target.publish(target);
+        return calc(_impl->target);
+    }
+
+    CameraPose OriginalAnimationCamera::calc(CameraTargetObj &target) {
         const auto binding = smgpc::compat::ScopedCameraTargetBinding(
-            _impl->camera, _impl->target, smgpc::compat::OriginalCameraMode::Event);
+            _impl->camera, target, smgpc::compat::OriginalCameraMode::Event);
         (void)_impl->camera.calc();
         // The existing original helper uses the same finite-pose arithmetic
         // as CameraManEvent::setSafePose, including its 300-unit watch distance.

@@ -1210,13 +1210,17 @@ namespace {
         const auto *pipe_camera = event_catalog.find(0, "土管固有出現054");
         require(pipe_camera != nullptr && pipe_camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
                 "the real root pipe event must supply an authored XZ_PARA controller");
+        auto event_scene_holder = SceneObjHolder{};
+        auto event_scene_binding = smgpc::scene::SceneObjHolderBinding(event_scene_holder);
+        require(event_scene_holder.create(SceneObj_AreaObjContainer) != nullptr &&
+                    event_scene_holder.create(SceneObj_PlanetGravityManager) != nullptr,
+                "the original matrix event target requires real area and gravity scene registries");
         camera.attach_event_camera_catalog(event_catalog);
         camera.declare_event_camera(0, "土管固有出現054");
         auto event_target = CameraTargetMtx("PersistentEventPauseTarget");
         event_target.mMatrix.mMtx[0][3] = 100.0F;
         event_target.mMatrix.mMtx[1][3] = 200.0F;
         event_target.mMatrix.mMtx[2][3] = 300.0F;
-        event_target.mLastMove.set(15.0F, 0.0F, 0.0F);
         camera.start_event_camera(0, "土管固有出現054",
                                  smgpc::camera::EventCameraTarget::target_matrix(event_target), 0);
         camera.begin_frame(99U);

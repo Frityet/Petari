@@ -1,0 +1,254 @@
+{
+  "function": "makeMtxRotate__2MRFPA4_fsss",
+  "compiled_size": "0xd4",
+  "retail_size": "0xbc",
+  "compiled_instructions": 53,
+  "retail_instructions": 47,
+  "relocations": [
+    {
+      "offset": "0xe",
+      "kind": 6,
+      "symbol": "sSinCosTable__5JMath",
+      "target": "0x8060fc80"
+    },
+    {
+      "offset": "0x16",
+      "kind": 4,
+      "symbol": "sSinCosTable__5JMath",
+      "target": "0x8060fc80"
+    },
+    {
+      "offset": "0x58",
+      "kind": 109,
+      "symbol": "@4471",
+      "target": "0x806c17e4"
+    }
+  ],
+  "matching_output_dataflows": 12,
+  "compiled_instruction_counts": {
+    "stack_save": 1,
+    "f31_preserve": 4,
+    "lis": 1,
+    "angle_index": 3,
+    "addi": 1,
+    "add": 3,
+    "lfsx": 3,
+    "lfs": 4,
+    "fneg": 1,
+    "fmuls": 14,
+    "stfs": 12,
+    "fsubs": 2,
+    "fadds": 2,
+    "stack_restore": 1,
+    "blr": 1
+  },
+  "retail_instruction_counts": {
+    "lis": 1,
+    "angle_index": 3,
+    "addi": 1,
+    "add": 3,
+    "lfsx": 3,
+    "lfs": 4,
+    "fneg": 1,
+    "fmuls": 14,
+    "stfs": 12,
+    "fsubs": 2,
+    "fadds": 2,
+    "blr": 1
+  },
+  "outputs": {
+    "matrix[0][0]": [
+      "fmuls",
+      [
+        "input",
+        "cosY"
+      ],
+      [
+        "input",
+        "cosZ"
+      ]
+    ],
+    "matrix[0][1]": [
+      "fsubs",
+      [
+        "fmuls",
+        [
+          "fmuls",
+          [
+            "input",
+            "cosZ"
+          ],
+          [
+            "input",
+            "sinY"
+          ]
+        ],
+        [
+          "input",
+          "sinX"
+        ]
+      ],
+      [
+        "fmuls",
+        [
+          "input",
+          "cosX"
+        ],
+        [
+          "input",
+          "sinZ"
+        ]
+      ]
+    ],
+    "matrix[0][2]": [
+      "fadds",
+      [
+        "fmuls",
+        [
+          "fmuls",
+          [
+            "input",
+            "cosZ"
+          ],
+          [
+            "input",
+            "sinY"
+          ]
+        ],
+        [
+          "input",
+          "cosX"
+        ]
+      ],
+      [
+        "fmuls",
+        [
+          "input",
+          "sinX"
+        ],
+        [
+          "input",
+          "sinZ"
+        ]
+      ]
+    ],
+    "matrix[0][3]": [
+      "constant",
+      "00000000"
+    ],
+    "matrix[1][0]": [
+      "fmuls",
+      [
+        "input",
+        "cosY"
+      ],
+      [
+        "input",
+        "sinZ"
+      ]
+    ],
+    "matrix[1][1]": [
+      "fadds",
+      [
+        "fmuls",
+        [
+          "fmuls",
+          [
+            "input",
+            "sinY"
+          ],
+          [
+            "input",
+            "sinZ"
+          ]
+        ],
+        [
+          "input",
+          "sinX"
+        ]
+      ],
+      [
+        "fmuls",
+        [
+          "input",
+          "cosX"
+        ],
+        [
+          "input",
+          "cosZ"
+        ]
+      ]
+    ],
+    "matrix[1][2]": [
+      "fsubs",
+      [
+        "fmuls",
+        [
+          "fmuls",
+          [
+            "input",
+            "sinY"
+          ],
+          [
+            "input",
+            "sinZ"
+          ]
+        ],
+        [
+          "input",
+          "cosX"
+        ]
+      ],
+      [
+        "fmuls",
+        [
+          "input",
+          "cosZ"
+        ],
+        [
+          "input",
+          "sinX"
+        ]
+      ]
+    ],
+    "matrix[1][3]": [
+      "constant",
+      "00000000"
+    ],
+    "matrix[2][0]": [
+      "fneg",
+      [
+        "input",
+        "sinY"
+      ]
+    ],
+    "matrix[2][1]": [
+      "fmuls",
+      [
+        "input",
+        "cosY"
+      ],
+      [
+        "input",
+        "sinX"
+      ]
+    ],
+    "matrix[2][2]": [
+      "fmuls",
+      [
+        "input",
+        "cosX"
+      ],
+      [
+        "input",
+        "cosY"
+      ]
+    ],
+    "matrix[2][3]": [
+      "constant",
+      "00000000"
+    ]
+  },
+  "compiled_object_sha256": "71017c7187ed3ce187557050539bcc6f7c937f007c1d22c0c2052d22a977ae51",
+  "compiler_sha256": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2"
+}

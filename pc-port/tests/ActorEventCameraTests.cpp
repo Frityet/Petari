@@ -2,9 +2,14 @@
 #include "Game/Camera/CameraAnim.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
+#include "Game/Camera/CameraTargetObj.hpp"
+#include "Game/Gravity/GravityInfo.hpp"
+#include "Game/Gravity/PointGravity.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
+#include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "camera/CameraAnimation.hpp"
 #include "camera/EventCamera.hpp"
@@ -19,6 +24,7 @@
 #include "runtime/SceneScheduler.hpp"
 #include "scene/StageAuthoredData.hpp"
 #include "scene/StageEventCameraBinding.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/dvd.h>
 #include <aurora/wpad.hpp>
@@ -56,6 +62,13 @@ namespace {
                                      ": actual=" + std::to_string(actual) +
                                      ";expected=" + std::to_string(expected));
         }
+    }
+
+    void require_vector_near(const TVec3f& actual, const TVec3f& expected,
+                             float tolerance, std::string_view message) {
+        require_near(actual.x, expected.x, tolerance, message);
+        require_near(actual.y, expected.y, tolerance, message);
+        require_near(actual.z, expected.z, tolerance, message);
     }
 
     void write_be32(std::vector<std::uint8_t> &bytes, std::size_t offset,
@@ -201,6 +214,19 @@ namespace {
         });
     }
 
+    [[nodiscard]] smgpc::camera::CameraAnimation make_target_basis_animation() {
+        return smgpc::camera::CameraAnimation::from_bytes(make_animation_tracks(false, 32U, {
+            AnimationTrack{1U, 0U, {10.0F}},
+            AnimationTrack{1U, 0U, {20.0F}},
+            AnimationTrack{1U, 0U, {100.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {20.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {45.0F}},
+        }));
+    }
+
     [[nodiscard]] std::vector<std::uint8_t> make_ckan_fovy_track(
         const AnimationTrack& fovy, std::uint32_t frame_count = 4U) {
         return make_animation_tracks(true, frame_count, {
@@ -239,6 +265,56 @@ namespace {
 
     private:
         smgpc::runtime::PlayerSystemService &_player;
+    };
+
+    class CameraTargetScene final {
+    public:
+        CameraTargetScene() : binding(holder) {
+            require(holder.create(SceneObj_AreaObjContainer) != nullptr &&
+                        holder.create(SceneObj_PlanetGravityManager) != nullptr,
+                    "original camera targets require real area and gravity scene registries");
+        }
+
+        SceneObjHolder holder;
+        smgpc::scene::SceneObjHolderBinding binding;
+    };
+
+    class CountedMatrixTarget final : public CameraTargetMtx {
+    public:
+        CountedMatrixTarget() : CameraTargetMtx("counted matrix camera target") {}
+
+        void movement() override {
+            ++movement_count;
+            CameraTargetMtx::movement();
+        }
+
+        unsigned movement_count = 0U;
+    };
+
+    class ActorBaseMatrixFixture final : public LiveActor {
+    public:
+        ActorBaseMatrixFixture() : LiveActor("virtual base matrix camera target") { appear(); }
+
+        MtxPtr getBaseMtx() const override {
+            ++base_matrix_reads;
+            return has_base_matrix ? matrix : nullptr;
+        }
+
+        mutable Mtx matrix{{0.0F, 0.0F, 4.0F, 999.0F},
+                           {0.0F, 3.0F, 0.0F, 888.0F},
+                           {-2.0F, 0.0F, 0.0F, 777.0F}};
+        mutable unsigned base_matrix_reads = 0U;
+        bool has_base_matrix = true;
+    };
+
+    class GravityInfoCameraTarget final : public CameraTargetActor {
+    public:
+        GravityInfoCameraTarget() : CameraTargetActor("gravity info camera target") {}
+
+        GravityInfo* getGravityInfo() const override { return has_info ? &info : nullptr; }
+
+        mutable GravityInfo info;
+        bool has_info = false;
     };
 
     void set_player_matrix(smgpc::runtime::PlayerSystemService &player,
@@ -1036,6 +1112,300 @@ namespace {
                 "a failed explicit-target start must not replace the retained target");
     }
 
+    void test_original_matrix_target_movement_and_gravity() {
+        auto scene = CameraTargetScene{};
+        auto target = CameraTargetMtx("original matrix movement");
+        Mtx matrix{{2.0F, 0.0F, 0.0F, 3.0F},
+                   {0.0F, 3.0F, 0.0F, 4.0F},
+                   {0.0F, 0.0F, 4.0F, 0.0F}};
+        target.setMtx(matrix);
+        target.movement();
+        require_vector_near(target.getPosition(), {3.0F, 4.0F, 0.0F}, 0.0F,
+                            "matrix target movement must publish the matrix translation");
+        require_vector_near(target.getLastMove(), {3.0F, 4.0F, 0.0F}, 0.0F,
+                            "the original matrix target must derive its first delta from its initial zero position");
+        require_vector_near(target.getSideVec(), {2.0F, 0.0F, 0.0F}, 0.0F,
+                            "matrix target side must preserve the raw matrix column magnitude");
+        require_vector_near(target.getUpVec(), {0.0F, 3.0F, 0.0F}, 0.0F,
+                            "matrix target up must preserve the raw matrix column magnitude");
+        require_vector_near(target.getFrontVec(), {0.0F, 0.0F, 4.0F}, 0.0F,
+                            "matrix target front must preserve the raw matrix column magnitude");
+        require_vector_near(target.getGravityVector(), {}, 0.0F,
+                            "a present empty gravity registry must publish zero gravity");
+        require(&target.getGroundPos() == &target.getPosition() && target.getCubeCameraArea() == nullptr,
+                "the matrix target must expose its actual position as ground and query the empty CubeCamera manager");
+
+        auto gravity = PointGravity{};
+        MR::registerGravity(&gravity);
+        target.mMatrix.setTrans(TVec3f{6.0F, 8.0F, 0.0F});
+        target.movement();
+        require_vector_near(target.getLastMove(), {3.0F, 4.0F, 0.0F}, 0.0F,
+                            "matrix target deltas must use consecutive published translations");
+        require_vector_near(target.getGravityVector(), {-0.6F, -0.8F, 0.0F}, 0.0001F,
+                            "matrix target gravity must come from the scene's actual point field at the latest position");
+        target.invalidateLastMove();
+        target.mMatrix.setTrans(TVec3f{9.0F, 12.0F, 0.0F});
+        target.movement();
+        require_vector_near(target.getLastMove(), {}, 0.0F,
+                            "invalidateLastMove must suppress exactly the next matrix delta");
+        target.mMatrix.setTrans(TVec3f{12.0F, 16.0F, 0.0F});
+        target.movement();
+        require_vector_near(target.getLastMove(), {3.0F, 4.0F, 0.0F}, 0.0F,
+                            "movement after invalidation must start from the suppressed phase's published position");
+        gravity.mActivated = false;
+        target.movement();
+        require_vector_near(target.getGravityVector(), {}, 0.0F,
+                            "deactivating the real gravity field must clear the matrix target's prior gravity");
+    }
+
+    void test_matrix_and_object_target_camera_phases() {
+        auto scene = CameraTargetScene{};
+        auto target = CountedMatrixTarget{};
+        Mtx matrix{{2.0F, 0.0F, 0.0F, 15.0F},
+                   {0.0F, 3.0F, 0.0F, 0.0F},
+                   {0.0F, 0.0F, 4.0F, 0.0F}};
+        target.setMtx(matrix);
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto animation = make_target_basis_animation();
+        camera.declare_event_camera_animation(5, "original matrix phases", animation);
+        camera.start_event_camera(5, "original matrix phases",
+            smgpc::camera::EventCameraTarget::target_matrix(target), 30);
+        require(target.movement_count == 0U && !camera.active_event_camera_pose().has_value(),
+                "a matrix event request must bind its target without moving it or calculating a camera");
+        camera.begin_frame(1U);
+        require(target.movement_count == 1U, "a camera phase must move the actual matrix target once");
+        require_vector_near(target.getLastMove(), {}, 0.0F,
+                            "an explicit matrix argument must invalidate the first published delta");
+        const auto first = *camera.active_event_camera_pose();
+        require_near(first.eye.x, 35.0F, 0.0001F,
+                     "CameraAnim must receive the matrix translation and unnormalized side before calculation");
+        require_near(first.eye.y, 60.0F, 0.0001F,
+                     "CameraAnim must receive the original matrix target's raw up column");
+        require_near(first.eye.z, 400.0F, 0.0001F,
+                     "CameraAnim must receive the original matrix target's raw front column");
+
+        target.mMatrix.setTrans(TVec3f{30.0F, 0.0F, 0.0F});
+        camera.begin_frame(1U);
+        require(target.movement_count == 1U && same_pose(*camera.active_event_camera_pose(), first),
+                "repeating a camera phase index must skip target movement and controller calculation");
+        camera.begin_frame(2U);
+        require(target.movement_count == 2U, "a new camera phase must advance its matrix target once");
+        require_vector_near(target.getLastMove(), {}, 0.0F,
+                            "the first changed-chunk checkReset rebind must invalidate the second matrix delta");
+        target.mMatrix.setTrans(TVec3f{45.0F, 0.0F, 0.0F});
+        camera.begin_frame(3U);
+        require_vector_near(target.getLastMove(), {15.0F, 0.0F, 0.0F}, 0.0F,
+                            "matrix target motion must resume after the two original argument bindings");
+
+        const auto before_pause = *camera.active_event_camera_pose();
+        camera.pause_on_camera_director();
+        target.mMatrix.setTrans(TVec3f{90.0F, 0.0F, 0.0F});
+        camera.begin_frame(4U);
+        require(target.movement_count == 3U && same_pose(*camera.active_event_camera_pose(), before_pause),
+                "director pause must skip actual matrix movement and preserve the camera pose");
+        camera.pause_off_camera_director();
+        camera.begin_frame(4U);
+        require(target.movement_count == 4U,
+                "a skipped paused phase must remain available when the director resumes");
+        require_vector_near(target.getLastMove(), {45.0F, 0.0F, 0.0F}, 0.0F,
+                            "resuming must measure all translation since the last actual target movement");
+
+        camera.start_event_camera(5, "original matrix phases",
+            smgpc::camera::EventCameraTarget::retain(), 30);
+        target.mMatrix.setTrans(TVec3f{105.0F, 0.0F, 0.0F});
+        camera.begin_frame(5U);
+        require_vector_near(target.getLastMove(), {15.0F, 0.0F, 0.0F}, 0.0F,
+                            "a no-argument retained target request must not invalidate a matrix delta");
+        camera.start_event_camera(5, "original matrix phases",
+            smgpc::camera::EventCameraTarget::target_matrix(target), 30);
+        target.mMatrix.setTrans(TVec3f{120.0F, 0.0F, 0.0F});
+        camera.begin_frame(6U);
+        require_vector_near(target.getLastMove(), {}, 0.0F,
+                            "an explicit same-chunk matrix argument must invalidate its next delta once");
+        target.mMatrix.setTrans(TVec3f{135.0F, 0.0F, 0.0F});
+        camera.begin_frame(7U);
+        require_vector_near(target.getLastMove(), {15.0F, 0.0F, 0.0F}, 0.0F,
+                            "an unchanged chunk must not perform the second matrix invalidation");
+
+        auto object_target = CountedMatrixTarget{};
+        object_target.setMtx(matrix);
+        camera.declare_event_camera_animation(5, "original object phases", animation);
+        camera.start_event_camera(5, "original object phases",
+            smgpc::camera::EventCameraTarget::target_object(object_target), 30);
+        require(object_target.movement_count == 0U,
+                "a generic original target object must also wait for camera movement");
+        camera.begin_frame(8U);
+        require(object_target.movement_count == 1U,
+                "the generic target-object path must execute the object's original virtual movement");
+        require_vector_near(object_target.getLastMove(), {15.0F, 0.0F, 0.0F}, 0.0F,
+                            "a generic object argument must not inherit matrix-argument invalidation semantics");
+        object_target.mMatrix.setTrans(TVec3f{30.0F, 0.0F, 0.0F});
+        camera.begin_frame(9U);
+        require_vector_near(object_target.getLastMove(), {15.0F, 0.0F, 0.0F}, 0.0F,
+                            "a changed-chunk generic object rebind must leave the next delta intact");
+        camera.end_event_camera(5, "original object phases", true, -1);
+
+        auto pending_target = CountedMatrixTarget{};
+        pending_target.setMtx(matrix);
+        camera.start_event_camera(5, "original matrix phases",
+            smgpc::camera::EventCameraTarget::target_matrix(pending_target), 30);
+        camera.start_event_camera(5, "original matrix phases",
+            smgpc::camera::EventCameraTarget::target_object(pending_target), 30);
+        require(pending_target.movement_count == 0U,
+                "switching a pending matrix argument to an object argument must not advance the target");
+        camera.begin_frame(10U);
+        require_vector_near(pending_target.getLastMove(), {}, 0.0F,
+                            "the earlier explicit matrix request still invalidates the pending object's first delta");
+        pending_target.mMatrix.setTrans(TVec3f{30.0F, 0.0F, 0.0F});
+        camera.begin_frame(11U);
+        require_vector_near(pending_target.getLastMove(), {15.0F, 0.0F, 0.0F}, 0.0F,
+                            "a pending switch to a generic object must clear the obsolete second matrix invalidation");
+
+        const auto preceding_pose = *camera.active_event_camera_pose();
+        require(camera.event_camera_animation_frame(5, "original matrix phases") == 2,
+                "the A-to-B-to-A fixture must begin with a calculated animation cursor");
+        camera.start_event_camera(5, "original object phases",
+            smgpc::camera::EventCameraTarget::target_matrix(pending_target), 30);
+        camera.start_event_camera(5, "original matrix phases",
+            smgpc::camera::EventCameraTarget::target_matrix(pending_target), 30);
+        require(pending_target.movement_count == 2U &&
+                    same_pose(*camera.active_event_camera_pose(), preceding_pose) &&
+                    camera.event_camera_animation_frame(5, "original matrix phases") == 2,
+                "requesting B then calculated A before movement must retain A's visible pose and original animation cursor");
+        pending_target.mMatrix.setTrans(TVec3f{45.0F, 0.0F, 0.0F});
+        camera.begin_frame(12U);
+        require(camera.event_camera_animation_frame(5, "original matrix phases") == 3,
+                "returning to calculated A before the camera phase must continue its existing controller");
+        require_vector_near(pending_target.getLastMove(), {}, 0.0F,
+                            "the final explicit matrix request must invalidate the next movement once");
+        pending_target.mMatrix.setTrans(TVec3f{60.0F, 0.0F, 0.0F});
+        camera.begin_frame(13U);
+        require_vector_near(pending_target.getLastMove(), {15.0F, 0.0F, 0.0F}, 0.0F,
+                            "A-to-B-to-A before movement must not perform a changed-chunk second matrix invalidation");
+        require(camera.event_camera_animation_frame(5, "original matrix phases") == 4,
+                "the retained A animation cursor must continue on subsequent phases");
+        camera.start_event_camera(5, "original object phases",
+            smgpc::camera::EventCameraTarget::target_object(pending_target), 30);
+        camera.end_event_camera(5, "original object phases", true, -1);
+        require(!camera.active_event_camera_key().has_value() &&
+                    !camera.active_event_camera_pose().has_value(),
+                "cancelling the pending chunk must clear both entries in its original event priority slot");
+    }
+
+    void test_original_actor_target_axes_and_state() {
+        auto scene = CameraTargetScene{};
+        auto actor = ActorBaseMatrixFixture{};
+        actor.mPosition.set(100.0F, 200.0F, 300.0F);
+        actor.mVelocity.set(7.0F, -8.0F, 9.0F);
+        actor.mGravity.set(0.0F, -1.0F, 0.0F);
+        auto target = GravityInfoCameraTarget{};
+        target.mActor = &actor;
+        target.movement();
+        require(actor.base_matrix_reads > 0U,
+                "the original actor target must dispatch the actor's virtual getBaseMtx");
+        require_vector_near(target.getSideVec(), {0.0F, 0.0F, -2.0F}, 0.0F,
+                            "actor target side must retain the virtual matrix's raw column");
+        require_vector_near(target.getUpVec(), {0.0F, 3.0F, 0.0F}, 0.0F,
+                            "actor target up must retain the virtual matrix's raw column");
+        require_vector_near(target.getFrontVec(), {4.0F, 0.0F, 0.0F}, 0.0F,
+                            "actor target front must retain the virtual matrix's raw column");
+        require(&target.getPosition() == &actor.mPosition && &target.getGroundPos() == &actor.mPosition &&
+                    &target.getLastMove() == &actor.mVelocity,
+                "actor target position, ground, and last move must expose the original actor state");
+        require_vector_near(target.getGravityVector(), {0.0F, 3.0F, 0.0F}, 0.0F,
+                            "an actor target without GravityInfo must return its raw up vector");
+        target.info.mGravityVector.set(6.0F, -7.0F, 8.0F);
+        target.has_info = true;
+        require_vector_near(target.getGravityVector(), {6.0F, -7.0F, 8.0F}, 0.0F,
+                            "actor target gravity must honor the original virtual GravityInfo without normalizing it");
+
+        const auto preceding_reads = actor.base_matrix_reads;
+        actor.mFlag.mIsClipped = true;
+        actor.has_base_matrix = false;
+        actor.mRotation.set(30.0F, 45.0F, 0.0F);
+        actor.mPosition.set(110.0F, 220.0F, 330.0F);
+        target.movement();
+        require(actor.base_matrix_reads == preceding_reads,
+                "clipping must skip original actor-target orientation calculation");
+        require_vector_near(target.getFrontVec(), {4.0F, 0.0F, 0.0F}, 0.0F,
+                            "a clipped actor target must retain its preceding orientation");
+        require_vector_near(target.getPosition(), {110.0F, 220.0F, 330.0F}, 0.0F,
+                            "clipping must not replace the actor target's direct position getter with a cached snapshot");
+        actor.mFlag.mIsClipped = false;
+        actor.mFlag.mIsDead = true;
+        target.movement();
+        require(actor.base_matrix_reads == preceding_reads,
+                "a dead but retained actor owner must skip target orientation movement");
+        require_vector_near(target.getFrontVec(), {4.0F, 0.0F, 0.0F}, 0.0F,
+                            "dead actor-target movement must preserve the preceding raw orientation");
+
+        actor.mFlag.mIsDead = false;
+        target.movement();
+        // R_y(45) R_x(30), allowing the original signed-angle table's grid.
+        require_vector_near(target.getSideVec(), {0.70710678F, 0.0F, -0.70710678F}, 0.0003F,
+                            "an actor without a base matrix must derive side from its original Euler rotation");
+        require_vector_near(target.getUpVec(), {0.35355339F, 0.86602540F, 0.35355339F}, 0.0003F,
+                            "the Euler fallback must combine actor X and Y rotation in the original order");
+        require_vector_near(target.getFrontVec(), {0.61237244F, -0.5F, 0.61237244F}, 0.0003F,
+                            "the combined Euler front must include cosine X times sine Y");
+    }
+
+    void test_actor_target_camera_phases_and_retained_orientation() {
+        auto scene = CameraTargetScene{};
+        auto actor = ActorBaseMatrixFixture{};
+        actor.mPosition.set(100.0F, 200.0F, 300.0F);
+        auto camera = smgpc::runtime::CameraSystemService{};
+        camera.declare_event_camera_animation(5, "original actor phases", make_target_basis_animation());
+        camera.start_event_camera(5, "original actor phases",
+            smgpc::camera::EventCameraTarget::target_actor(actor), 30);
+        require(actor.base_matrix_reads == 0U,
+                "an actor event request must defer original orientation movement to the camera phase");
+        camera.begin_frame(1U);
+        const auto first = *camera.active_event_camera_pose();
+        require_near(first.eye.x, 500.0F, 0.0001F,
+                     "an actor event must use the actor's virtual raw front and actual position");
+        require_near(first.eye.y, 260.0F, 0.0001F,
+                     "an actor event must preserve raw up magnitude through actual CameraAnim calculation");
+        require_near(first.eye.z, 280.0F, 0.0001F,
+                     "an actor event must use the virtual side instead of a native registry matrix");
+        const auto first_reads = actor.base_matrix_reads;
+        require(first_reads > 0U, "the first actor camera phase must have executed original target movement");
+        actor.mPosition.set(110.0F, 220.0F, 330.0F);
+        camera.begin_frame(1U);
+        require(actor.base_matrix_reads == first_reads && same_pose(*camera.active_event_camera_pose(), first),
+                "a repeated camera frame must not resample live actor position or orientation");
+        actor.mFlag.mIsClipped = true;
+        actor.has_base_matrix = false;
+        camera.begin_frame(2U);
+        require(actor.base_matrix_reads == first_reads,
+                "a clipped event actor must use the original target's cached orientation");
+        require_near(camera.active_event_camera_pose()->eye.x, 510.0F, 0.0001F,
+                     "a clipped actor event must combine its current position with its retained orientation");
+        actor.mFlag.mIsClipped = false;
+        actor.mFlag.mIsDead = true;
+        actor.mPosition.set(120.0F, 240.0F, 360.0F);
+        camera.begin_frame(3U);
+        require(actor.base_matrix_reads == first_reads,
+                "a dead retained event actor must preserve the original target movement skip");
+        require_near(camera.active_event_camera_pose()->eye.x, 520.0F, 0.0001F,
+                     "a retained dead actor is still a live owner whose original position getter is readable");
+
+        auto next_actor = ActorBaseMatrixFixture{};
+        next_actor.mPosition.set(200.0F, 400.0F, 600.0F);
+        next_actor.mFlag.mIsClipped = true;
+        next_actor.has_base_matrix = false;
+        camera.start_event_camera(5, "original actor phases",
+            smgpc::camera::EventCameraTarget::target_actor(next_actor), 30);
+        camera.begin_frame(4U);
+        require(next_actor.base_matrix_reads == 0U,
+                "changing the actor owner must still honor the replacement actor's clipping state");
+        require_near(camera.active_event_camera_pose()->eye.x, 600.0F, 0.0001F,
+                     "the reused original actor target must retain cached orientation across a clipped owner change");
+        require_near(camera.active_event_camera_pose()->eye.z, 580.0F, 0.0001F,
+                     "reusing the actor target must preserve its prior side vector as well as its front");
+        camera.end_event_camera(5, "original actor phases", true, -1);
+    }
+
     void test_matrix_target_lifetime_and_aba() {
         const auto animation = smgpc::camera::CameraAnimation::from_bytes(
             make_linear_canm());
@@ -1505,6 +1875,10 @@ int main() {
         TestCase{"same animation request preserves cursor", test_same_animation_request_preserves_cursor},
         TestCase{"failed start is transactional",
                  test_failed_start_is_transactional},
+        TestCase{"original matrix target movement and gravity", test_original_matrix_target_movement_and_gravity},
+        TestCase{"matrix and object target camera phases", test_matrix_and_object_target_camera_phases},
+        TestCase{"original actor target axes and state", test_original_actor_target_axes_and_state},
+        TestCase{"actor target phases and retained orientation", test_actor_target_camera_phases_and_retained_orientation},
         TestCase{"matrix target lifetime and ABA",
                  test_matrix_target_lifetime_and_aba},
         TestCase{"optional real-disc event camera resources",

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/LiveActor/ActorCameraInfo.hpp"
+#include "Game/Camera/CameraTargetObj.hpp"
 #include "camera/CameraAnimation.hpp"
 #include "camera/CameraPose.hpp"
 #include "camera/OriginalGameCamera.hpp"
@@ -65,13 +66,15 @@ namespace smgpc::camera {
         Player,
         LiveActor,
         Matrix,
+        Object,
     };
 
     struct EventCameraTarget {
         EventCameraTargetKind kind = EventCameraTargetKind::Retain;
         smgpc::runtime::PlayerSystemService *player = nullptr;
         const LiveActor *actor = nullptr;
-        const CameraTargetMtx *matrix = nullptr;
+        CameraTargetMtx *matrix = nullptr;
+        CameraTargetObj *object = nullptr;
         const NameObj *name_obj_identity = nullptr;
         std::uint64_t name_obj_generation = 0U;
 
@@ -81,7 +84,8 @@ namespace smgpc::camera {
         [[nodiscard]] static EventCameraTarget target_actor(
             const LiveActor &actor) noexcept;
         [[nodiscard]] static EventCameraTarget target_matrix(
-            const CameraTargetMtx &matrix) noexcept;
+            CameraTargetMtx &matrix) noexcept;
+        [[nodiscard]] static EventCameraTarget target_object(CameraTargetObj &object) noexcept;
     };
 
     class EventCameraRuntime final {
@@ -97,13 +101,12 @@ namespace smgpc::camera {
                    float speed = 1.0F, const CameraPoseParam *game_seed = nullptr);
         void end(std::int32_t zone_id, std::string_view name, bool force,
                  std::int32_t interpolation_frames);
-        void begin_frame(bool paused);
+        void begin_frame(std::uint64_t frame_index, bool paused);
         [[nodiscard]] ActorCameraInfo *create_actor_camera_info(
             std::int32_t camera_set_id, std::int32_t zone_id);
 
         [[nodiscard]] std::optional<CameraPose> active_pose() const;
         [[nodiscard]] std::optional<EventCameraKey> active_key() const;
-        [[nodiscard]] smgpc::runtime::PlayerSystemService *active_player_target() const;
         [[nodiscard]] bool is_active(std::int32_t zone_id,
                                      std::string_view name) const;
         [[nodiscard]] bool is_declared(std::int32_t zone_id,
@@ -127,9 +130,13 @@ namespace smgpc::camera {
             float speed = 1.0F;
             std::int32_t interpolation_frames = 0;
             bool animation = false;
+            bool rebind_matrix_on_first_calc = false;
         };
 
-        [[nodiscard]] CameraPose calculate_active_pose(ActiveEvent &active);
+        [[nodiscard]] CameraPose calculate_active_pose(ActiveEvent &active, CameraTargetObj &target);
+        [[nodiscard]] const ActiveEvent *requested_event() const;
+        [[nodiscard]] CameraTargetObj &selected_target() const;
+        void apply_target_request(const EventCameraTarget &target);
         [[nodiscard]] const CameraAnimation *find_animation(
             const EventCameraKey &key) const;
 
@@ -138,7 +145,10 @@ namespace smgpc::camera {
         std::map<EventCameraKey, CameraAnimation> _animations{};
         std::vector<std::unique_ptr<ActorCameraInfo>> _actor_camera_infos{};
         std::optional<ActiveEvent> _active{};
+        std::optional<ActiveEvent> _pending{};
         std::optional<EventCameraTarget> _last_target{};
+        std::unique_ptr<CameraTargetActor> _actor_target;
+        std::optional<std::uint64_t> _last_frame;
     };
 
 }  // namespace smgpc::camera

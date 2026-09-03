@@ -6,6 +6,7 @@
 #include <memory>
 
 class CameraPoseParam;
+class CameraTargetObj;
 
 namespace smgpc::camera {
 
@@ -16,12 +17,15 @@ namespace smgpc::camera {
         OriginalAnimationCamera(const CameraAnimation &animation,
                                 const StageCameraTargetState &target, float speed,
                                 const CameraPoseParam *manager_seed = nullptr);
+        OriginalAnimationCamera(const CameraAnimation &animation, CameraTargetObj &target,
+                                float speed, const CameraPoseParam *manager_seed = nullptr);
         ~OriginalAnimationCamera();
 
         OriginalAnimationCamera(const OriginalAnimationCamera &) = delete;
         OriginalAnimationCamera &operator=(const OriginalAnimationCamera &) = delete;
 
         [[nodiscard]] CameraPose calc(const StageCameraTargetState &target);
+        [[nodiscard]] CameraPose calc(CameraTargetObj &target);
         [[nodiscard]] CameraPose pose() const;
         [[nodiscard]] const CameraPoseParam &pose_param() const;
         [[nodiscard]] float current_frame() const;

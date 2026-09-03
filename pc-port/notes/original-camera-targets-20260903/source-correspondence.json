@@ -1,0 +1,148 @@
+{
+  "verification": "Two exact matrix target files, eleven unchanged actor target methods, three original axis helpers, and one corrected root/PC rotation helper. No new binary match.",
+  "root_head_before_changes": "0e3b1fb74af0b2573a0c6ca5ffac3dd33fdbe464",
+  "files": [
+    {
+      "source": "src/Game/Camera/CameraTargetMtx.cpp",
+      "destination": "pc-port/src/Game/Camera/CameraTargetMtx.cpp",
+      "sha256": "08d58aaae22394550a724b93affe042dcbba7266bc41ce1c4f98bf3f5793ffa1"
+    },
+    {
+      "source": "include/Game/Camera/CameraTargetMtx.hpp",
+      "destination": "pc-port/src/Game/Camera/CameraTargetMtx.hpp",
+      "sha256": "b4fa8d709b7a0687fba5cb8e844a1e97ba29da71ec8b2cf24037903ced5f5a1e"
+    }
+  ],
+  "functions": [
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "CameraTargetActor::CameraTargetActor(const char* pName)",
+      "sha256": "184af669810034ebf173a98ca0487058d2b33bcdbf0c25cad693f72c75f774e7"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "void CameraTargetActor::movement()",
+      "sha256": "77c26e29a6f965deeb868dbf239aa724f2d6de4791588d23330bd5f42d72c601"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "const TVec3f& CameraTargetActor::getPosition() const",
+      "sha256": "ffa2ab3ea30f27a6e19a11fd3a9edf04a5532f2524c3ccbbeedd8b20d6b0891f"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "const TVec3f& CameraTargetActor::getUpVec() const",
+      "sha256": "3b7f21eb70b75e147d86d8b343f0116b9fd132c189b919e64a7ea63fd4973ec3"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "const TVec3f& CameraTargetActor::getFrontVec() const",
+      "sha256": "fcee135acf979fd2953d438f894f4838be9033cb5e0e139fab8ac9509a518ef4"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "const TVec3f& CameraTargetActor::getSideVec() const",
+      "sha256": "9cf8886d159717b2af8dab5d283aad7fe20810efe807e11207bd4e71dacb3415"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "const TVec3f& CameraTargetActor::getLastMove() const",
+      "sha256": "528975dd1b11516f863af5593e3d18521144bf174f19f02927ad6fd21f765503"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "const TVec3f& CameraTargetActor::getGroundPos() const",
+      "sha256": "3ddebd92b7559da51366ee5310989bb3ca049f122ac0b85a3e20730594b2c3a6"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "const TVec3f& CameraTargetActor::getGravityVector() const",
+      "sha256": "0e953e24d88b955853de4db1b80b12eb6e840411f8a218a88951773929c16b0b"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "CubeCameraArea* CameraTargetActor::getCubeCameraArea() const",
+      "sha256": "cd7df0ebf86ffe94cfaaeba712d9c4cdcebf5ac85254540cff08a185c8adfaf4"
+    },
+    {
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "Triangle* CameraTargetActor::getGroundTriangle() const",
+      "sha256": "8821d769f5402666904afb32b669d04a5ce79921dd9d58a07a5b6c5c765cb18f"
+    },
+    {
+      "source": "src/Game/Util/ActorMovementUtil.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "void calcFrontVec(TVec3f* pFrontVec, const LiveActor* pActor)",
+      "sha256": "723c3ad9935ea76f1b1eb14819ba06007fe272e1d23860b6b79e5304b93b0493"
+    },
+    {
+      "source": "src/Game/Util/ActorMovementUtil.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "void calcUpVec(TVec3f* pUpVec, const LiveActor* pActor)",
+      "sha256": "f00a3f2cd839399fb8ff7e2b7bab618cbab49089646ea357904352f7b6d9b76a"
+    },
+    {
+      "source": "src/Game/Util/ActorMovementUtil.cpp",
+      "destination": "pc-port/src/compat/OriginalCameraTargetActor.cpp",
+      "signature": "void calcSideVec(TVec3f* pSideVec, const LiveActor* pActor)",
+      "sha256": "20f3a7b1dddc79810df8d4e00acdf2da7e02247a961ac9e15a659b3d1348c43b"
+    },
+    {
+      "source": "src/Game/Util/MtxUtil.cpp",
+      "destination": "pc-port/src/compat/MtxCompat.cpp",
+      "signature": "void makeMtxRotate(MtxPtr mtx, s16 rx, s16 ry, s16 rz)",
+      "sha256": "1068bb08691413cf031b132a573cdd25c28d99571e807028417ac1b2de8fd080"
+    }
+  ],
+  "root_rotation_fix": {
+    "source": "src/Game/Util/MtxUtil.cpp",
+    "signature": "void makeMtxRotate(MtxPtr mtx, s16 rx, s16 ry, s16 rz)",
+    "previous_body_sha256": "0cce31e28fa6cc76af1446d1deeb943a8bb1b0ad4024349a4603fca968d46800",
+    "changed_output": "mtx[0][2]",
+    "old_expression": "cosXsinZsinY + sinXcosZ",
+    "corrected_expression": "cosXcosZsinY + sinXsinZ",
+    "instruction_evidence": [
+      "0x803EB30C: sinZ*sinX",
+      "0x803EB32C: cosX*(cosZ*sinY)",
+      "0x803EB33C: sum",
+      "0x803EB360: store mtx[0][2]"
+    ]
+  },
+  "dol": {
+    "path": "build/compat-math-oracle/main.dol",
+    "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+    "functions": [
+      {
+        "name": "makeMtxRotate_signed",
+        "address": "0x803eb2c4",
+        "size": "0xbc",
+        "sha256": "8e9dffb92be5e7b7c9c069f3e871b66d33e63abebbec5d8cc0bb9fdc6328229d"
+      },
+      {
+        "name": "makeMtxRotate_float",
+        "address": "0x803eb380",
+        "size": "0x60",
+        "sha256": "f534f151f65a862249cb51b04840c1f060953096e9393d28e7ae0a74099d046a"
+      }
+    ]
+  },
+  "compiler_verification": {
+    "toolchain": "GC/3.0a3",
+    "flags": "configure.py cflags_game; RMGK01; VERSION=0",
+    "status": "Whole root MtxUtil.cpp compiled without diagnostics.",
+    "verifier": "verify-rotation-object.py",
+    "evidence": "rotation-compiler-evidence.json",
+    "comparison": "53 emitted instructions versus 47 retail; 12 of 12 output expression trees match after 3 verified relocations; not byte-identical."
+  }
+}

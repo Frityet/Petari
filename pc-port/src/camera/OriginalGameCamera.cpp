@@ -42,7 +42,7 @@ namespace smgpc::camera {
              const StageCameraTargetState &initial_target, float default_fovy,
              const StageCameraCalculationState &initial_state,
              smgpc::compat::OriginalCameraMode mode, const CameraPoseParam *manager_seed,
-             bool reset_local_offset)
+             bool reset_local_offset, CameraTargetObj *original_target = nullptr)
             : zone_transform(zone), camera_param(param), default_fovy_degrees(default_fovy),
               mode(mode), man("OriginalGameCameraMan"), camera(create_camera(param)),
               man_pose(man.mPoseParam), camera_pose(camera->mPoseParam), height(camera->mVPan),
@@ -59,8 +59,11 @@ namespace smgpc::camera {
             }
             apply_parameter();
 
-            target.publish(initial_target);
-            const auto binding = smgpc::compat::ScopedCameraTargetBinding(*camera, target, mode);
+            if (original_target == nullptr) {
+                target.publish(initial_target);
+                original_target = &target;
+            }
+            const auto binding = smgpc::compat::ScopedCameraTargetBinding(*camera, *original_target, mode);
             camera->reset();
             if (mode == smgpc::compat::OriginalCameraMode::Event) {
                 // CameraManEvent resets and calculates in the same phase,
@@ -181,6 +184,20 @@ namespace smgpc::camera {
 
     OriginalGameCamera::~OriginalGameCamera() = default;
 
+    OriginalGameCamera::OriginalGameCamera(const smgpc::scene::StageZoneTransform &zone_transform,
+                                         const CameraParamChunk &camera_param, CameraTargetObj &target,
+                                         float default_fovy_degrees, const CameraPoseParam *manager_seed,
+                                         bool reset_local_offset) {
+        if (camera_param.camera_type != "CAM_TYPE_XZ_PARA" &&
+            camera_param.camera_type != "CAM_TYPE_EYEPOS_FIX") {
+            throw std::invalid_argument("Original game camera does not support " + camera_param.camera_type + ".");
+        }
+        _impl = std::make_unique<Impl>(zone_transform, camera_param, StageCameraTargetState{},
+                                       default_fovy_degrees, StageCameraCalculationState{},
+                                       smgpc::compat::OriginalCameraMode::Event, manager_seed,
+                                       reset_local_offset, &target);
+    }
+
     void OriginalGameCamera::reset(const StageCameraTargetState &target) {
         _impl->target.publish(target);
         _impl->apply_parameter();
@@ -208,12 +225,16 @@ namespace smgpc::camera {
 
     StageCameraPoseCalculation OriginalGameCamera::calc(const StageCameraTargetState &target) {
         _impl->target.publish(target);
+        return calc(_impl->target);
+    }
+
+    StageCameraPoseCalculation OriginalGameCamera::calc(CameraTargetObj &target) {
         if (!_impl->parameter_applied_for_reset) {
             _impl->apply_parameter();
         }
         const auto binding = smgpc::compat::ScopedCameraTargetBinding(
-            *_impl->camera, _impl->target, _impl->mode);
-        if (_impl->camera->calc() != &_impl->target) {
+            *_impl->camera, target, _impl->mode);
+        if (_impl->camera->calc() != &target) {
             throw std::logic_error("Original game camera returned a different target owner.");
         }
         CameraLocalUtil::calcSafePose(&_impl->man, _impl->camera.get());

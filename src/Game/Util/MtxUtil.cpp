@@ -38,13 +38,15 @@ namespace MR {
 
         f32 cosXsinZ = cosX * sinZ;
         f32 sinXcosZ = sinX * cosZ;
+        f32 sinXsinZ = sinX * sinZ;
 
         f32 sinXcosZsinY = sinX * cosZsinY;
+        f32 cosXcosZsinY = cosX * cosZsinY;
         f32 cosXsinZsinY = cosX * sinZsinY;
 
         mtx[0][3] = 0.0f;
         mtx[0][1] = sinXcosZsinY - cosXsinZ;
-        mtx[0][2] = cosXsinZsinY + sinXcosZ;
+        mtx[0][2] = cosXcosZsinY + sinXsinZ;
 
         f32 sinXcosY = sinX * cosY;
         f32 cosXcosY = cosX * cosY;

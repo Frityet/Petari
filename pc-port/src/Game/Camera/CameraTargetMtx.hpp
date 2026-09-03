@@ -1,24 +1,32 @@
 #pragma once
 
-#include <revolution.h>
+#include "Game/Camera/CameraTargetObj.hpp"
+#include "JSystem/JGeometry/TMatrix.hpp"
 
-#include "Game/LiveActor/LiveActor.hpp"
-
-struct CameraTargetMatrix {
-    Mtx mMtx;
-
-    void identity();
-};
-
-class CameraTargetMtx : public NameObj {
+class CameraTargetMtx : public CameraTargetObj {
 public:
-    explicit CameraTargetMtx(const char *pName);
-    ~CameraTargetMtx() override;
+    CameraTargetMtx(const char*);
+    virtual ~CameraTargetMtx();
 
-    void movement() override;
+    virtual void movement();
+
+    virtual const TVec3f& getPosition() const;
+    virtual const TVec3f& getUpVec() const;
+    virtual const TVec3f& getFrontVec() const;
+    virtual const TVec3f& getSideVec() const;
+    virtual const TVec3f& getLastMove() const;
+    virtual const TVec3f& getGroundPos() const;
+    virtual const TVec3f& getGravityVector() const;
+
+    virtual CubeCameraArea* getCubeCameraArea() const;
+
     void invalidateLastMove();
 
-    /* 0x10 */ CameraTargetMatrix mMatrix;
+    void setMtx(MtxPtr mtx) {
+        mMatrix.set(mtx);
+    }
+
+    /* 0x10 */ TPos3f mMatrix;
     /* 0x40 */ TVec3f mPosition;
     /* 0x4C */ TVec3f mLastMove;
     /* 0x58 */ TVec3f mGravityVector;
@@ -26,4 +34,5 @@ public:
     /* 0x70 */ TVec3f mFront;
     /* 0x7C */ TVec3f mSide;
     /* 0x88 */ bool mInvalidLastMove;
+    /* 0x8C */ CubeCameraArea* mCameraArea;
 };

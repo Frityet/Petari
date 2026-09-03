@@ -1,49 +1,83 @@
 #include "Game/Camera/CameraTargetMtx.hpp"
+#include "Game/AreaObj/CubeCamera.hpp"
+#include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Util/GravityUtil.hpp"
 
-void CameraTargetMatrix::identity() {
-    mMtx[0][0] = 1.0F;
-    mMtx[0][1] = 0.0F;
-    mMtx[0][2] = 0.0F;
-    mMtx[0][3] = 0.0F;
-    mMtx[1][0] = 0.0F;
-    mMtx[1][1] = 1.0F;
-    mMtx[1][2] = 0.0F;
-    mMtx[1][3] = 0.0F;
-    mMtx[2][0] = 0.0F;
-    mMtx[2][1] = 0.0F;
-    mMtx[2][2] = 1.0F;
-    mMtx[2][3] = 0.0F;
+void CameraTargetMtx_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
 }
 
-CameraTargetMtx::CameraTargetMtx(const char *pName)
-    : NameObj(pName), mPosition(0.0F, 0.0F, 0.0F), mLastMove(0.0F, 0.0F, 0.0F), mGravityVector(0.0F, -1.0F, 0.0F),
-      mUp(0.0F, 1.0F, 0.0F), mFront(0.0F, 0.0F, 1.0F), mSide(1.0F, 0.0F, 0.0F), mInvalidLastMove(false) {
+CameraTargetMtx::CameraTargetMtx(const char* pName)
+    : CameraTargetObj(pName), mPosition(0.0f, 0.0f, 0.0f), mLastMove(0.0f, 0.0f, 0.0f), mGravityVector(0.0f, -1.0f, 0.0f), mUp(0.0f, 1.0f, 0.0f),
+      mFront(0.0f, 0.0f, 1.0f), mSide(0.0f, 0.0f, 1.0f), mInvalidLastMove(), mCameraArea() {
     mMatrix.identity();
 }
 
-CameraTargetMtx::~CameraTargetMtx() = default;
+const TVec3f& CameraTargetMtx::getPosition() const {
+    return mPosition;
+}
 
-void CameraTargetMtx::movement() {
-    const auto next_position = TVec3f{
-        mMatrix.mMtx[0][3],
-        mMatrix.mMtx[1][3],
-        mMatrix.mMtx[2][3],
-    };
+const TVec3f& CameraTargetMtx::getUpVec() const {
+    return mUp;
+}
 
-    if (mInvalidLastMove) {
-        mLastMove.set(0.0F, 0.0F, 0.0F);
-        mInvalidLastMove = false;
-    } else {
-        mLastMove = next_position - mPosition;
-    }
+const TVec3f& CameraTargetMtx::getFrontVec() const {
+    return mFront;
+}
 
-    mPosition.set(next_position);
-    mUp.set(mMatrix.mMtx[0][1], mMatrix.mMtx[1][1], mMatrix.mMtx[2][1]);
-    mFront.set(mMatrix.mMtx[0][2], mMatrix.mMtx[1][2], mMatrix.mMtx[2][2]);
-    mSide.set(mMatrix.mMtx[0][0], mMatrix.mMtx[1][0], mMatrix.mMtx[2][0]);
-    mGravityVector.set(0.0F, -1.0F, 0.0F);
+const TVec3f& CameraTargetMtx::getSideVec() const {
+    return mSide;
+}
+
+const TVec3f& CameraTargetMtx::getLastMove() const {
+    return mLastMove;
+}
+
+const TVec3f& CameraTargetMtx::getGroundPos() const {
+    return mPosition;
+}
+
+const TVec3f& CameraTargetMtx::getGravityVector() const {
+    return mGravityVector;
+}
+
+CubeCameraArea* CameraTargetMtx::getCubeCameraArea() const {
+    return mCameraArea;
 }
 
 void CameraTargetMtx::invalidateLastMove() {
     mInvalidLastMove = true;
+}
+
+CameraTargetMtx::~CameraTargetMtx() {
+}
+
+void CameraTargetMtx::movement() {
+    mMatrix.getYDir(mUp);
+    mMatrix.getZDir(mFront);
+    mMatrix.getXDir(mSide);
+
+    TVec3f position;
+    mMatrix.getTrans(position);
+
+    if (mInvalidLastMove) {
+        mInvalidLastMove = false;
+        mLastMove.z = 0.0f;
+        mLastMove.y = 0.0f;
+        mLastMove.x = 0.0f;
+    } else {
+        mLastMove.sub(position, mPosition);
+    }
+
+    mPosition.set(position);
+
+    AreaObj* area = MR::getAreaObj("CubeCamera", mPosition);
+
+    if (area == nullptr) {
+        mCameraArea = nullptr;
+    } else {
+        mCameraArea = static_cast< CubeCameraArea* >(area);
+    }
+
+    MR::calcGravityVectorOrZero(this, mPosition, &mGravityVector, nullptr, 0);
 }

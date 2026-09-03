@@ -19,68 +19,6 @@
 namespace smgpc::camera {
     namespace {
 
-        struct TargetSnapshot {
-            CameraParamVec3 position{};
-            CameraParamVec3 side{1.0F, 0.0F, 0.0F};
-            CameraParamVec3 up{0.0F, 1.0F, 0.0F};
-            CameraParamVec3 front{0.0F, 0.0F, 1.0F};
-            CameraParamVec3 last_move{};
-            std::optional<CameraParamVec3> ground_position;
-            std::optional<CameraParamVec3> gravity;
-            bool jumping = false;
-            bool fast_rise = false;
-            bool fast_drop = false;
-        };
-
-        [[nodiscard]] CameraParamVec3 scale(const CameraParamVec3 &value,
-                                            float factor) {
-            return {.x = value.x * factor, .y = value.y * factor, .z = value.z * factor};
-        }
-
-        [[nodiscard]] float dot(const CameraParamVec3 &lhs,
-                                const CameraParamVec3 &rhs) {
-            return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
-        }
-
-        [[nodiscard]] CameraParamVec3 cross(const CameraParamVec3 &lhs,
-                                            const CameraParamVec3 &rhs) {
-            return {.x = lhs.y * rhs.z - lhs.z * rhs.y,
-                    .y = lhs.z * rhs.x - lhs.x * rhs.z,
-                    .z = lhs.x * rhs.y - lhs.y * rhs.x};
-        }
-
-        [[nodiscard]] std::optional<CameraParamVec3> normalized(
-            const CameraParamVec3 &value) {
-            const auto magnitude = std::sqrt(dot(value, value));
-            if (!(magnitude > 0.000001F)) {
-                return std::nullopt;
-            }
-            return scale(value, 1.0F / magnitude);
-        }
-
-        [[nodiscard]] TargetSnapshot snapshot_from_matrix(
-            std::span<const float, 12U> matrix,
-            CameraParamVec3 last_move = {}) {
-            auto result = TargetSnapshot{
-                .position = {matrix[3U], matrix[7U], matrix[11U]},
-                .side = {matrix[0U], matrix[4U], matrix[8U]},
-                .up = {matrix[1U], matrix[5U], matrix[9U]},
-                .front = {matrix[2U], matrix[6U], matrix[10U]},
-                .last_move = last_move,
-            };
-            const auto side = normalized(result.side);
-            const auto up = normalized(result.up);
-            const auto front = normalized(result.front);
-            if (!side.has_value() || !up.has_value() || !front.has_value()) {
-                throw std::logic_error(
-                    "Event-camera target has a degenerate base matrix.");
-            }
-            result.side = *side;
-            result.up = *up;
-            result.front = *front;
-            return result;
-        }
-
         void validate_target_reference(const EventCameraTarget &target) {
             switch (target.kind) {
             case EventCameraTargetKind::Player:
@@ -99,10 +37,6 @@ namespace smgpc::camera {
                     throw std::logic_error(
                         "LiveActor-target event camera lost its runtime actor.");
                 }
-                if (target.actor->mFlag.mIsDead) {
-                    throw std::logic_error(
-                        "LiveActor-target event camera lost its runtime actor.");
-                }
                 return;
             case EventCameraTargetKind::Matrix:
                 if (target.matrix == nullptr ||
@@ -115,6 +49,14 @@ namespace smgpc::camera {
                         "Matrix-target event camera lost its runtime target.");
                 }
                 return;
+            case EventCameraTargetKind::Object:
+                if (target.object == nullptr || target.name_obj_identity == nullptr ||
+                    target.name_obj_generation == 0U ||
+                    smgpc::compat::name_obj_runtime_generation(target.name_obj_identity) !=
+                        target.name_obj_generation) {
+                    throw std::logic_error("Object-target event camera lost its runtime target.");
+                }
+                return;
             case EventCameraTargetKind::Retain:
                 break;
             }
@@ -122,64 +64,16 @@ namespace smgpc::camera {
                 "Event camera has no retained target to calculate from.");
         }
 
-        [[nodiscard]] TargetSnapshot snapshot_target(
-            const EventCameraTarget &target) {
-            validate_target_reference(target);
-            switch (target.kind) {
-            case EventCameraTargetKind::Player: {
-                const auto state = target.player->camera_target_state();
-                if (!state.has_value()) {
-                    throw std::logic_error(
-                        "Player-target event camera requires its target movement before calculation.");
-                }
-                const auto side = state->side.value_or(cross(state->up, state->front));
-                return {
-                    .position = state->position,
-                    .side = side,
-                    .up = state->up,
-                    .front = state->front,
-                    .last_move = state->last_move,
-                    .ground_position = state->ground_position,
-                    .gravity = state->gravity,
-                    .jumping = state->jumping,
-                    .fast_rise = state->fast_rise,
-                    .fast_drop = state->fast_drop,
-                };
-            }
-            case EventCameraTargetKind::LiveActor: {
-                const auto &base = smgpc::compat::actor_base_matrix(target.actor).m;
-                auto result = snapshot_from_matrix(
-                    std::span<const float, 12U>(base),
-                    {target.actor->mVelocity.x, target.actor->mVelocity.y,
-                     target.actor->mVelocity.z});
-                result.position = {target.actor->mPosition.x,
-                                   target.actor->mPosition.y,
-                                   target.actor->mPosition.z};
-                return result;
-            }
-            case EventCameraTargetKind::Matrix: {
-                const auto &mtx = target.matrix->mMatrix.mMtx;
-                return snapshot_from_matrix(
-                    std::span<const float, 12U>(&mtx[0][0], 12U),
-                    {target.matrix->mLastMove.x, target.matrix->mLastMove.y,
-                     target.matrix->mLastMove.z});
-            }
-            case EventCameraTargetKind::Retain:
-                break;
-            }
-            throw std::logic_error("Event camera has no retained target to calculate from.");
-        }
-
-        void validate_target_snapshot(const TargetSnapshot &target) {
-            const auto finite = [](const CameraParamVec3 &value) {
+        void validate_target_object(const CameraTargetObj &target) {
+            const auto finite = [](const TVec3f &value) {
                 return std::isfinite(value.x) && std::isfinite(value.y) && std::isfinite(value.z);
             };
-            if (!finite(target.position) || !finite(target.up) || !finite(target.front) ||
-                !finite(target.side) || !finite(target.last_move) ||
-                dot(target.up, target.up) <= 1.0e-12F ||
-                dot(target.front, target.front) <= 1.0e-12F || dot(target.side, target.side) <= 1.0e-12F ||
-                (target.ground_position.has_value() && !finite(*target.ground_position)) ||
-                (target.gravity.has_value() && !finite(*target.gravity))) {
+            const auto &up = target.getUpVec();
+            const auto &front = target.getFrontVec();
+            const auto &side = target.getSideVec();
+            if (!finite(target.getPosition()) || !finite(up) || !finite(front) || !finite(side) ||
+                !finite(target.getLastMove()) || up.squared() <= 1.0e-12F ||
+                front.squared() <= 1.0e-12F || side.squared() <= 1.0e-12F) {
                 throw std::logic_error("Event camera target requires finite vectors and a non-degenerate basis.");
             }
         }
@@ -283,13 +177,20 @@ namespace smgpc::camera {
     }
 
     EventCameraTarget EventCameraTarget::target_matrix(
-        const CameraTargetMtx &matrix) noexcept {
+        CameraTargetMtx &matrix) noexcept {
         const auto *identity = static_cast<const NameObj *>(&matrix);
         return {.kind = EventCameraTargetKind::Matrix,
                 .matrix = &matrix,
                 .name_obj_identity = identity,
                 .name_obj_generation =
                     smgpc::compat::name_obj_runtime_generation(identity)};
+    }
+
+    EventCameraTarget EventCameraTarget::target_object(CameraTargetObj &object) noexcept {
+        const auto *identity = static_cast<const NameObj *>(&object);
+        return {.kind = EventCameraTargetKind::Object, .object = &object,
+                .name_obj_identity = identity,
+                .name_obj_generation = smgpc::compat::name_obj_runtime_generation(identity)};
     }
 
     void EventCameraRuntime::attach_catalog(const EventCameraCatalog &catalog) {
@@ -307,7 +208,10 @@ namespace smgpc::camera {
         }
         _catalog = nullptr;
         _active.reset();
+        _pending.reset();
         _last_target.reset();
+        _actor_target.reset();
+        _last_frame.reset();
         _animations.clear();
         _actor_camera_infos.clear();
         _declared_static.clear();
@@ -371,12 +275,18 @@ namespace smgpc::camera {
         // CameraManEvent::start requests the chunk and sets its target. The
         // director advances that target before CameraManEvent::calc next frame.
         validate_target_reference(target);
+        if (has_explicit_target) {
+            apply_target_request(target);
+        }
         if (_active.has_value() && _active->key == key &&
             ((animation != nullptr && _active->animation) ||
              (animation == nullptr && !_active->animation && _active->controller))) {
             // CameraManEvent::checkReset preserves the controller when its
             // chunk and type are unchanged. Validate before changing either
             // current or retained target; pose advances only on movement.
+            // Only the calculated chunk determines checkReset. A pending
+            // different chunk can be replaced before it ever calculates.
+            _pending.reset();
             _active->target = target;
             _active->speed = speed;
             if (_active->animation_controller) {
@@ -401,6 +311,8 @@ namespace smgpc::camera {
                 // its full raw pose through further requests in this phase.
                 seed = _active->manager_seed.get();
             }
+        } else if (_pending) {
+            seed = _pending->manager_seed.get();
         }
         std::shared_ptr<CameraPoseParam> manager_seed;
         if (seed != nullptr) {
@@ -415,11 +327,12 @@ namespace smgpc::camera {
             .speed = speed,
             .interpolation_frames = interpolation_frames,
             .animation = animation != nullptr,
+            .rebind_matrix_on_first_calc = has_explicit_target && target.kind == EventCameraTargetKind::Matrix,
         };
         if (has_explicit_target) {
             _last_target = target;
         }
-        _active = std::move(candidate);
+        _pending = std::move(candidate);
     }
 
     void EventCameraRuntime::end(std::int32_t zone_id, std::string_view name,
@@ -427,17 +340,75 @@ namespace smgpc::camera {
                                  std::int32_t interpolation_frames) {
         (void)force;
         (void)interpolation_frames;
+        if (_pending.has_value() && _pending->key.zone_id == zone_id &&
+            _pending->key.name == name) {
+            // cleanChunkFIFO clears both entries when the pending entry
+            // matches in the supported event priority slot.
+            _pending.reset();
+            _active.reset();
+            return;
+        }
         if (_active.has_value() && _active->key.zone_id == zone_id &&
             _active->key.name == name) {
             _active.reset();
         }
     }
 
-    void EventCameraRuntime::begin_frame(bool paused) {
-        if (!_active.has_value() || paused) {
+    void EventCameraRuntime::apply_target_request(const EventCameraTarget &target) {
+        if (target.kind == EventCameraTargetKind::Matrix) {
+            // CameraTargetArg::setTarget invalidates only the matrix argument,
+            // not an arbitrary CameraTargetObj which happens to be a matrix.
+            target.matrix->invalidateLastMove();
+        } else if (target.kind == EventCameraTargetKind::LiveActor) {
+            if (!_actor_target) {
+                _actor_target = std::make_unique<CameraTargetActor>("OriginalEventActorTarget");
+            }
+            // CameraTargetHolder reuses its actor target and cached axes.
+            _actor_target->mActor = target.actor;
+        }
+    }
+
+    CameraTargetObj &EventCameraRuntime::selected_target() const {
+        switch (_last_target->kind) {
+        case EventCameraTargetKind::Player:
+            return *_last_target->player->camera_target();
+        case EventCameraTargetKind::LiveActor:
+            return *_actor_target;
+        case EventCameraTargetKind::Matrix:
+            return *_last_target->matrix;
+        case EventCameraTargetKind::Object:
+            return *_last_target->object;
+        case EventCameraTargetKind::Retain:
+            break;
+        }
+        throw std::logic_error("Event camera has no selected original target.");
+    }
+
+    void EventCameraRuntime::begin_frame(std::uint64_t frame_index, bool paused) {
+        if (requested_event() == nullptr || paused || _last_frame == frame_index) {
             return;
         }
-        _active->pose = calculate_active_pose(*_active);
+        validate_target_reference(*_last_target);
+        auto &target = selected_target();
+        // CameraDirector advances its target before CameraManEvent calculates.
+        if (_last_target->kind == EventCameraTargetKind::Player) {
+            _last_target->player->advance_camera_target(frame_index);
+        } else {
+            target.movement();
+        }
+        if (_pending) {
+            if (_pending->rebind_matrix_on_first_calc) {
+                // checkReset re-applies the new chunk's target argument after
+                // movement, leaving this invalidation for the following phase.
+                _pending->target.matrix->invalidateLastMove();
+                _pending->rebind_matrix_on_first_calc = false;
+            }
+            _active = std::move(*_pending);
+            _pending.reset();
+        }
+        validate_target_object(target);
+        _active->pose = calculate_active_pose(*_active, target);
+        _last_frame = frame_index;
     }
 
     ActorCameraInfo *EventCameraRuntime::create_actor_camera_info(
@@ -453,23 +424,24 @@ namespace smgpc::camera {
         return result;
     }
 
+    const EventCameraRuntime::ActiveEvent *EventCameraRuntime::requested_event() const {
+        return _pending ? &*_pending : (_active ? &*_active : nullptr);
+    }
+
     std::optional<CameraPose> EventCameraRuntime::active_pose() const {
-        return _active.has_value() ? _active->pose : std::nullopt;
+        const auto *event = requested_event();
+        return event != nullptr ? event->pose : std::nullopt;
     }
 
     std::optional<EventCameraKey> EventCameraRuntime::active_key() const {
-        return _active.has_value() ? std::optional{_active->key} : std::nullopt;
-    }
-
-    smgpc::runtime::PlayerSystemService *EventCameraRuntime::active_player_target() const {
-        return _active.has_value() && _active->target.kind == EventCameraTargetKind::Player
-                   ? _active->target.player : nullptr;
+        const auto *event = requested_event();
+        return event != nullptr ? std::optional{event->key} : std::nullopt;
     }
 
     bool EventCameraRuntime::is_active(std::int32_t zone_id,
                                        std::string_view name) const {
-        return _active.has_value() && _active->key.zone_id == zone_id &&
-               _active->key.name == name;
+        const auto *event = requested_event();
+        return event != nullptr && event->key.zone_id == zone_id && event->key.name == name;
     }
 
     bool EventCameraRuntime::is_declared(std::int32_t zone_id,
@@ -480,16 +452,18 @@ namespace smgpc::camera {
 
     bool EventCameraRuntime::is_animation_end(std::int32_t zone_id,
                                               std::string_view name) const {
-        if (!is_active(zone_id, name) || !_active->animation) {
+        const auto *event = requested_event();
+        if (!is_active(zone_id, name) || !event->animation) {
             return true;
         }
-        return _active->animation_controller != nullptr && _active->animation_controller->is_end();
+        return event->animation_controller != nullptr && event->animation_controller->is_end();
     }
 
     std::int32_t EventCameraRuntime::animation_frame(
         std::int32_t zone_id, std::string_view name) const {
-        return is_active(zone_id, name) && _active->animation_controller
-                   ? static_cast<std::int32_t>(_active->animation_controller->current_frame()) : 0;
+        const auto *event = requested_event();
+        return is_active(zone_id, name) && event->animation_controller
+                   ? static_cast<std::int32_t>(event->animation_controller->current_frame()) : 0;
     }
 
     std::int32_t EventCameraRuntime::event_frames(
@@ -512,14 +486,7 @@ namespace smgpc::camera {
         return _actor_camera_infos.size();
     }
 
-    CameraPose EventCameraRuntime::calculate_active_pose(ActiveEvent &active) {
-        const auto target = snapshot_target(active.target);
-        validate_target_snapshot(target);
-        const auto published_target = StageCameraTargetState{
-            .position = target.position, .up = target.up, .front = target.front,
-            .last_move = target.last_move, .ground_position = target.ground_position,
-            .gravity = target.gravity, .jumping = target.jumping,
-            .fast_rise = target.fast_rise, .fast_drop = target.fast_drop, .side = target.side};
+    CameraPose EventCameraRuntime::calculate_active_pose(ActiveEvent &active, CameraTargetObj &target) {
         if (active.animation) {
             const auto *animation = find_animation(active.key);
             if (animation == nullptr) {
@@ -528,9 +495,9 @@ namespace smgpc::camera {
             }
             if (!active.animation_controller) {
                 active.animation_controller = std::make_unique<OriginalAnimationCamera>(
-                    *animation, published_target, active.speed, active.manager_seed.get());
+                    *animation, target, active.speed, active.manager_seed.get());
             }
-            return active.animation_controller->calc(published_target);
+            return active.animation_controller->calc(target);
         }
         if (_catalog == nullptr) {
             throw std::logic_error(
@@ -547,12 +514,10 @@ namespace smgpc::camera {
             if (!active.controller) {
                 active.controller = std::make_unique<OriginalGameCamera>(
                     definition->zone_transform, definition->camera_param,
-                    published_target, 45.0F,
-                    StageCameraCalculationState{}, smgpc::compat::OriginalCameraMode::Event,
-                    active.manager_seed.get(),
+                    target, 45.0F, active.manager_seed.get(),
                     start_interpolation_frames(definition->camera_param, active.interpolation_frames) == 0);
             }
-            return active.controller->calc(published_target).pose;
+            return active.controller->calc(target).pose;
         }
         throw std::logic_error("Unsupported event-camera type " +
                                definition->camera_param.camera_type);

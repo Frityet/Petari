@@ -63,39 +63,50 @@ namespace MR {
         pMatrix->setTrans(rPosition);
     }
 
-    void makeMtxRotate(MtxPtr pMatrix, s16 rotationX, s16 rotationY, s16 rotationZ) {
-        const auto sinY = JMASSin(rotationY);
-        const auto cosZ = JMASCos(rotationZ);
-        const auto sinZ = JMASSin(rotationZ);
-        const auto cosX = JMASCos(rotationX);
-        const auto sinX = JMASSin(rotationX);
-        const auto cosY = JMASCos(rotationY);
+    void makeMtxRotate(MtxPtr mtx, s16 rx, s16 ry, s16 rz) {
+        f32 sinY = JMASSin(ry);
+        f32 cosZ = JMASCos(rz);
+        f32 sinZ = JMASSin(rz);
+        f32 cosX = JMASCos(rx);
+        f32 sinX = JMASSin(rx);
+        f32 cosY = JMASCos(ry);
 
-        const auto sinZSinY = sinZ * sinY;
-        const auto cosZSinY = cosZ * sinY;
-        const auto sinXSinZSinY = sinX * sinZSinY;
-        const auto cosXCosZ = cosX * cosZ;
+        f32 sinZsinY = sinZ * sinY;
+        f32 cosZsinY = cosZ * sinY;
 
-        pMatrix[2][0] = -sinY;
-        pMatrix[0][0] = cosZ * cosY;
-        pMatrix[1][0] = sinZ * cosY;
+        f32 sinXsinZsinY = sinX * sinZsinY;
+        f32 cosXcosZ = cosX * cosZ;
 
-        const auto cosXSinZ = cosX * sinZ;
-        const auto sinXSinZ = sinX * sinZ;
-        const auto sinXCosZ = sinX * cosZ;
-        const auto sinXCosZSinY = sinX * cosZSinY;
-        const auto cosXCosZSinY = cosX * cosZSinY;
-        const auto cosXSinZSinY = cosX * sinZSinY;
+        mtx[2][0] = -sinY;
 
-        pMatrix[0][3] = 0.0F;
-        pMatrix[0][1] = sinXCosZSinY - cosXSinZ;
-        pMatrix[0][2] = cosXCosZSinY + sinXSinZ;
-        pMatrix[2][1] = sinX * cosY;
-        pMatrix[1][1] = sinXSinZSinY + cosXCosZ;
-        pMatrix[1][2] = cosXSinZSinY - sinXCosZ;
-        pMatrix[2][2] = cosX * cosY;
-        pMatrix[1][3] = 0.0F;
-        pMatrix[2][3] = 0.0F;
+        f32 cosZcosY = cosZ * cosY;
+        f32 sinZcosY = sinZ * cosY;
+
+        mtx[0][0] = cosZcosY;
+        mtx[1][0] = sinZcosY;
+
+        f32 cosXsinZ = cosX * sinZ;
+        f32 sinXcosZ = sinX * cosZ;
+        f32 sinXsinZ = sinX * sinZ;
+
+        f32 sinXcosZsinY = sinX * cosZsinY;
+        f32 cosXcosZsinY = cosX * cosZsinY;
+        f32 cosXsinZsinY = cosX * sinZsinY;
+
+        mtx[0][3] = 0.0f;
+        mtx[0][1] = sinXcosZsinY - cosXsinZ;
+        mtx[0][2] = cosXcosZsinY + sinXsinZ;
+
+        f32 sinXcosY = sinX * cosY;
+        f32 cosXcosY = cosX * cosY;
+
+        mtx[2][1] = sinXcosY;
+        mtx[1][1] = sinXsinZsinY + cosXcosZ;
+        mtx[1][2] = cosXsinZsinY - sinXcosZ;
+
+        mtx[2][2] = cosXcosY;
+        mtx[1][3] = 0.0f;
+        mtx[2][3] = 0.0f;
     }
 
     void makeMtxRotate(MtxPtr pMatrix, f32 rotationX, f32 rotationY, f32 rotationZ) {
