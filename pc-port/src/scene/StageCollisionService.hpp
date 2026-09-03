@@ -44,6 +44,7 @@ namespace smgpc::scene {
         std::span<const std::uint8_t> attributes{};
         std::string_view source_name{};
         HitSensor* sensor = nullptr;
+        std::optional<std::int32_t> placement_zone_id;
         std::array<TVec3f, 3U> vertices{};
         std::array<TVec3f, 4U> normals{};
     };
@@ -105,12 +106,15 @@ namespace smgpc::scene {
         // owner. Stage placement and archive contents are never inspected or
         // guessed here; callers must preserve the request's resource identity
         // in source_name and call build() after completing registrations.
+        // Sensor ownership and placement zone are separate from that resource
+        // identity. A geometry-only registration has no authored owner/zone.
         bool add_kcl(std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
                      std::string source_name = {});
         [[nodiscard]] StageCollisionRegistrationResult register_kcl(
             std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
             std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration,
-            std::span<const std::uint8_t> attributes = {}, HitSensor* sensor = nullptr);
+            std::span<const std::uint8_t> attributes = {}, HitSensor* sensor = nullptr,
+            std::optional<std::int32_t> placement_zone_id = std::nullopt);
         void build();
 
         [[nodiscard]] bool line_cast(const TVec3f& start, const TVec3f& offset,
@@ -161,6 +165,7 @@ namespace smgpc::scene {
             std::string name{};
             std::vector<std::uint8_t> attributes{};
             HitSensor* sensor = nullptr;
+            std::optional<std::int32_t> placement_zone_id;
         };
 
         struct BvhNode {

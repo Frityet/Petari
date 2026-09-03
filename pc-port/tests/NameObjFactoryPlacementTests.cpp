@@ -8,12 +8,15 @@
 #include "Game/NPC/DemoRabbit.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
+#include "compat/HitInfoCompat.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "resource/BcsvTable.hpp"
 #include "scene/AreaObjRuntime.hpp"
+#include "scene/PlacementZoneNameScope.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StageHostScene.hpp"
@@ -477,7 +480,8 @@ namespace {
     }
 
     [[nodiscard]] bool line_query_hits_registered_wall(
-        const smgpc::scene::StageCollisionService &collision) {
+        const smgpc::scene::StageCollisionService &collision,
+        smgpc::scene::StageCollisionHit *hit = nullptr) {
         constexpr auto coordinates = std::array{-750.0F, -500.0F, -250.0F, 0.0F,
                                                 250.0F, 500.0F, 750.0F, 1000.0F};
         for (auto axis = 0U; axis < 3U; ++axis) {
@@ -492,7 +496,7 @@ namespace {
                         offset_values[axis] = direction * 4000.0F;
                         start_values[(axis + 1U) % 3U] = first;
                         start_values[(axis + 2U) % 3U] = second;
-                        if (collision.line_cast(start, offset)) {
+                        if (collision.line_cast(start, offset, hit)) {
                             return true;
                         }
                     }
@@ -578,6 +582,10 @@ namespace {
         require(collision.empty(),
                 "strict preflight must not synthesize collision before exact actor construction");
 
+        auto scene_objects = SceneObjHolder{};
+        auto scene_binding = smgpc::scene::SceneObjHolderBinding(scene_objects);
+        require(scene_objects.create(SceneObj_PlacementStateChecker) != nullptr,
+                "collision construction requires the original placement-zone state owner");
         auto object = smgpc::scene::nameobj::create_name_obj(
             dvd, wall->object_name, wall->object_name.c_str());
         auto *actor = dynamic_cast<InvisiblePolygonObj *>(object.get());
@@ -587,7 +595,12 @@ namespace {
             dvd, wall->object_name, &iter);
         require(archives.size() == 1U && archives.front().loaded,
                 "the exact wall lifecycle must preload its real retail archive");
-        actor->init(iter);
+        {
+            const auto zone_scope = smgpc::scene::PlacementZoneNameScope(wall->zone_id, wall->zone_name);
+            actor->init(iter);
+        }
+        require(MR::getCurrentPlacementZoneId() == -1,
+                "the collision fixture must finish its construction zone scope before querying provenance");
         require(smgpc::compat::has_actor_collision_parts(actor) &&
                     smgpc::compat::actor_collision_parts_source(actor).find(
                         "InvisibleWall10x10.arc") != std::string_view::npos &&
@@ -598,10 +611,17 @@ namespace {
 
         actor->initAfterPlacement();
         collision.build();
+        auto hit = smgpc::scene::StageCollisionHit{};
         require(collision.stats().mesh_count == 1U &&
                     collision.stats().triangle_count > 0U &&
-                    line_query_hits_registered_wall(collision),
+                    line_query_hits_registered_wall(collision, &hit),
                 "the post-placement build must expose the exact wall KCL to map queries");
+        const auto triangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
+        require(triangle.getHostName() == actor->mName &&
+                    triangle.getHostPlacementZoneID() == wall->zone_id &&
+                    collision.surface(hit.triangle_index)->source_name ==
+                        smgpc::compat::actor_collision_parts_source(actor),
+                "the original actor's CollisionParts must retain its host/zone separately from the exact KCL path");
 
         actor->makeActorDead();
         require(!line_query_hits_registered_wall(collision),
@@ -610,7 +630,8 @@ namespace {
         require(line_query_hits_registered_wall(collision),
                 "reappeared CollisionParts owners must restore their retained map collision");
         object.reset();
-        require(!line_query_hits_registered_wall(collision),
+        require(!line_query_hits_registered_wall(collision) &&
+                    !triangle.isValid() && triangle.getHostName() == nullptr,
                 "destroyed CollisionParts owners must invalidate retained BVH registrations");
     }
 

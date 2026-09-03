@@ -442,7 +442,14 @@ namespace smgpc::scene {
     StageCollisionRegistrationResult StageCollisionService::register_kcl(
         std::span<const std::uint8_t> bytes, const std::array<float, 12U> &matrix,
         std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration,
-        std::span<const std::uint8_t> attributes, HitSensor* sensor) {
+        std::span<const std::uint8_t> attributes, HitSensor* sensor,
+        std::optional<std::int32_t> placement_zone_id) {
+        if (sensor != nullptr && registration == nullptr) {
+            throw std::invalid_argument("Collision sensor ownership requires a retained registration lifetime.");
+        }
+        if (placement_zone_id.has_value() && *placement_zone_id < 0) {
+            throw std::invalid_argument("Collision placement provenance requires a non-negative zone ID.");
+        }
         if (bytes.size() < 0x38U) {
             return {};
         }
@@ -472,6 +479,7 @@ namespace smgpc::scene {
             .name = std::move(source_name),
             .attributes = std::vector<std::uint8_t>(attributes.begin(), attributes.end()),
             .sensor = sensor,
+            .placement_zone_id = placement_zone_id,
         });
         const auto triangle_count_before = _triangles.size();
         auto local_bounding_radius_squared = 0.0F;
@@ -952,6 +960,7 @@ namespace smgpc::scene {
             .attributes = source.attributes,
             .source_name = source.name,
             .sensor = source.sensor,
+            .placement_zone_id = source.placement_zone_id,
             .vertices = {triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]},
             .normals = triangle.source_normals,
         };

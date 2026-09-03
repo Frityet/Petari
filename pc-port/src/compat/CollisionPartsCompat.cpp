@@ -5,6 +5,7 @@
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/RarcArchive.hpp"
 #include "scene/StageCollisionService.hpp"
@@ -201,10 +202,16 @@ namespace MR {
             }
         }
 
+        // CollisionParts::init selects its CollisionZone from the placement
+        // checker at creation. Retain that identity when the scope ends.
+        const auto placement_zone_id = MR::getCurrentPlacementZoneId();
+        if (placement_zone_id < 0) {
+            throw std::logic_error("CollisionParts requires an active placement-zone ownership scope.");
+        }
         auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>(
             &actor->mFlag.mIsDead);
         const auto result = collision->register_kcl(kcl, host_matrix, source, registration,
-                                                    attributes, sensor);
+                                                    attributes, sensor, placement_zone_id);
         if (!result.accepted) {
             registration->release_owner();
             throw std::runtime_error("Required CollisionParts KCL is malformed: " + source);

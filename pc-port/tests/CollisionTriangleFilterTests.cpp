@@ -1,4 +1,6 @@
 #include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/TriangleFilter.hpp"
@@ -9,6 +11,7 @@
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -71,6 +74,29 @@ namespace {
                 0.0F, 0.0F, 100.0F, 0.0F};
     }
 
+    struct CollisionOwner {
+        explicit CollisionOwner(const char* name)
+            : actor(name), sensor(0U, 0U, 1.0F, &actor),
+              registration(std::make_shared<smgpc::scene::StageCollisionRegistrationState>(&actor.mFlag.mIsDead)) {
+            actor.makeActorAppeared();
+        }
+
+        ~CollisionOwner() {
+            registration->release_owner();
+        }
+
+        bool add(smgpc::scene::StageCollisionService& collision,
+                 std::span<const std::uint8_t> kcl, const std::array<float, 12U>& matrix,
+                 std::int32_t zone_id = 0) {
+            return collision.register_kcl(kcl, matrix, "/ObjectData/Shared.arc:/Shared.kcl",
+                                          registration, {}, &sensor, zone_id).accepted;
+        }
+
+        LiveActor actor;
+        HitSensor sensor;
+        std::shared_ptr<smgpc::scene::StageCollisionRegistrationState> registration;
+    };
+
     class RejectAll final : public TriangleFilterBase {
     public:
         bool isInvalidTriangle(const Triangle* triangle) const override {
@@ -126,19 +152,21 @@ namespace {
     void test_filters_preserve_later_contacts() {
         auto collision = smgpc::scene::StageCollisionService{};
         const auto kcl = make_kcl();
+        auto rejected = CollisionOwner("RejectedOwner");
+        auto accepted = CollisionOwner("AcceptedOwner");
         // Separate registrations mirror the category keeper's output capacity:
         // rejected parts must not consume the accepted HitInfo slots.
         for (auto index = 0U; index < 32U; ++index) {
-            require(collision.add_kcl(kcl, floor_matrix(), "rejected.kcl"), "the rejected prism must register");
+            require(rejected.add(collision, kcl, floor_matrix()), "the rejected prism must register");
         }
-        require(collision.add_kcl(kcl, floor_matrix(), "accepted.kcl"), "the later accepted prism must register");
+        require(accepted.add(collision, kcl, floor_matrix()), "the later accepted prism must register");
         collision.build();
         collision.activate();
-        auto filter = RejectNamed("rejected.kcl");
+        auto filter = RejectNamed("RejectedOwner");
         const auto center = TVec3f(10.0F, 0.5F, 10.0F);
         const auto assert_strike = [&] {
             require(Collision::getStrikeInfoNumMap() == 1U &&
-                        std::string_view(Collision::getStrikeInfoMap(0U)->mParentTriangle.getHostName()) == "accepted.kcl",
+                        std::string_view(Collision::getStrikeInfoMap(0U)->mParentTriangle.getHostName()) == "AcceptedOwner",
                     "the original strike-info API must retain the later accepted prism");
         };
         require(Collision::checkStrikeBallToMap(center, 1.0F, nullptr, &filter) == 1,
@@ -152,15 +180,17 @@ namespace {
         binder.setTriangleFilter(&filter);
         (void)binder.bind(TVec3f{});
         require(binder.isBindedGround() && binder.mPlaneNum == 1 &&
-                    std::string_view(binder.mGroundInfo.mParentTriangle.getHostName()) == "accepted.kcl",
+                    std::string_view(binder.mGroundInfo.mParentTriangle.getHostName()) == "AcceptedOwner",
                 "Binder's one-plane capacity must remain available to the accepted floor");
     }
 
     void test_filtered_nearest_line_returns_farther_hit() {
         auto collision = smgpc::scene::StageCollisionService{};
         const auto kcl = make_kcl();
-        require(collision.add_kcl(kcl, floor_matrix(1.0F), "nearest.kcl") &&
-                    collision.add_kcl(kcl, floor_matrix(), "farther.kcl"), "both line-query floors must register");
+        auto nearest = CollisionOwner("NearestOwner");
+        auto farther = CollisionOwner("FartherOwner");
+        require(nearest.add(collision, kcl, floor_matrix(1.0F)) &&
+                    farther.add(collision, kcl, floor_matrix()), "both line-query floors must register");
         collision.build();
         collision.activate();
         auto position = TVec3f{};
@@ -169,11 +199,81 @@ namespace {
         const auto offset = TVec3f(0.0F, -5.0F, 0.0F);
         require(MR::getFirstPolyOnLineToMap(&position, &triangle, start, offset), "the unfiltered ray must hit");
         require_vector(position, TVec3f(10.0F, 1.0F, 10.0F), "the unfiltered ray must hit the nearest floor");
-        auto filter = RejectNamed("nearest.kcl");
+        auto filter = RejectNamed("NearestOwner");
         require(MR::getFirstPolyOnLineToMap(&position, &triangle, start, offset, nullptr, &filter),
                 "rejecting the nearest floor must still find the farther accepted floor");
         require_vector(position, TVec3f(10.0F, 0.0F, 10.0F), "the filtered ray must return the accepted hit position");
-        require(std::string_view(triangle.getHostName()) == "farther.kcl", "the filtered ray must return the accepted source");
+        require(std::string_view(triangle.getHostName()) == "FartherOwner", "the filtered ray must return the accepted actor");
+    }
+
+    void test_owner_name_and_zone_remain_separate_from_resources() {
+        auto collision = smgpc::scene::StageCollisionService{};
+        const auto kcl = make_kcl();
+        auto lower = CollisionOwner("LowerActor");
+        auto upper = std::make_unique<CollisionOwner>("UpperActor");
+        require(lower.add(collision, kcl, floor_matrix(), 5) &&
+                    upper->add(collision, kcl, floor_matrix(2.0F), 9),
+                "two actors in different zones must be able to share the exact same KCL resource");
+        collision.build();
+        collision.activate();
+        const auto read_triangle = [](const TVec3f& start) {
+            auto triangle = Triangle{};
+            auto position = TVec3f{};
+            require(MR::getFirstPolyOnLineToMap(&position, &triangle, start, TVec3f(0.0F, -1.5F, 0.0F)),
+                    "the owner fixture must return its live floor triangle");
+            return triangle;
+        };
+        auto lower_triangle = read_triangle(TVec3f(10.0F, 1.0F, 10.0F));
+        auto upper_triangle = read_triangle(TVec3f(10.0F, 3.0F, 10.0F));
+        require(std::string_view(lower_triangle.getHostName()) == "LowerActor" &&
+                    std::string_view(upper_triangle.getHostName()) == "UpperActor" &&
+                    lower_triangle.getHostPlacementZoneID() == 5 && upper_triangle.getHostPlacementZoneID() == 9,
+                "Triangle must retain each actual sensor host and its creation zone");
+        const auto lower_surface = collision.surface(lower_triangle.mIdx);
+        const auto upper_surface = collision.surface(upper_triangle.mIdx);
+        require(lower_surface.has_value() && upper_surface.has_value() &&
+                    lower_surface->source_name == "/ObjectData/Shared.arc:/Shared.kcl" &&
+                    lower_surface->source_name == upper_surface->source_name &&
+                    lower_surface->sensor == &lower.sensor && upper_surface->sensor == &upper->sensor &&
+                    lower_surface->placement_zone_id == 5 && upper_surface->placement_zone_id == 9,
+                "diagnostic resource identity must remain unchanged and independent of actor/zone metadata");
+
+        lower.actor.setName("RenamedLowerActor");
+        require(std::string_view(lower_triangle.getHostName()) == "RenamedLowerActor",
+                "the host getter must read the current NameObj name rather than a stale copied label");
+        lower.sensor.mHost = nullptr;
+        require(lower_triangle.getHostName() == nullptr && lower_triangle.getHostPlacementZoneID() == 5,
+                "a missing sensor host has no name and does not change the part's retained zone");
+        lower.sensor.mHost = &lower.actor;
+        collision.build();
+        require(lower_triangle.getHostPlacementZoneID() == 5 && upper_triangle.getHostPlacementZoneID() == 9,
+                "rebuilding the query structure must preserve triangle owner provenance");
+
+        upper->actor.makeActorDead();
+        require(!upper_triangle.isValid() && upper_triangle.getHostName() == nullptr,
+                "inactive actor collision must not publish stale owner pointers");
+        upper->actor.makeActorAppeared();
+        require(upper_triangle.isValid() && upper_triangle.getHostPlacementZoneID() == 9,
+                "reappearing an actor must recover its original zone identity");
+        upper.reset();
+        require(!upper_triangle.isValid() && upper_triangle.getHostName() == nullptr,
+                "released registrations must not dereference a destroyed sensor or actor");
+
+        collision.clear();
+        require(!lower_triangle.isValid() && lower_triangle.getHostName() == nullptr,
+                "clearing the stage must withdraw previous triangle provenance");
+        require(collision.add_kcl(kcl, floor_matrix(), "geometry-only.kcl"), "an unowned geometry fixture must still register");
+        collision.build();
+        const auto unowned = read_triangle(TVec3f(10.0F, 1.0F, 10.0F));
+        require(unowned.getHostName() == nullptr && lower_triangle.getHostName() == nullptr,
+                "geometry-only registrations must not pretend resource names are actor names or revive old triangles");
+        auto zone_unavailable = false;
+        try {
+            (void)unowned.getHostPlacementZoneID();
+        } catch (const std::logic_error&) {
+            zone_unavailable = true;
+        }
+        require(zone_unavailable, "an absent authored zone must fail explicitly when requested");
     }
 
     void verify_transformed_geometry(const Triangle& triangle) {
@@ -244,8 +344,9 @@ int main() {
         test_filtered_floor_and_wall_do_not_resolve();
         test_filters_preserve_later_contacts();
         test_filtered_nearest_line_returns_farther_hit();
+        test_owner_name_and_zone_remain_separate_from_resources();
         test_original_queries_expose_source_geometry();
-        std::cout << "[pass] collision triangle filters and source geometry\n";
+        std::cout << "[pass] collision triangle filters, source geometry, and owner provenance\n";
         return 0;
     } catch (const std::exception& exception) {
         std::cerr << "[fail] " << exception.what() << '\n';

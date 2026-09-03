@@ -1,5 +1,7 @@
 #include "compat/HitInfoCompat.hpp"
 
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/TriangleFilter.hpp"
 
 #include <cstdint>
@@ -69,11 +71,20 @@ Triangle& Triangle::operator=(const Triangle& other) = default;
 
 const char* Triangle::getHostName() const {
     const auto surface = triangle_surface(*this);
-    return surface.has_value() && !surface->source_name.empty() ? surface->source_name.data() : nullptr;
+    // CollisionParts::getHostName reads the live sensor host's NameObj name.
+    // A resource path is diagnostic metadata, not an actor identity.
+    if (!surface.has_value() || surface->sensor == nullptr || surface->sensor->mHost == nullptr) {
+        return nullptr;
+    }
+    return surface->sensor->mHost->mName;
 }
 
 s32 Triangle::getHostPlacementZoneID() const {
-    return -1;
+    const auto surface = triangle_surface(*this);
+    if (!surface.has_value() || !surface->placement_zone_id.has_value()) {
+        throw std::logic_error("Triangle placement-zone lookup requires a live collision owner with placement provenance.");
+    }
+    return *surface->placement_zone_id;
 }
 
 bool Triangle::isHostMoved() const {
