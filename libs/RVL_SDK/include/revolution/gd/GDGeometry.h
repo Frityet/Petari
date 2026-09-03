@@ -200,6 +200,7 @@ extern "C" {
 
 void GDSetCullMode(GXCullMode);
 void GDSetGenMode2(u8, u8, u8, u8, GXCullMode);
+void GDSetGenMode(u8, u8, u8);
 void GDSetTexCoordGen(GXTexCoordID, GXTexGenType, GXTexGenSrc, u8, u32);
 
 #ifdef __cplusplus

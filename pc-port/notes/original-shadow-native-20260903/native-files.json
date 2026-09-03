@@ -1,0 +1,67 @@
+[
+  {
+    "destination": "pc-port/src/Game/Player/MarioActor.hpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Player/MarioActor.hpp",
+    "sha256": "31a4ebe55f057e476e700463da40653b7abecfcca036685dd5e84b7355c030a8"
+  },
+  {
+    "destination": "pc-port/src/Game/Player/MarioActorDraw.cpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Player/MarioActorDraw.cpp",
+    "sha256": "1d1468df492965e469c8c8145974cce2feacf42b0df7426ac11d1f809d4cf36d"
+  },
+  {
+    "destination": "pc-port/src/Game/Player/MarioActorInit.cpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Player/MarioActorInit.cpp",
+    "sha256": "9a06d746c5171e0bee8405db70f4dfc3f847dacb616258d7cf1893b2cfa55434"
+  },
+  {
+    "destination": "pc-port/src/Game/Player/MarioActorShadow.cpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Player/MarioActorShadow.cpp",
+    "sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768"
+  },
+  {
+    "destination": "pc-port/src/Game/Player/MarioShadow.cpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Player/MarioShadow.cpp",
+    "sha256": "a2848efa6cb94bef79c98f8f3a5a72dd6f144db96f5e946f414b7ed12fec1981"
+  },
+  {
+    "destination": "pc-port/src/Game/Player/MarioSwim.hpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Player/MarioSwim.hpp",
+    "sha256": "9cb7dd70827613b9a161b75dd7821cf77777c7e8883b7745cf649fd4c0ab4d1c"
+  },
+  {
+    "destination": "pc-port/src/Game/Util/AreaObjUtil.hpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Util/AreaObjUtil.hpp",
+    "sha256": "2994a6f7bc2e5309770ca43d4a7672e3e044c9b9b33424f93a73286b30ad0a39"
+  },
+  {
+    "destination": "pc-port/src/Game/Util/FootPrint.cpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Util/FootPrint.cpp",
+    "sha256": "fc613ba00f6cf750bbbd84829bb8425fa755b18ca04d32a6a1ed524c0f329096"
+  },
+  {
+    "destination": "pc-port/src/Game/Util/FootPrint.hpp",
+    "staged": "build/original-shadow-native-20260903/staged/Game/Util/FootPrint.hpp",
+    "sha256": "bae2ba1861fb3a40b54f7c2c812132fa7b54751d1a40745f0d67ff42fb17b75d"
+  },
+  {
+    "destination": "pc-port/src/JSystem/J3DGraphAnimator/J3DModel.hpp",
+    "staged": "build/original-shadow-native-20260903/staged/JSystem/J3DGraphAnimator/J3DModel.hpp",
+    "sha256": "2a81b73be79d9fcf6b5d92581da8a4554b033da63aaa7c6b1d0a7b915f31f4ed"
+  },
+  {
+    "destination": "pc-port/src/JSystem/JUtility/JUTTexture.hpp",
+    "staged": "build/original-shadow-native-20260903/staged/JSystem/JUtility/JUTTexture.hpp",
+    "sha256": "00d461080918f65acebccd92380d296c3b62e61c239834013d42cc899e645909"
+  },
+  {
+    "destination": "pc-port/src/compat/OriginalJutCapture.cpp",
+    "staged": "build/original-shadow-native-20260903/staged/compat/OriginalJutCapture.cpp",
+    "sha256": "443a15f2df14937bb2eee2146a73f39cea7d9561032be91112d2f3353059f2f5"
+  },
+  {
+    "destination": "pc-port/aurora/include/dolphin/gx/GXEnum.h",
+    "staged": "build/original-shadow-native-20260903/staged/dolphin/gx/GXEnum.h",
+    "sha256": "f458d3d2b5bab2c62758f24d753e647fbbae33f1b34a752ee885d444c5a34702"
+  }
+]

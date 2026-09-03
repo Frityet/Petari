@@ -1,0 +1,916 @@
+--- a/src/Game/Player/MarioActor.hpp
++++ b/src/Game/Player/MarioActor.hpp
+@@ -606,7 +606,7 @@
+     /* 0x1F0 */ TVec3f _1F0;
+     /* 0x1FC */ TVec3f _1FC;
+     /* 0x208 */ f32 _208;
+-    /* 0x20C */ u32 _20C;
++    /* 0x20C */ const AreaObj* _20C;
+     /* 0x210 */ u8 _210;
+     /* 0x211 */ u8 _211;
+     /* 0x214 */ CollisionShadow* _214;
+@@ -817,8 +817,7 @@
+     /* 0xA68 */ f32 _A68;
+     /* 0xA6C */ u16 _A6C;
+     /* 0xA6E */ u8 _A6E;
+-    /* 0xA70 */ Mtx* _A70[8];
+-    /* 0xA90 */ Mtx* _A90[8];
++    /* 0xA70 */ Mtx* _A70[16];
+     /* 0xAB0 */ TMtx34f _AB0;
+     /* 0xAE0 */ TMtx34f _AE0;
+     /* 0xB10 */ u16 _B10;
+--- a/src/Game/Player/MarioActorDraw.cpp
++++ b/src/Game/Player/MarioActorDraw.cpp
+@@ -911,7 +911,7 @@
+     MR::multMtx(inv, inv, MR::getCameraViewMtx());
+     for (u32 i = 1; i < 8; i++) {
+         const u32 idx = static_cast< u32 >(i + _B12) & 7;
+-        model->setDrawViewBuffer(reinterpret_cast< MtxPtr >(_A70[idx + (_B10 << 5)]));
++        model->setDrawViewBuffer(reinterpret_cast< MtxPtr >(_A70[idx + (_B10 << 3)]));
+ 
+         if (!_1C1) {
+             for (u16 joint = 0; joint < getModelData()->getJointNum(); joint++) {
+--- a/src/Game/Player/MarioActorInit.cpp
++++ b/src/Game/Player/MarioActorInit.cpp
+@@ -41,7 +41,7 @@
+     _1EC = 0.0f;
+     _1F0.zero();
+     _1FC.zero();
+-    _20C = 0;
++    _20C = nullptr;
+     _208 = 0.0f;
+     _210 = 0;
+     _211 = 0;
+@@ -264,9 +264,9 @@
+     _A68 = 0.0f;
+     _A6C = 0;
+     _A6E = 0;
+-    for (int i = 0; i < ARRAY_SIZE(_A70); i++) {
++    for (int i = 0; i < ARRAY_SIZE(_A70) / 2; i++) {
+         _A70[i] = nullptr;
+-        _A90[i] = nullptr;
++        _A70[i + 8] = nullptr;
+     }
+     PSMTXIdentity(_AB0.toMtxPtr());
+     PSMTXIdentity(_AE0.toMtxPtr());
+--- a/src/Game/Player/MarioActorShadow.cpp
++++ b/src/Game/Player/MarioActorShadow.cpp
+@@ -1,9 +1,21 @@
++#include "Game/Map/HitInfo.hpp"
++#include "Game/LiveActor/HitSensor.hpp"
+ #include "Game/Player/J3DModelX.hpp"
++#include "Game/Player/JetTurtleShadow.hpp"
+ #include "Game/Player/MarioActor.hpp"
++#include "Game/Player/MarioConst.hpp"
++#include "Game/Player/MarioShadow.hpp"
++#include "Game/Player/MarioSwim.hpp"
+ #include "Game/Player/ModelHolder.hpp"
+ #include "Game/Util/AreaObjUtil.hpp"
++#include "Game/Util/CameraUtil.hpp"
++#include "Game/Util/DemoUtil.hpp"
++#include "Game/Util/FootPrint.hpp"
++#include "Game/Util/JointUtil.hpp"
+ #include "Game/Util/MathUtil.hpp"
+ #include "Game/Util/ModelUtil.hpp"
++#include "Game/Util/MtxUtil.hpp"
++#include "Game/Util/ObjUtil.hpp"
+ 
+ void MarioActor::initShadow() {
+     _A08 = 1;
+@@ -24,15 +36,365 @@
+     }
+ }
+ 
+-// void MarioActor::calcViewReflectionModel() {}
+-
+-// void MarioActor::calcViewWallShadowModel() {}
+-
+-// void MarioActor::drawShadow() const {}
+-
+-// void MarioActor::decideShadowMode() {}
+-
+-// void MarioActor::calcViewSilhouetteModel() {}
++void MarioActor::calcViewReflectionModel() {
++    J3DModelX* model = getJ3DModel();
++    Mtx matrix;
++    PSMTXCopy(getJ3DModel()->getBaseTRMtx(), matrix);
++    Mtx offsetMatrix;
++    PSMTXIdentity(offsetMatrix);
++    TVec3f position;
++    f32 offset = 10.0f;
++    if (isAnimationRun("ターンジャンプ")) {
++        offset = 25.0f;
++    }
++    if (_A08 != 6 && _A08 != 7) {
++        _A24 = 0;
++    }
++    if (_A08 != 3) {
++        _A25 = 0;
++    }
++
++    switch (_A08) {
++    case 2: {
++        matrix[0][1] = -matrix[0][1];
++        matrix[1][1] = -matrix[1][1];
++        matrix[2][1] = -matrix[2][1];
++        position = mMario->mShadowPos - *mMario->_45C->getNormal(0) * offset;
++        TVec3f jointPosition;
++        getRealPos("All_Root", &jointPosition);
++        TVec3f difference(mPosition);
++        difference -= jointPosition;
++        PSMTXTrans(offsetMatrix, difference.x, difference.y, difference.z);
++        updateReflectAlphaDL(_A09);
++        break;
++    }
++    case 3: {
++        TVec3f xDir;
++        xDir.set< f32 >(matrix[0][0], matrix[1][0], matrix[2][0]);
++        TVec3f yDir;
++        yDir.set< f32 >(matrix[0][1], matrix[1][1], matrix[2][1]);
++        TVec3f zDir;
++        zDir.set< f32 >(matrix[0][2], matrix[1][2], matrix[2][2]);
++        const TVec3f& normal = mMario->mSwim->mSurfacePos;
++        f32 xDot = MR::vecKillElement(xDir, normal, &xDir);
++        f32 yDot = MR::vecKillElement(yDir, normal, &yDir);
++        f32 zDot = MR::vecKillElement(zDir, normal, &zDir);
++        xDir -= normal * xDot;
++        yDir -= normal * yDot;
++        zDir -= normal * zDot;
++        matrix[0][0] = xDir.x;
++        matrix[1][0] = xDir.y;
++        matrix[2][0] = xDir.z;
++        matrix[0][1] = yDir.x;
++        matrix[1][1] = yDir.y;
++        matrix[2][1] = yDir.z;
++        matrix[0][2] = zDir.x;
++        matrix[1][2] = zDir.y;
++        matrix[2][2] = zDir.z;
++        position = mMario->mSwim->mSurfaceNorm - normal * offset;
++        f32 depth = -mMario->mSwim->mWaterDepth;
++        if (depth < 40.0f) {
++            offset = 0.0f;
++        } else if (depth < 200.0f) {
++            offset = (depth - 40.0f) / 160.0f;
++        } else {
++            offset = 1.0f;
++        }
++        f32 alpha = mCamDirZ.dot(normal);
++        MR::clamp01(&alpha);
++        alpha *= 1.414f;
++        MR::clamp01(&alpha);
++        alpha *= 64.0f;
++        if (_A25 > static_cast< u8 >(offset * alpha)) {
++            _A25--;
++        } else if (_A25 < static_cast< u8 >(offset * alpha)) {
++            _A25++;
++        }
++        updateSimpleAlphaDL(_A25);
++        _B18 = position;
++        break;
++    }
++    case 6:
++    case 7: {
++        TVec3f xDir;
++        xDir.set< f32 >(matrix[0][0], matrix[1][0], matrix[2][0]);
++        TVec3f yDir;
++        yDir.set< f32 >(matrix[0][1], matrix[1][1], matrix[2][1]);
++        TVec3f zDir;
++        zDir.set< f32 >(matrix[0][2], matrix[1][2], matrix[2][2]);
++        TVec3f normal(mMario->mSwim->_178);
++        normal -= mPosition;
++        MR::normalize(&normal);
++        f32 xDot = MR::vecKillElement(xDir, normal, &xDir);
++        f32 yDot = MR::vecKillElement(yDir, normal, &yDir);
++        f32 zDot = MR::vecKillElement(zDir, normal, &zDir);
++        xDir -= normal * xDot;
++        yDir -= normal * yDot;
++        zDir -= normal * zDot;
++        matrix[0][0] = xDir.x;
++        matrix[1][0] = xDir.y;
++        matrix[2][0] = xDir.z;
++        matrix[0][1] = yDir.x;
++        matrix[1][1] = yDir.y;
++        matrix[2][1] = yDir.z;
++        matrix[0][2] = zDir.x;
++        matrix[1][2] = zDir.y;
++        matrix[2][2] = zDir.z;
++        position = mMario->mSwim->_178 - normal * offset;
++        f32 distance = mMario->mSwim->getWaterEdgeDist();
++        offset = 0.0f;
++        if (distance < 0.0f) {
++        } else if (distance < 1000.0f) {
++            offset = 0.5f + 0.5f * (distance / 1000.0f);
++        }
++        f32 alpha = mCamDirZ.dot(normal);
++        MR::clamp01(&alpha);
++        alpha *= 1.414f;
++        MR::clamp01(&alpha);
++        alpha *= 127.0f;
++        if (_A24 > static_cast< u8 >(offset * alpha)) {
++            _A24--;
++        } else if (_A24 < static_cast< u8 >(offset * alpha)) {
++            _A24++;
++        }
++        updateSimpleAlphaDL(_A24);
++        _B18 = position;
++        break;
++    }
++    }
++
++    matrix[0][3] = position.x;
++    matrix[1][3] = position.y;
++    matrix[2][3] = position.z;
++    PSMTXCopy(matrix, _E0C);
++    if (getCarrySensor() != nullptr) {
++        Mtx carryMatrix;
++        PSMTXConcat(_BC8, MR::getJointMtx(getCarrySensor()->mHost, 0), carryMatrix);
++        PSMTXConcat(_E0C, carryMatrix, _E0C);
++        _9A0->calcType0(_E0C);
++    }
++    PSMTXConcat(_BC8, offsetMatrix, offsetMatrix);
++    PSMTXConcat(matrix, offsetMatrix, matrix);
++    PSMTXConcat(j3dSys.mViewMtx, matrix, j3dSys.mViewMtx);
++    model->viewCalc3(3, nullptr);
++    MR::loadViewMtx();
++}
++
++void MarioActor::calcViewWallShadowModel() {
++    _A0C = 0;
++    if ((_A08 & 2) || mBeeWallWalk) {
++        return;
++    }
++
++    TVec3f direction;
++    s32 distance = 0;
++    const AreaObj* area = MR::getAreaObj("ExtraWallCheckArea", _2A0);
++    if (area != nullptr) {
++        MR::calcCubeAxisZ(area, &direction);
++        distance = MR::getAreaObjArg(area, 0);
++        _20C = area;
++        _210 = 0;
++    } else {
++        area = MR::getAreaObj("ExtraWallCheckCylinder", _2A0);
++        if (area != nullptr) {
++            distance = calcCylinderToCenter(area, &direction);
++            _20C = area;
++            _210 = 1;
++        }
++    }
++
++    bool leavingArea = false;
++    if (area == nullptr || static_cast< f32 >(distance) < 0.0f) {
++        if (_208 >= 1000.0f) {
++            return;
++        }
++        _208 += 10.0f;
++        if (_208 >= 1000.0f) {
++            _208 = 1000.0f;
++        }
++        switch (_210) {
++        case 0:
++            MR::calcCubeAxisZ(_20C, &direction);
++            distance = MR::getAreaObjArg(_20C, 0);
++            break;
++        case 1:
++            distance = calcCylinderToCenter(_20C, &direction);
++            break;
++        }
++        leavingArea = true;
++    }
++
++    Triangle triangle;
++    TVec3f hitPosition;
++    if (!MR::getFirstPolyOnLineToMap(&hitPosition, &triangle, _2A0, direction * distance)) {
++        return;
++    }
++    _1F0 = hitPosition;
++    _1FC = *triangle.getNormal(0);
++    if (!leavingArea) {
++        _208 = 0.9f * _208 + 0.1f * (hitPosition - _2A0).length();
++    }
++    updateRandomTexture(_208);
++
++    TVec3f normalizedDirection(direction);
++    MR::normalizeOrZero(&normalizedDirection);
++    J3DModelX* model = getJ3DModel();
++    J3DModelX* simpleModel = getSimpleModel();
++    PSMTXCopy(model->getBaseTRMtx(), simpleModel->getBaseTRMtx());
++    TPos3f* matrix = reinterpret_cast< TPos3f* >(simpleModel->getBaseTRMtx());
++    TVec3f xDir;
++    matrix->getXDir(xDir);
++    MR::vecKillElement(xDir, normalizedDirection, &xDir);
++    TVec3f yDir;
++    matrix->getYDir(yDir);
++    MR::vecKillElement(yDir, normalizedDirection, &yDir);
++    TVec3f zDir;
++    matrix->getZDir(zDir);
++    MR::vecKillElement(zDir, normalizedDirection, &zDir);
++    matrix->setXDir(xDir);
++    matrix->setYDir(yDir);
++    matrix->setZDir(zDir);
++
++    TVec3f offset;
++    MR::vecKillElement(mPosition - hitPosition, getGravityVec(), &offset);
++    TVec3f position = mPosition + normalizedDirection * (10.0f + offset.length());
++    MR::setMtxTrans(*matrix, position.x, position.y, position.z);
++    PSMTXConcat(*matrix, _BC8, *matrix);
++    simpleModel->viewCalcRef(3, model);
++    _A0C = 1;
++}
++
++void MarioActor::drawShadow() const {
++    bool hidden = _482 || _481;
++    if (hidden || !(_A08 & 1) || mPlayerMode == 6) {
++        return;
++    }
++    if (mBeeWallWalk && mMario->mMovementStates._1) {
++        return;
++    }
++    if (mMario->isStatusActive(18) && _1A1) {
++        return;
++    }
++    if (_924 != nullptr && selectNoShadow(_924)) {
++        return;
++    }
++    if (mMario->mMovementStates._F && mMario->_544 > 1) {
++        return;
++    }
++
++    J3DModelX* model = getSimpleModel();
++    Mtx scale;
++    PSMTXScale(scale, mScale.x, mScale.y, mScale.z);
++    PSMTXConcat(scale, _BC8, scale);
++    PSMTXConcat(getJ3DModel()->getBaseTRMtx(), scale, model->getBaseTRMtx());
++    _214->calcView(model, 2, getJ3DModel());
++    if (mMario->mSinkTimer > 180) {
++        return;
++    }
++    if (mMario->mSinkTimer > 128) {
++        MR::hideJointAndChildren(model, "Hip");
++    }
++    if (mMario->mSinkTimer > 150) {
++        MR::hideJointAndChildren(model, "ShoulderL");
++        MR::hideJointAndChildren(model, "ShoulderR");
++    }
++    if (_A58 || mMario->mSinkTimer > 120) {
++        MR::hideJoint(model, "HandL0");
++        MR::hideJoint(model, "HandR0");
++    }
++    _214->drawAndCaptureTex(model, mPosition);
++    _214->clearAlphaBuffer();
++    if (mBeeWallWalk) {
++        _214->_307 = false;
++    } else {
++        _214->_307 = true;
++    }
++    _214->draw();
++    MR::showJointAndChildren(model, "JointRoot");
++}
++
++void MarioActor::decideShadowMode() {
++    if (mMario->mMovementStates._2 && !mMario->isNotReflectGlassGround() && !mMario->isStatusActive(18) &&
++        (mMario->_962 == 14 || mMario->_962 == 33)) {
++        _A08 = 2;
++        f32 ratio = mMario->mVerticalSpeed / 500.0f;
++        if (ratio >= 0.75f) {
++            ratio = 0.75f;
++        }
++        u32 alpha = 64;
++        u8 targetAlpha = alpha * (1.0f - ratio);
++        for (u32 i = 0; i < 4; i++) {
++            if (_A09 < targetAlpha) {
++                _A09++;
++            } else if (_A09 > targetAlpha) {
++                _A09--;
++            }
++        }
++    } else if (_A09) {
++        _A09--;
++        if (_A09) {
++            _A09--;
++        }
++        if (_A09) {
++            _A09--;
++        }
++        if (_A09) {
++            _A09--;
++        }
++        if (_A09 == 0) {
++            _A08 = 1;
++        } else {
++            _A08 = 2;
++        }
++    } else {
++        _A08 = 1;
++    }
++
++    if (mMario->isSwimming() && MR::isInWater(mCamPos)) {
++        if (_A25 || mCamDirZ.dot(-getGravityVector()) > 0.0f) {
++            _A08 = 3;
++        }
++        if (_A24 || (mMario->mSwim->getWaterEdgeDist() > 0.0f && mMario->mSwim->getWaterEdgeDist() < 1000.0f)) {
++            _A08 = 7;
++        }
++    }
++    _214->setUpdateFlag();
++}
++
++void MarioActor::calcViewSilhouetteModel() {
++    J3DModelX* model = getJ3DModel();
++    J3DModelX* simpleModel = getSimpleModel();
++    TVec3f direction(mPosition);
++    direction -= mCamPos;
++    MR::normalizeOrZero(&direction);
++
++    PSMTXCopy(model->getBaseTRMtx(), simpleModel->getBaseTRMtx());
++    TPos3f* matrix = reinterpret_cast< TPos3f* >(simpleModel->getBaseTRMtx());
++    TVec3f xDir;
++    matrix->getXDir(xDir);
++    MR::vecKillElement(xDir, direction, &xDir);
++    TVec3f yDir;
++    matrix->getYDir(yDir);
++    MR::vecKillElement(yDir, direction, &yDir);
++    TVec3f zDir;
++    matrix->getZDir(zDir);
++    MR::vecKillElement(zDir, direction, &zDir);
++    matrix->setXDir(xDir);
++    matrix->setYDir(yDir);
++    matrix->setZDir(zDir);
++
++    TVec3f position;
++    if (_EA4) {
++        TVec3f jointPosition;
++        getRealPos("All_Root", &jointPosition);
++        position = jointPosition - direction * mConst->getTable()->mSilhouetteZoffset;
++    } else {
++        position = mPosition;
++    }
++    MR::setMtxTrans(*matrix, position.x, position.y, position.z);
++    PSMTXConcat(*matrix, _BC8, *matrix);
++    simpleModel->viewCalcRef(1, model);
++}
+ 
+ f32 MarioActor::calcCylinderToCenter(const AreaObj* pAreaObj, TVec3f* pVec) {
+     TVec3f upVec;
+@@ -60,8 +422,88 @@
+     return MR::getAreaObjArg(pAreaObj, 0);
+ }
+ 
+-// void MarioActor::calcViewBlurModel() {}
+-
+-// void MarioActor::calcViewFootPrint() {}
+-
+-// void MarioActor::drawSilhouette() const {}
++void MarioActor::calcViewBlurModel() {
++    J3DModelX* model = getJ3DModel();
++    if (model->_1E5) {
++        if (_A6E == 1) {
++            _A6E = 2;
++        }
++        model->_1E5 = 0;
++    }
++    if (MR::isDemoActive()) {
++        if (_A6E) {
++            _A6E = 5;
++        }
++        return;
++    }
++    if (_1C1 || !_A6E) {
++        return;
++    }
++    if (_A6E >= 3) {
++        _A6E--;
++        return;
++    }
++    if (_A6E == 2) {
++        for (u32 i = 0; i < 8; i++) {
++            for (u32 j = 0; j < getModelData()->getJointNum(); j++) {
++                PSMTXCopy(*model->getDrawMtx(j), _A70[i][j]);
++                PSMTXCopy(*model->getDrawMtx(j), _A70[i + 8][j]);
++            }
++        }
++        _B12 = 0;
++        _A6E = 1;
++    } else if (_37C % 3 == 0) {
++        _B12 = (_B12 + 1) & 7;
++        for (u32 j = 0; j < getModelData()->getJointNum(); j++) {
++            PSMTXCopy(*model->getDrawMtx(j), _A70[(1 - _B10) * 8 + _B12][j]);
++        }
++    }
++    _B10 = 1 - _B10;
++    model->_1E4 = 1;
++}
++
++void MarioActor::calcViewFootPrint() {
++    if (!_934 && mMario->mMovementStates._1 &&
++        (mMario->mTargetWalkSpeedIndex || mMario->_1C.mIsUnderwater || mMario->mWalkSpeed > 0.1f || mMario->isPlayerModeHopper()) &&
++        !mMario->mSinkTimer && !mMario->mDrawStates._9 && !mMario->mDrawStates._A && mMario->_1C._13 && mMario->_1C._14 &&
++        (mMario->checkCurrentFloorCodeSevere(13) || mMario->checkCurrentFloorCodeSevere(26))) {
++        _B48->addPrint(mPosition, mMario->mFrontVec, mMario->_368, false);
++    }
++
++    if (_B48->isValid(_37C) && MR::isInWater(*_B48->getPrintPos(_37C))) {
++        _B48->invalidate(_37C);
++    }
++}
++
++void MarioActor::drawSilhouette() const {
++    bool hidden = _482 || _483 || _481;
++    if (hidden || mMario->isStatusActive(26)) {
++        return;
++    }
++    if (mMario->isStatusActive(27)) {
++        if (!MR::isExistMapCollision(mCamPos, mPosition - mCamPos)) {
++            return;
++        }
++        if (!MR::isExistMapCollision(mCamPos, _2AC - mCamPos)) {
++            return;
++        }
++    }
++    if (mMario->mSinkTimer || mPlayerMode == 6) {
++        return;
++    }
++    if (mMario->isStatusActive(18) && _1A1) {
++        return;
++    }
++    if (_EA4 || _934) {
++        return;
++    }
++    J3DModelX* model = getSimpleModel();
++    model->setDrawView(1);
++    model->mFlags.clear();
++    model->mFlags._1C = true;
++    model->directDraw(nullptr);
++    model->mFlags._1C = false;
++    GXSetAlphaUpdate(GX_TRUE);
++    GXSetColorUpdate(GX_TRUE);
++    GXSetDstAlpha(GX_TRUE, 0);
++}
+--- a/src/Game/Player/MarioShadow.cpp
++++ b/src/Game/Player/MarioShadow.cpp
+@@ -17,17 +17,12 @@
+ #include <JSystem/JUtility/JUTVideo.hpp>
+ #include <cstring>
+ #include <revolution/gd/GDBase.h>
++#include <revolution/gd/GDGeometry.h>
++#include <revolution/gd/GDIndirect.h>
++#include <revolution/gd/GDLight.h>
++#include <revolution/gd/GDPixel.h>
++#include <revolution/gd/GDTev.h>
+ #include <revolution/gx.h>
+-
+-extern "C" {
+-void GDSetAlphaCompare(int, int, int, int, int);
+-void GDSetZMode(int, int, int);
+-void GDSetTevDirect(int);
+-void GDSetGenMode(int, int, int);
+-void GDSetChanCtrl(int, int, int, int, int, int, int);
+-void GDSetTevAlphaCalcAndSwap(int, int, int, int, int, int, int, int, int, int, int, int);
+-void GDSetTevColor(int, GXColor);
+-}
+ 
+ namespace {
+     const f32 cCheckOffset0 = 5.0f;
+@@ -606,14 +601,15 @@
+     GDInitGDLObj(&displayList, buffer, sizeof(buffer));
+     __GDCurrentDL = &displayList;
+ 
+-    GDSetAlphaCompare(7, 0, 1, 7, 0);
+-    GDSetZMode(1, 3, 0);
+-    GDSetTevDirect(0);
++    GDSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
++    GDSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
++    GDSetTevDirect(GX_TEVSTAGE0);
+     GDSetGenMode(0, 1, 1);
+-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+-    GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
++    GDSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_CLAMP, GX_AF_NONE);
++    GDSetTevAlphaCalcAndSwap(GX_TEVSTAGE0, GX_CA_A0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE,
++                           GX_TEVPREV, GX_TEV_SWAP0, GX_TEV_SWAP0);
+     GXColor color = {0, 0, 0, 4};
+-    GDSetTevColor(1, color);
++    GDSetTevColor(GX_TEVREG0, color);
+     GDPadCurr32();
+ 
+     const u32 usedSize = displayList.ptr - displayList.start;
+--- a/src/Game/Player/MarioSwim.hpp
++++ b/src/Game/Player/MarioSwim.hpp
+@@ -82,7 +82,7 @@
+     f32 checkUnderWaterFull(const TVec3f&);
+     void hitHead(const HitInfo*);
+ 
+-    f32 calcWaterEdgeDist() const {
++    f32 getWaterEdgeDist() const {
+         if (isOnWaterSurface()) {
+             return -1.0f;
+         }
+--- a/src/Game/Util/AreaObjUtil.hpp
++++ b/src/Game/Util/AreaObjUtil.hpp
+@@ -28,6 +28,7 @@
+     void calcCubeLocalPos(TVec3f*, const AreaObj*, const TVec3f&);
+ 
+     void calcCubeRotate(const AreaObj*, TVec3f*);
++    void calcCubeAxisZ(const AreaObj*, TVec3f*);
+ 
+     bool calcWhirlPoolAccelInfo(const TVec3f&, TVec3f*);
+ 
+--- /dev/null
++++ b/src/Game/Util/FootPrint.cpp
+@@ -0,0 +1,175 @@
++#include "Game/Util/FootPrint.hpp"
++#include "Game/Scene/SceneFunction.hpp"
++#include "Game/Util/Color.hpp"
++#include "Game/Util/DirectDraw.hpp"
++#include "Game/Util/MathUtil.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/Util/ObjUtil.hpp"
++#include <JSystem/JUtility/JUTTexture.hpp>
++#include <revolution/gx/GXEnum.h>
++#include <revolution/gx/GXStruct.h>
++
++namespace {
++    static const s32 sFadeBufferCount = 10;
++    static const s32 sFadeOutTime = 60;
++};  // namespace
++
++FootPrint::FootPrint(const char* pName, s32 amount, s32 drawType) : NameObj(pName) {
++    initMember(amount, drawType);
++}
++
++FootPrint::FootPrint(const char* pName, s32 amount) : NameObj(pName) {
++    initMember(amount, MR::DrawType_0x17);
++}
++
++void FootPrint::initMember(s32 amount, s32 drawType) {
++    _C = nullptr;
++    mPrints = nullptr;
++    mPrintMaxNum = 0;
++    mPrintNum = 0;
++    mRotatingPrintIndex = 0;
++
++    _2C = 20.0f;
++    _30 = 20.0f;
++    _34 = 20.0f;
++    mMinPrintDistance = 80.0f;
++
++    mLastPrintPos.set2(0.0f);
++
++    mPrints = new FootPrintInfo[amount];
++    mPrintMaxNum = amount;
++
++    for (int i = 0; i < mPrintMaxNum; i++) {
++        mPrints[i].mIsValid = false;
++    }
++
++    MR::connectToScene(this, MR::MovementType_MapObj, -1, -1, drawType);
++}
++
++FootPrintInfo::FootPrintInfo() {
++}
++
++void FootPrint::setTexture(ResTIMG* img) {
++    MR::CurrentHeapRestorer heapRestorer = MR::CurrentHeapRestorer(reinterpret_cast< JKRHeap* >(MR::getSceneHeapGDDR3()));
++    _C = new JUTTexture(img, 0);
++}
++
++void FootPrint::movement() {
++    if (_3C) {
++        for (int i = 0; i < mPrintNum; i++) {
++            if (!mPrints[i].mIsValid) {
++                continue;
++            }
++
++            mPrints[i].mTimeLeft--;
++
++            if (mPrints[i].mTimeLeft <= 0) {
++                mPrints[i].mIsValid = false;
++            }
++        }
++
++        return;
++    }
++
++    for (s32 i = mRotatingPrintIndex; i < mRotatingPrintIndex + ::sFadeBufferCount; i++) {
++        s32 rotatedIndex = i;
++        if (i >= mPrintMaxNum) {
++            rotatedIndex -= mPrintMaxNum;
++        }
++
++        if (!mPrints[rotatedIndex].mIsValid) {
++            continue;
++        }
++
++        mPrints[rotatedIndex].mTimeLeft--;
++
++        if (mPrints[rotatedIndex].mTimeLeft <= 0) {
++            mPrints[rotatedIndex].mIsValid = false;
++        }
++    }
++}
++
++bool FootPrint::addPrint(const TVec3f& rPos, const TVec3f& rArg2, const TVec3f& rArg3, bool arg4) {
++    _3C = false;
++
++    if (mPrintNum > 0 && rPos.distance(mLastPrintPos) < mMinPrintDistance) {
++        return false;
++    }
++
++    mLastPrintPos = rPos;
++    mPrints[mRotatingPrintIndex].mPos = rPos;
++    mPrints[mRotatingPrintIndex]._C = rArg2;
++    mPrints[mRotatingPrintIndex]._18 = rArg3;
++    mPrints[mRotatingPrintIndex].mTimeLeft = ::sFadeOutTime;
++    mPrints[mRotatingPrintIndex].mIsValid = true;
++    mPrints[mRotatingPrintIndex]._29 = arg4;
++
++    mRotatingPrintIndex++;
++    mPrintNum++;
++
++    if (mRotatingPrintIndex >= mPrintMaxNum) {
++        mRotatingPrintIndex -= mPrintMaxNum;
++    }
++
++    if (mPrintNum > mPrintMaxNum) {
++        mPrintNum = mPrintMaxNum;
++    }
++
++    return true;
++}
++
++void FootPrint::draw() const {
++    if (mPrintNum <= 0) {
++        return;
++    }
++
++    TDDraw::setup(2, 1, 0);
++    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
++    _C->load(GX_TEXMAP0);
++
++    Color8 color(0, 0, 0, 255);
++
++    for (int i = 0; i < mPrintNum; i++) {
++        if (!mPrints[i].mIsValid) {
++            continue;
++        }
++
++        color.a = 255.0f * MR::normalize(mPrints[i].mTimeLeft, 0.0f, ::sFadeOutTime);
++        GXSetTevColor(GX_TEVREG0, color);
++
++        TVec3f cross = mPrints[i]._C.cross(mPrints[i]._18);
++        TVec3f v1;
++        if ((i & 1) != 0) {
++            v1 = mPrints[i].mPos + cross * _2C;
++        } else {
++            v1 = mPrints[i].mPos - cross * _2C;
++        }
++
++        v1 += mPrints[i]._18 * 5.0f;
++
++        TDDraw::drawTexture3D(v1, mPrints[i]._18, mPrints[i]._C, _34, _30, nullptr, mPrints[i]._29 != false, false);
++    }
++
++    TDDraw::close();
++}
++
++void FootPrint::clear() {
++    _3C = true;
++}
++
++void FootPrint::clearForce() {
++    mPrintNum = 0;
++    mRotatingPrintIndex = 0;
++}
++
++TVec3f* FootPrint::getPrintPos(u32 index) const {
++    return &mPrints[index % mPrintMaxNum].mPos;
++}
++
++void FootPrint::invalidate(u32 index) {
++    mPrints[index % mPrintMaxNum].mIsValid = false;
++}
++
++bool FootPrint::isValid(u32 index) const {
++    return mPrints[index % mPrintMaxNum].mIsValid != false;
++}
+--- /dev/null
++++ b/src/Game/Util/FootPrint.hpp
+@@ -0,0 +1,68 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++#include <JSystem/JGeometry/TVec.hpp>
++
++class ResTIMG;
++class JUTTexture;
++class FootPrintInfo;
++
++class FootPrintInfo {
++public:
++    FootPrintInfo();
++
++    /* 0x00 */ TVec3f mPos;
++    /* 0x0C */ TVec3f _C;
++    /* 0x18 */ TVec3f _18;
++
++    /// @brief Frames left before becoming invalid. Also controls the footprint's alpha.
++    /* 0x24 */ s32 mTimeLeft;
++
++    /// @brief Invalid prints will no longer be updated nor drawn.
++    /* 0x28 */ bool mIsValid;
++
++    /* 0x29 */ bool _29;
++};
++
++class FootPrint : public NameObj {
++public:
++    FootPrint(const char*, s32);
++    FootPrint(const char*, s32, s32);
++
++    virtual void movement();
++    virtual void draw() const;
++
++    void setTexture(ResTIMG*);
++    bool addPrint(const TVec3f&, const TVec3f&, const TVec3f&, bool);
++    void clear();
++    void initMember(s32, s32);
++    void clearForce();
++    TVec3f* getPrintPos(u32) const;
++    void invalidate(u32);
++    bool isValid(u32) const;
++
++    /* 0x0C */ JUTTexture* _C;
++
++    /// @brief Array of footprints.
++    /* 0x10 */ FootPrintInfo* mPrints;
++
++    /* 0x14 */ TVec3f mLastPrintPos;
++
++    /// @brief Size of the mPrints array.
++    /* 0x20 */ s32 mPrintMaxNum;
++
++    /// @brief Amount of active footprints (counting invalid ones). Caps at mPrintMaxNum.
++    /* 0x24 */ s32 mPrintNum;
++
++    /// @brief The index used when adding a new footprint. Will wrap around and overwrite the oldest footprints.
++    /* 0x28 */ s32 mRotatingPrintIndex;
++
++    /* 0x2C */ f32 _2C;
++    /* 0x30 */ f32 _30;
++    /* 0x34 */ f32 _34;
++
++    /// @brief The minimum distance for a new print to be registered.
++    /* 0x38 */ f32 mMinPrintDistance;
++
++    /* 0x3C */ bool _3C;
++};
+--- a/src/JSystem/J3DGraphAnimator/J3DModel.hpp
++++ b/src/JSystem/J3DGraphAnimator/J3DModel.hpp
+@@ -118,6 +118,9 @@
+     Mtx* getDrawMtxPtr() {
+         return mMtxBuffer->getDrawMtxPtr();
+     }
++    Mtx* getDrawMtx(int idx) {
++        return mMtxBuffer->getDrawMtx(idx);
++    }
+     void setBaseScale(const Vec& scale) {
+         mBaseScale = scale;
+     }
+--- a/src/JSystem/JUtility/JUTTexture.hpp
++++ b/src/JSystem/JUtility/JUTTexture.hpp
+@@ -45,6 +45,7 @@
+     void initTexObj(GXTlut tlut);
+     void load(GXTexMapID tex_map_id);
+     void capture(int width, int height, GXTexFmt format, bool mipmap, u8 clear);
++    static void captureDolTexture(void*, int, int, int, int, bool, GXTexFmt);
+ 
+     [[nodiscard]] const ResTIMG* getTexInfo() const { return mTIMG; }
+     [[nodiscard]] s32 getFormat() const { return mTIMG != nullptr ? mTIMG->mFormat : 0; }
+--- /dev/null
++++ b/src/compat/OriginalJutCapture.cpp
+@@ -0,0 +1,12 @@
++#include "JSystem/JUtility/JUTTexture.hpp"
++
++void JUTTexture::captureDolTexture(void* image, int width, int height, int x, int y, bool mipmap, GXTexFmt format) {
++    if (mipmap) {
++        GXSetTexCopySrc(x, y, width * 2, height * 2);
++    } else {
++        GXSetTexCopySrc(x, y, width, height);
++    }
++    GXSetTexCopyDst(width, height, format, mipmap);
++    GXCopyTex(image, GX_FALSE);
++    GXPixModeSync();
++}
+--- a/aurora/include/dolphin/gx/GXEnum.h
++++ b/aurora/include/dolphin/gx/GXEnum.h
+@@ -888,6 +888,11 @@
+ } GXMiscToken;
+ 
+ typedef enum {
++  GX_XF_FLUSH_NONE = 0,
++  GX_XF_FLUSH_SAFE = 8,
++} GXXFFlushVal;
++
++typedef enum {
+   GX_CMD_LOAD_INDX_A = 0x20,
+   GX_CMD_LOAD_INDX_B = 0x28,
+   GX_CMD_LOAD_INDX_C = 0x30,

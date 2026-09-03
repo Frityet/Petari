@@ -278,10 +278,10 @@ void MarioActor::initMember() {
     mScreenBoxMin.x = 0.0f;
     mScreenBoxMax.y = 0.0f;
     mScreenBoxMax.x = 0.0f;
-    _B38 = 0.0f;
-    _B34 = 0.0f;
-    _B40 = 0.0f;
-    _B3C = 0.0f;
+    mScreenBoxPosition.y = 0.0f;
+    mScreenBoxPosition.x = 0.0f;
+    mScreenBoxSize.y = 0.0f;
+    mScreenBoxSize.x = 0.0f;
     _B44 = 0;
     _B48 = nullptr;
     _B4C = 0;

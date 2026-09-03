@@ -1,0 +1,8 @@
+[
+  "Game/Player/MarioActorSpecialDraw.cpp",
+  "Game/Player/MarioActor.hpp",
+  "Game/Player/MarioActorInit.cpp",
+  "revolution/gx/GXTexture.h",
+  "revolution/gx/GXGeometry.h",
+  "revolution/gx/GXManage.h"
+]

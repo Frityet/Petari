@@ -1,0 +1,545 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler_commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorSpecialDraw.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-screen-blend-20260903/MarioActorSpecialDraw.o"
+    ]
+  ],
+  "source_sha256": {
+    "Game/Player/MarioActorSpecialDraw": "77e679acf755eae1af4ef8f5fa81f3111a29fc64967588f3787c9120848447a0"
+  },
+  "functions": [
+    {
+      "symbol": "drawScreenBlend__10MarioActorCFv",
+      "address": "0x802c2914",
+      "retail_bytes": 744,
+      "compiled_bytes": 744,
+      "objdiff_match_percent": 99.83871,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "target": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "target": "drawFullScreenBlur__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "target": "drawFullScreenBlur__2MRFffUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "target": "project2D__6TDDrawFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 109,
+          "target": "42c80000",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "target": "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 109,
+          "target": "c2c80000",
+          "addend": 0
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "target": "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x150",
+          "kind": 109,
+          "target": "c1200000",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "target": "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 109,
+          "target": "41200000",
+          "addend": 0
+        },
+        {
+          "offset": "0x194",
+          "kind": 10,
+          "target": "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1bc",
+          "kind": 10,
+          "target": "setup__6TDDrawFUlUlUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 10,
+          "target": "GXSetCullMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "target": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d4",
+          "kind": 10,
+          "target": "GXSetColorUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "target": "GXSetBlendMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "target": "GXSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x204",
+          "kind": 10,
+          "target": "drawFillBox__6TDDrawFRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>Ul",
+          "addend": 0
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "target": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x210",
+          "kind": 10,
+          "target": "loadProjectionMtx__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x214",
+          "kind": 10,
+          "target": "loadViewMtx__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x24c",
+          "kind": 10,
+          "target": "setup__6TDDrawFUlUlUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "target": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x262",
+          "kind": 6,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x266",
+          "kind": 4,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x274",
+          "kind": 10,
+          "target": "getScreenWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x282",
+          "kind": 4,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x290",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x29c",
+          "kind": 10,
+          "target": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a0",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b4",
+          "kind": 10,
+          "target": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 10,
+          "target": "drawFillBox__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "target": "close__6TDDrawFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d4",
+          "kind": 10,
+          "target": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "a9c34eda803e9733ea9179335fc0caa9460c4fb091caab8b5182bf48c1eb4508"
+    },
+    {
+      "symbol": "writeBackScreenBox__10MarioActorCFv",
+      "address": "0x802c1a08",
+      "retail_bytes": 560,
+      "compiled_bytes": 560,
+      "objdiff_match_percent": 99.42857,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "target": "isUseScreenBox__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "target": "setup__6TDDrawFUlUlUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "target": "GXInitTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "target": "GXLoadTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "target": "convertFrameBufferPosToScreenPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 109,
+          "target": "3f7d70a4",
+          "addend": 0
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "target": "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "target": "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "target": "convertFrameBufferPosToScreenPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xfc",
+          "kind": 10,
+          "target": "GXSetBlendMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "target": "GXSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "target": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "target": "GXPixModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "target": "GXTexModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x126",
+          "kind": 6,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x132",
+          "kind": 4,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x16c",
+          "kind": 10,
+          "target": "GXSetZMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x17c",
+          "kind": 10,
+          "target": "GXBegin",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 109,
+          "target": "3f7ff972",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "target": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x198",
+          "kind": 109,
+          "target": "3f7ff972",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "target": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 109,
+          "target": "3f7ff972",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c0",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d0",
+          "kind": 10,
+          "target": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d4",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 109,
+          "target": "3f7ff972",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f0",
+          "kind": 10,
+          "target": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x204",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "target": "GXSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x214",
+          "kind": 10,
+          "target": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x218",
+          "kind": 10,
+          "target": "close__6TDDrawFv",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "72a8a3fb79ac8074f1600d95fb8c296e47514dee41643c1a7b7914a02863c9f8"
+    }
+  ],
+  "instruction_bytes_verified": 1304,
+  "normalization": "Only relocation fields cleared; identical offsets, kinds, addends and resolved constant/string bytes or external symbol identities required. NOBITS reads as zeros."
+}

@@ -823,10 +823,8 @@ public:
     /* 0xB18 */ TVec3f _B18;
     /* 0xB24 */ TVec2f mScreenBoxMin;
     /* 0xB2C */ TVec2f mScreenBoxMax;
-    /* 0xB34 */ f32 _B34;
-    /* 0xB38 */ f32 _B38;
-    /* 0xB3C */ f32 _B3C;
-    /* 0xB40 */ f32 _B40;
+    /* 0xB34 */ TVec2f mScreenBoxPosition;
+    /* 0xB3C */ TVec2f mScreenBoxSize;
     /* 0xB44 */ void* _B44;
     /* 0xB48 */ FootPrint* _B48;
     /* 0xB4C */ IceStep** _B4C;

@@ -1,0 +1,8 @@
+{
+  "symbol": "initMember__10MarioActorFv",
+  "instruction_bytes": 2156,
+  "pre_post_instructions_and_references_identical": true,
+  "baseline_object_sha256": "5cf0520d7d5641fc42b0bca16aee604acc7ed3e9654983d0980af1b766110a77",
+  "current_object_sha256": "c3e8cb9b8f0af56bde3e4c300f8177a024e52152eb3ba42b0ddbd8c2a307dd02",
+  "note": "Baseline reconstructed from current source by reversing only the four scalar / two vector representations; no root initialization behavior changed."
+}
