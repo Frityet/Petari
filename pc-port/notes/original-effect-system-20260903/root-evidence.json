@@ -1,0 +1,400 @@
+[
+  {
+    "source": "src/Game/Effect/EffectSystem.cpp",
+    "source_sha256": "8e0ad3b52ee8b3e0409993b26c753ddf2171cdc7453b3fdaa855bca70ae2eaf3",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/EffectSystem.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-system-20260903/EffectSystem.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__12EffectSystemFPCcb",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__12EffectSystemFRC12JMapInfoIter",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createEmitter__12EffectSystemFUsUcUc",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteEmitter__12EffectSystemCFP15ParticleEmitter",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteSingleEmitter__12EffectSystemCFP13SingleEmitter",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createSingleEmitter__12EffectSystemFP13SingleEmitterP24MultiEmitterCallBackBaseP28MultiEmitterParticleCallBack",
+        "size": "176",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getEffectSystem__2MRFv",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__12EffectSystemFv",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "entry__12EffectSystemFP22ParticleResourceHolderUlUl",
+        "size": "192",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__12EffectSystem",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@53900",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "size": "88",
+        "match_percent": 77.68763
+      },
+      {
+        "name": "[.sdata2-0]",
+        "size": "8",
+        "match_percent": 66.66667
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "source_sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/ParticleCalcExecutor.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-system-20260903/ParticleCalcExecutor.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__20ParticleCalcExecutorFPC12EffectSystemb",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementNormal__20ParticleCalcExecutorFv",
+        "size": "232",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementIgnorePause3D__20ParticleCalcExecutorFv",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementIgnorePause2D__20ParticleCalcExecutorFv",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementCheckUpdate__20ParticleCalcExecutorFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestMovementOnPauseIgnore__20ParticleCalcExecutorFv",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initMovementAdaptor__20ParticleCalcExecutorFv",
+        "size": "504",
+        "match_percent": 99.88095
+      },
+      {
+        "name": "Functor<20ParticleCalcExecutor>__2MRFP20ParticleCalcExecutorM20ParticleCalcExecutorFPCvPv_v_Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__cl__Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>CFv",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "clone__Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>CFP7JKRHeap",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@54909",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@54910",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@54911",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@54912",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "size": "160",
+        "match_percent": 98.899284
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/AutoEffectGroupHolder.cpp",
+    "source_sha256": "b30eaa5d5c22af22c23537ae14673b0b6493db4f6c3ade189471e183308dbf41",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/AutoEffectGroupHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-system-20260903/AutoEffectGroupHolder.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__21AutoEffectGroupHolderFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "find__21AutoEffectGroupHolderCFPCc",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExist__21AutoEffectGroupHolderCFPCc",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createAndAddAutoEffectGroup__Q22MR6EffectFP21AutoEffectGroupHolderPCc",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP12EffectKeeperPC9LiveActorPCc",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP16PaneEffectKeeperPC11LayoutActorPCc",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP22MultiSceneEffectKeeperPC15MultiSceneActorPCc",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "find_if<PCP15AutoEffectGroup,Q22MR31eq_ptr_case<P15AutoEffectGroup>>__3stdFPCP15AutoEffectGroupPCP15AutoEffectGroupQ22MR31eq_ptr_case<P15AutoEffectGroup>_PCP15AutoEffectGroup",
+        "size": "104",
+        "match_percent": 100.0
+      }
+    ]
+  }
+]

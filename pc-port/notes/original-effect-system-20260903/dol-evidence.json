@@ -1,0 +1,279 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "methods": [
+    {
+      "object": "EffectSystem",
+      "symbol": "__ct__12EffectSystemFPCcb",
+      "address": "0x800c54fc",
+      "size": 184,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "init__12EffectSystemFRC12JMapInfoIter",
+      "address": "0x800c55b4",
+      "size": 4,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "createEmitter__12EffectSystemFUsUcUc",
+      "address": "0x800c55b8",
+      "size": 172,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "forceDeleteEmitter__12EffectSystemCFP15ParticleEmitter",
+      "address": "0x800c5664",
+      "size": 108,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "forceDeleteSingleEmitter__12EffectSystemCFP13SingleEmitter",
+      "address": "0x800c56d0",
+      "size": 76,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "createSingleEmitter__12EffectSystemFP13SingleEmitterP24MultiEmitterCallBackBaseP28MultiEmitterParticleCallBack",
+      "address": "0x800c571c",
+      "size": 176,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "getEffectSystem__2MRFv",
+      "address": "0x800c57cc",
+      "size": 40,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "__dt__12EffectSystemFv",
+      "address": "0x800c57f4",
+      "size": 88,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "EffectSystem",
+      "symbol": "entry__12EffectSystemFP22ParticleResourceHolderUlUl",
+      "address": "0x800c584c",
+      "size": 192,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "__ct__20ParticleCalcExecutorFPC12EffectSystemb",
+      "address": "0x800c9078",
+      "size": 92,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "movementNormal__20ParticleCalcExecutorFv",
+      "address": "0x800c90d4",
+      "size": 232,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "movementIgnorePause3D__20ParticleCalcExecutorFv",
+      "address": "0x800c91bc",
+      "size": 84,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "movementIgnorePause2D__20ParticleCalcExecutorFv",
+      "address": "0x800c9210",
+      "size": 84,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "movementCheckUpdate__20ParticleCalcExecutorFv",
+      "address": "0x800c9264",
+      "size": 12,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "requestMovementOnPauseIgnore__20ParticleCalcExecutorFv",
+      "address": "0x800c9270",
+      "size": 64,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "initMovementAdaptor__20ParticleCalcExecutorFv",
+      "address": "0x800c92b0",
+      "size": 504,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "Functor<20ParticleCalcExecutor>__2MRFP20ParticleCalcExecutorM20ParticleCalcExecutorFPCvPv_v_Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>",
+      "address": "0x800c94a8",
+      "size": 64,
+      "relocation_kinds": [
+        4,
+        6
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "__cl__Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>CFv",
+      "address": "0x800c94e8",
+      "size": 48,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleCalcExecutor",
+      "symbol": "clone__Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>CFP7JKRHeap",
+      "address": "0x800c9518",
+      "size": 104,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "__ct__21AutoEffectGroupHolderFv",
+      "address": "0x800c4a98",
+      "size": 12,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "find__21AutoEffectGroupHolderCFPCc",
+      "address": "0x800c4aa4",
+      "size": 96,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "isExist__21AutoEffectGroupHolderCFPCc",
+      "address": "0x800c4b04",
+      "size": 88,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "createAndAddAutoEffectGroup__Q22MR6EffectFP21AutoEffectGroupHolderPCc",
+      "address": "0x800c4b5c",
+      "size": 120,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP12EffectKeeperPC9LiveActorPCc",
+      "address": "0x800c4bd4",
+      "size": 80,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP16PaneEffectKeeperPC11LayoutActorPCc",
+      "address": "0x800c4c24",
+      "size": 80,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP22MultiSceneEffectKeeperPC15MultiSceneActorPCc",
+      "address": "0x800c4c74",
+      "size": 80,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroupHolder",
+      "symbol": "find_if<PCP15AutoEffectGroup,Q22MR31eq_ptr_case<P15AutoEffectGroup>>__3stdFPCP15AutoEffectGroupPCP15AutoEffectGroupQ22MR31eq_ptr_case<P15AutoEffectGroup>_PCP15AutoEffectGroup",
+      "address": "0x800c4cc4",
+      "size": 104,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    }
+  ]
+}

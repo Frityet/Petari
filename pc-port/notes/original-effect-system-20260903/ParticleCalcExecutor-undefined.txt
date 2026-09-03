@@ -1,0 +1,14 @@
+__Unwind_Resume
+NameObjAdaptor::connectToCalcAnim(MR::FunctorBase const&)
+NameObjAdaptor::connectToMovement(MR::FunctorBase const&)
+NameObjAdaptor::NameObjAdaptor(char const*)
+JPAEmitterManager::calc(unsigned char)
+ParticleEmitterHolder::update(bool)
+MR::connectToScene(NameObj*, int, int, int, int)
+MR::requestMovementOn(NameObj*)
+vtable for __cxxabiv1::__class_type_info
+vtable for __cxxabiv1::__si_class_type_info
+operator delete(void*, unsigned long)
+operator new(unsigned long)
+___cxa_pure_virtual
+___gxx_personality_v0

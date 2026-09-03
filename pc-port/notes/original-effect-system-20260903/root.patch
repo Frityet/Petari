@@ -1,0 +1,286 @@
+--- a/src/Game/Effect/EffectSystem.cpp
++++ b/src/Game/Effect/EffectSystem.cpp
+@@ -1,10 +1,42 @@
+ #include "Game/Effect/EffectSystem.hpp"
++#include "Game/Effect/AutoEffectGroupHolder.hpp"
++#include "Game/Effect/ParticleCalcExecutor.hpp"
++#include "Game/Effect/ParticleDrawExecutor.hpp"
++#include "Game/Effect/ParticleEmitterHolder.hpp"
++#include "Game/Effect/ParticleResourceHolder.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/Util/ScreenUtil.hpp"
+ #include "Game/Effect/EffectSystemUtil.hpp"
+ #include "Game/Effect/SingleEmitter.hpp"
+ #include "Game/Scene/SceneObjHolder.hpp"
+ #include "JSystem/JParticle/JPAParticle.hpp"
+ #include <JSystem/JParticle/JPAEmitter.hpp>
+ #include <JSystem/JParticle/JPAEmitterManager.hpp>
++
++EffectSystem::EffectSystem(const char* pName, bool createAdaptor)
++    : NameObj(pName), mEmitterManager(nullptr), mDrawExec(nullptr), mCalcExec(nullptr), mGroupHolder(new AutoEffectGroupHolder()), _20(true) {
++    mDrawExec = new ParticleDrawExecutor(this, createAdaptor);
++    mCalcExec = new ParticleCalcExecutor(this, createAdaptor);
++}
++
++ParticleEmitter* EffectSystem::createEmitter(u16 id, u8 groupId, u8 resourceId) {
++    if (!_20) {
++        return nullptr;
++    }
++    ParticleEmitter* pEmitter = mEmitterHolder->findAvailableParticleEmitter();
++    if (pEmitter == nullptr) {
++        return nullptr;
++    }
++    MR::Effect::createParticleEmitter(pEmitter, mEmitterManager, TVec3f(0.0f, 0.0f, 0.0f), id, groupId, resourceId);
++    return pEmitter->mEmitter != nullptr ? pEmitter : nullptr;
++}
++
++void EffectSystem::entry(ParticleResourceHolder* pResource, u32 particleNum, u32 emitterNum) {
++    mEmitterManager = new JPAEmitterManager(particleNum, emitterNum, MR::getCurrentHeap(), 9, 1);
++    mEmitterManager->entryResourceManager(pResource->mResourceMgr, 0);
++    mEmitterHolder = new ParticleEmitterHolder(this, emitterNum);
++    pResource->swapTexture(MR::getScreenResTIMG(), "IndDummy");
++}
+ 
+ void EffectSystem::init(const JMapInfoIter& rIter) {
+ }
+--- /dev/null
++++ b/src/Game/Effect/ParticleCalcExecutor.cpp
+@@ -0,0 +1,85 @@
++#include "Game/Effect/ParticleCalcExecutor.hpp"
++#include "Game/Effect/EffectSystem.hpp"
++#include "Game/Effect/ParticleEmitterHolder.hpp"
++#include "Game/NameObj/NameObjAdaptor.hpp"
++#include "Game/Util/Functor.hpp"
++#include "Game/Util/ObjUtil.hpp"
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
++
++ParticleCalcExecutor::ParticleCalcExecutor(const EffectSystem* pHost, bool createAdaptor)
++    : mHost(pHost), _4(nullptr), _8(nullptr), _C(nullptr), _10(nullptr), _14(true), _15(false) {
++    if (createAdaptor) {
++        initMovementAdaptor();
++    }
++}
++
++void ParticleCalcExecutor::movementNormal() {
++    if (_14 && _15) {
++        mHost->mEmitterHolder->update(false);
++        mHost->mEmitterManager->calc(0);
++        mHost->mEmitterManager->calc(1);
++        mHost->mEmitterManager->calc(2);
++        mHost->mEmitterManager->calc(3);
++        mHost->mEmitterManager->calc(4);
++        mHost->mEmitterManager->calc(5);
++        mHost->mEmitterManager->calc(6);
++        mHost->mEmitterManager->calc(7);
++        mHost->mEmitterManager->calc(8);
++    }
++    _15 = false;
++}
++
++void ParticleCalcExecutor::movementIgnorePause3D() {
++    if (_15) {
++        mHost->mEmitterHolder->update(true);
++        mHost->mEmitterManager->calc(1);
++    }
++}
++
++void ParticleCalcExecutor::movementIgnorePause2D() {
++    if (_15) {
++        mHost->mEmitterHolder->update(true);
++        mHost->mEmitterManager->calc(7);
++    }
++}
++
++void ParticleCalcExecutor::movementCheckUpdate() {
++    _15 = true;
++}
++
++void ParticleCalcExecutor::requestMovementOnPauseIgnore() {
++    MR::requestMovementOn(_4);
++    MR::requestMovementOn(_8);
++    MR::requestMovementOn(_C);
++}
++
++void ParticleCalcExecutor::initMovementAdaptor() {
++    _4 = new NameObjAdaptor("パーティクル");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementNormal);
++        NameObjAdaptor* pAdaptor = _4;
++        pAdaptor->connectToCalcAnim(functor);
++        MR::connectToScene(pAdaptor, -1, 19, -1, -1);
++    }
++    _8 = new NameObjAdaptor("ポーズ無効3Dパーティクル");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause3D);
++        NameObjAdaptor* pAdaptor = _8;
++        pAdaptor->connectToCalcAnim(functor);
++        MR::connectToScene(pAdaptor, -1, 20, -1, -1);
++    }
++    _C = new NameObjAdaptor("ポーズ無効2Dパーティクル");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause2D);
++        NameObjAdaptor* pAdaptor = _C;
++        pAdaptor->connectToCalcAnim(functor);
++        MR::connectToScene(pAdaptor, -1, 20, -1, -1);
++    }
++    _10 = new NameObjAdaptor("更新チェック");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementCheckUpdate);
++        NameObjAdaptor* pAdaptor = _10;
++        pAdaptor->connectToMovement(functor);
++        MR::connectToScene(pAdaptor, 20, -1, -1, -1);
++    }
++}
+--- /dev/null
++++ b/src/Game/Effect/AutoEffectGroupHolder.cpp
+@@ -0,0 +1,64 @@
++#include "Game/Effect/AutoEffectGroupHolder.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include <algorithm>
++
++namespace MR {
++    template < class T >
++    struct eq_ptr_case {
++        eq_ptr_case(const char* pName) : mName(pName) {}
++        bool operator()(T pItem) const {
++            return MR::strcasecmp(pItem->getName(), mName) == 0;
++        }
++        const char* mName;
++    };
++}
++
++AutoEffectGroupHolder::AutoEffectGroupHolder() {
++}
++
++AutoEffectGroup* AutoEffectGroupHolder::find(const char* pName) const {
++    AutoEffectGroup* const* pGroup = std::find_if(mGroups.begin(), mGroups.end(), MR::eq_ptr_case< AutoEffectGroup* >(pName));
++    return pGroup != mGroups.end() ? *pGroup : nullptr;
++}
++
++bool AutoEffectGroupHolder::isExist(const char* pName) const {
++    AutoEffectGroup* const* pGroup = std::find_if(mGroups.begin(), mGroups.end(), MR::eq_ptr_case< AutoEffectGroup* >(pName));
++    return pGroup != mGroups.end();
++}
++
++namespace MR {
++    namespace Effect {
++        bool createAndAddAutoEffectGroup(AutoEffectGroupHolder* pHolder, const char* pName) {
++            if (pHolder->isExist(pName)) {
++                return false;
++            }
++            AutoEffectGroup* pGroup = createAutoEffectGroup(pName);
++            if (pGroup == nullptr) {
++                return false;
++            }
++            pHolder->mGroups.push_back(pGroup);
++            return true;
++        }
++
++        void registerAutoEffectInfos(AutoEffectGroupHolder* pHolder, EffectKeeper* pKeeper, const LiveActor* pActor, const char* pName) {
++            AutoEffectGroup* pGroup = pHolder->find(pName);
++            if (pGroup != nullptr) {
++                addAutoEffectsFromGroup(pGroup, pKeeper, pActor);
++            }
++        }
++
++        void registerAutoEffectInfos(AutoEffectGroupHolder* pHolder, PaneEffectKeeper* pKeeper, const LayoutActor* pActor, const char* pName) {
++            AutoEffectGroup* pGroup = pHolder->find(pName);
++            if (pGroup != nullptr) {
++                addAutoEffectsFromGroup(pGroup, pKeeper, pActor);
++            }
++        }
++
++        void registerAutoEffectInfos(AutoEffectGroupHolder* pHolder, MultiSceneEffectKeeper* pKeeper, const MultiSceneActor* pActor, const char* pName) {
++            AutoEffectGroup* pGroup = pHolder->find(pName);
++            if (pGroup != nullptr) {
++                addAutoEffectsFromGroup(pGroup, pKeeper, pActor);
++            }
++        }
++    }
++}
+--- /dev/null
++++ b/include/Game/Effect/ParticleCalcExecutor.hpp
+@@ -0,0 +1,24 @@
++#pragma once
++
++class EffectSystem;
++class NameObjAdaptor;
++
++class ParticleCalcExecutor {
++public:
++    ParticleCalcExecutor(const EffectSystem*, bool);
++
++    void movementNormal();
++    void movementIgnorePause3D();
++    void movementIgnorePause2D();
++    void movementCheckUpdate();
++    void requestMovementOnPauseIgnore();
++    void initMovementAdaptor();
++
++    /* 0x00 */ const EffectSystem* mHost;
++    /* 0x04 */ NameObjAdaptor* _4;
++    /* 0x08 */ NameObjAdaptor* _8;
++    /* 0x0C */ NameObjAdaptor* _C;
++    /* 0x10 */ NameObjAdaptor* _10;
++    /* 0x14 */ bool _14;
++    /* 0x15 */ bool _15;
++};
+--- /dev/null
++++ b/include/Game/Effect/AutoEffectGroupHolder.hpp
+@@ -0,0 +1,22 @@
++#pragma once
++
++#include "Game/Effect/AutoEffectGroup.hpp"
++#include "Game/Util/Array.hpp"
++
++class AutoEffectGroupHolder {
++public:
++    AutoEffectGroupHolder();
++    AutoEffectGroup* find(const char*) const;
++    bool isExist(const char*) const;
++
++    /* 0x000 */ MR::Vector< MR::FixedArray< AutoEffectGroup*, 256 > > mGroups;
++};
++
++namespace MR {
++    namespace Effect {
++        bool createAndAddAutoEffectGroup(AutoEffectGroupHolder*, const char*);
++        void registerAutoEffectInfos(AutoEffectGroupHolder*, EffectKeeper*, const LiveActor*, const char*);
++        void registerAutoEffectInfos(AutoEffectGroupHolder*, PaneEffectKeeper*, const LayoutActor*, const char*);
++        void registerAutoEffectInfos(AutoEffectGroupHolder*, MultiSceneEffectKeeper*, const MultiSceneActor*, const char*);
++    }
++}
+--- /dev/null
++++ b/include/Game/Effect/AutoEffectGroup.hpp
+@@ -0,0 +1,31 @@
++#pragma once
++
++#include "Game/Util/Array.hpp"
++
++class AutoEffectInfo;
++class EffectKeeper;
++class JMapInfoIter;
++class LayoutActor;
++class LiveActor;
++class MultiSceneActor;
++class MultiSceneEffectKeeper;
++class PaneEffectKeeper;
++
++class AutoEffectGroup {
++public:
++    AutoEffectGroup(const char*, int);
++    void add(const JMapInfoIter&);
++    const char* getName() const { return mName; }
++
++    /* 0x00 */ const char* mName;
++    /* 0x04 */ MR::Vector< MR::AssignableArray< AutoEffectInfo* > > mInfos;
++};
++
++namespace MR {
++    namespace Effect {
++        void addAutoEffectsFromGroup(const AutoEffectGroup*, EffectKeeper*, const LiveActor*);
++        void addAutoEffectsFromGroup(const AutoEffectGroup*, PaneEffectKeeper*, const LayoutActor*);
++        void addAutoEffectsFromGroup(const AutoEffectGroup*, MultiSceneEffectKeeper*, const MultiSceneActor*);
++        AutoEffectGroup* createAutoEffectGroup(const char*);
++    }
++}

@@ -1,0 +1,5 @@
+MR::strcasecmp(char const*, char const*)
+MR::Effect::createAutoEffectGroup(char const*)
+MR::Effect::addAutoEffectsFromGroup(AutoEffectGroup const*, EffectKeeper*, LiveActor const*)
+MR::Effect::addAutoEffectsFromGroup(AutoEffectGroup const*, PaneEffectKeeper*, LayoutActor const*)
+MR::Effect::addAutoEffectsFromGroup(AutoEffectGroup const*, MultiSceneEffectKeeper*, MultiSceneActor const*)

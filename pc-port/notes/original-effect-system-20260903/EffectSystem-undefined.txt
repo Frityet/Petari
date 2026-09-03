@@ -1,0 +1,33 @@
+__Unwind_Resume
+SingleEmitter::link(ParticleEmitter*)
+SingleEmitter::unlink()
+ParticleEmitter::invalidate()
+JPAEmitterManager::forceDeleteEmitter(JPABaseEmitter*)
+JPAEmitterManager::entryResourceManager(JPAResourceManager*, unsigned char)
+JPAEmitterManager::JPAEmitterManager(unsigned int, unsigned int, JKRHeap*, unsigned char, unsigned char)
+ParticleCalcExecutor::ParticleCalcExecutor(EffectSystem const*, bool)
+ParticleDrawExecutor::ParticleDrawExecutor(EffectSystem const*, bool)
+AutoEffectGroupHolder::AutoEffectGroupHolder()
+ParticleEmitterHolder::findAvailableParticleEmitter()
+ParticleEmitterHolder::ParticleEmitterHolder(EffectSystem const*, int)
+ParticleResourceHolder::swapTexture(ResTIMG const*, char const*)
+MR::getCurrentHeap()
+MR::getScreenResTIMG()
+MR::getSceneObjHolder()
+MR::Effect::getLinkSingleEmitter(JPABaseEmitter const*)
+MR::Effect::createParticleEmitter(ParticleEmitter*, JPAEmitterManager*, JGeometry::TVec3<float> const&, unsigned short, unsigned char, unsigned char)
+NameObj::calcViewAndEntry()
+NameObj::initAfterPlacement()
+NameObj::calcAnim()
+NameObj::movement()
+NameObj::NameObj(char const*)
+NameObj::~NameObj()
+SingleEmitter::isValid() const
+SingleEmitter::isOneTime() const
+SceneObjHolder::getObj(int) const
+NameObj::draw() const
+typeinfo for NameObj
+vtable for __cxxabiv1::__si_class_type_info
+operator delete(void*, unsigned long)
+operator new(unsigned long)
+___gxx_personality_v0

@@ -1,0 +1,68 @@
+[
+  {
+    "source": "src/Game/Effect/EffectSystem.cpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/EffectSystem.cpp",
+    "owned": true,
+    "sha256": "8e0ad3b52ee8b3e0409993b26c753ddf2171cdc7453b3fdaa855bca70ae2eaf3"
+  },
+  {
+    "source": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/ParticleCalcExecutor.cpp",
+    "owned": true,
+    "sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486"
+  },
+  {
+    "source": "src/Game/Effect/AutoEffectGroupHolder.cpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/AutoEffectGroupHolder.cpp",
+    "owned": true,
+    "sha256": "b30eaa5d5c22af22c23537ae14673b0b6493db4f6c3ade189471e183308dbf41"
+  },
+  {
+    "source": "include/Game/Effect/ParticleCalcExecutor.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/ParticleCalcExecutor.hpp",
+    "owned": true,
+    "sha256": "3c78e9c644b6530e634b912f2629b7978356a465cc347380d536c4511f8a5dcc"
+  },
+  {
+    "source": "include/Game/Effect/AutoEffectGroupHolder.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/AutoEffectGroupHolder.hpp",
+    "owned": true,
+    "sha256": "79b4cea7563571a2d679bdf2197f61356c13aebe3221977100e612213591281d"
+  },
+  {
+    "source": "include/Game/Effect/AutoEffectGroup.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/AutoEffectGroup.hpp",
+    "owned": true,
+    "sha256": "77873297c3bb9f49aa5bda4fca91287cde4091038f84b214de2d528a125f9748"
+  },
+  {
+    "source": "include/Game/Effect/EffectSystem.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/EffectSystem.hpp",
+    "owned": false,
+    "sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c"
+  },
+  {
+    "source": "include/Game/Effect/ParticleDrawExecutor.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/ParticleDrawExecutor.hpp",
+    "owned": false,
+    "sha256": "adb228c5cb7fbad77c6dd0f9e22d5cc589d69f4d39d7b929691f6a1042031f87"
+  },
+  {
+    "source": "include/Game/Effect/ParticleEmitterHolder.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/ParticleEmitterHolder.hpp",
+    "owned": false,
+    "sha256": "5a199086d25da8071abe94a206cf357f543cbc48d98ccf95c064a5e4e28a3144"
+  },
+  {
+    "source": "include/Game/Effect/ParticleEmitter.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/ParticleEmitter.hpp",
+    "owned": false,
+    "sha256": "1a0f50d2b503adee89129083273c3ed072fd73db77629d7bb9fa0f682daeaba7"
+  },
+  {
+    "source": "include/Game/Effect/ParticleResourceHolder.hpp",
+    "staged": "build/original-effect-system-20260903/staged/Game/Effect/ParticleResourceHolder.hpp",
+    "owned": false,
+    "sha256": "ba533a624489e16f9c1058ce3c661a03415c56b96f3a453f29210bd74a7cc1ed"
+  }
+]
