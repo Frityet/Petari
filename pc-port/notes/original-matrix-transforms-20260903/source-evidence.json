@@ -1,0 +1,161 @@
+{
+  "root_sha256": "5f9a1d2a52627e348055d77cdbea801a23fd7a6d002ab5c5d213d7a552b09389",
+  "native_sha256": "5fa438d29293a68727bf674742c905238e0e8a7ed6db6a05f5eae14a7ee56e98",
+  "compiler_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/Util/MtxUtil.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-matrix-transforms-20260903/MtxUtil.o"
+  ],
+  "methods": [
+    {
+      "name": "blendMtxRotate__2MRFPA4_fPA4_ffPA4_f",
+      "size": "120",
+      "match_percent": 100.0
+    },
+    {
+      "name": "blendMtxRotateSlerp__2MRFPA4_fPA4_ffPA4_f",
+      "size": "120",
+      "match_percent": 100.0
+    },
+    {
+      "name": "blendMtx__2MRFPA4_fPA4_ffPA4_f",
+      "size": "236",
+      "match_percent": 81.644066
+    },
+    {
+      "name": "makeMtxWithoutScale__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "size": "140",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addTransMtx__2MRFPA4_fRCQ29JGeometry8TVec3<f>",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addTransMtxLocal__2MRFPA4_fRCQ29JGeometry8TVec3<f>",
+      "size": "84",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addTransMtxLocalX__2MRFPA4_ff",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addTransMtxLocalY__2MRFPA4_ff",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addTransMtxLocalZ__2MRFPA4_ff",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tmpMtxTrans__2MRFRCQ29JGeometry8TVec3<f>",
+      "size": "68",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tmpMtxScale__2MRFfff",
+      "size": "24",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tmpMtxRotXRad__2MRFf",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tmpMtxRotYRad__2MRFf",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tmpMtxRotZRad__2MRFf",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tmpMtxRotXDeg__2MRFf",
+      "size": "92",
+      "match_percent": 99.478264
+    },
+    {
+      "name": "tmpMtxRotYDeg__2MRFf",
+      "size": "92",
+      "match_percent": 99.565216
+    },
+    {
+      "name": "tmpMtxRotZDeg__2MRFf",
+      "size": "92",
+      "match_percent": 99.478264
+    },
+    {
+      "name": "orderRotateMtx__2MRFsRCQ29JGeometry8TVec3<f>PA4_f",
+      "size": "256",
+      "match_percent": 99.21875
+    }
+  ]
+}

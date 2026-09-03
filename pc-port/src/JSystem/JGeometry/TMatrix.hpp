@@ -71,6 +71,29 @@ namespace JGeometry {
 
     template <typename T>
     struct TMatrix34 : public T {
+        inline f32 dotX() const {
+            // f32 _10 = ;
+            // f32 _20 = ;
+            // f32 _00 = ;
+
+            return (this->mMtx[1][0] * this->mMtx[1][0]) + (this->mMtx[0][0] * this->mMtx[0][0]) + (this->mMtx[2][0] * this->mMtx[2][0]);
+        }
+
+        inline f32 dotY() const {
+            // f32 _11 = ;
+            // f32 _21 = ;
+            // f32 _01 = ;
+
+            return (this->mMtx[1][1] * this->mMtx[1][1]) + (this->mMtx[0][1] * this->mMtx[0][1]) + (this->mMtx[2][1] * this->mMtx[2][1]);
+        }
+
+        inline f32 dotZ() const {
+            // f32 _12 = ;
+            // f32 _22 = ;
+            // f32 _02 = ;
+
+            return (this->mMtx[1][2] * this->mMtx[1][2]) + (this->mMtx[0][2] * this->mMtx[0][2]) + (this->mMtx[2][2] * this->mMtx[2][2]);
+        }
         void identity() {
             this->mMtx[0][0] = 1.0F;
             this->mMtx[0][1] = 0.0F;
@@ -164,6 +187,21 @@ namespace JGeometry {
             destination.set(this->mMtx[0][2], this->mMtx[1][2], this->mMtx[2][2]);
         }
 
+        void getXYZDir(TVec3f& rDestX, TVec3f& rDestY, TVec3f& rDestZ) const {
+            f32 xz = this->mMtx[2][0];
+            f32 xy = this->mMtx[1][0];
+            f32 xx = this->mMtx[0][0];
+            rDestX.set< f32 >(xx, xy, xz);
+            f32 yz = this->mMtx[2][1];
+            f32 yy = this->mMtx[1][1];
+            f32 yx = this->mMtx[0][1];
+            rDestY.set< f32 >(yx, yy, yz);
+            f32 zz = this->mMtx[2][2];
+            f32 zy = this->mMtx[1][2];
+            f32 zx = this->mMtx[0][2];
+            rDestZ.set< f32 >(zx, zy, zz);
+        }
+
         void setXYZDir(const TVec3f &x_direction, const TVec3f &y_direction, const TVec3f &z_direction) {
             this->mMtx[0][0] = x_direction.x;
             this->mMtx[1][0] = x_direction.y;
@@ -227,6 +265,42 @@ namespace JGeometry {
 
         void mult33(TVec3f &vector) const {
             mult33(vector, vector);
+        }
+
+        void setRotate(const TVec3f& rRot) {
+            f32 z = rRot.z;
+            f32 y = rRot.y;
+            f32 x = rRot.x;
+            setRotate(x, y, z);
+        }
+
+        void setRotate(f32 rx, f32 ry, f32 rz) {
+            // NOTE: setEulerXYZ?
+            f32 sinX, sinY, sinZ;
+            f32 cosX, cosY, cosZ;
+
+            cosZ = cos(rz);
+            cosY = cos(ry);
+            cosX = cos(rx);
+            sinZ = sin(rz);
+            sinY = sin(ry);
+            sinX = sin(rx);
+
+            f32 sXsY = sinX * sinY;
+            f32 cXcZ = cosX * cosZ;
+            f32 cXsZ = cosX * sinZ;
+
+            this->mMtx[0][0] = cosY * cosZ;
+            this->mMtx[1][0] = cosY * sinZ;
+            this->mMtx[2][0] = -sinY;
+
+            this->mMtx[0][1] = sXsY * cosZ - cosX * sinZ;
+            this->mMtx[1][1] = cosX * cosZ + sXsY * sinZ;
+            this->mMtx[2][1] = sinX * cosY;
+
+            this->mMtx[0][2] = cXcZ * sinY + sinX * sinZ;
+            this->mMtx[1][2] = cXsZ * sinY - sinX * cosZ;
+            this->mMtx[2][2] = cosX * cosY;
         }
 
         void setRotate(const TVec3f& axis, f32 angle) {

@@ -1,0 +1,7 @@
+# Original shared matrix transforms
+
+The native matrix provider now imports eighteen complete existing root MtxUtil methods: translation/local-axis offsets, scale extraction removal, quaternion matrix blending, the complete temporary translation/scale/radian/degree rotation family, and ordered rotation composition. The original five static temporary matrices are shared by the same entrypoints as in Game; radian and degree helpers no longer use independent substitute storage. Native JGeometry adds the original getXYZDir member required by makeMtxWithoutScale.
+
+No Game algorithm was changed. verify-source.py checks each native body and all shared temporary initializers byte-for-byte against root, then compiles the root TU with original GC3.0a3 Game flags. Thirteen methods match retail100%; degree helpers and ordered rotation match99.2–99.6%. The inherited blendMtx source is81.64% with different inline vector-add/temporary allocation; its source is imported unchanged and no new exact-retail claim is made for that body. Original rotation order4 and the differing signs in the degree/radian helpers are preserved.
+
+The source evidence is for existing root methods, not a new decompilation. The integrated actual title-model/draw-buffer test exercises native matrix users and passes, but this document does not claim a complete original movement/jump run. Build/runtime details are in ../original-actor-pipeline-activation-20260903.

@@ -8,21 +8,6 @@
 
 namespace {
     constexpr f32 cDegreesToRadians = 3.14159265358979323846F / 180.0F;
-    Mtx sTemporaryRotationX = {
-        {1.0F, 0.0F, 0.0F, 0.0F},
-        {0.0F, 1.0F, 0.0F, 0.0F},
-        {0.0F, 0.0F, 1.0F, 0.0F},
-    };
-    Mtx sTemporaryRotationY = {
-        {1.0F, 0.0F, 0.0F, 0.0F},
-        {0.0F, 1.0F, 0.0F, 0.0F},
-        {0.0F, 0.0F, 1.0F, 0.0F},
-    };
-    Mtx sTemporaryRotationZ = {
-        {1.0F, 0.0F, 0.0F, 0.0F},
-        {0.0F, 1.0F, 0.0F, 0.0F},
-        {0.0F, 0.0F, 1.0F, 0.0F},
-    };
 
     void set_axes(TPos3f *pMatrix, const TVec3f &rAxisX, const TVec3f &rAxisY, const TVec3f &rAxisZ) {
         pMatrix->mMtx[0][0] = rAxisX.x;
@@ -224,36 +209,6 @@ namespace MR {
             pMatrix[row][1] *= scaleY;
             pMatrix[row][2] *= scaleZ;
         }
-    }
-
-    MtxPtr tmpMtxRotXDeg(f32 degrees) {
-        const auto cosine = JMACosDegree(degrees);
-        const auto sine = JMASinDegree(degrees);
-        sTemporaryRotationX[1][1] = cosine;
-        sTemporaryRotationX[1][2] = sine;
-        sTemporaryRotationX[2][1] = -sine;
-        sTemporaryRotationX[2][2] = cosine;
-        return sTemporaryRotationX;
-    }
-
-    MtxPtr tmpMtxRotYDeg(f32 degrees) {
-        const auto cosine = JMACosDegree(degrees);
-        const auto sine = JMASinDegree(degrees);
-        sTemporaryRotationY[0][0] = cosine;
-        sTemporaryRotationY[0][2] = -sine;
-        sTemporaryRotationY[2][0] = sine;
-        sTemporaryRotationY[2][2] = cosine;
-        return sTemporaryRotationY;
-    }
-
-    MtxPtr tmpMtxRotZDeg(f32 degrees) {
-        const auto cosine = JMACosDegree(degrees);
-        const auto sine = JMASinDegree(degrees);
-        sTemporaryRotationZ[0][0] = cosine;
-        sTemporaryRotationZ[0][1] = sine;
-        sTemporaryRotationZ[1][0] = -sine;
-        sTemporaryRotationZ[1][1] = cosine;
-        return sTemporaryRotationZ;
     }
 
     void makeMtxUpNoSupportPos(TPos3f *pMatrix, const TVec3f &rUp, const TVec3f &rPosition) {
