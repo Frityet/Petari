@@ -82,7 +82,6 @@ target("smg-pc-game")
         "Player/MarioRabbit.cpp",
         "Player/MarioRecovery.cpp",
         "Player/MarioSearchLight.cpp",
-        "Player/MarioShadow.cpp",
         "Player/MarioSideStep.cpp",
         "Player/MarioSkate.cpp",
         "Player/MarioSlider.cpp",

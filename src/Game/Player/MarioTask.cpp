@@ -6,10 +6,6 @@
 #include "revolution/mtx.h"
 #include "revolution/types.h"
 
-extern "C" {
-extern u8 lbl_806B6288;
-}
-
 static const f32 sOne = 1.0f;
 static const f32 sZero = 0.0f;
 static const f32 sSameDirEpsilon = 0.01f;
@@ -290,7 +286,7 @@ bool Mario::taskOnHandy(u32) {
 
 void Mario::startHipDropBlur() {
     if (isPlayerModeHopper()) {
-        if (lbl_806B6288) {
+        if (gIsLuigi) {
             playEffect("ホッパー尻落ルイージ");
         } else {
             playEffect("ホッパー尻落");
@@ -299,7 +295,7 @@ void Mario::startHipDropBlur() {
         return;
     }
 
-    if (lbl_806B6288) {
+    if (gIsLuigi) {
         playEffect("尻落ルイージ");
     } else {
         playEffect("尻落");

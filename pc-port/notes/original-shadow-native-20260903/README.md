@@ -28,3 +28,7 @@ The archive-only undefined-symbol inventory in `unresolved.txt` is a snapshot, n
 FootPrint similarly retains its print array and a JUTTexture wrapper over an actual borrowed TIMG. Its resource archive must outlive that wrapper, and its registered movement/draw callbacks must be removed before retirement. The wrapper still needs its destructor for GX state retirement although pixel ownership is borrowed.
 
 Construction of CollisionShadow::createDL must occur inside the real scene GD/J3DSys scope: the original method selects a stack GDLObj, and its scheduler/interrupt guard does not itself restore the selected GD pointer. Drawing needs the original scene phase matrix/state ownership. The existing SceneJ3dScope is the integration boundary. The original `viewCalc3(3, nullptr)` behavior and the CollisionShadow mode-specific pointer preconditions are preserved; this preparation does not invent a fallback for them.
+
+## Applied integration
+
+The native patch and source selection are applied. The later generic JKR finalizer in `../jut-heap-retirement-20260903/` now retires constructed texture wrappers after original disposers and before heap storage reuse, superseding the manual-wrapper-cleanup requirement above. Queued-capture and heap teardown tests pass on Metal. Original collision ownership and TDDraw geometry still gate complete Mario runtime; no full shadow rendering claim is made.

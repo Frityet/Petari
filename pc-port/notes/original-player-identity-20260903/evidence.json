@@ -1,0 +1,78 @@
+{
+  "function": "startHipDropBlur__5MarioFv",
+  "code_bytes": 240,
+  "code_sha256": "f56eb25c03f277d9320f73c623ab80e0ea5f2cbf8e2ff96aac4d509410bb1402",
+  "identical_code_and_references": true,
+  "old_name": "lbl_806B6288",
+  "actual_owner": "gIsLuigi",
+  "retail_address": "0x806B6288",
+  "retail_owning_source": "Game/Player/MarioActor.cpp",
+  "references": [
+    {
+      "offset": "0x12",
+      "kind": 6,
+      "symbol": "...data.0",
+      "addend": 0
+    },
+    {
+      "offset": "0x16",
+      "kind": 4,
+      "symbol": "...data.0",
+      "addend": 0
+    },
+    {
+      "offset": "0x20",
+      "kind": 10,
+      "symbol": "isPlayerModeHopper__11MarioModuleCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2c",
+      "kind": 109,
+      "symbol": "gIsLuigi",
+      "addend": 0
+    },
+    {
+      "offset": "0x40",
+      "kind": 10,
+      "symbol": "playEffect__11MarioModuleFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0x50",
+      "kind": 10,
+      "symbol": "playEffect__11MarioModuleFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0x7c",
+      "kind": 10,
+      "symbol": "pushTask__5MarioFM5MarioFPCvPvUl_bUl",
+      "addend": 0
+    },
+    {
+      "offset": "0x84",
+      "kind": 109,
+      "symbol": "gIsLuigi",
+      "addend": 0
+    },
+    {
+      "offset": "0x98",
+      "kind": 10,
+      "symbol": "playEffect__11MarioModuleFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0xa8",
+      "kind": 10,
+      "symbol": "playEffect__11MarioModuleFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0xd4",
+      "kind": 10,
+      "symbol": "pushTask__5MarioFM5MarioFPCvPvUl_bUl",
+      "addend": 0
+    }
+  ]
+}

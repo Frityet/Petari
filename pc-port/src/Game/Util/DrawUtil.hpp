@@ -1,6 +1,9 @@
 #pragma once
 
 namespace MR {
+    void reinitGX();
+    void resetTextureCacheSize();
+    void loadViewMtxFor2DModel();
     void clearAlphaBuffer(u8);
     void clearAlphaBuffer(u8, const TVec2f&, const TVec2f&);
     void drawInit();

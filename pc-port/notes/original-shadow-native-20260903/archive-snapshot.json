@@ -1,0 +1,78 @@
+{
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-si.a": [
+    1788471875539993131,
+    44056
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-base.a": [
+    1788471875526995451,
+    5061712
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libsmg-pc-common.a": [
+    1788438535508605986,
+    7310424
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-vi.a": [
+    1788471875546315283,
+    35544
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libsmg-pc-render.a": [
+    1788472029767914884,
+    1903192
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-nw4r.a": [
+    1788399530034417224,
+    971880
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-ms.a": [
+    1788471875539221882,
+    37000
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-mtx.a": [
+    1788443390343252569,
+    143640
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-platform.a": [
+    1788471875536858971,
+    3338416
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-os.a": [
+    1788471875541030420,
+    1549680
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-dvd.a": [
+    1788471875537642011,
+    1740376
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libsmg-pc-game.a": [
+    1788472399181552017,
+    339100384
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-gd.a": [
+    1788471875580175957,
+    398584
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-core.a": [
+    1788471875578342670,
+    721984
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libsmg-pc-app.a": [
+    1788472399199695310,
+    25995168
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-pad.a": [
+    1788471875550189108,
+    790696
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-main.a": [
+    1788399530105006960,
+    2248
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-card.a": [
+    1788471875537690261,
+    2519920
+  ],
+  "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/libaurora-gx.a": [
+    1788471875566852737,
+    32973432
+  ]
+}

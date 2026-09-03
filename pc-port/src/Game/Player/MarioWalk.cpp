@@ -17,7 +17,6 @@
 #include <cstring>
 #include <stdexcept>
 
-extern u8 lbl_806B6288;
 #else  // SMGPC_RETAIL_SOURCE
 #include "Game/Player/MarioModule.hpp"
 #include "Game/Player/MarioMove.hpp"
@@ -739,7 +738,7 @@ void Mario::decideWalkAnimation() {
     checkWallPush();
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     f32 brakeSpeed = 0.9f;
-    if (lbl_806B6288) {
+    if (gIsLuigi) {
         brakeSpeed = 0.3f;
     }
     if (mTargetWalkSpeedIndex > 5 && mWalkSpeed > brakeSpeed && !mDrawStates._4 && !mMovementStates._35) {
@@ -801,7 +800,7 @@ void Mario::doBrakingAnimation() {
     changeAnimation("歩行制動ブレーキ", 1);
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     getAnimator()->mXanimePlayer->_20->setAttribute(1);
-    if (lbl_806B6288) {
+    if (gIsLuigi) {
         getAnimator()->mXanimePlayer->changeSpeed(0.5f);
 #else  // SMGPC_RETAIL_SOURCE
     getAnimator()->getXanimePlayer()->_20->mAttribute = 1;
@@ -913,7 +912,7 @@ void Mario::updateBrakeAnimation() {
     }
 
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    if (!lbl_806B6288 || (!isAnimationRun("歩行制動ブレーキ", 1) && !isAnimationRun("ブレーキ"))) {
+    if (!gIsLuigi || (!isAnimationRun("歩行制動ブレーキ", 1) && !isAnimationRun("ブレーキ"))) {
 #else  // SMGPC_RETAIL_SOURCE
     if (!gIsLuigi) {
         return;

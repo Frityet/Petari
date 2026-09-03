@@ -14,6 +14,8 @@ target("smg-pc-mario-gateway-walk-slice")
         "../Game/Player/MarioActor.cpp",
         "../Game/Player/MarioActorCamera.cpp",
         "../Game/Player/MarioActorDraw.cpp",
+        "../Game/Player/MarioActorShadow.cpp",
+        "../Game/Player/MarioActorWipe.cpp",
         "../Game/Player/MarioActorHand.cpp",
         "../Game/Player/MarioActorSpecialDraw.cpp",
         "../Game/Player/MarioActorEye.cpp",

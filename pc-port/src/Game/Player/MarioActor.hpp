@@ -595,8 +595,7 @@ public:
     /* 0x1D0 */ u8 _1D0;
     /* 0x1D1 */ u8 _1D1;
     /* 0x1D4 */ f32 _1D4;
-    /* 0x1D8 */ FBO* _1D8;
-    /* 0x1DC */ FBO* _1DC;
+    /* 0x1D8 */ FBO* mRasterBuffers[2];
     /* 0x1E0 */ bool _1E0;
     /* 0x1E1 */ bool _1E1;
     /* 0x1E2 */ u8 _1E2;
@@ -606,7 +605,7 @@ public:
     /* 0x1F0 */ TVec3f _1F0;
     /* 0x1FC */ TVec3f _1FC;
     /* 0x208 */ f32 _208;
-    /* 0x20C */ u32 _20C;
+    /* 0x20C */ const AreaObj* _20C;
     /* 0x210 */ u8 _210;
     /* 0x211 */ u8 _211;
     /* 0x214 */ CollisionShadow* _214;
@@ -817,8 +816,7 @@ public:
     /* 0xA68 */ f32 _A68;
     /* 0xA6C */ u16 _A6C;
     /* 0xA6E */ u8 _A6E;
-    /* 0xA70 */ Mtx* _A70[8];
-    /* 0xA90 */ Mtx* _A90[8];
+    /* 0xA70 */ Mtx* _A70[16];
     /* 0xAB0 */ TMtx34f _AB0;
     /* 0xAE0 */ TMtx34f _AE0;
     /* 0xB10 */ u16 _B10;
@@ -827,10 +825,8 @@ public:
     /* 0xB18 */ TVec3f _B18;
     /* 0xB24 */ TVec2f mScreenBoxMin;
     /* 0xB2C */ TVec2f mScreenBoxMax;
-    /* 0xB34 */ f32 _B34;
-    /* 0xB38 */ f32 _B38;
-    /* 0xB3C */ f32 _B3C;
-    /* 0xB40 */ f32 _B40;
+    /* 0xB34 */ TVec2f mScreenBoxPosition;
+    /* 0xB3C */ TVec2f mScreenBoxSize;
     /* 0xB44 */ void* _B44;
     /* 0xB48 */ FootPrint* _B48;
     /* 0xB4C */ IceStep** _B4C;

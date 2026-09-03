@@ -14,21 +14,6 @@ namespace MR {
         loadScreenAlphaTexture(0, GX_TEXMAP0);
     }
 
-    void drawInitFor2DModel() {
-        Mtx identity;
-        PSMTXIdentity(identity);
-        smgpc::compat::load_j3d_view_matrix(identity);
-
-        auto* renderer = smgpc::render::try_current_aurora_renderer();
-        if (renderer == nullptr) {
-            return;
-        }
-        renderer->prepare_model_3d_for_2d({
-            .screen_width = static_cast<f32>(MR::getScreenWidth()),
-            .screen_height = static_cast<f32>(MR::getScreenHeight()),
-        });
-    }
-
     void activateGameSceneDraw3D() {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->game_layout().activate_game_scene_draw_3d();

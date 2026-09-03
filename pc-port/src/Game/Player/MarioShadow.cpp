@@ -17,17 +17,12 @@
 #include <JSystem/JUtility/JUTVideo.hpp>
 #include <cstring>
 #include <revolution/gd/GDBase.h>
+#include <revolution/gd/GDGeometry.h>
+#include <revolution/gd/GDIndirect.h>
+#include <revolution/gd/GDLight.h>
+#include <revolution/gd/GDPixel.h>
+#include <revolution/gd/GDTev.h>
 #include <revolution/gx.h>
-
-extern "C" {
-void GDSetAlphaCompare(int, int, int, int, int);
-void GDSetZMode(int, int, int);
-void GDSetTevDirect(int);
-void GDSetGenMode(int, int, int);
-void GDSetChanCtrl(int, int, int, int, int, int, int);
-void GDSetTevAlphaCalcAndSwap(int, int, int, int, int, int, int, int, int, int, int, int);
-void GDSetTevColor(int, GXColor);
-}
 
 namespace {
     const f32 cCheckOffset0 = 5.0f;
@@ -606,14 +601,15 @@ void CollisionShadow::createDL() {
     GDInitGDLObj(&displayList, buffer, sizeof(buffer));
     __GDCurrentDL = &displayList;
 
-    GDSetAlphaCompare(7, 0, 1, 7, 0);
-    GDSetZMode(1, 3, 0);
-    GDSetTevDirect(0);
+    GDSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
+    GDSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    GDSetTevDirect(GX_TEVSTAGE0);
     GDSetGenMode(0, 1, 1);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+    GDSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_CLAMP, GX_AF_NONE);
+    GDSetTevAlphaCalcAndSwap(GX_TEVSTAGE0, GX_CA_A0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE,
+                           GX_TEVPREV, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXColor color = {0, 0, 0, 4};
-    GDSetTevColor(1, color);
+    GDSetTevColor(GX_TEVREG0, color);
     GDPadCurr32();
 
     const u32 usedSize = displayList.ptr - displayList.start;

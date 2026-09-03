@@ -2,6 +2,7 @@
 
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DirectDraw.hpp"
+#include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include <JSystem/JUtility/JUTVideo.hpp>

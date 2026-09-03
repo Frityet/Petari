@@ -42,4 +42,8 @@ namespace MR {
     [[nodiscard]] FunctorV0M< T*, void (T::*)() > Functor_Inline(T* pCaller, void (T::*pCallee)()) {
         return Functor(pCaller, pCallee);
     }
+    template < class T >
+    inline static FunctorV0M< T*, void (T::*)() const > Functor_Inline(T* a1, void (T::*a2)() const) {
+        return FunctorV0M< T*, void (T::*)() const >(a1, a2);
+    }
 }  // namespace MR

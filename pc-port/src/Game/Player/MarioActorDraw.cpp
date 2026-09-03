@@ -911,7 +911,7 @@ void MarioActor::drawModelBlur() const {
     MR::multMtx(inv, inv, MR::getCameraViewMtx());
     for (u32 i = 1; i < 8; i++) {
         const u32 idx = static_cast< u32 >(i + _B12) & 7;
-        model->setDrawViewBuffer(reinterpret_cast< MtxPtr >(_A70[idx + (_B10 << 5)]));
+        model->setDrawViewBuffer(reinterpret_cast< MtxPtr >(_A70[idx + (_B10 << 3)]));
 
         if (!_1C1) {
             for (u16 joint = 0; joint < getModelData()->getJointNum(); joint++) {

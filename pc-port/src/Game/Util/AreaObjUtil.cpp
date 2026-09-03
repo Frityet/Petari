@@ -4,6 +4,7 @@
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/RestartCube.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
 namespace MR {
 
@@ -52,6 +53,14 @@ namespace MR {
 
     void calcCylinderPos(TVec3f* pPos, const AreaObj* pAreaObj) {
         static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcPos(pPos);
+    }
+
+    void calcCubeAxisZ(const AreaObj* pAreaObj, TVec3f* pAxis) {
+        TVec3f rotation;
+        static_cast< AreaFormCube* >(pAreaObj->mForm)->calcWorldRotate(&rotation);
+        Mtx matrix;
+        MR::makeMtxRotate(matrix, rotation.x, rotation.y, rotation.z);
+        pAxis->set< f32 >(matrix[0][2], matrix[1][2], matrix[2][2]);
     }
 
     void tryToUpdatePlayerRestartIdInfo(const TVec3f& rPos) {

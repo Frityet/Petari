@@ -28,6 +28,7 @@ namespace MR {
     void calcCubeLocalPos(TVec3f*, const AreaObj*, const TVec3f&);
 
     void calcCubeRotate(const AreaObj*, TVec3f*);
+    void calcCubeAxisZ(const AreaObj*, TVec3f*);
 
     bool calcWhirlPoolAccelInfo(const TVec3f&, TVec3f*);
 

@@ -45,6 +45,7 @@ public:
     void initTexObj(GXTlut tlut);
     void load(GXTexMapID tex_map_id);
     void capture(int width, int height, GXTexFmt format, bool mipmap, u8 clear);
+    static void captureDolTexture(void*, int, int, int, int, bool, GXTexFmt);
 
     [[nodiscard]] const ResTIMG* getTexInfo() const { return mTIMG; }
     [[nodiscard]] s32 getFormat() const { return mTIMG != nullptr ? mTIMG->mFormat : 0; }

@@ -118,6 +118,9 @@ public:
     Mtx* getDrawMtxPtr() {
         return mMtxBuffer->getDrawMtxPtr();
     }
+    Mtx* getDrawMtx(int idx) {
+        return mMtxBuffer->getDrawMtx(idx);
+    }
     void setBaseScale(const Vec& scale) {
         mBaseScale = scale;
     }

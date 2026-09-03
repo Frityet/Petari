@@ -1,0 +1,37 @@
+_GXSetMisc
+__Unwind_Resume
+MarioActor::updateRandomTexture(float)
+MarioActor::updateSimpleAlphaDL(unsigned char)
+MarioActor::updateReflectAlphaDL(unsigned char)
+JetTurtleShadow::calcType0(float (*) [4])
+MR::calcCubeAxisZ(AreaObj const*, JGeometry::TVec3<float>*)
+MR::clearAlphaBuffer(unsigned char, JGeometry::TVec2<float> const&, JGeometry::TVec2<float> const&)
+MR::createBoundingBox(JGeometry::TVec3<float> const*, unsigned int, JGeometry::TVec3<float>*, JGeometry::TVec3<float>*)
+MR::calcCylinderCenterPos(JGeometry::TVec3<float>*, AreaObj const*)
+MR::createAreaPolygonListArray(Triangle*, unsigned int, JGeometry::TVec3<float>*, unsigned int)
+MR::isInitializeStatePlacementSomething()
+MR::sortSmall(int, float*, int*)
+TDDraw::setViewMtx(float (*) [4])
+TDDraw::cameraInit3D()
+TDDraw::drawFillBox3D(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, unsigned int)
+TDDraw::drawTexture3D(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float, float, JUTTexture*, bool, bool)
+TDDraw::drawFillCircle(JGeometry::TVec3<float> const&, float, unsigned int, unsigned int, unsigned int)
+TDDraw::close()
+TDDraw::setup(unsigned int, unsigned int, unsigned char)
+TDDraw::fix2Dpos(JGeometry::TVec3<float>*)
+MarioActor::getRealPos(char const*, JGeometry::TVec3<float>*) const
+MarioActor::getJ3DModel() const
+MarioActor::getModelData() const
+MarioActor::getCarrySensor() const
+MarioActor::getSimpleModel() const
+MarioActor::selectNoShadow(HitSensor const*) const
+MarioActor::getGravityVector() const
+MarioModule::isPlayerModeHopper() const
+Mario::isNotReflectGlassGround() const
+vtable for __cxxabiv1::__si_class_type_info
+vtable for __cxxabiv1::__vmi_class_type_info
+___gxx_personality_v0
+___stack_chk_fail
+___stack_chk_guard
+_gIsLuigi
+_strcmp
