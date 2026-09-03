@@ -68,3 +68,12 @@ public:
 
     u8 temp[0x3C];
 };
+
+class MarioShadowProjmapMtxSetter : public MaterialCtrl {
+public:
+    MarioShadowProjmapMtxSetter(J3DModel*, const ResourceHolder*);
+
+    virtual void update() override;
+
+    ProjmapEffectMtxSetter* mProjmapEffectMtxSetter;  // 0xC
+};

@@ -48,6 +48,10 @@ bool AnmPlayerBase::isPlaying(const char* pAnimName) const {
     return false;
 }
 
+bool AnmPlayerBase::isStop() const {
+    return mAnmRes == nullptr || mFrameCtrl.andState(1) == 1 || mFrameCtrl.getRate() == 0.0f;
+}
+
 MaterialAnmPlayerBase::MaterialAnmPlayerBase(const ResTable* pResTable, J3DModelData* pModelData) : AnmPlayerBase(pResTable), mModelData(pModelData) {
 }
 
