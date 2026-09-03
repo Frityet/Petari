@@ -789,7 +789,8 @@ int main() {
             .height = 240,
             .title = "SMG PC point-light runtime proof",
         });
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         auto player = LiveActor("point-light player");
         player.mPosition.zero();
         player.calcAndSetBaseMtx();

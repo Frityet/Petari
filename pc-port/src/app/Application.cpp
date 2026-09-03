@@ -409,14 +409,24 @@ namespace smgpc::app {
                 });
         }
 
+        if (overrides.resource_runtime) {
+            graph.register_service<di::SingletonService<resource::GameResourceRuntime>>(std::move(overrides.resource_runtime));
+        } else {
+            graph.register_service<di::SingletonService<resource::GameResourceRuntime>, render::AuroraWindow>(
+                [configuration](di::DependencyReference<render::AuroraWindow>) {
+                    return std::make_unique<resource::GameResourceRuntime>(configuration.resource_budget);
+                });
+        }
+
         if (overrides.runtime_context) {
             graph.register_service<di::SingletonService<smgpc::runtime::RuntimeContext>>(std::move(overrides.runtime_context));
         } else {
-            graph.register_service<di::SingletonService<smgpc::runtime::RuntimeContext>, logging::ILogger, render::AuroraWindow>(
+            graph.register_service<di::SingletonService<smgpc::runtime::RuntimeContext>, logging::ILogger, render::AuroraWindow, resource::GameResourceRuntime>(
                 [configuration](di::DependencyReference<logging::ILogger> logger,
-                                di::DependencyReference<render::AuroraWindow> window_service) {
+                                di::DependencyReference<render::AuroraWindow> window_service,
+                                di::DependencyReference<resource::GameResourceRuntime> resources) {
                     ensure_disc_image_open(configuration, logger.get());
-                    return std::make_unique<smgpc::runtime::RuntimeContext>(logger.get(), window_service.get(),
+                    return std::make_unique<smgpc::runtime::RuntimeContext>(logger.get(), window_service.get(), resources.get(),
                                                                             smgpc::runtime::RuntimeContextSceneServiceMode::External);
                 });
         }

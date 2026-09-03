@@ -1402,8 +1402,9 @@ namespace {
             .height = 228,
             .title = "SMG PC JAudio runtime binding proof",
         });
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
         auto runtime = smgpc::runtime::RuntimeContext(
-            *logger, window, std::move(playback));
+            *logger, window, resource_runtime, std::move(playback));
 
         const auto system_event_count = runtime.audio().events().size();
         auto *game_start = MR::startSystemSE("SE_SY_GAME_START", -1, -1);

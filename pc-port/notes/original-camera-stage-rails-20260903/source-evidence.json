@@ -1,0 +1,754 @@
+{
+  "scope": "Five recovered stage/camera APIs, necessary private rail helper, and corrected iterator return types for two existing StageDataHolder path lookups. Root-only; no native imports or camera activation.",
+  "compiler": "GC/3.0a3, real configure.py cflags_game, RMGK01 VERSION=0; no generated source/header overlay",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_sha256": {
+    "src/Game/Scene/StageDataHolder.cpp": "6fd845a6315524f055dd6afda077e7585f2688ddc2bab3399744e4ff85ea949e",
+    "src/Game/Util/SceneUtil.cpp": "7768e482566eb88af20d34dedd3659d5be1aad22bbb3dd073fd73681d6457200"
+  },
+  "header_sha256": {
+    "include/Game/Scene/StageDataHolder.hpp": "40f27c4baae3065022999e53a129c3b6f9a96437345f85f1e368aa7ceb876b5c",
+    "include/Game/Util/JMapInfo.hpp": "646a0d03989697b0a2c801d7a50606122d9e359d6e139df40d18eaf2c4de5532",
+    "include/Game/Util/SceneUtil.hpp": "baea88f74e5782d6692330f85402ff69c02e82cc17be44e066d1669a8b42bc83"
+  },
+  "tool_sha256": {
+    "build/compilers/GC/3.0a3/mwcceppc.exe": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2",
+    "build/tools/sjiswrap.exe": "01d50fa1148cfc3c3b16658c6c9b1c0d9f5324cde79ed6c09ef8353af9d63adf",
+    "build/tools/objdiff-cli": "4ef0896ba8986f1adea6202d6e52a471deb1d126b071d23e88e8c00c250da7fd"
+  },
+  "original_layout": {
+    "sizeof(JMapInfoIter)": 8,
+    "offsetof(JMapInfoIter, mInfo)": 0,
+    "offsetof(JMapInfoIter, mIndex)": 4,
+    "offsetof(StageDataHolder, mPathObjs)": 52,
+    "offsetof(StageDataHolder, mZoneID)": 220
+  },
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Scene/StageDataHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/StageDataHolder.o"
+    ],
+    [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/build/j3d-vertex-buffer-lifecycle-20260903/retail/obj/Game/Scene/StageDataHolder.o",
+      "-2",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/StageDataHolder.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/StageDataHolder.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Util/SceneUtil.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/SceneUtil.o"
+    ],
+    [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/build/j3d-vertex-buffer-lifecycle-20260903/retail/obj/Game/Util/SceneUtil.o",
+      "-2",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/SceneUtil.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/SceneUtil.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/layout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-stage-rails-20260903/layout.o"
+    ]
+  ],
+  "verified_sda13_base": "0x806b9620",
+  "verified_retail_strings": {
+    "CommonPathInfo": "0x805d2603",
+    "l_id": "0x805d2612",
+    "CommonPathPointInfo.%d": "0x805d2617",
+    "Camera": "0x805e1fc4",
+    "StartScenario%d.canm": "0x805e1fdc"
+  },
+  "functions": [
+    {
+      "name": "getCommonPathPointInfo__15StageDataHolderCFPPC8JMapInfoi",
+      "address": "0x803473c8",
+      "size": 116,
+      "objdiff_percent": 99.31035,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 29,
+      "compiled_object_sha256": "0474a51ed5a23fbdeeb78e8732a43a358472e1abf96d9629e0878b159a5a24cf",
+      "retail_split_object_sha256": "542879055fa61865a38c264385fef4834cceadeca18c7c757e88834b0174357f",
+      "retail_function_sha256": "1948ceb88e31eca26e966c2eadb450506be4580f6296fe9994a6e5d172390c3a",
+      "objdiff_differences_string_symbol_names_only": [
+        "lis r6, lbl_805D2603@ha",
+        "addi r5, r6, lbl_805D2603@l",
+        "lis r4, lbl_805D2612@ha",
+        "addi r4, r4, lbl_805D2612@l"
+      ],
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x16",
+          "kind": 6,
+          "symbol": "@4325",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468496e666f00",
+          "retail_target": "0x805d2603"
+        },
+        {
+          "offset": "0x2a",
+          "kind": 4,
+          "symbol": "@4325",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468496e666f00",
+          "retail_target": "0x805d2603"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "findJmpInfoFromArray__15StageDataHolderCFPCQ22MR26AssignableArray<8JMapInfo>PCc",
+          "addend": 0,
+          "retail_target": "0x803486e4"
+        },
+        {
+          "offset": "0x32",
+          "kind": 6,
+          "symbol": "@4326",
+          "addend": 0,
+          "value_hex": "6c5f696400",
+          "retail_target": "0x805d2612"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 4,
+          "symbol": "@4326",
+          "addend": 0,
+          "value_hex": "6c5f696400",
+          "retail_target": "0x805d2612"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "findElement<l>__8JMapInfoCFPCcli_12JMapInfoIter",
+          "addend": 0,
+          "retail_target": "0x80346c0c"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "getCommonPathPointInfoFromRailDataIndex__15StageDataHolderCFPPC8JMapInfoi",
+          "addend": 0,
+          "retail_target": "0x8034743c"
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a54"
+        }
+      ]
+    },
+    {
+      "name": "getCommonPathPointInfoFromRailDataIndex__15StageDataHolderCFPPC8JMapInfoi",
+      "address": "0x8034743c",
+      "size": 140,
+      "objdiff_percent": 99.42857,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 35,
+      "compiled_object_sha256": "0474a51ed5a23fbdeeb78e8732a43a358472e1abf96d9629e0878b159a5a24cf",
+      "retail_split_object_sha256": "542879055fa61865a38c264385fef4834cceadeca18c7c757e88834b0174357f",
+      "retail_function_sha256": "dcf690ba85527311e9dfb9ca287610f6d964856de0602b981883c1bbf29f1455",
+      "objdiff_differences_string_symbol_names_only": [
+        "lis r6, lbl_805D2603@ha",
+        "addi r5, r6, lbl_805D2603@l",
+        "lis r5, lbl_805D2617@ha",
+        "addi r5, r5, lbl_805D2617@l"
+      ],
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0,
+          "retail_target": "0x80518a04"
+        },
+        {
+          "offset": "0x16",
+          "kind": 6,
+          "symbol": "@4325",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468496e666f00",
+          "retail_target": "0x805d2603"
+        },
+        {
+          "offset": "0x2a",
+          "kind": 4,
+          "symbol": "@4325",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468496e666f00",
+          "retail_target": "0x805d2603"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "findJmpInfoFromArray__15StageDataHolderCFPCQ22MR26AssignableArray<8JMapInfo>PCc",
+          "addend": 0,
+          "retail_target": "0x803486e4"
+        },
+        {
+          "offset": "0x32",
+          "kind": 6,
+          "symbol": "@4372",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468506f696e74496e666f2e256400",
+          "retail_target": "0x805d2617"
+        },
+        {
+          "offset": "0x42",
+          "kind": 4,
+          "symbol": "@4372",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468506f696e74496e666f2e256400",
+          "retail_target": "0x805d2617"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0,
+          "retail_target": "0x8051e4cc"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "findJmpInfoFromArray__15StageDataHolderCFPCQ22MR26AssignableArray<8JMapInfo>PCc",
+          "addend": 0,
+          "retail_target": "0x803486e4"
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0,
+          "retail_target": "0x80518a50"
+        }
+      ]
+    },
+    {
+      "name": "getCommonPathInfoElementNum__15StageDataHolderCFv",
+      "address": "0x803474c8",
+      "size": 68,
+      "objdiff_percent": 99.411766,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 17,
+      "compiled_object_sha256": "0474a51ed5a23fbdeeb78e8732a43a358472e1abf96d9629e0878b159a5a24cf",
+      "retail_split_object_sha256": "542879055fa61865a38c264385fef4834cceadeca18c7c757e88834b0174357f",
+      "retail_function_sha256": "cbd8a664ee32f99be5890ef28d37ab8b86a0515b8c78defce9e3b9c7f55b8ffa",
+      "objdiff_differences_string_symbol_names_only": [
+        "lis r5, lbl_805D2603@ha",
+        "addi r5, r5, lbl_805D2603@l"
+      ],
+      "relocations": [
+        {
+          "offset": "0xa",
+          "kind": 6,
+          "symbol": "@4325",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468496e666f00",
+          "retail_target": "0x805d2603"
+        },
+        {
+          "offset": "0x16",
+          "kind": 4,
+          "symbol": "@4325",
+          "addend": 0,
+          "value_hex": "436f6d6d6f6e50617468496e666f00",
+          "retail_target": "0x805d2603"
+        },
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "findJmpInfoFromArray__15StageDataHolderCFPCQ22MR26AssignableArray<8JMapInfo>PCc",
+          "addend": 0,
+          "retail_target": "0x803486e4"
+        }
+      ]
+    },
+    {
+      "name": "getRailInfoFromRailId__23@unnamed@SceneUtil_cpp@FP12JMapInfoIterPPC8JMapInfoPC15StageDataHolderi",
+      "address": "0x803f70d4",
+      "size": 68,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 17,
+      "compiled_object_sha256": "3ee040662af06f82d0057cd391810b5b95a2b1083ef40bfcbdf848e6f48f7cb1",
+      "retail_split_object_sha256": "407b55d3d1dfcb3a0789e1e7eedce5020ea145cf51c8c5effaf4a646114d9428",
+      "retail_function_sha256": "dfdc23e897677540057f86d0e636646e7e0caab0fe74471183c6e7e01b372dfc",
+      "objdiff_differences_string_symbol_names_only": [],
+      "relocations": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getCommonPathPointInfo__15StageDataHolderCFPPC8JMapInfoi",
+          "addend": 0,
+          "retail_target": "0x803473c8"
+        }
+      ]
+    },
+    {
+      "name": "getPlacedRailNum__2MRFl",
+      "address": "0x803f7af0",
+      "size": 84,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 21,
+      "compiled_object_sha256": "3ee040662af06f82d0057cd391810b5b95a2b1083ef40bfcbdf848e6f48f7cb1",
+      "retail_split_object_sha256": "407b55d3d1dfcb3a0789e1e7eedce5020ea145cf51c8c5effaf4a646114d9428",
+      "retail_function_sha256": "5e6ad8c080f7ed0ee03a260c1c5b0d70b3f1492ebcb4e18a0a53523c50436e49",
+      "objdiff_differences_string_symbol_names_only": [],
+      "relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getStageDataHolder__2MRFv",
+          "addend": 0,
+          "retail_target": "0x80348b28"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "isPlacedZone__15StageDataHolderCFi",
+          "addend": 0,
+          "retail_target": "0x80347b0c"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "getStageDataHolder__2MRFv",
+          "addend": 0,
+          "retail_target": "0x80348b28"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "getStageDataHolderFromZoneId__15StageDataHolderFi",
+          "addend": 0,
+          "retail_target": "0x80347b08"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "getCommonPathInfoElementNum__15StageDataHolderCFv",
+          "addend": 0,
+          "retail_target": "0x803474c8"
+        }
+      ]
+    },
+    {
+      "name": "getCameraRailInfo__2MRFP12JMapInfoIterPPC8JMapInfoll",
+      "address": "0x803f7b44",
+      "size": 92,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 23,
+      "compiled_object_sha256": "3ee040662af06f82d0057cd391810b5b95a2b1083ef40bfcbdf848e6f48f7cb1",
+      "retail_split_object_sha256": "407b55d3d1dfcb3a0789e1e7eedce5020ea145cf51c8c5effaf4a646114d9428",
+      "retail_function_sha256": "83e88cd9ef00b4947a60343d7fcd96c51b45fbcad4b236d5302443393e1a2859",
+      "objdiff_differences_string_symbol_names_only": [],
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0,
+          "retail_target": "0x80518a04"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getStageDataHolder__2MRFv",
+          "addend": 0,
+          "retail_target": "0x80348b28"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "getStageDataHolderFromZoneId__15StageDataHolderFi",
+          "addend": 0,
+          "retail_target": "0x80347b08"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "getRailInfoFromRailId__23@unnamed@SceneUtil_cpp@FP12JMapInfoIterPPC8JMapInfoPC15StageDataHolderi",
+          "addend": 0,
+          "retail_target": "0x803f70d4"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0,
+          "retail_target": "0x80518a50"
+        }
+      ]
+    },
+    {
+      "name": "getCameraRailInfoFromRailDataIndex__2MRFP12JMapInfoIterPPC8JMapInfoil",
+      "address": "0x803f7ba0",
+      "size": 116,
+      "objdiff_percent": 99.655174,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 29,
+      "compiled_object_sha256": "3ee040662af06f82d0057cd391810b5b95a2b1083ef40bfcbdf848e6f48f7cb1",
+      "retail_split_object_sha256": "407b55d3d1dfcb3a0789e1e7eedce5020ea145cf51c8c5effaf4a646114d9428",
+      "retail_function_sha256": "fb3ea9fc31a6310f6b1f6f4cfd2ec8c2dd23c33408091ab3a1bffc5979ce603e",
+      "objdiff_differences_string_symbol_names_only": [
+        "lis r5, lbl_805E1FC4@ha",
+        "addi r4, r5, lbl_805E1FC4@l"
+      ],
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0,
+          "retail_target": "0x80518a04"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getStageDataHolder__2MRFv",
+          "addend": 0,
+          "retail_target": "0x80348b28"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "getStageDataHolderFromZoneId__15StageDataHolderFi",
+          "addend": 0,
+          "retail_target": "0x80347b08"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "getCommonPathPointInfoFromRailDataIndex__15StageDataHolderCFPPC8JMapInfoi",
+          "addend": 0,
+          "retail_target": "0x8034743c"
+        },
+        {
+          "offset": "0x42",
+          "kind": 6,
+          "symbol": "@3131",
+          "addend": 0,
+          "value_hex": "43616d65726100",
+          "retail_target": "0x805e1fc4"
+        },
+        {
+          "offset": "0x4a",
+          "kind": 4,
+          "symbol": "@3131",
+          "addend": 0,
+          "value_hex": "43616d65726100",
+          "retail_target": "0x805e1fc4"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "isEqualRailUsage__2MRFRC12JMapInfoIterPCc",
+          "addend": 0,
+          "retail_target": "0x803d6518"
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0,
+          "retail_target": "0x80518a50"
+        }
+      ]
+    },
+    {
+      "name": "getCurrentScenarioStartAnimCameraData__2MRFPPvPl",
+      "address": "0x803f7ca0",
+      "size": 152,
+      "objdiff_percent": 99.73684,
+      "relocated_bytes_equal_current_retail": true,
+      "instructions_verified": 38,
+      "compiled_object_sha256": "3ee040662af06f82d0057cd391810b5b95a2b1083ef40bfcbdf848e6f48f7cb1",
+      "retail_split_object_sha256": "407b55d3d1dfcb3a0789e1e7eedce5020ea145cf51c8c5effaf4a646114d9428",
+      "retail_function_sha256": "b64d17e4e579f3085921fc334c65b7a0f315b238e13b31434cea1c8395fe7f51",
+      "objdiff_differences_string_symbol_names_only": [
+        "lis r5, lbl_805E1FDC@ha",
+        "addi r5, r5, lbl_805E1FDC@l"
+      ],
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getStageDataHolder__2MRFv",
+          "addend": 0,
+          "retail_target": "0x80348b28"
+        },
+        {
+          "offset": "0x20",
+          "kind": 109,
+          "symbol": "sInstance__29SingletonHolder<10GameSystem>",
+          "addend": 0,
+          "retail_target": "0x806b5be8"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "getCurrentScenarioNo__25GameSystemSceneControllerCFv",
+          "addend": 0,
+          "retail_target": "0x8039e9e8"
+        },
+        {
+          "offset": "0x32",
+          "kind": 6,
+          "symbol": "@3148",
+          "addend": 0,
+          "value_hex": "53746172745363656e6172696f25642e63616e6d00",
+          "retail_target": "0x805e1fdc"
+        },
+        {
+          "offset": "0x42",
+          "kind": 4,
+          "symbol": "@3148",
+          "addend": 0,
+          "value_hex": "53746172745363656e6172696f25642e63616e6d00",
+          "retail_target": "0x805e1fdc"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0,
+          "retail_target": "0x8051e4cc"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "getStageArchiveResource__15StageDataHolderFPCc",
+          "addend": 0,
+          "retail_target": "0x80347bf4"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "getStageArchiveResourceSize__15StageDataHolderFPv",
+          "addend": 0,
+          "retail_target": "0x80347c14"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a54"
+        }
+      ]
+    }
+  ],
+  "total_verified_instruction_words": 209,
+  "total_resolved_relocations": 50
+}

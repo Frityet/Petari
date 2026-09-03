@@ -1,0 +1,784 @@
+{
+  "scope": "Isolated root sources and two explicitly recorded staged compiler adaptations compile against current PC headers first plus original missing-header fallback. This does not import Game code or validate linking/runtime. No substitutions or fake declarations.",
+  "registry_type_count": 45,
+  "sources": [
+    {
+      "source": "src/Game/Camera/CameraParallel.cpp",
+      "source_sha256": "184a1505a3077ac0441f781292b214d9244889a6efc13f365b3b97ced995f6ff",
+      "root_source": "src/Game/Camera/CameraParallel.cpp",
+      "root_source_sha256": "184a1505a3077ac0441f781292b214d9244889a6efc13f365b3b97ced995f6ff",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorParallel.cpp",
+      "source_sha256": "1861ab88d2f2f3346c3d8c0371ff791ba88e6bb053c0d75260b5f90135cb9491",
+      "root_source": "src/Game/Camera/CamTranslatorParallel.cpp",
+      "root_source_sha256": "1861ab88d2f2f3346c3d8c0371ff791ba88e6bb053c0d75260b5f90135cb9491",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTower.cpp",
+      "source_sha256": "3d1b1507bf65dd1044a5c6ba083470866a58e4940cc6eda7affb9ba32824e60d",
+      "root_source": "src/Game/Camera/CameraTower.cpp",
+      "root_source_sha256": "3d1b1507bf65dd1044a5c6ba083470866a58e4940cc6eda7affb9ba32824e60d",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTower.cpp",
+      "source_sha256": "f1ffe684b91de65470a983a66180e30ec3e38d94fac03a438e094bd9c3f86eef",
+      "root_source": "src/Game/Camera/CamTranslatorTower.cpp",
+      "root_source_sha256": "f1ffe684b91de65470a983a66180e30ec3e38d94fac03a438e094bd9c3f86eef",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraFollow.cpp",
+      "source_sha256": "3f7755d34b40cf5e32b584d85a2ff9cdb2b67f3195e8ae9f6ebd25d20aeb3e6e",
+      "root_source": "src/Game/Camera/CameraFollow.cpp",
+      "root_source_sha256": "3f7755d34b40cf5e32b584d85a2ff9cdb2b67f3195e8ae9f6ebd25d20aeb3e6e",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFollow.cpp",
+      "source_sha256": "3dfb30a8df421b965522d58759f87392c2559b3c71057b754775a2650a3740be",
+      "root_source": "src/Game/Camera/CamTranslatorFollow.cpp",
+      "root_source_sha256": "3dfb30a8df421b965522d58759f87392c2559b3c71057b754775a2650a3740be",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraWonderPlanet.cpp",
+      "source_sha256": "6b61ace8efa83cb515a123bb649f539e6de3ec665e8d6226a91a468de9da6d48",
+      "root_source": "src/Game/Camera/CameraWonderPlanet.cpp",
+      "root_source_sha256": "6b61ace8efa83cb515a123bb649f539e6de3ec665e8d6226a91a468de9da6d48",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorWonderPlanet.cpp",
+      "source_sha256": "94c5ddd72b12ea0e91a38a8c6505fd838906066cb4a3efa19d5b6258c8610ef3",
+      "root_source": "src/Game/Camera/CamTranslatorWonderPlanet.cpp",
+      "root_source_sha256": "94c5ddd72b12ea0e91a38a8c6505fd838906066cb4a3efa19d5b6258c8610ef3",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraFix.cpp",
+      "source_sha256": "244e86238fc3826fbcc7c8c0c2d7f99821080a8b1f4b36090b70ca9fdc2bad4a",
+      "root_source": "src/Game/Camera/CameraFix.cpp",
+      "root_source_sha256": "244e86238fc3826fbcc7c8c0c2d7f99821080a8b1f4b36090b70ca9fdc2bad4a",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFix.cpp",
+      "source_sha256": "cc32358a08d19ce40576b67af9529d7b438cbae34f1819bdde741e6b425faf07",
+      "root_source": "src/Game/Camera/CamTranslatorFix.cpp",
+      "root_source_sha256": "cc32358a08d19ce40576b67af9529d7b438cbae34f1819bdde741e6b425faf07",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraFixedPoint.cpp",
+      "source_sha256": "876d1a229a572b1cf4ded76a76dd15634837143bfff40fd9d6bcf8f2e62a98b7",
+      "root_source": "src/Game/Camera/CameraFixedPoint.cpp",
+      "root_source_sha256": "876d1a229a572b1cf4ded76a76dd15634837143bfff40fd9d6bcf8f2e62a98b7",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFixedPoint.cpp",
+      "source_sha256": "c75d08a31dcc004172303a1c23fecc9118feed2027d0f2e2d475eb024e10772b",
+      "root_source": "src/Game/Camera/CamTranslatorFixedPoint.cpp",
+      "root_source_sha256": "c75d08a31dcc004172303a1c23fecc9118feed2027d0f2e2d475eb024e10772b",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraBehind.cpp",
+      "source_sha256": "e3960bdcd9382998df8babfc208bde846269a6363a2a984ca5c9093b56cf120e",
+      "root_source": "src/Game/Camera/CameraBehind.cpp",
+      "root_source_sha256": "e3960bdcd9382998df8babfc208bde846269a6363a2a984ca5c9093b56cf120e",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorBehind.cpp",
+      "source_sha256": "7383cdbeb71a68c3f4c7f16f76f7880e07800196ff9357f51a54ee1f2aa75e33",
+      "root_source": "src/Game/Camera/CamTranslatorBehind.cpp",
+      "root_source_sha256": "7383cdbeb71a68c3f4c7f16f76f7880e07800196ff9357f51a54ee1f2aa75e33",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraInwardTower.cpp",
+      "source_sha256": "8aa5e973f5382885e2ab968c8ca7a5a1b2ad330915a139def51519f11eb8f2da",
+      "root_source": "src/Game/Camera/CameraInwardTower.cpp",
+      "root_source_sha256": "8aa5e973f5382885e2ab968c8ca7a5a1b2ad330915a139def51519f11eb8f2da",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorInwardTower.cpp",
+      "source_sha256": "2c6dcfd8037ed79d7d98ccab6cc5c47aade2571848645318f1fe2acb9cebaecf",
+      "root_source": "src/Game/Camera/CamTranslatorInwardTower.cpp",
+      "root_source_sha256": "2c6dcfd8037ed79d7d98ccab6cc5c47aade2571848645318f1fe2acb9cebaecf",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraFixedThere.cpp",
+      "source_sha256": "b85befbb28206a124db1c903a3303631aabd275966eca8a3267f31c66c766513",
+      "root_source": "src/Game/Camera/CameraFixedThere.cpp",
+      "root_source_sha256": "b85befbb28206a124db1c903a3303631aabd275966eca8a3267f31c66c766513",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFixedThere.cpp",
+      "source_sha256": "5b6f2db41a7086c6440a90b06cda4e4d4320ed5c0d0669b7395b4e298fcc122a",
+      "root_source": "src/Game/Camera/CamTranslatorFixedThere.cpp",
+      "root_source_sha256": "5b6f2db41a7086c6440a90b06cda4e4d4320ed5c0d0669b7395b4e298fcc122a",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTripodBoss.cpp",
+      "source_sha256": "72852b35131afde8f1e17fc4d738b703be7c6dcb89e05cfb7b8f866b80e39477",
+      "root_source": "src/Game/Camera/CameraTripodBoss.cpp",
+      "root_source_sha256": "72852b35131afde8f1e17fc4d738b703be7c6dcb89e05cfb7b8f866b80e39477",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTripodBoss.cpp",
+      "source_sha256": "bff28e8845a80d4dc8ba6e9894bea4868af50606db1904bf0c87db85172089b0",
+      "root_source": "src/Game/Camera/CamTranslatorTripodBoss.cpp",
+      "root_source_sha256": "bff28e8845a80d4dc8ba6e9894bea4868af50606db1904bf0c87db85172089b0",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTowerPos.cpp",
+      "source_sha256": "fe5b16df3009e07bd2ebca30dc03c03e4549705d1d8999bfbe4e0387c65cb342",
+      "root_source": "src/Game/Camera/CameraTowerPos.cpp",
+      "root_source_sha256": "fe5b16df3009e07bd2ebca30dc03c03e4549705d1d8999bfbe4e0387c65cb342",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTowerPos.cpp",
+      "source_sha256": "03b861e806b50bbee3d72fdd5c9160818688780c2b04278d4853644d97104b87",
+      "root_source": "src/Game/Camera/CamTranslatorTowerPos.cpp",
+      "root_source_sha256": "03b861e806b50bbee3d72fdd5c9160818688780c2b04278d4853644d97104b87",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTripodPlanet.cpp",
+      "source_sha256": "69bda23e458bcafd0d41575d9226f4d5971cdf81befd170694bd97e598f00a14",
+      "root_source": "src/Game/Camera/CameraTripodPlanet.cpp",
+      "root_source_sha256": "69bda23e458bcafd0d41575d9226f4d5971cdf81befd170694bd97e598f00a14",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTripodPlanet.cpp",
+      "source_sha256": "47450b61db7489e8fce0015929bba5d2efd6a3bbe67da0427f1b5bb888decedf",
+      "root_source": "src/Game/Camera/CamTranslatorTripodPlanet.cpp",
+      "root_source_sha256": "47450b61db7489e8fce0015929bba5d2efd6a3bbe67da0427f1b5bb888decedf",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraDead.cpp",
+      "source_sha256": "26edaef5fe7ed94df914e37b1a6fb55a14c1d0c9db0f6b35d4ba7116a41940b5",
+      "root_source": "src/Game/Camera/CameraDead.cpp",
+      "root_source_sha256": "26edaef5fe7ed94df914e37b1a6fb55a14c1d0c9db0f6b35d4ba7116a41940b5",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorDead.cpp",
+      "source_sha256": "eff118147a916074e8d3903233bd0de6f7fa7f40d6beb9c6f38a01e4b3314931",
+      "root_source": "src/Game/Camera/CamTranslatorDead.cpp",
+      "root_source_sha256": "eff118147a916074e8d3903233bd0de6f7fa7f40d6beb9c6f38a01e4b3314931",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraInwardSphere.cpp",
+      "source_sha256": "ffc8118f18129be6da6eeb60bfb47803251f417d9a1bfb5b4cdcde890cfbbfa0",
+      "root_source": "src/Game/Camera/CameraInwardSphere.cpp",
+      "root_source_sha256": "ffc8118f18129be6da6eeb60bfb47803251f417d9a1bfb5b4cdcde890cfbbfa0",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorInwardSphere.cpp",
+      "source_sha256": "093a9ab77571df2e0d47d54c6f5839a591f75baaab74857069ac3fd076d15bcd",
+      "root_source": "src/Game/Camera/CamTranslatorInwardSphere.cpp",
+      "root_source_sha256": "093a9ab77571df2e0d47d54c6f5839a591f75baaab74857069ac3fd076d15bcd",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraRailDemo.cpp",
+      "source_sha256": "2023d2770d1f032048617fe4edf881fa6197bf29b48abdc0fb31cf92c9b3ea69",
+      "root_source": "src/Game/Camera/CameraRailDemo.cpp",
+      "root_source_sha256": "2023d2770d1f032048617fe4edf881fa6197bf29b48abdc0fb31cf92c9b3ea69",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorRailDemo.cpp",
+      "source_sha256": "6083516802d15c9e3df8b6d62e4a65c5001220e619e9b6ad81669c6128fd9849",
+      "root_source": "src/Game/Camera/CamTranslatorRailDemo.cpp",
+      "root_source_sha256": "6083516802d15c9e3df8b6d62e4a65c5001220e619e9b6ad81669c6128fd9849",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraRailFollow.cpp",
+      "source_sha256": "f23b5b87a0c1a9d6cd8efb21eb605c2d9fe4331a7759fbf0805ef46ca334a25f",
+      "root_source": "src/Game/Camera/CameraRailFollow.cpp",
+      "root_source_sha256": "f23b5b87a0c1a9d6cd8efb21eb605c2d9fe4331a7759fbf0805ef46ca334a25f",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorRailFollow.cpp",
+      "source_sha256": "9932479c6c8f8a3e2181564b5f75f4c7f7891f7ba3eeb673dc18bd245b6a0b2e",
+      "root_source": "src/Game/Camera/CamTranslatorRailFollow.cpp",
+      "root_source_sha256": "9932479c6c8f8a3e2181564b5f75f4c7f7891f7ba3eeb673dc18bd245b6a0b2e",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTripodBossJoint.cpp",
+      "source_sha256": "0cf0f4f21f0454618b808ef3cd5af0e3d1bfe771ff9c32c55901cf8f214a42c4",
+      "root_source": "src/Game/Camera/CameraTripodBossJoint.cpp",
+      "root_source_sha256": "0cf0f4f21f0454618b808ef3cd5af0e3d1bfe771ff9c32c55901cf8f214a42c4",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTripodBossJoint.cpp",
+      "source_sha256": "ab8308af7a81fde64f8a0f914b42855ba0755c539063328a72b308acab4b84cf",
+      "root_source": "src/Game/Camera/CamTranslatorTripodBossJoint.cpp",
+      "root_source_sha256": "ab8308af7a81fde64f8a0f914b42855ba0755c539063328a72b308acab4b84cf",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraCharmedTripodBoss.cpp",
+      "source_sha256": "333098590c409793ccbb2d5375fab83a1337d64e8f48508f2de138929868b7d6",
+      "root_source": "src/Game/Camera/CameraCharmedTripodBoss.cpp",
+      "root_source_sha256": "333098590c409793ccbb2d5375fab83a1337d64e8f48508f2de138929868b7d6",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorCharmedTripodBoss.cpp",
+      "source_sha256": "6cde48dd6936a13fc7a74e4753e0257926b14a87bdb30fba34ae75e3b41b20bd",
+      "root_source": "src/Game/Camera/CamTranslatorCharmedTripodBoss.cpp",
+      "root_source_sha256": "6cde48dd6936a13fc7a74e4753e0257926b14a87bdb30fba34ae75e3b41b20bd",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraObjParallel.cpp",
+      "source_sha256": "4496ff867ba2aabffd0b1321138ae1d6ec82eb82a45b1a0d45b8aea1727df910",
+      "root_source": "src/Game/Camera/CameraObjParallel.cpp",
+      "root_source_sha256": "4496ff867ba2aabffd0b1321138ae1d6ec82eb82a45b1a0d45b8aea1727df910",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorObjParallel.cpp",
+      "source_sha256": "6acf4107e112d7f3c7ef6852051034cf2fe9c95d00d093d6cb518ddfb127efde",
+      "root_source": "src/Game/Camera/CamTranslatorObjParallel.cpp",
+      "root_source_sha256": "6acf4107e112d7f3c7ef6852051034cf2fe9c95d00d093d6cb518ddfb127efde",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraCharmedFix.cpp",
+      "source_sha256": "93733f954ce6a6235a1989cb846462d48044c91ec2adef0aff69fe523f18cbca",
+      "root_source": "src/Game/Camera/CameraCharmedFix.cpp",
+      "root_source_sha256": "93733f954ce6a6235a1989cb846462d48044c91ec2adef0aff69fe523f18cbca",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorCharmedFix.cpp",
+      "source_sha256": "bfe9bb87fe0cbf66e1aa987ce564883f9908d984da97a2c0ee219263c1536869",
+      "root_source": "src/Game/Camera/CamTranslatorCharmedFix.cpp",
+      "root_source_sha256": "bfe9bb87fe0cbf66e1aa987ce564883f9908d984da97a2c0ee219263c1536869",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraGround.cpp",
+      "source_sha256": "4bdd3132866e9e29e7fd1345625f3b459ccae17c04be63c047d0adf4f85b879f",
+      "root_source": "src/Game/Camera/CameraGround.cpp",
+      "root_source_sha256": "4bdd3132866e9e29e7fd1345625f3b459ccae17c04be63c047d0adf4f85b879f",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorGround.cpp",
+      "source_sha256": "fa2cea0f5c05166c874d40f09cabc1f5525f64024de2229202ac332323766923",
+      "root_source": "src/Game/Camera/CamTranslatorGround.cpp",
+      "root_source_sha256": "fa2cea0f5c05166c874d40f09cabc1f5525f64024de2229202ac332323766923",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTrundle.cpp",
+      "source_sha256": "9152a528b19780fe52ed8fa9fe3a51ae31a1d3338d125594d1ec9e3e431de100",
+      "root_source": "src/Game/Camera/CameraTrundle.cpp",
+      "root_source_sha256": "9152a528b19780fe52ed8fa9fe3a51ae31a1d3338d125594d1ec9e3e431de100",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTrundle.cpp",
+      "source_sha256": "e55e8743ac959279808d23002f1877b0feb9d853a2cac339f9babae3973de45e",
+      "root_source": "src/Game/Camera/CamTranslatorTrundle.cpp",
+      "root_source_sha256": "e55e8743ac959279808d23002f1877b0feb9d853a2cac339f9babae3973de45e",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraCubePlanet.cpp",
+      "source_sha256": "af9c2598d74c877edbe7eeb2f2f7a6f4e3e1bc0c24838764802d50f2c059b4d0",
+      "root_source": "src/Game/Camera/CameraCubePlanet.cpp",
+      "root_source_sha256": "af9c2598d74c877edbe7eeb2f2f7a6f4e3e1bc0c24838764802d50f2c059b4d0",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorCubePlanet.cpp",
+      "source_sha256": "3a344f7b0d3468e549472683f43714b908b429bd0be290a9cc7d2d8815dec51d",
+      "root_source": "src/Game/Camera/CamTranslatorCubePlanet.cpp",
+      "root_source_sha256": "3a344f7b0d3468e549472683f43714b908b429bd0be290a9cc7d2d8815dec51d",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraInnerCylinder.cpp",
+      "source_sha256": "7d5ac5e9d2b97eff3743f8cb32a65a802c242a5f00a4e827b6073d2ded9dda01",
+      "root_source": "src/Game/Camera/CameraInnerCylinder.cpp",
+      "root_source_sha256": "7d5ac5e9d2b97eff3743f8cb32a65a802c242a5f00a4e827b6073d2ded9dda01",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorInnerCylinder.cpp",
+      "source_sha256": "b42b13e6f0cf972a3d24290998ad3902397417333d1bbd1e80495b885464b3b8",
+      "root_source": "src/Game/Camera/CamTranslatorInnerCylinder.cpp",
+      "root_source_sha256": "b42b13e6f0cf972a3d24290998ad3902397417333d1bbd1e80495b885464b3b8",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraSpiral.cpp",
+      "source_sha256": "11e947d23d337c16c3869f756c2987adb375f13cb5cd2a52b92a64d22dc889e0",
+      "root_source": "src/Game/Camera/CameraSpiral.cpp",
+      "root_source_sha256": "11e947d23d337c16c3869f756c2987adb375f13cb5cd2a52b92a64d22dc889e0",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorSpiral.cpp",
+      "source_sha256": "16be51c6b8545d3e4d5c62ff9f355f06005a3d4599d9f2bd6256445f7325a106",
+      "root_source": "src/Game/Camera/CamTranslatorSpiral.cpp",
+      "root_source_sha256": "16be51c6b8545d3e4d5c62ff9f355f06005a3d4599d9f2bd6256445f7325a106",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTalk.cpp",
+      "source_sha256": "0bd9a6ef63f0e42c2d14daaa5db93864e09b7173a0e641d3ad85cc233c461dd1",
+      "root_source": "src/Game/Camera/CameraTalk.cpp",
+      "root_source_sha256": "0bd9a6ef63f0e42c2d14daaa5db93864e09b7173a0e641d3ad85cc233c461dd1",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTalk.cpp",
+      "source_sha256": "7d5cc3fa46ea0f68b4d56d7267ccb9e2e12e635b987f91d4cad2b34d35baac91",
+      "root_source": "src/Game/Camera/CamTranslatorTalk.cpp",
+      "root_source_sha256": "7d5cc3fa46ea0f68b4d56d7267ccb9e2e12e635b987f91d4cad2b34d35baac91",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraMtxRegParallel.cpp",
+      "source_sha256": "074818835a2de11fc49822850ade7de64acd6fb94f6e3c3843e2a57ed4d77718",
+      "root_source": "src/Game/Camera/CameraMtxRegParallel.cpp",
+      "root_source_sha256": "074818835a2de11fc49822850ade7de64acd6fb94f6e3c3843e2a57ed4d77718",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorMtxRegParallel.cpp",
+      "source_sha256": "b22f31ffe90d9bff239d62fab3598f53ba1dffbc0772c3b16cb6228e60f23255",
+      "root_source": "src/Game/Camera/CamTranslatorMtxRegParallel.cpp",
+      "root_source_sha256": "b22f31ffe90d9bff239d62fab3598f53ba1dffbc0772c3b16cb6228e60f23255",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraCharmedVecReg.cpp",
+      "source_sha256": "aa0fda5c8a928eccebacf27b14d20ec61da6c86341f14401249889356927ec44",
+      "root_source": "src/Game/Camera/CameraCharmedVecReg.cpp",
+      "root_source_sha256": "aa0fda5c8a928eccebacf27b14d20ec61da6c86341f14401249889356927ec44",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorCharmedVecReg.cpp",
+      "source_sha256": "363881d1e2dea661879fb132c9da36355ba7fe5eea1b48bf05c14a34491d283c",
+      "root_source": "src/Game/Camera/CamTranslatorCharmedVecReg.cpp",
+      "root_source_sha256": "363881d1e2dea661879fb132c9da36355ba7fe5eea1b48bf05c14a34491d283c",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraMedianPlanet.cpp",
+      "source_sha256": "c2808d4111e27fa69d5820e60b0729567374fffdb5b04160b09ad84f261b85b3",
+      "root_source": "src/Game/Camera/CameraMedianPlanet.cpp",
+      "root_source_sha256": "c2808d4111e27fa69d5820e60b0729567374fffdb5b04160b09ad84f261b85b3",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorMedianPlanet.cpp",
+      "source_sha256": "b746e8167450111f9c29f03dbc8adaa5992f4f37c102bdf1b813facdc5397c05",
+      "root_source": "src/Game/Camera/CamTranslatorMedianPlanet.cpp",
+      "root_source_sha256": "b746e8167450111f9c29f03dbc8adaa5992f4f37c102bdf1b813facdc5397c05",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraTwistedPassage.cpp",
+      "source_sha256": "707bf3b235902d917d4ca940f0791c4af10af0a6b674a208f28bd9392dc66298",
+      "root_source": "src/Game/Camera/CameraTwistedPassage.cpp",
+      "root_source_sha256": "707bf3b235902d917d4ca940f0791c4af10af0a6b674a208f28bd9392dc66298",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorTwistedPassage.cpp",
+      "source_sha256": "0cacdfd9ee62df56ea3bca946fb8c3a87016ef106124a23c7c29cc163732558a",
+      "root_source": "src/Game/Camera/CamTranslatorTwistedPassage.cpp",
+      "root_source_sha256": "0cacdfd9ee62df56ea3bca946fb8c3a87016ef106124a23c7c29cc163732558a",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraMedianTower.cpp",
+      "source_sha256": "4a055656a5f2f94a82ff49b062f82ae07f9df28a684ab5d4219cf2cbc6ccf5b6",
+      "root_source": "src/Game/Camera/CameraMedianTower.cpp",
+      "root_source_sha256": "4a055656a5f2f94a82ff49b062f82ae07f9df28a684ab5d4219cf2cbc6ccf5b6",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorMedianTower.cpp",
+      "source_sha256": "50e0e17cb789733f95da987139108f9a55dbbede4227a6b1d119b258e8c2a649",
+      "root_source": "src/Game/Camera/CamTranslatorMedianTower.cpp",
+      "root_source_sha256": "50e0e17cb789733f95da987139108f9a55dbbede4227a6b1d119b258e8c2a649",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraCharmedVecRegTower.cpp",
+      "source_sha256": "77e553e441b857c419571f959245314adeb87b49c73f0b6d9daf25402fe415da",
+      "root_source": "src/Game/Camera/CameraCharmedVecRegTower.cpp",
+      "root_source_sha256": "77e553e441b857c419571f959245314adeb87b49c73f0b6d9daf25402fe415da",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorCharmedVecRegTower.cpp",
+      "source_sha256": "7a8d053127def67311573c94cd2263d057578b657f0e042004b32642360ad853",
+      "root_source": "src/Game/Camera/CamTranslatorCharmedVecRegTower.cpp",
+      "root_source_sha256": "7a8d053127def67311573c94cd2263d057578b657f0e042004b32642360ad853",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraFrontAndBack.cpp",
+      "source_sha256": "bca726a022d22476a139d2cb3a552be248fccdd3516c308b13e406821bbe80df",
+      "root_source": "src/Game/Camera/CameraFrontAndBack.cpp",
+      "root_source_sha256": "bca726a022d22476a139d2cb3a552be248fccdd3516c308b13e406821bbe80df",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFrontAndBack.cpp",
+      "source_sha256": "4dba9fba77eb180cb7043b0ab25f974aa79892dfb9e71ca989016f00b950d269",
+      "root_source": "src/Game/Camera/CamTranslatorFrontAndBack.cpp",
+      "root_source_sha256": "4dba9fba77eb180cb7043b0ab25f974aa79892dfb9e71ca989016f00b950d269",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraRaceFollow.cpp",
+      "source_sha256": "38b3f43aae9bf5df75a2e61b6aec5bae3991c3f8cdc15d000a52096def131b00",
+      "root_source": "src/Game/Camera/CameraRaceFollow.cpp",
+      "root_source_sha256": "38b3f43aae9bf5df75a2e61b6aec5bae3991c3f8cdc15d000a52096def131b00",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorRaceFollow.cpp",
+      "source_sha256": "da8c29c437dee1dcf9b29a80291e1a1f00833095ae12679f9e1daa8f3a3ca765",
+      "root_source": "src/Game/Camera/CamTranslatorRaceFollow.cpp",
+      "root_source_sha256": "da8c29c437dee1dcf9b29a80291e1a1f00833095ae12679f9e1daa8f3a3ca765",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraSlide.cpp",
+      "source_sha256": "fcf0f42cdd6dce172637ad66301607c0cb9a91fcde2a5c2a7557e5974ca5018d",
+      "root_source": "src/Game/Camera/CameraSlide.cpp",
+      "root_source_sha256": "fcf0f42cdd6dce172637ad66301607c0cb9a91fcde2a5c2a7557e5974ca5018d",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorSlide.cpp",
+      "source_sha256": "13b55694e97470d932abc9fd9428e81cb3189c686cdcc359983b1c7516887485",
+      "root_source": "src/Game/Camera/CamTranslatorSlide.cpp",
+      "root_source_sha256": "13b55694e97470d932abc9fd9428e81cb3189c686cdcc359983b1c7516887485",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraFooFighter.cpp",
+      "source_sha256": "f4ae24e29ebf465b346c4bbce6c9ea9559bd5ca8c5b1911d02943789a5f36133",
+      "root_source": "src/Game/Camera/CameraFooFighter.cpp",
+      "root_source_sha256": "f4ae24e29ebf465b346c4bbce6c9ea9559bd5ca8c5b1911d02943789a5f36133",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFooFighter.cpp",
+      "source_sha256": "d1df727427b8b9c1b75cfdd7e4768ecc92d7e4a78c5a970da6eb89c9391bda61",
+      "root_source": "src/Game/Camera/CamTranslatorFooFighter.cpp",
+      "root_source_sha256": "d1df727427b8b9c1b75cfdd7e4768ecc92d7e4a78c5a970da6eb89c9391bda61",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraFooFighterPlanet.cpp",
+      "source_sha256": "3d58de6ebbb986df82378add37cc863ceca707a06bc50c34a972872ff52596de",
+      "root_source": "src/Game/Camera/CameraFooFighterPlanet.cpp",
+      "root_source_sha256": "3d58de6ebbb986df82378add37cc863ceca707a06bc50c34a972872ff52596de",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFooFighterPlanet.cpp",
+      "source_sha256": "44052575e086b3e8adc928c5cce43b3dd83689e7eade0531b37ae69360563368",
+      "root_source": "src/Game/Camera/CamTranslatorFooFighterPlanet.cpp",
+      "root_source_sha256": "44052575e086b3e8adc928c5cce43b3dd83689e7eade0531b37ae69360563368",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraBlackHole.cpp",
+      "source_sha256": "6c77cecbd8f87621b6fd3bd517fdc693512ba0cc9ce2dad30a528f5732d1a020",
+      "root_source": "src/Game/Camera/CameraBlackHole.cpp",
+      "root_source_sha256": "6c77cecbd8f87621b6fd3bd517fdc693512ba0cc9ce2dad30a528f5732d1a020",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorBlackHole.cpp",
+      "source_sha256": "3cc9c0809d143557cf8561709bc060d93bd0e928e19553f51baee3a6d3584590",
+      "root_source": "src/Game/Camera/CamTranslatorBlackHole.cpp",
+      "root_source_sha256": "3cc9c0809d143557cf8561709bc060d93bd0e928e19553f51baee3a6d3584590",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraAnim.cpp",
+      "source_sha256": "5f9f737b174e583cf571aa1878f972550855788498c8347238a3f2b042a0c40a",
+      "root_source": "src/Game/Camera/CameraAnim.cpp",
+      "root_source_sha256": "5f9f737b174e583cf571aa1878f972550855788498c8347238a3f2b042a0c40a",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorAnim.cpp",
+      "source_sha256": "e7f2c34b1681f5b1ea81dad2ad6b209907ff30a8dc9887241ebdeb47723d8a14",
+      "root_source": "src/Game/Camera/CamTranslatorAnim.cpp",
+      "root_source_sha256": "e7f2c34b1681f5b1ea81dad2ad6b209907ff30a8dc9887241ebdeb47723d8a14",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraDPD.cpp",
+      "source_sha256": "6edb8b592a4119bceeb3fc8e4140da54de9c91c2260a62ebeee79405de0d04b9",
+      "root_source": "src/Game/Camera/CameraDPD.cpp",
+      "root_source_sha256": "6edb8b592a4119bceeb3fc8e4140da54de9c91c2260a62ebeee79405de0d04b9",
+      "compiled": false,
+      "errors": [
+        "/Users/frityet/Projects/petari/src/Game/Camera/CameraDPD.cpp:48:27: error: no member named 'getStarPointerWorldPosUsingDepth' in namespace 'MR'"
+      ]
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorDPD.cpp",
+      "source_sha256": "c8b7a36d000c9d9e1319d9f7804a59a812ea8ba136b8a2ecb1d2e00564116455",
+      "root_source": "src/Game/Camera/CamTranslatorDPD.cpp",
+      "root_source_sha256": "c8b7a36d000c9d9e1319d9f7804a59a812ea8ba136b8a2ecb1d2e00564116455",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraWaterFollow.cpp",
+      "source_sha256": "b7136463d299938156612f553470c3e43da5ac3eeb5d92c8592ae77b31d3439c",
+      "root_source": "src/Game/Camera/CameraWaterFollow.cpp",
+      "root_source_sha256": "b7136463d299938156612f553470c3e43da5ac3eeb5d92c8592ae77b31d3439c",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorWaterFollow.cpp",
+      "source_sha256": "15c6030bd22001d8ea1f1cc23b1909df13145acf21c044e6f42588d1ac686ff9",
+      "root_source": "src/Game/Camera/CamTranslatorWaterFollow.cpp",
+      "root_source_sha256": "15c6030bd22001d8ea1f1cc23b1909df13145acf21c044e6f42588d1ac686ff9",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraWaterPlanet.cpp",
+      "source_sha256": "4f953b55d49d09e1dfd383959275815e1207808e4b2a47039df22c514341abe7",
+      "root_source": "src/Game/Camera/CameraWaterPlanet.cpp",
+      "root_source_sha256": "4f953b55d49d09e1dfd383959275815e1207808e4b2a47039df22c514341abe7",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorWaterPlanet.cpp",
+      "source_sha256": "a8bdc2c0a6ba69291cc008253cba67d41f4ed3f23fc6f5d1c6e8c38bc417ecf7",
+      "root_source": "src/Game/Camera/CamTranslatorWaterPlanet.cpp",
+      "root_source_sha256": "a8bdc2c0a6ba69291cc008253cba67d41f4ed3f23fc6f5d1c6e8c38bc417ecf7",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraWaterPlanetBoss.cpp",
+      "source_sha256": "b8f57bbfb12ad26486916f96037ecf7c6bde94507cf5fd2c0053e7c64c93ed82",
+      "root_source": "src/Game/Camera/CameraWaterPlanetBoss.cpp",
+      "root_source_sha256": "b8f57bbfb12ad26486916f96037ecf7c6bde94507cf5fd2c0053e7c64c93ed82",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorWaterPlanetBoss.cpp",
+      "source_sha256": "75e9351bfb476d2e4f9e40ea35dd3770176748586186322f268b8e7906c6475d",
+      "root_source": "src/Game/Camera/CamTranslatorWaterPlanetBoss.cpp",
+      "root_source_sha256": "75e9351bfb476d2e4f9e40ea35dd3770176748586186322f268b8e7906c6475d",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraRailWatch.cpp",
+      "source_sha256": "1894d1b83455c91f0f4de9c43b765493b3cb006f8e339fdf07ba4508eff8cbb2",
+      "root_source": "src/Game/Camera/CameraRailWatch.cpp",
+      "root_source_sha256": "1894d1b83455c91f0f4de9c43b765493b3cb006f8e339fdf07ba4508eff8cbb2",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorRailWatch.cpp",
+      "source_sha256": "b7e067f790e393125a650a2b7c7194f1aec0209167bb20897e0b0bc36a7e7ae3",
+      "root_source": "src/Game/Camera/CamTranslatorRailWatch.cpp",
+      "root_source_sha256": "b7e067f790e393125a650a2b7c7194f1aec0209167bb20897e0b0bc36a7e7ae3",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraSubjective.cpp",
+      "source_sha256": "e13cb4786027cf919a26d5f65184e10a3ff0b9c8c5cd9654d40a5cfd7d357c0b",
+      "root_source": "src/Game/Camera/CameraSubjective.cpp",
+      "root_source_sha256": "e13cb4786027cf919a26d5f65184e10a3ff0b9c8c5cd9654d40a5cfd7d357c0b",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraHolder.cpp",
+      "source_sha256": "71b4b6f5334a6eeb2af995607ec604297cf47588f394eaf26d17c82746662369",
+      "root_source": "src/Game/Camera/CameraHolder.cpp",
+      "root_source_sha256": "71b4b6f5334a6eeb2af995607ec604297cf47588f394eaf26d17c82746662369",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraParamChunkHolder.cpp",
+      "source_sha256": "0aec2ec148122a883db1ae5951ad18b0d9e3cdb6a7bb2ecd2394ba0e93bf9e62",
+      "root_source": "src/Game/Camera/CameraParamChunkHolder.cpp",
+      "root_source_sha256": "0aec2ec148122a883db1ae5951ad18b0d9e3cdb6a7bb2ecd2394ba0e93bf9e62",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraParamChunk.cpp",
+      "source_sha256": "fbf2e8621ec88d55671abd16d70274747e808f4b56b7db983bb93c2d92418498",
+      "root_source": "src/Game/Camera/CameraParamChunk.cpp",
+      "root_source_sha256": "fbf2e8621ec88d55671abd16d70274747e808f4b56b7db983bb93c2d92418498",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraParamChunkID.cpp",
+      "source_sha256": "a495266b17e631030b353bc2566430626eb6d3f9d84274c9a5ca8800e2dd4048",
+      "root_source": "src/Game/Camera/CameraParamChunkID.cpp",
+      "root_source_sha256": "a495266b17e631030b353bc2566430626eb6d3f9d84274c9a5ca8800e2dd4048",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraParamString.cpp",
+      "source_sha256": "19f0b136218f9a40941dca4ec6e9b17afa54951d63a986fcb6565142e43b0dc7",
+      "root_source": "src/Game/Camera/CameraParamString.cpp",
+      "root_source_sha256": "19f0b136218f9a40941dca4ec6e9b17afa54951d63a986fcb6565142e43b0dc7",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "pc-port/notes/original-camera-registration-20260903/staged/Game/Camera/DotCamParams.cpp",
+      "source_sha256": "0873826cc0766ecc0f7f3432b2f68b485e7fe55e90faa07b0889b4790ffe649d",
+      "root_source": "src/Game/Camera/DotCamParams.cpp",
+      "root_source_sha256": "83f2c91ca18d5f2c5f328acc7b28bd1733a34990c6f410eb316419b3524d8ea2",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "pc-port/notes/original-camera-registration-20260903/staged/Game/Camera/GameCameraCreator.cpp",
+      "source_sha256": "0202b987b116b32560267829875a8150da5164ae3dd36168842ee6e24ab34b00",
+      "root_source": "src/Game/Camera/GameCameraCreator.cpp",
+      "root_source_sha256": "412f4af9f403ac3313aaf13815537133cb9a6085da4249fe1e46e23858ff6ce6",
+      "compiled": true,
+      "errors": []
+    },
+    {
+      "source": "src/Game/Camera/CameraPolygonCodeUtil.cpp",
+      "source_sha256": "145d6055fb4eee9084f056b4261b432f017eeb1b9564ad998fab95881f15d30f",
+      "root_source": "src/Game/Camera/CameraPolygonCodeUtil.cpp",
+      "root_source_sha256": "145d6055fb4eee9084f056b4261b432f017eeb1b9564ad998fab95881f15d30f",
+      "compiled": true,
+      "errors": []
+    }
+  ]
+}

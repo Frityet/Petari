@@ -125,7 +125,9 @@ namespace {
         require(early_load_failed,
                 "Mario model loading must fail while RuntimeContext is absent");
 
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         auto contextless_load_failed = false;
         try {
             retry_model.requireLoaded();

@@ -1,0 +1,45 @@
+{
+  "scope": "Four finite axis magnitude witnesses; original DOL instruction/constant identity plus independent hardware-estimate table and rounded arithmetic. No universal numerical emulation claim.",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "address": "0x804b90d8",
+  "size": 68,
+  "retail_bytes": "e0030000c082250010000032c0230008ec4420281021007a10210014fc0110004d820020fc000834c0622504ec400032ec000132ec42187cec020032ec2100324e800020",
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang",
+    "-std=c11",
+    "-O2",
+    "-dynamiclib",
+    "-Ipc-port/aurora/include",
+    "pc-port/aurora/lib/dolphin/mtx/vec.c",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-only-camera-20260903/math-thresholds/libmagnitude.dylib"
+  ],
+  "witnesses": [
+    {
+      "input_x_bits": "0x3f800000",
+      "retail_sequence_bits": "0x3f7fffff",
+      "actual_native_bits": "0x3f7fffff"
+    },
+    {
+      "input_x_bits": "0x3f800001",
+      "retail_sequence_bits": "0x3f800000",
+      "actual_native_bits": "0x3f800000"
+    },
+    {
+      "input_x_bits": "0x3f800008",
+      "retail_sequence_bits": "0x3f800007",
+      "actual_native_bits": "0x3f800007"
+    },
+    {
+      "input_x_bits": "0x40000000",
+      "retail_sequence_bits": "0x3fffffff",
+      "actual_native_bits": "0x3fffffff"
+    }
+  ],
+  "source_sha256": {
+    "pc-port/dolphin/Source/Core/Common/FloatUtils.cpp": "e7bcd6a48701a361a84a9c0dfbf2ddb0c5c5219a1370838c05f99a5e8dff9dbb",
+    "pc-port/aurora/lib/dolphin/mtx/vec.c": "82423ddf5171f580f23d81f5af3a304c2f6744034fce2208d381c9a802f46d0c",
+    "pc-port/aurora/include/dolphin/ppc_math.h": "9b50a457f896ff4d86146d8faf63659aa5e83e9a42f2337ea60b20dd06e0fa92",
+    "pc-port/tests/OnlyCameraTests.cpp": "9058b0ff6a095969dd6af97f6fd69eec948f245f4f6ca091e09676f432a451a6"
+  }
+}

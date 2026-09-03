@@ -647,11 +647,15 @@ namespace smgpc::resource {
                 for (std::uint32_t i = 0; i < file.mBlockNum; ++i) {
                     const auto type = r.u32(at), size = r.u32(at + 4);
                     require_range(size, 0, 8);
-                    require_range(r.bytes.size(), at, size);
+                    // Retail uses mSize to locate the next block, while every
+                    // table offset is relative to this header in the retained
+                    // file. The final next pointer is never dereferenced.
+                    if (i + 1 < file.mBlockNum)
+                        require_range(r.bytes.size(), at, size);
                     if (is_animation_block(type) && type != expected)
                         throw std::runtime_error("J3D animation block does not match its declared animation family");
                     found |= type == expected;
-                    blocks.push_back(decode_block({r.bytes.subspan(at, size)}));
+                    blocks.push_back(decode_block({r.bytes.subspan(at)}));
                     at += size;
                 }
                 if (!found)

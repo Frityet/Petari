@@ -1,0 +1,182 @@
+[
+  {
+    "target": "smg-pc-original-resource-holder-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-original-resource-holder-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "2cd59a3577943b533ea33f616dbe161646c12a11c76f700c2aa5c560a47cabcf",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-showcase",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-showcase"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "5423e9d78b18b699a72b92ee7da61ac16a261b870beb4075786166a88c4f2f94"
+  },
+  {
+    "target": "smg-pc-original-camera-vector-math-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-original-camera-vector-math-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "854ed23d00d22d42ec251e4615a04fc6cc80adb5e1b8fbb0bd027cb2988d1a45",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-game-math-rotation-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-game-math-rotation-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "790fa8d9ff9db8a9e854adc6fd6cc3a32f3e6c1c4ce370f94c59e02f0d0ded4f",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-original-camera-runtime-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "684e3ea6d5d175bea221e8bc539f736d8a7abd7fafe710d8de52c8deb1696dbe",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-only-camera-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-only-camera-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "9c074affe5c80bee8016dc14cde9339314ec38ae17339eeb5c8f9581bc866ba5",
+    "run_returncode": 0,
+    "skips": [],
+    "fixture_sha256": "9058b0ff6a095969dd6af97f6fd69eec948f245f4f6ca091e09676f432a451a6",
+    "source_review": "pc-port/notes/original-only-camera-20260903/vector-threshold-tests.log"
+  },
+  {
+    "target": "smg-pc-camera-view-interpolator-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-camera-view-interpolator-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "9fafaf8c668c6b61044ef8476ecd3bd8045d44974892f82e497dcea88dca85a5",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-camera-view-service-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-camera-view-service-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "7a22b326735b36c6cad40ebeedf1d4cd5517a71a140b2adbf924999dd1c0f4ca",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-stage-start-camera-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-stage-start-camera-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "b966d016eb411f80a8302af8e4f17775e7b8d5d7053ca0cb493360702772c8af",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-actor-event-camera-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-actor-event-camera-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "87b98289ba395993b511bc6a6d20aad8a108125887ad9ba1b99ba019118638c0",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-original-xanime-core-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "4f75af5759a2a7297def52bedd5648c717d132c659f52367eaef9ad27e272ede",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-original-xanime-player-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-original-xanime-player-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "0dd72d4b4ad4d25334ec683b2965460f87ba1ea3b3d45a2786831d8d5084aee6",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-traversal-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-original-j3d-joint-traversal-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "c676d0c40d395a579d68c261fbb3949d61eb70109171ebf2a57b5ca87fb7e37e",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-fixed-step-clock-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-fixed-step-clock-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "aa6b6eb1519ccbc5bbb64e2cd4f23307a40811c229af526ae9bb736f93cb056b",
+    "run_returncode": 0,
+    "skips": []
+  },
+  {
+    "target": "smg-pc-original-j3d-model-resource-tests",
+    "build": [
+      "xmake",
+      "build",
+      "smg-pc-original-j3d-model-resource-tests"
+    ],
+    "build_returncode": 0,
+    "binary_sha256": "2ced3acd470a5229ecceeffcf3e1649892c1d93ac99856d72c3d567b95e7f133",
+    "run_returncode": 0,
+    "skips": []
+  }
+]

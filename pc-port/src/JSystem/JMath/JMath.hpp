@@ -10,6 +10,7 @@
 
 void JMAEulerToQuat(s16, s16, s16, Quaternion*);
 void JMAQuatLerp(const Quaternion*, const Quaternion*, f32, Quaternion*);
+void JMAVECScaleAdd(const Vec*, const Vec*, Vec*, f32);
 
 void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
 

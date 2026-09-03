@@ -1,0 +1,123 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "native_primitive_calls": 35043,
+  "all_output_bits_equal_current_retail": true,
+  "original_tvec_dot_operation_graph_equal_sdk_dot": true,
+  "test_groups_per_mode": 5,
+  "native_modes": [
+    "optimized",
+    "ASan+UBSan"
+  ],
+  "scope": "5005 moderate finite input pairs plus eight partial-overlap cases, including fused cancellation and signed zero. Regression separately verifies signed subnormal quantized stores. Does not claim complete FPSCR, signaling-NaN propagation, or subnormal arithmetic emulation.",
+  "commands": [
+    [
+      "/opt/homebrew/opt/llvm/bin/clang",
+      "-std=c11",
+      "-O2",
+      "-fPIC",
+      "-DTARGET_PC",
+      "-DMTX_USE_PS",
+      "-Ipc-port/aurora/include",
+      "-Ipc-port/src",
+      "-c",
+      "pc-port/aurora/lib/dolphin/mtx/vec.c",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vec.o"
+    ],
+    [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++23",
+      "-O2",
+      "-fPIC",
+      "-DTARGET_PC",
+      "-DMTX_USE_PS",
+      "-Ipc-port/aurora/include",
+      "-Ipc-port/src",
+      "-dynamiclib",
+      "pc-port/src/compat/JMathVectorCompat.cpp",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-camera-registration-20260903/math-harness.cpp",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vec.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/libvectors.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/llvm/bin/clang",
+      "-std=c11",
+      "-O2",
+      "-DTARGET_PC",
+      "-DMTX_USE_PS",
+      "-Ipc-port/aurora/include",
+      "-Ipc-port/src",
+      "-c",
+      "pc-port/aurora/lib/dolphin/mtx/vec.c",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vec-optimized.o"
+    ],
+    [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++23",
+      "-O2",
+      "-DTARGET_PC",
+      "-DMTX_USE_PS",
+      "-Ipc-port/aurora/include",
+      "-Ipc-port/src",
+      "pc-port/tests/OriginalCameraVectorMathTests.cpp",
+      "pc-port/src/compat/JMathVectorCompat.cpp",
+      "pc-port/src/JSystem/JMath/JMATrigonometricTable.cpp",
+      "pc-port/src/render/JMathTrig.cpp",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vec-optimized.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vector-tests-optimized"
+    ],
+    [
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vector-tests-optimized"
+    ],
+    [
+      "/opt/homebrew/opt/llvm/bin/clang",
+      "-std=c11",
+      "-O2",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-DTARGET_PC",
+      "-DMTX_USE_PS",
+      "-Ipc-port/aurora/include",
+      "-Ipc-port/src",
+      "-c",
+      "pc-port/aurora/lib/dolphin/mtx/vec.c",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vec-asan.o"
+    ],
+    [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++23",
+      "-O2",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-DTARGET_PC",
+      "-DMTX_USE_PS",
+      "-Ipc-port/aurora/include",
+      "-Ipc-port/src",
+      "pc-port/tests/OriginalCameraVectorMathTests.cpp",
+      "pc-port/src/compat/JMathVectorCompat.cpp",
+      "pc-port/src/JSystem/JMath/JMATrigonometricTable.cpp",
+      "pc-port/src/render/JMathTrig.cpp",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vec-asan.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vector-tests-asan"
+    ],
+    [
+      "/Users/frityet/Projects/petari/build/original-camera-registration-20260903/math/vector-tests-asan"
+    ]
+  ],
+  "source_sha256": {
+    "pc-port/tests/OriginalCameraVectorMathTests.cpp": "af76eb8e633b66831c36ea611ae8ea4b4ed6c3f4ceac5a2197ac37f519d719b2",
+    "pc-port/src/compat/JMathVectorCompat.cpp": "bb147f9eba1c394e3728c354eb5690c147b530176589509526b18bf028c4bc28",
+    "pc-port/src/JSystem/JMath/JMATrigonometricTable.cpp": "394dce2fb241858ae254a1e5885dc492cf7e3eda162fd36d866538721af75019",
+    "pc-port/src/render/JMathTrig.cpp": "7e0f43fad64a77ff20c0da1b23150e05ab9747998ac54e51b5db8300ca075a1e",
+    "pc-port/aurora/lib/dolphin/mtx/vec.c": "82423ddf5171f580f23d81f5af3a304c2f6744034fce2208d381c9a802f46d0c",
+    "pc-port/aurora/include/dolphin/mtx.h": "84b67cb5ed3d8775bc69c7036ab6088f9b3d5364e6a60480845e958f5d381dca",
+    "pc-port/aurora/include/dolphin/ppc_math.h": "9b50a457f896ff4d86146d8faf63659aa5e83e9a42f2337ea60b20dd06e0fa92",
+    "pc-port/src/JSystem/JMath/JMath.hpp": "fcedf574a07a3d5d8d213455a007ab6fc1ffe61e5aef981a2313d4bf43f05f49",
+    "pc-port/src/JSystem/JGeometry/TVec.hpp": "0f7a34ca007dd59ff422b6daed68816429e66d4f3f32ae895575c4e1b26a36a6"
+  }
+}

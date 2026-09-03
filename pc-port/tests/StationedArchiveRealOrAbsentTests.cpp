@@ -1,5 +1,7 @@
 #include "Game/System/StationedFileInfo.hpp"
 #include "compat/ResourceHolderCompat.hpp"
+#include "resource/GameResourceRuntime.hpp"
+#include <aurora/aurora.h>
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -14,6 +16,8 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+
+namespace aurora { extern AuroraConfig g_config; }
 
 namespace {
 
@@ -91,7 +95,9 @@ namespace {
         DVDInit();
 
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
-        auto service = smgpc::compat::ResourceHolderService{dvd};
+        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto service = smgpc::compat::ResourceHolderService{dvd, resource_runtime.create_cohort(), resource_runtime.mem1_heap()};
         const auto resources = service.create_and_add_stationed(2);
         require(resources.size() == 6U, "stationed load type 2 must resolve all six retail Mario archives");
 
@@ -105,10 +111,32 @@ namespace {
         };
         for (auto index = std::size_t{}; index < resources.size(); ++index) {
             require(resources[index] != nullptr, "a real stationed archive must produce a ResourceHolder");
-            require(resources[index]->resolved_path().filename() == expected_names[index],
+            require(service.backing(*resources[index]).resolved_path().filename() == expected_names[index],
                     "stationed archives must retain retail table order and exact resolved identity");
-            require(!resources[index]->archive().entries().empty(),
+            require(!service.backing(*resources[index]).archive().entries().empty(),
                     "each real Mario stationed archive must contain a parsed RARC file table");
+            auto& holder = *resources[index];
+            require(holder.mArchive != nullptr && holder.mHeap == &service.allocation_domain()->heap() &&
+                        JKRHeap::findFromRoot(&holder) == holder.mHeap,
+                    "stationed resources must construct the actual Game holder in their shared archive cohort");
+            std::size_t count = 0, total_size = 0;
+            for (const auto* table : {holder.mModelResTable, holder.mMotionResTable, holder.mBtkResTable,
+                                      holder.mBpkResTable, holder.mBtpResTable, holder.mBlkResTable,
+                                      holder.mBrkResTable, holder.mBasResTable, holder.mBmtResTable,
+                                      holder.mBvaResTable, holder.mBanmtResTable, holder.mFileInfoTable}) {
+                count += table->mCount;
+                for (u32 row = 0; row < table->mCount; ++row) {
+                    const auto* info = table->getFileInfo(row);
+                    require(info->_8 == holder.mArchive->getResource(static_cast<u16>(info->_C)) &&
+                                info->_4 == holder.mArchive->getResSize(info->_8),
+                            "every original table row retains its authored file ID, raw pointer and size");
+                    total_size += info->_4;
+                }
+            }
+            require(count == service.backing(holder).archive().entries().size() && total_size == holder.mTotalResourceSize,
+                    "original resource tables cover every authored file exactly once");
+            require(holder.mMotionResTable->mCount == 0 || holder.mBckCtrl != nullptr,
+                    "motion archives construct the actual BckCtrl with retained control-table names");
         }
 
         const auto repeated = service.create_and_add_stationed(2);
@@ -119,6 +147,9 @@ namespace {
         }
         require(service.create_and_add_stationed(0x7fffffff).empty(),
                 "an unknown stationed load type must remain genuinely absent");
+        std::cout << "stationed cohort used=" << service.allocation_domain()->heap().mSize -
+                         service.allocation_domain()->heap().getTotalFreeSize()
+                  << " MEM1 available=" << resource_runtime.mem1_heap()->available_bytes() << '\n';
     }
 
 }  // namespace

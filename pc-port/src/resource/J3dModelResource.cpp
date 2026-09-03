@@ -4,6 +4,7 @@
 #include "J3dMaterialTableData.hpp"
 #include "J3dTextureData.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/J3dCommandScope.hpp"
 #include "compat/J3DModelLoaderCompat.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -75,27 +76,6 @@ namespace smgpc::resource {
                 }
                 return result;
             }
-        };
-
-        // Native construction may run under an existing caller's GD/OS scope.
-        // Original SDK routines retain one-time interrupt snapshots. Pin their
-        // cooperative CPU ownership for the complete operation and restore this
-        // caller's state after those unchanged routines finish.
-        class CommandScope final {
-            BOOL interrupts;
-            GDLObj* previous;
-        public:
-            CommandScope() : interrupts(OSDisableInterrupts()) {
-                OSDisableScheduler();
-                OSRestoreInterrupts(interrupts);
-                previous = __GDCurrentDL;
-            }
-            ~CommandScope() {
-                GDSetCurrent(previous);
-                OSRestoreInterrupts(interrupts);
-                OSEnableScheduler();
-            }
-            CommandScope(const CommandScope&) = delete;
         };
 
         // Model the original pointer links before entering its recursive walk.
@@ -297,7 +277,7 @@ namespace smgpc::resource {
             ~LoadedData() {
                 compat::JkrHostAllocationScope host;
                 compat::JkrAllocationScope original(domain);
-                CommandScope commands;
+                compat::J3dCommandScope commands;
                 const auto* texture = textures ? &textures->texture() : empty_texture.get();
                 if (texture && j3dSys.getTexture() == texture) j3dSys.setTexture(nullptr);
                 model.reset();
@@ -393,7 +373,7 @@ namespace smgpc::resource {
             validate_shape_matrices(model);
             {
                 compat::JkrAllocationScope original(domain);
-                CommandScope commands;
+                compat::J3dCommandScope commands;
                 if (binary) validate_display_lists(model.mMaterialTable, *result->materials);
                 compat::finalize_j3d_model(model, result->geometry->shape_block(), binary);
             }

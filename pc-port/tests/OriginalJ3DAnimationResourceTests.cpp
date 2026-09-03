@@ -409,6 +409,44 @@ namespace {
         a->getVisibility(0, &out);
         require(out == 41, "original block traversal skips unknown blocks and last matching block wins");
     }
+    void block_navigation_test() {
+        const std::array cases{
+            std::pair{"bck1", transform(true)}, std::pair{"bca1", transform(false)},
+            std::pair{"bpk1", color(true)}, std::pair{"bpa1", color(false)},
+            std::pair{"btk1", texture_srt()}, std::pair{"brk1", tev()},
+            std::pair{"btp1", pattern()}, std::pair{"bva1", visibility()},
+            std::pair{"blk1", cluster(true)}, std::pair{"bla1", cluster(false)},
+            std::pair{"bxk1", color(true, true)}, std::pair{"bxa1", color(false, true)},
+        };
+        for (const auto& [type, original_block] : cases) {
+            for (const auto declared_size : {8U, 0xfffffff0U}) {
+                auto block = original_block;
+                u32(block, 4, declared_size);
+                auto raw = file(type, {block});
+                J3dAnimationResource resource(raw);
+                auto* animation = resource.load();
+                require(animation != nullptr && animation->mFrameMax == 7,
+                        "all original families use final size only for an unused next pointer");
+                if (auto* transform = dynamic_cast<J3DAnmTransform*>(animation)) {
+                    J3DTransformInfo value{};
+                    transform->getTransform(0, &value);
+                    near(value.mScale.x, std::string_view(type) == "bck1" ? 2 : 1,
+                         "final cursor does not truncate transform value tables");
+                }
+            }
+        }
+        auto raw = file("bva1", {visibility()});
+        u32(raw, 0x24, 0xfffffff0U);
+        u32(raw, 12, 2);
+        J3dAnimationResource next_outside(raw);
+        rejects([&] { (void)next_outside.load(); }, "a required next block must remain inside the file");
+
+        auto truncated = file("bva1", {visibility()});
+        truncated.pop_back();
+        u32(truncated, 8, truncated.size());
+        J3dAnimationResource missing_value(truncated);
+        rejects([&] { (void)missing_value.load(); }, "a referenced last sample must exist regardless of block size");
+    }
     void ownership_test() {
         auto raw = file("btp1", {pattern()});
         const void *stale = nullptr;
@@ -547,7 +585,7 @@ namespace {
     }
 }  // namespace
 int main(int argc, char **argv) {
-    const std::array tests{std::pair{"BCK and BCA original dispatch", transform_test}, std::pair{"BPK and BPA material color", color_test}, std::pair{"material keyed interpolation", key_interpolation_test}, std::pair{"BTK pre and post texture data", texture_test}, std::pair{"BRK signed and konst registers", tev_test}, std::pair{"BTP and BVA frame rules", pattern_visibility_test}, std::pair{"BLK and BLA cluster weights", cluster_test}, std::pair{"BXK and BXA index relocation", vertex_test}, std::pair{"original block order", order_test}, std::pair{"retained ownership and repeat load", ownership_test}, std::pair{"explicit archive alias lifetime", registration_test}, std::pair{"bounded malformed resources", malformed_test}, std::pair{"concurrent native load scopes", concurrent_test}, std::pair{"actual JKR allocation domain", heap_domain_test}};
+    const std::array tests{std::pair{"BCK and BCA original dispatch", transform_test}, std::pair{"BPK and BPA material color", color_test}, std::pair{"material keyed interpolation", key_interpolation_test}, std::pair{"BTK pre and post texture data", texture_test}, std::pair{"BRK signed and konst registers", tev_test}, std::pair{"BTP and BVA frame rules", pattern_visibility_test}, std::pair{"BLK and BLA cluster weights", cluster_test}, std::pair{"BXK and BXA index relocation", vertex_test}, std::pair{"original block order", order_test}, std::pair{"original block navigation and bounded reads", block_navigation_test}, std::pair{"retained ownership and repeat load", ownership_test}, std::pair{"explicit archive alias lifetime", registration_test}, std::pair{"bounded malformed resources", malformed_test}, std::pair{"concurrent native load scopes", concurrent_test}, std::pair{"actual JKR allocation domain", heap_domain_test}};
     for (const auto &[label, test] : tests) {
         try {
             test();

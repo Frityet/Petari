@@ -16,6 +16,7 @@
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "compat/ResourceHolderCompat.hpp"
+#include "resource/GameResourceRuntime.hpp"
 #include "render/J3dModelRenderer.hpp"
 #include "runtime/JAudioPlaybackService.hpp"
 #include "runtime/RflService.hpp"
@@ -126,10 +127,12 @@ namespace smgpc::runtime {
 #endif
 
         RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
+                       resource::GameResourceRuntime &resources,
                        RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
         // Allows a host to supply a fully concrete playback service (for
         // example an explicit SDL test sink backed by retail fixtures).
         RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
+                       resource::GameResourceRuntime &resources,
                        std::unique_ptr<JAudioPlaybackService> audio_playback,
                        RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
         ~RuntimeContext();

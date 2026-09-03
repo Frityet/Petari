@@ -771,7 +771,8 @@ int main() {
         .height = 456,
         .title = "SMG PC exact Talk/FLW proof",
     });
-    auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+    auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+    auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
     {
         auto event_game_data = GameDataHolder(nullptr);
         auto event_game_data_binding =

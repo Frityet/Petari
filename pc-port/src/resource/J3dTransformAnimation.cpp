@@ -200,8 +200,12 @@ namespace smgpc::resource {
             const auto tag = read_u32(data, offset);
             const auto size = read_u32(data, offset + 4U);
             require_range(size, 0U, 8U);
-            require_range(data.size(), offset, size);
-            const auto block = data.subspan(offset, size);
+            // The original loader only uses size to advance to another block.
+            // Bound referenced tables by the retained file, not that cursor.
+            if (i + 1U < block_count) {
+                require_range(data.size(), offset, size);
+            }
+            const auto block = data.subspan(offset);
             if (type == BCK1 && tag == ANK1) {
                 animation = load_key(block);
             } else if (type == BCA1 && tag == ANF1) {

@@ -151,21 +151,23 @@ void StageDataHolder::initPlacement() {
     _10C->initPlacement();
 }
 
-JMapInfo StageDataHolder::getCommonPathPointInfo(const JMapInfo** ppOut, int idx) const {
+JMapInfoIter StageDataHolder::getCommonPathPointInfo(const JMapInfo** ppOut, int idx) const {
     const JMapInfo* pInfo = findJmpInfoFromArray(&mPathObjs, "CommonPathInfo");
     JMapInfoIter pathIter = pInfo->findElement< s32 >("l_id", idx, 0);
     return getCommonPathPointInfoFromRailDataIndex(ppOut, pathIter.mIndex);
 }
 
-JMapInfo StageDataHolder::getCommonPathPointInfoFromRailDataIndex(const JMapInfo** ppInfo, int idx) const {
+JMapInfoIter StageDataHolder::getCommonPathPointInfoFromRailDataIndex(const JMapInfo** ppInfo, int idx) const {
     const JMapInfo* pInfo = findJmpInfoFromArray(&mPathObjs, "CommonPathInfo");
     char buf[128];
     snprintf(buf, sizeof(buf), "CommonPathPointInfo.%d", idx);
     *ppInfo = findJmpInfoFromArray(&mPathObjs, buf);
-    return *pInfo;
+    return JMapInfoIter(pInfo, idx);
 }
 
-// StageDataHolder::getCommonPathInfoElementNum
+s32 StageDataHolder::getCommonPathInfoElementNum() const {
+    return findJmpInfoFromArray(&mPathObjs, "CommonPathInfo")->getNumEntries();
+}
 
 s32 StageDataHolder::getStartPosNum() const {
     s32 cur = 0;

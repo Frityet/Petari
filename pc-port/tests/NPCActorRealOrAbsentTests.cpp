@@ -117,7 +117,8 @@ namespace {
             .height = 456,
             .title = "SMG PC NPC float-offset proof",
         });
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         auto holder = SceneObjHolder{};
         auto holderBinding = smgpc::scene::SceneObjHolderBinding(holder);
         require(holder.create(SceneObj_TalkDirector) != nullptr,

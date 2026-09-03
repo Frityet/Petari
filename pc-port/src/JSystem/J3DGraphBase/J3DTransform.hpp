@@ -1,6 +1,7 @@
 #pragma once
 
 #include <revolution.h>
+#include <revolution/mtx.h>
 
 struct J3DTransformInfo {
     Vec mScale;        // 0x00

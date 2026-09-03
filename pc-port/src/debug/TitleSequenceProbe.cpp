@@ -32,7 +32,9 @@ namespace {
             throw std::runtime_error("Aurora could not open the requested disc image");
         }
 
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
 
         const auto title_logo = runtime.find_layout_archive("TitleLogo");
         const auto press_start = runtime.find_layout_archive("PressStart");

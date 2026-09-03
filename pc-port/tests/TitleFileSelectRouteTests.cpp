@@ -296,8 +296,9 @@ namespace {
             .title = "SMG PC Title/File Select route proof",
         });
         auto renderer = smgpc::render::AuroraRenderer(window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
         auto runtime = smgpc::runtime::RuntimeContext(
-            *logger, window, std::move(playback));
+            *logger, window, resource_runtime, std::move(playback));
         const auto renderer_context =
             smgpc::render::ScopedAuroraRendererContext(renderer);
 

@@ -20,6 +20,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/WPadRumbleData.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "render/effects/JpcBillboard.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TextEncoding.hpp"
@@ -1214,7 +1215,13 @@ namespace smgpc::runtime {
         return archive_for_path_with_request(path, path.generic_string());
     }
 
+    std::shared_ptr<const smgpc::resource::RarcArchive> DvdFileSystemService::retain_archive_for_path(const std::filesystem::path &path) {
+        (void)archive_for_path(path);
+        return _archives.at(archive_cache_key_for_path(path));
+    }
+
     smgpc::resource::RarcArchive &DvdFileSystemService::archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path) {
+        smgpc::compat::JkrHostAllocationScope host;
         const auto key = archive_cache_key_for_path(path);
         if (auto it = _archives.find(key); it != _archives.end()) {
             _archive_load_trace.push_back(DvdArchiveLoadTrace{
@@ -1228,7 +1235,7 @@ namespace smgpc::runtime {
             return *it->second;
         }
 
-        auto archive = std::make_unique<smgpc::resource::RarcArchive>(smgpc::resource::RarcArchive::from_bytes(read_file(key)));
+        auto archive = std::make_shared<smgpc::resource::RarcArchive>(smgpc::resource::RarcArchive::from_bytes(read_file(key)));
         auto [it, inserted] = _archives.emplace(key, std::move(archive));
         if (inserted) {
             ++_archive_load_counts[key];

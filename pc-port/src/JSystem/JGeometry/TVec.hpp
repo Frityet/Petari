@@ -278,12 +278,12 @@ namespace JGeometry {
             z = start.z + ((end.z - start.z) * rate);
         }
 
-        [[nodiscard]] constexpr f32 dot(const TVec3 &value) const {
-            return x * value.x + y * value.y + z * value.z;
+        [[nodiscard]] f32 dot(const TVec3 &value) const {
+            return PSVECDotProduct(this, &value);
         }
 
-        [[nodiscard]] constexpr f32 squared() const {
-            return dot(*this);
+        [[nodiscard]] f32 squared() const {
+            return JMathInlineVEC::PSVECSquareMag(this);
         }
 
         [[nodiscard]] constexpr f32 squared(const TVec3 &value) const {
@@ -298,7 +298,7 @@ namespace JGeometry {
         }
 
         [[nodiscard]] f32 length() const {
-            return std::sqrt(squared());
+            return PSVECMag(this);
         }
 
         [[nodiscard]] f32 distance(const TVec3 &value) const {
@@ -336,16 +336,28 @@ namespace JGeometry {
         }
 
         void cross(const TVec3 &lhs, const TVec3 &rhs) {
-            const f32 newX = lhs.y * rhs.z - lhs.z * rhs.y;
-            const f32 newY = lhs.z * rhs.x - lhs.x * rhs.z;
-            const f32 newZ = lhs.x * rhs.y - lhs.y * rhs.x;
-            set(newX, newY, newZ);
+            PSVECCrossProduct(&lhs, &rhs, this);
         }
 
         [[nodiscard]] TVec3 cross(const TVec3 &value) const {
             TVec3 result;
-            result.cross(*this, value);
+            PSVECCrossProduct(this, &value, &result);
             return result;
+        }
+
+        [[nodiscard]] f32 angle(const TVec3 &value) const {
+            const f32 crossPart = cross(value).length();
+            const f32 dotPart = dot(value);
+            return std::fabs(JMAATan2(crossPart, dotPart));
+        }
+
+        [[nodiscard]] bool orientation(const TVec3 &a, const TVec3 &b) const {
+            return a.cross(b).dot(*this) < 0.0F;
+        }
+
+        void orthogonalize(const TVec3 &killDirection) {
+            const TVec3 &kill = killDirection;
+            JMAVECScaleAdd(&kill, this, this, -kill.dot(*this));
         }
 
         void negate() {
@@ -389,7 +401,7 @@ namespace JGeometry {
             zero();
         }
 
-        [[nodiscard]] constexpr bool isZero() const {
+        [[nodiscard]] bool isZero() const {
             return squared() <= TUtil<f32>::epsilon();
         }
 

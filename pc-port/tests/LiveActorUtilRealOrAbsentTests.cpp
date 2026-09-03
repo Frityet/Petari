@@ -217,7 +217,8 @@ namespace {
         });
         auto renderer = smgpc::render::AuroraRenderer(window);
         const auto renderer_context = smgpc::render::ScopedAuroraRendererContext(renderer);
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
 
         auto actor = LiveActor("Tico BCK/joint proof");
         actor.initModelManagerWithAnm("Tico", "Tico", false);

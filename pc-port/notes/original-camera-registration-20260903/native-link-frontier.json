@@ -1,0 +1,135 @@
+{
+  "scope": "Undefined public Game/camera/math symbols from the 82 compiled graph files, minus symbols present in that graph and current native archives. Failed source files are not represented; symbol presence is not functional availability. No executable linked or run.",
+  "resolved_by_archive_count": {
+    "smg-pc-game": 79,
+    "smg-pc-render": 0,
+    "smg-pc-common": 1,
+    "aurora-mtx": 1,
+    "aurora-os": 0,
+    "aurora-gx": 0,
+    "aurora-gd": 0,
+    "aurora-core": 0
+  },
+  "unresolved": [
+    {
+      "symbol": "__ZN14CameraDirector18registerCameraCodeEj",
+      "demangled": "CameraDirector::registerCameraCode(unsigned int)"
+    },
+    {
+      "symbol": "__ZN14CameraDirector24initCameraCodeCollectionEPKci",
+      "demangled": "CameraDirector::initCameraCodeCollection(char const*, int)"
+    },
+    {
+      "symbol": "__ZN14CameraDirector24termCameraCodeCollectionEv",
+      "demangled": "CameraDirector::termCameraCodeCollection()"
+    },
+    {
+      "symbol": "__ZN14CameraTowerPosC1EPKc",
+      "demangled": "CameraTowerPos::CameraTowerPos(char const*)"
+    },
+    {
+      "symbol": "__ZN15CameraLocalUtil14tryCameraResetEv",
+      "demangled": "CameraLocalUtil::tryCameraReset()"
+    },
+    {
+      "symbol": "__ZN15CameraLocalUtil18getDummyVecRegNameEv",
+      "demangled": "CameraLocalUtil::getDummyVecRegName()"
+    },
+    {
+      "symbol": "__ZN15CameraLocalUtil19isForceCameraChangeEv",
+      "demangled": "CameraLocalUtil::isForceCameraChange()"
+    },
+    {
+      "symbol": "__ZN15CameraLocalUtil21tryCameraResetTriggerEv",
+      "demangled": "CameraLocalUtil::tryCameraResetTrigger()"
+    },
+    {
+      "symbol": "__ZN15CameraLocalUtil9getMtxRegEPKc",
+      "demangled": "CameraLocalUtil::getMtxReg(char const*)"
+    },
+    {
+      "symbol": "__ZN16CameraFooFighterC1EPKc",
+      "demangled": "CameraFooFighter::CameraFooFighter(char const*)"
+    },
+    {
+      "symbol": "__ZN16CameraRaceFollowC1EPKc",
+      "demangled": "CameraRaceFollow::CameraRaceFollow(char const*)"
+    },
+    {
+      "symbol": "__ZN17CameraMedianTowerC1EPKc",
+      "demangled": "CameraMedianTower::CameraMedianTower(char const*)"
+    },
+    {
+      "symbol": "__ZN17CameraWaterFollowC1EPKc",
+      "demangled": "CameraWaterFollow::CameraWaterFollow(char const*)"
+    },
+    {
+      "symbol": "__ZN18CameraFrontAndBackC1EPKc",
+      "demangled": "CameraFrontAndBack::CameraFrontAndBack(char const*)"
+    },
+    {
+      "symbol": "__ZN18CameraInwardSphereC1EPKc",
+      "demangled": "CameraInwardSphere::CameraInwardSphere(char const*)"
+    },
+    {
+      "symbol": "__ZN18CameraMedianPlanetC1EPKc",
+      "demangled": "CameraMedianPlanet::CameraMedianPlanet(char const*)"
+    },
+    {
+      "symbol": "__ZN19CameraCharmedVecRegC1EPKc",
+      "demangled": "CameraCharmedVecReg::CameraCharmedVecReg(char const*)"
+    },
+    {
+      "symbol": "__ZN21CameraWaterPlanetBossC1EPKc",
+      "demangled": "CameraWaterPlanetBoss::CameraWaterPlanetBoss(char const*)"
+    },
+    {
+      "symbol": "__ZN22CameraFooFighterPlanetC1EPKc",
+      "demangled": "CameraFooFighterPlanet::CameraFooFighterPlanet(char const*)"
+    },
+    {
+      "symbol": "__ZN24CameraCharmedVecRegTowerC1EPKc",
+      "demangled": "CameraCharmedVecRegTower::CameraCharmedVecRegTower(char const*)"
+    },
+    {
+      "symbol": "__ZN2MR10blendAngleEfff",
+      "demangled": "MR::blendAngle(float, float, float)"
+    },
+    {
+      "symbol": "__ZN2MR10getZoneNumEv",
+      "demangled": "MR::getZoneNum()"
+    },
+    {
+      "symbol": "__ZN2MR14convergeRadianEfff",
+      "demangled": "MR::convergeRadian(float, float, float)"
+    },
+    {
+      "symbol": "__ZN2MR17getCameraDirectorEv",
+      "demangled": "MR::getCameraDirector()"
+    },
+    {
+      "symbol": "__ZN2MR18getStageCameraDataEPPvPii",
+      "demangled": "MR::getStageCameraData(void**, int*, int)"
+    },
+    {
+      "symbol": "__ZN2MR19isCreatedTripodBossEv",
+      "demangled": "MR::isCreatedTripodBoss()"
+    },
+    {
+      "symbol": "__ZN2MR24getTripodBossJointMatrixEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEEi",
+      "demangled": "MR::getTripodBossJointMatrix(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, int)"
+    },
+    {
+      "symbol": "__ZN2MR24startCameraInterpolationEj",
+      "demangled": "MR::startCameraInterpolation(unsigned int)"
+    },
+    {
+      "symbol": "__ZN9CameraDPDC1EPKc",
+      "demangled": "CameraDPD::CameraDPD(char const*)"
+    },
+    {
+      "symbol": "__ZNK16CameraRailHolder8getRiderEii",
+      "demangled": "CameraRailHolder::getRider(int, int) const"
+    }
+  ]
+}

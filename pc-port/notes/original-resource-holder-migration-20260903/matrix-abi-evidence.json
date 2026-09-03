@@ -1,0 +1,80 @@
+{
+  "results": [
+    {
+      "name": "matrix-abi-good",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-g",
+        "-O0",
+        "-std=c11",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-fsyntax-only",
+        "aurora/lib/dolphin/mtx/mtx44.c"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/pc-port",
+      "returncode": 0
+    },
+    {
+      "name": "matrix-abi-missing-target-pc",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-g",
+        "-O0",
+        "-std=c11",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA",
+        "-fsyntax-only",
+        "aurora/lib/dolphin/mtx/mtx44.c"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/pc-port",
+      "returncode": 1
+    },
+    {
+      "name": "matrix-cmake-build",
+      "command": [
+        "cmake",
+        "--build",
+        "build/aurora-upstream-merge-tests",
+        "--target",
+        "mtx44_tests",
+        "-j",
+        "4"
+      ],
+      "cwd": "/Users/frityet/Projects/petari",
+      "returncode": 0
+    },
+    {
+      "name": "matrix-cmake-test",
+      "command": [
+        "/Users/frityet/Projects/petari/build/aurora-upstream-merge-tests/tests/mtx44_tests"
+      ],
+      "cwd": "/Users/frityet/Projects/petari",
+      "returncode": 0
+    }
+  ],
+  "cmake_matrix_compile": "/usr/bin/cc -DAURORA -DTARGET_PC -I/Users/frityet/Projects/petari/pc-port/aurora/include -g -std=gnu11 -arch arm64 -fPIC -MD -MT CMakeFiles/aurora_mtx.dir/lib/dolphin/mtx/mtx44.c.o -MF CMakeFiles/aurora_mtx.dir/lib/dolphin/mtx/mtx44.c.o.d -o CMakeFiles/aurora_mtx.dir/lib/dolphin/mtx/mtx44.c.o -c /Users/frityet/Projects/petari/pc-port/aurora/lib/dolphin/mtx/mtx44.c",
+  "cmake_test_link": ": && /usr/bin/c++ -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names tests/CMakeFiles/mtx44_tests.dir/mtx44_test.cpp.o -o tests/mtx44_tests  libaurora_mtx.a && :",
+  "source_sha256": {
+    "aurora/xmake.lua": "36a17b515b22bf0ed82aaa2fab79fa12d674e793a2efeaaba48bf0ce8f31df60",
+    "aurora/cmake/aurora_mtx.cmake": "9817676cdd7fefe989a55a05a599cbaa8a4cafbbea592a69740989466df459ce",
+    "aurora/lib/dolphin/mtx/mtx44.c": "234649fc2126720e5ec44c0d000d1c892614eb3c0a684dbe0c78fe068c696d9b",
+    "aurora/include/dolphin/types.h": "ff856762a43fa4d7be157a67e786e4d638ad8d128547790ea25caeb82a0eddf2",
+    "aurora/tests/CMakeLists.txt": "5a49806cb6e40ab104854ea3294caa1eedeec8b242978ad949b5df99f078c7ba",
+    "aurora/tests/mtx44_test.cpp": "20158bbf0e9d511759aedefa768f96594e2f60ee5ef1d6f0aa8ddb59bb39c4e0"
+  },
+  "xmake_library_sha256": "d67f62909fe1bf554e13a901e050881da64d51d1b8044b0761d6988e67c3f30c"
+}

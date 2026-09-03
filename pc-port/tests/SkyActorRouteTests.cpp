@@ -134,7 +134,8 @@ namespace {
             .title = "SMG PC exact shared sky actor proof",
         });
         auto renderer = smgpc::render::AuroraRenderer(window);
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
 
         require(smgpc::scene::nameobj::can_create_name_obj("VROrbit") &&

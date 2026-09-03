@@ -111,7 +111,8 @@ namespace {
             .title = "SMG PC ordinary PlanetMap actor proof",
         });
         auto renderer = smgpc::render::AuroraRenderer(window);
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
 
         const auto camera = smgpc::camera::CameraPose{

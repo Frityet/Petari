@@ -1240,7 +1240,9 @@ for _, fixture in ipairs {
     {"jkr-allocation-domain", "JkrAllocationDomainTests.cpp"},
     {"jkr-archive", "OriginalJkrArchiveTests.cpp"},
     {"jmap-resource", "OriginalJMapResourceTests.cpp"},
-    {"bck-ctrl", "OriginalBckCtrlTests.cpp"}
+    {"bck-ctrl", "OriginalBckCtrlTests.cpp"},
+    {"resource-holder", "OriginalResourceHolderTests.cpp"},
+    {"camera-vector-math", "OriginalCameraVectorMathTests.cpp"}
 } do
     target("smg-pc-original-" .. fixture[1] .. "-tests")
         set_kind("binary")

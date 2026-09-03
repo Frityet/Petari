@@ -29,6 +29,7 @@ namespace smgpc::app {
         std::string window_title = "SMG PC";
         std::vector<std::string> arguments = {};
         std::optional<std::filesystem::path> disc_image = {};
+        resource::GameResourceBudget resource_budget = {};
     };
 
     class IApplication {
@@ -41,6 +42,7 @@ namespace smgpc::app {
         std::unique_ptr<logging::ILogger> logger = {};
         std::unique_ptr<render::AuroraWindow> window_service = {};
         std::unique_ptr<render::AuroraRenderer> aurora_renderer = {};
+        std::unique_ptr<resource::GameResourceRuntime> resource_runtime = {};
         std::unique_ptr<smgpc::runtime::RuntimeContext> runtime_context = {};
         std::unique_ptr<smgpc::scene::GameSystemSceneControllerService> scene_controller = {};
         std::unique_ptr<smgpc::scene::SceneTransitionRequestService> scene_transitions = {};
@@ -54,6 +56,7 @@ namespace smgpc::app {
         di::SingletonService<logging::ILogger>,
         di::SingletonService<render::AuroraWindow>,
         di::SingletonService<render::AuroraRenderer>,
+        di::SingletonService<resource::GameResourceRuntime>,
         di::SingletonService<smgpc::runtime::RuntimeContext>,
         di::SingletonService<smgpc::runtime::DvdFileSystemService>,
         di::SingletonService<smgpc::runtime::WiiIosService>,

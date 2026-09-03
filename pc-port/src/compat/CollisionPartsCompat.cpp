@@ -174,22 +174,25 @@ namespace MR {
         }
         const auto host_matrix = copy_matrix(matrix);
 
+        auto* resources = smgpc::compat::ResourceHolderService::active();
+        if (resources == nullptr) throw std::logic_error("CollisionParts requires its ResourceHolder owner");
+        const auto& backing = resources->backing(*resource_holder);
         const auto kcl_name = std::string(resource_name) + ".kcl";
         const auto attributes_name = std::string(resource_name) + ".pa";
-        const auto *kcl_entry = resource_holder->archive().find_resource(kcl_name);
+        const auto *kcl_entry = backing.archive().find_resource(kcl_name);
         if (kcl_entry == nullptr) {
             throw std::runtime_error("Required CollisionParts KCL is unavailable: " + kcl_name);
         }
-        const auto *attributes_entry = resource_holder->archive().find_resource(attributes_name);
-        const auto kcl = resource_holder->archive().file_data(*kcl_entry);
+        const auto *attributes_entry = backing.archive().find_resource(attributes_name);
+        const auto kcl = backing.archive().file_data(*kcl_entry);
         const auto attributes = attributes_entry != nullptr ?
-                                    resource_holder->archive().file_data(*attributes_entry) :
+                                    backing.archive().file_data(*attributes_entry) :
                                     std::span<const std::uint8_t>{};
-        const auto source = resource_holder->resolved_path().generic_string() + ":/" +
+        const auto source = backing.resolved_path().generic_string() + ":/" +
                             kcl_entry->path;
         const auto attributes_source =
             attributes_entry != nullptr ?
-                resource_holder->resolved_path().generic_string() + ":/" +
+                backing.resolved_path().generic_string() + ":/" +
                     attributes_entry->path :
                 std::string{};
 

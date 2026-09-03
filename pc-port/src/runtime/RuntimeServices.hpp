@@ -110,6 +110,7 @@ namespace smgpc::runtime {
                                                       std::uint64_t delay_frames = 1U);
         [[nodiscard]] smgpc::resource::RarcArchive &archive(std::string_view disc_path);
         [[nodiscard]] smgpc::resource::RarcArchive &archive_for_path(const std::filesystem::path &path);
+        [[nodiscard]] std::shared_ptr<const smgpc::resource::RarcArchive> retain_archive_for_path(const std::filesystem::path &path);
         [[nodiscard]] std::size_t archive_load_count(std::string_view disc_path) const;
         [[nodiscard]] std::size_t archive_load_count_for_path(const std::filesystem::path &path) const;
         [[nodiscard]] std::size_t cached_archive_count() const;
@@ -128,7 +129,7 @@ namespace smgpc::runtime {
         [[nodiscard]] smgpc::resource::RarcArchive &archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path);
 
         std::filesystem::path _root;
-        std::map<std::string, std::unique_ptr<smgpc::resource::RarcArchive>> _archives;
+        std::map<std::string, std::shared_ptr<smgpc::resource::RarcArchive>> _archives;
         std::map<std::string, std::size_t> _archive_load_counts;
         std::uint64_t _frame_index = 0U;
         std::uint64_t _next_async_read_id = 1U;

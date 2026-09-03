@@ -13,8 +13,11 @@
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/HitInfoCompat.hpp"
 #include "compat/ResourceHolderCompat.hpp"
+#include "resource/GameResourceRuntime.hpp"
+#include <aurora/aurora.h>
 #include "runtime/RuntimeServices.hpp"
 #include "resource/BcsvTable.hpp"
+#include "resource/RarcArchive.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/PlacementZoneNameScope.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -45,6 +48,8 @@
 
 static_assert(std::is_base_of_v<LiveActor, FileSelector>,
               "the exact retail FileSelector declaration must coexist with the host boundary");
+
+namespace aurora { extern AuroraConfig g_config; }
 
 namespace {
 
@@ -567,12 +572,14 @@ namespace {
                 "strict preflight must report the exact 2-blocker closure without fabricating roots");
 #endif
 
-        auto resource_holders = smgpc::compat::ResourceHolderService{dvd};
+        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto resource_holders = smgpc::compat::ResourceHolderService{dvd, resource_runtime.create_cohort(), resource_runtime.mem1_heap()};
         auto *wall_resources =
             resource_holders.create_and_add("InvisibleWall10x10.arc");
-        require(wall_resources->resource_data("InvisibleWall10x10.kcl").size() == 1222U &&
-                    wall_resources->resource_data("InvisibleWall10x10.pa").size() == 96U &&
-                    wall_resources->resource_data("CollisionVersion").size() == 7U,
+        require(resource_holders.backing(*wall_resources).archive().resource_data("InvisibleWall10x10.kcl").size() == 1222U &&
+                    resource_holders.backing(*wall_resources).archive().resource_data("InvisibleWall10x10.pa").size() == 96U &&
+                    resource_holders.backing(*wall_resources).archive().resource_data("CollisionVersion").size() == 7U,
                 "the ResourceHolder must expose the real RMGK01 KCL, attribute, and version resources");
 
         auto collision = smgpc::scene::StageCollisionService{};

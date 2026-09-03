@@ -8,12 +8,18 @@
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include <cstdio>
 
 namespace {
+    void getRailInfoFromRailId(JMapInfoIter* pIter, const JMapInfo** ppPointInfo, const StageDataHolder* pHolder, int railId) NO_INLINE {
+        *pIter = pHolder->getCommonPathPointInfo(ppPointInfo, railId);
+    }
+
     ScenePlayingResult* getScenePlayingResult() {
         return MR::getSceneObj< ScenePlayingResult >(SceneObj_ScenePlayingResult);
     }
@@ -149,7 +155,10 @@ namespace MR {
         return *SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mStartIdInfo;
     }
 
-    // getStartPosNum
+    s32 getStartPosNum() {
+        return getStageDataHolder()->getStartPosNum();
+    }
+
     s32 getCurrentStartZoneId() {
         return getStageDataHolder()->getCurrentStartZoneId();
     }
@@ -193,9 +202,25 @@ namespace MR {
         getStageDataHolder()->getStartCameraIdInfoFromStartDataIndex(pInfo, startDataIndex);
     }
 
-    // getPlacedRailNum
-    // getCameraRailInfo
-    // getCameraRailInfoFromRailDataIndex
+    s32 getPlacedRailNum(s32 zoneId) {
+        if (getStageDataHolder()->isPlacedZone(zoneId)) {
+            return getStageDataHolder()->getStageDataHolderFromZoneId(zoneId)->getCommonPathInfoElementNum();
+        }
+
+        return 0;
+    }
+
+    void getCameraRailInfo(JMapInfoIter* pIter, const JMapInfo** ppPointInfo, s32 railId, s32 zoneId) {
+        const StageDataHolder* pHolder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId);
+        ::getRailInfoFromRailId(pIter, ppPointInfo, pHolder, railId);
+    }
+
+    bool getCameraRailInfoFromRailDataIndex(JMapInfoIter* pIter, const JMapInfo** ppPointInfo, int index, s32 zoneId) {
+        const StageDataHolder* pHolder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId);
+        *pIter = pHolder->getCommonPathPointInfoFromRailDataIndex(ppPointInfo, index);
+        return isEqualRailUsage(*pIter, "Camera");
+    }
+
     void getStageCameraData(void** ppData, s32* pSize, s32 zoneId) {
         if (!getStageDataHolder()->isPlacedZone(zoneId)) {
             *ppData = nullptr;
@@ -208,7 +233,17 @@ namespace MR {
         *pSize = pHolder->getStageArchiveResourceSize(*ppData);
     }
 
-    // getCurrentScenarioStartAnimCameraData
+    void getCurrentScenarioStartAnimCameraData(void** ppData, s32* pSize) {
+        StageDataHolder* pHolder = getStageDataHolder();
+        char filename[64];
+        snprintf(filename, sizeof(filename), "StartScenario%d.canm", getCurrentScenarioNo());
+        *ppData = pHolder->getStageArchiveResource(filename);
+        if (*ppData != nullptr) {
+            *pSize = pHolder->getStageArchiveResourceSize(*ppData);
+        } else {
+            *pSize = 0;
+        }
+    }
 
     void incCoin(int term) {
         ::getScenePlayingResult()->incCoin(term);

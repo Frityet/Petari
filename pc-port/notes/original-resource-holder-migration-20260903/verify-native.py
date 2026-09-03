@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+"""Isolated actual ResourceHolder ownership ASan/UBSan; frozen shared archives."""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shlex
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[3]
+HERE = Path(__file__).resolve().parent
+PC = ROOT / 'pc-port'
+BUILD = ROOT / 'build/original-resource-holder-migration-20260903/sanitizer'
+CACHE = PC / 'build/.deps'
+TARGET = 'smg-pc-original-resource-holder-tests'
+HOLDER_TEST = 'tests/OriginalResourceHolderTests.cpp'
+ANIMATION_TEST = 'tests/OriginalJ3DAnimationResourceTests.cpp'
+FLAGS = ['-fsanitize=address,undefined', '-fno-omit-frame-pointer']
+SOURCES = ['src/resource/' + name + '.cpp' for name in (
+    'J3dModelResource', 'J3dJointData', 'J3dGeometryData', 'J3dMaterialTableData',
+    'J3dMaterialBlockData', 'J3dTextureData', 'J3dNameData', 'J3dAllocationIdentity',
+    'Mem1ResourceHeap', 'TplTexture')]
+SOURCES += ['src/compat/' + name + '.cpp' for name in (
+    'J3DModelLoaderCompat', 'J3DHierarchyCompat', 'J3DModelDataCompat', 'J3DJointTreeCompat',
+    'J3DJointCompat', 'J3DShapeTableCompat', 'J3DShapeFactoryCompat', 'J3DShapeCompat',
+    'J3DShapeDrawCompat', 'J3DShapeMtxCompat', 'J3DShapeMtxGameCompat', 'J3DMaterialLoaderFactoryCompat',
+    'J3DMaterialFactoryCompat', 'J3DMaterialVariantsCompat', 'J3DMaterialHelpersCompat',
+    'J3DMatBlockCompat', 'J3DTevsCompat', 'J3DTexMtxCompat', 'J3DTextureMtxCompat', 'J3DStructCompat',
+    'J3DGDCompat', 'J3DSysCompat', 'J3DMtxBufferCompat', 'J3DTransformMtxCompat',
+    'J3DVertexBufferCompat', 'J3DPacketCompat', 'J3DDrawBufferCompat', 'J3DJointEntryCompat',
+    'JUTNameTabCompat', 'JKRExpHeapCompat', 'MemoryHeapScopeCompat', 'JkrAllocationDomain',
+    'JkrAllocationProvenance', 'MetrowerksAlignedNew', 'JKRHeapCompat', 'JKRSolidHeapCompat',
+    'JKRDisposerCompat', 'JSUListCompat', 'JkrDiagnostics')]
+SOURCES += ['aurora/lib/dolphin/os/' + name + '.cpp' for name in (
+    'OSExecution', 'OSMutex', 'OSReport', 'OSAlloc', 'OSArena', 'OSMemory', 'OSAddress', 'OSInit')]
+SOURCES += ['aurora/lib/dolphin/mtx/' + name + '.c' for name in (
+    'mtx', 'mtxstack', 'mtxvec', 'mtx44', 'vec', 'quat')]
+SOURCES += ['src/resource/' + name + '.cpp' for name in (
+    'GameResourceRuntime', 'J3dAnimationResource', 'J3dTransformAnimation', 'JMapResource', 'BcsvTable', 'RarcArchive')]
+SOURCES += ['src/compat/' + name + '.cpp' for name in (
+    'ResourceHolderCompat', 'J3dCommandScope', 'ModelPostLoadCompat', 'JKRArchiveCompat', 'JKRFileFinderCompat',
+    'J3DAnmLoaderCompat', 'J3DTransformAnimationCompat', 'J3DMaterialAnimationCompat', 'J3DMaterialAttachCompat',
+    'J3DMaterialAnmCompat')]
+SOURCES += ['src/Game/' + name + '.cpp' for name in (
+    'System/ResourceHolder', 'System/ResourceInfo', 'Animation/BckCtrl', 'Animation/MaterialAnmBuffer',
+    'Animation/AnmPlayer', 'Animation/BpkPlayer', 'Util/JMapInfo')]
+SOURCES += ['src/runtime/RuntimeServices.cpp', HOLDER_TEST]
+SOURCES = list(dict.fromkeys(SOURCES))
+
+
+def strings(text):
+    return [json.loads(s) for s in re.findall(r'"(?:\\.|[^"\\])*"', text)]
+
+
+def arguments(path):
+    return strings(re.search(r'values = \{(.*?)\n    \}', path.read_text(), re.S).group(1))
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def run(command, log, timeout=120):
+    with log.open('w') as output:
+        result = subprocess.run(command, cwd=PC, stdout=output, stderr=subprocess.STDOUT, timeout=timeout)
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--jobs', type=int, default=4)
+    parser.add_argument('--archive', type=Path, default=ROOT / 'build/original-resource-holder-20260903/MarioAnime.arc')
+    options = parser.parse_args()
+    if options.jobs < 1 or options.jobs > 8:
+        parser.error('--jobs must be between 1 and 8')
+    disc = Path(os.environ.get('SMGPC_REAL_DISC', ROOT / 'Super Mario Wii - Galaxy Adventure (Korea).rvz'))
+    if not disc.is_file():
+        parser.error('Set SMGPC_REAL_DISC to the actual retained disc image')
+    archive = options.archive.resolve()
+    if not archive.is_file():
+        parser.error('--archive must name the extracted real MarioAnime.arc')
+    BUILD.mkdir(parents=True, exist_ok=True)
+    sources = SOURCES + [ANIMATION_TEST]
+    compiled_sources = {source: sha(PC / source) for source in sources}
+    headers, cache_hashes, commands = {}, {}, []
+    objects, compile_jobs = {}, []
+    for source in sources:
+        matches = sorted(CACHE.glob('*/macosx/arm64/debug/' + source + '.o.d'))
+        if not matches:
+            raise RuntimeError('Frozen native compile flags are unavailable for ' + source)
+        preferred = [path for path in matches if path.parts[len(CACHE.parts)] == ('smg-pc-game' if source.startswith('src/') else TARGET)]
+        cache = (preferred or matches)[0]
+        cache_hashes[str(cache.relative_to(PC))] = sha(cache)
+        cache_text = cache.read_text()
+        files_match = re.search(r'files = \{(.*?)\n    \}', cache_text, re.S)
+        dependencies = strings(files_match.group(1))
+        depfiles = re.search(r'depfiles = "(.*?)",\n', cache_text, re.S)
+        if depfiles:
+            dependency_text = depfiles.group(1).replace('\\\n', '')
+            dependencies += shlex.split(dependency_text.split(':', 1)[1])
+        for item in dependencies:
+            path = (PC / item).resolve()
+            if path.is_relative_to(PC / 'src') or path.is_relative_to(PC / 'aurora/include') or path.is_relative_to(PC / 'aurora/lib'):
+                if path.is_file():
+                    headers[str(path.relative_to(PC))] = sha(path)
+        output = BUILD / (source.replace('/', '_') + '.asan.o')
+        command = arguments(cache) + FLAGS + ['-c', source, '-o', str(output)]
+        commands.append(command)
+        compile_jobs.append((command, BUILD / (Path(source).stem + '.compile.log')))
+        objects[source] = str(output)
+    link_cache = CACHE / TARGET / 'macosx/arm64/debug' / (TARGET + '.d')
+    link_args = arguments(link_cache)
+    cache_hashes[str(link_cache.relative_to(PC))] = sha(link_cache)
+    archive_paths = [PC / value for value in strings(re.search(r'files = \{(.*?)\n    \}', link_cache.read_text(), re.S).group(1)) if value.endswith('.a')]
+    archives = {str(p.relative_to(PC)): sha(p) for p in archive_paths}
+    compat = PC / 'build/.objs' / TARGET / 'macosx/arm64/debug/aurora/lib/compat.cpp.o'
+    compat_hash = sha(compat)
+    binary = BUILD / 'resource-holder-tests-asan'
+    animation_binary = BUILD / 'animation-resource-tests-asan'
+    links = []
+    for output, test in [(binary, HOLDER_TEST), (animation_binary, ANIMATION_TEST)]:
+        chosen = [obj for source, obj in objects.items() if source not in (HOLDER_TEST, ANIMATION_TEST) or source == test]
+        links.append([link_args[0], *FLAGS, *chosen, str(compat), *link_args[1:], '-o', str(output)])
+    commands.extend(links)
+    (BUILD / 'commands.json').write_text(json.dumps(commands, indent=2) + '\n')
+    print(f'Compiling {len(compile_jobs)} isolated holder/resource/SDK/heap objects with ASan/UBSan', flush=True)
+    with ThreadPoolExecutor(max_workers=options.jobs) as pool:
+        results = list(pool.map(lambda job: run(*job), compile_jobs))
+    failed = False
+    for result, (_, log) in zip(results, compile_jobs):
+        if result.returncode:
+            print(log.read_text(), end='')
+            failed = True
+    if failed:
+        raise RuntimeError('Isolated sanitizer compilation failed; see per-source logs')
+    for i, link in enumerate(links):
+        log = BUILD / ('link.log' if i == 0 else 'animation-link.log')
+        result = run(link, log)
+        if result.returncode:
+            print(log.read_text(), end='')
+            result.check_returncode()
+
+    def verify_frozen():
+        for path, expected in {**compiled_sources, **headers, **archives, **cache_hashes}.items():
+            assert sha(PC / path) == expected, 'Source/header/archive/cache changed during validation: ' + path
+        assert sha(compat) == compat_hash
+
+    verify_frozen()
+    env = dict(os.environ, SMGPC_REAL_DISC=str(disc), ASAN_OPTIONS='detect_leaks=1:halt_on_error=1',
+               UBSAN_OPTIONS='halt_on_error=1:print_stacktrace=1')
+    result = subprocess.run([str(binary)], cwd=PC, env=env, stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT, text=True, timeout=120)
+    (HERE / 'native-asan.log').write_text(result.stdout)
+    print(result.stdout, end='')
+    verify_frozen()
+    report = {
+        'scope': 'Original ResourceHolder constructor, typed resources and material player, raw DVD cache, retained domains and native failure cleanup using the real supplied disc; no shared xmake or GPU run.',
+        'instrumentation': 'Listed holder, resource owners/decoders, Game tables/control/player, DVD service cache, original factories/finalizers/material blocks/matrix traversal, all six Aurora matrix library C files, JKR heap and OS lifecycle providers and tests are ASan/UBSan instrumented. Other SDK, render, Aurora DVD/disc decoding, GX/FIFO, remaining math, standard/package libraries and retained Aurora compat object are frozen uninstrumented dependencies. This is not whole-program instrumentation.',
+        'environment': {key: env[key] for key in ('SMGPC_REAL_DISC','ASAN_OPTIONS','UBSAN_OPTIONS')},
+        'return_code': result.returncode,
+        'group_count': 4,
+        'real_disc_groups_ran': 'SKIP' not in result.stdout,
+        'binary_sha256': sha(binary),
+        'compiled_source_count': len(compiled_sources),
+        'linked_instrumented_source_count': len(SOURCES),
+        'compiled_source_sha256': compiled_sources,
+        'instrumented_source_sha256': {s: h for s, h in compiled_sources.items() if s != ANIMATION_TEST},
+        'included_workspace_file_sha256': headers,
+        'frozen_archive_sha256': archives,
+        'frozen_compat_object_sha256': compat_hash,
+        'frozen_build_flag_cache_sha256': cache_hashes,
+    }
+    (HERE / 'native-asan-evidence.json').write_text(json.dumps(report, indent=2) + '\n')
+    result.check_returncode()
+    assert result.stdout.count('PASS ') == 4
+    assert report['real_disc_groups_ran']
+    print('[pass] frozen ResourceHolder source/header/archive hashes and real-disc sanitizer result')
+
+    animation_command = [str(animation_binary), str(archive)]
+    result = subprocess.run(animation_command, cwd=PC, env=env, stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT, text=True, timeout=120)
+    (HERE / 'animation-native-asan.log').write_text(result.stdout)
+    print(result.stdout, end='')
+    verify_frozen()
+    families = {family: int(count) for family, count in re.findall(r'^ARCHIVE (\S+) (\d+)$', result.stdout, re.M)}
+    animation_report = {
+        **report,
+        'scope': 'All12 original animation families including final block navigation metadata versus referenced file reads, malformed/truncated tables, retained aliases, concurrent loads and real MarioAnime archive; same87 instrumented common providers and separate instrumented test object.',
+        'command': animation_command,
+        'return_code': result.returncode,
+        'group_count': result.stdout.count('PASS '),
+        'archive_path': str(archive),
+        'archive_sha256': sha(archive),
+        'archive_family_counts': families,
+        'archive_animation_count': sum(families.values()),
+        'binary_sha256': sha(animation_binary),
+        'instrumented_source_sha256': {s: h for s, h in compiled_sources.items() if s != HOLDER_TEST},
+    }
+    (HERE / 'animation-native-asan-evidence.json').write_text(json.dumps(animation_report, indent=2) + '\n')
+    result.check_returncode()
+    assert animation_report['group_count'] == 15
+    assert animation_report['archive_animation_count'] == 531
+    print('[pass] all15 animation-resource groups and531 real archive animations under ASan/UBSan')
+
+
+if __name__ == '__main__':
+    main()

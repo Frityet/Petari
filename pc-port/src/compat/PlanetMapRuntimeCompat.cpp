@@ -45,7 +45,7 @@ namespace {
             return false;
         }
         const auto *holder = require_actor_resource_holder(actor);
-        return holder->archive().find_resource(std::string(resource_name) + ".kcl") != nullptr;
+        return smgpc::compat::ResourceHolderService::active()->backing(*holder).archive().find_resource(std::string(resource_name) + ".kcl") != nullptr;
     }
 
     CollisionParts *try_register_auxiliary_collision(LiveActor *actor,
@@ -109,8 +109,8 @@ namespace MR {
         // retail all-animation existence test for BPK/BVA without claiming
         // playback support for those optional formats.
         const auto *holder = require_actor_resource_holder(actor);
-        return holder->archive().find_resource(std::string(name) + ".bpk") != nullptr ||
-               holder->archive().find_resource(std::string(name) + ".bva") != nullptr;
+        return smgpc::compat::ResourceHolderService::active()->backing(*holder).archive().find_resource(std::string(name) + ".bpk") != nullptr ||
+               smgpc::compat::ResourceHolderService::active()->backing(*holder).archive().find_resource(std::string(name) + ".bva") != nullptr;
     }
 
     PartsModel *createWaterModel(LiveActor *actor, MtxPtr) {

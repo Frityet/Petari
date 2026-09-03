@@ -352,7 +352,8 @@ namespace {
         auto outcome = TitleShowcaseOutcome{};
 
         {
-            auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+            auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+            auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
             const auto scene_renderer_context =
                 smgpc::render::ScopedAuroraRendererContext(renderer);
             auto route = smgpc::scene::TitleFileSelectRoute(runtime);
@@ -705,7 +706,8 @@ namespace {
 #endif
 
         {
-            auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+            auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+            auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
             runtime.set_current_stage_name("HeavensDoorGalaxy");
             // Authored scene visuals initialize and retire native model state
             // inside the Gateway scene lifetime. Keep the renderer binding

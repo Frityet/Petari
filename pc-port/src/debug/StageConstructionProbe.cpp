@@ -125,8 +125,10 @@ namespace {
             .title = "SMG PC strict stage construction probe",
         });
 
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+
         auto runtime = smgpc::runtime::RuntimeContext(
-            *logger, window, smgpc::runtime::RuntimeContextSceneServiceMode::External);
+            *logger, window, resource_runtime, smgpc::runtime::RuntimeContextSceneServiceMode::External);
         auto name_obj_lifecycle = smgpc::scene::NameObjLifecycleService(runtime);
         auto scene_execution = smgpc::scene::SceneExecutionService(runtime);
         auto scene_lifecycle = smgpc::scene::SceneLifecycleService(runtime);

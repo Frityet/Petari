@@ -469,19 +469,21 @@ namespace smgpc::runtime {
     }  // namespace
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
+                                   resource::GameResourceRuntime &resources,
                                    RuntimeContextSceneServiceMode scene_service_mode)
-        : RuntimeContext(logger, window_service, nullptr, scene_service_mode) {
+        : RuntimeContext(logger, window_service, resources, nullptr, scene_service_mode) {
     }
 
     RuntimeContext::RuntimeContext(
         logging::ILogger &logger, render::AuroraWindow &window_service,
+        resource::GameResourceRuntime &resources,
         std::unique_ptr<JAudioPlaybackService> audio_playback,
         RuntimeContextSceneServiceMode scene_service_mode)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
           _j_audio_playback(audio_playback != nullptr
                                 ? std::move(audio_playback)
                                 : std::make_unique<JAudioPlaybackService>(_dvd)),
-          _resource_holders(_dvd), _rfl(_save_data.nand()),
+          _resource_holders(_dvd, resources.create_cohort(), resources.mem1_heap()), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,

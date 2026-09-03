@@ -6,7 +6,9 @@
 #include "compat/CameraViewRuntime.hpp"
 
 #include <array>
+#include <bit>
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -92,18 +94,22 @@ namespace {
     }
 
     void test_later_close_watch_preserves_previous_direction_and_distance() {
+        require(std::bit_cast<std::uint32_t>(TVec3f(1.0F, 0.0F, 0.0F).length()) == 0x3F7FFFFFU,
+                "the retail PSVECMag unit witness must retain its one-step reciprocal-square-root rounding");
         const auto eye = TVec3f{10.0F, 20.0F, 30.0F};
-        for (const float distance : {0.0F, 0.5F, 1.0F, 299.0F, 300.0F, 450.0F}) {
+        // 2^-20 is one ULP at the translated watch X=11, so this above-unit
+        // displacement survives the position addition and subsequent subtraction.
+        for (const float distance : {0.0F, 0.5F, 1.0F, 0x1.00001p0F, 299.0F, 300.0F, 450.0F}) {
             auto fixture = Fixture{};
             fixture.set_geometry({}, {0.0F, 0.0F, -450.0F});
             fixture.calc();
             fixture.set_geometry(eye, eye + TVec3f(distance, 0.0F, 0.0F));
             fixture.calc();
-            const auto expected_offset = distance < 1.0F ? TVec3f(0.0F, 0.0F, -450.0F)
+            const auto expected_offset = distance <= 1.0F ? TVec3f(0.0F, 0.0F, -450.0F)
                                                        : TVec3f(distance < 300.0F ? 300.0F : distance, 0.0F, 0.0F);
             require_vector(fixture.pose->mPos, eye, "inactive ideal movement must pass through the requested eye");
             require_vector(fixture.pose->mWatchPos, eye + expected_offset,
-                           "later sub-unit targets must reuse the old watch vector; exactly one unit must extend to 300 units");
+                           "the unit displacement rounds below the retail threshold; the next translated watch value must extend to 300");
         }
     }
 
@@ -202,8 +208,11 @@ namespace {
             Case{10000.0F, 99.5F, 100.0F, 100.0F, true},
             Case{0.5F, 0.0F, 0.5F, 0.0F, false},
             Case{0.25F, 1.0F, 0.25F, 0.0F, false},
-            Case{1.0F, 0.0F, 1.0F, 1.0F, true},
+            Case{1.0F, 0.0F, 1.0F, 0.0F, false},
+            Case{0x1.000002p0F, 0.0F, 1.0F, 1.0F, true},
         };
+        require(std::bit_cast<std::uint32_t>(TVec3f(0x1.000002p0F, 0.0F, 0.0F).length()) == 0x3F800000U,
+                "the float above one must produce an exact unit retail magnitude and exercise the strict endpoint comparison");
         for (const auto& sample : cases) {
             auto fixture = Fixture{};
             fixture.original.mCalcIdeal = true;
@@ -215,8 +224,8 @@ namespace {
                            "ideal movement must preserve original braking, fractional-speed, cap and endpoint boundaries");
             require_near(fixture.original.mSpeed, sample.expected_speed, "ideal movement must preserve its original speed state");
             require(fixture.original.mCalcIdeal == sample.remains_active,
-                    "exactly reaching the new speed must remain active until the following calculation");
-            if (sample.distance == 1.0F) {
+                    "ideal activity must use the rounded retail magnitude at the strict speed threshold");
+            if (sample.distance == 0x1.000002p0F) {
                 fixture.pose->mPos.set(requested);
                 fixture.original.moveToIdealPosition(&requested);
                 require(!fixture.original.mCalcIdeal && fixture.original.mSpeed == 0.0F,

@@ -211,7 +211,8 @@ namespace {
             .title = "SMG PC captured-frame blur proof",
         });
         auto renderer = smgpc::render::AuroraRenderer(window);
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         auto fixture = std::make_unique<ExactCenterFixture>();
         const auto checkerboard = make_checkerboard();
         auto checker_texture = smgpc::render::TextureHandle{};

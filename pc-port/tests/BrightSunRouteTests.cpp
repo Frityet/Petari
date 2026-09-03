@@ -264,7 +264,8 @@ namespace {
             .color = {0U, 0U, 0U, 255U},
             .depth = GX_MAX_Z24,
         });
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
         const auto renderer_context =
             smgpc::render::ScopedAuroraRendererContext(renderer);

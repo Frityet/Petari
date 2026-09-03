@@ -1,0 +1,33 @@
+#pragma once
+
+#include "compat/JkrAllocationDomain.hpp"
+#include "resource/Mem1ResourceHeap.hpp"
+
+#include <cstddef>
+#include <memory>
+
+namespace smgpc::resource {
+    struct GameResourceBudget {
+        std::size_t host_heap_bytes = 128U * 1024U * 1024U;
+        std::size_t cohort_bytes = 64U * 1024U * 1024U;
+        std::size_t mem1_bytes = 16U * 1024U * 1024U;
+    };
+
+    // Explicit process startup after Aurora configuration. Reuse this owner
+    // across RuntimeContexts; no resource request reinitializes OS memory.
+    class GameResourceRuntime final {
+    public:
+        explicit GameResourceRuntime(GameResourceBudget budget = {});
+        ~GameResourceRuntime();
+        GameResourceRuntime(const GameResourceRuntime&) = delete;
+        GameResourceRuntime& operator=(const GameResourceRuntime&) = delete;
+        [[nodiscard]] std::shared_ptr<compat::JkrAllocationDomain> create_cohort() const;
+        [[nodiscard]] const std::shared_ptr<Mem1ResourceHeap>& mem1_heap() const noexcept;
+        [[nodiscard]] const GameResourceBudget& budget() const noexcept;
+
+    private:
+        GameResourceBudget _budget;
+        std::shared_ptr<compat::JkrHeapRuntime> _heaps;
+        std::shared_ptr<Mem1ResourceHeap> _mem1;
+    };
+}

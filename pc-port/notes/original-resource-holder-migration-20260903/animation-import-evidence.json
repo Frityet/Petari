@@ -1,0 +1,86 @@
+[
+  {
+    "source": "src/Game/Animation/AnmPlayer.cpp",
+    "native": "pc-port/src/Game/Animation/AnmPlayer.cpp",
+    "source_sha256": "cdf83fd80e84f30038549727cced4757a2796457bee9212641c11f65303be47a",
+    "native_sha256": "cdf83fd80e84f30038549727cced4757a2796457bee9212641c11f65303be47a"
+  },
+  {
+    "source": "include/Game/Animation/AnmPlayer.hpp",
+    "native": "pc-port/src/Game/Animation/AnmPlayer.hpp",
+    "source_sha256": "10bffaa12d89a856bc4e5741d1b449e0f35313d6d44bec85ca337884f546a1ec",
+    "native_sha256": "10bffaa12d89a856bc4e5741d1b449e0f35313d6d44bec85ca337884f546a1ec"
+  },
+  {
+    "source": "src/Game/Animation/BtkPlayer.cpp",
+    "native": "pc-port/src/Game/Animation/BtkPlayer.cpp",
+    "source_sha256": "48225cc1cc06169efe62863aa98712eebdfe53cff3792fc72bd338b47fc9e695",
+    "native_sha256": "48225cc1cc06169efe62863aa98712eebdfe53cff3792fc72bd338b47fc9e695"
+  },
+  {
+    "source": "include/Game/Animation/BtkPlayer.hpp",
+    "native": "pc-port/src/Game/Animation/BtkPlayer.hpp",
+    "source_sha256": "cec00d81f6e7e568a030db2a2ce90ebd80cf65e8f3d298f303489307e3d1f459",
+    "native_sha256": "cec00d81f6e7e568a030db2a2ce90ebd80cf65e8f3d298f303489307e3d1f459"
+  },
+  {
+    "source": "src/Game/Animation/BrkPlayer.cpp",
+    "native": "pc-port/src/Game/Animation/BrkPlayer.cpp",
+    "source_sha256": "c34ef1eb3f81039a7cd51c1759f632b58b210d5b0a33cafbfb8a132ea1e7e8fc",
+    "native_sha256": "c34ef1eb3f81039a7cd51c1759f632b58b210d5b0a33cafbfb8a132ea1e7e8fc"
+  },
+  {
+    "source": "include/Game/Animation/BrkPlayer.hpp",
+    "native": "pc-port/src/Game/Animation/BrkPlayer.hpp",
+    "source_sha256": "9ba13330515e9ee12a2d480e5348158b7a5e4735e72e0484a7f76256520a3abe",
+    "native_sha256": "9ba13330515e9ee12a2d480e5348158b7a5e4735e72e0484a7f76256520a3abe"
+  },
+  {
+    "source": "src/Game/Animation/BtpPlayer.cpp",
+    "native": "pc-port/src/Game/Animation/BtpPlayer.cpp",
+    "source_sha256": "5851c7495f334947a643e25146e1bbbb40254896b43bdf59d1e3b84f7e3cf622",
+    "native_sha256": "5851c7495f334947a643e25146e1bbbb40254896b43bdf59d1e3b84f7e3cf622"
+  },
+  {
+    "source": "include/Game/Animation/BtpPlayer.hpp",
+    "native": "pc-port/src/Game/Animation/BtpPlayer.hpp",
+    "source_sha256": "bd3da538e999d05cc8778955de1b4b4cc2d2019e0de68257dc26056b1b4e220f",
+    "native_sha256": "bd3da538e999d05cc8778955de1b4b4cc2d2019e0de68257dc26056b1b4e220f"
+  },
+  {
+    "source": "src/Game/Animation/BpkPlayer.cpp",
+    "native": "pc-port/src/Game/Animation/BpkPlayer.cpp",
+    "source_sha256": "9bde7a4cf5b67dd0d54b89c04a9d737f325e26e94061dc1525024f1da63753b2",
+    "native_sha256": "9bde7a4cf5b67dd0d54b89c04a9d737f325e26e94061dc1525024f1da63753b2"
+  },
+  {
+    "source": "include/Game/Animation/BpkPlayer.hpp",
+    "native": "pc-port/src/Game/Animation/BpkPlayer.hpp",
+    "source_sha256": "b4ba01a138ed6391e9d8a400ba2dc8197dc619005fa0d8f090d54a5e2fe22443",
+    "native_sha256": "b4ba01a138ed6391e9d8a400ba2dc8197dc619005fa0d8f090d54a5e2fe22443"
+  },
+  {
+    "source": "src/Game/Animation/BvaPlayer.cpp",
+    "native": "pc-port/src/Game/Animation/BvaPlayer.cpp",
+    "source_sha256": "9d10cc08cd8094e9554825d5f2b78444f315229458fd86e94ff66d929cfca845",
+    "native_sha256": "9d10cc08cd8094e9554825d5f2b78444f315229458fd86e94ff66d929cfca845"
+  },
+  {
+    "source": "include/Game/Animation/BvaPlayer.hpp",
+    "native": "pc-port/src/Game/Animation/BvaPlayer.hpp",
+    "source_sha256": "ca7c2d4d2336d83d63b8717716b214d78c5e0dd5ea8cbb3af6a1bfe3c2213c0d",
+    "native_sha256": "ca7c2d4d2336d83d63b8717716b214d78c5e0dd5ea8cbb3af6a1bfe3c2213c0d"
+  },
+  {
+    "source": "src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp",
+    "native": "pc-port/src/compat/J3DMaterialAttachCompat.cpp",
+    "source_sha256": "70c76cd403297d522028da9908531ca04628b770a224e8174fbbe4183000e593",
+    "native_sha256": "87fd92083af28b7234c362e3260017bc2f818ed41c08819e0994d1bc16aa1cf6"
+  },
+  {
+    "source": "src/JSystem/J3DGraphBase/J3DSys.cpp",
+    "native": "pc-port/src/compat/J3DDrawInitCompat.cpp",
+    "source_sha256": "908a17930beafd031cde862385ca606e8fcfae8ecebbb3f2ce2c768edb1a12be",
+    "native_sha256": "dba0787163210180b73a7d4da192244327d1484ef1bdece75d9235d3e9997867"
+  }
+]

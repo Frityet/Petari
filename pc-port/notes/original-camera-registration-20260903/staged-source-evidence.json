@@ -1,0 +1,30 @@
+[
+  {
+    "root": "include/Game/Camera/GameCameraCreator.hpp",
+    "root_sha256": "ff2e5168e1dd0eceb262a0ad4faa9e9fcf1cd6e765ed23f369e1d4c53517c00c",
+    "staged": "pc-port/notes/original-camera-registration-20260903/staged/Game/Camera/GameCameraCreator.hpp",
+    "staged_sha256": "ff2e5168e1dd0eceb262a0ad4faa9e9fcf1cd6e765ed23f369e1d4c53517c00c",
+    "only_documented_difference": true
+  },
+  {
+    "root": "src/Game/Camera/GameCameraCreator.cpp",
+    "root_sha256": "412f4af9f403ac3313aaf13815537133cb9a6085da4249fe1e46e23858ff6ce6",
+    "staged": "pc-port/notes/original-camera-registration-20260903/staged/Game/Camera/GameCameraCreator.cpp",
+    "staged_sha256": "0202b987b116b32560267829875a8150da5164ae3dd36168842ee6e24ab34b00",
+    "only_documented_difference": true
+  },
+  {
+    "root": "include/Game/Camera/DotCamParams.hpp",
+    "root_sha256": "d0c5881a2fe18cb3eb4860a97ff6110d306538bb890b22ab536984798198dff5",
+    "staged": "pc-port/notes/original-camera-registration-20260903/staged/Game/Camera/DotCamParams.hpp",
+    "staged_sha256": "d0c5881a2fe18cb3eb4860a97ff6110d306538bb890b22ab536984798198dff5",
+    "only_documented_difference": true
+  },
+  {
+    "root": "src/Game/Camera/DotCamParams.cpp",
+    "root_sha256": "83f2c91ca18d5f2c5f328acc7b28bd1733a34990c6f410eb316419b3524d8ea2",
+    "staged": "pc-port/notes/original-camera-registration-20260903/staged/Game/Camera/DotCamParams.cpp",
+    "staged_sha256": "0873826cc0766ecc0f7f3432b2f68b485e7fe55e90faa07b0889b4790ffe649d",
+    "only_documented_difference": true
+  }
+]
