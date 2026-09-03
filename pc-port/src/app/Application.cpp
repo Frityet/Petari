@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "app/SimulationClock.hpp"
 
 #ifndef NDEBUG
 #include "runtime/ParityTrace.hpp"
@@ -35,10 +36,6 @@ namespace smgpc::app {
             std::chrono::duration<double>(WII_FRAME_DURATION_SECONDS));
 
         bool g_disc_open = false;
-
-        [[nodiscard]] double logical_frame_time_seconds(std::uint64_t logical_frame_index) {
-            return logical_frame_index <= 1U ? 0.0 : static_cast<double>(logical_frame_index - 1U) * WII_FRAME_DURATION_SECONDS;
-        }
 
         [[nodiscard]] std::filesystem::path default_save_directory() {
             if (const auto *xdg_data_home = std::getenv("XDG_DATA_HOME"); xdg_data_home != nullptr && xdg_data_home[0] != '\0') {
@@ -277,29 +274,39 @@ namespace smgpc::app {
 #endif
 
                 auto frame_pacer = FramePacer(frame_pacing_enabled_from_environment());
-                auto loop_frame_index = std::uint64_t {};
+                auto simulation_clock = SimulationClock{};
                 while (_window_service->poll_events()) {
-                    const auto logical_frame_index = loop_frame_index + 1U;
+                    if (!simulation_clock.poll()) {
+                        std::this_thread::sleep_for(std::chrono::milliseconds{1});
+                        continue;
+                    }
                     auto frame_context = _renderer->begin_frame();
                     auto renderer_context = render::ScopedAuroraRendererContext(_renderer.get());
-                    frame_context.frame_index = logical_frame_index;
-                    frame_context.frame_time_seconds = logical_frame_time_seconds(logical_frame_index);
-                    frame_context.frame_delta_seconds = WII_FRAME_DURATION_SECONDS;
+                    (void)simulation_clock.poll();
 
-                    game_system.begin_frame(frame_context);
-                    game_system.update();
+                    while (simulation_clock.advance_frame(frame_context)) {
+                        game_system.begin_frame(frame_context);
+                        game_system.update();
 
-                    if (runtime.should_exit_application()) {
-                        _logger->info(logging::Category::APP, logging::Message {"Closing application after runtime request: {}"},
-                                      runtime.application_exit_reason());
-                        _window_service->close();
-                    }
+                        if (runtime.should_exit_application()) {
+                            _logger->info(logging::Category::APP, logging::Message {"Closing application after runtime request: {}"},
+                                          runtime.application_exit_reason());
+                            _window_service->close();
+                            break;
+                        }
 
 #ifndef NDEBUG
-                    if (exit_on_layout_name.has_value() && has_active_layout(runtime, *exit_on_layout_name)) {
-                        _window_service->close();
-                    }
+                        if (exit_on_layout_name.has_value() && has_active_layout(runtime, *exit_on_layout_name)) {
+                            _window_service->close();
+                            break;
+                        }
+                        if ((exit_after_frame.has_value() && frame_context.frame_index >= *exit_after_frame) ||
+                            (parity_trace_path.has_value() && !parity_trace_written && frame_context.frame_index >= parity_trace_frame) ||
+                            (screenshot_path.has_value() && !screenshot_written && frame_context.frame_index >= screenshot_frame)) {
+                            break;
+                        }
 #endif
+                    }
 
                     const auto should_draw_frame = !skip_render_until_frame.has_value() || frame_context.frame_index >= *skip_render_until_frame;
                     if (should_draw_frame) {
@@ -336,7 +343,6 @@ namespace smgpc::app {
                     }
 #endif
                     frame_pacer.wait_for_frame_end();
-                    ++loop_frame_index;
                 }
 
                 _renderer->shutdown();

@@ -1185,6 +1185,20 @@ target("smg-pc-original-j3d-vertex-buffer-tests")
         realtime_output = true
     })
 
+target("smg-pc-fixed-step-clock-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/runtime")
+    add_includedirs("../src", "../aurora/include")
+    add_defines("TARGET_PC")
+    add_files("FixedStepClockTests.cpp", "../src/compat/J3DFrameCtrlCompat.cpp")
+    add_deps("smg-pc-common")
+    add_tests("fixed_step_clock", {
+        group = "runtime",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-original-j3d-transform-animation-tests")
     set_kind("binary")
     set_default(false)

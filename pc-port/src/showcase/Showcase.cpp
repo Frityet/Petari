@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "app/SimulationClock.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Map/PlanetMap.hpp"
@@ -29,9 +30,12 @@
 #include <algorithm>
 #include <array>
 #include <charconv>
+#include <chrono>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <memory>
@@ -40,6 +44,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <utility>
 #include <vector>
 
@@ -356,18 +361,32 @@ namespace {
             logger->info(smgpc::logging::Category::APP,
                          smgpc::logging::Message{"Hold Enter+Backspace at the title prompt; use arrows and a fresh Enter to select a blank file"});
 
+            auto simulation_clock = smgpc::app::SimulationClock{};
             while (window.poll_events()) {
+                if (!simulation_clock.poll()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds{1});
+                    continue;
+                }
                 auto frame_context = renderer.begin_frame();
-                frame_index = frame_context.frame_index;
+                (void)simulation_clock.poll();
                 {
                     const auto renderer_context = smgpc::render::ScopedAuroraRendererContext(renderer);
+                    while (simulation_clock.advance_frame(frame_context)) {
+                        frame_index = frame_context.frame_index;
 #ifndef NDEBUG
-                    if (options.smoke) {
-                        runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
-                    }
+                        if (options.smoke) {
+                            runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
+                        }
 #endif
-                    runtime.begin_frame(frame_context);
-                    route.update();
+                        runtime.begin_frame(frame_context);
+                        route.update();
+                        if ((options.max_frames != 0U && frame_index >= options.max_frames) ||
+                            (!captured && options.screenshot_path.has_value() && options.screenshot_frame.has_value() &&
+                             frame_index >= *options.screenshot_frame) ||
+                            (!options.smoke && route.launch_request().has_value())) {
+                            break;
+                        }
+                    }
                     runtime.draw_3d_normal();
                     runtime.draw_2d_normal();
 #ifndef NDEBUG
@@ -678,6 +697,12 @@ namespace {
         auto mario_center_on_screen_seen = false;
         auto gravity_velocity_change_seen = false;
         auto real_kcl_contact_seen = false;
+#ifndef NDEBUG
+        const auto* timing_flag = std::getenv("SMGPC_DEBUG_SIMULATION_TIMING");
+        const auto log_simulation_timing =
+            timing_flag != nullptr && timing_flag[0] != '\0' &&
+            std::string_view{timing_flag} != "0";
+#endif
 
         {
             auto runtime = smgpc::runtime::RuntimeContext(*logger, window);
@@ -814,51 +839,66 @@ namespace {
                                  "Gateway smoke automatically spawned physics probe 1 in front of the game camera"});
             }
 
+            auto simulation_clock = smgpc::app::SimulationClock{runtime.frame_index()};
             while (window.poll_events()) {
+                if (!simulation_clock.poll()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds{1});
+                    continue;
+                }
                 auto frame_context = renderer.begin_frame();
-                frame_index = frame_context.frame_index;
+                (void)simulation_clock.poll();
                 {
                     const auto renderer_context =
                         smgpc::render::ScopedAuroraRendererContext(renderer);
+                    while (simulation_clock.advance_frame(frame_context)) {
+                        frame_index = frame_context.frame_index;
 #ifndef NDEBUG
-                    if (options.smoke) {
-                        runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
-                    }
-#endif
-                    runtime.begin_frame(frame_context);
-                    const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
-
-                    const auto spawn_key =
-                        window.is_input_pressed(smgpc::render::InputButton::CORE_PAD_PLUS);
-                    if (spawn_key && !spawn_key_held) {
-                        if (probes.size() == 64U) {
-                            probes.erase(probes.begin());
+                        if (options.smoke) {
+                            runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
                         }
-                        probes.push_back(spawn_gateway_probe(next_probe_id++, camera));
-                        const auto& probe = probes.back();
-                        logger->info(
-                            smgpc::logging::Category::APP,
-                            smgpc::logging::Message{
-                                "Spawned Gateway physics probe {} at ({}, {}, {}); active probes={}"},
-                            probe.id, probe.position.x, probe.position.y, probe.position.z,
-                            probes.size());
-                    }
-                    spawn_key_held = spawn_key;
+#endif
+                        runtime.begin_frame(frame_context);
+                        const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
 
-                    for (auto& probe : probes) {
-                        if (update_gateway_probe(probe, scene, gravity_requester)) {
+                        const auto spawn_key =
+                            window.is_input_pressed(smgpc::render::InputButton::CORE_PAD_PLUS);
+                        if (spawn_key && !spawn_key_held) {
+                            if (probes.size() == 64U) {
+                                probes.erase(probes.begin());
+                            }
+                            probes.push_back(spawn_gateway_probe(next_probe_id++, camera));
+                            const auto& probe = probes.back();
                             logger->info(
                                 smgpc::logging::Category::APP,
                                 smgpc::logging::Message{
-                                    "Gateway physics probe {} contacted real planet KCL triangle {} after {} frames"},
-                                probe.id, probe.last_triangle, probe.age_frames);
+                                    "Spawned Gateway physics probe {} at ({}, {}, {}); active probes={}"},
+                                probe.id, probe.position.x, probe.position.y, probe.position.z,
+                                probes.size());
                         }
-                        gravity_velocity_change_seen =
-                            gravity_velocity_change_seen || probe.gravity_changed_velocity;
-                        real_kcl_contact_seen =
-                            real_kcl_contact_seen || probe.real_kcl_contact_seen;
+                        spawn_key_held = spawn_key;
+
+                        for (auto& probe : probes) {
+                            if (update_gateway_probe(probe, scene, gravity_requester)) {
+                                logger->info(
+                                    smgpc::logging::Category::APP,
+                                    smgpc::logging::Message{
+                                        "Gateway physics probe {} contacted real planet KCL triangle {} after {} frames"},
+                                    probe.id, probe.last_triangle, probe.age_frames);
+                            }
+                            gravity_velocity_change_seen =
+                                gravity_velocity_change_seen || probe.gravity_changed_velocity;
+                            real_kcl_contact_seen =
+                                real_kcl_contact_seen || probe.real_kcl_contact_seen;
+                        }
+
+                        if ((options.max_frames != 0U && frame_index >= options.max_frames) ||
+                            (!captured && options.screenshot_path.has_value() && options.screenshot_frame.has_value() &&
+                             frame_index >= *options.screenshot_frame)) {
+                            break;
+                        }
                     }
 
+                    const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
                     runtime.draw_3d_normal(camera);
 #ifndef NDEBUG
                     if (options.smoke) {
@@ -906,6 +946,31 @@ namespace {
                     ++rendered_frames;
                 }
                 renderer.end_frame(runtime.wii_video().render_mode());
+
+#ifndef NDEBUG
+                if (log_simulation_timing) {
+                    const auto& actor = mario_owner.actor();
+                    const auto* animation = smgpc::compat::actor_bck_ctrl(&actor);
+                    const auto animation_name = smgpc::compat::actor_current_bck_name(&actor);
+                    if (animation != nullptr) {
+                        std::fprintf(
+                            stderr,
+                            "[smgpc:timing] tick=%llu present=%llu bck=%.*s "
+                            "bck_frame=%.9g bck_rate=%.9g bck_end=%d "
+                            "position=(%.9g,%.9g,%.9g)\n",
+                            static_cast<unsigned long long>(frame_index),
+                            static_cast<unsigned long long>(rendered_frames),
+                            static_cast<int>(animation_name.size()), animation_name.data(),
+                            animation->getFrame(), animation->getRate(), animation->getEnd(),
+                            actor.mPosition.x, actor.mPosition.y, actor.mPosition.z);
+                    } else {
+                        std::fprintf(stderr,
+                                     "[smgpc:timing] tick=%llu present=%llu bck=unavailable\n",
+                                     static_cast<unsigned long long>(frame_index),
+                                     static_cast<unsigned long long>(rendered_frames));
+                    }
+                }
+#endif
 
                 if (const auto* stats = aurora_get_stats(); stats != nullptr) {
                     gpu_draw_seen = gpu_draw_seen ||

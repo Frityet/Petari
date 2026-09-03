@@ -1,0 +1,68 @@
+[
+  {
+    "target": "smg-pc-fixed-step-clock-tests",
+    "exit_code": 0,
+    "seconds": 0.006,
+    "sha256": "6c24329ab88595ffc6fcc4b808f2c97d9db171fc108b4a6cc77360cb94106d46"
+  },
+  {
+    "target": "smg-pc-original-j3d-vertex-buffer-tests",
+    "exit_code": 0,
+    "seconds": 0.046,
+    "sha256": "5eb265bf514fb637497afe5378d87fd1e6012ce4ebc326ab37399594b95dfbc9"
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "exit_code": 0,
+    "seconds": 0.533,
+    "sha256": "f72502946d89b69c3ad473a2d3f749b8a672ed17463f81226f0deb83a657a9cd"
+  },
+  {
+    "target": "smg-pc-binder-kcl-mario-walk-tests",
+    "exit_code": 0,
+    "seconds": 0.556,
+    "sha256": "9eead6e87c2935759bce398947b94d6087d7bdad10b8ebf83abf53544bdbbca9"
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "exit_code": 0,
+    "seconds": 0.5,
+    "sha256": "9a45b5eefd08f7c96bff282629473473562caa1cd6339c3bb0c41dc31947ff34"
+  },
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "exit_code": 0,
+    "seconds": 0.542,
+    "sha256": "810fe8e496c97fb5a7f43d580fcef7f5600b8e1d4ee38a3a4c516601b084455c"
+  },
+  {
+    "target": "smg-pc-only-camera-tests",
+    "exit_code": 0,
+    "seconds": 0.548,
+    "sha256": "cfe7460e97d5fc0b956bd34ab8fe9235cf8fe3219e01352b2ea352d1e9b1ef1d"
+  },
+  {
+    "target": "smg-pc-camera-view-interpolator-tests",
+    "exit_code": 0,
+    "seconds": 0.547,
+    "sha256": "446b44c7b20b7c3db5d162631194a0f6aca64167cf6ce5486e3d9788ed5575fc"
+  },
+  {
+    "target": "smg-pc-camera-view-service-tests",
+    "exit_code": 0,
+    "seconds": 0.548,
+    "sha256": "687a727c2e4a1880a8b8f7eef3f2288cb1b9da60b06d50278d759b707686715f"
+  },
+  {
+    "target": "smg-pc-stage-start-camera-tests",
+    "exit_code": 0,
+    "seconds": 0.55,
+    "sha256": "49fd1cff83a92e27cd7bab1b060ce81e8c209bae99d802d242d0e6a6f552284e"
+  },
+  {
+    "target": "smg-pc-actor-event-camera-tests",
+    "exit_code": 0,
+    "seconds": 0.627,
+    "sha256": "bb4a545c17541eb4cc3078434e4d5cad062afc5b7de87ac0a8fdcc38ea9580c5"
+  }
+]
