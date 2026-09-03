@@ -147,7 +147,10 @@ namespace MR {
     // playSceneForScenarioOpeningCamera
     // getCurrentMarioStartIdInfo
     // getStartPosNum
-    // getCurrentStartZoneId
+    s32 getCurrentStartZoneId() {
+        return getStageDataHolder()->getCurrentStartZoneId();
+    }
+
     // getInitializeStartIdInfo
     // getStageArchive
     // getGeneralPosNum
@@ -179,12 +182,29 @@ namespace MR {
     // getPlacedHiddenStarScenarioNo
     // getRailInfo
     // getNextLinkRailInfo
-    // getCurrentStartCameraId
-    // getStartCameraIdInfoFromStartDataIndex
+    s32 getCurrentStartCameraId() {
+        return getStageDataHolder()->getCurrentStartCameraId();
+    }
+
+    void getStartCameraIdInfoFromStartDataIndex(JMapIdInfo* pInfo, int startDataIndex) {
+        getStageDataHolder()->getStartCameraIdInfoFromStartDataIndex(pInfo, startDataIndex);
+    }
+
     // getPlacedRailNum
     // getCameraRailInfo
     // getCameraRailInfoFromRailDataIndex
-    // getStageCameraData
+    void getStageCameraData(void** ppData, s32* pSize, s32 zoneId) {
+        if (!getStageDataHolder()->isPlacedZone(zoneId)) {
+            *ppData = nullptr;
+            *pSize = 0;
+            return;
+        }
+
+        StageDataHolder* pHolder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId);
+        *ppData = pHolder->getStageArchiveResource("CameraParam.bcam");
+        *pSize = pHolder->getStageArchiveResourceSize(*ppData);
+    }
+
     // getCurrentScenarioStartAnimCameraData
 
     void incCoin(int term) {

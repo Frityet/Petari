@@ -33,7 +33,7 @@ public:
 
     const StageDataHolder* findPlacedStageDataHolder(const JMapInfoIter&) const;
     const StageDataHolder* getStageDataHolderFromZoneId(int) const;
-    const StageDataHolder* getStageDataHolderFromZoneId(int);
+    StageDataHolder* getStageDataHolderFromZoneId(int);
     bool isPlacedZone(int) const;
     const char* getJapaneseObjectName(const char*) const;
     void* getStageArchiveResource(const char*);
