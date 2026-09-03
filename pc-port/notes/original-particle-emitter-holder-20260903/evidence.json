@@ -1,0 +1,299 @@
+{
+  "compiler_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/Effect/ParticleEmitterHolder.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-particle-emitter-holder-20260903/ParticleEmitterHolder.o"
+  ],
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_sha256": {
+    "src/Game/Effect/ParticleEmitterHolder.cpp": "0936947a99975fe94ae3677a92b45b26594ccf67a777ceac7e60d7adf07704aa",
+    "include/Game/Effect/ParticleEmitter.hpp": "1a0f50d2b503adee89129083273c3ed072fd73db77629d7bb9fa0f682daeaba7",
+    "include/Game/Effect/ParticleEmitterHolder.hpp": "5a199086d25da8071abe94a206cf357f543cbc48d98ccf95c064a5e4e28a3144",
+    "libs/MSL_C++/include/functional.hpp": "e0db64062ab2a5e1ea5fc6dc8ea347d45e69d9ac4abda516e5a6a09ee7161c72"
+  },
+  "layout": {
+    "sizeof(ParticleEmitterHolder)": 12,
+    "sizeof(ParticleEmitter)": 8,
+    "offsetof(ParticleEmitterHolder, mEffectSystem)": 0,
+    "offsetof(ParticleEmitterHolder, mEmitters)": 4,
+    "offsetof(ParticleEmitter, mStopped)": 5
+  },
+  "member_predicate_address": "0x805787c8",
+  "member_predicate_bytes": "00000000ffffffff800ca448",
+  "functions": [
+    {
+      "name": "__ct__21ParticleEmitterHolderFPC12EffectSystemi",
+      "address": "0x800ca05c",
+      "bytes": 116,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b47c"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 6,
+          "symbol": "__ct__15ParticleEmitterFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c9fb4"
+        },
+        {
+          "offset": "0x42",
+          "kind": 4,
+          "symbol": "__ct__15ParticleEmitterFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c9fb4"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "__construct_new_array",
+          "addend": 0,
+          "effective_retail_target": "0x80518494"
+        }
+      ]
+    },
+    {
+      "name": "update__21ParticleEmitterHolderFb",
+      "address": "0x800ca0d0",
+      "bytes": 244,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0,
+          "effective_retail_target": "0x80518a00"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "forceDeleteEmitter__12EffectSystemCFP15ParticleEmitter",
+          "addend": 0,
+          "effective_retail_target": "0x800c5664"
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "getLinkSingleEmitter__Q22MR6EffectFPC14JPABaseEmitter",
+          "addend": 0,
+          "effective_retail_target": "0x800c626c"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0,
+          "effective_retail_target": "0x80518a4c"
+        }
+      ]
+    },
+    {
+      "name": "forceDeleteAllOneTimeEmitters__21ParticleEmitterHolderFv",
+      "address": "0x800ca1c4",
+      "bytes": 124,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "isContinuousParticle__15ParticleEmitterCFv",
+          "addend": 0,
+          "effective_retail_target": "0x800ca458"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "forceDeleteEmitter__12EffectSystemCFP15ParticleEmitter",
+          "addend": 0,
+          "effective_retail_target": "0x800c5664"
+        }
+      ]
+    },
+    {
+      "name": "forceDeleteAllEmitters__21ParticleEmitterHolderFv",
+      "address": "0x800ca240",
+      "bytes": 96,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "forceDeleteEmitter__12EffectSystemCFP15ParticleEmitter",
+          "addend": 0,
+          "effective_retail_target": "0x800c5664"
+        }
+      ]
+    },
+    {
+      "name": "requestMovementOnAllEmitters__21ParticleEmitterHolderFv",
+      "address": "0x800ca2a0",
+      "bytes": 124,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "pauseOff__15ParticleEmitterFv",
+          "addend": 0,
+          "effective_retail_target": "0x800ca034"
+        }
+      ]
+    },
+    {
+      "name": "findAvailableParticleEmitter__21ParticleEmitterHolderFv",
+      "address": "0x800ca31c",
+      "bytes": 180,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x16",
+          "kind": 6,
+          "symbol": "@3401",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805787c8"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 4,
+          "symbol": "@3401",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805787c8"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "__ptmf_scall",
+          "addend": 0,
+          "effective_retail_target": "0x805188b0"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ]
+    },
+    {
+      "name": "requestMovementOffAllLoopEmitters__21ParticleEmitterHolderFv",
+      "address": "0x800ca3d0",
+      "bytes": 120,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "isContinuousParticle__15ParticleEmitterCFv",
+          "addend": 0,
+          "effective_retail_target": "0x800ca458"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "pauseOn__15ParticleEmitterFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c9ff4"
+        }
+      ]
+    },
+    {
+      "name": "isValid__15ParticleEmitterCFv",
+      "address": "0x800ca448",
+      "bytes": 16,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": []
+    },
+    {
+      "name": "isContinuousParticle__15ParticleEmitterCFv",
+      "address": "0x800ca458",
+      "bytes": 36,
+      "match_percent": 100,
+      "relocated_bytes_equal": true,
+      "relocations": []
+    }
+  ]
+}

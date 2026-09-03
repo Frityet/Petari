@@ -112,6 +112,29 @@ namespace std {
         Return (Type::*mf_)() const;
     };
 
+    template < class Return, class Type >
+    class const_mem_fun_ref_t : public unary_function< Type, Return > {
+    public:
+        explicit const_mem_fun_ref_t(Return (Type::*mf)() const) : mf_(mf) {};
+
+        Return operator()(const Type& t) const {
+            return (t.*mf_)();
+        }
+
+    private:
+        Return (Type::*mf_)() const;
+    };
+
+    template < class Return, class Type >
+    inline mem_fun_ref_t< Return, Type > mem_fun_ref(Return (Type::*f)()) {
+        return mem_fun_ref_t< Return, Type >(f);
+    }
+
+    template < class Return, class Type >
+    inline const_mem_fun_ref_t< Return, Type > mem_fun_ref(Return (Type::*f)() const) {
+        return const_mem_fun_ref_t< Return, Type >(f);
+    }
+
     template < class Result, class Type, class Arg >
     class mem_fun1_t : public binary_function< Type*, Arg, Result > {
     public:
