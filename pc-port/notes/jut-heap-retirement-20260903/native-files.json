@@ -1,0 +1,32 @@
+[
+  {
+    "destination": "pc-port/src/compat/JKRHeapCompat.cpp",
+    "staged": "build/jut-heap-retirement-20260903/staged/compat/JKRHeapCompat.cpp",
+    "sha256": "2930d2e5cc2639ba0bcd1990c95d5972010dfa2f7c87fc28f55eb36118d608a5"
+  },
+  {
+    "destination": "pc-port/src/compat/JkrHeapFinalizer.cpp",
+    "staged": "build/jut-heap-retirement-20260903/staged/compat/JkrHeapFinalizer.cpp",
+    "sha256": "742890719b2394440780f4eaaa97dd56b228f41c121c4c3982eee606b01edf7c"
+  },
+  {
+    "destination": "pc-port/src/compat/JkrHeapFinalizer.hpp",
+    "staged": "build/jut-heap-retirement-20260903/staged/compat/JkrHeapFinalizer.hpp",
+    "sha256": "1df42be3da0b8bacb175738be75a14caebfd7c4881271c8229b91093bf1aaf0c"
+  },
+  {
+    "destination": "pc-port/src/runtime/jut/JutTexture.cpp",
+    "staged": "build/jut-heap-retirement-20260903/staged/runtime/jut/JutTexture.cpp",
+    "sha256": "81de3a2043647ae2751639d921a03697fef377b9ccb8bc344ddb31640512e094"
+  },
+  {
+    "destination": "pc-port/tests/JkrHeapFinalizerTests.cpp",
+    "staged": "build/jut-heap-retirement-20260903/staged/tests/JkrHeapFinalizerTests.cpp",
+    "sha256": "f7ed22c5059bc80f302892aed6b9724e41bb0566ba5d389b701a82766fc868d0"
+  },
+  {
+    "destination": "pc-port/tests/JutTextureOwnershipTests.cpp",
+    "staged": "build/jut-heap-retirement-20260903/staged/tests/JutTextureOwnershipTests.cpp",
+    "sha256": "2272a641ba7814e039d76663cbc207923ca53c8905f772a1ecff1b79a6c29c0d"
+  }
+]

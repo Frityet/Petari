@@ -1,9 +1,17 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 
 #include "compat/JutTextureAllocation.hpp"
+#include "compat/JkrHeapFinalizer.hpp"
+
+namespace {
+    void retire_jut_texture(void* object) noexcept {
+        static_cast<JUTTexture*>(object)->~JUTTexture();
+    }
+}
 
 JUTTexture::JUTTexture() {
     setCaptureFlag(false);
+    smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
 }
 
 JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
@@ -39,15 +47,23 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
     // cast to u8 solves ambiguity
     storeTIMG(texBuf, static_cast< u8 >(0));
     DCFlushRange(mImage, bufSize);
+    smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
     allocation.commit();
 }
 
 JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
     storeTIMG(p_timg, param_1);
     setCaptureFlag(false);
+    try {
+        smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+    } catch (...) {
+        GXDestroyTexObj(&mObj);
+        throw;
+    }
 }
 
 JUTTexture::~JUTTexture() {
+    smgpc::compat::unregister_jkr_heap_finalizer(this);
     GXDestroyTexObj(&mObj);
     if (getCaptureFlag()) {
         smgpc::compat::release_owned_jut_texture(*this);

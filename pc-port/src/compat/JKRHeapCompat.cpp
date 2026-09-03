@@ -1,6 +1,7 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JkrDiagnostics.hpp"
 #include "compat/JkrAllocationProvenance.hpp"
+#include "compat/JkrHeapFinalizer.hpp"
 #include <cstdint>
 
 namespace {
@@ -136,6 +137,7 @@ void JKRHeap::callAllDisposer() {
     while (mDisposerList.mHead != nullptr) {
         reinterpret_cast< JKRDisposer* >(mDisposerList.mHead->mData)->~JKRDisposer();
     }
+    smgpc::compat::detail::finalize_jkr_heap_objects(this);
 }
 
 void JKRHeap::freeAll() {
@@ -244,6 +246,7 @@ void JKRHeap::dispose_subroutine(uintptr_t start, uintptr_t end) {
             next_it++;
         }
     }
+    smgpc::compat::detail::finalize_jkr_heap_objects(this, start, end);
 }
 
 bool JKRHeap::dispose(void* ptr, u32 size) {
@@ -265,6 +268,7 @@ void JKRHeap::dispose() {
         iterator = list.getFirst();
         iterator->~JKRDisposer();
     }
+    smgpc::compat::detail::finalize_jkr_heap_objects(this);
 }
 
 void JKRHeap::copyMemory(void* pDst, void* pSrc, u32 size) {

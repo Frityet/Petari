@@ -1,0 +1,363 @@
+--- a/src/compat/JKRHeapCompat.cpp
++++ b/src/compat/JKRHeapCompat.cpp
+@@ -1,6 +1,7 @@
+ #include "JSystem/JKernel/JKRHeap.hpp"
+ #include "compat/JkrDiagnostics.hpp"
+ #include "compat/JkrAllocationProvenance.hpp"
++#include "compat/JkrHeapFinalizer.hpp"
+ #include <cstdint>
+ 
+ namespace {
+@@ -136,6 +137,7 @@
+     while (mDisposerList.mHead != nullptr) {
+         reinterpret_cast< JKRDisposer* >(mDisposerList.mHead->mData)->~JKRDisposer();
+     }
++    smgpc::compat::detail::finalize_jkr_heap_objects(this);
+ }
+ 
+ void JKRHeap::freeAll() {
+@@ -244,6 +246,7 @@
+             next_it++;
+         }
+     }
++    smgpc::compat::detail::finalize_jkr_heap_objects(this, start, end);
+ }
+ 
+ bool JKRHeap::dispose(void* ptr, u32 size) {
+@@ -265,6 +268,7 @@
+         iterator = list.getFirst();
+         iterator->~JKRDisposer();
+     }
++    smgpc::compat::detail::finalize_jkr_heap_objects(this);
+ }
+ 
+ void JKRHeap::copyMemory(void* pDst, void* pSrc, u32 size) {
+--- /dev/null
++++ b/src/compat/JkrHeapFinalizer.cpp
+@@ -0,0 +1,102 @@
++#include "compat/JkrHeapFinalizer.hpp"
++#include "compat/JkrAllocationDomain.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include <atomic>
++#include <cstdlib>
++#include <mutex>
++#include <new>
++#include <stdexcept>
++
++namespace smgpc::compat {
++    namespace {
++        struct Record {
++            void* object;
++            JKRHeap* heap;
++            void (*finalize)(void*) noexcept;
++            Record* next;
++        };
++        Record* records;
++        std::atomic<std::size_t> record_count;
++        std::mutex& mutex() {
++            // Native SDK destruction remains legal during process teardown.
++            // This synchronization object never uses a Game allocation.
++            static auto* instance = [] {
++                void* memory = std::malloc(sizeof(std::mutex));
++                if (!memory) std::abort();
++                return new (memory) std::mutex;
++            }();
++            return *instance;
++        }
++        struct HeapLock {
++            JKRHeap& heap;
++            explicit HeapLock(JKRHeap& value) : heap(value) { heap.lock(); }
++            ~HeapLock() { heap.unlock(); }
++        };
++        void finalize(JKRHeap* heap, std::uintptr_t begin, std::uintptr_t end, bool entire_heap) noexcept {
++            JkrHostAllocationScope host;
++            for (;;) {
++                if (record_count.load(std::memory_order_acquire) == 0) return;
++                Record* removed = nullptr;
++                {
++                    std::lock_guard lock(mutex());
++                    for (auto** slot = &records; *slot; slot = &(*slot)->next) {
++                        auto* record = *slot;
++                        auto address = reinterpret_cast<std::uintptr_t>(record->object);
++                        if (record->heap == heap && (entire_heap || (begin <= address && address < end))) {
++                            removed = record;
++                            *slot = record->next;
++                            record_count.fetch_sub(1, std::memory_order_release);
++                            break;
++                        }
++                    }
++                }
++                if (!removed) return;
++                auto* object = removed->object;
++                auto callback = removed->finalize;
++                std::free(removed);
++                // Re-scan after each callback: it can destroy and unregister
++                // other objects. Never hold the registry lock across GX drain.
++                callback(object);
++            }
++        }
++    }
++    void register_jkr_heap_finalizer(void* object, void (*callback)(void*) noexcept) {
++        JkrHostAllocationScope host;
++        if (!object || !callback) throw std::invalid_argument("Heap finalizer requires an object and callback");
++        auto* heap = JKRHeap::findFromRoot(object);
++        if (!heap) return;
++        HeapLock heap_lock(*heap);
++        auto* record = static_cast<Record*>(std::malloc(sizeof(Record)));
++        if (!record) throw std::bad_alloc();
++        *record = {object, heap, callback, nullptr};
++        std::lock_guard lock(mutex());
++        for (auto* current = records; current; current = current->next) {
++            if (current->object == object) {
++                std::free(record);
++                throw std::logic_error("Object already has a JKR heap finalizer");
++            }
++        }
++        record->next = records;
++        records = record;
++        record_count.fetch_add(1, std::memory_order_release);
++    }
++    void unregister_jkr_heap_finalizer(void* object) noexcept {
++        if (record_count.load(std::memory_order_acquire) == 0) return;
++        std::lock_guard lock(mutex());
++        for (auto** slot = &records; *slot; slot = &(*slot)->next) {
++            if ((*slot)->object == object) {
++                auto* removed = *slot;
++                *slot = removed->next;
++                record_count.fetch_sub(1, std::memory_order_release);
++                std::free(removed);
++                return;
++            }
++        }
++    }
++    namespace detail {
++        void finalize_jkr_heap_objects(JKRHeap* heap) noexcept { finalize(heap, 0, 0, true); }
++        void finalize_jkr_heap_objects(JKRHeap* heap, std::uintptr_t begin, std::uintptr_t end) noexcept {
++            finalize(heap, begin, end, false);
++        }
++    }
++}
+--- /dev/null
++++ b/src/compat/JkrHeapFinalizer.hpp
+@@ -0,0 +1,14 @@
++#pragma once
++#include <cstdint>
++class JKRHeap;
++namespace smgpc::compat {
++    // Native resources attached to an object in an actual original heap. The
++    // callback runs after original disposers, before that storage is reused.
++    // Host/stack objects are not registered. Does not retain the heap itself.
++    void register_jkr_heap_finalizer(void* object, void (*finalize)(void*) noexcept);
++    void unregister_jkr_heap_finalizer(void* object) noexcept;
++    namespace detail {
++        void finalize_jkr_heap_objects(JKRHeap*) noexcept;
++        void finalize_jkr_heap_objects(JKRHeap*, std::uintptr_t begin, std::uintptr_t end) noexcept;
++    }
++}
+--- a/src/runtime/jut/JutTexture.cpp
++++ b/src/runtime/jut/JutTexture.cpp
+@@ -1,9 +1,17 @@
+ #include <JSystem/JUtility/JUTTexture.hpp>
+ 
+ #include "compat/JutTextureAllocation.hpp"
++#include "compat/JkrHeapFinalizer.hpp"
++
++namespace {
++    void retire_jut_texture(void* object) noexcept {
++        static_cast<JUTTexture*>(object)->~JUTTexture();
++    }
++}
+ 
+ JUTTexture::JUTTexture() {
+     setCaptureFlag(false);
++    smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+ }
+ 
+ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
+@@ -39,15 +47,23 @@
+     // cast to u8 solves ambiguity
+     storeTIMG(texBuf, static_cast< u8 >(0));
+     DCFlushRange(mImage, bufSize);
++    smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+     allocation.commit();
+ }
+ 
+ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
+     storeTIMG(p_timg, param_1);
+     setCaptureFlag(false);
++    try {
++        smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
++    } catch (...) {
++        GXDestroyTexObj(&mObj);
++        throw;
++    }
+ }
+ 
+ JUTTexture::~JUTTexture() {
++    smgpc::compat::unregister_jkr_heap_finalizer(this);
+     GXDestroyTexObj(&mObj);
+     if (getCaptureFlag()) {
+         smgpc::compat::release_owned_jut_texture(*this);
+--- /dev/null
++++ b/tests/JkrHeapFinalizerTests.cpp
+@@ -0,0 +1,71 @@
++#include "compat/JkrHeapFinalizer.hpp"
++#include "compat/JkrAllocationDomain.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include "JSystem/JKernel/JKRDisposer.hpp"
++#include <iostream>
++#include <memory>
++#include <new>
++#include <stdexcept>
++
++namespace {
++    using namespace smgpc::compat;
++    void require(bool value) { if (!value) throw std::runtime_error("JKR heap finalizer invariant failed"); }
++    struct Resource {
++        int& retired;
++        Resource* sibling = nullptr;
++        explicit Resource(int& counter) : retired(counter) {
++            register_jkr_heap_finalizer(this, [](void* pointer) noexcept { static_cast<Resource*>(pointer)->~Resource(); });
++        }
++        ~Resource() { unregister_jkr_heap_finalizer(this); ++retired; delete sibling; }
++    };
++    struct OriginalOwner final : JKRDisposer {
++        Resource* resource;
++        explicit OriginalOwner(Resource* value) : resource(value) {}
++        ~OriginalOwner() override { delete resource; }
++    };
++}
++int main() {
++    auto runtime = JkrHeapRuntime::create(1024 * 1024);
++    auto domain = JkrAllocationDomain::create(runtime, 256 * 1024);
++    auto& heap = domain->heap();
++    int host_count=0, deleted=0, bulk=0;
++    {
++        Resource host(host_count);
++        {
++            JkrAllocationScope scope(domain);
++            auto* object=new Resource(deleted); delete object;
++            new Resource(bulk);
++        }
++        heap.freeAll();
++        require(deleted==1 && bulk==1 && host_count==0);
++    }
++    require(host_count==1);
++    int head=0, tail=0;
++    {
++        JkrAllocationScope scope(domain);
++        new Resource(head);
++        new (heap.alloc(sizeof(Resource), -int(alignof(Resource)))) Resource(tail);
++    }
++    heap.freeTail(); require(tail==1 && head==0);
++    heap.freeAll(); require(tail==1 && head==1);
++    int range=0, survivor=0;
++    Resource* ranged;
++    {
++        JkrAllocationScope scope(domain);
++        ranged=new Resource(range); new Resource(survivor);
++    }
++    heap.dispose(ranged, u32(sizeof(Resource))); require(range==1 && survivor==0);
++    heap.freeAll(); require(range==1 && survivor==1);
++    int first=0, second=0, owned=0;
++    {
++        JkrAllocationScope scope(domain);
++        auto* sibling=new Resource(second);
++        auto* owner=new Resource(first); owner->sibling=sibling;
++        new OriginalOwner(new Resource(owned));
++    }
++    heap.freeAll(); require(first==1 && second==1 && owned==1);
++    int final=0;
++    { JkrAllocationScope scope(domain); new Resource(final); }
++    domain.reset(); require(final==1);
++    std::cout << "JKR native finalizers: host/explicit/bulk, tail, range, callback mutation/original disposer, domain destruction pass\n";
++}
+--- a/tests/JutTextureOwnershipTests.cpp
++++ b/tests/JutTextureOwnershipTests.cpp
+@@ -1,4 +1,6 @@
+ #include "compat/JutTextureAllocation.hpp"
++#include "compat/JkrAllocationDomain.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
+ #include "resource/Mem1ResourceHeap.hpp"
+ #include "render/RendererService.hpp"
+ #include "JSystem/JUtility/JUTTexture.hpp"
+@@ -23,7 +25,10 @@
+     OSInit();
+     auto heap=smgpc::resource::Mem1ResourceHeap::create(4U*1024U*1024U);
+     const auto available=heap->available_bytes();
++    auto jkr=smgpc::compat::JkrHeapRuntime::create(2U*1024U*1024U);
+     std::unique_ptr<JUTTexture> retained;
++    std::shared_ptr<smgpc::compat::JkrAllocationDomain> retired_service_domain;
++    std::size_t retained_capacity=0;
+     (void)renderer.begin_frame();
+     {
+         smgpc::compat::JutTextureAllocationService provider(heap);
+@@ -39,6 +44,47 @@
+         require(retained->mTIMG->mWidth==8 && retained->mTIMG->mHeight==8);
+         require(retained->mTIMG->mFormat==GX_TF_RGB565 && retained->mTIMG->mMinType==GX_LINEAR);
+         const auto allocated=heap->available_bytes();
++        retained_capacity=allocated;
++        {
++            using namespace smgpc::compat;
++            auto domain=JkrAllocationDomain::create(jkr,256U*1024U);
++            auto& original=domain->heap();
++            {
++                JkrAllocationScope scope(domain);
++                auto* texture=new JUTTexture(16,16,GX_TF_RGB565);
++                texture->capture(0,0,GX_TF_RGB565,false,0);
++                new JUTTexture(retained->mTIMG,0); // Borrowed image stays with retained.
++            }
++            require(heap->available_bytes()<allocated);
++            original.freeAll();
++            require(heap->available_bytes()==allocated);
++            {
++                JkrAllocationScope scope(domain);
++                auto* texture=new JUTTexture(16,16,GX_TF_RGB565);
++                delete texture;
++            }
++            original.freeAll(); require(heap->available_bytes()==allocated);
++            std::size_t head_capacity;
++            {
++                JkrAllocationScope scope(domain);
++                new JUTTexture(8,8,GX_TF_I8);
++                head_capacity=heap->available_bytes();
++                auto* tail=new(original.alloc(sizeof(JUTTexture),-int(alignof(JUTTexture)))) JUTTexture(16,16,GX_TF_RGB565);
++                tail->capture(0,0,GX_TF_RGB565,false,0);
++            }
++            original.freeTail(); require(heap->available_bytes()==head_capacity);
++            original.freeAll(); require(heap->available_bytes()==allocated);
++            {
++                JkrAllocationScope scope(domain);
++                new JUTTexture(16,16,GX_TF_RGB565);
++                bool failed=false;
++                try { new JUTTexture(2048,2048,GX_TF_RGBA8); } catch(const std::bad_alloc&) { failed=true; }
++                require(failed);
++            }
++            domain.reset(); require(heap->available_bytes()==allocated);
++            std::cout << "JUTTexture: actual JKR bulk/tail/domain retirement, explicit delete, borrowed storage and failed construction pass\n";
++        }
++
+         {
+             JUTTexture borrowed(retained->mTIMG,0);
+             require(!borrowed.getCaptureFlag() && borrowed.mTIMG==retained->mTIMG && borrowed.mImage==retained->mImage);
+@@ -75,6 +121,11 @@
+         try { JUTTexture too_large(2048, 2048, GX_TF_RGBA8); }
+         catch (const std::bad_alloc&) { capacity_rejected=true; }
+         require(capacity_rejected && heap->available_bytes()==allocated);
++        retired_service_domain=smgpc::compat::JkrAllocationDomain::create(jkr,128U*1024U);
++        {
++            smgpc::compat::JkrAllocationScope scope(retired_service_domain);
++            new JUTTexture(8,8,GX_TF_I8);
++        }
+         std::cout << "JUTTexture: enclosing-constructor unwind and failed allocation restore mapped capacity\n";
+         std::cout << "JUTTexture: mapped owned/borrowed, GD address, dimensions, three capture/destruction/reuse cycles pass\n";
+     }
+@@ -82,6 +133,8 @@
+     bool rejected=false;
+     try { JUTTexture missing(8,8,GX_TF_RGB565); } catch(const std::logic_error&) { rejected=true; }
+     require(rejected);
++    retired_service_domain.reset();
++    require(heap->available_bytes()==retained_capacity);
+     retained.reset();
+     require(heap->available_bytes()==available);
+     renderer.end_frame();
