@@ -659,29 +659,6 @@ void JPADrawPoint(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
     GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 }
 
-void JPADrawLine(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {
-    if (param_1->checkStatus(8) == 0) {
-        JGeometry::TVec3< f32 > local_1c;
-        param_1->mPosition.x = local_1c.x;
-        JGeometry::TVec3< f32 > local_28;
-        param_1->getVelVec(local_28);
-        if (!local_28.isZero()) {
-            local_28.setLength(param_0->mGlobalPtclScl.y * (25.0f * param_1->mParticleScaleY));
-            local_28.sub(local_1c, local_28);
-            GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-            GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-            GXBegin(GX_LINES, GX_VTXFMT1, 2);
-            GXPosition3f32(local_1c.x, local_1c.y, local_1c.z);
-            GXTexCoord2f32(0.0f, 0.0f);
-            GXPosition3f32(local_28.x, local_28.y, local_28.z);
-            GXTexCoord2f32(0.0f, 1.0f);
-            GXEnd();
-            GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
-            GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
-        }
-    }
-}
-
 void JPADrawEmitterCallBackB(JPAEmitterWorkData* work) {
     if (work->mpEmtr->mpEmtrCallBack == NULL)
         return;

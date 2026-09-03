@@ -1,0 +1,107 @@
+[
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawDirection(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawRotDirection(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawDBillboard(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawYBillboard(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawRotYBillboard(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawLine(JPAEmitterWorkData* pWork, JPABaseParticle* pParticle) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawStripe(JPAEmitterWorkData* pWork) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/Game/System/Overwrite.cpp",
+    "definition": "void JPADrawStripeX(JPAEmitterWorkData* pWork) {"
+  },
+  {
+    "phase": "before",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawBillboard(JPAEmitterWorkData* work, JPABaseParticle* param_1) {"
+  },
+  {
+    "phase": "before",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawRotBillboard(JPAEmitterWorkData* work, JPABaseParticle* param_1) {"
+  },
+  {
+    "phase": "before",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawRotation(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {"
+  },
+  {
+    "phase": "before",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawPoint(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {"
+  },
+  {
+    "phase": "before",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawLine(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {"
+  },
+  {
+    "phase": "before",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawEmitterCallBackB(JPAEmitterWorkData* work) {"
+  },
+  {
+    "phase": "before",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawParticleCallBack(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawBillboard(JPAEmitterWorkData* work, JPABaseParticle* param_1) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawRotBillboard(JPAEmitterWorkData* work, JPABaseParticle* param_1) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawRotation(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawPoint(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawEmitterCallBackB(JPAEmitterWorkData* work) {"
+  },
+  {
+    "phase": "after",
+    "source": "src/JSystem/JParticle/JPABaseShape.cpp",
+    "definition": "void JPADrawParticleCallBack(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {"
+  }
+]

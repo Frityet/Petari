@@ -1,0 +1,267 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "methods": [
+    {
+      "name": "noLoadPrj__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPA4_Cf",
+      "address": "0x803a498c",
+      "size": 4,
+      "relocation_kinds": [],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "loadPrj__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPA4_Cf",
+      "address": "0x803a4990",
+      "size": 56,
+      "relocation_kinds": [
+        10
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "loadPrjAnm__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPA4_Cf",
+      "address": "0x803a49c8",
+      "size": 484,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "getNext__23@unnamed@Overwrite_cpp@FP26JPANode<15JPABaseParticle>",
+      "address": "0x803a4bac",
+      "size": 8,
+      "relocation_kinds": [],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "getPrev__23@unnamed@Overwrite_cpp@FP26JPANode<15JPABaseParticle>",
+      "address": "0x803a4bb4",
+      "size": 8,
+      "relocation_kinds": [],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "dirTypeVel__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "address": "0x803a4bbc",
+      "size": 12,
+      "relocation_kinds": [
+        10
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "dirTypePos__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "address": "0x803a4bc8",
+      "size": 12,
+      "relocation_kinds": [
+        10
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "dirTypePosInv__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "address": "0x803a4bd4",
+      "size": 76,
+      "relocation_kinds": [
+        10
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "dirTypeEmtrDir__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "address": "0x803a4c20",
+      "size": 16,
+      "relocation_kinds": [
+        10
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "dirTypePrevPtcl__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "address": "0x803a4c30",
+      "size": 120,
+      "relocation_kinds": [
+        10
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "rotTypeY__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "address": "0x803a4ca8",
+      "size": 64,
+      "relocation_kinds": [
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "rotTypeX__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "address": "0x803a4ce8",
+      "size": 64,
+      "relocation_kinds": [
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "rotTypeZ__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "address": "0x803a4d28",
+      "size": 64,
+      "relocation_kinds": [
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "rotTypeXYZ__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "address": "0x803a4d68",
+      "size": 92,
+      "relocation_kinds": [
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "basePlaneTypeXY__23@unnamed@Overwrite_cpp@FPA4_fff",
+      "address": "0x803a4dc4",
+      "size": 76,
+      "relocation_kinds": [],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "basePlaneTypeXZ__23@unnamed@Overwrite_cpp@FPA4_fff",
+      "address": "0x803a4e10",
+      "size": 76,
+      "relocation_kinds": [],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "basePlaneTypeX__23@unnamed@Overwrite_cpp@FPA4_fff",
+      "address": "0x803a4e5c",
+      "size": 112,
+      "relocation_kinds": [],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawDirection__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "address": "0x803a514c",
+      "size": 428,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawRotDirection__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "address": "0x803a52f8",
+      "size": 548,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawDBillboard__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "address": "0x803a551c",
+      "size": 372,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawLine__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "address": "0x803a5690",
+      "size": 332,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawStripe__FP18JPAEmitterWorkData",
+      "address": "0x803a57dc",
+      "size": 1004,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawStripeX__FP18JPAEmitterWorkData",
+      "address": "0x803a5bc8",
+      "size": 1784,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "calcYBBCam__17JPAEmitterManagerFv",
+      "address": "0x803a65d4",
+      "size": 228,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawYBillboard__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "address": "0x803a66b8",
+      "size": 296,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    },
+    {
+      "name": "JPADrawRotYBillboard__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "address": "0x803a67e0",
+      "size": 348,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "dol_normalized_exact": true
+    }
+  ],
+  "arrays": [
+    {
+      "name": "jpa_dl",
+      "address": "0x805dbd20",
+      "size": 32,
+      "dol_exact": true
+    },
+    {
+      "name": "jpa_dl_x",
+      "address": "0x805dbd40",
+      "size": 32,
+      "dol_exact": true
+    }
+  ]
+}

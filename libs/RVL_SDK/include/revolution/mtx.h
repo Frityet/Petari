@@ -49,6 +49,7 @@ void PSMTXIdentity(Mtx);
 void PSMTXCopy(const Mtx, Mtx);
 void PSMTXConcat(const Mtx, const Mtx, Mtx);
 void PSMTXMultVecSR(const Mtx, const Vec*, Vec*);
+void PSMTXMultVecArraySR(const Mtx, const Vec*, Vec*, u32);
 
 u32 PSMTXInverse(const Mtx, Mtx);
 

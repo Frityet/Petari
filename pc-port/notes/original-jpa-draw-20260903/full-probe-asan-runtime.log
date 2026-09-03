@@ -1,0 +1,9 @@
+Actual original manager loaded 3327 resources and 225 textures; 45386 function entries; all 3327 emitter IDs constructed; 52571 CPU frames; 352896 particle-frame observations; pool reuse, exhaustion, and heap retirement passed
+/Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPAParticle.cpp:100:28: runtime error: -16384 is outside the range of representable values of type 'unsigned short'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPAParticle.cpp:100:28 
+/Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPADynamicsBlock.cpp:57:57: runtime error: division by zero
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPADynamicsBlock.cpp:57:57 
+/Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPADynamicsBlock.cpp:58:17: runtime error: 32768 is outside the range of representable values of type 'short'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPADynamicsBlock.cpp:58:17 
+/Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPAParticle.cpp:101:28: runtime error: 32768 is outside the range of representable values of type 'short'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /Users/frityet/Projects/petari/build/original-jpa-draw-20260903/staged/JSystem/JParticle/JPAParticle.cpp:101:28 

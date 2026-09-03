@@ -1,0 +1,225 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/System/Overwrite.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-jpa-draw-20260903/Overwrite.o"
+  ],
+  "methods": [
+    {
+      "name": "noLoadPrj__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPA4_Cf",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "loadPrj__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPA4_Cf",
+      "size": "56",
+      "match_percent": 100.0
+    },
+    {
+      "name": "loadPrjAnm__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPA4_Cf",
+      "size": "484",
+      "match_percent": 98.92562
+    },
+    {
+      "name": "getNext__23@unnamed@Overwrite_cpp@FP26JPANode<15JPABaseParticle>",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getPrev__23@unnamed@Overwrite_cpp@FP26JPANode<15JPABaseParticle>",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "dirTypeVel__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "dirTypePos__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "dirTypePosInv__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "size": "76",
+      "match_percent": 100.0
+    },
+    {
+      "name": "dirTypeEmtrDir__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "dirTypePrevPtcl__23@unnamed@Overwrite_cpp@FPC18JPAEmitterWorkDataPC15JPABaseParticlePQ29JGeometry8TVec3<f>",
+      "size": "120",
+      "match_percent": 100.0
+    },
+    {
+      "name": "rotTypeY__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "size": "64",
+      "match_percent": 99.375
+    },
+    {
+      "name": "rotTypeX__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "size": "64",
+      "match_percent": 99.375
+    },
+    {
+      "name": "rotTypeZ__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "size": "64",
+      "match_percent": 99.375
+    },
+    {
+      "name": "rotTypeXYZ__23@unnamed@Overwrite_cpp@FffRA3_A4_f",
+      "size": "92",
+      "match_percent": 95.78261
+    },
+    {
+      "name": "basePlaneTypeXY__23@unnamed@Overwrite_cpp@FPA4_fff",
+      "size": "76",
+      "match_percent": 100.0
+    },
+    {
+      "name": "basePlaneTypeXZ__23@unnamed@Overwrite_cpp@FPA4_fff",
+      "size": "76",
+      "match_percent": 100.0
+    },
+    {
+      "name": "basePlaneTypeX__23@unnamed@Overwrite_cpp@FPA4_fff",
+      "size": "112",
+      "match_percent": 100.0
+    },
+    {
+      "name": "JPADrawDirection__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "428",
+      "match_percent": 99.90654
+    },
+    {
+      "name": "JPADrawRotDirection__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "548",
+      "match_percent": 99.78102
+    },
+    {
+      "name": "JPADrawDBillboard__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "372",
+      "match_percent": 99.7957
+    },
+    {
+      "name": "JPADrawLine__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "332",
+      "match_percent": 99.578316
+    },
+    {
+      "name": "JPADrawStripe__FP18JPAEmitterWorkData",
+      "size": "1004",
+      "match_percent": 98.18725
+    },
+    {
+      "name": "JPADrawStripeX__FP18JPAEmitterWorkData",
+      "size": "1784",
+      "match_percent": 93.61659
+    },
+    {
+      "name": "calcYBBCam__17JPAEmitterManagerFv",
+      "size": "228",
+      "match_percent": 99.649124
+    },
+    {
+      "name": "JPADrawYBillboard__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "296",
+      "match_percent": 99.74324
+    },
+    {
+      "name": "JPADrawRotYBillboard__FP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "348",
+      "match_percent": 99.82758
+    },
+    {
+      "name": "p_dl__23@unnamed@Overwrite_cpp@",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "p_prj__23@unnamed@Overwrite_cpp@",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "p_direction__23@unnamed@Overwrite_cpp@",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "p_rot__23@unnamed@Overwrite_cpp@",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "p_plane__23@unnamed@Overwrite_cpp@",
+      "size": "12",
+      "match_percent": 100.0
+    }
+  ],
+  "source_sha256": "b50ecc81d4afe9f6bdc99910dc351cc5c791dd53942efee385dbc755ff119255"
+}
