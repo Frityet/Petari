@@ -1,7 +1,7 @@
 #include "Game/System/GalaxyNameSortTable.hpp"
 #include "Game/Util/JMapInfo.hpp"
 
-extern const JMapData GalaxyIDBCSV;
+extern const u8 GalaxyIDBCSV[];
 
 s32 GalaxyNameSortTable::getGalaxySortIndex(const char* pName) {
     JMapInfo info;

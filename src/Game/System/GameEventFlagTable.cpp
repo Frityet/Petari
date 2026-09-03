@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cstdio>
 
-extern const JMapData GalaxyIDBCSV;
+extern const u8 GalaxyIDBCSV[];
 
 namespace {
     static const GameEventFlag sGameEventFlagStatic[] = {
