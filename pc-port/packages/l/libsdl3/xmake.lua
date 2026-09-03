@@ -15,7 +15,10 @@ package("libsdl3")
     add_versions("3.4.8", "e9fff7467fb60f037e6708da18b25560649e4c63edc2a69bb871b960d9cbfbba")
     add_versions("3.4.10", "12b34280415ec8418c864408b93d008a20a6530687ee613d60bfbd20411f2785")
 
-    add_deps("cmake", "egl-headers", "opengl-headers")
+    add_deps("cmake")
+    if not is_plat("macosx", "iphoneos", "wasm") then
+        add_deps("egl-headers", "opengl-headers")
+    end
 
     if is_plat("linux", "bsd", "cross") then
         add_configs("x11", {description = "Enables X11 support", default = true, type = "boolean"})
@@ -75,6 +78,10 @@ package("libsdl3")
         table.insert(configs, "-DBUILD_SHARED_LIBS=" .. (package:config("shared") and "ON" or "OFF"))
         table.insert(configs, "-DSDL_TEST_LIBRARY=OFF")
         table.insert(configs, "-DSDL_EXAMPLES=OFF")
+        if package:is_plat("macosx") then
+            -- macOS uses native Metal/CGL; GLES would require an external EGL implementation.
+            table.insert(configs, "-DSDL_OPENGLES=OFF")
+        end
         if package:is_plat("linux", "bsd", "cross") then
             table.insert(configs, "-DSDL_X11=" .. (package:config("x11") and "ON" or "OFF"))
             table.insert(configs, "-DSDL_X11_SHARED=" .. (package:config("x11_shared") and "ON" or "OFF"))
@@ -88,13 +95,13 @@ package("libsdl3")
         end
 
         local cflags
-        local packagedeps
-        if not package:is_plat("wasm") then
-            packagedeps = table.join2(packagedeps or {}, {"egl-headers", "opengl-headers"})
+        local packagedeps = {}
+        if not package:is_plat("macosx", "iphoneos", "wasm") then
+            packagedeps = table.join2(packagedeps, {"egl-headers", "opengl-headers"})
         end
 
         if package:is_plat("linux", "bsd", "cross") then
-            packagedeps = table.join2(packagedeps or {}, {"libxcursor", "libxext", "libxfixes", "libxcb", "libx11", "libxi", "libxrandr", "libxrender", "xorgproto", "wayland"})
+            packagedeps = table.join2(packagedeps, {"libxcursor", "libxext", "libxfixes", "libxcb", "libx11", "libxi", "libxrandr", "libxrender", "xorgproto", "wayland"})
         elseif package:is_plat("wasm") then
             cflags = {"-sUSE_SDL=0"}
         end

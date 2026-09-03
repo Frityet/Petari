@@ -40,6 +40,8 @@ package("imgui")
 
     on_install(function (package)
         local configs = {
+            -- Keep explicit archiver selection in xmake 3.1.1 LLVM sub-builds.
+            ar = get_config("ar"),
             sdl3 = package:config("sdl3"),
             sdl3_renderer = package:config("sdl3_renderer"),
             wgpu = package:config("wgpu"),

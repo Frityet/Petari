@@ -25,6 +25,7 @@ struct JMapData;
 #include "Game/Util/StringUtil.hpp"
 #include "compat/StageSessionState.hpp"
 #include <cstdio>
+#include <exception>
 #include <stdexcept>
 #include <string>
 #include <string_view>

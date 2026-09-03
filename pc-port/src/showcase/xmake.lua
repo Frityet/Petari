@@ -2,7 +2,6 @@ target("smg-pc-mario-gateway-walk-slice")
     set_kind("static")
     set_default(false)
     set_group("showcase")
-    set_toolset("cxx", "clang++")
     add_includedirs(path.join(os.projectdir(), "src"), {before = true})
     add_includedirs(path.join(os.projectdir(), "..", "include"))
     add_includedirs(path.join(os.projectdir(), "..", "libs", "JSystem", "include"))
@@ -39,4 +38,8 @@ target("smg-pc-showcase")
         "smg-pc-mario-gateway-walk-slice",
         "aurora-main"
     }
-    add_ldflags("-Wl,--gc-sections", {force = true})
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end

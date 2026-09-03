@@ -78,7 +78,7 @@ package("dawn-build")
         elseif package:is_plat("windows", "mingw", "msys") then
             package:add("syslinks", "advapi32", "dbghelp")
         elseif package:is_plat("macosx") then
-            package:add("frameworks", "CoreFoundation", "Foundation", "IOKit", "Metal", "QuartzCore")
+            package:add("frameworks", "CoreFoundation", "Foundation", "IOKit", "IOSurface", "Metal", "QuartzCore")
         end
     end)
 

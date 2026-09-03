@@ -7,6 +7,7 @@
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
+#include <exception>
 #include <stdexcept>
 #include <utility>
 #include <vector>

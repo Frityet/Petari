@@ -790,6 +790,12 @@ namespace smgpc::runtime {
                 entry->live_actor->calcAnim();
                 break;
             }
+            // Derived actors may supply their own calcAnim implementation.
+            // Publish the authoritative controller phase after that virtual
+            // calculation so every native model and retained joint follows it.
+            if (auto* actor = entry_live_actor(*entry); actor != nullptr) {
+                smgpc::compat::synchronize_actor_model_animation(actor);
+            }
 #ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::CalcAnim);
 #endif

@@ -8,6 +8,7 @@
 #include "compat/MaterialCtrlCompat.hpp"
 #include "render/J3dMatrix.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "runtime/SceneScheduler.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -23,6 +24,15 @@
 #include <string_view>
 
 namespace {
+    class CalcAnimOverrideActor final : public LiveActor {
+    public:
+        CalcAnimOverrideActor() : LiveActor("native calcAnim override proof") {}
+
+        void calcAnim() override {
+            calcAndSetBaseMtx();
+        }
+    };
+
     void require(bool condition, std::string_view message) {
         if (!condition) {
             throw std::runtime_error(std::string(message));
@@ -241,6 +251,44 @@ namespace {
         actor.calcAnmMtx();
         require_near(body_joint[0][3], view_only_x + 50.0F,
                      "calcAnmMtx must refresh cached joints after the virtual base calculation");
+
+        auto overridden_actor = CalcAnimOverrideActor{};
+        overridden_actor.initModelManagerWithAnm("Tico", "Tico", false);
+        MR::startBck(&overridden_actor, "Wait", nullptr);
+        overridden_actor.makeActorAppeared();
+        auto* overridden_model = smgpc::compat::actor_model(&overridden_actor);
+        auto* overridden_controller = MR::getBckCtrl(&overridden_actor);
+        auto* retained_joint = MR::getJointMtx(&overridden_actor, "Body");
+        require(overridden_model != nullptr && retained_joint != nullptr &&
+                    !overridden_actor.mFlag.mIsDead && !overridden_actor.mFlag.mIsClipped,
+                "the overridden animation proof must retain the real Tico model and joint");
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        scheduler.register_live_actor_model(overridden_actor, -1, 0, -1, -1);
+
+        overridden_controller->setFrame(7.0F);
+        overridden_actor.mPosition.x = 25.0F;
+        scheduler.execute_calc_anim();
+        require(overridden_model->bck_frame(0U) == 7.0F,
+                "scheduled calcAnim overrides must publish their authoritative BCK controller phase");
+        const auto override_joint_x = retained_joint[0][3];
+        overridden_actor.mFlag.mIsNoCalcAnim = true;
+        overridden_controller->setFrame(8.0F);
+        overridden_actor.mPosition.x += 50.0F;
+        scheduler.execute_calc_anim();
+        require(overridden_model->bck_frame(0U) == 7.0F &&
+                    retained_joint[0][3] == override_joint_x,
+                "no-calc animation must retain the published phase and joints for overrides");
+
+        overridden_actor.mFlag.mIsNoCalcAnim = false;
+        overridden_actor.mFlag.mIsStoppedAnim = true;
+        overridden_actor.movement();
+        scheduler.execute_calc_anim();
+        require(overridden_controller->getFrame() == 8.0F &&
+                    overridden_model->bck_frame(0U) == 8.0F &&
+                    MR::getJointMtx(&overridden_actor, "Body") == retained_joint &&
+                    retained_joint[0][3] != override_joint_x,
+                "stopped animation must not advance but must publish explicit phase and joint changes");
+        scheduler.unregister_live_actor_model(overridden_actor);
     }
 }
 

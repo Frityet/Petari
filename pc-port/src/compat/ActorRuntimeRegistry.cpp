@@ -763,6 +763,22 @@ namespace smgpc::compat {
         }
     }
 
+    void synchronize_actor_model_animation(LiveActor* actor) {
+        if (actor == nullptr || actor->mFlag.mIsDead || actor->mFlag.mIsNoCalcAnim) {
+            return;
+        }
+        auto& state = require_actor_state(actor);
+        if (state.model == nullptr) {
+            return;
+        }
+        const auto& animation = state.animation;
+        if (animation.bck_available) {
+            state.model->syncBckFrameController(
+                animation.bck_ctrl.mFrame, animation.bck_ctrl.mRate, animation.bck_ctrl.mState);
+        }
+        state.model->refresh_resolved_joint_matrices(state.base_matrix);
+    }
+
     void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count) {
         auto& state = require_actor_state(actor);
         release_actor_sensor_bindings(actor);

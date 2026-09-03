@@ -284,6 +284,7 @@ namespace smgpc::compat {
     [[nodiscard]] std::string_view actor_current_btk_name(const LiveActor* actor);
     [[nodiscard]] std::string_view actor_current_btp_name(const LiveActor* actor);
     void advance_actor_animation(LiveActor* actor);
+    void synchronize_actor_model_animation(LiveActor* actor);
 
     void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count);
     [[nodiscard]] HitSensor* add_actor_hit_sensor(LiveActor* actor, const char* name, std::uint32_t type,

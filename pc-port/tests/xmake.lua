@@ -136,12 +136,15 @@ target("smg-pc-gateway-spin-checkpoint-tests")
     set_default(false)
     set_group("tests/aurora")
     set_rundir(os.projectdir())
-    set_toolset("cxx", "clang++")
     add_files {
         "GatewaySpinCheckpointTests.cpp",
         "../aurora/lib/compat.cpp"
     }
-    add_ldflags("-Wl,--gc-sections", {force = true})
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
     add_deps {
         "smg-pc-mario-gateway-walk-slice",
         "smg-pc-common",
@@ -166,12 +169,15 @@ target("smg-pc-mario-gateway-walk-tests")
     set_default(false)
     set_group("tests/aurora")
     set_rundir(os.projectdir())
-    set_toolset("cxx", "clang++")
     add_files {
         "MarioGatewayWalkTests.cpp",
         "../aurora/lib/compat.cpp"
     }
-    add_ldflags("-Wl,--gc-sections", {force = true})
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
     add_deps {
         "smg-pc-mario-gateway-walk-slice",
         "smg-pc-common",
@@ -195,7 +201,6 @@ target("smg-pc-file-select-exact-source-compile")
     set_kind("static")
     set_default(false)
     set_group("tests/source-boundary")
-    set_toolset("cxx", "clang++")
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
     add_cxxflags("-include " .. path.join(os.projectdir(), "tests/FileSelectExactSourceCompileCompat.hpp"), { force = true })
     add_files {

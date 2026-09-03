@@ -1,5 +1,6 @@
 target("smg-pc-game")
     set_kind("static")
+    add_cxxflags("-Wno-register")
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
     add_files("**.cpp")
     -- The exact Player constructor closure is mirrored under src/Game/Player,
@@ -103,7 +104,11 @@ target("smg-pc-game")
         "Player/RushEndInfo.cpp",
         "Player/TornadoMario.cpp",
     }
-    add_files("Gravity/PlanetGravityManager.cpp", {cxxflags = "-fpermissive"})
+    -- The retail source explicitly narrows its opaque host pointer to u32.
+    -- Clang accepts this legacy cast in its extension mode; -fpermissive is GCC-only.
+    add_files("Gravity/PlanetGravityManager.cpp", {
+        cxxflags = is_plat("macosx", "iphoneos") and "-fms-extensions" or "-fpermissive"
+    })
     add_files("AudioLib/AudBgmSetting.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("AudioLib/AudParams.cpp", {
         force = {

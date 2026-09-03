@@ -694,7 +694,16 @@ namespace {
                     run_draw.parsed_display_list_bytes != 0U &&
                     run_draw.animated_joint_packets != 0U &&
                     run_draw.bck_frame_max > 0 && animation_frame_advanced,
-                "stick input must select, advance, and draw the real Run.bck model");
+                "stick input must select, advance, and draw the real Run.bck model;saw_run=" +
+                    std::to_string(saw_run) + ";current_bck=" +
+                    std::string(smgpc::compat::actor_current_bck_name(actor)) +
+                    ";packets=" + std::to_string(run_draw.packet_count) +
+                    ";triangles=" + std::to_string(run_draw.source_triangles) +
+                    ";display_list_bytes=" + std::to_string(run_draw.parsed_display_list_bytes) +
+                    ";animated_packets=" + std::to_string(run_draw.animated_joint_packets) +
+                    ";bck_frame=" + std::to_string(run_draw.bck_frame) +
+                    ";bck_frame_max=" + std::to_string(run_draw.bck_frame_max) +
+                    ";animation_advanced=" + std::to_string(animation_frame_advanced));
         require(walk_distance > 5.0F &&
                     std::fabs(dot(walk_displacement, stand_gravity)) <
                         walk_distance * 0.35F,
