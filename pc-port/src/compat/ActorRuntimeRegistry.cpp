@@ -81,6 +81,7 @@ namespace {
 
     [[nodiscard]] std::vector<NameObj*> snapshot_name_obj_runtime_objects_from(
         std::uint64_t first_registration_order) {
+        smgpc::compat::JkrHostAllocationScope host;
         auto objects = std::vector<NameObj*>{};
         objects.reserve(name_obj_states().size());
         for (const auto& [object, state] : name_obj_states()) {
@@ -158,6 +159,7 @@ namespace smgpc::compat {
     }
 
     const char* register_name_obj_runtime_state(NameObj* object, const char* name) {
+        JkrHostAllocationScope host;
         if (object == nullptr) {
             throw std::invalid_argument("NameObj runtime state requires a real object.");
         }
@@ -174,6 +176,7 @@ namespace smgpc::compat {
     }
 
     const char* update_name_obj_runtime_name(NameObj* object, const char* name) {
+        JkrHostAllocationScope host;
         if (object == nullptr) {
             throw std::invalid_argument("NameObj runtime state requires a real object.");
         }
