@@ -18,26 +18,12 @@
 #include <revolution/gd/GDBase.h>
 #include <revolution/gx.h>
 
-extern "C" {
-void GDSetCullMode(int);
-void GDSetAlphaCompare(int, int, int, int, int);
-void GDSetZMode(int, int, int);
-void GDSetGenMode2(int, int, int, int, int);
-void GDSetTevDirect(int);
-void GDSetChanCtrl(int, int, int, int, int, int, int);
-void GDSetBlendModeEtc(int, int, int, int, int, int, int);
-void GDSetDstAlpha(int, int);
-void GDSetTevAlphaCalcAndSwap(int, int, int, int, int, int, int, int, int, int, int, int);
-void GDSetTevOrder(int, int, int, int, int, int, int);
-void GDSetTevColorCalc(int, int, int, int, int, int, int, int, int, int);
-void GDSetTevColor(int, GXColor);
-void GDSetTexLookupMode(int, int, int, int, int, f32, f32, f32, int, int, int);
-void GDSetTexImgAttr(int, int, int, int);
-void GDSetTexImgPtr(int, void*);
-void GDSetTexCoordGen(int, int, int, int, int);
-void GDSetChanAmbColor(int, GXColor);
-void GDSetChanMatColor(int, GXColor);
-}
+#include <revolution/gd/GDGeometry.h>
+#include <revolution/gd/GDTev.h>
+#include <revolution/gd/GDPixel.h>
+#include <revolution/gd/GDIndirect.h>
+#include <revolution/gd/GDLight.h>
+#include <revolution/gd/GDTexture.h>
 
 class J3DMtxBuffer2 : public J3DMtxBuffer {
 public:
@@ -259,30 +245,30 @@ void J3DModelX::drawIn(J3DMaterial* material, bool mixFog, MtxPtr, J3DModel* ref
     }
 
     if (_1B8 != nullptr) {
-        _1B4 = reinterpret_cast< u32 >(_1B8);
+        _1B4 = _1B8;
         _1B8 = nullptr;
     }
 
     if (_1B4 != 0 && _1BC != 0) {
-        GXCallDisplayList(reinterpret_cast< void* >(_1B4), _1BC);
+        GXCallDisplayList(_1B4, _1BC);
     }
 
     if (_1C8[_1C0] != nullptr) {
-        _1C4[_1C0] = reinterpret_cast< u32 >(_1C8[_1C0]);
+        _1C4[_1C0] = _1C8[_1C0];
         _1C8[_1C0] = nullptr;
     }
 
     if (_1C4[_1C0] != 0 && _1CC[_1C0] != 0) {
-        GXCallDisplayList(reinterpret_cast< void* >(_1C4[_1C0]), _1CC[_1C0]);
+        GXCallDisplayList(_1C4[_1C0], _1CC[_1C0]);
     }
 
     if (mMaterialCallback != nullptr) {
-        mMaterialCallback(reinterpret_cast< void* >(_128), _1C0);
+        mMaterialCallback(_128, _1C0);
     }
 
     J3DShape* originalShape = nullptr;
     if (_12C != 0) {
-        J3DModel* shapeModel = reinterpret_cast< J3DModel* >(_12C);
+        J3DModel* shapeModel = _12C;
         originalShape = shapePacket->mpShape;
         J3DShape* replacementShape = shapeModel->mShapePacket[material->mShape->mIndex].mpShape;
         shapePacket->mpShape = replacementShape;
@@ -348,140 +334,140 @@ J3DModelX::J3DModelX(J3DModelData* modelData, u32 modelFlags, u32 mtxBufferFlags
     GDInitGDLObj(&displayList, displayListBuffer, sizeof(displayListBuffer));
     __GDCurrentDL = &displayList;
 
-    GDSetCullMode(1);
+    GDSetCullMode(static_cast< GXCullMode >(1));
     storeDisplayList(&displayList, 0);
 
-    GDSetAlphaCompare(7, 0, 1, 7, 0);
-    GDSetZMode(0, 7, 0);
-    GDSetGenMode2(0, 1, 1, 0, 2);
-    GDSetTevDirect(0);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(1), static_cast< GXCompare >(7), 0);
+    GDSetZMode(0, static_cast< GXCompare >(7), 0);
+    GDSetGenMode2(0, 1, 1, 0, static_cast< GXCullMode >(2));
+    GDSetTevDirect(static_cast< GXTevStageID >(0));
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(0), static_cast< GXBlendFactor >(0), static_cast< GXBlendFactor >(5), static_cast< GXLogicOp >(0), 0, 1, 0);
     GDSetDstAlpha(1, 0xFF);
-    GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(1), static_cast< GXTevScale >(3), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 1);
 
-    GDSetCullMode(1);
-    GDSetZMode(1, 3, 1);
-    GDSetBlendModeEtc(1, 4, 1, 0, 1, 0, 0);
-    GDSetGenMode2(1, 0, 1, 0, 1);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
-    GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
-    GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
-    GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+    GDSetCullMode(static_cast< GXCullMode >(1));
+    GDSetZMode(1, static_cast< GXCompare >(3), 1);
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(4), static_cast< GXBlendFactor >(1), static_cast< GXLogicOp >(0), 1, 0, 0);
+    GDSetGenMode2(1, 0, 1, 0, static_cast< GXCullMode >(1));
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetChanCtrl(static_cast< GXChannelID >(5), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetTevOrder(static_cast< GXTevStageID >(0), static_cast< GXTexCoordID >(0), static_cast< GXTexMapID >(0), static_cast< GXChannelID >(0xFF), static_cast< GXTexCoordID >(1), static_cast< GXTexMapID >(1), static_cast< GXChannelID >(0xFF));
+    GDSetTevColorCalc(static_cast< GXTevStageID >(0), static_cast< GXTevColorArg >(8), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0));
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(1), static_cast< GXTevScale >(3), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 2);
 
-    GDSetAlphaCompare(7, 0, 1, 7, 0);
-    GDSetZMode(1, 6, 0);
-    GDSetGenMode2(0, 1, 1, 0, 2);
-    GDSetTevDirect(0);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetBlendModeEtc(0, 0, 5, 0, 0, 1, 0);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(1), static_cast< GXCompare >(7), 0);
+    GDSetZMode(1, static_cast< GXCompare >(6), 0);
+    GDSetGenMode2(0, 1, 1, 0, static_cast< GXCullMode >(2));
+    GDSetTevDirect(static_cast< GXTevStageID >(0));
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(0), static_cast< GXBlendFactor >(0), static_cast< GXBlendFactor >(5), static_cast< GXLogicOp >(0), 0, 1, 0);
     GDSetDstAlpha(1, 0x90);
-    GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 1, 3, 1, 0, 0, 0);
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(1), static_cast< GXTevScale >(3), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 3);
 
-    GDSetAlphaCompare(7, 0, 0, 7, 0);
-    GDSetZMode(1, 3, 0);
-    GDSetGenMode2(0, 1, 1, 0, 1);
-    GDSetTevDirect(0);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetBlendModeEtc(1, 4, 5, 0, 1, 0, 0);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(0), static_cast< GXCompare >(7), 0);
+    GDSetZMode(1, static_cast< GXCompare >(3), 0);
+    GDSetGenMode2(0, 1, 1, 0, static_cast< GXCullMode >(1));
+    GDSetTevDirect(static_cast< GXTevStageID >(0));
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(4), static_cast< GXBlendFactor >(5), static_cast< GXLogicOp >(0), 1, 0, 0);
     GXColor yellow = {0xFF, 0xFF, 0x00, 0xFF};
-    GDSetTevColor(1, yellow);
-    GDSetTevColorCalc(0, 2, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
-    GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+    GDSetTevColor(static_cast< GXTevRegID >(1), yellow);
+    GDSetTevColorCalc(static_cast< GXTevStageID >(0), static_cast< GXTevColorArg >(2), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0));
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(1), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 4);
 
-    GDSetAlphaCompare(7, 0, 0, 7, 0);
-    GDSetZMode(1, 7, 1);
-    GDSetGenMode2(0, 1, 1, 0, 1);
-    GDSetBlendModeEtc(0, 4, 1, 0, 0, 0, 0);
-    GDSetChanCtrl(4, 0, 1, 1, 0, 2, 2);
-    GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 0xF, 0, 0, 0, 1, 0);
-    GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
-    GDSetTevOrder(0, 0xFF, 0xFF, 4, 0xFF, 0xFF, 4);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(0), static_cast< GXCompare >(7), 0);
+    GDSetZMode(1, static_cast< GXCompare >(7), 1);
+    GDSetGenMode2(0, 1, 1, 0, static_cast< GXCullMode >(1));
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(0), static_cast< GXBlendFactor >(4), static_cast< GXBlendFactor >(1), static_cast< GXLogicOp >(0), 0, 0, 0);
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(1), static_cast< GXColorSrc >(1), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetTevColorCalc(static_cast< GXTevStageID >(0), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0));
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
+    GDSetTevOrder(static_cast< GXTevStageID >(0), static_cast< GXTexCoordID >(0xFF), static_cast< GXTexMapID >(0xFF), static_cast< GXChannelID >(4), static_cast< GXTexCoordID >(0xFF), static_cast< GXTexMapID >(0xFF), static_cast< GXChannelID >(4));
     storeDisplayList(&displayList, 5);
 
-    GDSetTexLookupMode(0, 1, 1, 1, 1, 0.0f, 0.0f, 0.0f, 0, 0, 0);
-    GDSetTexImgAttr(0, static_cast< u16 >(MR::getScreenWidth()), JUTVideo::getManager()->getEfbHeight(), 4);
+    GDSetTexLookupMode(static_cast< GXTexMapID >(0), static_cast< GXTexWrapMode >(1), static_cast< GXTexWrapMode >(1), static_cast< GXTexFilter >(1), static_cast< GXTexFilter >(1), 0.0f, 0.0f, 0.0f, 0, 0, static_cast< GXAnisotropy >(0));
+    GDSetTexImgAttr(static_cast< GXTexMapID >(0), static_cast< u16 >(MR::getScreenWidth()), JUTVideo::getManager()->getEfbHeight(), static_cast< GXTexFmt >(4));
     const ResTIMG* screenImage = MR::getScreenResTIMG();
-    GDSetTexImgPtr(0, const_cast< u8* >(reinterpret_cast< const u8* >(screenImage)) + screenImage->mImageDataOffset);
-    GDSetTexCoordGen(0, 1, 1, 1, 0x3C);
+    GDSetTexImgPtr(static_cast< GXTexMapID >(0), const_cast< u8* >(reinterpret_cast< const u8* >(screenImage)) + screenImage->mImageDataOffset);
+    GDSetTexCoordGen(static_cast< GXTexCoordID >(0), static_cast< GXTexGenType >(1), static_cast< GXTexGenSrc >(1), 1, 0x3C);
     storeDisplayList(&displayList, 6);
 
     GXColor black = {0, 0, 0, 0};
     GXColor opaqueBlack = {0, 0, 0, 0xFF};
-    GDSetChanAmbColor(2, black);
-    GDSetChanMatColor(2, opaqueBlack);
-    GDSetBlendModeEtc(0, 1, 0, 5, 0, 1, 0);
-    GDSetAlphaCompare(7, 0, 0, 7, 0);
-    GDSetChanCtrl(0, 0, 0, 0, 0, 2, 2);
-    GDSetChanCtrl(2, 1, 0, 0, 1, 2, 2);
-    GDSetTevAlphaCalcAndSwap(0, 6, 7, 5, 7, 0, 0, 0, 1, 0, 0, 0);
+    GDSetChanAmbColor(static_cast< GXChannelID >(2), black);
+    GDSetChanMatColor(static_cast< GXChannelID >(2), opaqueBlack);
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(0), static_cast< GXBlendFactor >(1), static_cast< GXBlendFactor >(0), static_cast< GXLogicOp >(5), 0, 1, 0);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(0), static_cast< GXCompare >(7), 0);
+    GDSetChanCtrl(static_cast< GXChannelID >(0), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetChanCtrl(static_cast< GXChannelID >(2), 1, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 1, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(6), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(5), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 7);
 
-    GDSetCullMode(1);
-    GDSetBlendModeEtc(1, 0, 0, 5, 0, 1, 0);
-    GDSetAlphaCompare(7, 0, 1, 7, 0);
-    GDSetZMode(1, 3, 0);
+    GDSetCullMode(static_cast< GXCullMode >(1));
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(0), static_cast< GXBlendFactor >(0), static_cast< GXLogicOp >(5), 0, 1, 0);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(1), static_cast< GXCompare >(7), 0);
+    GDSetZMode(1, static_cast< GXCompare >(3), 0);
     GXColor tevColor8 = {0, 0, 0, 0xFC};
-    GDSetTevColor(1, tevColor8);
-    GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+    GDSetTevColor(static_cast< GXTevRegID >(1), tevColor8);
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(1), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 8);
 
-    GDSetCullMode(2);
-    GDSetBlendModeEtc(1, 1, 1, 5, 0, 1, 0);
-    GDSetAlphaCompare(7, 0, 1, 7, 0);
-    GDSetZMode(1, 3, 0);
+    GDSetCullMode(static_cast< GXCullMode >(2));
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(1), static_cast< GXBlendFactor >(1), static_cast< GXLogicOp >(5), 0, 1, 0);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(1), static_cast< GXCompare >(7), 0);
+    GDSetZMode(1, static_cast< GXCompare >(3), 0);
     GXColor tevColor9 = {0, 0, 0, 4};
-    GDSetTevColor(1, tevColor9);
-    GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
+    GDSetTevColor(static_cast< GXTevRegID >(1), tevColor9);
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(1), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 9);
 
-    GDSetBlendModeEtc(1, 6, 7, 5, 1, 1, 0);
-    GDSetZMode(1, 3, 0);
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(6), static_cast< GXBlendFactor >(7), static_cast< GXLogicOp >(5), 1, 1, 0);
+    GDSetZMode(1, static_cast< GXCompare >(3), 0);
     GDSetDstAlpha(1, 0);
     storeDisplayList(&displayList, 10);
 
-    GDSetZMode(1, 3, 1);
-    GDSetGenMode2(1, 0, 1, 0, 1);
-    GDSetAlphaCompare(4, 0x20, 0, 7, 0);
-    GDSetBlendModeEtc(0, 0, 0, 5, 1, 1, 0);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
-    GDSetTevColorCalc(0, 8, 0xF, 0xF, 0xF, 0, 0, 3, 1, 0);
-    GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+    GDSetZMode(1, static_cast< GXCompare >(3), 1);
+    GDSetGenMode2(1, 0, 1, 0, static_cast< GXCullMode >(1));
+    GDSetAlphaCompare(static_cast< GXCompare >(4), 0x20, static_cast< GXAlphaOp >(0), static_cast< GXCompare >(7), 0);
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(0), static_cast< GXBlendFactor >(0), static_cast< GXBlendFactor >(0), static_cast< GXLogicOp >(5), 1, 1, 0);
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetChanCtrl(static_cast< GXChannelID >(5), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetTevColorCalc(static_cast< GXTevStageID >(0), static_cast< GXTevColorArg >(8), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(3), 1, static_cast< GXTevRegID >(0));
+    GDSetTevOrder(static_cast< GXTevStageID >(0), static_cast< GXTexCoordID >(0), static_cast< GXTexMapID >(0), static_cast< GXChannelID >(0xFF), static_cast< GXTexCoordID >(1), static_cast< GXTexMapID >(1), static_cast< GXChannelID >(0xFF));
     storeDisplayList(&displayList, 11);
 
-    GDSetZMode(1, 3, 0);
-    GDSetGenMode2(1, 0, 1, 0, 2);
-    GDSetAlphaCompare(7, 0, 0, 7, 0);
-    GDSetBlendModeEtc(1, 4, 1, 5, 1, 0, 0);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetChanCtrl(5, 0, 0, 0, 0, 2, 2);
-    GDSetTevColorCalc(0, 0xF, 0xC, 2, 0xF, 0, 0, 0, 1, 0);
-    GDSetTevAlphaCalcAndSwap(0, 1, 7, 7, 7, 0, 0, 0, 1, 0, 0, 0);
-    GDSetTevOrder(0, 0, 0, 0xFF, 1, 1, 0xFF);
+    GDSetZMode(1, static_cast< GXCompare >(3), 0);
+    GDSetGenMode2(1, 0, 1, 0, static_cast< GXCullMode >(2));
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(0), static_cast< GXCompare >(7), 0);
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(4), static_cast< GXBlendFactor >(1), static_cast< GXLogicOp >(5), 1, 0, 0);
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetChanCtrl(static_cast< GXChannelID >(5), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetTevColorCalc(static_cast< GXTevStageID >(0), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xC), static_cast< GXTevColorArg >(2), static_cast< GXTevColorArg >(0xF), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0));
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(1), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
+    GDSetTevOrder(static_cast< GXTevStageID >(0), static_cast< GXTexCoordID >(0), static_cast< GXTexMapID >(0), static_cast< GXChannelID >(0xFF), static_cast< GXTexCoordID >(1), static_cast< GXTexMapID >(1), static_cast< GXChannelID >(0xFF));
     storeDisplayList(&displayList, 12);
 
-    GDSetAlphaCompare(7, 0, 1, 7, 0);
-    GDSetZMode(1, 6, 0);
-    GDSetGenMode2(0, 1, 1, 0, 2);
-    GDSetTevDirect(0);
-    GDSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
-    GDSetBlendModeEtc(1, 1, 4, 0, 1, 0, 0);
+    GDSetAlphaCompare(static_cast< GXCompare >(7), 0, static_cast< GXAlphaOp >(1), static_cast< GXCompare >(7), 0);
+    GDSetZMode(1, static_cast< GXCompare >(6), 0);
+    GDSetGenMode2(0, 1, 1, 0, static_cast< GXCullMode >(2));
+    GDSetTevDirect(static_cast< GXTevStageID >(0));
+    GDSetChanCtrl(static_cast< GXChannelID >(4), 0, static_cast< GXColorSrc >(0), static_cast< GXColorSrc >(0), 0, static_cast< GXDiffuseFn >(2), static_cast< GXAttnFn >(2));
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(1), static_cast< GXBlendFactor >(4), static_cast< GXLogicOp >(0), 1, 0, 0);
     GXColor tevColor13 = {0x23, 0x19, 0x19, 5};
-    GDSetTevColor(1, tevColor13);
-    GDSetTevColorCalc(0, 0xF, 0xF, 0xF, 2, 0, 0, 0, 1, 0);
-    GDSetTevAlphaCalcAndSwap(0, 7, 7, 7, 1, 0, 0, 0, 1, 0, 0, 0);
+    GDSetTevColor(static_cast< GXTevRegID >(1), tevColor13);
+    GDSetTevColorCalc(static_cast< GXTevStageID >(0), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(0xF), static_cast< GXTevColorArg >(2), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0));
+    GDSetTevAlphaCalcAndSwap(static_cast< GXTevStageID >(0), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(7), static_cast< GXTevAlphaArg >(1), static_cast< GXTevOp >(0), static_cast< GXTevBias >(0), static_cast< GXTevScale >(0), 1, static_cast< GXTevRegID >(0), static_cast< GXTevSwapSel >(0), static_cast< GXTevSwapSel >(0));
     storeDisplayList(&displayList, 13);
 
     GDSetDstAlpha(1, 0x40);
     storeDisplayList(&displayList, 14);
 
-    GDSetBlendModeEtc(1, 7, 6, 0, 1, 0, 0);
+    GDSetBlendModeEtc(static_cast< GXBlendMode >(1), static_cast< GXBlendFactor >(7), static_cast< GXBlendFactor >(6), static_cast< GXLogicOp >(0), 1, 0, 0);
     storeDisplayList(&displayList, 15);
 
     _1E0 = -1;
@@ -495,7 +481,7 @@ J3DModelX::J3DModelX(J3DModelData* modelData, u32 modelFlags, u32 mtxBufferFlags
     _1BC = 0;
 
     const u16 materialCount = mModelData->getMaterialNum();
-    _1C4 = new u32[materialCount];
+    _1C4 = new u8*[materialCount];
     _1C8 = new u8*[materialCount];
     _1CC = new u16[materialCount];
 
@@ -568,5 +554,7 @@ void J3DModelX::shapeDrawFast(J3DShapeX* shape) const {
 J3DModelX::~J3DModelX() {
 }
 
+#ifndef TARGET_PC
 J3DModel::~J3DModel() {
 }
+#endif

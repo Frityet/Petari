@@ -1,0 +1,170 @@
+{
+  "function": "tryStandardRush__10MarioActorFv",
+  "source": "src/Game/Player/MarioActorRushMsg.cpp",
+  "source_sha256": "a43817229694d106ce1e3014f9d1822a4d124c026b0dab92e9a2066259ca5bf2",
+  "compiler": "GC/3.0a3 with configure.py cflags_game",
+  "address": "0x802c88b0",
+  "size": 260,
+  "instructions": 65,
+  "fully_relocated_bytes_equal": true,
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "function_sha256": "eefe99e7f15e688c6a0fbab76e082cabd2b1074b5cf07ed81df616a083063d8a",
+  "relocations": [
+    {
+      "offset": 16,
+      "kind": 10,
+      "symbol": "_savegpr_29",
+      "target_address": "0x80518a08",
+      "addend": 0
+    },
+    {
+      "offset": 52,
+      "kind": 10,
+      "symbol": "isRequestRush__10MarioActorCFv",
+      "target_address": "0x802bb91c",
+      "addend": 0
+    },
+    {
+      "offset": 80,
+      "kind": 10,
+      "symbol": "getNearestRushTarget__10MarioActorCFb",
+      "target_address": "0x802c8a70",
+      "addend": 0
+    },
+    {
+      "offset": 116,
+      "kind": 10,
+      "symbol": "selectHandyRush__10MarioActorCFPC9HitSensor",
+      "target_address": "0x802c4720",
+      "addend": 0
+    },
+    {
+      "offset": 138,
+      "kind": 6,
+      "symbol": "@4338",
+      "target_address": "0x805baa10",
+      "addend": 0
+    },
+    {
+      "offset": 146,
+      "kind": 4,
+      "symbol": "@4338",
+      "target_address": "0x805baa10",
+      "addend": 0
+    },
+    {
+      "offset": 148,
+      "kind": 10,
+      "symbol": "getSensor__9LiveActorCFPCc",
+      "target_address": "0x80165ce4",
+      "addend": 0
+    },
+    {
+      "offset": 164,
+      "kind": 10,
+      "symbol": "receiveMessage__9HitSensorFUlP9HitSensor",
+      "target_address": "0x80163bd0",
+      "addend": 0
+    },
+    {
+      "offset": 188,
+      "kind": 10,
+      "symbol": "tryStartRush__10MarioActorFb",
+      "target_address": "0x802c9094",
+      "addend": 0
+    },
+    {
+      "offset": 204,
+      "kind": 10,
+      "symbol": "resetSensorCount__10MarioActorFv",
+      "target_address": "0x802bf774",
+      "addend": 0
+    },
+    {
+      "offset": 212,
+      "kind": 10,
+      "symbol": "zero__Q29JGeometry8TVec3<f>Fv",
+      "target_address": "0x80018dfc",
+      "addend": 0
+    },
+    {
+      "offset": 220,
+      "kind": 10,
+      "symbol": "beginRush__10MarioActorFv",
+      "target_address": "0x802bdfa0",
+      "addend": 0
+    },
+    {
+      "offset": 240,
+      "kind": 10,
+      "symbol": "_restgpr_29",
+      "target_address": "0x80518a54",
+      "addend": 0
+    }
+  ],
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Player/MarioActorRushMsg.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-mario-jump-activation-20260903/MarioActorRushMsg-retail.o"
+  ]
+}

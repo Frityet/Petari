@@ -13,6 +13,7 @@
 #include "Game/GameAudio/AudEffectDirector.hpp"
 #include "Game/GameAudio/AudSeKeeper.hpp"
 #include "Game/GameAudio/AudStageBgmWrap.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/RhythmLib/AudChordInfo.hpp"
 #include "Game/RhythmLib/AudMeObject.hpp"
@@ -21,6 +22,7 @@
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -252,7 +254,36 @@ namespace MR {
         AudWrap::getSystemMeObject()->startMe(id);
     }
 
-    // getMapSoundCodeFoot
+    s32 getMapSoundCodeFoot(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return -1;
+        }
+
+        s32 groundCode = -1;
+        s32 wallCode = -1;
+        s32 roofCode = -1;
+        if (const Triangle* pGround = &pActor->mBinder->mGroundInfo.mParentTriangle) {
+            groundCode = getSoundCodeIndex(pGround->getAttributes());
+        } else if (const Triangle* pWall = &pActor->mBinder->mWallInfo.mParentTriangle) {
+            wallCode = getSoundCodeIndex(pWall->getAttributes());
+        } else if (const Triangle* pRoof = &pActor->mBinder->mRoofInfo.mParentTriangle) {
+            roofCode = getSoundCodeIndex(pRoof->getAttributes());
+        }
+
+        if (groundCode >= 0) {
+            return groundCode;
+        }
+
+        if (roofCode >= 0) {
+            return roofCode;
+        }
+
+        if (wallCode >= 0) {
+            return wallCode;
+        }
+
+        return -1;
+    }
 
     void setMapSondCodeGravity(const LiveActor* pActor, s32 code) {
         if (pActor->mSoundObject == nullptr) {

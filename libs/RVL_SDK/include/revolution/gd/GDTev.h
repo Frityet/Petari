@@ -1,6 +1,10 @@
 #ifndef GDTEV_H
 #define GDTEV_H
 
+#include "revolution/gx/GXEnum.h"
+#include "revolution/gx/GXStruct.h"
+#include "revolution/types.h"
+
 #define TEV_COLOR_ENV_0_ID 0x000000c0
 #define TEV_ALPHA_ENV_0_ID 0x000000c1
 #define TEV_COLOR_ENV_1_ID 0x000000c2
@@ -162,5 +166,19 @@
 #define BP_TEV_ORDER(map0, coord0, enable0, color0, map1, coord1, enable1, color1, id)                                                               \
     ((u32)(map0) << 0 | (u32)(coord0) << 3 | (u32)(enable0) << 6 | (u32)(color0) << 7 | (u32)(map1) << 12 | (u32)(coord1) << 15 |                    \
      (u32)(enable1) << 18 | (u32)(color1) << 19 | (u32)(id) << 24)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void GDSetAlphaCompare(GXCompare, u8, GXAlphaOp, GXCompare, u8);
+void GDSetTevAlphaCalcAndSwap(GXTevStageID, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevAlphaArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID, GXTevSwapSel, GXTevSwapSel);
+void GDSetTevOrder(GXTevStageID, GXTexCoordID, GXTexMapID, GXChannelID, GXTexCoordID, GXTexMapID, GXChannelID);
+void GDSetTevColorCalc(GXTevStageID, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevColorArg, GXTevOp, GXTevBias, GXTevScale, u8, GXTevRegID);
+void GDSetTevColor(GXTevRegID, GXColor);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // GDTEV_H

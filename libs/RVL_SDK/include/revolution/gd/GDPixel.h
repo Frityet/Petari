@@ -1,6 +1,10 @@
 #ifndef GDPIXEL_H
 #define GDPIXEL_H
 
+#include "revolution/gx/GXEnum.h"
+#include "revolution/gx/GXStruct.h"
+#include "revolution/types.h"
+
 #define TEV_FOG_PARAM_0_ID 0x000000ee
 #define TEV_FOG_PARAM_1_ID 0x000000ef
 #define TEV_FOG_PARAM_2_ID 0x000000f0
@@ -111,5 +115,17 @@
 #define BP_DST_ALPHA(alpha, enable, id) ((u32)(alpha) << 0 | (u32)(enable) << 8 | (u32)(id) << 24)
 
 #define BP_TOKEN(token, id) ((u32)(token) << 0 | (u32)(id) << 24)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void GDSetZMode(u8, GXCompare, u8);
+void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8);
+void GDSetDstAlpha(u8, u8);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // GDPIXEL_H

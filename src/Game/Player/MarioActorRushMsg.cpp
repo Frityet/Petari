@@ -17,7 +17,36 @@ void MarioActor::addRushSensor(HitSensor* pSensor, bool myBool) {
     _930++;
 }
 
-// bool MarioActor::tryStandardRush();
+bool MarioActor::tryStandardRush() {
+    if (mMario->getMovementStates().debugMode) {
+        return false;
+    }
+
+    bool autoRush = true;
+    if (isRequestRush()) {
+        autoRush = false;
+    } else {
+        HitSensor* pTarget = getNearestRushTarget(false);
+        if (pTarget != nullptr) {
+            if (_468 != 0 && selectHandyRush(pTarget)) {
+                return false;
+            }
+
+            if (pTarget->receiveMessage(ACTMES_IS_RUSH_REQUEST, getSensor("body"))) {
+                autoRush = false;
+            }
+        }
+    }
+
+    if (tryStartRush(autoRush)) {
+        resetSensorCount();
+        mVelocity.zero();
+        beginRush();
+        return true;
+    }
+
+    return false;
+}
 
 void MarioActor::checkPriorRushTarget() {
     s32 maxVal = 0;

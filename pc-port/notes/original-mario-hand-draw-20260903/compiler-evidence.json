@@ -1,0 +1,693 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorHand.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-hand-draw-20260903/MarioActorHand.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorSpecialDraw.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-hand-draw-20260903/MarioActorSpecialDraw.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorDraw.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-hand-draw-20260903/MarioActorDraw.o"
+    ]
+  ],
+  "functions": [
+    {
+      "symbol": "updateHand__10MarioActorFv",
+      "retail_bytes": 540,
+      "compiled_bytes": 540,
+      "objdiff_match_percent": 99.8,
+      "original_call_order": [
+        "_savegpr_27",
+        "isStatusActive__5MarioCFUl",
+        "isHiddenModel__2MRFPC9LiveActor",
+        "getJointIndex__2MRFPC9LiveActorPCc",
+        "getMainAnimationTrans__12XanimePlayerCFUlPQ29JGeometry8TVec3<f>",
+        "clamp__2MRFlll",
+        "clamp__2MRFlll",
+        "getJoint__2MRFPC9LiveActorUs",
+        "hideJoint__2MRFP8J3DJoint",
+        "getJoint__2MRFPC9LiveActorUs",
+        "showJoint__2MRFP8J3DJoint",
+        "getJoint__2MRFPC9LiveActorUs",
+        "hideJoint__2MRFP8J3DJoint",
+        "getJoint__2MRFPC9LiveActorUs",
+        "showJoint__2MRFP8J3DJoint",
+        "_restgpr_27"
+      ],
+      "constant_values": [
+        "3efae148",
+        "41200000",
+        "5061727473436f6e74726f6c00"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "isHiddenModel__2MRFPC9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0xce",
+          "kind": 6,
+          "symbol": "lbl_805B8772",
+          "addend": 0,
+          "value_hex": "5061727473436f6e74726f6c00"
+        },
+        {
+          "offset": "0xde",
+          "kind": 4,
+          "symbol": "lbl_805B8772",
+          "addend": 0,
+          "value_hex": "5061727473436f6e74726f6c00"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "getMainAnimationTrans__12XanimePlayerCFUlPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x100",
+          "kind": 109,
+          "symbol": "@61350",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x110",
+          "kind": 109,
+          "symbol": "@61349",
+          "addend": 0,
+          "value_hex": "3efae148"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "clamp__2MRFlll",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "clamp__2MRFlll",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1bc",
+          "kind": 10,
+          "symbol": "showJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e4",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f8",
+          "kind": 10,
+          "symbol": "showJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "isHiddenModel__2MRFPC9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0xce",
+          "kind": 6,
+          "symbol": "@6063",
+          "addend": 0,
+          "value_hex": "5061727473436f6e74726f6c00"
+        },
+        {
+          "offset": "0xde",
+          "kind": 4,
+          "symbol": "@6063",
+          "addend": 0,
+          "value_hex": "5061727473436f6e74726f6c00"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "getMainAnimationTrans__12XanimePlayerCFUlPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x100",
+          "kind": 109,
+          "symbol": "@6065",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x110",
+          "kind": 109,
+          "symbol": "@6064",
+          "addend": 0,
+          "value_hex": "3efae148"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "clamp__2MRFlll",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "clamp__2MRFlll",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1bc",
+          "kind": 10,
+          "symbol": "showJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e4",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "symbol": "getJoint__2MRFPC9LiveActorUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f8",
+          "kind": 10,
+          "symbol": "showJoint__2MRFP8J3DJoint",
+          "addend": 0
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0
+        }
+      ],
+      "source_sha256": "5de14b35b34c105291bdaef6bc3a81dccd6eec95617cd2370853d4666d661323"
+    },
+    {
+      "symbol": "createRainbowDL__10MarioActorFv",
+      "retail_bytes": 492,
+      "compiled_bytes": 492,
+      "objdiff_match_percent": 99.349594,
+      "original_call_order": [
+        "_savegpr_19",
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "__nw__FUl",
+        "__nwa__FUl",
+        "__nwa__FUli",
+        "GDInitGDLObj",
+        "GDSetTevColor",
+        "GDPadCurr32",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+        "_restgpr_19"
+      ],
+      "constant_values": [],
+      "retail_references": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "_savegpr_19",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "__nwa__FUli",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "GDSetTevColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x150",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 10,
+          "symbol": "_restgpr_19",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "_savegpr_19",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "__nwa__FUli",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "GDSetTevColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x150",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 10,
+          "symbol": "_restgpr_19",
+          "addend": 0
+        }
+      ],
+      "source_sha256": "5016226413752a8dea2c7ffb51e00a8393874a87c401ea6a55067a3c8b26fd4c"
+    },
+    {
+      "symbol": "addDL__9DLchangerFP9J3DModelX",
+      "retail_bytes": 36,
+      "compiled_bytes": 36,
+      "objdiff_match_percent": 100.0,
+      "original_call_order": [
+        "setDynamicDL__9J3DModelXFPUcUl"
+      ],
+      "constant_values": [],
+      "retail_references": [
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "setDynamicDL__9J3DModelXFPUcUl",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "setDynamicDL__9J3DModelXFPUcUl",
+          "addend": 0
+        }
+      ],
+      "source_sha256": "e5cfd787c1704bd94de5c31b4daa981cb76eefc85a8037b1bfefe77dcd75e53a"
+    }
+  ]
+}

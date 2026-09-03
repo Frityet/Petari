@@ -1,6 +1,10 @@
 #ifndef GDINDIRECT_H
 #define GDINDIRECT_H
 
+#include "revolution/gx/GXEnum.h"
+#include "revolution/gx/GXStruct.h"
+#include "revolution/types.h"
+
 #define IND_CMD0_ID 0x00000010
 
 #define IND_CMD_BT_SHIFT 0
@@ -30,5 +34,15 @@
      (u32)(coord3) << 21 | (u32)(id) << 24)
 
 #define BP_IND_MASK(mask, id) ((u32)(mask) << 0 | (u32)(id) << 24)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void GDSetTevDirect(GXTevStageID);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // GDINDIRECT_H

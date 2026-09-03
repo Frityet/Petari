@@ -1,4 +1,11 @@
 #include "Game/Player/MarioActor.hpp"
+#include <revolution/os/OSCache.h>
+#include <JSystem/JUtility/JUTTexture.hpp>
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Player/DLchanger.hpp"
+#include "Game/Util/SchedulerUtil.hpp"
+#include <revolution/gd/GDBase.h>
+#include <revolution/gd/GDTev.h>
 #include <revolution/gx/GXEnum.h>
 #include <revolution/gx/GXFrameBuf.h>
 #include <revolution/gx/GXPixel.h>
@@ -93,11 +100,60 @@ void MarioActor::resetFog() {
 
 // void MarioActor::updateLightDL(const Color8&, const Color8&, const Color8&, f32) {}
 
-// void MarioActor::createRainbowDL() {}
+void MarioActor::createRainbowDL() {
+    MR::ProhibitSchedulerAndInterrupts prohibit(false);
+    u8 displayList[0x100] ATTRIBUTE_ALIGN(32);
+    GDLObj obj;
+
+    for (u32 alpha = 0; alpha < 8; alpha++) {
+        for (u32 colorIndex = 0; colorIndex < 8; colorIndex++) {
+            _94[colorIndex + alpha * 8] = new DLchanger(32, 1);
+            GDInitGDLObj(&obj, displayList, sizeof(displayList));
+            __GDCurrentDL = &obj;
+
+            GXColor color = {0, 0, 0, 0};
+            if (colorIndex & 1) {
+                color.r = 255;
+            }
+            if (colorIndex & 2) {
+                color.g = 255;
+            }
+            if (colorIndex & 4) {
+                color.b = 255;
+            }
+            if (colorIndex == 0) {
+                color.r = 64;
+                color.g = 64;
+                color.b = 64;
+            }
+            color.a = (alpha + 1) * 24 + 16;
+            GDSetTevColor(GX_TEVREG0, color);
+            GDPadCurr32();
+            _94[colorIndex + alpha * 8]->setDL(displayList, obj.ptr - obj.start);
+        }
+    }
+}
 
 // void MarioActor::drawScreenBlend() const {}
 
-// void MarioActor::updateRandomTexture(f32) {}
+void MarioActor::updateRandomTexture(f32 value) {
+    _B88 = 1 - _B88;
+    u8* pImage = _B80[_B88]->mImage;
+    f32 chance = MR::clamp(1.0f - value / 1000.0f, 0.0f, 1.0f);
+
+    for (u32 y = 0; y < 8; y++) {
+        for (u32 x = 0; x < 8; x++) {
+            s32 intensity = pImage[x + y * 8] >> 4;
+            if (MR::getRandom() < chance) {
+                intensity += 4;
+            } else {
+                intensity--;
+            }
+            pImage[x + y * 8] = MR::clamp(intensity, 0, 15) << 4;
+        }
+    }
+    DCStoreRange(pImage, 64);
+}
 
 // void MarioActor::drawWallShade(const TVec3f&, const TVec3f&, f32) const {}
 

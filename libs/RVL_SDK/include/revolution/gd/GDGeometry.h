@@ -1,6 +1,10 @@
 #ifndef GDGEOMETRY_H
 #define GDGEOMETRY_H
 
+#include "revolution/gx/GXEnum.h"
+#include "revolution/gx/GXStruct.h"
+#include "revolution/types.h"
+
 #include "revolution/gd/GDBase.h"
 #include "revolution/gx/GXEnum.h"
 #include "revolution/gx/GXStruct.h"
@@ -185,6 +189,18 @@ void GDSetArray(GXAttr attr, const void* base_ptr, u8 stride);
 void GDSetArrayRaw(GXAttr attr, u32 base_ptr_raw, u8 stride);
 void GDSetVtxDescv(const GXVtxDescList* attrPtr);
 void GDSetTexCoordGen(GXTexCoordID, GXTexGenType, GXTexGenSrc, GXBool, u32);
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void GDSetCullMode(GXCullMode);
+void GDSetGenMode2(u8, u8, u8, u8, GXCullMode);
+void GDSetTexCoordGen(GXTexCoordID, GXTexGenType, GXTexGenSrc, u8, u32);
 
 #ifdef __cplusplus
 }

@@ -2,6 +2,10 @@
 #define GDLIGHT_H
 
 #include "revolution/gx/GXEnum.h"
+#include "revolution/gx/GXStruct.h"
+#include "revolution/types.h"
+
+#include "revolution/gx/GXEnum.h"
 #include "revolution/types.h"
 
 #ifdef __cplusplus
@@ -55,6 +59,18 @@ inline static u16 __GDLightID2Index(GXLightID id) {
 static u16 __GDLightID2Offset(GXLightID id) {
     return __GDLightID2Index(id) * 16;
 }
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void GDSetChanCtrl(GXChannelID, u8, GXColorSrc, GXColorSrc, u32, GXDiffuseFn, GXAttnFn);
+void GDSetChanAmbColor(GXChannelID, GXColor);
+void GDSetChanMatColor(GXChannelID, GXColor);
 
 #ifdef __cplusplus
 }

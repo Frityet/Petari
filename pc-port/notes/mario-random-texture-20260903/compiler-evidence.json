@@ -1,0 +1,180 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "address": "0x802C2BFC",
+  "bytes": 272,
+  "objdiff_match_percent": 99.04412,
+  "same_instruction_opcode_sequence": true,
+  "original_call_order": [
+    "_savegpr_26",
+    "getRandom__2MRFv",
+    "DCStoreRange",
+    "_restgpr_26"
+  ],
+  "constants": [
+    "00000000",
+    "3f800000",
+    "447a0000"
+  ],
+  "retail_references": [
+    {
+      "offset": "0x18",
+      "kind": 10,
+      "symbol": "_savegpr_26",
+      "addend": 0
+    },
+    {
+      "offset": "0x1c",
+      "kind": 109,
+      "symbol": "@63896",
+      "addend": 0,
+      "value_hex": "447a0000"
+    },
+    {
+      "offset": "0x28",
+      "kind": 109,
+      "symbol": "@62525",
+      "addend": 0,
+      "value_hex": "3f800000"
+    },
+    {
+      "offset": "0x30",
+      "kind": 109,
+      "symbol": "@62526",
+      "addend": 0,
+      "value_hex": "00000000"
+    },
+    {
+      "offset": "0x84",
+      "kind": 10,
+      "symbol": "getRandom__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0xec",
+      "kind": 10,
+      "symbol": "DCStoreRange",
+      "addend": 0
+    },
+    {
+      "offset": "0xfc",
+      "kind": 10,
+      "symbol": "_restgpr_26",
+      "addend": 0
+    }
+  ],
+  "compiled_references": [
+    {
+      "offset": "0x18",
+      "kind": 10,
+      "symbol": "_savegpr_26",
+      "addend": 0
+    },
+    {
+      "offset": "0x1c",
+      "kind": 109,
+      "symbol": "@4033",
+      "addend": 0,
+      "value_hex": "447a0000"
+    },
+    {
+      "offset": "0x28",
+      "kind": 109,
+      "symbol": "@4011",
+      "addend": 0,
+      "value_hex": "3f800000"
+    },
+    {
+      "offset": "0x30",
+      "kind": 109,
+      "symbol": "@3997",
+      "addend": 0,
+      "value_hex": "00000000"
+    },
+    {
+      "offset": "0x84",
+      "kind": 10,
+      "symbol": "getRandom__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0xec",
+      "kind": 10,
+      "symbol": "DCStoreRange",
+      "addend": 0
+    },
+    {
+      "offset": "0xfc",
+      "kind": 10,
+      "symbol": "_restgpr_26",
+      "addend": 0
+    }
+  ],
+  "method_sha256": "30348ade581437b0b0fa2b0f5cb5a6039a86d0b2f396b4897c10b3718f5ad61d",
+  "compiled_source_sha256": "5f934718c7e9a5926ad840a2a38f958b0c3390b56a65cdd782f249761d599f8c",
+  "compiler_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/build/mario-random-texture-20260903/MarioActorSpecialDraw.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/mario-random-texture-20260903/MarioActorSpecialDraw.o"
+  ],
+  "retail_function_sha256": "99a459022930ed8bc1bf74338260b9239ec235bba66fcef74f0649ceaa79cd9f"
+}

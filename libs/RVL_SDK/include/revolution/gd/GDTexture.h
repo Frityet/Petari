@@ -1,6 +1,10 @@
 #ifndef GDTEXTURE_H
 #define GDTEXTURE_H
 
+#include "revolution/gx/GXEnum.h"
+#include "revolution/gx/GXStruct.h"
+#include "revolution/types.h"
+
 #define TX_SETMODE0_I0_ID 0x80
 #define TX_SETMODE0_I1_ID 0x81
 #define TX_SETMODE0_I2_ID 0x82
@@ -96,5 +100,17 @@
     ((u32)(tmem) << 0 | (u32)(size0) << 15 | (u32)(size1) << 18 | (u32)(type) << 21 | (u32)(id) << 24)
 
 #define BP_TEX_CACHE_ODD(tmem, size0, size1, id) ((u32)(tmem) << 0 | (u32)(size0) << 15 | (u32)(size1) << 18 | (u32)(id) << 24)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void GDSetTexLookupMode(GXTexMapID, GXTexWrapMode, GXTexWrapMode, GXTexFilter, GXTexFilter, f32, f32, f32, u8, u8, GXAnisotropy);
+void GDSetTexImgAttr(GXTexMapID, u16, u16, GXTexFmt);
+void GDSetTexImgPtr(GXTexMapID, void*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // GDTEXTURE_H
