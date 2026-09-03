@@ -1,0 +1,2060 @@
+{
+  "scope": "Three root pose blending methods; original-toolchain comparison, not native/runtime animation activation.",
+  "source_sha256": "ebe4bf05de36294a9b0543a56e03be018467361cdf2bc635990fc298bee7286b",
+  "header_sha256": "5af00a66420b3ed82d1f8616d1041c4f019037c902e3431cc3c9cf37b75ffed8",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC/3.0a3, configure.py cflags_game, RMGK01 VERSION=0; sjiswrap v1.2.2",
+  "tool_versions": {
+    "dtk": "v1.8.3",
+    "objdiff-cli": "v3.6.1",
+    "sjiswrap": "v1.2.2"
+  },
+  "tool_hashes": {
+    "build/compilers/GC/3.0a3/mwcceppc.exe": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2",
+    "build/tools/sjiswrap.exe": "01d50fa1148cfc3c3b16658c6c9b1c0d9f5324cde79ed6c09ef8353af9d63adf",
+    "build/tools/dtk": "a33363725a323c5226d2efe183a2430b0247ea55298d6a19a347a8692b3ae870",
+    "build/tools/objdiff-cli": "4ef0896ba8986f1adea6202d6e52a471deb1d126b071d23e88e8c00c250da7fd"
+  },
+  "target_object_sha256": "049002b352c9ab19fb00f510edb78c6872323b0ba4d490e591310473cc8e836e",
+  "compiled_object_sha256": "dfa5629274328919fe10b215d0e44eb821465ea91f95b0ca48f6b2cf58f5a3ba",
+  "verified_ppc_layout": {
+    "sizeof(XanimeCore)": 44,
+    "sizeof(XanimeTrack)": 16,
+    "sizeof(XjointInfo)": 100,
+    "sizeof(XtransformInfo)": 40,
+    "sizeof(J3DTransformInfo)": 32,
+    "offsetof(J3DTransformInfo, mScale)": 0,
+    "offsetof(J3DTransformInfo, mRotation)": 12,
+    "offsetof(J3DTransformInfo, mTranslate)": 20,
+    "offsetof(J3DMtxBuffer, mpAnmMtx)": 12,
+    "offsetof(XjointInfo, _0)": 0,
+    "offsetof(XjointInfo, _28)": 40,
+    "offsetof(XjointInfo, _50)": 80,
+    "offsetof(XjointInfo, _5C)": 92,
+    "offsetof(XjointInfo, _60)": 96,
+    "offsetof(XtransformInfo, mRotation)": 24,
+    "offsetof(XanimeCore, mTrackCount)": 5,
+    "offsetof(XanimeCore, mJointList)": 16,
+    "offsetof(XanimeCore, mTrackList)": 24,
+    "offsetof(XanimeCore, _1C)": 28,
+    "offsetof(XanimeCore, _20)": 32,
+    "offsetof(XanimeCore, _29)": 41
+  },
+  "normalization": "Ignore separately inspected Vec copy constructors and outlined zero helper; map set(Vec) to TVec assignment. Erase register allocation in the event stream, retain comparison and arithmetic opcodes, calls, and branch destinations.",
+  "functions": [
+    {
+      "symbol": "calcBlend__10XanimeCoreFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "address": "0x800194ac",
+      "retail_size": 1044,
+      "compiled_size": 1064,
+      "objdiff_match_percent": 90.32567,
+      "retail_function_sha256": "1e0096b40b462059f5296c48abd6e3a31690113008ad5f58f7dde3409866b411",
+      "retail_direct_calls": [
+        "_savegpr_24",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "PSMTXQuat",
+        "JMAEulerToQuat__FsssP10Quaternion",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__14XtransformInfoFRC14XtransformInfo",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__10QuaternionFRC10Quaternion",
+        "PSMTXQuat",
+        "_restgpr_24"
+      ],
+      "compiled_direct_calls": [
+        "_savegpr_24",
+        "zero__Q29JGeometry8TVec3<f>Fv",
+        "zero__Q29JGeometry8TVec3<f>Fv",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "PSMTXQuat",
+        "JMAEulerToQuat__FsssP10Quaternion",
+        "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__14XtransformInfoFRC14XtransformInfo",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__10QuaternionFRC10Quaternion",
+        "PSMTXQuat",
+        "_restgpr_24"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x58",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x114",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "JMAEulerToQuat__FsssP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x194",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x1fc",
+          "kind": 10,
+          "symbol": "__as__14XtransformInfoFRC14XtransformInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x214",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x21c",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x23c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x240",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x25c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x268",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x274",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x284",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x288",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x298",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a4",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b0",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2bc",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d0",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d4",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2f4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f8",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x30c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x318",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x324",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x330",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x340",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x344",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x358",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x364",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x370",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x37c",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x390",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a4",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3b8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3cc",
+          "kind": 10,
+          "symbol": "__as__10QuaternionFRC10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x3d8",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x400",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "zero__Q29JGeometry8TVec3<f>Fv",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "zero__Q29JGeometry8TVec3<f>Fv",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x74",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xbc",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "JMAEulerToQuat__FsssP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x17c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c0",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "__as__14XtransformInfoFRC14XtransformInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x224",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x22c",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x24c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x260",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x26c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x278",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x284",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x294",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x298",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2a8",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b4",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2cc",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e0",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x308",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x30c",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x320",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x32c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x338",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x344",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x354",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x358",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x36c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x378",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x384",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x390",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a4",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x3b8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3cc",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e0",
+          "kind": 10,
+          "symbol": "__as__10QuaternionFRC10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x3ec",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x414",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ],
+      "identical_normalized_event_count": 70,
+      "identical_normalized_events": [
+        "call _savegpr_24",
+        "cmpwi _, 0x0",
+        "ble event7",
+        "cmpwi _, 0x0",
+        "beq event6",
+        "fadds _, _, _",
+        "bdnz event3",
+        "fcmpu cr0, _, _",
+        "bne event13",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call PSMTXQuat",
+        "b event69",
+        "fdivs _, _, _",
+        "b event29",
+        "cmpwi _, 0x0",
+        "beq event29",
+        "fcmpu cr0, _, _",
+        "beq event29",
+        "bctrl",
+        "call JMAEulerToQuat__FsssP10Quaternion",
+        "fmuls _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "fadds _, _, _",
+        "fdivs _, _, _",
+        "call JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "cmpw _, _",
+        "blt event15",
+        "cmpwi _, 0x0",
+        "beq event34",
+        "call __as__14XtransformInfoFRC14XtransformInfo",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "fcmpo cr0, _, _",
+        "bge event50",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "fcmpu cr0, _, _",
+        "beq event65",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__10QuaternionFRC10Quaternion",
+        "call PSMTXQuat",
+        "call _restgpr_24"
+      ]
+    },
+    {
+      "symbol": "calcSingle__10XanimeCoreFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "address": "0x800198c0",
+      "retail_size": 460,
+      "compiled_size": 460,
+      "objdiff_match_percent": 99.434784,
+      "retail_function_sha256": "9d9e40eba8d91fb02bedc84f23bf97563f8efd7dd951e3050e9b8757271595db",
+      "retail_direct_calls": [
+        "_savegpr_26",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "PSMTXQuat",
+        "JMAEulerToQuat__FsssP10Quaternion",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__14XtransformInfoFRC14XtransformInfo",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+        "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__10QuaternionFRC10Quaternion",
+        "PSMTXQuat",
+        "_restgpr_26"
+      ],
+      "compiled_direct_calls": [
+        "_savegpr_26",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "PSMTXQuat",
+        "JMAEulerToQuat__FsssP10Quaternion",
+        "set__Q29JGeometry8TVec3<f>FRC3Vec",
+        "set__Q29JGeometry8TVec3<f>FRC3Vec",
+        "__as__14XtransformInfoFRC14XtransformInfo",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+        "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__10QuaternionFRC10Quaternion",
+        "PSMTXQuat",
+        "_restgpr_26"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "_savegpr_26",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "JMAEulerToQuat__FsssP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "__as__14XtransformInfoFRC14XtransformInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x114",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+          "addend": 0
+        },
+        {
+          "offset": "0x160",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x19c",
+          "kind": 10,
+          "symbol": "__as__10QuaternionFRC10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "_restgpr_26",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "_savegpr_26",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "JMAEulerToQuat__FsssP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "set__Q29JGeometry8TVec3<f>FRC3Vec",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "set__Q29JGeometry8TVec3<f>FRC3Vec",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "__as__14XtransformInfoFRC14XtransformInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x114",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+          "addend": 0
+        },
+        {
+          "offset": "0x160",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x19c",
+          "kind": 10,
+          "symbol": "__as__10QuaternionFRC10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "_restgpr_26",
+          "addend": 0
+        }
+      ],
+      "identical_normalized_event_count": 25,
+      "identical_normalized_events": [
+        "call _savegpr_26",
+        "cmpwi _, 0x0",
+        "bne event7",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call PSMTXQuat",
+        "b event24",
+        "bctrl",
+        "call JMAEulerToQuat__FsssP10Quaternion",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "cmpwi _, 0x0",
+        "beq event14",
+        "call __as__14XtransformInfoFRC14XtransformInfo",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "fcmpo cr0, _, _",
+        "bge event20",
+        "call vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+        "call vecBlend__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+        "call JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__10QuaternionFRC10Quaternion",
+        "call PSMTXQuat",
+        "call _restgpr_26"
+      ]
+    },
+    {
+      "symbol": "calcBlendSpecial__10XanimeCoreFv",
+      "address": "0x80019a8c",
+      "retail_size": 1052,
+      "compiled_size": 1080,
+      "objdiff_match_percent": 94.882126,
+      "retail_function_sha256": "2dc4bfac4a5e63d9aa47b4a0e9386cb6f550c20af26ed404e372ee6a67c97b96",
+      "retail_direct_calls": [
+        "_savegpr_27",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "JMAEulerToQuat__FsssP10Quaternion",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__14XtransformInfoFRC14XtransformInfo",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__10QuaternionFRC10Quaternion",
+        "_restgpr_27"
+      ],
+      "compiled_direct_calls": [
+        "_savegpr_27",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "JMAEulerToQuat__FsssP10Quaternion",
+        "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__14XtransformInfoFRC14XtransformInfo",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ml__Q29JGeometry8TVec3<f>CFf",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__10QuaternionFRC10Quaternion",
+        "_restgpr_27"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x70",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xbc",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xc8",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "JMAEulerToQuat__FsssP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x13c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x148",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x17c",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "__as__14XtransformInfoFRC14XtransformInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d0",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x1ec",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x234",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x254",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x264",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x270",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x27c",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x288",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x298",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x29c",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2ac",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d0",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e8",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x308",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x30c",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x320",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x32c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x338",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x344",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x354",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x358",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x36c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x378",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x384",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x390",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a4",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x3b8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3cc",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e0",
+          "kind": 10,
+          "symbol": "__as__10QuaternionFRC10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x408",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x70",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xbc",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xc8",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "JMAEulerToQuat__FsssP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+          "addend": 0
+        },
+        {
+          "offset": "0x148",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x160",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x17c",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x194",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "__as__14XtransformInfoFRC14XtransformInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x204",
+          "kind": 109,
+          "symbol": "@10277",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x24c",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x268",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x26c",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x27c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x288",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x294",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a0",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b0",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b4",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d0",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2dc",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2fc",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x300",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x324",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x328",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x33c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x348",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x354",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x360",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x370",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x374",
+          "kind": 109,
+          "symbol": "@10283",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x388",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x394",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a0",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3ac",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c0",
+          "kind": 10,
+          "symbol": "JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x3d4",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3fc",
+          "kind": 10,
+          "symbol": "__as__10QuaternionFRC10Quaternion",
+          "addend": 0
+        },
+        {
+          "offset": "0x424",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0
+        }
+      ],
+      "identical_normalized_event_count": 76,
+      "identical_normalized_events": [
+        "call _savegpr_27",
+        "call __ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "call __ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "cmpwi _, 0x0",
+        "ble event9",
+        "cmpwi _, 0x0",
+        "beq event8",
+        "fadds _, _, _",
+        "bdnz event5",
+        "fcmpu cr0, _, _",
+        "beq event75",
+        "fdivs _, _, _",
+        "b event27",
+        "cmpwi _, 0x0",
+        "beq event27",
+        "fcmpu cr0, _, _",
+        "beq event27",
+        "bctrl",
+        "call JMAEulerToQuat__FsssP10Quaternion",
+        "fmuls _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "fadds _, _, _",
+        "fdivs _, _, _",
+        "call JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "cmpw _, _",
+        "blt event13",
+        "cmpwi _, 0x0",
+        "beq event32",
+        "call __as__14XtransformInfoFRC14XtransformInfo",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "fcmpu cr0, _, _",
+        "beq event42",
+        "fadds _, _, _",
+        "fcmpo cr0, _, _",
+        "bge event39",
+        "b event42",
+        "fcmpo cr0, _, _",
+        "ble event42",
+        "b event42",
+        "fcmpo cr0, _, _",
+        "bge event57",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "fcmpu cr0, _, _",
+        "beq event72",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "fsubs _, _, _",
+        "call __ml__Q29JGeometry8TVec3<f>CFf",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call JMAQuatLerp__FPC10QuaternionPC10QuaternionfP10Quaternion",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__10QuaternionFRC10Quaternion",
+        "call _restgpr_27"
+      ]
+    }
+  ],
+  "checked_adaptation_helpers": {
+    "__ct__Q29JGeometry8TVec3<f>FRC3Vec": [
+      "psq_l f1, 0x0(r4), 0, qr0",
+      "lfs f0, 0x8(r4)",
+      "psq_st f1, 0x0(r3), 0, qr0",
+      "stfs f0, 0x8(r3)",
+      "blr"
+    ],
+    "zero__Q29JGeometry8TVec3<f>Fv": [
+      "lfs f0, @10277@sda21",
+      "stfs f0, 0x8(r3)",
+      "stfs f0, 0x4(r3)",
+      "stfs f0, 0x0(r3)",
+      "blr"
+    ],
+    "set__Q29JGeometry8TVec3<f>FRC3Vec": [
+      "lfs f2, 0x0(r4)",
+      "lfs f1, 0x4(r4)",
+      "lfs f0, 0x8(r4)",
+      "stfs f2, 0x0(r3)",
+      "stfs f1, 0x4(r3)",
+      "stfs f0, 0x8(r3)",
+      "blr"
+    ]
+  }
+}

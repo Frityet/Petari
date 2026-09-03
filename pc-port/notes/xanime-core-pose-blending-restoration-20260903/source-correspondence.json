@@ -1,0 +1,51 @@
+{
+  "scope": "Three root XanimeCore pose blending methods reconstructed against current RMGK01; no PC production import or native activation.",
+  "baseline_commit": "85a73fd53036aca5cabd8f538bb21de87ff7272e",
+  "files": [
+    {
+      "path": "src/Game/Animation/XanimeCore.cpp",
+      "sha256": "ebe4bf05de36294a9b0543a56e03be018467361cdf2bc635990fc298bee7286b",
+      "baseline_sha256": "698b3f14c9ccc7bf7bb01f30b0359549e4d9c1624de5ea46b841aa1a5d28c9cb"
+    },
+    {
+      "path": "include/Game/Animation/XanimeCore.hpp",
+      "sha256": "5af00a66420b3ed82d1f8616d1041c4f019037c902e3431cc3c9cf37b75ffed8",
+      "baseline_sha256": "eb276f9878df8940fba4124ce505f2a25b5b4a10008d8339f30818a28e6d01ca"
+    }
+  ],
+  "methods": [
+    {
+      "symbol": "calcBlend__10XanimeCoreFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::calcBlend(",
+      "source_line": 196,
+      "body_sha256": "969e99a9c158d09627f138d38a1660d609eec7584906330b958ccccda618948f",
+      "retail_address": "0x800194ac",
+      "retail_size": 1044,
+      "retail_function_sha256": "1e0096b40b462059f5296c48abd6e3a31690113008ad5f58f7dde3409866b411",
+      "objdiff_match_percent": 90.32567
+    },
+    {
+      "symbol": "calcSingle__10XanimeCoreFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::calcSingle(",
+      "source_line": 264,
+      "body_sha256": "cbe992d72b4530ab3826bbf04553a1c27b3b889d622b962d451778e99ef3f2d2",
+      "retail_address": "0x800198c0",
+      "retail_size": 460,
+      "retail_function_sha256": "9d9e40eba8d91fb02bedc84f23bf97563f8efd7dd951e3050e9b8757271595db",
+      "objdiff_match_percent": 99.434784
+    },
+    {
+      "symbol": "calcBlendSpecial__10XanimeCoreFv",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::calcBlendSpecial(",
+      "source_line": 300,
+      "body_sha256": "fa02f73726b0086298db27cee71482d946bb9641dec1dc08d4c5aaf75553480e",
+      "retail_address": "0x80019a8c",
+      "retail_size": 1052,
+      "retail_function_sha256": "2dc4bfac4a5e63d9aa47b4a0e9386cb6f550c20af26ed404e372ee6a67c97b96",
+      "objdiff_match_percent": 94.882126
+    }
+  ]
+}

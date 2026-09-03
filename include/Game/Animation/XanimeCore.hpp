@@ -104,6 +104,9 @@ public:
     void fixT(TVec3f*);
     void reconfigJointTransform(J3DModelData*);
     void updateFrame();
+    void calcBlend(TVec3f*, TVec3f*);
+    void calcSingle(TVec3f*, TVec3f*);
+    void calcBlendSpecial();
 
     void enableJointTransform(J3DModelData*);
 

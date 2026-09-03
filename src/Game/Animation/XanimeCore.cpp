@@ -1,8 +1,11 @@
 #include "Game/Animation/XanimeCore.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModel.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
+#include "JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
+#include "JSystem/JMath/JMath.hpp"
 
 void JMAEulerToQuat(s16, s16, s16, Quaternion*);
 
@@ -188,6 +191,179 @@ void XanimeCore::freezeCopy(J3DModelData* pModelData, XanimeCore* pOther, u32 jo
         rate = 1.0f / interp;
     }
     pOther->mJointList[jointIndex]._60 = rate;
+}
+
+void XanimeCore::calcBlend(TVec3f* pScale, TVec3f* pTranslation) {
+    u16 jointIndex = getJoint()->getJntNo();
+    MtxPtr matrix = getMtxBuffer()->getAnmMtx(jointIndex);
+    f32 accumulatedWeight = 0.0f;
+    pScale->zero();
+    pTranslation->zero();
+    Quaternion rotation;
+    rotation.x = rotation.y = rotation.z = 0.0f;
+    rotation.w = 1.0f;
+
+    f32 totalWeight = 0.0f;
+    for (s32 i = 0; i < mTrackCount; i++) {
+        if (mTrackList[i]._0 != nullptr) {
+            totalWeight += mTrackList[i].mWeight;
+        }
+    }
+
+    if (totalWeight == 0.0f) {
+        *pScale = mJointList[jointIndex]._28._0;
+        *pTranslation = mJointList[jointIndex]._28._C;
+        PSMTXQuat(matrix, &mJointList[jointIndex]._28.mRotation);
+        return;
+    }
+
+    f32 inverseWeight = 1.0f / totalWeight;
+    for (s32 i = 0; i < mTrackCount; i++) {
+        XanimeTrack& track = mTrackList[i];
+        if (track._0 == nullptr || track.mWeight == 0.0f) {
+            continue;
+        }
+
+        J3DTransformInfo transform;
+        track._0->getTransform(jointIndex, &transform);
+        Quaternion trackRotation;
+        JMAEulerToQuat(transform.mRotation.x, transform.mRotation.y, transform.mRotation.z, &trackRotation);
+        f32 weight = inverseWeight * track.mWeight;
+        *pScale += TVec3f(transform.mScale) * weight;
+        *pTranslation += TVec3f(transform.mTranslate) * weight;
+        accumulatedWeight += weight;
+        JMAQuatLerp(&rotation, &trackRotation, weight / accumulatedWeight, &rotation);
+    }
+
+    if (_29) {
+        mJointList[jointIndex]._0 = mJointList[jointIndex]._28;
+    }
+    mJointList[jointIndex]._50 = *pTranslation;
+
+    f32 rate = _1C;
+    if (rate < 1.0f) {
+        XtransformInfo& frozen = mJointList[jointIndex]._0;
+        *pScale = frozen._0 * (1.0f - rate) + *pScale * rate;
+        *pTranslation = frozen._C * (1.0f - rate) + *pTranslation * rate;
+        JMAQuatLerp(&frozen.mRotation, &rotation, rate, &rotation);
+    }
+
+    if (_20 != 1.0f) {
+        XtransformInfo& previous = mJointList[jointIndex]._28;
+        *pScale = previous._0 * (1.0f - _20) + *pScale * _20;
+        *pTranslation = previous._C * (1.0f - _20) + *pTranslation * _20;
+        JMAQuatLerp(&previous.mRotation, &rotation, _20, &rotation);
+    }
+
+    mJointList[jointIndex]._28._0 = *pScale;
+    mJointList[jointIndex]._28._C = *pTranslation;
+    mJointList[jointIndex]._28.mRotation = rotation;
+    PSMTXQuat(matrix, &rotation);
+}
+
+void XanimeCore::calcSingle(TVec3f* pScale, TVec3f* pTranslation) {
+    u16 jointIndex = getJoint()->getJntNo();
+    MtxPtr matrix = getMtxBuffer()->getAnmMtx(jointIndex);
+    if (mTrackList[0]._0 == nullptr) {
+        *pScale = mJointList[jointIndex]._28._0;
+        *pTranslation = mJointList[jointIndex]._28._C;
+        PSMTXQuat(matrix, &mJointList[jointIndex]._28.mRotation);
+        return;
+    }
+
+    J3DTransformInfo transform;
+    mTrackList[0]._0->getTransform(jointIndex, &transform);
+    Quaternion rotation;
+    JMAEulerToQuat(transform.mRotation.x, transform.mRotation.y, transform.mRotation.z, &rotation);
+    pScale->set(transform.mScale);
+    pTranslation->set(transform.mTranslate);
+
+    if (_29) {
+        mJointList[jointIndex]._0 = mJointList[jointIndex]._28;
+    }
+    mJointList[jointIndex]._50 = *pTranslation;
+
+    f32 rate = _1C;
+    if (rate < 1.0f) {
+        XtransformInfo& frozen = mJointList[jointIndex]._0;
+        MR::vecBlend(frozen._0, *pScale, pScale, rate);
+        MR::vecBlend(frozen._C, *pTranslation, pTranslation, rate);
+        JMAQuatLerp(&frozen.mRotation, &rotation, rate, &rotation);
+    }
+
+    mJointList[jointIndex]._28._0 = *pScale;
+    mJointList[jointIndex]._28._C = *pTranslation;
+    mJointList[jointIndex]._28.mRotation = rotation;
+    PSMTXQuat(matrix, &rotation);
+}
+
+void XanimeCore::calcBlendSpecial() {
+    u16 jointIndex = getJoint()->getJntNo();
+    TVec3f scale(0.0f, 0.0f, 0.0f);
+    TVec3f translation(0.0f, 0.0f, 0.0f);
+    f32 accumulatedWeight = 0.0f;
+    Quaternion rotation;
+    rotation.x = rotation.y = rotation.z = 0.0f;
+    rotation.w = 1.0f;
+
+    f32 totalWeight = 0.0f;
+    for (s32 i = 0; i < mTrackCount; i++) {
+        if (mTrackList[i]._0 != nullptr) {
+            totalWeight += mTrackList[i].mWeight;
+        }
+    }
+
+    if (totalWeight == 0.0f) {
+        return;
+    }
+
+    f32 inverseWeight = 1.0f / totalWeight;
+    for (s32 i = 0; i < mTrackCount; i++) {
+        XanimeTrack& track = mTrackList[i];
+        if (track._0 == nullptr || track.mWeight == 0.0f) {
+            continue;
+        }
+
+        J3DTransformInfo transform;
+        track._0->getTransform(jointIndex, &transform);
+        Quaternion trackRotation;
+        JMAEulerToQuat(transform.mRotation.x, transform.mRotation.y, transform.mRotation.z, &trackRotation);
+        f32 weight = inverseWeight * track.mWeight;
+        scale += TVec3f(transform.mScale) * weight;
+        translation += TVec3f(transform.mTranslate) * weight;
+        accumulatedWeight += weight;
+        JMAQuatLerp(&rotation, &trackRotation, weight / accumulatedWeight, &rotation);
+    }
+
+    if (_29) {
+        mJointList[jointIndex]._0 = mJointList[jointIndex]._28;
+    }
+    mJointList[jointIndex]._50 = translation;
+
+    f32 rate = _1C;
+    if (mJointList[jointIndex]._5C != 1.0f) {
+        mJointList[jointIndex]._5C += mJointList[jointIndex]._60;
+        mJointList[jointIndex]._5C = MR::clamp(mJointList[jointIndex]._5C, 0.0f, 1.0f);
+        rate = mJointList[jointIndex]._5C;
+    }
+
+    if (rate < 1.0f) {
+        XtransformInfo& frozen = mJointList[jointIndex]._0;
+        scale = frozen._0 * (1.0f - rate) + scale * rate;
+        translation = frozen._C * (1.0f - rate) + translation * rate;
+        JMAQuatLerp(&frozen.mRotation, &rotation, rate, &rotation);
+    }
+
+    if (_20 != 1.0f) {
+        XtransformInfo& previous = mJointList[jointIndex]._28;
+        scale = previous._0 * (1.0f - _20) + scale * _20;
+        translation = previous._C * (1.0f - _20) + translation * _20;
+        JMAQuatLerp(&previous.mRotation, &rotation, _20, &rotation);
+    }
+
+    mJointList[jointIndex]._28._0 = scale;
+    mJointList[jointIndex]._28._C = translation;
+    mJointList[jointIndex]._28.mRotation = rotation;
 }
 
 void XanimeCore::initT(J3DModelData* pModelData) {
