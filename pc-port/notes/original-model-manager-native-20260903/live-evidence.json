@@ -1,0 +1,36 @@
+{
+  "exit_code": 0,
+  "rendered_frames": 5,
+  "logical_game_ticks_before_draws": 30,
+  "additional_survivor_lifetime_tick": 31,
+  "completed_frame_draw_counts": [
+    36,
+    22,
+    11,
+    11,
+    11
+  ],
+  "steady_two_actor_draw_count": 22,
+  "survivor_draw_counts": [
+    11,
+    11,
+    11
+  ],
+  "first_actor_removed_before_frame_index": 2,
+  "model_joints": 30,
+  "model_materials": 9,
+  "model_shapes": 9,
+  "modelx_display_lists": 16,
+  "original_prototype_material_packets_retained": true,
+  "only_survivor_shape_packets_active_after_removal": true,
+  "actor_and_nameobj_retirement_checked": true,
+  "captured_construction_identity_retirement_checked": true,
+  "survivor_model_and_player_and_core_stay_identical": true,
+  "both_models_joint_matrices_finite": true,
+  "view_entry_preserves_animation_frame": true,
+  "runtime_mem1_capacity_restored": true,
+  "initial_recording_count_cause": "Recorded separately; no steady-frame assertion or gameplay claim based on it.",
+  "binary_sha256": "308bee59fcb4f3da506d9411457f5d259d036349c811babb11253b79ea491999",
+  "probe_source_sha256": "b0c8fdcf6bb97e5e2748640820836133f4fc3aee12fd1dc0f0078ae1bbd698c4",
+  "full_log_sha256": "e8cc40ddf01416905f4efae34d66173a0aa009cff0b07f8b85ddd70fcfa67686"
+}

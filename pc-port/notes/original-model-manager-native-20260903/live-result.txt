@@ -1,0 +1,18 @@
+Exit status: 0
+Backend: Metal, Apple M5 Max
+
+[modelx] original MR specialization constructed joints=30 materials=9 shapes=9 display_lists=16; holder identity and GD restoration verified
+[manager] ticks=6 survivor_bck_frame=6 rate=1 original pose is finite
+[modelx] frame=0 original_calc_entry_draws=36 expected=22
+[manager] ticks=12 survivor_bck_frame=12 rate=1 original pose is finite
+[modelx] frame=1 original_calc_entry_draws=22 expected=22
+[lifetime] first actor destroyed; original material prototype retained; surviving packets only
+[manager] ticks=18 survivor_bck_frame=18 rate=1 original pose is finite
+[modelx] frame=2 original_calc_entry_draws=11 expected=11
+[manager] ticks=24 survivor_bck_frame=24 rate=1 original pose is finite
+[modelx] frame=3 original_calc_entry_draws=11 expected=11
+[manager] ticks=30 survivor_bck_frame=30 rate=1 original pose is finite
+[modelx] frame=4 original_calc_entry_draws=11 expected=11
+[lifetime] captured original model/player/core retired; borrowed replacement still calculates at frame31
+[modelx] actual model retired before holder lease and original allocation domain
+[modelx] runtime and all textures retired before GX; full MEM1 capacity restored

@@ -1,0 +1,764 @@
+{
+  "collisions": [
+    {
+      "symbol": "__ZN2MR10isEnvelopeEP11J3DMaterial",
+      "readable": "MR::isEnvelope(J3DMaterial*)",
+      "unit": "OriginalModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "MaterialTextureModeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR18syncJointAnimationEP9LiveActorPKS0_",
+      "readable": "MR::syncJointAnimation(LiveActor*, LiveActor const*)",
+      "unit": "OriginalModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LodCtrlRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR21syncMaterialAnimationEP9LiveActorPKS0_",
+      "readable": "MR::syncMaterialAnimation(LiveActor*, LiveActor const*)",
+      "unit": "OriginalModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LodCtrlRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10getBckCtrlEPK9LiveActor",
+      "readable": "MR::getBckCtrl(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10getBrkCtrlEPK9LiveActor",
+      "readable": "MR::getBrkCtrl(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10isExistBckEPK9LiveActorPKc",
+      "readable": "MR::isExistBck(LiveActor const*, char const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "NPCActorRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10setBrkRateEPK9LiveActorf",
+      "readable": "MR::setBrkRate(LiveActor const*, float)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11isExistAnimEPK9LiveActorPKc",
+      "readable": "MR::isExistAnim(LiveActor const*, char const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "PlanetMapRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11setBckFrameEPK9LiveActorf",
+      "readable": "MR::setBckFrame(LiveActor const*, float)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11setBrkFrameEPK9LiveActorf",
+      "readable": "MR::setBrkFrame(LiveActor const*, float)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12isBckStoppedEPK9LiveActor",
+      "readable": "MR::isBckStopped(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12isBtpStoppedEPK9LiveActor",
+      "readable": "MR::isBtpStopped(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12setBaseScaleEP9LiveActorRKN9JGeometry5TVec3IfEE",
+      "readable": "MR::setBaseScale(LiveActor*, JGeometry::TVec3<float> const&)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12setBaseTRMtxEP9LiveActorPA4_f",
+      "readable": "MR::setBaseTRMtx(LiveActor*, float (*) [4])",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12setBaseTRMtxEP9LiveActorRKN9JGeometry10TPosition3INS2_9TMatrix34INS2_10SMatrix34CIfEEEEEE",
+      "readable": "MR::setBaseTRMtx(LiveActor*, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>> const&)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12setBaseTRMtxEP9LiveActorRKN9JGeometry6TQuat4IfEE",
+      "readable": "MR::setBaseTRMtx(LiveActor*, JGeometry::TQuat4<float> const&)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "NPCActorRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR14calcAnimDirectEP9LiveActor",
+      "readable": "MR::calcAnimDirect(LiveActor*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LodCtrlRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR14getBckFrameMaxEPK9LiveActor",
+      "readable": "MR::getBckFrameMax(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR15getModelResNameEPK9LiveActor",
+      "readable": "MR::getModelResName(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LodCtrlRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR17checkPassBckFrameEPK9LiveActorf",
+      "readable": "MR::checkPassBckFrame(LiveActor const*, float)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR18setBckFrameAndStopEPK9LiveActorf",
+      "readable": "MR::setBckFrameAndStop(LiveActor const*, float)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR18setBrkFrameAndStopEPK9LiveActorf",
+      "readable": "MR::setBrkFrameAndStop(LiveActor const*, float)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR19newDifferedDLBufferEP9LiveActor",
+      "readable": "MR::newDifferedDLBuffer(LiveActor*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR21setBrkFrameEndAndStopEPK9LiveActor",
+      "readable": "MR::setBrkFrameEndAndStop(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR22isBrkOneTimeAndStoppedEPK9LiveActor",
+      "readable": "MR::isBrkOneTimeAndStopped(LiveActor const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR8startBrkEPK9LiveActorPKc",
+      "readable": "MR::startBrk(LiveActor const*, char const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR8startBtkEPK9LiveActorPKc",
+      "readable": "MR::startBtk(LiveActor const*, char const*)",
+      "unit": "OriginalActorModelAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11getJointMtxEPK9LiveActorPKc",
+      "readable": "MR::getJointMtx(LiveActor const*, char const*)",
+      "unit": "OriginalJointAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11getJointNumEPK9LiveActor",
+      "readable": "MR::getJointNum(LiveActor const*)",
+      "unit": "OriginalJointAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12isExistJointEPK9LiveActorPKc",
+      "readable": "MR::isExistJoint(LiveActor const*, char const*)",
+      "unit": "OriginalJointAccess",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "PlanetMapRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11startActionEPK9LiveActorPKc",
+      "readable": "MR::startAction(LiveActor const*, char const*)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12startAllAnimEPK9LiveActorPKc",
+      "readable": "MR::startAllAnim(LiveActor const*, char const*)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR15tryStartAllAnimEPK9LiveActorPKc",
+      "readable": "MR::tryStartAllAnim(LiveActor const*, char const*)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR16isAnyAnimStoppedEPK9LiveActorPKc",
+      "readable": "MR::isAnyAnimStopped(LiveActor const*, char const*)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR19startBckNoInterpoleEPK9LiveActorPKc",
+      "readable": "MR::startBckNoInterpole(LiveActor const*, char const*)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "NPCActorRuntimeCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR20setAllAnimFrameAtEndEPK9LiveActorPKc",
+      "readable": "MR::setAllAnimFrameAtEnd(LiveActor const*, char const*)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR21startBckWithInterpoleEPK9LiveActorPKci",
+      "readable": "MR::startBckWithInterpole(LiveActor const*, char const*, int)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR8startBckEPK9LiveActorPKcS4_",
+      "readable": "MR::startBck(LiveActor const*, char const*, char const*)",
+      "unit": "OriginalActorAnimationStart",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    }
+  ],
+  "external": [
+    {
+      "symbol": "_C_MTXCopy",
+      "readable": "_C_MTXCopy",
+      "existing_providers": []
+    },
+    {
+      "symbol": "_OSLockMutex",
+      "readable": "_OSLockMutex",
+      "existing_providers": []
+    },
+    {
+      "symbol": "_OSUnlockMutex",
+      "readable": "_OSUnlockMutex",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12EffectKeeper9changeBckEv",
+      "readable": "EffectKeeper::changeBck()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12J3DFrameCtrl9checkPassEf",
+      "readable": "J3DFrameCtrl::checkPass(float)",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "J3DFrameCtrlCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12ModelManager17getJointTransformEPKc",
+      "readable": "ModelManager::getJointTransform(char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager18initJointTransformEv",
+      "readable": "ModelManager::initJointTransform()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager19newDifferedDLBufferEv",
+      "readable": "ModelManager::newDifferedDLBuffer()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager21startBckWithInterpoleEPKci",
+      "readable": "ModelManager::startBckWithInterpole(char const*, int)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager6updateEv",
+      "readable": "ModelManager::update()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager7stopBrkEv",
+      "readable": "ModelManager::stopBrk()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager7stopBtkEv",
+      "readable": "ModelManager::stopBtk()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager7stopBtpEv",
+      "readable": "ModelManager::stopBtp()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager7stopBvaEv",
+      "readable": "ModelManager::stopBva()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8calcAnimEv",
+      "readable": "ModelManager::calcAnim()",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8startBckEPKcS1_",
+      "readable": "ModelManager::startBck(char const*, char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8startBpkEPKc",
+      "readable": "ModelManager::startBpk(char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8startBrkEPKc",
+      "readable": "ModelManager::startBrk(char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8startBtkEPKc",
+      "readable": "ModelManager::startBtk(char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8startBtpEPKc",
+      "readable": "ModelManager::startBtp(char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8startBvaEPKc",
+      "readable": "ModelManager::startBva(char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12ModelManager8updateDLEb",
+      "readable": "ModelManager::updateDL(bool)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN12XanimePlayer19updateAfterMovementEv",
+      "readable": "XanimePlayer::updateAfterMovement()",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "XanimePlayer.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12XanimePlayer20updateBeforeMovementEv",
+      "readable": "XanimePlayer::updateBeforeMovement()",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "XanimePlayer.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15ActorAnimKeeper5startEPKc",
+      "readable": "ActorAnimKeeper::start(char const*)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN16DisplayListMaker10addFogCtrlEb",
+      "readable": "DisplayListMaker::addFogCtrl(bool)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZN2MR6isStepEPK9LiveActori",
+      "readable": "MR::isStep(LiveActor const*, int)",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "LiveActorUtilCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR8startBasEPK9LiveActorPKcbff",
+      "readable": "MR::startBas(LiveActor const*, char const*, bool, float, float)",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK10JUTNameTab7getNameEt",
+      "readable": "JUTNameTab::getName(unsigned short) const",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "JUTNameTabCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK10JUTNameTab8getIndexEPKc",
+      "readable": "JUTNameTab::getIndex(char const*) const",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "JUTNameTabCompat.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK12ModelManager10getBckCtrlEv",
+      "readable": "ModelManager::getBckCtrl() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager10getBpkCtrlEv",
+      "readable": "ModelManager::getBpkCtrl() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager10getBrkCtrlEv",
+      "readable": "ModelManager::getBrkCtrl() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager10getBtkCtrlEv",
+      "readable": "ModelManager::getBtkCtrl() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager10getBtpCtrlEv",
+      "readable": "ModelManager::getBtpCtrl() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager10getBvaCtrlEv",
+      "readable": "ModelManager::getBvaCtrl() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager11getJ3DModelEv",
+      "readable": "ModelManager::getJ3DModel() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBckStoppedEv",
+      "readable": "ModelManager::isBckStopped() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBpkPlayingEPKc",
+      "readable": "ModelManager::isBpkPlaying(char const*) const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBpkStoppedEv",
+      "readable": "ModelManager::isBpkStopped() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBrkPlayingEPKc",
+      "readable": "ModelManager::isBrkPlaying(char const*) const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBrkStoppedEv",
+      "readable": "ModelManager::isBrkStopped() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBtkPlayingEPKc",
+      "readable": "ModelManager::isBtkPlaying(char const*) const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBtkStoppedEv",
+      "readable": "ModelManager::isBtkStopped() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBtpPlayingEPKc",
+      "readable": "ModelManager::isBtpPlaying(char const*) const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBtpStoppedEv",
+      "readable": "ModelManager::isBtpStopped() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBvaPlayingEPKc",
+      "readable": "ModelManager::isBvaPlaying(char const*) const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager12isBvaStoppedEv",
+      "readable": "ModelManager::isBvaStopped() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager15getJ3DModelDataEv",
+      "readable": "ModelManager::getJ3DModelData() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager17getResourceHolderEv",
+      "readable": "ModelManager::getResourceHolder() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12ModelManager22getModelResourceHolderEv",
+      "readable": "ModelManager::getModelResourceHolder() const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK12XanimePlayer11isTerminateEv",
+      "readable": "XanimePlayer::isTerminate() const",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "XanimePlayer.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK12XanimePlayer5isRunEPKc",
+      "readable": "XanimePlayer::isRun(char const*) const",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "XanimePlayer.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15ActorAnimKeeper9isPlayingEPKc",
+      "readable": "ActorAnimKeeper::isPlaying(char const*) const",
+      "existing_providers": []
+    },
+    {
+      "symbol": "__ZNK8ResTable10getResNameEj",
+      "readable": "ResTable::getResName(unsigned int) const",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "ResourceInfo.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8ResTable10isExistResEPKc",
+      "readable": "ResTable::isExistRes(char const*) const",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "ResourceInfo.cpp.o"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8ResTable6getResEPKc",
+      "readable": "ResTable::getRes(char const*) const",
+      "existing_providers": [
+        {
+          "archive": "smg-pc-game",
+          "member": "ResourceInfo.cpp.o"
+        }
+      ]
+    }
+  ]
+}

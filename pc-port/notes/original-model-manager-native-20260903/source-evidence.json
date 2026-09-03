@@ -1,0 +1,215 @@
+{
+  "scope": "Original ModelManager/ModelX/DrawBuffer construction and actual packet lifetime probe; no actor or MarioAnimator activation.",
+  "root_commit": "18c80730d301a1a52d2893c3d8ae931f1e8f1449",
+  "aurora_commit": "41383f0bb0ac54c8a6c494ae8f0b0f285748d886",
+  "original_sources": [
+    {
+      "original": "src/Game/LiveActor/ModelManager.cpp",
+      "staged": "build/original-model-manager-native-20260903/ModelManager.cpp",
+      "sha256": "c1a617db9357dd59d1d7edb9a658b91919ba504e81297e763e053cf662f3287e",
+      "byte_identical": true
+    },
+    {
+      "original": "include/Game/LiveActor/ModelManager.hpp",
+      "staged": "build/original-model-manager-native-20260903/Game/LiveActor/ModelManager.hpp",
+      "sha256": "0743be3cfc6b0206dea6cecbe850731c6d0b1330dea02df1ae5289aaf2af5cb1",
+      "byte_identical": true
+    },
+    {
+      "original": "src/Game/LiveActor/DisplayListMaker.cpp",
+      "staged": "build/original-model-manager-native-20260903/DisplayListMaker.cpp",
+      "sha256": "e98e8a1b41b6e5055b23239da41bc8f1ad754d89c10b1d1f3dc0e12133320d51",
+      "byte_identical": true
+    },
+    {
+      "original": "include/Game/LiveActor/DisplayListMaker.hpp",
+      "staged": "build/original-model-manager-native-20260903/Game/LiveActor/DisplayListMaker.hpp",
+      "sha256": "27be76cf10f98a750bac758c2d1c6b9e9b0e8d6e7d359c1829170a0ec3b61241",
+      "byte_identical": true
+    },
+    {
+      "original": "src/Game/LiveActor/MaterialCtrl.cpp",
+      "staged": "build/original-model-manager-native-20260903/MaterialCtrl.cpp",
+      "sha256": "e63bea8b251bb49d3e365c734595e1d0cf996bd8219089db97c4225dabb69780",
+      "byte_identical": true
+    },
+    {
+      "original": "include/Game/LiveActor/MaterialCtrl.hpp",
+      "staged": "build/original-model-manager-native-20260903/Game/LiveActor/MaterialCtrl.hpp",
+      "sha256": "aed2a7f0f0cbff4597612d181e4a8906e017d0e058888b0ea78319fd3760e38a",
+      "byte_identical": true
+    },
+    {
+      "original": "src/Game/System/DrawBuffer.cpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBuffer.cpp",
+      "sha256": "5d6e8bb02bf651650646c686d878d2bb01a874f997e1fa1215b41570f7e04373",
+      "byte_identical": true
+    },
+    {
+      "original": "include/Game/System/DrawBuffer.hpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBuffer.hpp",
+      "sha256": "45329aa64df240b2adfd3b6b9624ff49a9693a63ab756877ed6f5895bb27ac86",
+      "byte_identical": true
+    },
+    {
+      "original": "src/Game/System/DrawBufferExecuter.cpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBufferExecuter.cpp",
+      "sha256": "ef4f4b93a93453cb76ed85cfd0616f0d19cbef6c456f26b27e35c6ca5d85585c",
+      "byte_identical": true
+    },
+    {
+      "original": "include/Game/System/DrawBufferExecuter.hpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBufferExecuter.hpp",
+      "sha256": "d7884616d289631bcecdc6049fd91d18169e762ac6a6fa160c1132c4203b0418",
+      "byte_identical": true
+    },
+    {
+      "original": "src/Game/System/DrawBufferGroup.cpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBufferGroup.cpp",
+      "sha256": "30f4d3b829fd12c09b6d2e5157b6281953ab7d4df30d092103cbf3efac2e8ca6",
+      "byte_identical": true
+    },
+    {
+      "original": "include/Game/System/DrawBufferGroup.hpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBufferGroup.hpp",
+      "sha256": "02d3cb894fb5f71b1e754fc5e61f1d82768b21b25ebfb70a495b0958d8ff0817",
+      "byte_identical": true
+    },
+    {
+      "original": "src/Game/System/DrawBufferHolder.cpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBufferHolder.cpp",
+      "sha256": "5343e98caf34fbace0320de2c1d96a1047cc7537c825fcdc59a289cf1293b292",
+      "byte_identical": true
+    },
+    {
+      "original": "include/Game/System/DrawBufferHolder.hpp",
+      "staged": "build/original-model-manager-render-20260903/staged/Game/System/DrawBufferHolder.hpp",
+      "sha256": "8e472785ab55d588b86c14076b69080a57277a7887c852ed618fe596752fcb6d",
+      "byte_identical": true
+    }
+  ],
+  "extracted_helpers": [
+    {
+      "signature": "u16 getMaterialNo(J3DModelData* pModelData, const char* pMaterialName)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "J3DMaterial* getMaterial(J3DModelData* pModelData, const char* pMaterialName)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "bool isUseTex(J3DMaterial* pMaterial, u16 a2)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "bool isNormalTexMtx(J3DMaterial* pMaterial)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "TVec3f* getPlayerShadowRotate()",
+      "original": "src/Game/Util/PlayerUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "ProjmapEffectMtxSetter* initDLMakerProjmapEffectMtxSetter(LiveActor* pActor)",
+      "original": "src/Game/Util/LiveActorUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "J3DModel* getJ3DModel(const LiveActor* pActor)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "J3DMaterial* getMaterial(J3DModel* pModel, int idx)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "s32 getMaterialNum(J3DModel* pModel)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "const char* getMaterialName(const J3DModelData* pModelData, int idx)",
+      "original": "src/Game/Util/ModelUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "ResourceHolder* getModelResourceHolder(const LiveActor* pActor)",
+      "original": "src/Game/Util/LiveActorUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "const char* getModelResName(const LiveActor* pActor)",
+      "original": "src/Game/Util/LiveActorUtil.cpp",
+      "tokens_equal": true,
+      "normalization": "The original u32 zero index is spelled 0U in the native extract."
+    },
+    {
+      "signature": "const JUTTexture* getMarioShadowTex()",
+      "original": "src/Game/Util/DrawUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "const JUTTexture* getMarioShadowTexForLoad()",
+      "original": "src/Game/Util/DrawUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "const TVec3f& getMarioShadowVec()",
+      "original": "src/Game/Util/DrawUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "void setMarioShadowTex(const JUTTexture* pShadowTex)",
+      "original": "src/Game/Util/DrawUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    },
+    {
+      "signature": "void setMarioShadowVec(const TVec3f& rVec)",
+      "original": "src/Game/Util/DrawUtil.cpp",
+      "tokens_equal": true,
+      "normalization": null
+    }
+  ],
+  "probe_and_link_inputs": {
+    "build/original-model-manager-native-20260903/ModelManagerOwner.cpp": "f7bdd86f4b53aac73d55fca94ff77ea2835f164f53de459e24ad4ad5161bd7d5",
+    "build/original-model-manager-native-20260903/ModelManagerOwner.hpp": "ba9b5d3bd2cb95493000daf2851ecb2dc0c00984a03a828f53a8a9a14a54bdfe",
+    "build/original-model-manager-native-20260903/Helpers.cpp": "3a36659d426efe8bda08e27eec6998e67a4e6e90cf24126368167e59ab451860",
+    "build/original-model-manager-native-20260903/ShadowPublish.cpp": "9c800f408ee126a5c596cd9e354c91075d525db32b8f70d0e53f4761e41cc067",
+    "build/original-model-manager-native-20260903/ActorRuntimeRegistry.cpp": "8c1eb100292ac43dee12745dea9de085ffdf217addc1a881d2b84728398c0938",
+    "build/original-model-manager-native-20260903/LodCtrlRuntimeCompat.cpp": "939b060bc3c7a31d5a0f3b1d246379db691fb000182fb9aceefe825bb7399037",
+    "build/original-model-manager-native-20260903/LiveActor.cpp": "d88a46dfb3ee8f1614cbf243ff6383abe3997097c57dbddeb1e954d54724a8a6",
+    "build/original-model-manager-native-20260903/draw-live.cpp": "b0c8fdcf6bb97e5e2748640820836133f4fc3aee12fd1dc0f0078ae1bbd698c4",
+    "pc-port/src/runtime/RuntimeContext.hpp": "90221da486605a9c3c7c9cb44789ca91f95b3b425a3677a56c0c0d9b700a78a0",
+    "pc-port/src/runtime/RuntimeContext.cpp": "c6bdd321b3f24c6be070b4eb1dc8e5053ab47a26c687383b23f63e63798f2d40",
+    "pc-port/build/macosx/arm64/debug/libsmg-pc-game.a": "72e4608f67e27fabfd55298ff1537f2f9887fccedad9f13654062f210fd18da5",
+    "pc-port/build/macosx/arm64/debug/libsmg-pc-app.a": "c69f9971d3876aa939ac5be948b5e620e6246563002725181fa7afff841a932f",
+    "pc-port/build/macosx/arm64/debug/libsmg-pc-common.a": "fe65fdc1fbe5229b828a3509f31fdf59b9d18edd8fff02d8efcd8ff44b4816f7",
+    "pc-port/build/macosx/arm64/debug/libsmg-pc-render.a": "01f965b48284a97927ee29ebd4134d795a03e698c1a8a6f5fa9a603fd806c693",
+    "pc-port/build/macosx/arm64/debug/libaurora-core.a": "7192637f8151145c1c1285bf36cfa309e174a43ba56d94ecb96ac703ffa54ba3",
+    "pc-port/build/macosx/arm64/debug/libaurora-mtx.a": "d67f62909fe1bf554e13a901e050881da64d51d1b8044b0761d6988e67c3f30c"
+  },
+  "runtime_overlay_matches_current_header": true,
+  "warning": "The registry/LOD/LiveActor overlay is probe-only coexistence scaffolding, not an approved production activation patch."
+}

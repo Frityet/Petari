@@ -1,0 +1,1890 @@
+{
+  "source_sha256": {
+    "include/Game/LiveActor/EffectKeeper.hpp": "f0f26410e53dd24d4deeb61b99e5e57e0f0def07547352dd03283488a38fb5b2",
+    "include/Game/LiveActor/ActorAnimKeeper.hpp": "928547d988f695f1b58971a34d563a1627b5a784497fafe864de5fb9bbeff3d0",
+    "include/Game/Effect/SyncBckEffectChecker.hpp": "2e9610903767a814b6710a7fb0e4fdd7e6f5457cf7686da12a67be5ced06bc32",
+    "src/Game/Util/ModelUtil.cpp": "b56e61ad020a7c47f93c6c74644ee019787b7fa8968f4f5adf0be0da9a5c06ce",
+    "src/Game/Util/LiveActorUtil.cpp": "cc17feabc8d0f798f162103db32623c9fd9fbc3528d29d31159d53370fe12d6a",
+    "src/Game/Util/JointUtil.cpp": "0873985da7436ef2e5d0542a1981dda19d473511ba8c519705d9ee80af9fd052",
+    "src/Game/LiveActor/EffectKeeper.cpp": "820329100489f4cb5c4608d8629978be8556bb680de56b62c824200d2e080923",
+    "src/Game/Effect/SyncBckEffectChecker.cpp": "37810b050c3fd6d26ca7c90837aad8843e59935ff5711920f4b8ef9323b355bd",
+    "src/Game/Util/SoundUtil.cpp": "c4a096ec205e770ff499c66c252018e171ade7da1f8bd2b31ef2c0a76c7ad66c"
+  },
+  "imports": [
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void updateModelManager(LiveActor* pActor)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 43,
+      "literal_sha256": "219d8c7e0b5dd1fd91b45022d964de911b31960a8f88da85fb616ae024c07dd9"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void calcAnimModelManager(LiveActor* pActor)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 47,
+      "literal_sha256": "f821d627d0fb356c33995df4baa38301b793b975d413b04dc00782c0bde9940d"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void updateModelAnimPlayer(LiveActor* pActor)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 51,
+      "literal_sha256": "dfb8e9c0043298d1663b88beac8bb9e2e4ed0da6908d4d32194e2ab832612209"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void invalidateMtxCalc(J3DModelData* pModelData)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 57,
+      "literal_sha256": "c93a48cc0dad44226ded84df4b210269b6cc4e315f8971a991d700e170c53915"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void invalidateJointCallback(J3DModelData* pModelData)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 64,
+      "literal_sha256": "c25f006ca5aa075e535658b3c8d19f50ab53d48c5234d17ddc1324c6288b9d05"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "J3DModel* getJ3DModel(const LiveActor* pActor)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 71,
+      "literal_sha256": "f92aa0d5ec283893d0463458537590d5ecb22d908b3ffa3cce197a8a3f7cc5de"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void calcJ3DModel(LiveActor* pActor)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 78,
+      "literal_sha256": "405936beac27f57f32268a84ea09f2d5fceee9ad3840c7c1c580744076c8cf95"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "J3DModelData* getJ3DModelData(const LiveActor* pActor)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 84,
+      "literal_sha256": "4dd21af9257d80b4d8593ea206db64557062e813fcac159aeb815b66125e074a"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "s16 getBckFrameMax(const LiveActor* pActor, const char* pBckName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 91,
+      "literal_sha256": "760100d947eabceac646e8a55c2fa6ec6f7008a08d0895edd7b9763b6225d5f4"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "s16 getBrkFrameMax(const LiveActor* pActor, const char* pBrkName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 95,
+      "literal_sha256": "0b8333affb6cfdb0e2fc021cacf2f5f29b939d05873c4cf37a13116a222307fd"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "s16 getBvaFrameMax(const LiveActor* pActor, const char* pBvaName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 99,
+      "literal_sha256": "4fbd45e3b016f250a1c2479d0c8fce8a3d7fb9bcf2bffcbf99056027d5da6cbe"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "bool isBckPlaying(XanimePlayer* pAnimePlayer, const char* pBckName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 103,
+      "literal_sha256": "e4791173339c40f8aedcacb92bf39674dabcdf1570b49270e79aff63126979ac"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "u16 getMaterialNo(J3DModel* pModel, const char* pMaterialName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 122,
+      "literal_sha256": "fa37b9b9ef4fae65c6323c89355733c99b01e294eff507678b74ef400707be0c"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "J3DMaterial* getMaterial(J3DModelData* pModelData, int idx)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 132,
+      "literal_sha256": "1cd0bb4d06d67a15a63678647c2ab5a9aae28afeacffbf6b694b57a3b67b9520"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "J3DMaterial* getMaterial(J3DModel* pModel, int idx)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 136,
+      "literal_sha256": "314c606b70bce9c12a5ca4fbbe5c89da67182ebf2d9fabb311306716a6de8e61"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "J3DMaterial* getMaterial(const LiveActor* pActor, int idx)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 140,
+      "literal_sha256": "ca6c714dcf619e5541de36871cf9cbab5209a7e00030f458d2e576f5b87aeb15"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "s32 getMaterialNum(J3DModel* pModel)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 144,
+      "literal_sha256": "3bec969304c5999ffa976f9fb6c0e43a5aa3054380dc77972fbe5286067777a6"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "const char* getMaterialName(const J3DModelData* pModelData, int idx)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 148,
+      "literal_sha256": "154e80b03ffdffe1cd7c551480c132d64ae8cd9db66f3bd9d7f505eb8db1c560"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void updateModelDiffDL(LiveActor* pActor)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 152,
+      "literal_sha256": "71beab8a6b354bc6010be811f199a865ba4204c1175c88c101e25b2bf9370c33"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "bool isEnvelope(J3DMaterial* pMaterial)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 156,
+      "literal_sha256": "387168fbb905e601c2939b3a4fb5723fc42d495d2c3b525e94b1564135b528c6"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void hideMaterial(J3DModel* pModel, const char* pMaterialName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 160,
+      "literal_sha256": "d2db51bee6e7a42c1e7d632b31d3ae445cb7902f60cf9f43baf90fa1d9f2f6bb"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void hideMaterial(const LiveActor* pActor, const char* pMaterialName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 165,
+      "literal_sha256": "3b1c6c97570d2ec6e76104df28b9a9e66ed05469b76864728a4c704f09a99414"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void showMaterial(J3DModel* pModel, const char* pMaterialName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 169,
+      "literal_sha256": "5af6f0134febf32b2f2f4ff40a3b718feaff3996ad780def6816d809679930d0"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void showMaterial(const LiveActor* pActor, const char* pMaterialName)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 174,
+      "literal_sha256": "70def8c2ac5d8299795efdb4d5d3dfdec87db03d2f27195db19a34538ec2ba9c"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "ResTIMG* getResTIMG(const LiveActor* pActor, int idx)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 343,
+      "literal_sha256": "1e6633f07e7a1e29a3cfedbd5e2aff1d353c577a34919347c6010f340aa71075"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "ResTIMG* getResTIMG(const J3DModelData* pModelData, int idx)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 347,
+      "literal_sha256": "3d8910c096db2d3bdec91b01ef86fff03a924177e891d170c008d58907abc45b"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void copyJointAnimation(J3DModel* pCopyTo, J3DModel* pCopyFrom)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 393,
+      "literal_sha256": "469e41ebc34948e965cc343302f1bda7f17047bb32535eaba865ce7ddc0c6fa4"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void copyJointAnimation(LiveActor* pCopyTo, const LiveActor* pCopyFrom)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 405,
+      "literal_sha256": "64d2e6a910beaf6fcb9f572d3637ebf11e53c07ae81c274df4afa08cdf10e8f7"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void syncJointAnimation(LiveActor* pActor1, const LiveActor* pActor2)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 409,
+      "literal_sha256": "ff733cd0dcbf675791dca882306f9fc3f7a1c817b11ffb7a19ffd7e350171a17"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void syncMaterialAnimation(J3DModel* pModel1, J3DModel* pModel2)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 413,
+      "literal_sha256": "cab31413fa9e75991c02e14540b21cfd3e2ad31bf581937202424be9f2352454"
+    },
+    {
+      "unit": "OriginalModelAccess",
+      "header": "void syncMaterialAnimation(LiveActor* pActor1, const LiveActor* pActor2)",
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "line": 431,
+      "literal_sha256": "bde8405ef5aea69c7600be3f67a13042d4dd99e213934f28299c3f67fd54a1fd"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void calcAnimDirect(LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 610,
+      "literal_sha256": "7c2278970d2a47280c449b70964b6a0ef7d236a65bb40a16cda04fdba2cb9396"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBaseTRMtx(LiveActor* pActor, MtxPtr pMtx)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 725,
+      "literal_sha256": "3ec3daf5c74b49dfa6e2caa1613a5bab42cf6025b4639840d3010c4bfa54bc7f"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBaseTRMtx(LiveActor* pActor, const TPos3f& rMtx)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 729,
+      "literal_sha256": "0d7f93a5f05c1c0ea45a5daf6212f5a9c73f4cf7c8b193da9d45edc5b3c0c50e"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBaseTRMtx(LiveActor* pActor, const TQuat4f& rQuat)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 733,
+      "literal_sha256": "94398409467087834030a38c686dc29848cd64da6a8fe60548a522d1c5b4f59f"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBaseScale(LiveActor* pActor, const TVec3f& rScale)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 784,
+      "literal_sha256": "fe300f7ced34753aa27e421e95229d78accab771ac791cfb9418f86ea58f86ba"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "ResourceHolder* getResourceHolder(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 791,
+      "literal_sha256": "fdf9a8fcdd328aca06fa58bead474ae47d024af04f4171271fa6aa6af9e6a144"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "ResourceHolder* getModelResourceHolder(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 799,
+      "literal_sha256": "bd8ad0108d6062024ac9ef5f741f1805c2d222fcae931125ecff0a2f45eb2dd7"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "ResTIMG* getTexFromModel(const char* pName, const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 807,
+      "literal_sha256": "eae7701f02945dabf3c3137c8d2c89af2ea41379ab71c5600d0ef81c34182abd"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "ResTIMG* getTexFromArc(const char* pName, const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 812,
+      "literal_sha256": "a24ddf7babc8849f8f9f1c24956863288d1e6086ca35ed107d42bae18f288a38"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "const char* getModelResName(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 816,
+      "literal_sha256": "240fbbacb83be7c4cca28cebd7438a83cfcf186600046b63c8356a710c3491b3"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistAnim(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 820,
+      "literal_sha256": "3edc09f88eb8ddf4ec93cfbd6144c6e7f8736eb7e6864927e89637d33800bdc1"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistBck(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 844,
+      "literal_sha256": "55b8e170442cecc256916294cea3c1c21b2ec49db96300cf71dd94f51d76564f"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistBtk(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 852,
+      "literal_sha256": "40b36cf447bf9682bd4e65431cd05039fca323b5002cb01a3f94cbb748eb5712"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistBrk(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 860,
+      "literal_sha256": "64aaad30cf1007d0d8fdb5e5c9e19f776005aee3eff1462a23e2e5698ab5d634"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistBtp(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 868,
+      "literal_sha256": "f2b32871688652b5478c1c80d52d1889fd09641022a847fb2a2d1715549d5280"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistBpk(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 876,
+      "literal_sha256": "2fe10f2f602c905392554a8c7095f2cd0cc4a0479b057b2d21049b2dd9067466"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistBva(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 884,
+      "literal_sha256": "8adfab3470e789e138685a743915539ddb7bd68494066f89feb9c0a032409dbd"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isExistTexture(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 892,
+      "literal_sha256": "ee07b90197ba00cf8bb1e903a348898ea2330e7cd78a2011cf710a23fee69845"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void newDifferedDLBuffer(LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 896,
+      "literal_sha256": "449a55984d54accf0e71386b12f910a45b3e91485becd443d9ce9e13e5557782"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void initDLMakerFog(LiveActor* pActor, bool enable)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 900,
+      "literal_sha256": "41538f68114f15e2cc840ae54889dc27a7ec1f90683e38ad201e37f3bcb81323"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBckStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1283,
+      "literal_sha256": "16bde294131ac89cc76f6b1e6e40542e5876f25fe944457badfec04356b4ddb4"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBtkStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1287,
+      "literal_sha256": "c095cb07ffb971f4316569e2a4c5a314eca5e60d3eb27ca5593c11a21b301dfe"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBrkStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1291,
+      "literal_sha256": "29b0c37bb80cece76648868eaf28fda050f31640fdf3612f5ed5001073b8edc2"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBtpStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1295,
+      "literal_sha256": "f6ee1864b2b2419deaf6fc1b6e6c734e27091a085e4a2235a158fd0177344ae9"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBpkStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1299,
+      "literal_sha256": "ed660d5b41c01e8891e97cce9b3d3db8265177e539b60096c5be9f3836655a01"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBvaStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1303,
+      "literal_sha256": "d473850090153aba4b77f8c41fb38ea90c55482d0f7afa71f3a50500355f6aef"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBckOneTimeAndStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1307,
+      "literal_sha256": "58d5b3f8c4b194e1118bd060ebf2a67d6a52a6099f8f42d6b0ae87a04e3bb055"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBrkOneTimeAndStopped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1311,
+      "literal_sha256": "2829b8568f7eab975f8a5dd5d892ff192668160aa0307e209409481e16883895"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBckLooped(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1315,
+      "literal_sha256": "95e84daa649dacba3085d6deab2ab7b658fa79592898d66594889fae2874df51"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool checkPassBckFrame(const LiveActor* pActor, f32 f)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1319,
+      "literal_sha256": "55969053944993f0413de8eb9a087123323a07eee945f72c5ffde324456a9a4c"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBckFrameAndStop(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1335,
+      "literal_sha256": "1ca059b00a10c29a34c53329a50e03c1fbd21e85599fcaf07ce7e1cac03779fd"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBtkFrameAndStop(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1340,
+      "literal_sha256": "9d90d5a8610860a312a8938d6d0671fc486ed59ccedd67baa6df7ea8fc0dae42"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBrkFrameAndStop(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1345,
+      "literal_sha256": "256badf9c77eb833465b08e58918aebc2126b0675a6d55ddab5f14314ad1e6ea"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBtpFrameAndStop(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1350,
+      "literal_sha256": "45fa7168d9603cb937581d7205be4dcc5950d217c44b980169725e5396e9324b"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBpkFrameAndStop(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1355,
+      "literal_sha256": "81abaafdee4169b46c3a279a5acc7ef768f5819fd3f0c035dcac1cfe10f54154"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBvaFrameAndStop(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1360,
+      "literal_sha256": "58b9148c44496340151eae860664df67c7d4582789a986e2826231741f1da2a5"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBrkFrameEndAndStop(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1365,
+      "literal_sha256": "47ee83d0bc5a922ca65e2d55280fcedadfd1000a8ebc79993a981751beff4efd"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBtkAndSetFrameAndStop(const LiveActor* pActor, const char* pBtkName, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1370,
+      "literal_sha256": "42bf85575b241bf341230cfd86373697c1908d7bfaf3e7b2cbe29194a1db9335"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBrkAndSetFrameAndStop(const LiveActor* pActor, const char* pBrkName, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1375,
+      "literal_sha256": "adfec2ee9f6d485ae0a1f22660e4ca49000146c278c0dc82122d3262e6d42fc0"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBtpAndSetFrameAndStop(const LiveActor* pActor, const char* pBtpName, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1380,
+      "literal_sha256": "6e6d7fca3f1e0b335e5d871de20efe5c039db5aaf48b9ad79ccadcd8c3915c3b"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBtk(const LiveActor* pActor, const char* pBtkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1385,
+      "literal_sha256": "742ce61119cc6a6457ce2fcecdfed24af311386f847a58502ea69f670492796f"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBrk(const LiveActor* pActor, const char* pBrkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1389,
+      "literal_sha256": "cfc4285bd2d1bd0f1f47b7cc848b90efc0b95f5712d9564fdbbe9148fecfafb2"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBtp(const LiveActor* pActor, const char* pBtpName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1393,
+      "literal_sha256": "f444fcb291c7f9bee52961d28f24570465d6e3f5d4acaf40b635e5119decd1c5"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBpk(const LiveActor* pActor, const char* pBpkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1397,
+      "literal_sha256": "fb162a7e8133cbd6ff07cc6b70499b09c71db0719ff658fdc0bb07c6a4208bad"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void startBva(const LiveActor* pActor, const char* pBvaName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1401,
+      "literal_sha256": "a0aeeb0dbc72fa9da4acde93f1381994a1e71e665e3b419af82d064d32a3ae7f"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool startBtkIfExist(const LiveActor* pActor, const char* pBtkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1416,
+      "literal_sha256": "8a957e106695aabf8ac5127c447b48893d14c0a7f3cf116ef4077c9ac0d6d674"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool startBrkIfExist(const LiveActor* pActor, const char* pBrkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1425,
+      "literal_sha256": "05615e4411ae13ad354375df26990f04955eb288b39200a39af45badb99755d4"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool startBtpIfExist(const LiveActor* pActor, const char* pBtpName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1434,
+      "literal_sha256": "001b6713e8349e0f10b295798a72ec6aa6d2860c59d4d64d03dc2646f9c7ab7d"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool startBpkIfExist(const LiveActor* pActor, const char* pBpkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1443,
+      "literal_sha256": "f7be3b6fb1ea5f5ebb58bf4ed7b2af5a94caf0b55e4e78849b74d53dae6db800"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool startBvaIfExist(const LiveActor* pActor, const char* pBvaName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1452,
+      "literal_sha256": "ac6ce3e9be86a994c8653efb1718e78c362a56dc2202f038f37fc1b14cdcb99c"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBtkPlaying(const LiveActor* pActor, const char* pBtkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1461,
+      "literal_sha256": "7f50e83a23034b1207f442508dc0c078dffc8b7a94f05d52086c3661b5e5c73f"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBrkPlaying(const LiveActor* pActor, const char* pBrkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1465,
+      "literal_sha256": "c2211109e289048ce09762d4969850a1e78059de0c92adc87a37d2a545dc110f"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBtpPlaying(const LiveActor* pActor, const char* pBtpName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1469,
+      "literal_sha256": "5dceccb3c10568305f04f6b3ef2c321d15cead4aff6c713deae15144e66d6b9d"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBpkPlaying(const LiveActor* pActor, const char* pBpkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1473,
+      "literal_sha256": "ca312c820e962c0aace34101a8903b78542934d0bee73cc44838ca6a18c478f1"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBvaPlaying(const LiveActor* pActor, const char* pBvaName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1477,
+      "literal_sha256": "2c2d505036e90661ba5c1265742fc72c72822093dd2e773bd544cd7c9b319ccc"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBckExist(const LiveActor* pActor, const char* pBckName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1481,
+      "literal_sha256": "a9fd6b8ff6091118dd6df37171e74c914f176480fd2e964b85ab97119a64a267"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBtkExist(const LiveActor* pActor, const char* pBtkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1493,
+      "literal_sha256": "601aa6c390394ed1485c3c0c3123958aa522a2fe9f690f7251288e5088cf793a"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBrkExist(const LiveActor* pActor, const char* pBrkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1505,
+      "literal_sha256": "0913ce644868a72067511373476651ad8638825951a2db22f03fab9435fbbac2"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBpkExist(const LiveActor* pActor, const char* pBpkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1517,
+      "literal_sha256": "d08b32dadaf99aa08476298be08467a39a0be85657bbf9dcb0cff31acf06f45a"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBtpExist(const LiveActor* pActor, const char* pBtpName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1529,
+      "literal_sha256": "5afbec784edf3950a0d00c28b2d411b957f02ec398d3060339f484c8591a241a"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBvaExist(const LiveActor* pActor, const char* pBvaName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1541,
+      "literal_sha256": "01965c02bbcdcb95b84fefe29233db8cc955b0b9770a9ec4f8ac18dbc65c2ce1"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void stopBck(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1553,
+      "literal_sha256": "141a94bde18ccd5374a4fbe0af6c3bf59ff2bd2b6a9a926f8fa4a4265a21a576"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void stopBtk(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1557,
+      "literal_sha256": "129bd30aa34990c87ba9fd91a182ffb2006c54ce5144694f3cb094bfbaed80da"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void stopBrk(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1561,
+      "literal_sha256": "ee0d21eced7d85b71d6908931a1d2172305aca926d41287abd209b6602443671"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void stopBtp(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1565,
+      "literal_sha256": "ab5e6bbbb0451692d1ecd3c10ec09e6d57fb3166e7c2e5c7820d6cc200386494"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void stopBva(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1569,
+      "literal_sha256": "51b77ce9eeb718fb2cb982208956e303f437880830699dbccca609fc8ae96925"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBckRate(const LiveActor* pActor, f32 rate)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1573,
+      "literal_sha256": "9f7ac1964223dffdd9021f82ce2ca18f60757908909d4b63b0631a88f920fc9e"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBtkRate(const LiveActor* pActor, f32 rate)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1577,
+      "literal_sha256": "23270197010bf636f5bb8fd663344014622f7940c8223d991756345a11898ad8"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBrkRate(const LiveActor* pActor, f32 rate)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1581,
+      "literal_sha256": "d7948e6f9c3ead43f4f3f5dc0dcaec1d71ef5b99d73c5c8f84561ce954922b59"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBvaRate(const LiveActor* pActor, f32 rate)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1585,
+      "literal_sha256": "d1363f18327323222bbb45cd6dce81f13af2728e5e6e4d65adac5b02f7a0ebce"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBckFrame(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1589,
+      "literal_sha256": "eb48810e0a89f04fd9ced13db894ed2c90f68011b5063af4b6bc8aa7af3f236b"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBtkFrame(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1593,
+      "literal_sha256": "8d00e4edb3be950091f2128913032dbda0d97a5f69d4c777796f48eadc50fdb3"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBrkFrame(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1597,
+      "literal_sha256": "ea3528c86dee6d0471682467c0ec44624faaff389e155f3cb2d1a26cd33c7ef1"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBtpFrame(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1601,
+      "literal_sha256": "90225ce8792564e70ca87967e0fffd1f2d77a493dc351407f223476a0edb17f0"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBpkFrame(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1605,
+      "literal_sha256": "9785ad89abcfbba5935435bb7d55b0bf2365c18476b5bcde7b4de6b22021c395"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setBvaFrame(const LiveActor* pActor, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1609,
+      "literal_sha256": "70f5c55dabe1efa3dfdf20c5ea965956c27110834c6ead7b25b9fdea1ec206a8"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "bool isBckPlaying(const LiveActor* pActor, const char* pBckName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1613,
+      "literal_sha256": "3646cea918d39a41e31ce8854d8f8f575d33d6a8f2a90af044d250f9670fec04"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "J3DFrameCtrl* getBckCtrl(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1617,
+      "literal_sha256": "d0c3b8a65f51256033c8462618e2dc0ef5b50bf50a56e4afa774ab2a75619e0d"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "J3DFrameCtrl* getBtkCtrl(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1621,
+      "literal_sha256": "049bb86d3dd13911972bfacb26d7fe34efefdb1ffbaa7502ed22dd92185e65f1"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "J3DFrameCtrl* getBrkCtrl(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1625,
+      "literal_sha256": "2414ffc6ef2e1fb3ce912f7d1232109a379e526e49842b3311c95a3de39b0c40"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "J3DFrameCtrl* getBtpCtrl(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1629,
+      "literal_sha256": "b9a76761661a0b9ddb1d354fc9cc053b6de0b5d907e57c611742dbc50f6efd1c"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "J3DFrameCtrl* getBpkCtrl(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1633,
+      "literal_sha256": "167c1b3333d271c1d2ed8a84222509edde2be0b95d76fc9bc665f7432b6fa1da"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "J3DFrameCtrl* getBvaCtrl(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1637,
+      "literal_sha256": "04b2b4281a0be8d0d5a6145e738dd6d5037a92590a206044e0e8c01631e683b6"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void updateMaterial(LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1641,
+      "literal_sha256": "08d690e2d56b906616c5701b479b91b13be7c28a8adc5671cd1d5ad25da4c23b"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void initJointTransform(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1724,
+      "literal_sha256": "ecab34231ed4fe4b5c2fa29e86ed47e262acf4565965624a70efb9e0fb224373"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "XjointTransform* getJointTransform(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1728,
+      "literal_sha256": "e3f45ed2b959d8c0d9436d9dfa6698f95e81fcbc6d1cdbf541a00b34d60e9985"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void setJointTransformLocalMtx(const LiveActor* pActor, const char* pName, MtxPtr pMtx)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1732,
+      "literal_sha256": "6f9cf416d95b3d4a520932b73771271e191313dccf2860f9cd71f69ae3d709a8"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBckFrame(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1737,
+      "literal_sha256": "73b6412b1e821d743bc2079b48b5b76f06fd2ab6912fe74f1cd98d527644d45c"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBrkFrame(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1741,
+      "literal_sha256": "f0db9ad0437296189daa15b313f8379e6f248a843113dbcddab976352c8702e6"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBtpFrame(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1745,
+      "literal_sha256": "1df76306c50f633b7e4fc918adf67c438878c0de5e913d72ec3e32be7d422433"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBvaFrame(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1749,
+      "literal_sha256": "c9baf4d673af582ef3563ebcd7b147ece597b23e74784734d40ed9dc815ab8ed"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBckRate(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1753,
+      "literal_sha256": "70fd6be855ff81407ca6760bd3d423a337e59e48aa43395889c9ec87d0144d31"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBckFrameMax(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1757,
+      "literal_sha256": "62ebd22590af82ce6fc647ff950409cab0c2cd1ecc6f0945a4fd5dff556a92de"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBtkFrameMax(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1761,
+      "literal_sha256": "1d5cc6711c0643c8460d6ac8b56c38f12d562170ec61639ebd1334da3b807785"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "f32 getBrkFrameMax(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1765,
+      "literal_sha256": "44f7bf23017a911b837ae6abbb5ff3610e8d7762841d1477bdaf4aa211054560"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void stopAnimFrame(LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 2166,
+      "literal_sha256": "d9a02b96468d223dc8e68be26cf070c227ab96787c33bd2a1ec0292124d7b17b"
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "header": "void releaseAnimFrame(LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 2170,
+      "literal_sha256": "1440eb5ab29dd4c1e99c3ffabb91195269ad5b177470a81ef130c7f4b56fce2b"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "J3DJoint* getJoint(J3DModel* pModel, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 13,
+      "literal_sha256": "ada68d5a91788c28df47b3c47f8dbcc4103952b37f29b041a16781c48c723618"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "J3DJoint* getJoint(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 17,
+      "literal_sha256": "b472298e84e1415aac8db1ea5b706ce0dde08601414c5f2f9d48fd027b72d081"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "J3DJoint* getJoint(const LiveActor* pActor, u16 idx)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 21,
+      "literal_sha256": "ad84da663837b97be62b28dba66f0cc5a6c312dc9d8383846701a37d49b3b2d8"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "MtxPtr getJointMtx(J3DModel* pModel, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 25,
+      "literal_sha256": "1a0b2cfb7a3421fe604f6cc61b77f840aa0460bfda3d5576cc280ee9919e6423"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "MtxPtr getJointMtx(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 30,
+      "literal_sha256": "e2ea99fc7920974c35648a6f146bcf4b76f28293875a62b84205affdb828f8e7"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "MtxPtr getJointMtx(const LiveActor* pActor, int idx)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 34,
+      "literal_sha256": "e95a41d382d43a786b9aaaae303ea3f38dc5e1f8a4d5d3eeccc4b6a598135b07"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "u16 getJointIndex(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 38,
+      "literal_sha256": "d9bc655cb335e2aed634a5c4c9ad95737efcd11a0e68b24a77f86bd19f60144f"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "const char* getJointName(const LiveActor* pActor, int idx)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 42,
+      "literal_sha256": "dda47b112a15b747c70fc7ecf683a522aaf13cfea54718399f464f8df956480f"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "s32 getJointNum(const LiveActor* pActor)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 46,
+      "literal_sha256": "f90b3abfc15c445497ef5e5bab8603c860421e15b85bd95096fddf5b65862e42"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "bool isExistJoint(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 50,
+      "literal_sha256": "7574b1524dc1d805ecedd9d6d13d360d90bcdef7ae28552ac50fb329ae7059ab"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void copyJointPos(J3DModel* pModel, const char* pName, TVec3f* pPos)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 54,
+      "literal_sha256": "d98a6a9cbeb7511b921979636494f5634f8fd6d8e38d0ea035cfe6f6fcca0960"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void copyJointPos(const LiveActor* pActor, const char* pName, TVec3f* pPos)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 59,
+      "literal_sha256": "cb63436cf4322ed331d835a0a2a8288ee97dcc0e52d2ab5f8e47702ad52eea65"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void copyJointPos(J3DModel* pModel, int idx, TVec3f* pPos)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 63,
+      "literal_sha256": "8bd516093339f46c825e16c5b7baf082a35e807385c3f2b095a7e6dc0a5ff5f3"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void copyJointPos(const LiveActor* pActor, int idx, TVec3f* pPos)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 68,
+      "literal_sha256": "ad0d1f613d14a419fa090bcba08bce7e893e2faa03e43f8040d442309896c325"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void copyJointScale(const LiveActor* pActor, const char* pName, TVec3f* pScale)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 72,
+      "literal_sha256": "9f77cb21c53525fdd3ddd96cf52ed0bd18ba72d9593761dc071e6548a66aab17"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void hideJoint(J3DJoint* pJoint)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 80,
+      "literal_sha256": "3babcfef8f4ebf130a73cd06b7cdcd312dda85d4f455b4c53d2a3b5d90707573"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void hideJoint(J3DModel* pModel, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 86,
+      "literal_sha256": "10a85ba29cd80222ab939217dfa7be81de89317d0eec823423d08ec1c6a8ff4e"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void hideJoint(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 90,
+      "literal_sha256": "d330a405a361fdbbdf8580716ec7c39e4c89b1e1366219fbf234900a702f5876"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void hideJointAndChildren(J3DJoint* pJoint)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 94,
+      "literal_sha256": "b8b7c2feb0f76b1c18cee53b08d67ff358a077f4afe1c9d073ef89fb296b52b5"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void hideJointAndChildren(J3DModel* pModel, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 104,
+      "literal_sha256": "812e40e14a5b6894e265260b39c861e36cb437b08085d664807336e078110514"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void hideJointAndChildren(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 108,
+      "literal_sha256": "57792f3923b9ca4bc26b5769133fc1b7c658c9eefe26e0316ce7f070bb895545"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void showJoint(J3DJoint* pJoint)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 112,
+      "literal_sha256": "59471a5f9c3482c15946a66b2a9eb6b31cad9113db5709b62b1fb55e3171de0c"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void showJoint(J3DModel* pModel, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 118,
+      "literal_sha256": "c43a8d0d600cc4342f67845c60994003ef7feb8cc2f6fcb5a616754cffeded85"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void showJoint(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 122,
+      "literal_sha256": "3dea2fa2344c7688f34e9121361f175d66026831d69c06bc1016d7ef9a64e079"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void showJointAndChildren(J3DJoint* pJoint)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 126,
+      "literal_sha256": "45d0e39b541ca9e4383c440a7b99178f2de97f3dbf803e967c4c4db779f7ed84"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void showJointAndChildren(J3DModel* pModel, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 136,
+      "literal_sha256": "32277a94fbc48d26df04f8e1ca2961a9a91ab9603bfc4eccfa63a0026acb94ed"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "void showJointAndChildren(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 140,
+      "literal_sha256": "0bf4ce355a1deb869501fceea2911c699e5d8e522339fc5c305b899e7389baec"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "f32 getJointTransX(const J3DJoint* pJoint)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 144,
+      "literal_sha256": "dbfafeb930df70ed77fb3077afcc1e673fa7430cadc39c8a3fb28de8624263ed"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "f32 getJointTransY(const J3DJoint* pJoint)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 148,
+      "literal_sha256": "c50d409b29dbe1cf1dca729d6ab1e103ac439e1f55743a2d4ec8b37c5235749c"
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "header": "f32 getJointTransZ(const J3DJoint* pJoint)",
+      "source": "src/Game/Util/JointUtil.cpp",
+      "line": 152,
+      "literal_sha256": "c0c2df475a56b6d058a14043762daf7ff01387b9aeb73056cdcba43b1c664ce7"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void startAction(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 933,
+      "literal_sha256": "5e978cf107f6efc2b70dca35acadbde9b77f586bbed77268890e3ca53220c542"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool isActionEnd(const LiveActor* pActor)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 941,
+      "literal_sha256": "0891f51c48d3dc5cf56eacf1ba23dbdbcad75528186134e0eac7f8736e2958d3"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool isActionStart(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 945,
+      "literal_sha256": "e1bdd83259ebff6e1ef81dd2e71497f5fbfa98cd2345728b8ef0e88411017029"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool tryStartAction(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 953,
+      "literal_sha256": "c47e5ecee883db9b14f51bb355fbc69c1501274ed3364aa30f40c00b9d25669b"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void startAllAnim(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 962,
+      "literal_sha256": "ea7058db6119c68a51ce837aa466e833839c6d27a3a06321b1425cc66fa6bfe2"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool tryStartAllAnim(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 966,
+      "literal_sha256": "ce101c8911a4f2f6c62502fa348c3449c37abc7eed9f3319e119dd590e801b19"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void startBck(const LiveActor* pActor, const char* pBckName, const char* pBrkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 995,
+      "literal_sha256": "fad208c9f2761f490f866a68c4a8d787e2928c9aa8767fa58575761a65864ff3"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void startBckWithInterpole(const LiveActor* pActor, const char* pBckName, s32 interpole)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1001,
+      "literal_sha256": "3228bd8008fe18dcdc4e521073bc31567034020d01ed3f55d5ec88b93cb597de"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void startBckNoInterpole(const LiveActor* pActor, const char* pBckName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1007,
+      "literal_sha256": "ffd6aea92b905a681ce284e7f71cabd860432801d3f34d53fd05c10a9d7804b7"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void startBckAtFirstStep(const LiveActor* pActor, const char* pBckName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1013,
+      "literal_sha256": "cfaf987226496d926632062ba18be1fcfb0d2058dfdafc0e63f116480550a9cb"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool tryStartBck(const LiveActor* pActor, const char* pBckName, const char* pBrkName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1023,
+      "literal_sha256": "6ef25e11cb83dd2f1aed666c6766d4ce7bffffba7f0463776a648500632886a7"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool tryStartBckAndBtp(const LiveActor* pActor, const char* pBckName, const char* pBtpName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1034,
+      "literal_sha256": "7a0805ef6d79e409439da8e5d66b09143be6e6789f62c2f759dad69179264425"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void setAllAnimFrame(const LiveActor* pActor, const char* pName, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1046,
+      "literal_sha256": "27011c45e3d9566ff8f16252126d5100a8c180af83753599a001a755ab5421e7"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void setAllAnimFrameAndStop(const LiveActor* pActor, const char* pName, f32 frame)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1072,
+      "literal_sha256": "2c8960ece1fcbda4fdd07e1098dffa475ffa92b4ae657b92ca81c0fb60248932"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "void setAllAnimFrameAtEnd(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1098,
+      "literal_sha256": "4f8190990259c821247b62f3a6ae525e3bb10231a3f282d80d374b217fb040f2"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool isAnyAnimStopped(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1124,
+      "literal_sha256": "8464aa6f91e0f354f4de0e11eb64064d5d8730c69915b0be724eab7af706b845"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool isAnyAnimOneTimeAndStopped(const LiveActor* pActor, const char* pName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1152,
+      "literal_sha256": "fe9b931299a7dc562c8fd542ae19fc5e851d9dc14f9fc2c21493f1d17878136a"
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "header": "bool startBckIfExist(const LiveActor* pActor, const char* pBckName)",
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "line": 1405,
+      "literal_sha256": "33af19f9cf3e03b4012fe5e1bee455116ca7dc3becf2fc61f8db1127c5ad13f5"
+    },
+    {
+      "unit": "OriginalEffectBckNotification",
+      "header": "void EffectKeeper::changeBck()",
+      "source": "src/Game/LiveActor/EffectKeeper.cpp",
+      "line": 253,
+      "literal_sha256": "10af8e433e8c29257feca869d75bc8cea2eb96b90875de537f66395885e5e676"
+    },
+    {
+      "unit": "OriginalEffectBckNotification",
+      "header": "void SyncBckEffectChecker::reset()",
+      "source": "src/Game/Effect/SyncBckEffectChecker.cpp",
+      "line": 3,
+      "literal_sha256": "4792708dd3c0604f55a0d230e7386bdb694b7d692ac0f28ef222012b1e109b7a"
+    },
+    {
+      "unit": "OriginalActorBasStart",
+      "header": "void startBas(const LiveActor* pActor, const char* pName, bool param3, f32 param4, f32 param5)",
+      "source": "src/Game/Util/SoundUtil.cpp",
+      "line": 193,
+      "literal_sha256": "4ec9fc3321a3ca1e7fa1610a59e924e766461e2ebc9d670d5eafbf7f1c14a89e"
+    }
+  ],
+  "results": [
+    {
+      "unit": "OriginalModelAccess",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-native-20260903",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-g",
+        "-O0",
+        "-std=c++23",
+        "-Isrc/render",
+        "-Isrc/common",
+        "-Isrc",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA_ENABLE_GX",
+        "-DIMGUI_USER_CONFIG=\"aurora/imgui_config.h\"",
+        "-DWEBGPU_DAWN",
+        "-DDAWN_ENABLE_BACKEND_NULL",
+        "-DDAWN_ENABLE_BACKEND_METAL",
+        "-DIMGUI_IMPL_WEBGPU_BACKEND_DAWN",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-framework",
+        "IOSurface",
+        "-framework",
+        "AudioToolbox",
+        "-framework",
+        "AVFoundation",
+        "-framework",
+        "CoreAudio",
+        "-framework",
+        "CoreHaptics",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "GameController",
+        "-framework",
+        "Metal",
+        "-framework",
+        "QuartzCore",
+        "-framework",
+        "CoreFoundation",
+        "-framework",
+        "UniformTypeIdentifiers",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "Carbon",
+        "-framework",
+        "ForceFeedback",
+        "-framework",
+        "IOKit",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/n/nlohmann_json/v3.12.0/3b425cf7b9154348b2259d59ddf47f26/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/imgui",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/backends",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/misc/cpp",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/include/freetype2",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/include",
+        "-Wno-register",
+        "-include",
+        "/Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp",
+        "-fno-builtin-sprintf",
+        "-fno-builtin-snprintf",
+        "-fno-builtin-vsprintf",
+        "-fno-builtin-vsnprintf",
+        "-c",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged/OriginalModelAccess.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/OriginalModelAccess.o"
+      ],
+      "returncode": 0
+    },
+    {
+      "unit": "OriginalActorModelAccess",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-native-20260903",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-g",
+        "-O0",
+        "-std=c++23",
+        "-Isrc/render",
+        "-Isrc/common",
+        "-Isrc",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA_ENABLE_GX",
+        "-DIMGUI_USER_CONFIG=\"aurora/imgui_config.h\"",
+        "-DWEBGPU_DAWN",
+        "-DDAWN_ENABLE_BACKEND_NULL",
+        "-DDAWN_ENABLE_BACKEND_METAL",
+        "-DIMGUI_IMPL_WEBGPU_BACKEND_DAWN",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-framework",
+        "IOSurface",
+        "-framework",
+        "AudioToolbox",
+        "-framework",
+        "AVFoundation",
+        "-framework",
+        "CoreAudio",
+        "-framework",
+        "CoreHaptics",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "GameController",
+        "-framework",
+        "Metal",
+        "-framework",
+        "QuartzCore",
+        "-framework",
+        "CoreFoundation",
+        "-framework",
+        "UniformTypeIdentifiers",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "Carbon",
+        "-framework",
+        "ForceFeedback",
+        "-framework",
+        "IOKit",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/n/nlohmann_json/v3.12.0/3b425cf7b9154348b2259d59ddf47f26/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/imgui",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/backends",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/misc/cpp",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/include/freetype2",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/include",
+        "-Wno-register",
+        "-include",
+        "/Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp",
+        "-fno-builtin-sprintf",
+        "-fno-builtin-snprintf",
+        "-fno-builtin-vsprintf",
+        "-fno-builtin-vsnprintf",
+        "-c",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged/OriginalActorModelAccess.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/OriginalActorModelAccess.o"
+      ],
+      "returncode": 0
+    },
+    {
+      "unit": "OriginalJointAccess",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-native-20260903",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-g",
+        "-O0",
+        "-std=c++23",
+        "-Isrc/render",
+        "-Isrc/common",
+        "-Isrc",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA_ENABLE_GX",
+        "-DIMGUI_USER_CONFIG=\"aurora/imgui_config.h\"",
+        "-DWEBGPU_DAWN",
+        "-DDAWN_ENABLE_BACKEND_NULL",
+        "-DDAWN_ENABLE_BACKEND_METAL",
+        "-DIMGUI_IMPL_WEBGPU_BACKEND_DAWN",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-framework",
+        "IOSurface",
+        "-framework",
+        "AudioToolbox",
+        "-framework",
+        "AVFoundation",
+        "-framework",
+        "CoreAudio",
+        "-framework",
+        "CoreHaptics",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "GameController",
+        "-framework",
+        "Metal",
+        "-framework",
+        "QuartzCore",
+        "-framework",
+        "CoreFoundation",
+        "-framework",
+        "UniformTypeIdentifiers",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "Carbon",
+        "-framework",
+        "ForceFeedback",
+        "-framework",
+        "IOKit",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/n/nlohmann_json/v3.12.0/3b425cf7b9154348b2259d59ddf47f26/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/imgui",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/backends",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/misc/cpp",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/include/freetype2",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/include",
+        "-Wno-register",
+        "-include",
+        "/Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp",
+        "-fno-builtin-sprintf",
+        "-fno-builtin-snprintf",
+        "-fno-builtin-vsprintf",
+        "-fno-builtin-vsnprintf",
+        "-c",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged/OriginalJointAccess.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/OriginalJointAccess.o"
+      ],
+      "returncode": 0
+    },
+    {
+      "unit": "OriginalActorAnimationStart",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-native-20260903",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-g",
+        "-O0",
+        "-std=c++23",
+        "-Isrc/render",
+        "-Isrc/common",
+        "-Isrc",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA_ENABLE_GX",
+        "-DIMGUI_USER_CONFIG=\"aurora/imgui_config.h\"",
+        "-DWEBGPU_DAWN",
+        "-DDAWN_ENABLE_BACKEND_NULL",
+        "-DDAWN_ENABLE_BACKEND_METAL",
+        "-DIMGUI_IMPL_WEBGPU_BACKEND_DAWN",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-framework",
+        "IOSurface",
+        "-framework",
+        "AudioToolbox",
+        "-framework",
+        "AVFoundation",
+        "-framework",
+        "CoreAudio",
+        "-framework",
+        "CoreHaptics",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "GameController",
+        "-framework",
+        "Metal",
+        "-framework",
+        "QuartzCore",
+        "-framework",
+        "CoreFoundation",
+        "-framework",
+        "UniformTypeIdentifiers",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "Carbon",
+        "-framework",
+        "ForceFeedback",
+        "-framework",
+        "IOKit",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/n/nlohmann_json/v3.12.0/3b425cf7b9154348b2259d59ddf47f26/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/imgui",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/backends",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/misc/cpp",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/include/freetype2",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/include",
+        "-Wno-register",
+        "-include",
+        "/Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp",
+        "-fno-builtin-sprintf",
+        "-fno-builtin-snprintf",
+        "-fno-builtin-vsprintf",
+        "-fno-builtin-vsnprintf",
+        "-c",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged/OriginalActorAnimationStart.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/OriginalActorAnimationStart.o"
+      ],
+      "returncode": 0
+    },
+    {
+      "unit": "OriginalEffectBckNotification",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-native-20260903",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-g",
+        "-O0",
+        "-std=c++23",
+        "-Isrc/render",
+        "-Isrc/common",
+        "-Isrc",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA_ENABLE_GX",
+        "-DIMGUI_USER_CONFIG=\"aurora/imgui_config.h\"",
+        "-DWEBGPU_DAWN",
+        "-DDAWN_ENABLE_BACKEND_NULL",
+        "-DDAWN_ENABLE_BACKEND_METAL",
+        "-DIMGUI_IMPL_WEBGPU_BACKEND_DAWN",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-framework",
+        "IOSurface",
+        "-framework",
+        "AudioToolbox",
+        "-framework",
+        "AVFoundation",
+        "-framework",
+        "CoreAudio",
+        "-framework",
+        "CoreHaptics",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "GameController",
+        "-framework",
+        "Metal",
+        "-framework",
+        "QuartzCore",
+        "-framework",
+        "CoreFoundation",
+        "-framework",
+        "UniformTypeIdentifiers",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "Carbon",
+        "-framework",
+        "ForceFeedback",
+        "-framework",
+        "IOKit",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/n/nlohmann_json/v3.12.0/3b425cf7b9154348b2259d59ddf47f26/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/imgui",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/backends",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/misc/cpp",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/include/freetype2",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/include",
+        "-Wno-register",
+        "-include",
+        "/Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp",
+        "-fno-builtin-sprintf",
+        "-fno-builtin-snprintf",
+        "-fno-builtin-vsprintf",
+        "-fno-builtin-vsnprintf",
+        "-c",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged/OriginalEffectBckNotification.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/OriginalEffectBckNotification.o"
+      ],
+      "returncode": 0
+    },
+    {
+      "unit": "OriginalActorBasStart",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged",
+        "-I/Users/frityet/Projects/petari/build/original-model-manager-native-20260903",
+        "-Qunused-arguments",
+        "-target",
+        "arm64-apple-macos26.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-g",
+        "-O0",
+        "-std=c++23",
+        "-Isrc/render",
+        "-Isrc/common",
+        "-Isrc",
+        "-Iaurora/include",
+        "-DSMGPC_DEBUG_BUILD",
+        "-DAURORA_ENABLE_GX",
+        "-DIMGUI_USER_CONFIG=\"aurora/imgui_config.h\"",
+        "-DWEBGPU_DAWN",
+        "-DDAWN_ENABLE_BACKEND_NULL",
+        "-DDAWN_ENABLE_BACKEND_METAL",
+        "-DIMGUI_IMPL_WEBGPU_BACKEND_DAWN",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-framework",
+        "IOSurface",
+        "-framework",
+        "AudioToolbox",
+        "-framework",
+        "AVFoundation",
+        "-framework",
+        "CoreAudio",
+        "-framework",
+        "CoreHaptics",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "GameController",
+        "-framework",
+        "Metal",
+        "-framework",
+        "QuartzCore",
+        "-framework",
+        "CoreFoundation",
+        "-framework",
+        "UniformTypeIdentifiers",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "Carbon",
+        "-framework",
+        "ForceFeedback",
+        "-framework",
+        "IOKit",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/n/nlohmann_json/v3.12.0/3b425cf7b9154348b2259d59ddf47f26/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/imgui",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/backends",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/include/misc/cpp",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/include/freetype2",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/include",
+        "-isystem",
+        "/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/include",
+        "-Wno-register",
+        "-include",
+        "/Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp",
+        "-fno-builtin-sprintf",
+        "-fno-builtin-snprintf",
+        "-fno-builtin-vsprintf",
+        "-fno-builtin-vsnprintf",
+        "-I/Users/frityet/Projects/petari/include",
+        "-I/Users/frityet/Projects/petari/libs/JSystem/include",
+        "-c",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/staged/OriginalActorBasStart.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-model-manager-render-20260903/OriginalActorBasStart.o"
+      ],
+      "returncode": 1
+    }
+  ]
+}

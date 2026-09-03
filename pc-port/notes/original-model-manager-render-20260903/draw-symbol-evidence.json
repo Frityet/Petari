@@ -1,0 +1,204 @@
+[
+  {
+    "symbol": "__Unwind_Resume",
+    "readable": "__Unwind_Resume",
+    "provider_archives": []
+  },
+  {
+    "symbol": "__ZN14J3DShapePacket8drawFastEv",
+    "readable": "J3DShapePacket::drawFast()",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR10zeroMemoryEPvj",
+    "readable": "MR::zeroMemory(void*, unsigned int)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR11getJ3DModelEPK9LiveActor",
+    "readable": "MR::getJ3DModel(LiveActor const*)",
+    "provider_archives": []
+  },
+  {
+    "symbol": "__ZN2MR11getMaterialEP8J3DModeli",
+    "readable": "MR::getMaterial(J3DModel*, int)",
+    "provider_archives": []
+  },
+  {
+    "symbol": "__ZN2MR12getLightCtrlEPK9LiveActor",
+    "readable": "MR::getLightCtrl(LiveActor const*)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR13isEqualStringEPKcS1_",
+    "readable": "MR::isEqualString(char const*, char const*)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR14getMaterialNumEP8J3DModel",
+    "readable": "MR::getMaterialNum(J3DModel*)",
+    "provider_archives": []
+  },
+  {
+    "symbol": "__ZN2MR15getMaterialNameEPK12J3DModelDatai",
+    "readable": "MR::getMaterialName(J3DModelData const*, int)",
+    "provider_archives": []
+  },
+  {
+    "symbol": "__ZN2MR15getModelResNameEPK9LiveActor",
+    "readable": "MR::getModelResName(LiveActor const*)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR25getJ3DShapePacketUserDataEPK14J3DShapePacket",
+    "readable": "MR::getJ3DShapePacketUserData(J3DShapePacket const*)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR27initActorLightInfoLightTypeEP9LiveActori",
+    "readable": "MR::initActorLightInfoLightType(LiveActor*, int)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR28initActorLightInfoDrawBufferEP9LiveActorP10DrawBuffer",
+    "readable": "MR::initActorLightInfoDrawBuffer(LiveActor*, DrawBuffer*)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR9loadLightEi",
+    "readable": "MR::loadLight(int)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZN8J3DShape13sOldVcdVatCmdE",
+    "readable": "J3DShape::sOldVcdVatCmd",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZNK14ActorLightCtrl11isSameLightEPKS_",
+    "readable": "ActorLightCtrl::isSameLight(ActorLightCtrl const*) const",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZNK14ActorLightCtrl9loadLightEv",
+    "readable": "ActorLightCtrl::loadLight() const",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZNK17J3DDisplayListObj6callDLEv",
+    "readable": "J3DDisplayListObj::callDL() const",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZNK19ShapePacketUserData6callDLEv",
+    "readable": "ShapePacketUserData::callDL() const",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZNK8J3DShape18loadPreDrawSettingEv",
+    "readable": "J3DShape::loadPreDrawSetting() const",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZSt9terminatev",
+    "readable": "std::terminate()",
+    "provider_archives": []
+  },
+  {
+    "symbol": "__ZdaPv",
+    "readable": "operator delete[](void*)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZdaPvm",
+    "readable": "operator delete[](void*, unsigned long)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__ZdlPvm",
+    "readable": "operator delete(void*, unsigned long)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__Znam",
+    "readable": "operator new[](unsigned long)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "__Znwm",
+    "readable": "operator new(unsigned long)",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "___cxa_begin_catch",
+    "readable": "___cxa_begin_catch",
+    "provider_archives": []
+  },
+  {
+    "symbol": "___gxx_personality_v0",
+    "readable": "___gxx_personality_v0",
+    "provider_archives": []
+  },
+  {
+    "symbol": "___stack_chk_fail",
+    "readable": "___stack_chk_fail",
+    "provider_archives": []
+  },
+  {
+    "symbol": "___stack_chk_guard",
+    "readable": "___stack_chk_guard",
+    "provider_archives": []
+  },
+  {
+    "symbol": "_j3dSys",
+    "readable": "_j3dSys",
+    "provider_archives": [
+      "smg-pc-game"
+    ]
+  },
+  {
+    "symbol": "_strcasecmp",
+    "readable": "_strcasecmp",
+    "provider_archives": []
+  }
+]

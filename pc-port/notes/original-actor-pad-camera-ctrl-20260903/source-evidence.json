@@ -1,0 +1,866 @@
+{
+  "scope": "Root-only complete ActorPadAndCameraCtrl recovery; no native import or runtime activation.",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC3.0a3, actual configure.py cflags_game, real root headers",
+  "source_sha256": {
+    "src/Game/LiveActor/ActorPadAndCameraCtrl.cpp": "d2cdd7ba8bff81a84ea5d1a772a067f850cbc997299d520da39eb652cd896bb4",
+    "include/Game/LiveActor/ActorPadAndCameraCtrl.hpp": "80018815db7b72e2b2c5bbbc019b8401f298251e6b492fb1c750e883c21db7c5"
+  },
+  "methods": [
+    {
+      "symbol": "__ct__21ActorPadAndCameraCtrlFPC12ModelManagerPCQ29JGeometry8TVec3<f>",
+      "address": "0x8015c8c8",
+      "size": 540,
+      "objdiff_percent": 95.888885,
+      "relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "_savegpr_23",
+          "addend": 0,
+          "retail_target": "0x805189f0"
+        },
+        {
+          "offset": "0x1e",
+          "kind": 6,
+          "symbol": "...data.0",
+          "addend": 0,
+          "retail_target": "0x805877a0"
+        },
+        {
+          "offset": "0x2e",
+          "kind": 4,
+          "symbol": "...data.0",
+          "addend": 0,
+          "retail_target": "0x805877a0"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "getResourceHolder__12ModelManagerCFv",
+          "addend": 0,
+          "retail_target": "0x80169b90"
+        },
+        {
+          "offset": "0x50",
+          "kind": 109,
+          "symbol": "sFileName__35@unnamed@ActorPadAndCameraCtrl_cpp@",
+          "addend": 0,
+          "value_hex": "00000000",
+          "retail_target": "0x806b1b20"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "tryCreateCsvParser__2MRFPC14ResourceHolderPCce",
+          "addend": 0,
+          "retail_target": "0x803f19e0"
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "getCsvDataElementNum__2MRFPC8JMapInfo",
+          "addend": 0,
+          "retail_target": "0x803f1a6c"
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0,
+          "retail_target": "0x8040b47c"
+        },
+        {
+          "offset": "0xa4",
+          "kind": 109,
+          "symbol": "@5120",
+          "addend": 0,
+          "value_hex": "453b8000",
+          "retail_target": "0x806bbbd4"
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1a88"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1b88"
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1b88"
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "getCsvDataStrOrNULL__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1ae8"
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "getCsvDataStrOrNULL__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1ae8"
+        },
+        {
+          "offset": "0x130",
+          "kind": 10,
+          "symbol": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1b88"
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1b88"
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "searchItemInfo__8JMapInfoCFPCc",
+          "addend": 0,
+          "retail_target": "0x80406154"
+        },
+        {
+          "offset": "0x19c",
+          "kind": 10,
+          "symbol": "getCsvDataStrOrNULL__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1ae8"
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "getCsvDataStrOrNULL__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1ae8"
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 10,
+          "symbol": "getCsvDataStrOrNULL__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1ae8"
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 10,
+          "symbol": "getCsvDataStrOrNULL__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "retail_target": "0x803f1ae8"
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "_restgpr_23",
+          "addend": 0,
+          "retail_target": "0x80518a3c"
+        }
+      ],
+      "register_permutation_compiled_to_retail": {
+        "28": 29,
+        "29": 28
+      },
+      "constructor_loop_local_scheduling": {
+        "range": "0x98..0xb0",
+        "compiled_words": [
+          "0x2c000000",
+          "0x4081015c",
+          "0x3b600000",
+          "0xc3e2bfb4",
+          "0x7f77db78",
+          "0x3bbe0019",
+          "0x3b000000"
+        ],
+        "retail_words": [
+          "0x3b600000",
+          "0x2c000000",
+          "0x3b000000",
+          "0x40810154",
+          "0xc3e2bfb4",
+          "0x7f17c378",
+          "0x3bbe0019"
+        ],
+        "reason": "Two loop-local zero initializations move across the count guard. The flag-zero copy uses a different already-zero local."
+      },
+      "all_instruction_words_equal_after_listed_normalization": true,
+      "retail_sha256": "3dc62b04aea43d78ee32151c3d753749ef415ae42415319dee6ef9abaea3c830"
+    },
+    {
+      "symbol": "tryCreate__21ActorPadAndCameraCtrlFPC12ModelManagerPCQ29JGeometry8TVec3<f>",
+      "address": "0x8015cae4",
+      "size": 148,
+      "objdiff_percent": 100.0,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getResourceHolder__12ModelManagerCFv",
+          "addend": 0,
+          "retail_target": "0x80169b90"
+        },
+        {
+          "offset": "0x22",
+          "kind": 6,
+          "symbol": "@5111",
+          "addend": 0,
+          "value_hex": "25732e6263737600",
+          "retail_target": "0x805877b1"
+        },
+        {
+          "offset": "0x24",
+          "kind": 109,
+          "symbol": "sFileName__35@unnamed@ActorPadAndCameraCtrl_cpp@",
+          "addend": 0,
+          "value_hex": "00000000",
+          "retail_target": "0x806b1b20"
+        },
+        {
+          "offset": "0x2e",
+          "kind": 4,
+          "symbol": "@5111",
+          "addend": 0,
+          "value_hex": "25732e6263737600",
+          "retail_target": "0x805877b1"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "isExistFileInArc__2MRFPC14ResourceHolderPCce",
+          "addend": 0,
+          "retail_target": "0x803f1704"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "__ct__21ActorPadAndCameraCtrlFPC12ModelManagerPCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "retail_target": "0x8015c8c8"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a54"
+        }
+      ],
+      "register_permutation_compiled_to_retail": {},
+      "constructor_loop_local_scheduling": null,
+      "all_instruction_words_equal_after_listed_normalization": true,
+      "retail_sha256": "735fb382700b16bb57e79ed709c8e450ffa03ceb97c19c2f4e17d20293bb41ad"
+    },
+    {
+      "symbol": "update__21ActorPadAndCameraCtrlFv",
+      "address": "0x8015cb78",
+      "size": 276,
+      "objdiff_percent": 98.695656,
+      "relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "_savegpr_25",
+          "addend": 0,
+          "retail_target": "0x805189f8"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getPlayingBckName__12ModelManagerCFv",
+          "addend": 0,
+          "retail_target": "0x80169bf4"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "getPlayingBckName__12ModelManagerCFv",
+          "addend": 0,
+          "retail_target": "0x80169bf4"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "updateInfoBck__21ActorPadAndCameraCtrlFv",
+          "addend": 0,
+          "retail_target": "0x8015cc8c"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "getBckCtrl__12ModelManagerCFv",
+          "addend": 0,
+          "retail_target": "0x801699e4"
+        },
+        {
+          "offset": "0x54",
+          "kind": 109,
+          "symbol": "@5147",
+          "addend": 0,
+          "value_hex": "00000000",
+          "retail_target": "0x806bbbd0"
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "checkPass__12J3DFrameCtrlFf",
+          "addend": 0,
+          "retail_target": "0x80433994"
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "updatePadAndCamera__21ActorPadAndCameraCtrlFPC25ActorPadAndCameraCtrlInfo",
+          "addend": 0,
+          "retail_target": "0x8015ce40"
+        },
+        {
+          "offset": "0xd0",
+          "kind": 10,
+          "symbol": "checkPass__12J3DFrameCtrlFf",
+          "addend": 0,
+          "retail_target": "0x80433994"
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "_restgpr_25",
+          "addend": 0,
+          "retail_target": "0x80518a44"
+        }
+      ],
+      "register_permutation_compiled_to_retail": {
+        "26": 28,
+        "27": 26,
+        "28": 27
+      },
+      "constructor_loop_local_scheduling": null,
+      "all_instruction_words_equal_after_listed_normalization": true,
+      "retail_sha256": "46fc4c33ef354a6c5f352b1204d859c2e565f5f747e0dacc0e06e8cecb2539be"
+    },
+    {
+      "symbol": "updateInfoBck__21ActorPadAndCameraCtrlFv",
+      "address": "0x8015cc8c",
+      "size": 148,
+      "objdiff_percent": 98.91892,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_26",
+          "addend": 0,
+          "retail_target": "0x805189fc"
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "_restgpr_26",
+          "addend": 0,
+          "retail_target": "0x80518a48"
+        }
+      ],
+      "register_permutation_compiled_to_retail": {
+        "27": 28,
+        "28": 27
+      },
+      "constructor_loop_local_scheduling": null,
+      "all_instruction_words_equal_after_listed_normalization": true,
+      "retail_sha256": "3fba8bfa5dc46ebd38db9f92f032a6f99479bf360ae46ca89b6f66ea84844486"
+    },
+    {
+      "symbol": "tryUpdateCameraShake__35@unnamed@ActorPadAndCameraCtrl_cpp@FPCc",
+      "address": "0x8015cd20",
+      "size": 252,
+      "objdiff_percent": 99.68254,
+      "relocations": [
+        {
+          "offset": "0x16",
+          "kind": 6,
+          "symbol": "...data.0",
+          "addend": 0,
+          "retail_target": "0x805877a0"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 4,
+          "symbol": "...data.0",
+          "addend": 0,
+          "retail_target": "0x805877a0"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "shakeCameraVeryStrong__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f2a20"
+        },
+        {
+          "offset": "0x44",
+          "kind": 109,
+          "symbol": "@5176",
+          "addend": 0,
+          "value_hex": "8bad00",
+          "retail_target": "0x806b1b24"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "shakeCameraStrong__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f2a4c"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "symbol": "shakeCameraNormalStrong__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f2a78"
+        },
+        {
+          "offset": "0x7c",
+          "kind": 109,
+          "symbol": "@5178",
+          "addend": 0,
+          "value_hex": "928600",
+          "retail_target": "0x806b1b27"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "shakeCameraNormal__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f2aa4"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "shakeCameraNormalWeak__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f2ad0"
+        },
+        {
+          "offset": "0xb4",
+          "kind": 109,
+          "symbol": "@5180",
+          "addend": 0,
+          "value_hex": "8ee300",
+          "retail_target": "0x806b1b2a"
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "shakeCameraWeak__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f2afc"
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "shakeCameraVeryWeak__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f2b28"
+        }
+      ],
+      "register_permutation_compiled_to_retail": {},
+      "constructor_loop_local_scheduling": null,
+      "all_instruction_words_equal_after_listed_normalization": true,
+      "retail_sha256": "467a0ec5eca983db6b83ddc1ae461475bf30485fa2a6b7441d81e167f657997d"
+    },
+    {
+      "symbol": "isDistanceExistAndFar__35@unnamed@ActorPadAndCameraCtrl_cpp@Fff",
+      "address": "0x8015ce1c",
+      "size": 36,
+      "objdiff_percent": 99.44444,
+      "relocations": [
+        {
+          "offset": "0x0",
+          "kind": 109,
+          "symbol": "@5147",
+          "addend": 0,
+          "value_hex": "00000000",
+          "retail_target": "0x806bbbd0"
+        }
+      ],
+      "register_permutation_compiled_to_retail": {},
+      "constructor_loop_local_scheduling": null,
+      "all_instruction_words_equal_after_listed_normalization": true,
+      "retail_sha256": "3885294941f6a51b1297f834bac66c785be7386e558bb5c6a2f8d788793df7df"
+    },
+    {
+      "symbol": "updatePadAndCamera__21ActorPadAndCameraCtrlFPC25ActorPadAndCameraCtrlInfo",
+      "address": "0x8015ce40",
+      "size": 240,
+      "objdiff_percent": 100.0,
+      "relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "getPlayerPos__2MRFv",
+          "addend": 0,
+          "retail_target": "0x803f35d0"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "PSVECDistance",
+          "addend": 0,
+          "retail_target": "0x804b9178"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "isDistanceExistAndFar__35@unnamed@ActorPadAndCameraCtrl_cpp@Fff",
+          "addend": 0,
+          "retail_target": "0x8015ce1c"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "isDistanceExistAndFar__35@unnamed@ActorPadAndCameraCtrl_cpp@Fff",
+          "addend": 0,
+          "retail_target": "0x8015ce1c"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "tryRumblePad__2MRFPCvPCcl",
+          "addend": 0,
+          "retail_target": "0x803f2824"
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "symbol": "tryUpdateCameraShake__35@unnamed@ActorPadAndCameraCtrl_cpp@FPCc",
+          "addend": 0,
+          "retail_target": "0x8015cd20"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "isDistanceExistAndFar__35@unnamed@ActorPadAndCameraCtrl_cpp@Fff",
+          "addend": 0,
+          "retail_target": "0x8015ce1c"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "tryRumblePad__2MRFPCvPCcl",
+          "addend": 0,
+          "retail_target": "0x803f2824"
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "tryUpdateCameraShake__35@unnamed@ActorPadAndCameraCtrl_cpp@FPCc",
+          "addend": 0,
+          "retail_target": "0x8015cd20"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "tryRumblePad__2MRFPCvPCcl",
+          "addend": 0,
+          "retail_target": "0x803f2824"
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "tryUpdateCameraShake__35@unnamed@ActorPadAndCameraCtrl_cpp@FPCc",
+          "addend": 0,
+          "retail_target": "0x8015cd20"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "retail_target": "0x80518a54"
+        }
+      ],
+      "register_permutation_compiled_to_retail": {},
+      "constructor_loop_local_scheduling": null,
+      "all_instruction_words_equal_after_listed_normalization": true,
+      "retail_sha256": "ce9d711fd338b962c857c2f1b2795903244683a2485c80c98a8acf03ea8853cf"
+    }
+  ],
+  "total_retail_instruction_words": 410,
+  "authored_string_pool_address": "0x805877a0",
+  "authored_string_pool_bytes_exact": "506164416e6443616d6572614374726c0025732e626373760044697374616e6365496e76616c69640042636b4e616d650053746172744672616d6500456e644672616d650050616452756d626c654e616d650043616d6572615368616b654e616d650044697374616e63654e6561720044697374616e63654661720050616452756d626c654e616d654d6964646c650050616452756d626c654e616d654661720043616d6572615368616b654e616d654d6964646c650043616d6572615368616b654e616d65466172008dc58bad0092868bad0092868ee3008dc58ee300",
+  "filename_pointer": {
+    "address": "0x806b1b20",
+    "target": "0x805877a0",
+    "relocations": [
+      {
+        "offset": "0x0",
+        "kind": 1,
+        "symbol": "@4739",
+        "addend": 0,
+        "value_hex": "506164416e6443616d6572614374726c00"
+      }
+    ]
+  },
+  "small_data_payloads": {
+    "00000000": [
+      2154544080,
+      2
+    ],
+    "453b8000": [
+      2154544084,
+      2
+    ],
+    "8bad00": [
+      2154502948,
+      13
+    ],
+    "928600": [
+      2154502951,
+      13
+    ],
+    "8ee300": [
+      2154502954,
+      13
+    ]
+  },
+  "original_layout": {
+    "sizeof(ActorPadAndCameraCtrl)": 24,
+    "sizeof(ActorPadAndCameraCtrlInfo)": 52,
+    "offsetof(ActorPadAndCameraCtrl,_C)": 12,
+    "offsetof(ActorPadAndCameraCtrl,mInfo)": 20,
+    "offsetof(ActorPadAndCameraCtrlInfo,mDistanceInvalid)": 44,
+    "offsetof(ActorPadAndCameraCtrlInfo,_30)": 48,
+    "offsetof(ActorPadAndCameraCtrlInfo,_31)": 49
+  },
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/LiveActor/ActorPadAndCameraCtrl.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-actor-pad-camera-ctrl-20260903/ActorPadAndCameraCtrl.o"
+    ],
+    [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/build/j3d-vertex-buffer-lifecycle-20260903/retail/obj/Game/LiveActor/ActorPadAndCameraCtrl.o",
+      "-2",
+      "/Users/frityet/Projects/petari/build/original-actor-pad-camera-ctrl-20260903/ActorPadAndCameraCtrl.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-actor-pad-camera-ctrl-20260903/objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/build/original-actor-pad-camera-ctrl-20260903/layout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-actor-pad-camera-ctrl-20260903/layout.o"
+    ]
+  ]
+}

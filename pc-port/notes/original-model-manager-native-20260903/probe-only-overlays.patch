@@ -1,0 +1,88 @@
+--- a/pc-port/src/compat/ActorRuntimeRegistry.cpp
++++ b/pc-port/src/compat/ActorRuntimeRegistry.cpp
+@@ -11,7 +11,6 @@
+ #include "Game/NameObj/NameObj.hpp"
+ #include "compat/CollisionPartsCompat.hpp"
+ #include "compat/GameActorSensorCompat.hpp"
+-#include "compat/MaterialCtrlCompat.hpp"
+ #include "runtime/RuntimeContext.hpp"
+ 
+ #include <algorithm>
+@@ -388,7 +387,6 @@
+ 
+         release_actor_collision_parts(actor);
+         release_actor_sensor_bindings(actor);
+-        release_actor_material_ctrl_state(actor);
+         release_talk_runtime_state(actor);
+         release_demo_runtime_state(actor);
+ 
+--- a/pc-port/src/compat/LodCtrlRuntimeCompat.cpp
++++ b/pc-port/src/compat/LodCtrlRuntimeCompat.cpp
+@@ -68,9 +68,7 @@
+         return createSubModelObjName(pActor, "Middle");
+     }
+ 
+-    const char* getModelResName(const LiveActor* pActor) {
+-        return requireModel(pActor).model_arc_name().data();
+-    }
++    
+ 
+     void copyTransRotateScale(const LiveActor* pSource, LiveActor* pDestination) {
+         if (pSource == nullptr || pDestination == nullptr) {
+--- a/pc-port/src/Game/LiveActor/LiveActor.cpp
++++ b/pc-port/src/Game/LiveActor/LiveActor.cpp
+@@ -1,3 +1,4 @@
++#include "Game/LiveActor/ModelManager.hpp"
+ #include "Game/LiveActor/LiveActor.hpp"
+ 
+ #include "Game/LiveActor/ActorLightCtrl.hpp"
+@@ -94,8 +95,19 @@
+ }
+ 
+ void LiveActor::calcViewAndEntry() {
+-    // Model view calculation and entry are performed by the native renderer.
+-    // Retail does not recalculate the base or animation matrices in this pass.
++    if (mFlag.mIsNoCalcView) {
++        return;
++    }
++
++    if (mModelManager == nullptr) {
++        return;
++    }
++
++    if (mFlag.mIsNoCalcView) {
++        return;
++    }
++
++    mModelManager->calcView();
+ }
+ 
+ void LiveActor::appear() {
+--- a/pc-port/src/Game/Util.hpp
++++ b/pc-port/src/Game/Util.hpp
+@@ -29,3 +29,9 @@
+ #include "Game/Util/ScreenUtil.hpp"
+ #include "Game/Util/SoundUtil.hpp"
+ #include "Game/Util/StarPointerUtil.hpp"
++
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/Util/ModelUtil.hpp"
++#include "Game/Util/SchedulerUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include "Game/Util/DrawUtil.hpp"
+--- a/pc-port/src/Game/Util/DrawUtil.hpp
++++ b/pc-port/src/Game/Util/DrawUtil.hpp
+@@ -6,3 +6,13 @@
+     void activateGameSceneDraw3D();
+     void deactivateGameSceneDraw3D();
+ }  // namespace MR
++
++#include "JSystem/JGeometry/TVec.hpp"
++class JUTTexture;
++namespace MR {
++ const JUTTexture* getMarioShadowTex();
++ const JUTTexture* getMarioShadowTexForLoad();
++ const TVec3f& getMarioShadowVec();
++ void setMarioShadowTex(const JUTTexture*);
++ void setMarioShadowVec(const TVec3f&);
++}
