@@ -1,0 +1,42 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "VIGetDTVStatus": {
+    "address": "0x804b5e6c",
+    "size": 60,
+    "register": "0xCC00206E",
+    "mask": 1,
+    "sha256": "ea891c91190a1a619b5999c8fb6028cf3e1e52d8031a3675db2e00d2a1f2dafa"
+  },
+  "VIGetTvFormat": {
+    "address": "0x804b5e0c",
+    "size": 96,
+    "table": "0x805FD770",
+    "mapping": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      5,
+      0,
+      0,
+      0
+    ],
+    "out_of_range": "preserve current format"
+  },
+  "getSuitableRenderMode": {
+    "address": "0x803a7274",
+    "size": 308,
+    "calls": [
+      "0x80518a08",
+      "0x804d1bd8",
+      "0x804b5e6c",
+      "0x804d1d6c",
+      "0x804b5e0c",
+      "0x804b5e0c",
+      "0x804d1ca0",
+      "0x80518a54"
+    ],
+    "native_source_identical_to_root": true
+  }
+}

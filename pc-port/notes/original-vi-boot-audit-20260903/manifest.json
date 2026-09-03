@@ -1,0 +1,30 @@
+[
+  {
+    "path": "include/aurora/vi.hpp",
+    "patch": "aurora.patch",
+    "staged": "build/original-vi-boot-audit-20260903/staged-aurora/include/aurora/vi.hpp",
+    "baseline_sha256": null,
+    "sha256": "1a009943c33683da92c091509de07d849ebc59db26d287f521652b2fbe8b514b"
+  },
+  {
+    "path": "lib/dolphin/vi/vi.cpp",
+    "patch": "aurora.patch",
+    "staged": "build/original-vi-boot-audit-20260903/staged-aurora/lib/dolphin/vi/vi.cpp",
+    "baseline_sha256": "37cb7019924344b4780bcb876a1fb5a707e07dee8bf486443c1ccddd6553362e",
+    "sha256": "24efa6829ea95ff567757d3a85dd2ae96e0b56d8a58b31360baac41db3f4ef1c"
+  },
+  {
+    "path": "pc-port/src/runtime/WiiVideoService.cpp",
+    "patch": "native.patch",
+    "staged": "build/original-vi-boot-audit-20260903/staged/runtime/WiiVideoService.cpp",
+    "baseline_sha256": "c64bdf42b7347f900e5f113e5382011d2d576c60985f88ac7d47fbee67928c3f",
+    "sha256": "555440b3d1cea37672e82f671f66f16884d038f2f04d66ec2ea8be9ea284f796"
+  },
+  {
+    "path": "pc-port/tests/OriginalViRenderModeTests.cpp",
+    "patch": "native.patch",
+    "staged": "build/original-vi-boot-audit-20260903/OriginalViRenderModeTests.cpp",
+    "baseline_sha256": null,
+    "sha256": "a54d9e0b2804d0cdd5c54fa8d3dc33c03fa3678c01dfc03503b3fe6ee251eb77"
+  }
+]

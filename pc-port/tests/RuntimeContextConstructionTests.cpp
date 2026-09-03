@@ -47,6 +47,7 @@ namespace {
         void aspect(u8 value) const {
             aurora::SysConf document;
             document.replace_integer("IPL.AR", aurora::SysConf::Type::Byte, value);
+            document.replace_integer("IPL.PGS", aurora::SysConf::Type::Byte, value);
             auto bytes = document.encode();
             auto file = path / "shared2/sys/SYSCONF";
             std::filesystem::create_directories(file.parent_path());
@@ -138,7 +139,8 @@ int main() {
             require(smgpc::runtime::SystemConfigService::active() && SCGetAspectRatio() == cycle,
                     "actual startup did not publish imported console settings");
             require(MR::getScreenWidth() == (cycle ? 832 : 608) &&
-                        runtime.wii_video().render_mode().viWidth == (cycle ? 686 : 670),
+                        runtime.wii_video().render_mode().viWidth == (cycle ? 686 : 670) &&
+                        runtime.wii_video().scan_mode() == (cycle ? VI_PROGRESSIVE : VI_INTERLACE),
                     "original render-mode selection and screen width must use the imported SC setting");
             {
                 CameraContext camera;

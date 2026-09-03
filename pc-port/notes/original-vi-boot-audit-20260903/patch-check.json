@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "git",
+      "apply",
+      "--check",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-vi-boot-audit-20260903/native.patch"
+    ],
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/Users/frityet/Projects/petari/pc-port/aurora",
+      "apply",
+      "--check",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-vi-boot-audit-20260903/aurora.patch"
+    ],
+    "exit": 0,
+    "output": ""
+  }
+]

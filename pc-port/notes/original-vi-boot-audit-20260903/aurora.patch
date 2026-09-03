@@ -1,0 +1,70 @@
+--- /dev/null
++++ b/include/aurora/vi.hpp
+@@ -0,0 +1,12 @@
++#pragma once
++
++namespace aurora::vi {
++
++// Emulated video-output connection capability (VI DTV status bit 0), independent
++// of both the selected scan mode and the user's stored progressive preference.
++// Desktop output supports progressive presentation by default. Platform owners
++// may change the connection state without rewriting the configured render mode.
++void set_dtv_connected(bool connected) noexcept;
++[[nodiscard]] bool dtv_connected() noexcept;
++
++} // namespace aurora::vi
+--- a/lib/dolphin/vi/vi.cpp
++++ b/lib/dolphin/vi/vi.cpp
+@@ -1,12 +1,21 @@
+ #include <dolphin/vi.h>
++#include <aurora/vi.hpp>
+ 
+ #include "../../window.hpp"
+ #include "aurora/math.hpp"
+ #include "vi_internal.hpp"
+ 
++#include <atomic>
+ #include <optional>
+ 
+ namespace aurora::vi {
++namespace {
++std::atomic<bool> s_dtvConnected{true};
++}
++
++void set_dtv_connected(bool connected) noexcept { s_dtvConnected.store(connected, std::memory_order_relaxed); }
++bool dtv_connected() noexcept { return s_dtvConnected.load(std::memory_order_relaxed); }
++
+ std::optional<GXRenderModeObj> g_renderMode;
+ u32 g_retraceCount = 0;
+ void* g_nextFrameBuffer = nullptr;
+@@ -64,7 +73,20 @@
+   if (!aurora::vi::g_renderMode) {
+     return VI_NTSC;
+   }
+-  return static_cast<u32>(aurora::vi::g_renderMode->viTVmode) >> 2U;
++  const auto format = static_cast<u32>(aurora::vi::g_renderMode->viTVmode) >> 2U;
++  switch (format) {
++  case 0:
++  case 3:
++  case 6:
++  case 7:
++  case 8:
++    return VI_NTSC;
++  case 1:
++  case 4:
++    return VI_PAL;
++  default:
++    return format;
++  }
+ }
+ u32 VIGetScanMode() {
+   if (!aurora::vi::g_renderMode) {
+@@ -79,7 +101,7 @@
+ }
+ u32 VIGetRetraceCount() { return aurora::vi::g_retraceCount; }
+ u32 VIGetNextField() { return aurora::vi::g_retraceCount & 1U; }
+-u32 VIGetDTVStatus() { return VIGetScanMode() == VI_PROGRESSIVE ? 1U : 0U; }
++u32 VIGetDTVStatus() { return aurora::vi::dtv_connected() ? 1U : 0U; }
+ void VIWaitForRetrace() {
+   if (aurora::vi::g_preRetraceCallback != nullptr) {
+     aurora::vi::g_preRetraceCallback(aurora::vi::g_retraceCount);

@@ -156,7 +156,7 @@ namespace smgpc::runtime {
     }
 
     u32 WiiVideoService::tv_format() const {
-        return _render_mode.viTVmode >> 2U;
+        return VIGetTvFormat();
     }
 
     u32 WiiVideoService::scan_mode() const {
@@ -164,7 +164,7 @@ namespace smgpc::runtime {
     }
 
     u32 WiiVideoService::dtv_status() const {
-        return scan_mode() == VI_PROGRESSIVE ? 1U : 0U;
+        return VIGetDTVStatus();
     }
 
     u32 WiiVideoService::current_line() const {

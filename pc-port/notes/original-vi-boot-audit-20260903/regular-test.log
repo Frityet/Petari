@@ -1,0 +1,4 @@
+PASS independent desktop DTV connection and service delegation
+PASS all nine retail TV-format mappings across three scan modes
+PASS 192 original RenderMode selections with actual SC data
+PASS missing and invalid SC original selection defaults
