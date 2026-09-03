@@ -26,6 +26,29 @@ namespace {
     }
 }  // namespace
 
+// Portable branch of the original paired-single helper in MathUtil.cpp.
+f32 PSVECKillElement(const Vec* pSrc, const Vec* pKill, const Vec* pDst) {
+    const f32 x = pSrc->x;
+    const f32 y = pSrc->y;
+    const f32 z = pSrc->z;
+    const f32 killX = pKill->x;
+    const f32 killY = pKill->y;
+    const f32 killZ = pKill->z;
+    const f32 yy = y * killY;
+    const f32 zz = z * killZ;
+    const f32 dot = std::fma(x, killX, yy) + zz;
+    Vec* pResult = const_cast< Vec* >(pDst);
+    // Keep the rounded fused result separate from negation, including signed zero.
+    volatile f32 resultX = std::fma(dot, killX, -x);
+    volatile f32 resultY = std::fma(dot, killY, -y);
+    volatile f32 resultZ = std::fma(dot, killZ, -z);
+    pResult->x = -resultX;
+    pResult->y = -resultY;
+    pResult->z = -resultZ;
+    return dot;
+}
+
+
 namespace MR {
     bool isNan(const TVec3f& vector) {
         return std::isnan(vector.x) || std::isnan(vector.y) || std::isnan(vector.z);
@@ -305,8 +328,32 @@ namespace MR {
         return std::fabs(x) < tolerance;
     }
 
-    bool isNearZero(const TVec3f &rVec, f32 tolerance) {
-        return std::fabs(rVec.x) <= tolerance && std::fabs(rVec.y) <= tolerance && std::fabs(rVec.z) <= tolerance;
+    bool isNearZero(const TVec3f& rVec, f32 tolerance) {
+        if (rVec.x > tolerance) {
+            return false;
+        }
+
+        if (rVec.x < -tolerance) {
+            return false;
+        }
+
+        if (rVec.y > tolerance) {
+            return false;
+        }
+
+        if (rVec.y < -tolerance) {
+            return false;
+        }
+
+        if (rVec.z > tolerance) {
+            return false;
+        }
+
+        if (rVec.z < -tolerance) {
+            return false;
+        }
+
+        return true;
     }
 
     void makeAxisVerticalZX(TVec3f *pDst, const TVec3f &rAxis) {
@@ -389,25 +436,11 @@ namespace MR {
         pDst->set((rSrc * cosine) + (axis.cross(rSrc) * sine) + axisProjection);
     }
 
-    void normalize(TVec3f *pVec) {
-        if (pVec == nullptr) {
-            return;
-        }
-
-        const auto length = pVec->length();
-        if (length <= 0.000001F) {
-            pVec->set(0.0F, 0.0F, 0.0F);
-            return;
-        }
-
-        pVec->scale(1.0F / length);
+    void normalize(TVec3f* pVec) {
+        PSVECNormalize(pVec, pVec);
     }
 
-    void normalize(const TVec3f &rSrc, TVec3f *pDst) {
-        if (pDst == nullptr) {
-            return;
-        }
-
+    void normalize(const TVec3f& rSrc, TVec3f* pDst) {
         pDst->set(rSrc);
         normalize(pDst);
     }
@@ -453,18 +486,14 @@ namespace MR {
         }
     }
 
-    f32 vecKillElement(const TVec3f &rVector, const TVec3f &rDirection, TVec3f *pOut) {
-        if (pOut == nullptr) {
-            return 0.0F;
+    f32 vecKillElement(const TVec3f& rSrc, const TVec3f& rKillDir, TVec3f* pDst) {
+        if (isNearZero(rKillDir)) {
+            *pDst = rSrc;
+
+            return 0.0f;
         }
-        auto direction = rDirection;
-        if (normalizeOrZero(&direction)) {
-            pOut->set(rVector);
-            return 0.0F;
-        }
-        const auto scalar = rVector.dot(direction);
-        pOut->set(rVector - (direction * scalar));
-        return scalar;
+
+        return PSVECKillElement(rSrc, rKillDir, pDst);
     }
 
     f32 getMaxElement(const TVec3f &rVec) {

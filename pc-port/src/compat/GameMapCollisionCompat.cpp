@@ -3,6 +3,7 @@
 #include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Util/TriangleFilter.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "compat/HitInfoCompat.hpp"
 #include "scene/StageCollisionService.hpp"
 
@@ -50,7 +51,7 @@ namespace {
             require_stage_collision(), contact.triangle_index);
         info._60 = contact.penetration;
         info.mHitPos.set(contact.position);
-        info._7C.set(contact.reaction_normal);
+        info._7C.set(contact.moving_reaction);
         info._88 = 1U;
         return info;
     }
@@ -155,17 +156,32 @@ namespace MR {
         return triangle != nullptr ? triangle->getNormal(0) : nullptr;
     }
 
-    bool isWallPolygon(const TVec3f& normal, const TVec3f& gravity) {
-        return !normal.epsilonEquals(TVec3f{}, 0.000001F) && isWallPolygon(normal.dot(gravity));
+    bool isWallPolygon(const TVec3f& rParam1, const TVec3f& rParam2) {
+        if (isNearZero(rParam1)) {
+            return false;
+        }
+
+        return isWallPolygon(rParam1.dot(rParam2));
     }
 
-    bool isFloorPolygon(const TVec3f& normal, const TVec3f& gravity) {
-        return !normal.epsilonEquals(TVec3f{}, 0.000001F) && isFloorPolygon(normal.dot(gravity));
+    bool isFloorPolygon(const TVec3f& rParam1, const TVec3f& rParam2) {
+        if (isNearZero(rParam1)) {
+            return false;
+        }
+
+        return isFloorPolygon(rParam1.dot(rParam2));
     }
 
-    bool isFloorPolygonCos(const TVec3f& normal, const TVec3f& gravity, f32 cosine) {
-        return !normal.epsilonEquals(TVec3f{}, 0.000001F) && -normal.dot(gravity) >= cosine &&
-               isFloorPolygon(normal.dot(gravity));
+    bool isFloorPolygonCos(const TVec3f& rParam1, const TVec3f& rParam2, f32 param3) {
+        if (isNearZero(rParam1)) {
+            return false;
+        }
+
+        if (-rParam1.dot(rParam2) < param3) {
+            return false;
+        }
+
+        return isFloorPolygon(rParam1.dot(rParam2));
     }
 
     bool isWallPolygon(f32 gravity_dot) {

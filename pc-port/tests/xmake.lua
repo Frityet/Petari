@@ -312,6 +312,7 @@ target("smg-pc-mario-gateway-walk-tests")
         "MarioGatewayWalkTests.cpp",
         "MarioWalkParameterTests.cpp",
         "MarioCameraTargetTests.cpp",
+        "OriginalMarioStateTests.cpp",
         "../aurora/lib/compat.cpp"
     }
     if is_plat("macosx", "iphoneos") then

@@ -1,4 +1,5 @@
 #include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -15,6 +16,7 @@
 #include <cstring>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -148,10 +150,10 @@ namespace {
         Triangle ground_triangle{};
     };
 
-    void test_binder_contact_skin_across_convex_seam() {
+    void test_binder_contact_margin_across_convex_seam() {
         constexpr auto cRadius = 0.5F;
-        constexpr auto cContactSkin = 1.2F;
-        constexpr auto cInitialSkinPenetration = 0.1F;
+        constexpr auto cContactMargin = 1.2F;
+        constexpr auto cPenetration = 0.1F;
         constexpr auto cScale = 100.0F;
         constexpr auto cSinTenDegrees = 0.17364818F;
         constexpr auto cCosTenDegrees = 0.98480775F;
@@ -173,9 +175,9 @@ namespace {
 
         auto collision = smgpc::scene::StageCollisionService{};
         const auto kcl = make_single_triangle_kcl();
-        require(collision.add_kcl(kcl, left_face, "skin-seam-left.kcl") &&
-                    collision.add_kcl(kcl, right_face, "skin-seam-right.kcl"),
-                "the convex skin-seam fixture must register both KCL faces");
+        require(collision.add_kcl(kcl, left_face, "seam-left.kcl") &&
+                    collision.add_kcl(kcl, right_face, "seam-right.kcl"),
+                "the convex seam fixture must register both KCL faces");
         collision.build();
         collision.activate();
 
@@ -192,85 +194,190 @@ namespace {
             -cScale * cSinTenDegrees * cLocalAcross,
             cScale * cLocalAlong,
         };
-        const auto skin_query_distance =
-            cRadius + cContactSkin - cInitialSkinPenetration;
-        const auto left_skin_center =
-            left_surface + left_normal * skin_query_distance;
-        const auto right_skin_center =
-            right_surface + right_normal * skin_query_distance;
+        const auto contact_distance = cRadius - cPenetration;
+        const auto left_contact_center =
+            left_surface + left_normal * contact_distance;
+        const auto right_contact_center =
+            right_surface + right_normal * contact_distance;
 
-        require(collision.sphere_contacts(left_skin_center, cRadius).empty() &&
-                    collision.sphere_contacts(right_skin_center, cRadius).empty(),
-                "Binder's contact skin must not change public exact-radius sphere queries");
+        require(!collision.sphere_contacts(left_contact_center, cRadius).empty() &&
+                    !collision.sphere_contacts(right_contact_center, cRadius).empty(),
+                "each seam endpoint must overlap the true collision radius");
 
-        auto position = left_skin_center;
+        auto position = left_contact_center;
         const auto gravity = TVec3f{0.0F, -1.0F, 0.0F};
         auto binder = Binder(nullptr, &position, &gravity, cRadius, 0.0F, 8U);
 
         const auto settle = binder.bind(TVec3f{});
         position.add(settle);
         const auto left_shell_center =
-            left_surface + left_normal * (cRadius + cContactSkin);
+            left_surface + left_normal * (cRadius + cContactMargin);
         require(binder.isBindedGround() &&
                     position.epsilonEquals(left_shell_center, 0.0005F) &&
                     binder.mGroundInfo.mParentTriangle.getNormal(0)->epsilonEquals(
                         left_normal, 0.0001F) &&
                     collision.sphere_contacts(position, cRadius).empty(),
-                "a skin-only left-face contact must classify as ground without changing exact queries");
+                "a true left-face contact receives the original 1.2 post-contact margin");
+        const auto idle = binder.bind(TVec3f{});
+        require(!binder.isBindedGround() && binder.mPlaneNum == 0U &&
+                    idle.epsilonEquals(TVec3f{}, 0.0F),
+                "zero motion outside the true radius must not retain a margin-only ground contact");
 
         // Mario's retail Binder skips the initial overlap check. Starting on
         // the left shell must therefore reach and classify the next face in a
         // single short sweep, rather than retaining the old support plane.
         binder._1EC._3 = true;
-        const auto cross_seam = right_skin_center - position;
+        const auto cross_seam = right_contact_center - position;
         const auto crossed = binder.bind(cross_seam);
         position.add(crossed);
         const auto right_shell_center =
-            right_surface + right_normal * (cRadius + cContactSkin);
+            right_surface + right_normal * (cRadius + cContactMargin);
         require(binder.isBindedGround() && binder.mPlaneNum == 1 &&
                     position.epsilonEquals(right_shell_center, 0.0005F) &&
                     binder.mGroundInfo.mParentTriangle.getNormal(0)->epsilonEquals(
                         right_normal, 0.0001F),
                 "skip-initial Binder motion must carry ground classification across the convex seam");
         require(collision.sphere_contacts(position, cRadius).empty() &&
+                    binder._1EC._3 &&
                     binder.mFixReactionVector.epsilonEquals(
-                        right_normal * cInitialSkinPenetration, 0.0005F),
-                "the seam contact must use one 1.2-skin correction while exact queries remain empty");
+                        right_normal * (cPenetration + cContactMargin), 0.0005F),
+                "the new true-radius contact adds penetration and margin while skip-initial persists");
 
         collision.deactivate();
     }
 
-    void test_minimum_norm_gateway_contact_reaction() {
-        constexpr auto cRadius = 60.0F;
-        constexpr auto cContactSkin = 1.2F;
+    void test_original_margin_and_retry_flags() {
+        auto collision = smgpc::scene::StageCollisionService{};
+        constexpr auto floor = std::array<float, 12U>{
+            100.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 100.0F, 0.0F,
+        };
+        require(collision.add_kcl(make_single_triangle_kcl(), floor, "margin-flags.kcl"),
+                "margin flag fixture must load a real floor");
+        collision.build();
+        collision.activate();
+        const auto position = TVec3f{10.0F, 0.4F, 20.0F};
+        const auto gravity = TVec3f{0.0F, -1.0F, 0.0F};
+        const auto requested = TVec3f{2.0F, 1.0F, 0.0F};
+        auto binder = Binder(nullptr, &position, &gravity, 0.5F, 0.0F, 4U);
+        binder._1EC._5 = true;
+        const auto without_margin = binder.bind(requested);
+        require(without_margin.epsilonEquals(TVec3f{0.0F, 0.1F, 0.0F}, 0.0001F) &&
+                    binder.isBindedGround() && !binder._1EC._5 &&
+                    std::abs(binder.mGroundInfo._60 - 0.1F) < 0.0001F,
+                "the one-shot no-margin flag disables both margin and unconsumed movement retry");
+        const auto with_margin = binder.bind(requested);
+        require(with_margin.epsilonEquals(TVec3f{2.0F, 2.3F, 0.0F}, 0.0001F) &&
+                    std::abs(binder.mGroundInfo._60 - 1.3F) < 0.0001F,
+                "the next bind restores margin and the original projected retry");
+        collision.deactivate();
+    }
+
+    void test_original_plane_copy_storage_modes() {
+        auto collision = smgpc::scene::StageCollisionService{};
+        auto owner = LiveActor("plane-copy-owner");
+        owner.makeActorAppeared();
+        auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>(&owner.mFlag.mIsDead);
+        auto sensors = std::array{HitSensor(0U, 0U, 1.0F, &owner),
+                                  HitSensor(0U, 0U, 1.0F, &owner),
+                                  HitSensor(0U, 0U, 1.0F, &owner)};
+        constexpr auto floor = std::array<float, 12U>{
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+        constexpr auto wall = std::array<float, 12U>{
+            0.0F, 1.0F, 0.0F, 0.0F,
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+        constexpr auto roof = std::array<float, 12U>{
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, -1.0F, 0.0F, 0.5F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        };
+        const auto kcl = make_single_triangle_kcl();
+        require(collision.register_kcl(kcl, floor, "copy-floor.kcl", registration, {}, &sensors[0]).accepted &&
+                    collision.register_kcl(kcl, wall, "copy-wall.kcl", registration, {}, &sensors[2]).accepted &&
+                    collision.register_kcl(kcl, roof, "copy-roof.kcl", registration, {}, &sensors[1]).accepted,
+                "plane-copy fixture must retain three real source sensors");
+        collision.build();
+        collision.activate();
+        const auto position = TVec3f{0.25F, 0.25F, 0.25F};
+        const auto gravity = TVec3f{0.0F, -1.0F, 0.0F};
+        for (const auto capacity : {0U, 3U}) {
+            auto binder = Binder(nullptr, &position, &gravity, 0.5F, 0.0F, capacity);
+            binder._1EC._5 = true;
+            (void)binder.bind(TVec3f{});
+            require(binder.mPlaneNum == 3U && binder.isBindedGround() &&
+                        binder.isBindedWall() && binder.isBindedRoof() &&
+                        ((capacity == 0U) == (binder.mPlane == nullptr)),
+                    "zero allocation still records temporary hits and cached ground, wall, and roof");
+            // The original second argument does not bound writes. Always
+            // allocate for the full result even while proving it is ignored.
+            auto copied = std::array<HitInfo*, 4U>{};
+            copied[3] = &binder.mGroundInfo;
+            require(binder.copyPlaneArrayAndSortingSensor(copied.data(), 1U) == 3U &&
+                        copied[0]->mParentTriangle.mSensor == &sensors[2] &&
+                        copied[1]->mParentTriangle.mSensor == &sensors[1] &&
+                        copied[2]->mParentTriangle.mSensor == &sensors[0] &&
+                        copied[3] == &binder.mGroundInfo,
+                    "original plane copying returns every hit sorted by descending sensor pointer");
+            if (capacity == 0U) {
+                require(copied[0] == &binder.mWallInfo && copied[1] == &binder.mRoofInfo &&
+                            copied[2] == &binder.mGroundInfo,
+                        "zero-allocation copying must return retained category caches");
+            } else {
+                require(copied[0] == &binder.mPlane[1] && copied[1] == &binder.mPlane[2] &&
+                            copied[2] == &binder.mPlane[0],
+                        "allocated-plane copying must return the actual plane array entries");
+            }
+        }
+        registration->release_owner();
+        collision.deactivate();
+    }
+
+    void test_component_extrema_contact_reaction() {
+        constexpr auto cRadius = 10.0F;
+        constexpr auto cContactMargin = 1.2F;
         constexpr auto cSurfaceScale = 400.0F;
         constexpr auto cLocalX = 0.1F;
         constexpr auto cLocalZ = 0.2F;
-        constexpr auto normals = std::array<TVec3f, 8U>{
-            TVec3f{0.0131106F, -0.799246F, -0.600861F},
-            TVec3f{-0.00212449F, -0.804581F, -0.593839F},
-            TVec3f{0.00979495F, -0.759085F, -0.650917F},
-            TVec3f{0.0155864F, -0.765469F, -0.643284F},
-            TVec3f{-0.0966284F, -0.739551F, -0.666129F},
-            TVec3f{-0.107744F, -0.743717F, -0.659755F},
-            TVec3f{-0.129962F, -0.772808F, -0.621190F},
-            TVec3f{-0.118979F, -0.783882F, -0.609403F},
+        struct Plane {
+            TVec3f normal;
+            float penetration;
         };
-        constexpr auto penetrations = std::array<float, 8U>{
-            1.09743F, 1.09850F, 1.09686F, 1.09692F,
-            1.30540F, 1.93950F, 1.44741F, 1.93824F,
+        struct Fixture {
+            std::array<Plane, 3U> planes;
+            std::size_t count;
+            TVec3f expected;
+            const char* name;
+        };
+        const auto fixtures = std::array{
+            // Stored depths include the 1.2 post-contact margin. Reactions
+            // are (1.2,1.6,0), (0,1.8,2.4), (-1.6,0,1.2).
+            // Each component retains its largest positive and negative value.
+            Fixture{{Plane{{0.6F, 0.8F, 0.0F}, 2.0F},
+                     Plane{{0.0F, 0.6F, 0.8F}, 3.0F},
+                     Plane{{-0.8F, 0.0F, 0.6F}, 2.0F}},
+                    3U, {-0.4F, 1.8F, 2.4F}, "nonorthogonal"},
+            // Opposing penetrations intentionally cannot both be resolved by
+            // a displacement. Retail still adds the component extrema.
+            Fixture{{Plane{{1.0F, 0.0F, 0.0F}, 3.0F},
+                     Plane{{-1.0F, 0.0F, 0.0F}, 1.5F}, Plane{}},
+                    2U, {1.5F, 0.0F, 0.0F}, "opposing"},
         };
 
         const auto make_surface_matrix = [](TVec3f normal, float penetration) {
             normal.scale(1.0F / normal.length());
-            auto tangent_x = TVec3f{0.0F, normal.z, -normal.y};
+            const auto reference = std::fabs(normal.x) < 0.9F
+                                       ? TVec3f{1.0F, 0.0F, 0.0F}
+                                       : TVec3f{0.0F, 1.0F, 0.0F};
+            auto tangent_x = normal.cross(reference);
             tangent_x.scale(1.0F / tangent_x.length());
-            const auto tangent_z = TVec3f{
-                tangent_x.y * normal.z - tangent_x.z * normal.y,
-                tangent_x.z * normal.x - tangent_x.x * normal.z,
-                tangent_x.x * normal.y - tangent_x.y * normal.x,
-            };
-            const auto plane_distance = cRadius + cContactSkin - penetration;
+            const auto tangent_z = tangent_x.cross(normal);
+            const auto plane_distance = cRadius + cContactMargin - penetration;
             const auto interior = tangent_x * (cSurfaceScale * cLocalX) +
                                   tangent_z * (cSurfaceScale * cLocalZ);
             const auto translation = normal * -plane_distance - interior;
@@ -284,41 +391,86 @@ namespace {
             };
         };
 
-        auto collision = smgpc::scene::StageCollisionService{};
         const auto kcl = make_single_triangle_kcl();
-        for (auto index = std::size_t{}; index < normals.size(); ++index) {
-            require(collision.add_kcl(
-                        kcl, make_surface_matrix(normals[index], penetrations[index]),
-                        "gateway-reaction-" + std::to_string(index) + ".kcl"),
-                    "each traced Gateway contact plane must register");
-        }
-        collision.build();
+        const auto position = TVec3f{};
+        const auto gravity = TVec3f{0.0F, -1.0F, 0.0F};
+        auto binder = Binder(nullptr, &position, &gravity, cRadius, 0.0F, 3U);
+        for (const auto& fixture : fixtures) {
+            auto collision = smgpc::scene::StageCollisionService{};
+            for (auto index = std::size_t{}; index < fixture.count; ++index) {
+                const auto& plane = fixture.planes[index];
+                require(collision.add_kcl(
+                            kcl, make_surface_matrix(plane.normal, plane.penetration),
+                            std::string(fixture.name) + std::to_string(index) + ".kcl"),
+                        "each synthetic contact plane must register");
+            }
+            collision.build();
+            const auto moved = collision.move_sphere(
+                position, TVec3f{}, cRadius, fixture.count, true);
+            require(moved.contacts.size() == fixture.count,
+                    "the synthetic fixture must retain every contact");
+            require(moved.fix_reaction.epsilonEquals(fixture.expected, 0.001F) &&
+                        moved.displacement.epsilonEquals(fixture.expected, 0.001F),
+                    "contact response must add positive maxima and negative minima per component");
 
-        const auto seated = collision.move_sphere(
-            TVec3f{}, TVec3f{}, cRadius, normals.size(), true);
-        require(seated.contacts.size() == normals.size(),
-                "the traced Gateway manifold must reproduce all eight floor contacts");
-        for (const auto& contact : seated.contacts) {
-            require(contact.normal.dot(seated.fix_reaction) >=
-                        contact.penetration - 0.001F,
-                    "the minimum-norm correction must satisfy every traced contact half-space");
+            auto hits = std::array<HitInfo, 3U>{};
+            for (auto index = std::size_t{}; index < fixture.count; ++index) {
+                const auto& contact = moved.contacts[index];
+                require(contact.moving_reaction.epsilonEquals(TVec3f{}, 0.0F),
+                        "a static contact must have no collision-part movement reaction");
+                hits[index].mParentTriangle.mNormals[0].set(contact.normal);
+                hits[index]._60 = contact.penetration;
+                hits[index]._7C.set(contact.moving_reaction);
+            }
+            binder.mPlaneNum = static_cast<u32>(fixture.count);
+            auto original_reaction = TVec3f{};
+            binder.obtainMomentFixReaction(hits.data(), 0U, &original_reaction, 0U);
+            require(original_reaction.epsilonEquals(moved.fix_reaction, 0.00001F),
+                    "shared static collision response must agree with the actual original Binder method");
         }
-        require(seated.fix_reaction.epsilonEquals(
-                    TVec3f{-0.21672F, -1.47067F, -1.24651F}, 0.01F) &&
-                    seated.fix_reaction.length() < 1.95F &&
-                    seated.displacement.epsilonEquals(seated.fix_reaction, 0.0001F),
-                "the traced eight-plane response must choose the bounded minimum-norm correction");
+    }
 
-        const auto idle = collision.move_sphere(
-            seated.displacement, TVec3f{}, cRadius, normals.size(), true);
-        require(!idle.contacts.empty() && idle.displacement.length() < 0.01F,
-                "the minimum-norm seating correction must retain a zero-motion support manifold");
+    void test_original_reaction_range_and_moving_parts() {
+        const auto position = TVec3f{};
+        const auto gravity = TVec3f{0.0F, -1.0F, 0.0F};
+        auto binder = Binder(nullptr, &position, &gravity, 1.0F, 0.0F, 4U);
+        auto planes = std::array<HitInfo, 4U>{};
+        // Both sentinels would dominate every component if included.
+        for (const auto index : {0U, 3U}) {
+            planes[index].mParentTriangle.mNormals[0].set(1.0F, 1.0F, 1.0F);
+            planes[index]._60 = 1000.0F;
+        }
+        planes[1].mParentTriangle.mNormals[0].set(0.6F, 0.8F, 0.0F);
+        planes[1]._60 = 2.0F;
+        planes[1]._7C.set(4.0F, -3.0F, 0.5F);
+        planes[2].mParentTriangle.mNormals[0].set(-0.8F, 0.0F, 0.6F);
+        planes[2]._60 = 1.0F;
+        planes[2]._7C.set(-2.0F, 1.0F, -5.0F);
+        binder.mPlaneNum = 3;
+
+        auto reaction = TVec3f{99.0F, 99.0F, 99.0F};
+        binder._1EC._1 = false;
+        binder.obtainMomentFixReaction(planes.data(), 1U, &reaction, 1U);
+        require(reaction.epsilonEquals(TVec3f{0.4F, 1.6F, 0.6F}, 0.00001F),
+                "original reaction uses start through mPlaneNum and ignores the second argument");
+
+        binder._1EC._1 = true;
+        binder.obtainMomentFixReaction(planes.data(), 0U, &reaction, 1U);
+        require(reaction.epsilonEquals(TVec3f{2.0F, -1.4F, -4.4F}, 0.00001F),
+                "enabled moving-part reactions share the face reaction component extrema");
+
+        binder.obtainMomentFixReaction(planes.data(), 4U, &reaction, 3U);
+        require(reaction.epsilonEquals(TVec3f{}, 0.0F),
+                "an empty original reaction range replaces previous output with zero");
     }
 }  // namespace
 
 int main() {
-    test_binder_contact_skin_across_convex_seam();
-    test_minimum_norm_gateway_contact_reaction();
+    test_binder_contact_margin_across_convex_seam();
+    test_original_margin_and_retry_flags();
+    test_original_plane_copy_storage_modes();
+    test_component_extrema_contact_reaction();
+    test_original_reaction_range_and_moving_parts();
 
     constexpr auto identity = std::array<float, 12U>{
         1.0F, 0.0F, 0.0F, 0.0F,
@@ -367,26 +519,35 @@ int main() {
 
     auto point_info = HitInfo{};
     require(MR::checkStrikePointToMap(TVec3f{0.25F, 0.0F, 0.25F}, &point_info) &&
-                point_info.mParentTriangle.mIdx == floor_triangle.mIdx,
-            "Mario's point query must retain the real KCL Triangle identity");
+                point_info.mParentTriangle.mIdx == floor_triangle.mIdx &&
+                point_info.mParentTriangle.getNormal(0)->epsilonEquals(
+                    TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) &&
+                point_info._7C.epsilonEquals(TVec3f{}, 0.0F),
+            "a static point query must retain triangle face normal and zero moving reaction");
     require(Collision::checkStrikeBallToMap(TVec3f{10.25F, 5.25F, 0.25F}, 0.5F,
                                             nullptr, nullptr) > 0 &&
                 Collision::getStrikeInfoMap(0) != nullptr,
             "Mario's wall sphere query must publish a real HitInfo buffer");
+    const auto* sphere_info = Collision::getStrikeInfoMap(0);
+    require(sphere_info->mParentTriangle.getNormal(0)->epsilonEquals(
+                TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F) &&
+                sphere_info->_7C.epsilonEquals(TVec3f{}, 0.0F),
+            "a static sphere strike stores its normal in Triangle and no moving reaction in HitInfo");
 
     constexpr auto binder_radius = 0.5F;
-    const auto skin_support_center = TVec3f{0.25F, 1.69F, 0.25F};
-    require(collision.sphere_contacts(skin_support_center, binder_radius).empty(),
-            "public exact sphere queries must not inflate their physical radius by Binder skin");
-    const auto skin_support = collision.move_sphere(
-        skin_support_center, TVec3f{}, binder_radius, 8U);
-    require(!skin_support.contacts.empty() &&
-                skin_support.contacts.front().normal.epsilonEquals(
-                    TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) &&
-                skin_support.contacts.front().penetration >= 0.0F &&
-                skin_support.contacts.front().penetration < 0.02F &&
-                skin_support.displacement.length() < 0.02F,
-            "Binder motion queries must retain a real floor within the 1.2-unit contact skin");
+    const auto separated_center = TVec3f{0.25F, 1.69F, 0.25F};
+    const auto separated = collision.move_sphere(
+        separated_center, TVec3f{}, binder_radius, 8U);
+    require(collision.sphere_contacts(separated_center, binder_radius).empty() &&
+                separated.contacts.empty() &&
+                separated.displacement.epsilonEquals(TVec3f{}, 0.0F),
+            "Binder must not detect a separated floor by inflating its query radius");
+    const auto shallow_contact = collision.move_sphere(
+        TVec3f{0.25F, 0.49F, 0.25F}, TVec3f{}, binder_radius, 8U);
+    require(shallow_contact.contacts.size() == 1U &&
+                std::abs(shallow_contact.contacts.front().penetration - 1.21F) < 0.0001F &&
+                shallow_contact.displacement.epsilonEquals(TVec3f{0.0F, 1.21F, 0.0F}, 0.0001F),
+            "a true 0.01 overlap receives 1.2 additional penetration after detection");
 
     auto large_world_matrix = identity;
     large_world_matrix[3U] = 14760.0F;
@@ -394,26 +555,23 @@ int main() {
     large_world_matrix[11U] = 6770.0F;
     auto large_world_collision = smgpc::scene::StageCollisionService{};
     require(large_world_collision.add_kcl(
-                kcl, large_world_matrix, "large-world-shell.kcl"),
-            "the Gateway-scale shell fixture must register");
+                kcl, large_world_matrix, "large-world-radius.kcl"),
+            "the large-coordinate radius fixture must register");
     large_world_collision.build();
-    constexpr auto contact_skin = 1.2F;
-    const auto exact_shell_y =
-        large_world_matrix[7U] + binder_radius + contact_skin;
-    const auto large_world_shell = TVec3f{
+    const auto exact_contact_y = large_world_matrix[7U] + binder_radius;
+    const auto outside_radius = TVec3f{
         large_world_matrix[3U] + 0.25F,
-        std::nextafter(exact_shell_y, std::numeric_limits<float>::infinity()),
+        std::nextafter(exact_contact_y, std::numeric_limits<float>::infinity()),
         large_world_matrix[11U] + 0.25F,
     };
     require(large_world_collision.sphere_contacts(
-                large_world_shell, binder_radius).empty(),
-            "large-coordinate Binder tolerance must not change public exact sphere queries");
-    const auto large_world_support = large_world_collision.move_sphere(
-        large_world_shell, TVec3f{}, binder_radius, 8U, true);
-    require(!large_world_support.contacts.empty() &&
-                large_world_support.contacts.front().penetration == 0.0F &&
-                large_world_support.displacement.epsilonEquals(TVec3f{}, 0.0001F),
-            "an exact Binder skin shell one large-coordinate ulp outside must remain support");
+                outside_radius, binder_radius).empty(),
+            "a sphere one large-coordinate ulp outside its radius is separated");
+    const auto outside_move = large_world_collision.move_sphere(
+        outside_radius, TVec3f{}, binder_radius, 8U, true);
+    require(outside_move.contacts.empty() &&
+                outside_move.displacement.epsilonEquals(TVec3f{}, 0.0F),
+            "original Binder must not add a host epsilon to recover separated support");
 
     const auto overlapping_center = TVec3f{0.25F, 0.4F, 0.25F};
     const auto moving_away = TVec3f{0.0F, 2.0F, 0.0F};

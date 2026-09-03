@@ -23,6 +23,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/StageAuthoredData.hpp"
+#include "scene/StageCollisionService.hpp"
 #include "scene/StageEventCameraBinding.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -270,11 +271,18 @@ namespace {
     class CameraTargetScene final {
     public:
         CameraTargetScene() : binding(holder) {
+            require(smgpc::scene::StageCollisionService::active() == nullptr,
+                    "a geometry-free target fixture must not replace another scene's collision");
+            collision.build();
+            collision.activate();
             require(holder.create(SceneObj_AreaObjContainer) != nullptr &&
                         holder.create(SceneObj_PlanetGravityManager) != nullptr,
                     "original camera targets require real area and gravity scene registries");
         }
 
+        // These target/resource fixtures load no stage KCL. The actual
+        // CameraViewInterpolator Binder queries this explicit empty scene.
+        smgpc::scene::StageCollisionService collision;
         SceneObjHolder holder;
         smgpc::scene::SceneObjHolderBinding binding;
     };
@@ -483,8 +491,18 @@ namespace {
         const auto pose = camera.calc(target).pose;
         require_near(pose.up.x, 1.0F, 0.0001F,
                      "FixedPoint mode two must use the global player's original up getter independently of its render matrix and event target");
-        require(camera.pose_param().mUpVec.x == 1.0F && camera.pose_param().mWatchUpVec.y == 1.0F,
-                "mode two camera up must come from the player while watch-up remains the event target's up");
+        require_vector_near(camera.pose_param().mUpVec, {1.0F, 0.0F, 0.0F}, 0.000001F,
+                            "mode two safe camera up must preserve the player's axis through SDK normalization");
+        require(camera.pose_param().mWatchUpVec.y == 1.0F,
+                "watch-up must remain the event target's unchanged up vector");
+        auto sdk_unit = Vec{1.0F, 0.0F, 0.0F};
+        PSVECNormalize(&sdk_unit, &sdk_unit);
+        require(camera.pose_param().mUpVec.x == sdk_unit.x,
+                "original safe-pose normalization must retain the SDK unit-vector result");
+        std::cout << "[fixed-point-safe-up] manager_x_bits=0x" << std::hex
+                  << std::bit_cast<std::uint32_t>(camera.pose_param().mUpVec.x)
+                  << ";sdk_x_bits=0x" << std::bit_cast<std::uint32_t>(sdk_unit.x)
+                  << std::dec << '\n';
     }
 
     void test_actor_camera_info_pool_and_identity() {

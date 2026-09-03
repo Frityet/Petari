@@ -17,6 +17,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/StageHostService.hpp"
+#include "scene/StageCollisionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/SceneTransitionRequestService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -56,6 +57,18 @@ namespace {
                                      ";expected=" + std::to_string(expected));
         }
     }
+
+    class EmptyCameraCollisionScene final {
+    public:
+        EmptyCameraCollisionScene() {
+            require(smgpc::scene::StageCollisionService::active() == nullptr,
+                    "a geometry-free camera fixture must not replace another scene's collision");
+            collision.build();
+            collision.activate();
+        }
+
+        smgpc::scene::StageCollisionService collision;
+    };
 
     class CameraPlayerFixture final : public LiveActor {
     public:
@@ -639,11 +652,17 @@ namespace {
         camera.declare_event_camera_animation(
             0, "DemoMeetTico",
             smgpc::camera::CameraAnimation::from_bytes(make_guide_animation()));
+        // OnlyCamera and the view interpolator have already processed the
+        // manager pose. Their original normalization need not reproduce the
+        // raw resolved pose bit-for-bit; startEvent must retain this view.
+        const auto visible_before_event = camera.effective_camera_pose();
+        require(visible_before_event.has_value(),
+                "the start camera must have a rendered view before the guide event");
         camera.start_event_camera(
             0, "DemoMeetTico",
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
         const auto guide_pose = camera.effective_camera_pose();
-        require(guide_pose.has_value() && same_pose(*guide_pose, start_pose) &&
+        require(guide_pose.has_value() && same_pose(*guide_pose, *visible_before_event) &&
                     camera.active_event_camera_key().has_value(),
                 "DemoMeetTico must retain the visible pose until its first camera phase");
 
@@ -1146,6 +1165,9 @@ namespace {
         } close_guard;
         DVDInit();
 
+        // This fixture reads retail camera resources without instantiating
+        // stage geometry. Original view interpolation still owns a real Binder.
+        auto collision_scene = EmptyCameraCollisionScene{};
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
@@ -1305,9 +1327,12 @@ int main() {
     auto failures = 0;
     for (const auto &test : tests) {
         try {
+            auto collision = std::unique_ptr<EmptyCameraCollisionScene>{};
             auto holder = std::unique_ptr<SceneObjHolder>{};
             auto binding = std::unique_ptr<smgpc::scene::SceneObjHolderBinding>{};
             if (!test.owns_scene) {
+                // These shared camera fixtures intentionally contain no KCL.
+                collision = std::make_unique<EmptyCameraCollisionScene>();
                 holder = std::make_unique<SceneObjHolder>();
                 binding = std::make_unique<smgpc::scene::SceneObjHolderBinding>(*holder);
                 require(holder->create(SceneObj_AreaObjContainer) != nullptr,

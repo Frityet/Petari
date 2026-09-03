@@ -1,0 +1,152 @@
+[
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "exit_code": 0,
+    "seconds": 0.57,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-original-camera-runtime-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-original-camera-runtime-tests.log",
+    "tested_binary_sha256": "ab316bfc88ddb8cf1fbdb4eff69026da64ff3f86da5947482b2157f7171dfcbd"
+  },
+  {
+    "target": "smg-pc-only-camera-tests",
+    "exit_code": 0,
+    "seconds": 0.51,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-only-camera-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-only-camera-tests.log",
+    "tested_binary_sha256": "924e80b2ad88768f1251cf100ddcefa4e23ef36d75922f32ecbcc862438efaef"
+  },
+  {
+    "target": "smg-pc-camera-view-interpolator-tests",
+    "exit_code": 0,
+    "seconds": 0.51,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-camera-view-interpolator-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-camera-view-interpolator-tests.log",
+    "tested_binary_sha256": "715828f6e6250cde9ed90c253314414f571468ca6e3f249fff03370e099e341b"
+  },
+  {
+    "target": "smg-pc-camera-view-service-tests",
+    "exit_code": 0,
+    "seconds": 0.52,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-camera-view-service-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-camera-view-service-tests.log",
+    "tested_binary_sha256": "29d5ed465a119c8b4c62f6e037f09884070e3f44f13e1b5add404268d473c701"
+  },
+  {
+    "target": "smg-pc-stage-start-camera-tests",
+    "exit_code": 1,
+    "seconds": 0.57,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-stage-start-camera-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-stage-start-camera-tests.log",
+    "binary_hash_note": "Initial run hash was not captured before the fixture rebuild."
+  },
+  {
+    "target": "smg-pc-actor-event-camera-tests",
+    "exit_code": 1,
+    "seconds": 0.62,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-actor-event-camera-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-actor-event-camera-tests.log",
+    "binary_hash_note": "Initial run hash was not captured before the fixture rebuild."
+  },
+  {
+    "target": "smg-pc-stage-collision-registration-tests",
+    "exit_code": 0,
+    "seconds": 0.5,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-stage-collision-registration-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-stage-collision-registration-tests.log",
+    "tested_binary_sha256": "5d77c676345faf13acf2eb854b55f7cd8350863b5cbd6c56d247644cc7c302a3"
+  },
+  {
+    "target": "smg-pc-collision-triangle-filter-tests",
+    "exit_code": 0,
+    "seconds": 0.5,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-collision-triangle-filter-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-collision-triangle-filter-tests.log",
+    "tested_binary_sha256": "de4ce4d08a2e63592195b4a1f653e49942fb618af0bd00d9f67ad39ea0c96d2c"
+  },
+  {
+    "target": "smg-pc-mario-gateway-walk-tests",
+    "exit_code": 1,
+    "seconds": 4.97,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-mario-gateway-walk-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-mario-gateway-walk-tests.log",
+    "tested_binary_sha256": "ca8aa7cf10ef91ce1bd9bd508bff481ebc9592fdfa07908bcce06afacde868b3"
+  },
+  {
+    "target": "smg-pc-gateway-spin-checkpoint-tests",
+    "exit_code": 0,
+    "seconds": 2.07,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-gateway-spin-checkpoint-tests"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-gateway-spin-checkpoint-tests.log",
+    "tested_binary_sha256": "c68ca9829e8c3560285b2ec604b3e3bb0c4a9edc620b5d03ef2f784778525660"
+  },
+  {
+    "target": "smg-pc-showcase",
+    "exit_code": 0,
+    "seconds": 3.67,
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--smoke",
+      "--max-frames",
+      "360",
+      "--screenshot",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-binder-native-20260903/showcase.png",
+      "--screenshot-frame",
+      "20"
+    ],
+    "log": "notes/original-binder-native-20260903/smg-pc-showcase.log",
+    "tested_binary_sha256": "2b46eede6f955374823a0a4c426361cccfaba992b970aa0fdbb34fdc56fbd4d5"
+  },
+  {
+    "target": "smg-pc-binder-kcl-mario-walk-tests",
+    "exit_code": 0,
+    "log": "notes/original-binder-native-20260903/worker-binder-tests.log",
+    "tested_binary_sha256": "906d70a1d7e29e321e675eed39451d3988e6af5f681b9b8ea91892088561e1db"
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "exit_code": 0,
+    "log": "notes/original-binder-native-20260903/worker-aurora-tests.log",
+    "tested_binary_sha256": "2472d80e56b5bedb3b8fcdaf926d3fe99bcdd3c4103e1552c33ca67d51239156"
+  },
+  {
+    "target": "smg-pc-stage-start-camera-tests",
+    "exit_code": 0,
+    "groups_passed": 14,
+    "real_disc": true,
+    "rerun_after": "explicit empty collision scene ownership and original normalization/view fixture corrections",
+    "log": "notes/original-binder-native-20260903/worker-stage-start-camera-tests.log",
+    "tested_binary_sha256": "5b4532ef96ede37d8b419adf1f9f18422ed91890b14a1bebf2089c692d24e1d4"
+  },
+  {
+    "target": "smg-pc-actor-event-camera-tests",
+    "exit_code": 0,
+    "groups_passed": 23,
+    "real_disc": true,
+    "rerun_after": "explicit empty collision scene ownership and original normalization/view fixture corrections",
+    "log": "notes/original-binder-native-20260903/worker-actor-event-camera-tests.log",
+    "tested_binary_sha256": "6c83fe57acc4f2713878b8ed2518ba8904cc5118039d617a0bd019f30fc17309"
+  }
+]

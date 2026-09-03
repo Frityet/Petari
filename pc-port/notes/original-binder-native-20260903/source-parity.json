@@ -1,0 +1,43 @@
+[
+  {
+    "root": "src/Game/LiveActor/Binder.cpp",
+    "native": "pc-port/src/Game/LiveActor/Binder.cpp",
+    "byte_identical": true,
+    "sha256": "7bd6ede6772644e0bedefbb16cba5833b92472e4a38c10aa5751da50b3355b51"
+  },
+  {
+    "root": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "native": "pc-port/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "byte_identical": true,
+    "sha256": "69eec8cc2b28710b114726a94eabcdcd7eb7faf19a0eadb845cc298d57ed9686"
+  },
+  {
+    "root": "include/Game/Player/MarioHang.hpp",
+    "native": "pc-port/src/Game/Player/MarioHang.hpp",
+    "byte_identical": true,
+    "sha256": "23457ec6017677d006db16ac2a3ad38f4896d89934432ae014243f9a787a71c6"
+  },
+  {
+    "root": "include/Game/Map/CollisionCategorizedKeeper.hpp",
+    "native": "pc-port/src/Game/Map/CollisionCategorizedKeeper.hpp",
+    "byte_identical": true,
+    "sha256": "5b044d76e86920260adf5fe10c009616ec580517ab8ee4267f18b28332fccd1d"
+  },
+  {
+    "root": "include/Game/Map/CollisionDirector.hpp",
+    "native": "pc-port/src/Game/Map/CollisionDirector.hpp",
+    "byte_identical": true,
+    "sha256": "935594008c31ba06a632c3fedb6faf3784cedad6e66ce58f5978afae30aaa6a6"
+  },
+  {
+    "root": "include/Game/Map/CollisionParts.hpp",
+    "native": "pc-port/src/Game/Map/CollisionParts.hpp",
+    "byte_identical": true,
+    "sha256": "091308c1dd4ce3210d529150f51bec551f91a540e06ed5d1ba12405f7eed3e3d"
+  },
+  {
+    "root": "include/Game/LiveActor/Binder.hpp",
+    "native": "pc-port/src/Game/LiveActor/Binder.hpp",
+    "only_difference": "TARGET_PC destructor declaration for native ownership; native implementation deletes original mPlane allocation"
+  }
+]

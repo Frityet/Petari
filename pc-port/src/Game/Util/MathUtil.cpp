@@ -1163,6 +1163,25 @@ f32 PSVECKillElement(__REGISTER const Vec* pSrc, __REGISTER const Vec* pKill, __
     }
     // clang-format on
     return dot;
+#else
+    const f32 x = pSrc->x;
+    const f32 y = pSrc->y;
+    const f32 z = pSrc->z;
+    const f32 killX = pKill->x;
+    const f32 killY = pKill->y;
+    const f32 killZ = pKill->z;
+    const f32 yy = y * killY;
+    const f32 zz = z * killZ;
+    const f32 dot = std::fma(x, killX, yy) + zz;
+    Vec* pResult = const_cast< Vec* >(pDst);
+    // Keep the rounded fused result separate from negation, including signed zero.
+    volatile f32 resultX = std::fma(dot, killX, -x);
+    volatile f32 resultY = std::fma(dot, killY, -y);
+    volatile f32 resultZ = std::fma(dot, killZ, -z);
+    pResult->x = -resultX;
+    pResult->y = -resultY;
+    pResult->z = -resultZ;
+    return dot;
 #endif
 }
 

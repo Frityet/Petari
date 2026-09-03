@@ -165,6 +165,27 @@ pointer and decrements the count; it does not preserve order or recalculate
 bounds. An absent pointer changes nothing. No CollisionDirector or placeholder
 part is constructed by this recovery.
 
-Parent owns native imports, providers and runtime testing. This directory's
-original-compiler evidence is not a claim that the whole original Mario update
-or all moving collision actors are already activated on PC.
+After the Binder verifier, run:
+
+```sh
+python3 pc-port/notes/original-binder-reaction-20260903/verify-zone.py
+```
+
+`zone-evidence.json` records `calcMinMaxAndRadius` at 98.636360% raw objdiff
+(440/440 bytes), `addAndUpdateMinMax` at 100% (220/220 bytes), and `eraseParts` at
+86.896550% (116/104 bytes). Bounds calculation preserves every instruction after
+two independent loads exchange order and its second-loop pointer uses r30 in
+place of r31. Bounds accumulation is byte-identical after verified relocations.
+Erasure's compiler reuses the end-pointer byte offset to load the last entry;
+retail subtracts one from count and scales again. All remaining state effects
+agree. A strict integer interpreter executes both actual instruction streams on
+56 independent array cases, including empty/absent/first/middle/last/duplicate
+entries, compares the entire array (including inactive slots) and count, and
+covers both outcomes of every erasure branch.
+
+Parent imported both root `.cpp` files byte-for-byte into native `Game` and
+reported successful linkage through the real Binder; this agent verified the
+mirror bytes and source hashes against the evidence. Parent owns runtime tests
+and collision-provider integration. This directory's original-compiler evidence
+does not claim the whole original Mario update or all moving collision actors
+are already activated on PC.

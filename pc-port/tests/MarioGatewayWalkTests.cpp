@@ -15,6 +15,7 @@
 #include "Logger.hpp"
 #include "MarioWalkParameterTests.hpp"
 #include "MarioCameraTargetTests.hpp"
+#include "OriginalMarioStateTests.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -29,6 +30,7 @@
 #include <aurora/dvd.h>
 #include <aurora/wpad.hpp>
 #include <dolphin/dvd.h>
+#include <dolphin/mtx.h>
 #include <SDL3/SDL.h>
 
 #include <algorithm>
@@ -135,10 +137,21 @@ namespace {
         actor._EA8 = saved_forced_matrix;
         actor._934 = saved_bound;
         actor._924 = saved_bound_sensor;
+        // Retail PSVECNormalize's frsqrte/Newton sequence produces 0x3F7FFFFF
+        // for these axis inputs. Mathematical division previously gave 1.0.
+        constexpr auto normalized_axis = 0x1.fffffep-1F;
+        const auto up_input = Vec{0.0F, 2.0F, 0.0F};
+        auto sdk_up = Vec{};
+        PSVECNormalize(&up_input, &sdk_up);
+        const auto bound_up_input = Vec{0.0F, 0.0F, 1.0F};
+        auto sdk_bound_up = Vec{};
+        PSVECNormalize(&bound_up_input, &sdk_bound_up);
+        require(sdk_up.y == normalized_axis && sdk_bound_up.z == normalized_axis,
+                "original SDK axis normalization must preserve the retail 0x3F7FFFFF result");
         require(target->getGroundPos().x == 11.0F &&
                     target->getGroundPos().y == 22.0F &&
                     target->getGroundPos().z == 33.0F &&
-                    target->getUpVec().x == 0.0F && target->getUpVec().y == 1.0F && target->getUpVec().z == 0.0F &&
+                    target->getUpVec().x == 0.0F && target->getUpVec().y == sdk_up.y && target->getUpVec().z == 0.0F &&
                     target->getSideVec().z == -4.0F,
                 "the player camera bridge must use shadow position, normalized camera up, and Mario's side getter");
         const auto raw_vectors_match = [](const TVec3f& up, const TVec3f& front, const TVec3f& side) {
@@ -150,7 +163,7 @@ namespace {
                     raw_vectors_match(bound_player_up, bound_player_front, bound_player_side),
                 "global player orientation must preserve all three raw MarioActor getters in normal and bound states");
         require(bound_target->getUpVec().x == 0.0F && bound_target->getUpVec().y == 0.0F &&
-                    bound_target->getUpVec().z == 1.0F &&
+                    bound_target->getUpVec().z == sdk_bound_up.z &&
                     bound_target->getFrontVec().x == 1.0F && bound_target->getFrontVec().y == 0.0F &&
                     bound_target->getFrontVec().z == 0.0F &&
                     bound_target->getSideVec().x == 0.0F && bound_target->getSideVec().y == 1.0F &&
@@ -527,6 +540,7 @@ namespace {
                 "MarioActor init must register the real actor with MarioHolder");
         require(actor->mGravityRatio == 1.0F,
                 "MarioActor init2 must establish the retail airborne gravity multiplier");
+        smgpc::tests::verify_original_mario_state_lifecycle(*actor);
         require(actor->mActorLightCtrl != nullptr &&
                     actor->mActorLightCtrl->_4 == MR::LightType_Player &&
                     runtime.scene_lights().player_light_ctrl() ==

@@ -1,0 +1,40 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "address": "0x803E7500",
+  "size": 52,
+  "native_calls": 15009,
+  "finite_outputs_compared": 60036,
+  "alias_modes": [
+    "separate",
+    "source",
+    "direction"
+  ],
+  "all_output_bits_equal": true,
+  "scope": "5003 finite moderate-range input pairs; includes signed zero and nonunit directions. Does not assert NaN payload/sign, subnormal flushing, or FPSCR.",
+  "compile_command": [
+    "clang++",
+    "-std=c++23",
+    "-O2",
+    "-fPIC",
+    "-ffp-contract=off",
+    "-Wno-register",
+    "-DTARGET_PC",
+    "-DMTX_USE_PS",
+    "-Ipc-port/aurora/include",
+    "-Ipc-port/src",
+    "-include",
+    "pc-port/src/compat/MetrowerksStdCompat.hpp",
+    "-dynamiclib",
+    "-Wl,-dead_strip",
+    "-Wl,-exported_symbol,_native_kill",
+    "pc-port/src/compat/GameMathCompat.cpp",
+    "/Users/frityet/Projects/petari/pc-port/notes/original-binder-native-20260903/math-harness.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-binder-native-20260903/libmath.dylib"
+  ],
+  "source_sha256": {
+    "src/Game/Util/MathUtil.cpp": "9e975fcc0c78952695ba9300545ee06e09289be3f2c4c06a35ae1fdc2c705a17",
+    "pc-port/src/compat/GameMathCompat.cpp": "36f5b54d7d7d74425e60bf6a863c167b8df11ecf5511e21d55441f83d0d96fd9",
+    "pc-port/notes/xanime-core-matrix-calculation-20260903/math-oracle.py": "78a3ebb2552e2c453d8b3f85e19943ef5e1d4ac5a2a3ee9faf35958299d2f12d"
+  }
+}

@@ -1,0 +1,1513 @@
+{
+  "source": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+  "source_sha256": "69eec8cc2b28710b114726a94eabcdcd7eb7faf19a0eadb845cc298d57ed9686",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC3.0a3/configure.py Game flags",
+  "methods": [
+    {
+      "method": "calcMinMaxAndRadius",
+      "address": "0x80174c9c",
+      "retail_size": 440,
+      "compiled_size": 440,
+      "objdiff_match_percent": 98.63636,
+      "relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "zero__Q29JGeometry8TVec3<f>Fv",
+          "addend": 0,
+          "effective_retail_target": "0x80018dfc"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "zero__Q29JGeometry8TVec3<f>Fv",
+          "addend": 0,
+          "effective_retail_target": "0x80018dfc"
+        },
+        {
+          "offset": "0x30",
+          "kind": 109,
+          "symbol": "@2689",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bbe58"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getTrans__14CollisionPartsFv",
+          "addend": 0,
+          "effective_retail_target": "0x801750e8"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "getTrans__14CollisionPartsFv",
+          "addend": 0,
+          "effective_retail_target": "0x801750e8"
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x800200f8"
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x80018f04"
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x80018ef0"
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x80018ef0"
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "addAndUpdateMinMax__13CollisionZoneFQ29JGeometry8TVec3<f>Q29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x80174f40"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x80018ef0"
+        },
+        {
+          "offset": "0xec",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x80018f04"
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x80018ef0"
+        },
+        {
+          "offset": "0x104",
+          "kind": 109,
+          "symbol": "@2713",
+          "addend": 0,
+          "value_hex": "3f000000",
+          "effective_retail_target": "0x806bbe5c"
+        },
+        {
+          "offset": "0x11c",
+          "kind": 109,
+          "symbol": "@2689",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bbe58"
+        },
+        {
+          "offset": "0x148",
+          "kind": 10,
+          "symbol": "getTrans__14CollisionPartsFv",
+          "addend": 0,
+          "effective_retail_target": "0x801750e8"
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x800200f8"
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "addend": 0,
+          "effective_retail_target": "0x804b90d8"
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ],
+      "relocated_bytes_equal": false,
+      "difference": "Two independent loads exchanged around output-address setup; second-loop pointer allocated to r30 instead of r31.",
+      "all_canonical_instructions_equal": true,
+      "canonical_instructions": [
+        "stwu r1, -0xa0(r1)",
+        "mflr r0",
+        "stw r0, 0xa4(r1)",
+        "stfd f31, 0x90(r1)",
+        "psq_st f31, 0x98(r1), 0, qr0",
+        "addi r11, r1, 0x90",
+        "bl _savegpr_29",
+        "mr r29, r3",
+        "addi r3, r3, 0x818",
+        "bl zero__Q29JGeometry8TVec3<f>Fv",
+        "addi r3, r29, 0x824",
+        "bl zero__Q29JGeometry8TVec3<f>Fv",
+        "lfs f0, constant_00000000@sda21",
+        "addi r30, r29, 0x4",
+        "stfs f0, 0x814(r29)",
+        "b instruction_48",
+        "lwz r4, 0x0(r30)",
+        "addi r3, r1, 0x68",
+        "bl getTrans__14CollisionPartsFv",
+        "lwz r4, 0x0(r30)",
+        "addi r3, r1, 0x5c",
+        "bl getTrans__14CollisionPartsFv",
+        "lwz r5, 0x0(r30)",
+        "addi r3, r1, 0x68",
+        "addi r4, r1, 0x44",
+        "lfs f31, 0xd8(r5)",
+        "stfs f31, 0x44(r1)",
+        "stfs f31, 0x48(r1)",
+        "stfs f31, 0x4c(r1)",
+        "bl __ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "stfs f31, 0x38(r1)",
+        "addi r3, r1, 0x5c",
+        "addi r4, r1, 0x38",
+        "stfs f31, 0x3c(r1)",
+        "stfs f31, 0x40(r1)",
+        "bl __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "addi r3, r1, 0x20",
+        "addi r4, r1, 0x5c",
+        "bl __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "mr r31, r3",
+        "addi r3, r1, 0x2c",
+        "addi r4, r1, 0x68",
+        "bl __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "mr r4, r3",
+        "mr r3, r29",
+        "mr r5, r31",
+        "bl addAndUpdateMinMax__13CollisionZoneFQ29JGeometry8TVec3<f>Q29JGeometry8TVec3<f>",
+        "addi r30, r30, 0x4",
+        "lwz r0, 0x804(r29)",
+        "slwi r0, r0, 2",
+        "add r3, r29, r0",
+        "addi r0, r3, 0x4",
+        "cmplw r30, r0",
+        "bne instruction_16",
+        "addi r3, r1, 0x8",
+        "addi r4, r29, 0x824",
+        "bl __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "addi r3, r1, 0x8",
+        "addi r4, r29, 0x818",
+        "bl __apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "addi r3, r1, 0x14",
+        "addi r4, r1, 0x8",
+        "bl __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "lfs f3, constant_3f000000@sda21",
+        "addi r3, r29, 0x808",
+        "lfs f0, 0x14(r1)",
+        "addi r31, r29, 0x4",
+        "lfs f1, 0x18(r1)",
+        "fmuls f2, f0, f3",
+        "lfs f0, 0x1c(r1)",
+        "fmuls f1, f1, f3",
+        "lfs f31, constant_00000000@sda21",
+        "fmuls f0, f0, f3",
+        "stfs f2, 0x14(r1)",
+        "stfs f1, 0x18(r1)",
+        "stfs f0, 0x1c(r1)",
+        "psq_l f1, 0x14(r1), 0, qr0",
+        "psq_st f1, 0x0(r3), 0, qr0",
+        "stfs f0, 0x810(r29)",
+        "b instruction_95",
+        "lwz r4, 0x0(r31)",
+        "addi r3, r1, 0x50",
+        "bl getTrans__14CollisionPartsFv",
+        "addi r3, r1, 0x50",
+        "addi r4, r29, 0x808",
+        "bl __ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "addi r3, r1, 0x50",
+        "bl PSVECMag",
+        "lwz r3, 0x0(r31)",
+        "lfs f0, 0xd8(r3)",
+        "fadds f0, f1, f0",
+        "fcmpo cr0, f31, f0",
+        "bge instruction_94",
+        "fmr f31, f0",
+        "addi r31, r31, 0x4",
+        "lwz r0, 0x804(r29)",
+        "slwi r0, r0, 2",
+        "add r3, r29, r0",
+        "addi r0, r3, 0x4",
+        "cmplw r31, r0",
+        "bne instruction_80",
+        "stfs f31, 0x814(r29)",
+        "psq_l f31, 0x98(r1), 0, qr0",
+        "lfd f31, 0x90(r1)",
+        "addi r11, r1, 0x90",
+        "bl _restgpr_29",
+        "lwz r0, 0xa4(r1)",
+        "mtlr r0",
+        "addi r1, r1, 0xa0",
+        "blr"
+      ]
+    },
+    {
+      "method": "addAndUpdateMinMax",
+      "address": "0x80174f40",
+      "retail_size": 220,
+      "compiled_size": 220,
+      "objdiff_match_percent": 100.0,
+      "relocations": [
+        {
+          "offset": "0x8",
+          "kind": 109,
+          "symbol": "@2689",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bbe58"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "@2735",
+          "addend": 0,
+          "value_hex": "3dcccccd",
+          "effective_retail_target": "0x806bbe60"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "addend": 0,
+          "effective_retail_target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "addend": 0,
+          "effective_retail_target": "0x8001d2c8"
+        }
+      ],
+      "relocated_bytes_equal": true,
+      "all_canonical_instructions_equal": true,
+      "canonical_instructions": [
+        "stwu r1, -0x10(r1)",
+        "mflr r0",
+        "lfs f1, constant_00000000@sda21",
+        "stw r0, 0x14(r1)",
+        "stw r31, 0xc(r1)",
+        "mr r31, r5",
+        "stw r30, 0x8(r1)",
+        "mr r30, r3",
+        "lfs f0, 0x814(r3)",
+        "fcmpu cr0, f1, f0",
+        "bne instruction_19",
+        "lfs f0, constant_3dcccccd@sda21",
+        "stfs f0, 0x814(r3)",
+        "addi r3, r3, 0x818",
+        "bl set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+        "mr r4, r31",
+        "addi r3, r30, 0x824",
+        "bl set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+        "b instruction_49",
+        "lfs f1, 0x0(r4)",
+        "lfs f0, 0x818(r3)",
+        "fcmpo cr0, f1, f0",
+        "bge instruction_24",
+        "stfs f1, 0x818(r3)",
+        "lfs f1, 0x4(r4)",
+        "lfs f0, 0x81c(r3)",
+        "fcmpo cr0, f1, f0",
+        "bge instruction_29",
+        "stfs f1, 0x81c(r3)",
+        "lfs f1, 0x8(r4)",
+        "lfs f0, 0x820(r3)",
+        "fcmpo cr0, f1, f0",
+        "bge instruction_34",
+        "stfs f1, 0x820(r3)",
+        "lfs f1, 0x824(r3)",
+        "lfs f0, 0x0(r5)",
+        "fcmpo cr0, f1, f0",
+        "bge instruction_39",
+        "stfs f0, 0x824(r3)",
+        "lfs f1, 0x828(r3)",
+        "lfs f0, 0x4(r5)",
+        "fcmpo cr0, f1, f0",
+        "bge instruction_44",
+        "stfs f0, 0x828(r3)",
+        "lfs f1, 0x82c(r3)",
+        "lfs f0, 0x8(r5)",
+        "fcmpo cr0, f1, f0",
+        "bge instruction_49",
+        "stfs f0, 0x82c(r3)",
+        "lwz r0, 0x14(r1)",
+        "lwz r31, 0xc(r1)",
+        "lwz r30, 0x8(r1)",
+        "mtlr r0",
+        "addi r1, r1, 0x10",
+        "blr"
+      ]
+    },
+    {
+      "method": "eraseParts",
+      "address": "0x8017501c",
+      "retail_size": 116,
+      "compiled_size": 104,
+      "objdiff_match_percent": 86.89655,
+      "relocations": [],
+      "relocated_bytes_equal": false,
+      "behavior": {
+        "case_count": 56,
+        "all_branch_sites_taken_and_not_taken": true,
+        "cases": [
+          {
+            "before": [],
+            "needle": 131072,
+            "active_after": [],
+            "count_after": 0,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131072,
+              131080
+            ],
+            "needle": 131072,
+            "active_after": [
+              131080,
+              131076,
+              131072
+            ],
+            "count_after": 3,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072
+            ],
+            "needle": 131072,
+            "active_after": [],
+            "count_after": 0,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072
+            ],
+            "count_after": 1,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076
+            ],
+            "needle": 131072,
+            "active_after": [
+              131076
+            ],
+            "count_after": 1,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072
+            ],
+            "count_after": 1,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076
+            ],
+            "count_after": 2,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080
+            ],
+            "needle": 131072,
+            "active_after": [
+              131080,
+              131076
+            ],
+            "count_after": 2,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072,
+              131080
+            ],
+            "count_after": 2,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080
+            ],
+            "needle": 131080,
+            "active_after": [
+              131072,
+              131076
+            ],
+            "count_after": 2,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076,
+              131080
+            ],
+            "count_after": 3,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084
+            ],
+            "needle": 131072,
+            "active_after": [
+              131084,
+              131076,
+              131080
+            ],
+            "count_after": 3,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072,
+              131084,
+              131080
+            ],
+            "count_after": 3,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084
+            ],
+            "needle": 131080,
+            "active_after": [
+              131072,
+              131076,
+              131084
+            ],
+            "count_after": 3,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084
+            ],
+            "needle": 131084,
+            "active_after": [
+              131072,
+              131076,
+              131080
+            ],
+            "count_after": 3,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084
+            ],
+            "count_after": 4,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "needle": 131072,
+            "active_after": [
+              131088,
+              131076,
+              131080,
+              131084
+            ],
+            "count_after": 4,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072,
+              131088,
+              131080,
+              131084
+            ],
+            "count_after": 4,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "needle": 131080,
+            "active_after": [
+              131072,
+              131076,
+              131088,
+              131084
+            ],
+            "count_after": 4,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "needle": 131084,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131088
+            ],
+            "count_after": 4,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "needle": 131088,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084
+            ],
+            "count_after": 4,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "count_after": 5,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "needle": 131072,
+            "active_after": [
+              131092,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "count_after": 5,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072,
+              131092,
+              131080,
+              131084,
+              131088
+            ],
+            "count_after": 5,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "needle": 131080,
+            "active_after": [
+              131072,
+              131076,
+              131092,
+              131084,
+              131088
+            ],
+            "count_after": 5,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "needle": 131084,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131092,
+              131088
+            ],
+            "count_after": 5,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "needle": 131088,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131092
+            ],
+            "count_after": 5,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "needle": 131092,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088
+            ],
+            "count_after": 5,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 131072,
+            "active_after": [
+              131096,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072,
+              131096,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 131080,
+            "active_after": [
+              131072,
+              131076,
+              131096,
+              131084,
+              131088,
+              131092
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 131084,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131096,
+              131088,
+              131092
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 131088,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131096,
+              131092
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 131092,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131096
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 131096,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092
+            ],
+            "count_after": 6,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131072,
+            "active_after": [
+              131100,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072,
+              131100,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131080,
+            "active_after": [
+              131072,
+              131076,
+              131100,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131084,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131100,
+              131088,
+              131092,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131088,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131100,
+              131092,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131092,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131100,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131096,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131100
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 131100,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096
+            ],
+            "count_after": 7,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131072,
+            "active_after": [
+              131104,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131076,
+            "active_after": [
+              131072,
+              131104,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131080,
+            "active_after": [
+              131072,
+              131076,
+              131104,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131084,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131104,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131088,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131104,
+              131092,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131092,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131104,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131096,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131104,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131100,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131104
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 131104,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100
+            ],
+            "count_after": 8,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          },
+          {
+            "before": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "needle": 196608,
+            "active_after": [
+              131072,
+              131076,
+              131080,
+              131084,
+              131088,
+              131092,
+              131096,
+              131100,
+              131104
+            ],
+            "count_after": 9,
+            "complete_array_and_count_equal_in_retail_and_compiled": true
+          }
+        ]
+      },
+      "difference": "Compiler reuses the end-pointer byte offset for the last-element load; retail subtracts one from count then scales. Both compute the same address."
+    }
+  ],
+  "limits": "Array erasure runs actual retail/compiler integer instructions; bounds helpers have complete instruction correspondence after only stated scheduling/register normalization. No native zone lifetime or collision actor execution claim."
+}

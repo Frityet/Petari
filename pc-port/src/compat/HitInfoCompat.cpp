@@ -2,6 +2,7 @@
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Map/CollisionParts.hpp"
 #include "Game/Util/TriangleFilter.hpp"
 
 #include <cstdint>
@@ -89,7 +90,20 @@ s32 Triangle::getHostPlacementZoneID() const {
 }
 
 bool Triangle::isHostMoved() const {
-    return false;
+    // Registered native KCL is static. Real CollisionParts retain the game's
+    // movement counter instead of losing their moving-host behavior here.
+    return mParts != nullptr && mParts->_D4 == 0;
+}
+
+void Triangle::calcForceMovePower(TVec3f* output, const TVec3f& position) const {
+    if (mParts != nullptr) {
+        mParts->calcForceMovePower(output, position);
+        return;
+    }
+    if (!triangle_surface(*this).has_value()) {
+        throw std::logic_error("Motion queries require a live collision triangle.");
+    }
+    output->zero();
 }
 
 bool Triangle::isValid() const {
@@ -153,8 +167,6 @@ JMapInfoIter Triangle::getAttributes() const {
 HitInfo::HitInfo()
     : mParentTriangle(), _60(0.0F), mHitPos(), _70(), _7C(), _88(0U), _89{} {
 }
-
-HitInfo& HitInfo::operator=(const HitInfo& other) = default;
 
 bool HitInfo::isCollisionAtFace() const {
     return _88 == 1U;

@@ -30,7 +30,8 @@ namespace smgpc::scene {
     struct StageCollisionContact {
         TVec3f position{};
         TVec3f normal{};
-        TVec3f reaction_normal{};
+        // Collision-part motion projected onto the face normal; static parts contribute zero.
+        TVec3f moving_reaction{};
         float penetration = 0.0F;
         std::uint16_t attribute = 0U;
         std::uint32_t triangle_index = 0U;
@@ -182,7 +183,7 @@ namespace smgpc::scene {
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_impl(
             const TVec3f& center, float radius, std::size_t maximum,
-            std::optional<float> thickness_override, float outer_margin,
+            std::optional<float> thickness_override,
             const StageCollisionTriangleFilter& filter) const;
 
         std::vector<Triangle> _triangles{};

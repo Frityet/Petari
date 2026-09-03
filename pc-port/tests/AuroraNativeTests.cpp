@@ -947,8 +947,9 @@ namespace {
         constexpr auto expected_edge_penetration = 0.25355339F;
         require(!edge_contact.empty() &&
                     std::abs(edge_contact.front().penetration - expected_edge_penetration) < 0.0001F &&
-                    edge_contact.front().reaction_normal.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F),
-                "edge contacts should use KCHitSphere's face-axis square-root correction and face normal");
+                    edge_contact.front().normal.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) &&
+                    edge_contact.front().moving_reaction.epsilonEquals(TVec3f{}, 0.0F),
+                "static edge contacts retain the face normal and have zero collision-part movement reaction");
 
         const auto point_contact = collision.sphere_contacts(TVec3f{0.25F, -1.0F, 0.25F}, 0.0F);
         require(!point_contact.empty() && std::abs(point_contact.front().penetration - 1.0F) < 0.0001F,
@@ -1000,23 +1001,24 @@ namespace {
         const auto* zero_binder_contacts = smgpc::compat::actor_binder_contacts(&zero_binder);
         require(smgpc::compat::has_actor_binder(&zero_binder) && zero_binder_contacts != nullptr &&
                     zero_binder_contacts->ground &&
-                    zero_binder.mPosition.y > 1.0F,
+                    std::abs(zero_binder.mPosition.y - 1.2F) < 0.0001F &&
+                    zero_binder.mBinder->mPlaneNum == 1U && zero_binder.mBinder->mPlane == nullptr,
                 "a zero-radius Binder should remain explicit and resolve a strict-interior point-prism hit");
 
         auto matrix_binder = LiveActor("matrix-binder-test");
         matrix_binder.makeActorAppeared();
-        matrix_binder.mPosition.set(0.25F, 2.0F, 0.25F);
+        matrix_binder.mPosition.set(0.25F, 4.25F, 0.25F);
         smgpc::compat::set_actor_base_matrix(&matrix_binder, smgpc::render::J3dMatrix3x4{{
             1.0F, 0.0F, 0.0F, 0.25F,
-            0.0F, -2.0F, 0.0F, 2.0F,
+            0.0F, -2.0F, 0.0F, 4.25F,
             0.0F, 0.0F, -1.0F, 0.25F,
         }});
         matrix_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(matrix_binder);
         const auto* matrix_binder_contacts = smgpc::compat::actor_binder_contacts(&matrix_binder);
         require(matrix_binder_contacts != nullptr && matrix_binder_contacts->ground &&
-                    matrix_binder.mPosition.y > 3.0F,
-                "Binder offset should use the unscaled base-matrix Y direction instead of inferred anti-gravity");
+                    std::abs(matrix_binder.mPosition.y - 5.7F) < 0.0001F,
+                "original Binder multiplies offset by the supplied raw matrix Y without normalization");
 
         auto negative_scale_binder = LiveActor("negative-scale-binder-test");
         negative_scale_binder.makeActorAppeared();
@@ -1232,6 +1234,39 @@ namespace {
         part->mFixedPos = nullptr;
         delete ownedFixedPosition;
         delete part;
+    }
+
+    void test_original_vector_kill_and_normalize() {
+        const auto source = TVec3f{1.0F, 2.0F, 0.0F};
+        const auto raw_direction = TVec3f{2.0F, 0.0F, 0.0F};
+        const auto expected = TVec3f{-3.0F, 2.0F, 0.0F};
+        auto output = TVec3f{};
+        require(MR::vecKillElement(source, raw_direction, &output) == 2.0F &&
+                    output.epsilonEquals(expected, 0.0F),
+                "vecKillElement must retain the raw direction magnitude and return its dot product");
+
+        auto source_alias = source;
+        require(MR::vecKillElement(source_alias, raw_direction, &source_alias) == 2.0F &&
+                    source_alias.epsilonEquals(expected, 0.0F),
+                "vecKillElement must preserve original operands when output aliases source");
+        auto direction_alias = raw_direction;
+        require(MR::vecKillElement(source, direction_alias, &direction_alias) == 2.0F &&
+                    direction_alias.epsilonEquals(expected, 0.0F),
+                "vecKillElement must preserve original operands when output aliases direction");
+
+        require(MR::vecKillElement(source, TVec3f{0.0001F, 0.0F, 0.0F}, &output) == 0.0F &&
+                    output.epsilonEquals(source, 0.0F),
+                "the original near-zero direction guard must copy the source unchanged");
+
+        auto tiny = TVec3f{3.0e-8F, 4.0e-8F, 0.0F};
+        MR::normalize(&tiny);
+        require(tiny.epsilonEquals(TVec3f{0.6F, 0.8F, 0.0F}, 0.00001F),
+                "MR::normalize must use SDK normalization for a tiny nonzero vector");
+        const auto tiny_source = TVec3f{3.0e-8F, 4.0e-8F, 0.0F};
+        MR::normalize(tiny_source, &output);
+        require(output.epsilonEquals(TVec3f{0.6F, 0.8F, 0.0F}, 0.00001F) &&
+                    tiny_source.x == 3.0e-8F && tiny_source.y == 4.0e-8F,
+                "the copied normalize overload must preserve its source and normalize tiny nonzero input");
     }
 
     void test_coin_math_and_gravity_surface() {
@@ -1471,6 +1506,7 @@ int main() {
                  test_derived_actor_consumes_same_frame_binder_before_scheduler_returns},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
+        TestCase{"original vector kill and normalize", test_original_vector_kill_and_normalize},
         TestCase{"Coin math and gravity surface", test_coin_math_and_gravity_surface},
         TestCase{"Spine retail two-phase transition", test_spine_uses_retail_two_phase_transition},
         TestCase{"ActorStateKeeper exact lifecycle", test_actor_state_keeper_uses_exact_state_lifecycle},

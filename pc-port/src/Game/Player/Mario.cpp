@@ -2533,9 +2533,6 @@ XjointTransform* XanimeCore::getJointTransform(u32 idx) {
     return &mTransformList[idx];
 }
 
-void MarioState::draw3D() const {
-}
-
 template <>
 bool TriangleFilterDelegator< Mario >::isInvalidTriangle(const Triangle* pTriangle) const {
     return (mParent->*mFunc)(pTriangle);
