@@ -22,13 +22,13 @@ MatrixControl::MatrixControl(const char* pName, MatrixMap* pMap, MatrixSelectLis
 }
 
 u8 MatrixControl::getValue(const char* pName, u8 value) const {
-    u32 index;
+    HashSortTable::Value index;
     _14->search(pName, &index);
     return _C[index]._8[value];
 }
 
 bool MatrixControl::getValueOrNone(const char* pName, u8 idx, u8* value) const {
-    u32 index;
+    HashSortTable::Value index;
     if (!_14->search(pName, &index)) {
         return false;
     }
@@ -41,19 +41,19 @@ bool MatrixControl::getValueOrNone(const char* pName, u8 idx, u8* value) const {
 }
 
 bool MatrixControl::getBit(const char* pName, u8 bit) const {
-    u32 index;
+    HashSortTable::Value index;
     _14->search(pName, &index);
     return _C[index]._4 & (1 << (31 - bit));
 }
 
 bool MatrixControl::isExist(const char* pName) const {
-    u32 index;
+    HashSortTable::Value index;
     return _14->search(pName, &index);
 }
 
 bool MatrixControl::getBitOrNone(const char* pName, u8 bit) const {
     // FIXME: some black magickery going on here
-    u32 index;
+    HashSortTable::Value index;
     if (_14->search(pName, &index)) {
         return _1D;
     }
@@ -75,7 +75,7 @@ MatrixValueGetter::MatrixValueGetter(const char* pName, MatrixValueTable* pTable
 }
 
 bool MatrixValueGetter::getValue(const char* pName, f32* value) const {
-    u32 index;
+    HashSortTable::Value index;
     if (!_10->search(pName, &index)) {
         return false;
     }

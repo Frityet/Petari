@@ -1735,7 +1735,7 @@ void Mario::initSound() {
 }
 
 void Mario::playSoundJ(const char* pSoundName, s32 timing) {
-    u32 index;
+    HashSortTable::Value index;
     if (_96C->search(pSoundName, &index)) {
         switch ((soundlist[index]._8._0 >> 24) & 0x3) {
         case 0:
@@ -1772,7 +1772,7 @@ void Mario::playSoundJ(const char* pSoundName, s32 timing) {
 }
 
 void Mario::stopSoundJ(const char* pSoundName, u32 delay) {
-    u32 index;
+    HashSortTable::Value index;
     if (_96C->search(pSoundName, &index)) {
         switch ((soundlist[index]._8._0 >> 24) & 0x3) {
         case 0:

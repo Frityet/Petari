@@ -232,7 +232,7 @@ void MarioActor::initMaterialEffect() {
     _BA4 = new HashSortTable(entryCount);
     entry = cMaterialEffectTable;
     for (int i = 0; i < entryCount; i++) {
-        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< u32 >(&cMaterialEffectTable[i]), false);
+        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< HashSortTable::Value >(&cMaterialEffectTable[i]), false);
     }
 
     _BA4->sort();
@@ -335,7 +335,7 @@ s32 MarioActor::getFloorMaterialIndex(u32 flags) const {
 }
 
 MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
-    u32 value = 0;
+    HashSortTable::Value value = 0;
 
     _BA4->search(pName, &value);
     MaterialEffectEntry* entry = reinterpret_cast< MaterialEffectEntry* >(value);
@@ -384,7 +384,7 @@ MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
 }
 
 void MarioActor::stopMaterialEffect(const char* pName) {
-    u32 value = 0;
+    HashSortTable::Value value = 0;
 
     _BA4->search(pName, &value);
     MaterialEffectEntry* entry = reinterpret_cast< MaterialEffectEntry* >(value);

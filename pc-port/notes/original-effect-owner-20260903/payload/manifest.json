@@ -1,0 +1,47 @@
+[
+  {
+    "path": "pc-port/src/Game/Util/HashUtil.hpp",
+    "before_sha256": "e50529b54e40b20f4a9494eb9dd4054f58557ce72f2494766bb0da421aa35e98",
+    "after_sha256": "d98bcc17a3ed40ff62ed00c5bc07b14c8065672ef01701573405d4221f07b55f"
+  },
+  {
+    "path": "pc-port/src/Game/Animation/XanimeResource.cpp",
+    "before_sha256": "751f1b82b9d53fc002d4fe06e5104d4f8e57d3eec6dcb0b27304efefec2d7d31",
+    "after_sha256": "6fe4147e36d1be2adbc3972552cbc751853fa0d24f2eea6b1d85578671602140"
+  },
+  {
+    "path": "pc-port/src/Game/Player/MarioAnimationEfx.cpp",
+    "before_sha256": "ff263633f738104b78c5faea847b37f6ed0f3531125b81a04109a4cc5700bd88",
+    "after_sha256": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7"
+  },
+  {
+    "path": "pc-port/src/Game/Player/MatrixControl.cpp",
+    "before_sha256": "4037ae786713019ad85e1236368b094237500837684a360589d7be85d20b87f0",
+    "after_sha256": "3e8bfc9be7e31573bf8c0c3a0b64fc83d5b3fa0edeaf06d9147915772688feaa"
+  },
+  {
+    "path": "pc-port/src/Game/Player/MarioSound.cpp",
+    "before_sha256": "7db7d98e8811eef2c92c499e0f6b0268d512e76e61a74fb5cae57e7e6e81e7d8",
+    "after_sha256": "366168f9f2f93eeb8cf2aff2b1c035ed8450505c2ea83dfe42c0d4697e67adbc"
+  },
+  {
+    "path": "pc-port/src/Game/Player/MarioEffect.cpp",
+    "before_sha256": "89b76eed0a196ca40cac3fefb3dbc494a31ba09eaee60d00540e9d4f180eec68",
+    "after_sha256": "040f60403b4a057b3bd0d218bfbe79f895d36f08cc38690256441cb90e627a69"
+  },
+  {
+    "path": "pc-port/src/compat/HashSortTableCompat.cpp",
+    "before_sha256": "7bffd4544c64abe4579c2067903ff42845b807f2d5c13b9522f0135e5730f46d",
+    "after_sha256": "7a4ce2e94466d985e529cec0c2931a404e78442e0f971dbb2b5225bfbc08514c"
+  },
+  {
+    "path": "pc-port/src/compat/OriginalMarioSound.cpp",
+    "before_sha256": "eeecba39fa7033e176dacbf0f7ba37f7ba94082f1f5f5bc2035e67054686c1cc",
+    "after_sha256": "04d209090897a5b86ca0859d233b568e213aa72fb08834f4d0ced2b5ad2d0021"
+  },
+  {
+    "path": "pc-port/src/compat/MarioAnimatorLifetime.cpp",
+    "before_sha256": "c7b4213db874b3f42da3d1c9fa27c8ae6a23b51c0c716a0049448ace023ea151",
+    "after_sha256": "af733aa96eb09301ff5ee954145070bae48ffe228cd7280df46ad5e67c7f9836"
+  }
+]

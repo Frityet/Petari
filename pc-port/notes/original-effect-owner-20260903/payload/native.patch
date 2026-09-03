@@ -1,0 +1,274 @@
+--- a/pc-port/src/Game/Util/HashUtil.hpp
++++ b/pc-port/src/Game/Util/HashUtil.hpp
+@@ -1,23 +1,26 @@
+ #pragma once
+ 
+ #include <revolution/types.h>
++#include <stdint.h>
+ 
+ class HashSortTable {
+ public:
++    typedef uintptr_t Value;
++
+     HashSortTable(u32);
+ 
+-    bool add(const char*, u32, bool);
+-    bool add(u32, u32);
+-    bool addOrSkip(u32, u32);
++    bool add(const char*, Value, bool);
++    bool add(u32, Value);
++    bool addOrSkip(u32, Value);
+     void sort();
+-    bool search(u32, u32*);
+-    bool search(const char*, u32*);
+-    bool search(const char*, const char*, u32*);
++    bool search(u32, Value*);
++    bool search(const char*, Value*);
++    bool search(const char*, const char*, Value*);
+     void swap(const char*, const char*);
+ 
+     /* 0x00 */ bool mHasBeenSorted;
+     /* 0x04 */ u32* mHashCodes;
+-    /* 0x08 */ u32* _8;
++    /* 0x08 */ Value* _8;
+     /* 0x0C */ u16* _C;
+     /* 0x10 */ u16* _10;
+     /* 0x14 */ u32 mCurrentLength;
+--- a/pc-port/src/Game/Animation/XanimeResource.cpp
++++ b/pc-port/src/Game/Animation/XanimeResource.cpp
+@@ -323,7 +323,7 @@
+ 
+ u32 XanimeResourceTable::getIndexFromHash(u32 hash) const {
+     if (mSortTable != nullptr) {
+-        u32 index;
++        HashSortTable::Value index;
+         if (mSortTable->search(hash, &index)) {
+             return index;
+         }
+@@ -339,7 +339,7 @@
+     case 0:
+         return -1;
+     case 1:
+-        u32 position;
++        HashSortTable::Value position;
+         if (mSortTable->search(hash, &position)) {
+             return position;
+         }
+--- a/pc-port/src/Game/Player/MarioAnimationEfx.cpp
++++ b/pc-port/src/Game/Player/MarioAnimationEfx.cpp
+@@ -75,7 +75,7 @@
+     _10F = 0;
+     closeCallback();
+ 
+-    u32 callbackIdx;
++    HashSortTable::Value callbackIdx;
+     if (_120->search(pName, &callbackIdx)) {
+         _11C = callbackIdx;
+ 
+--- a/pc-port/src/Game/Player/MatrixControl.cpp
++++ b/pc-port/src/Game/Player/MatrixControl.cpp
+@@ -22,13 +22,13 @@
+ }
+ 
+ u8 MatrixControl::getValue(const char* pName, u8 value) const {
+-    u32 index;
++    HashSortTable::Value index;
+     _14->search(pName, &index);
+     return _C[index]._8[value];
+ }
+ 
+ bool MatrixControl::getValueOrNone(const char* pName, u8 idx, u8* value) const {
+-    u32 index;
++    HashSortTable::Value index;
+     if (!_14->search(pName, &index)) {
+         return false;
+     }
+@@ -41,19 +41,19 @@
+ }
+ 
+ bool MatrixControl::getBit(const char* pName, u8 bit) const {
+-    u32 index;
++    HashSortTable::Value index;
+     _14->search(pName, &index);
+     return _C[index]._4 & (1 << (31 - bit));
+ }
+ 
+ bool MatrixControl::isExist(const char* pName) const {
+-    u32 index;
++    HashSortTable::Value index;
+     return _14->search(pName, &index);
+ }
+ 
+ bool MatrixControl::getBitOrNone(const char* pName, u8 bit) const {
+     // FIXME: some black magickery going on here
+-    u32 index;
++    HashSortTable::Value index;
+     if (_14->search(pName, &index)) {
+         return _1D;
+     }
+@@ -75,7 +75,7 @@
+ }
+ 
+ bool MatrixValueGetter::getValue(const char* pName, f32* value) const {
+-    u32 index;
++    HashSortTable::Value index;
+     if (!_10->search(pName, &index)) {
+         return false;
+     }
+--- a/pc-port/src/Game/Player/MarioSound.cpp
++++ b/pc-port/src/Game/Player/MarioSound.cpp
+@@ -1738,7 +1738,7 @@
+ }
+ 
+ void Mario::playSoundJ(const char* pSoundName, s32 timing) {
+-    u32 index;
++    HashSortTable::Value index;
+     if (_96C->search(pSoundName, &index)) {
+         switch (soundlist[index]._8._4[0] & 0x3) {
+         case 0:
+@@ -1775,7 +1775,7 @@
+ }
+ 
+ void Mario::stopSoundJ(const char* pSoundName, u32 delay) {
+-    u32 index;
++    HashSortTable::Value index;
+     if (_96C->search(pSoundName, &index)) {
+         switch (soundlist[index]._8._4[0] & 0x3) {
+         case 0:
+--- a/pc-port/src/Game/Player/MarioEffect.cpp
++++ b/pc-port/src/Game/Player/MarioEffect.cpp
+@@ -232,7 +232,7 @@
+     _BA4 = new HashSortTable(entryCount);
+     entry = cMaterialEffectTable;
+     for (int i = 0; i < entryCount; i++) {
+-        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< u32 >(&cMaterialEffectTable[i]), false);
++        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< HashSortTable::Value >(&cMaterialEffectTable[i]), false);
+     }
+ 
+     _BA4->sort();
+@@ -335,7 +335,7 @@
+ }
+ 
+ MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
+-    u32 value = 0;
++    HashSortTable::Value value = 0;
+ 
+     _BA4->search(pName, &value);
+     MaterialEffectEntry* entry = reinterpret_cast< MaterialEffectEntry* >(value);
+@@ -384,7 +384,7 @@
+ }
+ 
+ void MarioActor::stopMaterialEffect(const char* pName) {
+-    u32 value = 0;
++    HashSortTable::Value value = 0;
+ 
+     _BA4->search(pName, &value);
+     MaterialEffectEntry* entry = reinterpret_cast< MaterialEffectEntry* >(value);
+--- a/pc-port/src/compat/HashSortTableCompat.cpp
++++ b/pc-port/src/compat/HashSortTableCompat.cpp
+@@ -5,7 +5,7 @@
+ // Source correspondence: notes/original-xanime-lifecycle-20260903/README.md.
+ HashSortTable::HashSortTable(u32 cnt) {
+     mHashCodes = new u32[cnt];
+-    _8 = new u32[cnt];
++    _8 = new Value[cnt];
+     _C = new u16[0x100];
+     _10 = new u16[0x100];
+     mCurrentLength = 0;
+@@ -13,7 +13,7 @@
+     mHasBeenSorted = false;
+ }
+ 
+-bool HashSortTable::add(const char* pName, u32 a2, bool isValidSkip) {
++bool HashSortTable::add(const char* pName, Value a2, bool isValidSkip) {
+     u32 hash = MR::getHashCode(pName);
+ 
+     if (isValidSkip) {
+@@ -23,7 +23,7 @@
+     }
+ }
+ 
+-bool HashSortTable::add(u32 a1, u32 a2) {
++bool HashSortTable::add(u32 a1, Value a2) {
+     mHashCodes[mCurrentLength] = a1;
+     _8[mCurrentLength] = a2;
+     mCurrentLength++;
+@@ -31,7 +31,7 @@
+     return true;
+ }
+ 
+-bool HashSortTable::addOrSkip(u32 a1, u32 a2) {
++bool HashSortTable::addOrSkip(u32 a1, Value a2) {
+     for (u32 i = 0; i < mCurrentLength; i++) {
+         if (a1 == mHashCodes[i]) {
+             return false;
+@@ -52,7 +52,7 @@
+ 
+     s32 originalIndices[0x400];
+     MR::sortSmall(mCurrentLength, mHashCodes, originalIndices);
+-    u32 swapArray[0x400];
++    Value swapArray[0x400];
+ 
+     for (int i = 0; i < mCurrentLength; i++) {
+         swapArray[i] = _8[originalIndices[i]];
+@@ -104,7 +104,7 @@
+     mHasBeenSorted = true;
+ }
+ 
+-bool HashSortTable::search(u32 a1, u32* a2) {
++bool HashSortTable::search(u32 a1, Value* a2) {
+     u8 upperByte = a1 >> 24;
+ 
+     if (a2 != nullptr) {
+@@ -138,13 +138,13 @@
+     return false;
+ }
+ 
+-bool HashSortTable::search(const char* a1, u32* a2) {
++bool HashSortTable::search(const char* a1, Value* a2) {
+     u32 hash = MR::getHashCode(a1);
+ 
+     return search(hash, a2);
+ }
+ 
+-bool HashSortTable::search(const char* a1, const char* a2, u32* a3) {
++bool HashSortTable::search(const char* a1, const char* a2, Value* a3) {
+     u32 hash = MR::getHashCode(a1) + MR::getHashCode(a2);
+ 
+     return search(hash, a3);
+--- a/pc-port/src/compat/OriginalMarioSound.cpp
++++ b/pc-port/src/compat/OriginalMarioSound.cpp
+@@ -1735,7 +1735,7 @@
+ }
+ 
+ void Mario::playSoundJ(const char* pSoundName, s32 timing) {
+-    u32 index;
++    HashSortTable::Value index;
+     if (_96C->search(pSoundName, &index)) {
+         switch ((soundlist[index]._8._0 >> 24) & 0x3) {
+         case 0:
+@@ -1772,7 +1772,7 @@
+ }
+ 
+ void Mario::stopSoundJ(const char* pSoundName, u32 delay) {
+-    u32 index;
++    HashSortTable::Value index;
+     if (_96C->search(pSoundName, &index)) {
+         switch ((soundlist[index]._8._0 >> 24) & 0x3) {
+         case 0:
+@@ -1862,3 +1862,4 @@
+ void Mario::setSeVersion(u32 version) {
+     MR::setSeVersion(mActor, version);
+ }
++
+--- a/pc-port/src/compat/MarioAnimatorLifetime.cpp
++++ b/pc-port/src/compat/MarioAnimatorLifetime.cpp
+@@ -25,7 +25,7 @@
+         struct CapturedHashTable {
+             HashSortTable* table = nullptr;
+             u32* hashes = nullptr;
+-            u32* indices = nullptr;
++            HashSortTable::Value* indices = nullptr;
+             u16* bucket_starts = nullptr;
+             u16* bucket_counts = nullptr;
+ 

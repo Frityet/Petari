@@ -75,7 +75,7 @@ void MarioAnimator::entryCallback(const char* pName) {
     _10F = 0;
     closeCallback();
 
-    u32 callbackIdx;
+    HashSortTable::Value callbackIdx;
     if (_120->search(pName, &callbackIdx)) {
         _11C = callbackIdx;
 
