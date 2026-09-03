@@ -1,10 +1,11 @@
-#include "Game/Map/HitInfo.hpp"
+#include "compat/HitInfoCompat.hpp"
 
-#include "scene/StageCollisionService.hpp"
+#include "Game/Util/TriangleFilter.hpp"
 
 #include <cstdint>
 #include <map>
 #include <optional>
+#include <stdexcept>
 
 namespace {
     struct AttributeCache {
@@ -26,6 +27,39 @@ namespace {
         return collision != nullptr ? collision->surface(triangle.mIdx) : std::nullopt;
     }
 }  // namespace
+
+namespace smgpc::compat {
+
+    Triangle make_collision_triangle(const scene::StageCollisionService& collision,
+                                     std::uint32_t triangle_index) {
+        const auto surface = collision.surface(triangle_index);
+        if (!surface.has_value()) {
+            throw std::logic_error("A collision hit requires its live source KCL prism.");
+        }
+        auto triangle = Triangle{};
+        triangle.mIdx = triangle_index;
+        triangle.mSensor = surface->sensor;
+        for (auto index = std::size_t{}; index < surface->vertices.size(); ++index) {
+            triangle.mPos[index] = surface->vertices[index];
+        }
+        for (auto index = std::size_t{}; index < surface->normals.size(); ++index) {
+            triangle.mNormals[index] = surface->normals[index];
+        }
+        return triangle;
+    }
+
+    scene::StageCollisionTriangleFilter make_collision_triangle_filter(
+        const scene::StageCollisionService& collision, const TriangleFilterBase* filter) {
+        if (filter == nullptr) {
+            return {};
+        }
+        return [&collision, filter](std::uint32_t triangle_index) {
+            const auto triangle = make_collision_triangle(collision, triangle_index);
+            return !filter->isInvalidTriangle(&triangle);
+        };
+    }
+
+}  // namespace smgpc::compat
 
 Triangle::Triangle()
     : mParts(nullptr), mIdx(0xFFFFFFFFU), mSensor(nullptr), mNormals{}, mPos{} {

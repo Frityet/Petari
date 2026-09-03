@@ -541,6 +541,22 @@ namespace smgpc::scene {
             if (dot(triangle.normal, source_normal) < 0.0F) {
                 triangle.normal.negate();
             }
+            // Triangle::fillData transforms the four KCL normal axes with
+            // the matrix's linear part and normalizes each independently.
+            // Preserve these source axes separately from the geometric plane
+            // normal used by the host affine sphere-query implementation.
+            triangle.source_normals = {
+                source_normal,
+                transform_vector(matrix, edge_normal_0),
+                transform_vector(matrix, edge_normal_1),
+                transform_vector(matrix, edge_normal_2),
+            };
+            if (!normalize(triangle.source_normals[1]) ||
+                !normalize(triangle.source_normals[2]) ||
+                !normalize(triangle.source_normals[3])) {
+                ++_stats.rejected_triangle_count;
+                continue;
+            }
             // Local KCL slab planes are separated by `thickness` along the
             // unit face normal. After an affine transform their perpendicular
             // separation is thickness / |M^-T n|, equivalently the projection
@@ -653,7 +669,8 @@ namespace smgpc::scene {
         return node_index;
     }
 
-    bool StageCollisionService::line_cast(const TVec3f& start, const TVec3f& offset, StageCollisionHit* hit) const {
+    bool StageCollisionService::line_cast(const TVec3f& start, const TVec3f& offset, StageCollisionHit* hit,
+                                          const StageCollisionTriangleFilter& filter) const {
         if (!_built || _nodes.empty() || length_squared(offset) <= 1.0e-12F) {
             return false;
         }
@@ -683,7 +700,8 @@ namespace smgpc::scene {
                     const auto fraction = segment_triangle_fraction(start, offset, triangle.vertices[0],
                                                                     triangle.vertices[1], triangle.vertices[2],
                                                                     triangle.arrow_edge_tolerances);
-                    if (fraction.has_value() && *fraction < best_fraction) {
+                    if (fraction.has_value() && *fraction < best_fraction &&
+                        (!filter || filter(triangle.triangle_index))) {
                         best_fraction = *fraction;
                         best_triangle = &triangle;
                     }
@@ -708,21 +726,24 @@ namespace smgpc::scene {
     }
 
     std::vector<StageCollisionContact> StageCollisionService::sphere_contacts(const TVec3f& center, float radius,
-                                                                              std::size_t maximum) const {
-        return sphere_contacts_impl(center, radius, maximum, std::nullopt);
+                                                                              std::size_t maximum,
+                                                                              const StageCollisionTriangleFilter& filter) const {
+        return sphere_contacts_impl(center, radius, maximum, std::nullopt, 0.0F, filter);
     }
 
     std::vector<StageCollisionContact> StageCollisionService::sphere_contacts_with_thickness(
-        const TVec3f& center, float radius, float thickness, std::size_t maximum) const {
+        const TVec3f& center, float radius, float thickness, std::size_t maximum,
+        const StageCollisionTriangleFilter& filter) const {
         if (thickness < 0.0F || !std::isfinite(thickness)) {
             return {};
         }
-        return sphere_contacts_impl(center, radius, maximum, thickness);
+        return sphere_contacts_impl(center, radius, maximum, thickness, 0.0F, filter);
     }
 
     std::vector<StageCollisionContact> StageCollisionService::sphere_contacts_impl(
         const TVec3f& center, float radius, std::size_t maximum,
-        std::optional<float> thickness_override, float outer_margin) const {
+        std::optional<float> thickness_override, float outer_margin,
+        const StageCollisionTriangleFilter& filter) const {
         auto contacts = std::vector<StageCollisionContact>{};
         if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) ||
             outer_margin < 0.0F || !std::isfinite(outer_margin) || maximum == 0U) {
@@ -791,6 +812,9 @@ namespace smgpc::scene {
                     penetration > maximum_penetration + outer_margin) {
                     continue;
                 }
+                if (filter && !filter(triangle.triangle_index)) {
+                    continue;
+                }
                 indexed_contacts.push_back(IndexedContact{
                     .triangle_index = triangle_index,
                     .contact = StageCollisionContact{
@@ -821,7 +845,8 @@ namespace smgpc::scene {
 
     StageCollisionMoveResult StageCollisionService::move_sphere(const TVec3f& center, const TVec3f& movement,
                                                                 float radius, std::size_t maximum_contacts,
-                                                                bool skip_initial_check) const {
+                                                                bool skip_initial_check,
+                                                                const StageCollisionTriangleFilter& filter) const {
         auto result = StageCollisionMoveResult{};
         if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum_contacts == 0U) {
             result.displacement = movement;
@@ -851,7 +876,7 @@ namespace smgpc::scene {
 
                 sweep_result.contacts = sphere_contacts_impl(
                     sweep_result.center, radius, detection_limit, std::nullopt,
-                    cCollisionSkin);
+                    cCollisionSkin, filter);
                 if (!sweep_result.contacts.empty()) {
                     sweep_result.can_move_more = step_index != step_count;
                     return sweep_result;
@@ -927,6 +952,8 @@ namespace smgpc::scene {
             .attributes = source.attributes,
             .source_name = source.name,
             .sensor = source.sensor,
+            .vertices = {triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]},
+            .normals = triangle.source_normals,
         };
     }
 

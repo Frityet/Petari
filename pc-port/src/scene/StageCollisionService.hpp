@@ -3,6 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <span>
@@ -43,7 +44,14 @@ namespace smgpc::scene {
         std::span<const std::uint8_t> attributes{};
         std::string_view source_name{};
         HitSensor* sensor = nullptr;
+        std::array<TVec3f, 3U> vertices{};
+        std::array<TVec3f, 4U> normals{};
     };
+
+    // An empty predicate accepts every triangle. Query filters run before
+    // hit selection and capacity limits, so rejected prisms cannot obstruct
+    // a sweep or hide another accepted contact.
+    using StageCollisionTriangleFilter = std::function<bool(std::uint32_t)>;
 
     struct StageCollisionMoveResult {
         TVec3f displacement{};
@@ -106,14 +114,18 @@ namespace smgpc::scene {
         void build();
 
         [[nodiscard]] bool line_cast(const TVec3f& start, const TVec3f& offset,
-                                     StageCollisionHit* hit = nullptr) const;
+                                     StageCollisionHit* hit = nullptr,
+                                     const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts(const TVec3f& center, float radius,
-                                                                         std::size_t maximum = 32U) const;
+                                                                         std::size_t maximum = 32U,
+                                                                         const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_with_thickness(
-            const TVec3f& center, float radius, float thickness, std::size_t maximum = 32U) const;
+            const TVec3f& center, float radius, float thickness, std::size_t maximum = 32U,
+            const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] StageCollisionMoveResult move_sphere(const TVec3f& center, const TVec3f& movement,
                                                            float radius, std::size_t maximum_contacts = 32U,
-                                                           bool skip_initial_check = false) const;
+                                                           bool skip_initial_check = false,
+                                                           const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index) const;
         [[nodiscard]] std::uint64_t revision() const noexcept;
 
@@ -133,6 +145,7 @@ namespace smgpc::scene {
         struct Triangle {
             TVec3f vertices[3]{};
             TVec3f normal{};
+            std::array<TVec3f, 4U> source_normals{};
             Bounds bounds{};
             TVec3f centroid{};
             float thickness = 0.0F;
@@ -161,7 +174,8 @@ namespace smgpc::scene {
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_impl(
             const TVec3f& center, float radius, std::size_t maximum,
-            std::optional<float> thickness_override, float outer_margin = 0.0F) const;
+            std::optional<float> thickness_override, float outer_margin,
+            const StageCollisionTriangleFilter& filter) const;
 
         std::vector<Triangle> _triangles{};
         std::unordered_map<std::uint32_t, std::uint32_t> _triangle_lookup{};

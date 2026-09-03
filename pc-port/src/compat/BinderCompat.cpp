@@ -3,6 +3,7 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "compat/BinderCompat.hpp"
+#include "compat/HitInfoCompat.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <algorithm>
@@ -81,19 +82,10 @@ namespace {
         return up;
     }
 
-    void fill_hit_info(HitInfo& destination, const smgpc::scene::StageCollisionContact& contact,
-                       std::uint32_t) {
+    void fill_hit_info(HitInfo& destination, const smgpc::scene::StageCollisionService& collision,
+                       const smgpc::scene::StageCollisionContact& contact) {
         destination = HitInfo{};
-        destination.mParentTriangle.mIdx = contact.triangle_index;
-        if (auto* collision = smgpc::scene::StageCollisionService::active()) {
-            if (const auto surface = collision->surface(contact.triangle_index)) {
-                destination.mParentTriangle.mSensor = surface->sensor;
-            }
-        }
-        destination.mParentTriangle.mNormals[0].set(contact.normal);
-        destination.mParentTriangle.mPos[0].set(contact.position);
-        destination.mParentTriangle.mPos[1].set(contact.position);
-        destination.mParentTriangle.mPos[2].set(contact.position);
+        destination.mParentTriangle = smgpc::compat::make_collision_triangle(collision, contact.triangle_index);
         destination._60 = contact.penetration;
         destination.mHitPos.set(contact.position);
         destination._88 = 1U;
@@ -213,6 +205,9 @@ const TVec3f Binder::bind(const TVec3f& movement) {
     if (collision == nullptr || collision->empty()) {
         return movement;
     }
+    if (mCollisionPartsFilter != nullptr) {
+        throw std::logic_error("Binder CollisionParts filtering requires the exact CollisionParts provider.");
+    }
 
     auto gravity = *_14;
     if (!normalize(gravity)) {
@@ -220,8 +215,9 @@ const TVec3f Binder::bind(const TVec3f& movement) {
     }
 
     const auto maximum_contacts = _24 == 0U ? std::size_t{32U} : static_cast<std::size_t>(_24);
+    const auto filter = smgpc::compat::make_collision_triangle_filter(*collision, mTriangleFilter);
     const auto resolved =
-        collision->move_sphere(center, movement, mRadius, maximum_contacts, _1EC._3);
+        collision->move_sphere(center, movement, mRadius, maximum_contacts, _1EC._3, filter);
     mFixReactionVector.set(resolved.fix_reaction);
 
     // A zero-capacity retail Binder uses a temporary 32-plane query array but
@@ -232,21 +228,14 @@ const TVec3f Binder::bind(const TVec3f& movement) {
             if (static_cast<u32>(mPlaneNum) >= _24) {
                 break;
             }
-            fill_hit_info(mPlaneInfos[mPlaneNum], contact, static_cast<u32>(mPlaneNum));
-            if (mTriangleFilter != nullptr &&
-                mTriangleFilter->isInvalidTriangle(&mPlaneInfos[mPlaneNum].mParentTriangle)) {
-                continue;
-            }
+            fill_hit_info(mPlaneInfos[mPlaneNum], *collision, contact);
             ++mPlaneNum;
         }
     }
 
     for (auto index = std::size_t{}; index < resolved.contacts.size(); ++index) {
         auto info = HitInfo{};
-        fill_hit_info(info, resolved.contacts[index], static_cast<u32>(index));
-        if (mTriangleFilter != nullptr && mTriangleFilter->isInvalidTriangle(&info.mParentTriangle)) {
-            continue;
-        }
+        fill_hit_info(info, *collision, resolved.contacts[index]);
         const auto gravity_dot = info.mParentTriangle.mNormals[0].dot(gravity);
         if (std::abs(gravity_dot) < cWallDot) {
             if (info._60 > _158) {

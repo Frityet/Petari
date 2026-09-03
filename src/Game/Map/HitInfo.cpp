@@ -22,7 +22,7 @@ void Triangle::fillData(CollisionParts* pParts, u32 index, HitSensor* pSensor) {
     mSensor = pSensor;
 
     KCollisionServer* server = pParts->mServer;
-    MtxPtr matrix;
+    TPos3f* matrix;
     KC_PrismData* prism = server->getPrismData(index);
 
     mNormals[0].set< f32 >(*server->getFaceNormal(prism));
@@ -30,12 +30,12 @@ void Triangle::fillData(CollisionParts* pParts, u32 index, HitSensor* pSensor) {
     mNormals[2].set< f32 >(*server->getEdgeNormal2(prism));
     mNormals[3].set< f32 >(*server->getEdgeNormal3(prism));
 
-    matrix = reinterpret_cast< MtxPtr >(&mParts->mBaseMatrix);
+    matrix = &mParts->mBaseMatrix;
 
-    PSMTXMultVecSR(matrix, &mNormals[0], &mNormals[0]);
-    PSMTXMultVecSR(matrix, &mNormals[1], &mNormals[1]);
-    PSMTXMultVecSR(matrix, &mNormals[2], &mNormals[2]);
-    PSMTXMultVecSR(matrix, &mNormals[3], &mNormals[3]);
+    PSMTXMultVecSR(matrix->toMtxPtr(), &mNormals[0], &mNormals[0]);
+    PSMTXMultVecSR(matrix->toMtxPtr(), &mNormals[1], &mNormals[1]);
+    PSMTXMultVecSR(matrix->toMtxPtr(), &mNormals[2], &mNormals[2]);
+    PSMTXMultVecSR(matrix->toMtxPtr(), &mNormals[3], &mNormals[3]);
 
     MR::normalize(&mNormals[0]);
     MR::normalize(&mNormals[1]);
@@ -46,9 +46,9 @@ void Triangle::fillData(CollisionParts* pParts, u32 index, HitSensor* pSensor) {
     mPos[1].set< f32 >(server->getPos(prism, 1));
     mPos[2].set< f32 >(server->getPos(prism, 2));
 
-    PSMTXMultVecSR(matrix, &mPos[0], &mPos[0]);
-    PSMTXMultVecSR(matrix, &mPos[1], &mPos[1]);
-    PSMTXMultVecSR(matrix, &mPos[2], &mPos[2]);
+    matrix->mult(mPos[0], mPos[0]);
+    matrix->mult(mPos[1], mPos[1]);
+    matrix->mult(mPos[2], mPos[2]);
 }
 
 const char* Triangle::getHostName() const {

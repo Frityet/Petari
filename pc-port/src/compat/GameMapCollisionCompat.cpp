@@ -3,6 +3,7 @@
 #include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Util/TriangleFilter.hpp"
+#include "compat/HitInfoCompat.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <algorithm>
@@ -43,31 +44,15 @@ namespace {
         return *collision;
     }
 
-    void fill_triangle(Triangle& triangle, std::uint32_t triangle_index, const TVec3f& normal,
-                       const TVec3f& position) {
-        triangle = Triangle{};
-        triangle.mIdx = triangle_index;
-        if (const auto surface = require_stage_collision().surface(triangle_index)) {
-            triangle.mSensor = surface->sensor;
-        }
-        triangle.mNormals[0].set(normal);
-        triangle.mPos[0].set(position);
-        triangle.mPos[1].set(position);
-        triangle.mPos[2].set(position);
-    }
-
     [[nodiscard]] HitInfo make_hit_info(const smgpc::scene::StageCollisionContact& contact) {
         auto info = HitInfo{};
-        fill_triangle(info.mParentTriangle, contact.triangle_index, contact.normal, contact.position);
+        info.mParentTriangle = smgpc::compat::make_collision_triangle(
+            require_stage_collision(), contact.triangle_index);
         info._60 = contact.penetration;
         info.mHitPos.set(contact.position);
         info._7C.set(contact.reaction_normal);
         info._88 = 1U;
         return info;
-    }
-
-    [[nodiscard]] bool accepts_triangle(const Triangle& triangle, const TriangleFilterBase* filter) {
-        return filter == nullptr || !filter->isInvalidTriangle(&triangle);
     }
 
     void require_supported_parts_filter(const CollisionPartsFilterBase* filter) {
@@ -81,19 +66,14 @@ namespace {
                                       const TVec3f& offset, const CollisionPartsFilterBase* parts_filter,
                                       const TriangleFilterBase* triangle_filter) {
         require_supported_parts_filter(parts_filter);
+        const auto& collision = require_stage_collision();
+        const auto filter = smgpc::compat::make_collision_triangle_filter(collision, triangle_filter);
         auto hit = smgpc::scene::StageCollisionHit{};
-        if (!require_stage_collision().line_cast(start, offset, &hit)) {
+        if (!collision.line_cast(start, offset, &hit, filter)) {
             return false;
         }
 
-        auto candidate = Triangle{};
-        fill_triangle(candidate, hit.triangle_index, hit.normal, hit.position);
-        // The current service exposes the closest real KCL hit. If that one is
-        // rejected, report a conservative miss instead of accepting a filtered
-        // polygon or inventing a farther contact.
-        if (!accepts_triangle(candidate, triangle_filter)) {
-            return false;
-        }
+        const auto candidate = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
         if (position != nullptr) {
             position->set(hit.position);
         }
@@ -113,19 +93,18 @@ namespace {
                                             const TriangleFilterBase* triangle_filter,
                                             const float* thickness) {
         require_supported_parts_filter(parts_filter);
+        const auto& collision = require_stage_collision();
+        const auto filter = smgpc::compat::make_collision_triangle_filter(collision, triangle_filter);
         auto contacts = thickness == nullptr
-                            ? require_stage_collision().sphere_contacts(center, radius, cMaximumStrikeInfos)
-                            : require_stage_collision().sphere_contacts_with_thickness(
-                                  center, radius, *thickness, cMaximumStrikeInfos);
+                            ? collision.sphere_contacts(center, radius, cMaximumStrikeInfos, filter)
+                            : collision.sphere_contacts_with_thickness(
+                                  center, radius, *thickness, cMaximumStrikeInfos, filter);
 
         auto& infos = strike_infos();
         infos.clear();
         infos.reserve(contacts.size());
         for (const auto& contact : contacts) {
-            auto info = make_hit_info(contact);
-            if (accepts_triangle(info.mParentTriangle, triangle_filter)) {
-                infos.push_back(info);
-            }
+            infos.push_back(make_hit_info(contact));
         }
         return static_cast<s32>(infos.size());
     }
