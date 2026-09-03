@@ -1342,6 +1342,8 @@ const TVec3f* Mario::calcShadowPos() {
 }
 
 bool Mario::updateBinderInfo() {
+    bool canStoreWall = true;
+    bool canPushGround = true;
     _3A4.zero();
     _4C8->mIdx = -1;
 
@@ -1350,18 +1352,15 @@ bool Mario::updateBinderInfo() {
         return false;
     }
 
-    const s32 planeNum = pBinder->mPlaneNum;
+    const u32 planeNum = pBinder->mPlaneNum;
     if (planeNum == 0) {
         return false;
     }
 
-    bool canStoreWall = true;
-    bool canPushGround = true;
-    for (s32 i = 0; i < planeNum; i++) {
-        const HitInfo& rInfo = pBinder->mPlane[i];
-        const Triangle* pPlane = &rInfo.mParentTriangle;
-        const TVec3f& normal = triangleNormal(pPlane);
-
+    for (u32 i = 0; i < planeNum; i++) {
+        const HitInfo* pInfo = pBinder->getPlane(i);
+        const Triangle* pPlane = &pInfo->mParentTriangle;
+        TVec3f normal(*pPlane->getNormal(0));
         if (MR::isThroughPolygon(pPlane) || isThroughWall(pPlane)) {
             continue;
         }
@@ -1374,116 +1373,99 @@ bool Mario::updateBinderInfo() {
 
         if (gravityDot < _3C) {
             mDrawStates_WORD |= 0x02000000;
-
-            if (canPushGround && mMovementStates.jumping && mVerticalSpeed > 0.0f) {
-                TVec3f pushDir = mActor->_2A0 - rInfo.mHitPos;
-                bool needsPush = MR::diffAngleAbs(pushDir, normal) > 0.10471976f;
-
-                if (!rInfo.isCollisionAtCorner() && !rInfo.isCollisionAtEdge() && !needsPush) {
-                    canPushGround = false;
+            if (canPushGround && mMovementStates.jumping && mVerticalSpeed > 30.0f) {
+                bool needsPush = false;
+                TVec3f actorOffset = mActor->_2A0 - pInfo->mHitPos;
+                if (MR::diffAngleAbs(actorOffset, *pPlane->getNormal(0)) > 0.10471976f) {
+                    needsPush = true;
                 }
-                else {
-                    if (rInfo.isCollisionAtEdge()) {
-                        pushDir = *pPlane->getNormal(rInfo._88 - 1);
+
+                if (pInfo->isCollisionAtCorner() || pInfo->isCollisionAtEdge() || needsPush) {
+                    TVec3f pushDir;
+                    if (pInfo->isCollisionAtEdge()) {
+                        pushDir = *pPlane->getNormal(pInfo->_88 - 1);
+                    }
+                    else if (!pInfo->isCollisionAtCorner()) {
+                        pushDir = mPosition - pInfo->mHitPos;
                     }
                     else {
-                        pushDir = mPosition - rInfo.mHitPos;
+                        pushDir = mPosition - pInfo->mHitPos;
                     }
 
-                    TVec3f pushBase(pushDir);
+                    TVec3f pushBase(actorOffset);
                     MR::normalizeOrZero(&pushBase);
-
-                    f32 pushScale = pushBase.dot(normal);
+                    f32 pushScale = pushBase.dot(*pPlane->getNormal(0));
                     if (pushScale >= 0.707f) {
-                        if (rInfo.isCollisionAtEdge()) {
-                            MR::vecKillElement(mVelocity, normal, &mVelocity);
-                            pushScale = 0.0f;
+                        if (pInfo->isCollisionAtEdge()) {
+                            MR::vecKillElement(mVelocity, *pPlane->getNormal(0), &mVelocity);
+                            pushScale = 1.0f;
                         }
                     }
                     else if (pushScale <= -0.707f) {
-                        pushScale = 1.0f;
+                        pushScale = 0.0f;
                     }
                     else {
                         pushScale = (0.707f - __fabsf(pushScale)) / 0.707f;
                     }
 
-                    MR::vecKillElement(pushDir, *getAirGravityVec(), &pushDir);
+                    MR::vecKillElement(pushDir, getAirGravityVec(), &pushDir);
                     if (MR::normalizeOrZero(&pushDir)) {
-                        TVec3f killed;
-                        MR::vecKillElement(pushBase, *getAirGravityVec(), &killed);
-                        pushDir = killed;
+                        MR::vecKillElement(actorOffset, getAirGravityVec(), &pushDir);
                         MR::normalizeOrZero(&pushDir);
                     }
 
-                    if (mMovementStates._B) {
-                        if (MR::diffAngleAbsHorizontal(mActor->_288, pushDir, *getAirGravityVec()) >= 150.0f) {
+                    if (mMovementStates._14) {
+                        const TVec3f& actorFront = mActor->_288;
+                        if (MR::diffAngleAbsHorizontal(actorFront, pushDir, getAirGravityVec()) >= 2.3561945f) {
                             if (_45C->isValid()) {
-                                const TVec3f& shadowNormal = triangleNormal(_45C);
-                                if (normal.dot(shadowNormal) <= -0.8f) {
-                                    f32 removed = MR::vecKillElement(mJumpVec, normal, &mJumpVec);
-                                    TVec3f fix = normal;
-                                    fix.scale(removed * -2.0f);
-                                    mJumpVec += fix;
-                                    mJumpVec += shadowNormal;
+                                if (pPlane->getNormal(0)->dot(*_45C->getNormal(0)) <= 0.17f) {
+                                    const f32 removed = MR::vecKillElement(mJumpVec, *pPlane->getNormal(0), &mJumpVec);
+                                    mJumpVec += *pPlane->getNormal(0) * removed * 0.5f;
+                                    mJumpVec += *_45C->getNormal(0);
                                 }
-                                else if (mMovementStates._1A) {
-                                    bool flipPush = MR::diffAngleAbs(pushDir, *getAirGravityVec()) >= 120.0f;
-                                    if (!flipPush && MR::diffAngleAbsHorizontal(mJumpVec, pushDir, *getAirGravityVec()) < 70.0f) {
-                                        flipPush = true;
+                                else {
+                                    if (mMovementStates._1A) {
+                                        if (MR::diffAngleAbs(pushDir, getAirGravityVec()) >= 1.4959966f
+                                            || MR::diffAngleAbsHorizontal(mJumpVec, pushDir, getAirGravityVec()) < 0.0f) {
+                                            pushDir = -pushDir;
+                                        }
                                     }
-                                    if (flipPush) {
+                                    mMovementStates._14 = false;
+                                }
+                            }
+                            else {
+                                if (mMovementStates._1A) {
+                                    if (MR::diffAngleAbs(pushDir, getAirGravityVec()) >= 1.4959966f
+                                        || MR::diffAngleAbsHorizontal(mJumpVec, pushDir, getAirGravityVec()) < 0.0f) {
                                         pushDir = -pushDir;
                                     }
-                                    mMovementStates_LOW_WORD &= ~0x00000400;
                                 }
+                                mMovementStates._14 = false;
                             }
-                            else if (mMovementStates._1A) {
-                                bool flipPush = MR::diffAngleAbs(pushDir, *getAirGravityVec()) >= 120.0f;
-                                if (!flipPush && MR::diffAngleAbsHorizontal(mJumpVec, pushDir, *getAirGravityVec()) < 70.0f) {
-                                    flipPush = true;
+                        }
+
+                        if (mMovementStates.jumping && !isRising()) {
+                            TVec3f actorMove;
+                            const TVec3f& lastMove = mActor->_27C;
+                            if (MR::isNearZero(MR::vecKillElement(lastMove, getAirGravityVec(), &actorMove))
+                                && (mMovementStates._8 || mMovementStates._19 || mMovementStates._1A)) {
+                                cutGravityElementFromJumpVec(true);
+                                mJumpVec += -getAirGravityVec() * 5.0f + getWallNorm() * 2.0f;
+                                if (!isCeiling()) {
+                                    addTrans(getAirGravityVec() * -30.0f, nullptr);
                                 }
-                                if (flipPush) {
-                                    pushDir = -pushDir;
-                                }
-                                mMovementStates_LOW_WORD &= ~0x00000400;
+                                pushDir.zero();
                             }
                         }
                     }
 
-                    if (mMovementStates.jumping && !isRising()) {
-                        TVec3f actorMove;
-                        mActor->getLastMove(&actorMove);
-                        if (MR::isNearZero(actorMove.dot(*getGravityVec()), 0.001f)
-                            && (mMovementStates._8 || mMovementStates._19 || mMovementStates._1A)) {
-                            cutGravityElementFromJumpVec(true);
-
-                            TVec3f wallFix = getWallNorm();
-                            wallFix.scale(3.0f);
-                            TVec3f gravityFix = *getAirGravityVec();
-                            gravityFix.scale(-5.0f);
-                            mJumpVec += gravityFix + wallFix;
-
-                            if (!isCeiling()) {
-                                TVec3f trans = *getAirGravityVec();
-                                trans.scale(-1.0f);
-                                addTrans(trans, nullptr);
-                            }
-
-                            pushDir.zero();
-                        }
-                    }
-
-                    TVec3f pushVec(pushDir);
-                    pushVec.scale(rInfo._60 * pushScale);
-                    push(pushVec);
+                    push(pushDir * pInfo->_60 * pushScale);
                     canPushGround = false;
-
                     if (getPlayerMode() == 6) {
-                        _25C = rInfo.mHitPos;
-                        _268 = normal;
-                        doTeresaReflection(pushBase, true);
+                        _25C = pInfo->mHitPos;
+                        _268 = *pPlane->getNormal(0);
+                        doTeresaReflection(actorOffset, true);
                     }
-
                     _1C_WORD |= 0x00040000;
                 }
             }
@@ -1491,88 +1473,57 @@ bool Mario::updateBinderInfo() {
             if (mMovementStates.jumping && mMovementStates._B) {
                 TVec3f actorMove;
                 mActor->getLastMove(&actorMove);
-                if (MR::isNearZero(actorMove.dot(*getGravityVec()), 0.001f)) {
+                if (MR::isNearZero(actorMove.dot(*getGravityVec()))) {
                     mActor->sendMsgToSensor(pPlane->mSensor, 0xB4);
                     if (!mActor->sendMsgToSensor(pPlane->mSensor, 3)) {
-                        TVec3f toHit = mPosition - rInfo.mHitPos;
-                        TVec3f front(mFrontVec);
-                        MR::normalizeOrZero(&front);
-
-                        f32 blend = 0.0f;
-                        if (!MR::isNearZero(front, 0.001f)) {
-                            blend = front.dot(normal);
+                        TVec3f toHit = mPosition - pInfo->mHitPos;
+                        TVec3f toHitCopy(toHit);
+                        TVec3f direction(_1A8);
+                        MR::normalizeOrZero(&direction);
+                        f32 blend = 1.0f;
+                        if (!MR::isNearZero(direction)) {
+                            blend = direction.dot(*pPlane->getNormal(0));
                         }
-
                         if (blend < 0.0f) {
                             blend = 0.0f;
                         }
                         else if (blend > 1.0f) {
                             blend = 1.0f;
                         }
-
-                        MR::vecBlendSphere(mFrontVec, toHit, &toHit, blend);
+                        MR::vecBlendSphere(_1A8, toHit, &toHit, blend);
                         MR::vecKillElement(toHit, *getGravityVec(), &toHit);
                         MR::normalizeOrZero(&toHit);
-                        if (MR::isNearZero(toHit, 0.001f)) {
+                        if (MR::isNearZero(toHit)) {
                             toHit = mFrontVec;
                         }
-
-                        f32 pushAmount = rInfo._60;
+                        f32 pushAmount = pInfo->_60;
                         if (pushAmount == 0.0f) {
                             pushAmount = 1.0f;
                         }
-
-                        toHit.scale(pushAmount);
-                        push(toHit);
+                        push(toHit * pushAmount);
                         canPushGround = false;
                     }
                 }
             }
         }
-        else if (gravityDot >= wallDotLimit) {
+        else if (!(gravityDot < wallDotLimit)) {
             if (canStoreWall) {
                 TVec3f killed;
                 const f32 removed = MR::vecKillElement(mJumpVec, normal, &killed);
                 if ((removed < 0.0f || mPrevDrawStates._1E) && calcAngleD(normal) > 100.0f) {
-                    mJumpVec = killed;
-                    u32 vibLevel = 0;
-                    startPadVib(vibLevel);
-                    *_4C8 = *pPlane;
+                    if (strcmp(pPlane->mSensor->mHost->mName, "マンホールのふた(クッパ船)") != 0) {
+                        mJumpVec = killed;
+                    }
+                    startPadVib(static_cast<u32>(0));
                     canStoreWall = false;
+                    *_4C8 = *pPlane;
                 }
             }
-
             _3A4 += normal;
         }
     }
 
     MR::normalizeOrZero(&_3A4);
-
-    if (pBinder->mGroundInfo.mParentTriangle.isValid()) {
-        *mGroundPolygon = pBinder->mGroundInfo.mParentTriangle;
-        mGroundPos = pBinder->mGroundInfo.mHitPos;
-        _368 = triangleNormal(mGroundPolygon);
-        _374 = -_368;
-        mMovementStates._1 = 1;
-    }
-    else {
-        mMovementStates._1 = 0;
-    }
-
-    if (pBinder->mWallInfo.mParentTriangle.isValid()) {
-        *mFrontWallTriangle = pBinder->mWallInfo.mParentTriangle;
-        _4E8 = pBinder->mWallInfo.mHitPos;
-    }
-
-    if (pBinder->mRoofInfo.mParentTriangle.isValid()) {
-        *_460 = pBinder->mRoofInfo.mParentTriangle;
-        _498 = pBinder->mRoofInfo.mHitPos;
-        _10._24 = 1;
-    }
-    else {
-        _10._24 = 0;
-    }
-
     return true;
 }
 
