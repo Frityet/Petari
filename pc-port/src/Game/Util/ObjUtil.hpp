@@ -8,8 +8,11 @@ class LayoutActor;
 class NameObj;
 class JMapInfoIter;
 class StageSwitchCtrl;
+struct ResTIMG;
 
 namespace MR {
+    const ResTIMG* loadTexFromArc(const char*, const char*);
+    const ResTIMG* loadTexFromArc(const char*);
     void connectToSceneMapObjDecorationMovement(NameObj* pObj);
     class FunctorBase;
 

@@ -1159,7 +1159,7 @@ void Mario::doLockOnHoming() {
         changeAnimation("その場足踏み", static_cast<const char*>(nullptr));
 
         if (_750 == 0) {
-            setFrontVecKeepUp(front, 15ul);
+            setFrontVecKeepUp(front, static_cast< u32 >(15));
             _334 = front;
         }
     }

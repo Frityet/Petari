@@ -67,6 +67,15 @@ inline s32 __abs(s32 value) {
 #define ARRAY_SIZE(array) (static_cast<s32>(sizeof(array) / sizeof((array)[0])))
 #endif
 
+// The original RVL macros.h provides these with this single-precision pi
+// literal and operation order. Preserve that definition at the host boundary.
+#ifndef DEG_TO_RAD
+#define DEG_TO_RAD(x) ((x) * (3.1415926f / 180.0f))
+#endif
+#ifndef RAD_TO_DEG
+#define RAD_TO_DEG(x) ((x) * (180.0f / 3.1415926f))
+#endif
+
 // Retail decompilation translation units can contain unrelated scratch
 // emitters with the same placeholder name. Metrowerks linked those units in
 // separate REL/DOL contexts; make only placeholder function definitions

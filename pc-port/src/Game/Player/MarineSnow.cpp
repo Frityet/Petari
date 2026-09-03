@@ -119,7 +119,7 @@ void MarineSnow::draw(const TVec3f& rVec1, const TVec3f& rVec2, f32 myFloat) con
                     continue;
                 }
 
-                GXColor color = {0, 0, 0, u_val};
+                GXColor color = {0, 0, 0, static_cast< u8 >(u_val)};
                 GXSetTevColor(GX_TEVREG0, color);
 
                 TMtx34f mtx;

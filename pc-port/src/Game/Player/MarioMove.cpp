@@ -1208,11 +1208,7 @@ void Mario::doLockOnHoming() {
         changeAnimation("その場足踏み", static_cast<const char*>(nullptr));
 
         if (_750 == 0) {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
             setFrontVecKeepUp(front, static_cast< u32 >(15));
-#else  // SMGPC_RETAIL_SOURCE
-            setFrontVecKeepUp(front, 15ul);
-#endif  // SMGPC_PC_DIVERGENCE
             _334 = front;
         }
     }

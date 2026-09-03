@@ -1,6 +1,6 @@
 target("smg-pc-game")
     set_kind("static")
-    add_cxxflags("-Wno-register")
+    add_cxxflags("-Wno-register", {force = true})
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
     add_files("**.cpp")
     -- Retail XanimeCore uses unfused scalar arithmetic; its paired SDK calls

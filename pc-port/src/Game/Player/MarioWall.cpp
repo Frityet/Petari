@@ -1,4 +1,6 @@
+#if !defined(TARGET_PC)
 #define JMAAcosRadian JMAAcosRadianInline
+#endif
 
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -14,7 +16,9 @@
 #include <cstring>
 #include <revolution/mtx.h>
 
+#if !defined(TARGET_PC)
 #undef JMAAcosRadian
+#endif
 
 f32 JMAAcosRadian(f32);
 
@@ -392,7 +396,7 @@ bool MarioWall::start() {
     changeAnimation("壁くっつき", static_cast< const char* >(nullptr));
     startPadVib(static_cast< u32 >(0));
     getPlayer()->mMovementStates._28 = false;
-    getPlayer()->_24 &= ~0x800000;
+    getPlayer()->_20_HIGH_WORD &= ~0x800000;
     _1D = false;
     initTriangleJump();
     _1E = false;

@@ -743,3 +743,11 @@ void XanimeCore::init(const Vec& scale, const Mtx& matrix) {
         break;
     }
 }
+
+XjointTransform* XanimeCore::getJointTransform(u32 idx) {
+    if (mTransformList == nullptr) {
+        return nullptr;
+    }
+
+    return &mTransformList[idx];
+}

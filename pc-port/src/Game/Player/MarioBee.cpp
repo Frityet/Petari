@@ -17,8 +17,8 @@ void Mario::beeMarioOnGround() {
 }
 
 void MarioActor::entryWallWalkMode(const TVec3f& rPosition, const TVec3f& rNormal) {
-    if (mAlphaEnable == 0 && _9F2 == 0) {
-        mAlphaEnable = 5;
+    if (mBeeWallWalk == 0 && _9F2 == 0) {
+        mBeeWallWalk = 5;
 
         TVec3f gravity(-rNormal);
         _240 = gravity;
@@ -32,7 +32,7 @@ void MarioActor::entryWallWalkMode(const TVec3f& rPosition, const TVec3f& rNorma
         TVec3f oldHead(mMario->mHeadVec);
         mMario->setGravityVec(gravity);
         mMario->setHeadVec(-gravity);
-        mMario->setFrontVecKeepUp(oldHead, 1UL);
+        mMario->setFrontVecKeepUp(oldHead, static_cast< u32 >(1));
         setBlendMtxTimer(2);
 
         _38C = 5;

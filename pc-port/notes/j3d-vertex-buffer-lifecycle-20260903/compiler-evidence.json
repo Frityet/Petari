@@ -1,0 +1,110 @@
+{
+  "scope": "Three restored VertexBuffer methods, existing inline frameInit, and restored Core getter; exact relocation-aware original compiler comparison.",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC/3.0a3; configure.py cflags_jsys for J3DVertex and cflags_game for XanimeCore; RMGK01 VERSION=0",
+  "source_sha256": {
+    "src/JSystem/J3DGraphBase/J3DVertex.cpp": "4ad24c0c1a6cde41588664c904a2064dbc767dc0eb5d796356e4ed564602447c",
+    "src/Game/Animation/XanimeCore.cpp": "12a8f4400158f4b9ec73ba542202347600c5bd15bb2a18179c8894702a880379"
+  },
+  "header_sha256": {
+    "libs/JSystem/include/JSystem/J3DGraphBase/J3DVertex.hpp": "6022d7f2938e6bf636c48b90f7df024050af055ca8340ed292c16fcc8b65a451",
+    "include/Game/Animation/XanimeCore.hpp": "89ecbea4b67e41a22b487e69479014405f4a8c3c3e1ecd5dc7c58d0b9014ad61"
+  },
+  "tool_sha256": {
+    "build/compilers/GC/3.0a3/mwcceppc.exe": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2",
+    "build/tools/sjiswrap.exe": "01d50fa1148cfc3c3b16658c6c9b1c0d9f5324cde79ed6c09ef8353af9d63adf",
+    "build/tools/dtk": "a33363725a323c5226d2efe183a2430b0247ea55298d6a19a347a8692b3ae870",
+    "build/tools/objdiff-cli": "4ef0896ba8986f1adea6202d6e52a471deb1d126b071d23e88e8c00c250da7fd"
+  },
+  "verified_ppc_layout": {
+    "sizeof(J3DVertexBuffer)": 56,
+    "offsetof(J3DVertexBuffer, mVtxData)": 0,
+    "offsetof(J3DVertexBuffer, mVtxPosArray)": 4,
+    "offsetof(J3DVertexBuffer, mVtxNrmArray)": 12,
+    "offsetof(J3DVertexBuffer, mVtxColArray)": 20,
+    "offsetof(J3DVertexBuffer, mTransformedVtxPosArray)": 28,
+    "offsetof(J3DVertexBuffer, mTransformedVtxNrmArray)": 36,
+    "offsetof(J3DVertexBuffer, mCurrentVtxPos)": 44,
+    "offsetof(J3DVertexBuffer, mCurrentVtxNrm)": 48,
+    "offsetof(J3DVertexBuffer, mCurrentVtxCol)": 52,
+    "offsetof(J3DVertexData, mVtxPosArray)": 24,
+    "offsetof(J3DVertexData, mVtxNrmArray)": 28,
+    "offsetof(J3DVertexData, mVtxColorArray)": 36,
+    "sizeof(XjointTransform)": 112,
+    "offsetof(XanimeCore, mTransformList)": 20
+  },
+  "normalization": "Only REL24 branch displacement bits are masked; opcode, AA/LK and complete other instruction words are retained. Relocation offset/type/name/addend must agree exactly.",
+  "functions": [
+    {
+      "name": "setVertexData__15J3DVertexBufferFP13J3DVertexData",
+      "address": "0x80423874",
+      "retail_size": 72,
+      "compiled_size": 72,
+      "objdiff_match_percent": 100.0,
+      "relocation_normalized_instructions_equal": true,
+      "retail_function_sha256": "6e4eff5aba8dc0f342ad81f342588cb8282e04404500a17f4e0da64f36092838",
+      "references": [
+        {
+          "offset": 68,
+          "kind": 10,
+          "symbol": "frameInit__15J3DVertexBufferFv",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "init__15J3DVertexBufferFv",
+      "address": "0x804238bc",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "relocation_normalized_instructions_equal": true,
+      "retail_function_sha256": "7dd5fd1bc21c00101d5f70eba3ef46733a6e9ab8c3e49b81685d06819204c076",
+      "references": [
+        {
+          "offset": 60,
+          "kind": 10,
+          "symbol": "frameInit__15J3DVertexBufferFv",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "__dt__15J3DVertexBufferFv",
+      "address": "0x804238fc",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "relocation_normalized_instructions_equal": true,
+      "retail_function_sha256": "a3fbcad496ceee6c89e0c9e495f805380d90b53fdb77109bf160ebb7b3177abf",
+      "references": [
+        {
+          "offset": 36,
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "frameInit__15J3DVertexBufferFv",
+      "address": "0x804239b4",
+      "retail_size": 28,
+      "compiled_size": 28,
+      "objdiff_match_percent": 100.0,
+      "relocation_normalized_instructions_equal": true,
+      "retail_function_sha256": "10d0839c02942dabcd8ec1dcdf98430cd2dcbf8a4a5e321bdcb34025c8f05f54",
+      "references": []
+    },
+    {
+      "name": "getJointTransform__10XanimeCoreFUl",
+      "address": "0x802aec3c",
+      "retail_size": 32,
+      "compiled_size": 32,
+      "objdiff_match_percent": 100.0,
+      "relocation_normalized_instructions_equal": true,
+      "retail_function_sha256": "280e55f0aed3bf8a5177cb25c3c772fd6efefc6b6bae7fa9dd0d7061bbf01171",
+      "references": []
+    }
+  ]
+}

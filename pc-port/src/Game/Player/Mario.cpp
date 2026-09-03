@@ -1153,11 +1153,7 @@ void Mario::fixFrontVecByGravity() {
         }
     }
     TVec3f front = _344.cross(up);
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     if (MR::normalizeOrZero(&front) == false) {
-#else  // SMGPC_RETAIL_SOURCE
-    if (MR::normalizeOrZero(&front) == nullptr) {
-#endif  // SMGPC_PC_DIVERGENCE
         setFrontVec(front);
         _22C = mFrontVec;
         f32 _328mag = _328.length();
@@ -1312,11 +1308,7 @@ void Mario::setFrontVecKeepSide(const TVec3f& rFront) {
     }
 
     headVec.cross(mFrontVec, mSideVec);
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     if (MR::normalizeOrZero(&headVec) != false) {
-#else  // SMGPC_RETAIL_SOURCE
-    if (MR::normalizeOrZero(&headVec) != nullptr) {
-#endif  // SMGPC_PC_DIVERGENCE
         const TVec3f* gravity = getGravityVec();
         TVec3f up = -(*gravity);
         mHeadVec = up;
@@ -2524,14 +2516,6 @@ namespace NrvMarioActor {
     INIT_NERVE(MarioActorNrvTimeWait);
     INIT_NERVE(MarioActorNrvNoRush);
 }  // namespace NrvMarioActor
-
-XjointTransform* XanimeCore::getJointTransform(u32 idx) {
-    if (mTransformList == nullptr) {
-        return nullptr;
-    }
-
-    return &mTransformList[idx];
-}
 
 template <>
 bool TriangleFilterDelegator< Mario >::isInvalidTriangle(const Triangle* pTriangle) const {

@@ -1,0 +1,34 @@
+[
+  {
+    "signature": "void J3DVertexBuffer::setVertexData(",
+    "root": "src/JSystem/J3DGraphBase/J3DVertex.cpp",
+    "native": "pc-port/src/compat/J3DVertexBufferCompat.cpp",
+    "root_line": 29,
+    "native_line": 6,
+    "body_sha256": "390a6ec18aecb22c4ce5e7ac82b650cead33ce9e46e51449034bad680515f5a0"
+  },
+  {
+    "signature": "void J3DVertexBuffer::init(",
+    "root": "src/JSystem/J3DGraphBase/J3DVertex.cpp",
+    "native": "pc-port/src/compat/J3DVertexBufferCompat.cpp",
+    "root_line": 44,
+    "native_line": 21,
+    "body_sha256": "518dc9071f09b31480c7acdb76ff795f4113dc4553229d8a9c70ff1e214a9eda"
+  },
+  {
+    "signature": "J3DVertexBuffer::~J3DVertexBuffer(",
+    "root": "src/JSystem/J3DGraphBase/J3DVertex.cpp",
+    "native": "pc-port/src/compat/J3DVertexBufferCompat.cpp",
+    "root_line": 57,
+    "native_line": 34,
+    "body_sha256": "d6c3ac8c3e47cc93237dd91f446aa01deb5dfee44ac5e5c91af37dea09904189"
+  },
+  {
+    "signature": "XjointTransform* XanimeCore::getJointTransform(",
+    "root": "src/Game/Animation/XanimeCore.cpp",
+    "native": "pc-port/src/Game/Animation/XanimeCore.cpp",
+    "root_line": 747,
+    "native_line": 747,
+    "body_sha256": "64178a1f2d17c91e38b87feab223645ec3ddbffa2684ee5b6adb172fb387daed"
+  }
+]

@@ -1,0 +1,355 @@
+{
+  "scope": "Compilation foundation only; fuzzy scores are not runtime or complete semantic proof",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC3.0a3, configured cflags_game, sjiswrap",
+  "root_mario_header_sha256": "7141e69858593bef8f882960a85151ef98c713a1a5c600f94249543a3ca50c28",
+  "native_mario_header_sha256": "2a6f22279ade1c1d92faddae8b23f53776a1fe7affda7e2bb0e408aab8b3e608",
+  "probes": {
+    "scope": "Source identity and optional isolated syntax diagnostics; no link/runtime proof",
+    "units": [
+      {
+        "unit": "Mario",
+        "root_sha256": "9c739ddcaf1c031e7094b4458acb9994a883e58f4522c1cebb0e008f1f77acab",
+        "native_sha256": "529f075faf2ba3b9d3d15b330a1387e245bd8064712495d38e836d16fcdef60f",
+        "source_identical": false,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/Mario.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioMove",
+        "root_sha256": "18be16c4d904600014a0112fde648addbd60b1342027d32ce50554d419cf49ef",
+        "native_sha256": "a6b8b9a637cc41320561c7ecb2f56bd9df917b64c78e4b82a008a660183d134a",
+        "source_identical": false,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioMove.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioJump",
+        "root_sha256": "0f40b65ab2b07c36b6964c35235d170385ffdca36e1fbd1dbef586d882ad8212",
+        "native_sha256": "0f40b65ab2b07c36b6964c35235d170385ffdca36e1fbd1dbef586d882ad8212",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioJump.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioCollision",
+        "root_sha256": "d75a4b16a659617934a2c46f9d683676c00f02a1f177dc6a23803251ff616977",
+        "native_sha256": "d75a4b16a659617934a2c46f9d683676c00f02a1f177dc6a23803251ff616977",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioCollision.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioSlope",
+        "root_sha256": "19f64c2542b3a5e0b283683ecd9b7598c801fae47329b4aaa873263059cff092",
+        "native_sha256": "19f64c2542b3a5e0b283683ecd9b7598c801fae47329b4aaa873263059cff092",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioSlope.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioActorGravity",
+        "root_sha256": "3ab56d5fb3fe58d80e31b240a13500d3fcfd1ce516bd26f45ce4620cd35786f1",
+        "native_sha256": "442afd65ff3497b62a338295bddad467b52c49c362d4da0db5117880f073c3fa",
+        "source_identical": false,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioActorGravity.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioWall",
+        "root_sha256": "b4fba54fff4a0e5db941ee407d6755c58182773aa5b865a2070b2dd3835eb463",
+        "native_sha256": "b4fba54fff4a0e5db941ee407d6755c58182773aa5b865a2070b2dd3835eb463",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioWall.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioHang",
+        "root_sha256": "58be2327c15deceed6b089903dc3ee0b4137ad08053edfa172a5d348bf2a3d74",
+        "native_sha256": "58be2327c15deceed6b089903dc3ee0b4137ad08053edfa172a5d348bf2a3d74",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioHang.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioSwim",
+        "root_sha256": "645e4ab071b53ecbc1fd14c80ae40cd42885ebd8b461d7c33697b4caa86b8fc6",
+        "native_sha256": "645e4ab071b53ecbc1fd14c80ae40cd42885ebd8b461d7c33697b4caa86b8fc6",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioSwim.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioSpin",
+        "root_sha256": "a8021453aba28f654e9af7be42c694c795a3728b82e2e9cc83bf94e15c014bf2",
+        "native_sha256": "a8021453aba28f654e9af7be42c694c795a3728b82e2e9cc83bf94e15c014bf2",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioSpin.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioBee",
+        "root_sha256": "e8ed414085d379b33d0302f1fa646b1091c90d50ad83c422327dbebb348d4721",
+        "native_sha256": "e8ed414085d379b33d0302f1fa646b1091c90d50ad83c422327dbebb348d4721",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioBee.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarioEnforce",
+        "root_sha256": "27dc19a1ff298c22c6e937404da1253420ba5fbdfcbf89db81aacf0d32796b2d",
+        "native_sha256": "27dc19a1ff298c22c6e937404da1253420ba5fbdfcbf89db81aacf0d32796b2d",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarioEnforce.syntax.log",
+        "original_exit": 0
+      },
+      {
+        "unit": "MarineSnow",
+        "root_sha256": "2f441b0964bb1915f8650a7a62fc2965e411ab9ed343b9a4766a40c42db93851",
+        "native_sha256": "2f441b0964bb1915f8650a7a62fc2965e411ab9ed343b9a4766a40c42db93851",
+        "source_identical": true,
+        "syntax_exit": 0,
+        "errors": [],
+        "log": "build/original-mario-jump-20260903/MarineSnow.syntax.log",
+        "original_exit": 0
+      }
+    ],
+    "compile_database_sha256": "7f53d13591ffb6caabfcd239cdff512d8df081a5101b765209dcff6f00bfd849"
+  },
+  "retail_instruction_witnesses": [
+    {
+      "address": "0x802e359c",
+      "word": "0x93fe0a38",
+      "meaning": "startTornadoCentering stores retained sensor in Mario+0xA38"
+    },
+    {
+      "address": "0x802e35e4",
+      "word": "0x809f0a38",
+      "meaning": "taskOnTornadoCentering loads that retained sensor"
+    },
+    {
+      "address": "0x80306370",
+      "word": "0x90830574",
+      "meaning": "lockGroundCheck stores its void-pointer argument at Mario+0x574"
+    },
+    {
+      "address": "0x80306388",
+      "word": "0x80030574",
+      "meaning": "unlockGroundCheck loads retained owner for comparison"
+    },
+    {
+      "address": "0x8030639c",
+      "word": "0x90830574",
+      "meaning": "unlockGroundCheck clears retained owner"
+    },
+    {
+      "address": "0x802d5020",
+      "word": "0x939e0568",
+      "meaning": "updateCubeCode stores selected area pointer at Mario+0x568"
+    },
+    {
+      "address": "0x802db0dc",
+      "word": "0x880309f1",
+      "meaning": "entryWallWalkMode reads existing mBeeWallWalk byte"
+    },
+    {
+      "address": "0x802db104",
+      "word": "0x9be309f1",
+      "meaning": "entryWallWalkMode writes existing mBeeWallWalk byte"
+    },
+    {
+      "address": "0x802f6750",
+      "word": "0x80030024",
+      "meaning": "Wall start loads previous movement second word"
+    },
+    {
+      "address": "0x802f6754",
+      "word": "0x53e0ba10",
+      "meaning": "Wall start clears bit 0x800000"
+    },
+    {
+      "address": "0x802f6758",
+      "word": "0x90030024",
+      "meaning": "Wall start stores previous movement second word"
+    }
+  ],
+  "comparisons": [
+    {
+      "unit": "MarioJump",
+      "symbol": "startTornadoCentering__5MarioFP9HitSensor",
+      "objdiff_match_percent": 100.0,
+      "retail_size": 104,
+      "compiled_size": 104,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "compiled_object_sha256": "8b9fba63fa91b64ae14c5bf560d79eb58c76dd223978f89bbd23105e5bdce7ea"
+    },
+    {
+      "unit": "MarioJump",
+      "symbol": "taskOnTornadoCentering__5MarioFUl",
+      "objdiff_match_percent": 99.7619,
+      "retail_size": 252,
+      "compiled_size": 252,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "compiled_object_sha256": "8b9fba63fa91b64ae14c5bf560d79eb58c76dd223978f89bbd23105e5bdce7ea"
+    },
+    {
+      "unit": "MarioJump",
+      "symbol": "tryJump__5MarioFv",
+      "objdiff_match_percent": 99.5881,
+      "retail_size": 3360,
+      "compiled_size": 3360,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "compiled_object_sha256": "8b9fba63fa91b64ae14c5bf560d79eb58c76dd223978f89bbd23105e5bdce7ea"
+    },
+    {
+      "unit": "MarioJump",
+      "symbol": "initJumpParam__5MarioFv",
+      "objdiff_match_percent": 99.639175,
+      "retail_size": 388,
+      "compiled_size": 388,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "compiled_object_sha256": "8b9fba63fa91b64ae14c5bf560d79eb58c76dd223978f89bbd23105e5bdce7ea"
+    },
+    {
+      "unit": "MarioJump",
+      "symbol": "procJump__5MarioFb",
+      "objdiff_match_percent": 96.40148,
+      "retail_size": 3248,
+      "compiled_size": 3236,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "compiled_object_sha256": "8b9fba63fa91b64ae14c5bf560d79eb58c76dd223978f89bbd23105e5bdce7ea"
+    },
+    {
+      "unit": "MarioJump",
+      "symbol": "doAirWalk__5MarioFv",
+      "objdiff_match_percent": 87.73969,
+      "retail_size": 3104,
+      "compiled_size": 3084,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "compiled_object_sha256": "8b9fba63fa91b64ae14c5bf560d79eb58c76dd223978f89bbd23105e5bdce7ea"
+    },
+    {
+      "unit": "MarioJump",
+      "symbol": "doLanding__5MarioFv",
+      "objdiff_match_percent": 99.60094,
+      "retail_size": 3408,
+      "compiled_size": 3408,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "compiled_object_sha256": "8b9fba63fa91b64ae14c5bf560d79eb58c76dd223978f89bbd23105e5bdce7ea"
+    },
+    {
+      "unit": "MarioCollision",
+      "symbol": "updateCubeCode__5MarioFv",
+      "objdiff_match_percent": 77.208954,
+      "retail_size": 1072,
+      "compiled_size": 856,
+      "retail_object_sha256": "7e1e34887b15b3daa09759c49fe49dfd4336b0fce2c7d5a8f721bdd19438f81b",
+      "compiled_object_sha256": "52f8ec4820a9e80af496380b70a2f1eff0da0429fae45201260d0ca7411cf356"
+    },
+    {
+      "unit": "MarioCollision",
+      "symbol": "updateBinderInfo__5MarioFv",
+      "objdiff_match_percent": 65.60863,
+      "retail_size": 2504,
+      "compiled_size": 2616,
+      "retail_object_sha256": "7e1e34887b15b3daa09759c49fe49dfd4336b0fce2c7d5a8f721bdd19438f81b",
+      "compiled_object_sha256": "52f8ec4820a9e80af496380b70a2f1eff0da0429fae45201260d0ca7411cf356"
+    },
+    {
+      "unit": "MarioSlope",
+      "symbol": "lockGroundCheck__5MarioFPvb",
+      "objdiff_match_percent": 95.888885,
+      "retail_size": 36,
+      "compiled_size": 36,
+      "retail_object_sha256": "ae0b609cb857d5e728f211d65dc9280d0922df2701344f94c354be0e146d0db9",
+      "compiled_object_sha256": "c59deff871b807d06c529331dad3229fe2ec7369bef3de266404c98d9ff16d9b"
+    },
+    {
+      "unit": "MarioSlope",
+      "symbol": "unlockGroundCheck__5MarioFPv",
+      "objdiff_match_percent": 100.0,
+      "retail_size": 44,
+      "compiled_size": 44,
+      "retail_object_sha256": "ae0b609cb857d5e728f211d65dc9280d0922df2701344f94c354be0e146d0db9",
+      "compiled_object_sha256": "c59deff871b807d06c529331dad3229fe2ec7369bef3de266404c98d9ff16d9b"
+    },
+    {
+      "unit": "MarioBee",
+      "symbol": "entryWallWalkMode__10MarioActorFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "objdiff_match_percent": 100.0,
+      "retail_size": 280,
+      "compiled_size": 280,
+      "retail_object_sha256": "fe4128de70a2ba8a40376ffdf8adc84cd182f1cddd8043b30f032f90d3ac1da1",
+      "compiled_object_sha256": "ef3e62751c8ef2c9ba460a09d0fe34cff18b4a7ff9221bc47023ba5fb3294176"
+    },
+    {
+      "unit": "MarioWall",
+      "symbol": "start__9MarioWallFv",
+      "objdiff_match_percent": 96.25455,
+      "retail_size": 440,
+      "compiled_size": 436,
+      "retail_object_sha256": "ec9faf854693f1c4453cedfca5975b232a632797aa69b0d5f858c6c7f4162a3c",
+      "compiled_object_sha256": "19019467c833232a2680d83b29b90dd9a8532734b96926ed6649cc8fe2e019bf"
+    },
+    {
+      "unit": "MarioHang",
+      "symbol": "fixHangDir__5MarioFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "objdiff_match_percent": 96.666664,
+      "retail_size": 252,
+      "compiled_size": 244,
+      "retail_object_sha256": "3543e4f54a53bd7fc50ac009a6620c0d1433788d042fa009698b5c22b6d1c267",
+      "compiled_object_sha256": "2d6281001dfa680a8f72cd1c99e98e823871907803b9ef355032da9fe987b91f"
+    },
+    {
+      "unit": "MarioSpin",
+      "symbol": "taskOnRotation__5MarioFUl",
+      "objdiff_match_percent": 99.666664,
+      "retail_size": 180,
+      "compiled_size": 180,
+      "retail_object_sha256": "c2edc0bf340b812af15b992a53c31cdaacd852ee0d08635cac6a77baf607167e",
+      "compiled_object_sha256": "e1239fd7066622b47651d56a3274d1866f9223d1a49a28d8643533640c52d32b"
+    },
+    {
+      "unit": "Mario",
+      "symbol": "fixFrontVecByGravity__5MarioFv",
+      "objdiff_match_percent": 99.91803,
+      "retail_size": 488,
+      "compiled_size": 488,
+      "retail_object_sha256": "8a0f3fe7833d1f6ffd594bb0780f2f100d9b37b34cd6d946e478c92835008281",
+      "compiled_object_sha256": "140fb65b13450a593f8e7712b05d5bd19b1786785951557ab3a2e69eb9b12e55"
+    },
+    {
+      "unit": "Mario",
+      "symbol": "setFrontVecKeepSide__5MarioFRCQ29JGeometry8TVec3<f>",
+      "objdiff_match_percent": 99.92958,
+      "retail_size": 284,
+      "compiled_size": 284,
+      "retail_object_sha256": "8a0f3fe7833d1f6ffd594bb0780f2f100d9b37b34cd6d946e478c92835008281",
+      "compiled_object_sha256": "140fb65b13450a593f8e7712b05d5bd19b1786785951557ab3a2e69eb9b12e55"
+    }
+  ]
+}
