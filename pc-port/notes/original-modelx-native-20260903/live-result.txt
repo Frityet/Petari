@@ -1,0 +1,8 @@
+[modelx] original MR specialization constructed joints=30 materials=9 shapes=9 display_lists=16; holder identity and GD restoration verified
+[modelx] frame=0 original_calc_entry_draws=0
+[modelx] frame=1 original_calc_entry_draws=29
+[modelx] frame=2 original_calc_entry_draws=11
+[modelx] frame=3 original_calc_entry_draws=11
+[modelx] frame=4 original_calc_entry_draws=11
+[modelx] actual model retired before holder lease and original allocation domain
+[modelx] runtime and all textures retired before GX; full MEM1 capacity restored

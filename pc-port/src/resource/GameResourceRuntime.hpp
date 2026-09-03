@@ -6,6 +6,8 @@
 #include <cstddef>
 #include <memory>
 
+namespace smgpc::compat { class JutTextureAllocationService; }
+
 namespace smgpc::resource {
     struct GameResourceBudget {
         std::size_t host_heap_bytes = 128U * 1024U * 1024U;
@@ -29,5 +31,6 @@ namespace smgpc::resource {
         GameResourceBudget _budget;
         std::shared_ptr<compat::JkrHeapRuntime> _heaps;
         std::shared_ptr<Mem1ResourceHeap> _mem1;
+        std::unique_ptr<compat::JutTextureAllocationService> _textures;
     };
 }

@@ -1,0 +1,44 @@
+Running main() from /Users/frityet/Projects/petari/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 10 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 7 tests from GfxRecordingTest
+[ RUN      ] GfxRecordingTest.CreateRestoreReturnsToEfb
+[       OK ] GfxRecordingTest.CreateRestoreReturnsToEfb (0 ms)
+[ RUN      ] GfxRecordingTest.EfbPassUsesDiscoveredSceneLayout
+[       OK ] GfxRecordingTest.EfbPassUsesDiscoveredSceneLayout (0 ms)
+[ RUN      ] GfxRecordingTest.CopiedOffscreenPassIsRetainedOnRestore
+[       OK ] GfxRecordingTest.CopiedOffscreenPassIsRetainedOnRestore (0 ms)
+[ RUN      ] GfxRecordingTest.ReplacementRetainsCopiedPassesAndDiscardsContinuations
+[       OK ] GfxRecordingTest.ReplacementRetainsCopiedPassesAndDiscardsContinuations (230 ms)
+[ RUN      ] GfxRecordingTest.RepeatedUncopiedCreatesDiscardEarlierPasses
+[       OK ] GfxRecordingTest.RepeatedUncopiedCreatesDiscardEarlierPasses (0 ms)
+[ RUN      ] GfxRecordingTest.PublicCreatePassRejectsExistingOffscreenPass
+[warning] [aurora::gfx] create_pass: an offscreen pass is already active (nesting is unsupported)
+[       OK ] GfxRecordingTest.PublicCreatePassRejectsExistingOffscreenPass (2 ms)
+[ RUN      ] GfxRecordingTest.FinalizedPassesAreSealedOrDeliberatelyDiscarded
+[       OK ] GfxRecordingTest.FinalizedPassesAreSealedOrDeliberatelyDiscarded (0 ms)
+[----------] 7 tests from GfxRecordingTest (233 ms total)
+
+[----------] 1 test from GfxRecordingStateTest
+[ RUN      ] GfxRecordingStateTest.QueuedViewportAndScissorSurviveInactiveDrains
+[debug] [aurora::gx::fifo] Unhandled XF register 0x0000 (value 0x0000003F)
+[debug] [aurora::gx::fifo] Unhandled XF register 0x0012 (value 0x00000001)
+[debug] [aurora::gx::fifo] Unhandled BP register 0x58 (value 0x00000F)
+[debug] [aurora::gx::fifo] Unhandled XF memory write 0x00F0 (12 words)
+[debug] [aurora::gx::fifo] Unhandled XF memory write 0x05F4 (12 words)
+[debug] [aurora::gx::fifo] Unhandled XF register 0x0005 (value 0x00000000)
+[debug] [aurora::gx::fifo] Unhandled BP register 0x44 (value 0x000003)
+[debug] [aurora::gx::fifo] Unhandled BP register 0x68 (value 0x000000)
+[       OK ] GfxRecordingStateTest.QueuedViewportAndScissorSurviveInactiveDrains (0 ms)
+[----------] 1 test from GfxRecordingStateTest (0 ms total)
+
+[----------] 2 tests from RenderTargetLayoutTest
+[ RUN      ] RenderTargetLayoutTest.KeyChangesWithPipelineCompatibility
+[       OK ] RenderTargetLayoutTest.KeyChangesWithPipelineCompatibility (0 ms)
+[ RUN      ] RenderTargetLayoutTest.RenderPassDerivesLayoutFromAttachmentState
+[       OK ] RenderTargetLayoutTest.RenderPassDerivesLayoutFromAttachmentState (0 ms)
+[----------] 2 tests from RenderTargetLayoutTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 3 test suites ran. (233 ms total)
+[  PASSED  ] 10 tests.

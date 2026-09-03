@@ -1,0 +1,149 @@
+[
+  {
+    "name": "viewCalc2__9J3DModelXFv",
+    "size": 176,
+    "typed_size": 176,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "calcNrmMtx2__13J3DMtxBuffer2Fv",
+    "size": 148,
+    "typed_size": 148,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "setDrawView__9J3DModelXFUl",
+    "size": 32,
+    "typed_size": 32,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "rotationMtx__13J3DMtxBuffer2FPA4_f",
+    "size": 20,
+    "typed_size": 20,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "setDrawViewBuffer__9J3DModelXFPA4_f",
+    "size": 24,
+    "typed_size": 24,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "copyAnmMtxBuffer__9J3DModelXFPC9J3DModelX",
+    "size": 20,
+    "typed_size": 20,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "viewCalc3__9J3DModelXFUlPA4_f",
+    "size": 224,
+    "typed_size": 224,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "viewCalcRef__9J3DModelXFUlP8J3DModel",
+    "size": 144,
+    "typed_size": 144,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "calcDrawMtx2__13J3DMtxBuffer2FUlRC3VecRA3_A4_CfP12J3DMtxBuffer",
+    "size": 216,
+    "typed_size": 216,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "viewCalcRefPos__9J3DModelXFUlP8J3DModelRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "size": 160,
+    "typed_size": 160,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "calcDrawMtx3__13J3DMtxBuffer2FUlRC3VecRA3_A4_CfP12J3DMtxBufferRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "size": 476,
+    "typed_size": 476,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "directDraw__9J3DModelXFP8J3DModel",
+    "size": 324,
+    "typed_size": 324,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "drawIn__9J3DModelXFP11J3DMaterialbPA4_fP8J3DModel",
+    "size": 608,
+    "typed_size": 608,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "shapePacketDrawFast__9J3DModelXCFP15J3DShapePacketX",
+    "size": 144,
+    "typed_size": 144,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "simpleDrawSetup__9J3DModelXFP11J3DMaterial",
+    "size": 168,
+    "typed_size": 168,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "simpleDrawShape__9J3DModelXFP11J3DMaterial",
+    "size": 24,
+    "typed_size": 24,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "storeDisplayList__9J3DModelXFP7_GDLObjUl",
+    "size": 148,
+    "typed_size": 148,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "__vt__9J3DModelX",
+    "size": 36,
+    "typed_size": 36,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "__ct__9J3DModelXFP12J3DModelDataUlUl",
+    "size": 3608,
+    "typed_size": 3608,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "shapeDrawFast__9J3DModelXCFP9J3DShapeX",
+    "size": 440,
+    "typed_size": 440,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  },
+  {
+    "name": "__dt__9J3DModelXFv",
+    "size": 96,
+    "typed_size": 96,
+    "instruction_bytes_equal": true,
+    "references_equal": true
+  }
+]

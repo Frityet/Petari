@@ -1,4 +1,7 @@
 #include "RuntimeContext.hpp"
+#include "compat/JutTextureAllocation.hpp"
+#include "runtime/ScreenAlphaCaptureService.hpp"
+#include "JSystem/JUtility/JUTTexture.hpp"
 
 #include <algorithm>
 #include <array>
@@ -468,6 +471,25 @@ namespace smgpc::runtime {
 
     }  // namespace
 
+    struct RuntimeContext::Registration {
+        explicit Registration(RuntimeContext& runtime) : owner(&runtime) {
+            if (s_runtime_context != nullptr) {
+                throw std::logic_error("Only one SMG runtime context may be active.");
+            }
+            s_runtime_context = owner;
+        }
+
+        ~Registration() {
+            // Every RuntimeContext member, including the callback scheduler,
+            // has retired before this first-declared member is destroyed.
+            JUTVideo::destroyManager();
+            aurora::wpad_service().clear();
+            if (s_runtime_context == owner) s_runtime_context = nullptr;
+        }
+
+        RuntimeContext* owner;
+    };
+
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                                    resource::GameResourceRuntime &resources,
                                    RuntimeContextSceneServiceMode scene_service_mode)
@@ -491,71 +513,80 @@ namespace smgpc::runtime {
           _debug_wpad_pointer_script(read_debug_wpad_pointer_script_environment())
 #endif
     {
-        if (s_runtime_context != nullptr) {
-            throw std::logic_error("Only one SMG runtime context may be active.");
-        }
-
-        s_runtime_context = this;
-        _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
-        JUTVideo::createManager(nullptr);
-        aurora::wpad_service().clear();
-        if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
-            _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
-            _owned_scene_execution = std::make_unique<smgpc::scene::SceneExecutionService>(*this);
-            _owned_scene_lifecycle = std::make_unique<smgpc::scene::SceneLifecycleService>(*this);
-            attach_name_obj_lifecycle(*_owned_name_obj_lifecycle);
-            attach_scene_execution(*_owned_scene_execution);
-            attach_scene_lifecycle(*_owned_scene_lifecycle);
-        }
-        _capture_screen_director = std::make_unique<CaptureScreenDirector>();
-        MR::createScreenAlphaSceneObj(0, 1.0F);
-        _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
-        _capture_screen_camera_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenCamera, "Camera");
-        _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
-        if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
-            _save_data.set_host_directory(*save_directory);
-            _logger.info(logging::Category::APP, logging::Message{"Using SMG save files from {}"}, save_directory->string());
-        }
-        if (const auto message_archive = _dvd.find_first({
-                std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
-                std::filesystem::path("MessageData") / "Message.arc",
-            })) {
-            try {
-                const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
-                _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());
-            } catch (const std::exception &error) {
-                _logger.warning(logging::Category::APP, logging::Message{"Could not load original message archive {}: {}"}, message_archive->string(),
-                                error.what());
+        _registration = std::make_unique<Registration>(*this);
+        try {
+            _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
+            JUTVideo::createManager(nullptr);
+            aurora::wpad_service().clear();
+            if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
+                _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
+                _owned_scene_execution = std::make_unique<smgpc::scene::SceneExecutionService>(*this);
+                _owned_scene_lifecycle = std::make_unique<smgpc::scene::SceneLifecycleService>(*this);
+                attach_name_obj_lifecycle(*_owned_name_obj_lifecycle);
+                attach_scene_execution(*_owned_scene_execution);
+                attach_scene_lifecycle(*_owned_scene_lifecycle);
             }
-        }
-        if (const auto effect_archive = _dvd.find_first({
-                std::filesystem::path("ParticleData") / "Effect.arc",
-            })) {
-            try {
-                _effects.load_resources(_dvd.archive_for_path(*effect_archive));
-                if (const auto *resources = _effects.resource_library(); resources != nullptr) {
-                    _logger.info(logging::Category::APP, logging::Message{"Loaded {} particle names, {} particle resources, and {} particle textures from {}"},
-                                 resources->particle_name_count(), resources->resource_count(), resources->texture_count(), effect_archive->string());
+            _screen_alpha_capture = std::make_unique<ScreenAlphaCaptureService>();
+            _capture_screen_director = std::make_unique<CaptureScreenDirector>();
+            _capture_screen_texture.reset(smgpc::compat::get_owned_jut_texture(_capture_screen_director->getResTIMG()));
+            MR::createScreenAlphaSceneObj(0, 1.0F);
+            _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
+            _capture_screen_camera_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenCamera, "Camera");
+            _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
+            if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
+                _save_data.set_host_directory(*save_directory);
+                _logger.info(logging::Category::APP, logging::Message{"Using SMG save files from {}"}, save_directory->string());
+            }
+            if (const auto message_archive = _dvd.find_first({
+                    std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
+                    std::filesystem::path("MessageData") / "Message.arc",
+                })) {
+                try {
+                    const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
+                    _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());
+                } catch (const std::exception &error) {
+                    _logger.warning(logging::Category::APP, logging::Message{"Could not load original message archive {}: {}"}, message_archive->string(),
+                                    error.what());
                 }
-            } catch (const std::exception &error) {
-                _logger.warning(logging::Category::APP, logging::Message{"Could not load original effect archive {}: {}"}, effect_archive->string(),
-                                error.what());
             }
-        }
+            if (const auto effect_archive = _dvd.find_first({
+                    std::filesystem::path("ParticleData") / "Effect.arc",
+                })) {
+                try {
+                    _effects.load_resources(_dvd.archive_for_path(*effect_archive));
+                    if (const auto *resources = _effects.resource_library(); resources != nullptr) {
+                        _logger.info(logging::Category::APP, logging::Message{"Loaded {} particle names, {} particle resources, and {} particle textures from {}"},
+                                     resources->particle_name_count(), resources->resource_count(), resources->texture_count(), effect_archive->string());
+                    }
+                } catch (const std::exception &error) {
+                    _logger.warning(logging::Category::APP, logging::Message{"Could not load original effect archive {}: {}"}, effect_archive->string(),
+                                    error.what());
+                }
+            }
 #ifndef NDEBUG
-        if (!_debug_wpad_button_script.empty()) {
-            _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD button script spans"},
-                         _debug_wpad_button_script.size());
-        }
-        if (!_debug_wpad_pointer_script.empty()) {
-            _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD pointer script spans"},
-                         _debug_wpad_pointer_script.size());
-        }
-        emit_semantic_trace_event("runtime", "runtime_context_created", "disc=aurora-dvd");
+            if (!_debug_wpad_button_script.empty()) {
+                _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD button script spans"},
+                             _debug_wpad_button_script.size());
+            }
+            if (!_debug_wpad_pointer_script.empty()) {
+                _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD pointer script spans"},
+                             _debug_wpad_pointer_script.size());
+            }
+            emit_semantic_trace_event("runtime", "runtime_context_created", "disc=aurora-dvd");
 #endif
+        } catch (...) {
+            // These owners call back into the still-live scheduler and trace
+            // services during destruction; retire them before member unwind.
+            retire_owned_runtime_objects();
+            throw;
+        }
     }
 
     RuntimeContext::~RuntimeContext() {
+        retire_owned_runtime_objects();
+    }
+
+    void RuntimeContext::retire_owned_runtime_objects() {
 #ifndef NDEBUG
         _is_destroying = true;
 #endif
@@ -575,11 +606,8 @@ namespace smgpc::runtime {
         _capture_screen_camera_actor.reset();
         _capture_screen_indirect_actor.reset();
         _capture_screen_director.reset();
-        JUTVideo::destroyManager();
-        aurora::wpad_service().clear();
-        if (s_runtime_context == this) {
-            s_runtime_context = nullptr;
-        }
+        _capture_screen_texture.reset();
+        _screen_alpha_capture.reset();
     }
 
     RuntimeContext &RuntimeContext::instance() {

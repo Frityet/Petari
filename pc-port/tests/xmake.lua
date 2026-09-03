@@ -1258,6 +1258,32 @@ for _, fixture in ipairs {
         })
 end
 
+target("smg-pc-jut-texture-ownership-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("JutTextureOwnershipTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("jut_texture_ownership", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-runtime-context-construction-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("RuntimeContextConstructionTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("runtime_context_construction", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
 target("smg-pc-original-kcollision-resource-tests")
     set_kind("binary")
     set_default(false)

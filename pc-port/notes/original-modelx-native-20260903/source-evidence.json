@@ -1,0 +1,116 @@
+{
+  "compiler": "GC3.0a3",
+  "baseline_commit": "1f254b773",
+  "modelx_objects": [
+    {
+      "name": "viewCalc2__9J3DModelXFv",
+      "bytes": 176,
+      "references": 8
+    },
+    {
+      "name": "calcNrmMtx2__13J3DMtxBuffer2Fv",
+      "bytes": 148,
+      "references": 5
+    },
+    {
+      "name": "setDrawView__9J3DModelXFUl",
+      "bytes": 32,
+      "references": 1
+    },
+    {
+      "name": "rotationMtx__13J3DMtxBuffer2FPA4_f",
+      "bytes": 20,
+      "references": 0
+    },
+    {
+      "name": "setDrawViewBuffer__9J3DModelXFPA4_f",
+      "bytes": 24,
+      "references": 0
+    },
+    {
+      "name": "copyAnmMtxBuffer__9J3DModelXFPC9J3DModelX",
+      "bytes": 20,
+      "references": 0
+    },
+    {
+      "name": "viewCalc3__9J3DModelXFUlPA4_f",
+      "bytes": 224,
+      "references": 12
+    },
+    {
+      "name": "viewCalcRef__9J3DModelXFUlP8J3DModel",
+      "bytes": 144,
+      "references": 7
+    },
+    {
+      "name": "calcDrawMtx2__13J3DMtxBuffer2FUlRC3VecRA3_A4_CfP12J3DMtxBuffer",
+      "bytes": 216,
+      "references": 9
+    },
+    {
+      "name": "viewCalcRefPos__9J3DModelXFUlP8J3DModelRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "bytes": 160,
+      "references": 7
+    },
+    {
+      "name": "calcDrawMtx3__13J3DMtxBuffer2FUlRC3VecRA3_A4_CfP12J3DMtxBufferRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "bytes": 476,
+      "references": 24
+    },
+    {
+      "name": "directDraw__9J3DModelXFP8J3DModel",
+      "bytes": 324,
+      "references": 14
+    },
+    {
+      "name": "drawIn__9J3DModelXFP11J3DMaterialbPA4_fP8J3DModel",
+      "bytes": 608,
+      "references": 16
+    },
+    {
+      "name": "shapePacketDrawFast__9J3DModelXCFP15J3DShapePacketX",
+      "bytes": 144,
+      "references": 5
+    },
+    {
+      "name": "simpleDrawSetup__9J3DModelXFP11J3DMaterial",
+      "bytes": 168,
+      "references": 6
+    },
+    {
+      "name": "simpleDrawShape__9J3DModelXFP11J3DMaterial",
+      "bytes": 24,
+      "references": 1
+    },
+    {
+      "name": "storeDisplayList__9J3DModelXFP7_GDLObjUl",
+      "bytes": 148,
+      "references": 7
+    },
+    {
+      "name": "__vt__9J3DModelX",
+      "bytes": 36,
+      "references": 7
+    },
+    {
+      "name": "__ct__9J3DModelXFP12J3DModelDataUlUl",
+      "bytes": 3608,
+      "references": 154
+    },
+    {
+      "name": "shapeDrawFast__9J3DModelXCFP9J3DShapeX",
+      "bytes": 440,
+      "references": 15
+    },
+    {
+      "name": "__dt__9J3DModelXFv",
+      "bytes": 96,
+      "references": 2
+    }
+  ],
+  "literal_extracted_helpers": 11,
+  "retail_viewCalc3_stack_pointer_path": [
+    "0x802A6B88: stw r5,8(r1)",
+    "0x802A6BCC: addi r6,r1,8"
+  ]
+}

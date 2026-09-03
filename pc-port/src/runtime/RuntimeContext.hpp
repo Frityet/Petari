@@ -30,6 +30,7 @@ class LiveActor;
 class LayoutActor;
 class CaptureScreenActor;
 class CaptureScreenDirector;
+class JUTTexture;
 
 namespace smgpc::scene {
     class NameObjLifecycleService;
@@ -42,6 +43,8 @@ namespace smgpc::layout {
 }
 
 namespace smgpc::runtime {
+
+    class ScreenAlphaCaptureService;
 
     enum class RuntimeContextSceneServiceMode {
         RuntimeOwned,
@@ -306,6 +309,12 @@ namespace smgpc::runtime {
         void refresh_effect_host_bindings();
         void refresh_effect_host_binding(std::string_view host_name, const void *host_identity = nullptr);
 
+        void retire_owned_runtime_objects();
+        struct Registration;
+        // Destruction runs in reverse order: callbacks and their scheduler
+        // retire before the published runtime/video registration.
+        std::unique_ptr<Registration> _registration;
+        SceneScheduler _scheduler;
         logging::ILogger &_logger;
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
@@ -330,6 +339,8 @@ namespace smgpc::runtime {
         MessageService _messages;
         SceneLightService _scene_lights;
         RflService _rfl;
+        std::unique_ptr<ScreenAlphaCaptureService> _screen_alpha_capture;
+        std::unique_ptr<JUTTexture> _capture_screen_texture;
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
         std::unique_ptr<CaptureScreenActor> _capture_screen_indirect_actor;
         std::unique_ptr<CaptureScreenActor> _capture_screen_camera_actor;
@@ -339,7 +350,6 @@ namespace smgpc::runtime {
         smgpc::scene::NameObjLifecycleService *_name_obj_lifecycle = nullptr;
         smgpc::scene::SceneExecutionService *_scene_execution = nullptr;
         smgpc::scene::SceneLifecycleService *_scene_lifecycle = nullptr;
-        SceneScheduler _scheduler;
         std::map<const void *, LiveActor *, std::less<>> _effect_live_actor_hosts;
         std::optional<std::size_t> _active_scene_registration_scope;
         std::size_t _scene_scheduler_registration_marker = 0U;

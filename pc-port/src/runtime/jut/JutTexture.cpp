@@ -1,45 +1,45 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 
-#include <algorithm>
+#include "compat/JutTextureAllocation.hpp"
 
 JUTTexture::JUTTexture() {
     setCaptureFlag(false);
 }
 
 JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
-    setCaptureFlag(true);
+    mFlag = mFlag & 2 | 1;
+    u32 bufSize = GXGetTexBufferSize(width, height, format, GX_FALSE, 1);
 
-    const auto clamped_width = static_cast<u16>(std::max(width, 1));
-    const auto clamped_height = static_cast<u16>(std::max(height, 1));
-    const auto buffer_size = GXGetTexBufferSize(clamped_width, clamped_height, format, GX_FALSE, 1U);
-    auto *bytes = new u8[sizeof(ResTIMG) + buffer_size]{};
-    auto *tex_buf = reinterpret_cast<ResTIMG *>(bytes);
-    _3C = tex_buf;
+    auto allocation = smgpc::compat::allocate_owned_jut_texture(*this, static_cast<std::size_t>(bufSize) + sizeof(ResTIMG));
+    ResTIMG* texBuf = static_cast<ResTIMG*>(allocation.data());
+    _3C = texBuf;
+    texBuf->mFormat = format;
+    texBuf->mTransparency = 0;
+    texBuf->mWidth = width;
+    texBuf->mHeight = height;
+    texBuf->mWrapS = GX_CLAMP;
+    texBuf->mWrapT = GX_CLAMP;
+    texBuf->mPaletteName = GX_TLUT0;
+    texBuf->mPaletteFormat = GX_TL_IA8;
+    texBuf->mPaletteNum = 0;
+    texBuf->mPaletteDataOffset = 0;
+    texBuf->mMipmap = false;
+    texBuf->mDoEdgeLod = false;
+    texBuf->mBiasClamp = false;
+    texBuf->mMaxAnisotropy = GX_ANISO_1;
+    texBuf->mMinType = GX_LINEAR;
+    texBuf->mMagType = GX_LINEAR;
+    texBuf->mMinLod = 0;
+    texBuf->mMaxLod = 0;
+    texBuf->mImageNum = 1;
+    texBuf->mLodBias = 0;
+    texBuf->mImageDataOffset = sizeof(ResTIMG);
+    mEmbPalette = nullptr;
 
-    tex_buf->mFormat = static_cast<u8>(format);
-    tex_buf->mTransparency = 0U;
-    tex_buf->mWidth = clamped_width;
-    tex_buf->mHeight = clamped_height;
-    tex_buf->mWrapS = GX_CLAMP;
-    tex_buf->mWrapT = GX_CLAMP;
-    tex_buf->mPaletteName = GX_TLUT0;
-    tex_buf->mPaletteFormat = GX_TL_IA8;
-    tex_buf->mPaletteNum = 0U;
-    tex_buf->mPaletteDataOffset = 0U;
-    tex_buf->mMipmap = false;
-    tex_buf->mDoEdgeLod = false;
-    tex_buf->mBiasClamp = false;
-    tex_buf->mMaxAnisotropy = GX_ANISO_1;
-    tex_buf->mMinType = GX_LINEAR;
-    tex_buf->mMagType = GX_LINEAR;
-    tex_buf->mMinLod = 0U;
-    tex_buf->mMaxLod = 0U;
-    tex_buf->mImageNum = 1U;
-    tex_buf->mLodBias = 0;
-    tex_buf->mImageDataOffset = sizeof(ResTIMG);
-
-    storeTIMG(tex_buf, static_cast<u8>(0U));
-    DCFlushRange(mImage, buffer_size);
+    // cast to u8 solves ambiguity
+    storeTIMG(texBuf, static_cast< u8 >(0));
+    DCFlushRange(mImage, bufSize);
+    allocation.commit();
 }
 
 JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
@@ -50,8 +50,7 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
 JUTTexture::~JUTTexture() {
     GXDestroyTexObj(&mObj);
     if (getCaptureFlag()) {
-        GXDestroyCopyTex(mImage);
-        delete[] reinterpret_cast<u8 *>(_3C);
+        smgpc::compat::release_owned_jut_texture(*this);
     }
 }
 

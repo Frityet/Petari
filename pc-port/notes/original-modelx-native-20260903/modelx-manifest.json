@@ -1,0 +1,119 @@
+{
+  "baseline_commit": "1f254b773",
+  "files": [
+    {
+      "path": "src/Game/Player/J3DModelX.cpp",
+      "exists_at_baseline": true,
+      "before_sha256": "b3d281dd636496be949a2ae8a8807d96e28d2e36752f6bcf369794e75a2b16d7",
+      "after_sha256": "ad580fcf92857c0b16c7ea83f8a070acc8e1039e8fe2ef0df987ad595d1439e3"
+    },
+    {
+      "path": "pc-port/src/Game/Player/J3DModelX.cpp",
+      "exists_at_baseline": true,
+      "before_sha256": "b3d281dd636496be949a2ae8a8807d96e28d2e36752f6bcf369794e75a2b16d7",
+      "after_sha256": "ad580fcf92857c0b16c7ea83f8a070acc8e1039e8fe2ef0df987ad595d1439e3"
+    },
+    {
+      "path": "include/Game/Player/J3DModelX.hpp",
+      "exists_at_baseline": true,
+      "before_sha256": "f75ee32dac9784be93acb4b00661998ddf3e812c3cc63573704eecf22d307606",
+      "after_sha256": "14f36e152dca5239ab3893d11811fd60a4b361beff73a700b0d977eaecdcd2d1"
+    },
+    {
+      "path": "pc-port/src/compat/J3DModelXDrawCompat.cpp",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "76b57a28586e856df50c55348351bbd6f7752663174dbb89f23d25af910e6059"
+    },
+    {
+      "path": "pc-port/src/compat/ModelCreationCompat.cpp",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "daa95be6c40af155a9b09ef22c39815b66c4509da3464e4d22286d1a87630cb6"
+    },
+    {
+      "path": "pc-port/src/compat/ModelFogCompat.cpp",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "ca84df751f67fbeca5fb489b7e140a77964c549a5761f120064bb639b5aa66f5"
+    },
+    {
+      "path": "pc-port/src/Game/Player/J3DModelX.hpp",
+      "exists_at_baseline": true,
+      "before_sha256": "f75ee32dac9784be93acb4b00661998ddf3e812c3cc63573704eecf22d307606",
+      "after_sha256": "14f36e152dca5239ab3893d11811fd60a4b361beff73a700b0d977eaecdcd2d1"
+    },
+    {
+      "path": "libs/RVL_SDK/include/revolution/gd/GDGeometry.h",
+      "exists_at_baseline": true,
+      "before_sha256": "8ef077b6c53bb3d241cc498536aafaebccf16c4e9d818e8cde5b9afe3e61d93f",
+      "after_sha256": "87d5103c8fdc96525d79feeb1092025d8b637ecfc42211a7bebfd883092e83fd"
+    },
+    {
+      "path": "pc-port/src/revolution/gd/GDGeometry.h",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "58a5899132dc8c81b106c66b6901e4e83ca5ecc562f844981aa144eb6cd38ce3"
+    },
+    {
+      "path": "libs/RVL_SDK/include/revolution/gd/GDTev.h",
+      "exists_at_baseline": true,
+      "before_sha256": "94621605628747eff5fbd76387c955c702bfdeb785a056cc1d2102e84d00445d",
+      "after_sha256": "37e1cad7e2e4b9b72f9bcc4cb6e920cda0c6787c1f1fda89afedafada758ddeb"
+    },
+    {
+      "path": "pc-port/src/revolution/gd/GDTev.h",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "81b6c1f8ee52a53070e732ce9b765170593c916e98b7e7837903f4c342cd1e60"
+    },
+    {
+      "path": "libs/RVL_SDK/include/revolution/gd/GDPixel.h",
+      "exists_at_baseline": true,
+      "before_sha256": "a1daaa13d5e0493c2b207c6aadd58fa83861b8634f1e6938bbcc111f5e3a6ddc",
+      "after_sha256": "3654309b8bb6b48a690ba3d100d3df2334d79343730bd8c2286cb56136681ac6"
+    },
+    {
+      "path": "pc-port/src/revolution/gd/GDPixel.h",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "de1a0cf18c3838290d2f08a943b26b01f92c58ea6a4a73af5cb1de7245ff29c3"
+    },
+    {
+      "path": "libs/RVL_SDK/include/revolution/gd/GDIndirect.h",
+      "exists_at_baseline": true,
+      "before_sha256": "5ec9cf42991ae65ffcdd7270ab0c03d8117c50c7da45d29846b127f6ab598a48",
+      "after_sha256": "dc3f4616a98bb0bebc73500c628bb83ea0ea2929a7b37d6d9cf50b3612577662"
+    },
+    {
+      "path": "pc-port/src/revolution/gd/GDIndirect.h",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "52344fec1a4d254c3e8dd37362ab7e95fa882a388f0f9736442e9661220a6c4e"
+    },
+    {
+      "path": "libs/RVL_SDK/include/revolution/gd/GDLight.h",
+      "exists_at_baseline": true,
+      "before_sha256": "6f91cbfd2aa2191bcaca526c8eb029b22e7410e298f7cd6f42ca6e7b4e342368",
+      "after_sha256": "def0d7f7132019547ac3df0b0fb4ab4ad08e317298d7462f90ad9cf909034b6e"
+    },
+    {
+      "path": "pc-port/src/revolution/gd/GDLight.h",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "b13ae3a927872f701d56eeb742c21b602d0f0d018af8ef79ced197c0726eb863"
+    },
+    {
+      "path": "libs/RVL_SDK/include/revolution/gd/GDTexture.h",
+      "exists_at_baseline": true,
+      "before_sha256": "f378ce05244ddec4626d09fcb081310a7c884bab6833e2f57d5948b905a860a5",
+      "after_sha256": "db4cf5d3bd29cd5d185c9687c2f63453ae947e8187eb32053d2b2a108a077955"
+    },
+    {
+      "path": "pc-port/src/revolution/gd/GDTexture.h",
+      "exists_at_baseline": false,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "0053a5e69bea5679262973909c51e33eea7631a806ec73205debae3fe0ee546f"
+    }
+  ]
+}

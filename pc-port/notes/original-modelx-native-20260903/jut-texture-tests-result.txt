@@ -1,0 +1,3 @@
+JUTTexture: enclosing-constructor unwind and failed allocation restore mapped capacity
+JUTTexture: mapped owned/borrowed, GD address, dimensions, three capture/destruction/reuse cycles pass
+JUTTexture: outstanding storage survives provider retirement, returns full MEM1 capacity on final destruction

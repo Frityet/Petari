@@ -1,0 +1,3 @@
+RuntimeContext: real mapped capture allocation failure restores video/context/scene/heap owners
+RuntimeContext: injected logger failure retires both original capture callbacks before global registration
+RuntimeContext: two complete reconstructions restore full MEM1 capacity and every owner identity
