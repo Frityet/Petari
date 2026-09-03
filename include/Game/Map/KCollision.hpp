@@ -69,7 +69,7 @@ public:
 
     void init(void*, const void*);
     void setData(void*);
-    void calcFarthestVertexDistance();
+    bool calcFarthestVertexDistance();
     static bool isBinaryInitialized(const void*);
     KC_PrismData* checkPoint(Fxyz*, f32, f32*);
     u32 checkArea3D(Fxyz*, Fxyz*, KC_PrismData**, u32);

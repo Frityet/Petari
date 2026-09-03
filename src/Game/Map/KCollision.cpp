@@ -1,4 +1,7 @@
 #include "Game/Map/KCollision.hpp"
+#include "Game/Camera/CameraPolygonCodeUtil.hpp"
+#include "Game/Map/CollisionCode.hpp"
+#include "Game/Map/CollisionDirector.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/MathUtil.hpp"
 
@@ -57,14 +60,38 @@ void KCollisionServer::setData(void* pData) {
     }
 }
 
-/*void KCollisionServer::calcFarthestVertexDistance() {
-    s32 triCount = getTriangleNum();
+bool KCollisionServer::calcFarthestVertexDistance() {
+    u32 triCount = getTriangleNum();
     f32 maxDistance = 0.0f;
+    bool isValid = true;
 
-    for (s32 i = 0; i < triCount; i++) {
+    for (u32 i = 0; i < triCount; i++) {
+        KC_PrismData* prism = getPrismData(i);
+        JMapInfoIter iter = getAttributes(i);
 
+        if (!iter.isValid()) {
+            isValid = false;
+        } else {
+            MR::registerCameraCode(MR::getCollisionDirector()->mCode->getCameraID(iter));
+        }
+
+        if (isNearParallelNormal(prism)) {
+            prism->mHeight = -MR::abs(prism->mHeight);
+        } else {
+            for (s32 j = 0; j < 3; j++) {
+                TVec3f pos = getPos(prism, j);
+                f32 distance = pos.squared();
+
+                if (maxDistance < distance) {
+                    maxDistance = distance;
+                }
+            }
+        }
     }
-}*/
+
+    mMaxVertexDistance = MR::sqrt(maxDistance);
+    return isValid;
+}
 
 bool KCollisionServer::isBinaryInitialized(const void* pData) {
     return reinterpret_cast< const s32* >(pData)[0] < 0;
