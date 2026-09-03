@@ -5,6 +5,7 @@
 #include <cstring>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <span>
 #include <string>
 #include <string_view>
@@ -41,7 +42,10 @@ class JMapInfoIter;
 class JMapInfo {
 public:
     struct DataCompat {
+        explicit DataCompat(s32 numEntries = 0) : mNumEntries(numEntries) {}
         s32 mNumEntries = 0;
+        std::mutex mStringMutex;
+        std::map< std::pair< int, std::uint32_t >, std::string > mStringCache;
     };
 
     // Original Game code reads this small part of JMapInfoData directly.
@@ -116,7 +120,6 @@ private:
     std::string mName;
     s32 mPlacedZoneId = -1;
     std::map< std::pair< int, std::uint32_t >, f32 > mFloatOverrides;
-    mutable std::map< std::pair< int, std::uint32_t >, std::string > mStringCache;
 };
 
 class JMapInfoIter {

@@ -1,0 +1,33 @@
+{
+  "scope": "New material factory/variant/decoder fixture linked against unchanged frozen native archives; no shared build or GPU work.",
+  "group_count": 4,
+  "actual_mario_resource": true,
+  "return_code": 0,
+  "binary_sha256": "b837273b4c1b7ea9340926511bcd3cbbd6f735cb03d343fb69d680c01d116c3c",
+  "source_sha256": {
+    "src/compat/J3DMaterialLoaderFactoryCompat.cpp": "59332aba0213a59f714621da81b74c185ea1b3c91a6c34a7bc5401282b08b7ff",
+    "src/compat/J3DMaterialVariantsCompat.cpp": "1971865ed5e372ecff754f47d0463cfbbb217913165cc939ef8e598f29d1e819",
+    "src/resource/J3dMaterialBlockData.cpp": "7937de0111f14f3c53624021d801244ede87b45af432cfd6491f6422488c5ab7",
+    "src/resource/J3dNameData.cpp": "ffd4c7ef8480e36ee29be121f13d5d46e0aea523fa66bdaf080f25c245e31a43",
+    "tests/OriginalJ3DMaterialResourceTests.cpp": "c401724f67cb632f5429504796b20feaeefcf6fc41ec6b997d970c382a0b0572"
+  },
+  "archive_sha256": {
+    "build/macosx/arm64/debug/libaurora-base.a": "0a204f64707e8b21541f6532cbe14d271f8825c26b7476712043d410407096b7",
+    "build/macosx/arm64/debug/libaurora-card.a": "96a9642205e4bd3e84523108b9c6855c4646ce7229429f225441c915b8165cd3",
+    "build/macosx/arm64/debug/libaurora-core.a": "7192637f8151145c1c1285bf36cfa309e174a43ba56d94ecb96ac703ffa54ba3",
+    "build/macosx/arm64/debug/libaurora-dvd.a": "f0a1ea81808c07a9dd2d1f29d2643f39c9d64606385eef20be7269e91a7d4e4d",
+    "build/macosx/arm64/debug/libaurora-gd.a": "7b0bc614134f71fd7494601d0efa49edca440f8c7566073087de70732db32b00",
+    "build/macosx/arm64/debug/libaurora-gx.a": "64c2fcb0074d85089d48caea3d83237fde3f1939f3c5c7dce5af40d97aef3c47",
+    "build/macosx/arm64/debug/libaurora-ms.a": "320a12b454b6c37fee2d29ae96937c39e0c7ce4d66d1b2a51ec9bc7b120718ad",
+    "build/macosx/arm64/debug/libaurora-mtx.a": "08bca4258153eb5758c67cb4735cb4390566f285fb44686a6223016945574889",
+    "build/macosx/arm64/debug/libaurora-nw4r.a": "22e3dc2b7416c999f922ae0aa23441c839fa00c3a1a626a78038fb9fa219e94c",
+    "build/macosx/arm64/debug/libaurora-os.a": "5c9e1866dd1682407a8f5cceefd0e1d2082adcda1013c6e62ff075a5838cf88f",
+    "build/macosx/arm64/debug/libaurora-pad.a": "61acb4bf9420c56b029d41f69d60bdf0592d712dfc5c40b945a7579baf591ce6",
+    "build/macosx/arm64/debug/libaurora-platform.a": "379c5fcf95f84852aa0e4a1b9a4428ebbc2dcc668023a467b01835980fece58e",
+    "build/macosx/arm64/debug/libaurora-si.a": "425bc8fdb03433b23590d9ec9f2467aa78888768fbd710b14e8ba85601735c0c",
+    "build/macosx/arm64/debug/libaurora-vi.a": "cb5c342f6b0f8134b8959ad7cfbde2fa1671dcd5c96abe2e45137a0428ec7bf4",
+    "build/macosx/arm64/debug/libsmg-pc-common.a": "dc0dad4caebeb970502d9540d6ad772ef5898e154e037b2c3f70fc18d3340f1e",
+    "build/macosx/arm64/debug/libsmg-pc-game.a": "e6d6a841f3af9339fcc5a82b59aedabc731c068461f39ae3be36eb5264b2d5d6",
+    "build/macosx/arm64/debug/libsmg-pc-render.a": "3fd63e9daec68d1cd35e950bab9aa9446b75006e1bd691566ddd438f2f55ead4"
+  }
+}

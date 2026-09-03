@@ -1,0 +1,86 @@
+[
+  {
+    "target": "smg-pc-original-j3d-material-resource-tests",
+    "returncode": 0,
+    "seconds": 0.554,
+    "binary_sha256": "d36e2252260642e24f7f4e01af43cb266a25f1f6f8e81c177d3382c485483120",
+    "output": "[resource] mario.bdl: 9 materials, all normal/patched/locked factories\n[pass] 4 original J3D material-resource groups\n"
+  },
+  {
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "returncode": 0,
+    "seconds": 0.508,
+    "binary_sha256": "ef79392b1d8eba820dbe462e511f0b68f96282514949716c30f4972044a728bb",
+    "output": "[resource] mario.bdl: shapes=9, groups=12, normals=2742, colors=41, tex metadata=977, physical S16/ST=1952\n[pass] 5 original J3D geometry-resource groups\n"
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-resource-tests",
+    "returncode": 0,
+    "seconds": 0.494,
+    "binary_sha256": "f371f4d2464a4159bc0836c8965742dad8261df2656429d1c8f40ad0ec692b20",
+    "output": "[resource] mario.bdl TEX1: textures=22, bytes=101440\n[pass] 5 original J3D texture-resource groups\n"
+  },
+  {
+    "target": "smg-pc-original-jkr-archive-tests",
+    "returncode": 0,
+    "seconds": 0.202,
+    "binary_sha256": "8d573147bd2e37762d2e67952eb9fda059a577e366f3309443e352e65460f83c",
+    "output": "PASS full typed catalog\nPASS original finder\nPASS IDs and resource bytes\nPASS relative directories\nPASS retained archive lifetime\nPASS bounded string table\n"
+  },
+  {
+    "target": "smg-pc-original-jmap-resource-tests",
+    "returncode": 0,
+    "seconds": 0.182,
+    "binary_sha256": "e9d3c0dcf574a7e2e5290fd781837d0bc8ba022c104ac2048197c63971071870",
+    "output": "PASS borrowed name outlives local reader\nPASS attached reader retains released resource\nPASS rebind preserves other owner\nPASS concurrent shared readers\n"
+  },
+  {
+    "target": "smg-pc-original-bck-ctrl-tests",
+    "returncode": 0,
+    "seconds": 0.467,
+    "binary_sha256": "e85a8b4f0f5ca73c0765e860d4e85c857c36a127ed8259385e34a97f32a53f8f",
+    "output": "PASS complete data assignment\nPASS sentinels preserve state\nPASS authored settings\nPASS ordered frame bounds\nPASS reverse interval\nPASS inclusive bounds\nPASS interpolation and loop-mode order\n"
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-resource-tests",
+    "returncode": 0,
+    "seconds": 0.508,
+    "binary_sha256": "bf94dd4c5d7249b89afb5ecda2c02373d390a65cd25760092fcce5a83f00c906",
+    "output": "[resource] mario.bdl: joints=30, envelopes=13, serialized draw=48, native draw=35, full=22\n[pass] 4 original J3D joint-resource groups\n"
+  },
+  {
+    "target": "smg-pc-original-j3d-material-animation-tests",
+    "returncode": 0,
+    "seconds": 0.477,
+    "binary_sha256": "9cfcf9cb455ff713bf20a40460681c714c4c40929c2fbb57a0b9bf071f07bc73",
+    "output": "5/5 original material-animation groups passed\n"
+  },
+  {
+    "target": "smg-pc-original-j3d-material-block-tests",
+    "returncode": 0,
+    "seconds": 0.337,
+    "binary_sha256": "99fac30f7b5e710e20b16ed38f056b993ff60d10574132ba0f477b4324854c66",
+    "output": "5/5 original J3D material-block groups passed\n"
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "returncode": 0,
+    "seconds": 0.477,
+    "binary_sha256": "5e132edde8c2c5820c7ca83a264976a1b6018985a1d5c4f5e6468c7edf61edf4",
+    "output": "9/9 original XanimeCore system groups passed\n"
+  },
+  {
+    "target": "smg-pc-original-xanime-player-tests",
+    "returncode": 0,
+    "seconds": 0.47,
+    "binary_sha256": "79287c582208dff98864809f258c5c5a9757f4cc58339b3c4f5745561fa9412b",
+    "output": "6/6 original XanimePlayer lifecycle groups passed\n"
+  },
+  {
+    "target": "smg-pc-original-kcollision-resource-tests",
+    "returncode": 0,
+    "seconds": 0.193,
+    "binary_sha256": "f12d799eb8281f7617492ae3bd2552773974c76e2aa1ab0480bacd7f7fe9e8eb",
+    "output": "PASS actual constructor, init, and geometry\nPASS retained mutable resource lifetime\nPASS JMap attach identity and null semantics\nPASS original octree search and leaf indices\nPASS single root and overlapping unused prefix\nPASS multiple root blocks\nPASS malformed resource boundaries\nPASS absent and out-of-range attributes\nPASS empty original prism array\nPASS incompatible live node/leaf alias is explicit\n"
+  }
+]

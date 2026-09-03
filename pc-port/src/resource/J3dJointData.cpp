@@ -1,4 +1,5 @@
 #include "J3dJointData.hpp"
+#include "J3dNameData.hpp"
 
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -6,7 +7,6 @@
 
 #include <algorithm>
 #include <bit>
-#include <cstring>
 #include <stdexcept>
 #include <vector>
 
@@ -106,37 +106,6 @@ namespace smgpc::resource {
             return blocks;
         }
 
-        struct NameData {
-            std::unique_ptr<std::byte[]> bytes;
-            std::unique_ptr<JUTNameTab> table;
-
-            void load(Bytes block, std::size_t offset) {
-                if (offset == 0) {
-                    return;
-                }
-                require_range(block, offset, 4);
-                const auto source = block.subspan(offset);
-                const auto count = u16_at(source, 0);
-                require_range(source, 4, count * 4U);
-                // Preserve the original header, key codes, string offsets and
-                // bytes. Only the integer records change to host byte order.
-                bytes = std::make_unique<std::byte[]>(std::max(source.size(), sizeof(ResNTAB)));
-                std::memcpy(bytes.get(), source.data(), source.size());
-                for (std::size_t i = 0; i < 2U + count * 2U; ++i) {
-                    const auto value = u16_at(source, i * 2);
-                    std::memcpy(bytes.get() + i * 2, &value, sizeof(value));
-                }
-                for (std::size_t i = 0; i < count; ++i) {
-                    const auto string_offset = u16_at(source, 6 + i * 4);
-                    require_range(source, string_offset, 1);
-                    if (std::find(source.begin() + string_offset, source.end(), 0) == source.end()) {
-                        throw std::runtime_error("J3D joint name is not terminated inside its block");
-                    }
-                }
-                table = std::make_unique<JUTNameTab>(reinterpret_cast<const ResNTAB*>(bytes.get()));
-            }
-        };
-
     }  // namespace
 
     struct J3dJointData::Storage {
@@ -150,7 +119,7 @@ namespace smgpc::resource {
         std::vector<J3DJoint> joints;
         std::vector<J3DJoint*> joint_pointers;
         std::unique_ptr<J3DMtxCalc> basic;
-        NameData names;
+        J3dNameData names;
         std::vector<u8> mix_counts;
         std::vector<u16> mix_indices;
         std::vector<float> mix_weights;
@@ -196,7 +165,11 @@ namespace smgpc::resource {
                 joint.mMtxCalc = nullptr;
                 joint_pointers.push_back(&joint);
             }
-            names.load(block, u32_at(block, 0x14));
+            const auto name_offset = u32_at(block, 0x14);
+            if (name_offset != 0) {
+                require_range(block, name_offset, 4);
+                names = J3dNameData(block.subspan(name_offset));
+            }
         }
 
         void load_info(Bytes block, std::uint32_t load_flags) {
@@ -358,7 +331,7 @@ namespace smgpc::resource {
         tree.mBasicMtxCalc = data.basic.get();
         tree.mJointNodePointer = data.joint_pointers.data();
         tree.mJointNum = static_cast<u16>(data.joints.size());
-        tree.mJointName = data.names.table.get();
+        tree.mJointName = data.names.table();
         tree.mWEvlpMtxNum = static_cast<u16>(data.mix_counts.size());
         tree.mWEvlpMixMtxNum = data.mix_counts.data();
         tree.mWEvlpMixMtxIndex = data.mix_indices.data();

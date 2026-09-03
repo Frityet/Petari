@@ -1,0 +1,145 @@
+[
+  {
+    "target": "smg-pc-showcase",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-showcase"
+    ],
+    "returncode": 0,
+    "seconds": 30.772
+  },
+  {
+    "target": "smg-pc-original-j3d-material-resource-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-j3d-material-resource-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.684
+  },
+  {
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-j3d-geometry-resource-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.676
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-resource-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-j3d-texture-resource-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.681
+  },
+  {
+    "target": "smg-pc-original-jkr-archive-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-jkr-archive-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.513
+  },
+  {
+    "target": "smg-pc-original-jmap-resource-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-jmap-resource-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.422
+  },
+  {
+    "target": "smg-pc-original-bck-ctrl-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-bck-ctrl-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.488
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-resource-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-j3d-joint-resource-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.703
+  },
+  {
+    "target": "smg-pc-original-j3d-material-animation-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-j3d-material-animation-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.479
+  },
+  {
+    "target": "smg-pc-original-j3d-material-block-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-j3d-material-block-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.465
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-xanime-core-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.487
+  },
+  {
+    "target": "smg-pc-original-xanime-player-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-xanime-player-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.531
+  },
+  {
+    "target": "smg-pc-original-kcollision-resource-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-j8",
+      "smg-pc-original-kcollision-resource-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.486
+  }
+]

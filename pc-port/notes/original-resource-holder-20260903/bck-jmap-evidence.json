@@ -1,0 +1,89 @@
+{
+  "bck_comparison": [
+    {
+      "name": "__ct__7BckCtrlFP14ResourceHolderPCc",
+      "retail_size": "548",
+      "objdiff_match_percent": 99.78102
+    },
+    {
+      "name": "add__7BckCtrlFRC11BckCtrlData",
+      "retail_size": "288",
+      "objdiff_match_percent": 93.81944
+    },
+    {
+      "name": "__as__11BckCtrlDataFRC11BckCtrlData",
+      "retail_size": "100",
+      "objdiff_match_percent": 100.0
+    },
+    {
+      "name": "overWrite__7BckCtrlFRC11BckCtrlData",
+      "retail_size": "132",
+      "objdiff_match_percent": 100.0
+    },
+    {
+      "name": "changeBckSetting__7BckCtrlCFPCcP12XanimePlayer",
+      "retail_size": "176",
+      "objdiff_match_percent": 100.0
+    },
+    {
+      "name": "find__7BckCtrlCFPCc",
+      "retail_size": "204",
+      "objdiff_match_percent": 92.94118
+    },
+    {
+      "name": "reflectBckCtrlData__15BckCtrlFunctionFRC11BckCtrlDataP12XanimePlayer",
+      "retail_size": "332",
+      "objdiff_match_percent": 95.54217
+    },
+    {
+      "name": "__ct__11BckCtrlDataFv",
+      "retail_size": "44",
+      "objdiff_match_percent": 100.0
+    }
+  ],
+  "assignment_retail_bytes_equal_after_relocation": true,
+  "manual_semantic_review": "See bck-review.md for instruction-level residuals; nonmatching routines are functional recoveries, not byte matches.",
+  "native_jmap_tests": {
+    "normal": {
+      "cases": [
+        "borrowed name outlives local reader",
+        "attached reader retains released resource",
+        "rebind preserves other owner",
+        "concurrent shared readers"
+      ],
+      "binary_sha256": "6b9b3b97b27bd0bef3a947b6eeee49c0e9fa82605514c802176023caf9dcc846"
+    },
+    "address-undefined": {
+      "cases": [
+        "borrowed name outlives local reader",
+        "attached reader retains released resource",
+        "rebind preserves other owner",
+        "concurrent shared readers"
+      ],
+      "binary_sha256": "e3fb523779077f510559294447bcc0eeea2a77cdb0d281cba363406688f862aa"
+    },
+    "thread": {
+      "cases": [
+        "borrowed name outlives local reader",
+        "attached reader retains released resource",
+        "rebind preserves other owner",
+        "concurrent shared readers"
+      ],
+      "binary_sha256": "81485f2aab640cf34b9a0ea1275a54b5f9702ec968708dc5378efd49b6de2ba4"
+    }
+  },
+  "native_bck_runtime_tests": "Awaiting coordinated parent build; syntax-only probe passed.",
+  "source_sha256": {
+    "pc-port/tests/OriginalJMapResourceTests.cpp": "bc4d197eafb608913bae041dffa2f8572f8bf73cac058198ec2f76282a866cb1",
+    "pc-port/src/resource/JMapResource.cpp": "4c088d6d55b099b98126fda5ecc006124aa8c3a5bdf88e73e77d8c2242c49a41",
+    "pc-port/src/resource/BcsvTable.cpp": "2b92814a77d6b4d03c0c8a4adebe6be024d909138701c2746bd528f9ff79b4be",
+    "pc-port/src/Game/Util/JMapInfo.cpp": "5265b61e4da2e239cfa00d5f8833f8270f948a29170948ff8a753169278695ee",
+    "pc-port/src/Game/Util/JMapInfo.hpp": "16ee1be0ffcc4e9e61bfed4ebd867f957d09da7167143b2fae0e2965f9f12dd6",
+    "include/Game/Animation/BckCtrl.hpp": "053b2575f5671349884b7a49b657345fa0ac6c0e814aa8339a3d384cf5cfef8d",
+    "src/Game/Animation/BckCtrl.cpp": "2974e6262f3e78802a0e5d011cd1799c89909463b6a8668e1ea43ca681d9e13f",
+    "pc-port/src/Game/Animation/BckCtrl.hpp": "053b2575f5671349884b7a49b657345fa0ac6c0e814aa8339a3d384cf5cfef8d",
+    "pc-port/src/Game/Animation/BckCtrl.cpp": "2974e6262f3e78802a0e5d011cd1799c89909463b6a8668e1ea43ca681d9e13f",
+    "pc-port/tests/OriginalBckCtrlTests.cpp": "5e26bf48f12e3a8f023f82497de0f91e20814b28e79b6196dd9d37e847018a75"
+  },
+  "scope": "Original BckCtrl prerequisite and shared borrowed-string ownership; ResourceHolder migration not activated."
+}

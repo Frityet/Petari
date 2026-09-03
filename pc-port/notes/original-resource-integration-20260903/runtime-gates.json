@@ -1,0 +1,32 @@
+[
+  {
+    "mode": "title",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-showcase",
+      "title",
+      "--disc",
+      "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--smoke",
+      "--max-frames",
+      "600"
+    ],
+    "returncode": 0,
+    "seconds": 1.536,
+    "binary_sha256": "3f2e3df676f49e0c3a52762831fee757fe278a870b7ddbfafc50e42cde2ab044"
+  },
+  {
+    "mode": "gateway",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--smoke",
+      "--max-frames",
+      "600"
+    ],
+    "returncode": 0,
+    "seconds": 1.313,
+    "binary_sha256": "3f2e3df676f49e0c3a52762831fee757fe278a870b7ddbfafc50e42cde2ab044"
+  }
+]

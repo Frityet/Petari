@@ -1206,7 +1206,10 @@ for _, fixture in ipairs {
     {"texture-mtx", "OriginalJ3DTextureMtxTests.cpp"},
     {"material-animation", "OriginalMaterialAnimationTests.cpp"},
     {"material-block", "OriginalJ3DMaterialBlockTests.cpp"},
-    {"joint-resource", "OriginalJ3DJointResourceTests.cpp"}
+    {"joint-resource", "OriginalJ3DJointResourceTests.cpp"},
+    {"material-resource", "OriginalJ3DMaterialResourceTests.cpp"},
+    {"geometry-resource", "OriginalJ3DGeometryResourceTests.cpp"},
+    {"texture-resource", "OriginalJ3DTextureResourceTests.cpp"}
 } do
     target("smg-pc-original-j3d-" .. fixture[1] .. "-tests")
         set_kind("binary")
@@ -1221,6 +1224,25 @@ for _, fixture in ipairs {
             group = "aurora",
             rundir = os.projectdir(),
             realtime_output = true
+        })
+end
+
+for _, fixture in ipairs {
+    {"jkr-archive", "OriginalJkrArchiveTests.cpp"},
+    {"jmap-resource", "OriginalJMapResourceTests.cpp"},
+    {"bck-ctrl", "OriginalBckCtrlTests.cpp"}
+} do
+    target("smg-pc-original-" .. fixture[1] .. "-tests")
+        set_kind("binary")
+        set_default(false)
+        set_group("tests/aurora")
+        add_files(fixture[2], "../aurora/lib/compat.cpp")
+        add_deps {
+            "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+            "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+        }
+        add_tests("original_" .. fixture[1]:gsub("-", "_"), {
+            group = "aurora", rundir = os.projectdir(), realtime_output = true
         })
 end
 

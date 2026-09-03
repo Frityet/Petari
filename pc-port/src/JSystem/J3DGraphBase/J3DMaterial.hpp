@@ -17,6 +17,10 @@ class J3DDisplayListObj;
 
 class J3DMaterial {
 public:
+    J3DMaterial() NO_INLINE {
+        initialize();
+    }
+
     virtual void calc(f32 const (*)[4]);
     virtual void calcDiffTexMtx(f32 const (*)[4]);
     virtual void makeDisplayList();

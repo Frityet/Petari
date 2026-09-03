@@ -41,6 +41,6 @@ public:
 
     BckCtrlData mDefaultCtrlData;  // 0x0
     BckCtrlData* mControlData;     // 0x14
-    u32 mControlDataCount;         // 0x18
-    u32 _1C;
+    s32 mControlDataCount;         // 0x18
+    s32 _1C;
 };

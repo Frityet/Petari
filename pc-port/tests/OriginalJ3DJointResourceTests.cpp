@@ -1,7 +1,11 @@
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
+#include "JSystem/J3DGraphLoader/J3DModelLoader.hpp"
+#include "JSystem/JSupport/JSupport.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include "resource/J3dJointData.hpp"
+#include "resource/J3dNameData.hpp"
+#include "resource/J3dNativeBlock.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <aurora/dvd.h>
@@ -268,6 +272,37 @@ namespace {
         require(model.getDrawMtxNum() == 4 && model.getWEvlpMtxNum() == 1 &&
                     model.getJointTree().getDrawFullWgtMtxNum() == 2,
                 "native readDraw count follows original block order before later envelopes are attached");
+
+        smgpc::resource::J3dNameData absent;
+        require(absent.table() == nullptr && absent.resource() == nullptr && absent.bytes().empty(),
+                "an absent shared name owner must not synthesize a table");
+        const std::array<std::uint8_t, 4> empty_bytes{0, 0, 0xab, 0xcd};
+        smgpc::resource::J3dNameData empty(empty_bytes);
+        require(empty.resource()->mEntryNum == 0 && empty.resource()->_2 == 0xabcd && empty.table() != nullptr &&
+                    empty.table()->getName(0) == nullptr && empty.table()->getIndex("missing") == -1,
+                "a present zero-entry table retains its header and original guarded lookup behavior");
+        auto short_names = fixture();
+        write16(short_names, block_offset(short_names, "JNT1") + 0xa0, 1);
+        J3dJointData short_resource(short_names);
+        J3DModelData short_model;
+        short_resource.attach_to(short_model);
+        require(short_model.getJointNum() == 2 && short_model.getJointName()->mNameNum == 1 &&
+                    std::strcmp(short_model.getJointName()->getName(0), "Root") == 0 &&
+                    short_model.getJointName()->getName(1) == nullptr,
+                "stored name count remains independent of joint cardinality as in the original loader");
+        const auto source_joint = block(source, "JNT1");
+        smgpc::resource::J3dNameData names(source_joint.subspan(read32(source_joint, 0x14)));
+        smgpc::resource::J3dNativeBlock<J3DShapeBlock>::Builder builder;
+        const auto name_offset = builder.append_bytes(names.bytes(), alignof(ResNTAB));
+        builder.header.mpNameTable = decltype(builder)::pointer_offset(name_offset);
+        auto native = std::move(builder).finish();
+        names = smgpc::resource::J3dNameData();
+        const auto* name_resource = JSUConvertOffsetToPtr<ResNTAB>(&native->header(),
+                                      reinterpret_cast<std::uintptr_t>(native->header().mpNameTable));
+        JUTNameTab table(name_resource);
+        require(table.getIndex("Root") == 0 && table.getIndex("Child") == 1 &&
+                    std::strcmp(table.getName(1), "Child") == 0 && table.mResource->_2 == 0xabcd,
+                "shared converted records retain relative strings when moved into a native SDK block arena");
     }
 
     void test_bad_ranges() {

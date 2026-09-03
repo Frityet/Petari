@@ -13,6 +13,17 @@ void JMAQuatLerp(const Quaternion*, const Quaternion*, f32, Quaternion*);
 
 void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
 
+template < typename T >
+inline T JMAMax(T param_0, T param_1) {
+    T ret;
+    if (param_0 > param_1) {
+        ret = param_0;
+    } else {
+        ret = param_1;
+    }
+    return ret;
+}
+
 inline f32 JMAFastSqrt(f32 input) {
     return input > 0.0f ? static_cast< f32 >(frsqrte(static_cast< double >(input)) * input) : input;
 }

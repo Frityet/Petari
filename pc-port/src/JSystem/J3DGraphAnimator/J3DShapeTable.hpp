@@ -7,6 +7,14 @@ class J3DShape;
 class J3DVertexData;
 class JUTNameTab;
 
+#if defined(TARGET_PC)
+namespace smgpc {
+namespace resource {
+class J3dGeometryData;
+}
+}
+#endif
+
 class J3DShapeTable {
 public:
     J3DShapeTable() {
@@ -32,6 +40,9 @@ public:
 
 private:
     friend class J3DModelLoader;
+#if defined(TARGET_PC)
+    friend class smgpc::resource::J3dGeometryData;
+#endif
 
     /* 0x4 */ u16 mShapeNum;
     /* 0x8 */ J3DShape** mShapeNodePointer;

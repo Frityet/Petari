@@ -1,0 +1,158 @@
+{
+  "finder_retail_proof": [
+    {
+      "name": "__ct__12JKRArcFinderFP10JKRArchivell",
+      "address": "0x80410c44",
+      "size": 140,
+      "retail_bytes_equal_after_relocation": true,
+      "objdiff_match_percent": 100.0,
+      "references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a04"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "__ct__13JKRFileFinderFv",
+          "addend": 0,
+          "effective_retail_target": "0x80410d6c"
+        },
+        {
+          "offset": "0x2e",
+          "kind": 6,
+          "symbol": "__vt__12JKRArcFinder",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e7a10"
+        },
+        {
+          "offset": "0x3e",
+          "kind": 4,
+          "symbol": "__vt__12JKRArcFinder",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e7a10"
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a50"
+        }
+      ]
+    },
+    {
+      "name": "findNextFile__12JKRArcFinderFv",
+      "address": "0x80410cd0",
+      "size": 156,
+      "retail_bytes_equal_after_relocation": true,
+      "objdiff_match_percent": 100.0,
+      "references": [
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "getDirEntry__10JKRArchiveCFPQ210JKRArchive9SDirEntryUl",
+          "addend": 0,
+          "effective_retail_target": "0x804110ac"
+        }
+      ]
+    },
+    {
+      "name": "__ct__13JKRFileFinderFv",
+      "address": "0x80410d6c",
+      "size": 28,
+      "retail_bytes_equal_after_relocation": true,
+      "objdiff_match_percent": 100.0,
+      "references": [
+        {
+          "offset": "0x2",
+          "kind": 6,
+          "symbol": "__vt__13JKRFileFinder",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e7a20"
+        },
+        {
+          "offset": "0xa",
+          "kind": 4,
+          "symbol": "__vt__13JKRFileFinder",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e7a20"
+        }
+      ]
+    },
+    {
+      "name": "__dt__12JKRArcFinderFv",
+      "address": "0x80410d88",
+      "size": 64,
+      "retail_bytes_equal_after_relocation": true,
+      "objdiff_match_percent": 100.0,
+      "references": [
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "addend": 0,
+          "effective_retail_target": "0x8040b4a0"
+        }
+      ]
+    },
+    {
+      "name": "__dt__13JKRFileFinderFv",
+      "address": "0x80277a00",
+      "size": 64,
+      "retail_bytes_equal_after_relocation": true,
+      "objdiff_match_percent": null,
+      "references": [
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "addend": 0,
+          "effective_retail_target": "0x8040b4a0"
+        }
+      ]
+    }
+  ],
+  "native_tests": {
+    "normal": {
+      "cases": [
+        "full typed catalog",
+        "original finder",
+        "IDs and resource bytes",
+        "relative directories",
+        "retained archive lifetime",
+        "bounded string table"
+      ],
+      "binary_sha256": "7dcc0d15558f0b4673906b9aeec59d714abc7484d2aca30ff88003d4d84fa98d"
+    },
+    "address-undefined": {
+      "cases": [
+        "full typed catalog",
+        "original finder",
+        "IDs and resource bytes",
+        "relative directories",
+        "retained archive lifetime",
+        "bounded string table"
+      ],
+      "binary_sha256": "153986e2d7f80a1b0a8583be3b33c6b1dd3b22e04482701ab86f5c20f992abc9"
+    }
+  },
+  "source_sha256": {
+    "pc-port/tests/OriginalJkrArchiveTests.cpp": "87edc032e11317ca9ad43861fd445b1982916f909090aa42a262095e1513941c",
+    "pc-port/src/resource/RarcArchive.cpp": "750970c8ff82ce34df3739e51245b9dd3731e3d36f7c5c96800e30dd8be91d49",
+    "pc-port/src/resource/Yaz0.cpp": "81990d78ccaf5245abb94eeca24d9660be748faebe8dcfc0dc02602f5ab49c1d",
+    "pc-port/src/compat/JKRArchiveCompat.cpp": "99a0834289388f7aeb0572ce7706486b31c6dd864f1c84297d32b2f65974ab40",
+    "pc-port/src/compat/JKRFileFinderCompat.cpp": "b080bcf47f9093d2781e4947a191bbe5b5b4a1246594b0df3461ccaf331d9f7f",
+    "pc-port/src/JSystem/JKernel/JKRArchive.hpp": "a25ee2cd0f4d7fe96b0207726498a9e9feaac5273dfc1ea4820f3b687557c036",
+    "pc-port/src/resource/RarcArchive.hpp": "b1115b0545a3899cdd25217ad09893f936d04da4f5740c2410dd1eb5a81bd60d",
+    "src/JSystem/JKernel/JKRFileFinder.cpp": "b080bcf47f9093d2781e4947a191bbe5b5b4a1246594b0df3461ccaf331d9f7f"
+  },
+  "scope": "Typed archive catalog and actual original finder; ResourceHolder migration not activated."
+}

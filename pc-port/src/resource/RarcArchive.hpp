@@ -27,6 +27,7 @@ namespace smgpc::resource {
         static RarcArchive from_bytes(std::vector<std::uint8_t> bytes);
 
         [[nodiscard]] const std::vector<RarcEntry> &entries() const;
+        [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept { return _bytes; }
         [[nodiscard]] static std::uint16_t hash_name(std::string_view name);
         [[nodiscard]] bool contains(std::string_view path) const;
         [[nodiscard]] bool contains_normalized(std::string_view path) const;

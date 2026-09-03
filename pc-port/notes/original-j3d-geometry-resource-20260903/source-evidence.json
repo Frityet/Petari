@@ -1,0 +1,77 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "factory_exact_root_copy_sha256": "4f345ac3ba8257fd9a44b7c26b14e4ebe0fbe4c7d6cde812e1b9f460b31bcf78",
+  "shape_table_exact_bodies_with_one_compile_include": true,
+  "shape_factory_header_exact": true,
+  "original_compiler": {
+    "J3DShapeFactory": {
+      "__ct__15J3DShapeFactoryFRC13J3DShapeBlock": {
+        "match_percent": 100.0,
+        "size": 208
+      },
+      "create__15J3DShapeFactoryFiUlP14_GXVtxDescList": {
+        "match_percent": 80.07921,
+        "size": 404
+      },
+      "newShapeMtx__15J3DShapeFactoryCFUlii": {
+        "match_percent": 63.634922,
+        "size": 504
+      },
+      "newShapeDraw__15J3DShapeFactoryCFii": {
+        "match_percent": 90.15151,
+        "size": 132
+      },
+      "allocVcdVatCmdBuffer__15J3DShapeFactoryFUl": {
+        "match_percent": 100.0,
+        "size": 108
+      },
+      "calcSize__15J3DShapeFactoryFiUl": {
+        "match_percent": 94.84375,
+        "size": 128
+      },
+      "calcSizeVcdVatCmdBuffer__15J3DShapeFactoryFUl": {
+        "match_percent": 100.0,
+        "size": 16
+      },
+      "calcSizeShapeMtx__15J3DShapeFactoryCFUlii": {
+        "match_percent": 100.0,
+        "size": 168
+      },
+      "getMtxGroupNum__15J3DShapeFactoryCFi": {
+        "match_percent": 100.0,
+        "size": 32
+      }
+    },
+    "J3DShapeTable": {
+      "initShapeNodes__13J3DShapeTableFP14J3DDrawMtxDataP13J3DVertexData": {
+        "match_percent": 100.0,
+        "size": 108
+      },
+      "sortVcdVatCmd__13J3DShapeTableFv": {
+        "match_percent": 100.0,
+        "size": 156
+      }
+    }
+  },
+  "retail_instruction_checks": {
+    "0x8043e874": "0x2c00000a",
+    "0x8043e898": "0x2c000004",
+    "0x8043e89c": "0x38c00006",
+    "0x8043e8a4": "0x38c0000c",
+    "0x8043e908": "0x7ca03396",
+    "0x8043e90c": "0x38050001",
+    "0x8043e924": "0x7ca03396",
+    "0x8043e928": "0x38050001",
+    "0x8043e97c": "0x5405f0be",
+    "0x8043e980": "0x38050001",
+    "0x8043e998": "0x5405f0be",
+    "0x8043e99c": "0x38050001",
+    "0x8043e9c8": "0x5404e8fe",
+    "0x8043e9cc": "0x38040001",
+    "0x804408dc": "0xa0030004",
+    "0x804408e0": "0x7c050214",
+    "0x80440948": "0x1c1c00c0",
+    "0x804409ac": "0xb39f0008"
+  },
+  "scope": "Existing original factory/table sources with sizeof-only native ABI corrections. Matching percentages are reported without claiming binary identity for lower-matching factory allocation bodies. Decoder behavior is covered by separate native resource tests."
+}

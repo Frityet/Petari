@@ -55,7 +55,7 @@ namespace {
 }  // namespace
 
 JMapInfo::JMapInfo(smgpc::resource::BcsvTable table)
-    : mData(std::make_shared< DataCompat >(DataCompat{static_cast< s32 >(table.entry_count())})),
+    : mData(std::make_shared< DataCompat >(static_cast< s32 >(table.entry_count()))),
       mTable(std::make_shared< smgpc::resource::BcsvTable >(std::move(table))) {
 }
 
@@ -96,7 +96,6 @@ bool JMapInfo::attach(const void* data) {
     mData = resource->mData;
     mTable = resource->mTable;
     mFloatOverrides.clear();
-    mStringCache.clear();
     return true;
 }
 
@@ -348,9 +347,9 @@ bool JMapInfo::getStringValueByHash(int entryIndex, std::uint32_t hash, const ch
         return false;
     }
 
-    auto& cached = mStringCache[{entryIndex, hash}];
-    cached = *value;
-    *pValueOut = cached.c_str();
+    const std::lock_guard lock(mData->mStringMutex);
+    const auto [cached, inserted] = mData->mStringCache.try_emplace(std::pair{entryIndex, hash}, *value);
+    *pValueOut = cached->second.c_str();
     return true;
 }
 
