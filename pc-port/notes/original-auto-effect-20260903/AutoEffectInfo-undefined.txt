@@ -1,0 +1,7 @@
+MR::isEqualString(char const*, char const*)
+JMapInfo::getValueFast(int, int, char const**) const
+JMapInfo::getValueFast(int, int, float*) const
+JMapInfo::getValueFast(int, int, int*) const
+JMapInfo::searchItemInfo(char const*) const
+_strchr
+_strtoul

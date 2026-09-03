@@ -1,0 +1,170 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "methods": [
+    {
+      "object": "AutoEffectGroup",
+      "symbol": "__ct__15AutoEffectGroupFPCci",
+      "address": "0x800c46e8",
+      "size": 92,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroup",
+      "symbol": "add__15AutoEffectGroupFRC12JMapInfoIter",
+      "address": "0x800c4744",
+      "size": 116,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroup",
+      "symbol": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP12EffectKeeperPC9LiveActor",
+      "address": "0x800c47b8",
+      "size": 108,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroup",
+      "symbol": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP16PaneEffectKeeperPC11LayoutActor",
+      "address": "0x800c4824",
+      "size": 108,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroup",
+      "symbol": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP22MultiSceneEffectKeeperPC15MultiSceneActor",
+      "address": "0x800c4890",
+      "size": 108,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectGroup",
+      "symbol": "createAutoEffectGroup__Q22MR6EffectFPCc",
+      "address": "0x800c48fc",
+      "size": 412,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "getValue<PCc>__12JMapInfoIterCFPCcPPCc_b",
+      "address": "0x800c4d2c",
+      "size": 100,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "str2Color__28@unnamed@AutoEffectInfo_cpp@FPCc",
+      "address": "0x800c4d90",
+      "size": 48,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "isValueOnR__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+      "address": "0x800c4dc0",
+      "size": 64,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "isValueOnS__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+      "address": "0x800c4e00",
+      "size": 64,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "getStringValue__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+      "address": "0x800c4e40",
+      "size": 76,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "__ct__14AutoEffectInfoFv",
+      "address": "0x800c4e8c",
+      "size": 92,
+      "relocation_kinds": [
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "init__14AutoEffectInfoFRC12JMapInfoIter",
+      "address": "0x800c4ee8",
+      "size": 960,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "getName__14AutoEffectInfoCFv",
+      "address": "0x800c52a8",
+      "size": 28,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "isValueOnT__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+      "address": "0x800c52c4",
+      "size": 64,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "AutoEffectInfo",
+      "symbol": "set__6Color8F8_GXColor",
+      "address": "0x800c5304",
+      "size": 36,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+[
+  {
+    "source": "src/Game/Effect/AutoEffectGroup.cpp",
+    "source_sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/AutoEffectGroup.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-auto-effect-20260903/AutoEffectGroup.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__15AutoEffectGroupFPCci",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "add__15AutoEffectGroupFRC12JMapInfoIter",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP12EffectKeeperPC9LiveActor",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP16PaneEffectKeeperPC11LayoutActor",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP22MultiSceneEffectKeeperPC15MultiSceneActor",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createAutoEffectGroup__Q22MR6EffectFPCc",
+        "size": "412",
+        "match_percent": 99.805824
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/AutoEffectInfo.cpp",
+    "source_sha256": "2b03d5ac211ee13fdcd0507b3665ea299e313a6c4dc2e7f87691393250f21677",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/AutoEffectInfo.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-auto-effect-20260903/AutoEffectInfo.o"
+    ],
+    "methods": [
+      {
+        "name": "getValue<PCc>__12JMapInfoIterCFPCcPPCc_b",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "str2Color__28@unnamed@AutoEffectInfo_cpp@FPCc",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isValueOnR__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+        "size": "64",
+        "match_percent": 99.6875
+      },
+      {
+        "name": "isValueOnS__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+        "size": "64",
+        "match_percent": 99.6875
+      },
+      {
+        "name": "getStringValue__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+        "size": "76",
+        "match_percent": 99.47369
+      },
+      {
+        "name": "__ct__14AutoEffectInfoFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__14AutoEffectInfoFRC12JMapInfoIter",
+        "size": "960",
+        "match_percent": 99.17083
+      },
+      {
+        "name": "getName__14AutoEffectInfoCFv",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isValueOnT__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+        "size": "64",
+        "match_percent": 99.6875
+      },
+      {
+        "name": "set__6Color8F8_GXColor",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sDrawOrderDataTable__28@unnamed@AutoEffectInfo_cpp@",
+        "size": "72",
+        "match_percent": 66.66667
+      },
+      {
+        "name": "@53767",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@53768",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "size": "104",
+        "match_percent": 60.77922
+      },
+      {
+        "name": "[.sdata2-0]",
+        "size": "8",
+        "match_percent": 100.0
+      }
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "source": "src/Game/Effect/AutoEffectGroup.cpp",
+    "staged": "build/original-auto-effect-20260903/staged/Game/Effect/AutoEffectGroup.cpp",
+    "owned": true,
+    "sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9"
+  },
+  {
+    "source": "src/Game/Effect/AutoEffectInfo.cpp",
+    "staged": "build/original-auto-effect-20260903/staged/Game/Effect/AutoEffectInfo.cpp",
+    "owned": true,
+    "sha256": "2b03d5ac211ee13fdcd0507b3665ea299e313a6c4dc2e7f87691393250f21677"
+  },
+  {
+    "source": "include/Game/Effect/AutoEffectInfo.hpp",
+    "staged": "build/original-auto-effect-20260903/staged/Game/Effect/AutoEffectInfo.hpp",
+    "owned": true,
+    "sha256": "05e24a042cf79acaf6fadf35560b9008cff0da19b996646a9d8e7c12293f2c25"
+  },
+  {
+    "source": "libs/MSL_C/include/cstdlib",
+    "staged": "build/original-auto-effect-20260903/staged/MSL_C/include/cstdlib",
+    "owned": true,
+    "sha256": "43a3af1a57616afa7b490238bf6ca081e41616e6c05976aefeddbf7845578b34"
+  },
+  {
+    "source": "include/Game/Effect/AutoEffectGroup.hpp",
+    "staged": "build/original-auto-effect-20260903/staged/Game/Effect/AutoEffectGroup.hpp",
+    "owned": false,
+    "sha256": "77873297c3bb9f49aa5bda4fca91287cde4091038f84b214de2d528a125f9748"
+  }
+]

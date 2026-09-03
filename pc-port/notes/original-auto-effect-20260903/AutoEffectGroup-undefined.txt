@@ -1,0 +1,18 @@
+__Unwind_Resume
+AutoEffectInfo::init(JMapInfoIter const&)
+AutoEffectInfo::AutoEffectInfo()
+MR::findJMapInfoElementNoCase(JMapInfo const*, char const*, char const*, int)
+MR::Effect::addAutoEffect(EffectKeeper*, LiveActor const*, AutoEffectInfo const*)
+MR::Effect::addAutoEffect(PaneEffectKeeper*, LayoutActor const*, AutoEffectInfo const*)
+MR::Effect::addAutoEffect(MultiSceneEffectKeeper*, MultiSceneActor const*, AutoEffectInfo const*)
+MR::Effect::getAutoEffectNum(char const*)
+MR::Effect::getAutoEffectListBinary()
+JMapInfo::getNumEntries() const
+JMapInfo::end() const
+operator delete[](void*)
+operator delete(void*, unsigned long)
+operator new[](unsigned long)
+operator new(unsigned long)
+___gxx_personality_v0
+___stack_chk_fail
+___stack_chk_guard
