@@ -1,0 +1,456 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "methods": [
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__ct__19NameObjCategoryListFUlPC24CategoryListInitialTableM7NameObjFPCvPv_vbPCc",
+      "address": "0x80261b38",
+      "size": 184,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__ct__19NameObjCategoryListFUlPC24CategoryListInitialTableM7NameObjFPCvPCv_vbPCc",
+      "address": "0x80261bf0",
+      "size": 184,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__dt__19NameObjCategoryListFv",
+      "address": "0x80261ca8",
+      "size": 100,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "execute__19NameObjCategoryListFi",
+      "address": "0x80261d0c",
+      "size": 160,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "incrementCheck__19NameObjCategoryListFP7NameObji",
+      "address": "0x80261dac",
+      "size": 28,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "allocateBuffer__19NameObjCategoryListFv",
+      "address": "0x80261dc8",
+      "size": 136,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "add__19NameObjCategoryListFP7NameObji",
+      "address": "0x80261e50",
+      "size": 40,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "remove__19NameObjCategoryListFP7NameObji",
+      "address": "0x80261e78",
+      "size": 108,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "registerExecuteBeforeFunction__19NameObjCategoryListFRCQ22MR11FunctorBasei",
+      "address": "0x80261ee4",
+      "size": 80,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "initTable__19NameObjCategoryListFUlPC24CategoryListInitialTable",
+      "address": "0x80261f34",
+      "size": 244,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__ct__Q219NameObjCategoryList12CategoryInfoFv",
+      "address": "0x80262028",
+      "size": 20,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__dt__Q219NameObjCategoryList12CategoryInfoFv",
+      "address": "0x8026203c",
+      "size": 92,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__cl__Q233@unnamed@NameObjCategoryList_cpp@40NameObjRealDelegator<M7NameObjFPCvPCv_v>FP7NameObj",
+      "address": "0x80262098",
+      "size": 48,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__cl__Q233@unnamed@NameObjCategoryList_cpp@39NameObjRealDelegator<M7NameObjFPCvPv_v>FP7NameObj",
+      "address": "0x802620c8",
+      "size": 48,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjCategoryList",
+      "symbol": "__dt__Q22MR54AssignableArray<Q219NameObjCategoryList12CategoryInfo>Fv",
+      "address": "0x802620f8",
+      "size": 104,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "__ct__19NameObjListExecutorFv",
+      "address": "0x8026c378",
+      "size": 36,
+      "relocation_kinds": [
+        4,
+        6
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "__dt__19NameObjListExecutorFv",
+      "address": "0x8026c39c",
+      "size": 204,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "__dt__Q22MR50Vector<Q22MR35AssignableArray<P15DrawBufferGroup>>Fv",
+      "address": "0x8026c468",
+      "size": 100,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "init__19NameObjListExecutorFv",
+      "address": "0x8026c4cc",
+      "size": 116,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "registerDrawBuffer__19NameObjListExecutorFP9LiveActori",
+      "address": "0x8026c540",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "allocateDrawBufferActorList__19NameObjListExecutorFv",
+      "address": "0x8026c548",
+      "size": 72,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "registerPreDrawFunction__19NameObjListExecutorFRCQ22MR11FunctorBasei",
+      "address": "0x8026c590",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "findLightInfo__19NameObjListExecutorCFP9LiveActorii",
+      "address": "0x8026c598",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "incrementCheckMovement__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5a0",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "incrementCheckCalcAnim__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5a8",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "incrementCheckDraw__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5b0",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "addToMovement__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5b8",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "addToCalcAnim__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5c0",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "addToDrawBuffer__19NameObjListExecutorFP9LiveActorii",
+      "address": "0x8026c5c8",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "addToDraw__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5d0",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "removeToMovement__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5d8",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "removeToCalcAnim__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5e0",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "removeToDrawBuffer__19NameObjListExecutorFP9LiveActorii",
+      "address": "0x8026c5e8",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "removeToDraw__19NameObjListExecutorFP7NameObji",
+      "address": "0x8026c5f0",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "executeMovement__19NameObjListExecutorFi",
+      "address": "0x8026c5f8",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "executeCalcAnim__19NameObjListExecutorFi",
+      "address": "0x8026c600",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "entryDrawBuffer2D__19NameObjListExecutorFv",
+      "address": "0x8026c608",
+      "size": 12,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "entryDrawBuffer3D__19NameObjListExecutorFv",
+      "address": "0x8026c614",
+      "size": 12,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "entryDrawBufferMirror__19NameObjListExecutorFv",
+      "address": "0x8026c620",
+      "size": 12,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "drawOpa__19NameObjListExecutorFi",
+      "address": "0x8026c62c",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "drawXlu__19NameObjListExecutorFi",
+      "address": "0x8026c634",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "executeDraw__19NameObjListExecutorFi",
+      "address": "0x8026c63c",
+      "size": 8,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "initMovementList__19NameObjListExecutorFv",
+      "address": "0x8026c644",
+      "size": 4,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "initCalcAnimList__19NameObjListExecutorFv",
+      "address": "0x8026c648",
+      "size": 4,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "initCalcViewAndEntryList__19NameObjListExecutorFv",
+      "address": "0x8026c64c",
+      "size": 4,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "NameObjListExecutor",
+      "symbol": "initDrawList__19NameObjListExecutorFv",
+      "address": "0x8026c650",
+      "size": 4,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    }
+  ]
+}

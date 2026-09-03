@@ -1,0 +1,399 @@
+[
+  {
+    "source": "src/Game/NameObj/NameObjCategoryList.cpp",
+    "source_sha256": "26d30a4b871379783e6fa0da929cd7a4c72e2f8a3b79f2c27e0a3fcb929246c0",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/NameObj/NameObjCategoryList.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-predraw-scheduler-20260903/NameObjCategoryList.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__19NameObjCategoryListFUlPC24CategoryListInitialTableM7NameObjFPCvPv_vbPCc",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__19NameObjCategoryListFUlPC24CategoryListInitialTableM7NameObjFPCvPCv_vbPCc",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__19NameObjCategoryListFv",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__19NameObjCategoryListFi",
+        "size": "160",
+        "match_percent": 100.0
+      },
+      {
+        "name": "incrementCheck__19NameObjCategoryListFP7NameObji",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "allocateBuffer__19NameObjCategoryListFv",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "add__19NameObjCategoryListFP7NameObji",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "remove__19NameObjCategoryListFP7NameObji",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerExecuteBeforeFunction__19NameObjCategoryListFRCQ22MR11FunctorBasei",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initTable__19NameObjCategoryListFUlPC24CategoryListInitialTable",
+        "size": "244",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q219NameObjCategoryList12CategoryInfoFv",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__Q219NameObjCategoryList12CategoryInfoFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__cl__Q233@unnamed@NameObjCategoryList_cpp@40NameObjRealDelegator<M7NameObjFPCvPCv_v>FP7NameObj",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__cl__Q233@unnamed@NameObjCategoryList_cpp@39NameObjRealDelegator<M7NameObjFPCvPv_v>FP7NameObj",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__Q22MR54AssignableArray<Q219NameObjCategoryList12CategoryInfo>Fv",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233@unnamed@NameObjCategoryList_cpp@40NameObjRealDelegator<M7NameObjFPCvPCv_v>",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233@unnamed@NameObjCategoryList_cpp@39NameObjRealDelegator<M7NameObjFPCvPv_v>",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "size": "24",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/NameObj/NameObjListExecutor.cpp",
+    "source_sha256": "260c79e1a424456323d572e7232693189fcb894604d6a3d0bfa2ac1504c0ca7c",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/NameObj/NameObjListExecutor.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-predraw-scheduler-20260903/NameObjListExecutor.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__19NameObjListExecutorFv",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__19NameObjListExecutorFv",
+        "size": "204",
+        "match_percent": 98.411766
+      },
+      {
+        "name": "__dt__Q22MR50Vector<Q22MR35AssignableArray<P15DrawBufferGroup>>Fv",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__19NameObjListExecutorFv",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerDrawBuffer__19NameObjListExecutorFP9LiveActori",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "allocateDrawBufferActorList__19NameObjListExecutorFv",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerPreDrawFunction__19NameObjListExecutorFRCQ22MR11FunctorBasei",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findLightInfo__19NameObjListExecutorCFP9LiveActorii",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "incrementCheckMovement__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "incrementCheckCalcAnim__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "incrementCheckDraw__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addToMovement__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addToCalcAnim__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addToDrawBuffer__19NameObjListExecutorFP9LiveActorii",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addToDraw__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "removeToMovement__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "removeToCalcAnim__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "removeToDrawBuffer__19NameObjListExecutorFP9LiveActorii",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "removeToDraw__19NameObjListExecutorFP7NameObji",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeMovement__19NameObjListExecutorFi",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeCalcAnim__19NameObjListExecutorFi",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "entryDrawBuffer2D__19NameObjListExecutorFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "entryDrawBuffer3D__19NameObjListExecutorFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "entryDrawBufferMirror__19NameObjListExecutorFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawOpa__19NameObjListExecutorFi",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawXlu__19NameObjListExecutorFi",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeDraw__19NameObjListExecutorFi",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initMovementList__19NameObjListExecutorFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initCalcAnimList__19NameObjListExecutorFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initCalcViewAndEntryList__19NameObjListExecutorFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initDrawList__19NameObjListExecutorFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__19NameObjListExecutor",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "size": "32",
+        "match_percent": 95.897446
+      }
+    ]
+  }
+]

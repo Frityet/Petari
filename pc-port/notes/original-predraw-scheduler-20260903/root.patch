@@ -1,0 +1,24 @@
+diff --git a/src/Game/NameObj/NameObjCategoryList.cpp b/src/Game/NameObj/NameObjCategoryList.cpp
+index 790ab910c..b2df7568c 100644
+--- a/src/Game/NameObj/NameObjCategoryList.cpp
++++ b/src/Game/NameObj/NameObjCategoryList.cpp
+@@ -1,5 +1,6 @@
+ #include "Game/NameObj/NameObjCategoryList.hpp"
+ #include "Game/Util/Functor.hpp"
++#include <algorithm>
+ 
+ NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTable* pTable, NameObjMethod pMethod, bool a4,
+                                          const char* /* unused */) {
+@@ -60,7 +61,11 @@ void NameObjCategoryList::add(NameObj* pObj, int idx) {
+     mCategoryInfo[idx].mNameObjArr.push_back(pObj);
+ }
+ 
+-// NameObjCategoryList::remove
++void NameObjCategoryList::remove(NameObj* pObj, int idx) {
++    MR::Vector< MR::AssignableArray< NameObj* > >& array = mCategoryInfo[idx].mNameObjArr;
++    array[std::find(array.begin(), array.end(), pObj) - array.begin()] = array[array.mCount - 1];
++    array.mCount--;
++}
+ 
+ void NameObjCategoryList::registerExecuteBeforeFunction(const MR::FunctorBase& rFunc, int idx) {
+     NameObjCategoryList::CategoryInfo* pCategoryInfo = &mCategoryInfo[idx];
