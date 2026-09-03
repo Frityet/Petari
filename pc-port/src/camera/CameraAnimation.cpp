@@ -1,14 +1,47 @@
 #include "camera/CameraAnimation.hpp"
 
+#include "Game/Camera/CameraAnim.hpp"
+
 #include <algorithm>
+#include <array>
 #include <bit>
 #include <cmath>
-#include <limits>
+#include <cstddef>
+#include <cstring>
+#include <new>
 #include <stdexcept>
 #include <string_view>
+#include <vector>
 
 namespace smgpc::camera {
+    struct NativeCameraAnimationData::Storage {
+        explicit Storage(std::size_t byte_count)
+            : data(::operator new(byte_count,
+                                  std::align_val_t{alignof(std::max_align_t)})),
+              size(byte_count) {}
+
+        ~Storage() {
+            ::operator delete(data,
+                              std::align_val_t{alignof(std::max_align_t)});
+        }
+
+        Storage(const Storage &) = delete;
+        Storage &operator=(const Storage &) = delete;
+
+        void *data;
+        std::size_t size;
+    };
+
     namespace {
+
+        static_assert(sizeof(CanmFileHeader) == 0x20U);
+        static_assert(sizeof(CanmFrameInfo) == 8U * 8U);
+        static_assert(sizeof(CanmKeyFrameInfo) == 8U * 12U);
+        static_assert(alignof(CanmFileHeader) == alignof(std::uint32_t));
+        static_assert(alignof(CanmFrameInfo) == alignof(std::uint32_t));
+        static_assert(alignof(CanmKeyFrameInfo) == alignof(std::uint32_t));
+        static_assert(sizeof(float) == 4U);
+        static_assert(alignof(float) == alignof(std::uint32_t));
 
         [[nodiscard]] std::uint32_t read_be_u32(
             std::span<const std::uint8_t> bytes, std::size_t offset) {
@@ -34,30 +67,14 @@ namespace smgpc::camera {
                    std::equal(tag.begin(), tag.end(), bytes.begin() + offset);
         }
 
-        [[nodiscard]] float hermite(float frame, float first_frame,
-                                    float first_value, float first_tangent,
-                                    float second_frame, float second_value,
-                                    float second_tangent) {
-            const auto duration = second_frame - first_frame;
-            if (!(duration > 0.0F)) {
-                return first_value;
-            }
-            const auto t = std::clamp((frame - first_frame) / duration, 0.0F,
-                                      1.0F);
-            const auto t2 = t * t;
-            const auto t3 = t2 * t;
-            const auto h00 = 2.0F * t3 - 3.0F * t2 + 1.0F;
-            const auto h10 = t3 - 2.0F * t2 + t;
-            const auto h01 = -2.0F * t3 + 3.0F * t2;
-            const auto h11 = t3 - t2;
-            // Retail camera-key tangents are authored in 30 Hz units.
-            return h00 * first_value +
-                   h10 * duration * (first_tangent / 30.0F) +
-                   h01 * second_value +
-                   h11 * duration * (second_tangent / 30.0F);
-        }
-
     }  // namespace
+
+    std::span<const std::uint8_t> NativeCameraAnimationData::bytes() const noexcept {
+        if (_storage == nullptr) {
+            return {};
+        }
+        return {static_cast<const std::uint8_t *>(_storage->data), _storage->size};
+    }
 
     CameraAnimation CameraAnimation::from_bytes(
         std::span<const std::uint8_t> bytes) {
@@ -68,6 +85,13 @@ namespace smgpc::camera {
         }
 
         auto result = CameraAnimation{};
+        struct Component {
+            std::uint32_t count = 0U;
+            std::uint32_t offset = 0U;
+            std::uint32_t type = 0U;
+        };
+        auto components = std::array<Component, 8U>{};
+        auto values = std::vector<float>{};
         auto component_size = std::size_t{};
         if (has_tag(bytes, 4U, "CANM")) {
             result._format = CameraAnimationFormat::Canm;
@@ -85,10 +109,19 @@ namespace smgpc::camera {
         }
 
         result._frame_count = read_be_u32(bytes, 0x18U);
+        if (result._frame_count == 0U) {
+            throw std::runtime_error(
+                "Camera animation has no frames for the original camera reader.");
+        }
         const auto value_offset =
             cHeaderSize + static_cast<std::size_t>(read_be_u32(bytes, 0x1cU));
         const auto component_table_size =
-            result._components.size() * component_size;
+            components.size() * component_size;
+        if ((value_offset % alignof(std::uint32_t)) != 0U ||
+            value_offset < cHeaderSize + component_table_size) {
+            throw std::runtime_error(
+                "Camera animation value table is unaligned or overlaps its components.");
+        }
         if (cHeaderSize + component_table_size > bytes.size() ||
             value_offset + 4U > bytes.size()) {
             throw std::runtime_error(
@@ -103,22 +136,18 @@ namespace smgpc::camera {
                 "Camera animation float table has an invalid extent.");
         }
 
-        for (auto index = std::size_t{}; index < result._components.size();
+        for (auto index = std::size_t{}; index < components.size();
              ++index) {
             const auto offset = cHeaderSize + index * component_size;
-            auto &component = result._components[index];
+            auto &component = components[index];
             component.count = read_be_u32(bytes, offset);
             component.offset = read_be_u32(bytes, offset + 4U);
             if (result._format == CameraAnimationFormat::Ckan) {
                 component.type = read_be_u32(bytes, offset + 8U);
-                if (component.type > 1U) {
-                    throw std::runtime_error(
-                        "CKAN component uses an unsupported tangent layout.");
-                }
             }
         }
 
-        result._values.reserve(value_byte_count / sizeof(float));
+        values.reserve(value_byte_count / sizeof(float));
         for (auto offset = value_offset + 4U;
              offset < value_offset + 4U + value_byte_count; offset += 4U) {
             const auto value = read_be_float(bytes, offset);
@@ -126,23 +155,128 @@ namespace smgpc::camera {
                 throw std::runtime_error(
                     "Camera animation contains a non-finite authored value.");
             }
-            result._values.push_back(value);
+            values.push_back(value);
         }
 
-        for (const auto &component : result._components) {
+        const auto terminal_frame = static_cast<float>(result._frame_count - 1U);
+        if (result._format == CameraAnimationFormat::Canm &&
+            !(terminal_frame < 4294967296.0F)) {
+            throw std::runtime_error(
+                "CANM terminal frame exceeds the original unsigned frame conversion.");
+        }
+        for (auto component_index = std::size_t{};
+             component_index < components.size(); ++component_index) {
+            const auto &component = components[component_index];
             if (component.count == 0U) {
                 throw std::runtime_error(
                     "Camera animation component has no authored samples.");
             }
-            const auto stride = result._format == CameraAnimationFormat::Canm ? 1U : component.type == 0U ? 3U :
-                                                                                                            4U;
-            const auto required = component.count == 1U ? std::size_t{1U} : static_cast<std::size_t>(component.count) * stride;
+            const auto stride = result._format == CameraAnimationFormat::Canm ?
+                                    std::size_t{1U} :
+                                    component.type == 0U ? std::size_t{3U} :
+                                                           std::size_t{4U};
+            // A final key used only as lookahead needs time/value/incoming
+            // tangent; get4f never reads its outgoing tangent.
+            const auto required = component.count == 1U ? std::size_t{1U} :
+                                  result._format == CameraAnimationFormat::Canm ?
+                                      static_cast<std::size_t>(component.count) :
+                                      (component.count - 1U) * stride + 3U;
             if (static_cast<std::size_t>(component.offset) + required >
-                result._values.size()) {
+                values.size()) {
                 throw std::runtime_error(
                     "Camera animation component exceeds its float table.");
             }
+
+            if (result._format == CameraAnimationFormat::Ckan &&
+                component.count > 1U) {
+                auto previous = values[component.offset];
+                if (previous > 0.0F) {
+                    throw std::runtime_error(
+                        "CKAN first key would underflow the original key search at frame zero.");
+                }
+                for (auto key = std::uint32_t{1U}; key < component.count; ++key) {
+                    const auto next = values[
+                        static_cast<std::size_t>(component.offset) + key * stride];
+                    if (previous > next) {
+                        throw std::runtime_error(
+                            "CKAN key times are not in nondecreasing order.");
+                    }
+                    previous = next;
+                }
+                // Original get3f/get4f unconditionally read the following key.
+                // calc samples active frames below mNrFrames and, once ended,
+                // samples twist/FOV at float(mNrFrames - 1).
+                const auto final_key_is_reachable =
+                    previous < static_cast<float>(result._frame_count) ||
+                    (component_index >= 6U && !(terminal_frame < previous));
+                if (final_key_is_reachable) {
+                    // The search count need not include a stored lookahead
+                    // record. Preserve the original count and validate the
+                    // three following values that get3f/get4f actually load.
+                    const auto following =
+                        static_cast<std::size_t>(component.offset) +
+                        component.count * stride;
+                    if (following + 3U > values.size()) {
+                        throw std::runtime_error(
+                            "CKAN final searched key has no readable following record.");
+                    }
+                    const auto boundary = values[following];
+                    // This record is outside the binary search. Later frames
+                    // retain this final segment and extrapolate in the original
+                    // Hermite routine; its time does not clamp playback.
+                    if (!(previous < boundary)) {
+                        throw std::runtime_error(
+                            "CKAN following record does not advance beyond the last searched key.");
+                    }
+                }
+            }
         }
+
+        auto storage = std::make_shared<NativeCameraAnimationData::Storage>(bytes.size());
+        auto *native = static_cast<std::uint8_t *>(storage->data);
+        std::memcpy(native, bytes.data(), bytes.size());
+
+        auto *header = std::construct_at(reinterpret_cast<CanmFileHeader *>(native));
+        std::memcpy(header->mMagic, bytes.data(), sizeof(header->mMagic));
+        std::memcpy(header->mType, bytes.data() + 4U, sizeof(header->mType));
+        header->_8 = std::bit_cast<std::int32_t>(read_be_u32(bytes, 0x08U));
+        header->_C = std::bit_cast<std::int32_t>(read_be_u32(bytes, 0x0cU));
+        header->_10 = std::bit_cast<std::int32_t>(read_be_u32(bytes, 0x10U));
+        header->_14 = std::bit_cast<std::int32_t>(read_be_u32(bytes, 0x14U));
+        header->mNrFrames = result._frame_count;
+        header->mValueOffset = read_be_u32(bytes, 0x1cU);
+
+        if (result._format == CameraAnimationFormat::Canm) {
+            auto *info = std::construct_at(
+                reinterpret_cast<CanmFrameInfo *>(native + cHeaderSize));
+            const auto native_components = std::array{
+                &info->mPosX, &info->mPosY, &info->mPosZ,
+                &info->mWatchPosX, &info->mWatchPosY, &info->mWatchPosZ,
+                &info->mTwist, &info->mFovy};
+            for (auto index = std::size_t{}; index < native_components.size(); ++index) {
+                native_components[index]->mCount = components[index].count;
+                native_components[index]->mOffset = components[index].offset;
+            }
+        } else {
+            auto *info = std::construct_at(
+                reinterpret_cast<CanmKeyFrameInfo *>(native + cHeaderSize));
+            const auto native_components = std::array{
+                &info->mPosX, &info->mPosY, &info->mPosZ,
+                &info->mWatchPosX, &info->mWatchPosY, &info->mWatchPosZ,
+                &info->mTwist, &info->mFovy};
+            for (auto index = std::size_t{}; index < native_components.size(); ++index) {
+                native_components[index]->mCount = components[index].count;
+                native_components[index]->mOffset = components[index].offset;
+                native_components[index]->mType = components[index].type;
+            }
+        }
+
+        std::construct_at(reinterpret_cast<std::uint32_t *>(native + value_offset),
+                          static_cast<std::uint32_t>(value_byte_count));
+        auto *native_values = ::new (static_cast<void *>(native + value_offset + 4U))
+            float[values.size()];
+        std::copy(values.begin(), values.end(), native_values);
+        result._native_data._storage = std::move(storage);
         return result;
     }
 
@@ -154,66 +288,43 @@ namespace smgpc::camera {
         return _frame_count;
     }
 
-    CameraAnimationSample CameraAnimation::sample(float frame) const {
-        const auto bounded_frame =
-            std::clamp(frame, 0.0F, static_cast<float>(_frame_count));
-        return CameraAnimationSample{
-            .eye = {sample_component(_components[0], bounded_frame),
-                    sample_component(_components[1], bounded_frame),
-                    sample_component(_components[2], bounded_frame)},
-            .watch = {sample_component(_components[3], bounded_frame),
-                      sample_component(_components[4], bounded_frame),
-                      sample_component(_components[5], bounded_frame)},
-            .twist_degrees =
-                sample_component(_components[6], bounded_frame),
-            .fovy_degrees = sample_component(_components[7], bounded_frame),
-        };
+    NativeCameraAnimationData CameraAnimation::native_data() const noexcept {
+        return _native_data;
     }
 
-    float CameraAnimation::sample_component(const Component &component,
-                                            float frame) const {
-        const auto offset = static_cast<std::size_t>(component.offset);
-        if (component.count == 1U) {
-            return _values[offset];
+    CameraAnimationSample CameraAnimation::sample(float frame) const {
+        if (!std::isfinite(frame) || frame < 0.0F ||
+            !(frame < static_cast<float>(_frame_count))) {
+            throw std::invalid_argument(
+                "Camera animation sampling requires a finite frame within playback.");
         }
-
-        if (_format == CameraAnimationFormat::Canm) {
-            const auto last = component.count - 1U;
-            if (frame >= static_cast<float>(last)) {
-                return _values[offset + last];
-            }
-            const auto first = static_cast<std::uint32_t>(std::floor(frame));
-            const auto fraction = frame - static_cast<float>(first);
-            const auto first_value = _values[offset + first];
-            const auto second_value = _values[offset + first + 1U];
-            return first_value + (second_value - first_value) * fraction;
+        const auto native = _native_data.bytes();
+        if (native.empty()) {
+            throw std::logic_error("Camera animation has no native data owner.");
         }
-
-        const auto stride = component.type == 0U ? std::size_t{3U} : std::size_t{4U};
-        const auto frame_at = [&](std::size_t index) {
-            return _values[offset + index * stride];
+        const auto *header = reinterpret_cast<const CanmFileHeader *>(native.data());
+        // The original set/accessor signatures predate const-correctness. They
+        // retain these pointers and only read the immutable native block.
+        auto *entry = const_cast<std::uint8_t *>(native.data() + sizeof(CanmFileHeader));
+        const auto read_sample = [&](auto &accessor) {
+            accessor.set(entry, entry + header->mValueOffset + 4U);
+            auto eye = TVec3f{};
+            auto watch = TVec3f{};
+            accessor.getPos(&eye, frame);
+            accessor.getWatchPos(&watch, frame);
+            return CameraAnimationSample{
+                .eye = {eye.x, eye.y, eye.z},
+                .watch = {watch.x, watch.y, watch.z},
+                .twist_degrees = accessor.getTwist(frame),
+                .fovy_degrees = accessor.getFovy(frame),
+            };
         };
-        if (frame <= frame_at(0U)) {
-            return _values[offset + 1U];
+        if (_format == CameraAnimationFormat::Canm) {
+            auto accessor = CamAnmDataAccessor{};
+            return read_sample(accessor);
         }
-        const auto last = static_cast<std::size_t>(component.count - 1U);
-        if (frame >= frame_at(last)) {
-            return _values[offset + last * stride + 1U];
-        }
-
-        auto upper = std::size_t{1U};
-        while (upper < component.count && frame_at(upper) <= frame) {
-            ++upper;
-        }
-        const auto lower = upper - 1U;
-        const auto lower_base = offset + lower * stride;
-        const auto upper_base = offset + upper * stride;
-        const auto lower_tangent =
-            _values[lower_base + (component.type == 0U ? 2U : 3U)];
-        const auto upper_tangent = _values[upper_base + 2U];
-        return hermite(frame, _values[lower_base], _values[lower_base + 1U],
-                       lower_tangent, _values[upper_base],
-                       _values[upper_base + 1U], upper_tangent);
+        auto accessor = KeyCamAnmDataAccessor{};
+        return read_sample(accessor);
     }
 
 }  // namespace smgpc::camera

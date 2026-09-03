@@ -2,10 +2,9 @@
 
 #include "camera/CameraParam.hpp"
 
-#include <array>
 #include <cstdint>
+#include <memory>
 #include <span>
-#include <vector>
 
 namespace smgpc::camera {
 
@@ -21,6 +20,18 @@ namespace smgpc::camera {
         float fovy_degrees = 45.0F;
     };
 
+    // A copy retains the aligned native block even after its source animation
+    // is destroyed. Original CameraAnim accessors borrow this block read-only.
+    class NativeCameraAnimationData final {
+    public:
+        [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept;
+
+    private:
+        friend class CameraAnimation;
+        struct Storage;
+        std::shared_ptr<const Storage> _storage{};
+    };
+
     class CameraAnimation final {
     public:
         [[nodiscard]] static CameraAnimation from_bytes(
@@ -28,22 +39,13 @@ namespace smgpc::camera {
 
         [[nodiscard]] CameraAnimationFormat format() const noexcept;
         [[nodiscard]] std::uint32_t frame_count() const noexcept;
+        [[nodiscard]] NativeCameraAnimationData native_data() const noexcept;
         [[nodiscard]] CameraAnimationSample sample(float frame) const;
 
     private:
-        struct Component {
-            std::uint32_t count = 0U;
-            std::uint32_t offset = 0U;
-            std::uint32_t type = 0U;
-        };
-
-        [[nodiscard]] float sample_component(const Component &component,
-                                             float frame) const;
-
         CameraAnimationFormat _format = CameraAnimationFormat::Canm;
         std::uint32_t _frame_count = 0U;
-        std::array<Component, 8U> _components{};
-        std::vector<float> _values{};
+        NativeCameraAnimationData _native_data{};
     };
 
 }  // namespace smgpc::camera

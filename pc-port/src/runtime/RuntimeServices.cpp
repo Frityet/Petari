@@ -14,6 +14,7 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Camera/CameraTargetObj.hpp"
+#include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/WPadRumbleData.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -2835,7 +2836,22 @@ namespace smgpc::runtime {
         std::int32_t zone_id, std::string_view name,
         smgpc::camera::EventCameraTarget target,
         std::int32_t interpolation_frames, float speed) {
-        _event_cameras.start(zone_id, name, target, interpolation_frames, speed);
+        const CameraPoseParam *seed = nullptr;
+        std::optional<CameraPoseParam> native_seed;
+        if (_authored_game_camera.has_value() && !active_programmable_camera_pose().has_value()) {
+            seed = &_authored_game_camera->controller->pose_param();
+        } else if (const auto visible = effective_camera_pose(); visible.has_value()) {
+            // A manually published native view has an already rolled up axis.
+            // Its equivalent original pose therefore carries zero extra roll.
+            native_seed.emplace();
+            native_seed->mPos.set(visible->eye.x, visible->eye.y, visible->eye.z);
+            native_seed->mWatchPos.set(visible->watch.x, visible->watch.y, visible->watch.z);
+            native_seed->mUpVec.set(visible->up.x, visible->up.y, visible->up.z);
+            native_seed->mWatchUpVec.set(native_seed->mUpVec);
+            native_seed->mFovy = visible->fovy_degrees;
+            seed = &*native_seed;
+        }
+        _event_cameras.start(zone_id, name, target, interpolation_frames, speed, seed);
         update_game_camera_activation();
     }
 

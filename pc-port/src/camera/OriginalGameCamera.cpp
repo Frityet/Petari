@@ -1,4 +1,5 @@
 #include "camera/OriginalGameCamera.hpp"
+#include "camera/PublishedCameraTarget.hpp"
 
 #include "Game/Camera/CameraHeightArrange.hpp"
 #include "Game/Camera/CameraLocalUtil.hpp"
@@ -22,76 +23,6 @@ namespace smgpc::camera {
         [[nodiscard]] CameraParamVec3 host_vec(const TVec3f &value) {
             return {value.x, value.y, value.z};
         }
-
-        void validate_target(const StageCameraTargetState &target) {
-            const auto finite = [](const CameraParamVec3 &value) {
-                return std::isfinite(value.x) && std::isfinite(value.y) && std::isfinite(value.z);
-            };
-            if (!finite(target.position) || !finite(target.up) || !finite(target.front) ||
-                !finite(target.last_move) || game_vec(target.up).squared() <= 1.0e-12F ||
-                game_vec(target.front).squared() <= 1.0e-12F ||
-                (target.ground_position.has_value() && !finite(*target.ground_position)) ||
-                (target.gravity.has_value() && !finite(*target.gravity)) ||
-                (target.side.has_value() && !finite(*target.side))) {
-                throw std::invalid_argument("Original camera target requires finite vectors and a non-degenerate orientation.");
-            }
-        }
-
-        // This target is a typed data boundary for the original controller.
-        // Unavailable geometry remains unavailable if a camera requests it.
-        class PublishedCameraTarget final : public CameraTargetObj {
-        public:
-            PublishedCameraTarget() : CameraTargetObj("PublishedCameraTarget") {}
-
-            void publish(const StageCameraTargetState &state) {
-                validate_target(state);
-                _position = game_vec(state.position);
-                _up = game_vec(state.up);
-                _front = game_vec(state.front);
-                _side = state.side.has_value() ? game_vec(*state.side) : _up.cross(_front);
-                _last_move = game_vec(state.last_move);
-                _ground = state.ground_position.has_value()
-                              ? std::optional<TVec3f>{game_vec(*state.ground_position)} : std::nullopt;
-                _gravity = state.gravity.has_value()
-                               ? std::optional<TVec3f>{game_vec(*state.gravity)} : std::nullopt;
-                _jumping = state.jumping;
-                _fast_rise = state.fast_rise;
-                _fast_drop = state.fast_drop;
-            }
-
-            const TVec3f &getPosition() const override { return _position; }
-            const TVec3f &getUpVec() const override { return _up; }
-            const TVec3f &getFrontVec() const override { return _front; }
-            const TVec3f &getSideVec() const override { return _side; }
-            const TVec3f &getLastMove() const override { return _last_move; }
-            const TVec3f &getGroundPos() const override {
-                if (!_ground.has_value()) {
-                    throw std::logic_error("Original camera target has no published ground position.");
-                }
-                return *_ground;
-            }
-            const TVec3f &getGravityVector() const override {
-                if (!_gravity.has_value()) {
-                    throw std::logic_error("Original camera target has no published gravity vector.");
-                }
-                return *_gravity;
-            }
-            bool isJumping() const override { return _jumping; }
-            bool isFastRise() const override { return _fast_rise; }
-            bool isFastDrop() const override { return _fast_drop; }
-
-        private:
-            TVec3f _position{0.0F, 0.0F, 0.0F};
-            TVec3f _up{0.0F, 1.0F, 0.0F};
-            TVec3f _front{0.0F, 0.0F, 1.0F};
-            TVec3f _side{1.0F, 0.0F, 0.0F};
-            TVec3f _last_move{0.0F, 0.0F, 0.0F};
-            std::optional<TVec3f> _ground;
-            std::optional<TVec3f> _gravity;
-            bool _jumping = false;
-            bool _fast_rise = false;
-            bool _fast_drop = false;
-        };
 
     }  // namespace
 
@@ -204,7 +135,7 @@ namespace smgpc::camera {
         if (camera_param.camera_type != "CAM_TYPE_XZ_PARA") {
             throw std::invalid_argument("Original game camera does not support " + camera_param.camera_type + ".");
         }
-        validate_target(initial_target);
+        validate_original_camera_target(initial_target);
         _impl = std::make_unique<Impl>(zone_transform, camera_param, initial_target,
                                        default_fovy_degrees, initial_state);
     }
@@ -254,6 +185,10 @@ namespace smgpc::camera {
 
     StageCameraPoseCalculation OriginalGameCamera::calculation() const {
         return _impl->calculation();
+    }
+
+    const CameraPoseParam &OriginalGameCamera::pose_param() const {
+        return *_impl->man_pose;
     }
 
 }  // namespace smgpc::camera

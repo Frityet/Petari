@@ -12,6 +12,7 @@ namespace smgpc::compat {
 
     enum class OriginalCameraMode {
         Game,
+        Event,
         Subjective,
     };
 

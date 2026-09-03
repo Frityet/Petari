@@ -4,6 +4,7 @@
 #include "camera/CameraAnimation.hpp"
 #include "camera/CameraPose.hpp"
 #include "camera/OriginalGameCamera.hpp"
+#include "camera/OriginalAnimationCamera.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
@@ -20,6 +21,7 @@
 #include <vector>
 
 class CameraTargetMtx;
+class CameraPoseParam;
 class LiveActor;
 class NameObj;
 
@@ -92,7 +94,7 @@ namespace smgpc::camera {
                                CameraAnimation animation);
         void start(std::int32_t zone_id, std::string_view name,
                    EventCameraTarget target, std::int32_t interpolation_frames,
-                   float speed = 1.0F);
+                   float speed = 1.0F, const CameraPoseParam *game_seed = nullptr);
         void end(std::int32_t zone_id, std::string_view name, bool force,
                  std::int32_t interpolation_frames);
         void begin_frame(bool paused);
@@ -119,8 +121,9 @@ namespace smgpc::camera {
             EventCameraKey key{};
             EventCameraTarget target{};
             std::unique_ptr<OriginalGameCamera> controller;
+            std::unique_ptr<OriginalAnimationCamera> animation_controller;
+            std::shared_ptr<const CameraPoseParam> manager_seed;
             std::optional<CameraPose> pose;
-            float animation_frame = 0.0F;
             float speed = 1.0F;
             std::int32_t interpolation_frames = 0;
             bool animation = false;

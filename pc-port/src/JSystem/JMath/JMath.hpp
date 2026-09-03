@@ -11,6 +11,25 @@ inline f32 JMAFastSqrt(f32 input) {
     return input > 0.0F ? std::sqrt(input) : input;
 }
 
+// Scalar form of the original JMA instruction order, including its fused
+// multiply/add operations and final negated multiply/subtract.
+inline f32 JMAHermiteInterpolation(f32 p1, f32 p2, f32 p3, f32 p4, f32 p5, f32 p6,
+                                   f32 p7) {
+    f32 ff31 = p1 - p2;
+    f32 ff30 = p5 - p2;
+    f32 ff29 = ff31 / ff30;
+    f32 ff28 = ff29 * ff29;
+    f32 ff25 = ff29 + ff29;
+    f32 ff27 = ff28 - ff29;
+    ff30 = p3 - p6;
+    f32 ff26 = std::fma(ff25, ff27, -ff28);
+    ff25 = std::fma(p4, ff27, p4);
+    ff26 = std::fma(ff26, ff30, p3);
+    ff25 = std::fma(p7, ff27, ff25);
+    ff25 = std::fma(ff29, p4, -ff25);
+    return -std::fma(ff31, ff25, -ff26);
+}
+
 namespace JMath {
     [[nodiscard]] inline f32 fastReciprocal(f32 value) {
         return 1.0F / value;

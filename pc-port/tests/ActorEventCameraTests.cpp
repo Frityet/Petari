@@ -1,4 +1,6 @@
 #include "CameraTargetTestSupport.hpp"
+#include "Game/Camera/CameraAnim.hpp"
+#include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -6,6 +8,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "camera/CameraAnimation.hpp"
 #include "camera/EventCamera.hpp"
+#include "camera/OriginalAnimationCamera.hpp"
 #include "compat/CameraUtilCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "resource/BcsvTable.hpp"
@@ -45,7 +48,7 @@ namespace {
 
     void require_near(float actual, float expected, float tolerance,
                       std::string_view message) {
-        if (std::fabs(actual - expected) > tolerance) {
+        if (!std::isfinite(actual) || std::fabs(actual - expected) > tolerance) {
             throw std::runtime_error(std::string(message) +
                                      ": actual=" + std::to_string(actual) +
                                      ";expected=" + std::to_string(expected));
@@ -138,6 +141,75 @@ namespace {
                            values[index]);
         }
         return bytes;
+    }
+
+    struct AnimationTrack {
+        std::uint32_t count;
+        std::uint32_t type;
+        std::vector<float> values;
+    };
+
+    [[nodiscard]] std::vector<std::uint8_t> make_animation_tracks(
+        bool keyed, std::uint32_t frame_count,
+        const std::array<AnimationTrack, 8U>& tracks) {
+        constexpr auto header_size = std::size_t{0x20U};
+        const auto component_size = keyed ? std::size_t{12U} : std::size_t{8U};
+        const auto table_size = tracks.size() * component_size;
+        const auto value_offset = header_size + table_size;
+        auto value_count = std::size_t{};
+        for (const auto& track : tracks) {
+            value_count += track.values.size();
+        }
+        auto bytes = std::vector<std::uint8_t>(value_offset + 4U + value_count * sizeof(float), 0U);
+        std::copy_n("ANDO", 4U, bytes.begin());
+        std::copy_n(keyed ? "CKAN" : "CANM", 4U, bytes.begin() + 4U);
+        write_be32(bytes, 0x08U, 1U);
+        write_be32(bytes, 0x10U, 1U);
+        write_be32(bytes, 0x18U, frame_count);
+        write_be32(bytes, 0x1cU, static_cast<std::uint32_t>(table_size));
+        write_be32(bytes, value_offset, static_cast<std::uint32_t>(value_count * sizeof(float)));
+        auto value_index = std::size_t{};
+        for (auto index = std::size_t{}; index < tracks.size(); ++index) {
+            const auto& track = tracks[index];
+            const auto component_offset = header_size + index * component_size;
+            write_be32(bytes, component_offset, track.count);
+            write_be32(bytes, component_offset + 4U, static_cast<std::uint32_t>(value_index));
+            if (keyed) {
+                write_be32(bytes, component_offset + 8U, track.type);
+            }
+            for (const auto value : track.values) {
+                write_be_float(bytes, value_offset + 4U + value_index * sizeof(float), value);
+                ++value_index;
+            }
+        }
+        return bytes;
+    }
+
+    [[nodiscard]] std::vector<std::uint8_t> make_four_frame_canm() {
+        return make_animation_tracks(false, 4U, {
+            AnimationTrack{4U, 0U, {0.0F, 10.0F, 30.0F, 60.0F}},
+            AnimationTrack{1U, 0U, {100.0F}},
+            AnimationTrack{1U, 0U, {500.0F}},
+            AnimationTrack{4U, 0U, {0.0F, 10.0F, 30.0F, 60.0F}},
+            AnimationTrack{1U, 0U, {100.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{4U, 0U, {0.0F, 20.0F, 40.0F, 60.0F}},
+            AnimationTrack{4U, 0U, {45.0F, 55.0F, 65.0F, 75.0F}},
+        });
+    }
+
+    [[nodiscard]] std::vector<std::uint8_t> make_ckan_fovy_track(
+        const AnimationTrack& fovy, std::uint32_t frame_count = 4U) {
+        return make_animation_tracks(true, frame_count, {
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {500.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            fovy,
+        });
     }
 
     class CameraPlayerFixture final : public LiveActor {
@@ -434,6 +506,345 @@ namespace {
             rejected = true;
         }
         require(rejected, "retained player targets must fail once their camera provider is detached");
+    }
+
+    void test_fractional_canm_camera_and_director_pause() {
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player, false);
+        actor.camera_state.position = {100.0F, 200.0F, 300.0F};
+        auto camera = smgpc::runtime::CameraSystemService{};
+        camera.declare_event_camera_animation(0, "fractional CANM",
+            smgpc::camera::CameraAnimation::from_bytes(make_four_frame_canm()));
+        camera.start_event_camera(0, "fractional CANM",
+            smgpc::camera::EventCameraTarget::target_player(player), 0, 0.5F);
+        camera.begin_frame(1U);
+        const auto first = *camera.active_event_camera_pose();
+        require_near(first.eye.x, 100.0F, 0.001F, "CANM first phase must sample frame zero");
+        require_near(first.fovy_degrees, 45.0F, 0.0001F, "CANM first phase must use its first FOV sample");
+        camera.pause_on_camera_director();
+        actor.camera_state.position.x = 300.0F;
+        camera.begin_frame(2U);
+        require(same_pose(*camera.active_event_camera_pose(), first),
+                "director pause must freeze animation pose and target tracking together");
+        camera.pause_off_camera_director();
+        camera.begin_frame(3U);
+        const auto fractional = *camera.active_event_camera_pose();
+        require_near(fractional.eye.x, 305.0F, 0.001F,
+                     "CANM must resume at frame one-half and use the latest target translation");
+        require_near(fractional.watch.x, 305.0F, 0.001F,
+                     "CANM watch coordinates must use the same fractional sample");
+        require_near(fractional.fovy_degrees, 50.0F, 0.0001F,
+                     "CANM fractional FOV must interpolate between authored samples");
+        require_near(fractional.up.x, -0.17364818F, 0.0002F,
+                     "CANM ten-degree twist must reach the original view-matrix roll");
+        require_near(fractional.up.y, 0.98480775F, 0.0002F,
+                     "CANM ten-degree twist must preserve the perpendicular up component");
+        require(camera.event_camera_animation_frame(0, "fractional CANM") == 1 &&
+                    !camera.is_event_camera_animation_end(0, "fractional CANM"),
+                "director pause must not consume animation time");
+    }
+
+    void test_fractional_ckan_tangent_layouts() {
+        // The two moving tracks have independent Hermite polynomials:
+        // eyeX(t) = 2*t + 6.75*t^2 - 1.1875*t^3;
+        // watchX(t) = 4*t + 12.5*t^2 - 2.125*t^3.
+        // Nonzero type 7's unused first incoming and final outgoing tangents differ
+        // deliberately, so swapping either tangent cannot satisfy the oracle.
+        const auto bytes = make_animation_tracks(true, 4U, {
+            AnimationTrack{2U, 0U, {0.0F, 0.0F, 60.0F, 4.0F, 40.0F, -30.0F}},
+            AnimationTrack{1U, 0U, {100.0F}},
+            AnimationTrack{1U, 0U, {500.0F}},
+            AnimationTrack{2U, 7U, {0.0F, 0.0F, -900.0F, 120.0F, 4.0F, 80.0F, 60.0F, 999.0F}},
+            AnimationTrack{1U, 0U, {100.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {50.0F}},
+        });
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player, false);
+        actor.camera_state.position = {100.0F, 200.0F, 300.0F};
+        auto camera = smgpc::runtime::CameraSystemService{};
+        camera.declare_event_camera_animation(0, "fractional CKAN",
+            smgpc::camera::CameraAnimation::from_bytes(bytes));
+        camera.start_event_camera(0, "fractional CKAN",
+            smgpc::camera::EventCameraTarget::target_player(player), 0, 0.5F);
+        camera.begin_frame(1U);
+        camera.begin_frame(2U);
+        const auto half = *camera.active_event_camera_pose();
+        require_near(half.eye.x, 102.5390625F, 0.0001F,
+                     "CKAN type-zero tangents must be converted from authored 30 Hz units");
+        require_near(half.watch.x, 104.859375F, 0.0001F,
+                     "CKAN nonzero type-seven interpolation must use outgoing then incoming tangents");
+        require_near(half.eye.y, 300.0F, 0.0001F,
+                     "single-value CKAN tracks must remain constant");
+        camera.begin_frame(3U);
+        const auto one = *camera.active_event_camera_pose();
+        require_near(one.eye.x, 107.5625F, 0.0001F,
+                     "CKAN type-zero polynomial must remain correct at a second sample");
+        require_near(one.watch.x, 114.375F, 0.0001F,
+                     "CKAN nonzero type-seven polynomial must remain correct at a second sample");
+    }
+
+    void test_ckan_duplicate_keys_select_last_equal_time() {
+        const auto check_track = [](const AnimationTrack& track,
+                                    const std::array<float, 4U>& expected) {
+            const auto animation = smgpc::camera::CameraAnimation::from_bytes(make_ckan_fovy_track(track));
+            const auto target = smgpc::camera::StageCameraTargetState{};
+            auto camera = smgpc::camera::OriginalAnimationCamera(animation, target, 1.0F);
+            for (const auto fovy : expected) {
+                require_near(camera.calc(target).fovy_degrees, fovy, 0.0001F,
+                             "the original CKAN upper-bound search must select the last key at an equal time");
+            }
+        };
+        check_track(AnimationTrack{3U, 0U, {
+                        0.0F, 10.0F, 0.0F,
+                        0.0F, 40.0F, 0.0F,
+                        4.0F, 80.0F, 0.0F}},
+                    {40.0F, 46.25F, 60.0F, 73.75F});
+        check_track(AnimationTrack{4U, 0U, {
+                        0.0F, 40.0F, 0.0F,
+                        2.0F, 50.0F, 0.0F,
+                        2.0F, 70.0F, 0.0F,
+                        4.0F, 90.0F, 0.0F}},
+                    {40.0F, 45.0F, 70.0F, 80.0F});
+    }
+
+    void test_ckan_search_count_and_lookahead_validation() {
+        const auto target = smgpc::camera::StageCameraTargetState{};
+        const auto animation = smgpc::camera::CameraAnimation::from_bytes(make_ckan_fovy_track(
+            AnimationTrack{2U, 0U, {
+                0.0F, 40.0F, 0.0F,
+                2.0F, 60.0F, 0.0F,
+                4.0F, 80.0F, 0.0F}}));
+        const auto native = animation.native_data();
+        const auto* info = reinterpret_cast<const CanmKeyFrameInfo*>(
+            native.bytes().data() + sizeof(CanmFileHeader));
+        require(info->mFovy.mCount == 2U,
+                "native decoding must preserve the declared search count when a readable following record exists");
+        auto camera = smgpc::camera::OriginalAnimationCamera(animation, target, 1.0F);
+        for (const auto expected : std::array{40.0F, 50.0F, 60.0F, 70.0F}) {
+            require_near(camera.calc(target).fovy_degrees, expected, 0.0001F,
+                         "the original accessor must interpolate through its physical lookahead beyond the search count");
+        }
+        require_near(camera.calc(target).fovy_degrees, 70.0F, 0.0001F,
+                     "the terminal FOV lookup must remain valid through the same lookahead record");
+        require(camera.current_frame() == 4.0F,
+                "a lookahead record must not extend the animation's declared playback duration");
+
+        const auto require_rejected = [](const AnimationTrack& track, std::string_view reason) {
+            auto rejected = false;
+            try {
+                (void)smgpc::camera::CameraAnimation::from_bytes(make_ckan_fovy_track(track));
+            } catch (const std::runtime_error&) {
+                rejected = true;
+            }
+            require(rejected, reason);
+        };
+        // FOV is the final track in the global table: no other component can
+        // accidentally supply a physically readable following record.
+        require_rejected(AnimationTrack{2U, 0U, {
+                             0.0F, 40.0F, 0.0F,
+                             2.0F, 60.0F, 0.0F}},
+                         "reachable final searched keys require a physically readable following record");
+        require_rejected(AnimationTrack{2U, 0U, {
+                             1.0F, 40.0F, 0.0F,
+                             4.0F, 80.0F, 0.0F}},
+                         "a first key after frame zero must be rejected before the original unsigned search underflows");
+    }
+
+    void test_native_animation_metadata_and_alignment() {
+        auto retained = smgpc::camera::NativeCameraAnimationData{};
+        constexpr auto native_value_offset = std::size_t{0x20U + 0x40U + 16U};
+        {
+            auto bytes = make_four_frame_canm();
+            bytes.insert(bytes.begin() + 0x60U, 16U, 0xA5U);
+            write_be32(bytes, 0x08U, 0x01020304U);
+            write_be32(bytes, 0x0cU, static_cast<std::uint32_t>(-77));
+            write_be32(bytes, 0x10U, 0x0A0B0C0DU);
+            write_be32(bytes, 0x14U, 0x10203040U);
+            write_be32(bytes, 0x1cU, 0x50U);
+            bytes.push_back(0x5AU);
+            bytes.push_back(0x6BU);
+            const auto animation = smgpc::camera::CameraAnimation::from_bytes(bytes);
+            retained = animation.native_data();
+            std::ranges::fill(bytes, 0U);
+        }
+        const auto bytes = retained.bytes();
+        require(reinterpret_cast<std::uintptr_t>(bytes.data()) % alignof(CanmFileHeader) == 0U,
+                "native animation storage must satisfy original header and component alignment");
+        const auto* header = reinterpret_cast<const CanmFileHeader*>(bytes.data());
+        require(header->_8 == 0x01020304 && header->_C == -77 &&
+                    header->_10 == 0x0A0B0C0D && header->_14 == 0x10203040 &&
+                    header->mNrFrames == 4U && header->mValueOffset == 0x50U,
+                "native animation ownership must preserve all decoded metadata after source destruction");
+        const auto* info = reinterpret_cast<const CanmFrameInfo*>(bytes.data() + sizeof(CanmFileHeader));
+        require(info->mPosX.mCount == 4U && info->mPosX.mOffset == 0U &&
+                    info->mFovy.mCount == 4U && info->mFovy.mOffset == 16U,
+                "native components must retain counts and offsets without rewriting tracks");
+        require(*reinterpret_cast<const std::uint32_t*>(bytes.data() + native_value_offset) == 80U,
+                "the relocated value byte count must be stored in host byte order");
+        const auto* values = reinterpret_cast<const float*>(bytes.data() + native_value_offset + 4U);
+        require(values[1U] == 10.0F && values[19U] == 75.0F &&
+                    bytes[0x60U] == 0xA5U && bytes[bytes.size() - 2U] == 0x5AU && bytes.back() == 0x6BU,
+                "native decoding must retain float values, table padding, and trailing resource bytes");
+    }
+
+    void test_animation_safe_pose_uses_copied_manager_seed() {
+        const auto bytes = make_animation_tracks(false, 1U, {
+            AnimationTrack{1U, 0U, {0.0F}}, AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}}, AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {0.0F}}, AnimationTrack{1U, 0U, {0.0F}},
+            AnimationTrack{1U, 0U, {30.0F}}, AnimationTrack{1U, 0U, {47.0F}},
+        });
+        const auto animation = smgpc::camera::CameraAnimation::from_bytes(bytes);
+        auto seed = CameraPoseParam{};
+        seed.mPos.set(10.0F, 20.0F, 30.0F);
+        seed.mWatchPos.set(410.0F, 20.0F, 30.0F);
+        seed.mUpVec.set(0.0F, 0.0F, 1.0F);
+        seed.mRoll = 0.4F;
+        seed.mFovy = 52.0F;
+        auto target = smgpc::camera::StageCameraTargetState{};
+        target.position = {1000.0F, 2000.0F, 3000.0F};
+        target.up = {1.0F, 0.0F, 0.0F};
+        auto camera = smgpc::camera::OriginalAnimationCamera(animation, target, 1.0F, &seed);
+        require(camera.pose_param().mRoll == 0.4F && camera.pose_param().mUpVec.z == 1.0F,
+                "the manager seed must retain unrolled up and roll separately before animation calculation");
+        seed.mWatchPos.set(10.0F, 20.0F, -470.0F);
+        seed.mUpVec.set(0.0F, 1.0F, 0.0F);
+        const auto pose = camera.calc(target);
+        require(pose.eye.x == 1000.0F && pose.eye.y == 2000.0F && pose.eye.z == 3000.0F &&
+                    pose.watch.x == 1400.0F && pose.watch.y == 2000.0F && pose.watch.z == 3000.0F,
+                "coincident authored eye/watch must use the copied prior manager view direction");
+        require_near(pose.up.y, 0.5F, 0.0002F,
+                     "parallel target up must fall back to prior unrolled manager up before applying animation roll");
+        require_near(pose.up.z, 0.86602540F, 0.0002F,
+                     "the fallback must not apply the prior manager roll a second time");
+        require_near(pose.fovy_degrees, 47.0F, 0.0001F,
+                     "the first animation FOV must replace the seeded manager FOV");
+    }
+
+    void test_animation_terminal_pose_and_restart() {
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player, false);
+        actor.camera_state.position = {100.0F, 200.0F, 300.0F};
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto animation = smgpc::camera::CameraAnimation::from_bytes(make_four_frame_canm());
+        camera.declare_event_camera_animation(0, "terminal CANM", animation);
+        camera.declare_event_camera_animation(0, "restart CANM", animation);
+        camera.start_event_camera(0, "terminal CANM",
+            smgpc::camera::EventCameraTarget::target_player(player), 0, 2.0F);
+        camera.begin_frame(1U);
+        camera.begin_frame(2U);
+        const auto last_sample = *camera.active_event_camera_pose();
+        require_near(last_sample.eye.x, 130.0F, 0.001F,
+                     "speed two must leave the last sampled position at frame two");
+        require_near(last_sample.fovy_degrees, 65.0F, 0.0001F,
+                     "completion must initially retain the last sampled FOV");
+        require(camera.event_camera_animation_frame(0, "terminal CANM") == 4 &&
+                    camera.is_event_camera_animation_end(0, "terminal CANM"),
+                "the original cursor must report completion after its last valid sample");
+
+        actor.camera_state.position = {2000.0F, 3000.0F, 4000.0F};
+        actor.camera_state.side = smgpc::camera::CameraParamVec3{0.0F, 1.0F, 0.0F};
+        actor.camera_state.up = {0.0F, 0.0F, 1.0F};
+        actor.camera_state.front = {1.0F, 0.0F, 0.0F};
+        camera.begin_frame(3U);
+        const auto terminal = *camera.active_event_camera_pose();
+        require(terminal.eye.x == last_sample.eye.x && terminal.eye.y == last_sample.eye.y &&
+                    terminal.eye.z == last_sample.eye.z && terminal.watch.x == last_sample.watch.x &&
+                    terminal.watch.y == last_sample.watch.y && terminal.watch.z == last_sample.watch.z,
+                "completed CameraAnim must retain eye and watch despite target translation and rotation");
+        require_near(terminal.fovy_degrees, 75.0F, 0.0001F,
+                     "the terminal branch must apply the final authored FOV after a skipped final position sample");
+        require_near(terminal.up.x, -0.86602540F, 0.0002F,
+                     "the terminal branch must apply final twist to the retained camera up vector");
+        require_near(terminal.up.y, 0.5F, 0.0002F,
+                     "terminal twist must not use the newly rotated target up vector");
+        camera.begin_frame(4U);
+        require(same_pose(*camera.active_event_camera_pose(), terminal) &&
+                    camera.event_camera_animation_frame(0, "terminal CANM") == 4,
+                "completed animation poses and cursors must stop advancing");
+
+        actor.camera_state.side = smgpc::camera::CameraParamVec3{1.0F, 0.0F, 0.0F};
+        actor.camera_state.up = {0.0F, 1.0F, 0.0F};
+        actor.camera_state.front = {0.0F, 0.0F, 1.0F};
+        camera.start_event_camera(0, "restart CANM",
+            smgpc::camera::EventCameraTarget::retain(), 0, 1.0F);
+        require(same_pose(*camera.active_event_camera_pose(), terminal),
+                "a new animation chunk must preserve the prior visible pose during its request");
+        camera.begin_frame(5U);
+        const auto restarted = *camera.active_event_camera_pose();
+        require_near(restarted.eye.x, 2000.0F, 0.001F,
+                     "a different animation chunk must reset to frame zero and the current target");
+        require_near(restarted.fovy_degrees, 45.0F, 0.0001F,
+                     "a new animation chunk must restore its first FOV sample");
+        require(camera.event_camera_animation_frame(0, "restart CANM") == 1 &&
+                    !camera.is_event_camera_animation_end(0, "restart CANM"),
+                "a new animation chunk must own a reset original cursor");
+    }
+
+    void test_animation_pause_and_resource_ownership() {
+        auto target = smgpc::camera::StageCameraTargetState{};
+        auto camera = std::unique_ptr<smgpc::camera::OriginalAnimationCamera>{};
+        {
+            auto bytes = make_four_frame_canm();
+            const auto animation = smgpc::camera::CameraAnimation::from_bytes(bytes);
+            camera = std::make_unique<smgpc::camera::OriginalAnimationCamera>(animation, target, 1.0F);
+            std::ranges::fill(bytes, 0xEDU);
+        }
+        require(camera->current_frame() == 0.0F && !camera->is_end(),
+                "constructing the original animation owner must not sample or advance the camera");
+        const auto first = camera->calc(target);
+        require_near(first.eye.z, 500.0F, 0.0001F,
+                     "the original controller must retain decoded resource storage after its source owners are destroyed");
+        require(camera->current_frame() == 1.0F,
+                "the first original calc must advance the cursor after sampling");
+
+        camera->set_paused(true);
+        target.position.x = 200.0F;
+        const auto paused_first = camera->calc(target);
+        require_near(paused_first.eye.x, 210.0F, 0.0001F,
+                     "animation-only pause must still calculate its current sample against the moving target");
+        require(camera->current_frame() == 1.0F,
+                "animation-only pause must hold the original cursor");
+        target.position.x = 300.0F;
+        const auto paused_second = camera->calc(target);
+        require_near(paused_second.eye.x, 310.0F, 0.0001F,
+                     "repeated paused calculations must keep following target motion at the same animation sample");
+        require(camera->current_frame() == 1.0F,
+                "repeated paused calculations must not advance animation time");
+        camera->set_paused(false);
+        const auto resumed = camera->calc(target);
+        require(same_pose(resumed, paused_second) && camera->current_frame() == 2.0F,
+                "unpausing must resample the held frame and then resume cursor advancement");
+        const auto next = camera->calc(target);
+        require_near(next.eye.x, 330.0F, 0.0001F,
+                     "the next unpaused calculation must use the following authored sample");
+    }
+
+    void test_same_animation_request_preserves_cursor() {
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player, false);
+        auto camera = smgpc::runtime::CameraSystemService{};
+        camera.declare_event_camera_animation(0, "same animation",
+            smgpc::camera::CameraAnimation::from_bytes(make_four_frame_canm()));
+        camera.start_event_camera(0, "same animation",
+            smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
+        camera.begin_frame(1U);
+        const auto before = *camera.active_event_camera_pose();
+        camera.start_event_camera(0, "same animation",
+            smgpc::camera::EventCameraTarget::retain(), 30, 0.5F);
+        require(same_pose(*camera.active_event_camera_pose(), before) &&
+                    camera.event_camera_animation_frame(0, "same animation") == 1,
+                "same-chunk ANIM requests must preserve the original controller cursor and visible pose");
+        camera.begin_frame(2U);
+        require_near(camera.active_event_camera_pose()->eye.x, 10.0F, 0.0001F,
+                     "same-chunk re-request must continue at the retained frame instead of restarting");
+        camera.begin_frame(3U);
+        require_near(camera.active_event_camera_pose()->eye.x, 20.0F, 0.0001F,
+                     "same-chunk re-request must apply its updated playback speed without a reset");
+        require(camera.event_camera_animation_frame(0, "same animation") == 2,
+                "the reused controller must preserve the original frame plus its new playback increments");
     }
 
     void test_failed_start_is_transactional() {
@@ -797,6 +1208,15 @@ int main() {
         TestCase{"linear CANM player target", test_linear_canm_player_target},
         TestCase{"uninitialized player event camera phase", test_uninitialized_player_event_waits_for_camera_phase},
         TestCase{"player camera capability and live sampling", test_player_camera_capability_and_live_sampling},
+        TestCase{"fractional CANM and director pause", test_fractional_canm_camera_and_director_pause},
+        TestCase{"fractional CKAN tangent layouts", test_fractional_ckan_tangent_layouts},
+        TestCase{"CKAN duplicate key times", test_ckan_duplicate_keys_select_last_equal_time},
+        TestCase{"CKAN search count and lookahead", test_ckan_search_count_and_lookahead_validation},
+        TestCase{"native animation metadata and alignment", test_native_animation_metadata_and_alignment},
+        TestCase{"animation copied manager fallback", test_animation_safe_pose_uses_copied_manager_seed},
+        TestCase{"animation terminal pose and restart", test_animation_terminal_pose_and_restart},
+        TestCase{"animation pause and resource ownership", test_animation_pause_and_resource_ownership},
+        TestCase{"same animation request preserves cursor", test_same_animation_request_preserves_cursor},
         TestCase{"failed start is transactional",
                  test_failed_start_is_transactional},
         TestCase{"matrix target lifetime and ABA",

@@ -2,6 +2,10 @@
 
 #include <revolution.h>
 
+#ifndef __MWERKS__
+#include <cmath>
+#endif
+
 void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
 void JMAVECLerp(const Vec*, const Vec*, Vec*, f32);
 void JMAVECScaleAdd(const Vec*, const Vec*, Vec*, f32);
@@ -50,6 +54,20 @@ inline f32 JMAHermiteInterpolation(__REGISTER f32 p1, __REGISTER f32 p2, __REGIS
     }
     // clang-format on
     return ff25;
+#else
+    f32 ff31 = p1 - p2;
+    f32 ff30 = p5 - p2;
+    f32 ff29 = ff31 / ff30;
+    f32 ff28 = ff29 * ff29;
+    f32 ff25 = ff29 + ff29;
+    f32 ff27 = ff28 - ff29;
+    ff30 = p3 - p6;
+    f32 ff26 = std::fma(ff25, ff27, -ff28);
+    ff25 = std::fma(p4, ff27, p4);
+    ff26 = std::fma(ff26, ff30, p3);
+    ff25 = std::fma(p7, ff27, ff25);
+    ff25 = std::fma(ff29, p4, -ff25);
+    return -std::fma(ff31, ff25, -ff26);
 #endif
 }
 

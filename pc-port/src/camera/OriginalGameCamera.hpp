@@ -4,6 +4,8 @@
 
 #include <memory>
 
+class CameraPoseParam;
+
 namespace smgpc::camera {
 
     // Own the original Game camera and its arena-style allocations. This
@@ -25,6 +27,7 @@ namespace smgpc::camera {
         void reset_manager(const StageCameraTargetState &target);
         [[nodiscard]] StageCameraPoseCalculation calc(const StageCameraTargetState &target);
         [[nodiscard]] StageCameraPoseCalculation calculation() const;
+        [[nodiscard]] const CameraPoseParam &pose_param() const;
 
     private:
         struct Impl;

@@ -1,6 +1,7 @@
 #include "camera/EventCamera.hpp"
 
 #include "Game/Camera/CameraTargetMtx.hpp"
+#include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "resource/BcsvTable.hpp"
@@ -17,8 +18,6 @@
 
 namespace smgpc::camera {
     namespace {
-
-        constexpr auto cPi = 3.14159265358979323846F;
 
         struct TargetSnapshot {
             CameraParamVec3 position{};
@@ -86,14 +85,6 @@ namespace smgpc::camera {
             const CameraParamVec3 &value) {
             return camera_vec(
                 transform.transform_point({value.x, value.y, value.z}));
-        }
-
-        [[nodiscard]] CameraParamVec3 transform_target_point(
-            const TargetSnapshot &target, const CameraParamVec3 &point) {
-            return add(target.position,
-                       add(add(scale(target.side, point.x),
-                               scale(target.up, point.y)),
-                           scale(target.front, point.z)));
         }
 
         [[nodiscard]] TargetSnapshot snapshot_from_matrix(
@@ -280,38 +271,6 @@ namespace smgpc::camera {
             };
         }
 
-        [[nodiscard]] CameraPose calculate_animation_pose(
-            const CameraAnimation &animation, float frame,
-            const TargetSnapshot &target) {
-            const auto sample = animation.sample(frame);
-            const auto eye = transform_target_point(target, sample.eye);
-            const auto watch = transform_target_point(target, sample.watch);
-            const auto forward = normalized(subtract(watch, eye));
-            if (!forward.has_value()) {
-                throw std::logic_error(
-                    "CANM event camera has coincident eye and watch points.");
-            }
-            const auto right = normalized(cross(*forward, target.up));
-            if (!right.has_value()) {
-                throw std::logic_error(
-                    "CANM event camera target up axis is parallel to its view.");
-            }
-            const auto corrected_up = normalized(cross(*right, *forward));
-            const auto twist = sample.twist_degrees * cPi / 180.0F;
-            const auto rolled_up = corrected_up.has_value() ? normalized(add(
-                                                                  scale(*corrected_up, std::cos(twist)),
-                                                                  scale(*right, -std::sin(twist)))) :
-                                                              std::nullopt;
-            if (!rolled_up.has_value() || !(sample.fovy_degrees > 0.0F)) {
-                throw std::logic_error(
-                    "CANM event camera produced an invalid pose.");
-            }
-            return CameraPose{.eye = eye,
-                              .watch = watch,
-                              .up = *rolled_up,
-                              .fovy_degrees = sample.fovy_degrees};
-        }
-
         [[nodiscard]] std::string lower_copy(std::string_view value) {
             auto result = std::string(value);
             std::ranges::transform(result, result.begin(), [](char character) {
@@ -446,6 +405,9 @@ namespace smgpc::camera {
             throw std::invalid_argument(
                 "Animation event-camera declaration requires a non-empty name.");
         }
+        if (animation.native_data().bytes().empty()) {
+            throw std::invalid_argument("Animation event-camera declaration requires a decoded resource.");
+        }
         _animations.insert_or_assign(
             EventCameraKey{zone_id, std::string(name)}, std::move(animation));
     }
@@ -453,7 +415,7 @@ namespace smgpc::camera {
     void EventCameraRuntime::start(std::int32_t zone_id, std::string_view name,
                                    EventCameraTarget target,
                                    std::int32_t interpolation_frames,
-                                   float speed) {
+                                   float speed, const CameraPoseParam *game_seed) {
         if (name.empty() || !std::isfinite(speed) || !(speed > 0.0F)) {
             throw std::invalid_argument(
                 "Event-camera start requires a name and positive finite speed.");
@@ -485,22 +447,55 @@ namespace smgpc::camera {
         // CameraManEvent::start requests the chunk and sets its target. The
         // director advances that target before CameraManEvent::calc next frame.
         validate_target_reference(target);
-        if (animation == nullptr && definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA" &&
-            _active.has_value() && _active->key == key && !_active->animation && _active->controller) {
+        if (_active.has_value() && _active->key == key &&
+            ((animation != nullptr && _active->animation) ||
+             (animation == nullptr && definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA" &&
+              !_active->animation && _active->controller))) {
             // CameraManEvent::checkReset preserves the controller when its
             // chunk and type are unchanged. Validate before changing either
             // current or retained target; pose advances only on movement.
             _active->target = target;
             _active->speed = speed;
+            if (_active->animation_controller) {
+                _active->animation_controller->set_speed(speed);
+            }
             _active->interpolation_frames = interpolation_frames;
             if (has_explicit_target) {
                 _last_target = target;
             }
             return;
         }
+        // CameraDirector::startEvent copies the original game manager pose
+        // only on entry; event-to-event requests retain the event manager pose.
+        const CameraPoseParam *seed = game_seed;
+        std::optional<CameraPoseParam> native_seed;
+        if (_active.has_value()) {
+            if (_active->animation_controller) {
+                seed = &_active->animation_controller->pose_param();
+            } else if (_active->controller) {
+                seed = &_active->controller->pose_param();
+            } else if (_active->pose.has_value()) {
+                const auto &visible = *_active->pose;
+                native_seed.emplace();
+                native_seed->mPos.set(visible.eye.x, visible.eye.y, visible.eye.z);
+                native_seed->mWatchPos.set(visible.watch.x, visible.watch.y, visible.watch.z);
+                native_seed->mUpVec.set(visible.up.x, visible.up.y, visible.up.z);
+                native_seed->mWatchUpVec.set(native_seed->mUpVec);
+                native_seed->mFovy = visible.fovy_degrees;
+                seed = &*native_seed;
+            } else if (_active->manager_seed) {
+                seed = _active->manager_seed.get();
+            }
+        }
+        std::shared_ptr<CameraPoseParam> manager_seed;
+        if (seed != nullptr) {
+            manager_seed = std::make_shared<CameraPoseParam>();
+            manager_seed->copyFrom(*seed);
+        }
         auto candidate = ActiveEvent{
             .key = key,
             .target = target,
+            .manager_seed = std::move(manager_seed),
             .pose = active_pose(),
             .speed = speed,
             .interpolation_frames = interpolation_frames,
@@ -528,10 +523,6 @@ namespace smgpc::camera {
             return;
         }
         _active->pose = calculate_active_pose(*_active);
-        // CameraAnim::reset starts at zero, and calc samples before advancing.
-        if (_active->animation) {
-            _active->animation_frame += _active->speed;
-        }
     }
 
     ActorCameraInfo *EventCameraRuntime::create_actor_camera_info(
@@ -577,14 +568,13 @@ namespace smgpc::camera {
         if (!is_active(zone_id, name) || !_active->animation) {
             return true;
         }
-        const auto *animation = find_animation(_active->key);
-        return animation == nullptr ||
-               _active->animation_frame >= animation->frame_count();
+        return _active->animation_controller != nullptr && _active->animation_controller->is_end();
     }
 
     std::int32_t EventCameraRuntime::animation_frame(
         std::int32_t zone_id, std::string_view name) const {
-        return is_active(zone_id, name) && _active->animation ? static_cast<std::int32_t>(_active->animation_frame) : 0;
+        return is_active(zone_id, name) && _active->animation_controller
+                   ? static_cast<std::int32_t>(_active->animation_controller->current_frame()) : 0;
     }
 
     std::int32_t EventCameraRuntime::event_frames(
@@ -610,14 +600,22 @@ namespace smgpc::camera {
     CameraPose EventCameraRuntime::calculate_active_pose(ActiveEvent &active) {
         const auto target = snapshot_target(active.target);
         validate_target_snapshot(target);
+        const auto published_target = StageCameraTargetState{
+            .position = target.position, .up = target.up, .front = target.front,
+            .last_move = target.last_move, .ground_position = target.ground_position,
+            .gravity = target.gravity, .jumping = target.jumping,
+            .fast_rise = target.fast_rise, .fast_drop = target.fast_drop, .side = target.side};
         if (active.animation) {
             const auto *animation = find_animation(active.key);
             if (animation == nullptr) {
                 throw std::logic_error(
                     "Active CANM event camera lost its declaration.");
             }
-            return calculate_animation_pose(*animation, active.animation_frame,
-                                            target);
+            if (!active.animation_controller) {
+                active.animation_controller = std::make_unique<OriginalAnimationCamera>(
+                    *animation, published_target, active.speed, active.manager_seed.get());
+            }
+            return active.animation_controller->calc(published_target);
         }
         if (_catalog == nullptr) {
             throw std::logic_error(
@@ -633,17 +631,6 @@ namespace smgpc::camera {
             return calculate_eye_position_fixed(*definition, target);
         }
         if (definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA") {
-            const auto published_target = StageCameraTargetState{
-                .position = target.position,
-                .up = target.up,
-                .front = target.front,
-                .last_move = target.last_move,
-                .ground_position = target.ground_position,
-                .gravity = target.gravity,
-                .jumping = target.jumping,
-                .fast_rise = target.fast_rise,
-                .fast_drop = target.fast_drop,
-                .side = target.side};
             if (!active.controller) {
                 active.controller = std::make_unique<OriginalGameCamera>(
                     definition->zone_transform, definition->camera_param,

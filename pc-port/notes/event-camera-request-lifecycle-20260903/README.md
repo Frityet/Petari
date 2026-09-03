@@ -1,5 +1,9 @@
 # Deferred event-camera request lifecycle
 
+Follow-up: `notes/original-camera-anim-20260903/integration.md` replaces the
+native CANM calculation discussed below with actual CameraAnim execution,
+including the terminal behavior that was still missing at this checkpoint.
+
 This checkpoint makes event requests establish ownership and select their target without calculating a camera pose during the request. It closes the first-player-event initialization failure introduced by retaining an actual `CameraTargetPlayer` whose cached fields are initialized in its camera movement phase.
 
 ## Source evidence

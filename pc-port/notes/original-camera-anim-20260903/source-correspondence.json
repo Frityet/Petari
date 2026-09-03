@@ -1,0 +1,33 @@
+{
+  "verification": "Four byte-identical Game source/header mirrors; identical root/PC scalar fallback body. No new binary matching claim.",
+  "files": [
+    {
+      "source": "src/Game/Camera/CameraAnim.cpp",
+      "destination": "pc-port/src/Game/Camera/CameraAnim.cpp",
+      "sha256": "5f9f737b174e583cf571aa1878f972550855788498c8347238a3f2b042a0c40a"
+    },
+    {
+      "source": "include/Game/Camera/CameraAnim.hpp",
+      "destination": "pc-port/src/Game/Camera/CameraAnim.hpp",
+      "sha256": "cf4a31b2badad30d5a221739837ca74cceb15cb98ce66dc4011c9674b7057258"
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorAnim.cpp",
+      "destination": "pc-port/src/Game/Camera/CamTranslatorAnim.cpp",
+      "sha256": "e7f2c34b1681f5b1ea81dad2ad6b209907ff30a8dc9887241ebdeb47723d8a14"
+    },
+    {
+      "source": "include/Game/Camera/CamTranslatorAnim.hpp",
+      "destination": "pc-port/src/Game/Camera/CamTranslatorAnim.hpp",
+      "sha256": "bfea6d12814cd7741bc2883719f12bde73f5cd6995a9aa1b7f843cc6ff909d44"
+    }
+  ],
+  "hermite": {
+    "source": "libs/JSystem/include/JSystem/JMath/JMath.hpp",
+    "destination": "pc-port/src/JSystem/JMath/JMath.hpp",
+    "start_marker": "    f32 ff31 = p1 - p2;",
+    "end_marker": "    return -std::fma(ff31, ff25, -ff26);",
+    "body_sha256": "caff778257787c0fa21cb8a05715aea75e647081daf9f6093225cce5c78776f5",
+    "basis": "Scalar translation of existing original MW instructions; std::fma preserves explicit fused operations."
+  }
+}
