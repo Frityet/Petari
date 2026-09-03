@@ -1,0 +1,133 @@
+{
+  "scope": "Nine root Xanime lifecycle methods; no PC import or native activation.",
+  "baseline_commit": "9c23f8636c00c62d6a9db2143990b0a3e3e46563",
+  "historical_freeze_copy_commit": "3c0aaf0f09bb1470e812f7bda062472342439a73",
+  "historical_source_sha256": "51b135c9ed3dc05be899b7449642bb297ad21ce6c88cb41aabe2f1e4ca71f86b",
+  "historical_freeze_copy_body_sha256": "b6bb479529cfbfbd5350e7cc078f3a235feb491ac14456d1a0d0d372805ba000",
+  "files": [
+    {
+      "path": "src/Game/Animation/XanimeCore.cpp",
+      "sha256": "698b3f14c9ccc7bf7bb01f30b0359549e4d9c1624de5ea46b841aa1a5d28c9cb",
+      "baseline_sha256": "f7b4e9930c33edb6cc82bc5bc3e22161fa0edbf6aad1cb9ed1484d30e59af225"
+    },
+    {
+      "path": "include/Game/Animation/XanimeCore.hpp",
+      "sha256": "eb276f9878df8940fba4124ce505f2a25b5b4a10008d8339f30818a28e6d01ca",
+      "baseline_sha256": "715aa08c6597d844bcb0ebb7050dbf90fafd47fb9df4b12ce37a85eab3864221"
+    }
+  ],
+  "methods": [
+    {
+      "symbol": "__as__14XtransformInfoFRC14XtransformInfo",
+      "source": "include/Game/Animation/XanimeCore.hpp",
+      "body_key": "class XtransformInfo {",
+      "source_line": 9,
+      "body_sha256": "52b506e645edfc80575ea976f874b867a9886ce6fbb633dbd4f704b89adab9c2",
+      "retail_address": "0x80018e10",
+      "retail_size": 104,
+      "retail_function_sha256": "2e9c9bb23284341f345864d4826901dd72d4eb84feaad67f16c6dfbf443ad9e1",
+      "objdiff_match_percent": 100.0
+    },
+    {
+      "symbol": "__ct__15XjointTransformFv",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "XjointTransform::XjointTransform() {",
+      "source_line": 35,
+      "body_sha256": "8107e4b666a53132f8300fee5e29a77c49cd2ed43e4d86fb34d77d1853dcdd86",
+      "retail_address": "0x80019060",
+      "retail_size": 144,
+      "retail_function_sha256": "df6400fc8e44433375293062b18e812ce862fda60b565d2882584c92ef8be863",
+      "objdiff_match_percent": 99.72222
+    },
+    {
+      "symbol": "enableJointTransform__10XanimeCoreFP12J3DModelData",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::enableJointTransform(",
+      "source_line": 60,
+      "body_sha256": "e04b438a2faa06d8de5f6ac6885bfec50608ddf3561f707001ad67850a67f81f",
+      "retail_address": "0x800190fc",
+      "retail_size": 292,
+      "retail_function_sha256": "04d2f63398f6a391245172c8ee8c99e19662a0a2e8ab55c251a683851478dd6b",
+      "objdiff_match_percent": 99.0411
+    },
+    {
+      "symbol": "reconfigJointTransform__10XanimeCoreFP12J3DModelData",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::reconfigJointTransform(",
+      "source_line": 87,
+      "body_sha256": "8b912e6867b8cb149956d2af0d10533142bafc019d3e3aa51d0e787b8c662ff7",
+      "retail_address": "0x80019220",
+      "retail_size": 124,
+      "retail_function_sha256": "2e36c2855494e94a8af000233e6dd50fe2163cadf3d99fa5baf61b8efb769297",
+      "objdiff_match_percent": 100.0
+    },
+    {
+      "symbol": "setBck__10XanimeCoreFUlP15J3DAnmTransform",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::setBck(",
+      "source_line": 139,
+      "body_sha256": "ff3798eca2c60eae26d197b2b4f2690df234a1b22676d4008713d4e56898042b",
+      "retail_address": "0x80019460",
+      "retail_size": 56,
+      "retail_function_sha256": "9cd10e024725167b10ee6a86a78e55da9644cd4bed9d2fc855bd9532c76e3258",
+      "objdiff_match_percent": 99.64286
+    },
+    {
+      "symbol": "updateFrame__10XanimeCoreFv",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::updateFrame(",
+      "source_line": 151,
+      "body_sha256": "e04b19cf33c40af39f24e6b4c1cf3b9f3bce44648df3f8e2e2f1a1744b88acaa",
+      "retail_address": "0x80019ea8",
+      "retail_size": 204,
+      "retail_function_sha256": "c5126af130c8cace611c9a53ec2c7dcb8ac1f84e00a95e7e7f938dd979cc8824",
+      "objdiff_match_percent": 98.52941
+    },
+    {
+      "symbol": "freezeCopy__10XanimeCoreFP12J3DModelDataP10XanimeCoreUlUl",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::freezeCopy(",
+      "source_line": 172,
+      "body_sha256": "49fc173a90298c703f3bd8e4956dd81fd05744170d05df4d6ccc73f7151280ce",
+      "retail_address": "0x8001acf4",
+      "retail_size": 236,
+      "retail_function_sha256": "20ace63e9c46a7b0f66b5d6f9da5f43d66f7b563304fa7ee4fb8ee93d23a6a1d",
+      "objdiff_match_percent": 90.84746
+    },
+    {
+      "symbol": "initT__10XanimeCoreFP12J3DModelData",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::initT(",
+      "source_line": 193,
+      "body_sha256": "fb263c55a6f3fd0400070e826b4cc85777156cd7270c15a544b03b0a2e79ff3c",
+      "retail_address": "0x8001ade0",
+      "retail_size": 232,
+      "retail_function_sha256": "a3aaf14568808b8f1b4b2f111357fe978e4e80fc8bfc17f2e3a5c8713d9e07d5",
+      "objdiff_match_percent": 99.82758
+    },
+    {
+      "symbol": "fixT__10XanimeCoreFPQ29JGeometry8TVec3<f>",
+      "source": "src/Game/Animation/XanimeCore.cpp",
+      "body_key": "void XanimeCore::fixT(",
+      "source_line": 207,
+      "body_sha256": "9d489d3f5df53b8970b7cb2ce3ea4d4347f099e7291617655cb511fc99a716ac",
+      "retail_address": "0x8001aec8",
+      "retail_size": 72,
+      "retail_function_sha256": "b4814b79d9fb6ad09ace691ebc6b400626266c089adfdc7bcfec467fe519d3fb",
+      "objdiff_match_percent": 93.888885
+    }
+  ],
+  "declaration_recoveries": [
+    "XtransformInfo copy assignment is compiler-generated, not an undefined user-declared method.",
+    "XtransformInfo offset0x18 is Quaternion; original scalar member names retained in an aliasing union.",
+    "XjointTransform offset0 is a J3DJoint pointer, offset4 an unsigned16 parent index.",
+    "XjointTransform offsets0x44..0x63 are J3DTransformInfo, including original zeroed pad at0x56; legacy names retained in an aliasing union.",
+    "Declare XanimeCore::fixT(TVec3f*)."
+  ],
+  "source_adaptations": [
+    "J3DJoint mYounger/mJntNo and typed getJointNodePointer/getTransformInfo accessors replace obsolete historical member names.",
+    "freezeCopy correction: destination other.mJointList[j]._0, source this.mJointList[j]._28, followed by writes to other._5C and other._60.",
+    "SDK Vec scale/translation copied through TVec3::set(const Vec&) to avoid invalid downcasts while copying identical components.",
+    "JMAEulerToQuat declaration is local to this TU; its existing implementation is src/JSystem/JMath/JMath.cpp."
+  ]
+}
