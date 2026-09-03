@@ -1,0 +1,58 @@
+diff --git a/src/Game/Map/CollisionParts.cpp b/src/Game/Map/CollisionParts.cpp
+index 546486689..577ee3165 100644
+--- a/src/Game/Map/CollisionParts.cpp
++++ b/src/Game/Map/CollisionParts.cpp
+@@ -165,7 +165,6 @@ void CollisionParts::updateMtx() {
+     }
+ }
+ 
+-// Issues with assignments of scaleDiff
+ f32 CollisionParts::makeEqualScale(MtxPtr matrix) {
+     TPos3f& mtx = *reinterpret_cast< TPos3f* >(matrix);
+ 
+@@ -173,9 +172,9 @@ f32 CollisionParts::makeEqualScale(MtxPtr matrix) {
+     mtx.getScale(scale);
+ 
+     TVec3f scaleDiff;
+-    scaleDiff.x = scale.z - scale.x;
++    scaleDiff.x = scale.x - scale.y;
+     scaleDiff.y = scale.y - scale.z;
+-    scaleDiff.z = scale.x - scale.y;
++    scaleDiff.z = scale.z - scale.x;
+ 
+     if (MR::isNearZero(scaleDiff.x) && MR::isNearZero(scaleDiff.y) && MR::isNearZero(scaleDiff.z)) {
+         return scale.x;
+@@ -185,11 +184,11 @@ f32 CollisionParts::makeEqualScale(MtxPtr matrix) {
+     TVec3f invScale;
+ 
+     if (_D0) {
+-        invScale.set(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
++        invScale.set< f32 >(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
+         uniformScale = 1.0f;
+     } else if (_CF) {
+         uniformScale = (scale.x + scale.y + scale.z) / 3.0f;
+-        invScale.set(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
++        invScale.set< f32 >(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
+     }
+ 
+     mtx.mMtx[0][0] *= invScale.x;
+diff --git a/src/JSystem/JGeometry/TMatrix.cpp b/src/JSystem/JGeometry/TMatrix.cpp
+index 83488ddd2..95784d539 100644
+--- a/src/JSystem/JGeometry/TMatrix.cpp
++++ b/src/JSystem/JGeometry/TMatrix.cpp
+@@ -41,3 +41,15 @@ namespace JGeometry {
+         }
+     }
+ }  // namespace JGeometry
++
++namespace JGeometry {
++    template <>
++    void TRotation3< TMatrix34< SMatrix34C< f32 > > >::getScale(TVec3f& rDest) const {
++        rDest.x = TUtil< f32 >::sqrt(this->mMtx[2][0] * this->mMtx[2][0] +
++                                    (this->mMtx[0][0] * this->mMtx[0][0] + this->mMtx[1][0] * this->mMtx[1][0]));
++        rDest.y = TUtil< f32 >::sqrt(this->mMtx[2][1] * this->mMtx[2][1] +
++                                    (this->mMtx[0][1] * this->mMtx[0][1] + this->mMtx[1][1] * this->mMtx[1][1]));
++        rDest.z = TUtil< f32 >::sqrt(this->mMtx[2][2] * this->mMtx[2][2] +
++                                    (this->mMtx[0][2] * this->mMtx[0][2] + this->mMtx[1][2] * this->mMtx[1][2]));
++    }
++}  // namespace JGeometry

@@ -165,7 +165,6 @@ void CollisionParts::updateMtx() {
     }
 }
 
-// Issues with assignments of scaleDiff
 f32 CollisionParts::makeEqualScale(MtxPtr matrix) {
     TPos3f& mtx = *reinterpret_cast< TPos3f* >(matrix);
 
@@ -173,9 +172,9 @@ f32 CollisionParts::makeEqualScale(MtxPtr matrix) {
     mtx.getScale(scale);
 
     TVec3f scaleDiff;
-    scaleDiff.x = scale.z - scale.x;
+    scaleDiff.x = scale.x - scale.y;
     scaleDiff.y = scale.y - scale.z;
-    scaleDiff.z = scale.x - scale.y;
+    scaleDiff.z = scale.z - scale.x;
 
     if (MR::isNearZero(scaleDiff.x) && MR::isNearZero(scaleDiff.y) && MR::isNearZero(scaleDiff.z)) {
         return scale.x;
@@ -185,11 +184,11 @@ f32 CollisionParts::makeEqualScale(MtxPtr matrix) {
     TVec3f invScale;
 
     if (_D0) {
-        invScale.set(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
+        invScale.set< f32 >(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
         uniformScale = 1.0f;
     } else if (_CF) {
         uniformScale = (scale.x + scale.y + scale.z) / 3.0f;
-        invScale.set(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
+        invScale.set< f32 >(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
     }
 
     mtx.mMtx[0][0] *= invScale.x;
