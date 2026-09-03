@@ -97,6 +97,439 @@ bool KCollisionServer::isBinaryInitialized(const void* pData) {
     return reinterpret_cast< const s32* >(pData)[0] < 0;
 }
 
+bool KCollisionServer::KCHitSphere(KC_PrismData* pPrism, Fxyz* pPos, f32 radius, f32 scale, f32* pDistance, u8* pFeature) {
+    f32 thickness = mFile->mThickness * scale;
+    f32 radiusSquared = radius * radius;
+    *pFeature = 0;
+    Fxyz relative;
+    f32 distances[4];
+    f32 dot01;
+    f32 dot12;
+    f32 dot20;
+    TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
+    relative.x = pPos->x - pOrigin->x;
+    relative.y = pPos->y - pOrigin->y;
+    relative.z = pPos->z - pOrigin->z;
+    TVec3f* pEdge0 = &mFile->mNorms[pPrism->mEdgeIndices[0]];
+    distances[1] = relative.x * pEdge0->x + relative.y * pEdge0->y + relative.z * pEdge0->z;
+
+    if (distances[1] >= radius) {
+        return false;
+    }
+
+    TVec3f* pEdge1 = &mFile->mNorms[pPrism->mEdgeIndices[1]];
+    distances[2] = relative.x * pEdge1->x + relative.y * pEdge1->y + relative.z * pEdge1->z;
+
+    if (distances[2] >= radius) {
+        return false;
+    }
+
+    TVec3f* pEdge2 = &mFile->mNorms[pPrism->mEdgeIndices[2]];
+    distances[3] = relative.x * pEdge2->x + relative.y * pEdge2->y + relative.z * pEdge2->z - pPrism->mHeight;
+
+    if (distances[3] >= radius) {
+        return false;
+    }
+
+    TVec3f* pNormal = &mFile->mNorms[pPrism->mNormalIndex];
+    distances[0] = relative.x * pNormal->x + relative.y * pNormal->y + relative.z * pNormal->z;
+    *pDistance = radius - distances[0];
+
+    if (*pDistance < 0.0f) {
+        return false;
+    }
+
+    if (distances[1] > distances[2]) {
+        if (!(distances[1] > distances[3])) {
+            goto edge2Region;
+        }
+    } else {
+        if (!(distances[2] > distances[3])) {
+            goto edge2Region;
+        }
+
+        goto edge1Region;
+    }
+
+edge0Region:
+    if (distances[1] <= 0.0f) {
+        if (thickness < *pDistance) {
+            return false;
+        }
+
+        *pFeature = 1;
+        goto accepted;
+    }
+
+    if (distances[2] > distances[3]) {
+        dot01 = pEdge0->x * pEdge1->x + pEdge0->y * pEdge1->y + pEdge0->z * pEdge1->z;
+
+        if (!(dot01 * distances[1] > distances[2])) {
+            goto vertex0;
+        }
+
+        goto edge0;
+    } else {
+        dot20 = pEdge0->x * pEdge2->x + pEdge0->y * pEdge2->y + pEdge0->z * pEdge2->z;
+
+        if (!(dot20 * distances[1] > distances[3])) {
+            goto vertex2;
+        }
+
+        goto edge0;
+    }
+
+edge1Region:
+    if (distances[2] <= 0.0f) {
+        if (thickness < *pDistance) {
+            return false;
+        }
+
+        *pFeature = 1;
+        goto accepted;
+    }
+
+    if (distances[3] > distances[1]) {
+        dot12 = pEdge1->x * pEdge2->x + pEdge1->y * pEdge2->y + pEdge1->z * pEdge2->z;
+
+        if (!(dot12 * distances[2] > distances[3])) {
+            goto vertex1;
+        }
+
+        goto edge1;
+    } else {
+        dot01 = pEdge1->x * pEdge0->x + pEdge1->y * pEdge0->y + pEdge1->z * pEdge0->z;
+
+        if (!(dot01 * distances[2] > distances[1])) {
+            goto vertex0;
+        }
+
+        goto edge1;
+    }
+
+edge2Region:
+    if (distances[3] <= 0.0f) {
+        if (thickness < *pDistance) {
+            return false;
+        }
+
+        *pFeature = 1;
+        goto accepted;
+    }
+
+    if (distances[1] > distances[2]) {
+        dot20 = pEdge2->x * pEdge0->x + pEdge2->y * pEdge0->y + pEdge2->z * pEdge0->z;
+
+        if (!(dot20 * distances[3] > distances[1])) {
+            goto vertex2;
+        }
+
+        goto edge2;
+    } else {
+        dot12 = pEdge2->x * pEdge1->x + pEdge2->y * pEdge1->y + pEdge2->z * pEdge1->z;
+
+        if (!(dot12 * distances[3] > distances[2])) {
+            goto vertex1;
+        }
+
+        goto edge2;
+    }
+
+edge0:
+    if (distances[1] > distances[0]) {
+        return false;
+    }
+
+    *pDistance = radiusSquared - distances[1] * distances[1];
+    *pFeature = 2;
+    goto calcDistance;
+
+edge1:
+    if (distances[2] > distances[0]) {
+        return false;
+    }
+
+    *pDistance = radiusSquared - distances[2] * distances[2];
+    *pFeature = 3;
+    goto calcDistance;
+
+edge2:
+    if (distances[3] > distances[0]) {
+        return false;
+    }
+
+    *pDistance = radiusSquared - distances[3] * distances[3];
+    *pFeature = 4;
+    goto calcDistance;
+
+vertex0: {
+    f32 weight0 = (dot01 * distances[2] - distances[1]) / (dot01 * dot01 - 1.0f);
+    f32 weight1 = distances[2] - weight0 * dot01;
+    relative.x = weight0 * pEdge0->x + weight1 * pEdge1->x;
+    relative.y = weight0 * pEdge0->y + weight1 * pEdge1->y;
+    relative.z = weight0 * pEdge0->z + weight1 * pEdge1->z;
+    *pFeature = 5;
+    goto checkVertex;
+}
+
+vertex1: {
+    f32 weight1 = (dot12 * distances[3] - distances[2]) / (dot12 * dot12 - 1.0f);
+    f32 weight2 = distances[3] - weight1 * dot12;
+    relative.x = weight1 * pEdge1->x + weight2 * pEdge2->x;
+    relative.y = weight1 * pEdge1->y + weight2 * pEdge2->y;
+    relative.z = weight1 * pEdge1->z + weight2 * pEdge2->z;
+    *pFeature = 6;
+    goto checkVertex;
+}
+
+vertex2: {
+    f32 weight2 = (dot20 * distances[1] - distances[3]) / (dot20 * dot20 - 1.0f);
+    f32 weight0 = distances[1] - weight2 * dot20;
+    relative.x = weight2 * pEdge2->x + weight0 * pEdge0->x;
+    relative.y = weight2 * pEdge2->y + weight0 * pEdge0->y;
+    relative.z = weight2 * pEdge2->z + weight0 * pEdge0->z;
+    *pFeature = 7;
+}
+
+checkVertex: {
+    f32 squaredDistance = relative.x * relative.x + relative.y * relative.y + relative.z * relative.z;
+    f32 distance = MR::sqrt(squaredDistance);
+
+    if (distance > distances[0] || distance >= radius) {
+        *pFeature = 0;
+        return false;
+    }
+
+    *pDistance = radiusSquared - squaredDistance;
+}
+
+calcDistance:
+    *pDistance = MR::sqrt(*pDistance) - distances[0];
+
+    if (*pDistance < 0.0f || thickness < *pDistance) {
+        *pFeature = 0;
+        return false;
+    }
+
+accepted:
+    return true;
+}
+
+bool KCollisionServer::KCHitSphereWithThickness(KC_PrismData* pPrism, Fxyz* pPos, f32 radius, f32 scale, f32* pDistance, u8* pFeature,
+                                                  f32 requestedThickness) {
+    f32 thickness = requestedThickness * scale;
+    f32 radiusSquared = radius * radius;
+    *pFeature = 0;
+    Fxyz relative;
+    f32 distances[4];
+    f32 dot01;
+    f32 dot12;
+    f32 dot20;
+    TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
+    relative.x = pPos->x - pOrigin->x;
+    relative.y = pPos->y - pOrigin->y;
+    relative.z = pPos->z - pOrigin->z;
+    TVec3f* pEdge0 = &mFile->mNorms[pPrism->mEdgeIndices[0]];
+    distances[1] = relative.x * pEdge0->x + relative.y * pEdge0->y + relative.z * pEdge0->z;
+
+    if (distances[1] >= radius) {
+        return false;
+    }
+
+    TVec3f* pEdge1 = &mFile->mNorms[pPrism->mEdgeIndices[1]];
+    distances[2] = relative.x * pEdge1->x + relative.y * pEdge1->y + relative.z * pEdge1->z;
+
+    if (distances[2] >= radius) {
+        return false;
+    }
+
+    TVec3f* pEdge2 = &mFile->mNorms[pPrism->mEdgeIndices[2]];
+    distances[3] = relative.x * pEdge2->x + relative.y * pEdge2->y + relative.z * pEdge2->z - pPrism->mHeight;
+
+    if (distances[3] >= radius) {
+        return false;
+    }
+
+    TVec3f* pNormal = &mFile->mNorms[pPrism->mNormalIndex];
+    distances[0] = relative.x * pNormal->x + relative.y * pNormal->y + relative.z * pNormal->z;
+    *pDistance = radius - distances[0];
+
+    if (*pDistance < 0.0f) {
+        return false;
+    }
+
+    if (distances[1] > distances[2]) {
+        if (!(distances[1] > distances[3])) {
+            goto edge2Region;
+        }
+    } else {
+        if (!(distances[2] > distances[3])) {
+            goto edge2Region;
+        }
+
+        goto edge1Region;
+    }
+
+edge0Region:
+    if (distances[1] <= 0.0f) {
+        if (thickness < *pDistance) {
+            return false;
+        }
+
+        *pFeature = 1;
+        goto accepted;
+    }
+
+    if (distances[2] > distances[3]) {
+        dot01 = pEdge0->x * pEdge1->x + pEdge0->y * pEdge1->y + pEdge0->z * pEdge1->z;
+
+        if (!(dot01 * distances[1] > distances[2])) {
+            goto vertex0;
+        }
+
+        goto edge0;
+    } else {
+        dot20 = pEdge0->x * pEdge2->x + pEdge0->y * pEdge2->y + pEdge0->z * pEdge2->z;
+
+        if (!(dot20 * distances[1] > distances[3])) {
+            goto vertex2;
+        }
+
+        goto edge0;
+    }
+
+edge1Region:
+    if (distances[2] <= 0.0f) {
+        if (thickness < *pDistance) {
+            return false;
+        }
+
+        *pFeature = 1;
+        goto accepted;
+    }
+
+    if (distances[3] > distances[1]) {
+        dot12 = pEdge1->x * pEdge2->x + pEdge1->y * pEdge2->y + pEdge1->z * pEdge2->z;
+
+        if (!(dot12 * distances[2] > distances[3])) {
+            goto vertex1;
+        }
+
+        goto edge1;
+    } else {
+        dot01 = pEdge1->x * pEdge0->x + pEdge1->y * pEdge0->y + pEdge1->z * pEdge0->z;
+
+        if (!(dot01 * distances[2] > distances[1])) {
+            goto vertex0;
+        }
+
+        goto edge1;
+    }
+
+edge2Region:
+    if (distances[3] <= 0.0f) {
+        if (thickness < *pDistance) {
+            return false;
+        }
+
+        *pFeature = 1;
+        goto accepted;
+    }
+
+    if (distances[1] > distances[2]) {
+        dot20 = pEdge2->x * pEdge0->x + pEdge2->y * pEdge0->y + pEdge2->z * pEdge0->z;
+
+        if (!(dot20 * distances[3] > distances[1])) {
+            goto vertex2;
+        }
+
+        goto edge2;
+    } else {
+        dot12 = pEdge2->x * pEdge1->x + pEdge2->y * pEdge1->y + pEdge2->z * pEdge1->z;
+
+        if (!(dot12 * distances[3] > distances[2])) {
+            goto vertex1;
+        }
+
+        goto edge2;
+    }
+
+edge0:
+    *pDistance = radiusSquared - distances[1] * distances[1];
+    *pFeature = 2;
+    goto calcDistance;
+
+edge1:
+    *pDistance = radiusSquared - distances[2] * distances[2];
+    *pFeature = 3;
+    goto calcDistance;
+
+edge2:
+    *pDistance = radiusSquared - distances[3] * distances[3];
+    *pFeature = 4;
+    goto calcDistance;
+
+vertex0: {
+    f32 weight0 = (dot01 * distances[2] - distances[1]) / (dot01 * dot01 - 1.0f);
+    f32 weight1 = distances[2] - weight0 * dot01;
+    relative.x = weight0 * pEdge0->x + weight1 * pEdge1->x;
+    relative.y = weight0 * pEdge0->y + weight1 * pEdge1->y;
+    relative.z = weight0 * pEdge0->z + weight1 * pEdge1->z;
+    *pFeature = 5;
+    goto checkVertex;
+}
+
+vertex1: {
+    f32 weight1 = (dot12 * distances[3] - distances[2]) / (dot12 * dot12 - 1.0f);
+    f32 weight2 = distances[3] - weight1 * dot12;
+    relative.x = weight1 * pEdge1->x + weight2 * pEdge2->x;
+    relative.y = weight1 * pEdge1->y + weight2 * pEdge2->y;
+    relative.z = weight1 * pEdge1->z + weight2 * pEdge2->z;
+    *pFeature = 6;
+    goto checkVertex;
+}
+
+vertex2: {
+    f32 weight2 = (dot20 * distances[1] - distances[3]) / (dot20 * dot20 - 1.0f);
+    f32 weight0 = distances[1] - weight2 * dot20;
+    relative.x = weight2 * pEdge2->x + weight0 * pEdge0->x;
+    relative.y = weight2 * pEdge2->y + weight0 * pEdge0->y;
+    relative.z = weight2 * pEdge2->z + weight0 * pEdge0->z;
+    *pFeature = 7;
+}
+
+checkVertex: {
+    f32 squaredDistance = relative.x * relative.x + relative.y * relative.y + relative.z * relative.z;
+    f32 distance = MR::sqrt(squaredDistance);
+
+    if (distance >= radius) {
+        *pFeature = 0;
+        return false;
+    }
+
+    *pDistance = radiusSquared - squaredDistance;
+}
+
+calcDistance: {
+    f32 distance = MR::sqrt(*pDistance);
+
+    if (distances[0] + distance < 0.0f) {
+        *pFeature = 0;
+        return false;
+    }
+
+    *pDistance = distance - distances[0];
+
+    if (*pDistance < 0.0f || thickness < *pDistance) {
+        *pFeature = 0;
+        return false;
+    }
+}
+
+accepted:
+    return true;
+}
+
 bool KCollisionServer::isNearParallelNormal(const KC_PrismData* pPrism) const {
     TVec3f edge0 = mFile->mNorms[pPrism->mEdgeIndices[0]];
     TVec3f edge1 = mFile->mNorms[pPrism->mEdgeIndices[1]];
@@ -109,6 +542,93 @@ bool KCollisionServer::isNearParallelNormal(const KC_PrismData* pPrism) const {
     }
 
     return isNear;
+}
+
+bool KCollisionServer::KCHitArrow(KC_PrismData* pPrism, const TVec3f& rPos, const TVec3f& rOffset, f32* pDistance, u8* pFeature) const {
+    TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
+    TVec3f* pNormal = &mFile->mNorms[pPrism->mNormalIndex];
+    TVec3f relative;
+    PSVECSubtract(&rPos, pOrigin, &relative);
+    f32 faceDistance = PSVECDotProduct(&relative, pNormal);
+
+    if (faceDistance <= 0.0f) {
+        *pFeature = 0;
+        return false;
+    }
+
+    f32 faceMovement = PSVECDotProduct(pNormal, &rOffset);
+
+    if (0.0f < faceDistance + faceMovement) {
+        *pFeature = 0;
+        return false;
+    }
+
+    f32 fraction = faceDistance / -faceMovement;
+    TVec3f position = rOffset * fraction;
+    position += relative;
+    bool edge0 = false;
+    bool edge1 = false;
+    bool edge2 = false;
+    f32 distance = PSVECDotProduct(&position, &mFile->mNorms[pPrism->mEdgeIndices[0]]);
+
+    if (0.01f < distance) {
+        *pFeature = 0;
+        return false;
+    }
+
+    if (0.0f <= distance && distance <= 0.01f) {
+        edge0 = true;
+    }
+
+    distance = PSVECDotProduct(&position, &mFile->mNorms[pPrism->mEdgeIndices[1]]);
+
+    if (0.01f < distance) {
+        *pFeature = 0;
+        return false;
+    }
+
+    if (0.0f <= distance && distance <= 0.01f) {
+        edge1 = true;
+    }
+
+    distance = PSVECDotProduct(&position, &mFile->mNorms[pPrism->mEdgeIndices[2]]);
+
+    if (0.01f + pPrism->mHeight < distance) {
+        *pFeature = 0;
+        return false;
+    }
+
+    if (0.0f <= distance && distance <= 0.01f) {
+        edge2 = true;
+    }
+
+    *pDistance = fraction;
+
+    if (edge0) {
+        if (edge1) {
+            if (edge2) {
+                *pFeature = 1;
+            } else {
+                *pFeature = 5;
+            }
+        } else if (edge2) {
+            *pFeature = 7;
+        } else {
+            *pFeature = 2;
+        }
+    } else if (edge1) {
+        if (edge2) {
+            *pFeature = 6;
+        } else {
+            *pFeature = 3;
+        }
+    } else if (edge2) {
+        *pFeature = 4;
+    } else {
+        *pFeature = 1;
+    }
+
+    return true;
 }
 
 s32 KCollisionServer::toIndex(const KC_PrismData* pPrism) const {
