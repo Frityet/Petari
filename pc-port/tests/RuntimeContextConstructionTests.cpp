@@ -2,6 +2,7 @@
 #include "runtime/ScreenAlphaCaptureService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "Game/Screen/ScreenAlphaCapture.hpp"
+#include "Game/System/ScenarioDataParser.hpp"
 #include "JSystem/JUtility/JUTVideo.hpp"
 #include <aurora/dvd.h>
 #include <cstdlib>
@@ -47,6 +48,7 @@ int main() {
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr, "failed/destroyed runtime remains published");
         require(JUTVideo::getManager() == nullptr, "failed/destroyed runtime retains its JUTVideo owner");
         require(smgpc::compat::ResourceHolderService::active() == nullptr, "failed/destroyed runtime retains archive service");
+        require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "failed/destroyed runtime retains scenario catalog publication");
         require(smgpc::compat::name_obj_runtime_state_count() == objects, "failed/destroyed runtime retains NameObj callbacks");
         require(heap->available_bytes() == expected_capacity, "failed/destroyed runtime retains mapped texture storage");
         bool absent = false;
@@ -85,6 +87,13 @@ int main() {
             require(smgpc::runtime::RuntimeContext::try_instance() == &runtime && JUTVideo::getManager(), "reconstructed runtime is not registered");
             require(runtime.scheduler().snapshot().size() == 2, "reconstruction did not install the exact capture callbacks");
             require(MR::getScreenAlphaTexture(0) != nullptr, "reconstruction lost its mapped screen-alpha texture");
+            require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "platform construction eagerly created the Game catalog");
+            if (disc) {
+                runtime.initialize_scenario_catalog(process);
+                auto catalog = runtime.retain_scenario_catalog();
+                require(ScenarioDataFunction::getScenarioDataParser() == &catalog->parser(), "resource-ready startup published a different parser");
+                require(catalog->parser().mScenarioData.size() == 48, "resource-ready startup did not load the actual disc catalog");
+            }
         }
         require_retired(capacity);
     }

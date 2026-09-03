@@ -14,6 +14,7 @@
 
 #include "Logger.hpp"
 #include "runtime/ArchiveMountService.hpp"
+#include "runtime/ScenarioCatalogOwnership.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "compat/ResourceHolderCompat.hpp"
@@ -194,6 +195,8 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
         [[nodiscard]] ArchiveMountService &archive_mounts();
         [[nodiscard]] const ArchiveMountService &archive_mounts() const;
+        void initialize_scenario_catalog(const resource::GameResourceRuntime &resources);
+        [[nodiscard]] std::shared_ptr<ScenarioCatalogOwnership> retain_scenario_catalog() const;
         [[nodiscard]] DvdFileSystemService &dvd();
         [[nodiscard]] const DvdFileSystemService &dvd() const;
         [[nodiscard]] WiiIosService &ios();
@@ -326,6 +329,7 @@ namespace smgpc::runtime {
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
         ArchiveMountService _archive_mounts;
+        std::shared_ptr<ScenarioCatalogOwnership> _scenario_catalog;
         std::unique_ptr<JAudioPlaybackService> _j_audio_playback;
         smgpc::compat::ResourceHolderService _resource_holders;
         std::unique_ptr<aurora::audio::DisabledObjectAudioService> _disabled_object_audio;

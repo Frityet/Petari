@@ -426,8 +426,10 @@ namespace smgpc::app {
                                 di::DependencyReference<render::AuroraWindow> window_service,
                                 di::DependencyReference<resource::GameResourceRuntime> resources) {
                     ensure_disc_image_open(configuration, logger.get());
-                    return std::make_unique<smgpc::runtime::RuntimeContext>(logger.get(), window_service.get(), resources.get(),
-                                                                            smgpc::runtime::RuntimeContextSceneServiceMode::External);
+                    auto runtime = std::make_unique<smgpc::runtime::RuntimeContext>(logger.get(), window_service.get(), resources.get(),
+                                                                                  smgpc::runtime::RuntimeContextSceneServiceMode::External);
+                    runtime->initialize_scenario_catalog(resources.get());
+                    return runtime;
                 });
         }
 

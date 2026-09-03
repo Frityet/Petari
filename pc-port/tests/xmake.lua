@@ -1277,6 +1277,11 @@ target("smg-pc-runtime-context-construction-tests")
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
     add_files("RuntimeContextConstructionTests.cpp", "../aurora/lib/compat.cpp")
     add_deps {
         "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",

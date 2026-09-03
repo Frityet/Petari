@@ -1110,6 +1110,22 @@ namespace smgpc::runtime {
     ArchiveMountService &RuntimeContext::archive_mounts() { return _archive_mounts; }
     const ArchiveMountService &RuntimeContext::archive_mounts() const { return _archive_mounts; }
 
+    void RuntimeContext::initialize_scenario_catalog(const resource::GameResourceRuntime &resources) {
+        compat::JkrHostAllocationScope host;
+        if (_scenario_catalog) {
+            throw std::logic_error("The process scenario catalog is already initialized.");
+        }
+        _scenario_catalog = std::make_shared<ScenarioCatalogOwnership>(
+            resources.host_heaps(), resources.budget().scenario_catalog_bytes, _archive_mounts);
+    }
+
+    std::shared_ptr<ScenarioCatalogOwnership> RuntimeContext::retain_scenario_catalog() const {
+        if (!_scenario_catalog) {
+            throw std::logic_error("The process scenario catalog has not reached resource-ready startup.");
+        }
+        return _scenario_catalog;
+    }
+
     DvdFileSystemService &RuntimeContext::dvd() {
         return _dvd;
     }
