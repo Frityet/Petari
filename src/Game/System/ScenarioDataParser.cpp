@@ -46,8 +46,35 @@ ScenarioData::ScenarioData(const char* pFilePath) : mScenarioData(nullptr), mGal
     mZoneList->attach(pArchive->getResource("/ZoneList.bcsv"));
 }
 
-// ScenarioData::getScenarioNum
-// ScenarioData::getPowerStarNum
+s32 ScenarioData::getScenarioNum() const {
+    s32 count = 0;
+
+    for (s32 scenarioNo = 1; scenarioNo <= mScenarioData->getNumEntries(); scenarioNo++) {
+        bool isHidden = false;
+        getValueBool("IsHidden", scenarioNo, &isHidden);
+
+        if (!isHidden) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+s32 ScenarioData::getPowerStarNum() const {
+    s32 count = 0;
+
+    for (s32 scenarioNo = 1; scenarioNo <= mScenarioData->getNumEntries(); scenarioNo++) {
+        u32 powerStarId = 0;
+        getValueU32("PowerStarId", scenarioNo, &powerStarId);
+
+        if (powerStarId != 0) {
+            count++;
+        }
+    }
+
+    return count;
+}
 
 bool ScenarioData::getValueString(const char* pKey, s32 a2, const char** ppOut) const {
     JMapInfoIter iter = getScenarioDataIter(a2);
@@ -69,7 +96,10 @@ const char* ScenarioData::getZoneName(s32 zoneId) const {
     return pZoneName;
 }
 
-// ScenarioData::getScenarioDataIter
+JMapInfoIter ScenarioData::getScenarioDataIter(s32 scenarioNo) const {
+    JMapInfoIter iter = mScenarioData->findElement("ScenarioNo", scenarioNo, 0);
+    return iter;
+}
 
 bool ScenarioData::getValueU32(const char* pKey, s32 a2, u32* pOut) const {
     JMapInfoIter iter = getScenarioDataIter(a2);
@@ -82,7 +112,16 @@ bool ScenarioData::getValueU32(const char* pKey, s32 a2, u32* pOut) const {
     return iter.mInfo->getValueFast(iter.mIndex, index, pOut);
 }
 
-// ScenarioData::getValueBool
+bool ScenarioData::getValueBool(const char* pKey, s32 scenarioNo, bool* pOut) const {
+    JMapInfoIter iter = getScenarioDataIter(scenarioNo);
+    s32 index = iter.mInfo->searchItemInfo(pKey);
+
+    if (index < 0) {
+        return false;
+    }
+
+    return iter.mInfo->getValueFast(iter.mIndex, index, pOut);
+}
 
 s32 ScenarioData::getZoneNum() const {
     if (mZoneList->mData != nullptr) {

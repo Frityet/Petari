@@ -1,0 +1,143 @@
+{
+  "compiler": "GC3.0a3 with configure.py JSystem flags and Shift-JIS wrapper",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "name": "loadMaterialTable__22J3DModelLoaderDataBaseFPCv",
+      "address": "0x8043ddbc",
+      "retail_size": 128,
+      "compiled_size": 128,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "all_canonical_instructions_equal": true,
+      "relocations": [
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "__ct__18J3DModelLoader_v26Fv",
+          "addend": 0,
+          "effective_retail_target": "0x8043f9ec"
+        }
+      ],
+      "canonical_instructions": [
+        "stwu r1, -0x30(r1)",
+        "mflr r0",
+        "cmpwi r3, 0x0",
+        "stw r0, 0x34(r1)",
+        "stw r31, 0x2c(r1)",
+        "mr r31, r3",
+        "bne instruction_9",
+        "li r3, 0x0",
+        "b instruction_27",
+        "lwz r4, 0x0(r3)",
+        "subis r0, r4, 0x4a33",
+        "cmplwi r0, 0x4432",
+        "bne instruction_26",
+        "lwz r3, 0x4(r3)",
+        "subis r0, r3, 0x626d",
+        "cmplwi r0, 0x7433",
+        "bne instruction_26",
+        "addi r3, r1, 0x8",
+        "bl __ct__18J3DModelLoader_v26Fv",
+        "lwz r12, 0x8(r1)",
+        "mr r4, r31",
+        "addi r3, r1, 0x8",
+        "lwz r12, 0xc(r12)",
+        "mtctr r12",
+        "bctrl",
+        "b instruction_27",
+        "li r3, 0x0",
+        "lwz r0, 0x34(r1)",
+        "lwz r31, 0x2c(r1)",
+        "mtlr r0",
+        "addi r1, r1, 0x30",
+        "blr"
+      ]
+    },
+    {
+      "name": "loadBinaryDisplayList__22J3DModelLoaderDataBaseFPCvUl",
+      "address": "0x8043de3c",
+      "retail_size": 148,
+      "compiled_size": 148,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "all_canonical_instructions_equal": true,
+      "relocations": [
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "__ct__18J3DModelLoader_v26Fv",
+          "addend": 0,
+          "effective_retail_target": "0x8043f9ec"
+        }
+      ],
+      "canonical_instructions": [
+        "stwu r1, -0x30(r1)",
+        "mflr r0",
+        "cmpwi r3, 0x0",
+        "stw r0, 0x34(r1)",
+        "stw r31, 0x2c(r1)",
+        "mr r31, r4",
+        "stw r30, 0x28(r1)",
+        "mr r30, r3",
+        "bne instruction_11",
+        "li r3, 0x0",
+        "b instruction_31",
+        "lwz r4, 0x0(r3)",
+        "subis r0, r4, 0x4a33",
+        "cmplwi r0, 0x4432",
+        "bne instruction_30",
+        "lwz r3, 0x4(r3)",
+        "subis r3, r3, 0x6264",
+        "subi r0, r3, 0x6c33",
+        "cmplwi r0, 0x1",
+        "bgt instruction_30",
+        "addi r3, r1, 0x8",
+        "bl __ct__18J3DModelLoader_v26Fv",
+        "lwz r12, 0x8(r1)",
+        "mr r4, r30",
+        "mr r5, r31",
+        "addi r3, r1, 0x8",
+        "lwz r12, 0x10(r12)",
+        "mtctr r12",
+        "bctrl",
+        "b instruction_31",
+        "li r3, 0x0",
+        "lwz r0, 0x34(r1)",
+        "lwz r31, 0x2c(r1)",
+        "lwz r30, 0x28(r1)",
+        "mtlr r0",
+        "addi r1, r1, 0x30",
+        "blr"
+      ]
+    }
+  ],
+  "existing_addMesh": {
+    "name": "addMesh__8J3DJointFP11J3DMaterial",
+    "root_definition_already_present": true,
+    "retail_inline_address": "0x804317dc",
+    "retail_inline_size": 20,
+    "retail_inline_bytes": "801700582c00000041820008901c000493970058",
+    "compiled_size": 24,
+    "all_inline_operations_verified": true,
+    "compiled_canonical_instructions": [
+      "lwz r0, 0x58(r3)",
+      "cmpwi r0, 0x0",
+      "beq instruction_4",
+      "stw r0, 0x4(r4)",
+      "stw r4, 0x58(r3)",
+      "blr"
+    ],
+    "caller_argument_identity_verified": true,
+    "makeHierarchy_context_objdiff_percent": 95.73034,
+    "scope": "Verifies the existing addMesh body and caller argument identity, not every unrelated makeHierarchy instruction."
+  },
+  "source_sha256": {
+    "src/JSystem/J3DGraphLoader/J3DModelLoader.cpp": "2a2635a183bc86c3d431279dbd6ed6d551d7db9396be9bce4b172f45bdca5d7a",
+    "libs/JSystem/include/JSystem/J3DGraphLoader/J3DModelLoader.hpp": "53b971fefbdefeb29d202e33a427028140c731353966e85f93168764ccc8b866",
+    "src/JSystem/J3DGraphAnimator/J3DJointTree.cpp": "c7a6ef4f538672d556649340cd5587976cd6f496f681fdf4e06080ff4d974a1b",
+    "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp": "c898e77abaabd6f2ad3e921db75243ba14e268687c76567f6a5664f9613329af",
+    "libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp": "b39cb9e5a03b032e808707f57c18f6a8e36bfbb69731a7ac60038d678e561b70"
+  },
+  "scope": "Two root SDK dispatchers recovered; existing root addMesh verified. No native changes."
+}

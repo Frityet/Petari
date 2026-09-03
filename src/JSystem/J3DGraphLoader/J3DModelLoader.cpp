@@ -34,6 +34,34 @@ J3DModelData* J3DModelLoaderDataBase::load(void const* i_data, u32 i_flags) {
     return NULL;
 }
 
+J3DMaterialTable* J3DModelLoaderDataBase::loadMaterialTable(const void* i_data) {
+    if (i_data == nullptr) {
+        return nullptr;
+    }
+
+    const u32* data = static_cast< const u32* >(i_data);
+    if (data[0] == 'J3D2' && data[1] == 'bmt3') {
+        J3DModelLoader_v26 loader;
+        return loader.loadMaterialTable(i_data);
+    }
+
+    return nullptr;
+}
+
+J3DModelData* J3DModelLoaderDataBase::loadBinaryDisplayList(const void* i_data, u32 i_flags) {
+    if (i_data == nullptr) {
+        return nullptr;
+    }
+
+    const u32* data = static_cast< const u32* >(i_data);
+    if (data[0] == 'J3D2' && (data[1] == 'bdl3' || data[1] == 'bdl4')) {
+        J3DModelLoader_v26 loader;
+        return loader.loadBinaryDisplayList(i_data, i_flags);
+    }
+
+    return nullptr;
+}
+
 J3DModelData* J3DModelLoader::load(void const* i_data, u32 i_flags) {
     JKRGetCurrentHeap()->getTotalFreeSize();
     mpModelData = new J3DModelData();
