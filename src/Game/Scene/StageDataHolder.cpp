@@ -307,6 +307,17 @@ JMapInfoIter StageDataHolder::makeMarioJMapInfoIter(const JMapIdInfo& rInfo) con
     return JMapInfoIter();
 }
 
+JMapInfoIter StageDataHolder::makeCurrentMarioJMapInfoIter() const {
+    JMapIdInfo startInfo = MR::getCurrentMarioStartIdInfo();
+    JMapInfoIter iter = makeMarioJMapInfoIter(startInfo);
+
+    if (MR::checkJMapDataEntries(iter)) {
+        return iter;
+    }
+
+    return JMapInfoIter();
+}
+
 void StageDataHolder::initJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, const char* pName) {
     s32 fileCnt = mArchive->countFile(pName) - 2;
     s32 v = fileCnt > 0 ? fileCnt : 0;

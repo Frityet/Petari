@@ -145,7 +145,10 @@ namespace MR {
     // isInitializeStatePlacementSomething
     // stopSceneForScenarioOpeningCamera
     // playSceneForScenarioOpeningCamera
-    // getCurrentMarioStartIdInfo
+    const JMapIdInfo& getCurrentMarioStartIdInfo() {
+        return *SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mStartIdInfo;
+    }
+
     // getStartPosNum
     s32 getCurrentStartZoneId() {
         return getStageDataHolder()->getCurrentStartZoneId();
